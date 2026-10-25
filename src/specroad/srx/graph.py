@@ -26,7 +26,7 @@ class LoadedGraph:
     _visible_ids: frozenset
     validation_scope: str
 
-    def __init__(self, sources, *, rule_id, artifact_ids=None):
+    def __init__(self, sources, *, rule_id, artifact_ids=None, partial=None):
         from .validation import _rule_id
         rule_id = _rule_id(rule_id)
         if type(sources) not in (list, tuple):
@@ -47,13 +47,25 @@ class LoadedGraph:
                                expected="valid source records", actual=error.reason,
                                subject="context", pointer="/graph") from None
         try:
-            references = RelationReferences(records)
-            index = RelationIndex(references)
+            if partial is None:
+                references = RelationReferences(records)
+                index = RelationIndex(references)
+                boundary_ids = frozenset()
+            else:
+                from ..bundles._partial_graph import PartialGraph
+                from ..bundles._partial_read import PartialReadSnapshot
+                if (type(partial) is not PartialReadSnapshot or len(records) != len(partial.records) or
+                        {r.identity.id: r.source_bytes for r in records} !=
+                        {r.identity.id: r.source_bytes for r in partial.records}):
+                    raise ModelError('partial_graph_sources_mismatch')
+                index = PartialGraph(partial)
+                boundary_ids = index.boundary_ids
         except ModelError as error:
             raise SrxError("graph_model_invalid", rule_id=rule_id,
                            expected="resolved canonical relations", actual=error.reason,
                            subject="context", pointer="/graph") from None
         object.__setattr__(self, "_index", index)
+        object.__setattr__(self, '_boundary_ids', boundary_ids)
         object.__setattr__(self, "_artifacts", MappingProxyType({
             record.identity.id: JsonSnapshot(record.data, rule_id=rule_id, subject="context")
             for record in records}))
@@ -66,6 +78,8 @@ class LoadedGraph:
         object.__setattr__(self, '_visible_ids', frozenset(known if artifact_ids is None else artifact_ids))
         object.__setattr__(self, "validation_scope", "loaded_model_only" if artifact_ids is None
                            else 'selected_loaded_model_only')
+        if partial is not None:
+            object.__setattr__(self, 'validation_scope', 'partial_bundle_artifacts')
 
     @property
     def artifact_ids(self):
@@ -91,7 +105,8 @@ class LoadedGraph:
     def neighbours(self, identifier, direction, types, *, meter=None, pointer="/expression"):
         return complete_steps(self.neighbours_steps(identifier, direction, types, meter=meter, pointer=pointer))
 
-    def neighbours_steps(self, identifier, direction, types, *, meter=None, pointer="/expression", controls=None):
+    def neighbours_steps(self, identifier, direction, types, *, meter=None, pointer="/expression", controls=None,
+                         include_boundaries=False):
         # The legacy deterministic work charge remains unchanged. Operational
         # controls follow the actual per-edge processing below, not this batch.
         if controls is not None:
@@ -105,7 +120,8 @@ class LoadedGraph:
             meter.add("graph_steps", len(views), pointer=pointer)
         selected = []
         for view in views:
-            if view.target.id in self._visible_ids and (types == "*" or view.type in types
+            if (view.target.id in self._visible_ids or
+                    (include_boundaries and view.relation_id in self._boundary_ids)) and (types == "*" or view.type in types
                                                         or view.stored.relation.type in types):
                 selected.append(view)
             if controls is not None:
@@ -131,7 +147,7 @@ class LoadedGraph:
             meter.add("graph_steps", len(views), pointer=pointer)
         result["relations"] = []
         for view in views:
-            if view.target.id in self._visible_ids:
+            if view.target.id in self._visible_ids or view.relation_id in self._boundary_ids:
                 result["relations"].append(
                     {"relation_id": view.relation_id, "type": view.type,
                      "source": view.source.id, "target": view.target.id,

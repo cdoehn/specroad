@@ -3,6 +3,8 @@ from pathlib import Path
 
 from ..cli.command_errors import CommandUsageError
 from ..cli.result_schemas import validate_result_document
+from ..bundles.errors import BundleError
+from ..srx.errors import SrxError
 from ..cli.results import CommandResult, OperationFailure
 from ..model.errors import ModelError
 from ..security import ProjectBoundary, SafetyViolation
@@ -64,6 +66,12 @@ def _query_steps(root, query=None, *, options=None, cwd=None, configuration_id=N
             if configuration_id is not None:
                 raise CommandUsageError('Duplicate configuration selection')
             configuration_id = options['--configuration']
+        from ..bundles._partial_read import partial_read_snapshot
+        partial = partial_read_snapshot(root)
+        if partial is not None:
+            from ._partial_commands import query_steps
+            return (yield from query_steps(partial, query, options=options, cwd=cwd,
+                configuration_id=configuration_id, details=details))
         source = ProjectSource(root)
         project = {'project_root': str(source.boundary.root), 'project_id': source.configuration.project_id}
         _preflight(source)
@@ -91,7 +99,7 @@ def _query_steps(root, query=None, *, options=None, cwd=None, configuration_id=N
         _verify_current(source, snapshot.binding)
         validate_result_document('artifact-query-v1', payload)
         return CommandResult('query', result=payload, project=project, details=details)
-    except (OperationFailure, ModelError, SrxError, SafetyViolation, OSError) as error:
+    except (BundleError, OperationFailure, ModelError, SrxError, SafetyViolation, OSError) as error:
         return read_failure('query', error, project, details)
 
 

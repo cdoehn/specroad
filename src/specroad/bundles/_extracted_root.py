@@ -6,6 +6,7 @@ Neither record is an authenticated authority or a substitute for live gates.
 """
 from hashlib import sha256
 import os
+import stat
 
 from ..authoring._bootstrap_io import STAGING
 from ..model.errors import ModelError
@@ -25,6 +26,25 @@ def _optional(boundary, path):
         return boundary.read_bytes(path)
     except FileNotFoundError:
         return None
+
+
+def has_extracted_metadata(boundary):
+    """Discover extraction markers without opening ordinary operational data.
+
+    Inspect components without following links. Unsafe components deliberately
+    enter the descriptor-bound marker check, which reports the safety failure.
+    """
+    for components in ((STAGING,), (MANIFEST_NAME,), (*COMPLETED, 'journal.json')):
+        current = boundary.root
+        for index, component in enumerate(components):
+            current = current / component
+            try:
+                mode = current.lstat().st_mode
+            except FileNotFoundError:
+                break
+            if index == len(components) - 1 or not stat.S_ISDIR(mode):
+                return True
+    return False
 
 
 def require_complete_root(boundary):

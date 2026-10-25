@@ -11,7 +11,8 @@ from .contracts import PreflightProfile
 from .option_values import OptionResolutionError, _text
 
 
-def _read_configuration(path: Path, *, project_read=False, schema_required=False, preflight=None) -> dict:
+def _read_configuration(path: Path, *, project_read=False, schema_required=False, preflight=None,
+                        command=None, options=None) -> dict:
     """Read one regular configuration file; never follow a config-file link."""
     metadata = MetadataPhases()
     observed = {'profile': 'project_read' if project_read else 'project_metadata',
@@ -64,8 +65,23 @@ def _read_configuration(path: Path, *, project_read=False, schema_required=False
                                        'model_error': error.diagnostic()}}) from error
     if project_read:
         from ..runtime.preflight import require_project_read_preflight
+        from ..bundles._partial_read import _marker
+        from ..bundles._extracted_root import has_extracted_metadata
+        try:
+            if has_extracted_metadata(boundary):
+                _marker(boundary)
+        except SafetyViolation as error:
+            raise OptionResolutionError('Extracted-root safety boundary rejected the read', 7,
+                details={'preflight': {**details()['preflight'],
+                    'reason': 'unsafe_preflight_resource'}}) from error
+        if command is not None:
+            from ..bundles._command_guard import require_partial_command_at
+            require_partial_command_at(boundary.root, command, options)
         observed = require_project_read_preflight(boundary, raw, metadata)
     else:
+        if command is not None:
+            from ..bundles._command_guard import require_partial_command_at
+            require_partial_command_at(boundary.root, command, options)
         observed.update(inspection_scope='configuration_only')
     if preflight is not None:
         preflight.update(details()['preflight'])
@@ -93,7 +109,8 @@ def select_project(command, options, cwd, *, preflight=None):
             config = root / "specroad.json"
             config.lstat()
             return root, "cli", _read_configuration(config, project_read=project_read,
-                schema_required=command.configuration_schema_required, preflight=preflight)
+                schema_required=command.configuration_schema_required, preflight=preflight,
+                command=command, options=options)
         start = (Path.cwd() if cwd is None else Path(cwd)).resolve(strict=True)
         if not start.is_dir():
             raise OptionResolutionError("Search origin is not a directory")
@@ -104,7 +121,8 @@ def select_project(command, options, cwd, *, preflight=None):
             except FileNotFoundError:
                 continue
             return root, "discovery", _read_configuration(config, project_read=project_read,
-                schema_required=command.configuration_schema_required, preflight=preflight)
+                schema_required=command.configuration_schema_required, preflight=preflight,
+                command=command, options=options)
     except OptionResolutionError:
         raise
     except FileNotFoundError as error:

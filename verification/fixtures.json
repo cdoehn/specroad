@@ -389,8 +389,8 @@
       "provider": "tests/test_partial_bundle.py:project,independent_root;tests/test_partial_bundle_right.py:configured,config_oracle,root_oracle"
     },
     "SR-FIX-PARTIAL-READ-v1": {
-      "kind": "Actual extracted native partials with removed origin, original configuration parent chains or synthetic review endpoint proof bytes; rehashed adversarial metadata, retained read changes, filesystem inventory and no-write traps. No real review, origin authenticity, rehydration or release claim.",
-      "provider": "tests/test_partial_read_commands.py:extracted;tests/test_bundle_verification_right.py:reviewed;tests/test_partial_bundle_right.py:configured"
+      "kind": "Actual extracted native partials with removed origin, original configuration parent chains or synthetic review endpoint proof bytes; rehashed adversarial metadata, retained read changes, filesystem inventory and no-write traps. No real review, origin authenticity, rehydration or release claim. Member-only query/graph/view/diagram comparisons, native partial validation/inspection, direct weak-boundary observations, cycle/depth/page limits and writer admission with retained metadata diagnosis.",
+      "provider": "tests/test_partial_read_commands.py:extracted;tests/test_bundle_verification_right.py:reviewed;tests/test_partial_bundle_right.py:configured;tests/test_partial_read_consumers.py:view_partial"
     },
     "SR-FIX-PLANNING-BUILTIN-VIEWS-v1": {
       "kind": "Native owned Roadmap, Verification coverage and ReleaseReadiness contexts with actual stored/external selections, explicit synthetic host proofs and failed/missing gates. Read-only view adapters, exact source/model mismatch and forbidden-I/O observations. No rendered text or production human approval is an oracle.",

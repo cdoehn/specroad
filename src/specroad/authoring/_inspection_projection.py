@@ -4,6 +4,7 @@ No project discovery, preflight, file access, lock acquisition or repair. The
 calling inspection retains responsibility for freshness and runtime blockers.
 """
 from ..changes.target_model import _default_scope
+from ..documents._read_model import read_root
 
 
 def semantic_description(model, report, assessment):
@@ -13,7 +14,7 @@ def semantic_description(model, report, assessment):
         kind = artifact['artifact_type']
         counts[kind] = counts.get(kind, 0) + 1
     semantic = {'project_id': model.configuration.project_id,
-        'model_root_sha256': model.manifest(artifacts, _default_scope()).sha256,
+        'model_root_sha256': read_root(model),
         'schema_version': model.configuration.data['schema_version'],
         'active_profiles': [{k: p[k] for k in ('profile_id', 'version')}
                             for p in model.profile.data['profiles']],

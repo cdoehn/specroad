@@ -3,6 +3,7 @@
 Resolution is a data projection of the target's actual bytes. It does not store
 a second artifact, render output, determine document ownership or grant approval.
 """
+from ._read_model import read_root, read_scope
 from dataclasses import dataclass
 from hashlib import sha256
 
@@ -54,10 +55,10 @@ def resolve_artifact_reference(model, block_id):
     from ..changes.target_model import _default_scope
     model, source, block, position, relation, target, value = _resolve_reference_sources(
         model, block_id, ArtifactReferenceError)
-    descriptor = _default_scope()
+    descriptor = read_scope(model)
     data = {'format_version': 'artifact-reference-v1', 'project_id': model.binding.project_id,
         'scope_descriptor': descriptor,
-        'model_root_sha256': model.manifest(model.artifacts, descriptor).sha256,
+        'model_root_sha256': read_root(model, descriptor),
         'input_sha256': model._sources_sha256,
         'validation_scope': 'supplied_model_artifact_reference', 'reference_resolved': True,
         'block': block.binding,

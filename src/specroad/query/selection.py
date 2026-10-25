@@ -111,7 +111,8 @@ class QuerySelection:
         return 'supplied_query_inventory_only'
 
 
-def select_query(records, query, *, project, configuration=None, configuration_id=None, verification=None):
+def select_query(records, query, *, project, configuration=None, configuration_id=None, verification=None,
+                 partial=None):
     """OR within a value group; AND across groups and all SRX expressions.
 
     No file access, cache hints, callbacks, implicit evaluation or early paging.
@@ -134,6 +135,9 @@ def select_query(records, query, *, project, configuration=None, configuration_i
                                        configuration, configuration_id)
         evaluation_binding = verification.summary
     selected_configuration, eligible = None, None
+    effective = None if partial is None else partial.configuration_selection(configuration_id)
+    if effective is not None:
+        configuration_id = effective.binding['configuration_id']
     if configuration_id is not None:
         from ..configurations import resolve_configuration, evaluate_applicability
         from ..configurations.evaluation import ConfigurationEvaluationError
@@ -141,21 +145,23 @@ def select_query(records, query, *, project, configuration=None, configuration_i
             if configuration is not None:
                 raise ModelError('query_configuration_context_conflict')
             records = tuple(sorted(configured_sources(records, configuration_id), key=lambda r: r.identity.id))
-            effective = resolve_configuration(records, configuration_id)
+            effective = resolve_configuration(records, configuration_id) if effective is None else effective
             eligible = [r.identity.id for r in records if evaluate_applicability(
                 r, effective, require_configuration=True).status == 'applicable']
             configuration = effective.srx_context
             selected_configuration = effective.binding
         except ModelError as error:
             raise ConfigurationEvaluationError(error) from error
-    whole_graph = LoadedGraph(records, rule_id='query')
-    graph = whole_graph if eligible is None else LoadedGraph(records, rule_id='query', artifact_ids=eligible)
+    whole_graph = LoadedGraph(records, rule_id='query', partial=partial)
+    graph = whole_graph if eligible is None else LoadedGraph(records, rule_id='query', artifact_ids=eligible,
+                                                            partial=partial)
     search_sources = {record.identity.id: record for record in records} if 'full_text' in data['filters'] else {}
     roots = EvaluationContext({'artifact': {}, 'project': project,
         'configuration': configuration, 'relations': []}, rule_id='query').data
     input_hash = canonical_json_sha256({'project': roots['project'],
         'configuration': roots['configuration'],
         **({} if evaluation_binding is None else {'verification': evaluation_binding}),
+        **({} if partial is None else {'partial_observation': partial.observation_sha256}),
         'sources': sorted(({'id': record.identity.id,
                            'sha256': sha256(record.source_bytes).hexdigest()} for record in records),
                           key=lambda item: item['id'])})

@@ -1,5 +1,7 @@
 """All shortest directed paths to origins in a fresh complete project observation."""
 from ..cli.result_schemas import validate_result_document
+from ..bundles.errors import BundleError
+from ..srx.errors import SrxError
 from ..cli.results import CommandResult, FailureKind, OperationFailure
 from ..diagnostics import Diagnostic, from_model_error
 from ..model.errors import ModelError
@@ -28,6 +30,11 @@ def _why_steps(root, artifact_id):
     details = dict(atomic_snapshot=False, full_semantic_validation=False,
                    approval_granted=False, write_authorized=False, recovery_performed=False)
     try:
+        from ..bundles._partial_read import partial_read_snapshot
+        partial = partial_read_snapshot(root)
+        if partial is not None:
+            from ._partial_commands import why_steps
+            return (yield from why_steps(partial, artifact_id, details=details))
         source = ProjectSource(root)
         project = {'project_root': str(source.boundary.root), 'project_id': source.configuration.project_id}
         _preflight(source)
@@ -52,6 +59,9 @@ def _why_steps(root, artifact_id):
         _verify_current(source, observed.binding)
         validate_result_document('artifact-why-v1', payload)
         return CommandResult('why', result=payload, project=project, details=details)
+    except (BundleError, SrxError) as error:
+        from ._read_errors import read_failure
+        return read_failure('why', error, project, details)
     except OperationFailure as error:
         return CommandResult.failed('why', error.kind, project=project,
             diagnostics=(Diagnostic('CORE_' + error.kind.name, 'error', 'preflight', str(error)),),

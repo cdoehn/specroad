@@ -1,4 +1,6 @@
 """Cycle-checked document data composition over one owned project snapshot."""
+from ._read_model import require_read_model, read_scope, read_root, partial_observation, local_references
+
 from dataclasses import dataclass
 from hashlib import sha256
 
@@ -60,14 +62,13 @@ def compose_document(model, document_id):
     rendered layout. Other block payloads remain passive for later providers.
     """
     from ..changes.target_model import TargetModel
-    if type(model) is not TargetModel:
-        raise ModelError('document_target_model_required')
+    require_read_model(model)
     if type(document_id) is not str:
         raise DocumentIncludeError('document_id_required', pointer='/document_id')
     model = model.snapshot()
     structure = assess_document_structure(model)
     structure.require_document(document_id)
-    index, pointers, edges, outgoing = _include_graph(model.documents, DocumentIncludeCycleError)
+    index, pointers, edges, outgoing = _include_graph(model.documents, DocumentIncludeCycleError, model=model)
     # Repeated occurrences are deliberate. A global visited set here would
     # incorrectly drop content shared by two documents or include paths.
     pending = [(document_id, None, None, 0)]

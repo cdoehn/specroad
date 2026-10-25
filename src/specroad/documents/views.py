@@ -1,4 +1,6 @@
 """Declarative view data from an owned snapshot; no rendering or external I/O."""
+from ._read_model import require_read_model, read_scope, read_root, partial_observation, local_references
+
 from dataclasses import dataclass
 from hashlib import sha256
 import unicodedata
@@ -49,8 +51,7 @@ def resolve_view(model, view_id, *, configuration_id=None):
     services. A result never supplies those services or authorizes a write.
     """
     from ..changes.target_model import TargetModel, _default_scope
-    if type(model) is not TargetModel:
-        raise ModelError('document_target_model_required')
+    require_read_model(model)
     if type(view_id) is not str:
         raise ViewError('view_id_required', pointer='/view_id')
     model = model.snapshot()
@@ -70,7 +71,7 @@ def resolve_view(model, view_id, *, configuration_id=None):
     descriptor, projections, columns, projection_columns, grouping, query = plan_view(
         value, source, len(records), ViewError)
     selected_scope, page, graph = select_view(records, model.configuration.data, index,
-        descriptor, query, configuration_id, fail)
+        descriptor, query, configuration_id, fail, partial=partial_observation(model))
     rows = project_view_rows(index, graph, projections, columns, projection_columns, page, fail)
 
     groups = {}
@@ -89,8 +90,8 @@ def resolve_view(model, view_id, *, configuration_id=None):
         group_keys.sort(key=lambda key: key[i], reverse=grouping[i][1] == 'desc')
 
     data = {'format_version': 1, 'kind': 'view-data-v1', 'project_id': model.binding.project_id,
-        'scope_descriptor': _default_scope(),
-        'model_root_sha256': model.manifest(model.artifacts, _default_scope()).sha256,
+        'scope_descriptor': read_scope(model),
+        'model_root_sha256': read_root(model),
         'input_sha256': model._sources_sha256,
         'selection_scope_descriptor': selected_scope.data,
         'selection_scope_descriptor_sha256': selected_scope.sha256,

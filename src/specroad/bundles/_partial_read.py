@@ -96,6 +96,9 @@ class PartialReadSnapshot:
         check_manifest_bytes(marker[0], self.files)
         container = BundleContainer(encode_archive(MANIFEST_NAME, metadata, self.files))
         native = verify_partial_model(container)
+        from ._payload_model import payload_model
+        self.container = container
+        self.payload_model = payload_model(container, partial=True)
         self.manifest = container.manifest
         self.records = tuple(SourceRelations(self.files[artifact_path(
             a['artifact_type'], a['id'], self.configuration.id_prefix)],
@@ -110,10 +113,37 @@ class PartialReadSnapshot:
             'files': [{'path': p, 'sha256': sha256(raw).hexdigest()} for p, raw in self.files.items()]})
         self.verify_current()
 
+    def configuration_selection(self, requested=None):
+        """Resolve context for the selected scope, without adding query members."""
+        from ..configurations import resolve_configuration
+        selected = self.manifest['scope_descriptor']['configuration_id']
+        if requested is not None and selected is not None and requested != selected:
+            raise BundleError('bundle_partial_configuration_conflict', code=None, exit_code=3)
+        selected = selected if requested is None else requested
+        if selected is None:
+            return None
+        records = tuple(SourceRelations(d.content, path=d.path) for d in self.payload_model.documents)
+        return resolve_configuration(records, selected)
+
+    def require_records(self, records):
+        require({r.identity.id: r.source_bytes for r in records} ==
+                {r.identity.id: r.source_bytes for r in self.records}
+                and len(records) == len(self.records), 'partial_sources_mismatch')
+
+    @property
+    def details(self):
+        m = self.manifest
+        return dict(bundle_kind='partial', read_only=True, project_complete=False,
+            scope_descriptor=m['scope_descriptor'], boundary_references=m['boundary_references'],
+            bundle_model_root_sha256=m['bundle_model_root_sha256'],
+            origin_model_root_sha256=m['origin_model_root_sha256'], origin_root_verified=False)
+
     def preflight(self):
         require_project_read_preflight(self.boundary, self.configuration_bytes, MetadataPhases())
 
     def verify_current(self):
+        # Marker/root safety is not hidden by a simultaneous operational blocker.
+        _marker(self.boundary)
         self.preflight()
         try:
             if (_marker(self.boundary) != self.marker or _payload_paths(self.boundary) != set(self.files)

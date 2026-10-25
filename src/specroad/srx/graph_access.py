@@ -33,16 +33,18 @@ class GraphReadContext:
         object.__setattr__(self, "direction", direction)
         object.__setattr__(self, "types", "*" if selected == "*" else tuple(selected))
         object.__setattr__(self, "rule_id", rule_id)
+        object.__setattr__(self, '_direct', node['op'] != 'reachable')
 
     def neighbours(self, identifier):
-        return self.graph.neighbours(identifier, self.direction, self.types, meter=self.meter, pointer=self.at)
+        from ..runtime.control_points import complete_steps
+        return complete_steps(self.neighbours_steps(identifier, None))
 
     def candidate_roots(self, identifier):
         return self.graph.candidate_roots(self.roots, identifier, rule_id=self.rule_id, meter=self.meter, pointer=self.at)
 
     def neighbours_steps(self, identifier, controls):
         return self.graph.neighbours_steps(identifier, self.direction, self.types,
-            meter=self.meter, pointer=self.at, controls=controls)
+            meter=self.meter, pointer=self.at, controls=controls, include_boundaries=self._direct)
 
     def candidate_roots_steps(self, identifier, controls):
         return self.graph.candidate_roots_steps(self.roots, identifier, rule_id=self.rule_id,

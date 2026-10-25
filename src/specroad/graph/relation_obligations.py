@@ -25,15 +25,19 @@ class RelationObligations:
     policy_sha256: str
     profile_rule_ids: tuple
 
-    def __init__(self, sources, *, profile_rules=()):
+    def __init__(self, sources, *, profile_rules=(), partial=None):
         if isinstance(sources, (str, bytes, dict)):
             raise ModelError("source_relations_sequence_required")
         try:
             sources = tuple(sources)
         except TypeError as error:
             raise ModelError("source_relations_sequence_required") from error
-        refs = RelationReferences(sources)
-        index = RelationIndex(refs)
+        if partial is None:
+            index = RelationIndex(RelationReferences(sources))
+        else:
+            from ..bundles._partial_graph import PartialGraph
+            partial.require_records(sources)
+            index = PartialGraph(partial)
         rules = _profile_rules(profile_rules)
         checks = []
         for source in sorted(sources, key=lambda item: item.identity.id):

@@ -19,7 +19,8 @@ from ._semantic_classes import (
 def compare_semantic(before, after, *, before_configuration=None,
                      after_configuration=None, timing_bounds=None,
                      before_configuration_id=None, after_configuration_id=None,
-                     before_currentness=None, after_currentness=None):
+                     before_currentness=None, after_currentness=None,
+                     before_partial=None, after_partial=None):
     """Classify supplied sets; explicit policies never grant approval or writes.
 
     Configuration comparison requires both typed declarations. Timing bounds
@@ -42,7 +43,8 @@ def compare_semantic(before, after, *, before_configuration=None,
     right = {record.identity.id: record.data for record in after.records}
     configuration, configuration_inputs = _configuration_comparison(
         before_configuration, after_configuration, before, after)
-    variant = _variant_scope(before, after, before_configuration_id, after_configuration_id)
+    variant = _variant_scope(before, after, before_configuration_id, after_configuration_id,
+                             before_partial=before_partial, after_partial=after_partial)
     policy, timing = _timing_comparisons(timing_bounds, left, right)
     timing_by_id = {row['artifact_id']: row for row in timing}
     changes = base['changes']

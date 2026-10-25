@@ -4,7 +4,7 @@ from ..query import NormalizedQuery, query_records
 from ..srx import LoadedGraph
 
 
-def select_view(records, project, index, descriptor, query, configuration_id, fail):
+def select_view(records, project, index, descriptor, query, configuration_id, fail, *, partial=None):
     selected_scope = descriptor.data
     if configuration_id is not None:
         if selected_scope['configuration_id'] not in (None, configuration_id):
@@ -12,16 +12,20 @@ def select_view(records, project, index, descriptor, query, configuration_id, fa
         selected_scope['configuration_id'] = configuration_id
     selected_scope = ScopeDescriptor(selected_scope)
     selected_id = selected_scope.data['configuration_id']
-    if selected_id is not None and selected_id not in index:
+    if partial is not None:
+        effective = partial.configuration_selection(selected_id)
+        selected_id = None if effective is None else effective.binding['configuration_id']
+        selected_scope = ScopeDescriptor(partial.manifest['scope_descriptor'])
+    if partial is None and selected_id is not None and selected_id not in index:
         fail('view_configuration_provider_required', '/scope_descriptor/configuration_id')
-    page = query_records(records, query, project=project, configuration_id=selected_id)
+    page = query_records(records, query, project=project, configuration_id=selected_id, partial=partial)
     eligible_ids = None
     if selected_id is not None:
         # Resolve the same native configuration over all snapshot records.
         # The row filter must not discard applicable intermediate graph nodes.
         eligible = query_records(records, NormalizedQuery(limit=len(records)),
-            project=project, configuration_id=selected_id)
+            project=project, configuration_id=selected_id, partial=partial)
         eligible_ids = [item['id'] for item in eligible.data['items']]
-    graph = LoadedGraph(records, rule_id='document-view', artifact_ids=eligible_ids)
+    graph = LoadedGraph(records, rule_id='document-view', artifact_ids=eligible_ids, partial=partial)
 
     return selected_scope, page, graph

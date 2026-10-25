@@ -38,6 +38,34 @@ def command_example_project(root, command_id):
     if command_id == 'configuration.evaluate':
         from .records import record_value
         return inspection_project(root, artifacts=[record_value('configuration')])
+    if command_id in ('render', 'view.render'):
+        from .records import record_value
+        from .targets import SCOPE
+        return inspection_project(root, artifacts=[record_value('document')] if command_id == 'render' else
+            [record_value('view', scope_descriptor=SCOPE, columns=[{
+                'source': {'kind': 'artifact_field', 'pointer': '/id'}, 'heading': 'ID',
+                'data_type': 'string', 'format': 'plain', 'missing': 'error'}],
+                relation_projections=[], grouping=[], sort=[])])
+    if command_id == 'diagram':
+        return inspection_project(root, artifacts=[domain_value('requirement')])
+    if command_id == 'validate':
+        from specroad.bundles import prepare_partial_bundle
+        from specroad.bundles.extraction import extract_bundle
+        from specroad.graph.scope_descriptors import ScopeDescriptor
+        from .scopes import descriptor
+        origin = root / 'origin'
+        release = domain_value('release')
+        inspection_project(origin, artifacts=[release])
+        bundle = prepare_partial_bundle(origin, ScopeDescriptor(descriptor('release',
+            {'release_id': release['id']}, boundary_policy='partial')))
+        target = root / 'selected'
+        extract_bundle(bundle.source_bytes, target)
+        # The example discovers root; publish only the actual extracted fixture files.
+        import shutil
+        for path in target.iterdir():
+            shutil.move(str(path), root / path.name)
+        shutil.rmtree(origin); target.rmdir()
+        return None
     if command_id == 'export':
         model = inspection_project(root)
         put(root, 'mappings/export.json', canonical_json_bytes({

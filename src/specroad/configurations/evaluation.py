@@ -85,15 +85,25 @@ class ConfigurationEvaluation:
     """Owned complete result within the declared stored-relation scope."""
     _encoded: bytes
 
-    def __init__(self, records, configuration_id):
+    def __init__(self, records, configuration_id, *, partial=None):
         if type(records) not in (list, tuple):
             raise ModelError('configuration_inventory_required')
         if any(type(record) is not SourceRelations for record in records):
             raise ModelError('configuration_source_required')
         records = tuple(sorted((SourceRelations(record.source_bytes, path=record.path) for record in records),
                                key=lambda record: record.identity.id.encode('utf-8')))
-        effective, decisions = _configuration_decisions(records, configuration_id)
-        index = RelationIndex(RelationReferences(records))
+        if partial is None:
+            effective, decisions = _configuration_decisions(records, configuration_id)
+            index = RelationIndex(RelationReferences(records))
+        else:
+            from ..bundles._partial_graph import PartialGraph
+            partial.require_records(records)
+            effective = partial.configuration_selection(configuration_id)
+            if effective is None:
+                raise ConfigurationEvaluationError(ModelError('configuration_not_found'))
+            decisions = tuple(evaluate_applicability(record, effective, require_configuration=True)
+                              for record in records)
+            index = PartialGraph(partial).local
         validate_hierarchies(index.references)
         applicable = {item.artifact_id for item in decisions if item.status == 'applicable'}
         excluded = {item.artifact_id for item in decisions if item.status == 'excluded'}
@@ -105,7 +115,7 @@ class ConfigurationEvaluation:
                                 for item in sorted(decisions, key=lambda item: item.artifact_id)],
                 'inconsistent_dependencies': conflicts, 'consistent': not conflicts,
                 'dependency_scope': 'stored_strong_relations', 'source_count': len(records),
-                'relation_count': len(index.references.relations)}
+                'relation_count': sum(len(r.relations) for r in records)}
         object.__setattr__(self, '_encoded', canonical_json_bytes(data))
 
     @property
@@ -117,5 +127,5 @@ class ConfigurationEvaluation:
         return 'supplied_configuration_applicability_and_required_relations'
 
 
-def evaluate_configuration(records, configuration_id):
-    return ConfigurationEvaluation(records, configuration_id)
+def evaluate_configuration(records, configuration_id, *, partial=None):
+    return ConfigurationEvaluation(records, configuration_id, partial=partial)

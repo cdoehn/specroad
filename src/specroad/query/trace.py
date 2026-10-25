@@ -1,6 +1,8 @@
 """Directed depth-bounded trace over a fresh, complete project observation."""
 from ..cli.command_errors import CommandUsageError
 from ..cli.result_schemas import validate_result_document
+from ..bundles.errors import BundleError
+from ..srx.errors import SrxError
 from ..cli.results import CommandResult, FailureKind, OperationFailure
 from ..diagnostics import Diagnostic, from_model_error
 from ..graph._trace_frontier import _TraceFrontier
@@ -42,6 +44,12 @@ def _trace_steps(root, artifact_id, *, direction, depth, currentness=None, confi
         if (type(direction) is not str or direction not in ('in', 'out', 'both')
                 or type(depth) is not int or depth < 0):
             raise OperationFailure(FailureKind.USAGE, 'Trace requires a direction and nonnegative integer depth.')
+        from ..bundles._partial_read import partial_read_snapshot
+        partial = partial_read_snapshot(root)
+        if partial is not None:
+            from ._partial_commands import trace_steps
+            return (yield from trace_steps(partial, artifact_id, direction=direction, depth=depth,
+                currentness=currentness, configuration_id=configuration_id, details=details))
         source = ProjectSource(root)
         project = {'project_root': str(source.boundary.root), 'project_id': source.configuration.project_id}
         _preflight(source)
@@ -64,6 +72,9 @@ def _trace_steps(root, artifact_id, *, direction, depth, currentness=None, confi
         _verify_current(source, observed.binding)
         validate_result_document('artifact-trace-v1', payload)
         return CommandResult('trace', result=payload, project=project, details=details)
+    except (BundleError, SrxError) as error:
+        from ._read_errors import read_failure
+        return read_failure('trace', error, project, details)
     except OperationFailure as error:
         return CommandResult.failed('trace', error.kind, project=project,
             diagnostics=(Diagnostic('CORE_' + error.kind.name, 'error', 'preflight', str(error)),),

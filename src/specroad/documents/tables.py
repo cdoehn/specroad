@@ -1,4 +1,6 @@
 """Snapshot-bound query and literal table data, without templates or rendering."""
+from ._read_model import require_read_model, read_scope, read_root, partial_observation, local_references
+
 from dataclasses import dataclass
 from hashlib import sha256
 
@@ -51,8 +53,7 @@ def resolve_table_block(model, block_id):
     """
     from ..changes.target_model import TargetModel, _default_scope
     projection = TableProjection(TableBlockError)
-    if type(model) is not TargetModel:
-        raise ModelError('document_target_model_required')
+    require_read_model(model)
     if type(block_id) is not str:
         raise TableBlockError('content_block_id_required', pointer='/block_id')
     model = model.snapshot()
@@ -66,7 +67,7 @@ def resolve_table_block(model, block_id):
     block = ContentBlock(source.source_bytes, path=source.path)
     if block.block_kind not in ('query', 'table'):
         projection._fail('table_content_block_required', source, '/block_kind')
-    RelationReferences(records)
+    local_references(model, records)
     payload = block.payload; view = None; view_bytes = None
     query = None; descriptor = None; query_page = None; query_binding = None
     configuration_id = None; column_source = source
@@ -93,7 +94,7 @@ def resolve_table_block(model, block_id):
     if query is None:
         rows = projection._literal_rows(payload, columns, source)
     else:
-        page = query_records(records, query, project=model.configuration.data, configuration_id=configuration_id)
+        page = query_records(records, query, project=model.configuration.data, configuration_id=configuration_id, partial=partial_observation(model))
         query_page = page.data
         query_binding = {'query': query.data, 'query_sha256': page.query_sha256,
             'inputs_sha256': page.inputs_sha256, 'source_count': page.source_count,
@@ -112,8 +113,8 @@ def resolve_table_block(model, block_id):
     if not rows and empty_policy == 'error':
         projection._fail('table_query_empty', source, '/payload/empty_policy')
     data = {'format_version': 1, 'kind': 'table-block-data-v1', 'project_id': model.binding.project_id,
-        'scope_descriptor': _default_scope(),
-        'model_root_sha256': model.manifest(model.artifacts, _default_scope()).sha256,
+        'scope_descriptor': read_scope(model),
+        'model_root_sha256': read_root(model),
         'input_sha256': model._sources_sha256, 'block': block.binding, 'view': view,
         'columns': column_values, 'rows': rows, 'row_count': len(rows),
         'row_source': 'view' if view is not None else 'query' if query is not None else 'literal',

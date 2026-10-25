@@ -461,7 +461,11 @@ def builtin_registry() -> CommandRegistry:
             diagnostic_codes=('SRV167', 'CORE_MODEL', 'CORE_SECURITY', 'CORE_CONFLICT'),
             work=WorkContract('environment_metadata', ('runtime_identity', 'distribution_metadata'))),
     ))
-    readers = {'artifact.show', 'query', 'trace', 'why', 'impact', 'diff', 'configuration.evaluate', 'roadmap.explain', 'export', 'bundle.verify'}
+    from .document_commands import read_commands
+    from .metadata_commands import metadata_commands
+    commands += read_commands()
+    commands += metadata_commands()
+    readers = {'artifact.show', 'query', 'trace', 'why', 'impact', 'diff', 'configuration.evaluate', 'roadmap.explain', 'export', 'bundle.verify', 'render', 'view.render', 'diagram'}
     return CommandRegistry(tuple(replace(command, options=command.options + _read_runtime_options(),
         budget_policy_version='runtime-budget-v2') if command.command_id in readers else command
         for command in commands))

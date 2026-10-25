@@ -34,11 +34,13 @@ def _roadmap_sources(model):
     return values, bindings
 
 
-def _roadmap_links(values, bindings):
+def _roadmap_links(values, bindings, *, partial=False):
     """Select direct stored edges while preserving source direction and pointers."""
     links = []
     for key, value in sorted(values.items()):
         for position, relation in enumerate(value['relations']):
+            if partial and relation['target'] not in values:
+                continue
             kind, target = relation['type'], values[relation['target']]
             include = (kind in ('scheduled_for', 'mitigates') or
                 (kind == 'part_of' and value['artifact_type'] in ('milestone', 'task')) or

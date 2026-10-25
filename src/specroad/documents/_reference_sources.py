@@ -1,4 +1,6 @@
 """Native source/edge/target checks, independent of presentation and ownership."""
+from ._read_model import require_read_model, read_scope, read_root, partial_observation, local_references
+
 from ..graph.references import RelationReferences
 from ..graph.relations import SourceRelations
 from ..model.domain_schemas import DOMAIN_TYPES
@@ -10,8 +12,7 @@ from .blocks import ContentBlock
 
 def _resolve_reference_sources(model, block_id, error_type):
     from ..changes.target_model import TargetModel
-    if type(model) is not TargetModel:
-        raise ModelError('document_target_model_required')
+    require_read_model(model)
     if type(block_id) is not str:
         raise error_type('content_block_id_required', pointer='/block_id')
     model = model.snapshot()
@@ -25,10 +26,12 @@ def _resolve_reference_sources(model, block_id, error_type):
     block = ContentBlock(source.source_bytes, path=source.path)
     if block.block_kind != 'artifact_ref':
         raise error_type('artifact_reference_block_required', path=source.path, pointer='/block_kind')
-    RelationReferences(records)
+    local_references(model, records)
     position, relation = next((position, relation) for position, relation in enumerate(source.relations)
                               if relation.type == 'references')
-    target = index[relation.target]
+    target = index.get(relation.target)
+    if target is None:
+        raise error_type('artifact_reference_target_not_loaded', path=source.path, pointer='/relations')
     reader = DomainArtifact if target.identity.artifact_type in DOMAIN_TYPES else RecordArtifact
     target_record = reader(target.source_bytes, path=target.path)
     value = target_record.data

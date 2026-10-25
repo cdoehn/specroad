@@ -31,7 +31,7 @@ from .production import production_gates, formal_findings, profile_applies
 
 
 def validate_model(documents, *, profile=None, selected_ids=None, gates=(), resources=None,
-                   configuration_id=None, document_role_scope=None, currentness=None):
+                   configuration_id=None, document_role_scope=None, currentness=None, partial=None):
     """Validate all loaded documents, or a conservatively expanded selection.
 
     Parsing/schema/reference checks inspect the ENTIRE supplied model, even for
@@ -58,13 +58,20 @@ def validate_model(documents, *, profile=None, selected_ids=None, gates=(), reso
     if len({d.path for d in documents}) != len(documents):
         raise ModelError("duplicate_validation_source")
     documents = tuple(sorted(documents, key=lambda d: d.path))
+    if partial is not None:
+        from ..bundles._partial_read import PartialReadSnapshot
+        if type(partial) is not PartialReadSnapshot or document_role_scope is not None:
+            raise ModelError('validation_partial_observation_required')
+        partial.require_records(tuple(SourceRelations(d.content, path=d.path) for d in documents))
+        partial.verify_current()
     configuration = None
     if configuration_id is not None:
         from ..configurations.values import resolve_configuration
         from ..configurations.evaluation import ConfigurationEvaluationError
         try:
-            configuration = resolve_configuration(
+            configuration = (resolve_configuration(
                 tuple(SourceRelations(d.content, path=d.path) for d in documents), configuration_id)
+                if partial is None else partial.configuration_selection(configuration_id))
         except ModelError as error:
             raise ConfigurationEvaluationError(error) from error
     if profile is not None and type(profile) is not EffectiveProfile:
@@ -95,6 +102,7 @@ def validate_model(documents, *, profile=None, selected_ids=None, gates=(), reso
             tuple(SourceRelations(d.content, path=d.path) for d in documents),
             None if resources is None else resources.configuration, configuration_id)
     basis = canonical_json_sha256({"version": VALIDATION_VERSION,
+        **({'partial_observation_sha256': partial.observation_sha256} if partial is not None else {}),
         **({'currentness_sha256': observed['sha256']} if observed is not None else {}),
         **({"document_role_scope": document_role_scope} if document_role_scope is not None else {}),
         **({"resources_sha256": resources.sha256} if resources is not None else {}),
@@ -118,13 +126,16 @@ def validate_model(documents, *, profile=None, selected_ids=None, gates=(), reso
         stages.append({"stage": name, "status": status, "checked_ids": list(ids), "diagnostics": diagnostics})
 
     def report():
+        if partial is not None:
+            partial.verify_current()
         failed = any(s["status"] == "failed" for s in stages)
         complete = all(s["status"] in ("passed", "failed", "not_applicable") for s in stages)
         return ValidationReport._create({"format_version": VALIDATION_VERSION,
             **({'currentness': observed} if observed is not None else {}),
             **({"document_role_scope": document_role_scope} if document_role_scope is not None else {}),
             **({'selected_configuration': configuration.binding} if configuration is not None else {}),
-            "input_sha256": basis, "validation_scope": "loaded_model" if selected is None else "dependency_expanded_loaded_scope",
+            "input_sha256": basis, "validation_scope": ("partial_bundle_artifacts" if partial is not None else
+                "loaded_model" if selected is None else "dependency_expanded_loaded_scope"),
             "source_count": len(documents), "structural_scope": "all_supplied_documents",
             "source_bindings": _document_bindings(documents),
             "identified_ids": sorted({v["id"] for _, v in parsed if type(v.get("id")) is str and v["id"]}),
@@ -166,14 +177,20 @@ def validate_model(documents, *, profile=None, selected_ids=None, gates=(), reso
         stage("model_dependencies", status="blocked")
         return report()
     records = tuple(sorted(records, key=lambda r: r.identity.id))
-    reference_issues = _reference_issues(records)
+    reference_issues = _reference_issues(records) if partial is None else []
     if reference_issues:
         stage("identities_references", reference_issues)
         stage("graph_and_semantics", status="blocked")
         return report()
     try:
-        references = RelationReferences(records)
-        foreign = _foreign_edges(records, references)
+        if partial is None:
+            references = RelationReferences(records)
+            foreign = _foreign_edges(records, references)
+        else:
+            from ..bundles._partial_graph import PartialGraph
+            from ._partial_inputs import partial_foreign_edges
+            references = PartialGraph(partial).references
+            foreign = partial_foreign_edges(records, partial)
         stage("identities_references", ids=tuple(r.identity.id for r in records))
     except ModelError as error:
         stage("identities_references", [_issue(error)])
@@ -247,7 +264,7 @@ def validate_model(documents, *, profile=None, selected_ids=None, gates=(), reso
                                 for d in check_composed_fields(profile, index[identity].data)["diagnostics"])
         stage("profiles", field_errors, ids=checked)
     rules = () if profile is None else profile.minimum_relation_rules()
-    obligations = RelationObligations(records, profile_rules=rules)
+    obligations = RelationObligations(records, profile_rules=rules, partial=partial)
     stage("minimum_relations", [d for d in obligations.diagnostics if d["artifact_id"] in visited], ids=checked)
     # The local schema already checked maturity, revision/actor/time value types
     # and special-state couplings. It did NOT verify historical authorization.

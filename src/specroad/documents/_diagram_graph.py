@@ -3,6 +3,8 @@
 This module knows the selected model scope, never Mermaid/DOT source syntax.
 Its result is owned by the public DiagramData factory after canonical encoding.
 """
+from ._read_model import require_read_model, read_scope, read_root, partial_observation, local_references
+
 from collections import deque
 from hashlib import sha256
 
@@ -21,8 +23,7 @@ def diagram_graph_data(model, diagram_kind, *, start_id, direction, max_depth,
                        max_nodes, max_edges, artifact_ids, relation_types, error_type):
     """Resolve the existing graph contract with the caller's public error class."""
     from ..changes.target_model import TargetModel, _default_scope
-    if type(model) is not TargetModel:
-        raise ModelError('document_target_model_required')
+    require_read_model(model)
     if type(diagram_kind) is not str or diagram_kind not in ('trace', 'architecture', 'release'):
         raise error_type('diagram_kind_not_supported', pointer='/diagram_kind', exit_code=2)
     if type(start_id) is not str:
@@ -57,9 +58,11 @@ def diagram_graph_data(model, diagram_kind, *, start_id, direction, max_depth,
     elif diagram_kind == 'release':
         if by_id[start_id].identity.artifact_type != 'release':
             raise error_type('diagram_release_start_required', pointer='/start_id')
+        partial = partial_observation(model)
         descriptor = ScopeDescriptor({**_default_scope(), 'scope_kind': 'release',
-                                      'selector': {'release_id': start_id}})
-        seeds = resolve_scope_seeds(descriptor, ScopeSeedInputs(model.configuration, records))
+            'selector': {'release_id': start_id}, 'boundary_policy': 'closed' if partial is None else 'partial'})
+        seeds = resolve_scope_seeds(descriptor, ScopeSeedInputs(model.configuration, records,
+            partial_descriptor=None if partial is None else ScopeDescriptor(partial.manifest['scope_descriptor'])))
         eligible = set(seeds.artifact_ids)
         scope = {'kind': 'release_seed_relations', 'descriptor': descriptor.data,
                  'seed_inputs_sha256': seeds.inputs_sha256}
@@ -74,7 +77,7 @@ def diagram_graph_data(model, diagram_kind, *, start_id, direction, max_depth,
         eligible = set(artifact_ids)
     if start_id not in eligible:
         raise error_type('diagram_start_outside_scope', pointer='/start_id')
-    graph = LoadedGraph(records, rule_id='document-diagram', artifact_ids=sorted(eligible))
+    graph = LoadedGraph(records, rule_id='document-diagram', artifact_ids=sorted(eligible), partial=partial_observation(model))
     distances, edges = {start_id: 0}, {}
     pending = deque([start_id])
     while pending:
@@ -113,7 +116,7 @@ def diagram_graph_data(model, diagram_kind, *, start_id, direction, max_depth,
         'generated': True, 'normative': False, 'tool_version': __version__,
         'schema_version': MODEL_SCHEMA_VERSION, 'profiles': list(model.profile.profile_chain),
         'project_id': model.binding.project_id,
-        'model_root_sha256': model.manifest(model.artifacts, _default_scope()).sha256,
+        'model_root_sha256': read_root(model),
         'input_sha256': model._sources_sha256,
         'selection': {'start_id': start_id, 'direction': direction, 'max_depth': max_depth,
             'max_nodes': max_nodes, 'max_edges': max_edges, 'scope': scope,

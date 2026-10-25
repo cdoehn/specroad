@@ -23,7 +23,7 @@ class RelationReviewStatuses:
     _source_ids: tuple
     _diagnostics: tuple
 
-    def __init__(self, sources):
+    def __init__(self, sources, *, partial=None):
         if isinstance(sources, (str, bytes, dict)):
             raise ModelError('source_relations_sequence_required')
         try:
@@ -51,8 +51,27 @@ class RelationReviewStatuses:
             for relation in source.relations:
                 for error in _relation_identity_errors(relation, seen, external):
                     raise error
-        observations = tuple(_status(source, relation, index,
-                histories.get(relation.identity.id, ()))
+        endpoints, outside = {}, set()
+        if partial is not None:
+            from ..bundles._partial_read import PartialReadSnapshot
+            from ..bundles.boundary_context import read_boundary_context
+            if (type(partial) is not PartialReadSnapshot or
+                    {r.identity.id: r.source_bytes for r in records} !=
+                    {r.identity.id: r.source_bytes for r in partial.records}):
+                raise ModelError('partial_review_sources_mismatch')
+            endpoints = read_boundary_context(partial.container, partial.payload_model)
+            outside = {b.data['relation_id'] for b in partial.references.boundary_references}
+
+        def observe(source, relation):
+            history = histories.get(relation.identity.id, ())
+            if relation.identity.id in outside:
+                if not history:
+                    return RelationReviewStatus(source.identity.id, relation.identity.id,
+                        relation.target, 'unreviewed', None, None, (), ())
+                return _status(source, relation, {**index, relation.target: endpoints[relation.target]}, history)
+            return _status(source, relation, index, history)
+
+        observations = tuple(observe(source, relation)
             for source in ordered
             for relation in sorted(source.relations, key=lambda edge: edge.identity.id))
         object.__setattr__(self, 'statuses', observations)

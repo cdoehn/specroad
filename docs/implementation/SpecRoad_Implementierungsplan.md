@@ -28,10 +28,10 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ```yaml
 plan_revision: 22
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 631
-last_completed_plan_commit: 15.f.W
-next_plan_commit: 15.f.R
-last_completed_numbered_bundle: 477
+implementation_plan_commits_completed: 632
+last_completed_plan_commit: 15.f.R
+next_plan_commit: 15.f.C
+last_completed_numbered_bundle: 478
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -26285,7 +26285,7 @@ oder Produktabnahmen werden aus der geänderten Spezifikationshashbindung
 abgeleitet. Die kommenden Verhaltenstests müssen die fachlichen Resultate
 und Sicherheitsgrenzen prüfen, nicht Wortlaut oder Markdown dieses Dokuments.
 
-- [ ] **15.f.R** · Position **632/900** · Voraussetzung: `15.f.W`.
+- [x] **15.f.R** · Position **632/900** · Voraussetzung: `15.f.W`.
 **Exakte Commit-Message:** `15.f.R feat(bundle): Read-only-Befehle auf Partials vervollständigen`
 
 **Vervollständigung:** Jeder normative Write auf Partial wird mit Code 7 abgewiesen.
@@ -26594,6 +26594,273 @@ Grenzverweis und die Planabnahmeüberschriften werden vereinheitlicht.
 Mitglieder, Relationszählung, Traversierung, Fehler, Status und Seiteneffekte
 aus W/R ändern sich nicht. Nach erfolgreichem C-Gate bleibt die Produktposition
 631/900 und 15.f.R offen; nur die OFF-PLAN-Marker und Bundle 477 sind abgeschlossen.
+
+
+**Umsetzungs- und Übergabenachweis – Bundle 478 (R), 25. Oktober 2026.**
+
+**Bestätigte Basis.** Result `specroad-apply_Result_155231_1025_8767bb.zip`,
+SHA-256 `6c87f43477bdbd5f55d032f72f19a38ace66891cd3ee537799f01dbe18867c21`,
+bestätigt den sauberen Apply-Commit `632417650c00f059b2ae8178e8d170412af25b17`.
+Root-Anleitung, Kontext, Umgebung, Manifest, Run-/Ausführungslogs und alle
+2.248 Snapshotdateien wurden gegen Blob-IDs, Größen, Modi und vollständige
+Bytes geprüft. Native Resultprüfung, konsistente Zustandserfassung und
+Vierfachbindung stimmen. Die drei tatsächlich erfolgreichen OFF-PLAN-Zustände
+von Bundle 477 sind mit ihren berichteten Einzeloutcomes geprüft:
+
+- `PARTIAL-READ-GRAPH.W`: Commit `2d23566e84a334efb24354c3df1b65b592e5de3d`, Sequenz 181, Gruppe 1/3, 7005 bestandene Tests. Auswahlbindung `c735003515e10020b532285ec6f989e2fc7b92c0232c8c620ad306e146b892b9`; Auswahlbericht-SHA `d1d305071169647990cd082374da7e10c50814259da915e85fadcc18ea583812`; Einzeloutcomes-SHA `e3b1e807d351b8c79b7ded717cf6c6c3f29fd85594ec7e5578f81dd0591c62c1`.
+- `PARTIAL-READ-GRAPH.R`: Commit `fb1faeb63f4ee87a90a9cf887b671d3dd24b74bd`, Sequenz 182, Gruppe 2/3, 7007 bestandene Tests. Auswahlbindung `a360d2ae9a58f78b0f058665673883406a261d40a07f4c51db732b300cb0b3e9`; Auswahlbericht-SHA `0e4cc270614cf763a59a7827f4d3890311deaba7a550750c81c4f3a2dd77b64c`; Einzeloutcomes-SHA `d6ebebfdfc26de63d54be6227b38c792961e028f7a095343f9030b430aef90cb`.
+- `PARTIAL-READ-GRAPH.C`: Commit `632417650c00f059b2ae8178e8d170412af25b17`, Sequenz 183, Gruppe 0/3, 7007 bestandene Tests. Auswahlbindung `f91cacedd34f99ab50948f96b9d49cc6a2e456dbc9cf03d24bf61c5b1e40fea5`; Auswahlbericht-SHA `d4e87c42518fbe4326c35cb0f140179bb0cd029293e6c67e447215186230df04`; Einzeloutcomes-SHA `c32565e1da4d80939c1d6109873f38df6d69f4f9beef6dd245114b434f4828d0`.
+
+Dies bestätigt die dokumentierte Klärung PARTIAL-READ-GRAPH, keine Umsetzung
+von 15.f.R und keinen Vollsuite-/Releaseerfolg. Der bestätigte Planstand bleibt
+vor diesem Apply 631/900, zuletzt 15.f.W, nächstens 15.f.R, Bundle 477.
+Dev-Historie und Index wurden nicht geändert; Apply wurde nur gelesen.
+SPECROAD-DECISION-1 ist ausdrücklich enthalten. Die bereits verbindliche
+Spezifikation 0.2.27/E.3.3 wird umgesetzt; es erfolgt keine neue Klärung.
+Die Spezifikation bleibt bytegleich (SHA-256
+`07a35f089e83d27045e76a57aa5b3d5d0061dd0556543b4765da5f114e1ae637`).
+
+**Regulärer R-Zustand.** Die verifizierte Closure M ist nun die gemeinsame
+Population für Query, Trace, Why, Impact und lokale semantische Vergleiche.
+Originale schwache Außenkanten zählen in unmittelbaren Relationsfiltern und
+SRX has/count. Ziel-ID und Zieltyp werden beobachtet; ein Außenziel wird weder
+Abfrageobjekt noch Traversierungsknoten oder SRX-Prädikatsobjekt. Lokale
+Traversierung verwendet ausschließlich Kanten mit beiden Endpunkten in M.
+Query behält seine sechs Ergebnisfelder und ursprüngliche Filter-, Sortier-,
+Typfehler- und Pagingverträge. Konfigurationskontext und tatsächliche
+Review-Endpunktprüfungen behalten ihre Fachrolle außerhalb der Population.
+Diff bindet beide explizit gelieferten Mengen; Bestandsdifferenzen behaupten
+keine Löschung im vollständigen Ursprung.
+
+Ein gesondertes lesendes Dokumentmodell ist kein schreibfähiges TargetModel.
+Es versorgt explizites Dokumentrendering, gespeicherte Views, Tabellen,
+Referenzen, Includes, Diagramme sowie gespeicherte Built-in-Traceability und
+Roadmap mit M und der nativen Teilmodellwurzel. Die vollständige
+Primärdokumentauswahl, Verification, Currentness und Readiness erhalten ihre
+bisherigen Input-/Providerschranken. Eine lokale Abfrage erfindet keine
+Vollprojektbeobachtung, Evidence oder Freigabe. Neue registrierte Adapter für
+Render, View, Diagramm, Validation und Lock-/Recovery-Metadaten verwenden die
+vorhandenen nativen Dienste und maschinenlesbaren Resultschemas.
+
+`validate --partial` und `project inspect` prüfen Modellmitglieder mit genau
+gebundenen Kontextreferenzen und behalten ihre spezifischen Schemas. Fehlende
+Pflichtprüfdienste bleiben unvollständig mit Code 5; ein geschlossenes
+Release-Teilmodell ohne solche fehlenden Inputs ist tatsächlich erfolgreich
+prüfbar. Der Erfolg ist keine Ursprungs- oder Schreibfreigabe. Metadatendiagnosen
+bleiben selbst bei offenem Journal zugänglich und melden dessen Zustand.
+
+Der gemeinsame Commandeingang und die bestehenden Root-/Writergrenzen weisen
+normative Änderungen sowie nicht erlaubte Projektbefehle auf Partials mit
+Code 7 ab. Bestehende vollständige ProjectSource-/TargetModel-Verträge bleiben
+streng. Vor Ergebnislieferung werden Marker, Sicherheit, Betriebszustand,
+Mitgliedschaft und sämtliche beobachteten Payload-/Kontextbytes erneut geprüft.
+Marker-/Pfadverletzungen bleiben vorrangig Code 7; Journale Code 5, geänderte
+Inputs Code 6, fehlende starke Ziele oder unpassende Boundaries Code 3.
+Alle erfolgreichen fachlichen Partial-Leseergebnisse binden explizit Scope,
+Boundaries und Teilmodellwurzel; die Ursprungswurzel bleibt ungeprüfte Provenienz.
+
+**Entwicklungsnachweis.** Der abschließende gezielte Lauf besteht mit
+**4929/4929 Verhaltenstests** aus
+**120 vollständigen Testdateien**, acht parallelen Workern unter CPython 3.14.4,
+in **989.76 s**, beobachtetem Prozessende 0 und ausschließlich
+`passed`-Outcomes. Die vollständige Collection/Katalogprüfung ist gültig:
+**21.191** aktive Identitäten, **0** Testkörper. `full_suite_passed=null`.
+**172** neue Identitäten sind ausschließlich mit Nummern **21023–21194**
+angehängt; alle bisherigen Nummern einschließlich vier historisch
+stillgelegter Tests bleiben erhalten. Kein bestehender Test wurde entfernt
+oder sein erwartetes Fachverhalten abgeschwächt. Die zwei geschlossenen CLI-
+Befehlsmengen werden exakt um die sechs nun implementierten Reader ergänzt;
+die Capability-Ausschlussliste erhält die tatsächlich implementierte Validation;
+die Schemafabrikliste ergänzt exakt die vier neuen Ergebnisverträge;
+die Ausführungsfixtures prüfen deren tatsächliche maschinenlesbare Ergebnisse. `SR-TC-0484` und das
+synthetische Fixture benennen die neuen Verhaltensfälle; der getrennte
+C-Schritt bleibt offen. Keine Dokumentations- oder Darstellungsoracles,
+kein serieller Testlauf, kein Dev-Volltest und kein CI-Start.
+Quellidentität: `ba26b0e8921157a4c5f8789ebcbc4c0e184685d07b62e8f401f24a9541bcbe88`.
+Katalog-SHA: `a1589e1bab0d3e1681f14e58df7136ad7c15d6cebd35c417e8178d87cfa162b8`.
+Auswahlbericht-SHA: `d526f33bfca1d4786b2551f4c24c57690b76dd33fb7ea415f336a2b48996e164`.
+Einzeloutcomes-SHA: `118ca2b4aa8908774571f5a517edcf3e81cd8f9d46c198dd4acb109bd2472325`.
+Ausgewählte vollständige Testdateien:
+
+- `tests/test_apply_rotation.py`
+- `tests/test_artifact_show.py`
+- `tests/test_artifact_show_right.py`
+- `tests/test_bootstrap.py`
+- `tests/test_boundary_references.py`
+- `tests/test_builtin_document_views.py`
+- `tests/test_builtin_document_views_right.py`
+- `tests/test_bundle_extraction.py`
+- `tests/test_bundle_extraction_right.py`
+- `tests/test_bundle_verification.py`
+- `tests/test_bundle_verification_right.py`
+- `tests/test_capabilities.py`
+- `tests/test_capability_scope.py`
+- `tests/test_catalog_check.py`
+- `tests/test_catalog_check_right.py`
+- `tests/test_cli.py`
+- `tests/test_configuration_applicability.py`
+- `tests/test_configuration_applicability_right.py`
+- `tests/test_configuration_diff.py`
+- `tests/test_configuration_diff_right.py`
+- `tests/test_configuration_evaluation.py`
+- `tests/test_configuration_evaluation_right.py`
+- `tests/test_description.py`
+- `tests/test_document_composition_preservation.py`
+- `tests/test_document_composition_preservation_right.py`
+- `tests/test_document_diagrams.py`
+- `tests/test_document_diagrams_right.py`
+- `tests/test_document_includes.py`
+- `tests/test_document_includes_right.py`
+- `tests/test_document_references.py`
+- `tests/test_document_references_right.py`
+- `tests/test_document_rendering_behavior.py`
+- `tests/test_document_rendering_right.py`
+- `tests/test_document_structure.py`
+- `tests/test_document_structure_right.py`
+- `tests/test_document_tables.py`
+- `tests/test_document_tables_right.py`
+- `tests/test_document_view_variants.py`
+- `tests/test_document_view_variants_right.py`
+- `tests/test_document_views.py`
+- `tests/test_document_views_right.py`
+- `tests/test_environment_check.py`
+- `tests/test_environment_check_right.py`
+- `tests/test_metadata.py`
+- `tests/test_model_validation.py`
+- `tests/test_model_validation_right.py`
+- `tests/test_options.py`
+- `tests/test_partial_bundle.py`
+- `tests/test_partial_bundle_right.py`
+- `tests/test_partial_read_commands.py`
+- `tests/test_partial_read_commands_right.py`
+- `tests/test_partial_read_consumers.py`
+- `tests/test_planning_builtin_views.py`
+- `tests/test_planning_relations.py`
+- `tests/test_planning_relations_right.py`
+- `tests/test_preflight_metadata.py`
+- `tests/test_preflight_profiles.py`
+- `tests/test_product_bundle.py`
+- `tests/test_product_bundle_right.py`
+- `tests/test_production_validation.py`
+- `tests/test_production_validation_right.py`
+- `tests/test_project_bundle.py`
+- `tests/test_project_bundle_right.py`
+- `tests/test_project_inspection.py`
+- `tests/test_project_inspection_right.py`
+- `tests/test_query_changed_only.py`
+- `tests/test_query_changed_only_right.py`
+- `tests/test_query_comparison_sources.py`
+- `tests/test_query_comparison_sources_right.py`
+- `tests/test_query_full_text.py`
+- `tests/test_query_full_text_right.py`
+- `tests/test_query_git_source.py`
+- `tests/test_query_git_source_right.py`
+- `tests/test_query_impact.py`
+- `tests/test_query_impact_right.py`
+- `tests/test_query_paging.py`
+- `tests/test_query_paging_right.py`
+- `tests/test_query_read_integration.py`
+- `tests/test_query_read_integration_right.py`
+- `tests/test_query_selection.py`
+- `tests/test_query_selection_right.py`
+- `tests/test_query_semantic_diff.py`
+- `tests/test_query_semantic_diff_right.py`
+- `tests/test_query_trace.py`
+- `tests/test_query_trace_right.py`
+- `tests/test_query_why.py`
+- `tests/test_query_why_right.py`
+- `tests/test_read_only_validation.py`
+- `tests/test_read_only_validation_right.py`
+- `tests/test_registry.py`
+- `tests/test_relation_index.py`
+- `tests/test_relation_index_right.py`
+- `tests/test_relation_obligations.py`
+- `tests/test_relation_obligations_right.py`
+- `tests/test_relation_review_status.py`
+- `tests/test_relation_review_status_right.py`
+- `tests/test_requests.py`
+- `tests/test_resource_inventory.py`
+- `tests/test_resource_inventory_right.py`
+- `tests/test_results.py`
+- `tests/test_roadmap_projection.py`
+- `tests/test_roadmap_projection_right.py`
+- `tests/test_runtime_consumption.py`
+- `tests/test_runtime_consumption_right.py`
+- `tests/test_runtime_resource_policy.py`
+- `tests/test_runtime_resource_policy_right.py`
+- `tests/test_schema_catalog.py`
+- `tests/test_schema_catalog_change_plan.py`
+- `tests/test_schema_catalog_robustness.py`
+- `tests/test_srx_context.py`
+- `tests/test_srx_context_right.py`
+- `tests/test_srx_graph.py`
+- `tests/test_srx_graph_right.py`
+- `tests/test_transaction_preflight.py`
+- `tests/test_transaction_preflight_right.py`
+- `tests/test_validation_diagnostics.py`
+- `tests/test_validation_diagnostics_right.py`
+- `tests/test_validation_missing_references.py`
+- `tests/test_validation_reference_sets.py`
+- `tests/test_validation_target_reference_sets.py`
+
+**Vorläufe.** Die engeren parallelen Läufe deckten und korrigierten zunächst
+Testaufbauten (gültige kanonische symmetrische Orientierung, obligatorische
+Writer-Transaktions-ID und tatsächliche Recovery-Diagnose). Ein breiter
+4729-Fall-Lauf war fehlgeschlagen und ist kein Erfolgsnachweis. Für einen
+weiteren 4927-Fall-Vorlauf wurde nach beobachteten Bootstrapfehlern eine
+Unterbrechung angefordert. Die registrierten Reader laden Projektdienste nun ausschließlich
+im tatsächlichen Handler; projektfreie Bootstrapaufrufe importieren den
+Projekt-Guard nicht. Die bestehenden Bootstrap-Oracles bleiben unverändert.
+Der abschließende native Auswahlrunner protokolliert zur Diagnose die
+einzelnen Testidentitäten ausführlich; Testauswahl, Parallelität und
+Quell-/Outcome-Bindung verwenden unverändert die nativen Runnerfunktionen. Release-Diagramme verwenden jetzt die
+bereits verifizierten Partial-Seeds; Diff prüft auch nach dem letzten
+Verarbeitungsschritt die ursprünglichen Inputs erneut. Ein gezielter
+390-Fall-Diagnoselauf zeigte drei Preflight-Regressionsfehler; diese wurden
+behoben, ohne die bestehenden Oracles zu ändern. Markerentdeckung öffnet
+keine gewöhnlichen Betriebsdaten, und die bestehenden Konflikt-/Sicherheits-
+details bleiben erhalten. Validation übernimmt die aufgelöste Projekt-/CLI-
+Warnschwelle und Strict-Anforderung ohne zusätzliche Prüfungen zu erfinden. Die endgültige
+oben gebundene Auswahl läuft vollständig auf unveränderten finalen Bytes.
+Ein weiterer Diagnosevorlauf deckte die fehlende tatsächliche Projektidentität
+in neuen Adaptern und die veraltete erwartete Budgetliste auf. Die Adapter
+binden jetzt das gelesene Projekt; Lock-/Recovery-Metadaten prüfen seine
+Konfigurationsbytes vor Lieferung erneut. Die maschinenlesbare Budgetliste
+berücksichtigt exakt die drei budgetfähigen neuen Dokumentleser. Ein
+zusätzlicher paralleler Randfallnachweis zeigte Code 5 statt Code 7 bei
+verbotenem Partial-Befehl und gleichzeitig offenem Journal. Der laufende
+4927-Fall-Versuch wurde vor Änderungen zum Abbruch aufgefordert und ist kein
+Erfolgsnachweis. Die Unterbrechungsanforderungen beendeten ältere Testkindprozesse
+nicht sofort. Deren später veröffentlichte Berichte wurden anhand der
+4927er-Auswahl und ihrer alten Quellbindung getrennt gesichert; kein Bericht
+eines Vorlaufs wird für den finalen Zustand verwendet. Der abschließende
+4929er-Lauf besitzt ausschließlich eigene, im Prozess gesammelte Einzeloutcomes
+und die unveränderte finale Quellbindung. Frische Markerprüfung und Befehlszulassung
+gehen nun der Journalprüfung voraus; die beiden Fälle liegen als dauerhafte
+Verhaltensregressionen im abschließenden gebundenen Lauf. Der daraufhin
+vollständig beobachtete 4929er-Vorlauf endete mit 4928 bestandenen Tests und
+genau einem Fehler: Die feste Schemafabrik-Erwartungsliste enthielt die vier
+neuen Ergebnisverträge noch nicht. Ausschließlich diese Liste wurde um
+`document-read-v1`, `model-validation-v1`, `project-lock-v1` und
+`recovery-status-v1` ergänzt; die strikte Gleichheit zwischen öffentlicher
+Fabrikmenge und abrufbarem Katalog bleibt erhalten. Nach dieser Testkorrektur
+wurde die gesamte gezielte 4929er-Auswahl erneut auf unveränderten finalen
+Bytes mit acht parallelen Workern und eigenem Berichtspfad ausgeführt.
+
+**Gebundene Übergabe.** Genau ein regulärer PLAN-Zustand **15.f.R**, Position
+**632/900**, wird mit dem nativen Payloadwriter installiert. Der Entrypoint
+verlangt zuvor den sauberen bestätigten Stand und prüft danach ausschließlich
+die fällige **Gruppe 1/3, Sequenz 184**, mit **7.062** Tests parallel auf vier
+Workern. Quellidentität, vollständiger Katalog, unveränderte Nummerierung und
+auswahlgebundener Beleg müssen passen. Erst nach erfolgreichem Gate werden
+die fünf Planmarker auf R abgeschlossen, 632/900, zuletzt 15.f.R, nächstens
+15.f.C und Bundle 478 gesetzt. Erst danach folgt der Commit
+`15.f.R feat(bundle): Read-only-Befehle auf Partials vervollständigen`.
+15.f.C bleibt offen; der R-Zustand wird nicht als künstliche W/R/C-Folge
+zerlegt. Apply-Tests und Commit sind hier vorgesehen, nicht bereits erfolgt.
+Fehler erhalten den tatsächlichen Arbeitszustand und bisherige Commits.
+Nach nativer ZIP-Prüfung und atomarer Exchange-Übergabe endet dieser
+N-Auftrag ohne Result-Warten oder Hintergrundfortsetzung.
 
 <a id="step-15-g"></a>
 ### 15.g – Receipts und portable Idempotenz

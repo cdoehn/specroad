@@ -3,6 +3,8 @@
 The supplied snapshot is authoritative for content, not proof of completeness
 on disk, current evidence, code availability or release readiness.
 """
+from ._read_model import require_read_model, read_scope, read_root, partial_observation, local_references
+
 from dataclasses import dataclass
 from hashlib import sha256
 
@@ -144,8 +146,7 @@ def resolve_builtin_view(model, view_name, *, verification=None, currentness=Non
     is recomputed from an exact native context, never from a supplied report.
     """
     from ..changes.target_model import TargetModel, _default_scope
-    if type(model) is not TargetModel:
-        raise ModelError('document_target_model_required')
+    require_read_model(model)
     require_view_name(view_name)
     if view_name == 'verification' and verification is None and currentness is None:
         raise BuiltinViewProviderError(view_name)
@@ -168,8 +169,8 @@ def resolve_builtin_view(model, view_name, *, verification=None, currentness=Non
     model = model.snapshot()
     data = {'view_name': view_name, 'source_kind': 'supplied_project',
         'schema_version': MODEL_SCHEMA_VERSION, 'profiles': list(model.profile.profile_chain),
-        'project_id': model.binding.project_id, 'scope_descriptor': _default_scope(),
-        'model_root_sha256': model.manifest(model.artifacts, _default_scope()).sha256,
+        'project_id': model.binding.project_id, 'scope_descriptor': read_scope(model),
+        'model_root_sha256': read_root(model),
         'input_sha256': model._sources_sha256, 'fallback': False}
     if view_name == 'roadmap':
         data.update(roadmap_fields(model, readiness, readiness_gates,
@@ -186,7 +187,7 @@ def resolve_builtin_view(model, view_name, *, verification=None, currentness=Non
             validation_scope='supplied_primary_document_composition')
     else:
         records = _typed_records(model.documents)
-        references = RelationViews(RelationReferences(
+        references = RelationViews(local_references(model,
             [SourceRelations(d.content, path=d.path) for d in model.documents]))
         rows, relations = _traceability(records, references)
         data.update(mode='stored_traceability', records=records, relations=relations,

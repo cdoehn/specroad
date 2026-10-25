@@ -1,4 +1,6 @@
 """Language annotations beside unchanged native view/query/literal values."""
+from ._read_model import require_read_model, read_scope, read_root, partial_observation, local_references
+
 from dataclasses import dataclass
 from hashlib import sha256
 
@@ -35,8 +37,7 @@ class TablePresentation:
 
 def _snapshot(model):
     from ..changes.target_model import TargetModel
-    if type(model) is not TargetModel:
-        raise ModelError('document_target_model_required')
+    require_read_model(model)
     return model.snapshot()
 
 

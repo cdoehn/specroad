@@ -3,6 +3,8 @@
 This is not rendering, include expansion, full document semantics or permission
 to publish. The caller supplies the complete inventory; no files are discovered.
 """
+from ._read_model import require_read_model, read_scope, read_root, partial_observation, local_references
+
 from dataclasses import dataclass
 from hashlib import sha256
 
@@ -69,10 +71,11 @@ def assess_document_structure(model, *, scope_descriptor=None):
     """
     from ..changes.target_model import TargetModel, _default_scope
     from ..graph.scope_descriptors import ScopeDescriptor
-    if type(model) is not TargetModel:
-        raise ModelError('document_target_model_required')
-    descriptor = ScopeDescriptor(_default_scope() if scope_descriptor is None else scope_descriptor).data
-    if (descriptor['scope_kind'] != 'project' or descriptor['boundary_policy'] != 'closed'
+    require_read_model(model)
+    descriptor = ScopeDescriptor(read_scope(model) if scope_descriptor is None else scope_descriptor).data
+    if partial_observation(model) is not None and descriptor != read_scope(model):
+        raise DocumentStructureError('document_partial_scope_mismatch', pointer='/scope_descriptor')
+    if partial_observation(model) is None and (descriptor['scope_kind'] != 'project' or descriptor['boundary_policy'] != 'closed'
             or descriptor['configuration_id'] is not None):
         raise DocumentStructureError('document_structure_full_project_scope_required', pointer='/scope_descriptor')
     model = model.snapshot()
@@ -92,7 +95,7 @@ def assess_document_structure(model, *, scope_descriptor=None):
     fields_valid = not diagnostics
     if fields_valid:
         try:
-            references = RelationReferences(records)
+            references = local_references(model, records)
             require_canonical_relations(references)
             validate_hierarchies(references)
         except ModelError as error:
@@ -103,9 +106,10 @@ def assess_document_structure(model, *, scope_descriptor=None):
         diagnostics.extend(findings)
     data = {'format_version': 'document-structure-v1', 'project_id': model.binding.project_id,
         'scope_descriptor': descriptor,
-        'model_root_sha256': model.manifest(model.artifacts, descriptor).sha256,
+        'model_root_sha256': read_root(model, descriptor),
         'input_sha256': model._sources_sha256,
-        'validation_scope': 'supplied_project_section_ownership_and_contains_order',
+        'validation_scope': ('supplied_project_section_ownership_and_contains_order'
+            if partial_observation(model) is None else 'partial_section_ownership_and_contains_order'),
         'source_bindings': [{'artifact_id': r.identity.id, 'path': r.path,
             'source_sha256': sha256(r.source_bytes).hexdigest(),
             'record_sha256': canonical_json_sha256(values[r.identity.id])} for r in records],

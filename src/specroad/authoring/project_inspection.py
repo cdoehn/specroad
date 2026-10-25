@@ -7,7 +7,9 @@ Missing specialist validation services remain incomplete, never green stubs.
 from ..changes.locking import inspect_project_lock
 from ..changes._target_materialization import validation_resources
 from ..cli.result_schemas import validate_result_document
-from ..cli.results import CommandResult, FailureKind
+from ..cli.results import CommandResult, FailureKind, OperationFailure
+from ..bundles.errors import BundleError
+from ..srx.errors import SrxError
 from ..diagnostics import Diagnostic, from_model_error
 from ..model.errors import ModelError
 from ..security import ProjectBoundary, SafetyViolation
@@ -90,17 +92,29 @@ def inspect_project(root, *, profiles=None, gates=()):
             raise ModelError('inspection_gate_sequence_required')
         gates = tuple(gates)
         boundary = ProjectBoundary(root)
+        from ..bundles._partial_read import _marker
+        _marker(boundary)
         payload['runtime']['project_root'] = str(boundary.root)
         payload['runtime'] = initial = _runtime(boundary)
         state = initial['consistency_state']
         if state != 'consistent':
             return _blocked_result(payload)
-        snapshot = InspectionSnapshot(boundary.root, profiles)
-        if snapshot.source.boundary._root_identity != boundary._root_identity:
-            raise InspectionChanged('inspection_root_changed')
-        model = snapshot.model
+        from ..bundles._partial_read import partial_read_snapshot
+        from ..documents._read_model import PartialDocumentModel
+        partial = partial_read_snapshot(boundary.root)
+        if partial is not None:
+            if profiles is not None and tuple(profiles) != tuple(partial.payload_model.profile.profile_chain):
+                raise ModelError('inspection_partial_profile_selection_mismatch')
+            snapshot = partial
+            model = PartialDocumentModel(partial)
+        else:
+            snapshot = InspectionSnapshot(boundary.root, profiles)
+            if snapshot.source.boundary._root_identity != boundary._root_identity:
+                raise InspectionChanged('inspection_root_changed')
+            model = snapshot.model
         report = validate_model(model.documents, profile=model.profile,
-                                resources=validation_resources(model), gates=gates)
+            resources=validation_resources(model) if partial is None else None,
+            gates=gates, partial=partial)
         assessment = assess_validation(report, documents=model.documents)
         semantic = semantic_description(model, report, assessment)
         snapshot.verify_current()
@@ -115,7 +129,15 @@ def inspect_project(root, *, profiles=None, gates=()):
         payload['semantic'] = semantic
         code = assessment.exit_code if assessment.exit_code >= 2 else 0
         return _result(payload, code=code, diagnostics=assessment.diagnostics,
-                       diagnostic_checks_complete=report.data['checks_complete'])
+                       diagnostic_checks_complete=report.data['checks_complete'],
+                       **({} if partial is None else partial.details))
+    except (BundleError, OperationFailure, SrxError) as error:
+        from ..query._read_errors import read_failure
+        failed = read_failure('project.inspect', error, None, {})
+        payload['semantic'] = dict.fromkeys(SEMANTIC_FIELDS)
+        payload['runtime'].update(open_transaction=_unknown(), writer_lock=_unknown(),
+                                  consistency_state='unknown')
+        return _result(payload, code=failed.exit_code, diagnostics=failed.diagnostics)
     except (ModelError, SafetyViolation, OSError) as error:
         # No stale model facts or unverified negative lock/transaction claims.
         payload['semantic'] = dict.fromkeys(SEMANTIC_FIELDS)

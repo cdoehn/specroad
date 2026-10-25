@@ -3,6 +3,8 @@
 The original statement is never a template or input to language inference.
 Only explicitly supplied model resources can contribute display labels.
 """
+from ._read_model import require_read_model, read_scope, read_root, partial_observation, local_references
+
 from dataclasses import dataclass
 from hashlib import sha256
 
@@ -50,8 +52,7 @@ def resolve_requirement_presentation(model, requirement_id):
     No host locale, detector, translation or implicit resource loading is used.
     """
     from ..changes.target_model import TargetModel, _default_scope
-    if type(model) is not TargetModel:
-        raise ModelError('document_target_model_required')
+    require_read_model(model)
     if type(requirement_id) is not str:
         raise RequirementPresentationError('presentation_requirement_id_required', pointer='/requirement_id')
     model = model.snapshot()
@@ -72,7 +73,7 @@ def resolve_requirement_presentation(model, requirement_id):
         'generated': True, 'normative': False, 'tool_version': __version__,
         'schema_version': MODEL_SCHEMA_VERSION, 'profiles': list(model.profile.profile_chain),
         'project_id': model.binding.project_id,
-        'model_root_sha256': model.manifest(model.artifacts, _default_scope()).sha256,
+        'model_root_sha256': read_root(model),
         'input_sha256': model._sources_sha256,
         'requirement': {'artifact_id': requirement_id, 'revision': value['revision'],
             'path': source.path, 'source_sha256': sha256(requirement.source_bytes).hexdigest(),

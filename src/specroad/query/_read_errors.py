@@ -1,4 +1,5 @@
 """Failure projection for the new live Query and Diff adapters."""
+from ..bundles.errors import BundleError
 from ..cli.results import CommandResult, FailureKind, OperationFailure
 from ..diagnostics import Diagnostic, from_model_error
 from ..model.errors import ModelError
@@ -11,6 +12,11 @@ def read_failure(command, error, project, details):
         code = int(error.kind)
         diagnostic = Diagnostic('CORE_' + error.kind.name, 'error', 'preflight', str(error))
         details = {**error.details, **details}
+    elif isinstance(error, BundleError):
+        code = error.exit_code
+        diagnostic = Diagnostic(error.code or 'CORE_' + FailureKind(code).name, 'error', 'bundle',
+                                'Partial input verification failed.', rationale=error.reason)
+        details = {**details, 'bundle_failure': error.as_dict()}
     elif isinstance(error, ModelError):
         changed = {'configuration_changed', 'relation_source_changed',
                    'relation_index_membership_changed', 'relation_index_source_changed',

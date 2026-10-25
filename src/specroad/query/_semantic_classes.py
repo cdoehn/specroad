@@ -124,15 +124,15 @@ def _owned_variant_inputs(inputs):
         tuple(SourceRelations(record.source_bytes, path=record.path) for record in inputs.records))
 
 
-def _variant_scope(before, after, before_id, after_id):
+def _variant_scope(before, after, before_id, after_id, *, before_partial=None, after_partial=None):
     if before_id is None and after_id is None:
         return {'state': 'not_evaluated'}
     from ..configurations import evaluate_configuration
     from ..configurations.evaluation import ConfigurationEvaluationError
     if before_id is None or after_id is None:
         raise ConfigurationEvaluationError(ModelError('configuration_comparison_pair_required'))
-    left = evaluate_configuration(before.records, before_id).data
-    right = evaluate_configuration(after.records, after_id).data
+    left = evaluate_configuration(before.records, before_id, partial=before_partial).data
+    right = evaluate_configuration(after.records, after_id, partial=after_partial).data
     old, new = set(left['applicable_artifact_ids']), set(right['applicable_artifact_ids'])
     return {'state': 'evaluated', 'scope': 'supplied_artifact_applicability',
         'before': left, 'after': right, 'added_ids': sorted(new - old),

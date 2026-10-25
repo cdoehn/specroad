@@ -45,19 +45,20 @@ stored orientation. Draft Tasks may still lack subject links; the report lists
 them explicitly, without inventing an edge or treating them as complete.
 The supplied inventory is not proof of completeness on disk or applicability.
 """
-    if type(model) is not TargetModel:
+    from ..documents._read_model import partial_observation, local_references, read_scope, read_root
+    if type(model) is not TargetModel and partial_observation(model) is None:
         raise ModelError('planning_target_model_required')
     model = model.snapshot()
     records, values, bindings = _planning_sources(model.documents)
-    references = RelationReferences(records)
+    references = local_references(model, records)
     require_canonical_relations(references)
     validate_hierarchies(references)
     links = _planning_links(references, values, bindings)
     releases, milestones, tasks, missing = _planning_artifacts(values, bindings, links)
-    scope = _default_scope()
+    scope = read_scope(model)
     data = {'format_version': 'planning-relations-v1', 'project_id': model.binding.project_id,
         'input_sha256': model._sources_sha256, 'scope_descriptor': scope,
-        'model_root_sha256': model.manifest(model.artifacts, scope).sha256,
+        'model_root_sha256': read_root(model),
         'validation_scope': 'supplied_planning_fields_and_stored_relations',
         'artifacts': [bindings[key] for key in sorted(bindings)], 'relations': links,
         'releases': releases, 'milestones': milestones, 'tasks': tasks,

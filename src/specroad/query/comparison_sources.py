@@ -143,7 +143,8 @@ class ComparisonSourceSnapshot:
     resources: tuple
     _baseline_evidence: bytes | None
 
-    def __init__(self, root, *, kind='local', reference=None, expected_project_id=None):
+    def __init__(self, root, *, kind='local', reference=None, expected_project_id=None,
+                 allow_partial=False):
         if type(kind) is not str or kind not in _SOURCE_READERS:
             raise ModelError('comparison_source_kind_invalid')
         if _SOURCE_READERS[kind] is None:
@@ -153,8 +154,24 @@ class ComparisonSourceSnapshot:
             raise ModelError('comparison_project_required')
         if expected_project_id is not None:
             canonical_json_bytes(expected_project_id)
-        configuration, resources, source_root, commit_id, finish = _SOURCE_READERS[kind](
-            root, reference, expected_project_id)
+        partial = None
+        if allow_partial and kind == 'local':
+            from ..bundles._partial_read import partial_read_snapshot
+            partial = partial_read_snapshot(root)
+        if partial is None:
+            configuration, resources, source_root, commit_id, finish = _SOURCE_READERS[kind](
+                root, reference, expected_project_id)
+        else:
+            if reference is not None:
+                raise ModelError('comparison_reference_not_allowed')
+            configuration = partial.configuration
+            if expected_project_id is not None and configuration.project_id != expected_project_id:
+                raise ModelError('project_identity_mismatch')
+            # Proof/configuration context is bound separately, never a compared artifact.
+            resources = tuple(sorted((('specroad.json', partial.configuration_bytes),
+                *((r.path, r.source_bytes) for r in partial.records),
+                *((d.path, d.content) for d in partial.payload_model.resource_files))))
+            source_root, commit_id, finish = str(partial.boundary.root), None, partial.verify_current
         records = []
         for path, raw in resources:
             if classify_path(path, configuration) is not PathClass.ARTIFACT:
@@ -174,7 +191,7 @@ class ComparisonSourceSnapshot:
         evidence = finish() if finish is not None else None
         for key, value in (('kind', kind), ('source_root', source_root), ('commit_id', commit_id),
                            ('configuration', configuration), ('inputs', inputs), ('resources', resources),
-                           ('_baseline_evidence', evidence)):
+                           ('_baseline_evidence', evidence), ('partial', partial)):
             object.__setattr__(self, key, value)
 
     @property
@@ -197,7 +214,10 @@ class ComparisonSourceSnapshot:
                 'source_root': self.source_root, 'commit_id': self.commit_id,
                 'project_id': self.configuration.project_id,
                 'resources': [{'path': path, 'sha256': sha256(raw).hexdigest()} for path, raw in self.resources],
-                'comparison_scope': 'project_configuration_and_artifacts',
+                'comparison_scope': ('project_configuration_and_artifacts' if self.partial is None
+                                     else 'partial_bundle_artifacts'),
+                **({} if self.partial is None else {'partial': self.partial.details,
+                    'partial_observation_sha256': self.partial.observation_sha256}),
                 'uncompared_resources': [path for path, _ in self.uncompared_resources],
                 'atomic_snapshot': False, 'full_semantic_validation': False,
                 'approval_granted': False, 'write_authorized': False,
@@ -226,4 +246,5 @@ def compare_sources(before, after, *, timing_bounds=None,
         before_configuration=before.configuration, after_configuration=after.configuration,
         timing_bounds=timing_bounds, before_configuration_id=before_configuration_id,
         after_configuration_id=after_configuration_id,
-        before_currentness=before_currentness, after_currentness=after_currentness)
+        before_currentness=before_currentness, after_currentness=after_currentness,
+        before_partial=before.partial, after_partial=after.partial)

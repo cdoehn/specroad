@@ -43,13 +43,15 @@ def project_roadmap(model):
     Applicability, live-file completeness, Done and readiness remain unevaluated.
     Unscheduled means no explicit scheduled_for edge, not missing ownership.
     """
-    if type(model) is not TargetModel:
+    from ..documents._read_model import partial_observation
+    partial = partial_observation(model)
+    if type(model) is not TargetModel and partial is None:
         raise ModelError('roadmap_target_model_required')
     model = model.snapshot()
     planning = assess_planning_relations(model)
     plan = planning.data
     values, bindings = _roadmap_sources(model)
-    links = _roadmap_links(values, bindings)
+    links = _roadmap_links(values, bindings, partial=partial is not None)
     items, risks, groups, unscheduled = _roadmap_facts(values, bindings, links)
 
     data = {'format_version': 'roadmap-projection-v1', 'generated': True, 'normative': False,

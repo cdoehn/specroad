@@ -22,10 +22,11 @@ def _edge_data(edge, index, pointers):
         'include_mode': source.data['payload']['mode'] if include else None}
 
 
-def _include_graph(documents, cycle_error_type):
+def _include_graph(documents, cycle_error_type, *, model=None):
     records = tuple(SourceRelations(d.content, path=d.path) for d in documents)
     index = {record.identity.id: record for record in records}
-    references = RelationReferences(records)
+    from ._read_model import local_references
+    references = RelationReferences(records) if model is None else local_references(model, records)
     include_ids = set()
     for record in records:
         value = record.data

@@ -3,6 +3,8 @@
 These APIs return UTF-8 bytes. They neither discover inputs nor write outputs,
 execute templates, determine approval, or replace the CLI's later providers.
 """
+from ._read_model import require_read_model, read_scope, read_root, partial_observation, local_references
+
 from .._metadata import __version__, MODEL_SCHEMA_VERSION
 from ..model.errors import ModelError
 from ..model.content_language import ContentLanguage
@@ -24,8 +26,7 @@ def _snapshot(model, output_format):
     from ..changes.target_model import TargetModel
     if type(output_format) is not str or output_format not in ('markdown', 'html'):
         raise RenderError('render_format_not_supported', pointer='/output_format')
-    if type(model) is not TargetModel:
-        raise ModelError('document_target_model_required')
+    require_read_model(model)
     return model.snapshot()
 
 

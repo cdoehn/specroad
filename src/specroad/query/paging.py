@@ -69,7 +69,8 @@ def _scalar_key(value, pointer):
     raise ModelError('query_sort_value_not_scalar', pointer=pointer)
 
 
-def query_records(records, query, *, project, configuration=None, configuration_id=None, verification=None):
+def query_records(records, query, *, project, configuration=None, configuration_id=None, verification=None,
+                  partial=None):
     """Filter all supplied sources, sort all matches, then form the exact page.
 
     Sort values come from original fields, independently of projection. All
@@ -90,7 +91,7 @@ def query_records(records, query, *, project, configuration=None, configuration_
             raise ModelError('query_verification_provider_required', pointer=pointer)
         ordering.append((tokens, item['direction'] == 'desc', pointer))
     selection = select_query(records, query, project=project, configuration=configuration,
-                             configuration_id=configuration_id, verification=verification)
+                             configuration_id=configuration_id, verification=verification, partial=partial)
     from ..verification._read_evaluation import selected_artifacts
     artifacts = selected_artifacts(records, selection.artifact_ids, verification)
     rows = []

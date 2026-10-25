@@ -1,5 +1,7 @@
 """Complete direct impact and Appendix J observations over current artifacts."""
 from ..cli.result_schemas import validate_result_document
+from ..bundles.errors import BundleError
+from ..srx.errors import SrxError
 from ..cli.results import CommandResult, FailureKind, OperationFailure
 from ..diagnostics import Diagnostic, from_model_error
 from ..graph._impact_projection import _impact_rows, _artifact_observations
@@ -23,6 +25,12 @@ def _impact_steps(root, artifact_id, *, currentness=None, configuration_id=None)
                    approval_granted=False, write_authorized=False, recovery_performed=False,
                    profile_policy_applied=False, diagnostic_policy='core_defaults')
     try:
+        from ..bundles._partial_read import partial_read_snapshot
+        partial = partial_read_snapshot(root)
+        if partial is not None:
+            from ._partial_commands import impact_steps
+            return (yield from impact_steps(partial, artifact_id, currentness=currentness,
+                configuration_id=configuration_id, details=details))
         source = ProjectSource(root)
         project = {'project_root': str(source.boundary.root), 'project_id': source.configuration.project_id}
         _preflight(source)
@@ -51,6 +59,9 @@ def _impact_steps(root, artifact_id, *, currentness=None, configuration_id=None)
             return CommandResult.failed('impact', FailureKind.POLICY, complete=True,
                 result=payload, diagnostics=findings, project=project, details=details)
         return CommandResult('impact', result=payload, diagnostics=findings, project=project, details=details)
+    except (BundleError, SrxError) as error:
+        from ._read_errors import read_failure
+        return read_failure('impact', error, project, details)
     except OperationFailure as error:
         return CommandResult.failed('impact', error.kind, project=project,
             diagnostics=(Diagnostic('CORE_' + error.kind.name, 'error', 'preflight', str(error)),),

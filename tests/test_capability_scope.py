@@ -52,8 +52,8 @@ class CapabilityScopeTests(unittest.TestCase):
         actual_ids = {command['command_id'] for command in semantic['commands']}
         advertised_cli = {key[4:] for key in semantic['capability_ids'] if key.startswith('cli.')}
         self.assertEqual(advertised_cli, actual_ids)
-        self.assertTrue({'query', 'diff'} <= actual_ids)
-        for command in ('srx.evaluate', 'validate', 'proposal.create', 'proposal.apply'):
+        self.assertTrue({'query', 'diff', 'validate'} <= actual_ids)
+        for command in ('srx.evaluate', 'proposal.create', 'proposal.apply'):
             with self.subTest(command=command):
                 self.assertNotIn(command, actual_ids)
                 self.assertEqual(dispatch_result(command.split('.')).exit_code, 2)

@@ -99,6 +99,29 @@ def _fields(schema_id):
             'files': _array(_object({'path': nonempty, 'size': count, 'sha256': sha})),
             'directories': strings, **{k: {'const': False} for k in
                 ('creator_authenticated', 'approval_granted', 'full_semantic_validation')}})
+    if schema_id == 'document-read-v1':
+        return _object({'format_version': {'const': 'document-read-v1'},
+            'operation': {'enum': ['render', 'view.render', 'diagram']}, 'data': obj,
+            'rendered': _nullable(_object({'utf8': text, 'size': count, 'sha256': sha})),
+            'generated': {'const': True}, **{k: {'const': False} for k in
+                ('normative', 'write_authorized', 'approval_granted', 'full_semantic_validation')}})
+    if schema_id == 'model-validation-v1':
+        return _object({'diagnostic_format_version': {'const': 1}, 'diagnostics': _array(diagnostic),
+            'checked_ids': strings, 'summary': obj, 'checks_complete': boolean,
+            'status': {'enum': ['success', 'failed']}, 'exit_code': {'type': 'integer', 'minimum': 0, 'maximum': 7},
+            'fail_on': {'enum': ['error', 'warning']}, 'strict_requested': boolean,
+            'input_sha256': sha, 'validation_scope': nonempty, 'source_report': obj,
+            **{k: {'const': False} for k in ('optional_lint_started', 'approval_granted', 'write_authorized')}})
+    if schema_id == 'project-lock-v1':
+        return _object({'format_version': {'const': 'project-lock-v1'}, 'record': _nullable(obj),
+            'record_sha256': _nullable(sha), 'owner_state': text, 'journal_paths': strings,
+            'recovery_required': boolean, 'observation_only': {'const': True},
+            **{k: {'const': False} for k in ('exclusive_access_proven', 'write_authorized', 'atomic_snapshot')}})
+    if schema_id == 'recovery-status-v1':
+        return _object({'format_version': {'const': 'recovery-status-v1'}, 'transactions': _array(obj),
+            'active_paths': strings, 'recovery_required': boolean, 'normal_access_blocked': boolean,
+            'corrupt_detected': boolean, 'observation_only': {'const': True},
+            **{k: {'const': False} for k in ('model_loaded', 'write_authorized', 'exclusive_access_proven', 'atomic_snapshot')}})
     if schema_id == 'bundle-verify-v1':
         return _object({'format_version': {'const': 'bundle-verify-v1'}, 'manifest': obj,
             'file': _object({'size': count, 'sha256': sha}),
@@ -188,9 +211,9 @@ def _fields(schema_id):
         return _with_currentness(_object({'format_version': {'const': '1.0.0'}, 'start': nonempty,
             'direction': {'enum': ['in', 'out', 'both']}, 'depth': count,
             'nodes': _array(_object({'id': nonempty, 'artifact_type': nonempty, 'distance': count})),
-            'edges': _array(edge), 'coverage': _object({'scope': {'const': 'current_project_artifacts'},
+            'edges': _array(edge), 'coverage': _object({'scope': {'enum': ['current_project_artifacts', 'partial_bundle_artifacts']},
                 'source_count': count, 'relation_count': count, 'observation_sha256': sha,
-                'validation_scope': {'const': 'relation_references_and_canonical_storage_only'},
+                'validation_scope': {'enum': ['relation_references_and_canonical_storage_only', 'partial_payload_model']},
                 'atomic_snapshot': {'const': False}})}))
     if schema_id == 'artifact-why-v1':
         identity = _object({'id': nonempty, 'id_scheme': nonempty, 'artifact_type': nonempty, 'id_prefix': nonempty})
@@ -202,9 +225,9 @@ def _fields(schema_id):
             'targets': _array(_object({'id': nonempty, 'artifact_type': {'enum': ['goal', 'need', 'source']},
                                       'distance': count, 'path_count': count})),
             'paths': _array(path), 'path_count': count,
-            'coverage': _object({'scope': {'const': 'current_project_artifacts'},
+            'coverage': _object({'scope': {'enum': ['current_project_artifacts', 'partial_bundle_artifacts']},
                 'source_count': count, 'relation_count': count, 'observation_sha256': sha,
-                'validation_scope': {'const': 'relation_references_canonical_storage_and_hierarchies_only'},
+                'validation_scope': {'enum': ['relation_references_canonical_storage_and_hierarchies_only', 'partial_payload_model']},
                 'atomic_snapshot': {'const': False}})})
     if schema_id == 'roadmap-explain-v1':
         identity = _object({'id': nonempty, 'id_scheme': nonempty, 'artifact_type': nonempty, 'id_prefix': nonempty})
@@ -282,10 +305,10 @@ def _fields(schema_id):
                                       'connections': _array(connection)})),
             'review_groups': _object({state: _object({'relation_ids': strings, 'affected_ids': strings})
                                      for state in ('unreviewed', 'current', 'suspect', 'invalid')}),
-            'coverage': _object({'scope': {'const': 'current_project_artifacts'},
+            'coverage': _object({'scope': {'enum': ['current_project_artifacts', 'partial_bundle_artifacts']},
                 'source_count': count, 'relation_count': count, 'review_record_count': count,
                 'observation_sha256': sha,
-                'validation_scope': {'const': 'artifact_fields_and_relation_review_status_only'},
+                'validation_scope': {'enum': ['artifact_fields_and_relation_review_status_only', 'partial_payload_model']},
                 'atomic_snapshot': {'const': False}})}))
     if schema_id == 'artifact-query-v1':
         return _object({'items': _array(_object({'id': nonempty, 'artifact_type': nonempty}, extra=True)),
