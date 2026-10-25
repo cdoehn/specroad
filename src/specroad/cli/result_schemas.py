@@ -91,6 +91,14 @@ def _fields(schema_id):
         return _object({"usage": text, "options": _array(_object({"flag": text, "values": strings}, ("flag",))),
             "commands": _array(_object({k: surface[k] for k in ("command_id", "words", "aliases")})),
             "exit_codes": {"type": "object", "additionalProperties": text}, "examples": strings, "scope": text})
+    if schema_id == 'bundle-extract-v1':
+        return _object({'format_version': {'const': 'bundle-extract-v1'}, 'project_root': nonempty,
+            'manifest': obj, 'file': _object({'size': count, 'sha256': sha}),
+            'validation_scope': {'enum': ['closed_project_payload_model', 'partial_payload_model']},
+            'bootstrap_state': {'const': 'complete'}, 'external_hash_verified': boolean,
+            'files': _array(_object({'path': nonempty, 'size': count, 'sha256': sha})),
+            'directories': strings, **{k: {'const': False} for k in
+                ('creator_authenticated', 'approval_granted', 'full_semantic_validation')}})
     if schema_id == 'bundle-verify-v1':
         return _object({'format_version': {'const': 'bundle-verify-v1'}, 'manifest': obj,
             'file': _object({'size': count, 'sha256': sha}),

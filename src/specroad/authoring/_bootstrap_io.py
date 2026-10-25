@@ -100,16 +100,16 @@ def check_entry(parent, name, expected):
     return info
 
 
-def verify_tree(parent, inventory, prefix='', *, receipt_identity=None):
+def verify_tree(parent, inventory, prefix='', *, receipt_identity=None, completed=COMPLETED):
     """Exact names, identities and bytes; no unlisted entry is read or removed."""
     children = {p[len(prefix):].split('/')[0] for p in inventory if p.startswith(prefix)}
     actual = set(os.listdir(parent))
     if receipt_identity is not None and prefix == '.specroad/recovery/':
-        receipt = info_at(parent, COMPLETED[-1])
+        receipt = info_at(parent, completed[-1])
         if receipt is None or identity(receipt) != receipt_identity:
             raise BootstrapError('bootstrap_receipt_changed')
         guards._regular(receipt, directory=True)
-        actual.remove(COMPLETED[-1])
+        actual.remove(completed[-1])
     if actual != children:
         raise BootstrapError('bootstrap_inventory_changed', path=prefix)
     for name in sorted(children):
@@ -118,7 +118,7 @@ def verify_tree(parent, inventory, prefix='', *, receipt_identity=None):
         before = check_entry(parent, name, expected)
         if expected['kind'] == 'directory':
             with directory(parent, (name,)) as child:
-                verify_tree(child, inventory, path + '/', receipt_identity=receipt_identity)
+                verify_tree(child, inventory, path + '/', receipt_identity=receipt_identity, completed=completed)
         else:
             fd = os.open(name, os.O_RDONLY | os.O_NOFOLLOW | getattr(os, 'O_NONBLOCK', 0), dir_fd=parent)
             try:
@@ -140,12 +140,12 @@ def verify_tree(parent, inventory, prefix='', *, receipt_identity=None):
             raise BootstrapError('bootstrap_entry_changed', path=path)
 
 
-def verify_unit(parent, name, inventory, path, *, receipt_identity=None):
+def verify_unit(parent, name, inventory, path, *, receipt_identity=None, completed=COMPLETED):
     expected = inventory[path]
     check_entry(parent, name, expected)
     if expected['kind'] == 'directory':
         with directory(parent, (name,)) as child:
-            verify_tree(child, inventory, path + '/', receipt_identity=receipt_identity)
+            verify_tree(child, inventory, path + '/', receipt_identity=receipt_identity, completed=completed)
     else:
         # Same bounded byte check as for a tree, without requiring an otherwise
         # empty repository parent. This one file is always the final config.
@@ -169,8 +169,9 @@ def verify_unit(parent, name, inventory, path, *, receipt_identity=None):
 
 
 class BootstrapTree:
-    def __init__(self, held, function, reused):
+    def __init__(self, held, function, reused, *, completed=COMPLETED):
         self.held = held
+        self.completed = completed
         self.function = function
         self.reused = reused
         self.inventory = {}
@@ -200,7 +201,7 @@ class BootstrapTree:
         self.check()
         os.fsync(self.held.root_fd)
 
-    def prepare(self, content, directories, root_created):
+    def prepare(self, content, directories, root_created, *, journal_format='specroad-bootstrap-v1'):
         for path in sorted(directories, key=lambda p: (p.count('/'), p)):
             parts = path.split('/')
             with directory(self.fd, parts[:-1]) as parent:
@@ -216,7 +217,7 @@ class BootstrapTree:
         self.units.remove('specroad.json'); self.units.append('specroad.json')
         self.check()
         verify_tree(self.fd, self.inventory)
-        journal = {'format': 'specroad-bootstrap-v1', 'state': 'prepared',
+        journal = {'format': journal_format, 'state': 'prepared',
             'root_identity': identity(os.fstat(self.held.root_fd)), 'root_created': root_created,
             'stage_identity': self.stage_identity, 'units': self.units,
             'reused_directories': self.reused, 'entries': self.inventory}
@@ -254,7 +255,8 @@ class BootstrapTree:
                     raise BootstrapError('bootstrap_unit_ambiguous', path=path)
                 selected = staged if a is not None else target
                 verify_unit(selected, parts[-1], self.inventory, path,
-                            receipt_identity=self.stage_identity if self.stage_parts == COMPLETED else None)
+                            receipt_identity=self.stage_identity if self.stage_parts == self.completed else None,
+                            completed=self.completed)
                 locations[path] = a is None
         return locations
 
@@ -298,12 +300,12 @@ class BootstrapTree:
         """
         if not all(self.checked_locations().values()):
             raise BootstrapError('bootstrap_publication_incomplete')
-        if self.stage_parts == COMPLETED:
+        if self.stage_parts == self.completed:
             return
-        with directory(self.held.root_fd, COMPLETED[:-1]) as parent:
+        with directory(self.held.root_fd, self.completed[:-1]) as parent:
             self.check()
-            _rename_native(self.function, self.held.root_fd, STAGING, parent, COMPLETED[-1])
-            self.stage_parts = COMPLETED
+            _rename_native(self.function, self.held.root_fd, STAGING, parent, self.completed[-1])
+            self.stage_parts = self.completed
             os.fsync(parent)
             os.fsync(self.held.root_fd)
         self.checked_locations()

@@ -17,7 +17,8 @@
     "Verify existing bytes/inodes/modes survive collisions and ordinary preparation/publication failures, including an error after the real native rename; inspect the durable journal before each publication and configuration-last order.",
     "Verify the real root mutex, metadata preflights and supported isolated module/zipapp execution; retain the declared field/resource validation scope.",
     "Terminate an independent isolated process after durable preparation, real no-replace publication boundaries and receipt completion; replay with the original file inodes, bytes, project/document identities and timestamps. Repeat after another native I/O interruption.",
-    "Reject malformed or modified journals, rehashed invalid bootstrap payloads, ambiguous prefixes, links and extra/changed/missing state before writes. Preserve foreign files on rollback and completed-receipt conflicts."
+    "Reject malformed or modified journals, rehashed invalid bootstrap payloads, ambiguous prefixes, links and extra/changed/missing state before writes. Preserve foreign files on rollback and completed-receipt conflicts.",
+    "15.e.W additionally checks journaled extraction of verified bundles into new/empty targets, byte-exact manifests, native rollback and same-input bootstrap replay without foreign-file replacement."
   ],
   "oracle": {
     "kind": "behavior",
@@ -44,6 +45,34 @@
   },
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
+    "tests/test_bundle_extraction.py::test_bad_inputs_fail_before_target_creation[bad_model]",
+    "tests/test_bundle_extraction.py::test_bad_inputs_fail_before_target_creation[input_symlink]",
+    "tests/test_bundle_extraction.py::test_bad_inputs_fail_before_target_creation[invalid_zip]",
+    "tests/test_bundle_extraction.py::test_bad_inputs_fail_before_target_creation[missing]",
+    "tests/test_bundle_extraction.py::test_bad_inputs_fail_before_target_creation[wrong_hash]",
+    "tests/test_bundle_extraction.py::test_changed_completed_bootstrap_is_not_overwritten_or_accepted[changed]",
+    "tests/test_bundle_extraction.py::test_changed_completed_bootstrap_is_not_overwritten_or_accepted[foreign]",
+    "tests/test_bundle_extraction.py::test_changed_completed_bootstrap_is_not_overwritten_or_accepted[journal]",
+    "tests/test_bundle_extraction.py::test_completed_bootstrap_is_rechecked_without_reinstalling_files",
+    "tests/test_bundle_extraction.py::test_configuration_is_last_and_every_published_unit_has_bound_journal",
+    "tests/test_bundle_extraction.py::test_foreign_target_contents_are_never_overwritten[directory]",
+    "tests/test_bundle_extraction.py::test_foreign_target_contents_are_never_overwritten[file]",
+    "tests/test_bundle_extraction.py::test_foreign_target_contents_are_never_overwritten[hidden]",
+    "tests/test_bundle_extraction.py::test_foreign_target_contents_are_never_overwritten[symlink]",
+    "tests/test_bundle_extraction.py::test_foreign_target_contents_are_never_overwritten[target_symlink]",
+    "tests/test_bundle_extraction.py::test_native_failures_restore_original_missing_or_empty_target[False-prepare]",
+    "tests/test_bundle_extraction.py::test_native_failures_restore_original_missing_or_empty_target[False-publish]",
+    "tests/test_bundle_extraction.py::test_native_failures_restore_original_missing_or_empty_target[True-prepare]",
+    "tests/test_bundle_extraction.py::test_native_failures_restore_original_missing_or_empty_target[True-publish]",
+    "tests/test_bundle_extraction.py::test_same_verified_input_resumes_proven_publication_prefix",
+    "tests/test_bundle_extraction.py::test_verified_project_roundtrip_to_new_or_empty_root[False-bytes]",
+    "tests/test_bundle_extraction.py::test_verified_project_roundtrip_to_new_or_empty_root[False-cli]",
+    "tests/test_bundle_extraction.py::test_verified_project_roundtrip_to_new_or_empty_root[False-registry]",
+    "tests/test_bundle_extraction.py::test_verified_project_roundtrip_to_new_or_empty_root[False-request]",
+    "tests/test_bundle_extraction.py::test_verified_project_roundtrip_to_new_or_empty_root[True-bytes]",
+    "tests/test_bundle_extraction.py::test_verified_project_roundtrip_to_new_or_empty_root[True-cli]",
+    "tests/test_bundle_extraction.py::test_verified_project_roundtrip_to_new_or_empty_root[True-registry]",
+    "tests/test_bundle_extraction.py::test_verified_project_roundtrip_to_new_or_empty_root[True-request]",
     "tests/test_project_initialization.py::test_built_distribution_initializes_without_project_imports_or_path[module]",
     "tests/test_project_initialization.py::test_built_distribution_initializes_without_project_imports_or_path[zipapp]",
     "tests/test_project_initialization.py::test_configuration_is_last_and_every_move_has_a_durable_journal",
@@ -172,6 +201,7 @@
   "open_items": [
     "An interrupted preparation without a complete durable journal remains an untouched conflict; automatic cleanup cannot infer ownership from unverified remnants. Existing project edits invalidate init replay without deleting data. Journal consistency is not authentication of a deliberately reconstructed foreign record.",
     "The native implementation is currently Linux/local-filesystem only; other platform, filesystem and complete release coverage remain open. Advisory mutexes do not sandbox noncooperating host writers.",
-    "Parent directories must already exist. Whole bootstrap inputs and inventory are memory-resident. Full later document/project semantic gates are not implemented by initialization."
+    "Parent directories must already exist. Whole bootstrap inputs and inventory are memory-resident. Full later document/project semantic gates are not implemented by initialization.",
+    "Complete 15.e.R extraction fault/race/process-interruption coverage and 15.e.C cleanup. Existing init checks and their measured scope remain unchanged."
   ]
 }

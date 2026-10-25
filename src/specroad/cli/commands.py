@@ -156,6 +156,11 @@ def _bundle_verify(invocation):
     return verify_command(invocation)
 
 
+def _bundle_extract(invocation):
+    from ..bundles.extraction_command import extract_command
+    return extract_command(invocation)
+
+
 def _read_runtime_options():
     return (OptionSpec('--resource-profile', takes_value=True, choices=('constrained', 'standard')),
             *(OptionSpec(flag, takes_value=True) for flag in ('--cpu-budget-ms', '--wall-budget-ms',
@@ -165,6 +170,20 @@ def _read_runtime_options():
 
 def builtin_registry() -> CommandRegistry:
     commands = (CommandSpec(
+        command_id='bundle.extract', words=('bundle', 'extract'), command_class=CommandClass.ROOT_CREATION,
+        preflight_profile=PreflightProfile.ROOT_CREATION, effect_scope=EffectScope.NEW_ROOT,
+        handler=_bundle_extract, positionals=(PositionalSpec('file'),), requires_write_paths=('output',),
+        options=(OptionSpec('--output', takes_value=True, required=True),
+            OptionSpec('--expected-sha256', takes_value=True),
+            OptionSpec('--format', takes_value=True, choices=('pretty', 'json')),
+            OptionSpec('--no-color'), OptionSpec('--quiet')),
+        protocol=CommandProtocol('bundle-extract-v1', {'command_id': 'bundle.extract',
+            'arguments': {'file': 'project.zip'}, 'options': {'--output': 'project', '--format': 'json'}},
+            handler_exit_codes=(0, 3, 4, 5, 6, 7),
+            diagnostic_codes=('CORE_MODEL', 'CORE_ENVIRONMENT', 'CORE_CONFLICT', 'CORE_SECURITY',
+                              'SRV001', 'SRV002', 'SRV003', 'SRV060', 'SRV083'),
+            lock_kind='bootstrap', work=WorkContract('root_creation', ('verified_bundle_input', 'target_directory'))),
+    ), CommandSpec(
         command_id='bundle.verify', words=('bundle', 'verify'), command_class=CommandClass.READ_ONLY,
         preflight_profile=PreflightProfile.INPUT_READ, effect_scope=EffectScope.NONE, handler=_bundle_verify,
         positionals=(PositionalSpec('file'),),

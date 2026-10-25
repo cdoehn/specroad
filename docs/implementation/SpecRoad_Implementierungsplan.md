@@ -28,10 +28,10 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ```yaml
 plan_revision: 19
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 627
-last_completed_plan_commit: 15.d.C
-next_plan_commit: 15.e.W
-last_completed_numbered_bundle: 471
+implementation_plan_commits_completed: 628
+last_completed_plan_commit: 15.e.W
+next_plan_commit: 15.e.R
+last_completed_numbered_bundle: 472
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -25540,12 +25540,164 @@ auf ein weiteres Result.
 
 #### 15.e.W – Let it Work
 
-- [ ] **15.e.W** · Position **628/900** · Voraussetzung: `15.d.C`.
+- [x] **15.e.W** · Position **628/900** · Voraussetzung: `15.d.C`.
 **Exakte Commit-Message:** `15.e.W feat(bundle): Atomare Extraktion und Zielschutz aufbauen`
 
 **Umsetzung:** Ausschließlich verifiziertes Bundle in fehlendes oder leeres Ziel über Bootstrapjournal extrahieren.
 
 **Verhaltensabnahme:** Vollständiges Projekt ist nach Abschluss regulär ladbar. Bei Teilbundles bleiben die getrennten Originalprüfbytes und das Manifest nach E.3.2 erhalten, ohne daraus Fachmitglieder zu erzeugen.
+
+
+**Umsetzungs- und Übergabenachweis – Bundle 472 (W), 25. Oktober 2026.**
+
+**Bestätigte Basis.** Das Result
+`specroad-apply_Result_095217_1025_cdc437.zip`, SHA-256
+`6acaaf50a25f0611cda9898404d5918ca6eb0168d7a52940b24ade8d064b847c`,
+bestätigt den sauberen **15.d.C**-Commit
+`06d29e196c3a9acc8eb69fa94700fdcd51280da0`, Bundle **471**, Parent
+`a54810b55f5e66a31b51f128c7e05b88867875c4`. Die generierte Root-Anleitung,
+Kontext, Umgebung, Manifest, Run-/Ausführungslogs und alle **2.238**
+Snapshotdateien wurden geprüft. Größen, Blob-IDs, Modi und vollständige Bytes
+entsprechen dem ausschließlich lesend geprüften Apply-Stand und den
+vorherigen Payloads einschließlich der fünf post-Gate-Planmarker.
+Vor Beginn wurde nur der bereits bestätigte Planstand in Dev nachgeführt:
+**627/900**, zuletzt **15.d.C**, nächstens **15.e.W**, Bundle **471**.
+Es gab keine Git-Synchronisation oder direkte Änderung in Apply.
+
+Die tatsächlichen Berichte und Einzeloutcomes bestätigen **6.904/6.904**
+bestandene Apply-Tests in **2.088,25 s** auf vier parallelen Workern,
+**Sequenz 176 / Gruppe 2/3**, aus **20.710** aktiven Identitäten.
+Testnummern, Quellbindung und Auswahl wurden nachgerechnet.
+Auswahlbindung: `0dd0a285f9a78d871660ffdc1e0405b3530634da1d8e4699e2c4b0a0ee598b0e`;
+Auswahlbericht-SHA-256: `0a1434560458b768109bc849bc97852567c0b32f48af279f6bd39df01b9f2f5c`;
+Einzeloutcomes-SHA-256: `e1a23a1da89a5272995c08637e419bd60f4f093be7b282553be47b5f64ae3ae6`.
+Dieser Teilnachweis belegt weder eine Vollsuite noch einen Release.
+
+**Nutzbarer W-Ausschnitt.** **SPECROAD-DECISION-1** ist ausdrücklich in den
+maßgeblichen Projektvorgaben enthalten. Die bestehenden Vorgaben zu 15.e.W,
+11.7 und Anhang E reichen für diese reguläre Umsetzung aus; eine weitere
+normative Klärung ist nicht erforderlich. Spezifikation **0.2.24**, SHA-256
+`ed0a3c233753e9bfff165dcbf5347e83eb056ba2b745d865a5cbdc514bd88008`,
+bleibt bytegleich.
+
+`bundle extract FILE --output DIR [--expected-sha256 HASH]` ist über CLI,
+Registry und strukturierten Request als projektloser Root-Erzeugungsbefehl
+verfügbar. Die vorhandene unabhängige Bundleverifikation prüft die gesamten
+owned ZIP-Bytes einschließlich optionaler externer Hashbindung und fachlichem
+Payloadmodell vor dem ersten Zielschreibzugriff. Der Dateiadapter liest den
+expliziten Eingang sicher und prüft seine Bytes vor der Veröffentlichung erneut.
+
+Die Extraktion verwendet die vorhandene native BootstrapTree-Publikation mit
+Ziel-/Elternmutex, descriptorrelativen Zugriffen und No-Replace-Renames.
+Sie erzeugt nur benötigte Elternverzeichnisse und den lokalen Recoverybereich.
+Das Ziel muss fehlen oder leer sein; fremde Inhalte und Links werden erhalten
+und abgewiesen. Ein vorhandenes leeres Ziel behält seine Identität.
+Die Konfiguration wird zuletzt veröffentlicht. Jede veröffentlichte Einheit
+ist zuvor durch das persistierte Bootstrapjournal gebunden. Gewöhnliche
+Vorbereitungs-/Veröffentlichungsfehler rollen nur nachweislich eigene Daten
+zurück; nicht verifizierbare Reste bleiben als Konflikt erhalten.
+
+Ein nachweisbarer Publikationspräfix lässt sich mit demselben erneut vollständig
+verifizierten Bundle abschließen. Die erwarteten Dateien und Verzeichnisse
+stammen ausschließlich aus diesem Eingang, nicht aus Journalanweisungen.
+Das geschlossene Journal bindet Identitäten, Modi, Größen, Hashes und Reihenfolge.
+Nach Abschluss bleibt es unter `.specroad/recovery/bundle-bootstrap` als
+passiver lokaler Nachweis erhalten. Ein erneuter Aufruf prüft den vollständigen
+gebundenen Zustand, ohne Dateien nochmals zu installieren; nachträgliche oder
+fremde Änderungen werden dabei nicht überschrieben.
+
+Alle Payloadbytes einschließlich `bundle-manifest.json`, Parent-Kontext und
+separatem Boundary-Prüfkontext nach E.3.2 bleiben unverändert. Ein Vollprojekt
+ist regulär ladbar und reproduziert zunächst dasselbe Projektbundle.
+Spätere zulässige Fachänderungen bleiben den bestehenden Write-/Frische-Gates
+unterworfen; das historische Manifest friert die laufenden Fachbytes nicht ein.
+Der zusätzliche Rootschutz gilt für Roots mit dem erhaltenen Extraktionsnachweis:
+Teilbundles können keinen vollständigen ProjectSource oder Vollprojektexport
+öffnen. Das Entfernen allein des Rootmanifests hebt diesen Schutz nicht auf.
+Bereits bestehende Marker-/Fehlerverträge außerhalb dieses Extraktionspfades
+bleiben erhalten. Die zulässigen Partial-Abfragen und vollständige Integration
+aller Befehle bleiben **15.f**, nichtleere portable Receipts **15.g** und
+ai-runtime-Extraktion ihrem späteren Planschritt zugeordnet.
+
+**Grenzen und Nachweise.** `SR-TC-0390` und `SR-TC-0480` bleiben ausdrücklich
+`partial`. Die bestehenden Init-Orakel und alle bisherigen offenen Punkte von
+SR-TC-0480 bleiben erhalten. Gemessen wird native Linux-/Local-Filesystem-
+Ausführung mit existierendem Elternverzeichnis und speicherresidentem Eingang;
+advisory Mutexes isolieren keine nicht kooperierenden Hostschreiber.
+Journalkonsistenz authentifiziert keinen absichtlich rekonstruierten Fremdbeleg.
+Die umfassende Fault-/Race-/Prozessabbruchmatrix bleibt **15.e.R**, die weitere
+strukturelle Bereinigung **15.e.C**. Es wird keine vollständige semantische
+Validierung, Produktfreigabe, portable Receipt-Historie oder neue Schreibbefugnis
+behauptet. Synthetische Reviewdaten in Verhaltenstests sind ausschließlich Fixtures.
+
+**Gezielte Verhaltensnachweise.** **1.293/1.293** ausgewählte Verhaltenstests
+bestehen in **224.62 s** mit **vier parallelen Workern**, beobachtetem
+Prozessabschluss **0**, ausschließlich `passed`-Outcomes und
+`full_suite_passed=null`. Darunter sind **39** neue Extraktionsfälle sowie
+betroffene Init-/Recovery-, Bundle-, Reader-, Preflight-, Schema-/Resultat- und
+Katalogregressionen. Die maschinenlesbare Schemaauswahl erhält die neue
+Ergebnisidentität; die bestehende Beispiel-Fixture stellt den expliziten
+ZIP-Eingang auch für den neuen Befehl bereit. Fachorakel werden nicht gelockert.
+
+Reproduzierbare Auswahl vollständiger Testdateien:
+
+- `tests/test_apply_rotation.py`
+- `tests/test_bundle_extraction.py`
+- `tests/test_bundle_verification.py`
+- `tests/test_bundle_verification_right.py`
+- `tests/test_catalog_check.py`
+- `tests/test_catalog_check_right.py`
+- `tests/test_partial_bundle.py`
+- `tests/test_partial_bundle_right.py`
+- `tests/test_preflight_metadata.py`
+- `tests/test_preflight_profiles.py`
+- `tests/test_product_bundle.py`
+- `tests/test_product_bundle_right.py`
+- `tests/test_project_bundle.py`
+- `tests/test_project_bundle_right.py`
+- `tests/test_project_initialization.py`
+- `tests/test_project_initialization_right.py`
+- `tests/test_project_inspection.py`
+- `tests/test_project_inspection_right.py`
+- `tests/test_publication_check.py`
+- `tests/test_publication_check_right.py`
+- `tests/test_resource_inventory.py`
+- `tests/test_resource_inventory_right.py`
+- `tests/test_results.py`
+- `tests/test_schema_catalog.py`
+- `tests/test_schema_catalog_change_plan.py`
+- `tests/test_schema_catalog_robustness.py`
+- `tests/test_transaction_preflight.py`
+- `tests/test_transaction_preflight_right.py`
+
+Ausführung über `tools/run_selected_tests.py --workers 4 --expected-tests 1293`
+in einem frischen ignorierten Berichtsverzeichnis. Die vollständige Collection
+und Katalogprüfung ist gültig: **20.749** aktive Identitäten, **0** Testkörper.
+Die **39** neuen Testidentitäten erhalten ausschließlich hinten neue Nummern;
+alle bisherigen Nummern bleiben erhalten. Insgesamt sind **20.753** Nummern
+reserviert, darunter dieselben vier stillgelegten Identitäten.
+Quellidentität: `47fd817ed9cf975402ac080cd6d13ab36c7236039ce742770c7f6936f170e223`;
+Katalogbericht-SHA-256: `299de18d92c0674ee5c58533f39c69f695a88ac36305b6391db93e4b5ceb0c40`;
+Auswahlbericht-SHA-256: `495346beb6e626d5abea52eec87b11907083a067150bd1f6f60b328a84169114`;
+Einzeloutcomes-SHA-256: `2947c9b1c791a8d8d133f2188a5274a9c2a10328dbf49725a41db68a7b38fa19`.
+Dies ist ausschließlich ein gezielter paralleler Entwicklungs-Teilnachweis.
+Kein vollständiger Entwicklungs- oder serieller Testlauf wurde gestartet.
+
+**Gebundene Übergabe.** Bundle **472** enthält genau einen echten
+W-Zwischenstand mit **17** Dateien einschließlich dieses Plans.
+Der Entrypoint installiert die gezielt geprüften Bytes über den nativen
+PatchHarbor-Payloadwriter und prüft **Sequenz 177 / Gruppe 0/3**:
+**6.917** dauerhaft nummerierte Tests mit vier parallelen Workern.
+Erst nach erfolgreichem Gate setzt er die fünf Planmarker auf **628/900**,
+zuletzt **15.e.W**, nächstens **15.e.R**, Bundle **472** und die W-Checkbox.
+Danach entsteht ausschließlich in Apply der Commit
+`15.e.W feat(bundle): Atomare Extraktion und Zielschutz aufbauen`.
+Dieser zukünftige Testlauf und Commit werden nicht als erfolgt behauptet.
+Fehler erhalten den tatsächlichen Zustand und erfolgreiche frühere Commits;
+R und C bleiben eigene offene Zwischenstände. Kein Dev-Commit, Push/Fetch,
+CI-, Control- oder Watcherstart. Nach nativer Paketprüfung und atomarer
+Übergabe genau einer kanonischen ZIP endet dieser N-Durchlauf ohne Warten
+auf ein weiteres Result.
 
 #### 15.e.R – Make it Right
 

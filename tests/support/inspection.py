@@ -52,7 +52,7 @@ def command_example_inputs(root, command):
     """Materialize declared inputs, including a ZIP beside an unselected origin."""
     if command.requires_project:
         command_example_project(root, command.command_id)
-    elif command.command_id == 'bundle.verify':
+    elif command.command_id in ('bundle.verify', 'bundle.extract'):
         from specroad.bundles import prepare_project_bundle
         origin = root / 'origin'
         inspection_project(origin)

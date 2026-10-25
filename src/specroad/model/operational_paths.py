@@ -13,7 +13,7 @@ EMPTY_OPERATIONAL_DIRECTORIES = frozenset(('tmp', 'merge'))
 OPERATIONAL_DIRECTORIES = frozenset(('locks', 'transactions', 'recovery', 'cache', 'requests')) | EMPTY_OPERATIONAL_DIRECTORIES
 PASSIVE_ROOTS = frozenset((CACHE_ROOT, REQUESTS_ROOT))
 PASSIVE_JOURNAL_DIRECTORIES = frozenset((('transactions', 'receipts'),
-    ('recovery', 'lock-audit'), ('recovery', 'transaction-audit'), ('recovery', 'init-bootstrap')))
+    ('recovery', 'lock-audit'), ('recovery', 'transaction-audit'), ('recovery', 'init-bootstrap'), ('recovery', 'bundle-bootstrap')))
 
 
 def passive_journal_directory(folder, name):

@@ -12,13 +12,15 @@ from types import MappingProxyType
 from ..model.configuration import ProjectConfiguration
 from ..model.paths import CURRENT_JSON_CLASSES, PAYLOAD_CLASSES, classify_path, project_path
 from ..model.errors import ModelError
-from ..security import ProjectBoundary
+from ..security import ProjectBoundary, SafetyViolation
 
 
 
 class ProjectSource:
     def __init__(self, root, *, expected_project_id=None):
         self.boundary = ProjectBoundary(root)
+        from ..bundles._extracted_root import require_complete_root
+        self._bundle_origin = require_complete_root(self.boundary)
         self.configuration_bytes = self.boundary.read_bytes("specroad.json")
         from .json_reader import JsonResource, configuration_schema
         resource = JsonResource(self.configuration_bytes, configuration_schema(), path="specroad.json")
@@ -27,6 +29,9 @@ class ProjectSource:
             raise ModelError("project_identity_mismatch")
 
     def _fresh_configuration(self):
+        from ..bundles._extracted_root import require_complete_root
+        if require_complete_root(self.boundary) != self._bundle_origin:
+            raise SafetyViolation('Extracted project origin changed')
         if self.boundary.read_bytes("specroad.json") != self.configuration_bytes:
             raise ModelError("configuration_changed", path="specroad.json")
 
