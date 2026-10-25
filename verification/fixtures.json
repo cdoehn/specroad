@@ -404,6 +404,10 @@
       "kind": "Native Capability/Task schema 0.2.0 values, exact Appendix L field projection, metadata/workflow exclusions, configured independent contracts and legacy Evidence hashes. Native freshness/selection/aggregation, no rewriting or audit-hash substitute.",
       "provider": "tests/test_verification_planning_context.py:value"
     },
+    "SR-FIX-PORTABLE-RECEIPTS-v1": {
+      "kind": "Owned native temporary complete project, actual test-authorized creation/commit/cleanup, archived completion and request receipts, full and partial bundle generation, independent verification and inode-bound extraction. Retries compare original IDs/result objects and unchanged inventories. Corruption, omission, simple copy and changed operations never supply a replay or live authority. No real user approval, authentication, full crash matrix or release claim.",
+      "provider": "tests/test_bundle_receipts.py:completed,transfer,receipts"
+    },
     "SR-FIX-PRODUCT-BUNDLE-R-v1": {
       "kind": "Versioned owned stdlib ZIP/JSON vectors with fixed hashes and explicit error classes, plus native metadata and portable-path boundary cases in tests/test_product_bundle_right.py. No product ZIP codec generated the vectors; no semantic project, receipt-authenticity, extraction or approval claim.",
       "provider": "tests/fixtures/product_bundle_container_v1.json"
@@ -819,6 +823,7 @@
     "SR-FIX-PLANNING-BUILTIN-WORK-v1",
     "SR-FIX-PLANNING-RELATIONS-v1",
     "SR-FIX-PLANNING-VERIFICATION-CONTEXT-v1",
+    "SR-FIX-PORTABLE-RECEIPTS-v1",
     "SR-FIX-PRODUCT-BUNDLE-R-v1",
     "SR-FIX-PRODUCT-BUNDLE-v1",
     "SR-FIX-PRODUCTION-VALIDATION-v1",

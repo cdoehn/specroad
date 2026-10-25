@@ -190,8 +190,10 @@ def test_unimplemented_receipt_verification_is_not_claimed(tmp_path, path):
     raw = rebind(original, {**original.files, path: b'{}'})
     with no_write_attempts(), pytest.raises(BundleError) as failure:
         verify_bundle(raw)
-    assert failure.value.reason == 'bundle_portable_receipt_provider_required'
-    assert failure.value.exit_code == 5
+    # The provider now validates native completion sets; these opaque paths
+    # still cannot become a verified receipt history.
+    assert failure.value.reason == 'bundle_receipt_path_invalid'
+    assert failure.value.exit_code == 3
 
 
 @pytest.mark.parametrize('kind', ['missing', 'directory', 'symlink', 'invalid_zip', 'wrong_hash'])

@@ -305,7 +305,8 @@ def test_nonempty_history_or_unresolved_transaction_remains_outside_provider(tmp
     before = inventory(root)
     with no_write_attempts(), pytest.raises(BundleError) as failure:
         prepare_partial_bundle(root, scope())
-    assert failure.value.exit_code == 5 and inventory(root) == before
+    expected = 3 if path.startswith('.specroad/requests/') else 5
+    assert failure.value.exit_code == expected and inventory(root) == before
 
 
 def test_omitted_resource_link_is_not_followed(tmp_path):
@@ -334,7 +335,7 @@ def test_original_observation_is_rechecked_after_encoding(tmp_path, change):
         return result
     with patch.object(service, 'encode_bundle', changed), pytest.raises(BundleError) as failure:
         prepare_partial_bundle(root, scope())
-    assert failure.value.exit_code == (5 if change == 'receipt' else 6)
+    assert failure.value.exit_code == 6
     assert not (root / 'generated').exists()
 
 

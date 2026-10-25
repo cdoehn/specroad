@@ -188,8 +188,8 @@ def test_nonempty_receipt_history_is_not_silently_omitted(tmp_path, path):
     before = inventory(root)
     with no_write_attempts(), pytest.raises(BundleError) as failure:
         prepare_project_bundle(root)
-    assert failure.value.reason == 'bundle_portable_receipt_provider_required'
-    assert failure.value.exit_code == 5 and inventory(root) == before
+    assert failure.value.reason == 'bundle_receipt_path_invalid'
+    assert failure.value.exit_code == 3 and inventory(root) == before
 
 
 def test_explicitly_empty_receipt_directories_are_checked_and_accepted(tmp_path):

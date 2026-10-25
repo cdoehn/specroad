@@ -126,7 +126,8 @@ def extract_bundle(raw, target, *, expected_sha256=None, cwd=None, _recheck_inpu
     """Materialize only a verified inventory, retaining the original manifest.
 
     A partial is not a normal ProjectSource; its permitted reader integration
-    remains separate. No receipt import, source authentication or approval.
+    remains separate. Completed project receipts retain their bytes and the
+    extraction proof; their later historical admission grants no live authority.
     """
     verified = verify_bundle(raw, expected_sha256=expected_sha256)
     container = BundleContainer(raw, expected_sha256=expected_sha256)

@@ -202,6 +202,7 @@ def builtin_registry() -> CommandRegistry:
         effect_scope=EffectScope.EXTERNAL_OUTPUT, handler=_bundle_create, requires_project=True,
         configuration_schema_required=True,
         options=(OptionSpec('--scope', takes_value=True, choices=BUNDLE_SCOPE_KINDS),
+            OptionSpec('--exclude-operational-receipts'),
             *(OptionSpec('--' + name, takes_value=True) for name in
               ('output', 'output-root', 'configuration', 'document', 'release', 'project')),
             OptionSpec('--format', takes_value=True, choices=('pretty', 'json')),
@@ -212,7 +213,7 @@ def builtin_registry() -> CommandRegistry:
             diagnostic_codes=('CORE_MODEL', 'CORE_ENVIRONMENT', 'CORE_CONFLICT', 'CORE_SECURITY',
                               'SRV001', 'SRV002', 'SRV003', 'SRV060', 'SRV083'),
             work=WorkContract('native_project_bundle', ('project_configuration', 'current_project_inventory',
-                                                       'empty_completed_receipt_inventory'))),
+                                                       'completed_receipt_inventory'))),
     ), CommandSpec(
         command_id='export', words=('export',), command_class=CommandClass.GENERATED_OUTPUT,
         preflight_profile=PreflightProfile.PROJECT_READ, effect_scope=EffectScope.EXTERNAL_OUTPUT,

@@ -31,7 +31,8 @@ def test_cli_registry_declares_implemented_project_and_partial_creation():
     assert command.preflight_profile.value == 'project_read'
     assert command.effect_scope.value == 'external_output'
     assert next(o for o in command.options if o.flag == '--scope').choices == ('project', 'document', 'release')
-    assert not any(o.flag in ('--profile', '--exclude-operational-receipts') for o in command.options)
+    assert not any(o.flag == '--profile' for o in command.options)
+    assert any(o.flag == '--exclude-operational-receipts' and not o.takes_value for o in command.options)
     result = dispatch_result(['command', 'describe', 'bundle.create'])
     assert result.exit_code == 0, result.as_dict()
     schema = dispatch_result(['schema', 'show', 'bundle-create-v1'])
@@ -98,7 +99,7 @@ def test_initialization_language_packages_and_baseline_objects_survive_publicati
     {'--scope': 'project', '--output': 'generated/project.zip', '--configuration': 'SR-CFG-0001'},
     {'--scope': 'document', '--output': 'generated/project.zip'},
     {'--scope': 'release', '--output': 'generated/project.zip'},
-    {'--scope': 'project', '--output': 'generated/project.zip', '--exclude-operational-receipts': True},
+    {'--scope': 'project', '--output': 'generated/project.zip', '--exclude-operational-receipts': 'invalid-boolean'},
     {'--scope': 'project', '--output': 'generated/project.zip', '--profile': 'ai-runtime'},
 ])
 def test_invalid_or_unimplemented_selections_fail_without_writes(tmp_path, options):
@@ -175,7 +176,8 @@ def test_unresolved_or_unverified_history_prevents_normal_completion(tmp_path, p
     before = inventory(root)
     with no_write_attempts():
         result = create(root)
-    assert result.exit_code == 5 and inventory(root) == before, result.as_dict()
+    expected = 3 if path.startswith(('.specroad/requests/', '.specroad/transactions/receipts/')) else 5
+    assert result.exit_code == expected and inventory(root) == before, result.as_dict()
     assert result.as_dict()['result'] is None and not result.complete
 
 
@@ -203,8 +205,8 @@ def test_missing_required_source_never_publishes_a_zip(tmp_path, kind):
 def test_changes_after_preparation_are_rechecked_before_any_output(tmp_path, change):
     root = tmp_path / 'project'; project(root)
     original = publication._prepare
-    def changed(*args):
-        prepared = original(*args)
+    def changed(*args, **kwargs):
+        prepared = original(*args, **kwargs)
         if change == 'artifact':
             path = artifact_path('goal', domain_value('goal')['id'], 'SR')
             put(root, path, (root / path).read_bytes() + b' ')

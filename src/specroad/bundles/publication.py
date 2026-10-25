@@ -101,10 +101,11 @@ def _publish(container, source, verify_current, output, output_root):
             'approval_granted': False, 'write_authorized': False}
 
 
-def _steps(root, *, output, output_root=None, descriptor=_PROJECT_SCOPE):
+def _steps(root, *, output, output_root=None, descriptor=_PROJECT_SCOPE, exclude_operational_receipts=False):
     project = None
     try:
-        container, source, verify_current = (_prepare(root) if descriptor is _PROJECT_SCOPE
+        container, source, verify_current = (_prepare(root, exclude_operational_receipts=exclude_operational_receipts)
+                                            if descriptor is _PROJECT_SCOPE
                                             else _prepare_partial(root, descriptor))
         project = {'project_root': str(source.boundary.root), 'project_id': source.configuration.project_id}
         yield 'evaluated'
@@ -121,14 +122,15 @@ def _steps(root, *, output, output_root=None, descriptor=_PROJECT_SCOPE):
         return read_failure('bundle.create', error, project, read_details())
 
 
-def create_project_bundle(root, *, output, output_root=None):
+def create_project_bundle(root, *, output, output_root=None, exclude_operational_receipts=False):
     """Generate one ZIP under generated/ or an explicit separate output root.
 
     Existing targets are never replaced. Failed publication retains its actual
     complete/private images; it never reports success or deletes others' files.
-    Portable nonempty receipt history remains a separate provider requirement.
+    Explicit receipt exclusion is reflected in the local_only manifest.
     """
-    return complete_read_steps(_steps(root, output=output, output_root=output_root))
+    return complete_read_steps(_steps(root, output=output, output_root=output_root,
+                                     exclude_operational_receipts=exclude_operational_receipts))
 
 
 def create_command(invocation):
@@ -155,7 +157,8 @@ def create_command(invocation):
         except ModelError as error:
             return read_failure('bundle.create', error, None, read_details())
     return complete_read_steps(_steps(invocation.resolved.project_root,
-        output=options['--output'], output_root=options.get('--output-root'), descriptor=descriptor),
+        output=options['--output'], output_root=options.get('--output-root'), descriptor=descriptor,
+        exclude_operational_receipts=options.get('--exclude-operational-receipts', False)),
         call=invocation.consumption_call)
 
 

@@ -4,19 +4,43 @@
   "requirement_id": "SR-REQ-0490",
   "specification_sha256": "07a35f089e83d27045e76a57aa5b3d5d0061dd0556543b4765da5f114e1ae637",
   "primary_verification_id": "SR-VER-0033",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-PORTABLE-RECEIPTS-v1"
+  ],
+  "preconditions": [
+    "Native completed and cleaned-up transaction in an owned temporary project; authorization is supplied only by the test fixture. No local or transported data is treated as authentication or human approval."
+  ],
+  "steps": [
+    "Complete a native create transaction, retain its exact request/transaction/committed bytes, and create/verify/extract a closed project bundle.",
+    "Compare unchanged stored results and IDs on retry; reject missing/corrupt completion links, copied proof and changed operations without writes.",
+    "Exclude observed receipts explicitly, check local_only and exact exclusions, and keep partials without project write receipts."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Die Idempotenzentscheidung nach dem Transfer eines vollständigen Projektbundles MUSS dieselben Regeln wie `SR-REQ-0384` und `SR-REQ-0385` anwenden.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Completed native receipt sets retain project, request, operation and completion hash links separately from the unchanged normative model. Only the local inode-bound proof of verified project extraction admits historical foreign-root receipts; copied files, absent transported requests and changed bindings cannot trigger a replay or duplicate new request. Explicit exclusions and partials are local_only; replay performs no normative mutation and grants no live publication authority."
   },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
+  "expected_diagnostics": [
+    "SRV002",
+    "SRV060"
+  ],
+  "expected_exit_codes": [
+    0,
+    3,
+    6
+  ],
+  "json_pointers": [
+    "/manifest/idempotency_scope",
+    "/manifest/entries",
+    "/manifest/excluded_contents",
+    "/action",
+    "/result_object",
+    "/created_ids",
+    "/normative_writes",
+    "/write_authorized"
+  ],
   "required_environment": {
     "implementation": "cpython",
     "declared_minimum_python": "3.10",
@@ -28,8 +52,47 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_bundle_receipts.py::test_changed_imported_completion_never_replays_or_becomes_new_request[bytes-committed]",
+    "tests/test_bundle_receipts.py::test_changed_imported_completion_never_replays_or_becomes_new_request[bytes-request]",
+    "tests/test_bundle_receipts.py::test_changed_imported_completion_never_replays_or_becomes_new_request[bytes-transaction]",
+    "tests/test_bundle_receipts.py::test_changed_imported_completion_never_replays_or_becomes_new_request[remove-committed]",
+    "tests/test_bundle_receipts.py::test_changed_imported_completion_never_replays_or_becomes_new_request[remove-request]",
+    "tests/test_bundle_receipts.py::test_changed_imported_completion_never_replays_or_becomes_new_request[remove-transaction]",
+    "tests/test_bundle_receipts.py::test_changed_imported_completion_never_replays_or_becomes_new_request[replace_inode-committed]",
+    "tests/test_bundle_receipts.py::test_changed_imported_completion_never_replays_or_becomes_new_request[replace_inode-request]",
+    "tests/test_bundle_receipts.py::test_changed_imported_completion_never_replays_or_becomes_new_request[replace_inode-transaction]",
+    "tests/test_bundle_receipts.py::test_changed_retry_operations_remain_a_conflict_after_transfer",
+    "tests/test_bundle_receipts.py::test_complete_history_is_byte_exact_separate_and_verified_without_writes",
+    "tests/test_bundle_receipts.py::test_explicit_exclusion_publishes_only_local_idempotency[False-cli]",
+    "tests/test_bundle_receipts.py::test_explicit_exclusion_publishes_only_local_idempotency[False-direct]",
+    "tests/test_bundle_receipts.py::test_explicit_exclusion_publishes_only_local_idempotency[False-structured]",
+    "tests/test_bundle_receipts.py::test_explicit_exclusion_publishes_only_local_idempotency[True-cli]",
+    "tests/test_bundle_receipts.py::test_explicit_exclusion_publishes_only_local_idempotency[True-direct]",
+    "tests/test_bundle_receipts.py::test_explicit_exclusion_publishes_only_local_idempotency[True-structured]",
+    "tests/test_bundle_receipts.py::test_historical_retry_does_not_freeze_the_live_normative_model",
+    "tests/test_bundle_receipts.py::test_imported_and_new_local_completions_share_the_next_portable_history",
+    "tests/test_bundle_receipts.py::test_imported_history_never_supplies_original_live_publication_proof",
+    "tests/test_bundle_receipts.py::test_invalid_operational_binding_cannot_be_hidden_by_rehashing_zip[created_ids]",
+    "tests/test_bundle_receipts.py::test_invalid_operational_binding_cannot_be_hidden_by_rehashing_zip[local_only]",
+    "tests/test_bundle_receipts.py::test_invalid_operational_binding_cannot_be_hidden_by_rehashing_zip[orphan_request]",
+    "tests/test_bundle_receipts.py::test_invalid_operational_binding_cannot_be_hidden_by_rehashing_zip[project_id]",
+    "tests/test_bundle_receipts.py::test_invalid_operational_binding_cannot_be_hidden_by_rehashing_zip[request_hash]",
+    "tests/test_bundle_receipts.py::test_partial_explicitly_omits_completed_project_history",
+    "tests/test_bundle_receipts.py::test_rebound_zip_missing_one_completion_link_is_rejected_before_extraction[committed]",
+    "tests/test_bundle_receipts.py::test_rebound_zip_missing_one_completion_link_is_rejected_before_extraction[request]",
+    "tests/test_bundle_receipts.py::test_rebound_zip_missing_one_completion_link_is_rejected_before_extraction[transaction]",
+    "tests/test_bundle_receipts.py::test_receipt_bytes_are_rechecked_before_publishing_the_selected_bundle[False]",
+    "tests/test_bundle_receipts.py::test_receipt_bytes_are_rechecked_before_publishing_the_selected_bundle[True]",
+    "tests/test_bundle_receipts.py::test_receipt_replay_requires_native_root_bound_extraction[copied_extraction]",
+    "tests/test_bundle_receipts.py::test_receipt_replay_requires_native_root_bound_extraction[manual_payload]",
+    "tests/test_bundle_receipts.py::test_receipt_replay_requires_native_root_bound_extraction[missing_proof]",
+    "tests/test_bundle_receipts.py::test_receipt_replay_requires_native_root_bound_extraction[plain_copy]",
+    "tests/test_bundle_receipts.py::test_reexported_history_survives_another_native_transfer",
+    "tests/test_bundle_receipts.py::test_retry_after_native_transfer_reuses_exact_result_and_ids_without_writes",
+    "tests/test_bundle_receipts.py::test_transaction_without_request_id_transports_its_completion_pair"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "15.g.W provides the first complete native transfer/replay path. 15.g.R boundary and robustness completion and 15.g.C structural cleanup remain open; this is targeted partial evidence, not full-suite or release proof."
   ]
 }

@@ -45,8 +45,7 @@ class _CompletionProof:
         self.journal = CommittedJournal(raw)
         value = self.journal.data
         if (value['transaction_id'] != transaction_id
-                or value['project_id'] != source.configuration.project_id
-                or value['root_identity'] != list(source.boundary._root_identity)):
+                or value['project_id'] != source.configuration.project_id):
             raise ReceiptError('completion_project_binding_mismatch', exit_code=6)
         refs = value['receipts']
         transaction = TransactionReceipt(self.read(refs['transaction']['path']))
@@ -61,6 +60,11 @@ class _CompletionProof:
                     or canonical_json_bytes(request.data) != canonical_json_bytes(request_for_transaction(transaction).data)):
                 raise ReceiptError('request_receipt_link_mismatch', exit_code=6)
             self.receipt_paths.append(request.path)
+        if value['root_identity'] != list(source.boundary._root_identity):
+            if preflight is not None:
+                raise ReceiptError('completion_project_binding_mismatch', exit_code=6)
+            from ..bundles._receipt_admission import verify_imported_completion
+            verify_imported_completion(self)
         if preflight is not None:
             if type(preflight) is not PublicationPreflight:
                 raise ReceiptError('publication_preflight_required', exit_code=2)
@@ -128,7 +132,8 @@ def read_transaction_completion(source, transaction_id, *, preflight=None):
     """Observe committed + linked receipts. No writes, locks or retry dispatch.
 
     Without preflight this verifies historical local records, not the current
-    model. Original source identity is required; a copied tree is not its owner.
+    model. Original source identity or a locally bound verified full-bundle
+    extraction is required; a copied tree is not its owner.
     """
     if type(source) is not ProjectSource:
         raise ReceiptError('project_source_required', exit_code=2)
@@ -170,6 +175,8 @@ def _read_confirmed_request(source, identity):
             raise ReceiptError('request_root_changed', exit_code=6)
         first = _request_bytes(files, path)
         if first is None:
+            from ..bundles._receipt_admission import reject_missing_imported_request
+            reject_missing_imported_request(source, path)
             source.check_current()
             if _request_bytes(files, path) is not None:
                 raise ReceiptError('request_receipt_changed', exit_code=6, path=path)

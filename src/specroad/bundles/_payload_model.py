@@ -24,6 +24,8 @@ from .manifest import require
 
 def payload_model(container, *, partial=False):
     files = container.files
+    from ._receipts import verify_payload_receipts
+    receipts = verify_payload_receipts(container)
     configuration = ProjectConfiguration(parse_json_object(files['specroad.json']))
     registry_binding = configuration.data.get('language_registry')
     registry_path = None if registry_binding is None else registry_binding['path']
@@ -34,11 +36,9 @@ def payload_model(container, *, partial=False):
                                     expected_version=registry_binding['registry_version'])
     documents, resources, profiles, packages, attachments = [], [], [], {}, {}
     for path, raw in files.items():
-        if path == 'specroad.json' or (partial and path.startswith('bundle-context/')):
+        if path == 'specroad.json' or path in receipts or (partial and path.startswith('bundle-context/')):
             continue
         kind = classify_path(path, configuration)
-        if kind is PathClass.RECEIPT:
-            raise BundleError('bundle_portable_receipt_provider_required', code=None, exit_code=5)
         document = ModelDocument(path, raw)
         if kind is PathClass.ARTIFACT:
             value = parse_json_object(raw, path=path)

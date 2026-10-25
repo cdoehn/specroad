@@ -4,15 +4,12 @@ This adapter adds the bundle-specific receipt, root-marker and archive-name
 observations to InspectionSnapshot. It does not create another snapshot model,
 resolve a second closure, or grant publication/extraction authority.
 """
-import os
-
 from ..authoring._inspection_snapshot import InspectionSnapshot, InspectionChanged
 from ..changes.target_model import _default_scope
 from ..exchange._export_scope import export_scope, resource_identity
 from ..graph.scope_descriptors import ScopeDescriptor
 from ..model.canonical import canonical_json_bytes
 from ..model.domain_schemas import DOMAIN_TYPES, validate_domain_fields
-from ..model.operational_paths import REQUESTS_ROOT, RECEIPTS_ROOT
 from ..model.paths import PathClass
 from ..model.record_schemas import validate_record_fields
 from ..query.show import _preflight
@@ -21,15 +18,7 @@ from ..storage.json_syntax import parse_json_object
 from ..storage.project import ProjectSource
 from .errors import BundleError
 from .manifest import MANIFEST_NAME, owned_metadata, check_entries, require
-
-
-def _empty_receipts(source):
-    # Shallow read preflight deliberately skips passive histories. Absence or
-    # emptiness is therefore observed here, through guarded directory handles.
-    for path in (REQUESTS_ROOT, RECEIPTS_ROOT):
-        with opened_resource(source.boundary, path, directory=True, missing_ok=True) as (fd, _):
-            if fd is not None and os.listdir(fd):
-                raise BundleError('bundle_portable_receipt_provider_required', code=None, exit_code=5)
+from ._receipts import ReceiptSnapshot
 
 
 def _previous_manifest(source):
@@ -80,7 +69,7 @@ class ProjectBundleSnapshot:
         except PartialRootMarker as error:
             raise BundleError('bundle_partial_project_source', code='SRV083', exit_code=7) from error
         _preflight(source)
-        _empty_receipts(source)
+        receipts = ReceiptSnapshot(source)
         previous_manifest = _previous_manifest(source)
         snapshot = InspectionSnapshot(root, None, include_archive_objects=True)
         if (snapshot.source.boundary._root_identity != source.boundary._root_identity
@@ -111,6 +100,7 @@ class ProjectBundleSnapshot:
         self.native = native
         self.payloads = payloads
         self.archives = archives
+        self.receipts = receipts
         self._snapshot = snapshot
         self._previous_manifest = previous_manifest
 
@@ -119,6 +109,6 @@ class ProjectBundleSnapshot:
         if (_archive_paths(self.source) != self.archives
                 or _previous_manifest(self.source) != self._previous_manifest):
             raise InspectionChanged('bundle_inventory_changed')
-        _empty_receipts(self.source)
+        self.receipts.verify_current()
         _preflight(self.source)
         self.source.check_current()

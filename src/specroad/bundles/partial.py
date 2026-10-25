@@ -81,7 +81,7 @@ def _prepare_partial(root, descriptor):
     require(type(descriptor) is ScopeDescriptor, 'bundle_scope_descriptor_required')
     selection = descriptor.data
     require(PARTIAL.matches_scope(selection), 'bundle_scope_combination')
-    # Reuse the full native origin guard, including empty-receipt observation.
+    # Reuse the full native origin guard, including completed-receipt observation.
     # A partial marker is never promoted, nor is a missing origin target guessed.
     origin = ProjectBundleSnapshot(root)
     context_paths, configuration_sha256 = _configuration_context(origin.model, selection)
@@ -100,6 +100,7 @@ def _prepare_partial(root, descriptor):
     exclusions = {p: 'outside_scope' for p in origin.payloads if p not in payloads and p not in proof_sources}
     exclusions.update({p: 'unreferenced_archive_object' for p in origin.archives
                        if p not in origin.payloads})
+    exclusions.update({p: 'operational_receipts_excluded' for p in origin.receipts.payloads})
     metadata = {
         'bundle_format_version': '1.0.0', **PARTIAL.creation_fields(),
         'project_id': origin.model.configuration.project_id, 'schema_version': '0.2.0',
@@ -126,7 +127,7 @@ def prepare_partial_bundle(root, descriptor):
     The descriptor selects a document/release with partial boundaries and an
     optional native configuration. All omitted weak targets are present and
     hashed in the complete origin. A partial target never substitutes for it.
-    Nonempty receipt histories remain outside this initial provider's support.
+    Project receipts are explicitly excluded; partials never admit write retries.
     """
     try:
         return _prepare_partial(root, descriptor)[0]

@@ -399,7 +399,7 @@ def test_partial_publication_retains_original_observation_through_last_check(tmp
         result = original(*args, **kwargs); mutate(); return result
     with patch.object(target, name, changed):
         result = create_partial_bundle(root, scope(configuration_id=chain[-1]['id']), output='generated/partial.zip')
-    assert result.exit_code == (5 if change == 'receipt' else 6), result.as_dict()
+    assert result.exit_code == 6, result.as_dict()
     assert result.result is None and not (root / 'generated/partial.zip').exists()
     if when == 'publishing':
         pending = list((root / 'generated').glob('.specroad-bundle-*.tmp'))
