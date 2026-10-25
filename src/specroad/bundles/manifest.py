@@ -8,6 +8,7 @@ import re
 
 from ..graph.boundaries import BoundaryReference
 from ..graph.scope_descriptors import ScopeDescriptor
+from ..model._bundle_scope_contract import IDEMPOTENCY_SCOPES, KINDS, PROJECT
 from ..model.canonical import canonical_json_bytes
 from ..model.errors import ModelError
 from ..model.versions import SCHEMA_VERSION
@@ -69,19 +70,17 @@ def _check_scope(value):
     require(type(value['read_only']) is bool, 'bundle_read_only_type')
     descriptor = ScopeDescriptor(value['scope_descriptor']).data
     kind = value['bundle_kind']
-    require(type(kind) is str and kind in ('project', 'partial'), 'bundle_kind')
+    require(type(kind) is str and kind in KINDS, 'bundle_kind')
     require(type(value['idempotency_scope']) is str
-            and value['idempotency_scope'] in ('portable', 'local_only'), 'bundle_idempotency_scope')
-    if kind == 'project':
-        require(not value['read_only'] and descriptor['scope_kind'] == 'project'
-                and descriptor['selector'] == {} and descriptor['configuration_id'] is None
-                and descriptor['boundary_policy'] == 'closed', 'bundle_scope_combination')
+            and value['idempotency_scope'] in IDEMPOTENCY_SCOPES, 'bundle_idempotency_scope')
+    rule = KINDS[kind]
+    require(value['read_only'] is rule.read_only and rule.matches_scope(descriptor),
+            'bundle_scope_combination')
+    if rule is PROJECT:
         require(value['origin_model_root_sha256'] == value['bundle_model_root_sha256'],
                 'bundle_project_root_mismatch')
     else:
-        require(value['read_only'] and descriptor['scope_kind'] in ('document', 'release')
-                and descriptor['boundary_policy'] == 'partial', 'bundle_scope_combination')
-        require(value['idempotency_scope'] == 'local_only', 'bundle_partial_idempotency')
+        require(value['idempotency_scope'] in rule.idempotency_scopes, 'bundle_partial_idempotency')
     return kind
 
 

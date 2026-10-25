@@ -7,6 +7,7 @@ Extraction, arbitrary-bundle verification and write admission remain separate.
 """
 from .. import __version__
 from ..cli.results import OperationFailure
+from ..model._bundle_scope_contract import PROJECT
 from ..model.errors import ModelError
 from ..security import SafetyViolation
 from ..srx.errors import SrxError
@@ -20,13 +21,13 @@ def _metadata(snapshot):
     model, descriptor, native = snapshot.model, snapshot.descriptor, snapshot.native
     archives, payloads = snapshot.archives, snapshot.payloads
     return {
-        'bundle_format_version': '1.0.0', 'bundle_kind': 'project', 'read_only': False,
+        'bundle_format_version': '1.0.0', **PROJECT.creation_fields(),
         'project_id': model.configuration.project_id, 'schema_version': '0.2.0',
         'tool_version': __version__, 'scope_descriptor': descriptor.data,
         'origin_model_root_sha256': native.sha256, 'bundle_model_root_sha256': native.sha256,
         'profile_sha256': native.data['profile_sha256'],
         'configuration_sha256': native.data['configuration_sha256'],
-        'boundary_references': [], 'idempotency_scope': 'portable',
+        'boundary_references': [],
         'excluded_contents': [{'path': p, 'reason': 'unreferenced_archive_object'}
                               for p in archives if p not in payloads],
     }

@@ -11,6 +11,7 @@ from ..cli.results import CommandResult, FailureKind, OperationFailure
 from ..diagnostics import Diagnostic
 from ..documents._export_targets import _check_external, _output_boundary, _target_path
 from ..graph.scope_descriptors import ScopeDescriptor
+from ..model._bundle_scope_contract import PARTIAL, PROJECT
 from ..model.errors import ModelError
 from ..query._read_errors import read_details, read_failure
 from ..query.read_work import complete_read_steps
@@ -135,7 +136,7 @@ def create_command(invocation):
     if '--scope' not in options or '--output' not in options:
         raise CommandUsageError('Bundle creation requires scope and output')
     kind, selector = options['--scope'], {}
-    for scope in ('document', 'release'):
+    for scope in PARTIAL.scope_kinds:
         flag = '--' + scope
         if kind == scope:
             if flag not in options:
@@ -143,14 +144,14 @@ def create_command(invocation):
             selector = {scope + '_id': options[flag]}
         elif flag in options:
             raise CommandUsageError('Bundle selector does not match scope')
-    if kind == 'project' and '--configuration' in options:
+    if kind in PROJECT.scope_kinds and '--configuration' in options:
         raise CommandUsageError('A full project bundle cannot be configuration filtered')
     descriptor = _PROJECT_SCOPE
-    if kind != 'project':
+    if kind not in PROJECT.scope_kinds:
         try:
             descriptor = ScopeDescriptor({'scope_version': 'scope-v1', 'scope_kind': kind,
                 'selector': selector, 'configuration_id': options.get('--configuration'),
-                'closure_profile': 'core-closure-v1', 'boundary_policy': 'partial'})
+                'closure_profile': 'core-closure-v1', 'boundary_policy': PARTIAL.boundary_policy})
         except ModelError as error:
             return read_failure('bundle.create', error, None, read_details())
     return complete_read_steps(_steps(invocation.resolved.project_root,

@@ -2,6 +2,7 @@
 
 from dataclasses import replace
 
+from ..model._bundle_scope_contract import SCOPE_KINDS as BUNDLE_SCOPE_KINDS
 from .registry import CommandClass, CommandRegistry, CommandSpec, EffectScope, OptionSpec, PreflightProfile
 from .results import CommandResult, FailureKind, OperationFailure
 from .contracts import CommandProtocol, PositionalSpec, WorkContract
@@ -163,7 +164,7 @@ def builtin_registry() -> CommandRegistry:
         command_class=CommandClass.GENERATED_OUTPUT, preflight_profile=PreflightProfile.PROJECT_READ,
         effect_scope=EffectScope.EXTERNAL_OUTPUT, handler=_bundle_create, requires_project=True,
         configuration_schema_required=True,
-        options=(OptionSpec('--scope', takes_value=True, choices=('project', 'document', 'release')),
+        options=(OptionSpec('--scope', takes_value=True, choices=BUNDLE_SCOPE_KINDS),
             *(OptionSpec('--' + name, takes_value=True) for name in
               ('output', 'output-root', 'configuration', 'document', 'release', 'project')),
             OptionSpec('--format', takes_value=True, choices=('pretty', 'json')),

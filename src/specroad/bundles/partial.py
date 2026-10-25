@@ -10,6 +10,7 @@ from ..configurations import evaluate_applicability, resolve_configuration
 from ..exchange._export_scope import export_scope, resource_identity
 from ..graph.relations import SourceRelations
 from ..graph.scope_descriptors import ScopeDescriptor
+from ..model._bundle_scope_contract import PARTIAL
 from ..model.errors import ModelError
 from ..model.language_package_values import LanguagePackage
 from ..model.manifest_resources import project_json_resource
@@ -80,8 +81,7 @@ def _selected_payloads(origin, closure, artifacts, context_paths):
 def _prepare_partial(root, descriptor):
     require(type(descriptor) is ScopeDescriptor, 'bundle_scope_descriptor_required')
     selection = descriptor.data
-    require(selection['scope_kind'] in ('document', 'release')
-            and selection['boundary_policy'] == 'partial', 'bundle_scope_combination')
+    require(PARTIAL.matches_scope(selection), 'bundle_scope_combination')
     # Reuse the full native origin guard, including empty-receipt observation.
     # A partial marker is never promoted, nor is a missing origin target guessed.
     origin = ProjectBundleSnapshot(root)
@@ -95,7 +95,7 @@ def _prepare_partial(root, descriptor):
     exclusions.update({p: 'unreferenced_archive_object' for p in origin.archives
                        if p not in origin.payloads})
     metadata = {
-        'bundle_format_version': '1.0.0', 'bundle_kind': 'partial', 'read_only': True,
+        'bundle_format_version': '1.0.0', **PARTIAL.creation_fields(),
         'project_id': origin.model.configuration.project_id, 'schema_version': '0.2.0',
         'tool_version': __version__, 'scope_descriptor': selection,
         'origin_model_root_sha256': origin.native.sha256,
@@ -103,7 +103,6 @@ def _prepare_partial(root, descriptor):
         'profile_sha256': native.data['profile_sha256'],
         'configuration_sha256': native.data['configuration_sha256'],
         'boundary_references': native.data['boundary_references'],
-        'idempotency_scope': 'local_only',
         'excluded_contents': [{'path': p, 'reason': exclusions[p]}
                               for p in sorted(exclusions, key=lambda p: p.encode('utf-8'))],
     }
