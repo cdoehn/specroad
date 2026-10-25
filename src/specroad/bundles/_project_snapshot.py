@@ -69,8 +69,8 @@ class ProjectBundleSnapshot:
         except PartialRootMarker as error:
             raise BundleError('bundle_partial_project_source', code='SRV083', exit_code=7) from error
         _preflight(source)
-        receipts = ReceiptSnapshot(source)
         previous_manifest = _previous_manifest(source)
+        receipts = ReceiptSnapshot(source, imported_manifest=previous_manifest)
         snapshot = InspectionSnapshot(root, None, include_archive_objects=True)
         if (snapshot.source.boundary._root_identity != source.boundary._root_identity
                 or snapshot.source.configuration_bytes != source.configuration_bytes):

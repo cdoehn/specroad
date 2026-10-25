@@ -28,10 +28,10 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ```yaml
 plan_revision: 22
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 634
-last_completed_plan_commit: 15.g.W
-next_plan_commit: 15.g.R
-last_completed_numbered_bundle: 480
+implementation_plan_commits_completed: 635
+last_completed_plan_commit: 15.g.R
+next_plan_commit: 15.g.C
+last_completed_numbered_bundle: 481
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -27163,12 +27163,148 @@ N-Auftrag ohne Result-Warten oder Hintergrundfortsetzung.
 
 #### 15.g.R – Make it Right
 
-- [ ] **15.g.R** · Position **635/900** · Voraussetzung: `15.g.W`.
+- [x] **15.g.R** · Position **635/900** · Voraussetzung: `15.g.W`.
 **Exakte Commit-Message:** `15.g.R feat(bundle): Receipts und portable Idempotenz vervollständigen`
 
 **Vervollständigung:** Veränderte Operationsbindung bleibt Konflikt; ausgeschlossene Receipts nicht als portiert behaupten.
 
 **Verhaltensabnahme:** Modellwurzel bleibt unabhängig vom Betriebssektionsinhalt. Die W-Nachweise bleiben zusätzlich grün.
+
+
+**Umsetzungs- und Übergabenachweis – Bundle 481 (R), 25. Oktober 2026.**
+
+**Bestätigte Basis.** Result `specroad-apply_Result_212822_1025_a12ecb.zip`,
+SHA-256 `abef6e8019fa82eea38b2f58e86e6bc50b87e704505bf995fc0ae0fe061ba2b2`,
+bestätigt den sauberen Apply-Commit `6cef980a226df8d5c0b5d92a433d49068a7ec6ce`,
+Parent `92393f36ee51fa5db30641e90405e6023d772c6e`, für **15.g.W**, Bundle 480.
+Root-Anleitung, Kontext, Umgebung, Manifest, Run-/Ausführungslogs und alle
+**2.263** Snapshotdateien wurden geprüft; Blob-IDs, Größen, Modi und Bytes
+passen zum tatsächlichen sauberen Apply-Zustand. Die native Resultprüfung und
+die konsistente lesende Zustandserfassung bestätigen die exakte Vierfachbindung.
+Das Result war eindeutig maßgeblich und noch ohne gebundenes Folgebundle.
+
+Die tatsächliche Commitfolge und die Apply-Einzeloutcomes belegen **7.077/7.077**
+bestandene Tests, Sequenz **186**, Gruppe **0/3**, vier parallele Worker,
+**2.286,67 s**, Prozessende 0. Auswahlbindung `183438dca0071f2707728aaf54692412e34cc22c46e4daf7170127d50c229aca`;
+Auswahlbericht-SHA `533a20eac1361cc94976f6e61acef466bb572b37401f8e796d7e67cdf0d656aa`;
+Einzeloutcomes-SHA `3f331c0e793cd09c3b961793463a8fa5a06bff41a11a76c34f7450ecb8907512`.
+Dieser Nachweis ist ein Teiltest, kein Vollsuite- oder Release-Erfolg.
+Der bestätigte Planstand vor dieser Übergabe ist **634/900**, zuletzt 15.g.W,
+nächstens 15.g.R, Bundle 480. Nur die zurückgebliebenen Dev-Planmarker wurden
+zunächst aus dem bestätigten Snapshot übernommen; Dev-Historie und Index
+bleiben unverändert. Apply wurde ausschließlich gelesen.
+
+**Regulärer R-Zustand.** Die vorhandenen Regeln in 10.9, 10.16, E.1.1,
+SR-REQ-0487/0488/0490 und den nativen Idempotenzverträgen bestimmen diesen
+Ausschnitt. SPECROAD-DECISION-1 ist ausdrücklich vorhanden; eine eigene
+normative Festlegung ist hier nicht erforderlich. Spezifikation **0.2.27**
+bleibt bytegleich, SHA-256
+`07a35f089e83d27045e76a57aa5b3d5d0061dd0556543b4765da5f114e1ae637`.
+
+Die bisherige Prüfung der jeweils vorhandenen abgeschlossenen Receiptgruppen
+erkannte das vollständige Verschwinden einer ursprünglich transportierten
+Gruppe nicht. Die verbliebenen Gruppen konnten weiterhin vollständig sein,
+oder die aktuelle Menge erschien leer. Der Projektprovider bindet deshalb
+jetzt zusätzlich die Receipt-Payloadpfade des vorhandenen Ursprungsmanifests
+an die tatsächlich beobachteten Bytes, Größen und Hashes. Fehlende oder
+geänderte gebundene Historie wird als Konflikt **6** abgewiesen, auch bei
+explizitem Ausschluss, Teilbundle-Auswahl und öffentlichem ZIP-Publisher.
+Die bisherigen Manifest- und Inventurbeobachtungen bleiben bis zur
+Veröffentlichung frisch geprüft. Historische Modellpayloads werden dadurch
+nicht eingefroren; der Abgleich betrifft nur die unveränderlichen Receipts.
+
+Bei unabhängiger Bundleprüfung und Übernahme eines vorhandenen Quellmanifests
+muss eine Ausschlussdeklaration den nativen Receiptpfad und den Grund
+`operational_receipts_excluded` konsistent zusammenführen. Ein Receiptpfad
+kann nicht als `outside_scope` oder `unreferenced_archive_object` ausgegeben
+werden; andere oder ungültige Pfade sind keine operativen Receipts. Solche
+inkonsistenten Deklarationen scheitern mit **3/SRV002**, bevor die Extraktion
+Dateien anlegt. Die bestehende Pflicht zu `local_only` bei Receipt-Ausschluss
+und die Grenze des Teilbundles bleiben erhalten. Manifestflags liefern
+weiterhin weder historische Replaybeweise noch Schreib- oder Freigaberechte.
+
+Reale abgeschlossene Transaktionen mit verschiedenen Request-/Transaktions-
+Identitäten liefern bei gleichem normativem Modell dieselben Modellwurzel-,
+Profil- und Konfigurationshashes. Die Betriebs- und Containerbytes unterscheiden
+sich weiterhin korrekt; ein expliziter Ausschluss beeinflusst nur Inventar,
+Ausschlussdeklaration und Idempotenzscope. Nach nativem Transfer bleiben
+Operationsreihenfolge, geänderter Inhalt, Guards und entfernte Operationen
+Konflikte mit beiden tatsächlichen Operationshashes. Schlüsselreihenfolge
+und späterer Akteur ändern das historische Ergebnis nicht. Request-IDs
+bleiben case-sensitiv, Dry-Run und fehlende Request-ID nicht anwendbar; keine
+dieser Beobachtungen erteilt eine Schreibbefugnis. Symlinks und FIFOs bleiben
+Sicherheitsfehler **7**, auch bei ausgeschlossener Betriebssektion. Späte
+Gruppen-, Namens- und Verzeichnisidentitätswechsel verhindern Veröffentlichung.
+
+**Entwicklungsnachweis.** Die 20 neu angelegten Negativfälle reproduzierten
+die Lücken am unveränderten W-Produktstand. Ein anschließender paralleler
+W-/R-Vorlauf bestand mit 81 Verhaltenstests. Der abschließende gebundene
+Regressionslauf prüft **1681/1681** Tests aus
+**33** vollständigen Testdateien auf acht parallelen Workern
+unter CPython 3.14.4, **630.87 s**, beobachtetes Prozessende 0 und
+ausschließlich `passed`-Einzeloutcomes. Die vollständige Collection/Katalog-
+prüfung bestätigt **21.272** aktive Identitäten bei **0** ausgeführten
+Testkörpern. **43** neue Identitäten erhalten ausschließlich die Nummern
+**21233–21275**; alle bisherigen Nummern und vier stillgelegten Identitäten
+bleiben erhalten. `full_suite_passed=null`: kein Entwicklungsvolltest,
+kein serieller Testlauf, keine Darstellungs-/Dokumentationstests und kein CI-Start.
+
+SR-TC-0487/0488/0490 binden die neuen R-Verhaltenstests zusätzlich an ihre
+native temporäre Fixture. Die strukturelle C-Arbeit und weitergehende
+plattformübergreifende, Vollsuite- und Release-Nachweise bleiben offen.
+Quellidentität `0e94635668948224f61efe0857ea767cce56e5207edd92572c39cb6a390396cb`;
+Katalog-SHA `20b15c5c7b9a0056ec4c67cb25bd3443fd8d3bc7d5c1a88f28dbb490c34c74ed`;
+Auswahlbericht-SHA `4a24607d1fbf3b8c8c77048e0c7891c449dd11298d4af3fc9ea0c41ef816089b`;
+Einzeloutcomes-SHA `655dd1ced61173d4aac1ffc0d7c6c0a31922e6f890c8a5fe2be08eeb718f17c7`.
+Ausgewählte vollständige Testdateien:
+
+- `tests/test_bootstrap.py`
+- `tests/test_bundle_extraction.py`
+- `tests/test_bundle_extraction_right.py`
+- `tests/test_bundle_receipts.py`
+- `tests/test_bundle_receipts_right.py`
+- `tests/test_bundle_verification.py`
+- `tests/test_bundle_verification_right.py`
+- `tests/test_metadata.py`
+- `tests/test_normative_idempotency.py`
+- `tests/test_normative_idempotency_preplanning.py`
+- `tests/test_normative_idempotency_right.py`
+- `tests/test_partial_bundle.py`
+- `tests/test_partial_bundle_right.py`
+- `tests/test_partial_read_commands.py`
+- `tests/test_partial_read_commands_right.py`
+- `tests/test_partial_read_consumers.py`
+- `tests/test_preflight_metadata.py`
+- `tests/test_preflight_profiles.py`
+- `tests/test_product_bundle.py`
+- `tests/test_product_bundle_right.py`
+- `tests/test_project_bundle.py`
+- `tests/test_project_bundle_right.py`
+- `tests/test_publication_check.py`
+- `tests/test_publication_check_right.py`
+- `tests/test_requests.py`
+- `tests/test_runtime_consumption.py`
+- `tests/test_runtime_consumption_right.py`
+- `tests/test_transaction_preflight.py`
+- `tests/test_transaction_preflight_right.py`
+- `tests/test_transaction_receipts.py`
+- `tests/test_transaction_receipts_right.py`
+- `tests/test_transaction_recovery_completion.py`
+- `tests/test_transaction_recovery_completion_right.py`
+
+**Gebundene Übergabe.** Genau ein regulärer **PLAN 15.g.R**, Position
+**635/900**, wird mit dem nativen Payloadwriter installiert. Der Entrypoint
+verlangt den sauberen gebundenen Ausgangsstand und führt ausschließlich
+**Gruppe 1/3, Sequenz 187**, mit **7.089** Tests parallel auf vier Workern aus.
+Quellidentität, Katalog, feste Nummerierung und Auswahlbeleg müssen passen.
+Erst nach erfolgreichem Gate setzt er die fünf Planmarker auf R abgeschlossen,
+635/900, zuletzt 15.g.R, nächstens 15.g.C und Bundle 481. Erst danach folgt
+der Commit `15.g.R feat(bundle): Receipts und portable Idempotenz vervollständigen`.
+15.g.C bleibt ein eigener offener Zustand; sein Endzustand wird nicht vorab
+installiert. Apply-Tests und Commit sind vorgesehen, nicht bereits erfolgt.
+Fehler erhalten den tatsächlichen Arbeitszustand und erfolgreiche Commits.
+Die native ZIP-Prüfung und atomare Exchange-Übergabe beenden diesen N-Auftrag
+ohne Result-Warten oder Hintergrundfortsetzung.
 
 #### 15.g.C – Make it Clean
 

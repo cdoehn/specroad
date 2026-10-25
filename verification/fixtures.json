@@ -405,8 +405,8 @@
       "provider": "tests/test_verification_planning_context.py:value"
     },
     "SR-FIX-PORTABLE-RECEIPTS-v1": {
-      "kind": "Owned native temporary complete project, actual test-authorized creation/commit/cleanup, archived completion and request receipts, full and partial bundle generation, independent verification and inode-bound extraction. Retries compare original IDs/result objects and unchanged inventories. Corruption, omission, simple copy and changed operations never supply a replay or live authority. No real user approval, authentication, full crash matrix or release claim.",
-      "provider": "tests/test_bundle_receipts.py:completed,transfer,receipts"
+      "kind": "Owned native temporary complete project, actual test-authorized creation/commit/cleanup, archived completion and request receipts, full and partial bundle generation, independent verification and inode-bound extraction. Retries compare original IDs/result objects and unchanged inventories. Corruption, omission, simple copy and changed operations never supply a replay or live authority. No real user approval, authentication, full crash matrix or release claim. The R cases retain real extracted history, remove complete groups, declare misleading exclusions, compare equal normative roots with distinct receipts, and exercise multi-operation conflicts, special files and publication races.",
+      "provider": "tests/test_bundle_receipts.py:completed,transfer,receipts; tests/test_bundle_receipts_right.py:document_scope,multi_transfer"
     },
     "SR-FIX-PRODUCT-BUNDLE-R-v1": {
       "kind": "Versioned owned stdlib ZIP/JSON vectors with fixed hashes and explicit error classes, plus native metadata and portable-path boundary cases in tests/test_product_bundle_right.py. No product ZIP codec generated the vectors; no semantic project, receipt-authenticity, extraction or approval claim.",

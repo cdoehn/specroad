@@ -4,6 +4,7 @@ The portable set contains native archived completion markers and their linked
 receipts. It never contains active work, and supplies no live publication proof.
 """
 import re
+from hashlib import sha256
 
 from ..changes.receipt_projection import request_for_transaction
 from ..changes.receipt_read import read_transaction_completion
@@ -12,6 +13,7 @@ from ..changes.receipt_values import (CommittedJournal, TransactionReceipt,
 from ..model.canonical import canonical_json_bytes
 from ..model.operational_paths import REQUESTS_ROOT, RECEIPTS_ROOT
 from ..security.resource_access import opened_resource, directory_entries
+from ..storage.json_syntax import parse_json_object
 from .errors import BundleError
 from .manifest import require
 
@@ -74,9 +76,19 @@ def completed_receipts(files, project_id):
         raise BundleError(error.reason) from error
 
 
+def _check_exclusions(manifest):
+    for item in manifest['excluded_contents']:
+        operational = receipt_path(item['path'])
+        require(operational == (item['reason'] == 'operational_receipts_excluded'),
+                'bundle_receipt_exclusion_path')
+        if operational:
+            _path_kind(item['path'])
+
+
 def verify_payload_receipts(container):
     files = {p: b for p, b in container.files.items() if receipt_path(p)}
     manifest = container.manifest
+    _check_exclusions(manifest)
     require(not files or (manifest['bundle_kind'] == 'project'
             and manifest['idempotency_scope'] == 'portable'), 'bundle_receipts_not_portable')
     completed_receipts(files, manifest['project_id'])
@@ -117,10 +129,23 @@ def _observe(source):
 class ReceiptSnapshot:
     """Retain bytes and bounded directory observations through publication."""
 
-    def __init__(self, source):
+    def __init__(self, source, *, imported_manifest=None):
         self.source = source
         self.records, self.directories = _observe(source)
         self.payloads = {p: record[1] for p, record in self.records.items()}
+        if imported_manifest is not None:
+            manifest = parse_json_object(imported_manifest)
+            _check_exclusions(manifest)
+            # A complete group can disappear without leaving an orphan. Its
+            # previously observed transport binding still forbids silently
+            # certifying an empty or smaller history, even on explicit exclusion.
+            for entry in manifest['entries']:
+                if not receipt_path(entry['path']):
+                    continue
+                raw = self.payloads.get(entry['path'])
+                if (raw is None or len(raw) != entry['size']
+                        or sha256(raw).hexdigest() != entry['sha256']):
+                    raise BundleError('bundle_imported_receipt_missing_or_changed', code=None, exit_code=6)
         self.journals = completed_receipts(self.payloads, source.configuration.project_id)
         self.verify_current()
 

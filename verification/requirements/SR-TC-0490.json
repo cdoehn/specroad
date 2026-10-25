@@ -15,30 +15,40 @@
   "steps": [
     "Complete a native create transaction, retain its exact request/transaction/committed bytes, and create/verify/extract a closed project bundle.",
     "Compare unchanged stored results and IDs on retry; reject missing/corrupt completion links, copied proof and changed operations without writes.",
-    "Exclude observed receipts explicitly, check local_only and exact exclusions, and keep partials without project write receipts."
+    "Exclude observed receipts explicitly, check local_only and exact exclusions, and keep partials without project write receipts.",
+    "Remove a whole originally transported receipt group while leaving all remaining groups internally complete; full, excluded, partial and publishing paths must refuse the lost history without writes.",
+    "Reject a consistent ZIP whose exclusions disguise native receipt paths as another content kind or claim a non-receipt path as an operational receipt before extraction.",
+    "Compare equal normative projects with distinct native receipt contents and explicit exclusions; model roots and semantic profile/configuration hashes stay equal while container/receipt hashes and exclusion metadata differ.",
+    "Transfer a real multi-operation completion and compare exact replay, case-sensitive request identity, actor/key-order independence, dry-run/absent-ID behavior and conflicts with both operation hashes. Exercise late namespace changes and special files with and without exclusion."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Die Idempotenzentscheidung nach dem Transfer eines vollständigen Projektbundles MUSS dieselben Regeln wie `SR-REQ-0384` und `SR-REQ-0385` anwenden.",
-    "scope": "Completed native receipt sets retain project, request, operation and completion hash links separately from the unchanged normative model. Only the local inode-bound proof of verified project extraction admits historical foreign-root receipts; copied files, absent transported requests and changed bindings cannot trigger a replay or duplicate new request. Explicit exclusions and partials are local_only; replay performs no normative mutation and grants no live publication authority."
+    "scope": "Completed native receipt sets retain project, request, operation and completion hash links separately from the unchanged normative model. Only the local inode-bound proof of verified project extraction admits historical foreign-root receipts; copied files, absent transported requests and changed bindings cannot trigger a replay or duplicate new request. Explicit exclusions and partials are local_only; replay performs no normative mutation and grants no live publication authority. Known imported receipt groups may not disappear on re-export; exclusion reasons must match native operational file paths. Receipt content/exclusion never changes the normative root. After transfer the native idempotency conflict, absence and non-authorizing replay contracts remain unchanged; unsafe files retain Code 7."
   },
   "expected_diagnostics": [
     "SRV002",
-    "SRV060"
+    "SRV060",
+    "SRV083"
   ],
   "expected_exit_codes": [
     0,
     3,
-    6
+    6,
+    7
   ],
   "json_pointers": [
-    "/manifest/idempotency_scope",
+    "/action",
+    "/created_ids",
+    "/expected_operations_sha256",
+    "/manifest/bundle_model_root_sha256",
     "/manifest/entries",
     "/manifest/excluded_contents",
-    "/action",
-    "/result_object",
-    "/created_ids",
+    "/manifest/idempotency_scope",
+    "/manifest/origin_model_root_sha256",
     "/normative_writes",
+    "/received_operations_sha256",
+    "/result_object",
     "/write_authorized"
   ],
   "required_environment": {
@@ -90,9 +100,52 @@
     "tests/test_bundle_receipts.py::test_receipt_replay_requires_native_root_bound_extraction[plain_copy]",
     "tests/test_bundle_receipts.py::test_reexported_history_survives_another_native_transfer",
     "tests/test_bundle_receipts.py::test_retry_after_native_transfer_reuses_exact_result_and_ids_without_writes",
-    "tests/test_bundle_receipts.py::test_transaction_without_request_id_transports_its_completion_pair"
+    "tests/test_bundle_receipts.py::test_transaction_without_request_id_transports_its_completion_pair",
+    "tests/test_bundle_receipts_right.py::test_excluded_receipts_cannot_be_relabelled_as_other_content[committed-partial]",
+    "tests/test_bundle_receipts_right.py::test_excluded_receipts_cannot_be_relabelled_as_other_content[committed-project]",
+    "tests/test_bundle_receipts_right.py::test_excluded_receipts_cannot_be_relabelled_as_other_content[request-partial]",
+    "tests/test_bundle_receipts_right.py::test_excluded_receipts_cannot_be_relabelled_as_other_content[request-project]",
+    "tests/test_bundle_receipts_right.py::test_excluded_receipts_cannot_be_relabelled_as_other_content[transaction-partial]",
+    "tests/test_bundle_receipts_right.py::test_excluded_receipts_cannot_be_relabelled_as_other_content[transaction-project]",
+    "tests/test_bundle_receipts_right.py::test_model_root_is_independent_of_receipt_contents_and_exclusion[False]",
+    "tests/test_bundle_receipts_right.py::test_model_root_is_independent_of_receipt_contents_and_exclusion[True]",
+    "tests/test_bundle_receipts_right.py::test_receipt_exclusion_requires_a_native_receipt_file_path[.specroad/requests/FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF.json]",
+    "tests/test_bundle_receipts_right.py::test_receipt_exclusion_requires_a_native_receipt_file_path[.specroad/requests/not-a-request-hash.json]",
+    "tests/test_bundle_receipts_right.py::test_receipt_exclusion_requires_a_native_receipt_file_path[.specroad/requests]",
+    "tests/test_bundle_receipts_right.py::test_receipt_exclusion_requires_a_native_receipt_file_path[.specroad/transactions/receipts/ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff/unknown.json]",
+    "tests/test_bundle_receipts_right.py::test_receipt_exclusion_requires_a_native_receipt_file_path[.specroad/transactions/receipts]",
+    "tests/test_bundle_receipts_right.py::test_receipt_exclusion_requires_a_native_receipt_file_path[artifacts/goals/absent.json]",
+    "tests/test_bundle_receipts_right.py::test_receipt_namespace_changes_between_prepare_and_publish_are_conflicts[directory_replaced-False]",
+    "tests/test_bundle_receipts_right.py::test_receipt_namespace_changes_between_prepare_and_publish_are_conflicts[directory_replaced-True]",
+    "tests/test_bundle_receipts_right.py::test_receipt_namespace_changes_between_prepare_and_publish_are_conflicts[extra_file-False]",
+    "tests/test_bundle_receipts_right.py::test_receipt_namespace_changes_between_prepare_and_publish_are_conflicts[extra_file-True]",
+    "tests/test_bundle_receipts_right.py::test_receipt_namespace_changes_between_prepare_and_publish_are_conflicts[group_removed-False]",
+    "tests/test_bundle_receipts_right.py::test_receipt_namespace_changes_between_prepare_and_publish_are_conflicts[group_removed-True]",
+    "tests/test_bundle_receipts_right.py::test_transfer_preserves_native_retry_identity_and_non_authorization[absent_id]",
+    "tests/test_bundle_receipts_right.py::test_transfer_preserves_native_retry_identity_and_non_authorization[actor]",
+    "tests/test_bundle_receipts_right.py::test_transfer_preserves_native_retry_identity_and_non_authorization[dry_run]",
+    "tests/test_bundle_receipts_right.py::test_transfer_preserves_native_retry_identity_and_non_authorization[key_order]",
+    "tests/test_bundle_receipts_right.py::test_transfer_preserves_native_retry_identity_and_non_authorization[new_case]",
+    "tests/test_bundle_receipts_right.py::test_transferred_request_conflict_retains_both_operation_hashes[content]",
+    "tests/test_bundle_receipts_right.py::test_transferred_request_conflict_retains_both_operation_hashes[guard]",
+    "tests/test_bundle_receipts_right.py::test_transferred_request_conflict_retains_both_operation_hashes[order]",
+    "tests/test_bundle_receipts_right.py::test_transferred_request_conflict_retains_both_operation_hashes[remove]",
+    "tests/test_bundle_receipts_right.py::test_unsafe_operational_files_are_never_bypassed_by_exclusion[request_fifo-False]",
+    "tests/test_bundle_receipts_right.py::test_unsafe_operational_files_are_never_bypassed_by_exclusion[request_fifo-True]",
+    "tests/test_bundle_receipts_right.py::test_unsafe_operational_files_are_never_bypassed_by_exclusion[request_symlink-False]",
+    "tests/test_bundle_receipts_right.py::test_unsafe_operational_files_are_never_bypassed_by_exclusion[request_symlink-True]",
+    "tests/test_bundle_receipts_right.py::test_unsafe_operational_files_are_never_bypassed_by_exclusion[transaction_symlink-False]",
+    "tests/test_bundle_receipts_right.py::test_unsafe_operational_files_are_never_bypassed_by_exclusion[transaction_symlink-True]",
+    "tests/test_bundle_receipts_right.py::test_whole_imported_receipt_group_cannot_disappear_on_reexport[excluded-False]",
+    "tests/test_bundle_receipts_right.py::test_whole_imported_receipt_group_cannot_disappear_on_reexport[excluded-True]",
+    "tests/test_bundle_receipts_right.py::test_whole_imported_receipt_group_cannot_disappear_on_reexport[partial-False]",
+    "tests/test_bundle_receipts_right.py::test_whole_imported_receipt_group_cannot_disappear_on_reexport[partial-True]",
+    "tests/test_bundle_receipts_right.py::test_whole_imported_receipt_group_cannot_disappear_on_reexport[project-False]",
+    "tests/test_bundle_receipts_right.py::test_whole_imported_receipt_group_cannot_disappear_on_reexport[project-True]",
+    "tests/test_bundle_receipts_right.py::test_whole_imported_receipt_group_cannot_disappear_on_reexport[publish-False]",
+    "tests/test_bundle_receipts_right.py::test_whole_imported_receipt_group_cannot_disappear_on_reexport[publish-True]"
   ],
   "open_items": [
-    "15.g.W provides the first complete native transfer/replay path. 15.g.R boundary and robustness completion and 15.g.C structural cleanup remain open; this is targeted partial evidence, not full-suite or release proof."
+    "15.g.R supplies the bounded robustness and conflict completion; 15.g.C structural cleanup remains open. The recorded selected runs are partial evidence, not full-suite, cross-version, release or real-approval proof. Apply evidence remains bound to the resulting actual commit."
   ]
 }
