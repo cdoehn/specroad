@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 18 · **Stand:** 25. Oktober 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.23
+**Planrevision:** 19 · **Stand:** 25. Oktober 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.24
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 Schritte und 900 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; jeder Schritt besitzt einen konkreten Arbeitsumfang und eigene Verhaltensabnahme.
 
@@ -9,7 +9,7 @@ Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 S
 
 Fachliche Grundlage ist [`docs/specification/SpecRoad_Spezifikation.md`](../specification/SpecRoad_Spezifikation.md), einschließlich aller konsolidierten Korrekturen, 742 Requirements, 51 Verifikationsverträge, 46 Szenario-/E2E-Identitäten sowie R-01 bis R-75, Anhang U und den PatchHarbor-Rundweg aus Anhang W. Der [`Prüfbericht`](../reviews/SpecRoad_v0.2.7_Implementierungsreife_Pruefbericht.md) ist ein vorgelagerter Entwurfsreview, kein späterer Produktnachweis.
 
-Gebundene Spezifikations-SHA-256: `d5100497b2bef9c26f76197b97acd6c9a05a6c7c2ce7c2637f18ba98c0883caf`.
+Gebundene Spezifikations-SHA-256: `ed0a3c233753e9bfff165dcbf5347e83eb056ba2b745d865a5cbdc514bd88008`.
 Planungsbasis: Commit `fe2661d02ecf2f7eb483b58a4487eb009c6b3846`; sauberes Result-Bundle `specroad_Result_120209_0914_df3504.zip`; Repository-ID `3d2576df-d611-46fc-9d2b-92869468aaca`. Diese Angaben dokumentieren die Entstehung des Plans, nicht die zukünftige Patchbindung. **Jedes spätere Patchpaket bindet den dann aktuellen tatsächlichen Result-Zustand.**
 
 Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 2026 gelten zusätzlich und bei den nachfolgend benannten Konflikten vorrangig. Sonstige normative Spezifikationsinhalte werden nicht stillschweigend abgeschwächt. Neue fachliche Widersprüche, fehlende zwingende Angaben und Sicherheitsprobleme sind offen zu benennen, nicht durch erfundene Annahmen oder Scheinerfolge zu lösen.
@@ -26,12 +26,12 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 18
+plan_revision: 19
 implementation_plan_commits_total: 900
 implementation_plan_commits_completed: 625
 last_completed_plan_commit: 15.d.W
 next_plan_commit: 15.d.R
-last_completed_numbered_bundle: 468
+last_completed_numbered_bundle: 469
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -59,6 +59,104 @@ in ihrer bisherigen Reihenfolge. M20 übernimmt die zusätzliche Gesamtmatrix
 in seinen vorhandenen Schritten 20.f, 20.h und 20.m.
 
 Nach tatsächlich erfolgreich ausgeführten, zum Commit passenden Verhaltenstests wird die betreffende Checkbox im selben Git-Commit gesetzt. Reguläre Produktcommits aktualisieren den Produktzähler; Audit-Nacharbeiten aktualisieren ausschließlich ihren Status und `next_audit_step`. Ein fehlgeschlagener Schritt bleibt offen. Git ist die Historie; das Dokument nimmt keinen eigenen noch unbekannten Commit-Hash auf. Vor dem nächsten Auftrag werden tatsächliche Git-Historie, Result-Logs und Planfortschritt abgeglichen. Bei Inkonsistenz nicht einfach weiterzählen.
+
+## OFF-PLAN – Prüfkontext für Boundary-Relationsreviews (Bundle 469)
+
+Revision 19 dokumentiert **BOUNDARY-REVIEW-CONTEXT** gemäß ausdrücklicher
+Nutzerentscheidung vom **25. Oktober 2026** und deren begrenzter
+Ausgestaltung nach SPECROAD-DECISION-1. Spezifikation **0.2.24, E.3.2**,
+legt die minimal nötigen hashgebundenen Originalzielbytes als getrennten
+Prüfkontext fest; es entstehen keine zusätzlichen Scope-Mitglieder.
+Entscheidungsbeleg, Alternativen und Abnahmen stehen bei **15.d.R**.
+
+- [x] **BOUNDARY-REVIEW-CONTEXT:** Prüfkontext für Relationsreviews an Außenkanten verbindlich klären. Commit: `docs(spec): Prüfkontext für Boundary-Relationsreviews festlegen`.
+
+**Übergabegrenze:** Genau ein OFF-PLAN-Dokumentcommit mit Spezifikation,
+Plan und den notwendigen aktiven Spezifikationshashbindungen. Produktcode,
+Tests, Oracles, Fixtures, Testnummern, Runner, Workflows und historische
+Evidence bleiben unverändert. Der bestätigte Produktstand bleibt
+**625/900**, zuletzt **15.d.W**, nächstens **15.d.R**. R und C bleiben
+offen; der Dokumentcommit ist keine nominelle Produkt-W/R/C-Folge.
+Die regulären Zwischenstände behalten ihre eigenen gezielten parallelen
+Dev-Gates und commitgebundenen parallelen Apply-Gruppen.
+
+Vor seinem Commit führt der Entrypoint ausschließlich die fällige
+**Sequenz 174 / Gruppe 0/3** mit **6.873 Tests** und vier parallelen
+Workern aus. Erst nach Erfolg setzt er den Offplan-Marker und die
+Bundlenummer auf **469**. Fehler erhalten den tatsächlichen Zustand
+und vorherige Commits. Die Übergabe erfolgt als `spec_clarification`;
+die externe Apply-Steuerung übernimmt die ZIP. Kein Apply-/Test-Erfolg
+wird vorweggenommen. Danach endet dieser Einzelauftrag; der offene
+Planschritt wird gesondert beauftragt.
+
+**Beobachtete gezielte Dev-Prüfungen.** Der abschließende Zustand besteht
+**54/54** bestehende Verhaltenstests der maschinenlesbaren Katalog- und
+Auswahlverträge in **9.27 s** mit **vier parallelen Workern**, Python
+**3.14.4**, beobachtetem Prozessabschluss **0** und ausschließlich
+`passed`-Outcomes. Ausgewählt wurden vollständig
+`tests/test_catalog_check.py` und `tests/test_catalog_check_right.py`,
+ausgeführt mit `tools/run_selected_tests.py --workers 4 --expected-tests 54`
+in einem frischen ignorierten Berichtsverzeichnis. Dies prüft die von der
+neuen Dokumenthashbindung betroffenen JSON-Verträge; es sind keine Tests
+von Dokumentation, Formulierungen oder Darstellung.
+
+Davor bestanden **1.042/1.042** gezielte bestehende Verhaltenstests in
+**131.70 s** auf vier Workern. Sie decken Bundlecodec/-erzeugung/-prüfung,
+Scope-Seeds/-Closure, Relationsreviewstatus, Konfiguration und Katalog ab.
+Nach diesem Lauf wurde nur die normative Abgrenzung präzisiert, dass bereits
+im ZIP erkannte doppelte Mitgliedsnamen/Pfadkollisionen unverändert Code 7
+behalten; anschließend wurden alle aktiven Spezifikationshashbindungen
+nachgeführt und die genannten 54 betroffenen Tests erneut ausgeführt.
+Produktcode, Tests, Oracles, Fixtures und Testnummern blieben dabei bytegleich.
+Die erste Quellbindung `f8a7170861364d9f5199b6a2edbb11c501267f066782ab2646c3eda046ae63e2`
+ist ein eigener Zwischenstand, kein Ergebnis unter dem abschließenden Hash.
+Sein Auswahlbericht-SHA-256 ist
+`bc9cb43576f6c1ff885e961c0e4c0ae1b85c6899e8317fb4e8b9cab66171bdea`,
+sein Einzeloutcomes-SHA-256
+`cdbef0ccd482069e73c37563acd2d99e9c29c130fc2e6650ce7fb66becdaa1a2`.
+Die erste Auswahl umfasste folgende vollständige Testdateien:
+
+- `tests/test_bundle_verification.py`
+- `tests/test_catalog_check.py`
+- `tests/test_catalog_check_right.py`
+- `tests/test_configuration_applicability.py`
+- `tests/test_configuration_applicability_right.py`
+- `tests/test_configuration_inheritance.py`
+- `tests/test_configuration_inheritance_right.py`
+- `tests/test_partial_bundle.py`
+- `tests/test_partial_bundle_right.py`
+- `tests/test_product_bundle.py`
+- `tests/test_product_bundle_right.py`
+- `tests/test_project_bundle.py`
+- `tests/test_project_bundle_right.py`
+- `tests/test_relation_review_status.py`
+- `tests/test_relation_review_status_right.py`
+- `tests/test_scope_closure.py`
+- `tests/test_scope_closure_right.py`
+- `tests/test_scope_seeds.py`
+- `tests/test_scope_seeds_right.py`
+
+Die abschließende vollständige Collection-/Katalogprüfung bestätigt
+**20.617** unveränderte aktive Testidentitäten, keine Katalogfehler,
+Exit **0** und **0 ausgeführte Testkörper**. Die **20.619** dauerhaft
+reservierten Testnummern einschließlich zweier historisch entfernter
+Identitäten bleiben unverändert. Die **743** aktiven Katalogdateien ändern
+jeweils ausschließlich `specification_sha256`; historische Evidence bleibt
+an ihren früheren Bytes gebunden. Zusammen mit Spezifikation und Plan enthält
+das Bundle **745** geänderte Bestandsdateien und keine neue Produktdatei.
+
+Abschließende Quellbindung:
+`32372d164c776564207a2d28388ef26b58160aa300ff1d5b38569fdd131e3ebe`;
+Katalogbindung: `2b359849c320db030fa6f57bd8198464d3f77a4787221788353f931575d46c05`;
+Auswahlbericht-SHA-256:
+`856b01d3567fc91c4ee88cf5ee42d2470d7c9b2fa5cb28d90ba67d42b5c78db5`;
+Einzeloutcomes-SHA-256:
+`25539f8dd38bd9107cf67827622016eda31970a901ee1b2c91ec249b128b81c5`.
+Beide Dev-Läufe sind gezielte Teilprüfungen mit `full_suite_passed=null`;
+keine vollständige oder serielle Testsuite wurde gestartet. Sie sichern
+den unveränderten technischen Ausgangspunkt und die aktive Katalogbindung,
+nicht die noch unimplementierte Prüfkontextfunktion. Der künftige parallele
+Apply-Lauf und sein Commit werden nicht als bereits erfolgt behauptet.
 
 ## OFF-PLAN – Konfigurationskontext im Teilbundle (Bundle 465)
 
@@ -24997,6 +25095,134 @@ endet dieser N-Durchlauf ohne Warten auf ein weiteres Result.
 
 #### 15.d.R – Make it Right
 
+**Entscheidungsbeleg BOUNDARY-REVIEW-CONTEXT (OFF-PLAN, Bundle 469).**
+
+**Basis und Lücke.** Das weiterhin maßgebliche saubere Result
+`specroad-apply_Result_020624_1025_86cfbb.zip`, SHA-256
+`0ede6246875f1dd1843dfeab94b262cda0f8d317b656395860c4c6604e9fad99`,
+bestätigt **15.d.W**, Commit
+`23cd5467f237e67fca0fd893797629b0996716cc`, Parent
+`25a494705d0151bade67a0c057be424a0b5c766c`, Bundle **468**.
+Rootanleitung, Kontext, Umgebung, Manifest, Run-/Ausführungslogs sowie
+alle **2.232** Snapshotdateien wurden geprüft und mit der tatsächlichen
+Apply-Basis und den vorigen Payloads verglichen. Der vollständige tatsächliche
+Apply-Bericht bestätigt **6.873/6.873** bestandene Tests in **2.111,14 s**,
+vier parallele Worker, **Sequenz 173 / Gruppe 2/3**, aus **20.617** aktiven
+Identitäten. Auswahlbindung
+`57d444b26962ab4370d160464672952c8382141e0cefb40818486e12f01166d3`,
+Auswahlbericht-SHA-256
+`c999e9839c999a8064d9e2fdd3c11c96014f9087535014959d42c9e45698acce`,
+Einzeloutcomes-SHA-256
+`f4e3fd8b4e8c8a1e273a855b1489a1635e60da816137ca0e431817a994f5f89f`.
+Dies ist ein Apply-Teilnachweis, kein Vollsuite- oder Releasebeleg.
+
+Spezifikation 0.2.23, 10.8/E.1/E.3 und J.1–J.3 verlangen unabhängig
+rekonstruierte Closure und aktuelle Relationsreviews. Der vorhandene Erzeuger
+`bundles/partial.py` nimmt passende Reviews schwacher Außenkanten mit,
+lässt deren Zielbytes aber aus. `_review_status_selection.py` benötigt die
+tatsächlichen Endpunkte und `_review_projection.py` unterscheidet deren
+Kontexthash vom Vollhash. Die Boundary enthält bisher nur den Zielvollhash.
+Vier parallele temporäre Verhaltensreproduktionen bestanden: Dokument und
+Release jeweils mit unverändertem Ziel beziehungsweise nur geänderter
+Revision/Tags. Im Ursprung blieb das mitgenommene Review aktuell; im Teilbundle
+fehlte der erforderliche Zielkontext. Im Audit-/Tagsfall unterschied sich
+außerdem der historische Review-Vollhash vom aktuellen Boundary-Vollhash.
+Diese synthetischen Testfixtures sind keine realen menschlichen Reviews und
+kein Nachweis der noch fehlenden Leserfunktion. Die Prüfung dauerte **2,40 s**
+auf vier Workern; es entstanden keine Produktänderung und kein Folgebundle.
+
+**Autorität.** Der daraufhin gemeldete Blocker fragte ausdrücklich nach
+hashgebundenen Zielbytes als separatem Prüfkontext ohne Scope-Erweiterung.
+Der Nutzer entschied: „Wir gehen nach deiner Empfehlung! Mache das
+klärungsbundle und lass es über apply anwenden“. Diese konkrete Entscheidung
+trägt die zusätzliche Transportfreigabe. SPECROAD-DECISION-1 allein wurde
+zuvor nicht als Erlaubnis zum Abschwächen des Nachweises oder zum Mitliefern
+weiterer ausgelassener Inhalte ausgelegt. Ihre vorhandene begrenzte Befugnis
+trägt nun die deterministische Ausgestaltung; sie wird nicht erweitert.
+Keine Produktfreigabe, Risikoakzeptanz oder fachliche Reviewentscheidung
+wird daraus abgeleitet.
+
+**Alternativen und Auswahl.** (1) Nur Container-/Modellhash prüfen und die
+Reviewclosure behaupten: verworfen, weil der erforderliche Nachweis fehlt.
+(2) Historische Review-Vollhashes gegen Boundary-Vollhashes vergleichen:
+verworfen, weil J.3 legitime kontextneutrale Änderungen erlaubt und ein
+behaupteter Kontexthash keine Originalbytes ersetzt. (3) Schwache Ziele in
+die fachliche Closure aufnehmen oder alle Außenziele samt Abhängigkeiten
+transportieren: verworfen, weil dies den Scope beziehungsweise die nötige
+Datenmenge erweitert. (4) Vollprojekt oder externe Ursprungsdateien beim
+Reader nachladen: verworfen; die Prüfung soll aus den Bundlebytes arbeiten.
+(5) Gewählt: genau die für mittransportierte Relationsreviews benötigten
+Außenkanten-Ziele in unveränderten Originalbytes unter einem festen separaten
+Prüfpfad. Der bestehende kanonische Vollhash der Boundary bindet ihren
+semantischen Inhalt, `entries` ihre Rohbytes. Ein neuer Manifestclaim,
+anderer Hashalgorithmus oder künstlicher Endpunkt ist nicht erforderlich.
+
+**Normative Zielregel und Grenzen.** E.3.2 definiert die Prüfzielmenge aus
+tatsächlichen Boundaries und enthaltenen Review-Relations-IDs, feste sichere
+Pfade, exakte Inventar-/Typ-/Hashbindung, native Kontextneuberechnung und
+unveränderte Reviewauswahl. Prüfziele bleiben außerhalb der Modellmitglieder,
+ohne transitive Abhängigkeitsexpansion, Query-/Trace-Sichtbarkeit oder Write-
+Befugnis. Starke Ziele und gebundene Ressourcen bleiben Pflichtpayloads.
+Die bewusst zusätzlich mitgelieferten Originalzielbytes werden nicht zugleich
+als vollständig ausgelassene Quellinhalte deklariert. Weitere Außeninhalte
+bleiben ausgeschlossen. Die Regel liefert keine Vollprojekt-, Authentizitäts-,
+Release- oder menschliche Freigabeaussage.
+
+Der Abgleich mit 2.4.1 ergibt: (1) derselbe offene Bundleverifikationsumfang;
+(2) nachvollziehbare Lösung ohne Änderung der Review-/Closureanforderungen;
+(3) zusätzliche Daten ausschließlich aufgrund der konkreten Nutzerentscheidung,
+bei erhaltenen Sicherheits-, Nachweis- und Freigabegrenzen; (4) versionierte
+Dokumentänderung, erhaltene Bestandsbytes und keine automatische Migration;
+(5) keine benötigten fremden Fakten oder fingierten Freigaben. Bestehende
+CLI-Aufrufe, Manifestfeldmenge und Hashalgorithmen bleiben erhalten.
+Ältere Bundles mit diesem Nachweisbedarf können ohne ihre fehlenden Bytes
+keinen vollständigen Prüfungserfolg erhalten; ausdrücklich neu erzeugte
+Bundles müssen den geklärten Vertrag erfüllen. Andere Bundles bleiben
+unverändert. Eine spätere Änderung benötigt eine neue versionierte
+Entscheidung, keinen Reset, Datenverlust oder nachträglich umgebundene Evidence.
+
+**Verbindliche offene Verhaltensabnahmen für 15.d.R.**
+
+- Dokument-/Release-Teilbundles mit aktuellen Reviews schwacher Außenkanten
+  enthalten genau die nötigen Originalprüfbytes. Erzeuger und unabhängiger
+  Reader bestimmen dieselbe Closure und Teilmodellwurzel ohne Ursprungszugriff,
+  Extraktionsdateien oder zusätzliche Scope-Mitglieder.
+- Fehlende, zusätzliche, inhaltlich redundante, falsch benannte oder schema-/
+  identitätsfalsche Prüfdateien und widersprüchliche Rollen scheitern nach
+  ZIP-Sicherheitsprüfung mit Code 3; neu gehashte
+  Transportbytes bei falschem Boundary-Vollhash mit 3/SRV060. Unsichere
+  Pfade, Pfadkollisionen einschließlich doppelter ZIP-Mitgliedsnamen und
+  gefährliche Dateitypen behalten vorrangig Code 7.
+- Audit-/Revision-/Tagsänderungen nach J.2 lassen passende Reviews aktuell;
+  geänderte Fachkontexte nicht. Historische und abgelehnte Reviewrecords
+  werden nach J.3 bewertet und niemals umgeschrieben oder positiv erfunden.
+- Mehrere relevante Boundaries auf dasselbe Ziel verwenden genau eine Datei;
+  widersprüchliche Zielbindungen scheitern. Ein ohne passenden Reviewbezug
+  transportiertes Prüfziel wird abgewiesen. Kontextneutrale JSON-Formatierung
+  ändert Transporthashes, nicht den semantischen Voll-/Kontext-/Modellhash.
+- Wird das Ziel regulär Mitglied, entfällt Boundary und Prüfkopie; sein nativer
+  Mitgliedspfad ist Pflicht. Ein starkes Ziel nur im Prüfnamensraum bleibt
+  fehlend. Ausgehende Kanten und Anhänge eines reinen Prüfziels erweitern
+  weder Seeds noch Closure; der vollständige Ursprung bleibt geprüft.
+- Konfigurationskontext nach E.3.1 und Prüfkontext nach E.3.2 sind unterscheidbar;
+  Applicability, Parent-Kette, Payloadvereinigung und Fachmitgliedschaft
+  bleiben unabhängig geprüft. Fällt ein Prüfziel mit einer reinen Parent-/
+  Auswahlkonfiguration zusammen, sind beide festgelegten Transportrollen
+  bytegleich und erzeugen keine zweite Artefaktidentität; Abweichungen scheitern.
+  Kein zusätzlicher externer Fallback.
+- Projektbundles und Teilbundles ohne diesen Review-/Boundarybedarf behalten
+  ihre bisherigen Verträge. Alte externe ZIP-Hashbindungen erkennen veränderte
+  Archive weiterhin. Fehlende alte Prüfbytes erhalten keinen Scheinerfolg.
+
+**Offene Umsetzung.** Diese Lieferung ändert nur die normative Vorgabe,
+Planabnahmen und aktive Katalogbindung. Die kohärente Anpassung des bestehenden
+Teilbundleerzeugers und die unabhängige Readerintegration werden gemeinsam
+unter **15.d.R** umgesetzt und mit gezielten parallelen Verhaltenstests
+abgenommen. Historische 15.c- und 15.d.W-Nachweise bleiben unverändert.
+**15.d.C**, Extraktion **15.e**, Read-only-Befehle **15.f** und Receiptprovider
+**15.g** werden nicht vorgezogen. Für 15.e bleibt der Erhalt des getrennten
+Prüfkontexts, für 15.f dessen Sichtbarkeits-/Writegrenze verbindlich offen.
+
 - [ ] **15.d.R** · Position **626/900** · Voraussetzung: `15.d.W`.
 **Exakte Commit-Message:** `15.d.R feat(bundle): Bundleverifikation ohne Extraktion vervollständigen`
 
@@ -25028,7 +25254,7 @@ endet dieser N-Durchlauf ohne Warten auf ein weiteres Result.
 
 **Umsetzung:** Ausschließlich verifiziertes Bundle in fehlendes oder leeres Ziel über Bootstrapjournal extrahieren.
 
-**Verhaltensabnahme:** Vollständiges Projekt ist nach Abschluss regulär ladbar.
+**Verhaltensabnahme:** Vollständiges Projekt ist nach Abschluss regulär ladbar. Bei Teilbundles bleiben die getrennten Originalprüfbytes und das Manifest nach E.3.2 erhalten, ohne daraus Fachmitglieder zu erzeugen.
 
 #### 15.e.R – Make it Right
 
@@ -25063,7 +25289,7 @@ endet dieser N-Durchlauf ohne Warten auf ein weiteres Result.
 
 **Umsetzung:** Zulässige lesende Funktionen und referenzielle Boundaryprüfung auf Partialmodellen aktivieren.
 
-**Verhaltensabnahme:** Unterstützte Abfrage funktioniert ohne Vollprojektbehauptung.
+**Verhaltensabnahme:** Unterstützte Abfrage funktioniert ohne Vollprojektbehauptung. Prüfdateien nach E.3.2 erscheinen nicht als zusätzliche Query-/Show-/Trace-/Renderobjekte und erlauben keine Writes oder implizite Rehydration.
 
 #### 15.f.R – Make it Right
 

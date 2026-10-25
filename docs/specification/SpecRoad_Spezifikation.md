@@ -1,21 +1,21 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.23
+## Version 0.2.24
 
 | Feld | Wert |
 |---|---|
 | Dokument-ID | `SR-SPEC-0001` |
-| Dokumentversion | `0.2.23` |
+| Dokumentversion | `0.2.24` |
 | Zielrelease | `SpecRoad Single-Repository Workbench 0.2.0` |
 | Status | **Fachlich konsolidierte Arbeitsgrundlage; technische Reviewentscheidung gesondert dokumentiert, formale Baseline-Freigabe und Produktabnahme nicht durch dieses Dokument erklärt** |
 | Stand | 25. Oktober 2026 |
 | Sprache | Deutsch; technische Feldnamen, Enum-Werte und CLI-Kommandos Englisch |
-| Fachliche Quelle | **Diese Repositoryfassung v0.2.23 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.23 liegt mit dieser Änderung nicht vor.** |
+| Fachliche Quelle | **Diese Repositoryfassung v0.2.24 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.24 liegt mit dieser Änderung nicht vor.** |
 | Bearbeitbare Satzquelle | Diese Datei; eine spätere PDF muss denselben versionierten Inhalt wiedergeben. |
-| Vorgängerversion | Repository-Spezifikation v0.2.22 vom 24. Oktober 2026; frühere PDF-/Reviewbelege bleiben an ihre historischen Fassungen gebunden. |
-| Prüf- und Entscheidungsgrundlage | Entscheidung PARTIAL-CONFIGURATION-CONTEXT, delegiert gemäß SPECROAD-DECISION-1: exakter Konfigurationskontext für Dokument-/Release-Teilbundles bei unveränderter Scope- und Hashprojektion. Entscheidungsbeleg und Abnahmen stehen bei 15.c.R im Implementierungsplan. |
-| Änderungsart | Additive Präzisierung der erforderlichen Konfigurationspayloads und ihrer Abgrenzung zur fachlichen Closure in E.3.1; keine neue Requirement-ID, Manifestfeldmenge oder Produktposition. Bestandsressourcen, Evidence, Freigabegrenzen und Control-Zustände bleiben erhalten; Produktumsetzung folgt gesondert. |
+| Vorgängerversion | Repository-Spezifikation v0.2.23 vom 25. Oktober 2026; frühere PDF-/Reviewbelege bleiben an ihre historischen Fassungen gebunden. |
+| Prüf- und Entscheidungsgrundlage | Ausdrückliche Nutzerentscheidung BOUNDARY-REVIEW-CONTEXT vom 25. Oktober 2026: hashgebundene Zielbytes als separater Prüfkontext ohne zusätzliche Scope-Mitgliedschaft. Begrenzte Ausgestaltung gemäß SPECROAD-DECISION-1; Entscheidungsbeleg und Abnahmen stehen bei 15.d.R im Implementierungsplan. |
+| Änderungsart | Präzisierung der für Relationsreviews nötigen Außenkanten-Zielbytes als begrenzter Transportkontext in E.3.2; keine neue Requirement-ID, Manifestfeldmenge oder Produktposition. Bestandsressourcen, Evidence, Freigabegrenzen und Control-Zustände bleiben erhalten; Produktumsetzung folgt gesondert. |
 
-> **Verbindlicher Quellenwechsel:** Die delegierte Entscheidung schreibt die Repository-Spezifikation als v0.2.23 fort. Frühere PDF- und Reviewnachweise behalten ihre historische Bindung und belegen diese Erweiterung nicht. Der py3langid-Adapter bleibt Bestandteil des Zielreleases; der kleine Core bleibt ohne Analyzer-Abhängigkeiten nutzbar.
+> **Verbindlicher Quellenwechsel:** Die ausdrückliche Nutzerentscheidung und ihre begrenzte Ausgestaltung schreiben die Repository-Spezifikation als v0.2.24 fort. Frühere PDF- und Reviewnachweise behalten ihre historische Bindung und belegen diese Erweiterung nicht. Der py3langid-Adapter bleibt Bestandteil des Zielreleases; der kleine Core bleibt ohne Analyzer-Abhängigkeiten nutzbar.
 
 > **Fortbestehende Arbeitsprinzipien:** Weiche Budgets führen zu sparsamer vollständiger Weiterarbeit oder gesicherter Fortsetzung über mehrere Aufrufe beziehungsweise Prompts. Es werden keine erforderlichen Arbeiten stillschweigend ausgelassen. Reale Host-, Speicher-, Berechtigungs- und Sicherheitsgrenzen bleiben wirksam.
 
@@ -101,7 +101,7 @@ Bei einem Widerspruch innerhalb dieser Dokumentversion gilt:
 3. `SR-DEC-*` hat Vorrang vor erläuterndem Text, Diagrammen und Beispielen.
 4. Beispiele sind niemals normativ, sofern sie nicht ausdrücklich als Testvektor bezeichnet sind.
 5. Zwei widersprüchliche `SR-REQ-*`-Anforderungen besitzen **keine implizite Rangfolge** nach Nummer, Position oder Spezifität. Ein solcher Fund ist ein Spezifikationsfehler, muss als Issue gelöst werden und verhindert die Freigabe.
-6. Diese Dokumentversion 0.2.22 ersetzt die frühere fachliche Arbeitsgrundlage vollständig. Bis zur gesonderten PDF-Veröffentlichung ist diese versionierte Repositorydatei maßgeblich. Eine spätere PDF muss inhaltsgleich sein; frühere PDFs werden nicht als Nachweis der neuen Verträge ausgegeben. Inhalte verschiedener Fassungen dürfen nicht zu einer Mischspezifikation kombiniert werden.
+6. Diese Dokumentversion 0.2.24 ersetzt die frühere fachliche Arbeitsgrundlage vollständig. Bis zur gesonderten PDF-Veröffentlichung ist diese versionierte Repositorydatei maßgeblich. Eine spätere PDF muss inhaltsgleich sein; frühere PDFs werden nicht als Nachweis der neuen Verträge ausgegeben. Inhalte verschiedener Fassungen dürfen nicht zu einer Mischspezifikation kombiniert werden.
 7. Eine nachträgliche Änderung dieser veröffentlichten Datei erfordert mindestens eine neue Patch-Dokumentversion; stille Korrekturen unter derselben Dokumentversion sind unzulässig.
 8. Eine normative Tabelle, auf die eine `SR-REQ-*`-Anforderung ausdrücklich als Algorithmus oder Matrix verweist, ist Bestandteil des Passkriteriums dieser Anforderung.
 
@@ -1577,7 +1577,7 @@ Bei gebundener Konfiguration wird `applicability` nach Auflösung der Parent-Ket
 - **gebundene Ressourcen:** Evidence-Subjects, Test-IDs aus `evidence_slots` enthaltener Contracts, zu einer enthaltenen Relation gehörende aktuelle Relationsreviews, referenzierte Anhänge sowie von enthaltenen Ressourcen verwendete Profile, Regeln und Mappings werden nach Scope-Zulässigkeitsprüfung aufgenommen;
 - **schwache Kanten:** `conflicts_with` und `duplicates`; bei `closed` wird ihr Ziel aufgenommen, bei `partial` wird stattdessen genau eine Boundary Reference erzeugt.
 
-Ein Ziel einer starken Kante oder gebundenen Ressource, das wegen der ausgewählten Konfiguration ausgeschlossen ist, erzeugt einen Konfigurationsfehler; es wird weder stillschweigend aufgenommen noch als Boundary Reference abgeschwächt. `rejected` und `retired` sind enthalten, wenn sie Seed sind oder durch eine starke Kante beziehungsweise gebundene Ressource erreicht werden. Eine fehlende Zielressource ist unabhängig von der Grenzpolicy ein Fehler.
+Ein Ziel einer starken Kante oder gebundenen Ressource, das wegen der ausgewählten Konfiguration ausgeschlossen ist, erzeugt einen Konfigurationsfehler; es wird weder stillschweigend aufgenommen noch als Boundary Reference abgeschwächt. `rejected` und `retired` sind enthalten, wenn sie Seed sind oder durch eine starke Kante beziehungsweise gebundene Ressource erreicht werden. Eine fehlende Zielressource ist unabhängig von der Grenzpolicy ein Fehler. Der ausschließlich zur Prüfung einer schwachen Außenkante transportierte Kontext nach E.3.2 wird dadurch nicht zum fachlichen Zielmitglied; er ersetzt niemals ein erforderliches starkes Ziel oder eine gebundene Ressource.
 
 Die Ergebnisreihenfolge ist für Artefakte deren ID, für Profile, Regeln und Mappings deren Identität plus Version, für Anhänge deren projektroot-relativer Pfad und für Boundary References das Tupel `(source_id, relation_id, target_id)`, jeweils lexikografisch nach UTF-8-Bytes. Der Scope-Hash bindet den RFC-8785-kanonisierten Descriptor, alle enthaltenen Ressourcenidentitäten und -hashes sowie die geordneten Boundary References.
 
@@ -5782,7 +5782,7 @@ Die **Hashdomänen sind nicht rekursiv**. `entries` listet genau alle tatsächli
 
 Ein extrahiertes Manifest wird beim erneuten Bündeln nicht als normale Projektpayload aufgenommen; das neue Manifest wird aus dem tatsächlich ausgewählten aktuellen Stand erzeugt. Die Modellwurzel umfasst ausschließlich die in 10.8–10.9 definierten normativen Inhalte, niemals Manifest, ZIP-Container oder Betriebssektion. Eine in einem manifestierten Snapshot erforderliche Archivdatei bleibt normale gehashte Payload.
 
-`bundle verify` vergleicht die ZIP-Eintragsmenge mit `entries` plus genau diesem einen Manifest und prüft für jede Payload die tatsächliche Bytelänge und SHA-256. Danach werden semantische Projektwurzel, Scope Descriptor, Typkombination und Closure unabhängig aus den Payloadbytes rekonstruiert. Ein selbstreferenzierender `entries`-Eintrag für das Manifest, fehlende/zusätzliche Payload, Dubletten oder inkonsistente Metadaten sind Fehler. Der manifestlose oder mehrfach manifeste Container ist ungültig.
+`bundle verify` vergleicht die ZIP-Eintragsmenge mit `entries` plus genau diesem einen Manifest und prüft für jede Payload die tatsächliche Bytelänge und SHA-256. Danach werden semantische Projektwurzel, Scope Descriptor, Typkombination und Closure unabhängig aus den Payloadbytes rekonstruiert. Der exakt abgeleitete Prüfkontext nach E.3.2 gehört zur Transportprüfung, nicht zu Seeds oder fachlichen Modellressourcen. Ein selbstreferenzierender `entries`-Eintrag für das Manifest, fehlende/zusätzliche Payload, Dubletten oder inkonsistente Metadaten sind Fehler. Der manifestlose oder mehrfach manifeste Container ist ungültig.
 
 Das optionale `--expected-sha256 <HASH>` bei `bundle verify`, `bundle extract` und einer Bundle-Restore-Quelle vergleicht zusätzlich vor Extraktion beziehungsweise Veröffentlichung den Voll-ZIP-Hash mit einem außerhalb der Datei erhaltenen erwarteten Wert. Eine Manifeständerung kann durch interne Widersprüche auffallen; eine konsistente Neubeschreibung samt passenden Nutzdaten ist ohne externe Erwartungsbindung **nicht** als Manipulation einer bestimmten früheren Datei erkennbar. Selbstkonsistenz ist kein Authentizitätsnachweis. Bereits an Auftrag, Work-Manifest oder Restore-Plan gebundene Bundle-Hashes sind verpflichtend, nicht optional. Unpassende erwartete Bytes werden als Integritätsfehler Code 3/SRV060 abgewiesen.
 
@@ -5979,8 +5979,9 @@ Ressourcen bleiben ebenfalls Pflicht. Unbeteiligte Konfigurationen werden
 nicht allein wegen ihres Typs mitgenommen; sind sie reguläre Closuremitglieder,
 gelten für sie unverändert die normalen Mitgliedschaftsregeln.
 
-Die Transportmenge ist die Vereinigung der benötigten Closurepayloads und
-dieses exakt abgeleiteten Konfigurationskontexts. Überlappende Pfade werden
+Die Transportmenge ist die Vereinigung der benötigten Closurepayloads,
+dieses exakt abgeleiteten Konfigurationskontexts und des gegebenenfalls
+erforderlichen getrennten Prüfkontexts nach E.3.2. Überlappende Pfade werden
 einmal transportiert. Alle diese Bytes sind normale, vollständig inventarisierte
 Payloads nach E.1; sie dürfen nicht zugleich als `outside_scope` ausgeschlossen
 sein. Es gibt keine vom Absender frei deklarierbare Kontext-Ausnahmeliste.
@@ -6039,14 +6040,146 @@ Rootmanifest; daraus entsteht keine Schreibberechtigung. `partial`,
 Closure verbindlich. Die Ursprungswurzel bleibt die getrennte Provenienzbindung
 aus E.1.1 und kein aus den Teilbytes ableitbarer Vollprojektnachweis.
 
-Unkonfigurierte Teilbundles, Vollbundles, Export- und Baselineprojektionen
-behalten ihre bisherigen Hashdomänen und Bytes. Bereits gebundene Artefakte,
+Diese Konfigurationsregel allein verändert keine unkonfigurierten Teilbundles,
+Vollbundles, Export- oder Baselineprojektionen. Für erforderliche
+Relationsreview-Prüfbytes gilt zusätzlich E.3.2. Bereits gebundene Artefakte,
 Reviews, Evidence und historische Hashes werden nicht umgeschrieben oder
 nachträglich als neu geprüft bezeichnet. Bei konfigurierten Teilbundles werden
 keine neuen semantischen Mitglieder nur für den Transport erfunden. Die
 Produktumsetzung der Erzeugung bleibt in 15.c.R, die unabhängige Bundleprüfung
 in 15.d und der extrahierte Read-only-Umfang in 15.e offen. Diese Festlegung
 behauptet weder eine implementierte Funktion noch eine Freigabe oder Abnahme.
+
+### E.3.2 Getrennter Prüfkontext für Relationsreviews an Außenkanten
+
+**Entscheidung BOUNDARY-REVIEW-CONTEXT.** Der Nutzer hat am 25. Oktober
+2026 nach Benennung der Nachweis- und Transportgrenze ausdrücklich
+hashgebundene Zielbytes als separaten Prüfkontext ohne zusätzliche
+Scope-Mitgliedschaft beauftragt. Die folgenden Detailregeln konkretisieren
+diese Entscheidung gemäß SPECROAD-DECISION-1. Sie ändern weder die
+Reviewentscheidung eines Menschen noch die Aktualitätsregeln aus Anhang J.
+Der Kontext ist kein Review, keine Freigabe und kein Rehydrationsvorgang.
+
+**Notwendigkeit und minimale Auswahl.** Die Closure nach 10.8 nimmt aktuelle
+Relationsreviews auch zu enthaltenen schwachen Relationen auf. Ob ein Review
+passt, hängt nach J.1–J.3 vom wirklichen Relations- und Endpunktkontext ab.
+Der Vollhash eines ausgelassenen Ziels allein liefert dessen Kontextbytes
+nicht. Ein gespeicherter historischer Review-Vollhash ersetzt diese Prüfung
+auch dann nicht, wenn er zufällig mit dem Boundary-Zielhash übereinstimmt.
+
+Für ein `partial`-Bundle wird die Prüfzielmenge ausschließlich so bestimmt:
+Aus seinen nach 10.8 tatsächlich erforderlichen Boundary References werden
+jene ausgewählt, deren `relation_id` in wenigstens einem enthaltenen nativen
+`relation_review` referenziert wird. Die Prüfzielmenge enthält genau die
+verschiedenen `target_id` dieser Boundaries. Maßgeblich ist die Relations-ID,
+nicht eine frei wählbare Kontextliste oder eine schon als aktuell behauptete
+Reviewentscheidung. Auch ein durch andere reguläre Closurepfade enthaltenes
+historisches oder abgelehntes Review löst diese Auswahl aus. Seine fachliche
+Bewertung erfolgt erst anhand der tatsächlichen Kontexte. Ohne solchen
+Reviewbezug wird kein Ziel allein für diese Regel zusätzlich transportiert.
+
+Für jedes Prüfziel MUSS der Erzeuger genau einmal dessen vollständige,
+unveränderte native JSON-Quelldatei aus demselben geprüften Ursprungsstand
+unter `bundle-context/boundary-targets/<TARGET-ID>.json` mitliefern.
+`<TARGET-ID>` ist die vollständige, bereits nach nativer Identitätsregel
+geprüfte Artefakt-ID, keine Eingabe für freie Pfadbildung. Der reservierte
+Namensraum `bundle-context/` erlaubt ausschließlich diese unmittelbar darin
+festgelegten Prüfdateien. Keine Verzeichnis-Einträge, Metadateien,
+Unterverzeichnisvarianten, Symlinks oder fremden Payloads sind zulässig.
+Mehrere betroffene Boundaries mit demselben Ziel verwenden dieselbe Datei.
+Sie MÜSSEN dieselbe Zielidentität, denselben Typ und denselben aktuellen
+kanonischen Vollhash binden. Das Rootmanifest erhält kein neues Feld;
+`bundle_format_version=1.0.0` und die sieben Boundary-Felder bleiben erhalten.
+
+Ist dasselbe Prüfziel bereits ausschließlich als Konfigurationskontext nach
+E.3.1 am nativen Pfad vorhanden, bleibt der feste getrennte Prüfpfad bestehen.
+Beide Rollen MÜSSEN dieselben unveränderten Originalbytes enthalten; eine
+abweichende Kopie ist ein Eingabefehler. Daraus entstehen keine zweite
+Artefaktidentität und keine Scope-Mitgliedschaft. Der feste Pfad vermeidet
+zusätzliche, vom Absender wählbare Speicher- oder Auflösungsvarianten.
+
+**Transport- und Hashbindung.** Jede Prüfdatei ist reguläre Payload mit
+exaktem Pfad, tatsächlicher Bytelänge, `application/json` und Byte-SHA-256
+in `entries`. Der Reader MUSS unabhängig native Identität, Artefakttyp,
+Schema und kanonische Darstellbarkeit des enthaltenen Originaldokuments
+prüfen. Der ID-basierte Dateiname, `target_id`, `target_type` und der aus
+den wirklichen JSON-Werten berechnete RFC-8785-Vollhash MÜSSEN zu allen
+betroffenen Boundaries und deren `origin_target_sha256` passen. Bloße
+Kontexthashes, Projektionen, Ersatzartefakte oder neu erzeugte Reviewrecords
+sind kein Ersatz für die erforderlichen Originalbytes.
+
+Die Prüfdatei ist keine zweite fachliche Kopie am nativen Artefaktpfad.
+Ihre native Quelldatei wird nicht zusätzlich als `outside_scope` in
+`excluded_contents` ausgewiesen: Deren vollständige Bytes werden hier in
+einer anderen Transportrolle tatsächlich mitgeliefert. Der native Quellpfad
+ist aus Typ und ID eindeutig ableitbar. Für andere tatsächlich ausgelassene
+Quellpayloads bleiben E.1.1 und ihre Ausschlussgründe unverändert. Das
+Prüfziel bleibt trotz dieser Transportrolle außerhalb des fachlichen Scopes;
+diese Grenze bezeichnet weiterhin die Boundary Reference.
+
+**Unabhängige Rekonstruktion.** Der Reader verwendet Prüfbytes ausschließlich
+als Endpunktbeobachtung für die zugehörigen enthaltenen Boundary-Relationen.
+Er berechnet die Relations- und beide Endpunktkontexte nach J.1/J.2 und wendet
+J.3 auf die enthaltene Reviewhistorie an. Er leitet die gebundenen aktuellen
+Reviewressourcen selbst ab und prüft anschließend den kleinsten fachlichen
+Closurefixpunkt, dessen Modellwurzel und die exakte Payloadvereinigung aus
+Closure, E.3.1-Konfiguration und dieser Prüfzielmenge. Ein vom Manifest
+behaupteter Scope- oder Modellhash ersetzt keinen dieser Schritte.
+
+Historische Vollrevisionen und Vollhashes der Reviews bleiben unverändert.
+Eine Änderung allein an nach J.2 ausgeschlossenen Zielwerten darf ein weiterhin
+passendes Review nicht stale machen; fachlich veränderte Zielkontexte dürfen
+nicht als aktuell ausgegeben werden. Abgelehnte passende Reviews bleiben
+abgelehnt. Fehlende Reviewhistorie wird weder erfunden noch durch den
+Prüfkontext ersetzt. Die Prüfung belegt keine unbekannte Vollständigkeit der
+ursprünglichen Reviewhistorie und keine menschliche Authentizität; der
+vollständige Ursprung bleibt die getrennte Provenienzgrenze aus E.1.1.
+
+**Keine zusätzliche Mitgliedschaft.** Prüfziele werden weder Seeds noch
+normale Closuremitglieder. Ihre ausgehenden Kanten, Anhänge und sonstigen
+Ressourcen werden nicht transitiv in den Teilumfang aufgenommen. Sie erhalten
+keine eigenen erfundenen Boundary References. Das behauptet keine Prüfung
+dieser außerhalb des Scopes liegenden Ressourcen. Der Erzeuger MUSS weiterhin
+den vollständigen Ursprung einschließlich seiner benötigten Referenzen und
+Ressourcen prüfen; dort fehlende Daten bleiben Fehler.
+
+Wird dasselbe Ziel regulär durch einen Seed, eine starke Kante oder eine
+gebundene Ressource erreicht, MUSS es als normales Closuremitglied am nativen
+Artefaktpfad vorhanden sein. Die betreffende Relation hat dann kein äußeres
+Ziel und keine Boundary. Eine zusätzliche Prüfkopie für dieses Ziel ist
+unzulässig. Ein starkes Ziel, das nur im Prüfnamensraum vorliegt, fehlt weiterhin;
+es wird nicht stillschweigend in den fachlichen Bestand übernommen.
+
+Prüfdateien werden nicht als Query-, Show-, Trace-, Render- oder andere
+Fachobjekte angeboten. Extraktion erhält ihre Originalbytes getrennt und
+das unveränderte Manifest für erneute Prüfungen. Sie vermittelt weder Writes,
+Re-Export als Vollprojekt, Release Readiness noch Rehydration. `partial`,
+`read_only=true` und `local_only` bleiben wirksam. Die Modellwurzel bindet
+unverändert die wirklichen fachlichen Mitglieder, Profile, Konfiguration und
+Boundaries; Prüfbytes werden nicht als zusätzliche Modellressourcen gehasht.
+Ihr Transporthash bindet die Originalbytes, der vorhandene Boundary-Vollhash
+bindet den semantischen Zielwert. Der Voll-ZIP-Hash bleibt extern.
+
+**Fehler und Bestandsgrenze.** Nach erfolgreicher ZIP-Sicherheitsprüfung
+ergeben fehlende benötigte Prüfbytes, unerwartete oder inhaltlich redundante
+Prüfdateien, falsche Identität, Typ- oder Schemakonflikte sowie eine
+widersprüchliche Payloadrolle Code 3. Byte-/Vollhashwidersprüche bleiben
+Code 3/SRV060. Unsichere Pfade, Pfadkollisionen einschließlich doppelter
+ZIP-Mitgliedsnamen und gefährliche Dateitypen behalten vorrangig Code 7. Keine dieser
+Situationen darf einen verifizierten Closure- oder Freigabestatus erzeugen.
+Ein altes Bundle ohne nun erforderlichen Prüfkontext wird nicht stillschweigend
+repariert oder als vollständig verifiziert ausgegeben. Eine Neuherstellung
+erfolgt nur ausdrücklich aus dem vollständigen geprüften Ursprung; bestehende
+ZIP-Bytes, Reviews, Evidence und deren alte Hashbindungen bleiben erhalten.
+
+Projektbundles und Teilbundles ohne den beschriebenen Review-/Boundarybedarf
+benötigen keine Prüfdateien und behalten ihre bisherigen Transport- und
+Hashdomänen. Unnötige Kontextdateien sind auch dort Fehler. Bestehende CLI-
+Aufrufe bleiben erhalten; es gibt keinen neuen Ursprungspfad-Fallback, kein
+Nachladen und keine neue Freigabeoption. Diese Fortschreibung erklärt einen
+Sollvertrag. Seine Erzeuger-/Readerintegration und Verhaltensnachweise in
+15.d.R sowie der spätere Erhalt und Sichtbarkeitsschutz in 15.e/15.f bleiben
+offen; die Spezifikationsklärung ist kein Produktabschluss.
 
 ---
 
