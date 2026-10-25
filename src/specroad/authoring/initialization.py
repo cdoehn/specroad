@@ -2,17 +2,15 @@
 from contextlib import ExitStack
 from hashlib import sha256
 import os
-from pathlib import Path
 import stat
-import sys
 
 from ..changes._lock_files import LockFiles
-from ..changes.lock_values import ProjectLockError
 from ..cli.result_schemas import validate_result_document
 from ..security import SafetyViolation
 from ..security import paths as guards
 from ._bootstrap_io import (BootstrapError, BootstrapTree, STAGING, directory,
-                            identity, info_at, metadata, rename_function)
+                            info_at, metadata, rename_function)
+from ._bootstrap_root import BootstrapRoot, root_destination
 from ._initial_content import ROOT_DIRECTORIES, initial_content
 from ._bootstrap_recovery import recover_bootstrap
 
@@ -53,67 +51,32 @@ def initialize_project(path='.', *, cwd=None):
     prior bootstrap is a conflict unless its complete journal, identities and
     actual bytes prove the exact prepared state or a published prefix of it.
     """
-    if not isinstance(path, (str, Path)) or not str(path) or '\0' in str(path):
-        raise BootstrapError('bootstrap_path_invalid', exit_code=2)
-    if not sys.platform.startswith('linux') or not guards._HAS_SAFE_OPEN:
-        raise BootstrapError('bootstrap_platform_unavailable', exit_code=5)
-    requested = Path(path)
-    if not requested.is_absolute(): requested = (Path.cwd() if cwd is None else Path(cwd)) / requested
-    # Normalize lexical dots without resolving the target itself through a link.
-    requested = Path(os.path.abspath(requested))
-    if requested == requested.parent:
-        raise BootstrapError('bootstrap_root_destination_invalid', exit_code=2)
-    parent = requested.parent.resolve(strict=True)
-    target = parent / requested.name
+    parent, target = root_destination(path, cwd=cwd, invalid_reason='bootstrap_path_invalid')
     function = rename_function()
-    created = False; created_identity = None; tree = None; rollback_complete = False
+    tree = None
     with ExitStack() as stack:
         parent_held = stack.enter_context(LockFiles(parent)); parent_held.acquire()
-        current = info_at(parent_held.root_fd, target.name)
-        if current is not None: guards._regular(current, directory=True)
+        destination = BootstrapRoot(parent_held, target)
         try:
-            if current is None:
+            if destination.current is None:
                 content, directories, configuration, document_id = initial_content(target.name)
-                os.mkdir(target.name, mode=0o755, dir_fd=parent_held.root_fd)
-                created = True
-                created_identity = identity(os.stat(target.name, dir_fd=parent_held.root_fd, follow_symlinks=False))
-                os.fsync(parent_held.root_fd)
-            held = stack.enter_context(LockFiles(target)); held.acquire()
-            expected_identity = created_identity if created else identity(current)
-            if identity(os.fstat(held.root_fd)) != expected_identity:
-                raise BootstrapError('bootstrap_root_changed')
+                destination.create()
+            held = destination.acquire(stack)
             _portable_names(held)
-            recovered = None if created else recover_bootstrap(held, function, target.name)
+            recovered = None if destination.created else recover_bootstrap(held, function, target.name)
             if recovered is not None:
                 content, directories, configuration, document_id = recovered
             else:
                 reused = _preflight(held)
-                if not created:
+                if not destination.created:
                     content, directories, configuration, document_id = initial_content(target.name)
                 tree = BootstrapTree(held, function, reused)
                 tree.create()
-                tree.prepare(content, directories, created)
+                tree.prepare(content, directories, destination.created)
                 tree.publish()
                 tree.cleanup()
         except BaseException as original:
-            if tree is not None and tree.fd is not None:
-                try:
-                    tree.cleanup()
-                    rollback_complete = not tree.committed
-                except (BootstrapError, ProjectLockError, SafetyViolation, OSError):
-                    raise BootstrapError('bootstrap_recovery_required', path=STAGING,
-                                         mutation_possible=True) from original
-            elif tree is None:
-                rollback_complete = True
-            if created and rollback_complete:
-                parent_held.require_held()
-                now = info_at(parent_held.root_fd, target.name)
-                if now is not None and identity(now) == created_identity:
-                    with directory(parent_held.root_fd, (target.name,)) as fd:
-                        if os.listdir(fd):
-                            raise BootstrapError('bootstrap_root_not_empty', mutation_possible=True) from original
-                    os.rmdir(target.name, dir_fd=parent_held.root_fd)
-                    os.fsync(parent_held.root_fd)
+            destination.rollback(tree, original)
             raise
         finally:
             if tree is not None: tree.close()

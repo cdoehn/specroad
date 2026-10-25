@@ -2,18 +2,15 @@
 from contextlib import ExitStack
 from hashlib import sha256
 import os
-from pathlib import Path
-import sys
 
 from ..authoring._bootstrap_io import (BootstrapError, BootstrapTree, STAGING,
     directory, identity, info_at, rename_function)
 from ..authoring._bootstrap_recovery import _read
+from ..authoring._bootstrap_root import BootstrapRoot, root_destination
 from ..changes._lock_files import LockFiles
-from ..changes.lock_values import ProjectLockError
 from ..cli.result_schemas import validate_result_document
 from ..model.errors import ModelError
 from ..security import SafetyViolation
-from ..security import paths as guards
 from ._extraction_record import COMPLETED, FORMAT, restore_inventory
 from .container import BundleContainer
 from .errors import BundleError
@@ -89,70 +86,36 @@ def _check_names(held, tree):
 
 
 def _publish(container, target, *, cwd=None, recheck_input=lambda: None):
-    if not isinstance(target, (str, Path)) or not str(target) or '\0' in str(target):
-        raise BootstrapError('bundle_extraction_target_invalid', exit_code=2)
-    if not sys.platform.startswith('linux') or not guards._HAS_SAFE_OPEN:
-        raise BootstrapError('bootstrap_platform_unavailable', exit_code=5)
-    requested = Path(target)
-    if not requested.is_absolute():
-        requested = (Path.cwd() if cwd is None else Path(cwd)) / requested
-    requested = Path(os.path.abspath(requested))
-    if requested == requested.parent:
-        raise BootstrapError('bootstrap_root_destination_invalid', exit_code=2)
-    parent = requested.parent.resolve(strict=True)
-    target = parent / requested.name
+    parent, target = root_destination(target, cwd=cwd, invalid_reason='bundle_extraction_target_invalid')
     content = {**container.files, MANIFEST_NAME: container.manifest_bytes}
     directories = _directories(content)
     function = rename_function()
-    created = False; created_identity = None; tree = None; rollback_complete = False
+    tree = None
     with ExitStack() as stack:
         parent_held = stack.enter_context(LockFiles(parent)); parent_held.acquire()
-        current = info_at(parent_held.root_fd, target.name)
-        if current is not None: guards._regular(current, directory=True)
+        destination = BootstrapRoot(parent_held, target)
         recheck_input()
         try:
-            if current is None:
-                os.mkdir(target.name, mode=0o755, dir_fd=parent_held.root_fd)
-                created = True
-                created_identity = identity(os.stat(target.name, dir_fd=parent_held.root_fd, follow_symlinks=False))
-                os.fsync(parent_held.root_fd)
-            held = stack.enter_context(LockFiles(target)); held.acquire()
-            if identity(os.fstat(held.root_fd)) != (created_identity if created else identity(current)):
-                raise BootstrapError('bootstrap_root_changed')
+            if destination.current is None:
+                destination.create()
+            held = destination.acquire(stack)
             def guard(tree):
                 parent_held.require_held()
                 _check_names(held, tree)
                 recheck_input()
-            recovered = False if created else _recover(held, function, content, directories, guard)
+            recovered = False if destination.created else _recover(held, function, content, directories, guard)
             if not recovered:
                 if os.listdir(held.root_fd):
                     raise BootstrapError('bundle_extraction_target_not_empty')
                 tree = BootstrapTree(held, function, {}, completed=COMPLETED)
                 tree.create()
-                tree.prepare(content, directories, created, journal_format=FORMAT)
+                tree.prepare(content, directories, destination.created, journal_format=FORMAT)
                 guard(tree)
                 tree.publish(guard=lambda: guard(tree))
                 tree.cleanup()
                 guard(tree)
         except BaseException as original:
-            if tree is not None and tree.fd is not None:
-                try:
-                    tree.cleanup()
-                    rollback_complete = not tree.committed
-                except (BootstrapError, ProjectLockError, SafetyViolation, OSError):
-                    raise BootstrapError('bootstrap_recovery_required', path=STAGING,
-                                         mutation_possible=True) from original
-            elif tree is None:
-                rollback_complete = True
-            if created and rollback_complete:
-                parent_held.require_held()
-                now = info_at(parent_held.root_fd, target.name)
-                if now is not None and identity(now) == created_identity:
-                    with directory(parent_held.root_fd, (target.name,)) as fd:
-                        if os.listdir(fd):
-                            raise BootstrapError('bootstrap_root_not_empty', mutation_possible=True) from original
-                    os.rmdir(target.name, dir_fd=parent_held.root_fd)
-                    os.fsync(parent_held.root_fd)
+            destination.rollback(tree, original)
             raise
         finally:
             if tree is not None: tree.close()

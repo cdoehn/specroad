@@ -28,10 +28,10 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ```yaml
 plan_revision: 19
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 629
-last_completed_plan_commit: 15.e.R
-next_plan_commit: 15.e.C
-last_completed_numbered_bundle: 474
+implementation_plan_commits_completed: 630
+last_completed_plan_commit: 15.e.C
+next_plan_commit: 15.f.W
+last_completed_numbered_bundle: 475
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -26011,7 +26011,7 @@ Prüfung und atomarer Übergabe einer kanonischen ZIP endet dieser N-Auftrag.
 
 #### 15.e.C – Make it Clean
 
-- [ ] **15.e.C** · Position **630/900** · Voraussetzung: `15.e.R`.
+- [x] **15.e.C** · Position **630/900** · Voraussetzung: `15.e.R`.
 **Exakte Commit-Message:** `15.e.C refactor(bundle): Atomare Extraktion und Zielschutz bereinigen`
 
 **Bereinigung:** Rootcreationprimitiven aus init wiederverwenden.
@@ -26019,6 +26019,139 @@ Prüfung und atomarer Übergabe einer kanonischen ZIP endet dieser N-Auftrag.
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
 **Regressionsabnahme:** Alle vorhandenen W-/R-Verhaltenstests dieses Schritts und die vom Refactoring betroffenen bisherigen Verhaltenstests erneut ausführen; erwartete Fachwerte nicht passend zum Refactoring umschreiben. Bei reinen Präsentations-/Dokuschritten keine solchen Tests erfinden.
+
+
+**Umsetzungs- und Übergabenachweis – Bundle 475 (C), 25. Oktober 2026.**
+
+**Bestätigte Basis.** Das Result
+`specroad-apply_Result_125406_1025_dda5ab.zip`, SHA-256
+`490456b7ea6aca630e958208e3bc632c193f77825c50695adf105ad0f07e1d73`,
+bestätigt den sauberen **15.e.R**-Commit
+`82dbd6c93ef78c358d8049b987ec74af69c4bba5`, Bundle **474**, Parent
+`d5b7b77bc240adc79f11dc402ef4814189941653`. Root-Anleitung, Kontext,
+Umgebung, vollständiges Manifest, Run-/Ausführungslogs und alle **2.244**
+Snapshotdateien wurden geprüft. Größen, Blob-IDs, Modi und vollständige
+Bytes entsprechen dem ausschließlich lesend geprüften Apply-Stand und dem
+vorherigen Payload einschließlich der fünf post-Gate-Planmarker. Die native
+Result-Prüfung, konsistente Zustandserfassung und Vierfachbindung stimmen.
+In Dev wurde nur der bestätigte Planfortschritt nachgeführt: **629/900**,
+zuletzt **15.e.R**, nächstens **15.e.C**, erfolgreiches Bundle **474**.
+Git-Historie und Index blieben unverändert; Apply wurde nicht verändert.
+
+Die tatsächlichen Berichte und Einzeloutcomes bestätigen **6.989/6.989**
+bestandene Apply-Tests in **1.960,80 s** auf vier parallelen Workern,
+**Sequenz 178 / Gruppe 1/3**, aus **20.972** aktiven Identitäten.
+Testnummern, Quellbindung und nummerierter Auswahlbeleg wurden nachgerechnet.
+Auswahlbindung: `1dac723b62ac2dea0c9b7f81caf011292b8164934b21bafa1a26cf62a8869e56`;
+Auswahlbericht-SHA-256: `ba5d8170a4f2679bb950bc2c72c24173b2d081157d5898bfbaf36f378bd18b7d`;
+Einzeloutcomes-SHA-256: `38a2b1cb945297c8d09778e3e563f56da8e80c2cb3129ab97343b68dd105e9be`.
+Dies belegt den tatsächlichen R-Abschluss, keine Vollsuite oder Freigabe.
+
+**Reguläre C-Bereinigung.** Der gemeinsame interne Baustein
+`authoring/_bootstrap_root.py` übernimmt die bisher bei Init und Extraktion
+doppelten Root-Primitiven: Zielprüfung und lexikalische Auflösung ohne
+Auflösen eines Zielsymlinks, Beobachtung des unveränderten Zieltyps,
+Erzeugung mit unveränderter Modus-/Fsync-Reihenfolge, Erwerb und Vergleich
+der Root-Identität sowie Entfernung ausschließlich des bewiesen eigenen,
+leeren neuen Roots nach erfolgreichem Tree-Rollback.
+Beide Aufrufer verwenden dieselben Primitiven. Die ursprüngliche Reihenfolge
+von Inhaltsplanung, Eingaberecheck, Mutationen, Locks und Fehlerbehandlung
+bleibt erhalten, ebenso Exit Codes, Reasons und `mutation_possible`.
+
+Die unterschiedlichen Fachvorbedingungen bleiben bei den Aufrufern:
+Init erhält unbeanspruchte Repositorydateien und wiederverwendbare leere
+Zielverzeichnisse; Extraktion verlangt ein fehlendes oder leeres Ziel und
+prüft ihre exakte Namensmenge sowie die unveränderte Eingabe erneut.
+Beide behalten ihre bisherigen Journale, Inventar-/Recoveryprüfungen,
+Konfiguration-zuletzt-Publikation, dauerhafte Abschlussbelege und
+Aufräumgrenzen. Erneutes Einlesen, Replay, fremde Dateien und Fehler nach
+vollständiger Publikation erhalten dieselben Ergebnisse und Seiteneffekte.
+Manifest-, Payload-, Resultat- und CLI-Verträge ändern sich nicht.
+Es wird weder ein zusätzlicher Fallback noch Partial-Reader-Verhalten aus
+**15.f** eingeführt.
+
+**SPECROAD-DECISION-1** ist ausdrücklich vorhanden. Die bestätigte
+C-Abnahme und Spezifikation 11.7 / 11.8 / Anhang E reichen aus; es ist
+keine normative Entscheidung nötig. Spezifikation **0.2.24**, SHA-256
+`ed0a3c233753e9bfff165dcbf5347e83eb056ba2b745d865a5cbdc514bd88008`,
+Tests einschließlich aller Oracles, Requirement-Verträge, Fixtures, Runner
+und Nummerierung bleiben bytegleich. Alle **20.976** reservierten Nummern
+und die vier historischen stillgelegten Identitäten bleiben erhalten;
+keine neue, entfernte oder umnummerierte Testidentität.
+
+**Gezielte Entwicklungsprüfung.** **1.681/1.681** vorhandene Verhaltenstests
+bestehen in **320.96 s** mit **vier parallelen Workern**, beobachtetem
+Prozessende **0**, ausschließlich `passed`-Outcomes und
+`full_suite_passed=null`. Enthalten sind alle Extraktions-W-/R-Tests und
+Init-W-/R-Tests, Fehler an realen Veröffentlichungsgrenzen, Replay,
+Fremddaten-/Pfadschutz, Lesergrenzen, Bundlecodec/-verifikation,
+CLI-Verträge sowie betroffene Distribution-/Katalogregressionen.
+Die vollständige Collection-/Katalogprüfung ist gültig: **20.972**
+eindeutige aktive Identitäten und **0** Testkörper. Kein Dev-Volltest,
+serieller Lauf, CI-Start oder Darstellungs-/Dokumentationstest.
+Ausgewählte vollständige Testdateien:
+
+- `tests/test_apply_rotation.py`
+- `tests/test_bootstrap.py`
+- `tests/test_bundle_extraction.py`
+- `tests/test_bundle_extraction_right.py`
+- `tests/test_bundle_verification.py`
+- `tests/test_bundle_verification_right.py`
+- `tests/test_capabilities.py`
+- `tests/test_capability_scope.py`
+- `tests/test_catalog_check.py`
+- `tests/test_catalog_check_right.py`
+- `tests/test_cli.py`
+- `tests/test_description.py`
+- `tests/test_options.py`
+- `tests/test_partial_bundle.py`
+- `tests/test_partial_bundle_right.py`
+- `tests/test_preflight_metadata.py`
+- `tests/test_preflight_profiles.py`
+- `tests/test_product_bundle.py`
+- `tests/test_product_bundle_right.py`
+- `tests/test_project_bundle.py`
+- `tests/test_project_bundle_right.py`
+- `tests/test_project_initialization.py`
+- `tests/test_project_initialization_right.py`
+- `tests/test_project_inspection.py`
+- `tests/test_project_inspection_right.py`
+- `tests/test_publication_check.py`
+- `tests/test_publication_check_right.py`
+- `tests/test_registry.py`
+- `tests/test_requests.py`
+- `tests/test_resource_inventory.py`
+- `tests/test_resource_inventory_right.py`
+- `tests/test_results.py`
+- `tests/test_schema_catalog.py`
+- `tests/test_schema_catalog_change_plan.py`
+- `tests/test_schema_catalog_robustness.py`
+- `tests/test_transaction_preflight.py`
+- `tests/test_transaction_preflight_right.py`
+
+Ausführung über `tools/run_selected_tests.py --workers 4 --expected-tests 1681`
+in einem frischen ignorierten Berichtsverzeichnis. Quellidentität:
+`c69ef5514b66a26fe6a283f93d33d8625570844d8a8f78c6f0f2a15f21507a7f`.
+Katalogbericht-SHA-256: `3816e2eef8d09877c212c62896d7aaa76c53658578492cdd109cd41824b11d00`;
+Auswahlbericht-SHA-256: `45f1e6489e87ef6f2ac75a1fe6add04a55821fe365e9042ac141359c0a410779`;
+Einzeloutcomes-SHA-256: `8b6257170fb0a66ad8dec753c6b0554bc85dd735fba4a1a39ef0f84e332d3855`.
+Teilnachweise ersetzen keine Release-, Review- oder menschliche Freigabe.
+
+**Gebundene Übergabe.** Bundle **475** enthält genau den echten
+PLAN-Zustand **15.e.C**, Position **630/900**, als vier Dateien: den
+gemeinsamen internen Baustein, seine beiden Aufrufer und diesen Plannachweis.
+Der Entrypoint verlangt den sauberen gebundenen R-Stand und schreibt die
+geprüften C-Bytes mit dem nativen Payloadwriter. Ausschließlich die fällige
+**Gruppe 2/3 / Sequenz 179** mit **6.992** Tests läuft parallel auf vier
+Workern. Erst nach erfolgreichem Gate und passenden Quell-/Katalog-/
+Auswahlbindungen setzt er die fünf Marker auf **630/900**, zuletzt
+**15.e.C**, nächstens **15.f.W**, Bundle **475** und die C-Checkbox.
+Dann folgt die exakte PLAN-Commit-Message
+`15.e.C refactor(bundle): Atomare Extraktion und Zielschutz bereinigen`.
+15.f bleibt offen. Fehler erhalten vorherige Commits und den tatsächlichen
+Arbeitszustand. Dieser zukünftige Apply-Testlauf und Commit werden nicht
+als erfolgt behauptet. Nach nativer Prüfung und atomarer Übergabe genau
+einer kanonischen ZIP endet dieser N-Auftrag ohne Result-Warteschleife.
 
 <a id="step-15-f"></a>
 ### 15.f – Read-only-Befehle auf Partials
