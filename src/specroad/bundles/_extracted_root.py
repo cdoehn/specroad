@@ -1,7 +1,7 @@
 """Keep an extracted partial out of the existing complete-project reader.
 
-This conservative boundary does not implement partial queries (15.f). The
-retained bootstrap proof detects removal/replacement of the root manifest.
+Partial queries use their own read-only observation. The retained bootstrap
+proof detects removal/replacement of the root manifest.
 Neither record is an authenticated authority or a substitute for live gates.
 """
 from hashlib import sha256
@@ -14,6 +14,10 @@ from ..storage.json_syntax import parse_json_object
 from ._extraction_record import COMPLETED, FORMAT
 from .errors import BundleError
 from .manifest import MANIFEST_NAME, check_entries, owned_metadata
+
+
+class PartialRootMarker(SafetyViolation):
+    """A marker-only partial, retaining the earlier bundle-source contract."""
 
 
 def _optional(boundary, path):
@@ -34,6 +38,13 @@ def require_complete_root(boundary):
     # Existing readers keep their own marker/error/freshness contracts; the
     # complete partial-command integration remains 15.f.
     if proof is None:
+        # A copied partial marker still cannot authorize a complete reader.
+        # Full-project marker validation remains with its existing consumers.
+        raw = _optional(boundary, MANIFEST_NAME)
+        if raw is not None:
+            value = parse_json_object(raw)
+            if value.get('bundle_kind') == 'partial' or value.get('read_only') is True:
+                raise PartialRootMarker('A partial bundle is not a complete project')
         return None, None
     raw = _optional(boundary, MANIFEST_NAME)
     try:

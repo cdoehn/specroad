@@ -55,10 +55,20 @@ def _show_steps(root, artifact_id, *, index=None, strategy='indexed'):
     storage. It does not grant full semantic validation, approval or an atomic
     snapshot against noncooperating writers. Optional persistent caches stay off.
     """
+    from ..bundles.errors import BundleError
+    from ..srx.errors import SrxError
     project = None
     details = dict(atomic_snapshot=False, full_semantic_validation=False,
                    approval_granted=False, write_authorized=False, recovery_performed=False)
     try:
+        from ..bundles._partial_read import partial_read_snapshot
+        from ._partial_show import partial_show_steps
+        partial = partial_read_snapshot(root)
+        if partial is not None:
+            project = {'project_root': str(partial.boundary.root),
+                       'project_id': partial.configuration.project_id}
+            return (yield from partial_show_steps(partial, artifact_id, index=index,
+                                                  strategy=strategy, details=details))
         source = ProjectSource(root)
         project = {'project_root': str(source.boundary.root),
                    'project_id': source.configuration.project_id}
@@ -71,6 +81,14 @@ def _show_steps(root, artifact_id, *, index=None, strategy='indexed'):
         _verify_current(source, observed.binding)
         validate_result_document('artifact-show-v1', payload)
         return CommandResult('artifact.show', result=payload, project=project, details=details)
+    except BundleError as error:
+        kind = FailureKind(error.exit_code)
+        return CommandResult.failed('artifact.show', kind, project=project, details=details,
+            diagnostics=(Diagnostic(error.code or 'CORE_' + kind.name, 'error', 'bundle',
+                'Partial bundle read failed.', rationale=error.reason),))
+    except SrxError as error:
+        from ._read_errors import read_failure
+        return read_failure('artifact.show', error, project, details)
     except OperationFailure as error:
         return CommandResult.failed('artifact.show', error.kind, project=project,
             diagnostics=(Diagnostic('CORE_' + error.kind.name, 'error', 'preflight', str(error)),),

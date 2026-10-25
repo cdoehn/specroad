@@ -74,7 +74,11 @@ class ProjectBundleSnapshot:
     """Own the selected bytes and the original observation used to recheck them."""
 
     def __init__(self, root):
-        source = ProjectSource(root)
+        from ._extracted_root import PartialRootMarker
+        try:
+            source = ProjectSource(root)
+        except PartialRootMarker as error:
+            raise BundleError('bundle_partial_project_source', code='SRV083', exit_code=7) from error
         _preflight(source)
         _empty_receipts(source)
         previous_manifest = _previous_manifest(source)

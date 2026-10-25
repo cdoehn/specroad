@@ -28,10 +28,10 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ```yaml
 plan_revision: 19
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 630
-last_completed_plan_commit: 15.e.C
-next_plan_commit: 15.f.W
-last_completed_numbered_bundle: 475
+implementation_plan_commits_completed: 631
+last_completed_plan_commit: 15.f.W
+next_plan_commit: 15.f.R
+last_completed_numbered_bundle: 476
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -26161,7 +26161,7 @@ einer kanonischen ZIP endet dieser N-Auftrag ohne Result-Warteschleife.
 
 #### 15.f.W – Let it Work
 
-- [ ] **15.f.W** · Position **631/900** · Voraussetzung: `15.e.C`.
+- [x] **15.f.W** · Position **631/900** · Voraussetzung: `15.e.C`.
 **Exakte Commit-Message:** `15.f.W feat(bundle): Read-only-Befehle auf Partials aufbauen`
 
 **Umsetzung:** Zulässige lesende Funktionen und referenzielle Boundaryprüfung auf Partialmodellen aktivieren.
@@ -26187,6 +26187,177 @@ einer kanonischen ZIP endet dieser N-Auftrag ohne Result-Warteschleife.
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
 **Regressionsabnahme:** Alle vorhandenen W-/R-Verhaltenstests dieses Schritts und die vom Refactoring betroffenen bisherigen Verhaltenstests erneut ausführen; erwartete Fachwerte nicht passend zum Refactoring umschreiben. Bei reinen Präsentations-/Dokuschritten keine solchen Tests erfinden.
+
+
+**Umsetzungs- und Übergabenachweis – Bundle 476 (W), 25. Oktober 2026.**
+
+**Bestätigte Basis.** Das Result
+`specroad-apply_Result_133808_1025_bbd518.zip`, SHA-256
+`93d97d6ab1b37b65fa1f61f7b79af3aeda1b4d2455b258dd0fa1c9651ff5e3ff`,
+bestätigt den sauberen **15.e.C**-Commit
+`65018c571feeca126431b4deddcda85355bbb916`, Bundle **475**, Parent
+`82dbd6c93ef78c358d8049b987ec74af69c4bba5`. Root-Anleitung, Kontext,
+Umgebung, vollständiges Manifest, Run-/Ausführungslogs und alle **2.245**
+Snapshotdateien wurden geprüft. Größen, Blob-IDs, Modi und vollständige
+Bytes entsprechen dem ausschließlich lesend geprüften Apply-Stand und dem
+vorherigen Payload einschließlich der fünf post-Gate-Planmarker.
+Native Result-Prüfung, konsistente Zustandserfassung und Vierfachbindung
+stimmen. In Dev wurde nur der bestätigte Planfortschritt nachgeführt:
+**630/900**, zuletzt **15.e.C**, nächstens **15.f.W**, Bundle **475**.
+Git-Historie und Index blieben unverändert; Apply wurde nicht verändert.
+
+Die tatsächlichen Berichte und Einzeloutcomes bestätigen **6.992/6.992**
+bestandene Apply-Tests in **2.146,20 s** auf vier parallelen Workern,
+**Sequenz 179 / Gruppe 2/3**, aus **20.972** aktiven Identitäten.
+Nummerierung, Quellbindung und nummerierter Auswahlbeleg wurden nachgerechnet.
+Auswahlbindung: `0b47c95beb6ae52a93aba5ce1ee7cb8e5c552f291dd68d9fb9a3d50601b703a5`;
+Auswahlbericht-SHA-256: `821b553e66dbc0177249eccc94d2a535a03dd7c53abed8587fc42229c31c0231`;
+Einzeloutcomes-SHA-256: `bdc820fe3a8aca811e54a24a08849a1a3bd2c9160c9055b0174e3685e6facae3`.
+Dies bestätigt den C-Abschluss, keine Vollsuite oder Freigabe.
+
+**Regulärer W-Ausschnitt.** `show` / `artifact show` liest jetzt tatsächliche
+Closuremitglieder eines extrahierten Dokument-/Release-Teilbundles, über die
+Python-API, CLI, Alias und strukturierten Request. Der eigene lesende
+Partial-Snapshot besitzt keine `ProjectSource`-/Writefähigkeit. Er prüft
+Rootmarker, vorhandenen Bootstrapbeleg, Betriebszustand, sichere Pfade,
+exakte Payloadnamensmenge und Originalbytes. Die vorhandene native
+Bundleprüfung rekonstruiert Scope, Closure, Modellwurzel, Konfigurations-
+und Profilbindung samt separaten Review-Prüfzielen. Erst die dadurch
+bestimmten Closuremitglieder werden als Abfrageobjekte zugelassen.
+
+Show liefert das unveränderte Artefakt mit lokalen eingehenden/ausgehenden
+Relationen und exakt gebundenen ausgehenden Boundary-Verweisen. Eine
+Boundary-Zielidentität ist kein erfundenes geladenes Zielartefakt und
+erzeugt keine außerhalb beobachteten Incoming-Quellen. Das Ergebnis ist
+explizit `status=partial`, `partial_scope=partial_bundle_artifacts`;
+Abdeckung und Quellzahl beziehen sich ausschließlich auf diese Mitglieder.
+Descriptor, Boundaries und Teilmodellwurzel sind sichtbar gebunden;
+die Ursprungswurzel bleibt ungeprüfte Provenienz. Der maschinenlesbare
+Show-Vertrag erlaubt diese zusätzliche begrenzte Abdeckung; bisherige
+Vollprojekt-Ergebnisse behalten ihre Werte.
+
+Konfigurationskontext und E.3.2-Prüfdateien bleiben außerhalb der
+Fachobjektmenge. Ihre IDs sind kein zusätzliches Show-Ziel. Vor Lieferung
+werden Root, Marker, Beleg, sämtliche Payloadbytes und Namensmengen erneut
+geprüft. Unaufgelöste Transaktionen verhindern bereits den Modellzugriff;
+falsche oder fehlende Daten erzeugen keinen Teilerfolg. Gefährliche Pfade
+und verletzte Bootstrap-/Markergrenzen bleiben Code 7, ungültiges
+Format/Closure Code 3, nach Laden veränderte Payloadbytes oder
+Payloadmengen Code 6. Ein kopierter Partialmarker ohne lokalen
+Bootstrapbeleg erlaubt ebenfalls keinen vollständigen `ProjectSource`.
+Entfernung allein des Markers eines extrahierten Roots bleibt gesperrt.
+Weder Writes, Re-Export als Vollprojekt noch implizite Rehydration werden
+durch die neue lesende Beobachtung ermöglicht.
+
+**Offener Umfang.** Dies ist der kleinste nutzbare W-Zustand: **Show** und
+seine referenzielle Partialprüfung. Weitere gemäß 10.16 zulässige
+lesende Befehle sowie die vollständige befehlsübergreifende Write-Abweisung
+bleiben **15.f.R**; die gemeinsame Command-/Readerstruktur bleibt
+**15.f.C**. Bestehende andere Reader werden nicht als bereits Partial-fähig
+ausgewiesen und erhalten durch diese Änderung keine Kontextartefakte.
+`SR-TC-0484` steht ausdrücklich auf `partial`, mit ausführbaren
+Testidentitäten, synthetischem Fixture und benannten offenen Punkten.
+
+**SPECROAD-DECISION-1** ist ausdrücklich vorhanden. Die bestehende
+W-Abnahme und Spezifikation 10.16 / Anhang E.3–E.3.2 reichen aus;
+es ist keine normative Klärung nötig. Spezifikation **0.2.24**, SHA-256
+`ed0a3c233753e9bfff165dcbf5347e83eb056ba2b745d865a5cbdc514bd88008`,
+bleibt bytegleich. Die bisherigen **20.976** reservierten Testnummern
+einschließlich vier historisch stillgelegter Identitäten bleiben erhalten;
+**47** neue Identitäten werden ausschließlich hinten mit Nummern
+**20976–21022** angehängt. Kein vorhandener Test wurde entfernt,
+umnummeriert oder sein Oracle an die Implementierung angepasst.
+
+**Gezielte Entwicklungsprüfung.** **1.944/1.944** Verhaltenstests aus
+**43** vollständigen Testdateien bestehen in **327.94 s** auf
+**vier parallelen Workern**, mit beobachtetem Prozessende **0**,
+ausschließlich `passed`-Outcomes und `full_suite_passed=null`.
+Darunter sind alle 47 neuen Partial-Show-Fälle, bisherige Show-/Query-
+und Indexverträge, Bundle-Erzeugung/-Verifikation/-Extraktion, sichere
+Reader, Preflight, Katalog und betroffene CLI-/Distributionsregressionen.
+Eine vorgelagerte Collection fand einen Importzyklus; dieser wurde vor
+den Verhaltenstests behoben. Der erste engere Lauf bestand mit 42/42;
+Ein erster breiter Lauf ergab 1.942 bestandene und zwei fehlgeschlagene
+Tests: Der bestehende Bundle-Reason für Marker-only-Partials wird jetzt
+auch bei früherer Reader-Abweisung erhalten; die neue Journal-Erwartung
+wurde anhand des vorhandenen Preflight-Vertrags auf Code 5 korrigiert.
+Bestehende Testoracles bleiben unverändert. Die abschließende Auswahl
+enthält zusätzlich die fünf danach ergänzten
+Metadaten-/Kopier-/Preflight-Fälle. Die vollständige abschließende
+Collection-/Katalogprüfung ist gültig: **21.019** aktive eindeutige
+Identitäten, **0** Testkörper. Kein Dev-Volltest, serieller Lauf,
+CI-Start oder Darstellungs-/Dokumentationstest.
+Ausgewählte vollständige Testdateien:
+
+- `tests/test_apply_rotation.py`
+- `tests/test_artifact_show.py`
+- `tests/test_artifact_show_right.py`
+- `tests/test_bootstrap.py`
+- `tests/test_boundary_references.py`
+- `tests/test_bundle_extraction.py`
+- `tests/test_bundle_extraction_right.py`
+- `tests/test_bundle_verification.py`
+- `tests/test_bundle_verification_right.py`
+- `tests/test_capabilities.py`
+- `tests/test_capability_scope.py`
+- `tests/test_catalog_check.py`
+- `tests/test_catalog_check_right.py`
+- `tests/test_cli.py`
+- `tests/test_description.py`
+- `tests/test_options.py`
+- `tests/test_partial_bundle.py`
+- `tests/test_partial_bundle_right.py`
+- `tests/test_partial_read_commands.py`
+- `tests/test_preflight_metadata.py`
+- `tests/test_preflight_profiles.py`
+- `tests/test_product_bundle.py`
+- `tests/test_product_bundle_right.py`
+- `tests/test_project_bundle.py`
+- `tests/test_project_bundle_right.py`
+- `tests/test_project_inspection.py`
+- `tests/test_project_inspection_right.py`
+- `tests/test_query_read_integration.py`
+- `tests/test_query_read_integration_right.py`
+- `tests/test_read_only_validation.py`
+- `tests/test_read_only_validation_right.py`
+- `tests/test_registry.py`
+- `tests/test_relation_index.py`
+- `tests/test_relation_index_right.py`
+- `tests/test_requests.py`
+- `tests/test_resource_inventory.py`
+- `tests/test_resource_inventory_right.py`
+- `tests/test_results.py`
+- `tests/test_schema_catalog.py`
+- `tests/test_schema_catalog_change_plan.py`
+- `tests/test_schema_catalog_robustness.py`
+- `tests/test_transaction_preflight.py`
+- `tests/test_transaction_preflight_right.py`
+
+Ausführung über `tools/run_selected_tests.py --workers 4 --expected-tests 1944`
+in einem frischen ignorierten Berichtsverzeichnis. Quellidentität:
+`da295069dfb94e20fbaca1a730e75dd53013e4dcf4365a7dd0eae93a97cc79ed`.
+Katalogbericht-SHA-256: `c80ca13229b3daaea60509896c389c4a2c0c03fed92d57b1c60ae0b0789fe14c`;
+Auswahlbericht-SHA-256: `263308598be8777c210f975fa746c120392d8fcd92f930ce6ff01a8c5e91385e`;
+Einzeloutcomes-SHA-256: `87ac13558a4ff897254219c2e8e3efd01c2630e4b457cafbae7c908b546f1d99`.
+Teilnachweise ersetzen keine Release-, Review- oder menschliche Freigabe.
+
+**Gebundene Übergabe.** Bundle **476** enthält genau den echten
+PLAN-Zustand **15.f.W**, Position **631/900**, als elf Dateien:
+zwei neue interne Reader-/Show-Bausteine, Show, Rootschutz und
+Show-Resultschema samt kompatiblem Bundle-Fehlervertrag, neue Verhaltenstests, ergänzte Testnummerierung,
+Fixture-/Requirement-Nachweis und diesen Planbeleg. Der Entrypoint
+verlangt den sauberen gebundenen C-Stand und schreibt die gezielt
+geprüften W-Bytes mit dem nativen Payloadwriter. Ausschließlich die
+fällige **Gruppe 0/3 / Sequenz 180** mit **7.007** Tests läuft parallel
+auf vier Workern. Erst nach erfolgreichem Gate und passenden Quell-,
+Katalog-, Nummerierungs- und Auswahlbindungen setzt er die fünf Marker
+auf **631/900**, zuletzt **15.f.W**, nächstens **15.f.R**, Bundle **476**
+und die W-Checkbox. Dann folgt die exakte PLAN-Commit-Message
+`15.f.W feat(bundle): Read-only-Befehle auf Partials aufbauen`.
+R und C bleiben offen. Fehler erhalten bisherige Commits und den
+tatsächlichen Arbeitszustand. Zukünftiger Apply-Lauf und Commit werden
+nicht als erfolgt behauptet. Nach nativer Prüfung und atomarer Übergabe
+genau einer kanonischen ZIP endet dieser N-Auftrag ohne Result-Warten.
 
 <a id="step-15-g"></a>
 ### 15.g – Receipts und portable Idempotenz

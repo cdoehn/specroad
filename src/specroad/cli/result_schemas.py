@@ -176,9 +176,9 @@ def _fields(schema_id):
                                            'target': nonempty}, extra=True)})
         return _object({'format_version': {'const': '1.0.0'}, 'artifact': obj,
             'incoming': _array(relation_view(True)), 'outgoing': _array(relation_view(False)),
-            'coverage': _object({'scope': {'const': 'current_project_artifacts'},
+            'coverage': _object({'scope': {'enum': ['current_project_artifacts', 'partial_bundle_artifacts']},
                 'source_count': count, 'relation_count': count, 'observation_sha256': sha,
-                'validation_scope': {'const': 'relation_references_and_canonical_storage_only'},
+                'validation_scope': {'enum': ['relation_references_and_canonical_storage_only', 'partial_payload_model']},
                 'atomic_snapshot': {'const': False}})})
     if schema_id == 'artifact-trace-v1':
         edge = _object({'relation_id': nonempty, 'type': nonempty, 'source': nonempty,
