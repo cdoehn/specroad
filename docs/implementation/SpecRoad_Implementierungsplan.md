@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 19 · **Stand:** 25. Oktober 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.24
+**Planrevision:** 20 · **Stand:** 25. Oktober 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.25
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 Schritte und 900 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; jeder Schritt besitzt einen konkreten Arbeitsumfang und eigene Verhaltensabnahme.
 
@@ -9,7 +9,7 @@ Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 S
 
 Fachliche Grundlage ist [`docs/specification/SpecRoad_Spezifikation.md`](../specification/SpecRoad_Spezifikation.md), einschließlich aller konsolidierten Korrekturen, 742 Requirements, 51 Verifikationsverträge, 46 Szenario-/E2E-Identitäten sowie R-01 bis R-75, Anhang U und den PatchHarbor-Rundweg aus Anhang W. Der [`Prüfbericht`](../reviews/SpecRoad_v0.2.7_Implementierungsreife_Pruefbericht.md) ist ein vorgelagerter Entwurfsreview, kein späterer Produktnachweis.
 
-Gebundene Spezifikations-SHA-256: `ed0a3c233753e9bfff165dcbf5347e83eb056ba2b745d865a5cbdc514bd88008`.
+Gebundene Spezifikations-SHA-256: `55bc8575bdb33e5ddbd50420b01eeee9fbfb8996637194ceafc2e09e547b4ec9`.
 Planungsbasis: Commit `fe2661d02ecf2f7eb483b58a4487eb009c6b3846`; sauberes Result-Bundle `specroad_Result_120209_0914_df3504.zip`; Repository-ID `3d2576df-d611-46fc-9d2b-92869468aaca`. Diese Angaben dokumentieren die Entstehung des Plans, nicht die zukünftige Patchbindung. **Jedes spätere Patchpaket bindet den dann aktuellen tatsächlichen Result-Zustand.**
 
 Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 2026 gelten zusätzlich und bei den nachfolgend benannten Konflikten vorrangig. Sonstige normative Spezifikationsinhalte werden nicht stillschweigend abgeschwächt. Neue fachliche Widersprüche, fehlende zwingende Angaben und Sicherheitsprobleme sind offen zu benennen, nicht durch erfundene Annahmen oder Scheinerfolge zu lösen.
@@ -26,7 +26,7 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 19
+plan_revision: 20
 implementation_plan_commits_total: 900
 implementation_plan_commits_completed: 631
 last_completed_plan_commit: 15.f.W
@@ -59,6 +59,32 @@ in ihrer bisherigen Reihenfolge. M20 übernimmt die zusätzliche Gesamtmatrix
 in seinen vorhandenen Schritten 20.f, 20.h und 20.m.
 
 Nach tatsächlich erfolgreich ausgeführten, zum Commit passenden Verhaltenstests wird die betreffende Checkbox im selben Git-Commit gesetzt. Reguläre Produktcommits aktualisieren den Produktzähler; Audit-Nacharbeiten aktualisieren ausschließlich ihren Status und `next_audit_step`. Ein fehlgeschlagener Schritt bleibt offen. Git ist die Historie; das Dokument nimmt keinen eigenen noch unbekannten Commit-Hash auf. Vor dem nächsten Auftrag werden tatsächliche Git-Historie, Result-Logs und Planfortschritt abgeglichen. Bei Inkonsistenz nicht einfach weiterzählen.
+
+## OFF-PLAN – Partial-Lesegraph (Bundle 477)
+
+Revision 20 dokumentiert **PARTIAL-READ-GRAPH**, delegiert gemäß
+SPECROAD-DECISION-1. Die Produktposition bleibt **631/900**, zuletzt
+**15.f.W**, nächstens **15.f.R**. Entscheidungsbeleg und offene fachliche
+Abnahmen stehen bei 15.f.R, normative Regeln in Spezifikation 0.2.25/E.3.3.
+Diese eine Klärungs-ZIP enthält drei echte Dokumentzwischenstände desselben
+Vertrags, keine Produktimplementierung und keine nominellen Produktcommits:
+
+- [x] **PARTIAL-READ-GRAPH.W:** Objekt-/Relationsdomäne und lokale Traversierung festlegen. Commit: `docs(spec): Partial-Lesegraph festlegen`.
+- [ ] **PARTIAL-READ-GRAPH.R:** Fehler-, Kontext- und Grenzfallabnahmen vervollständigen. Commit: `docs(spec): Partial-Lesegraph absichern`.
+- [ ] **PARTIAL-READ-GRAPH.C:** Gemeinsame Grenzen zentral ordnen, ohne Semantikänderung. Commit: `docs(spec): Partial-Lesevertrag strukturieren`.
+
+Jeder Zustand erhält seine eigene gezielte parallele Dev-Verhaltensprüfung
+und danach erst im externen Apply seine genau eine parallele Testgruppe:
+Sequenz **181/Gruppe 1** (7.005), **182/Gruppe 2** (7.007),
+**183/Gruppe 0** (7.007). Erst das erfolgreiche jeweilige Gate erlaubt
+seinen Dokumentcommit und den zugehörigen Marker; erst C setzt Bundle 477.
+Keine nachfolgende Phase wird vor dem vorherigen Commit installiert.
+Fehler erhalten erfolgreiche Commits und den tatsächlichen Arbeitszustand.
+Vorgesehene Apply-Gates sind keine bereits beobachteten Erfolge. Die
+Teilgruppen laufen auf verschiedenen Dokument-/Katalogständen; dies ist
+kein Vollsuite- oder Releasebeleg. Übergabe: **spec_clarification**.
+Der reguläre Planschritt bleibt offen; nach der atomaren ZIP-Veröffentlichung
+endet der Einzelauftrag ohne eigenes Apply, Statuspolling oder Fortsetzung.
 
 ## OFF-PLAN – Prüfkontext für Boundary-Relationsreviews (Bundle 469)
 
@@ -26170,6 +26196,65 @@ einer kanonischen ZIP endet dieser N-Auftrag ohne Result-Warteschleife.
 
 #### 15.f.R – Make it Right
 
+**OFF-PLAN-Entscheidungsbeleg PARTIAL-READ-GRAPH – Bundle 477.**
+
+**Lücke und Quellen.** Maßgeblich sind Spezifikation 2.4, 10.8, 10.16,
+11.5–11.7, B.2–B.6, E.3–E.3.2 und J.1–J.3 sowie SR-REQ-0293,
+0416, 0482–0484 und 0521. Der bestätigte 15.f.W-Stand erlaubt Show.
+Seine `_partial_read.py`/`_partial_show.py` trennen Mitglieder und Boundaries.
+`query/selection.py` baut dagegen `srx.graph.LoadedGraph`; dessen native
+`RelationReferences` verlangt alle Zielartefakte. `_trace_frontier.py`
+setzt ebenfalls einen vollständig aufgelösten Index voraus. Die bisherigen
+Normen erlauben die Lesebefehle und schließen Kontext als Fachobjekte aus,
+legen aber noch nicht fest, ob unmittelbare Relationsfilter bekannte
+Außenkanten zählen und ob Traversierungen Außenidentitäten als geladene
+Knoten behandeln. Diese Wahl verändert maschinenlesbare Ergebnisse.
+
+**Alternativen.** (1) Alle Abfragen bis zur Beschaffung des Ursprungs sperren:
+verworfen, weil dies den zugesagten Partial-Leseumfang unbenutzbar ließe.
+(2) Prüfbytes oder künstliche Stubs als Zielartefakte laden: verworfen wegen
+der ausdrücklich getrennten Mitgliedschaft, erfundener Felder und möglicher
+transitiver Kontextoffenlegung. (3) Sämtliche Außenkanten vor der Abfrage
+entfernen: verworfen, weil bekannte unmittelbare Relationen verschwänden.
+(4) Gewählt: wirkliche Mitglieder als Objektpopulation, erhaltene bekannte
+Relationssichten einschließlich Boundaries, Traversierung nur zwischen
+Mitgliedern und explizite lokale Ergebnisbindung. Die vorhandenen Scope-,
+Boundary-, Envelope- und SRX-Mechanismen bleiben die Grundlage.
+
+**Autorität und Grenzen.** Delegiert gemäß **SPECROAD-DECISION-1**, keine
+behauptete persönliche Einzelentscheidung. Der aktuelle Control-Vertrag v2
+erlaubt genau ein Klärungsbundle. Abgleich mit 2.4.1: (1) derselbe offene
+15.f.R-Leseumfang, keine neue Funktion oder Produktposition; (2) konsistente
+Ergänzung der fehlenden Abfragedomäne, keine Änderung der Requirements;
+(3) E.3.1/E.3.2 und die ausdrückliche Nutzerentscheidung zum Prüfkontext,
+Read-only, unveränderte Originalbytes, menschliche Reviews und Nachweise
+bleiben erhalten; (4) versionierte Dokumentänderung ohne Datenmigration,
+rücknehmbar durch eine spätere begründete Fortschreibung; (5) keine externen
+Fakten, fehlenden Originaldaten oder fingierten Freigaben werden ersetzt.
+Vollprojekt- und bereits belegte Show-Ergebnisse bleiben kompatibel.
+Die zusätzliche Domäne gilt nur für explizit verifizierte Partials; sie
+ändert keine bisherige SRX-1.0-Auswertung auf vollständigen geladenen Modellen.
+Grammatik, Typen, Missing und Fehler bleiben erhalten, kein SRX-2.0-Umbau.
+
+**Normative Festlegung und positive Abnahme.** Spezifikation **0.2.25/E.3.3**
+ist die Zielregel. Eine gültige lokale Relation A→B wird wie bisher verfolgt.
+Eine gültige schwache Außenkante A→X zählt unmittelbar für passende
+Relationsfilter; X erscheint dennoch nicht als Query-Item, Show-Artefakt,
+Trace-Knoten, Why-Pfadmitglied oder `reachable`-Prädikatsobjekt. Bei Tiefe 0
+wird nur A geprüft. Ein `reachable` auf die ID X bleibt im Teilmodell false,
+während `has_relation` auf X wahr sein kann. Fehlende Außen-Incoming-Quellen
+werden nicht erfunden. Query-Gesamtzahl und Pagination zählen nur wirkliche
+Mitglieder, die den angegebenen Filtern entsprechen. Erfolg trägt die
+explizite Teilmodell- und Boundary-Bindung, niemals eine Ursprungsfreigabe.
+
+**Offene Umsetzung.** 15.f.R bleibt ungeprüft und offen, einschließlich aller
+weiteren in 10.16 erlaubten Lesebefehle und der vollständigen Write-Abweisung
+mit Code 7. 15.f.C bleibt eine gesonderte strukturelle Produktbereinigung.
+Bestehende SR-TC-0484-Nachweise bleiben `partial`; keine neuen Testergebnisse
+oder Produktabnahmen werden aus der geänderten Spezifikationshashbindung
+abgeleitet. Die kommenden Verhaltenstests müssen die fachlichen Resultate
+und Sicherheitsgrenzen prüfen, nicht Wortlaut oder Markdown dieses Dokuments.
+
 - [ ] **15.f.R** · Position **632/900** · Voraussetzung: `15.f.W`.
 **Exakte Commit-Message:** `15.f.R feat(bundle): Read-only-Befehle auf Partials vervollständigen`
 
@@ -26358,6 +26443,69 @@ R und C bleiben offen. Fehler erhalten bisherige Commits und den
 tatsächlichen Arbeitszustand. Zukünftiger Apply-Lauf und Commit werden
 nicht als erfolgt behauptet. Nach nativer Prüfung und atomarer Übergabe
 genau einer kanonischen ZIP endet dieser N-Auftrag ohne Result-Warten.
+
+**Technische Basis der Klärung.** Das Result
+`specroad-apply_Result_144133_1025_7b3927.zip`, SHA-256
+`b788efa0144f637353945a6f4be2cf50dc16b812e22bc8b71d7170bf703d7dc7`,
+bestätigt den sauberen Commit `e2682fb59b5c18fb369e63620a8b6aa51804c819`
+mit Parent `65018c571feeca126431b4deddcda85355bbb916` und Bundle 476.
+Generierte Root-Anleitung, Kontext, Umgebung, vollständiges Manifest,
+Run-/Ausführungslogs und alle 2.248 Snapshotdateien wurden geprüft.
+Inventar, Blob-IDs, Größen, Modi und Bytes stimmen mit dem nativ und
+ausschließlich lesend erfassten Apply-Zustand sowie dem vorherigen
+Payload einschließlich post-Gate-Planfortschritt überein. Das Result
+war maßgeblich und noch ohne Folgebundle. Dev-Historie, Index und lokale
+Regeln blieben unverändert; nur bestätigte Planmarker wurden übernommen.
+Tatsächlich beobachtet: **7.007/7.007** Apply-Tests auf vier Workern in
+**2.056,93 s**, Sequenz **180 / Gruppe 0**, aus **21.019** aktiven Tests.
+Die nummerierte Auswahl und alle Outcomes wurden nachgerechnet.
+Auswahlbindung: `344e85bca2b66c6a2c31e9ff8e374428cccec43a4bed124db168cdc8652bd524`;
+Bericht-SHA-256: `33b9a46c14202ef20ac8af21cab5421a6d31331f9883b2c5959faafd951b01fc`;
+Outcomes-SHA-256: `59b013119dbf661010782d2fee8a0ae037440ffa75e53eafb35a51046784caa9`.
+Dies belegt 15.f.W, keine Vollsuite oder neue fachliche Freigabe.
+
+**Payloadgrenze.** Ausschließlich Spezifikation, Plan und 743 aktive
+Katalog-/Requirement-Hashbindungen werden geändert. Produktcode,
+Testdateien, Oracles, Fixtures, Testnummern, Runner, Workflows und historische
+Evidence bleiben bytegleich. 21.023 reservierte Nummern einschließlich
+vier stillgelegter Identitäten bleiben erhalten. Die aktuelle Hashbindung
+ist keine rückwirkende Umetikettierung historischer Test-/Reviewbelege.
+
+**Gezielte Regressionauswahl für jeden Dokumentzustand:**
+
+- `tests/test_boundary_references.py`
+- `tests/test_bundle_verification_right.py`
+- `tests/test_catalog_check.py`
+- `tests/test_catalog_check_right.py`
+- `tests/test_partial_read_commands.py`
+- `tests/test_query_impact.py`
+- `tests/test_query_paging.py`
+- `tests/test_query_paging_right.py`
+- `tests/test_query_selection.py`
+- `tests/test_query_selection_right.py`
+- `tests/test_query_trace.py`
+- `tests/test_query_why.py`
+- `tests/test_srx_graph.py`
+- `tests/test_srx_graph_right.py`
+
+**Entwicklungsnachweis PARTIAL-READ-GRAPH.W.** Eigener geänderter
+Dokument-/Katalogzustand, anschließend **528/528** bestehende Verhaltenstests
+auf **vier parallelen Workern** in **156.91 s**, Prozessende **0**,
+ausschließlich `passed`, `full_suite_passed=null`. Vollständige Collection
+und Katalogprüfung: **21.019** Identitäten, **0** Testkörper, gültig.
+Runner: `tools/run_selected_tests.py --workers 4 --expected-tests 528`.
+Quellidentität: `062ae14150924a3b08e67a2887487462232775d8ec4b0bc6cc247ab9bb5bc4f1`;
+Spezifikationshash dieses Zwischenstands: `55bc8575bdb33e5ddbd50420b01eeee9fbfb8996637194ceafc2e09e547b4ec9`;
+Katalogbericht-SHA-256: `8807a558e12c518a234bfa25b99170da8c3fb389075487014610e1eb331201f9`;
+Auswahlbericht-SHA-256: `ae69d2baf76e1faf60a6df20463532fc6cba92ec965fb43e74f3f98b76dbdaee`;
+Einzeloutcomes-SHA-256: `a0e432c6afb930142bb24273b873a35ecb8a938b358b599fef69093ad7c9dcf3`.
+Dies sind Regressionen der vorhandenen Maschinen-/Verhaltensverträge,
+kein Dokumentations-/Darstellungstest und kein Implementierungsnachweis
+für die neuen offenen Partial-Abnahmen. Der native Entrypoint installiert
+genau diese Bytes, prüft ausschließlich die fällige Apply-Gruppe
+**1/3 / Sequenz 181** mit **7005** Tests
+parallel und darf erst danach den eigenen Dokumentcommit erzeugen.
+Der zukünftige Apply-Erfolg und Commit sind noch nicht beobachtet.
 
 <a id="step-15-g"></a>
 ### 15.g – Receipts und portable Idempotenz
