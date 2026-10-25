@@ -71,12 +71,18 @@ class ScopeSeedInputs:
     archive_bindings: object
     configuration_sha256: str
     fingerprint: str
+    partial_descriptor: object
 
-    def __init__(self, configuration, records, resources=(), *, archive_bindings=None):
+    def __init__(self, configuration, records, resources=(), *, archive_bindings=None,
+                 partial_descriptor=None):
         if type(configuration) is not ProjectConfiguration:
             raise ModelError('scope_configuration_required')
         records = _sequence(records)
-        references = RelationReferences(records)
+        if partial_descriptor is None:
+            references = RelationReferences(records)
+        else:
+            from ._partial_scope_references import local_scope_references
+            references = local_scope_references(records, partial_descriptor)
         if any(source.id_prefix != configuration.id_prefix for source in references.sources):
             raise ModelError('scope_project_prefix_mismatch')
         ordered = tuple(sorted(records, key=lambda record: record.identity.id.encode('utf-8')))
@@ -108,18 +114,22 @@ class ScopeSeedInputs:
                 raise ModelError('duplicate_scope_archive_binding')
             checked[baseline_id] = tuple(sorted(names, key=lambda name: name.encode('utf-8')))
         config_hash = canonical_json_sha256(semantic_configuration(configuration))
-        fingerprint = canonical_json_sha256({
+        binding = {
             'binding_version': 'scope-seed-inputs-v1', 'project_id': configuration.project_id,
             'configuration_sha256': config_hash,
             'artifacts': [{'id': record.identity.id, 'sha256': sha256(record.source_bytes).hexdigest()}
                           for record in ordered],
             'resources': [resource.data for resource in resources],
             'archive_bindings': {name: list(values) for name, values in checked.items()},
-        })
+        }
+        if partial_descriptor is not None:
+            binding['partial_descriptor'] = partial_descriptor.data
+        fingerprint = canonical_json_sha256(binding)
         for name, value in (('project_id', configuration.project_id), ('records', ordered),
                             ('resources', resources), ('references', references),
                             ('archive_bindings', MappingProxyType(checked)),
-                            ('configuration_sha256', config_hash), ('fingerprint', fingerprint)):
+                            ('configuration_sha256', config_hash), ('fingerprint', fingerprint),
+                            ('partial_descriptor', partial_descriptor)):
             object.__setattr__(self, name, value)
 
     @property

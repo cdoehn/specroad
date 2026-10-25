@@ -28,10 +28,10 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ```yaml
 plan_revision: 19
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 625
-last_completed_plan_commit: 15.d.W
-next_plan_commit: 15.d.R
-last_completed_numbered_bundle: 469
+implementation_plan_commits_completed: 626
+last_completed_plan_commit: 15.d.R
+next_plan_commit: 15.d.C
+last_completed_numbered_bundle: 470
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -25223,12 +25223,186 @@ abgenommen. Historische 15.c- und 15.d.W-Nachweise bleiben unverändert.
 **15.g** werden nicht vorgezogen. Für 15.e bleibt der Erhalt des getrennten
 Prüfkontexts, für 15.f dessen Sichtbarkeits-/Writegrenze verbindlich offen.
 
-- [ ] **15.d.R** · Position **626/900** · Voraussetzung: `15.d.W`.
+- [x] **15.d.R** · Position **626/900** · Voraussetzung: `15.d.W`.
 **Exakte Commit-Message:** `15.d.R feat(bundle): Bundleverifikation ohne Extraktion vervollständigen`
 
 **Vervollständigung:** Bitmanipulation, zusätzliche/unaufgeführte Datei und ersetztes Archiv bei altem externem Hash erkennen.
 
 **Verhaltensabnahme:** Verifikation erzeugt keine Extraktionsdateien und beansprucht ohne externe Bindung keine Erstellerauthentizität. Die W-Nachweise bleiben zusätzlich grün.
+
+
+**Umsetzungs- und Übergabenachweis – Bundle 470 (R), 25. Oktober 2026.**
+
+**Bestätigte Basis.** Das Result
+`specroad-apply_Result_070813_1025_0f7d5a.zip`, SHA-256
+`80c8b9199040d02b85ded69d6ba69fdee70769df09fb81307bf8d3425aad1678`,
+bestätigt den sauberen OFF-PLAN-Commit **BOUNDARY-REVIEW-CONTEXT**
+`f950cd57c55e7f75b051607f5cac5518a6af1b15`, Bundle **469**, Parent
+`23cd5467f237e67fca0fd893797629b0996716cc`. Die generierte Root-Anleitung,
+Kontext, Umgebung, Manifest, Run-/Ausführungslogs und alle **2.232**
+Snapshotdateien wurden geprüft. Größen, Blob-IDs, Modi und vollständige Bytes
+entsprechen dem ausschließlich lesend geprüften Apply-Stand sowie den
+Payloads des vorigen Bundles einschließlich seiner Planfortschreibung.
+Die bestätigten Planmarker wurden vor Beginn in Dev nachgeführt:
+**625/900**, zuletzt **15.d.W**, nächstens **15.d.R**, Bundle **469**.
+
+Die tatsächlichen Berichte und Einzeloutcomes bestätigen **6.873/6.873**
+bestandene Apply-Tests in **2.267,91 s** auf vier parallelen Workern,
+**Sequenz 174 / Gruppe 0/3**, aus **20.617** aktiven Identitäten.
+Die Testnummern, Quellbindung und Auswahl wurden nachgerechnet.
+Auswahlbindung: `cd6b39149009d180703a18b13d995f3acaa021e8e211b3b7427d82465ce39e57`;
+Auswahlbericht-SHA-256: `e3c2d294508cb741cacd06ab9a570568c4141609ad3945964f04b7808f4cecc7`;
+Einzeloutcomes-SHA-256: `030c9fb7d5fe67fb7d60dd8b08fba4dc38a60cb010d4533b1d15bfae01461616`.
+Dies ist ein Apply-Teilnachweis, kein Vollsuite- oder Releasebeleg.
+
+**Reguläre R-Umsetzung.** **SPECROAD-DECISION-1** ist ausdrücklich enthalten.
+Die bereits angewandte Nutzerentscheidung **BOUNDARY-REVIEW-CONTEXT** aus
+E.3.2 wird jetzt implementiert; keine weitere normative Klärung erfolgt.
+Spezifikation **0.2.24**, SHA-256
+`ed0a3c233753e9bfff165dcbf5347e83eb056ba2b745d865a5cbdc514bd88008`,
+und die bestehenden Abnahmekriterien bleiben bytegleich.
+
+Der Teilbundleerzeuger liefert für jede tatsächlich enthaltene Review-
+Relations-ID mit Boundary genau die benötigten ursprünglichen Zielbytes
+unter `bundle-context/boundary-targets/<ID>.json`. Mehrfach benötigte Ziele
+teilen eine Datei; alle einschlägigen Typ-/Vollhashbindungen müssen stimmen.
+Die native Quellposition eines kopierten Prüfziels steht nicht zugleich
+unter `excluded_contents`. Regulär erreichte Ziele erhalten keine separate
+Prüfkopie. Vollständige Ursprungsprüfung und erneute Byteprüfung vor Rückgabe
+bleiben erhalten.
+
+Der unabhängige Reader rekonstruiert Dokument- und Release-Teilmodelle aus
+den eigenen ZIP-Bytes. Er prüft native Schemas, Identitäten, Ressourcen,
+Sprachpakete, Anhänge, Baselineobjekte und die genaue Konfigurations-Parent-
+Kette. Ein an den konkreten Teil-Scope gebundenes Eingangsinventar liefert
+beobachtete lokale Kanten an den bestehenden Seed-/Closurewalker; es kann
+keinen vollständigen Ursprung bestätigen oder für einen anderen Scope
+wiederverwendet werden. Die strikte vollständige Referenzprüfung für
+Projektmodelle und Erzeuger bleibt erhalten.
+
+Prüfziele liefern ausschließlich Endpunktbeobachtungen für die unveränderte
+native Relationskontext-/Reviewauswahl nach J.1–J.3. Sie sind keine Seeds,
+Mitglieder, Reviewhistorien oder transitiven Ressourcenprovider. Ein starkes
+Ziel nur im Prüfnamensraum bleibt fehlend. Ein doppelt benötigtes Ziel im
+Konfigurations- und Prüfkontext muss in beiden Rollen bytegleich sein.
+Ausgehende Abhängigkeiten reiner Konfigurationskontexte werden erst relevant,
+wenn die Konfiguration regulär erreicht wird. Das tatsächliche Inventar muss
+der exakten Vereinigung aus Closure, Konfigurationskontext, gebundenen
+Sprachpaketen und getrennten Prüfdateien entsprechen.
+
+Boundaries sowie Modell-, Profil- und Konfigurationshashes werden aus diesen
+Beobachtungen unabhängig neu bestimmt. Ein partieller Ursprungsroothash
+bleibt Herkunftsangabe ohne Vollständigkeitsbeweis. `bundle-verify-v1`
+unterscheidet `partial_payload_model` vom bisherigen geschlossenen
+Projektmodell. Authentizität, vollständige semantische Validierung,
+menschliche Freigabe und Schreibbefugnis bleiben ausdrücklich falsch.
+Die gesamte Prüfung bleibt im Speicher ohne Extraktion, temporären
+Projektroot oder externen Ursprungsfallback. **15.d.C**, Extraktion **15.e**,
+Read-only-Befehle **15.f** und der Provider für nichtleere portable Receipts
+**15.g** bleiben offen; die bestehende Receipt-Providergrenze bleibt Code 5.
+
+**Verhaltensnachweise.** Die neue R-Datei enthält **93** eigenständige Fälle:
+Dokument/Release, aktuelle, historische und abgelehnte Reviews, neutrale
+Audit-/Formatänderungen und geänderte Fachkontexte; exakte Prüfzielmengen,
+Rollen-/Schema-/Identitäts-/Vollhashwidersprüche, gemeinsame Außenziele,
+starke Pflichtziele, Konfigurationsvererbung und Applicability, Ressourcen,
+Anhänge, Sprachpakete und Baselineobjekte. Hinzu kommen externe alte
+ZIP-Hashes, projektlose CLI-Verifikation, Bitmanipulation, unaufgeführte
+Dateien sowie ZIP-Duplikate, Symlinks, Verzeichniseinträge und Traversal.
+Unsichere Archive behalten Code 7 vor fachlicher Auswertung; ungültiger
+Prüfkontext scheitert mit Code 3, Hashwiderspruch mit 3/SRV060. Synthetische
+Testreviews belegen keine tatsächliche menschliche Freigabe.
+
+Die beiden bisherigen temporären Providerlücken-Tests für Dokument/Release
+werden durch positive Integrationsfälle mit neuen Identitäten ersetzt.
+Ihre alten Nummern bleiben dauerhaft reserviert. Alle übrigen W-Verträge
+und bisherigen Testidentitäten bleiben erhalten. Der erste gezielte Lauf
+der bisherigen Bundle-/Verifikationstests bestand **168/168** Fälle.
+Zwischenläufe der neuen R-Datei deckten ausschließlich Fixturefehler auf:
+eine fehlende Rationale-Initialisierung, eine nichtkanonisch gerichtete
+symmetrische Fixturekante und einen falschen Fixtureimport. Diese wurden
+korrigiert; kein fachliches Fehlerorakel wurde abgeschwächt. Die zunächst
+noch katalogisierten beiden Providerlücken-Identitäten wurden nachvollziehbar
+ersetzt und stillgelegt.
+
+Der abschließende R-Zustand besteht **1.896/1.896** gezielte Verhaltenstests
+in **204.60 s** mit **vier parallelen Workern**, beobachtetem
+Prozessabschluss **0**, ausschließlich `passed`-Outcomes und
+`full_suite_passed=null`. Enthalten sind die neuen Fälle sowie betroffene
+Bundle-, Review-, Konfigurations-, Ressourcen-/Scope-/Closure-, Resultat-
+und Katalogregressionen. Reproduzierbare Auswahl vollständiger Testdateien:
+
+- `tests/test_apply_rotation.py`
+- `tests/test_boundary_references.py`
+- `tests/test_bundle_verification.py`
+- `tests/test_bundle_verification_right.py`
+- `tests/test_catalog_check.py`
+- `tests/test_catalog_check_right.py`
+- `tests/test_configuration_applicability.py`
+- `tests/test_configuration_applicability_right.py`
+- `tests/test_configuration_inheritance.py`
+- `tests/test_configuration_inheritance_right.py`
+- `tests/test_configuration_scope.py`
+- `tests/test_configuration_scope_right.py`
+- `tests/test_exchange_export.py`
+- `tests/test_exchange_export_right.py`
+- `tests/test_partial_bundle.py`
+- `tests/test_partial_bundle_right.py`
+- `tests/test_product_bundle.py`
+- `tests/test_product_bundle_right.py`
+- `tests/test_project_bundle.py`
+- `tests/test_project_bundle_right.py`
+- `tests/test_relation_references.py`
+- `tests/test_relation_references_right.py`
+- `tests/test_relation_review_status.py`
+- `tests/test_relation_review_status_right.py`
+- `tests/test_release_scope.py`
+- `tests/test_release_scope_right.py`
+- `tests/test_results.py`
+- `tests/test_schema_catalog.py`
+- `tests/test_schema_catalog_change_plan.py`
+- `tests/test_schema_catalog_robustness.py`
+- `tests/test_scope_closure.py`
+- `tests/test_scope_closure_right.py`
+- `tests/test_scope_comparison.py`
+- `tests/test_scope_comparison_right.py`
+- `tests/test_scope_controls.py`
+- `tests/test_scope_controls_right.py`
+- `tests/test_scope_seeds.py`
+- `tests/test_scope_seeds_right.py`
+- `tests/test_strong_closure.py`
+- `tests/test_strong_closure_right.py`
+
+Ausführung über `tools/run_selected_tests.py --workers 4 --expected-tests 1896`
+in einem frischen ignorierten Berichtsverzeichnis. Die vollständige Collection
+und Katalogprüfung ist gültig: **20.710** aktive Identitäten, **0** Testkörper.
+Die **95** neuen Identitäten (93 R-Fälle und zwei Integrationsersatzfälle)
+erhalten ausschließlich die neuen Nummern **20.619–20.713**; die bisherigen
+**20.619** reservierten Nummern bleiben unverändert. Insgesamt bleiben vier
+stillgelegte Identitäten reserviert. `SR-TC-0389` bleibt wegen des noch
+offenen Receiptproviders bewusst `partial`.
+
+Quellidentität: `b75c33d3b3cf2cd60d03cefd7179af61aae87a8d6ad0d121b91a8efc19578e6a`;
+Katalogbericht-SHA-256: `e52ef5ae150f264239bfc6c419b4c292e049e0002daf300225100b9a4d77228b`;
+Auswahlbericht-SHA-256: `5d82e0f66ef713a7ffed274d29dc2bfa5d7a08f19709c08afdc2ff509e020723`;
+Einzeloutcomes-SHA-256: `07aa282285d3ea2a0a0bd0ef0e88914cd813ccc5008bbe3c67d76cf9e08a1c21`.
+Dies ist eine gezielte Entwicklungs-Teilprüfung; kein vollständiger
+Entwicklungs- oder serieller Testlauf wurde gestartet.
+
+**Gebundene Übergabe.** Bundle **470** enthält genau einen echten
+R-Zwischenstand mit **18** Dateien einschließlich dieses Plans.
+Der Entrypoint installiert die gezielt geprüften Bytes über den nativen
+PatchHarbor-Payloadwriter und prüft **Sequenz 175 / Gruppe 1/3**:
+**6.902** dauerhaft nummerierte Tests mit vier parallelen Workern.
+Erst nach erfolgreichem Gate setzt er die fünf Planmarker auf **626/900**,
+zuletzt **15.d.R**, nächstens **15.d.C**, Bundle **470** und die R-Checkbox.
+Danach entsteht ausschließlich in Apply der Commit
+`15.d.R feat(bundle): Bundleverifikation ohne Extraktion vervollständigen`.
+Dieser zukünftige Testlauf und Commit werden nicht als erfolgt behauptet.
+Fehler erhalten den tatsächlichen Zustand; keine spätere Phase wird vorab
+installiert. Kein Dev-Commit, Push/Fetch, CI-, Control- oder Watcherstart.
+Nach nativer Paketprüfung und atomarer Übergabe genau einer kanonischen ZIP
+endet dieser N-Durchlauf ohne Warten auf ein weiteres Result.
 
 #### 15.d.C – Make it Clean
 

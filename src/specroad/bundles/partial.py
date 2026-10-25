@@ -14,7 +14,7 @@ from ..model._bundle_scope_contract import PARTIAL
 from ..model.errors import ModelError
 from ..model.language_package_values import LanguagePackage
 from ..model.manifest_resources import project_json_resource
-from ..model.paths import PathClass, artifact_path
+from ..model.paths import PathClass, artifact_path, classify_path
 from ..security import SafetyViolation
 from ..srx.errors import SrxError
 from ._project_snapshot import ProjectBundleSnapshot
@@ -40,10 +40,9 @@ def _configuration_context(model, selection):
     return paths, effective.scope_sha256(model.configuration)
 
 
-def _selected_payloads(origin, closure, artifacts, context_paths):
-    model = origin.model
+def _selected_payloads(model, source_payloads, closure, artifacts, context_paths):
     paths = {'specroad.json', *context_paths}
-    require(paths <= origin.payloads.keys(), 'bundle_partial_configuration_context_missing')
+    require(paths <= source_payloads.keys(), 'bundle_partial_configuration_context_missing')
     paths.update(artifact_path(a['artifact_type'], a['id'], model.configuration.id_prefix)
                  for a in artifacts)
     by_path = {r.data['path']: r for r in model.resources if 'path' in r.data}
@@ -64,10 +63,10 @@ def _selected_payloads(origin, closure, artifacts, context_paths):
     ordinary = set(model.source_files)
     packages = {p.key: p for p in model.language_packages}
     included_packages = set()
-    for path, raw in origin.payloads.items():
+    for path, raw in source_payloads.items():
         if path in ordinary:
             continue
-        require(origin.source.classify(path) is PathClass.PROFILE, 'bundle_partial_source_unclassified')
+        require(classify_path(path, model.configuration) is PathClass.PROFILE, 'bundle_partial_source_unclassified')
         package = LanguagePackage(raw)
         if package.key in packages:
             require(package.source_bytes == packages[package.key].source_bytes,
@@ -75,7 +74,7 @@ def _selected_payloads(origin, closure, artifacts, context_paths):
             paths.add(path)
             included_packages.add(package.key)
     require(included_packages == set(packages), 'bundle_partial_package_missing')
-    return {p: origin.payloads[p] for p in sorted(paths, key=lambda p: p.encode('utf-8'))}
+    return {p: source_payloads[p] for p in sorted(paths, key=lambda p: p.encode('utf-8'))}
 
 
 def _prepare_partial(root, descriptor):
@@ -90,8 +89,15 @@ def _prepare_partial(root, descriptor):
     if configuration_sha256 is not None:
         require(configuration_sha256 == native.data['configuration_sha256'],
                 'bundle_partial_configuration_binding', code='SRV060')
-    payloads = _selected_payloads(origin, closure, artifacts, context_paths)
-    exclusions = {p: 'outside_scope' for p in origin.payloads if p not in payloads}
+    payloads = _selected_payloads(origin.model, origin.payloads, closure, artifacts, context_paths)
+    from .boundary_context import required_targets, proof_path
+    targets = required_targets(native.data['boundary_references'], artifacts)
+    proof_sources = set()
+    for identity, boundary in targets.items():
+        path = artifact_path(boundary['target_type'], identity, origin.model.configuration.id_prefix)
+        payloads[proof_path(identity)] = origin.payloads[path]
+        proof_sources.add(path)
+    exclusions = {p: 'outside_scope' for p in origin.payloads if p not in payloads and p not in proof_sources}
     exclusions.update({p: 'unreferenced_archive_object' for p in origin.archives
                        if p not in origin.payloads})
     metadata = {

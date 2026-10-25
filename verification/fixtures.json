@@ -60,6 +60,10 @@
       "kind": "Owned current-schema requirement, need, goal, task, verification, evidence, milestone and release bytes with actual relation identities and original evidence subject fields. Cyclic and missing traces, exact source/record hashes and relation-array pointers, absent calculation providers, read-only rendering metadata and isolated Core/PYZ contracts. Stored success values never become computed verification or release-readiness results.",
       "provider": "tests/test_builtin_document_views.py:trace_project"
     },
+    "SR-FIX-BUNDLE-VERIFICATION-RIGHT-v1": {
+      "kind": "Native document/release models with independently projected synthetic reviews, shared outside targets, original endpoint bytes, configuration parent context, attachments, baselines and language packages. Rehashed adversarial archives, no-write and no-origin-read traps, independent member root projection. No human approval, external history, extraction or promotion claim.",
+      "provider": "tests/test_bundle_verification_right.py:reviewed,verify_without_origin;tests/test_partial_bundle.py:project,independent_root;tests/test_partial_bundle_right.py:configured;tests/test_relation_review_status.py:review"
+    },
     "SR-FIX-BUNDLE-VERIFICATION-v1": {
       "kind": "Actual native closed project bytes with composed profile, registry/packages, binary attachment and baseline objects; canonical rebindings of altered inputs, unavailable origin, unrelated invalid current project and observed no-write effects. Empty receipt inventory only; no authenticity or full validation claim.",
       "provider": "tests/test_bundle_verification.py:bundle,rebind;tests/test_project_bundle.py:project,baseline_project"
@@ -719,6 +723,7 @@
     "SR-FIX-BUILTIN-PARTIAL-RIGHT-v1",
     "SR-FIX-BUILTIN-PARTIAL-v1",
     "SR-FIX-BUILTIN-TRACEABILITY-v1",
+    "SR-FIX-BUNDLE-VERIFICATION-RIGHT-v1",
     "SR-FIX-BUNDLE-VERIFICATION-v1",
     "SR-FIX-CATALOG-DATA-v1",
     "SR-FIX-CHANGE-AUTHORING-v1",

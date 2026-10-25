@@ -172,15 +172,16 @@ def test_formatting_changes_zip_hash_but_preserves_the_semantic_model(tmp_path):
 
 
 @pytest.mark.parametrize('kind', ['document', 'release'])
-def test_partial_provider_gap_is_not_reported_as_verified(tmp_path, kind):
+def test_partial_owned_inventory_is_verified_after_reader_integration(tmp_path, kind):
     from test_partial_bundle import project as partial_project, scope
     from specroad.bundles import prepare_partial_bundle
     root = tmp_path / 'source'; partial_project(root, kind)
     original = prepare_partial_bundle(root, scope(kind))
-    with no_write_attempts(), pytest.raises(BundleError) as failure:
-        verify_bundle(original.source_bytes)
-    assert failure.value.reason == 'bundle_partial_verification_provider_required'
-    assert failure.value.exit_code == 5
+    with no_write_attempts():
+        result = verify_bundle(original.source_bytes)
+    assert result['validation_scope'] == 'partial_payload_model'
+    assert result['closure_verified'] and result['model_root_verified']
+    assert result['manifest']['read_only'] and not result['write_authorized']
 
 
 @pytest.mark.parametrize('path', ['.specroad/requests/item.json', '.specroad/transactions/receipts/item/transaction.json'])

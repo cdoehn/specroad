@@ -124,6 +124,10 @@ def check_entries(entries):
 
 
 def check_payload_binding(metadata, files):
+    context = [p for p in files if p == 'bundle-context' or p.startswith('bundle-context/')]
+    require(not context or metadata['bundle_kind'] == 'partial', 'bundle_unexpected_boundary_context')
+    require(all(len(p.split('/')) == 3 and p.split('/')[1] == 'boundary-targets'
+                and p.endswith('.json') for p in context), 'bundle_boundary_context_path')
     exclusions = {item['path'] for item in metadata['excluded_contents']}
     require(not exclusions.intersection(files), 'bundle_excluded_payload')
     validate_portable_archive_paths([MANIFEST_NAME, *files, *exclusions])

@@ -169,6 +169,9 @@ def _check_seeds(seeds, bindings, query_page):
         raise ModelError('closure_values_required')
     if seeds.inputs_sha256 != bindings.inventory.fingerprint:
         raise ModelError('stale_closure_seed_inputs')
+    partial = bindings.inventory.partial_descriptor
+    if partial is not None and partial.data != seeds.descriptor.data:
+        raise ModelError('partial_scope_descriptor_mismatch')
     expected = resolve_scope_seeds(seeds.descriptor, bindings.inventory, query_page=query_page)
     if seeds != expected:
         raise ModelError('closure_seed_selection_mismatch')

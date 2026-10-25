@@ -67,6 +67,8 @@ def resolve_scope_closure(seeds, bindings, *, query_page=None):
     # The shared walker validates/recomputes seeds before reading their policy.
     from .strong_closure import _check_seeds
     _check_seeds(seeds, bindings, query_page)
+    if bindings.inventory.partial_descriptor is not None:
+        raise ModelError('complete_origin_inventory_required')
     closed = seeds.descriptor.data['boundary_policy'] == 'closed'
     values = _resolve_closure_members(seeds, bindings, query_page=query_page, follow_weak=closed)
     weak_edges = values.pop('pending_weak_relations')
@@ -87,6 +89,23 @@ def resolve_scope_closure(seeds, bindings, *, query_page=None):
     checked = validate_boundary_references(
         [records[identity] for identity in values['artifact_ids']], boundaries,
         descriptor=seeds.descriptor, origin_sources=bindings.inventory.records)
+    return ScopeClosure(**values, boundary_references=checked.boundary_references)
+
+
+def verify_partial_scope_closure(seeds, bindings, declarations):
+    """Reconstruct membership first, then match exactly the supplied boundaries.
+
+    No origin completeness or outside target content is inferred here. Review
+    endpoint observations are supplied separately by the byte-owning reader.
+    """
+    if bindings.inventory.partial_descriptor is None:
+        raise ModelError('partial_scope_inventory_required')
+    values = _resolve_closure_members(seeds, bindings)
+    values.pop('pending_weak_relations')
+    records = {record.identity.id: record for record in bindings.inventory.records}
+    checked = validate_boundary_references(
+        [records[key] for key in values['artifact_ids']], declarations,
+        descriptor=seeds.descriptor)
     return ScopeClosure(**values, boundary_references=checked.boundary_references)
 
 

@@ -73,7 +73,7 @@ class ClosureBindings:
         nodes.update(resource_node(value.resource_id) for value in inventory.resources)
         resource_index = {value.resource_id: value for value in inventory.resources}
         record_index = {record.identity.id: record for record in inventory.records}
-        relations = {edge.relation.identity.id: edge for edge in inventory.references.relations}
+        relations = {edge.identity.id for record in inventory.records for edge in record.relations}
         use_map = {}
         for source, targets in _mapping(uses, 'closure_usage_observations_required').items():
             if type(source) is not ClosureNode or source not in nodes:

@@ -94,7 +94,7 @@ def _fields(schema_id):
     if schema_id == 'bundle-verify-v1':
         return _object({'format_version': {'const': 'bundle-verify-v1'}, 'manifest': obj,
             'file': _object({'size': count, 'sha256': sha}),
-            'validation_scope': {'const': 'closed_project_payload_model'},
+            'validation_scope': {'enum': ['closed_project_payload_model', 'partial_payload_model']},
             'container_verified': {'const': True}, 'model_root_verified': {'const': True},
             'closure_verified': {'const': True}, 'external_hash_verified': boolean,
             'creator_authenticated': {'const': False}, 'full_semantic_validation': {'const': False},
