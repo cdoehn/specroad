@@ -1,35 +1,10 @@
-"""Independent native model and closure verification over owned ZIP bytes."""
-from ..exchange._export_scope import export_scope, resource_identity
-from ..graph.scope_descriptors import ScopeDescriptor
+"""Container integrity, then native model integrity, then a bounded result."""
 from ..model.errors import ModelError
 from ..security import SafetyViolation
 from ..srx.errors import SrxError
+from ._model_verification import verify_model
 from .container import BundleContainer
 from .errors import BundleError
-from .manifest import require
-from ._payload_model import payload_model
-
-
-def _verify(container, externally_bound):
-    manifest = container.manifest
-    if manifest['bundle_kind'] != 'project':
-        from ._partial_verification import verify_partial_model
-        verify_partial_model(container)
-        return _result(container, externally_bound, 'partial_payload_model')
-    model = payload_model(container)
-    descriptor = ScopeDescriptor(manifest['scope_descriptor'])
-    closure, native, artifacts, _ = export_scope(model, descriptor)
-    require(set(closure.artifact_ids) == {a['id'] for a in model.artifacts}
-            and set(closure.resource_ids) == {resource_identity(r) for r in model.resources}
-            and not closure.boundary_references, 'bundle_project_closure_incomplete')
-    require(native.sha256 == model.manifest(artifacts, descriptor.data).sha256,
-            'bundle_project_manifest_mismatch', code='SRV060')
-    for key, actual in (('origin_model_root_sha256', native.sha256),
-                        ('bundle_model_root_sha256', native.sha256),
-                        ('configuration_sha256', native.data['configuration_sha256']),
-                        ('profile_sha256', native.data['profile_sha256'])):
-        require(manifest[key] == actual, 'bundle_model_binding_mismatch', code='SRV060')
-    return _result(container, externally_bound, 'closed_project_payload_model')
 
 
 def _result(container, externally_bound, scope):
@@ -49,7 +24,9 @@ def verify_bundle(raw, *, expected_sha256=None):
     it does not attest the original project's completeness or release readiness.
     """
     try:
-        return _verify(BundleContainer(raw, expected_sha256=expected_sha256), expected_sha256 is not None)
+        container = BundleContainer(raw, expected_sha256=expected_sha256)
+        scope = verify_model(container)
+        return _result(container, expected_sha256 is not None, scope)
     except SafetyViolation as error:
         raise BundleError('unsafe_bundle_model', code='SRV083', exit_code=7) from error
     except ModelError as error:

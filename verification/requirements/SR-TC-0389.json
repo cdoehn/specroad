@@ -203,6 +203,6 @@
     "tests/test_bundle_verification_right.py::test_zip_safety_and_inventory_precede_model_success[unlisted]"
   ],
   "open_items": [
-    "15.d.C structural cleanup; nonempty portable receipt-history verification remains in 15.g. No original-project completeness, creator authenticity, full semantic validation, release or write authority is attested."
+    "Nonempty portable receipt-history verification remains in 15.g. No original-project completeness, creator authenticity, full semantic validation, release or write authority is attested."
   ]
 }

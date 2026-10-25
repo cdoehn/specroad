@@ -28,10 +28,10 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ```yaml
 plan_revision: 19
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 626
-last_completed_plan_commit: 15.d.R
-next_plan_commit: 15.d.C
-last_completed_numbered_bundle: 470
+implementation_plan_commits_completed: 627
+last_completed_plan_commit: 15.d.C
+next_plan_commit: 15.e.W
+last_completed_numbered_bundle: 471
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -25406,7 +25406,7 @@ endet dieser N-Durchlauf ohne Warten auf ein weiteres Result.
 
 #### 15.d.C – Make it Clean
 
-- [ ] **15.d.C** · Position **627/900** · Voraussetzung: `15.d.R`.
+- [x] **15.d.C** · Position **627/900** · Voraussetzung: `15.d.R`.
 **Exakte Commit-Message:** `15.d.C refactor(bundle): Bundleverifikation ohne Extraktion bereinigen`
 
 **Bereinigung:** Containerintegrität und fachliche Modellintegrität als getrennte überprüfbare Stufen führen.
@@ -25414,6 +25414,123 @@ endet dieser N-Durchlauf ohne Warten auf ein weiteres Result.
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
 **Regressionsabnahme:** Alle vorhandenen W-/R-Verhaltenstests dieses Schritts und die vom Refactoring betroffenen bisherigen Verhaltenstests erneut ausführen; erwartete Fachwerte nicht passend zum Refactoring umschreiben. Bei reinen Präsentations-/Dokuschritten keine solchen Tests erfinden.
+
+
+**Umsetzungs- und Übergabenachweis – Bundle 471 (C), 25. Oktober 2026.**
+
+**Bestätigte Basis.** Das Result
+`specroad-apply_Result_091050_1025_67e25e.zip`, SHA-256
+`22fea03740cd265b0195402a4dc152da67d1858f37c307eb796b9d2246591f65`,
+bestätigt den sauberen **15.d.R**-Commit
+`a54810b55f5e66a31b51f128c7e05b88867875c4`, Bundle **470**, Parent
+`f950cd57c55e7f75b051607f5cac5518a6af1b15`. Die generierte Root-Anleitung,
+Kontext, Umgebung, Manifest, Run-/Ausführungslogs und alle **2.237**
+Snapshotdateien wurden geprüft. Größen, Blob-IDs, Modi und vollständige Bytes
+entsprechen dem ausschließlich lesend geprüften Apply-Stand und den
+vorherigen Payloads einschließlich der fünf post-Gate-Planmarker.
+Vor Beginn wurden ausschließlich die bestätigten Planmarker in Dev
+nachgeführt: **626/900**, zuletzt **15.d.R**, nächstens **15.d.C**,
+Bundle **470**. Es gab keine eigene Git-Synchronisation oder Änderung in Apply.
+
+Die tatsächlichen Berichte und Einzeloutcomes bestätigen **6.902/6.902**
+bestandene Apply-Tests in **1.891,31 s** auf vier parallelen Workern,
+**Sequenz 175 / Gruppe 1/3**, aus **20.710** aktiven Identitäten.
+Testnummern, Quellbindung und Auswahl wurden nachgerechnet.
+Auswahlbindung: `dbabf6d8b896ba3b6227683e931525c1ca643c740616c8cdfac1bae64074948e`;
+Auswahlbericht-SHA-256: `c2610cf39974fafc1b9015f52c386c503ef2882c0af98d872befe51b0e214cc0`;
+Einzeloutcomes-SHA-256: `fb9cb7cdeb4a746cdadce1385709ccc3b2b8b0c0471b5a2455e832869691d5a9`.
+Dieser Teilnachweis belegt weder eine Vollsuite noch einen Release.
+
+**Reine strukturelle Bereinigung.** **SPECROAD-DECISION-1** ist ausdrücklich
+in den maßgeblichen Projektvorgaben enthalten. Für diese C-Umsetzung ist
+keine normative Klärung nötig. Spezifikation **0.2.24**, SHA-256
+`ed0a3c233753e9bfff165dcbf5347e83eb056ba2b745d865a5cbdc514bd88008`,
+und alle bisherigen Abnahmeorakel bleiben bytegleich.
+
+Der öffentliche Verifikationsablauf führt drei klar getrennte Schritte aus:
+Der vorhandene `BundleContainer` prüft zuerst externe ZIP-Hashbindung,
+Archiv-/Manifestintegrität und Payloadbijektion. Danach übernimmt das
+interne Modul `_model_verification` die fachliche Dispatch-/Projektprüfung
+beziehungsweise den vorhandenen Teilmodellprüfer. Erst deren vollständiger
+Erfolg erlaubt die bisherige maschinenlesbare Ergebniserzeugung. Die
+Containerstufe alleine kann weiterhin keine fachliche Modellprüfung melden.
+
+Im Teilmodellprüfer sind die beobachteten Closure-Eingänge und die Prüfung
+der exakten Payloadvereinigung als getrennte interne Helfer gefasst.
+Die Reihenfolge von nativer Rekonstruktion, Konfigurationskontext,
+Boundary-Endpunktprüfung, Ressourcen-/Reviewbindung, Seed-/Closureberechnung,
+Inventarprüfung und abschließendem Hashvergleich bleibt erhalten.
+Die separaten Rollen von Mitgliedern, Parent-Kontext und Prüfendpunkten,
+starke Pflichtabhängigkeiten und der vorhandene native Walker ändern sich
+nicht. Es gibt keinen zweiten Algorithmus, zusätzliche Eingaben oder
+vorweggenommene Extraktion.
+
+Der Strukturabgleich der verschobenen Anweisungsbäume bestätigt identische
+Projektprüfungen; nach Einsetzen der ausgegliederten Helfer auch identische
+Teilmodellprüfungen. Reviewauswahl, Ergebnisfelder und Fehlerübersetzung
+bleiben unverändert. Dies ist eine ergänzende Strukturprüfung, kein Ersatz
+für Verhaltenstests. `SR-TC-0389` bleibt ausdrücklich `partial`; ausschließlich
+der erledigte C-Strukturpunkt wurde aus seinen offenen Punkten entfernt.
+Nichtleere portable Receipt-Historien bleiben **15.g** zugeordnet.
+Authentizität, Vollständigkeit des ursprünglichen Projekts, vollständige
+semantische Validierung, Freigabe und Schreibbefugnis werden nicht behauptet.
+Extraktion **15.e** und Read-only-Befehle **15.f** bleiben eigene offene
+W/R/C-Schritte.
+
+**Gezielte Verhaltensnachweise.** **777/777** bestehende Verhaltenstests
+bestehen in **151.40 s** mit **vier parallelen Workern**, beobachtetem
+Prozessabschluss **0**, ausschließlich `passed`-Outcomes und
+`full_suite_passed=null`. Darunter sind sämtliche **139** W-/R-Fälle von
+15.d sowie die betroffenen Bundlecodec-, Erzeuger-, Resultat-, Schema- und
+Katalogregressionen. Die Prüfungen erhalten insbesondere externe Hashbindung,
+native Modell-/Boundary-/Reviewintegrität, Fehlerklassen und die schreibfreie
+projektlose Ausführung. Es wurden keine Verhaltenstests, Oracles, Fixtures
+oder erwarteten Fachwerte verändert, neu angelegt oder entfernt.
+
+Reproduzierbare Auswahl vollständiger Testdateien:
+
+- `tests/test_bundle_verification.py`
+- `tests/test_bundle_verification_right.py`
+- `tests/test_catalog_check.py`
+- `tests/test_catalog_check_right.py`
+- `tests/test_partial_bundle.py`
+- `tests/test_partial_bundle_right.py`
+- `tests/test_product_bundle.py`
+- `tests/test_product_bundle_right.py`
+- `tests/test_project_bundle.py`
+- `tests/test_project_bundle_right.py`
+- `tests/test_results.py`
+- `tests/test_schema_catalog.py`
+- `tests/test_schema_catalog_change_plan.py`
+- `tests/test_schema_catalog_robustness.py`
+
+Ausführung über `tools/run_selected_tests.py --workers 4 --expected-tests 777`
+in einem frischen ignorierten Berichtsverzeichnis. Die vollständige Collection
+und Katalogprüfung ist gültig: unverändert **20.710** aktive Identitäten,
+**0** Testkörper. Alle **20.714** reservierten Testnummern einschließlich
+der vier stillgelegten Identitäten bleiben bytegleich; kein Nummernwechsel.
+Quellidentität: `42ea72038562a0a2e03159cd90467cdae2b191455990c9299ef4aef3a68e8c26`;
+Katalogbericht-SHA-256: `30f28c3cc1fd3f06ad48816aa4ae9d21900072c1c399c04f06ecf34689b6595d`;
+Auswahlbericht-SHA-256: `8ffa76f9c7c40e6f74cca2a897d51e45e0ae3fbb49bd4e22846c5d2f9eae50cf`;
+Einzeloutcomes-SHA-256: `2ccf477eb9dfacc3364de344e9c9fe5a413cb3149a8206a242a182217332e241`.
+Dies ist ausschließlich ein gezielter paralleler Entwicklungs-Teilnachweis.
+Kein vollständiger Entwicklungs- oder serieller Testlauf wurde gestartet.
+
+**Gebundene Übergabe.** Bundle **471** enthält genau einen echten
+C-Zwischenstand mit **fünf** Dateien einschließlich dieses Plans.
+Der Entrypoint installiert die gezielt geprüften Bytes über den nativen
+PatchHarbor-Payloadwriter und prüft **Sequenz 176 / Gruppe 2/3**:
+**6.904** dauerhaft nummerierte Tests mit vier parallelen Workern.
+Erst nach erfolgreichem Gate setzt er die fünf Planmarker auf **627/900**,
+zuletzt **15.d.C**, nächstens **15.e.W**, Bundle **471** und die C-Checkbox.
+Danach entsteht ausschließlich in Apply der Commit
+`15.d.C refactor(bundle): Bundleverifikation ohne Extraktion bereinigen`.
+Dieser zukünftige Testlauf und Commit werden nicht als erfolgt behauptet.
+Fehler erhalten den tatsächlichen Zustand und erfolgreiche frühere Commits;
+keine spätere Phase wird vorab installiert. Kein Dev-Commit, Push/Fetch,
+CI-, Control- oder Watcherstart. Nach nativer Paketprüfung und atomarer
+Übergabe genau einer kanonischen ZIP endet dieser N-Durchlauf ohne Warten
+auf ein weiteres Result.
 
 <a id="step-15-e"></a>
 ### 15.e – Atomare Extraktion und Zielschutz

@@ -37,13 +37,8 @@ def _review_bindings(records, proof, boundaries):
     return result
 
 
-def verify_partial_model(container):
-    model = payload_model(container, partial=True)
-    manifest = container.manifest
-    descriptor = ScopeDescriptor(manifest['scope_descriptor'])
-    context_paths, configuration_hash = _configuration_context(model, descriptor.data)
-    records = tuple(SourceRelations(d.content, path=d.path) for d in model.documents)
-    proof = read_boundary_context(container, model)
+def _closure_inputs(model, descriptor, records, proof, boundaries, context_paths):
+    """Bind observed resources and reviews without expanding proof endpoints."""
     by_resource, resources = _scope_resources(model)
     inventory = ScopeSeedInputs(model.configuration, records, resources,
         archive_bindings=_archive_bindings(model, records), partial_descriptor=descriptor)
@@ -59,16 +54,33 @@ def verify_partial_model(container):
             # An unresolved resource of context-only configuration is outside
             # this scope. If reached, the walker rejects its missing provider.
     bindings = ClosureBindings(inventory, uses={key: tuple(value) for key, value in uses.items()},
-        current_reviews=_review_bindings(records, proof, manifest['boundary_references']),
+        current_reviews=_review_bindings(records, proof, boundaries),
         attachments=attachments)
-    seeds = resolve_scope_seeds(descriptor, inventory)
-    closure = verify_partial_scope_closure(seeds, bindings, manifest['boundary_references'])
-    native, artifacts = _native_manifest(model, descriptor, inventory, seeds, closure, records, by_resource)
+    return inventory, bindings, by_resource
+
+
+def _check_payload_inventory(container, model, closure, native, artifacts, proof, context_paths):
+    """Require precisely the native members and their separate context roles."""
     require(set(proof) == set(required_targets(native.data['boundary_references'], artifacts)),
             'bundle_boundary_context_membership')
     files = {p: raw for p, raw in container.files.items() if not p.startswith(PREFIX)}
     expected = _selected_payloads(model, files, closure, artifacts, context_paths)
     require(set(files) == set(expected), 'bundle_partial_payload_inventory')
+
+
+def verify_partial_model(container):
+    model = payload_model(container, partial=True)
+    manifest = container.manifest
+    descriptor = ScopeDescriptor(manifest['scope_descriptor'])
+    context_paths, configuration_hash = _configuration_context(model, descriptor.data)
+    records = tuple(SourceRelations(d.content, path=d.path) for d in model.documents)
+    proof = read_boundary_context(container, model)
+    inventory, bindings, by_resource = _closure_inputs(
+        model, descriptor, records, proof, manifest['boundary_references'], context_paths)
+    seeds = resolve_scope_seeds(descriptor, inventory)
+    closure = verify_partial_scope_closure(seeds, bindings, manifest['boundary_references'])
+    native, artifacts = _native_manifest(model, descriptor, inventory, seeds, closure, records, by_resource)
+    _check_payload_inventory(container, model, closure, native, artifacts, proof, context_paths)
     if configuration_hash is not None:
         require(configuration_hash == native.data['configuration_sha256'],
                 'bundle_partial_configuration_binding', code='SRV060')
