@@ -9,6 +9,7 @@ from ..srx.errors import SrxError
 from ..query._read_errors import read_details, read_failure
 from ..query.read_work import complete_read_steps
 from ..bundles._partial_read import partial_read_snapshot
+from ..bundles._read_context import PartialReadContext
 from ._read_model import PartialDocumentModel
 
 
@@ -62,8 +63,7 @@ def document_read_steps(root, operation, identifier=None, **options):
         yield 'evaluated'
         snapshot.verify_current()
         if partial is not None:
-            from ..query._partial_commands import finish
-            return finish(partial, operation, 'document-read-v1', payload, details)
+            return PartialReadContext(partial).finish(operation, 'document-read-v1', payload, details)
         require_project_read_preflight(snapshot.source.boundary,
             snapshot.source.configuration_bytes, MetadataPhases())
         from ..cli.result_schemas import validate_result_document

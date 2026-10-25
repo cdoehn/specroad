@@ -28,10 +28,10 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ```yaml
 plan_revision: 22
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 632
-last_completed_plan_commit: 15.f.R
-next_plan_commit: 15.f.C
-last_completed_numbered_bundle: 478
+implementation_plan_commits_completed: 633
+last_completed_plan_commit: 15.f.C
+next_plan_commit: 15.g.W
+last_completed_numbered_bundle: 479
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -26294,7 +26294,7 @@ und Sicherheitsgrenzen prüfen, nicht Wortlaut oder Markdown dieses Dokuments.
 
 #### 15.f.C – Make it Clean
 
-- [ ] **15.f.C** · Position **633/900** · Voraussetzung: `15.f.R`.
+- [x] **15.f.C** · Position **633/900** · Voraussetzung: `15.f.R`.
 **Exakte Commit-Message:** `15.f.C refactor(bundle): Read-only-Befehle auf Partials bereinigen`
 
 **Bereinigung:** Partialberechtigung im gemeinsamen Command-/Readerkontext führen.
@@ -26859,6 +26859,140 @@ die fünf Planmarker auf R abgeschlossen, 632/900, zuletzt 15.f.R, nächstens
 15.f.C bleibt offen; der R-Zustand wird nicht als künstliche W/R/C-Folge
 zerlegt. Apply-Tests und Commit sind hier vorgesehen, nicht bereits erfolgt.
 Fehler erhalten den tatsächlichen Arbeitszustand und bisherige Commits.
+Nach nativer ZIP-Prüfung und atomarer Exchange-Übergabe endet dieser
+N-Auftrag ohne Result-Warten oder Hintergrundfortsetzung.
+
+
+**Umsetzungs- und Übergabenachweis – Bundle 479 (C), 25. Oktober 2026.**
+
+**Bestätigte Basis.** Result `specroad-apply_Result_193501_1025_598532.zip`,
+SHA-256 `7e86f37347151d4e4131a7547fe1921d80f47d32826b8ed25b14aa1ae812ba17`,
+bestätigt den sauberen Apply-Commit `77ad0dccc3a6e7515cc4a72da1583ea8b3fda033`,
+Parent `632417650c00f059b2ae8178e8d170412af25b17`, und den regulären Schritt
+15.f.R aus Bundle 478. Root-Anleitung, Kontext, Umgebung, Manifest,
+Run-/Ausführungslogs und alle 2.259 Snapshotdateien wurden vollständig gegen
+Blob-IDs, Größen, Modi und Bytes geprüft. Native Resultprüfung und konsistente
+lesende Zustandserfassung bestätigen exakt die Vierfachbindung. Das Result
+war das eindeutig jüngste maßgebliche Result; es lag kein daran gebundenes
+Folgebundle vor. Die tatsächlich erfolgreiche Commitfolge und ihre Testauswahl
+wurden aus den Apply-Einzeloutcomes nachgerechnet: Sequenz 184, Gruppe 1/3,
+**7.062/7.062** bestandene Tests, vier parallele Worker, Prozessende 0.
+Auswahlbindung `8019844e6fb20573a006c16b2edb893011f80650cab1348dd557f39bfe0db893`;
+Auswahlbericht-SHA `334dd27e74dcdedbe554a950ed913124770aecd54310a4d25961616b283296c8`;
+Einzeloutcomes-SHA `196d72493ac85fb9eb6834a892f1131554cd97d080769c571c142e31a073ae98`.
+Dies ist ein Teiltestnachweis, kein Vollsuite- oder Release-Erfolg.
+
+Der bestätigte Planstand bleibt vor dem vorgesehenen Apply 632/900,
+zuletzt 15.f.R, nächstens 15.f.C, Bundle 478. Die Entwicklungskopie wurde
+auf die exakten Resultbytes abgeglichen; lediglich ihre zurückgebliebenen
+Planmarker wurden aus dem bestätigten Snapshot übernommen. Dev-Historie
+und Index bleiben unverändert. Apply wurde ausschließlich gelesen.
+SPECROAD-DECISION-1 ist ausdrücklich enthalten. Die verbindliche
+Spezifikation 0.2.27/E.3.3 reicht für diese strukturelle C-Arbeit aus;
+es wird keine neue normative Klärung eingeführt. Die Spezifikation bleibt
+bytegleich, SHA-256
+`07a35f089e83d27045e76a57aa5b3d5d0061dd0556543b4765da5f114e1ae637`.
+
+**Regulärer C-Zustand.** Der gemeinsame interne `PartialReadContext` führt
+nun die unveränderte Befehlszulassung, die verifizierte Projektidentität,
+Partial-Summary, Coverage und den erfolgreichen Partial-Ergebnisrahmen.
+Query, Trace, Why, Impact und Dokumentleser teilen ihre bisherige abschließende
+Freshness-/Schema-/Policy-Projektion über diesen Kontext. Dokumentleser
+müssen dafür keine Query-Implementierung mehr importieren. Show und Diff
+verwenden denselben Ergebnisrahmen; Show ergänzt die Partialdetails weiterhin
+vor seinem letzten Verarbeitungsschritt, Diff behält die ausdrücklich gewählte
+After-Projektidentität auch bei ausschließlich partieller Before-Quelle.
+Validation und Inspection verwenden die gemeinsame Kontextprojektion unter
+Beibehaltung ihrer eigenen Schemas und Ergebnisstatus.
+
+Der Kontext erzeugt keine eigene Dateiinventur, ersetzt keinen nativen Snapshot und verleiht
+keine zusätzliche Modell- oder Schreibbefugnis. Die bisherige Allowlist,
+EffectScope-Bedingung, explizites `validate --partial`, projektfreier Bootstrap,
+Marker-/Preflight-Reihenfolge, Freshness-Prüfstellen und Fehlerklassen bleiben
+erhalten. Die verifizierte Closure, exakten Boundaries, vollständigen
+ProjectSource-/TargetModel-Schranken und Pflichtprovider bleiben unverändert.
+Es gibt keine neuen Features, keine neue Norm und keine geänderten zulässigen
+Seiteneffekte. Der Kataloghinweis zu SR-TC-0484 hält die erledigte Strukturarbeit
+fest; seine Oracles, Testidentitäten und Nachweisgrenzen bleiben unverändert.
+
+**Entwicklungsnachweis.** Alle vorhandenen W-/R-Verhaltenstests dieses
+Ausschnitts sowie die betroffenen öffentlichen Query-, Diff-, Show-,
+Dokument-, Validation-, Inspection-, CLI-/Request-, Bootstrap-, Preflight-,
+Metadaten- und Verbrauchsverträge wurden mit unveränderten Oracles geprüft:
+**1841/1841** Tests aus **45** vollständigen Dateien,
+acht parallele Worker unter CPython 3.14.4, **156.39 s**, beobachtetes
+Prozessende 0, ausschließlich `passed`-Einzeloutcomes. Die native vollständige
+Collection/Katalogprüfung bestätigt **21.191** aktive Identitäten bei
+**0** ausgeführten Testkörpern. Die **21.195** vergebenen Nummern einschließlich
+vier historisch stillgelegter Identitäten bleiben bytegleich; keine neuen,
+entfernten oder umnummerierten Tests. `full_suite_passed=null`.
+Kein serieller Lauf, kein Entwicklungsvolltest, kein CI-Start. Keine
+Darstellungs- oder Dokumentationstests und keine abgeschwächten Fachoracles.
+Quellidentität `89eb4481d7dc436b62a4b1d34936a556d811ec6671c711f7044ce240d95979d5`;
+Katalog-SHA `1c4b174594870731e5a3c8189291f2291e50c4f46da37481cf2d60951dcc08f1`;
+Auswahlbericht-SHA `0982c0126a258e538aac15c6538219627082bb09fd4a4975da3d8b2bd826d214`;
+Einzeloutcomes-SHA `99375d5be987ef47ae58ecae30f18f5c975f3c285139f851e2ca509ca425b965`.
+Ausgewählte vollständige Testdateien:
+
+- `tests/test_artifact_show.py`
+- `tests/test_artifact_show_right.py`
+- `tests/test_bootstrap.py`
+- `tests/test_cli.py`
+- `tests/test_configuration_diff.py`
+- `tests/test_configuration_diff_right.py`
+- `tests/test_document_diagrams.py`
+- `tests/test_document_diagrams_right.py`
+- `tests/test_document_rendering_behavior.py`
+- `tests/test_document_rendering_right.py`
+- `tests/test_document_views.py`
+- `tests/test_document_views_right.py`
+- `tests/test_environment_check.py`
+- `tests/test_environment_check_right.py`
+- `tests/test_metadata.py`
+- `tests/test_partial_read_commands.py`
+- `tests/test_partial_read_commands_right.py`
+- `tests/test_partial_read_consumers.py`
+- `tests/test_preflight_metadata.py`
+- `tests/test_preflight_profiles.py`
+- `tests/test_production_validation.py`
+- `tests/test_production_validation_right.py`
+- `tests/test_project_inspection.py`
+- `tests/test_project_inspection_right.py`
+- `tests/test_query_comparison_sources.py`
+- `tests/test_query_comparison_sources_right.py`
+- `tests/test_query_impact.py`
+- `tests/test_query_impact_right.py`
+- `tests/test_query_read_integration.py`
+- `tests/test_query_read_integration_right.py`
+- `tests/test_query_semantic_diff.py`
+- `tests/test_query_semantic_diff_right.py`
+- `tests/test_query_trace.py`
+- `tests/test_query_trace_right.py`
+- `tests/test_query_why.py`
+- `tests/test_query_why_right.py`
+- `tests/test_read_only_validation.py`
+- `tests/test_read_only_validation_right.py`
+- `tests/test_registry.py`
+- `tests/test_requests.py`
+- `tests/test_results.py`
+- `tests/test_runtime_consumption.py`
+- `tests/test_runtime_consumption_right.py`
+- `tests/test_transaction_preflight.py`
+- `tests/test_transaction_preflight_right.py`
+
+**Gebundene Übergabe.** Genau ein regulärer PLAN-Zustand **15.f.C**,
+Position **633/900**, wird mit dem nativen Payloadwriter installiert.
+Der Entrypoint verlangt den sauberen bestätigten Ausgangsstand und prüft
+anschließend ausschließlich **Gruppe 2/3, Sequenz 185**, mit **7.065** Tests
+parallel auf vier Workern. Quellidentität, vollständiger Katalog, feste
+Nummerierung und Auswahlbeleg müssen exakt passen. Erst nach erfolgreichem
+Gate werden die fünf Planmarker auf C abgeschlossen, 633/900, zuletzt
+15.f.C, nächstens 15.g.W und Bundle 479 gesetzt. Erst danach folgt der Commit
+`15.f.C refactor(bundle): Read-only-Befehle auf Partials bereinigen`.
+W und R sind bereits durch ihre tatsächlichen früheren Apply-Commits
+abgeschlossen; dieser C-Zustand wird nicht künstlich in weitere Phasen zerlegt.
+Die Apply-Tests und der Commit sind vorgesehen, nicht bereits erfolgt.
+Fehler erhalten den tatsächlichen Arbeitszustand und vorhandene Commits.
 Nach nativer ZIP-Prüfung und atomarer Exchange-Übergabe endet dieser
 N-Auftrag ohne Result-Warten oder Hintergrundfortsetzung.
 

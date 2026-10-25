@@ -3,8 +3,9 @@ from pathlib import Path
 
 from ..cli.result_schemas import validate_result_document
 from ..bundles.errors import BundleError
+from ..bundles._read_context import PartialReadContext
 from ..srx.errors import SrxError
-from ..cli.results import CommandResult, FailureKind, OperationFailure, ResultStatus
+from ..cli.results import CommandResult, FailureKind, OperationFailure
 from ..diagnostics import Diagnostic
 from ..model.errors import ModelError
 from ..security import SafetyViolation
@@ -65,8 +66,8 @@ def _diff_steps(root, against, *, against_kind='git', configuration_id=None,
                                             project=project, diagnostics=diagnostics, details=details)
         partial = after.partial or before.partial
         if partial is not None:
-            return CommandResult('diff', status=ResultStatus.PARTIAL, partial_scope='partial_bundle_artifacts',
-                result=payload, project=project, details={**details, **partial.details})
+            context = PartialReadContext(partial)
+            return context.result('diff', payload, {**details, **context.details}, project=project)
         return CommandResult('diff', result=payload, project=project, details=details)
     except (BundleError, OperationFailure, ModelError, SafetyViolation, OSError) as error:
         return read_failure('diff', error, project, details)

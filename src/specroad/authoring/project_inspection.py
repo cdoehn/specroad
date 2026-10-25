@@ -100,6 +100,7 @@ def inspect_project(root, *, profiles=None, gates=()):
         if state != 'consistent':
             return _blocked_result(payload)
         from ..bundles._partial_read import partial_read_snapshot
+        from ..bundles._read_context import PartialReadContext
         from ..documents._read_model import PartialDocumentModel
         partial = partial_read_snapshot(boundary.root)
         if partial is not None:
@@ -130,7 +131,7 @@ def inspect_project(root, *, profiles=None, gates=()):
         code = assessment.exit_code if assessment.exit_code >= 2 else 0
         return _result(payload, code=code, diagnostics=assessment.diagnostics,
                        diagnostic_checks_complete=report.data['checks_complete'],
-                       **({} if partial is None else partial.details))
+                       **({} if partial is None else PartialReadContext(partial).details))
     except (BundleError, OperationFailure, SrxError) as error:
         from ..query._read_errors import read_failure
         failed = read_failure('project.inspect', error, None, {})

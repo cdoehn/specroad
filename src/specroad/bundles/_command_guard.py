@@ -1,12 +1,9 @@
 """The explicit partial command allowlist, independent of handler authority."""
 from ..cli.results import FailureKind, OperationFailure
-from ..cli.registry import PreflightProfile, EffectScope
+from ..cli.registry import PreflightProfile
 from ..security import ProjectBoundary, SafetyViolation
 from ._extracted_root import has_extracted_metadata, require_complete_root
-
-_READERS = frozenset(('artifact.show', 'query', 'trace', 'why', 'impact', 'diff',
-    'render', 'document.render', 'view.render', 'diagram', 'bundle.verify', 'project.inspect',
-    'environment.check', 'recover.status', 'lock.status'))
+from ._read_context import PartialReadContext
 
 
 def require_partial_command(invocation):
@@ -17,8 +14,7 @@ def require_partial_command_at(root, command, options):
     """Refuse disallowed partial commands before normal operational preflight."""
     if root is None or command.preflight_profile is PreflightProfile.BOOTSTRAP:
         return
-    if (command.effect_scope is EffectScope.NONE and (command.command_id in _READERS or
-            (command.command_id == 'validate' and options.get('--partial') is True))):
+    if PartialReadContext.allows(command, options):
         return
     try:
         boundary = ProjectBoundary(root)

@@ -1,6 +1,6 @@
 """Show only verified closure members and their explicitly bounded relations."""
 from ..cli.result_schemas import validate_result_document
-from ..cli.results import CommandResult, ResultStatus
+from ..bundles._read_context import PartialReadContext
 from ..graph._boundary_contract import require_boundary_match
 from ..graph.relation_views import RelationView
 from ..model.errors import ModelError
@@ -8,6 +8,7 @@ from ._show_projection import show_payload
 
 
 def partial_show_steps(snapshot, artifact_id, *, index, strategy, details):
+    context = PartialReadContext(snapshot)
     from ..storage.relation_index import ProjectRelationIndex
     from ..graph.indices import RelationIndex
     if type(strategy) is not str or strategy not in ('indexed', 'scan'):
@@ -37,14 +38,8 @@ def partial_show_steps(snapshot, artifact_id, *, index, strategy, details):
         coverage_scope='partial_bundle_artifacts', source_count=len(records), relation_count=len(edges),
         binding=SimpleNamespace(sha256=snapshot.observation_sha256),
         validation_scope='partial_payload_model', atomic_snapshot=False))
-    manifest = snapshot.manifest
-    details.update(bundle_kind='partial', read_only=True, project_complete=False,
-        scope_descriptor=manifest['scope_descriptor'], boundary_references=manifest['boundary_references'],
-        bundle_model_root_sha256=manifest['bundle_model_root_sha256'],
-        origin_model_root_sha256=manifest['origin_model_root_sha256'], origin_root_verified=False)
+    details.update(context.details)
     yield 'evaluated'
     snapshot.verify_current()
     validate_result_document('artifact-show-v1', payload)
-    return CommandResult('artifact.show', status=ResultStatus.PARTIAL, partial_scope='partial_bundle_artifacts',
-        result=payload, project={'project_root': str(snapshot.boundary.root),
-                                'project_id': snapshot.configuration.project_id}, details=details)
+    return context.result('artifact.show', payload, details)

@@ -14,6 +14,7 @@ from ..validation import validate_model, assess_validation
 from ..validation.result_adapter import validation_command_result
 from ..documents._read_model import PartialDocumentModel
 from ._partial_read import partial_read_snapshot
+from ._read_context import PartialReadContext
 
 
 def validate_partial_project(root, *, selected_ids=None, gates=(), fail_on='error', strict=False):
@@ -27,9 +28,8 @@ def validate_partial_project(root, *, selected_ids=None, gates=(), fail_on='erro
         assessment = assess_validation(report, fail_on=fail_on, strict=strict, documents=model.documents)
         result = validation_command_result('validate', assessment)
         snapshot.verify_current()
-        return replace(result, details={**result.details, **snapshot.details},
-            project={'project_root': str(snapshot.boundary.root),
-                     'project_id': snapshot.configuration.project_id})
+        context = PartialReadContext(snapshot)
+        return replace(result, details={**result.details, **context.details}, project=context.project)
     except (BundleError, OperationFailure, ModelError, SafetyViolation, OSError) as error:
         return read_failure('validate', error, None, read_details())
 

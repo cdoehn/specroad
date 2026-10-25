@@ -284,6 +284,6 @@
     "tests/test_partial_read_consumers.py::test_view_projection_never_enters_boundary_or_configuration_context[request-True]"
   ],
   "open_items": [
-    "15.f.W and 15.f.R behavior is covered by targeted parallel tests. 15.f.C remains the separate shared command/reader structural cleanup. Targeted evidence is not a full-suite, origin authenticity, release, provider or human approval proof."
+    "15.f.W/R behavior and the shared command/reader cleanup in 15.f.C are covered by targeted parallel regression tests. Targeted evidence is not a full-suite, origin authenticity, release, provider or human approval proof."
   ]
 }
