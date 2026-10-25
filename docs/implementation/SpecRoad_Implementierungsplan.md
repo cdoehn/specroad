@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 20 · **Stand:** 25. Oktober 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.25
+**Planrevision:** 21 · **Stand:** 25. Oktober 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.26
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 Schritte und 900 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; jeder Schritt besitzt einen konkreten Arbeitsumfang und eigene Verhaltensabnahme.
 
@@ -9,7 +9,7 @@ Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 S
 
 Fachliche Grundlage ist [`docs/specification/SpecRoad_Spezifikation.md`](../specification/SpecRoad_Spezifikation.md), einschließlich aller konsolidierten Korrekturen, 742 Requirements, 51 Verifikationsverträge, 46 Szenario-/E2E-Identitäten sowie R-01 bis R-75, Anhang U und den PatchHarbor-Rundweg aus Anhang W. Der [`Prüfbericht`](../reviews/SpecRoad_v0.2.7_Implementierungsreife_Pruefbericht.md) ist ein vorgelagerter Entwurfsreview, kein späterer Produktnachweis.
 
-Gebundene Spezifikations-SHA-256: `55bc8575bdb33e5ddbd50420b01eeee9fbfb8996637194ceafc2e09e547b4ec9`.
+Gebundene Spezifikations-SHA-256: `7ce1c193c1857e5c5fa86468276811b265460910a22270710ce31ad818cf823e`.
 Planungsbasis: Commit `fe2661d02ecf2f7eb483b58a4487eb009c6b3846`; sauberes Result-Bundle `specroad_Result_120209_0914_df3504.zip`; Repository-ID `3d2576df-d611-46fc-9d2b-92869468aaca`. Diese Angaben dokumentieren die Entstehung des Plans, nicht die zukünftige Patchbindung. **Jedes spätere Patchpaket bindet den dann aktuellen tatsächlichen Result-Zustand.**
 
 Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 2026 gelten zusätzlich und bei den nachfolgend benannten Konflikten vorrangig. Sonstige normative Spezifikationsinhalte werden nicht stillschweigend abgeschwächt. Neue fachliche Widersprüche, fehlende zwingende Angaben und Sicherheitsprobleme sind offen zu benennen, nicht durch erfundene Annahmen oder Scheinerfolge zu lösen.
@@ -26,7 +26,7 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 20
+plan_revision: 21
 implementation_plan_commits_total: 900
 implementation_plan_commits_completed: 631
 last_completed_plan_commit: 15.f.W
@@ -62,15 +62,17 @@ Nach tatsächlich erfolgreich ausgeführten, zum Commit passenden Verhaltenstest
 
 ## OFF-PLAN – Partial-Lesegraph (Bundle 477)
 
-Revision 20 dokumentiert **PARTIAL-READ-GRAPH**, delegiert gemäß
+Revision 21 dokumentiert **PARTIAL-READ-GRAPH**, delegiert gemäß
 SPECROAD-DECISION-1. Die Produktposition bleibt **631/900**, zuletzt
 **15.f.W**, nächstens **15.f.R**. Entscheidungsbeleg und offene fachliche
-Abnahmen stehen bei 15.f.R, normative Regeln in Spezifikation 0.2.25/E.3.3.
+Abnahmen stehen bei 15.f.R, normative Regeln in Spezifikation 0.2.26/E.3.3. Die echten
+Dokumentzustände erhalten gemäß 2.1 eigene Patchversionen: W 0.2.25,
+R 0.2.26 und die strukturelle C-Fassung 0.2.27.
 Diese eine Klärungs-ZIP enthält drei echte Dokumentzwischenstände desselben
 Vertrags, keine Produktimplementierung und keine nominellen Produktcommits:
 
 - [x] **PARTIAL-READ-GRAPH.W:** Objekt-/Relationsdomäne und lokale Traversierung festlegen. Commit: `docs(spec): Partial-Lesegraph festlegen`.
-- [ ] **PARTIAL-READ-GRAPH.R:** Fehler-, Kontext- und Grenzfallabnahmen vervollständigen. Commit: `docs(spec): Partial-Lesegraph absichern`.
+- [x] **PARTIAL-READ-GRAPH.R:** Fehler-, Kontext- und Grenzfallabnahmen vervollständigen. Commit: `docs(spec): Partial-Lesegraph absichern`.
 - [ ] **PARTIAL-READ-GRAPH.C:** Gemeinsame Grenzen zentral ordnen, ohne Semantikänderung. Commit: `docs(spec): Partial-Lesevertrag strukturieren`.
 
 Jeder Zustand erhält seine eigene gezielte parallele Dev-Verhaltensprüfung
@@ -26236,7 +26238,7 @@ Die zusätzliche Domäne gilt nur für explizit verifizierte Partials; sie
 ändert keine bisherige SRX-1.0-Auswertung auf vollständigen geladenen Modellen.
 Grammatik, Typen, Missing und Fehler bleiben erhalten, kein SRX-2.0-Umbau.
 
-**Normative Festlegung und positive Abnahme.** Spezifikation **0.2.25/E.3.3**
+**Normative Festlegung und positive Abnahme.** Spezifikation **0.2.26/E.3.3**
 ist die Zielregel. Eine gültige lokale Relation A→B wird wie bisher verfolgt.
 Eine gültige schwache Außenkante A→X zählt unmittelbar für passende
 Relationsfilter; X erscheint dennoch nicht als Query-Item, Show-Artefakt,
@@ -26246,6 +26248,34 @@ während `has_relation` auf X wahr sein kann. Fehlende Außen-Incoming-Quellen
 werden nicht erfunden. Query-Gesamtzahl und Pagination zählen nur wirkliche
 Mitglieder, die den angegebenen Filtern entsprechen. Erfolg trägt die
 explizite Teilmodell- und Boundary-Bindung, niemals eine Ursprungsfreigabe.
+
+**Zusätzliche negative und Grenzfallabnahmen.** Bestehende Ergebnisverträge
+für Metadatendiagnosen, Bootstrap, eigenständige Bundleprüfung,
+`validate --partial` und `project inspect` bleiben erhalten; die gemeinsame
+Graph-Ergebnishülle gilt für fachliche Abfragen auf M. Für Dokument- und
+Release-Partials, mit und ohne ausgewählte Konfiguration und bei vorhandenem
+Review-Prüfkontext, gilt dieselbe Mitgliedergrenze. Ein nur als Kontext
+transportiertes X bleibt als explizites Startobjekt Code 3. Seine Tags,
+Titel, Statusfelder und ausgehenden Relationen dürfen weder Filtertreffer
+noch weitere Traversierung bewirken. Ein legitimes Mitglied X bleibt
+dagegen vollständig auswählbar und wird nicht wegen seines Typs verborgen.
+Lokale Zyklen, symmetrische Relationen, mehrere Boundaries auf dasselbe
+Außenziel, `max_depth=0`, eine leere gefilterte Treffermenge und `limit=0`
+behalten deterministische Werte und die explizite Scopebindung. Die Anzahl
+gespeicherter Relationen zählt jede Relations-ID genau einmal; abgeleitete
+inverse Sichten verdoppeln diese Bestandszahl nicht. Ein echtes SRX-Typ-
+oder Auswertungsproblem behält die bestehende Diagnose und Fehlerwirkung.
+
+Fehlende/zusätzliche/falsch gebundene Boundaries und fehlende starke Ziele
+scheitern vor Lieferung eines Erfolgs. Tests müssen selbstkonsistent neu
+gehashte Transportfälschungen, geänderte Payload-/Kontextbytes und
+Markerentfernung einschließen. Symlink-/Pfadverstöße und jeder normative
+Write bleiben Code 7, offene Transaktionen Code 5, nachträgliche
+Eingangsänderungen Code 6 gemäß den vorhandenen Sicherheitsvorrängen.
+Kein unerlaubter Write, Cache-/Journalersatz oder Ursprungszugriff darf
+stattfinden. Vollprojektresultate und alle vorhandenen W-Nachweise bleiben
+grün; die neuen Partial-Query-/SRX-/Traversierungsfälle sind weiterhin
+ausstehende Produktabnahmen und werden hier nicht als bestanden behauptet.
 
 **Offene Umsetzung.** 15.f.R bleibt ungeprüft und offen, einschließlich aller
 weiteren in 10.16 erlaubten Lesebefehle und der vollständigen Write-Abweisung
@@ -26504,6 +26534,37 @@ kein Dokumentations-/Darstellungstest und kein Implementierungsnachweis
 für die neuen offenen Partial-Abnahmen. Der native Entrypoint installiert
 genau diese Bytes, prüft ausschließlich die fällige Apply-Gruppe
 **1/3 / Sequenz 181** mit **7005** Tests
+parallel und darf erst danach den eigenen Dokumentcommit erzeugen.
+Der zukünftige Apply-Erfolg und Commit sind noch nicht beobachtet.
+
+**Vorbereitungsbefund.** Ein lokaler Pakethelfer suchte zunächst den
+OFF-PLAN-Checkboxmarker ohne seinen Doppelpunkt und stoppte vor einer ZIP.
+Der dadurch vor R-Materialisierung gestartete Versuch wurde abgebrochen.
+Ein weiterer R-Versuch wurde bei der Prüfung von 2.1 zugunsten eigener
+Patch-Dokumentversionen für alle drei echten Commitstände abgebrochen.
+Beide Versuche sind keine R-Gates. Erst der folgende frische Lauf auf
+Version 0.2.26 ist der gebundene R-Nachweis. Ein früherer Lauf auf 0.2.26
+bestand ebenfalls mit 528 Tests; nach Präzisierung der unveränderten
+Ergebnisverträge für Metadatendiagnosen und eigenständige Prüfbefehle wird
+die unten genannte endgültige R-Quellbindung erneut geprüft. W bleibt
+unverändert geprüft.
+
+**Entwicklungsnachweis PARTIAL-READ-GRAPH.R.** Eigener geänderter
+Dokument-/Katalogzustand, anschließend **528/528** bestehende Verhaltenstests
+auf **vier parallelen Workern** in **160.90 s**, Prozessende **0**,
+ausschließlich `passed`, `full_suite_passed=null`. Vollständige Collection
+und Katalogprüfung: **21.019** Identitäten, **0** Testkörper, gültig.
+Runner: `tools/run_selected_tests.py --workers 4 --expected-tests 528`.
+Quellidentität: `4bc2c67e75dfde850436bb57a11390ffa3af535ea5861743e356bb02c2da14eb`;
+Spezifikationshash dieses Zwischenstands: `7ce1c193c1857e5c5fa86468276811b265460910a22270710ce31ad818cf823e`;
+Katalogbericht-SHA-256: `5e6e7b358f8b3054ec5c8fc1cfa5b1069cfb1aa5e0246aeb9c5f5cb3e0103f24`;
+Auswahlbericht-SHA-256: `b99fc51fc625fb084bbc0925ff9c568bde748dea26e7cf243cd12f7839649253`;
+Einzeloutcomes-SHA-256: `5fa7825194778213141632b84608f128315aa2f28b10c6193aa04a91f0ec0b20`.
+Dies sind Regressionen der vorhandenen Maschinen-/Verhaltensverträge,
+kein Dokumentations-/Darstellungstest und kein Implementierungsnachweis
+für die neuen offenen Partial-Abnahmen. Der native Entrypoint installiert
+genau diese Bytes, prüft ausschließlich die fällige Apply-Gruppe
+**2/3 / Sequenz 182** mit **7007** Tests
 parallel und darf erst danach den eigenen Dokumentcommit erzeugen.
 Der zukünftige Apply-Erfolg und Commit sind noch nicht beobachtet.
 
