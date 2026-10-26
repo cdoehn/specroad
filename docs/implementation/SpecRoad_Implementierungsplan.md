@@ -28,10 +28,10 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ```yaml
 plan_revision: 23
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 643
-last_completed_plan_commit: 15.j.W
-next_plan_commit: 15.j.R
-last_completed_numbered_bundle: 490
+implementation_plan_commits_completed: 644
+last_completed_plan_commit: 15.j.R
+next_plan_commit: 15.j.C
+last_completed_numbered_bundle: 491
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -28689,12 +28689,136 @@ CI, Watcher, Control, Result-Warten, weiteres Bundle oder S-Schleife.
 
 #### 15.j.R – Make it Right
 
-- [ ] **15.j.R** · Position **644/900** · Voraussetzung: `15.j.W`.
+- [x] **15.j.R** · Position **644/900** · Voraussetzung: `15.j.W`.
 **Exakte Commit-Message:** `15.j.R feat(bundle): Vollqualifizierter Restore-Plan vervollständigen`
 
 **Vervollständigung:** Release-/Specification-/gefilterte Quelle oder fehlende Originalbytes ohne Vorprüfungswrite zurückweisen.
 
 **Verhaltensabnahme:** R-44/R-45 zeigen gültige Vollquelle versus unzureichende Quelle mit unverändertem Projekt. Die W-Nachweise bleiben zusätzlich grün.
+
+
+**Umsetzungs- und Übergabenachweis – Bundle 491 (R), 26. Oktober 2026.**
+
+**Maßgebliche Basis.** Das vollständig geprüfte Result
+`specroad-apply_Result_081355_1026_7d275e.zip`, SHA-256
+`c6f1bd3e02ec7d60a826999a64ca39f0fbdb097fe64bda5dfb41e652d1bba7c1`,
+bindet den sauberen Commit
+`d65f05c6c4b9e959551ab6bfce96eada49955e23`, Repository
+`a33ed6cf-0a97-4b73-b11a-d4239e7a2145`, Fingerprint
+`7c9d2a24e397e0e5`, Algorithmus `patchharbor-state-v1`.
+Generierte Root-Anleitung, Kontext, Umgebung, Manifest, Run-/Ausführungslogs,
+vollständiger Snapshot, tatsächlicher Apply-Stand und vorheriges Bundle
+wurden gegeneinander geprüft. Der vorausgehende echte W-Commit entstand
+nach **7.152/7.152** bestandenen parallelen Tests der **Sequenz 196 / Gruppe 1**,
+vier Worker, **2305.53 s**. Die Auswahlbindung, sämtliche Einzeloutcomes
+und die tatsächlich committeten Bytes stimmen; Ausgangsfortschritt ist
+**643/900**, zuletzt **15.j.W**, Bundle **490**.
+
+**Reguläre R-Vervollständigung desselben Ausschnitts.** SPECROAD-DECISION-1
+ist in § 2.4 ausdrücklich enthalten. Die vorhandenen Vorgaben der
+Spezifikation **0.2.28, 10.7.1–10.7.2**, insbesondere die gebundene Entscheidung
+RESTORE-PLAN-CONTRACT und die offenen R-44/R-45-Abnahmen, reichen aus.
+Es gibt keine neue normative Entscheidung oder Spezifikationsänderung.
+
+Bei einer beschädigten oder fehlenden aktuellen `specroad.json` werden
+Projektidentität und bisherige Deklarationen jetzt aus unabhängig im
+aktuellen nativen Bestand erhaltenen, `sealed` Vollprojekt-Baselines
+ermittelt. Ihre Originalobjekte und verschachtelten Baselines werden
+vollständig nativ rekonstruiert und gehasht. Die gewählte Restorequelle
+und ihre eingebetteten Bytes ersetzen diese unabhängigen Bestandsbelege
+nicht. Widersprüchliche Identitäten ergeben Code 6; nicht eindeutig
+beweisbare bisherige Deklarationen oder unvollständige Originalbytes
+verhindern den Plan mit Code 3. Eine unsichere aktuelle Pfaddeklaration
+wird nicht durch einen Fallback verdeckt und behält Code 7.
+
+Die alte und die Quell-`managed_paths`-Abdeckung werden gemeinsam vollständig
+inventarisiert. Auch bei abweichender Quellkonfiguration bleiben alte
+Wurzeln sichtbar. Die gesamte Baseline-Namensmenge und alle Belegbytes
+werden zwischen Entdeckung und Inventur verglichen und beim passiven
+Planlesen ausschließlich aus den gebundenen Bestandsbytes erneut bewiesen.
+Ein Nachladen aus der Quelle ist dabei ausgeschlossen. Lesbare beschädigte
+Konfigurationsbytes gelangen unverändert in `backup`; eine fehlende Datei
+bleibt als `missing` gebunden. Die vorhandene inerte Archivprojektion dient
+nur der Bestandsklassifikation; ihre operativen Platzhalter werden nie
+als Zielkonfiguration übernommen. Baseline-Zielwerte bleiben ausdrücklich
+anzugebende Eingaben, Bundle-Konfigurationsbytes bleiben bytegleich.
+
+**Verhaltensnachweise.** Die neuen R-Fälle prüfen echte vollständig
+verifizierte Teilbundles mit Dokument-, Release- und konfiguriertem Scope
+gegen die Restorequalifikation sowie die Descriptorgrenzen beider
+Baseline-Typen. Fehlende/falsche Originalobjekte, Größen, native Quellwurzeln
+und Konfigurationshashes scheitern schreibfrei. Geschlossene verschachtelte
+Planobjekte, Typen, Reihenfolgen, doppelte Einträge, Objektmengen,
+kanonische JSON-/Base64-Kodierung und die voneinander unabhängigen
+Hashdomänen werden auch nach äußerem Neusignieren geprüft. Native
+Link-/Root-/Projektgrenzen bleiben Code 7, geänderte Bestandsbelege Code 6
+und tatsächliche Lese-I/O-Fehler Code 5. Unveränderte Projekt-/Betriebsbytes
+und Schreibversuchsfallen sichern die abgewiesenen Vorprüfungen ab.
+Positive beschädigte/fehlende Konfigurationsfälle werden zusätzlich in
+einem unabhängigen nativen Projekt materialisiert und am tatsächlichen
+vollen Zielmodellroot nachgerechnet.
+
+Die bestehenden W-Verhaltenstests bleiben unverändert. `SR-TC-0461`
+bleibt **partial**: zusätzliche geschützte Historie, abgeschlossene
+Receipts und deren gespeicherte Lifecycle-/Spezialistenbelege benötigen
+weiterhin 15.k; externe CLI-Planveröffentlichung, aktuelle Autorisierung,
+Recovery-Lock, dauerhafte Sicherung, Journal/Audit und Crashabschluss
+bleiben 15.l. Unverfügbare Prüfer werden weiterhin ausdrücklich abgewiesen,
+nicht durch Erfolgs-Callbacks oder erfundene Reviews ersetzt. 15.j.C bleibt
+für die reine strukturelle Bereinigung offen. Kein ausgeführter Restore,
+Vollprojekt-Allfallnachweis oder Releaseerfolg wird behauptet.
+
+**Gezielte parallele Dev-Prüfung.** Der abschließende Zustand besteht
+**416/416** Verhaltenstests mit **vier Workern**
+unter **CPython 3.14.4**, Prozessabschluss **0**, in **380.26 s**:
+
+- `tests/test_restore_plan.py` (46)
+- `tests/test_restore_plan_right.py` (82)
+- `tests/test_baseline_verification.py` (30)
+- `tests/test_baseline_verification_right.py` (34)
+- `tests/test_bundle_verification.py` (46)
+- `tests/test_bundle_verification_right.py` (93)
+- `tests/test_catalog_check.py` (17)
+- `tests/test_catalog_check_right.py` (37)
+- `tests/test_apply_rotation.py` (31)
+
+Die vollständige Collection/Katalogprüfung ist gültig und führt keine
+Testkörper aus: **21542** aktive Tests, alle bisherigen
+Identitäten und Nummern unverändert, **82** neue Tests
+hinten angefügt, **21546** dauerhafte Nummern einschließlich
+vier weiterhin reservierter entfernter Identitäten. Kein alter Test wird
+für diese Änderung entfernt oder auf neue Erwartungswerte umgeschrieben.
+
+Dev-Quellidentität: `845111031216b837bac7a44f2643de221831ba2a829a8977c4b1ff12cba7e633`.
+Auswahlbericht-SHA-256:
+`3e7310e49141bb7bb604a6cb04bc95a412e16456ec0d2e9aff40f7d677b3721a`.
+Einzeloutcomes-SHA-256:
+`8d9e2201769e337d3cc2e0ca2dc4c61ae53ac9dd69bb9dd45ac0b9096010e425`.
+Vorherige Apply-Auswahlbindung: `0e3ce58df207ca6fe82aaffaad0c2e4228a1c7da5270ad1545fbb116183d19c7`;
+Apply-Bericht: `f1d90b5c564342e108ede16509ca37c330b30567cfe4e932442d91213c7dfc3b`;
+Apply-Einzeloutcomes: `efd84eaa419144ffcaf216962e85d1941e7e700a05ce9e2aa4c98f0760c1d437`.
+Alle Dev-/Apply-Auswahlen sind Teilprüfungen, `full_suite_passed=null`.
+Der erste parallele R-Versuch bestand 414 Fälle und scheiterte in zwei
+neuen Konflikt-Fixtures vor dem Produktaufruf: Das Elternverzeichnis des
+zweiten synthetischen Projekts war nicht angelegt. Der Fixtureaufbau wurde
+korrigiert, keine fachliche Erwartung abgeschwächt. Dieser Bericht bleibt
+an seine tatsächlichen Quellbytes gebunden; ausschließlich der erneute
+abschließende erfolgreiche Bericht gilt für die übergebenen Bytes.
+
+**Übergabe.** Genau dieser geprüfte R-Zustand wird als ein reguläres Bundle
+mit einem eigenen Commit übergeben. Der unveränderte geprüfte Entrypoint
+installiert ihn über den nativen PatchHarbor-Payloadwriter, führt nur die
+fällige **Sequenz 197 / Gruppe 2 von 3**, **7182** Tests,
+parallel mit vier Workern aus und prüft Auswahl, Quellhash und Outcomes.
+Erst nach Erfolg folgen die fünf Fortschrittsmarker auf **644/900**, zuletzt
+**15.j.R**, nächstens **15.j.C**, Bundle **491** und die R-Checkbox; dann
+folgt die exakte Commit-Message dieses Schritts. Der C-Zustand wird nicht
+vorinstalliert. Fehler erhalten vorhandene Commits und den tatsächlichen
+Arbeitszustand. Apply-Test und Commit sind bei Übergabe noch nicht beobachtet.
+
+Native Prüfung der fertigen ZIP, vollständiger SHA und atomare Übergabe
+beenden diesen N-Auftrag sofort. Kein eigenes Apply, CI, Watcher, Control,
+weiteres Bundle, Result-Warten oder Hintergrundfortsetzung.
 
 #### 15.j.C – Make it Clean
 

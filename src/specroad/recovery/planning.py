@@ -4,26 +4,13 @@ from pathlib import Path
 
 from ..changes.target_model import _default_scope
 from ..model.canonical import canonical_json_bytes, canonical_json_sha256
-from ..model.configuration import ProjectConfiguration
-from ..storage.json_syntax import parse_json_object
 from ._codec import file_row, file_table
+from ._current_evidence import BASELINES, observe_configuration, current_configuration
 from ._inventory import boundary, observe, read_source, inventory_roots
 from ._plan_checks import assemble_target, check_current
 from ._sources import reconstruct
 from ._validation import validate_project
 from .values import RestoreError, RestorePlan, require, guarded
-
-
-def _current_configuration(bound):
-    try:
-        return ProjectConfiguration(parse_json_object(read_source(bound, 'specroad.json')))
-    except (RestoreError, FileNotFoundError):
-        raise
-    except Exception as error:
-        from ..model.errors import ModelError
-        if not isinstance(error, ModelError):
-            raise
-        raise RestoreError('restore_current_configuration_evidence_required') from error
 
 
 @guarded
@@ -34,9 +21,9 @@ def prepare_restore_plan(project_root, *, source_root, source_path, source_kind,
     Both roots and the source kind/path are explicit. The project is never
     opened through normal write preflight and no lock, journal, cache, staging
     or output is created. Only Baselines accept explicit operational config.
-    The W history provider refuses additional history requiring 15.k, damaged
-    configuration without an independent evidence adapter, and unavailable
-    model specialists. These are failures, not qualified partial plans.
+    Additional history requiring 15.k and unavailable model specialists fail
+    closed. Damaged configuration requires independent retained evidence;
+    neither source files nor caller assertions can substitute for that proof.
     """
     require(isinstance(project_root, (str, Path)) and isinstance(source_root, (str, Path)),
             'restore_roots_required', exit_code=2)
@@ -61,11 +48,19 @@ def prepare_restore_plan(project_root, *, source_root, source_path, source_kind,
     require(source_model_root == actual_source_root, 'restore_source_root_mismatch')
     target, preserved = assemble_target(files, additions)
     target_model, target_root = validate_project(target)
-    configuration = _current_configuration(project)
+    configuration, evidence, baseline_inventory = observe_configuration(project)
     roots = inventory_roots(source_model.configuration, configuration)
     inventory, current = observe(project, roots)
+    require(all(current.get(path) == content for path, content in evidence.items()),
+            'restore_inventory_changed', exit_code=6)
+    if baseline_inventory is not None:
+        entries = [row for row in inventory['entries']
+                   if row['path'] == BASELINES or row['path'].startswith(BASELINES + '/')]
+        # An absent descendant is implicit when an ancestor inventory root is
+        # missing. A useful retained Baseline necessarily has a real namespace.
+        require(entries == baseline_inventory['entries'], 'restore_inventory_changed', exit_code=6)
     backup = check_current(inventory, current, source_model, target, target_model)
-    require(configuration.data == ProjectConfiguration(parse_json_object(current['specroad.json'])).data,
+    require(configuration.data == current_configuration(current, roots).data,
             'restore_inventory_changed', exit_code=6)
     objects = {}
     for content in [raw, *owned.values(), *target.values(), *backup.values()]:

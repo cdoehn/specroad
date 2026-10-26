@@ -6,6 +6,7 @@ from ..model.paths import PathClass, classify_path, artifact_path
 from ..model.record_schemas import validate_record_fields
 from ..storage.json_syntax import parse_json_object
 from ._codec import file_row, file_table, namespace
+from ._current_evidence import current_configuration
 from ._inventory import inventory_roots, OPERATIONAL_ROOTS
 from ._sources import reconstruct
 from ._validation import validate_project
@@ -67,12 +68,7 @@ def check_history(current, target, current_configuration, target_model):
 
 
 def check_current(inventory, current, source_model, target, target_model):
-    require('specroad.json' in current, 'restore_current_configuration_evidence_required')
-    try:
-        configuration = ProjectConfiguration(parse_json_object(current['specroad.json']))
-    except ModelError:
-        # The independent damaged-config evidence adapter belongs to R.
-        require(False, 'restore_current_configuration_evidence_required')
+    configuration = current_configuration(current, inventory['roots'])
     require(configuration.project_id == source_model.configuration.project_id == target_model.configuration.project_id,
             'restore_project_identity_conflict', exit_code=6)
     require(inventory['roots'] == inventory_roots(source_model.configuration, configuration),
