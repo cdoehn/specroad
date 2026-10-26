@@ -169,19 +169,24 @@ def export_work_package(store):
     """
     build = _runtime_build(); _initial(store, build); _supported(store._initial)
     with store._location.inspect_checkpoint() as held:
-        pointer, current = _read(store, held, build); _supported(current)
-        value = current.as_dict()
-        metadata = {'format_version': 'work-package-v1', 'package_kind': 'work',
-            **{key: value[key] for key in ('work_id', 'checkpoint_generation', 'checkpoint_sha256')},
-            'initial_manifest': _reference(store._initial.raw),
-            'initial_checkpoint_sha256': store._initial.as_dict()['checkpoint_sha256'],
-            'tool_build': build}
-        raw = encode_archive(_MANIFEST, metadata, _capture(store, held, pointer))
-        chain, _ = _checked_package(raw, sha256(raw).hexdigest(), store._registry, build)
-        _require(chain[0].raw == store._initial.raw and chain[-1].raw == current.raw,
-                 'work_package_source_changed')
-        _ensure_work(store, held, pointer, current, build)
-        return raw
+        return _export_held(store, held, build)[0]
+
+
+def _export_held(store, held, build):
+    """Retain the original checkpoint observation for an external publisher."""
+    pointer, current = _read(store, held, build); _supported(current)
+    value = current.as_dict()
+    metadata = {'format_version': 'work-package-v1', 'package_kind': 'work',
+        **{key: value[key] for key in ('work_id', 'checkpoint_generation', 'checkpoint_sha256')},
+        'initial_manifest': _reference(store._initial.raw),
+        'initial_checkpoint_sha256': store._initial.as_dict()['checkpoint_sha256'],
+        'tool_build': build}
+    raw = encode_archive(_MANIFEST, metadata, _capture(store, held, pointer))
+    chain, _ = _checked_package(raw, sha256(raw).hexdigest(), store._registry, build)
+    _require(chain[0].raw == store._initial.raw and chain[-1].raw == current.raw,
+             'work_package_source_changed')
+    _ensure_work(store, held, pointer, current, build)
+    return raw, pointer, current
 
 
 def _restore_target(held, payloads, *, complete=False):

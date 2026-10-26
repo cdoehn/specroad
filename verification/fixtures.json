@@ -715,6 +715,10 @@
     "SR-FIX-BUNDLE-COMPARISON-v1": {
       "provider": "tests/test_bundle_comparison.py:captured",
       "kind": "Native full project ZIPs from real project, archive, initialized language and completed receipt fixtures; independent local and Git field-comparison oracles, public direct/CLI/structured diff, invalid native roots, binary payloads, partial inputs and observed source replacement. No extraction or full-merge oracle. R cases retain original file/parent observations and reject missing native dependencies, invalid schemas, public partial promotion, foreign pairs and malformed selectors without local fallback."
+    },
+    "SR-FIX-BUNDLE-WORK-BACKUP-v1": {
+      "kind": "Owned read-only Work checkpoints and explicit compatibility fixture; actual externally written canonical ZIPs, restoration and handler replay. Completed native projects and real prepared/partially replaced/committed interrupted transactions verify distinct package kinds and unchanged recovery gates. Real private atomic output files with source, image, target and IO fault injection; no remote-backup or native-write Work export claim.",
+      "provider": "tests/test_bundle_work_backup.py:destination,save;tests/test_work_resume.py:setup,recorded;tests/test_project_bundle.py:project;tests/support/work_publication_process.py:child"
     }
   },
   "fixture_format_version": 1,
@@ -738,6 +742,7 @@
     "SR-FIX-BUNDLE-COMPARISON-v1",
     "SR-FIX-BUNDLE-VERIFICATION-RIGHT-v1",
     "SR-FIX-BUNDLE-VERIFICATION-v1",
+    "SR-FIX-BUNDLE-WORK-BACKUP-v1",
     "SR-FIX-CATALOG-DATA-v1",
     "SR-FIX-CHANGE-AUTHORING-v1",
     "SR-FIX-CHANGE-EXECUTION-v1",

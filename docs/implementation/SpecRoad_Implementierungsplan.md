@@ -28,10 +28,10 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ```yaml
 plan_revision: 22
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 639
-last_completed_plan_commit: 15.h.C
-next_plan_commit: 15.i.W
-last_completed_numbered_bundle: 485
+implementation_plan_commits_completed: 640
+last_completed_plan_commit: 15.i.W
+next_plan_commit: 15.i.R
+last_completed_numbered_bundle: 486
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -27875,12 +27875,150 @@ diesen N-Durchlauf ohne Result-Warten oder Hintergrundfortsetzung.
 
 #### 15.i.W – Let it Work
 
-- [ ] **15.i.W** · Position **640/900** · Voraussetzung: `15.h.C`.
+- [x] **15.i.W** · Position **640/900** · Voraussetzung: `15.h.C`.
 **Exakte Commit-Message:** `15.i.W feat(bundle): Offene Transaktionen und externe Sicherung aufbauen`
 
 **Umsetzung:** Normales Projektbundle bei ungelöster Transaktion sperren; separat markierten Workexport zulassen.
 
 **Verhaltensabnahme:** Intakter abgeschlossener Stand lässt sich sichern, offene Arbeit nur nach eigenem Workvertrag.
+
+
+**Umsetzungs- und Übergabenachweis – Bundle 486 (W), 26. Oktober 2026.**
+
+**Bestätigte Basis.** Result `specroad-apply_Result_023603_1026_e8c264.zip`,
+SHA-256 `067aea9a53350e735fb49694a65fd3ed7d4a99ba3052baa8d800cec11f10343c`,
+bestätigt den sauberen Commit `bbed124aa77c2703d4d4a4d26e13eea87fef806d`,
+Parent `171bca6ccd03b4800aae0f98f146df003db801b6`, für **15.h.C**, Bundle 485.
+Root-Anleitung, Kontext, Umgebung, Manifest, Run-/Ausführungslogs und alle
+**2.269** Snapshotdateien wurden geprüft. Blob-IDs, Größen, Modi und Bytes
+stimmen mit dem tatsächlich nur lesend geprüften Apply-Zustand überein.
+Native Resultprüfung und konsistente Zustandserfassung bestätigen die exakte
+Vierfachbindung; das Result war eindeutig maßgeblich und noch unverbraucht.
+
+Die tatsächliche Commitfolge und gebundenen Apply-Einzeloutcomes belegen
+**7.113/7.113** bestandene Tests, Sequenz **191**, Gruppe **2/3**, vier
+parallele Worker, **2.204,00 s**, Prozessende 0. Auswahlbindung
+`67bd637c66f4f111aedd6bc5096ee5e3fe81e64886d1d2e7c7fd56d62f2b7f11`; Auswahlbericht-SHA
+`74a359a0bf961982b79e6b4f7fecf256a8c783d9d5e96e53afa6d5def732a51a`; Einzeloutcomes-SHA
+`55ea69faee95c50019c28520901079a5659d43581fa675ffacf85d3603254811`. Dieser Teiltest ist kein Vollsuite- oder
+Release-Nachweis. Bestätigt sind **639/900**, zuletzt 15.h.C, nächstens 15.i.W,
+Bundle 485. Die Dev-Planmarker wurden zuerst auf diese bestätigte Basis
+synchronisiert. Dev-Historie, Index und lokale Arbeitsregeln bleiben unverändert.
+
+**Regulärer W-Ausschnitt.** SPECROAD-DECISION-1 ist ausdrücklich in den
+maßgeblichen Projektvorgaben enthalten. Die vorhandenen Vorgaben in 10.16,
+SR-REQ-0568 und Anhang P.7/P.8 sowie der vorhandene Read-only-Work-Paketvertrag
+ermöglichen diesen kleinsten sicheren Ausschnitt ohne normative Ergänzung.
+Die Spezifikation 0.2.27 bleibt bytegleich mit SHA-256
+`07a35f089e83d27045e76a57aa5b3d5d0061dd0556543b4765da5f114e1ae637`.
+
+Normale Projektvollbundles bleiben bei ungelösten nativen Transaktionen
+schreibfrei mit Code 5 gesperrt. Das neue Host-API
+`specroad.work.package_publication.publish_work_package` schreibt den bereits
+geprüften, separat als `package_kind=work` gekennzeichneten Read-only-Work-Inhalt
+in eine ausdrücklich gewählte externe Datei. Der aufrufende Host liefert wie
+bisher den unabhängig vertrauenswürdig gebundenen Anfangscheckpoint und alle
+zu schützenden Projekt-/Inputgrenzen. Die vollständige geprüfte Checkpointkette
+mit erreichbaren Eingabe- und Ergebnisbytes bleibt im unveränderten Work-ZIP32-
+Paketformat. Das bestehende In-Memory-Export-API behält seinen Bytevertrag.
+
+Der Export hält die Work-Beobachtung bis nach der Dateiveröffentlichung und
+prüft Pointer, Checkpointbytes, Laufzeit und Wurzelidentitäten erneut. Das
+bestehende separate Zielverzeichnis darf weder Work noch geschützte Quellen
+überlappen; Projektkontrollpfade, Symlinks, verschachtelte Projekte und
+Namenskollisionen bleiben gesperrt. Ein Verzeichnis-Inode-Mutex, private
+Zwischendatei, vollständige Größen-/Hashprüfung, atomare Neuanlage ohne
+Überschreiben und dauerhafte Synchronisation binden die ausgegebene Datei.
+Die Rückgabe benennt Pfad, Größe, SHA-256, Work-Identität und Generation.
+Fehler erhalten tatsächliche private oder bereits veröffentlichte Bilder.
+Quellcheckpoints, Projektdaten und bestehende Zieldateien werden nicht geändert;
+Handler, Recovery und automatische Wiederholungen werden nicht ausgeführt.
+
+Die Datei bleibt eine Sicherung des vorhandenen Read-only-Work-Vertrags und
+wird nicht zum Projektvollbundle, zum nativen Transaktionsabschluss oder zur
+menschlichen Freigabe erhoben. Die bestehende Ablehnung normativer Work-Pakete
+ohne native Transaktions-/Receiptbindung mit Code 6 bleibt erhalten.
+Eine lokal geschriebene Datei beweist keine Kopie außerhalb eines verlorenen
+Sandboxes (`external_backup_confirmed=false`). Work-CLI, native Schreibarbeit-
+Portabilität und Streaming/Mehrteiler bleiben die schon zuvor offenen
+Anhang-P-Verpflichtungen. SR-REQ-0568 bleibt **partial**; 15.i.R mit dem
+Verlust-/Pfadwechselkorpus und 15.i.C bleiben offen.
+
+**Entwicklungsnachweis.** Der endgültige W-Zustand besteht
+**925/925** Tests aus **27** vollständigen
+Testdateien mit acht parallelen Workern unter CPython 3.14.4 in **408.21 s**,
+beobachtetem Prozessende 0 und ausschließlich bestandenen Einzeloutcomes.
+Die 31 neuen Fälle prüfen tatsächlich geschriebene und wiederhergestellte
+Generationen 0/1/2 mit gleichem Handlerresultat, getrennte Projekt-/Work-Paketarten,
+echte Prozessabbrüche bei prepared/first_target/committed, unveränderte Quellen,
+unsichere und belegte Zielpfade, Mutexkonflikt, geänderte Pointer/Objekte/Bilder,
+konkurrierende Zielanlage und Fehler nach Veröffentlichung. Die Kompatibilitäts-
+Builddaten sind ausdrücklich Fixtures, keine behaupteten Distributionsnachweise.
+Zusätzlich bleiben bestehende Work-Paket-, Archiv-, Root-, Checkpoint-, Manifest-,
+Resume-, Finalisierungs-, Resultdatei-, Kontroll- und Projektbundlefälle enthalten.
+
+Ein erster gezielter Paralleltest endete mit 924 bestandenen und einem
+fehlgeschlagenen Fall: Der neue Pointerkonflikttest erwartete zunächst die
+falsche Ausnahmefamilie. Er prüft nun den vorhandenen Vertrag
+`checkpoint_pointer_changed`, `WorkResumeError`, Code 6 ausdrücklich;
+der Produktcode wurde deshalb nicht geändert. Dieser erste Lauf ist kein
+Erfolgsnachweis. Maßgeblich ist der vollständige gezielte Lauf über den
+endgültigen Stand oben.
+
+Die vollständige Collection/Katalogprüfung bestätigt **21367** aktive
+Testidentitäten und **0** ausgeführte Testkörper. **31** neue Identitäten werden
+hinten angefügt: **21371** reservierte Nummern einschließlich vier
+stillgelegter; keine alte Nummer geändert, entfernt oder wiederverwendet.
+`full_suite_passed=null`: kein Entwicklungsvolltest, kein serieller Testlauf,
+keine Darstellungs-/Dokumentationstests, kein CI-Start.
+Quellidentität `ab6d9728c41890a299630410de19ecb97cdd6a1aa920f122fa412b0afcbfc5da`;
+Katalog-SHA `ae641f96289f2824d279b8906aa5f8c3cd636df67c8d3eaf54d05156e0cce581`;
+Auswahlbericht-SHA `5d5566c0bef11aa6bbfa391e633ce3c888fb94c5f8dbe1f1f60ddbe61aacded5`;
+Einzeloutcomes-SHA `fefa578a93d7ee7c600a0068cc024639758549d0ecc1b0b1dde486caa22652ae`.
+Ausgewählte vollständige Testdateien:
+
+- `tests/test_bundle_work_backup.py`
+- `tests/test_project_bundle.py`
+- `tests/test_project_bundle_right.py`
+- `tests/test_work_archive.py`
+- `tests/test_work_archive_right.py`
+- `tests/test_work_checkpoints.py`
+- `tests/test_work_checkpoints_right.py`
+- `tests/test_work_control.py`
+- `tests/test_work_evaluation.py`
+- `tests/test_work_evaluation_right.py`
+- `tests/test_work_finalization.py`
+- `tests/test_work_finalization_right.py`
+- `tests/test_work_manifest.py`
+- `tests/test_work_manifest_right.py`
+- `tests/test_work_packages.py`
+- `tests/test_work_packages_right.py`
+- `tests/test_work_progress.py`
+- `tests/test_work_progress_right.py`
+- `tests/test_work_prompt.py`
+- `tests/test_work_publication.py`
+- `tests/test_work_publication_right.py`
+- `tests/test_work_receipt_files.py`
+- `tests/test_work_result_files.py`
+- `tests/test_work_resume.py`
+- `tests/test_work_resume_right.py`
+- `tests/test_work_root.py`
+- `tests/test_work_root_right.py`
+
+**Gebundene Übergabe.** Genau ein regulärer **PLAN 15.i.W**, Position
+**640/900**, wird als eigener geprüfter Zwischenstand mit dem nativen
+Payloadwriter hergestellt. Der Entrypoint fordert den sauberen gebundenen
+Ausgangsstand und ausschließlich **Gruppe 0/3, Sequenz 192**, mit
+**7123** parallelen Tests auf vier Workern. Quellidentität, Katalog,
+feste Nummerierung und tatsächliche Auswahlbindung müssen übereinstimmen.
+Erst nach erfolgreichem Apply-Gate werden die fünf Planmarker auf W abgeschlossen,
+640/900, zuletzt 15.i.W, nächstens 15.i.R und Bundle 486 gesetzt. Danach folgt
+`15.i.W feat(bundle): Offene Transaktionen und externe Sicherung aufbauen`.
+15.i.R und 15.i.C bleiben offen. Apply-Test und Commit sind vorgesehen und
+werden nicht als bereits erfolgt behauptet. Fehler erhalten den tatsächlichen
+Zustand und bereits erfolgreiche Commits. Native ZIP-Prüfung und atomare
+Exchange-Übergabe beenden diesen N-Durchlauf ohne Result-Warten oder
+Hintergrundfortsetzung.
 
 #### 15.i.R – Make it Right
 

@@ -7,19 +7,22 @@
   "implementation_status": "partial",
   "method": "automated_behavior",
   "fixture_ids": [
-    "SR-FIX-PROJECT-BUNDLE-R-v1"
+    "SR-FIX-PROJECT-BUNDLE-R-v1",
+    "SR-FIX-BUNDLE-WORK-BACKUP-v1"
   ],
   "preconditions": [
-    "A current native project with a completely observed empty request/transaction receipt inventory; no configuration filter or partial source promotion."
+    "A current native project with a completely observed empty request/transaction receipt inventory; no configuration filter or partial source promotion.",
+    "Work export uses the existing caller-trusted read-only initial manifest and compatible runtime; an explicit, existing output root is disjoint from Work and protected project/input roots."
   ],
   "steps": [
     "Prepare canonical project bytes from guarded native inventory and closure; compare unchanged artifact/resource and referenced object bytes, native roots, exclusions and independently reopened payloads. Refuse unsafe, changed, incomplete or unresolved sources without writing.",
-    "Publish the retained native bundle through CLI, structured request and library entry points; verify unchanged source inventory, exact ZIP bytes/hash and no overwrite. Reject missing payloads, incomplete histories, unsafe destinations and changes before atomic publication; preserve actual images on failure."
+    "Publish the retained native bundle through CLI, structured request and library entry points; verify unchanged source inventory, exact ZIP bytes/hash and no overwrite. Reject missing payloads, incomplete histories, unsafe destinations and changes before atomic publication; preserve actual images on failure.",
+    "15.i.W: publish a separate package_kind=work ZIP to a create-only external file while retaining checkpoint observation; restore the actual saved generations 0/1/2 and replay the exact result. Preserve sources and existing or raced destinations. Real unresolved native transactions block project full bundles with code 5; unsupported normative Work export remains code 6 without Recovery or writes."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "`bundle create` MUSS ungelöste Transaktionen als Projektvollbundle abweisen; ein separat gekennzeichnetes Arbeitspaket folgt dem Export- und Recoveryvertrag aus Anhang P.",
-    "scope": "15.b.R ordinary full-project creation rejects unresolved transactions, active locks/staging and unverified completed history without normal bundle completion. Work-package export and Recovery remain separate unfinished obligations."
+    "scope": "15.b.R project creation plus 15.i.W external file publication for the existing read-only Work package contract. Exact package bytes/hash, source preservation, distinct project/work kinds, recovery refusal, output containment, no overwrite and retained actual failure images. No Work CLI, native transaction/receipt export binding, remote backup assurance or general Appendix P completion is claimed."
   },
   "expected_diagnostics": [
     "SRV002",
@@ -47,6 +50,37 @@
   },
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
+    "tests/test_bundle_work_backup.py::test_actual_unresolved_transaction_is_not_a_project_backup_or_work_export[committed]",
+    "tests/test_bundle_work_backup.py::test_actual_unresolved_transaction_is_not_a_project_backup_or_work_export[first_target]",
+    "tests/test_bundle_work_backup.py::test_actual_unresolved_transaction_is_not_a_project_backup_or_work_export[prepared]",
+    "tests/test_bundle_work_backup.py::test_changes_at_publication_preserve_actual_state_and_never_overwrite[image]",
+    "tests/test_bundle_work_backup.py::test_changes_at_publication_preserve_actual_state_and_never_overwrite[object]",
+    "tests/test_bundle_work_backup.py::test_changes_at_publication_preserve_actual_state_and_never_overwrite[pointer]",
+    "tests/test_bundle_work_backup.py::test_changes_at_publication_preserve_actual_state_and_never_overwrite[target]",
+    "tests/test_bundle_work_backup.py::test_completed_project_backup_and_work_package_remain_distinct",
+    "tests/test_bundle_work_backup.py::test_existing_output_is_preserved_without_any_write_attempt[case]",
+    "tests/test_bundle_work_backup.py::test_existing_output_is_preserved_without_any_write_attempt[directory]",
+    "tests/test_bundle_work_backup.py::test_existing_output_is_preserved_without_any_write_attempt[fifo]",
+    "tests/test_bundle_work_backup.py::test_existing_output_is_preserved_without_any_write_attempt[file]",
+    "tests/test_bundle_work_backup.py::test_existing_output_is_preserved_without_any_write_attempt[symlink]",
+    "tests/test_bundle_work_backup.py::test_failure_after_publication_preserves_the_complete_file",
+    "tests/test_bundle_work_backup.py::test_invalid_relative_output_is_write_free[../escape.zip]",
+    "tests/test_bundle_work_backup.py::test_invalid_relative_output_is_write_free[.specroad/work.zip]",
+    "tests/test_bundle_work_backup.py::test_invalid_relative_output_is_write_free[/absolute.zip]",
+    "tests/test_bundle_work_backup.py::test_invalid_relative_output_is_write_free[specroad.json]",
+    "tests/test_bundle_work_backup.py::test_output_mutex_contention_is_write_free",
+    "tests/test_bundle_work_backup.py::test_unsafe_or_overlapping_destinations_do_not_mutate_any_root[ancestor]",
+    "tests/test_bundle_work_backup.py::test_unsafe_or_overlapping_destinations_do_not_mutate_any_root[foreign_project]",
+    "tests/test_bundle_work_backup.py::test_unsafe_or_overlapping_destinations_do_not_mutate_any_root[missing_root]",
+    "tests/test_bundle_work_backup.py::test_unsafe_or_overlapping_destinations_do_not_mutate_any_root[nested_project]",
+    "tests/test_bundle_work_backup.py::test_unsafe_or_overlapping_destinations_do_not_mutate_any_root[project]",
+    "tests/test_bundle_work_backup.py::test_unsafe_or_overlapping_destinations_do_not_mutate_any_root[symlink_parent]",
+    "tests/test_bundle_work_backup.py::test_unsafe_or_overlapping_destinations_do_not_mutate_any_root[symlink_root]",
+    "tests/test_bundle_work_backup.py::test_unsafe_or_overlapping_destinations_do_not_mutate_any_root[work]",
+    "tests/test_bundle_work_backup.py::test_unsafe_or_overlapping_destinations_do_not_mutate_any_root[work_child]",
+    "tests/test_bundle_work_backup.py::test_written_work_file_restores_exact_checkpoint_and_handler_result[0]",
+    "tests/test_bundle_work_backup.py::test_written_work_file_restores_exact_checkpoint_and_handler_result[1]",
+    "tests/test_bundle_work_backup.py::test_written_work_file_restores_exact_checkpoint_and_handler_result[2]",
     "tests/test_project_bundle_right.py::test_changes_after_preparation_are_rechecked_before_any_output[archive]",
     "tests/test_project_bundle_right.py::test_changes_after_preparation_are_rechecked_before_any_output[artifact]",
     "tests/test_project_bundle_right.py::test_changes_after_preparation_are_rechecked_before_any_output[missing_attachment]",
@@ -66,6 +100,6 @@
     "tests/test_project_bundle_right.py::test_unresolved_or_unverified_history_prevents_normal_completion[.specroad/transactions/receipts/item/transaction.json]"
   ],
   "open_items": [
-    "15.i: distinct incomplete-work package export and Recovery contract remain open; no normal project bundle success is substituted."
+    "15.i.R/C: complete loss/path-change cases and cleanup for this slice; native-write Work portability, Work CLI and streaming/multipart remain separate unfinished Appendix P obligations. A local exported file does not prove survival outside a lost sandbox."
   ]
 }
