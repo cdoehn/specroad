@@ -20,7 +20,8 @@
     "Prepare canonical project bytes from guarded native inventory and closure; compare unchanged artifact/resource and referenced object bytes, native roots, exclusions and independently reopened payloads. Refuse unsafe, changed, incomplete or unresolved sources without writing.",
     "Publish the retained native bundle through CLI, structured request and library entry points; verify unchanged source inventory, exact ZIP bytes/hash and no overwrite. Reject missing payloads, incomplete histories, unsafe destinations and changes before atomic publication; preserve actual images on failure.",
     "15.i.W: publish a separate package_kind=work ZIP to a create-only external file while retaining checkpoint observation; restore the actual saved generations 0/1/2 and replay the exact result. Preserve sources and existing or raced destinations. Real unresolved native transactions block project full bundles with code 5; unsupported normative Work export remains code 6 without Recovery or writes.",
-    "15.i.R: restore from an explicitly selected canonical file and mandatory external SHA-256 after actual Work/source loss or backup relocation. Recheck the retained file across every generation. Reject missing/mutated payloads and prompt/report substitutes before allocation; preserve the real published prefix on later source loss. A newer prompt does not advance an older backup."
+    "15.i.R: restore from an explicitly selected canonical file and mandatory external SHA-256 after actual Work/source loss or backup relocation. Recheck the retained file across every generation. Reject missing/mutated payloads and prompt/report substitutes before allocation; preserve the real published prefix on later source loss. A newer prompt does not advance an older backup.",
+    "15.i.C: separate the unchanged backup-file result projection from ongoing Work state and publication mechanics. Re-run the existing W/R behavior oracles, including exact generation-bound export values and the actual retained backup boundary after loss; no new behavior or tests."
   ],
   "oracle": {
     "kind": "behavior",
@@ -150,6 +151,6 @@
     "tests/test_project_bundle_right.py::test_unresolved_or_unverified_history_prevents_normal_completion[.specroad/transactions/receipts/item/transaction.json]"
   ],
   "open_items": [
-    "15.i.C cleanup remains open; native-write Work portability, Work CLI and streaming/multipart remain separate unfinished Appendix P obligations. A local exported file does not prove survival outside a lost sandbox."
+    "Native-write Work portability, Work CLI and streaming/multipart remain separate unfinished Appendix P obligations. A local exported file does not prove survival outside a lost sandbox."
   ]
 }

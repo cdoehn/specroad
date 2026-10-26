@@ -28,10 +28,10 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ```yaml
 plan_revision: 22
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 641
-last_completed_plan_commit: 15.i.R
-next_plan_commit: 15.i.C
-last_completed_numbered_bundle: 487
+implementation_plan_commits_completed: 642
+last_completed_plan_commit: 15.i.C
+next_plan_commit: 15.j.W
+last_completed_numbered_bundle: 488
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -28168,7 +28168,7 @@ beenden diesen N-Durchlauf ohne Result-Warten oder Hintergrundfortsetzung.
 
 #### 15.i.C – Make it Clean
 
-- [ ] **15.i.C** · Position **642/900** · Voraussetzung: `15.i.R`.
+- [x] **15.i.C** · Position **642/900** · Voraussetzung: `15.i.R`.
 **Exakte Commit-Message:** `15.i.C refactor(bundle): Offene Transaktionen und externe Sicherung bereinigen`
 
 **Bereinigung:** Sicherungsstatus ausdrücklich von aktuell laufender Arbeit unterscheiden.
@@ -28176,6 +28176,129 @@ beenden diesen N-Durchlauf ohne Result-Warten oder Hintergrundfortsetzung.
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
 **Regressionsabnahme:** Alle vorhandenen W-/R-Verhaltenstests dieses Schritts und die vom Refactoring betroffenen bisherigen Verhaltenstests erneut ausführen; erwartete Fachwerte nicht passend zum Refactoring umschreiben. Bei reinen Präsentations-/Dokuschritten keine solchen Tests erfinden.
+
+
+**Umsetzungs- und Übergabenachweis – Bundle 488 (C), 26. Oktober 2026.**
+
+**Bestätigte Basis.** Result `specroad-apply_Result_044413_1026_bc561c.zip`,
+SHA-256 `1a10f24021d4990a1eac1d8d3897ca77423e655c1918dccddff17f4f2be2489c`,
+bestätigt den sauberen Commit `c410d039c88a3d8ca53e6d604f5da505035ce40d`,
+Parent `8678d254dc2d6a50a4000989f6e1fd218ff23204`, für **15.i.R**, Bundle 487.
+Root-Anleitung, Kontext, Umgebung, Manifest, Run-/Ausführungslogs und alle
+**2.273** Snapshotdateien wurden geprüft. Blob-IDs, Größen, Modi und Bytes
+stimmen mit dem tatsächlich nur lesend geprüften Apply-Zustand überein.
+Native Resultprüfung und konsistente Zustandserfassung bestätigen die exakte
+Vierfachbindung; das Result war eindeutig maßgeblich und noch unverbraucht.
+
+Die tatsächliche Commitfolge und gebundenen Apply-Einzeloutcomes belegen
+**7.136/7.136** bestandene Tests, Sequenz **193**, Gruppe **1/3**, vier
+parallele Worker, **2.258,69 s**, Prozessende 0. Auswahlbindung
+`5672f92875060b14951d66f9daebd2fe351409c1510bbb3c1b0df1b0a071b888`; Auswahlbericht-SHA
+`becf447db0b8549a6b41bb9586c832b8de55b694150012f12b94fa4128101107`; Einzeloutcomes-SHA
+`c06b22214b92e16fc9a5366a09bcf26b21c9567be8cd4f12c041ff09c77475ab`. Dieser Teiltest ist kein Vollsuite- oder
+Release-Nachweis. Bestätigt sind **641/900**, zuletzt 15.i.R, nächstens 15.i.C,
+Bundle 487. Die Dev-Planmarker wurden zuerst auf diese bestätigte Basis
+synchronisiert. Dev-Historie, Index und lokale Arbeitsregeln bleiben unverändert.
+
+**Reguläre C-Bereinigung.** SPECROAD-DECISION-1 ist ausdrücklich in den
+maßgeblichen Projektvorgaben enthalten. Die vorhandenen Regeln in 10.16,
+SR-REQ-0568 und Anhang P.1/P.3/P.7/P.8 bestimmen bereits die Trennung zwischen
+gesichertem Paketstand, laufender Arbeit und tatsächlich externem Erhalt.
+Es ist keine normative Ergänzung erforderlich. Die Spezifikation 0.2.27 bleibt
+bytegleich mit SHA-256
+`07a35f089e83d27045e76a57aa5b3d5d0061dd0556543b4765da5f114e1ae637`.
+
+Die bestehende Rückgabe von `publish_work_package` wird in die reine interne
+Wertfunktion `package_export_result` in `_package_export_result.py` ausgelagert.
+Sie erhält ausschließlich Work-ID, Checkpointgeneration/-hash und beobachtete
+Dateidaten. Sie kennt keinen Work-Store, laufenden Prozess, Arbeitsfortschritt
+oder Zustand und liest keine Dateien. Der Koordinator behält Quellprüfung,
+Locks, private Zwischendatei, atomare Neuanlage, Readback und erneute Prüfung
+in unveränderter Reihenfolge; erst danach setzt er die bisherigen Exportwerte
+zusammen. Eine neue Prüfung, Statusentscheidung oder Berechtigung entsteht nicht.
+
+Das vollständige `work-package-export-v1`-Ergebnis bleibt unverändert, ebenso
+Paketbytes, Hashes, Generationsbindung, Fehlerklassen und zulässige Seiteneffekte.
+`generated=true` beschreibt die erzeugte Datei und erklärt keine laufende Arbeit
+für abgeschlossen. `external_backup_confirmed=false` bleibt unabhängig vom
+Work-Zustand; ein lokaler Export ist kein Nachweis externen Erhalts.
+Restore verwendet weiterhin tatsächliche Paketbytes und den externen Hash,
+niemals einen Exportbericht oder Prompt als Datenersatz. Die W-/R-Adapter und
+ihre Sicherungs-, Verlust-, Recovery- und Pfadgrenzen erhalten ihre Fachverträge.
+
+SR-TC-0568 dokumentiert die Bereinigung und entfernt nur den nun umgesetzten
+C-Punkt aus seinen offenen Arbeiten. SR-REQ-0568 bleibt **partial**:
+Work-CLI, native Schreibarbeit-Portabilität und Streaming/Mehrteiler bleiben
+wie bisher offen. SR-TC-0628 und alle übrigen Anforderungsverträge, Fixtures,
+Tests, Oracles, Testnummern, Runner und Workflows bleiben bytegleich.
+Es gibt weder eine neue Produktfunktion noch vorgezogene Arbeit an 15.j.W.
+
+**Entwicklungsnachweis.** Der endgültige C-Zustand besteht
+**972/972** vorhandene Verhaltenstests aus
+**28** vollständigen Testdateien mit acht parallelen Workern unter
+CPython 3.14.4 in **422.75 s**, beobachtetem Prozessende 0 und ausschließlich
+bestandenen Einzeloutcomes. Alle 31 W- und 47 R-Fälle sind unverändert enthalten:
+exakte Exportwerte für Generationen 0/1/2, getrennte Projekt-/Work-Pakete,
+echte unterbrochene native Transaktionen, Quellen-/Zielerhalt und Publikations-
+fehler; außerdem tatsächlicher Sandboxverlust, neue Prozesse, umgezogene
+Sicherungen, fehlende Bytes, unveränderte Wiederaufsetzgrenze trotz neuerem
+Prompt und erhaltene Präfixe nach Abbruch. Die übrigen betroffenen Work-/
+Projektbundle-Regressionen bleiben enthalten. Keine Erwartung wurde passend
+zum Refactoring umgeschrieben; keine neuen Struktur- oder Dokumentationstests.
+
+Die vollständige Collection/Katalogprüfung bestätigt **21414** unveränderte
+aktive Testidentitäten und **0** ausgeführte Testkörper. Die **21418**
+reservierten Nummern einschließlich vier stillgelegter bleiben bytegleich.
+`full_suite_passed=null`: kein Entwicklungsvolltest, kein serieller Testlauf,
+keine Darstellungs-/Dokumentationstests, kein CI-Start.
+Quellidentität `0d154b19d290c6f9185113ada153ab59094288bcf3563eb31567d8702c9c6e73`;
+Katalog-SHA `18c01c6965deaa8ff8fbac932a5c4d4cffcd25c6257854c7acc47197e8f16aee`;
+Auswahlbericht-SHA `b0481c6aa0b2a8632f309951e91ff1a3b039ec953700507e69768a5c144d1bb2`;
+Einzeloutcomes-SHA `9e48f51190f6c5cbfa1fa1f9c5e58d915a3642e9f316864afa11a7cf92899eff`.
+Ausgewählte vollständige Testdateien:
+
+- `tests/test_bundle_work_backup.py`
+- `tests/test_bundle_work_backup_right.py`
+- `tests/test_project_bundle.py`
+- `tests/test_project_bundle_right.py`
+- `tests/test_work_archive.py`
+- `tests/test_work_archive_right.py`
+- `tests/test_work_checkpoints.py`
+- `tests/test_work_checkpoints_right.py`
+- `tests/test_work_control.py`
+- `tests/test_work_evaluation.py`
+- `tests/test_work_evaluation_right.py`
+- `tests/test_work_finalization.py`
+- `tests/test_work_finalization_right.py`
+- `tests/test_work_manifest.py`
+- `tests/test_work_manifest_right.py`
+- `tests/test_work_packages.py`
+- `tests/test_work_packages_right.py`
+- `tests/test_work_progress.py`
+- `tests/test_work_progress_right.py`
+- `tests/test_work_prompt.py`
+- `tests/test_work_publication.py`
+- `tests/test_work_publication_right.py`
+- `tests/test_work_receipt_files.py`
+- `tests/test_work_result_files.py`
+- `tests/test_work_resume.py`
+- `tests/test_work_resume_right.py`
+- `tests/test_work_root.py`
+- `tests/test_work_root_right.py`
+
+**Gebundene Übergabe.** Genau ein regulärer **PLAN 15.i.C**, Position
+**642/900**, wird als eigener geprüfter Zwischenstand mit dem nativen
+Payloadwriter hergestellt. Der Entrypoint fordert den sauberen gebundenen
+Ausgangsstand und ausschließlich **Gruppe 2/3, Sequenz 194**, mit
+**7139** parallelen Tests auf vier Workern. Quellidentität, Katalog,
+feste Nummerierung und tatsächliche Auswahlbindung müssen übereinstimmen.
+Erst nach erfolgreichem Apply-Gate werden die fünf Planmarker auf C abgeschlossen,
+642/900, zuletzt 15.i.C, nächstens 15.j.W und Bundle 488 gesetzt. Danach folgt
+`15.i.C refactor(bundle): Offene Transaktionen und externe Sicherung bereinigen`.
+15.j.W bleibt offen. Apply-Test und Commit sind vorgesehen und werden nicht
+als bereits erfolgt behauptet. Fehler erhalten den tatsächlichen Zustand und
+bereits erfolgreiche Commits. Native ZIP-Prüfung und atomare Exchange-Übergabe
+beenden diesen N-Durchlauf ohne Result-Warten oder Hintergrundfortsetzung.
 
 <a id="step-15-j"></a>
 ### 15.j – Vollqualifizierter Restore-Plan

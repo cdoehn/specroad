@@ -15,6 +15,7 @@ from ..model.paths import project_path
 from ..security import ProjectBoundary, SafetyViolation
 from ..security import paths as guards
 from ..storage.archive import ArchiveError
+from ._package_export_result import package_export_result
 from .control import _initial
 from .packages import _export_held, _supported
 from .result_files import _ensure_work
@@ -114,8 +115,7 @@ def publish_work_package(store, *, output_root, output):
                 raise ArchiveError('work_export_published_bytes_changed', exit_code=6)
             check_source()
         value = current.as_dict()
-        return {'format_version': 'work-package-export-v1', 'package_kind': 'work',
-            **{key: value[key] for key in ('work_id', 'checkpoint_generation', 'checkpoint_sha256')},
-            'file': {'root': str(boundary.root), 'path': path, 'size': len(raw), 'sha256': digest},
-            'generated': True, 'normative': False, 'source_bytes_rechecked': True,
-            'external_backup_confirmed': False}
+        return package_export_result(work_id=value['work_id'],
+            checkpoint_generation=value['checkpoint_generation'],
+            checkpoint_sha256=value['checkpoint_sha256'], root=boundary.root,
+            path=path, size=len(raw), digest=digest)
