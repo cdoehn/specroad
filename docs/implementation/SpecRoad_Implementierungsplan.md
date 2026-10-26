@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 22 · **Stand:** 25. Oktober 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.27
+**Planrevision:** 23 · **Stand:** 26. Oktober 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.28
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 Schritte und 900 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; jeder Schritt besitzt einen konkreten Arbeitsumfang und eigene Verhaltensabnahme.
 
@@ -9,7 +9,7 @@ Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 S
 
 Fachliche Grundlage ist [`docs/specification/SpecRoad_Spezifikation.md`](../specification/SpecRoad_Spezifikation.md), einschließlich aller konsolidierten Korrekturen, 742 Requirements, 51 Verifikationsverträge, 46 Szenario-/E2E-Identitäten sowie R-01 bis R-75, Anhang U und den PatchHarbor-Rundweg aus Anhang W. Der [`Prüfbericht`](../reviews/SpecRoad_v0.2.7_Implementierungsreife_Pruefbericht.md) ist ein vorgelagerter Entwurfsreview, kein späterer Produktnachweis.
 
-Gebundene Spezifikations-SHA-256: `07a35f089e83d27045e76a57aa5b3d5d0061dd0556543b4765da5f114e1ae637`.
+Gebundene Spezifikations-SHA-256: `1b076c7706a48dcf81c63f2cceaf87a263aa81ea71bfc126739deb76e4bd9f28`.
 Planungsbasis: Commit `fe2661d02ecf2f7eb483b58a4487eb009c6b3846`; sauberes Result-Bundle `specroad_Result_120209_0914_df3504.zip`; Repository-ID `3d2576df-d611-46fc-9d2b-92869468aaca`. Diese Angaben dokumentieren die Entstehung des Plans, nicht die zukünftige Patchbindung. **Jedes spätere Patchpaket bindet den dann aktuellen tatsächlichen Result-Zustand.**
 
 Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 2026 gelten zusätzlich und bei den nachfolgend benannten Konflikten vorrangig. Sonstige normative Spezifikationsinhalte werden nicht stillschweigend abgeschwächt. Neue fachliche Widersprüche, fehlende zwingende Angaben und Sicherheitsprobleme sind offen zu benennen, nicht durch erfundene Annahmen oder Scheinerfolge zu lösen.
@@ -26,12 +26,12 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 22
+plan_revision: 23
 implementation_plan_commits_total: 900
 implementation_plan_commits_completed: 642
 last_completed_plan_commit: 15.i.C
 next_plan_commit: 15.j.W
-last_completed_numbered_bundle: 488
+last_completed_numbered_bundle: 489
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -59,6 +59,86 @@ in ihrer bisherigen Reihenfolge. M20 übernimmt die zusätzliche Gesamtmatrix
 in seinen vorhandenen Schritten 20.f, 20.h und 20.m.
 
 Nach tatsächlich erfolgreich ausgeführten, zum Commit passenden Verhaltenstests wird die betreffende Checkbox im selben Git-Commit gesetzt. Reguläre Produktcommits aktualisieren den Produktzähler; Audit-Nacharbeiten aktualisieren ausschließlich ihren Status und `next_audit_step`. Ein fehlgeschlagener Schritt bleibt offen. Git ist die Historie; das Dokument nimmt keinen eigenen noch unbekannten Commit-Hash auf. Vor dem nächsten Auftrag werden tatsächliche Git-Historie, Result-Logs und Planfortschritt abgeglichen. Bei Inkonsistenz nicht einfach weiterzählen.
+
+## OFF-PLAN – Gebundener Restore-Plan (Bundle 489)
+
+Revision 23 dokumentiert **RESTORE-PLAN-CONTRACT**, delegiert gemäß
+**SPECROAD-DECISION-1**. Spezifikation **0.2.28 / 10.7.2** präzisiert die
+bereits geforderte Restoreplanhülle und ihre Byte-/Inventur-/Hashbindungen.
+Entscheidungsbeleg, Alternativen, Grenzen und verbindliche offene Abnahmen
+stehen bei **15.j.W**. Der reguläre Stand bleibt **642/900**, zuletzt
+**15.i.C**, nächstens **15.j.W**.
+
+- [x] **RESTORE-PLAN-CONTRACT:** Restoreplanformat verbindlich festlegen.
+  Commit: `docs(spec): Gebundenen Restoreplanvertrag festlegen`.
+
+Dies ist gemäß 2.4.3 ein echter OFF-PLAN-Dokumentcommit; es entstehen keine
+künstlichen Produkt-W/R/C-Commits. Produktcode, Tests, Fixtures, Oracles,
+Testnummern, Runner, Workflows und historische Evidence bleiben bytegleich.
+Geändert werden Spezifikation, Plan und ausschließlich die aktiven
+Spezifikationshashfelder der **743** Katalogdateien. Es wird keine
+implementierte Restorefunktion oder erfüllte Produktabnahme behauptet.
+
+Vor seinem Commit prüft der externe Entrypoint genau **Sequenz 195 /
+Gruppe 0 von 3**, **7.139 Tests**, mit vier parallelen Workern. Erst nach
+Erfolg setzt er den Offplan-Marker und die Bundle-Nummer **489**. Der
+Produktzähler und sämtliche offenen 15.j–15.l-Checkboxen bleiben unverändert.
+Fehler erhalten den tatsächlichen Zustand und vorherige Commits. Nach
+nativer ZIP-Prüfung und atomarer Exchange-Veröffentlichung endet der
+Einzelauftrag mit `spec_clarification`; kein eigenes Apply, Result-Warten,
+CI-Start, Statuspolling oder zweites Bundle aus demselben Result.
+
+**Beobachtete gezielte Dev-Prüfung.** Die abschließende Dokument- und
+Katalogfassung besteht **54/54** bestehende Verhaltenstests aus
+`tests/test_catalog_check.py` und `tests/test_catalog_check_right.py` in
+**6.74 s**, mit **vier parallelen Workern**, CPython **3.14.4**, Exit
+**0** und ausschließlich `passed`-Einzeloutcomes. Ausgeführt wurde
+`tools/run_selected_tests.py --workers 4 --expected-tests 54` mit den beiden
+genannten vollständigen Dateien in einem frischen ignorierten Berichtsroot.
+Geprüft werden die von der neuen Spezifikationshashbindung betroffenen
+maschinenlesbaren Katalog- und Auswahlverträge; keine Dokumentation,
+Darstellung oder noch nicht implementierte Restorefunktion.
+
+Die vollständige Collection-/Katalogprüfung bestätigt **21.414** aktive
+Tests, **0** Katalogfehler, Exit **0** und **0** ausgeführte Testkörper.
+Die **21.418** dauerhaft reservierten Nummern einschließlich vier historisch
+entfernter Identitäten bleiben bytegleich. Produktcode, Testdateien,
+Fixtures, Oracles, Runner, Workflows und historische Evidence ändern sich
+nicht. Die **743** aktiven Katalogdateien ändern ausschließlich
+`specification_sha256`; einschließlich Spezifikation und Plan sind es
+**745** geänderte Bestandsdateien, keine neuen Produktdateien oder Löschungen.
+
+Gebundener Entwicklungsquellhash:
+`05c9ce32c0a86fec1a59203659e457f5e2b2c2ed845b3594df78c499e83fb5bd`;
+Katalogvertrag-SHA-256:
+`6d58a657318d2df41b12318f7fe0fe714ceff72065422aa90f2ae7a7557863d6`;
+Auswahlbericht-SHA-256:
+`822b17e1707b1f06e267770974cb0e2fa117e74c3c9f054b56b7fa1bca58763b`;
+Einzeloutcomes-SHA-256:
+`d0aa0e6393a9cf9bc241e7975134b9f28c85aeb728ef68a28ea7d538a5929177`.
+Dies ist ausdrücklich eine Teilprüfung mit `full_suite_passed=null`;
+kein vollständiger oder serieller Testlauf und kein Releasebeleg.
+
+Ein früherer Dokumentstand bestand dieselben **54/54** Tests in **6.63 s**
+auf vier Workern. Die anschließende Durchsicht präzisierte ausschließlich
+die Unterscheidung zwischen normativen Erhaltungsobjekten und operativen
+Receipts sowie den Feldvergleich mit der Zieldateiinventur. Danach wurden
+alle aktiven Spezifikationshashbindungen nachgeführt und die betroffenen
+54 Tests im oben ausgewiesenen abschließenden Zustand erneut geprüft.
+Der frühere Quellhash
+`0c276589aea4762f5ee8537940914940de49e20a1decc2de8db0d3f2983d94f4`,
+Auswahlbericht-SHA-256 `79280efacb88c982ef9861ca606d33f460e34327f6fef8020d424e9e8a0c8dcd`
+und Einzeloutcomes-SHA-256 `2523548005b347ffd66856d7068ea8b0de374a50c6508701ace2e6678f837185`
+bleiben diesem früheren Zustand zugeordnet; sie werden nicht als
+Prüfung unter dem abschließenden Quellhash umgedeutet.
+
+Der bestätigte vorherige Apply-Nachweis ist davon getrennt:
+Auswahlbindungs-SHA-256 `80234c01aa0945fef06d029e0518956dfe0d244f5751834355493b2fd47cc6bf`,
+Bericht-SHA-256 `0db30616ab957cb3cf35918519fd1efd70dfbe0e3bdeb2909a6e0261630a958a` und
+Einzeloutcomes-SHA-256 `85e107e7955768e0e09403e0d802c0fc66b957372870fb14d4f0ac8a20d5579a`.
+Die vorgesehene neue Apply-Gruppe und der OFF-PLAN-Commit sind bei dieser
+Übergabe noch nicht ausgeführt. Native ZIP-Prüfung und atomare Veröffentlichung
+beenden den Einzelauftrag; 15.j.W bleibt offen.
 
 ## OFF-PLAN – Partial-Lesegraph (Bundle 477)
 
@@ -28313,7 +28393,149 @@ beenden diesen N-Durchlauf ohne Result-Warten oder Hintergrundfortsetzung.
 
 **Umsetzung:** restore-preserve-v1 nur aus unfiltrierter geschlossener Vollprojekt-Baseline oder verifiziertem Vollbundle planen.
 
-**Verhaltensabnahme:** Zielinventur bindet Quelle, neue Zielwurzel und erhaltene geschützte Geschichte.
+**Verhaltensabnahme:** Zielinventur bindet Quelle, neue Zielwurzel und erhaltene geschützte Geschichte. Der geschlossene Planvertrag aus 10.7.2 gilt; seine folgenden offenen Abnahmen gehören zum bestehenden Umfang.
+
+**OFF-PLAN-Entscheidungsbeleg RESTORE-PLAN-CONTRACT, 26. Oktober 2026.**
+Autorität: delegiert gemäß **SPECROAD-DECISION-1**, keine behauptete
+persönliche Einzelentscheidung oder Produktfreigabe. Betroffen ist der
+offene Schritt **15.j.W** samt seinen bereits vorgesehenen Schnittstellen
+zu 15.j.R/C, Historienerhaltung 15.k und Veröffentlichung 15.l.
+
+**Geprüfte Basis und genaue Lücke.** Das vollständig geprüfte Result
+`specroad-apply_Result_053423_1026_e55111.zip`, SHA-256
+`f3bcfb099c1b345eec953020ab6f15d804453eb4117a1ddf7f298b45c399a7b9`,
+bestätigt den sauberen Commit
+`fe830bafb7f9aa278e66332c7a4f9a4418c3da22`, Parent
+`c410d039c88a3d8ca53e6d604f5da505035ce40d`, Bundle **488**, **15.i.C**.
+Die tatsächlich ausgeführte Apply-Sequenz **194 / Gruppe 2** besteht
+**7.139/7.139** Tests mit vier parallelen Workern in **2558.19 s**;
+Prozessabschluss 0, keine Warnungen oder Unterbrechung, Snapshot **2.274**
+Dateien. Die tatsächlichen Commitbytes, vollständige Testauswahl,
+Einzeloutcomes und unveränderte Nummernzuordnung wurden geprüft. Dies
+bestätigt **642/900**, nicht die neue Restorefunktion. Die Dev-Dateien wurden
+vor der Klärung mit diesem Snapshot abgeglichen; Git-Historie und Index
+blieben unverändert.
+
+Gelesen wurden die generierte Root-Anleitung, Kontext, Umgebung, Manifest,
+Run-/Ausführungslogs und vollständiger Base-Snapshot sowie die aktuelle
+Dev-AGENTS.md. Fachliche Ausgangsbasis sind Spezifikation **0.2.27**, SHA-256
+`07a35f089e83d27045e76a57aa5b3d5d0061dd0556543b4765da5f114e1ae637`,
+insbesondere **2.1/2.4, 10.7.1, 10.8, Anhang E und R-44–R-47**,
+**SR-REQ-0461/0462**, **SR-VER-0031** und die unveränderten Planpositionen
+15.j–15.l. Die Grenzen aus O/P, TD-001, BD-001 und den bestehenden
+Autorisierungs-/Recoveryverträgen bleiben maßgeblich.
+
+10.7.1 legt Quelle, Erhaltung, Zielwurzel und Sicherung fachlich fest,
+aber noch keine geschlossene JSON-Hülle, konkrete Bytebezüge oder
+selbstreferenzfreie Inventur-/Planhashprojektion für den übergebenen Plan.
+Die Quellsuche fand keinen vorhandenen Restoreplan-Codec oder passenden
+ausführbaren Vertrag; **SR-TC-0461** bleibt `open`/`pending` ohne Tests.
+Der vorhandene reguläre Change-Plan-Vertrag in
+`src/specroad/changes/plan_contract.py` setzt eine normale Modellbasis voraus.
+`changes/recovery_read.py` diagnostiziert Journale schreibfrei, erstellt
+aber kein vollständiges Restoreziel. `bundles/verification.py` und
+`bundles/_model_verification.py` prüfen Container und Modellclosure mit
+ausdrücklich begrenzter Assurance; `archive/verification.py` und
+`archive/materialization.py` prüfen beziehungsweise materialisieren
+Snapshotbytes, ohne vollständige Restore- oder Freigabeaussage.
+Diese Fakten ersetzen keinen noch fehlenden vollständigen Planvertrag.
+
+**Alternativen und Auswahl.**
+
+1. Einen normalen Change Plan verwenden: verworfen. Das würde eine
+   konsistente aktuelle Modellbasis unterstellen und den ausdrücklich
+   separaten Recoveryvertrag aus 10.7.1 umgehen.
+2. Nur Quell- und Zielhashes beziehungsweise einen früheren Prüfbericht
+   speichern: verworfen. Dadurch fehlen die benötigten Bytebezüge,
+   die vollständige Bestandsbindung und eine erneut prüfbare Sicherungsmenge.
+3. Einen zusätzlichen Archiv-/Sidecarverbund mit eigenem Locator- und
+   Lebenszyklusprotokoll einführen: hier nicht gewählt. Dafür besteht noch
+   kein benötigter öffentlicher Vertrag; zusätzliche bewegliche Dateien
+   würden mehr Konsistenz- und Wiederaufnahmegrenzen schaffen.
+4. Gewählt: ein geschlossenes passives `restore-plan-v1`-JSON mit einer
+   deduplizierten Byteobjekttabelle, expliziten Herkunfts- und Projektroot-
+   Bindungen und getrennten Inventuren. SHA-256 und der vorhandene
+   RFC-8785-Vertrag reichen aus. Die native Modellwurzel bleibt eine
+   gesonderte, unveränderte Projektion. Die selbstenthaltenen Prüfbytes
+   erlauben unabhängige Rekonstruktion; eine tatsächliche Ausführung prüft
+   zusätzlich die gebundenen lebenden Eingaben erneut. O/P erlaubt
+   Streaming/Spooling statt einer künstlichen In-Memory-Pflicht.
+
+**Normative Zielregel.** Spezifikation **0.2.28 / 10.7.2** definiert die
+exakten Felder, Quellarten, Originalbytehashes, rekursive Baselineobjekte,
+vollständige Bestandsabdeckung, Ziel-/Sicherungsinventuren, zusätzliche
+Erhaltungsobjekte, kanonische Byteobjekte und selbstreferenzfreien Planhash.
+Baselinequelle, ihre eigene Datei und Objektclosure bleiben unterscheidbar;
+Quellwurzel und Zielwurzel werden nicht gleichgesetzt. Operative
+Konfigurationswerte werden für eine Baseline explizit geliefert und in
+Zielbytes gebunden, niemals als fehlende semantische Quelle geraten.
+Herkunftswechsel und veränderte Inventuren sind stale Eingaben. Fachlich
+negative Befunde bleiben negativ. Planbytes, Sicherungsdurabilität,
+Autorisierung und tatsächliche Veröffentlichung sind getrennte Nachweise.
+
+**Abgleich mit jeder Grenze aus 2.4.1.** (1) Der Vertrag bleibt innerhalb
+des bestätigten Restoreumfangs, ohne zusätzlichen Produktschritt oder
+vorgezogene Implementierung. (2) Er erfüllt die bereits festgelegten
+Quellen-, Historien- und Zielregeln; kein gleichrangiges Requirement wird
+verdrängt. (3) CLI-Aufruftrennung, Fehlerklassen, menschliche Entscheidungen,
+Autorisierung, Integrität und Bestandskompatibilität bleiben erhalten.
+Es werden keine alten Bundle-, Baseline-, Work- oder Change-Plan-Bytes
+migriert. (4) Die Präzisierung hat eine eigene Dokumentversion; eine spätere
+Änderung braucht einen neuen versionierten Vertrag. Originaldaten und
+historische Evidence bleiben unverändert. (5) Die Detailentscheidung
+benötigt keine fehlenden externen Fakten, Geheimnisse oder erfundenen
+Reviews. Beim tatsächlichen Restore fehlende Identitäts-/Bestandsbelege
+bleiben konkrete Datenblocker, keine automatisch akzeptierten Annahmen.
+
+**Verbindliche offene Verhaltensabnahmen.**
+
+- **15.j.W:** Aus einer vollständig qualifizierten unkonfigurierten,
+  geschlossenen project-Baseline und aus einem vollständig geprüften
+  project-Bundle entsteht ein Plan, dessen unabhängige Rekonstruktion
+  dieselben Quellbytes, Quellwurzel, Zielbytes und neu berechnete Zielwurzel
+  liefert. Die Baseline selbst und zusätzliche Archivobjekte sind mit
+  ihren tatsächlichen Bytes ausdrücklich erhalten. Eine dadurch vom
+  Quellroot verschiedene Zielwurzel wird korrekt gebunden. Projekt- und
+  Betriebsbytes bleiben beim Dry-Run unverändert.
+- **15.j.R / R-44–R-45:** Release-/Specification-/gefilterte oder konfigurierte
+  Scopes, Boundary References, fehlendes Primärdokument oder fehlende
+  rekursive Originalbytes ergeben Code 3 ohne Vorprüfungswrite. Ein
+  Baseline-Typname allein ersetzt keine Scopeprüfung. Gleicher Inhalt an
+  zufälligen aktuellen Pfaden ist kein semantisches Füllmaterial.
+- **15.j.R:** Unbekannte Felder/Versionen, falsche Typen, doppelte Pfade,
+  nichtkanonische Bytekodierung, fehlende/zusätzliche Objekte, Größen- oder
+  innere Hashwidersprüche werden abgewiesen. Eigenhash, Inventurhash,
+  Quellmodellwurzel und Zielmodellwurzel werden unabhängig geprüft;
+  ein neu berechneter äußerer Planhash heilt keine falsche innere Bindung.
+  Sicherheitsverletzungen bleiben Code 7.
+- **15.j.R:** Der Bestand bindet auch beschädigte lesbare Rohbytes,
+  fehlende Inventurwurzeln, tatsächliche Verzeichnisse und Dateimengen.
+  Geänderte, hinzugefügte oder entfernte relevante Dateien können keine
+  unveränderte Inventur behaupten. Nicht beweisbare Projektidentität oder
+  unvollständig bestimmbarer Bestandsumfang führt zu keinem freigegebenen
+  Plan. Fehlende explizite operative Konfigurationswerte werden nicht aus
+  beschädigten Projektdateien erraten.
+- **15.k / R-46:** Jüngere gültige geschützte Ressourcen samt nötigen
+  Original-/Archivbytes erscheinen explizit im Ziel. Identische Bytes
+  werden dedupliziert; gleiche geschützte Identität mit anderem Inhalt
+  bleibt Konflikt Code 6, fehlende notwendige Zielbytes Code 3. Nachweislich
+  veröffentlichte Revisionen dürfen nicht still zurückgesetzt werden.
+  Historische und negative Nachweise erhalten ihre ursprünglichen Bytes.
+- **15.l / R-47:** Quelle, Abhängigkeiten, Bestand und separat bestätigter
+  Zielroot werden vor Write erneut geprüft; stale Eingaben ergeben Code 6.
+  Unfertige Sicherung verhindert Veröffentlichung. Reale Unterbrechungen
+  erhalten Journale, Originalbytes und nachvollziehbare Sperre, bis der
+  geprüfte vollständige Zielstand oder die bytegleiche gesperrte Ausgangslage
+  erreicht ist. Aktuelle Autorisierung und dauerhafter Audit bleiben Pflicht.
+
+**Offene Umsetzung und ehrliche Nachweisgrenze.** Dieses Bundle enthält
+ausschließlich Spezifikation, Plan und die notwendigen aktiven
+Spezifikationshashbindungen. Kein Restorecodec, Hostadapter oder
+Publikationspfad wird implementiert. W/R/C von **15.j** bleiben offen und
+erhalten bei ihrer tatsächlichen Implementierung eigene gezielte parallele
+Dev-Prüfungen und eigene Apply-Gates/Commits. 15.k und 15.l behalten ihre
+Positionen und offenen Abnahmen. **SR-TC-0461** bleibt offen; der bisherige
+Teilstatus von **SR-TC-0462** ist kein Restore-Erfolgsnachweis.
 
 #### 15.j.R – Make it Right
 

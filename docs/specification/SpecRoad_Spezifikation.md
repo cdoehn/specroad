@@ -1,21 +1,21 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.27
+## Version 0.2.28
 
 | Feld | Wert |
 |---|---|
 | Dokument-ID | `SR-SPEC-0001` |
-| Dokumentversion | `0.2.27` |
+| Dokumentversion | `0.2.28` |
 | Zielrelease | `SpecRoad Single-Repository Workbench 0.2.0` |
 | Status | **Fachlich konsolidierte Arbeitsgrundlage; technische Reviewentscheidung gesondert dokumentiert, formale Baseline-Freigabe und Produktabnahme nicht durch dieses Dokument erklärt** |
-| Stand | 25. Oktober 2026 |
+| Stand | 26. Oktober 2026 |
 | Sprache | Deutsch; technische Feldnamen, Enum-Werte und CLI-Kommandos Englisch |
-| Fachliche Quelle | **Diese Repositoryfassung v0.2.27 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.27 liegt mit dieser Änderung nicht vor.** |
+| Fachliche Quelle | **Diese Repositoryfassung v0.2.28 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.28 liegt mit dieser Änderung nicht vor.** |
 | Bearbeitbare Satzquelle | Diese Datei; eine spätere PDF muss denselben versionierten Inhalt wiedergeben. |
-| Vorgängerversion | Repository-Spezifikation v0.2.26 vom 25. Oktober 2026; frühere PDF-/Reviewbelege bleiben an ihre historischen Fassungen gebunden. |
-| Prüf- und Entscheidungsgrundlage | PARTIAL-READ-GRAPH, delegiert gemäß SPECROAD-DECISION-1; Entscheidungsbeleg, Grenzen und offene Abnahmen bei 15.f.R im Implementierungsplan. Die ausdrückliche Nutzerentscheidung zum Boundary-Prüfkontext bleibt unverändert. |
-| Änderungsart | Präzisierung der Objekt-, Relations- und Traversierungsdomäne zulässiger Partial-Lesebefehle in E.3.3; keine neue Requirement-ID, Transportmenge oder Produktposition. Umsetzung und Produktabnahme bleiben offen. |
+| Vorgängerversion | Repository-Spezifikation v0.2.27 vom 25. Oktober 2026; frühere PDF-/Reviewbelege bleiben an ihre historischen Fassungen gebunden. |
+| Prüf- und Entscheidungsgrundlage | RESTORE-PLAN-CONTRACT, delegiert gemäß SPECROAD-DECISION-1; Entscheidungsbeleg, Grenzen und offene Abnahmen bei 15.j.W im Implementierungsplan. Bestehende Nutzerentscheidungen und Produktfreigabegrenzen bleiben unverändert. |
+| Änderungsart | Additive Präzisierung des geschlossenen Restoreplanformats, seiner Byte-/Inventurbindungen und getrennten Hashdomänen in 10.7.2; keine neue Requirement-ID oder Produktposition. Umsetzung und Produktabnahme bleiben offen. |
 
-> **Verbindlicher Quellenwechsel:** Die delegierte Detailentscheidung schreibt die Repository-Spezifikation als v0.2.27 fort. Frühere PDF- und Reviewnachweise behalten ihre historische Bindung und belegen diese Erweiterung nicht. Der py3langid-Adapter bleibt Bestandteil des Zielreleases; der kleine Core bleibt ohne Analyzer-Abhängigkeiten nutzbar.
+> **Verbindlicher Quellenwechsel:** Die delegierte Detailentscheidung schreibt die Repository-Spezifikation als v0.2.28 fort. Frühere PDF- und Reviewnachweise behalten ihre historische Bindung und belegen diese Erweiterung nicht. Der py3langid-Adapter bleibt Bestandteil des Zielreleases; der kleine Core bleibt ohne Analyzer-Abhängigkeiten nutzbar.
 
 > **Fortbestehende Arbeitsprinzipien:** Weiche Budgets führen zu sparsamer vollständiger Weiterarbeit oder gesicherter Fortsetzung über mehrere Aufrufe beziehungsweise Prompts. Es werden keine erforderlichen Arbeiten stillschweigend ausgelassen. Reale Host-, Speicher-, Berechtigungs- und Sicherheitsgrenzen bleiben wirksam.
 
@@ -101,7 +101,7 @@ Bei einem Widerspruch innerhalb dieser Dokumentversion gilt:
 3. `SR-DEC-*` hat Vorrang vor erläuterndem Text, Diagrammen und Beispielen.
 4. Beispiele sind niemals normativ, sofern sie nicht ausdrücklich als Testvektor bezeichnet sind.
 5. Zwei widersprüchliche `SR-REQ-*`-Anforderungen besitzen **keine implizite Rangfolge** nach Nummer, Position oder Spezifität. Ein solcher Fund ist ein Spezifikationsfehler, muss als Issue gelöst werden und verhindert die Freigabe.
-6. Diese Dokumentversion 0.2.27 ersetzt die frühere fachliche Arbeitsgrundlage vollständig. Bis zur gesonderten PDF-Veröffentlichung ist diese versionierte Repositorydatei maßgeblich. Eine spätere PDF muss inhaltsgleich sein; frühere PDFs werden nicht als Nachweis der neuen Verträge ausgegeben. Inhalte verschiedener Fassungen dürfen nicht zu einer Mischspezifikation kombiniert werden.
+6. Diese Dokumentversion 0.2.28 ersetzt die frühere fachliche Arbeitsgrundlage vollständig. Bis zur gesonderten PDF-Veröffentlichung ist diese versionierte Repositorydatei maßgeblich. Eine spätere PDF muss inhaltsgleich sein; frühere PDFs werden nicht als Nachweis der neuen Verträge ausgegeben. Inhalte verschiedener Fassungen dürfen nicht zu einer Mischspezifikation kombiniert werden.
 7. Eine nachträgliche Änderung dieser veröffentlichten Datei erfordert mindestens eine neue Patch-Dokumentversion; stille Korrekturen unter derselben Dokumentversion sind unzulässig.
 8. Eine normative Tabelle, auf die eine `SR-REQ-*`-Anforderung ausdrücklich als Algorithmus oder Matrix verweist, ist Bestandteil des Passkriteriums dieser Anforderung.
 
@@ -1541,6 +1541,224 @@ Der Plan weist `source_snapshot_root` und `expected_target_root` getrennt aus. D
 Der spezialisierte Recovery-Lock, vollständig synchronisiertes Staging, Before Images und ein separates Restore-Journal binden den Plan. Vor Write werden Quellen-, Inventur- und erwarteter Zielhash nochmals verglichen. Ein veränderter Input ergibt Code 6 ohne Veröffentlichung. Nach echtem Hostabbruch bleibt das Projekt gesperrt, bis das Restore-Journal entweder vollständig auf das geprüfte Ziel abgeschlossen oder auf die bytegetreue gesperrte Ausgangslage zurückgerollt ist. Erst wenn sämtliche Zielbytes und die vollständige Zielwurzel stimmen und das Audit dauerhaft vorliegt, werden normale Projektbefehle freigegeben. Das alte korrupte Journal bleibt archiviert.
 
 Eine unvollständige/unzulässige Quelle ergibt Code 3 mit präzisem Quellen-/Vollständigkeitsbefund; eine widersprüchliche Projektidentität oder eine kollidierende geschützte Historie Code 6; Sicherheitsverletzung Code 7; tatsächliches I/O-/Sicherungsproblem Code 5. Weiche Arbeitsbudgets folgen unverändert Anhang O/P und erlauben sichere Vorbereitung in mehreren Schritten. Vor Abschluss der Quellenqualifikation und Stagingprüfung beginnt keine Veröffentlichung.
+
+#### 10.7.2 Gebundener Restore-Plan `restore-plan-v1`
+
+**Entscheidung RESTORE-PLAN-CONTRACT, delegiert gemäß SPECROAD-DECISION-1.**
+Dieser additive Vertrag konkretisiert ausschließlich das bereits in 10.7.1
+verlangte Recovery-Fachformat. Quellenqualifikation, Erhaltung geschützter
+Geschichte, vollständige Zielvalidierung, Sicherung, Autorisierung und
+Crashabsicherung aus 10.7.1 bleiben Voraussetzung. Ein Plan ist eine passive,
+erneut zu prüfende Beschreibung und weder ein regulärer Change Plan noch
+ein Erfolgs-, Freigabe- oder Authentizitätsnachweis.
+
+**Geschlossene Hülle.** Der externe Plan besteht aus genau einem kanonischen
+UTF-8-JSON-Objekt nach dem vorhandenen RFC-8785-Vertrag, ohne BOM, doppelte
+Schlüssel oder nachgestellte Daten. Seine Pflichtfelder sind exakt:
+
+| Feld | Vertrag |
+|---|---|
+| `format_version` | exakt `restore-plan-v1` |
+| `policy_version` | exakt `restore-preserve-v1` |
+| `project_id` | nach 10.7.1 unabhängig bestätigte, für Quelle und Ziel gleiche Projekt-ID |
+| `project_root` | expliziter kanonischer absoluter Pfad des zu reparierenden Projektroots; ausschließlich lokale Ausführungsbindung, kein Bestandteil der semantischen Modellwurzel |
+| `source` | Quellbindung nach dem folgenden Absatz |
+| `source_snapshot_root` | unveränderte, aus den vollständigen Quellbytes rekonstruierte native Quellmodellwurzel |
+| `source_descriptor` | exakt der qualifizierte unkonfigurierte geschlossene project-Scope nach 10.7.1 |
+| `inventory` | vollständige gebundene Beobachtung des relevanten Zielbestands nach untenstehendem Inventurvertrag |
+| `preserved` | nach Pfad sortierte zusätzliche Erhaltungsobjekte einschließlich Herkunftsgrund |
+| `target` | vollständige Zieldateiinventur `{entries, sha256}` |
+| `expected_target_root` | native vollständige project-Modellwurzel nach allen Erhaltungsobjekten, unabhängig vom Byteinventurhash |
+| `backup` | separat gebundene Sicherungsdateiinventur `{entries, sha256}` |
+| `objects` | deduplizierte Tabelle der tatsächlich benötigten Original- und Zielbytes |
+| `restore_plan_sha256` | SHA-256 der kanonischen Hülle unter Ausschluss allein dieses Felds |
+
+Alle hier definierten Objekte sind geschlossen; zusätzliche Felder sind kein
+Erweiterungsmechanismus. SHA-256-Werte bestehen aus genau 64 kleingeschriebenen
+Hexzeichen. Größen sind nichtnegative JSON-Ganzzahlen, keine booleschen Werte.
+Es gibt keine optionalen Erfolgsflags und keine impliziten Null-Defaults.
+`source_descriptor` ist vollständig ausgeschrieben: `scope_version=scope-v1`,
+`scope_kind=project`, `selector={}`, `configuration_id=null`,
+`closure_profile=core-closure-v1`, `boundary_policy=closed`.
+
+**Quellbytes und Herkunft.** `source` hat exakt die Felder `kind`, `root`,
+`path`, `size`, `sha256` und `dependencies`. `kind` ist `project_bundle`
+oder `baseline`. `root` bezeichnet den expliziten kanonischen absoluten
+Quellroot, `path` einen sicheren relativen Pfad darunter. Diese Herkunft
+ist eine erneut zu prüfende lokale Bytebindung, keine Vertrauensaussage.
+Beim Bundle binden `size` und `sha256` das gesamte unveränderte ZIP;
+`dependencies` ist leer. Bei der Baseline binden sie die vollständige
+unveränderte Baseline-Quelldatei, nicht nur ihr Manifest oder ihren
+kanonischen semantischen Hash. `dependencies` enthält genau die vollständig
+rekursiv benötigten Snapshotobjektdateien am nativen Objektpfad unter
+demselben Quellroot. Jede Datei wird einmal als `{path, size, sha256}`
+aufgeführt, nach UTF-8-Pfadbytes sortiert. Referenzzyklen, fehlende Bytes
+und widersprüchliche Objektbindungen werden nicht durch Hashlisten ersetzt.
+
+Der Plan enthält die gebundenen Quelldateibytes und sämtliche benötigten
+Abhängigkeitsbytes in `objects`. Aus ihnen MUSS der Leser Quelle, Descriptor,
+Closure und Quellwurzel unabhängig rekonstruieren. Ein gespeicherter
+`bundle-verify-v1`- oder Baseline-Prüfbericht ersetzt weder diese Prüfung
+noch die vollständigen Qualifikations- und Zielgates aus 10.7.1. Insbesondere
+ist ein bloßer Container-/Closure-Erfolg ohne die erforderliche vollständige
+Projektprüfung keine Restorequalifikation. Ein `release`-Baseline-Typ ist
+nur bei dem unabhängig qualifizierten vollständigen project-Scope zulässig;
+ein release-Scope wird dadurch niemals zugelassen.
+
+Bei Baselines fehlen operative Konfigurationswerte gegebenenfalls bewusst
+in der semantischen Snapshotprojektion. Zur Herstellung der vollständigen
+Zieldatei `specroad.json` MÜSSEN diese Werte explizit für die Planung geliefert
+und in den exakten Zielbytes gebunden werden. Sie DÜRFEN NICHT aus einem
+beschädigten Arbeitsstand geraten oder zum Ergänzen semantischer Quellwerte
+benutzt werden. Ihre vorhandene Klassifikation als operativ bleibt erhalten;
+die semantische Konfiguration muss exakt zur Quelle passen. Bei einer
+Bundlequelle bleiben deren bereits vorhandene Konfigurationsbytes erhalten.
+
+**Bestandsinventur.** `inventory` enthält exakt `roots`, `entries`, `sha256`.
+`roots` ist die sortierte, redundanzfreie Liste sicherer relativer Datei-
+oder Teilbaumwurzeln im `project_root`. Sie umfasst `specroad.json`, die
+Vereinigung der für Quelle und nachweisbaren bisherigen Projektbestand
+geltenden `managed_paths` sowie die Recovery-/Receipt-Namensräume
+`.specroad/transactions`, `.specroad/requests` und `.specroad/recovery`.
+Überdeckte Unterwurzeln werden entfernt. Bei beschädigter Konfiguration
+MÜSSEN die bisherigen Deklarationen aus unabhängig gebundenen erhaltenen
+Projektbelegen ermittelt werden; eine frei gewählte Teilinventur ist kein
+Ersatz. Ist die relevante Bestandsabdeckung nicht sicher bestimmbar, wird
+kein vollständiger Plan ausgestellt. Quell- und Zielprojektidentität
+werden weiterhin nach 10.7.1 geprüft, nicht allein aus einem Pfad oder
+einer vom Aufrufer behaupteten ID übernommen.
+
+Unter jeder Inventurwurzel werden sämtliche vorhandenen regulären Dateien
+und Verzeichnisse einschließlich der Wurzel beobachtet. Ein vorhandener
+Dateieintrag ist exakt `{path, kind: "file", size, sha256}`, ein Verzeichnis
+exakt `{path, kind: "directory"}`. Eine fehlende Inventurwurzel wird als
+`{path, kind: "missing"}` gebunden; sonstige fehlende Nachfahren folgen aus
+der vollständigen Aufzählung und erhalten keine erfundenen Einträge.
+Die Einträge sind eindeutig und nach UTF-8-Pfadbytes sortiert. Links,
+Sonderdateien, Pfad-/Großkleinschreibungskollisionen und Durchqueren fremder
+Roots behalten die vorhandenen Sicherheitsablehnungen. Beschädigte, aber
+lesbare reguläre Bestandsdateien werden mit ihren tatsächlichen Rohbytes
+erfasst und nicht durch eine erfolgreiche JSON-Interpretation ersetzt.
+`inventory.sha256` ist SHA-256 der kanonischen Projektion `{roots, entries}`.
+Auch hinzugefügte oder entfernte Bestandsdateien sind dadurch Eingabeänderungen.
+
+Diese Inventur liest keine Git-Inhalte und erklärt unbekannte Dateien
+nicht automatisch zu normativen Ressourcen oder zulässigen Löschzielen.
+Ein in `managed_paths` enthaltener bisher nicht unterstützter Inhalt darf
+nicht still ausgelassen werden. Nicht betroffene Repositorydateien bleiben
+nach 10.7.1 erhalten. Lockdateien, Caches und generierte Ausgaben außerhalb
+der gebundenen relevanten Namensräume gehören nicht zur Fachinventur;
+ihre vorhandenen Host-/Sicherheitsprüfungen entfallen dadurch nicht.
+Der bestehende native Root-/Pfadschutz muss während der Beobachtung und
+erneut unter dem Recovery-Lock die tatsächliche Rootidentität prüfen.
+Ein übereinstimmender Pfadstring allein genügt nicht.
+
+**Ziel, Erhaltung und Sicherung.** `target.entries` und `backup.entries`
+verwenden jeweils exakt `{path, size, sha256}` pro Datei, eindeutig und
+nach UTF-8-Pfadbytes sortiert. Ihr jeweiliges `sha256` ist SHA-256 der
+kanonischen `entries`-Liste. `target` enthält sämtliche tatsächlich geplanten
+Zieldateien einschließlich des vollständigen normativen Projekts, seiner
+Konfiguration und der rekursiv nötigen Archiv-/Originalbytes. Etwaige nach
+den bestehenden Bundle-/Receiptverträgen zulässige transportierte Receipts
+werden ausschließlich an ihren getrennten operativen Pfaden gebunden und
+geprüft, niemals als Modellressourcen in die semantische Zielwurzel gehasht.
+Der Plan erlaubt weder zusätzliche Receiptarten noch das Überschreiben
+kollidierender vorhandener Receipts. Die Pflicht zur bytegetreuen Erhaltung
+abgeschlossener lokaler Receipts bleibt auch außerhalb der Zieldateiliste.
+
+`preserved` enthält genau die nach 10.7.1 gegenüber dem rekonstruierten
+Quellsnapshot zusätzlich normativ zu erhaltenden Dateien als
+`{path, size, sha256, reasons}`. Operative Receipts sind keine solchen
+normativen Erhaltungsobjekte. `reasons` ist
+eine nichtleere, sortierte, duplikatfreie Liste aus `source_baseline`,
+`source_archive`, `protected_history`, `protected_dependency`. Die ersten
+beiden Gründe bezeichnen die Quellbaseline selbst und ihre zusätzlich
+erforderlichen Snapshotobjekte; die letzten beiden bezeichnen die nach
+10.7.1 erhaltenen unveränderbaren historischen Ressourcen und deren nötige
+Original-/Archivclosure. Mehrere belegte Gründe teilen sich genau einen
+Eintrag. Für jeden Eintrag müssen `path`, `size` und `sha256` identisch
+in `target.entries` enthalten sein; `reasons` gehört nur zu `preserved`.
+Eine bereits im Quellsnapshot vorhandene Datei wird nicht zusätzlich
+aufgeführt. Identitätskonflikte werden vor der Deduplizierung nach 10.7.1
+erkannt; gleichnamige oder gleichhashige Pfade sind kein semantischer Merge.
+
+`expected_target_root` wird mit der bestehenden Modellmanifest- und
+project-Closure-Projektion aus allen Zielbytes neu berechnet. Weder der
+Quellroot noch `target.sha256` darf dafür eingesetzt werden. Das gilt auch,
+wenn die zusätzliche Quellbaseline oder jüngere geschützte Geschichte die
+Zielwurzel verändert. Keine ursprüngliche Baseline, Evidence oder Review-
+Hashbindung wird dafür umgeschrieben. Strukturell gültige negative fachliche
+Befunde bleiben erhalten und werden im separaten Restorebericht ausgewiesen;
+sie werden nicht als bestandene Readiness oder Freigabe interpretiert.
+
+`backup` bindet die tatsächlichen bisherigen Bytes aller zu ersetzenden
+oder zu entfernenden Dateien und sämtlicher nach 10.7.1 betroffenen Journale,
+Vorher-/Stagingbilder und historischen Zusatzinformationen. Es ist aus der
+vollständigen Bestandsbeobachtung und dem geprüften Ziel abzuleiten, keine
+frei reduzierbare Auswahl. Die aufgeführten Dateiwerte müssen mit den
+Bestandseinträgen übereinstimmen. Die abgeleiteten Lösch-/Ersetzungswirkungen
+dürfen keine außerhalb des erlaubten Restoreumfangs liegende Datei betreffen.
+Die spätere betriebliche Sicherung unter `.specroad/recovery/archive/`
+bleibt zusätzlich zwingend: Planbytes allein sind weder ein dauerhaft
+gesichertes lokales Backup noch eine Commitfreigabe.
+
+**Byteobjekte und Hashdomänen.** Jeder Eintrag in `objects` hat exakt
+`sha256`, `size`, `data_base64`. Die Tabelle ist nach Hash sortiert und
+enthält jeden verschiedenen Byteinhalt genau einmal. `data_base64` ist
+die RFC-4648-Standarddarstellung mit notwendigem Padding und ohne
+Whitespace; Rückkodierung muss exakt denselben String ergeben. Dekodierte
+Länge und Byte-SHA-256 müssen zu `size` und `sha256` passen. Gleiche Hashes
+mit verschiedenen Bytes sind ein Fehler, keine Überschreibungsentscheidung.
+Die Tabelle enthält exakt die Vereinigung aller durch `source` samt
+`dependencies`, `target` und `backup` referenzierten Inhalte; keine
+unreferenzierten Zusatzobjekte. Ein Bestandsfile, das weder Quelle noch
+Ziel noch Sicherungsinhalt ist, benötigt nur seine Inventurbindung.
+
+Damit binden die Inventurhashes die jeweiligen geordneten Metadaten,
+die Objekthashes die wirklichen Bytes und `restore_plan_sha256` die gesamte
+Hülle einschließlich Herkunft, operativem Zielroot und aller Byteobjekte.
+Es gibt keine Selbstreferenz auf den eigenen Hash oder eine eigene
+Plan-Ausgabedatei. Die bestehenden semantischen Hashprojektionen werden
+nicht verändert. Hashkonsistenz authentifiziert keinen Ersteller.
+Streaming, privates Spooling und checkpointbasierte Vorbereitung nach O/P
+bleiben zulässig und nötig; das Format schreibt keine vollständige
+In-Memory-Verarbeitung vor. Ein weiches Budget darf weder Objekte entfernen
+noch einen Teilplan als vollständigen Plan veröffentlichen.
+
+**Vorbereitung und erneute Prüfung.** Ein auslieferbarer vollständiger Plan
+setzt alle Qualifikations-, Identitäts-, Erhaltungs- und Zielprüfungen aus
+10.7.1 voraus. Unfertige Work-Zwischenstände sind kein `restore-plan-v1`-
+Erfolgsartefakt. Die Vorbereitung verändert weder normative Projektdateien
+noch Journale, Locks oder andere Betriebsdateien. Nur nach erfolgreicher
+Vorprüfung darf sie den ausdrücklich benannten externen Plan gemäß den
+bestehenden sicheren Generated-Output-Regeln veröffentlichen.
+
+Vor jeder Restoreveröffentlichung werden der Plan selbst, seine Original-
+Byteobjekte, die tatsächliche Quelle am gebundenen Herkunftsort samt
+Abhängigkeiten, die vollständige Bestandsinventur, die geschützte Geschichte
+und die vollständige Zielwurzel erneut geprüft. Eingebettete Planbytes
+erlauben kein stilles Ignorieren inzwischen geänderter oder verschwundener
+Herkunftsdateien. Eine Verlagerung von Quelle oder Ziel erfordert eine neue
+explizite Planung; es gibt keinen Pfadfallback oder automatisch umgebundenen
+Plan. Der vom Aufrufer separat bestätigte `--expected-target-root` muss
+exakt mit der neu berechneten Zielwurzel übereinstimmen. Prüfung und Hash
+verleihen keine Autorisierung; aktueller Recovery-Auftrag, sicherer Lock,
+Sicherungsdurabilität, Journal und Audit bleiben getrennte Pflichtgates.
+
+Ungültiges Format, unvollständige Quelle/Objekttabelle oder innere
+Hash-/Inventurwidersprüche ergeben Code 3; fehlende explizite Pflichtangaben
+im Aufruf Code 2. Eine seit der Planung geänderte Quelle, Inventur oder
+Zielbindung sowie widersprüchliche Identität oder geschützte Historie ergibt
+Code 6; unsichere Pfade/Dateitypen Code 7, tatsächliche I/O-Fehler Code 5.
+Für erwartete, inzwischen fehlende Herkunftsdateien gilt die stale-Bindung
+Code 6. Ablehnungen der schreibfreien Planung und Vorprüfung dürfen keine
+Projekt- oder Betriebswrites erzeugen. Für Fehler nach ausdrücklich
+begonnenem Restore gelten unverändert die
+erhaltenden Journal-/Sicherungsregeln aus 10.7.1; kein globaler Rollback durch
+Löschen von Nachweisen. Bestehende Change-Plan-, Bundle-, Baseline- und
+Workformate bleiben unverändert und werden nicht implizit als Restoreplan
+akzeptiert. Implementierung und Verhaltensevidence folgen in 15.j–15.l.
+
 
 ### 10.8 Scope Descriptor und Scope-Closure
 
@@ -4500,6 +4718,18 @@ in 15.a.W/R/C und den bestehenden nachfolgenden M15-Schritten. Produktstand
 unverändert. Die neue Katalogbindung ist kein Produkt-, Vollprojekt-,
 Idempotenz-, Freigabe- oder Release-Nachweis.
 
+### 20.22 Restoreplanpräzisierung v0.2.28
+
+`RESTORE-PLAN-CONTRACT`, delegiert gemäß `SPECROAD-DECISION-1`, konkretisiert
+in 10.7.2 das bereits verlangte Recovery-Fachformat aus 10.7.1: geschlossene
+Hülle, tatsächliche Byteobjekte, Quell-/Bestands-/Erhaltungs-/Ziel-/Sicherungs-
+bindungen und getrennte Hashdomänen. Quelle, Geschichte, Autorisierung,
+Sicherungsdurabilität und vollständige Zielvalidierung bleiben Pflicht.
+Die neue Dokument- und aktive Katalogbindung ist weder eine Restore-
+Implementierung noch ein erfolgreicher Wiederherstellungs- oder Releasebeleg.
+Produktstand 642/900 und der offene Schritt 15.j.W bleiben unverändert;
+15.k/15.l werden nicht vorgezogen. Historische Nachweise bleiben unverändert.
+
 ## 21. Entscheidungsstatus und nicht blockierende Restpunkte
 
 | ID | Thema | Stand |
@@ -4542,6 +4772,7 @@ Die folgende Roadmap ist informativ und erzeugt keine Anforderungen an 0.2:
 
 | Version | Datum | Status | Änderung |
 |---|---|---|---|
+| 0.2.28 | 2026-10-26 | Delegierte Detailklärung nach SPECROAD-DECISION-1 | RESTORE-PLAN-CONTRACT: geschlossener bytegebundener Restoreplan mit getrennten Quell-, Bestands-, Ziel- und Sicherungshashes; Umsetzung in 15.j–15.l bleibt offen. |
 | 0.2.27 | 2026-10-25 | PARTIAL-READ-GRAPH.C | Bereits festgelegte gemeinsame Grenzen und Abfragedomänen strukturell ordnen; Fachverhalten unverändert, 15.f.R bleibt offen. |
 | 0.2.26 | 2026-10-25 | PARTIAL-READ-GRAPH.R | Fehler-, Kontext- und Randfallgrenzen des Partial-Lesevertrags ergänzen; 15.f.R bleibt offen. |
 | 0.2.25 | 2026-10-25 | Delegierte Detailklärung nach SPECROAD-DECISION-1 | PARTIAL-READ-GRAPH: tatsächliche Mitglieder, bekannte Außenkanten und lokale Traversierung für zulässige Partial-Lesebefehle; maschinenlesbare Scopegrenze, keine zusätzlichen Prüfobjekte, Produktumsetzung in 15.f.R offen. |
@@ -7662,4 +7893,4 @@ Implementierungsschritten nachgewiesen sein.
 
 ---
 
-**Ende der SpecRoad-Produktspezifikation v0.2.13.**
+**Ende der SpecRoad-Produktspezifikation v0.2.28.**
