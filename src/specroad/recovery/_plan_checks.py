@@ -8,6 +8,7 @@ from ..storage.json_syntax import parse_json_object
 from ._codec import file_row, file_table, namespace
 from ._current_evidence import current_configuration
 from ._coverage import inventory_roots, OPERATIONAL_ROOTS
+from ._history import preserve_history
 from ._sources import reconstruct
 from ._validation import validate_project
 from .values import require
@@ -21,10 +22,9 @@ def assemble_target(source_files, additions):
 
 
 def check_history(current, target, current_configuration, target_model):
-    """W never merges younger immutable records or invents receipt history.
+    """Require protected originals after the explicit supported history fold.
 
-    Known history that needs the next 15.k provider is an explicit blocker,
-    rather than an apparently complete plan which would delete that history.
+    Unsupported historical kinds and receipt history remain explicit blockers.
     Corrupt readable mutable bytes remain backup bytes, not model inputs.
     """
     for path, raw in current.items():
@@ -104,11 +104,6 @@ def verify_contents(data, objects):
     source_model, actual_source_root = validate_project(files)
     require(actual_source_root == source_root == data['source_snapshot_root'], 'restore_source_root_mismatch')
     require(project_id == data['project_id'], 'restore_project_identity_conflict', exit_code=6)
-    expected_target, preserved = assemble_target(files, additions)
-    require(target == expected_target, 'restore_target_inventory_mismatch')
-    require(data['preserved'] == preserved, 'restore_preservation_inventory_mismatch')
-    target_model, root = validate_project(target)
-    require(root == data['expected_target_root'], 'restore_target_root_mismatch')
     current = {}
     for row in data['inventory']['entries']:
         if row['kind'] != 'file':
@@ -119,5 +114,14 @@ def verify_contents(data, objects):
         raw = objects[row['sha256']]
         require(len(raw) == row['size'], 'restore_inventory_bytes_mismatch', path=row['path'])
         current[row['path']] = raw
+    configuration = current_configuration(current, data['inventory']['roots'])
+    require(configuration.project_id == source_model.configuration.project_id,
+            'restore_project_identity_conflict', exit_code=6)
+    additions = preserve_history(files, additions, current, configuration)
+    expected_target, preserved = assemble_target(files, additions)
+    require(target == expected_target, 'restore_target_inventory_mismatch')
+    require(data['preserved'] == preserved, 'restore_preservation_inventory_mismatch')
+    target_model, root = validate_project(target)
+    require(root == data['expected_target_root'], 'restore_target_root_mismatch')
     backup = check_current(data['inventory'], current, source_model, target, target_model)
     require(data['backup'] == file_table(backup), 'restore_backup_inventory_mismatch')

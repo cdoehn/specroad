@@ -11,7 +11,7 @@
   ],
   "preconditions": [
     "Explicit canonical native source/project roots and original full-project source bytes; current identity and managed coverage are proven by an intact configuration or independently retained sealed project Baselines with verified original recursive objects.",
-    "The native provider supports draft standard artifacts, complete document/block structure, profiles, bound attachments and sealed project Baselines. Additional immutable/operational history and unavailable specialist gates remain explicit blockers pending 15.k; no incomplete plan is qualified."
+    "The native provider supports draft standard artifacts, document/block structure, profiles, original attachments, sealed Baselines and recorded Evidence with bound configuration policy. Unsupported immutable/operational history and specialist gates remain explicit blockers; no partial target is qualified."
   ],
   "steps": [
     "Prepare and independently decode project-bundle and working/release-kind project-Baseline plans without project or operational writes.",
@@ -20,12 +20,14 @@
     "Refuse insufficient semantic sources, unsupported history, identity/revision conflicts, unknown managed contents, links/special entries, stale live origin/inventory and forged or malformed plan bytes.",
     "Recover damaged or absent current configuration declarations exclusively from retained native Baselines, reread their exact bytes, and inventory old managed roots even when the chosen source omits those declarations.",
     "Reject conflicting or missing current evidence, partial/configured source scopes, malformed nested wire objects and original-byte/hash/root contradictions without project or operational writes.",
-    "Distinguish invalid input (3), historical identity/conflict or stale inventory (6), native root/link/path safety (7), actual read I/O (5) and missing operational call values (2)."
+    "Distinguish invalid input (3), historical identity/conflict or stale inventory (6), native root/link/path safety (7), actual read I/O (5) and missing operational call values (2).",
+    "Preserve younger immutable Baselines and bound Evidence, their recursive archive objects and original attachments byte-for-byte; independently recompute the augmented project root and exact preservation reasons.",
+    "Keep native negative and stale Evidence findings in a detached assessment separate from the closed passive plan; refuse original-byte conflicts, missing structural subjects and rewritten preservation inventories."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "`recover restore` MUSS ausschließlich einen vollständig qualifizierten, zielhashgebundenen Restore-Plan nach Kapitel 10.7.1 aus einer unveränderten Vollprojekt-Baseline oder einem Vollprojektbundle ausführen.",
-    "scope": "Supported complete plans have independent native source/target reconstruction, exact original and backup bytes and distinct canonical hash domains. Invalid/missing current configuration can use independently retained, fully byte-verified project Baselines only when identity and managed coverage agree; source/target objects alone never supply current evidence. Read-only planning and preflight preserve project/operational bytes. Unsupported history and specialist providers fail explicitly. A passive plan is not a ChangePlan, permission, durable backup, completed recovery or release proof."
+    "scope": "Supported complete plans have independent native source/target reconstruction, exact original and backup bytes and distinct canonical hash domains. Invalid/missing current configuration can use independently retained, fully byte-verified project Baselines only when identity and managed coverage agree; source/target objects alone never supply current evidence. Read-only planning and preflight preserve project/operational bytes. Unsupported history and specialist providers fail explicitly. A passive plan is not a ChangePlan, permission, durable backup, completed recovery or release proof. Younger supported protected history and its native original-byte closure survive both source kinds. Native historical Evidence assessments retain failed/stale data and explicitly do not establish run selection, approval, full verification or release readiness."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [
@@ -59,6 +61,40 @@
   },
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
+    "tests/test_restore_history.py::test_baseline_archive_retains_missing_immutable_evidence_file[False]",
+    "tests/test_restore_history.py::test_baseline_archive_retains_missing_immutable_evidence_file[True]",
+    "tests/test_restore_history.py::test_current_mutable_subjects_cannot_fill_a_complete_source",
+    "tests/test_restore_history.py::test_history_with_unavailable_original_bytes_never_yields_a_complete_plan[changed_archive]",
+    "tests/test_restore_history.py::test_history_with_unavailable_original_bytes_never_yields_a_complete_plan[changed_attachment]",
+    "tests/test_restore_history.py::test_history_with_unavailable_original_bytes_never_yields_a_complete_plan[missing_archive]",
+    "tests/test_restore_history.py::test_history_with_unavailable_original_bytes_never_yields_a_complete_plan[missing_attachment]",
+    "tests/test_restore_history.py::test_identical_history_in_source_is_deduplicated_without_extra_preservation_rows",
+    "tests/test_restore_history.py::test_missing_specialists_and_contradictory_run_history_are_not_faked[approved_subject]",
+    "tests/test_restore_history.py::test_missing_specialists_and_contradictory_run_history_are_not_faked[independent]",
+    "tests/test_restore_history.py::test_missing_specialists_and_contradictory_run_history_are_not_faked[run_conflict]",
+    "tests/test_restore_history.py::test_original_evidence_and_attachment_survive_with_honest_findings[False-failed-False-baseline]",
+    "tests/test_restore_history.py::test_original_evidence_and_attachment_survive_with_honest_findings[False-failed-False-project_bundle]",
+    "tests/test_restore_history.py::test_original_evidence_and_attachment_survive_with_honest_findings[False-failed-True-baseline]",
+    "tests/test_restore_history.py::test_original_evidence_and_attachment_survive_with_honest_findings[False-failed-True-project_bundle]",
+    "tests/test_restore_history.py::test_original_evidence_and_attachment_survive_with_honest_findings[False-passed-False-baseline]",
+    "tests/test_restore_history.py::test_original_evidence_and_attachment_survive_with_honest_findings[False-passed-False-project_bundle]",
+    "tests/test_restore_history.py::test_original_evidence_and_attachment_survive_with_honest_findings[False-passed-True-baseline]",
+    "tests/test_restore_history.py::test_original_evidence_and_attachment_survive_with_honest_findings[False-passed-True-project_bundle]",
+    "tests/test_restore_history.py::test_original_evidence_and_attachment_survive_with_honest_findings[True-failed-False-baseline]",
+    "tests/test_restore_history.py::test_original_evidence_and_attachment_survive_with_honest_findings[True-failed-False-project_bundle]",
+    "tests/test_restore_history.py::test_original_evidence_and_attachment_survive_with_honest_findings[True-failed-True-baseline]",
+    "tests/test_restore_history.py::test_original_evidence_and_attachment_survive_with_honest_findings[True-failed-True-project_bundle]",
+    "tests/test_restore_history.py::test_original_evidence_and_attachment_survive_with_honest_findings[True-passed-False-baseline]",
+    "tests/test_restore_history.py::test_original_evidence_and_attachment_survive_with_honest_findings[True-passed-False-project_bundle]",
+    "tests/test_restore_history.py::test_original_evidence_and_attachment_survive_with_honest_findings[True-passed-True-baseline]",
+    "tests/test_restore_history.py::test_original_evidence_and_attachment_survive_with_honest_findings[True-passed-True-project_bundle]",
+    "tests/test_restore_history.py::test_resigning_or_stale_inventory_cannot_erase_the_preservation_obligation[drop_history]",
+    "tests/test_restore_history.py::test_resigning_or_stale_inventory_cannot_erase_the_preservation_obligation[live_bytes]",
+    "tests/test_restore_history.py::test_resigning_or_stale_inventory_cannot_erase_the_preservation_obligation[reason]",
+    "tests/test_restore_history.py::test_same_immutable_identity_with_different_bytes_is_a_conflict[baseline]",
+    "tests/test_restore_history.py::test_same_immutable_identity_with_different_bytes_is_a_conflict[evidence]",
+    "tests/test_restore_history.py::test_younger_baseline_and_recursive_original_objects_are_explicit_history[baseline]",
+    "tests/test_restore_history.py::test_younger_baseline_and_recursive_original_objects_are_explicit_history[project_bundle]",
     "tests/test_restore_plan.py::test_archived_publication_evidence_cannot_hide_behind_current_draft_bytes[approval]",
     "tests/test_restore_plan.py::test_archived_publication_evidence_cannot_hide_behind_current_draft_bytes[revision]",
     "tests/test_restore_plan.py::test_baseline_does_not_guess_operational_configuration[default_locale]",
@@ -189,7 +225,7 @@
     "tests/test_restore_plan_right.py::test_wire_json_syntax_and_encoding_fail_without_any_project_access[utf8]"
   ],
   "open_items": [
-    "15.k: fold younger protected history and dependency closure; integrate stored lifecycle/specialist and completed-receipt publication evidence. Unsupported cases remain explicit failures, not qualified partial plans or permanently exempted project contents.",
+    "15.k.R/C: complete historical lifecycle/specialist and completed-receipt publication evidence, independent-policy Evidence, remaining protected record kinds and robust closure edge cases; then structural cleanup. Unsupported cases remain explicit failures, never permanent exemptions or qualified partial targets.",
     "15.l: external CLI plan publication, separately authorized locked execution, durable recovery archive/journal/audit and crash-safe completion. No executed restore or full SR-REQ-0461 acceptance is claimed."
   ]
 }

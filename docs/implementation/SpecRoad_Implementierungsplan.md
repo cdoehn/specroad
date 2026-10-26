@@ -28,10 +28,10 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ```yaml
 plan_revision: 23
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 645
-last_completed_plan_commit: 15.j.C
-next_plan_commit: 15.k.W
-last_completed_numbered_bundle: 492
+implementation_plan_commits_completed: 646
+last_completed_plan_commit: 15.k.W
+next_plan_commit: 15.k.R
+last_completed_numbered_bundle: 493
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -28935,12 +28935,123 @@ weiteres Bundle, Result-Warten oder Hintergrundfortsetzung.
 
 #### 15.k.W – Let it Work
 
-- [ ] **15.k.W** · Position **646/900** · Voraussetzung: `15.j.C`.
+- [x] **15.k.W** · Position **646/900** · Voraussetzung: `15.j.C`.
 **Exakte Commit-Message:** `15.k.W feat(bundle): Geschützte Historie beim Restore aufbauen`
 
 **Umsetzung:** Jüngere gültige immutable Evidence/Baselines und ihre Referenzclosure bytegetreu im expliziten Restoreziel erhalten.
 
 **Verhaltensabnahme:** Rückkehr zu altem Fachstand löscht keinen jüngeren geschützten Nachweis stillschweigend.
+
+
+**Umsetzungs- und Übergabenachweis – Bundle 493 (W), 26. Oktober 2026.**
+
+**Maßgebliche Basis.** Das vollständig geprüfte Result
+`specroad-apply_Result_102856_1026_97062a.zip`, SHA-256
+`5682f5ef63c0ee6bb9ad38cd5bd4299e84cc20e7a5ddf3210ddbc1168d7d3814`,
+bindet den sauberen Commit
+`e48a1c01761ee8ccb6364c51e0a2ad68b0a57fb2`, Repository
+`a33ed6cf-0a97-4b73-b11a-d4239e7a2145`, Fingerprint
+`7c9d2a24e397e0e5`, Algorithmus `patchharbor-state-v1`.
+Generierte Root-Anleitung, Kontext, Umgebung, Manifest, Run-/Ausführungslogs,
+vollständiger Snapshot, tatsächlicher Apply-Stand und vorheriges Bundle
+wurden gegeneinander geprüft. Der vorausgehende echte 15.j.C-Commit entstand
+nach **7.181/7.181** bestandenen parallelen Tests der **Sequenz 198 / Gruppe 0**,
+vier Worker, **2287.32 s**. Auswahlbindung, Einzeloutcomes und tatsächlich
+committete Bytes stimmen. Ausgangsfortschritt: **645/900**, zuletzt
+**15.j.C**, Bundle **492**.
+
+**Reguläre W-Umsetzung.** Die ausdrücklich vorhandene Regel
+SPECROAD-DECISION-1 wurde geprüft. Die bestehenden Vorgaben in
+Spezifikation **0.2.28, 10.7.1–10.7.2** und die bestätigte W-Abnahme
+reichen aus; keine neue normative Entscheidung oder Spezifikationsänderung.
+
+Nach unabhängiger vollständiger Quellqualifikation faltet der Planner
+jüngere unterstützte immutable Baselines und Evidence aus der gebundenen
+Bestandsinventur in den expliziten Zielstand. Native Baselineprüfung bindet
+die rekursiven Originalobjekte. Archivierte immutable Records und nötige
+Originalanhänge werden ausdrücklich erhalten; aktuelle mutable Fachdateien
+werden weiterhin nicht als semantisches Füllmaterial übernommen.
+Gleiche Bytes werden dedupliziert, verschiedene Bytes derselben geschützten
+Identität abgewiesen. Erhaltungsgründe werden pro zusätzlichem Pfad vereinigt.
+Der gespeicherte Quellsnapshot und seine Wurzel bleiben unverändert;
+der vollständige Zielstand wird nach der Ergänzung nativ erneut geprüft.
+
+Der passive Planleser leitet dieselbe Erhaltungspflicht unabhängig aus
+Originalquelle und Bestandsinventur ab. Ausgelassene Records oder frei
+behauptete Gründe lassen sich nicht durch Neu-Hashen der Hülle legitimieren.
+Sicherungseinträge enthalten weiter die tatsächlichen ersetzten Altbytes.
+Native Pfad-/Inventurgrenzen und die frische Herkunftsprüfung bleiben erhalten.
+
+Native Contract-/Testleser und VerificationContext-Assessments prüfen die
+unterstützte Evidence mit expliziter gebundener Konfigurationspolicy.
+`history_assessments` liefert getrennte, abgelöste Befunde, ohne das geschlossene
+Planformat zu erweitern. `failed` und `stale` werden nicht umgeschrieben;
+Run-Auswahl, volle Verification, Readiness, Ausführung und Freigabe werden
+explizit nicht behauptet. Das ist keine neue Aufnahme oder Authentifizierung
+der historischen Messung. Originalanhänge bleiben byte-, größen- und hashgebunden.
+
+**Grenzen.** `SR-TC-0461` und `SR-TC-0462` bleiben **partial**.
+Unabhängige Evidence-Konfigurationspolicy, weitere geschützte Recordarten,
+gespeicherte Standard-Approval-/Spezialistenbelege und abgeschlossene
+Receipts bleiben explizite Blocker bis zu ihrer eigenen vollständigen
+Integration. 15.k.R vervollständigt die Historien-/Konfliktfälle, danach
+folgt C. CLI-Veröffentlichung, getrennte Autorisierung, Recovery-Lock,
+dauerhafte Sicherung, Restore-Journal/Audit und Crashabschluss bleiben 15.l.
+Kein ausgeführter Restore und keine vollständige Produktabnahme.
+
+**Gezielte parallele Dev-Prüfung.** Der übergebene Zustand besteht
+**162/162** Verhaltenstests mit **vier Workern**
+unter **CPython 3.14.4**, Prozessabschluss **0**, in **439.60 s**:
+
+- `tests/test_restore_plan.py` (46)
+- `tests/test_restore_plan_right.py` (82)
+- `tests/test_restore_history.py` (34)
+
+Die vollständige Collection/Katalogprüfung führt keine Testkörper aus:
+**21576** aktive Tests, **21580** dauerhafte
+Nummern. **34** neue Identitäten werden ausschließlich
+hinten angehängt; alle bisherigen Nummern und vier stillgelegten
+Identitäten bleiben erhalten. Die bisherigen Restore-W/R-Nachweise laufen
+mit. Der bisherige unqualifizierte synthetische Evidence-Fall erwartet jetzt
+Code 3 für fehlende native Konfigurations-/Subject-Belege; echte
+Identitätskollisionen bleiben Code 6. Der Spezialistenblocker verwendet jetzt
+eine externe Source; die inzwischen unterstützten Test-Records werden
+positiv über Evidence-Referenzen geprüft. Der erste lokale Versuch fand
+zusätzlich ungültige Testdaten (gebundene Evidence ohne Konfigurationshash);
+diese wurden durch die reale native Konfigurationsbindung ersetzt. Der
+zweite breite Teiltestlauf bestand 727/728 Fälle; ein weiterer neuer
+Negativtest scheiterte bereits an seinen ungültigen Testdaten (fehlende
+Pflichtbegründung für ein approval-förmiges Requirement). Dieser Fixturefehler
+wurde ergänzt, ohne einen echten Freigabenachweis zu erfinden. Der
+abschließende Lauf prüft alle 162 direkt betroffenen Restore-W/R-/Historienfälle
+am korrigierten Zustand. Die übrigen zuvor geprüften nativen Bibliotheken
+und deren Tests sind unverändert; keiner der fehlgeschlagenen Läufe ist
+ein erfolgreicher Auswahl- oder Vollsuite-Nachweis.
+Neue Orakel prüfen native unabhängige
+Zielwurzeln, unveränderte Originalbytes, negative/stale Befunde, Closure,
+fehlende Ressourcen, Konflikte, passive Manipulation und Schreibfreiheit.
+
+Dev-Quellidentität: `b5cfa7fc0815bbf645d45057a2845c8aff0597127bd6db9a3184bdc98e189c3c`.
+Auswahlbericht-SHA-256:
+`5e32e70a579ee7035e16b87438840893c30286a42acfb11d69dc13c2612329ae`.
+Einzeloutcomes-SHA-256:
+`9618cef23e3e984f17c7510b598f6c5aae647dbe2616bfbe5b71b396f44ed4af`.
+Vorherige Apply-Auswahlbindung: `691a62d704d69a5b5c8ddeb157b1d78b80f21e4724c0e4295d301e801f6bfdc0`;
+Apply-Bericht: `a44ec69f46aa1c76873957989cb4b83bafce9293c01e64c995f3835fc0e22a34`;
+Apply-Einzeloutcomes: `da557c8ac9054c5c2962fdb60426a703842f0ee209c92e09a27e66c215b9ea10`.
+Alle Dev-/Apply-Auswahlen sind Teilprüfungen, `full_suite_passed=null`.
+
+**Übergabe.** Genau ein W-Zustand mit eigenem Commit. Der bewährte
+Entrypoint installiert den gezielt geprüften Zustand durch den nativen
+PatchHarbor-Payloadwriter und führt ausschließlich **Sequenz 199 / Gruppe 1
+von 3**, **7190** Tests, parallel mit vier Workern aus.
+Auswahl, Quellhash und Outcomes werden geprüft. Erst nach Erfolg folgen
+die fünf Fortschrittsmarker auf **646/900**, zuletzt **15.k.W**, nächstens
+**15.k.R**, Bundle **493** und die W-Checkbox, dann die exakte Commit-Message.
+R und C werden nicht vorinstalliert. Fehler erhalten abgeschlossene Commits
+und den tatsächlichen Zustand. Apply-Test und Commit sind bei Übergabe
+noch nicht beobachtet. Native Prüfung der fertigen ZIP, vollständiger SHA
+und atomare Übergabe beenden N ohne weitere Result-Abfrage.
 
 #### 15.k.R – Make it Right
 

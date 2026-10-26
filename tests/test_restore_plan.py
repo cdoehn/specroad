@@ -133,7 +133,9 @@ def test_container_integrity_is_not_full_project_qualification(tmp_path, case):
     elif case == 'approval':
         values[1] = approved_value('goal')
     else:
-        values.append(record_value('test'))
+        # Native test-record reading is now part of Evidence preservation;
+        # external Source semantics still need an unavailable specialist.
+        values.append(record_value('source', locator='urn:synthetic:external-source'))
     # A missing reference cannot even be packaged by the native project creator;
     # start with a hash-consistent explicit container to exercise model gates.
     if case == 'reference':
@@ -185,7 +187,9 @@ def test_unproved_identity_history_or_inventory_prevents_a_complete_plan(tmp_pat
     before = inventory(tmp_path)
     with no_write_attempts(), pytest.raises(RestoreError) as error:
         plan_for(options)
-    assert error.value.exit_code == (3 if case in ('damaged_config', 'unknown_managed') else 6)
+    # 15.k now inventories Evidence; this synthetic record lacks the native
+    # configuration/subject proof and is invalid input, not an ID collision.
+    assert error.value.exit_code == (3 if case in ('damaged_config', 'unknown_managed', 'history') else 6)
     assert inventory(tmp_path) == before
 
 

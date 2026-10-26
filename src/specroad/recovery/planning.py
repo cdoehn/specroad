@@ -8,6 +8,7 @@ from ._codec import file_row, file_table
 from ._coverage import inventory_roots
 from ._current_evidence import BASELINES, current_configuration
 from ._inventory import boundary, observe, read_source
+from ._history import preserve_history
 from ._observations import observe_configuration, verify_live as _verify_live
 from ._plan_checks import assemble_target, check_current
 from ._sources import reconstruct
@@ -23,8 +24,8 @@ def prepare_restore_plan(project_root, *, source_root, source_path, source_kind,
     Both roots and the source kind/path are explicit. The project is never
     opened through normal write preflight and no lock, journal, cache, staging
     or output is created. Only Baselines accept explicit operational config.
-    Additional history requiring 15.k and unavailable model specialists fail
-    closed. Damaged configuration requires independent retained evidence;
+    Unsupported history and unavailable model specialists fail closed.
+    Damaged configuration requires independent retained evidence;
     neither source files nor caller assertions can substitute for that proof.
     """
     require(isinstance(project_root, (str, Path)) and isinstance(source_root, (str, Path)),
@@ -48,8 +49,6 @@ def prepare_restore_plan(project_root, *, source_root, source_path, source_kind,
         source_kind, raw, read, operational=operational)
     source_model, actual_source_root = validate_project(files)
     require(source_model_root == actual_source_root, 'restore_source_root_mismatch')
-    target, preserved = assemble_target(files, additions)
-    target_model, target_root = validate_project(target)
     configuration, evidence, baseline_inventory = observe_configuration(project)
     roots = inventory_roots(source_model.configuration, configuration)
     inventory, current = observe(project, roots)
@@ -61,6 +60,11 @@ def prepare_restore_plan(project_root, *, source_root, source_path, source_kind,
         # An absent descendant is implicit when an ancestor inventory root is
         # missing. A useful retained Baseline necessarily has a real namespace.
         require(entries == baseline_inventory['entries'], 'restore_inventory_changed', exit_code=6)
+    require(configuration.project_id == source_model.configuration.project_id,
+            'restore_project_identity_conflict', exit_code=6)
+    additions = preserve_history(files, additions, current, configuration)
+    target, preserved = assemble_target(files, additions)
+    target_model, target_root = validate_project(target)
     backup = check_current(inventory, current, source_model, target, target_model)
     require(configuration.data == current_configuration(current, roots).data,
             'restore_inventory_changed', exit_code=6)

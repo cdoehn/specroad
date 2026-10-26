@@ -73,5 +73,20 @@ class RestorePlan:
         """Hash of the actual external bytes, distinct from the inner plan hash."""
         return sha256(self._raw).hexdigest()
 
+    @property
+    @guarded
+    def history_assessments(self):
+        """Detached native Evidence findings, separate from the closed plan.
+
+        Negative results and stale contexts stay visible. These are neither
+        authoritative-run selection nor verification/readiness success.
+        """
+        from ..bundles._payload_model import owned_payload_model
+        from ._codec import decode
+        from ._evidence_history import evidence_assessments
+        data, objects = decode(self._raw)
+        files = {r['path']: objects[r['sha256']] for r in data['target']['entries']}
+        return evidence_assessments(owned_payload_model(files, source_label='restore:owned-project'))
+
     def __bool__(self):
         raise TypeError('A restore plan grants no execution or approval authority')
