@@ -1,21 +1,21 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.31
+## Version 0.2.32
 
 | Feld | Wert |
 |---|---|
 | Dokument-ID | `SR-SPEC-0001` |
-| Dokumentversion | `0.2.31` |
+| Dokumentversion | `0.2.32` |
 | Zielrelease | `SpecRoad Single-Repository Workbench 0.2.0` |
 | Status | **Fachlich konsolidierte Arbeitsgrundlage; technische Reviewentscheidung gesondert dokumentiert, formale Baseline-Freigabe und Produktabnahme nicht durch dieses Dokument erklärt** |
 | Stand | 26. Oktober 2026 |
 | Sprache | Deutsch; technische Feldnamen, Enum-Werte und CLI-Kommandos Englisch |
-| Fachliche Quelle | **Diese Repositoryfassung v0.2.31 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.31 liegt mit dieser Änderung nicht vor.** |
+| Fachliche Quelle | **Diese Repositoryfassung v0.2.32 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.32 liegt mit dieser Änderung nicht vor.** |
 | Bearbeitbare Satzquelle | Diese Datei; eine spätere PDF muss denselben versionierten Inhalt wiedergeben. |
-| Vorgängerversion | Repository-Spezifikation v0.2.30 vom 26. Oktober 2026; frühere PDF-/Reviewbelege bleiben an ihre historischen Fassungen gebunden. |
-| Prüf- und Entscheidungsgrundlage | SPECROAD-DECISION-1-V3, ausdrücklicher manueller Nutzerauftrag vom 26. Oktober 2026 zur Erweiterung der Projektregel; Entscheidungsbeleg und Verfahrensabnahmen im OFF-PLAN-Abschnitt des Implementierungsplans. Bestehende Nutzerentscheidungen und Produktfreigabegrenzen bleiben unverändert. |
-| Änderungsart | Versionierte Erweiterung der Entwicklungsbefugnis in 2.4.3 auf höchstens drei Klärungsbundles unter Control-Vertrag 3; Vertrag 2 behält die Einerregel; keine neue Requirement-ID oder Produktposition. Umsetzung und Produktabnahme bleiben offen. |
+| Vorgängerversion | Repository-Spezifikation v0.2.31 vom 26. Oktober 2026; frühere PDF-/Reviewbelege bleiben an ihre historischen Fassungen gebunden. |
+| Prüf- und Entscheidungsgrundlage | RESTORE-OWNER-HANDOFF, delegiert gemäß SPECROAD-DECISION-1 unter gültigem Control-Vertrag 3; Entscheidungsbeleg und offene Verhaltensabnahmen im OFF-PLAN-Abschnitt des Implementierungsplans. Bestehende Nutzerentscheidungen und Produktfreigabegrenzen bleiben unverändert. |
+| Änderungsart | Additive Präzisierung der expliziten Ownerübergabe für neuen oder fortgesetzten Restore in 10.7.5; unveränderte Projektdelegation und Owner-/Risikogates; keine neue Requirement-ID oder Produktposition. Umsetzung und Produktabnahme bleiben offen. |
 
-> **Verbindlicher Quellenwechsel:** Die ausdrücklich beauftragte Erweiterung der Projektregel schreibt die Repository-Spezifikation als v0.2.31 fort. Frühere PDF- und Reviewnachweise behalten ihre historische Bindung und belegen diese Erweiterung nicht. Der py3langid-Adapter bleibt Bestandteil des Zielreleases; der kleine Core bleibt ohne Analyzer-Abhängigkeiten nutzbar.
+> **Verbindlicher Quellenwechsel:** Die delegierte Detailentscheidung zur Restore-Ownerübergabe schreibt die Repository-Spezifikation als v0.2.32 fort. Frühere PDF- und Reviewnachweise behalten ihre historische Bindung und belegen diese Präzisierung nicht. Der py3langid-Adapter bleibt Bestandteil des Zielreleases; der kleine Core bleibt ohne Analyzer-Abhängigkeiten nutzbar.
 
 > **Fortbestehende Arbeitsprinzipien:** Weiche Budgets führen zu sparsamer vollständiger Weiterarbeit oder gesicherter Fortsetzung über mehrere Aufrufe beziehungsweise Prompts. Es werden keine erforderlichen Arbeiten stillschweigend ausgelassen. Reale Host-, Speicher-, Berechtigungs- und Sicherheitsgrenzen bleiben wirksam.
 
@@ -101,7 +101,7 @@ Bei einem Widerspruch innerhalb dieser Dokumentversion gilt:
 3. `SR-DEC-*` hat Vorrang vor erläuterndem Text, Diagrammen und Beispielen.
 4. Beispiele sind niemals normativ, sofern sie nicht ausdrücklich als Testvektor bezeichnet sind.
 5. Zwei widersprüchliche `SR-REQ-*`-Anforderungen besitzen **keine implizite Rangfolge** nach Nummer, Position oder Spezifität. Ein solcher Fund ist ein Spezifikationsfehler, muss als Issue gelöst werden und verhindert die Freigabe.
-6. Diese Dokumentversion 0.2.31 ersetzt die frühere fachliche Arbeitsgrundlage vollständig. Bis zur gesonderten PDF-Veröffentlichung ist diese versionierte Repositorydatei maßgeblich. Eine spätere PDF muss inhaltsgleich sein; frühere PDFs werden nicht als Nachweis der neuen Verträge ausgegeben. Inhalte verschiedener Fassungen dürfen nicht zu einer Mischspezifikation kombiniert werden.
+6. Diese Dokumentversion 0.2.32 ersetzt die frühere fachliche Arbeitsgrundlage vollständig. Bis zur gesonderten PDF-Veröffentlichung ist diese versionierte Repositorydatei maßgeblich. Eine spätere PDF muss inhaltsgleich sein; frühere PDFs werden nicht als Nachweis der neuen Verträge ausgegeben. Inhalte verschiedener Fassungen dürfen nicht zu einer Mischspezifikation kombiniert werden.
 7. Eine nachträgliche Änderung dieser veröffentlichten Datei erfordert mindestens eine neue Patch-Dokumentversion; stille Korrekturen unter derselben Dokumentversion sind unzulässig.
 8. Eine normative Tabelle, auf die eine `SR-REQ-*`-Anforderung ausdrücklich als Algorithmus oder Matrix verweist, ist Bestandteil des Passkriteriums dieser Anforderung.
 
@@ -2118,6 +2118,145 @@ dieselbe Auswahlbindung und dieselben weichen Budgets nach N/O/P.
 Diese Auswahlregel ändert weder `restore-plan-v1` noch Modell-/Quell-/
 Zielhashes, vorhandene erfolgreiche Receipts oder historische Belege.
 Implementierung und Verhaltensabnahme bleiben in 15.l.W/R/C offen.
+
+
+#### 10.7.5 Explizite Ownerübergabe für Restore `restore-owner-handoff-v1`
+
+**Entscheidung RESTORE-OWNER-HANDOFF, delegiert gemäß SPECROAD-DECISION-1.**
+Diese Regel konkretisiert die Ownerbindung aus 10.7.3 für 15.l.R. Ein
+neu beginnender Restore hat einen eigenen Auftrag; er ist keine Fortsetzung
+der beschädigten gewöhnlichen Transaktion. Die Wiederaufnahme eines bereits
+begonnenen Restore behält dagegen dessen ursprüngliche Ausführungsbindung.
+Die beiden Fälle DÜRFEN NICHT still ineinander umgedeutet werden. Ein
+Planhash, eine Journalauswahl oder ein verwaister Owner allein erteilt
+weder eine Übernahmebefugnis noch die Berechtigung zur Restore-Publikation.
+
+**Ausdrücklicher Aufruf.** Ein Ausführungs-/Wiederanlaufaufruf nach
+10.7.1/10.7.3/10.7.4 darf einen vorhandenen Owner nur mit zusätzlich
+`--force --expected-lock-sha256 <SHA256> --reason <TEXT>` übernehmen.
+`--accept-remote-risk` bleibt die bestehende gesonderte ausdrückliche
+Risikozustimmung. Ohne diese Zustimmung gilt `false`, auch für eine lokale
+KI oder einen früher bereits autorisierten Aufruf. `reason` ist ein
+nichtleerer Grund nach dem bestehenden Recovery-Textvertrag; der erwartete
+Hash bindet die vollständigen unveränderten Rohbytes des aktuell beobachteten
+Lockrecords. Dies sind zusätzliche Bindungen des Recovery-Aufrufs, keine
+Felder des geschlossenen `restore-plan-v1` oder der Journalauswahl.
+
+Ohne Übernahmeoptionen bleiben ownerfreie Ausführung und Wiederaufnahme
+unter dem aktuellen Recovery-Lock zulässig. Ein vorhandener Owner bleibt
+ohne ausdrücklichen Übernahmeauftrag mit Code 5 gesperrt. Unvollständige
+Optionskombinationen und Übernahmeoptionen beim schreibfreien `--from`-
+Planungsaufruf ergeben Code 2. Ein erwarteter Owner, der fehlt oder inzwischen
+andere Bytes hat, ist Code 6; die Erwartung wird nicht aus alten Audits neu
+abgeleitet. Ein gültiger Übernahmeauftrag ist noch kein erfolgreicher
+Lock- oder Restoreabschluss.
+
+**Zwei getrennte Bindungsfälle.** Vor dem ersten Übernahmewrite MUSS der
+Owner gültig lesbar und an dieselbe unabhängig bestätigte Projektidentität
+und den tatsächlichen Root gebunden sein. Die folgende Zuordnung ist
+zusätzlich zwingend:
+
+| Fall | Erforderlicher Zusammenhang |
+|---|---|
+| Beginn eines neuen Restore; Owner einer gewöhnlichen alten Transaktion | Der Owner hat `kind=writer` oder `kind=recovery`, bezeichnet keinen `recover restore` und bindet eine sichere Transaktionskennung. Genau der kanonische unmittelbare Pfad `.specroad/transactions/<transaction_id>` dieser Kennung ist ein ausdrücklich ausgewählter Originaleintrag nach 10.7.4. Sein vollständiges `E_p` und dessen Auswahlhash stimmen mit der Originalinventur. Alter Owner einschließlich seiner Request-ID und neuer Restore-Auftrag werden getrennt gebunden; sie müssen nicht dieselbe Transaktions-/Requestidentität haben. |
+| Fortsetzung eines begonnenen Restore | Der Owner hat `kind=recovery`, `command=recover restore` und bindet genau die nach 10.7.3 nachgewiesene ursprüngliche Restore-Ausführung sowie deren ursprüngliche Request-ID. Originalplanbytes, Originalauftrag, Auswahl und eigene bisherige Effekte passen. Die aktuelle Recovery-Person beziehungsweise der aktuelle Recovery-Akteur wird zusätzlich auditiert; ursprünglicher Akteur und ursprüngliche Request-ID werden nicht umgeschrieben. |
+
+Im ersten Fall ist der ausgewählte Originaleintrag ausdrücklich auch als
+beschädigte reguläre Bytefolge oder als leeres Verzeichnis zulässig, wie
+bereits in 10.7.4 festgelegt. Seine Bytes werden gesichert, nicht als gültiges
+gewöhnliches Transaktionsjournal interpretiert. Der Zusammenhang wird durch
+den **gültigen Ownerrecord**, den kanonisch abgeleiteten Transaktionspfad
+und die vollständig gebundene explizite Auswahl bewiesen. Ein ähnlich
+benannter Eintrag, ein Requestlabel oder frei behauptete Journalfelder
+genügen nicht. Andere ausgewählte Journale bleiben unter ihren bisherigen
+Auswahl-/Sicherungsbedingungen; daraus entsteht keine zweite Ownerübernahme.
+
+Ein Restore-Owner darf nicht als gewöhnlicher Altowner behandelt werden,
+um einen anderen Restore-Auftrag zu beginnen. Unbekannte, unlesbare oder
+widersprüchliche Ownerbindung, fehlende notwendige Ausführungsbelege oder
+eine nicht herstellbare Zuordnung bleiben Blocker. Sie werden nicht durch
+eine größere Auswahl, einen neuen Planhash oder `--force` geheilt. Gibt es
+keinen zugehörigen aktiven Vorgang, bleibt ausschließlich der dafür bereits
+zulässige separate Lock-Recovery-Weg maßgeblich; diese Regel ersetzt ihn nicht.
+
+**Unveränderte Host- und Autoritätsgates.** Die Übernahme MUSS denselben
+echten nativen Root-Mutex wie Writer und Recovery exklusiv halten. Ein
+besetzter Mutex wird niemals umgangen. Der vorhandene native Ownerprüfer
+und seine Host-/Prozessstartbindung bleiben maßgeblich: ein lebender Owner
+wird auch mit `--accept-remote-risk` abgewiesen; fremde, unprüfbare oder
+PID-wiederverwendete Owner benötigen weiterhin die ausdrückliche
+Risikozustimmung. Eine fehlende PID allein beweist keine Übernahmereife.
+
+Die aktuelle Host-Autorisierung MUSS die Übernahme als eigene Aktion
+`takeover` mit `command=recover restore` prüfen. Sie bindet beide Seiten:
+alten vollständigen Ownerrecord samt Rohbytehash, beobachteten Ownerzustand,
+Grund, Force-/Risikoangaben, Projekt-/Rootidentität und vollständigen
+Restore-Auftrag einschließlich Originalplan-, Quell-, Inventur-, Ziel-,
+Sicherungs- und Auswahlbindung. Im ersten Fall kommt die oben bestimmte
+alte Pfad-/Inventurbindung hinzu; im Fortsetzungsfall die überprüfte
+ursprüngliche Ausführungsbindung. Aktueller Recovery-Akteur und ursprüngliche
+Auftragsakteure bleiben unterscheidbar. Ein gespeichertes positives Ergebnis
+oder Actorlabel ersetzt diese aktuelle Prüfung nicht. Die gesonderte
+aktuelle Berechtigung für Beginn, Rückrollen oder Abschluss des Restore
+nach 10.7.3 bleibt zusätzlich erforderlich; Übernahme erlaubt keinen
+beliebigen normativen Write. Die Request-ID-Regeln und das Verbot
+abweichender Wiederverwendung bleiben unverändert.
+
+**Erhaltende Übergabe und Unterbrechung.** Die vorhandenen sicheren
+descriptorgebundenen Owner-, Evidence-, Staging-, Rename- und Sync-Primitiven
+sind wiederzuverwenden. Vor dem atomaren Ownerwechsel werden unveränderliche
+Originalownerbytes und ein Übernahmeintent mit Regelversion
+`restore-owner-handoff-v1`, beiden Ownerbindungen, den oben geprüften
+Auftrags-/Ausführungsbindungen, aktueller Autoritätszuordnung und
+Risikoentscheidung dauerhaft angelegt und bytegleich wiedergeprüft.
+Der vollständig vorbereitete neue Owner ist ein Recovery-Owner für exakt
+den neuen beziehungsweise fortgesetzten Restore. Unmittelbar vor seinem
+atomaren Einsetzen werden alter Owner einschließlich Dateiidentität,
+Root, Ownerbeobachtung, aktive Journalmenge und alle betroffenen Bindungen
+erneut geprüft. Es gibt keine Lücke durch vorheriges Löschen des Owners.
+Ein eigener dauerhafter Abschlussbeleg bestätigt den tatsächlichen Wechsel.
+
+Diese zusätzlichen Betriebsbytes und benötigten Verzeichnisse werden vor
+ihrem ersten Write genau im Übernahmeintent gebunden und mit der
+unveränderten Originalausführung verknüpft. Bei einem neuen Restore bindet
+der Intent auch die vollständigen Originalplanbytes und den autorisierten
+neuen Auftrag, bevor der neue Owner eingesetzt wird. Bei Fortsetzung ist
+der unveränderliche frühere Ausführungsbeleg zusätzlich gebunden. So sind
+auch Abbrüche vor Anlage des eigentlichen Restore-Journals anhand einer
+vollständigen Übernahmebindung unterscheidbar. Die Originalinventur wird
+dafür nicht neu gehasht. Eine allgemeine Ausnahme für einen Recovery- oder
+Auditordner und eine nachträglich frei ergänzte Liste eigener Dateien sind
+unzulässig. Kurze, fremde oder abweichende Belege werden nicht überschrieben.
+
+Die Übernahme verändert keine normativen Modellbytes und entfernt oder
+archiviert kein ausgewähltes altes Journal. Alle bisherigen Sperren bleiben
+bis zum nachgewiesenen Restoreabschluss aus 10.7.3/10.7.4 erhalten. Nach einem
+Abbruch bleiben tatsächlicher Owner und sämtliche bereits geschriebenen
+Belege bestehen. Ein erneuter ausdrücklich autorisierter Aufruf bindet den
+dann tatsächlich beobachteten Owner; er prüft den alten oder neuen Stand
+gegen den unveränderten Übernahmeintent und vollendet nur belegbare Schritte.
+Ein vollständiger Intent allein behauptet weder ausgeführten Ownerwechsel
+noch veröffentlichte Zielbytes. Kann bei einem belegten neuen Owner vor dem
+Restore-Journal nachgewiesen werden, dass keine Zielpublikation begann, gilt
+der `building`-Abschluss aus 10.7.3: erhaltener, auditierter Rückrollzustand,
+keine neue Fachoperation im selben Aufruf. Andernfalls gelten dessen
+Vollziel-/Teilziel-/Integritätsregeln unverändert. Ein Folgeprozess erbt
+keine aktuelle Risikozustimmung oder Schreibberechtigung aus dem Intent.
+
+Der allgemeine Befehl `lock recover --force` behält sein Journalveto.
+Die bestehende gewöhnliche Transaktionsübernahme behält ihre exakte
+Transaktions-/Request-/Journalbindung. Der hier zusätzlich gebundene
+Restorefall ist keine globale Aufweichung dieser Wege. Der Lock wird nur
+freigegeben, solange er noch der eigene unveränderte Owner ist.
+
+Fehlende Pflichtangaben ergeben Code 2, ungültige oder unvollständige
+notwendige Belege 3, echte I/O-Fehler oder ungelöster Recoverybedarf 5,
+abweichende Bindungen 6 sowie unsichere Pfade, lebende Owner oder fehlende
+Berechtigung/Risikozustimmung 7. Abgewiesene Vorprüfungen bleiben schreibfrei;
+nach möglichem Write werden tatsächlicher Zustand und Recoverybedarf
+ausgewiesen. Einzellauf und Workfortsetzung benutzen dieselben Bindungen
+und Gates. Diese Präzisierung enthält keine menschliche Freigabe, keine
+reale Risikoakzeptanz und keinen Implementierungs-/Abnahmenachweis.
 
 
 ### 10.8 Scope Descriptor und Scope-Closure
@@ -5135,6 +5274,18 @@ oder Produktverhalten und aktiviert keine Automatik. Produktstand 648/900
 und der offene Schritt 15.l.W bleiben unverändert. Aktive Katalogbindungen
 folgen den neuen Dokumentbytes; historische Nachweise bleiben historisch.
 
+### 20.26 Explizite Restore-Ownerübergabe v0.2.32
+
+Die delegierte Entscheidung RESTORE-OWNER-HANDOFF aus 10.7.5 trennt den
+explizit autorisierten Übergang eines passend ausgewählten gewöhnlichen
+Altowners an einen neuen Restore von der Fortsetzung derselben gebundenen
+Restore-Ausführung. Beide Owner-/Auftragsseiten, tatsächlicher Root,
+Originalbytes und Risikoentscheidung bleiben nachvollziehbar gebunden.
+Native Mutex-, Owner-, Berechtigungs- und Journalgates werden nicht umgangen.
+Der Produktstand bleibt 649/900, 15.l.R offen. Diese normative Präzisierung
+ist kein Implementierungs- oder Produktabnahmenachweis. Aktive Kataloghashes
+folgen den neuen Dokumentbytes; historische Belege bleiben unverändert.
+
 ## 21. Entscheidungsstatus und nicht blockierende Restpunkte
 
 | ID | Thema | Stand |
@@ -5177,6 +5328,7 @@ Die folgende Roadmap ist informativ und erzeugt keine Anforderungen an 0.2:
 
 | Version | Datum | Status | Änderung |
 |---|---|---|---|
+| 0.2.32 | 2026-10-26 | Delegiert gemäß SPECROAD-DECISION-1 | RESTORE-OWNER-HANDOFF: explizite zweitseitige Owner-/Auftragsbindung für neuen oder fortgesetzten Restore; native Lock-/Risikogates, Originalerhaltung und Produktstand bleiben erhalten. |
 | 0.2.31 | 2026-10-26 | Ausdrücklicher manueller Nutzerauftrag zur Erweiterung der Projektregel | SPECROAD-DECISION-1-V3: höchstens drei Klärungsbundles unter gültigem Vertrag 3 mit dauerhaftem Budget; Version 2 behält die Einerregel. Fachliche Grenzen, Nachweise und Betriebszustände bleiben erhalten. |
 | 0.2.30 | 2026-10-26 | Ausdrücklicher manueller Nutzerauftrag | RESTORE-JOURNAL-SELECTION: autorisierte Pfad-/Inventurhashliste für betroffene alte aktive Journale, übrige Sperren bleiben erhalten; Umsetzung und Crashabnahme in 15.l offen. |
 | 0.2.29 | 2026-10-26 | Delegierte Detailklärung nach SPECROAD-DECISION-1 | RESTORE-EXECUTION-CONTRACT: genaue eigene Betriebswrites, dauerhafte Originalbytes und konservativer Abschluss/Rollback der Restore-Ausführung; Umsetzung und Crashabnahme in 15.l bleiben offen. |
@@ -8301,4 +8453,4 @@ Implementierungsschritten nachgewiesen sein.
 
 ---
 
-**Ende der SpecRoad-Produktspezifikation v0.2.31.**
+**Ende der SpecRoad-Produktspezifikation v0.2.32.**
