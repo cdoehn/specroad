@@ -254,7 +254,7 @@
     "tests/test_restore_plan_right.py::test_wire_json_syntax_and_encoding_fail_without_any_project_access[utf8]"
   ],
   "open_items": [
-    "15.k.C: structural cleanup of the tested R-46 Evidence/Baseline history fold. Historical lifecycle/specialist and completed-receipt publication evidence, independent-policy Evidence and remaining protected record kinds still require integration before full restore acceptance. These unsupported cases remain explicit failures, never permanent exemptions or qualified partial targets.",
+    "Historical lifecycle/specialist and completed-receipt publication evidence, independent-policy Evidence and remaining protected record kinds still require integration before full restore acceptance. These unsupported cases remain explicit failures, never permanent exemptions or qualified partial targets.",
     "15.l: external CLI plan publication, separately authorized locked execution, durable recovery archive/journal/audit and crash-safe completion. No executed restore or full SR-REQ-0461 acceptance is claimed."
   ]
 }

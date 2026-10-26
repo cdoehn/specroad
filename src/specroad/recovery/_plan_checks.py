@@ -5,20 +5,13 @@ from ..model.errors import ModelError
 from ..model.paths import PathClass, classify_path, artifact_path
 from ..model.record_schemas import validate_record_fields
 from ..storage.json_syntax import parse_json_object
-from ._codec import file_row, file_table, namespace
+from ._codec import file_table, namespace
 from ._current_evidence import current_configuration
 from ._coverage import inventory_roots, OPERATIONAL_ROOTS
-from ._history import preserve_history
+from ._history import history_target
 from ._sources import reconstruct
 from ._validation import validate_project
 from .values import require
-
-
-def assemble_target(source_files, additions):
-    target = {**source_files, **{p: raw for p, (raw, _) in additions.items()}}
-    preserved = [{**file_row(p, raw), 'reasons': reasons}
-                 for p, (raw, reasons) in sorted(additions.items(), key=lambda item: item[0].encode('utf-8'))]
-    return target, preserved
 
 
 def check_history(current, target, current_configuration, target_model):
@@ -117,8 +110,7 @@ def verify_contents(data, objects):
     configuration = current_configuration(current, data['inventory']['roots'])
     require(configuration.project_id == source_model.configuration.project_id,
             'restore_project_identity_conflict', exit_code=6)
-    additions = preserve_history(files, additions, current, configuration)
-    expected_target, preserved = assemble_target(files, additions)
+    expected_target, preserved = history_target(files, additions, current, configuration)
     require(target == expected_target, 'restore_target_inventory_mismatch')
     require(data['preserved'] == preserved, 'restore_preservation_inventory_mismatch')
     target_model, root = validate_project(target)

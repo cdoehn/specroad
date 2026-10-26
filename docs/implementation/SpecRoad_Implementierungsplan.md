@@ -28,10 +28,10 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ```yaml
 plan_revision: 23
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 647
-last_completed_plan_commit: 15.k.R
-next_plan_commit: 15.k.C
-last_completed_numbered_bundle: 494
+implementation_plan_commits_completed: 648
+last_completed_plan_commit: 15.k.C
+next_plan_commit: 15.l.W
+last_completed_numbered_bundle: 495
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -29172,7 +29172,7 @@ ohne weitere Result-Abfrage oder Hintergrundfortsetzung.
 
 #### 15.k.C – Make it Clean
 
-- [ ] **15.k.C** · Position **648/900** · Voraussetzung: `15.k.R`.
+- [x] **15.k.C** · Position **648/900** · Voraussetzung: `15.k.R`.
 **Exakte Commit-Message:** `15.k.C refactor(bundle): Geschützte Historie beim Restore bereinigen`
 
 **Bereinigung:** Schutzinventur und Quellsnapshot zu einem sichtbaren Zielplan falten.
@@ -29180,6 +29180,107 @@ ohne weitere Result-Abfrage oder Hintergrundfortsetzung.
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
 **Regressionsabnahme:** Alle vorhandenen W-/R-Verhaltenstests dieses Schritts und die vom Refactoring betroffenen bisherigen Verhaltenstests erneut ausführen; erwartete Fachwerte nicht passend zum Refactoring umschreiben. Bei reinen Präsentations-/Dokuschritten keine solchen Tests erfinden.
+
+
+**Umsetzungs- und Übergabenachweis – Bundle 495 (C), 26. Oktober 2026.**
+
+**Maßgebliche Basis.** Das vollständig geprüfte Result
+`specroad-apply_Result_130017_1026_653493.zip`, SHA-256
+`5528661bcee533aa0a604bfec333bb9136fb652071452c3b78408fb7b52e3b89`,
+bindet den sauberen Commit
+`e5bc5b9e50a4327b135876a6de8a8b2ecf9eec26`, Repository
+`a33ed6cf-0a97-4b73-b11a-d4239e7a2145`, Fingerprint
+`7c9d2a24e397e0e5`, Algorithmus `patchharbor-state-v1`.
+Generierte Root-Anleitung, Kontext, Umgebung, Manifest, Run-/Ausführungslogs,
+vollständiger Snapshot, tatsächlicher Apply-Stand und vorheriges Bundle
+wurden gegeneinander geprüft. Der echte 15.k.R-Commit entstand nach
+**7.202/7.202** bestandenen parallelen Tests der **Sequenz 200 / Gruppe 2**,
+vier Worker, **2394.92 s**. Auswahlbindung, Einzeloutcomes und committete
+Bytes stimmen. Ausgangsfortschritt: **647/900**, zuletzt **15.k.R**,
+Bundle **494**.
+
+**Reguläre C-Bereinigung desselben Evidence-/Baseline-Ausschnitts.**
+SPECROAD-DECISION-1 ist ausdrücklich vorhanden und wurde geprüft.
+Die bereits verbindlichen Vorgaben **0.2.28, 10.7.1–10.7.2 und R-46**
+bleiben unverändert; keine neue normative Entscheidung.
+
+`history_target` faltet den qualifizierten Quellsnapshot und die expliziten
+Quellergänzungen mit der Schutzinventur in genau ein Zielinventar und seine
+Erhaltungszeilen. Ein privater, ausschließlich im Speicher arbeitender
+Faltungszustand hält Zielbytes, Gründe, registrierte Identitäten,
+Baseline-Arbeitsliste und ursprüngliche Anhangversionen zusammen.
+Die Reihenfolge bleibt sichtbar: aktuelle immutable Identitäten registrieren,
+rekursive Baselineclosure schließen, sämtliche Evidence-Anhangbindungen
+prüfen, exakt gebundene Originalbytes erhalten und Erhaltungszeilen ausgeben.
+Die Vorbereitung und die passive unabhängige Prüfung rufen denselben
+internen Faltungseinstieg mit ihren jeweils selbst rekonstruierten Bytes auf.
+Die bisher separat wiederholte Zielzusammensetzung entfällt.
+
+Identitätskonflikte werden weiterhin vor der Abhängigkeitsauflösung erkannt.
+Native Leser, Originalbytes, Iterationsreihenfolge, Konfliktgrenzen,
+Gründe-/Pfadsortierung, Rückgabeverträge, Codes und maschinenlesbare
+Fehlergründe bleiben gleich. Es entstehen keine Projekt-/Betriebswrites.
+Kein neuer Provider, keine neue Annahme über mutable Daten, keine geänderte
+Fachentscheidung. Alle vorhandenen Tests und ihre Erwartungen bleiben
+bytegleich zum Result; keine neue Testidentität oder Umnummerierung.
+
+**Erhaltene Grenzen.** `SR-TC-0461` und `SR-TC-0462` bleiben **partial**.
+Unabhängige Evidencepolicy, weitere geschützte Recordarten, gespeicherte
+Standard-Approval-/Spezialistenbelege und abgeschlossene Receipts brauchen
+weiterhin ihre vollständige Integration vor einer Gesamt-Restoreabnahme.
+Die vorhandenen Ablehnungen sind keine dauerhaften Ausnahmen von diesen
+Anforderungen. Negative/stale Historie bleibt ein historischer Befund,
+kein Readiness- oder Freigabenachweis. 15.l enthält externe Planveröffentlichung,
+getrennte Autorisierung, Recovery-Lock, dauerhafte Sicherung, Journal/Audit
+und Crashabschluss. Die C-Bereinigung führt keinen Restore aus.
+
+**Gezielte parallele Dev-Prüfung.** Der übergebene Zustand besteht
+**254/254** bestehende Verhaltenstests mit
+**vier Workern**, CPython **3.14.4**, Prozessabschluss **0**, in
+**612.35 s**:
+
+- `tests/test_restore_plan.py` (46)
+- `tests/test_restore_plan_right.py` (82)
+- `tests/test_restore_history.py` (34)
+- `tests/test_restore_history_right.py` (28)
+- `tests/test_baseline_verification.py` (30)
+- `tests/test_baseline_verification_right.py` (34)
+
+Alle 15.k.W-/R-Verhaltenstests sowie die betroffenen Restoreplan- und nativen
+Baseline-Verifikationstests laufen unverändert erneut. Sie prüfen beide
+vollständigen Quellarten, jüngere Historie, native rekursive Archive,
+Identitäts-/Anhangkonflikte, fehlende oder beschädigte Originale, exakte
+Auswahl historischer Anhangstände, Deduplizierung, präzise Fehlerverträge,
+unabhängige Zielwurzel und neu gehashte manipulierte Pläne einschließlich
+Schreibfreiheit. Keine Darstellungs-, Dokumentations- oder Strukturtests.
+
+Die vollständige Collection/Katalogprüfung führt keine Testkörper aus:
+**21604** aktive Tests, **21608**
+dauerhafte Nummern. Nummernregister, alle bestehenden Testidentitäten und
+die vier stillgelegten Identitäten bleiben unverändert. Teilprüfung,
+`full_suite_passed=null`; kein Vollsuite- oder Release-Erfolgsnachweis.
+
+Dev-Quellidentität: `6adc13ace9dbc14795808afa1d9048b4b1f1da797855402a695eedef38319b3c`.
+Auswahlbericht-SHA-256:
+`6eb65addd8d878ceeb14f4d8e98deb8090a850197065c6f98648f54ffe888039`.
+Einzeloutcomes-SHA-256:
+`d3bfda00d65d3f7e8d6f0fc103aeff8963c441e3254a303b0ca8f0df7d14584f`.
+Vorherige Apply-Auswahlbindung: `ad590b76422534f15001e4d63009bf7c37cf0c9b49f94313a4a1789b8613ef11`;
+Apply-Bericht: `36b3aed78e170c95ccd2702a3b402c26e4cb05c90c064bf1f20343040a6d881e`;
+Apply-Einzeloutcomes: `8ce0e80835d7d3b2bff8ea7d467533d6e4b249d9f4f90baeee35335beaf33499`.
+
+**Übergabe.** Genau ein echter C-Zustand mit eigenem Commit. Der unveränderte
+bewährte Entrypoint installiert die gezielt geprüften Bytes durch den nativen
+PatchHarbor-Payloadwriter. Ausschließlich **Sequenz 201 / Gruppe 0 von 3**,
+**7202** Tests, läuft parallel mit vier Workern.
+Erst nach erfolgreicher Prüfung von Auswahl, Quellhash und Einzeloutcomes
+folgen die fünf Fortschrittsmarker auf **648/900**, zuletzt **15.k.C**,
+nächstens **15.l.W**, Bundle **495** und die C-Checkbox sowie die exakte
+Commit-Message. Fehler erhalten den tatsächlichen Stand und erfolgreiche
+Commits. Apply-Test und Commit sind bei Übergabe noch nicht beobachtet.
+Native Prüfung der fertigen ZIP, vollständiger SHA und atomare
+Exchange-Übergabe beenden diesen N-Auftrag ohne weitere Result-Abfrage
+oder Hintergrundfortsetzung.
 
 <a id="step-15-l"></a>
 ### 15.l – Restore veröffentlichen und Crashabsicherung

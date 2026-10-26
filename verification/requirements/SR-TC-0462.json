@@ -262,6 +262,6 @@
   ],
   "open_items": [
     "Automatic transaction preflight (5.t), the comprehensive fault-injection matrix (5.v) and full-source restore (15.j-15.l) remain in their assigned plan positions; the existing explicit recovery kernels do not establish those integrations.",
-    "15.k.C and 15.l: structural cleanup, restore execution and durable action audit. Remaining protected history providers are still mandatory before full restore acceptance; passive qualified inventories are not an executed recovery or complete SR-REQ-0462 acceptance."
+    "15.l: restore execution and durable action audit. Remaining protected history providers are still mandatory before full restore acceptance; passive qualified inventories are not an executed recovery or complete SR-REQ-0462 acceptance."
   ]
 }

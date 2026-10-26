@@ -8,9 +8,9 @@ from ._codec import file_row, file_table
 from ._coverage import inventory_roots
 from ._current_evidence import BASELINES, current_configuration
 from ._inventory import boundary, observe, read_source
-from ._history import preserve_history
+from ._history import history_target
 from ._observations import observe_configuration, verify_live as _verify_live
-from ._plan_checks import assemble_target, check_current
+from ._plan_checks import check_current
 from ._sources import reconstruct
 from ._validation import validate_project
 from .values import RestoreError, RestorePlan, require, guarded
@@ -62,8 +62,7 @@ def prepare_restore_plan(project_root, *, source_root, source_path, source_kind,
         require(entries == baseline_inventory['entries'], 'restore_inventory_changed', exit_code=6)
     require(configuration.project_id == source_model.configuration.project_id,
             'restore_project_identity_conflict', exit_code=6)
-    additions = preserve_history(files, additions, current, configuration)
-    target, preserved = assemble_target(files, additions)
+    target, preserved = history_target(files, additions, current, configuration)
     target_model, target_root = validate_project(target)
     backup = check_current(inventory, current, source_model, target, target_model)
     require(configuration.data == current_configuration(current, roots).data,
