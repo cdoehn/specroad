@@ -11,7 +11,7 @@ import os
 
 from ..model.canonical import canonical_json_bytes
 from ..model.errors import ModelError
-from ..storage.archive import ArchiveError, encode_archive, decode_archive, _require
+from ..storage.archive import ArchiveError, encode_archive, decode_archive, _require, _hash as _archive_hash
 from ._data_contract import WorkManifestError, _object, _parse, _hash, _count
 from .checkpoints import (CheckpointStore, _StoredObjects, _read_reference,
                           _reference, _reference_check, _verify_bindings)
@@ -152,6 +152,9 @@ def _decode(metadata, payloads, registry, build):
 
 
 def _checked_package(raw, expected_sha256, registry, build):
+    # A required external identity must not become the codec's optional-hash
+    # mode when a host accidentally supplies None.
+    _archive_hash(expected_sha256)
     metadata, payloads = decode_archive(raw, manifest_name=_MANIFEST, expected_sha256=expected_sha256)
     try:
         chain = _decode(metadata, payloads, registry, build)
@@ -207,7 +210,8 @@ def _restore_target(held, payloads, *, complete=False):
     held.check()
 
 
-def restore_work_package(raw, *, expected_sha256, registry, protected_roots, directory):
+def restore_work_package(raw, *, expected_sha256, registry, protected_roots, directory,
+                         _recheck_input=lambda: None):
     """Verify every package byte, then restore into one missing/empty safe root.
 
     No command, imported package code or Recovery is executed. Every original
@@ -219,16 +223,21 @@ def restore_work_package(raw, *, expected_sha256, registry, protected_roots, dir
     build = _runtime_build()
     chain, payloads = _checked_package(raw, expected_sha256, registry, build)
     _require(_runtime_build() == build, 'work_package_runtime_changed')
+    _recheck_input()
     location = WorkDirectory(chain[0], protected_roots=protected_roots, directory=directory)
     store = CheckpointStore(location, chain[0])
     with location.for_checkpoint(require_empty=True) as held:
         _require(_runtime_build() == build, 'work_package_runtime_changed')
+        _recheck_input()
         _restore_target(held, payloads)
         for manifest in chain:
             _require(_runtime_build() == build, 'work_package_runtime_changed')
+            _recheck_input()
             store._publish_held(held, manifest, store._pointer(held))
             _restore_target(held, payloads)
+            _recheck_input()
         _require(store._pointer(held)[0] == payloads['work.json'], 'work_package_restore_mismatch')
         _ensure_work(store, held, store._pointer(held), chain[-1], build)
         _restore_target(held, payloads, complete=True)
+        _recheck_input()
     return store

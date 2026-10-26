@@ -719,6 +719,10 @@
     "SR-FIX-BUNDLE-WORK-BACKUP-v1": {
       "kind": "Owned read-only Work checkpoints and explicit compatibility fixture; actual externally written canonical ZIPs, restoration and handler replay. Completed native projects and real prepared/partially replaced/committed interrupted transactions verify distinct package kinds and unchanged recovery gates. Real private atomic output files with source, image, target and IO fault injection; no remote-backup or native-write Work export claim.",
       "provider": "tests/test_bundle_work_backup.py:destination,save;tests/test_work_resume.py:setup,recorded;tests/test_project_bundle.py:project;tests/support/work_publication_process.py:child"
+    },
+    "SR-FIX-BUNDLE-WORK-LOSS-R-v1": {
+      "kind": "Owned externally published Work files and exact external hashes, explicit compatibility fixture, real loss of original sandbox and moved backups in isolated fresh processes. Sealed binary inputs, segmented ancestry, declared result bytes and actual source changes before/during publication; prompt/report substitution is rejected as absent data. No remote retention or native-write Work portability claim.",
+      "provider": "tests/test_bundle_work_backup_right.py:retained,restore;tests/test_work_resume.py:setup,recorded;tests/support/processes.py:run_core"
     }
   },
   "fixture_format_version": 1,
@@ -743,6 +747,7 @@
     "SR-FIX-BUNDLE-VERIFICATION-RIGHT-v1",
     "SR-FIX-BUNDLE-VERIFICATION-v1",
     "SR-FIX-BUNDLE-WORK-BACKUP-v1",
+    "SR-FIX-BUNDLE-WORK-LOSS-R-v1",
     "SR-FIX-CATALOG-DATA-v1",
     "SR-FIX-CHANGE-AUTHORING-v1",
     "SR-FIX-CHANGE-EXECUTION-v1",

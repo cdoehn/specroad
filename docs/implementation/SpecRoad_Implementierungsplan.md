@@ -28,10 +28,10 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ```yaml
 plan_revision: 22
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 640
-last_completed_plan_commit: 15.i.W
-next_plan_commit: 15.i.R
-last_completed_numbered_bundle: 486
+implementation_plan_commits_completed: 641
+last_completed_plan_commit: 15.i.R
+next_plan_commit: 15.i.C
+last_completed_numbered_bundle: 487
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -28022,12 +28022,149 @@ Hintergrundfortsetzung.
 
 #### 15.i.R – Make it Right
 
-- [ ] **15.i.R** · Position **641/900** · Voraussetzung: `15.i.W`.
+- [x] **15.i.R** · Position **641/900** · Voraussetzung: `15.i.W`.
 **Exakte Commit-Message:** `15.i.R feat(bundle): Offene Transaktionen und externe Sicherung vervollständigen`
 
 **Vervollständigung:** Verlorene lokale Bytes nicht als aus einer alten Chatbeschreibung wiederherstellbar darstellen.
 
 **Verhaltensabnahme:** Verlust-/Pfadwechselkorpus weist tatsächlich benötigte Sicherungsdaten nach. Die W-Nachweise bleiben zusätzlich grün.
+
+
+**Umsetzungs- und Übergabenachweis – Bundle 487 (R), 26. Oktober 2026.**
+
+**Bestätigte Basis.** Result `specroad-apply_Result_034314_1026_81a13d.zip`,
+SHA-256 `2a6ddd48fe676cb79910b6c3d64bc358b31eb52754443deca70780e4524f16f9`,
+bestätigt den sauberen Commit `8678d254dc2d6a50a4000989f6e1fd218ff23204`,
+Parent `bbed124aa77c2703d4d4a4d26e13eea87fef806d`, für **15.i.W**, Bundle 486.
+Root-Anleitung, Kontext, Umgebung, Manifest, Run-/Ausführungslogs und alle
+**2.271** Snapshotdateien wurden geprüft. Blob-IDs, Größen, Modi und Bytes
+stimmen mit dem tatsächlich nur lesend geprüften Apply-Zustand überein.
+Native Resultprüfung und konsistente Zustandserfassung bestätigen die exakte
+Vierfachbindung; das Result war eindeutig maßgeblich und noch unverbraucht.
+
+Die tatsächliche Commitfolge und gebundenen Apply-Einzeloutcomes belegen
+**7.123/7.123** bestandene Tests, Sequenz **192**, Gruppe **0/3**, vier
+parallele Worker, **2.470,77 s**, Prozessende 0. Auswahlbindung
+`d9f5c6df05618d71b3c255ac1eed71ac8551d2576a1f446a50f341200e2daeb4`; Auswahlbericht-SHA
+`472af043cbfd4656e625a3ba86a4e6639895fbf83f801de88e89e01871b15f2a`; Einzeloutcomes-SHA
+`45f05ae11940831fa66662f1686dff2a8228ba8981c6b1a4d24afea1b85c13f7`. Dieser Teiltest ist kein Vollsuite- oder
+Release-Nachweis. Bestätigt sind **640/900**, zuletzt 15.i.W, nächstens 15.i.R,
+Bundle 486. Die Dev-Planmarker wurden zuerst auf diese bestätigte Basis
+synchronisiert. Dev-Historie, Index und lokale Arbeitsregeln bleiben unverändert.
+
+**Regulärer R-Ausschnitt.** SPECROAD-DECISION-1 ist ausdrücklich in den
+maßgeblichen Projektvorgaben enthalten. Der bestätigte Plan und die bestehenden
+Vorgaben in 10.16, SR-REQ-0568 sowie Anhang P.3/P.4/P.7/P.8 bestimmen bereits,
+dass tatsächlich erhaltene Paketbytes den Wiederanlauf begrenzen. Eine normative
+Ergänzung ist nicht erforderlich. Die Spezifikation 0.2.27 bleibt bytegleich mit
+SHA-256 `07a35f089e83d27045e76a57aa5b3d5d0061dd0556543b4765da5f114e1ae637`.
+
+Das neue Host-API `specroad.work.package_restoration.restore_work_package_file`
+liest genau eine ausdrücklich gewählte kanonische absolute Datei und verlangt
+deren vollständigen externen SHA-256. Es sucht weder nach Ersatzpaketen noch
+verwendet es alte Prompts, Exportberichte oder ursprüngliche Sandboxpfade als
+Payloadquelle. Ein fehlender Hash aktiviert auch beim bestehenden Byte-Restore
+nicht mehr versehentlich den optionalen Hashmodus des allgemeinen ZIP-Codecs.
+Die vorhandene vollständige Paket-, Inventar-, Build-, Manifest- und Kettenprüfung
+läuft vor der Zielanlage. Fehlende Eingabe-, Ergebnis-, Manifest-, Segment- oder
+Vorfahrenbytes werden nicht aus ihren Hashes oder Beschreibungen rekonstruiert.
+
+Der Dateirestore ergänzt den Quellordner als geschützte Eingabegrenze; die
+ausdrücklich vom Host gelieferten übrigen Schutzgrenzen bleiben erforderlich.
+Er prüft Dateibytes und Quellwurzelidentität nach der Validierung sowie vor und
+nach jeder echten Checkpointveröffentlichung erneut. Die vorhandene durable
+Wiederherstellung erzeugt nur ein fehlendes oder privates leeres, getrenntes
+Work-Ziel. Symlinks, Spezialdateien, nichtkanonische Pfade, belegte Ziele und
+geschützte Überlappungen bleiben gesperrt. Fehler vor der Zielanlage schreiben
+keine Wiederherstellungsdaten. Ein späterer Verlust oder Wechsel der Paketdatei
+bricht ohne Erfolgsmeldung ab und erhält den tatsächlich veröffentlichten Präfix.
+
+Eine auf anderem Pfad tatsächlich erhaltene Datei kann ohne den ursprünglichen
+Work-/Projektordner in einem neuen Prozess wiederhergestellt werden. Maßgeblich
+sind exakt ihre Generation, Bindungen und Bytes: ein später gespeicherter Prompt
+macht aus einer Sicherung von Generation 0 keine Sicherung von Generation 1.
+Handlerausführung erfolgt weiterhin getrennt; deklarierte generische Daten
+werden nicht zu ausführbarer Autorität. W-Dateipublikation, Paketformat,
+Projektvollbundle-Sperre bei ungelösten Transaktionen und Ablehnung normativer
+Work-Pakete ohne native Transaktions-/Receiptbindung bleiben erhalten.
+
+Dies belegt den vorhandenen Read-only-Host-Ausschnitt, keine automatische
+Außensicherung oder vollständige Anhang-P-Umsetzung. Work-CLI, native Schreibarbeit-
+Portabilität, ausdrückliche native Zielzuordnung und Streaming/Mehrteiler bleiben
+offen. SR-REQ-0568 und SR-REQ-0628 bleiben **partial**. Es werden weder Recovery,
+Projektveröffentlichung, zusätzliche Freigaben noch externe Nachweise erfunden.
+
+**Entwicklungsnachweis.** Der endgültige R-Zustand besteht
+**972/972** Tests aus **28** vollständigen
+Testdateien mit acht parallelen Workern unter CPython 3.14.4 in **410.79 s**,
+beobachtetem Prozessende 0 und ausschließlich bestandenen Einzeloutcomes.
+Die 47 neuen Fälle prüfen echten Sandboxverlust und umgezogene Pakete in neuen
+Prozessen für Generationen 0/1/2, private leere Ziele, die Grenze einer älteren
+Sicherung trotz neuerem Prompt, vollständig versiegelte Binäreingaben und
+segmentierte Vorfahren-/Ergebnisdaten. Hinzu kommen fehlende Paketbestandteile,
+Report-/Prompt-/Projektpaket-Ersatzversuche, erforderliche externe Hashes,
+geänderte Quelldateien und Quellwurzelidentitäten vor und während der echten
+Wiederherstellung, erhaltene Präfixe sowie Pfad- und Schutzgrenzen.
+Die Kompatibilitäts-Builddaten sind ausdrücklich Fixtures; Dateien, Prozesse,
+Archive und Checkpointveröffentlichungen sind reale Vorgänge.
+Alle 31 W-Fälle und die betroffenen Work-Paket-, Archiv-, Root-, Checkpoint-,
+Manifest-, Resume-, Finalisierungs-, Resultdatei-, Kontroll- und Projektbundle-
+Regressionen bleiben in derselben Auswahl enthalten.
+
+Die vollständige Collection/Katalogprüfung bestätigt **21414** aktive
+Testidentitäten und **0** ausgeführte Testkörper. **47** neue Identitäten werden
+hinten angefügt: **21418** reservierte Nummern einschließlich vier
+stillgelegter; keine alte Nummer geändert, entfernt oder wiederverwendet.
+`full_suite_passed=null`: kein Entwicklungsvolltest, kein serieller Testlauf,
+keine Darstellungs-/Dokumentationstests, kein CI-Start.
+Quellidentität `784d3f4ac709b48e8205db960681aca214cdee454cc3a3657f34b2a8c64015e5`;
+Katalog-SHA `2b32cabea11f2d45eaeeac579b755eecfcbff5143abf4d6b2b7ca7e8ea16c17a`;
+Auswahlbericht-SHA `685ed744a46e687390aba2a97f6f5be287b8697f8294e16258847094bfa3f087`;
+Einzeloutcomes-SHA `0a4f75b024d6dd6e3f745df60c11efc6189ce30e38df86802420799680c78079`.
+Ausgewählte vollständige Testdateien:
+
+- `tests/test_bundle_work_backup.py`
+- `tests/test_bundle_work_backup_right.py`
+- `tests/test_project_bundle.py`
+- `tests/test_project_bundle_right.py`
+- `tests/test_work_archive.py`
+- `tests/test_work_archive_right.py`
+- `tests/test_work_checkpoints.py`
+- `tests/test_work_checkpoints_right.py`
+- `tests/test_work_control.py`
+- `tests/test_work_evaluation.py`
+- `tests/test_work_evaluation_right.py`
+- `tests/test_work_finalization.py`
+- `tests/test_work_finalization_right.py`
+- `tests/test_work_manifest.py`
+- `tests/test_work_manifest_right.py`
+- `tests/test_work_packages.py`
+- `tests/test_work_packages_right.py`
+- `tests/test_work_progress.py`
+- `tests/test_work_progress_right.py`
+- `tests/test_work_prompt.py`
+- `tests/test_work_publication.py`
+- `tests/test_work_publication_right.py`
+- `tests/test_work_receipt_files.py`
+- `tests/test_work_result_files.py`
+- `tests/test_work_resume.py`
+- `tests/test_work_resume_right.py`
+- `tests/test_work_root.py`
+- `tests/test_work_root_right.py`
+
+**Gebundene Übergabe.** Genau ein regulärer **PLAN 15.i.R**, Position
+**641/900**, wird als eigener geprüfter Zwischenstand mit dem nativen
+Payloadwriter hergestellt. Der Entrypoint fordert den sauberen gebundenen
+Ausgangsstand und ausschließlich **Gruppe 1/3, Sequenz 193**, mit
+**7136** parallelen Tests auf vier Workern. Quellidentität, Katalog,
+feste Nummerierung und tatsächliche Auswahlbindung müssen übereinstimmen.
+Erst nach erfolgreichem Apply-Gate werden die fünf Planmarker auf R abgeschlossen,
+641/900, zuletzt 15.i.R, nächstens 15.i.C und Bundle 487 gesetzt. Danach folgt
+`15.i.R feat(bundle): Offene Transaktionen und externe Sicherung vervollständigen`.
+15.i.C bleibt offen. Apply-Test und Commit sind vorgesehen und werden nicht
+als bereits erfolgt behauptet. Fehler erhalten den tatsächlichen Zustand und
+bereits erfolgreiche Commits. Native ZIP-Prüfung und atomare Exchange-Übergabe
+beenden diesen N-Durchlauf ohne Result-Warten oder Hintergrundfortsetzung.
 
 #### 15.i.C – Make it Clean
 

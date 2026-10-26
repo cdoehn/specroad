@@ -8,21 +8,24 @@
   "method": "automated_behavior",
   "fixture_ids": [
     "SR-FIX-PROJECT-BUNDLE-R-v1",
-    "SR-FIX-BUNDLE-WORK-BACKUP-v1"
+    "SR-FIX-BUNDLE-WORK-BACKUP-v1",
+    "SR-FIX-BUNDLE-WORK-LOSS-R-v1"
   ],
   "preconditions": [
     "A current native project with a completely observed empty request/transaction receipt inventory; no configuration filter or partial source promotion.",
-    "Work export uses the existing caller-trusted read-only initial manifest and compatible runtime; an explicit, existing output root is disjoint from Work and protected project/input roots."
+    "Work export uses the existing caller-trusted read-only initial manifest and compatible runtime; an explicit, existing output root is disjoint from Work and protected project/input roots.",
+    "File restore requires the actual retained ZIP and its complete external hash, explicit current protected boundaries and a disjoint missing/private-empty Work target; no old sandbox or chat description supplies payload bytes."
   ],
   "steps": [
     "Prepare canonical project bytes from guarded native inventory and closure; compare unchanged artifact/resource and referenced object bytes, native roots, exclusions and independently reopened payloads. Refuse unsafe, changed, incomplete or unresolved sources without writing.",
     "Publish the retained native bundle through CLI, structured request and library entry points; verify unchanged source inventory, exact ZIP bytes/hash and no overwrite. Reject missing payloads, incomplete histories, unsafe destinations and changes before atomic publication; preserve actual images on failure.",
-    "15.i.W: publish a separate package_kind=work ZIP to a create-only external file while retaining checkpoint observation; restore the actual saved generations 0/1/2 and replay the exact result. Preserve sources and existing or raced destinations. Real unresolved native transactions block project full bundles with code 5; unsupported normative Work export remains code 6 without Recovery or writes."
+    "15.i.W: publish a separate package_kind=work ZIP to a create-only external file while retaining checkpoint observation; restore the actual saved generations 0/1/2 and replay the exact result. Preserve sources and existing or raced destinations. Real unresolved native transactions block project full bundles with code 5; unsupported normative Work export remains code 6 without Recovery or writes.",
+    "15.i.R: restore from an explicitly selected canonical file and mandatory external SHA-256 after actual Work/source loss or backup relocation. Recheck the retained file across every generation. Reject missing/mutated payloads and prompt/report substitutes before allocation; preserve the real published prefix on later source loss. A newer prompt does not advance an older backup."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "`bundle create` MUSS ungelöste Transaktionen als Projektvollbundle abweisen; ein separat gekennzeichnetes Arbeitspaket folgt dem Export- und Recoveryvertrag aus Anhang P.",
-    "scope": "15.b.R project creation plus 15.i.W external file publication for the existing read-only Work package contract. Exact package bytes/hash, source preservation, distinct project/work kinds, recovery refusal, output containment, no overwrite and retained actual failure images. No Work CLI, native transaction/receipt export binding, remote backup assurance or general Appendix P completion is claimed."
+    "scope": "15.b.R project creation plus 15.i.W external file publication for the existing read-only Work package contract. Exact package bytes/hash, source preservation, distinct project/work kinds, recovery refusal, output containment, no overwrite and retained actual failure images. No Work CLI, native transaction/receipt export binding, remote backup assurance or general Appendix P completion is claimed. 15.i.R adds a required-hash file restore adapter, actual loss/path relocation and fresh-process recovery at exactly the retained generation. Complete byte validation precedes allocation; source parent identity and exact bytes are rechecked during restoration. No automatic backup discovery or prompt-based reconstruction occurs."
   },
   "expected_diagnostics": [
     "SRV002",
@@ -81,6 +84,53 @@
     "tests/test_bundle_work_backup.py::test_written_work_file_restores_exact_checkpoint_and_handler_result[0]",
     "tests/test_bundle_work_backup.py::test_written_work_file_restores_exact_checkpoint_and_handler_result[1]",
     "tests/test_bundle_work_backup.py::test_written_work_file_restores_exact_checkpoint_and_handler_result[2]",
+    "tests/test_bundle_work_backup_right.py::test_actual_sealed_inputs_and_complete_ancestry_are_required_after_loss[None]",
+    "tests/test_bundle_work_backup_right.py::test_actual_sealed_inputs_and_complete_ancestry_are_required_after_loss[ancestor]",
+    "tests/test_bundle_work_backup_right.py::test_actual_sealed_inputs_and_complete_ancestry_are_required_after_loss[input]",
+    "tests/test_bundle_work_backup_right.py::test_actual_sealed_inputs_and_complete_ancestry_are_required_after_loss[inventory_segment]",
+    "tests/test_bundle_work_backup_right.py::test_actual_sealed_inputs_and_complete_ancestry_are_required_after_loss[manifest]",
+    "tests/test_bundle_work_backup_right.py::test_actual_sealed_inputs_and_complete_ancestry_are_required_after_loss[result]",
+    "tests/test_bundle_work_backup_right.py::test_adding_input_boundary_never_replaces_required_explicit_protected_roots[roots0]",
+    "tests/test_bundle_work_backup_right.py::test_adding_input_boundary_never_replaces_required_explicit_protected_roots[roots1]",
+    "tests/test_bundle_work_backup_right.py::test_descriptions_and_other_package_kinds_cannot_substitute_for_work_bytes[export_report]",
+    "tests/test_bundle_work_backup_right.py::test_descriptions_and_other_package_kinds_cannot_substitute_for_work_bytes[project_package]",
+    "tests/test_bundle_work_backup_right.py::test_descriptions_and_other_package_kinds_cannot_substitute_for_work_bytes[prompt_only]",
+    "tests/test_bundle_work_backup_right.py::test_descriptions_and_other_package_kinds_cannot_substitute_for_work_bytes[prompt_record]",
+    "tests/test_bundle_work_backup_right.py::test_external_hash_is_required_and_cannot_enable_optional_codec_hash_mode[bytes-000000000000000000000000000000000000000000000000000000000000000]",
+    "tests/test_bundle_work_backup_right.py::test_external_hash_is_required_and_cannot_enable_optional_codec_hash_mode[bytes-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA]",
+    "tests/test_bundle_work_backup_right.py::test_external_hash_is_required_and_cannot_enable_optional_codec_hash_mode[bytes-None]",
+    "tests/test_bundle_work_backup_right.py::test_external_hash_is_required_and_cannot_enable_optional_codec_hash_mode[bytes-]",
+    "tests/test_bundle_work_backup_right.py::test_external_hash_is_required_and_cannot_enable_optional_codec_hash_mode[file-000000000000000000000000000000000000000000000000000000000000000]",
+    "tests/test_bundle_work_backup_right.py::test_external_hash_is_required_and_cannot_enable_optional_codec_hash_mode[file-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA]",
+    "tests/test_bundle_work_backup_right.py::test_external_hash_is_required_and_cannot_enable_optional_codec_hash_mode[file-None]",
+    "tests/test_bundle_work_backup_right.py::test_external_hash_is_required_and_cannot_enable_optional_codec_hash_mode[file-]",
+    "tests/test_bundle_work_backup_right.py::test_last_retained_generation_is_the_boundary_despite_a_newer_saved_prompt",
+    "tests/test_bundle_work_backup_right.py::test_missing_or_changed_external_file_never_allocates_target[missing]",
+    "tests/test_bundle_work_backup_right.py::test_missing_or_changed_external_file_never_allocates_target[other_valid_package]",
+    "tests/test_bundle_work_backup_right.py::test_missing_or_changed_external_file_never_allocates_target[truncated]",
+    "tests/test_bundle_work_backup_right.py::test_moved_external_file_survives_total_sandbox_loss_in_a_new_process[False-0]",
+    "tests/test_bundle_work_backup_right.py::test_moved_external_file_survives_total_sandbox_loss_in_a_new_process[False-1]",
+    "tests/test_bundle_work_backup_right.py::test_moved_external_file_survives_total_sandbox_loss_in_a_new_process[False-2]",
+    "tests/test_bundle_work_backup_right.py::test_moved_external_file_survives_total_sandbox_loss_in_a_new_process[True-0]",
+    "tests/test_bundle_work_backup_right.py::test_moved_external_file_survives_total_sandbox_loss_in_a_new_process[True-1]",
+    "tests/test_bundle_work_backup_right.py::test_moved_external_file_survives_total_sandbox_loss_in_a_new_process[True-2]",
+    "tests/test_bundle_work_backup_right.py::test_restore_never_overwrites_retained_input_or_protected_targets[input_child]",
+    "tests/test_bundle_work_backup_right.py::test_restore_never_overwrites_retained_input_or_protected_targets[input_parent]",
+    "tests/test_bundle_work_backup_right.py::test_restore_never_overwrites_retained_input_or_protected_targets[occupied]",
+    "tests/test_bundle_work_backup_right.py::test_restore_never_overwrites_retained_input_or_protected_targets[project]",
+    "tests/test_bundle_work_backup_right.py::test_source_changes_after_validation_prevent_allocation[bytes]",
+    "tests/test_bundle_work_backup_right.py::test_source_changes_after_validation_prevent_allocation[missing]",
+    "tests/test_bundle_work_backup_right.py::test_source_changes_after_validation_prevent_allocation[parent_identity]",
+    "tests/test_bundle_work_backup_right.py::test_source_changes_after_validation_prevent_allocation[symlink]",
+    "tests/test_bundle_work_backup_right.py::test_source_loss_during_restore_preserves_the_real_published_prefix[bytes-0]",
+    "tests/test_bundle_work_backup_right.py::test_source_loss_during_restore_preserves_the_real_published_prefix[bytes-2]",
+    "tests/test_bundle_work_backup_right.py::test_source_loss_during_restore_preserves_the_real_published_prefix[missing-0]",
+    "tests/test_bundle_work_backup_right.py::test_source_loss_during_restore_preserves_the_real_published_prefix[missing-2]",
+    "tests/test_bundle_work_backup_right.py::test_source_paths_are_explicit_canonical_regular_files[fifo]",
+    "tests/test_bundle_work_backup_right.py::test_source_paths_are_explicit_canonical_regular_files[parent_symlink]",
+    "tests/test_bundle_work_backup_right.py::test_source_paths_are_explicit_canonical_regular_files[relative]",
+    "tests/test_bundle_work_backup_right.py::test_source_paths_are_explicit_canonical_regular_files[symlink]",
+    "tests/test_bundle_work_backup_right.py::test_source_paths_are_explicit_canonical_regular_files[traversal]",
     "tests/test_project_bundle_right.py::test_changes_after_preparation_are_rechecked_before_any_output[archive]",
     "tests/test_project_bundle_right.py::test_changes_after_preparation_are_rechecked_before_any_output[artifact]",
     "tests/test_project_bundle_right.py::test_changes_after_preparation_are_rechecked_before_any_output[missing_attachment]",
@@ -100,6 +150,6 @@
     "tests/test_project_bundle_right.py::test_unresolved_or_unverified_history_prevents_normal_completion[.specroad/transactions/receipts/item/transaction.json]"
   ],
   "open_items": [
-    "15.i.R/C: complete loss/path-change cases and cleanup for this slice; native-write Work portability, Work CLI and streaming/multipart remain separate unfinished Appendix P obligations. A local exported file does not prove survival outside a lost sandbox."
+    "15.i.C cleanup remains open; native-write Work portability, Work CLI and streaming/multipart remain separate unfinished Appendix P obligations. A local exported file does not prove survival outside a lost sandbox."
   ]
 }
