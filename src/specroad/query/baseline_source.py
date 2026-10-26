@@ -10,6 +10,7 @@ from ..model.paths import artifact_path
 from ..security import ProjectBoundary
 from ..storage.json_syntax import parse_json_object
 from ._baseline_observation import _stored_record, baseline_observation
+from ._comparison_capture import SourceCapture
 
 
 def baseline_source(root, reference, expected_project_id):
@@ -51,4 +52,5 @@ def baseline_source(root, reference, expected_project_id):
 
     finish = baseline_observation(boundary, path, raw, objects, checked, record)
 
-    return configuration, resources, str(boundary.root), None, finish
+    return SourceCapture(configuration, resources, str(boundary.root),
+                         check=finish, evidence_key='baseline')

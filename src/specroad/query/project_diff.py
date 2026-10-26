@@ -54,10 +54,8 @@ def _diff_steps(root, against, *, against_kind='git', configuration_id=None,
             expected_project_id=after.configuration.project_id, allow_partial=True)
         if current.sha256 != after.sha256:
             raise ModelError('diff_source_changed')
-        if before._bundle_recheck is not None:
-            # Recheck the original boundary and bytes after the target reads.
-            # Never replace a captured source by validating a new file/root.
-            before._bundle_recheck()
+        # Retained source checks run after the target reads, without recapture.
+        before.verify_before_result()
         validate_result_document('artifact-diff-v1', payload)
         if payload['configuration_scope']['state'] == 'evaluated':
             diagnostics = tuple(Diagnostic('SRV131', 'error', 'model',

@@ -16,6 +16,7 @@ from ..model.record_schemas import validate_record_fields
 from ..runtime.preflight import require_project_read_preflight
 from ..security import SafetyViolation
 from ..storage.json_reader import JsonResource, configuration_schema
+from ..storage.json_syntax import parse_json_object
 from ..storage.preflight_metadata import MetadataPhases
 from ..storage.project import ProjectSource
 from ..storage.resource_discovery import current_json_paths
@@ -23,6 +24,7 @@ from .git_source import GitObjectSource
 from .semantic_diff import compare_semantic
 from .baseline_source import baseline_source
 from .bundle_source import bundle_source
+from ._comparison_capture import SourceCapture
 
 
 def _git_json_paths(source, configuration):
@@ -91,7 +93,6 @@ def _local_source(root, reference, expected_project_id):
     configuration = source.configuration
     names = current_json_paths(source)
     resources = tuple((path, source.read_normative(path)) for path in names)
-    source_root, commit_id = str(source.boundary.root), None
 
     def finish():
         require_project_read_preflight(source.boundary, source.configuration_bytes, MetadataPhases())
@@ -108,7 +109,7 @@ def _local_source(root, reference, expected_project_id):
         # This remains an observation, never an atomic lock or write permit.
         require_project_read_preflight(source.boundary, source.configuration_bytes, MetadataPhases())
 
-    return configuration, resources, source_root, commit_id, finish
+    return SourceCapture(configuration, resources, str(source.boundary.root), check=finish)
 
 
 def _git_source(root, reference, expected_project_id):
@@ -119,8 +120,7 @@ def _git_source(root, reference, expected_project_id):
         raise ModelError('project_identity_mismatch')
     names = _git_json_paths(source, configuration)
     resources = tuple((path, raw if path == 'specroad.json' else source.read_bytes(path)) for path in names)
-    source_root, commit_id = str(source.root), source.commit_id
-    return configuration, resources, source_root, commit_id, None
+    return SourceCapture(configuration, resources, str(source.root), commit_id=source.commit_id)
 
 
 _SOURCE_READERS = MappingProxyType({
@@ -143,9 +143,9 @@ class ComparisonSourceSnapshot:
     configuration: ProjectConfiguration
     inputs: ComparisonInputs
     resources: tuple
-    _baseline_evidence: bytes | None
-    _bundle_evidence: bytes | None
-    _bundle_recheck: Callable[[], bytes] | None
+    _source_evidence_key: str | None
+    _source_evidence: bytes | None
+    _source_recheck: Callable[[], bytes | None] | None
 
     def __init__(self, root, *, kind='local', reference=None, expected_project_id=None,
                  allow_partial=False):
@@ -163,8 +163,7 @@ class ComparisonSourceSnapshot:
             from ..bundles._partial_read import partial_read_snapshot
             partial = partial_read_snapshot(root)
         if partial is None:
-            configuration, resources, source_root, commit_id, finish = _SOURCE_READERS[kind](
-                root, reference, expected_project_id)
+            capture = _SOURCE_READERS[kind](root, reference, expected_project_id)
         else:
             if reference is not None:
                 raise ModelError('comparison_reference_not_allowed')
@@ -175,7 +174,9 @@ class ComparisonSourceSnapshot:
             resources = tuple(sorted((('specroad.json', partial.configuration_bytes),
                 *((r.path, r.source_bytes) for r in partial.records),
                 *((d.path, d.content) for d in partial.payload_model.resource_files))))
-            source_root, commit_id, finish = str(partial.boundary.root), None, partial.verify_current
+            capture = SourceCapture(configuration, resources, str(partial.boundary.root),
+                                    check=partial.verify_current)
+        configuration, resources = capture.configuration, capture.resources
         records = []
         for path, raw in resources:
             if classify_path(path, configuration) is not PathClass.ARTIFACT:
@@ -192,13 +193,18 @@ class ComparisonSourceSnapshot:
                 raise
             records.append(record)
         inputs = ComparisonInputs(configuration.project_id, records)
-        evidence = finish() if finish is not None else None
-        for key, value in (('kind', kind), ('source_root', source_root), ('commit_id', commit_id),
+        evidence = capture.finish()
+        for key, value in (('kind', kind), ('source_root', capture.source_root), ('commit_id', capture.commit_id),
                            ('configuration', configuration), ('inputs', inputs), ('resources', resources),
-                           ('_baseline_evidence', evidence if kind == 'baseline' else None),
-                           ('_bundle_recheck', finish if kind == 'bundle' else None),
-                           ('_bundle_evidence', evidence if kind == 'bundle' else None), ('partial', partial)):
+                           ('_source_evidence_key', capture.evidence_key), ('_source_evidence', evidence),
+                           ('_source_recheck', capture.check if capture.recheck_before_result else None),
+                           ('partial', partial)):
             object.__setattr__(self, key, value)
+
+    def verify_before_result(self):
+        """Observe retained source bytes at the caller's existing final boundary."""
+        if self._source_recheck is not None:
+            self._source_recheck()
 
     @property
     def uncompared_resources(self):
@@ -215,7 +221,6 @@ class ComparisonSourceSnapshot:
     @property
     def binding(self):
         """Local provenance and raw bytes, explicitly not a SpecRoad model root."""
-        from ..storage.json_syntax import parse_json_object
         return {'binding_version': 'comparison-source-v1', 'kind': self.kind,
                 'source_root': self.source_root, 'commit_id': self.commit_id,
                 'project_id': self.configuration.project_id,
@@ -227,10 +232,8 @@ class ComparisonSourceSnapshot:
                 'uncompared_resources': [path for path, _ in self.uncompared_resources],
                 'atomic_snapshot': False, 'full_semantic_validation': False,
                 'approval_granted': False, 'write_authorized': False,
-                **({'baseline': parse_json_object(self._baseline_evidence)}
-                   if self._baseline_evidence is not None else {}),
-                **({'bundle': parse_json_object(self._bundle_evidence)}
-                   if self._bundle_evidence is not None else {})}
+                **({self._source_evidence_key: parse_json_object(self._source_evidence)}
+                   if self._source_evidence_key is not None and self._source_evidence is not None else {})}
 
     @property
     def sha256(self):

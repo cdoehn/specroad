@@ -9,6 +9,7 @@ from ..model.errors import ModelError
 from ..model.paths import CURRENT_JSON_CLASSES, classify_path
 from ..security import ProjectBoundary
 from ..storage.json_syntax import parse_json_object
+from ._comparison_capture import SourceCapture
 
 
 def bundle_source(filename, reference, expected_project_id):
@@ -44,4 +45,5 @@ def bundle_source(filename, reference, expected_project_id):
             raise ModelError('comparison_source_changed')
         return canonical_json_bytes({**verified, 'source_bytes_rechecked': True})
 
-    return configuration, resources, str(boundary.root / path.name), None, finish
+    return SourceCapture(configuration, resources, str(boundary.root / path.name),
+                         check=finish, evidence_key='bundle', recheck_before_result=True)

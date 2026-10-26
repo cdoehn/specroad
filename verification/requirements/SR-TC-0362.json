@@ -17,7 +17,8 @@
     "Compare unchanged and changed bundle sources against independent local/Git/bundle captures, exercise public diff --against-kind bundle including relative structured requests, and reject invalid native bytes, partial full-source promotion, foreign identity, symlinks and observed input replacement.",
     "Bind a relative bundle input before retained read work starts; changing the process working directory before the first unit must not select another file.",
     "Reject invalid bundle file selectors before filesystem access; valid partial bundles remain unusable as full sources through direct, CLI and structured Diff. Reject foreign local/Git/bundle pairs in both directions and unsupported native schema or missing payloads without borrowing valid neighboring files.",
-    "Retain the original safe file boundary and owned ZIP bytes through final Diff observation. Detect disappearance or replacement (including malformed, foreign, partial and representation-only changes) as an observed-source conflict; a replaced parent stays a security failure. Observe the source again after final local target reads, while initially missing files remain environment failures."
+    "Retain the original safe file boundary and owned ZIP bytes through final Diff observation. Detect disappearance or replacement (including malformed, foreign, partial and representation-only changes) as an observed-source conflict; a replaced parent stays a security failure. Observe the source again after final local target reads, while initially missing files remain environment failures.",
+    "Run the existing local/Git/Baseline/bundle and public Diff behavior regressions after consolidating adapter results, immutable verification evidence and the final retained bundle observation; preserve all existing oracles and error boundaries (15.h.C)."
   ],
   "oracle": {
     "kind": "behavior",
@@ -106,6 +107,6 @@
   ],
   "open_items": [
     "The common registry provider is preparatory work only. Full normative three-way merge sources, source combination, merge plans, CLI/Work integration and current bound release/matrix evidence remain open in M17.",
-    "15.h.C cleanup remains open; no completed Merge or full-model equivalence is claimed."
+    "No completed Merge or full-model equivalence is claimed by the common comparison-source adapter contract."
   ]
 }
