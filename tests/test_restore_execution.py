@@ -252,11 +252,15 @@ def test_publication_io_failure_retains_active_barrier_original_backup_and_actua
     assert not (archives[0] / 'completed.json').exists()
     observed = observe_operational_preflight(ProjectBoundary(root))
     assert observed['recovery_required'] and any('/restore-' in p for p in observed['unresolved_paths'])
-    before = inventory(root)
-    with no_write_attempts(), pytest.raises(RestoreError) as repeat:
-        execute(plan, affected_journals=selected(plan, ['.specroad/transactions/corrupt']))
-    assert repeat.value.recovery_required and not repeat.value.mutation_possible
-    assert inventory(root) == before
+    # R adds the separately authorized recovery operation to the same API.
+    # It must preserve the original failure evidence and never publish forward
+    # from a partial state. The W assertions above remain unchanged.
+    monkeypatch.setattr(os, 'replace', native)
+    result = execute(plan, affected_journals=selected(plan, ['.specroad/transactions/corrupt'])).data
+    assert result['result'] == ('rolled_back' if when == 'before' else 'restored')
+    assert result['recovery_required'] == (when == 'before')
+    assert (root / path).read_bytes() == (old if when == 'before' else original[path])
+    assert (archives[0] / 'objects' / sha256(old).hexdigest()).read_bytes() == old
 
 
 @pytest.mark.parametrize('fault,code', [('plan', 6), ('subtree', 6), ('raw_hash', 6),

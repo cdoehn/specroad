@@ -4,7 +4,8 @@ import os
 
 from ..changes._journal_io import _read
 from ..changes._publication_io import replace_bound_image
-from ..changes._recovery_evidence import EvidenceRecord, persist_evidence
+from ..changes._recovery_evidence import EvidenceRecord, persist_evidence, sync_evidence
+from ..changes._recovery_receipts import existing_recovery_record
 from ..changes._recovery_bytes import fingerprint_recovery_file
 from ..changes._recovery_files import write_recovery_file
 from ..security import paths as guards
@@ -14,18 +15,23 @@ from .values import RestoreError, require
 
 
 class RestoreStore:
-    def __init__(self, held, plan, layout):
+    def __init__(self, held, plan, layout, *, expected=None):
         self.held = held
         self.files = held._files
         self.roots = plan.data['inventory']['roots']
-        self.expected = {r['path']: dict(r) for r in plan.data['inventory']['entries']}
+        self.expected = {r['path']: dict(r) for r in plan.data['inventory']['entries']} if expected is None else dict(expected)
         self.own = layout['own']
         self.moves = {m['source']: m['target'] for m in layout['binding']['archive_moves']}
         self.moves[layout['active']] = layout['terminal']
         self.targets = layout['target']
+        self.before_mutation = lambda: None
+        self.before_create = lambda path: None
 
     def check(self):
         self.held.check()
+        from ._execution_binding import active_paths
+        require(tuple(sorted(self.files.journal_entries())) == active_paths(self.expected.values()),
+                'restore_active_set_changed', exit_code=6)
         inventory, _ = observe(self.files.boundary, self.roots)
         require(inventory['entries'] == [self.expected[p] for p in sorted(self.expected, key=lambda p: p.encode('utf-8'))],
                 'restore_execution_inventory_conflict', exit_code=6)
@@ -50,7 +56,10 @@ class RestoreStore:
         require(path not in self.expected, 'restore_own_path_collision', path=path, exit_code=6)
         self._parent(path)
         record = EvidenceRecord(path, raw)
-        persist_evidence(self.files, record, write_new=write_recovery_file, before_publish=self.check)
+        def check():
+            self.before_create(path)
+            self.check()
+        persist_evidence(self.files, record, write_new=write_recovery_file, before_publish=check)
         self.expected[path] = {**file_row(path, raw), 'kind': 'file'}
         self.check()
 
@@ -68,6 +77,7 @@ class RestoreStore:
             with self.files.directory(target[:-1]) as target_dir:
                 require(source_dir is not None and target_dir is not None, 'restore_parent_changed', exit_code=6)
                 def check():
+                    self.before_mutation()
                     self.check()
                     require(fingerprint_recovery_file(self.files, path) == previous,
                             'restore_target_changed', path=path, exit_code=6)
@@ -89,6 +99,7 @@ class RestoreStore:
                 'restore_removal_conflict', path=path, exit_code=6)
         parts = path.split('/')
         with self.files.directory(parts[:-1]) as directory:
+            self.before_mutation()
             self.check()
             require(fingerprint_recovery_file(self.files, path) == token,
                     'restore_removal_conflict', path=path, exit_code=6)
@@ -131,3 +142,37 @@ class RestoreStore:
         with self.files.directory(parts[:-1]) as directory:
             require(directory is not None, 'restore_required_bytes_missing', path=path, exit_code=5)
             return _read(directory, parts[-1])
+
+    def remove_directory(self, path):
+        """Remove only a proven empty directory created by this execution."""
+        self.check()
+        require(self.expected.get(path) == {'path': path, 'kind': 'directory'}
+                and not any(p.startswith(path + '/') for p in self.expected),
+                'restore_directory_not_empty', path=path, exit_code=6)
+        parts = path.split('/')
+        with self.files.directory(parts[:-1]) as directory:
+            self.check()
+            os.rmdir(parts[-1], dir_fd=directory)
+            os.fsync(directory)
+        del self.expected[path]
+        if path in self.roots:
+            self.expected[path] = {'path': path, 'kind': 'missing'}
+        self.check()
+
+    def synchronize(self):
+        """Reconfirm bytes and durability after an interrupted sync boundary."""
+        self.check()
+        for path, row in sorted(self.expected.items()):
+            if row['kind'] == 'file':
+                record = EvidenceRecord(path, self.read(path))
+                require({**file_row(path, record.source_bytes), 'kind': 'file'} == row,
+                        'restore_sync_bytes_changed', path=path, exit_code=6)
+                token = existing_recovery_record(self.files, record)
+                require(token is not None, 'restore_sync_bytes_missing', path=path, exit_code=6)
+                sync_evidence(self.files, record, token)
+            elif row['kind'] == 'directory':
+                with self.files.directory(path.split('/')) as directory:
+                    require(directory is not None, 'restore_sync_directory_missing', path=path, exit_code=6)
+                    os.fsync(directory)
+        os.fsync(self.files.root_fd)
+        self.check()

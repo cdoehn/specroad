@@ -41,7 +41,7 @@ implementation_plan_commits_total: 900
 implementation_plan_commits_completed: 649
 last_completed_plan_commit: 15.l.W
 next_plan_commit: 15.l.R
-last_completed_numbered_bundle: 500
+last_completed_numbered_bundle: 501
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -30221,6 +30221,186 @@ noch nicht beobachtet. Native ZIP-Prüfung, SHA-256 und atomare Exchange-
 **Vervollständigung:** Quellenwechsel, unvollständige Sicherung und Crash erhalten ursprüngliche Journale und Wiederherstellungsdaten.
 
 **Verhaltensabnahme:** R-47 sowie Einzellauf-/Workparität weisen vollständigen Zustand oder gesperrten Recoveryfall nach. Die W-Nachweise bleiben zusätzlich grün. Die explizite Ownerübergabe folgt zusätzlich 10.7.5 und den offenen positiven, negativen und Crashabnahmen unter OFF-PLAN RESTORE-OWNER-HANDOFF (Bundle 500); der allgemeine Lock-Recovery-Weg und gewöhnliche Transaktionsübernahmen behalten ihre bisherigen Grenzen.
+
+
+**Umsetzungs- und Übergabenachweis – Bundle 501 (nativer R-Zwischenstand), 26. Oktober 2026.**
+
+**Maßgebliche Basis.** Das vollständig geprüfte Result
+`specroad-apply_Result_203641_1026_4118c6.zip`, SHA-256
+`d36012675270014e2002773f2d54ed059e16ce0c702a79f4ed41787d87a4f8a7`,
+bindet den sauberen Commit
+`9f866ea8025121c507f58fcb3cd544927ab04270`, Repository
+`a33ed6cf-0a97-4b73-b11a-d4239e7a2145`, Fingerprint
+`7c9d2a24e397e0e5`, Algorithmus `patchharbor-state-v1`.
+Generierte Root-Anleitung, Kontext, Umgebung, Manifest, Run-/Ausführungslogs,
+alle **2.298** Snapshotdateien mit Blob-IDs/Modi, tatsächlicher Apply-Stand
+und vorheriges Bundle stimmen überein. Bundle **500**, Paket-SHA-256
+`4ecadfc065dea13d7660f1017c08d49d2d0fa993279080474144b48de822bb52`,
+endete im zugeordneten OFF-PLAN-Dokumentcommit nach **7.216/7.216**
+bestandenen parallelen Apply-Tests, **Sequenz 206 / Gruppe 2**, vier Worker,
+**2470.81 s**. Gebundene Auswahl, Einzeloutcomes und Commitdateien wurden
+geprüft; keine offenen Apply-Änderungen. Ausgangsfortschritt **649/900**,
+zuletzt **15.l.W**, nächstens **15.l.R**, Bundle **500**.
+
+**Reguläre Umsetzung, keine normative Klärung.** SPECROAD-DECISION-1 und
+Vertrag 3 sind ausdrücklich enthalten. Der aktuelle Control-Auftrag hat
+`version=3`, `clarification_limit=3`, `clarifications_remaining=2` und
+`clarification_allowed=true`. Dieses Bundle setzt die bereits verbindlichen
+Verträge **0.2.32 / 10.7.1–10.7.5** im nativen Restorekern um; Spezifikation,
+Planrevision und deren Hashbindung bleiben unverändert. Die Budgetverwaltung
+bleibt ausschließlich bei Control. Es werden weder eigene Befugnisse noch
+eine menschliche Freigabe oder Risikoakzeptanz aus gespeicherten Daten erzeugt.
+
+Der fachlich geschlossene Zwischenstand ergänzt die ausdrücklich autorisierte
+Wiederaufnahme derselben ursprünglichen Restore-Ausführung und die gebundene
+Ownerübergabe. Unveränderliche Originalplan-/Auftrags-/Auswahlbytes werden
+vollständig rekonstruiert und mit **allen** tatsächlich beobachteten Dateien
+und Verzeichnissen verglichen. Ein Cursor oder gespeichertes Actorlabel gilt
+nicht als Beweis. Nur genaue, aus diesen Bindungen ableitbare Effekte und
+vollständig validierte eigene Übergabe-/Aktionsbelege erklären Veränderungen;
+kein Recovery-/Archivordner wird pauschal aus der Inventur entfernt.
+
+Vor Publikationsbeginn wird nur der nachweisbare erhaltende Rückrollabschluss
+vollendet. Nach Teilpublikation werden ausschließlich überprüfte ursprüngliche
+Before Images zurückgeschrieben beziehungsweise genau eigene neue Dateien und
+leere neue normative Verzeichnisse entfernt. Bereits entfernte Originaldateien
+werden bytegleich wiederhergestellt. Die ursprünglichen ausgewählten Journale,
+Sicherungen und die aktive Recovery-Sperre bleiben erhalten. Es gibt weder
+Vorwärts-Resume eines Teilziels noch einen beiläufigen neuen Restore.
+
+Ein genau gebundenes tatsächliches Vollziel wird aus ursprünglichen Belegen
+und Sicherungen abgeschlossen, auch wenn die externe Quelle inzwischen fehlt
+oder verändert ist. Die geänderte Herkunft wird gesondert beobachtet, nicht
+als frisch gültig ausgegeben. Fehlende Audit-/Archivschritte schreiben keine
+normativen Zielbytes erneut. Vor Abschluss wird die wirkliche native Zielwurzel
+geprüft. Passender unveränderlicher Abschluss erlaubt ausschließlich Replay;
+ein inzwischen geändertes Ziel bleibt Konflikt **6**. Aktuelle Rückroll-/
+Abschlussautorisierung und aktueller Recovery-Akteur bleiben von Originalauftrag,
+Originalakteur und ursprünglicher Autoritätszuordnung getrennt.
+
+Eine Übernahme erfordert Force, erwarteten vollständigen Owner-Rohbytehash,
+Grund und gegebenenfalls aktuelle ausdrückliche Risikozustimmung. Gewöhnlicher
+Altowner und neuer Restore werden über genau den ausgewählten kanonischen
+Originaleintrag verbunden; Restore-Owner über die ursprüngliche Ausführung.
+Ein später erschienener gewöhnlicher Owner darf einen begonnenen Restore
+nicht übernehmen; vor dem Hauptjournal genügt nur der exakt belegte Altowner
+der noch unvollendeten eigenen Übergabe. Der native Mutex, die native Host-/Prozessstartprüfung und eine zusätzliche
+aktuelle `takeover`-Autorisierung bleiben zwingend. Lebende Owner und besetzte
+Mutexe sind unübernehmbar. Originalowner, vollständig gebundener Intent und
+vorbereiteter neuer Owner werden vor dem atomaren Wechsel über vorhandene
+Evidence-/Staging-/Sync-Primitiven dauerhaft gesichert und erneut geprüft.
+Der aktuelle Owner wird nie vorzeitig gelöscht. Bereits ausgeführter Wechsel
+und nachfolgende I/O-Fehler bleiben im tatsächlichen Zustand erhalten.
+
+Ein Abbruch nach vollständigem Handoffintent, aber vor dem Haupt-Restorejournal,
+führt bei belegbar fehlender Zielpublikation nur zum auditierenden Rückroll-
+abschluss. Nach genau belegter terminaler Journalüberführung wird lediglich
+die noch nicht beendete Ownerfreigabe **derselben** Ausführung abgewickelt;
+ein Owner ohne zugehörigen Ausführungsnachweis erhält dadurch keine Übernahme.
+Der allgemeine Lock-Recovery-Weg, sein Journalveto und die gewöhnliche
+Transaktionsübernahme bleiben unverändert. Jeder neue Versuch braucht aktuelle
+Berechtigung und gegebenenfalls neue Risikozustimmung.
+
+Zusätzlich ist die Herkunft unmittelbar vor dem nativen `committing`-Write
+und jedem normativen Dateieffekt erneut gebunden, auch bei einem Ziel ohne
+Änderungen. Ein Quellenwechsel in der Autorisierungs-/Publikationsgrenze lässt
+keinen unberechtigten Zielwrite zu. Strukturfehler unvollständiger gespeicherter
+Belege ergeben 3; bereits strukturierte Konflikt-/Sicherheitsdiagnosen behalten
+ihre getrennten Codes. Nach möglichem Write bleiben `mutation_possible` und
+`recovery_required` wahrheitsgemäß sichtbar.
+
+**Gezielte parallele Dev-Prüfung.** Der übergebene Zustand besteht
+**294/294** Verhaltenstests in **816.97 s**,
+CPython **3.14.4**, **vier Worker**, Prozessabschluss **0**, ausschließlich
+bestandene Einzeloutcomes:
+
+- `tests/test_catalog_check.py` (17)
+- `tests/test_catalog_check_right.py` (37)
+- `tests/test_project_locks.py` (39)
+- `tests/test_project_locks_right.py` (50)
+- `tests/test_recovery_protection.py` (29)
+- `tests/test_restore_execution.py` (42)
+- `tests/test_restore_execution_right.py` (59)
+- `tests/test_transaction_recovery_lock.py` (21)
+
+Die Auswahl umfasst alle neuen und geänderten Restore-Verhaltenstests sowie
+die betroffenen Lock-, Recovery-Schutz-, Transaktionsübernahme- und maschinellen
+Katalogverträge. Unveränderte Plan-/Historienprovider werden nicht als erneut
+vollständig geprüft behauptet. Ein zuvor breiter begonnener Lauf wurde für
+die zusätzliche Ownerkorrektur abgebrochen; er ist kein Erfolgsnachweis.
+
+Die **59** neuen Fälle umfassen echte isolierte Prozessabbrüche bei Intent,
+Sicherung, Staging, Phasenmarkern, partieller/vollständiger Publikation auch
+vor Sync, Audit und Archivierung, erneute Abbrüche bei Ownerübergabe und
+Rollback, fehlende/veränderte Herkunft, Originalerhaltung, Datei-/Verzeichnis-
+umkehr, Replay, tatsächlichen Mutex, getrennte alte/neue Aufträge sowie
+fehlende, fremde, lebende, unprüfbare und PID-wiederverwendete Owner.
+Abgewiesene Vorprüfungen werden ausdrücklich auf Schreibfreiheit geprüft.
+Die zwei bestehenden W-I/O-Fälle behalten ihre ursprünglichen Fehler-/
+Erhaltungsassertionen; ihr zuvor gesperrter Folgeaufruf prüft nun ausdrücklich
+autorisierten Rollback beziehungsweise Vollzielabschluss. Testidentitäten
+bleiben erhalten. Weitere bestehende Testdateien sind unverändert.
+
+Vollständige Collection/Katalogprüfung: **21.705** aktive Tests, **0** Fehler,
+**0** ausgeführte Testkörper. **21.709** Nummern bleiben dauerhaft reserviert;
+die **59** neuen Identitäten werden ab Nummer **21650** angehängt, alle alten
+Nummern und vier historische Entfernungen bleiben erhalten. Aktive Fälle
+SR-TC-0461/0462 und die neue synthetische Fixture erfassen genau diesen Umfang.
+Dies ist eine Teilprüfung mit `full_suite_passed=null`, kein Vollsuite-/
+Releasebeleg. Keine neuen Dokumentationstests, kein CI- oder serieller Lauf.
+
+Quellidentität des bestandenen 294er-Verhaltenslaufs:
+`b986594daab5286a0ba8cd92597482abbb4078085342a6ce4bb639f1a89abdac`.
+
+Danach wurde ausschließlich der **noch unveröffentlichte** Anhang der 59
+neuen Testnummern gemäß dem bestehenden Registryvertrag gemeinsam sortiert.
+Kein bereits committeter Index, Produktbyte, Testfall, Katalogfall oder
+Prüftool wurde dadurch verändert. Die vollständige ursprüngliche
+Verhaltensquelle wird mit dem alten Registrybytebestand rekonstruiert;
+`source_identity` reproduziert exakt den beobachteten Verhaltensquellhash.
+Die Registrykorrektur wird nicht als unveränderter früherer Teststand ausgegeben.
+
+Zusätzlich bestehen **170/170** gezielte parallele Tests für die korrigierte
+Nummerierung, Drittelrotation, Auswahlgates und Katalogverträge mit vier
+Workern, Exit 0 und ausschließlich bestandenen Einzeloutcomes. Davon
+überschneiden sich 54 Katalogtests mit dem ersten Lauf; zusammen sind es
+410 verschiedene Testidentitäten, kein Volltest. Der frische vollständige
+Katalog ist fehlerfrei und hat dieselben 21.705 aktiven Identitäten.
+Finale Quellidentität nach Registrykorrektur:
+`3351915f5e63ba1919aaf8156bb780a0db4bb7caa1fb5073e966db6cfebf3fe4`.
+Zusätzlicher Auswahlbericht:
+`f6d61985c9c80cdb1236abae1d9d9805e7c37a4ba0dc21a57c20537cf8081c05`;
+zusätzliche Einzeloutcomes:
+`c00789c9aef98510a0584b0b9b128b4b24b548161b7a55a3b7c08923d669c245`.
+Auswahlbericht-SHA-256:
+`ba795c4a419b6f82490a9d9df80de11304387eb6920597be324c799a359a020d`.
+Einzeloutcomes-SHA-256:
+`9d2921ced95d96753346dab0c1b51b91a7a3bb9dfefbce8f64ea0b14b5093f68`.
+Vorherige Apply-Auswahlbindung: `70aaa212dd7e82bdcb052aefa455faf894057b88d8ee30299dac5c5de96e0987`;
+Apply-Bericht: `a4e6bfe0630bbbc1ea309b30de2ed20931a27cd85d6d82f6b1b95506fee50dbd`;
+Apply-Einzeloutcomes: `49237bf59e57f9380cdd99670c49e99935d3329b7f368f4c162af19389e273db`.
+
+**Offene Pflichtabnahmen.** **15.l.R bleibt offen**, ebenso 15.l.C und
+SR-TC-0461/0462 (`partial`). CLI/externe Planveröffentlichung und vollständige
+Einzellauf-/Workparität sowie die vollständige Dauergrenzen-/I/O-Matrix sind
+noch nicht nachgewiesen. Ein Abbruch vor jedem verwertbaren unveränderlichen
+Intent bleibt ein fehlender notwendiger Beleg und wird nicht geraten.
+Schutz-/Lifecycle-/Spezialistenprovider, allgemeine Receipt-Historienfaltung
+und frühere Recovery-Audits bleiben verpflichtende Integrationen vor der
+Gesamt-Restoreabnahme; konservative Ablehnungen sind keine dauerhafte Ausnahme.
+Die hier bestandenen nativen Teilabnahmen ersetzen diese Anforderungen nicht.
+
+**Übergabe.** Ein echter, gezielt geprüfter R-Zwischenstand innerhalb von
+15.l.R, keine neue Planposition, keine künstliche W/R/C-Folge und kein
+C-Vorgriff. Kennung/Position und Commit-Message stammen unverändert aus dem
+Plan. Der Entrypoint installiert genau die geprüften Bytes und führt vor dem
+Commit ausschließlich **Sequenz 207 / Gruppe 0 von 3**, **7.236** Tests mit
+vier parallelen Workern, aus. Erst nach erfolgreichem Gate wird allein die
+Bundle-Nummer auf **501** gesetzt. Produktstand **649/900**, zuletzt **15.l.W**,
+nächster Schritt **15.l.R** sowie die offenen R-/C-Checkboxen bleiben bestehen.
+Apply-Test und Commit sind bei Übergabe noch nicht beobachtet. Native ZIP-
+Prüfung, vollständiger SHA-256 und atomare Veröffentlichung beenden den
+N-Auftrag sofort; keine Apply-/Warte-/Modellschleife.
 
 #### 15.l.C – Make it Clean
 

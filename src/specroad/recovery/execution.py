@@ -1,22 +1,26 @@
 """One explicitly authorized Restore publication, with durable original evidence.
 
-The initial W kernel keeps interrupted executions blocked; the independently
-authorized continuation/rollback adapter is a separate recovery operation.
+The independently authorized continuation/rollback adapter is a separate
+recovery operation, derived from the original binding and actual bytes.
 It never converts its saved plan, actor label or journal into permission.
 """
 from dataclasses import dataclass
 
 from ..changes.authoring import normalize_authoring_actor, normalize_request_id
 from ..changes._lock_files import LockFiles
-from ..changes.locking import project_lock
 from ..changes.recovery_values import RecoveryAuthority
 from ..changes.receipt_values import request_receipt_path
 from ..model.canonical import canonical_json_bytes, canonical_json_sha256
+from ..model.errors import ModelError
+from ..security import SafetyViolation
 from ..storage.json_syntax import parse_json_object
 from ._codec import file_row
-from ._execution_store import RestoreStore
 from ._execution_layout import execution_layout
-from ._inventory import boundary, read_source
+from ._execution_binding import restore_request, original_active
+from ._execution_lock import restore_lock, takeover_options
+from ._execution_resume import discover, classify, resume
+from ._execution_events import unfinished_old_handoff
+from ._inventory import boundary, read_source, observe
 from ._journal_selection import journal_selection
 from ._observations import verify_live
 from ._validation import validate_project
@@ -67,18 +71,21 @@ def _source(data, origin):
 
 
 def execute_restore(raw, *, expected_target_root, authority, actor, request_id=None,
-                    affected_journals=None):
+                    affected_journals=None, force=False, expected_lock_sha256=None,
+                    reason=None, accept_remote_risk=False, owner_probe=None):
     """Publish the exact supported full plan under fresh authorization and lock.
 
     No caller supplies substitute model checks. A failed/unfinished attempt
     leaves its exact plan, original bytes, target staging and active barrier.
-    Existing owners are never taken over by this initial-publication API.
+    Existing owners require an explicit, independently authorized handoff.
     """
     progress = {'mutation_possible': False, 'recovery_required': False}
     try:
         return _execute_restore(raw, expected_target_root=expected_target_root,
             authority=authority, actor=actor, request_id=request_id,
-            affected_journals=affected_journals, progress=progress)
+            affected_journals=affected_journals, progress=progress, force=force,
+            expected_lock_sha256=expected_lock_sha256, reason=reason,
+            accept_remote_risk=accept_remote_risk, owner_probe=owner_probe)
     except RestoreError as error:
         error.mutation_possible |= progress['mutation_possible']
         error.recovery_required |= error.mutation_possible or progress['recovery_required']
@@ -87,7 +94,9 @@ def execute_restore(raw, *, expected_target_root, authority, actor, request_id=N
 
 @guarded
 def _execute_restore(raw, *, expected_target_root, authority, actor, request_id,
-                     affected_journals, progress):
+                     affected_journals, progress, force, expected_lock_sha256,
+                     reason, accept_remote_risk, owner_probe):
+    takeover_options(force, expected_lock_sha256, reason, accept_remote_risk)
     require(type(authority) is RecoveryAuthority, 'restore_authority_required', exit_code=2)
     actor = normalize_authoring_actor(actor)
     request_id = normalize_request_id(request_id)
@@ -100,7 +109,7 @@ def _execute_restore(raw, *, expected_target_root, authority, actor, request_id,
     plan = RestorePlan(raw)
     data = plan.data
     require(expected_target_root == data['expected_target_root'], 'restore_target_binding_conflict', exit_code=6)
-    project, origin = boundary(data['project_root']), boundary(data['source']['root'])
+    project = boundary(data['project_root'])
     if request_id is not None:
         require(all(r['path'] != request_receipt_path(request_id) for r in data['inventory']['entries']),
                 'restore_request_binding_conflict', exit_code=6)
@@ -111,17 +120,49 @@ def _execute_restore(raw, *, expected_target_root, authority, actor, request_id,
         active_entries = files.journal_entries()
         owner = files.read_record()[0]
         progress['recovery_required'] = bool(active_entries) or owner is not None
+        inventory, contents = observe(project, data['inventory']['roots'])
+        previous = discover(plan, project, request_id, inventory, contents)
+        if previous is not None:
+            selection = journal_selection(plan, affected_journals, original_active(plan))
+            require(selection == previous['binding']['request']['affected_journals'],
+                    'restore_selection_changed', exit_code=6)
+            classification = classify(plan, previous, inventory, contents, owner)
+            if owner is not None and owner.data['command'] != 'recover restore':
+                require(unfinished_old_handoff(owner, previous, contents),
+                        'restore_owner_execution_conflict', exit_code=6)
+            if owner is not None and classification['action'] == 'replay' and classification['completion']['result'] == 'restored':
+                classification['action'] = 'complete'
+            expected = {r['path']: r for r in inventory['entries']}
+            recovery_request = {'action': classification['action'], 'original_request': previous['binding']['request'],
+                                'actor': actor.as_fields(), 'observed_inventory_sha256': canonical_json_sha256(inventory['entries'])}
+            _authorize(authority, recovery_request)
+
+            def fresh_recovery(locked):
+                require(locked.boundary._root_identity == project._root_identity,
+                        'restore_root_changed', exit_code=7)
+                _authorize(authority, recovery_request)
+                current, _ = observe(project, data['inventory']['roots'])
+                require(current == inventory, 'restore_recovery_inventory_changed', exit_code=6)
+                require(locked.journal_entries() == active_entries, 'restore_active_set_changed', exit_code=6)
+
+            observation = {'status': 'unchanged', 'reason': None}
+            try:
+                _source(data, boundary(data['source']['root']))
+            except (OSError, ModelError, SafetyViolation) as error:
+                observation = {'status': 'unavailable_or_changed', 'reason': getattr(error, 'reason', 'restore_source_unavailable')}
+            with restore_lock(project, plan, previous, expected, authority=authority, actor=actor,
+                    refresh=fresh_recovery, authorize=_authorize, progress=progress, resuming=True,
+                    force=force, expected_lock_sha256=expected_lock_sha256, reason=reason,
+                    accept_remote_risk=accept_remote_risk, owner_probe=owner_probe) as store:
+                store.synchronize()
+                return RestoreCompletion._create(resume(store, plan, previous, classification,
+                    authority=authority, actor=actor, authorize=_authorize, source_observation=observation))
+        origin = boundary(data['source']['root'])
         verify_live(plan, project, origin)
         selection = journal_selection(plan, affected_journals, active_entries)
-        if owner is not None:
+        if owner is not None and not force:
             raise RestoreError('restore_owner_recovery_required', exit_code=5, recovery_required=True)
-    request = {'action': 'restore', 'project_id': data['project_id'],
-        'project_root': data['project_root'], 'root_identity': list(project._root_identity),
-        'restore_plan_sha256': data['restore_plan_sha256'], 'plan_bytes_sha256': plan.sha256,
-        'source_sha256': data['source']['sha256'], 'inventory_sha256': data['inventory']['sha256'],
-        'expected_target_root': expected_target_root, 'target_sha256': data['target']['sha256'],
-        'backup_sha256': data['backup']['sha256'], 'affected_journals': selection,
-        'selection_sha256': canonical_json_sha256(selection), 'actor': actor.as_fields(), 'request_id': request_id}
+    request = restore_request(plan, project, actor, request_id, selection)
     _authorize(authority, request)
     layout = execution_layout(plan, request, authority)
     token, active, archive, terminal = (layout[k] for k in ('token', 'active', 'archive', 'terminal'))
@@ -138,14 +179,13 @@ def _execute_restore(raw, *, expected_target_root, authority, actor, request_id,
                 'restore_selection_changed', exit_code=6)
         _authorize(authority, request)
         verify_live(plan, project, origin)
-        # The immediately following native owner-record write may itself fail.
-        # All rejecting preflights above remain strictly write-free.
-        progress['mutation_possible'] = True
 
-    with project_lock(project.root, kind='recovery', command='recover restore',
-            project_id=data['project_id'], transaction_id='restore-' + token,
-            request_id=request_id, _before_record=fresh) as held:
-        store = RestoreStore(held, plan, layout)
+    with restore_lock(project, plan, layout, {r['path']: r for r in data['inventory']['entries']},
+            authority=authority, actor=actor, refresh=fresh, authorize=_authorize, progress=progress, resuming=False,
+            force=force, expected_lock_sha256=expected_lock_sha256, reason=reason,
+            accept_remote_risk=accept_remote_risk, owner_probe=owner_probe,
+            source_check=lambda: _source(data, origin)) as store:
+        held = store.held
         store.check()
         def save(path):
             store.create(path, own[path])
@@ -161,8 +201,11 @@ def _execute_restore(raw, *, expected_target_root, authority, actor, request_id,
         save(active + '/prepared.json')
         _source(data, origin)
         _authorize(authority, request)
+        _source(data, origin)
         store.check()
+        store.before_create = lambda path: _source(data, origin) if path == active + '/committing.json' else None
         save(active + '/committing.json')
+        store.before_mutation = lambda: _source(data, origin)
         for index, path in enumerate(changes):
             _source(data, origin)
             if path in target:
