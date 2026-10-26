@@ -11,6 +11,7 @@ from ._coverage import inventory_roots, OPERATIONAL_ROOTS
 from ._history import history_target
 from ._sources import reconstruct
 from ._validation import validate_project
+from ._operational_history import check_operational_history, operational_path
 from .values import require
 
 
@@ -20,10 +21,13 @@ def check_history(current, target, current_configuration, target_model):
     Unsupported historical kinds and receipt history remain explicit blockers.
     Corrupt readable mutable bytes remain backup bytes, not model inputs.
     """
+    check_operational_history(current, target, current_configuration.project_id)
     for path, raw in current.items():
         if path == 'specroad.json':
             continue
-        require(not any(path.startswith(root + '/') or path == root for root in OPERATIONAL_ROOTS),
+        if operational_path(path):
+            continue
+        require(not any(path == root for root in OPERATIONAL_ROOTS),
                 'restore_operational_history_provider_required', path=path, exit_code=6)
         old_kind = classify_path(path, current_configuration)
         new_kind = classify_path(path, target_model.configuration)

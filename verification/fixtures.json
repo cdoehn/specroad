@@ -727,6 +727,10 @@
     "verification-context-subjects": {
       "kind": "Owned requirement, verification and test subjects with immutable recorded Evidence bindings. Audit/workflow and semantic changes, exact effective product configurations, passive metadata, native rejection boundaries and isolated Core/PYZ parity. No authoritative run selection or verification success.",
       "provider": "tests/test_verification_context.py:subject"
+    },
+    "SR-FIX-RESTORE-EXECUTION-v1": {
+      "kind": "Owned native full-project bundle and Baseline cases, damaged mutable bytes, explicit corrupt/empty journal selection, real directory and byte backups, kernel mutex, native staged publication and immutable audit. Synthetic host RecoveryAuthority callbacks are not human release approval. Selected I/O interruptions retain actual bytes and active recovery barriers; no comprehensive restart or CLI/Work integration claim.",
+      "provider": "tests/support/restore.py:restore_case;tests/test_restore_execution.py:selected,execute,files;tests/test_bundle_receipts.py:completed,receipts"
     }
   },
   "fixture_format_version": 1,
@@ -879,6 +883,7 @@
     "SR-FIX-REQUIREMENT-EXCHANGE-v1",
     "SR-FIX-REQUIREMENT-INPUT-v1",
     "SR-FIX-RESOURCE-INVENTORY-v1",
+    "SR-FIX-RESTORE-EXECUTION-v1",
     "SR-FIX-RESTORE-PLAN-v1",
     "SR-FIX-ROADMAP-EXPLANATION-RIGHT-v1",
     "SR-FIX-ROADMAP-EXPLANATION-v1",

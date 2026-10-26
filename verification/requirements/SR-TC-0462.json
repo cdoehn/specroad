@@ -11,7 +11,8 @@
     "SR-FIX-TRANSACTION-COMMITTING-v1",
     "SR-FIX-PROJECT-LOCK-v1",
     "SR-FIX-DISCARD-RESTART-v1",
-    "SR-FIX-RESTORE-PLAN-v1"
+    "SR-FIX-RESTORE-PLAN-v1",
+    "SR-FIX-RESTORE-EXECUTION-v1"
   ],
   "preconditions": [
     "Owned native Linux project with checked journal, released original writer lock and a transaction-bound recovery lock; synthetic explicit host authorization.",
@@ -31,12 +32,16 @@
     "Reject foreign empty/short/conflicting or unsafe files and concurrent prefix collisions; recheck journal, lock, live normative bytes and prior evidence before publication. Reuse complete records without changing their authority attribution; finish existing preserving cleanup.",
     "In fresh writer/recovery processes, reconstruct explicit building/prepared discard inputs and retain the original immutable audit and receipt through selected interrupted completion boundaries; compare independent basis bytes, repeated results and next-writer access.",
     "Bind younger supported protected records and their original dependencies in the passive restore preservation/target inventory; reconstruct it independently and retain negative/stale findings without an execution claim.",
-    "Close retained Baseline history before selecting exact Evidence dependency bytes; reject incompatible immutable identities and attachment bindings with code 6, unavailable originals with code 3, and rehashed plans that hide protected records in backup only."
+    "Close retained Baseline history before selecting exact Evidence dependency bytes; reject incompatible immutable identities and attachment bindings with code 6, unavailable originals with code 3, and rehashed plans that hide protected records in backup only.",
+    "Execute both qualified full source kinds with explicit selected corrupt trees, empty files/directories or no old journal; independently prove the actual full target root, complete original backup objects/directories and audit-before-archive ordering.",
+    "Bind current authority, independent target, plan/source/complete inventory, normalized selection and exact own file layout before the first operational write, and repeat under the actual shared kernel mutex. Denied, stale, reused ordinary requests and unselected or malformed/forbidden journal selections remain write-free.",
+    "Retain native completed receipts at their original paths; verify exact supported historical result bytes rather than dropping their publication proof. Remove a mutable unprotected addition only with complete backup.",
+    "Inject real before/after-replacement I/O failure and a foreign file inside the own backup namespace: preserve original bytes, actual publication and active barrier, refuse blind repeats; do not report recovery completion."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Jede ausgeführte Recovery-Aktion MUSS einen unveränderbaren lokalen Auditdatensatz einschließlich der für Restore nach Kapitel 10.7.1 gebundenen Quellen-, Erhaltungs- und Zielinventur erzeugen.",
-    "scope": "Immutable evidence for explicit complete-target recovery, rollback, unpublished discard, work cleanup and transaction-bound orphan takeover under native locks. Original authority, owner/journal bindings and retained work inventories survive full-byte durability loss and real process stops. Hash consistency is not authentication. Bound rollback copies, cursor/terminal journals, completion receipts/marker and action/rollback receipts are published only after complete staging. Initial allocation/write failures expose no short canonical helper. Tested repeated native failures and real process stops remain explicitly resumable; foreign or altered bindings block publication, existing evidence retains its bytes and original authority, and mutation diagnostics retain possible operational changes. Selected persisted-input discard restart cases retain the original audit/receipt and complete basis without normative writes; interrupted completion resumes in a fresh process and preserves conflicting evidence. The passive restore subset additionally binds source/preservation/target byte inventories for supported immutable history. Durable restore action audit, comprehensive fault-injection and complete interrupted-action acceptance remain outside this scope. R-46 Evidence/Baseline cases additionally verify order-independent exact archived attachment selection, shared dependency deduplication and precise conflict/missing-byte diagnostics without modifying historical records or current mutable subjects."
+    "scope": "Immutable evidence for explicit complete-target recovery, rollback, unpublished discard, work cleanup and transaction-bound orphan takeover under native locks. Original authority, owner/journal bindings and retained work inventories survive full-byte durability loss and real process stops. Hash consistency is not authentication. Bound rollback copies, cursor/terminal journals, completion receipts/marker and action/rollback receipts are published only after complete staging. Initial allocation/write failures expose no short canonical helper. Tested repeated native failures and real process stops remain explicitly resumable; foreign or altered bindings block publication, existing evidence retains its bytes and original authority, and mutation diagnostics retain possible operational changes. Selected persisted-input discard restart cases retain the original audit/receipt and complete basis without normative writes; interrupted completion resumes in a fresh process and preserves conflicting evidence. The passive restore subset additionally binds source/preservation/target byte inventories for supported immutable history. Comprehensive Restore fault-injection and complete interrupted-action acceptance remain outside this scope. R-46 Evidence/Baseline cases additionally verify order-independent exact archived attachment selection, shared dependency deduplication and precise conflict/missing-byte diagnostics without modifying historical records or current mutable subjects. Initial Restore now emits an immutable native action audit linking the original plan/source/inventory, preservation and backup hashes, normalized selected original journals, actor/request and current host authority. Before/after-publication failure retains originals and the active blocker; archive moves occur only after full target and durable audit. This is no successful restart or release evidence."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [
@@ -135,6 +140,48 @@
     "tests/test_recovery_auxiliary_writes.py::test_real_auxiliary_process_stop_resumes_through_native_lock_takeover[prefix-completion_audit]",
     "tests/test_recovery_auxiliary_writes.py::test_real_auxiliary_process_stop_resumes_through_native_lock_takeover[prefix-rollback_audit]",
     "tests/test_recovery_auxiliary_writes.py::test_real_auxiliary_process_stop_resumes_through_native_lock_takeover[prefix-rollback_receipt]",
+    "tests/test_restore_execution.py::test_completed_native_receipts_remain_byte_exact_at_their_original_paths[False]",
+    "tests/test_restore_execution.py::test_completed_native_receipts_remain_byte_exact_at_their_original_paths[True]",
+    "tests/test_restore_execution.py::test_exact_request_binds_authority_and_original_state_even_for_zero_model_effects",
+    "tests/test_restore_execution.py::test_existing_owner_is_not_removed_or_interpreted_as_permission",
+    "tests/test_restore_execution.py::test_explicit_selection_never_expands_into_a_different_binding_or_area[archive-7]",
+    "tests/test_restore_execution.py::test_explicit_selection_never_expands_into_a_different_binding_or_area[audit-7]",
+    "tests/test_restore_execution.py::test_explicit_selection_never_expands_into_a_different_binding_or_area[bom-3]",
+    "tests/test_restore_execution.py::test_explicit_selection_never_expands_into_a_different_binding_or_area[duplicate-3]",
+    "tests/test_restore_execution.py::test_explicit_selection_never_expands_into_a_different_binding_or_area[extra-3]",
+    "tests/test_restore_execution.py::test_explicit_selection_never_expands_into_a_different_binding_or_area[invalid_hash-3]",
+    "tests/test_restore_execution.py::test_explicit_selection_never_expands_into_a_different_binding_or_area[locks-7]",
+    "tests/test_restore_execution.py::test_explicit_selection_never_expands_into_a_different_binding_or_area[plan-6]",
+    "tests/test_restore_execution.py::test_explicit_selection_never_expands_into_a_different_binding_or_area[raw_hash-6]",
+    "tests/test_restore_execution.py::test_explicit_selection_never_expands_into_a_different_binding_or_area[receipt-7]",
+    "tests/test_restore_execution.py::test_explicit_selection_never_expands_into_a_different_binding_or_area[root-7]",
+    "tests/test_restore_execution.py::test_explicit_selection_never_expands_into_a_different_binding_or_area[subtree-6]",
+    "tests/test_restore_execution.py::test_explicit_selection_never_expands_into_a_different_binding_or_area[traversal-7]",
+    "tests/test_restore_execution.py::test_explicit_selection_never_expands_into_a_different_binding_or_area[unsorted-3]",
+    "tests/test_restore_execution.py::test_foreign_bytes_inside_own_archive_are_not_an_inventory_exception",
+    "tests/test_restore_execution.py::test_initial_authority_and_independent_target_are_mandatory_and_write_free[ai_request]",
+    "tests/test_restore_execution.py::test_initial_authority_and_independent_target_are_mandatory_and_write_free[denied]",
+    "tests/test_restore_execution.py::test_initial_authority_and_independent_target_are_mandatory_and_write_free[mutated]",
+    "tests/test_restore_execution.py::test_initial_authority_and_independent_target_are_mandatory_and_write_free[no_authority]",
+    "tests/test_restore_execution.py::test_initial_authority_and_independent_target_are_mandatory_and_write_free[non_bool]",
+    "tests/test_restore_execution.py::test_initial_authority_and_independent_target_are_mandatory_and_write_free[target]",
+    "tests/test_restore_execution.py::test_initial_restore_reaches_exact_full_target_and_retains_selected_originals[absent-baseline]",
+    "tests/test_restore_execution.py::test_initial_restore_reaches_exact_full_target_and_retains_selected_originals[absent-project_bundle]",
+    "tests/test_restore_execution.py::test_initial_restore_reaches_exact_full_target_and_retains_selected_originals[empty_directory-baseline]",
+    "tests/test_restore_execution.py::test_initial_restore_reaches_exact_full_target_and_retains_selected_originals[empty_directory-project_bundle]",
+    "tests/test_restore_execution.py::test_initial_restore_reaches_exact_full_target_and_retains_selected_originals[empty_file-baseline]",
+    "tests/test_restore_execution.py::test_initial_restore_reaches_exact_full_target_and_retains_selected_originals[empty_file-project_bundle]",
+    "tests/test_restore_execution.py::test_initial_restore_reaches_exact_full_target_and_retains_selected_originals[tree-baseline]",
+    "tests/test_restore_execution.py::test_initial_restore_reaches_exact_full_target_and_retains_selected_originals[tree-project_bundle]",
+    "tests/test_restore_execution.py::test_late_authorizer_input_change_is_detected_before_first_restore_write[current]",
+    "tests/test_restore_execution.py::test_late_authorizer_input_change_is_detected_before_first_restore_write[source]",
+    "tests/test_restore_execution.py::test_publication_io_failure_retains_active_barrier_original_backup_and_actual_bytes[after]",
+    "tests/test_restore_execution.py::test_publication_io_failure_retains_active_barrier_original_backup_and_actual_bytes[before]",
+    "tests/test_restore_execution.py::test_revalidation_and_authority_under_kernel_mutex_precede_owner_creation",
+    "tests/test_restore_execution.py::test_unpublished_mutable_addition_is_removed_only_after_exact_backup",
+    "tests/test_restore_execution.py::test_unselected_active_entries_prevent_even_operational_writes[empty]",
+    "tests/test_restore_execution.py::test_unselected_active_entries_prevent_even_operational_writes[omitted]",
+    "tests/test_restore_execution.py::test_unselected_active_entries_prevent_even_operational_writes[one]",
     "tests/test_restore_history.py::test_baseline_archive_retains_missing_immutable_evidence_file[False]",
     "tests/test_restore_history.py::test_baseline_archive_retains_missing_immutable_evidence_file[True]",
     "tests/test_restore_history.py::test_current_mutable_subjects_cannot_fill_a_complete_source",
@@ -261,7 +308,7 @@
     "tests/test_transaction_recovery_lock.py::test_takeover_rechecks_journal_after_authorization"
   ],
   "open_items": [
-    "Automatic transaction preflight (5.t), the comprehensive fault-injection matrix (5.v) and full-source restore (15.j-15.l) remain in their assigned plan positions; the existing explicit recovery kernels do not establish those integrations.",
-    "15.l: restore execution and durable action audit. Remaining protected history providers are still mandatory before full restore acceptance; passive qualified inventories are not an executed recovery or complete SR-REQ-0462 acceptance."
+    "The existing explicit transaction recovery kernels remain separate from the comprehensive Restore interruption/restart integration; no complete 15.l.R or whole-project release claim.",
+    "15.l.R/C: all required Restore recovery histories, interrupted-action completion/rollback/replay, native owner takeover, CLI and Work parity plus remaining protected-history providers are mandatory before complete SR-REQ-0462 acceptance."
   ]
 }

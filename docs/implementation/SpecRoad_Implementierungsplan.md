@@ -38,10 +38,10 @@ Laufzeitdaten und ist keine Start-/Resume-Anweisung.
 ```yaml
 plan_revision: 26
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 648
-last_completed_plan_commit: 15.k.C
-next_plan_commit: 15.l.W
-last_completed_numbered_bundle: 498
+implementation_plan_commits_completed: 649
+last_completed_plan_commit: 15.l.W
+next_plan_commit: 15.l.R
+last_completed_numbered_bundle: 499
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -29620,7 +29620,7 @@ oder Hintergrundfortsetzung.
 
 #### 15.l.W – Let it Work
 
-- [ ] **15.l.W** · Position **649/900** · Voraussetzung: `15.k.C`.
+- [x] **15.l.W** · Position **649/900** · Voraussetzung: `15.k.C`.
 **Exakte Commit-Message:** `15.l.W feat(bundle): Restore veröffentlichen und Crashabsicherung aufbauen`
 
 **Umsetzung:** Gebundene Sicherung, Quellenprüfung und vollständige Recoverypublikation samt Audit ausführen.
@@ -29892,6 +29892,145 @@ vorgetäuscht. Alle 15.l.W/R/C-Checkboxen und der Produktzähler bleiben offen
 beziehungsweise unverändert. `SR-TC-0461` und `SR-TC-0462` bleiben **partial**;
 weitere Schutz-/Lifecycle-/Receiptprovider bleiben vor Gesamt-Restoreabnahme
 zwingend. Der nächste Control-Auftrag setzt 15.l.W nach gebundenem Apply um.
+
+
+**Umsetzungs- und Übergabenachweis – Bundle 499 (W), 26. Oktober 2026.**
+
+**Maßgebliche Basis.** Das vollständig geprüfte Result
+`specroad-apply_Result_174540_1026_42c9ca.zip`, SHA-256
+`3ebb1cfe8630b7fc4ebdb514b494bd494ba36e9b80f59ca1c83b45d14107151b`,
+bindet den sauberen Commit
+`5b7e2ac35a62c3ff64223b8b48bb7ef59a5e1b9d`, Repository
+`a33ed6cf-0a97-4b73-b11a-d4239e7a2145`, Fingerprint
+`7c9d2a24e397e0e5`, Algorithmus `patchharbor-state-v1`.
+Generierte Root-Anleitung, Kontext, Umgebung, Manifest, Run-/Ausführungslogs,
+alle 2.292 Snapshotdateien samt Blob-IDs/Modi, tatsächlicher Apply-Stand und
+vorheriges Bundle stimmen überein. Der OFF-PLAN-Commit aus Bundle **498**
+entstand nach **7.202/7.202** bestandenen parallelen Tests der **Sequenz 204 /
+Gruppe 0**, vier Worker, **2262.15 s**. Auswahlbindung, Einzeloutcomes,
+Abschlusscommit und saubere Bestandsbytes wurden geprüft.
+Ausgangsfortschritt: **648/900**, zuletzt **15.k.C**, Bundle **498**.
+
+**Regulärer W-Ausschnitt.** SPECROAD-DECISION-1 ist ausdrücklich vorhanden.
+Für diesen Auftrag bleibt **Control-Vertrag 2 mit clarification_allowed=false**
+maßgeblich. Spezifikation **0.2.31**, insbesondere 10.7.1–10.7.4 und R-44/R-47,
+wird umgesetzt; keine neue normative Klärung und kein Budgetreset.
+
+Die native API `execute_restore` nimmt unveränderte Planbytes, separat
+bestätigten Zielroot, Host-`RecoveryAuthority`, Actor/Request und optionale
+kanonische Auswahlbytes entgegen. Vor dem ersten Betriebswrite und nochmals
+unter demselben nativen Root-Mutex wie normale Writer prüft sie vollständige
+Herkunft, Originalinventur, unabhängige Projektidentität und Auswahl.
+Ein privater Pre-Record-Hook des vorhandenen Locks führt diese Prüfungen
+vor der Ownerdatei aus; die bisherigen Lockarten und Ownergates bleiben
+bestehen. Bestehende Owner werden nicht übernommen. Denied/abweichende
+Autorisierung oder nicht gewählte aktive Einträge erlauben keine Writes.
+
+Die getrennte Ausführungsbindung enthält den vollständigen Originalplan,
+Auftrag, normalisierte Auswahl, eigene Dateihashes und Verzeichnisse,
+Vorher-/Nachherbindungen jedes Dateieffekts und genaue Archivierungsziele.
+Das Journal benennt sich selbst; es erfindet keinen rekursiven Selbsthash.
+Eigene Dateiinventur wird aus Plan und Auftrag abgeleitet, niemals aus einer
+nachträglich pauschal bereinigten Inventur. Jeder weitere Effekt vergleicht
+den gesamten tatsächlichen Bestand mit den exakt erklärten eigenen Writes.
+Fremde Bytes innerhalb des eigenen Archivs bleiben Konflikte.
+
+Vor `committing` werden ursprüngliche Planbytes, vollständige Sicherungsobjekte
+samt Manifest der Originaldateien und Verzeichnisse sowie **alle** Zielbytes
+über vorhandene descriptorgebundene Evidence-/Staging-/Sync-Primitiven
+persistiert und wiedergeprüft. Kanonisch geordnete Ersetzungen und Entfernungen
+verwenden die vorhandene native Publikationsprimitive; eigene Fortschrittsbelege
+benennen die konkreten Before-/Targetzustände. Nach tatsächlichem Vollziel
+und nativer Zielwurzelprüfung entsteht der unveränderbare Abschlussaudit.
+Erst danach werden ausschließlich die gewählten alten Einträge bytegetreu
+in das Recoveryarchiv überführt. Bis zum letzten belegten Archivierungsschritt
+bleibt der eigene Restoreeintrag aktiv. Der benannte Archivbereich verwendet
+den vorhandenen typgeprüften passiven Metadatenpfadvertrag; die vollständige
+Restoreinventur nimmt ihn ausdrücklich nicht pauschal aus.
+
+Beschädigte aktive Journalbytes werden nun bei der Planung als Originale
+inventarisiert und gesichert; dies wählt oder autorisiert sie nicht.
+Native vollständige abgeschlossene Receipts bleiben unverändert am alten
+Pfad. Der erste Receipt-Historienprovider lässt nur exakt erhaltene ursprüngliche
+Zielinventare zu; andere Historie bleibt ein expliziter Konflikt.
+Ein bereits für einen gewöhnlichen Write verwendeter Request wird nicht als
+neuer Restore umgedeutet. Frühe Ablehnung ist schreibfrei. Nach möglichem
+Write weisen Fehler `mutation_possible` und `recovery_required` aus;
+ein erneuter stale Aufruf behält eine tatsächlich beobachtete Recovery-Sperre.
+
+**Gezielte parallele Dev-Prüfung.** Der übergebene Zustand besteht
+**574/574** Verhaltenstests mit **vier Workern**,
+CPython **3.14.4**, Prozessabschluss **0**, in **965.90 s**:
+
+- `tests/test_bundle_receipts.py` (38)
+- `tests/test_bundle_receipts_right.py` (43)
+- `tests/test_catalog_check.py` (17)
+- `tests/test_catalog_check_right.py` (37)
+- `tests/test_project_locks.py` (39)
+- `tests/test_project_locks_right.py` (50)
+- `tests/test_recovery_protection.py` (29)
+- `tests/test_restore_execution.py` (42)
+- `tests/test_restore_history.py` (34)
+- `tests/test_restore_history_right.py` (28)
+- `tests/test_restore_plan.py` (46)
+- `tests/test_restore_plan_right.py` (82)
+- `tests/test_transaction_preflight.py` (35)
+- `tests/test_transaction_preflight_right.py` (33)
+- `tests/test_transaction_recovery_lock.py` (21)
+
+Die **42** neuen Fälle prüfen vollständige Bundle-/Baselinequellen mit
+beschädigten Journaltrees, leeren Dateien/Verzeichnissen oder leerer Auswahl,
+unabhängige tatsächliche Vollzielwurzel, sämtliche Originalobjekte und
+Stagingbytes, Audit vor Archivierung, unveränderte native Receipts,
+Requestkonflikt, fehlende Autorisierung, echten gehaltenen Root-Mutex,
+Änderungen während der Autorisierung, ungewählte/ungültige/verbotene Auswahl,
+mutablen Altbestand, fremde Archivbytes und wirkliche I/O-Unterbrechung
+vor/nach atomarem Dateieffekt. Abgebrochene Publikationen behalten aktuelle
+Bytes, vollständiges Backup, alte Originaljournale und aktive Sperre.
+Die bestehende Journal-Planprobe wurde ausschließlich an die nun vorhandene
+schreibfreie Inventarisierung angepasst; ihre Identität bleibt erhalten.
+Alle übrigen bestehenden Tests bleiben bytegleich.
+
+Die vollständige Collection/Katalogprüfung führt keine Testkörper aus:
+**21.646** aktive Tests, **21.650** dauerhafte Nummern. Die 42 neuen IDs
+stehen ausschließlich hinten; alle bestehenden und vier historisch
+stillgelegten Nummern bleiben erhalten. Aktive Katalogfälle 0461/0462 und
+die synthetische Fixture binden den beobachteten Teilumfang, unverändert
+an Spezifikation 0.2.31. Teilprüfung, `full_suite_passed=null`; kein Vollsuite-
+oder Release-Erfolgsnachweis, kein CI-, serieller oder Dokumentationstest.
+
+Dev-Quellidentität: `a6975270f7f21ece0f77d5410eb60c94a50efc4e27cf875d6e457b67433b7fe4`.
+Auswahlbericht-SHA-256:
+`d229f384ef5cf4ba89c3552185b90d5b868ff5a9280f5d25fef5a1ea902e5053`.
+Einzeloutcomes-SHA-256:
+`55bc9e87d37ae93cf71321e73a59da66353940fe391a455683df93ab0d850981`.
+Vorherige Apply-Auswahlbindung: `3b3c566056e760f54847942f3694eabe690d088365bd1355fc91ed7702bad126`;
+Apply-Bericht: `6bc481accbaaae1862c8b7bdea2561fe4d626967a6cc439d69e9f1ecbe86eb2d`;
+Apply-Einzeloutcomes: `eb30739bd3ab9b7a0203c8b7e21e88ef19262a80d374fa4f79fcf5aab58fe14f`.
+
+**Verbleibender Pflichtumfang.** SR-TC-0461/0462 bleiben **partial**.
+Die W-API beginnt eine neue explizit gebundene Ausführung; unterbrochene
+Ausführungen werden sicher gesperrt, noch nicht durch sie resumed oder
+zurückgerollt. Native Ownerübernahme, Vollzielabschluss trotz später stale
+Herkunft, Teilziel-Rollback, vollständige Crashmatrix, Abschlussreplay,
+CLI/externe Planveröffentlichung und Einzellauf-/Workparität bleiben in
+15.l.R/C offen. Weiterhin fehlende Schutz-/Lifecycle-/Spezialistenprovider,
+allgemeine Receipt-Historienfaltung und frühere Recovery-Audits sind zwingende
+Integrationen vor Gesamt-Restoreabnahme; ihre konservativen Ablehnungen sind
+keine dauerhaften Ausnahmen. Keine menschlichen Freigaben oder externe
+Risikozustimmung werden aus dem Test-Host oder gespeicherten Bytes abgeleitet.
+
+**Übergabe.** Genau ein echter W-Zustand, ein regulärer Commit, keine künstliche
+W/R/C-Folge. Der bewährte Entrypoint installiert genau die gezielt geprüften
+Bytes über den nativen PatchHarbor-Payloadwriter. Ausschließlich **Sequenz 205 /
+Gruppe 1 von 3**, **7.214** Tests, läuft parallel mit vier Workern in Apply.
+Erst nach erfolgreicher Prüfung von Auswahl, Quellhash und Einzeloutcomes
+folgen die fünf Fortschrittsmarker auf **649/900**, zuletzt **15.l.W**,
+nächstens **15.l.R**, Bundle **499** und die W-Checkbox sowie die exakte
+Commit-Message. R/C bleiben offen. Fehler erhalten tatsächlichen Arbeitsstand
+und bereits erfolgreiche Commits. Apply-Test und Commit sind bei Übergabe
+noch nicht beobachtet. Native ZIP-Prüfung, SHA-256 und atomare Exchange-
+Übergabe beenden den N-Auftrag sofort; keine Apply-/Warte-/Modellschleife.
 
 #### 15.l.R – Make it Right
 

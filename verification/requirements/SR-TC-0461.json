@@ -7,11 +7,12 @@
   "implementation_status": "partial",
   "method": "automated_behavior",
   "fixture_ids": [
-    "SR-FIX-RESTORE-PLAN-v1"
+    "SR-FIX-RESTORE-PLAN-v1",
+    "SR-FIX-RESTORE-EXECUTION-v1"
   ],
   "preconditions": [
     "Explicit canonical native source/project roots and original full-project source bytes; current identity and managed coverage are proven by an intact configuration or independently retained sealed project Baselines with verified original recursive objects.",
-    "The native provider supports draft standard artifacts, document/block structure, profiles, original attachments, sealed Baselines and recorded Evidence with bound configuration policy. Unsupported immutable/operational history and specialist gates remain explicit blockers; no partial target is qualified."
+    "The native provider supports draft standard artifacts, document/block structure, profiles, original attachments, sealed Baselines, recorded Evidence with bound configuration policy, corrupt active journal originals and completed receipts whose full original result is preserved. Unavailable specialist/protected-history providers remain explicit blockers, not qualified partial targets."
   ],
   "steps": [
     "Prepare and independently decode project-bundle and working/release-kind project-Baseline plans without project or operational writes.",
@@ -23,12 +24,16 @@
     "Distinguish invalid input (3), historical identity/conflict or stale inventory (6), native root/link/path safety (7), actual read I/O (5) and missing operational call values (2).",
     "Preserve younger immutable Baselines and bound Evidence, their recursive archive objects and original attachments byte-for-byte; independently recompute the augmented project root and exact preservation reasons.",
     "Keep native negative and stale Evidence findings in a detached assessment separate from the closed passive plan; refuse original-byte conflicts, missing structural subjects and rewritten preservation inventories.",
-    "Close retained Baseline history before selecting exact Evidence dependency bytes; reject incompatible immutable identities and attachment bindings with code 6, unavailable originals with code 3, and rehashed plans that hide protected records in backup only."
+    "Close retained Baseline history before selecting exact Evidence dependency bytes; reject incompatible immutable identities and attachment bindings with code 6, unavailable originals with code 3, and rehashed plans that hide protected records in backup only.",
+    "Execute both qualified full source kinds with explicit selected corrupt trees, empty files/directories or no old journal; independently prove the actual full target root, complete original backup objects/directories and audit-before-archive ordering.",
+    "Bind current authority, independent target, plan/source/complete inventory, normalized selection and exact own file layout before the first operational write, and repeat under the actual shared kernel mutex. Denied, stale, reused ordinary requests and unselected or malformed/forbidden journal selections remain write-free.",
+    "Retain native completed receipts at their original paths; verify exact supported historical result bytes rather than dropping their publication proof. Remove a mutable unprotected addition only with complete backup.",
+    "Inject real before/after-replacement I/O failure and a foreign file inside the own backup namespace: preserve original bytes, actual publication and active barrier, refuse blind repeats; do not report recovery completion."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "`recover restore` MUSS ausschließlich einen vollständig qualifizierten, zielhashgebundenen Restore-Plan nach Kapitel 10.7.1 aus einer unveränderten Vollprojekt-Baseline oder einem Vollprojektbundle ausführen.",
-    "scope": "Supported complete plans have independent native source/target reconstruction, exact original and backup bytes and distinct canonical hash domains. Invalid/missing current configuration can use independently retained, fully byte-verified project Baselines only when identity and managed coverage agree; source/target objects alone never supply current evidence. Read-only planning and preflight preserve project/operational bytes. Unsupported history and specialist providers fail explicitly. A passive plan is not a ChangePlan, permission, durable backup, completed recovery or release proof. Younger supported protected history and its native original-byte closure survive both source kinds. Native historical Evidence assessments retain failed/stale data and explicitly do not establish run selection, approval, full verification or release readiness. R-46 Evidence/Baseline cases additionally verify order-independent exact archived attachment selection, shared dependency deduplication and precise conflict/missing-byte diagnostics without modifying historical records or current mutable subjects."
+    "scope": "Supported complete plans have independent native source/target reconstruction, exact original and backup bytes and distinct canonical hash domains. Invalid/missing current configuration can use independently retained, fully byte-verified project Baselines only when identity and managed coverage agree; source/target objects alone never supply current evidence. Read-only planning and preflight preserve project/operational bytes. Unsupported history and specialist providers fail explicitly. A passive plan is not a ChangePlan, permission, durable backup, completed recovery or release proof. Younger supported protected history and its native original-byte closure survive both source kinds. Native historical Evidence assessments retain failed/stale data and explicitly do not establish run selection, approval, full verification or release readiness. R-46 Evidence/Baseline cases additionally verify order-independent exact archived attachment selection, shared dependency deduplication and precise conflict/missing-byte diagnostics without modifying historical records or current mutable subjects. Initial native Restore execution now reaches the exact planned full target for the supported subset after durable before/staging byte readback, with immutable source/plan/request/selection/own-file bindings and local completion audit. Only selected originals move after verified target and audit; native receipts remain in place. Unexpected own-namespace bytes are not exempt from inventory checks."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [
@@ -62,6 +67,48 @@
   },
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
+    "tests/test_restore_execution.py::test_completed_native_receipts_remain_byte_exact_at_their_original_paths[False]",
+    "tests/test_restore_execution.py::test_completed_native_receipts_remain_byte_exact_at_their_original_paths[True]",
+    "tests/test_restore_execution.py::test_exact_request_binds_authority_and_original_state_even_for_zero_model_effects",
+    "tests/test_restore_execution.py::test_existing_owner_is_not_removed_or_interpreted_as_permission",
+    "tests/test_restore_execution.py::test_explicit_selection_never_expands_into_a_different_binding_or_area[archive-7]",
+    "tests/test_restore_execution.py::test_explicit_selection_never_expands_into_a_different_binding_or_area[audit-7]",
+    "tests/test_restore_execution.py::test_explicit_selection_never_expands_into_a_different_binding_or_area[bom-3]",
+    "tests/test_restore_execution.py::test_explicit_selection_never_expands_into_a_different_binding_or_area[duplicate-3]",
+    "tests/test_restore_execution.py::test_explicit_selection_never_expands_into_a_different_binding_or_area[extra-3]",
+    "tests/test_restore_execution.py::test_explicit_selection_never_expands_into_a_different_binding_or_area[invalid_hash-3]",
+    "tests/test_restore_execution.py::test_explicit_selection_never_expands_into_a_different_binding_or_area[locks-7]",
+    "tests/test_restore_execution.py::test_explicit_selection_never_expands_into_a_different_binding_or_area[plan-6]",
+    "tests/test_restore_execution.py::test_explicit_selection_never_expands_into_a_different_binding_or_area[raw_hash-6]",
+    "tests/test_restore_execution.py::test_explicit_selection_never_expands_into_a_different_binding_or_area[receipt-7]",
+    "tests/test_restore_execution.py::test_explicit_selection_never_expands_into_a_different_binding_or_area[root-7]",
+    "tests/test_restore_execution.py::test_explicit_selection_never_expands_into_a_different_binding_or_area[subtree-6]",
+    "tests/test_restore_execution.py::test_explicit_selection_never_expands_into_a_different_binding_or_area[traversal-7]",
+    "tests/test_restore_execution.py::test_explicit_selection_never_expands_into_a_different_binding_or_area[unsorted-3]",
+    "tests/test_restore_execution.py::test_foreign_bytes_inside_own_archive_are_not_an_inventory_exception",
+    "tests/test_restore_execution.py::test_initial_authority_and_independent_target_are_mandatory_and_write_free[ai_request]",
+    "tests/test_restore_execution.py::test_initial_authority_and_independent_target_are_mandatory_and_write_free[denied]",
+    "tests/test_restore_execution.py::test_initial_authority_and_independent_target_are_mandatory_and_write_free[mutated]",
+    "tests/test_restore_execution.py::test_initial_authority_and_independent_target_are_mandatory_and_write_free[no_authority]",
+    "tests/test_restore_execution.py::test_initial_authority_and_independent_target_are_mandatory_and_write_free[non_bool]",
+    "tests/test_restore_execution.py::test_initial_authority_and_independent_target_are_mandatory_and_write_free[target]",
+    "tests/test_restore_execution.py::test_initial_restore_reaches_exact_full_target_and_retains_selected_originals[absent-baseline]",
+    "tests/test_restore_execution.py::test_initial_restore_reaches_exact_full_target_and_retains_selected_originals[absent-project_bundle]",
+    "tests/test_restore_execution.py::test_initial_restore_reaches_exact_full_target_and_retains_selected_originals[empty_directory-baseline]",
+    "tests/test_restore_execution.py::test_initial_restore_reaches_exact_full_target_and_retains_selected_originals[empty_directory-project_bundle]",
+    "tests/test_restore_execution.py::test_initial_restore_reaches_exact_full_target_and_retains_selected_originals[empty_file-baseline]",
+    "tests/test_restore_execution.py::test_initial_restore_reaches_exact_full_target_and_retains_selected_originals[empty_file-project_bundle]",
+    "tests/test_restore_execution.py::test_initial_restore_reaches_exact_full_target_and_retains_selected_originals[tree-baseline]",
+    "tests/test_restore_execution.py::test_initial_restore_reaches_exact_full_target_and_retains_selected_originals[tree-project_bundle]",
+    "tests/test_restore_execution.py::test_late_authorizer_input_change_is_detected_before_first_restore_write[current]",
+    "tests/test_restore_execution.py::test_late_authorizer_input_change_is_detected_before_first_restore_write[source]",
+    "tests/test_restore_execution.py::test_publication_io_failure_retains_active_barrier_original_backup_and_actual_bytes[after]",
+    "tests/test_restore_execution.py::test_publication_io_failure_retains_active_barrier_original_backup_and_actual_bytes[before]",
+    "tests/test_restore_execution.py::test_revalidation_and_authority_under_kernel_mutex_precede_owner_creation",
+    "tests/test_restore_execution.py::test_unpublished_mutable_addition_is_removed_only_after_exact_backup",
+    "tests/test_restore_execution.py::test_unselected_active_entries_prevent_even_operational_writes[empty]",
+    "tests/test_restore_execution.py::test_unselected_active_entries_prevent_even_operational_writes[omitted]",
+    "tests/test_restore_execution.py::test_unselected_active_entries_prevent_even_operational_writes[one]",
     "tests/test_restore_history.py::test_baseline_archive_retains_missing_immutable_evidence_file[False]",
     "tests/test_restore_history.py::test_baseline_archive_retains_missing_immutable_evidence_file[True]",
     "tests/test_restore_history.py::test_current_mutable_subjects_cannot_fill_a_complete_source",
@@ -254,7 +301,7 @@
     "tests/test_restore_plan_right.py::test_wire_json_syntax_and_encoding_fail_without_any_project_access[utf8]"
   ],
   "open_items": [
-    "Historical lifecycle/specialist and completed-receipt publication evidence, independent-policy Evidence and remaining protected record kinds still require integration before full restore acceptance. These unsupported cases remain explicit failures, never permanent exemptions or qualified partial targets.",
-    "15.l: external CLI plan publication, separately authorized locked execution, durable recovery archive/journal/audit and crash-safe completion. No executed restore or full SR-REQ-0461 acceptance is claimed."
+    "Historical lifecycle/specialist evidence, independent-policy Evidence, further protected record kinds, prior recovery audits and general completed-receipt history folds remain mandatory integrations before full Restore acceptance. Only exact supported original receipt targets are currently admitted; other histories fail closed.",
+    "15.l.R/C: explicit safe owner takeover and interrupted execution completion/rollback including stale source after full publication, historical completion replay, full failure matrix, CLI/external plan publication and Work parity. The initial native API and selected interruption observations do not establish those remaining contracts."
   ]
 }

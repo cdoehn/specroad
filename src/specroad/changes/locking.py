@@ -117,7 +117,8 @@ def _request(kind, command, project_id, request_id, transaction_id):
 
 
 @contextmanager
-def project_lock(root, *, kind, command, project_id, transaction_id=None, request_id=None):
+def project_lock(root, *, kind, command, project_id, transaction_id=None, request_id=None,
+                 _before_record=None):
     """Acquire a nonblocking exclusive guard; release only this exact owner record.
 
     Writer: configuration identity and absence of unresolved journals required.
@@ -142,6 +143,12 @@ def project_lock(root, *, kind, command, project_id, transaction_id=None, reques
         journals = files.journal_entries()
         if selected is not LockKind.RECOVERY and journals:
             raise ProjectLockError('transaction_journal_blocks_lock')
+        if _before_record is not None:
+            _before_record(files)
+            files.require_held()
+            current, _ = files.read_record()
+            if current is not None or files.journal_entries() != journals:
+                raise ProjectLockError('lock_preparation_changed', exit_code=6)
         record = LockRecord(canonical_json_bytes({'format_version': LOCK_VERSION,
             'kind': selected.value, 'lock_id': str(uuid4()), 'project_id': project_id,
             'root_identity': identity(os.fstat(files.root_fd)), **owner.as_dict(),

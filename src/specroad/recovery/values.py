@@ -9,9 +9,17 @@ from ..storage.json_syntax import parse_json_object
 
 
 class RestoreError(ModelError):
-    def __init__(self, reason, *, path=None, exit_code=3):
+    def __init__(self, reason, *, path=None, exit_code=3, mutation_possible=False,
+                 recovery_required=False):
         super().__init__(reason, path=path)
         self.exit_code = exit_code
+        self.mutation_possible = mutation_possible
+        self.recovery_required = recovery_required
+
+    def diagnostic(self):
+        return {**super().diagnostic(), 'exit_code': self.exit_code,
+                'mutation_possible': self.mutation_possible,
+                'recovery_required': self.recovery_required}
 
 
 def require(condition, reason, *, path=None, exit_code=3):
@@ -32,7 +40,8 @@ def guarded(function):
         except (ModelError, BundleError) as error:
             unsafe = error.reason in ('unsafe_path', 'reserved_path', 'unsafe_project_declaration')
             raise RestoreError(error.reason, path=getattr(error, 'path', None),
-                exit_code=7 if unsafe else getattr(error, 'exit_code', 3)) from error
+                exit_code=7 if unsafe else getattr(error, 'exit_code', 3),
+                mutation_possible=getattr(error, 'mutation_possible', False)) from error
         except FileNotFoundError as error:
             raise RestoreError('restore_required_source_missing') from error
         except OSError as error:

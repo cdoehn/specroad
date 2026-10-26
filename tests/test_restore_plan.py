@@ -185,6 +185,14 @@ def test_unproved_identity_history_or_inventory_prevents_a_complete_plan(tmp_pat
         path, raw = 'spec/unrecognized.bin', b'not silently omitted'
     put(root, path, raw)
     before = inventory(tmp_path)
+    if case == 'journal':
+        # 15.l.W now inventories corrupt active bytes as backup originals;
+        # this read-only observation does not select or authorize them.
+        with no_write_attempts():
+            plan = plan_for(options)
+        assert decode_files(plan, 'backup')[path] == raw
+        assert inventory(tmp_path) == before
+        return
     with no_write_attempts(), pytest.raises(RestoreError) as error:
         plan_for(options)
     # 15.k now inventories Evidence; this synthetic record lacks the native
