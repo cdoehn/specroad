@@ -1,21 +1,21 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.30
+## Version 0.2.31
 
 | Feld | Wert |
 |---|---|
 | Dokument-ID | `SR-SPEC-0001` |
-| Dokumentversion | `0.2.30` |
+| Dokumentversion | `0.2.31` |
 | Zielrelease | `SpecRoad Single-Repository Workbench 0.2.0` |
 | Status | **Fachlich konsolidierte Arbeitsgrundlage; technische Reviewentscheidung gesondert dokumentiert, formale Baseline-Freigabe und Produktabnahme nicht durch dieses Dokument erklärt** |
 | Stand | 26. Oktober 2026 |
 | Sprache | Deutsch; technische Feldnamen, Enum-Werte und CLI-Kommandos Englisch |
-| Fachliche Quelle | **Diese Repositoryfassung v0.2.30 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.30 liegt mit dieser Änderung nicht vor.** |
+| Fachliche Quelle | **Diese Repositoryfassung v0.2.31 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.31 liegt mit dieser Änderung nicht vor.** |
 | Bearbeitbare Satzquelle | Diese Datei; eine spätere PDF muss denselben versionierten Inhalt wiedergeben. |
-| Vorgängerversion | Repository-Spezifikation v0.2.29 vom 26. Oktober 2026; frühere PDF-/Reviewbelege bleiben an ihre historischen Fassungen gebunden. |
-| Prüf- und Entscheidungsgrundlage | RESTORE-JOURNAL-SELECTION, ausdrücklicher manueller Nutzerauftrag vom 26. Oktober 2026; Entscheidungsbeleg, Grenzen und offene Abnahmen bei 15.l.W im Implementierungsplan. Bestehende Nutzerentscheidungen und Produktfreigabegrenzen bleiben unverändert. |
-| Änderungsart | Additive Präzisierung der ausdrücklich autorisierten Auswahl alter aktiver Journale in 10.7.4; keine neue Requirement-ID oder Produktposition. Umsetzung und Produktabnahme bleiben offen. |
+| Vorgängerversion | Repository-Spezifikation v0.2.30 vom 26. Oktober 2026; frühere PDF-/Reviewbelege bleiben an ihre historischen Fassungen gebunden. |
+| Prüf- und Entscheidungsgrundlage | SPECROAD-DECISION-1-V3, ausdrücklicher manueller Nutzerauftrag vom 26. Oktober 2026 zur Erweiterung der Projektregel; Entscheidungsbeleg und Verfahrensabnahmen im OFF-PLAN-Abschnitt des Implementierungsplans. Bestehende Nutzerentscheidungen und Produktfreigabegrenzen bleiben unverändert. |
+| Änderungsart | Versionierte Erweiterung der Entwicklungsbefugnis in 2.4.3 auf höchstens drei Klärungsbundles unter Control-Vertrag 3; Vertrag 2 behält die Einerregel; keine neue Requirement-ID oder Produktposition. Umsetzung und Produktabnahme bleiben offen. |
 
-> **Verbindlicher Quellenwechsel:** Die ausdrücklich beauftragte Auswahlentscheidung schreibt die Repository-Spezifikation als v0.2.30 fort. Frühere PDF- und Reviewnachweise behalten ihre historische Bindung und belegen diese Erweiterung nicht. Der py3langid-Adapter bleibt Bestandteil des Zielreleases; der kleine Core bleibt ohne Analyzer-Abhängigkeiten nutzbar.
+> **Verbindlicher Quellenwechsel:** Die ausdrücklich beauftragte Erweiterung der Projektregel schreibt die Repository-Spezifikation als v0.2.31 fort. Frühere PDF- und Reviewnachweise behalten ihre historische Bindung und belegen diese Erweiterung nicht. Der py3langid-Adapter bleibt Bestandteil des Zielreleases; der kleine Core bleibt ohne Analyzer-Abhängigkeiten nutzbar.
 
 > **Fortbestehende Arbeitsprinzipien:** Weiche Budgets führen zu sparsamer vollständiger Weiterarbeit oder gesicherter Fortsetzung über mehrere Aufrufe beziehungsweise Prompts. Es werden keine erforderlichen Arbeiten stillschweigend ausgelassen. Reale Host-, Speicher-, Berechtigungs- und Sicherheitsgrenzen bleiben wirksam.
 
@@ -101,7 +101,7 @@ Bei einem Widerspruch innerhalb dieser Dokumentversion gilt:
 3. `SR-DEC-*` hat Vorrang vor erläuterndem Text, Diagrammen und Beispielen.
 4. Beispiele sind niemals normativ, sofern sie nicht ausdrücklich als Testvektor bezeichnet sind.
 5. Zwei widersprüchliche `SR-REQ-*`-Anforderungen besitzen **keine implizite Rangfolge** nach Nummer, Position oder Spezifität. Ein solcher Fund ist ein Spezifikationsfehler, muss als Issue gelöst werden und verhindert die Freigabe.
-6. Diese Dokumentversion 0.2.30 ersetzt die frühere fachliche Arbeitsgrundlage vollständig. Bis zur gesonderten PDF-Veröffentlichung ist diese versionierte Repositorydatei maßgeblich. Eine spätere PDF muss inhaltsgleich sein; frühere PDFs werden nicht als Nachweis der neuen Verträge ausgegeben. Inhalte verschiedener Fassungen dürfen nicht zu einer Mischspezifikation kombiniert werden.
+6. Diese Dokumentversion 0.2.31 ersetzt die frühere fachliche Arbeitsgrundlage vollständig. Bis zur gesonderten PDF-Veröffentlichung ist diese versionierte Repositorydatei maßgeblich. Eine spätere PDF muss inhaltsgleich sein; frühere PDFs werden nicht als Nachweis der neuen Verträge ausgegeben. Inhalte verschiedener Fassungen dürfen nicht zu einer Mischspezifikation kombiniert werden.
 7. Eine nachträgliche Änderung dieser veröffentlichten Datei erfordert mindestens eine neue Patch-Dokumentversion; stille Korrekturen unter derselben Dokumentversion sind unzulässig.
 8. Eine normative Tabelle, auf die eine `SR-REQ-*`-Anforderung ausdrücklich als Algorithmus oder Matrix verweist, ist Bestandteil des Passkriteriums dieser Anforderung.
 
@@ -279,38 +279,122 @@ das Dokumentieren dieser Arbeitsbefugnis.
 
 #### 2.4.3 Übergabe an Control und Begrenzung der Klärung
 
-Im automatisierten Betrieb gelten zusätzlich der tatsächlich gespeicherte
-`CONTROL_DECISION_CONTRACT` und das Antwortschema des aktuellen Auftrags.
-Diese Projektregel aktualisiert keinen laufenden oder historischen Auftrag.
-Nur ein neuer Vertrag `version=2` mit `clarification_allowed=true` erlaubt
-die automatische gesonderte Klärungsübergabe. Fehlende, alte oder unbekannte
-Verträge werden nicht als Zustimmung ausgelegt. Ein ausdrücklicher manueller
-Nutzerauftrag kann einen eigenen Offplan-Schritt beauftragen; daraus entsteht
-keine automatische Erweiterung des bestehenden Control-Auftrags.
+**Ausdrücklich beauftragte Erweiterung.** Der manuelle Nutzerauftrag vom
+26. Oktober 2026 erweitert `SPECROAD-DECISION-1` für Control-Vertrag 3 auf
+höchstens drei aufeinanderfolgende Klärungsbundles. Diese Erweiterung folgt
+unmittelbar aus diesem Nutzerauftrag, nicht aus der bisherigen Delegation.
+Alle fachlichen Grenzen aus 2.4.1, Entscheidungsbelege aus 2.4.2 und
+Blocker-/Erhaltungsregeln aus 2.4.4 bleiben uneingeschränkt verbindlich.
+Die Erweiterung betrifft ausschließlich die Entwicklungsbefugnis; sie
+ersetzt keine menschlichen Produktfreigaben, Reviews, Risikoentscheidungen
+oder Nachweise.
 
-Ist zur Auflösung eine eigene normative Entscheidung nötig, liefert der
+Im automatisierten Betrieb gelten zusätzlich der tatsächlich gespeicherte
+`CONTROL_DECISION_CONTRACT` und das Antwortschema des jeweiligen Auftrags.
+Diese Projektregel aktualisiert keinen laufenden oder historischen Auftrag
+und schreibt keinen Control-Zustand um. Ein ausdrücklicher manueller
+Nutzerauftrag kann einen eigenen OFF-PLAN-Schritt beauftragen; daraus
+entsteht keine automatische Erweiterung des bestehenden Control-Auftrags
+oder seines Restbudgets.
+
+**Gültiger Vertrag 3.** Er enthält die folgenden verbindlichen Felder mit
+ihren tatsächlichen JSON-Typen, ohne implizite Typkonvertierung:
+
+| Feld | Vertrag |
+|---|---|
+| `version` | Ganzzahl, exakt `3` |
+| `clarification_limit` | Ganzzahl, exakt `3` |
+| `clarifications_remaining` | Ganzzahl von `0` bis `3`, einschließlich beider Grenzen; Boolean ist keine Ganzzahl dieses Vertrags |
+| `clarification_allowed` | Boolean, exakt `true` oder `false` |
+
+Bei `clarifications_remaining=0` MUSS `clarification_allowed=false` gelten.
+Die Kombination aus Restbudget 0 und `true` ist ungültig, keine Freigabe
+und kein Anlass, den Vertrag still zu reparieren. Fehlende Pflichtfelder,
+falsche Typen, andere Limits oder Werte außerhalb des Bereichs erlauben
+keine automatische Klärungsübergabe. Fehlende oder unbekannte Verträge
+werden ebenso wenig als Zustimmung ausgelegt; es gibt keinen impliziten
+Fallback auf eine großzügigere Version oder ein erfundenes Startbudget.
+
+Eine automatische Klärungsübergabe unter Version 3 ist nur bei gültigem
+Vertrag, `clarification_allowed=true` **und** positivem Restbudget erlaubt.
+`false` sperrt sie auch bei Restbudget 1, 2 oder 3. Der Dev-Agent MUSS das
+tatsächlich erteilte Budget beachten und DARF es weder aus der Anzahl
+sichtbarer Dateien rekonstruieren noch selbst erhöhen. Ein positiver
+Restwert ersetzt weder die fachlichen Grenzen noch die nachfolgend
+verlangten Apply-Nachweise.
+
+**Eine Übergabe pro Auftrag und Result.** Ist zur Auflösung eine innerhalb
+der erteilten Befugnis zulässige normative Entscheidung nötig, liefert der
 Agent genau ein state-gebundenes OFF-PLAN-Spezifikationsbundle und meldet
 `status=spec_clarification`, die SHA-256 des tatsächlichen Quell-Results,
-die SHA-256 der fertig geprüften ZIP und eine kurze Entscheidungserklärung.
+die SHA-256 der fertig nativ geprüften ZIP und eine kurze Entscheidungserklärung.
 Die vier Antwortfelder bleiben `source_result_sha256`, `status`,
-`patch_sha256` und `message`. Es folgt kein zweites Bundle aus derselben
-Quelle, kein selbst gestartetes Apply und keine eigene Warte-/Modellschleife.
-Der bestehende Watcher übernimmt Apply, Tests und Result-Erzeugung.
-Der reguläre Planschritt bleibt bis zu seiner echten Umsetzung offen.
+`patch_sha256` und `message`. Je Auftrag und Quell-Result ist höchstens ein
+Bundle zulässig. Das Restbudget erlaubt weder mehrere Bundles aus derselben
+Quelle noch mehrere Klärungen innerhalb eines eigenen Fortsetzungsloops.
+Nach atomarer Übergabe endet der Auftrag sofort; kein selbst gestartetes
+Apply und keine eigene Warte-/Modellschleife. Apply, Tests und Result-Erzeugung
+bleiben beim gesondert autorisierten externen Verfahren. Der reguläre
+Planschritt bleibt bis zu seiner echten Umsetzung offen.
 
-Nach dem zugeordneten Apply-Result darf der laufende, zum Fortsetzen
-autorisierte Control-Worker den offenen Planschritt erneut beauftragen.
-Höchstens ein Klärungsbundle in Folge ist erlaubt. Bei
-`clarification_allowed=false` MUSS der Agent die bereits geklärte Vorgabe
-implementieren oder bei einer verbleibenden unlösbaren Grenze `blocked`
-melden; ein weiteres Klärungsbundle ist nicht zulässig. Insbesondere darf
-eine Spezifikationsklärung nicht als `patch_ready`, kosmetischer Produkt-
-oder Alibi-Commit verborgen werden. `patch_ready` bezeichnet reguläre
-Umsetzung oder eine echte technische Korrektur. Nur deren erfolgreiches,
-sauberes Apply mit passendem Abschlusscommit kann das Control-Budget wieder
-öffnen. Fehlgeschlagene Applys und unklassifiziert übernommene Bundles tun
-dies nicht. Control prüft Bindung und Klassifikation, nicht die fachliche
-Qualität oder tatsächlichen Planfortschritt; die Reviewpflicht bleibt.
+**Verbrauch und Folgeauftrag.** Jede als `spec_clarification` klassifizierte
+Übergabe verbraucht bei der Übernahme ihres eindeutig zugeordneten
+Folge-Results genau einen Platz, auch wenn Apply fehlgeschlagen ist.
+Control MUSS diese Zuordnung und den Verbrauch dauerhaft und genau einmal
+festhalten; die erneute Übernahme derselben Übergabe ist weder ein zweiter
+Verbrauch noch eine Erneuerung des Budgets. Ohne eindeutig zugeordnetes
+Result darf kein erfolgreicher Abschluss angenommen werden.
+
+Eine weitere automatische Klärung setzt das zugehörige **erfolgreiche,
+saubere Apply mit passendem Abschlusscommit**, verbleibendes positives
+Budget und einen neuen gültigen, freigebenden Auftrag voraus. Ein fehlendes,
+fehlgeschlagenes, unsauberes oder nicht passend abgeschlossenes Apply
+genehmigt keine weitere Klärung, auch wenn noch Plätze übrig sind.
+Der laufende, ausdrücklich zum Fortsetzen autorisierte Control-Worker darf
+den offenen Planschritt auf Basis des zugeordneten Results erneut beauftragen.
+Höchstens drei Klärungsbundles dürfen so über **getrennte Aufträge und
+zugeordnete Apply-Results** aufeinanderfolgen. Dieser Vertrag startet oder
+reaktiviert selbst keinen Worker.
+
+Nach der dritten Klärung bleibt reguläre Umsetzung erlaubt; eine vierte
+Klärung ist gesperrt. Bei `clarification_allowed=false` oder Restbudget 0
+MUSS der Agent die bereits geklärte Vorgabe umsetzen, soweit sie klar und
+beauftragt ist. Ist weitere notwendige Klärung nicht mehr erlaubt, meldet
+er `blocked` mit konkreter Frage, Empfehlung und Befugnisgrenze gemäß 2.4.4.
+Ein verbrauchtes Klärungsbudget ist kein Produktabschluss und kein `no_work`.
+
+**Erneuerung ausschließlich durch normalen Abschluss.** Nur das
+erfolgreiche, saubere Apply mit passendem Abschlusscommit eines als
+`patch_ready` klassifizierten regulären Umsetzungs- oder echten technischen
+Korrekturbundles eröffnet unter Vertrag 3 erneut drei Plätze. Die
+Klassifikation allein ist kein Nachweis einer solchen Änderung.
+Eine Spezifikationsklärung DARF NICHT als `patch_ready`, kosmetischer
+Produkt-/Alibi-Commit oder scheinbare technische Korrektur verborgen werden.
+Es gibt keine kosmetischen Budget-Resets. Fehler und unklassifizierte
+Übergaben erteilen keine neue Befugnis; auch ein sauber angewendetes
+Klärungsbundle erneuert das Budget nicht. Control prüft Bindung und
+Klassifikation, nicht die fachliche Qualität oder tatsächlichen
+Planfortschritt; die Reviewpflicht bleibt.
+
+**Dauerhaftigkeit und Versionsübergang.** Control verwaltet das Budget
+dauerhaft. Retry, Overload, Pause, Neustart und Recovery erneuern es nicht.
+Alte Verträge, Aufträge, Antworten und Result-Nachweise DÜRFEN NICHT
+nachträglich erweitert oder umklassifiziert werden. **Version 2 behält die
+Einerregel:** höchstens ein Klärungsbundle in Folge, automatische Übergabe
+nur bei gültigem Vertrag 2 mit `clarification_allowed=true`; `false`
+sperrt weitere Klärung. Die bisherigen Abschluss- und Resetgrenzen für
+Version 2 bleiben erhalten; fehlende Restbudgetfelder erzeugen dort keine
+drei Plätze.
+
+Der Wechsel einer alten Kette zu Vertrag 3 erfolgt erst nach dem belegten
+erfolgreichen normalen Abschluss gemäß Control-Vertrag: ein passend
+zugeordnetes `patch_ready`-Bundle mit echter Umsetzung oder technischer
+Korrektur, erfolgreichem sauberem Apply und passendem Abschlusscommit.
+Erst danach darf Control für einen neuen Auftrag Vertrag 3 mit drei
+Plätzen ausstellen. Eine neue Spezifikationsfassung, dieser manuelle
+OFF-PLAN-Auftrag, dessen erfolgreicher Dokumentcommit oder ein Neustart
+sind kein solcher Übergang und kein nachträgliches Auffüllen einer alten
+Kette. Bestehende Blockaden und Antworten bleiben erhalten.
 
 Ein reiner Spezifikationsschritt ist ein echter OFF-PLAN-Dokumentcommit,
 keine künstliche W/R/C-Produktfolge. Bei Produktimplementierung bleiben
@@ -320,6 +404,7 @@ Dokumentationstests, kein zusätzlicher Volltest, unveränderte parallele
 Apply-Testrotation mit N=3 pro tatsächlichem Commit. Collection-, Katalog-,
 Paket- und Result-Prüfungen bleiben bestehen. Ein Dokumentcommit erhöht
 keinen regulären Produktzähler und erklärt keine Produktabnahme.
+
 
 #### 2.4.4 Echte Blocker und Erhaltung des Betriebszustands
 
@@ -5034,6 +5119,22 @@ Produktstand 648/900, offene 15.l.W/R/C-Abnahmen und historische Belege
 bleiben erhalten; die Dokument- und Katalogbindung ist kein ausführbarer
 Restore-, Crash-, Produkt- oder Release-Erfolgsnachweis.
 
+### 20.25 Dreierregel für Control-Vertrag 3 v0.2.31
+
+Der ausdrückliche manuelle Nutzerauftrag vom 26. Oktober 2026 erweitert
+`SPECROAD-DECISION-1` gemäß 2.4.3 auf höchstens drei aufeinanderfolgende
+Klärungsbundles unter gültigem Control-Vertrag 3. Typisierte Pflichtfelder,
+positives Restbudget und ausdrückliche Freigabe, einmaliger Verbrauch auch
+bei Apply-Fehler sowie erfolgreicher sauberer normaler Abschluss als einzige
+Reset-/Versionsübergangsgrenze sind verbindlich. Version 2 behält die
+Einerregel. Alte Aufträge, Antworten, Blockaden und Belege bleiben erhalten;
+Retry, Overload, Pause, Neustart und Recovery erneuern kein Budget.
+Die Grenzen aus 2.4.1, Entscheidungsbelege aus 2.4.2 und Blockerregeln aus
+2.4.4 bleiben unverändert. Diese Dokumentfassung implementiert kein Control-
+oder Produktverhalten und aktiviert keine Automatik. Produktstand 648/900
+und der offene Schritt 15.l.W bleiben unverändert. Aktive Katalogbindungen
+folgen den neuen Dokumentbytes; historische Nachweise bleiben historisch.
+
 ## 21. Entscheidungsstatus und nicht blockierende Restpunkte
 
 | ID | Thema | Stand |
@@ -5076,6 +5177,7 @@ Die folgende Roadmap ist informativ und erzeugt keine Anforderungen an 0.2:
 
 | Version | Datum | Status | Änderung |
 |---|---|---|---|
+| 0.2.31 | 2026-10-26 | Ausdrücklicher manueller Nutzerauftrag zur Erweiterung der Projektregel | SPECROAD-DECISION-1-V3: höchstens drei Klärungsbundles unter gültigem Vertrag 3 mit dauerhaftem Budget; Version 2 behält die Einerregel. Fachliche Grenzen, Nachweise und Betriebszustände bleiben erhalten. |
 | 0.2.30 | 2026-10-26 | Ausdrücklicher manueller Nutzerauftrag | RESTORE-JOURNAL-SELECTION: autorisierte Pfad-/Inventurhashliste für betroffene alte aktive Journale, übrige Sperren bleiben erhalten; Umsetzung und Crashabnahme in 15.l offen. |
 | 0.2.29 | 2026-10-26 | Delegierte Detailklärung nach SPECROAD-DECISION-1 | RESTORE-EXECUTION-CONTRACT: genaue eigene Betriebswrites, dauerhafte Originalbytes und konservativer Abschluss/Rollback der Restore-Ausführung; Umsetzung und Crashabnahme in 15.l bleiben offen. |
 | 0.2.28 | 2026-10-26 | Delegierte Detailklärung nach SPECROAD-DECISION-1 | RESTORE-PLAN-CONTRACT: geschlossener bytegebundener Restoreplan mit getrennten Quell-, Bestands-, Ziel- und Sicherungshashes; Umsetzung in 15.j–15.l bleibt offen. |
@@ -8199,4 +8301,4 @@ Implementierungsschritten nachgewiesen sein.
 
 ---
 
-**Ende der SpecRoad-Produktspezifikation v0.2.30.**
+**Ende der SpecRoad-Produktspezifikation v0.2.31.**

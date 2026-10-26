@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 25 · **Stand:** 26. Oktober 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.30
+**Planrevision:** 26 · **Stand:** 26. Oktober 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.31
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 Schritte und 900 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; jeder Schritt besitzt einen konkreten Arbeitsumfang und eigene Verhaltensabnahme.
 
@@ -9,7 +9,7 @@ Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 S
 
 Fachliche Grundlage ist [`docs/specification/SpecRoad_Spezifikation.md`](../specification/SpecRoad_Spezifikation.md), einschließlich aller konsolidierten Korrekturen, 742 Requirements, 51 Verifikationsverträge, 46 Szenario-/E2E-Identitäten sowie R-01 bis R-75, Anhang U und den PatchHarbor-Rundweg aus Anhang W. Der [`Prüfbericht`](../reviews/SpecRoad_v0.2.7_Implementierungsreife_Pruefbericht.md) ist ein vorgelagerter Entwurfsreview, kein späterer Produktnachweis.
 
-Gebundene Spezifikations-SHA-256: `1b1a41df1559c48e2f7aadd53edde1f2676909fa426ee0441b544baa2b5fc7bf`.
+Gebundene Spezifikations-SHA-256: `7e26fcc96d1a3dcc6fbd18f6f5f650742e81b88604839e7d682bb34bfbb130a6`.
 Planungsbasis: Commit `fe2661d02ecf2f7eb483b58a4487eb009c6b3846`; sauberes Result-Bundle `specroad_Result_120209_0914_df3504.zip`; Repository-ID `3d2576df-d611-46fc-9d2b-92869468aaca`. Diese Angaben dokumentieren die Entstehung des Plans, nicht die zukünftige Patchbindung. **Jedes spätere Patchpaket bindet den dann aktuellen tatsächlichen Result-Zustand.**
 
 Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 2026 gelten zusätzlich und bei den nachfolgend benannten Konflikten vorrangig. Sonstige normative Spezifikationsinhalte werden nicht stillschweigend abgeschwächt. Neue fachliche Widersprüche, fehlende zwingende Angaben und Sicherheitsprobleme sind offen zu benennen, nicht durch erfundene Annahmen oder Scheinerfolge zu lösen.
@@ -23,15 +23,25 @@ weder Produktfreigaben ersetzen noch Scope, Sicherheit, Kompatibilität,
 W/R/C oder TD-001 abschwächen. Wirklich außerhalb dieser Grenzen liegende
 Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 
+Für die Begrenzung automatischer Klärungsübergaben gilt zusätzlich der
+ausdrückliche Nutzerauftrag **SPECROAD-DECISION-1-V3** vom 26. Oktober 2026
+nach **2.4.3** und dem folgenden OFF-PLAN-Abschnitt: Unter gültigem Vertrag 3
+sind höchstens drei aufeinanderfolgende Klärungsbundles mit dauerhaftem
+Restbudget zulässig; **Version 2 behält die Einerregel**. Ein Wechsel alter
+Ketten erfordert erst den belegten erfolgreichen normalen Abschluss.
+Produktfreigaben und die Grenzen aus 2.4.1/2.4.2/2.4.4 bleiben unverändert.
+Dieser Plan ändert keine alten Aufträge, Antworten, Blockaden oder
+Laufzeitdaten und ist keine Start-/Resume-Anweisung.
+
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 25
+plan_revision: 26
 implementation_plan_commits_total: 900
 implementation_plan_commits_completed: 648
 last_completed_plan_commit: 15.k.C
 next_plan_commit: 15.l.W
-last_completed_numbered_bundle: 497
+last_completed_numbered_bundle: 498
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -59,6 +69,181 @@ in ihrer bisherigen Reihenfolge. M20 übernimmt die zusätzliche Gesamtmatrix
 in seinen vorhandenen Schritten 20.f, 20.h und 20.m.
 
 Nach tatsächlich erfolgreich ausgeführten, zum Commit passenden Verhaltenstests wird die betreffende Checkbox im selben Git-Commit gesetzt. Reguläre Produktcommits aktualisieren den Produktzähler; Audit-Nacharbeiten aktualisieren ausschließlich ihren Status und `next_audit_step`. Ein fehlgeschlagener Schritt bleibt offen. Git ist die Historie; das Dokument nimmt keinen eigenen noch unbekannten Commit-Hash auf. Vor dem nächsten Auftrag werden tatsächliche Git-Historie, Result-Logs und Planfortschritt abgeglichen. Bei Inkonsistenz nicht einfach weiterzählen.
+
+## OFF-PLAN – Dreierregel für Control-Vertrag 3 (Bundle 498)
+
+Revision 26 setzt den ausdrücklichen manuellen Nutzerauftrag als
+**SPECROAD-DECISION-1-V3** um. Spezifikation **0.2.31 / 2.4.3** erweitert
+die Entwicklungsbefugnis ausschließlich unter gültigem Control-Vertrag 3.
+Der reguläre Stand bleibt **648/900**, zuletzt **15.k.C**, nächstens **15.l.W**.
+
+- [x] **SPECROAD-DECISION-1-V3:** Klärungsbudget für Control-Vertrag 3 erweitern.
+  Commit: `docs(spec): Klärungsbudget für Control-Vertrag 3 erweitern`.
+
+**Auftrag und Autorität.** Der Nutzer beauftragt ausdrücklich die Erweiterung
+von **SPECROAD-DECISION-1** auf höchstens drei aufeinanderfolgende
+Klärungsbundles unter **Control-Vertrag 3** und erteilt dafür die Befugnis zur
+Änderung der Projektregel. Autorität ist dieser manuelle Nutzerauftrag vom
+26. Oktober 2026, **nicht** die bisherige Delegation. Die bisherige Einerregel
+bleibt für Version 2 erhalten. Dieser Dokumentauftrag erneuert weder ein
+laufendes Budget noch eine blockierte oder pausierte Automatik.
+
+**Geprüfte Ausgangsbasis.** Das eindeutig zugeordnete saubere Result
+`specroad-apply_Result_163544_1026_0a669e.zip`, SHA-256
+`83253d84ee6442a209a6e8d384325565191cca1079c09558f2bbedec65d90ffd`,
+bestätigt das zuvor übergebene Bundle **497**, Paket-SHA-256
+`b40b8c66582b9edab03ff38f00724914618cce806e9afc9c240b68335fb2a4d9`.
+Der tatsächliche Abschlusscommit ist
+`54049d34312aded9b2afd6e56097600063760678`, Parent
+`f8ac3ad362a0eee777e4b228e950e9c33f93840a`, mit exakt dem OFF-PLAN-Commit
+**RESTORE-JOURNAL-SELECTION**. Repository-ID
+`a33ed6cf-0a97-4b73-b11a-d4239e7a2145`, Fingerprint
+`7c9d2a24e397e0e5` und Algorithmus `patchharbor-state-v1` stammen unverändert
+aus diesem neuen Result. Generierte Root-Anleitung, Kontext, Umgebung,
+Manifest, Run-/Ausführungslogs, alle **2.292** Snapshotdateien samt
+Blob-IDs/Modi, tatsächlicher sauberer Apply-Stand, Paketbytes und gebundene
+Testreceipts wurden geprüft. **7.202/7.202** Tests bestanden mit vier
+parallelen Workern, **Sequenz 203 / Gruppe 2**, in **2456.49 s**.
+Produktstand **648/900**, zuletzt **15.k.C**, nächstens **15.l.W**, und
+Bundle **497** stimmen mit den tatsächlichen Commitdateien überein.
+
+**Abgleich und Entscheidung.** Spezifikation **0.2.30**, 2.1 und 2.4.1–2.4.4,
+die ursprünglichen Verfahrensabnahmen von Bundle 389, die anschließenden
+Klärungsbelege sowie die aktuelle lokale Test-/Übergabepolicy wurden
+abgeglichen. Eine nachträgliche Erweiterung aller alten Aufträge oder ein
+Reset bei Neustart würde der ausdrücklichen Bestands- und Budgetgrenze
+widersprechen; ein bloßes Ersetzen von „eins“ durch „drei“ ließe Verbrauch,
+Fehlerfälle und Versionswechsel offen. Gewählt ist deshalb exakt die
+beauftragte versionierte Dreierregel mit typisierten Vertragsfeldern,
+dauerhaftem einmaligem Verbrauch und ausschließlich belegtem normalem
+Abschluss als Reset-/Übergangsgrenze. Bestehende fachliche Grenzen,
+menschliche Produktfreigaben, Reviews, Risikoentscheidungen und Nachweise
+werden nicht abgeschwächt.
+
+**Normative Fortschreibung und Erhaltung.** Spezifikation **0.2.31 / 2.4.3**
+enthält die Regel vollständig. Die grundlegende Delegation, die zulässigen
+fachlichen Entscheidungen nach 2.4.1, Entscheidungsbelege nach 2.4.2 und
+Blocker-/Erhaltungsregeln nach 2.4.4 bleiben erhalten; letztere drei Abschnitte
+bleiben bytegleich. Die folgenden Abnahmen konkretisieren ausschließlich
+das externe Entwicklungsverfahren. Die früheren Abnahmen aus Bundle 389
+bleiben als Vertrag-2-Nachweis lesbar und werden nicht als bereits
+beobachtete Vertrag-3-Ausführung ausgegeben. Historische Evidence,
+Reviewentscheidungen, Quell- und Paketnachweise bleiben unverändert.
+Es entstehen keine neue Requirement-ID und keine reguläre Produktposition.
+
+**Verbindliche Abnahmen für Control-Vertrag 3.** Diese sind überprüfbare
+Verfahrenskriterien, keine in diesem Bundle ausgeführten Control-Tests:
+
+1. Ein Vertrag enthält tatsächlich `version=3`, `clarification_limit=3`,
+   einen ganzzahligen Restwert von 0 bis 3 und ein Boolean für
+   `clarification_allowed`. Strings, Boolean als Ganzzahl, fehlende Felder,
+   andere Limits, Werte außerhalb des Bereichs und Restwert 0 mit `true`
+   gestatten keine automatische Klärung. Es gibt keinen stillen Default,
+   keine Vertragsreparatur und keinen Fallback auf eine andere Version.
+2. Nur ein gültiger Vertrag mit `true` und positivem Restbudget erlaubt
+   innerhalb der unveränderten fachlichen Grenzen eine automatische
+   Klärungsübergabe. `false` sperrt sie auch bei Restwert 1, 2 oder 3.
+   Der Agent darf das dauerhaft verwaltete Budget nicht selbst erhöhen.
+3. Je Auftrag und Quell-Result entsteht höchstens eine nativ geprüfte,
+   vierfach gebundene kanonische ZIP mit korrekten Quell-/Paket-SHAs und
+   `status=spec_clarification`. Der Auftrag endet sofort nach atomarer
+   Übergabe; keine eigene Apply-/Warte-/Modellschleife. Der normale
+   Planschritt bleibt offen.
+4. Bei Übernahme des zugeordneten Folge-Results jeder klassifizierten
+   Klärungsübergabe sinkt das Restbudget genau einmal um eins, auch bei
+   Apply-Fehler. Wiederholte Übernahme verbraucht nicht doppelt und füllt
+   nichts auf. Eine unklare Result-/Paketzuordnung begründet keinen
+   erfolgreichen Abschluss oder Folgeauftrag.
+5. Nur erfolgreiches sauberes Apply mit passendem Abschlusscommit und
+   verbleibendes Budget erlauben einen neuen freigebenden Auftrag für die
+   nächste Klärung. Bei drei so getrennt übergebenen Klärungen verläuft
+   das Budget **3 → 2 → 1 → 0**. Danach bleibt klare reguläre Umsetzung
+   erlaubt; eine vierte Klärung ist gesperrt. Fehlendes, fehlerhaftes oder
+   unsauberes Apply sowie fehlender/falscher Abschlusscommit erlauben auch
+   bei positivem Restwert keine weitere Klärung. Wenn weitere notwendige
+   Klärung gesperrt ist, folgt `blocked` mit konkreter Frage und Empfehlung.
+6. Nur ein als `patch_ready` klassifiziertes Bundle mit echter regulärer
+   Umsetzung oder technischer Korrektur eröffnet nach erfolgreichem sauberem
+   Apply und passendem Abschlusscommit erneut drei Plätze. Reine Klärung,
+   kosmetischer Reset, Alibi-Commit, Fehler oder unklassifizierte Übergabe
+   tun dies nicht. Eine bloße Antwortklassifikation ersetzt keine Prüfung
+   des tatsächlichen fachlichen Inhalts.
+7. Retry, Overload, Pause, Neustart und Recovery erhalten das dauerhaft
+   gespeicherte Budget. Alte Aufträge und Version 2 behalten die Einerregel;
+   ihre Antworten, Blockaden und Belege werden nicht umgeschrieben. Eine
+   alte Kette wechselt erst nach dem belegten erfolgreichen normalen
+   Abschluss gemäß 2.4.3 in einen neuen Vertrag 3. Dieser Dokumentcommit
+   allein erlaubt weder den Wechsel noch das Auffüllen.
+8. Die Grenzen aus 2.4.1, Entscheidungsbelege aus 2.4.2 und echte Blocker nach
+   2.4.4 gelten für jede der drei möglichen Klärungen einzeln. Fehlende
+   unverzichtbare externe Fakten, menschliche Freigaben oder unauflösbare
+   fachliche Konflikte werden weder durch Budget noch Vertragsversion ersetzt.
+
+**Offene Nachweise und Umfangsgrenze.** Diese Dokumentfassung implementiert
+kein Control-, Watcher- oder Produktverhalten. Dauerhaftes Budget, Retry-,
+Fehler- und Übergangsfälle sind erst durch die jeweiligen eigenständig
+beauftragten externen Läufe nachgewiesen. Bestehende Blockaden und alte
+Antworten bleiben erhalten. Keine Dienste, Konfigurationen oder Laufzeitdaten
+werden verändert; kein Apply oder Fortsetzen einer Automatik wird gestartet.
+Alle regulären W/R/C-Checkboxen, **648/900** und **15.l.W** bleiben unverändert.
+Die bestehende parallele Apply-Testrotation **N=3** bleibt vom hiervon
+unabhängigen Klärungslimit 3 getrennt. Dokumentversion und aktive
+Kataloghashbindungen werden gemeinsam fortgeschrieben; keine neuen
+Dokumentationstests und kein zusätzlicher Volltest.
+
+
+**Dokumentübergabe und Commit-Gate.** Genau ein echter OFF-PLAN-Dokumentcommit,
+keine künstliche W/R/C-Folge. Produktcode, Tests, Fixtures, Oracles,
+Testnummern, Runner, Workflows, lokale Regeln und historische Evidence
+bleiben bytegleich. Geändert werden Spezifikation, Plan und ausschließlich
+die aktiven Spezifikationshashfelder der **743** Katalogdateien.
+
+Vor diesem Dokumentcommit prüft der externe Entrypoint genau **Sequenz 204 /
+Gruppe 0 von 3**, **7.202 Tests**, mit vier parallelen Workern. Erst nach
+Erfolg setzt er den Offplan-Marker und die Bundle-Nummer **498**. Produktzähler
+und reguläre W/R/C-Checkboxen bleiben unverändert. Fehler erhalten den
+tatsächlichen Zustand und vorherige Commits. Die geplante Übergabe ist
+`spec_clarification`, kein als Umsetzung ausgegebener Budget-Reset. Nach
+nativer ZIP-Prüfung und atomarer Exchange-Veröffentlichung endet der Auftrag.
+
+**Beobachtete gezielte Dev-Prüfung.** Die Dokument- und Katalogfassung
+besteht **54/54** bestehende Verhaltenstests aus `tests/test_catalog_check.py`
+und `tests/test_catalog_check_right.py` in **6.54 s**, mit **vier
+parallelen Workern**, CPython **3.14.4**, Exit **0** und ausschließlich
+`passed`-Einzeloutcomes. Ausgeführt wurde `tools/run_selected_tests.py
+--workers 4 --expected-tests 54` mit den beiden genannten vollständigen
+Dateien in einem frischen ignorierten Berichtsroot. Geprüft werden die von
+der Spezifikationshashbindung betroffenen maschinenlesbaren Katalog- und
+Auswahlverträge; keine Dokumentation, Darstellung oder externe Control-Ausführung.
+
+Die vollständige Collection-/Katalogprüfung bestätigt **21.604** aktive
+Tests, **0** Katalogfehler, Exit **0** und **0** ausgeführte Testkörper.
+Die **21.608** dauerhaft reservierten Nummern einschließlich vier historisch
+entfernter Identitäten bleiben bytegleich. Produktcode, Testdateien,
+Fixtures, Oracles, Runner, Workflows und historische Evidence ändern sich
+nicht. Die **743** aktiven Katalogdateien ändern ausschließlich
+`specification_sha256`; einschließlich Spezifikation und Plan sind es
+**745** geänderte Bestandsdateien, keine neuen Produktdateien oder Löschungen.
+
+Gebundener Entwicklungsquellhash:
+`ee9f13fd252ca62e2b6f843580c733ed9ff569b42c248a00d36220a75be23ff2`;
+Katalogvertrag-SHA-256:
+`b0275a46bc71aa58e877d2dee580a83868b9753de57c15d42022f28835dd0095`;
+Auswahlbericht-SHA-256:
+`5e461b418e6130c0928c2bfbdda93774850447df9d261f23076e5942dda649fb`;
+Einzeloutcomes-SHA-256:
+`d0aa0e6393a9cf9bc241e7975134b9f28c85aeb728ef68a28ea7d538a5929177`.
+Dies ist ausdrücklich eine Teilprüfung mit `full_suite_passed=null`;
+kein vollständiger oder serieller Testlauf und kein Releasebeleg.
+
+Der bestätigte vorherige Apply-Nachweis für OFF-PLAN
+RESTORE-JOURNAL-SELECTION ist davon getrennt:
+Auswahlbindungs-SHA-256 `6b22b40f3e0be7a6f770e0d6e8d31f06b1ca99d9ea02688a0c48b981e5b14d9d`,
+Bericht-SHA-256 `0ee893e39fcff23d24be07e855d8947a67d17c2ecfae4f7fb2bbe57bb8ec1b6f` und
+Einzeloutcomes-SHA-256 `b2e088aa833cf0883ef20f9421e483edb3c659fb9a8776a9e47881a2b768bc42`.
+Die vorgesehene neue Apply-Gruppe und der OFF-PLAN-Commit sind bei dieser
+Übergabe noch nicht ausgeführt. Native ZIP-Prüfung und atomare Veröffentlichung
+beenden den Einzelauftrag; 15.l.W bleibt offen.
 
 ## OFF-PLAN – Explizite Auswahl alter Restore-Journale (Bundle 497)
 
@@ -838,6 +1023,13 @@ dies ist ein Teiltestnachweis. Die Übergabe wird als `spec_clarification`
 gemeldet; 13.f.W beginnt erst mit einem neuen gebundenen Auftrag nach Apply.
 
 ## OFF-PLAN – Delegierte Spezifikationsklärung (Bundle 389)
+
+**Historischer Vertragsstand:** Die folgende Einführung und ihre Abnahmen
+beschreiben **Vertrag 2 mit der Einerregel** und bleiben dafür erhalten.
+Für neue gültige Verträge 3 gelten zusätzlich die ausdrücklich beauftragte
+Erweiterung und Verfahrensabnahmen unter **SPECROAD-DECISION-1-V3 / Bundle 498**
+sowie die Übergangsgrenze aus 2.4.3. Die damaligen Nachweise belegen keine
+Vertrag-3-Ausführung; alte Aufträge und Antworten werden nicht umgedeutet.
 
 Revision 6 setzt den ausdrücklichen Nutzerauftrag vom 22. Oktober 2026 als
 **SPECROAD-DECISION-1** um. Spezifikation **0.2.11, Kapitel 2.4** erteilt die
