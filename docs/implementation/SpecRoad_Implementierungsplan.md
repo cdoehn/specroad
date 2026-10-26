@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 24 · **Stand:** 26. Oktober 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.29
+**Planrevision:** 25 · **Stand:** 26. Oktober 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.30
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 Schritte und 900 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; jeder Schritt besitzt einen konkreten Arbeitsumfang und eigene Verhaltensabnahme.
 
@@ -9,7 +9,7 @@ Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 S
 
 Fachliche Grundlage ist [`docs/specification/SpecRoad_Spezifikation.md`](../specification/SpecRoad_Spezifikation.md), einschließlich aller konsolidierten Korrekturen, 742 Requirements, 51 Verifikationsverträge, 46 Szenario-/E2E-Identitäten sowie R-01 bis R-75, Anhang U und den PatchHarbor-Rundweg aus Anhang W. Der [`Prüfbericht`](../reviews/SpecRoad_v0.2.7_Implementierungsreife_Pruefbericht.md) ist ein vorgelagerter Entwurfsreview, kein späterer Produktnachweis.
 
-Gebundene Spezifikations-SHA-256: `52d0aed48d928cf970f3936f671ec59d9a1fec328706bc8e6cbd55b6555a199f`.
+Gebundene Spezifikations-SHA-256: `1b1a41df1559c48e2f7aadd53edde1f2676909fa426ee0441b544baa2b5fc7bf`.
 Planungsbasis: Commit `fe2661d02ecf2f7eb483b58a4487eb009c6b3846`; sauberes Result-Bundle `specroad_Result_120209_0914_df3504.zip`; Repository-ID `3d2576df-d611-46fc-9d2b-92869468aaca`. Diese Angaben dokumentieren die Entstehung des Plans, nicht die zukünftige Patchbindung. **Jedes spätere Patchpaket bindet den dann aktuellen tatsächlichen Result-Zustand.**
 
 Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 2026 gelten zusätzlich und bei den nachfolgend benannten Konflikten vorrangig. Sonstige normative Spezifikationsinhalte werden nicht stillschweigend abgeschwächt. Neue fachliche Widersprüche, fehlende zwingende Angaben und Sicherheitsprobleme sind offen zu benennen, nicht durch erfundene Annahmen oder Scheinerfolge zu lösen.
@@ -26,12 +26,12 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 24
+plan_revision: 25
 implementation_plan_commits_total: 900
 implementation_plan_commits_completed: 648
 last_completed_plan_commit: 15.k.C
 next_plan_commit: 15.l.W
-last_completed_numbered_bundle: 496
+last_completed_numbered_bundle: 497
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -59,6 +59,78 @@ in ihrer bisherigen Reihenfolge. M20 übernimmt die zusätzliche Gesamtmatrix
 in seinen vorhandenen Schritten 20.f, 20.h und 20.m.
 
 Nach tatsächlich erfolgreich ausgeführten, zum Commit passenden Verhaltenstests wird die betreffende Checkbox im selben Git-Commit gesetzt. Reguläre Produktcommits aktualisieren den Produktzähler; Audit-Nacharbeiten aktualisieren ausschließlich ihren Status und `next_audit_step`. Ein fehlgeschlagener Schritt bleibt offen. Git ist die Historie; das Dokument nimmt keinen eigenen noch unbekannten Commit-Hash auf. Vor dem nächsten Auftrag werden tatsächliche Git-Historie, Result-Logs und Planfortschritt abgeglichen. Bei Inkonsistenz nicht einfach weiterzählen.
+
+## OFF-PLAN – Explizite Auswahl alter Restore-Journale (Bundle 497)
+
+Revision 25 dokumentiert **RESTORE-JOURNAL-SELECTION**, ausdrücklich manuell
+beauftragt am **26. Oktober 2026**. Spezifikation **0.2.30 / 10.7.4** bindet
+die betroffene alte aktive Journalmenge an eine aktuell autorisierte
+Pfad-/Hashliste. Entscheidungsbeleg, Alternativen, Grenzen und offene
+Verhaltensabnahmen stehen bei **15.l.W**. Der bestätigte reguläre Stand bleibt
+**648/900**, zuletzt **15.k.C**, nächstens **15.l.W**.
+
+- [x] **RESTORE-JOURNAL-SELECTION:** Betroffene Restore-Journale explizit binden.
+  Commit: `docs(spec): Betroffene Restore-Journale explizit binden`.
+
+Der vorherige N-Durchlauf erzeugte kein Bundle. Dieser zusätzliche manuelle
+OFF-PLAN-Auftrag nach 2.4.3 ersetzt für diese konkrete Übergabe die dortige
+Ablehnung einer weiteren automatischen Klärung. Er ändert weder den
+gespeicherten Control-Vertrag noch dessen automatisches Klärungsbudget.
+Das Bundle wird ehrlich als `spec_clarification` übergeben.
+
+Dies ist ein echter OFF-PLAN-Dokumentcommit. Produktcode, Tests, Fixtures,
+Oracles, Testnummern, Runner, Workflows und historische Evidence bleiben
+bytegleich. Geändert werden Spezifikation, Plan und ausschließlich die
+aktiven Spezifikationshashfelder der **743** Katalogdateien. Es entstehen
+keine künstlichen Produkt-W/R/C-Commits oder vorgezogenen Produktabnahmen.
+Die echte W/R/C-Folge des offenen 15.l bleibt unverändert beauftragt.
+
+Vor diesem Dokumentcommit prüft der externe Entrypoint genau **Sequenz 203 /
+Gruppe 2 von 3**, **7.202 Tests**, mit vier parallelen Workern. Erst nach
+Erfolg setzt er den Offplan-Marker und die Bundle-Nummer **497**. Produktzähler
+und offene 15.l.W/R/C-Checkboxen bleiben unverändert. Fehler erhalten den
+tatsächlichen Zustand und vorherige Commits. Der Auftrag endet nach nativer
+ZIP-Prüfung und atomarer Exchange-Veröffentlichung.
+
+**Beobachtete gezielte Dev-Prüfung.** Die Dokument- und Katalogfassung
+besteht **54/54** bestehende Verhaltenstests aus `tests/test_catalog_check.py`
+und `tests/test_catalog_check_right.py` in **6.56 s**, mit **vier
+parallelen Workern**, CPython **3.14.4**, Exit **0** und ausschließlich
+`passed`-Einzeloutcomes. Ausgeführt wurde `tools/run_selected_tests.py
+--workers 4 --expected-tests 54` mit den beiden genannten vollständigen
+Dateien in einem frischen ignorierten Berichtsroot. Geprüft werden die von
+der Spezifikationshashbindung betroffenen maschinenlesbaren Katalog- und
+Auswahlverträge; keine Dokumentation, Darstellung oder noch nicht
+implementierte Restore-Ausführung.
+
+Die vollständige Collection-/Katalogprüfung bestätigt **21.604** aktive
+Tests, **0** Katalogfehler, Exit **0** und **0** ausgeführte Testkörper.
+Die **21.608** dauerhaft reservierten Nummern einschließlich vier historisch
+entfernter Identitäten bleiben bytegleich. Produktcode, Testdateien,
+Fixtures, Oracles, Runner, Workflows und historische Evidence ändern sich
+nicht. Die **743** aktiven Katalogdateien ändern ausschließlich
+`specification_sha256`; einschließlich Spezifikation und Plan sind es
+**745** geänderte Bestandsdateien, keine neuen Produktdateien oder Löschungen.
+
+Gebundener Entwicklungsquellhash:
+`172ac9c7443375f885a013ed9d056c8cc22695bf8cf64520958ddba8d024b25f`;
+Katalogvertrag-SHA-256:
+`23099b468b9fd9620c9af13828380a676e817301b91702d5b8986783b8f85ee4`;
+Auswahlbericht-SHA-256:
+`53a2f15b8b5349e2fc4c62d3782a83c894ff30c61560647001540a4649b3c86b`;
+Einzeloutcomes-SHA-256:
+`d0aa0e6393a9cf9bc241e7975134b9f28c85aeb728ef68a28ea7d538a5929177`.
+Dies ist ausdrücklich eine Teilprüfung mit `full_suite_passed=null`;
+kein vollständiger oder serieller Testlauf und kein Releasebeleg.
+
+Der bestätigte vorherige Apply-Nachweis für OFF-PLAN
+RESTORE-EXECUTION-CONTRACT ist davon getrennt:
+Auswahlbindungs-SHA-256 `165abfc48a06705ccd2f8c9fc000f32aa498c4023ebf11962c2b906455c21ff9`,
+Bericht-SHA-256 `53abf1e576d195f3e2dc172bfd1ec4641a5b85a4bb6c5ef4b6da7e09ec1f850d` und
+Einzeloutcomes-SHA-256 `4714da58ab0fdbaaab89bfad93147cda6444dd660932defd002c22ec1f7310cb`.
+Die vorgesehene neue Apply-Gruppe und der OFF-PLAN-Commit sind bei dieser
+Übergabe noch nicht ausgeführt. Native ZIP-Prüfung und atomare Veröffentlichung
+beenden den Einzelauftrag; 15.l.W bleibt offen.
 
 ## OFF-PLAN – Gebundene Restore-Ausführung (Bundle 496)
 
@@ -29361,7 +29433,138 @@ oder Hintergrundfortsetzung.
 
 **Umsetzung:** Gebundene Sicherung, Quellenprüfung und vollständige Recoverypublikation samt Audit ausführen.
 
-**Verhaltensabnahme:** Erfolgreicher Restore erreicht genau die im Plan gebundene Zielwurzel. Die Ausführungsbindung aus 10.7.3 gilt; die folgenden offenen Abnahmen gehören zum bestehenden Umfang.
+**Verhaltensabnahme:** Erfolgreicher Restore erreicht genau die im Plan gebundene Zielwurzel. Die Ausführungsbindung aus 10.7.3 und die ausdrücklich autorisierte Journalauswahl aus 10.7.4 gelten; die folgenden offenen Abnahmen gehören zum bestehenden Umfang.
+
+**OFF-PLAN-Entscheidungsbeleg RESTORE-JOURNAL-SELECTION, 26. Oktober 2026.**
+
+**Manueller Auftrag und genaue Lücke.** 10.7.3 verlangt die „explizit
+betroffene aktive Journalmenge“, ohne ihre Auswahl aus der umfassenden
+Bestandsinventur festzulegen. Der vorausgegangene Einzelauftrag blieb deshalb
+ohne Bundle blockiert; 15.l.W blieb offen. Der Nutzer bestätigte anschließend
+die empfohlene ausdrücklich autorisierte Pfad-/Hashliste und beauftragte:
+„Wir gehen nach deiner Empfehlung. Setze das in der Spezifikation um und
+mache ein weiteres klärungsbundle“. Dieser konkrete manuelle Auftrag trägt
+den zusätzlichen OFF-PLAN-Schritt nach 2.4.3. Der vorherige Control-Vertrag
+`clarification_allowed=false` wird weder umgeschrieben noch als automatische
+Freigabe ausgelegt; das automatische Klärungsbudget wird hier nicht erneuert.
+Diese fachliche Entscheidung erteilt keine Berechtigung für einen realen
+Restore, keine Lock-Risikoakzeptanz und keine Produkt-/Baseline-Freigabe.
+
+**Tatsächlich geprüfte Grundlagen.** Maßgeblich ist das vollständige saubere
+Result `specroad-apply_Result_150317_1026_760cf3.zip`, SHA-256
+`9b471952f97bb0c0236243b0000d621d7bdedcf5922ae3180426814e37223a1e`.
+Es bindet Commit `f8ac3ad362a0eee777e4b228e950e9c33f93840a`, Repository
+`a33ed6cf-0a97-4b73-b11a-d4239e7a2145`, Fingerprint
+`7c9d2a24e397e0e5`, Algorithmus `patchharbor-state-v1`.
+Generierte Root-Anleitung, Kontext, Umgebung, Manifest, Run-/Ausführungslogs,
+alle **2.292** Snapshotdateien samt Blob-IDs/Modi und tatsächlicher sauberer
+Apply-Stand wurden geprüft. Das Result bestätigt genau den OFF-PLAN-Commit
+**RESTORE-EXECUTION-CONTRACT**, Bundle **496**, nach **7.200/7.200**
+bestandenen parallelen Apply-Tests, **Sequenz 202 / Gruppe 1**, vier Worker,
+**2318.40 s**. Die tatsächlichen Auswahl-/Einzeloutcome-Belege und die
+Commitdateien stimmen mit dem vorherigen Paket überein. Der reguläre Stand
+bleibt **648/900**, zuletzt **15.k.C**, nächstens **15.l.W**.
+
+Abgeglichen wurden Spezifikation **0.2.29**, 2.1, 2.4, 10.6–10.7.3,
+SR-REQ-0461/0462, SR-REQ-0258/0511, R-44–R-47 und die Preflight-/Workgrenzen
+aus N/O/P. Technisch maßgeblich sind die vollständige Bestandsinventur in
+`recovery/_inventory.py`, die geschlossene Planprüfung in `_codec.py` und
+`_plan_checks.py`, der gemeinsame Root-Mutex und die Metadatenauswahl in
+`changes/_lock_files.py` sowie die expliziten Namensraumgrenzen in
+`model/operational_paths.py`. Der aktuelle Restoreplanprüfer lehnt operative
+Historie noch mit `restore_operational_history_provider_required` ab; dies
+ist ein offener Implementierungsumfang, kein Erfolgsnachweis oder dauerhaft
+zulässiger Ersatz für die geforderte Restorefunktion.
+
+**Untersuchte Alternativen und Wahl.**
+
+1. Alle inventarisierten oder gesicherten Journale automatisch auswählen:
+   verworfen, weil die vollständige Beobachtung keine Freigabe zum Aufheben
+   fremder Sperren ist.
+2. Auswahl aus gültigen Journalfeldern, gleichem Akteur/Request oder einem
+   Terminalmarker ableiten: verworfen. Gerade beschädigte Journale können
+   unlesbar sein; Selbstbehauptungen sind weder aktuelle Berechtigung noch
+   Nachweis eines freien Locks. Nur `journal.json` zu hashen ließe zudem
+   Before Images, Staging, Zusatzdateien und leere Verzeichnisse ungebunden.
+3. **Vom Nutzer gewählte Regel:** eine ausdrücklich autorisierte Pfad-/
+   Hashliste. Ihre technische Konkretisierung bindet pro ausgewähltem aktiven
+   Eintrag die vollständige originale Inventurprojektion einschließlich aller
+   Nachfahren. Sie verwendet den bestehenden RFC-8785-/SHA-256-Vertrag und
+   benötigt keine neue semantische Modellwurzel oder Journalinterpretation.
+
+**Verbindliche Zielregel.** Spezifikation **0.2.30 / 10.7.4** legt
+`restore-journal-selection-v1` als geschlossene externe Auswahl mit
+Originalplanhash und sortierten `{path, sha256}`-Einträgen fest.
+`--affected-journals <EXTERNAL-SELECTION>` übergibt sie der noch offenen
+Restore-Ausführung beziehungsweise Fortsetzung. Ohne Option gilt nur die
+leere Auswahl. Ein Eintrag bindet über seinen Inventurhash die vollständige
+Originalstruktur; die aktuelle Autorisierung bindet die gesamte Auswahl
+zusammen mit dem unveränderten Auftrag aus 10.7.3. Ausführung, Sicherung,
+Journal, Audit und Wiederanlauf verwenden dieselbe Auswahl. Nicht gewählte
+aktive oder ungeklärte Einträge verhindern den Beginn weiterer Restorewrites
+und bleiben gesperrt. Keine pauschale Archiv-/Ordnerausnahme, keine automatische
+Auswahlerweiterung und keine Umwidmung abgeschlossener Receipts.
+
+**Befugnis, Kompatibilität und Rücknahme.** Die Auswahlentscheidung und dieses
+weitere Klärungsbundle sind ausdrücklich manuell beauftragt. Ihre begrenzte
+technische Konkretisierung erfolgt **delegiert gemäß SPECROAD-DECISION-1**;
+es wird keine darüber hinausgehende persönliche Zustimmung oder unabhängige
+Prüfung behauptet. Die Regel bleibt im bestehenden Restoreumfang von 15.l.
+Sie erhält Scope, alle Herkunfts-/Ziel-/Historienprovider, Lock-/Ownergates,
+menschliche Freigaben, Request-/Akteurregeln, W/R/C, TD-001 und BD-001.
+Bestehende `restore-plan-v1`-Bytes und ihre geschlossene Hülle bleiben gültig;
+die gesonderte Ausführungsbindung erweitert kein gespeichertes Planformat.
+Planhash und Inventur beweisen weiterhin keine Berechtigung. Die Auswahl
+ersetzt keine Datenintegritätsprüfung und keinen erforderlichen externen
+Nachweis. Eine spätere ausdrückliche Regelversion kann sie ändern; bestehende
+Pläne, Originaljournale, Sicherungen, Receipts und historische Evidence werden
+dafür weder migriert noch gelöscht. Keine neue Requirement-ID oder
+Produktposition entsteht. Die Dokumentversion und aktiven Kataloghashes
+werden fortgeschrieben, historische Belege bleiben unverändert.
+
+**Verbindliche offene Verhaltensabnahmen.**
+
+- **15.l.W / R-44:** Eine aktuell autorisierte, exakt plan-/inventurgebundene
+  Auswahl eines beschädigten Journaleintrags aus jeder vollständigen Quellart
+  führt nach allen bisherigen Pflichtgates zum vollständigen Restoreziel.
+  Alle ausgewählten Original-/Before-/Stagingbytes und Verzeichniseinträge
+  sind nachweisbar dauerhaft erhalten; erst Ziel und Audit erlauben den
+  belegten Abschluss der gewählten Menge. Leere reguläre Dateien und leere
+  Journalverzeichnisse sind eindeutig bindbar. Ohne alte aktive Journale
+  genügt die leere Auswahl.
+- **15.l.W/R / R-47:** Ein nicht ausgewähltes zusätzliches aktives Journal
+  bleibt bytegleich und verhindert vor Beginn sämtliche Restorewrites;
+  `recovery_required=true`, Code 5. Weder fehlende Option noch umfassendes
+  Backup bedeutet „alle“. Fremde, passive oder übergeordnete Pfade werden
+  nicht automatisch einbezogen. Abgeschlossene Receipts bleiben am bisherigen
+  Pfad unverändert.
+- **15.l.R:** Falscher Plan-/Teilbaumhash, fehlende oder zusätzliche
+  Nachfahren, geänderte Stagingbytes, Datei-/Verzeichnistausch und andere
+  Pfadkollisionen werden vor Write erkannt. Doppelte/unsortierte Einträge,
+  ungültige Hüllen/Hashes, Links, unzulässige Auswahlbereiche, fehlende
+  Sicherungsbytes und verweigerte aktuelle Berechtigung erhalten die in
+  10.7.4 getrennten Fehlercodes. Abgewiesene Vorprüfungen und Read-only-
+  Diagnosen verändern weder Modell noch Betriebsdaten.
+- **15.l.R:** Tatsächliche Abbrüche vor/nach Sicherungsreadback, zwischen
+  Ziel und Audit sowie während der Überführung alter Journale erhalten
+  die Sperre bis zum belegten Abschluss. Fortsetzung akzeptiert nur dieselbe
+  Auswahl, unterscheidet eigene Archivierung von fremden Änderungen und
+  neutralisiert keine später entstandenen Einträge. Vollzielabschluss und
+  Teilziel-Rollback folgen unverändert SR-REQ-0258/0511. Einzellauf und Work
+  haben dieselben Bindungen; nach Rollback bleiben Originale und Sperren
+  erhalten, keine neue Fachoperation beginnt beiläufig.
+- **15.l.C:** Dieselben Auswahl-, Fehler-, Autorisierungs-, Sicherungs- und
+  Wiederanlaufverträge bleiben bei struktureller Bereinigung erhalten.
+
+**Offene Umsetzung und Nachweise.** Dieses Bundle enthält ausschließlich
+Spezifikation, Plan und aktive Kataloghashbindungen. Die Auswahl-/CLI-/
+Autorisierungs-/Archivimplementierung und tatsächliche Crash-Evidence sind
+weiterhin offen. Alle 15.l.W/R/C-Checkboxen und der Produktzähler bleiben
+unverändert; SR-TC-0461/0462 bleiben **partial**. Der externe Apply-Lauf prüft
+und committet nur diesen Dokumentzustand. Der Auftrag endet nach nativer
+ZIP-Prüfung und atomarer Übergabe mit `spec_clarification`; keine eigene
+Apply-, Warte- oder Modellschleife und kein weiteres Bundle aus diesem Result.
+
 
 **OFF-PLAN-Entscheidungsbeleg RESTORE-EXECUTION-CONTRACT, 26. Oktober 2026.**
 

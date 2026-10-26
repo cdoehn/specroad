@@ -1,21 +1,21 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.29
+## Version 0.2.30
 
 | Feld | Wert |
 |---|---|
 | Dokument-ID | `SR-SPEC-0001` |
-| Dokumentversion | `0.2.29` |
+| Dokumentversion | `0.2.30` |
 | Zielrelease | `SpecRoad Single-Repository Workbench 0.2.0` |
 | Status | **Fachlich konsolidierte Arbeitsgrundlage; technische Reviewentscheidung gesondert dokumentiert, formale Baseline-Freigabe und Produktabnahme nicht durch dieses Dokument erklärt** |
 | Stand | 26. Oktober 2026 |
 | Sprache | Deutsch; technische Feldnamen, Enum-Werte und CLI-Kommandos Englisch |
-| Fachliche Quelle | **Diese Repositoryfassung v0.2.29 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.29 liegt mit dieser Änderung nicht vor.** |
+| Fachliche Quelle | **Diese Repositoryfassung v0.2.30 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.30 liegt mit dieser Änderung nicht vor.** |
 | Bearbeitbare Satzquelle | Diese Datei; eine spätere PDF muss denselben versionierten Inhalt wiedergeben. |
-| Vorgängerversion | Repository-Spezifikation v0.2.28 vom 26. Oktober 2026; frühere PDF-/Reviewbelege bleiben an ihre historischen Fassungen gebunden. |
-| Prüf- und Entscheidungsgrundlage | RESTORE-EXECUTION-CONTRACT, delegiert gemäß SPECROAD-DECISION-1; Entscheidungsbeleg, Grenzen und offene Abnahmen bei 15.l.W im Implementierungsplan. Bestehende Nutzerentscheidungen und Produktfreigabegrenzen bleiben unverändert. |
-| Änderungsart | Additive Präzisierung der getrennten Restore-Ausführungsbindung, dauerhaften Sicherung und konservativen Wiederaufnahme in 10.7.3; keine neue Requirement-ID oder Produktposition. Umsetzung und Produktabnahme bleiben offen. |
+| Vorgängerversion | Repository-Spezifikation v0.2.29 vom 26. Oktober 2026; frühere PDF-/Reviewbelege bleiben an ihre historischen Fassungen gebunden. |
+| Prüf- und Entscheidungsgrundlage | RESTORE-JOURNAL-SELECTION, ausdrücklicher manueller Nutzerauftrag vom 26. Oktober 2026; Entscheidungsbeleg, Grenzen und offene Abnahmen bei 15.l.W im Implementierungsplan. Bestehende Nutzerentscheidungen und Produktfreigabegrenzen bleiben unverändert. |
+| Änderungsart | Additive Präzisierung der ausdrücklich autorisierten Auswahl alter aktiver Journale in 10.7.4; keine neue Requirement-ID oder Produktposition. Umsetzung und Produktabnahme bleiben offen. |
 
-> **Verbindlicher Quellenwechsel:** Die delegierte Detailentscheidung schreibt die Repository-Spezifikation als v0.2.29 fort. Frühere PDF- und Reviewnachweise behalten ihre historische Bindung und belegen diese Erweiterung nicht. Der py3langid-Adapter bleibt Bestandteil des Zielreleases; der kleine Core bleibt ohne Analyzer-Abhängigkeiten nutzbar.
+> **Verbindlicher Quellenwechsel:** Die ausdrücklich beauftragte Auswahlentscheidung schreibt die Repository-Spezifikation als v0.2.30 fort. Frühere PDF- und Reviewnachweise behalten ihre historische Bindung und belegen diese Erweiterung nicht. Der py3langid-Adapter bleibt Bestandteil des Zielreleases; der kleine Core bleibt ohne Analyzer-Abhängigkeiten nutzbar.
 
 > **Fortbestehende Arbeitsprinzipien:** Weiche Budgets führen zu sparsamer vollständiger Weiterarbeit oder gesicherter Fortsetzung über mehrere Aufrufe beziehungsweise Prompts. Es werden keine erforderlichen Arbeiten stillschweigend ausgelassen. Reale Host-, Speicher-, Berechtigungs- und Sicherheitsgrenzen bleiben wirksam.
 
@@ -101,7 +101,7 @@ Bei einem Widerspruch innerhalb dieser Dokumentversion gilt:
 3. `SR-DEC-*` hat Vorrang vor erläuterndem Text, Diagrammen und Beispielen.
 4. Beispiele sind niemals normativ, sofern sie nicht ausdrücklich als Testvektor bezeichnet sind.
 5. Zwei widersprüchliche `SR-REQ-*`-Anforderungen besitzen **keine implizite Rangfolge** nach Nummer, Position oder Spezifität. Ein solcher Fund ist ein Spezifikationsfehler, muss als Issue gelöst werden und verhindert die Freigabe.
-6. Diese Dokumentversion 0.2.29 ersetzt die frühere fachliche Arbeitsgrundlage vollständig. Bis zur gesonderten PDF-Veröffentlichung ist diese versionierte Repositorydatei maßgeblich. Eine spätere PDF muss inhaltsgleich sein; frühere PDFs werden nicht als Nachweis der neuen Verträge ausgegeben. Inhalte verschiedener Fassungen dürfen nicht zu einer Mischspezifikation kombiniert werden.
+6. Diese Dokumentversion 0.2.30 ersetzt die frühere fachliche Arbeitsgrundlage vollständig. Bis zur gesonderten PDF-Veröffentlichung ist diese versionierte Repositorydatei maßgeblich. Eine spätere PDF muss inhaltsgleich sein; frühere PDFs werden nicht als Nachweis der neuen Verträge ausgegeben. Inhalte verschiedener Fassungen dürfen nicht zu einer Mischspezifikation kombiniert werden.
 7. Eine nachträgliche Änderung dieser veröffentlichten Datei erfordert mindestens eine neue Patch-Dokumentversion; stille Korrekturen unter derselben Dokumentversion sind unzulässig.
 8. Eine normative Tabelle, auf die eine `SR-REQ-*`-Anforderung ausdrücklich als Algorithmus oder Matrix verweist, ist Bestandteil des Passkriteriums dieser Anforderung.
 
@@ -1520,7 +1520,7 @@ Normale Projektbefehle dürfen ein Modell erst laden, wenn keine unvollständige
 
 #### 10.7.1 Vollständige Quelle und erhaltende Restore-Policy `restore-preserve-v1`
 
-Ein Restore wird in zwei expliziten Aufrufen vorbereitet und ausgeführt: `recover restore --from <SOURCE> --dry-run --output <EXTERNAL-PLAN>` erstellt ohne Projekt-/Betriebswrite einen gebundenen Restore-Plan; `recover restore --plan <EXTERNAL-PLAN> --expected-target-root <SHA256>` führt genau diesen Plan aus. Quelle und Plan dürfen nicht gleichzeitig angegeben werden. Ein Aufruf ohne Dry-Run und ohne geprüften Plan wird mit Code 2 abgewiesen. Der Plan ist ein Recovery-Fachformat, kein regulärer Change Plan eines vermeintlich konsistenten Arbeitsstands. Er enthält `policy_version=restore-preserve-v1`, `project_id`, Quellart, Quellbytehash, Quell-Snapshotwurzel, Quell-Descriptor, gebundene Bestandsinventur, zusätzliche Erhaltungsobjekte, erwartete vollständige Zielwurzel, Zielpfade/-bytes/-hashes und die separat gehashte Sicherungsinventur.
+Ein Restore wird in zwei expliziten Aufrufen vorbereitet und ausgeführt: `recover restore --from <SOURCE> --dry-run --output <EXTERNAL-PLAN>` erstellt ohne Projekt-/Betriebswrite einen gebundenen Restore-Plan; `recover restore --plan <EXTERNAL-PLAN> --expected-target-root <SHA256>` führt genau diesen Plan aus. Die getrennte ausdrückliche Auswahl alter aktiver Journale für Ausführung und Fortsetzung folgt 10.7.4. Quelle und Plan dürfen nicht gleichzeitig angegeben werden. Ein Aufruf ohne Dry-Run und ohne geprüften Plan wird mit Code 2 abgewiesen. Der Plan ist ein Recovery-Fachformat, kein regulärer Change Plan eines vermeintlich konsistenten Arbeitsstands. Er enthält `policy_version=restore-preserve-v1`, `project_id`, Quellart, Quellbytehash, Quell-Snapshotwurzel, Quell-Descriptor, gebundene Bestandsinventur, zusätzliche Erhaltungsobjekte, erwartete vollständige Zielwurzel, Zielpfade/-bytes/-hashes und die separat gehashte Sicherungsinventur.
 
 **Quellenqualifikation:** Zulässig sind ausschließlich (a) ein vollständig verifiziertes `project`-Bundle mit `read_only=false` oder (b) eine unveränderte `sealed` Baseline mit exakt `scope_kind=project`, Selector `{}`, `configuration_id=null`, `boundary_policy=closed`, vollständiger rekursiver Objektclosure und gültigem Manifest. Eine Baseline mit specification-, release-, document-, query-, explicit- oder konfiguriertem Scope ist auch bei gültigem Hash unzulässig. Der Baseline-Typ `working` oder `release` ersetzt diese Scopeprüfung nicht. Quellprojekt-ID und Zielprojekt-ID müssen gleich sein; bei beschädigter Konfiguration ist die ID aus unabhängig hashgebundenen Receipts, einer erhaltenen Baseline oder dem vorliegenden Recovery-Inventar zu bestätigen. Widersprüchliche oder nicht nachweisbare Identität wird nicht geraten.
 
@@ -1911,6 +1911,129 @@ Berechtigungsverletzungen 7. Diese Präzisierung schafft weder eine
 Read-only-Autorecovery noch eine neue Lock-Risikoausnahme. Workfortsetzung,
 weiche Budgets und der Verzicht auf freiwillige Pausen während `committing`
 folgen weiterhin Anhang N/O/P.
+
+#### 10.7.4 Explizite Auswahl alter aktiver Journale `restore-journal-selection-v1`
+
+**Entscheidung RESTORE-JOURNAL-SELECTION, ausdrücklich vom Nutzer am
+26. Oktober 2026 beauftragt.** Die in 10.7.3 genannte „explizit betroffene
+aktive Journalmenge“ MUSS durch eine gesonderte, aktuell autorisierte
+Pfad-/Hashliste bestimmt werden. Weder das Vorhandensein in der vollständigen
+Bestandsinventur noch eine Sicherung, ein Terminalmarker, ein Dateiname oder
+ein gleicher Akteur/Request wählt ein altes Journal automatisch aus.
+
+**Geschlossene Auswahl und CLI-Übergabe.** Der Ausführungs- und Wiederanlaufaufruf
+aus 10.7.1/10.7.3 erhält die Auswahl über
+`--affected-journals <EXTERNAL-SELECTION>`. Die externe Datei MUSS genau ein
+kanonisches UTF-8-JSON-Objekt nach dem vorhandenen RFC-8785-Vertrag enthalten,
+ohne BOM, doppelte Schlüssel oder nachgestellte Daten. Seine Felder sind exakt:
+
+| Feld | Vertrag |
+|---|---|
+| `format_version` | exakt `restore-journal-selection-v1` |
+| `restore_plan_sha256` | exakt der überprüfte gleichnamige innere Hash des unveränderten Originalplans nach 10.7.2 |
+| `entries` | nach UTF-8-Pfadbytes sortierte, duplikatfreie Liste geschlossener Objekte `{path, sha256}` nach untenstehender Projektion |
+
+Ohne die Option wird ausschließlich eine leere Liste normalisiert, mit der
+gleichen Regelversion und dem geprüften Originalplanhash. Das bedeutet
+„kein altes Journal ausgewählt“, niemals „alle gefundenen Journale“.
+Eine ausdrücklich gelieferte leere Liste ist semantisch gleich. Die Option
+gehört zur getrennten Ausführung, nicht zur schreibfreien Quellplanung;
+sie darf weder den Plan noch dessen geschlossene Hülle erweitern.
+Der nichtinteraktive Aufrufer MUSS eine nichtleere Auswahl ausdrücklich
+liefern. Ein gespeichertes Journal darf sie nicht als neue Zustimmung
+ergänzen. Ihre sichere Lektüre ist keine Erlaubnis zum Ausführen ihrer Inhalte.
+
+**Einheit und Pfad-/Hashprojektion.** `path` MUSS einen vorhandenen, vom
+bestehenden Metadatenpreflight als aktiv oder ungeklärt geführten unmittelbaren
+Eintrag unter `.specroad/transactions/` oder `.specroad/recovery/` bezeichnen.
+Die ganze Transaktions-/Recoverywurzel, Locks, Requests, passive Receipt-/
+Audit-/Archivbereiche, gemeinsame Betriebscontainer und beliebige fachliche
+Dateien sind keine auswählbaren Journale. Ein Verzeichnisname allein ist kein
+Nachweis eines passiven Bereichs; die vorhandenen Typ-/Pfad- und Belegprüfungen
+bleiben zwingend. Abgeschlossene Receipts und Audits DÜRFEN NICHT durch die
+Auswahl zu löschbaren aktiven Journalen umgewidmet werden. Ungeklärte Einträge
+außerhalb dieser auswählbaren Menge bleiben Sperrgründe.
+
+Für einen zulässigen Pfad `p` ist `E_p` exakt die bereits kanonisch geordnete
+Teilliste von `inventory.entries` des Originalplans mit `path == p` oder
+`path` beginnend mit `p + "/"`. Sie MUSS den Eintrag `p` selbst enthalten,
+mit `kind=file` oder `kind=directory`, niemals `missing`. Der Auswahlwert
+`sha256` ist SHA-256 der RFC-8785-Bytes der vollständigen Liste `E_p`.
+Er ist ausdrücklich ein Inventurhash, nicht der Rohbytehash allein von
+`journal.json`. Die Pfade bleiben dabei vollständige projektrelative Pfade.
+Damit sind sämtliche Dateinamen, Typen, Größen, Rohbytehashes und auch leere
+Verzeichnisse dieses ursprünglichen Eintrags gebunden. Die Hashdarstellung
+folgt 10.7.2; zusätzliche Felder und eigene Hashalgorithmen sind unzulässig.
+
+Diese Projektion erlaubt eine eindeutige Auswahl auch bei beschädigten,
+leeren oder nicht als JSON lesbaren Journalbytes, ohne deren Inhalt als
+gültigen Transaktionsnachweis zu behandeln. Es gibt keine Glob-, Präfix-,
+Zeitstempel- oder automatische Nachbarjournal-Auswahl. Die vollständige
+Originalinventur bestimmt die Teilbaumgrenze; eine vom Aufrufer verkürzte
+Dateiliste ist kein vollständiges `E_p`. Sichere Pfade, Rootidentität,
+Links-/Sonderdateiverbote und Kollisionsprüfung gelten unverändert.
+
+**Aktuelle Autorisierung und Sicherung.** Der Recovery-Auftrag nach 10.7.3
+MUSS die gesamte normalisierte Auswahl und SHA-256 ihrer kanonischen Hülle
+zusätzlich zu seinen bisherigen Projekt-, Originalplan-, Quell-, Inventur-,
+Ziel-, Sicherungs-, Akteur- und Requestbindungen enthalten. Die bestehende
+aktuelle Autorisierungsprüfung MUSS genau diese Auswahl prüfen; eine bloße
+Hashübereinstimmung verleiht keine Befugnis. Die Auswahl wird unverändert im
+getrennten Ausführungsjournal und Abschlussaudit gebunden. Aktiver Root-Mutex,
+Ownerübernahme und notwendige menschliche Freigaben bleiben eigene Gates.
+
+Vor dem ersten Restore-Betriebswrite und unmittelbar unter dem sicheren
+Recovery-Lock MÜSSEN jede Auswahlprojektion und die gesamte Originalinventur
+stimmen. Für jede Datei in jedem gewählten `E_p` MÜSSEN `backup` und `objects`
+des Originalplans bereits die exakten Originalbytes nach 10.7.2 binden.
+Fehlende Sicherungsabdeckung darf nicht erst während der Ausführung ergänzt
+werden; dafür ist eine neue explizite Planung nötig. Eine darüber hinaus
+gebundene Sicherung wählt keine weiteren Journale aus. Vor `committing`
+MÜSSEN alle gewählten Dateien samt Before-/Stagingbildern und Zusatzbelegen
+dauerhaft gesichert und bytegleich wiedergelesen sein; das Sicherungsmanifest
+erhält auch die gebundene Verzeichnisinventur. Eine leere gewählte
+Journalstruktur ist kein Anlass, ihre Typ-/Pfadbindung auszulassen.
+
+**Nicht gewählte Journale und Abschluss.** Nicht gewählte aktive oder
+ungeklärte Einträge bleiben unverändert und sperren weiterhin. Vor Beginn
+einer neuen Restore-Ausführung verhindert ein solcher übriger Sperrgrund
+jeden Restore-Betriebs- und Zielwrite; er wird mit Code 5 und
+`recovery_required=true` ausgewiesen. Der Aufrufer muss ihn separat nach
+dem bestehenden Recoveryvertrag behandeln oder eine neue ausdrückliche,
+passend gebundene Auswahl autorisieren. Es gibt keine stille Erweiterung.
+
+Nur die gewählte ursprüngliche Menge darf nach den vollständigen Sicherungs-,
+Ziel- und Auditnachweisen aus 10.7.3 ihren aktiven Namensraum verlassen.
+Jeder tatsächliche Überführungsschritt bindet Originalpfad/-inventur,
+geprüfte Archivbytes und seinen eigenen Dateieffekt. Bis zum nachgewiesenen
+Abschluss hält der eigene Restorezustand die Sperre aufrecht. Ein anderer
+Eintrag unter demselben Elternpfad oder ein erst später hinzugefügter Pfad
+wird dadurch nicht passiv. Eine nachweislich abgeschlossene Auswahl allein
+erlaubt keine Freigabe, solange weitere Sperrgründe bestehen.
+
+Bei Fortsetzung MUSS die normalisierte Auswahl exakt zum ursprünglichen
+Auftrag passen; Weglassen einer zuvor nichtleeren Auswahl, Hinzufügen,
+Austauschen oder Neu-Hashen verändert diese Bindung. Bereits belegte eigene
+Archivierungseffekte werden ausschließlich nach 10.7.3 gegen die ursprüngliche
+Auswahl geprüft; aus dem veränderten Arbeitsstand wird keine neue Auswahl
+abgeleitet. Fremde Änderungen bleiben Konflikte. Die bestehenden Regeln
+für vollständigen Zielabschluss nach SR-REQ-0258 und Teilziel-Rollback nach
+SR-REQ-0511 gelten unverändert; ein Rollback erhält beziehungsweise restauriert
+die ausgewählten Originale bytegetreu und hebt fremde Sperren nicht auf.
+
+Fehlender Optionswert ergibt Code 2; ungültige Hülle, Sortierung, Dubletten,
+Hashdarstellung oder unvollständige erforderliche Sicherung Code 3;
+abweichender Originalplan, Auswahlhash, Bestand oder Wiederanlaufauftrag
+Code 6; unzulässiger Auswahlbereich, unsicherer Pfad oder fehlende aktuelle
+Berechtigung Code 7; echte I/O-Fehler Code 5. Vorprüfungsablehnungen bleiben
+schreibfrei. Normale Read-only-Aufrufe erhalten keine neue Recoverykompetenz
+und keine tiefe Archivinventur. Einzellauf und Workfortsetzung verwenden
+dieselbe Auswahlbindung und dieselben weichen Budgets nach N/O/P.
+
+Diese Auswahlregel ändert weder `restore-plan-v1` noch Modell-/Quell-/
+Zielhashes, vorhandene erfolgreiche Receipts oder historische Belege.
+Implementierung und Verhaltensabnahme bleiben in 15.l.W/R/C offen.
+
 
 ### 10.8 Scope Descriptor und Scope-Closure
 
@@ -4896,6 +5019,21 @@ kein Implementierungs-, Crash-, Wiederherstellungs- oder Releasebeleg.
 Produktstand 648/900 und die offenen 15.l.W/R/C-Abnahmen bleiben unverändert.
 Historische Nachweise behalten ihre ursprünglichen Bindungen.
 
+### 20.24 Auswahl betroffener Restore-Journale v0.2.30
+
+`RESTORE-JOURNAL-SELECTION`, ausdrücklich manuell beauftragt am
+26. Oktober 2026, konkretisiert in 10.7.4 die Auswahl alter aktiver Journale
+durch eine aktuell autorisierte Pfad-/Hashliste. Die Auswahl bindet pro
+Eintrag die vollständige ursprüngliche Datei-/Verzeichnisinventur, bleibt
+an Originalplan und Recovery-Auftrag gebunden und darf weder fremde Sperren
+noch abgeschlossene Receipts neutralisieren. Leere Auswahl bedeutet keine
+Auswahl. Bestehende Quellen-, Historien-, Lock-, Sicherungs-, Audit- und
+Wiederanlaufgates bleiben zwingend. `restore-plan-v1` bleibt unverändert.
+Der manuelle OFF-PLAN-Auftrag verändert kein automatisches Control-Budget.
+Produktstand 648/900, offene 15.l.W/R/C-Abnahmen und historische Belege
+bleiben erhalten; die Dokument- und Katalogbindung ist kein ausführbarer
+Restore-, Crash-, Produkt- oder Release-Erfolgsnachweis.
+
 ## 21. Entscheidungsstatus und nicht blockierende Restpunkte
 
 | ID | Thema | Stand |
@@ -4938,6 +5076,7 @@ Die folgende Roadmap ist informativ und erzeugt keine Anforderungen an 0.2:
 
 | Version | Datum | Status | Änderung |
 |---|---|---|---|
+| 0.2.30 | 2026-10-26 | Ausdrücklicher manueller Nutzerauftrag | RESTORE-JOURNAL-SELECTION: autorisierte Pfad-/Inventurhashliste für betroffene alte aktive Journale, übrige Sperren bleiben erhalten; Umsetzung und Crashabnahme in 15.l offen. |
 | 0.2.29 | 2026-10-26 | Delegierte Detailklärung nach SPECROAD-DECISION-1 | RESTORE-EXECUTION-CONTRACT: genaue eigene Betriebswrites, dauerhafte Originalbytes und konservativer Abschluss/Rollback der Restore-Ausführung; Umsetzung und Crashabnahme in 15.l bleiben offen. |
 | 0.2.28 | 2026-10-26 | Delegierte Detailklärung nach SPECROAD-DECISION-1 | RESTORE-PLAN-CONTRACT: geschlossener bytegebundener Restoreplan mit getrennten Quell-, Bestands-, Ziel- und Sicherungshashes; Umsetzung in 15.j–15.l bleibt offen. |
 | 0.2.27 | 2026-10-25 | PARTIAL-READ-GRAPH.C | Bereits festgelegte gemeinsame Grenzen und Abfragedomänen strukturell ordnen; Fachverhalten unverändert, 15.f.R bleibt offen. |
@@ -8060,4 +8199,4 @@ Implementierungsschritten nachgewiesen sein.
 
 ---
 
-**Ende der SpecRoad-Produktspezifikation v0.2.29.**
+**Ende der SpecRoad-Produktspezifikation v0.2.30.**
