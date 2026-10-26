@@ -4,15 +4,23 @@
   "requirement_id": "SR-REQ-0362",
   "specification_sha256": "07a35f089e83d27045e76a57aa5b3d5d0061dd0556543b4765da5f114e1ae637",
   "primary_verification_id": "SR-VER-0026",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-BUNDLE-COMPARISON-v1"
+  ],
+  "preconditions": [
+    "Explicit canonical project bundle verified by the native bundle reader; current supported schema and matching project identity. The existing comparison scope is project configuration and artifact fields."
+  ],
+  "steps": [
+    "Read only the explicit ZIP, verify its full container, closure and native model root without extraction, then project current JSON resources into the common source registry and existing semantic comparator; bind full verification evidence separately.",
+    "Compare unchanged and changed bundle sources against independent local/Git/bundle captures, exercise public diff --against-kind bundle including relative structured requests, and reject invalid native bytes, partial full-source promotion, foreign identity, symlinks and observed input replacement.",
+    "Bind a relative bundle input before retained read work starts; changing the process working directory before the first unit must not select another file."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Als Merge-Eingaben MÜSSEN Baseline-IDs, Git-Refs, verifizierte Projektbundles und lokale SpecRoad-Projektverzeichnisse unterstützt werden, sofern alle drei Eingaben dieselbe `project_id` und dieselbe unterstützte Schema-Version besitzen.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "15.h.W adds a native verified full-bundle provider and explicit bundle-file Diff CLI/structured routing. Its current-JSON projection equals the existing local/Git configuration-and-artifact comparison; all ZIP payloads, including receipts, attachments and archives, remain bound and verified in separate provenance. This is not a full-resource or three-way merge equivalence claim. Opaque current JSON resource differences still fail, input bytes are rechecked, and no extraction, fallback, approval or writing is authorized."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [],
@@ -28,8 +36,34 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_bundle_comparison.py::test_bundle_and_identical_local_project_have_the_same_field_comparison[baseline]",
+    "tests/test_bundle_comparison.py::test_bundle_and_identical_local_project_have_the_same_field_comparison[initialized]",
+    "tests/test_bundle_comparison.py::test_bundle_and_identical_local_project_have_the_same_field_comparison[project]",
+    "tests/test_bundle_comparison.py::test_bundle_and_identical_local_project_have_the_same_field_comparison[receipts]",
+    "tests/test_bundle_comparison.py::test_bundle_capture_reads_only_the_explicit_file_and_owns_its_evidence",
+    "tests/test_bundle_comparison.py::test_changed_bundle_pairs_equal_the_existing_local_comparison[bundle]",
+    "tests/test_bundle_comparison.py::test_changed_bundle_pairs_equal_the_existing_local_comparison[git]",
+    "tests/test_bundle_comparison.py::test_changed_bundle_pairs_equal_the_existing_local_comparison[local]",
+    "tests/test_bundle_comparison.py::test_changed_file_during_capture_cannot_return_a_mixed_source",
+    "tests/test_bundle_comparison.py::test_changed_opaque_resources_still_require_their_own_comparison_semantics",
+    "tests/test_bundle_comparison.py::test_diff_rechecks_the_actual_bundle_before_returning_success[evaluated]",
+    "tests/test_bundle_comparison.py::test_diff_rechecks_the_actual_bundle_before_returning_success[loaded]",
+    "tests/test_bundle_comparison.py::test_expected_project_identity_still_rejects_a_verified_foreign_bundle",
+    "tests/test_bundle_comparison.py::test_explicit_bundle_symlink_is_not_followed",
+    "tests/test_bundle_comparison.py::test_invalid_transport_or_model_cannot_become_a_comparison_source[attachment]",
+    "tests/test_bundle_comparison.py::test_invalid_transport_or_model_cannot_become_a_comparison_source[container]",
+    "tests/test_bundle_comparison.py::test_invalid_transport_or_model_cannot_become_a_comparison_source[model]",
+    "tests/test_bundle_comparison.py::test_partial_bundle_is_not_promoted_to_full_comparison_input[document]",
+    "tests/test_bundle_comparison.py::test_partial_bundle_is_not_promoted_to_full_comparison_input[release]",
+    "tests/test_bundle_comparison.py::test_public_diff_accepts_explicit_bundle_files_and_keeps_the_existing_result[cli_absolute]",
+    "tests/test_bundle_comparison.py::test_public_diff_accepts_explicit_bundle_files_and_keeps_the_existing_result[cli_relative]",
+    "tests/test_bundle_comparison.py::test_public_diff_accepts_explicit_bundle_files_and_keeps_the_existing_result[direct]",
+    "tests/test_bundle_comparison.py::test_public_diff_accepts_explicit_bundle_files_and_keeps_the_existing_result[structured]",
+    "tests/test_bundle_comparison.py::test_retained_diff_binds_the_bundle_path_before_the_first_work_unit"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "The common registry provider is preparatory work only. Full normative three-way merge sources, source combination, merge plans, CLI/Work integration and current bound release/matrix evidence remain open in M17.",
+    "15.h.R/C source boundary hardening and cleanup remain open; no completed Merge or full-model equivalence is claimed."
   ]
 }

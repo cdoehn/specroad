@@ -711,6 +711,10 @@
     "verification-context-subjects": {
       "kind": "Owned requirement, verification and test subjects with immutable recorded Evidence bindings. Audit/workflow and semantic changes, exact effective product configurations, passive metadata, native rejection boundaries and isolated Core/PYZ parity. No authoritative run selection or verification success.",
       "provider": "tests/test_verification_context.py:subject"
+    },
+    "SR-FIX-BUNDLE-COMPARISON-v1": {
+      "provider": "tests/test_bundle_comparison.py:captured",
+      "kind": "Native full project ZIPs from real project, archive, initialized language and completed receipt fixtures; independent local and Git field-comparison oracles, public direct/CLI/structured diff, invalid native roots, binary payloads, partial inputs and observed source replacement. No extraction or full-merge oracle."
     }
   },
   "fixture_format_version": 1,
@@ -731,6 +735,7 @@
     "SR-FIX-BUILTIN-PARTIAL-RIGHT-v1",
     "SR-FIX-BUILTIN-PARTIAL-v1",
     "SR-FIX-BUILTIN-TRACEABILITY-v1",
+    "SR-FIX-BUNDLE-COMPARISON-v1",
     "SR-FIX-BUNDLE-VERIFICATION-RIGHT-v1",
     "SR-FIX-BUNDLE-VERIFICATION-v1",
     "SR-FIX-CATALOG-DATA-v1",

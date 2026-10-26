@@ -38,7 +38,7 @@ class ReadCommandWork:
                 arguments['options'] = thaw(freeze(arguments['options']))
             cwd = arguments.get('cwd')
             arguments['cwd'] = (Path.cwd() if cwd is None else Path(cwd).absolute())
-        if command == 'diff' and arguments.get('against_kind') == 'local':
+        if command == 'diff' and arguments.get('against_kind') in ('local', 'bundle'):
             against = arguments.get('against')
             if type(against) is str and against.strip() and '\0' not in against:
                 arguments['against'] = str(Path(against).absolute())

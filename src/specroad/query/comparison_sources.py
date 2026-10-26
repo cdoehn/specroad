@@ -1,4 +1,4 @@
-"""Owned local/Git/Baseline comparisons; no full model or approval claim."""
+"""Owned local/Git/Baseline/bundle comparisons; no full model or approval claim."""
 from dataclasses import dataclass
 from hashlib import sha256
 from types import MappingProxyType
@@ -21,6 +21,7 @@ from ..storage.resource_discovery import current_json_paths
 from .git_source import GitObjectSource
 from .semantic_diff import compare_semantic
 from .baseline_source import baseline_source
+from .bundle_source import bundle_source
 
 
 def _git_json_paths(source, configuration):
@@ -123,7 +124,7 @@ def _git_source(root, reference, expected_project_id):
 
 _SOURCE_READERS = MappingProxyType({
     'local': _local_source, 'git': _git_source,
-    'baseline': baseline_source, 'bundle': None,
+    'baseline': baseline_source, 'bundle': bundle_source,
 })
 
 
@@ -142,6 +143,7 @@ class ComparisonSourceSnapshot:
     inputs: ComparisonInputs
     resources: tuple
     _baseline_evidence: bytes | None
+    _bundle_evidence: bytes | None
 
     def __init__(self, root, *, kind='local', reference=None, expected_project_id=None,
                  allow_partial=False):
@@ -191,7 +193,8 @@ class ComparisonSourceSnapshot:
         evidence = finish() if finish is not None else None
         for key, value in (('kind', kind), ('source_root', source_root), ('commit_id', commit_id),
                            ('configuration', configuration), ('inputs', inputs), ('resources', resources),
-                           ('_baseline_evidence', evidence), ('partial', partial)):
+                           ('_baseline_evidence', evidence if kind == 'baseline' else None),
+                           ('_bundle_evidence', evidence if kind == 'bundle' else None), ('partial', partial)):
             object.__setattr__(self, key, value)
 
     @property
@@ -222,7 +225,9 @@ class ComparisonSourceSnapshot:
                 'atomic_snapshot': False, 'full_semantic_validation': False,
                 'approval_granted': False, 'write_authorized': False,
                 **({'baseline': parse_json_object(self._baseline_evidence)}
-                   if self._baseline_evidence is not None else {})}
+                   if self._baseline_evidence is not None else {}),
+                **({'bundle': parse_json_object(self._bundle_evidence)}
+                   if self._bundle_evidence is not None else {})}
 
     @property
     def sha256(self):

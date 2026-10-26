@@ -375,7 +375,7 @@ def builtin_registry() -> CommandRegistry:
         preflight_profile=PreflightProfile.PROJECT_READ, effect_scope=EffectScope.NONE,
         handler=_diff, requires_project=True,
         options=(OptionSpec('--against', takes_value=True, required=True),
-            OptionSpec('--against-kind', takes_value=True, choices=('git', 'local')),
+            OptionSpec('--against-kind', takes_value=True, choices=('git', 'local', 'bundle')),
             OptionSpec('--configuration', takes_value=True),
             OptionSpec('--project', takes_value=True),
             OptionSpec('--format', takes_value=True, choices=('pretty', 'json')),

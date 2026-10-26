@@ -28,10 +28,10 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ```yaml
 plan_revision: 22
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 636
-last_completed_plan_commit: 15.g.C
-next_plan_commit: 15.h.W
-last_completed_numbered_bundle: 482
+implementation_plan_commits_completed: 637
+last_completed_plan_commit: 15.h.W
+next_plan_commit: 15.h.R
+last_completed_numbered_bundle: 483
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -27451,12 +27451,157 @@ beenden diesen N-Auftrag ohne Result-Warten oder Hintergrundfortsetzung.
 
 #### 15.h.W – Let it Work
 
-- [ ] **15.h.W** · Position **637/900** · Voraussetzung: `15.g.C`.
+- [x] **15.h.W** · Position **637/900** · Voraussetzung: `15.g.C`.
 **Exakte Commit-Message:** `15.h.W feat(bundle): Bundle als Vergleichsquelle aufbauen`
 
 **Umsetzung:** Verifizierte Bundles in die gemeinsame Diff-/Mergequellenregistry einbinden.
 
 **Verhaltensabnahme:** Bundle und identischer lokaler Snapshot ergeben denselben fachlichen Vergleich.
+
+
+**Umsetzungs- und Übergabenachweis – Bundle 483 (W), 26. Oktober 2026.**
+
+**Bestätigte Basis.** Result `specroad-apply_Result_231946_1025_bbd50b.zip`,
+SHA-256 `23fa157210cf5d76888a72e144b8059dfe29568a72b2217dd585657d052770bc`,
+bestätigt den sauberen Apply-Commit `059bf135cb2e2a4bd780c99fb8a2797795c2be46`,
+Parent `19828070b5869a343fac523f0c35f19a98ca34b7`, für **15.g.C**, Bundle 482.
+Root-Anleitung, Kontext, Umgebung, Manifest, Run-/Ausführungslogs und sämtliche
+**2.265** Snapshotdateien wurden geprüft. Blob-IDs, Größen, Modi und Bytes
+stimmen mit dem tatsächlichen sauberen Apply-Zustand überein. Die native
+Resultprüfung und konsistente lesende Zustandserfassung bestätigen die exakte
+Vierfachbindung; das Result war eindeutig maßgeblich und noch unverbraucht.
+
+Die tatsächliche Commitfolge und gebundenen Apply-Einzeloutcomes belegen
+**7.092/7.092** bestandene Tests, Sequenz **188**, Gruppe **2/3**, vier
+parallele Worker, **2.458,26 s**, Prozessende 0. Auswahlbindung
+`bf817a83c5ed60473140dcde2f8e4f317db4fa136086b096026324a8d62a4cb9`; Auswahlbericht-SHA
+`f303e09599c60d79acef87292e3fd5ded047d11ceb3d17d2f56268f749dda947`; Einzeloutcomes-SHA
+`751352120dc3af98e9d22035b40d30e1f5cf63f08627e72d57a7cbb93bdb3ae8`. Dies ist ein Teiltest, kein Vollsuite- oder
+Release-Erfolg. Bestätigt sind **636/900**, zuletzt 15.g.C, nächstens 15.h.W,
+Bundle 482. Die Dev-Planmarker wurden zunächst auf diesen tatsächlichen
+Resultstand synchronisiert; Dev-Historie, Index und lokale Arbeitsregeln
+bleiben unverändert. Apply wurde ausschließlich gelesen.
+
+**Umsetzung des bestätigten W-Schritts.** SPECROAD-DECISION-1 wurde in den
+maßgeblichen Projektvorgaben ausdrücklich geprüft. SR-REQ-0114/0362, 10.16,
+Anhang E und der bestätigte Quellenvertrag aus M8/M10 geben die Anbindung vor;
+eine neue normative Entscheidung ist nicht erforderlich. Spezifikation
+**0.2.27** bleibt bytegleich, SHA-256
+`07a35f089e83d27045e76a57aa5b3d5d0061dd0556543b4765da5f114e1ae637`.
+
+Die gemeinsame Quellenregistry besitzt jetzt einen tatsächlichen
+`kind=bundle`-Adapter. Er liest ausschließlich die ausdrücklich bezeichnete
+ZIP-Datei über den bestehenden sicheren Bytezugriff und verwendet den nativen
+Bundleprüfer für kanonischen Container, Manifest, vollständige Payloadbindung,
+Closure und Modellwurzel. Er extrahiert nichts und ergänzt weder Ursprungs-
+noch benachbarte Arbeitsdateien. Ein Teilbundle wird nicht als Vollquelle
+angenommen; erwartete Projektidentität und unterstützte Schemas bleiben
+verbindlich. Die ZIP-Bytes werden nach Übernahme der Vergleichseingaben
+nochmals geprüft; beobachtete Änderungen verhindern eine erfolgreiche Rückgabe.
+
+Der Adapter liefert dieselbe aktuelle JSON-Projektion wie der lokale und
+Git-Adapter an die bestehende feldsemantische Vergleichsfunktion. Konfiguration,
+Artefaktfelder und die unverändert opaken Profile, Regeln und Mappings folgen
+dem bestehenden Vertrag. Unterschiede opaker aktueller JSON-Ressourcen bleiben
+explizite Fehler. Binäre Anhänge, historische Archivobjekte und abgeschlossene
+Receipts werden im vollständigen Bundle nativ geprüft und über ZIP-/Manifest-
+und Modellnachweise separat gebunden. Sie werden nicht zu neuen Artefakten,
+Betriebsreceipts nicht zu Modellinhalt und diese Projektion nicht zu einem
+Nachweis vollständiger Ressourcengleichheit erklärt. Der gleiche fachliche
+Vergleich mit einem identischen lokalen Stand bleibt das begrenzte W-Orakel.
+
+`diff --against <FILE> --against-kind bundle` verwendet diesen Adapter auch
+über den strukturierten Request. Relative Dateipfade werden aus dem gewählten
+Aufrufverzeichnis aufgelöst und bei fortsetzbaren Leseaufträgen bereits vor der
+ersten Arbeitseinheit gebunden; ein späterer CWD-Wechsel wählt keine andere
+Quelle. Vor Rückgabe werden die gebundene Bundlequelle
+und das lokale Ziel erneut beobachtet. Native Prüfevidence bleibt unter
+`bundle` von Baseline-Evidence und vom unveränderten `artifact-diff-v1` getrennt.
+Keine Vergleichsbeobachtung erteilt atomare Snapshotgarantie, volle semantische
+Validität, Authentifizierung, Freigabe oder Schreibrecht.
+
+SR-TC-0114 und SR-TC-0362 binden die echte neue Fixture und Verhaltenstests mit
+Status **partial**. Die Vollbereichs-Dreiwege-Mergefunktion und ihre
+Quellenkombination werden hier nicht vorgezogen; M17 bleibt offen. Auch die
+weitergehende Härtung und Bereinigung 15.h.R/C sowie plattform- und
+versionsübergreifende Nachweise bleiben offen. Vorhandene Testkennungen,
+Testorakel und stillgelegte Nummern werden weder umgedeutet noch ersetzt.
+
+**Entwicklungsnachweis.** Ein erster gezielter Lauf bestand mit 1.623/1.623
+Tests auf acht Workern in 600,53 s bei beobachtetem Prozessende 0. Nach der
+abschließenden Pfadbindung für fortsetzbares Lesen und ihrem zusätzlichen
+Verhaltenstest wurde der endgültige Zwischenstand erneut gebunden geprüft.
+Die abschließende gezielte Regression besteht mit
+**1624/1624** Tests aus **32**
+vollständigen Testdateien, acht parallelen Workern unter CPython 3.14.4,
+**565.48 s**, beobachtetem Prozessende 0 und ausschließlich bestandenen
+Einzeloutcomes. Enthalten sind die **24** neuen Bundle-
+Vergleichsfälle und betroffene Quellen-, Diff-, CLI-, Verifikations-,
+Receipt-, Partial-, Konfigurations- und Preflightpfade. Die neuen Orakel prüfen
+unveränderte und geänderte fachliche Vergleiche gegen unabhängig gelesene lokale
+und Git-Stände, explizite öffentliche Aufrufe, unveränderliche Beweisdaten,
+fehlende Ursprungsergänzung, ungültige Container-/Modell-/Anhangsbytes,
+Teil-/Projektgrenzen, Symlinks und beobachtete Quellenänderungen.
+
+Die vollständige Collection/Katalogprüfung bestätigt **21296**
+aktive Testidentitäten bei **0** ausgeführten Testkörpern. Die Registry erhält
+**24** neue Nummern ausschließlich am Ende und enthält nun
+**21300** Identitäten einschließlich vier stillgelegter
+Nummern; alle früheren Nummern und Rotationsanker bleiben erhalten.
+`full_suite_passed=null`: kein Entwicklungsvolltest, kein serieller Lauf,
+keine Darstellungs-/Dokumentationstests und kein CI-Start.
+Quellidentität `303c8c8d57dd3f890c69339fba6b9ecb6f6884909fb4f9af48b9ee3cdad82908`;
+Katalog-SHA `49b1cde02de90c6525fafc2c327a895c947bb62be0867a7363b17dd93e63aac2`;
+Auswahlbericht-SHA `6cb17fc1ea598c76986eabe4f8fb69099c225ea5509286db8d3db7cabf4c0657`;
+Einzeloutcomes-SHA `5335d3c65144d8196d40d4138ef9396da2251c3cba47dd03d388f63c5f38d5e4`.
+Ausgewählte vollständige Testdateien:
+
+- `tests/test_baseline_comparison.py`
+- `tests/test_baseline_comparison_right.py`
+- `tests/test_bundle_comparison.py`
+- `tests/test_bundle_receipts.py`
+- `tests/test_bundle_receipts_right.py`
+- `tests/test_bundle_verification.py`
+- `tests/test_bundle_verification_right.py`
+- `tests/test_capabilities.py`
+- `tests/test_capability_scope.py`
+- `tests/test_configuration_diff.py`
+- `tests/test_configuration_diff_right.py`
+- `tests/test_metadata.py`
+- `tests/test_partial_read_commands.py`
+- `tests/test_partial_read_commands_right.py`
+- `tests/test_partial_read_consumers.py`
+- `tests/test_preflight_metadata.py`
+- `tests/test_preflight_profiles.py`
+- `tests/test_product_bundle.py`
+- `tests/test_product_bundle_right.py`
+- `tests/test_project_bundle.py`
+- `tests/test_project_bundle_right.py`
+- `tests/test_query_comparison_sources.py`
+- `tests/test_query_comparison_sources_right.py`
+- `tests/test_query_git_source.py`
+- `tests/test_query_git_source_right.py`
+- `tests/test_query_read_integration.py`
+- `tests/test_query_read_integration_right.py`
+- `tests/test_query_semantic_diff.py`
+- `tests/test_query_semantic_diff_right.py`
+- `tests/test_requests.py`
+- `tests/test_scope_comparison.py`
+- `tests/test_scope_comparison_right.py`
+
+**Gebundene Übergabe.** Genau ein regulärer **PLAN 15.h.W**, Position
+**637/900**, wird als eigener Zwischenstand durch den nativen Payloadwriter
+hergestellt. Der Entrypoint fordert den sauberen gebundenen Ausgangsstand und
+ausschließlich **Gruppe 0/3, Sequenz 189**, mit **7099**
+parallelen Tests auf vier Workern. Quellidentität, vollständiger Katalog,
+feste Nummerierung und tatsächliche Auswahlbindung müssen übereinstimmen.
+Erst nach erfolgreichem Gate werden die fünf Planmarker auf W abgeschlossen,
+637/900, zuletzt 15.h.W, nächstens 15.h.R und Bundle 483 gesetzt. Erst danach
+folgt der Commit `15.h.W feat(bundle): Bundle als Vergleichsquelle aufbauen`.
+R und C bleiben offen. Apply-Tests und Commit sind vorgesehen, nicht bereits
+erfolgt. Fehler erhalten den tatsächlichen Zustand und erfolgreiche Commits.
+Native ZIP-Prüfung und atomare Exchange-Übergabe beenden diesen N-Auftrag
+ohne Result-Warten oder Hintergrundfortsetzung.
 
 #### 15.h.R – Make it Right
 

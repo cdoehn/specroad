@@ -1,4 +1,4 @@
-"""Public semantic Diff over a pinned Git or explicitly selected local base."""
+"""Public semantic Diff over Git, local projects or verified full bundles."""
 from pathlib import Path
 
 from ..cli.result_schemas import validate_result_document
@@ -19,12 +19,13 @@ def _diff_steps(root, against, *, against_kind='git', configuration_id=None,
     project = None
     details = read_details()
     try:
-        if type(against_kind) is not str or against_kind not in ('git', 'local'):
+        if type(against_kind) is not str or against_kind not in ('git', 'local', 'bundle'):
             raise ModelError('comparison_source_unavailable')
         if type(against) is not str or not against.strip() or '\0' in against:
             raise ModelError('comparison_reference_required')
         before = (ComparisonSourceSnapshot(root, kind='git', reference=against)
-                  if against_kind == 'git' else ComparisonSourceSnapshot(against, allow_partial=True))
+                  if against_kind == 'git' else ComparisonSourceSnapshot(
+                      against, kind=against_kind, allow_partial=True))
         after = ComparisonSourceSnapshot(root, expected_project_id=before.configuration.project_id, allow_partial=True)
         project = {'project_root': after.source_root, 'project_id': after.configuration.project_id}
         yield 'loaded'
@@ -44,8 +45,8 @@ def _diff_steps(root, against, *, against_kind='git', configuration_id=None,
         for snapshot in (before, after):
             if snapshot.partial is not None:
                 snapshot.partial.verify_current()
-        if against_kind == 'local':
-            current_base = ComparisonSourceSnapshot(before.source_root,
+        if against_kind in ('local', 'bundle'):
+            current_base = ComparisonSourceSnapshot(before.source_root, kind=against_kind,
                 expected_project_id=before.configuration.project_id, allow_partial=True)
             if current_base.sha256 != before.sha256:
                 raise ModelError('diff_source_changed')
@@ -84,7 +85,7 @@ def diff_project(root, against, *, against_kind='git', configuration_id=None,
 def diff_command(invocation):
     against = invocation.options['--against']
     kind = invocation.options.get('--against-kind', 'git')
-    if kind == 'local' and not Path(against).is_absolute():
+    if kind in ('local', 'bundle') and not Path(against).is_absolute():
         against = str(invocation.resolved.working_directory / against)
     return complete_read_command(invocation, _diff_steps, against, against_kind=kind,
                                  configuration_id=invocation.options.get('--configuration'))
