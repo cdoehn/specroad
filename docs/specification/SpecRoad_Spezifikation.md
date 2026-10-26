@@ -1,21 +1,21 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.28
+## Version 0.2.29
 
 | Feld | Wert |
 |---|---|
 | Dokument-ID | `SR-SPEC-0001` |
-| Dokumentversion | `0.2.28` |
+| Dokumentversion | `0.2.29` |
 | Zielrelease | `SpecRoad Single-Repository Workbench 0.2.0` |
 | Status | **Fachlich konsolidierte Arbeitsgrundlage; technische Reviewentscheidung gesondert dokumentiert, formale Baseline-Freigabe und Produktabnahme nicht durch dieses Dokument erklärt** |
 | Stand | 26. Oktober 2026 |
 | Sprache | Deutsch; technische Feldnamen, Enum-Werte und CLI-Kommandos Englisch |
-| Fachliche Quelle | **Diese Repositoryfassung v0.2.28 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.28 liegt mit dieser Änderung nicht vor.** |
+| Fachliche Quelle | **Diese Repositoryfassung v0.2.29 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.29 liegt mit dieser Änderung nicht vor.** |
 | Bearbeitbare Satzquelle | Diese Datei; eine spätere PDF muss denselben versionierten Inhalt wiedergeben. |
-| Vorgängerversion | Repository-Spezifikation v0.2.27 vom 25. Oktober 2026; frühere PDF-/Reviewbelege bleiben an ihre historischen Fassungen gebunden. |
-| Prüf- und Entscheidungsgrundlage | RESTORE-PLAN-CONTRACT, delegiert gemäß SPECROAD-DECISION-1; Entscheidungsbeleg, Grenzen und offene Abnahmen bei 15.j.W im Implementierungsplan. Bestehende Nutzerentscheidungen und Produktfreigabegrenzen bleiben unverändert. |
-| Änderungsart | Additive Präzisierung des geschlossenen Restoreplanformats, seiner Byte-/Inventurbindungen und getrennten Hashdomänen in 10.7.2; keine neue Requirement-ID oder Produktposition. Umsetzung und Produktabnahme bleiben offen. |
+| Vorgängerversion | Repository-Spezifikation v0.2.28 vom 26. Oktober 2026; frühere PDF-/Reviewbelege bleiben an ihre historischen Fassungen gebunden. |
+| Prüf- und Entscheidungsgrundlage | RESTORE-EXECUTION-CONTRACT, delegiert gemäß SPECROAD-DECISION-1; Entscheidungsbeleg, Grenzen und offene Abnahmen bei 15.l.W im Implementierungsplan. Bestehende Nutzerentscheidungen und Produktfreigabegrenzen bleiben unverändert. |
+| Änderungsart | Additive Präzisierung der getrennten Restore-Ausführungsbindung, dauerhaften Sicherung und konservativen Wiederaufnahme in 10.7.3; keine neue Requirement-ID oder Produktposition. Umsetzung und Produktabnahme bleiben offen. |
 
-> **Verbindlicher Quellenwechsel:** Die delegierte Detailentscheidung schreibt die Repository-Spezifikation als v0.2.28 fort. Frühere PDF- und Reviewnachweise behalten ihre historische Bindung und belegen diese Erweiterung nicht. Der py3langid-Adapter bleibt Bestandteil des Zielreleases; der kleine Core bleibt ohne Analyzer-Abhängigkeiten nutzbar.
+> **Verbindlicher Quellenwechsel:** Die delegierte Detailentscheidung schreibt die Repository-Spezifikation als v0.2.29 fort. Frühere PDF- und Reviewnachweise behalten ihre historische Bindung und belegen diese Erweiterung nicht. Der py3langid-Adapter bleibt Bestandteil des Zielreleases; der kleine Core bleibt ohne Analyzer-Abhängigkeiten nutzbar.
 
 > **Fortbestehende Arbeitsprinzipien:** Weiche Budgets führen zu sparsamer vollständiger Weiterarbeit oder gesicherter Fortsetzung über mehrere Aufrufe beziehungsweise Prompts. Es werden keine erforderlichen Arbeiten stillschweigend ausgelassen. Reale Host-, Speicher-, Berechtigungs- und Sicherheitsgrenzen bleiben wirksam.
 
@@ -101,7 +101,7 @@ Bei einem Widerspruch innerhalb dieser Dokumentversion gilt:
 3. `SR-DEC-*` hat Vorrang vor erläuterndem Text, Diagrammen und Beispielen.
 4. Beispiele sind niemals normativ, sofern sie nicht ausdrücklich als Testvektor bezeichnet sind.
 5. Zwei widersprüchliche `SR-REQ-*`-Anforderungen besitzen **keine implizite Rangfolge** nach Nummer, Position oder Spezifität. Ein solcher Fund ist ein Spezifikationsfehler, muss als Issue gelöst werden und verhindert die Freigabe.
-6. Diese Dokumentversion 0.2.28 ersetzt die frühere fachliche Arbeitsgrundlage vollständig. Bis zur gesonderten PDF-Veröffentlichung ist diese versionierte Repositorydatei maßgeblich. Eine spätere PDF muss inhaltsgleich sein; frühere PDFs werden nicht als Nachweis der neuen Verträge ausgegeben. Inhalte verschiedener Fassungen dürfen nicht zu einer Mischspezifikation kombiniert werden.
+6. Diese Dokumentversion 0.2.29 ersetzt die frühere fachliche Arbeitsgrundlage vollständig. Bis zur gesonderten PDF-Veröffentlichung ist diese versionierte Repositorydatei maßgeblich. Eine spätere PDF muss inhaltsgleich sein; frühere PDFs werden nicht als Nachweis der neuen Verträge ausgegeben. Inhalte verschiedener Fassungen dürfen nicht zu einer Mischspezifikation kombiniert werden.
 7. Eine nachträgliche Änderung dieser veröffentlichten Datei erfordert mindestens eine neue Patch-Dokumentversion; stille Korrekturen unter derselben Dokumentversion sind unzulässig.
 8. Eine normative Tabelle, auf die eine `SR-REQ-*`-Anforderung ausdrücklich als Algorithmus oder Matrix verweist, ist Bestandteil des Passkriteriums dieser Anforderung.
 
@@ -1759,6 +1759,158 @@ Löschen von Nachweisen. Bestehende Change-Plan-, Bundle-, Baseline- und
 Workformate bleiben unverändert und werden nicht implizit als Restoreplan
 akzeptiert. Implementierung und Verhaltensevidence folgen in 15.j–15.l.
 
+
+#### 10.7.3 Gebundene Restore-Ausführung und Fortsetzung `restore-execution-v1`
+
+Diese Regel konkretisiert den bereits verlangten getrennten Restore-Journal-
+und Sicherungsablauf aus 10.7.1. `restore-plan-v1`, seine geschlossene Hülle,
+Quell-/Zielhashes und Bestandsinventur bleiben unverändert. Ein Restore ist
+kein Change Plan eines vermeintlich gültigen Ausgangsmodells; für beschädigte
+Ausgangsbytes DARF keine erfundene semantische Basiswurzel eingesetzt werden.
+Die folgende Bindung ist eine betriebliche Ausführungsbindung, keine neue
+normative Modellressource und keine Freigabe durch einen Planhash.
+
+**Anfangsbindung und Autorisierung.** Vor dem ersten Restore-Betriebswrite
+MÜSSEN der vollständige Plan, der separat bestätigte Zielroot, die aktuelle
+Herkunft samt Abhängigkeiten, Projektidentität und gesamte Bestandsinventur
+nach 10.7.1–10.7.2 geprüft sein. Ein eigens für diesen Restore gehaltener
+nativer Recovery-Lock bindet den tatsächlichen Projektroot; derselbe Mutex
+schließt normale Writer und andere Recovery-Aufrufe aus. Unter diesem Lock
+MÜSSEN die Bindungen unmittelbar vor Beginn erneut stimmen. Ein bestehender
+Owner wird niemals durch das Lesen eines Plans oder wegen einer fehlenden
+PID entfernt; Übernahme, Risikozustimmung und Nachweise folgen unverändert
+dem bestehenden Lockvertrag. Ein korrupter alter Transaktionsinhalt darf als
+zu sichernde Originalbytefolge inventarisiert werden; er darf weder als
+konsistentes Modell noch als Beweis einer freien Sperre dienen.
+
+Jeder beginnende oder fortsetzende Write braucht einen aktuellen Recovery-
+Auftrag und die bestehende gesonderte Autorisierungsprüfung. Der Auftrag
+bindet mindestens Aktion, Projekt-/Rootidentität, Originalplanhash,
+Originalquellhash, Inventurhash, Zielroot, Ziel- und Sicherungsinventurhash,
+Akteur und die nach den bestehenden Regeln vorhandene Request-ID. Deren
+bestehende Pflicht-/Optionalitätsregeln bleiben unverändert. Actorlabels,
+Planfelder, Journalbytes oder ein gespeichertes `authorized=true` ersetzen
+keine aktuelle Berechtigung. Ursprünglicher Akteur/Request und späterer
+Recovery-Akteur werden getrennt auditiert; ein Resume schreibt die ursprüngliche
+Auftragsidentität nicht um. Eine abweichend wiederverwendete Requestbindung
+bleibt Code 6; es wird kein gewöhnliches Change-Plan-Erfolgsreceipt erfunden.
+
+**Eigene Betriebswrites und dauerhafte Erhaltung.** Der Restore erhält eine
+lokal eindeutige Ausführungskennung. Sein getrenntes Journal bindet diese
+Kennung, die Regelversion, den unveränderten vollständigen Originalplan,
+die geprüfte Auftragsbindung und die genaue eigene Dateiinventur. Es bleibt
+für normale Projektbefehle als ungelöster Recoveryzustand sichtbar. Die
+Implementierung MUSS die bestehende sichere, descriptorgebundene Lock-,
+Datei-, Staging- und Sync-Infrastruktur wiederverwenden; eine allgemeine
+Umgehung der Journal- oder Rootprüfung ist unzulässig.
+
+Vor `committing` MÜSSEN alle zu ersetzenden/entfernenden Bestandsbytes,
+betroffenen alten Journale, Before-/Stagingbilder und Zusatzinformationen
+vollständig nach 10.7.1 in `.specroad/recovery/archive/` gesichert sein.
+Eine content-addressierte Objektkopie MUSS Länge und Hash sowie die
+bytegleiche Wiederlesung bestehen. Ein dazugehöriges dauerhaftes Manifest
+ordnet jedes Original seinem Pfad und Byteobjekt zu; auch beschädigte,
+leere und nicht als JSON lesbare Originale bleiben unverändert erhalten.
+Der unveränderte Plan und alle geplanten Zielbytes werden ebenfalls
+vollständig gestaged und wiedergeprüft. Neue Dateien und erforderliche
+Verzeichnisse samt ihren Eltern werden nach dem bestehenden Durabilitäts-
+vertrag synchronisiert. Eine erst begonnene oder nur im Plan enthaltene
+Sicherung ist keine bestandene Sicherung. Reale I/O-/Speicherfehler bleiben
+Code 5; Pflichtbytes oder Prüfungen werden nicht aus Budgetgründen entfernt.
+
+Die ursprüngliche `inventory` DARF NICHT wegen eigener Writes neu
+gehasht oder auf den aktuellen Mischstand umgebunden werden. Bei einer
+laufenden Ausführung darf ausschließlich die genaue, separat journalgebundene
+Menge ihrer eigenen neu erzeugten Betriebsdateien und benötigten Verzeichnisse
+von der Originalinventur unterschieden werden. Keine pauschale Ausnahme für
+`.specroad/`, `recovery/`, `archive/` oder einen ganzen Ausführungsordner:
+zusätzliche, fremde, unlesbare oder abweichende Einträge sind kein eigener
+Fortschritt. Bereits vor Beginn vorhandene Dateien bleiben durch die
+Originalinventur gebunden. Eine angebliche Ausführungskennung oder ein frei
+neu gehashtes Manifest allein authentifiziert keine eigenen Writes.
+
+**Publikation und Sperre.** Erst nach dauerhafter Sicherung, vollständiger
+Zielvalidierung und frischer Prüfung der unveränderten Herkunft und noch
+unveröffentlichten Bestandsbindungen wird `committing` dauerhaft gesetzt.
+Die exakt aus Plan und Bestand abgeleiteten Ersetzungen, Erzeugungen und
+Entfernungen erfolgen in kanonischer UTF-8-Pfadreihenfolge über die vorhandenen
+sicheren Primitiven; Verzeichniskollisionen oder fremde Einträge erlauben
+kein rekursives Löschen. Der dauerhafte Fortschritt bindet für jeden Pfad
+seine ursprünglichen Bytes beziehungsweise Abwesenheit und seine geplanten
+Zielbytes beziehungsweise Abwesenheit. Eine Unterbrechung zwischen atomarem
+Dateieffekt und Fortschrittswrite MUSS anhand dieser exakten Bindungen
+auflösbar sein; ein Cursor allein beweist keinen Dateieffekt.
+
+Alte aktive Journale dürfen erst nach bytegetreu überprüfter Archivierung,
+vollständigem tatsächlichem Ziel und dauerhaftem Restore-Abschlussaudit aus
+ihrem aktiven Namensraum überführt werden. Vorher und während dieses
+Abschlusses hält mindestens ein nachweislich ungelöster Restorezustand normale
+Befehle gesperrt. Alte abgeschlossene Receipts und Audits außerhalb der
+explizit betroffenen aktiven Journalmenge bleiben an ihren vorhandenen Pfaden
+unverändert; die Sicherung ersetzt ihre Erhaltung nicht. Nur die genaue,
+geprüfte abgeschlossene Menge darf als passiv gelten. Fremde oder weitere
+ungelöste Journale blockieren weiterhin. Ein Terminalmarker ohne passende
+Ziel-, Sicherungs- und Auditnachweise hebt die Sperre nicht auf.
+
+**Erneuter Aufruf nach tatsächlicher Unterbrechung.** Ein erneuter
+`recover restore --plan <EXTERNAL-PLAN> --expected-target-root <SHA256>`
+verwendet für dieselbe Ausführung unveränderte Originalplanbytes und
+Auftragsbindungen. Nach aktueller Autorisierung und sicherem Recovery-Lock
+wird zuerst genau die gebundene laufende Ausführung untersucht. Ein fehlender
+oder geänderter Plan, mehrdeutige aktive Bindungen oder nicht erklärte
+Bestandsänderungen beginnen keine neue Transaktion. Die ursprüngliche
+Inventur wird mit den journalbelegten eigenen Betriebs- und Dateieffekten
+verglichen, nicht durch die Annahme ersetzt, der Mischstand sei konsistent.
+
+| Nachgewiesener Ausführungsstand | Zulässiger Abschluss desselben Aufrufs |
+|---|---|
+| `building`/`prepared`, keine Zielpublikation | Ausgangsbytes beibehalten, eigene Teilvorbereitung und Originalnachweise erhalten, als zurückgerollte Ausführung auditieren. Keine neue Fachoperation im selben Aufruf. |
+| `committing`, sämtliche Zielbytes und geplanten Abwesenheiten bereits erreicht, vollständige Zielwurzel gültig, ursprüngliche Quellenqualifikation journalgebunden belegt, Sicherung und Auftragsbindung gültig | Fehlende Abschluss-/Auditnachweise dauerhaft ergänzen und die geprüften Journalmengen abschließen; keine erneute normative Publikation. |
+| `committing` mit nur teilweise erreichtem Ziel; `rolling_back` | Ausschließlich anhand vollständiger überprüfter Before Images auf die bytegetreue ursprüngliche, weiterhin gesperrte Ausgangslage zurückrollen. Kein Vorwärts-Resume eines Teilziels. |
+| Beschädigte/fehlende notwendige Journale oder Before Images, nicht erklärter Mischstand, fremde Änderung oder unsichere Pfade | Keine geratenen Writes; Zustand und Nachweise erhalten, Sperre beibehalten und konkreten Integritäts-, Konflikt-, I/O- oder Sicherheitsbefund melden. |
+
+Für ein bereits vollständig veröffentlichtes, genau journalgebundenes Ziel
+gilt **SR-REQ-0258**: Nachträgliche Änderung oder Verlust der externen Quelle
+rechtfertigt weder das Zurückrollen dieses Ziels noch eine zweite
+Publikation. Die fehlenden Abschlussnachweise werden aus den überprüften
+ursprünglichen Journal-/Plan-/Sicherungsbytes ergänzt; eine inzwischen stale
+Herkunft wird als gesonderte Beobachtung ausgewiesen, nicht als frisch
+bestandene Quellenprüfung. Es werden dabei keine normativen Zielbytes mehr
+geschrieben. Ein nur teilweise veröffentlichtes Ziel folgt **SR-REQ-0511**.
+
+Ein Rollback aus eigenen dauerhaft gesicherten Originalbytes ist keine
+Publikation eines Restore-Ziels aus einer inzwischen geänderten Quelle.
+Vor jeder neuen Vorwärtspublikation bleiben sämtliche Herkunftsprüfungen aus
+10.7.2 zwingend. Beim Rückrollen darf nur ein durch eigene protokollierte
+Effekte erklärbarer Vorher-/Zielzustand verändert werden; fremde Bytes werden
+nicht überschrieben. Ursprünglich fehlende Dateien werden nur entfernt,
+wenn ihr jetziger Inhalt genau der eigenen veröffentlichten Datei entspricht.
+Eine zurückgerollte Ausführung erhält alle alten Sperren sowie ihren
+nachvollziehbaren Abschluss; sie ist kein erfolgreich wiederhergestelltes
+Projekt. Für einen weiteren Restore ist eine neue ausdrückliche Planung der
+nun tatsächlich vorhandenen Inventur erforderlich, keine automatische
+Neubindung oder Ausführung im Recovery-Aufruf.
+
+**Abschluss und Berichte.** Ein erfolgreicher Abschluss belegt die wirklichen
+Zielbytes, Zielwurzel, Sicherungsobjekte, Erhaltungsinventur, Originalquell- und
+Planbindung sowie den dauerhaften lokalen Audit. Der Audit trennt ursprünglichen
+Auftrag, beobachtete Dateieffekte, Autorisierungs-/Lockübernahmebelege und
+gegebenenfalls Rückroll-/Abschlussaktion. Historische negative fachliche
+Befunde bleiben ausgewiesen. Er enthält weder erfundene menschliche Reviews
+noch eine Releasefreigabe. Ein erneut vorgelegter bereits abgeschlossener
+Auftrag wird nur anhand seines passenden unveränderbaren Abschlussbelegs
+behandelt; er führt keine zweite normative Ausführung aus. Eine inzwischen
+abweichende Zielinventur erlaubt keinen erneuten Restore unter der alten
+Erfolgsbindung und wird als Konflikt Code 6 ausgewiesen.
+
+Bei zurückgerolltem oder ungelöstem Restore wird kein Restore-Erfolg gemeldet;
+`recovery_required=true` bleibt sichtbar. Fehlende Pflichtangaben ergeben 2,
+ungültige/unvollständige Belege 3, tatsächliche I/O-Probleme oder notwendige
+weitere Recovery 5, Bindungs-/Bestandskonflikte 6 und Sicherheits- oder
+Berechtigungsverletzungen 7. Diese Präzisierung schafft weder eine
+Read-only-Autorecovery noch eine neue Lock-Risikoausnahme. Workfortsetzung,
+weiche Budgets und der Verzicht auf freiwillige Pausen während `committing`
+folgen weiterhin Anhang N/O/P.
 
 ### 10.8 Scope Descriptor und Scope-Closure
 
@@ -4730,6 +4882,20 @@ Implementierung noch ein erfolgreicher Wiederherstellungs- oder Releasebeleg.
 Produktstand 642/900 und der offene Schritt 15.j.W bleiben unverändert;
 15.k/15.l werden nicht vorgezogen. Historische Nachweise bleiben unverändert.
 
+### 20.23 Restore-Ausführungspräzisierung v0.2.29
+
+`RESTORE-EXECUTION-CONTRACT`, delegiert gemäß `SPECROAD-DECISION-1`, bindet
+in 10.7.3 die bereits geforderte Restore-Ausführung an unveränderte
+Originalpläne, aktuelle Autorisierung, genaue eigene Betriebs-/Dateieffekte,
+dauerhafte Originalbytes und überprüfte Abschlussaudits. Die bestehende
+Abschluss-/Rollbackregel SR-REQ-0258/SR-REQ-0511 gilt auch bei später
+veränderter Herkunft; fremde Änderungen und unbeweisbare Zustände bleiben
+gesperrt. `restore-plan-v1` und alle Herkunfts-/Erhaltungs-/Reviewpflichten
+bleiben unverändert. Die neue Dokument- und aktive Katalogbindung ist
+kein Implementierungs-, Crash-, Wiederherstellungs- oder Releasebeleg.
+Produktstand 648/900 und die offenen 15.l.W/R/C-Abnahmen bleiben unverändert.
+Historische Nachweise behalten ihre ursprünglichen Bindungen.
+
 ## 21. Entscheidungsstatus und nicht blockierende Restpunkte
 
 | ID | Thema | Stand |
@@ -4772,6 +4938,7 @@ Die folgende Roadmap ist informativ und erzeugt keine Anforderungen an 0.2:
 
 | Version | Datum | Status | Änderung |
 |---|---|---|---|
+| 0.2.29 | 2026-10-26 | Delegierte Detailklärung nach SPECROAD-DECISION-1 | RESTORE-EXECUTION-CONTRACT: genaue eigene Betriebswrites, dauerhafte Originalbytes und konservativer Abschluss/Rollback der Restore-Ausführung; Umsetzung und Crashabnahme in 15.l bleiben offen. |
 | 0.2.28 | 2026-10-26 | Delegierte Detailklärung nach SPECROAD-DECISION-1 | RESTORE-PLAN-CONTRACT: geschlossener bytegebundener Restoreplan mit getrennten Quell-, Bestands-, Ziel- und Sicherungshashes; Umsetzung in 15.j–15.l bleibt offen. |
 | 0.2.27 | 2026-10-25 | PARTIAL-READ-GRAPH.C | Bereits festgelegte gemeinsame Grenzen und Abfragedomänen strukturell ordnen; Fachverhalten unverändert, 15.f.R bleibt offen. |
 | 0.2.26 | 2026-10-25 | PARTIAL-READ-GRAPH.R | Fehler-, Kontext- und Randfallgrenzen des Partial-Lesevertrags ergänzen; 15.f.R bleibt offen. |
@@ -7893,4 +8060,4 @@ Implementierungsschritten nachgewiesen sein.
 
 ---
 
-**Ende der SpecRoad-Produktspezifikation v0.2.28.**
+**Ende der SpecRoad-Produktspezifikation v0.2.29.**

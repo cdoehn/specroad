@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 23 · **Stand:** 26. Oktober 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.28
+**Planrevision:** 24 · **Stand:** 26. Oktober 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.29
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 Schritte und 900 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; jeder Schritt besitzt einen konkreten Arbeitsumfang und eigene Verhaltensabnahme.
 
@@ -9,7 +9,7 @@ Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 S
 
 Fachliche Grundlage ist [`docs/specification/SpecRoad_Spezifikation.md`](../specification/SpecRoad_Spezifikation.md), einschließlich aller konsolidierten Korrekturen, 742 Requirements, 51 Verifikationsverträge, 46 Szenario-/E2E-Identitäten sowie R-01 bis R-75, Anhang U und den PatchHarbor-Rundweg aus Anhang W. Der [`Prüfbericht`](../reviews/SpecRoad_v0.2.7_Implementierungsreife_Pruefbericht.md) ist ein vorgelagerter Entwurfsreview, kein späterer Produktnachweis.
 
-Gebundene Spezifikations-SHA-256: `1b076c7706a48dcf81c63f2cceaf87a263aa81ea71bfc126739deb76e4bd9f28`.
+Gebundene Spezifikations-SHA-256: `52d0aed48d928cf970f3936f671ec59d9a1fec328706bc8e6cbd55b6555a199f`.
 Planungsbasis: Commit `fe2661d02ecf2f7eb483b58a4487eb009c6b3846`; sauberes Result-Bundle `specroad_Result_120209_0914_df3504.zip`; Repository-ID `3d2576df-d611-46fc-9d2b-92869468aaca`. Diese Angaben dokumentieren die Entstehung des Plans, nicht die zukünftige Patchbindung. **Jedes spätere Patchpaket bindet den dann aktuellen tatsächlichen Result-Zustand.**
 
 Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 2026 gelten zusätzlich und bei den nachfolgend benannten Konflikten vorrangig. Sonstige normative Spezifikationsinhalte werden nicht stillschweigend abgeschwächt. Neue fachliche Widersprüche, fehlende zwingende Angaben und Sicherheitsprobleme sind offen zu benennen, nicht durch erfundene Annahmen oder Scheinerfolge zu lösen.
@@ -26,12 +26,12 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 23
+plan_revision: 24
 implementation_plan_commits_total: 900
 implementation_plan_commits_completed: 648
 last_completed_plan_commit: 15.k.C
 next_plan_commit: 15.l.W
-last_completed_numbered_bundle: 495
+last_completed_numbered_bundle: 496
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -59,6 +59,72 @@ in ihrer bisherigen Reihenfolge. M20 übernimmt die zusätzliche Gesamtmatrix
 in seinen vorhandenen Schritten 20.f, 20.h und 20.m.
 
 Nach tatsächlich erfolgreich ausgeführten, zum Commit passenden Verhaltenstests wird die betreffende Checkbox im selben Git-Commit gesetzt. Reguläre Produktcommits aktualisieren den Produktzähler; Audit-Nacharbeiten aktualisieren ausschließlich ihren Status und `next_audit_step`. Ein fehlgeschlagener Schritt bleibt offen. Git ist die Historie; das Dokument nimmt keinen eigenen noch unbekannten Commit-Hash auf. Vor dem nächsten Auftrag werden tatsächliche Git-Historie, Result-Logs und Planfortschritt abgeglichen. Bei Inkonsistenz nicht einfach weiterzählen.
+
+## OFF-PLAN – Gebundene Restore-Ausführung (Bundle 496)
+
+Revision 24 dokumentiert **RESTORE-EXECUTION-CONTRACT**, delegiert gemäß
+**SPECROAD-DECISION-1**. Spezifikation **0.2.29 / 10.7.3** präzisiert die
+bereits geforderte Ausführung mit Originalbindung, dauerhafter Sicherung,
+genau erklärbaren eigenen Dateieffekten und konservativer Fortsetzung.
+Entscheidungsbeleg, Alternativen, Grenzen und verbindliche offene Abnahmen
+stehen bei **15.l.W**. Der reguläre Stand bleibt **648/900**, zuletzt
+**15.k.C**, nächstens **15.l.W**.
+
+- [x] **RESTORE-EXECUTION-CONTRACT:** Restore-Ausführung und Wiederanlauf binden.
+  Commit: `docs(spec): Restore-Ausführung und Wiederanlauf binden`.
+
+Dies ist gemäß 2.4.3 ein echter OFF-PLAN-Dokumentcommit. Produktcode, Tests,
+Fixtures, Oracles, Testnummern, Runner, Workflows und historische Evidence
+bleiben bytegleich. Geändert werden Spezifikation, Plan und ausschließlich
+die aktiven Spezifikationshashfelder der **743** Katalogdateien. Es wird
+keine implementierte Restore-Ausführung oder erfüllte Produktabnahme behauptet.
+
+Vor seinem Commit prüft der externe Entrypoint genau **Sequenz 202 /
+Gruppe 1 von 3**, **7.200 Tests**, mit vier parallelen Workern. Erst nach
+Erfolg setzt er den Offplan-Marker und die Bundle-Nummer **496**. Der
+Produktzähler und sämtliche offenen 15.l.W/R/C-Checkboxen bleiben unverändert.
+Fehler erhalten den tatsächlichen Zustand und vorherige Commits. Nach
+nativer ZIP-Prüfung und atomarer Exchange-Veröffentlichung endet der
+Einzelauftrag mit `spec_clarification`.
+
+**Beobachtete gezielte Dev-Prüfung.** Die Dokument- und Katalogfassung
+besteht **54/54** bestehende Verhaltenstests aus `tests/test_catalog_check.py`
+und `tests/test_catalog_check_right.py` in **6.64 s**, mit **vier
+parallelen Workern**, CPython **3.14.4**, Exit **0** und ausschließlich
+`passed`-Einzeloutcomes. Ausgeführt wurde `tools/run_selected_tests.py
+--workers 4 --expected-tests 54` mit den beiden genannten vollständigen
+Dateien in einem frischen ignorierten Berichtsroot. Geprüft werden die von
+der Spezifikationshashbindung betroffenen maschinenlesbaren Katalog- und
+Auswahlverträge; keine Dokumentation, Darstellung oder noch nicht
+implementierte Restore-Ausführung.
+
+Die vollständige Collection-/Katalogprüfung bestätigt **21.604** aktive
+Tests, **0** Katalogfehler, Exit **0** und **0** ausgeführte Testkörper.
+Die **21.608** dauerhaft reservierten Nummern einschließlich vier historisch
+entfernter Identitäten bleiben bytegleich. Produktcode, Testdateien,
+Fixtures, Oracles, Runner, Workflows und historische Evidence ändern sich
+nicht. Die **743** aktiven Katalogdateien ändern ausschließlich
+`specification_sha256`; einschließlich Spezifikation und Plan sind es
+**745** geänderte Bestandsdateien, keine neuen Produktdateien oder Löschungen.
+
+Gebundener Entwicklungsquellhash:
+`41e838822dfdf5affe669012b173a467a474beceac4bbbdf2f9b45d3679f1cb2`;
+Katalogvertrag-SHA-256:
+`eb4572bad661afaf724bef2c484f7ad27885748aede62e88674a943610db346b`;
+Auswahlbericht-SHA-256:
+`fe326fbff8cab21275adb0b4edf333ed10d2aa400aecbd63fed465bab6790820`;
+Einzeloutcomes-SHA-256:
+`3606d3070201722c264f2db8655d02cc3da70eb70ea92b95730657ab935db163`.
+Dies ist ausdrücklich eine Teilprüfung mit `full_suite_passed=null`;
+kein vollständiger oder serieller Testlauf und kein Releasebeleg.
+
+Der bestätigte vorherige Apply-Nachweis für 15.k.C ist davon getrennt:
+Auswahlbindungs-SHA-256 `7cd748ce16b8ccac15e7a9d51473b43a00448bb8e306289241e172ff4142a6d4`,
+Bericht-SHA-256 `cd90cd9ec6f303cf8b282605bb136a4b17fe18d17bacf31d5c8df41625b13536` und
+Einzeloutcomes-SHA-256 `3c391f051958510936370ef72491b864da8c44790fa86c2b40b14d914cc87d3f`.
+Die vorgesehene neue Apply-Gruppe und der OFF-PLAN-Commit sind bei dieser
+Übergabe noch nicht ausgeführt. Native ZIP-Prüfung und atomare Veröffentlichung
+beenden den Einzelauftrag; 15.l.W bleibt offen.
 
 ## OFF-PLAN – Gebundener Restore-Plan (Bundle 489)
 
@@ -29295,7 +29361,142 @@ oder Hintergrundfortsetzung.
 
 **Umsetzung:** Gebundene Sicherung, Quellenprüfung und vollständige Recoverypublikation samt Audit ausführen.
 
-**Verhaltensabnahme:** Erfolgreicher Restore erreicht genau die im Plan gebundene Zielwurzel.
+**Verhaltensabnahme:** Erfolgreicher Restore erreicht genau die im Plan gebundene Zielwurzel. Die Ausführungsbindung aus 10.7.3 gilt; die folgenden offenen Abnahmen gehören zum bestehenden Umfang.
+
+**OFF-PLAN-Entscheidungsbeleg RESTORE-EXECUTION-CONTRACT, 26. Oktober 2026.**
+
+**Auftrag und konkrete Lücke.** Der bestätigte offene Schritt ist **15.l.W**,
+Position **649/900**, nach tatsächlich committetem **15.k.C**. Die Abschnitte
+10.7.1–10.7.2 verlangen ursprüngliche Bestandsbindung, dauerhafte Sicherung,
+ein separates Restore-Journal und Wiederherstellung nach Hostabbruch. Eigene
+Journal-/Sicherungswrites und bereits veröffentlichte Zieldateien verändern
+aber gerade die inventarisierten Pfade. Noch nicht konkretisiert war, wie ein
+erneuter Aufruf eigene Effekte von einer fremden Bestandsänderung unterscheidet,
+auf welche beweisbaren Restorezustände die bestehende Abschluss-/Rollbackregel
+angewendet wird und wann alte aktive Journale bei erhaltenem Audit die Sperre
+verlassen dürfen.
+Ein stilles Aktualisieren des Planhashs oder Ignorieren von `.specroad/`
+wäre keine zulässige Implementierungswahl.
+
+**Tatsächlich geprüfte Grundlagen.** Das vollständig geprüfte saubere Result
+`specroad-apply_Result_140004_1026_29f37b.zip`, SHA-256
+`12e7b9656dfa28a51e36109f46e8289b5576cf4b8c069a6fe2567e6a8d9b5130`,
+bindet Commit `a578270d13fc431b7d3223069217bc1774a3b825`, Repository
+`a33ed6cf-0a97-4b73-b11a-d4239e7a2145`, Fingerprint
+`7c9d2a24e397e0e5`, Algorithmus `patchharbor-state-v1`.
+Generierte Root-Anleitung, Kontext, Umgebung, Manifest, Run-/Ausführungslogs,
+alle **2.292** Snapshotdateien samt Blob-IDs/Modi, tatsächlicher Apply-Stand,
+vorheriges Paket und dessen echte Testreceipts stimmen überein.
+**15.k.C** entstand nach **7.202/7.202** bestandenen parallelen Apply-Tests,
+**Sequenz 201 / Gruppe 0**, vier Worker, **2269.63 s**. Der tatsächliche
+Planstand ist **648/900**, Bundle **495**; kein angenommener Apply-Erfolg.
+
+Spezifikation 0.2.28, 2.4, 10.6–10.7.2, 11.7, Anhang C.1–C.3,
+N.3, O.4 und P sowie `SR-REQ-0461`, `SR-REQ-0462`, die bestehenden
+Abschluss-/Rollbackregeln `SR-REQ-0258`/`SR-REQ-0511`, `SR-VER-0019`,
+`SR-VER-0031` und R-44–R-47 wurden abgeglichen. Technisch geprüft wurden
+die native Restoreplan-/Bestandsprüfung in `recovery/`, der gemeinsame
+Root-Mutex und Recovery-Lock, die explizite Ownerübernahme, Journal-/
+Before-Image-/Staging- und Recovery-Auditprimitiven in `changes/` sowie
+`model/operational_paths.py`. Der bisherige Planprüfer lehnt operative
+Historie noch explizit ab; das ist ein offener Provider, kein künftiger
+Ausnahmetatbestand. Die normale Transaktionsrecovery setzt ein gültiges
+eigenes Journal voraus und darf nicht durch einen künstlichen Change Plan
+für ein beschädigtes Ausgangsmodell ersetzt werden.
+
+**Untersuchte Alternativen.**
+
+1. Den Plan nach eigenen Writes neu inventarisieren oder betriebliche Wurzeln
+   pauschal ausnehmen: verworfen. Das würde die ursprüngliche Nutzerbindung
+   verlieren und fremde Änderungen als eigenen Fortschritt akzeptieren.
+2. Ein unterbrochenes Teilziel unter dem ursprünglichen Journal automatisch
+   weiter veröffentlichen: verworfen wegen der bestehenden Abschluss-/
+   Rollbackregel aus SR-REQ-0258/SR-REQ-0511 und Anhang C.3/N.3. Die Lücke
+   rechtfertigt keine neue Recoverystrategie parallel zur vorhandenen.
+3. **Gewählt:** unveränderter Originalplan plus getrennte genaue betriebliche
+   Ausführungsbindung. Eigene Dateieffekte werden gegen gebundene Original-/
+   Zielbytes geprüft. Ein nachweislich vollständig veröffentlichtes
+   Ziel wird gemäß SR-REQ-0258 ohne erneute normative Writes abgeschlossen;
+   ein Teilziel wird ausschließlich auf die ursprünglichen gesicherten Bytes
+   zurückgerollt.
+   Nicht beweisbare Zustände bleiben gesperrt. Das entspricht der vorhandenen
+   Recoveryrichtung und benötigt keine Datenverlustfreigabe oder neue
+   Produktfunktion.
+
+**Verbindliche Zielregel.** Spezifikation **0.2.29 / 10.7.3** legt
+`restore-execution-v1` fest: erneute aktuelle Autorisierung und Root-/
+Ownerbindung, vollständige lokale Sicherung vor `committing`, genaue eigene
+Dateiinventur statt pauschaler Pfadausnahme, nachvollziehbare Dateieffekte,
+konservative Wiederholung und Audit vor Freigabe der alten aktiven
+Journalmenge. Die geschlossene `restore-plan-v1`-Hülle bleibt unverändert.
+Der Vorrang der expliziten SR-REQ-0258 nach 2.1 wird gewahrt: Eine erst nach
+vollständiger Publikation stale Herkunft löst keinen Rollback aus. Abschluss
+ohne neue normative Writes ist keine neue Restoreveröffentlichung; die
+ursprüngliche Quellenqualifikation und die aktuelle Beobachtung bleiben im
+Audit getrennt. Rückrollen eines Teilziels aus dauerhaft gesicherten Before
+Images ist keine Erlaubnis zur Vorwärtspublikation aus einer inzwischen
+geänderten Quelle. Eine neue Restoreausführung verlangt eine neue explizite
+Planung des tatsächlichen
+Bestands; die ursprüngliche Fachoperation startet nicht beiläufig im selben
+Recovery-Aufruf.
+
+**Befugnis und Grenzen.** Autorität: **delegiert gemäß SPECROAD-DECISION-1**;
+keine behauptete persönliche Einzelbestätigung, kein fingierter Review und
+keine Risikoakzeptanz. Die Detailregel liegt vollständig innerhalb des
+bereits zugesagten Restore-/Crashumfangs von 15.l. Sie schwächt weder
+Requirement noch Quelle, Historienerhaltung, verpflichtende Provider,
+Kompatibilität, sichere Locks, menschliche Reviews, Operatorzustimmung oder
+Releasegates. Vollständige Herkunftsprüfung vor Vorwärtspublikation,
+ursprüngliche Bytes, ausgeführte fachliche Negativbefunde und abgeschlossene
+Receipts bleiben erhalten. Die Änderung führt keine Konten-/Auth-Infrastruktur,
+kein Data-Loss-Flag, keinen neuen Schreibbefehl und keine Pflicht zur Verwendung
+eines Online-Dienstes ein. Vorhandene Request-ID- und Actorregeln bleiben gleich.
+Es werden keine unverfügbaren externen Fakten vorausgesetzt. Die Entscheidung
+ist durch eine spätere ausdrückliche Versionierung rücknehmbar; gespeicherte
+Pläne, Journale, Backups und Belege werden dafür weder migriert noch gelöscht.
+W/R/C, TD-001 und BD-001 bleiben unverändert.
+
+**Verbindliche offene Abnahmen im bestehenden Schritt.**
+
+- **15.l.W / R-44:** Ein ausdrücklich autorisierter Restore aus beiden
+  vollständigen Quellarten erreicht exakt das gebundene Ziel, nachdem echte
+  Originalbytes und sämtliche betroffenen alten Journal-/Stagingbytes lokal
+  dauerhaft gesichert und wiedergeprüft sind. Audit bindet Quelle, Plan,
+  Bestand, Erhaltung, Ziel und Sicherung. Beschädigte Ausgangsbytes erhalten
+  keinen erfundenen Modellroot. Alte abgeschlossene Receipts bleiben erhalten.
+- **15.l.W/R / R-47:** Eigene Journal- und Sicherungswrites machen die
+  Originalbindung nicht stale; zusätzliche oder veränderte fremde Dateien
+  innerhalb derselben Betriebswurzeln bleiben ein Konflikt. Derselbe Plan
+  oder ein Journal allein erteilt keine Autorisierung oder Ownerübernahme.
+  Aktiver Mutex, geänderter Owner und nicht ausreichend belegte Übernahme
+  bleiben gesperrt. Read-only-Diagnosen und abgewiesene Vorprüfung schreiben
+  keine Projekt- oder Betriebsdaten.
+- **15.l.R:** Tatsächliche Prozessabbrüche an jeder dauerhaften Grenze,
+  insbesondere zwischen Dateieffekt und Cursor, Sicherung und `committing`,
+  vollständigem Ziel und Audit sowie Archivierung und Freigabe, erhalten
+  Daten und Sperre. Nachweislich vollständig veröffentlichtes Ziel wird nach
+  SR-REQ-0258 ohne zweite normative Publikation abgeschlossen, auch wenn die
+  externe Quelle erst danach verschwindet; deren aktuelle Beobachtung bleibt
+  getrennt. Teilziel und `rolling_back` werden
+  bytegleich auf den ursprünglichen weiterhin gesperrten Stand zurückgeführt.
+  Nicht beweisbare Zustände melden keinen Restore-Erfolg.
+- **15.l.R:** Quelle fehlt/ändert sich nach Beginn, Backup ist unvollständig,
+  Hash/Journal wird manipuliert, fremder Inhalt tritt auf, Speicher/Sync
+  scheitert oder Ausgabe geht nach Commit verloren: keine neue Zielbindung,
+  kein Überschreiben fremder Bytes, kein Löschen alter Nachweise und kein
+  doppelter Restore. Einzellauf und Workfortsetzung prüfen dieselben
+  fachlichen Bindungen. Codes bleiben getrennt nach 10.7.3.
+- **15.l.C:** Native Lock-, Datei-, Staging-, Sicherungs- und Recoveryprimitiven
+  zusammenführen, ohne Fachresultate, Fehlerverträge oder Sperrgrenzen zu ändern;
+  sämtliche vorhandenen W/R-Verhaltensnachweise unverändert erneut prüfen.
+
+**Offene Umsetzung.** Dieses OFF-PLAN-Bundle enthält ausschließlich
+Spezifikation, Plan und aktive Kataloghashbindungen. Keine Restore-Ausführung,
+Autorisierung, Journal-/Archiv-/CLI-Implementierung oder Crash-Evidence wird
+vorgetäuscht. Alle 15.l.W/R/C-Checkboxen und der Produktzähler bleiben offen
+beziehungsweise unverändert. `SR-TC-0461` und `SR-TC-0462` bleiben **partial**;
+weitere Schutz-/Lifecycle-/Receiptprovider bleiben vor Gesamt-Restoreabnahme
+zwingend. Der nächste Control-Auftrag setzt 15.l.W nach gebundenem Apply um.
 
 #### 15.l.R – Make it Right
 
