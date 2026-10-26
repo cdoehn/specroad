@@ -5,13 +5,10 @@ from unicodedata import normalize
 
 from ..changes._lock_files import LockFiles
 from ..model.canonical import canonical_json_sha256
-from ..model.operational_paths import TRANSACTIONS_ROOT, REQUESTS_ROOT, RECOVERY_ROOT
 from ..security import ProjectBoundary
 from ..security.resource_access import opened_resource, directory_entries
-from ._codec import file_row, minimal_roots, root_path, safe_path, namespace
+from ._codec import file_row, root_path, safe_path, namespace
 from .values import require
-
-OPERATIONAL_ROOTS = (TRANSACTIONS_ROOT, REQUESTS_ROOT, RECOVERY_ROOT)
 
 
 def boundary(root):
@@ -20,10 +17,6 @@ def boundary(root):
     result = ProjectBoundary(root)
     require(str(result.root) == value, 'restore_canonical_root_required', exit_code=7)
     return result
-
-
-def inventory_roots(source, current):
-    return minimal_roots(['specroad.json', *source.managed_paths, *current.managed_paths, *OPERATIONAL_ROOTS])
 
 
 def check_aliases(bound, path):

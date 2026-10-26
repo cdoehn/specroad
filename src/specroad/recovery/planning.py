@@ -5,8 +5,10 @@ from pathlib import Path
 from ..changes.target_model import _default_scope
 from ..model.canonical import canonical_json_bytes, canonical_json_sha256
 from ._codec import file_row, file_table
-from ._current_evidence import BASELINES, observe_configuration, current_configuration
-from ._inventory import boundary, observe, read_source, inventory_roots
+from ._coverage import inventory_roots
+from ._current_evidence import BASELINES, current_configuration
+from ._inventory import boundary, observe, read_source
+from ._observations import observe_configuration, verify_live as _verify_live
 from ._plan_checks import assemble_target, check_current
 from ._sources import reconstruct
 from ._validation import validate_project
@@ -81,23 +83,6 @@ def prepare_restore_plan(project_root, *, source_root, source_path, source_kind,
     plan = RestorePlan(canonical_json_bytes(data))
     _verify_live(plan, project, origin)
     return plan
-
-
-def _verify_live(plan, project, origin):
-    data = plan.data
-    source = data['source']
-    require(str(project.root) == data['project_root'] and str(origin.root) == source['root'],
-            'restore_root_binding_changed', exit_code=6)
-    try:
-        for row in [source, *source['dependencies']]:
-            raw = read_source(origin, row['path'])
-            require(file_row(row['path'], raw) == {k: row[k] for k in ('path', 'size', 'sha256')},
-                    'restore_source_changed', path=row['path'], exit_code=6)
-        inventory, _ = observe(project, data['inventory']['roots'])
-        require(inventory == data['inventory'], 'restore_inventory_changed', exit_code=6)
-    except FileNotFoundError as error:
-        raise RestoreError('restore_input_disappeared', exit_code=6) from error
-    project._check_root(); origin._check_root()
 
 
 @guarded

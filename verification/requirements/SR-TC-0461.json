@@ -189,7 +189,6 @@
     "tests/test_restore_plan_right.py::test_wire_json_syntax_and_encoding_fail_without_any_project_access[utf8]"
   ],
   "open_items": [
-    "15.j.C: structural separation and cleanup with all W/R behavioral results, failure classes and write restrictions preserved.",
     "15.k: fold younger protected history and dependency closure; integrate stored lifecycle/specialist and completed-receipt publication evidence. Unsupported cases remain explicit failures, not qualified partial plans or permanently exempted project contents.",
     "15.l: external CLI plan publication, separately authorized locked execution, durable recovery archive/journal/audit and crash-safe completion. No executed restore or full SR-REQ-0461 acceptance is claimed."
   ]

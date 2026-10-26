@@ -13,7 +13,6 @@ from ..model.errors import ModelError
 from ..model.paths import artifact_path
 from ..model.record_schemas import validate_record_fields
 from ..storage.json_syntax import parse_json_object
-from ._inventory import observe, read_source
 from ._sources import baseline_objects
 from .values import require
 
@@ -80,31 +79,3 @@ def current_configuration(files, roots):
         return files[path]
 
     return _retained(_baseline_files(files), read)
-
-
-def observe_configuration(bound):
-    """Discover the old roots without write preflight, holding exact evidence.
-
-    The subsequent full inventory must contain every observed evidence byte
-    and the complete Baseline namespace; the passive reader repeats the proof.
-    """
-    try:
-        raw = read_source(bound, 'specroad.json')
-    except FileNotFoundError:
-        raw = None
-    evidence = {'specroad.json': raw}
-    configuration = _intact(raw)
-    if configuration is not None:
-        return configuration, evidence, None
-    inventory, baselines = observe(bound, [BASELINES])
-    evidence.update(baselines)
-
-    def read(path):
-        content = read_source(bound, path)
-        require(path not in evidence or evidence[path] == content,
-                'restore_inventory_changed', path=path, exit_code=6)
-        evidence[path] = content
-        return content
-
-    configuration = _retained(baselines, read)
-    return configuration, evidence, inventory

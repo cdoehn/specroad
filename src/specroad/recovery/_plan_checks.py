@@ -7,7 +7,7 @@ from ..model.record_schemas import validate_record_fields
 from ..storage.json_syntax import parse_json_object
 from ._codec import file_row, file_table, namespace
 from ._current_evidence import current_configuration
-from ._inventory import inventory_roots, OPERATIONAL_ROOTS
+from ._coverage import inventory_roots, OPERATIONAL_ROOTS
 from ._sources import reconstruct
 from ._validation import validate_project
 from .values import require
