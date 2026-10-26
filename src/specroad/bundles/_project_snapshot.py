@@ -18,7 +18,7 @@ from ..storage.json_syntax import parse_json_object
 from ..storage.project import ProjectSource
 from .errors import BundleError
 from .manifest import MANIFEST_NAME, owned_metadata, check_entries, require
-from ._receipts import ReceiptSnapshot
+from ._receipt_snapshot import ReceiptSnapshot
 
 
 def _previous_manifest(source):

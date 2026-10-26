@@ -26,6 +26,8 @@ def payload_model(container, *, partial=False):
     files = container.files
     from ._receipts import verify_payload_receipts
     receipts = verify_payload_receipts(container)
+    # Keep transport receipt hashes out of the native model-resource pipeline.
+    model_files = {path: raw for path, raw in files.items() if path not in receipts}
     configuration = ProjectConfiguration(parse_json_object(files['specroad.json']))
     registry_binding = configuration.data.get('language_registry')
     registry_path = None if registry_binding is None else registry_binding['path']
@@ -35,8 +37,8 @@ def payload_model(container, *, partial=False):
         registry = LanguageRegistry(files[registry_path], expected_sha256=registry_binding['sha256'],
                                     expected_version=registry_binding['registry_version'])
     documents, resources, profiles, packages, attachments = [], [], [], {}, {}
-    for path, raw in files.items():
-        if path == 'specroad.json' or path in receipts or (partial and path.startswith('bundle-context/')):
+    for path, raw in model_files.items():
+        if path == 'specroad.json' or (partial and path.startswith('bundle-context/')):
             continue
         kind = classify_path(path, configuration)
         document = ModelDocument(path, raw)

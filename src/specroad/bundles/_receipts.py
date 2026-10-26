@@ -1,4 +1,4 @@
-"""Completed operational bytes, checked separately from the normative model.
+"""Pure operational byte checks, separate from model hashes and filesystem proof.
 
 The portable set contains native archived completion markers and their linked
 receipts. It never contains active work, and supplies no live publication proof.
@@ -7,12 +7,10 @@ import re
 from hashlib import sha256
 
 from ..changes.receipt_projection import request_for_transaction
-from ..changes.receipt_read import read_transaction_completion
 from ..changes.receipt_values import (CommittedJournal, TransactionReceipt,
     RequestReceipt, ReceiptError, completion_marker_path)
 from ..model.canonical import canonical_json_bytes
 from ..model.operational_paths import REQUESTS_ROOT, RECEIPTS_ROOT
-from ..security.resource_access import opened_resource, directory_entries
 from ..storage.json_syntax import parse_json_object
 from .errors import BundleError
 from .manifest import require
@@ -95,73 +93,18 @@ def verify_payload_receipts(container):
     return files
 
 
-def _observe(source):
-    records, directories = {}, {}
-
-    def names(path, optional=False):
-        with opened_resource(source.boundary, path, directory=True, missing_ok=optional) as (fd, info):
-            if fd is None:
-                directories[path] = None
-                return ()
-            entries = directory_entries(source.boundary, path)
-            directories[path] = ((info.st_dev, info.st_ino), entries)
-            return entries
-
-    paths = []
-    for name, directory in names(REQUESTS_ROOT, True):
-        path = REQUESTS_ROOT + '/' + name
-        require(not directory and _path_kind(path) == 'request', 'bundle_receipt_path_invalid')
-        paths.append(path)
-    for name, directory in names(RECEIPTS_ROOT, True):
-        require(directory and re.fullmatch('[0-9a-f]{64}', name) is not None, 'bundle_receipt_path_invalid')
-        parent = RECEIPTS_ROOT + '/' + name
-        entries = names(parent)
-        require(set(entries) == {('transaction.json', False), ('committed.json', False)},
-                'bundle_receipt_completion_missing', code='SRV060')
-        paths.extend(parent + '/' + child for child, _ in entries)
-    for path in sorted(paths):
-        with opened_resource(source.boundary, path) as (_, info):
-            records[path] = ((info.st_dev, info.st_ino), source.boundary.read_bytes(path))
-    source.check_current()
-    return records, directories
-
-
-class ReceiptSnapshot:
-    """Retain bytes and bounded directory observations through publication."""
-
-    def __init__(self, source, *, imported_manifest=None):
-        self.source = source
-        self.records, self.directories = _observe(source)
-        self.payloads = {p: record[1] for p, record in self.records.items()}
-        if imported_manifest is not None:
-            manifest = parse_json_object(imported_manifest)
-            _check_exclusions(manifest)
-            # A complete group can disappear without leaving an orphan. Its
-            # previously observed transport binding still forbids silently
-            # certifying an empty or smaller history, even on explicit exclusion.
-            for entry in manifest['entries']:
-                if not receipt_path(entry['path']):
-                    continue
-                raw = self.payloads.get(entry['path'])
-                if (raw is None or len(raw) != entry['size']
-                        or sha256(raw).hexdigest() != entry['sha256']):
-                    raise BundleError('bundle_imported_receipt_missing_or_changed', code=None, exit_code=6)
-        self.journals = completed_receipts(self.payloads, source.configuration.project_id)
-        self.verify_current()
-
-    def _recheck_files(self):
-        try:
-            current = _observe(self.source)
-        except BundleError as error:
-            raise BundleError('bundle_receipt_inventory_changed', code=None, exit_code=6) from error
-        if current != (self.records, self.directories):
-            raise BundleError('bundle_receipt_inventory_changed', code=None, exit_code=6)
-
-    def verify_current(self):
-        self._recheck_files()
-        try:
-            for journal in self.journals:
-                read_transaction_completion(self.source, journal.data['transaction_id'])
-        except ReceiptError as error:
-            raise BundleError(error.reason, code=None, exit_code=error.exit_code) from error
-        self._recheck_files()
+def verify_imported_receipts(imported_manifest, payloads):
+    """Check historical transport hashes independently of the model domain."""
+    if imported_manifest is not None:
+        manifest = parse_json_object(imported_manifest)
+        _check_exclusions(manifest)
+        # A complete group can disappear without leaving an orphan. Its
+        # previously observed transport binding still forbids silently
+        # certifying an empty or smaller history, even on explicit exclusion.
+        for entry in manifest['entries']:
+            if not receipt_path(entry['path']):
+                continue
+            raw = payloads.get(entry['path'])
+            if (raw is None or len(raw) != entry['size']
+                    or sha256(raw).hexdigest() != entry['sha256']):
+                raise BundleError('bundle_imported_receipt_missing_or_changed', code=None, exit_code=6)

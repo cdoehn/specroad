@@ -28,10 +28,10 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ```yaml
 plan_revision: 22
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 635
-last_completed_plan_commit: 15.g.R
-next_plan_commit: 15.g.C
-last_completed_numbered_bundle: 481
+implementation_plan_commits_completed: 636
+last_completed_plan_commit: 15.g.C
+next_plan_commit: 15.h.W
+last_completed_numbered_bundle: 482
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -27308,7 +27308,7 @@ ohne Result-Warten oder Hintergrundfortsetzung.
 
 #### 15.g.C – Make it Clean
 
-- [ ] **15.g.C** · Position **636/900** · Voraussetzung: `15.g.R`.
+- [x] **15.g.C** · Position **636/900** · Voraussetzung: `15.g.R`.
 **Exakte Commit-Message:** `15.g.C refactor(bundle): Receipts und portable Idempotenz bereinigen`
 
 **Bereinigung:** Fachpayload und betriebliche Nachweise getrennt hashen und auswerten.
@@ -27316,6 +27316,132 @@ ohne Result-Warten oder Hintergrundfortsetzung.
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
 **Regressionsabnahme:** Alle vorhandenen W-/R-Verhaltenstests dieses Schritts und die vom Refactoring betroffenen bisherigen Verhaltenstests erneut ausführen; erwartete Fachwerte nicht passend zum Refactoring umschreiben. Bei reinen Präsentations-/Dokuschritten keine solchen Tests erfinden.
+
+
+**Umsetzungs- und Übergabenachweis – Bundle 482 (C), 26. Oktober 2026.**
+
+**Bestätigte Basis.** Result `specroad-apply_Result_223023_1025_58657c.zip`,
+SHA-256 `848634ea34e6d97341fca57cae120804c3885ef6ced05c1020b4ab36d8c757d1`,
+bestätigt den sauberen Apply-Commit `19828070b5869a343fac523f0c35f19a98ca34b7`,
+Parent `6cef980a226df8d5c0b5d92a433d49068a7ec6ce`, für **15.g.R**, Bundle 481.
+Root-Anleitung, Kontext, Umgebung, Manifest, Run-/Ausführungslogs und sämtliche
+**2.264** Snapshotdateien wurden geprüft. Blob-IDs, Größen, Modi und Bytes
+stimmen mit dem tatsächlichen sauberen Apply-Zustand überein. Die native
+Resultprüfung und konsistente lesende Zustandserfassung bestätigen die exakte
+Vierfachbindung; das Result war eindeutig maßgeblich und noch unverbraucht.
+
+Die tatsächliche Commitfolge und die gebundenen Apply-Einzeloutcomes belegen
+**7.089/7.089** bestandene Tests, Sequenz **187**, Gruppe **1/3**, vier
+parallele Worker, **2.060,41 s**, Prozessende 0. Auswahlbindung
+`28c61b67fa86d2a0adad35319aae6eae8513cc800b5336ed0d5b2d42217c16ef`; Auswahlbericht-SHA
+`59fea02f1174c9c37a107197206bb31a8a11df0bd24dc972df4ec5c859c58523`; Einzeloutcomes-SHA
+`deb05497c652c0671d99a3172a6a04a210e4d804617064a99f8a49d7e10eabbb`. Dies ist ein Teiltest, kein Vollsuite- oder
+Release-Erfolg. Bestätigt sind **635/900**, zuletzt 15.g.R, nächstens 15.g.C,
+Bundle 481. Die nach dem vorigen Handoff zurückgebliebenen Dev-Planmarker
+wurden zunächst auf den tatsächlichen Resultstand synchronisiert; Dev-Historie,
+Index und lokale Arbeitsregeln bleiben unverändert. Apply wurde nur gelesen.
+
+**Reine strukturelle Bereinigung.** SPECROAD-DECISION-1 wurde in den
+maßgeblichen Projektvorgaben geprüft. Die bestehenden Vorgaben aus 10.9,
+10.16, E.1.1 und SR-REQ-0487/0488/0490 bestimmen diesen Schritt vollständig;
+eine neue normative Entscheidung ist nicht erforderlich. Spezifikation
+**0.2.27** bleibt bytegleich, SHA-256
+`07a35f089e83d27045e76a57aa5b3d5d0061dd0556543b4765da5f114e1ae637`.
+
+`bundles/_receipts.py` enthält jetzt ausschließlich die Prüfung bereits
+vorliegender Receipt-Bytes: native Pfad-, Projekt-, Operations-, Request- und
+Abschlussbindungen, konsistente Ausschlussdeklaration und die unveränderte
+Größen-/SHA-Bindung zuvor transportierter Receiptpayloads. Die aus dem
+Konstruktor herausgelöste Prüfung `verify_imported_receipts` bleibt rein
+bytebezogen; sie erhält denselben Konfliktvertrag und dieselbe Prüfreihenfolge.
+
+`bundles/_receipt_snapshot.py` trägt separat die bisherige Dateisysteminventur,
+Inode-/Verzeichnisbeobachtung und native Completion-Prüfung vor Veröffentlichung.
+Die Beobachtungs- und Recheck-Funktionskörper wurden unverändert verschoben;
+das Projekt-Snapshotmodul verwendet den neuen internen Import. Es gibt keinen
+neuen Writer, Hashalgorithmus, Fallback oder Ersatz für die native Beweiskette.
+Dateisystemnachweise verleihen weiterhin weder Fachgültigkeit noch Schreibrecht.
+
+Die unabhängige Modellrekonstruktion bildet nach der Receiptprüfung eine
+explizite, geordnete Auswahl ohne Receiptpfade für ihre Ressourcenverarbeitung.
+Alle übrigen ursprünglichen Prüfungen, ihre Reihenfolge und Transportbindungen
+bleiben bestehen. Fachpayload wird weiterhin ausschließlich durch die nativen
+Modellmanifeste gehasht, Betriebsbytes über ihre eigenen Payloadhashes und
+Completion-Bindungen. Der gemeinsame Bundlecodec, kanonische ZIP-Bytes,
+Idempotenzscope, Fehlerklassen und erlaubte Seiteneffekte werden nicht verändert.
+
+SR-TC-0487/0488/0490 aktualisieren nur ihre offenen Nachweisgrenzen für den
+C-Zustand. Fixture, Orakel, Test-IDs und alle Testdateien bleiben bytegleich.
+Die Requirements behalten den Status `partial`; weitergehende plattform- und
+versionsübergreifende sowie Vollsuite-/Release-Nachweise bleiben offen.
+
+**Entwicklungsnachweis.** Die abschließende gezielte Regression besteht mit
+**1681/1681** Tests aus **33**
+vollständigen Testdateien, acht parallelen Workern unter CPython 3.14.4,
+**626.75 s**, beobachtetem Prozessende 0 und ausschließlich bestandenen
+Einzeloutcomes. Enthalten sind alle **81** unveränderten W-/R-Receiptfälle
+sowie betroffene Erzeugungs-, Verifikations-, Extraktions-, Partial-,
+Idempotenz-, Completion-, Recovery- und Runtimepfade. Es wurden keine neuen
+Tests oder an den Umbau angepassten fachlichen Erwartungswerte eingeführt.
+
+Die vollständige Collection/Katalogprüfung bestätigt **21.272** unveränderte
+aktive Testidentitäten bei **0** ausgeführten Testkörpern. Die Registry mit
+**21.276** dauerhaft nummerierten Identitäten einschließlich vier stillgelegter
+Nummern ist bytegleich. `full_suite_passed=null`: kein Entwicklungsvolltest,
+kein serieller Lauf, keine Darstellungs-/Dokumentationstests und kein CI-Start.
+Quellidentität `0dd0d1e9d954ed73b97502300463fcb3c5b1e55812e0c47bba8377d8ea1a0ae6`;
+Katalog-SHA `d647ddb2a5e59da2a0a709c34376bdfa03535ba6a0a00ef54dd665afae7d9e9e`;
+Auswahlbericht-SHA `1805ec9aee09ee7dde98cfbbbda1baf4ebc99d8767e5d4f43f818e52c70e681f`;
+Einzeloutcomes-SHA `0991b144088b742b7ff46ec7c6918495380f955d23c349d5b051d52a0b69482f`.
+Ausgewählte vollständige Testdateien:
+
+- `tests/test_bootstrap.py`
+- `tests/test_bundle_extraction.py`
+- `tests/test_bundle_extraction_right.py`
+- `tests/test_bundle_receipts.py`
+- `tests/test_bundle_receipts_right.py`
+- `tests/test_bundle_verification.py`
+- `tests/test_bundle_verification_right.py`
+- `tests/test_metadata.py`
+- `tests/test_normative_idempotency.py`
+- `tests/test_normative_idempotency_preplanning.py`
+- `tests/test_normative_idempotency_right.py`
+- `tests/test_partial_bundle.py`
+- `tests/test_partial_bundle_right.py`
+- `tests/test_partial_read_commands.py`
+- `tests/test_partial_read_commands_right.py`
+- `tests/test_partial_read_consumers.py`
+- `tests/test_preflight_metadata.py`
+- `tests/test_preflight_profiles.py`
+- `tests/test_product_bundle.py`
+- `tests/test_product_bundle_right.py`
+- `tests/test_project_bundle.py`
+- `tests/test_project_bundle_right.py`
+- `tests/test_publication_check.py`
+- `tests/test_publication_check_right.py`
+- `tests/test_requests.py`
+- `tests/test_runtime_consumption.py`
+- `tests/test_runtime_consumption_right.py`
+- `tests/test_transaction_preflight.py`
+- `tests/test_transaction_preflight_right.py`
+- `tests/test_transaction_receipts.py`
+- `tests/test_transaction_receipts_right.py`
+- `tests/test_transaction_recovery_completion.py`
+- `tests/test_transaction_recovery_completion_right.py`
+
+**Gebundene Übergabe.** Genau ein regulärer **PLAN 15.g.C**, Position
+**636/900**, wird durch den nativen Payloadwriter hergestellt. Der Entrypoint
+fordert den sauberen gebundenen Ausgangsstand und ausschließlich **Gruppe 2/3,
+Sequenz 188**, mit **7.092** parallelen Tests auf vier Workern. Quellidentität,
+vollständiger Katalog, feste Nummerierung und tatsächliche Auswahlbindung
+müssen übereinstimmen. Erst nach erfolgreichem Gate werden die fünf Planmarker
+auf C abgeschlossen, 636/900, zuletzt 15.g.C, nächstens 15.h.W und Bundle 482
+gesetzt. Erst danach folgt der Commit
+`15.g.C refactor(bundle): Receipts und portable Idempotenz bereinigen`.
+Die nächste Facharbeit 15.h.W bleibt offen. Apply-Tests und Commit sind
+vorgesehen, nicht bereits erfolgt. Fehler erhalten den tatsächlichen Zustand
+und erfolgreiche Commits. Native ZIP-Prüfung und atomare Exchange-Übergabe
+beenden diesen N-Auftrag ohne Result-Warten oder Hintergrundfortsetzung.
 
 <a id="step-15-h"></a>
 ### 15.h – Bundle als Vergleichsquelle

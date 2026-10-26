@@ -146,6 +146,6 @@
     "tests/test_bundle_receipts_right.py::test_whole_imported_receipt_group_cannot_disappear_on_reexport[publish-True]"
   ],
   "open_items": [
-    "15.g.R supplies the bounded robustness and conflict completion; 15.g.C structural cleanup remains open. The recorded selected runs are partial evidence, not full-suite, cross-version, release or real-approval proof. Apply evidence remains bound to the resulting actual commit."
+    "15.g.C separates pure receipt-byte validation from retained filesystem proof and the normative model-resource pipeline. Existing W/R behavior and test identities remain unchanged. Selected runs are partial evidence; full-suite, cross-version, release and real-approval proof remain open. Apply evidence remains bound to the resulting actual commit."
   ]
 }
