@@ -30,12 +30,13 @@
     "Interrupt the remaining nine bound recovery derivative writes, repeat native interruptions and abruptly stop processes; resume with audited native lock takeover, retain original images and prove independent basis/full-target bytes without a second normative replacement.",
     "Reject foreign empty/short/conflicting or unsafe files and concurrent prefix collisions; recheck journal, lock, live normative bytes and prior evidence before publication. Reuse complete records without changing their authority attribution; finish existing preserving cleanup.",
     "In fresh writer/recovery processes, reconstruct explicit building/prepared discard inputs and retain the original immutable audit and receipt through selected interrupted completion boundaries; compare independent basis bytes, repeated results and next-writer access.",
-    "Bind younger supported protected records and their original dependencies in the passive restore preservation/target inventory; reconstruct it independently and retain negative/stale findings without an execution claim."
+    "Bind younger supported protected records and their original dependencies in the passive restore preservation/target inventory; reconstruct it independently and retain negative/stale findings without an execution claim.",
+    "Close retained Baseline history before selecting exact Evidence dependency bytes; reject incompatible immutable identities and attachment bindings with code 6, unavailable originals with code 3, and rehashed plans that hide protected records in backup only."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Jede ausgeführte Recovery-Aktion MUSS einen unveränderbaren lokalen Auditdatensatz einschließlich der für Restore nach Kapitel 10.7.1 gebundenen Quellen-, Erhaltungs- und Zielinventur erzeugen.",
-    "scope": "Immutable evidence for explicit complete-target recovery, rollback, unpublished discard, work cleanup and transaction-bound orphan takeover under native locks. Original authority, owner/journal bindings and retained work inventories survive full-byte durability loss and real process stops. Hash consistency is not authentication. Bound rollback copies, cursor/terminal journals, completion receipts/marker and action/rollback receipts are published only after complete staging. Initial allocation/write failures expose no short canonical helper. Tested repeated native failures and real process stops remain explicitly resumable; foreign or altered bindings block publication, existing evidence retains its bytes and original authority, and mutation diagnostics retain possible operational changes. Selected persisted-input discard restart cases retain the original audit/receipt and complete basis without normative writes; interrupted completion resumes in a fresh process and preserves conflicting evidence. The passive restore subset additionally binds source/preservation/target byte inventories for supported immutable history. Durable restore action audit, comprehensive fault-injection and complete interrupted-action acceptance remain outside this scope."
+    "scope": "Immutable evidence for explicit complete-target recovery, rollback, unpublished discard, work cleanup and transaction-bound orphan takeover under native locks. Original authority, owner/journal bindings and retained work inventories survive full-byte durability loss and real process stops. Hash consistency is not authentication. Bound rollback copies, cursor/terminal journals, completion receipts/marker and action/rollback receipts are published only after complete staging. Initial allocation/write failures expose no short canonical helper. Tested repeated native failures and real process stops remain explicitly resumable; foreign or altered bindings block publication, existing evidence retains its bytes and original authority, and mutation diagnostics retain possible operational changes. Selected persisted-input discard restart cases retain the original audit/receipt and complete basis without normative writes; interrupted completion resumes in a fresh process and preserves conflicting evidence. The passive restore subset additionally binds source/preservation/target byte inventories for supported immutable history. Durable restore action audit, comprehensive fault-injection and complete interrupted-action acceptance remain outside this scope. R-46 Evidence/Baseline cases additionally verify order-independent exact archived attachment selection, shared dependency deduplication and precise conflict/missing-byte diagnostics without modifying historical records or current mutable subjects."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [
@@ -168,6 +169,34 @@
     "tests/test_restore_history.py::test_same_immutable_identity_with_different_bytes_is_a_conflict[evidence]",
     "tests/test_restore_history.py::test_younger_baseline_and_recursive_original_objects_are_explicit_history[baseline]",
     "tests/test_restore_history.py::test_younger_baseline_and_recursive_original_objects_are_explicit_history[project_bundle]",
+    "tests/test_restore_history_right.py::test_archived_attachment_is_selected_by_exact_binding_not_snapshot_order[False-baseline]",
+    "tests/test_restore_history_right.py::test_archived_attachment_is_selected_by_exact_binding_not_snapshot_order[False-project_bundle]",
+    "tests/test_restore_history_right.py::test_archived_attachment_is_selected_by_exact_binding_not_snapshot_order[True-baseline]",
+    "tests/test_restore_history_right.py::test_archived_attachment_is_selected_by_exact_binding_not_snapshot_order[True-project_bundle]",
+    "tests/test_restore_history_right.py::test_archived_identity_conflict_is_not_hidden_by_damaged_dependency[changed-baseline]",
+    "tests/test_restore_history_right.py::test_archived_identity_conflict_is_not_hidden_by_damaged_dependency[changed-project_bundle]",
+    "tests/test_restore_history_right.py::test_archived_identity_conflict_is_not_hidden_by_damaged_dependency[missing-baseline]",
+    "tests/test_restore_history_right.py::test_archived_identity_conflict_is_not_hidden_by_damaged_dependency[missing-project_bundle]",
+    "tests/test_restore_history_right.py::test_identical_dependencies_of_distinct_records_are_preserved_once[False-baseline]",
+    "tests/test_restore_history_right.py::test_identical_dependencies_of_distinct_records_are_preserved_once[False-project_bundle]",
+    "tests/test_restore_history_right.py::test_identical_dependencies_of_distinct_records_are_preserved_once[True-baseline]",
+    "tests/test_restore_history_right.py::test_identical_dependencies_of_distinct_records_are_preserved_once[True-project_bundle]",
+    "tests/test_restore_history_right.py::test_incompatible_protected_attachment_bindings_are_conflicts_even_without_bytes[first-baseline]",
+    "tests/test_restore_history_right.py::test_incompatible_protected_attachment_bindings_are_conflicts_even_without_bytes[first-project_bundle]",
+    "tests/test_restore_history_right.py::test_incompatible_protected_attachment_bindings_are_conflicts_even_without_bytes[missing-baseline]",
+    "tests/test_restore_history_right.py::test_incompatible_protected_attachment_bindings_are_conflicts_even_without_bytes[missing-project_bundle]",
+    "tests/test_restore_history_right.py::test_incompatible_protected_attachment_bindings_are_conflicts_even_without_bytes[second-baseline]",
+    "tests/test_restore_history_right.py::test_incompatible_protected_attachment_bindings_are_conflicts_even_without_bytes[second-project_bundle]",
+    "tests/test_restore_history_right.py::test_missing_and_changed_original_attachments_have_exact_nonconflict_diagnostics[changed-baseline]",
+    "tests/test_restore_history_right.py::test_missing_and_changed_original_attachments_have_exact_nonconflict_diagnostics[changed-project_bundle]",
+    "tests/test_restore_history_right.py::test_missing_and_changed_original_attachments_have_exact_nonconflict_diagnostics[missing-baseline]",
+    "tests/test_restore_history_right.py::test_missing_and_changed_original_attachments_have_exact_nonconflict_diagnostics[missing-project_bundle]",
+    "tests/test_restore_history_right.py::test_missing_nested_archive_bytes_are_not_replaced_by_current_mutable_files[changed-baseline]",
+    "tests/test_restore_history_right.py::test_missing_nested_archive_bytes_are_not_replaced_by_current_mutable_files[changed-project_bundle]",
+    "tests/test_restore_history_right.py::test_missing_nested_archive_bytes_are_not_replaced_by_current_mutable_files[missing-baseline]",
+    "tests/test_restore_history_right.py::test_missing_nested_archive_bytes_are_not_replaced_by_current_mutable_files[missing-project_bundle]",
+    "tests/test_restore_history_right.py::test_rehashed_plan_cannot_hide_conflicting_record_as_backup_only",
+    "tests/test_restore_history_right.py::test_source_evidence_obligations_participate_in_history_conflict_check",
     "tests/test_terminal_recovery.py::test_complete_target_action_is_immutable_across_authorized_retries",
     "tests/test_terminal_recovery.py::test_conflicting_recovery_action_is_never_replaced",
     "tests/test_terminal_recovery.py::test_discard_persists_canonical_receipt_bound_to_preserved_audit[building]",
@@ -233,6 +262,6 @@
   ],
   "open_items": [
     "Automatic transaction preflight (5.t), the comprehensive fault-injection matrix (5.v) and full-source restore (15.j-15.l) remain in their assigned plan positions; the existing explicit recovery kernels do not establish those integrations.",
-    "15.k.R/C and 15.l: remaining protected history providers, restore execution and durable action audit; passive qualified inventories are not an executed recovery or complete SR-REQ-0462 acceptance."
+    "15.k.C and 15.l: structural cleanup, restore execution and durable action audit. Remaining protected history providers are still mandatory before full restore acceptance; passive qualified inventories are not an executed recovery or complete SR-REQ-0462 acceptance."
   ]
 }
