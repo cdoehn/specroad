@@ -2,6 +2,7 @@
 from dataclasses import dataclass
 from hashlib import sha256
 from types import MappingProxyType
+from typing import Callable
 
 from ..graph.comparison_values import ComparisonInputs
 from ..graph.relations import SourceRelations
@@ -144,6 +145,7 @@ class ComparisonSourceSnapshot:
     resources: tuple
     _baseline_evidence: bytes | None
     _bundle_evidence: bytes | None
+    _bundle_recheck: Callable[[], bytes] | None
 
     def __init__(self, root, *, kind='local', reference=None, expected_project_id=None,
                  allow_partial=False):
@@ -194,6 +196,7 @@ class ComparisonSourceSnapshot:
         for key, value in (('kind', kind), ('source_root', source_root), ('commit_id', commit_id),
                            ('configuration', configuration), ('inputs', inputs), ('resources', resources),
                            ('_baseline_evidence', evidence if kind == 'baseline' else None),
+                           ('_bundle_recheck', finish if kind == 'bundle' else None),
                            ('_bundle_evidence', evidence if kind == 'bundle' else None), ('partial', partial)):
             object.__setattr__(self, key, value)
 

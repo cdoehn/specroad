@@ -45,7 +45,7 @@ def _diff_steps(root, against, *, against_kind='git', configuration_id=None,
         for snapshot in (before, after):
             if snapshot.partial is not None:
                 snapshot.partial.verify_current()
-        if against_kind in ('local', 'bundle'):
+        if against_kind == 'local':
             current_base = ComparisonSourceSnapshot(before.source_root, kind=against_kind,
                 expected_project_id=before.configuration.project_id, allow_partial=True)
             if current_base.sha256 != before.sha256:
@@ -54,6 +54,10 @@ def _diff_steps(root, against, *, against_kind='git', configuration_id=None,
             expected_project_id=after.configuration.project_id, allow_partial=True)
         if current.sha256 != after.sha256:
             raise ModelError('diff_source_changed')
+        if before._bundle_recheck is not None:
+            # Recheck the original boundary and bytes after the target reads.
+            # Never replace a captured source by validating a new file/root.
+            before._bundle_recheck()
         validate_result_document('artifact-diff-v1', payload)
         if payload['configuration_scope']['state'] == 'evaluated':
             diagnostics = tuple(Diagnostic('SRV131', 'error', 'model',

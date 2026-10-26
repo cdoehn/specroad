@@ -15,6 +15,9 @@ def bundle_source(filename, reference, expected_project_id):
     """Read an explicit ZIP, never extract it or supplement its owned payloads."""
     if reference is not None:
         raise ModelError('comparison_source_unavailable')
+    if not isinstance(filename, (str, Path)) or not str(filename).strip() or '\0' in str(filename):
+        raise ModelError('comparison_reference_required')
+    canonical_json_bytes(str(filename))
     path = Path(filename)
     boundary = ProjectBoundary(path.parent)
     raw = boundary.read_bytes(path.name)
@@ -33,7 +36,11 @@ def bundle_source(filename, reference, expected_project_id):
                              if classify_path(name, configuration) in CURRENT_JSON_CLASSES))
 
     def finish():
-        if boundary.read_bytes(path.name) != raw:
+        try:
+            current = boundary.read_bytes(path.name)
+        except FileNotFoundError as error:
+            raise ModelError('comparison_source_changed') from error
+        if current != raw:
             raise ModelError('comparison_source_changed')
         return canonical_json_bytes({**verified, 'source_bytes_rechecked': True})
 

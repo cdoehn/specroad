@@ -28,10 +28,10 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ```yaml
 plan_revision: 22
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 637
-last_completed_plan_commit: 15.h.W
-next_plan_commit: 15.h.R
-last_completed_numbered_bundle: 483
+implementation_plan_commits_completed: 638
+last_completed_plan_commit: 15.h.R
+next_plan_commit: 15.h.C
+last_completed_numbered_bundle: 484
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -27605,12 +27605,133 @@ ohne Result-Warten oder Hintergrundfortsetzung.
 
 #### 15.h.R – Make it Right
 
-- [ ] **15.h.R** · Position **638/900** · Voraussetzung: `15.h.W`.
+- [x] **15.h.R** · Position **638/900** · Voraussetzung: `15.h.W`.
 **Exakte Commit-Message:** `15.h.R feat(bundle): Bundle als Vergleichsquelle vervollständigen`
 
 **Vervollständigung:** Teilbundle oder fremde project_id nicht als vollständige Mergequelle verwenden.
 
 **Verhaltensabnahme:** Adapter greift nicht ergänzend auf zufällige aktuelle Dateien zurück. Die W-Nachweise bleiben zusätzlich grün.
+
+
+**Umsetzungs- und Übergabenachweis – Bundle 484 (R), 26. Oktober 2026.**
+
+**Bestätigte Basis.** Result `specroad-apply_Result_003316_1026_ef7238.zip`,
+SHA-256 `32a277c73d848f7195019d1090ccbae40fdc8f51dcb9adecc4d48f98ba166192`,
+bestätigt den sauberen Commit `252c33df4b5f97dcb044c40fa986155a8c9ef51e`,
+Parent `059bf135cb2e2a4bd780c99fb8a2797795c2be46`, für **15.h.W**, Bundle 483.
+Root-Anleitung, Kontext, Umgebung, Manifest, Run-/Ausführungslogs und alle
+**2.267** Snapshotdateien wurden geprüft. Blob-IDs, Größen, Modi und Bytes
+stimmen mit dem tatsächlich nur lesend geprüften Apply-Zustand überein.
+Native Resultprüfung und konsistente Zustandserfassung bestätigen die exakte
+Vierfachbindung; das Result war eindeutig maßgeblich und noch unverbraucht.
+
+Die tatsächliche Commitfolge und gebundenen Apply-Einzeloutcomes belegen
+**7.099/7.099** bestandene Tests, Sequenz **189**, Gruppe **0/3**, vier
+parallele Worker, **2.356,57 s**, Prozessende 0. Auswahlbindung
+`7732df5314e15e3c0c52b9bd4f8c17e6613ac4498ea6b84a59bc8a660c497d9f`; Auswahlbericht-SHA
+`685b7eaef9e2e2b93c4dfc78db25e4f62bfcf98f8c67b322f8c3472022d84e2c`; Einzeloutcomes-SHA
+`595e827d18548ba2d45dbb40cb42d6c2e03db734cffb59c1816d9db9417bd8d4`. Dieser Teiltest ist kein Vollsuite- oder
+Release-Nachweis. Bestätigt sind **637/900**, zuletzt 15.h.W, nächstens 15.h.R,
+Bundle 483. Nur die Dev-Planmarker wurden zuerst auf diese bestätigte Basis
+synchronisiert. Dev-Historie, Index und lokale Arbeitsregeln bleiben unverändert.
+
+**Reguläre R-Vervollständigung.** SPECROAD-DECISION-1 ist ausdrücklich
+in den maßgeblichen Projektvorgaben enthalten. SR-REQ-0114/0362, 10.16,
+Anhang E und die bestätigten M8-/M10-Quellenverträge bestimmen den Umfang.
+Eine neue normative Klärung ist nicht erforderlich. Die Spezifikation 0.2.27
+bleibt bytegleich mit SHA-256
+`07a35f089e83d27045e76a57aa5b3d5d0061dd0556543b4765da5f114e1ae637`.
+
+Die Bundlequelle behält ihre ursprüngliche sichere Dateigrenze und ihre
+eigenen ZIP-Bytes bis zur abschließenden Diff-Beobachtung. Diese Prüfung
+folgt nach den letzten lokalen Ziellesungen. Sie eröffnet einen inzwischen
+ersetzten Elternordner nicht als neue gültige Quelle. Beobachtetes
+Verschwinden oder Ersetzen der Datei führt zum bestehenden Änderungsfehler
+Code 6, auch bei beschädigten, fremden, partiellen oder nur anders
+formatierten Ersatzbytes. Eine ersetzte Dateigrenze bleibt ein Sicherheitsfehler
+Code 7. Anfangs fehlende Dateien behalten Code 5; anfangs ungültige Bundle- und
+Modelldaten behalten ihre nativen Fehler. Ungültige Dateiselektoren werden
+bereits vor dem Dateisystemzugriff abgewiesen. Die Beobachtung bleibt ausdrücklich
+nicht atomar und erteilt weder Freigabe noch Schreibrecht.
+
+Die zusätzlichen Verhaltenstests sichern echte verifizierte Teilbundles über
+Direkt-, CLI- und strukturierte Diff-Aufrufe ab. Fremde Projektpaare werden mit
+lokalen, Git- und Bundlequellen in beiden Richtungen verworfen. Fehlende Anhänge,
+Profile und Registrydaten, nicht unterstützte Schemas und eine fremde
+Manifestidentität werden nicht durch benachbarte gültige Projektdateien ergänzt.
+Die beiden Requirements bleiben **partial**: Die Registry-Vorbereitung ersetzt
+keinen vollständigen Dreiwege-Merge aus M17. Der W-Vergleichsvertrag für
+Projektkonfiguration und Artefaktfelder bleibt erhalten; andere Ressourcen und
+betriebliche Receipts werden dadurch nicht zu neuer Vergleichssemantik.
+15.h.C und die noch fehlenden vollständigen Merge-/Matrixnachweise bleiben offen.
+
+**Entwicklungsnachweis.** Der endgültige R-Zustand besteht
+**1664/1664** Tests aus **33**
+vollständigen Testdateien mit acht parallelen Workern unter CPython 3.14.4
+in **545.81 s**, beobachtetem Prozessende 0 und ausschließlich bestandenen
+Einzeloutcomes. Enthalten sind **40** neue R-Grenzfälle,
+alle 24 W-Bundlevergleichsfälle sowie die betroffenen Quellen-, Diff-, CLI-,
+Konfigurations-, Preflight-, Partial-, Receipt- und Bundle-Verifikationsregressionen.
+Die vollständige Collection/Katalogprüfung bestätigt **21336**
+aktive Testidentitäten und **0** ausgeführte Testkörper. Die Registry erhält
+nur die **40** neuen Nummern am Ende, insgesamt
+**21340** reservierte Nummern einschließlich vier stillgelegter.
+Keine bisherige Identität oder Nummer wurde geändert oder wiederverwendet.
+`full_suite_passed=null`: kein Entwicklungsvolltest, kein serieller Testlauf,
+keine Darstellungs-/Dokumentationstests, kein CI-Start.
+Quellidentität `5892bcef82dbf6a9af5439ec200c5c545dab844286d45e68d74c5e38a707a950`;
+Katalog-SHA `b144100bf015254b8c1687ae858186df0d094bc844c4ee574cb6d15292d89ee6`;
+Auswahlbericht-SHA `921ea09f5fdd344c156d7914dad495d84bffe92786d03812cf824c99f59aae19`;
+Einzeloutcomes-SHA `1991c7ee7322de0e2bddea7908339be1cb3c4cd21cdcf981c6d9bd54a356d35f`.
+Ausgewählte vollständige Testdateien:
+
+- `tests/test_baseline_comparison.py`
+- `tests/test_baseline_comparison_right.py`
+- `tests/test_bundle_comparison.py`
+- `tests/test_bundle_comparison_right.py`
+- `tests/test_bundle_receipts.py`
+- `tests/test_bundle_receipts_right.py`
+- `tests/test_bundle_verification.py`
+- `tests/test_bundle_verification_right.py`
+- `tests/test_capabilities.py`
+- `tests/test_capability_scope.py`
+- `tests/test_configuration_diff.py`
+- `tests/test_configuration_diff_right.py`
+- `tests/test_metadata.py`
+- `tests/test_partial_read_commands.py`
+- `tests/test_partial_read_commands_right.py`
+- `tests/test_partial_read_consumers.py`
+- `tests/test_preflight_metadata.py`
+- `tests/test_preflight_profiles.py`
+- `tests/test_product_bundle.py`
+- `tests/test_product_bundle_right.py`
+- `tests/test_project_bundle.py`
+- `tests/test_project_bundle_right.py`
+- `tests/test_query_comparison_sources.py`
+- `tests/test_query_comparison_sources_right.py`
+- `tests/test_query_git_source.py`
+- `tests/test_query_git_source_right.py`
+- `tests/test_query_read_integration.py`
+- `tests/test_query_read_integration_right.py`
+- `tests/test_query_semantic_diff.py`
+- `tests/test_query_semantic_diff_right.py`
+- `tests/test_requests.py`
+- `tests/test_scope_comparison.py`
+- `tests/test_scope_comparison_right.py`
+
+**Gebundene Übergabe.** Genau ein regulärer **PLAN 15.h.R**, Position
+**638/900**, wird als eigener geprüfter Zwischenstand mit dem nativen
+Payloadwriter hergestellt. Der Entrypoint fordert den sauberen gebundenen
+Ausgangsstand und ausschließlich **Gruppe 1/3, Sequenz 190**, mit
+**7110** parallelen Tests auf vier Workern. Quellidentität,
+Katalog, feste Nummerierung und tatsächliche Auswahlbindung müssen übereinstimmen.
+Erst nach erfolgreichem Apply-Gate werden die fünf Planmarker auf R abgeschlossen,
+638/900, zuletzt 15.h.R, nächstens 15.h.C und Bundle 484 gesetzt. Danach folgt
+`15.h.R feat(bundle): Bundle als Vergleichsquelle vervollständigen`.
+C bleibt offen. Apply-Test und Commit sind vorgesehen und werden nicht als
+bereits erfolgt behauptet. Fehler erhalten den tatsächlichen Zustand und
+bereits erfolgreiche Commits. Native ZIP-Prüfung und atomare Exchange-Übergabe
+beenden diesen N-Durchlauf ohne Result-Warten oder Hintergrundfortsetzung.
 
 #### 15.h.C – Make it Clean
 

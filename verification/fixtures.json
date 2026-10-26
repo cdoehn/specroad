@@ -714,7 +714,7 @@
     },
     "SR-FIX-BUNDLE-COMPARISON-v1": {
       "provider": "tests/test_bundle_comparison.py:captured",
-      "kind": "Native full project ZIPs from real project, archive, initialized language and completed receipt fixtures; independent local and Git field-comparison oracles, public direct/CLI/structured diff, invalid native roots, binary payloads, partial inputs and observed source replacement. No extraction or full-merge oracle."
+      "kind": "Native full project ZIPs from real project, archive, initialized language and completed receipt fixtures; independent local and Git field-comparison oracles, public direct/CLI/structured diff, invalid native roots, binary payloads, partial inputs and observed source replacement. No extraction or full-merge oracle. R cases retain original file/parent observations and reject missing native dependencies, invalid schemas, public partial promotion, foreign pairs and malformed selectors without local fallback."
     }
   },
   "fixture_format_version": 1,
