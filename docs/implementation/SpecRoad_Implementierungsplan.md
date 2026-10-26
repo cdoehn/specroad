@@ -28,10 +28,10 @@ Entscheidungen bleiben mit konkreter Frage und Empfehlung blockiert.
 ```yaml
 plan_revision: 23
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 642
-last_completed_plan_commit: 15.i.C
-next_plan_commit: 15.j.W
-last_completed_numbered_bundle: 489
+implementation_plan_commits_completed: 643
+last_completed_plan_commit: 15.j.W
+next_plan_commit: 15.j.R
+last_completed_numbered_bundle: 490
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -28388,7 +28388,7 @@ beenden diesen N-Durchlauf ohne Result-Warten oder Hintergrundfortsetzung.
 
 #### 15.j.W – Let it Work
 
-- [ ] **15.j.W** · Position **643/900** · Voraussetzung: `15.i.C`.
+- [x] **15.j.W** · Position **643/900** · Voraussetzung: `15.i.C`.
 **Exakte Commit-Message:** `15.j.W feat(bundle): Vollqualifizierter Restore-Plan aufbauen`
 
 **Umsetzung:** restore-preserve-v1 nur aus unfiltrierter geschlossener Vollprojekt-Baseline oder verifiziertem Vollbundle planen.
@@ -28536,6 +28536,156 @@ erhalten bei ihrer tatsächlichen Implementierung eigene gezielte parallele
 Dev-Prüfungen und eigene Apply-Gates/Commits. 15.k und 15.l behalten ihre
 Positionen und offenen Abnahmen. **SR-TC-0461** bleibt offen; der bisherige
 Teilstatus von **SR-TC-0462** ist kein Restore-Erfolgsnachweis.
+
+
+**Umsetzungs- und Übergabenachweis – Bundle 490 (W), 26. Oktober 2026.**
+
+**Maßgebliche Basis.** Result
+`specroad-apply_Result_064440_1026_4d37e9.zip`, SHA-256
+`380d3f746c8875e772f5a1e9209b26e61e0acf0c7d3366e3d8347e075900aee2`,
+bindet den sauberen Apply-Commit
+`db5313b851e96231cb90208e560f203d7ea5d84a`, Repository
+`a33ed6cf-0a97-4b73-b11a-d4239e7a2145`, Fingerprint
+`7c9d2a24e397e0e5`, Algorithmus `patchharbor-state-v1`.
+Root-CHAT-Anleitung, Kontext, Umgebung, Manifest, Run-/Execution-Logs,
+vollständiger Snapshot, tatsächlicher Apply-Stand und vorheriges Bundle
+wurden gegeneinander geprüft. Bundle 489 hat seinen echten
+OFF-PLAN-Commit nach **7.139/7.139** bestandenen Tests der Sequenz **195**,
+Gruppe **0**, auf vier Workern in **2496.52 s** erzeugt. Quell-/Auswahl- und
+Einzeloutcomes sowie die tatsächlich committeten Payloadbytes stimmen.
+Der reguläre Ausgangsstand ist **642/900**, zuletzt **15.i.C**.
+
+Dieser Auftrag implementiert die bereits gebundene Vorgabe **0.2.28,
+10.7.1–10.7.2 / RESTORE-PLAN-CONTRACT**. Die ausdrückliche Regel
+SPECROAD-DECISION-1 ist vorhanden; `clarification_allowed=false` wird
+eingehalten. Es gibt keine neue normative Klärung oder Spezifikationsänderung.
+
+**Nutzbarer W-Zustand.** `specroad.recovery.prepare_restore_plan` erstellt
+aus explizit benannten nativen Projekt-/Quellwurzeln und Originalbytes einen
+passiven `RestorePlan`. Vollprojekt-Bundle und unkonfigurierte geschlossene
+Projekt-Baseline werden nativ rekonstruiert. Der Baseline-Typname `working`
+oder `release` ersetzt keine Scopeprüfung. Rekursive Snapshotobjekte,
+Quellmanifest und semantische Konfiguration werden tatsächlich geprüft;
+operative Baseline-Konfigurationswerte sind ausdrücklich anzugeben.
+Die Baseline-Datei und zusätzliche Originalobjekte erscheinen bytegetreu
+im Ziel und in `preserved`; die neue vollständige Zielwurzel wird getrennt
+von der ursprünglichen Quellwurzel berechnet.
+
+Der geschlossene Codec prüft die festgelegten Felder, kanonische JSON-/
+Base64-Bytes, Größen, sortierte Dateitabellen, exakte Objektvereinigung,
+Inventur-/Sicherungs-/Quell-/Zielbindungen und den Eigenhash unabhängig.
+`RestorePlan` rekonstruiert diese Verträge erneut aus den eingebetteten
+Bytes. `verify_restore_plan` liest darüber hinaus Originalquelle,
+Abhängigkeiten und vollständigen gebundenen Bestand erneut. Quelle oder
+Bestand dürfen nicht durch eingebettete Bytes oder neue Pfade ersetzt
+werden. Ein Plan ist weder Autorisierung noch ausgeführte Recovery.
+
+Die Bestandsaufnahme erfasst tatsächliche Dateien, Verzeichnisse und
+fehlende Wurzeln einschließlich lesbarer beschädigter Vorher-Bytes.
+Alle ersetzten/entfernten Dateibytes sind in der separat gehashten
+Sicherungsinventur enthalten. Descriptorgebundene native Lesezugriffe
+prüfen Links, Spezialdateien, Projektgrenzen und portable Namensaliasse;
+unbeteiligte Git-/Quellcodedateien werden nicht geöffnet. Vorbereitung und
+Vorprüfung erzeugen keine Projekt-, Lock-, Journal-, Cache- oder anderen
+Betriebswrites und benötigen keine Prozesse oder Netzverbindungen.
+
+Die native Modellkonstruktion aus eigenen Payloadbytes wird mit dem
+bestehenden Bundlereader geteilt. Recovery führt anschließend eigene
+vollständige Schema-, Identitäts-, Referenz-, Profil-, Dokument-/Block-,
+Anhang-, Archiv- und Scopeprüfungen für den unterstützten Ausschnitt aus.
+Es gibt keine vom Aufrufer gelieferten Erfolgs-Callbacks oder erfundenen
+Freigaben. Unterstützt sind vollständige Projekte mit Draft-Fachartefakten,
+gültiger Primärdokument-/Blockstruktur, Profilen, Registry, gebundenen
+Anhängen und geprüften Projekt-Baselines. Enthaltene ältere Baselines
+dürfen weder höhere bekannte Revisionen noch historische Freigabe- oder
+Legacy-Belege hinter aktuellen Draftdateien verbergen.
+
+**Bewusste Implementierungsgrenze, keine neue Produktregel.** Benötigte,
+noch nicht angeschlossene Fachprüfer, zusätzliche geschützte Geschichte,
+operative Receipts/Journale oder beschädigte Konfiguration ohne unabhängigen
+Identitäts-/Inventarbeleg liefern einen expliziten Fehler und keinen
+scheinbar vollständigen Plan. Die verbindlichen offenen Abnahmen von
+15.j.R/C, der Historien-/Publikationsabgleich in 15.k und externe CLI-
+Planveröffentlichung, Lock, dauerhafte Sicherung, Journal, Audit und echte
+Ausführung in 15.l bleiben offen. Es werden keine älteren Freigaben oder
+negativen Nachweise umgedeutet. **SR-TC-0461** erhält ausschließlich einen
+Teilnachweis; SR-TC-0462 und sämtliche Releaseaussagen bleiben unverändert.
+
+**Beobachtete Dev-Verhaltensabnahme.** Der abschließende Code-/Katalogstand
+besteht **688/688** gezielte Tests aus **12** vollständigen Dateien mit
+**vier parallelen Workern**, CPython **3.14.4**, Exit **0**, ausschließlich
+`passed`-Einzeloutcomes, in **346.23 s**. Darunter sind **46** neue
+Restoretests und **642** betroffene bestehende Regressionstests. Auswahl:
+
+- `tests/test_restore_plan.py` (46)
+- `tests/test_bundle_verification.py` (46)
+- `tests/test_bundle_verification_right.py` (93)
+- `tests/test_baseline_verification.py` (30)
+- `tests/test_baseline_verification_right.py` (34)
+- `tests/test_project_bundle.py` (29)
+- `tests/test_project_bundle_right.py` (63)
+- `tests/test_bundle_extraction.py` (39)
+- `tests/test_bundle_extraction_right.py` (223)
+- `tests/test_catalog_check.py` (17)
+- `tests/test_catalog_check_right.py` (37)
+- `tests/test_apply_rotation.py` (31)
+
+Ausgeführt wurde `tools/run_selected_tests.py --workers 4 --expected-tests
+688` mit den genannten `--test-file`-Argumenten in einem frischen ignorierten
+Berichtsroot. Erfolgsoracles rekonstruieren die Zielbytes zusätzlich in
+einer unabhängigen nativen Projektwurzel. Negative Oracles prüfen echte
+Fehlerklassen, innere Bindungen und unveränderte Projekt-/Betriebsbytes;
+keine GUI-, Darstellungs- oder Dokumentationstests.
+
+Die vollständige Collection-/Katalogprüfung bestätigt **21.460** aktive
+Tests, **0** Fehler und **0** ausgeführte Testkörper. Die bisherigen
+**21.418** reservierten Nummern bleiben unverändert; **46** neue Identitäten
+werden hinten angehängt, insgesamt **21.464** einschließlich vier früher
+entfernter Identitäten. Die neue synthetische Fixture ist
+`SR-FIX-RESTORE-PLAN-v1`; sie ist kein Review- oder Releasebeleg.
+
+Entwicklungsquellhash:
+`fd1a7e1b227a7396c4419ff5f04789cf778bb46e4ca6616f4dde1954cfb27c9c`;
+Katalogbericht-SHA-256:
+`891b32c44986ccf486c2b2bbfb5834e15078a7c85caec7e16752d6c59dabcbbc`;
+Auswahlbericht-SHA-256:
+`e6288f3dba95cef37d365c4213faf203ccf4357aad0a1a32e74b414152ed1d10`;
+Einzeloutcomes-SHA-256:
+`a860948356f7e5026e1982e24896b65c78b065e58910dfd722ca66e144d5309f`.
+
+Vorherige fehlgeschlagene Collection-/Fixture-Bindungen wurden korrigiert.
+Der erste ausgeführte Parallelversuch endete mit **658 bestanden / 28
+fehlgeschlagen**, weil die gebundene Sprachregistry fälschlich als unbekannte
+Bestandsdatei behandelt wurde. Nach Korrektur und ergänzter Aliasprüfung
+bestand der Zwischenstand **686/686** in **351.71 s**. Die anschließende
+Codeprüfung ergänzte die oben beschriebene Archivhistoriengrenze und zwei
+Regressionstests; deshalb wurde der endgültige Stand erneut gezielt
+parallel geprüft. Frühere Berichte bleiben ihren tatsächlichen Quellhashes
+zugeordnet, nicht dem abschließenden Zustand.
+
+Vorherige Apply-Auswahlbindung:
+`eeebb1e07842120a38d32729a42440b1ff1ab327c4eaf55ba6a0531732acf739`;
+Apply-Bericht-SHA-256:
+`375131dde777facb71d284ffd88e8b5aed19fcb2fb7483a5347498a97ed2c3ad`;
+Apply-Einzeloutcomes-SHA-256:
+`f9f5220827cf6a95a709d8221dc10eb4fb2e99b4c97dfd9bb295f1cb0c570058`.
+Alle genannten Dev-/Apply-Tests sind Teilprüfungen;
+`full_suite_passed=null`, kein Vollsuite- oder Releaseerfolg.
+
+**Übergabe und noch ausstehendes Apply.** Genau dieser geprüfte W-Zustand
+wird als ein reguläres Bundle mit einem eigenen Commit übergeben. Der
+Entrypoint installiert ihn mit dem nativen PatchHarbor-Payloadwriter und
+prüft ausschließlich die fällige **Sequenz 196 / Gruppe 1 von 3**, **7.152**
+Tests, parallel mit vier Workern. Erst nach Erfolg setzt er die fünf
+Fortschrittsmarker auf **643/900**, zuletzt **15.j.W**, nächstens **15.j.R**,
+Bundle **490** und die W-Checkbox; danach folgt die exakte Commit-Message
+dieses Planschritts. R und C werden nicht vorinstalliert. Fehler erhalten
+bereits bestätigte Commits und den tatsächlichen Zustand.
+
+Das neue Apply-Gate und der Commit sind bei dieser Übergabe noch nicht
+beobachtet. Native Paketprüfung, SHA-Bindung und atomare Exchange-
+Veröffentlichung beenden diesen N-Auftrag sofort; kein eigenes Apply,
+CI, Watcher, Control, Result-Warten, weiteres Bundle oder S-Schleife.
 
 #### 15.j.R – Make it Right
 

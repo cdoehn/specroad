@@ -28,6 +28,17 @@ def payload_model(container, *, partial=False):
     receipts = verify_payload_receipts(container)
     # Keep transport receipt hashes out of the native model-resource pipeline.
     model_files = {path: raw for path, raw in files.items() if path not in receipts}
+    return owned_payload_model(model_files, source_label='bundle:' + container.sha256,
+                               partial=partial)
+
+
+def owned_payload_model(files, *, source_label, partial=False):
+    """Reconstruct supplied normative bytes; no container or disk assurance.
+
+    Bundle and recovery readers independently qualify their envelopes and
+    operational receipts before using this shared native model constructor.
+    """
+    files = dict(files)
     configuration = ProjectConfiguration(parse_json_object(files['specroad.json']))
     registry_binding = configuration.data.get('language_registry')
     registry_path = None if registry_binding is None else registry_binding['path']
@@ -37,7 +48,7 @@ def payload_model(container, *, partial=False):
         registry = LanguageRegistry(files[registry_path], expected_sha256=registry_binding['sha256'],
                                     expected_version=registry_binding['registry_version'])
     documents, resources, profiles, packages, attachments = [], [], [], {}, {}
-    for path, raw in model_files.items():
+    for path, raw in files.items():
         if path == 'specroad.json' or (partial and path.startswith('bundle-context/')):
             continue
         kind = classify_path(path, configuration)
@@ -79,7 +90,7 @@ def payload_model(container, *, partial=False):
                                language_registry=registry, language_packages=selected)
     # This is provenance for owned bytes, never an observed filesystem root.
     # The sentinel is excluded from native hashes and grants no disk authority.
-    binding = ProjectReadBinding(configuration.project_id, 'bundle:' + container.sha256, (0, 0))
+    binding = ProjectReadBinding(configuration.project_id, source_label, (0, 0))
     constructor = PartialPayloadModel if partial else TargetModel
     return constructor(files['specroad.json'], binding, documents, profile=profile,
         resource_files=resources, attachments=tuple(attachments.values()), language_packages=selected)

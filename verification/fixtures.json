@@ -60,6 +60,10 @@
       "kind": "Owned current-schema requirement, need, goal, task, verification, evidence, milestone and release bytes with actual relation identities and original evidence subject fields. Cyclic and missing traces, exact source/record hashes and relation-array pointers, absent calculation providers, read-only rendering metadata and isolated Core/PYZ contracts. Stored success values never become computed verification or release-readiness results.",
       "provider": "tests/test_builtin_document_views.py:trace_project"
     },
+    "SR-FIX-BUNDLE-COMPARISON-v1": {
+      "provider": "tests/test_bundle_comparison.py:captured",
+      "kind": "Native full project ZIPs from real project, archive, initialized language and completed receipt fixtures; independent local and Git field-comparison oracles, public direct/CLI/structured diff, invalid native roots, binary payloads, partial inputs and observed source replacement. No extraction or full-merge oracle. R cases retain original file/parent observations and reject missing native dependencies, invalid schemas, public partial promotion, foreign pairs and malformed selectors without local fallback."
+    },
     "SR-FIX-BUNDLE-VERIFICATION-RIGHT-v1": {
       "kind": "Native document/release models with independently projected synthetic reviews, shared outside targets, original endpoint bytes, configuration parent context, attachments, baselines and language packages. Rehashed adversarial archives, no-write and no-origin-read traps, independent member root projection. No human approval, external history, extraction or promotion claim.",
       "provider": "tests/test_bundle_verification_right.py:reviewed,verify_without_origin;tests/test_partial_bundle.py:project,independent_root;tests/test_partial_bundle_right.py:configured;tests/test_relation_review_status.py:review"
@@ -67,6 +71,14 @@
     "SR-FIX-BUNDLE-VERIFICATION-v1": {
       "kind": "Actual native closed project bytes with composed profile, registry/packages, binary attachment and baseline objects; canonical rebindings of altered inputs, unavailable origin, unrelated invalid current project and observed no-write effects. Empty receipt inventory only; no authenticity or full validation claim.",
       "provider": "tests/test_bundle_verification.py:bundle,rebind;tests/test_project_bundle.py:project,baseline_project"
+    },
+    "SR-FIX-BUNDLE-WORK-BACKUP-v1": {
+      "kind": "Owned read-only Work checkpoints and explicit compatibility fixture; actual externally written canonical ZIPs, restoration and handler replay. Completed native projects and real prepared/partially replaced/committed interrupted transactions verify distinct package kinds and unchanged recovery gates. Real private atomic output files with source, image, target and IO fault injection; no remote-backup or native-write Work export claim.",
+      "provider": "tests/test_bundle_work_backup.py:destination,save;tests/test_work_resume.py:setup,recorded;tests/test_project_bundle.py:project;tests/support/work_publication_process.py:child"
+    },
+    "SR-FIX-BUNDLE-WORK-LOSS-R-v1": {
+      "kind": "Owned externally published Work files and exact external hashes, explicit compatibility fixture, real loss of original sandbox and moved backups in isolated fresh processes. Sealed binary inputs, segmented ancestry, declared result bytes and actual source changes before/during publication; prompt/report substitution is rejected as absent data. No remote retention or native-write Work portability claim.",
+      "provider": "tests/test_bundle_work_backup_right.py:retained,restore;tests/test_work_resume.py:setup,recorded;tests/support/processes.py:run_core"
     },
     "SR-FIX-CATALOG-DATA-v1": {
       "kind": "synthetic developer verification data",
@@ -544,6 +556,10 @@
       "kind": "owned binary payloads and normative JSON; actual byte checks, no external evidence authenticity or write authorization",
       "provider": "tests/test_resource_inventory.py:descriptor"
     },
+    "SR-FIX-RESTORE-PLAN-v1": {
+      "kind": "Owned synthetic full native projects with actual profile and offline registry bytes, draft standard artifacts and primary documents; native project ZIPs and sealed working/release-kind project Baselines with recursive original archive objects. Corrupt mutable before bytes, immutable-history conflicts, independent native target reconstruction, live stale and native safety cases. No human approval, restore execution, durable backup or release evidence is fabricated.",
+      "provider": "tests/support/restore.py:restore_case,plan_for;tests/test_restore_plan.py:decode_files"
+    },
     "SR-FIX-ROADMAP-EXPLANATION-RIGHT-v1": {
       "kind": "Owned live project with independently complete path/node sets, explicit missing planning references and configured depth. Public direct/CLI/structured/Core/PYZ results, closed result schema, read-only modes and write/process/entropy traps. Mid-read source/configuration/profile/inventory changes, operational blockers, malformed unreachable sources, path security and isolated runtimes. No atomicity, release readiness or View/Work claim.",
       "provider": "tests/test_roadmap_explanation_right.py:project"
@@ -711,18 +727,6 @@
     "verification-context-subjects": {
       "kind": "Owned requirement, verification and test subjects with immutable recorded Evidence bindings. Audit/workflow and semantic changes, exact effective product configurations, passive metadata, native rejection boundaries and isolated Core/PYZ parity. No authoritative run selection or verification success.",
       "provider": "tests/test_verification_context.py:subject"
-    },
-    "SR-FIX-BUNDLE-COMPARISON-v1": {
-      "provider": "tests/test_bundle_comparison.py:captured",
-      "kind": "Native full project ZIPs from real project, archive, initialized language and completed receipt fixtures; independent local and Git field-comparison oracles, public direct/CLI/structured diff, invalid native roots, binary payloads, partial inputs and observed source replacement. No extraction or full-merge oracle. R cases retain original file/parent observations and reject missing native dependencies, invalid schemas, public partial promotion, foreign pairs and malformed selectors without local fallback."
-    },
-    "SR-FIX-BUNDLE-WORK-BACKUP-v1": {
-      "kind": "Owned read-only Work checkpoints and explicit compatibility fixture; actual externally written canonical ZIPs, restoration and handler replay. Completed native projects and real prepared/partially replaced/committed interrupted transactions verify distinct package kinds and unchanged recovery gates. Real private atomic output files with source, image, target and IO fault injection; no remote-backup or native-write Work export claim.",
-      "provider": "tests/test_bundle_work_backup.py:destination,save;tests/test_work_resume.py:setup,recorded;tests/test_project_bundle.py:project;tests/support/work_publication_process.py:child"
-    },
-    "SR-FIX-BUNDLE-WORK-LOSS-R-v1": {
-      "kind": "Owned externally published Work files and exact external hashes, explicit compatibility fixture, real loss of original sandbox and moved backups in isolated fresh processes. Sealed binary inputs, segmented ancestry, declared result bytes and actual source changes before/during publication; prompt/report substitution is rejected as absent data. No remote retention or native-write Work portability claim.",
-      "provider": "tests/test_bundle_work_backup_right.py:retained,restore;tests/test_work_resume.py:setup,recorded;tests/support/processes.py:run_core"
     }
   },
   "fixture_format_version": 1,
@@ -875,6 +879,7 @@
     "SR-FIX-REQUIREMENT-EXCHANGE-v1",
     "SR-FIX-REQUIREMENT-INPUT-v1",
     "SR-FIX-RESOURCE-INVENTORY-v1",
+    "SR-FIX-RESTORE-PLAN-v1",
     "SR-FIX-ROADMAP-EXPLANATION-RIGHT-v1",
     "SR-FIX-ROADMAP-EXPLANATION-v1",
     "SR-FIX-ROADMAP-PROJECTION-RIGHT-v1",

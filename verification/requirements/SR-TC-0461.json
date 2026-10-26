@@ -4,19 +4,45 @@
   "requirement_id": "SR-REQ-0461",
   "specification_sha256": "1b076c7706a48dcf81c63f2cceaf87a263aa81ea71bfc126739deb76e4bd9f28",
   "primary_verification_id": "SR-VER-0031",
-  "implementation_status": "open",
-  "method": "pending",
-  "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "partial",
+  "method": "automated_behavior",
+  "fixture_ids": [
+    "SR-FIX-RESTORE-PLAN-v1"
+  ],
+  "preconditions": [
+    "Explicit canonical native source/project roots and original full-project source bytes; valid current configuration independently supplies project identity and managed coverage.",
+    "Current W provider supports native draft standard artifacts, complete document/block structure, profiles, bound attachments and sealed project Baselines. Additional immutable history, operational history, missing specialist gates or damaged configuration without independent evidence are explicit blockers."
+  ],
+  "steps": [
+    "Prepare and independently decode project-bundle and working/release-kind project-Baseline plans without project or operational writes.",
+    "Reconstruct target files in an independent native root and compare its full project model root, original source/recursive archive bytes and explicit operational configuration.",
+    "Verify exact before images, directory/missing-root inventory, separate byte hashes, outer plan hash, detached reads and explicit absence of execution authority.",
+    "Refuse insufficient semantic sources, unsupported history, identity/revision conflicts, unknown managed contents, links/special entries, stale live origin/inventory and forged or malformed plan bytes."
+  ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "`recover restore` MUSS ausschließlich einen vollständig qualifizierten, zielhashgebundenen Restore-Plan nach Kapitel 10.7.1 aus einer unveränderten Vollprojekt-Baseline oder einem Vollprojektbundle ausführen.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Supported complete plans have independent native source/target reconstruction, exact original and backup bytes and distinct canonical hash domains. Read-only preparation and preflight preserve project/operational bytes. No opaque success callbacks replace native model gates. Unsupported history, providers and damaged-config evidence yield an error, never a qualified partial plan. A plan is passive data, not a normal ChangePlan, permission, durable backup, completed recovery or release proof."
   },
   "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
+  "expected_exit_codes": [
+    0,
+    2,
+    3,
+    6,
+    7
+  ],
+  "json_pointers": [
+    "/source",
+    "/source_snapshot_root",
+    "/inventory",
+    "/preserved",
+    "/target",
+    "/expected_target_root",
+    "/backup",
+    "/objects",
+    "/restore_plan_sha256"
+  ],
   "required_environment": {
     "implementation": "cpython",
     "declared_minimum_python": "3.10",
@@ -28,8 +54,57 @@
     "harness_suite_timeout": null
   },
   "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
+  "test_ids": [
+    "tests/test_restore_plan.py::test_archived_publication_evidence_cannot_hide_behind_current_draft_bytes[approval]",
+    "tests/test_restore_plan.py::test_archived_publication_evidence_cannot_hide_behind_current_draft_bytes[revision]",
+    "tests/test_restore_plan.py::test_baseline_does_not_guess_operational_configuration[default_locale]",
+    "tests/test_restore_plan.py::test_baseline_does_not_guess_operational_configuration[generated_path]",
+    "tests/test_restore_plan.py::test_closed_plan_reader_rejects_invalid_wire_values[base64_whitespace]",
+    "tests/test_restore_plan.py::test_closed_plan_reader_rejects_invalid_wire_values[boolean_size]",
+    "tests/test_restore_plan.py::test_closed_plan_reader_rejects_invalid_wire_values[duplicate]",
+    "tests/test_restore_plan.py::test_closed_plan_reader_rejects_invalid_wire_values[extra_field]",
+    "tests/test_restore_plan.py::test_closed_plan_reader_rejects_invalid_wire_values[noncanonical]",
+    "tests/test_restore_plan.py::test_closed_plan_reader_rejects_invalid_wire_values[unsafe_path]",
+    "tests/test_restore_plan.py::test_complete_sources_bind_original_bytes_and_independent_native_target[project_bundle]",
+    "tests/test_restore_plan.py::test_complete_sources_bind_original_bytes_and_independent_native_target[release]",
+    "tests/test_restore_plan.py::test_complete_sources_bind_original_bytes_and_independent_native_target[working]",
+    "tests/test_restore_plan.py::test_container_integrity_is_not_full_project_qualification[approval]",
+    "tests/test_restore_plan.py::test_container_integrity_is_not_full_project_qualification[primary]",
+    "tests/test_restore_plan.py::test_container_integrity_is_not_full_project_qualification[reference]",
+    "tests/test_restore_plan.py::test_container_integrity_is_not_full_project_qualification[specialist]",
+    "tests/test_restore_plan.py::test_inventory_has_empty_directories_and_missing_roots_but_no_unrelated_bytes",
+    "tests/test_restore_plan.py::test_live_recheck_detects_changed_origin_or_complete_inventory[empty_directory]",
+    "tests/test_restore_plan.py::test_live_recheck_detects_changed_origin_or_complete_inventory[source_change]",
+    "tests/test_restore_plan.py::test_live_recheck_detects_changed_origin_or_complete_inventory[source_missing]",
+    "tests/test_restore_plan.py::test_live_recheck_detects_changed_origin_or_complete_inventory[target_added]",
+    "tests/test_restore_plan.py::test_live_recheck_detects_changed_origin_or_complete_inventory[target_change]",
+    "tests/test_restore_plan.py::test_live_recheck_detects_changed_origin_or_complete_inventory[target_removed]",
+    "tests/test_restore_plan.py::test_missing_baseline_dependency_cannot_be_filled_from_current_project",
+    "tests/test_restore_plan.py::test_native_safety_prevents_link_special_and_alias_inputs[alias]",
+    "tests/test_restore_plan.py::test_native_safety_prevents_link_special_and_alias_inputs[fifo]",
+    "tests/test_restore_plan.py::test_native_safety_prevents_link_special_and_alias_inputs[hardlink]",
+    "tests/test_restore_plan.py::test_native_safety_prevents_link_special_and_alias_inputs[root_alias]",
+    "tests/test_restore_plan.py::test_native_safety_prevents_link_special_and_alias_inputs[symlink]",
+    "tests/test_restore_plan.py::test_nested_baseline_objects_are_qualified_and_retained_without_changing_old_records",
+    "tests/test_restore_plan.py::test_raw_baseline_representation_and_explicit_operational_fields_are_retained",
+    "tests/test_restore_plan.py::test_resigning_outer_hash_cannot_repair_inner_contract_or_native_roots[backup]",
+    "tests/test_restore_plan.py::test_resigning_outer_hash_cannot_repair_inner_contract_or_native_roots[extra_object]",
+    "tests/test_restore_plan.py::test_resigning_outer_hash_cannot_repair_inner_contract_or_native_roots[inventory_hash]",
+    "tests/test_restore_plan.py::test_resigning_outer_hash_cannot_repair_inner_contract_or_native_roots[preserved]",
+    "tests/test_restore_plan.py::test_resigning_outer_hash_cannot_repair_inner_contract_or_native_roots[source]",
+    "tests/test_restore_plan.py::test_resigning_outer_hash_cannot_repair_inner_contract_or_native_roots[source_root]",
+    "tests/test_restore_plan.py::test_resigning_outer_hash_cannot_repair_inner_contract_or_native_roots[target]",
+    "tests/test_restore_plan.py::test_resigning_outer_hash_cannot_repair_inner_contract_or_native_roots[target_root]",
+    "tests/test_restore_plan.py::test_unproved_identity_history_or_inventory_prevents_a_complete_plan[damaged_config]",
+    "tests/test_restore_plan.py::test_unproved_identity_history_or_inventory_prevents_a_complete_plan[history]",
+    "tests/test_restore_plan.py::test_unproved_identity_history_or_inventory_prevents_a_complete_plan[journal]",
+    "tests/test_restore_plan.py::test_unproved_identity_history_or_inventory_prevents_a_complete_plan[project_id]",
+    "tests/test_restore_plan.py::test_unproved_identity_history_or_inventory_prevents_a_complete_plan[revision]",
+    "tests/test_restore_plan.py::test_unproved_identity_history_or_inventory_prevents_a_complete_plan[unknown_managed]"
+  ],
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "15.j.R/C: complete the remaining qualification, malformed-input, independent damaged-config evidence, specialist-provider, native race/error and structural cleanup cases.",
+    "15.k: fold younger protected history and its dependency closure; interpret completed receipts and publication evidence without deleting or downgrading protected state. The W implementation refuses these unsupported cases.",
+    "15.l: external CLI plan publication, separately authorized locked execution, durable recovery archive/journal/audit and crash-safe completion. No executed restore or full SR-REQ-0461 acceptance is claimed."
   ]
 }
