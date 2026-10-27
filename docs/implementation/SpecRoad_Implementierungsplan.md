@@ -41,7 +41,7 @@ implementation_plan_commits_total: 900
 implementation_plan_commits_completed: 649
 last_completed_plan_commit: 15.l.W
 next_plan_commit: 15.l.R
-last_completed_numbered_bundle: 501
+last_completed_numbered_bundle: 502
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -30401,6 +30401,122 @@ nächster Schritt **15.l.R** sowie die offenen R-/C-Checkboxen bleiben bestehen.
 Apply-Test und Commit sind bei Übergabe noch nicht beobachtet. Native ZIP-
 Prüfung, vollständiger SHA-256 und atomare Veröffentlichung beenden den
 N-Auftrag sofort; keine Apply-/Warte-/Modellschleife.
+
+
+**Umsetzungs- und Übergabenachweis – Bundle 502 (externe Restoredateien, R-Zwischenstand), 27. Oktober 2026.**
+
+**Maßgebliche Basis.** Das vollständig geprüfte Result
+`specroad-apply_Result_223555_1026_dee14b.zip`, SHA-256
+`91b3d519a3af2d84fcf8fae66dcea1e86bb077908b0117c5db28e34b6848e579`,
+bindet den sauberen Abschlusscommit
+`4b2402f5bb3eeae47b8fa649858935a1d5ebd732`, Repository
+`a33ed6cf-0a97-4b73-b11a-d4239e7a2145`, Fingerprint
+`7c9d2a24e397e0e5`, Algorithmus `patchharbor-state-v1`.
+Root-Anleitung, Kontext, Umgebung, Manifest, Run-/Ausführungslogs und alle
+**2.304** Snapshotdateien samt Blob-IDs und Modi wurden mit dem tatsächlichen
+Apply-Stand geprüft. Das zugeordnete Bundle **501**, Paket-SHA-256
+`59c4c8aa21649ce84882054e928acd8c0e9e7995ed0e34396274f039955fe730`,
+endete nach **7.236/7.236** parallelen Apply-Tests, **Sequenz 207 / Gruppe 0**,
+vier Workern und **2511.59 s**, im passenden regulären R-Zwischencommit.
+Auswahlbindung, Einzeloutcomes, Commitdateien und sauberer Endstand stimmen.
+Ausgangsfortschritt: **649/900**, zuletzt **15.l.W**, nächstens **15.l.R**.
+
+**Umsetzung der vorhandenen Vorgabe.** SPECROAD-DECISION-1 samt Vertrag 3
+ist ausdrücklich vorhanden; der aktuelle Auftrag erlaubt drei verbleibende
+Klärungen. Dieses Bundle braucht keine normative Entscheidung: Es setzt die
+externe Planübergabe aus **10.7.1–10.7.2** und die getrennte Dateiauswahl aus
+**10.7.4** als nativen Adapter um. Spezifikation **0.2.32**, Planrevision **27**
+und Spezifikationshash bleiben unverändert. Control verwaltet sein Budget;
+weder Paketklassifikation noch Tests behaupten eine menschliche Freigabe.
+
+`publish_restore_plan` rekonstruiert den vollständigen Originalplan und
+prüft Herkunft und Bestandsinventur vor jeder möglichen Ausgabe. Der
+vorhandene Generated-Output-Pfadschutz verlangt einen expliziten externen
+Root; Projektroots, überdeckende Roots, Symlinks, fremde Projektgrenzen,
+Traversal und portable Namenskollisionen bleiben gesperrt. Auch bei
+defekter aktueller Konfiguration wird kein gültiges Ausgangsmodell erfunden.
+Die ursprünglichen Rootidentitäten werden durchgängig gehalten.
+
+Private Stagingbytes und Elternverzeichnisse werden mit den vorhandenen
+nativen Primitiven geschrieben, synchronisiert und wiedergelesen. Unmittelbar
+vor der atomaren Create-only-Veröffentlichung werden Quelle, Inventur,
+Ausgabebereich, Parentidentität, Zielabwesenheit und Stagingbytes erneut
+geprüft. Vorhandene Ziele werden auch bei identischen Bytes nicht ersetzt.
+Vollständige finale Bytes werden nochmals gelesen. Der Directory-Mutex gehört
+nur zur externen Ausgabe; kein Projektowner, Journal oder Receipt entsteht.
+Fehler und Prozessabbrüche erhalten tatsächliche externe Teilbilder oder
+bereits vollständig veröffentlichte Dateien. Sie melden keinen Erfolg und
+lösen keine Lösch- oder Überschreibungswiederholung aus.
+
+`read_restore_inputs` liest Plan und ausdrücklich gewählte Journalauswahl
+über sichere native Deskriptoren, rekonstruiert die geschlossenen Verträge
+und die Auswahl aus der Originalinventur und liest beide Dateien erneut.
+Ein währenddessen geänderter oder verschwundener Input wird abgewiesen.
+Die erhaltenen Plan-/Auswahlbytes werden nicht auf eine neue Inventur
+umgebunden. Diese passive Lektüre ist bewusst kein Live-Preflight: Nach
+bereits erfolgten eigenen Restoreeffekten oder Verlust der externen Quelle
+müssen Originalbelege weiterhin an die spezialisierte Wiederaufnahme
+übergebbar sein. Der native Executor prüft unverändert tatsächlichen Zustand,
+Herkunft beziehungsweise eigene Effekte, frische Autorisierung und Lock.
+Ausgabedatei, Planhash und Actorlabel verleihen keine Schreibbefugnis.
+
+**Gezielte parallele Prüfung.** Der finale Zustand besteht
+**255/255** Verhaltenstests in **780.16 s**, CPython **3.14.4**,
+**vier Worker**, Exit **0** und ausschließlich bestandene Einzeloutcomes:
+
+- `tests/test_catalog_check.py` (17)
+- `tests/test_catalog_check_right.py` (37)
+- `tests/test_restore_execution.py` (42)
+- `tests/test_restore_execution_right.py` (59)
+- `tests/test_restore_files.py` (54)
+- `tests/test_restore_plan.py` (46)
+
+Alle **54** neuen Fälle prüfen fachliche Bytes, Pfad-/Bindungs- und
+Seiteneffektverträge: beide Quellarten, Dateiübergabe an den echten nativen
+Executor mit separater synthetischer Autorität, alte korrupte Journale,
+Nichtüberschreiben, fremde/nested Roots, Links und Sonderdateien, stale
+Herkunft/Inventur, Root-/Parent-/Staging-/Zielwechsel, tatsächlicher Mutex,
+I/O-Fehler sowie echte isolierte Prozessabbrüche vor und nach atomarer
+Veröffentlichung. Die Originaldateien im Projekt bleiben bei der
+Planveröffentlichung bytegleich. Statische Planlektüre wird ausdrücklich
+von frischer Quellenprüfung und aktueller Ausführungsbefugnis unterschieden.
+Bestehende W-/R-Ausführungs-, Plan- und Katalogtests bleiben unverändert.
+
+Vollständige Collection/Katalogprüfung: **21.759** aktive Tests, **0** Fehler,
+**0** Testkörper. Die 54 neuen Identitäten sind gemeinsam sortiert ab Nummer
+**21709** angehängt; **21.763** Nummern einschließlich vier historisch
+entfernter Tests bleiben reserviert. Kein Bestandsindex wird wiederverwendet
+oder umnummeriert. SR-TC-0461/0462 bleiben `partial`; nur die tatsächlich
+abgedeckten Fälle und die synthetische Dateifixture wurden ergänzt.
+Kein Vollsuite-/Releasebeleg (`full_suite_passed=null`), keine neuen
+Dokumentations-/Darstellungstests, kein serieller Lauf und kein CI-Start.
+
+Finale Quellidentität: `2ff2b3944e7de4dc5c81622648f24630123dd39ff988e9b6ca7b130999df77c1`.
+Auswahlbericht-SHA-256: `6e648f3d1d19e3b238dafaa54fb1fa10c4e7c1b96045505542d1da15b8061e19`.
+Einzeloutcomes-SHA-256: `55895465376fc435854c91652cb4217e6c4d017d7d96b94a788910cdc85a5c1b`.
+Vorherige Apply-Auswahlbindung: `bf6737371ba00109326851dd4d9fee08a792ec3c6204cd47572766f46a4a4796`;
+Apply-Bericht: `b7f3f8b6ba2c354d40994849c23a9c92e25e9f49152b623e5778ea33d687756c`;
+Apply-Einzeloutcomes: `78019023c0037aef8ac7af704e7028e1e17fa643305c78f6b84ade7c79660dba`.
+
+**Offen und Übergabe.** **15.l.R bleibt offen**, ebenso 15.l.C. Der native
+Dateiadapter ersetzt weder CLI-Registrierung noch Workfortsetzung. Die
+vollständige Einzellauf-/Workparität, Dauergrenzen-/I/O-Matrix und übrigen
+Integrationen bleiben Pflichtabnahmen. Historische Lifecycle-/Spezialisten-
+provider, unabhängig gebundene Evidence-Policies, weitere geschützte Arten,
+frühere Recovery-Audits und allgemeine Receipt-Historienfaltung sind weiterhin
+vor Gesamt-Restoreabnahme erforderlich. Fehlende Belege werden nicht geraten;
+konservative Ablehnung ist keine dauerhafte Scopeausnahme.
+
+Ein gezielt geprüfter echter **15.l.R**-Zwischenstand mit der unveränderten
+Plan-Commit-Message, keine künstliche W/R/C-Folge oder normative Klärung.
+Der Entrypoint installiert ausschließlich diese Bytes über PatchHarbor und
+führt vor dem Commit genau **Sequenz 208 / Gruppe 1 von 3**, **7.251** Tests,
+parallel mit vier Workern aus. Erst nach erfolgreicher Auswahl-/Hash-/
+Einzeloutcomeprüfung wird allein die Bundle-Nummer auf **502** gesetzt.
+Produktstand **649/900**, letzter Schritt **15.l.W**, nächster **15.l.R** und
+R-/C-Checkboxen bleiben unverändert. Apply und Commit sind bei Übergabe noch
+nicht beobachtet. Native ZIP-Prüfung und atomare Exchange-Übergabe beenden
+sofort diesen N-Auftrag; keine eigene Apply-, Warte- oder Modellschleife.
 
 #### 15.l.C – Make it Clean
 

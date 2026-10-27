@@ -556,9 +556,21 @@
       "kind": "owned binary payloads and normative JSON; actual byte checks, no external evidence authenticity or write authorization",
       "provider": "tests/test_resource_inventory.py:descriptor"
     },
+    "SR-FIX-RESTORE-EXECUTION-v1": {
+      "kind": "Owned native full-project bundle and Baseline cases, damaged mutable bytes, explicit corrupt/empty journal selection, real directory and byte backups, kernel mutex, native staged publication and immutable audit. Synthetic host RecoveryAuthority callbacks are not human release approval. Selected I/O interruptions retain actual bytes and active recovery barriers; no comprehensive restart or CLI/Work integration claim.",
+      "provider": "tests/support/restore.py:restore_case;tests/test_restore_execution.py:selected,execute,files;tests/test_bundle_receipts.py:completed,receipts"
+    },
+    "SR-FIX-RESTORE-FILES-v1": {
+      "kind": "Synthetic native full project and Baseline sources, damaged current bytes and explicitly selected corrupt journals. Native private staging and create-only durable publication, descriptor/path/root-inode checks, stale inputs, no-write traps, external mutex conflicts, simulated I/O failures and actual isolated process exits. Current host authority is supplied independently for the file-to-native execution check. No CLI, Work or release approval claim.",
+      "provider": "tests/support/restore.py:restore_case;tests/test_restore_files.py:case,selection"
+    },
     "SR-FIX-RESTORE-PLAN-v1": {
       "kind": "Owned synthetic full native projects with actual profile and offline registry bytes, draft standard artifacts and primary documents; native project ZIPs and sealed working/release-kind project Baselines with recursive original archive objects. Corrupt mutable before bytes, immutable-history conflicts, independent native target reconstruction, live stale and native safety cases. No human approval, restore execution, durable backup or release evidence is fabricated.",
       "provider": "tests/support/restore.py:restore_case,plan_for;tests/test_restore_plan.py:decode_files"
+    },
+    "SR-FIX-RESTORE-RECOVERY-v1": {
+      "kind": "Native full-project Restore, explicit original journals, real subprocess exits during backup/staging/publication/archive, stopped native owners and actual shared mutex. Separate synthetic current RecoveryAuthority and risk observations; exact before/target bytes, immutable handoff/action evidence and replay. No human approval, CLI/Work parity, complete crash matrix or release claim.",
+      "provider": "tests/test_restore_execution_right.py:fixture,interrupted,continue_restore,old_owner;tests/support/restore.py:restore_case;tests/support/project_locks.py:Probe"
     },
     "SR-FIX-ROADMAP-EXPLANATION-RIGHT-v1": {
       "kind": "Owned live project with independently complete path/node sets, explicit missing planning references and configured depth. Public direct/CLI/structured/Core/PYZ results, closed result schema, read-only modes and write/process/entropy traps. Mid-read source/configuration/profile/inventory changes, operational blockers, malformed unreachable sources, path security and isolated runtimes. No atomicity, release readiness or View/Work claim.",
@@ -727,14 +739,6 @@
     "verification-context-subjects": {
       "kind": "Owned requirement, verification and test subjects with immutable recorded Evidence bindings. Audit/workflow and semantic changes, exact effective product configurations, passive metadata, native rejection boundaries and isolated Core/PYZ parity. No authoritative run selection or verification success.",
       "provider": "tests/test_verification_context.py:subject"
-    },
-    "SR-FIX-RESTORE-EXECUTION-v1": {
-      "kind": "Owned native full-project bundle and Baseline cases, damaged mutable bytes, explicit corrupt/empty journal selection, real directory and byte backups, kernel mutex, native staged publication and immutable audit. Synthetic host RecoveryAuthority callbacks are not human release approval. Selected I/O interruptions retain actual bytes and active recovery barriers; no comprehensive restart or CLI/Work integration claim.",
-      "provider": "tests/support/restore.py:restore_case;tests/test_restore_execution.py:selected,execute,files;tests/test_bundle_receipts.py:completed,receipts"
-    },
-    "SR-FIX-RESTORE-RECOVERY-v1": {
-      "kind": "Native full-project Restore, explicit original journals, real subprocess exits during backup/staging/publication/archive, stopped native owners and actual shared mutex. Separate synthetic current RecoveryAuthority and risk observations; exact before/target bytes, immutable handoff/action evidence and replay. No human approval, CLI/Work parity, complete crash matrix or release claim.",
-      "provider": "tests/test_restore_execution_right.py:fixture,interrupted,continue_restore,old_owner;tests/support/restore.py:restore_case;tests/support/project_locks.py:Probe"
     }
   },
   "fixture_format_version": 1,
@@ -888,7 +892,9 @@
     "SR-FIX-REQUIREMENT-INPUT-v1",
     "SR-FIX-RESOURCE-INVENTORY-v1",
     "SR-FIX-RESTORE-EXECUTION-v1",
+    "SR-FIX-RESTORE-FILES-v1",
     "SR-FIX-RESTORE-PLAN-v1",
+    "SR-FIX-RESTORE-RECOVERY-v1",
     "SR-FIX-ROADMAP-EXPLANATION-RIGHT-v1",
     "SR-FIX-ROADMAP-EXPLANATION-v1",
     "SR-FIX-ROADMAP-PROJECTION-RIGHT-v1",
@@ -935,7 +941,6 @@
     "SR-FIX-WEAK-BOUNDARY-v1",
     "SR-FIX-WRITER-BOUNDARIES-v1",
     "verification-context-independent",
-    "verification-context-subjects",
-    "SR-FIX-RESTORE-RECOVERY-v1"
+    "verification-context-subjects"
   ]
 }

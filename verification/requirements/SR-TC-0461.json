@@ -9,7 +9,8 @@
   "fixture_ids": [
     "SR-FIX-RESTORE-PLAN-v1",
     "SR-FIX-RESTORE-EXECUTION-v1",
-    "SR-FIX-RESTORE-RECOVERY-v1"
+    "SR-FIX-RESTORE-RECOVERY-v1",
+    "SR-FIX-RESTORE-FILES-v1"
   ],
   "preconditions": [
     "Explicit canonical native source/project roots and original full-project source bytes; current identity and managed coverage are proven by an intact configuration or independently retained sealed project Baselines with verified original recursive objects.",
@@ -35,12 +36,16 @@
     "Explicitly transfer a valid selected old transaction owner or matching interrupted Restore owner using the real mutex, expected raw owner hash, independent current takeover authorization, preserved old/new requests and immutable handoff files. Stop live owners and held mutexes even with force; foreign, unverifiable and reused-PID owners require explicit current risk consent.",
     "Repeat crashes during owner replacement, handoff completion and rollback publication, including before sync and before the first main Restore intent. Retain actual state and require fresh authorization each time. Missing/corrupt backup, mismatched selection/target/intent, foreign own-namespace bytes, denied or mutated authority and incomplete arguments remain write-free preflight failures.",
     "Change the external source inside the native committing-marker publication boundary with zero or nonzero target effects: do not publish committing or target bytes. These are selected native boundaries, not complete CLI/Work or all-I/O acceptance.",
-    "A matching selected ordinary transaction owner cannot replace the owner of an already begun Restore. Only the exact original owner proved by an incomplete pre-journal handoff is eligible; other ordinary owners conflict without writes."
+    "A matching selected ordinary transaction owner cannot replace the owner of an already begun Restore. Only the exact original owner proved by an incomplete pre-journal handoff is eligible; other ordinary owners conflict without writes.",
+    "Publish the fully qualified original plan to one explicit external create-only target through native generated-output and durable image primitives; bind source, inventory, project/root/parent identities and complete staged bytes immediately before publication and verify the final bytes. Existing output and unsafe paths never authorize replacement or project writes.",
+    "Read exact external plan and original journal-selection bytes through native descriptors, reconstruct their closed passive contracts and reread both files. Do not confuse this with current source/inventory preflight: the unchanged original plan remains readable after execution or external source loss for the separate specialized recovery path.",
+    "Execute both source kinds from the returned exact file inputs using separately supplied current synthetic host authority; confirm old selected journal archival, unchanged input bytes and full target outcome. Native execution remains the only writer and still enforces its current gates.",
+    "Inject stale/racing source, inventory, roots, parent, staged image and target, external mutex conflict, I/O failure and isolated process exits before/after atomic file publication. Require byte-exact project preservation and either retained private staging or complete output, without claiming CLI/Work or exhaustive crash coverage."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "`recover restore` MUSS ausschließlich einen vollständig qualifizierten, zielhashgebundenen Restore-Plan nach Kapitel 10.7.1 aus einer unveränderten Vollprojekt-Baseline oder einem Vollprojektbundle ausführen.",
-    "scope": "Supported complete plans have independent native source/target reconstruction, exact original and backup bytes and distinct canonical hash domains. Invalid/missing current configuration can use independently retained, fully byte-verified project Baselines only when identity and managed coverage agree; source/target objects alone never supply current evidence. Read-only planning and preflight preserve project/operational bytes. Unsupported history and specialist providers fail explicitly. A passive plan is not a ChangePlan, permission, durable backup, completed recovery or release proof. Younger supported protected history and its native original-byte closure survive both source kinds. Native historical Evidence assessments retain failed/stale data and explicitly do not establish run selection, approval, full verification or release readiness. R-46 Evidence/Baseline cases additionally verify order-independent exact archived attachment selection, shared dependency deduplication and precise conflict/missing-byte diagnostics without modifying historical records or current mutable subjects. Initial native Restore execution now reaches the exact planned full target for the supported subset after durable before/staging byte readback, with immutable source/plan/request/selection/own-file bindings and local completion audit. Only selected originals move after verified target and audit; native receipts remain in place. Unexpected own-namespace bytes are not exempt from inventory checks. Native R recovery now derives only complete inventory-explained effect prefixes, independently authorizes rollback/completion and bound owner takeover, preserves original actors/requests and immutable before images, and checks exact current target on replay. Recovery actors and stale-source observation are separate audit data. No partial-target forward resume or blanket audit-directory exemption is permitted."
+    "scope": "Supported complete plans have independent native source/target reconstruction, exact original and backup bytes and distinct canonical hash domains. Invalid/missing current configuration can use independently retained, fully byte-verified project Baselines only when identity and managed coverage agree; source/target objects alone never supply current evidence. Read-only planning and preflight preserve project/operational bytes. Unsupported history and specialist providers fail explicitly. A passive plan is not a ChangePlan, permission, durable backup, completed recovery or release proof. Younger supported protected history and its native original-byte closure survive both source kinds. Native historical Evidence assessments retain failed/stale data and explicitly do not establish run selection, approval, full verification or release readiness. R-46 Evidence/Baseline cases additionally verify order-independent exact archived attachment selection, shared dependency deduplication and precise conflict/missing-byte diagnostics without modifying historical records or current mutable subjects. Initial native Restore execution now reaches the exact planned full target for the supported subset after durable before/staging byte readback, with immutable source/plan/request/selection/own-file bindings and local completion audit. Only selected originals move after verified target and audit; native receipts remain in place. Unexpected own-namespace bytes are not exempt from inventory checks. Native R recovery now derives only complete inventory-explained effect prefixes, independently authorizes rollback/completion and bound owner takeover, preserves original actors/requests and immutable before images, and checks exact current target on replay. Recovery actors and stale-source observation are separate audit data. No partial-target forward resume or blanket audit-directory exemption is permitted. External Restore plan publication and passive file-input reconstruction now have native behavior coverage. File reading never supplies execution authority, rebinds the original plan or claims live preflight success; output failure preserves actual external state and leaves project bytes untouched."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [
@@ -175,6 +180,60 @@
     "tests/test_restore_execution_right.py::test_unproven_partial_state_is_never_overwritten_by_recovery[ordinary-owner]",
     "tests/test_restore_execution_right.py::test_unproven_partial_state_is_never_overwritten_by_recovery[selection]",
     "tests/test_restore_execution_right.py::test_unproven_partial_state_is_never_overwritten_by_recovery[target]",
+    "tests/test_restore_files.py::test_existing_output_is_never_overwritten[different]",
+    "tests/test_restore_files.py::test_existing_output_is_never_overwritten[directory]",
+    "tests/test_restore_files.py::test_existing_output_is_never_overwritten[same]",
+    "tests/test_restore_files.py::test_external_mutex_conflict_does_not_acquire_a_project_writer",
+    "tests/test_restore_files.py::test_input_files_are_reread_after_qualification[missing_plan]",
+    "tests/test_restore_files.py::test_input_files_are_reread_after_qualification[plan]",
+    "tests/test_restore_files.py::test_input_files_are_reread_after_qualification[selection]",
+    "tests/test_restore_files.py::test_io_failure_preserves_external_images_and_never_mutates_project[after_move]",
+    "tests/test_restore_files.py::test_io_failure_preserves_external_images_and_never_mutates_project[before_move]",
+    "tests/test_restore_files.py::test_io_failure_preserves_external_images_and_never_mutates_project[staging]",
+    "tests/test_restore_files.py::test_output_root_restrictions_are_checked_without_writes[ancestor]",
+    "tests/test_restore_files.py::test_output_root_restrictions_are_checked_without_writes[descendant]",
+    "tests/test_restore_files.py::test_output_root_restrictions_are_checked_without_writes[missing]",
+    "tests/test_restore_files.py::test_output_root_restrictions_are_checked_without_writes[none]",
+    "tests/test_restore_files.py::test_output_root_restrictions_are_checked_without_writes[other_project]",
+    "tests/test_restore_files.py::test_output_root_restrictions_are_checked_without_writes[project]",
+    "tests/test_restore_files.py::test_output_root_restrictions_are_checked_without_writes[relative]",
+    "tests/test_restore_files.py::test_output_root_restrictions_are_checked_without_writes[source_project]",
+    "tests/test_restore_files.py::test_output_root_restrictions_are_checked_without_writes[symlink]",
+    "tests/test_restore_files.py::test_publish_complete_original_plan_then_read_and_execute_selected_journals[baseline]",
+    "tests/test_restore_files.py::test_publish_complete_original_plan_then_read_and_execute_selected_journals[project_bundle]",
+    "tests/test_restore_files.py::test_reading_original_plan_does_not_forge_live_freshness_or_authority",
+    "tests/test_restore_files.py::test_real_process_exit_leaves_only_private_or_complete_external_plan[published]",
+    "tests/test_restore_files.py::test_real_process_exit_leaves_only_private_or_complete_external_plan[staged]",
+    "tests/test_restore_files.py::test_recheck_between_staging_and_atomic_publication_preserves_real_state[image]",
+    "tests/test_restore_files.py::test_recheck_between_staging_and_atomic_publication_preserves_real_state[inventory]",
+    "tests/test_restore_files.py::test_recheck_between_staging_and_atomic_publication_preserves_real_state[parent_inode]",
+    "tests/test_restore_files.py::test_recheck_between_staging_and_atomic_publication_preserves_real_state[project_inode]",
+    "tests/test_restore_files.py::test_recheck_between_staging_and_atomic_publication_preserves_real_state[source]",
+    "tests/test_restore_files.py::test_recheck_between_staging_and_atomic_publication_preserves_real_state[target]",
+    "tests/test_restore_files.py::test_selection_file_is_explicit_and_bound_to_original_plan[empty]",
+    "tests/test_restore_files.py::test_selection_file_is_explicit_and_bound_to_original_plan[malformed]",
+    "tests/test_restore_files.py::test_selection_file_is_explicit_and_bound_to_original_plan[omitted]",
+    "tests/test_restore_files.py::test_selection_file_is_explicit_and_bound_to_original_plan[unpaired]",
+    "tests/test_restore_files.py::test_selection_file_is_explicit_and_bound_to_original_plan[wrong_plan]",
+    "tests/test_restore_files.py::test_selection_file_is_explicit_and_bound_to_original_plan[wrong_tree]",
+    "tests/test_restore_files.py::test_stale_plan_cannot_publish_even_a_private_output[inventory]",
+    "tests/test_restore_files.py::test_stale_plan_cannot_publish_even_a_private_output[missing_root]",
+    "tests/test_restore_files.py::test_stale_plan_cannot_publish_even_a_private_output[missing_source]",
+    "tests/test_restore_files.py::test_stale_plan_cannot_publish_even_a_private_output[source]",
+    "tests/test_restore_files.py::test_unsafe_output_paths_aliases_and_nested_projects_are_rejected[../escape]",
+    "tests/test_restore_files.py::test_unsafe_output_paths_aliases_and_nested_projects_are_rejected[.specroad/plan.json]",
+    "tests/test_restore_files.py::test_unsafe_output_paths_aliases_and_nested_projects_are_rejected[/absolute]",
+    "tests/test_restore_files.py::test_unsafe_output_paths_aliases_and_nested_projects_are_rejected[Plan.json]",
+    "tests/test_restore_files.py::test_unsafe_output_paths_aliases_and_nested_projects_are_rejected[bad\\\\path]",
+    "tests/test_restore_files.py::test_unsafe_output_paths_aliases_and_nested_projects_are_rejected[link/plan.json]",
+    "tests/test_restore_files.py::test_unsafe_output_paths_aliases_and_nested_projects_are_rejected[nested/plan.json]",
+    "tests/test_restore_files.py::test_unsafe_output_paths_aliases_and_nested_projects_are_rejected[specroad.json]",
+    "tests/test_restore_files.py::test_untrusted_plan_files_are_rejected_without_writes[fifo]",
+    "tests/test_restore_files.py::test_untrusted_plan_files_are_rejected_without_writes[hardlink]",
+    "tests/test_restore_files.py::test_untrusted_plan_files_are_rejected_without_writes[hash]",
+    "tests/test_restore_files.py::test_untrusted_plan_files_are_rejected_without_writes[malformed]",
+    "tests/test_restore_files.py::test_untrusted_plan_files_are_rejected_without_writes[noncanonical]",
+    "tests/test_restore_files.py::test_untrusted_plan_files_are_rejected_without_writes[symlink]",
     "tests/test_restore_history.py::test_baseline_archive_retains_missing_immutable_evidence_file[False]",
     "tests/test_restore_history.py::test_baseline_archive_retains_missing_immutable_evidence_file[True]",
     "tests/test_restore_history.py::test_current_mutable_subjects_cannot_fill_a_complete_source",
@@ -367,7 +426,7 @@
     "tests/test_restore_plan_right.py::test_wire_json_syntax_and_encoding_fail_without_any_project_access[utf8]"
   ],
   "open_items": [
-    "15.l.R remains open: CLI/external plan publication and Work parity, exhaustive durable-boundary and I/O matrix, and remaining integration acceptance are mandatory. This native recovery substage is not completion of position 650 or a complete Restore/release claim.",
+    "15.l.R remains open: CLI integration and Work parity, exhaustive durable-boundary and I/O matrix, and remaining integration acceptance are mandatory. This native recovery substage is not completion of position 650 or a complete Restore/release claim.",
     "Historical lifecycle/specialist evidence, independent-policy Evidence, further protected record kinds, prior recovery audits and general completed-receipt history folds remain mandatory before full Restore acceptance. Existing supported original receipt targets remain unchanged; missing necessary proof fails closed."
   ]
 }
