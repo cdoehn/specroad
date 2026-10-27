@@ -41,7 +41,7 @@ implementation_plan_commits_total: 900
 implementation_plan_commits_completed: 649
 last_completed_plan_commit: 15.l.W
 next_plan_commit: 15.l.R
-last_completed_numbered_bundle: 502
+last_completed_numbered_bundle: 503
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -30517,6 +30517,112 @@ Produktstand **649/900**, letzter Schritt **15.l.W**, nächster **15.l.R** und
 R-/C-Checkboxen bleiben unverändert. Apply und Commit sind bei Übergabe noch
 nicht beobachtet. Native ZIP-Prüfung und atomare Exchange-Übergabe beenden
 sofort diesen N-Auftrag; keine eigene Apply-, Warte- oder Modellschleife.
+
+
+**Korrektur- und Übergabenachweis – Bundle 503 (15.l.R-FIX1), 27. Oktober 2026.**
+
+**Maßgebliche Basis.** Das vollständig geprüfte Result
+`specroad-apply_Result_234623_1026_f4f9cf.zip`, SHA-256
+`7fe6bfdb96c56d7969275428fd7f5fa3f4c3adf67511f22bb954796cf1bbdc0f`,
+bindet den sauberen Abschlusscommit
+`083f391ffbb582af66ac67a924d8c84ab05ceae1`, Repository
+`a33ed6cf-0a97-4b73-b11a-d4239e7a2145`, Fingerprint
+`7c9d2a24e397e0e5`, Algorithmus `patchharbor-state-v1`.
+Root-Anleitung, Kontext, Umgebung, Manifest, Run-/Ausführungslogs und alle
+**2.306** Snapshotdateien samt Blob-IDs und Modi wurden mit dem tatsächlichen
+Apply-Stand geprüft. Das zugeordnete Bundle **502**, Paket-SHA-256
+`ad6c7b9bc69e069906f476e83aa8029d647be0cea2d63682b614166fc36e3502`,
+endete nach **7.251/7.251** parallelen Apply-Tests, **Sequenz 208 / Gruppe 1**,
+vier Workern und **2478.11 s**, im passenden regulären R-Zwischencommit.
+Auswahlbindung, Einzeloutcomes, Commitdateien und sauberer Endstand stimmen.
+Ausgangsfortschritt: **649/900**, zuletzt **15.l.W**, nächstens **15.l.R**.
+
+**Befund und technische Korrektur.** Ein geöffnetes Elternverzeichnis konnte
+nach dem Öffnen durch eine bytegleiche Kopie ersetzt werden. Die Inventur
+erkannte dabei keinen Byteunterschied; der alte Deskriptor konnte noch in
+das abgetrennte Verzeichnis schreiben. Auch ein in das neue Verzeichnis
+verschobener Originaldatei-Inode schützte einen fremden gleichnamigen
+Eintrag im alten Verzeichnis nicht. Bei der Publikation konnte zudem die
+Modusänderung am Stagingbild vor der bisherigen letzten Prüfung stattfinden.
+Ein später Konfliktbefund stellte die bereits veränderten Bytes nicht zurück.
+
+`RestoreStore` bindet nun die geöffneten Quell-/Zieleltern erneut an ihre
+aktuell sicher geöffneten Verzeichnisse. Die vorhandene native
+`check_directory_binding`-Prüfung wird vor Modusänderung und nochmals vor
+Publikation sowie vor Unlink, Journalarchivierung und Rmdir verwendet.
+Damit bleiben bytegleiche Kopien, entfernte/unsichere Eltern und fremde
+Einträge im abgetrennten Baum ohne weitere Dateieffekte. Unveränderte
+Bindungen behalten Publikationsbytes, bestehende Zielmodi, die Archivierung
+originaler Journalbytes und die bewiesene Leerordnerentfernung bei.
+Der gemeinsame Store schützt auch seine bestehenden Recovery-Aufrufer.
+Dies ist keine Sandbox gegen ein feindliches Dateisystem oder beliebige
+spätere Fremdschreibvorgänge; der native lokale/advisory Lockrahmen bleibt.
+
+Die vorhandene sichere Infrastruktur und Erhaltungspflicht aus **10.7.3**
+werden technisch korrigiert. **SPECROAD-DECISION-1** samt Vertrag 3 ist
+vorhanden; der Auftrag nennt drei verbleibende Klärungen. Eine normative
+Klärung ist für diesen Befund nicht erforderlich. Spezifikation **0.2.32**,
+Planrevision **27**, deren Hashbindungen und historische Nachweise bleiben
+unverändert. Control verwaltet das Budget; dieses Dokument verbucht keinen
+noch unbeobachteten Apply-Erfolg und erteilt keine Produktfreigabe.
+
+**Gezielte parallele Prüfung.** Die bereinigte Reproduktion hatte vor der
+Produktkorrektur bei 42 Fällen **23 Fehler / 19 Erfolge**; mit der Korrektur
+bestanden diese **42/42**. Zwei weitere Fälle prüfen einen Parentwechsel
+erst nach synchronisiertem Stagingmodus unmittelbar vor der Publikation.
+Der abschließende gezielte Lauf besteht **253/253** Verhaltenstests in
+**679.21 s**, CPython **3.14.4**, **vier Worker**, Exit **0**:
+
+- `tests/test_catalog_check.py` (17)
+- `tests/test_catalog_check_right.py` (37)
+- `tests/test_restore_directory_binding.py` (44)
+- `tests/test_restore_execution.py` (42)
+- `tests/test_restore_execution_right.py` (59)
+- `tests/test_restore_files.py` (54)
+
+Die **44** neuen Fälle vergleichen unabhängig Pfade, Bytes und Modi vor und
+nach tatsächlichem Verzeichnistausch: beide Elternseiten, Kopie, fehlender
+Pfad, Symlink, erhaltene Original-Inodes mit fremden abgetrennten Einträgen,
+normale Effekte und die zweite Publikationsgrenze. Zwei vollständige native
+Restore-Aufrufe mit Projektbundle beziehungsweise Baseline und separater
+synthetischer Hostautorisierung erhalten Sicherung, Staging und den aktiven
+Recoveryblocker. Der regulär beendete Live-Prozess gibt nur seinen genauen
+temporären Owner frei; daraus wird kein erfolgreicher Restore abgeleitet.
+Bestehende W-/R-Ausführungs-, Dateiadapter- und Katalogtests sind unverändert.
+
+Vollständige Collection/Katalogprüfung: **21.803** aktive Tests, **0** Fehler,
+**0** Testkörper. Neue Identitäten sind gemeinsam sortiert ab Nummer
+**21763** angehängt; **21.807** Nummern einschließlich vier historisch
+entfernter Tests bleiben reserviert. Keine Umnummerierung/Wiederverwendung.
+SR-TC-0461/0462 bleiben `partial`; die neue Fixture unterscheidet synthetische
+Storeinventur und qualifizierte native Restore-Ausführung ausdrücklich.
+Kein Vollsuite-/Releasebeleg (`full_suite_passed=null`), kein Dokumentations-
+oder Darstellungstest, kein serieller Lauf und kein CI-Start.
+
+Finale Quellidentität: `0d0ea3bbf8a35882e8f43d785eceec09cc0b0759efffe3370d8da81349248cad`.
+Auswahlbericht-SHA-256: `50ae715ce87f4fc861cc9c0c2e8116a6b8b7d30303fa2dbfa4c3782a07c01abd`.
+Einzeloutcomes-SHA-256: `5f560f7d33adcbe0e2e202647beee44cf5a18003654b53234f842111d25aae5c`.
+Vorherige Apply-Auswahlbindung: `363dc16c9acc4d0be1283b9210510cd3bfeb7c44cb105f98486b9a00149ed443`;
+Apply-Bericht: `bae7e67c31e8e9faeb56c3c72e6e291309eee71db5681fc56adf9d95da9ad996`;
+Apply-Einzeloutcomes: `fded6430aea08aa5d1b187463aa00ad0837e1d287ab2db8e12d205b7c3e4751e`.
+
+**Offen und Übergabe.** Genau ein **FIX 15.l.R-FIX1**, zugeordnet zur
+Planposition **650/900**, Commit-Message
+`Fix: 15.l.R – Restore-Mutationen an aktuelle Elternverzeichnisse binden`.
+Keine künstliche W/R/C-Folge und keine zusätzliche Produktposition.
+**15.l.R und 15.l.C bleiben offen**, erreichter Stand **649/900**.
+CLI-Integration, Einzellauf-/Workparität, vollständige Dauergrenzen-/I/O-Matrix
+und alle zuvor aufgeführten historischen/providerbezogenen Pflichtabnahmen
+bleiben erforderlich. Diese gezielte Korrektur ersetzt keinen Gesamtbeleg.
+
+Der Entrypoint installiert ausschließlich den gezielt geprüften Zustand
+über PatchHarbor. Vor dem Commit läuft genau **Sequenz 209 / Gruppe 2 von 3**,
+**7.269** Tests, parallel mit vier Workern. Erst nach erfolgreicher Auswahl-,
+Hash- und Einzeloutcomeprüfung wird allein die Bundle-Nummer auf **503**
+gesetzt. Produktzähler, letzter/nächster Planschritt und R-/C-Checkboxen
+bleiben unverändert. Apply und Commit sind bei Übergabe noch nicht
+beobachtet. Native ZIP-Prüfung und atomare Exchange-Übergabe beenden sofort
+diesen N-Auftrag; keine eigene Apply-, Warte- oder Modellschleife.
 
 #### 15.l.C – Make it Clean
 

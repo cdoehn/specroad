@@ -4,6 +4,7 @@ import os
 
 from ..changes._journal_io import _read
 from ..changes._publication_io import replace_bound_image
+from ..changes._recovery_binding import check_directory_binding
 from ..changes._recovery_evidence import EvidenceRecord, persist_evidence, sync_evidence
 from ..changes._recovery_receipts import existing_recovery_record
 from ..changes._recovery_bytes import fingerprint_recovery_file
@@ -50,6 +51,15 @@ class RestoreStore:
                 self.expected[parent] = {'path': parent, 'kind': 'directory'}
         self.check()
 
+    def _bound_parents(self, *bindings):
+        """Byte-equivalent replacement directories do not own our open handles."""
+        for parts, directory in bindings:
+            path = '/'.join(parts)
+            require(directory is not None, 'restore_parent_changed', path=path, exit_code=6)
+            with self.files.directory(parts) as current:
+                check_directory_binding(current, guards._identity(os.fstat(directory)),
+                                        reason='restore_parent_changed', path=path)
+
     def create(self, path, raw):
         require(path in self.own and type(raw) is bytes and self.own[path] == raw,
                 'restore_unbound_own_file', path=path, exit_code=7)
@@ -81,11 +91,12 @@ class RestoreStore:
                     self.check()
                     require(fingerprint_recovery_file(self.files, path) == previous,
                             'restore_target_changed', path=path, exit_code=6)
+                    self._bound_parents((source[:-1], source_dir), (target[:-1], target_dir))
                 replace_bound_image(source_dir, source[-1], target_dir, target[-1],
                     size=len(raw), digest=token['sha256'], identity=token['identity'],
                     mode=0o644 if previous is None else previous['mode'],
                     source_changed=lambda: RestoreError('restore_stage_conflict', path=staged, exit_code=6),
-                    before_replace=check)
+                    before_mutation=check, before_replace=check)
         del self.expected[staged]
         self.expected[path] = {**file_row(path, raw), 'kind': 'file'}
         self.check()
@@ -103,6 +114,7 @@ class RestoreStore:
             self.check()
             require(fingerprint_recovery_file(self.files, path) == token,
                     'restore_removal_conflict', path=path, exit_code=6)
+            self._bound_parents((parts[:-1], directory))
             os.unlink(parts[-1], dir_fd=directory)
             os.fsync(directory)
         del self.expected[path]
@@ -126,6 +138,7 @@ class RestoreStore:
                 require(target[-1] not in os.listdir(target_dir), 'restore_archive_collision', exit_code=6)
                 before = os.stat(source[-1], dir_fd=source_dir, follow_symlinks=False)
                 guards._regular(before, directory=self.expected[path]['kind'] == 'directory')
+                self._bound_parents((source[:-1], source_dir), (target[:-1], target_dir))
                 os.rename(source[-1], target[-1], src_dir_fd=source_dir, dst_dir_fd=target_dir)
                 os.fsync(source_dir)
                 os.fsync(target_dir)
@@ -152,6 +165,7 @@ class RestoreStore:
         parts = path.split('/')
         with self.files.directory(parts[:-1]) as directory:
             self.check()
+            self._bound_parents((parts[:-1], directory))
             os.rmdir(parts[-1], dir_fd=directory)
             os.fsync(directory)
         del self.expected[path]
