@@ -192,6 +192,14 @@ class CommandSpec:
             if any(other not in flags or other == option.flag for other in option.excludes):
                 raise CommandUsageError("Exclusion refers to an unknown option or itself")
         normative_flags = {"--actor-type", "--actor-id", "--request-id", "--dry-run", "--as-proposal"}
+        restore = (self.command_id == 'recover.restore' and self.words == ('recover', 'restore')
+                   and self.command_class is CommandClass.RECOVERY_WRITE
+                   and self.preflight_profile is PreflightProfile.RECOVERY
+                   and self.effect_scope is EffectScope.RECOVERY_TRANSACTION)
+        if restore:
+            # Restore has its own actor and planning contract, never a proposal
+            # or ordinary normative-write preflight. Metadata grants no authority.
+            normative_flags = {'--as-proposal'}
         if self.command_class is not CommandClass.NORMATIVE_WRITE and normative_flags.intersection(flags):
             raise CommandUsageError("Normative write option on a non-write command")
         if not all(isinstance(path, str) and re.fullmatch(r"[a-z][a-z0-9_]*", path) for path in self.requires_write_paths):

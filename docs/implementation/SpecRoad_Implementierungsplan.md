@@ -41,7 +41,7 @@ implementation_plan_commits_total: 900
 implementation_plan_commits_completed: 649
 last_completed_plan_commit: 15.l.W
 next_plan_commit: 15.l.R
-last_completed_numbered_bundle: 507
+last_completed_numbered_bundle: 508
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -31233,6 +31233,152 @@ reale Dateien, Index und bereits erfolgreiche Commits erhalten. Kein Dev-
 Volltest, serieller Lauf, zusätzlicher Apply-Volltest, CI-Start oder Dev-Commit.
 Native ZIP-Prüfung, SHA-256 und atomare Exchange-Übergabe beenden diesen
 N-Auftrag; keine eigene Apply-, Warte- oder Modellschleife.
+
+
+**Umsetzungs- und Übergabenachweis – Bundle 508 (15.l.R-Zwischenstand), 27. Oktober 2026.**
+
+**Maßgebliche Basis.** Vollständig geprüftes Result
+`specroad-apply_Result_063915_1027_806a9e.zip`, SHA-256
+`7b8844c26b630c7f3d9c4f2a4c040d7ffb6a50c9a76b1c701ec6c8bac2e0a2d9`;
+Repository `a33ed6cf-0a97-4b73-b11a-d4239e7a2145`, Abschlusscommit
+`07706b3926937c777c554db34535e7666c261cf1`, Fingerprint
+`7c9d2a24e397e0e5`, Algorithmus `patchharbor-state-v1`.
+Root-Anleitung, Kontext, Umgebung, Manifest, Run-/Ausführungslogs sowie alle
+**2.312** Snapshotdateien samt Blob-IDs und Modi stimmen mit dem tatsächlichen
+sauberen Apply-Stand überein. Bundle **507**, Paket-SHA-256
+`512c8f91ed41b8f4698362d406c5978363f5809d07e6657e7cd1edde2cdfd4cc`,
+endete nach **7.345/7.345** Apply-Tests, **Sequenz 213 / Gruppe 0**, vier
+parallelen Workern und **3231.07 s** im passenden Dokumentcommit. Exakte
+Payload-/Commitdateien, Auswahlbindung und Einzeloutcomes wurden geprüft.
+Die Klärung **RESTORE-WORK-BINDING** ist damit angewandt; Produktstand
+**649/900**, zuletzt **15.l.W**, nächstens **15.l.R**.
+
+**Umgesetzter Ausschnitt.** Der bestehende Workcodec erhält die in
+**0.2.34 / 10.7.7** bereits festgelegte passive Ausführungsbindung
+`work-restore-binding-v1`. Er rekonstruiert die vollständigen Originalplanbytes
+mit dem nativen Restoreplan-Prüfer und die kanonische explizite Journalauswahl
+gegen genau dessen ursprüngliche Inventur. Bei ursprünglich fehlender Auswahl
+werden allein die kanonischen leeren Auswahlbytes gebunden; gefundene aktive
+Journale erzeugen keine implizite Auswahl. Plan und Auswahl sind vollständige
+content-addressierte Objekte und zwingende Einträge im Eingangsmanifest.
+Innerer Planhash, Rohbytehash und Byte-Länge bleiben getrennt. Eine intakte
+Referenz außerhalb des Eingangsmanifests reicht nicht aus.
+
+Die ursprünglichen normalisierten Ausführungsargumente, Actor-/Requestwerte,
+Projekt-ID, volle Projekt-Scopebindung und Zielbindung bleiben erhalten.
+Es gibt weder eine erfundene semantische Ausgangswurzel noch einen
+Change-Plan-Operationshash. Die bereits vorhandene Aufgabenprojektion bindet
+diese Restorevariante einschließlich ihres ursprünglichen Auftrags; externe
+Plan-/Auswahltransportorte verändern keine Unit-Identität. Sie bleiben als
+ursprüngliche Argumente gespeichert und dürfen nicht in einer vertrauenswürdig
+gebundenen Nachfolgegeneration umgeschrieben werden. Originalprojekt- und
+Quellorte im Plan bleiben unverändert. Die bestehende strikte Nachfolgerprüfung
+weist auch konsistent neu gehashte fremde Actor-/Requestbindungen ab.
+Restorekonflikte erhalten Code 6; bestehende Work-/Change-Plan-Verträge behalten
+ihre bisherige Bedeutung. Ungültige gespeicherte Restorebytes werden über den
+Restoreleser als Code 3 behandelt, fehlende neue Aufrufangaben als 2. Native
+Auswahlkonflikte, Sicherheitsgrenzen und fehlende ausgewählte aktive Journale
+behalten ihre Fehlerklassen 6, 7 beziehungsweise 5.
+
+Der Registry-Metadatenvertrag erlaubt Actor-/Request-/Dry-Run-Optionen eng für
+`recover.restore` mit der vorgesehenen Schreibklasse, Schreibgrenze und dem
+Recovery-Preflight. Andere Command-IDs, Klassen oder Profile erhalten diese
+Ausnahme nicht; `--as-proposal` bleibt hier unzulässig. Das registriert keinen
+Platzhalter in der öffentlichen CLI. Der Codec benötigt einen tatsächlichen
+vertrauenswürdigen Hostvertrag, ruft aber keinen Handler auf. Er öffnet keine
+Projekt-, Plantransport- oder Herkunftsdateien, lädt keine Authority aus Daten
+und führt keine Restoreaktion aus. Ein gespeicherter Actor, Risikowert oder
+abgeschlossener Vorbereitungsteil ist keine aktuelle Recoveryautorisierung.
+
+Die vorhandene externe Checkpointablage speichert und liest diese Variante
+mit vollständiger ursprünglicher Bytebindung über mehrere Generationen.
+Ein erneutes Öffnen liest die gespeicherten Eingänge auch ohne externe
+Plan-/Quelldatei. Das ist ausschließlich passive Datenrekonstruktion und
+befreit eine spätere Ausführung nicht von frischen Herkunfts-, Bestands-,
+Owner-, Lock- und Authorityprüfungen oder der nativen Journalentscheidung.
+Abgeschlossene synthetische Vorbereitungseinheiten melden keinen Restoreerfolg.
+
+**Gezielte parallele Verhaltensprüfung.** Der endgültige Zustand besteht
+**594/594** ausgewählte Verhaltenstests
+mit **vier Workern**, Prozessabschluss **0**, in **388.97 s**.
+Alle Einzeloutcomes sind bestanden; dies ist ein Teiltestnachweis:
+
+- `tests/test_catalog_check.py` (17)
+- `tests/test_catalog_check_right.py` (37)
+- `tests/test_cli.py` (23)
+- `tests/test_registry.py` (18)
+- `tests/test_restore_invocation_options.py` (159)
+- `tests/test_work_checkpoints.py` (17)
+- `tests/test_work_checkpoints_right.py` (49)
+- `tests/test_work_finalization.py` (25)
+- `tests/test_work_finalization_right.py` (42)
+- `tests/test_work_manifest.py` (43)
+- `tests/test_work_manifest_right.py` (67)
+- `tests/test_work_restore_binding.py` (53)
+- `tests/test_work_resume_right.py` (44)
+
+**53 neue Fälle** prüfen beide qualifizierten Quellarten über beschädigtem
+Ausgangsbestand, fehlende und nichtleere explizite Journalauswahl, getrennte
+Hashdomänen, Byteerhaltung, echte dauerhafte Workgenerationen, gesperrte
+I/O-/Handleraufrufe, Originalactor-/Requestregeln, Transportidentität,
+fehlende oder veränderte Bytes, unbekannte/fremde Bindungsformate,
+Originalprojekt-/Zielkonflikte und konsistent gefälschte Nachfolger. Registry-
+grenzen und bestehende Read-only-/Change-Plan-/Checkpointverträge werden
+mitgeprüft. Alle Projekte, Actorlabels und Hostverträge sind synthetisch.
+Kein menschlicher Review, Hostgrant oder Risikoentscheid wird behauptet.
+Der erste Entwicklungsstand bestand alle 594 ausgewählten Fälle in 388.52 s.
+Die anschließende Prüfung präzisierte die bereits verlangte Code-6-Ablehnung
+fremder ursprünglicher Restoreaufträge gegenüber dem vertrauenswürdigen
+Vorgänger; auch dieser zweite Zustand bestand alle **594** Fälle in **388.32 s**.
+Die letzte Feldprüfung unterscheidet zusätzlich ungültige innere Hashwerte
+(Code 3) von abweichenden gültigen Bindungen (Code 6), einschließlich Boolean-,
+Null-, Zahlen-, Längen- und Großschreibungsfällen. Der vollständige ausgewählte
+Umfang wurde für diesen endgültigen Zustand erneut parallel geprüft. Frühere
+Läufe ersetzen keinen finalen Nachweis.
+
+Vollständige Collection-/Katalogprüfung: **22.086** aktive Identitäten,
+**0** Fehler und **0** ausgeführte Testkörper. Alle bisherigen **22.037**
+Testnummern bleiben erhalten. **53** neue Identitäten werden ausschließlich
+als Nummern **22.037–22.089** angehängt; **22.090** Nummern bleiben reserviert,
+einschließlich der vier weiterhin stillgelegten Identitäten. Die neue Fixture
+`SR-FIX-RESTORE-WORK-BINDING-v1` bezeichnet ausschließlich diesen passiven
+Ausschnitt. `SR-TC-0461` und `SR-TC-0462` bleiben `partial`.
+Spezifikation **0.2.34**, Planrevision **29** und aktive Spezifikationshash-
+bindungen bleiben unverändert; historische Nachweise werden nicht umgeschrieben.
+
+Finale Dev-Quellidentität: `022e383496483caa46ae1268514d46bd064f911b32732aad3d459d079c2a2133`.
+Auswahlbericht-SHA-256: `d06ddbfda5a88aa64001e7f7cbba0bdfe0208d8770d61361a31c868281c9430d`.
+Einzeloutcomes-SHA-256: `0a220d93bee83bf377c3b5f82ff3e72c5d70389a6ff66266a1b8d71b3b1dcf54`.
+Vorherige Apply-Auswahlbindung: `3656b8dff546e5f9ea14d6984c21c08709b1794f2e8eeca8a0ed7b0d3e953b77`;
+Apply-Bericht: `19d6ca98040c538aacf0a18d8c0564ff502d94f67b45bdd434eb4e769da49353`;
+Apply-Einzeloutcomes: `1722e75ce13cc96e74090373b42d09f3c55f5a39a1f488be17859ce62c45f9af`.
+
+**Offen und Übergabe.** Ein echter regulärer **15.l.R**-Zwischenstand,
+Position **650/900**, Commit-Message
+`15.l.R feat(bundle): Restore veröffentlichen und Crashabsicherung vervollständigen`.
+Dies ist Umsetzung der bereits angewandten Klärung, keine weitere normative
+Entscheidung, technische Alibikorrektur oder künstliche W/R/C-Folge.
+**15.l.R und 15.l.C bleiben offen**, erreichter Stand **649/900**.
+Öffentliche CLI-Registrierung/Selbstbeschreibung, die verwendbare echte
+CLI-Hostautorisierung, Planungs-Work, native Restore-Journalanbindung und
+Ausführung/Recovery in Work, Ergebnislieferung, vollständige Workparität,
+I/O-/Crashmatrix und alle zuvor offenen historischen Schutz-/Lifecycle-/
+Spezialistenprovider bleiben Pflichtabnahmen. Kein Vollsuite- oder Releaseerfolg.
+Der aktuelle Control-Vertrag 3 erlaubt Klärung bei Limit **3**, Restbudget **2**;
+SPECROAD-DECISION-1 enthält die ausdrückliche Projektfreigabe. Dieser Auftrag
+übergibt genau ein normales `patch_ready`-Bundle. Nur Control verwaltet das
+Budget nach dem tatsächlich zugeordneten erfolgreichen sauberen Folge-Result.
+
+Der Entrypoint installiert genau diesen geprüften Zustand. Vor dem Commit
+läuft ausschließlich **Sequenz 214 / Gruppe 1 von 3**, **7.360** Tests,
+parallel mit vier Workern. Erst nach erfolgreichem Gate und nativer
+Auswahlbindung wechselt allein der Bundlemarker von **507** auf **508**.
+Produktzähler, letzter/nächster Planschritt und offene Checkboxen bleiben
+unverändert. Apply und Commit sind bei Übergabe noch nicht beobachtet.
+Bei Fehler bleiben echte Dateien, Index und erfolgreiche frühere Commits
+erhalten. Kein Dev-Volltest, serieller Lauf, zusätzlicher Apply-Volltest,
+CI-/Watcher-/Control-Start oder Dev-Commit. Native Paketprüfung, echter SHA-256
+und atomare Exchange-Übergabe beenden diesen N-Auftrag unmittelbar.
 
 #### 15.l.C – Make it Clean
 
