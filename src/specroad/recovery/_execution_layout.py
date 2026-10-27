@@ -5,6 +5,7 @@ No self-referential hash is invented. Future recovery must reconstruct this
 layout from the original plan/request, not trust an arbitrary owned-path list.
 """
 from base64 import b64decode
+from hashlib import sha256
 
 from ..model.canonical import canonical_json_bytes, canonical_json_sha256
 from ._codec import file_row
@@ -65,6 +66,14 @@ def execution_layout(plan, request, authority):
         'own_directories': own_directories, 'effects': effects, 'archive_moves': moves,
         'terminal_move': {'source': active, 'target': terminal}}
     own[journal_path] = canonical_json_bytes(binding)
+    # A separate derivative binds the unchanged original journal. Do not add
+    # it to that journal's own_files: old original execution bytes stay valid.
+    # It keeps the shallow recovery gate closed while the terminal directory
+    # move is not yet durably confirmed, like native transaction cleanup.
+    barrier = '.specroad/recovery/pending-restore-' + token + '.json'
+    own[barrier] = canonical_json_bytes({'format_version': 'restore-terminal-barrier-v1',
+        'request_sha256': token, 'original_execution_sha256': sha256(own[journal_path]).hexdigest(),
+        'terminal_path': terminal})
     return {'token': token, 'active': active, 'archive': archive, 'terminal': terminal,
             'own': own, 'target': target, 'changes': changes, 'staged': staged,
-            'binding': binding, 'completed': completed}
+            'binding': binding, 'completed': completed, 'terminal_barrier': barrier}

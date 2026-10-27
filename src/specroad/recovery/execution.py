@@ -221,7 +221,12 @@ def _execute_restore(raw, *, expected_target_root, authority, actor, request_id,
         for index, move in enumerate(layout['binding']['archive_moves']):
             store.archive(move['source'], move['target'])
             save(active + '/archived/' + str(index) + '.json')
+        save(layout['terminal_barrier'])
         store.archive(active, terminal)
+        # No normative publication remains. Source loss cannot invalidate a
+        # proven full target or prevent release of its durable terminal gate.
+        store.before_mutation = lambda: None
+        store.remove(layout['terminal_barrier'])
         require(not held._files.journal_entries(), 'restore_remaining_journals', exit_code=5)
         store.check()
         return RestoreCompletion._create({**layout['completed'], 'audit_path': archive + '/completed.json',

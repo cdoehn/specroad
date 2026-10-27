@@ -560,6 +560,10 @@
       "kind": "Synthetic owned storage inventory under the real project mutex plus two qualified native full-source Restore executions with independent synthetic host authority. Deterministic native directory renames, byte-identical copies, missing parents, symlinks and relocated original inodes with foreign detached entries expose descriptor/path rebinding. Independent path, byte and mode inventories assert no additional effects after the external change; normal live-owner cleanup is accounted for. No hostile-filesystem sandbox, complete crash matrix, CLI, Work or human approval claim.",
       "provider": "tests/test_restore_directory_binding.py:store_case,exchange_parent,pause_open_parents;tests/support/restore.py:restore_case"
     },
+    "SR-FIX-RESTORE-DURABILITY-v1": {
+      "kind": "Synthetic EIO, ENOSPC, zero-write, lost-response and sync failures around native Restore evidence, target replacement, terminal archival and rollback. Real files and independent expected original/target bytes prove failure status, barrier retention, exact original-journal binding, fresh authority, source-loss completion and compatibility with legacy terminal states. Existing real process-crash regressions remain required. No full I/O matrix, Work parity, public CLI host authorization or human approval is asserted.",
+      "provider": "tests/test_restore_durability.py:io_fault,recovered;tests/test_restore_execution_right.py:fixture;tests/support/restore.py:restore_case"
+    },
     "SR-FIX-RESTORE-EXECUTION-v1": {
       "kind": "Owned native full-project bundle and Baseline cases, damaged mutable bytes, explicit corrupt/empty journal selection, real directory and byte backups, kernel mutex, native staged publication and immutable audit. Synthetic host RecoveryAuthority callbacks are not human release approval. Selected I/O interruptions retain actual bytes and active recovery barriers; no comprehensive restart or CLI/Work integration claim.",
       "provider": "tests/support/restore.py:restore_case;tests/test_restore_execution.py:selected,execute,files;tests/test_bundle_receipts.py:completed,receipts"
@@ -900,6 +904,7 @@
     "SR-FIX-REQUIREMENT-INPUT-v1",
     "SR-FIX-RESOURCE-INVENTORY-v1",
     "SR-FIX-RESTORE-DIRECTORY-BINDING-v1",
+    "SR-FIX-RESTORE-DURABILITY-v1",
     "SR-FIX-RESTORE-EXECUTION-v1",
     "SR-FIX-RESTORE-FILES-v1",
     "SR-FIX-RESTORE-INVOCATION-v1",

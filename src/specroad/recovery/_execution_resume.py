@@ -124,15 +124,27 @@ def classify(plan, layout, inventory, contents, owner=None):
         index, state = match_prefix(inventory['entries'], value['forward_prefix'], program, reverse, roots, evidence=events)
         return {'action': 'replay' if index == len(program) else 'rollback', 'index': index,
                 'state': state, 'layout': reverse, 'program': program, 'completion': completion, 'events': events}
-    index, state = match_prefix(inventory['entries'], original, forward, layout, roots, evidence=events)
+    try:
+        index, state = match_prefix(inventory['entries'], original, forward, layout, roots, evidence=events)
+    except RestoreError as error:
+        if error.reason != 'restore_unexplained_execution_state':
+            raise
+        # The previous producer could create the terminal parent before its
+        # final rename. Accept only that complete, byte-proven legacy prefix;
+        # retain the original journal and add the barrier before archiving it.
+        legacy = forward[:-3] + [forward[-2]]
+        legacy_index, state = match_prefix(inventory['entries'], original, legacy, layout, roots, evidence=events)
+        require(legacy_index == len(legacy) - 1, 'restore_unexplained_execution_state', exit_code=6)
+        index = len(forward) - 3
     if index == len(forward):
         require(layout['active'] not in {r['path'] for r in inventory['entries']},
                 'restore_terminal_active_conflict', exit_code=6)
         return {'action': 'replay', 'index': index, 'state': state, 'layout': layout,
                 'program': forward, 'completion': layout['completed'], 'events': events}
-    require(layout['terminal'] not in {r['path'] for r in inventory['entries']},
+    terminal = layout['terminal'] in state
+    require(not terminal or layout['active'] not in state,
             'restore_active_terminal_conflict', exit_code=6)
-    if layout['active'] + '/committing.json' in state and full_target(state, layout):
+    if (layout['active'] + '/committing.json' in state or terminal) and full_target(state, layout):
         return {'action': 'complete', 'index': index, 'state': state, 'layout': layout,
                 'program': forward, 'completion': layout['completed'], 'events': events}
     reverse, program, completion = rollback_program(plan, layout, state)
@@ -160,7 +172,9 @@ def resume(store, plan, original_layout, classified, *, authority, actor, author
     for operation in classified['program'][classified['index']:]:
         kind, path, *rest = operation
         if classified['action'] != 'rollback':
-            require(kind in ('create', 'move'), 'restore_forward_resume_forbidden', exit_code=7)
+            require(kind in ('create', 'move') or
+                    kind == 'remove' and path == original_layout['terminal_barrier'],
+                    'restore_forward_resume_forbidden', exit_code=7)
         if kind == 'create':
             if '/rollback/staging/' in path:
                 raw = store.own[path]

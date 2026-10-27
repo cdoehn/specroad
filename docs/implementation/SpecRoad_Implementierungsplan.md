@@ -41,7 +41,7 @@ implementation_plan_commits_total: 900
 implementation_plan_commits_completed: 649
 last_completed_plan_commit: 15.l.W
 next_plan_commit: 15.l.R
-last_completed_numbered_bundle: 505
+last_completed_numbered_bundle: 506
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -30904,6 +30904,146 @@ Commits. Kein Dev-Volltest, serieller Lauf, zusätzlicher Apply-Volltest,
 CI-Start oder Dev-Commit. Teiltests sind kein Vollsuite-/Release-Nachweis.
 Paketprüfung und atomare Übergabe beenden den Einzelauftrag; Apply und
 Folgeauftrag liegen ausschließlich bei der externen Steuerung.
+
+
+**Korrektur- und Übergabenachweis – Bundle 506 (15.l.R-FIX2), 27. Oktober 2026.**
+
+**Maßgebliche Basis.** Das vollständig geprüfte Result
+`specroad-apply_Result_034208_1027_0ee6ee.zip`, SHA-256
+`305df3014fbe66afeea6298abcf5bd9e3506a52edce5d23ce751ff82b8006065`,
+bindet den sauberen Abschlusscommit
+`0f60faf11457276934e8986eb73f63e9ed958f1f`, Repository
+`a33ed6cf-0a97-4b73-b11a-d4239e7a2145`, Fingerprint
+`7c9d2a24e397e0e5`, Algorithmus `patchharbor-state-v1`.
+Root-Anleitung, Kontext, Umgebung, Manifest, Run-/Ausführungslogs und alle
+**2.311** Snapshotdateien samt Blob-IDs und Modi stimmen mit dem tatsächlichen
+Apply-Stand überein. Bundle **505**, Paket-SHA-256
+`a1adae935762bbd65835360fb10bead5b6fe95a367857d8dbc81da90ae4fd4d8`,
+endete nach **7.331/7.331** parallelen Apply-Tests, **Sequenz 211 / Gruppe 1**,
+vier Workern und **2943.35 s**, im zugeordneten Commit. Auswahlbindung,
+Einzeloutcomes, Commitdateien und sauberer Endstand wurden geprüft.
+Ausgangsfortschritt: **649/900**, zuletzt **15.l.W**, nächstens **15.l.R**.
+
+**Befund und technische Korrektur.** Bei einem nativen I/O-Fehler unmittelbar
+nach dem tatsächlichen Umbenennen des aktiven Restore-Journals in seinen
+passiven Terminalbereich wurde zwar Fehler 5 mit `mutation_possible` und
+`recovery_required` gemeldet, aber die flache Recoverybeobachtung fand nach
+Ownerfreigabe keinen aktiven Sperreintrag mehr. Der gezielte parallele
+Ausgangslauf belegte genau diesen Fehler: **24 bestanden, 1 fehlgeschlagen**,
+**25** Tests in **215.91 s**. Er ist Fehlernachweis, kein erfolgreicher Gate.
+Die bereits verbindlichen Erhaltungs-/Durabilitäts-/Sperrverträge aus
+**0.2.33 / 10.7.3–10.7.5**, R-47 und der offenen R-Abnahme verlangen die
+Korrektur; eine normative Klärung ist dafür nicht erforderlich.
+
+Vor der terminalen Journalüberführung wird jetzt eine eigene aktive
+Sperrdatei mit den vorhandenen descriptorgebundenen Evidence-/Staging-/
+Sync-Primitiven angelegt und wiedergeprüft. Ihre exakt rekonstruierten Bytes
+binden Originaljournal-SHA-256, ursprünglichen Auftrag und Terminalpfad.
+Sie ist eine getrennte Ableitung, keine Änderung am Originaljournal:
+Originalplan, dessen Hash, Originalrequest, `restore-execution-v1`-Bytes,
+bestehende Sicherungsmanifeste und Audits bleiben unverändert.
+Nach dem vollständigen tatsächlichen Ziel, Abschlussaudit und geprüfter
+Archivierung der ausgewählten alten Journale bleibt sie über das native
+Rename und die Synchronisierung beider Eltern aktiv. Erst danach entfernt
+der bestehende sichere Einzeldateiweg genau diesen gebundenen Sperreintrag.
+Es gibt keine pauschale Ausnahme für Recovery- oder Archivverzeichnisse und
+kein rekursives Löschen.
+
+Die native Wiederanlaufklassifikation erkennt diesen belegten Terminal-
+Zwischenstand. Sie synchronisiert zunächst den tatsächlichen vollständigen
+Bestand und erlaubt anschließend nur den fehlenden Abschluss einschließlich
+der exakten Sperrfreigabe. Ein Teilziel wird weiterhin ausschließlich aus
+überprüften Before Images zurückgerollt. Kein zusätzlicher normativer Write
+ist für den Vollzielabschluss erlaubt. Fehlende Herkunft verhindert den
+belegten Abschluss nicht; die Herkunftsprüfungen vor neuer Zielpublikation
+bleiben unverändert. Fremde, veränderte oder verlinkte Sperrbytes verhindern
+Writes. Gespeicherte Marker oder Actorlabels sind keine aktuelle Erlaubnis.
+
+Vorherige aktive und terminale Ausführungszustände ohne diese neue Ableitung
+bleiben anhand ihrer unveränderten Originalbelege lesbar. Die gezielten
+Kompatibilitätsfälle reproduzieren die bisherigen Dateieffekte, ohne ihre
+Originaljournalbytes zu ändern; sie behaupten keinen ausgeführten alten
+Release. Ein aktiver Altstand erhält beim erforderlichen Abschluss den
+neuen Schutz; ein vollständig nachgewiesener Altabschluss bleibt Replay.
+Der erste Lauf mit allen **270** ausgewählten Fällen endete mit **269
+bestandenen Tests und einem fehlgeschlagenen Altstandsfall** in **1045.80 s**:
+Der frühere Producer konnte vor seinem letzten Rename bereits den
+Terminal-Elternordner angelegt haben. Die Korrektur erkennt ausschließlich
+den vollständig und bytegenau nachgewiesenen letzten Präfix dieses alten
+Publikationsprogramms. Vor der Archivierung wird die neue Sperre ergänzt;
+unbekannte Dateien und andere unerklärte Zwischenstände werden nicht
+freigegeben. Auch dieser Zwischenlauf ist kein erfolgreicher Gate.
+Allgemeine Ownerübernahme, lebende Owner, tatsächlicher Mutex und die
+getrennte aktuelle Recoveryautorisierung behalten ihre bisherigen Grenzen.
+
+**Gezielte parallele Verhaltensprüfung.** Der endgültige Zustand besteht
+**270/270** Verhaltenstests mit
+**vier Workern** in **1053.64 s**, Prozessabschluss **0**,
+ausschließlich bestandenen Einzeloutcomes:
+
+- `tests/test_catalog_check.py` (17)
+- `tests/test_catalog_check_right.py` (37)
+- `tests/test_restore_directory_binding.py` (44)
+- `tests/test_restore_durability.py` (36)
+- `tests/test_restore_execution.py` (42)
+- `tests/test_restore_execution_right.py` (59)
+- `tests/test_restore_invocation.py` (35)
+
+Die **36 neuen Fälle** injizieren ausdrücklich synthetische EIO-/ENOSPC-
+Fehler, Nullschreibfortschritt, verlorene Syscall-Rückmeldungen und
+Syncfehler vor/nach Sicherung, Staging, Zielersetzung, Archivierung und
+Rollback. Die Oracles prüfen reale verbleibende Dateien und Verzeichnisse,
+bytegleiche Originale, unveränderte Auswahl-/Auftragsbindung, Fehlerflags,
+Sperrwirkung, erneute gesonderte Autorisierung und Replay ohne doppelte
+Dauereffekte. Teilziel, vollständiges Ziel, Quellenverlust, erneuter Fehler
+beim Wieder-Synchronisieren, Datei-/Verzeichnisrücknahme, exakte Terminal-
+Sperrbindung, Fremdeinträge und Altzustände sind abgedeckt. Bestehende echte
+Prozessabbruchtests sowie Root-/Elternverzeichnis- und Invocationgrenzen
+wurden als betroffene Regressionen erneut ausgeführt. Alle verwendeten
+Hostautoritäten sind synthetisch; kein menschlicher Review oder reale
+Risikoakzeptanz wird behauptet.
+
+Vollständige Collection-/Katalogprüfung: **22.033** aktive Identitäten,
+**0** Fehler, **0** ausgeführte Testkörper. Alle **22.001** vorhandenen
+Nummern bleiben erhalten; **36** neue Identitäten werden ausschließlich
+als Nummern **22.001–22.036** angehängt. Damit bleiben **22.037** Nummern
+reserviert, einschließlich der vier weiterhin stillgelegten Identitäten.
+`SR-TC-0461` und `SR-TC-0462` bleiben `partial`; die neue synthetische Fixture
+`SR-FIX-RESTORE-DURABILITY-v1` bezeichnet genau diesen begrenzten Nachweis.
+Spezifikation **0.2.33**, Planrevision **28** und aktive Spezifikationshash-
+bindungen bleiben unverändert. Historische Nachweise werden nicht geändert.
+
+Finale Dev-Quellidentität: `3ec2f5b3b2b3ff9aea03c14c13cbbc7325824aa18a8a71130dc85bc8153b1604`.
+Auswahlbericht-SHA-256: `0dc573b9762753ee6db2c438ab4d926a21065c2d98413794857f24cafea092e1`.
+Einzeloutcomes-SHA-256: `8a1211e4c49360b797fc233105f9377e1e2dd7c539ad311c03e270e5c378d15c`.
+Vorherige Apply-Auswahlbindung: `10ae6728c59f36a416df3c7187098e8bad12c2cc566593f492d18179e843dc79`;
+Apply-Bericht: `8b0ccc93b156f4ee71e2302c11588da785d064cf8b42eea97d1f2f42298a6d47`;
+Apply-Einzeloutcomes: `87bfb028ef3e77abcc4454f4847d3adabbd351c942bb9c79528cea0ab3ee988f`.
+
+**Offen und Übergabe.** Genau ein echter **FIX 15.l.R-FIX2**, zugeordnet zur
+Planposition **650/900**, Commit-Message
+`Fix: 15.l.R – Recovery-Sperre bis zur dauerhaften Restore-Archivierung erhalten`.
+Keine künstliche W/R/C-Folge, kein kosmetischer Budgetreset, keine zusätzliche
+Produktposition. **15.l.R und 15.l.C bleiben offen**, Stand **649/900**.
+Öffentliche CLI-Registrierung/Selbstbeschreibung, verwendbare vertrauenswürdige
+CLI-Hostanbindung, Workparität, vollständige I/O-/Crashmatrix und die zuvor
+offenen historischen Schutz-/Lifecycle-/Spezialistenprovider bleiben Pflicht.
+Die technische Korrektur beansprucht weder Vollsuite- noch Releaseerfolg.
+SPECROAD-DECISION-1 und Vertrag 3 sind ausdrücklich enthalten; der Auftrag
+hat `clarification_allowed=true`, Limit **3** und Restbudget **3**. Dieses
+Bundle ist eine technische Korrektur, keine normative Klärung; nur Control
+verwaltet das Budget nach dem tatsächlich zugeordneten Folge-Result.
+
+Der Entrypoint installiert ausschließlich diesen geprüften Zustand. Vor dem
+Commit läuft genau **Sequenz 212 / Gruppe 2 von 3**, **7.345** Tests, parallel
+mit vier Workern. Erst nach erfolgreichem Gate und nativer Auswahlbindung
+wechselt allein der Bundlemarker von **505** auf **506**. Produktzähler,
+letzter/nächster Planschritt und offene Checkboxen bleiben erhalten.
+Apply und Commit sind bei Übergabe noch nicht beobachtet. Bei Fehler bleiben
+reale Dateien, Index und bereits erfolgreiche Commits erhalten. Kein Dev-
+Volltest, serieller Lauf, zusätzlicher Apply-Volltest, CI-Start oder Dev-Commit.
+Native ZIP-Prüfung, SHA-256 und atomare Exchange-Übergabe beenden diesen
+N-Auftrag; keine eigene Apply-, Warte- oder Modellschleife.
 
 #### 15.l.C – Make it Clean
 

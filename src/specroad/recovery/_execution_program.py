@@ -22,7 +22,9 @@ def publication_program(layout):
     for i, move in enumerate(layout['binding']['archive_moves']):
         program += [('move', move['source'], move['target']),
                     ('create', active + '/archived/' + str(i) + '.json')]
-    program.append(('move', active, layout['terminal']))
+    program += [('create', layout['terminal_barrier']),
+                ('move', active, layout['terminal']),
+                ('remove', layout['terminal_barrier'])]
     return program
 
 
