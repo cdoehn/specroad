@@ -1,21 +1,21 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.33
+## Version 0.2.34
 
 | Feld | Wert |
 |---|---|
 | Dokument-ID | `SR-SPEC-0001` |
-| Dokumentversion | `0.2.33` |
+| Dokumentversion | `0.2.34` |
 | Zielrelease | `SpecRoad Single-Repository Workbench 0.2.0` |
 | Status | **Fachlich konsolidierte Arbeitsgrundlage; technische Reviewentscheidung gesondert dokumentiert, formale Baseline-Freigabe und Produktabnahme nicht durch dieses Dokument erklärt** |
 | Stand | 27. Oktober 2026 |
 | Sprache | Deutsch; technische Feldnamen, Enum-Werte und CLI-Kommandos Englisch |
-| Fachliche Quelle | **Diese Repositoryfassung v0.2.33 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.33 liegt mit dieser Änderung nicht vor.** |
+| Fachliche Quelle | **Diese Repositoryfassung v0.2.34 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.34 liegt mit dieser Änderung nicht vor.** |
 | Bearbeitbare Satzquelle | Diese Datei; eine spätere PDF muss denselben versionierten Inhalt wiedergeben. |
-| Vorgängerversion | Repository-Spezifikation v0.2.32 vom 26. Oktober 2026; frühere PDF-/Reviewbelege bleiben an ihre historischen Fassungen gebunden. |
-| Prüf- und Entscheidungsgrundlage | RESTORE-CLI-BINDING, delegiert gemäß SPECROAD-DECISION-1 unter gültigem Control-Vertrag 3; Entscheidungsbeleg und offene Verhaltensabnahmen im OFF-PLAN-Abschnitt des Implementierungsplans. Bestehende Nutzerentscheidungen und Produktfreigabegrenzen bleiben unverändert. |
-| Änderungsart | Additive Präzisierung der expliziten Restoremodi, Quell-/Datei-/Rootbindung und des spezialisierten CLI-Preflights in 10.7.6; unveränderte Autorisierungs-, Owner- und Erhaltungsgates; keine neue Requirement-ID oder Produktposition. Umsetzung und Produktabnahme bleiben offen. |
+| Vorgängerversion | Repository-Spezifikation v0.2.33 vom 27. Oktober 2026; frühere PDF-/Reviewbelege bleiben an ihre historischen Fassungen gebunden. |
+| Prüf- und Entscheidungsgrundlage | RESTORE-WORK-BINDING, delegiert gemäß SPECROAD-DECISION-1 unter gültigem Control-Vertrag 3; Entscheidungsbeleg und offene Verhaltensabnahmen im OFF-PLAN-Abschnitt des Implementierungsplans. Bestehende Nutzerentscheidungen und Produktfreigabegrenzen bleiben unverändert. |
+| Änderungsart | Additive Präzisierung der passiven Restorebindung in Workcheckpoints und ihrer nativen Recoveryfortsetzung in 10.7.7; unveränderte Autorisierungs-, Owner-, Herkunfts- und Erhaltungsgates; keine neue Requirement-ID oder Produktposition. Umsetzung und Produktabnahme bleiben offen. |
 
-> **Verbindlicher Quellenwechsel:** Die delegierte Detailentscheidung zur Restore-Aufrufbindung schreibt die Repository-Spezifikation als v0.2.33 fort. Frühere PDF- und Reviewnachweise behalten ihre historische Bindung und belegen diese Präzisierung nicht. Der py3langid-Adapter bleibt Bestandteil des Zielreleases; der kleine Core bleibt ohne Analyzer-Abhängigkeiten nutzbar.
+> **Verbindlicher Quellenwechsel:** Die delegierte Detailentscheidung zur Restore-Workbindung schreibt die Repository-Spezifikation als v0.2.34 fort. Frühere PDF- und Reviewnachweise behalten ihre historische Bindung und belegen diese Präzisierung nicht. Der py3langid-Adapter bleibt Bestandteil des Zielreleases; der kleine Core bleibt ohne Analyzer-Abhängigkeiten nutzbar.
 
 > **Fortbestehende Arbeitsprinzipien:** Weiche Budgets führen zu sparsamer vollständiger Weiterarbeit oder gesicherter Fortsetzung über mehrere Aufrufe beziehungsweise Prompts. Es werden keine erforderlichen Arbeiten stillschweigend ausgelassen. Reale Host-, Speicher-, Berechtigungs- und Sicherheitsgrenzen bleiben wirksam.
 
@@ -101,7 +101,7 @@ Bei einem Widerspruch innerhalb dieser Dokumentversion gilt:
 3. `SR-DEC-*` hat Vorrang vor erläuterndem Text, Diagrammen und Beispielen.
 4. Beispiele sind niemals normativ, sofern sie nicht ausdrücklich als Testvektor bezeichnet sind.
 5. Zwei widersprüchliche `SR-REQ-*`-Anforderungen besitzen **keine implizite Rangfolge** nach Nummer, Position oder Spezifität. Ein solcher Fund ist ein Spezifikationsfehler, muss als Issue gelöst werden und verhindert die Freigabe.
-6. Diese Dokumentversion 0.2.33 ersetzt die frühere fachliche Arbeitsgrundlage vollständig. Bis zur gesonderten PDF-Veröffentlichung ist diese versionierte Repositorydatei maßgeblich. Eine spätere PDF muss inhaltsgleich sein; frühere PDFs werden nicht als Nachweis der neuen Verträge ausgegeben. Inhalte verschiedener Fassungen dürfen nicht zu einer Mischspezifikation kombiniert werden.
+6. Diese Dokumentversion 0.2.34 ersetzt die frühere fachliche Arbeitsgrundlage vollständig. Bis zur gesonderten PDF-Veröffentlichung ist diese versionierte Repositorydatei maßgeblich. Eine spätere PDF muss inhaltsgleich sein; frühere PDFs werden nicht als Nachweis der neuen Verträge ausgegeben. Inhalte verschiedener Fassungen dürfen nicht zu einer Mischspezifikation kombiniert werden.
 7. Eine nachträgliche Änderung dieser veröffentlichten Datei erfordert mindestens eine neue Patch-Dokumentversion; stille Korrekturen unter derselben Dokumentversion sind unzulässig.
 8. Eine normative Tabelle, auf die eine `SR-REQ-*`-Anforderung ausdrücklich als Algorithmus oder Matrix verweist, ist Bestandteil des Passkriteriums dieser Anforderung.
 
@@ -2378,6 +2378,139 @@ Berechtigung als aktuelle Zustimmung wiederverwenden. Alle übrigen Grenzen
 aus N/O/P sowie 10.7.1–10.7.5 bleiben Pflichtabnahmen von 15.l.R.
 
 
+#### 10.7.7 Restore in Workfortsetzungen `work-restore-binding-v1`
+
+**Entscheidung RESTORE-WORK-BINDING, delegiert gemäß SPECROAD-DECISION-1.**
+Diese Regel konkretisiert die zugesagte Einzellauf-/Workparität aus 10.7.3,
+10.7.6 und Anhang N/O/P. Sie verwendet den externen `work-v1`-Checkpoint und
+die vorhandene native Restoreausführung. Ein Restore wird weder zu einem
+gewöhnlichen Change Plan noch zu einer frei ausführbaren Work-Unteroperation.
+`work resume` bleibt `work_operational`; der gebundene innere Befehl ist
+`recover.restore`, Klasse `recovery_write`, mit seinem speziellen Preflight.
+Andere Workbefehle oder gespeicherte Command-IDs erhalten keine Recoverybefugnis.
+
+**Passive Eingangsbindung.** Ein Workauftrag bleibt in genau dem ursprünglich
+gewählten Planungs- oder Ausführungsmodus nach 10.7.6. Die vollständigen
+Fachargumente, Quellart, operativen Baselinewerte und ausdrücklichen Ziele
+bleiben gebunden; eine Fortsetzung wechselt nicht von Dry-Run zu Ausführung.
+Für die Planung gelten Snapshotaufbau, vollständige Aufgabenmanifeste und
+externe Planausgabe aus P.4/P.5 und 10.7.2. Noch nicht vollständig qualifizierte
+Planbytes sind kein erfolgreicher Restoreplan und keine spätere Writefreigabe.
+`actor`, `request_id`, `operations_sha256` und `plan_binding` sind dabei
+`null`; ein fertig erzeugter Plan gehört zu den gehashten Ergebnisbytes.
+
+Für einen Ausführungsauftrag gelten im vorhandenen Workmanifest zusätzlich
+die folgenden eindeutigen Feldbedeutungen. Die Originalpläne und die Auswahl
+behalten ihre geschlossenen Formate aus 10.7.2/10.7.4; sie werden nicht um
+Workfelder erweitert.
+
+| Workfeld | Verbindliche Restorebindung |
+|---|---|
+| `source_bindings` | Exakt `{project_id, scope, model_root_sha256}` mit der unabhängig geprüften Projekt-ID, `scope=["project"]` und `model_root_sha256=null`. Der beschädigte Ausgangsbestand wird durch die Originalinventur im Plan gebunden, nicht durch eine erfundene semantische Basiswurzel. |
+| `actor`, `request_id` | Unveränderter ursprünglicher Ausführungsakteur und dessen Request-ID nach 10.7.3; die dortige Pflicht-/Optionalitätsregel bleibt erhalten. Ein Work-ID-/Generationswert ersetzt keine Request-ID. |
+| `operations_sha256` | `null`: Restore besitzt keine gewöhnliche Change-Plan-Operationsfolge. Weder Inventur-, Plan- noch Zielhash werden als solcher Operationshash ausgegeben. |
+| `plan_binding` | Geschlossenes Objekt mit exakt `format_version`, `restore_plan_sha256`, `plan_source`, `journal_selection` gemäß nachfolgendem Vertrag. |
+
+`plan_binding.format_version` ist exakt `work-restore-binding-v1`.
+`restore_plan_sha256` ist der geprüfte innere Hash des Originalplans.
+`plan_source` und `journal_selection` sind jeweils exakt `{sha256, size}`:
+SHA-256 der vollständigen referenzierten Bytes und deren nichtnegative
+ganzzahlige Byte-Länge. `plan_source` referenziert die unveränderten
+Originalplanbytes, `journal_selection` die kanonischen Auswahlbytes nach
+10.7.4. Bei ursprünglich weggelassener Auswahl werden ausschließlich die
+dort festgelegten kanonischen Bytes der leeren Auswahl gebunden. Eine
+nichtleere Auswahl wird niemals aus gefundenen Journaldaten ergänzt.
+Beide Bytefolgen MÜSSEN im content-addressierten Work-Objektbestand erhalten
+und vollständig über das Eingangsmanifest gebunden sein. Ihr bloßer Pfad
+oder Hash ersetzt keine fehlenden Bytes. Der innere Planhash und sein
+äußerer Rohbytehash bleiben ausdrücklich verschiedene Hashdomänen.
+
+Jede Wiederaufnahme prüft die geschlossene Bindung, Originalbytes, Auswahl,
+Projektidentität, Actor-/Requestwerte und ihre Übereinstimmung mit den
+normalisierten Fachargumenten. Die vorhandene Checkpointprojektion bindet
+auch diese Variante; sie erhält keinen zweiten, widersprüchlichen Aufgaben-
+oder Operationshash. Für bereits begonnene Ausführungen muss zusätzlich
+genau die ursprüngliche Auftragsbindung des überprüften Restorejournals
+passen. Ein neuer Workcontainer darf keinen anderen ursprünglichen Akteur,
+Plan, Request oder Auswahl an eine bestehende Ausführung anhängen.
+Ein unbekannter Bindungstyp wird vor Fortsetzung abgewiesen, niemals als
+`work-change-plan-v1` oder ungebundener schreibfreier Auftrag interpretiert.
+Bestehende Work-/Change-Plan-Checkpoints bleiben unverändert lesbar; ihre
+Felder werden nicht nachträglich in Restorefelder umgedeutet.
+
+Die allgemeine Rootlokalisierung aus P.3/P.7 darf externe Work- und
+Plantransportorte neu zuordnen, aber keinen im Originalplan gebundenen
+`project_root` oder `source.root/path` umschreiben. Für deren Verlagerung
+bleibt die neue ausdrückliche Planung nach 10.7.2 erforderlich. Ein Workpaket
+ist keine verifizierte Kopie einer laufenden Projekttransaktion und ersetzt
+keine dort nötigen Journale, Before Images oder Root-/Ownernachweise.
+Eingebettete Plan-/Quellbytes erlauben vor einer neuen Vorwärtspublikation
+keine Ausnahme von den frischen Herkunfts- und Bestandsprüfungen.
+
+**Aktuelle Berechtigung statt gespeicherter Freigabe.** Die Workbindung ist
+passiver Auftragsnachweis, keine Berechtigung. Jeder tatsächliche Restorewrite
+braucht dieselbe aktuelle, vertrauenswürdig angebundene Recoveryautorisierung,
+den nativen Recovery-Lock und die Owner-/Risikogates wie der direkte Aufruf.
+Die ursprünglichen Workfelder bleiben erhalten. Bei einer Recoveryaktion
+wird der aktuelle Recoveryakteur nach 10.7.3 getrennt geprüft und auditiert;
+dies erweitert oder ersetzt den ursprünglichen Actor nicht. Ein gespeicherter
+Authorityname, früherer positiver Entscheid, Ownerbeleg oder Risikowert ist
+keine neue Zustimmung. Eine benötigte aktuelle Übernahme muss erneut genau
+nach 10.7.5 beauftragt und geprüft werden. Workdaten registrieren keine
+Callbacks, laden keinen Code und erzeugen keinen Hostgrant. Fehlende echte
+Autorisierung bleibt eine konkrete Sperre; der verwendbare positive CLI- und
+strukturierte Pfad ist weiterhin nachzuweisen.
+
+**Checkpoint und Journal.** Vor dem ersten Restore-Betriebswrite darf die
+Vorbereitung an vollständigen, belegten Fortschrittsgrenzen pausieren, ohne
+einen Projektwriter-/Recovery-Lock über den Aufruf hinweg zu halten. Beim
+späteren Beginn werden Herkunft, Bestand, Ziel, Autorisierung und Auswahl
+unter dem nativen Lock erneut geprüft. Bestätigte Vorbereitungsarbeit wird
+nicht aus einem Textcursor oder einer erneut geladenen aktuellen Modellwurzel
+erraten; weiche Budgets verkürzen weder Eingangs- noch Zielprüfung.
+
+Ab dem ersten Restore-Betriebswrite ist das getrennte Restorejournal die
+maßgebliche Ausführungswahrheit. Ein echter Abbruch wird als
+`recovery_required` behandelt, auch wenn der letzte externe Workcheckpoint
+noch einen früheren Vorbereitungsstand zeigt. `work resume` MUSS vor einem
+neuen Write die genau gebundene vorhandene Ausführung prüfen und darf nur
+deren native Recovery nach 10.7.3 ausführen. Es gibt keine zweite Publikation,
+kein Vorwärts-Resume eines Teilziels und keinen normalen Promptcheckpoint
+mit freiwillig freigegebenem Mischstand. Fehlen notwendige echte Belege oder
+aktuelle Berechtigung, bleiben Zustand, Workdaten und Recoverybarrieren erhalten.
+
+Ein vollständiges, journalgebundenes Ziel wird samt fehlendem Audit abgeschlossen,
+auch wenn die externe Herkunft inzwischen fehlt; eine Teilpublikation wird
+ausschließlich aus geprüften Before Images zurückgerollt. Work darf diese
+beiden Fälle nicht durch eine vorgezogene frische Originalinventur-/Quellprüfung
+oder durch allgemeines Laden eines gültigen Ausgangsmodells verdecken.
+Der Rollback ist kein Restoreerfolg, hebt alte Sperren nicht auf und beginnt
+im selben Aufruf weder Neuplanung noch neue Restoreausführung. `work cancel`
+oder `work export` darf eine laufende Restoretransaktion nicht entsperren,
+verwerfen oder als portabel gesichert erklären; P.6/P.7 bleiben verbindlich.
+
+**Abschluss und Parität.** Ein verlorener äußerer Workabschluss nach bereits
+dauerhaftem Restoreabschluss wird aus dem genau passenden nativen Abschluss-
+beleg und den gemäß 10.7.3 erforderlichen aktuellen Prüfungen rekonstruiert,
+ohne erneut Zielbytes zu veröffentlichen. Erst vollständige Ergebnislieferung
+erlaubt `completed`; ein Workstatus allein beweist keinen Restoreerfolg.
+Ein bereits vollständig abgeschlossener Workauftrag liefert nach 11.12
+sein gespeichertes, an diesen Abschluss gebundenes Ergebnis. Er behauptet
+damit keine neue Prüfung eines inzwischen geänderten Projekts; ein neuer
+ausdrücklicher Restoreaufruf behält dessen aktuelle Konfliktprüfung.
+
+Einzellauf, strukturierter Aufruf und Workfortsetzung müssen für denselben
+gebundenen Auftrag dieselben Zielbytes, Erhaltungs-/Sicherungsbindungen,
+fachlichen Ergebnisse, Fehlerklassen und zulässigen Dateieffekte erreichen.
+Workgenerationen und Laufzeitverbrauch sind getrennte Betriebsdaten. Ungültige
+oder fehlende gespeicherte Bindungsbytes ergeben 3, echte I/O-/Recoveryblocker
+5, abweichende Auftrags-/Bestandsbindungen 6, Sicherheits-/Berechtigungsverstöße
+7; fehlende explizite Aufrufangaben bleiben 2. Work wird weder zu einem neuen
+Erfolgsreceipt noch zu einer Ausnahme von historischen Schutz-, Review-,
+Lifecycle- oder Fachproviderprüfungen. Implementierung und vollständige
+Verhaltensevidence dieser Bindung bleiben Bestandteil von 15.l.R.
+
+
 ### 10.8 Scope Descriptor und Scope-Closure
 
 Jede Operation mit Modellumfang verwendet genau einen kanonischen Scope Descriptor:
@@ -3338,7 +3471,7 @@ Die ursprünglichen Fachbefehle bleiben der Einstieg. Der erste große Aufruf ze
 | `work restore <FILE> --output <DIR>` | Paket und alle nötigen Teile prüfen, ausschließlich in fehlendes/leeres externes Work-Ziel extrahieren. Keine normativen Projektdateien überschreiben. |
 | `work cancel <DIR> --reason <TEXT>` | Ohne aktive normative Transaktion explizit beenden; Kontrollbeleg erhalten. Kein Verwerfen notwendiger Recoverydaten. |
 
-`work resume` akzeptiert die Ressourcenoptionen von Kapitel 11.3; sie verändern den fachlichen Operationshash nicht. Die übrigen Befehle nennen anwendbare Ausgabe-/Ressourcenoptionen in `command describe`. CLI- oder Profileingaben, die den Fachauftrag, Actor, Plan oder Freigabewirkung verändern würden, sind kein Resume, sondern ein neuer ausdrücklich zu bindender Auftrag. `work resume` kann keine andere Command-ID oder Shellzeichenkette ausführen.
+`work resume` akzeptiert die Ressourcenoptionen von Kapitel 11.3; sie verändern den fachlichen Operationshash nicht. Die übrigen Befehle nennen anwendbare Ausgabe-/Ressourcenoptionen in `command describe`. CLI- oder Profileingaben, die den Fachauftrag, Actor, Plan oder Freigabewirkung verändern würden, sind kein Resume, sondern ein neuer ausdrücklich zu bindender Auftrag. `work resume` kann keine andere Command-ID oder Shellzeichenkette ausführen. Für den inneren Befehl `recover.restore` konkretisiert 10.7.7 die passive Originalbindung und die getrennte aktuelle Recoveryautorisierung; dessen gebundene Herkunfts-/Projektroots dürfen durch `--project` nicht umgeschrieben werden.
 
 ```bash
 python3 specroad.pyz validate --project ./projekt \
@@ -5416,6 +5549,17 @@ oder Produktfreigabe entsteht. Umsetzung und Gesamt-Restoreabnahme bleiben
 in 15.l.R offen, Produktstand 649/900. Aktive Kataloghashbindungen folgen
 der neuen Dokumentfassung; historische Evidence bleibt unverändert.
 
+### 20.28 Passive Restorebindung in Workfortsetzungen v0.2.34
+
+RESTORE-WORK-BINDING konkretisiert in 10.7.7 die passive Originalplan-/
+Auswahlbindung im vorhandenen Workmanifest. Beschädigter Bestand erhält
+keine erfundene Modellbasis; ursprünglicher Auftrag, aktuelle Autorisierung
+und native Journalwahrheit bleiben getrennt. Worktransport bindet keine
+Herkunfts-/Projektroots um und ersetzt keine lokale Transaktionssicherung.
+Die bestehenden Einzellauf-, Crash-, Erhaltungs- und menschlichen Freigabegates
+bleiben Pflicht. Umsetzung und Nachweise bleiben in 15.l.R offen; Produktstand
+649/900 unverändert. Nur aktive Kataloghashbindungen werden nachgeführt.
+
 ## 21. Entscheidungsstatus und nicht blockierende Restpunkte
 
 | ID | Thema | Stand |
@@ -5458,6 +5602,7 @@ Die folgende Roadmap ist informativ und erzeugt keine Anforderungen an 0.2:
 
 | Version | Datum | Status | Änderung |
 |---|---|---|---|
+| 0.2.34 | 2026-10-27 | Delegiert gemäß SPECROAD-DECISION-1 | RESTORE-WORK-BINDING: passive Originalplan-/Auswahlbindung für Restore in Work, getrennte aktuelle Recoveryautorisierung und Vorrang nativer Journale; offene Umsetzung und unveränderte Schutzgates. |
 | 0.2.33 | 2026-10-27 | Delegiert gemäß SPECROAD-DECISION-1 | RESTORE-CLI-BINDING: explizite Restoremodi, Quellart, operative Baselinewerte und Root-/Dateipaare; spezialisierter Preflight mit unveränderten nativen Autorisierungs- und Recoverygates. |
 | 0.2.32 | 2026-10-26 | Delegiert gemäß SPECROAD-DECISION-1 | RESTORE-OWNER-HANDOFF: explizite zweitseitige Owner-/Auftragsbindung für neuen oder fortgesetzten Restore; native Lock-/Risikogates, Originalerhaltung und Produktstand bleiben erhalten. |
 | 0.2.31 | 2026-10-26 | Ausdrücklicher manueller Nutzerauftrag zur Erweiterung der Projektregel | SPECROAD-DECISION-1-V3: höchstens drei Klärungsbundles unter gültigem Vertrag 3 mit dauerhaftem Budget; Version 2 behält die Einerregel. Fachliche Grenzen, Nachweise und Betriebszustände bleiben erhalten. |
@@ -7739,6 +7884,8 @@ Der Work-Root enthält mindestens `work.json`, `checkpoints/`, `objects/` und `r
 
 Große Listen werden als versionierte gehashte Manifestsegmente abgelegt, nicht als unbegrenzt großes Kontroll-JSON. Jedes Segment hat ID, Größe, Hash und Eintragszahl. Fehlende Segmente, Hashabweichungen, doppelt anerkannte Einheiten und unbekannte notwendige Felder verhindern ein unbemerktes Resume. Der alte vollständige Checkpoint bleibt gültig, bis die neue Generation mit allen referenzierten Teilen dauerhaft und atomar veröffentlicht ist.
 
+Für `recover.restore` gilt die geschlossene Workbindung aus 10.7.7. Sie ergänzt ausschließlich diesen inneren Recoverybefehl: keine erfundene Ausgangsmodellwurzel, keine Change-Plan-Operationsfolge und keine gespeicherte Autorität. Die dort ausdrücklich gebundenen Originalplanfelder werden durch die folgende allgemeine Lokalisierungsregel nicht umgeschrieben.
+
 Absolute Laufzeitpfade sind Lokalisierungsdaten und nicht Teil der semantischen Aufgabenidentität. Bei Restore werden sie durch überprüfte Rootzuordnung ersetzt. Daten- und Inhaltshashes, Actor, Operationen und Freigabebindungen ändern sich dabei nicht.
 
 ## P.4 Bindung der Eingaben und Snapshotaufbau
@@ -8584,4 +8731,4 @@ Implementierungsschritten nachgewiesen sein.
 
 ---
 
-**Ende der SpecRoad-Produktspezifikation v0.2.33.**
+**Ende der SpecRoad-Produktspezifikation v0.2.34.**
