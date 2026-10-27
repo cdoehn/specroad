@@ -41,7 +41,7 @@ implementation_plan_commits_total: 900
 implementation_plan_commits_completed: 649
 last_completed_plan_commit: 15.l.W
 next_plan_commit: 15.l.R
-last_completed_numbered_bundle: 510
+last_completed_numbered_bundle: 511
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -31731,6 +31731,134 @@ Bei Fehler bleiben echte Dateien, Index und erfolgreiche frühere Commits
 erhalten. Kein Dev-Volltest, serieller Lauf, zusätzlicher Apply-Volltest,
 CI-/Watcher-/Control-Start oder Dev-Commit. Native Paketprüfung, vollständiger
 SHA-256 und atomare Exchange-Übergabe beenden diesen N-Auftrag unmittelbar.
+
+
+**Umsetzungs- und Übergabenachweis – Bundle 511 (15.l.R-Zwischenstand), 27. Oktober 2026.**
+
+**Maßgebliche Basis.** Vollständig geprüftes Result
+`specroad-apply_Result_124618_1027_5289b1.zip`, SHA-256
+`df874188f2fb8d47504c015336a71f7b3793b4931ad1bbbe899c4f3772e67a15`;
+Repository `a33ed6cf-0a97-4b73-b11a-d4239e7a2145`, Abschlusscommit
+`dcfb9db4613be28ee4005527b1e71aec13b271bf`, Fingerprint
+`7c9d2a24e397e0e5`, Algorithmus `patchharbor-state-v1`.
+Root-Anleitung, Kontext, Umgebung, Manifest, Run-/Ausführungslogs und alle
+**2.317** Snapshotdateien samt Blob-IDs und Modi wurden geprüft. Der reale
+Apply-Stand ist sauber und bytegleich. Bundle **510**, Paket-SHA-256
+`c7c121bd09ba421fc6a562e8cf117c20217b422bf64ecc4a9e1f85e7fe8feeed`,
+endete im passenden Dokumentcommit nach **7.372/7.372** bestandenen
+Apply-Tests, **Sequenz 216 / Gruppe 0**, vier parallelen Workern und
+**3267.10 s**. Payloads, Auswahlbindung und Einzeloutcomes stimmen überein.
+Der bereits angewandte Abschnitt **0.2.35 / 10.7.8** ist die normative Basis;
+dieses Bundle ist reguläre Umsetzung, keine weitere Spezifikationsklärung.
+
+**Umgesetzter Ausschnitt.** Ein eigener interner Adapter übernimmt einen
+verwaisten äußeren Restore-Work-Owner ausschließlich mit aktuellem
+vollständigem Ownerbytehash und nicht leerem aktuellem Grund. Die unabhängige
+Initialbindung, vollständige veröffentlichte Checkpoint-/Objektkette,
+Buildbindung, private Ablage und geschützte disjunkte Wurzeln werden unter
+dem durchgehend gehaltenen nativen Work-Root-Inode-Mutex geprüft. Gespeicherte
+Restorebytes bleiben passive Daten; eine neue Live-Quellprüfung verdeckt
+keine bereits notwendige native Recovery.
+
+Die native Linuxbeobachtung verlangt bekannte identische Host-/Boot-/
+PID-Namespace-Bindung, ursprüngliche Prozessstartkennung und einen belegten
+terminalen, fehlenden oder wiederverwendeten ursprünglichen PID. Ein lebender,
+fremder oder unbekannter Owner bleibt gesperrt. Der neue Owner muss der
+aktuelle vollständig bekannte Prozess sein. Unmittelbar vor dem Austausch
+werden Prozessbeobachtung, ursprüngliche Ownerbytes, Work-/Checkpointbindung
+und alle gelesenen Übergabebelege erneut geprüft. Ein freier Mutex oder
+frühere Zustimmung genügt nicht; es gibt keinen Force-/Remote-Override.
+
+Vor dem atomaren Austausch werden die vollständigen alten und vorgesehenen
+neuen Ownerbytes einschließlich Inodes, Root-/Initialbindung, aktueller
+Checkpointbytes, nativer Beobachtung und aktuellem Grund unveränderbar
+unter `checkpoints/restore-owner-handoffs/` gesichert. Größen-/Hashbindungen,
+exklusive private Dateianlage und native Datei-/Verzeichnis-Synchronisation
+binden die tatsächlichen Bytes. Die Datei wird direkt alt→neu ersetzt;
+ein ownerloser Zwischenzustand wird nicht erzeugt. Ein dauerhafter
+Abschluss bindet anschließend exakt Absicht und neuen Owner.
+
+Abbrüche vor dem Austausch behalten den alten Owner, Abbrüche danach den
+wirklich installierten neuen Owner. Eine fehlende Abschlussdatei wird nur
+aus exakt passenden erhaltenen Bytes, Inode und unverändertem Checkpoint
+vervollständigt. Jeder weitere Ownerwechsel verlangt neue aktuelle Zustimmung
+und native Todesprüfung. Unvollständige oder widersprüchliche Belege bleiben
+blockierend; alte Absichten und Abschlussdateien werden nicht überschrieben.
+Ein eigener betrieblicher Ownerformatmarker macht den Übergabebeleg auch bei
+vollständig entferntem Belegverzeichnis zwingend; fehlende Belege sperren.
+Ein bereits vorbereiteter, aber nicht ausgeführter Austausch kann nach einem
+anderen belegten Übergang desselben alten Owners als unveränderte Geschichte
+bestehen bleiben. Nur der eigene vollständig belegte neue Owner wird beim
+normalen Verlassen entfernt. Fehler nach Austausch erhalten die wirkliche
+neue Ownerdatei und melden mögliche **Workwrites** und offene **äußere
+Owner-Recovery** getrennt von nativen Projekt-Restorewrites.
+
+Der Adapter publiziert weder Workfortschritt noch Restorearbeit oder
+Ergebnislieferung. `checkpoint_changed=false`,
+`project_mutation_possible=false` und `work_completion_recorded=false` sind
+explizite Ergebnisse. Der vorhandene native Restoreadapter benötigt danach
+weiterhin aktuelle eigene Autorisierung. Andere Workbefehlsklassen erhalten
+keine neue Übernahmebefugnis. Testregistrierung und Authority sind synthetisch;
+kein menschlicher Review, echte Produktfreigabe oder Risikoakzeptanz wird
+behauptet.
+
+**Abgrenzung.** Dies ist ein echter weiterer R-Zwischenstand desselben
+Restoreausschnitts, keine künstliche W/R/C-Folge und kein abgeschlossener
+15.l.R-Schritt. Öffentliche CLI-/strukturierte Resumeintegration,
+Status-/Cancel-/Exportparität, vollständige Fortschritts-/Ergebnislieferung,
+die kombinierte native Projekt-/Workcrashmatrix und sämtliche übrigen
+15.l.R-Abnahmen bleiben offen. Produktstand **649/900**, zuletzt **15.l.W**,
+nächstens **15.l.R**; SR-TC-0461 und SR-TC-0462 bleiben `partial`.
+Spezifikation und ihre aktiven Hashbindungen bleiben unverändert.
+
+**Beobachtete gezielte Dev-Prüfung.** Der endgültige unveränderte Stand
+besteht **283/283** Verhaltenstests in
+**1468.66 s** mit vier parallelen Workern, beobachtetem
+Prozessabschluss **0** und ausschließlich `passed`-Einzeloutcomes. Auswahl:
+
+- `tests/test_catalog_check.py` (17)
+- `tests/test_catalog_check_right.py` (37)
+- `tests/test_work_checkpoints.py` (17)
+- `tests/test_work_checkpoints_right.py` (49)
+- `tests/test_work_restore_binding.py` (53)
+- `tests/test_work_restore_owner.py` (37)
+- `tests/test_work_root.py` (32)
+- `tests/test_work_root_right.py` (41)
+
+Ausgeführt mit `tools/run_selected_tests.py --workers 4 --expected-tests 283`
+und ausschließlich diesen vollständigen Dateien in einem frischen ignorierten
+Berichtsroot. Reale Kindprozesse brechen bei vorbereiteten Ownerbytes,
+Intent, atomarem Austausch und durablem Abschluss ab. Positive und negative
+Owner-/Bindungs-/Safety-Fälle, fehlerhafte Belege und tatsächliche Fehler
+nach Austausch sind Verhaltensevidence; keine Darstellungs- oder
+Dokumentationstests. Der vollständig abgeschlossene vorläufige parallele Lauf hatte 29 bestandene und zwei fehlgeschlagene neue Tests (524.81 s, Exit 1). Beide Fehler waren String-Pfade statt Path-Objekten im Testaufbau; sie wurden korrigiert. Die Abbruchfixtures wurden außerdem von Forks im mehrthreadigen Testworker auf frisch gestartete isolierte Python-Prozesse umgestellt. Der erste Lauf bleibt als fehlgeschlagener Vorlauf erhalten und ist kein Nachweis für den endgültigen Stand. Der zweite abgeschlossene gezielte Lauf hatte 255 bestandene und 27 fehlgeschlagene Tests (706.42 s, Exit 1); sämtliche Fehler waren Argument-list-too-long im neuen Prozessfixture, vor dem Produktaufruf. Die vollständige unabhängige Workbindung wird nun über eine private Fixturedatei außerhalb von Work transportiert. Frische Child-Reader verwenden den expliziten angefragten Pfad; die Normalwriter-Prüfung öffnet den Writerlease ohne unzulässige Wiederveröffentlichung der Initialgeneration. Zusätzlich wurde die Erkennung eines bereits vor Eintritt abweichenden Builds auf Konflikt 6 vereinheitlicht und als Verhaltenstest ergänzt. Beide Vorläufe bleiben erhalten; ausschließlich der neu geprüfte finale Stand gilt als Übergabenachweis.
+
+Die vollständige Collection-/Katalogprüfung bestätigt **22.151**
+aktive Tests, **0** Katalogfehler und **0** ausgeführte Testkörper. **37**
+neue Testidentitäten werden am Ende der permanenten Nummernfolge ergänzt;
+alle bisherigen Nummern und vier historische Löschungen bleiben unverändert.
+Es gibt keine neue Vollsuite, keinen seriellen Lauf und keinen CI-Start.
+Diese Teilprüfung hat ausdrücklich `full_suite_passed=null`.
+
+Entwicklungsquellhash: `8021a775f0c61721404d44a5d8e46632ccdca6c3aef79b27b9f6256b4728d811`;
+Auswahlbericht: `f6004232507dc1cca292665c8590788007420bdb2b8d8e3db3858f6f11b77658`;
+Einzeloutcomes: `92916e39287c2b1bba1f301a4fd1779630b25ce91096a0dbb3d6a094b8ac14ed`;
+vollständiger Collectionbericht: `d9e60eba27a217d3cd6c340d9d3f91b5ac156d72b848fe03dfe9a23545f24ecf`.
+Der bestätigte Apply-Nachweis von Bundle 510 bleibt davon getrennt:
+Auswahlbindung `32e4b2b9cd32368c69a71293ef0852b1854517c29514ffb60b2230d691f44df8`,
+Bericht `7664c0ad67ad8787db190fa103b59dc857d1595384cfb1f16612e229a9bc3eab`,
+Einzeloutcomes `cd32a33d888a5de6eda860d4f5177bd58e06771853924101d35475bbd0e3daff`.
+
+**Vorgesehene Übergabe.** Genau ein state-gebundenes Bundle mit einem
+regulären R-Zwischenstand. Der Entrypoint installiert genau diesen gezielt
+geprüften Stand, führt ausschließlich die fällige **N=3-Gruppe 1, Sequenz 217**
+mit **7382** Tests parallel aus und erzeugt erst danach
+seinen Commit. Nach erfolgreichem Gate ändert sich nur der Bundlemarker
+**510→511**; keine Produktcheckbox wird geschlossen. Ein tatsächlicher
+Commit schaltet zur Gruppe 2 weiter. Dieser zukünftige Apply-Lauf ist bei
+Übergabe nicht ausgeführt und wird hier nicht als Erfolg behauptet.
+Native Paketprüfung und atomare Exchange-Veröffentlichung beenden den
+Einzelauftrag ohne eigene Apply-, Status- oder Fortsetzungsschleife.
 
 #### 15.l.C – Make it Clean
 

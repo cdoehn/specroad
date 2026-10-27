@@ -20,6 +20,10 @@ _LOCK = 'work-lock.json'
 _CURRENT = 'work.json'
 
 
+class WorkBindingViolation(SafetyViolation):
+    """A safe path was opened, but its independently held binding changed."""
+
+
 def _private(info, *, directory=False):
     guards._regular(info, directory=directory)
     if (info.st_uid != os.geteuid() or stat.S_IMODE(info.st_mode) & 0o077
@@ -68,13 +72,13 @@ class _HeldWorkRoot:
             current = os.stat(name, dir_fd=parent, follow_symlinks=False)
             guards._regular(current, directory=True)
             if guards._identity(current) != identity or guards._identity(os.fstat(fd)) != identity:
-                raise SafetyViolation('Work directory changed during use')
+                raise WorkBindingViolation('Work directory changed during use')
         if hasattr(self, '_root'):
             info = os.fstat(self._root)
             _private(info, directory=True)
             expected = self._location._allocated_identity
             if expected is not None and guards._identity(info) != expected:
-                raise SafetyViolation('Previously allocated work root changed')
+                raise WorkBindingViolation('Previously allocated work root changed')
         for fd in getattr(self, '_children', ()):
             _private(os.fstat(fd), directory=True)
 
@@ -239,7 +243,7 @@ class _HeldWorkRoot:
                     raise SafetyViolation('Foreign, incomplete or locked work root')
                 raw, self._binding_inode = self._read(_BINDING)
                 if raw != self._binding:
-                    raise SafetyViolation('Work root belongs to a different bound order')
+                    raise WorkBindingViolation('Work root belongs to a different bound order')
             else:
                 if self._inspection:
                     raise SafetyViolation('No bound work root to inspect')
@@ -279,7 +283,7 @@ class _HeldWorkRoot:
         if not self._locked or (self._owner is None and not self._inspection):
             raise SafetyViolation('No active work lock')
         if self._read(_BINDING) != (self._binding, self._binding_inode):
-            raise SafetyViolation('Work identity changed')
+            raise WorkBindingViolation('Work identity changed')
         try:
             owner = self._read(_LOCK)
         except FileNotFoundError:
@@ -287,7 +291,7 @@ class _HeldWorkRoot:
                 raise
             owner = None
         if owner != self._owner:
-            raise SafetyViolation('Work lock owner changed')
+            raise WorkBindingViolation('Work lock owner changed')
         return True
 
     def __exit__(self, *args):
