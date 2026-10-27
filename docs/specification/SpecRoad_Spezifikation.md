@@ -1,21 +1,21 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.32
+## Version 0.2.33
 
 | Feld | Wert |
 |---|---|
 | Dokument-ID | `SR-SPEC-0001` |
-| Dokumentversion | `0.2.32` |
+| Dokumentversion | `0.2.33` |
 | Zielrelease | `SpecRoad Single-Repository Workbench 0.2.0` |
 | Status | **Fachlich konsolidierte Arbeitsgrundlage; technische Reviewentscheidung gesondert dokumentiert, formale Baseline-Freigabe und Produktabnahme nicht durch dieses Dokument erklärt** |
-| Stand | 26. Oktober 2026 |
+| Stand | 27. Oktober 2026 |
 | Sprache | Deutsch; technische Feldnamen, Enum-Werte und CLI-Kommandos Englisch |
-| Fachliche Quelle | **Diese Repositoryfassung v0.2.32 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.32 liegt mit dieser Änderung nicht vor.** |
+| Fachliche Quelle | **Diese Repositoryfassung v0.2.33 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.33 liegt mit dieser Änderung nicht vor.** |
 | Bearbeitbare Satzquelle | Diese Datei; eine spätere PDF muss denselben versionierten Inhalt wiedergeben. |
-| Vorgängerversion | Repository-Spezifikation v0.2.31 vom 26. Oktober 2026; frühere PDF-/Reviewbelege bleiben an ihre historischen Fassungen gebunden. |
-| Prüf- und Entscheidungsgrundlage | RESTORE-OWNER-HANDOFF, delegiert gemäß SPECROAD-DECISION-1 unter gültigem Control-Vertrag 3; Entscheidungsbeleg und offene Verhaltensabnahmen im OFF-PLAN-Abschnitt des Implementierungsplans. Bestehende Nutzerentscheidungen und Produktfreigabegrenzen bleiben unverändert. |
-| Änderungsart | Additive Präzisierung der expliziten Ownerübergabe für neuen oder fortgesetzten Restore in 10.7.5; unveränderte Projektdelegation und Owner-/Risikogates; keine neue Requirement-ID oder Produktposition. Umsetzung und Produktabnahme bleiben offen. |
+| Vorgängerversion | Repository-Spezifikation v0.2.32 vom 26. Oktober 2026; frühere PDF-/Reviewbelege bleiben an ihre historischen Fassungen gebunden. |
+| Prüf- und Entscheidungsgrundlage | RESTORE-CLI-BINDING, delegiert gemäß SPECROAD-DECISION-1 unter gültigem Control-Vertrag 3; Entscheidungsbeleg und offene Verhaltensabnahmen im OFF-PLAN-Abschnitt des Implementierungsplans. Bestehende Nutzerentscheidungen und Produktfreigabegrenzen bleiben unverändert. |
+| Änderungsart | Additive Präzisierung der expliziten Restoremodi, Quell-/Datei-/Rootbindung und des spezialisierten CLI-Preflights in 10.7.6; unveränderte Autorisierungs-, Owner- und Erhaltungsgates; keine neue Requirement-ID oder Produktposition. Umsetzung und Produktabnahme bleiben offen. |
 
-> **Verbindlicher Quellenwechsel:** Die delegierte Detailentscheidung zur Restore-Ownerübergabe schreibt die Repository-Spezifikation als v0.2.32 fort. Frühere PDF- und Reviewnachweise behalten ihre historische Bindung und belegen diese Präzisierung nicht. Der py3langid-Adapter bleibt Bestandteil des Zielreleases; der kleine Core bleibt ohne Analyzer-Abhängigkeiten nutzbar.
+> **Verbindlicher Quellenwechsel:** Die delegierte Detailentscheidung zur Restore-Aufrufbindung schreibt die Repository-Spezifikation als v0.2.33 fort. Frühere PDF- und Reviewnachweise behalten ihre historische Bindung und belegen diese Präzisierung nicht. Der py3langid-Adapter bleibt Bestandteil des Zielreleases; der kleine Core bleibt ohne Analyzer-Abhängigkeiten nutzbar.
 
 > **Fortbestehende Arbeitsprinzipien:** Weiche Budgets führen zu sparsamer vollständiger Weiterarbeit oder gesicherter Fortsetzung über mehrere Aufrufe beziehungsweise Prompts. Es werden keine erforderlichen Arbeiten stillschweigend ausgelassen. Reale Host-, Speicher-, Berechtigungs- und Sicherheitsgrenzen bleiben wirksam.
 
@@ -101,7 +101,7 @@ Bei einem Widerspruch innerhalb dieser Dokumentversion gilt:
 3. `SR-DEC-*` hat Vorrang vor erläuterndem Text, Diagrammen und Beispielen.
 4. Beispiele sind niemals normativ, sofern sie nicht ausdrücklich als Testvektor bezeichnet sind.
 5. Zwei widersprüchliche `SR-REQ-*`-Anforderungen besitzen **keine implizite Rangfolge** nach Nummer, Position oder Spezifität. Ein solcher Fund ist ein Spezifikationsfehler, muss als Issue gelöst werden und verhindert die Freigabe.
-6. Diese Dokumentversion 0.2.32 ersetzt die frühere fachliche Arbeitsgrundlage vollständig. Bis zur gesonderten PDF-Veröffentlichung ist diese versionierte Repositorydatei maßgeblich. Eine spätere PDF muss inhaltsgleich sein; frühere PDFs werden nicht als Nachweis der neuen Verträge ausgegeben. Inhalte verschiedener Fassungen dürfen nicht zu einer Mischspezifikation kombiniert werden.
+6. Diese Dokumentversion 0.2.33 ersetzt die frühere fachliche Arbeitsgrundlage vollständig. Bis zur gesonderten PDF-Veröffentlichung ist diese versionierte Repositorydatei maßgeblich. Eine spätere PDF muss inhaltsgleich sein; frühere PDFs werden nicht als Nachweis der neuen Verträge ausgegeben. Inhalte verschiedener Fassungen dürfen nicht zu einer Mischspezifikation kombiniert werden.
 7. Eine nachträgliche Änderung dieser veröffentlichten Datei erfordert mindestens eine neue Patch-Dokumentversion; stille Korrekturen unter derselben Dokumentversion sind unzulässig.
 8. Eine normative Tabelle, auf die eine `SR-REQ-*`-Anforderung ausdrücklich als Algorithmus oder Matrix verweist, ist Bestandteil des Passkriteriums dieser Anforderung.
 
@@ -2257,6 +2257,125 @@ nach möglichem Write werden tatsächlicher Zustand und Recoverybedarf
 ausgewiesen. Einzellauf und Workfortsetzung benutzen dieselben Bindungen
 und Gates. Diese Präzisierung enthält keine menschliche Freigabe, keine
 reale Risikoakzeptanz und keinen Implementierungs-/Abnahmenachweis.
+
+
+#### 10.7.6 Explizite Restore-Aufrufbindung `restore-cli-binding-v1`
+
+**Entscheidung RESTORE-CLI-BINDING, delegiert gemäß SPECROAD-DECISION-1.**
+Diese Regel präzisiert die bisher nur schematischen Aufrufe aus 10.7.1.
+Sie bildet deren Eingaben auf die expliziten Root-, Quell- und Dateibindungen
+aus 10.7.2 ab. Die geschlossenen Plan-, Auswahl- und Ausführungsformate aus
+10.7.2–10.7.5 sowie ihre Autorisierungs-, Erhaltungs- und Crashgates bleiben
+unverändert. Ein Pfad, Actorlabel oder erfolgreicher Preflight erteilt keine
+Recovery-Berechtigung.
+
+**Zwei getrennte Modi.** Die nachstehend genannten Optionen sind jeweils
+einmalig und werden nicht aus Projektprofilen, Umgebungsvariablen oder einem
+vorherigen Aufruf ergänzt. Die vorhandenen allgemeinen Ausgabe- und weichen
+Ressourcenoptionen behalten ihre gesonderten Regeln; sie ersetzen keine
+dieser fachlichen Pflichtangaben.
+
+| Modus | Pflichtangaben | Zusätzliche fachliche Angaben |
+|---|---|---|
+| Planung | `--project <ROOT> --from <PATH> --source-root <ROOT> --source-kind project_bundle\|baseline --dry-run --output-root <ROOT> --output <PATH>` | Bei `baseline` genau die expliziten operativen Werte `--default-locale <LOCALE>` und `--generated-path <PATH>` nach 10.7.2; bei `project_bundle` sind beide unzulässig. |
+| Ausführung oder Wiederanlauf | `--project <ROOT> --plan-root <ROOT> --plan <PATH> --expected-target-root <SHA256> --actor-type <TYPE> --actor-id <ID>` | `--request-id <ID>` nach den unveränderten Pflicht-/Optionalitätsregeln aus 10.7.3; paarweise `--selection-root <ROOT> --affected-journals <PATH>` nach 10.7.4; Ownerübernahmeoptionen ausschließlich nach 10.7.5. |
+
+Fehlende Pflichtoptionen, Wiederholungen, unbekannte Quellarten oder eine
+Mischung der Modi sind Code 2. Insbesondere sind Plan-/Zielbestätigung,
+Akteur/Request, Journalauswahl und Ownerübernahme in der Planung unzulässig;
+Quell-, operative Baseline-, Dry-Run- und Planausgabeoptionen sind bei der
+Ausführung unzulässig. Der Wiederanlauf verwendet denselben Ausführungsmodus,
+keinen neuen Quellenaufruf. `--as-proposal` ist kein Restoremodus.
+
+`--source-kind` wählt ausschließlich `project_bundle` oder `baseline`.
+Dateiendung, ZIP-/JSON-Erkennung und Inhalt dürfen die ausdrücklich gewählte
+Art nicht ändern oder eine zweite Art als Fallback ausprobieren. Ein syntaktisch
+zulässiger Aufruf mit Bytes der falschen Art oder unvollständiger Quelle
+scheitert an der Quellenqualifikation mit Code 3. Beide Baselinewerte werden
+nach ihrem bestehenden Konfigurationsvertrag geprüft und nur in den operativen
+Zielwerten verwendet. Es gibt keinen Default aus der beschädigten Konfiguration,
+keine semantische Ergänzung und keinen Override von Bundle-Konfigurationsbytes.
+
+**Root und relative Datei.** Die Rootoptionen bezeichnen ausdrücklich
+vorhandene kanonische absolute Verzeichniswurzeln. Sie werden über den
+vorhandenen nativen Rootschutz geprüft; eine lexikalische Normalisierung,
+Symlinkauflösung oder ein gleicher Pfadstring ersetzt keine Rootidentität.
+`--from`, `--plan`, `--affected-journals` und `--output` bezeichnen jeweils
+einen sicheren relativen Dateipfad unter ihrer zugehörigen Rootoption.
+Absolute Dateiwerte, Traversal, Links, Sonderdateien, unsichere Aliase und
+fremde Rootdurchquerungen behalten die vorhandene Sicherheitsablehnung
+Code 7. `--generated-path` ist dagegen ein operativer projektbezogener
+Konfigurationswert und unterliegt dessen bestehendem Pfadvertrag.
+
+Bei Baselines bezeichnet `--source-root` auch die Wurzel aller rekursiv
+referenzierten nativen Snapshotobjektpfade. Ein Parent der Quelldatei wird
+nicht als Objektroot geraten. Eine Quelle darf nach den bestehenden
+Quellen-/Inventurregeln im ausgewählten Projekt liegen; das erteilt keine
+Schreibbefugnis. Plan- und Auswahldatei werden als passive explizite Eingaben
+gelesen. Ihr Speicherort authentifiziert weder Inhalt noch Auftrag. Ein
+anderer Ort der externen Originalplandatei bindet weder `project_root` noch
+`source.root/path` im Plan um; für deren Verlagerung gilt weiterhin 10.7.2.
+Ohne beide Auswahloptionen gilt nur die leere Auswahl nach 10.7.4. Ein allein
+angegebener Auswahlroot oder Auswahlpfad ist Code 2.
+
+Der Ausgaberoot und sein Ziel bleiben außerhalb des ausgewählten Projekts
+und anderer Projektroots gemäß den sicheren Generated-Output-Regeln. Nur
+eine noch fehlende Zieldatei wird atomar veröffentlicht; auch identische
+vorhandene Bytes werden nicht überschrieben. Ein bestehendes Ziel ergibt
+Code 6. Erforderliche Eltern unter dem geprüften Ausgaberoot dürfen mit den
+vorhandenen sicheren Primitiven angelegt werden; der Root selbst wird nicht
+aus dem Aufruf heraus erzeugt. Reale I/O-/Durabilitätsfehler bleiben Code 5.
+Der ausgegebene Plan und die erneut geprüften Quelldateien bleiben bytegebunden;
+keine Ausgabedatei oder temporäre Datei wird als Autorisierung verwendet.
+
+**Spezialisierter Preflight.** `recover restore` bleibt in beiden Modi die
+Command-ID `recover.restore`, Klasse `recovery_write`, Preflight `recovery`.
+Nur die tatsächliche Ausführung besitzt die deklarierten Recoverywrites;
+die Planung schreibt weder ins Projekt noch in `.specroad/` und nimmt keinen
+Projekt-Writer-/Recovery-Lock. Ihr einziger fachlicher Dateieffekt ist der
+explizite externe Plan; offengelegte externe Workdaten folgen unverändert O/P.
+Diese befehlsspezifische Dry-Run-/Actor-Unterstützung klassifiziert Restore
+nicht als gewöhnlichen normativen Writer und erlaubt keine globale Erweiterung
+der Optionen anderer Befehlsklassen.
+
+Die explizite Projektauswahl prüft den wirklichen Root, aber setzt weder eine
+lesbare/gültige `specroad.json` noch ein konsistentes Modell voraus. Sie
+verwendet kein beschädigtes Modell als gültige Options-/Profilquelle und
+ersetzt keinen Root durch einen früher ausgewählten Root. Erst die spezialisierte
+Restoreprüfung ermittelt vollständige Bestandsabdeckung und Projektidentität
+aus den unabhängig gebundenen Belegen nach 10.7.1–10.7.2. Unbestimmbare
+Identität oder Abdeckung bleibt ein Befund, keine erlaubte Teilinventur.
+Der Sonderweg gilt nur diesem expliziten Recoveryaufruf; normale Reader,
+Dry-Runs anderer Befehle und Writer behalten ihre Recoverybarrieren.
+
+Bei der Ausführung MUSS der ausdrücklich ausgewählte Projektroot exakt dem
+gebundenen `project_root` entsprechen; ein abweichender sonst zulässiger Root
+ist Code 6 ohne Projektwrite. Plan- und Auswahllektüre prüft zunächst die
+Originalformate und deren Paarbindung. Sie erzwingt vor der Untersuchung einer
+nachgewiesenen laufenden Ausführung keine frische ursprüngliche Bestandswurzel
+oder inzwischen verschwundene Herkunft. Die native Ausführung unterscheidet
+erst danach Neupublikation, Vollzielabschluss und Teilziel-Rollback gemäß
+10.7.3. Das ist keine Ausnahme von den Frischeprüfungen vor Neupublikation.
+
+**Autorisierung und gemeinsamer Adapter.** CLI und strukturierter Aufruf
+verwenden dieselben gebundenen Fachparameter, native Datei-/Restoreadapter,
+aktuelle gesonderte Autorisierungsprüfung und Owner-/Risikogates. Akteur und
+Request werden nach den vorhandenen Regeln validiert; insbesondere bleibt
+die Request-ID für `ai` und `ci` Pflicht. Kein Argument lädt ausführbaren
+Projektcode oder registriert eine Berechtigungsfunktion aus einer Datei.
+Fehlende, ablehnende, fehlerhafte oder nur gespeicherte Autorisierung bleibt
+eine Ablehnung nach dem bestehenden Vertrag. Diese Präzisierung erfindet
+weder eine reale Hostfreigabe noch eine neue Authentifizierungs-/Pluginarchitektur;
+die verwendbare vertrauenswürdige CLI-Anbindung ist weiterhin nachzuweisen.
+
+Selbstbeschreibung und maschinenlesbare Ergebnisse folgen 11.7: beide Modi,
+Pflicht-/Ausschlussbeziehungen, Source-/Rootbindung, tatsächlich mögliche
+Seiteneffekte und Fehlerklassen sind offenzulegen. Nur ein vollständig
+veröffentlichter Plan gilt als Planungserfolg; ein zurückgerollter oder
+gesperrter Wiederanlauf ist kein erfolgreich wiederhergestelltes Projekt.
+Einzellauf und Workfortsetzung dürfen weder Optionen neu erraten noch alte
+Berechtigung als aktuelle Zustimmung wiederverwenden. Alle übrigen Grenzen
+aus N/O/P sowie 10.7.1–10.7.5 bleiben Pflichtabnahmen von 15.l.R.
 
 
 ### 10.8 Scope Descriptor und Scope-Closure
@@ -5286,6 +5405,17 @@ Der Produktstand bleibt 649/900, 15.l.R offen. Diese normative Präzisierung
 ist kein Implementierungs- oder Produktabnahmenachweis. Aktive Kataloghashes
 folgen den neuen Dokumentbytes; historische Belege bleiben unverändert.
 
+### 20.27 Explizite Restore-Aufrufbindung v0.2.33
+
+RESTORE-CLI-BINDING konkretisiert in 10.7.6 die beiden bereits vorgesehenen
+Restoreaufrufe durch explizite Quellart, Root-/Dateipaare und operative
+Baselinewerte. Der spezialisierte Recoverypreflight und die native
+Wiederanlaufprüfung erhalten beschädigte Originalbytes und sämtliche
+Autorisierungs-, Lock-, Erhaltungs- und Frischegates. Keine neue Autorität
+oder Produktfreigabe entsteht. Umsetzung und Gesamt-Restoreabnahme bleiben
+in 15.l.R offen, Produktstand 649/900. Aktive Kataloghashbindungen folgen
+der neuen Dokumentfassung; historische Evidence bleibt unverändert.
+
 ## 21. Entscheidungsstatus und nicht blockierende Restpunkte
 
 | ID | Thema | Stand |
@@ -5328,6 +5458,7 @@ Die folgende Roadmap ist informativ und erzeugt keine Anforderungen an 0.2:
 
 | Version | Datum | Status | Änderung |
 |---|---|---|---|
+| 0.2.33 | 2026-10-27 | Delegiert gemäß SPECROAD-DECISION-1 | RESTORE-CLI-BINDING: explizite Restoremodi, Quellart, operative Baselinewerte und Root-/Dateipaare; spezialisierter Preflight mit unveränderten nativen Autorisierungs- und Recoverygates. |
 | 0.2.32 | 2026-10-26 | Delegiert gemäß SPECROAD-DECISION-1 | RESTORE-OWNER-HANDOFF: explizite zweitseitige Owner-/Auftragsbindung für neuen oder fortgesetzten Restore; native Lock-/Risikogates, Originalerhaltung und Produktstand bleiben erhalten. |
 | 0.2.31 | 2026-10-26 | Ausdrücklicher manueller Nutzerauftrag zur Erweiterung der Projektregel | SPECROAD-DECISION-1-V3: höchstens drei Klärungsbundles unter gültigem Vertrag 3 mit dauerhaftem Budget; Version 2 behält die Einerregel. Fachliche Grenzen, Nachweise und Betriebszustände bleiben erhalten. |
 | 0.2.30 | 2026-10-26 | Ausdrücklicher manueller Nutzerauftrag | RESTORE-JOURNAL-SELECTION: autorisierte Pfad-/Inventurhashliste für betroffene alte aktive Journale, übrige Sperren bleiben erhalten; Umsetzung und Crashabnahme in 15.l offen. |
@@ -8453,4 +8584,4 @@ Implementierungsschritten nachgewiesen sein.
 
 ---
 
-**Ende der SpecRoad-Produktspezifikation v0.2.32.**
+**Ende der SpecRoad-Produktspezifikation v0.2.33.**
