@@ -588,6 +588,10 @@
       "kind": "Synthetic registered host with a forbidden handler, native project-bundle/Baseline Restore plans over damaged current bytes, explicit original journal selection, no-I/O traps and real external CheckpointStore publication/reopening. Independent byte/hash/input membership and immutable-successor checks reject missing or forged stored bindings and changed actors/requests. No live Restore, current authorization, public CLI registration, complete Work engine, crash parity or human approval is asserted.",
       "provider": "tests/test_work_restore_binding.py:setup,registry,create;tests/support/restore.py:restore_case,plan_for;tests/test_restore_execution.py:selected"
     },
+    "SR-FIX-RESTORE-WORK-EXECUTION-v1": {
+      "kind": "Synthetic host registry with a forbidden handler and explicit RecoveryAuthority, native damaged project-bundle/Baseline plans, complete Work input bytes and a real external CheckpointStore. Actual native Restore publication, inode mutex observation, late Work/build changes and abrupt subprocess exits cover original actor binding, fresh takeover, full-target completion and partial rollback after source loss. Work bytes and pending delivery remain unchanged. No public CLI registration, human approval, complete Work delivery or release parity is asserted.",
+      "provider": "tests/test_work_restore_execution.py:stored,run,interrupt_work;tests/test_work_restore_binding.py:registry;tests/support/restore.py:restore_case,plan_for;tests/test_restore_execution_right.py:fixture,interrupted"
+    },
     "SR-FIX-ROADMAP-EXPLANATION-RIGHT-v1": {
       "kind": "Owned live project with independently complete path/node sets, explicit missing planning references and configured depth. Public direct/CLI/structured/Core/PYZ results, closed result schema, read-only modes and write/process/entropy traps. Mid-read source/configuration/profile/inventory changes, operational blockers, malformed unreachable sources, path security and isolated runtimes. No atomicity, release readiness or View/Work claim.",
       "provider": "tests/test_roadmap_explanation_right.py:project"
@@ -915,6 +919,7 @@
     "SR-FIX-RESTORE-PLAN-v1",
     "SR-FIX-RESTORE-RECOVERY-v1",
     "SR-FIX-RESTORE-WORK-BINDING-v1",
+    "SR-FIX-RESTORE-WORK-EXECUTION-v1",
     "SR-FIX-ROADMAP-EXPLANATION-RIGHT-v1",
     "SR-FIX-ROADMAP-EXPLANATION-v1",
     "SR-FIX-ROADMAP-PROJECTION-RIGHT-v1",

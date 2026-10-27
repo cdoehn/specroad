@@ -72,12 +72,15 @@ def _source(data, origin):
 
 def execute_restore(raw, *, expected_target_root, authority, actor, request_id=None,
                     affected_journals=None, force=False, expected_lock_sha256=None,
-                    reason=None, accept_remote_risk=False, owner_probe=None):
+                    reason=None, accept_remote_risk=False, owner_probe=None,
+                    expected_original_actor=None):
     """Publish the exact supported full plan under fresh authorization and lock.
 
     No caller supplies substitute model checks. A failed/unfinished attempt
     leaves its exact plan, original bytes, target staging and active barrier.
     Existing owners require an explicit, independently authorized handoff.
+    An optional independently bound original actor is a precondition, never a
+    substitute for the current recovery actor or host authorization.
     """
     progress = {'mutation_possible': False, 'recovery_required': False}
     try:
@@ -85,7 +88,8 @@ def execute_restore(raw, *, expected_target_root, authority, actor, request_id=N
             authority=authority, actor=actor, request_id=request_id,
             affected_journals=affected_journals, progress=progress, force=force,
             expected_lock_sha256=expected_lock_sha256, reason=reason,
-            accept_remote_risk=accept_remote_risk, owner_probe=owner_probe)
+            accept_remote_risk=accept_remote_risk, owner_probe=owner_probe,
+            expected_original_actor=expected_original_actor)
     except RestoreError as error:
         error.mutation_possible |= progress['mutation_possible']
         error.recovery_required |= error.mutation_possible or progress['recovery_required']
@@ -95,10 +99,12 @@ def execute_restore(raw, *, expected_target_root, authority, actor, request_id=N
 @guarded
 def _execute_restore(raw, *, expected_target_root, authority, actor, request_id,
                      affected_journals, progress, force, expected_lock_sha256,
-                     reason, accept_remote_risk, owner_probe):
+                     reason, accept_remote_risk, owner_probe, expected_original_actor):
     takeover_options(force, expected_lock_sha256, reason, accept_remote_risk)
     require(type(authority) is RecoveryAuthority, 'restore_authority_required', exit_code=2)
     actor = normalize_authoring_actor(actor)
+    original_actor = (None if expected_original_actor is None else
+                      normalize_authoring_actor(expected_original_actor).as_fields())
     request_id = normalize_request_id(request_id)
     request_id = None if request_id is None else request_id.value
     require(actor.actor_type not in ('ai', 'ci') or request_id is not None,
@@ -123,6 +129,8 @@ def _execute_restore(raw, *, expected_target_root, authority, actor, request_id,
         inventory, contents = observe(project, data['inventory']['roots'])
         previous = discover(plan, project, request_id, inventory, contents)
         if previous is not None:
+            require(original_actor is None or previous['binding']['request']['actor'] == original_actor,
+                    'restore_original_actor_conflict', exit_code=6)
             selection = journal_selection(plan, affected_journals, original_active(plan))
             require(selection == previous['binding']['request']['affected_journals'],
                     'restore_selection_changed', exit_code=6)
@@ -157,6 +165,8 @@ def _execute_restore(raw, *, expected_target_root, authority, actor, request_id,
                 store.synchronize()
                 return RestoreCompletion._create(resume(store, plan, previous, classification,
                     authority=authority, actor=actor, authorize=_authorize, source_observation=observation))
+        require(original_actor is None or actor.as_fields() == original_actor,
+                'restore_original_actor_conflict', exit_code=6)
         origin = boundary(data['source']['root'])
         verify_live(plan, project, origin)
         selection = journal_selection(plan, affected_journals, active_entries)

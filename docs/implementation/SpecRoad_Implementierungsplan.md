@@ -41,7 +41,7 @@ implementation_plan_commits_total: 900
 implementation_plan_commits_completed: 649
 last_completed_plan_commit: 15.l.W
 next_plan_commit: 15.l.R
-last_completed_numbered_bundle: 508
+last_completed_numbered_bundle: 509
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -31379,6 +31379,154 @@ Bei Fehler bleiben echte Dateien, Index und erfolgreiche frühere Commits
 erhalten. Kein Dev-Volltest, serieller Lauf, zusätzlicher Apply-Volltest,
 CI-/Watcher-/Control-Start oder Dev-Commit. Native Paketprüfung, echter SHA-256
 und atomare Exchange-Übergabe beenden diesen N-Auftrag unmittelbar.
+
+
+**Umsetzungs- und Übergabenachweis – Bundle 509 (15.l.R-Zwischenstand), 27. Oktober 2026.**
+
+**Maßgebliche Basis.** Vollständig geprüftes Result
+`specroad-apply_Result_081501_1027_616942.zip`, SHA-256
+`be68b1bdd4db37e6197c68e540c57c067663d8e2fb568607f9d457a571a86f14`;
+Repository `a33ed6cf-0a97-4b73-b11a-d4239e7a2145`, Abschlusscommit
+`b6ba22f80628702da33c23e2d9531b1a6f6e021e`, Fingerprint
+`7c9d2a24e397e0e5`, Algorithmus `patchharbor-state-v1`.
+Root-Anleitung, Kontext, Umgebung, Manifest, Run-/Ausführungslogs und alle
+**2.315** Snapshotdateien samt Blob-IDs und Modi wurden geprüft. Der reale
+Apply-Stand ist sauber und bytegleich. Bundle **508**, Paket-SHA-256
+`8b148a403173957c4d5ee6db070ebd843a3219f4987d02abca2111d984510086`,
+endete nach **7.360/7.360** Apply-Tests, **Sequenz 214 / Gruppe 1**,
+vier parallelen Workern und **3358.47 s** im passenden Abschlusscommit.
+Commitdateien, Payloads, Auswahlbindung und Einzeloutcomes stimmen überein.
+Die passive Restore-Workbindung ist angewandt; Produktstand **649/900**,
+zuletzt **15.l.W**, nächstens **15.l.R**.
+
+**Umgesetzter Ausschnitt.** Die vorhandene Vorgabe **0.2.34 / 10.7.7** wird
+weiter regulär umgesetzt. Ein geschlossener interner Workadapter bindet
+native Restoreausführung und weiterhin offene Ergebnislieferung an die
+unveränderten Plan-/Auswahlbytes. Seine Aufgaben enthalten ausdrücklich
+Transaktion und Ergebnislieferung; beliebige callerdefinierte Aufgaben,
+behauptete Fortschrittsnachweise, andere Zustände oder Builds gelangen nicht
+in diesen Ausführungspfad. Der Host muss einen tatsächlichen vertrauenswürdigen
+Registryvertrag, die unabhängig erhaltene Initialbindung und aktuelle
+Recoveryautorisierung liefern. Der Adapter führt weder gespeicherten Code
+noch den im Test bewusst unbenutzbaren Commandhandler aus.
+
+Die reale externe Workablage wird unter ihrem Inode-Mutex gelesen. Dieser
+bleibt über den ganzen nativen Restoreaufruf gehalten, ohne einen neuen
+Workowner oder Checkpoint zu schreiben. Work-/Buildbindung und Originalbytes
+werden vor und nach aktuellen Authorityaufrufen erneut geprüft. Späte
+Bindungsänderungen erhalten ihren konkreten Fehler und die tatsächlichen
+nativen Mutations-/Recoveryangaben. Der explizit geschützte Projektroot und
+die Trennung vom Herkunftsroot werden geprüft; es erfolgt keine vorgezogene
+frische Quell- oder Originalinventurprüfung, die eine vorhandene native
+Recovery verdecken könnte.
+
+Der native Executor erhält zusätzlich einen optionalen ursprünglichen Actor
+als reine Konfliktvorbedingung. Für eine neue Veröffentlichung muss der
+aktuelle Ausführungsakteur diesem Original entsprechen. Für eine bereits
+begonnene Ausführung muss der ursprüngliche Journalakteur passen; der
+aktuelle Recoveryakteur bleibt davon getrennt. Ein anderer Workcontainer
+kann deshalb selbst bei identischem Plan, Request und Auswahl keine fremde
+Originalakteurbindung übernehmen. Direkte native Aufrufe ohne diese zusätzliche
+Vorbedingung behalten ihren bisherigen Vertrag.
+
+Die aktuellen Übernahmeparameter kommen ausschließlich aus dem neuen Aufruf.
+Alte gespeicherte Force-/Owner-/Risikoangaben gelten nicht als Zustimmung.
+Alle nativen aktuellen Autorisierungs-, Lock-, Owner-, Herkunfts-, Bestands-,
+Ziel- und Erhaltungsgates bleiben bestehen. Ein vollständiges journalgebundenes
+Ziel wird nativ abgeschlossen; ein Teilziel wird ausschließlich auf seine
+geprüften Before Images zurückgerollt. Das gilt auch nach Verlust der externen
+Quelle. Es gibt weder eine zweite Vorwärtspublikation noch ein automatisches
+Neuplanen nach Rollback. Aktuelle Recoveryakteure erscheinen getrennt in den
+nativen Ereignisbelegen; Originalanforderung und Sicherungsbytes bleiben erhalten.
+
+Der Adapter gibt das tatsächliche native Ergebnis samt Workbindung zurück.
+`checkpoint_changed=false` und `work_completion_recorded=false` bleiben
+explizit: Der offene äußere Workauftrag wird nicht abgeschlossen, kein neuer
+Erfolgsreceipt oder vollständiger Work-Resume/CLI-Pfad behauptet. Nach einem
+Abbruch zwischen Restore und äußerer Ergebnislieferung ist eine erneute
+native Prüfung nötig; deren bereits vorhandener Abschluss verhindert eine
+zweite fachliche Veröffentlichung. Eine Rollbackausgabe bleibt als solche
+mit `recovery_required` erkennbar.
+
+**Gezielte parallele Verhaltensprüfung.** Der endgültige Zustand besteht
+**523/523** ausgewählte Verhaltenstests
+mit **vier Workern**, Prozessabschluss **0**, in **4711.26 s**.
+Alle Einzeloutcomes sind bestanden; ausschließlich Teiltestnachweis:
+
+- `tests/test_work_restore_execution.py` (28)
+- `tests/test_catalog_check.py` (17)
+- `tests/test_catalog_check_right.py` (37)
+- `tests/test_restore_execution.py` (42)
+- `tests/test_restore_execution_right.py` (59)
+- `tests/test_restore_invocation.py` (35)
+- `tests/test_restore_invocation_options.py` (159)
+- `tests/test_work_checkpoints.py` (17)
+- `tests/test_work_checkpoints_right.py` (49)
+- `tests/test_work_publication.py` (27)
+- `tests/test_work_restore_binding.py` (53)
+
+Die **28 neuen Fälle** umfassen beide qualifizierten Quellarten, explizite
+und leere Journalauswahl, tatsächliche Zielbytes und native Sicherungs-/
+Auditbindungen, gehaltenen Workmutex, verweigerte oder verändernde Authority,
+fremde Originalakteure, stale Quellen/Inventuren, unpassende Aufgaben,
+synthetischen Fortschritt, andere Builds, überlappende/ungeschützte Roots
+und die Unwirksamkeit gespeicherter Übernahmeflags. Späte Beschädigung der
+Work-Rootbindung vor oder nach möglichen nativen Schreibvorgängen darf
+die tatsächlichen Mutations-/Recoveryangaben nicht verdecken. Echte Subprozessabbrüche
+nach Teilziel, Vollziel, Audit und verlorener Rückgabe erhalten Workbytes;
+Fortsetzung ohne externe Quelldatei führt nativ zu Rollback beziehungsweise
+vollständigem Abschluss. Wiederholungen erhalten den vorhandenen nativen
+Ausführungsbeleg. Die bestehenden nativen Restore-, Aufruf-, Workcheckpoint-
+und Change-Plan-Worktests werden als Regression geprüft.
+Alle Projekte, Hostregistrierungen, Buildfixtures und Actorlabels sind
+synthetisch. Sie ersetzen keine echte menschliche Freigabe oder Risikoentscheidung.
+Zwei vorläufige Wrapper wurden ausdrücklich unterbrochen (jeweils beobachteter Wrapperabschluss 130): zuerst wegen eines ungenauen Negativfalls, danach wegen unzureichend erhaltener nativer Recoveryangaben beim fehlschlagenden Freigeben der Work-Sperre. Die Unterbrechung beendete deren Kind-Testläufe nicht. Die später tatsächlich geschriebenen Berichte weisen jeweils 521 bestandene Testkörper und Pytestabschluss 0 aus; beide Auswahlgates sind jedoch mit `selected_passed=false`, Ergebniscode 1 und `nonpassing_or_unbound_selection` abgeschlossen, weil sich ihre gebundene Quelle währenddessen geändert hatte. Diese Läufe werden ausdrücklich nicht als Nachweis für einen gebundenen Produktzustand verwendet. Logs und Originalberichte bleiben erhalten. Ausschließlich der vollständig neu geprüfte, unveränderte finale Zustand mit 523 Fällen gilt für dieses Bundle.
+Die finale Prüfung verwendet den tatsächlichen kompatiblen Runtimebuild auch
+für den Negativfall eines fremden Aufgabenplans; dessen Ablehnung darf nicht
+bloß durch eine andere Fixture-Buildkennung verdeckt werden.
+
+Vollständige Collection-/Katalogprüfung: **22.114** aktive Identitäten,
+**0** Fehler und **0** ausgeführte Testkörper. Alle bisherigen **22.090**
+Testnummern bleiben erhalten. **28** neue Identitäten werden ausschließlich
+als Nummern **22.090–22.117** angehängt; **22.118** Nummern bleiben reserviert,
+einschließlich vier stillgelegter Identitäten. Die neue Fixture
+`SR-FIX-RESTORE-WORK-EXECUTION-v1` bindet nur diesen Ausschnitt.
+`SR-TC-0461` und `SR-TC-0462` bleiben `partial`; ihre aktiven Angaben benennen
+weiter offene vollständige Workintegration. Spezifikation **0.2.34**, Planrevision
+**29**, Spezifikationshashbindungen und historische Nachweise bleiben erhalten.
+
+Finale Dev-Quellidentität: `0d4078e98cde07ee77354162221f47b23fce55766b1827c3056f9192210d2f02`.
+Auswahlbericht-SHA-256: `108358438a64b6ada804e83d8d0c5afac976677d26bffa9d7afaed8cac94d7d6`.
+Einzeloutcomes-SHA-256: `b58361cd1e71386c10f91570405e1cc5ce6ea1049bddfb25535d10ec26c71bce`.
+Vorherige Apply-Auswahlbindung: `311a17ca216cd08a52209a1a2fdb65244d0e09d8c27b408ea8299540b58a5ddd`;
+Apply-Bericht: `4b9a5d09c65fa0d129322c82f0e946394e20febb3caad2ed8d00454d816b6c47`;
+Apply-Einzeloutcomes: `ab54706ac15a02db9a033206588b74cbdf78b7dc9b76a410fe251aac4e1b318a`.
+
+**Offen und Übergabe.** Ein echter regulärer **15.l.R**-Zwischenstand,
+Position **650/900**, Commit-Message
+`15.l.R feat(bundle): Restore veröffentlichen und Crashabsicherung vervollständigen`.
+Keine neue normative Klärung, Alibikorrektur oder künstliche W/R/C-Folge.
+**15.l.R und 15.l.C bleiben offen**, erreichter Stand **649/900**.
+Öffentliche CLI-Registrierung/Selbstbeschreibung, verwendbare echte
+CLI-Hostautorisierung, Planungs-Work, vollständige Workfortsetzung und
+Abschlusslieferung, vollständige I/O-/Crash-/Paritätsmatrix sowie die zuvor
+offenen historischen Schutz-/Lifecycle-/Spezialistenprovider bleiben
+Pflichtabnahmen. Kein Vollsuite- oder Releaseerfolg. SPECROAD-DECISION-1 und
+Vertrag 3 sind ausdrücklich vorhanden; der aktuelle Vertrag nennt Limit **3**,
+Restbudget **3** und erlaubt Klärung. Dieser Auftrag liefert ein normales
+`patch_ready`-Bundle. Allein Control verwaltet das Budget nach zugeordnetem
+Apply-Result; dieser Nachweis ändert keinen Controlzustand.
+
+Der Entrypoint installiert genau diesen geprüften Zustand. Vor dem Commit
+läuft ausschließlich **Sequenz 215 / Gruppe 2 von 3**, **7.372** Tests,
+parallel mit vier Workern. Erst nach erfolgreichem Gate und nativer
+Auswahlbindung wechselt allein der Bundlemarker von **508** auf **509**.
+Produktzähler, letzter/nächster Planschritt und offene Checkboxen bleiben
+unverändert. Apply und Commit sind bei Übergabe noch nicht beobachtet.
+Bei Fehler bleiben echte Dateien, Index und erfolgreiche frühere Commits
+erhalten. Kein Dev-Volltest, serieller Lauf, zusätzlicher Apply-Volltest,
+CI-/Watcher-/Control-Start oder Dev-Commit. Native Paketprüfung, vollständiger
+SHA-256 und atomare Exchange-Übergabe beenden diesen N-Auftrag unmittelbar.
 
 #### 15.l.C – Make it Clean
 
