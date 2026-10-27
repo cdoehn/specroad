@@ -2,7 +2,7 @@
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0309",
   "requirement_id": "SR-REQ-0309",
-  "specification_sha256": "aa931a06096952dd9e578253c08e21a8b5448579e78829ca3c6a3ccdbfb32823",
+  "specification_sha256": "1b5d7e31e97c62ba47a2cda306d703190daaf2a82d5b58f74ef2439c3acfdb59",
   "primary_verification_id": "SR-VER-0023",
   "implementation_status": "partial",
   "method": "automated_behavior",
@@ -20,7 +20,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Das Verschieben oder Neuordnen eines Abschnitts DARF NICHT die IDs oder Revisionen der darin referenzierten fachlichen Artefakte \u00e4ndern; neue Revisionen entstehen ausschlie\u00dflich f\u00fcr tats\u00e4chlich ge\u00e4nderte Dokumentartefakte.",
+    "requirement_contract": "Das Verschieben oder Neuordnen eines Abschnitts DARF NICHT die IDs oder Revisionen der darin referenzierten fachlichen Artefakte ändern; neue Revisionen entstehen ausschließlich für tatsächlich geänderte Dokumentartefakte.",
     "scope": "Actual native writer publishes only changed document relation owners. Referenced content IDs, revision values, records and original bytes remain exact, including original noncanonical formatting. Shared reference targets remain one stored artifact; native composition/reference readback sees unchanged revisions. No render/UI/documentation oracle or permissive semantic-service success stub. Stored approval is preserved as data, not authenticated by this guard. Native candidate byte preservation and unavailable-service write refusal are separate from successful actual publication. Owner content and unrelated relation edges cannot be smuggled into a move."
   },
   "expected_diagnostics": [

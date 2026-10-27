@@ -1,21 +1,21 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.34
+## Version 0.2.35
 
 | Feld | Wert |
 |---|---|
 | Dokument-ID | `SR-SPEC-0001` |
-| Dokumentversion | `0.2.34` |
+| Dokumentversion | `0.2.35` |
 | Zielrelease | `SpecRoad Single-Repository Workbench 0.2.0` |
 | Status | **Fachlich konsolidierte Arbeitsgrundlage; technische Reviewentscheidung gesondert dokumentiert, formale Baseline-Freigabe und Produktabnahme nicht durch dieses Dokument erklärt** |
 | Stand | 27. Oktober 2026 |
 | Sprache | Deutsch; technische Feldnamen, Enum-Werte und CLI-Kommandos Englisch |
-| Fachliche Quelle | **Diese Repositoryfassung v0.2.34 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.34 liegt mit dieser Änderung nicht vor.** |
+| Fachliche Quelle | **Diese Repositoryfassung v0.2.35 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.35 liegt mit dieser Änderung nicht vor.** |
 | Bearbeitbare Satzquelle | Diese Datei; eine spätere PDF muss denselben versionierten Inhalt wiedergeben. |
-| Vorgängerversion | Repository-Spezifikation v0.2.33 vom 27. Oktober 2026; frühere PDF-/Reviewbelege bleiben an ihre historischen Fassungen gebunden. |
-| Prüf- und Entscheidungsgrundlage | RESTORE-WORK-BINDING, delegiert gemäß SPECROAD-DECISION-1 unter gültigem Control-Vertrag 3; Entscheidungsbeleg und offene Verhaltensabnahmen im OFF-PLAN-Abschnitt des Implementierungsplans. Bestehende Nutzerentscheidungen und Produktfreigabegrenzen bleiben unverändert. |
-| Änderungsart | Additive Präzisierung der passiven Restorebindung in Workcheckpoints und ihrer nativen Recoveryfortsetzung in 10.7.7; unveränderte Autorisierungs-, Owner-, Herkunfts- und Erhaltungsgates; keine neue Requirement-ID oder Produktposition. Umsetzung und Produktabnahme bleiben offen. |
+| Vorgängerversion | Repository-Spezifikation v0.2.34 vom 27. Oktober 2026; frühere PDF-/Reviewbelege bleiben an ihre historischen Fassungen gebunden. |
+| Prüf- und Entscheidungsgrundlage | RESTORE-WORK-OWNER-HANDOFF, delegiert gemäß SPECROAD-DECISION-1 unter gültigem Control-Vertrag 3; Entscheidungsbeleg und offene Verhaltensabnahmen im OFF-PLAN-Abschnitt des Implementierungsplans. Bestehende Nutzerentscheidungen und Produktfreigabegrenzen bleiben unverändert. |
+| Änderungsart | Additive Präzisierung der expliziten Übernahme eines nativ als beendet belegten lokalen äußeren Restore-Work-Owners in 10.7.8; getrennte unveränderte Projekt-Recovery- und Freigabegates; keine neue Requirement-ID oder Produktposition. Umsetzung und Produktabnahme bleiben offen. |
 
-> **Verbindlicher Quellenwechsel:** Die delegierte Detailentscheidung zur Restore-Workbindung schreibt die Repository-Spezifikation als v0.2.34 fort. Frühere PDF- und Reviewnachweise behalten ihre historische Bindung und belegen diese Präzisierung nicht. Der py3langid-Adapter bleibt Bestandteil des Zielreleases; der kleine Core bleibt ohne Analyzer-Abhängigkeiten nutzbar.
+> **Verbindlicher Quellenwechsel:** Die delegierte Detailentscheidung zum äußeren Restore-Work-Owner schreibt die Repository-Spezifikation als v0.2.35 fort. Frühere PDF- und Reviewnachweise behalten ihre historische Bindung und belegen diese Präzisierung nicht. Der py3langid-Adapter bleibt Bestandteil des Zielreleases; der kleine Core bleibt ohne Analyzer-Abhängigkeiten nutzbar.
 
 > **Fortbestehende Arbeitsprinzipien:** Weiche Budgets führen zu sparsamer vollständiger Weiterarbeit oder gesicherter Fortsetzung über mehrere Aufrufe beziehungsweise Prompts. Es werden keine erforderlichen Arbeiten stillschweigend ausgelassen. Reale Host-, Speicher-, Berechtigungs- und Sicherheitsgrenzen bleiben wirksam.
 
@@ -2511,6 +2511,119 @@ Lifecycle- oder Fachproviderprüfungen. Implementierung und vollständige
 Verhaltensevidence dieser Bindung bleiben Bestandteil von 15.l.R.
 
 
+### 10.7.8 Verwaister äußerer Work-Owner einer Restorefortsetzung
+
+Die äußere Checkpointveröffentlichung eines nach 10.7.7 gebundenen
+Restoreauftrags verwendet den nativen Work-Lock aus P.2. Ein echter
+Prozessabbruch kann dessen Ownerdatei erhalten, obwohl kein Prozess mehr
+den zugehörigen Kernelmutex hält. Die folgende Regel konkretisiert nur
+die Wiederaufnahme dieses vorhandenen Restore-Workauftrags. Sie ersetzt
+weder den Projektwriter-/Recovery-Lock noch dessen Übernahme nach 10.7.5.
+
+**Expliziter Auftrag und begrenzte Zulässigkeit.** Für den inneren Befehl
+`recover.restore` akzeptiert `work resume` das zusammengehörige Optionspaar
+`--expected-work-lock-sha256 <SHA256>` und `--work-recovery-reason <TEXT>`.
+Der Hash bezeichnet die vollständigen tatsächlich vorgefundenen Bytes von
+`work-lock.json`, nicht PID, Nonce oder Checkpointhash; der Grund ist nach
+Trimmen nicht leer. Beide Angaben stammen ausdrücklich aus dem aktuellen
+Aufruf. Ein einzelner Parameter, ein ungültiger Hash/Grund oder ihre Verwendung
+für einen anderen inneren Befehl ist Eingabefehler 2. Ohne dieses Paar wird
+ein erhaltener Work-Owner niemals entfernt oder ersetzt. Die Angaben ändern
+weder Originalauftrag, Actor, Request, Plan, Auswahl noch Aufgabenidentität
+und werden nicht als spätere Wiederholungszustimmung gespeichert.
+
+Die Übernahme ist ausschließlich zulässig, wenn unter dem durchgehend
+gehaltenen nativen exklusiven Mutex desselben Work-Root-Inodes alle folgenden
+Voraussetzungen erneut belegt sind:
+
+1. Private reguläre Dateien, sichere disjunkte Pfade, Root-/Inodebindung,
+   unabhängige ursprüngliche Workbindung, unterstützter Build und die gesamte
+   veröffentlichte Checkpoint-/Objektkette sind gültig. Die ursprüngliche
+   Restorebindung wird ausschließlich aus ihren gespeicherten vollständigen
+   Bytes geprüft; eine neue Ausgangsmodell- oder Herkunftsprüfung darf dabei
+   keine bereits notwendige native Recovery verdecken.
+2. Die alte Ownerdatei ist vollständig und an genau diesen Workauftrag
+   gebunden; Bytes, Dateityp, Inode und erwarteter Bytehash stimmen überein.
+   Die Datei fehlt bei erwartetem Owner nicht und ist kein fremder Lock.
+3. Ein vertrauenswürdiger nativer Kerneladapter bestätigt denselben bekannten
+   Host einschließlich Boot- und PID-Namespace-Identität. Der alte PID und
+   dessen gespeicherte Prozessstartkennung sind bekannt. Der ursprüngliche
+   Owner ist nachweislich beendet: derselbe Prozess ist terminal, seine
+   Nichtexistenz ist belastbar bestätigt oder der PID gehört nachweislich
+   einem anderen Prozessstart. PID-Wiederverwendung erlaubt keinen Zugriff
+   auf den neuen Prozess. PID oder Hostname allein, Lockalter, Timeout,
+   gespeicherte Beobachtungen und ein lediglich freier Mutex genügen nicht.
+4. Die gerade beobachteten Ownerbytes und die native Eigentümerprüfung
+   bleiben bis unmittelbar vor dem atomaren Austausch gültig. Der neue
+   aktuelle Prozessowner ist ebenfalls vollständig nativ identifiziert.
+
+Lebende, fremde oder nicht eindeutig prüfbare Owner bleiben gesperrt.
+Insbesondere sind fehlende Kernelinformationen, unlesbare Prozessdaten,
+abweichender Boot-/PID-Namespace und unbekannte Prozessstartkennung keine
+Todesnachweise. Dieser äußere Workpfad besitzt keinen Force- oder
+Remote-Risiko-Override; Restoreoptionen wie `--force` oder
+`--accept-remote-risk` erteilen dafür keine Erlaubnis. Eine tatsächlich
+fehlende sichere Fortsetzung wird mit konkretem Blocker und Abhilfe gemeldet,
+nicht durch Löschen eines Owners, Fortschritt oder Erfolg ersetzt.
+
+**Dauerhafte Übergabe und Wiederanlauf.** Vor dem Ownerwechsel werden die
+exakten alten Ownerbytes und die beabsichtigten neuen Ownerbytes zusammen
+mit Work-ID, unabhängiger Anfangsbindung, Rootidentität, aktuellem
+Checkpoint-/Generationshash, nativer Ownerbeobachtung und aktuellem Grund
+als unveränderbarer betrieblicher Übergabebeleg gesichert. Er liegt unter
+`checkpoints/restore-owner-handoffs/`, getrennt von fachlichen Ergebnissen,
+und ist durch Größe und SHA-256 an seine tatsächlichen Bytes gebunden.
+Er enthält keine ausführbaren Daten, Produktfreigabe oder gespeicherte
+Recoveryberechtigung. Die Ownerdatei wird unter demselben Mutex atomar von
+den nochmals geprüften alten zu den vorab gebundenen neuen Bytes ersetzt;
+ein ungesicherter Zustand ohne Ownerdatei zwischen beiden ist unzulässig.
+Ein dauerhafter Abschlussbeleg bindet anschließend exakt diese Übergabe und
+die neuen Ownerbytes. Erst danach darf dieser Aufruf Workfortschritt oder
+native Restorearbeit beginnen.
+
+Ein Abbruch vor dem Austausch lässt den alten Owner maßgeblich. Ein Abbruch
+danach lässt den tatsächlich installierten neuen Owner maßgeblich, auch wenn
+der Übergabeabschluss noch fehlt. Die nur vorbereitete Absicht allein
+berechtigt weder zum Austausch noch zur erneuten Ausführung. Der Wiederanlauf
+muss genau den tatsächlichen Übergabestand prüfen und gegebenenfalls den
+fehlenden betrieblichen Abschluss aus passenden Bytes vervollständigen;
+jeder weitere Ownerwechsel verlangt erneut das aktuelle Optionspaar und
+alle obigen nativen Prüfungen. Mehrdeutige, unvollständige oder widersprüchliche
+Belege werden nicht erraten. Alte Belege werden weder überschrieben noch
+zurückgerollt; die normalen Freigaberegeln dürfen ausschließlich den exakt
+eigenen nachgewiesenen Owner entfernen.
+
+Nach der Work-Ownerübernahme bleiben letzte vollständige Checkpointgeneration,
+bestätigte Einheiten und alle noch offenen Aufgaben zunächst unverändert.
+Ein gespeicherter Fortschritts- oder Übergabebeleg erzeugt keinen Restoreerfolg.
+Die tatsächliche Projekttransaktion entscheidet weiterhin ausschließlich
+nach 10.7.3/10.7.7: aktuelle Recoveryautorisierung und gegebenenfalls gesonderte
+Projektownerübernahme, Vollzielabschluss oder Teilzielrollback, keine zweite
+Publikation und keine umgedeutete Herkunftsprüfung. Erst vollständig belegte
+Ergebnislieferung erlaubt den äußeren Workabschluss. Eine unterbrochene
+Ownerübergabe wird auch durch `work cancel`, `work export` oder Cachebereinigung
+weder entsperrt noch als portabel abgeschlossene Recovery ausgegeben.
+
+**Fehler und Kompatibilität.** Fehlende oder ungültige gespeicherte
+Bindungs-/Übergabebytes ergeben 3, tatsächliche I/O- oder nicht auflösbare
+Ownerblocker 5, abweichende Ownerhash-/Work-/Root-/Checkpointbindungen 6
+und unsichere Pfade, Dateitypen oder Zugriffsgrenzen 7. Erhaltene Bytes und
+tatsächlich bereits geschehene Writes bleiben bei Fehlern erhalten und
+werden als solche ausgewiesen. `work status` darf den tatsächlich gelesenen
+Ownerhash, seine aktuelle native Einstufung beziehungsweise `unknown` und
+die notwendige explizite Aktion melden; diese Beobachtung ist keine
+Übernahmefreigabe und führt keinen Ownerwechsel aus.
+
+Bestehende Workmanifest-, Plan-, Auswahl- und Checkpointbytes bleiben
+unverändert. Die zusätzliche betriebliche Übergabe erzeugt weder eine neue
+fachliche Work-ID noch eine kompatible Buildbehauptung. Bestehende
+Read-only-/Change-Plan-Workverträge werden nicht erweitert. Für portablen
+Worktransport gelten weiterhin P.7 und sämtliche Grenzen aus 10.7.7;
+Transport ersetzt keine lokale aktive Transaktion. Implementierung,
+verwendbarer CLI-/strukturierter Pfad, echte Prozessabbrüche sowie positive
+und negative Verhaltensnachweise dieser Regel bleiben Abnahmen von 15.l.R.
+
+
 ### 10.8 Scope Descriptor und Scope-Closure
 
 Jede Operation mit Modellumfang verwendet genau einen kanonischen Scope Descriptor:
@@ -3471,7 +3584,7 @@ Die ursprünglichen Fachbefehle bleiben der Einstieg. Der erste große Aufruf ze
 | `work restore <FILE> --output <DIR>` | Paket und alle nötigen Teile prüfen, ausschließlich in fehlendes/leeres externes Work-Ziel extrahieren. Keine normativen Projektdateien überschreiben. |
 | `work cancel <DIR> --reason <TEXT>` | Ohne aktive normative Transaktion explizit beenden; Kontrollbeleg erhalten. Kein Verwerfen notwendiger Recoverydaten. |
 
-`work resume` akzeptiert die Ressourcenoptionen von Kapitel 11.3; sie verändern den fachlichen Operationshash nicht. Die übrigen Befehle nennen anwendbare Ausgabe-/Ressourcenoptionen in `command describe`. CLI- oder Profileingaben, die den Fachauftrag, Actor, Plan oder Freigabewirkung verändern würden, sind kein Resume, sondern ein neuer ausdrücklich zu bindender Auftrag. `work resume` kann keine andere Command-ID oder Shellzeichenkette ausführen. Für den inneren Befehl `recover.restore` konkretisiert 10.7.7 die passive Originalbindung und die getrennte aktuelle Recoveryautorisierung; dessen gebundene Herkunfts-/Projektroots dürfen durch `--project` nicht umgeschrieben werden.
+`work resume` akzeptiert die Ressourcenoptionen von Kapitel 11.3; sie verändern den fachlichen Operationshash nicht. Die übrigen Befehle nennen anwendbare Ausgabe-/Ressourcenoptionen in `command describe`. CLI- oder Profileingaben, die den Fachauftrag, Actor, Plan oder Freigabewirkung verändern würden, sind kein Resume, sondern ein neuer ausdrücklich zu bindender Auftrag. `work resume` kann keine andere Command-ID oder Shellzeichenkette ausführen. Für den inneren Befehl `recover.restore` konkretisiert 10.7.7 die passive Originalbindung und die getrennte aktuelle Recoveryautorisierung; dessen gebundene Herkunfts-/Projektroots dürfen durch `--project` nicht umgeschrieben werden. Nur für diesen inneren Befehl konkretisiert 10.7.8 zusätzlich das ausdrücklich aktuelle Paar `--expected-work-lock-sha256 <SHA256>` und `--work-recovery-reason <TEXT>` für einen verwaisten äußeren Work-Owner. Es ist von einer nötigen Projektownerübernahme vollständig getrennt und erweitert keine fachliche oder menschliche Freigabe.
 
 ```bash
 python3 specroad.pyz validate --project ./projekt \
@@ -5560,6 +5673,18 @@ Die bestehenden Einzellauf-, Crash-, Erhaltungs- und menschlichen Freigabegates
 bleiben Pflicht. Umsetzung und Nachweise bleiben in 15.l.R offen; Produktstand
 649/900 unverändert. Nur aktive Kataloghashbindungen werden nachgeführt.
 
+### 20.29 Verwaister äußerer Restore-Work-Owner v0.2.35
+
+RESTORE-WORK-OWNER-HANDOFF konkretisiert in 10.7.8 den ausdrücklichen
+aktuellen Übernahmeauftrag für einen erhaltenen äußeren Work-Owner und
+die nötigen nativen lokalen Todes-/Identitätsnachweise. Alte Ownerbytes,
+Checkpointgrenzen und tatsächliche Übergabestände bleiben erhalten.
+Lebende, fremde und unbekannte Owner werden nicht freigegeben; Projekt-
+Recovery, aktuelle Autorisierung, historische Schutzgates und menschliche
+Freigaben bleiben getrennt und uneingeschränkt. Umsetzung und Nachweise
+bleiben in 15.l.R offen; Produktstand 649/900 unverändert. Nur aktive
+Kataloghashbindungen werden fortgeschrieben.
+
 ## 21. Entscheidungsstatus und nicht blockierende Restpunkte
 
 | ID | Thema | Stand |
@@ -5602,6 +5727,7 @@ Die folgende Roadmap ist informativ und erzeugt keine Anforderungen an 0.2:
 
 | Version | Datum | Status | Änderung |
 |---|---|---|---|
+| 0.2.35 | 2026-10-27 | Delegiert gemäß SPECROAD-DECISION-1 | RESTORE-WORK-OWNER-HANDOFF: explizite Übernahme des verwaisten äußeren Restore-Work-Owners mit nativen lokalen Ownerbelegen und dauerhafter Übergabe; Projekt-Recovery und Produktabnahmen bleiben getrennt/offen. |
 | 0.2.34 | 2026-10-27 | Delegiert gemäß SPECROAD-DECISION-1 | RESTORE-WORK-BINDING: passive Originalplan-/Auswahlbindung für Restore in Work, getrennte aktuelle Recoveryautorisierung und Vorrang nativer Journale; offene Umsetzung und unveränderte Schutzgates. |
 | 0.2.33 | 2026-10-27 | Delegiert gemäß SPECROAD-DECISION-1 | RESTORE-CLI-BINDING: explizite Restoremodi, Quellart, operative Baselinewerte und Root-/Dateipaare; spezialisierter Preflight mit unveränderten nativen Autorisierungs- und Recoverygates. |
 | 0.2.32 | 2026-10-26 | Delegiert gemäß SPECROAD-DECISION-1 | RESTORE-OWNER-HANDOFF: explizite zweitseitige Owner-/Auftragsbindung für neuen oder fortgesetzten Restore; native Lock-/Risikogates, Originalerhaltung und Produktstand bleiben erhalten. |
@@ -7860,7 +7986,7 @@ Der Work-Root liegt außerhalb des normativen Projekts und seiner `.specroad/`-B
 
 Snapshots, Checkpoints und externe fachliche Ausgaben sind ausdrücklich ausgewiesene Seiteneffekte. Sie erlauben Read-only-/Dry-Run-Befehlen keine Änderung des Projekts. Ist kein externer Arbeits-/Ausgabepfad schreibbar, versucht der Befehl eine sichere kleinere In-Memory-Variante; ist auch diese tatsächlich nicht ausführbar, nennt er den fehlenden Schreibplatz als realen Blocker statt Erfolg zu behaupten.
 
-Ein planmäßiger Schrittwechsel löst den Work-Lock und hält keinen Projektwriter-Lock. Der nächste Aufruf prüft Work-Identität und Lock-Eigentümer neu. PID oder Hostname allein berechtigen nicht zur Lockübernahme. Nach echtem Prozessabbruch wird nur der letzte vollständig veröffentlichte Checkpoint anerkannt.
+Ein planmäßiger Schrittwechsel löst den Work-Lock und hält keinen Projektwriter-Lock. Der nächste Aufruf prüft Work-Identität und Lock-Eigentümer neu. PID oder Hostname allein berechtigen nicht zur Lockübernahme. Nach echtem Prozessabbruch wird nur der letzte vollständig veröffentlichte Checkpoint anerkannt. Für die explizite Übernahme eines erhaltenen äußeren Owners von Restore-Work gilt ausschließlich 10.7.8; dessen native Belege, aktueller Auftrag und dauerhafte Übergabe sind zusätzlich erforderlich. Diese Präzisierung überträgt keine Projektlockberechtigung und erweitert keine anderen inneren Workbefehle.
 
 ## P.3 Datenvertrag `work-v1`
 

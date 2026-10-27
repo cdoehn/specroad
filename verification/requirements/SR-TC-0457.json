@@ -2,7 +2,7 @@
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0457",
   "requirement_id": "SR-REQ-0457",
-  "specification_sha256": "aa931a06096952dd9e578253c08e21a8b5448579e78829ca3c6a3ccdbfb32823",
+  "specification_sha256": "1b5d7e31e97c62ba47a2cda306d703190daaf2a82d5b58f74ef2439c3acfdb59",
   "primary_verification_id": "SR-VER-0031",
   "implementation_status": "partial",
   "method": "automated_behavior",
@@ -19,7 +19,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Divergente lokale und externe \u00c4nderungen an derselben Mappingprojektion M\u00dcSSEN als Importkonflikt ohne stille Aufl\u00f6sung enden.",
+    "requirement_contract": "Divergente lokale und externe Änderungen an derselben Mappingprojektion MÜSSEN als Importkonflikt ohne stille Auflösung enden.",
     "scope": "14.c.W exposes divergent local/source changes as an unresolved SRV148/code-3 conflict under every strategy, including error and skip. No target or import-baseline update is allowed. Canonical comparison does not conflate boolean/number or distinct Unicode values. Detached observations and rejected invalid projections preserve the original inputs. These are pure decision-kernel checks, not a completed import plan or writer approval. 14.c.R adds asymmetric divergent baselines, mutated returned diagnostics and original file byte/mode preservation. All four strategies remain unresolved SRV148/code-3 conflicts in isolated Core/PYZ evaluation; passive source strings do not execute or grant publication authority."
   },
   "expected_diagnostics": [

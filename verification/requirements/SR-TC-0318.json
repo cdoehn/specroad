@@ -2,7 +2,7 @@
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0318",
   "requirement_id": "SR-REQ-0318",
-  "specification_sha256": "aa931a06096952dd9e578253c08e21a8b5448579e78829ca3c6a3ccdbfb32823",
+  "specification_sha256": "1b5d7e31e97c62ba47a2cda306d703190daaf2a82d5b58f74ef2439c3acfdb59",
   "primary_verification_id": "SR-VER-0024",
   "implementation_status": "partial",
   "method": "automated_behavior",
@@ -20,7 +20,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Die Import-Policy MUSS f\u00fcr bereits bekannte externe Identit\u00e4ten die Strategien `error`, `skip`, `update_if_unchanged` und `create_new_revision` unterst\u00fctzen; stilles \u00dcberschreiben ist unzul\u00e4ssig.",
+    "requirement_contract": "Die Import-Policy MUSS für bereits bekannte externe Identitäten die Strategien `error`, `skip`, `update_if_unchanged` und `create_new_revision` unterstützen; stilles Überschreiben ist unzulässig.",
     "scope": "14.c.W implements a pure import-conflict-policy-v1 evaluator with explicit error, skip, update_if_unchanged and create_new_revision strategies. The two adopting strategies share the normative five-case guard; only safe source changes and converged targets yield candidates, while local-only changes retain their history. Error rejects known identities and skip preserves them; neither conceals divergent SRV148 conflicts. Legacy or mismatched history does not become a fabricated baseline. The original identity, projections and observations are detached; lookup, mapping selection and isolated Core/PYZ availability remain usable without writes or new revisions. 14.c.R additionally checks the complete encoded observation before installation and translates reader failures through the import diagnostic contract. Failed construction retains the previous observation. Separate historic sides, exact prerelease/build/case mapping identities, every incomplete history field, safe JSON pointers, cycles, foreign hooks and numeric canonical equivalence are covered. Native collisions remain SRV147 before policy adoption; actual files and modes remain unchanged across successful and rejected comparisons. No new JSON depth policy is introduced."
   },
   "expected_diagnostics": [
