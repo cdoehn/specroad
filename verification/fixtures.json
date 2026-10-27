@@ -596,6 +596,10 @@
       "kind": "Synthetic registered Restore Work with independent initial binding and a real private CheckpointStore. Fresh native Linux subprocesses leave actual owner records and crash across staged-owner, immutable-intent, atomic-exchange and completion boundaries. Complete original owner bytes and checkpoint bytes, native dead/live/unknown identity gates, immutable audit, fresh explicit consent and separate project Restore authority are checked. No public CLI registration, human approval, complete Work delivery or release parity is asserted.",
       "provider": "tests/test_work_restore_owner.py:case,orphan,child,recover;tests/test_work_restore_execution.py:stored,run;tests/test_work_restore_binding.py:registry;tests/support/restore.py:restore_case,plan_for"
     },
+    "SR-FIX-RESTORE-WORK-PROGRESS-v1": {
+      "kind": "Synthetic registered Restore Work with independently retained initial bytes, actual native project execution and private CheckpointStore. One retained Work inode lease spans explicit orphan handoff, fresh project authorization and durable confirmation of the native execution unit. Real fresh subprocesses stop across partial/full project publication, native return, checkpoint objects/record and atomic pointer boundaries. Native rollback never confirms success; missing native completion cannot start another publication. Full result delivery, public command registration and release parity remain open.",
+      "provider": "tests/test_work_restore_progress.py:advance,interrupt,child;tests/test_work_restore_execution.py:stored,takeover;tests/test_work_restore_owner.py:orphan;tests/support/restore.py:restore_case,plan_for"
+    },
     "SR-FIX-ROADMAP-EXPLANATION-RIGHT-v1": {
       "kind": "Owned live project with independently complete path/node sets, explicit missing planning references and configured depth. Public direct/CLI/structured/Core/PYZ results, closed result schema, read-only modes and write/process/entropy traps. Mid-read source/configuration/profile/inventory changes, operational blockers, malformed unreachable sources, path security and isolated runtimes. No atomicity, release readiness or View/Work claim.",
       "provider": "tests/test_roadmap_explanation_right.py:project"
@@ -925,6 +929,7 @@
     "SR-FIX-RESTORE-WORK-BINDING-v1",
     "SR-FIX-RESTORE-WORK-EXECUTION-v1",
     "SR-FIX-RESTORE-WORK-OWNER-v1",
+    "SR-FIX-RESTORE-WORK-PROGRESS-v1",
     "SR-FIX-ROADMAP-EXPLANATION-RIGHT-v1",
     "SR-FIX-ROADMAP-EXPLANATION-v1",
     "SR-FIX-ROADMAP-PROJECTION-RIGHT-v1",

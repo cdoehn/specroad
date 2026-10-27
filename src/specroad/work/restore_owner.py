@@ -104,7 +104,7 @@ def _history(files, held, store, pointer):
     new_owners = [read_file_binding(v['new_owner']) for v in intents.values()]
     require(len(set(old_completed)) == len(old_completed)
             and len(set(new_owners)) == len(new_owners), 'restore_work_handoff_ambiguous')
-    if parse_json_object(held._owner[0])['format_version'] == 'restore-work-lock-v1':
+    if held._owner is not None and parse_json_object(held._owner[0])['format_version'] == 'restore-work-lock-v1':
         # A replacement owner is distinguishable from an ordinary checkpoint
         # owner even if the entire required handoff directory has disappeared.
         require(new_owners.count(held._owner) == 1, 'restore_work_handoff_intent_missing')
@@ -141,7 +141,7 @@ def recover_restore_work_owner(store, *, registry, expected_work_lock_sha256, re
 
 @guarded
 @persisted_contract
-def _recover(store, registry, expected, reason, probe, progress):
+def _recover(store, registry, expected, reason, probe, progress, continuation=None):
     require(type(store) is CheckpointStore, 'restore_trusted_work_store_required', exit_code=2)
     require(type(expected) is str and re.fullmatch('[0-9a-f]{64}', expected) is not None
             and type(reason) is str and bool(reason.strip()),
@@ -232,5 +232,9 @@ def _recover(store, registry, expected, reason, probe, progress):
             'checkpoint_generation': current.as_dict()['checkpoint_generation'],
             'checkpoint_sha256': current.as_dict()['checkpoint_sha256'], 'checkpoint_changed': False,
             'project_mutation_possible': False, 'work_completion_recorded': False}))
+        if continuation is not None:
+            # Installed Core continuation, never deserialized Work input. The
+            # same mutex and fully evidenced owner remain held until it exits.
+            result = continuation(held, result)
     progress['owner'] = False
     return result

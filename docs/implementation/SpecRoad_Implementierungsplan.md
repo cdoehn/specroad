@@ -41,7 +41,7 @@ implementation_plan_commits_total: 900
 implementation_plan_commits_completed: 649
 last_completed_plan_commit: 15.l.W
 next_plan_commit: 15.l.R
-last_completed_numbered_bundle: 511
+last_completed_numbered_bundle: 512
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -31857,6 +31857,132 @@ seinen Commit. Nach erfolgreichem Gate ändert sich nur der Bundlemarker
 **510→511**; keine Produktcheckbox wird geschlossen. Ein tatsächlicher
 Commit schaltet zur Gruppe 2 weiter. Dieser zukünftige Apply-Lauf ist bei
 Übergabe nicht ausgeführt und wird hier nicht als Erfolg behauptet.
+Native Paketprüfung und atomare Exchange-Veröffentlichung beenden den
+Einzelauftrag ohne eigene Apply-, Status- oder Fortsetzungsschleife.
+
+
+**Umsetzungs- und Übergabenachweis – Bundle 512 (15.l.R-Zwischenstand), 27. Oktober 2026.**
+
+**Maßgebliche Basis.** Vollständig geprüftes Result
+`specroad-apply_Result_145624_1027_dde755.zip`, SHA-256
+`d3f44b3f3af2dc882278261f7b3a2e8b97c607a9a3c3bedf73ef9222f42d7e35`;
+Repository `a33ed6cf-0a97-4b73-b11a-d4239e7a2145`, Abschlusscommit
+`5c37f7aa330d069c7cc1968fed6fbe32c4adff49`, Fingerprint
+`7c9d2a24e397e0e5`, Algorithmus `patchharbor-state-v1`.
+Root-Anleitung, Kontext, Umgebung, Manifest, Run-/Ausführungslogs und alle
+**2.321** Snapshotdateien samt Blob-IDs und Modi wurden geprüft. Der reale
+Apply-Stand ist sauber und bytegleich. Bundle **511**, Paket-SHA-256
+`75a2da3338e87d610014bebfba9c2aac3e4357e90c5d444e7d27d18d93c36a26`,
+endete nach **7.382/7.382** bestandenen Apply-Tests, **Sequenz 217 / Gruppe 1**,
+vier parallelen Workern und **3548.95 s** im passenden Abschlusscommit.
+Payloads, Auswahlbindung, vollständige Einzeloutcomes und Fortschrittsmarker
+wurden unabhängig abgeglichen. Die Spezifikation **0.2.35**, insbesondere
+10.7.3/10.7.7/10.7.8 und P.2/P.5/P.6, ist unverändert maßgeblich.
+SPECROAD-DECISION-1 samt Vertrag 3 ist ausdrücklich vorhanden; eine neue
+normative Entscheidung ist für diesen regulären Umsetzungsschritt nicht nötig.
+
+**Umgesetzter Ausschnitt.** Ein interner Fortschrittsadapter verbindet die
+aktuelle äußere Work-Ownerberechtigung, die native Restoreausführung und
+die dauerhafte Bestätigung ihrer Einheit unter einem durchgehend gehaltenen
+Work-Root-Inode-Mutex. Ein geprüft ownerloser Work-Root wird unter demselben
+Mutex mit dem aktuellen nativen Owner belegt. Ein erhaltener Owner verlangt
+das eigene aktuelle Hash-/Grundpaar und die vollständig belegte Übergabe
+nach 10.7.8. Nach deren durablem Abschluss führt eine ausschließlich aus
+installiertem Corecode stammende Fortsetzung unter genau diesem Owner weiter.
+Projekt-Force, gespeicherte Zustimmung oder ein freier Mutex ersetzen weder
+äußere Zustimmung noch native Todesprüfung. Vorhandene Übergabehistorien
+werden auch ohne aktuellen Owner vollständig geprüft und während der
+nativen Autorisierungsgrenzen erneut gegen ihre ursprünglichen Bytes gebunden.
+
+Der vorhandene native Restoreexecutor bleibt allein für Projekttransaktion,
+aktuelle unabhängige Autorisierung, ursprünglichen Actor/Request, Quell- und
+Bestandsprüfung, Backup, Vollzielabschluss oder Teilzielrollback zuständig.
+Ein nachweislich vollständiger Restoreabschluss wird als gehashte passive
+Evidenz der ersten vorhandenen Workeinheit gespeichert. Die reguläre
+Checkpointablage sichert alle Objekte und den vollständigen Nachfolger vor
+atomarem Austausch von `work.json`. Generation 1 bestätigt genau eine von
+zwei Einheiten; `restore_result` bleibt offen. Es gibt keine neue Work-ID,
+keinen umgedeuteten Operationshash, keine gespeicherte Berechtigung und keine
+Ergebnis-/Diagnosenteile oder Behauptung `completed`.
+
+Ein bereits bestätigter Workfortschritt verlangt zusätzlich exakt seinen
+vorhandenen nativen Abschluss. Diese zusätzliche native Vorbedingung wird
+vor Projektwrites geprüft; fehlende oder widersprüchliche echte Ausführung
+kann weder neue Erstpublikation noch einen als Erfolg behandelten Rollback
+starten. Ein vollständiger nativer Abschluss ohne äußeren Fortschritt wird
+mit den aktuellen nativen Gates erneut gelesen und nachgewiesen, ohne eine
+zweite Zielpublikation. Dynamische Wiederholungs-/Herkunftsbeobachtungen
+überschreiben die ursprünglichen abgeschlossenen Bytes nicht. Ein nativer
+Rollback bestätigt keine Workeinheit und startet keinen neuen Restore.
+
+Echte Abbrüche erhalten den tatsächlich erreichten Projekt-, Owner- und
+Checkpointstand. Wiederaufnahme prüft Originalauftrag und aktuelle äußere
+Ownerzustimmung unabhängig von der nötigen Projektownerübernahme. Eine
+fehlende Herkunft verdeckt weder notwendigen Teilzielrollback noch belegten
+Vollzielabschluss. Fehler nach Projektabschluss oder Pointeraustausch geben
+mögliche Projekt-/Workwrites und äußere Owner-Recovery getrennt wieder;
+bereits veröffentlichte Generationen werden nicht zurückgesetzt. Ein sicher
+abgeschlossener eigener Ownerabbau wird nicht als erhaltener Owner ausgegeben.
+
+**Abgrenzung.** Dies ist ein echter weiterer R-Zwischenstand desselben
+Restoreausschnitts. Öffentliche CLI-/strukturierte Resumeintegration,
+vollständige Ergebnislieferung, abgeschlossene Work-Ergebnisrückgabe,
+Status-/Cancel-/Exportparität und die übrigen vollständigen 15.l.R-Abnahmen
+bleiben offen. Der interne Adapter ist keine allgemeine Resume-Schleife und
+vergibt keinen Code-8-/Release-Erfolgsnachweis. Produktstand **649/900**,
+zuletzt **15.l.W**, nächstens **15.l.R**; R/C-Checkboxen und SR-TC-0461/0462
+bleiben offen beziehungsweise `partial`. Testauthority und Testregistrierung
+sind synthetisch; keine menschlichen Reviews, Freigaben oder Risikoakzeptanzen
+werden behauptet. Spezifikation und ihre aktiven Hashbindungen bleiben gleich.
+
+**Beobachtete gezielte Dev-Prüfung.** Der finale unveränderte Stand besteht
+**389/389** Verhaltenstests in
+**5567.42 s**, vier parallelen Workern, tatsächlichem Exit **0**
+und ausschließlich `passed`-Einzeloutcomes. Vollständige ausgewählte Dateien:
+
+- `tests/test_catalog_check.py` (17)
+- `tests/test_catalog_check_right.py` (37)
+- `tests/test_restore_execution.py` (42)
+- `tests/test_restore_execution_right.py` (59)
+- `tests/test_work_checkpoints.py` (17)
+- `tests/test_work_checkpoints_right.py` (49)
+- `tests/test_work_restore_execution.py` (28)
+- `tests/test_work_restore_owner.py` (37)
+- `tests/test_work_restore_progress.py` (30)
+- `tests/test_work_root.py` (32)
+- `tests/test_work_root_right.py` (41)
+
+Ausgeführt mit `tools/run_selected_tests.py --workers 4 --expected-tests 389`
+in einem frischen ignorierten Berichtsroot. Native Kindprozesse beenden sich
+bei Teil-/Vollpublikation, zurückgekehrtem nativen Abschluss, Workobjekten,
+Checkpointdatei und atomarem Pointer. Gespeicherte falsche Fortschritte,
+fehlende native Abschlussbelege, frische Autorisierungsverweigerung,
+unvollständige Ownerhistorie, späte Bindungsänderungen und gezielt injizierte I/O-Fehler
+werden als Verhalten geprüft. Ein vorangegangener paralleler Vorlauf bestand 27/27 neue Verhaltenstests in 1885.77 s. Danach wurden die Prüfung erhaltener Ownerhistorien und die Diagnose eines sicher abgeschlossenen Ownerabbaus ergänzt; die finale Auswahl prüft diese Änderungen erneut samt drei zusätzlichen Negativfällen und betroffenen Regressionen.
+
+Vollständige Collection-/Katalogprüfung: **22181** aktive
+Tests, **0** Katalogfehler und **0** ausgeführte Testkörper. **30**
+neue Identitäten werden ausschließlich hinten an die permanente Nummernfolge
+angehängt. Alle alten Nummern und vier historische Löschungen bleiben erhalten.
+Kein Volltest, serieller Lauf, Dokumentationstest oder CI-Start;
+`full_suite_passed=null` bezeichnet ausdrücklich nur eine gezielte Teilprüfung.
+
+Entwicklungsquellhash: `9ad625b26e8a5a276b3baa96812c932ae72a6d2533e43a1d68f6cb99c2010ad8`;
+Auswahlbericht: `15c5b6d09f7e7d65fa87013e019d9e75dda7a96ed222f0b0dcc2ea0cdb48e8ff`;
+Einzeloutcomes: `1645d3741dfa50591bf4a4be577a01029dac373a33bc42dad3aeae7149069db0`;
+Collectionbericht: `df2ca0c2602e9dc407359c877718eef065b6db3a3c7905866154a59a6c817f6b`.
+Der bestätigte Apply-Nachweis von Bundle 511 bleibt davon getrennt:
+Auswahlbindung `b9f5226b4b85e7e4bc18535c7a4e8150bc312a369fba4c25d1b19ed2a8ae654c`,
+Bericht `e6e3e509c2953eeb9b01d0ef0166a59b4d12da0edbabae47fdc23a1f3e282c08`,
+Einzeloutcomes `d682630c72792d647d5ff62bc727b9343e687d7eb65f574788a1100ce9244c72`.
+
+**Vorgesehene Übergabe.** Genau ein state-gebundenes Bundle und ein regulärer
+R-Zwischenstand mit der exakten Planmessage. Der Entrypoint installiert nur
+diesen geprüften Stand, führt ausschließlich **N=3-Gruppe 2, Sequenz 218**
+mit **7395** Tests parallel aus und erzeugt erst nach
+Erfolg seinen Commit. Danach ändert sich nur der Bundlemarker **511→512**;
+keine Produktposition wird geschlossen. Nur der tatsächliche Commit schaltet
+zur Gruppe 0 weiter. Der zukünftige Apply-Lauf ist kein beobachteter Erfolg.
 Native Paketprüfung und atomare Exchange-Veröffentlichung beenden den
 Einzelauftrag ohne eigene Apply-, Status- oder Fortsetzungsschleife.
 

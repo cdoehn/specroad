@@ -48,7 +48,7 @@ def prepare_restore_work(registry, request, *, plan, affected_journals=None):
 
 @guarded
 @persisted_contract
-def _checked(current, registry, build):
+def _bound(current, registry, build):
     require(current.as_dict()['tool_build'] == build, 'restore_work_build_changed', exit_code=6)
     current = read_restore_work_manifest(current.raw, current.objects, registry=registry,
                                          expected_tool_build=build)
@@ -57,6 +57,14 @@ def _checked(current, registry, build):
     require([{key: task[key] for key in ('key', 'phase', 'range')}
              for task in current.entries('tasks')] == _units(raw),
             'restore_work_execution_plan_required', exit_code=6)
+    return current, raw
+
+
+@guarded
+@persisted_contract
+def _checked(current, registry, build):
+    current, raw = _bound(current, registry, build)
+    value = current.as_dict()
     require(value['state'] == 'running' and not current.entries('completed')
             and not value['result_parts'] and not value['diagnostic_parts'],
             'restore_work_pending_execution_required', exit_code=6)
@@ -124,58 +132,11 @@ def _execute_restore_work(store, *, registry, authority, actor, force,
         pointer = store._pointer(held)
         require(pointer is not None, 'restore_published_work_required', exit_code=5)
         current, raw = _checked(store._read_chain(held, pointer[0]), registry, build)
+        outcome = _native_held(store, held, current, raw, pointer, registry=registry, build=build,
+            authority=authority, actor=actor, force=force, expected_lock_sha256=expected_lock_sha256,
+            reason=reason, accept_remote_risk=accept_remote_risk, owner_probe=owner_probe,
+            progress=progress)
         value = current.as_dict()
-
-        @guarded
-        @persisted_contract
-        def ensure_work():
-            require(_build() == build, 'restore_work_build_changed', exit_code=6)
-            require(store._pointer(held) == pointer, 'restore_work_pointer_changed', exit_code=6)
-            require(store._read_chain(held, pointer[0]).raw == current.raw,
-                    'restore_work_bytes_changed', exit_code=6)
-            require(store._pointer(held) == pointer, 'restore_work_pointer_changed', exit_code=6)
-            held.check()
-
-        failure = []
-
-        def ensure_bound_work():
-            try:
-                ensure_work()
-            except RestoreError as error:
-                failure.append(error)
-                raise
-
-        def authorize(request):
-            ensure_bound_work()
-            try:
-                return authority.check(request)
-            finally:
-                ensure_bound_work()
-
-        live = RecoveryAuthority(authority.authority_id, authority.version, authorize)
-        ensure_work()
-        try:
-            outcome = execute_restore(raw,
-                expected_target_root=value['normalized_arguments']['options']['--expected-target-root'],
-                authority=live, actor=actor, request_id=value['request_id'],
-                expected_original_actor=value['actor'],
-                affected_journals=_bytes(value['plan_binding']['journal_selection'], current.objects),
-                force=force, expected_lock_sha256=expected_lock_sha256, reason=reason,
-                accept_remote_risk=accept_remote_risk, owner_probe=owner_probe)
-        except RestoreError as error:
-            progress.update(mutation_possible=error.mutation_possible,
-                            recovery_required=error.recovery_required)
-            if failure:
-                # Native authorization catches callback errors. Retain the actual
-                # Work diagnostic as well as the native mutation/recovery state.
-                bound_error = failure[0]
-                bound_error.mutation_possible |= error.mutation_possible
-                bound_error.recovery_required |= error.recovery_required
-                raise bound_error from error
-            raise
-        # Native completion can be durable even if observation or lease exit fails.
-        progress.update(mutation_possible=True, recovery_required=True)
-        ensure_work()
         result = object.__new__(RestoreWorkExecution)
         object.__setattr__(result, '_raw', canonical_json_bytes({
             'format_version': 'restore-work-execution-v1', 'work_id': value['work_id'],
@@ -183,3 +144,67 @@ def _execute_restore_work(store, *, registry, authority, actor, force,
             'checkpoint_sha256': value['checkpoint_sha256'], 'checkpoint_changed': False,
             'work_completion_recorded': False, 'restore': outcome.data}))
         return result
+
+
+@guarded
+@persisted_contract
+def _native_held(store, held, current, raw, pointer, *, registry, build, authority, actor,
+                 force, expected_lock_sha256, reason, accept_remote_risk, owner_probe,
+                 progress, expected_completed_bytes=None, work_guard=None):
+    """One native execution with fresh Work checks under the caller's lease."""
+    value = current.as_dict()
+
+    @guarded
+    @persisted_contract
+    def ensure_work():
+        require(_build() == build, 'restore_work_build_changed', exit_code=6)
+        require(store._pointer(held) == pointer, 'restore_work_pointer_changed', exit_code=6)
+        require(store._read_chain(held, pointer[0]).raw == current.raw,
+                'restore_work_bytes_changed', exit_code=6)
+        require(store._pointer(held) == pointer, 'restore_work_pointer_changed', exit_code=6)
+        held.check()
+        if work_guard is not None:
+            work_guard()
+
+    failure = []
+
+    def ensure_bound_work():
+        try:
+            ensure_work()
+        except RestoreError as error:
+            failure.append(error)
+            raise
+
+    def authorize(request):
+        ensure_bound_work()
+        try:
+            return authority.check(request)
+        finally:
+            ensure_bound_work()
+
+    live = RecoveryAuthority(authority.authority_id, authority.version, authorize)
+    ensure_work()
+    try:
+        outcome = execute_restore(raw,
+            expected_target_root=value['normalized_arguments']['options']['--expected-target-root'],
+            authority=live, actor=actor, request_id=value['request_id'],
+            expected_original_actor=value['actor'],
+            affected_journals=_bytes(value['plan_binding']['journal_selection'], current.objects),
+            force=force, expected_lock_sha256=expected_lock_sha256, reason=reason,
+            accept_remote_risk=accept_remote_risk, owner_probe=owner_probe,
+            expected_completed_bytes=expected_completed_bytes)
+    except RestoreError as error:
+        progress.update(mutation_possible=error.mutation_possible,
+                        recovery_required=error.recovery_required)
+        if failure:
+            # Native authorization catches callback errors. Retain the actual
+            # Work diagnostic as well as the native mutation/recovery state.
+            bound_error = failure[0]
+            bound_error.mutation_possible |= error.mutation_possible
+            bound_error.recovery_required |= error.recovery_required
+            raise bound_error from error
+        raise
+    # Native completion can be durable even if observation or lease exit fails.
+    progress.update(mutation_possible=True, recovery_required=True)
+    ensure_work()
+    return outcome

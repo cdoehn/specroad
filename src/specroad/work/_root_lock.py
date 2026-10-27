@@ -44,6 +44,7 @@ class _HeldWorkRoot:
         self._pid = os.getpid()
         self._locked = False
         self._owner = None
+        self._owner_released = False
 
     def _adopt(self, fd):
         try:
@@ -265,18 +266,36 @@ class _HeldWorkRoot:
                 self._owner = self._read(_LOCK) if _LOCK in names else None
                 self.check()
                 return self
-            owner = LinuxOwnerProbe().current()
-            if owner.host_id is None or owner.process_start_id is None:
-                raise SafetyViolation('Work lock owner cannot be verified')
-            record = canonical_json_bytes({'format_version': 'work-lock-v1',
-                'work_id': self.work_id, 'owner_nonce': secrets.token_hex(16), **owner.as_dict()})
-            inode = self._create(_LOCK, record)
-            self._owner = (record, inode)
-            self.check()
+            self._claim_owner()
             return self
         except BaseException:
             self._close()
             raise
+
+    def _claim_owner(self):
+        """Claim an empty owner slot under this already held inode mutex.
+
+        A Restore adapter can promote a fully checked inspection without a
+        release/reacquire gap. This never replaces an existing owner record.
+        """
+        self._check_path()
+        if not self._locked or self._owner is not None:
+            raise SafetyViolation('Work owner slot is not available')
+        try:
+            self._read(_LOCK)
+        except FileNotFoundError:
+            pass
+        else:
+            raise SafetyViolation('Work owner slot is not available')
+        owner = LinuxOwnerProbe().current()
+        if owner.host_id is None or owner.process_start_id is None:
+            raise SafetyViolation('Work lock owner cannot be verified')
+        record = canonical_json_bytes({'format_version': 'work-lock-v1',
+            'work_id': self.work_id, 'owner_nonce': secrets.token_hex(16), **owner.as_dict()})
+        inode = self._create(_LOCK, record)
+        self._owner = (record, inode)
+        self.check()
+        self._inspection = False
 
     def check(self):
         self._check_path()
@@ -301,6 +320,7 @@ class _HeldWorkRoot:
                 if not self._inspection:
                     os.unlink(_LOCK, dir_fd=self._root)
                     os.fsync(self._root)
+                    self._owner_released = True
         finally:
             self._close()
 

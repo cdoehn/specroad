@@ -73,7 +73,7 @@ def _source(data, origin):
 def execute_restore(raw, *, expected_target_root, authority, actor, request_id=None,
                     affected_journals=None, force=False, expected_lock_sha256=None,
                     reason=None, accept_remote_risk=False, owner_probe=None,
-                    expected_original_actor=None):
+                    expected_original_actor=None, expected_completed_bytes=None):
     """Publish the exact supported full plan under fresh authorization and lock.
 
     No caller supplies substitute model checks. A failed/unfinished attempt
@@ -81,6 +81,8 @@ def execute_restore(raw, *, expected_target_root, authority, actor, request_id=N
     Existing owners require an explicit, independently authorized handoff.
     An optional independently bound original actor is a precondition, never a
     substitute for the current recovery actor or host authorization.
+    Expected completed bytes are an optional additional precondition: they
+    require the matching existing native completion, never a new publication.
     """
     progress = {'mutation_possible': False, 'recovery_required': False}
     try:
@@ -89,7 +91,8 @@ def execute_restore(raw, *, expected_target_root, authority, actor, request_id=N
             affected_journals=affected_journals, progress=progress, force=force,
             expected_lock_sha256=expected_lock_sha256, reason=reason,
             accept_remote_risk=accept_remote_risk, owner_probe=owner_probe,
-            expected_original_actor=expected_original_actor)
+            expected_original_actor=expected_original_actor,
+            expected_completed_bytes=expected_completed_bytes)
     except RestoreError as error:
         error.mutation_possible |= progress['mutation_possible']
         error.recovery_required |= error.mutation_possible or progress['recovery_required']
@@ -99,9 +102,12 @@ def execute_restore(raw, *, expected_target_root, authority, actor, request_id=N
 @guarded
 def _execute_restore(raw, *, expected_target_root, authority, actor, request_id,
                      affected_journals, progress, force, expected_lock_sha256,
-                     reason, accept_remote_risk, owner_probe, expected_original_actor):
+                     reason, accept_remote_risk, owner_probe, expected_original_actor,
+                     expected_completed_bytes):
     takeover_options(force, expected_lock_sha256, reason, accept_remote_risk)
     require(type(authority) is RecoveryAuthority, 'restore_authority_required', exit_code=2)
+    require(expected_completed_bytes is None or type(expected_completed_bytes) is bytes,
+            'restore_expected_completion_invalid', exit_code=2)
     actor = normalize_authoring_actor(actor)
     original_actor = (None if expected_original_actor is None else
                       normalize_authoring_actor(expected_original_actor).as_fields())
@@ -128,6 +134,10 @@ def _execute_restore(raw, *, expected_target_root, authority, actor, request_id,
         progress['recovery_required'] = bool(active_entries) or owner is not None
         inventory, contents = observe(project, data['inventory']['roots'])
         previous = discover(plan, project, request_id, inventory, contents)
+        if expected_completed_bytes is not None:
+            require(previous is not None
+                    and canonical_json_bytes(previous['completed']) == expected_completed_bytes,
+                    'restore_expected_completion_conflict', exit_code=6)
         if previous is not None:
             require(original_actor is None or previous['binding']['request']['actor'] == original_actor,
                     'restore_original_actor_conflict', exit_code=6)
@@ -135,6 +145,10 @@ def _execute_restore(raw, *, expected_target_root, authority, actor, request_id,
             require(selection == previous['binding']['request']['affected_journals'],
                     'restore_selection_changed', exit_code=6)
             classification = classify(plan, previous, inventory, contents, owner)
+            if expected_completed_bytes is not None:
+                require(classification['action'] in ('complete', 'replay')
+                        and classification['completion']['result'] == 'restored',
+                        'restore_expected_completion_conflict', exit_code=6)
             if owner is not None and owner.data['command'] != 'recover restore':
                 require(unfinished_old_handoff(owner, previous, contents),
                         'restore_owner_execution_conflict', exit_code=6)
