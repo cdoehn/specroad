@@ -41,7 +41,7 @@ implementation_plan_commits_total: 900
 implementation_plan_commits_completed: 649
 last_completed_plan_commit: 15.l.W
 next_plan_commit: 15.l.R
-last_completed_numbered_bundle: 504
+last_completed_numbered_bundle: 505
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -30791,6 +30791,119 @@ gesetzt. Produktzähler, letzter/nächster Planschritt und R-/C-Checkboxen
 bleiben unverändert. Apply und Commit sind bei Übergabe noch nicht
 beobachtet. Native ZIP-Prüfung und atomare Exchange-Übergabe beenden sofort
 diesen N-Auftrag; keine eigene Apply-, Warte- oder Modellschleife.
+
+
+**Umsetzungs- und Übergabenachweis – Bundle 505 (15.l.R-Zwischenstand), 27. Oktober 2026.**
+
+**Maßgebliche Basis.** Das vollständig geprüfte Result
+`specroad-apply_Result_020039_1027_f5c5af.zip`, SHA-256
+`335da222a954d92888dfb0aa932570fccd142271141ca8a0f54ed57d911325ee`,
+bindet den sauberen Abschlusscommit
+`4a966c83f3ab5c027521ee3f5897995866052c92`, Repository
+`a33ed6cf-0a97-4b73-b11a-d4239e7a2145`, Fingerprint
+`7c9d2a24e397e0e5`, Algorithmus `patchharbor-state-v1`.
+Root-Anleitung, Kontext, Umgebung, Manifest, Run-/Ausführungslogs und alle
+**2.307** Snapshotdateien samt Blob-IDs und Modi wurden mit dem tatsächlichen
+Apply-Stand geprüft. Bundle **504**, Paket-SHA-256
+`a15450d3d807630223b30a0ce0e071a762ae6d6fd931582ee2818400de834112`,
+endete nach **7.268/7.268** parallelen Apply-Tests, **Sequenz 210 / Gruppe 0**,
+vier Workern und **2785.66 s**, im passenden OFF-PLAN-Dokumentcommit.
+Auswahlbindung, Einzeloutcomes, Commitdateien und sauberer Endstand stimmen.
+Ausgangsfortschritt: **649/900**, zuletzt **15.l.W**, nächstens **15.l.R**.
+
+**Reguläre Umsetzung von 10.7.6.** Der interne, rendererfreie
+`cli._restore_adapter.run_restore` bindet echte argv-Aufrufe und native
+`CommandRequest`-Daten über dieselbe vorhandene Optionsgrammatik. Alle
+fachlichen Werte sind ausdrücklich anzugeben; der Adapter übernimmt keine
+Projektprofile, Umgebungsdefaults oder früher aufgelösten Kontexte.
+`_restore_options` trennt Planung und Ausführung, prüft einmalige Optionen,
+Quellart, operative Baselinepflichtwerte, Auswahlpaare, Zielhash und die
+vorhandenen Actor-/Request-/Ownerübernahmeverträge vor Dateizugriff.
+Nichtkanonische Roots und unsichere relative Dateien werden nicht repariert.
+
+Die Planung verwendet reale native Rootprüfungen, vollständige unabhängige
+Projekt-/Quellenqualifikation und die atomare externe Planveröffentlichung.
+Sie lädt keine beschädigte Konfiguration als gewöhnliche Profilquelle und
+verlangt keine Writerberechtigung. Die Ausführung liest Originalplan und
+ausdrückliche Auswahl zunächst passiv, bindet den ausgewählten Projektroot
+und ruft die unveränderten nativen Restoregates auf. Dadurch bleiben die
+Frischepflichten vor Neupublikation erhalten; ein belegter Wiederanlauf wird
+nicht vorzeitig wegen eigener Bestandsänderungen oder fehlender Herkunft
+verworfen. Die aktuelle `RecoveryAuthority` kommt ausschließlich separat vom
+vertrauenswürdigen Host; kein Actorlabel, Flag, Dateiinhalt oder gespeicherter
+Erfolg erzeugt sie. Es gibt keine neue Authentifizierungsarchitektur oder
+implizite Freigabe.
+
+**Gezielte Verhaltensnachweise.** **448/448**
+Tests bestanden parallel in zwei disjunkten Teilprüfungen mit jeweils **vier Workern**,
+in **763.25** und **864.43 s**:
+
+- `tests/test_catalog_check.py` (17)
+- `tests/test_catalog_check_right.py` (37)
+- `tests/test_cli.py` (23)
+- `tests/test_requests.py` (22)
+- `tests/test_restore_execution.py` (42)
+- `tests/test_restore_execution_right.py` (59)
+- `tests/test_restore_files.py` (54)
+- `tests/test_restore_invocation.py` (35)
+- `tests/test_restore_invocation_options.py` (159)
+
+Die beiden vorangegangenen Entwicklungsläufe stammen aus zwischenzeitlich
+geänderten Testständen und gelten ausdrücklich nicht als Erfolgsnachweis
+des endgültigen Stands. Die Testprüfung wurde um Lese-/Stat-/Listenfallen
+ergänzt; Wiederanlauftests behalten die ursprüngliche Request-ID und
+Replaytests erlauben ausschließlich den bestehenden temporären Owner,
+keine doppelte dauerhafte Publikation. Der Produktvertrag wurde dafür
+nicht abgeschwächt. Maßgeblich sind nur die
+zwei vollständig abgeschlossenen, an denselben Quellhash gebundenen
+Teilprüfungen mit **194** neuen beziehungsweise **254** Regressionstests.
+
+Die **194 neuen Tests** umfassen geschlossene Parameterbindung, beide
+Quellarten und Aufrufdarstellungen, unabhängige Belege bei fehlender oder
+beschädigter Konfiguration, einen echten neuen Prozess mit anderem
+Arbeitsverzeichnis, unveränderte Originaldateien, exakte Auswahl und den
+unabhängig berechneten tatsächlichen Zielroot. Fehlende/ablehnende/fehlerhafte
+aktuelle Autorität, falscher Projekt-/Zielroot, veraltete Anfangsquelle oder
+Inventur, Outputüberschreiben, Links und zwischenzeitlich ausgetauschte
+Root-Inodes werden abgewiesen. Ein Replay muss erneut autorisiert werden.
+Tatsächlich abrupt beendete Unterprozesse hinterlassen Teil- oder Vollziel;
+der neue Adapter setzt beide Aufrufdarstellungen bei entfernter Quelle nur
+mit expliziter Ownerübernahme fort. Vollzielabschluss, getrennte aktuelle
+Auditidentität beziehungsweise bytegenauer Rollback mit verbleibender
+Recoverybarriere werden am realen Bestand geprüft. Alle Hostentscheidungen
+sind ausdrücklich synthetische Testentscheidungen.
+
+Die vollständige **Collection-/Katalogprüfung**, ohne Testkörper, ist gültig:
+**21.997** aktive Testidentitäten. Die **21.807** bestehenden Nummern bleiben
+unverändert; **194** neue Identitäten erhalten ausschließlich die Nummern
+**21.807–22.000**. Der Katalog enthält damit **22.001** Nummern einschließlich
+vier weiterhin stillgelegter Identitäten. Keine Nummer wird wiederverwendet.
+`SR-TC-0461`/`SR-TC-0462` bleiben `partial`; die neue synthetische Fixture
+`SR-FIX-RESTORE-INVOCATION-v1` kennzeichnet diesen begrenzten Nachweis.
+Spezifikation **0.2.33**, Planrevision **28** und Spezifikationshash bleiben
+unverändert; historische Nachweise werden nicht umgeschrieben.
+
+**Offen und Übergabe.** Dies ist ein echter regulärer **15.l.R**-Zwischenstand,
+keine weitere normative Klärung. Öffentliche `recover.restore`-Registrierung,
+Selbstbeschreibung, nutzbare vertrauenswürdige CLI-Hostanbindung, Workparität,
+vollständige I/O-/Crashmatrix und die zuvor offenen historischen Schutz-/
+Lifecycle-/Spezialistenprovider bleiben Pflicht. Der interne Adapter wird
+nicht als vollständige öffentliche CLI oder Produktfreigabe ausgewiesen.
+**15.l.R und 15.l.C bleiben offen**, erreichter Stand **649/900**.
+
+Genau ein state-gebundenes Bundle stellt diesen geprüften R-Zustand her.
+Der Entrypoint führt ausschließlich **Sequenz 211 / Gruppe 1 von 3**, derzeit
+**7.331** Tests, mit vier parallelen Workern aus und prüft die native
+Auswahlbindung. Erst nach erfolgreichem Gate folgt der Commit mit der
+unveränderten Plan-Message
+`15.l.R feat(bundle): Restore veröffentlichen und Crashabsicherung vervollständigen`.
+Nur der Bundlemarker wechselt danach von **504** auf **505**; Produktzähler,
+letzter/nächster Planschritt und offene R-/C-Checkboxen bleiben unverändert.
+Ein Fehler erhält tatsächliche Dateien, Index und bereits erfolgreiche
+Commits. Kein Dev-Volltest, serieller Lauf, zusätzlicher Apply-Volltest,
+CI-Start oder Dev-Commit. Teiltests sind kein Vollsuite-/Release-Nachweis.
+Paketprüfung und atomare Übergabe beenden den Einzelauftrag; Apply und
+Folgeauftrag liegen ausschließlich bei der externen Steuerung.
 
 #### 15.l.C – Make it Clean
 

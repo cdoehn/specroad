@@ -568,6 +568,10 @@
       "kind": "Synthetic native full project and Baseline sources, damaged current bytes and explicitly selected corrupt journals. Native private staging and create-only durable publication, descriptor/path/root-inode checks, stale inputs, no-write traps, external mutex conflicts, simulated I/O failures and actual isolated process exits. Current host authority is supplied independently for the file-to-native execution check. No CLI, Work or release approval claim.",
       "provider": "tests/support/restore.py:restore_case;tests/test_restore_files.py:case,selection"
     },
+    "SR-FIX-RESTORE-INVOCATION-v1": {
+      "kind": "Synthetic explicit argv and native structured Restore requests over real project-bundle/Baseline sources, original external plans and exact selections. Fresh synthetic host RecoveryAuthority decisions, actual target/root/audit checks and real abrupt child processes cover full completion and partial rollback after source disappearance. Closed syntax checks trap any I/O; integration checks preserve actual project/source bytes and root identity. This internal adapter is not public command registration, a usable real CLI host authorization binding, Work parity, the exhaustive crash matrix or human approval.",
+      "provider": "tests/test_restore_invocation.py:planning,execution,authority;tests/test_restore_invocation_options.py:invocation;tests/support/restore.py:restore_case;tests/test_restore_execution_right.py:fixture,interrupted;tests/test_restore_plan_right.py:retained_case"
+    },
     "SR-FIX-RESTORE-PLAN-v1": {
       "kind": "Owned synthetic full native projects with actual profile and offline registry bytes, draft standard artifacts and primary documents; native project ZIPs and sealed working/release-kind project Baselines with recursive original archive objects. Corrupt mutable before bytes, immutable-history conflicts, independent native target reconstruction, live stale and native safety cases. No human approval, restore execution, durable backup or release evidence is fabricated.",
       "provider": "tests/support/restore.py:restore_case,plan_for;tests/test_restore_plan.py:decode_files"
@@ -898,6 +902,7 @@
     "SR-FIX-RESTORE-DIRECTORY-BINDING-v1",
     "SR-FIX-RESTORE-EXECUTION-v1",
     "SR-FIX-RESTORE-FILES-v1",
+    "SR-FIX-RESTORE-INVOCATION-v1",
     "SR-FIX-RESTORE-PLAN-v1",
     "SR-FIX-RESTORE-RECOVERY-v1",
     "SR-FIX-ROADMAP-EXPLANATION-RIGHT-v1",
