@@ -51,11 +51,11 @@ def _ensure_work(store, held, pointer, current, build):
     held.check()
 
 
-def _verify_files(held, files, *, allow_missing=False):
+def _verify_files(held, files, *, allow_missing=False, sync=False):
     complete, bindings = True, {}
     for name, raw in files:
         try:
-            actual = _read_file(held, 'results', name, expected_size=len(raw), bindings=bindings)
+            actual = _read_file(held, 'results', name, expected_size=len(raw), bindings=bindings, sync=sync)
         except CheckpointStorageError as error:
             if not allow_missing or error.reason != 'checkpoint_bytes_missing':
                 raise

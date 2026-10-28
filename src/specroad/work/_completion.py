@@ -5,6 +5,15 @@ from ._completion_outcome import _outcome, check_completed_controls
 from ._data_contract import _copy, _count, _hash, _object, _parse, _require
 
 
+def _result(value, objects, document, exit_code, registry):
+    if value['command_class'] == 'recovery_write':
+        from ._restore_completion import final_outcome
+        final_outcome(value, objects, document, exit_code)
+        return 'restore-work-finalization-v1', document['historical_findings']
+    _outcome(value, document, exit_code, registry)
+    return 'work-finalization-v1', document['diagnostics']
+
+
 def read_completion(value, objects, registry):
     """Check complete data and all supplied diagnostics, not execution truth."""
     from .manifest import _BINDING_FIELDS, _bytes
@@ -17,7 +26,8 @@ def read_completion(value, objects, registry):
     record = _parse(raw)
     _object(record, ('format_version', 'binding', 'completed_manifest_sha256',
                      'source_checkpoint_generation', 'source_checkpoint_sha256', 'outcome', 'exit_code'))
-    _require(record['format_version'] == 'work-finalization-v1'
+    version, findings = _result(value, objects, record['outcome'], record['exit_code'], registry)
+    _require(record['format_version'] == version
              and canonical_json_bytes(record) == raw)
     _require(canonical_json_bytes(record['binding'])
              == canonical_json_bytes({key: value[key] for key in _BINDING_FIELDS}))
@@ -25,9 +35,8 @@ def read_completion(value, objects, registry):
     _require(record['source_checkpoint_generation'] >= 1
              and record['source_checkpoint_generation'] + 1 == value['checkpoint_generation']
              and record['completed_manifest_sha256'] == value['completed_manifest_sha256'])
-    _outcome(value, record['outcome'], record['exit_code'], registry)
     diagnostics = canonical_json_bytes({'format_version': 'work-diagnostics-v1',
-                                        'diagnostics': record['outcome']['diagnostics']})
+                                        'diagnostics': findings})
     _require(_bytes(value['diagnostic_parts'][0], objects) == diagnostics)
     return record
 
@@ -44,8 +53,8 @@ def completion_candidate(manifest, outcome, exit_code):
     value = manifest.as_dict()
     _require(value['state'] == 'running' and not manifest.entries('remaining'))
     document = _copy(outcome)
-    _outcome(value, document, exit_code, manifest._registry)
-    record = {'format_version': 'work-finalization-v1',
+    version, findings = _result(value, manifest.objects, document, exit_code, manifest._registry)
+    record = {'format_version': version,
         'binding': {key: value[key] for key in _BINDING_FIELDS},
         'completed_manifest_sha256': value['completed_manifest_sha256'],
         'source_checkpoint_generation': value['checkpoint_generation'],
@@ -54,7 +63,7 @@ def completion_candidate(manifest, outcome, exit_code):
     objects = dict(manifest.objects)
     value['result_parts'] = [_put(canonical_json_bytes(record), objects)]
     value['diagnostic_parts'] = [_put(canonical_json_bytes({
-        'format_version': 'work-diagnostics-v1', 'diagnostics': document['diagnostics']}), objects)]
+        'format_version': 'work-diagnostics-v1', 'diagnostics': findings}), objects)]
     value['checkpoint_generation'] += 1
     value.update(state='completed', phase='completed', frontier=[],
                  next_action={'operation': 'deliver_completed_work'})

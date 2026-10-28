@@ -95,15 +95,37 @@ def advance_restore_work(store, *, registry, authority, actor, force=False,
     native evidence cannot start a second publication. Current outer and project
     owner consents remain independent and are never copied into Work bindings.
     """
+    return _run(store, registry=registry, authority=authority, actor=actor,
+        force=force, expected_lock_sha256=expected_lock_sha256, reason=reason,
+        accept_remote_risk=accept_remote_risk, owner_probe=owner_probe,
+        expected_work_lock_sha256=expected_work_lock_sha256,
+        work_recovery_reason=work_recovery_reason, work_owner_probe=work_owner_probe,
+        finish=False)
+
+
+def resume_restore_work(store, *, registry, authority=None, actor=None, force=False,
+                        expected_lock_sha256=None, reason=None, accept_remote_risk=False,
+                        owner_probe=None, expected_work_lock_sha256=None,
+                        work_recovery_reason=None, work_owner_probe=None):
+    """Complete native execution and delivery, or read an already saved result.
+
+    Unfinished Work requires fresh independent native authority. Terminal Work
+    uses only its checked saved bytes: it does not recheck or change the project.
+    This is a host API, not public command registration or a resume loop.
+    """
+    return _run(store, registry=registry, authority=authority, actor=actor,
+        force=force, expected_lock_sha256=expected_lock_sha256, reason=reason,
+        accept_remote_risk=accept_remote_risk, owner_probe=owner_probe,
+        expected_work_lock_sha256=expected_work_lock_sha256,
+        work_recovery_reason=work_recovery_reason, work_owner_probe=work_owner_probe,
+        finish=True)
+
+
+def _run(store, **options):
     progress = {'writes': False, 'owner': False,
                 'mutation_possible': False, 'recovery_required': False}
     try:
-        return _advance(store, registry=registry, authority=authority, actor=actor,
-            force=force, expected_lock_sha256=expected_lock_sha256, reason=reason,
-            accept_remote_risk=accept_remote_risk, owner_probe=owner_probe,
-            expected_work_lock_sha256=expected_work_lock_sha256,
-            work_recovery_reason=work_recovery_reason, work_owner_probe=work_owner_probe,
-            progress=progress)
+        return _advance(store, **options, progress=progress)
     except RestoreError as error:
         held = progress.get('held')
         if held is not None and held._owner_released:
@@ -115,9 +137,10 @@ def advance_restore_work(store, *, registry, authority, actor, force=False,
 @persisted_contract
 def _advance(store, *, registry, authority, actor, force, expected_lock_sha256, reason,
              accept_remote_risk, owner_probe, expected_work_lock_sha256,
-             work_recovery_reason, work_owner_probe, progress):
+             work_recovery_reason, work_owner_probe, progress, finish):
     require(type(store) is CheckpointStore, 'restore_trusted_work_store_required', exit_code=2)
-    require(type(authority) is RecoveryAuthority, 'restore_authority_required', exit_code=2)
+    if not finish:
+        require(type(authority) is RecoveryAuthority, 'restore_authority_required', exit_code=2)
     require(store._initial.as_dict()['command_id'] == 'recover.restore',
             'restore_work_command_invalid', exit_code=2)
     takeover_options(force, expected_lock_sha256, reason, accept_remote_risk)
@@ -137,11 +160,21 @@ def _advance(store, *, registry, authority, actor, force, expected_lock_sha256, 
                 'restore_work_source_overlap', exit_code=7)
         pointer = store._pointer(held)
         require(pointer is not None, 'restore_published_work_required', exit_code=5)
-        current, original, unit, saved = _progress(
+        from . import restore_delivery
+        reader = restore_delivery.checked_progress if finish else _progress
+        current, original, unit, saved = reader(
             store._read_chain(held, pointer[0]), initial, registry, build)
         history = HandoffFiles(held)
         require(not _history(history, held, store, pointer),
                 'restore_work_handoff_unresolved')
+        if finish and current.as_dict()['state'] == 'completed':
+            require(held._owner is None or handoff is not None,
+                    'restore_work_owner_recovery_required', exit_code=5)
+            document, references = restore_delivery.completed(
+                store, held, current, pointer, build, history)
+            return restore_delivery.result(store, registry, current, document, references,
+                                           finalized=False, handoff=handoff)
+        require(type(authority) is RecoveryAuthority, 'restore_authority_required', exit_code=2)
         if handoff is None:
             require(held._owner is None, 'restore_work_owner_recovery_required', exit_code=5)
             progress.update(writes=True, owner=True)
@@ -165,6 +198,11 @@ def _advance(store, *, registry, authority, actor, force, expected_lock_sha256, 
             else:
                 require(saved == canonical_json_bytes(completion),
                         'restore_work_completion_changed', exit_code=6)
+            if finish:
+                confirmed, document, references = restore_delivery.finish(store, held,
+                    confirmed, store._pointer(held), native, build, history, progress)
+                return restore_delivery.result(store, registry, confirmed, document, references,
+                                               finalized=True, handoff=handoff)
         require(_build() == build, 'restore_work_build_changed', exit_code=6)
         history.check()
         value = confirmed.as_dict()

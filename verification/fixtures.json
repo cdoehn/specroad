@@ -588,6 +588,10 @@
       "kind": "Synthetic registered host with a forbidden handler, native project-bundle/Baseline Restore plans over damaged current bytes, explicit original journal selection, no-I/O traps and real external CheckpointStore publication/reopening. Independent byte/hash/input membership and immutable-successor checks reject missing or forged stored bindings and changed actors/requests. No live Restore, current authorization, public CLI registration, complete Work engine, crash parity or human approval is asserted.",
       "provider": "tests/test_work_restore_binding.py:setup,registry,create;tests/support/restore.py:restore_case,plan_for;tests/test_restore_execution.py:selected"
     },
+    "SR-FIX-RESTORE-WORK-DELIVERY-v1": {
+      "kind": "Synthetic trusted Restore Work execution through native project recovery, complete durable result files, delivery checkpoint and terminal Work completion under one retained owner/mutex. Actual child process exits at each result-file publication and delivery/completed pointer. Completed replay uses saved result bytes without invoking native execution or rechecking changed project/source data. Unfinished work retains fresh independent authority and original completion proof; rollback cannot complete Work. No production CLI registration or human review is asserted.",
+      "provider": "tests/test_work_restore_delivery.py:resume,interrupt,child;tests/test_work_restore_execution.py:stored,takeover;tests/support/restore.py:restore_case,plan_for"
+    },
     "SR-FIX-RESTORE-WORK-EXECUTION-v1": {
       "kind": "Synthetic host registry with a forbidden handler and explicit RecoveryAuthority, native damaged project-bundle/Baseline plans, complete Work input bytes and a real external CheckpointStore. Actual native Restore publication, inode mutex observation, late Work/build changes and abrupt subprocess exits cover original actor binding, fresh takeover, full-target completion and partial rollback after source loss. Work bytes and pending delivery remain unchanged. No public CLI registration, human approval, complete Work delivery or release parity is asserted.",
       "provider": "tests/test_work_restore_execution.py:stored,run,interrupt_work;tests/test_work_restore_binding.py:registry;tests/support/restore.py:restore_case,plan_for;tests/test_restore_execution_right.py:fixture,interrupted"
@@ -927,6 +931,7 @@
     "SR-FIX-RESTORE-PLAN-v1",
     "SR-FIX-RESTORE-RECOVERY-v1",
     "SR-FIX-RESTORE-WORK-BINDING-v1",
+    "SR-FIX-RESTORE-WORK-DELIVERY-v1",
     "SR-FIX-RESTORE-WORK-EXECUTION-v1",
     "SR-FIX-RESTORE-WORK-OWNER-v1",
     "SR-FIX-RESTORE-WORK-PROGRESS-v1",

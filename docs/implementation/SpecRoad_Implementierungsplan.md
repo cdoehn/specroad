@@ -41,7 +41,7 @@ implementation_plan_commits_total: 900
 implementation_plan_commits_completed: 649
 last_completed_plan_commit: 15.l.W
 next_plan_commit: 15.l.R
-last_completed_numbered_bundle: 512
+last_completed_numbered_bundle: 513
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -31983,6 +31983,149 @@ mit **7395** Tests parallel aus und erzeugt erst nach
 Erfolg seinen Commit. Danach ändert sich nur der Bundlemarker **511→512**;
 keine Produktposition wird geschlossen. Nur der tatsächliche Commit schaltet
 zur Gruppe 0 weiter. Der zukünftige Apply-Lauf ist kein beobachteter Erfolg.
+Native Paketprüfung und atomare Exchange-Veröffentlichung beenden den
+Einzelauftrag ohne eigene Apply-, Status- oder Fortsetzungsschleife.
+
+
+**Umsetzungs- und Übergabenachweis – Bundle 513 (15.l.R-Zwischenstand), 28. Oktober 2026.**
+
+**Maßgebliche Basis.** Vollständig geprüftes Result
+`specroad-apply_Result_181637_1027_9ff80e.zip`, SHA-256
+`84ac40a760e2506a314ec827f1045bb879ea0641ed5d4b0151cb05048b17421c`;
+Repository `a33ed6cf-0a97-4b73-b11a-d4239e7a2145`, Abschlusscommit
+`04166b492af02e5ca216885128fe0916279164ea`, Fingerprint
+`7c9d2a24e397e0e5`, Algorithmus `patchharbor-state-v1`.
+Root-Anleitung, Kontext, Umgebung, Manifest, Run-/Ausführungslogs und alle
+**2.323** Snapshotdateien samt Blob-IDs und Modi wurden geprüft. Der reale
+Apply-Stand ist sauber und bytegleich. Bundle **512**, Paket-SHA-256
+`ced67380112d5769d62c43f2d2f8941dc5d6294ba28e3eb40875060ba3148afe`,
+endete nach **7.395/7.395** bestandenen Apply-Tests, **Sequenz 218 / Gruppe 2**,
+vier parallelen Workern und **5176.34 s** im passenden Abschlusscommit.
+Payloads, Auswahlbindung, vollständige Einzeloutcomes und Fortschrittsmarker
+wurden unabhängig abgeglichen. Die Spezifikation **0.2.35**, insbesondere
+10.7.3/10.7.7/10.7.8, 11.12 und P.2/P.5/P.6/P.9, bleibt maßgeblich und unverändert.
+SPECROAD-DECISION-1 samt Vertrag 3 ist ausdrücklich vorhanden; für diesen
+regulären Umsetzungsschritt ist keine neue normative Entscheidung nötig.
+
+**Umgesetzter Ausschnitt.** Der interne Restore-Work-Adapter verbindet nun
+native Ausführung beziehungsweise Recovery, vollständige Ergebnislieferung
+und terminalen Workabschluss unter derselben äußeren Owner-/Inode-Sperre.
+Unabgeschlossene Generationen verlangen weiterhin aktuelle, unabhängige native
+Autorisierung und bei erhaltener Work-Ownerdatei eine aktuelle belegte Übergabe.
+Die vorhandene Fortschritts-API bestätigt weiterhin nur die native Einheit;
+die neue explizite Host-API führt zusätzlich deren Ergebnislieferung aus.
+
+Nach dem nachgewiesenen nativen Vollzielabschluss wird die vollständige
+ursprüngliche native Ergebnisausgabe mit allen historischen Befunden erhalten.
+Frische Ausführung und native Wiederaufnahme behalten ihre jeweiligen
+Ergebnisfelder, einschließlich Pfadliste beziehungsweise Herkunftsbeobachtung.
+Originalauftrag, Actor, Request, Backup- und Zielbindung müssen mit der
+passiven Evidenz der bereits bestätigten Transaktion übereinstimmen.
+Diese gespeicherten Daten erteilen keine aktuelle Projektberechtigung.
+
+Eine private gehashte JSON-Ergebnisdatei und ihr gebundenes Dateimanifest
+werden atomar im externen Work-Root veröffentlicht und vollständig erneut
+gelesen. Auch nach einem Abbruch bereits vorhandene passende Dateien werden
+vor der Bestätigung über Datei- und Verzeichnis-fsync gesichert. Erst danach
+bestätigt Generation 2 die zweite bestehende Einheit `restore_result`.
+Generation 3 speichert den vollständigen Abschluss und die unveränderten
+Diagnosen. Der vorhandene read-only-Abschlussvertrag bleibt unverändert;
+der zusätzliche passive Abschlussdatentyp ist auf `recover.restore` begrenzt.
+Gewöhnliche normative Writes erhalten dadurch keine Work-Fortsetzungsbefugnis.
+
+Ein abgeschlossenes Work liefert ausschließlich sein vollständig geprüftes
+gespeichertes Ergebnis zurück. Es startet weder native Projektausführung noch
+eine neue Autorisierung, Quellprüfung oder zweite Restorepublikation. Auch
+nach späterer Projektänderung beziehungsweise Verlust der Herkunft bleiben
+die ursprünglich gespeicherten Ergebnisse und Befunde erhalten. Fehlende oder
+beschädigte Ergebnisdateien verhindern die erfolgreiche Rückgabe; sie werden
+im abgeschlossenen Zustand nicht stillschweigend neu erzeugt. Auch der Zugriff
+auf ein bereits erhaltenes Ergebnisobjekt prüft Checkpoint, Dateien und Bindungen
+erneut. Ein erhaltener äußerer Owner verlangt vor Resume weiter seine aktuelle
+Hash-/Grundzustimmung; terminale Daten umgehen diese Grenze nicht.
+
+Echte Prozessabbrüche zwischen Ergebnisdatei, Dateimanifest, Lieferbestätigung
+und Abschluss-Checkpoint erhalten die tatsächlich erreichte Generation.
+Wiederaufnahme nach Generation 1/2 verlangt erneut den passenden nativen
+Abschluss, übernimmt bei Generation 2 die schon gespeicherte vollständige
+Lieferung und führt keinen zweiten Restore aus. Ein nativer Teilzielrollback
+bestätigt keine Workeinheit und erzeugt keinen abgeschlossenen Erfolg.
+I/O-Fehler und späte Build-/Pointeränderungen bewahren den tatsächlichen
+Projekt- und Workzustand; mögliche Writes und nötige Owner-Recovery bleiben
+getrennt erkennbar. Historische Quellenbeobachtungen werden nicht nachträglich
+als neue Fakten ausgegeben.
+
+**Abgrenzung.** Dies ist ein tatsächlicher weiterer R-Zwischenstand desselben
+Restoreausschnitts. Öffentliche CLI-/strukturierte Commandintegration,
+Planungsmodus-Work, Status-/Cancel-/Exportparität und die übrigen vollständigen
+15.l.R-Abnahmen bleiben offen. Der Hostadapter ist keine allgemeine Resume-
+oder Apply-Schleife und behauptet keinen Code-8-/Release-Erfolgsnachweis.
+Produktstand **649/900**, zuletzt **15.l.W**, nächstens **15.l.R**;
+R/C-Checkboxen bleiben offen und SR-TC-0461/0462 bleiben `partial`.
+Testregistrierung und Hostberechtigungen sind synthetisch; menschliche Reviews,
+Freigaben oder Risikoakzeptanzen werden nicht behauptet. Spezifikation und
+ihre aktiven Hashbindungen bleiben unverändert, historische Nachweise erhalten.
+
+**Beobachtete gezielte Dev-Prüfung.** Der finale unveränderte Stand besteht
+**297/297** Verhaltenstests in
+**7830.83 s**, vier parallelen Workern, tatsächlichem Exit **0**
+und ausschließlich `passed`-Einzeloutcomes. Der erhaltene Lauf endete am
+**27. Oktober 2026 um 23:05:08 Uhr MEZ**. Bei der ausdrücklich beauftragten
+Wiederaufnahme am 28. Oktober wurden Abschluss, vollständige Einzeloutcomes,
+Auswahl- und Quellbindung erneut geprüft; der unveränderte getestete Stand
+wird ohne Testwiederholung übergeben. Vollständige ausgewählte Dateien:
+
+- `tests/test_catalog_check.py` (17)
+- `tests/test_catalog_check_right.py` (37)
+- `tests/test_work_finalization.py` (25)
+- `tests/test_work_finalization_right.py` (42)
+- `tests/test_work_manifest.py` (43)
+- `tests/test_work_manifest_right.py` (67)
+- `tests/test_work_restore_delivery.py` (14)
+- `tests/test_work_restore_progress.py` (30)
+- `tests/test_work_result_files.py` (22)
+
+Ausgeführt mit `tools/run_selected_tests.py --workers 4 --expected-tests 297`
+in einem frischen ignorierten Berichtsroot. Neue Verhaltenstests prüfen beide
+Restorequellen, echte native Teilziel-/Ausgabe-/Checkpointabbrüche, die nötige
+frische Ownerzustimmung, unveränderte Originalergebnisse, terminale I/O-Fehler,
+verlorene beziehungsweise korrupte Dateien, manipulierte Abschlussdaten sowie
+späte Build-/Pointerkonflikte. Relevante vorhandene Fortschritts-, Manifest-,
+Abschluss-, Ergebnisdatei- und maschinenlesbare Katalogverträge werden mitgeprüft.
+Es gab keinen separaten Testvorlauf.
+
+Vollständige Collection-/Katalogprüfung: **22195** aktive
+Tests, **0** Katalogfehler und **0** ausgeführte Testkörper. **14**
+neue Identitäten werden ausschließlich hinten an die permanente Nummernfolge
+angehängt. Alle alten Nummern und vier historische Löschungen bleiben erhalten.
+Kein Volltest, serieller Lauf, Dokumentationstest oder CI-Start;
+`full_suite_passed=null` bezeichnet ausdrücklich nur eine gezielte Teilprüfung.
+
+Entwicklungsquellhash: `b1c141245fe96594f43fecf5353bda28e0a92316a5de86e53a4955ec7318ed49`;
+Auswahlbericht: `475e75208dd4043cc90048d838db0ef608717802eca1f66cdfdc3f61211e2481`;
+Einzeloutcomes: `4bcc27487d2df1441b3d4461ff01f484f4b9bff57244966e58dabc84e811e8da`;
+Collectionbericht: `a453421e298860252b3431cc0678725c66e712d112713f0650bcad61bc350583`.
+Der bestätigte Apply-Nachweis von Bundle 512 bleibt davon getrennt:
+Auswahlbindung `72b14f050fd11976b8ade0769af4b7e14568ec5e3a6aa15efcca4c4393350cb3`,
+Bericht `64a1eafd56e24c222c28742af78f6d7f1177646da404a47ecb444dd2278080f5`,
+Einzeloutcomes `70c7a2949cfb6723d4dd0578c7f87d2da590d6c273276dc9f5e4f3ec8595c6c6`.
+
+**Paketprüfung ohne Änderung der getesteten Bytes.** Die zusätzlichen leeren
+Schlusszeilen in `src/specroad/work/_restore_completion.py` (Zeile 159) und
+`tests/test_work_restore_delivery.py` (Zeile 283) bleiben bytegenau wie im
+bestandenen Testlauf erhalten. Ausschließlich deren konkrete Git-Meldungen
+`new blank line at EOF` werden bei den Verpackungsprüfungen akzeptiert;
+andere Formatfehler bleiben gesperrt. Git-Konfiguration, Quellhash, Tests,
+Zustandsbindungen und Apply-Gates werden nicht geändert. Diese reine
+Formatentscheidung ist kein neuer W/R/C-Zustand.
+
+**Vorgesehene Übergabe.** Genau ein state-gebundenes Bundle und ein regulärer
+R-Zwischenstand mit der exakten Planmessage. Der Entrypoint installiert nur
+diesen geprüften Stand, führt ausschließlich **N=3-Gruppe 0, Sequenz 219**
+mit **7399** Tests parallel aus und erzeugt erst nach
+Erfolg seinen Commit. Danach ändert sich nur der Bundlemarker **512→513**;
+keine Produktposition wird geschlossen. Nur der tatsächliche Commit schaltet
+zur Gruppe 1 weiter. Der zukünftige Apply-Lauf ist kein beobachteter Erfolg.
 Native Paketprüfung und atomare Exchange-Veröffentlichung beenden den
 Einzelauftrag ohne eigene Apply-, Status- oder Fortsetzungsschleife.
 

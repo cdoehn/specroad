@@ -22186,7 +22186,21 @@
     "tests/test_work_restore_progress.py::test_success_retains_native_completion_and_pending_delivery_under_one_live_owner[baseline]",
     "tests/test_work_restore_progress.py::test_success_retains_native_completion_and_pending_delivery_under_one_live_owner[project_bundle]",
     "tests/test_work_restore_progress.py::test_work_io_failure_preserves_native_completion_and_actual_checkpoint[False]",
-    "tests/test_work_restore_progress.py::test_work_io_failure_preserves_native_completion_and_actual_checkpoint[True]"
+    "tests/test_work_restore_progress.py::test_work_io_failure_preserves_native_completion_and_actual_checkpoint[True]",
+    "tests/test_work_restore_delivery.py::test_actual_crashes_keep_last_complete_generation_and_resume_without_second_restore[completed-3]",
+    "tests/test_work_restore_delivery.py::test_actual_crashes_keep_last_complete_generation_and_resume_without_second_restore[delivery-2]",
+    "tests/test_work_restore_delivery.py::test_actual_crashes_keep_last_complete_generation_and_resume_without_second_restore[file_manifest-1]",
+    "tests/test_work_restore_delivery.py::test_actual_crashes_keep_last_complete_generation_and_resume_without_second_restore[payload-1]",
+    "tests/test_work_restore_delivery.py::test_completed_file_loss_or_corruption_blocks_return_without_reexecution_or_repair",
+    "tests/test_work_restore_delivery.py::test_existing_execution_unit_completes_without_overwriting_its_original_proof",
+    "tests/test_work_restore_delivery.py::test_full_delivery_is_durable_and_completed_replay_never_rechecks_changed_project[baseline]",
+    "tests/test_work_restore_delivery.py::test_full_delivery_is_durable_and_completed_replay_never_rechecks_changed_project[project_bundle]",
+    "tests/test_work_restore_delivery.py::test_late_work_change_during_output_publication_never_marks_delivery_complete[build]",
+    "tests/test_work_restore_delivery.py::test_late_work_change_during_output_publication_never_marks_delivery_complete[pointer]",
+    "tests/test_work_restore_delivery.py::test_partial_native_target_rolls_back_without_delivery_or_completed_work",
+    "tests/test_work_restore_delivery.py::test_self_hashed_final_payload_cannot_replace_native_result_or_drop_findings",
+    "tests/test_work_restore_delivery.py::test_terminal_io_error_retains_actual_generation_and_needs_no_second_publication[False]",
+    "tests/test_work_restore_delivery.py::test_terminal_io_error_retains_actual_generation_and_needs_no_second_publication[True]"
   ],
   "partition_count": 3,
   "rotation_anchor_commit": "81d91ff9611f6466cb48d4fc96ddc550f8b911cc"
