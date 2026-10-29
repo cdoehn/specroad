@@ -12,6 +12,7 @@ if str(ROOT / "tools") not in sys.path:
     sys.path.insert(0, str(ROOT / "tools"))
 from verification_support.process_environment import test_environment
 from verification_support.execution_policy import DEFAULT_WORKERS
+from verification_support.runtime_runner import prepare_request
 
 
 def worker_count(value):
@@ -36,7 +37,9 @@ def pytest_arguments(args):
     for option, value in (("--sr-evidence", args.evidence),
                           ("--sr-observations", args.observations),
                           ("--sr-expected-tests", args.expected_tests),
-                          ("--sr-runtimes", getattr(args, "runtime_measurement", None))):
+                          ("--sr-runtimes", getattr(args, "runtime_measurement", None)),
+                          ("--sr-runtime-journal", getattr(args, "runtime_journal", None)),
+                          ("--sr-timing-request", getattr(args, "timing_request", None))):
         if value is not None:
             arguments += [option, str(value)]
     return arguments
@@ -50,13 +53,14 @@ def main(argv=None):
     parser.add_argument("--observations", type=Path)
     parser.add_argument("--expected-tests", type=int)
     parser.add_argument("--runtime-measurement", type=Path)
+    parser.add_argument("--runtime-journal", type=Path)
     args = parser.parse_args(argv)
     if args.expected_tests is not None and args.expected_tests <= 0:
         parser.error("Expected tests must be positive")
     # Publication paths are interpreted relative to the caller, not a later cwd.
     if args.runtime_measurement is not None and args.workers in ("0", "1"):
         parser.error("One-time calibration requires parallel workers")
-    for name in ("evidence", "observations", "runtime_measurement"):
+    for name in ("evidence", "observations", "runtime_measurement", "runtime_journal"):
         value = getattr(args, name)
         if value is not None:
             setattr(args, name, value.absolute())
@@ -64,6 +68,23 @@ def main(argv=None):
     auto = environment.get("PYTEST_XDIST_AUTO_NUM_WORKERS")
     if args.workers == "auto" and auto is not None and (not auto.isdecimal() or int(auto) <= 0):
         parser.error("PYTEST_XDIST_AUTO_NUM_WORKERS must be a positive integer")
+    if args.runtime_journal is not None and args.runtime_measurement is None:
+        parser.error("Use measure_test_runtimes.py for selected/recovery measurements")
+    if args.runtime_measurement is not None:
+        from verification_support.publication import evidence_target
+        try:
+            evidence_target(args.runtime_measurement, ROOT)
+            if args.workers == "auto":
+                parser.error("Calibration needs an explicit parallel worker count")
+            args.runtime_journal = args.runtime_journal or args.runtime_measurement.with_suffix(".sqlite3")
+            if args.runtime_journal == args.runtime_measurement:
+                parser.error("Measurement and timing journal need separate paths")
+            args.timing_request, request = prepare_request(ROOT, args.runtime_journal,
+                int(args.workers), all_tests=True, keep_complete=True)
+            if args.expected_tests is None:
+                args.expected_tests = len(request["selected"])
+        except (OSError, ValueError) as error:
+            parser.error(str(error))
     command = [sys.executable, "-I", "-B", str(ROOT / "tools/pytest_entry.py"), *pytest_arguments(args)]
     try:
         return subprocess.run(command, cwd=ROOT, env=environment,

@@ -9,7 +9,7 @@ Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 S
 
 Fachliche Grundlage ist [`docs/specification/SpecRoad_Spezifikation.md`](../specification/SpecRoad_Spezifikation.md), einschließlich aller konsolidierten Korrekturen, 742 Requirements, 51 Verifikationsverträge, 46 Szenario-/E2E-Identitäten sowie R-01 bis R-75, Anhang U und den PatchHarbor-Rundweg aus Anhang W. Der [`Prüfbericht`](../reviews/SpecRoad_v0.2.7_Implementierungsreife_Pruefbericht.md) ist ein vorgelagerter Entwurfsreview, kein späterer Produktnachweis.
 
-Gebundene Spezifikations-SHA-256: `5b8d382cfa4848c45c9529b02c4b4399d552cc959c3f84ded8be4f9fe5b174b1`.
+Gebundene Spezifikations-SHA-256: `a65377cd0d54a80fb62bee38ea073e5dd56f19c020d6d39a5fff1d8fc3dddde1`.
 Planungsbasis: Commit `fe2661d02ecf2f7eb483b58a4487eb009c6b3846`; sauberes Result-Bundle `specroad_Result_120209_0914_df3504.zip`; Repository-ID `3d2576df-d611-46fc-9d2b-92869468aaca`. Diese Angaben dokumentieren die Entstehung des Plans, nicht die zukünftige Patchbindung. **Jedes spätere Patchpaket bindet den dann aktuellen tatsächlichen Result-Zustand.**
 
 Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 2026 gelten zusätzlich und bei den nachfolgend benannten Konflikten vorrangig. Sonstige normative Spezifikationsinhalte werden nicht stillschweigend abgeschwächt. Neue fachliche Widersprüche, fehlende zwingende Angaben und Sicherheitsprobleme sind offen zu benennen, nicht durch erfundene Annahmen oder Scheinerfolge zu lösen.
@@ -80,8 +80,42 @@ Die einmalige vollständige parallele Einmessung ist ausdrücklich Teil dieses
 Auftrags; sie ersetzt keine späteren commitgebundenen Apply-Gates.
 
 - [x] **WORKFLOW-514.W:** Laufzeiten erfassen, eine feste langsamste Fünftelmenge bilden und nur die automatische N=3-Auswahl filtern; Arbeitsregeln gemeinsam aktualisieren. Commit: `test(workflow): Feste Laufzeitauswahl und vollständige Arbeitspakete einführen`.
-- [ ] **WORKFLOW-514.R:** Unvollständige/mehrdeutige Messungen, unveränderliche Listen, explizite ungefilterte Auswahl und Laufbindung robust prüfen. Commit: `test(workflow): Laufzeitfilter und ungefilterte Prüfwege absichern`.
+- [x] **WORKFLOW-514.R:** Unvollständige/mehrdeutige Messungen, unveränderliche Listen, explizite ungefilterte Auswahl und Laufbindung robust prüfen. Commit: `test(workflow): Laufzeitfilter und ungefilterte Prüfwege absichern`.
 - [ ] **WORKFLOW-514.C:** Gemeinsame Timing-Verträge ohne Verhaltensänderung bereinigen. Commit: `refactor(testing): Laufzeitverträge gemeinsam nutzen`.
+
+**W-Nachweis:** 215 gezielte parallele Verhaltenstests bestanden; darunter
+echte erfolgreiche und fehlgeschlagene Messläufe in isolierten kleinen
+Testprojekten. Dies ist keine Vollmessung der Produktsuite. Der W-Stand ist
+als eigener unveränderter Payload-Zwischenstand für Apply gesichert.
+
+**Ergänzter Nutzerauftrag, dauerhafte Messung:** Der erste Messlauf endete
+ohne Abschlussdateien; 22.208 Erfolgsmarker sind keine erhaltenen Einzellaufzeiten.
+R ergänzt sofortige dauerhafte Phasen-Commits, frei kombinierbare Nachholgruppen,
+fehlende-Tests-Auswahl und quellgebundene Zusammenführung. Vorherige Logs und
+W-Payload bleiben erhalten. Keine Liste aus unvollständigen Daten erzeugen.
+Abbruchtests müssen belegen, dass gespeicherte Einzeltests erhalten bleiben
+und nur fehlende Tests erneut laufen; Teilmessungen sind kein Vollsuite-Nachweis.
+
+**SQLite-Sperrkorrektur:** Der dauerhafte Versuch endete nach 1.628 vollständig
+gespeicherten Tests mit `database is locked`. Nutzerauftrag: korrigieren und
+fortsetzen. R ergänzt native begrenzte Wartezeit, kurze Snapshot-Lesezugriffe und
+belegt parallele Statusabfragen. Die 1.628 historischen Messungen werden nur
+nach bytegenau geprüfter Messcode-Korrektur mit Herkunft in eine getrennte
+Fortsetzungsbasis übernommen. Produktcode und bereits gemessene Testdateien
+bleiben unverändert; neue Regressionstests werden zusätzlich gemessen.
+
+**Einmalige reale Einmessung:** 22263 Einzeltests vollständig
+parallel und dauerhaft erfasst. Aggregierte Messabdeckung ist kein Vollsuite-Nachweis.
+Beginn 2026-10-28T15:13:42.803165+00:00, Ende 2026-10-28T21:51:29.666725+00:00.
+Gemessener Quellstand `3efa4de94cb2da67fa40384b780d00ac91bcf6fcc9a7f6c6d37908ff55f80927`;
+Rohmessung SHA-256 `97db15a09716f3c4bc9796080f3e47f8d1a9b018c0e182f49ff9ae25be15a4bd`.
+Die feste Liste enthält 4452 ausgeschlossene Identitäten;
+Listen-SHA-256 `ebf60e61ff731f5144dae5ad05d98879acc66563f6247cf520d088bd47ef006b`.
+Die Liste enthält 1.628 ausdrücklich gekennzeichnete historische Messwerte aus der
+belegten Messcode-Korrektur. Originalquellen und Übernahme sind in der Liste gebunden.
+Der Messstand liegt vor Aufnahme der Liste; die aktuelle R-Fassung
+wird anschließend gezielt geprüft. C ändert nur Struktur. Dieser
+Messbeleg wird nicht als Vollsuite-Nachweis späterer Stände ausgegeben.
 
 **Abnahme:** Vollständige echte Messung mit eindeutigen parametrisierten
 Identitäten und drei Phasen; floor(N/5) feste Ausschlüsse, stabile Tie-Breaks;

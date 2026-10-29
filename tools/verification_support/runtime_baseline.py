@@ -6,6 +6,7 @@ import math
 import os
 from pathlib import Path
 import re
+import stat
 import tempfile
 
 from .ci_reference import _load_report
@@ -28,13 +29,74 @@ def _identity(value):
     return type(value) is str and bool(value) and not any(c in value for c in "\r\n\x00")
 
 
+def _timestamp(value):
+    if not _identity(value):
+        return False
+    try:
+        return datetime.fromisoformat(value).utcoffset() is not None
+    except (TypeError, ValueError, OverflowError):
+        return False
+
+
+def validate_imports(imports, source, identities):
+    if type(imports) is not list or not imports:
+        raise ValueError("Missing historical measurement provenance")
+    seen = set()
+    for item in imports:
+        fields = {"from_source_sha256", "to_source_sha256", "source_journal_sha256",
+                  "input_inventory_sha256", "imported_test_ids", "changed_files"}
+        if (type(item) is not dict or set(item) != fields
+                or any(not _hash(item[k]) for k in fields if k.endswith("sha256"))
+                or item["to_source_sha256"] != source or item["from_source_sha256"] == source
+                or type(item["imported_test_ids"]) is not list
+                or any(not _identity(i) for i in item["imported_test_ids"])
+                or item["imported_test_ids"] != sorted(set(item["imported_test_ids"]))
+                or not item["imported_test_ids"] or not set(item["imported_test_ids"]) <= set(identities)
+                or seen.intersection(item["imported_test_ids"])
+                or type(item["changed_files"]) is not list or not item["changed_files"]):
+            raise ValueError("Invalid historical measurement provenance")
+        seen.update(item["imported_test_ids"])
+        paths = set()
+        for change in item["changed_files"]:
+            if (type(change) is not dict or set(change) != {"path", "before", "after"}
+                    or not _identity(change["path"]) or change["path"].startswith("/")
+                    or ".." in change["path"].split("/") or change["path"] in paths
+                    or change["before"] is not None and not _hash(change["before"])
+                    or not _hash(change["after"])):
+                raise ValueError("Invalid instrumentation change proof")
+            paths.add(change["path"])
+    return imports
+
+
 def validate_measurement(value):
+    if type(value) is dict and value.get("format_version") == 3:
+        ordinary = dict(value)
+        imports = ordinary.pop("measurement_imports", None)
+        if ordinary.get("kind") != "specroad-resumable-test-runtimes-v3":
+            raise ValueError("Invalid historical coverage kind")
+        ordinary.update(format_version=2, kind="specroad-resumable-test-runtimes-v2")
+        validate_measurement(ordinary)
+        validate_imports(imports, value["source_sha256"], [r["test_id"] for r in value["tests"]])
+        return value
+    if type(value) is dict and value.get("format_version") == 2:
+        fields = {"format_version", "kind", "source_sha256", "measured_at", "workers",
+                  "coverage_complete", "full_suite_passed", "attempts", "tests"}
+        if (set(value) != fields or type(value["format_version"]) is not int
+                or value["kind"] != "specroad-resumable-test-runtimes-v2"
+                or value["coverage_complete"] is not True or value["full_suite_passed"] is not None
+                or type(value["attempts"]) is not int or value["attempts"] < 1):
+            raise ValueError("Incomplete resumable timing coverage")
+        # Reuse identity/duration validation without claiming a real full-suite run.
+        shape = {k: value[k] for k in ("source_sha256", "measured_at", "workers", "tests")}
+        shape.update(format_version=1, kind="specroad-full-test-runtimes-v1", full_suite_passed=True)
+        validate_measurement(shape)
+        return value
     fields = {"format_version", "kind", "source_sha256", "measured_at", "workers",
               "full_suite_passed", "tests"}
     if (type(value) is not dict or set(value) != fields
             or type(value["format_version"]) is not int or value["format_version"] != 1
             or value["kind"] != "specroad-full-test-runtimes-v1"
-            or not _hash(value["source_sha256"]) or not _identity(value["measured_at"])
+            or not _hash(value["source_sha256"]) or not _timestamp(value["measured_at"])
             or type(value["workers"]) is not int or value["workers"] < 2
             or value["full_suite_passed"] is not True
             or type(value["tests"]) is not list or not value["tests"]):
@@ -62,7 +124,8 @@ class RuntimeMeasurements:
         if subtest:
             return
         if (phase not in PHASES or type(duration) not in (int, float)
-                or not math.isfinite(duration) or duration < 0):
+                or not math.isfinite(duration) or duration < 0
+                or not math.isfinite(duration * 1_000_000_000)):
             self.invalid = True
             return
         phases = self.phases.setdefault(nodeid, {})
@@ -98,15 +161,29 @@ def make_baseline(measurement):
                   key=lambda row: row["test_id"])
     excluded = sorted(row["test_id"] for row in
         sorted(rows, key=lambda row: (-row["duration_ns"], row["test_id"]))[:len(rows) // 5])
-    return {"format_version": 1, "kind": "specroad-frozen-runtime-filter-v1",
+    result = {"format_version": 1, "kind": "specroad-frozen-runtime-filter-v1",
             "measured_source_sha256": value["source_sha256"],
             "measurement_sha256": sha256(encoded(value)).hexdigest(),
             "measured_at": value["measured_at"], "workers": value["workers"],
             "exclude_numerator": 1, "exclude_denominator": 5,
             "tests": rows, "excluded_test_ids": excluded}
 
+    if value.get("measurement_imports"):
+        result.update(format_version=2, kind="specroad-frozen-runtime-filter-v2",
+                      measurement_imports=value["measurement_imports"])
+    return result
+
 
 def validate_baseline(value):
+    if type(value) is dict and value.get("format_version") == 2:
+        ordinary = dict(value)
+        imports = ordinary.pop("measurement_imports", None)
+        if ordinary.get("kind") != "specroad-frozen-runtime-filter-v2":
+            raise ValueError("Invalid historical baseline kind")
+        ordinary.update(format_version=1, kind="specroad-frozen-runtime-filter-v1")
+        validate_baseline(ordinary)
+        validate_imports(imports, value["measured_source_sha256"], [r["test_id"] for r in value["tests"]])
+        return value
     fields = {"format_version", "kind", "measured_source_sha256", "measurement_sha256",
               "measured_at", "workers", "exclude_numerator", "exclude_denominator",
               "tests", "excluded_test_ids"}
@@ -114,7 +191,7 @@ def validate_baseline(value):
             or type(value["format_version"]) is not int or value["format_version"] != 1
             or value["kind"] != "specroad-frozen-runtime-filter-v1"
             or not _hash(value["measured_source_sha256"]) or not _hash(value["measurement_sha256"])
-            or not _identity(value["measured_at"])
+            or not _timestamp(value["measured_at"])
             or type(value["workers"]) is not int or value["workers"] < 2
             or type(value["exclude_numerator"]) is not int or value["exclude_numerator"] != 1
             or type(value["exclude_denominator"]) is not int or value["exclude_denominator"] != 5
@@ -140,6 +217,8 @@ def load_baseline(root):
     path = Path(root) / BASELINE
     if not os.path.lexists(path):
         return None
+    if not stat.S_ISREG(path.lstat().st_mode):
+        raise ValueError("Timing baseline must be a regular file")
     raw = path.read_bytes()
     value = validate_baseline(_load_report(path))
     if path.read_bytes() != raw:
@@ -152,6 +231,8 @@ def filter_partition(selected, baseline):
         return dict(selected), None
     digest, value = baseline
     validate_baseline(value)
+    if not _hash(digest):
+        raise ValueError("Invalid timing baseline byte binding")
     excluded = set(value["excluded_test_ids"])
     retained = {n: i for n, i in selected.items() if i not in excluded}
     if not retained:
@@ -167,6 +248,8 @@ def filter_partition(selected, baseline):
 def freeze(measurement_path, root):
     """Explicit one-time publication; never overwrite or silently recalibrate."""
     path = Path(root) / BASELINE
+    if not stat.S_ISDIR(path.parent.lstat().st_mode):
+        raise ValueError("Baseline directory must be a real directory")
     value = make_baseline(_load_report(Path(measurement_path)))
     raw = encoded(value)
     with tempfile.NamedTemporaryFile(dir=path.parent, prefix=".runtime-baseline-",

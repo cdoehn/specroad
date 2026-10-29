@@ -431,16 +431,52 @@ Regel ändert die Entwicklung und ihre Testauswahl. Sie ändert keine
 Produktanforderung, menschliche Freigabe, Releaseabnahme oder gespeicherte
 historische Evidence und erteilt Control keine neue fachliche Befugnis.
 
-**Einmalige Einmessung.** Eine ausdrücklich beauftragte vollständige,
-erfolgreiche, parallele Testsuite erfasst je eindeutiger Testidentität alle
-Vorbereitungs-, Ausführungs- und Aufräumphasen. Nur vollständige Messungen
-dürfen eine feste Liste erzeugen. Es werden floor(Testanzahl / 5) Tests mit
-der größten Summe dieser Laufzeiten ausgeschlossen; bei Gleichstand ordnet
-die Testidentität aufsteigend. Das sind 20 Prozent nach Testanzahl, keine
-Zeitquote. Die Messbasis und Laufzeiten bleiben unter
-`verification/test_runtime_baseline.json` versioniert. Der gemessene
-Quellhash dokumentiert den historischen Messstand, nicht eine Behauptung
-über spätere Quellen. Kein stilles Neumessen, Überschreiben oder Nachrücken.
+**Einmalige Einmessung mit dauerhaften Teilmessungen.** Nach ausdrücklichem
+Nutzerauftrag vom 28. Oktober 2026 wird jeder vom pytest-Controller empfangene
+Vorbereitungs-, Ausführungs- und Aufräumreport sofort transaktional mit
+SQLite `synchronous=FULL` gespeichert. Die einzelne lokale Datei liegt unter
+dem vorhandenen ignorierten `build`-Bereich der Dev-Kopie; kein neuer Dienst.
+Testidentität, Node-ID, Phase, Dauer, Ergebnis, Worker und Messversuch bleiben
+erhalten. Erst nach dem dauerhaften Commit gilt ein Abschnitt als gespeichert.
+Ein gewaltsam vor Empfang oder Commit unterbrochener Abschnitt bleibt offen.
+
+Vollständige erfolgreiche Einzeltests bleiben auch nach einem Prozessabbruch
+nutzbar. Frei kombinierbare Testdateien, einzelne stabile IDs/Node-IDs und
+JSON-Auswahllisten erlauben parallele Nachholmessungen; alternativ wird nur
+die fehlende Menge ausgeführt. Bereits vollständig gemessene Tests werden
+dabei nicht wiederholt oder überschrieben. Phasen verschiedener Versuche
+werden niemals zu einem scheinbar vollständigen Test zusammengesetzt.
+Fehlerhafte, übersprungene oder unvollständige Tests bleiben offen. Frühere
+Ergebnisse werden nur bei identischer vollständiger Collection, Quellhash,
+Plattform und Workerzahl übernommen. Abweichungen erfordern eine neue Messbasis.
+Ein exklusiver Writer schützt gegen konkurrierende Messläufe.
+Der Schreiber wartet höchstens 30 Sekunden auf native SQLite-Sperren. Status
+liest eine konsistente Online-Kopie; Auswertung und Sortierung halten keine
+Lesesperre auf der Messdatei. Ein Timeout bewahrt alle bereits committeten Daten.
+
+**Explizite Messcode-Korrektur:** Bei einer beauftragten Reparatur allein der
+Messinfrastruktur dürfen vorhandene vollständige Messungen in eine neue,
+getrennte Messbasis übernommen werden. Das Original bleibt unverändert.
+Voraussetzung sind ein gehashter Vorher-Snapshot, unveränderte Produktquellen,
+unveränderte bereits gemessene Testdateien/Identitäten, gleiche Plattform und
+Workerzahl sowie eine genaue Prüfung sämtlicher abweichender Dateien. Zulässig
+sind nur die konkret geprüfte Messcode-Korrektur, neue Regressionstests und
+deren mechanische Katalog-/Spezifikationsbindungen. Alte Messungen bleiben mit
+Originalquellhash, Journalhash, Test-IDs und Änderungsnachweis gekennzeichnet,
+auch im Export und in der festen Liste. Sie sind kein Testnachweis des neuen
+Quellstands. Normale Messaufrufe dürfen solche Wechsel niemals selbst freigeben.
+ Lesender Status
+zeigt gespeicherte Phasen, vollständige Tests und die noch fehlenden IDs.
+
+Nur vollständige erfolgreiche Messabdeckung aller gebundenen Tests darf die
+feste Liste erzeugen. Mehrere Teilmessungen sind ausdrücklich kein einzelner
+bestandener Vollsuitelauf (`full_suite_passed=null`). Es werden floor(Testanzahl / 5)
+Tests mit der größten Summe ihrer drei Laufzeiten ausgeschlossen; Gleichstand
+nach Testidentität aufsteigend. Das sind 20 Prozent nach Testanzahl, keine
+Zeitquote. Messbasis und Laufzeiten bleiben unter
+`verification/test_runtime_baseline.json` versioniert. Der gemessene Quellhash
+dokumentiert den historischen Stand; keine Behauptung über spätere Quellen.
+Kein stilles Neumessen, Überschreiben oder Nachrücken der festen Liste.
 
 **Ausführung.** Automatisches Apply wählt weiterhin die commitgebundene
 N=3-Gruppe mit unveränderten dauerhaften Testnummern und entfernt daraus
@@ -456,7 +492,8 @@ decken nur den weiter zugelassenen Bestand ab, nicht die ausgeschlossenen
 Tests. Teiltestberichte binden die tatsächliche Auswahl und Liste; sie
 behaupten keine Vollsuite- oder Releasefreigabe. Der erste gemeinsame
 Workflow-Auftrag erlaubt genau die für diese Einmessung notwendige lokale
-Vollsuite; die übliche gezielte parallele Entwicklung bleibt bestehen.
+Einmessung einschließlich ausdrücklich beauftragter Nachholmessungen; die
+übliche gezielte parallele Entwicklung bleibt bestehen.
 
 **Vollständige Planschritte.** Ab dem nächsten offenen W-, R- oder C-Schritt
 ist der gesamte offene fachliche Umfang das Ausgangsziel einer Lieferung.

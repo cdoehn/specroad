@@ -2,7 +2,7 @@
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0649",
   "requirement_id": "SR-REQ-0649",
-  "specification_sha256": "5b8d382cfa4848c45c9529b02c4b4399d552cc959c3f84ded8be4f9fe5b174b1",
+  "specification_sha256": "a65377cd0d54a80fb62bee38ea073e5dd56f19c020d6d39a5fff1d8fc3dddde1",
   "primary_verification_id": "SR-VER-0043",
   "implementation_status": "open",
   "method": "pending",

@@ -92,6 +92,8 @@ def run_apply_partition(root, outdir, *, workers=4, runner=None):
     head, sequence, previous = commit_context(root, registry)
     selected = select_partition(catalog["nodeid_to_test_id"], registry, sequence, previous)
     baseline = load_baseline(root)
+    if baseline is not None and registry["format_version"] != 2:
+        raise ValueError("Runtime filtering requires the existing N=3 contract")
     selected, runtime_filter = filter_partition(selected, baseline)
     receipt = {}
     if registry["format_version"] == 2:

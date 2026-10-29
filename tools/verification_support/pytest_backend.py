@@ -4,6 +4,8 @@ from .common import CatalogError
 from .outcomes import RunLedger, bind_test_ids
 from .collection_identity import test_identity
 from .runtime_baseline import RuntimeMeasurements
+from .runtime_store import TimingStore
+from .ci_reference import _load_report
 
 import importlib.metadata
 import json
@@ -31,6 +33,8 @@ def pytest_addoption(parser):
     group.addoption("--sr-evidence", type=Path, help="Exclusive path for bound development evidence")
     group.addoption("--sr-observations", type=Path, help="Exclusive path for test-run observations")
     group.addoption("--sr-runtimes", type=Path, help="One explicit full parallel timing measurement")
+    group.addoption("--sr-runtime-journal", type=Path)
+    group.addoption("--sr-timing-request", type=Path)
     group.addoption("--sr-expected-tests", type=int, help="Required number of collected tests")
 
 
@@ -46,6 +50,9 @@ class VerificationSession:
         self.observations = config.getoption("sr_observations")
         self.runtimes = config.getoption("sr_runtimes")
         self.runtime_measurements = RuntimeMeasurements() if self.runtimes is not None and not self.worker else None
+        self.timing_store = None
+        self.timing_run = None
+        self.timing_request = None
         self.catalog = None
         self.specification = ROOT / "docs/specification/SpecRoad_Spezifikation.md"
         self.binding = None
@@ -88,6 +95,25 @@ class VerificationSession:
             self.binding = {"run_id": str(uuid.uuid4()), "tool_build_sha256": self.source,
                             "platform_sha256": sha256(json_bytes(self.runtime)),
                             "configuration_sha256": sha256(json_bytes(self.execution))}
+
+        journal = config.getoption("sr_runtime_journal")
+        request = config.getoption("sr_timing_request")
+        if (journal is None) != (request is None):
+            raise CatalogError("Timing journal and request must be supplied together")
+        if self.runtimes is not None and journal is None:
+            raise CatalogError("Runtime calibration requires durable phase storage")
+        if journal is not None:
+            value = _load_report(request)
+            if (set(value) != {"format_version", "binding", "selected"}
+                    or value["format_version"] != 1 or not value["selected"]
+                    or value["binding"]["source_sha256"] != source_identity(ROOT)
+                    or value["binding"]["workers"] != config.getoption("numprocesses")
+                    or self.expected != len(value["selected"])
+                    or any(journal.absolute() == p for p in targets)):
+                raise CatalogError("Timing request differs from current inputs")
+            self.timing_store = TimingStore(journal, ROOT, value["binding"])
+            self.timing_request = value
+            self.timing_run = self.timing_store.begin(value["selected"])
 
     def collection(self, items):
         pairs = [(item.nodeid, test_identity(item)) for item in items]
@@ -148,6 +174,10 @@ def pytest_configure_node(node):
 def pytest_xdist_node_collection_finished(node, ids):
     state = node.config._specroad_verification
     state.ledger.collect(node.gateway.id, ids)
+    if state.timing_store is not None and set(ids) != set(state.timing_request["selected"]):
+        state.timing_store.invalidate(state.timing_run, "collection_mismatch")
+        state.ledger.error("timing_collection_mismatch")
+
     if state.expected is not None and len(ids) != state.expected:
         state.ledger.error("unexpected_test_count")
 
@@ -210,6 +240,9 @@ class ReportObserver:
             outcome = "skipped"
         else:
             outcome = "passed"
+        if self.state.timing_store is not None:
+            self.state.timing_store.observe(self.state.timing_run, report.nodeid, alias,
+                report.when, report.duration, outcome, worker, subtest=subtest)
         self.state.ledger.observe(report.nodeid, worker, report.when, outcome, subtest=subtest)
 
 
@@ -267,6 +300,15 @@ def pytest_sessionfinish(session, exitstatus):
             print("Could not publish test observations: " + str(error), file=sys.stderr)
             session.exitstatus = pytest.ExitCode.USAGE_ERROR
 
+    if state.timing_store is not None:
+        try:
+            if source_identity(ROOT) != state.timing_request["binding"]["source_sha256"]:
+                state.timing_store.invalidate(state.timing_run, "source_changed")
+                session.exitstatus = pytest.ExitCode.USAGE_ERROR
+            state.timing_store.finish(state.timing_run)
+        finally:
+            state.timing_store.close()
+
     if state.runtimes is not None:
         try:
             if session.exitstatus != 0 or source_identity(ROOT) != state.source:
@@ -276,3 +318,9 @@ def pytest_sessionfinish(session, exitstatus):
         except (CatalogError, OSError, ValueError, TypeError, KeyError):
             print("Complete runtime calibration was not published.", file=sys.stderr)
             session.exitstatus = pytest.ExitCode.USAGE_ERROR
+
+
+def pytest_unconfigure(config):
+    state = getattr(config, "_specroad_verification", None)
+    if state is not None and state.timing_store is not None:
+        state.timing_store.close()
