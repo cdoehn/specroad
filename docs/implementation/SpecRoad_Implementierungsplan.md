@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 31 · **Stand:** 28. Oktober 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.36
+**Planrevision:** 32 · **Stand:** 29. Oktober 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.37
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 Schritte und 900 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; jeder Schritt besitzt einen konkreten Arbeitsumfang und eigene Verhaltensabnahme.
 
@@ -9,7 +9,7 @@ Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 S
 
 Fachliche Grundlage ist [`docs/specification/SpecRoad_Spezifikation.md`](../specification/SpecRoad_Spezifikation.md), einschließlich aller konsolidierten Korrekturen, 742 Requirements, 51 Verifikationsverträge, 46 Szenario-/E2E-Identitäten sowie R-01 bis R-75, Anhang U und den PatchHarbor-Rundweg aus Anhang W. Der [`Prüfbericht`](../reviews/SpecRoad_v0.2.7_Implementierungsreife_Pruefbericht.md) ist ein vorgelagerter Entwurfsreview, kein späterer Produktnachweis.
 
-Gebundene Spezifikations-SHA-256: `a65377cd0d54a80fb62bee38ea073e5dd56f19c020d6d39a5fff1d8fc3dddde1`.
+Gebundene Spezifikations-SHA-256: `8e7a9a3e47fcae96fb8661e34fb8a8c868988bc9240df04a29a888422b98bd12`.
 Planungsbasis: Commit `fe2661d02ecf2f7eb483b58a4487eb009c6b3846`; sauberes Result-Bundle `specroad_Result_120209_0914_df3504.zip`; Repository-ID `3d2576df-d611-46fc-9d2b-92869468aaca`. Diese Angaben dokumentieren die Entstehung des Plans, nicht die zukünftige Patchbindung. **Jedes spätere Patchpaket bindet den dann aktuellen tatsächlichen Result-Zustand.**
 
 Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 2026 gelten zusätzlich und bei den nachfolgend benannten Konflikten vorrangig. Sonstige normative Spezifikationsinhalte werden nicht stillschweigend abgeschwächt. Neue fachliche Widersprüche, fehlende zwingende Angaben und Sicherheitsprobleme sind offen zu benennen, nicht durch erfundene Annahmen oder Scheinerfolge zu lösen.
@@ -36,12 +36,12 @@ Laufzeitdaten und ist keine Start-/Resume-Anweisung.
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 31
+plan_revision: 32
 implementation_plan_commits_total: 900
 implementation_plan_commits_completed: 649
 last_completed_plan_commit: 15.l.W
 next_plan_commit: 15.l.R
-last_completed_numbered_bundle: 514
+last_completed_numbered_bundle: 515
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -69,6 +69,122 @@ in ihrer bisherigen Reihenfolge. M20 übernimmt die zusätzliche Gesamtmatrix
 in seinen vorhandenen Schritten 20.f, 20.h und 20.m.
 
 Nach tatsächlich erfolgreich ausgeführten, zum Commit passenden Verhaltenstests wird die betreffende Checkbox im selben Git-Commit gesetzt. Reguläre Produktcommits aktualisieren den Produktzähler; Audit-Nacharbeiten aktualisieren ausschließlich ihren Status und `next_audit_step`. Ein fehlgeschlagener Schritt bleibt offen. Git ist die Historie; das Dokument nimmt keinen eigenen noch unbekannten Commit-Hash auf. Vor dem nächsten Auftrag werden tatsächliche Git-Historie, Result-Logs und Planfortschritt abgeglichen. Bei Inkonsistenz nicht einfach weiterzählen.
+
+## OFF-PLAN – Historische Restore-Belege und aktuelle Prüfdienste (Bundle 515)
+
+**RESTORE-HISTORICAL-VALIDATION**, ausdrücklicher manueller Nutzerauftrag
+vom 29. Oktober 2026: „Ja mache das bundle für die Klärung nach deiner
+Empfehlung!“ Die zuvor vorgelegte Empfehlung wird damit normativ in
+Spezifikation **0.2.37 / 10.7.9** übernommen. Dieser Dokumentauftrag folgt
+unmittelbar aus der Nutzeranweisung und 2.4.3; er beansprucht kein aus alten
+Control-Verträgen abgeleitetes Budget. Control, Watcher und Laufzeitdaten
+bleiben unverändert. Die Entwicklungsentscheidung ist kein menschlicher
+Reviewnachweis für ein verwaltetes Artefakt.
+
+- [x] **RESTORE-HISTORICAL-VALIDATION:** Aktuelle vollständige Restore-Qualifikation und passive historische Ergebnisprüfung verbindlich trennen; aktive Katalogbindungen fortschreiben. Commit: `docs(spec): Historische Restore-Belege und aktuelle Prüfdienste trennen`.
+
+**Geprüfte Basis und Lücke.** Maßgeblich ist das erfolgreiche saubere Result
+von Bundle 514, `specroad-apply_Result_215320_1028_59c44a.zip`, SHA-256
+`d33219d1211569e8a2510829c21c724e84267a1d39641956c1b67ac98cb1d287`,
+Abschlusscommit `bb2a55dbf5f2b46afe3b6c4701bc2087284605db`, Repository-ID
+`a33ed6cf-0a97-4b73-b11a-d4239e7a2145`, Fingerprint `7c9d2a24e397e0e5`,
+Algorithmus `patchharbor-state-v1`. Root-Anleitung, Metadaten, Run- und
+Ausführungslogs, vollständiger Snapshot und tatsächliche technische Basis
+wurden geprüft. Die drei erfolgreichen OFF-PLAN-Commits von 514 endeten
+mit 7.399, 5.946 und 5.915 bestandenen parallelen Apply-Tests, zuletzt
+Sequenz 222 / Gruppe 0. Dies sind getrennte Teiltests auf getrennten
+Zwischenständen, kein gemeinsamer Vollsuite- oder Produktfreigabenachweis.
+
+10.7.1 fordert vollständige Fachprüfung, 10.7.2 bindet unabhängig prüfbare
+Originalbytes, 10.7.7/11.12 verlangen zugleich die passive Rückgabe eines
+vollständig abgeschlossenen Work-Ergebnisses. Die vorhandenen nativen
+Requirement-Approval- und Task-Done-Prüfkerne erwarten explizite vollständige
+Hosteingaben und tatsächliche Reviewverifikation. `approval_values.py`
+definiert ausdrücklich kein persistiertes Reviewformat. Die bisherige
+Restore-Qualifikation besitzt dafür keinen vollständigen Eingang; ihre
+Provider-Sperren dürfen nicht durch Erfolgslabels oder leere Callbacks
+entfernt werden. `restore_delivery.py` unterscheidet bereits native
+Ausführung von historischer Rückgabe. Zu klären waren Herkunft/Bindung
+der notwendigen Belege und die Grenze zwischen diesen beiden Prüfwegen.
+
+**Alternativen und Entscheidung.** Statuswerte, Hashes oder frühere grüne
+Tests als Freigabeersatz scheiden aus: Sie authentifizieren keinen Review.
+Eine neue Qualifikation des heutigen Projekts für jede terminale Rückgabe
+widerspräche 10.7.7/11.12 und würde Rootverlust falsch als neue fachliche
+Aufgabe behandeln. Dauerhaftes Ablehnen historischer Ressourcen erfüllt
+den beauftragten R-Umfang nicht. Gewählt ist deshalb die kleinste Trennung:
+explizit angebundene vorhandene native Dienste für aktuelle Qualifikation;
+vollständige passive Original-/Abschlussbindung ausschließlich für die
+Rückgabe bereits abgeschlossener Arbeit. Es entsteht kein neues persistiertes
+Reviewformat. Bestehende native Hosteingaben bleiben Hosteingaben; gespeicherte
+Originalbelege werden nur in ihrem bereits definierten Vertrag gelesen.
+Fehlende Pflichtfakten bleiben sperrend und werden nicht erfunden.
+
+**Abgleich mit 2.4.1.** (1) Betroffen ist nur der bestätigte Rest von 15.l.R,
+kein neues Feature oder vorgezogener Schritt. (2) Die beiden Prüfzwecke werden
+nach 10.7.9 explizit getrennt; keine gleichrangige Pflicht wird gestrichen.
+(3) Vollständige Fachgates, menschliche Reviews, Autorisierung, Scope,
+Sicherheitsgrenzen und Bestandskompatibilität bleiben erhalten. (4) Die Regel
+ist dokumentversioniert und ohne Datenmigration korrigierbar; bestehende
+Plan-, Work-, Ergebnis- und Nachweisbytes bleiben unverändert. (5) Die
+Definition der expliziten Eingänge behauptet weder vorhandene reale Reviews
+noch externe Fakten. Bei fehlenden tatsächlichen Eingaben bleibt der
+betroffene Aufruf mit konkretem Befund gesperrt. §2.4.2/2.4.4, §2.5 und
+BD-001 sowie sämtliche Produktfreigabegrenzen bleiben unverändert.
+
+**Zusätzliche verbindliche R-Abnahmen, noch nicht ausgeführt:**
+
+1. Aktuelle Planung und neue Vorwärtspublikation verwenden vollständige native
+   Fachgates auf tatsächlichen Originalbytes samt Modell-/Konfigurations- und
+   Projektionsbindung. Positive synthetische Testfälle benutzen echte native
+   Review-/Task-Prüfverträge; Testdaten werden nicht als reale Nutzerfreigabe
+   ausgegeben. Fehlende, stale, gefälschte, nichtmenschliche, abgelehnte und
+   kontextfremde Belege sperren mit dem passenden fachlichen Befund.
+2. CLI, strukturierter Aufruf, Planungsmodus und Work besitzen dieselben
+   erforderlichen Prüfdienste und Ablehnungen. Projekt-/Plan-/Workdaten können
+   keinen Prüfdienst oder Grant einschleusen. Aktuelle Autorisierung und
+   externe Verifierbeobachtungen werden bei Bedarf frisch geprüft, auch wenn
+   identische reine Byteprüfungen innerhalb des Aufrufs wiederverwendet werden.
+3. Vollständig abgeschlossene Workaufträge liefern nach Prüfung ihrer
+   Originalbindung, vollständigen Kette, Abschluss- und Ergebnisbytes das
+   gespeicherte Ergebnis ohne Projekt-/Quellroot und ohne neue Facharbeit oder
+   Writes. Die aktuelle Antwort weist `native_execution_checked=false` und
+   `checkpoint_changed=false` aus; gespeicherte fachliche Ergebnisbytes
+   ändern sich nicht. Manipulierte oder unvollständige Belege werden abgewiesen.
+4. Noch nicht abgeschlossene Arbeit und verlorener äußerer Abschluss nutzen
+   ausschließlich die passende native Journal-/Recovery-/Lieferregel, niemals
+   den historischen Rückgabepfad als Abkürzung. Vollzielabschluss, Teilzielrollback,
+   frische Writeautorisierung und getrennte Ownerübernahme bleiben belegt.
+5. Alte geschlossene Plan-/Work-/Journalformate und historische Nachweise
+   behalten ihre Originalbytes und Verträge. Keine zusätzlichen Belegfelder,
+   stillen Migrationen oder aus Daten geladenen Prüffunktionen. Relevante
+   bestehende Regressionen bleiben grün.
+
+**Vollständiger Rest und Liefergrenze.** 15.l.R bleibt insgesamt offen:
+öffentliche Command-/CLI-Integration, Planungsmodus und Work-Parität,
+vollständige historische Receipt-/Recovery-Audit-Faltung, Lifecycle- und
+Spezialistenbelege, unabhängige Evidence-Policy, weitere geschützte Ressourcen,
+Konfigurations-/Dokumentprüfungen, partitionierbarer Planungs-Snapshot,
+Workstatus-/Cancel-/Exportgrenzen und die vollständigen Crash-/I/O- und
+Sicherheitsabnahmen einschließlich Integration und gezielter paralleler
+Regression. 15.l.C folgt erst nach vollständigem R-Abschluss. Vorhandene
+unfertige Produktarbeit wird erhalten und ist nicht Bestandteil dieser ZIP.
+Die Klärung ist ein ausdrücklich beauftragter Dokumentauftrag, keine weitere
+R-Teilimplementierung und keine durch Laufzeit oder Komplexität begründete
+Halbierung. Produktstand bleibt **649/900**, zuletzt **15.l.W**, nächstens
+**15.l.R**; SR-TC-0461 und SR-TC-0462 bleiben `partial`.
+
+**Prüfung und Übergabe.** Nur Spezifikation, Plan und aktive Katalogbindungen
+werden ausgeliefert. Kein neues Dokumentationstestprogramm und kein Dev-
+Volltest; vollständige Collection/Katalogprüfung, Payload-/Syntax- und native
+ZIP-Prüfung bleiben Pflicht. Beim Apply gilt unverändert die nächste
+parallele N=3-Gruppe minus eingefrorener Ausschlussliste: Sequenz 223 /
+Gruppe 1. Erst nach deren Erfolg wird der OFF-PLAN-Marker gesetzt und der
+eine Dokumentcommit erzeugt; R/C und Produktzähler bleiben offen. Der
+Paketstatus ist `spec_clarification`. Veröffentlichung der einzigen geprüften
+ZIP erfolgt atomar über Exchange; danach endet der Auftrag ohne Applystart,
+Warteschleife oder Fortsetzung der Automatik. Historische Nachweise bleiben
+unverändert an ihre ursprüngliche Spezifikation gebunden.
 
 ## OFF-PLAN – Entwicklungsworkflow vereinfachen (Bundle 514)
 
@@ -30840,6 +30956,8 @@ noch nicht beobachtet. Native ZIP-Prüfung, SHA-256 und atomare Exchange-
 **Exakte Commit-Message:** `15.l.R feat(bundle): Restore veröffentlichen und Crashabsicherung vervollständigen`
 
 **Vervollständigung:** Quellenwechsel, unvollständige Sicherung und Crash erhalten ursprüngliche Journale und Wiederherstellungsdaten.
+
+**Verbindliche Ergänzung:** Aktuelle Qualifikation, historische Originalbelege und passive Rückgabe vollständig abgeschlossener Workaufträge folgen zusätzlich Spezifikation 10.7.9 und den fünf offenen R-Abnahmen unter OFF-PLAN RESTORE-HISTORICAL-VALIDATION (Bundle 515). Alle übrigen Pflichtabnahmen dieses Schritts einschließlich vollständiger Integration und Crash-/I/O-Matrix bleiben erforderlich.
 
 **Verhaltensabnahme:** R-47 sowie Einzellauf-/Workparität weisen vollständigen Zustand oder gesperrten Recoveryfall nach. Die explizite Übernahme eines verwaisten äußeren Restore-Work-Owners und ihre getrennten nativen Belege folgen zusätzlich 10.7.8 sowie den offenen positiven, negativen und Crashabnahmen unter OFF-PLAN RESTORE-WORK-OWNER-HANDOFF (Bundle 510). Die passive Restore-Workbindung, Originalakteur-/Requesttreue, aktuelle Recoveryautorisierung und der Vorrang der nativen Journalwahrheit folgen zusätzlich 10.7.7 sowie den offenen Abnahmen unter OFF-PLAN RESTORE-WORK-BINDING (Bundle 507). Die W-Nachweise bleiben zusätzlich grün. Die CLI-Modi, Quellart, operativen Baselinewerte, Root-/Dateipaare und der spezialisierte Preflight folgen zusätzlich 10.7.6 sowie den offenen Abnahmen unter OFF-PLAN RESTORE-CLI-BINDING (Bundle 504); normale Befehle und aktuelle Autorisierung behalten ihre Grenzen. Die explizite Ownerübergabe folgt zusätzlich 10.7.5 und den offenen positiven, negativen und Crashabnahmen unter OFF-PLAN RESTORE-OWNER-HANDOFF (Bundle 500); der allgemeine Lock-Recovery-Weg und gewöhnliche Transaktionsübernahmen behalten ihre bisherigen Grenzen.
 

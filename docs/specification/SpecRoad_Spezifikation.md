@@ -1,21 +1,21 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.36
+## Version 0.2.37
 
 | Feld | Wert |
 |---|---|
 | Dokument-ID | `SR-SPEC-0001` |
-| Dokumentversion | `0.2.36` |
+| Dokumentversion | `0.2.37` |
 | Zielrelease | `SpecRoad Single-Repository Workbench 0.2.0` |
 | Status | **Fachlich konsolidierte Arbeitsgrundlage; technische Reviewentscheidung gesondert dokumentiert, formale Baseline-Freigabe und Produktabnahme nicht durch dieses Dokument erklärt** |
-| Stand | 28. Oktober 2026 |
+| Stand | 29. Oktober 2026 |
 | Sprache | Deutsch; technische Feldnamen, Enum-Werte und CLI-Kommandos Englisch |
-| Fachliche Quelle | **Diese Repositoryfassung v0.2.36 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.36 liegt mit dieser Änderung nicht vor.** |
+| Fachliche Quelle | **Diese Repositoryfassung v0.2.37 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.37 liegt mit dieser Änderung nicht vor.** |
 | Bearbeitbare Satzquelle | Diese Datei; eine spätere PDF muss denselben versionierten Inhalt wiedergeben. |
-| Vorgängerversion | Repository-Spezifikation v0.2.35 vom 27. Oktober 2026; historische Nachweise bleiben unverändert. |
-| Prüf- und Entscheidungsgrundlage | Ausdrücklicher Nutzerauftrag WORKFLOW-514 vom 28. Oktober 2026; keine delegierte Erweiterung von Produktfreigaben. |
-| Änderungsart | Entwicklungsworkflow: feste Laufzeitauswahl zusätzlich zu N=3 und vollständige Planschritte mit belegter rekursiver Halbierung; keine neue Requirement-ID oder Produktposition. |
+| Vorgängerversion | Repository-Spezifikation v0.2.36 vom 28. Oktober 2026; historische Nachweise bleiben unverändert. |
+| Prüf- und Entscheidungsgrundlage | Ausdrücklicher manueller Nutzerauftrag zur empfohlenen Klärung RESTORE-HISTORICAL-VALIDATION vom 29. Oktober 2026; keine Produktfreigabe. |
+| Änderungsart | Restore: aktuelle vollständige Qualifikation und passive historische Ergebnisprüfung nach 10.7.9 trennen; keine neue Requirement-ID, Produktposition oder persistierte Freigabe. |
 
-> **Verbindlicher Quellenwechsel:** Der ausdrückliche Workflow-Auftrag schreibt die Repository-Spezifikation als v0.2.36 fort. Frühere PDF- und Reviewnachweise bleiben historisch gebunden; keine Produktfreigabe wird erklärt.
+> **Verbindlicher Quellenwechsel:** Der ausdrücklich bestätigte Klärungsauftrag schreibt die Repository-Spezifikation als v0.2.37 fort. Frühere PDF- und Reviewnachweise bleiben historisch gebunden; keine Produktfreigabe wird erklärt.
 
 > **Fortbestehende Arbeitsprinzipien:** Weiche Budgets führen zu sparsamer vollständiger Weiterarbeit oder gesicherter Fortsetzung über mehrere Aufrufe beziehungsweise Prompts. Es werden keine erforderlichen Arbeiten stillschweigend ausgelassen. Reale Host-, Speicher-, Berechtigungs- und Sicherheitsgrenzen bleiben wirksam.
 
@@ -2722,6 +2722,125 @@ verwendbarer CLI-/strukturierter Pfad, echte Prozessabbrüche sowie positive
 und negative Verhaltensnachweise dieser Regel bleiben Abnahmen von 15.l.R.
 
 
+#### 10.7.9 Aktuelle Restore-Qualifikation und historische Ergebnisprüfung
+
+**RESTORE-HISTORICAL-VALIDATION**, ausdrücklich bestätigte manuelle Klärung
+vom 29. Oktober 2026. Diese Regel konkretisiert 10.7.1–10.7.3, 10.7.7 und
+11.12. Sie gewährt weder eine fachliche Freigabe noch eine neue Recovery-
+oder Schreibberechtigung. Alle Erhaltungs-, Review-, Lifecycle-, Spezialisten-
+und Sicherheitsgates bleiben Pflicht. Insbesondere ist die Gültigkeit von
+Originalbytes von der gegenwärtigen fachlichen Qualifikation zu trennen.
+
+**Aktuelle vollständige Qualifikation.** Planung und jeder neue Versuch einer
+Vorwärtspublikation MÜSSEN die jeweils vorgeschriebenen vollständigen nativen
+Modell-, Historien-, Lifecycle- und typspezifischen Prüfungen ausführen.
+Dazu zählen die tatsächlichen Requirement-Approval-, Relationsreview-,
+Task-Done-, Evidence-, Baseline-, Dokument-, Konfigurations- und sonstigen
+für den Inhalt erforderlichen Fachprüfungen. Die Quell-/Ziel-, Herkunfts-,
+Bestands-, Lock- und Autorisierungsgates bleiben getrennt wirksam; eine
+frühere Planprüfung berechtigt nicht zu einer späteren Publikation.
+
+Die benötigten Prüfdienste MÜSSEN für den konkreten Aufruf explizit aus
+vertrauenswürdig installiertem Hostcode an die nativen Prüfkerne gebunden
+werden. Der Host MUSS die vorhandenen vollständigen nativen Eingabe- und
+Verifierverträge verwenden; ein generisches `passed` oder ein leerer
+Erfolgscallback ersetzt keinen Dienst. Plan-, Projekt-, Work-, Archiv- und
+ZIP-Daten DÜRFEN NICHT Code, Callbacknamen, Plugins, Vertrauen oder einen
+Grant registrieren. CLI, strukturierter Aufruf und Work MÜSSEN denselben
+vertrauenswürdigen Adapter und dieselben fachlichen Pflichtgates erreichen.
+Diese Einbindung startet keinen zusätzlichen Analyzer oder externen Dienst.
+
+**Herkunft der fachlichen Belege.** Für eine benötigte menschliche Entscheidung
+MUSS der Host den tatsächlichen ursprünglichen Reviewbeleg über den dafür
+bereits vorgesehenen vertrauenswürdigen nativen Prüfweg liefern. Ein bereits
+versioniert gespeicherter Nachweis wird aus seinen unveränderten Originalbytes
+und Referenzen gelesen; ein nur als native Hosteingabe definierter Review
+bleibt eine explizite Hosteingabe und wird nicht als neues Dateiformat erraten.
+Insbesondere sind Requirement-Approval-Eingabewerte kein persistiertes
+Reviewformat. Ein Beleglabel, `actor_type=human`, Containerhash, alter grüner
+Testlauf oder Artefaktstatus authentifiziert die Entscheidung nicht.
+
+Der jeweilige native Verifier MUSS die wirkliche Entscheidung, ihren Akteur
+und ihre Herkunft nach seinem bestehenden Vertrag prüfen. Die Bindung MUSS
+alle dort geforderten tatsächlichen Originalbytes, Identitäten, Revisionen,
+vollständigen Modell-/Profil-/Konfigurationskontexte und fachlichen
+Projektionen umfassen; bei gespeicherten Zuständen gilt der native
+Prüfmodus für diesen Zustand, nicht eine neue Lifecycletransition. Fehlende
+Herkunft DARF NICHT aus heutigen Dateien des beschädigten Projekts ergänzt
+werden. Fehlende, unlesbare, stale, fremd gebundene, gefälschte, abgelehnte
+oder nichtmenschliche Pflichtbelege erlauben keinen positiven Fachentscheid.
+Der Befund MUSS das betroffene Objekt und die fehlende beziehungsweise
+verletzte Pflicht nennen, ohne einen Review oder eine Risikoakzeptanz zu
+erfinden. Ein nicht verfügbarer Pflichtdienst bleibt sperrend. Sein bloßes
+Sperren erfüllt jedoch nicht die positive R-Abnahme des unterstützten Falls.
+
+**Passive Originalbindung.** Das Lesen eines gespeicherten Restore-Plans
+MUSS dessen geschlossene Formatversion, vollständige Originalobjekte,
+Größen-/Hashbindungen, Identitäten, Projekt-/Actor-/Request-/Auswahlbindung
+und innere Konsistenz gemäß 10.7.2 prüfen, ohne fehlende Bytes durch heutige
+Projektdateien zu ersetzen. Diese reine Prüfung DARF intern separat von
+der aktuellen fachlichen Qualifikation erfolgen. Ihr Ergebnis DARF NICHT
+als aktuell qualifizierter Plan oder als Berechtigung an einen Schreibpfad
+weitergereicht werden. Jeder aktive Pfad MUSS die zusätzlich für seinen
+Zustand erforderlichen nativen Gates selbst verlangen. Eine solche Trennung
+ändert weder den geschlossenen Plan noch seine Hashprojektion.
+
+**Vollständig abgeschlossene Workaufträge.** Nur ein tatsächlich vollständig
+abgeschlossener Auftrag mit unabhängig gebundener Anfangsbasis, vollständiger
+Checkpoint-/Objektkette, passenden nativen Abschluss- und Lieferbelegen und
+unveränderten Ergebnisbytes darf seinen gespeicherten Ergebnisdatensatz
+passiv zurückgeben. Die erforderlichen Belege stammen ausschließlich aus
+den bereits gespeicherten Originalobjekten, Checkpoints und Abschlussdaten
+dieses Auftrags; ein Statuswort allein genügt nicht. Alle vorhandenen
+Typ-, Versions-, Build-, Pfad-, Sicherheits- und Bindungsprüfungen bleiben
+verbindlich. Manipulation, fehlende Pflichtbytes oder widersprüchliche
+Abschlussketten sperren die Rückgabe.
+
+Diese Rückgabe MUSS auch nach Änderung oder Verlust des damaligen
+Projekt-/Quellroots möglich sein, sofern sämtliche für diese passive Prüfung
+gebundenen Workbytes erhalten und gültig sind. Sie führt keine neue
+Projektqualifikation, externe Reviewbeobachtung, Recoveryaktion oder
+Publikation aus. Der gespeicherte Ergebnisdatensatz bleibt unverändert;
+seine historische Erfolgsangabe darf nicht als heutiger Projekterfolg
+umgedeutet werden. Die maschinenlesbare Restore-Work-Antwort behält die
+bestehende Unterscheidung: Bei rein historischer Rückgabe sind
+`native_execution_checked=false` und `checkpoint_changed=false`. Diese
+Felder bezeichnen die Arbeit des aktuellen Aufrufs und verleihen weder
+Review-, Release- noch Schreibbefugnis. Die fachlichen Ergebnisbytes dürfen
+nicht allein zur Kennzeichnung der Wiederholung umgeschrieben werden.
+
+Unvollständige Aufträge und ein verlorener äußerer Abschlusscheckpoint
+bekommen diese Ausnahme ausdrücklich nicht. Dort bleiben native
+Journalwahrheit, zulässige Abschlussrekonstruktion beziehungsweise Rollback
+und die jeweils erforderlichen aktuellen Prüfungen aus 10.7.3/10.7.7
+maßgeblich. Eine vorgezogene frische Herkunfts- oder Vollmodellprüfung darf
+notwendige native Recovery nicht verdecken. Jeder tatsächliche Write braucht
+weiterhin aktuelle Autorisierung; gespeicherte Prüf- oder Abschlussdaten
+ersetzen sie nicht. Eine nötige Ownerübernahme bleibt ein gesonderter
+expliziter Vorgang nach 10.7.5/10.7.8.
+
+**Persistenz, Wiederverwendung und Fehler.** Diese Klärung führt keine neuen
+persistierten Belegfelder oder Reviewcontainer ein. Bestehende Pläne,
+Workdaten, Journale, Ergebnisse und historische Nachweise bleiben in ihren
+jeweiligen geschlossenen Versionen und ursprünglichen Bytes gültig; es gibt
+keine stille Ergänzung, Umdeutung oder Migration. Sollte eine weitere
+Produktänderung zusätzliche persistierte Belege benötigen, MUSS deren
+vollständiger geschlossener, versionierter Lese-/Herkunfts- und Hashvertrag
+zuerst ausdrücklich spezifiziert werden; die vorliegende Regel erteilt dafür
+keine implizite Formatbefugnis.
+
+Nur reine Prüfungen unveränderlicher identischer Eingaben dürfen innerhalb
+eines Aufrufs wiederverwendet werden. Aktuelle Autorisierung, Owner-/Root-
+Beobachtungen und veränderliche externe Verifierergebnisse DÜRFEN NICHT als
+Byteprüfung gecacht oder als wiederverwendbarer Grant persistiert werden.
+Fehlende oder ungültige gespeicherte Belegbytes ergeben 3, tatsächliche
+I/O-/Recoveryblocker 5, abweichende Bindungen 6 und Sicherheits-/Berechtigungs-
+verstöße 7 gemäß den bestehenden Restore-/Workverträgen; fehlende explizite
+Aufrufangaben bleiben 2. Ein Fehler wird nicht zu einem historischen Erfolg
+herabgestuft. Die vollständigen positiven, negativen, Integrations- und
+Crash-/I/O-Abnahmen dieser Unterscheidung bleiben Teil von 15.l.R.
+
+
 ### 10.8 Scope Descriptor und Scope-Closure
 
 Jede Operation mit Modellumfang verwendet genau einen kanonischen Scope Descriptor:
@@ -3693,7 +3812,7 @@ python3 specroad.pyz work prompt ./arbeit --format pretty
 python3 specroad.pyz work export ./arbeit --output ./arbeit.specroad-work.zip
 ```
 
-Die Beispiele beschreiben mögliche aufeinanderfolgende Aufrufe, keinen automatisch laufenden Prozess. `work prompt`/`export` sind nur notwendig, solange noch Arbeit offen ist. Ein bereits abgeschlossenes `work resume` liefert ohne erneutes Rechnen das vollständige gespeicherte Resultat. Ein normaler Promptwechsel verändert weder Daten noch Request-ID.
+Die Beispiele beschreiben mögliche aufeinanderfolgende Aufrufe, keinen automatisch laufenden Prozess. `work prompt`/`export` sind nur notwendig, solange noch Arbeit offen ist. Ein bereits abgeschlossenes `work resume` liefert ohne erneutes Rechnen das vollständige gespeicherte Resultat. Ein normaler Promptwechsel verändert weder Daten noch Request-ID. Für Restore konkretisiert 10.7.9 die passive Prüfung des vollständig gebundenen historischen Abschlusses und ihre maschinenlesbare Abgrenzung von aktueller Qualifikation; unvollständige Aufträge behalten sämtliche vorgeschriebenen aktuellen Gates.
 
 
 ---

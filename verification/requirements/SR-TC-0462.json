@@ -2,7 +2,7 @@
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0462",
   "requirement_id": "SR-REQ-0462",
-  "specification_sha256": "a65377cd0d54a80fb62bee38ea073e5dd56f19c020d6d39a5fff1d8fc3dddde1",
+  "specification_sha256": "8e7a9a3e47fcae96fb8661e34fb8a8c868988bc9240df04a29a888422b98bd12",
   "primary_verification_id": "SR-VER-0031",
   "implementation_status": "partial",
   "method": "automated_behavior",
@@ -893,6 +893,7 @@
   ],
   "open_items": [
     "15.l.R remains open: CLI integration and Work parity, exhaustive durable-boundary and I/O matrix, and remaining integration acceptance are mandatory. This native recovery substage is not completion of position 650 or a complete Restore/release claim.",
-    "Historical lifecycle/specialist evidence, independent-policy Evidence, further protected record kinds, prior recovery audits and general completed-receipt history folds remain mandatory before full Restore acceptance. Existing supported original receipt targets remain unchanged; missing necessary proof fails closed."
+    "Historical lifecycle/specialist evidence, independent-policy Evidence, further protected record kinds, prior recovery audits and general completed-receipt history folds remain mandatory before full Restore acceptance. Existing supported original receipt targets remain unchanged; missing necessary proof fails closed.",
+    "RESTORE-HISTORICAL-VALIDATION / specification 10.7.9 is specified, not implemented: actual native host review/service inputs and full contextual binding for current qualification; separately verified passive terminal Work replay with unchanged saved result bytes, native_execution_checked=false and checkpoint_changed=false. Missing/forged/stale/nonhuman/rejected/foreign proof must fail closed. CLI/planning/Work parity, fresh write authorization, incomplete-Work recovery, old-byte compatibility and all existing R acceptance remain mandatory."
   ]
 }
