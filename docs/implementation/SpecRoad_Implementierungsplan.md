@@ -41,7 +41,7 @@ implementation_plan_commits_total: 900
 implementation_plan_commits_completed: 649
 last_completed_plan_commit: 15.l.W
 next_plan_commit: 15.l.R
-last_completed_numbered_bundle: 513
+last_completed_numbered_bundle: 514
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -81,7 +81,7 @@ Auftrags; sie ersetzt keine späteren commitgebundenen Apply-Gates.
 
 - [x] **WORKFLOW-514.W:** Laufzeiten erfassen, eine feste langsamste Fünftelmenge bilden und nur die automatische N=3-Auswahl filtern; Arbeitsregeln gemeinsam aktualisieren. Commit: `test(workflow): Feste Laufzeitauswahl und vollständige Arbeitspakete einführen`.
 - [x] **WORKFLOW-514.R:** Unvollständige/mehrdeutige Messungen, unveränderliche Listen, explizite ungefilterte Auswahl und Laufbindung robust prüfen. Commit: `test(workflow): Laufzeitfilter und ungefilterte Prüfwege absichern`.
-- [ ] **WORKFLOW-514.C:** Gemeinsame Timing-Verträge ohne Verhaltensänderung bereinigen. Commit: `refactor(testing): Laufzeitverträge gemeinsam nutzen`.
+- [x] **WORKFLOW-514.C:** Gemeinsame Timing-Verträge ohne Verhaltensänderung bereinigen. Commit: `refactor(testing): Laufzeitverträge gemeinsam nutzen`.
 
 **W-Nachweis:** 215 gezielte parallele Verhaltenstests bestanden; darunter
 echte erfolgreiche und fehlgeschlagene Messläufe in isolierten kleinen
@@ -116,6 +116,11 @@ belegten Messcode-Korrektur. Originalquellen und Übernahme sind in der Liste ge
 Der Messstand liegt vor Aufnahme der Liste; die aktuelle R-Fassung
 wird anschließend gezielt geprüft. C ändert nur Struktur. Dieser
 Messbeleg wird nicht als Vollsuite-Nachweis späterer Stände ausgegeben.
+
+**R-Nachweis:** Die eingefrorene reale Liste und ihre aktuelle Einbindung
+sind durch die gezielte parallele Verhaltenssuite geprüft. C trennt
+Messbeobachtung und feste Auswahl; AST-Vergleich bestätigt unveränderte
+Funktions- und Klassenkörper. Bestehende Tests bleiben bytegleich.
 
 **Abnahme:** Vollständige echte Messung mit eindeutigen parametrisierten
 Identitäten und drei Phasen; floor(N/5) feste Ausschlüsse, stabile Tie-Breaks;
