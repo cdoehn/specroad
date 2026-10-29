@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 33 · **Stand:** 29. Oktober 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.38
+**Planrevision:** 34 · **Stand:** 29. Oktober 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.39
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 Schritte und 900 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; die ausdrücklich genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wird nach 10.7.10 innerhalb von 15.l.R vorgezogen. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -9,7 +9,7 @@ Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 S
 
 Fachliche Grundlage ist [`docs/specification/SpecRoad_Spezifikation.md`](../specification/SpecRoad_Spezifikation.md), einschließlich aller konsolidierten Korrekturen, 742 Requirements, 51 Verifikationsverträge, 46 Szenario-/E2E-Identitäten sowie R-01 bis R-75, Anhang U und den PatchHarbor-Rundweg aus Anhang W. Der [`Prüfbericht`](../reviews/SpecRoad_v0.2.7_Implementierungsreife_Pruefbericht.md) ist ein vorgelagerter Entwurfsreview, kein späterer Produktnachweis.
 
-Gebundene Spezifikations-SHA-256: `f237ebf6c5f3629bbb36fb284052270ecb126df947845952d0ac36226af6c5d0`.
+Gebundene Spezifikations-SHA-256: `f1a0845fd53510162f35e481b7467235601afd1ae1e68e149586b76962c22f1a`.
 Planungsbasis: Commit `fe2661d02ecf2f7eb483b58a4487eb009c6b3846`; sauberes Result-Bundle `specroad_Result_120209_0914_df3504.zip`; Repository-ID `3d2576df-d611-46fc-9d2b-92869468aaca`. Diese Angaben dokumentieren die Entstehung des Plans, nicht die zukünftige Patchbindung. **Jedes spätere Patchpaket bindet den dann aktuellen tatsächlichen Result-Zustand.**
 
 Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 2026 gelten zusätzlich und bei den nachfolgend benannten Konflikten vorrangig. Sonstige normative Spezifikationsinhalte werden nicht stillschweigend abgeschwächt. Neue fachliche Widersprüche, fehlende zwingende Angaben und Sicherheitsprobleme sind offen zu benennen, nicht durch erfundene Annahmen oder Scheinerfolge zu lösen.
@@ -36,12 +36,12 @@ Laufzeitdaten und ist keine Start-/Resume-Anweisung.
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 33
+plan_revision: 34
 implementation_plan_commits_total: 900
 implementation_plan_commits_completed: 649
 last_completed_plan_commit: 15.l.W
 next_plan_commit: 15.l.R
-last_completed_numbered_bundle: 516
+last_completed_numbered_bundle: 517
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -69,6 +69,96 @@ in ihrer bisherigen Reihenfolge. M20 übernimmt die zusätzliche Gesamtmatrix
 in seinen vorhandenen Schritten 20.f, 20.h und 20.m.
 
 Nach tatsächlich erfolgreich ausgeführten, zum Commit passenden Verhaltenstests wird die betreffende Checkbox im selben Git-Commit gesetzt. Reguläre Produktcommits aktualisieren den Produktzähler; Audit-Nacharbeiten aktualisieren ausschließlich ihren Status und `next_audit_step`. Ein fehlgeschlagener Schritt bleibt offen. Git ist die Historie; das Dokument nimmt keinen eigenen noch unbekannten Commit-Hash auf. Vor dem nächsten Auftrag werden tatsächliche Git-Historie, Result-Logs und Planfortschritt abgeglichen. Bei Inkonsistenz nicht einfach weiterzählen.
+
+## OFF-PLAN – Restore-Umfang und Legacy-Voraussetzung klarstellen (Bundle 517)
+
+**RESTORE-SCHEMA-SCOPE**, ausdrückliche Nutzerfreigabe vom 29. Oktober 2026:
+„Ich erteile die Freigabe. Mache den weiteren Schritt.“ Genehmigt wurde der
+zuvor konkret vorgeschlagene Umfang: vollständiges 15.l.R für das vorhandene
+0.2-Format; sichere Abweisung nicht unterstützter deklarierter Altformate;
+positive 0.1-Unterstützung erst auf verbindlicher Quellgrundlage, Migration
+weiter in M16; Korrektur der pauschalen Forderung nach echten historischen
+Produktivdaten. Dies ist eine manuelle Scope-/Kompatibilitätsentscheidung,
+keine aus SPECROAD-DECISION-1 abgeleitete Detailvollmacht. Die vorherige
+Freigabe zur Vorziehung eines lesenden Legacy-Kerns wird insoweit ersetzt.
+RESTORE-PROPOSAL-PREREQUISITE und alle übrigen R-Pflichten bleiben bestehen.
+
+- [x] **RESTORE-SCHEMA-SCOPE:** Unterstützten Restoreumfang und Legacy-Voraussetzung verbindlich korrigieren und aktive Katalogbindungen fortschreiben. Commit: `docs(spec): Restore-Umfang und Legacy-Voraussetzung klarstellen`.
+
+**Geprüfte technische Basis.** Sauberes erfolgreiches Result von Bundle 516:
+`specroad-apply_Result_104417_1029_a7a40a.zip`, SHA-256
+`61940e56d3f08058fe3d69a05999b25d883794fdcb87a18f052aa269097920f2`,
+Abschlusscommit `df045ed438e1fed317da7c6e7ea1c919b06c4835`, Repository-ID
+`a33ed6cf-0a97-4b73-b11a-d4239e7a2145`, Fingerprint `7c9d2a24e397e0e5`,
+Algorithmus `patchharbor-state-v1`. Metadaten, Logs, Snapshot und tatsächliche
+Basis wurden nativ geprüft; 516 bestand 5.946 parallele Apply-Teiltests,
+Sequenz 224 / Gruppe 2. Das ist kein Prüferfolg des offenen R-Arbeitsstands.
+Im geprüften Result ist ausschließlich Schema 0.2.0 implementiert; der
+Legacy-Anzeigeadapter erklärt selbst, kein validierender Quellleser zu sein.
+0.1-Dokumentversionen belegen keine veröffentlichte Datenformatversion.
+Über externe 0.1-Installationen wird keine Existenzbehauptung getroffen.
+
+**Lücke und Alternativen.** Die bisherige Spezifikation verlangte positive
+Legacy-Erhaltung, ohne den benötigten vollständigen 0.1-Quellvertrag
+bereitzustellen. Die unmittelbare lesende Vorziehung beseitigte diese
+fehlende Definition nicht. (a) Historische Felder/Hashalgorithmen aus 0.2 zu
+erfinden würde unbelegte Kompatibilität behaupten. (b) Auf vermeintlich
+vorhandene Produktivdaten zu warten wäre ohne Beleg keine belastbare
+Voraussetzung. (c) Den Quellvertrag in M16 explizit vorauszusetzen und den
+aktuellen R-Abnahmeumfang auf das definierte 0.2-Format zu beziehen ist die
+gewählte begrenzte, versionierte und rücknehmbare Korrektur. Die bestehende
+0.1-Zusage wird dabei ausdrücklich geändert; sie wird nicht als unverändert
+ausgegeben. Eine spätere Unterstützung erfordert Leser, Migration und
+Restore-Integration mit vollständigen positiven und negativen Nachweisen.
+
+**Normative Fortschreibung.** Spezifikation **0.2.39**, 10.7.1/10.7.11,
+10.19, SR-REQ-0272 und Anhang Q.0 sind maßgeblich. Q.0 gilt vorrangig für
+positive 0.1-Aussagen in Requirements, Szenarien, Verifikation und M16.
+Die pauschale Forderung nach echten historischen Daten im unveröffentlichten
+Legacy-Entwurf wird nicht übernommen. Synthetische Fixtures gegen einen
+verbindlich definierten Quellvertrag sind zulässig und bleiben als solche
+gekennzeichnet. Historische Nachweise, existierende Originale, menschliche
+Freigaben, Risikoentscheidungen und aktuelle 0.2-Verträge bleiben erhalten.
+
+**Verbindliche Abnahmen für den vollständigen R-Abschluss:**
+
+1. Sämtliche positiven 0.2-Restorefälle und übrigen Pflichten aus
+   10.7.1–10.7.10 erfüllen: Quelle/Ziel, unveränderbare Historien samt Closure,
+   Receipts/Audits, native Review-/Proposalprüfungen und aktuelle Freigaben.
+2. Deklarierte 0.1-/unbekannte Schema-Versionen und nicht unterstützte
+   Legacy-Manifestregistrierungen vor Änderungen an Projekt, projektinternen
+   Betriebsdaten oder vorhandenen Originalen mit Code 3
+   und präzisem Befund abweisen; keine stille Auslassung oder Migration.
+   Identitäts-, Sicherheits- und I/O-Fehler behalten ihre bisherigen Klassen.
+3. Dieselben Grenzen in öffentlichem Command/CLI, strukturiertem Aufruf,
+   Planung und Work nachweisen; Originalbytes bei Abweisung unverändert
+   lassen. Passive terminale Work-Rückgabe bleibt nach 10.7.9 getrennt.
+4. Alle übrigen W-/R-Regressionen, Owner-/Autorisierungs-, vollständigen
+   Crash-/I/O- und Wiederherstellungsabnahmen erfüllen. Die Scopekorrektur
+   schließt keine dieser Pflichten und ersetzt keine Verhaltensprüfung.
+5. Für M16 bleibt vor positiver 0.1-Unterstützung der vollständige versionierte
+   Quellvertrag aus Q.0 samt Leser-/Migrations-/Restore-Integration und
+   nachweislich passenden Testvektoren erforderlich. Ohne ihn wird weder
+   Kompatibilität behauptet noch M16 als erledigt markiert.
+
+**Arbeitsstand und Übergabe.** Vorhandene unfertige R-Implementierung,
+separat geprüfte Reparaturen und auch fehlgeschlagene/unterbrochene Diagnosen
+bleiben erhalten. Diese reine OFF-PLAN-Dokumentlieferung übernimmt keinen
+Produktcode und behauptet keinen grünen R-Abschluss. Produktstand bleibt
+**649/900**, zuletzt **15.l.W**, nächstens **15.l.R**; **15.l.C** bleibt offen.
+Aktive Katalogbindungen folgen dem neuen Spezifikationshash, historische
+Nachweise bleiben bytegebunden. Keine neuen Dokumentationstests, keine
+Dev-Vollsuite, keine künstliche W/R/C-Folge. Der einzelne Dokumentcommit
+folgt in Apply nach erfolgreicher fälliger paralleler N=3-Auswahl,
+**Sequenz 225 / Gruppe 0**, **5.915** Tests aus **22.263** gesammelten Fällen
+nach Abzug der unveränderten eingefrorenen Laufzeitenliste von der fälligen
+Gruppe (7.422 vor Filterung, davon 1.507 ausgeschlossen). Auswahl, Identitäten,
+Listenhash und Testzahl werden nativ
+gebunden; erst der erfolgreiche Commit setzt die OFF-PLAN-Checkbox und die
+Bundlezählung. Control/Watcher, Dienste, externe Konfiguration und
+Laufzeitdaten bleiben unverändert. Nach geprüfter atomarer ZIP-Übergabe
+endet dieser Auftrag; ein Folgeauftrag setzt nach zugeordnetem Result den
+vollständigen R-Rest fort.
 
 ## OFF-PLAN – Lesende Proposal-Prüfgrundlage vorziehen (Bundle 516)
 
@@ -31092,6 +31182,8 @@ noch nicht beobachtet. Native ZIP-Prüfung, SHA-256 und atomare Exchange-
 
 **Vervollständigung:** Quellenwechsel, unvollständige Sicherung und Crash erhalten ursprüngliche Journale und Wiederherstellungsdaten.
 
+**Aktueller Schemaumfang nach RESTORE-SCHEMA-SCOPE (Bundle 517):** Der vollständige R-Abschluss umfasst das definierte 0.2.0-Format und sämtliche übrigen Pflichten aus 10.7.1–10.7.10. Deklarierter nicht unterstützter 0.1-/Altbestand wird nach 10.7.11 vor Änderungen sicher abgewiesen. Positive Legacy-Abnahmen setzen Q.0 und die spätere M16-Integration voraus; die vorher genehmigte Legacy-Vorziehung ist insoweit ersetzt. Die fünf Abnahmen im OFF-PLAN-Abschnitt RESTORE-SCHEMA-SCOPE gelten zusätzlich. R und C bleiben offen.
+
 **Verbindliche Ergänzung:** Aktuelle Qualifikation, historische Originalbelege und passive Rückgabe vollständig abgeschlossener Workaufträge folgen zusätzlich Spezifikation 10.7.9 und den fünf offenen R-Abnahmen unter OFF-PLAN RESTORE-HISTORICAL-VALIDATION (Bundle 515). Alle übrigen Pflichtabnahmen dieses Schritts einschließlich vollständiger Integration und Crash-/I/O-Matrix bleiben erforderlich.
 
 **Vorgezogene Voraussetzung:** RESTORE-PROPOSAL-PREREQUISITE (Bundle 516), Spezifikation 10.7.10 und dessen sechs zusätzliche R-Abnahmen gelten ebenfalls. Sie führen die benötigten lesenden M18-Prüfverträge in diesen vollständigen R-Abschluss ein; kein öffentlicher Proposal-Schreibworkflow und keine M18-Planposition wird damit abgeschlossen.
@@ -32568,7 +32660,7 @@ Einzelauftrag ohne eigene Apply-, Status- oder Fortsetzungsschleife.
 
 **Vorgesehener Zuschnitt:** `src/specroad/migration/, src/specroad/legacy/, src/specroad/schemas/`. **Fachgrundlage:** §§ 10.7, 12.20, 12.43; Anhänge K, Q, S.7.
 
-**Abschlussgate:** 0.1.0 nach 0.2.0 ist anhand echter historischer Fixtures verlustfrei nachgewiesen; neue Pflichtangaben und aktuelle Freigaben werden nicht erfunden. Die hier beschriebenen Gates sind Sollkriterien, keine behaupteten Messergebnisse.
+**Abschlussgate nach RESTORE-SCHEMA-SCOPE:** Vor positiver 0.1-Unterstützung liegt der vollständige versionierte Quellvertrag nach Q.0 vor. Darauf wird 0.1.0 nach 0.2.0 einschließlich Restore-Integration verlustfrei geprüft; passende ausdrücklich synthetische Fixtures sind zulässig. Eine historische Verbreitung oder externe Kompatibilität wird damit nicht erfunden. Neue Pflichtangaben und aktuelle Freigaben werden nicht fingiert. Ohne Quellvertrag bleibt der betreffende Pfad unregistriert und M16 offen; die Abweisung allein erfüllt keinen positiven Migrationsnachweis. Die folgenden positiven 0.1-Abnahmen stehen unter dieser Voraussetzung, keine davon ist durch den 0.2-R-Abschluss erledigt.
 
 <a id="step-16-a"></a>
 ### 16.a – Versionsgraph und Migrationsschrittvertrag
@@ -32608,6 +32700,8 @@ Einzelauftrag ohne eigene Apply-, Status- oder Fortsetzungsschleife.
 <a id="step-16-b"></a>
 ### 16.b – Quellinventur und historischer Core-Leser
 
+**Voraussetzung nach RESTORE-SCHEMA-SCOPE:** Der vollständige verbindliche Quellvertrag aus Q.0 muss vorliegen, bevor ein 0.1-Leser als unterstützt registriert wird. Dieser Leser wird nicht mehr als positive Voraussetzung in 15.l.R vorgezogen. Implementierung und die nachfolgenden Abnahmen bleiben M16 zugeordnet; eine reine Anzeigeprojektion oder sichere Abweisung ersetzt sie nicht.
+
 **Anforderungsbezug:** `SR-REQ-0247`, `SR-REQ-0272`, `SR-REQ-0639`, `SR-REQ-0641`.
 **Verifikationsbezug:** `SR-VER-0018`, `SR-VER-0020`, `SR-VER-0042`. Die exakten SR-TC-Identitäten stehen in der vollständigen Matrix.
 
@@ -32616,7 +32710,7 @@ Einzelauftrag ohne eigene Apply-, Status- oder Fortsetzungsschleife.
 - [ ] **16.b.W** · Position **664/900** · Voraussetzung: `16.a.C`.
 **Exakte Commit-Message:** `16.b.W feat(migration): Quellinventur und historischer Core-Leser aufbauen`
 
-**Umsetzung:** Eingebaute 0.1-Leser und Inventur mit mutable, immutable_legacy und referenced_payload bereitstellen.
+**Umsetzung:** Nach erfülltem Q.0-Quellvertrag eingebaute 0.1-Leser und Inventur mit mutable, immutable_legacy und referenced_payload bereitstellen.
 
 **Verhaltensabnahme:** Gültige alte Projektfixture wird ohne Fremdpaket und ohne Änderung ihrer Bytes vollständig eingelesen.
 
@@ -32783,6 +32877,8 @@ Einzelauftrag ohne eigene Apply-, Status- oder Fortsetzungsschleife.
 <a id="step-16-g"></a>
 ### 16.g – Legacy-Manifest und Hashdomänen
 
+**Voraussetzung nach RESTORE-SCHEMA-SCOPE:** Manifest, Originalhashdomänen und Quellalgorithmen werden gegen den verbindlichen Quellvertrag nach Q.0 implementiert und geprüft. Der allgemeine Manifestentwurf allein belegt kein externes 0.1-Format. Diese Arbeit und ihre vollständigen Abnahmen bleiben offen in M16.
+
 **Anforderungsbezug:** `SR-REQ-0639`, `SR-REQ-0641`.
 **Verifikationsbezug:** `SR-VER-0042`. Die exakten SR-TC-Identitäten stehen in der vollständigen Matrix.
 
@@ -32887,6 +32983,8 @@ Einzelauftrag ohne eigene Apply-, Status- oder Fortsetzungsschleife.
 
 <a id="step-16-j"></a>
 ### 16.j – Historische Evidence und Baselines
+
+**Voraussetzung nach RESTORE-SCHEMA-SCOPE:** Historische Verifikation setzt die konkret festgelegten Quellalgorithmen und Prüffälle nach Q.0 voraus. Passende synthetische Originalbytes sind als Testdaten zulässig; ein wirklicher historischer Entscheid oder externe Verbreitung wird daraus nicht behauptet. Migrations- und spätere Restore-Integration bleiben vollständig erforderlich und offen.
 
 **Anforderungsbezug:** `SR-REQ-0639`–`SR-REQ-0640`, `SR-REQ-0642`, `SR-REQ-0725`.
 **Verifikationsbezug:** `SR-VER-0042`, `SR-VER-0049`. Die exakten SR-TC-Identitäten stehen in der vollständigen Matrix.

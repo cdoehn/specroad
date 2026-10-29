@@ -2,7 +2,7 @@
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0531",
   "requirement_id": "SR-REQ-0531",
-  "specification_sha256": "f237ebf6c5f3629bbb36fb284052270ecb126df947845952d0ac36226af6c5d0",
+  "specification_sha256": "f1a0845fd53510162f35e481b7467235601afd1ae1e68e149586b76962c22f1a",
   "primary_verification_id": "SR-VER-0023",
   "implementation_status": "partial",
   "method": "automated_behavior",
@@ -142,6 +142,7 @@
   "open_items": [
     "Actual partial-bundle acquisition/authentication belongs to M15; the full legacy reader/migration belongs to M16. Explicit source_kind is not proof of either origin.",
     "Complete end-user CLI/source-provider integration remains pending. Legacy relations remain passive and legacy semantics are not claimed valid.",
-    "M12/M13 computations remain unavailable; targeted development and rotating Apply partitions do not establish full-suite success."
+    "M12/M13 computations remain unavailable; targeted development and rotating Apply partitions do not establish full-suite success.",
+    "RESTORE-SCHEMA-SCOPE / Q.0 takes precedence for positive 0.1 qualification: a versioned complete source contract, source hash algorithms, closure/provenance and matching test vectors are required before supported registration and positive M16/Restore integration. Explicitly synthetic fixtures against that contract are permitted; real production data are not a general test prerequisite and historical external compatibility is not invented. Existing 0.2 identities/contracts, CLI aliases and passive presentation retain their documented limits. Current status and remaining M16 work are unchanged; no positive Legacy acceptance is claimed."
   ]
 }

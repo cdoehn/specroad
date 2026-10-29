@@ -1,21 +1,21 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.38
+## Version 0.2.39
 
 | Feld | Wert |
 |---|---|
 | Dokument-ID | `SR-SPEC-0001` |
-| Dokumentversion | `0.2.38` |
+| Dokumentversion | `0.2.39` |
 | Zielrelease | `SpecRoad Single-Repository Workbench 0.2.0` |
 | Status | **Fachlich konsolidierte Arbeitsgrundlage; technische Reviewentscheidung gesondert dokumentiert, formale Baseline-Freigabe und Produktabnahme nicht durch dieses Dokument erklärt** |
 | Stand | 29. Oktober 2026 |
 | Sprache | Deutsch; technische Feldnamen, Enum-Werte und CLI-Kommandos Englisch |
-| Fachliche Quelle | **Diese Repositoryfassung v0.2.38 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.38 liegt mit dieser Änderung nicht vor.** |
+| Fachliche Quelle | **Diese Repositoryfassung v0.2.39 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.39 liegt mit dieser Änderung nicht vor.** |
 | Bearbeitbare Satzquelle | Diese Datei; eine spätere PDF muss denselben versionierten Inhalt wiedergeben. |
-| Vorgängerversion | Repository-Spezifikation v0.2.37 vom 29. Oktober 2026; historische Nachweise bleiben unverändert. |
-| Prüf- und Entscheidungsgrundlage | Ausdrückliche Nutzerentscheidung RESTORE-PROPOSAL-PREREQUISITE vom 29. Oktober 2026: benötigte Prüfgrundlage vorziehen; keine Produktfreigabe. |
-| Änderungsart | Lesende Proposal-Prüfgrundlage für den vollständigen Abschluss von 15.l.R nach 10.7.10 vorziehen; bestehende Formate und Pflichtabnahmen erhalten. |
+| Vorgängerversion | Repository-Spezifikation v0.2.38 vom 29. Oktober 2026; historische Nachweise bleiben unverändert. |
+| Prüf- und Entscheidungsgrundlage | Ausdrückliche Nutzerentscheidung RESTORE-SCHEMA-SCOPE vom 29. Oktober 2026: Restore-Abnahme auf das definierte 0.2-Format beziehen und Legacy-Unterstützung an einen verbindlichen Quellvertrag binden; keine Produktfreigabe. |
+| Änderungsart | Ausdrücklich genehmigte Korrektur der bisherigen unbedingten 0.1-Zusage nach 10.7.11/Q.0; vollständige übrige R-Abnahmen und Proposal-Voraussetzung aus 10.7.10 bleiben erhalten. |
 
-> **Verbindlicher Quellenwechsel:** Der ausdrücklich bestätigte Klärungsauftrag schreibt die Repository-Spezifikation als v0.2.38 fort. Frühere PDF- und Reviewnachweise bleiben historisch gebunden; keine Produktfreigabe wird erklärt.
+> **Verbindlicher Quellenwechsel:** Der ausdrücklich bestätigte Klärungsauftrag schreibt die Repository-Spezifikation als v0.2.39 fort. Frühere PDF- und Reviewnachweise bleiben historisch gebunden; keine Produktfreigabe wird erklärt.
 
 > **Fortbestehende Arbeitsprinzipien:** Weiche Budgets führen zu sparsamer vollständiger Weiterarbeit oder gesicherter Fortsetzung über mehrere Aufrufe beziehungsweise Prompts. Es werden keine erforderlichen Arbeiten stillschweigend ausgelassen. Reale Host-, Speicher-, Berechtigungs- und Sicherheitsgrenzen bleiben wirksam.
 
@@ -101,7 +101,7 @@ Bei einem Widerspruch innerhalb dieser Dokumentversion gilt:
 3. `SR-DEC-*` hat Vorrang vor erläuterndem Text, Diagrammen und Beispielen.
 4. Beispiele sind niemals normativ, sofern sie nicht ausdrücklich als Testvektor bezeichnet sind.
 5. Zwei widersprüchliche `SR-REQ-*`-Anforderungen besitzen **keine implizite Rangfolge** nach Nummer, Position oder Spezifität. Ein solcher Fund ist ein Spezifikationsfehler, muss als Issue gelöst werden und verhindert die Freigabe.
-6. Diese Dokumentversion 0.2.38 ersetzt die frühere fachliche Arbeitsgrundlage vollständig. Bis zur gesonderten PDF-Veröffentlichung ist diese versionierte Repositorydatei maßgeblich. Eine spätere PDF muss inhaltsgleich sein; frühere PDFs werden nicht als Nachweis der neuen Verträge ausgegeben. Inhalte verschiedener Fassungen dürfen nicht zu einer Mischspezifikation kombiniert werden.
+6. Diese Dokumentversion 0.2.39 ersetzt die frühere fachliche Arbeitsgrundlage vollständig. Bis zur gesonderten PDF-Veröffentlichung ist diese versionierte Repositorydatei maßgeblich. Eine spätere PDF muss inhaltsgleich sein; frühere PDFs werden nicht als Nachweis der neuen Verträge ausgegeben. Inhalte verschiedener Fassungen dürfen nicht zu einer Mischspezifikation kombiniert werden.
 7. Eine nachträgliche Änderung dieser veröffentlichten Datei erfordert mindestens eine neue Patch-Dokumentversion; stille Korrekturen unter derselben Dokumentversion sind unzulässig.
 8. Eine normative Tabelle, auf die eine `SR-REQ-*`-Anforderung ausdrücklich als Algorithmus oder Matrix verweist, ist Bestandteil des Passkriteriums dieser Anforderung.
 
@@ -1703,6 +1703,13 @@ Normale Projektbefehle dürfen ein Modell erst laden, wenn keine unvollständige
 
 #### 10.7.1 Vollständige Quelle und erhaltende Restore-Policy `restore-preserve-v1`
 
+**Unterstützter Schemaumfang:** Für den vollständigen Abschluss von 15.l.R gilt
+10.7.11: sämtliche hier festgelegten Restore-Abnahmen für das definierte
+Schema 0.2.0, einschließlich seiner unveränderbaren Historien, bleiben Pflicht.
+Die spätere positive Einbindung von 0.1-Legacy-Ressourcen setzt Q.0 voraus.
+Bis dahin gelten die Schutz- und Abweisungsregeln aus 10.7.11; ein fehlender
+0.1-Leser ist keine Erlaubnis, solche Bestandsdateien zu verwerfen.
+
 Ein Restore wird in zwei expliziten Aufrufen vorbereitet und ausgeführt: `recover restore --from <SOURCE> --dry-run --output <EXTERNAL-PLAN>` erstellt ohne Projekt-/Betriebswrite einen gebundenen Restore-Plan; `recover restore --plan <EXTERNAL-PLAN> --expected-target-root <SHA256>` führt genau diesen Plan aus. Die getrennte ausdrückliche Auswahl alter aktiver Journale für Ausführung und Fortsetzung folgt 10.7.4. Quelle und Plan dürfen nicht gleichzeitig angegeben werden. Ein Aufruf ohne Dry-Run und ohne geprüften Plan wird mit Code 2 abgewiesen. Der Plan ist ein Recovery-Fachformat, kein regulärer Change Plan eines vermeintlich konsistenten Arbeitsstands. Er enthält `policy_version=restore-preserve-v1`, `project_id`, Quellart, Quellbytehash, Quell-Snapshotwurzel, Quell-Descriptor, gebundene Bestandsinventur, zusätzliche Erhaltungsobjekte, erwartete vollständige Zielwurzel, Zielpfade/-bytes/-hashes und die separat gehashte Sicherungsinventur.
 
 **Quellenqualifikation:** Zulässig sind ausschließlich (a) ein vollständig verifiziertes `project`-Bundle mit `read_only=false` oder (b) eine unveränderte `sealed` Baseline mit exakt `scope_kind=project`, Selector `{}`, `configuration_id=null`, `boundary_policy=closed`, vollständiger rekursiver Objektclosure und gültigem Manifest. Eine Baseline mit specification-, release-, document-, query-, explicit- oder konfiguriertem Scope ist auch bei gültigem Hash unzulässig. Der Baseline-Typ `working` oder `release` ersetzt diese Scopeprüfung nicht. Quellprojekt-ID und Zielprojekt-ID müssen gleich sein; bei beschädigter Konfiguration ist die ID aus unabhängig hashgebundenen Receipts, einer erhaltenen Baseline oder dem vorliegenden Recovery-Inventar zu bestätigen. Widersprüchliche oder nicht nachweisbare Identität wird nicht geraten.
@@ -1711,13 +1718,13 @@ Die Quelle muss alle fachlichen Dateien, semantische Konfiguration, aktiven Prof
 
 **Vollständiges Ziel und Historienerhaltung:** Ausgang des Zielplans ist der vollständig rekonstruierte Quellsnapshot. Bei einer Baselinequelle werden die Baseline-Datei selbst und ihre vollständigen Snapshotobjekte als explizite Erhaltungsobjekte hinzugefügt, soweit sie vor der Baseline-Erzeugung noch nicht in ihrem eigenen Snapshot vorhanden waren. Dies ist keine rekursive Erweiterung des gespeicherten Baseline-Manifests; dessen Originalbytes und Quellwurzel bleiben unverändert.
 
-Zusätzlich bleiben alle noch bytegültig verfügbaren unveränderbaren Evidence-, Baseline-, Relationsreview-, abgeschlossenen Proposal- und Legacy-Ressourcen samt ihren referenzierten Original-/Archivbytes erhalten. Identische Identität/Bytes werden dedupliziert; gleiche Identität mit abweichenden unveränderbaren Bytes ist ein Konflikt, keine Überschreibungsentscheidung. Für eine erhaltene historische Ressource werden keine fehlenden aktuellen Fachartefakte erfunden. Fehlt eine zur strukturellen Gültigkeit notwendige Ressource auch in der vollständigen Quelle, wird der Restore abgewiesen. Ein historisch stale Nachweis ist dagegen nicht automatisch strukturell ungültig.
+Zusätzlich bleiben alle noch bytegültig verfügbaren unveränderbaren Evidence-, Baseline-, Relationsreview-, abgeschlossenen Proposal-Ressourcen des unterstützten 0.2-Formats sowie später nach Q.0 unterstützten Legacy-Ressourcen samt ihren referenzierten Original-/Archivbytes erhalten. Identische Identität/Bytes werden dedupliziert; gleiche Identität mit abweichenden unveränderbaren Bytes ist ein Konflikt, keine Überschreibungsentscheidung. Für eine erhaltene historische Ressource werden keine fehlenden aktuellen Fachartefakte erfunden. Fehlt eine zur strukturellen Gültigkeit notwendige Ressource auch in der vollständigen Quelle, wird der Restore abgewiesen. Ein historisch stale Nachweis ist dagegen nicht automatisch strukturell ungültig.
 
 Aus aktuell lesbaren Artefakten, verifizierten vorhandenen Baselines und abgeschlossenen Receipts bekannte jemals freigegebene Standardartefakte dürfen nicht aus dem normativen Ziel verschwinden. Der Quellsnapshot muss ihre Identität weiter enthalten; eine nachweislich erfolgreich veröffentlichte höhere Revision darf nicht als normale Historienänderung durch eine niedrigere ersetzt werden. Wo die vorhandenen Belege keine sichere Unterscheidung zwischen veröffentlichtem Stand und unterbrochenem Zwischenstand erlauben, wird eine passendere vollständige Quelle verlangt statt Historie zu erraten. Das ist ein Integritäts-/Datenblocker, kein Budgetabbruch. Diese erhaltende Policy führt keinen automatischen semantischen Merge durch. Ein bloßer Wunsch, auf einen älteren fachlichen Stand zurückzukehren, wird als gesonderter autorisierter Change Plan im wiederhergestellten Projekt behandelt.
 
 Der Plan weist `source_snapshot_root` und `expected_target_root` getrennt aus. Die Zielwurzel wird **nach** sämtlichen ausdrücklich gelisteten Historienergänzungen über den vollständigen project-Scope berechnet; sie muss nicht der Quell-Snapshotwurzel gleichen. Bereits konsistente, außerhalb der Zielinventur liegende Repositorydateien einschließlich `.git` und Quellcode werden nicht verändert. Abgeschlossene lokale Receipts werden nicht stillschweigend gelöscht; ihre erneute Verwendung unterliegt weiterhin Projekt-, Request- und Hashbindung. Eine alte Erfolgsquittung ist kein Nachweis, dass jede ihrer Wirkungen noch zum gewählten Zielstand gehört.
 
-**Vor Veröffentlichung:** Der gesamte rekonstruierte Zielstand besteht Schema-, Identitäts-, Referenz-, Lifecycle-, Archiv-/Legacy- und Scope-Integritätsprüfungen. Er ist ein vollständiges Projekt, keine scheinbar reparierte Teilmenge. Fachlich negative, korrekt gespeicherte Reviews oder Testergebnisse dürfen erhalten bleiben; sie werden im Restore-Bericht als verbleibende fachliche Befunde gezeigt und nicht in bestandene Readiness umgedeutet. Vorhandene `approved`-Invarianten dürfen nicht verletzt bleiben; andernfalls ist eine passende Quelle notwendig. Es wird keine stillschweigende fachliche Statuskorrektur beim Restore erfunden.
+**Vor Veröffentlichung:** Der gesamte rekonstruierte Zielstand besteht Schema-, Identitäts-, Referenz-, Lifecycle-, Archiv- und Scope-Integritätsprüfungen sowie bei nach Q.0 unterstütztem Legacy-Bestand dessen vollständige Legacy-Prüfung. Nicht unterstützter deklarierter Legacy-Bestand wird nach 10.7.11 vor Änderungen abgewiesen. Der Zielstand ist ein vollständiges Projekt, keine scheinbar reparierte Teilmenge. Fachlich negative, korrekt gespeicherte Reviews oder Testergebnisse dürfen erhalten bleiben; sie werden im Restore-Bericht als verbleibende fachliche Befunde gezeigt und nicht in bestandene Readiness umgedeutet. Vorhandene `approved`-Invarianten dürfen nicht verletzt bleiben; andernfalls ist eine passende Quelle notwendig. Es wird keine stillschweigende fachliche Statuskorrektur beim Restore erfunden.
 
 **Sicherung und Commit:** Alle durch den Restore zu ersetzenden oder zu entfernenden bisherigen Bytes einschließlich beschädigter Dateien, sämtlicher betroffener Journale und historischer Zusatzinformationen werden vor Veröffentlichung unverändert in einer content-addressierten lokalen Sicherungssektion unter `.specroad/recovery/archive/` dauerhaft gesichert. Nicht lesbare notwendige Bestandsbytes, eine unvollständige Sicherung oder unzureichender echter Speicher verhindern den Commit; es gibt kein stilles Data-Loss-Flag. Die Sicherung ist ausdrücklich betrieblich und nicht Bestandteil der neuen fachlichen Modellwurzel. Sie ersetzt nicht die oben verlangte Erhaltung normativer unveränderbarer Ressourcen.
 
@@ -2937,6 +2944,78 @@ Hashcheck die geforderte fachliche Prüfung. Die folgenden Planabnahmen
 müssen vor R-Abschluss tatsächlich erfüllt sein; diese Dokumentänderung
 behauptet weder Implementierung noch erfolgreiche Produktabnahme.
 
+#### 10.7.11 Unterstützter Restore-Schemaumfang und Legacy-Voraussetzung
+
+**RESTORE-SCHEMA-SCOPE**, ausdrückliche Nutzerentscheidung vom 29. Oktober
+2026. Der Nutzer genehmigt die Korrektur der bisherigen unbedingten
+0.1-Kompatibilitätszusage und der daraus abgeleiteten R-Voraussetzung.
+Diese Entscheidung wird nicht aus SPECROAD-DECISION-1 abgeleitet. Sie
+ersetzt insoweit die vorherige Freigabe, einen lesenden Legacy-Kern aus
+16.b/16.g/16.j in 15.l.R vorzuziehen. Die genehmigte lesende Proposal-
+Voraussetzung aus 10.7.10 bleibt uneingeschränkt bestehen.
+
+**Aktueller positiver Abnahmeumfang.** 15.l.R MUSS Restore für das verbindlich
+definierte Schema **0.2.0** vollständig erfüllen. Sämtliche übrigen Pflichten
+aus 10.7.1–10.7.10 bleiben bestehen: vollständige Quelle und Zielqualifikation,
+Evidence-/Baseline-/Relationsreview-/Proposal-Historien und Originalclosure,
+Revisionen, Receipts und Audits, aktuelle Freigaben, öffentliche Commands/CLI,
+strukturierte Aufrufe, Planung, Work-Parität und die gesamte Crash-/I/O-Matrix.
+Hierdurch wird weder R als abgeschlossen markiert noch 15.l.C vorgezogen.
+Bestehende reguläre 0.2-Daten mit zulässigen übernommenen Identitäten sowie
+bereits definierte Legacy-Verträge innerhalb von 0.2 werden nicht allein
+wegen ihrer Bezeichnung aus dem unterstützten Umfang ausgeschlossen.
+„Definiert“ meint die geltenden beziehungsweise ausdrücklich unterstützten
+Schema- und Fachverträge, nicht beliebige frühere Entwurfssnapshots allein
+wegen desselben Versionslabels. Bestehende Original-, Journal- und Work-
+Kompatibilität bleibt erhalten; die separate Entwurfsmigration nach S.4
+und ihre Herkunftsbindung bleiben M16-Aufgaben. Passive Anzeigeadapter
+und bereits festgelegte CLI-Aliase werden durch diese Formatgrenze nicht
+entfernt oder als vollständige Legacy-Qualifikation umgedeutet.
+
+**Sichere Grenze.** Solange der 0.1-Quellvertrag aus Q.0 nicht verbindlich
+vorliegt und der zugehörige native Leser nicht geprüft implementiert ist,
+ist 0.1 kein positiv unterstütztes Restore-Quell- oder Bestandsformat.
+Eine als normative Ressource erkennbare Datei mit deklarierter 0.1- oder
+anderer nicht unterstützter Schema-Version sowie eine nicht unterstützte
+Legacy-Manifestregistrierung MUSS vor einer Änderung am Projekt, an
+projektinternen Betriebsdaten oder an vorhandenen Originaldaten mit präzisem
+Versions-/Quellvertragsbefund und Code 3 abgewiesen werden.
+Das gilt auch für entsprechende Ressourcen in der erforderlichen Archiv-
+oder Anhangclosure. Sie dürfen nicht als entbehrliche beschädigte Dateien
+übersprungen, überschrieben, umgedeutet oder still migriert werden.
+Vorhandene Originale bleiben unverändert. Bereits ausdrücklich zulässige
+externe Work-Checkpoints zur sicheren Vorbereitung folgen weiterhin O/P
+und 10.7.7; sie erteilen keine Projektwritebefugnis und müssen tatsächlichen
+Teilfortschritt ohne vollständige Qualifikations-/Erfolgsbehauptung ausweisen.
+Allgemeine Regeln für tatsächlich
+beschädigte Bestandsbytes, Sicherung und Recovery bleiben erhalten; diese
+Grenze ist kein pauschales Verbot der Wiederherstellung beschädigter Projekte.
+Bereits festgestellte Identitätskonflikte, Sicherheits- und I/O-Fehler behalten
+ihre bisherigen Fehlerklassen. CLI, strukturierter Aufruf, Planung und Work
+MÜSSEN dieselbe Formatgrenze anwenden. Die passive Rückgabe eines bereits
+vollständig abgeschlossenen Work-Ergebnisses folgt unverändert 10.7.9 und
+erteilt keine neue Schreibbefugnis.
+
+**Legacy bleibt geplante Arbeit.** Definition, Prüfung und Implementierung
+eines tatsächlich festgelegten Altformats sowie dessen Migration bleiben
+M16 zugeordnet. Q.0 bestimmt die Voraussetzung. Weder die Existenz noch die
+Nichtexistenz eines extern verwendeten 0.1-Formats wird aus fehlenden Dateien
+im geprüften Repository abgeleitet. Eine Dokumentversion 0.1 ist allein
+kein Nachweis eines implementierten oder veröffentlichten Datenformats.
+Es werden keine historischen Schemas, Hashformeln, Produktivdaten oder
+Kompatibilitätsnachweise erfunden. Für einen verbindlich definierten
+Quellvertrag sind ausdrücklich als synthetisch gekennzeichnete positive,
+negative und Grenzfall-Fixtures zulässig; echte Produktivdaten sind keine
+pauschale Entwicklungs- oder Testvoraussetzung. Solche Fixtures beweisen
+nur den angegebenen Vertrag, keine unbelegte historische Verbreitung.
+
+**Abnahmegrenze.** Für R sind vollständige positive 0.2-Erhaltung samt allen
+übrigen Pflichten sowie negative Fälle für nicht unterstützte deklarierte
+Versionen und Legacy-Registrierungen nachzuweisen, einschließlich CLI/Work-
+Parität und unveränderten Originalbytes bei Abweisung. Positive 0.1-
+Kompatibilitätsabnahmen werden erst mit der M16-Integration unter Q.0 fällig;
+sie dürfen weder als bestanden noch als dauerhaft ersatzlos entfallen gelten.
+
 ### 10.8 Scope Descriptor und Scope-Closure
 
 Jede Operation mit Modellumfang verwendet genau einen kanonischen Scope Descriptor:
@@ -3532,7 +3611,7 @@ Eine ausgewählte `configuration` wird einschließlich Parent-Kette zu einer eff
 
 ### 10.19 Unveränderbare Legacy-Nachweise
 
-Die verbindliche Migration geschützter historischer Ressourcen steht in Anhang Q. Der normative Manifestpfad ist `mappings/legacy-manifest.json`. Dieses Manifest und seine Originalhashes gehören zu jedem Scope, der eine darin registrierte Ressource einschließt. Originalbytes und historische Hashalgorithmen bleiben erhalten; aktuelle 0.2-Gültigkeit wird nicht aus ergänzten Metadaten erfunden.
+Die verbindliche Migration geschützter historischer Ressourcen steht in Anhang Q; positive 0.1-Unterstützung setzt ausdrücklich den Quellvertrag und die geprüfte native Integration nach Q.0 voraus. Der normative Manifestpfad ist `mappings/legacy-manifest.json`. Dieses Manifest und seine Originalhashes gehören zu jedem Scope, der eine darin registrierte Ressource einschließt. Originalbytes und historische Hashalgorithmen bleiben erhalten; aktuelle 0.2-Gültigkeit wird nicht aus ergänzten Metadaten erfunden.
 
 ### 10.20 Vollständige fortsetzbare Arbeitsaufträge
 
@@ -4355,7 +4434,7 @@ Langlebige Projekte werden über geplante, verlustbewusste, gesicherte und verif
 | SR-REQ-0269 | Ein Migrationsschritt mit möglichem Informationsverlust MUSS ohne vollständige Angabe aller betroffenen `--accept-loss <LOSS-ID>` standardmäßig abbrechen. | SR-NEED-0003, SR-NEED-0009, SR-NEED-0014 | SR-VER-0020 | SR-TC-0269 |
 | SR-REQ-0270 | Eine wiederholte Migration auf dieselbe bereits erreichte Zielversion MUSS ohne semantische Änderung erfolgreich und idempotent enden oder eindeutig als nicht erforderlich gemeldet werden. | SR-NEED-0007, SR-NEED-0014 | SR-VER-0020 | SR-TC-0270 |
 | SR-REQ-0271 | `specroad migrate verify` MUSS Quellbundle, Migrationsbericht, Zielschemas, Zielmodellwurzel, Referenzen, Anhänge und deklarierte Invarianten prüfen, ohne den Zielstand zu verändern. | SR-NEED-0007, SR-NEED-0009, SR-NEED-0014 | SR-VER-0020 | SR-TC-0271 |
-| SR-REQ-0272 | Version 0.2 MUSS eine verlustfreie Migration von Schema 0.1.0 nach 0.2.0 nach Anhang Q bereitstellen, die veränderbare Artefakte ergänzt und unveränderbare Nachweise unter Erhalt ihrer Originalbytes einbindet. | SR-NEED-0001, SR-NEED-0012, SR-NEED-0014 | SR-VER-0020 | SR-TC-0272 |
+| SR-REQ-0272 | Für einen nach Q.0 verbindlich definierten und nativ unterstützten 0.1.0-Quellvertrag MUSS Version 0.2 eine verlustfreie Migration nach 0.2.0 gemäß Anhang Q bereitstellen, die veränderbare Artefakte ergänzt und unveränderbare Nachweise unter Erhalt ihrer Originalbytes einbindet; bis dahin darf der Pfad nicht als unterstützt gelten. | SR-NEED-0001, SR-NEED-0012, SR-NEED-0014 | SR-VER-0020 | SR-TC-0272 |
 | SR-REQ-0273 | Die Migration 0.1.0 nach 0.2.0 MUSS Relations-IDs reproduzierbar nach der Ableitungs- und Legacy-Projektionsregel in Anhang Q bilden. | SR-NEED-0003, SR-NEED-0009, SR-NEED-0014 | SR-VER-0020 | SR-TC-0273 |
 | SR-REQ-0274 | SpecRoad DARF ein Downgrade nur anbieten, wenn ein ausdrücklich implementierter verlustfreier Rückweg existiert. | SR-NEED-0009, SR-NEED-0011, SR-NEED-0014 | SR-VER-0020 | SR-TC-0274 |
 
@@ -6006,7 +6085,7 @@ Kataloghashbindungen werden fortgeschrieben.
 | SR-ISSUE-0002 | Vollständiges CLI-Authoring | **Geschlossen:** gemeinsamer Change Plan und direkte Authoring-Befehle. |
 | SR-ISSUE-0003 | Branchfähige IDs | **Geschlossen:** `random128-v1` für neue Artefakte und Relationen. |
 | SR-ISSUE-0004 | Mehrdatei-Atomarität | **Geschlossen:** Journal, Staging, Before Images und Recovery. |
-| SR-ISSUE-0005 | Schema-Migration | **Spezifiziert:** versionierte Plan-/Apply-/Verify-Migration einschließlich Legacy-Vertrag in Anhang Q; Nachweis durch die Implementierung ausstehend. |
+| SR-ISSUE-0005 | Schema-Migration | **Spezifiziert, Quellvertrag offen:** versionierte Plan-/Apply-/Verify-Migration; positive 0.1-Unterstützung setzt den verbindlichen Quellvertrag aus Q.0 voraus. Native Umsetzung und Kompatibilitätsnachweise bleiben offen. |
 | SR-ISSUE-0006 | Plugin-Prozessmodell | Offen für eine spätere Version; ausführbare Plugins sind kein Bestandteil des 0.2-Core. |
 | SR-ISSUE-0007 | MCP-Server | Offen für eine spätere Version; die maschinenlesbare CLI-Selbstbeschreibung ist die 0.2-Agentenschnittstelle. |
 | SR-ISSUE-0008 | Web- und IDE-Oberfläche | Außerhalb des Single-User-CLI-Zielrelease. |
@@ -6040,6 +6119,7 @@ Die folgende Roadmap ist informativ und erzeugt keine Anforderungen an 0.2:
 
 | Version | Datum | Status | Änderung |
 |---|---|---|---|
+| 0.2.39 | 2026-10-29 | Ausdrückliche Nutzerentscheidung | RESTORE-SCHEMA-SCOPE: vollständige 0.2-Restore-Abnahme; sichere Abweisung nicht unterstützter deklarierter Altformate; positive 0.1-Unterstützung erst nach verbindlichem Quellvertrag und M16-Integration. Keine Produktabnahme. |
 | 0.2.35 | 2026-10-27 | Delegiert gemäß SPECROAD-DECISION-1 | RESTORE-WORK-OWNER-HANDOFF: explizite Übernahme des verwaisten äußeren Restore-Work-Owners mit nativen lokalen Ownerbelegen und dauerhafter Übergabe; Projekt-Recovery und Produktabnahmen bleiben getrennt/offen. |
 | 0.2.34 | 2026-10-27 | Delegiert gemäß SPECROAD-DECISION-1 | RESTORE-WORK-BINDING: passive Originalplan-/Auswahlbindung für Restore in Work, getrennte aktuelle Recoveryautorisierung und Vorrang nativer Journale; offene Umsetzung und unveränderte Schutzgates. |
 | 0.2.33 | 2026-10-27 | Delegiert gemäß SPECROAD-DECISION-1 | RESTORE-CLI-BINDING: explizite Restoremodi, Quellart, operative Baselinewerte und Root-/Dateipaare; spezialisierter Preflight mit unveränderten nativen Autorisierungs- und Recoverygates. |
@@ -8389,6 +8469,43 @@ Erst nach bestätigt vollständigem Ergebnis oder ausdrücklicher Nutzerstornier
 
 
 # Anhang Q — Migration ohne Veränderung historischer Nachweise
+
+## Q.0 Verbindlicher Quellvertrag vor positiver Legacy-Unterstützung
+
+RESTORE-SCHEMA-SCOPE nach 10.7.11 korrigiert auf ausdrückliche Nutzerfreigabe
+die frühere unbedingte Zusage eines bereits bestimmten 0.1-Altformats.
+Alle positiven 0.1-Schema-, Migrations- und Restore-Qualifikationsaussagen
+in diesem Anhang, den Migration-Requirements, Szenarien, Verifikationsverträgen
+und M16 gelten erst unter der folgenden Voraussetzung; sie behaupten keinen
+heute vorhandenen Leser. Bereits festgelegte CLI-Kurzaliase nach Anhang F
+und 11.1 sowie passive Anzeigeprojektionen nach SR-REQ-0531 bleiben davon
+unberührt. Eine solche Anzeige prüft weiterhin nur ihren ausdrücklich
+definierten Teilvertrag und behauptet weder vollständige Schemaqualifikation
+noch eine Schreibbefugnis.
+
+Vor Registrierung eines unterstützten 0.1-Migrationspfads MUSS dessen
+Quellvertrag verbindlich versioniert und im Projekt verfügbar sein. Er
+umfasst die vollständigen Quellschemas und Zustands-/Unveränderbarkeitsregeln,
+Originalbyte- und kanonische Hashdomänen, den jeweiligen historischen
+Baselinealgorithmus, Referenz-/Archiv-/Anhangclosure, Manifest-/Provenienz-
+bindung sowie überprüfbare Eingabe-/Ergebnisvektoren. Die Herkunft und der
+Geltungsanspruch sind ausdrücklich festzuhalten. Fehlende historische
+Festlegungen dürfen nicht aus heutigen 0.2-Daten oder bloßen Versionslabels
+als historische Tatsachen rekonstruiert werden. Ein synthetisch festgelegter
+Testfall ist als solcher auszuweisen und ersetzt keine Behauptung, eine
+externe alte Installation sei damit kompatibel. Echte Produktivdaten sind
+nicht generell erforderlich; synthetische Fixtures gegen einen tatsächlich
+festgelegten Quellvertrag sind zulässig.
+
+Bis diese Voraussetzung erfüllt und die vollständige native Implementierung
+geprüft ist, wird der Pfad nicht als unterstützt veröffentlicht. M16 bleibt
+offen; die fehlende positive 0.1-Abnahme blockiert nicht den ausdrücklich
+auf 0.2 bezogenen R-Abschluss, wohl aber eine behauptete 0.1-Unterstützung.
+Schutz, Originalerhaltung, aktuelle Reviewpflichten und die sichere Abweisung
+aus 10.7.11 gelten weiter. Ein später eingeführter Leser MUSS zusätzlich in
+Restore und dessen CLI-/Work-Abnahmen integriert werden, bevor die
+entsprechende positive Kompatibilität zugesagt wird. Die folgenden Regeln
+Q.1–Q.5 bestimmen dann unverändert die verlusterhaltende Umsetzung.
 
 ## Q.1 Exakte Einteilung der Bestandsdaten
 

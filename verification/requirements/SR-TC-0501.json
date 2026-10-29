@@ -2,7 +2,7 @@
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0501",
   "requirement_id": "SR-REQ-0501",
-  "specification_sha256": "f237ebf6c5f3629bbb36fb284052270ecb126df947845952d0ac36226af6c5d0",
+  "specification_sha256": "f1a0845fd53510162f35e481b7467235601afd1ae1e68e149586b76962c22f1a",
   "primary_verification_id": "SR-VER-0018",
   "implementation_status": "partial",
   "method": "automated_behavior",
@@ -39,6 +39,7 @@
     "test_artifact_identity.ArtifactIdentityTests.test_identity_scheme_cannot_disagree_with_token"
   ],
   "open_items": [
-    "Integrate with complete project/historical inventory and atomic artifact publication; no authoring or migration permission is implied."
+    "Integrate with complete project/historical inventory and atomic artifact publication; no authoring or migration permission is implied.",
+    "RESTORE-SCHEMA-SCOPE / Q.0 takes precedence for positive 0.1 qualification: a versioned complete source contract, source hash algorithms, closure/provenance and matching test vectors are required before supported registration and positive M16/Restore integration. Explicitly synthetic fixtures against that contract are permitted; real production data are not a general test prerequisite and historical external compatibility is not invented. Existing 0.2 identities/contracts, CLI aliases and passive presentation retain their documented limits. Current status and remaining M16 work are unchanged; no positive Legacy acceptance is claimed."
   ]
 }
