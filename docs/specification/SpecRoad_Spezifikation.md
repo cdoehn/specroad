@@ -1,21 +1,21 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.37
+## Version 0.2.38
 
 | Feld | Wert |
 |---|---|
 | Dokument-ID | `SR-SPEC-0001` |
-| Dokumentversion | `0.2.37` |
+| Dokumentversion | `0.2.38` |
 | Zielrelease | `SpecRoad Single-Repository Workbench 0.2.0` |
 | Status | **Fachlich konsolidierte Arbeitsgrundlage; technische Reviewentscheidung gesondert dokumentiert, formale Baseline-Freigabe und Produktabnahme nicht durch dieses Dokument erklärt** |
 | Stand | 29. Oktober 2026 |
 | Sprache | Deutsch; technische Feldnamen, Enum-Werte und CLI-Kommandos Englisch |
-| Fachliche Quelle | **Diese Repositoryfassung v0.2.37 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.37 liegt mit dieser Änderung nicht vor.** |
+| Fachliche Quelle | **Diese Repositoryfassung v0.2.38 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.38 liegt mit dieser Änderung nicht vor.** |
 | Bearbeitbare Satzquelle | Diese Datei; eine spätere PDF muss denselben versionierten Inhalt wiedergeben. |
-| Vorgängerversion | Repository-Spezifikation v0.2.36 vom 28. Oktober 2026; historische Nachweise bleiben unverändert. |
-| Prüf- und Entscheidungsgrundlage | Ausdrücklicher manueller Nutzerauftrag zur empfohlenen Klärung RESTORE-HISTORICAL-VALIDATION vom 29. Oktober 2026; keine Produktfreigabe. |
-| Änderungsart | Restore: aktuelle vollständige Qualifikation und passive historische Ergebnisprüfung nach 10.7.9 trennen; keine neue Requirement-ID, Produktposition oder persistierte Freigabe. |
+| Vorgängerversion | Repository-Spezifikation v0.2.37 vom 29. Oktober 2026; historische Nachweise bleiben unverändert. |
+| Prüf- und Entscheidungsgrundlage | Ausdrückliche Nutzerentscheidung RESTORE-PROPOSAL-PREREQUISITE vom 29. Oktober 2026: benötigte Prüfgrundlage vorziehen; keine Produktfreigabe. |
+| Änderungsart | Lesende Proposal-Prüfgrundlage für den vollständigen Abschluss von 15.l.R nach 10.7.10 vorziehen; bestehende Formate und Pflichtabnahmen erhalten. |
 
-> **Verbindlicher Quellenwechsel:** Der ausdrücklich bestätigte Klärungsauftrag schreibt die Repository-Spezifikation als v0.2.37 fort. Frühere PDF- und Reviewnachweise bleiben historisch gebunden; keine Produktfreigabe wird erklärt.
+> **Verbindlicher Quellenwechsel:** Der ausdrücklich bestätigte Klärungsauftrag schreibt die Repository-Spezifikation als v0.2.38 fort. Frühere PDF- und Reviewnachweise bleiben historisch gebunden; keine Produktfreigabe wird erklärt.
 
 > **Fortbestehende Arbeitsprinzipien:** Weiche Budgets führen zu sparsamer vollständiger Weiterarbeit oder gesicherter Fortsetzung über mehrere Aufrufe beziehungsweise Prompts. Es werden keine erforderlichen Arbeiten stillschweigend ausgelassen. Reale Host-, Speicher-, Berechtigungs- und Sicherheitsgrenzen bleiben wirksam.
 
@@ -101,7 +101,7 @@ Bei einem Widerspruch innerhalb dieser Dokumentversion gilt:
 3. `SR-DEC-*` hat Vorrang vor erläuterndem Text, Diagrammen und Beispielen.
 4. Beispiele sind niemals normativ, sofern sie nicht ausdrücklich als Testvektor bezeichnet sind.
 5. Zwei widersprüchliche `SR-REQ-*`-Anforderungen besitzen **keine implizite Rangfolge** nach Nummer, Position oder Spezifität. Ein solcher Fund ist ein Spezifikationsfehler, muss als Issue gelöst werden und verhindert die Freigabe.
-6. Diese Dokumentversion 0.2.34 ersetzt die frühere fachliche Arbeitsgrundlage vollständig. Bis zur gesonderten PDF-Veröffentlichung ist diese versionierte Repositorydatei maßgeblich. Eine spätere PDF muss inhaltsgleich sein; frühere PDFs werden nicht als Nachweis der neuen Verträge ausgegeben. Inhalte verschiedener Fassungen dürfen nicht zu einer Mischspezifikation kombiniert werden.
+6. Diese Dokumentversion 0.2.38 ersetzt die frühere fachliche Arbeitsgrundlage vollständig. Bis zur gesonderten PDF-Veröffentlichung ist diese versionierte Repositorydatei maßgeblich. Eine spätere PDF muss inhaltsgleich sein; frühere PDFs werden nicht als Nachweis der neuen Verträge ausgegeben. Inhalte verschiedener Fassungen dürfen nicht zu einer Mischspezifikation kombiniert werden.
 7. Eine nachträgliche Änderung dieser veröffentlichten Datei erfordert mindestens eine neue Patch-Dokumentversion; stille Korrekturen unter derselben Dokumentversion sind unzulässig.
 8. Eine normative Tabelle, auf die eine `SR-REQ-*`-Anforderung ausdrücklich als Algorithmus oder Matrix verweist, ist Bestandteil des Passkriteriums dieser Anforderung.
 
@@ -2840,6 +2840,102 @@ Aufrufangaben bleiben 2. Ein Fehler wird nicht zu einem historischen Erfolg
 herabgestuft. Die vollständigen positiven, negativen, Integrations- und
 Crash-/I/O-Abnahmen dieser Unterscheidung bleiben Teil von 15.l.R.
 
+
+#### 10.7.10 Vorgezogene lesende Proposal-Prüfgrundlage für Restore
+
+**RESTORE-PROPOSAL-PREREQUISITE**, ausdrückliche Nutzerentscheidung vom
+29. Oktober 2026: Die für den vollständigen Abschluss von 15.l.R benötigte
+Proposal-Prüfgrundlage wird vorgezogen und die Planabhängigkeit korrigiert.
+Diese eng begrenzte Vorziehung ist unmittelbar vom Nutzer autorisiert;
+sie wird nicht aus der Delegation in 2.4.1 abgeleitet. Alle fachlichen
+Pflichten aus 10.3, 10.4, 10.7.1–10.7.9, 10.8.1 und 11.10 bleiben erhalten.
+
+**Umfang und Abhängigkeit.** Vor Abschluss von 15.l.R MUSS ein gemeinsamer,
+rein lesender nativer Prüfkern für gespeicherte Proposals verfügbar und in
+die vollständige Restore-Qualifikation eingebunden sein. Vorgezogen werden
+nur die dafür erforderliche Inhalts-/Basis-/Change-Plan-Prüfung,
+Kontrollhistorienprüfung und Prüfung der tatsächlichen Reviewwirksamkeit
+aus den fachlichen Verträgen von M18. Die öffentlichen Proposalbefehle,
+Authoring, Erteilung neuer Reviews, Review-start-Kontrollwrites, Proposal-
+Apply und deren vollständige W/R/C-Abnahmen bleiben M18 zugeordnet.
+M18 MUSS den gemeinsamen Kern wiederverwenden; ein eigener schwächerer
+Restore-Validator ist unzulässig. Die Umsetzung der lesenden Grundlage
+gehört zum vollständigen 15.l.R-Abschluss, nicht zu einer neuen
+Produktposition oder einem vorab als erledigt markierten M18-Schritt.
+
+**Native Eingaben und Belegbindung.** Der Prüfkern MUSS die folgenden
+fachlich getrennten Eingaben als geschlossene, typgeprüfte native Werte
+verlangen, soweit sie für den gespeicherten Zustand benötigt werden:
+
+| Eingabe | Verbindlicher Inhalt und Prüfung |
+|---|---|
+| Proposaloriginal | Unveränderte vollständige Originalbytes, Pfad/Identität, Größe und Bytehash; daraus nativ gelesene Artefaktrevision, Inhaltsrevision, Inhaltshash, Status, Reifegrad, Basis, vollständiger Change Plan, Reviews und Kontrollhistorie. |
+| Originalkontexte | Die tatsächlich referenzierten Originalobjekte und Manifeste für Basis, frühere Inhaltsfassungen, Prüfergebnisse und gegebenenfalls Veröffentlichung; jede Referenz wird nach ihrem nativen Vertrag auf konkrete Bytes, Identitäten und vollständige Hashes aufgelöst. Aktuelle Zielkontexte werden getrennt übergeben. |
+| Reviewbeobachtungen | Jede Beobachtung ist eindeutig an ihren unveränderten ursprünglichen Reviewbeleg und dessen Stelle in der Proposalhistorie gebunden. Sie umfasst den tatsächlichen Akteur, Entscheidung, UTC-Zeit, beobachtete Artefaktrevision und das vollständige Freigabetupel aus 10.3. Wirksamkeitsänderungen brauchen die jeweils zugehörigen Originalbelege; Wiederholung ist kein zusätzlicher Reviewer. |
+| Kontrollbeobachtungen | Die geordnete native Ereignisfolge samt vorherigem/nachfolgendem Status, unveränderter Inhaltsbindung, Akteur, UTC-Zeit, Grund und ursprünglicher Prüfergebnisbindung nach 10.3/11.10. Für `applied` gehören die passend gebundenen ursprünglichen Transaktions-/Ergebnisbelege dazu. |
+| Policykontexte | Die aus den tatsächlichen gebundenen Projekt-/Profil-/Konfigurationsbytes bestimmte Policy des jeweiligen ursprünglichen Entscheids und getrennt die für eine aktuelle Qualifikation geltende Policy. `validation_policy.minimum_human_proposal_approvals` wird nach dem bestehenden Konfigurationsvertrag ausgewertet, nicht aus einer Zahl im Reviewbericht übernommen. |
+| Vertrauenswürdiger Verifier | Expliziter, vom installierten Hostcode gebundener nativer Prüfweg für die tatsächliche Herkunft und Entscheidung der Originalbelege; er erhält die vollständige Beleg- und Kontextbindung. Projekt-, Plan-, Work- oder ZIP-Daten können ihn weder auswählen noch registrieren. |
+
+Dies definiert einen nativen Laufzeiteingang, **kein neues persistiertes
+Review-, Plan-, Work- oder Archivformat**. Bestehende gespeicherte Belege
+werden ausschließlich nach ihrem jeweiligen ursprünglichen Vertrag gelesen.
+Beobachtungen DÜRFEN NICHT aus bloßen Statuswerten, heutigen Ersatzdateien,
+Containerhashes, Testresultaten oder dieser Entwicklungsfreigabe erzeugt
+werden. Ein Hostadapter MUSS seine typisierten Beobachtungen auf die
+wirklichen Originalbelege zurückführen; er darf keinen unbelegten
+Erfolgscallback liefern. Nach 11.10 bleibt die Single-User-Akteursdeklaration
+eine Deklaration und wird nicht als kryptografische Authentifizierung
+ausgegeben. Ein tatsächlicher menschlicher Entscheid wird weder erfunden
+noch durch einen automatischen Check ersetzt. Fehlende zwingende
+Originalkontexte oder nicht prüfbare Herkunft sperren den betroffenen Fall
+mit konkretem Befund gemäß 10.7.1/10.7.9.
+
+**Deterministische lesende Prüfung.** Der Kern MUSS insbesondere:
+
+1. `content_sha256` exakt nach der Top-Level-Ausschlussliste aus 10.3
+   berechnen; gleichnamige Unterfelder und Extensions bleiben enthalten.
+   Inhaltsrevision und Artefaktrevision werden getrennt geprüft. Reine
+   Kontrolländerungen dürfen die fachliche Inhaltsbindung nicht ändern.
+2. Basisdescriptor und Modellwurzel nach 10.8.1 sowie den vollständigen
+   Change Plan einschließlich Reihenfolge, Metadaten, Vorbedingungen und
+   Ergebnisbindung mit den nativen Verträgen prüfen. Eine historische
+   Basisabweichung gegenüber dem heutigen Ziel wird gesondert bewertet;
+   sie ist weder eine stille Basisumschreibung noch allein ein beschädigtes
+   historisches Original. Der lesende Kern führt keine Proposaltransaktion
+   und keinen Projektcode aus.
+3. Die vollständige Kontrollfolge nach 10.3/10.4/11.10 prüfen, einschließlich
+   Status-/Reifegradzuordnung, atomarer Review-start-Folge und Endzuständen.
+   Ein Prüfergebnis-Hash ist nur eine Bindung: Der zugehörige ursprüngliche
+   Nachweis und seine tatsächlichen nativen Eingänge müssen geprüft werden.
+   Es wird kein fehlendes Ereignis ergänzt oder ein Status korrigiert.
+4. Reviews gegen Proposal-ID, `content_revision`, `content_sha256`,
+   `base_model_root_sha256` und `change_plan_sha256` prüfen. Nur wirksame,
+   nicht widerrufene menschliche Zustimmungen verschiedener `actor_id`
+   zählen zum verlangten Quorum. Beobachtete Artefaktrevisionen bleiben
+   Auditinformation; eine reine Kontrollrevision entwertet die unveränderte
+   Inhaltsfreigabe nicht. Inhaltsänderung, wirksamer Widerruf oder stale
+   Basis dürfen dagegen nicht durch ein gespeichertes `approved` verdeckt
+   werden. Unzureichende Quoren erzeugen keine Freigabe.
+5. Historische Gültigkeit und aktuelle Freigabewirkung getrennt ausweisen.
+   Korrekt gebundene `rejected`-, `stale`- und `applied`-Originale bleiben
+   erhaltbare Endzustände. Ein `applied`-Nachweis wird gegen seinen damaligen
+   Entscheid und passenden damaligen Abschluss geprüft; er autorisiert
+   keinen erneuten Apply. Negative oder inzwischen unwirksame Reviews
+   bleiben Originalhistorie und werden als solche berichtet. Aktuelle
+   `approved`-Invarianten des wiederhergestellten Zielstands bleiben
+   vollständig erforderlich; unzulässige Zustände werden nicht repariert.
+
+**Integration und Abnahmegrenze.** CLI, strukturierter Aufruf, Planungsmodus
+und Work MÜSSEN dieselben nativen Eingänge und Prüfungen erreichen. Planung
+und neue Vorwärtspublikation prüfen erforderliche aktuelle Beobachtungen
+frisch. Die rein historische Rückgabe vollständig abgeschlossener Work-
+Ergebnisse folgt unverändert 10.7.9 und erteilt keine neue Schreibbefugnis.
+Fehlercodes und Schutz-/Erhaltungsregeln aus 10.7.1 bleiben unverändert.
+Ein bloßes `unsupported` bei jedem abgeschlossenen Proposal erfüllt die
+positive R-Abnahme nicht. Ebenso wenig ersetzt ein grüner Schema- oder
+Hashcheck die geforderte fachliche Prüfung. Die folgenden Planabnahmen
+müssen vor R-Abschluss tatsächlich erfüllt sein; diese Dokumentänderung
+behauptet weder Implementierung noch erfolgreiche Produktabnahme.
 
 ### 10.8 Scope Descriptor und Scope-Closure
 

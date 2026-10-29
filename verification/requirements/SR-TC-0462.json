@@ -2,7 +2,7 @@
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0462",
   "requirement_id": "SR-REQ-0462",
-  "specification_sha256": "8e7a9a3e47fcae96fb8661e34fb8a8c868988bc9240df04a29a888422b98bd12",
+  "specification_sha256": "f237ebf6c5f3629bbb36fb284052270ecb126df947845952d0ac36226af6c5d0",
   "primary_verification_id": "SR-VER-0031",
   "implementation_status": "partial",
   "method": "automated_behavior",
@@ -894,6 +894,7 @@
   "open_items": [
     "15.l.R remains open: CLI integration and Work parity, exhaustive durable-boundary and I/O matrix, and remaining integration acceptance are mandatory. This native recovery substage is not completion of position 650 or a complete Restore/release claim.",
     "Historical lifecycle/specialist evidence, independent-policy Evidence, further protected record kinds, prior recovery audits and general completed-receipt history folds remain mandatory before full Restore acceptance. Existing supported original receipt targets remain unchanged; missing necessary proof fails closed.",
-    "RESTORE-HISTORICAL-VALIDATION / specification 10.7.9 is specified, not implemented: actual native host review/service inputs and full contextual binding for current qualification; separately verified passive terminal Work replay with unchanged saved result bytes, native_execution_checked=false and checkpoint_changed=false. Missing/forged/stale/nonhuman/rejected/foreign proof must fail closed. CLI/planning/Work parity, fresh write authorization, incomplete-Work recovery, old-byte compatibility and all existing R acceptance remain mandatory."
+    "RESTORE-HISTORICAL-VALIDATION / specification 10.7.9 is specified, not implemented: actual native host review/service inputs and full contextual binding for current qualification; separately verified passive terminal Work replay with unchanged saved result bytes, native_execution_checked=false and checkpoint_changed=false. Missing/forged/stale/nonhuman/rejected/foreign proof must fail closed. CLI/planning/Work parity, fresh write authorization, incomplete-Work recovery, old-byte compatibility and all existing R acceptance remain mandatory.",
+    "RESTORE-PROPOSAL-PREREQUISITE / specification 10.7.10 is expressly authorized and specified, not yet implemented: complete shared read-only native Proposal content/base/change-plan/control-history/review validation is a prerequisite inside full 15.l.R, without waiting for or completing public M18 steps. Require original proofs, actual trusted verifier inputs, human quorum, historical/current distinction, unchanged terminal bytes and full CLI/planning/Work parity. All six new R acceptances and all existing integration, lifecycle, history and crash/I/O acceptances remain open. No new persisted review format or artificial approval is authorized."
   ]
 }

@@ -1,15 +1,15 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 32 · **Stand:** 29. Oktober 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.37
+**Planrevision:** 33 · **Stand:** 29. Oktober 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.38
 
-Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 Schritte und 900 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; jeder Schritt besitzt einen konkreten Arbeitsumfang und eigene Verhaltensabnahme.
+Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 Schritte und 900 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; die ausdrücklich genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wird nach 10.7.10 innerhalb von 15.l.R vorgezogen. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
 ## Verbindliche Grundlagen und Rangfolge
 
 Fachliche Grundlage ist [`docs/specification/SpecRoad_Spezifikation.md`](../specification/SpecRoad_Spezifikation.md), einschließlich aller konsolidierten Korrekturen, 742 Requirements, 51 Verifikationsverträge, 46 Szenario-/E2E-Identitäten sowie R-01 bis R-75, Anhang U und den PatchHarbor-Rundweg aus Anhang W. Der [`Prüfbericht`](../reviews/SpecRoad_v0.2.7_Implementierungsreife_Pruefbericht.md) ist ein vorgelagerter Entwurfsreview, kein späterer Produktnachweis.
 
-Gebundene Spezifikations-SHA-256: `8e7a9a3e47fcae96fb8661e34fb8a8c868988bc9240df04a29a888422b98bd12`.
+Gebundene Spezifikations-SHA-256: `f237ebf6c5f3629bbb36fb284052270ecb126df947845952d0ac36226af6c5d0`.
 Planungsbasis: Commit `fe2661d02ecf2f7eb483b58a4487eb009c6b3846`; sauberes Result-Bundle `specroad_Result_120209_0914_df3504.zip`; Repository-ID `3d2576df-d611-46fc-9d2b-92869468aaca`. Diese Angaben dokumentieren die Entstehung des Plans, nicht die zukünftige Patchbindung. **Jedes spätere Patchpaket bindet den dann aktuellen tatsächlichen Result-Zustand.**
 
 Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 2026 gelten zusätzlich und bei den nachfolgend benannten Konflikten vorrangig. Sonstige normative Spezifikationsinhalte werden nicht stillschweigend abgeschwächt. Neue fachliche Widersprüche, fehlende zwingende Angaben und Sicherheitsprobleme sind offen zu benennen, nicht durch erfundene Annahmen oder Scheinerfolge zu lösen.
@@ -36,12 +36,12 @@ Laufzeitdaten und ist keine Start-/Resume-Anweisung.
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 32
+plan_revision: 33
 implementation_plan_commits_total: 900
 implementation_plan_commits_completed: 649
 last_completed_plan_commit: 15.l.W
 next_plan_commit: 15.l.R
-last_completed_numbered_bundle: 515
+last_completed_numbered_bundle: 516
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -69,6 +69,141 @@ in ihrer bisherigen Reihenfolge. M20 übernimmt die zusätzliche Gesamtmatrix
 in seinen vorhandenen Schritten 20.f, 20.h und 20.m.
 
 Nach tatsächlich erfolgreich ausgeführten, zum Commit passenden Verhaltenstests wird die betreffende Checkbox im selben Git-Commit gesetzt. Reguläre Produktcommits aktualisieren den Produktzähler; Audit-Nacharbeiten aktualisieren ausschließlich ihren Status und `next_audit_step`. Ein fehlgeschlagener Schritt bleibt offen. Git ist die Historie; das Dokument nimmt keinen eigenen noch unbekannten Commit-Hash auf. Vor dem nächsten Auftrag werden tatsächliche Git-Historie, Result-Logs und Planfortschritt abgeglichen. Bei Inkonsistenz nicht einfach weiterzählen.
+
+## OFF-PLAN – Lesende Proposal-Prüfgrundlage vorziehen (Bundle 516)
+
+**RESTORE-PROPOSAL-PREREQUISITE**, ausdrückliche Nutzerentscheidung vom
+29. Oktober 2026. Auf die konkrete Frage, ob die benötigte Prüfgrundlage
+aus M18 für 15.l.R vorgezogen und die Planabhängigkeit korrigiert werden
+soll, wurde „Benötigte Prüfgrundlage vorziehen (Empfohlen)“ gewählt.
+Diese Befugnis stammt unmittelbar vom Nutzer; §2.4.1 allein hätte die
+Vorziehung nicht erlaubt. Pflichtabnahmen und menschliche Freigaben bleiben
+erhalten. Der manuelle Auftrag erweitert kein Control-Restbudget und
+verändert weder Control, Watcher noch externe Konfiguration/Laufzeitdaten.
+
+- [x] **RESTORE-PROPOSAL-PREREQUISITE:** Lesende native Proposal-Prüfgrundlage als Voraussetzung des vollständigen 15.l.R-Abschlusses festlegen und aktive Katalogbindungen anpassen. Commit: `docs(spec): Lesende Proposal-Prüfgrundlage für Restore vorziehen`.
+
+**Geprüfte Basis und konkrete Lücke.** Maßgeblich ist das erfolgreich und
+sauber angewendete Bundle 515: `specroad-apply_Result_092336_1029_66d7e4.zip`,
+SHA-256 `b147c8fb79646dd290269358ccc74ed2ac7099de596b3263dcc2c70e69732929`,
+Abschlusscommit `494ca4ee5f39d5e3770aed502bd9bd6b010f7c7c`, Repository-ID
+`a33ed6cf-0a97-4b73-b11a-d4239e7a2145`, Fingerprint `7c9d2a24e397e0e5`,
+Algorithmus `patchharbor-state-v1`. Die generierte Root-Anleitung,
+Metadaten, Run-/Ausführungslogs, der vollständige Snapshot und die tatsächliche
+technische Basis wurden geprüft. Sein Dokumentcommit bestand 5.950 Tests
+parallel, Sequenz 223 / Gruppe 1. Das ist ein Apply-Teiltestnachweis für
+515, kein Erfolg der noch unfertigen R-Umsetzung.
+
+10.7.1 verlangt erhaltene abgeschlossene Proposals und vollständige
+Lifecycle-/Fachprüfung; 10.7.9 verlangt tatsächlich native Belege und
+Prüfdienste. Der Basisstand besitzt für Proposal in `record_contracts.py`
+nur `record_fields_only`; `record_schemas.py` prüft lokal zusätzlich
+`content_revision <= revision`. `plan_contract.py` bindet deklarierte
+Kontrollresultate, prüft aber keine wirkliche Reviewherkunft oder vollständige
+historische Freigabewirkung. Die benötigten lesenden Vertragsanteile aus
+10.3/10.4/10.8.1/11.10 sind bislang erst mit M18 geplant, insbesondere
+18.b/18.d/18.f und den Historien-/Reviewanteilen von 18.h/18.i/18.j/18.k.
+Das ist die konkrete Abhängigkeit; nicht jede öffentliche M18-Funktion
+ist damit Voraussetzung von Restore.
+
+**Alternativen und gewählte Lösung.** Ein Status-/Hashlabel als Freigabe
+oder ein dauerhafter Ausschluss aller abgeschlossenen Proposals würde die
+R-Abnahmen abschwächen. Den gesamten öffentlichen Proposalworkflow vor
+M15 umzusetzen wäre größer als die benötigte Voraussetzung. Gewählt ist
+der kleinste gemeinsame lesende Kern gemäß **Spezifikation 0.2.38 / 10.7.10**:
+volle Original-, Inhalts-, Basis-, Plan-, Kontroll- und Reviewprüfung für
+Restore; spätere Wiederverwendung in M18. Die bestehende Entwicklung wird
+erhalten. Keine öffentliche Proposal-Schreiboperation wird vorgezogen.
+
+**Abgleich mit den Entscheidungsgrenzen.** (1) Die Ausnahme vom Verbot der
+Vorziehung beruht ausschließlich auf der ausdrücklichen Nutzerentscheidung
+für diese Prüfgrundlage. Alle übrigen Grenzen bleiben wirksam. (2) Vorhandene
+fachliche Verträge werden gemeinsam umgesetzt; kein Requirement wird
+gestrichen. (3) Scope, menschliche Entscheidungen, Quorum, Originalbytes,
+Unveränderbarkeit, aktuelle Autorisierung, Crashschutz und Kompatibilität
+bleiben vollständig. (4) Die Vorziehung ist versioniert und ohne Migration
+historischer Formate rücknehmbar; Bestandsbelege werden nicht umgeschrieben.
+(5) Die Definition nativer Eingänge erfindet keine tatsächlichen Reviews,
+externen Fakten oder Risikoakzeptanzen. Fehlende zwingende Belege bleiben
+konkrete Datenblocker. §§2.4.2/2.4.4, §2.5 und BD-001 bleiben verbindlich.
+
+**Korrigierte Abhängigkeit.** Der lesende Kern ist Bestandteil des noch
+offenen vollständigen **15.l.R** und muss vor dessen Abschluss geprüft sein.
+R wartet dafür nicht auf den Abschluss der öffentlichen M18-Schritte.
+M18 verwendet den in R abgenommenen Kern weiter und führt danach seinen
+gesamten zusätzlichen Umfang samt W/R/C-Abnahmen aus. Alle 900 Positionen,
+ihre Kennungen und Committexte bleiben erhalten; keine M18-Checkbox wird
+durch die Klärung oder die spätere R-Implementierung geschlossen.
+
+**Zusätzliche verbindliche R-Abnahmen; derzeit noch offen:**
+
+1. Gültige synthetische Proposaloriginale werden mit vollständigen nativen
+   Originalkontexten, Reviewbelegen und Verifiern qualifiziert. Kontrollrevision
+   ohne Inhaltsänderung erhält die Freigabebindung; Inhalt, gleichnamige
+   Unterfelder und Extensions gehen vollständig in die Hashprüfung ein.
+2. Manipulierte Inhalts-/Basis-/Planhashes, fehlende Originalkontexte,
+   widersprüchliche Kontrollketten, falsche Status-/Reifegradzuordnung und
+   fehlender passender `applied`-Abschluss werden konkret abgewiesen.
+   Prüfergebnis-Hashes ohne die vorgeschriebenen ursprünglichen Belege
+   oder ein Host-`passed` ersetzen keine Prüfung.
+3. Echte unterschiedliche menschliche Testakteure erfüllen das gebundene
+   Quorum; doppelte Akteure und KI-Akteure erhöhen es nicht. Unzureichendes
+   Quorum, wirksamer Widerruf, Inhaltsänderung und stale Basis verhindern
+   unzulässige aktuelle Freigabe unabhängig von gespeicherten Labels.
+   Synthetische Testfreigaben werden nicht als reale Nutzerreviews ausgegeben.
+4. Korrekt gespeicherte `rejected`-, `stale`- und `applied`-Originale bleiben
+   bytegleich erhalten und liefern ihre getrennten historischen Befunde.
+   Ein später anderer Zielstand macht einen gültigen historischen Abschluss
+   nicht zu einem neuen Apply oder zu einer aktuellen Freigabe. Konflikte
+   geschützter Originale sowie verletzte aktuelle `approved`-Invarianten
+   bleiben sperrend; kein künstlicher Statuswechsel löst sie auf.
+5. CLI, strukturierter Aufruf, Planungsmodus und Work benutzen dieselbe
+   native Grundlage mit frischen Pflichtbeobachtungen bei aktiver Arbeit.
+   Eingabedaten können weder Prüfdienste noch Schreibrechte einschleusen.
+   Passive terminale Rückgabe und unvollständige Recovery bleiben nach
+   10.7.9 unterscheidbar; alte gespeicherte Formate bleiben unverändert.
+6. Die gemeinsamen lesenden Prüfungen erzeugen keine Projektwrites und
+   führen keinen Projektcode, Proposal-Apply oder Review-start aus. Die
+   bestehenden und zusätzlichen relevanten Verhaltenstests laufen gezielt
+   parallel. Diese Liste ersetzt keine andere Pflichtabnahme von 15.l.R.
+
+**Erhaltener Versuch und vollständiger Rest.** Der tatsächliche R-Versuch
+hat native Fachdienste, öffentliche/Work-Anbindung, inkrementelle
+Snapshotvorbereitung und erste Historienprüfungen erweitert. Ein defektes
+Reviewfixture-Präfix wurde diagnostiziert und korrigiert (danach 11 gezielte
+Tests bestanden). Der Work-Startfehler durch große Stat-Zeitwerte in JSON
+wurde durch eine vollständige gehashte Dateisignatur repariert (gezielter
+Status-/Prompt-/Cancel-Test bestanden). Ein weiterer Diagnoseversuch mit
+13 ausgewählten Tests wurde vor Abschluss mit Exit 130 beendet und zählt
+nicht als Erfolgsnachweis. Diese Einzelbefunde belegen keinen vollständigen
+R-Abschluss. Alle 47 unfertigen Produkt-/Testdateien sind gesichert und
+werden unverändert erhalten; diese ZIP enthält sie nicht.
+
+Offen bleiben der gemeinsame Proposal-Kern, alle übrigen Standard-Lifecycle-
+und Spezialistenbelege, historische Receipt-/Recovery-Audit-Faltung,
+geschützte Relationsreview-/Proposal-/gegebenenfalls Legacy-Originale,
+unabhängige Evidence-Policy und negative historische Befunde, vollständige
+öffentliche CLI-/strukturierte Integration, Planungsmodus und Work-Parität,
+partitionierbarer Snapshot mit vollständiger Abschlussprüfung,
+Status-/Cancel-/Export-/Rootverlustgrenzen, alle fehlenden Crash-/I/O-/
+Manipulationsabnahmen samt gezielter paralleler Regression und die
+Collection-/Katalog-/Testnummernprüfung. Kein Rest wird nach M18 verschoben.
+15.l.C folgt erst nach vollständigem R und erhält seinen eigenen geprüften
+Zustand und Commit. Das ist eine Voraussetzungsklärung, keine Halbierung
+wegen Laufzeit, Kontextdruck oder vermuteter Komplexität.
+
+**Prüfung und Übergabe.** Ein reiner OFF-PLAN-Dokumentcommit mit Spezifikation,
+Plan und erforderlichen aktiven Katalogbindungen. Keine neuen Dokumentationstests
+und kein zusätzlicher Dev-Volltest; vollständige Collection/Katalogprüfung,
+Payload-/Syntax-/Bindungsprüfung und native Paketprüfung bleiben Pflicht.
+Apply prüft unverändert parallel die fällige N=3-Gruppe minus eingefrorener
+Ausschlussliste: Sequenz **224 / Gruppe 2**. Nur nach erfolgreichem Testlauf
+setzt der Entrypoint den OFF-PLAN-Marker und die Bundlezahl 516 und erzeugt
+den Dokumentcommit. Produktstand bleibt **649/900**, zuletzt **15.l.W**,
+nächstens **15.l.R**; R/C und M18 bleiben offen, SR-TC-0461/0462 `partial`.
+Historische Nachweise behalten ihre ursprünglichen Spezifikationsbindungen.
+Genau eine nativ gepackte/geprüfte ZIP wird atomar über Exchange übergeben,
+Status `spec_clarification`; danach Ende ohne Applystart oder Warteschleife.
 
 ## OFF-PLAN – Historische Restore-Belege und aktuelle Prüfdienste (Bundle 515)
 
@@ -30952,12 +31087,14 @@ noch nicht beobachtet. Native ZIP-Prüfung, SHA-256 und atomare Exchange-
 
 #### 15.l.R – Make it Right
 
-- [ ] **15.l.R** · Position **650/900** · Voraussetzung: `15.l.W`.
+- [ ] **15.l.R** · Position **650/900** · Voraussetzung: `15.l.W`; die vorgezogene lesende Proposal-Prüfgrundlage nach 10.7.10 wird innerhalb dieses R-Schritts vor seinem vollständigen Abschluss implementiert und geprüft, ohne vorausgesetzten Abschluss öffentlicher M18-Schritte.
 **Exakte Commit-Message:** `15.l.R feat(bundle): Restore veröffentlichen und Crashabsicherung vervollständigen`
 
 **Vervollständigung:** Quellenwechsel, unvollständige Sicherung und Crash erhalten ursprüngliche Journale und Wiederherstellungsdaten.
 
 **Verbindliche Ergänzung:** Aktuelle Qualifikation, historische Originalbelege und passive Rückgabe vollständig abgeschlossener Workaufträge folgen zusätzlich Spezifikation 10.7.9 und den fünf offenen R-Abnahmen unter OFF-PLAN RESTORE-HISTORICAL-VALIDATION (Bundle 515). Alle übrigen Pflichtabnahmen dieses Schritts einschließlich vollständiger Integration und Crash-/I/O-Matrix bleiben erforderlich.
+
+**Vorgezogene Voraussetzung:** RESTORE-PROPOSAL-PREREQUISITE (Bundle 516), Spezifikation 10.7.10 und dessen sechs zusätzliche R-Abnahmen gelten ebenfalls. Sie führen die benötigten lesenden M18-Prüfverträge in diesen vollständigen R-Abschluss ein; kein öffentlicher Proposal-Schreibworkflow und keine M18-Planposition wird damit abgeschlossen.
 
 **Verhaltensabnahme:** R-47 sowie Einzellauf-/Workparität weisen vollständigen Zustand oder gesperrten Recoveryfall nach. Die explizite Übernahme eines verwaisten äußeren Restore-Work-Owners und ihre getrennten nativen Belege folgen zusätzlich 10.7.8 sowie den offenen positiven, negativen und Crashabnahmen unter OFF-PLAN RESTORE-WORK-OWNER-HANDOFF (Bundle 510). Die passive Restore-Workbindung, Originalakteur-/Requesttreue, aktuelle Recoveryautorisierung und der Vorrang der nativen Journalwahrheit folgen zusätzlich 10.7.7 sowie den offenen Abnahmen unter OFF-PLAN RESTORE-WORK-BINDING (Bundle 507). Die W-Nachweise bleiben zusätzlich grün. Die CLI-Modi, Quellart, operativen Baselinewerte, Root-/Dateipaare und der spezialisierte Preflight folgen zusätzlich 10.7.6 sowie den offenen Abnahmen unter OFF-PLAN RESTORE-CLI-BINDING (Bundle 504); normale Befehle und aktuelle Autorisierung behalten ihre Grenzen. Die explizite Ownerübergabe folgt zusätzlich 10.7.5 und den offenen positiven, negativen und Crashabnahmen unter OFF-PLAN RESTORE-OWNER-HANDOFF (Bundle 500); der allgemeine Lock-Recovery-Weg und gewöhnliche Transaktionsübernahmen behalten ihre bisherigen Grenzen.
 
@@ -33262,6 +33399,8 @@ Einzelauftrag ohne eigene Apply-, Status- oder Fortsetzungsschleife.
 
 **Abschlussgate:** Inhaltsbindung bleibt trotz Kontrollrevision stabil; jede Inhaltsänderung entwertet ältere Freigaben. Check führt keinen Projektcode aus, Resume ersetzt niemals echte menschliche Reviewakteure. Die hier beschriebenen Gates sind Sollkriterien, keine behaupteten Messergebnisse.
 
+**Vorgezogene gemeinsame Voraussetzung:** Nach ausdrücklicher Nutzerentscheidung RESTORE-PROPOSAL-PREREQUISITE und Spezifikation 10.7.10 wird der für Restore erforderliche lesende Kern bereits in 15.l.R vollständig geprüft. M18 übernimmt diesen Kern und ergänzt seinen gesamten öffentlichen und schreibenden Umfang. Die Voraussetzungsklärung oder ihre spätere R-Umsetzung schließt keine M18-Position. Die nachfolgenden öffentlichen W/R/C-Schritte behalten Reihenfolge, Umfang, Committexte und Abnahmen.
+
 <a id="step-18-a"></a>
 ### 18.a – Proposalobjekt und Provenienz
 
@@ -33302,6 +33441,8 @@ Einzelauftrag ohne eigene Apply-, Status- oder Fortsetzungsschleife.
 
 **Anforderungsbezug:** `SR-REQ-0158`, `SR-REQ-0426`.
 **Verifikationsbezug:** `SR-VER-0012`, `SR-VER-0030`. Die exakten SR-TC-Identitäten stehen in der vollständigen Matrix.
+
+**Abhängigkeit nach RESTORE-PROPOSAL-PREREQUISITE:** Die lesende Prüfung der festen Basis verwendet den gemeinsamen Kern aus 15.l.R/10.7.10; die öffentliche Basisbildung und alle W/R/C-Abnahmen dieses Schritts bleiben erforderlich.
 
 #### 18.b.W – Let it Work
 
@@ -33373,6 +33514,8 @@ Einzelauftrag ohne eigene Apply-, Status- oder Fortsetzungsschleife.
 **Anforderungsbezug:** `SR-REQ-0643`–`SR-REQ-0644`.
 **Verifikationsbezug:** `SR-VER-0043`. Die exakten SR-TC-Identitäten stehen in der vollständigen Matrix.
 
+**Abhängigkeit nach RESTORE-PROPOSAL-PREREQUISITE:** Die gemeinsame lesende Hashprojektion stammt aus 15.l.R/10.7.10. Authoring-/Kontrollrevisionsführung und alle W/R/C-Abnahmen bleiben hier erforderlich.
+
 #### 18.d.W – Let it Work
 
 - [ ] **18.d.W** · Position **739/900** · Voraussetzung: `18.c.C`.
@@ -33442,6 +33585,8 @@ Einzelauftrag ohne eigene Apply-, Status- oder Fortsetzungsschleife.
 
 **Anforderungsbezug:** `SR-REQ-0164`–`SR-REQ-0165`, `SR-REQ-0645`.
 **Verifikationsbezug:** `SR-VER-0012`, `SR-VER-0043`. Die exakten SR-TC-Identitäten stehen in der vollständigen Matrix.
+
+**Abhängigkeit nach RESTORE-PROPOSAL-PREREQUISITE:** Die öffentliche Validierung verwendet die bereits für Restore geprüfte lesende Grundlage; öffentliche Ergebniskontrakte und alle W/R/C-Abnahmen bleiben hier erforderlich.
 
 #### 18.f.W – Let it Work
 
@@ -33513,6 +33658,8 @@ Einzelauftrag ohne eigene Apply-, Status- oder Fortsetzungsschleife.
 **Anforderungsbezug:** `SR-REQ-0426`, `SR-REQ-0431`, `SR-REQ-0646`.
 **Verifikationsbezug:** `SR-VER-0030`, `SR-VER-0043`. Die exakten SR-TC-Identitäten stehen in der vollständigen Matrix.
 
+**Abhängigkeit nach RESTORE-PROPOSAL-PREREQUISITE:** Die Prüfung gespeicherter Kontrollhistorien verwendet den Kern aus 15.l.R/10.7.10; neue atomare Review-start-Writes und ihre vollständigen W/R/C-Abnahmen bleiben diesem Schritt vorbehalten.
+
 #### 18.h.W – Let it Work
 
 - [ ] **18.h.W** · Position **751/900** · Voraussetzung: `18.g.C`.
@@ -33547,6 +33694,8 @@ Einzelauftrag ohne eigene Apply-, Status- oder Fortsetzungsschleife.
 
 **Anforderungsbezug:** `SR-REQ-0171`–`SR-REQ-0173`, `SR-REQ-0643`, `SR-REQ-0674`.
 **Verifikationsbezug:** `SR-VER-0012`, `SR-VER-0043`, `SR-VER-0044`. Die exakten SR-TC-Identitäten stehen in der vollständigen Matrix.
+
+**Abhängigkeit nach RESTORE-PROPOSAL-PREREQUISITE:** Die lesende Originalbeleg-/Quorumprüfung verwendet den Kern aus 15.l.R/10.7.10; öffentliche Erfassung echter neuer Reviewentscheidungen und alle W/R/C-Abnahmen bleiben hier erforderlich.
 
 #### 18.i.W – Let it Work
 
@@ -33583,6 +33732,8 @@ Einzelauftrag ohne eigene Apply-, Status- oder Fortsetzungsschleife.
 **Anforderungsbezug:** `SR-REQ-0171`, `SR-REQ-0173`, `SR-REQ-0429`–`SR-REQ-0430`, `SR-REQ-0648`.
 **Verifikationsbezug:** `SR-VER-0012`, `SR-VER-0030`, `SR-VER-0043`. Die exakten SR-TC-Identitäten stehen in der vollständigen Matrix.
 
+**Abhängigkeit nach RESTORE-PROPOSAL-PREREQUISITE:** Die lesende Wirksamkeitsauswertung verwendet den Kern aus 15.l.R/10.7.10; autorisierte neue Kontrolländerungen und alle W/R/C-Abnahmen bleiben hier erforderlich.
+
 #### 18.j.W – Let it Work
 
 - [ ] **18.j.W** · Position **757/900** · Voraussetzung: `18.i.C`.
@@ -33617,6 +33768,8 @@ Einzelauftrag ohne eigene Apply-, Status- oder Fortsetzungsschleife.
 
 **Anforderungsbezug:** `SR-REQ-0173`–`SR-REQ-0175`, `SR-REQ-0178`, `SR-REQ-0429`.
 **Verifikationsbezug:** `SR-VER-0012`, `SR-VER-0019`, `SR-VER-0030`. Die exakten SR-TC-Identitäten stehen in der vollständigen Matrix.
+
+**Abhängigkeit nach RESTORE-PROPOSAL-PREREQUISITE:** Die lesende Prüfung ursprünglicher Abschlussbelege verwendet den Kern aus 15.l.R/10.7.10; neuer Proposal-Apply mit atomarer Transaktion und sämtliche W/R/C-Abnahmen bleiben hier erforderlich.
 
 #### 18.k.W – Let it Work
 
