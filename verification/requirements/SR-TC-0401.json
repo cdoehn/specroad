@@ -2,7 +2,7 @@
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0401",
   "requirement_id": "SR-REQ-0401",
-  "specification_sha256": "1b5d7e31e97c62ba47a2cda306d703190daaf2a82d5b58f74ef2439c3acfdb59",
+  "specification_sha256": "5b8d382cfa4848c45c9529b02c4b4399d552cc959c3f84ded8be4f9fe5b174b1",
   "primary_verification_id": "SR-VER-0028",
   "implementation_status": "partial",
   "method": "automated_behavior",

@@ -3,6 +3,7 @@
 from .common import CatalogError
 from .outcomes import RunLedger, bind_test_ids
 from .collection_identity import test_identity
+from .runtime_baseline import RuntimeMeasurements
 
 import importlib.metadata
 import json
@@ -29,6 +30,7 @@ def pytest_addoption(parser):
     group.addoption("--sr-gate", action="store_true", help="Verify the complete behavior catalog")
     group.addoption("--sr-evidence", type=Path, help="Exclusive path for bound development evidence")
     group.addoption("--sr-observations", type=Path, help="Exclusive path for test-run observations")
+    group.addoption("--sr-runtimes", type=Path, help="One explicit full parallel timing measurement")
     group.addoption("--sr-expected-tests", type=int, help="Required number of collected tests")
 
 
@@ -42,6 +44,8 @@ class VerificationSession:
         self.expected = config.getoption("sr_expected_tests")
         self.evidence = config.getoption("sr_evidence")
         self.observations = config.getoption("sr_observations")
+        self.runtimes = config.getoption("sr_runtimes")
+        self.runtime_measurements = RuntimeMeasurements() if self.runtimes is not None and not self.worker else None
         self.catalog = None
         self.specification = ROOT / "docs/specification/SpecRoad_Spezifikation.md"
         self.binding = None
@@ -51,7 +55,12 @@ class VerificationSession:
             return
         if self.expected is not None and self.expected <= 0:
             raise CatalogError("Expected test count must be positive")
-        for target in (self.evidence, self.observations):
+        if self.runtimes is not None and not self.gate:
+            raise CatalogError("Runtime calibration requires an explicit complete gate")
+        targets = [p.absolute() for p in (self.evidence, self.observations, self.runtimes) if p is not None]
+        if len(set(targets)) != len(targets):
+            raise CatalogError("Runtime, evidence and observations need separate destinations")
+        for target in (self.evidence, self.observations, self.runtimes):
             if target is not None:
                 evidence_target(target, ROOT)
         if (self.evidence is not None and self.observations is not None
@@ -183,6 +192,8 @@ class ReportObserver:
         # SubtestReport exposes a context in pytest >=9; do not count its call
         # report as a second execution of the parent test. No output is parsed.
         subtest = hasattr(report, "context")
+        if self.state.runtime_measurements is not None:
+            self.state.runtime_measurements.observe(report.nodeid, report.when, report.duration, subtest=subtest)
         properties = dict(report.user_properties)
         worker = properties.get("sr_worker", self.state.worker_id)
         alias = properties.get("sr_test_id")
@@ -254,4 +265,14 @@ def pytest_sessionfinish(session, exitstatus):
             publish_report(state.observations, ROOT, observation)
         except (CatalogError, OSError, ValueError) as error:
             print("Could not publish test observations: " + str(error), file=sys.stderr)
+            session.exitstatus = pytest.ExitCode.USAGE_ERROR
+
+    if state.runtimes is not None:
+        try:
+            if session.exitstatus != 0 or source_identity(ROOT) != state.source:
+                raise ValueError("Only an unchanged successful full run can be calibrated")
+            timings = state.runtime_measurements.finish(observation, state.source)
+            publish_report(state.runtimes, ROOT, timings)
+        except (CatalogError, OSError, ValueError, TypeError, KeyError):
+            print("Complete runtime calibration was not published.", file=sys.stderr)
             session.exitstatus = pytest.ExitCode.USAGE_ERROR

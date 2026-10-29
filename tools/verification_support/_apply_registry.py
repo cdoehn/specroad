@@ -78,7 +78,7 @@ def partition_metadata(registry, sequence):
             "partition_index": sequence % 3, "rotation_anchor_commit": registry["rotation_anchor_commit"]}
 
 
-def selection_receipt(registry, raw, selected, head, sequence):
+def selection_receipt(registry, raw, selected, head, sequence, runtime_filter=None):
     """Bind the actual numbered selection, without claiming a full-suite run."""
     numbers = {identity: number for number, identity in enumerate(registry["test_ids"])}
     binding = {"format_version": 1, "kind": "apply-selection-binding-v1",
@@ -88,5 +88,7 @@ def selection_receipt(registry, raw, selected, head, sequence):
         "partition_count": registry["partition_count"], "partition_index": sequence % registry["partition_count"],
         "tests": [{"nodeid": node, "test_id": identity, "test_number": numbers[identity]}
                   for node, identity in sorted(selected.items())]}
+    if runtime_filter is not None:
+        binding.update(format_version=2, kind="apply-selection-binding-v2", runtime_filter=runtime_filter)
     encoded = json.dumps(binding, sort_keys=True, ensure_ascii=True, allow_nan=False, separators=(",", ":")).encode()
     return {"selection_binding": binding, "selection_sha256": sha256(encoded).hexdigest()}

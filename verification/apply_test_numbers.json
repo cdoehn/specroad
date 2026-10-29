@@ -22200,7 +22200,14 @@
     "tests/test_work_restore_delivery.py::test_partial_native_target_rolls_back_without_delivery_or_completed_work",
     "tests/test_work_restore_delivery.py::test_self_hashed_final_payload_cannot_replace_native_result_or_drop_findings",
     "tests/test_work_restore_delivery.py::test_terminal_io_error_retains_actual_generation_and_needs_no_second_publication[False]",
-    "tests/test_work_restore_delivery.py::test_terminal_io_error_retains_actual_generation_and_needs_no_second_publication[True]"
+    "tests/test_work_restore_delivery.py::test_terminal_io_error_retains_actual_generation_and_needs_no_second_publication[True]",
+    "tests/test_runtime_baseline.py::test_apply_filters_only_the_numbered_group_and_binds_the_actual_selection",
+    "tests/test_runtime_baseline.py::test_explicit_freeze_is_exclusive_and_loading_never_changes_the_baseline",
+    "tests/test_runtime_baseline.py::test_measurements_require_complete_successful_phases_and_ignore_subreports",
+    "tests/test_runtime_baseline.py::test_real_failed_full_run_never_publishes_a_calibration",
+    "tests/test_runtime_baseline.py::test_real_full_parallel_gate_records_all_three_native_phases",
+    "tests/test_runtime_baseline.py::test_slowest_fifth_is_frozen_by_total_phase_time_and_identity_tie_break",
+    "tests/test_runtime_baseline.py::test_unknown_and_retired_tests_do_not_recalculate_the_frozen_cutoff"
   ],
   "partition_count": 3,
   "rotation_anchor_commit": "81d91ff9611f6466cb48d4fc96ddc550f8b911cc"

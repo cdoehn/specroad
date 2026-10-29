@@ -35,7 +35,8 @@ def pytest_arguments(args):
     arguments += ["--sr-gate", str(ROOT / "tests")]
     for option, value in (("--sr-evidence", args.evidence),
                           ("--sr-observations", args.observations),
-                          ("--sr-expected-tests", args.expected_tests)):
+                          ("--sr-expected-tests", args.expected_tests),
+                          ("--sr-runtimes", getattr(args, "runtime_measurement", None))):
         if value is not None:
             arguments += [option, str(value)]
     return arguments
@@ -48,11 +49,14 @@ def main(argv=None):
     parser.add_argument("--evidence", type=Path)
     parser.add_argument("--observations", type=Path)
     parser.add_argument("--expected-tests", type=int)
+    parser.add_argument("--runtime-measurement", type=Path)
     args = parser.parse_args(argv)
     if args.expected_tests is not None and args.expected_tests <= 0:
         parser.error("Expected tests must be positive")
     # Publication paths are interpreted relative to the caller, not a later cwd.
-    for name in ("evidence", "observations"):
+    if args.runtime_measurement is not None and args.workers in ("0", "1"):
+        parser.error("One-time calibration requires parallel workers")
+    for name in ("evidence", "observations", "runtime_measurement"):
         value = getattr(args, name)
         if value is not None:
             setattr(args, name, value.absolute())

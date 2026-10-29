@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 30 · **Stand:** 27. Oktober 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.35
+**Planrevision:** 31 · **Stand:** 28. Oktober 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.36
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 Schritte und 900 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; jeder Schritt besitzt einen konkreten Arbeitsumfang und eigene Verhaltensabnahme.
 
@@ -9,7 +9,7 @@ Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 S
 
 Fachliche Grundlage ist [`docs/specification/SpecRoad_Spezifikation.md`](../specification/SpecRoad_Spezifikation.md), einschließlich aller konsolidierten Korrekturen, 742 Requirements, 51 Verifikationsverträge, 46 Szenario-/E2E-Identitäten sowie R-01 bis R-75, Anhang U und den PatchHarbor-Rundweg aus Anhang W. Der [`Prüfbericht`](../reviews/SpecRoad_v0.2.7_Implementierungsreife_Pruefbericht.md) ist ein vorgelagerter Entwurfsreview, kein späterer Produktnachweis.
 
-Gebundene Spezifikations-SHA-256: `1b5d7e31e97c62ba47a2cda306d703190daaf2a82d5b58f74ef2439c3acfdb59`.
+Gebundene Spezifikations-SHA-256: `5b8d382cfa4848c45c9529b02c4b4399d552cc959c3f84ded8be4f9fe5b174b1`.
 Planungsbasis: Commit `fe2661d02ecf2f7eb483b58a4487eb009c6b3846`; sauberes Result-Bundle `specroad_Result_120209_0914_df3504.zip`; Repository-ID `3d2576df-d611-46fc-9d2b-92869468aaca`. Diese Angaben dokumentieren die Entstehung des Plans, nicht die zukünftige Patchbindung. **Jedes spätere Patchpaket bindet den dann aktuellen tatsächlichen Result-Zustand.**
 
 Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 2026 gelten zusätzlich und bei den nachfolgend benannten Konflikten vorrangig. Sonstige normative Spezifikationsinhalte werden nicht stillschweigend abgeschwächt. Neue fachliche Widersprüche, fehlende zwingende Angaben und Sicherheitsprobleme sind offen zu benennen, nicht durch erfundene Annahmen oder Scheinerfolge zu lösen.
@@ -36,7 +36,7 @@ Laufzeitdaten und ist keine Start-/Resume-Anweisung.
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 30
+plan_revision: 31
 implementation_plan_commits_total: 900
 implementation_plan_commits_completed: 649
 last_completed_plan_commit: 15.l.W
@@ -69,6 +69,27 @@ in ihrer bisherigen Reihenfolge. M20 übernimmt die zusätzliche Gesamtmatrix
 in seinen vorhandenen Schritten 20.f, 20.h und 20.m.
 
 Nach tatsächlich erfolgreich ausgeführten, zum Commit passenden Verhaltenstests wird die betreffende Checkbox im selben Git-Commit gesetzt. Reguläre Produktcommits aktualisieren den Produktzähler; Audit-Nacharbeiten aktualisieren ausschließlich ihren Status und `next_audit_step`. Ein fehlgeschlagener Schritt bleibt offen. Git ist die Historie; das Dokument nimmt keinen eigenen noch unbekannten Commit-Hash auf. Vor dem nächsten Auftrag werden tatsächliche Git-Historie, Result-Logs und Planfortschritt abgeglichen. Bei Inkonsistenz nicht einfach weiterzählen.
+
+## OFF-PLAN – Entwicklungsworkflow vereinfachen (Bundle 514)
+
+**WORKFLOW-514**, ausdrücklicher Nutzerauftrag vom 28. Oktober 2026. Eine
+gemeinsame ZIP liefert feste Laufzeiten/Ausschlüsse und die neue BD-001-Regel.
+Produktfortschritt bleibt **649/900**, nächster Schritt **15.l.R**. Quelle ist
+das erfolgreiche saubere Result von Bundle 513 mit 7.399 bestandenen Tests.
+Die einmalige vollständige parallele Einmessung ist ausdrücklich Teil dieses
+Auftrags; sie ersetzt keine späteren commitgebundenen Apply-Gates.
+
+- [x] **WORKFLOW-514.W:** Laufzeiten erfassen, eine feste langsamste Fünftelmenge bilden und nur die automatische N=3-Auswahl filtern; Arbeitsregeln gemeinsam aktualisieren. Commit: `test(workflow): Feste Laufzeitauswahl und vollständige Arbeitspakete einführen`.
+- [ ] **WORKFLOW-514.R:** Unvollständige/mehrdeutige Messungen, unveränderliche Listen, explizite ungefilterte Auswahl und Laufbindung robust prüfen. Commit: `test(workflow): Laufzeitfilter und ungefilterte Prüfwege absichern`.
+- [ ] **WORKFLOW-514.C:** Gemeinsame Timing-Verträge ohne Verhaltensänderung bereinigen. Commit: `refactor(testing): Laufzeitverträge gemeinsam nutzen`.
+
+**Abnahme:** Vollständige echte Messung mit eindeutigen parametrisierten
+Identitäten und drei Phasen; floor(N/5) feste Ausschlüsse, stabile Tie-Breaks;
+N=3-Nummern/Anker unverändert; neue Tests zugelassen; gezielte Dev-Prüfungen
+und manuelle Vollsuite ungefiltert; spätere Läufe verändern die Liste nicht;
+Apply-Berichte prüfen tatsächlich ausgeführte Identitäten und Listenhash.
+Einmessung und aktuelle Verhaltenstests werden getrennt belegt. Nur tatsächliche
+erfolgreiche Apply-Commits schließen die obigen Zwischenstände ab.
 
 ## OFF-PLAN – Verwaister äußerer Restore-Work-Owner (Bundle 510)
 
@@ -3548,7 +3569,7 @@ waren Teiltests; ihre Auswahlregel ist durch TD-002 aufgehoben.
 
 Die Nutzerfreigabe mehrerer Commits und W/R/C-Folgen pro Bundle gilt fortlaufend und wird in der lokalen AGENTS.md gepflegt. Die gewählte Strecke muss zum Auftrag und den tatsächlichen Abhängigkeiten dieses Plans passen. Für die Audit-Nacharbeiten gilt die vorgeschaltete Reihenfolge oben; danach folgt die reguläre Produktfolge. Bundlegröße und Produktfortschritt werden getrennt geführt.
 
-Der Chatbot wählt eine sichere zusammenhängende Strecke ab der nächsten offenen Kennung anhand Umfang, Kopplung, Testkosten, Kontext und tatsächlicher Ausführbarkeit. Er kann mehrere Schritte gemeinsam liefern oder mitten in W/R/C nach einem grünen Commit enden. Die gewählte erste/letzte Kennung, Anzahl und die exakten Einzelmessages werden vor Auslieferung genannt. Kein Squash und keine Umnummerierung nur wegen der Bündelgröße. Verschiedene Meilensteine dürfen nur bei erfüllten vorausgehenden Gates zusammen im selben Bundle liegen.
+Nach Nutzerauftrag vom 28. Oktober 2026 gilt Spezifikation 2.5: Ausgangsziel ist der vollständige nächste offene W-, R- oder C-Schritt, einschließlich seines gesamten bisherigen Rests. Weitere zusammenhängende vollständige Schritte werden bei erfüllten Gates möglichst gemeinsam geliefert. Interne Aufgaben und grüne Zwischenprüfungen rechtfertigen keine eigenen Bundles oder zusätzlichen Teilcommits. Erst ein belegtes, nach Diagnose und Reparatur verbliebenes und durch geringeren Umfang lösbares Hindernis erlaubt zwei fachlich zusammenhängende, möglichst ausgewogene Teile. Nur die erneut scheiternde Hälfte wird weiter geteilt. Versuch, Fehler, Reparatur, Begründung, Teilumfänge und vollständiger Rest einschließlich Integration werden hier dokumentiert. Infrastrukturfehler und vermutete Komplexität allein rechtfertigen keine Teilung. Die gewählte erste/letzte Kennung, Anzahl und die exakten Einzelmessages werden vor Auslieferung genannt. Kein Squash und keine Umnummerierung nur wegen der Bündelgröße. Verschiedene Meilensteine dürfen nur bei erfüllten vorausgehenden Gates zusammen im selben Bundle liegen.
 
 **Technische Konsequenz für Format 1:** PatchHarbor kopiert normale Nutzdateien bereits vor dem Entrypoint in das Repository. Deshalb darf ein Mehr-Commit-Paket nicht einfach den gesamten letzten Produktstand als normale Payload vorinstallieren und danach mehrere leere oder gemischte Commits erzeugen. Commitweise Stände werden beispielsweise als inert eingebettete Patch-/Dateidaten im privat ausgeführten Entrypoint gehalten und dort einzeln materialisiert. Je Commit folgen Scopekontrolle, Verhaltenstests, Fortschrittsaktualisierung, gezieltes Staging und genau dessen Git-Commit. Alle eingebetteten Pfade bleiben genauso sicher und der zulässige Gesamtumfang wird vorher gebunden. Keine verdeckten Aufrufe von Projektcode, keine fremden Dateien und kein rekursiver PatchHarbor-Aufruf.
 

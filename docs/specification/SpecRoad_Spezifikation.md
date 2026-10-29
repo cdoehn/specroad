@@ -1,21 +1,21 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.35
+## Version 0.2.36
 
 | Feld | Wert |
 |---|---|
 | Dokument-ID | `SR-SPEC-0001` |
-| Dokumentversion | `0.2.35` |
+| Dokumentversion | `0.2.36` |
 | Zielrelease | `SpecRoad Single-Repository Workbench 0.2.0` |
 | Status | **Fachlich konsolidierte Arbeitsgrundlage; technische Reviewentscheidung gesondert dokumentiert, formale Baseline-Freigabe und Produktabnahme nicht durch dieses Dokument erklärt** |
-| Stand | 27. Oktober 2026 |
+| Stand | 28. Oktober 2026 |
 | Sprache | Deutsch; technische Feldnamen, Enum-Werte und CLI-Kommandos Englisch |
-| Fachliche Quelle | **Diese Repositoryfassung v0.2.35 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.35 liegt mit dieser Änderung nicht vor.** |
+| Fachliche Quelle | **Diese Repositoryfassung v0.2.36 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.36 liegt mit dieser Änderung nicht vor.** |
 | Bearbeitbare Satzquelle | Diese Datei; eine spätere PDF muss denselben versionierten Inhalt wiedergeben. |
-| Vorgängerversion | Repository-Spezifikation v0.2.34 vom 27. Oktober 2026; frühere PDF-/Reviewbelege bleiben an ihre historischen Fassungen gebunden. |
-| Prüf- und Entscheidungsgrundlage | RESTORE-WORK-OWNER-HANDOFF, delegiert gemäß SPECROAD-DECISION-1 unter gültigem Control-Vertrag 3; Entscheidungsbeleg und offene Verhaltensabnahmen im OFF-PLAN-Abschnitt des Implementierungsplans. Bestehende Nutzerentscheidungen und Produktfreigabegrenzen bleiben unverändert. |
-| Änderungsart | Additive Präzisierung der expliziten Übernahme eines nativ als beendet belegten lokalen äußeren Restore-Work-Owners in 10.7.8; getrennte unveränderte Projekt-Recovery- und Freigabegates; keine neue Requirement-ID oder Produktposition. Umsetzung und Produktabnahme bleiben offen. |
+| Vorgängerversion | Repository-Spezifikation v0.2.35 vom 27. Oktober 2026; historische Nachweise bleiben unverändert. |
+| Prüf- und Entscheidungsgrundlage | Ausdrücklicher Nutzerauftrag WORKFLOW-514 vom 28. Oktober 2026; keine delegierte Erweiterung von Produktfreigaben. |
+| Änderungsart | Entwicklungsworkflow: feste Laufzeitauswahl zusätzlich zu N=3 und vollständige Planschritte mit belegter rekursiver Halbierung; keine neue Requirement-ID oder Produktposition. |
 
-> **Verbindlicher Quellenwechsel:** Die delegierte Detailentscheidung zum äußeren Restore-Work-Owner schreibt die Repository-Spezifikation als v0.2.35 fort. Frühere PDF- und Reviewnachweise behalten ihre historische Bindung und belegen diese Präzisierung nicht. Der py3langid-Adapter bleibt Bestandteil des Zielreleases; der kleine Core bleibt ohne Analyzer-Abhängigkeiten nutzbar.
+> **Verbindlicher Quellenwechsel:** Der ausdrückliche Workflow-Auftrag schreibt die Repository-Spezifikation als v0.2.36 fort. Frühere PDF- und Reviewnachweise bleiben historisch gebunden; keine Produktfreigabe wird erklärt.
 
 > **Fortbestehende Arbeitsprinzipien:** Weiche Budgets führen zu sparsamer vollständiger Weiterarbeit oder gesicherter Fortsetzung über mehrere Aufrufe beziehungsweise Prompts. Es werden keine erforderlichen Arbeiten stillschweigend ausgelassen. Reale Host-, Speicher-, Berechtigungs- und Sicherheitsgrenzen bleiben wirksam.
 
@@ -400,8 +400,8 @@ Ein reiner Spezifikationsschritt ist ein echter OFF-PLAN-Dokumentcommit,
 keine künstliche W/R/C-Produktfolge. Bei Produktimplementierung bleiben
 echte W/R/C-Zwischenstände und ihre jeweiligen Tests/Commits Pflicht.
 TD-001 und die lokale Testpolicy bleiben maßgeblich: keine erfundenen
-Dokumentationstests, kein zusätzlicher Volltest, unveränderte parallele
-Apply-Testrotation mit N=3 pro tatsächlichem Commit. Collection-, Katalog-,
+Dokumentationstests, regulär kein zusätzlicher Volltest; parallele
+Apply-Testrotation mit N=3 und Laufzeitfilterung nach 2.5 bleiben maßgeblich. Collection-, Katalog-,
 Paket- und Result-Prüfungen bleiben bestehen. Ein Dokumentcommit erhöht
 keinen regulären Produktzähler und erklärt keine Produktabnahme.
 
@@ -423,6 +423,67 @@ nachträgliche Umdeutung alter Aufträge. Ihre Übernahme erfolgt ausschließlic
 nach dem bestehenden ausdrücklich beauftragten Control-Verfahren.
 
 ---
+
+### 2.5 Entwicklungsworkflow: feste Laufzeitfilterung und vollständige Planschritte
+
+**Ausdrücklicher Nutzerauftrag vom 28. Oktober 2026 — WORKFLOW-514.** Diese
+Regel ändert die Entwicklung und ihre Testauswahl. Sie ändert keine
+Produktanforderung, menschliche Freigabe, Releaseabnahme oder gespeicherte
+historische Evidence und erteilt Control keine neue fachliche Befugnis.
+
+**Einmalige Einmessung.** Eine ausdrücklich beauftragte vollständige,
+erfolgreiche, parallele Testsuite erfasst je eindeutiger Testidentität alle
+Vorbereitungs-, Ausführungs- und Aufräumphasen. Nur vollständige Messungen
+dürfen eine feste Liste erzeugen. Es werden floor(Testanzahl / 5) Tests mit
+der größten Summe dieser Laufzeiten ausgeschlossen; bei Gleichstand ordnet
+die Testidentität aufsteigend. Das sind 20 Prozent nach Testanzahl, keine
+Zeitquote. Die Messbasis und Laufzeiten bleiben unter
+`verification/test_runtime_baseline.json` versioniert. Der gemessene
+Quellhash dokumentiert den historischen Messstand, nicht eine Behauptung
+über spätere Quellen. Kein stilles Neumessen, Überschreiben oder Nachrücken.
+
+**Ausführung.** Automatisches Apply wählt weiterhin die commitgebundene
+N=3-Gruppe mit unveränderten dauerhaften Testnummern und entfernt daraus
+die fest ausgeschlossenen Identitäten. Neue, unbekannte Identitäten werden
+nicht wegen fehlender Laufzeit ausgeschlossen. Entfernte Tests erzeugen
+keine Ersatz-Ausschlüsse. Ohne veröffentlichte Liste gilt die bisherige
+Auswahl; ungültige oder während des Laufs veränderte Daten begründen keinen
+Erfolg. Leere Auswahlen sind kein bestandener Testlauf. Gezielte, ausdrücklich
+von Dev ausgewählte Tests und manuelle Volltests umgehen diesen Filter
+vollständig. Eine spätere Vollsuite verändert die feste Liste nicht.
+Ausgeschlossene Tests werden nicht gelöscht. Drei erfolgreiche Commitgruppen
+decken nur den weiter zugelassenen Bestand ab, nicht die ausgeschlossenen
+Tests. Teiltestberichte binden die tatsächliche Auswahl und Liste; sie
+behaupten keine Vollsuite- oder Releasefreigabe. Der erste gemeinsame
+Workflow-Auftrag erlaubt genau die für diese Einmessung notwendige lokale
+Vollsuite; die übliche gezielte parallele Entwicklung bleibt bestehen.
+
+**Vollständige Planschritte.** Ab dem nächsten offenen W-, R- oder C-Schritt
+ist der gesamte offene fachliche Umfang das Ausgangsziel einer Lieferung.
+Interne Aufgaben oder einzelne grüne Tests sind keine Liefergrenzen.
+Zusammenhängende folgende vollständige Schritte dürfen bei erfüllten Gates
+in derselben ZIP liegen. Echte W/R/C-Zustände, ihre Tests und Commits bleiben
+getrennt; zusätzliche Teilcommits innerhalb eines solchen Schritts bedürfen
+derselben Begründung wie eine Teilung auf mehrere Bundles.
+
+**Belegte Halbierung.** Erst ein tatsächlicher Umsetzungs- oder
+Integrationsversuch mit Diagnose und gezieltem Reparaturversuch darf eine
+Teilung begründen, wenn gerade geringerer Umfang das belegte Hindernis löst.
+Zunächst entstehen zwei möglichst ausgewogene, fachlich zusammenhängende
+Teile in sicher anwendbarer Reihenfolge. Nur eine wiederum nachweislich
+scheiternde Hälfte wird weiter halbiert. Beide Teile müssen den bisherigen
+Umfang einschließlich ihrer gemeinsamen Integration vollständig erhalten.
+Der Plan hält Versuch, Fehler, Reparatur, Teilungsgrund, Teilumfänge und
+vollständigen Rest fest. Lange Laufzeiten, Modellüberlastung,
+Verbindungsabbrüche, vermuteter Kontextdruck oder bloß gefühlte Komplexität
+sind allein keine Teilungsgründe. Ist sichere Teilung unmöglich oder fehlen
+zwingende externe Fakten beziehungsweise Befugnisse, ist der konkrete
+Blocker zu melden. Keine blinde Wiederholung oder Verwerfung vorhandener
+Arbeit. Eine reine Teilungsentscheidung erzeugt kein Klärungsbundle.
+
+Die Arbeitsdetails stehen in der lokalen AGENTS.md, die konkreten
+Abnahmekriterien im Implementierungsplan. PatchHarbor bleibt die
+Übergabestelle; diese Regel startet oder stoppt keinen Dienst.
 
 ## 3. Produktziele
 

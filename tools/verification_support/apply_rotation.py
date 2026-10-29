@@ -11,6 +11,7 @@ from .ci_reference import _load_report, _unique_object
 from .identity import source_identity
 from .process_environment import test_environment
 from .selected_contract import new_report_directory, verify_observation
+from .runtime_baseline import load_baseline, filter_partition
 
 from ._apply_registry import (REGISTRY, validate_registry, validate_registry_shape,
                               select_partition, partition_metadata, selection_receipt)
@@ -90,10 +91,13 @@ def run_apply_partition(root, outdir, *, workers=4, runner=None):
     validate_registry_shape(registry)
     head, sequence, previous = commit_context(root, registry)
     selected = select_partition(catalog["nodeid_to_test_id"], registry, sequence, previous)
+    baseline = load_baseline(root)
+    selected, runtime_filter = filter_partition(selected, baseline)
     receipt = {}
     if registry["format_version"] == 2:
-        receipt = selection_receipt(registry, registry_raw, selected, head, sequence)
+        receipt = selection_receipt(registry, registry_raw, selected, head, sequence, runtime_filter)
         if (source_identity(root) != binding or (root / REGISTRY).read_bytes() != registry_raw
+                or load_baseline(root) != baseline
                 or commit_context(root, registry) != (head, sequence, previous)):
             raise ValueError("Apply inputs changed before the selected tests could start")
     (outdir / "nodeids.txt").write_text("\n".join(selected) + "\n", encoding="utf-8")
@@ -114,6 +118,7 @@ def run_apply_partition(root, outdir, *, workers=4, runner=None):
                 or any(not name.startswith("gw") for name in observation["worker_test_counts"])
                 or code != 0 or source_identity(root) != binding
                 or (root / REGISTRY).read_bytes() != registry_raw
+                or load_baseline(root) != baseline
                 or commit_context(root, registry) != (head, sequence, previous)):
             raise ValueError("Nonpassing, changed or unbound Apply selection")
     except (OSError, ValueError, TypeError, KeyError, AttributeError, RecursionError):
@@ -125,6 +130,9 @@ def run_apply_partition(root, outdir, *, workers=4, runner=None):
               "collected_tests": catalog["collected_tests"], "expected_tests": len(selected),
               "nodeid_to_test_id": selected, "workers": workers,
               "process_exit_code": code, "errors": errors, "exit_code": 0 if not errors else 1}
+    if runtime_filter is not None:
+        result.update(test_scope="stable_modulo_partition_with_frozen_runtime_filter",
+                      runtime_filter=runtime_filter)
     with (outdir / "selection.json").open("x", encoding="utf-8") as stream:
         json.dump(result, stream, allow_nan=False, sort_keys=True)
         stream.write("\n")
