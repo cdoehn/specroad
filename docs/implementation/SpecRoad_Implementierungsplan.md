@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 36 · **Stand:** 30. Oktober 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.40
+**Planrevision:** 37 · **Stand:** 30. Oktober 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.40
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 Schritte und 900 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; die ausdrücklich genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wird nach 10.7.10 innerhalb von 15.l.R vorgezogen. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -36,12 +36,12 @@ Laufzeitdaten und ist keine Start-/Resume-Anweisung.
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 36
+plan_revision: 37
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 651
-last_completed_plan_commit: 15.l.C
-next_plan_commit: 15.m.W
-last_completed_numbered_bundle: 522
+implementation_plan_commits_completed: 652
+last_completed_plan_commit: 15.m.W
+next_plan_commit: 15.m.R
+last_completed_numbered_bundle: 523
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -33117,12 +33117,112 @@ PH-API-RESULT wird durch dieses Refactoring nicht vorweggenommen.
 
 #### 15.m.W – Let it Work
 
-- [ ] **15.m.W** · Position **652/900** · Voraussetzung: `15.l.C`.
+- [x] **15.m.W** · Position **652/900** · Voraussetzung: `15.l.C`.
 **Exakte Commit-Message:** `15.m.W feat(transport): Öffentliche PatchHarbor-API und Runtimebindung aufbauen`
 
 **Umsetzung:** Den verzögert geladenen Adapter ausschließlich gegen patchharbor.api und den dokumentierten verifizierten PYZ-Bootstrap aufbauen. Konkrete kompatible Distribution, Version, Hash, Pythonmatrix und verfügbare API-Fähigkeiten erfassen; normale Core-Aufrufe laden PatchHarbor nicht.
 
 **Verhaltensabnahme:** Realer öffentlicher Import aus gelieferten Artefakten unter 3.10/3.11 und den weiteren unterstützten Versionen; Core ohne Transportkomponente weiterhin nutzbar. Fehlende Fähigkeiten werden maschinenlesbar verweigert.
+
+**Prüfort der Pythonmatrix – ausdrückliche Nutzeranweisung vom
+30. Oktober 2026:** „Die Python prüfungen machen wir in der ci“.
+Die reale CPython-3.10–3.14-Matrix aus gelieferten Artefakten gehört damit in
+die bestehende, ausschließlich vom Nutzer gestartete manuelle CI. Sie bleibt
+als eigene Kompatibilitätsabnahme offen, bis passende echte CI-Nachweise
+vorliegen. Für den lokalen W-Abschluss gelten die gezielten parallelen
+Verhaltenstests auf dem verfügbaren Interpreter und anschließend die fällige
+parallele Apply-Testgruppe N=3. Fehlende zusätzliche lokale Interpreter
+verhindern diese Übergabe nicht; ein lokaler Erfolg wird nicht als bestandene
+Pythonmatrix, Vollsuite oder Releasefreigabe ausgegeben. Die Pflichtabnahme
+selbst, Anhang W.7, die übrigen W/R/C-Gates und die externe Voraussetzung
+PH-API-RESULT werden nicht gestrichen. Workflow, Control und Dienste bleiben
+unverändert; Codex startet keine CI.
+
+
+
+**Vollständiger lokaler W-Umfang, Bundle 523 (30. Oktober 2026).**
+Quelle ist das erfolgreiche saubere Result 522
+`specroad-apply_Result_172629_1030_7ae503.zip`, SHA-256
+`087181bb62796f1abbccae3432654241e5f2fbd0d2447a1dbd495983d7c8d174`,
+Abschlusscommit `c8089bdc92fcd504c01b736edcf16e92c3259a0b`.
+Sein Apply-Gate hat 6.012 Tests bestanden (Sequenz 229 / Gruppe 1).
+Native Resultprüfung, alle 2.384 Base-Dateien und die aktuelle saubere
+Vierfachbindung stimmen überein. Die fünf bestätigten Fortschrittsmarkierungen
+von 15.l.C wurden in Dev übernommen; übrige Arbeitsbytes und Git-Historie
+blieben erhalten.
+
+**Adapter und tatsächlich gelieferte Runtime.** `specroad.transport.PatchHarborRuntime`
+bindet einen expliziten absoluten Referenzpfad, dessen extern vertrauenswürdig
+übergebenen SHA-256 und einen neuen privaten Runtimepfad. Konstruktion,
+`describe()` und gewöhnliche Core-Aufrufe laden PatchHarbor nicht.
+Erst `load_api(required=(...))` verwendet den dokumentierten verifizierten
+PYZ-Bootstrap aus der geprüften Root-Anleitung. Dessen ausführbarer Code ist
+unverändert übernommen, mit MIT-Lizenzhinweis; keine eigene Resultrekonstruktion
+und kein CLI-, Installations-, Netzwerk- oder Git-Fallback entstehen.
+
+Gebunden ist die tatsächliche Distribution **PatchHarbor 1.4.0**, Profil
+`patchharbor-core-no-watcher-v1`, `python-present`, deklarierte CPython-Matrix
+3.10–3.14, Abnahmeplattform Linux-x86-64; PYZ-SHA-256
+`4e0d26997bffe9476e79d98211cef2d93be7899063a0eb3480bea2ffa3d8f594`.
+Der Adapter liefert ausschließlich das öffentliche Modul `patchharbor.api` und
+erfasst die verfügbaren Aufrufe `bundle`, `inspect_patch`, `validate_patch`,
+`pack_patch` und `apply`. Ihre Verfügbarkeit erteilt keine fachliche Apply- oder
+Reviewfreigabe. Version, Artefakthash und Pythonanforderung werden vor Import
+gegen diese feste Distribution geprüft. Fehlende Fähigkeiten liefern einen
+maschinenlesbaren Unavailable-Befund; **PH-API-RESULT bleibt ausdrücklich
+nicht verfügbar**, ohne erfundenen API-Namen oder privaten Resultreader.
+Der Runtime-Descriptor-Precheck behauptet niemals vollständige Resultprüfung.
+
+**Gezielte Abnahme.** 71 Tests in fünf Dateien, vier parallele Worker,
+Exit 0; abgeschlossen `2026-10-30T18:47:48.291892+00:00`. Darunter sind 17 neue
+Transport-Verhaltenstests mit der unveränderten ausgelieferten PYZ, echten
+öffentlichen Imports und nativer Patchprüfung aus Modul- und PYZ-Core unter
+dem tatsächlich vorhandenen CPython 3.14.4. Synthetische Runtimehüllen sind
+ausdrücklich nur Descriptor-Fixtures, keine vollständigen Resultfixtures.
+Die Tests belegen außerdem Core ohne Transport, fehlende Fähigkeiten,
+fehlende Runtime, Herkunfts-/Hashkonflikte, Erhalt bestehender Zielpfade,
+abweichende vorbereitete Bytes und erneute Referenzprüfung. Fremde Imports
+werden nicht entladen; Originalbytes bleiben bei Verweigerung erhalten.
+
+- `tests/test_transport_runtime.py`
+- `tests/test_core.py`
+- `tests/test_cli.py`
+- `tests/test_venv_runtime.py`
+- `tests/test_identity.py`
+
+Quell-SHA-256: `496db6465055f00e7ede62b2374b2862a382164f499048ccd280ae65158aef25`.
+Auswahlbericht: `ddb319bad293bbfa190166445d8b8a48a35b17c1808ab0c1113db726ab3784f7`;
+Einzeloutcomes: `18ad6fc3062f489d4347c1a69cf834be81b177c1e863e472424f13d2afddb166`;
+vollständige Collection: `51d4d3d4f6cb2bae81de42c03548dcb17cb726d5ea063e9913a83e5efdc46df4`.
+Die Collection bestätigt 22.531 aktive Identitäten und führt keine Testkörper
+aus. Die 17 neuen Testnummern werden hinten angefügt; bestehende Nummern,
+Rotation, historische Baseline und Originalnachweise bleiben erhalten.
+Dev läuft ungefiltert und speichert gemäß RUNTIME-AUTO-521 jeden Versuch in der
+gemeinsamen dauerhaften Messhistorie. Die zwei vorausgehenden bestandenen
+71er-Gates bleiben erhalten; nach der ausdrücklichen CI-Zuordnung wurden die
+aktiven Katalogbindungen angepasst, danach vier Leerzeichen im hinzugefügten
+Lizenzkommentar korrigiert. Der letzte Gate bindet exakt diese Lieferbytes.
+Es gab keinen fachlichen Split und keinen fehlgeschlagenen Verhaltenstest.
+
+**Offene CI-Abnahme.** Der frühere lokale Interpreterversuch konnte wegen
+fehlender DNS-Auflösung keine weiteren Versionen bereitstellen. Die anschließend
+ausdrücklich vom Nutzer in die CI verlegte vollständige Pythonmatrix bleibt
+offen. Bestehender `workflow_dispatch`, fünf Pythonversionen und die parallele
+Vollsuite bleiben unverändert; kein CI-Lauf wurde gestartet oder als bestanden
+ausgegeben. Die lokale W-Abnahme ist kein Pythonmatrix-/Vollsuite-/Releasebeleg.
+
+**Gebundene Übergabe und Rest.** Ein regulärer W-Commit, keine künstliche
+W/R/C-Folge. Der Entrypoint installiert zuerst genau den gezielt geprüften
+W-Zustand über PatchHarbors nativen Payload-Writer. Fällig ist **N=3-Sequenz
+230 / Gruppe 2**, mit aktueller Laufzeitauswahl und v3-Bindungsprüfung der
+tatsächlich gelaufenen Tests. Erst dessen Erfolg erlaubt die W-Checkbox und
+den Fortschritt 652/900, zuletzt 15.m.W, nächstens 15.m.R, Bundle 523,
+anschließend den exakten W-Commit. Bei Übergabe ist dieses Apply-Gate noch
+nicht beobachtet; Fehler erhalten den tatsächlichen Arbeitszustand.
+15.m.R/C und alle Hin-/Rück-/Hostintegrationen bleiben offen. Für R fehlt
+weiterhin der extern zu liefernde öffentliche vollständige Result-/Snapshot-
+Vertrag; die spätere Integration wird nicht vorgetäuscht. Control, Watcher,
+lokale Konfigurationen und Dienste bleiben unverändert.
 
 #### 15.m.R – Make it Right
 

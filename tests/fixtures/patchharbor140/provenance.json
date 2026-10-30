@@ -1,0 +1,13 @@
+{
+  "distribution": "patchharbor",
+  "version": "1.4.0",
+  "artifact_sha256": "4e0d26997bffe9476e79d98211cef2d93be7899063a0eb3480bea2ffa3d8f594",
+  "artifact_bytes": 973604,
+  "source_result_sha256": "087181bb62796f1abbccae3432654241e5f2fbd0d2447a1dbd495983d7c8d174",
+  "source_result_filename": "specroad-apply_Result_172629_1030_7ae503.zip",
+  "kind": "original_runtime_and_exact_documented_bootstrap",
+  "fixture_scope": "Real unchanged delivered runtime; tests build explicitly synthetic descriptor-only envelopes, not full Result or snapshot fixtures.",
+  "original_bootstrap_sha256": "f30220eb4111443481c70994fb0fc055547b23d5c9e5eb2d98afb7004c22ff61",
+  "vendored_bootstrap_sha256": "3b99a350f6ba09fa66dcaa69480e2e51559ed00698030cf09adc156a0950c98d",
+  "license_notice_added": true
+}

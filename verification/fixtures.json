@@ -61,8 +61,8 @@
       "provider": "tests/test_builtin_document_views.py:trace_project"
     },
     "SR-FIX-BUNDLE-COMPARISON-v1": {
-      "provider": "tests/test_bundle_comparison.py:captured",
-      "kind": "Native full project ZIPs from real project, archive, initialized language and completed receipt fixtures; independent local and Git field-comparison oracles, public direct/CLI/structured diff, invalid native roots, binary payloads, partial inputs and observed source replacement. No extraction or full-merge oracle. R cases retain original file/parent observations and reject missing native dependencies, invalid schemas, public partial promotion, foreign pairs and malformed selectors without local fallback."
+      "kind": "Native full project ZIPs from real project, archive, initialized language and completed receipt fixtures; independent local and Git field-comparison oracles, public direct/CLI/structured diff, invalid native roots, binary payloads, partial inputs and observed source replacement. No extraction or full-merge oracle. R cases retain original file/parent observations and reject missing native dependencies, invalid schemas, public partial promotion, foreign pairs and malformed selectors without local fallback.",
+      "provider": "tests/test_bundle_comparison.py:captured"
     },
     "SR-FIX-BUNDLE-VERIFICATION-RIGHT-v1": {
       "kind": "Native document/release models with independently projected synthetic reviews, shared outside targets, original endpoint bytes, configuration parent context, attachments, baselines and language packages. Rehashed adversarial archives, no-write and no-origin-read traps, independent member root projection. No human approval, external history, extraction or promotion claim.",
@@ -403,6 +403,10 @@
     "SR-FIX-PARTIAL-READ-v1": {
       "kind": "Actual extracted native partials with removed origin, original configuration parent chains or synthetic review endpoint proof bytes; rehashed adversarial metadata, retained read changes, filesystem inventory and no-write traps. No real review, origin authenticity, rehydration or release claim. Member-only query/graph/view/diagram comparisons, native partial validation/inspection, direct weak-boundary observations, cycle/depth/page limits and writer admission with retained metadata diagnosis.",
       "provider": "tests/test_partial_read_commands.py:extracted;tests/test_bundle_verification_right.py:reviewed;tests/test_partial_bundle_right.py:configured;tests/test_partial_read_consumers.py:view_partial"
+    },
+    "SR-FIX-PATCHHARBOR-140-RUNTIME-v1": {
+      "kind": "Original delivered PatchHarbor 1.4.0 PYZ and runtime metadata with pinned SHA-256; explicitly synthetic descriptor-only envelopes, not full Result or snapshot fixtures. Real isolated current-CPython imports and native public patch inspection using module/PYZ SpecRoad builds. Audit hooks reject shell/network/process effects. No host Apply, complete reference validation, proposal lifecycle or unavailable Python/platform success is claimed.",
+      "provider": "tests/support/transport_runtime.py:envelope,native_patch,probe;tests/fixtures/patchharbor140/provenance.json"
     },
     "SR-FIX-PLANNING-BUILTIN-VIEWS-v1": {
       "kind": "Native owned Roadmap, Verification coverage and ReleaseReadiness contexts with actual stored/external selections, explicit synthetic host proofs and failed/missing gates. Read-only view adapters, exact source/model mismatch and forbidden-I/O observations. No rendered text or production human approval is an oracle.",
@@ -905,6 +909,7 @@
     "SR-FIX-OWNED-TEMP-v1",
     "SR-FIX-PARTIAL-BUNDLE-RIGHT-v1",
     "SR-FIX-PARTIAL-READ-v1",
+    "SR-FIX-PATCHHARBOR-140-RUNTIME-v1",
     "SR-FIX-PLANNING-BOUNDARIES-v1",
     "SR-FIX-PLANNING-BUILTIN-VIEWS-v1",
     "SR-FIX-PLANNING-BUILTIN-WORK-v1",

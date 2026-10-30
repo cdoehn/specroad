@@ -7,8 +7,9 @@
   "implementation_status": "partial",
   "method": "automated_behavior",
   "fixture_ids": [
+    "SR-FIX-ISOLATED-CPYTHON-v1",
     "SR-FIX-OWNED-TEMP-v1",
-    "SR-FIX-ISOLATED-CPYTHON-v1"
+    "SR-FIX-PATCHHARBOR-140-RUNTIME-v1"
   ],
   "preconditions": [
     "Use the current trusted checkout and a private temporary directory."
@@ -20,7 +21,7 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Die entpackte Core-Distribution und die Core-Zipapp DÜRFEN NICHT für eine nicht Git-spezifische Core-Funktion extern zu installierende Laufzeitpakete voraussetzen; die PatchHarbor-Runtime für das Transportprofil MUSS offline mitgeliefert und ausschließlich bei dessen Nutzung geladen werden, während Analyzer-Zusatzvoraussetzungen getrennt Anhang T.6 folgen.",
-    "scope": "Existing bootstrap/test-infrastructure behavior only; not complete requirement acceptance."
+    "scope": "Existing bootstrap/test-infrastructure behavior only; not complete requirement acceptance. The lazy transport adapter is additionally exercised with module and PYZ Core commands without any PatchHarbor installation or load."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [
@@ -39,11 +40,13 @@
   },
   "evidence_kind": "specroad-dev-pytest-v1",
   "test_ids": [
+    "test_cli.EntryPointTests.test_module_and_zipapp_have_same_exit_and_file_effects",
     "test_core.CoreTests.test_isolated_standard_library_only_import",
-    "test_cli.EntryPointTests.test_module_and_zipapp_have_same_exit_and_file_effects"
+    "tests/test_transport_runtime.py::test_core_commands_and_adapter_description_need_no_transport[module]",
+    "tests/test_transport_runtime.py::test_core_commands_and_adapter_description_need_no_transport[zipapp]"
   ],
   "open_items": [
     "Complete the remaining normative behavior and its requirement-specific oracle; obtain current evidence on required platforms.",
-    "SpecRoad 0.2.8 transport-profile extension remains unimplemented: verify the bundled, lazy public PatchHarbor API and explicit host-only Git prerequisites in 15.m–15.o and M20; existing tests do not prove this new scope."
+    "Complete transport profile and explicit host-only Git prerequisites in 15.m-15.o and M20. The lazy 1.4.0 adapter is present; the user assigns its full Python matrix to manually started CI, still open. Current Core tests do not prove the complete transport roundtrip."
   ]
 }
