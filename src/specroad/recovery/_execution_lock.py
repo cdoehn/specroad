@@ -9,7 +9,7 @@ from ..changes._lock_files import LockFiles, identity
 from ..changes._lock_process import LinuxOwnerProbe
 from ..changes._lock_owner_policy import _recovery_permitted
 from ..changes._recovery_bytes import fingerprint_recovery_file
-from ..changes._staging_files import _image
+from ..changes._publication_io import publish_recovery_owner
 from ..changes.lock_values import LOCK_VERSION, LockRecord, text
 from ..changes.locking import HeldProjectLock, _bound, project_lock
 from ..model.canonical import canonical_json_bytes
@@ -105,15 +105,16 @@ def restore_lock(project, plan, layout, expected, *, authority, actor, refresh, 
         source_check()
         pending = prefix + '/owner.pending.json'
         token = fingerprint_recovery_file(files, pending)
+
+        def before_replace():
+            unchanged()
+            source_check()
+
         with files.directory(prefix.split('/')) as staged:
             with files.directory(('.specroad', 'locks')) as locks:
                 require(staged is not None and locks is not None, 'restore_owner_directory_changed', exit_code=6)
-                _image(staged, 'owner.pending.json', len(new.source_bytes), new.sha256, identity=token['identity'])
-                unchanged()
-                source_check()
-                os.replace('owner.pending.json', 'project.json', src_dir_fd=staged, dst_dir_fd=locks)
-                os.fsync(locks)
-                os.fsync(staged)
+                publish_recovery_owner(staged, locks, size=len(new.source_bytes),
+                    digest=new.sha256, identity=token['identity'], before_replace=before_replace)
         current, inode = files.read_record()
         require(current is not None and current.source_bytes == new.source_bytes and inode == token['identity'],
                 'restore_owner_changed', exit_code=6)

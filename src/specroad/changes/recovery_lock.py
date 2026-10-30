@@ -25,7 +25,7 @@ from ._recovery_inputs import _parse
 from ._recovery_evidence import (EvidenceRecord, evidence_root, read_evidence,
                                  persist_evidence, rollback_receipt)
 from ._recovery_receipts import existing_recovery_record, recheck_recovery_record
-from ._staging_files import _image
+from ._publication_io import publish_recovery_owner
 from ._recovery_terminal import read_terminal_journal, terminal_marker_path
 
 
@@ -128,13 +128,8 @@ def _takeover(files, transaction_id, *, project_id, request_id, command,
             with files.directory(('.specroad', 'locks')) as locks:
                 if staged is None or locks is None:
                     raise RecoveryError('recovery_takeover_directory_changed', exit_code=6)
-                _image(staged, 'owner.pending.json', len(next_record.source_bytes),
-                       next_record.sha256, identity=owner_token[1])
-                unchanged()
-                # No unlink/create gap or partial new owner at the live path.
-                os.replace('owner.pending.json', 'project.json', src_dir_fd=staged, dst_dir_fd=locks)
-                os.fsync(locks)
-                os.fsync(staged)
+                publish_recovery_owner(staged, locks, size=len(next_record.source_bytes),
+                    digest=next_record.sha256, identity=owner_token[1], before_replace=unchanged)
         current, inode = files.read_record()
         if current is None or current.source_bytes != next_record.source_bytes or inode != owner_token[1]:
             raise RecoveryError('lock_owner_changed', exit_code=6)

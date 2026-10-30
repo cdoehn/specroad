@@ -5,12 +5,27 @@ module owns only the byte-bound final move: revalidate the source image, keep it
 opened identity stable, optionally set the final mode durably, execute caller
 checks immediately before replace, fsync both directories, and verify the final
 image by the same identity and content binding.
+
+Owner transfer uses the narrower existing protocol below: validate the staged
+owner, run the caller's final checks, replace, and sync both directories. The
+caller retains the live-record identity check and recovery evidence.
 """
 from collections.abc import Callable
 import os
 
 from ..security import paths as guards
 from ._staging_files import _image
+
+
+def publish_recovery_owner(staged, locks, *, size, digest, identity, before_replace):
+    """Publish a staged owner without changing the caller's I/O boundaries."""
+    _image(staged, 'owner.pending.json', size, digest, identity=identity)
+    before_replace()
+    # No unlink/create gap or partial new owner at the live path. Failures keep
+    # the actual owner and original evidence for the caller's recovery policy.
+    os.replace('owner.pending.json', 'project.json', src_dir_fd=staged, dst_dir_fd=locks)
+    os.fsync(locks)
+    os.fsync(staged)
 
 
 def replace_bound_image(source_dir, source_name, target_dir, target_name, *,

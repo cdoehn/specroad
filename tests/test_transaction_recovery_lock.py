@@ -184,7 +184,7 @@ def test_takeover_rechecks_journal_after_authorization(tmp_path):
 
 
 def test_changed_owner_at_transfer_boundary_is_preserved(tmp_path, monkeypatch):
-    import specroad.changes.recovery_lock as implementation
+    import specroad.changes._publication_io as implementation
     lock, journal, expected = orphan_writer(tmp_path)
     foreign = dict(lock.data, lock_id='aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa')
     foreign_bytes = LockRecord(canonical_json_bytes(foreign)).source_bytes

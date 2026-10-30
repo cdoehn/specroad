@@ -38,10 +38,10 @@ Laufzeitdaten und ist keine Start-/Resume-Anweisung.
 ```yaml
 plan_revision: 36
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 650
-last_completed_plan_commit: 15.l.R
-next_plan_commit: 15.l.C
-last_completed_numbered_bundle: 521
+implementation_plan_commits_completed: 651
+last_completed_plan_commit: 15.l.C
+next_plan_commit: 15.m.W
+last_completed_numbered_bundle: 522
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -32904,7 +32904,7 @@ beenden den Einzelauftrag ohne Änderung von Control oder eigene Fortsetzung.
 
 #### 15.l.C – Make it Clean
 
-- [ ] **15.l.C** · Position **651/900** · Voraussetzung: `15.l.R`.
+- [x] **15.l.C** · Position **651/900** · Voraussetzung: `15.l.R`.
 **Exakte Commit-Message:** `15.l.C refactor(bundle): Restore veröffentlichen und Crashabsicherung bereinigen`
 
 **Bereinigung:** Bestehende Transaktions-/Recoveryprimitiven verwenden, keine destruktive Sonderabkürzung.
@@ -32912,6 +32912,200 @@ beenden den Einzelauftrag ohne Änderung von Control oder eigene Fortsetzung.
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
 **Regressionsabnahme:** Alle vorhandenen W-/R-Verhaltenstests dieses Schritts und die vom Refactoring betroffenen bisherigen Verhaltenstests erneut ausführen; erwartete Fachwerte nicht passend zum Refactoring umschreiben. Bei reinen Präsentations-/Dokuschritten keine solchen Tests erfinden.
+
+
+**Vollständiger C-Abschluss, Bundle 522 (30. Oktober 2026).** Maßgebliche Basis
+ist das erfolgreiche und saubere Result 521
+`specroad-apply_Result_112901_1030_321cbc.zip`, SHA-256
+`232045cdf651dd2c8e178f79f882ae236dde95021a353a717bc33198dbd4355e`,
+Abschlusscommit `f9e59017b86ade38231ddd65718abdfe03c4a033`.
+Die tatsächlichen parallelen Apply-Gates der vorausgehenden OFF-PLAN-W/R-Folge
+sind belegt: Sequenz 227/Gruppe 2 mit 6.007 und Sequenz 228/Gruppe 0 mit
+6.027 bestandenen Tests. Der vollständige Base-Snapshot und die saubere
+Vierfachbindung wurden nativ gegen Apply geprüft. In Dev musste ausschließlich
+der dokumentierte Fortschritt dieser bereits abgeschlossenen Folge übernommen
+werden; der vorherige lokale Plan wurde erhalten.
+
+**Bereinigung und unveränderte Grenzen.** Die gemeinsame Routine
+`changes._publication_io.publish_recovery_owner` ersetzt die doppelte
+Owner-Veröffentlichung in Restore und Transaction-Recovery. Sie behält exakt
+die bisherige Abfolge: gebundenes `_image`, aufruferspezifische Prüfungen,
+atomarer Replace, `fsync` des Lockverzeichnisses, `fsync` des Stagingverzeichnisses.
+Aufrufer behalten Autorisierung, Mutex, aktuelle Ownerbeobachtung,
+Journal-/Source-Prüfung, Fehlerklassen, abschließende Inode-/Byteprüfung und
+Originalnachweise. Zusätzliche Öffnungs-, Schreib- oder Syncgrenzen entstehen
+nicht. Fehler erhalten den tatsächlichen Owner und den Recoveryzustand.
+
+RestoreStore und Work-Restore verwenden weiterhin die vorhandenen nativen
+Publication-, Evidence-, Directory-Binding- und Recoveryprimitiven.
+Die unabhängige Sollinventarrekonstruktion bleibt von den tatsächlichen
+Schreiboperationen getrennt; Forward und Resume behalten ihre unterschiedlichen
+Prüfgrenzen. Keine destruktive Sonderabkürzung, kein neues Fachverhalten und keine weitere
+Planabhängigkeit werden eingeführt. Der vorhandene Ownerwechseltest verschiebt
+nur seinen Injection-Import zur extrahierten Routine, ohne Fachassertions zu
+ändern. Spezifikation, aktive Katalogbindungen, Testnummern und historische
+Nachweise bleiben bytegleich. Der C-Umfang wird vollständig und ungeteilt
+in genau einem Commit geliefert.
+
+**Regressionsumfang.** Sämtliche vorhandenen W-/R-Tests aus dem Abschnitt 15.l,
+die direkten Abnahmen SR-TC-0461/0462 und die zusätzlich betroffenen nativen
+Transaction-Recovery-Verhaltenstests wurden geprüft. Zusammen 3.027 Tests in
+87 Dateien, ohne Überschneidung zwischen den beiden gezielten Auswahlen.
+Beide vollständigen Katalog-Collections bestätigen unverändert 22.514 aktive
+Identitäten; sie führen keine Testkörper aus. Die Dev-Läufe bleiben ungefiltert
+und speichern die Phasen gemäß RUNTIME-AUTO-521 in der gemeinsamen Historie.
+Es handelt sich um gezielte Teiltests, keinen Vollsuite-/Releaseerfolg und
+keinen menschlichen Freigabenachweis.
+
+**Dev-Gate `C-main-retry`:** 2839 bestehende Tests in
+78 Dateien bestanden, 12 parallele Worker,
+Exit 0; abgeschlossen `2026-10-30T17:25:17.989995+00:00`.
+Quell-SHA-256: `c3e7c093d4491c0b5e83c9be286644b42ae86b0e633819dcc978a3bc197e1bef`.
+Auswahlbericht: `1ba3dd706b7819223944b651e6d10cda9d27fe1109dce2f7f18b159bb63790e4`;
+Einzeloutcomes: `bc387640f1ca0eb37006e38b4c62c058d63e8e9ffc10efa878a3d3393b7d2541`;
+vollständige Collection: `c1519484311e29ab0329cc2c7c999326af2075b2bdb98addcb3212b77b25ed63`.
+
+- `tests/test_bootstrap.py`
+- `tests/test_bundle_receipts.py`
+- `tests/test_bundle_receipts_right.py`
+- `tests/test_capabilities.py`
+- `tests/test_catalog_check.py`
+- `tests/test_catalog_check_right.py`
+- `tests/test_change_target.py`
+- `tests/test_change_target_right.py`
+- `tests/test_cli.py`
+- `tests/test_description.py`
+- `tests/test_discard_restart.py`
+- `tests/test_discard_restart_right.py`
+- `tests/test_model_validation.py`
+- `tests/test_model_validation_right.py`
+- `tests/test_normalization_target.py`
+- `tests/test_preflight_profiles.py`
+- `tests/test_production_validation.py`
+- `tests/test_production_validation_right.py`
+- `tests/test_project_locks.py`
+- `tests/test_project_locks_right.py`
+- `tests/test_proposal_completion.py`
+- `tests/test_proposal_history.py`
+- `tests/test_proposal_originals.py`
+- `tests/test_recovery_auxiliary_writes.py`
+- `tests/test_recovery_protection.py`
+- `tests/test_registry.py`
+- `tests/test_requests.py`
+- `tests/test_restore_capture.py`
+- `tests/test_restore_directory_binding.py`
+- `tests/test_restore_durability.py`
+- `tests/test_restore_execution.py`
+- `tests/test_restore_execution_right.py`
+- `tests/test_restore_files.py`
+- `tests/test_restore_history.py`
+- `tests/test_restore_history_right.py`
+- `tests/test_restore_invocation.py`
+- `tests/test_restore_invocation_options.py`
+- `tests/test_restore_legacy_history.py`
+- `tests/test_restore_operational_history.py`
+- `tests/test_restore_plan.py`
+- `tests/test_restore_plan_right.py`
+- `tests/test_restore_planning_recovery.py`
+- `tests/test_restore_profile_rules.py`
+- `tests/test_restore_proposals.py`
+- `tests/test_restore_public.py`
+- `tests/test_restore_qualification.py`
+- `tests/test_restore_schema_boundary_public.py`
+- `tests/test_restore_source_metadata.py`
+- `tests/test_restore_specialists.py`
+- `tests/test_restore_work_public.py`
+- `tests/test_results.py`
+- `tests/test_runtime_resource_policy.py`
+- `tests/test_schema_catalog.py`
+- `tests/test_schema_catalog_robustness.py`
+- `tests/test_terminal_recovery.py`
+- `tests/test_terminal_recovery_right.py`
+- `tests/test_transaction_preflight.py`
+- `tests/test_transaction_preflight_right.py`
+- `tests/test_transaction_recovery_lock.py`
+- `tests/test_work_checkpoints.py`
+- `tests/test_work_checkpoints_right.py`
+- `tests/test_work_control.py`
+- `tests/test_work_finalization.py`
+- `tests/test_work_finalization_right.py`
+- `tests/test_work_manifest.py`
+- `tests/test_work_manifest_right.py`
+- `tests/test_work_packages.py`
+- `tests/test_work_packages_right.py`
+- `tests/test_work_publication.py`
+- `tests/test_work_restore_binding.py`
+- `tests/test_work_restore_delivery.py`
+- `tests/test_work_restore_execution.py`
+- `tests/test_work_restore_owner.py`
+- `tests/test_work_restore_progress.py`
+- `tests/test_work_result_files.py`
+- `tests/test_work_resume_right.py`
+- `tests/test_work_root.py`
+- `tests/test_work_root_right.py`
+
+**Dev-Gate `C-recovery-retry`:** 188 bestehende Tests in
+9 Dateien bestanden, 8 parallele Worker,
+Exit 0; abgeschlossen `2026-10-30T12:29:18.143512+00:00`.
+Quell-SHA-256: `c3e7c093d4491c0b5e83c9be286644b42ae86b0e633819dcc978a3bc197e1bef`.
+Auswahlbericht: `9410d8930165bdd5189f3d076290093ce1eb888281af7d1dc6550c0d45ef7274`;
+Einzeloutcomes: `759a755756047b2be7b3b76ffd73459e6f7e06d5808a3459c99b4817f1c20f3c`;
+vollständige Collection: `c1519484311e29ab0329cc2c7c999326af2075b2bdb98addcb3212b77b25ed63`.
+
+- `tests/test_evidence_import_transaction_right.py`
+- `tests/test_negative_relation_review_right.py`
+- `tests/test_normalization_scope_transactions.py`
+- `tests/test_recovery_initial_successor.py`
+- `tests/test_work_publication_right.py`
+- `tests/test_work_receipt_files.py`
+- `tests/test_writer_boundaries.py`
+- `tests/test_writer_boundaries_right.py`
+- `tests/test_writer_pending_recovery.py`
+
+**Rechnerabsturz im Hauptlauf.** Nach dem vom Nutzer gemeldeten Absturz
+blieben Code, Quellbindung und Messdatenbank erhalten (Integritätsprüfung ok).
+Der ursprüngliche Hauptlauf hatte 1.669 vollständig erfolgreiche Messungen,
+vier unvollständige Versuche und 1.166 noch nicht gestartete Tests, aber
+keinen nativen Abschlussbericht. Gemäß 2.5 ist die Messdatenbank kein
+Testfreigabenachweis. Deshalb wurde ausschließlich dieser unvollständige
+2.839er-Gate mit zwölf parallelen Workern unverändert wiederholt. Die bereits
+vollständig abgeschlossenen Zusatzgates wurden nach dem Absturz erhalten
+und nicht erneut ausgeführt. Alle ursprünglichen Logs und Versuche bleiben
+historisch erhalten; kein alter Erfolg ersetzt eine jüngere ungültige Messung.
+
+**Erhaltener Orchestrierungsabbruch und Wiederholung.** Die äußere Tool-Steuerung
+des ersten Zusatzlaufs meldete Exit 143, als 159 Tests vollständig gemessen
+waren und noch kein nativer Abschlussbericht vorlag. Die deshalb gestartete
+unveränderte Wiederholung verwendet acht parallele Worker und eine eigene
+Prüfablage. Danach belegten neue Messphasen, dass die ursprüngliche Kindprüfung
+weiterlief; der Befund ist somit kein belegter Abbruch ihres Pytest-Prozesses.
+Die Herkunft des Signals bleibt unbekannt. Runner und aktive Crashhelfer
+enthalten keinen Suite-Timeout oder Signalabbruch ihres Eltern-Prozessverbandes.
+Beide gestarteten Prüfungen wurden erhalten; ihre nativen Abschlussberichte
+werden getrennt bewertet, der äußere Wrapperabschluss wird nicht nachgebaut.
+Die 188 Zusatzidentitäten zählen nur einmal zur fachlichen Abdeckung.
+Historie und jüngste Testversuche bleiben unverändert erhalten; kein
+Produktsplit, keine neue Testassertion und kein dritter Lauf werden abgeleitet.
+
+Der ursprüngliche Kindlauf hat anschließend ebenfalls seine 188 Tests
+erfolgreich abgeschlossen: nativer Prozessexit 0, Quellbindung unverändert.
+Sein Auswahlbericht hat SHA-256
+`8ff96fb893b015959ee1f6862f919e21cdb8a91e1f9704455966c16a352084f0`,
+seine Einzeloutcomes
+`16186f99975d9071f867a3f9f19a7ce4188b86a3c1fbcc61d18ee6ad5a229991`.
+Dies ist der native Gatenachweis, keine Umdeutung des äußeren Exits 143.
+
+**Gebundene Übergabe.** Der Entrypoint prüft vor dem ersten Write die exakte
+saubere Quellbindung und installiert ausschließlich den geprüften C-Zustand
+über den nativen Payload-Writer. Fällig ist **N=3-Sequenz 229 / Gruppe 1**;
+der Apply-Lauf ermittelt seine aktuelle Auswahl aus dem neuesten dauerhaften
+Laufzeit-Snapshot und prüft die tatsächlich gelaufenen Identitäten sowie die
+Auswahlbindung v3. Erst dessen Erfolg erlaubt C-Checkbox, Fortschritt 651/900,
+zuletzt 15.l.C, nächstens 15.m.W und abgeschlossenes Bundle 522, anschließend
+den einen Commit mit der exakten C-Planmessage. Bei Übergabe ist dieses
+Apply-Gate noch nicht beobachtet; bei Fehler bleiben echte Arbeitsbytes erhalten.
+Der nächste Schritt 15.m.W bleibt offen; seine externe Voraussetzung
+PH-API-RESULT wird durch dieses Refactoring nicht vorweggenommen.
 
 <a id="step-15-m"></a>
 ### 15.m – Öffentliche PatchHarbor-API und Runtimebindung
