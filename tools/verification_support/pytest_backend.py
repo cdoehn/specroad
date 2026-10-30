@@ -289,11 +289,18 @@ def pytest_sessionfinish(session, exitstatus):
     if state.history is not None:
         try:
             changed = state.history_source is not None and source_identity(ROOT) != state.history_source
+            if exitstatus == 0 and not state.ledger.errors:
+                current = state.ledger.snapshot(exitstatus)
+                state.history.verify_run(state.history_run, current['nodeid_to_test_id'], current['test_outcomes'])
             state.history.finish(state.history_run, int(exitstatus), invalid=changed)
             if changed:
                 state.ledger.error('runtime_source_changed')
                 session.exitstatus = pytest.ExitCode.USAGE_ERROR
         except (OSError, ValueError, sqlite3.Error):
+            try:
+                state.history.finish(state.history_run, int(pytest.ExitCode.USAGE_ERROR), invalid=True)
+            except (OSError, ValueError, sqlite3.Error):
+                pass
             state.ledger.error('runtime_storage_failed')
             session.exitstatus = pytest.ExitCode.USAGE_ERROR
         finally:

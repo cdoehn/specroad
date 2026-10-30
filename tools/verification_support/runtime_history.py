@@ -7,6 +7,8 @@ import math
 import os
 from pathlib import Path
 import sqlite3
+import stat
+import time
 
 from .common import json_bytes
 from .identity import platform_identity
@@ -69,7 +71,20 @@ class RuntimeHistory:
         fd = os.open(self.path, os.O_RDWR | os.O_CREAT | os.O_NOFOLLOW, 0o600)
         try:
             # Serialize creation only; every writer uses SQLite transactions afterwards.
-            fcntl.flock(fd, fcntl.LOCK_EX)
+            deadline = time.monotonic() + 30
+            while True:
+                try:
+                    fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                    break
+                except BlockingIOError:
+                    if time.monotonic() >= deadline:
+                        raise ValueError('Runtime history initialization is busy') from None
+                    time.sleep(0.01)
+            opened = os.fstat(fd)
+            current = self.path.lstat()
+            if (not stat.S_ISREG(opened.st_mode) or opened.st_nlink != 1
+                    or (opened.st_dev, opened.st_ino) != (current.st_dev, current.st_ino)):
+                raise ValueError('Runtime history file changed while opening')
             size = os.fstat(fd).st_size
             if size and os.read(fd, 16) != b'SQLite format 3\0':
                 raise ValueError('Invalid runtime history file')
@@ -86,6 +101,9 @@ class RuntimeHistory:
                     os.close(directory)
             if self.db.execute('SELECT version FROM metadata WHERE id=1').fetchall() != [(1,)]:
                 raise ValueError('Unknown runtime history version')
+            if self.db.execute('PRAGMA quick_check').fetchall() != [('ok',)]:
+                raise ValueError('Runtime history integrity check failed')
+            self.file_identity = (opened.st_dev, opened.st_ino)
         except BaseException:
             self.close()
             raise
@@ -113,6 +131,9 @@ class RuntimeHistory:
         if not all(type(v) is str and v for v in (node, identity, worker)):
             raise ValueError('A native test identity is required before execution')
         with self.db:
+            state = self.db.execute('SELECT finished FROM runs WHERE id=?', (run,)).fetchone()
+            if state != (None,):
+                raise ValueError('A live runtime attempt requires an unfinished run')
             self.db.execute('INSERT INTO attempts(run,node,test,worker,started) VALUES(?,?,?,?,?)',
                             (run, node, identity, worker, now()))
 
@@ -120,9 +141,12 @@ class RuntimeHistory:
         with self.db:
             row = self.db.execute('SELECT id,test,worker FROM attempts WHERE run=? AND node=?',
                                   (run, node)).fetchone()
-            if row is None or row[1:] != (identity, worker):
+            if row is None:
                 raise ValueError('Runtime phase does not match the started test')
             attempt = row[0]
+            if row[1:] != (identity, worker):
+                self.db.execute('UPDATE attempts SET invalid=1 WHERE id=?', (attempt,))
+                return
             if subtest:
                 if outcome != 'passed':
                     self.db.execute('UPDATE attempts SET invalid=1 WHERE id=?', (attempt,))
@@ -136,6 +160,9 @@ class RuntimeHistory:
             if previous:
                 self.db.execute('UPDATE attempts SET invalid=1 WHERE id=?', (attempt,))
                 return
+            order = self.db.execute('SELECT phase FROM phases WHERE attempt=? ORDER BY rowid', (attempt,)).fetchall()
+            if [p[0] for p in order] != list(PHASES[:PHASES.index(phase)]):
+                self.db.execute('UPDATE attempts SET invalid=1 WHERE id=?', (attempt,))
             self.db.execute('INSERT INTO phases VALUES(?,?,?,?,?)',
                             (attempt, phase, round(duration * 1_000_000_000), outcome, now()))
             if outcome != 'passed':
@@ -150,6 +177,18 @@ class RuntimeHistory:
             if invalid:
                 self.db.execute('UPDATE attempts SET invalid=1 WHERE run=?', (run,))
             self.db.execute('UPDATE runs SET finished=?,exit_code=? WHERE id=?', (now(), code, run))
+
+    def verify_run(self, run, pairs, outcomes):
+        """A successful gate requires its own durable matching records, not old values."""
+        current = self.path.lstat()
+        if (current.st_nlink != 1 or not stat.S_ISREG(current.st_mode)
+                or (current.st_dev, current.st_ino) != self.file_identity):
+            raise ValueError('Runtime history was replaced during execution')
+        rows = self.db.execute('SELECT node,test,invalid,complete FROM attempts WHERE run=?', (run,)).fetchall()
+        observed = {node: identity for node, identity, _, _ in rows}
+        if observed != pairs or any((outcomes.get(identity) == 'passed') != (not invalid and bool(complete))
+                                    for _, identity, invalid, complete in rows):
+            raise ValueError('The successful observation lacks matching durable phases')
 
     def snapshot(self, identities):
         ids = sorted(set(identities))
@@ -188,6 +227,17 @@ def filter_latest(selected, snapshot):
             or snapshot['kind'] != 'specroad-latest-runtime-snapshot-v1'):
         raise ValueError('Unknown runtime snapshot')
     rows = snapshot['tests']
+    if type(rows) is not list or not rows or any(type(r) is not dict for r in rows):
+        raise ValueError('Invalid runtime snapshot records')
+    for row in rows:
+        if (set(row) not in ({'test_id','duration_ns'}, {'test_id','duration_ns','attempt'},
+                             {'test_id','duration_ns','origin_sha256'})
+                or type(row.get('test_id')) is not str or not row['test_id']
+                or ('attempt' in row and (type(row['attempt']) is not int or row['attempt'] < 1))
+                or ('origin_sha256' in row and (type(row['origin_sha256']) is not str
+                    or len(row['origin_sha256']) != 64
+                    or any(c not in '0123456789abcdef' for c in row['origin_sha256'])))):
+            raise ValueError('Invalid runtime snapshot identity or origin')
     ids = [r['test_id'] for r in rows]
     if ids != sorted(set(ids)) or not set(selected.values()) <= set(ids):
         raise ValueError('Snapshot must cover the complete current selection')

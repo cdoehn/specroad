@@ -41,7 +41,7 @@ implementation_plan_commits_total: 900
 implementation_plan_commits_completed: 650
 last_completed_plan_commit: 15.l.R
 next_plan_commit: 15.l.C
-last_completed_numbered_bundle: 519
+last_completed_numbered_bundle: 521
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -87,13 +87,31 @@ Pflichtabnahmen:
 
 - [x] **RUNTIME-AUTO-521.W:** Vollständige automatische Messung, aktuelle
   Apply-Auswahl und beide Inventarkorrekturen funktionsfähig integrieren.
-- [ ] **RUNTIME-AUTO-521.R:** Fehler-, Abbruch-, Parallelitäts- und I/O-Grenzen
+- [x] **RUNTIME-AUTO-521.R:** Fehler-, Abbruch-, Parallelitäts- und I/O-Grenzen
   vervollständigen und mit Verhaltensabnahmen absichern.
 
 W-Dev-Abnahme: **215 gezielte Verhaltenstests**, vier parallele Worker, Exit 0.
 Beide Tests aus dem fehlgeschlagenen Result sind enthalten und erfolgreich.
 Vollständige Collection/Katalogprüfung: **22.489** Identitäten; keine Vollsuite.
 Der W-Apply-Nachweis und sein Commit stehen bis zur externen Ausführung aus.
+
+R-Dev-Abnahme: **330 gezielte Verhaltenstests**, vier parallele Worker,
+Exit 0; ergänzend **57** Tests der betroffenen Auswahl-Runner, ebenfalls
+vier Worker und Exit 0. Vollständige Collection/Katalogprüfung: **22.514**
+Identitäten. Echte Worker-Abbrüche, erfolgreiche Wiederholung, konkurrierende
+Schreiber, defekte/ausgetauschte Datenbanken und verweigerte Schreibvorgänge
+wurden in isolierten Testprojekten geprüft. Diese negativen Fixture-Läufe sind
+keine fehlgeschlagenen Produktgates. Historische Journale bleiben unverändert.
+
+Lieferfolge innerhalb Bundle 521: erst W-Zustand installieren, fällige N=3-Gruppe
+2 mit aktueller Auswahl prüfen und committen; anschließend R-Zustand herstellen,
+Gruppe 0 mit neuem Messsnapshot prüfen und committen. Keine Vorinstallation des
+R-Endstands. Die aktuellen Messdaten bestimmen die Gruppengröße unmittelbar
+vor dem jeweiligen Lauf, keine veraltete feste Sollzahl. Bei Fehler bleiben
+bereits erzeugte Commits und der tatsächliche Restzustand erhalten.
+Commit-Messages:
+1. `test(workflow): Laufzeiten automatisch erfassen und Apply-Auswahl aktualisieren`
+2. `test(workflow): Messhistorie gegen Abbruch und Speicherfehler absichern`
 
 Die frühere Ausnahme RUNTIME-REFRESH-520 bleibt historisch dokumentiert; ihr
 fehlgeschlagener Einzelcommit wird nicht als erfolgreich abgeschlossen erklärt.
@@ -4039,6 +4057,12 @@ waren Teiltests; ihre Auswahlregel ist durch TD-002 aufgehoben.
 Die Nutzerfreigabe mehrerer Commits und W/R/C-Folgen pro Bundle gilt fortlaufend und wird in der lokalen AGENTS.md gepflegt. Die gewählte Strecke muss zum Auftrag und den tatsächlichen Abhängigkeiten dieses Plans passen. Für die Audit-Nacharbeiten gilt die vorgeschaltete Reihenfolge oben; danach folgt die reguläre Produktfolge. Bundlegröße und Produktfortschritt werden getrennt geführt.
 
 Nach Nutzerauftrag vom 28. Oktober 2026 gilt Spezifikation 2.5: Ausgangsziel ist der vollständige nächste offene W-, R- oder C-Schritt, einschließlich seines gesamten bisherigen Rests. Weitere zusammenhängende vollständige Schritte werden bei erfüllten Gates möglichst gemeinsam geliefert. Interne Aufgaben und grüne Zwischenprüfungen rechtfertigen keine eigenen Bundles oder zusätzlichen Teilcommits. Erst ein belegtes, nach Diagnose und Reparatur verbliebenes und durch geringeren Umfang lösbares Hindernis erlaubt zwei fachlich zusammenhängende, möglichst ausgewogene Teile. Nur die erneut scheiternde Hälfte wird weiter geteilt. Versuch, Fehler, Reparatur, Begründung, Teilumfänge und vollständiger Rest einschließlich Integration werden hier dokumentiert. Infrastrukturfehler und vermutete Komplexität allein rechtfertigen keine Teilung. Die gewählte erste/letzte Kennung, Anzahl und die exakten Einzelmessages werden vor Auslieferung genannt. Kein Squash und keine Umnummerierung nur wegen der Bündelgröße. Verschiedene Meilensteine dürfen nur bei erfüllten vorausgehenden Gates zusammen im selben Bundle liegen.
+
+Nach ausdrücklichem Nutzerauftrag vom 30. Oktober 2026 ersetzt
+RUNTIME-AUTO-521 allein die bisherige feste Laufzeitauswahl: laufende
+Phasenmessung mit Historie, ausschließlich neueste Werte, dynamischer
+Apply-Filter nach 2.5. W/R/C-Zustände und vollständige Arbeitspakete bleiben
+unverändert. Diese Workflow-W/R-Folge ist keine Bearbeitung von 15.l.C.
 
 **Technische Konsequenz für Format 1:** PatchHarbor kopiert normale Nutzdateien bereits vor dem Entrypoint in das Repository. Deshalb darf ein Mehr-Commit-Paket nicht einfach den gesamten letzten Produktstand als normale Payload vorinstallieren und danach mehrere leere oder gemischte Commits erzeugen. Commitweise Stände werden beispielsweise als inert eingebettete Patch-/Dateidaten im privat ausgeführten Entrypoint gehalten und dort einzeln materialisiert. Je Commit folgen Scopekontrolle, Verhaltenstests, Fortschrittsaktualisierung, gezieltes Staging und genau dessen Git-Commit. Alle eingebetteten Pfade bleiben genauso sicher und der zulässige Gesamtumfang wird vorher gebunden. Keine verdeckten Aufrufe von Projektcode, keine fremden Dateien und kein rekursiver PatchHarbor-Aufruf.
 
