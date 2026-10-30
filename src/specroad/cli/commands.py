@@ -161,6 +161,11 @@ def _bundle_extract(invocation):
     return extract_command(invocation)
 
 
+def _restore(invocation):
+    from .restore_command import restore_command
+    return restore_command(invocation)
+
+
 def _read_runtime_options():
     return (OptionSpec('--resource-profile', takes_value=True, choices=('constrained', 'standard')),
             *(OptionSpec(flag, takes_value=True) for flag in ('--cpu-budget-ms', '--wall-budget-ms',
@@ -169,7 +174,26 @@ def _read_runtime_options():
 
 
 def builtin_registry() -> CommandRegistry:
+    from ._restore_metadata import RESTORE_OPTIONS
+    from .work_commands import restore_work_contract, work_commands
     commands = (CommandSpec(
+        command_id='recover.restore', words=('recover', 'restore'),
+        command_class=CommandClass.RECOVERY_WRITE, preflight_profile=PreflightProfile.RECOVERY,
+        effect_scope=EffectScope.RECOVERY_TRANSACTION, handler=_restore,
+        requires_project=True, budget_policy_version='runtime-budget-v2',
+        options=(*RESTORE_OPTIONS, OptionSpec('--work-dir', takes_value=True), *_read_runtime_options(),
+            OptionSpec('--format', takes_value=True, choices=('pretty', 'json')),
+            OptionSpec('--no-color'), OptionSpec('--quiet')),
+        protocol=CommandProtocol('restore-command-v1', {'command_id': 'recover.restore',
+            'options': {'--project': '/project', '--source-root': '/source', '--from': 'project.zip',
+                '--source-kind': 'project_bundle', '--dry-run': True,
+                '--output-root': '/output', '--output': 'restore.json'}},
+            handler_exit_codes=(0, 2, 3, 4, 5, 6, 7, 8),
+            diagnostic_codes=('CORE_USAGE', 'CORE_MODEL', 'CORE_INTERNAL', 'CORE_ENVIRONMENT',
+                              'CORE_CONFLICT', 'CORE_SECURITY'),
+            lock_kind='recovery',
+            work=restore_work_contract()),
+    ), CommandSpec(
         command_id='bundle.extract', words=('bundle', 'extract'), command_class=CommandClass.ROOT_CREATION,
         preflight_profile=PreflightProfile.ROOT_CREATION, effect_scope=EffectScope.NEW_ROOT,
         handler=_bundle_extract, positionals=(PositionalSpec('file'),), requires_write_paths=('output',),
@@ -466,6 +490,7 @@ def builtin_registry() -> CommandRegistry:
     from .metadata_commands import metadata_commands
     commands += read_commands()
     commands += metadata_commands()
+    commands += work_commands()
     readers = {'artifact.show', 'query', 'trace', 'why', 'impact', 'diff', 'configuration.evaluate', 'roadmap.explain', 'export', 'bundle.verify', 'render', 'view.render', 'diagram'}
     return CommandRegistry(tuple(replace(command, options=command.options + _read_runtime_options(),
         budget_policy_version='runtime-budget-v2') if command.command_id in readers else command

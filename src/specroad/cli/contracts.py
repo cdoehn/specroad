@@ -83,12 +83,19 @@ class WorkContract:
                     or len(values) != len(set(values))):
                 raise CommandUsageError("Invalid work contract sequence")
             object.__setattr__(self, name, values)
-        if self.continuation_supported is not False or self.external_side_effects or self.checkpoint_algorithms:
-            raise CommandUsageError("The current Core has no published work-resume engine")
+        if type(self.continuation_supported) is not bool:
+            raise CommandUsageError('A boolean continuation contract is required')
+        if self.continuation_supported:
+            if (self.checkpoint_algorithms != ('work-manifest-segments-v1',)
+                    or self.external_side_effects != ('external_work_directory',)):
+                raise CommandUsageError('A native Work checkpoint contract is required')
+        elif self.external_side_effects or self.checkpoint_algorithms:
+            raise CommandUsageError('Checkpoint effects require a continuation engine')
 
     def as_dict(self):
-        return {"continuation_supported": False, "external_side_effects": [],
-                "checkpoint_algorithms": [],
+        return {"continuation_supported": self.continuation_supported,
+                "external_side_effects": list(self.external_side_effects),
+                "checkpoint_algorithms": list(self.checkpoint_algorithms),
                 "minimum_step": {"kind": self.minimum_step, "required_inputs": list(self.required_inputs),
                     "limits": {"memory_bytes": None, "cpu_seconds": None}, "limits_status": "unmeasured",
                     "on_blocked": "fail_without_checkpoint", "blocked_exit_code": 5}}
@@ -106,17 +113,19 @@ class CommandProtocol:
 
     def __post_init__(self):
         from .requests import CommandRequest
-        if self.lock_kind not in ('none', 'bootstrap') or not isinstance(self.work, WorkContract):
+        if self.lock_kind not in ('none', 'bootstrap', 'recovery') or not isinstance(self.work, WorkContract):
             raise CommandUsageError("Unsupported lock or work protocol")
         if not isinstance(self.result_schema, str) or not re.fullmatch(r"[a-z][a-z0-9._-]*", self.result_schema):
             raise CommandUsageError("Invalid result schema identity")
         example = self.example if isinstance(self.example, CommandRequest) else CommandRequest.from_mapping(self.example)
         object.__setattr__(self, "example", example)
         codes = _sequence(self.handler_exit_codes, "handler_exit_codes")
-        if (not codes or any(type(code) is not int or code not in range(8) for code in codes)
+        if (not codes or any(type(code) is not int or code not in range(9) for code in codes)
                 or len(codes) != len(set(codes))):
             raise CommandUsageError("Invalid completed handler exit codes")
         object.__setattr__(self, "handler_exit_codes", codes)
+        if (8 in codes) != self.work.continuation_supported:
+            raise CommandUsageError('Continuation exit requires its native Work contract')
         diagnostics = _sequence(self.diagnostic_codes, "diagnostic_codes")
         if (any(not isinstance(code, str) or not re.fullmatch(r"[A-Z][A-Z0-9_]*", code) for code in diagnostics)
                 or len(diagnostics) != len(set(diagnostics))):
@@ -200,6 +209,12 @@ class CommandSpec:
             # Restore has its own actor and planning contract, never a proposal
             # or ordinary normative-write preflight. Metadata grants no authority.
             normative_flags = {'--as-proposal'}
+        if self.protocol is not None and self.protocol.lock_kind == 'recovery' and not restore:
+            raise CommandUsageError('Recovery locking requires the native Restore command')
+        if (self.protocol is not None and self.protocol.work.continuation_supported
+                and not (restore or (self.command_id == 'work.resume'
+                    and self.command_class is CommandClass.WORK_OPERATIONAL))):
+            raise CommandUsageError('No installed continuation adapter for this command')
         if self.command_class is not CommandClass.NORMATIVE_WRITE and normative_flags.intersection(flags):
             raise CommandUsageError("Normative write option on a non-write command")
         if not all(isinstance(path, str) and re.fullmatch(r"[a-z][a-z0-9_]*", path) for path in self.requires_write_paths):
@@ -256,6 +271,9 @@ class Invocation:
     arguments: Mapping[str, str] = field(default_factory=dict)
     registry: object = field(default=None, repr=False, compare=False)
     consumption_call: object = field(default=None, repr=False, compare=False)
+    recovery_authority: object = field(default=None, repr=False, compare=False)
+    recovery_actor: object = field(default=None, repr=False, compare=False)
+    restore_services: object = field(default=None, repr=False, compare=False)
 
     def __post_init__(self) -> None:
         object.__setattr__(self, "options", MappingProxyType(dict(self.options)))

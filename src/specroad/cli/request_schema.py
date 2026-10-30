@@ -19,6 +19,22 @@ def request_schema(command):
     exclusions = [list(pair) for pair in exclusive_pairs(command.options)]
     if exclusions:
         options["allOf"] = [{"not": {"required": pair}} for pair in exclusions]
+    if command.command_id == 'recover.restore':
+        from ._restore_metadata import _PLAN, _EXECUTE, _PLAN_REQUIRED, _EXECUTE_REQUIRED
+        def mode(required, forbidden):
+            return {'required': sorted(required),
+                    'not': {'anyOf': [{'required': [name]} for name in sorted(forbidden)]}}
+        options.setdefault('allOf', []).append({'anyOf': [
+            {'allOf': [mode(_PLAN_REQUIRED, _EXECUTE), {'anyOf': [
+                {'properties': {'--source-kind': {'const': 'baseline'}},
+                 'required': ['--default-locale', '--generated-path']},
+                {'properties': {'--source-kind': {'const': 'project_bundle'}},
+                 'not': {'anyOf': [{'required': ['--default-locale']},
+                                  {'required': ['--generated-path']}]}}]}]},
+            {'allOf': [mode(_EXECUTE_REQUIRED, _PLAN), {'anyOf': [
+                {'required': ['--selection-root', '--affected-journals']},
+                {'not': {'anyOf': [{'required': ['--selection-root']},
+                                  {'required': ['--affected-journals']}]}}]}]}]})
     arguments = {"type": "object", "additionalProperties": False,
                  "properties": {arg.name: arg.value_contract.as_schema() for arg in command.positionals},
                  "required": [arg.name for arg in command.positionals if arg.required]}

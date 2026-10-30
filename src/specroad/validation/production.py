@@ -108,20 +108,31 @@ def production_gates(resources, profile):
     return tuple(gates)
 
 
-def formal_findings(documents, records, checked, profile, resources, *, configuration=None):
+def formal_findings(documents, records, checked, profile, resources, *, configuration=None,
+                    approval_contexts=()):
     findings, identities = [], []
+    contexts = {c.requirement_id: c for c in approval_contexts}
     for record in records:
         value = record.data
         if (record.identity.id not in checked or value["artifact_type"] != "requirement"
                 or value["maturity"] not in ("in_review", "approved")):
             continue
         identities.append(record.identity.id)
+        supplied = contexts.pop(record.identity.id, None)
+        projections = {} if supplied is None else {key: supplied.data[key]
+            for key in ('quality_fields', 'interface_fields')}
         context = ApprovalContext(record.identity.id, documents, profile=profile,
             configuration=(resources.configuration.data if configuration is None else
                            {'project': resources.configuration.data, 'selected': configuration}),
-            mode="stored" if value["maturity"] == "approved" else "transition")
+            mode="stored" if value["maturity"] == "approved" else "transition", **projections)
+        if supplied is not None and supplied.input_sha256 != context.input_sha256:
+            from ..model.errors import ModelError
+            raise ModelError('approval_context_binding_mismatch', path=record.path)
         for item in formal_requirement_findings(context):
             diagnostic = item["diagnostic"]
             findings.append({**diagnostic, "reason": item["reason"],
                              "path": diagnostic.get("path") or record.path})
+    if contexts:
+        from ..model.errors import ModelError
+        raise ModelError('approval_context_subject_outside_selection')
     return findings, identities

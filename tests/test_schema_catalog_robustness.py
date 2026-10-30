@@ -49,8 +49,10 @@ class SchemaCatalogRobustnessTests(unittest.TestCase):
                 self.catalog.validate(schema['$id'], example)
                 with tempfile.TemporaryDirectory() as tmp:
                     from support.inspection import command_example_inputs
-                    command_example_inputs(Path(tmp), command)
-                    self.assertEqual(execute_request(example, cwd=Path(tmp)).result.exit_code, 0)
+                    with command_example_inputs(Path(tmp), command) as bound_example:
+                        self.catalog.validate(schema["$id"], bound_example)
+                        result = execute_request(bound_example, cwd=Path(tmp)).result
+                        self.assertEqual(result.exit_code, 0, (command.command_id, result.as_dict()))
 
     def test_requirement_enum_and_examples_have_no_obligation_default(self):
         field = self.catalog.get(domain_schema('requirement')['$id']).schema['properties']['normative_force']
@@ -221,7 +223,7 @@ class SchemaCatalogRobustnessTests(unittest.TestCase):
         data=dispatch_result(['command','describe','version']).as_dict()['result']
         data['work']['continuation_supported']=True
         with self.assertRaises(ModelError): self.catalog.validate('command-description-v1',data)
-        data=dispatch_result(['capabilities']).as_dict()['result']; data['semantic']['work']['engine_available']=True
+        data=dispatch_result(['capabilities']).as_dict()['result']; data['semantic']['work']['engine_available']=False
         with self.assertRaises(ModelError): self.catalog.validate('capabilities-v1',data)
 
     def test_nested_runtime_limit_types_remain_a_data_contract(self):

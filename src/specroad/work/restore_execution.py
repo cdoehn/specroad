@@ -88,7 +88,7 @@ class RestoreWorkExecution:
 
 def execute_restore_work(store, *, registry, authority, actor, force=False,
                          expected_lock_sha256=None, reason=None,
-                         accept_remote_risk=False, owner_probe=None):
+                         accept_remote_risk=False, owner_probe=None, services=None):
     """Run or recover exactly the saved order with fresh, explicit authority.
 
     Takeover arguments come only from this call, never saved flags. The native
@@ -102,7 +102,7 @@ def execute_restore_work(store, *, registry, authority, actor, force=False,
         return _execute_restore_work(store, registry=registry, authority=authority,
             actor=actor, force=force, expected_lock_sha256=expected_lock_sha256,
             reason=reason, accept_remote_risk=accept_remote_risk,
-            owner_probe=owner_probe, progress=progress)
+            owner_probe=owner_probe, progress=progress, services=services)
     except RestoreError as error:
         # A failing Work-lease exit must not hide already possible native effects.
         error.mutation_possible |= progress['mutation_possible']
@@ -114,7 +114,7 @@ def execute_restore_work(store, *, registry, authority, actor, force=False,
 @persisted_contract
 def _execute_restore_work(store, *, registry, authority, actor, force,
                           expected_lock_sha256, reason, accept_remote_risk,
-                          owner_probe, progress):
+                          owner_probe, progress, services):
     require(type(store) is CheckpointStore, 'restore_trusted_work_store_required', exit_code=2)
     require(type(authority) is RecoveryAuthority, 'restore_authority_required', exit_code=2)
     build = _build()
@@ -122,7 +122,7 @@ def _execute_restore_work(store, *, registry, authority, actor, force,
     require(initial.as_dict()['checkpoint_generation'] == 0,
             'restore_initial_work_required', exit_code=6)
     data = parse_json_object(raw)
-    require(any(boundary.root == Path(data['project_root']) for boundary in store._location._protected),
+    require(store._location.protects(Path(data['project_root'])),
             'restore_work_unprotected_project', exit_code=7)
     with store._location.inspect_checkpoint() as held:
         # No probe of a possibly lost origin: native journal recovery has priority.
@@ -135,7 +135,7 @@ def _execute_restore_work(store, *, registry, authority, actor, force,
         outcome = _native_held(store, held, current, raw, pointer, registry=registry, build=build,
             authority=authority, actor=actor, force=force, expected_lock_sha256=expected_lock_sha256,
             reason=reason, accept_remote_risk=accept_remote_risk, owner_probe=owner_probe,
-            progress=progress)
+            progress=progress, services=services)
         value = current.as_dict()
         result = object.__new__(RestoreWorkExecution)
         object.__setattr__(result, '_raw', canonical_json_bytes({
@@ -150,7 +150,7 @@ def _execute_restore_work(store, *, registry, authority, actor, force,
 @persisted_contract
 def _native_held(store, held, current, raw, pointer, *, registry, build, authority, actor,
                  force, expected_lock_sha256, reason, accept_remote_risk, owner_probe,
-                 progress, expected_completed_bytes=None, work_guard=None):
+                 progress, expected_completed_bytes=None, work_guard=None, services=None):
     """One native execution with fresh Work checks under the caller's lease."""
     value = current.as_dict()
 
@@ -192,7 +192,7 @@ def _native_held(store, held, current, raw, pointer, *, registry, build, authori
             affected_journals=_bytes(value['plan_binding']['journal_selection'], current.objects),
             force=force, expected_lock_sha256=expected_lock_sha256, reason=reason,
             accept_remote_risk=accept_remote_risk, owner_probe=owner_probe,
-            expected_completed_bytes=expected_completed_bytes)
+            expected_completed_bytes=expected_completed_bytes, services=services)
     except RestoreError as error:
         progress.update(mutation_possible=error.mutation_possible,
                         recovery_required=error.recovery_required)

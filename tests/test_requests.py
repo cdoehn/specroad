@@ -121,10 +121,10 @@ assert response.result.result['python_support']['verification_status'] == 'unrec
             self.assertEqual(calls, ['warning'])
 
     def test_unavailable_aliases_are_not_silently_registered(self):
-        for command in ('retire', 'init.unavailable', 'work.resume'):
+        for command in ('retire', 'init.unavailable', 'work.unavailable'):
             self.assertEqual(execute_request({'command_id': command}).result.exit_code, 2)
         self.assertEqual(dispatch_result(['retire']).exit_code, 2)
-        self.assertEqual({c.command_id for c in builtin_registry().commands}, {'help', 'version', 'command.describe', 'capabilities', 'schema.list', 'schema.show', 'environment.check', 'init', 'project.inspect', 'artifact.show', 'trace', 'why', 'impact', 'query', 'diff', 'configuration.evaluate', 'roadmap.explain', 'export', 'bundle.create', 'bundle.verify', 'bundle.extract', 'render', 'view.render', 'diagram', 'validate', 'lock.status', 'recover.status'})
+        self.assertEqual({c.command_id for c in builtin_registry().commands}, {'help', 'version', 'command.describe', 'capabilities', 'schema.list', 'schema.show', 'environment.check', 'init', 'project.inspect', 'artifact.show', 'trace', 'why', 'impact', 'query', 'diff', 'configuration.evaluate', 'roadmap.explain', 'export', 'bundle.create', 'bundle.verify', 'bundle.extract', 'render', 'view.render', 'diagram', 'validate', 'lock.status', 'recover.status', 'recover.restore', 'work.status', 'work.resume', 'work.prompt', 'work.cancel', 'work.export', 'work.restore'})
         diagnosed = execute_request({'command_id': 'environment.check'}).result
         self.assertEqual(diagnosed.exit_code, 0)
         self.assertFalse(diagnosed.result['semantic_validation_performed'])

@@ -9,7 +9,7 @@ from ._codec import file_row
 from ._execution_binding import checked_layout
 from ._execution_events import event_files, observed_events
 from ._execution_program import publication_program, match_prefix, parents
-from ._validation import validate_project
+from ._validation import project_bytes
 from .values import require, RestoreError, persisted_contract
 
 
@@ -183,7 +183,7 @@ def resume(store, plan, original_layout, classified, *, authority, actor, author
                         'restore_backup_bytes_conflict', exit_code=6)
             if path == original_layout['archive'] + '/completed.json':
                 actual = {p: store.read(p) for p in original_layout['target']}
-                require(actual == original_layout['target'] and validate_project(actual)[1] == plan.data['expected_target_root'],
+                require(actual == original_layout['target'] and project_bytes(actual)[1] == plan.data['expected_target_root'],
                         'restore_actual_target_conflict', exit_code=6)
             store.create(path, store.own[path])
         elif kind == 'publish':
@@ -198,7 +198,7 @@ def resume(store, plan, original_layout, classified, *, authority, actor, author
     completion = classified['completion']
     if completion['result'] == 'restored':
         actual = {p: store.read(p) for p in original_layout['target']}
-        require(actual == original_layout['target'] and validate_project(actual)[1] == plan.data['expected_target_root'],
+        require(actual == original_layout['target'] and project_bytes(actual)[1] == plan.data['expected_target_root'],
                 'restore_actual_target_conflict', exit_code=6)
         require(not store.files.journal_entries(), 'restore_remaining_journals', exit_code=5)
     return {**completion, 'recovery_required': completion['result'] != 'restored',

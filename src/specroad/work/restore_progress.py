@@ -87,7 +87,7 @@ def _progress(current, initial, registry, build):
 def advance_restore_work(store, *, registry, authority, actor, force=False,
                          expected_lock_sha256=None, reason=None, accept_remote_risk=False,
                          owner_probe=None, expected_work_lock_sha256=None,
-                         work_recovery_reason=None, work_owner_probe=None):
+                         work_recovery_reason=None, work_owner_probe=None, services=None):
     """Execute/recover once, recording only a proven successful native unit.
 
     A partial native publication rolls back and leaves Work unchanged. An
@@ -100,13 +100,13 @@ def advance_restore_work(store, *, registry, authority, actor, force=False,
         accept_remote_risk=accept_remote_risk, owner_probe=owner_probe,
         expected_work_lock_sha256=expected_work_lock_sha256,
         work_recovery_reason=work_recovery_reason, work_owner_probe=work_owner_probe,
-        finish=False)
+        finish=False, services=services)
 
 
 def resume_restore_work(store, *, registry, authority=None, actor=None, force=False,
                         expected_lock_sha256=None, reason=None, accept_remote_risk=False,
                         owner_probe=None, expected_work_lock_sha256=None,
-                        work_recovery_reason=None, work_owner_probe=None):
+                        work_recovery_reason=None, work_owner_probe=None, services=None):
     """Complete native execution and delivery, or read an already saved result.
 
     Unfinished Work requires fresh independent native authority. Terminal Work
@@ -118,7 +118,7 @@ def resume_restore_work(store, *, registry, authority=None, actor=None, force=Fa
         accept_remote_risk=accept_remote_risk, owner_probe=owner_probe,
         expected_work_lock_sha256=expected_work_lock_sha256,
         work_recovery_reason=work_recovery_reason, work_owner_probe=work_owner_probe,
-        finish=True)
+        finish=True, services=services)
 
 
 def _run(store, **options):
@@ -137,7 +137,7 @@ def _run(store, **options):
 @persisted_contract
 def _advance(store, *, registry, authority, actor, force, expected_lock_sha256, reason,
              accept_remote_risk, owner_probe, expected_work_lock_sha256,
-             work_recovery_reason, work_owner_probe, progress, finish):
+             work_recovery_reason, work_owner_probe, progress, finish, services):
     require(type(store) is CheckpointStore, 'restore_trusted_work_store_required', exit_code=2)
     if not finish:
         require(type(authority) is RecoveryAuthority, 'restore_authority_required', exit_code=2)
@@ -149,7 +149,7 @@ def _advance(store, *, registry, authority, actor, force, expected_lock_sha256, 
     require(initial.as_dict()['checkpoint_generation'] == 0,
             'restore_initial_work_required', exit_code=6)
     plan = parse_json_object(raw)
-    require(any(b.root == Path(plan['project_root']) for b in store._location._protected),
+    require(store._location.protects(Path(plan['project_root'])),
             'restore_work_unprotected_project', exit_code=7)
 
     def advance(held, handoff=None):
@@ -183,7 +183,8 @@ def _advance(store, *, registry, authority, actor, force, expected_lock_sha256, 
             build=build, authority=authority, actor=actor, force=force,
             expected_lock_sha256=expected_lock_sha256, reason=reason,
             accept_remote_risk=accept_remote_risk, owner_probe=owner_probe,
-            progress=progress, expected_completed_bytes=saved, work_guard=history.check)
+            progress=progress, expected_completed_bytes=saved, work_guard=history.check,
+            services=services)
         native = outcome.data
         confirmed = current
         if native['result'] == 'restored':

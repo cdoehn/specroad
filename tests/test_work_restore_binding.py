@@ -289,10 +289,17 @@ def test_fixture_host_registration_grants_no_public_command_or_recovery_authorit
     _, plan, request = setup(tmp_path)
     with no_io_attempts():
         initial = create(plan, request)
-        with pytest.raises(CommandUsageError):
-            builtin_registry().resolve('recover.restore')
-        with pytest.raises(RestoreError):
-            read_restore_work_manifest(initial.raw, initial.objects,
-                registry=builtin_registry(), expected_tool_build=BUILD)
+        # The public R integration now supplies its own native handler.
+        # Reading fixture-created inert data cannot install its forbidden
+        # fixture handler or turn retained actor/plan fields into authority.
+        public = builtin_registry()
+        assert public.resolve('recover.restore').handler is not forbidden_handler
+        assert read_restore_work_manifest(initial.raw, initial.objects,
+            registry=public, expected_tool_build=BUILD).raw == initial.raw
+        from specroad.cli._restore_adapter import run_restore
+        with pytest.raises(RestoreError) as missing:
+            run_restore(request)
+        assert missing.value.reason == 'restore_authority_required'
+        assert missing.value.exit_code == 2 and not missing.value.mutation_possible
         assert read_work_manifest(initial.raw, initial.objects, registry=registry(),
                                   expected_tool_build=BUILD).raw == initial.raw

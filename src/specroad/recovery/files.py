@@ -22,7 +22,7 @@ from .values import RestoreError, RestorePlan, guarded, require
 
 
 @guarded
-def publish_restore_plan(raw, *, output_root, output):
+def publish_restore_plan(raw, *, output_root, output, services=None):
     """Create one complete external plan without changing any project bytes.
 
     The existing output root must be explicit and outside every project. An
@@ -33,6 +33,8 @@ def publish_restore_plan(raw, *, output_root, output):
     require(type(output) is str and output, 'restore_output_path_required', exit_code=2)
     plan = RestorePlan(raw)
     data = plan.data
+    from ._plan_checks import qualify_plan
+    qualify_plan(plan, services=services)
     try:
         project = boundary(data['project_root'])
         origin = boundary(data['source']['root'])

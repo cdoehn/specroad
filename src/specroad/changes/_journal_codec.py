@@ -54,7 +54,7 @@ def _target_path(value):
     return value
 
 
-def validate_building_document(value):
+def validate_building_document(value, *, historical_proposal=False):
     fields = {'format_version', 'state', 'transaction_id', 'project_id', 'root_identity',
               'change_plan_id', 'request_id', 'actor', 'planned_at', 'plan_sha256',
               'plan_bytes_sha256', 'request_sha256', 'authoring_binding',
@@ -96,10 +96,14 @@ def validate_building_document(value):
         expected = {**rebuilt.data, 'plan_sha256': value['plan_sha256'],
                     'base_model_root_sha256': value['base_model_root_sha256'],
                     'scope_descriptor': authoring.get('scope_descriptor')}
+        # The historical reader may check an original Proposal completion.
+        # BuildingJournal and every active transaction path keep the default
+        # command restriction; a historical object is not an executable journal.
+        command, route = ('proposal apply', 'approved_proposal_apply') if historical_proposal else ('change apply', 'direct')
         if (authoring != expected or authoring['actor'] != value['actor']
                 or authoring['request_id'] != value['request_id']
-                or authoring['command_id'] != 'change apply'
-                or authoring['route'] != 'direct' or authoring['dry_run']
+                or authoring['command_id'] != command
+                or authoring['route'] != route or authoring['dry_run']
                 or authoring['as_proposal']
                 or canonical_json_sha256(authoring) != value['authoring_sha256']):
             raise JournalError('invalid_journal_authoring_binding')

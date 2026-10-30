@@ -14,6 +14,7 @@ from ..model.paths import artifact_path
 from ..model.record_schemas import validate_record_fields
 from ..storage.json_syntax import parse_json_object
 from ._sources import baseline_objects
+from ._schema_boundary import declared_resource
 from .values import require
 
 BASELINES = 'spec/baselines'
@@ -22,6 +23,7 @@ BASELINES = 'spec/baselines'
 def _intact(raw):
     if raw is None:
         return None
+    declared_resource(raw, 'specroad.json', normative=True)
     try:
         return ProjectConfiguration(parse_json_object(raw))
     except ModelError as error:
@@ -35,6 +37,7 @@ def _intact(raw):
 def _retained(baselines, read):
     configurations = []
     for path, raw in sorted(baselines.items()):
+        declared_resource(raw, path, normative=True)
         try:
             record = parse_json_object(raw)
             validate_record_fields(record, expected_type='baseline')

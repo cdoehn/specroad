@@ -7,6 +7,7 @@ import pytest
 
 from specroad.cli.application import dispatch_result, execute_request
 from specroad.cli.commands import builtin_registry
+from specroad.cli.registry import CommandRegistry
 from specroad.graph.scope_descriptors import ScopeDescriptor
 from specroad.graph.scope_query_page import QuerySeedPage
 from specroad.graph.scope_seeds import resolve_scope_seeds
@@ -131,7 +132,15 @@ def test_command_describes_resolved_policy_without_inventing_a_work_engine():
     assert value['work']['continuation_supported'] is False
     assert value['work']['checkpoint_algorithms'] == [] and 8 not in value['exit_codes']
     capabilities = dispatch_result(['capabilities']).as_dict()['result']['semantic']['work']
-    assert capabilities['engine_available'] is False and capabilities['checkpoint_algorithms'] == []
+    assert capabilities == {'engine_available': True,
+                            'checkpoint_algorithms': ['work-manifest-segments-v1'],
+                            'budget_policy_version': 'runtime-budget-v2'}
+    without_work = CommandRegistry(tuple(command for command in builtin_registry().commands
+        if command.command_id != 'recover.restore' and not command.command_id.startswith('work.')))
+    unavailable = dispatch_result(['capabilities'], registry=without_work)
+    assert unavailable.exit_code == 0
+    assert unavailable.as_dict()['result']['semantic']['work'] == {
+        'engine_available': False, 'checkpoint_algorithms': [], 'budget_policy_version': None}
 
 
 def test_declared_limits_have_distinct_semantic_safety_and_work_classes():

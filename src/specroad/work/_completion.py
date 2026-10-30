@@ -7,6 +7,10 @@ from ._data_contract import _copy, _count, _hash, _object, _parse, _require
 
 def _result(value, objects, document, exit_code, registry):
     if value['command_class'] == 'recovery_write':
+        if '--from' in value['normalized_arguments']['options']:
+            from .restore_planning import final_outcome
+            final_outcome(value, objects, document, exit_code)
+            return 'restore-planning-finalization-v1', document['history_assessments']
         from ._restore_completion import final_outcome
         final_outcome(value, objects, document, exit_code)
         return 'restore-work-finalization-v1', document['historical_findings']

@@ -8,20 +8,30 @@ from ..storage.json_syntax import parse_json_object
 from ..storage.record_artifact import RecordArtifact
 from ._codec import file_row
 from ._sources import baseline_objects
+from ._schema_boundary import declared_files
 from .values import require
+
+
+def protected_record(value):
+    return (value['artifact_type'] in ('baseline', 'evidence', 'relation_review') or
+            value['artifact_type'] == 'proposal' and
+            value['proposal_status'] in ('rejected', 'applied', 'stale'))
 
 
 def history_target(files, additions, current, configuration):
     """Fold actual protected history into an explicit target and preservation rows.
 
-    The provider supports sealed Baselines and recorded Evidence. Other
-    protected kinds still encounter the existing fail-closed history checks.
-    Dependencies may reuse identical source bytes, never guessed mutable data.
+    Sealed Baselines, Evidence, RelationReviews and terminal Proposals retain
+    their original bytes and complete dependencies. Their current native
+    qualification is separate. No mutable source data is guessed here.
     """
     fold = _HistoryFold(files, additions, current, configuration)
     fold.retain_current()
+    declared_files(current, include_payloads=False)
     fold.close_baselines()
+    fold.retain_archives()
     fold.retain_attachments(fold.attachment_bindings())
+    declared_files(fold.target)
     return fold.target, fold.preservation_rows()
 
 
@@ -54,7 +64,6 @@ class _HistoryFold:
     def _retain(self, raw, path):
         record = RecordArtifact(raw, path=path)
         value = record.data
-        require(value['id_scheme'] == 'random128-v1', 'restore_legacy_provider_required', path=path)
         require(artifact_path(record.artifact_type, record.id, self.configuration.id_prefix) == path,
                 'restore_current_identity_conflict', path=path, exit_code=6)
         self._add(path, raw, 'protected_history')
@@ -73,7 +82,7 @@ class _HistoryFold:
                 record = RecordArtifact(raw, path=path)
             except ModelError:
                 continue  # Damaged bytes are still inventoried and backed up.
-            if record.artifact_type in ('baseline', 'evidence'):
+            if protected_record(record.data):
                 self._retain(raw, path)
 
     def close_baselines(self):
@@ -95,8 +104,18 @@ class _HistoryFold:
                         continue
                     content = originals[row['object_path']]
                     archived = parse_json_object(content)
-                    if archived['artifact_type'] in ('baseline', 'evidence'):
+                    if protected_record(archived):
                         self._retain(content, artifact_path(archived['artifact_type'], archived['id'], self.configuration.id_prefix))
+
+    def retain_archives(self):
+        # An unreferenced original is still protected history, not expendable
+        # scratch. Verify its native content address before preserving it.
+        from ..archive.objects import SnapshotObject
+        for path, raw in sorted(self.current.items()):
+            if classify_path(path, self.configuration) is PathClass.ARCHIVE_OBJECT:
+                require(SnapshotObject(raw).reference.path == path,
+                        'restore_archive_object_mismatch', path=path)
+                self._add(path, raw, 'protected_dependency')
 
     def attachment_bindings(self):
         # Source Evidence participates too. Incompatible protected bindings
@@ -109,7 +128,7 @@ class _HistoryFold:
                 record = RecordArtifact(raw, path=path)
             except ModelError:
                 continue
-            if record.artifact_type != 'evidence':
+            if not protected_record(record.data):
                 continue
             for entry in record.data.get('attachments', []):
                 descriptor = AttachmentDescriptor.from_data(entry)

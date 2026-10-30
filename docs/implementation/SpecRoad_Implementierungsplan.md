@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 34 · **Stand:** 29. Oktober 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.39
+**Planrevision:** 34 · **Stand:** 30. Oktober 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.39
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 Schritte und 900 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; die ausdrücklich genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wird nach 10.7.10 innerhalb von 15.l.R vorgezogen. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -38,10 +38,10 @@ Laufzeitdaten und ist keine Start-/Resume-Anweisung.
 ```yaml
 plan_revision: 34
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 649
-last_completed_plan_commit: 15.l.W
-next_plan_commit: 15.l.R
-last_completed_numbered_bundle: 517
+implementation_plan_commits_completed: 650
+last_completed_plan_commit: 15.l.R
+next_plan_commit: 15.l.C
+last_completed_numbered_bundle: 519
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -31177,7 +31177,7 @@ noch nicht beobachtet. Native ZIP-Prüfung, SHA-256 und atomare Exchange-
 
 #### 15.l.R – Make it Right
 
-- [ ] **15.l.R** · Position **650/900** · Voraussetzung: `15.l.W`; die vorgezogene lesende Proposal-Prüfgrundlage nach 10.7.10 wird innerhalb dieses R-Schritts vor seinem vollständigen Abschluss implementiert und geprüft, ohne vorausgesetzten Abschluss öffentlicher M18-Schritte.
+- [x] **15.l.R** · Position **650/900** · Voraussetzung: `15.l.W`; die vorgezogene lesende Proposal-Prüfgrundlage nach 10.7.10 wird innerhalb dieses R-Schritts vor seinem vollständigen Abschluss implementiert und geprüft, ohne vorausgesetzten Abschluss öffentlicher M18-Schritte.
 **Exakte Commit-Message:** `15.l.R feat(bundle): Restore veröffentlichen und Crashabsicherung vervollständigen`
 
 **Vervollständigung:** Quellenwechsel, unvollständige Sicherung und Crash erhalten ursprüngliche Journale und Wiederherstellungsdaten.
@@ -32535,6 +32535,259 @@ keine Produktposition wird geschlossen. Nur der tatsächliche Commit schaltet
 zur Gruppe 1 weiter. Der zukünftige Apply-Lauf ist kein beobachteter Erfolg.
 Native Paketprüfung und atomare Exchange-Veröffentlichung beenden den
 Einzelauftrag ohne eigene Apply-, Status- oder Fortsetzungsschleife.
+
+**Vollständiger R-Abschluss – Bundle 518 (reguläre Umsetzung).**
+
+**Maßgebliche Basis und Erhaltung.** Das native, erfolgreiche und saubere
+Result `specroad-apply_Result_155623_1029_cc024d.zip`, SHA-256
+`d024058040df1fc419d561894970dd87f34586195ba2f04d1017e6e430ae2542`,
+bindet Commit `d9a8ce422aeda4c48c6bcac208a63518a6f48138`, Repository
+`a33ed6cf-0a97-4b73-b11a-d4239e7a2145`, Fingerprint `7c9d2a24e397e0e5`,
+Algorithmus `patchharbor-state-v1`. Root-Anleitung, Metadaten, Logs,
+alle 2.338 Snapshotdateien und tatsächliche Apply-Basis wurden abgeglichen.
+Bundle 517 bestand 5.915 parallele Apply-Teiltests (Sequenz 225, Gruppe 0,
+vier Worker) und endete im passenden Dokumentcommit. Unfertige R-Arbeit
+und frühere Diagnosebelege wurden erhalten; die bereits angewendeten
+Dokumente wurden anhand des Snapshots abgeglichen.
+
+**Vollständiger Umfang.** Dieser Zustand schließt den gesamten Rest aus
+10.7.1–10.7.11 einschließlich öffentlicher `recover.restore`-Integration,
+CLI-/strukturierter Parität, Planungsmodus, aller sechs Workbefehle,
+partitionierbarer Snapshotaufnahme, unabhängiger Evidence-Policy,
+Originalhistorien samt Closure und Receipt-/Recovery-Audits. Native
+Review-/Proposal-/Task-/Source-/Code-/Profilprüfungen qualifizieren die
+tatsächlichen Eingänge; gespeicherte Labels sind keine Freigaben.
+Die ausdrücklich vorgezogene lesende Proposal-Grundlage prüft vollständige
+Inhalts-, Basis-, Plan-, Kontroll-, Quorum- und Abschlussbindungen ohne
+öffentlichen M18-Schreibworkflow. Historische negative Befunde bleiben
+historisch; geschützte Originale bleiben bytegleich.
+
+Aktive Wiederaufnahme braucht frische Pflichtbeobachtungen, Autorisierung
+und gegebenenfalls explizite Ownerübernahme. Nur vollständig gespeicherte
+terminale Workausgaben sind passiv lesbar, auch bei inzwischen verlorener
+Projektwurzel; verlorene Abschlusscheckpointdaten erlauben keine Umgehung
+der frischen Prüfung. Originalakteur und aktuelle Recoveryautorisierung
+bleiben getrennt. Fehler erhalten tatsächliche Journale, Originale,
+Before Images und Recovery-Sperren. Die vorhandenen echten Prozessabbrüche
+und I/O-Injektionen über Aufnahme, Ownerübergabe, Teilpublikation,
+Rückrollen, Sync-/Archiv-/Audit- und Workabschlussbarrieren werden mitgeprüft.
+
+Deklarierte nicht unterstützte Schema-Versionen und Legacy-Registrierungen
+werden nach 10.7.11 auch in normativ erkennbaren Archiv-/Anhangsobjekten vor
+Projekt-/Betriebs-/Originaländerungen mit Code 3 abgewiesen. Fremde opaque
+Anhänge bleiben zulässig; beschädigtes aktuelles Format folgt weiter den
+vorhandenen erhaltenden Recoveryregeln. Unterstützte Profil-/SRX-Regeln
+werden nativ geprüft; unbekannte Regelverträge erhalten keine erfundene
+Semantik. Positive 0.1-Unterstützung, Q.0 und M16 bleiben offen. Es werden
+keine echten historischen Installationen, menschlichen Reviews oder
+Produktfreigaben behauptet; die Testdaten sind synthetisch gekennzeichnet.
+
+**Diagnose und Reparatur ohne weitere Teilung.** Der erhaltene frühere
+44-Dateien-Lauf endete tatsächlich mit 1.633 bestandenen und fünf
+fehlgeschlagenen Tests, Exit 1; er ist kein Erfolg. Die diagnostizierten
+lokalen Import-/öffentlichen Registry-/Beispiel-/Fortsetzungsschemafehler
+wurden gezielt repariert. Weitere gezielte Diagnosen korrigierten native
+Fixturebindungen und bewahrten die Fehlerklassen 3/5/6/7 bei externen
+Prüfungen. Keine Abnahme wurde wegen Laufzeit oder Komplexität ausgelassen.
+Erhaltene Fehlläufe bleiben unverändert. Der anschließend vollständig
+ausgeführte integrierte Lauf mit 1.845 Fällen endete mit 1.580 bestandenen,
+236 fehlgeschlagenen und 29 fehlerhaften Fällen, Exit 1. Bei 262 Fehlerfällen
+ist das ausgeschöpfte temporäre Dateisystemkontingent ausdrücklich belegt;
+zwei umhüllte Code-5-Fälle wurden ebenfalls nachgeprüft, ohne ihre konkrete
+Ursache aus der Verkürzung zu erfinden. Ein Negativtest erwartete irrtümlich
+einen Pflichtdienst für gültige unfreigegebene Source-Metadaten. Er erhielt
+eine explizite Inhaltsbindung, die den geprüften Pflichtdienst tatsächlich
+erfordert. Sämtliche Assertions blieben erhalten; Produktcode, gemeinsame
+Helfer, Kataloge und alle anderen Testdateien blieben bytegleich.
+
+**Tatsächlich bestandene gezielte Dev-Abdeckung.** Der Nachholgate führt
+alle 265 zuvor nicht bestandenen Fälle und sämtliche 46 Fälle der geänderten
+Testdatei aus: **310 bestanden, Exit 0**, acht parallele Worker, Abschluss
+`2026-10-29T22:09:11.467299+00:00`. Sein privates temporäres Verzeichnis liegt
+auf dem Repository-Dateisystem wie beim vorhandenen Apply-Entrypoint;
+globale Konfiguration und fremde temporäre Daten werden nicht verändert.
+Die übrigen **1.535** bestandenen Einzelbeobachtungen werden aus dem ersten
+Lauf erhalten. Vollständige Pfad-/Hashinventur, ein mechanischer AST-Abgleich
+der einzigen Testeingabeänderung, die unveränderten übrigen Testeingänge und
+die disjunkte Identitätsvereinigung belegen die vollständige Abdeckung aller
+**1845** ausgewählten Fälle. Dies ist ausdrücklich
+**kein einzelner erfolgreicher 1.845-Testlauf**; der Exit-1-Lauf bleibt als
+solcher erhalten. Es gibt keine fachliche Halbierung und keinen C-Zustand.
+Die gezielte Gesamtauswahl umfasst 54 Testdateien:
+
+- `tests/test_bundle_receipts.py` (38)
+- `tests/test_bundle_receipts_right.py` (43)
+- `tests/test_capabilities.py` (23)
+- `tests/test_change_target.py` (22)
+- `tests/test_change_target_right.py` (48)
+- `tests/test_cli.py` (23)
+- `tests/test_description.py` (28)
+- `tests/test_discard_restart.py` (33)
+- `tests/test_discard_restart_right.py` (125)
+- `tests/test_model_validation.py` (32)
+- `tests/test_model_validation_right.py` (40)
+- `tests/test_normalization_target.py` (18)
+- `tests/test_production_validation.py` (19)
+- `tests/test_production_validation_right.py` (38)
+- `tests/test_proposal_completion.py` (7)
+- `tests/test_proposal_history.py` (18)
+- `tests/test_proposal_originals.py` (22)
+- `tests/test_requests.py` (22)
+- `tests/test_restore_capture.py` (8)
+- `tests/test_restore_directory_binding.py` (44)
+- `tests/test_restore_durability.py` (36)
+- `tests/test_restore_execution.py` (42)
+- `tests/test_restore_execution_right.py` (59)
+- `tests/test_restore_files.py` (54)
+- `tests/test_restore_history.py` (34)
+- `tests/test_restore_history_right.py` (28)
+- `tests/test_restore_invocation.py` (35)
+- `tests/test_restore_invocation_options.py` (159)
+- `tests/test_restore_legacy_history.py` (49)
+- `tests/test_restore_operational_history.py` (12)
+- `tests/test_restore_plan.py` (46)
+- `tests/test_restore_plan_right.py` (82)
+- `tests/test_restore_planning_recovery.py` (4)
+- `tests/test_restore_profile_rules.py` (4)
+- `tests/test_restore_proposals.py` (17)
+- `tests/test_restore_public.py` (8)
+- `tests/test_restore_qualification.py` (15)
+- `tests/test_restore_schema_boundary_public.py` (6)
+- `tests/test_restore_source_metadata.py` (24)
+- `tests/test_restore_specialists.py` (11)
+- `tests/test_restore_work_public.py` (10)
+- `tests/test_results.py` (37)
+- `tests/test_schema_catalog.py` (34)
+- `tests/test_schema_catalog_robustness.py` (42)
+- `tests/test_work_control.py` (34)
+- `tests/test_work_packages.py` (42)
+- `tests/test_work_packages_right.py` (35)
+- `tests/test_work_restore_binding.py` (53)
+- `tests/test_work_restore_delivery.py` (14)
+- `tests/test_work_restore_execution.py` (28)
+- `tests/test_work_restore_owner.py` (37)
+- `tests/test_work_restore_progress.py` (30)
+- `tests/test_work_root.py` (32)
+- `tests/test_work_root_right.py` (41)
+
+Dies ist ein Teiltestnachweis, keine Vollsuite oder Releasefreigabe;
+`full_suite_passed=null`. Die vollständige Collection-/Katalogprüfung
+erfasst 22478 aktive Tests bei null Fehlern und null
+ausgeführten Testkörpern. 215 neue Identitäten
+werden ausschließlich hinten an die dauerhafte Nummernfolge angehängt;
+alte Nummern, historische Löschungen und Rotationsanker bleiben erhalten.
+SR-TC-0461/0462 sind mit den tatsächlichen vollständigen R-Verträgen und
+ausführbaren Testidentitäten abgeglichen. Die aktuelle Spezifikation
+0.2.39, deren Hashbindungen und alle historischen Nachweise bleiben erhalten.
+
+Abschließender Entwicklungsquellhash: `21421d71f865e77786f169fc482613ceb63f4c77581f646185c724cf2ceff571`;
+Abdeckungsbeleg: `d94feb7372646696326e38fc6a33d1046c119e57c2003ec9f214c26b10124199`;
+erster Auswahlbericht (Exit 1): `d1093da9b18dc5bc4d5b481a543b6e0070dfd19bf497ba3aa45b5753e1865ca2`;
+erste Einzeloutcomes: `4e805a743d7b90dc1776f6d2596bb7bf8bd38697b4cd20a9b694d5128fb194de`;
+Nachholauswahl (Exit 0): `6c69262277bf508b247ddc9bee8b9d8b8dcdc1e495a9a798c2a8f07b00e64576`;
+Nachhol-Einzeloutcomes: `9adbcf996854fb15b8d76019d438c581bb63a0056a5b3386734f2d5001bd8351`;
+aktuelle Collection: `d1208c9fa254ba368b6818eb8794fb3efd7f0efc2b7e161b492bbcee3c6d1e8b`.
+
+**Gebundene Übergabe.** Genau ein geprüfter R-Zustand mit der oben
+festgelegten exakten Commitmessage. Apply stellt diesen Zustand her,
+prüft parallel mit vier Workern ausschließlich N=3-Sequenz 226 / Gruppe 1
+mit 6022 tatsächlich ausgewählten Tests nach Abzug der
+unveränderten eingefrorenen Ausschlussliste. Identitäten, Listenhash,
+Auswahlbindung v2, Quellhash und Einzeloutcomes müssen übereinstimmen.
+Erst nach Erfolg werden die fünf Fortschrittsmarker auf 650/900,
+zuletzt 15.l.R, nächstens 15.l.C, Bundle 518 und die R-Checkbox gesetzt
+und der Commit erzeugt. 15.l.C bleibt ausdrücklich unbearbeitet und offen.
+Bei Übergabe sind Apply-Erfolg und Commit noch nicht beobachtet. Native
+ZIP-Prüfung und atomare Exchange-Veröffentlichung beenden den Auftrag;
+Control, Watcher und externe Laufzeitdaten werden nicht verändert.
+
+**Korrektur des erhaltenen R-Zustands – Bundle 519.**
+
+**Beobachtetes Result und vollständige Erhaltung.** Das native Result
+`specroad-apply_Result_221120_1029_57a8c1.zip`, SHA-256
+`098e43c9ba9c77aa514bc2b580c824b260e92590976b41f00a582317578f2ca2`, gehört eindeutig
+zur Übergabe 518, Paket-SHA-256
+`5a0f5697f789b5da92547adcda0b1bfbedc528790a5ccb3c7c495938d7cbcdca`.
+Sein Apply-Lauf endete mit **6.020 bestanden / 2 fehlgeschlagen**, Exit 1,
+vier parallelen Workern und 7.298,43 Sekunden. Es entstand kein Commit.
+Die Fortschrittsmarker stehen weiterhin auf 649/900, zuletzt 15.l.W,
+nächstens 15.l.R und zuletzt abgeschlossenem Bundle 517. Der obige
+518-Abschnitt dokumentiert die damalige Übergabe, keinen Apply-Erfolg.
+
+Die neue Bindung verwendet unverändert Commit
+`d9a8ce422aeda4c48c6bcac208a63518a6f48138`, Repository-ID
+`a33ed6cf-0a97-4b73-b11a-d4239e7a2145`, **dirty** Fingerprint
+`be76b387dbd6585c` und Algorithmus `patchharbor-state-v1`.
+Root-Anleitung, Kontext, Umgebung, Manifest, Run-/Ausführungslog,
+alle 2.338 Basisdateien, beide Git-Patches und alle 41 unversionierten
+Dateien wurden geprüft. Tatsächliche Apply-Bytes, Dateimodi, leere Stage,
+HEAD und lokale Repositoryregistrierung entsprechen diesem Result.
+Alle **92** bereits installierten, uncommitteten Pfade aus 518 bleiben
+Bestandteil des vollständigen R-Zustands. Es erfolgt kein Reset, keine
+Wiederherstellung einer alten sauberen Basis und kein Verlust vorhandener
+Arbeit oder Fehlbelege.
+
+**Konkrete Diagnose und technische Reparatur.** Die öffentliche Registry
+und Request-Schemabeschreibung importierten Restore-Validierungsdienste
+schon beim Laden der Optionsmetadaten. Zusätzlich initialisierte der
+Aufrufkontext native Restore-Dienste auch für dienstfreie Bootstrap-Befehle.
+`test_help_runs_without_project_or_distribution_identity_services` scheiterte
+an dieser verletzten Importgrenze. Der zweite Apply-Fehler,
+`test_command_describes_resolved_policy_without_inventing_a_work_engine`,
+erwartete nach der tatsächlichen öffentlichen Work-Veröffentlichung noch
+pauschal eine nicht verfügbare Engine.
+
+Die unveränderten Restore-Optionsbeschreibungen liegen nun in einem reinen
+Metadatenmodul. Die eigentliche Restore-Validierung bleibt erhalten.
+Der Kontext lädt Default-Restore-Dienste für Bootstrap nicht vorzeitig;
+Nicht-Bootstrap-Aufrufe einschließlich Restore/Work und explizite
+Host-Service-Eingaben behalten ihre native Initialisierung und Prüfung.
+Der Capability-Test prüft die tatsächlich registrierte Work-Engine samt
+Algorithmus und Budgetversion sowie die negative Variante einer Registry
+ohne Restore-/Workbefehle. `environment.check` erhält weiterhin keine
+Fortsetzung und keine erfundenen Workalgorithmen. Die ImportBoundary,
+Authority-/Actor-Prüfungen und vorhandenen Produktfehlerverträge werden
+nicht abgeschwächt. Dies ist eine technische Korrektur, keine normative
+Klärung, Scope-Teilung oder C-Bereinigung.
+
+**Gezielte Dev-Abnahme.** Der erste Korrekturversuch bestand **289 von 291**
+parallelen Fällen. Hilfe und zusätzlich die maschinenlesbare Versionsausgabe
+scheiterten noch an der zweiten, bedingungslosen Dienstinitialisierung.
+Dieser Exit-1-Lauf bleibt erhalten. Nach ihrer gezielten Reparatur bestand
+der erweiterte Lauf **339 von 339**, Exit 0, acht parallele Worker,
+Abschluss `2026-10-30T01:04:41.801138+00:00`. Ausgeführt wurden die sieben
+vollständigen betroffenen Testdateien `test_bootstrap.py`,
+`test_runtime_resource_policy.py`, `test_capabilities.py`,
+`test_restore_invocation_options.py`, `test_requests.py`,
+`test_preflight_profiles.py` und `test_restore_public.py`, außerdem drei
+Request-Schema-Verhaltensfälle und alle acht Parametrisierungen von
+`test_public_restore_uses_original_proposals_and_current_typed_inputs`.
+Die Prüfung umfasst beide Apply-Fehler, die zusätzliche Bootstrapregression,
+Default-Restore-Dienste und explizit injizierte native Proposal-Prüfdienste.
+Keine neue Testidentität wurde eingeführt oder umnummeriert.
+
+Dev-Quell-SHA-256: `080b0477f269c4d159cd39987e16aaab369364140a1afb2e668c690809fd9ff0`;
+Auswahlbericht: `36d692efd190d3fdbf6f2ce0f36bc4f18df1648eaaf5adcee86a3d99ae0251c9`;
+Einzeloutcomes: `f6b5e12fc227ccbc88bf660074a89338404bd7d7e05c91c11ad17c1eda098e52`;
+vollständige Collection: `6d66a7c055d8822fd4cf1eb61ca8b3bd5db5adee1f85e893366a413031baa8c0`.
+Die Collection bestätigt **22.478** aktive Identitäten ohne Fehler und ohne
+Testkörperausführung. Die Tests sind gezielte Teiltests, kein Vollsuite-,
+Release- oder menschlicher Freigabenachweis. Die früheren R-Abnahmen bleiben
+historisch erhalten; die eingefrorene Laufzeitenliste bleibt bytegleich.
+
+**Gebundene Fortsetzung.** Ein einziges Korrekturbundle installiert nur die
+Korrekturdeltas über den exakt gebundenen erhaltenen Zustand. Vorher und
+nachher prüft der Entrypoint alle übernommenen Pfade, HEAD-Preimages und
+Bytes. Er führt dieselbe unverbrauchte **N=3-Sequenz 226 / Gruppe 1** mit
+**6.022** ausgewählten Tests nach eingefrorenem Laufzeitfilter parallel aus;
+Auswahlbindung v2, Identitäten, Quellhash und Listenhash bleiben verbindlich.
+Erst nach deren Erfolg werden die fünf Fortschrittsmarker auf 650/900,
+zuletzt 15.l.R, nächstens 15.l.C, abgeschlossenes Bundle **519** und die
+R-Checkbox gesetzt. Der eine Commit enthält den vollständigen erhaltenen
+R-Zustand und seine Korrekturen unter der exakten R-Planmessage.
+15.l.C bleibt unbearbeitet und offen. Bei Übergabe sind dieser Apply-Erfolg
+und Commit noch nicht beobachtet. Native ZIP-Prüfung und atomare Übergabe
+beenden den Einzelauftrag ohne Änderung von Control oder eigene Fortsetzung.
 
 #### 15.l.C – Make it Clean
 

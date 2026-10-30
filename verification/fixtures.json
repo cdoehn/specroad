@@ -556,6 +556,10 @@
       "kind": "owned binary payloads and normative JSON; actual byte checks, no external evidence authenticity or write authorization",
       "provider": "tests/test_resource_inventory.py:descriptor"
     },
+    "SR-FIX-RESTORE-COMPLETE-HISTORY-v1": {
+      "kind": "Actual native synthetic Evidence, sealed recursive Baselines, RelationReviews, terminal Proposals, completed ordinary/discard/recovery/Restore receipts and audits with original archived attachments and exact byte closure. Negative or stale original findings stay negative or stale; retained records never become new review, execution or release authority.",
+      "provider": "tests/test_restore_history.py;tests/test_restore_history_right.py;tests/test_restore_operational_history.py:actual_history;tests/test_restore_proposals.py:project;tests/test_proposal_completion.py:completed"
+    },
     "SR-FIX-RESTORE-DIRECTORY-BINDING-v1": {
       "kind": "Synthetic owned storage inventory under the real project mutex plus two qualified native full-source Restore executions with independent synthetic host authority. Deterministic native directory renames, byte-identical copies, missing parents, symlinks and relocated original inodes with foreign detached entries expose descriptor/path rebinding. Independent path, byte and mode inventories assert no additional effects after the external change; normal live-owner cleanup is accounted for. No hostile-filesystem sandbox, complete crash matrix, CLI, Work or human approval claim.",
       "provider": "tests/test_restore_directory_binding.py:store_case,exchange_parent,pause_open_parents;tests/support/restore.py:restore_case"
@@ -576,13 +580,33 @@
       "kind": "Synthetic explicit argv and native structured Restore requests over real project-bundle/Baseline sources, original external plans and exact selections. Fresh synthetic host RecoveryAuthority decisions, actual target/root/audit checks and real abrupt child processes cover full completion and partial rollback after source disappearance. Closed syntax checks trap any I/O; integration checks preserve actual project/source bytes and root identity. This internal adapter is not public command registration, a usable real CLI host authorization binding, Work parity, the exhaustive crash matrix or human approval.",
       "provider": "tests/test_restore_invocation.py:planning,execution,authority;tests/test_restore_invocation_options.py:invocation;tests/support/restore.py:restore_case;tests/test_restore_execution_right.py:fixture,interrupted;tests/test_restore_plan_right.py:retained_case"
     },
+    "SR-FIX-RESTORE-NATIVE-SPECIALISTS-v1": {
+      "kind": "Owned defined 0.2 projects and native complete RequirementReviewInputs, stored ApprovalContext, TaskDone and actual CodeReference/source bytes. Explicit synthetic human review/provenance verifiers, current/stale/missing/forged/nonhuman/foreign inputs and native error classes. Actual installed ProfileResource/SRX, mapping and CSV contracts run over complete originals. No project code, genuine human product approval or production grant is fabricated.",
+      "provider": "tests/test_restore_qualification.py:approved_project,services;tests/test_restore_specialists.py;tests/test_restore_source_metadata.py;tests/test_restore_profile_rules.py"
+    },
     "SR-FIX-RESTORE-PLAN-v1": {
       "kind": "Owned synthetic full native projects with actual profile and offline registry bytes, draft standard artifacts and primary documents; native project ZIPs and sealed working/release-kind project Baselines with recursive original archive objects. Corrupt mutable before bytes, immutable-history conflicts, independent native target reconstruction, live stale and native safety cases. No human approval, restore execution, durable backup or release evidence is fabricated.",
       "provider": "tests/support/restore.py:restore_case,plan_for;tests/test_restore_plan.py:decode_files"
     },
+    "SR-FIX-RESTORE-PLANNING-RECOVERY-v1": {
+      "kind": "Real original plan capture and native output publication with injected terminal-checkpoint response loss before/after durable publication. Retained completed results remain passive; incomplete planning must reacquire current qualification and prove source/output identity. Native external Work files are separate from project mutation.",
+      "provider": "tests/test_restore_capture.py;tests/test_restore_planning_recovery.py;tests/test_restore_work_public.py:work,start"
+    },
+    "SR-FIX-RESTORE-PROPOSAL-ORIGINALS-v1": {
+      "kind": "Synthetic original Proposal revision chains, full native original models/change plans, verifier-bound review/control observations, distinct human test actors and real native publication/receipt originals. Original hashes, quorum, revocation, stale/current and applied-history semantics are checked without performing Proposal writes. Synthetic review actors do not establish real human approval; public M18 remains outside this fixture.",
+      "provider": "tests/test_proposal_originals.py:draft,original;tests/test_proposal_history.py:history,verifier;tests/test_proposal_completion.py:completed;tests/test_restore_proposals.py:project"
+    },
+    "SR-FIX-RESTORE-PUBLIC-WORK-v1": {
+      "kind": "Actual public argv and structured command execution over original project/baseline bytes with explicit synthetic host services and authority. Real durable planning/execution Work checkpoints, status/prompt/cancel/export/restore and original result files, source/root loss and tampered inputs. Native process and syscall faults preserve actual effects; terminal replay is passive and does not renew authority.",
+      "provider": "tests/test_restore_public.py;tests/test_restore_work_public.py:work,start;tests/test_restore_invocation.py:planning,execution,authority;tests/test_work_resume.py:recorded"
+    },
     "SR-FIX-RESTORE-RECOVERY-v1": {
       "kind": "Native full-project Restore, explicit original journals, real subprocess exits during backup/staging/publication/archive, stopped native owners and actual shared mutex. Separate synthetic current RecoveryAuthority and risk observations; exact before/target bytes, immutable handoff/action evidence and replay. No human approval, CLI/Work parity, complete crash matrix or release claim.",
       "provider": "tests/test_restore_execution_right.py:fixture,interrupted,continue_restore,old_owner;tests/support/restore.py:restore_case;tests/support/project_locks.py:Probe"
+    },
+    "SR-FIX-RESTORE-SCHEMA-BOUNDARY-v1": {
+      "kind": "Defined 0.2 native projects and explicit synthetic unsupported 0.1/unknown normative declarations or Legacy registrations at current/source/archive/attachment boundaries. Real bundle/Baseline hashes bind unsupported originals. No positive 0.1 schema or compatibility is invented; unrelated opaque attachment data and valid 0.2 legacy_ids remain distinct.",
+      "provider": "tests/test_restore_legacy_history.py:unsupported,legacy_registration,attach_current_evidence;tests/test_restore_schema_boundary_public.py:damaged_format;tests/support/restore.py:restore_case"
     },
     "SR-FIX-RESTORE-WORK-BINDING-v1": {
       "kind": "Synthetic registered host with a forbidden handler, native project-bundle/Baseline Restore plans over damaged current bytes, explicit original journal selection, no-I/O traps and real external CheckpointStore publication/reopening. Independent byte/hash/input membership and immutable-successor checks reject missing or forged stored bindings and changed actors/requests. No live Restore, current authorization, public CLI registration, complete Work engine, crash parity or human approval is asserted.",
@@ -923,13 +947,19 @@
     "SR-FIX-REQUIREMENT-EXCHANGE-v1",
     "SR-FIX-REQUIREMENT-INPUT-v1",
     "SR-FIX-RESOURCE-INVENTORY-v1",
+    "SR-FIX-RESTORE-COMPLETE-HISTORY-v1",
     "SR-FIX-RESTORE-DIRECTORY-BINDING-v1",
     "SR-FIX-RESTORE-DURABILITY-v1",
     "SR-FIX-RESTORE-EXECUTION-v1",
     "SR-FIX-RESTORE-FILES-v1",
     "SR-FIX-RESTORE-INVOCATION-v1",
+    "SR-FIX-RESTORE-NATIVE-SPECIALISTS-v1",
     "SR-FIX-RESTORE-PLAN-v1",
+    "SR-FIX-RESTORE-PLANNING-RECOVERY-v1",
+    "SR-FIX-RESTORE-PROPOSAL-ORIGINALS-v1",
+    "SR-FIX-RESTORE-PUBLIC-WORK-v1",
     "SR-FIX-RESTORE-RECOVERY-v1",
+    "SR-FIX-RESTORE-SCHEMA-BOUNDARY-v1",
     "SR-FIX-RESTORE-WORK-BINDING-v1",
     "SR-FIX-RESTORE-WORK-DELIVERY-v1",
     "SR-FIX-RESTORE-WORK-EXECUTION-v1",

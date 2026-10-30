@@ -29,7 +29,9 @@ _FIELDS = ('format_version', 'package_kind', 'work_id', 'checkpoint_generation',
 
 
 def _supported(manifest):
-    if manifest.as_dict()['command_class'] != 'read_only':
+    value = manifest.as_dict()
+    restore = value['command_class'] == 'recovery_write' and value['command_id'] == 'recover.restore'
+    if value['command_class'] != 'read_only' and not restore:
         raise ArchiveError('normative_work_package_requires_native_binding', exit_code=6)
 
 
@@ -178,6 +180,14 @@ def export_work_package(store):
 def _export_held(store, held, build):
     """Retain the original checkpoint observation for an external publisher."""
     pointer, current = _read(store, held, build); _supported(current)
+    from .restore_control import passive_guard, delivered_files
+    from .result_files import _verify_files
+    with passive_guard(current):
+        _verify_files(held, delivered_files(current))
+        return _export_checked(store, held, build, pointer, current)
+
+
+def _export_checked(store, held, build, pointer, current):
     value = current.as_dict()
     metadata = {'format_version': 'work-package-v1', 'package_kind': 'work',
         **{key: value[key] for key in ('work_id', 'checkpoint_generation', 'checkpoint_sha256')},
@@ -224,20 +234,35 @@ def restore_work_package(raw, *, expected_sha256, registry, protected_roots, dir
     chain, payloads = _checked_package(raw, expected_sha256, registry, build)
     _require(_runtime_build() == build, 'work_package_runtime_changed')
     _recheck_input()
-    location = WorkDirectory(chain[0], protected_roots=protected_roots, directory=directory)
+    from .open_existing import protected_paths
+    from .restore_control import delivered_files
+    from .result_files import _publish_file, _verify_files
+    reserved = (protected_paths(chain[0])
+                if chain[0].as_dict()['command_id'] == 'recover.restore' else ())
+    location = WorkDirectory(chain[0], protected_roots=protected_roots,
+                             protected_paths=reserved, directory=directory)
+    results = delivered_files(chain[-1])
+    expected_payloads = {**payloads, **{'results/' + name: data for name, data in results}}
     store = CheckpointStore(location, chain[0])
     with location.for_checkpoint(require_empty=True) as held:
         _require(_runtime_build() == build, 'work_package_runtime_changed')
         _recheck_input()
-        _restore_target(held, payloads)
+        _restore_target(held, expected_payloads)
         for manifest in chain:
             _require(_runtime_build() == build, 'work_package_runtime_changed')
             _recheck_input()
             store._publish_held(held, manifest, store._pointer(held))
-            _restore_target(held, payloads)
+            _restore_target(held, expected_payloads)
             _recheck_input()
         _require(store._pointer(held)[0] == payloads['work.json'], 'work_package_restore_mismatch')
         _ensure_work(store, held, store._pointer(held), chain[-1], build)
-        _restore_target(held, payloads, complete=True)
+        def ensure():
+            _ensure_work(store, held, store._pointer(held), chain[-1], build)
+            _recheck_input()
+        for name, content in results:
+            _publish_file(held, name, content, ensure)
+            _restore_target(held, expected_payloads)
+        _verify_files(held, results, sync=True)
+        _restore_target(held, expected_payloads, complete=True)
         _recheck_input()
     return store

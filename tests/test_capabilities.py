@@ -24,7 +24,7 @@ class CapabilitiesWorkTests(unittest.TestCase):
         self.assertEqual(set(semantic['capability_ids']), {'cli.' + item for item in ids} |
                          {'python.structured-request', 'python.srx.evaluate'})
         self.assertEqual(set(semantic['command_groups']), {item.split('.')[0] for item in ids})
-        self.assertEqual(semantic['command_classes'], ['generated_output', 'read_only', 'root_creation'])
+        self.assertEqual(semantic['command_classes'], ['generated_output', 'read_only', 'recovery_write', 'root_creation', 'work_operational'])
         for item in semantic['commands']:
             result = dispatch_result(['command', 'describe', item['command_id']], registry=registry)
             self.assertEqual(result.exit_code, 0)
@@ -38,9 +38,13 @@ class CapabilitiesWorkTests(unittest.TestCase):
         self.assertEqual(semantic['supported_versions']['schema'], ['0.2.0'])
         self.assertEqual(semantic['supported_versions']['srx'], ['1.0'])
         self.assertEqual(semantic['supported_versions']['proposal'], [])
-        self.assertFalse(semantic['work']['engine_available'])
-        self.assertEqual(semantic['work']['checkpoint_algorithms'], [])
-        self.assertIsNone(semantic['work']['budget_policy_version'])
+        self.assertTrue(semantic['work']['engine_available'])
+        self.assertEqual(semantic['work']['checkpoint_algorithms'], ['work-manifest-segments-v1'])
+        self.assertEqual(semantic['work']['budget_policy_version'], 'runtime-budget-v2')
+        read_only = CommandRegistry(tuple(command for command in builtin_registry().commands
+            if command.command_id != 'recover.restore' and not command.command_id.startswith('work.')))
+        self.assertEqual(capabilities(read_only)['semantic']['work'],
+            {'engine_available': False, 'checkpoint_algorithms': [], 'budget_policy_version': None})
 
     def test_advertised_model_versions_match_retrievable_schema_contracts(self):
         outcomes = [dispatch_result(argv) for argv in (

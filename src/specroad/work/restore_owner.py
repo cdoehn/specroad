@@ -158,7 +158,7 @@ def _recover(store, registry, expected, reason, probe, progress, continuation=No
     initial = read_restore_work_manifest(store._initial.raw, store._initial.objects,
         registry=registry, expected_tool_build=build)
     plan = parse_json_object(_bytes(initial.as_dict()['plan_binding']['plan_source'], initial.objects))
-    require(any(b.root == Path(plan['project_root']) for b in store._location._protected),
+    require(store._location.protects(Path(plan['project_root'])),
             'restore_work_unprotected_project', exit_code=7)
     probe = LinuxOwnerProbe() if probe is None else probe
     with _held(store._location) as held:

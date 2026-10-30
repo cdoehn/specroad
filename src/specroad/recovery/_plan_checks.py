@@ -10,7 +10,7 @@ from ._current_evidence import current_configuration
 from ._coverage import inventory_roots, OPERATIONAL_ROOTS
 from ._history import history_target
 from ._sources import reconstruct
-from ._validation import validate_project
+from ._validation import validate_project, project_bytes
 from ._operational_history import check_operational_history, operational_path
 from .values import require
 
@@ -51,8 +51,7 @@ def check_history(current, target, current_configuration, target_model):
         require(artifact_path(value['artifact_type'], value['id'], current_configuration.id_prefix) == path,
                 'restore_current_identity_conflict', path=path, exit_code=6)
         protected = (value['artifact_type'] in ('baseline', 'evidence', 'relation_review') or
-            value['artifact_type'] == 'proposal' and value['proposal_status'] in ('rejected', 'applied', 'stale') or
-            value['id_scheme'] != 'random128-v1')
+            value['artifact_type'] == 'proposal' and value['proposal_status'] in ('rejected', 'applied', 'stale'))
         if protected:
             require(target.get(path) == raw, 'restore_protected_history_conflict', path=path, exit_code=6)
         if value['maturity'] == 'approved' or protected:
@@ -60,8 +59,14 @@ def check_history(current, target, current_configuration, target_model):
         if path in target:
             candidate = parse_json_object(target[path])
             require(candidate['revision'] >= value['revision'], 'restore_published_revision_conflict', path=path, exit_code=6)
-            require(value['maturity'] != 'approved' or candidate['maturity'] == 'approved',
-                    'restore_approved_state_conflict', path=path, exit_code=6)
+            # A later native revision may legitimately withdraw approval or
+            # retire the identity. Restore preserves it, never grants approval.
+            # Two different values claiming the same published revision cannot
+            # silently replace one another.
+            from ..model.canonical import canonical_json_sha256
+            require(candidate['revision'] != value['revision'] or
+                    canonical_json_sha256(candidate) == canonical_json_sha256(value),
+                    'restore_published_revision_conflict', path=path, exit_code=6)
 
 
 def check_current(inventory, current, source_model, target, target_model):
@@ -81,7 +86,10 @@ def check_current(inventory, current, source_model, target, target_model):
     return {p: raw for p, raw in current.items() if target.get(p) != raw}
 
 
-def verify_contents(data, objects):
+def verify_contents(data, objects, *, qualify=False, services=None):
+    # Decoding stored bytes must not contact a current review service. Every
+    # forward path explicitly requests qualification again before publication.
+    model_check = (lambda files: validate_project(files, services=services)) if qualify else project_bytes
     source = data['source']
     target = {r['path']: objects[r['sha256']] for r in data['target']['entries']}
     operational = None
@@ -98,7 +106,7 @@ def verify_contents(data, objects):
     files, additions, dependencies, source_root, project_id = reconstruct(source['kind'],
         objects[source['sha256']], read, operational=operational)
     require(dependencies == source['dependencies'], 'restore_dependency_inventory_mismatch')
-    source_model, actual_source_root = validate_project(files)
+    source_model, actual_source_root = model_check(files)
     require(actual_source_root == source_root == data['source_snapshot_root'], 'restore_source_root_mismatch')
     require(project_id == data['project_id'], 'restore_project_identity_conflict', exit_code=6)
     current = {}
@@ -117,7 +125,13 @@ def verify_contents(data, objects):
     expected_target, preserved = history_target(files, additions, current, configuration)
     require(target == expected_target, 'restore_target_inventory_mismatch')
     require(data['preserved'] == preserved, 'restore_preservation_inventory_mismatch')
-    target_model, root = validate_project(target)
+    target_model, root = model_check(target)
     require(root == data['expected_target_root'], 'restore_target_root_mismatch')
     backup = check_current(data['inventory'], current, source_model, target, target_model)
     require(data['backup'] == file_table(backup), 'restore_backup_inventory_mismatch')
+
+
+def qualify_plan(plan, *, services=None):
+    from ._codec import decode
+    data, objects = decode(plan.source_bytes)
+    verify_contents(data, objects, qualify=True, services=services)

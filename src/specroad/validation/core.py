@@ -25,13 +25,15 @@ from .values import (
     _document_bindings,
 )
 from ._model_checks import _issue, _applies, _foreign_edges, _reference_issues
+from .approval_values import ApprovalContext
 from .resources import ValidationResources
 from ._document_roles import _document_roles
 from .production import production_gates, formal_findings, profile_applies
 
 
 def validate_model(documents, *, profile=None, selected_ids=None, gates=(), resources=None,
-                   configuration_id=None, document_role_scope=None, currentness=None, partial=None):
+                   configuration_id=None, document_role_scope=None, currentness=None, partial=None,
+                   approval_contexts=()):
     """Validate all loaded documents, or a conservatively expanded selection.
 
     Parsing/schema/reference checks inspect the ENTIRE supplied model, even for
@@ -58,6 +60,11 @@ def validate_model(documents, *, profile=None, selected_ids=None, gates=(), reso
     if len({d.path for d in documents}) != len(documents):
         raise ModelError("duplicate_validation_source")
     documents = tuple(sorted(documents, key=lambda d: d.path))
+    approval_contexts = _sequence(approval_contexts, 'approval_contexts_required')
+    if any(type(c) is not ApprovalContext for c in approval_contexts):
+        raise ModelError('approval_context_required')
+    if len({c.requirement_id for c in approval_contexts}) != len(approval_contexts):
+        raise ModelError('approval_duplicate_context')
     if partial is not None:
         from ..bundles._partial_read import PartialReadSnapshot
         if type(partial) is not PartialReadSnapshot or document_role_scope is not None:
@@ -271,7 +278,8 @@ def validate_model(documents, *, profile=None, selected_ids=None, gates=(), reso
     stage("stored_lifecycle_fields", ids=checked)
     if resources is not None:
         findings, formal_ids = formal_findings(documents, records, checked, profile, resources,
-                                               configuration=None if configuration is None else configuration.data)
+            configuration=None if configuration is None else configuration.data,
+            approval_contexts=approval_contexts)
         stage("approval_formal", findings, ids=formal_ids,
               status=None if formal_ids else "not_applicable")
     names = sorted(set(HOOK_NAMES) | set(gate_index))

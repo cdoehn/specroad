@@ -230,6 +230,14 @@ def test_missing_specialists_and_contradictory_run_history_are_not_faked(tmp_pat
         path = artifact_path('evidence', value['id'], 'SR')
     put(options['project_root'], path, canonical_json_bytes(value))
     before = inventory(tmp_path)
+    if case == 'independent':
+        with no_write_attempts():
+            plan = plan_for(options)
+        assert decode_files(plan)[path] == canonical_json_bytes(value)
+        assert all('independent_contract_required' in row['reasons']
+                   and not row['approval_granted'] for row in plan.history_assessments)
+        assert inventory(tmp_path) == before
+        return
     with no_write_attempts(), pytest.raises(RestoreError) as failure:
         plan_for(options)
     assert failure.value.exit_code == 3

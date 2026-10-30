@@ -33,6 +33,7 @@ def capabilities(registry):
         commands.append({**command_surface(command),
             "output_formats": formats, "result_schema": protocol.result_schema,
             "continuation_supported": protocol.work.continuation_supported})
+    work_available = any(item["continuation_supported"] for item in commands)
     semantic = {
         "program_version": identity["program_version"],
         "distribution": {key: identity[key] for key in ("distribution_kind", "build_id", "build_sha256", "build_hash_scope")},
@@ -48,7 +49,9 @@ def capabilities(registry):
             "json_envelope": [FORMAT_VERSION], "command_description": [DESCRIPTION_VERSION],
             "capabilities": [CAPABILITIES_VERSION]},
         "python_support": identity["python_support"],
-        "work": {"engine_available": False, "checkpoint_algorithms": [], "budget_policy_version": None},
+        "work": {"engine_available": work_available,
+            "checkpoint_algorithms": ["work-manifest-segments-v1"] if work_available else [],
+            "budget_policy_version": "runtime-budget-v2" if work_available else None},
     }
     return {"format_version": CAPABILITIES_VERSION, "semantic": semantic,
             "runtime": {"interpreter": identity["runtime"],

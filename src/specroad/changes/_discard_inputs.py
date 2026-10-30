@@ -49,6 +49,16 @@ def original_discard(files, terminal):
             or intent.sha256 != data['discard']['intent_sha256']):
         raise RecoveryError('recovery_discard_audit_mismatch', exit_code=6)
     journal = _parse(original.source_bytes, data['transaction_id'], files, data['project_id'])
+    validate_discard_originals(terminal, journal, intent)
+    return journal, intent
+
+
+def validate_discard_originals(terminal, journal, intent):
+    """Native value-only binding, also used to retain historical originals."""
+    data = terminal.data
+    if (journal.sha256 != data['discard']['journal_before_sha256']
+            or intent.sha256 != data['discard']['intent_sha256']):
+        raise RecoveryError('recovery_discard_audit_mismatch', exit_code=6)
     expected = journal.data
     expected.update(state='rolled_back', discard=data['discard'])
     value = parse_json_object(intent.source_bytes)
@@ -62,7 +72,6 @@ def original_discard(files, terminal):
             or data['discard']['previous_state'] != journal.data['state']
             or any(value.get(key) != item for key, item in fields.items())):
         raise RecoveryError('recovery_discard_audit_mismatch', exit_code=6)
-    return journal, intent
 
 
 def discard_completion_record(terminal, original, intent):

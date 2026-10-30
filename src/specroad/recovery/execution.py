@@ -73,7 +73,7 @@ def _source(data, origin):
 def execute_restore(raw, *, expected_target_root, authority, actor, request_id=None,
                     affected_journals=None, force=False, expected_lock_sha256=None,
                     reason=None, accept_remote_risk=False, owner_probe=None,
-                    expected_original_actor=None, expected_completed_bytes=None):
+                    expected_original_actor=None, expected_completed_bytes=None, services=None):
     """Publish the exact supported full plan under fresh authorization and lock.
 
     No caller supplies substitute model checks. A failed/unfinished attempt
@@ -92,7 +92,7 @@ def execute_restore(raw, *, expected_target_root, authority, actor, request_id=N
             expected_lock_sha256=expected_lock_sha256, reason=reason,
             accept_remote_risk=accept_remote_risk, owner_probe=owner_probe,
             expected_original_actor=expected_original_actor,
-            expected_completed_bytes=expected_completed_bytes)
+            expected_completed_bytes=expected_completed_bytes, services=services)
     except RestoreError as error:
         error.mutation_possible |= progress['mutation_possible']
         error.recovery_required |= error.mutation_possible or progress['recovery_required']
@@ -103,7 +103,7 @@ def execute_restore(raw, *, expected_target_root, authority, actor, request_id=N
 def _execute_restore(raw, *, expected_target_root, authority, actor, request_id,
                      affected_journals, progress, force, expected_lock_sha256,
                      reason, accept_remote_risk, owner_probe, expected_original_actor,
-                     expected_completed_bytes):
+                     expected_completed_bytes, services):
     takeover_options(force, expected_lock_sha256, reason, accept_remote_risk)
     require(type(authority) is RecoveryAuthority, 'restore_authority_required', exit_code=2)
     require(expected_completed_bytes is None or type(expected_completed_bytes) is bytes,
@@ -181,6 +181,8 @@ def _execute_restore(raw, *, expected_target_root, authority, actor, request_id,
                     authority=authority, actor=actor, authorize=_authorize, source_observation=observation))
         require(original_actor is None or actor.as_fields() == original_actor,
                 'restore_original_actor_conflict', exit_code=6)
+        from ._plan_checks import qualify_plan
+        qualify_plan(plan, services=services)
         origin = boundary(data['source']['root'])
         verify_live(plan, project, origin)
         selection = journal_selection(plan, affected_journals, active_entries)
@@ -198,6 +200,7 @@ def _execute_restore(raw, *, expected_target_root, authority, actor, request_id,
     def fresh(files):
         require(files.boundary._root_identity == project._root_identity,
                 'restore_root_changed', exit_code=7)
+        qualify_plan(plan, services=services)
         verify_live(plan, project, origin)
         require(journal_selection(plan, affected_journals, files.journal_entries()) == selection,
                 'restore_selection_changed', exit_code=6)
@@ -226,6 +229,7 @@ def _execute_restore(raw, *, expected_target_root, authority, actor, request_id,
         _source(data, origin)
         _authorize(authority, request)
         _source(data, origin)
+        qualify_plan(plan, services=services)
         store.check()
         store.before_create = lambda path: _source(data, origin) if path == active + '/committing.json' else None
         save(active + '/committing.json')
@@ -238,7 +242,7 @@ def _execute_restore(raw, *, expected_target_root, authority, actor, request_id,
                 store.remove(path)
             save(active + '/effects/' + str(index) + '.json')
         actual = {path: store.read(path) for path in target}
-        require(actual == target and validate_project(actual)[1] == expected_target_root,
+        require(actual == target and validate_project(actual, services=services)[1] == expected_target_root,
                 'restore_actual_target_conflict', exit_code=6)
         store.check()
         save(archive + '/completed.json')

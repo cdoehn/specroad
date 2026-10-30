@@ -131,11 +131,14 @@ def test_container_integrity_is_not_full_project_qualification(tmp_path, case):
     elif case == 'reference':
         values.append(domain_value('milestone'))
     elif case == 'approval':
-        values[1] = approved_value('goal')
+        # A stored Requirement approval needs its actual human review inputs.
+        # Ordinary approved Goals now use the completed native stored-state gates.
+        values[1] = approved_value('requirement')
     else:
-        # Native test-record reading is now part of Evidence preservation;
-        # external Source semantics still need an unavailable specialist.
-        values.append(record_value('source', locator='urn:synthetic:external-source'))
+        # An explicit content binding requires the unavailable native provider;
+        # valid unapproved locator-only metadata does not require observation.
+        values.append(record_value('source', locator='urn:synthetic:external-source',
+            content_sha256=sha256(b'Bound external source content').hexdigest()))
     # A missing reference cannot even be packaged by the native project creator;
     # start with a hash-consistent explicit container to exercise model gates.
     if case == 'reference':
@@ -292,9 +295,9 @@ def test_archived_publication_evidence_cannot_hide_behind_current_draft_bytes(tm
     before = inventory(tmp_path)
     with no_write_attempts(), pytest.raises(RestoreError) as error:
         plan_for(options)
-    assert error.value.exit_code == (6 if case == 'revision' else 3)
+    assert error.value.exit_code == 6  # Protected published identity/revision conflict, §10.7.1.
     assert error.value.reason == ('restore_archived_revision_conflict' if case == 'revision'
-                                  else 'restore_archived_history_provider_required')
+                                  else 'restore_archived_approval_conflict')
     assert inventory(tmp_path) == before
 
 

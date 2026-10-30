@@ -62,6 +62,10 @@ def semantic_command(command):
 def read_plan(value, objects, inputs):
     from ..cli.requests import CommandRequest
     from .manifest import _bytes
+    if '--from' in value['normalized_arguments']['options']:
+        from .restore_planning import check_binding
+        check_binding(value, inputs)
+        return None
     binding = value['plan_binding']
     _object(binding, ('format_version', 'restore_plan_sha256', 'plan_source', 'journal_selection'))
     require(binding['format_version'] == 'work-restore-binding-v1', 'restore_work_binding_invalid')

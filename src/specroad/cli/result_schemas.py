@@ -70,12 +70,18 @@ def _fields(schema_id):
                     "build_hash_scope": _nullable(text)}
     entry = _object({"schema_id": nonempty, "version": nonempty, "stability": {"enum": ["experimental"]},
         "category": {"enum": list(CATEGORIES)}, "validation_scope": nonempty, "sha256": sha})
-    work = _object({"continuation_supported": {"const": False},
-        "external_side_effects": {"const": []}, "checkpoint_algorithms": {"const": []},
+    work = _object({"continuation_supported": boolean,
+        "external_side_effects": strings, "checkpoint_algorithms": strings,
         "minimum_step": _object({"kind": nonempty, "required_inputs": strings,
             "limits": _object({"memory_bytes": {"type": "null"}, "cpu_seconds": {"type": "null"}}),
             "limits_status": {"const": "unmeasured"}, "on_blocked": {"const": "fail_without_checkpoint"},
             "blocked_exit_code": {"const": 5}})})
+    work['allOf'] = [{'anyOf': [
+        {'properties': {'continuation_supported': {'const': False},
+                        'external_side_effects': {'const': []}, 'checkpoint_algorithms': {'const': []}}},
+        {'properties': {'continuation_supported': {'const': True},
+                        'external_side_effects': {'const': ['external_work_directory']},
+                        'checkpoint_algorithms': {'const': ['work-manifest-segments-v1']}}}]}]
     bound = _object({"state": {"enum": ["known", "unknown", "unlimited"]}, "value": _nullable(count)})
     process_limit = _object({"scope": {"const": "process"}, "unit": text, "source": text,
                             "soft": bound, "hard": bound})
@@ -91,6 +97,19 @@ def _fields(schema_id):
         return _object({"usage": text, "options": _array(_object({"flag": text, "values": strings}, ("flag",))),
             "commands": _array(_object({k: surface[k] for k in ("command_id", "words", "aliases")})),
             "exit_codes": {"type": "object", "additionalProperties": text}, "examples": strings, "scope": text})
+    if schema_id == 'work-command-v1':
+        return _object({'format_version': {'const': 'work-command-v1'},
+            'operation': {'enum': ['status', 'resume', 'prompt', 'export', 'restore', 'cancel']},
+            'data': obj})
+    if schema_id == 'restore-command-v1':
+        common = {'format_version': {'const': 'restore-command-v1'},
+                  'history_assessments': _array(obj)}
+        return {'anyOf': [
+            _object({**common, 'mode': {'const': 'plan'}, 'restore_plan': obj,
+                'execution': {'type': 'null'},
+                'plan_file': _object({'root': nonempty, 'path': nonempty, 'size': count, 'sha256': sha})}),
+            _object({**common, 'mode': {'const': 'execute'}, 'restore_plan': {'type': 'null'},
+                'execution': obj, 'plan_file': {'type': 'null'}})]}
     if schema_id == 'bundle-extract-v1':
         return _object({'format_version': {'const': 'bundle-extract-v1'}, 'project_root': nonempty,
             'manifest': obj, 'file': _object({'size': count, 'sha256': sha}),
@@ -343,7 +362,7 @@ def _fields(schema_id):
             "supported_output_format_versions": {"type": "object", "additionalProperties": strings}})
     if schema_id == "command-description-v1":
         return _object({"format_version": {"const": "1.0.0"}, **surface, "budget_policy_version": _nullable(text),
-            "lock_kind": {"enum": ['none', 'bootstrap']}, "work": work,
+            "lock_kind": {"enum": ['none', 'bootstrap', 'recovery']}, "work": work,
             "parameters": _array(_object({"name": text, "kind": {"const": "positional"},
                 "datatype": text, "required": boolean, "choices": strings})),
             "options": _array(_object({"flag": text, "datatype": text, "repeatable": boolean,
@@ -352,7 +371,7 @@ def _fields(schema_id):
             "stdin": _object({"mode": {"const": "unused"}, "explicit_markers": {"const": []}}),
             "stdout": _object({"formats": strings, "default_format": text,
                 "json_envelope_version": {"const": FORMAT_VERSION}, "result_schema": nonempty,
-                "continuation": _object({"supported": {"const": False}, "sarif_fallback": {"type": "null"}})}),
+                "continuation": _object({"supported": boolean, "sarif_fallback": {"type": "null"}})}),
             "diagnostic_codes": strings, "exit_codes": _array({"type": "integer", "minimum": 0, "maximum": 8}),
             "write_effects": _object({"scope": text, "required_write_paths": strings, "external_work": strings}),
             "requires_project": boolean, "requires_git": boolean,
@@ -363,8 +382,12 @@ def _fields(schema_id):
                 "result_schema": text, "continuation_supported": boolean})),
             "command_groups": strings, "command_classes": strings, "output_formats": strings, "exchange_formats": strings,
             "supported_versions": {"type": "object", "additionalProperties": strings},
-            "python_support": support, "work": _object({"engine_available": {"const": False},
-                "checkpoint_algorithms": {"const": []}, "budget_policy_version": {"type": "null"}})})
+            "python_support": support, "work": {'anyOf': [
+                _object({"engine_available": {"const": False}, "checkpoint_algorithms": {"const": []},
+                         "budget_policy_version": {"type": "null"}}),
+                _object({"engine_available": {"const": True},
+                         "checkpoint_algorithms": {"const": ['work-manifest-segments-v1']},
+                         "budget_policy_version": {"const": 'runtime-budget-v2'}})]}})
         return _object({"format_version": {"const": "1.0.0"}, "semantic": semantic,
             "runtime": _object({"interpreter": runtime, "limits": limits})})
     if schema_id == "schema-catalog-v1":

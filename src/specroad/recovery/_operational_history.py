@@ -6,19 +6,15 @@ from .values import require
 
 
 def check_operational_history(current, target, project_id):
-    receipts = {p: b for p, b in current.items() if receipt_path(p)}
-    journals = completed_receipts(receipts, project_id)
-    for journal in journals:
-        # An old receipt proves its original result, not an arbitrary revision
-        # selected by this restore. Unknown publication history stays blocked.
-        for row in journal.data['target_inventory']:
-            path = row['path']
-            require(path in target and file_row(path, target[path]) == row,
-                    'restore_receipt_history_conflict', path=path, exit_code=6)
+    from ._receipt_history import receipt_history, check_receipt_targets
+    merged = {**current, **target}
+    receipts, journals = receipt_history(merged, project_id)
+    check_receipt_targets(journals, target)
+    retained = retained_operational(current, project_id)
     for path in current:
         if not path.startswith(('.specroad/transactions/', '.specroad/recovery/', '.specroad/requests/')):
             continue
-        if receipt_path(path):
+        if path in retained:
             require(path not in target or target[path] == current[path],
                     'restore_receipt_history_conflict', path=path, exit_code=6)
             continue
@@ -34,3 +30,23 @@ def check_operational_history(current, target, project_id):
 
 def operational_path(path):
     return path.startswith(('.specroad/transactions/', '.specroad/recovery/', '.specroad/requests/'))
+
+
+def retained_operational(current, project_id):
+    from ._receipt_history import receipt_history
+    from ._restore_history import restore_audits
+    receipts, _ = receipt_history(current, project_id)
+    restored = restore_audits(current, project_id)
+    # These namespaces are already passive in native preflight. Retention is
+    # byte preservation, not a claim that an old lock/recovery/bootstrap event
+    # succeeded or that its authority still applies. Consumers must recheck
+    # their own original evidence before using it. Restore completions and
+    # successful write receipts above have additional native proof contracts.
+    passive = {}
+    for path, raw in current.items():
+        parts = path.split('/')
+        if (len(parts) > 3 and parts[:2] == ['.specroad', 'recovery']
+                and parts[2] in ('lock-audit', 'transaction-audit', 'init-bootstrap', 'bundle-bootstrap')
+                and not (parts[2] == 'transaction-audit' and parts[3].startswith('restore-'))):
+            passive[path] = raw
+    return {**receipts, **restored, **passive}

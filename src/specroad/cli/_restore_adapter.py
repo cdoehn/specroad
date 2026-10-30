@@ -12,7 +12,7 @@ from ..recovery.values import guarded, require
 
 
 @guarded
-def run_restore(value, *, authority=None, owner_probe=None):
+def run_restore(value, *, authority=None, owner_probe=None, services=None):
     """Bind one fresh argv/request and return the actual native typed outcome.
 
     No saved resolved context or caller-selected preflight bypass is accepted.
@@ -31,10 +31,10 @@ def run_restore(value, *, authority=None, owner_probe=None):
                         'generated_path': options['--generated-path']}
                        if options['--source-kind'] == 'baseline' else {})
         plan = prepare_restore_plan(options['--project'], source_root=options['--source-root'],
-            source_path=options['--from'], source_kind=options['--source-kind'], **operational)
+            source_path=options['--from'], source_kind=options['--source-kind'], services=services, **operational)
         project._check_root()
         return publish_restore_plan(plan.source_bytes,
-            output_root=options['--output-root'], output=options['--output'])
+            output_root=options['--output-root'], output=options['--output'], services=services)
     plan, selection = read_restore_inputs(options['--plan-root'], options['--plan'],
         selection_root=options.get('--selection-root'), selection_path=options.get('--affected-journals'))
     require(str(project.root) == plan.data['project_root'], 'restore_project_binding_conflict', exit_code=6)
@@ -44,4 +44,4 @@ def run_restore(value, *, authority=None, owner_probe=None):
         request_id=options.get('--request-id'), affected_journals=selection,
         force=options.get('--force', False), expected_lock_sha256=options.get('--expected-lock-sha256'),
         reason=options.get('--reason'), accept_remote_risk=options.get('--accept-remote-risk', False),
-        owner_probe=owner_probe)
+        owner_probe=owner_probe, services=services)

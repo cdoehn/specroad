@@ -41,44 +41,9 @@ def assess_change_target(plan, model, *, policy, gates=(), strict=False):
     base = model.manifest(model.artifacts, scope)
     if value['base']['model_root_sha256'] != base.sha256:
         raise TargetError('target_base_root_mismatch', pointer='/base/model_root_sha256')
-    normalize = normalization_mode(value['operations'])
-    baseline = baseline_mode(value['operations'])
-    evidence = evidence_mode(value['operations'])
-    imported = import_mode(value['operations'])
-    if evidence or imported:
-        prepare = prepare_import_candidates if imported else prepare_evidence_candidates
-        folded = prepare(model, value['operations'],
-            metadata_policy_version=value['metadata_policy_version'], actor=value['actor'],
-            planned_at=value['planned_at'], preconditions=value['preconditions'])
-        if {c.id: c.candidate_sha256 for c in folded.candidates} != {
-                r['artifact']['id']: r['sha256'] for r in value['result_artifacts']}:
-            raise TargetError('declared_evidence_result_mismatch', pointer='/result_artifacts')
-    elif baseline:
-        folded = prepare_baseline_candidates(model, value['operations'],
-            metadata_policy_version=value['metadata_policy_version'], actor=value['actor'],
-            planned_at=value['planned_at'], preconditions=value['preconditions'])
-        if {c.id: c.candidate_sha256 for c in folded.candidates} != {
-                r['artifact']['id']: r['sha256'] for r in value['result_artifacts']}:
-            raise TargetError('declared_baseline_result_mismatch')
-    elif review_mode(value['operations']):
-        folded = prepare_review_candidates(model.artifacts, value['operations'],
-            metadata_policy_version=value['metadata_policy_version'], actor=value['actor'],
-            planned_at=value['planned_at'], preconditions=value['preconditions'],
-            source_files=model.source_files, profile=model.profile, **model.reservations)
-        actual = {c.id: c.candidate_sha256 for c in folded.candidates}
-        expected = {r['artifact']['id']: r['sha256'] for r in value['result_artifacts']}
-        if actual != expected:
-            raise TargetError('declared_review_result_mismatch', pointer='/result_artifacts')
-    elif normalize:
-        # Keep all ordinary source/precondition/history checks, but do not fold
-        # representation changes as artifact edits or stamp revision/metadata.
-        folded = prepare_change_lifecycle(model.artifacts, [],
-            metadata_policy_version=value['metadata_policy_version'], actor=value['actor'],
-            planned_at=value['planned_at'], preconditions=value['preconditions'],
-            source_files=model.source_files, **model.reservations)
-    else:
-        folded = prepare_plan_lifecycle(plan, model.artifacts, observed_base_root=base.sha256,
-            observed_scope=scope, source_files=model.source_files, **model.reservations)
+    from ._saved_plan_fold import fold_saved_plan
+    folded, normalize, baseline = fold_saved_plan(plan, model,
+        observed_base_root=base.sha256, observed_scope=scope)
     artifacts = folded.artifacts
     originals = {parse_json_object(d.content)['id']:d for d in model.documents}
     documents = []

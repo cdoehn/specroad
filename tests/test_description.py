@@ -38,13 +38,17 @@ class DescriptionWorkTests(unittest.TestCase):
                 with self.subTest(command=command.command_id):
                     with tempfile.TemporaryDirectory() as tmp:
                         from support.inspection import command_example_inputs
-                        command_example_inputs(Path(tmp), command)
-                        result = execute_request(request, registry=registry, cwd=Path(tmp)).result
+                        with command_example_inputs(Path(tmp), command) as bound_request:
+                            result = execute_request(bound_request, registry=registry, cwd=Path(tmp)).result
                     self.assertEqual(result.exit_code, 0)
                     self.assertEqual(result.command, command.command_id)
-                    if command.requires_project:
+                    if command.requires_project and command.command_id != 'recover.restore':
                         self.assertEqual(result.project['project_root'], str(Path(tmp)))
                         self.assertEqual(result.project['project_id'], 'sample')
+                    elif command.command_id == 'recover.restore':
+                        self.assertEqual(dict(result.project), {
+                            'project_root': bound_request['options']['--project'],
+                            'project_id': None, 'model_root_sha256': None})
                     else:
                         self.assertIsNone(result.project)
 
@@ -57,7 +61,7 @@ class DescriptionWorkTests(unittest.TestCase):
         self.assertEqual(cli.result['stdout']['json_envelope_version'], '2.0.0')
 
     def test_unknown_commands_are_not_success_placeholders(self):
-        for target in ('init.unavailable', 'retire', 'schema.unavailable', 'work.resume', 'not-registered'):
+        for target in ('init.unavailable', 'retire', 'schema.unavailable', 'work.unavailable', 'not-registered'):
             self.assertEqual(dispatch_result(['command', 'describe', target]).exit_code, 2)
 
     def test_missing_extra_and_unknown_input_is_rejected(self):
@@ -205,18 +209,21 @@ class DescriptionRobustnessTests(unittest.TestCase):
         for command in registry.commands:
             document = describe_command(registry, command.command_id)
             work = document['work']
-            self.assertFalse(work['continuation_supported'])
-            self.assertEqual(work['external_side_effects'], [])
-            self.assertEqual(work['checkpoint_algorithms'], [])
-            self.assertEqual(document['write_effects']['external_work'], [])
+            continuation = command.command_id in ('recover.restore', 'work.resume')
+            self.assertEqual(work['continuation_supported'], continuation)
+            self.assertEqual(document['stdout']['continuation']['supported'], continuation)
+            self.assertEqual(work['external_side_effects'], ['external_work_directory'] if continuation else [])
+            self.assertEqual(work['checkpoint_algorithms'], ['work-manifest-segments-v1'] if continuation else [])
+            self.assertEqual(document['write_effects']['external_work'], work['external_side_effects'])
             self.assertEqual(document['lock_kind'],
-                             'bootstrap' if command.command_id in ('init', 'bundle.extract') else 'none')
-            self.assertNotIn(8, document['exit_codes'])
+                             'bootstrap' if command.command_id in ('init', 'bundle.extract') else
+                             'recovery' if command.command_id == 'recover.restore' else 'none')
+            self.assertEqual(8 in document['exit_codes'], continuation)
             self.assertEqual(document['budget_policy_version'],
                              'runtime-budget-v2' if command.command_id in (
                                  'environment.check', 'artifact.show', 'query', 'trace', 'why', 'impact', 'diff',
                                  'configuration.evaluate', 'roadmap.explain', 'export', 'bundle.verify',
-                                 'render', 'view.render', 'diagram') else None)
+                                 'render', 'view.render', 'diagram', 'recover.restore', 'work.resume') else None)
             self.assertIsNone(document['stdout']['continuation']['sarif_fallback'])
 
     def test_minimum_step_limits_are_explicitly_unmeasured(self):
@@ -242,10 +249,14 @@ class DescriptionRobustnessTests(unittest.TestCase):
             document = describe_command(registry, command.command_id)
             accepted = {option['flag'] for option in document['options']}
             rejected = ('--work-dir', '--resume', '--request-id', '--dry-run', '--actor-id')
-            if command.command_id == 'environment.check' or command.requires_project:
+            if command.command_id in ('environment.check', 'work.resume') or command.requires_project:
                 self.assertIn('--project', accepted)
             else:
                 rejected += ('--project',)
+            # Native Restore is the explicitly integrated writer; every other
+            # command retains its declared option boundary.
+            if command.command_id == 'recover.restore':
+                rejected = ('--resume', '--as-proposal')
             for flag in rejected:
                 self.assertNotIn(flag, accepted)
                 example = document['examples'][0]

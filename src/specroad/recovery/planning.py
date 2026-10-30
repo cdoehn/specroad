@@ -18,7 +18,7 @@ from .values import RestoreError, RestorePlan, require, guarded
 
 @guarded
 def prepare_restore_plan(project_root, *, source_root, source_path, source_kind,
-                         default_locale=None, generated_path=None):
+                         default_locale=None, generated_path=None, services=None):
     """Return exact passive plan bytes after complete supported native checks.
 
     Both roots and the source kind/path are explicit. The project is never
@@ -47,7 +47,7 @@ def prepare_restore_plan(project_root, *, source_root, source_path, source_kind,
 
     files, additions, dependencies, source_model_root, project_id = reconstruct(
         source_kind, raw, read, operational=operational)
-    source_model, actual_source_root = validate_project(files)
+    source_model, actual_source_root = validate_project(files, services=services)
     require(source_model_root == actual_source_root, 'restore_source_root_mismatch')
     configuration, evidence, baseline_inventory = observe_configuration(project)
     roots = inventory_roots(source_model.configuration, configuration)
@@ -63,7 +63,7 @@ def prepare_restore_plan(project_root, *, source_root, source_path, source_kind,
     require(configuration.project_id == source_model.configuration.project_id,
             'restore_project_identity_conflict', exit_code=6)
     target, preserved = history_target(files, additions, current, configuration)
-    target_model, target_root = validate_project(target)
+    target_model, target_root = validate_project(target, services=services)
     backup = check_current(inventory, current, source_model, target, target_model)
     require(configuration.data == current_configuration(current, roots).data,
             'restore_inventory_changed', exit_code=6)
@@ -89,13 +89,15 @@ def prepare_restore_plan(project_root, *, source_root, source_path, source_kind,
 
 
 @guarded
-def verify_restore_plan(raw):
+def verify_restore_plan(raw, *, services=None):
     """Recompute embedded contracts and reread the bound native origin/inventory.
 
     Read-only preflight, not a lock-held execution check or write capability.
     The later recovery executor must repeat it under its own specialized lock.
     """
     plan = RestorePlan(raw)
+    from ._plan_checks import qualify_plan
+    qualify_plan(plan, services=services)
     data = plan.data
     try:
         project, origin = boundary(data['project_root']), boundary(data['source']['root'])

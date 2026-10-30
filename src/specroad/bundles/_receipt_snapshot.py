@@ -66,9 +66,17 @@ class ReceiptSnapshot:
 
     def verify_current(self):
         self._recheck_files()
+        from ..proposals.receipts import HistoricalProposalJournal
+        # Pure historical completion readers must not route through the active
+        # journal/retry API. Recheck their complete owned group and unchanged
+        # directory/inode/byte observations, never current publication authority.
+        historical = completed_receipts(self.payloads, self.source.configuration.project_id)
+        require(tuple(j.source_bytes for j in historical) ==
+                tuple(j.source_bytes for j in self.journals), 'bundle_receipt_inventory_changed')
         try:
             for journal in self.journals:
-                read_transaction_completion(self.source, journal.data['transaction_id'])
+                if type(journal) is not HistoricalProposalJournal:
+                    read_transaction_completion(self.source, journal.data['transaction_id'])
         except ReceiptError as error:
             raise BundleError(error.reason, code=None, exit_code=error.exit_code) from error
         self._recheck_files()

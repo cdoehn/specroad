@@ -157,7 +157,9 @@ class SchemaCatalogWorkTests(unittest.TestCase):
 
     def test_request_schema_is_the_command_description_schema(self):
         for command in builtin_registry().commands:
-            description = dispatch_result(['command', 'describe', command.command_id]).as_dict()['result']
+            outcome = dispatch_result(['command', 'describe', command.command_id])
+            self.assertEqual(outcome.exit_code, 0, (command.command_id, outcome.as_dict()))
+            description = outcome.as_dict()['result']
             schema = description['request_schema']
             self.assertEqual(self.catalog.get(schema['$id']).schema, schema)
             self.catalog.validate(schema['$id'], command.protocol.example.as_dict())
@@ -166,9 +168,10 @@ class SchemaCatalogWorkTests(unittest.TestCase):
         for command in builtin_registry().commands:
             with tempfile.TemporaryDirectory() as tmp:
                 from support.inspection import command_example_inputs
-                command_example_inputs(Path(tmp), command)
-                outcome = execute_request(command.protocol.example, cwd=Path(tmp)).result
-            self.assertEqual(outcome.exit_code, 0)
+                with command_example_inputs(Path(tmp), command) as request:
+                    self.catalog.validate("urn:specroad:schema:1.0.0:request:" + command.command_id, request)
+                    outcome = execute_request(request, cwd=Path(tmp)).result
+            self.assertEqual(outcome.exit_code, 0, (command.command_id, outcome.as_dict()))
             self.catalog.validate(command.protocol.result_schema, outcome.as_dict()['result'])
 
     def test_envelope_schema_accepts_success_and_failure(self):

@@ -14,6 +14,7 @@ from ..model.record_schemas import validate_record_fields
 from ..model.semantic_configuration import semantic_configuration
 from ..storage.json_syntax import parse_json_object
 from ._codec import file_row, safe_path, namespace
+from ._schema_boundary import declared_files, declared_resource
 from .values import require
 
 
@@ -21,6 +22,7 @@ def baseline_objects(raw, read, *, active=frozenset()):
     """Verify every archived Baseline recursively, including original objects."""
     token = sha256(raw).hexdigest()
     require(token not in active, 'restore_baseline_cycle')
+    declared_resource(raw, 'source:baseline', normative=True)
     record = parse_json_object(raw)
     validate_record_fields(record, expected_type='baseline')
     objects = {}
@@ -31,6 +33,8 @@ def baseline_objects(raw, read, *, active=frozenset()):
         content = read(ref.path)
         require(type(content) is bytes and len(content) == ref.size and sha256(content).hexdigest() == ref.sha256,
                 'restore_baseline_object_bytes_mismatch', path=ref.path)
+        declared_resource(content, ref.path, normative=row['role'] in
+            ('artifact', 'profile', 'rule', 'mapping', 'semantic_configuration'))
         objects[ref.path] = content
     verify_baseline_objects(raw, tuple(SnapshotObject(b) for b in objects.values()))
     for row in record['manifest']:
@@ -57,18 +61,17 @@ def reconstruct(kind, raw, read_dependency, *, operational=None):
         require(manifest['bundle_kind'] == 'project' and manifest['read_only'] is False
                 and manifest['scope_descriptor'] == _default_scope()
                 and not manifest['boundary_references'], 'restore_full_project_source_required')
+        declared_files(container.files)
         verify_bundle(raw)
-        # The W provider has no completed-receipt publication-history fold yet.
-        # Refuse it, including explicit exclusions; never infer absent history.
-        require(not any(p.startswith('.specroad/') for p in container.files)
-                and not any(r['reason'] == 'operational_receipts_excluded'
-                            for r in manifest['excluded_contents']),
+        require(not any(r['reason'] == 'operational_receipts_excluded'
+                        for r in manifest['excluded_contents']),
                 'restore_receipt_history_provider_required')
         return container.files, {}, [], manifest['bundle_model_root_sha256'], manifest['project_id']
     require(kind == 'baseline', 'restore_source_kind_invalid', exit_code=2)
     require(type(operational) is dict and set(operational) == {'default_locale', 'generated_path'}
             and all(type(v) is str for v in operational.values()),
             'restore_explicit_operational_configuration_required', exit_code=2)
+    declared_resource(raw, 'source:baseline', normative=True)
     record = parse_json_object(raw)
     validate_record_fields(record, expected_type='baseline')
     require(record['baseline_state'] == 'sealed' and record['scope_descriptor'] == _default_scope(),

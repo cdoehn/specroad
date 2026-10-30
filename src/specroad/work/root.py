@@ -31,16 +31,21 @@ class WorkDirectory:
     caller can try a safe in-memory completion before declaring a blocker.
     """
 
-    def __init__(self, manifest, *, protected_roots, directory=None, temporary_directory=None):
+    def __init__(self, manifest, *, protected_roots, directory=None, temporary_directory=None,
+                 protected_paths=()):
         if type(manifest) is not WorkManifest:
             raise ValueError('A trusted checked work manifest is required')
-        if type(protected_roots) is not tuple or not protected_roots or any(
+        if type(protected_paths) is not tuple:
+            raise ValueError('Explicit protected paths are required')
+        protected_paths = tuple(_path(path) for path in protected_paths)
+        if type(protected_roots) is not tuple or not (protected_roots or protected_paths) or any(
                 type(boundary) is not ProjectBoundary for boundary in protected_roots):
             raise ValueError('Explicit protected project/input/output boundaries are required')
         value = manifest.as_dict()
         self._work_id = value['work_id']
         self._initial_hash = value['checkpoint_sha256']
         self._protected = protected_roots
+        self._reserved = protected_paths
         self._requested = None if directory is None else _path(directory)
         self._temporary = None if temporary_directory is None else _path(temporary_directory)
         self._path = None
@@ -52,10 +57,16 @@ class WorkDirectory:
         return self._path
 
     def _outside(self, path):
+        for reserved in self._reserved:
+            if path.is_relative_to(reserved) or reserved.is_relative_to(path):
+                raise SafetyViolation('Work and protected paths overlap')
         for boundary in self._protected:
             boundary._check_root()
             if path.is_relative_to(boundary.root) or boundary.root.is_relative_to(path):
                 raise SafetyViolation('Work and protected paths overlap')
+
+    def protects(self, path):
+        return path in self._reserved or any(boundary.root == path for boundary in self._protected)
 
     @contextmanager
     def for_checkpoint(self, *, require_empty=False):

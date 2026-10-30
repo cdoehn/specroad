@@ -14,7 +14,7 @@ def PrettyRenderer(*args, **kwargs):
     return renderer(*args, **kwargs)
 
 
-def main(argv: list[str] | None = None, *, stdout=None, stderr=None) -> int:
+def main(argv: list[str] | None = None, *, stdout=None, stderr=None, context_builder=None) -> int:
     """Keep machine documents separate from a replaceable human presenter."""
     from .application import _error_options
     from .results import FailureKind, OperationFailure, ResultContractError, failed_result, serialize_result
@@ -31,7 +31,8 @@ def main(argv: list[str] | None = None, *, stdout=None, stderr=None) -> int:
                                    quiet=display_options.get("--quiet", False)) if output_format == "pretty" else None
         if presenter is not None:
             presenter.phase("Run command")
-        response = execute(arguments)
+        response = (execute(arguments) if context_builder is None else
+                    execute(arguments, context_builder=context_builder))
         outcome = response.result
         output_format = response.options.get("--format", "pretty")
         try:

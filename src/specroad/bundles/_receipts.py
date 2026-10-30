@@ -10,6 +10,7 @@ from ..changes.receipt_projection import request_for_transaction
 from ..changes.receipt_values import (CommittedJournal, TransactionReceipt,
     RequestReceipt, ReceiptError, completion_marker_path)
 from ..model.canonical import canonical_json_bytes
+from ..model.errors import ModelError
 from ..model.operational_paths import REQUESTS_ROOT, RECEIPTS_ROOT
 from ..storage.json_syntax import parse_json_object
 from .errors import BundleError
@@ -31,6 +32,33 @@ def _path_kind(path):
 def completed_receipts(files, project_id):
     """Verify a closed set of owned native bytes, independent of host identity."""
     try:
+        # Historical Proposal completions have the same closed receipt
+        # contracts, but a distinct read-only native type. Never admit them to
+        # the live change-apply journal/retry constructors.
+        from ..proposals.receipts import read_proposal_receipts
+        from ..changes.receipt_values import transaction_receipt_path, request_receipt_path
+        remaining = dict(files)
+        proposal_journals, claimed = [], set()
+        for path, raw in files.items():
+            if _path_kind(path) != 'transaction':
+                continue
+            data = parse_json_object(raw)
+            if data.get('command_id') != 'proposal apply':
+                continue
+            journal = data.get('journal')
+            require(type(journal) is dict and type(journal.get('transaction_id')) is str,
+                    'bundle_receipt_path_binding', code='SRV060')
+            names = {transaction_receipt_path(journal['transaction_id']),
+                     completion_marker_path(journal['transaction_id'])}
+            if journal.get('request_id') is not None:
+                names.add(request_receipt_path(journal['request_id']))
+            require(path in names and names <= files.keys() and not claimed.intersection(names),
+                    'bundle_receipt_completion_missing', code='SRV060')
+            proposal_journals.append(read_proposal_receipts({p: files[p] for p in names}, project_id))
+            claimed.update(names)
+            for name in names:
+                remaining.pop(name)
+        files = remaining
         values = {}
         for path, raw in files.items():
             kind = _path_kind(path)
@@ -69,8 +97,8 @@ def completed_receipts(files, project_id):
             used.update(linked)
             journals.append(journal)
         require(used == set(files), 'bundle_receipt_completion_missing', code='SRV060')
-        return tuple(journals)
-    except ReceiptError as error:
+        return tuple(journals + proposal_journals)
+    except (ReceiptError, ModelError) as error:
         raise BundleError(error.reason) from error
 
 
