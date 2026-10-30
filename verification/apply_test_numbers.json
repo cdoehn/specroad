@@ -22483,7 +22483,18 @@
     "tests/test_restore_work_public.py::test_planning_work_keeps_exact_original_and_delivers_full_plan[argv-project_bundle]",
     "tests/test_restore_work_public.py::test_planning_work_keeps_exact_original_and_delivers_full_plan[mapping-baseline]",
     "tests/test_restore_work_public.py::test_planning_work_keeps_exact_original_and_delivers_full_plan[mapping-project_bundle]",
-    "tests/test_restore_work_public.py::test_status_prompt_cancel_are_passive_and_cancel_is_bound"
+    "tests/test_restore_work_public.py::test_status_prompt_cancel_are_passive_and_cancel_is_bound",
+    "tests/test_runtime_history.py::test_apply_freezes_latest_snapshot_and_does_not_filter_other_groups",
+    "tests/test_runtime_history.py::test_failed_latest_attempt_never_falls_back_and_successful_retry_restores[call]",
+    "tests/test_runtime_history.py::test_failed_latest_attempt_never_falls_back_and_successful_retry_restores[setup]",
+    "tests/test_runtime_history.py::test_failed_latest_attempt_never_falls_back_and_successful_retry_restores[teardown]",
+    "tests/test_runtime_history.py::test_first_run_persists_all_phases_without_calibration_request",
+    "tests/test_runtime_history.py::test_late_completion_of_older_attempt_cannot_replace_newer_start",
+    "tests/test_runtime_history.py::test_latest_filter_uses_current_valid_population_ties_and_retired_ids",
+    "tests/test_runtime_history.py::test_latest_success_replaces_duration_but_retains_each_attempt",
+    "tests/test_runtime_history.py::test_real_parallel_dev_runs_automatically_record_and_repeat_all_selected_tests",
+    "tests/test_runtime_history.py::test_seeds_are_idempotent_and_never_override_failed_newer_attempt",
+    "tests/test_runtime_history.py::test_start_immediately_invalidates_even_before_first_phase"
   ],
   "partition_count": 3,
   "rotation_anchor_commit": "81d91ff9611f6466cb48d4fc96ddc550f8b911cc"

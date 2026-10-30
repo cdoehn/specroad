@@ -5,6 +5,7 @@ from .outcomes import RunLedger, bind_test_ids
 from .collection_identity import test_identity
 from .runtime_baseline import RuntimeMeasurements
 from .runtime_store import TimingStore
+from .runtime_history import RuntimeHistory
 from .ci_reference import _load_report
 
 import importlib.metadata
@@ -12,6 +13,7 @@ import json
 from pathlib import Path
 import sys
 import uuid
+import sqlite3
 
 import pytest
 
@@ -53,12 +55,19 @@ class VerificationSession:
         self.timing_store = None
         self.timing_run = None
         self.timing_request = None
+        self.history = None
+        self.history_run = None
+        self.history_root = Path(config.rootpath).resolve()
+        self.history_source = None
         self.catalog = None
         self.specification = ROOT / "docs/specification/SpecRoad_Spezifikation.md"
         self.binding = None
         self.required_ids = set()
         if self.worker:
             self.required_ids = set(config.workerinput.get("sr_required_ids", []))
+            if not config.getoption('collectonly'):
+                self.history = RuntimeHistory(self.history_root)
+                self.history_run = config.workerinput['sr_history_run']
             return
         if self.expected is not None and self.expected <= 0:
             raise CatalogError("Expected test count must be positive")
@@ -115,6 +124,14 @@ class VerificationSession:
             self.timing_request = value
             self.timing_run = self.timing_store.begin(value["selected"])
 
+        if not config.getoption('collectonly'):
+            if self.history_root == ROOT:
+                self.history_source = source_identity(ROOT)
+            self.history = RuntimeHistory(self.history_root)
+            self.history.seed(self.history_root)
+            self.history_run = self.history.begin(self.history_source,
+                config.getoption('numprocesses', default=0) or 0)
+
     def collection(self, items):
         pairs = [(item.nodeid, test_identity(item)) for item in items]
         nodeids = [row[0] for row in pairs]
@@ -146,7 +163,7 @@ def _version(name):
 def pytest_configure(config):
     try:
         config._specroad_verification = VerificationSession(config)
-    except (CatalogError, OSError, ValueError) as error:
+    except (CatalogError, OSError, ValueError, sqlite3.Error) as error:
         raise pytest.UsageError(str(error)) from error
 
 
@@ -168,6 +185,7 @@ def pytest_collection_finish(session):
 def pytest_configure_node(node):
     state = node.config._specroad_verification
     node.workerinput["sr_required_ids"] = sorted(state.required_ids)
+    node.workerinput['sr_history_run'] = state.history_run
 
 
 @pytest.hookimpl(optionalhook=True)
@@ -217,6 +235,14 @@ class ReportObserver:
     def pytest_keyboard_interrupt(self, excinfo):
         self.state.ledger.error("interrupted")
 
+    def pytest_runtest_logstart(self, nodeid, location):
+        state = self.state
+        # Persist before test setup in the worker; a killed worker cannot leave
+        # a previous successful duration eligible for exclusion.
+        if state.history is not None and (state.worker or not state.config.getoption('numprocesses', default=0)):
+            state.history.start(state.history_run, nodeid,
+                                state.ledger.aliases[nodeid], state.worker_id)
+
     @pytest.hookimpl(tryfirst=True)
     def pytest_runtest_logreport(self, report):
         # SubtestReport exposes a context in pytest >=9; do not count its call
@@ -243,6 +269,10 @@ class ReportObserver:
         if self.state.timing_store is not None:
             self.state.timing_store.observe(self.state.timing_run, report.nodeid, alias,
                 report.when, report.duration, outcome, worker, subtest=subtest)
+        state = self.state
+        if state.history is not None and (state.worker or not state.config.getoption('numprocesses', default=0)):
+            state.history.observe(state.history_run, report.nodeid, alias, worker,
+                                  report.when, report.duration, outcome, subtest=subtest)
         self.state.ledger.observe(report.nodeid, worker, report.when, outcome, subtest=subtest)
 
 
@@ -256,6 +286,18 @@ def pytest_sessionfinish(session, exitstatus):
     state = session.config._specroad_verification
     if state.worker:
         return
+    if state.history is not None:
+        try:
+            changed = state.history_source is not None and source_identity(ROOT) != state.history_source
+            state.history.finish(state.history_run, int(exitstatus), invalid=changed)
+            if changed:
+                state.ledger.error('runtime_source_changed')
+                session.exitstatus = pytest.ExitCode.USAGE_ERROR
+        except (OSError, ValueError, sqlite3.Error):
+            state.ledger.error('runtime_storage_failed')
+            session.exitstatus = pytest.ExitCode.USAGE_ERROR
+        finally:
+            state.history.close()
     try:
         observation = state.ledger.snapshot(exitstatus)
         if state.gate:
@@ -324,3 +366,5 @@ def pytest_unconfigure(config):
     state = getattr(config, "_specroad_verification", None)
     if state is not None and state.timing_store is not None:
         state.timing_store.close()
+    if state is not None and state.history is not None:
+        state.history.close()

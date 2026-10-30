@@ -1,27 +1,28 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.39
+## Version 0.2.40
 
 | Feld | Wert |
 |---|---|
 | Dokument-ID | `SR-SPEC-0001` |
-| Dokumentversion | `0.2.39` |
+| Dokumentversion | `0.2.40` |
 | Zielrelease | `SpecRoad Single-Repository Workbench 0.2.0` |
 | Status | **Fachlich konsolidierte Arbeitsgrundlage; technische Reviewentscheidung gesondert dokumentiert, formale Baseline-Freigabe und Produktabnahme nicht durch dieses Dokument erklärt** |
-| Stand | 29. Oktober 2026 |
+| Stand | 30. Oktober 2026 |
 | Sprache | Deutsch; technische Feldnamen, Enum-Werte und CLI-Kommandos Englisch |
-| Fachliche Quelle | **Diese Repositoryfassung v0.2.39 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.39 liegt mit dieser Änderung nicht vor.** |
+| Fachliche Quelle | **Diese Repositoryfassung v0.2.40 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.40 liegt mit dieser Änderung nicht vor.** |
 | Bearbeitbare Satzquelle | Diese Datei; eine spätere PDF muss denselben versionierten Inhalt wiedergeben. |
-| Vorgängerversion | Repository-Spezifikation v0.2.38 vom 29. Oktober 2026; historische Nachweise bleiben unverändert. |
-| Prüf- und Entscheidungsgrundlage | Ausdrückliche Nutzerentscheidung RESTORE-SCHEMA-SCOPE vom 29. Oktober 2026: Restore-Abnahme auf das definierte 0.2-Format beziehen und Legacy-Unterstützung an einen verbindlichen Quellvertrag binden; keine Produktfreigabe. |
-| Änderungsart | Ausdrücklich genehmigte Korrektur der bisherigen unbedingten 0.1-Zusage nach 10.7.11/Q.0; vollständige übrige R-Abnahmen und Proposal-Voraussetzung aus 10.7.10 bleiben erhalten. |
+| Vorgängerversion | Repository-Spezifikation v0.2.39 vom 29. Oktober 2026; historische Nachweise bleiben unverändert. |
+| Prüf- und Entscheidungsgrundlage | Ausdrücklicher Nutzerauftrag RUNTIME-AUTO-521 vom 30. Oktober 2026: laufende Messhistorie und neueste Werte für den dynamischen Apply-Filter; vorhandene fachliche Entscheidungen bleiben erhalten. |
+| Änderungsart | Entwicklungsworkflow nach 2.5: automatische Messung in Dev und Apply, Historie erhalten, Fehler invalidieren, dynamische Auswahl ausschließlich in Apply. Keine Änderung der Produktabnahmen. |
 
-> **Verbindlicher Quellenwechsel:** Der ausdrücklich bestätigte Klärungsauftrag schreibt die Repository-Spezifikation als v0.2.39 fort. Frühere PDF- und Reviewnachweise bleiben historisch gebunden; keine Produktfreigabe wird erklärt.
+> **Verbindlicher Quellenwechsel:** Der ausdrücklich bestätigte Nutzerauftrag schreibt die Repository-Spezifikation als v0.2.40 fort. Frühere PDF- und Reviewnachweise bleiben historisch gebunden; keine Produktfreigabe wird erklärt.
 
 > **Fortbestehende Arbeitsprinzipien:** Weiche Budgets führen zu sparsamer vollständiger Weiterarbeit oder gesicherter Fortsetzung über mehrere Aufrufe beziehungsweise Prompts. Es werden keine erforderlichen Arbeiten stillschweigend ausgelassen. Reale Host-, Speicher-, Berechtigungs- und Sicherheitsgrenzen bleiben wirksam.
 
 > **Freigabeabgrenzung:** Alle Requirement-IDs sind verbindliche Sollvorgaben; ihr formaler Reifegrad bleibt bis zur dokumentierten Baseline-Entscheidung `proposed`. Technische Nachweise müssen den tatsächlich geprüften Dokumenthash binden. Diese Planungsänderung erklärt weder eine PDF-Veröffentlichung noch eine Produkt- oder Baseline-Freigabe.
 
 ---
+
 
 ## 1. Zweck und Geltungsbereich
 
@@ -101,7 +102,7 @@ Bei einem Widerspruch innerhalb dieser Dokumentversion gilt:
 3. `SR-DEC-*` hat Vorrang vor erläuterndem Text, Diagrammen und Beispielen.
 4. Beispiele sind niemals normativ, sofern sie nicht ausdrücklich als Testvektor bezeichnet sind.
 5. Zwei widersprüchliche `SR-REQ-*`-Anforderungen besitzen **keine implizite Rangfolge** nach Nummer, Position oder Spezifität. Ein solcher Fund ist ein Spezifikationsfehler, muss als Issue gelöst werden und verhindert die Freigabe.
-6. Diese Dokumentversion 0.2.39 ersetzt die frühere fachliche Arbeitsgrundlage vollständig. Bis zur gesonderten PDF-Veröffentlichung ist diese versionierte Repositorydatei maßgeblich. Eine spätere PDF muss inhaltsgleich sein; frühere PDFs werden nicht als Nachweis der neuen Verträge ausgegeben. Inhalte verschiedener Fassungen dürfen nicht zu einer Mischspezifikation kombiniert werden.
+6. Diese Dokumentversion 0.2.40 ersetzt die frühere fachliche Arbeitsgrundlage vollständig. Bis zur gesonderten PDF-Veröffentlichung ist diese versionierte Repositorydatei maßgeblich. Eine spätere PDF muss inhaltsgleich sein; frühere PDFs werden nicht als Nachweis der neuen Verträge ausgegeben. Inhalte verschiedener Fassungen dürfen nicht zu einer Mischspezifikation kombiniert werden.
 7. Eine nachträgliche Änderung dieser veröffentlichten Datei erfordert mindestens eine neue Patch-Dokumentversion; stille Korrekturen unter derselben Dokumentversion sind unzulässig.
 8. Eine normative Tabelle, auf die eine `SR-REQ-*`-Anforderung ausdrücklich als Algorithmus oder Matrix verweist, ist Bestandteil des Passkriteriums dieser Anforderung.
 
@@ -424,76 +425,62 @@ nach dem bestehenden ausdrücklich beauftragten Control-Verfahren.
 
 ---
 
-### 2.5 Entwicklungsworkflow: feste Laufzeitfilterung und vollständige Planschritte
+### 2.5 Entwicklungsworkflow: aktuelle Laufzeitfilterung und vollständige Planschritte
 
-**Ausdrücklicher Nutzerauftrag vom 28. Oktober 2026 — WORKFLOW-514.** Diese
-Regel ändert die Entwicklung und ihre Testauswahl. Sie ändert keine
-Produktanforderung, menschliche Freigabe, Releaseabnahme oder gespeicherte
-historische Evidence und erteilt Control keine neue fachliche Befugnis.
+**Ausdrücklicher Nutzerauftrag vom 30. Oktober 2026 — RUNTIME-AUTO-521.**
+Dieser Auftrag ersetzt die einmalig eingefrorene Laufzeitauswahl aus
+WORKFLOW-514. Er ändert nur den Entwicklungsworkflow; Produktanforderungen,
+menschliche Freigaben und historische Nachweise bleiben erhalten.
 
-**Einmalige Einmessung mit dauerhaften Teilmessungen.** Nach ausdrücklichem
-Nutzerauftrag vom 28. Oktober 2026 wird jeder vom pytest-Controller empfangene
-Vorbereitungs-, Ausführungs- und Aufräumreport sofort transaktional mit
-SQLite `synchronous=FULL` gespeichert. Die einzelne lokale Datei liegt unter
-dem vorhandenen ignorierten `build`-Bereich der Dev-Kopie; kein neuer Dienst.
-Testidentität, Node-ID, Phase, Dauer, Ergebnis, Worker und Messversuch bleiben
-erhalten. Erst nach dem dauerhaften Commit gilt ein Abschnitt als gespeichert.
-Ein gewaltsam vor Empfang oder Commit unterbrochener Abschnitt bleibt offen.
+**Automatische dauerhafte Messung.** Jeder tatsächlich ausgeführte Dev-,
+Apply- oder ausdrücklich gestartete Volltestlauf speichert native Setup-,
+Call- und Teardown-Dauern unverzüglich transaktional mit SQLite
+`synchronous=FULL`. Reine Collection startet keine Messung. Die Historie
+bleibt erhalten, einschließlich Testidentität, Node-ID, Quellbindung,
+Plattform, Workerzahl, Versuch, Phasenergebnis und Erfassungszeit.
+Dev und Apply benutzen im gemeinsamen Exchange dieselbe Messdatenbank;
+separate Projektkopien ohne diese Projektpolicy benutzen ihren build-Bereich.
+Die Datenbank ist kein Quellcode-Payload, keine Konfiguration eines Dienstes
+und kein Test- oder Releasefreigabenachweis. Bestehende Messjournale und die
+versionierte Baseline bleiben unveränderte historische Quellen. Die Baseline
+wird einmalig als gekennzeichnete Messherkunft importiert, niemals über neuere
+Versuche gelegt. Ein nicht lesbarer, beschädigter oder nicht beschreibbarer
+Messspeicher darf keinen erfolgreichen Test-Gate-Bericht erzeugen.
 
-Vollständige erfolgreiche Einzeltests bleiben auch nach einem Prozessabbruch
-nutzbar. Frei kombinierbare Testdateien, einzelne stabile IDs/Node-IDs und
-JSON-Auswahllisten erlauben parallele Nachholmessungen; alternativ wird nur
-die fehlende Menge ausgeführt. Bereits vollständig gemessene Tests werden
-dabei nicht wiederholt oder überschrieben. Phasen verschiedener Versuche
-werden niemals zu einem scheinbar vollständigen Test zusammengesetzt.
-Fehlerhafte, übersprungene oder unvollständige Tests bleiben offen. Frühere
-Ergebnisse werden nur bei identischer vollständiger Collection, Quellhash,
-Plattform und Workerzahl übernommen. Abweichungen erfordern eine neue Messbasis.
-Ein exklusiver Writer schützt gegen konkurrierende Messläufe.
-Der Schreiber wartet höchstens 30 Sekunden auf native SQLite-Sperren. Status
-liest eine konsistente Online-Kopie; Auswertung und Sortierung halten keine
-Lesesperre auf der Messdatei. Ein Timeout bewahrt alle bereits committeten Daten.
+**Nur der neueste Versuch zählt.** Der dauerhafte Start eines Einzeltests
+macht dessen aktuelle Messung sofort ungültig. Die Datenbank ordnet Starts
+atomar; ein später beendeter älterer Versuch verdrängt keinen neueren Start.
+Erst drei vollständige erfolgreiche Phasen desselben Versuchs und Workers
+machen die Messung gültig. Fehler, fehlgeschlagene Subtests, übersprungene,
+erwartet fehlgeschlagene oder abgebrochene Tests bleiben ungültig und müssen
+bei ihrer nächsten fälligen Auswahl wieder ausgeführt werden. Kein Rückgriff
+auf einen älteren gültigen Wert und keine Mittelwerte. Nicht gestartete oder
+abgewählte Tests verlieren ihre bisherigen Werte nicht. Bereits vollständig
+erfolgreiche Tests bleiben bei einem späteren Abbruch anderer Tests erhalten;
+Phasen verschiedener Versuche werden nicht vermischt. Eine erneute Messung
+ändert die aktuelle Auswahlgrundlage, ohne frühere Einträge zu überschreiben.
 
-**Explizite Messcode-Korrektur:** Bei einer beauftragten Reparatur allein der
-Messinfrastruktur dürfen vorhandene vollständige Messungen in eine neue,
-getrennte Messbasis übernommen werden. Das Original bleibt unverändert.
-Voraussetzung sind ein gehashter Vorher-Snapshot, unveränderte Produktquellen,
-unveränderte bereits gemessene Testdateien/Identitäten, gleiche Plattform und
-Workerzahl sowie eine genaue Prüfung sämtlicher abweichender Dateien. Zulässig
-sind nur die konkret geprüfte Messcode-Korrektur, neue Regressionstests und
-deren mechanische Katalog-/Spezifikationsbindungen. Alte Messungen bleiben mit
-Originalquellhash, Journalhash, Test-IDs und Änderungsnachweis gekennzeichnet,
-auch im Export und in der festen Liste. Sie sind kein Testnachweis des neuen
-Quellstands. Normale Messaufrufe dürfen solche Wechsel niemals selbst freigeben.
- Lesender Status
-zeigt gespeicherte Phasen, vollständige Tests und die noch fehlenden IDs.
+**Automatische Apply-Auswahl.** Vor jedem Apply-Teststart wird ein konsistenter
+Snapshot der jeweils neuesten Werte für die aktuelle vollständige Collection
+gebildet. Aus den aktuell vorhandenen Tests mit gültigem vollständigem Wert
+werden floor(Anzahl dieser Tests / 5) Identitäten mit der größten Summe aus
+Setup, Call und Teardown ausgeschlossen; Gleichstand nach Testidentität
+aufsteigend. Unbekannte, ungültige und unvollständig gemessene Tests bleiben
+zugelassen. Entfernte Tests zählen nicht zur Berechnung. Die fällige N=3-Gruppe
+wird mit unveränderten Testnummern und unverändertem Rotationsanker ermittelt
+und dann gefiltert. Ein Fehler ohne Commit schaltet die Gruppe nicht weiter.
+Eine leere Auswahl ist kein erfolgreicher Testlauf.
 
-Nur vollständige erfolgreiche Messabdeckung aller gebundenen Tests darf die
-feste Liste erzeugen. Mehrere Teilmessungen sind ausdrücklich kein einzelner
-bestandener Vollsuitelauf (`full_suite_passed=null`). Es werden floor(Testanzahl / 5)
-Tests mit der größten Summe ihrer drei Laufzeiten ausgeschlossen; Gleichstand
-nach Testidentität aufsteigend. Das sind 20 Prozent nach Testanzahl, keine
-Zeitquote. Messbasis und Laufzeiten bleiben unter
-`verification/test_runtime_baseline.json` versioniert. Der gemessene Quellhash
-dokumentiert den historischen Stand; keine Behauptung über spätere Quellen.
-Kein stilles Neumessen, Überschreiben oder Nachrücken der festen Liste.
-
-**Ausführung.** Automatisches Apply wählt weiterhin die commitgebundene
-N=3-Gruppe mit unveränderten dauerhaften Testnummern und entfernt daraus
-die fest ausgeschlossenen Identitäten. Neue, unbekannte Identitäten werden
-nicht wegen fehlender Laufzeit ausgeschlossen. Entfernte Tests erzeugen
-keine Ersatz-Ausschlüsse. Ohne veröffentlichte Liste gilt die bisherige
-Auswahl; ungültige oder während des Laufs veränderte Daten begründen keinen
-Erfolg. Leere Auswahlen sind kein bestandener Testlauf. Gezielte, ausdrücklich
-von Dev ausgewählte Tests und manuelle Volltests umgehen diesen Filter
-vollständig. Eine spätere Vollsuite verändert die feste Liste nicht.
-Ausgeschlossene Tests werden nicht gelöscht. Drei erfolgreiche Commitgruppen
-decken nur den weiter zugelassenen Bestand ab, nicht die ausgeschlossenen
-Tests. Teiltestberichte binden die tatsächliche Auswahl und Liste; sie
-behaupten keine Vollsuite- oder Releasefreigabe. Der erste gemeinsame
-Workflow-Auftrag erlaubt genau die für diese Einmessung notwendige lokale
-Einmessung einschließlich ausdrücklich beauftragter Nachholmessungen; die
-übliche gezielte parallele Entwicklung bleibt bestehen.
+Der Snapshot, seine Herkunft und sein Hash sowie die tatsächlich ausgewählten
+Identitäten werden vor Ausführung gebunden. Änderungen der Datenbank während
+des Laufs verändern dessen Auswahl nicht; der nächste Apply-Lauf berechnet
+neu. Neue Berichte verwenden `stable_modulo_partition_with_latest_runtime_filter`
+und Auswahlbindung v3. Alte Berichte und feste Listen werden nicht umgedeutet.
+Gezielte Dev-Auswahlen und ausdrücklich gestartete Vollsuites laufen vollständig
+ungefiltert und aktualisieren ebenfalls die Messdatenbank. Alle normalen Tests
+bleiben parallel; es wird kein zusätzlicher Volltest zur Messung gestartet.
+Teiltests behaupten weder Vollsuite- noch Releaseerfolg. Control und Watcher,
+die tatsächliche Commitfolge und sämtliche Produktfreigaben bleiben unverändert.
 
 **Vollständige Planschritte.** Ab dem nächsten offenen W-, R- oder C-Schritt
 ist der gesamte offene fachliche Umfang das Ausgangsziel einer Lieferung.
@@ -6120,6 +6107,7 @@ Die folgende Roadmap ist informativ und erzeugt keine Anforderungen an 0.2:
 | Version | Datum | Status | Änderung |
 |---|---|---|---|
 | 0.2.39 | 2026-10-29 | Ausdrückliche Nutzerentscheidung | RESTORE-SCHEMA-SCOPE: vollständige 0.2-Restore-Abnahme; sichere Abweisung nicht unterstützter deklarierter Altformate; positive 0.1-Unterstützung erst nach verbindlichem Quellvertrag und M16-Integration. Keine Produktabnahme. |
+| 0.2.40 | 2026-10-30 | Ausdrücklicher Nutzerauftrag | RUNTIME-AUTO-521: automatische Phasenmessung mit erhaltener Historie, nur neueste Werte, ungültige Fehlversuche und dynamischer Apply-Filter. Produktumfang und Freigaben unverändert. |
 | 0.2.35 | 2026-10-27 | Delegiert gemäß SPECROAD-DECISION-1 | RESTORE-WORK-OWNER-HANDOFF: explizite Übernahme des verwaisten äußeren Restore-Work-Owners mit nativen lokalen Ownerbelegen und dauerhafter Übergabe; Projekt-Recovery und Produktabnahmen bleiben getrennt/offen. |
 | 0.2.34 | 2026-10-27 | Delegiert gemäß SPECROAD-DECISION-1 | RESTORE-WORK-BINDING: passive Originalplan-/Auswahlbindung für Restore in Work, getrennte aktuelle Recoveryautorisierung und Vorrang nativer Journale; offene Umsetzung und unveränderte Schutzgates. |
 | 0.2.33 | 2026-10-27 | Delegiert gemäß SPECROAD-DECISION-1 | RESTORE-CLI-BINDING: explizite Restoremodi, Quellart, operative Baselinewerte und Root-/Dateipaare; spezialisierter Preflight mit unveränderten nativen Autorisierungs- und Recoverygates. |

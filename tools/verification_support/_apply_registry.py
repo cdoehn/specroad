@@ -89,6 +89,7 @@ def selection_receipt(registry, raw, selected, head, sequence, runtime_filter=No
         "tests": [{"nodeid": node, "test_id": identity, "test_number": numbers[identity]}
                   for node, identity in sorted(selected.items())]}
     if runtime_filter is not None:
-        binding.update(format_version=2, kind="apply-selection-binding-v2", runtime_filter=runtime_filter)
+        version = 3 if runtime_filter.get('format_version') == 2 else 2
+        binding.update(format_version=version, kind="apply-selection-binding-v" + str(version), runtime_filter=runtime_filter)
     encoded = json.dumps(binding, sort_keys=True, ensure_ascii=True, allow_nan=False, separators=(",", ":")).encode()
     return {"selection_binding": binding, "selection_sha256": sha256(encoded).hexdigest()}

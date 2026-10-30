@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 34 · **Stand:** 30. Oktober 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.39
+**Planrevision:** 36 · **Stand:** 30. Oktober 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.40
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 Schritte und 900 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; die ausdrücklich genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wird nach 10.7.10 innerhalb von 15.l.R vorgezogen. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -9,7 +9,7 @@ Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 S
 
 Fachliche Grundlage ist [`docs/specification/SpecRoad_Spezifikation.md`](../specification/SpecRoad_Spezifikation.md), einschließlich aller konsolidierten Korrekturen, 742 Requirements, 51 Verifikationsverträge, 46 Szenario-/E2E-Identitäten sowie R-01 bis R-75, Anhang U und den PatchHarbor-Rundweg aus Anhang W. Der [`Prüfbericht`](../reviews/SpecRoad_v0.2.7_Implementierungsreife_Pruefbericht.md) ist ein vorgelagerter Entwurfsreview, kein späterer Produktnachweis.
 
-Gebundene Spezifikations-SHA-256: `f1a0845fd53510162f35e481b7467235601afd1ae1e68e149586b76962c22f1a`.
+Gebundene Spezifikations-SHA-256: `0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4`.
 Planungsbasis: Commit `fe2661d02ecf2f7eb483b58a4487eb009c6b3846`; sauberes Result-Bundle `specroad_Result_120209_0914_df3504.zip`; Repository-ID `3d2576df-d611-46fc-9d2b-92869468aaca`. Diese Angaben dokumentieren die Entstehung des Plans, nicht die zukünftige Patchbindung. **Jedes spätere Patchpaket bindet den dann aktuellen tatsächlichen Result-Zustand.**
 
 Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 2026 gelten zusätzlich und bei den nachfolgend benannten Konflikten vorrangig. Sonstige normative Spezifikationsinhalte werden nicht stillschweigend abgeschwächt. Neue fachliche Widersprüche, fehlende zwingende Angaben und Sicherheitsprobleme sind offen zu benennen, nicht durch erfundene Annahmen oder Scheinerfolge zu lösen.
@@ -36,7 +36,7 @@ Laufzeitdaten und ist keine Start-/Resume-Anweisung.
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 34
+plan_revision: 36
 implementation_plan_commits_total: 900
 implementation_plan_commits_completed: 650
 last_completed_plan_commit: 15.l.R
@@ -49,6 +49,95 @@ plan_setup_kind: OFF-PLAN
 plan_setup_id: PLAN-SETUP
 plan_setup_message: "docs(plan): add detailed SpecRoad WRC implementation plan"
 ```
+
+## OFF-PLAN RUNTIME-AUTO-521: aktuelle Messhistorie und Korrektur von Result 520
+
+**Ausdrücklicher gemeinsamer Nutzerauftrag vom 30. Oktober 2026.** Die neue
+Messpolicy aus Spezifikation 2.5 wird zusammen mit den beiden Inventarkorrekturen
+in genau einer state-gebundenen ZIP umgesetzt. Produktstand bleibt 650/900;
+15.l.R ist abgeschlossen, 15.l.C bleibt offen und wird nicht bearbeitet.
+
+Quelle: Result 520, SHA-256
+`5fc5fb898397ab15796afce0984f8d02ed732277e2c4e5efe7bc4cfaa2479dc8`,
+Base-Commit `5b851562a0a882c1fde085c7306854cf30188ca9`, Zustand
+`33041b321d28c074`. Das Apply blieb ohne Commit: 6004 bestanden, 2 fehlgeschlagen.
+Die drei uncommitteten Dateien aus 520 werden erhalten. Historische Werte und
+Originaljournale werden weder ersetzt noch als aktuelle Erfolgsevidenz benutzt.
+
+Pflichtabnahmen:
+- Automatische dauerhafte Phasenmessung schon beim ersten gewöhnlichen Dev-
+  und Apply-Lauf; Historie und Originalherkunft erhalten; reine Collection ohne
+  Messversuch. Gemeinsame aktuelle Werte sind sofort für Apply verfügbar.
+- Neuester gestarteter Versuch pro Test; sofortige Invalidierung bei Start,
+  kein Rückgriff auf ältere Erfolge; Fehler/Subtests/Abbruch und fehlende Phasen
+  bleiben ungültig. Erfolgreicher Wiederholungslauf macht den Wert gültig.
+- N=3 minus dynamischem langsamstem Fünftel der aktuellen gültigen Messwerte;
+  deterministische Gleichstände, neue/ungültige Tests zugelassen, entfernte
+  Identitäten nicht mitzählen. Dev und manuelle Volltests bleiben ungefiltert.
+- Auswahl-Snapshot und tatsächliche Identitäten mit v3-Bindung prüfen;
+  Messänderungen während des Laufs gelten erst für die nächste Auswahl.
+- Parallelität, Datenbankfehler und unvollständige Phasen sicher behandeln;
+  keine Vermischung von Versuchen, keine verlorenen alten Datensätze.
+- Registry-Test ergänzt die bereits vorhandenen recover.restore- und work.*-
+  Commands; Schemakatalog-Test ergänzt restore-command-v1 und work-command-v1.
+  Die exakten Inventarprüfungen und negativen Verträge bleiben erhalten.
+- Gezielte parallele Dev-Abnahmen und vollständige Collection/Katalogprüfung;
+  pro echtem Zwischenstand genau die fällige parallele Apply-Gruppe vor Commit.
+  Kein zusätzlicher Volltest, keine Dokumentationstests, keine Dienstbedienung.
+
+- [x] **RUNTIME-AUTO-521.W:** Vollständige automatische Messung, aktuelle
+  Apply-Auswahl und beide Inventarkorrekturen funktionsfähig integrieren.
+- [ ] **RUNTIME-AUTO-521.R:** Fehler-, Abbruch-, Parallelitäts- und I/O-Grenzen
+  vervollständigen und mit Verhaltensabnahmen absichern.
+
+W-Dev-Abnahme: **215 gezielte Verhaltenstests**, vier parallele Worker, Exit 0.
+Beide Tests aus dem fehlgeschlagenen Result sind enthalten und erfolgreich.
+Vollständige Collection/Katalogprüfung: **22.489** Identitäten; keine Vollsuite.
+Der W-Apply-Nachweis und sein Commit stehen bis zur externen Ausführung aus.
+
+Die frühere Ausnahme RUNTIME-REFRESH-520 bleibt historisch dokumentiert; ihr
+fehlgeschlagener Einzelcommit wird nicht als erfolgreich abgeschlossen erklärt.
+Die erhaltene Baseline wird mit der neuen Policy gemeinsam übernommen.
+
+## OFF-PLAN RUNTIME-REFRESH-520: ausdrücklich aktualisierte Laufzeitausschlussliste
+
+**Nutzerauftrag vom 30. Oktober 2026:** Nach der abgeschlossenen gezielten
+Nachholmessung wird die feste Ausschlussliste einmalig neu berechnet. Dies ist
+eine ausdrücklich beauftragte Ausnahme für diesen Datenstand zu WORKFLOW-514;
+keine automatische Neuberechnung und keine allgemeine Lockerung von 2.5.
+
+- [ ] **RUNTIME-REFRESH-520:** Die neue Liste und diesen Nachweis nach dem
+  erfolgreichen parallelen Apply-Gate gemeinsam committen.
+- Historische vollständige Messungen: **22.263**, unverändert übernommen.
+- Zusätzlich gemessene neue Tests: **215**, alle vollständig erfolgreich;
+  keine bereits gemessenen Tests erneut zur Laufzeitbestimmung ausgeführt.
+- Abdeckung: **22.478/22.478 Testidentitäten**. Dies ist eine Zusammenstellung
+  historischer Laufzeiten verschiedener Quellstände, kein aktueller Vollsuitelauf
+  und kein Nachweis, dass alte Laufzeiten auf dem neuen Stand unverändert wären.
+- Auswahl: floor(22.478/5) = **4.495** langsamste Tests nach setup+call+teardown;
+  Gleichstand weiterhin nach Testidentität. **17.983** bleiben zugelassen.
+- Gegenüber der bisherigen Liste: **184** neu ausgeschlossen,
+  **141** wieder zugelassen. Davon sind **184**
+  neue Testidentitäten ausgeschlossen. Die Auswahlregel bleibt unverändert.
+- Die drei ursprünglichen Messherkünfte bleiben mit Quellhash, Journalhash,
+  Identitäten und Änderungsinventar gebunden. Die Originaljournale bleiben
+  unverändert; alte Laufzeiten werden nicht als neu gemessen bezeichnet.
+- Unverändert: N=3, Testnummern und Rotationsanker, ungefilterte gezielte
+  Dev-Auswahl und manuelle Vollsuite. Dieser Commit schaltet nur nach seinem
+  erfolgreichen Apply-Gate die bestehende Rotation regulär weiter.
+- Produktstand bleibt **650/900**, zuletzt **15.l.R**, nächstens **15.l.C**.
+  Es gibt keine Produktimplementierung, keine künstliche W/R/C-Folge und
+  keinen Start oder Neustart eines Dienstes oder Dev-Modells.
+
+Neue Messbasis: `080b0477f269c4d159cd39987e16aaab369364140a1afb2e668c690809fd9ff0`.
+
+Zusammengesetzter Messbericht: `3450e1d5b21090ec55ca01aa6cd1e52aecd78ea4a6cc5a0afb0f928eecd2e0e3`.
+
+Alte feste Liste: `ebf60e61ff731f5144dae5ad05d98879acc66563f6247cf520d088bd47ef006b`.
+
+Neue feste Liste: `8ed182c83f7f36cdd850d527224d1521af96fcbcf95c67357dc2d325a7c79e95`.
+
+Commit: `test(workflow): Laufzeitausschlussliste nach gezielter Nachholmessung aktualisieren`.
 
 Der ursprüngliche OFF-PLAN-Setup legte dieses Dokument mit offenen Produktpositionen an. Revision 2 ergänzt die Audit-Nacharbeiten und bereinigt überholte Testanweisungen als **OFF-PLAN / AUDIT-PLAN-UPDATE**, Commit-Message `docs(plan): Audit-Nacharbeiten vor 5.t konkretisieren`. Sie implementiert keine Produktreparatur und erhöht den Produktzähler nicht. Die Bundle-Nummer 047 bezeichnet diese Übergabe und zählt keine zusätzliche Produktposition. Ein erzeugtes ZIP oder ein hier formulierter Test ist kein abgeschlossener Commit und keine Test-Evidence; maßgeblich sind der tatsächlich entstandene Commit und sein Apply-Result.
 

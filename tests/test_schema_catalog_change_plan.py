@@ -56,6 +56,7 @@ class SchemaCatalogChangePlanTests(unittest.TestCase):
             'capabilities-v1', 'schema-catalog-v1', 'schema-document-v1', 'sarif-specroad-v1',
             'document-read-v1', 'model-validation-v1', 'project-lock-v1', 'recovery-status-v1',
             'exchange-export-v1', 'bundle-create-v1', 'bundle-verify-v1', 'bundle-extract-v1', 'import-plan-work-v1',
+            'restore-command-v1', 'work-command-v1',
             'environment-v1', 'document-work-v1', 'work-evaluation-v1', 'project-init-v1', 'project-inspect-v1', 'artifact-show-v1', 'artifact-trace-v1', 'artifact-why-v1', 'artifact-impact-v1', 'artifact-query-v1', 'artifact-diff-v1', 'configuration-evaluation-v1', 'roadmap-explain-v1',
         )]
         expected = {schema['$id']: schema for schema in schemas}
