@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 37 · **Stand:** 30. Oktober 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.40
+**Planrevision:** 38 · **Stand:** 31. Oktober 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.40
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 Schritte und 900 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; die ausdrücklich genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wird nach 10.7.10 innerhalb von 15.l.R vorgezogen. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -36,12 +36,12 @@ Laufzeitdaten und ist keine Start-/Resume-Anweisung.
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 37
+plan_revision: 38
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 652
-last_completed_plan_commit: 15.m.W
-next_plan_commit: 15.m.R
-last_completed_numbered_bundle: 523
+implementation_plan_commits_completed: 653
+last_completed_plan_commit: 15.m.R
+next_plan_commit: 15.m.C
+last_completed_numbered_bundle: 524
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -33224,14 +33224,136 @@ weiterhin der extern zu liefernde öffentliche vollständige Result-/Snapshot-
 Vertrag; die spätere Integration wird nicht vorgetäuscht. Control, Watcher,
 lokale Konfigurationen und Dienste bleiben unverändert.
 
+**Aktualisierung vor 15.m.R, 31. Oktober 2026.** PatchHarbor 1.6.0 ist im
+vom Nutzer bereitgestellten sauberen Quellcommit
+`29c9cfdc095517e7c4cfd4a4c0588cd90655f0b9` vorhanden. Die nun dokumentierten
+öffentlichen Aufrufe `integration_capabilities()` und `read_result_snapshot()`
+liefern den in W.1 verlangten Vertrag einschließlich der fünf unveränderlichen
+Schichten Base, Index, Worktree, Untracked und Effective. Die früheren Angaben
+über die fehlende externe Lieferung bleiben historische W-Befunde. R bindet
+und prüft das tatsächlich daraus gebaute Artefakt; die bloße Versionsangabe
+ersetzt keine Integrationsabnahme.
+
+**CI-Entwicklungsblock bis auf Widerruf ausgesetzt – ausdrückliche
+Nutzerentscheidung.** Die noch laufende beziehungsweise ausstehende
+CPython-3.10–3.14-CI darf spätere Entwicklung und die lokale R-Übergabe nicht
+blockieren. Diese Ausnahme endet erst durch ausdrückliche Wiederaufnahme des
+Gates durch den Nutzer; Retry, Neustart oder ein Folgebundle ändern sie nicht.
+Die Kompatibilitätsabnahme bleibt offen und wird weder als bestanden noch als
+Releasefreigabe ausgewiesen. Die gezielten parallelen Dev-Tests und N=3-Apply
+mit aktueller Laufzeitauswahl bleiben verbindlich. CI, Control, Watcher und
+externe Konfiguration bleiben unverändert; kein Lauf wird gestartet/abgebrochen.
+
 #### 15.m.R – Make it Right
 
-- [ ] **15.m.R** · Position **653/900** · Voraussetzung: `15.m.W`.
+- [x] **15.m.R** · Position **653/900** · Voraussetzung: `15.m.W`.
 **Exakte Commit-Message:** `15.m.R feat(transport): Öffentliche PatchHarbor-API und Runtimebindung vervollständigen`
 
 **Vervollständigung:** Falsche Version, Runtimehash, Plattform und Importpfadunterschiebung vor dem Laden abweisen; API-Fehler und SpecRoad-Exitcodes getrennt abbilden. Die öffentliche Resultprüfung muss effektive Base-/Index-/Worktree-/Untracked-Inventare liefern, nicht nur Metadaten lesen.
 
 **Verhaltensabnahme:** Manipulierte Runtime und unvollständige Resultschichten erzeugen keinen Codeimport, keine Materialisierung und keinen Scheinerfolg; echte Resultfixtures werden über die öffentliche API geprüft.
+
+**Vollständiger lokaler R-Umfang, Bundle 524 (31. Oktober 2026).**
+Quelle ist das erfolgreiche saubere Result 523
+`specroad-apply_Result_185433_1030_1526ae.zip`, SHA-256
+`b5214c4bc237a169746bd0a21fc58198d04270e45857375d3d50797f69930aa5`,
+Abschlusscommit `61755f9196dea98dc71fd6ecfc539041d0d9bbdb`.
+Native öffentliche Resultprüfung, Metadaten, Ausführungslog und alle 2.392
+Snapshotdateien wurden abgeglichen. Das zurückgegebene Apply-Gate bestand
+6.020 Tests (Sequenz 230 / Gruppe 2); nur die fünf dadurch bestätigten
+Fortschrittsmarkierungen fehlten in Dev und wurden übernommen. Sonstige
+vorhandene Arbeit und die Dev-Git-Historie bleiben erhalten.
+
+**Gebundene Distribution.** Offizieller `build_backend.build_wheel` aus dem
+unveränderten bereitgestellten Commit
+`29c9cfdc095517e7c4cfd4a4c0588cd90655f0b9`; kein globales Upgrade,
+keine Änderung am gelieferten Checkout, Control oder Watcher. PatchHarbor
+**1.6.0**, Core-PYZ ohne Watcher, Python `>=3.10`, Abnahmeplattform Linux-x86-64;
+Artefakt-SHA-256
+`377e715d7cb443eb5e80a3e7f9e8405f36092a0f7c062745b70c8b3a2e3eb055`.
+Wheel-SHA-256
+`990b87eb163941e4257dfd609e2a20b228d8f6f302aade6164a0bfc4fa3ffe9e`.
+Der dokumentierte Bootstrap bleibt ausführbar unverändert, mit MIT-Hinweis.
+Die API-Fähigkeiten werden über `integration_capabilities()` gegen
+Vertragsversion 1 und Snapshotvertrag 1 geprüft; fehlende Aufrufe oder geänderte
+Verträge verweigern die Nutzung. `PH-API-RESULT` ist damit als öffentliche
+Fähigkeit gebunden. Die Verfügbarkeit von Host-Apply erteilt keine vorgezogene
+fachliche oder menschliche Freigabe.
+
+**Lesen und Fehlergrenzen.** Die ausdrücklich angeforderte Vorbereitung der
+vertrauenswürdig hashgebundenen Bibliothek (`load_api`) ist vom schreibfreien
+`read_snapshot` getrennt. Ohne vorbereitete Runtime startet eine Snapshotanfrage
+keinen Bootstrap. Eingaberesults wählen oder liefern für diesen Leseweg keinen
+auszuführenden Code und werden nicht extrahiert; die bereits vertrauenswürdige
+Bibliothek ruft ausschließlich `api.read_result_snapshot` auf. Es gibt keinen
+eigenen Resultreader, Patchinterpreter, Formatvalidator oder CLI-Fallback.
+Die unabhängigen Base-/Index-/Worktree-/Untracked-/Effective-Inventare kommen
+vollständig aus der öffentlichen API, einschließlich Bytes, Modus, Größe, Hash
+und Git-Objekt-ID. Der einmal erfasste unveränderliche Snapshot bleibt nach
+Austausch der Quelldatei konsistent. Vor Wiederverwendung werden ursprüngliche
+Referenz, Runtimebytes und geladene Modulherkunft erneut geprüft.
+
+Falsche Runtimeversion, geänderte Artefaktbytes, fremde geladene Module und
+ungeeignete Python-/Plattformprofile werden vor neuem Laden verweigert;
+vorhandene Pfade und Module bleiben erhalten. Unvollständige oder beschädigte
+Resultschichten liefern weder Snapshot noch Projektmaterialisierung oder
+Scheinerfolg. Fehler führen eigene SpecRoad-Exitcodes und behalten zusätzlich
+die öffentlichen PatchHarbor-Felder `reason`, `error_kind` und Snapshot-`code`.
+Hashkonflikt ist Exit 6, ungültige Daten 3, fehlende Schnittstelle/Option 2,
+I/O/Hostfehler 5 und Sicherheitsverweigerung 7; keine numerische Übernahme eines
+PatchHarbor-Status. Fehlgeschlagene, dirty, dry-run und runtime-unavailable
+historische Results bleiben prüfbare passive Nachweise mit ihren tatsächlichen
+Statuswerten; ihre eingebettete alte Runtime wird nicht ausgeführt.
+
+**Reale Fixtures und Abnahme.** Die saubere und gemischte 1.6-Fixture stammen
+vom echten öffentlichen `api.bundle` in einem isolierten synthetischen Git-
+Repository. Gitindex/Blobbytes und Dateisysteminventare bilden den unabhängigen
+Oracle; abgedeckt sind Text/Binärdaten, leere Dateien, fehlender letzter
+Zeilenumbruch, Modusänderung, Rename, Löschung, neue und untracked Dateien.
+Fünf ursprüngliche 1.4-Fixtures aus dem gelieferten Upstream bleiben bytegleich.
+Die alten W-Descriptor-Fixtures bleiben ausdrücklich keine Vollresultbeweise.
+
+112 gezielte Verhaltenstests in sechs Dateien bestanden mit vier parallelen
+Workern auf CPython 3.14.4; Exit 0, Abschluss `2026-10-31T13:43:05.239280+00:00`.
+Die vollständige Collection ist gültig: 22.572 aktive Identitäten, keine
+Testkörper während Collection. 42 neue Nummern werden ausschließlich hinten
+angefügt; der frühere Test für die jetzt vorhandene fehlende PH-API-RESULT-
+Fähigkeit wird inaktiv, seine Nummer bleibt reserviert. N=3 und die Anker
+bleiben unverändert. Jeder Testversuch schreibt seine Phasen dauerhaft in die
+Laufzeithistorie; Dev bleibt ungefiltert, Apply bestimmt seine aktuelle Auswahl.
+
+- `tests/test_transport_runtime.py`
+- `tests/test_transport_snapshots.py`
+- `tests/test_core.py`
+- `tests/test_cli.py`
+- `tests/test_venv_runtime.py`
+- `tests/test_identity.py`
+
+Geprüfter Quell-SHA-256: `7afc7b5593b080f7129e351c7f326741ee2a0c5d4001e7201d39790777b8b7e5`.
+Auswahlbericht: `901a6fad7968472b2e501f318e586de5d030e7afd64d34a39e86d37756d6403c`;
+Einzeloutcomes: `8ca566c88e537c31d09aa057303ad2fb9d5118bc3afdca1a0e276397e81ed1f7`;
+Collection: `9643050bc587cff9c2a8869ecbf8d283b5799d4547b8b0e6bf8bbd08cd8fb359`.
+Der erste Lauf (99 bestanden, sechs fehlgeschlagen) bleibt als Diagnose erhalten:
+fünf historische Oracles verwendeten irrtümlich das kurze Manifest-Statusfeld
+statt der zugehörigen strukturierten Run-Fakten; der sechste Fault erzeugte ein
+unbekanntes Patchformat statt eines widersprüchlichen bekannten Hunks. Diese
+Testfehler wurden anhand der tatsächlichen öffentlichen Verträge korrigiert.
+Zusätzlich wurde die erneute Modulherkunft als Sicherheitsfehler abgesichert.
+Der vollständige korrigierte gezielte Lauf ist grün. Nach Aktualisierung der
+beiden aktiven Core-Katalogbindungen wurde derselbe gezielte Umfang auf den
+exakten finalen Lieferbytes erneut erfolgreich geprüft; kein fachlicher Split.
+
+**Übergabe und offener Rest.** Genau ein regulärer R-Zustand mit exakter
+R-Commitmessage; keine künstliche W/R/C-Folge und kein vorweggenommenes C.
+Fällig ist **N=3-Sequenz 231 / Gruppe 0** mit dynamischem neuesten Messsnapshot
+und v3-Bindung der tatsächlich ausgeführten Tests. Erst nach dessen Erfolg
+setzt der Entrypoint R auf abgeschlossen, Fortschritt 653/900, zuletzt 15.m.R,
+nächstens 15.m.C, Bundle 524, und erzeugt den R-Commit. Bei Übergabe ist das
+Apply-Gate noch nicht beobachtet. Fehler erhalten tatsächliche Arbeitsbytes
+und bisherige Commits. Pythonmatrix bleibt gemäß obiger Nutzerentscheidung
+offen und bis auf Widerruf kein Entwicklungsblocker; kein CI-/Vollsuite-/
+Releasebeleg wird behauptet. 15.m.C sowie 15.n/15.o und Rück-/Hostintegration
+bleiben eigenständige offene Schritte. Control und Dienste bleiben unverändert.
 
 #### 15.m.C – Make it Clean
 

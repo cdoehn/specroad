@@ -1,6 +1,6 @@
 """Explicit, lazy access to the pinned public PatchHarbor API.
 
-The bootstrap is the unchanged reviewed helper delivered with PatchHarbor 1.4.0.
+The bootstrap is the unchanged reviewed helper delivered with PatchHarbor 1.6.0.
 Its descriptor precheck is deliberately not a full Result/snapshot validator.
 No registration, Git action, installer, subprocess or transport is started here.
 The returned API grants no proposal, review or automatic host-apply authority.
@@ -11,14 +11,14 @@ from pathlib import Path
 import platform
 import re
 import sys
+from zipimport import zipimporter
 
 
-_VERSION = '1.4.0'
-_ARTIFACT_SHA256 = '4e0d26997bffe9476e79d98211cef2d93be7899063a0eb3480bea2ffa3d8f594'
+_VERSION = '1.6.0'
+_ARTIFACT_SHA256 = '377e715d7cb443eb5e80a3e7f9e8405f36092a0f7c062745b70c8b3a2e3eb055'
 _PYTHONS = ((3, 10), (3, 11), (3, 12), (3, 13), (3, 14))
-_OPERATIONS = ('bundle', 'inspect_patch', 'validate_patch', 'pack_patch', 'apply')
-# A requirement identifier, not an invented public PatchHarbor function name.
-_RESULT_REQUIREMENT = 'PH-API-RESULT'
+_OPERATIONS = ('bundle', 'inspect_patch', 'validate_patch', 'pack_patch', 'apply',
+               'integration_capabilities', 'read_result_snapshot')
 
 
 class TransportUnavailable(ValueError):
@@ -75,7 +75,9 @@ class PatchHarborRuntime:
             'platform_profiles': ['linux-x86_64'],
             'source_result_sha256': self._trusted_sha256,
             'api_capabilities': {name: True for name in _OPERATIONS},
-            'unavailable_capabilities': [_RESULT_REQUIREMENT],
+            'unavailable_capabilities': [],
+            'integration_contract_version': 1,
+            'snapshot_contract_version': 1,
             'runtime_loaded': self._api is not None,
             'capability_scope': 'pinned_distribution_contract',
             'full_reference_valid': False,
@@ -84,14 +86,16 @@ class PatchHarborRuntime:
     def load_api(self, *, required=()):
         """Use only the documented bootstrap and return ``patchharbor.api``.
 
-        ``PH-API-RESULT`` always refuses before loading or materializing code:
-        the pinned distribution has no public full Result/snapshot operation.
-        Ordinary API presence must not be confused with that missing contract.
+        This explicitly prepares trusted library code, not project contents.
+        Snapshot reads are a separate, read-only operation and never bootstrap
+        a library from their input. API presence is not Result validation.
         """
         if (type(required) is not tuple
                 or any(type(name) is not str for name in required)):
             raise TransportUnavailable('invalid_capability_request')
         for name in required:
+            if name == 'PH-API-RESULT':
+                continue
             if name not in _OPERATIONS:
                 raise TransportUnavailable('api_capability_unavailable', capability=name)
         if (sys.implementation.name != 'cpython'
@@ -105,6 +109,19 @@ class PatchHarborRuntime:
                 name == 'patchharbor' or name.startswith('patchharbor.')
                 for name in sys.modules):
             raise TransportUnavailable('runtime_origin_conflict', exit_code=7)
+        if self._prepared is not None:
+            for name, module in tuple(sys.modules.items()):
+                if name != 'patchharbor' and not name.startswith('patchharbor.'):
+                    continue
+                spec = getattr(module, '__spec__', None)
+                loader = getattr(spec, 'loader', None)
+                prefix = str(self._prepared.path) + '/'
+                if (not isinstance(loader, zipimporter)
+                        or Path(loader.archive) != self._prepared.path
+                        or not str(getattr(spec, 'origin', '')).startswith(prefix)
+                        or not str(getattr(module, '__file__', '')).startswith(prefix)):
+                    self._failed = True
+                    raise TransportUnavailable('runtime_origin_conflict', exit_code=7)
 
         bootstrap = importlib.import_module('specroad.transport._pyz_bootstrap')
         try:
@@ -120,6 +137,13 @@ class PatchHarborRuntime:
             for name in _OPERATIONS:
                 if not callable(getattr(api, name, None)):
                     raise TransportUnavailable('api_capability_unavailable', capability=name)
+            capabilities = api.integration_capabilities()
+            if (type(capabilities.contract_version) is not int
+                    or capabilities.contract_version != 1
+                    or type(capabilities.snapshot_contract_version) is not int
+                    or capabilities.snapshot_contract_version != 1):
+                raise TransportUnavailable('unsupported_api_contract',
+                                           capability='PH-API-RESULT')
         except TransportUnavailable:
             self._failed = True
             raise
@@ -137,3 +161,19 @@ class PatchHarborRuntime:
                                        cause_type=type(error).__name__) from error
         self._api = api
         return api
+
+    def read_snapshot(self, result, *, expected_sha256):
+        """Read complete immutable inventories through the pinned public API.
+
+        Runtime preparation must be requested separately with ``load_api``.
+        A Result supplied here cannot supply code, bootstrap, switch runtimes
+        or request extraction. In particular, failed/dirty historical Results
+        retain their real facts; validation is not an Apply-success assertion.
+        """
+        from .snapshots import read_snapshot
+        if self._api is None or self._failed:
+            raise TransportUnavailable('explicit_runtime_load_required')
+        # Recheck the original trust binding and loaded module origins even
+        # when inspecting another (possibly historical) Result as passive data.
+        api = self.load_api(required=('read_result_snapshot',))
+        return read_snapshot(api, result, expected_sha256=expected_sha256)

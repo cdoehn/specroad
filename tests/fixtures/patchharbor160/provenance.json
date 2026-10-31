@@ -1,0 +1,19 @@
+{
+  "artifact_sha256": "377e715d7cb443eb5e80a3e7f9e8405f36092a0f7c062745b70c8b3a2e3eb055",
+  "build": "official build_backend.build_wheel; PyzProvider from its prepared wheel",
+  "distribution": "patchharbor",
+  "files": {
+    "LICENSE": "6765dc3fb17e5c1c97f3457b54bdeb8dc6c388de3f88c4c23dfc20a2745f3f50",
+    "expected.json": "60f3a4a3e3670424e53abb0477dc4197e6a4786d18cdddf0ecb9f397918668af",
+    "patchharbor-1.6.0.pyz": "377e715d7cb443eb5e80a3e7f9e8405f36092a0f7c062745b70c8b3a2e3eb055",
+    "result-clean.zip": "a43e71cf4088a4438cbb4fbbb072eac1802649574b7d165358aacdaa2ce30e51",
+    "result-dirty.zip": "ef0b30b8e811d4f8b81daa3b28cd4b39d4bcc1397a5c90edfbe3f8ee26b53b25",
+    "runtime.json": "f95bb6fbdc35f7e98bc7a5e97bc037874e42f9e2076e052875126ff25644c059"
+  },
+  "fixture_kind": "actual public bundle producer on isolated synthetic Git repository; independent Git and filesystem inventories",
+  "python": "3.14.4",
+  "python_matrix": "pending_manual_ci; development blocker waived until user reinstates",
+  "source_commit": "29c9cfdc095517e7c4cfd4a4c0588cd90655f0b9",
+  "version": "1.6.0",
+  "wheel_sha256": "990b87eb163941e4257dfd609e2a20b228d8f6f302aade6164a0bfc4fa3ffe9e"
+}

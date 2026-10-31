@@ -7,25 +7,27 @@
   "implementation_status": "partial",
   "method": "automated_behavior",
   "fixture_ids": [
-    "SR-FIX-PATCHHARBOR-140-RUNTIME-v1"
+    "SR-FIX-PATCHHARBOR-160-SNAPSHOT-v1"
   ],
   "preconditions": [
-    "Use the trusted current SpecRoad checkout and original pinned 1.4.0 runtime, a supported native CPython and an owned temporary Linux-x86_64 directory."
+    "Use the pinned PatchHarbor 1.6.0 built from supplied source commit 29c9cfdc095517e7c4cfd4a4c0588cd90655f0b9 and native synthetic producer Results; preserve historical 1.4 Results unchanged."
   ],
   "steps": [
-    "Execute the bound behavior tests in the current parallel selected gate; each import probe uses a real isolated CPython process, without site packages, shell or network.",
-    "Observe public API identity and actual native inspection, lazy Core operation, descriptor and missing-capability refusals, unchanged source bytes and owned runtime output."
+    "Explicitly bootstrap the verified, pinned library and then read Results as passive data using the public snapshot API.",
+    "Compare all five layers with independent Git and filesystem oracles, reject incomplete layers, retain upstream failure facts, and check lazy Core, runtime trust and source preservation in isolated offline processes."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Das Transportprofil MUSS mit einer gebundenen, CPython 3.10 bis 3.14 unterstützenden PatchHarbor-Distribution offline nutzbar sein, ohne deren Laden oder Installation für die übrigen Core-Befehle vorauszusetzen.",
-    "scope": "15.m.W adapter foundation with exact original runtime identity, documented bootstrap, real public import and native inspect_patch; Core remains lazy. Descriptor-only synthetic envelopes do not prove full Result validation. Every execution report identifies its actual interpreter; a 3.14 run does not prove the required 3.10-3.13 imports. Per the explicit user instruction of 30 October 2026, the full native Python matrix is a separate manually started CI gate. Local W delivery requires current-interpreter targeted tests and its normal Apply partition; neither gate claims CI or release acceptance."
+    "scope": "15.m.W/R transport foundation: pinned 1.6.0 public API, native immutable five-layer snapshots, offline module/PYZ use, independent error mapping and historical original facts. Runtime preparation is explicit and separate from read-only snapshots: input data cannot select or execute a runtime or materialize project files. No outbound, return, host-apply, full Python-matrix or release acceptance is asserted."
   },
   "expected_diagnostics": [],
   "expected_exit_codes": [
     0,
     2,
+    3,
     5,
+    6,
     7
   ],
   "json_pointers": [],
@@ -46,7 +48,6 @@
     "tests/test_transport_runtime.py::test_declared_unavailable_runtime_is_not_replaced_or_installed",
     "tests/test_transport_runtime.py::test_existing_runtime_destination_is_preserved",
     "tests/test_transport_runtime.py::test_loaded_foreign_origin_is_not_evicted_or_overwritten",
-    "tests/test_transport_runtime.py::test_missing_capability_refuses_without_reading_or_loading[PH-API-RESULT]",
     "tests/test_transport_runtime.py::test_missing_capability_refuses_without_reading_or_loading[not_a_public_operation]",
     "tests/test_transport_runtime.py::test_project_module_cannot_shadow_the_verified_runtime",
     "tests/test_transport_runtime.py::test_real_public_import_and_native_inspection_from_delivered_artifacts[module]",
@@ -57,11 +58,52 @@
     "tests/test_transport_runtime.py::test_trusted_digest_is_mandatory[GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG]",
     "tests/test_transport_runtime.py::test_trusted_digest_is_mandatory[None]",
     "tests/test_transport_runtime.py::test_trusted_digest_is_mandatory[]",
-    "tests/test_transport_runtime.py::test_wrong_trusted_digest_preserves_inputs_and_loads_no_code"
+    "tests/test_transport_runtime.py::test_wrong_trusted_digest_preserves_inputs_and_loads_no_code",
+    "tests/test_transport_snapshots.py::test_api_failure_classification_preserves_semantic_reason[execution_error-5]",
+    "tests/test_transport_snapshots.py::test_api_failure_classification_preserves_semantic_reason[interrupted-5]",
+    "tests/test_transport_snapshots.py::test_api_failure_classification_preserves_semantic_reason[repository_busy-6]",
+    "tests/test_transport_snapshots.py::test_api_failure_classification_preserves_semantic_reason[result_bundle_error-5]",
+    "tests/test_transport_snapshots.py::test_api_failure_classification_preserves_semantic_reason[source_error-3]",
+    "tests/test_transport_snapshots.py::test_api_failure_classification_preserves_semantic_reason[state_mismatch-6]",
+    "tests/test_transport_snapshots.py::test_api_failure_classification_preserves_semantic_reason[timeout-5]",
+    "tests/test_transport_snapshots.py::test_api_failure_classification_preserves_semantic_reason[unsupported_repository_state-7]",
+    "tests/test_transport_snapshots.py::test_api_failure_classification_preserves_semantic_reason[usage_error-2]",
+    "tests/test_transport_snapshots.py::test_complete_native_dirty_snapshot_matches_independent_git_and_disk[module]",
+    "tests/test_transport_snapshots.py::test_complete_native_dirty_snapshot_matches_independent_git_and_disk[zipapp]",
+    "tests/test_transport_snapshots.py::test_corrupted_runtime_is_rejected_before_import_or_workspace_creation",
+    "tests/test_transport_snapshots.py::test_historical_result_facts_are_passive_and_not_rewritten[result-clean.zip]",
+    "tests/test_transport_snapshots.py::test_historical_result_facts_are_passive_and_not_rewritten[result-dirty.zip]",
+    "tests/test_transport_snapshots.py::test_historical_result_facts_are_passive_and_not_rewritten[result-dry-run.zip]",
+    "tests/test_transport_snapshots.py::test_historical_result_facts_are_passive_and_not_rewritten[result-partial-failure.zip]",
+    "tests/test_transport_snapshots.py::test_historical_result_facts_are_passive_and_not_rewritten[result-unavailable.zip]",
+    "tests/test_transport_snapshots.py::test_invalid_layers_never_load_input_code_or_materialize_project[base/text.txt]",
+    "tests/test_transport_snapshots.py::test_invalid_layers_never_load_input_code_or_materialize_project[base_hash]",
+    "tests/test_transport_snapshots.py::test_invalid_layers_never_load_input_code_or_materialize_project[changes/staged.patch]",
+    "tests/test_transport_snapshots.py::test_invalid_layers_never_load_input_code_or_materialize_project[changes/unstaged.patch]",
+    "tests/test_transport_snapshots.py::test_invalid_layers_never_load_input_code_or_materialize_project[context.json]",
+    "tests/test_transport_snapshots.py::test_invalid_layers_never_load_input_code_or_materialize_project[invalid_patch]",
+    "tests/test_transport_snapshots.py::test_invalid_layers_never_load_input_code_or_materialize_project[runtime_hash]",
+    "tests/test_transport_snapshots.py::test_invalid_layers_never_load_input_code_or_materialize_project[untracked/loose.bin]",
+    "tests/test_transport_snapshots.py::test_invalid_layers_never_load_input_code_or_materialize_project[untracked_hash]",
+    "tests/test_transport_snapshots.py::test_old_distribution_cannot_supply_the_new_api",
+    "tests/test_transport_snapshots.py::test_platform_refusal_happens_before_source_access[linux-aarch64-cpython-version1]",
+    "tests/test_transport_snapshots.py::test_platform_refusal_happens_before_source_access[linux-x86_64-cpython-version3]",
+    "tests/test_transport_snapshots.py::test_platform_refusal_happens_before_source_access[linux-x86_64-pypy-version2]",
+    "tests/test_transport_snapshots.py::test_platform_refusal_happens_before_source_access[win32-x86_64-cpython-version0]",
+    "tests/test_transport_snapshots.py::test_public_snapshot_error_codes_remain_separate_from_exit_numbers[path_collision-7]",
+    "tests/test_transport_snapshots.py::test_public_snapshot_error_codes_remain_separate_from_exit_numbers[resource_limit-3]",
+    "tests/test_transport_snapshots.py::test_public_snapshot_error_codes_remain_separate_from_exit_numbers[unsupported_patch-2]",
+    "tests/test_transport_snapshots.py::test_runtime_reuse_rejects_changed_api_contract_and_origin[capability]",
+    "tests/test_transport_snapshots.py::test_runtime_reuse_rejects_changed_api_contract_and_origin[contract]",
+    "tests/test_transport_snapshots.py::test_runtime_reuse_rejects_changed_api_contract_and_origin[origin]",
+    "tests/test_transport_snapshots.py::test_snapshot_does_not_implicitly_bootstrap_from_its_input",
+    "tests/test_transport_snapshots.py::test_snapshot_input_errors_preserve_upstream_facts[bad_digest]",
+    "tests/test_transport_snapshots.py::test_snapshot_input_errors_preserve_upstream_facts[digest]",
+    "tests/test_transport_snapshots.py::test_snapshot_input_errors_preserve_upstream_facts[missing]",
+    "tests/test_transport_snapshots.py::test_snapshot_input_errors_preserve_upstream_facts[relative]"
   ],
   "open_items": [
-    "Obtain the real CPython 3.10-3.14 adapter matrix from the existing manually started CI, as explicitly assigned there by the user on 30 October 2026. Current local tests prove only their recorded interpreter; CI acceptance remains open and is not a local bundle prerequisite.",
-    "15.m.R/C remain open. PH-API-RESULT is unavailable in the pinned public API; obtain a documented public full Result/snapshot contract and delivered artifacts before dependent export or validation integration.",
-    "Complete the separate outbound/return/host-apply profiles, proposal authority gates and end-to-end acceptance in their planned steps."
+    "Python 3.10-3.14 CI acceptance remains pending; by explicit user instruction its development-blocking effect is suspended until the user reinstates it. This does not claim compatibility or release evidence.",
+    "15.m.C and separate outbound/return/host-apply integration, human proposal gates and end-to-end acceptance remain open."
   ]
 }

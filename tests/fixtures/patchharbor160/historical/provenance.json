@@ -1,0 +1,12 @@
+{
+  "kind": "unchanged upstream historical Result fixtures",
+  "sha256": {
+    "result-clean.zip": "d5b1f6453da2d8a2ad2e73fde0d4a0d8775777fd1fa083bd0ac8da4f223db636",
+    "result-dirty.zip": "cdf23c845454420cb68dc591cffa3ee481cde18f340a083fe556abb65336d765",
+    "result-dry-run.zip": "a91bdb1b7590109b5ed508aec481bf6cfc5f90e64efca728082babf7183b0e05",
+    "result-partial-failure.zip": "9faeeffc544f97ce204d4e6d240579ed75d23c95164afef5b7bb731de71f5bf1",
+    "result-unavailable.zip": "0828aef01d94341c84f27925b3c4a44cefe8542a71b13a2f87e9d635856f76cb"
+  },
+  "source_commit": "29c9cfdc095517e7c4cfd4a4c0588cd90655f0b9",
+  "source_directory": "tests/fixtures/compatibility_140"
+}

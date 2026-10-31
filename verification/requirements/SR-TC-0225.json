@@ -9,13 +9,13 @@
   "fixture_ids": [
     "SR-FIX-ISOLATED-CPYTHON-v1",
     "SR-FIX-OWNED-TEMP-v1",
-    "SR-FIX-PATCHHARBOR-140-RUNTIME-v1"
+    "SR-FIX-PATCHHARBOR-160-SNAPSHOT-v1"
   ],
   "preconditions": [
     "Use the current trusted checkout and a private temporary directory."
   ],
   "steps": [
-    "Execute each listed unittest once in the current full suite.",
+    "Execute the listed behavior tests in the current prescribed parallel gate; record the actual selected scope without asserting a full suite.",
     "Observe the declared file effects, returned data and exit statuses without matching human text."
   ],
   "oracle": {
@@ -42,10 +42,66 @@
   "test_ids": [
     "test_core.CoreRobustnessTests.test_no_installer_shell_network_or_write_during_import",
     "tests/test_transport_runtime.py::test_core_commands_and_adapter_description_need_no_transport[module]",
-    "tests/test_transport_runtime.py::test_core_commands_and_adapter_description_need_no_transport[zipapp]"
+    "tests/test_transport_runtime.py::test_core_commands_and_adapter_description_need_no_transport[zipapp]",
+    "tests/test_transport_runtime.py::test_declared_unavailable_runtime_is_not_replaced_or_installed",
+    "tests/test_transport_runtime.py::test_existing_runtime_destination_is_preserved",
+    "tests/test_transport_runtime.py::test_loaded_foreign_origin_is_not_evicted_or_overwritten",
+    "tests/test_transport_runtime.py::test_missing_capability_refuses_without_reading_or_loading[not_a_public_operation]",
+    "tests/test_transport_runtime.py::test_project_module_cannot_shadow_the_verified_runtime",
+    "tests/test_transport_runtime.py::test_real_public_import_and_native_inspection_from_delivered_artifacts[module]",
+    "tests/test_transport_runtime.py::test_real_public_import_and_native_inspection_from_delivered_artifacts[zipapp]",
+    "tests/test_transport_runtime.py::test_reuse_rechecks_both_reference_and_prepared_bytes[reference]",
+    "tests/test_transport_runtime.py::test_reuse_rechecks_both_reference_and_prepared_bytes[runtime]",
+    "tests/test_transport_runtime.py::test_trusted_digest_is_mandatory[000000000000000000000000000000000000000000000000000000000000000]",
+    "tests/test_transport_runtime.py::test_trusted_digest_is_mandatory[GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG]",
+    "tests/test_transport_runtime.py::test_trusted_digest_is_mandatory[None]",
+    "tests/test_transport_runtime.py::test_trusted_digest_is_mandatory[]",
+    "tests/test_transport_runtime.py::test_wrong_trusted_digest_preserves_inputs_and_loads_no_code",
+    "tests/test_transport_snapshots.py::test_api_failure_classification_preserves_semantic_reason[execution_error-5]",
+    "tests/test_transport_snapshots.py::test_api_failure_classification_preserves_semantic_reason[interrupted-5]",
+    "tests/test_transport_snapshots.py::test_api_failure_classification_preserves_semantic_reason[repository_busy-6]",
+    "tests/test_transport_snapshots.py::test_api_failure_classification_preserves_semantic_reason[result_bundle_error-5]",
+    "tests/test_transport_snapshots.py::test_api_failure_classification_preserves_semantic_reason[source_error-3]",
+    "tests/test_transport_snapshots.py::test_api_failure_classification_preserves_semantic_reason[state_mismatch-6]",
+    "tests/test_transport_snapshots.py::test_api_failure_classification_preserves_semantic_reason[timeout-5]",
+    "tests/test_transport_snapshots.py::test_api_failure_classification_preserves_semantic_reason[unsupported_repository_state-7]",
+    "tests/test_transport_snapshots.py::test_api_failure_classification_preserves_semantic_reason[usage_error-2]",
+    "tests/test_transport_snapshots.py::test_complete_native_dirty_snapshot_matches_independent_git_and_disk[module]",
+    "tests/test_transport_snapshots.py::test_complete_native_dirty_snapshot_matches_independent_git_and_disk[zipapp]",
+    "tests/test_transport_snapshots.py::test_corrupted_runtime_is_rejected_before_import_or_workspace_creation",
+    "tests/test_transport_snapshots.py::test_historical_result_facts_are_passive_and_not_rewritten[result-clean.zip]",
+    "tests/test_transport_snapshots.py::test_historical_result_facts_are_passive_and_not_rewritten[result-dirty.zip]",
+    "tests/test_transport_snapshots.py::test_historical_result_facts_are_passive_and_not_rewritten[result-dry-run.zip]",
+    "tests/test_transport_snapshots.py::test_historical_result_facts_are_passive_and_not_rewritten[result-partial-failure.zip]",
+    "tests/test_transport_snapshots.py::test_historical_result_facts_are_passive_and_not_rewritten[result-unavailable.zip]",
+    "tests/test_transport_snapshots.py::test_invalid_layers_never_load_input_code_or_materialize_project[base/text.txt]",
+    "tests/test_transport_snapshots.py::test_invalid_layers_never_load_input_code_or_materialize_project[base_hash]",
+    "tests/test_transport_snapshots.py::test_invalid_layers_never_load_input_code_or_materialize_project[changes/staged.patch]",
+    "tests/test_transport_snapshots.py::test_invalid_layers_never_load_input_code_or_materialize_project[changes/unstaged.patch]",
+    "tests/test_transport_snapshots.py::test_invalid_layers_never_load_input_code_or_materialize_project[context.json]",
+    "tests/test_transport_snapshots.py::test_invalid_layers_never_load_input_code_or_materialize_project[invalid_patch]",
+    "tests/test_transport_snapshots.py::test_invalid_layers_never_load_input_code_or_materialize_project[runtime_hash]",
+    "tests/test_transport_snapshots.py::test_invalid_layers_never_load_input_code_or_materialize_project[untracked/loose.bin]",
+    "tests/test_transport_snapshots.py::test_invalid_layers_never_load_input_code_or_materialize_project[untracked_hash]",
+    "tests/test_transport_snapshots.py::test_old_distribution_cannot_supply_the_new_api",
+    "tests/test_transport_snapshots.py::test_platform_refusal_happens_before_source_access[linux-aarch64-cpython-version1]",
+    "tests/test_transport_snapshots.py::test_platform_refusal_happens_before_source_access[linux-x86_64-cpython-version3]",
+    "tests/test_transport_snapshots.py::test_platform_refusal_happens_before_source_access[linux-x86_64-pypy-version2]",
+    "tests/test_transport_snapshots.py::test_platform_refusal_happens_before_source_access[win32-x86_64-cpython-version0]",
+    "tests/test_transport_snapshots.py::test_public_snapshot_error_codes_remain_separate_from_exit_numbers[path_collision-7]",
+    "tests/test_transport_snapshots.py::test_public_snapshot_error_codes_remain_separate_from_exit_numbers[resource_limit-3]",
+    "tests/test_transport_snapshots.py::test_public_snapshot_error_codes_remain_separate_from_exit_numbers[unsupported_patch-2]",
+    "tests/test_transport_snapshots.py::test_runtime_reuse_rejects_changed_api_contract_and_origin[capability]",
+    "tests/test_transport_snapshots.py::test_runtime_reuse_rejects_changed_api_contract_and_origin[contract]",
+    "tests/test_transport_snapshots.py::test_runtime_reuse_rejects_changed_api_contract_and_origin[origin]",
+    "tests/test_transport_snapshots.py::test_snapshot_does_not_implicitly_bootstrap_from_its_input",
+    "tests/test_transport_snapshots.py::test_snapshot_input_errors_preserve_upstream_facts[bad_digest]",
+    "tests/test_transport_snapshots.py::test_snapshot_input_errors_preserve_upstream_facts[digest]",
+    "tests/test_transport_snapshots.py::test_snapshot_input_errors_preserve_upstream_facts[missing]",
+    "tests/test_transport_snapshots.py::test_snapshot_input_errors_preserve_upstream_facts[relative]"
   ],
   "open_items": [
     "Complete the remaining normative behavior and its requirement-specific oracle; obtain current evidence on required platforms.",
-    "Complete transport profile and explicit host-only Git prerequisites in 15.m-15.o and M20. The lazy 1.4.0 adapter is present; the user assigns its full Python matrix to manually started CI, still open. Current Core tests do not prove the complete transport roundtrip."
+    "Complete transport profiles and explicit host-only Git prerequisites in 15.n-15.o and M20. The lazy pinned 1.6.0 adapter and public snapshot path are exercised locally; Python 3.10-3.14 compatibility remains pending in manual CI, whose development-blocking effect is explicitly suspended until user reinstatement. Current tests do not prove the complete transport roundtrip."
   ]
 }

@@ -13,12 +13,12 @@ from support.processes import run_python
 
 
 ROOT = Path(__file__).resolve().parents[2]
-FIXTURE = ROOT / 'tests/fixtures/patchharbor140'
-ARTIFACT_SHA256 = '4e0d26997bffe9476e79d98211cef2d93be7899063a0eb3480bea2ffa3d8f594'
+FIXTURE = ROOT / 'tests/fixtures/patchharbor160'
+ARTIFACT_SHA256 = '377e715d7cb443eb5e80a3e7f9e8405f36092a0f7c062745b70c8b3a2e3eb055'
 
 
 def envelope(root, *, unavailable=False):
-    artifact = (FIXTURE / 'patchharbor-1.4.0.pyz').read_bytes()
+    artifact = (FIXTURE / 'patchharbor-1.6.0.pyz').read_bytes()
     assert sha256(artifact).hexdigest() == ARTIFACT_SHA256
     metadata = json.loads((FIXTURE / 'runtime.json').read_bytes())
     if unavailable:

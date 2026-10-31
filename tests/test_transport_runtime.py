@@ -1,4 +1,4 @@
-"""Public lazy integration with the original shipped 1.4.0 runtime, offline."""
+"""Public lazy integration with the original shipped 1.6.0 runtime, offline."""
 
 from hashlib import sha256
 import json
@@ -34,21 +34,21 @@ print(json.dumps({'before': before, 'after': runtime.describe(),
 '''
     result = probe(tmp_path, body, distribution=module if distribution_kind == 'module' else archive)
     assert result['api_name'] == 'patchharbor.api'
-    assert result['api_origin'].startswith(str(workspace / 'patchharbor-1.4.0.pyz'))
+    assert result['api_origin'].startswith(str(workspace / 'patchharbor-1.6.0.pyz'))
     assert result['inspection_sha256'] == sha256(patch.read_bytes()).hexdigest()
     assert result['python'] == list(sys.version_info[:2])
     assert result['before']['runtime_loaded'] is False
     assert result['after']['runtime_loaded'] is True
     assert result['after']['artifact_sha256'] == ARTIFACT_SHA256
-    assert result['after']['version'] == '1.4.0'
+    assert result['after']['version'] == '1.6.0'
     assert result['after']['source_result_sha256'] == digest
     assert result['after']['supported_cpython'] == ['3.10', '3.11', '3.12', '3.13', '3.14']
-    assert result['after']['unavailable_capabilities'] == ['PH-API-RESULT']
+    assert result['after']['unavailable_capabilities'] == []
     assert all(result['after']['api_capabilities'].values())
     assert result['full_reference_valid'] is False
     assert reference.read_bytes() == before
-    assert list(workspace.iterdir()) == [workspace / 'patchharbor-1.4.0.pyz']
-    assert sha256((workspace / 'patchharbor-1.4.0.pyz').read_bytes()).hexdigest() == ARTIFACT_SHA256
+    assert list(workspace.iterdir()) == [workspace / 'patchharbor-1.6.0.pyz']
+    assert sha256((workspace / 'patchharbor-1.6.0.pyz').read_bytes()).hexdigest() == ARTIFACT_SHA256
 
 
 @pytest.mark.parametrize('distribution_kind', ['module', 'zipapp'])
@@ -77,7 +77,7 @@ print(json.dumps({'exit': main(['--help'], stdout=io.StringIO()),
     assert files_under(project) == before
 
 
-@pytest.mark.parametrize('capability', ['PH-API-RESULT', 'not_a_public_operation'])
+@pytest.mark.parametrize('capability', ['not_a_public_operation'])
 def test_missing_capability_refuses_without_reading_or_loading(tmp_path, capability):
     body = adapter_source(tmp_path / 'absent-result', '0' * 64, tmp_path / 'runtime') + '''
 try:
@@ -168,7 +168,7 @@ print(json.dumps({'api': api.__name__, 'origin': api.__file__}))
 '''
     result = probe(tmp_path, body)
     assert result['api'] == 'patchharbor.api'
-    assert result['origin'].startswith(str(tmp_path / 'runtime' / 'patchharbor-1.4.0.pyz'))
+    assert result['origin'].startswith(str(tmp_path / 'runtime' / 'patchharbor-1.6.0.pyz'))
 
 
 def test_loaded_foreign_origin_is_not_evicted_or_overwritten(tmp_path):
@@ -196,7 +196,7 @@ else:
 @pytest.mark.parametrize('changed', ['reference', 'runtime'])
 def test_reuse_rechecks_both_reference_and_prepared_bytes(tmp_path, changed):
     reference, digest = envelope(tmp_path)
-    target = reference if changed == 'reference' else tmp_path / 'runtime' / 'patchharbor-1.4.0.pyz'
+    target = reference if changed == 'reference' else tmp_path / 'runtime' / 'patchharbor-1.6.0.pyz'
     body = adapter_source(reference, digest, tmp_path / 'runtime') + '''
 api = runtime.load_api()
 path = Path(''' + repr(str(target)) + ''')
