@@ -1,19 +1,47 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0110",
-  "requirement_id": "SR-REQ-0110",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0008",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [],
   "fixture_ids": [
     "SR-FIX-DOMAIN-DRAFT-v1",
     "SR-FIX-RELATIONS-v1",
     "SR-FIX-SRX-CONTEXT-v1"
   ],
+  "implementation_status": "partial",
+  "json_pointers": [
+    "/filters",
+    "/srx_filters",
+    "/select",
+    "/items"
+  ],
+  "method": "automated_behavior",
+  "open_items": [
+    "Public query CLI/structured request and current project adapter remain open; this evidence covers the explicit-input Python selection kernel only.",
+    "QueryWork now performs real M6 external sorting/live page continuation; public CLI/live-project delivery, whole-query streaming and durable Work integration remain open.",
+    "Closed release scope, current verification aggregation and evaluation binding require actual providers; absent providers reject requested execution.",
+    "Supported platform/product acceptance, load and full Work-engine integration remain open."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Query MUSS wiederholte Werte derselben Wertfilterart als ODER, unterschiedliche Wertfilterarten als UND und davon getrennt alle wiederholten SRX-`--filter`-Ausdrücke untereinander sowie mit den Wertfiltern als UND nach Kapitel 11.6 auswerten.",
+    "scope": "W kernel only: complete passive normalized grammar; OR within known value groups, AND across groups and SRX predicates; full supplied adjacency and detached field projection. No CLI, public page, live project coverage, evaluation currency or computed verification result is claimed. Current provider gaps fail explicitly, including for empty input. The four requirements remain partial. R rejects unknown or non-normalized envelope fields, incorrect SRX content hashes, unsupported operators and invalid alternatives in known filter vocabularies. Invalid known stored status fields anywhere in the supplied inventory block selection. Computed verification projection requires its actual provider even with no matches; passive nested extension values remain data. No current verification aggregation is claimed. C extracts normalization and stored-field projection into private pure helpers at the original call sites. Public classes and module identities, existing W/R cases, errors, bindings and provider boundaries remain unchanged. 8.c.W now executes the full_text group with literal NFC/casefold search; repeated terms are OR and compose with the existing groups/SRX by AND. Its former missing-provider empty-input case now requires the exact empty selection; other provider failures remain unchanged. 8.c.R binds every search observation to an exact SourceRelations record, retaining original bytes and raw SHA-256 separately from immutable normalized copies. Repeated queries rebuild current copies even for the same ID; canonically equivalent sources and alternative JSON encodings retain distinct source bindings. Actual available locale switches occur only in an isolated child process, with exact hit, projection and byte oracles; C is mandatory, additional installed locales are covered without a cross-platform completeness claim. All prior W expectations remain unchanged. 8.c.C moves the identical field-selection/normalization function into a private pure working-copy module. SearchText and literal matching retain their module identity and source ownership behavior. All W/R tests and IDs remain unchanged; an AST proof binds the moved function and remaining source module to the authoritative R Result. 8.d.W adds query_records and an owned QueryPage with exactly items/total/offset/limit/returned/truncated. All supplied-inventory filters execute before exact counting, full scalar sorting and pagination. Missing/null/Boolean/numeric/string precedence, NFC UTF-8 string order, mixed directions and final ascending ID tie-breaking have independent result oracles. Projection never removes sort operands. Object/array sort values fail before pagination, and computed verification sorting requires the actual provider even for empty input. Source bytes, query/input bindings and all existing selection behavior remain unchanged. The synchronous kernel is in-memory; R/C continuation and M6 spooling, public CLI/live-project delivery and current semantic providers remain open. 8.d.R adds QueryWork with actual M6 bounded-run sorting and forward-only page construction. Single and multiple advance calls retain exact empty/beyond-end/zero-limit pages, all scalar directions and final ascending ID ties. An actual 10001-item selection is delivered without a count cap. Projection pointer order, original Unicode and input/query bindings survive external merges. Incomplete work never exposes a complete page; cancellation, native write failures and run tampering preserve owned files and block success. Only an explicit private spool outside protected roots is writable. Upstream selection and the requested page remain materialized; this is process-local continuation, not durable Work or a whole-query memory bound. All prior tests remain unchanged. 8.d.C extracts the identical private query row codec, direction comparison, row producer and M6 spool specialization into _paging_spool.py. QueryWork keeps its public module identity, preparation, real advance/delivery orchestration and failure/handle lifecycle. An AST/source proof binds all five moved definitions and the remaining module to the authoritative R Result, allowing only the explicit import changes. All 271 prior test files and 9014 test IDs remain unchanged; results, projection order, original bytes/bindings, scalar ordering, exact counts, errors and allowed storage effects are preserved."
+  },
   "preconditions": [
     "Explicit owned SourceRelations, real immutable SRX programs and passive project/configuration contexts; current native CPython only."
   ],
+  "primary_verification_id": "SR-VER-0008",
+  "required_environment": {
+    "declared_minimum_python": "3.10",
+    "implementation": "cpython",
+    "measured_scope": "current-run-only"
+  },
+  "requirement_id": "SR-REQ-0110",
+  "resources": {
+    "harness_suite_timeout": null,
+    "harness_test_timeout": null,
+    "owned_temporary_files": true
+  },
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
   "steps": [
     "Normalize content-bound query data; execute value/SRX filtering against the entire supplied graph and project exact pointer values.",
     "Compare independently expected identities and values, distinguish missing/null and Boolean SRX results, and require explicit errors for unavailable providers.",
@@ -22,30 +50,8 @@
     "Execute complete sorting/pagination and assert the exact six-field page while retaining unpaged selection behavior.",
     "Advance the real external query sort and delivery with different budgets; compare exact results and explicit failure/cancellation/storage boundaries."
   ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "Query MUSS wiederholte Werte derselben Wertfilterart als ODER, unterschiedliche Wertfilterarten als UND und davon getrennt alle wiederholten SRX-`--filter`-Ausdrücke untereinander sowie mit den Wertfiltern als UND nach Kapitel 11.6 auswerten.",
-    "scope": "W kernel only: complete passive normalized grammar; OR within known value groups, AND across groups and SRX predicates; full supplied adjacency and detached field projection. No CLI, public page, live project coverage, evaluation currency or computed verification result is claimed. Current provider gaps fail explicitly, including for empty input. The four requirements remain partial. R rejects unknown or non-normalized envelope fields, incorrect SRX content hashes, unsupported operators and invalid alternatives in known filter vocabularies. Invalid known stored status fields anywhere in the supplied inventory block selection. Computed verification projection requires its actual provider even with no matches; passive nested extension values remain data. No current verification aggregation is claimed. C extracts normalization and stored-field projection into private pure helpers at the original call sites. Public classes and module identities, existing W/R cases, errors, bindings and provider boundaries remain unchanged. 8.c.W now executes the full_text group with literal NFC/casefold search; repeated terms are OR and compose with the existing groups/SRX by AND. Its former missing-provider empty-input case now requires the exact empty selection; other provider failures remain unchanged. 8.c.R binds every search observation to an exact SourceRelations record, retaining original bytes and raw SHA-256 separately from immutable normalized copies. Repeated queries rebuild current copies even for the same ID; canonically equivalent sources and alternative JSON encodings retain distinct source bindings. Actual available locale switches occur only in an isolated child process, with exact hit, projection and byte oracles; C is mandatory, additional installed locales are covered without a cross-platform completeness claim. All prior W expectations remain unchanged. 8.c.C moves the identical field-selection/normalization function into a private pure working-copy module. SearchText and literal matching retain their module identity and source ownership behavior. All W/R tests and IDs remain unchanged; an AST proof binds the moved function and remaining source module to the authoritative R Result. 8.d.W adds query_records and an owned QueryPage with exactly items/total/offset/limit/returned/truncated. All supplied-inventory filters execute before exact counting, full scalar sorting and pagination. Missing/null/Boolean/numeric/string precedence, NFC UTF-8 string order, mixed directions and final ascending ID tie-breaking have independent result oracles. Projection never removes sort operands. Object/array sort values fail before pagination, and computed verification sorting requires the actual provider even for empty input. Source bytes, query/input bindings and all existing selection behavior remain unchanged. The synchronous kernel is in-memory; R/C continuation and M6 spooling, public CLI/live-project delivery and current semantic providers remain open. 8.d.R adds QueryWork with actual M6 bounded-run sorting and forward-only page construction. Single and multiple advance calls retain exact empty/beyond-end/zero-limit pages, all scalar directions and final ascending ID ties. An actual 10001-item selection is delivered without a count cap. Projection pointer order, original Unicode and input/query bindings survive external merges. Incomplete work never exposes a complete page; cancellation, native write failures and run tampering preserve owned files and block success. Only an explicit private spool outside protected roots is writable. Upstream selection and the requested page remain materialized; this is process-local continuation, not durable Work or a whole-query memory bound. All prior tests remain unchanged. 8.d.C extracts the identical private query row codec, direction comparison, row producer and M6 spool specialization into _paging_spool.py. QueryWork keeps its public module identity, preparation, real advance/delivery orchestration and failure/handle lifecycle. An AST/source proof binds all five moved definitions and the remaining module to the authoritative R Result, allowing only the explicit import changes. All 271 prior test files and 9014 test IDs remain unchanged; results, projection order, original bytes/bindings, scalar ordering, exact counts, errors and allowed storage effects are preserved."
-  },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [
-    "/filters",
-    "/srx_filters",
-    "/select",
-    "/items"
-  ],
-  "required_environment": {
-    "implementation": "cpython",
-    "declared_minimum_python": "3.10",
-    "measured_scope": "current-run-only"
-  },
-  "resources": {
-    "owned_temporary_files": true,
-    "harness_test_timeout": null,
-    "harness_suite_timeout": null
-  },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0110",
   "test_ids": [
     "tests/test_query_full_text.py::test_canonically_equivalent_terms_match_both_stored_forms[CAF\\xc9]",
     "tests/test_query_full_text.py::test_canonically_equivalent_terms_match_both_stored_forms[Caf\\xc9]",
@@ -228,11 +234,5 @@
     "tests/test_query_selection_right.py::test_untrusted_normalized_envelope_rejects_unknown_or_noncanonical_fields[sort]",
     "tests/test_query_selection_right.py::test_untrusted_normalized_envelope_rejects_unknown_or_noncanonical_fields[top]",
     "tests/test_query_selection_right.py::test_untrusted_normalized_envelope_rejects_unknown_or_noncanonical_fields[wrong_hash]"
-  ],
-  "open_items": [
-    "Public query CLI/structured request and current project adapter remain open; this evidence covers the explicit-input Python selection kernel only.",
-    "QueryWork now performs real M6 external sorting/live page continuation; public CLI/live-project delivery, whole-query streaming and durable Work integration remain open.",
-    "Closed release scope, current verification aggregation and evaluation binding require actual providers; absent providers reject requested execution.",
-    "Supported platform/product acceptance, load and full Work-engine integration remain open."
   ]
 }

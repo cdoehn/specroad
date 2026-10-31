@@ -1,29 +1,5 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0099",
-  "requirement_id": "SR-REQ-0099",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0007",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
-  "fixture_ids": [
-    "SR-FIX-DIAGNOSTICS-v1",
-    "SR-FIX-REFERENCE-FINDINGS-v1",
-    "SR-FIX-PRODUCTION-VALIDATION-v1"
-  ],
-  "preconditions": [
-    "Explicit diagnostic data and already loaded, source-bound model reports."
-  ],
-  "steps": [
-    "Construct and validate findings; preserve all observed machine locations and identities.",
-    "Apply an explicit threshold without rerunning rules and inspect structured counts and failure class.",
-    "Compare independent expected reference findings and their machine locations, codes, order and counts with direct model and read-only project assessments; keep structural identity failures and downstream blocking explicit."
-  ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "Jedes Prüfkommando MUSS eine Zusammenfassung mit Anzahl geprüfter Artefakte und Anzahl Diagnosen je Schwere ausgeben.",
-    "scope": "Shared diagnostic values, stable semantic ordering and explicit threshold assessment over supplied, source-bound observations. These tests do not authenticate diagnostic producers, execute optional lint automatically or establish full CLI conformance. Direct and read-only project reference assessments retain the complete observed artifact and diagnostic counts for full and partial selections, without a full CLI claim. Whole-target and dry-run field-reference checks additionally retain every available location and the project assessment decision; invalid stored relations retain the strict pre-plan boundary."
-  },
+  "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [],
   "expected_exit_codes": [
     0,
@@ -31,18 +7,47 @@
     3,
     5
   ],
+  "fixture_ids": [
+    "SR-FIX-DIAGNOSTICS-v1",
+    "SR-FIX-REFERENCE-FINDINGS-v1",
+    "SR-FIX-PRODUCTION-VALIDATION-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "Future validator and public command adapters must preserve this existing diagnostic contract; current model and read-only project integrations do not establish all command consumers.",
+    "Full command-level lint dispatch and the complete supported runtime/target filesystem matrix require their own actual evidence; bound library and observed project coverage remain limited to their collected tests.",
+    "Human presentation/documentation is not an automated oracle (TD-001)."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Jedes Prüfkommando MUSS eine Zusammenfassung mit Anzahl geprüfter Artefakte und Anzahl Diagnosen je Schwere ausgeben.",
+    "scope": "Shared diagnostic values, stable semantic ordering and explicit threshold assessment over supplied, source-bound observations. These tests do not authenticate diagnostic producers, execute optional lint automatically or establish full CLI conformance. Direct and read-only project reference assessments retain the complete observed artifact and diagnostic counts for full and partial selections, without a full CLI claim. Whole-target and dry-run field-reference checks additionally retain every available location and the project assessment decision; invalid stored relations retain the strict pre-plan boundary."
+  },
+  "preconditions": [
+    "Explicit diagnostic data and already loaded, source-bound model reports."
+  ],
+  "primary_verification_id": "SR-VER-0007",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0099",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Construct and validate findings; preserve all observed machine locations and identities.",
+    "Apply an explicit threshold without rerunning rules and inspect structured counts and failure class.",
+    "Compare independent expected reference findings and their machine locations, codes, order and counts with direct model and read-only project assessments; keep structural identity failures and downstream blocking explicit."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0099",
   "test_ids": [
     "test_diagnostics.DiagnosticWorkTests.test_duplicate_findings_are_not_silently_deduplicated",
     "test_validation_diagnostics.ValidationDiagnosticWorkTests.test_valid_model_has_no_diagnostics_and_exact_summary",
@@ -86,10 +91,5 @@
     "tests/test_validation_target_reference_sets.py::test_complete_field_findings_agree_for_project_target_and_dry_run[1-False]",
     "tests/test_validation_target_reference_sets.py::test_complete_field_findings_agree_for_project_target_and_dry_run[2-False]",
     "tests/test_validation_target_reference_sets.py::test_complete_field_findings_agree_for_project_target_and_dry_run[0-True]"
-  ],
-  "open_items": [
-    "Future validator and public command adapters must preserve this existing diagnostic contract; current model and read-only project integrations do not establish all command consumers.",
-    "Full command-level lint dispatch and the complete supported runtime/target filesystem matrix require their own actual evidence; bound library and observed project coverage remain limited to their collected tests.",
-    "Human presentation/documentation is not an automated oracle (TD-001)."
   ]
 }

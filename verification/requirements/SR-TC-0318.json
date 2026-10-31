@@ -1,28 +1,5 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0318",
-  "requirement_id": "SR-REQ-0318",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0024",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
-  "fixture_ids": [
-    "SR-FIX-IMPORT-COMPARISON-v1"
-  ],
-  "preconditions": [
-    "Explicit validated native identity (or an unmatched lookup), exact selected mapping key and caller-supplied local/source projections in the same mapping space. No external source or inferred history."
-  ],
-  "steps": [
-    "Evaluate the five specified historical/local/source cases under explicit strategies and observe classification, target candidate, retained identity and diagnostics.",
-    "Reject malformed input and unsafe adoption while preserving legacy values, independent historical hashes and detached observations.",
-    "Exercise native artifact/relation lookup with actual mapping selection and compare isolated Core/PYZ decisions without publication authority.",
-    "14.c.R exercises exact mapping/history binding, structured rejection, canonical JSON boundaries, failed reinitialization, native-owner collisions and isolated no-write behavior under explicit strategies."
-  ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "Die Import-Policy MUSS für bereits bekannte externe Identitäten die Strategien `error`, `skip`, `update_if_unchanged` und `create_new_revision` unterstützen; stilles Überschreiben ist unzulässig.",
-    "scope": "14.c.W implements a pure import-conflict-policy-v1 evaluator with explicit error, skip, update_if_unchanged and create_new_revision strategies. The two adopting strategies share the normative five-case guard; only safe source changes and converged targets yield candidates, while local-only changes retain their history. Error rejects known identities and skip preserves them; neither conceals divergent SRV148 conflicts. Legacy or mismatched history does not become a fabricated baseline. The original identity, projections and observations are detached; lookup, mapping selection and isolated Core/PYZ availability remain usable without writes or new revisions. 14.c.R additionally checks the complete encoded observation before installation and translates reader failures through the import diagnostic contract. Failed construction retains the previous observation. Separate historic sides, exact prerelease/build/case mapping identities, every incomplete history field, safe JSON pointers, cycles, foreign hooks and numeric canonical equivalence are covered. Native collisions remain SRV147 before policy adoption; actual files and modes remain unchanged across successful and rejected comparisons. No new JSON depth policy is introduced."
-  },
+  "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [
     "SRV090",
     "SRV147",
@@ -31,6 +8,10 @@
   "expected_exit_codes": [
     3
   ],
+  "fixture_ids": [
+    "SR-FIX-IMPORT-COMPARISON-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [
     "/identity",
     "/mapping_id",
@@ -38,17 +19,40 @@
     "/local_projection",
     "/source_projection"
   ],
+  "method": "automated_behavior",
+  "open_items": [
+    "14.c.C cleans this W/R comparison kernel with unchanged behavior and diagnostics.",
+    "Import plan and guarded writer integration, complete native target validation, revision/metadata updates and loss/review gates remain in 14.d/14.e. No complete format import, human approval or release success is claimed."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Die Import-Policy MUSS für bereits bekannte externe Identitäten die Strategien `error`, `skip`, `update_if_unchanged` und `create_new_revision` unterstützen; stilles Überschreiben ist unzulässig.",
+    "scope": "14.c.W implements a pure import-conflict-policy-v1 evaluator with explicit error, skip, update_if_unchanged and create_new_revision strategies. The two adopting strategies share the normative five-case guard; only safe source changes and converged targets yield candidates, while local-only changes retain their history. Error rejects known identities and skip preserves them; neither conceals divergent SRV148 conflicts. Legacy or mismatched history does not become a fabricated baseline. The original identity, projections and observations are detached; lookup, mapping selection and isolated Core/PYZ availability remain usable without writes or new revisions. 14.c.R additionally checks the complete encoded observation before installation and translates reader failures through the import diagnostic contract. Failed construction retains the previous observation. Separate historic sides, exact prerelease/build/case mapping identities, every incomplete history field, safe JSON pointers, cycles, foreign hooks and numeric canonical equivalence are covered. Native collisions remain SRV147 before policy adoption; actual files and modes remain unchanged across successful and rejected comparisons. No new JSON depth policy is introduced."
+  },
+  "preconditions": [
+    "Explicit validated native identity (or an unmatched lookup), exact selected mapping key and caller-supplied local/source projections in the same mapping space. No external source or inferred history."
+  ],
+  "primary_verification_id": "SR-VER-0024",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0318",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Evaluate the five specified historical/local/source cases under explicit strategies and observe classification, target candidate, retained identity and diagnostics.",
+    "Reject malformed input and unsafe adoption while preserving legacy values, independent historical hashes and detached observations.",
+    "Exercise native artifact/relation lookup with actual mapping selection and compare isolated Core/PYZ decisions without publication authority.",
+    "14.c.R exercises exact mapping/history binding, structured rejection, canonical JSON boundaries, failed reinitialization, native-owner collisions and isolated no-write behavior under explicit strategies."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0318",
   "test_ids": [
     "tests/test_import_comparison.py::test_both_adopting_strategies_follow_the_five_normative_cases[converged-create_new_revision]",
     "tests/test_import_comparison.py::test_both_adopting_strategies_follow_the_five_normative_cases[converged-update_if_unchanged]",
@@ -214,9 +218,5 @@
     "tests/test_import_comparison_right.py::test_real_read_only_sources_stay_byte_and_mode_identical_for_every_decision[skip]",
     "tests/test_import_comparison_right.py::test_real_read_only_sources_stay_byte_and_mode_identical_for_every_decision[update_if_unchanged]",
     "tests/test_import_comparison_right.py::test_shared_nested_inputs_and_mutated_diagnostics_cannot_change_later_observations"
-  ],
-  "open_items": [
-    "14.c.C cleans this W/R comparison kernel with unchanged behavior and diagnostics.",
-    "Import plan and guarded writer integration, complete native target validation, revision/metadata updates and loss/review gates remain in 14.d/14.e. No complete format import, human approval or release success is claimed."
   ]
 }

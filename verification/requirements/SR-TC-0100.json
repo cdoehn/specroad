@@ -1,31 +1,5 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0100",
-  "requirement_id": "SR-REQ-0100",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0007",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
-  "fixture_ids": [
-    "SR-FIX-READ-ONLY-PROJECT-v1",
-    "SR-FIX-PRODUCTION-VALIDATION-v1",
-    "SR-FIX-REFERENCE-FINDINGS-v1"
-  ],
-  "preconditions": [
-    "Owned existing project root; explicit profile or literal policy. Operational data is never changed."
-  ],
-  "steps": [
-    "Capture file names, original bytes and permissions; run read-only library APIs while trapping write attempts.",
-    "Check structured model/lint outcomes or metadata-only diagnostics; compare original files and generated/operational state.",
-    "Execute actual bound language, profile-SRX and formal-approval observations in the project reader with a write-attempt trap, including valid and invalid inputs.",
-    "Bind explicit selected profile paths, recheck profiles and registry around real semantic checks, and reject concurrent source/configuration changes, missing/corrupt resources and symlinks without repair.",
-    "Compare complete structured reference findings and counts with direct model validation, including unrelated selections and invalid inventory, while trapping writes and preserving the full owned project inventory."
-  ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "Read-only-Prüfkommandos DÜRFEN NICHT normative oder generierte Projektdateien verändern.",
-    "scope": "Library-level current artifact validation, explicitly selected literal lint and shallow model-independent operational metadata diagnostics; real non-write observations, not full CLI conformance. The validation reader also executes actual language/SRX/formal-approval kernels with explicit resources and rechecks the observed registry. Optional explicit profile paths are byte-rechecked; resource provenance scope remains explicit. No bound resource or model read authorizes a write. Complete safe reference sets and invalid-inventory barriers are observed through the real read-only project adapter with direct-model parity and unchanged project bytes. Whole-target and dry-run field-reference checks additionally retain every available location and the project assessment decision; invalid stored relations retain the strict pre-plan boundary."
-  },
+  "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [
     "SRV020",
     "SRV021",
@@ -40,18 +14,50 @@
     5,
     7
   ],
+  "fixture_ids": [
+    "SR-FIX-READ-ONLY-PROJECT-v1",
+    "SR-FIX-PRODUCTION-VALIDATION-v1",
+    "SR-FIX-REFERENCE-FINDINGS-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "CLI entrypoints and remaining read-only commands (query, render, diff, trace, etc.) are still later plan work.",
+    "No full transaction-state parser, lock-ownership proof, automatic recovery, preflight-detail cursor or atomic multi-file snapshot is implemented by this layer.",
+    "Trusted application callbacks must themselves respect the read-only contract; this library is not an OS sandbox.",
+    "Complete supported runtime/platform acceptance remains bound to real CI and target results."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Read-only-Prüfkommandos DÜRFEN NICHT normative oder generierte Projektdateien verändern.",
+    "scope": "Library-level current artifact validation, explicitly selected literal lint and shallow model-independent operational metadata diagnostics; real non-write observations, not full CLI conformance. The validation reader also executes actual language/SRX/formal-approval kernels with explicit resources and rechecks the observed registry. Optional explicit profile paths are byte-rechecked; resource provenance scope remains explicit. No bound resource or model read authorizes a write. Complete safe reference sets and invalid-inventory barriers are observed through the real read-only project adapter with direct-model parity and unchanged project bytes. Whole-target and dry-run field-reference checks additionally retain every available location and the project assessment decision; invalid stored relations retain the strict pre-plan boundary."
+  },
+  "preconditions": [
+    "Owned existing project root; explicit profile or literal policy. Operational data is never changed."
+  ],
+  "primary_verification_id": "SR-VER-0007",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0100",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Capture file names, original bytes and permissions; run read-only library APIs while trapping write attempts.",
+    "Check structured model/lint outcomes or metadata-only diagnostics; compare original files and generated/operational state.",
+    "Execute actual bound language, profile-SRX and formal-approval observations in the project reader with a write-attempt trap, including valid and invalid inputs.",
+    "Bind explicit selected profile paths, recheck profiles and registry around real semantic checks, and reject concurrent source/configuration changes, missing/corrupt resources and symlinks without repair.",
+    "Compare complete structured reference findings and counts with direct model validation, including unrelated selections and invalid inventory, while trapping writes and preserving the full owned project inventory."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0100",
   "test_ids": [
     "test_read_only_validation.ReadOnlyValidationTests.test_valid_root_without_cache_is_checked_without_writes",
     "test_read_only_validation.ReadOnlyValidationTests.test_read_only_permissions_do_not_require_write_probe",
@@ -173,11 +179,5 @@
     "tests/test_validation_target_reference_sets.py::test_complete_field_findings_agree_for_project_target_and_dry_run[0-True]",
     "tests/test_validation_target_reference_sets.py::test_invalid_stored_relations_keep_strict_plan_boundary[False]",
     "tests/test_validation_target_reference_sets.py::test_invalid_stored_relations_keep_strict_plan_boundary[True]"
-  ],
-  "open_items": [
-    "CLI entrypoints and remaining read-only commands (query, render, diff, trace, etc.) are still later plan work.",
-    "No full transaction-state parser, lock-ownership proof, automatic recovery, preflight-detail cursor or atomic multi-file snapshot is implemented by this layer.",
-    "Trusted application callbacks must themselves respect the read-only contract; this library is not an OS sandbox.",
-    "Complete supported runtime/platform acceptance remains bound to real CI and target results."
   ]
 }

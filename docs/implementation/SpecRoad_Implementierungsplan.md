@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 38 · **Stand:** 31. Oktober 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.40
+**Planrevision:** 38 · **Stand:** 31. Oktober 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.41
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 Schritte und 900 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; die ausdrücklich genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wird nach 10.7.10 innerhalb von 15.l.R vorgezogen. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -32,6 +32,22 @@ Ketten erfordert erst den belegten erfolgreichen normalen Abschluss.
 Produktfreigaben und die Grenzen aus 2.4.1/2.4.2/2.4.4 bleiben unverändert.
 Dieser Plan ändert keine alten Aufträge, Antworten, Blockaden oder
 Laufzeitdaten und ist keine Start-/Resume-Anweisung.
+
+## OFF-PLAN CI-PACKAGES-525 — manuelle CI und worksteal
+
+Autorität: ausdrücklicher Nutzerauftrag 31.10.2026; Spezifikation 2.5.1.
+Produktfortschritt bleibt 653/900, nächster Produktcommit 15.m.C.
+Ein gemeinsames Bundle liefert echte W/R/C-Zustände mit getrennten gezielten
+parallelen Dev-Gates und jeweils einer fälligen N=3-Apply-Gruppe vor dem Commit.
+W: worksteal, bestehende Messdaten, zeitgewichtete dynamische CI-Matrix,
+exakte Teilbelege und vollständige Zusammenführung funktionsfähig integrieren.
+R: falsche/fehlende/mehrdeutige Belege, Eingabe- und Pfadgrenzen, tatsächliche
+mehrteilige Worker-Ausführung und historische CI-Kompatibilität absichern.
+C: gemeinsame Ausführungs-/Messprimitive zusammenführen, ohne Fachänderung.
+Die Repo-/Commit-/Attempt-Bindung und sämtliche vorhandenen Testidentitäten
+bleiben erhalten. Keine Vollsuite zur Messung, keine automatische GitHub-CI.
+Lokale Abnahmen und native Paketprüfung werden vor Übergabe dokumentiert;
+Apply- und echte GitHub-Nachweise bleiben bis zur tatsächlichen Ausführung offen.
 
 ## Fortschritt – einzige maßgebliche Planstelle
 

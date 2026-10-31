@@ -1,47 +1,47 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0074",
-  "requirement_id": "SR-REQ-0074",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0006",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [],
   "fixture_ids": [
     "SR-FIX-DOMAIN-DRAFT-v1",
     "SR-FIX-REQUIREMENT-INPUT-v1"
   ],
-  "preconditions": [
-    "Trusted read-only domain reader; owned current-schema fixtures; no authoring or approval operation.",
-    "Explicit requirement identity and audit inputs; no language inference, publication or human approval."
-  ],
-  "steps": [
-    "Load valid per-type drafts, reject invalid field values, and compare original data and relevant status axes."
+  "implementation_status": "partial",
+  "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "Full language-tag/registry policy (2.n), profile/graph/review validation, and transactional CLI/import/migration integration remain at their assigned steps. No requirement or release approval is claimed."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Ein Requirement MUSS eine Kritikalität aus `normal`, `important`, `critical` oder `safety_critical` besitzen.",
     "scope": "Existing read-only field checks plus pure new requirement construction and explicit metadata. No natural-language interpretation, BCP-47 registry validation, profile, Change Plan, CLI/import or write authorization."
   },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
+  "preconditions": [
+    "Trusted read-only domain reader; owned current-schema fixtures; no authoring or approval operation.",
+    "Explicit requirement identity and audit inputs; no language inference, publication or human approval."
+  ],
+  "primary_verification_id": "SR-VER-0006",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0074",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Load valid per-type drafts, reject invalid field values, and compare original data and relevant status axes."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0074",
   "test_ids": [
     "test_domain_schemas.DomainWorkTests.test_requirement_enumerations_are_exact",
     "test_requirement.RequirementWorkTests.test_missing_mandatory_fields_rejected",
     "test_requirement_right.RequirementRightTests.test_criticality_does_not_determine_force"
-  ],
-  "open_items": [
-    "Full language-tag/registry policy (2.n), profile/graph/review validation, and transactional CLI/import/migration integration remain at their assigned steps. No requirement or release approval is claimed."
   ]
 }

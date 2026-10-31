@@ -1,32 +1,5 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0143",
-  "requirement_id": "SR-REQ-0143",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0011",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
-  "fixture_ids": [
-    "SR-FIX-BASELINE-WORK-v1",
-    "SR-FIX-ISOLATED-CPYTHON-v1",
-    "SR-FIX-JCS-RFC8785-v1",
-    "SR-FIX-SNAPSHOT-OBJECTS-v1"
-  ],
-  "preconditions": [
-    "Original JSON or attachment bytes; an existing private external store and every protected project/input/output root explicitly declared."
-  ],
-  "steps": [
-    "Create canonical/raw snapshot objects, store and read exact bytes through real native I/O, deduplicate identical objects, preserve protected projects and failed preparation state, and reopen the stored objects in an isolated process.",
-    "Check complete supplied byte inventories and declared references before a candidate change; reject removal of referenced objects and differing bytes under one identity. Recheck retained physical objects before and after put and exercise native corruption/path/publication failures.",
-    "Capture actual supplied Baseline inputs in bounded blocks and compare the split saved-plan/manifest/object bytes with ordinary single-run preparation.",
-    "Persist and resume the existing Work preparation generations, then use the same native Baseline transaction and original receipt replay.",
-    "Publish an actual older Baseline, bind record/object hashes, then exercise cancelled capture, stale Work bases, missing Work objects, denied authority and real native process loss; require unchanged history/checkpoint, native Recovery and no false completion. Replay an actual configured receipt after removing its current configuration, while fresh publication remains gated."
-  ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "Eine Baseline MUSS eine benannte, unveränderbare Menge konkreter Artefaktrevisionen, Beziehungen, Profile, Regeln, Mappings, effektiver Konfiguration und referenzierter Anhänge samt content-addressierten Snapshotobjekten darstellen.",
-    "scope": "10.a.W introduces immutable SnapshotObject and ObjectReference values with exact SHA-256, byte length and archive/objects/<hh>/<sha256> paths. JSON uses the existing strict reader and RFC-8785 canonical bytes; attachment bytes remain untouched. The physical preparation store is restricted to an existing private owned root outside every declared protected boundary and project ancestor. It uses the existing native root-inode mutex, guarded directory traversal, exclusive durable temporary writes and atomic no-replace publication. Identical bytes reuse the existing object; malformed or corrupted targets are rejected without replacement. Reads verify exact length/hash without writes and can inspect an existing project archive. Independent tests cover canonical/opaque bytes, real deduplication, distinct objects, protected-root boundaries, absence of project writes, complete publication, retained failed preparation, busy locks, reopening in a new isolated process and portable distribution behavior. This is the object layer and external preparation store, not a Baseline manifest or normative create command. Complete Baseline identity/revision/scope/configuration bindings, referenced-deletion policy and journalled project publication remain in subsequent steps; no full requirement, full-suite or release success is claimed. Protected-boundary checks are independent of unrelated Git ancestry; a Git marker alone never defines a SpecRoad project root. 10.a.R adds the pure check_object_retention kernel over owned actual SnapshotObject inventories and explicit ObjectReferences. Shared references deduplicate, inconsistent declarations and unknown predecessor objects fail, referenced removals are rejected, and even an injected hash collision cannot replace differing original bytes. The observation grants no write or Baseline-completeness authority. Native put owns optional retained_references and rereads every retained object before preparation, immediately before publication and before success. Temporary bytes and the live hash directory are rebound immediately before linking. New tests cover shared bytes, missing/changed references, exact collision refusal, linked paths, changed roots/directories, late payload changes, target races, and preserved actual state after partial publication. Existing W tests remain unchanged. Actual Baseline discovery/manifests and atomic project publication stay in their following plan steps. 10.a.C moves unchanged immutable object/reference values and the pure retention kernel into archive._object_values. The native preparation store and reader retain their implementation, and the public archive/objects imports keep the same objects and call contracts. No Baseline or Git dependencies are introduced; all W/R test bytes and expected behavior remain unchanged. 10.i.R verifies actual older Baseline and shared-object retention through the existing Work/native writer. Five real process cuts preserve the durable preparation checkpoint and require native Recovery; only committed original receipts replay. Missing Work inputs never fall back to current files. Receipt replay precedes current configuration resolution, while fresh writes retain their gates. Process-loss observations do not prove power-loss durability or full requirement acceptance."
-  },
+  "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [
     "project_lock_busy",
     "snapshot_object_content_collision",
@@ -41,18 +14,52 @@
     "snapshot_referenced_object_removal"
   ],
   "expected_exit_codes": [],
+  "fixture_ids": [
+    "SR-FIX-BASELINE-WORK-v1",
+    "SR-FIX-ISOLATED-CPYTHON-v1",
+    "SR-FIX-JCS-RFC8785-v1",
+    "SR-FIX-SNAPSHOT-OBJECTS-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "Complete actual Baseline manifest/identity/revision/scope/configuration bindings and the atomic normative Baseline writer in the assigned following plan steps.",
+    "The retention kernel verifies only explicitly supplied object/reference inventories; discovery of every actual Baseline and journalled project publication remain later integration work.",
+    "External-store and selected development observations do not constitute complete Baseline, cross-platform, full-suite or release acceptance.",
+    "Partial input capture is currently invocation-local; cross-process capture checkpoints, bounded-memory whole-model planning remain open.",
+    "The Baseline process-loss matrix does not prove power-loss or cross-platform durability; recovery behavior also retains the existing common native Work recovery regression coverage."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Eine Baseline MUSS eine benannte, unveränderbare Menge konkreter Artefaktrevisionen, Beziehungen, Profile, Regeln, Mappings, effektiver Konfiguration und referenzierter Anhänge samt content-addressierten Snapshotobjekten darstellen.",
+    "scope": "10.a.W introduces immutable SnapshotObject and ObjectReference values with exact SHA-256, byte length and archive/objects/<hh>/<sha256> paths. JSON uses the existing strict reader and RFC-8785 canonical bytes; attachment bytes remain untouched. The physical preparation store is restricted to an existing private owned root outside every declared protected boundary and project ancestor. It uses the existing native root-inode mutex, guarded directory traversal, exclusive durable temporary writes and atomic no-replace publication. Identical bytes reuse the existing object; malformed or corrupted targets are rejected without replacement. Reads verify exact length/hash without writes and can inspect an existing project archive. Independent tests cover canonical/opaque bytes, real deduplication, distinct objects, protected-root boundaries, absence of project writes, complete publication, retained failed preparation, busy locks, reopening in a new isolated process and portable distribution behavior. This is the object layer and external preparation store, not a Baseline manifest or normative create command. Complete Baseline identity/revision/scope/configuration bindings, referenced-deletion policy and journalled project publication remain in subsequent steps; no full requirement, full-suite or release success is claimed. Protected-boundary checks are independent of unrelated Git ancestry; a Git marker alone never defines a SpecRoad project root. 10.a.R adds the pure check_object_retention kernel over owned actual SnapshotObject inventories and explicit ObjectReferences. Shared references deduplicate, inconsistent declarations and unknown predecessor objects fail, referenced removals are rejected, and even an injected hash collision cannot replace differing original bytes. The observation grants no write or Baseline-completeness authority. Native put owns optional retained_references and rereads every retained object before preparation, immediately before publication and before success. Temporary bytes and the live hash directory are rebound immediately before linking. New tests cover shared bytes, missing/changed references, exact collision refusal, linked paths, changed roots/directories, late payload changes, target races, and preserved actual state after partial publication. Existing W tests remain unchanged. Actual Baseline discovery/manifests and atomic project publication stay in their following plan steps. 10.a.C moves unchanged immutable object/reference values and the pure retention kernel into archive._object_values. The native preparation store and reader retain their implementation, and the public archive/objects imports keep the same objects and call contracts. No Baseline or Git dependencies are introduced; all W/R test bytes and expected behavior remain unchanged. 10.i.R verifies actual older Baseline and shared-object retention through the existing Work/native writer. Five real process cuts preserve the durable preparation checkpoint and require native Recovery; only committed original receipts replay. Missing Work inputs never fall back to current files. Receipt replay precedes current configuration resolution, while fresh writes retain their gates. Process-loss observations do not prove power-loss durability or full requirement acceptance."
+  },
+  "preconditions": [
+    "Original JSON or attachment bytes; an existing private external store and every protected project/input/output root explicitly declared."
+  ],
+  "primary_verification_id": "SR-VER-0011",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0143",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Create canonical/raw snapshot objects, store and read exact bytes through real native I/O, deduplicate identical objects, preserve protected projects and failed preparation state, and reopen the stored objects in an isolated process.",
+    "Check complete supplied byte inventories and declared references before a candidate change; reject removal of referenced objects and differing bytes under one identity. Recheck retained physical objects before and after put and exercise native corruption/path/publication failures.",
+    "Capture actual supplied Baseline inputs in bounded blocks and compare the split saved-plan/manifest/object bytes with ordinary single-run preparation.",
+    "Persist and resume the existing Work preparation generations, then use the same native Baseline transaction and original receipt replay.",
+    "Publish an actual older Baseline, bind record/object hashes, then exercise cancelled capture, stale Work bases, missing Work objects, denied authority and real native process loss; require unchanged history/checkpoint, native Recovery and no false completion. Replay an actual configured receipt after removing its current configuration, while fresh publication remains gated."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0143",
   "test_ids": [
     "tests/test_baseline_work.py::test_actual_captured_bytes_must_match_the_owned_model",
     "tests/test_baseline_work.py::test_actual_target_gate_refusal_cannot_create_a_work_manifest",
@@ -175,12 +182,5 @@
     "tests/test_snapshot_objects_right.py::test_transition_requires_explicit_reference_sequences[value1]",
     "tests/test_snapshot_objects_right.py::test_two_reference_owners_share_one_unchanged_object_during_addition",
     "tests/test_snapshot_objects_right.py::test_unreferenced_candidate_removal_is_only_a_data_observation_without_write_authority"
-  ],
-  "open_items": [
-    "Complete actual Baseline manifest/identity/revision/scope/configuration bindings and the atomic normative Baseline writer in the assigned following plan steps.",
-    "The retention kernel verifies only explicitly supplied object/reference inventories; discovery of every actual Baseline and journalled project publication remain later integration work.",
-    "External-store and selected development observations do not constitute complete Baseline, cross-platform, full-suite or release acceptance.",
-    "Partial input capture is currently invocation-local; cross-process capture checkpoints, bounded-memory whole-model planning remain open.",
-    "The Baseline process-loss matrix does not prove power-loss or cross-platform durability; recovery behavior also retains the existing common native Work recovery regression coverage."
   ]
 }

@@ -1,17 +1,37 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0620",
-  "requirement_id": "SR-REQ-0620",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0041",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [],
   "fixture_ids": [
     "SR-FIX-OWNED-TEMP-v1"
   ],
+  "implementation_status": "partial",
+  "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "Incremental large-plan construction, finer memory-bounded preparation, builtin CLI/Code-8 integration and final normative Work completion remain open. Process-loss tests do not establish power-loss guarantees. No release or complete requirement approval is claimed."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Ein atomarer Change Plan DARF NICHT allein wegen kleiner Schrittfenster in unabhängige fachliche Teilcommits zerlegt werden.",
+    "scope": "6.p.W adds a closed trusted-host adapter that persists complete target assessment and current publication preflight in two distinct Work generations without project writes. Their assessment bindings agree. A new publication requires the whole original plan, fresh target/basis checks, explicit current host authority and the existing native writer lock. Building, staging, every planned target replacement, full target checks, durable receipts and existing cleanup run in one uninterrupted native transaction. Original actor, request, operations, plan bytes and IDs are preserved. Receipt-first retry returns the verified historical native result without a second normative write, including output loss after commit. Missing or malformed preparation, missing global gates, changed current inputs/identity/build and authority denial do not gain publication permission. Actual early/late Work and native I/O faults preserve the observed generation or native journal; open transactions block ordinary Work continuation and require the existing recovery path. Tests use real temporary filesystem operations and explicitly labelled in-process build and host-authority fixtures; no actual process termination or power-loss claim is made in this W step. Final normative Work completion and CLI/Code-8 delivery are not claimed. Each preparation still handles a full supplied in-memory model; incremental large-plan construction and finer bounded units remain open. This is partial behavior coverage, not full requirement or release approval. A changed reconstructed current model is consistently a stale-target conflict with code 6 in either preparation phase and before new publication; original work and project bytes are preserved. 6.p.R adds actual interpreter termination without Python finalizers after building, staging, the first real target replacement, all targets, confirmed commit and cleanup. Fresh-process native recovery restores exactly the whole basis or target while preserving Work generation 2. Recovery to basis permits a new explicit technical transaction with the same original semantic request; recovery to target and confirmed historical replay never perform a second write. Two preparation process changes retain an ordinarily readable unchanged basis. Completion reports now bind request, project, transaction, target and the exact request-receipt reference; four conflicting-observation cases use separately real native completions, preserve actual commits and reject an inconsistent combined result. These observations measure current process-loss behavior, not power-loss durability or CLI integration. 6.p.C moves the frozen publication result and unchanged receipt-binding projection into a private outcome module. All existing definition bodies, native transaction phase calls, errors and public result imports are retained; the previous W/R behavior tests remain byte-identical. No new behavior or broader requirement approval is claimed."
+  },
   "preconditions": [
     "Owned temporary real project and private external Work root; independently bound original ChangePlan and recorded-build fixture; explicit test-host registry, policy and human authority."
   ],
+  "primary_verification_id": "SR-VER-0041",
+  "required_environment": {
+    "declared_minimum_python": "3.10",
+    "implementation": "cpython",
+    "measured_scope": "current-run-only"
+  },
+  "requirement_id": "SR-REQ-0620",
+  "resources": {
+    "harness_suite_timeout": null,
+    "harness_test_timeout": null,
+    "owned_temporary_files": true
+  },
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
   "steps": [
     "Persist target assessment and live publication preflight in separate calls; inspect exact project bytes and retained Work identities.",
     "Publish all original operations with the native writer and inspect the durable transaction/request receipts; replay their identical result without another writer.",
@@ -19,25 +39,8 @@
     "Terminate real adapter child processes at six native transaction boundaries; reject ordinary Work continuation and recover the complete basis or target in another process, preserving the last Work checkpoint.",
     "Resume after actual preparation process changes and verify a regular readable basis; reject conflicting individually verified completion observations before reporting a combined success."
   ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "Ein atomarer Change Plan DARF NICHT allein wegen kleiner Schrittfenster in unabhängige fachliche Teilcommits zerlegt werden.",
-    "scope": "6.p.W adds a closed trusted-host adapter that persists complete target assessment and current publication preflight in two distinct Work generations without project writes. Their assessment bindings agree. A new publication requires the whole original plan, fresh target/basis checks, explicit current host authority and the existing native writer lock. Building, staging, every planned target replacement, full target checks, durable receipts and existing cleanup run in one uninterrupted native transaction. Original actor, request, operations, plan bytes and IDs are preserved. Receipt-first retry returns the verified historical native result without a second normative write, including output loss after commit. Missing or malformed preparation, missing global gates, changed current inputs/identity/build and authority denial do not gain publication permission. Actual early/late Work and native I/O faults preserve the observed generation or native journal; open transactions block ordinary Work continuation and require the existing recovery path. Tests use real temporary filesystem operations and explicitly labelled in-process build and host-authority fixtures; no actual process termination or power-loss claim is made in this W step. Final normative Work completion and CLI/Code-8 delivery are not claimed. Each preparation still handles a full supplied in-memory model; incremental large-plan construction and finer bounded units remain open. This is partial behavior coverage, not full requirement or release approval. A changed reconstructed current model is consistently a stale-target conflict with code 6 in either preparation phase and before new publication; original work and project bytes are preserved. 6.p.R adds actual interpreter termination without Python finalizers after building, staging, the first real target replacement, all targets, confirmed commit and cleanup. Fresh-process native recovery restores exactly the whole basis or target while preserving Work generation 2. Recovery to basis permits a new explicit technical transaction with the same original semantic request; recovery to target and confirmed historical replay never perform a second write. Two preparation process changes retain an ordinarily readable unchanged basis. Completion reports now bind request, project, transaction, target and the exact request-receipt reference; four conflicting-observation cases use separately real native completions, preserve actual commits and reject an inconsistent combined result. These observations measure current process-loss behavior, not power-loss durability or CLI integration. 6.p.C moves the frozen publication result and unchanged receipt-binding projection into a private outcome module. All existing definition bodies, native transaction phase calls, errors and public result imports are retained; the previous W/R behavior tests remain byte-identical. No new behavior or broader requirement approval is claimed."
-  },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
-  "required_environment": {
-    "implementation": "cpython",
-    "declared_minimum_python": "3.10",
-    "measured_scope": "current-run-only"
-  },
-  "resources": {
-    "owned_temporary_files": true,
-    "harness_test_timeout": null,
-    "harness_suite_timeout": null
-  },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0620",
   "test_ids": [
     "tests/test_work_publication.py::test_absent_work_is_never_created_to_claim_preparation[prepare]",
     "tests/test_work_publication.py::test_absent_work_is_never_created_to_claim_preparation[publish]",
@@ -78,8 +81,5 @@
     "tests/test_work_publication_right.py::test_individually_valid_but_different_completion_observations_cannot_be_combined[txn-work-native-True]",
     "tests/test_work_publication_right.py::test_preparation_pause_releases_project_and_work_for_a_fresh_process[pause_one]",
     "tests/test_work_publication_right.py::test_preparation_pause_releases_project_and_work_for_a_fresh_process[pause_two]"
-  ],
-  "open_items": [
-    "Incremental large-plan construction, finer memory-bounded preparation, builtin CLI/Code-8 integration and final normative Work completion remain open. Process-loss tests do not establish power-loss guarantees. No release or complete requirement approval is claimed."
   ]
 }

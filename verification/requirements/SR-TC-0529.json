@@ -1,27 +1,5 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0529",
-  "requirement_id": "SR-REQ-0529",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0023",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
-  "fixture_ids": [
-    "SR-FIX-DOCUMENT-INCLUDES-v1"
-  ],
-  "preconditions": [
-    "Owned native TargetModel snapshot with actual document/section/content-block bytes and complete supplied relation inventory; no on-disk or rendering approval inferred."
-  ],
-  "steps": [
-    "11.g.W: validate native structure/ownership and the whole contains/include graph before iterative expansion. Verify repeated content/section includes, deterministic source-bound ancestry, direct/transitive cycle witnesses, missing targets, native ordering, deep acyclic chains, changed revisions, immutable results, read-only behavior and isolated Core/PYZ parity.",
-    "11.g.R: verify three-document and unreachable/mixed include cycles, lawful cross-document leaf-section reuse, diamonds and wide/repeated paths, exact malformed-edge/source rejection, detached cycle witnesses, byte-only rebinding, immutable source ownership and real read/process/network traps, including Core/PYZ diagnostic parity.",
-    "11.g.C: rerun unchanged W/R behavior tests after extracting native contains/include graph admission and exact edge provenance into one private helper. Keep shared iterative cycle validation, public error/value classes and data composition unchanged."
-  ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "Ein Inhaltsblock DARF NICHT transitiv das Dokument einschließen, in dem er gerendert wird.",
-    "scope": "11.g.W: exact flat occurrences preserve every include path and original artifact identity while a shared bound record map retains original bytes/revisions/hashes. All supplied contains/include cycles are rejected before expansion with actual edge witnesses. Other block semantics and rendering remain unproved; tests never compare presentation. 11.g.R confirms the actual artifact/edge graph rather than a coarsened document dependency graph: legal section sharing remains valid, unreachable cycles block composition, and no path or source identity is silently dropped. Existing native guards already enforce the tested failures; production behavior is unchanged. 11.g.C changes only the private graph/provenance module; occurrence order, graph admission, source bindings, cycle diagnostics and permitted effects retain their W/R contracts."
-  },
+  "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [
     "document_include_cycle",
     "missing_relation_target",
@@ -33,22 +11,48 @@
     "target_sources_changed"
   ],
   "expected_exit_codes": [],
+  "fixture_ids": [
+    "SR-FIX-DOCUMENT-INCLUDES-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [
     "/relations",
     "/relations/0/target",
     "/document_id"
   ],
+  "method": "automated_behavior",
+  "open_items": [
+    "Rendering integration remains at 11.m; data composition does not execute or approve passive query/table/prose/reference payloads.",
+    "Targeted development and alternating Apply half-suite observations remain partial and do not imply full-suite or release approval."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Ein Inhaltsblock DARF NICHT transitiv das Dokument einschließen, in dem er gerendert wird.",
+    "scope": "11.g.W: exact flat occurrences preserve every include path and original artifact identity while a shared bound record map retains original bytes/revisions/hashes. All supplied contains/include cycles are rejected before expansion with actual edge witnesses. Other block semantics and rendering remain unproved; tests never compare presentation. 11.g.R confirms the actual artifact/edge graph rather than a coarsened document dependency graph: legal section sharing remains valid, unreachable cycles block composition, and no path or source identity is silently dropped. Existing native guards already enforce the tested failures; production behavior is unchanged. 11.g.C changes only the private graph/provenance module; occurrence order, graph admission, source bindings, cycle diagnostics and permitted effects retain their W/R contracts."
+  },
+  "preconditions": [
+    "Owned native TargetModel snapshot with actual document/section/content-block bytes and complete supplied relation inventory; no on-disk or rendering approval inferred."
+  ],
+  "primary_verification_id": "SR-VER-0023",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0529",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "11.g.W: validate native structure/ownership and the whole contains/include graph before iterative expansion. Verify repeated content/section includes, deterministic source-bound ancestry, direct/transitive cycle witnesses, missing targets, native ordering, deep acyclic chains, changed revisions, immutable results, read-only behavior and isolated Core/PYZ parity.",
+    "11.g.R: verify three-document and unreachable/mixed include cycles, lawful cross-document leaf-section reuse, diamonds and wide/repeated paths, exact malformed-edge/source rejection, detached cycle witnesses, byte-only rebinding, immutable source ownership and real read/process/network traps, including Core/PYZ diagnostic parity.",
+    "11.g.C: rerun unchanged W/R behavior tests after extracting native contains/include graph admission and exact edge provenance into one private helper. Keep shared iterative cycle validation, public error/value classes and data composition unchanged."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0529",
   "test_ids": [
     "tests/test_document_includes.py::test_actual_source_files_are_unchanged_and_later_removal_cannot_replace_owned_input",
     "tests/test_document_includes.py::test_changed_included_content_updates_every_new_occurrence_without_revising_owners",
@@ -113,9 +117,5 @@
     "tests/test_document_includes_right.py::test_unplaced_include_is_checked_but_does_not_invent_a_document_occurrence",
     "tests/test_document_includes_right.py::test_unreachable_cycle_still_blocks_an_empty_selected_document",
     "tests/test_document_includes_right.py::test_wide_acyclic_reuse_keeps_all_paths_without_a_hidden_visit_or_count_cap"
-  ],
-  "open_items": [
-    "Rendering integration remains at 11.m; data composition does not execute or approve passive query/table/prose/reference payloads.",
-    "Targeted development and alternating Apply half-suite observations remain partial and do not imply full-suite or release approval."
   ]
 }

@@ -1,47 +1,47 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0005",
-  "requirement_id": "SR-REQ-0005",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0001",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [
+    0
+  ],
   "fixture_ids": [
     "SR-FIX-OWNED-TEMP-v1",
     "SR-FIX-ISOLATED-CPYTHON-v1"
   ],
-  "preconditions": [
-    "Use the current trusted checkout and a private temporary directory."
-  ],
-  "steps": [
-    "Execute each listed unittest once in the current full suite.",
-    "Observe the declared file effects, returned data and exit statuses without matching human text."
+  "implementation_status": "partial",
+  "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "Complete the remaining normative behavior and its requirement-specific oracle; obtain current evidence on required platforms."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "SpecRoad MUSS ohne explizite Projektangabe vom aktuellen Verzeichnis aufwärts die nächstgelegene `specroad.json` als Projektroot verwenden.",
     "scope": "Existing bootstrap/test-infrastructure behavior only; not complete requirement acceptance."
   },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [
-    0
+  "preconditions": [
+    "Use the current trusted checkout and a private temporary directory."
   ],
-  "json_pointers": [],
+  "primary_verification_id": "SR-VER-0001",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0005",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Execute each listed unittest once in the current full suite.",
+    "Observe the declared file effects, returned data and exit statuses without matching human text."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0005",
   "test_ids": [
     "test_options.OptionWorkTests.test_closest_ancestor_wins_without_modifying_project"
-  ],
-  "open_items": [
-    "Complete the remaining normative behavior and its requirement-specific oracle; obtain current evidence on required platforms."
   ]
 }

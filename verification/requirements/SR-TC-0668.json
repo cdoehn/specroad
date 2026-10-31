@@ -1,25 +1,5 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0668",
-  "requirement_id": "SR-REQ-0668",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0045",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
-  "fixture_ids": [
-    "SR-FIX-LANGUAGE-POLICY-v1"
-  ],
-  "preconditions": [
-    "Explicit immutable registry snapshot and language-policy values."
-  ],
-  "steps": [
-    "Evaluate the declaration or compose the explicitly activated language resources."
-  ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "Fehlende Sprach-Lintcapabilities MÜSSEN als nicht verfügbar statt als bestanden ausgewiesen werden.",
-    "scope": "Declared-language policy and supplied-resource composition only; full CLI/validation pipeline and lifecycle operations remain open."
-  },
+  "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [
     "SRV177",
     "SRV178",
@@ -32,26 +12,46 @@
     1,
     3
   ],
+  "fixture_ids": [
+    "SR-FIX-LANGUAGE-POLICY-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [
     "/language",
     "/language_policy"
   ],
+  "method": "automated_behavior",
+  "open_items": [
+    "Integrate the actual config-show, validation/lint command and full project work pipeline; not an approval or linguistic/detector result."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Fehlende Sprach-Lintcapabilities MÜSSEN als nicht verfügbar statt als bestanden ausgewiesen werden.",
+    "scope": "Declared-language policy and supplied-resource composition only; full CLI/validation pipeline and lifecycle operations remain open."
+  },
+  "preconditions": [
+    "Explicit immutable registry snapshot and language-policy values."
+  ],
+  "primary_verification_id": "SR-VER-0045",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0668",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Evaluate the declaration or compose the explicitly activated language resources."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0668",
   "test_ids": [
     "tests/test_language_policy.py::test_missing_linguistic_capabilities_never_pass",
     "tests/test_language_policy_right.py::test_missing_reference_reports_unavailable_without_blocking_valid_language"
-  ],
-  "open_items": [
-    "Integrate the actual config-show, validation/lint command and full project work pipeline; not an approval or linguistic/detector result."
   ]
 }

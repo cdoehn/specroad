@@ -1,31 +1,5 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0337",
-  "requirement_id": "SR-REQ-0337",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0025",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
-  "fixture_ids": [
-    "SR-FIX-EVIDENCE-EXCHANGE-v1",
-    "SR-FIX-EVIDENCE-EXCHANGE-RIGHT-v1",
-    "SR-FIX-EVIDENCE-IMPORT-POLICY-RIGHT-v1"
-  ],
-  "preconditions": [
-    "Owned strict JSON input bytes, explicit mapping where required and supplied native requirement/test/verification snapshots; no host or implicit project lookup."
-  ],
-  "steps": [
-    "Parse the versioned input and preserve original-byte/canonical hashes.",
-    "Bind each measurement and referenced subject/target exactly, preserving separate occurrences and explicit result semantics.",
-    "Reject unsupported or malformed inputs without file/network/process access or resource changes; check immutable values and isolated Core/PYZ behavior.",
-    "R additionally defends the native nonblank measurement contract, bounds native target counts and bytes before revalidation, preserves opaque explicit values, prevents environment authority injection and reports embedded Exchange errors in their real coordinate space. Real project byte/mode preservation is checked for schema and late binding failures.",
-    "12.i.R additionally binds exact Generic/SARIF originals and applies explicit abort/skip to record-local required-field, binding and mapping failures. Every source occurrence is accepted, rejected with diagnostics or withheld by abort; conflicting or ambiguous observations cannot select a favorable result. Global envelope/source/target/resource errors remain fatal; no persistence or external authority is granted."
-  ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "`specroad evidence import generic <FILE>` MUSS ein versioniertes SpecRoad-Evidence-Exchange-Schema mit Producer, Run, Subjects, Results, Environment und Attachments unterstützen.",
-    "scope": "12.h.W versioned closed SpecRoad Evidence Exchange v1 and passive generic candidate API. Producer, explicit product run, exact supplied native subject hashes, results, environment, attachments and configuration declarations are preserved without host access or implicit authority. No external-run authentication, project inventory/contract-slot resolution or persistent import. R additionally defends the native nonblank measurement contract, bounds native target counts and bytes before revalidation, preserves opaque explicit values, prevents environment authority injection and reports embedded Exchange errors in their real coordinate space. Real project byte/mode preservation is checked for schema and late binding failures. 12.i.R additionally binds exact Generic/SARIF originals and applies explicit abort/skip to record-local required-field, binding and mapping failures. Every source occurrence is accepted, rejected with diagnostics or withheld by abort; conflicting or ambiguous observations cannot select a favorable result. Global envelope/source/target/resource errors remain fatal; no persistence or external authority is granted."
-  },
+  "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [
     "SRV091"
   ],
@@ -33,18 +7,47 @@
     0,
     3
   ],
+  "fixture_ids": [
+    "SR-FIX-EVIDENCE-EXCHANGE-v1",
+    "SR-FIX-EVIDENCE-EXCHANGE-RIGHT-v1",
+    "SR-FIX-EVIDENCE-IMPORT-POLICY-RIGHT-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "12.j and the assigned CLI steps: authoritative project/run/contract-slot checks, attachment publication, idempotency and atomic Evidence publication."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "`specroad evidence import generic <FILE>` MUSS ein versioniertes SpecRoad-Evidence-Exchange-Schema mit Producer, Run, Subjects, Results, Environment und Attachments unterstützen.",
+    "scope": "12.h.W versioned closed SpecRoad Evidence Exchange v1 and passive generic candidate API. Producer, explicit product run, exact supplied native subject hashes, results, environment, attachments and configuration declarations are preserved without host access or implicit authority. No external-run authentication, project inventory/contract-slot resolution or persistent import. R additionally defends the native nonblank measurement contract, bounds native target counts and bytes before revalidation, preserves opaque explicit values, prevents environment authority injection and reports embedded Exchange errors in their real coordinate space. Real project byte/mode preservation is checked for schema and late binding failures. 12.i.R additionally binds exact Generic/SARIF originals and applies explicit abort/skip to record-local required-field, binding and mapping failures. Every source occurrence is accepted, rejected with diagnostics or withheld by abort; conflicting or ambiguous observations cannot select a favorable result. Global envelope/source/target/resource errors remain fatal; no persistence or external authority is granted."
+  },
+  "preconditions": [
+    "Owned strict JSON input bytes, explicit mapping where required and supplied native requirement/test/verification snapshots; no host or implicit project lookup."
+  ],
+  "primary_verification_id": "SR-VER-0025",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0337",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Parse the versioned input and preserve original-byte/canonical hashes.",
+    "Bind each measurement and referenced subject/target exactly, preserving separate occurrences and explicit result semantics.",
+    "Reject unsupported or malformed inputs without file/network/process access or resource changes; check immutable values and isolated Core/PYZ behavior.",
+    "R additionally defends the native nonblank measurement contract, bounds native target counts and bytes before revalidation, preserves opaque explicit values, prevents environment authority injection and reports embedded Exchange errors in their real coordinate space. Real project byte/mode preservation is checked for schema and late binding failures.",
+    "12.i.R additionally binds exact Generic/SARIF originals and applies explicit abort/skip to record-local required-field, binding and mapping failures. Every source occurrence is accepted, rejected with diagnostics or withheld by abort; conflicting or ambiguous observations cannot select a favorable result. Global envelope/source/target/resource errors remain fatal; no persistence or external authority is granted."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0337",
   "test_ids": [
     "tests/test_evidence_exchange.py::test_attachment_references_are_safe_relative_paths_without_access[../outside]",
     "tests/test_evidence_exchange.py::test_attachment_references_are_safe_relative_paths_without_access[./attachments/x]",
@@ -373,8 +376,5 @@
     "tests/test_evidence_import_policy_right.py::test_unsafe_global_inputs_remain_fatal_under_both_policies[tool-skip_invalid_with_diagnostic-sarif]",
     "tests/test_evidence_import_policy_right.py::test_whitespace_keeps_mapping_semantics_but_changes_raw_provenance[generic]",
     "tests/test_evidence_import_policy_right.py::test_whitespace_keeps_mapping_semantics_but_changes_raw_provenance[sarif]"
-  ],
-  "open_items": [
-    "12.j and the assigned CLI steps: authoritative project/run/contract-slot checks, attachment publication, idempotency and atomic Evidence publication."
   ]
 }

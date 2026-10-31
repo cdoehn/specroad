@@ -1,43 +1,46 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0378",
-  "requirement_id": "SR-REQ-0378",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0027",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [
+    0,
+    2
+  ],
   "fixture_ids": [
     "SR-FIX-SCHEMA-CATALOG-v1",
     "SR-FIX-CHANGE-PLAN-v1"
   ],
-  "preconditions": [
-    "Use implemented distribution schemas; no project, network, schema plugin or user file is a schema provider."
-  ],
-  "steps": [
-    "List the resources; retrieve their full field schemas; validate real positive and negative field fixtures and execute project-free commands."
+  "implementation_status": "partial",
+  "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "Future mapping/exchange schemas join only with their real implementations. Full Python/platform matrix and release approval remain open. Cross-field, profile, graph and publication checks are additional to exported field schemas."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "`specroad schema show <SCHEMA-ID> --format json` MUSS das vollständige Schema einschließlich Beschreibungen, Defaults, Beispielen, Enumwerten und deprecation-Hinweisen ausgeben.",
     "scope": "Available structural schema catalog and actual project-free CLI/API retrieval, including the real Change Plan 1.2.0 factory and its typed field acceptance/rejection; field validation is distinct from integrity, lifecycle, graph and publication authorization. Full current public factory inventory, exact Change Plan identity/version lookup, detached nested schemas, typed operation closure and project-free retrieval are covered."
   },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [
-    0,
-    2
+  "preconditions": [
+    "Use implemented distribution schemas; no project, network, schema plugin or user file is a schema provider."
   ],
-  "json_pointers": [],
+  "primary_verification_id": "SR-VER-0027",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0378",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "List the resources; retrieve their full field schemas; validate real positive and negative field fixtures and execute project-free commands."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0378",
   "test_ids": [
     "test_schema_catalog.SchemaCatalogWorkTests.test_list_and_show_metadata_agree_for_every_resource",
     "test_schema_catalog.SchemaCatalogWorkTests.test_request_schema_is_the_command_description_schema",
@@ -66,8 +69,5 @@
     "test_schema_catalog_change_plan.SchemaCatalogChangePlanTests.test_change_plan_resource_rejects_metadata_and_reference_mismatches",
     "test_schema_catalog_change_plan.SchemaCatalogChangePlanTests.test_embedded_and_future_contracts_do_not_create_catalog_entries",
     "test_schema_catalog_change_plan.SchemaCatalogChangePlanTests.test_empty_command_registry_preserves_change_plan_resource"
-  ],
-  "open_items": [
-    "Future mapping/exchange schemas join only with their real implementations. Full Python/platform matrix and release approval remain open. Cross-field, profile, graph and publication checks are additional to exported field schemas."
   ]
 }

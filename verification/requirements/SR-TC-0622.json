@@ -1,42 +1,45 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0622",
-  "requirement_id": "SR-REQ-0622",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0039",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [],
   "fixture_ids": [
     "SR-FIX-OWNED-TEMP-v1"
   ],
-  "preconditions": [
-    "Private external Work storage and independent initial binding; labelled recorded-build/planner fixtures, plus actual built module/zipapp distributions for fresh-process checks."
-  ],
-  "steps": [
-    "Execute each supported real handler and finalize its fully stored result under the Work lease; replay the same terminal bytes without handler execution or extra generations.",
-    "Keep declared global work open until confirmed; retain complete failed outcome data and every provided diagnostic in labelled planner fixtures.",
-    "Refuse incomplete/mismatched envelopes and Code 8; preserve actual generations across early/late publication errors and refuse lost final result bytes.",
-    "Refuse self-hashed contradictory result controls, changed final output/parent/diagnostic parts and normative preparation; retain the actual checkpoint across context/publication runtime changes and explicitly retry under the compatible build."
+  "implementation_status": "partial",
+  "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "The live adapter covers only the closed six-command bootstrap plan. Arbitrary planner data remains inert, not execution proof. General multi-unit graph/closure execution, normative success receipts, CLI/Code-8 continuation and large external output delivery remain open. No release or full requirement approval is claimed."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Die Abschlussprüfung eines aufgeteilten Auftrags MUSS sämtliche erforderlichen globalen Regeln und vollständig zusammengeführten Pflichtdiagnosen einbeziehen.",
     "scope": "6.o.W adds an inert completed-data transition that requires every declared unit to be confirmed and binds the complete command envelope, all supplied diagnostics, original work binding and immediate source checkpoint. Completed functional failures retain their actual status and code; incomplete/partial envelopes and Code 8 are not completion. A completed generation is terminal and preserves all previous bytes and unit evidence. The live finalize_read_only_work adapter separately checks the independently bound closed bootstrap plan, fresh runtime/registry/context, full storage chain and saved handler output, then durably publishes before returning. Replay revalidates and delivers the same result without executing the handler or generating another checkpoint. Resume/progress also check the final result against saved handler evidence. Early/late publication failures retain actual storage; missing final bytes prevent replay. Real generated module and zipapp processes demonstrate final-result reuse after relocation. General failed outcomes and multi-phase unit declarations are explicitly labelled inert planner fixtures, not a claim of additional live command execution. General graph/closure reduction, multi-unit execution, normative semantic receipts, CLI/Code-8 delivery and large external results remain open; this is partial coverage, not complete requirement approval. 6.o.R additionally applies typed result-control invariants to restored full inline results: reserved partial/external/continuation summary fields and failure-kind/success contradictions are refused, while noncontrol command details remain intact. Data candidates, resume and live finalization share this check. Rehashed final output differing from the confirmed handler, manipulated parent bindings, lost/reordered/changed diagnostic parts and normative preparation cannot become a read-only completion or semantic receipt. Runtime identity is checked again after publication; a late change preserves the actual completed generation without returning a stale success. Compatible retry reuses the saved result. Unverified continuation controls are never upgraded to Code 8; actual general CLI continuation integration remains open. 6.o.C separates the unchanged complete-result checks from technical checkpoint completion transitions. The extracted functions retain their exact syntax trees; the public finalization, resume and manifest modules and all existing W/R behavior tests remain unchanged. This structural separation adds no functional or receipt authority and closes no open integration."
   },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
+  "preconditions": [
+    "Private external Work storage and independent initial binding; labelled recorded-build/planner fixtures, plus actual built module/zipapp distributions for fresh-process checks."
+  ],
+  "primary_verification_id": "SR-VER-0039",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0622",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Execute each supported real handler and finalize its fully stored result under the Work lease; replay the same terminal bytes without handler execution or extra generations.",
+    "Keep declared global work open until confirmed; retain complete failed outcome data and every provided diagnostic in labelled planner fixtures.",
+    "Refuse incomplete/mismatched envelopes and Code 8; preserve actual generations across early/late publication errors and refuse lost final result bytes.",
+    "Refuse self-hashed contradictory result controls, changed final output/parent/diagnostic parts and normative preparation; retain the actual checkpoint across context/publication runtime changes and explicitly retry under the compatible build."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0622",
   "test_ids": [
     "tests/test_work_finalization.py::test_actual_complete_handler_result_is_durably_finalized_once[capabilities]",
     "tests/test_work_finalization.py::test_actual_complete_handler_result_is_durably_finalized_once[command.describe]",
@@ -105,8 +108,5 @@
     "tests/test_work_finalization_right.py::test_self_hashed_success_cannot_smuggle_partial_external_or_continuation_controls[resume-work_id]",
     "tests/test_work_finalization_right.py::test_validly_rehashed_final_result_cannot_replace_actual_confirmed_handler_output[finalize]",
     "tests/test_work_finalization_right.py::test_validly_rehashed_final_result_cannot_replace_actual_confirmed_handler_output[resume]"
-  ],
-  "open_items": [
-    "The live adapter covers only the closed six-command bootstrap plan. Arbitrary planner data remains inert, not execution proof. General multi-unit graph/closure execution, normative success receipts, CLI/Code-8 continuation and large external output delivery remain open. No release or full requirement approval is claimed."
   ]
 }

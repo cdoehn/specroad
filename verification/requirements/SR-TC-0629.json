@@ -1,42 +1,45 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0629",
-  "requirement_id": "SR-REQ-0629",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0040",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [],
   "fixture_ids": [
     "SR-FIX-OWNED-TEMP-v1"
   ],
-  "preconditions": [
-    "Owned native Linux work and protected roots, independently supplied initial WorkManifest and inert declared completion fixtures. Child processes use isolated interpreters; crash and disk-full injections are explicit."
-  ],
-  "steps": [
-    "Publish complete initial and immediate successor generations; verify every original byte, private mode, retained predecessor, segmented inventory and fsync ordering before atomic pointer replacement.",
-    "Read the actual current generation in another process; abruptly terminate publishers during object storage and immediately before/after pointer replacement, retaining the orphan record and verifying data-only read access.",
-    "Reject stale or foreign successors and identify missing/changed required bytes; retain the prior readable generation on an injected partial-write failure.",
-    "Rehash altered stored records/inventories independently, mutate previously read or newly secured parts, inject fsync failures before and after publication, and require retained predecessors plus the actual complete pointer without writes from readers."
+  "implementation_status": "partial",
+  "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "Command resume/compatibility, actual completion evidence, portable restore, explicit orphan recovery, incremental publication/readback, bounded total memory and full runtime/cache integration remain open. Native persistent declared-work data is covered; no release or complete requirement pass is claimed."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Ein bestätigter Checkpoint und seine notwendigen Snapshotdaten DÜRFEN NICHT durch eine Cachebereinigung entfernt werden.",
     "scope": "6.l.W persists the existing inert WorkManifest and its exact object set through segmented hash-addressed inventories and a checked predecessor chain anchored in the caller-trusted initial manifest. Existing native exclusive creation and atomic image replacement primitives fsync all required files/directories before switching work.json. Data-only inspection uses the native work mutex without creating/removing owner records, so a crashed publisher leaves either the prior complete generation or the fully secured new one readable; orphan records still block writes. Previous checkpoints, all objects and partial own files remain retained. Real process restart/exit tests prove current stored-byte selection, not command execution or runtime resume. No Code 8, execution authority, all-command coverage, cache-cleanup integration, automatic recovery, bounded whole-store memory or non-native filesystem durability is asserted. 6.l.R binds the complete checked read set to stable file identities/signatures and verifies it before returning; known object-size mismatches are rejected before payload reads. Fixed-structure checkpoint records and canonical 64-fanout inventory segments are limited to 64 KiB, independently of input-payload sizes. The entire prospective generation and predecessor chain is freshly checked immediately before pointer replacement and again afterward. Missing/changed new parts before replacement preserve the prior pointer; later errors retain the actual state and every predecessor. Independently rehashed hostile metadata, foreign initial bindings, unsafe file types, late read/publication mutations and explicit fsync fault windows are exercised. Unreferenced private data remains inert and retained. No automatic rollback, cleanup, lock takeover, command execution or atomic snapshot against noncooperating external writes is claimed. 6.l.C separates descriptor-bound reads and final read-set checks into an internal work-file adapter with explicit caller-supplied error policy. The public error class, generation/pointer orchestration and shared exclusive-write/atomic-replacement primitives retain their existing behavior. Work and project journal policies remain separate; all existing behavior tests and expected values are unchanged."
   },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
+  "preconditions": [
+    "Owned native Linux work and protected roots, independently supplied initial WorkManifest and inert declared completion fixtures. Child processes use isolated interpreters; crash and disk-full injections are explicit."
+  ],
+  "primary_verification_id": "SR-VER-0040",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0629",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Publish complete initial and immediate successor generations; verify every original byte, private mode, retained predecessor, segmented inventory and fsync ordering before atomic pointer replacement.",
+    "Read the actual current generation in another process; abruptly terminate publishers during object storage and immediately before/after pointer replacement, retaining the orphan record and verifying data-only read access.",
+    "Reject stale or foreign successors and identify missing/changed required bytes; retain the prior readable generation on an injected partial-write failure.",
+    "Rehash altered stored records/inventories independently, mutate previously read or newly secured parts, inject fsync failures before and after publication, and require retained predecessors plus the actual complete pointer without writes from readers."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0629",
   "test_ids": [
     "tests/test_work_checkpoints.py::test_active_publisher_mutex_blocks_an_independent_reader",
     "tests/test_work_checkpoints.py::test_all_payload_files_are_synced_before_the_current_pointer_can_change",
@@ -104,8 +107,5 @@
     "tests/test_work_checkpoints_right.py::test_unsafe_storage_is_not_followed_repaired_or_replaced[symlink-input]",
     "tests/test_work_checkpoints_right.py::test_unsafe_storage_is_not_followed_repaired_or_replaced[symlink-pointer]",
     "tests/test_work_checkpoints_right.py::test_wrong_object_size_is_detected_before_reading_the_object"
-  ],
-  "open_items": [
-    "Command resume/compatibility, actual completion evidence, portable restore, explicit orphan recovery, incremental publication/readback, bounded total memory and full runtime/cache integration remain open. Native persistent declared-work data is covered; no release or complete requirement pass is claimed."
   ]
 }

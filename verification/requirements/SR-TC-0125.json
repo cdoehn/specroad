@@ -1,36 +1,17 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0125",
-  "requirement_id": "SR-REQ-0125",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0009",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
-  "fixture_ids": [
-    "SR-FIX-READINESS-MIGRATION-v1",
-    "SR-FIX-RELEASE-READINESS-RIGHT-v1",
-    "SR-FIX-RELEASE-READINESS-v1"
-  ],
-  "preconditions": [
-    "Owned complete TargetModel, exact native ClosureBindings, explicit UTC evaluation time, stored/explicit native VerificationEvaluation and independent input bytes/roles. Trusted host supplies bound ModelGates and current human-review verification."
-  ],
-  "steps": [
-    "Evaluate eight fixed gates over the native Release closure and existing verification aggregation, retaining every missing provider and blocker.",
-    "Check native Task Done and human Requirement review, actual relation currentness, exact policy/selection binding and isolated Core/PYZ parity without writes.",
-    "For 13.f.R: Evaluate exact current human Risk/Issue completion reviews, explicit guarded legacy migration, effective parent manifests, native Waivers and mandatory slot/error classification. Retain all blockers and never infer authority from a terminal status or warning threshold.",
-    "Keep a missing native profile minimum blocking even with info/warning diagnostics; preserve the original provider severity."
-  ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "SR-NEED-0006, SR-NEED-0010",
-    "scope": "13.f.W: native read-only eight-gate core and positive fully evidenced Capability/Requirement/Task Release; missing approval/Done/currentness providers, altered or missing evidence, unknown applicability, external required subjects, open/legacy blockers, non-current mandatory relations and replayed observations prevent readiness. This is partial behavior evidence, not production human approval, baseline authority or a full-suite result. 13.f.R: Evaluate exact current human Risk/Issue completion reviews, explicit guarded legacy migration, effective parent manifests, native Waivers and mandatory slot/error classification. Retain all blockers and never infer authority from a terminal status or warning threshold. Supplied-input targeted checks do not certify production human authority, Release baseline or full-suite success."
-  },
+  "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [],
   "expected_exit_codes": [
     0,
     3,
     6
   ],
+  "fixture_ids": [
+    "SR-FIX-READINESS-MIGRATION-v1",
+    "SR-FIX-RELEASE-READINESS-RIGHT-v1",
+    "SR-FIX-RELEASE-READINESS-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [
     "/input_sha256",
     "/binding",
@@ -39,17 +20,39 @@
     "/status",
     "/provisional"
   ],
+  "method": "automated_behavior",
+  "open_items": [
+    "13.f.C structural cleanup and 13.g guarded Release baseline/public command integration remain open; no full-suite or production approval is asserted."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "SR-NEED-0006, SR-NEED-0010",
+    "scope": "13.f.W: native read-only eight-gate core and positive fully evidenced Capability/Requirement/Task Release; missing approval/Done/currentness providers, altered or missing evidence, unknown applicability, external required subjects, open/legacy blockers, non-current mandatory relations and replayed observations prevent readiness. This is partial behavior evidence, not production human approval, baseline authority or a full-suite result. 13.f.R: Evaluate exact current human Risk/Issue completion reviews, explicit guarded legacy migration, effective parent manifests, native Waivers and mandatory slot/error classification. Retain all blockers and never infer authority from a terminal status or warning threshold. Supplied-input targeted checks do not certify production human authority, Release baseline or full-suite success."
+  },
+  "preconditions": [
+    "Owned complete TargetModel, exact native ClosureBindings, explicit UTC evaluation time, stored/explicit native VerificationEvaluation and independent input bytes/roles. Trusted host supplies bound ModelGates and current human-review verification."
+  ],
+  "primary_verification_id": "SR-VER-0009",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0125",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Evaluate eight fixed gates over the native Release closure and existing verification aggregation, retaining every missing provider and blocker.",
+    "Check native Task Done and human Requirement review, actual relation currentness, exact policy/selection binding and isolated Core/PYZ parity without writes.",
+    "For 13.f.R: Evaluate exact current human Risk/Issue completion reviews, explicit guarded legacy migration, effective parent manifests, native Waivers and mandatory slot/error classification. Retain all blockers and never infer authority from a terminal status or warning threshold.",
+    "Keep a missing native profile minimum blocking even with info/warning diagnostics; preserve the original provider severity."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0125",
   "test_ids": [
     "tests/test_readiness_updates.py::test_explicit_migration_publishes_one_native_revision_and_no_review_or_approval[issue]",
     "tests/test_readiness_updates.py::test_explicit_migration_publishes_one_native_revision_and_no_review_or_approval[release]",
@@ -214,8 +217,5 @@
     "tests/test_release_readiness_right.py::test_verification_plan_status_does_not_disappear_behind_passing_evidence[running]",
     "tests/test_release_readiness_right.py::test_warning_level_minimum_relation_still_blocks_release[info]",
     "tests/test_release_readiness_right.py::test_warning_level_minimum_relation_still_blocks_release[warning]"
-  ],
-  "open_items": [
-    "13.f.C structural cleanup and 13.g guarded Release baseline/public command integration remain open; no full-suite or production approval is asserted."
   ]
 }

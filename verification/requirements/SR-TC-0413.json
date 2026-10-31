@@ -1,46 +1,49 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0413",
-  "requirement_id": "SR-REQ-0413",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0029",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [],
   "fixture_ids": [
     "SR-FIX-MODEL-MANIFEST-v1",
     "SR-FIX-SCOPE-COMPARISON-v1"
   ],
-  "preconditions": [
-    "Explicit current-resource selection from one bound ProjectSource; supplied semantic profile projection, no claimed closure proof.",
-    "Owned supplied artifact sets and resolved scope observations. No live completeness or release authority."
+  "implementation_status": "partial",
+  "json_pointers": [
+    "/project_id",
+    "/scope_descriptor",
+    "/scope_sha256"
   ],
-  "steps": [
-    "Capture selected bytes, assemble a semantic manifest and compare hashes or observe rejection of mismatched project provenance.",
-    "Compare canonical value bindings, field deltas and all immediate relation neighbours without I/O."
+  "method": "automated_behavior",
+  "open_items": [
+    "Integrate the primitives with complete live/base readers, profile semantics and the planned CLI; no release approval is claimed."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Der Scope-Hash MUSS Scope Descriptor, enthaltene Ressourcen und geordnete Boundary References binden.",
     "scope": "Pure supplied-input primitives. Complete CLI/base providers, evaluation-derived currency, effective-profile and platform approval remain separate."
   },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [
-    "/project_id",
-    "/scope_descriptor",
-    "/scope_sha256"
+  "preconditions": [
+    "Explicit current-resource selection from one bound ProjectSource; supplied semantic profile projection, no claimed closure proof.",
+    "Owned supplied artifact sets and resolved scope observations. No live completeness or release authority."
   ],
+  "primary_verification_id": "SR-VER-0029",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0413",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Capture selected bytes, assemble a semantic manifest and compare hashes or observe rejection of mismatched project provenance.",
+    "Compare canonical value bindings, field deltas and all immediate relation neighbours without I/O."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0413",
   "test_ids": [
     "test_model_root.ModelRootWorkTests.test_scope_descriptor_changes_are_bound",
     "test_model_root.ModelRootWorkTests.test_artifact_order_is_independent_of_path_input_order",
@@ -61,8 +64,5 @@
     "test_scope_comparison_right.ScopeComparisonRightTests.test_selected_attachment_binds_size_media_type_and_bytes",
     "test_scope_comparison_right.ScopeComparisonRightTests.test_query_scope_preserves_bound_pagination",
     "test_scope_comparison_right.ScopeComparisonRightTests.test_archived_model_is_not_replaced_by_archive_zip_digest"
-  ],
-  "open_items": [
-    "Integrate the primitives with complete live/base readers, profile semantics and the planned CLI; no release approval is claimed."
   ]
 }

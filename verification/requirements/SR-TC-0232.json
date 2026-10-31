@@ -1,35 +1,5 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0232",
-  "requirement_id": "SR-REQ-0232",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0018",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
-  "fixture_ids": [
-    "SR-FIX-JSON-PATCH-v1",
-    "SR-FIX-DOMAIN-DRAFT-v1",
-    "SR-FIX-OWNED-TEMP-v1"
-  ],
-  "preconditions": [
-    "Owned JSON values or a field-valid explicitly supplied artifact plus an update with an expected revision and/or canonical hash.",
-    "For actual writes: an explicit complete TargetModel, trusted PublicationAuthority, actor, UTC time, plan/transaction IDs and native writable project tree."
-  ],
-  "steps": [
-    "Apply real RFC-6902 operations in order on an isolated value snapshot.",
-    "Compile ordered set/unset inputs without implicit parent creation or type conversion.",
-    "Check supplied target, revision/hash and controlled fields before returning a field-valid candidate; ensure original values are unchanged.",
-    "Read an explicit saved RFC-6902 array from a stable file or binary stdin, or normalize ordered set/unset pairs into an owned update operation.",
-    "Use complete native planning, lifecycle/metadata and the real writer lock, live checks, journal, publication and completion receipts.",
-    "Retry the original normalized operation before a new plan/lock; reject a conflicting reuse and retain unrelated file bytes and modes.",
-    "Retain the owned initial target across mutating input callbacks; exercise actual approved changes, noncanonical no-ops, both guards, protected/forged operations, denied authority, foreign lock/base bytes and failures before/after real replacement with preserved recovery evidence.",
-    "Use a real update-bound lifecycle gate that reruns the existing native kernel and compares the whole target; reject different targets, unrelated approvals and unsupported states, and retain explicit host denials."
-  ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "`specroad artifact update <ID>` MUSS RFC-6902-Patches sowie die Komfortoptionen `--set <JSON-POINTER>=<JSON-VALUE>` und `--unset <JSON-POINTER>` unterstützen und eine erwartete Revision oder einen erwarteten Hash verlangen.",
-    "scope": "Pure RFC-6902 and guarded value previews plus actual embedding-service updates on a complete local Goal/Requirement model: explicit revision/hash, all six patch operations, ordered set/unset, one revision, live host authorization, no-op and native historical replay. No registered CLI, general production model loading, dry-run/stdout or platform completion claim. R extends native behavior evidence to original-target input ownership, approved-to-proposed revision, byte-preserving draft/proposed no-op, stale/controlled input refusal and partial-publication recovery preservation. The automatic native lifecycle gate is limited to this updated proposed subject; it is not an approval/history certificate or a general replacement for other required services."
-  },
+  "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [
     "SRV030",
     "SRV070",
@@ -42,23 +12,60 @@
     6,
     7
   ],
+  "fixture_ids": [
+    "SR-FIX-JSON-PATCH-v1",
+    "SR-FIX-DOMAIN-DRAFT-v1",
+    "SR-FIX-OWNED-TEMP-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [
     "/patch",
     "/target",
     "/expected_revision",
     "/expected_sha256"
   ],
+  "method": "automated_behavior",
+  "open_items": [
+    "Register the public artifact-update CLI, including production model/history loading, dry-run and stdout contracts.",
+    "Callers retain the original normalized operation for retry; recompiling field options against an already changed artifact is not an equivalent historical-intent guarantee.",
+    "Proposal planning still requires both revision and hash; this authoring path accepts either and checks both when present.",
+    "Only the user starts manual CI for the supported Python matrix; selected development evidence is not a full-suite or platform pass.",
+    "Complete general review/context-binding integration and missing native semantic services in their assigned plan steps; structural approved fixtures do not prove historical approval legitimacy."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "`specroad artifact update <ID>` MUSS RFC-6902-Patches sowie die Komfortoptionen `--set <JSON-POINTER>=<JSON-VALUE>` und `--unset <JSON-POINTER>` unterstützen und eine erwartete Revision oder einen erwarteten Hash verlangen.",
+    "scope": "Pure RFC-6902 and guarded value previews plus actual embedding-service updates on a complete local Goal/Requirement model: explicit revision/hash, all six patch operations, ordered set/unset, one revision, live host authorization, no-op and native historical replay. No registered CLI, general production model loading, dry-run/stdout or platform completion claim. R extends native behavior evidence to original-target input ownership, approved-to-proposed revision, byte-preserving draft/proposed no-op, stale/controlled input refusal and partial-publication recovery preservation. The automatic native lifecycle gate is limited to this updated proposed subject; it is not an approval/history certificate or a general replacement for other required services."
+  },
+  "preconditions": [
+    "Owned JSON values or a field-valid explicitly supplied artifact plus an update with an expected revision and/or canonical hash.",
+    "For actual writes: an explicit complete TargetModel, trusted PublicationAuthority, actor, UTC time, plan/transaction IDs and native writable project tree."
+  ],
+  "primary_verification_id": "SR-VER-0018",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0232",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Apply real RFC-6902 operations in order on an isolated value snapshot.",
+    "Compile ordered set/unset inputs without implicit parent creation or type conversion.",
+    "Check supplied target, revision/hash and controlled fields before returning a field-valid candidate; ensure original values are unchanged.",
+    "Read an explicit saved RFC-6902 array from a stable file or binary stdin, or normalize ordered set/unset pairs into an owned update operation.",
+    "Use complete native planning, lifecycle/metadata and the real writer lock, live checks, journal, publication and completion receipts.",
+    "Retry the original normalized operation before a new plan/lock; reject a conflicting reuse and retain unrelated file bytes and modes.",
+    "Retain the owned initial target across mutating input callbacks; exercise actual approved changes, noncanonical no-ops, both guards, protected/forged operations, denied authority, foreign lock/base bytes and failures before/after real replacement with preserved recovery evidence.",
+    "Use a real update-bound lifecycle gate that reruns the existing native kernel and compares the whole target; reject different targets, unrelated approvals and unsupported states, and retain explicit host denials."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0232",
   "test_ids": [
     "tests/test_artifact_update.py::test_actor_policy_blocks_before_planning_and_lock[ai-update-1-7]",
     "tests/test_artifact_update.py::test_actor_policy_blocks_before_planning_and_lock[ci-None-2]",
@@ -155,12 +162,5 @@
     "tests/test_json_patch_right.py::test_base_preconditions_fail_before_comfort_execution",
     "tests/test_json_patch_right.py::test_comfort_update_binds_actual_base_and_retains_source_bytes",
     "tests/test_json_patch_right.py::test_controlled_parent_writes_cannot_be_hidden_by_later_restore"
-  ],
-  "open_items": [
-    "Register the public artifact-update CLI, including production model/history loading, dry-run and stdout contracts.",
-    "Callers retain the original normalized operation for retry; recompiling field options against an already changed artifact is not an equivalent historical-intent guarantee.",
-    "Proposal planning still requires both revision and hash; this authoring path accepts either and checks both when present.",
-    "Only the user starts manual CI for the supported Python matrix; selected development evidence is not a full-suite or platform pass.",
-    "Complete general review/context-binding integration and missing native semantic services in their assigned plan steps; structural approved fixtures do not prove historical approval legitimacy."
   ]
 }

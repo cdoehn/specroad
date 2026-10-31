@@ -1,21 +1,41 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0119",
-  "requirement_id": "SR-REQ-0119",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0009",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [],
   "fixture_ids": [
     "SR-FIX-DOMAIN-DRAFT-v1",
     "SR-FIX-PLANNING-BOUNDARIES-v1",
     "SR-FIX-PLANNING-RELATIONS-v1"
   ],
+  "implementation_status": "partial",
+  "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "Done evidence in 13.b, roadmap and readiness in subsequent M13 steps; no full SR-VER-0009 or release approval claimed."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Ein Milestone-Artefakt MUSS über `part_of` genau einem Release zugeordnet sein.",
+    "scope": "Stored planning fields, exactly one resolved Release per Milestone, original Task owners/criteria and explicit incoming implementation links; native scheduling of Capability/Requirement/Task to Release/Milestone. No Done evidence, complete lifecycle, roadmap or release-readiness proof. R additionally covers adversarial matrix/cardinality/missing-target cases and mandatory approved-Task links at shared validation and real publication boundaries; failed writes preserve the original project."
+  },
   "preconditions": [
     "Trusted read-only domain reader; owned current-schema fixtures; no authoring or approval operation.",
     "Owned native TargetModel with real artifact bytes and explicit stored planning edges; native authoring writer uses an owned temporary project and explicit host authority.",
     "Owned invalid planning graph variants and explicit native host gates; no live user project or fabricated approval authority."
   ],
+  "primary_verification_id": "SR-VER-0009",
+  "required_environment": {
+    "declared_minimum_python": "3.10",
+    "implementation": "cpython",
+    "measured_scope": "current-run-only"
+  },
+  "requirement_id": "SR-REQ-0119",
+  "resources": {
+    "harness_suite_timeout": null,
+    "harness_test_timeout": null,
+    "owned_temporary_files": true
+  },
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
   "steps": [
     "Load valid per-type drafts, reject invalid field values, and compare original data and relevant status axes.",
     "Check stored non-draft field gates and malformed statuses without inferring approval or evidence outcomes.",
@@ -24,25 +44,8 @@
     "Reject invalid/missing planning endpoints and milestone cardinality, enforce canonical graph storage, and preserve actual files when native publication refuses an invalid target.",
     "Require an incoming Requirement/Decision implementation relation for approved Tasks in the common minimum, model, lint and writer gates; permissive profiles and successful host gates do not bypass the core obligation."
   ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "Ein Milestone-Artefakt MUSS über `part_of` genau einem Release zugeordnet sein.",
-    "scope": "Stored planning fields, exactly one resolved Release per Milestone, original Task owners/criteria and explicit incoming implementation links; native scheduling of Capability/Requirement/Task to Release/Milestone. No Done evidence, complete lifecycle, roadmap or release-readiness proof. R additionally covers adversarial matrix/cardinality/missing-target cases and mandatory approved-Task links at shared validation and real publication boundaries; failed writes preserve the original project."
-  },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
-  "required_environment": {
-    "implementation": "cpython",
-    "declared_minimum_python": "3.10",
-    "measured_scope": "current-run-only"
-  },
-  "resources": {
-    "owned_temporary_files": true,
-    "harness_test_timeout": null,
-    "harness_suite_timeout": null
-  },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0119",
   "test_ids": [
     "test_domain_schemas.DomainWorkTests.test_milestone_has_exactly_one_release_relation",
     "test_domain_schemas.DomainRightTests.test_local_milestone_cardinality_has_precise_error_location",
@@ -62,8 +65,5 @@
     "tests/test_planning_relations_right.py::test_native_writer_rejects_invalid_planning_without_authorization_or_file_changes[wrong_schedule]",
     "tests/test_planning_relations_right.py::test_two_milestone_links_are_not_deduplicated_or_arbitrarily_selected[1]",
     "tests/test_planning_relations_right.py::test_two_milestone_links_are_not_deduplicated_or_arbitrarily_selected[2]"
-  ],
-  "open_items": [
-    "Done evidence in 13.b, roadmap and readiness in subsequent M13 steps; no full SR-VER-0009 or release approval claimed."
   ]
 }

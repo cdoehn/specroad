@@ -1,26 +1,5 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0384",
-  "requirement_id": "SR-REQ-0384",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0027",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
-  "fixture_ids": [
-    "SR-FIX-TRANSACTION-RECEIPTS-v1"
-  ],
-  "preconditions": [
-    "Owned temporary project, native writer lock, full publication and durable committed proof."
-  ],
-  "steps": [
-    "Commit a native transaction and store its linked receipts.",
-    "Repeat the normative request and compare the stored result, identities and unchanged files."
-  ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "Die Wiederholung derselben Request-ID eines normativen Schreibauftrags mit demselben normalisierten Operationshash MUSS ohne erneute normative Änderung dasselbe semantische Ergebnis und dieselben erzeugten IDs zurückgeben.",
-    "scope": "A confirmed native receipt returns the exact stored result and IDs without locks, planning or writes. The locked native gate refuses a second publication for a completed ID."
-  },
+  "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [],
   "expected_exit_codes": [
     0,
@@ -30,23 +9,47 @@
     6,
     7
   ],
+  "fixture_ids": [
+    "SR-FIX-TRANSACTION-RECEIPTS-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [
     "/request_id",
     "/operations_sha256",
     "/result_object",
     "/created_ids"
   ],
+  "method": "automated_behavior",
+  "open_items": [
+    "Public normative CLI and specialist command wiring remain in their assigned later plan steps."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Die Wiederholung derselben Request-ID eines normativen Schreibauftrags mit demselben normalisierten Operationshash MUSS ohne erneute normative Änderung dasselbe semantische Ergebnis und dieselben erzeugten IDs zurückgeben.",
+    "scope": "A confirmed native receipt returns the exact stored result and IDs without locks, planning or writes. The locked native gate refuses a second publication for a completed ID."
+  },
+  "preconditions": [
+    "Owned temporary project, native writer lock, full publication and durable committed proof."
+  ],
+  "primary_verification_id": "SR-VER-0027",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0384",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Commit a native transaction and store its linked receipts.",
+    "Repeat the normative request and compare the stored result, identities and unchanged files."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0384",
   "test_ids": [
     "tests/test_normative_idempotency.py::test_identical_retry_returns_exact_stored_result_without_any_write",
     "tests/test_normative_idempotency.py::test_created_ids_are_reused_not_allocated_again",
@@ -54,8 +57,5 @@
     "tests/test_normative_idempotency.py::test_native_new_writer_cannot_reuse_a_completed_request_id",
     "tests/test_normative_idempotency_preplanning.py::test_replay_needs_no_plan_id_time_basis_or_current_target_model",
     "tests/test_normative_idempotency_preplanning.py::test_saved_plan_and_preplanning_intent_have_identical_results"
-  ],
-  "open_items": [
-    "Public normative CLI and specialist command wiring remain in their assigned later plan steps."
   ]
 }

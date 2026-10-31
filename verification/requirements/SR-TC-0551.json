@@ -1,50 +1,50 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0551",
-  "requirement_id": "SR-REQ-0551",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0035",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [
+    0,
+    2
+  ],
   "fixture_ids": [
     "SR-FIX-OWNED-TEMP-v1",
     "SR-FIX-ISOLATED-CPYTHON-v1"
   ],
-  "preconditions": [
-    "Use the current trusted checkout and isolated temporary inputs."
-  ],
-  "steps": [
-    "Execute the named behavior tests in the current complete suite.",
-    "Observe returned data, file effects, module loads and exit status; never human-readable output."
+  "implementation_status": "partial",
+  "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "Complete downstream command families and the full transaction/resource preflight; obtain evidence on the required runtime matrix."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Die dem Profil `bootstrap` zugeordneten Befehle MÜSSEN ohne vorhandenes SpecRoad-Projekt ausführbar sein.",
     "scope": "Existing bootstrap works beside broken project metadata without reading it."
   },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [
-    0,
-    2
+  "preconditions": [
+    "Use the current trusted checkout and isolated temporary inputs."
   ],
-  "json_pointers": [],
+  "primary_verification_id": "SR-VER-0035",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0551",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Execute the named behavior tests in the current complete suite.",
+    "Observe returned data, file effects, module loads and exit status; never human-readable output."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0551",
   "test_ids": [
     "test_bootstrap.BootstrapWorkTests.test_bootstrap_does_not_require_current_directory",
     "test_bootstrap.BootstrapWorkTests.test_help_runs_without_project_or_distribution_identity_services",
     "test_bootstrap.BootstrapRobustnessTests.test_bootstrap_remains_available_beside_corrupt_project_metadata"
-  ],
-  "open_items": [
-    "Complete downstream command families and the full transaction/resource preflight; obtain evidence on the required runtime matrix."
   ]
 }

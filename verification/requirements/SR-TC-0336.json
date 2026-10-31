@@ -1,31 +1,5 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0336",
-  "requirement_id": "SR-REQ-0336",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0025",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
-  "fixture_ids": [
-    "SR-FIX-SARIF-IMPORT-v1",
-    "SR-FIX-SARIF-IMPORT-RIGHT-v1",
-    "SR-FIX-EVIDENCE-IMPORT-POLICY-RIGHT-v1"
-  ],
-  "preconditions": [
-    "Owned strict JSON input bytes, explicit mapping where required and supplied native requirement/test/verification snapshots; no host or implicit project lookup."
-  ],
-  "steps": [
-    "Parse the versioned input and preserve original-byte/canonical hashes.",
-    "Bind each measurement and referenced subject/target exactly, preserving separate occurrences and explicit result semantics.",
-    "Reject unsupported or malformed inputs without file/network/process access or resource changes; check immutable values and isolated Core/PYZ behavior.",
-    "R additionally validates selected SARIF metadata and source references even for omitted related imports; refuses ambiguous descriptors, replaced/failed linked invocations, baseline-only measurements and suppressed pass claims. Unselected foreign data never creates candidates. Schema or late mapping failures preserve actual project bytes/modes; Core/PYZ diagnostics agree.",
-    "12.i.R additionally binds exact Generic/SARIF originals and applies explicit abort/skip to record-local required-field, binding and mapping failures. Every source occurrence is accepted, rejected with diagnostics or withheld by abort; conflicting or ambiguous observations cannot select a favorable result. Global envelope/source/target/resource errors remain fatal; no persistence or external authority is granted."
-  ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "`specroad evidence import sarif <FILE>` MUSS SARIF 2.1.0 einlesen und nur ausdrücklich gemappte Results, Rules, Artifacts und Invocations als Evidence oder Evidence-Anhang übernehmen.",
-    "scope": "12.h.W inline SARIF 2.1.0 candidate API only. Exact source hash and explicit index mapping select results and optional driver rules, invocations and artifacts, binding declared producer/run/subjects and outcomes to native supplied targets. No inference from severity, tool success, opaque metadata or unmapped entries. This is not full SARIF-schema/CLI or Evidence-publication support. R additionally validates selected SARIF metadata and source references even for omitted related imports; refuses ambiguous descriptors, replaced/failed linked invocations, baseline-only measurements and suppressed pass claims. Unselected foreign data never creates candidates. Schema or late mapping failures preserve actual project bytes/modes; Core/PYZ diagnostics agree. 12.i.R additionally binds exact Generic/SARIF originals and applies explicit abort/skip to record-local required-field, binding and mapping failures. Every source occurrence is accepted, rejected with diagnostics or withheld by abort; conflicting or ambiguous observations cannot select a favorable result. Global envelope/source/target/resource errors remain fatal; no persistence or external authority is granted."
-  },
+  "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [
     "SRV091"
   ],
@@ -33,18 +7,47 @@
     0,
     3
   ],
+  "fixture_ids": [
+    "SR-FIX-SARIF-IMPORT-v1",
+    "SR-FIX-SARIF-IMPORT-RIGHT-v1",
+    "SR-FIX-EVIDENCE-IMPORT-POLICY-RIGHT-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "12.j and the assigned CLI steps: authoritative project/run/contract-slot checks, attachment publication, idempotency and atomic Evidence publication."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "`specroad evidence import sarif <FILE>` MUSS SARIF 2.1.0 einlesen und nur ausdrücklich gemappte Results, Rules, Artifacts und Invocations als Evidence oder Evidence-Anhang übernehmen.",
+    "scope": "12.h.W inline SARIF 2.1.0 candidate API only. Exact source hash and explicit index mapping select results and optional driver rules, invocations and artifacts, binding declared producer/run/subjects and outcomes to native supplied targets. No inference from severity, tool success, opaque metadata or unmapped entries. This is not full SARIF-schema/CLI or Evidence-publication support. R additionally validates selected SARIF metadata and source references even for omitted related imports; refuses ambiguous descriptors, replaced/failed linked invocations, baseline-only measurements and suppressed pass claims. Unselected foreign data never creates candidates. Schema or late mapping failures preserve actual project bytes/modes; Core/PYZ diagnostics agree. 12.i.R additionally binds exact Generic/SARIF originals and applies explicit abort/skip to record-local required-field, binding and mapping failures. Every source occurrence is accepted, rejected with diagnostics or withheld by abort; conflicting or ambiguous observations cannot select a favorable result. Global envelope/source/target/resource errors remain fatal; no persistence or external authority is granted."
+  },
+  "preconditions": [
+    "Owned strict JSON input bytes, explicit mapping where required and supplied native requirement/test/verification snapshots; no host or implicit project lookup."
+  ],
+  "primary_verification_id": "SR-VER-0025",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0336",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Parse the versioned input and preserve original-byte/canonical hashes.",
+    "Bind each measurement and referenced subject/target exactly, preserving separate occurrences and explicit result semantics.",
+    "Reject unsupported or malformed inputs without file/network/process access or resource changes; check immutable values and isolated Core/PYZ behavior.",
+    "R additionally validates selected SARIF metadata and source references even for omitted related imports; refuses ambiguous descriptors, replaced/failed linked invocations, baseline-only measurements and suppressed pass claims. Unselected foreign data never creates candidates. Schema or late mapping failures preserve actual project bytes/modes; Core/PYZ diagnostics agree.",
+    "12.i.R additionally binds exact Generic/SARIF originals and applies explicit abort/skip to record-local required-field, binding and mapping failures. Every source occurrence is accepted, rejected with diagnostics or withheld by abort; conflicting or ambiguous observations cannot select a favorable result. Global envelope/source/target/resource errors remain fatal; no persistence or external authority is granted."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0336",
   "test_ids": [
     "tests/test_evidence_import_policy_right.py::test_ambiguous_sarif_mapping_never_selects_a_first_or_last_row[exchange-abort_import]",
     "tests/test_evidence_import_policy_right.py::test_ambiguous_sarif_mapping_never_selects_a_first_or_last_row[exchange-skip_invalid_with_diagnostic]",
@@ -377,8 +380,5 @@
     "tests/test_sarif_import_right.py::test_suppression_is_not_a_pass_or_waiver_even_when_an_explicit_pass_is_claimed[rejected]",
     "tests/test_sarif_import_right.py::test_suppression_is_not_a_pass_or_waiver_even_when_an_explicit_pass_is_claimed[underReview]",
     "tests/test_sarif_import_right.py::test_unselected_foreign_data_remains_unmapped_and_never_changes_a_valid_candidate"
-  ],
-  "open_items": [
-    "12.j and the assigned CLI steps: authoritative project/run/contract-slot checks, attachment publication, idempotency and atomic Evidence publication."
   ]
 }

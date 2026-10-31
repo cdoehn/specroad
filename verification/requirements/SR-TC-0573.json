@@ -1,29 +1,5 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0573",
-  "requirement_id": "SR-REQ-0573",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0037",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
-  "fixture_ids": [
-    "SR-FIX-OWNED-TEMP-v1",
-    "SR-FIX-ISOLATED-CPYTHON-v1"
-  ],
-  "preconditions": [
-    "Current trusted runtime/SRX APIs with owned in-memory model, plan, scope and graph fixtures; native environment command against owned temporary roots."
-  ],
-  "steps": [
-    "Resolve declared profiles and explicit operational targets through current command/library consumers.",
-    "Inspect complete machine outputs, actual SRX results/errors and bound semantic identities; compare immutable inputs before and after selection.",
-    "Exercise the R historical-quantity, complete-work and malformed-input cases listed below; preserve the W tests unchanged.",
-    "Re-run the unchanged W/R behavioral cases after separating internal runtime options from semantic constraints; retain the same result values, errors, origins and side effects."
-  ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "SpecRoad MUSS die Ressourcenprofile und weichen Default-Arbeitsziele von `runtime-budget-v2` nach Anhang O.1 bereitstellen.",
-    "scope": "The real environment.check and embedded resolver provide all eleven constrained/standard targets, default and explicit origins, six positive integer overrides, byte conversion and unclamped explicit step windows. Real CLI/structured/registry routes use the same policy; the SRX consumer uses its selected graph target. R reports stable selected-project targets with project origins, preserves model error class for invalid declarations and checks real UTF-8 JSON representability after unit conversion. Concurrent embedded calls retain independent policy selection. C retains these same behavioral oracles and public machine contracts while separating the internal option and semantic-constraint types."
-  },
+  "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [],
   "expected_exit_codes": [
     0,
@@ -32,21 +8,48 @@
     5,
     6
   ],
+  "fixture_ids": [
+    "SR-FIX-OWNED-TEMP-v1",
+    "SR-FIX-ISOLATED-CPYTHON-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [
     "/result/resource_policy",
     "/result/resource_policy/classified_limits"
   ],
+  "method": "automated_behavior",
+  "open_items": [
+    "Partial 6.c.W/R behavior evidence with unchanged C regression coverage. Adaptive work scheduling, measured aggregate consumption, persistent Work/checkpoints, future command consumers and the complete runtime/platform matrix remain open. Historical hash-policy migration is a later migration-plan responsibility; no existing baseline is rewritten. Supplied-model and query-page tests do not prove filesystem completeness or a complete query engine."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "SpecRoad MUSS die Ressourcenprofile und weichen Default-Arbeitsziele von `runtime-budget-v2` nach Anhang O.1 bereitstellen.",
+    "scope": "The real environment.check and embedded resolver provide all eleven constrained/standard targets, default and explicit origins, six positive integer overrides, byte conversion and unclamped explicit step windows. Real CLI/structured/registry routes use the same policy; the SRX consumer uses its selected graph target. R reports stable selected-project targets with project origins, preserves model error class for invalid declarations and checks real UTF-8 JSON representability after unit conversion. Concurrent embedded calls retain independent policy selection. C retains these same behavioral oracles and public machine contracts while separating the internal option and semantic-constraint types."
+  },
+  "preconditions": [
+    "Current trusted runtime/SRX APIs with owned in-memory model, plan, scope and graph fixtures; native environment command against owned temporary roots."
+  ],
+  "primary_verification_id": "SR-VER-0037",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0573",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Resolve declared profiles and explicit operational targets through current command/library consumers.",
+    "Inspect complete machine outputs, actual SRX results/errors and bound semantic identities; compare immutable inputs before and after selection.",
+    "Exercise the R historical-quantity, complete-work and malformed-input cases listed below; preserve the W tests unchanged.",
+    "Re-run the unchanged W/R behavioral cases after separating internal runtime options from semantic constraints; retain the same result values, errors, origins and side effects."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0573",
   "test_ids": [
     "tests/test_runtime_resource_policy.py::test_all_overrides_reach_the_same_real_command[cli]",
     "tests/test_runtime_resource_policy.py::test_all_overrides_reach_the_same_real_command[registry]",
@@ -104,8 +107,5 @@
     "tests/test_runtime_resource_policy_right.py::test_selected_project_exposes_legacy_targets_without_model_reads_or_automatic_recovery[unknown_lock-constrained]",
     "tests/test_runtime_resource_policy_right.py::test_selected_project_exposes_legacy_targets_without_model_reads_or_automatic_recovery[unknown_lock-standard]",
     "tests/test_runtime_resource_policy_right.py::test_unit_conversion_cannot_turn_a_usage_problem_into_unserializable_cli_success"
-  ],
-  "open_items": [
-    "Partial 6.c.W/R behavior evidence with unchanged C regression coverage. Adaptive work scheduling, measured aggregate consumption, persistent Work/checkpoints, future command consumers and the complete runtime/platform matrix remain open. Historical hash-policy migration is a later migration-plan responsibility; no existing baseline is rewritten. Supplied-model and query-page tests do not prove filesystem completeness or a complete query engine."
   ]
 }

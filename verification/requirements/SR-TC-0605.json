@@ -1,14 +1,22 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0605",
-  "requirement_id": "SR-REQ-0605",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0039",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [],
   "fixture_ids": [
     "SR-FIX-OWNED-TEMP-v1"
   ],
+  "implementation_status": "partial",
+  "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "Work identity, persistent generations, source-snapshot binding, portable/process-independent resume, automatic roots, locks and all-command integration remain open for subsequent plan steps. The live cursor does not import arbitrary state; durable_checkpoint remains false. Prepared path transport does not implement Why search/frontier preservation. Intermediate runs remain retained. Batch goals and work windows do not promise total RSS, host quota, cross-platform completion or preemptive wall-clock control.",
+    "11.r.W: finer cursors within composition/query/row generation, bounded total memory, automatic document CLI integration and automatic inline/file delivery selection remain open. Supplied inventory scope is explicit; no current disk completeness, full validation, authentication or write/approval authority is inferred."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Jede potenziell große Verarbeitungsphase MUSS einen dokumentierten granularen Fortschritts- und Fortsetzungsvertrag nach Anhang P.5 besitzen.",
+    "scope": "6.f.W: hashed JSONL batch runs and pairwise stable merging preserve every Diagnostic and its existing ordering, independently of the soft encoded batch target. The complete final run is delivered through a monotone record/byte cursor with full hash and descriptor guards; prefixes are not complete results. Oversized individual diagnostics make real progress. Owned private files lie outside declared protected roots, survive failures and are never automatically deleted. The cursor explicitly declares durable_checkpoint=false; construction, merge and cross-process resume remain a partial P.5 scope. 6.f.R adds live input/run/merge/publication steps with detached state projections, actual read/output record and byte cursors and monotonically confirmed units. Paused tasks retain the iterator and two merge heads; one failed unit invalidates the task without a success increment or retry. Prepared path output uses the same bounded driver and preserves the complete producer order. The synchronous diagnostic adapter drains that exact driver, preserving the original W contracts. 6.f.C moves the unchanged immutable run reference, positive-count validation and guarded delivery cursor into shared storage segment/cursor primitives. Native file authority, work driver, codecs, result fields and all W/R behavior contracts remain unchanged; no additional requirement completion is inferred. 6.k.W incrementally captures the explicit declared input set into immutable hash-addressed bytes. Progress is detached data; only guarded complete files can be materialized and the declared-set manifest is sealed last. Source errors preserve prior bytes, identify the logical resource, do not count the failed unit and do not trigger retry. Tests measure actual read offsets and limits, reuse captured files before the entire set, and roundtrip the completed input bytes through the existing inert Work codec. model_root_sha256 remains null, atomic_project_snapshot and durable_checkpoint remain false. Whole-project closure, writer/overarching consistency, cross-process persistence/resume and bounded total storage are not yet claimed. 6.k.R holds the existing native root-inode writer mutexes read-only across live capture, deduplicates physical source roots, and checks shallow operational state before reading and sealing. Active native guards, orphan owner records, unresolved transactions and unknown operational entries block confirmation. Every declared source is revalidated at closure; changed metadata triggers one bounded blockwise content rehash, and only hash-identical source bytes may confirm the previous binding. Changed content, missing files, unsafe paths or later observed changes retain prior captured bytes and invalidate the whole-set seal with a logical resource error. Unchanged captured prefixes are not reread per work window. Real child processes verify writer exclusion, release on seal/close/error, and fork ownership. Native guard and I/O fault injections are explicit. The scope remains an in-memory caller-declared input set: no atomic external filesystem snapshot, complete normative model closure, durable generation or cross-process resume is asserted. 6.k.C extracts the identical logical manifest and detached progress projections into a pure data module. Root paths, descriptors, native mutexes, process ownership and active hash objects stay in the runtime adapter. Structural inlining preserves the existing expressions; all W/R tests, data fields, content hashes, errors and operational boundaries remain unchanged. No additional requirement completion is inferred. 11.r.W adds the closed document.project host adapter over the existing Work engine. The complete supplied model bytes bind a native composition unit followed by all source block selections. Completed native kernels are reused across process/root changes; repeated include occurrences remain distinct while block data is shared. A separate completion requires all declared units, and the existing atomic Work file writer publishes the whole result and its manifest. Query offset/limit remain explicit native semantics. All new tests compare data, native errors, complete output bytes and unchanged project inventories, not rendered layout. This establishes whole-unit durable resume and explicit external delivery only; native kernels and final reduction remain memory resident. 11.r.R adds source-bound occurrence closure, exact literal coverage, normalized query/page/input/configuration bindings, retained row projections and fresh output verification. Unknown fields, malformed context, missing include occurrences, altered rows and false authority are typed conflicts before writes. The complete query total remains a retained native evaluation result; these consistency checks do not rerun filtering/prose/composition, authenticate foreign checkpoints, or claim finer inner-kernel cursors. Whole-unit execution and delivery remain memory resident and overall status stays partial."
+  },
   "preconditions": [
     "Explicit diagnostic iterator and a fresh external private spool directory; all protected project/input/output roots are supplied as trusted boundaries. Current native POSIX descriptor operations only.",
     "R: retain the same live DiagnosticSort or PathSort object between bounded advance calls. Injected failures are labelled; no persistent Work checkpoint is claimed.",
@@ -17,6 +25,19 @@
     "11.r.W: independently retained initial document Work binding, an explicit owned TargetModel and private external Work root; recorded-build fixtures are labelled and actual module/PYZ distributions run in separate processes.",
     "11.r.R: the same independent initial binding and private external Work store; deliberately rehashed evidence mutations and early/late output I/O injections are labelled. No authentication of arbitrary foreign Work data is claimed."
   ],
+  "primary_verification_id": "SR-VER-0039",
+  "required_environment": {
+    "declared_minimum_python": "3.10",
+    "implementation": "cpython",
+    "measured_scope": "current-run-only"
+  },
+  "requirement_id": "SR-REQ-0605",
+  "resources": {
+    "harness_suite_timeout": null,
+    "harness_test_timeout": null,
+    "owned_temporary_files": true
+  },
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
   "steps": [
     "Compare the complete stable diagnostic sequence across tiny batches and pages, including duplicates, mandatory errors, large individual records, large integer coordinates and an empty source.",
     "Generate a real run larger than 4 MiB with a one-pass iterator and 32-KiB encoded batches; measure only the selected Python allocation window.",
@@ -30,25 +51,8 @@
     "11.r.W: compare complete native document/block data over durable windows, source loss, changed cache state and relocated module/PYZ processes; verify missing units cannot finish and complete external result bytes retain every selected table row plus size/hash/schema bindings without project writes.",
     "11.r.R: reject dropped repeated include subtrees, source/edge/record mismatches, truncated literal rows, altered query pagination, row bytes and retained output omissions before advance, completion or delivery writes. Preserve all data and hashes over large complete projections and explicit delivery retries after early/late I/O failures; confirm completed native evaluators are not repeated."
   ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "Jede potenziell große Verarbeitungsphase MUSS einen dokumentierten granularen Fortschritts- und Fortsetzungsvertrag nach Anhang P.5 besitzen.",
-    "scope": "6.f.W: hashed JSONL batch runs and pairwise stable merging preserve every Diagnostic and its existing ordering, independently of the soft encoded batch target. The complete final run is delivered through a monotone record/byte cursor with full hash and descriptor guards; prefixes are not complete results. Oversized individual diagnostics make real progress. Owned private files lie outside declared protected roots, survive failures and are never automatically deleted. The cursor explicitly declares durable_checkpoint=false; construction, merge and cross-process resume remain a partial P.5 scope. 6.f.R adds live input/run/merge/publication steps with detached state projections, actual read/output record and byte cursors and monotonically confirmed units. Paused tasks retain the iterator and two merge heads; one failed unit invalidates the task without a success increment or retry. Prepared path output uses the same bounded driver and preserves the complete producer order. The synchronous diagnostic adapter drains that exact driver, preserving the original W contracts. 6.f.C moves the unchanged immutable run reference, positive-count validation and guarded delivery cursor into shared storage segment/cursor primitives. Native file authority, work driver, codecs, result fields and all W/R behavior contracts remain unchanged; no additional requirement completion is inferred. 6.k.W incrementally captures the explicit declared input set into immutable hash-addressed bytes. Progress is detached data; only guarded complete files can be materialized and the declared-set manifest is sealed last. Source errors preserve prior bytes, identify the logical resource, do not count the failed unit and do not trigger retry. Tests measure actual read offsets and limits, reuse captured files before the entire set, and roundtrip the completed input bytes through the existing inert Work codec. model_root_sha256 remains null, atomic_project_snapshot and durable_checkpoint remain false. Whole-project closure, writer/overarching consistency, cross-process persistence/resume and bounded total storage are not yet claimed. 6.k.R holds the existing native root-inode writer mutexes read-only across live capture, deduplicates physical source roots, and checks shallow operational state before reading and sealing. Active native guards, orphan owner records, unresolved transactions and unknown operational entries block confirmation. Every declared source is revalidated at closure; changed metadata triggers one bounded blockwise content rehash, and only hash-identical source bytes may confirm the previous binding. Changed content, missing files, unsafe paths or later observed changes retain prior captured bytes and invalidate the whole-set seal with a logical resource error. Unchanged captured prefixes are not reread per work window. Real child processes verify writer exclusion, release on seal/close/error, and fork ownership. Native guard and I/O fault injections are explicit. The scope remains an in-memory caller-declared input set: no atomic external filesystem snapshot, complete normative model closure, durable generation or cross-process resume is asserted. 6.k.C extracts the identical logical manifest and detached progress projections into a pure data module. Root paths, descriptors, native mutexes, process ownership and active hash objects stay in the runtime adapter. Structural inlining preserves the existing expressions; all W/R tests, data fields, content hashes, errors and operational boundaries remain unchanged. No additional requirement completion is inferred. 11.r.W adds the closed document.project host adapter over the existing Work engine. The complete supplied model bytes bind a native composition unit followed by all source block selections. Completed native kernels are reused across process/root changes; repeated include occurrences remain distinct while block data is shared. A separate completion requires all declared units, and the existing atomic Work file writer publishes the whole result and its manifest. Query offset/limit remain explicit native semantics. All new tests compare data, native errors, complete output bytes and unchanged project inventories, not rendered layout. This establishes whole-unit durable resume and explicit external delivery only; native kernels and final reduction remain memory resident. 11.r.R adds source-bound occurrence closure, exact literal coverage, normalized query/page/input/configuration bindings, retained row projections and fresh output verification. Unknown fields, malformed context, missing include occurrences, altered rows and false authority are typed conflicts before writes. The complete query total remains a retained native evaluation result; these consistency checks do not rerun filtering/prose/composition, authenticate foreign checkpoints, or claim finer inner-kernel cursors. Whole-unit execution and delivery remain memory resident and overall status stays partial."
-  },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
-  "required_environment": {
-    "implementation": "cpython",
-    "declared_minimum_python": "3.10",
-    "measured_scope": "current-run-only"
-  },
-  "resources": {
-    "owned_temporary_files": true,
-    "harness_test_timeout": null,
-    "harness_suite_timeout": null
-  },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0605",
   "test_ids": [
     "tests/test_document_work.py::test_complete_external_files_have_all_rows_hashes_and_fresh_references",
     "tests/test_document_work.py::test_document_data_equals_native_kernels_across_work_windows[constrained-100]",
@@ -348,9 +352,5 @@
     "tests/test_spooling_work.py::test_relocated_root_is_rejected_and_both_directories_are_retained",
     "tests/test_spooling_work.py::test_streamed_collection_keeps_python_allocation_window_below_collection_size",
     "tests/test_spooling_work.py::test_traversal_path_is_rejected_before_any_write"
-  ],
-  "open_items": [
-    "Work identity, persistent generations, source-snapshot binding, portable/process-independent resume, automatic roots, locks and all-command integration remain open for subsequent plan steps. The live cursor does not import arbitrary state; durable_checkpoint remains false. Prepared path transport does not implement Why search/frontier preservation. Intermediate runs remain retained. Batch goals and work windows do not promise total RSS, host quota, cross-platform completion or preemptive wall-clock control.",
-    "11.r.W: finer cursors within composition/query/row generation, bounded total memory, automatic document CLI integration and automatic inline/file delivery selection remain open. Supplied inventory scope is explicit; no current disk completeness, full validation, authentication or write/approval authority is inferred."
   ]
 }

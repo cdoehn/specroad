@@ -1,35 +1,35 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0176",
-  "requirement_id": "SR-REQ-0176",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0012",
-  "implementation_status": "open",
-  "method": "pending",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [],
   "fixture_ids": [],
-  "preconditions": [],
-  "steps": [],
+  "implementation_status": "open",
+  "json_pointers": [],
+  "method": "pending",
+  "open_items": [
+    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+  ],
   "oracle": {
     "kind": "pending",
     "requirement_contract": "`specroad proposal apply` DARF NICHT einen Git-Commit, Branch, Tag oder Push erzeugen.",
     "scope": "Not implemented. No automated pass oracle is claimed."
   },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
+  "preconditions": [],
+  "primary_verification_id": "SR-VER-0012",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0176",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [],
-  "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
-  ]
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0176",
+  "test_ids": []
 }

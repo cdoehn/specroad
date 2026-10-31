@@ -1,29 +1,5 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0390",
-  "requirement_id": "SR-REQ-0390",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0027",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
-  "fixture_ids": [
-    "SR-FIX-OWNED-TEMP-v1"
-  ],
-  "preconditions": [
-    "Owned native Linux temporary roots and canonical project/document/release bundles generated from native model fixtures; original endpoint proofs and configuration parent context. Synthetic reviews are fixture inputs, not real human approvals."
-  ],
-  "steps": [
-    "Extract verified owned bytes through direct, CLI, structured-request and registry routes into missing or empty targets; compare original payload and manifest bytes, reopen complete projects and reproduce their bundle.",
-    "Preserve partial configuration and review proof files separately; reject complete-project loading and full export, including after root-manifest removal while the retained bootstrap proof remains.",
-    "Reject foreign target contents and invalid, linked, changed or hash-mismatched inputs before mutation. Inject native preparation/publication failures and verify original target preservation.",
-    "Resume the exact verified payload from a proven durable prefix; recheck completed receipts and reject altered or foreign inventories without overwriting.",
-    "15.e.R uses native process hard exits at durable preparation, every project publication unit and completion; validates exact replay input and actual inodes, checks hostile ZIP vectors before writes, and preserves conflicts under I/O failures, changed journals, links, replaced targets, concurrent foreign writes and changed input. A configuration published before bootstrap completion cannot open a complete-project reader."
-  ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "`specroad bundle extract <FILE> --output <DIR>` MUSS ausschließlich verifizierte Bundles unter den Pfad-, Ziel- und harten Sicherheitsregeln aus Kapitel 10.16, 11.7 und Anhang E extrahieren; weiche Arbeitsbudgets folgen Anhang O.",
-    "scope": "15.e.W/R native Linux journaled extraction of currently verifiable project and partial bundles. Existing BootstrapTree owns no-replace publication, configuration-last ordering, rollback and retained proof. Complete projects reopen and remain subject to normal write gates. Partials are conservatively excluded from the complete-project reader until 15.f; no context promotion or implicit rehydration. No cross-platform, unimplemented portable receipts, authenticity, full semantic validation or release claim. R guards the original input and exact root namespace at every publication boundary and after receipt retention. Interrupted replay retains its proven prefix and never reports success after a fault; fresh ordinary failures restore the owned original state or retain the complete published root. Unverifiable/foreign remnants are retained as conflicts."
-  },
+  "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [],
   "expected_exit_codes": [
     0,
@@ -33,18 +9,46 @@
     6,
     7
   ],
+  "fixture_ids": [
+    "SR-FIX-OWNED-TEMP-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "15.e.C structural cleanup. A preparation interrupted before a complete durable journal remains an untouched conflict; it cannot establish ownership for automatic cleanup. Advisory mutexes do not sandbox noncooperating host writers.",
+    "15.f allowed partial reader integration and complete command authorization; current complete-project readers reject partials. Nonempty portable receipt histories remain 15.g; ai-runtime extraction remains its assigned later step."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "`specroad bundle extract <FILE> --output <DIR>` MUSS ausschließlich verifizierte Bundles unter den Pfad-, Ziel- und harten Sicherheitsregeln aus Kapitel 10.16, 11.7 und Anhang E extrahieren; weiche Arbeitsbudgets folgen Anhang O.",
+    "scope": "15.e.W/R native Linux journaled extraction of currently verifiable project and partial bundles. Existing BootstrapTree owns no-replace publication, configuration-last ordering, rollback and retained proof. Complete projects reopen and remain subject to normal write gates. Partials are conservatively excluded from the complete-project reader until 15.f; no context promotion or implicit rehydration. No cross-platform, unimplemented portable receipts, authenticity, full semantic validation or release claim. R guards the original input and exact root namespace at every publication boundary and after receipt retention. Interrupted replay retains its proven prefix and never reports success after a fault; fresh ordinary failures restore the owned original state or retain the complete published root. Unverifiable/foreign remnants are retained as conflicts."
+  },
+  "preconditions": [
+    "Owned native Linux temporary roots and canonical project/document/release bundles generated from native model fixtures; original endpoint proofs and configuration parent context. Synthetic reviews are fixture inputs, not real human approvals."
+  ],
+  "primary_verification_id": "SR-VER-0027",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0390",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Extract verified owned bytes through direct, CLI, structured-request and registry routes into missing or empty targets; compare original payload and manifest bytes, reopen complete projects and reproduce their bundle.",
+    "Preserve partial configuration and review proof files separately; reject complete-project loading and full export, including after root-manifest removal while the retained bootstrap proof remains.",
+    "Reject foreign target contents and invalid, linked, changed or hash-mismatched inputs before mutation. Inject native preparation/publication failures and verify original target preservation.",
+    "Resume the exact verified payload from a proven durable prefix; recheck completed receipts and reject altered or foreign inventories without overwriting.",
+    "15.e.R uses native process hard exits at durable preparation, every project publication unit and completion; validates exact replay input and actual inodes, checks hostile ZIP vectors before writes, and preserves conflicts under I/O failures, changed journals, links, replaced targets, concurrent foreign writes and changed input. A configuration published before bootstrap completion cannot open a complete-project reader."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0390",
   "test_ids": [
     "tests/test_bundle_extraction.py::test_bad_inputs_fail_before_target_creation[bad_model]",
     "tests/test_bundle_extraction.py::test_bad_inputs_fail_before_target_creation[input_symlink]",
@@ -308,9 +312,5 @@
     "tests/test_bundle_extraction_right.py::test_unverifiable_remainders_are_never_cleaned_or_reused[no-journal]",
     "tests/test_bundle_extraction_right.py::test_unverifiable_remainders_are_never_cleaned_or_reused[receipt-extra]",
     "tests/test_bundle_extraction_right.py::test_unverifiable_remainders_are_never_cleaned_or_reused[receipt-link]"
-  ],
-  "open_items": [
-    "15.e.C structural cleanup. A preparation interrupted before a complete durable journal remains an untouched conflict; it cannot establish ownership for automatic cleanup. Advisory mutexes do not sandbox noncooperating host writers.",
-    "15.f allowed partial reader integration and complete command authorization; current complete-project readers reject partials. Nonempty portable receipt histories remain 15.g; ai-runtime extraction remains its assigned later step."
   ]
 }

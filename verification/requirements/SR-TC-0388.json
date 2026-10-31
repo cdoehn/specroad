@@ -1,29 +1,5 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0388",
-  "requirement_id": "SR-REQ-0388",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0027",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
-  "fixture_ids": [
-    "SR-FIX-PRODUCT-BUNDLE-R-v1",
-    "SR-FIX-PRODUCT-BUNDLE-v1"
-  ],
-  "preconditions": [
-    "Explicit closed E.1.1 metadata, actual native scope/hash observations and actual byte payloads; no implicit source selection or live-project completeness claim."
-  ],
-  "steps": [
-    "Encode and independently inspect actual canonical ZIP members and exact nonrecursive manifest inventory.",
-    "Read the exact bytes with optional external SHA-256; check scope/type/version/identity, payload and exclusion bindings and reject unsafe paths before payload access.",
-    "Check byte preservation, immutable observations, no filesystem effects, explicit lack of project/write authority, and isolated Core/PYZ execution.",
-    "Exercise frozen independent v1 ZIP vectors, entire portable-entry safety preflight, exact typed manifests, native descriptor/boundary bindings, explicit exclusions, external hashes and UTF-8 ZIP name-field limits without writing files."
-  ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "Ein Projektbundle MUSS das kanonische ZIP-Profil aus Kapitel 10.16 erfüllen.",
-    "scope": "15.a.W/R/C exact container/manifest/payload byte contract. Frozen independent stdlib bytes and literal expected errors; exact field and native scope/boundary contracts; no filesystem effects or semantic-project/write authority."
-  },
+  "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [
     "SRV002",
     "SRV003",
@@ -36,23 +12,50 @@
     5,
     7
   ],
+  "fixture_ids": [
+    "SR-FIX-PRODUCT-BUNDLE-R-v1",
+    "SR-FIX-PRODUCT-BUNDLE-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [
     "/bundle_format_version",
     "/scope_descriptor",
     "/entries",
     "/excluded_contents"
   ],
+  "method": "automated_behavior",
+  "open_items": [
+    "Full project closure/root verification, operational receipt validity/transfer, CLI create/verify/extract and whole-project completeness remain in subsequent M15 steps; a pure container is not a project verification result."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Ein Projektbundle MUSS das kanonische ZIP-Profil aus Kapitel 10.16 erfüllen.",
+    "scope": "15.a.W/R/C exact container/manifest/payload byte contract. Frozen independent stdlib bytes and literal expected errors; exact field and native scope/boundary contracts; no filesystem effects or semantic-project/write authority."
+  },
+  "preconditions": [
+    "Explicit closed E.1.1 metadata, actual native scope/hash observations and actual byte payloads; no implicit source selection or live-project completeness claim."
+  ],
+  "primary_verification_id": "SR-VER-0027",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0388",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Encode and independently inspect actual canonical ZIP members and exact nonrecursive manifest inventory.",
+    "Read the exact bytes with optional external SHA-256; check scope/type/version/identity, payload and exclusion bindings and reject unsafe paths before payload access.",
+    "Check byte preservation, immutable observations, no filesystem effects, explicit lack of project/write authority, and isolated Core/PYZ execution.",
+    "Exercise frozen independent v1 ZIP vectors, entire portable-entry safety preflight, exact typed manifests, native descriptor/boundary bindings, explicit exclusions, external hashes and UTF-8 ZIP name-field limits without writing files."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0388",
   "test_ids": [
     "tests/test_product_bundle.py::test_bundle_codec_runs_without_external_dependencies_in_portable_distributions[core]",
     "tests/test_product_bundle.py::test_bundle_codec_runs_without_external_dependencies_in_portable_distributions[pyz]",
@@ -251,8 +254,5 @@
     "tests/test_product_bundle_right.py::test_writer_real_host_failure_stays_separate_from_invalid_data[PermissionError]",
     "tests/test_product_bundle_right.py::test_writer_reports_unrepresentable_zip_name_without_struct_error[ascii-overflow]",
     "tests/test_product_bundle_right.py::test_writer_reports_unrepresentable_zip_name_without_struct_error[utf8-overflow]"
-  ],
-  "open_items": [
-    "Full project closure/root verification, operational receipt validity/transfer, CLI create/verify/extract and whole-project completeness remain in subsequent M15 steps; a pure container is not a project verification result."
   ]
 }

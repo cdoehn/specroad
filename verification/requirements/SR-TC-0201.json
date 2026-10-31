@@ -1,50 +1,50 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0201",
-  "requirement_id": "SR-REQ-0201",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0014",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [
+    0,
+    7
+  ],
   "fixture_ids": [
     "SR-FIX-ISOLATED-CPYTHON-v1",
     "SR-FIX-OWNED-TEMP-v1"
   ],
-  "preconditions": [
-    "Bound local directory; untrusted data remains inert."
+  "implementation_status": "partial",
+  "json_pointers": [
+    "/project/project_root"
   ],
-  "steps": [
-    "Exercise the single-root read boundary and reject prohibited execution before any handler."
+  "method": "automated_behavior",
+  "open_items": [
+    "Apply this boundary to future model readers, transactional writes and explicitly authorized Git/analyzer adapters; complete cross-feature verification in later milestones."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "SpecRoad MUSS nicht aus der vertrauenswürdigen eingebauten Ausführungsliste stammende Plugin- oder Analyzer-Ausführungsdeklarationen vor dem Laden oder Starten zurückweisen; reine Resultatdateien folgen dem Importvertrag aus Anhang T.",
     "scope": "Current read and execution boundary only; no full-model, writer or future-analyzer safety approval."
   },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [
-    0,
-    7
+  "preconditions": [
+    "Bound local directory; untrusted data remains inert."
   ],
-  "json_pointers": [
-    "/project/project_root"
-  ],
+  "primary_verification_id": "SR-VER-0014",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0201",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Exercise the single-root read boundary and reject prohibited execution before any handler."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0201",
   "test_ids": [
     "test_security.SafetyWorkTests.test_unimplemented_executor_is_never_loaded",
     "test_security.SafetyWorkTests.test_project_execution_declarations_fail_before_handler"
-  ],
-  "open_items": [
-    "Apply this boundary to future model readers, transactional writes and explicitly authorized Git/analyzer adapters; complete cross-feature verification in later milestones."
   ]
 }

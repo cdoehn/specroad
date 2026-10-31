@@ -1,28 +1,5 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0317",
-  "requirement_id": "SR-REQ-0317",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0024",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
-  "fixture_ids": [
-    "SR-FIX-NATIVE-IMPORT-IDENTITIES-v1"
-  ],
-  "preconditions": [
-    "Explicit native source bytes, external identity values, mapping projections, source payload bytes and UTC timestamp; no implicit discovery, clock or import authority."
-  ],
-  "steps": [
-    "Record canonical projection hashes and original payload hash while retaining external identity and extension values.",
-    "Read artifact/relation candidates and resolve repeated external identities to existing native owners; reject ambiguous or malformed inventories.",
-    "Verify native model-root changes, detached observations and availability in isolated Core/PYZ runtimes.",
-    "14.b.R roundtrips bound and legacy identities with unknown extensions; exercises exact namespaces, explicit projection history, malformed data and isolated Core/PYZ behavior."
-  ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "Ein importiertes Objekt MUSS seine externe Identität als Kombination aus `source_system`, `source_document`, `external_id` und optionaler `external_revision` verlustfrei speichern.",
-    "scope": "14.b.W: owned native identities preserve the existing relation field contract for artifacts and relations. Explicit imported/source mapping projections receive separate canonical SHA-256 values; original payload bytes and supplied UTC time are retained distinctly. A passive index resolves the exact class/system/document/id key to an existing native artifact or relation independent of external revision. Original source bytes, legacy unbound data and namespaced extensions remain intact; construction or history generation grants no write, conflict or completeness authority. 14.b.R additionally retains unknown extensions at identity, artifact and relation level through complete data roundtrips. Literal source namespaces remain distinct across case, whitespace, Unicode spelling and document order. Native paths and byte values are checked before use; reader positions and serializable diagnostics survive rejected input, and failed construction leaves previous observations intact."
-  },
+  "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [
     "SRV090",
     "SRV147"
@@ -30,6 +7,10 @@
   "expected_exit_codes": [
     3
   ],
+  "fixture_ids": [
+    "SR-FIX-NATIVE-IMPORT-IDENTITIES-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [
     "/external_identities",
     "/relations",
@@ -37,17 +18,40 @@
     "/imported_at",
     "/source_payload"
   ],
+  "method": "automated_behavior",
+  "open_items": [
+    "14.b.C cleans this identity/history slice without changing behavior. End-to-end format import remains outside this partial contract.",
+    "Format-specific parsers, conflict policies, import plans and guarded project publication remain in later steps; no completed import or full model approval is asserted."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Ein importiertes Objekt MUSS seine externe Identität als Kombination aus `source_system`, `source_document`, `external_id` und optionaler `external_revision` verlustfrei speichern.",
+    "scope": "14.b.W: owned native identities preserve the existing relation field contract for artifacts and relations. Explicit imported/source mapping projections receive separate canonical SHA-256 values; original payload bytes and supplied UTC time are retained distinctly. A passive index resolves the exact class/system/document/id key to an existing native artifact or relation independent of external revision. Original source bytes, legacy unbound data and namespaced extensions remain intact; construction or history generation grants no write, conflict or completeness authority. 14.b.R additionally retains unknown extensions at identity, artifact and relation level through complete data roundtrips. Literal source namespaces remain distinct across case, whitespace, Unicode spelling and document order. Native paths and byte values are checked before use; reader positions and serializable diagnostics survive rejected input, and failed construction leaves previous observations intact."
+  },
+  "preconditions": [
+    "Explicit native source bytes, external identity values, mapping projections, source payload bytes and UTC timestamp; no implicit discovery, clock or import authority."
+  ],
+  "primary_verification_id": "SR-VER-0024",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0317",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Record canonical projection hashes and original payload hash while retaining external identity and extension values.",
+    "Read artifact/relation candidates and resolve repeated external identities to existing native owners; reject ambiguous or malformed inventories.",
+    "Verify native model-root changes, detached observations and availability in isolated Core/PYZ runtimes.",
+    "14.b.R roundtrips bound and legacy identities with unknown extensions; exercises exact namespaces, explicit projection history, malformed data and isolated Core/PYZ behavior."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0317",
   "test_ids": [
     "tests/test_import_identity_history.py::test_actual_mapping_output_can_be_recorded_on_artifact_and_relation_candidates",
     "tests/test_import_identity_history.py::test_bad_history_inputs_leave_original_identity_unchanged[changes0]",
@@ -196,9 +200,5 @@
     "tests/test_native_identity_index_right.py::test_reordered_sources_and_equal_ids_in_distinct_documents_keep_separate_history[artifact]",
     "tests/test_native_identity_index_right.py::test_reordered_sources_and_equal_ids_in_distinct_documents_keep_separate_history[relation]",
     "tests/test_native_identity_index_right.py::test_success_unknown_identity_and_failure_leave_original_project_bytes_and_modes"
-  ],
-  "open_items": [
-    "14.b.C cleans this identity/history slice without changing behavior. End-to-end format import remains outside this partial contract.",
-    "Format-specific parsers, conflict policies, import plans and guarded project publication remain in later steps; no completed import or full model approval is asserted."
   ]
 }

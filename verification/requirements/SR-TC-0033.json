@@ -1,46 +1,46 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0033",
-  "requirement_id": "SR-REQ-0033",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0003",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [],
   "fixture_ids": [
     "SR-FIX-ARTIFACT-COMMON-v1"
   ],
-  "preconditions": [
-    "Owned synthetic model inputs; no authoring, ancestry discovery or external state mutation."
-  ],
-  "steps": [
-    "Exercise the real model contracts and invalid input; preserve exact input values and resource bytes."
+  "implementation_status": "partial",
+  "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "Operation-specific revision advancement and chronological metadata policies remain for Change Plans, merge and migration; these values authorize no write."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Jedes Artefakt MUSS eine positive ganzzahlige `revision` besitzen, die bei 1 beginnt.",
     "scope": "Shared persisted UTC-Z and typed audit read contracts; existing history revisions and original bytes are preserved."
   },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
+  "preconditions": [
+    "Owned synthetic model inputs; no authoring, ancestry discovery or external state mutation."
+  ],
+  "primary_verification_id": "SR-VER-0003",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0033",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Exercise the real model contracts and invalid input; preserve exact input values and resource bytes."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0033",
   "test_ids": [
     "test_audit.AuditTests.test_fractional_boolean_and_nonpositive_revisions_are_rejected",
     "test_audit.AuditTests.test_regular_creation_starts_at_one_with_complete_bound_actor_and_time",
     "test_audit_right.AuditRightTests.test_bad_revision_inputs_do_not_change_original_metadata",
     "test_audit_right.AuditRightTests.test_integral_number_projection_does_not_rewrite_source_bytes"
-  ],
-  "open_items": [
-    "Operation-specific revision advancement and chronological metadata policies remain for Change Plans, merge and migration; these values authorize no write."
   ]
 }

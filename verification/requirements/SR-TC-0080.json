@@ -1,29 +1,11 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0080",
-  "requirement_id": "SR-REQ-0080",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0045",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [],
   "fixture_ids": [
     "SR-FIX-PROFILES-v1"
   ],
-  "preconditions": [
-    "Explicit profile bytes and artifact values; no hidden CLI or project selection."
-  ],
-  "steps": [
-    "Parse exact versioned declarations and verify resource hashes.",
-    "Check scoped field effects, passive rule definitions, and unchanged mixed-language contents.",
-    "Reject executable declarations, incompatible formats/versions and changed or incorrectly bound project resources."
-  ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "Version 0.2 MUSS die Fachprofile `core`, `software-de` und `software-en` ohne erzwungene gemeinsame Inhaltssprache gemäß Anhang S.6 bereitstellen.",
-    "scope": "Single resource and field rules only, explicit definitions for later composition and lint consumers."
-  },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
+  "implementation_status": "partial",
   "json_pointers": [
     "/profile_id",
     "/version",
@@ -32,17 +14,39 @@
     "/relation_rules",
     "/lint_rules"
   ],
+  "method": "automated_behavior",
+  "open_items": [
+    "Full profile composition and conflicts (4.k), lint integration and full validator/CLI consumers remain separate.",
+    "Current evidence from the real supported runtime matrix remains necessary."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Version 0.2 MUSS die Fachprofile `core`, `software-de` und `software-en` ohne erzwungene gemeinsame Inhaltssprache gemäß Anhang S.6 bereitstellen.",
+    "scope": "Single resource and field rules only, explicit definitions for later composition and lint consumers."
+  },
+  "preconditions": [
+    "Explicit profile bytes and artifact values; no hidden CLI or project selection."
+  ],
+  "primary_verification_id": "SR-VER-0045",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0080",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Parse exact versioned declarations and verify resource hashes.",
+    "Check scoped field effects, passive rule definitions, and unchanged mixed-language contents.",
+    "Reject executable declarations, incompatible formats/versions and changed or incorrectly bound project resources."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0080",
   "test_ids": [
     "test_profiles.ProfileWorkTests.test_three_exact_bundled_profiles",
     "test_profiles.ProfileWorkTests.test_both_software_profiles_accept_mixed_declared_languages",
@@ -51,9 +55,5 @@
     "test_profiles_right.ProfileRightTests.test_distribution_reads_only_exact_selected_resource",
     "test_profiles_right.ProfileRightTests.test_missing_project_profile_does_not_fall_back_to_distribution",
     "test_profiles_right.ProfileRightTests.test_environment_does_not_set_content_language"
-  ],
-  "open_items": [
-    "Full profile composition and conflicts (4.k), lint integration and full validator/CLI consumers remain separate.",
-    "Current evidence from the real supported runtime matrix remains necessary."
   ]
 }

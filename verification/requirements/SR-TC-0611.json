@@ -1,40 +1,43 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0611",
-  "requirement_id": "SR-REQ-0611",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0041",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [],
   "fixture_ids": [
     "SR-FIX-OWNED-TEMP-v1"
   ],
-  "preconditions": [
-    "Private native Linux work storage, independently trusted initial work and original ChangePlan, current owned target model and policy, test-owned registered normative contract and an explicit recorded-build fixture."
-  ],
-  "steps": [
-    "Persist original plan and authoring bindings in initial and successive work data; perform a fresh read-only normative resume diagnostic without executing a handler.",
-    "Check retained original bytes and IDs, reject changed current identity or actual target basis, and require the separate final native-lock writer gate."
+  "implementation_status": "partial",
+  "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "General work-resume CLI/Code-8 and closure integration, normative execution under the final authorizing writer gate, multi-unit execution and portable copy/restore remain open. Stored normative plan bindings and fresh read-only diagnostics are partial coverage, not write authority."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Eine nicht mehr passende normative Zielbasis MUSS vor Apply als Konflikt ohne stilles Rebase behandelt werden.",
     "scope": "6.m.R adds exact original ChangePlan bytes and plan/operation/actor/request bindings to the inert normative work codec. The read-only normative resume preflight uses the current recorded build, trusted host registry, protected project root, original authoring identity and the existing publication diagnostic against current model and actual filesystem bytes/rights. Different actor, request or project bindings and stale target state conflict without rebase or work writes. This is diagnostic preparation only: no normative handler executes, write_authorized remains false, and the existing final authorization and recheck under the real project writer lock are mandatory. It also validates saved read-only completion schemas, declared handler exit codes and diagnostics before a writer lease, and refuses runtime identity changes before confirmation. Work remains running. General work-resume CLI/Code-8 integration, normative execution, multi-unit execution, portable copy/restore and full work completion remain open; no complete requirement or release pass is asserted. 6.m.C separates independently bound initial/checkpoint restoration from the fresh local identity/target/rights check. Extracted check statements and their order remain unchanged, with the same work mutex retained through final readback. Public result and error contracts, stored bytes and read-only execution are unchanged. Existing behavior tests are retained byte-for-byte; no additional command, authorization or completion claim is introduced."
   },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
+  "preconditions": [
+    "Private native Linux work storage, independently trusted initial work and original ChangePlan, current owned target model and policy, test-owned registered normative contract and an explicit recorded-build fixture."
+  ],
+  "primary_verification_id": "SR-VER-0041",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0611",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Persist original plan and authoring bindings in initial and successive work data; perform a fresh read-only normative resume diagnostic without executing a handler.",
+    "Check retained original bytes and IDs, reject changed current identity or actual target basis, and require the separate final native-lock writer gate."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0611",
   "test_ids": [
     "tests/test_work_resume_right.py::test_changed_actual_target_is_code_six_and_never_rebases_or_loses_work[bytes]",
     "tests/test_work_resume_right.py::test_changed_actual_target_is_code_six_and_never_rebases_or_loses_work[configuration]",
@@ -43,8 +46,5 @@
     "tests/test_work_resume_right.py::test_changed_reconstructed_model_is_a_conflict_before_any_target_publication",
     "tests/test_work_resume_right.py::test_relocated_current_target_uses_a_fresh_binding_and_the_original_plan",
     "tests/test_work_resume_right.py::test_unprotected_current_target_cannot_be_promoted_by_a_resume_check"
-  ],
-  "open_items": [
-    "General work-resume CLI/Code-8 and closure integration, normative execution under the final authorizing writer gate, multi-unit execution and portable copy/restore remain open. Stored normative plan bindings and fresh read-only diagnostics are partial coverage, not write authority."
   ]
 }

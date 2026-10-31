@@ -1,51 +1,55 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0406",
-  "requirement_id": "SR-REQ-0406",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0029",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
-  "fixture_ids": [
-    "SR-FIX-SCOPE-SEEDS-v1",
-    "SR-FIX-SCOPE-CONTROL-v1",
-    "SR-FIX-STRONG-CLOSURE-v1",
-    "SR-FIX-WEAK-BOUNDARY-v1"
-  ],
-  "preconditions": [
-    "Explicit source relations and passive resource inventories; query pages are synthetic trusted-resolver inputs, not query evaluation."
-  ],
-  "steps": [
-    "Validate descriptor, select exact seeds and verify bound page membership and order.",
-    "Resolve specification closure with permanent control admission guards; compare non-control members and assert SRV140/code 3 with endpoints and relation ID or field pointer.",
-    "Check original relation/field positions, long indirect references, mixed partial dependencies, closed/local imported members and unchanged project/document/query behavior; execute pure gate in moved portable distributions."
-  ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "Der Scope `specification` MUSS die Seed-Menge und den permanenten Ausschluss von Proposal- und Baseline-Artefakten einschließlich der Fehlerbehandlung aus Kapitel 10.8 und 10.8.1 anwenden.",
-    "scope": "Permanent control exclusions over explicitly supplied closure bindings, including evidence subjects and closed weak relations. Not a complete live inventory, configured applicability evaluator, proposal approval or write."
-  },
+  "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [
     "SRV140"
   ],
   "expected_exit_codes": [
     3
   ],
+  "fixture_ids": [
+    "SR-FIX-SCOPE-SEEDS-v1",
+    "SR-FIX-SCOPE-CONTROL-v1",
+    "SR-FIX-STRONG-CLOSURE-v1",
+    "SR-FIX-WEAK-BOUNDARY-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [
     "/relations/0/target",
     "/subjects/0/artifact_id"
   ],
+  "method": "automated_behavior",
+  "open_items": [
+    "Actual configuration/applicability evaluation, live complete resource providers and end-to-end no-write proposal gates remain in later steps. Pure guard already recognizes a configuration wrapper around specification.",
+    "No normative scope hash is certified by a closure-observation fingerprint; normative hash primitives belong to 3.j."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Der Scope `specification` MUSS die Seed-Menge und den permanenten Ausschluss von Proposal- und Baseline-Artefakten einschließlich der Fehlerbehandlung aus Kapitel 10.8 und 10.8.1 anwenden.",
+    "scope": "Permanent control exclusions over explicitly supplied closure bindings, including evidence subjects and closed weak relations. Not a complete live inventory, configured applicability evaluator, proposal approval or write."
+  },
+  "preconditions": [
+    "Explicit source relations and passive resource inventories; query pages are synthetic trusted-resolver inputs, not query evaluation."
+  ],
+  "primary_verification_id": "SR-VER-0029",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0406",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Validate descriptor, select exact seeds and verify bound page membership and order.",
+    "Resolve specification closure with permanent control admission guards; compare non-control members and assert SRV140/code 3 with endpoints and relation ID or field pointer.",
+    "Check original relation/field positions, long indirect references, mixed partial dependencies, closed/local imported members and unchanged project/document/query behavior; execute pure gate in moved portable distributions."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0406",
   "test_ids": [
     "test_scope_seeds.ScopeSeedTests.test_specification_excludes_both_control_types",
     "test_scope_seeds.ScopeSeedTests.test_specification_uses_only_active_profiles_rules_mappings",
@@ -108,9 +112,5 @@
     "test_scope_controls_right.ScopeControlRightTests.test_locale_and_timezone_do_not_modify_admission",
     "test_scope_controls_right.ScopeControlRightTests.test_partial_reader_control_source_is_not_allowed_via_self_contained_list",
     "test_scope_controls_right.ScopeControlRightTests.test_portable_distributions_preserve_control_diagnostic_and_no_writes"
-  ],
-  "open_items": [
-    "Actual configuration/applicability evaluation, live complete resource providers and end-to-end no-write proposal gates remain in later steps. Pure guard already recognizes a configuration wrapper around specification.",
-    "No normative scope hash is certified by a closure-observation fingerprint; normative hash primitives belong to 3.j."
   ]
 }

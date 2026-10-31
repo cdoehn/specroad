@@ -1,30 +1,5 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0314",
-  "requirement_id": "SR-REQ-0314",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0024",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
-  "fixture_ids": [
-    "SR-FIX-ARTIFACT-IMPORT-PLAN-REUSE-v1",
-    "SR-FIX-ARTIFACT-IMPORT-PLAN-v1"
-  ],
-  "preconditions": [
-    "Explicit parsed artifact candidates, actual source bytes, exact selected mapping, complete supplied TargetModel and explicit native creation envelopes/actor/time. Trusted target policy/gates are caller registrations, not source data."
-  ],
-  "steps": [
-    "Plan new and matched artifacts through real mapping selection, native lookup, conflict evaluation and the ordinary complete-target Change Plan service.",
-    "Inspect exact byte/canonical bindings, operations, native IDs, regular metadata/history, preserved local fields, attachment references, skipped objects, unresolved conflicts and individual losses.",
-    "Verify normal saved-plan target equivalence, blocking target gates, passive detached reports and isolated Core/PYZ availability without filesystem writes.",
-    "Reassess saved canonical import envelopes against independently supplied current source bytes, format, parsed candidates, mapping, basis and explicit request metadata/policy; rerun all current target gates.",
-    "Reject stale raw/semantic inputs and forged operations, results, losses, success or authority claims; preserve invalid reports, original input ownership and project/operational inventory. Verify Core/PYZ availability."
-  ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "`specroad import plan <FORMAT> <INPUT>` MUSS Eingabeformat, Mapping, neue und aktualisierte Artefakte, Konflikte, Informationsverluste, Anhänge, Diagnosen, einen ausführbaren Change Plan und die erwartete Zielmodellwurzel ausgeben, ohne den Projektstand zu verändern.",
-    "scope": "14.d.W implements an owned artifact-import-plan-v1 observation from explicit parsed artifact candidates. Actual mapping bytes, native-owner lookup and the five-case policy derive regular create/update operations with explicit IDs, actor and time. The ordinary Change Plan service recomputes regular revisions/history and validates the complete supplied target. Exact input bytes, canonical and byte mapping hashes, candidate content, base/root, resource/source bindings and Change Plan hash are retained. Reports include planned created/updated IDs, skipped objects, unresolved conflicts, individual unaccepted unmapped-field losses and byte-verified existing attachment references. No-op/local/skip/reject preserve native history; safe adoption keeps the same ID and preserves unrelated fields and identities. A missing gate, divergent conflict, unaccepted loss or invalid complete target never exposes a valid executable plan. The regular saved plan reproduces the target on the same supplied model. No input parsing, filesystem completeness, authorization, transaction or completed import is claimed. 14.d.R adds assess_import_plan: strict JSON bytes are passive saved data. Full re-preparation from explicit current inputs must reproduce every bound field and observation; no expected input, actor/time, policy or gate is taken from the saved report. All source/resource bytes, candidates, untouched base members, reservations, metadata and current target checks remain bound. A changed gate result or input requires a new preparation; matching invalid reports remain non-executable. JSON envelope layout may differ, not the bound source bytes. No live inventory, source parsing, authority, transaction or import completion is claimed."
-  },
+  "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [
     "SRV090",
     "SRV147",
@@ -37,6 +12,11 @@
     3,
     4
   ],
+  "fixture_ids": [
+    "SR-FIX-ARTIFACT-IMPORT-PLAN-REUSE-v1",
+    "SR-FIX-ARTIFACT-IMPORT-PLAN-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [
     "/binding",
     "/operations",
@@ -49,17 +29,40 @@
     "/diagnostics",
     "/target_model_root_sha256"
   ],
+  "method": "automated_behavior",
+  "open_items": [
+    "CLI format parsing, relation/registry candidates, incoming attachment byte publication, guarded transactional import/loss acceptance and a real import-completion receipt remain in subsequent assigned import steps. This is a planning report, not completed-import or release evidence."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "`specroad import plan <FORMAT> <INPUT>` MUSS Eingabeformat, Mapping, neue und aktualisierte Artefakte, Konflikte, Informationsverluste, Anhänge, Diagnosen, einen ausführbaren Change Plan und die erwartete Zielmodellwurzel ausgeben, ohne den Projektstand zu verändern.",
+    "scope": "14.d.W implements an owned artifact-import-plan-v1 observation from explicit parsed artifact candidates. Actual mapping bytes, native-owner lookup and the five-case policy derive regular create/update operations with explicit IDs, actor and time. The ordinary Change Plan service recomputes regular revisions/history and validates the complete supplied target. Exact input bytes, canonical and byte mapping hashes, candidate content, base/root, resource/source bindings and Change Plan hash are retained. Reports include planned created/updated IDs, skipped objects, unresolved conflicts, individual unaccepted unmapped-field losses and byte-verified existing attachment references. No-op/local/skip/reject preserve native history; safe adoption keeps the same ID and preserves unrelated fields and identities. A missing gate, divergent conflict, unaccepted loss or invalid complete target never exposes a valid executable plan. The regular saved plan reproduces the target on the same supplied model. No input parsing, filesystem completeness, authorization, transaction or completed import is claimed. 14.d.R adds assess_import_plan: strict JSON bytes are passive saved data. Full re-preparation from explicit current inputs must reproduce every bound field and observation; no expected input, actor/time, policy or gate is taken from the saved report. All source/resource bytes, candidates, untouched base members, reservations, metadata and current target checks remain bound. A changed gate result or input requires a new preparation; matching invalid reports remain non-executable. JSON envelope layout may differ, not the bound source bytes. No live inventory, source parsing, authority, transaction or import completion is claimed."
+  },
+  "preconditions": [
+    "Explicit parsed artifact candidates, actual source bytes, exact selected mapping, complete supplied TargetModel and explicit native creation envelopes/actor/time. Trusted target policy/gates are caller registrations, not source data."
+  ],
+  "primary_verification_id": "SR-VER-0024",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0314",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Plan new and matched artifacts through real mapping selection, native lookup, conflict evaluation and the ordinary complete-target Change Plan service.",
+    "Inspect exact byte/canonical bindings, operations, native IDs, regular metadata/history, preserved local fields, attachment references, skipped objects, unresolved conflicts and individual losses.",
+    "Verify normal saved-plan target equivalence, blocking target gates, passive detached reports and isolated Core/PYZ availability without filesystem writes.",
+    "Reassess saved canonical import envelopes against independently supplied current source bytes, format, parsed candidates, mapping, basis and explicit request metadata/policy; rerun all current target gates.",
+    "Reject stale raw/semantic inputs and forged operations, results, losses, success or authority claims; preserve invalid reports, original input ownership and project/operational inventory. Verify Core/PYZ availability."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0314",
   "test_ids": [
     "tests/test_import_planning.py::test_adoption_preserves_nonmapped_content_relations_and_other_identities",
     "tests/test_import_planning.py::test_attachment_report_uses_verified_existing_bytes_and_reference_in_target",
@@ -194,8 +197,5 @@
     "tests/test_import_planning_right.py::test_selected_mapping_is_bound_by_actual_bytes_and_full_versioned_content[content]",
     "tests/test_import_planning_right.py::test_selected_mapping_is_bound_by_actual_bytes_and_full_versioned_content[identity]",
     "tests/test_import_planning_right.py::test_selected_mapping_is_bound_by_actual_bytes_and_full_versioned_content[version]"
-  ],
-  "open_items": [
-    "CLI format parsing, relation/registry candidates, incoming attachment byte publication, guarded transactional import/loss acceptance and a real import-completion receipt remain in subsequent assigned import steps. This is a planning report, not completed-import or release evidence."
   ]
 }

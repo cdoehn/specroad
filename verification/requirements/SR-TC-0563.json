@@ -1,17 +1,37 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0563",
-  "requirement_id": "SR-REQ-0563",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0035",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [],
   "fixture_ids": [
     "SR-FIX-OWNED-TEMP-v1"
   ],
+  "implementation_status": "partial",
+  "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "Initial read-only host APIs and whole-byte ZIP32 processing only. Full Work CLI, general executable workflows, normative work export with current transaction/receipt proof and explicit write-target mapping, incremental large export and multipart archives remain open. No native Recovery substitute, executable code loading, authenticity from internal self-consistency, semantic success from generic data, or release approval is claimed."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Die Wiederaufnahme nach vollständigem Sandboxverlust MUSS auf extern erhaltene, verifizierbare Projektvollbundles beziehungsweise Arbeitspakete nach Anhang P begrenzt sein.",
+    "scope": "An externally retained, full-SHA-bound work package is sufficient to reconstruct the complete original read-only checkpoint chain and all referenced object bytes in a new private root, including a new process with the explicitly compatible runtime. Sealed captured inputs survive loss of original source bytes. Actual closed handlers resume or reuse their recorded output without changing original Work identity or inventing success; a generic task manifest remains inert data. Initial read-only host APIs and whole-byte ZIP32 processing only. Full Work CLI, general executable workflows, normative work export with current transaction/receipt proof and explicit write-target mapping, incremental large export and multipart archives remain open. No native Recovery substitute, executable code loading, authenticity from internal self-consistency, semantic success from generic data, or release approval is claimed. R additionally checks file/ancestor collisions, native inventory reproducibility before allocation, current runtime after complete validation and fresh destination inventories across every generation. Real lost bytes, locks, replaced roots and foreign arrivals are exercised. Preserved pointer bytes are not a claim that externally changed payloads remain usable."
+  },
   "preconditions": [
     "Owned private Work/project/input/restore roots and externally retained package bytes/hash. Explicit recorded-build fixture and trusted host registry; actual closed handlers, sealed source capture, native checkpoint publication and isolated fresh process."
   ],
+  "primary_verification_id": "SR-VER-0035",
+  "required_environment": {
+    "declared_minimum_python": "3.10",
+    "implementation": "cpython",
+    "measured_scope": "current-run-only"
+  },
+  "requirement_id": "SR-REQ-0563",
+  "resources": {
+    "harness_suite_timeout": null,
+    "harness_test_timeout": null,
+    "owned_temporary_files": true
+  },
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
   "steps": [
     "Export the independently bound complete published read-only chain without writes, retain its exact archive bytes and external hash, and remove owned original Work/source data.",
     "Verify canonical ZIP bytes, exact nonrecursive inventory and every original Work generation before allocating a missing or private empty external destination.",
@@ -20,25 +40,8 @@
     "Remove retained input, manifest, inventory, ancestor or result bytes from a coherently rebuilt archive after owned original data is lost; refuse target allocation instead of reconstructing bytes from hashes.",
     "Verify current runtime/source and destination bindings at live restore boundaries and preserve the actual published prefix when foreign changes prevent completion."
   ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "Die Wiederaufnahme nach vollständigem Sandboxverlust MUSS auf extern erhaltene, verifizierbare Projektvollbundles beziehungsweise Arbeitspakete nach Anhang P begrenzt sein.",
-    "scope": "An externally retained, full-SHA-bound work package is sufficient to reconstruct the complete original read-only checkpoint chain and all referenced object bytes in a new private root, including a new process with the explicitly compatible runtime. Sealed captured inputs survive loss of original source bytes. Actual closed handlers resume or reuse their recorded output without changing original Work identity or inventing success; a generic task manifest remains inert data. Initial read-only host APIs and whole-byte ZIP32 processing only. Full Work CLI, general executable workflows, normative work export with current transaction/receipt proof and explicit write-target mapping, incremental large export and multipart archives remain open. No native Recovery substitute, executable code loading, authenticity from internal self-consistency, semantic success from generic data, or release approval is claimed. R additionally checks file/ancestor collisions, native inventory reproducibility before allocation, current runtime after complete validation and fresh destination inventories across every generation. Real lost bytes, locks, replaced roots and foreign arrivals are exercised. Preserved pointer bytes are not a claim that externally changed payloads remain usable."
-  },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
-  "required_environment": {
-    "implementation": "cpython",
-    "declared_minimum_python": "3.10",
-    "measured_scope": "current-run-only"
-  },
-  "resources": {
-    "owned_temporary_files": true,
-    "harness_test_timeout": null,
-    "harness_suite_timeout": null
-  },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0563",
   "test_ids": [
     "tests/test_work_packages.py::test_a_new_process_restores_only_the_retained_package_and_bound_runtime",
     "tests/test_work_packages.py::test_every_closed_handler_resumes_or_replays_after_root_loss[capabilities-0]",
@@ -103,8 +106,5 @@
     "tests/test_work_packages_right.py::test_runtime_change_during_actual_package_validation_prevents_target_allocation",
     "tests/test_work_packages_right.py::test_unsafe_restore_ancestors_are_rejected_without_probe_writes[protected_ancestor]",
     "tests/test_work_packages_right.py::test_unsafe_restore_ancestors_are_rejected_without_probe_writes[symlink_ancestor]"
-  ],
-  "open_items": [
-    "Initial read-only host APIs and whole-byte ZIP32 processing only. Full Work CLI, general executable workflows, normative work export with current transaction/receipt proof and explicit write-target mapping, incremental large export and multipart archives remain open. No native Recovery substitute, executable code loading, authenticity from internal self-consistency, semantic success from generic data, or release approval is claimed."
   ]
 }

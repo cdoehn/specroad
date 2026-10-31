@@ -1,27 +1,5 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0457",
-  "requirement_id": "SR-REQ-0457",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0031",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
-  "fixture_ids": [
-    "SR-FIX-IMPORT-COMPARISON-v1"
-  ],
-  "preconditions": [
-    "Explicit validated native identity (or an unmatched lookup), exact selected mapping key and caller-supplied local/source projections in the same mapping space. No external source or inferred history."
-  ],
-  "steps": [
-    "Create divergent local/source projections with valid separate historical hashes under all four explicit strategies.",
-    "Observe SRV148, no adopted target or refreshed history, and unchanged original inputs; exercise canonical type/Unicode distinctions and rejected invalid projections.",
-    "14.c.R preserves unresolved conflicts and original file bytes/modes under every strategy, including isolated Core/PYZ error and skip evaluation."
-  ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "Divergente lokale und externe Änderungen an derselben Mappingprojektion MÜSSEN als Importkonflikt ohne stille Auflösung enden.",
-    "scope": "14.c.W exposes divergent local/source changes as an unresolved SRV148/code-3 conflict under every strategy, including error and skip. No target or import-baseline update is allowed. Canonical comparison does not conflate boolean/number or distinct Unicode values. Detached observations and rejected invalid projections preserve the original inputs. These are pure decision-kernel checks, not a completed import plan or writer approval. 14.c.R adds asymmetric divergent baselines, mutated returned diagnostics and original file byte/mode preservation. All four strategies remain unresolved SRV148/code-3 conflicts in isolated Core/PYZ evaluation; passive source strings do not execute or grant publication authority."
-  },
+  "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [
     "SRV090",
     "SRV148"
@@ -29,21 +7,47 @@
   "expected_exit_codes": [
     3
   ],
+  "fixture_ids": [
+    "SR-FIX-IMPORT-COMPARISON-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [
     "/local_projection",
     "/source_projection"
   ],
+  "method": "automated_behavior",
+  "open_items": [
+    "14.c.C cleans this W/R comparison kernel with unchanged behavior and diagnostics.",
+    "Import plan and guarded writer integration, complete native target validation, revision/metadata updates and loss/review gates remain in 14.d/14.e. No complete format import, human approval or release success is claimed."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Divergente lokale und externe Änderungen an derselben Mappingprojektion MÜSSEN als Importkonflikt ohne stille Auflösung enden.",
+    "scope": "14.c.W exposes divergent local/source changes as an unresolved SRV148/code-3 conflict under every strategy, including error and skip. No target or import-baseline update is allowed. Canonical comparison does not conflate boolean/number or distinct Unicode values. Detached observations and rejected invalid projections preserve the original inputs. These are pure decision-kernel checks, not a completed import plan or writer approval. 14.c.R adds asymmetric divergent baselines, mutated returned diagnostics and original file byte/mode preservation. All four strategies remain unresolved SRV148/code-3 conflicts in isolated Core/PYZ evaluation; passive source strings do not execute or grant publication authority."
+  },
+  "preconditions": [
+    "Explicit validated native identity (or an unmatched lookup), exact selected mapping key and caller-supplied local/source projections in the same mapping space. No external source or inferred history."
+  ],
+  "primary_verification_id": "SR-VER-0031",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0457",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Create divergent local/source projections with valid separate historical hashes under all four explicit strategies.",
+    "Observe SRV148, no adopted target or refreshed history, and unchanged original inputs; exercise canonical type/Unicode distinctions and rejected invalid projections.",
+    "14.c.R preserves unresolved conflicts and original file bytes/modes under every strategy, including isolated Core/PYZ error and skip evaluation."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0457",
   "test_ids": [
     "tests/test_import_comparison.py::test_both_adopting_strategies_follow_the_five_normative_cases[diverged-create_new_revision]",
     "tests/test_import_comparison.py::test_both_adopting_strategies_follow_the_five_normative_cases[diverged-update_if_unchanged]",
@@ -65,9 +69,5 @@
     "tests/test_import_comparison_right.py::test_real_read_only_sources_stay_byte_and_mode_identical_for_every_decision[skip]",
     "tests/test_import_comparison_right.py::test_real_read_only_sources_stay_byte_and_mode_identical_for_every_decision[update_if_unchanged]",
     "tests/test_import_comparison_right.py::test_shared_nested_inputs_and_mutated_diagnostics_cannot_change_later_observations"
-  ],
-  "open_items": [
-    "14.c.C cleans this W/R comparison kernel with unchanged behavior and diagnostics.",
-    "Import plan and guarded writer integration, complete native target validation, revision/metadata updates and loss/review gates remain in 14.d/14.e. No complete format import, human approval or release success is claimed."
   ]
 }

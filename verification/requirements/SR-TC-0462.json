@@ -1,11 +1,15 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0462",
-  "requirement_id": "SR-REQ-0462",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0031",
-  "implementation_status": "implemented",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [
+    0,
+    2,
+    3,
+    5,
+    6,
+    7,
+    8
+  ],
   "fixture_ids": [
     "SR-FIX-TRANSACTION-RECOVERY-v1",
     "SR-FIX-TRANSACTION-COMMITTING-v1",
@@ -30,6 +34,16 @@
     "SR-FIX-RESTORE-COMPLETE-HISTORY-v1",
     "SR-FIX-RESTORE-SCHEMA-BOUNDARY-v1"
   ],
+  "implementation_status": "implemented",
+  "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [],
+  "oracle": {
+    "execution_evidence": "This active behavior coverage contract is not a test result; actual selected Dev and Apply outcomes are recorded separately with their source and selection bindings.",
+    "kind": "behavior",
+    "requirement_contract": "Jede ausgeführte Recovery-Aktion MUSS einen unveränderbaren lokalen Auditdatensatz einschließlich der für Restore nach Kapitel 10.7.1 gebundenen Quellen-, Erhaltungs- und Zielinventur erzeugen.",
+    "scope": "Complete defined 0.2 Restore R behavior under specification 10.7.1-10.7.11: native full-source/target qualification, immutable historical closure, actual Proposal/review/service proof, exact source/plan/inventory bindings, authorized durable backup/publication/recovery, explicit project and outer Work owner handoff, public argv/structured/planning/Work parity and actual crash/IO boundaries. Current qualification is fresh; terminal Work replay only validates unchanged original chain/result bytes and does no new project work. Unsupported declared 0.1/unknown formats and Legacy registrations fail before project/internal operational/original writes. Positive 0.1 source-contract/reader/migration/Restore integration remains M16/Q.0, public Proposal writes remain M18, and 15.l.C is not implemented by this R change. Test fixtures are synthetic native inputs and never establish real human approval, risk acceptance, external production compatibility or release success. Implementation coverage does not assert a successful current final test run; frozen-state targeted Dev and rotated Apply evidence are recorded separately."
+  },
   "preconditions": [
     "Original full-project source bytes, explicit canonical roots and independently proven current project identity/managed coverage; complete original archive/attachment/receipt closure.",
     "Defined schema 0.2.0, complete native specialist/Proposal contracts and explicit fresh synthetic trusted host inputs where required; unknown declarations never acquire permission through successful container/hash parsing.",
@@ -37,6 +51,19 @@
     "Synthetic human review and authority fixtures are test inputs, not actual product approval. Final integrated targeted Dev execution and Apply N=3 execution remain separately evidenced; historical results are not rewritten.",
     "Native discard/recovery derivative publication requires Linux O_TMPFILE and a usable /proc/self/fd link; unavailable operations fail without a named-write fallback."
   ],
+  "primary_verification_id": "SR-VER-0031",
+  "required_environment": {
+    "declared_minimum_python": "3.10",
+    "implementation": "cpython",
+    "measured_scope": "current-run-only"
+  },
+  "requirement_id": "SR-REQ-0462",
+  "resources": {
+    "harness_suite_timeout": null,
+    "harness_test_timeout": null,
+    "owned_temporary_files": true
+  },
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
   "steps": [
     "Complete a full target or roll back a partial publication; verify immutable authority-attributed action evidence.",
     "Discard an unpublished preparation and check its receipt link to retained audit bytes.",
@@ -67,34 +94,8 @@
     "Reject declared unsupported 0.1/unknown normative schemas and Legacy registrations in source, current or required archive/attachment closure with Code 3 before project/internal operational/original writes. Enforce the same public planning/structured/Work boundary; do not silently skip, migrate or invent a supported legacy contract. Opaque foreign attachments and defined 0.2 legacy_ids retain their existing meaning.",
     "Keep invalid/unsupported input Code 3, missing operational values Code 2, real IO Code 5, identity/stale-content conflict Code 6 and native path/root safety Code 7 distinct. Work partial continuation Code 8 is not completion. Current catalog implementation coverage is separate from pending frozen-state Dev/Apply execution evidence, full-suite results and human product release approval."
   ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "Jede ausgeführte Recovery-Aktion MUSS einen unveränderbaren lokalen Auditdatensatz einschließlich der für Restore nach Kapitel 10.7.1 gebundenen Quellen-, Erhaltungs- und Zielinventur erzeugen.",
-    "scope": "Complete defined 0.2 Restore R behavior under specification 10.7.1-10.7.11: native full-source/target qualification, immutable historical closure, actual Proposal/review/service proof, exact source/plan/inventory bindings, authorized durable backup/publication/recovery, explicit project and outer Work owner handoff, public argv/structured/planning/Work parity and actual crash/IO boundaries. Current qualification is fresh; terminal Work replay only validates unchanged original chain/result bytes and does no new project work. Unsupported declared 0.1/unknown formats and Legacy registrations fail before project/internal operational/original writes. Positive 0.1 source-contract/reader/migration/Restore integration remains M16/Q.0, public Proposal writes remain M18, and 15.l.C is not implemented by this R change. Test fixtures are synthetic native inputs and never establish real human approval, risk acceptance, external production compatibility or release success. Implementation coverage does not assert a successful current final test run; frozen-state targeted Dev and rotated Apply evidence are recorded separately.",
-    "execution_evidence": "This active behavior coverage contract is not a test result; actual selected Dev and Apply outcomes are recorded separately with their source and selection bindings."
-  },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [
-    0,
-    2,
-    3,
-    5,
-    6,
-    7,
-    8
-  ],
-  "json_pointers": [],
-  "required_environment": {
-    "implementation": "cpython",
-    "declared_minimum_python": "3.10",
-    "measured_scope": "current-run-only"
-  },
-  "resources": {
-    "owned_temporary_files": true,
-    "harness_test_timeout": null,
-    "harness_suite_timeout": null
-  },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0462",
   "test_ids": [
     "tests/test_discard_restart.py::test_prepared_discard_after_fresh_process_restart[resources-abrupt]",
     "tests/test_discard_restart.py::test_prepared_discard_after_fresh_process_restart[update-released]",
@@ -1229,6 +1230,5 @@
     "tests/test_work_restore_progress.py::test_success_retains_native_completion_and_pending_delivery_under_one_live_owner[project_bundle]",
     "tests/test_work_restore_progress.py::test_work_io_failure_preserves_native_completion_and_actual_checkpoint[False]",
     "tests/test_work_restore_progress.py::test_work_io_failure_preserves_native_completion_and_actual_checkpoint[True]"
-  ],
-  "open_items": []
+  ]
 }

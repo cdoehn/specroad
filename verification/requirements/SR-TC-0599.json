@@ -1,46 +1,49 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0599",
-  "requirement_id": "SR-REQ-0599",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0035",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [
+    0,
+    6
+  ],
   "fixture_ids": [
     "SR-FIX-OWNED-TEMP-v1"
   ],
-  "preconditions": [
-    "Owned temporary model/profile files and Work roots; real native model, graph, SRX, checkpoint and transaction paths. In-process tests use an explicitly labelled recorded-build fixture; process tests build and run the actual module/zipapp. Trusted host registry, initial binding and normative publication authority are explicit test harness inputs.",
-    "The host-boundary case uses actual newly built module execution and native RLIMIT_NOFILE changes in independent owned child processes; low-limit failure is a real EMFILE, not an invented softbudget refusal."
-  ],
-  "steps": [
-    "Build the actual core module tree and zipapp and invoke their trusted host evaluation adapter in independent isolated Python processes with no PATH discovery.",
-    "Move runtime, Work and protected project roots between invocations, remove original captured source files and alternate resource profiles; resume from durable bytes.",
-    "Verify exact final native results and reject an incompatible build before a writing lease.",
-    "Check rehashed incomplete/contradictory retained data and actual changed input/runtime/host prerequisites; retain the actual checkpoint and all required observations, then resume only after a compatible prerequisite is restored."
+  "implementation_status": "partial",
+  "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "Closed trusted host API for finite explicitly saved model/profile inputs and complete native evaluation units. Whole evaluations and the input set are currently memory-resident; general CLI/Code-8 integration, evaluation Work-package export/restore, bounded within-evaluation durable cursors, later commands and full platform/sandbox/release coverage remain open. Rename cases preserve inode identities and use identical built bytes. Hash consistency does not authenticate foreign Work data; results do not claim current project-file verification."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Die Release-Abnahme MUSS die in Kapitel 14.7 definierten Prozess-, Pfad-, Sandbox- und Cachewechsel ohne notwendige Sessions nachweisen.",
     "scope": "Actual built module and zipapp executions continue in fresh processes after inode-preserving path changes and original source loss, without an in-memory prior session. Missing/empty/corrupt caches and incompatible builds are checked. This is current-host evidence, not the entire release portability matrix. Closed trusted host API for finite explicitly saved model/profile inputs and complete native evaluation units. Whole evaluations and the input set are currently memory-resident; general CLI/Code-8 integration, evaluation Work-package export/restore, bounded within-evaluation durable cursors, later commands and full platform/sandbox/release coverage remain open. Rename cases preserve inode identities and use identical built bytes. Hash consistency does not authenticate foreign Work data; results do not claim current project-file verification. R additionally checks the complete retained native phase/scope/diagnostic contract and reports concrete lost snapshot resources, without rerunning confirmed native evaluations. Current-host EMFILE from a real reduced descriptor limit and late build changes retain the actual checkpoint; compatible later calls reuse only confirmed units. These are consistency and current-host behavior checks, not authentication, bounded-memory completion or full release portability approval."
   },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [
-    0,
-    6
+  "preconditions": [
+    "Owned temporary model/profile files and Work roots; real native model, graph, SRX, checkpoint and transaction paths. In-process tests use an explicitly labelled recorded-build fixture; process tests build and run the actual module/zipapp. Trusted host registry, initial binding and normative publication authority are explicit test harness inputs.",
+    "The host-boundary case uses actual newly built module execution and native RLIMIT_NOFILE changes in independent owned child processes; low-limit failure is a real EMFILE, not an invented softbudget refusal."
   ],
-  "json_pointers": [],
+  "primary_verification_id": "SR-VER-0035",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0599",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Build the actual core module tree and zipapp and invoke their trusted host evaluation adapter in independent isolated Python processes with no PATH discovery.",
+    "Move runtime, Work and protected project roots between invocations, remove original captured source files and alternate resource profiles; resume from durable bytes.",
+    "Verify exact final native results and reject an incompatible build before a writing lease.",
+    "Check rehashed incomplete/contradictory retained data and actual changed input/runtime/host prerequisites; retain the actual checkpoint and all required observations, then resume only after a compatible prerequisite is restored."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0599",
   "test_ids": [
     "tests/test_work_evaluation.py::test_new_incompatible_build_cannot_write_or_reuse_evaluation",
     "tests/test_work_evaluation.py::test_real_distribution_reuses_saved_units_in_new_processes_and_relocated_roots[module]",
@@ -55,8 +58,5 @@
     "tests/test_work_evaluation_right.py::test_lost_captured_bytes_name_the_resource_without_original_source_fallback[changed-profiles]",
     "tests/test_work_evaluation_right.py::test_lost_captured_bytes_name_the_resource_without_original_source_fallback[missing-model]",
     "tests/test_work_evaluation_right.py::test_lost_captured_bytes_name_the_resource_without_original_source_fallback[missing-profiles]"
-  ],
-  "open_items": [
-    "Closed trusted host API for finite explicitly saved model/profile inputs and complete native evaluation units. Whole evaluations and the input set are currently memory-resident; general CLI/Code-8 integration, evaluation Work-package export/restore, bounded within-evaluation durable cursors, later commands and full platform/sandbox/release coverage remain open. Rename cases preserve inode identities and use identical built bytes. Hash consistency does not authenticate foreign Work data; results do not claim current project-file verification."
   ]
 }

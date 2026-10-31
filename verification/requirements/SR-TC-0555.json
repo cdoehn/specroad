@@ -1,29 +1,5 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0555",
-  "requirement_id": "SR-REQ-0555",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0035",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
-  "fixture_ids": [
-    "SR-FIX-OWNED-TEMP-v1",
-    "SR-FIX-ISOLATED-CPYTHON-v1"
-  ],
-  "preconditions": [
-    "Use the current trusted checkout and isolated temporary inputs."
-  ],
-  "steps": [
-    "Execute the named behavior tests in the current complete suite.",
-    "Observe returned data, file effects, module loads and exit status; never human-readable output.",
-    "Observe actual bounded descriptor reads and phase progress across exact metadata thresholds, short reads and changing files; preserve genuine error classes.",
-    "Compare native startup accesses before and after 5,000 completed history files; classify at most sixteen active entries without opening journal bodies."
-  ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "Ein Preflight DARF NICHT allein zur Startprüfung die vollständige Modellvalidierung, einen Indexneuaufbau oder einen rekursiven Repository-/Archivscan auslösen.",
-    "scope": "Native access recording and side-effect traps cover bootstrap, current metadata diagnosis and project_read/startup gates through the actual invocation pipeline. Invalid unrelated model/archive/history contents remain uninterpreted; unresolved active state blocks without model or journal-body loading. Broader metadata budgets and later command families remain open. Shared metadata accounting covers configuration capture, shallow names and verification; same-invocation detail phases disclose SRV167 without a size-only error or invented persistent continuation. Large history does not change native startup accesses."
-  },
+  "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [
     "SRV167"
   ],
@@ -35,22 +11,49 @@
     6,
     7
   ],
+  "fixture_ids": [
+    "SR-FIX-OWNED-TEMP-v1",
+    "SR-FIX-ISOLATED-CPYTHON-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [
     "/summary/preflight/metadata_bytes_read",
     "/summary/preflight/metadata_phases",
     "/summary/preflight/preflight_detail_required"
   ],
+  "method": "automated_behavior",
+  "open_items": [
+    "The current profile selection and bounded startup are covered by unchanged W/R tests after 6.a.C consolidation. Cross-invocation detail continuation with persisted Work manifests/checkpoints remains assigned to 6.i-6.l; full resource budgets, actual write/recovery/root-creation prerequisites and further project command families remain open. No runtime/platform-matrix approval."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Ein Preflight DARF NICHT allein zur Startprüfung die vollständige Modellvalidierung, einen Indexneuaufbau oder einen rekursiven Repository-/Archivscan auslösen.",
+    "scope": "Native access recording and side-effect traps cover bootstrap, current metadata diagnosis and project_read/startup gates through the actual invocation pipeline. Invalid unrelated model/archive/history contents remain uninterpreted; unresolved active state blocks without model or journal-body loading. Broader metadata budgets and later command families remain open. Shared metadata accounting covers configuration capture, shallow names and verification; same-invocation detail phases disclose SRV167 without a size-only error or invented persistent continuation. Large history does not change native startup accesses."
+  },
+  "preconditions": [
+    "Use the current trusted checkout and isolated temporary inputs."
+  ],
+  "primary_verification_id": "SR-VER-0035",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0555",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Execute the named behavior tests in the current complete suite.",
+    "Observe returned data, file effects, module loads and exit status; never human-readable output.",
+    "Observe actual bounded descriptor reads and phase progress across exact metadata thresholds, short reads and changing files; preserve genuine error classes.",
+    "Compare native startup accesses before and after 5,000 completed history files; classify at most sixteen active entries without opening journal bodies."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0555",
   "test_ids": [
     "test_bootstrap.BootstrapRobustnessTests.test_instrumented_bootstrap_performs_no_project_reads_scans_or_processes",
     "test_bootstrap.BootstrapRobustnessTests.test_metadata_only_call_does_not_read_model_or_git",
@@ -114,8 +117,5 @@
     "tests/test_preflight_profiles.py::test_project_read_opens_only_current_metadata_before_handler[generated]",
     "tests/test_preflight_profiles.py::test_project_read_opens_only_current_metadata_before_handler[plan]",
     "tests/test_preflight_profiles.py::test_project_read_opens_only_current_metadata_before_handler[read]"
-  ],
-  "open_items": [
-    "The current profile selection and bounded startup are covered by unchanged W/R tests after 6.a.C consolidation. Cross-invocation detail continuation with persisted Work manifests/checkpoints remains assigned to 6.i-6.l; full resource budgets, actual write/recovery/root-creation prerequisites and further project command families remain open. No runtime/platform-matrix approval."
   ]
 }

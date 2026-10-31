@@ -1,17 +1,43 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0240",
-  "requirement_id": "SR-REQ-0240",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0018",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [
+    2,
+    3,
+    5,
+    7
+  ],
   "fixture_ids": [
     "SR-FIX-OWNED-TEMP-v1"
   ],
+  "implementation_status": "partial",
+  "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "Complete registered artifact-create CLI/dry-run/stdout and production project/history loading; extend the shared boundary to subsequent authoring commands. The native embedding writer is now covered but is not a registered CLI.",
+    "Whole raw and normalized inputs remain memory-resident. Full model, profile, graph, local instance, platform and release coverage is not established by field-schema preparation."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Schreibende Authoring-Befehle MÜSSEN strukturierte Eingaben sowohl über `--input <FILE>` als auch über `--input -` von stdin akzeptieren und bei `--format json` ausschließlich ein versioniertes Ergebnisobjekt auf stdout ausgeben.",
+    "scope": "Shared artifact-create field inputs normalize options, files and explicit binary stdin into canonical intent for24regular types without input-layer writes or allocation. The native7.c.W embedding service now connects those inputs to locked identity allocation, complete supplied-target validation and real transaction publication for applicable types, with required unavailable semantic gates failing closed. Registered CLI/stdout, complete production project/history loading, other authoring commands, platform and release scope remain partial."
+  },
   "preconditions": [
     "Owned temporary inputs and independently constructed native domain/record fixtures. Native safe descriptor reads for files; explicit binary streams. Real built module and zipapp in isolated empty-PATH child processes."
   ],
+  "primary_verification_id": "SR-VER-0018",
+  "required_environment": {
+    "declared_minimum_python": "3.10",
+    "implementation": "cpython",
+    "measured_scope": "current-run-only"
+  },
+  "requirement_id": "SR-REQ-0240",
+  "resources": {
+    "harness_suite_timeout": null,
+    "harness_test_timeout": null,
+    "owned_temporary_files": true
+  },
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
   "steps": [
     "Normalize the same declared draft fields through owned mappings, real JSON files, explicit binary stdin and actual field option token binding; compare canonical intent bytes and hashes.",
     "Verify all 24 regular draft field types, exact textual semantics, language canonicalization, detached values and preservation of input files; reject generated fields, specialized records, malformed JSON, conflicts and unsafe input paths.",
@@ -20,30 +46,8 @@
     "Reject missing/null required fields for all regular types and native conditional requirements. Check exact composite option values, control-field rejection, conflicting sources, broken/closed binary streams, actual file replacement/growth/shrinkage and FIFOs without visible identities or project writes. Verify actual built distribution invalid stdin diagnostics.",
     "Connect equivalent mapping/file/stdin inputs to the actual native embedding writer, check stored draft fields and its versioned result without claiming an implemented CLI stdout surface."
   ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "Schreibende Authoring-Befehle MÜSSEN strukturierte Eingaben sowohl über `--input <FILE>` als auch über `--input -` von stdin akzeptieren und bei `--format json` ausschließlich ein versioniertes Ergebnisobjekt auf stdout ausgeben.",
-    "scope": "Shared artifact-create field inputs normalize options, files and explicit binary stdin into canonical intent for24regular types without input-layer writes or allocation. The native7.c.W embedding service now connects those inputs to locked identity allocation, complete supplied-target validation and real transaction publication for applicable types, with required unavailable semantic gates failing closed. Registered CLI/stdout, complete production project/history loading, other authoring commands, platform and release scope remain partial."
-  },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [
-    2,
-    3,
-    5,
-    7
-  ],
-  "json_pointers": [],
-  "required_environment": {
-    "implementation": "cpython",
-    "declared_minimum_python": "3.10",
-    "measured_scope": "current-run-only"
-  },
-  "resources": {
-    "owned_temporary_files": true,
-    "harness_test_timeout": null,
-    "harness_suite_timeout": null
-  },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0240",
   "test_ids": [
     "tests/test_artifact_creation.py::test_native_create_publishes_exact_draft_under_its_allocated_path[file-assumption]",
     "tests/test_artifact_creation.py::test_native_create_publishes_exact_draft_under_its_allocated_path[file-capability]",
@@ -400,9 +404,5 @@
     "tests/test_authoring_inputs_right.py::test_union_option_wrong_types_are_schema_errors[[]]",
     "tests/test_authoring_inputs_right.py::test_union_option_wrong_types_are_schema_errors[false]",
     "tests/test_authoring_inputs_right.py::test_union_option_wrong_types_are_schema_errors[null]"
-  ],
-  "open_items": [
-    "Complete registered artifact-create CLI/dry-run/stdout and production project/history loading; extend the shared boundary to subsequent authoring commands. The native embedding writer is now covered but is not a registered CLI.",
-    "Whole raw and normalized inputs remain memory-resident. Full model, profile, graph, local instance, platform and release coverage is not established by field-schema preparation."
   ]
 }

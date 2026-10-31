@@ -1,31 +1,5 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0096",
-  "requirement_id": "SR-REQ-0096",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0007",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
-  "fixture_ids": [
-    "SR-FIX-LITERAL-LINT-v1",
-    "SR-FIX-CORE-LINT-v1"
-  ],
-  "preconditions": [
-    "Explicit valid artifact values, selected text fields, versioned policy and supplied term inventory.",
-    "Owned complete relation sources, selected IDs and explicit bundled Core/software profile resources; stored approved values are not human review evidence."
-  ],
-  "steps": [
-    "Capture and validate owned records and exact selections.",
-    "Run literal checks on unchanged selected text and inspect structured findings and coverage.",
-    "Run the actual public Core and read-only project lint paths with complete data and missing rationale, origin, verification or active profile minimum; verify bound findings and absence of writes.",
-    "Observe simultaneous selected findings, incoming/outgoing/both profile minima, exact endpoint counts, maturity and field obligations, selection and fail thresholds.",
-    "Supply unavailable literal resources and invalid references, mutate configuration/source/membership/operational state during real reads, and verify incomplete/failed outcomes without writes or fabricated coverage."
-  ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "Die eingebauten Lint-Regeln MÜSSEN fehlende Begründung, fehlende Verifikation, explizit konfigurierte literale Glossar-/Platzhalterverletzungen und fehlende Mindestbeziehungen diagnostizieren; semantische Modalitäts- oder Mehrdeutigkeitserkennung ist kein Core-Passkriterium.",
-    "scope": "Selected schema-defined rationale fields and Core/profile relation minima plus literal lint over supplied or observed project sources. Explicit profile composition, diagnostic bindings, threshold semantics and read freshness are covered. Missing literal prerequisites retain known Core findings while remaining incomplete; invalid structural/reference prerequisites stop evaluation. No complete model/schema/profile, review, language understanding or approval proof."
-  },
+  "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [
     "SRV002",
     "SRV023",
@@ -42,22 +16,52 @@
     5,
     7
   ],
+  "fixture_ids": [
+    "SR-FIX-LITERAL-LINT-v1",
+    "SR-FIX-CORE-LINT-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [
     "/rationale",
     "/relations",
     "/statement"
   ],
+  "method": "automated_behavior",
+  "open_items": [
+    "Production language/SRX/formal-approval validation is evidenced separately by SR-TC-0086 and SR-TC-0100; reference aggregation is evidenced by the diagnostic manifests. Those adapters do not establish human review, complete evidence freshness or full command-level lint integration.",
+    "Full CLI integration and the complete target runtime matrix remain separate evidence scopes; no full schema, review or human approval result is inferred from lint."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Die eingebauten Lint-Regeln MÜSSEN fehlende Begründung, fehlende Verifikation, explizit konfigurierte literale Glossar-/Platzhalterverletzungen und fehlende Mindestbeziehungen diagnostizieren; semantische Modalitäts- oder Mehrdeutigkeitserkennung ist kein Core-Passkriterium.",
+    "scope": "Selected schema-defined rationale fields and Core/profile relation minima plus literal lint over supplied or observed project sources. Explicit profile composition, diagnostic bindings, threshold semantics and read freshness are covered. Missing literal prerequisites retain known Core findings while remaining incomplete; invalid structural/reference prerequisites stop evaluation. No complete model/schema/profile, review, language understanding or approval proof."
+  },
+  "preconditions": [
+    "Explicit valid artifact values, selected text fields, versioned policy and supplied term inventory.",
+    "Owned complete relation sources, selected IDs and explicit bundled Core/software profile resources; stored approved values are not human review evidence."
+  ],
+  "primary_verification_id": "SR-VER-0007",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0096",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Capture and validate owned records and exact selections.",
+    "Run literal checks on unchanged selected text and inspect structured findings and coverage.",
+    "Run the actual public Core and read-only project lint paths with complete data and missing rationale, origin, verification or active profile minimum; verify bound findings and absence of writes.",
+    "Observe simultaneous selected findings, incoming/outgoing/both profile minima, exact endpoint counts, maturity and field obligations, selection and fail thresholds.",
+    "Supply unavailable literal resources and invalid references, mutate configuration/source/membership/operational state during real reads, and verify incomplete/failed outcomes without writes or fabricated coverage."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0096",
   "test_ids": [
     "test_literal_lint.LiteralWorkTests.test_declared_forbidden_synonym_is_diagnosed",
     "test_literal_lint.LiteralWorkTests.test_approved_core_placeholders_cannot_be_removed",
@@ -109,9 +113,5 @@
     "test_core_lint_right.ProjectCoreLintRightTests.test_operational_change_after_core_check_invalidates_findings",
     "test_core_lint_right.ProjectCoreLintRightTests.test_recovery_during_profile_composition_blocks_before_model_load",
     "test_core_lint_right.ProjectCoreLintRightTests.test_unavailable_or_unsafe_source_is_never_repaired"
-  ],
-  "open_items": [
-    "Production language/SRX/formal-approval validation is evidenced separately by SR-TC-0086 and SR-TC-0100; reference aggregation is evidenced by the diagnostic manifests. Those adapters do not establish human review, complete evidence freshness or full command-level lint integration.",
-    "Full CLI integration and the complete target runtime matrix remain separate evidence scopes; no full schema, review or human approval result is inferred from lint."
   ]
 }

@@ -1,43 +1,46 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0039",
-  "requirement_id": "SR-REQ-0039",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0004",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [],
   "fixture_ids": [
     "SR-FIX-ARTIFACT-COMMON-v1"
   ],
-  "preconditions": [
-    "Trusted 0.2.0 Core type registry; owned inert common-field JSON fixtures."
+  "implementation_status": "partial",
+  "json_pointers": [
+    "/schema_version",
+    "/artifact_type",
+    "/id"
   ],
-  "steps": [
-    "Validate versioned common-field envelopes; compare accepted identities and rejection diagnostics."
+  "method": "automated_behavior",
+  "open_items": [
+    "Common projection only: nested relations, provenance, external identities, SRX and complete BCP-47 validation remain with their later contracts. Type-specific schemas, graph/profile rules, lifecycle authorization, artifact creation and historical-resource adapters are not provided by this layer."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Jeder Kernartefakttyp MUSS ein unverwechselbares ID-Präfix besitzen.",
     "scope": "Common-field schema resources and read-only projections only. This is not a complete artifact acceptance, approval, release or creation gate."
   },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [
-    "/schema_version",
-    "/artifact_type",
-    "/id"
+  "preconditions": [
+    "Trusted 0.2.0 Core type registry; owned inert common-field JSON fixtures."
   ],
+  "primary_verification_id": "SR-VER-0004",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0039",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Validate versioned common-field envelopes; compare accepted identities and rejection diagnostics."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0039",
   "test_ids": [
     "test_artifact_schemas.ArtifactSchemaWorkTests.test_all_28_types_have_distinct_versioned_schema_and_prefix",
     "test_artifact_schemas.ArtifactSchemaWorkTests.test_file_identity_and_project_identity_are_bound",
@@ -45,8 +48,5 @@
     "test_artifact_schemas.ArtifactSchemaRightTests.test_valid_legacy_ids_are_readable_but_not_minted",
     "test_artifact_schemas.ArtifactSchemaRightTests.test_identity_scheme_cannot_be_swapped_without_changing_identity",
     "test_artifact_schemas.ArtifactSchemaRightTests.test_artifact_project_prefix_grammar"
-  ],
-  "open_items": [
-    "Common projection only: nested relations, provenance, external identities, SRX and complete BCP-47 validation remain with their later contracts. Type-specific schemas, graph/profile rules, lifecycle authorization, artifact creation and historical-resource adapters are not provided by this layer."
   ]
 }

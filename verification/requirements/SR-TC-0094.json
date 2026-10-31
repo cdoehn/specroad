@@ -1,26 +1,5 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0094",
-  "requirement_id": "SR-REQ-0094",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0007",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
-  "fixture_ids": [
-    "SR-FIX-DIAGNOSTICS-v1"
-  ],
-  "preconditions": [
-    "Explicit diagnostic data and already loaded, source-bound model reports."
-  ],
-  "steps": [
-    "Construct and validate findings; preserve all observed machine locations and identities.",
-    "Apply an explicit threshold without rerunning rules and inspect structured counts and failure class."
-  ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "Die Option `--strict` MUSS `--fail-on warning` und die dokumentierten optionalen Core-Lint-Regeln aktivieren, ohne dadurch einen Analyzer zu starten oder nicht verfügbare Sprachanalyse als geprüft auszugeben.",
-    "scope": "Shared finding model, semantic ordering and explicit fail assessment; no full CLI command, unknown producer authentication or automatic optional lint."
-  },
+  "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [],
   "expected_exit_codes": [
     0,
@@ -28,25 +7,46 @@
     3,
     5
   ],
-  "json_pointers": [],
-  "required_environment": {
-    "implementation": "cpython",
-    "declared_minimum_python": "3.10",
-    "measured_scope": "current-run-only"
-  },
-  "resources": {
-    "owned_temporary_files": true,
-    "harness_test_timeout": null,
-    "harness_suite_timeout": null
-  },
-  "evidence_kind": "specroad-dev-pytest-v1",
-  "test_ids": [
-    "test_diagnostics.DiagnosticWorkTests.test_strict_uses_warning_threshold_without_executing_rules",
-    "test_validation_diagnostics_right.ValidationDiagnosticRightTests.test_assessment_never_reexecutes_gate_when_threshold_changes"
+  "fixture_ids": [
+    "SR-FIX-DIAGNOSTICS-v1"
   ],
+  "implementation_status": "partial",
+  "json_pointers": [],
+  "method": "automated_behavior",
   "open_items": [
     "All future validators/commands must use this diagnostic boundary.",
     "Optional strict lint execution, full source inventory and complete target runtime matrix remain separately evidenced.",
     "Human presentation/documentation is not an automated oracle (TD-001)."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Die Option `--strict` MUSS `--fail-on warning` und die dokumentierten optionalen Core-Lint-Regeln aktivieren, ohne dadurch einen Analyzer zu starten oder nicht verfügbare Sprachanalyse als geprüft auszugeben.",
+    "scope": "Shared finding model, semantic ordering and explicit fail assessment; no full CLI command, unknown producer authentication or automatic optional lint."
+  },
+  "preconditions": [
+    "Explicit diagnostic data and already loaded, source-bound model reports."
+  ],
+  "primary_verification_id": "SR-VER-0007",
+  "required_environment": {
+    "declared_minimum_python": "3.10",
+    "implementation": "cpython",
+    "measured_scope": "current-run-only"
+  },
+  "requirement_id": "SR-REQ-0094",
+  "resources": {
+    "harness_suite_timeout": null,
+    "harness_test_timeout": null,
+    "owned_temporary_files": true
+  },
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Construct and validate findings; preserve all observed machine locations and identities.",
+    "Apply an explicit threshold without rerunning rules and inspect structured counts and failure class."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0094",
+  "test_ids": [
+    "test_diagnostics.DiagnosticWorkTests.test_strict_uses_warning_threshold_without_executing_rules",
+    "test_validation_diagnostics_right.ValidationDiagnosticRightTests.test_assessment_never_reexecutes_gate_when_threshold_changes"
   ]
 }

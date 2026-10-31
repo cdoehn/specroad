@@ -1,45 +1,48 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0289",
-  "requirement_id": "SR-REQ-0289",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0022",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [
+    "SRV110"
+  ],
+  "expected_exit_codes": [],
   "fixture_ids": [
     "SR-FIX-SRX-FIELDS-v1",
     "SR-FIX-SRX-QUANTIFIERS-v1"
   ],
-  "preconditions": [
-    "Explicit SRX program and owned JSON-only context."
+  "implementation_status": "partial",
+  "json_pointers": [
+    "/expression"
   ],
-  "steps": [
-    "Evaluate static fields and exists; classify value types; reject malformed operands without coercion or side effects.",
-    "Evaluate any/all/none in array order using lexical item binding, strict Boolean predicates and empty-array identities."
+  "method": "automated_behavior",
+  "open_items": [
+    "Complete remaining operator families, quantifier-local item context and integration with rules/profiles."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Der Operator `field` MUSS Werte ausschließlich über RFC-6901-JSON-Pointer in einem benannten Kontextobjekt lesen.",
     "scope": "Static field/exists/value-kind foundation; complete SRX operator and validation integration remain pending."
   },
-  "expected_diagnostics": [
-    "SRV110"
+  "preconditions": [
+    "Explicit SRX program and owned JSON-only context."
   ],
-  "expected_exit_codes": [],
-  "json_pointers": [
-    "/expression"
-  ],
+  "primary_verification_id": "SR-VER-0022",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0289",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Evaluate static fields and exists; classify value types; reject malformed operands without coercion or side effects.",
+    "Evaluate any/all/none in array order using lexical item binding, strict Boolean predicates and empty-array identities."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0289",
   "test_ids": [
     "test_srx_fields.SrxFieldTests.test_object_field",
     "test_srx_fields.SrxFieldTests.test_slash_and_tilde_escaping",
@@ -47,8 +50,5 @@
     "test_srx_quantifiers.SrxQuantifierTests.test_top_level_array_expression_has_no_item_binding",
     "test_srx_quantifiers.SrxQuantifierTests.test_escaped_item_pointer",
     "test_srx_quantifiers.SrxQuantifierTests.test_array_element_pointer"
-  ],
-  "open_items": [
-    "Complete remaining operator families, quantifier-local item context and integration with rules/profiles."
   ]
 }

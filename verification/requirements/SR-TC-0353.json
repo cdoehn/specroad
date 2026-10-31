@@ -1,19 +1,39 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0353",
-  "requirement_id": "SR-REQ-0353",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0023",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [],
   "fixture_ids": [
     "SR-FIX-DOCUMENT-VIEW-VARIANTS-RIGHT-v1",
     "SR-FIX-DOCUMENT-VIEWS-RIGHT-v1",
     "SR-FIX-DOCUMENT-VIEWS-v1"
   ],
+  "implementation_status": "partial",
+  "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "Live non-project closure, computed-status services and CLI/rendering adapters remain assigned to their actual providers and later steps. These are partial behavior tests, not full-suite or release evidence."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Relationsprojektionen einer View MÜSSEN Richtung, zulässige Relationstypen, Maximaltiefe und Aggregationsart deklarieren und die konfigurierten Graphgrenzen einhalten.",
+    "scope": "11.k.W: closed unconfigured project view; native SRX filter/sort; artifact-field and bounded distinct-related-ID/count columns; stable scalar grouping and exact snapshot bindings. Read-only data, no rendering or full project validation. R adds closed format names and adversarial declaration/source/graph tests, no-I/O guards and isolated package parity. 11.l.R adds explicit missing preservation and bounded nested record data in the same configured snapshot."
+  },
   "preconditions": [
     "Owned TargetModel snapshot with original native records; no discovery, approval or external verification provider is fabricated."
   ],
+  "primary_verification_id": "SR-VER-0023",
+  "required_environment": {
+    "declared_minimum_python": "3.10",
+    "implementation": "cpython",
+    "measured_scope": "current-run-only"
+  },
+  "requirement_id": "SR-REQ-0353",
+  "resources": {
+    "harness_suite_timeout": null,
+    "harness_test_timeout": null,
+    "owned_temporary_files": true
+  },
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
   "steps": [
     "Resolve the stored view through native Query/SRX and relation services, compare typed rows/groups and snapshot bindings, and reject unsupported declarations before producing data.",
     "11.k.R: reject unknown/duplicate formats and foreign executable declarations; verify empty-filter validation, static projection paths, graph/type/source boundaries, unchanged original bytes and actual absence of external I/O; compare isolated Core/PYZ data.",
@@ -21,25 +41,8 @@
     "11.l.R: preserve missing cells explicitly without null/type coercion; evaluate acyclic nested records projections with independent native graph bounds, stable target IDs and original source bindings; reject malformed/unused definitions before filtering.",
     "11.l.C: extract unchanged native scope/configuration/query selection and typed row evaluation into private services; preserve all W/R tests, public bindings, grouping, error contracts and effects."
   ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "Relationsprojektionen einer View MÜSSEN Richtung, zulässige Relationstypen, Maximaltiefe und Aggregationsart deklarieren und die konfigurierten Graphgrenzen einhalten.",
-    "scope": "11.k.W: closed unconfigured project view; native SRX filter/sort; artifact-field and bounded distinct-related-ID/count columns; stable scalar grouping and exact snapshot bindings. Read-only data, no rendering or full project validation. R adds closed format names and adversarial declaration/source/graph tests, no-I/O guards and isolated package parity. 11.l.R adds explicit missing preservation and bounded nested record data in the same configured snapshot."
-  },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
-  "required_environment": {
-    "implementation": "cpython",
-    "declared_minimum_python": "3.10",
-    "measured_scope": "current-run-only"
-  },
-  "resources": {
-    "owned_temporary_files": true,
-    "harness_test_timeout": null,
-    "harness_suite_timeout": null
-  },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0353",
   "test_ids": [
     "tests/test_document_view_variants_right.py::test_each_nested_projection_keeps_its_own_direction_depth_and_distinct_targets[0-both-numbers2]",
     "tests/test_document_view_variants_right.py::test_each_nested_projection_keeps_its_own_direction_depth_and_distinct_targets[0-incoming-numbers1]",
@@ -126,8 +129,5 @@
     "tests/test_document_views_right.py::test_scope_declarations_cannot_silently_widen_or_discover_unbound_sources[partial]",
     "tests/test_document_views_right.py::test_scope_declarations_cannot_silently_widen_or_discover_unbound_sources[specification]",
     "tests/test_document_views_right.py::test_small_soft_graph_work_targets_do_not_truncate_declared_projection_depth"
-  ],
-  "open_items": [
-    "Live non-project closure, computed-status services and CLI/rendering adapters remain assigned to their actual providers and later steps. These are partial behavior tests, not full-suite or release evidence."
   ]
 }

@@ -1,18 +1,39 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0401",
-  "requirement_id": "SR-REQ-0401",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0028",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [],
   "fixture_ids": [
     "SR-FIX-CONFIGURED-BASELINE-v1",
     "SR-FIX-CONFIGURED-BASELINE-NATIVE-v1"
   ],
+  "implementation_status": "partial",
+  "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "Other historical scope kinds, configuration-wrapper dispatch, CLI/Work integration and installed language-package snapshot providers remain explicit integrations.",
+    "The pure preparation API does not prove live-project completeness, full validation or release readiness. Native creation enforces its existing complete target validation and publication gates."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Eine konfigurationsgebundene Baseline MUSS Konfigurations-ID, -Revision, -Hash, Scope Descriptor und den resultierenden Artefaktumfang speichern.",
+    "scope": "Configured Baseline preparation plus native closed project snapshot publication, independent archived-byte verification, show, materialization and shared comparison. Selection ID/revision/chain hash and canonical effective_configuration object are rebuilt from actual archived records. Current working changes cannot invalidate or replace history. The semantic project hash and combined configured model hash retain their existing contracts. Historical integrity grants no full validation, release or publication authority."
+  },
   "preconditions": [
     "Owned actual source records, project configuration, effective profile, resolved configured scope and complete supplied dependency observations; selected configuration and all parent records must belong to the retained scope."
   ],
+  "primary_verification_id": "SR-VER-0028",
+  "required_environment": {
+    "declared_minimum_python": "3.10",
+    "implementation": "cpython",
+    "measured_scope": "current-run-only"
+  },
+  "requirement_id": "SR-REQ-0401",
+  "resources": {
+    "harness_suite_timeout": null,
+    "harness_test_timeout": null,
+    "owned_temporary_files": true
+  },
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
   "steps": [
     "Prepare two configured Baseline manifests with distinct effective selections through the shared scope/applicability/hash services.",
     "Retain configuration ID, revision, effective chain hash, exact Scope Descriptor, selected artifact records and an independently archived effective-configuration manifest.",
@@ -23,25 +44,8 @@
     "Retain archives only for included older Baselines; preserve original identity reservations before applicability filtering.",
     "Reuse the selected configuration gate in native complete-target validation; reject caller replacement and missing weak relation targets in the closed scope."
   ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "Eine konfigurationsgebundene Baseline MUSS Konfigurations-ID, -Revision, -Hash, Scope Descriptor und den resultierenden Artefaktumfang speichern.",
-    "scope": "Configured Baseline preparation plus native closed project snapshot publication, independent archived-byte verification, show, materialization and shared comparison. Selection ID/revision/chain hash and canonical effective_configuration object are rebuilt from actual archived records. Current working changes cannot invalidate or replace history. The semantic project hash and combined configured model hash retain their existing contracts. Historical integrity grants no full validation, release or publication authority."
-  },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
-  "required_environment": {
-    "implementation": "cpython",
-    "declared_minimum_python": "3.10",
-    "measured_scope": "current-run-only"
-  },
-  "resources": {
-    "owned_temporary_files": true,
-    "harness_test_timeout": null,
-    "harness_suite_timeout": null
-  },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0401",
   "test_ids": [
     "tests/test_configured_baseline.py::test_archived_configuration_selection_can_be_resolved_from_stored_objects_without_original_files",
     "tests/test_configured_baseline.py::test_configured_snapshot_is_independent_of_input_order",
@@ -90,9 +94,5 @@
     "tests/test_configured_baseline_right.py::test_shared_configured_project_preparation_uses_the_same_historical_snapshot_reader[1]",
     "tests/test_configured_baseline_right.py::test_shared_configured_project_preparation_uses_the_same_historical_snapshot_reader[2]",
     "tests/test_configured_baseline_right.py::test_two_historical_variant_sources_keep_bindings_and_shared_comparison_contract"
-  ],
-  "open_items": [
-    "Other historical scope kinds, configuration-wrapper dispatch, CLI/Work integration and installed language-package snapshot providers remain explicit integrations.",
-    "The pure preparation API does not prove live-project completeness, full validation or release readiness. Native creation enforces its existing complete target validation and publication gates."
   ]
 }

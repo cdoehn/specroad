@@ -1,25 +1,5 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0161",
-  "requirement_id": "SR-REQ-0161",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0012",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
-  "fixture_ids": [
-    "SR-FIX-PUBLICATION-RECHECK-v1"
-  ],
-  "preconditions": [
-    "A checked plan, exact supplied TargetModel and owned on-disk files; actual held native writer lock and explicit host authority."
-  ],
-  "steps": [
-    "Recheck original bytes, normative JSON membership, destination ancestry/permissions and lock/recovery state immediately before invoking the trusted publisher."
-  ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "Jede `update`- oder `retire`-Operation MUSS die erwartete Artefaktrevision und den erwarteten Artefakthash enthalten.",
-    "scope": "Live final publication guard on supplied bound inputs; no native journal, atomic multi-file publication or CLI authorization yet."
-  },
+  "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [],
   "expected_exit_codes": [
     0,
@@ -29,18 +9,43 @@
     6,
     7
   ],
+  "fixture_ids": [
+    "SR-FIX-PUBLICATION-RECHECK-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "Complete production transaction writer/journal and specialized Proposal workflows in their assigned steps.",
+    "Existing prepared current-JSON inventory plus all bound resource bytes are checked; no complete archive/history or durable publication proof.",
+    "Native Linux support, actual filesystem/CPython matrix and host authentication require real target/CI verification."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Jede `update`- oder `retire`-Operation MUSS die erwartete Artefaktrevision und den erwarteten Artefakthash enthalten.",
+    "scope": "Live final publication guard on supplied bound inputs; no native journal, atomic multi-file publication or CLI authorization yet."
+  },
+  "preconditions": [
+    "A checked plan, exact supplied TargetModel and owned on-disk files; actual held native writer lock and explicit host authority."
+  ],
+  "primary_verification_id": "SR-VER-0012",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0161",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Recheck original bytes, normative JSON membership, destination ancestry/permissions and lock/recovery state immediately before invoking the trusted publisher."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0161",
   "test_ids": [
     "tests/test_publication_check.py::test_source_changed_after_preflight_refuses_before_publication[0]",
     "tests/test_publication_check.py::test_source_changed_after_preflight_refuses_before_publication[1]",
@@ -48,10 +53,5 @@
     "tests/test_publication_check.py::test_expected_revision_is_not_rebased",
     "tests/test_publication_check_right.py::test_gate_that_was_green_is_rerun_under_lock",
     "tests/test_publication_check_right.py::test_wrong_expected_hash_is_never_rebased_to_live_content"
-  ],
-  "open_items": [
-    "Complete production transaction writer/journal and specialized Proposal workflows in their assigned steps.",
-    "Existing prepared current-JSON inventory plus all bound resource bytes are checked; no complete archive/history or durable publication proof.",
-    "Native Linux support, actual filesystem/CPython matrix and host authentication require real target/CI verification."
   ]
 }

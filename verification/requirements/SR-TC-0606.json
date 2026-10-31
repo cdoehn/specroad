@@ -1,17 +1,37 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0606",
-  "requirement_id": "SR-REQ-0606",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0039",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [],
   "fixture_ids": [
     "SR-FIX-OWNED-TEMP-v1"
   ],
+  "implementation_status": "partial",
+  "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "General multi-unit scheduling and finite completion beyond the closed single-handler plan, persistent consumption/blocker state, global Work finalization and CLI/Code-8 integration remain open. No total memory or preemptive timing bound is asserted."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Ein Arbeitsschritt MUSS bevorzugt innerhalb seines gewählten Schrittfensters bis zum nächsten sicheren Checkpoint ausgeführt werden.",
+    "scope": "6.n.W connects the existing closed read-only bootstrap handler plan to an active owned InvocationConsumption. One complete safe handler is the supported minimum unit; a measured soft target already exceeded before execution still permits its attempt and durable publication. Successful new work is checked as an immediate manifest successor with a new completed unit. Existing checked completion bytes are reused without re-executing the handler or creating an empty generation, including after resource profile changes and relocation into a new built module/zipapp process. Unknown observations stay unknown. Incomplete handlers, missing checkpoint bytes and publication failures retain their actual error/state and do not return a successful work window. Measurements bracket fresh checks, execution and checkpoint publication, with no preemptive timing guarantee. The window explicitly reports consumption_persisted=false: consumption is only the caller-owned in-process ledger, not cumulative checkpoint evidence. The current handler result is complete while work remains running pending global finalization. General multi-unit scheduling, persistent consumption/blockers, Code 8 and CLI integration remain open; this is partial behavior coverage, not complete requirement or release approval. 6.n.R adds a single-attempt outcome API that distinguishes confirmed handler results from observed resource failures during resume. The blocker states its native cause, required remedy and the actual freshly inspected storage chain, without claiming execution authority, a known minimum resource amount or an exactly observed handler-attempt boundary. A late publication error may retain the new generation; unavailable inspection reports no invented checkpoint. No retry, rollback, critical-data deletion or empty blocker generation occurs. Measurement/projection failures, unknown errors, interruptions and safety/compatibility/usage failures keep their original exception contracts. Rehashed duplicate units and empty generations are rejected before execution. Blockers are current-call data, not persisted WorkManifest state; all previously listed integration limits remain open. 6.n.C separates unchanged successor/reuse confirmation, window projection and retained storage inspection from measurement/resume orchestration. Public result type, error boundaries, check order and output fields remain unchanged. All existing W/R tests retain their original bytes and expectations; no additional behavior or integration coverage is claimed."
+  },
   "preconditions": [
     "Private external work storage, independently trusted initial work binding, explicit recorded-build and deterministic clock fixtures; separate generated module/zipapp distributions for fresh-process reuse."
   ],
+  "primary_verification_id": "SR-VER-0039",
+  "required_environment": {
+    "declared_minimum_python": "3.10",
+    "implementation": "cpython",
+    "measured_scope": "current-run-only"
+  },
+  "requirement_id": "SR-REQ-0606",
+  "resources": {
+    "harness_suite_timeout": null,
+    "harness_test_timeout": null,
+    "owned_temporary_files": true
+  },
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
   "steps": [
     "Begin an active measurement window, including a soft target already exceeded before execution; attempt a complete supported Core handler and inspect its durably confirmed result.",
     "Reuse the saved result across new resource profiles and fresh compatible processes without recomputing the handler or generating an empty checkpoint.",
@@ -19,25 +39,8 @@
     "Use labelled native resource failures at actual resume/publication boundaries; inspect the retained checkpoint after early and late errors, then explicitly resume after remedy without recomputing confirmed units.",
     "Reject self-hashed duplicate units and empty checkpoint generations before handler execution; keep observation, safety, compatibility and usage failures distinct from resource blockers."
   ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "Ein Arbeitsschritt MUSS bevorzugt innerhalb seines gewählten Schrittfensters bis zum nächsten sicheren Checkpoint ausgeführt werden.",
-    "scope": "6.n.W connects the existing closed read-only bootstrap handler plan to an active owned InvocationConsumption. One complete safe handler is the supported minimum unit; a measured soft target already exceeded before execution still permits its attempt and durable publication. Successful new work is checked as an immediate manifest successor with a new completed unit. Existing checked completion bytes are reused without re-executing the handler or creating an empty generation, including after resource profile changes and relocation into a new built module/zipapp process. Unknown observations stay unknown. Incomplete handlers, missing checkpoint bytes and publication failures retain their actual error/state and do not return a successful work window. Measurements bracket fresh checks, execution and checkpoint publication, with no preemptive timing guarantee. The window explicitly reports consumption_persisted=false: consumption is only the caller-owned in-process ledger, not cumulative checkpoint evidence. The current handler result is complete while work remains running pending global finalization. General multi-unit scheduling, persistent consumption/blockers, Code 8 and CLI integration remain open; this is partial behavior coverage, not complete requirement or release approval. 6.n.R adds a single-attempt outcome API that distinguishes confirmed handler results from observed resource failures during resume. The blocker states its native cause, required remedy and the actual freshly inspected storage chain, without claiming execution authority, a known minimum resource amount or an exactly observed handler-attempt boundary. A late publication error may retain the new generation; unavailable inspection reports no invented checkpoint. No retry, rollback, critical-data deletion or empty blocker generation occurs. Measurement/projection failures, unknown errors, interruptions and safety/compatibility/usage failures keep their original exception contracts. Rehashed duplicate units and empty generations are rejected before execution. Blockers are current-call data, not persisted WorkManifest state; all previously listed integration limits remain open. 6.n.C separates unchanged successor/reuse confirmation, window projection and retained storage inspection from measurement/resume orchestration. Public result type, error boundaries, check order and output fields remain unchanged. All existing W/R tests retain their original bytes and expectations; no additional behavior or integration coverage is claimed."
-  },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
-  "required_environment": {
-    "implementation": "cpython",
-    "declared_minimum_python": "3.10",
-    "measured_scope": "current-run-only"
-  },
-  "resources": {
-    "owned_temporary_files": true,
-    "harness_test_timeout": null,
-    "harness_suite_timeout": null
-  },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0606",
   "test_ids": [
     "tests/test_work_progress.py::test_exceeded_soft_window_still_confirms_the_actual_complete_minimum_unit[--cpu-budget-ms-capabilities]",
     "tests/test_work_progress.py::test_exceeded_soft_window_still_confirms_the_actual_complete_minimum_unit[--cpu-budget-ms-command.describe]",
@@ -104,8 +107,5 @@
     "tests/test_work_progress_right.py::test_unclassified_or_interrupted_execution_keeps_its_original_exception[failure1]",
     "tests/test_work_progress_right.py::test_unclassified_or_interrupted_execution_keeps_its_original_exception[failure2]",
     "tests/test_work_progress_right.py::test_unsafe_work_data_stays_a_safety_failure_and_is_never_removed"
-  ],
-  "open_items": [
-    "General multi-unit scheduling and finite completion beyond the closed single-handler plan, persistent consumption/blocker state, global Work finalization and CLI/Code-8 integration remain open. No total memory or preemptive timing bound is asserted."
   ]
 }

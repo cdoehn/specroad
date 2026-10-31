@@ -1,28 +1,5 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0527",
-  "requirement_id": "SR-REQ-0527",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0023",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
-  "fixture_ids": [
-    "SR-FIX-DOCUMENT-PROSE-RIGHT-v1",
-    "SR-FIX-DOCUMENT-PROSE-v1"
-  ],
-  "preconditions": [
-    "Native ContentBlock with owned original UTF-8 JSON bytes; explicit prose/admonition parser invocation, no implicit tightening of passive record or search contracts."
-  ],
-  "steps": [
-    "11.e.W: parse allowed paragraph/inline/code/list/quote/break/attachment node families; compare semantic data, owned source and normalized hashes, admonition levels, structured forbidden-content errors, real unchanged files and isolated Core/PYZ results.",
-    "11.e.R: preserve unchanged W nodes while completing lazy/nested container and indentation behavior; verify one-time escape/entity decoding, multiline definition rejection, obfuscated external/traversing paths, inert extension-like text, no reads/process/network/writes, bounded parser resources and isolated Core/PYZ parity.",
-    "11.e.C: rerun unchanged W/R node/security behavior and affected existing contracts after extracting the internal parser from the immutable public prose value/source-binding API. No renderer, semantic feature or changed expectation is introduced."
-  ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "Ein Prosa-Inhaltsblock DARF NICHT ausführbares HTML, Skripte oder externe Includes enthalten.",
-    "scope": "11.e.W/R: owned inert prose/admonition data with explicit source hashes, LF normalization, bounded parsing, native canonical attachment paths, container/inline semantics and structured security errors. No executable HTML/include/template nodes exist. Strings in code/title/text remain data. Tests assert semantic values and forbidden effects, not rendered Markdown/HTML or presentation; no renderer or complete project approval is claimed. The C split preserves the parser body and public value/error classes, with explicit error-type injection; hashes, errors, limits and side effects remain unchanged."
-  },
+  "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [
     "prose_active_entity",
     "prose_attachment_path_required",
@@ -39,21 +16,48 @@
     "prose_size_limit"
   ],
   "expected_exit_codes": [],
+  "fixture_ids": [
+    "SR-FIX-DOCUMENT-PROSE-RIGHT-v1",
+    "SR-FIX-DOCUMENT-PROSE-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [
     "/payload/markdown",
     "/block_kind"
   ],
+  "method": "automated_behavior",
+  "open_items": [
+    "Document composition, attachment resolution/media safety and rendering remain separate later steps; the owned-prose API is not complete project or release approval.",
+    "Targeted development and alternating Apply partitions remain partial observations on their actual source states."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Ein Prosa-Inhaltsblock DARF NICHT ausführbares HTML, Skripte oder externe Includes enthalten.",
+    "scope": "11.e.W/R: owned inert prose/admonition data with explicit source hashes, LF normalization, bounded parsing, native canonical attachment paths, container/inline semantics and structured security errors. No executable HTML/include/template nodes exist. Strings in code/title/text remain data. Tests assert semantic values and forbidden effects, not rendered Markdown/HTML or presentation; no renderer or complete project approval is claimed. The C split preserves the parser body and public value/error classes, with explicit error-type injection; hashes, errors, limits and side effects remain unchanged."
+  },
+  "preconditions": [
+    "Native ContentBlock with owned original UTF-8 JSON bytes; explicit prose/admonition parser invocation, no implicit tightening of passive record or search contracts."
+  ],
+  "primary_verification_id": "SR-VER-0023",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0527",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "11.e.W: parse allowed paragraph/inline/code/list/quote/break/attachment node families; compare semantic data, owned source and normalized hashes, admonition levels, structured forbidden-content errors, real unchanged files and isolated Core/PYZ results.",
+    "11.e.R: preserve unchanged W nodes while completing lazy/nested container and indentation behavior; verify one-time escape/entity decoding, multiline definition rejection, obfuscated external/traversing paths, inert extension-like text, no reads/process/network/writes, bounded parser resources and isolated Core/PYZ parity.",
+    "11.e.C: rerun unchanged W/R node/security behavior and affected existing contracts after extracting the internal parser from the immutable public prose value/source-binding API. No renderer, semantic feature or changed expectation is introduced."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0527",
   "test_ids": [
     "tests/test_document_prose.py::test_admonitions_use_the_same_prose_nodes_and_keep_title_as_plain_data[caution]",
     "tests/test_document_prose.py::test_admonitions_use_the_same_prose_nodes_and_keep_title_as_plain_data[important]",
@@ -215,9 +219,5 @@
     "tests/test_document_prose_right.py::test_untrusted_parser_resources_fail_with_structured_errors_before_result_creation[containers]",
     "tests/test_document_prose_right.py::test_untrusted_parser_resources_fail_with_structured_errors_before_result_creation[emphasis]",
     "tests/test_document_prose_right.py::test_untrusted_parser_resources_fail_with_structured_errors_before_result_creation[work]"
-  ],
-  "open_items": [
-    "Document composition, attachment resolution/media safety and rendering remain separate later steps; the owned-prose API is not complete project or release approval.",
-    "Targeted development and alternating Apply partitions remain partial observations on their actual source states."
   ]
 }

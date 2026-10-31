@@ -1,17 +1,37 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0610",
-  "requirement_id": "SR-REQ-0610",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0040",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [],
   "fixture_ids": [
     "SR-FIX-OWNED-TEMP-v1"
   ],
+  "implementation_status": "partial",
+  "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "General work-resume CLI/Code-8 and closure integration, normative execution under the final authorizing writer gate, multi-unit execution and portable copy/restore remain open. Stored normative plan bindings and fresh read-only diagnostics are partial coverage, not write authority."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Jeder `work resume`-Aufruf MUSS den erforderlichen aktuellen Runtime-, Work-Root- und Berechtigungskontext neu prüfen.",
+    "scope": "6.m.W provides a Python embedding API for a closed single-unit plan executing six existing read-only bootstrap Core handlers. The running distribution must have a recorded build matching the independently trusted initial work binding. Every call rechecks current runtime support, work/protected roots and the invocation context; a live work lease spans the actual handler execution and durable publication of its complete machine result. A fresh built-in registry prevents a saved registry from replacing handlers. Recorded completion bytes bind the original request, unit, build, outcome and actual exit code and are revalidated/reused without a second handler invocation. Real generated module and zipapp distributions resume after runtime/work/protected-root renames in independent isolated processes. Other tests use explicitly injected in-process build records. Missing inputs, unsupported plans, incompatible builds, incomplete handler outcomes and publication errors cannot confirm new progress. Work remains running pending later global finalization. 6.m.R adds exact original ChangePlan bytes and plan/operation/actor/request bindings to the inert normative work codec. The read-only normative resume preflight uses the current recorded build, trusted host registry, protected project root, original authoring identity and the existing publication diagnostic against current model and actual filesystem bytes/rights. Different actor, request or project bindings and stale target state conflict without rebase or work writes. This is diagnostic preparation only: no normative handler executes, write_authorized remains false, and the existing final authorization and recheck under the real project writer lock are mandatory. It also validates saved read-only completion schemas, declared handler exit codes and diagnostics before a writer lease, and refuses runtime identity changes before confirmation. Work remains running. General work-resume CLI/Code-8 integration, normative execution, multi-unit execution, portable copy/restore and full work completion remain open; no complete requirement or release pass is asserted. 6.m.C separates independently bound initial/checkpoint restoration from the fresh local identity/target/rights check. Extracted check statements and their order remain unchanged, with the same work mutex retained through final readback. Public result and error contracts, stored bytes and read-only execution are unchanged. Existing behavior tests are retained byte-for-byte; no additional command, authorization or completion claim is introduced."
+  },
   "preconditions": [
     "Private native Linux work storage, independently retained initial binding, fresh built-in command registry, explicit build fixtures and actual generated relocatable Core distributions."
   ],
+  "primary_verification_id": "SR-VER-0040",
+  "required_environment": {
+    "declared_minimum_python": "3.10",
+    "implementation": "cpython",
+    "measured_scope": "current-run-only"
+  },
+  "requirement_id": "SR-REQ-0610",
+  "resources": {
+    "harness_suite_timeout": null,
+    "harness_test_timeout": null,
+    "owned_temporary_files": true
+  },
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
   "steps": [
     "Plan one supported complete read-only handler without execution; publish initial work and run a resume through current runtime/context checks under a continuously held work mutex.",
     "Check exact stored machine results and unchanged request/work/plan bindings; resume again without rerunning the handler or creating a new generation.",
@@ -19,25 +39,8 @@
     "Reject incompatible or absent runtime/work, unsupported plans, missing checkpoint bytes and incomplete handler outcomes; preserve the actual previous checkpoint on publication failure.",
     "Check exact normative original bindings against a fresh host registry, model and actual target bytes/rights without executing a writer; reject conflicting identities, stale bases and incompatible stored completion contracts."
   ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "Jeder `work resume`-Aufruf MUSS den erforderlichen aktuellen Runtime-, Work-Root- und Berechtigungskontext neu prüfen.",
-    "scope": "6.m.W provides a Python embedding API for a closed single-unit plan executing six existing read-only bootstrap Core handlers. The running distribution must have a recorded build matching the independently trusted initial work binding. Every call rechecks current runtime support, work/protected roots and the invocation context; a live work lease spans the actual handler execution and durable publication of its complete machine result. A fresh built-in registry prevents a saved registry from replacing handlers. Recorded completion bytes bind the original request, unit, build, outcome and actual exit code and are revalidated/reused without a second handler invocation. Real generated module and zipapp distributions resume after runtime/work/protected-root renames in independent isolated processes. Other tests use explicitly injected in-process build records. Missing inputs, unsupported plans, incompatible builds, incomplete handler outcomes and publication errors cannot confirm new progress. Work remains running pending later global finalization. 6.m.R adds exact original ChangePlan bytes and plan/operation/actor/request bindings to the inert normative work codec. The read-only normative resume preflight uses the current recorded build, trusted host registry, protected project root, original authoring identity and the existing publication diagnostic against current model and actual filesystem bytes/rights. Different actor, request or project bindings and stale target state conflict without rebase or work writes. This is diagnostic preparation only: no normative handler executes, write_authorized remains false, and the existing final authorization and recheck under the real project writer lock are mandatory. It also validates saved read-only completion schemas, declared handler exit codes and diagnostics before a writer lease, and refuses runtime identity changes before confirmation. Work remains running. General work-resume CLI/Code-8 integration, normative execution, multi-unit execution, portable copy/restore and full work completion remain open; no complete requirement or release pass is asserted. 6.m.C separates independently bound initial/checkpoint restoration from the fresh local identity/target/rights check. Extracted check statements and their order remain unchanged, with the same work mutex retained through final readback. Public result and error contracts, stored bytes and read-only execution are unchanged. Existing behavior tests are retained byte-for-byte; no additional command, authorization or completion claim is introduced."
-  },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
-  "required_environment": {
-    "implementation": "cpython",
-    "declared_minimum_python": "3.10",
-    "measured_scope": "current-run-only"
-  },
-  "resources": {
-    "owned_temporary_files": true,
-    "harness_test_timeout": null,
-    "harness_suite_timeout": null
-  },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0610",
   "test_ids": [
     "tests/test_work_resume.py::test_a_generic_data_manifest_is_not_execution_authority[different_unit]",
     "tests/test_work_resume.py::test_a_generic_data_manifest_is_not_execution_authority[extra_unit]",
@@ -108,8 +111,5 @@
     "tests/test_work_resume_right.py::test_self_consistent_saved_completion_must_obey_request_and_handler_contract[undeclared_exit]",
     "tests/test_work_resume_right.py::test_self_consistent_saved_completion_must_obey_request_and_handler_contract[unit]",
     "tests/test_work_resume_right.py::test_unprotected_current_target_cannot_be_promoted_by_a_resume_check"
-  ],
-  "open_items": [
-    "General work-resume CLI/Code-8 and closure integration, normative execution under the final authorizing writer gate, multi-unit execution and portable copy/restore remain open. Stored normative plan bindings and fresh read-only diagnostics are partial coverage, not write authority."
   ]
 }

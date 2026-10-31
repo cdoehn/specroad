@@ -1,27 +1,5 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0385",
-  "requirement_id": "SR-REQ-0385",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0027",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
-  "fixture_ids": [
-    "SR-FIX-TRANSACTION-RECEIPTS-v1"
-  ],
-  "preconditions": [
-    "Completed native request receipt with linked committed proof in the original project root."
-  ],
-  "steps": [
-    "Replay an identical normalized operation sequence.",
-    "Reuse the same ID with different operations and inspect the code-6 conflict.",
-    "Compare real publication count, file hashes and artifact revision."
-  ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "Die Wiederverwendung einer Request-ID im normativen Schreibnamensraum mit einem anderen Operationshash MUSS mit Exit Code 6 als Idempotenzkonflikt abgewiesen werden.",
-    "scope": "Confirmed native retries and code-6 conflicts. Malformed receipts are errors, never absence; analysis correlation cannot enter the typed normative API."
-  },
+  "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [],
   "expected_exit_codes": [
     0,
@@ -31,30 +9,52 @@
     6,
     7
   ],
+  "fixture_ids": [
+    "SR-FIX-TRANSACTION-RECEIPTS-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [
     "/request_id",
     "/expected_operations_sha256",
     "/received_operations_sha256"
   ],
+  "method": "automated_behavior",
+  "open_items": [
+    "Public normative CLI and specialist command wiring remain in their assigned later plan steps."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Die Wiederverwendung einer Request-ID im normativen Schreibnamensraum mit einem anderen Operationshash MUSS mit Exit Code 6 als Idempotenzkonflikt abgewiesen werden.",
+    "scope": "Confirmed native retries and code-6 conflicts. Malformed receipts are errors, never absence; analysis correlation cannot enter the typed normative API."
+  },
+  "preconditions": [
+    "Completed native request receipt with linked committed proof in the original project root."
+  ],
+  "primary_verification_id": "SR-VER-0027",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0385",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Replay an identical normalized operation sequence.",
+    "Reuse the same ID with different operations and inspect the code-6 conflict.",
+    "Compare real publication count, file hashes and artifact revision."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0385",
   "test_ids": [
     "tests/test_normative_idempotency_right.py::test_conflict_reports_both_hashes_and_no_recovery_or_write",
     "tests/test_normative_idempotency_right.py::test_count_hash_and_revision_prove_exactly_one_model_write",
     "tests/test_normative_idempotency_right.py::test_operation_order_is_significant",
     "tests/test_normative_idempotency_right.py::test_analysis_correlation_object_is_not_coerced",
     "tests/test_normative_idempotency_preplanning.py::test_conflict_is_decided_before_attempting_a_new_plan"
-  ],
-  "open_items": [
-    "Public normative CLI and specialist command wiring remain in their assigned later plan steps."
   ]
 }

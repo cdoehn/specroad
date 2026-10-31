@@ -1,29 +1,5 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0414",
-  "requirement_id": "SR-REQ-0414",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0029",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
-  "fixture_ids": [
-    "SR-FIX-SCOPE-SEEDS-v1",
-    "SR-FIX-STRONG-CLOSURE-v1",
-    "SR-FIX-RECORD-FIELDS-v1"
-  ],
-  "preconditions": [
-    "Explicit byte-bound scope inventory and complete synthetic resource/review observations; no filesystem discovery, profile authenticity or release approval."
-  ],
-  "steps": [
-    "Resolve configuration before seed/required-artifact admission; preserve unconfigured scope behavior.",
-    "Bind direct and wrapped configured query pages to the applicable inventory; validate exact page size, order preservation and fresh descriptor/source bindings.",
-    "Reject excluded targets for every strong relation, required evidence/contract/review bindings and closed weak edges; retain partial weak origin boundaries and prevent stale successes from supplying a model root."
-  ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "Eine konfigurationsbedingt ausgeschlossene Pflichtabhängigkeit MUSS den Scope als inkonsistent diagnostizieren.",
-    "scope": "Configured seed/page/closure resolution over supplied bindings. Applicable query pages retain their exact order and pagination; excluded page members and stale/forged page values are rejected. Excluded required targets raise SRV141 with stable edge/field identity before admission. Partial weak edges retain their origin boundary; no configuration conflict produces a valid model root. Supplied query filtering/ordering and inventory completeness remain provider preconditions."
-  },
+  "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [
     "bound_query_seed_page_required",
     "invalid_applicability",
@@ -35,23 +11,50 @@
   "expected_exit_codes": [
     3
   ],
+  "fixture_ids": [
+    "SR-FIX-SCOPE-SEEDS-v1",
+    "SR-FIX-STRONG-CLOSURE-v1",
+    "SR-FIX-RECORD-FIELDS-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [
     "/relations/0/target",
     "/subjects/0/artifact_id",
     "/evidence_slots/0/test_id",
     "/current_reviews"
   ],
+  "method": "automated_behavior",
+  "open_items": [
+    "Live provider/command configuration integration follows in 9.g; this pure adapter does not certify query evaluation, resource discovery, review freshness or release approval."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Eine konfigurationsbedingt ausgeschlossene Pflichtabhängigkeit MUSS den Scope als inkonsistent diagnostizieren.",
+    "scope": "Configured seed/page/closure resolution over supplied bindings. Applicable query pages retain their exact order and pagination; excluded page members and stale/forged page values are rejected. Excluded required targets raise SRV141 with stable edge/field identity before admission. Partial weak edges retain their origin boundary; no configuration conflict produces a valid model root. Supplied query filtering/ordering and inventory completeness remain provider preconditions."
+  },
+  "preconditions": [
+    "Explicit byte-bound scope inventory and complete synthetic resource/review observations; no filesystem discovery, profile authenticity or release approval."
+  ],
+  "primary_verification_id": "SR-VER-0029",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0414",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Resolve configuration before seed/required-artifact admission; preserve unconfigured scope behavior.",
+    "Bind direct and wrapped configured query pages to the applicable inventory; validate exact page size, order preservation and fresh descriptor/source bindings.",
+    "Reject excluded targets for every strong relation, required evidence/contract/review bindings and closed weak edges; retain partial weak origin boundaries and prevent stale successes from supplying a model root."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0414",
   "test_ids": [
     "test_configuration_scope.ConfigurationScopeWorkTests.test_applicable_strong_dependency_is_admitted",
     "test_configuration_scope.ConfigurationScopeWorkTests.test_excluded_evidence_subject_is_a_required_resource_error",
@@ -134,8 +137,5 @@
     "tests/test_configuration_scope_right.py::test_transitive_failure_identifies_the_actual_excluded_edge[scope]",
     "tests/test_configuration_scope_right.py::test_transitive_failure_identifies_the_actual_excluded_edge[strong]",
     "tests/test_configuration_scope_right.py::test_unselected_historical_review_is_not_an_implicit_dependency"
-  ],
-  "open_items": [
-    "Live provider/command configuration integration follows in 9.g; this pure adapter does not certify query evaluation, resource discovery, review freshness or release approval."
   ]
 }

@@ -1,19 +1,39 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0261",
-  "requirement_id": "SR-REQ-0261",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0019",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [],
   "fixture_ids": [
     "SR-FIX-WRITER-BOUNDARIES-v1",
     "SR-FIX-OWNED-TEMP-v1",
     "SR-FIX-ISOLATED-CPYTHON-v1"
   ],
+  "implementation_status": "partial",
+  "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "Later 20.e covers the complete transaction/customer matrix; unmeasured filesystems, real power loss and future restore clients are not approved by this local process-interruption proof."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Die Referenztests MÜSSEN einen kontrollierten Prozessabbruch nach jeder dauerhaften Journal- und Dateisystemgrenze injizieren und nach Recovery jeweils exakt die Basis- oder die vollständige Zielmodellwurzel nachweisen.",
+    "scope": "Exact complete basis or target bytes and independently rebuilt model root after every observed journal/staging/publication/receipt/cleanup boundary. Recoverable journals must clear the transaction gate. Pre-journal namespace cuts must retain the exact basis and all evidence while remaining blocked; they are not successful recovery. No power-loss or platform-matrix claim. R adds multi-file publication, incomplete receipt acknowledgement, ownership-transfer/recovery boundaries and repeated real process exits. Pending writer acknowledgements remain bound to the original forward cursor during rollback; no mixed model or user-data loss is accepted."
+  },
   "preconditions": [
     "Owned complete temporary project on the current native Linux filesystem; explicit test host publication/recovery authority; separate stopped writer and recovery interpreters."
   ],
+  "primary_verification_id": "SR-VER-0019",
+  "required_environment": {
+    "declared_minimum_python": "3.10",
+    "implementation": "cpython",
+    "measured_scope": "current-run-only"
+  },
+  "requirement_id": "SR-REQ-0261",
+  "resources": {
+    "harness_suite_timeout": null,
+    "harness_test_timeout": null,
+    "owned_temporary_files": true
+  },
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
   "steps": [
     "Observe every successful native filesystem boundary in an uninterrupted single-artifact writer, then terminate a fresh writer after each boundary without finalizers and recover solely from persisted bytes.",
     "Retain the independently bound initial/final journal.next derivative during recovery and prove that foreign content, another cursor, unsafe links, size changes and authority-time mutation cannot be adopted.",
@@ -21,25 +41,8 @@
     "Reconstruct missing pre-commit receipts exactly; preserve damaged post-commit receipt evidence while blocking new writes.",
     "Interrupt each observed discard, rollback and full-target recovery boundary, then interrupt the following recovery again and require a fresh consumer to reach the exact bound base/target and clear the gate."
   ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "Die Referenztests MÜSSEN einen kontrollierten Prozessabbruch nach jeder dauerhaften Journal- und Dateisystemgrenze injizieren und nach Recovery jeweils exakt die Basis- oder die vollständige Zielmodellwurzel nachweisen.",
-    "scope": "Exact complete basis or target bytes and independently rebuilt model root after every observed journal/staging/publication/receipt/cleanup boundary. Recoverable journals must clear the transaction gate. Pre-journal namespace cuts must retain the exact basis and all evidence while remaining blocked; they are not successful recovery. No power-loss or platform-matrix claim. R adds multi-file publication, incomplete receipt acknowledgement, ownership-transfer/recovery boundaries and repeated real process exits. Pending writer acknowledgements remain bound to the original forward cursor during rollback; no mixed model or user-data loss is accepted."
-  },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
-  "required_environment": {
-    "implementation": "cpython",
-    "declared_minimum_python": "3.10",
-    "measured_scope": "current-run-only"
-  },
-  "resources": {
-    "owned_temporary_files": true,
-    "harness_test_timeout": null,
-    "harness_suite_timeout": null
-  },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0261",
   "test_ids": [
     "tests/test_writer_boundaries.py::test_every_native_writer_boundary_recovers_exact_basis_or_complete_target[building]",
     "tests/test_writer_boundaries.py::test_every_native_writer_boundary_recovers_exact_basis_or_complete_target[cleanup]",
@@ -86,8 +89,5 @@
     "tests/test_writer_pending_recovery.py::test_unbound_pending_writer_record_blocks_without_recovery_mutation[oversized-prepared]",
     "tests/test_writer_pending_recovery.py::test_unbound_pending_writer_record_blocks_without_recovery_mutation[symlink-committing]",
     "tests/test_writer_pending_recovery.py::test_unbound_pending_writer_record_blocks_without_recovery_mutation[symlink-prepared]"
-  ],
-  "open_items": [
-    "Later 20.e covers the complete transaction/customer matrix; unmeasured filesystems, real power loss and future restore clients are not approved by this local process-interruption proof."
   ]
 }

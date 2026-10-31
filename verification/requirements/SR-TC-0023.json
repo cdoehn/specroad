@@ -1,46 +1,46 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0023",
-  "requirement_id": "SR-REQ-0023",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0002",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [],
   "fixture_ids": [
     "SR-FIX-OWNED-TEMP-v1"
   ],
-  "preconditions": [
-    "Owned project fixtures; installed development dependencies; isolated process state."
-  ],
-  "steps": [
-    "Read or validate the declared project resources and observe data, rejection and file effects."
+  "implementation_status": "partial",
+  "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "Full artifact schemas, resource inventory, transaction writes and cross-platform release evidence remain assigned to later steps."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "SpecRoad DARF NICHT normative Daten außerhalb von `specroad.json` und den konfigurierten `managed_paths` erzeugen oder verändern.",
     "scope": "2.a: closed configuration, deterministic artifact paths, current root binding and input-only path classes."
   },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
+  "preconditions": [
+    "Owned project fixtures; installed development dependencies; isolated process state."
+  ],
+  "primary_verification_id": "SR-VER-0002",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0023",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Read or validate the declared project resources and observe data, rejection and file effects."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0023",
   "test_ids": [
     "test_model_configuration.ConfigurationWorkTests.test_write_authorization_never_writes_and_rejects_escapes",
     "test_model_configuration.ConfigurationWorkTests.test_configuration_paths_cannot_mix_generated_and_normative_classes",
     "test_model_configuration.ConfigurationRightTests.test_nested_roots_and_symlinks_are_rejected_for_read_and_write",
     "test_model_configuration.ConfigurationRightTests.test_changed_configuration_invalidates_reads_and_write_authorization"
-  ],
-  "open_items": [
-    "Full artifact schemas, resource inventory, transaction writes and cross-platform release evidence remain assigned to later steps."
   ]
 }

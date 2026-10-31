@@ -1,27 +1,5 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0443",
-  "requirement_id": "SR-REQ-0443",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0030",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
-  "fixture_ids": [
-    "SR-FIX-CHANGE-EXECUTION-v1"
-  ],
-  "preconditions": [
-    "Owned TargetModel bytes, explicit immutable plan and command policy. A trusted test-only storage adapter is supplied only to the apply path."
-  ],
-  "steps": [
-    "Compare dry-run/direct/saved results, fail-on-change, fresh transaction inputs, exact receipt/readback binding and actual file effects in owned test storage.",
-    "Compare explicit prepared-operation previews with actual native saved-plan publication and unchanged direct authoring adapters; verify exact plan bytes, target files, audit bindings, no-op and historical receipt replay.",
-    "Inspect real native refusal and interrupted-publication evidence; execute and retry each create/update/link/review/retire step against fresh on-disk models, preserving original audit and IDs."
-  ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "Ein direkter Authoring-Befehl MUSS intern denselben speicherbaren Change Plan erzeugen wie sein entsprechender Dry-Run.",
-    "scope": "Shared full target/plan/diff/impact/diagnostic projection; dry-run never enters any publication backend or writes a receipt. Exact supplied readback is verified after trusted publication, without claiming independent durability proof. Exact raw plan bytes are retained; source state is read again after locked revalidation. Detached callback handoffs, full post-publication file sets and controlled unknown outcomes are checked. 7.k.W: all six native command families share plan construction. Explicit prepared operations yield a write-free full preview; saved plans execute through real locks, authorization, journals, receipts and cleanup. Native target and plan equality, historical audit and replay are measured in owned fixtures; CLI/raw-intent preview allocation and complete command error/continuation audit are not claimed. 7.k.R: native saved-plan failure reports preserve actual write/recovery state, distinguish planned identities and roots from publication, and reject conflicting or damaged retry proofs. A real create/update/link/review/retire chain uses freshly loaded models and verified historical replays without new IDs or revisions. The final retirement uses explicit fixture host gates bound to the unchanged review and independently expected complete target; it does not prove authentic history acquisition or generic approval authority. 7.k.C relocates the unchanged W/R domain scenarios, execution helpers and behavior oracles into shared test support. Test bodies, parameterizations, helper logic, fixture authority boundaries and all test identities remain unchanged; product source bytes are unchanged."
-  },
+  "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [
     "SRV146"
   ],
@@ -35,23 +13,50 @@
     6,
     7
   ],
+  "fixture_ids": [
+    "SR-FIX-CHANGE-EXECUTION-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [
     "/plan",
     "/expected_model_root",
     "/write_state",
     "/backend_receipt"
   ],
+  "method": "automated_behavior",
+  "open_items": [
+    "Integrate registered CLI/stdout envelopes and raw-intent dry-run allocation, authentic complete model/history acquisition and actual host identity/authorization. Explicit prepared operation IDs in this API are not reserved by a preview.",
+    "Integrate complete error/continuation audit output across every original direct command; the new report adapter covers the saved-plan route. Complete remaining product acceptance. The native chain uses explicit fixture gates for retained review evidence, not an authentic general history service.",
+    "Verify supported-platform/Python behavior with actual applicable evidence; this local native run is not a full platform or product approval."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Ein direkter Authoring-Befehl MUSS intern denselben speicherbaren Change Plan erzeugen wie sein entsprechender Dry-Run.",
+    "scope": "Shared full target/plan/diff/impact/diagnostic projection; dry-run never enters any publication backend or writes a receipt. Exact supplied readback is verified after trusted publication, without claiming independent durability proof. Exact raw plan bytes are retained; source state is read again after locked revalidation. Detached callback handoffs, full post-publication file sets and controlled unknown outcomes are checked. 7.k.W: all six native command families share plan construction. Explicit prepared operations yield a write-free full preview; saved plans execute through real locks, authorization, journals, receipts and cleanup. Native target and plan equality, historical audit and replay are measured in owned fixtures; CLI/raw-intent preview allocation and complete command error/continuation audit are not claimed. 7.k.R: native saved-plan failure reports preserve actual write/recovery state, distinguish planned identities and roots from publication, and reject conflicting or damaged retry proofs. A real create/update/link/review/retire chain uses freshly loaded models and verified historical replays without new IDs or revisions. The final retirement uses explicit fixture host gates bound to the unchanged review and independently expected complete target; it does not prove authentic history acquisition or generic approval authority. 7.k.C relocates the unchanged W/R domain scenarios, execution helpers and behavior oracles into shared test support. Test bodies, parameterizations, helper logic, fixture authority boundaries and all test identities remain unchanged; product source bytes are unchanged."
+  },
+  "preconditions": [
+    "Owned TargetModel bytes, explicit immutable plan and command policy. A trusted test-only storage adapter is supplied only to the apply path."
+  ],
+  "primary_verification_id": "SR-VER-0030",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0443",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Compare dry-run/direct/saved results, fail-on-change, fresh transaction inputs, exact receipt/readback binding and actual file effects in owned test storage.",
+    "Compare explicit prepared-operation previews with actual native saved-plan publication and unchanged direct authoring adapters; verify exact plan bytes, target files, audit bindings, no-op and historical receipt replay.",
+    "Inspect real native refusal and interrupted-publication evidence; execute and retry each create/update/link/review/retire step against fresh on-disk models, preserving original audit and IDs."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0443",
   "test_ids": [
     "tests/test_change_execution.py::test_direct_and_saved_entry_use_same_plan_bytes",
     "tests/test_change_execution.py::test_actual_adapter_file_publication_matches_dry_run",
@@ -109,10 +114,5 @@
     "tests/test_authoring_plan_execution_right.py::test_retry_reports_original_actor_time_and_plan_not_new_envelope",
     "tests/test_authoring_plan_execution_right.py::test_stale_live_bytes_report_failure_without_erasing_external_change",
     "tests/test_authoring_plan_execution_right.py::test_unclassified_io_failure_does_not_leak_message_or_claim_rollback"
-  ],
-  "open_items": [
-    "Integrate registered CLI/stdout envelopes and raw-intent dry-run allocation, authentic complete model/history acquisition and actual host identity/authorization. Explicit prepared operation IDs in this API are not reserved by a preview.",
-    "Integrate complete error/continuation audit output across every original direct command; the new report adapter covers the saved-plan route. Complete remaining product acceptance. The native chain uses explicit fixture gates for retained review evidence, not an authentic general history service.",
-    "Verify supported-platform/Python behavior with actual applicable evidence; this local native run is not a full platform or product approval."
   ]
 }

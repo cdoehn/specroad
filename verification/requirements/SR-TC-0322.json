@@ -1,18 +1,43 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0322",
-  "requirement_id": "SR-REQ-0322",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0024",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [
+    2,
+    3,
+    6,
+    7
+  ],
   "fixture_ids": [
     "SR-FIX-REQIF-PRESERVATION-v1",
     "SR-FIX-REQIF-LOSS-v1"
   ],
+  "implementation_status": "partial",
+  "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "Later whole native model/CLI/project import/export, authorized Change Plans and ReqIFZ integration. The native record candidate scope does not certify a complete native artifact schema, project graph or performed Apply. Partial behavior evidence is not a full-suite, release or interoperability result."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "ReqIF-Inhalte außerhalb des unterstützten Abbildungsprofils MÜSSEN entweder verlustfrei unter namespaced `extensions` erhalten oder als einzeln identifizierter Informationsverlust im Import- beziehungsweise Exportplan ausgewiesen werden.",
+    "scope": "14.j.W passive original-source carrier and verified original-byte recovery plus source-derived inventory of codec-reported uninterpreted XML. Actual JSON/XML targets determine preserved versus lost, with deterministic bound item identities. Full assessment, loss_free and native_projection_complete remain false because native mapping/projection and attachment transport are outside this W assessment. General native extensions stay passive. Existing import gates and artifact metadata are unchanged. 14.j.R adds complete bound-input inventories for original-source transport, whole XML mapped-record assessment with all remainders, and one entire native JSON record candidate compared with actual XML. Native projection, assessment completeness and loss freedom are separate. Every source information unit without a proved mapping is retained only by the two actual-target v1 forms or explicitly lost. Actual attachment payloads are checked separately. The pure export boundary returns no bytes on blocked loss/incomplete assessment; it performs no writes. Existing W partial reports and import authorization gates retain their contracts."
+  },
   "preconditions": [
     "Caller-owned source and actual target bytes, explicit source context/hashes and existing ReqIFLimits. No project owner, mapping success or write authority inferred."
   ],
+  "primary_verification_id": "SR-VER-0024",
+  "required_environment": {
+    "declared_minimum_python": "3.10",
+    "implementation": "cpython",
+    "measured_scope": "current-run-only"
+  },
+  "requirement_id": "SR-REQ-0322",
+  "resources": {
+    "harness_suite_timeout": null,
+    "harness_test_timeout": null,
+    "owned_temporary_files": true
+  },
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
   "steps": [
     "Merge complete source bytes into the closed namespaced carrier; verify byte-exact recovery from actual native JSON target bytes, preserved foreign extensions, deterministic source ordering and idempotent merge.",
     "Reject incompatible existing carriers, duplicate keys, tampered size/hash/Base64, noncanonical encodings, changed source/extensions/target bindings and invalid locations without overwriting inputs.",
@@ -25,30 +50,8 @@
     "Recompute the bound assessment at the pure export return boundary: reject losses under fail-on-loss and reject missing assessment prerequisites, with an owned machine report and no returned export bytes. Explicitly permitted, completely reported losses remain losses.",
     "Exercise source/target/mapping conflicts, all seven XML budgets, strict JSON syntax, opaque/original attachment safety, typed carrier limits and host exceptions without reclassifying them as ordinary loss."
   ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "ReqIF-Inhalte außerhalb des unterstützten Abbildungsprofils MÜSSEN entweder verlustfrei unter namespaced `extensions` erhalten oder als einzeln identifizierter Informationsverlust im Import- beziehungsweise Exportplan ausgewiesen werden.",
-    "scope": "14.j.W passive original-source carrier and verified original-byte recovery plus source-derived inventory of codec-reported uninterpreted XML. Actual JSON/XML targets determine preserved versus lost, with deterministic bound item identities. Full assessment, loss_free and native_projection_complete remain false because native mapping/projection and attachment transport are outside this W assessment. General native extensions stay passive. Existing import gates and artifact metadata are unchanged. 14.j.R adds complete bound-input inventories for original-source transport, whole XML mapped-record assessment with all remainders, and one entire native JSON record candidate compared with actual XML. Native projection, assessment completeness and loss freedom are separate. Every source information unit without a proved mapping is retained only by the two actual-target v1 forms or explicitly lost. Actual attachment payloads are checked separately. The pure export boundary returns no bytes on blocked loss/incomplete assessment; it performs no writes. Existing W partial reports and import authorization gates retain their contracts."
-  },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [
-    2,
-    3,
-    6,
-    7
-  ],
-  "json_pointers": [],
-  "required_environment": {
-    "implementation": "cpython",
-    "declared_minimum_python": "3.10",
-    "measured_scope": "current-run-only"
-  },
-  "resources": {
-    "owned_temporary_files": true,
-    "harness_test_timeout": null,
-    "harness_suite_timeout": null
-  },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0322",
   "test_ids": [
     "tests/test_reqif_preservation.py::test_bound_source_target_and_extensions_changes_conflict_before_returning_data",
     "tests/test_reqif_preservation.py::test_budget_failures_are_not_loss_or_success_and_base64_size_is_checked_before_decode[claim]",
@@ -243,8 +246,5 @@
     "tests/test_reqif_loss.py::test_unsafe_references_do_not_become_accepted_loss_or_trigger_resolution[a\\\\b]",
     "tests/test_reqif_loss.py::test_unsafe_references_do_not_become_accepted_loss_or_trigger_resolution[file:a]",
     "tests/test_reqif_loss.py::test_unsafe_references_do_not_become_accepted_loss_or_trigger_resolution[https://invalid/a]"
-  ],
-  "open_items": [
-    "Later whole native model/CLI/project import/export, authorized Change Plans and ReqIFZ integration. The native record candidate scope does not certify a complete native artifact schema, project graph or performed Apply. Partial behavior evidence is not a full-suite, release or interoperability result."
   ]
 }

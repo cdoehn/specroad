@@ -1,29 +1,5 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0241",
-  "requirement_id": "SR-REQ-0241",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0018",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
-  "fixture_ids": [
-    "SR-FIX-TRANSACTION-RECEIPTS-v1"
-  ],
-  "preconditions": [
-    "Owned local Linux project; exact independent publication request and native writer lock."
-  ],
-  "steps": [
-    "Publish verified target files using the existing transaction phases.",
-    "Create bound receipts, synchronize them and only then persist committed.",
-    "Assert normative inputs are not written again and failed completion retains evidence.",
-    "Compare explicit prepared-operation previews with actual native saved-plan publication and unchanged direct authoring adapters; verify exact plan bytes, target files, audit bindings, no-op and historical receipt replay.",
-    "Inspect real native refusal and interrupted-publication evidence; execute and retry each create/update/link/review/retire step against fresh on-disk models, preserving original audit and IDs."
-  ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "Jeder tatsächlich ausgeführte oder abgewiesene `normative_write` MUSS den Auditbericht seiner Befehlsklasse nach Kapitel 11.7 ausgeben; ein noch offener Arbeitsschritt weist statt eines Erfolgsreceipts den Fortsetzungsstand aus.",
-    "scope": "Native complete-target finalization and read-only receipt contracts. No whole CLI, rollback recovery or normative retry-dispatch claim. 7.k.W: all six native command families share plan construction. Explicit prepared operations yield a write-free full preview; saved plans execute through real locks, authorization, journals, receipts and cleanup. Native target and plan equality, historical audit and replay are measured in owned fixtures; CLI/raw-intent preview allocation and complete command error/continuation audit are not claimed. 7.k.R: native saved-plan failure reports preserve actual write/recovery state, distinguish planned identities and roots from publication, and reject conflicting or damaged retry proofs. A real create/update/link/review/retire chain uses freshly loaded models and verified historical replays without new IDs or revisions. The final retirement uses explicit fixture host gates bound to the unchanged review and independently expected complete target; it does not prove authentic history acquisition or generic approval authority. 7.k.C relocates the unchanged W/R domain scenarios, execution helpers and behavior oracles into shared test support. Test bodies, parameterizations, helper logic, fixture authority boundaries and all test identities remain unchanged; product source bytes are unchanged."
-  },
+  "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [],
   "expected_exit_codes": [
     0,
@@ -33,18 +9,47 @@
     6,
     7
   ],
+  "fixture_ids": [
+    "SR-FIX-TRANSACTION-RECEIPTS-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "Integrate registered CLI/stdout envelopes and raw-intent dry-run allocation, authentic complete model/history acquisition and actual host identity/authorization. Explicit prepared operation IDs in this API are not reserved by a preview.",
+    "Integrate complete error/continuation audit output across every original direct command; the new report adapter covers the saved-plan route. Complete remaining product acceptance. The native chain uses explicit fixture gates for retained review evidence, not an authentic general history service.",
+    "Verify supported-platform/Python behavior with actual applicable evidence; this local native run is not a full platform or product approval."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Jeder tatsächlich ausgeführte oder abgewiesene `normative_write` MUSS den Auditbericht seiner Befehlsklasse nach Kapitel 11.7 ausgeben; ein noch offener Arbeitsschritt weist statt eines Erfolgsreceipts den Fortsetzungsstand aus.",
+    "scope": "Native complete-target finalization and read-only receipt contracts. No whole CLI, rollback recovery or normative retry-dispatch claim. 7.k.W: all six native command families share plan construction. Explicit prepared operations yield a write-free full preview; saved plans execute through real locks, authorization, journals, receipts and cleanup. Native target and plan equality, historical audit and replay are measured in owned fixtures; CLI/raw-intent preview allocation and complete command error/continuation audit are not claimed. 7.k.R: native saved-plan failure reports preserve actual write/recovery state, distinguish planned identities and roots from publication, and reject conflicting or damaged retry proofs. A real create/update/link/review/retire chain uses freshly loaded models and verified historical replays without new IDs or revisions. The final retirement uses explicit fixture host gates bound to the unchanged review and independently expected complete target; it does not prove authentic history acquisition or generic approval authority. 7.k.C relocates the unchanged W/R domain scenarios, execution helpers and behavior oracles into shared test support. Test bodies, parameterizations, helper logic, fixture authority boundaries and all test identities remain unchanged; product source bytes are unchanged."
+  },
+  "preconditions": [
+    "Owned local Linux project; exact independent publication request and native writer lock."
+  ],
+  "primary_verification_id": "SR-VER-0018",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0241",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Publish verified target files using the existing transaction phases.",
+    "Create bound receipts, synchronize them and only then persist committed.",
+    "Assert normative inputs are not written again and failed completion retains evidence.",
+    "Compare explicit prepared-operation previews with actual native saved-plan publication and unchanged direct authoring adapters; verify exact plan bytes, target files, audit bindings, no-op and historical receipt replay.",
+    "Inspect real native refusal and interrupted-publication evidence; execute and retry each create/update/link/review/retire step against fresh on-disk models, preserving original audit and IDs."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0241",
   "test_ids": [
     "tests/test_transaction_receipts.py::test_complete_receipts_bind_plan_actor_source_target_and_operations",
     "tests/test_transaction_receipts.py::test_receipts_are_synced_before_committed_marker",
@@ -137,10 +142,5 @@
     "tests/test_authoring_plan_execution_right.py::test_retry_reports_original_actor_time_and_plan_not_new_envelope",
     "tests/test_authoring_plan_execution_right.py::test_stale_live_bytes_report_failure_without_erasing_external_change",
     "tests/test_authoring_plan_execution_right.py::test_unclassified_io_failure_does_not_leak_message_or_claim_rollback"
-  ],
-  "open_items": [
-    "Integrate registered CLI/stdout envelopes and raw-intent dry-run allocation, authentic complete model/history acquisition and actual host identity/authorization. Explicit prepared operation IDs in this API are not reserved by a preview.",
-    "Integrate complete error/continuation audit output across every original direct command; the new report adapter covers the saved-plan route. Complete remaining product acceptance. The native chain uses explicit fixture gates for retained review evidence, not an authentic general history service.",
-    "Verify supported-platform/Python behavior with actual applicable evidence; this local native run is not a full platform or product approval."
   ]
 }

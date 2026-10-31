@@ -1,39 +1,42 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0250",
-  "requirement_id": "SR-REQ-0250",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0026",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [],
   "fixture_ids": [
     "SR-FIX-ARTIFACT-COMMON-v1"
   ],
-  "preconditions": [
-    "Owned synthetic model inputs; no authoring, ancestry discovery or external state mutation."
-  ],
-  "steps": [
-    "Exercise the real model contracts and invalid input; preserve exact input values and resource bytes."
+  "implementation_status": "partial",
+  "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "No automatic Git ancestry discovery, imported-provenance authentication or merge decision is implemented here."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "SpecRoad MUSS beim Import und semantischen Merge unterscheiden, ob eine gleiche ID dieselbe Historie, eine zulässige identische Kopie oder eine fachlich kollidierende unabhängige Erzeugung bezeichnet.",
     "scope": "Exact supplied bytes bind identity observations; absent origin stays unresolved and is rejected by the necessary history precondition."
   },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
+  "preconditions": [
+    "Owned synthetic model inputs; no authoring, ancestry discovery or external state mutation."
+  ],
+  "primary_verification_id": "SR-VER-0026",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0250",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Exercise the real model contracts and invalid input; preserve exact input values and resource bytes."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0250",
   "test_ids": [
     "test_identity_history.IdentityHistoryTests.test_changed_content_with_same_origin_is_same_history",
     "test_identity_history.IdentityHistoryTests.test_equal_ids_and_bytes_without_origin_do_not_prove_a_copy",
@@ -41,8 +44,5 @@
     "test_identity_history_right.IdentityHistoryRightTests.test_artifact_observation_is_bound_to_exact_bytes_and_identity",
     "test_identity_history_right.IdentityHistoryRightTests.test_equal_audit_metadata_does_not_establish_history",
     "test_identity_history_right.IdentityHistoryRightTests.test_relation_observation_binds_source_and_bytes"
-  ],
-  "open_items": [
-    "No automatic Git ancestry discovery, imported-provenance authentication or merge decision is implemented here."
   ]
 }

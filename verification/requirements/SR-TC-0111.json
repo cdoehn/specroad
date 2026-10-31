@@ -1,31 +1,5 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0111",
-  "requirement_id": "SR-REQ-0111",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0008",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
-  "fixture_ids": [
-    "SR-FIX-ISOLATED-CPYTHON-v1",
-    "SR-FIX-OWNED-TEMP-v1",
-    "SR-FIX-DOMAIN-DRAFT-v1",
-    "SR-FIX-RELATIONS-v1"
-  ],
-  "preconditions": [
-    "Fresh owned current-project artifacts, canonical resolved relation identities and native CPython; no approval or atomic snapshot claim."
-  ],
-  "steps": [
-    "Invoke the same trace scope through Python, CLI, structured request and portable distribution.",
-    "Compare independently expected node distances, edge directions, depth boundaries, original relation values and complete inventory bindings.",
-    "Trap project writes, stdin, entropy, subprocesses and lock acquisition; exercise currentness, writer/journal and invalid-input failures.",
-    "Resume actual node/edge work under changing targets; compare independent graph sets and retain honest pending, failure and cancellation states without project writes."
-  ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "`specroad trace <ID>` MUSS gerichtete Traversierung mit `--direction in\\|out\\|both` und einer begrenzten `--depth` unterstützen.",
-    "scope": "8.e.W implements actual read-only trace through Python, CLI, structured requests and the portable zipapp. Explicit in/out/both and nonnegative depth determine exact visited nodes with minimum distances and traversed relation views. The existing identity frontier and complete current-project relation index preserve stored identities, named inverses, original relation data and final currentness checks. Unknown starts, invalid arguments, active writers, unresolved journals, invalid unreachable sources and changed source bytes cannot become a successful partial answer. Coverage is relation-reference/canonical-storage validation, not full semantic or atomic-snapshot approval. R adds genuine process-local TraceTraversal over a supplied resolved RelationIndex: one node removal or directed edge check per work unit, retaining the frontier and unfinished adjacency across calls. Independent cycle/diamond/multiple-relation oracles, a 513-edge node and a 1301-node chain prove unchanged scope under small or varying targets. Incomplete/failed/closed work cannot publish a result; invalid targets consume no work, and result/state copies own their data. Public trace uses this engine with the existing current-project guards. Inventory/graph/output remain materialized; durable Work, adaptive runtime admission, external delivery and supported-platform/performance acceptance remain open. C moves the unchanged frontier implementation into a private graph module while preserving the public TraceTraversal class name, defining module and docstring through inheritance. The project adapter, all W/R behavior oracles and other product sources remain unchanged."
-  },
+  "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [],
   "expected_exit_codes": [
     0,
@@ -34,22 +8,51 @@
     5,
     6
   ],
+  "fixture_ids": [
+    "SR-FIX-ISOLATED-CPYTHON-v1",
+    "SR-FIX-OWNED-TEMP-v1",
+    "SR-FIX-DOMAIN-DRAFT-v1",
+    "SR-FIX-RELATIONS-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [
     "/nodes",
     "/edges",
     "/coverage"
   ],
+  "method": "automated_behavior",
+  "open_items": [
+    "Durable Work, large external result delivery and supported-platform/performance acceptance remain open."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "`specroad trace <ID>` MUSS gerichtete Traversierung mit `--direction in\\|out\\|both` und einer begrenzten `--depth` unterstützen.",
+    "scope": "8.e.W implements actual read-only trace through Python, CLI, structured requests and the portable zipapp. Explicit in/out/both and nonnegative depth determine exact visited nodes with minimum distances and traversed relation views. The existing identity frontier and complete current-project relation index preserve stored identities, named inverses, original relation data and final currentness checks. Unknown starts, invalid arguments, active writers, unresolved journals, invalid unreachable sources and changed source bytes cannot become a successful partial answer. Coverage is relation-reference/canonical-storage validation, not full semantic or atomic-snapshot approval. R adds genuine process-local TraceTraversal over a supplied resolved RelationIndex: one node removal or directed edge check per work unit, retaining the frontier and unfinished adjacency across calls. Independent cycle/diamond/multiple-relation oracles, a 513-edge node and a 1301-node chain prove unchanged scope under small or varying targets. Incomplete/failed/closed work cannot publish a result; invalid targets consume no work, and result/state copies own their data. Public trace uses this engine with the existing current-project guards. Inventory/graph/output remain materialized; durable Work, adaptive runtime admission, external delivery and supported-platform/performance acceptance remain open. C moves the unchanged frontier implementation into a private graph module while preserving the public TraceTraversal class name, defining module and docstring through inheritance. The project adapter, all W/R behavior oracles and other product sources remain unchanged."
+  },
+  "preconditions": [
+    "Fresh owned current-project artifacts, canonical resolved relation identities and native CPython; no approval or atomic snapshot claim."
+  ],
+  "primary_verification_id": "SR-VER-0008",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0111",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Invoke the same trace scope through Python, CLI, structured request and portable distribution.",
+    "Compare independently expected node distances, edge directions, depth boundaries, original relation values and complete inventory bindings.",
+    "Trap project writes, stdin, entropy, subprocesses and lock acquisition; exercise currentness, writer/journal and invalid-input failures.",
+    "Resume actual node/edge work under changing targets; compare independent graph sets and retain honest pending, failure and cancellation states without project writes."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0111",
   "test_ids": [
     "tests/test_query_trace.py::test_changed_unreached_source_is_rejected_by_final_freshness_check",
     "tests/test_query_trace.py::test_direct_cli_and_structured_invocation_agree_on_complete_machine_result",
@@ -125,8 +128,5 @@
     "tests/test_query_trace_right.py::test_unknown_start_is_not_a_completed_empty_traversal[1]",
     "tests/test_query_trace_right.py::test_unresolved_inputs_are_not_accepted_as_a_relation_index[None]",
     "tests/test_query_trace_right.py::test_unresolved_inputs_are_not_accepted_as_a_relation_index[index1]"
-  ],
-  "open_items": [
-    "Durable Work, large external result delivery and supported-platform/performance acceptance remain open."
   ]
 }

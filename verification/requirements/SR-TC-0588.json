@@ -1,44 +1,47 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0588",
-  "requirement_id": "SR-REQ-0588",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0038",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [],
   "fixture_ids": [
     "SR-FIX-OWNED-TEMP-v1",
     "SR-FIX-ISOLATED-CPYTHON-v1"
   ],
-  "preconditions": [
-    "Owned temporary current projects. Recorded-build unit fixtures are explicitly synthetic; a separate isolated integration uses actual generated module and ZIP distributions. Cache files are explicitly installed by the fixture, never by the read-only product API.",
-    "R: owned guarded files; actual short reads. EACCES and EMFILE use isolated native processes. Memory failures are labelled injections; the separate address-space case performs a real refused allocation inside an explicitly injected allocator, not the actual cache initializer minimum."
-  ],
-  "steps": [
-    "Compare complete incoming, outgoing and combined relation views for every artifact against the independent fresh scan, including isolated sources.",
-    "Exercise missing/deleted/stale/malformed entries, binding substitutions and rehashed invalid adjacency; compare exact results and unchanged project file bytes.",
-    "Verify original-source failures still propagate and actual module/ZIP builds reuse a validated cache without normal adjacency reconstruction.",
-    "R: reject excessive cache depth/structure before strict decoding; check native short-read accounting and the selected 160 KiB adapter allocation window, faults, observed file races, descriptor cleanup, no write attempts and unchanged critical input inventory."
+  "implementation_status": "partial",
+  "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "Partial current-project relation-reader integration only. CLI-wide cache selection, other cache kinds, adaptive CPU/memory accounting and persistent Work continuation, full runtime/platform acceptance and performance benchmarks remain open. Parsed cache objects can exceed the read-byte allowance in memory; the allowance is not an RSS cap. Real native error observations and labelled injections are distinguished."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Fehlende oder gelöschte persistente Caches DÜRFEN NICHT die fachliche Ausführbarkeit eines zulässigen Auftrags verhindern.",
     "scope": "Existing current-project relation reader only: off, a real validated hit, missing or deleted cache and complete rebuild return the same fresh data. No directories are created and original input failures remain failures. R adds bounded streaming structure preflight and bytearray accumulation without retained per-read fragments. Native access/descriptor refusal, labelled allocation failures and observed cache changes fall back completely; original-source changes and programming/interruption failures retain their own errors. The selected one-byte-read Python allocation window stays below 1 MiB for 160 KiB input; this is not RSS or a host capacity promise. 6.g.C moves unchanged cache binding/encoding/shape helpers into _relation_cache_values. Native reads, descriptor guards, strict decoding, fallback exceptions and the authoritative reader retain their existing behavior. W/R test identities and open scope limits are unchanged."
   },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
+  "preconditions": [
+    "Owned temporary current projects. Recorded-build unit fixtures are explicitly synthetic; a separate isolated integration uses actual generated module and ZIP distributions. Cache files are explicitly installed by the fixture, never by the read-only product API.",
+    "R: owned guarded files; actual short reads. EACCES and EMFILE use isolated native processes. Memory failures are labelled injections; the separate address-space case performs a real refused allocation inside an explicitly injected allocator, not the actual cache initializer minimum."
+  ],
+  "primary_verification_id": "SR-VER-0038",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0588",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Compare complete incoming, outgoing and combined relation views for every artifact against the independent fresh scan, including isolated sources.",
+    "Exercise missing/deleted/stale/malformed entries, binding substitutions and rehashed invalid adjacency; compare exact results and unchanged project file bytes.",
+    "Verify original-source failures still propagate and actual module/ZIP builds reuse a validated cache without normal adjacency reconstruction.",
+    "R: reject excessive cache depth/structure before strict decoding; check native short-read accounting and the selected 160 KiB adapter allocation window, faults, observed file races, descriptor cleanup, no write attempts and unchanged critical input inventory."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0588",
   "test_ids": [
     "tests/test_relation_cache_right.py::test_native_short_reads_keep_a_real_hit_with_exact_total_allowance[17]",
     "tests/test_relation_cache_right.py::test_native_short_reads_keep_a_real_hit_with_exact_total_allowance[1]",
@@ -65,8 +68,5 @@
     "tests/test_relation_cache_work.py::test_missing_and_deleted_cache_never_create_cache_or_recovery_state",
     "tests/test_relation_cache_work.py::test_new_unselected_source_and_removed_source_invalidate_cache",
     "tests/test_relation_cache_work.py::test_real_recorded_module_and_zipapp_use_same_cache_after_distribution_move"
-  ],
-  "open_items": [
-    "Partial current-project relation-reader integration only. CLI-wide cache selection, other cache kinds, adaptive CPU/memory accounting and persistent Work continuation, full runtime/platform acceptance and performance benchmarks remain open. Parsed cache objects can exceed the read-byte allowance in memory; the allowance is not an RSS cap. Real native error observations and labelled injections are distinguished."
   ]
 }

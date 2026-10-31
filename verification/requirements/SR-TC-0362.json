@@ -1,17 +1,38 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0362",
-  "requirement_id": "SR-REQ-0362",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0026",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [],
   "fixture_ids": [
     "SR-FIX-BUNDLE-COMPARISON-v1"
   ],
+  "implementation_status": "partial",
+  "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "The common registry provider is preparatory work only. Full normative three-way merge sources, source combination, merge plans, CLI/Work integration and current bound release/matrix evidence remain open in M17.",
+    "No completed Merge or full-model equivalence is claimed by the common comparison-source adapter contract."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Als Merge-Eingaben MÜSSEN Baseline-IDs, Git-Refs, verifizierte Projektbundles und lokale SpecRoad-Projektverzeichnisse unterstützt werden, sofern alle drei Eingaben dieselbe `project_id` und dieselbe unterstützte Schema-Version besitzen.",
+    "scope": "15.h.W adds a native verified full-bundle provider and explicit bundle-file Diff CLI/structured routing. Its current-JSON projection equals the existing local/Git configuration-and-artifact comparison; all ZIP payloads, including receipts, attachments and archives, remain bound and verified in separate provenance. This is not a full-resource or three-way merge equivalence claim. Opaque current JSON resource differences still fail, input bytes are rechecked, and no extraction, fallback, approval or writing is authorized. 15.h.R retains the original bundle observation until Diff completion; errors preserve initial native validation, host and security boundaries, and observed changes never publish a successful diff. These are non-atomic read observations, not locks or write authority."
+  },
   "preconditions": [
     "Explicit canonical project bundle verified by the native bundle reader; current supported schema and matching project identity. The existing comparison scope is project configuration and artifact fields."
   ],
+  "primary_verification_id": "SR-VER-0026",
+  "required_environment": {
+    "declared_minimum_python": "3.10",
+    "implementation": "cpython",
+    "measured_scope": "current-run-only"
+  },
+  "requirement_id": "SR-REQ-0362",
+  "resources": {
+    "harness_suite_timeout": null,
+    "harness_test_timeout": null,
+    "owned_temporary_files": true
+  },
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
   "steps": [
     "Read only the explicit ZIP, verify its full container, closure and native model root without extraction, then project current JSON resources into the common source registry and existing semantic comparator; bind full verification evidence separately.",
     "Compare unchanged and changed bundle sources against independent local/Git/bundle captures, exercise public diff --against-kind bundle including relative structured requests, and reject invalid native bytes, partial full-source promotion, foreign identity, symlinks and observed input replacement.",
@@ -20,25 +41,8 @@
     "Retain the original safe file boundary and owned ZIP bytes through final Diff observation. Detect disappearance or replacement (including malformed, foreign, partial and representation-only changes) as an observed-source conflict; a replaced parent stays a security failure. Observe the source again after final local target reads, while initially missing files remain environment failures.",
     "Run the existing local/Git/Baseline/bundle and public Diff behavior regressions after consolidating adapter results, immutable verification evidence and the final retained bundle observation; preserve all existing oracles and error boundaries (15.h.C)."
   ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "Als Merge-Eingaben MÜSSEN Baseline-IDs, Git-Refs, verifizierte Projektbundles und lokale SpecRoad-Projektverzeichnisse unterstützt werden, sofern alle drei Eingaben dieselbe `project_id` und dieselbe unterstützte Schema-Version besitzen.",
-    "scope": "15.h.W adds a native verified full-bundle provider and explicit bundle-file Diff CLI/structured routing. Its current-JSON projection equals the existing local/Git configuration-and-artifact comparison; all ZIP payloads, including receipts, attachments and archives, remain bound and verified in separate provenance. This is not a full-resource or three-way merge equivalence claim. Opaque current JSON resource differences still fail, input bytes are rechecked, and no extraction, fallback, approval or writing is authorized. 15.h.R retains the original bundle observation until Diff completion; errors preserve initial native validation, host and security boundaries, and observed changes never publish a successful diff. These are non-atomic read observations, not locks or write authority."
-  },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
-  "required_environment": {
-    "implementation": "cpython",
-    "declared_minimum_python": "3.10",
-    "measured_scope": "current-run-only"
-  },
-  "resources": {
-    "owned_temporary_files": true,
-    "harness_test_timeout": null,
-    "harness_suite_timeout": null
-  },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0362",
   "test_ids": [
     "tests/test_bundle_comparison.py::test_bundle_and_identical_local_project_have_the_same_field_comparison[baseline]",
     "tests/test_bundle_comparison.py::test_bundle_and_identical_local_project_have_the_same_field_comparison[initialized]",
@@ -104,9 +108,5 @@
     "tests/test_bundle_comparison_right.py::test_retained_diff_rejects_every_observed_bundle_replacement[partial-loaded]",
     "tests/test_bundle_comparison_right.py::test_retained_diff_rejects_every_observed_bundle_replacement[representation-evaluated]",
     "tests/test_bundle_comparison_right.py::test_retained_diff_rejects_every_observed_bundle_replacement[representation-loaded]"
-  ],
-  "open_items": [
-    "The common registry provider is preparatory work only. Full normative three-way merge sources, source combination, merge plans, CLI/Work integration and current bound release/matrix evidence remain open in M17.",
-    "No completed Merge or full-model equivalence is claimed by the common comparison-source adapter contract."
   ]
 }

@@ -1,43 +1,47 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0569",
-  "requirement_id": "SR-REQ-0569",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0035",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [],
   "fixture_ids": [
     "SR-FIX-PROJECT-LOCK-v1",
     "SR-FIX-TRANSACTION-COMMITTING-v1"
   ],
-  "preconditions": [
-    "Owned local Linux roots; real competing processes and explicit trusted ownership observations for uncertainty tests.",
-    "Explicit transaction-bound host authority; real stopped Linux processes and native root mutex for orphan recovery; independent normative byte oracle."
-  ],
-  "steps": [
-    "Acquire shared native exclusion for writer/recovery kinds; recheck exact ownership and journal barriers before audited orphan removal.",
-    "Apply existing risk-consent gates to transaction-bound takeover and reject live owners even with risk consent.",
-    "Recheck the current owner at the atomic transfer boundary and retain a replacement owner instead of overwriting it."
+  "implementation_status": "partial",
+  "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "Complete native transaction/backend and CLI integrations in their later steps; validate the full runtime/target filesystem matrix in actual CI and target runs.",
+    "Native Linux local-filesystem scope is not a distributed/NFS lock or authenticated host identity."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Ein neuer Hostname oder eine erneut vergebene Prozessnummer DARF NICHT allein die Übernahme eines unbekannten Lock-Eigentümers rechtfertigen.",
     "scope": "Native owner observations and audited transaction-bound takeover retain explicit risk consent for foreign, unverifiable and reused-PID observations. Live owners and occupied native mutexes remain forbidden; a changed owner at the final transfer boundary is preserved. Full CLI integration and authenticated host identity are not claimed."
   },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
+  "preconditions": [
+    "Owned local Linux roots; real competing processes and explicit trusted ownership observations for uncertainty tests.",
+    "Explicit transaction-bound host authority; real stopped Linux processes and native root mutex for orphan recovery; independent normative byte oracle."
+  ],
+  "primary_verification_id": "SR-VER-0035",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0569",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Acquire shared native exclusion for writer/recovery kinds; recheck exact ownership and journal barriers before audited orphan removal.",
+    "Apply existing risk-consent gates to transaction-bound takeover and reject live owners even with risk consent.",
+    "Recheck the current owner at the atomic transfer boundary and retain a replacement owner instead of overwriting it."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0569",
   "test_ids": [
     "tests/test_project_locks_right.py::test_inaccessible_proc_never_claims_dead_from_pid_number_alone",
     "tests/test_project_locks_right.py::test_unknown_host_observation_stays_unknown_not_hostname_fallback",
@@ -48,9 +52,5 @@
     "tests/test_transaction_recovery_lock.py::test_takeover_preserves_existing_owner_risk_boundaries[foreign]",
     "tests/test_transaction_recovery_lock.py::test_takeover_preserves_existing_owner_risk_boundaries[pid_reused]",
     "tests/test_transaction_recovery_lock.py::test_takeover_preserves_existing_owner_risk_boundaries[unverifiable]"
-  ],
-  "open_items": [
-    "Complete native transaction/backend and CLI integrations in their later steps; validate the full runtime/target filesystem matrix in actual CI and target runs.",
-    "Native Linux local-filesystem scope is not a distributed/NFS lock or authenticated host identity."
   ]
 }

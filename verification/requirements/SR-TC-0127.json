@@ -1,20 +1,40 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0127",
-  "requirement_id": "SR-REQ-0127",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0009",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [],
   "fixture_ids": [
     "SR-FIX-RELEASE-READINESS-RIGHT-v1",
     "SR-FIX-TASK-DONE-REVIEW-v1"
   ],
+  "implementation_status": "partial",
+  "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "Task Done remains the existing explicit human-review route; the now defined Capability/Task Verification context does not itself prove Done criteria. No Evidence-only Done service, full SR-REQ-0127 or Release baseline completion is claimed."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Ein Task DARF den Umsetzungsstatus `implemented` nur besitzen, wenn seine Done-Kriterien erfüllt und durch Review oder Evidence nachgewiesen sind.",
+    "scope": "13.b.W/R: explicit human-reviewed Task implementation plus mandatory task_done semantic service for every implemented Task. Full original Task/model/ordered-criteria/unconfigured-project bindings and trusted current human verification remain required. Shared validation blocks generic create/update/saved-plan/no-op routes with unproven target status, including unrelated implemented Tasks. Native single-Task review cannot certify a neighbour. Explicit trusted host service registration is not supplied by JSON or AI prose. Existing proof and native publication/replay contracts remain; no Task Evidence projection is invented. 13.f.R: Retain native Task Done criteria as mandatory even when their rejection is a provider warning; a valid Task Verification Waiver does not grant Release readiness. Supplied-input targeted checks do not certify production human authority, Release baseline or full-suite success."
+  },
   "preconditions": [
     "Owned native Task and complete TargetModel with an explicit unconfigured project scope.",
     "Passive synthetic human Done decisions plus an explicitly supplied trusted host ReviewVerifier. Test doubles do not authenticate actual humans.",
     "Native transactional publication in an owned temporary project with ordinary independent PublicationAuthority."
   ],
+  "primary_verification_id": "SR-VER-0009",
+  "required_environment": {
+    "declared_minimum_python": "3.10",
+    "implementation": "cpython",
+    "measured_scope": "current-run-only"
+  },
+  "requirement_id": "SR-REQ-0127",
+  "resources": {
+    "harness_suite_timeout": null,
+    "harness_test_timeout": null,
+    "owned_temporary_files": true
+  },
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
   "steps": [
     "Bind the complete original Task, ordered Done criteria, model sources and exact scope to an explicit status-update intention.",
     "Require human confirmation of every criterion and a typed current host verification bound to context and full review hashes.",
@@ -27,25 +47,8 @@
     "Preserve all files on rejected writes or stale content/configuration; allow retraction of an unproven status and a freshly reviewed no-op; check isolated Core/PYZ parity.",
     "For 13.f.R: Retain native Task Done criteria as mandatory even when their rejection is a provider warning; a valid Task Verification Waiver does not grant Release readiness."
   ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "Ein Task DARF den Umsetzungsstatus `implemented` nur besitzen, wenn seine Done-Kriterien erfüllt und durch Review oder Evidence nachgewiesen sind.",
-    "scope": "13.b.W/R: explicit human-reviewed Task implementation plus mandatory task_done semantic service for every implemented Task. Full original Task/model/ordered-criteria/unconfigured-project bindings and trusted current human verification remain required. Shared validation blocks generic create/update/saved-plan/no-op routes with unproven target status, including unrelated implemented Tasks. Native single-Task review cannot certify a neighbour. Explicit trusted host service registration is not supplied by JSON or AI prose. Existing proof and native publication/replay contracts remain; no Task Evidence projection is invented. 13.f.R: Retain native Task Done criteria as mandatory even when their rejection is a provider warning; a valid Task Verification Waiver does not grant Release readiness. Supplied-input targeted checks do not certify production human authority, Release baseline or full-suite success."
-  },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
-  "required_environment": {
-    "implementation": "cpython",
-    "declared_minimum_python": "3.10",
-    "measured_scope": "current-run-only"
-  },
-  "resources": {
-    "owned_temporary_files": true,
-    "harness_test_timeout": null,
-    "harness_suite_timeout": null
-  },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0127",
   "test_ids": [
     "tests/test_release_readiness_right.py::test_a_valid_native_human_waiver_never_counts_as_release_verification[task]",
     "tests/test_release_readiness_right.py::test_required_negative_review_is_failed_even_as_a_provider_warning[task_done-task_done_criteria_unconfirmed]",
@@ -123,8 +126,5 @@
     "tests/test_task_implementation_right.py::test_unrelated_services_and_ai_prose_do_not_supply_task_done_proof[extension:task-done]",
     "tests/test_task_implementation_right.py::test_unrelated_services_and_ai_prose_do_not_supply_task_done_proof[lifecycle]",
     "tests/test_task_implementation_right.py::test_unrelated_services_and_ai_prose_do_not_supply_task_done_proof[review_currentness]"
-  ],
-  "open_items": [
-    "Task Done remains the existing explicit human-review route; the now defined Capability/Task Verification context does not itself prove Done criteria. No Evidence-only Done service, full SR-REQ-0127 or Release baseline completion is claimed."
   ]
 }

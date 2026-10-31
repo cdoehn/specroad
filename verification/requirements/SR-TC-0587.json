@@ -1,19 +1,44 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0587",
-  "requirement_id": "SR-REQ-0587",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0038",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [
+    0,
+    1,
+    3
+  ],
   "fixture_ids": [
     "SR-FIX-CHANGED-SOURCES-v1",
     "SR-FIX-OWNED-TEMP-v1"
   ],
+  "implementation_status": "partial",
+  "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "Closed trusted host API for finite explicitly saved model/profile inputs and complete native evaluation units. Whole evaluations and the input set are currently memory-resident; general CLI/Code-8 integration, evaluation Work-package export/restore, bounded within-evaluation durable cursors, later commands and full platform/sandbox/release coverage remain open. Rename cases preserve inode identities and use identical built bytes. Hash consistency does not authenticate foreign Work data; results do not claim current project-file verification.",
+    "Changed-only source composition remains a library scope: full CLI/Work, literal/full lint, broader resource semantics, live freshness and scalable processing remain open."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Inkrementelle Prüfungen MÜSSEN ihren tatsächlich geprüften Umfang einschließlich notwendiger Abhängigkeiten korrekt ausweisen.",
+    "scope": "The selected closure contains exactly three dependent goals from four supplied sources; all source bytes are structurally examined. Every completed result retains the native source report, scope and diagnostics. Malformed model inputs and unfinished work cannot claim completion. Closed trusted host API for finite explicitly saved model/profile inputs and complete native evaluation units. Whole evaluations and the input set are currently memory-resident; general CLI/Code-8 integration, evaluation Work-package export/restore, bounded within-evaluation durable cursors, later commands and full platform/sandbox/release coverage remain open. Rename cases preserve inode identities and use identical built bytes. Hash consistency does not authenticate foreign Work data; results do not claim current project-file verification. R additionally checks the complete retained native phase/scope/diagnostic contract and reports concrete lost snapshot resources, without rerunning confirmed native evaluations. Current-host EMFILE from a real reduced descriptor limit and late build changes retain the actual checkpoint; compatible later calls reuse only confirmed units. These are consistency and current-host behavior checks, not authentication, bounded-memory completion or full release portability approval. 8.k.W composes captured Git/current sources, changed artifact/configuration seeds, byte-bound current profiles, native validation dependency expansion and Core lint. Incoming/transitive and declared gate dependencies are retained; actual SRX profile edits detect failures in unchanged artifacts. Profile/configuration changes and removals conservatively seed current artifacts; unsupported changed normative resources fail. Native reports, failure policy, exact checked/dependency IDs and raw bindings are retained. No-change/empty-current cases do not fabricate checks. This is loaded-model validation and Core lint only, not full-project, literal/full-lint, live-file, Work or approval coverage. 8.k.R preserves known warning-threshold failures even when required semantic services remain unavailable, without changing native reports, completion or unavailable-only unknown results. Real unchanged SRX graph rules find failures in unchanged artifacts after target or edge changes. Failed/unbound/incomplete dependency discovery never runs a falsely narrowed check; faulty check observations preserve native errors and actual scope. Coverage includes outside references, cyclic declared dependencies, unresolved real Git refs, early base guards, ambiguous/unused profiles, unexecuted empty scopes and owned snapshots without live freshness claims. All earlier behavior proofs and test identities are retained. 8.k.C extracts the same seed-selection and native validation/assessment/Core-lint blocks into two private helpers. A static AST extraction proof verifies the two substitutions and unchanged guards, reports, module bindings and profile behavior. All 285 existing test files and 9503 prior test IDs remain unchanged; targeted W/R regression rechecks behavior. No new semantics, error contracts, side effects or authority are introduced."
+  },
   "preconditions": [
     "Owned temporary model/profile files and Work roots; real native model, graph, SRX, checkpoint and transaction paths. In-process tests use an explicitly labelled recorded-build fixture; process tests build and run the actual module/zipapp. Trusted host registry, initial binding and normative publication authority are explicit test harness inputs.",
     "The host-boundary case uses actual newly built module execution and native RLIMIT_NOFILE changes in independent owned child processes; low-limit failure is a real EMFILE, not an invented softbudget refusal."
   ],
+  "primary_verification_id": "SR-VER-0038",
+  "required_environment": {
+    "declared_minimum_python": "3.10",
+    "implementation": "cpython",
+    "measured_scope": "current-run-only"
+  },
+  "requirement_id": "SR-REQ-0587",
+  "resources": {
+    "harness_suite_timeout": null,
+    "harness_test_timeout": null,
+    "owned_temporary_files": true
+  },
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
   "steps": [
     "Run actual model validation with a selected subject whose incoming graph dependencies require additional model subjects; retain the native source report and exact checked IDs.",
     "Compare completed durable results and complete policy failures with direct native evaluation, including every diagnostic and retained native detail.",
@@ -22,29 +47,8 @@
     "Run Git-derived changed-only validation and Core lint; retain native structural and semantic scopes, exact seeds/checked/dependency IDs, resource bindings and absence of a full-project claim.",
     "Exercise actual SRX outside-file failures, incomplete warning policy, blocked dependency discovery and exact native scope/error preservation with the Changed-only R cases."
   ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "Inkrementelle Prüfungen MÜSSEN ihren tatsächlich geprüften Umfang einschließlich notwendiger Abhängigkeiten korrekt ausweisen.",
-    "scope": "The selected closure contains exactly three dependent goals from four supplied sources; all source bytes are structurally examined. Every completed result retains the native source report, scope and diagnostics. Malformed model inputs and unfinished work cannot claim completion. Closed trusted host API for finite explicitly saved model/profile inputs and complete native evaluation units. Whole evaluations and the input set are currently memory-resident; general CLI/Code-8 integration, evaluation Work-package export/restore, bounded within-evaluation durable cursors, later commands and full platform/sandbox/release coverage remain open. Rename cases preserve inode identities and use identical built bytes. Hash consistency does not authenticate foreign Work data; results do not claim current project-file verification. R additionally checks the complete retained native phase/scope/diagnostic contract and reports concrete lost snapshot resources, without rerunning confirmed native evaluations. Current-host EMFILE from a real reduced descriptor limit and late build changes retain the actual checkpoint; compatible later calls reuse only confirmed units. These are consistency and current-host behavior checks, not authentication, bounded-memory completion or full release portability approval. 8.k.W composes captured Git/current sources, changed artifact/configuration seeds, byte-bound current profiles, native validation dependency expansion and Core lint. Incoming/transitive and declared gate dependencies are retained; actual SRX profile edits detect failures in unchanged artifacts. Profile/configuration changes and removals conservatively seed current artifacts; unsupported changed normative resources fail. Native reports, failure policy, exact checked/dependency IDs and raw bindings are retained. No-change/empty-current cases do not fabricate checks. This is loaded-model validation and Core lint only, not full-project, literal/full-lint, live-file, Work or approval coverage. 8.k.R preserves known warning-threshold failures even when required semantic services remain unavailable, without changing native reports, completion or unavailable-only unknown results. Real unchanged SRX graph rules find failures in unchanged artifacts after target or edge changes. Failed/unbound/incomplete dependency discovery never runs a falsely narrowed check; faulty check observations preserve native errors and actual scope. Coverage includes outside references, cyclic declared dependencies, unresolved real Git refs, early base guards, ambiguous/unused profiles, unexecuted empty scopes and owned snapshots without live freshness claims. All earlier behavior proofs and test identities are retained. 8.k.C extracts the same seed-selection and native validation/assessment/Core-lint blocks into two private helpers. A static AST extraction proof verifies the two substitutions and unchanged guards, reports, module bindings and profile behavior. All 285 existing test files and 9503 prior test IDs remain unchanged; targeted W/R regression rechecks behavior. No new semantics, error contracts, side effects or authority are introduced."
-  },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [
-    0,
-    1,
-    3
-  ],
-  "json_pointers": [],
-  "required_environment": {
-    "implementation": "cpython",
-    "declared_minimum_python": "3.10",
-    "measured_scope": "current-run-only"
-  },
-  "resources": {
-    "owned_temporary_files": true,
-    "harness_test_timeout": null,
-    "harness_suite_timeout": null
-  },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0587",
   "test_ids": [
     "tests/test_query_changed_only.py::test_added_artifact_is_selected_without_a_disconnected_unchanged_artifact",
     "tests/test_query_changed_only.py::test_changed_target_pulls_incoming_and_transitive_dependencies",
@@ -146,9 +150,5 @@
     "tests/test_work_evaluation_right.py::test_self_hashed_observations_cannot_drop_phases_scope_or_findings[source_binding-finalize]",
     "tests/test_work_evaluation_right.py::test_self_hashed_observations_cannot_drop_phases_scope_or_findings[unknown_stage-advance]",
     "tests/test_work_evaluation_right.py::test_self_hashed_observations_cannot_drop_phases_scope_or_findings[unknown_stage-finalize]"
-  ],
-  "open_items": [
-    "Closed trusted host API for finite explicitly saved model/profile inputs and complete native evaluation units. Whole evaluations and the input set are currently memory-resident; general CLI/Code-8 integration, evaluation Work-package export/restore, bounded within-evaluation durable cursors, later commands and full platform/sandbox/release coverage remain open. Rename cases preserve inode identities and use identical built bytes. Hash consistency does not authenticate foreign Work data; results do not claim current project-file verification.",
-    "Changed-only source composition remains a library scope: full CLI/Work, literal/full lint, broader resource semantics, live freshness and scalable processing remain open."
   ]
 }

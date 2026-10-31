@@ -1,26 +1,5 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0383",
-  "requirement_id": "SR-REQ-0383",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0027",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
-  "fixture_ids": [
-    "SR-FIX-TRANSACTION-RECEIPTS-v1"
-  ],
-  "preconditions": [
-    "Owned temporary project, native writer lock, full publication and durable committed proof."
-  ],
-  "steps": [
-    "Commit a native transaction and store its linked receipts.",
-    "Repeat the normative request and compare the stored result, identities and unchanged files."
-  ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "SpecRoad MUSS für jede abgeschlossene Request-ID eines normativen Schreibauftrags einen unveränderbaren Receipt mit normalisiertem Operationshash, Akteur, Basiswurzel, Ergebnis, Zielwurzel, erzeugten IDs, Transaktions-ID und Ergebnisobjekt unter `.specroad/requests/` speichern.",
-    "scope": "Native committed request receipt storage and confirmed local replay; actor/base/target, operation hash, transaction and result stay bound to the original write."
-  },
+  "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [],
   "expected_exit_codes": [
     0,
@@ -30,29 +9,50 @@
     6,
     7
   ],
+  "fixture_ids": [
+    "SR-FIX-TRANSACTION-RECEIPTS-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [
     "/request_id",
     "/operations_sha256",
     "/result_object",
     "/created_ids"
   ],
+  "method": "automated_behavior",
+  "open_items": [
+    "Public normative CLI and specialist command wiring remain in their assigned later plan steps."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "SpecRoad MUSS für jede abgeschlossene Request-ID eines normativen Schreibauftrags einen unveränderbaren Receipt mit normalisiertem Operationshash, Akteur, Basiswurzel, Ergebnis, Zielwurzel, erzeugten IDs, Transaktions-ID und Ergebnisobjekt unter `.specroad/requests/` speichern.",
+    "scope": "Native committed request receipt storage and confirmed local replay; actor/base/target, operation hash, transaction and result stay bound to the original write."
+  },
+  "preconditions": [
+    "Owned temporary project, native writer lock, full publication and durable committed proof."
+  ],
+  "primary_verification_id": "SR-VER-0027",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0383",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Commit a native transaction and store its linked receipts.",
+    "Repeat the normative request and compare the stored result, identities and unchanged files."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0383",
   "test_ids": [
     "tests/test_transaction_receipts.py::test_complete_receipts_bind_plan_actor_source_target_and_operations",
     "tests/test_transaction_receipts.py::test_created_ids_record_actual_plan_identities",
     "tests/test_normative_idempotency.py::test_identical_retry_returns_exact_stored_result_without_any_write"
-  ],
-  "open_items": [
-    "Public normative CLI and specialist command wiring remain in their assigned later plan steps."
   ]
 }

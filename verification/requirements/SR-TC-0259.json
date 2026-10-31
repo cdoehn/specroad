@@ -1,11 +1,14 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0259",
-  "requirement_id": "SR-REQ-0259",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0019",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [
+    0,
+    2,
+    3,
+    5,
+    6,
+    7
+  ],
   "fixture_ids": [
     "SR-FIX-TRANSACTION-RECEIPTS-v1",
     "SR-FIX-TRANSACTION-COMMITTING-v1",
@@ -13,12 +16,38 @@
     "SR-FIX-PROJECT-LOCK-v1",
     "SR-FIX-DISCARD-RESTART-v1"
   ],
+  "implementation_status": "partial",
+  "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "Automatic transaction preflight (5.t), the comprehensive fault-injection matrix (5.v) and full-source restore (15.j-15.l) remain in their assigned plan positions; the existing explicit recovery kernels do not establish those integrations.",
+    "Persisted-input building/prepared discard restart is implemented and has selected process-interruption evidence. Journals without explicit basis selection and building-v1 journals without persisted staging proof remain unsupported for reconstruction; full command/authentication integration and the complete environment matrix remain open.",
+    "Full supported Python matrix is evidenced only by its actual GitHub runs."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Eine erfolgreich abgeschlossene oder zurückgerollte Transaktion MUSS einen unveränderbaren Abschlussbeleg unter `.specroad/transactions/receipts/` hinterlassen und danach das Entfernen temporärer Payloads erlauben.",
+    "scope": "Native committed finalization/readback, immutable rolled-back/discarded receipts and explicit recovery-lock cleanup after writer release or audited orphan takeover. Lost terminal evidence, rename and synchronization responses preserve exact bytes; a bound pending marker keeps interrupted archival active. Bound rollback copies, cursor/terminal journals, completion receipts/marker and action/rollback receipts are published only after complete staging. Initial allocation/write failures expose no short canonical helper. Tested repeated native failures and real process stops remain explicitly resumable; foreign or altered bindings block publication, existing evidence retains its bytes and original authority, and mutation diagnostics retain possible operational changes. Selected persisted-input discard restart cases retain the original audit/receipt and complete basis without normative writes; interrupted completion resumes in a fresh process and preserves conflicting evidence. No whole CLI, restore or complete failure/restart acceptance."
+  },
   "preconditions": [
     "Owned local Linux project; exact independent publication request and native writer lock.",
     "Released original writer lock; current transaction-bound recovery lock and explicit host authority for terminal cleanup.",
     "Explicit transaction-bound host authority; real stopped Linux processes and native root mutex for orphan recovery; independent normative byte oracle.",
     "Recovery derivative publication requires native Linux O_TMPFILE support and a usable /proc/self/fd link; unsupported operations fail without a named-write fallback."
   ],
+  "primary_verification_id": "SR-VER-0019",
+  "required_environment": {
+    "declared_minimum_python": "3.10",
+    "implementation": "cpython",
+    "measured_scope": "current-run-only"
+  },
+  "requirement_id": "SR-REQ-0259",
+  "resources": {
+    "harness_suite_timeout": null,
+    "harness_test_timeout": null,
+    "owned_temporary_files": true
+  },
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
   "steps": [
     "Publish verified target files using the existing transaction phases.",
     "Create bound receipts, synchronize them and only then persist committed.",
@@ -33,32 +62,8 @@
     "Reject foreign empty/short/conflicting or unsafe files and concurrent prefix collisions; recheck journal, lock, live normative bytes and prior evidence before publication. Reuse complete records without changing their authority attribution; finish existing preserving cleanup.",
     "In fresh writer/recovery processes, reconstruct explicit building/prepared discard inputs and retain the original immutable audit and receipt through selected interrupted completion boundaries; compare independent basis bytes, repeated results and next-writer access."
   ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "Eine erfolgreich abgeschlossene oder zurückgerollte Transaktion MUSS einen unveränderbaren Abschlussbeleg unter `.specroad/transactions/receipts/` hinterlassen und danach das Entfernen temporärer Payloads erlauben.",
-    "scope": "Native committed finalization/readback, immutable rolled-back/discarded receipts and explicit recovery-lock cleanup after writer release or audited orphan takeover. Lost terminal evidence, rename and synchronization responses preserve exact bytes; a bound pending marker keeps interrupted archival active. Bound rollback copies, cursor/terminal journals, completion receipts/marker and action/rollback receipts are published only after complete staging. Initial allocation/write failures expose no short canonical helper. Tested repeated native failures and real process stops remain explicitly resumable; foreign or altered bindings block publication, existing evidence retains its bytes and original authority, and mutation diagnostics retain possible operational changes. Selected persisted-input discard restart cases retain the original audit/receipt and complete basis without normative writes; interrupted completion resumes in a fresh process and preserves conflicting evidence. No whole CLI, restore or complete failure/restart acceptance."
-  },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [
-    0,
-    2,
-    3,
-    5,
-    6,
-    7
-  ],
-  "json_pointers": [],
-  "required_environment": {
-    "implementation": "cpython",
-    "declared_minimum_python": "3.10",
-    "measured_scope": "current-run-only"
-  },
-  "resources": {
-    "owned_temporary_files": true,
-    "harness_test_timeout": null,
-    "harness_suite_timeout": null
-  },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0259",
   "test_ids": [
     "tests/test_transaction_receipts.py::test_complete_receipts_bind_plan_actor_source_target_and_operations",
     "tests/test_transaction_receipts.py::test_receipts_are_synced_before_committed_marker",
@@ -330,10 +335,5 @@
     "tests/test_discard_restart_right.py::test_interrupted_audit_preparation_preserves_prior_evidence[prefix-intent]",
     "tests/test_discard_restart_right.py::test_conflicting_discard_completion_evidence_is_never_repaired[terminal]",
     "tests/test_discard_restart_right.py::test_terminal_restart_rechecks_audit_after_authorization"
-  ],
-  "open_items": [
-    "Automatic transaction preflight (5.t), the comprehensive fault-injection matrix (5.v) and full-source restore (15.j-15.l) remain in their assigned plan positions; the existing explicit recovery kernels do not establish those integrations.",
-    "Persisted-input building/prepared discard restart is implemented and has selected process-interruption evidence. Journals without explicit basis selection and building-v1 journals without persisted staging proof remain unsupported for reconstruction; full command/authentication integration and the complete environment matrix remain open.",
-    "Full supported Python matrix is evidenced only by its actual GitHub runs."
   ]
 }

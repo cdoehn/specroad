@@ -1,20 +1,41 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0623",
-  "requirement_id": "SR-REQ-0623",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0039",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [],
   "fixture_ids": [
     "SR-FIX-OWNED-TEMP-v1"
   ],
+  "implementation_status": "partial",
+  "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "Automatic CLI delivery selection, final normative CLI/Work completion, multipart output and external large-diagnostic delivery remain open. Both source outcomes, canonical outputs and readbacks still use complete in-memory values; bounded I/O does not establish streaming generation. Historical receipt delivery does not assert current target validity, authentication, new write permission or overall requirement/release approval.",
+    "11.r.W: finer cursors within composition/query/row generation, bounded total memory, automatic document CLI integration and automatic inline/file delivery selection remain open. Supplied inventory scope is explicit; no current disk completeness, full validation, authentication or write/approval authority is inferred."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Eine zu große Inlineausgabe MUSS vollständig über den Ergebnisdatei-/Manifestvertrag nach Kapitel 11.5 geliefert werden.",
+    "scope": "6.q.W adds explicit file materialization for already completed Work from the existing six read-only bootstrap handlers. Actual saved handler results and the full original schema, status, exit code, project binding and diagnostics are preserved. The whole canonical result is atomically published in the protected external Work results directory; a subsequently published canonical manifest binds every produced payload by relative path, role, media type, size, SHA-256 and schema, plus the originating Work/checkpoint/command and complete source-envelope hash. The returned manifest reference binds its own complete bytes without recursion. Every delivery access rechecks the original closed Work plan, full checkpoint chain, current build and all output bytes. Matching files are reused without writes, handler execution, checkpoint changes or project changes. Missing or altered files never yield a confirmed delivery; unsafe storage and changed runtime are refused. Actual short writes and injected early/late native output failures retain the real checkpoint and output/temporary files, and explicit retry only completes verified missing outputs. All tests compare machine contracts and complete byte content, not human wording or layout. This is a partial closed-host adapter, not CLI integration or a claim of streaming/multipart/normative result delivery. 6.q.R adds a separate receipt-only native result-file adapter. Independently verified request and transaction completion observations must bind the same project/request/transaction/target/receipt. The entire original normative-request-resolution-v1 payload is externalized, without inventing a native CLI envelope or marking normative Work completed. Source proof is checked again during atomic output publication and every delivery access; old output never substitutes for missing native commit proof. Actual post-commit process loss, explicit cleanup Recovery and early/late output failures preserve the one original semantic commit. Explicit retry only finishes missing result files, never invokes another Apply, handler, project writer or automatic Recovery. Prior W tests are unchanged. 6.q.C moves only pure file/manifest/result assembly into a private projection module. All native source checks, checkpoint bindings, atomic writes and fresh delivery verification remain in their coordinators. Re-inlined projection ASTs and every remaining function/class match the prior state; all prior test files, W/R expectations and requirement test identities are unchanged. This structure-only change adds no behavioral scope or completion claim. 11.r.W adds the closed document.project host adapter over the existing Work engine. The complete supplied model bytes bind a native composition unit followed by all source block selections. Completed native kernels are reused across process/root changes; repeated include occurrences remain distinct while block data is shared. A separate completion requires all declared units, and the existing atomic Work file writer publishes the whole result and its manifest. Query offset/limit remain explicit native semantics. All new tests compare data, native errors, complete output bytes and unchanged project inventories, not rendered layout. This establishes whole-unit durable resume and explicit external delivery only; native kernels and final reduction remain memory resident. 11.r.R adds source-bound occurrence closure, exact literal coverage, normalized query/page/input/configuration bindings, retained row projections and fresh output verification. Unknown fields, malformed context, missing include occurrences, altered rows and false authority are typed conflicts before writes. The complete query total remains a retained native evaluation result; these consistency checks do not rerun filtering/prose/composition, authenticate foreign checkpoints, or claim finer inner-kernel cursors. Whole-unit execution and delivery remain memory resident and overall status stays partial."
+  },
   "preconditions": [
     "Owned temporary protected project/input root and private external Work directory; actual closed bootstrap handlers, complete durable Work generation and explicitly labelled recorded-build compatibility fixture.",
     "Explicit trusted test-host normative registry and authority; real native project locks, journal, receipts and owned subprocess cuts after semantic commit or cleanup. Independently retained original Work binding; no CLI registration or measured distribution claim.",
     "11.r.W: independently retained initial document Work binding, an explicit owned TargetModel and private external Work root; recorded-build fixtures are labelled and actual module/PYZ distributions run in separate processes.",
     "11.r.R: the same independent initial binding and private external Work store; deliberately rehashed evidence mutations and early/late output I/O injections are labelled. No authentication of arbitrary foreign Work data is claimed."
   ],
+  "primary_verification_id": "SR-VER-0039",
+  "required_environment": {
+    "declared_minimum_python": "3.10",
+    "implementation": "cpython",
+    "measured_scope": "current-run-only"
+  },
+  "requirement_id": "SR-REQ-0623",
+  "resources": {
+    "harness_suite_timeout": null,
+    "harness_test_timeout": null,
+    "owned_temporary_files": true
+  },
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
   "steps": [
     "Execute and finalize each supported real read-only handler, then publish its entire unchanged result payload and bound file manifest.",
     "Check complete machine payload, original schema, exact byte size/hash, full diagnostics and source checkpoint binding; reuse through a fresh controller without writes or handler execution.",
@@ -25,25 +46,8 @@
     "11.r.W: compare complete native document/block data over durable windows, source loss, changed cache state and relocated module/PYZ processes; verify missing units cannot finish and complete external result bytes retain every selected table row plus size/hash/schema bindings without project writes.",
     "11.r.R: reject dropped repeated include subtrees, source/edge/record mismatches, truncated literal rows, altered query pagination, row bytes and retained output omissions before advance, completion or delivery writes. Preserve all data and hashes over large complete projections and explicit delivery retries after early/late I/O failures; confirm completed native evaluators are not repeated."
   ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "Eine zu große Inlineausgabe MUSS vollständig über den Ergebnisdatei-/Manifestvertrag nach Kapitel 11.5 geliefert werden.",
-    "scope": "6.q.W adds explicit file materialization for already completed Work from the existing six read-only bootstrap handlers. Actual saved handler results and the full original schema, status, exit code, project binding and diagnostics are preserved. The whole canonical result is atomically published in the protected external Work results directory; a subsequently published canonical manifest binds every produced payload by relative path, role, media type, size, SHA-256 and schema, plus the originating Work/checkpoint/command and complete source-envelope hash. The returned manifest reference binds its own complete bytes without recursion. Every delivery access rechecks the original closed Work plan, full checkpoint chain, current build and all output bytes. Matching files are reused without writes, handler execution, checkpoint changes or project changes. Missing or altered files never yield a confirmed delivery; unsafe storage and changed runtime are refused. Actual short writes and injected early/late native output failures retain the real checkpoint and output/temporary files, and explicit retry only completes verified missing outputs. All tests compare machine contracts and complete byte content, not human wording or layout. This is a partial closed-host adapter, not CLI integration or a claim of streaming/multipart/normative result delivery. 6.q.R adds a separate receipt-only native result-file adapter. Independently verified request and transaction completion observations must bind the same project/request/transaction/target/receipt. The entire original normative-request-resolution-v1 payload is externalized, without inventing a native CLI envelope or marking normative Work completed. Source proof is checked again during atomic output publication and every delivery access; old output never substitutes for missing native commit proof. Actual post-commit process loss, explicit cleanup Recovery and early/late output failures preserve the one original semantic commit. Explicit retry only finishes missing result files, never invokes another Apply, handler, project writer or automatic Recovery. Prior W tests are unchanged. 6.q.C moves only pure file/manifest/result assembly into a private projection module. All native source checks, checkpoint bindings, atomic writes and fresh delivery verification remain in their coordinators. Re-inlined projection ASTs and every remaining function/class match the prior state; all prior test files, W/R expectations and requirement test identities are unchanged. This structure-only change adds no behavioral scope or completion claim. 11.r.W adds the closed document.project host adapter over the existing Work engine. The complete supplied model bytes bind a native composition unit followed by all source block selections. Completed native kernels are reused across process/root changes; repeated include occurrences remain distinct while block data is shared. A separate completion requires all declared units, and the existing atomic Work file writer publishes the whole result and its manifest. Query offset/limit remain explicit native semantics. All new tests compare data, native errors, complete output bytes and unchanged project inventories, not rendered layout. This establishes whole-unit durable resume and explicit external delivery only; native kernels and final reduction remain memory resident. 11.r.R adds source-bound occurrence closure, exact literal coverage, normalized query/page/input/configuration bindings, retained row projections and fresh output verification. Unknown fields, malformed context, missing include occurrences, altered rows and false authority are typed conflicts before writes. The complete query total remains a retained native evaluation result; these consistency checks do not rerun filtering/prose/composition, authenticate foreign checkpoints, or claim finer inner-kernel cursors. Whole-unit execution and delivery remain memory resident and overall status stays partial."
-  },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
-  "required_environment": {
-    "implementation": "cpython",
-    "declared_minimum_python": "3.10",
-    "measured_scope": "current-run-only"
-  },
-  "resources": {
-    "owned_temporary_files": true,
-    "harness_test_timeout": null,
-    "harness_suite_timeout": null
-  },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0623",
   "test_ids": [
     "tests/test_document_work.py::test_complete_external_files_have_all_rows_hashes_and_fresh_references",
     "tests/test_document_work.py::test_document_data_equals_native_kernels_across_work_windows[constrained-100]",
@@ -250,9 +254,5 @@
     "tests/test_work_result_files.py::test_unsafe_result_storage_is_refused_without_project_writes[hardlink]",
     "tests/test_work_result_files.py::test_unsafe_result_storage_is_refused_without_project_writes[public]",
     "tests/test_work_result_files.py::test_unsafe_result_storage_is_refused_without_project_writes[symlink]"
-  ],
-  "open_items": [
-    "Automatic CLI delivery selection, final normative CLI/Work completion, multipart output and external large-diagnostic delivery remain open. Both source outcomes, canonical outputs and readbacks still use complete in-memory values; bounded I/O does not establish streaming generation. Historical receipt delivery does not assert current target validity, authentication, new write permission or overall requirement/release approval.",
-    "11.r.W: finer cursors within composition/query/row generation, bounded total memory, automatic document CLI integration and automatic inline/file delivery selection remain open. Supplied inventory scope is explicit; no current disk completeness, full validation, authentication or write/approval authority is inferred."
   ]
 }

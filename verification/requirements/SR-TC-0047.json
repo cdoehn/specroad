@@ -1,25 +1,5 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0047",
-  "requirement_id": "SR-REQ-0047",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0004",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
-  "fixture_ids": [
-    "SR-FIX-CHANGE-LIFECYCLE-v1"
-  ],
-  "preconditions": [
-    "Owned standard-artifact values and ordered operations; explicit bound actor and time."
-  ],
-  "steps": [
-    "Prepare lifecycle candidates without I/O; compare final status, metadata, content hashes and operation audit."
-  ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "Ein Wechsel eines Artefakts auf `superseded` MUSS durch mindestens eine gespeicherte `supersedes`-Beziehung eines Nachfolgeartefakts gleichen Typs auf dieses Artefakt begründet sein.",
-    "scope": "Standard lifecycle candidate planning under 9.6.1/9.6.3; changes precede audit stamping/hashing. No write or legitimate approval proof. Saved plans recompute final lifecycle/audit values and verify declared hashes. Explicit history reservations are not a full history or authentication proof."
-  },
+  "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [
     "SRV030"
   ],
@@ -28,22 +8,47 @@
     2,
     3
   ],
+  "fixture_ids": [
+    "SR-FIX-CHANGE-LIFECYCLE-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [
     "/maturity",
     "/revision",
     "/operations"
   ],
+  "method": "automated_behavior",
+  "open_items": [
+    "Full target validation and live publication are future planner/transaction steps.",
+    "Dedicated complete approval gates are required for transitions to approved; this adapter refuses them.",
+    "Historical completeness and specialized lifecycles are not established by this regular adapter."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Ein Wechsel eines Artefakts auf `superseded` MUSS durch mindestens eine gespeicherte `supersedes`-Beziehung eines Nachfolgeartefakts gleichen Typs auf dieses Artefakt begründet sein.",
+    "scope": "Standard lifecycle candidate planning under 9.6.1/9.6.3; changes precede audit stamping/hashing. No write or legitimate approval proof. Saved plans recompute final lifecycle/audit values and verify declared hashes. Explicit history reservations are not a full history or authentication proof."
+  },
+  "preconditions": [
+    "Owned standard-artifact values and ordered operations; explicit bound actor and time."
+  ],
+  "primary_verification_id": "SR-VER-0004",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0047",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Prepare lifecycle candidates without I/O; compare final status, metadata, content hashes and operation audit."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0047",
   "test_ids": [
     "tests/test_change_lifecycle.py::test_pure_supersession_requires_incoming_same_type_successor",
     "tests/test_change_lifecycle.py::test_successor_can_be_created_later_in_the_same_plan",
@@ -51,10 +56,5 @@
     "tests/test_change_lifecycle_right.py::test_removed_final_successor_is_not_enough",
     "tests/test_change_lifecycle_right.py::test_outgoing_supersedes_is_not_a_successor_of_the_source",
     "tests/test_change_lifecycle_right.py::test_cyclic_successors_cannot_legitimize_supersession"
-  ],
-  "open_items": [
-    "Full target validation and live publication are future planner/transaction steps.",
-    "Dedicated complete approval gates are required for transitions to approved; this adapter refuses them.",
-    "Historical completeness and specialized lifecycles are not established by this regular adapter."
   ]
 }

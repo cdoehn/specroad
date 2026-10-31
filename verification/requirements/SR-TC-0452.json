@@ -1,50 +1,53 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0452",
-  "requirement_id": "SR-REQ-0452",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0030",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [],
   "fixture_ids": [
     "verification-context-subjects",
     "verification-context-independent",
     "SR-FIX-PLANNING-VERIFICATION-CONTEXT-v1"
   ],
-  "preconditions": [
-    "Locally valid owned subject/Evidence bytes and an explicitly supplied effective configuration or null.",
-    "For independent reuse, an explicitly supplied native contract must declare this subject/check and be recorded with its current semantic context hash."
-  ],
-  "steps": [
-    "Project the Appendix L subject fields and calculate the RFC 8785 SHA-256.",
-    "Compare recorded subject identity/context and exact configuration; grant independence only from the matching, context-current explicit contract and recorded check/test.",
-    "Observe freshness independently of Evidence result, product/run selection and release readiness.",
-    "13.f.W: check additive native Capability/Task projection with exact field list and unchanged old projections; evaluate recorded Evidence using actual contracts, slots, configuration and native result priorities without rewriting it."
-  ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "`verification_context_hash-v1` DARF NICHT Workflowstatus, berechnete Ergebnisse oder reine Auditfelder enthalten.",
-    "scope": "12.c.W/R/C: Appendix L subject hashes with exact requirement/verification/test vectors; explicit current independent-contract/check binding permits cross-configuration freshness, never erases Subject staleness or historical configuration provenance. Partial context observation only, not required-set/run selection or verification success. 13.f.W adds Capability and Task support under the clarified Appendix L.2.1/L.3.1, retaining every old projection and evaluating legacy bindings explicitly."
-  },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
+  "implementation_status": "partial",
   "json_pointers": [
     "/freshness",
     "/reasons",
     "/subject/verification_context_sha256",
     "/configuration_hash"
   ],
+  "method": "automated_behavior",
+  "open_items": [
+    "Integration with record/import/coverage/baseline consumers in their assigned plan steps; no full verification or release-success claim."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "`verification_context_hash-v1` DARF NICHT Workflowstatus, berechnete Ergebnisse oder reine Auditfelder enthalten.",
+    "scope": "12.c.W/R/C: Appendix L subject hashes with exact requirement/verification/test vectors; explicit current independent-contract/check binding permits cross-configuration freshness, never erases Subject staleness or historical configuration provenance. Partial context observation only, not required-set/run selection or verification success. 13.f.W adds Capability and Task support under the clarified Appendix L.2.1/L.3.1, retaining every old projection and evaluating legacy bindings explicitly."
+  },
+  "preconditions": [
+    "Locally valid owned subject/Evidence bytes and an explicitly supplied effective configuration or null.",
+    "For independent reuse, an explicitly supplied native contract must declare this subject/check and be recorded with its current semantic context hash."
+  ],
+  "primary_verification_id": "SR-VER-0030",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0452",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Project the Appendix L subject fields and calculate the RFC 8785 SHA-256.",
+    "Compare recorded subject identity/context and exact configuration; grant independence only from the matching, context-current explicit contract and recorded check/test.",
+    "Observe freshness independently of Evidence result, product/run selection and release readiness.",
+    "13.f.W: check additive native Capability/Task projection with exact field list and unchanged old projections; evaluate recorded Evidence using actual contracts, slots, configuration and native result priorities without rewriting it."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0452",
   "test_ids": [
     "tests/test_verification_context.py::test_audit_lifecycle_tags_and_relations_do_not_stale_subject_evidence[changes0-requirement]",
     "tests/test_verification_context.py::test_audit_lifecycle_tags_and_relations_do_not_stale_subject_evidence[changes0-test]",
@@ -197,8 +200,5 @@
     "tests/test_verification_planning_context.py::test_type_specific_business_fields_invalidate_old_evidence[task-done_criteria-changed3]",
     "tests/test_verification_planning_context.py::test_untyped_or_unknown_schema_data_cannot_bypass_native_admission[capability]",
     "tests/test_verification_planning_context.py::test_untyped_or_unknown_schema_data_cannot_bypass_native_admission[task]"
-  ],
-  "open_items": [
-    "Integration with record/import/coverage/baseline consumers in their assigned plan steps; no full verification or release-success claim."
   ]
 }

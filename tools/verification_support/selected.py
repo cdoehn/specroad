@@ -23,7 +23,7 @@ def run_selected(root, names, outdir, *, expected, workers=4, runner=None, envir
     command = [sys.executable, "-I", "-B", str(root / "tools/pytest_entry.py"),
                "-o", "addopts=", "--disable-plugin-autoload", "-p", "no:cacheprovider",
                "-p", "no:doctest", "-p", "xdist.plugin", "-n", str(workers),
-               "--dist", "load", "--max-worker-restart=0", "--sr-observations", str(observed),
+               "--dist", "worksteal", "--max-worker-restart=0", "--sr-observations", str(observed),
                "--sr-expected-tests", str(expected), *names]
     runner = subprocess.run if runner is None else runner
     errors = []

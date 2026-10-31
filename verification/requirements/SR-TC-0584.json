@@ -1,48 +1,51 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0584",
-  "requirement_id": "SR-REQ-0584",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0037",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
-  "fixture_ids": [
-    "SR-FIX-OWNED-TEMP-v1",
-    "SR-FIX-ISOLATED-CPYTHON-v1"
-  ],
-  "preconditions": [
-    "W: explicitly invoked guarded payload hashing in an active consumption window; owned temporary inputs. Allocation/read failures are labelled injections, not native host-quota or OOM measurements.",
-    "R: explicit operational outcome adapter; real guarded inputs. Permission and file-descriptor refusals use owned isolated POSIX processes. A native address-space-refused allocation is injected as an indivisible initializer, not claimed as the actual SHA-256 memory requirement."
-  ],
-  "steps": [
-    "Hash a real 32 MiB attachment with 64 KiB and 4 KiB reusable buffers; bind the complete byte count and independent incremental SHA-256.",
-    "Exercise smaller pre-read buffer allocation alternatives, short reads, exact control positions, guarded descriptor lifetime and unchanged critical fixture bytes on failure.",
-    "Compare complete hashes across 1-byte through 64-KiB buffers and finite actual allocation attempts; never turn a soft target into a capacity blocker.",
-    "Check machine-readable native resource blockers, raw API compatibility, no partial digest or automatic retry after a read, privacy of diagnostics and exact preservation of owned critical fixture bytes."
-  ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "Vor bekannten großen Speicher- und Stagingallokationen MUSS SpecRoad die sparsame Alternative und tatsächliche Verfügbarkeit nach Anhang O.3 prüfen.",
-    "scope": "The actual bounded bytearray allocation is attempted before payload consumption; an injected allocation MemoryError halves the requested capacity down to one byte, with a finite stop if the minimum fails. A failure after input consumption is never silently retried. Actual reserved payload capacity is registered separately from measured RSS and released from active ownership on success/failure. A real owned 32 MiB file is read with one observed reusable buffer; tracemalloc bounds the selected Python allocation window below 2 MiB. Full-payload copy, claimed host quota, staging availability or whole-product completion is not inferred. R adds fingerprint_file_outcome with complete fingerprints or observed Code-5 resource/access blockers: failed stage, finite buffer attempts, required remedy, no checkpoint or automatic retry. Safety/invalid-input/programming failures retain their separate exceptions. Only an actually failed one-byte reservation supplies a known minimum; indivisible initializer/read/guard steps do not invent a byte minimum. Original W cases remain unchanged. 6.e.C consolidates growth counting and exact-size digest completion for the existing read/readinto adapters. Their call ordering, fingerprint type, allocation alternatives, raw exceptions and operational blocker reports retain the unchanged W/R behavior contracts; no additional consumer or platform completion is claimed."
-  },
+  "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [],
   "expected_exit_codes": [
     0,
     5,
     7
   ],
+  "fixture_ids": [
+    "SR-FIX-OWNED-TEMP-v1",
+    "SR-FIX-ISOLATED-CPYTHON-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "Explicit guarded payload hashing and its operational outcome adapter only; no new CLI command or persistent resume engine. Known-limit integration, staging capacity/reserves, all archive/import/snapshot consumers and full runtime/platform acceptance remain open. Tests distinguish injected errors, native permission/descriptor refusals and the labelled injected indivisible initializer with a real refused allocation. No actual SHA-256 minimum memory benchmark, total RSS, host quota guarantee or recovery from an uncatchable process kill is claimed."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Vor bekannten großen Speicher- und Stagingallokationen MUSS SpecRoad die sparsame Alternative und tatsächliche Verfügbarkeit nach Anhang O.3 prüfen.",
+    "scope": "The actual bounded bytearray allocation is attempted before payload consumption; an injected allocation MemoryError halves the requested capacity down to one byte, with a finite stop if the minimum fails. A failure after input consumption is never silently retried. Actual reserved payload capacity is registered separately from measured RSS and released from active ownership on success/failure. A real owned 32 MiB file is read with one observed reusable buffer; tracemalloc bounds the selected Python allocation window below 2 MiB. Full-payload copy, claimed host quota, staging availability or whole-product completion is not inferred. R adds fingerprint_file_outcome with complete fingerprints or observed Code-5 resource/access blockers: failed stage, finite buffer attempts, required remedy, no checkpoint or automatic retry. Safety/invalid-input/programming failures retain their separate exceptions. Only an actually failed one-byte reservation supplies a known minimum; indivisible initializer/read/guard steps do not invent a byte minimum. Original W cases remain unchanged. 6.e.C consolidates growth counting and exact-size digest completion for the existing read/readinto adapters. Their call ordering, fingerprint type, allocation alternatives, raw exceptions and operational blocker reports retain the unchanged W/R behavior contracts; no additional consumer or platform completion is claimed."
+  },
+  "preconditions": [
+    "W: explicitly invoked guarded payload hashing in an active consumption window; owned temporary inputs. Allocation/read failures are labelled injections, not native host-quota or OOM measurements.",
+    "R: explicit operational outcome adapter; real guarded inputs. Permission and file-descriptor refusals use owned isolated POSIX processes. A native address-space-refused allocation is injected as an indivisible initializer, not claimed as the actual SHA-256 memory requirement."
+  ],
+  "primary_verification_id": "SR-VER-0037",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0584",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Hash a real 32 MiB attachment with 64 KiB and 4 KiB reusable buffers; bind the complete byte count and independent incremental SHA-256.",
+    "Exercise smaller pre-read buffer allocation alternatives, short reads, exact control positions, guarded descriptor lifetime and unchanged critical fixture bytes on failure.",
+    "Compare complete hashes across 1-byte through 64-KiB buffers and finite actual allocation attempts; never turn a soft target into a capacity blocker.",
+    "Check machine-readable native resource blockers, raw API compatibility, no partial digest or automatic retry after a read, privacy of diagnostics and exact preservation of owned critical fixture bytes."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0584",
   "test_ids": [
     "tests/test_streaming_right.py::test_complete_native_hash_outcome_is_independent_of_transfer_capacity[1024]",
     "tests/test_streaming_right.py::test_complete_native_hash_outcome_is_independent_of_transfer_capacity[1048576]",
@@ -99,8 +102,5 @@
     "tests/test_streaming_work.py::test_short_readinto_preserves_hash_and_actual_control_boundaries[over]",
     "tests/test_streaming_work.py::test_short_readinto_preserves_hash_and_actual_control_boundaries[small]",
     "tests/test_streaming_work.py::test_unavailable_minimum_buffer_stops_without_reading_or_removing_inputs"
-  ],
-  "open_items": [
-    "Explicit guarded payload hashing and its operational outcome adapter only; no new CLI command or persistent resume engine. Known-limit integration, staging capacity/reserves, all archive/import/snapshot consumers and full runtime/platform acceptance remain open. Tests distinguish injected errors, native permission/descriptor refusals and the labelled injected indivisible initializer with a real refused allocation. No actual SHA-256 minimum memory benchmark, total RSS, host quota guarantee or recovery from an uncatchable process kill is claimed."
   ]
 }

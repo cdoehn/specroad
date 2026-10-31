@@ -1,11 +1,7 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0449",
-  "requirement_id": "SR-REQ-0449",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0032",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [],
   "fixture_ids": [
     "SR-FIX-DOMAIN-DRAFT-v1",
     "SR-FIX-RELATIONS-v1",
@@ -13,25 +9,7 @@
     "SR-FIX-VERIFICATION-COVERAGE-v1",
     "SR-FIX-VERIFICATION-COVERAGE-RIGHT-v1"
   ],
-  "preconditions": [
-    "Explicit owned SourceRelations, real immutable SRX programs and passive project/configuration contexts; current native CPython only.",
-    "12.p.W: Explicit typed native TargetModel, descriptor or null, actual supplied input bytes/roles, optional configuration and UTC evaluation time. Evidence retains original results and context binding; synthetic waiver provenance is explicitly supplied.",
-    "12.p.R: Explicit native model and actual product bytes/roles, descriptor or null, UTC evaluation time and independent native scope observations. Native Work input bytes and hash are independently trusted; waiver evidence/verifier is resupplied at resume."
-  ],
-  "steps": [
-    "Normalize content-bound query data; execute value/SRX filtering against the entire supplied graph and project exact pointer values.",
-    "Compare independently expected identities and values, distinguish missing/null and Boolean SRX results, and require explicit errors for unavailable providers.",
-    "R revalidates normalized envelopes and current known stored status values; assert exact combination/permutation results and explicit rejection of computed verification projection without its provider.",
-    "12.p.W: Compute one owned read input, then compare exact requirement/kind/dimension sets and counts. Keep result/freshness and Subject/check priorities separate. Require source-order invariance, detached values, exact model/query bindings, independent plan/result filters, sorting before paging, same view coverage, explicit provider refusals, no IO and Core/PYZ equivalence.",
-    "12.p.R: Compare exact independent gap identities/counts for missing contract/test/selection/evidence and stale observations, active versus historical/superseded runs, configured exclusions and invalid references. Resolve actual Release scope and stored selection precedence; reject conflicts. Preserve full descriptor/time/scope/hash through native Work storage and fresh Core/PYZ process; recompute and reject changed inputs. Compare incremental query pages and provenance to the synchronous path without model writes."
-  ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "Query MUSS getrennte Filter für `verification_plan_status` und das berechnete `verification_result` anbieten.",
-    "scope": "W kernel only: complete passive normalized grammar; OR within known value groups, AND across groups and SRX predicates; full supplied adjacency and detached field projection. No CLI, public page, live project coverage, evaluation currency or computed verification result is claimed. Current provider gaps fail explicitly, including for empty input. The four requirements remain partial. R rejects unknown or non-normalized envelope fields, incorrect SRX content hashes, unsupported operators and invalid alternatives in known filter vocabularies. Invalid known stored status fields anywhere in the supplied inventory block selection. Computed verification projection requires its actual provider even with no matches; passive nested extension values remain data. No current verification aggregation is claimed. C extracts normalization and stored-field projection into private pure helpers at the original call sites. Public classes and module identities, existing W/R cases, errors, bindings and provider boundaries remain unchanged. 12.p.W implements deterministic requirement, kind and declared-dimension coverage over the same bound native aggregation. Original results, freshness and required-key observations remain independent; no implicit selection or successful Evidence is invented. The synchronous query accepts exact bound evaluation input for separate stored plan/computed result filters, projections and sort keys. Query provenance stays outside its six-field data; the verification view shares the same coverage. Unbound sources or contexts reject, and missing providers retain their errors. 12.p.R provides separate overlapping gap sets without fabricated runs, excludes inapplicable requirements from gaps and retains native raw evidence dispositions. Release coverage uses native source-bound closure and stored selection precedence; conflicts yield code 6, unstored external selection is provisional only. Native Work storage preserves inert full descriptor/time/scope/hash, and resume recomputes from original model and input bytes with independently supplied trust. QueryWork computed selection/sort/page preserves provenance, without claiming a durable sorting cursor."
-  },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
+  "implementation_status": "partial",
   "json_pointers": [
     "/aggregation",
     "/by_dimension",
@@ -52,17 +30,42 @@
     "/totals",
     "/verification_input_sha256"
   ],
+  "method": "automated_behavior",
+  "open_items": [
+    "12.p.R completes supplied-input coverage gaps, scoped Release precedence and full evaluation inputs preserved through native Work storage and recomputation. CLI, computed SRX graph queries and a durable QueryWork sorting cursor remain open. 12.p.C will clean structure only. No live inventory, external execution, full-suite or release pass is claimed."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Query MUSS getrennte Filter für `verification_plan_status` und das berechnete `verification_result` anbieten.",
+    "scope": "W kernel only: complete passive normalized grammar; OR within known value groups, AND across groups and SRX predicates; full supplied adjacency and detached field projection. No CLI, public page, live project coverage, evaluation currency or computed verification result is claimed. Current provider gaps fail explicitly, including for empty input. The four requirements remain partial. R rejects unknown or non-normalized envelope fields, incorrect SRX content hashes, unsupported operators and invalid alternatives in known filter vocabularies. Invalid known stored status fields anywhere in the supplied inventory block selection. Computed verification projection requires its actual provider even with no matches; passive nested extension values remain data. No current verification aggregation is claimed. C extracts normalization and stored-field projection into private pure helpers at the original call sites. Public classes and module identities, existing W/R cases, errors, bindings and provider boundaries remain unchanged. 12.p.W implements deterministic requirement, kind and declared-dimension coverage over the same bound native aggregation. Original results, freshness and required-key observations remain independent; no implicit selection or successful Evidence is invented. The synchronous query accepts exact bound evaluation input for separate stored plan/computed result filters, projections and sort keys. Query provenance stays outside its six-field data; the verification view shares the same coverage. Unbound sources or contexts reject, and missing providers retain their errors. 12.p.R provides separate overlapping gap sets without fabricated runs, excludes inapplicable requirements from gaps and retains native raw evidence dispositions. Release coverage uses native source-bound closure and stored selection precedence; conflicts yield code 6, unstored external selection is provisional only. Native Work storage preserves inert full descriptor/time/scope/hash, and resume recomputes from original model and input bytes with independently supplied trust. QueryWork computed selection/sort/page preserves provenance, without claiming a durable sorting cursor."
+  },
+  "preconditions": [
+    "Explicit owned SourceRelations, real immutable SRX programs and passive project/configuration contexts; current native CPython only.",
+    "12.p.W: Explicit typed native TargetModel, descriptor or null, actual supplied input bytes/roles, optional configuration and UTC evaluation time. Evidence retains original results and context binding; synthetic waiver provenance is explicitly supplied.",
+    "12.p.R: Explicit native model and actual product bytes/roles, descriptor or null, UTC evaluation time and independent native scope observations. Native Work input bytes and hash are independently trusted; waiver evidence/verifier is resupplied at resume."
+  ],
+  "primary_verification_id": "SR-VER-0032",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0449",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Normalize content-bound query data; execute value/SRX filtering against the entire supplied graph and project exact pointer values.",
+    "Compare independently expected identities and values, distinguish missing/null and Boolean SRX results, and require explicit errors for unavailable providers.",
+    "R revalidates normalized envelopes and current known stored status values; assert exact combination/permutation results and explicit rejection of computed verification projection without its provider.",
+    "12.p.W: Compute one owned read input, then compare exact requirement/kind/dimension sets and counts. Keep result/freshness and Subject/check priorities separate. Require source-order invariance, detached values, exact model/query bindings, independent plan/result filters, sorting before paging, same view coverage, explicit provider refusals, no IO and Core/PYZ equivalence.",
+    "12.p.R: Compare exact independent gap identities/counts for missing contract/test/selection/evidence and stale observations, active versus historical/superseded runs, configured exclusions and invalid references. Resolve actual Release scope and stored selection precedence; reject conflicts. Preserve full descriptor/time/scope/hash through native Work storage and fresh Core/PYZ process; recompute and reject changed inputs. Compare incremental query pages and provenance to the synchronous path without model writes."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0449",
   "test_ids": [
     "tests/test_query_selection.py::test_absent_semantic_provider_never_fakes_empty_success[verification_result]",
     "tests/test_query_selection.py::test_complete_grammar_materializes_scope_values_and_binds_srx_content",
@@ -178,8 +181,5 @@
     "tests/test_verification_coverage_right.py::test_work_rejects_tampered_or_rebound_semantic_inputs[unknown]",
     "tests/test_verification_coverage_right.py::test_work_roundtrip_preserves_full_descriptor_scope_time_and_all_observations[False]",
     "tests/test_verification_coverage_right.py::test_work_roundtrip_preserves_full_descriptor_scope_time_and_all_observations[True]"
-  ],
-  "open_items": [
-    "12.p.R completes supplied-input coverage gaps, scoped Release precedence and full evaluation inputs preserved through native Work storage and recomputation. CLI, computed SRX graph queries and a durable QueryWork sorting cursor remain open. 12.p.C will clean structure only. No live inventory, external execution, full-suite or release pass is claimed."
   ]
 }

@@ -1,26 +1,5 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0254",
-  "requirement_id": "SR-REQ-0254",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0019",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
-  "fixture_ids": [
-    "SR-FIX-TRANSACTION-STAGING-v1"
-  ],
-  "preconditions": [
-    "Explicit independently checked publication preflight and live own writer lock; no other journal or recovery blocker. Native local Linux files and directory fsync support."
-  ],
-  "steps": [
-    "Stage exact before/after bytes to new transaction-local files; sync each file and parent, hash and read back every image.",
-    "Recheck current source, authority and complete image set; durably replace only the building journal with prepared and retain recovery data on failure."
-  ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "Vor dem Wechsel in `prepared` MUSS SpecRoad alle neuen Dateien und erforderlichen Before Images vollständig schreiben, hashen, gegen den Change Plan prüfen und auf der Referenzplattform mittels `fsync` dauerhaft synchronisieren.",
-    "scope": "Real native building-to-prepared effects, all required bytes durable before prepared publication, unchanged normative model and controlled incomplete states. No later commit/recovery integration claimed."
-  },
+  "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [],
   "expected_exit_codes": [
     0,
@@ -31,18 +10,43 @@
     6,
     7
   ],
+  "fixture_ids": [
+    "SR-FIX-TRANSACTION-STAGING-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "Universal integration of every normative write, specialized payload families, committing, receipts and crash recovery remain in their later plan steps.",
+    "These library tests validate native fsync/rename boundaries, not power-loss guarantees stronger than the underlying filesystem/hardware; complete target CPython matrix requires actual CI."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Vor dem Wechsel in `prepared` MUSS SpecRoad alle neuen Dateien und erforderlichen Before Images vollständig schreiben, hashen, gegen den Change Plan prüfen und auf der Referenzplattform mittels `fsync` dauerhaft synchronisieren.",
+    "scope": "Real native building-to-prepared effects, all required bytes durable before prepared publication, unchanged normative model and controlled incomplete states. No later commit/recovery integration claimed."
+  },
+  "preconditions": [
+    "Explicit independently checked publication preflight and live own writer lock; no other journal or recovery blocker. Native local Linux files and directory fsync support."
+  ],
+  "primary_verification_id": "SR-VER-0019",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0254",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Stage exact before/after bytes to new transaction-local files; sync each file and parent, hash and read back every image.",
+    "Recheck current source, authority and complete image set; durably replace only the building journal with prepared and retain recovery data on failure."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0254",
   "test_ids": [
     "tests/test_transaction_staging.py::test_prepare_writes_images_and_only_changes_journal_state",
     "tests/test_transaction_staging.py::test_new_file_has_no_before_image",
@@ -80,9 +84,5 @@
     "tests/test_transaction_staging_right.py::test_saved_record_in_a_project_copy_is_not_transferable",
     "tests/test_transaction_staging_right.py::test_empty_project_target_has_no_vacuous_command_gate_success",
     "tests/test_transaction_staging_right.py::test_unbound_validation_report_keeps_recovery_state"
-  ],
-  "open_items": [
-    "Universal integration of every normative write, specialized payload families, committing, receipts and crash recovery remain in their later plan steps.",
-    "These library tests validate native fsync/rename boundaries, not power-loss guarantees stronger than the underlying filesystem/hardware; complete target CPython matrix requires actual CI."
   ]
 }

@@ -1,17 +1,42 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0003",
-  "requirement_id": "SR-REQ-0003",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0001",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [
+    0,
+    5
+  ],
   "fixture_ids": [
     "SR-FIX-OWNED-TEMP-v1"
   ],
+  "implementation_status": "partial",
+  "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "An interrupted preparation without a complete durable journal remains an untouched conflict; automatic cleanup cannot infer ownership from unverified remnants. Existing project edits invalidate init replay without deleting data. Journal consistency is not authentication of a deliberately reconstructed foreign record.",
+    "The native implementation is currently Linux/local-filesystem only; other platform, filesystem and complete release coverage remain open. Advisory mutexes do not sandbox noncooperating host writers.",
+    "Parent directories must already exist. Whole bootstrap inputs and inventory are memory-resident. Full later document/project semantic gates are not implemented by initialization."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "`specroad init` MUSS bei einem Fehler entweder die vollständige gültige Grundstruktur oder den unveränderten Ausgangszustand hinterlassen.",
+    "scope": "Real root creation and validated prepared-journal replay on native Linux/local filesystems. Replay verifies the entire closed inventory, root/stage/reused identities, publication prefix, native configuration/document fields and exact distribution bytes before publication; no new project/document IDs or timestamps. A durable passive completion receipt preserves evidence through the final rename. Foreign files and unverifiable states are preserved. Existing W oracles remain unchanged. This is not full semantic validation, authentication of deliberately reconstructed foreign evidence, arbitrary pre-journal recovery, cross-platform or release approval."
+  },
   "preconditions": [
     "Owned temporary directories; native Linux descriptor-relative reads, inode flock and renameat2 no-replace publication. Built module/zipapp cases use actual independently built distribution bytes in fresh isolated processes."
   ],
+  "primary_verification_id": "SR-VER-0001",
+  "required_environment": {
+    "declared_minimum_python": "3.10",
+    "implementation": "cpython",
+    "measured_scope": "current-run-only"
+  },
+  "requirement_id": "SR-REQ-0003",
+  "resources": {
+    "harness_suite_timeout": null,
+    "harness_test_timeout": null,
+    "owned_temporary_files": true
+  },
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
   "steps": [
     "Execute the real init CLI, structured-request and registry routes on missing, empty and collision-free existing targets; independently inspect the required directories, exactly one native valid draft primary document, configuration and pinned distribution resources.",
     "Verify existing bytes/inodes/modes survive collisions and ordinary preparation/publication failures, including an error after the real native rename; inspect the durable journal before each publication and configuration-last order.",
@@ -19,28 +44,8 @@
     "Terminate an independent isolated process after durable preparation, real no-replace publication boundaries and receipt completion; replay with the original file inodes, bytes, project/document identities and timestamps. Repeat after another native I/O interruption.",
     "Reject malformed or modified journals, rehashed invalid bootstrap payloads, ambiguous prefixes, links and extra/changed/missing state before writes. Preserve foreign files on rollback and completed-receipt conflicts."
   ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "`specroad init` MUSS bei einem Fehler entweder die vollständige gültige Grundstruktur oder den unveränderten Ausgangszustand hinterlassen.",
-    "scope": "Real root creation and validated prepared-journal replay on native Linux/local filesystems. Replay verifies the entire closed inventory, root/stage/reused identities, publication prefix, native configuration/document fields and exact distribution bytes before publication; no new project/document IDs or timestamps. A durable passive completion receipt preserves evidence through the final rename. Foreign files and unverifiable states are preserved. Existing W oracles remain unchanged. This is not full semantic validation, authentication of deliberately reconstructed foreign evidence, arbitrary pre-journal recovery, cross-platform or release approval."
-  },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [
-    0,
-    5
-  ],
-  "json_pointers": [],
-  "required_environment": {
-    "implementation": "cpython",
-    "declared_minimum_python": "3.10",
-    "measured_scope": "current-run-only"
-  },
-  "resources": {
-    "owned_temporary_files": true,
-    "harness_test_timeout": null,
-    "harness_suite_timeout": null
-  },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0003",
   "test_ids": [
     "tests/test_project_initialization.py::test_configuration_is_last_and_every_move_has_a_durable_journal",
     "tests/test_project_initialization.py::test_init_creates_real_bound_minimum_project[empty-cli]",
@@ -142,10 +147,5 @@
     "tests/test_project_initialization_right.py::test_rollback_does_not_remove_foreign_bytes_added_during_failure[published]",
     "tests/test_project_initialization_right.py::test_rollback_does_not_remove_foreign_bytes_added_during_failure[reused]",
     "tests/test_project_initialization_right.py::test_rollback_does_not_remove_foreign_bytes_added_during_failure[staged]"
-  ],
-  "open_items": [
-    "An interrupted preparation without a complete durable journal remains an untouched conflict; automatic cleanup cannot infer ownership from unverified remnants. Existing project edits invalidate init replay without deleting data. Journal consistency is not authentication of a deliberately reconstructed foreign record.",
-    "The native implementation is currently Linux/local-filesystem only; other platform, filesystem and complete release coverage remain open. Advisory mutexes do not sandbox noncooperating host writers.",
-    "Parent directories must already exist. Whole bootstrap inputs and inventory are memory-resident. Full later document/project semantic gates are not implemented by initialization."
   ]
 }

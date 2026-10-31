@@ -1,42 +1,45 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0619",
-  "requirement_id": "SR-REQ-0619",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0039",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [],
   "fixture_ids": [
     "SR-FIX-OWNED-TEMP-v1"
   ],
-  "preconditions": [
-    "Owned private temporary project/input/work directories; explicitly trusted fixture work manifest. Native Linux kernel mutex and real isolated child processes; one labelled write-failure adapter and one unknown-owner adapter."
-  ],
-  "steps": [
-    "Declare storage without requesting a checkpoint and run small CLI metadata commands; require no work-file creation.",
-    "Acquire an explicit or automatic external root, inspect private permissions and work binding, and prove native exclusion in another process while the project mutex remains available.",
-    "Release normally or through a caller exception; retain payloads and reject changed, foreign, unsafe or orphaned roots. A real child exit leaves a lock record that is never stolen.",
-    "Reacquire after real directory/control mutations and inspect nested private data; refuse unsafe retained entries, project temporary locations and additional input/output overlaps. Observe real fork ownership and repeated failure descriptor counts."
+  "implementation_status": "partial",
+  "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "Partial external storage/lock foundation only. Full production prompt-pause integration, complete work CLI contracts, snapshot/atomic checkpoint publication, resume/restore across generations and locations, safe in-memory fallback and final delivery remain future plan steps. No Code 8, complete requirement satisfaction or release approval is claimed."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Eine planmäßige Promptpause vor fachlicher Veröffentlichung MUSS den Projektstand regulär lesbar und ohne gehaltenen Projektwriter-Lock hinterlassen.",
     "scope": "A lazy WorkDirectory writes only to explicitly guarded external storage, uses private Linux descriptor-bound directories and a separate root-inode mutex, checks concrete process ownership and releases only its own unchanged record. Small actual metadata commands create no work files. Existing project and operational bytes remain unchanged, and the project mutex remains available while the work mutex is held. Native child termination preserves an orphan record; there is no automatic takeover or cleanup. These are storage lifetime observations, not a complete production pause/resume contract. R pins an allocated root identity against silent recreation and checks retained container entry types and private ownership through an iterative descriptor walk. Altered live records are preserved on exit while the native mutex is released. A real fork cannot release its parent lease; repeated rejected walks preserve both bytes and the native descriptor count. Payload inspection is not snapshot authentication or production resume approval. C separates lazy location selection from the identical private work lease/file implementation. Both classes, both helper functions and all format constants retain identical ASTs; existing W/R test bindings, refusal behavior, side effects and open integration boundaries remain unchanged."
   },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
+  "preconditions": [
+    "Owned private temporary project/input/work directories; explicitly trusted fixture work manifest. Native Linux kernel mutex and real isolated child processes; one labelled write-failure adapter and one unknown-owner adapter."
+  ],
+  "primary_verification_id": "SR-VER-0039",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0619",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Declare storage without requesting a checkpoint and run small CLI metadata commands; require no work-file creation.",
+    "Acquire an explicit or automatic external root, inspect private permissions and work binding, and prove native exclusion in another process while the project mutex remains available.",
+    "Release normally or through a caller exception; retain payloads and reject changed, foreign, unsafe or orphaned roots. A real child exit leaves a lock record that is never stolen.",
+    "Reacquire after real directory/control mutations and inspect nested private data; refuse unsafe retained entries, project temporary locations and additional input/output overlaps. Observe real fork ownership and repeated failure descriptor counts."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0619",
   "test_ids": [
     "tests/test_work_root.py::test_declaring_storage_without_checkpoint_need_creates_nothing[False]",
     "tests/test_work_root.py::test_declaring_storage_without_checkpoint_need_creates_nothing[True]",
@@ -111,8 +114,5 @@
     "tests/test_work_root_right.py::test_unsafe_retained_entries_block_reacquisition_without_changing_any_bytes[symlink-checkpoints]",
     "tests/test_work_root_right.py::test_unsafe_retained_entries_block_reacquisition_without_changing_any_bytes[symlink-objects]",
     "tests/test_work_root_right.py::test_unsafe_retained_entries_block_reacquisition_without_changing_any_bytes[symlink-results]"
-  ],
-  "open_items": [
-    "Partial external storage/lock foundation only. Full production prompt-pause integration, complete work CLI contracts, snapshot/atomic checkpoint publication, resume/restore across generations and locations, safe in-memory fallback and final delivery remain future plan steps. No Code 8, complete requirement satisfaction or release approval is claimed."
   ]
 }

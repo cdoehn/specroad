@@ -1,42 +1,45 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0615",
-  "requirement_id": "SR-REQ-0615",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0040",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [],
   "fixture_ids": [
     "SR-FIX-OWNED-TEMP-v1"
   ],
-  "preconditions": [
-    "Owned temporary source files and explicit fixture build/source declarations. Completion JSON is labelled planner data; one entropy test substitutes deterministic bytes. No production command is executed or durable work state published."
-  ],
-  "steps": [
-    "Replace registered handlers with traps and inspect candidate binding without invoking them or changing public continuation declarations.",
-    "Refuse a registered normative writer, unknown or shell-like command IDs and operational options.",
-    "Reject pickle/script bytes, duplicate JSON keys, non-finite JSON, foreign Python range values and rehashed incompatible or unauthorized metadata.",
-    "Exercise the R successor and hostile-data cases with independently rehashed packages, explicit planner fixtures and handler/foreign-object traps; require unchanged prior data and no execution or writes."
+  "implementation_status": "partial",
+  "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "Partial data contract only: the caller must supply a trusted prior work value; accepting that value from the same untrusted package is not authentication. Complete command-specific plan coverage and actual completion evidence, consistent snapshots, guarded work storage/locks, atomic publication, true resume, bounded whole-store memory and global finalization remain open. No Code 8, write authority, release approval or complete requirement satisfaction is claimed."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Work-Daten DÜRFEN NICHT ausführbaren Code, Pickle-Objekte oder zur Fortsetzung zu ladende fremde Pythonobjekte enthalten.",
     "scope": "The first closed data codec accepts strict JSON metadata and hashed raw bytes, binds only current registered read-only requests without options, and never calls a handler, deserializer or external process. Labelled handler/foreign-object traps and write guards verify these boundaries. Broader hostile-shape hardening, externally expected task identity and all eventual resume/publication integration remain open; internally consistent hashes alone confer no execution authority. R rejects foreign mappings, mapping proxies, dict/byte subclasses, custom keys and nested foreign values before their hooks run. Invalid structured commands have a typed refusal; script-like JSON text is inert. A successor is checked against externally supplied trusted prior work, so newly hashed command/class/argument replacements gain no authority. The standalone data reader remains non-authenticating and invokes no handler. Exact JSON-type admission uses identity comparisons before the shared encoder, including nested values, so foreign metaclass equality is never invoked. C relocates identical closed data and request-binding definitions and shares the same pure phase expressions between reader and writer. Existing W/R behavior, test identities, typed refusals, partial status and open boundaries are unchanged."
   },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
+  "preconditions": [
+    "Owned temporary source files and explicit fixture build/source declarations. Completion JSON is labelled planner data; one entropy test substitutes deterministic bytes. No production command is executed or durable work state published."
+  ],
+  "primary_verification_id": "SR-VER-0040",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0615",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Replace registered handlers with traps and inspect candidate binding without invoking them or changing public continuation declarations.",
+    "Refuse a registered normative writer, unknown or shell-like command IDs and operational options.",
+    "Reject pickle/script bytes, duplicate JSON keys, non-finite JSON, foreign Python range values and rehashed incompatible or unauthorized metadata.",
+    "Exercise the R successor and hostile-data cases with independently rehashed packages, explicit planner fixtures and handler/foreign-object traps; require unchanged prior data and no execution or writes."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0615",
   "test_ids": [
     "tests/test_work_manifest.py::test_first_codec_refuses_operational_options_instead_of_guessing_semantic_identity[options0]",
     "tests/test_work_manifest.py::test_first_codec_refuses_operational_options_instead_of_guessing_semantic_identity[options1]",
@@ -109,8 +112,5 @@
     "tests/test_work_manifest_right.py::test_self_consistent_foreign_work_cannot_replace_the_expected_order[plan]",
     "tests/test_work_manifest_right.py::test_self_consistent_foreign_work_cannot_replace_the_expected_order[project]",
     "tests/test_work_manifest_right.py::test_self_consistent_foreign_work_cannot_replace_the_expected_order[scope]"
-  ],
-  "open_items": [
-    "Partial data contract only: the caller must supply a trusted prior work value; accepting that value from the same untrusted package is not authentication. Complete command-specific plan coverage and actual completion evidence, consistent snapshots, guarded work storage/locks, atomic publication, true resume, bounded whole-store memory and global finalization remain open. No Code 8, write authority, release approval or complete requirement satisfaction is claimed."
   ]
 }

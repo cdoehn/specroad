@@ -1,19 +1,40 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0153",
-  "requirement_id": "SR-REQ-0153",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0011",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [],
   "fixture_ids": [
     "SR-FIX-BASELINE-MATERIALIZATION-v1",
     "SR-FIX-BASELINE-COMPARISON-v1",
     "SR-FIX-BASELINE-COMPARISON-RIGHT-v1"
   ],
+  "implementation_status": "partial",
+  "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "CLI lookup/dispatch and selected/configured scopes remain separate integrations. Native materialization supports a missing destination under a private owned canonical Linux parent; no resume, atomic whole-directory publication or cross-platform write claim.",
+    "Baseline comparison now uses the shared 10.f source adapter; unsupported resource deltas still fail explicitly. Snapshot integrity and materialization do not prove historical full validation, original-project completeness, authorship, approvals or release readiness."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Eine Baseline MUSS aufgrund ihrer Snapshotobjekte ohne Git-Commit verifizierbar, materialisierbar und vergleichbar bleiben; ein zugehöriger Git-Commit ist ausschließlich optionale Provenienz.",
+    "scope": "Fresh stored-manifest integrity view and independent materialization of the already supported unconfigured whole-project snapshot; all semantic and binary bytes come from verified archived objects. Capture completion rechecks the selected native record and actual archived objects. Missing records and missing objects have distinct path-bound diagnostics; host access denial and safety violations remain errors. Legacy schema migration/readers are not inferred from current data."
+  },
   "preconditions": [
     "Explicit Baseline record bytes, actual archive objects and a private owned external destination parent; every protected boundary is declared."
   ],
+  "primary_verification_id": "SR-VER-0011",
+  "required_environment": {
+    "declared_minimum_python": "3.10",
+    "implementation": "cpython",
+    "measured_scope": "current-run-only"
+  },
+  "requirement_id": "SR-REQ-0153",
+  "resources": {
+    "harness_suite_timeout": null,
+    "harness_test_timeout": null,
+    "owned_temporary_files": true
+  },
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
   "steps": [
     "Read stored Baseline data with freshly recomputed integrity, without writes or cached success.",
     "Restore the verified whole-project snapshot without Git or current files, preserving exact resource bytes and semantic configuration hashes; reconstruct the root again from actual output bytes.",
@@ -24,25 +45,8 @@
     "Compare verified Baseline pairs through the shared source registry and semantic diff, including successive stored history and independent materialized-project comparison.",
     "Reject a missing or concurrently changed native Baseline record and missing archive bytes throughout capture; preserve exact missing-object paths and host/security failures. Reject foreign projects and unsupported historical schemas; compare committed Git bytes without checkout."
   ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "Eine Baseline MUSS aufgrund ihrer Snapshotobjekte ohne Git-Commit verifizierbar, materialisierbar und vergleichbar bleiben; ein zugehöriger Git-Commit ist ausschließlich optionale Provenienz.",
-    "scope": "Fresh stored-manifest integrity view and independent materialization of the already supported unconfigured whole-project snapshot; all semantic and binary bytes come from verified archived objects. Capture completion rechecks the selected native record and actual archived objects. Missing records and missing objects have distinct path-bound diagnostics; host access denial and safety violations remain errors. Legacy schema migration/readers are not inferred from current data."
-  },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
-  "required_environment": {
-    "implementation": "cpython",
-    "declared_minimum_python": "3.10",
-    "measured_scope": "current-run-only"
-  },
-  "resources": {
-    "owned_temporary_files": true,
-    "harness_test_timeout": null,
-    "harness_suite_timeout": null
-  },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0153",
   "test_ids": [
     "tests/test_baseline_comparison.py::test_baseline_and_local_sources_share_the_registry_when_resource_inventories_match",
     "tests/test_baseline_comparison.py::test_baseline_compare_and_independently_materialized_projects_have_the_same_diff",
@@ -163,9 +167,5 @@
     "tests/test_baseline_materialization_right.py::test_show_preserves_security_failures_instead_of_showing_verified_integrity[hardlink]",
     "tests/test_baseline_materialization_right.py::test_show_preserves_security_failures_instead_of_showing_verified_integrity[symlink]",
     "tests/test_baseline_materialization_right.py::test_symlinked_external_parent_cannot_redirect_materialization"
-  ],
-  "open_items": [
-    "CLI lookup/dispatch and selected/configured scopes remain separate integrations. Native materialization supports a missing destination under a private owned canonical Linux parent; no resume, atomic whole-directory publication or cross-platform write claim.",
-    "Baseline comparison now uses the shared 10.f source adapter; unsupported resource deltas still fail explicitly. Snapshot integrity and materialization do not prove historical full validation, original-project completeness, authorship, approvals or release readiness."
   ]
 }

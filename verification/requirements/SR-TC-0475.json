@@ -1,32 +1,13 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0475",
-  "requirement_id": "SR-REQ-0475",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0032",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [],
   "fixture_ids": [
     "SR-FIX-DOMAIN-DRAFT-v1",
     "SR-FIX-RELATIONS-v1",
     "SR-FIX-SRX-CONTEXT-v1"
   ],
-  "preconditions": [
-    "Owned common-schema sources and real supplied-inventory Query selection on current native CPython; no CLI, whole-project validation or approval claim."
-  ],
-  "steps": [
-    "Execute value/fulltext/SRX filters over every supplied source and count all matches.",
-    "Sort original scalar fields independently of projection; apply offset/limit only after complete sorting.",
-    "Compare all six result fields and independent ID/value oracles; reject non-scalar and unavailable computed sort values before pagination.",
-    "Advance the real external query sort and delivery with different budgets; compare exact results and explicit failure/cancellation/storage boundaries."
-  ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "Ein Query-Ergebnis MUSS `items`, `total`, `offset`, `limit`, `returned` und `truncated` enthalten.",
-    "scope": "8.d.W adds query_records and an owned QueryPage with exactly items/total/offset/limit/returned/truncated. All supplied-inventory filters execute before exact counting, full scalar sorting and pagination. Missing/null/Boolean/numeric/string precedence, NFC UTF-8 string order, mixed directions and final ascending ID tie-breaking have independent result oracles. Projection never removes sort operands. Object/array sort values fail before pagination, and computed verification sorting requires the actual provider even for empty input. Source bytes, query/input bindings and all existing selection behavior remain unchanged. The synchronous kernel is in-memory; R/C continuation and M6 spooling, public CLI/live-project delivery and current semantic providers remain open. 8.d.R adds QueryWork with actual M6 bounded-run sorting and forward-only page construction. Single and multiple advance calls retain exact empty/beyond-end/zero-limit pages, all scalar directions and final ascending ID ties. An actual 10001-item selection is delivered without a count cap. Projection pointer order, original Unicode and input/query bindings survive external merges. Incomplete work never exposes a complete page; cancellation, native write failures and run tampering preserve owned files and block success. Only an explicit private spool outside protected roots is writable. Upstream selection and the requested page remain materialized; this is process-local continuation, not durable Work or a whole-query memory bound. All prior tests remain unchanged. 8.d.C extracts the identical private query row codec, direction comparison, row producer and M6 spool specialization into _paging_spool.py. QueryWork keeps its public module identity, preparation, real advance/delivery orchestration and failure/handle lifecycle. An AST/source proof binds all five moved definitions and the remaining module to the authoritative R Result, allowing only the explicit import changes. All 271 prior test files and 9014 test IDs remain unchanged; results, projection order, original bytes/bindings, scalar ordering, exact counts, errors and allowed storage effects are preserved."
-  },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
+  "implementation_status": "partial",
   "json_pointers": [
     "/items",
     "/total",
@@ -35,17 +16,41 @@
     "/returned",
     "/truncated"
   ],
+  "method": "automated_behavior",
+  "open_items": [
+    "W/R/C sorting/paging kernels are present with actual M6 external sorting and process-local continuation. Upstream selection and the requested page still materialize in memory; whole-query streaming and durable Work integration remain open.",
+    "Public query CLI/live-project adapter and current release/verification/evaluation providers remain open.",
+    "Supported platform/product acceptance, load and full durable Work integration remain open."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Ein Query-Ergebnis MUSS `items`, `total`, `offset`, `limit`, `returned` und `truncated` enthalten.",
+    "scope": "8.d.W adds query_records and an owned QueryPage with exactly items/total/offset/limit/returned/truncated. All supplied-inventory filters execute before exact counting, full scalar sorting and pagination. Missing/null/Boolean/numeric/string precedence, NFC UTF-8 string order, mixed directions and final ascending ID tie-breaking have independent result oracles. Projection never removes sort operands. Object/array sort values fail before pagination, and computed verification sorting requires the actual provider even for empty input. Source bytes, query/input bindings and all existing selection behavior remain unchanged. The synchronous kernel is in-memory; R/C continuation and M6 spooling, public CLI/live-project delivery and current semantic providers remain open. 8.d.R adds QueryWork with actual M6 bounded-run sorting and forward-only page construction. Single and multiple advance calls retain exact empty/beyond-end/zero-limit pages, all scalar directions and final ascending ID ties. An actual 10001-item selection is delivered without a count cap. Projection pointer order, original Unicode and input/query bindings survive external merges. Incomplete work never exposes a complete page; cancellation, native write failures and run tampering preserve owned files and block success. Only an explicit private spool outside protected roots is writable. Upstream selection and the requested page remain materialized; this is process-local continuation, not durable Work or a whole-query memory bound. All prior tests remain unchanged. 8.d.C extracts the identical private query row codec, direction comparison, row producer and M6 spool specialization into _paging_spool.py. QueryWork keeps its public module identity, preparation, real advance/delivery orchestration and failure/handle lifecycle. An AST/source proof binds all five moved definitions and the remaining module to the authoritative R Result, allowing only the explicit import changes. All 271 prior test files and 9014 test IDs remain unchanged; results, projection order, original bytes/bindings, scalar ordering, exact counts, errors and allowed storage effects are preserved."
+  },
+  "preconditions": [
+    "Owned common-schema sources and real supplied-inventory Query selection on current native CPython; no CLI, whole-project validation or approval claim."
+  ],
+  "primary_verification_id": "SR-VER-0032",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0475",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Execute value/fulltext/SRX filters over every supplied source and count all matches.",
+    "Sort original scalar fields independently of projection; apply offset/limit only after complete sorting.",
+    "Compare all six result fields and independent ID/value oracles; reject non-scalar and unavailable computed sort values before pagination.",
+    "Advance the real external query sort and delivery with different budgets; compare exact results and explicit failure/cancellation/storage boundaries."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0475",
   "test_ids": [
     "tests/test_query_paging.py::test_all_input_permutations_have_the_same_sorted_page",
     "tests/test_query_paging.py::test_computed_sort_requires_actual_provider_even_for_empty_input[False-/verification_result/status]",
@@ -110,10 +115,5 @@
     "tests/test_query_paging_right.py::test_unavailable_computed_sort_is_rejected_before_spool_creation[True]",
     "tests/test_query_paging_right.py::test_unicode_mixed_keys_and_ascending_id_ties_survive_every_merge",
     "tests/test_query_paging_right.py::test_unrepresentable_offset_keeps_the_existing_json_number_error"
-  ],
-  "open_items": [
-    "W/R/C sorting/paging kernels are present with actual M6 external sorting and process-local continuation. Upstream selection and the requested page still materialize in memory; whole-query streaming and durable Work integration remain open.",
-    "Public query CLI/live-project adapter and current release/verification/evaluation providers remain open.",
-    "Supported platform/product acceptance, load and full durable Work integration remain open."
   ]
 }

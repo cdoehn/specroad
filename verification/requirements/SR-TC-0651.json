@@ -1,46 +1,46 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0651",
-  "requirement_id": "SR-REQ-0651",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0044",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [],
   "fixture_ids": [
     "SR-FIX-REQUIREMENT-INPUT-v1"
   ],
-  "preconditions": [
-    "Explicit requirement identity and audit inputs; no language inference, publication or human approval."
-  ],
-  "steps": [
-    "Prepare a new requirement from explicit inputs and inspect stored values; reject incomplete or conflicting inputs."
+  "implementation_status": "partial",
+  "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "Full language-tag/registry policy (2.n), profile/graph/review validation, and transactional CLI/import/migration integration remain at their assigned steps. No requirement or release approval is claimed."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Jedes regulär gespeicherte Requirement MUSS ab draft genau einen expliziten BCP-47-Sprach-Tag im Feld language besitzen.",
     "scope": "Existing read-only field checks plus pure new requirement construction and explicit metadata. No natural-language interpretation, BCP-47 registry validation, profile, Change Plan, CLI/import or write authorization."
   },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
+  "preconditions": [
+    "Explicit requirement identity and audit inputs; no language inference, publication or human approval."
+  ],
+  "primary_verification_id": "SR-VER-0044",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0651",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Prepare a new requirement from explicit inputs and inspect stored values; reject incomplete or conflicting inputs."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0651",
   "test_ids": [
     "test_requirement.RequirementWorkTests.test_no_language_default",
     "test_requirement.RequirementWorkTests.test_explicit_project_default_is_materialized",
     "test_requirement_right.RequirementRightTests.test_multilingual_statements_preserved_without_detection",
     "test_requirement_right.RequirementRightTests.test_loaded_record_missing_language_is_not_defaulted"
-  ],
-  "open_items": [
-    "Full language-tag/registry policy (2.n), profile/graph/review validation, and transactional CLI/import/migration integration remain at their assigned steps. No requirement or release approval is claimed."
   ]
 }

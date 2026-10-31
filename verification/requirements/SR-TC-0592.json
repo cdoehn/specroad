@@ -1,17 +1,37 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0592",
-  "requirement_id": "SR-REQ-0592",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0037",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [],
   "fixture_ids": [
     "SR-FIX-OWNED-TEMP-v1"
   ],
+  "implementation_status": "partial",
+  "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "Partial live diagnostic/prepared-path spool integration only. Persistent Work identity/checkpoints, portable restart and reuse of retained files follow from 6.i onward. Full command/CLI integration, other algorithms, complete resource accounting, indivisible large-record kernels, hard OOM/kill recovery and cross-platform acceptance remain open. No host-capacity or minimum-memory amount is inferred from declared budgets, injected errors or fixture allocation sizes."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Bei Erreichen eines weichen Arbeitsziels MUSS SpecRoad phasenabhängig sparsam weiterarbeiten oder einen sicheren Fortsetzungspunkt nach Anhang O.4 veröffentlichen.",
+    "scope": "Explicit in-process diagnostic/prepared-path spool driver only. Measured soft targets stop after actual bounded progress, never before a first minimum attempt; unknown measurements allow bounded work. Complete outputs and sorted record bytes match the reference. Active reports retain the same live task without claiming persistent checkpoints or Code 8. R additionally drives complete conservative one-record future batches through positive finite windows. Active outcomes have no exit code; only complete spools return code 0. Observed native failures are distinct from soft-target pauses. C isolates the same pure batch-target choice, errno mapping and blocker values from the task/measurement adapter. Existing W/R behavior, test bindings, exception boundaries and side-effect contracts remain unchanged."
+  },
   "preconditions": [
     "Owned guarded external spool roots and protected project/recovery fixtures; active in-process consumption windows. Clock counters and write refusals are explicitly labelled injections. Native descriptor/file-size limits run only in isolated Linux children; the native address-space refusal uses a labelled replacement initializer, not a claim about the real kernel minimum."
   ],
+  "primary_verification_id": "SR-VER-0037",
+  "required_environment": {
+    "declared_minimum_python": "3.10",
+    "implementation": "cpython",
+    "measured_scope": "current-run-only"
+  },
+  "requirement_id": "SR-REQ-0592",
+  "resources": {
+    "harness_suite_timeout": null,
+    "harness_test_timeout": null,
+    "owned_temporary_files": true
+  },
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
   "steps": [
     "Drive finite diagnostic/prepared-path inputs through tiny measured windows and compare complete results/record bytes with the existing reference.",
     "Check monotone actual units, one source traversal, retained buffered/pending records and live merge cursors, unknown measurements and detached operational reports.",
@@ -20,25 +40,8 @@
     "Observe actual minimum-advance failures and assert machine-readable cause, attempted smaller batching, preserved observed cursor and files, nonresumable volatile input, explicit remedy and no automatic replay.",
     "Verify native descriptor/file-size refusal and a labelled native failed allocation in isolated children, plus a real short write before injected ENOSPC. Preserve critical recovery fixtures and propagate safety/observer/unexpected failures."
   ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "Bei Erreichen eines weichen Arbeitsziels MUSS SpecRoad phasenabhängig sparsam weiterarbeiten oder einen sicheren Fortsetzungspunkt nach Anhang O.4 veröffentlichen.",
-    "scope": "Explicit in-process diagnostic/prepared-path spool driver only. Measured soft targets stop after actual bounded progress, never before a first minimum attempt; unknown measurements allow bounded work. Complete outputs and sorted record bytes match the reference. Active reports retain the same live task without claiming persistent checkpoints or Code 8. R additionally drives complete conservative one-record future batches through positive finite windows. Active outcomes have no exit code; only complete spools return code 0. Observed native failures are distinct from soft-target pauses. C isolates the same pure batch-target choice, errno mapping and blocker values from the task/measurement adapter. Existing W/R behavior, test bindings, exception boundaries and side-effect contracts remain unchanged."
-  },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
-  "required_environment": {
-    "implementation": "cpython",
-    "declared_minimum_python": "3.10",
-    "measured_scope": "current-run-only"
-  },
-  "resources": {
-    "owned_temporary_files": true,
-    "harness_test_timeout": null,
-    "harness_suite_timeout": null
-  },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0592",
   "test_ids": [
     "tests/test_adaptive_spooling_right.py::test_actual_allocation_refusal_in_labelled_initializer_reports_unknown_minimum",
     "tests/test_adaptive_spooling_right.py::test_already_completed_task_returns_complete_without_new_work",
@@ -115,8 +118,5 @@
     "tests/test_adaptive_spooling_work.py::test_unknown_measurements_allow_bounded_progress_without_invented_exhaustion[1000]",
     "tests/test_adaptive_spooling_work.py::test_unknown_measurements_allow_bounded_progress_without_invented_exhaustion[1]",
     "tests/test_adaptive_spooling_work.py::test_unknown_measurements_allow_bounded_progress_without_invented_exhaustion[7]"
-  ],
-  "open_items": [
-    "Partial live diagnostic/prepared-path spool integration only. Persistent Work identity/checkpoints, portable restart and reuse of retained files follow from 6.i onward. Full command/CLI integration, other algorithms, complete resource accounting, indivisible large-record kernels, hard OOM/kill recovery and cross-platform acceptance remain open. No host-capacity or minimum-memory amount is inferred from declared budgets, injected errors or fixture allocation sizes."
   ]
 }

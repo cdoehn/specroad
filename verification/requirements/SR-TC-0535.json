@@ -1,29 +1,5 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0535",
-  "requirement_id": "SR-REQ-0535",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0025",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
-  "fixture_ids": [
-    "SR-FIX-EVIDENCE-IMPORT-POLICY-v1",
-    "SR-FIX-EVIDENCE-IMPORT-POLICY-RIGHT-v1"
-  ],
-  "preconditions": [
-    "Explicit owned JUnit document, strict/analysis mapping, native target snapshots, one named policy and declared reporter name/version; optional source-bound external identifiers."
-  ],
-  "steps": [
-    "Bind unchanged source/mapping/selected sidecar bytes, separate raw and canonical hashes, format, parser profile, explicit reporter and actual SpecRoad importer version in an immutable preparation.",
-    "Apply abort_import to withhold all otherwise valid candidates when diagnostics exist, or skip_invalid_with_diagnostic to retain only independently valid occurrences with all diagnostics; failed test outcomes remain valid observations.",
-    "Check occurrence accounting, detached originals, native input validation, unchanged real project bytes/modes, output limits and isolated Core/PYZ behavior.",
-    "12.i.R additionally binds exact Generic/SARIF originals and applies explicit abort/skip to record-local required-field, binding and mapping failures. Every source occurrence is accepted, rejected with diagnostics or withheld by abort; conflicting or ambiguous observations cannot select a favorable result. Global envelope/source/target/resource errors remain fatal; no persistence or external authority is granted."
-  ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "Die Importpolicy MUSS für einen ungültigen Pflichtnachweis genau eine Strategie aus `abort_import` oder `skip_invalid_with_diagnostic` festlegen.",
-    "scope": "12.i.W first passive JUnit preparation: exact original files, raw/canonical provenance, caller-declared tool/version and actual importer version; explicit abort or diagnosed subset with complete occurrence accounting. Neither policy converts failed measurements into passed Evidence. Malformed global inputs remain fatal, and no file/network/process/clock or host configuration is used. Persistence and complete import authority remain open. 12.i.R additionally binds exact Generic/SARIF originals and applies explicit abort/skip to record-local required-field, binding and mapping failures. Every source occurrence is accepted, rejected with diagnostics or withheld by abort; conflicting or ambiguous observations cannot select a favorable result. Global envelope/source/target/resource errors remain fatal; no persistence or external authority is granted."
-  },
+  "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [
     "SRV043",
     "SRV083",
@@ -34,18 +10,45 @@
     0,
     3
   ],
+  "fixture_ids": [
+    "SR-FIX-EVIDENCE-IMPORT-POLICY-v1",
+    "SR-FIX-EVIDENCE-IMPORT-POLICY-RIGHT-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "12.j and the assigned CLI steps: native run/project/contract-slot authority, attachment publication, idempotency and atomic persistent Evidence import."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Die Importpolicy MUSS für einen ungültigen Pflichtnachweis genau eine Strategie aus `abort_import` oder `skip_invalid_with_diagnostic` festlegen.",
+    "scope": "12.i.W first passive JUnit preparation: exact original files, raw/canonical provenance, caller-declared tool/version and actual importer version; explicit abort or diagnosed subset with complete occurrence accounting. Neither policy converts failed measurements into passed Evidence. Malformed global inputs remain fatal, and no file/network/process/clock or host configuration is used. Persistence and complete import authority remain open. 12.i.R additionally binds exact Generic/SARIF originals and applies explicit abort/skip to record-local required-field, binding and mapping failures. Every source occurrence is accepted, rejected with diagnostics or withheld by abort; conflicting or ambiguous observations cannot select a favorable result. Global envelope/source/target/resource errors remain fatal; no persistence or external authority is granted."
+  },
+  "preconditions": [
+    "Explicit owned JUnit document, strict/analysis mapping, native target snapshots, one named policy and declared reporter name/version; optional source-bound external identifiers."
+  ],
+  "primary_verification_id": "SR-VER-0025",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0535",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Bind unchanged source/mapping/selected sidecar bytes, separate raw and canonical hashes, format, parser profile, explicit reporter and actual SpecRoad importer version in an immutable preparation.",
+    "Apply abort_import to withhold all otherwise valid candidates when diagnostics exist, or skip_invalid_with_diagnostic to retain only independently valid occurrences with all diagnostics; failed test outcomes remain valid observations.",
+    "Check occurrence accounting, detached originals, native input validation, unchanged real project bytes/modes, output limits and isolated Core/PYZ behavior.",
+    "12.i.R additionally binds exact Generic/SARIF originals and applies explicit abort/skip to record-local required-field, binding and mapping failures. Every source occurrence is accepted, rejected with diagnostics or withheld by abort; conflicting or ambiguous observations cannot select a favorable result. Global envelope/source/target/resource errors remain fatal; no persistence or external authority is granted."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0535",
   "test_ids": [
     "tests/test_evidence_import_policy.py::test_a_sidecar_binding_failure_cannot_be_silently_skipped[foreign-abort_import]",
     "tests/test_evidence_import_policy.py::test_a_sidecar_binding_failure_cannot_be_silently_skipped[foreign-skip_invalid_with_diagnostic]",
@@ -324,8 +327,5 @@
     "tests/test_evidence_import_policy_right.py::test_unsafe_global_inputs_remain_fatal_under_both_policies[tool-skip_invalid_with_diagnostic-sarif]",
     "tests/test_evidence_import_policy_right.py::test_whitespace_keeps_mapping_semantics_but_changes_raw_provenance[generic]",
     "tests/test_evidence_import_policy_right.py::test_whitespace_keeps_mapping_semantics_but_changes_raw_provenance[sarif]"
-  ],
-  "open_items": [
-    "12.j and the assigned CLI steps: native run/project/contract-slot authority, attachment publication, idempotency and atomic persistent Evidence import."
   ]
 }

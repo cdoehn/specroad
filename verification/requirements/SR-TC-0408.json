@@ -1,50 +1,53 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0408",
-  "requirement_id": "SR-REQ-0408",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0029",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [],
   "fixture_ids": [
     "SR-FIX-SCOPE-SEEDS-v1",
     "SR-FIX-RELEASE-SCOPE-v1",
     "SR-FIX-RELEASE-SCOPE-RIGHT-v1"
   ],
-  "preconditions": [
-    "Explicit source relations and passive resource inventories; query pages are synthetic trusted-resolver inputs, not query evaluation.",
-    "For the Release provider, exact TargetModel byte inventory and explicitly supplied ClosureBindings.",
-    "For 13.e.R, supplied native member schemas and explicit effective configuration chains; unselected conditional applicability remains unresolved."
+  "implementation_status": "partial",
+  "json_pointers": [
+    "/applicability",
+    "/unresolved_applicability",
+    "/scope_applicability_complete"
   ],
-  "steps": [
-    "Validate descriptor, select exact seeds and verify bound page membership and order.",
-    "Resolve Release, Milestones, directly scheduled artifacts and Tasks with part_of Release/Milestone as seeds; retain seed membership separately from the native closure.",
-    "Resolve complete indirect obligations and reject exact strong, field, current-review and closed-weak configuration conflicts. Validate every reached artifact with its native schema; retain explicit applicability status, reason and source/configuration binding.",
-    "For 13.e.C, rerun unchanged Release W/R behavior and affected shared-scope, query, configuration and verification contracts after moving the bound-model provider to graph and isolating member/dependency projection."
+  "method": "automated_behavior",
+  "open_items": [
+    "Release readiness gates and authenticated currentness remain 13.f; View/Work integration remains 13.h. Supplied-input tests do not certify live inventory completeness, normative ScopeHash or full-suite success."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Ein Release-Scope MUSS Release, zugeordnete Milestones und eingehend darauf geplante Artefakte als Seed-Menge verwenden.",
     "scope": "Existing deterministic seed-selection contracts plus 13.e.W native byte-bound Release provider and closed core closure, including external required targets. Configuration filtering and mandatory-dependency rejection use native admission. No live inventory completeness, authenticated providers, normative ScopeHash, readiness or write authority. 13.e.R additionally covers the complete indirect graph, all 15 strong edge types, resource and review paths, exact SRV141 variant diagnostics, native schemas of reached non-planning members and unresolved unconfigured applicability. Isolated Core/PYZ and no-write boundaries remain enforced. 13.e.C preserves these outputs, hashes, diagnostics and side-effect limits through the shared bound-model scope provider; no new release behavior is introduced."
   },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [
-    "/applicability",
-    "/unresolved_applicability",
-    "/scope_applicability_complete"
+  "preconditions": [
+    "Explicit source relations and passive resource inventories; query pages are synthetic trusted-resolver inputs, not query evaluation.",
+    "For the Release provider, exact TargetModel byte inventory and explicitly supplied ClosureBindings.",
+    "For 13.e.R, supplied native member schemas and explicit effective configuration chains; unselected conditional applicability remains unresolved."
   ],
+  "primary_verification_id": "SR-VER-0029",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0408",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Validate descriptor, select exact seeds and verify bound page membership and order.",
+    "Resolve Release, Milestones, directly scheduled artifacts and Tasks with part_of Release/Milestone as seeds; retain seed membership separately from the native closure.",
+    "Resolve complete indirect obligations and reject exact strong, field, current-review and closed-weak configuration conflicts. Validate every reached artifact with its native schema; retain explicit applicability status, reason and source/configuration binding.",
+    "For 13.e.C, rerun unchanged Release W/R behavior and affected shared-scope, query, configuration and verification contracts after moving the bound-model provider to graph and isolating member/dependency projection."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0408",
   "test_ids": [
     "test_scope_seeds.ScopeSeedTests.test_release_uses_incoming_planning_memberships",
     "test_scope_seeds.ScopeSeedTests.test_release_does_not_expand_requirement_dependencies",
@@ -136,8 +139,5 @@
     "tests/test_release_scope_right.py::test_variant_conflicts_on_non_strong_obligations_retain_exact_diagnostics[current-review]",
     "tests/test_release_scope_right.py::test_variant_conflicts_on_non_strong_obligations_retain_exact_diagnostics[slot]",
     "tests/test_release_scope_right.py::test_variant_conflicts_on_non_strong_obligations_retain_exact_diagnostics[subject]"
-  ],
-  "open_items": [
-    "Release readiness gates and authenticated currentness remain 13.f; View/Work integration remains 13.h. Supplied-input tests do not certify live inventory completeness, normative ScopeHash or full-suite success."
   ]
 }

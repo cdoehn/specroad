@@ -1,47 +1,47 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0658",
-  "requirement_id": "SR-REQ-0658",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0045",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [],
   "fixture_ids": [
     "SR-FIX-LANGUAGE-REGISTRY-v1"
   ],
-  "preconditions": [
-    "Use the explicitly hash-bound snapshot; no online or host-locale fallback."
-  ],
-  "steps": [
-    "Run the referenced behavior cases with owned inputs and actual offline snapshot bytes."
+  "implementation_status": "partial",
+  "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "Complete project-language policy and planned init/change workflows remain assigned to later steps. Release/complete platform evidence is not asserted."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Sprach-Tag-Syntax und Registerzustand MÜSSEN gemäß Anhang S.3 getrennt bestimmt werden.",
     "scope": "Tag grammar and snapshot-relative registration are distinct. Frozen historical snapshot transport is checked independently from language permission, detection, and release approval."
   },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
+  "preconditions": [
+    "Use the explicitly hash-bound snapshot; no online or host-locale fallback."
+  ],
+  "primary_verification_id": "SR-VER-0045",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0658",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Run the referenced behavior cases with owned inputs and actual offline snapshot bytes."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0658",
   "test_ids": [
     "test_language_tags.LanguageSyntaxTests.test_minimum_declared_corpus",
     "test_language_tags.RegistryLookupTests.test_all_four_states",
     "test_language_tags.RegistryLookupTests.test_reserved_private_subtags",
     "test_language_right.LanguageIntegrationTests.test_bad_language_rejected_by_common_schema",
     "test_language_right.LanguageIntegrationTests.test_loaded_tag_and_bytes_unchanged"
-  ],
-  "open_items": [
-    "Complete project-language policy and planned init/change workflows remain assigned to later steps. Release/complete platform evidence is not asserted."
   ]
 }

@@ -1,40 +1,44 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0280",
-  "requirement_id": "SR-REQ-0280",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0021",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [],
   "fixture_ids": [
     "SR-FIX-OWNED-TEMP-v1"
   ],
-  "preconditions": [
-    "Owned complete field-valid endpoints and passive human review history; the native integration case uses an owned temporary project and actual publication receipt."
-  ],
-  "steps": [
-    "Observe deterministic status from current relation/context hashes and supplied review history; inspect machine-readable selections and reasons; verify immutable inputs, detached outputs and no write attempts.",
-    "Inspect typed SRV025/SRV026/SRV027 findings, exact stored pointers and failure policy; verify structural and newest-current rejection precedence, lifecycle/audit exclusions, semantic changes and retained read-only boundaries."
+  "implementation_status": "partial",
+  "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "Bind complete authentic/current project-history acquisition, registered CLI and full semantic validation/diagnostic gates; this supplied-snapshot observation grants no approval or write authority.",
+    "Verify the applicable supported-platform and product-level acceptance contracts."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Eine Relation MUSS `invalid` sein, wenn ihr Ziel fehlt, ihre Quell-Ziel-Typkombination unzulässig ist, ihre kanonische Speicherung verletzt ist oder das jüngste aktuelle Review die Entscheidung `rejected` trägt.",
     "scope": "Missing target or forbidden endpoint type pair gives structural invalid; the latest matching rejected decision yields invalid/current_review_rejected. Equal instants use highest review ID; exact UTC fraction comparison avoids truncation. General validator and diagnostic integration remain open. R: typed diagnostics retain protected error severity and distinguish review_outcome from structural invalid; supplied-snapshot query preserves exact source pointers and original severity under strict/fail-on policies. Additional precedence, lifecycle/audit and input-ambiguity regressions retain all W expectations."
   },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
+  "preconditions": [
+    "Owned complete field-valid endpoints and passive human review history; the native integration case uses an owned temporary project and actual publication receipt."
+  ],
+  "primary_verification_id": "SR-VER-0021",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0280",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Observe deterministic status from current relation/context hashes and supplied review history; inspect machine-readable selections and reasons; verify immutable inputs, detached outputs and no write attempts.",
+    "Inspect typed SRV025/SRV026/SRV027 findings, exact stored pointers and failure policy; verify structural and newest-current rejection precedence, lifecycle/audit exclusions, semantic changes and retained read-only boundaries."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0280",
   "test_ids": [
     "tests/test_relation_review_status.py::test_duplicate_history_identity_is_rejected_before_selection",
     "tests/test_relation_review_status.py::test_duplicate_relation_identity_in_two_sources_is_rejected",
@@ -63,9 +67,5 @@
     "tests/test_relation_review_status_right.py::test_structural_invalid_dominates_even_hash_matching_confirmed_review[missing-missing_relation_target]",
     "tests/test_relation_review_status_right.py::test_structural_invalid_dominates_even_hash_matching_confirmed_review[pair-relation_type_pair_forbidden]",
     "tests/test_relation_review_status_right.py::test_structural_invalid_dominates_even_hash_matching_confirmed_review[self-self_relation_forbidden]"
-  ],
-  "open_items": [
-    "Bind complete authentic/current project-history acquisition, registered CLI and full semantic validation/diagnostic gates; this supplied-snapshot observation grants no approval or write authority.",
-    "Verify the applicable supported-platform and product-level acceptance contracts."
   ]
 }

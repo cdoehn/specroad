@@ -1,50 +1,50 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0024",
-  "requirement_id": "SR-REQ-0024",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0002",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [],
   "fixture_ids": [
     "SR-FIX-OWNED-TEMP-v1",
     "SR-FIX-DOMAIN-DRAFT-v1",
     "SR-FIX-RECORD-FIELDS-v1"
   ],
-  "preconditions": [
-    "Use explicit current resource paths in an owned temporary project; no authoring or full schema/graph approval."
-  ],
-  "steps": [
-    "Prepare normal-form candidates or non-normative views; observe value/byte bindings, exclusions and real absence of writes."
+  "implementation_status": "partial",
+  "json_pointers": [],
+  "method": "automated_behavior",
+  "not_automated_by_user_policy": "TD-001",
+  "open_items": [
+    "Wire the pure representation candidates into future format CLI and checked Change Plan transactions. Complete rendering/import workflows remain later work; no write or release approval is claimed."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Alle unter `generated_path` erzeugten Dateien MÜSSEN als nicht normativ und generiert gekennzeichnet sein.",
     "scope": "Read-only normalization proposals and generated-role/source rejection only. Human indentation, headers and layout are not test oracles (TD-001)."
   },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
+  "policy_excluded_scope": [
+    "Visible generated labels and human rendering are manually inspected, never matched by automated tests."
+  ],
+  "preconditions": [
+    "Use explicit current resource paths in an owned temporary project; no authoring or full schema/graph approval."
+  ],
+  "primary_verification_id": "SR-VER-0002",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0024",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Prepare normal-form candidates or non-normative views; observe value/byte bindings, exclusions and real absence of writes."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0024",
   "test_ids": [
     "test_representation.RepresentationWorkTests.test_generated_views_have_no_normative_role_and_keep_payload",
     "test_representation.RepresentationWorkTests.test_generated_json_keeps_selected_data_in_separate_envelope"
-  ],
-  "open_items": [
-    "Wire the pure representation candidates into future format CLI and checked Change Plan transactions. Complete rendering/import workflows remain later work; no write or release approval is claimed."
-  ],
-  "not_automated_by_user_policy": "TD-001",
-  "policy_excluded_scope": [
-    "Visible generated labels and human rendering are manually inspected, never matched by automated tests."
   ]
 }

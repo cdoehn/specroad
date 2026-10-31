@@ -1,27 +1,5 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0570",
-  "requirement_id": "SR-REQ-0570",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0038",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
-  "fixture_ids": [
-    "SR-FIX-OWNED-TEMP-v1"
-  ],
-  "preconditions": [
-    "Current owned project inputs and native read/enumeration recording through actual invocation and transaction-preflight boundaries."
-  ],
-  "steps": [
-    "Read configuration capture and recheck at exact byte thresholds; record actual offsets and returned bytes.",
-    "Compare startup scope before and after 5,000 historical entries; cap actual active-entry classification at sixteen.",
-    "Preserve live owner and authority decisions for oversized valid recovery policy; retain changed bytes without starting a normal operation."
-  ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "Der automatische Preflight MUSS die Metadaten- und Journalgrenzen aus Anhang N.2 ohne Scannen der abgeschlossenen Receipt-Historie einhalten.",
-    "scope": "Shared accounting limits each metadata phase to 1 MiB across actual configuration bytes and shallow names; separate rechecks are counted. Reads progress at the current offset in blocks of at most 64 KiB. At most sixteen active entries are classified per independent observation; no completed receipt/request/cache/audit namespace is opened or enumerated. Detail phases report SRV167; size alone does not produce code 5 or an unproven code 8. Genuine corruption, mutation, live owner and authorization failures preserve their contracts."
-  },
+  "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [
     "SRV167"
   ],
@@ -31,22 +9,47 @@
     5,
     7
   ],
+  "fixture_ids": [
+    "SR-FIX-OWNED-TEMP-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [
     "/summary/preflight/metadata_bytes_read",
     "/summary/preflight/metadata_phases",
     "/summary/preflight/preflight_detail_required"
   ],
+  "method": "automated_behavior",
+  "open_items": [
+    "Same-invocation bounded metadata phases are implemented. Durable Work manifests, checkpoints and cross-invocation resumption under Annex P remain assigned to 6.i-6.l. Broader command-profile integration and the runtime/platform matrix remain open."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Der automatische Preflight MUSS die Metadaten- und Journalgrenzen aus Anhang N.2 ohne Scannen der abgeschlossenen Receipt-Historie einhalten.",
+    "scope": "Shared accounting limits each metadata phase to 1 MiB across actual configuration bytes and shallow names; separate rechecks are counted. Reads progress at the current offset in blocks of at most 64 KiB. At most sixteen active entries are classified per independent observation; no completed receipt/request/cache/audit namespace is opened or enumerated. Detail phases report SRV167; size alone does not produce code 5 or an unproven code 8. Genuine corruption, mutation, live owner and authorization failures preserve their contracts."
+  },
+  "preconditions": [
+    "Current owned project inputs and native read/enumeration recording through actual invocation and transaction-preflight boundaries."
+  ],
+  "primary_verification_id": "SR-VER-0038",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0570",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Read configuration capture and recheck at exact byte thresholds; record actual offsets and returned bytes.",
+    "Compare startup scope before and after 5,000 historical entries; cap actual active-entry classification at sixteen.",
+    "Preserve live owner and authority decisions for oversized valid recovery policy; retain changed bytes without starting a normal operation."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0570",
   "test_ids": [
     "tests/test_preflight_metadata.py::test_active_entry_bound_stops_classification_without_opening_any_journal[16]",
     "tests/test_preflight_metadata.py::test_active_entry_bound_stops_classification_without_opening_any_journal[17]",
@@ -86,8 +89,5 @@
     "tests/test_preflight_metadata.py::test_metadata_phases_cover_exact_bytes_without_restarting_capture[65536-metadata]",
     "tests/test_preflight_metadata.py::test_metadata_phases_cover_exact_bytes_without_restarting_capture[65536-read]",
     "tests/test_preflight_metadata.py::test_short_native_reads_advance_without_repeating_or_losing_bytes"
-  ],
-  "open_items": [
-    "Same-invocation bounded metadata phases are implemented. Durable Work manifests, checkpoints and cross-invocation resumption under Annex P remain assigned to 6.i-6.l. Broader command-profile integration and the runtime/platform matrix remain open."
   ]
 }

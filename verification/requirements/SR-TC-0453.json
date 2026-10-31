@@ -1,42 +1,45 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0453",
-  "requirement_id": "SR-REQ-0453",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0031",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [],
   "fixture_ids": [
     "SR-FIX-RELATIONS-v1",
     "SR-FIX-NATIVE-IMPORT-IDENTITIES-v1"
   ],
-  "preconditions": [
-    "Owned source artifact bytes and explicit synthetic relation records."
-  ],
-  "steps": [
-    "Load complete relation fields and inspect exact preserved data, identity and read-only effects.",
-    "14.b.W reads explicit import history on native relation candidates and resolves the exact source-bound relation owner without a writer.",
-    "14.b.R roundtrips relation external identities and unknown nested extensions and keeps exact document namespaces separate."
+  "implementation_status": "partial",
+  "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "Integrate with complete graph, authoring/import and transaction gates; computed inverses and full project-level constraints follow later."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Eine Relation MUSS External Identities und namespaced Extensions verlustfrei speichern können.",
     "scope": "Relation fields and original source-byte preservation; no complete model approval or file publication. 14.b.W adds history/hash preservation through native model inputs and exact relation-class lookup alongside artifact identities. 14.b.R covers bound/unbound full native data roundtrips, unknown extensions at every level and exact relation keys without collapsing external revision or import history."
   },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
+  "preconditions": [
+    "Owned source artifact bytes and explicit synthetic relation records."
+  ],
+  "primary_verification_id": "SR-VER-0031",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0453",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Load complete relation fields and inspect exact preserved data, identity and read-only effects.",
+    "14.b.W reads explicit import history on native relation candidates and resolves the exact source-bound relation owner without a writer.",
+    "14.b.R roundtrips relation external identities and unknown nested extensions and keeps exact document namespaces separate."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0453",
   "test_ids": [
     "test_relations.RelationWorkTests.test_complete_relation_retains_external_identity_and_extensions",
     "test_relations.RelationWorkTests.test_full_import_binding_is_retained_not_verified",
@@ -55,8 +58,5 @@
     "tests/test_native_identity_index.py::test_duplicate_external_identity_across_objects_rejects_ambiguous_inventory[relation]",
     "tests/test_native_identity_index_right.py::test_changed_mapping_revision_or_history_cannot_hide_a_duplicate_external_key[relation]",
     "tests/test_native_identity_index_right.py::test_reordered_sources_and_equal_ids_in_distinct_documents_keep_separate_history[relation]"
-  ],
-  "open_items": [
-    "Integrate with complete graph, authoring/import and transaction gates; computed inverses and full project-level constraints follow later."
   ]
 }

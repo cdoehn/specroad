@@ -1,45 +1,45 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0436",
-  "requirement_id": "SR-REQ-0436",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0030",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [],
   "fixture_ids": [
     "SR-FIX-CHANGE-METADATA-v1"
   ],
-  "preconditions": [
-    "Supply stable explicit base artifacts and ordered operations; bind change-metadata-v1, actor and planned_at. No runtime clock or external state is acquired."
-  ],
-  "steps": [
-    "Fold operations on private intermediate values, assign one final metadata set per changed identity, and compare returned data and canonical hashes."
+  "implementation_status": "partial",
+  "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "Integrate lifecycle postconditions (5.e), final target-model validation and model-root verification (5.f), specialized evidence/control operations, transactional apply and the separate merge/migration policies. Current candidates authorize no write and requirements remain partial."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Ein Change Plan MUSS für jede resultierende Artefaktressource Revision, Zeit-/Akteursmetadaten und erwarteten Ressourcenhash binden.",
     "scope": "Regular K.2 metadata candidates for create/update/relation_add/relation_remove; unchanged/reverted values retain audit data. No lifecycle completion, live state authentication, merge/migration implementation or publication."
   },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
+  "preconditions": [
+    "Supply stable explicit base artifacts and ordered operations; bind change-metadata-v1, actor and planned_at. No runtime clock or external state is acquired."
+  ],
+  "primary_verification_id": "SR-VER-0030",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0436",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Fold operations on private intermediate values, assign one final metadata set per changed identity, and compare returned data and canonical hashes."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0436",
   "test_ids": [
     "tests/test_change_metadata.py::test_existing_change_advances_revision_once_and_preserves_creation",
     "tests/test_change_metadata.py::test_bound_hash_changes_for_different_actor_or_planned_time",
     "tests/test_change_metadata_right.py::test_declared_revision_time_actor_or_hash_mismatch_is_rejected"
-  ],
-  "open_items": [
-    "Integrate lifecycle postconditions (5.e), final target-model validation and model-root verification (5.f), specialized evidence/control operations, transactional apply and the separate merge/migration policies. Current candidates authorize no write and requirements remain partial."
   ]
 }

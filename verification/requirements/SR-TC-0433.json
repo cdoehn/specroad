@@ -1,44 +1,48 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0433",
-  "requirement_id": "SR-REQ-0433",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0030",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [],
   "fixture_ids": [
     "SR-FIX-BASELINE-CREATION-v1",
     "SR-FIX-RECORD-FIELDS-v1"
   ],
-  "preconditions": [
-    "Owned current-schema records and read-only model APIs; synthetic actors and hashes are not actual approvals or external test evidence.",
-    "Trusted host supplies complete TargetModel/history, explicit random128 Baseline identity, audit values, native publication authority and all applicable semantic gates."
-  ],
-  "steps": [
-    "Load supported stored records, reject malformed local fields and compare original bytes without executing referenced operations.",
-    "Prepare and save a working-Baseline plan, then execute its exact bytes through the actual native transaction protocol; reject invalid model, changed sources, missing/changed objects, absent gates and denied authority.",
-    "Inject late source/staging/archive corruption, native link/sync/unlink failures, lost publication acknowledgement and receipt/cleanup failures; inspect actual retained bytes and journal/completion state.",
-    "Re-run the unchanged W/R behavior tests after separating the unchanged planning function from the native publication adapter."
+  "implementation_status": "partial",
+  "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "CLI integration, selected/configured scopes, installed language package snapshot providers, general historical verification and release readiness remain separate integration work.",
+    "These targeted tests and the alternating Apply partition are not a full-suite or release proof."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Ein Baseline-Artefakt MUSS atomar mit `baseline_state=sealed` und `maturity=approved` erzeugt werden.",
     "scope": "Native embedding API for unconfigured whole-project working Baselines: fresh complete target validation, all bound snapshot objects staged and published before one sealed/approved immutable record, exact precreation root, actual receipt replay and unchanged source bytes. Existing semantic subjects require trusted complete providers; no CLI or release readiness claim."
   },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
+  "preconditions": [
+    "Owned current-schema records and read-only model APIs; synthetic actors and hashes are not actual approvals or external test evidence.",
+    "Trusted host supplies complete TargetModel/history, explicit random128 Baseline identity, audit values, native publication authority and all applicable semantic gates."
+  ],
+  "primary_verification_id": "SR-VER-0030",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0433",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Load supported stored records, reject malformed local fields and compare original bytes without executing referenced operations.",
+    "Prepare and save a working-Baseline plan, then execute its exact bytes through the actual native transaction protocol; reject invalid model, changed sources, missing/changed objects, absent gates and denied authority.",
+    "Inject late source/staging/archive corruption, native link/sync/unlink failures, lost publication acknowledgement and receipt/cleanup failures; inspect actual retained bytes and journal/completion state.",
+    "Re-run the unchanged W/R behavior tests after separating the unchanged planning function from the native publication adapter."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0433",
   "test_ids": [
     "test_record_schemas.RecordRightTests.test_all_special_endstates_refuse_every_generic_route",
     "test_record_schemas.RecordWorkTests.test_special_status_and_maturity_are_coupled",
@@ -96,9 +100,5 @@
     "tests/test_baseline_creation_right.py::test_self_consistent_saved_declarations_cannot_override_actual_snapshot_inputs[model_root_sha256]",
     "tests/test_baseline_creation_right.py::test_self_consistent_saved_declarations_cannot_override_actual_snapshot_inputs[source_path]",
     "tests/test_baseline_creation_right.py::test_source_change_after_journal_creation_cannot_enter_the_snapshot"
-  ],
-  "open_items": [
-    "CLI integration, selected/configured scopes, installed language package snapshot providers, general historical verification and release readiness remain separate integration work.",
-    "These targeted tests and the alternating Apply partition are not a full-suite or release proof."
   ]
 }

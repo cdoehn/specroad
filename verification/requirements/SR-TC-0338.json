@@ -1,30 +1,5 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0338",
-  "requirement_id": "SR-REQ-0338",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0025",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
-  "fixture_ids": [
-    "SR-FIX-JUNIT-MAPPING-RIGHT-v1",
-    "SR-FIX-EVIDENCE-IMPORT-POLICY-RIGHT-v1"
-  ],
-  "preconditions": [
-    "Explicit immutable JUnit document, closed mapping rules, native supplied Test/Verification targets and, when selected, a sidecar bound to the exact XML SHA-256 and core occurrence ordinals."
-  ],
-  "steps": [
-    "Resolve configurable combinations of classname/name/file/external_id; keep same names with different selected Class/File contexts distinct, never infer an identifier from unknown XML or target metadata.",
-    "Account for every testcase occurrence and return separate unmapped, ambiguous and contradictory diagnostics with grouped occurrence/mapping indices; retain only independently unambiguous candidates without choosing an import policy.",
-    "Reject foreign source hashes, out-of-range or duplicate sidecar ordinals, unsafe types, invalid schemas and exceeded hard input boundaries without external access or partial publication.",
-    "Preserve strict W behavior, native outcome classes, owned raw/canonical provenance, complete coverage of rejected occurrences, linear grouped diagnostics and isolated Core/PYZ behavior.",
-    "12.i.R additionally binds exact Generic/SARIF originals and applies explicit abort/skip to record-local required-field, binding and mapping failures. Every source occurrence is accepted, rejected with diagnostics or withheld by abort; conflicting or ambiguous observations cannot select a favorable result. Global envelope/source/target/resource errors remain fatal; no persistence or external authority is granted."
-  ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "Nicht gemappte, mehrdeutig gemappte oder widersprüchliche Testergebnisse MÜSSEN als getrennte Diagnosen erscheinen.",
-    "scope": "12.g.R provides complete separate unmapped, ambiguous and contradictory JUnit mapping observations, grouped by exact selected identity and full Class/Name/File/External-ID context, with every rejected occurrence accounted for. Diagnostic groups are linear rather than pairwise. The passive diagnostics do not publish Evidence or authorize an external run. 12.i.R additionally binds exact Generic/SARIF originals and applies explicit abort/skip to record-local required-field, binding and mapping failures. Every source occurrence is accepted, rejected with diagnostics or withheld by abort; conflicting or ambiguous observations cannot select a favorable result. Global envelope/source/target/resource errors remain fatal; no persistence or external authority is granted."
-  },
+  "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [
     "SRV043",
     "SRV090"
@@ -33,18 +8,47 @@
     0,
     3
   ],
+  "fixture_ids": [
+    "SR-FIX-JUNIT-MAPPING-RIGHT-v1",
+    "SR-FIX-EVIDENCE-IMPORT-POLICY-RIGHT-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "The assigned later CLI/publication steps remain open; complete native run/subject/configuration authority is not granted by passive diagnostics.",
+    "Synthetic parser/mapping observations do not authenticate an external run or prove project-wide verification, release readiness or approval."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Nicht gemappte, mehrdeutig gemappte oder widersprüchliche Testergebnisse MÜSSEN als getrennte Diagnosen erscheinen.",
+    "scope": "12.g.R provides complete separate unmapped, ambiguous and contradictory JUnit mapping observations, grouped by exact selected identity and full Class/Name/File/External-ID context, with every rejected occurrence accounted for. Diagnostic groups are linear rather than pairwise. The passive diagnostics do not publish Evidence or authorize an external run. 12.i.R additionally binds exact Generic/SARIF originals and applies explicit abort/skip to record-local required-field, binding and mapping failures. Every source occurrence is accepted, rejected with diagnostics or withheld by abort; conflicting or ambiguous observations cannot select a favorable result. Global envelope/source/target/resource errors remain fatal; no persistence or external authority is granted."
+  },
+  "preconditions": [
+    "Explicit immutable JUnit document, closed mapping rules, native supplied Test/Verification targets and, when selected, a sidecar bound to the exact XML SHA-256 and core occurrence ordinals."
+  ],
+  "primary_verification_id": "SR-VER-0025",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0338",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Resolve configurable combinations of classname/name/file/external_id; keep same names with different selected Class/File contexts distinct, never infer an identifier from unknown XML or target metadata.",
+    "Account for every testcase occurrence and return separate unmapped, ambiguous and contradictory diagnostics with grouped occurrence/mapping indices; retain only independently unambiguous candidates without choosing an import policy.",
+    "Reject foreign source hashes, out-of-range or duplicate sidecar ordinals, unsafe types, invalid schemas and exceeded hard input boundaries without external access or partial publication.",
+    "Preserve strict W behavior, native outcome classes, owned raw/canonical provenance, complete coverage of rejected occurrences, linear grouped diagnostics and isolated Core/PYZ behavior.",
+    "12.i.R additionally binds exact Generic/SARIF originals and applies explicit abort/skip to record-local required-field, binding and mapping failures. Every source occurrence is accepted, rejected with diagnostics or withheld by abort; conflicting or ambiguous observations cannot select a favorable result. Global envelope/source/target/resource errors remain fatal; no persistence or external authority is granted."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0338",
   "test_ids": [
     "tests/test_evidence_import_policy_right.py::test_ambiguous_sarif_mapping_never_selects_a_first_or_last_row[exchange-abort_import]",
     "tests/test_evidence_import_policy_right.py::test_ambiguous_sarif_mapping_never_selects_a_first_or_last_row[exchange-skip_invalid_with_diagnostic]",
@@ -350,9 +354,5 @@
     "tests/test_junit_mapping_right.py::test_separate_diagnoses_account_for_every_invalid_case_and_keep_independent_observation",
     "tests/test_junit_mapping_right.py::test_strict_w_api_is_unchanged_and_legacy_mapping_is_usable_for_analysis",
     "tests/test_junit_mapping_right.py::test_unselected_external_data_is_rejected_instead_of_silently_ignored"
-  ],
-  "open_items": [
-    "The assigned later CLI/publication steps remain open; complete native run/subject/configuration authority is not granted by passive diagnostics.",
-    "Synthetic parser/mapping observations do not authenticate an external run or prove project-wide verification, release readiness or approval."
   ]
 }

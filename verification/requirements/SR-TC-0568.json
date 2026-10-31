@@ -1,33 +1,5 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0568",
-  "requirement_id": "SR-REQ-0568",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0035",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
-  "fixture_ids": [
-    "SR-FIX-PROJECT-BUNDLE-R-v1",
-    "SR-FIX-BUNDLE-WORK-BACKUP-v1",
-    "SR-FIX-BUNDLE-WORK-LOSS-R-v1"
-  ],
-  "preconditions": [
-    "A current native project with a completely observed empty request/transaction receipt inventory; no configuration filter or partial source promotion.",
-    "Work export uses the existing caller-trusted read-only initial manifest and compatible runtime; an explicit, existing output root is disjoint from Work and protected project/input roots.",
-    "File restore requires the actual retained ZIP and its complete external hash, explicit current protected boundaries and a disjoint missing/private-empty Work target; no old sandbox or chat description supplies payload bytes."
-  ],
-  "steps": [
-    "Prepare canonical project bytes from guarded native inventory and closure; compare unchanged artifact/resource and referenced object bytes, native roots, exclusions and independently reopened payloads. Refuse unsafe, changed, incomplete or unresolved sources without writing.",
-    "Publish the retained native bundle through CLI, structured request and library entry points; verify unchanged source inventory, exact ZIP bytes/hash and no overwrite. Reject missing payloads, incomplete histories, unsafe destinations and changes before atomic publication; preserve actual images on failure.",
-    "15.i.W: publish a separate package_kind=work ZIP to a create-only external file while retaining checkpoint observation; restore the actual saved generations 0/1/2 and replay the exact result. Preserve sources and existing or raced destinations. Real unresolved native transactions block project full bundles with code 5; unsupported normative Work export remains code 6 without Recovery or writes.",
-    "15.i.R: restore from an explicitly selected canonical file and mandatory external SHA-256 after actual Work/source loss or backup relocation. Recheck the retained file across every generation. Reject missing/mutated payloads and prompt/report substitutes before allocation; preserve the real published prefix on later source loss. A newer prompt does not advance an older backup.",
-    "15.i.C: separate the unchanged backup-file result projection from ongoing Work state and publication mechanics. Re-run the existing W/R behavior oracles, including exact generation-bound export values and the actual retained backup boundary after loss; no new behavior or tests."
-  ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "`bundle create` MUSS ungelöste Transaktionen als Projektvollbundle abweisen; ein separat gekennzeichnetes Arbeitspaket folgt dem Export- und Recoveryvertrag aus Anhang P.",
-    "scope": "15.b.R project creation plus 15.i.W external file publication for the existing read-only Work package contract. Exact package bytes/hash, source preservation, distinct project/work kinds, recovery refusal, output containment, no overwrite and retained actual failure images. No Work CLI, native transaction/receipt export binding, remote backup assurance or general Appendix P completion is claimed. 15.i.R adds a required-hash file restore adapter, actual loss/path relocation and fresh-process recovery at exactly the retained generation. Complete byte validation precedes allocation; source parent identity and exact bytes are rechecked during restoration. No automatic backup discovery or prompt-based reconstruction occurs."
-  },
+  "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [
     "SRV002",
     "SRV060",
@@ -41,18 +13,49 @@
     6,
     7
   ],
+  "fixture_ids": [
+    "SR-FIX-PROJECT-BUNDLE-R-v1",
+    "SR-FIX-BUNDLE-WORK-BACKUP-v1",
+    "SR-FIX-BUNDLE-WORK-LOSS-R-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "Native-write Work portability, Work CLI and streaming/multipart remain separate unfinished Appendix P obligations. A local exported file does not prove survival outside a lost sandbox."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "`bundle create` MUSS ungelöste Transaktionen als Projektvollbundle abweisen; ein separat gekennzeichnetes Arbeitspaket folgt dem Export- und Recoveryvertrag aus Anhang P.",
+    "scope": "15.b.R project creation plus 15.i.W external file publication for the existing read-only Work package contract. Exact package bytes/hash, source preservation, distinct project/work kinds, recovery refusal, output containment, no overwrite and retained actual failure images. No Work CLI, native transaction/receipt export binding, remote backup assurance or general Appendix P completion is claimed. 15.i.R adds a required-hash file restore adapter, actual loss/path relocation and fresh-process recovery at exactly the retained generation. Complete byte validation precedes allocation; source parent identity and exact bytes are rechecked during restoration. No automatic backup discovery or prompt-based reconstruction occurs."
+  },
+  "preconditions": [
+    "A current native project with a completely observed empty request/transaction receipt inventory; no configuration filter or partial source promotion.",
+    "Work export uses the existing caller-trusted read-only initial manifest and compatible runtime; an explicit, existing output root is disjoint from Work and protected project/input roots.",
+    "File restore requires the actual retained ZIP and its complete external hash, explicit current protected boundaries and a disjoint missing/private-empty Work target; no old sandbox or chat description supplies payload bytes."
+  ],
+  "primary_verification_id": "SR-VER-0035",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0568",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Prepare canonical project bytes from guarded native inventory and closure; compare unchanged artifact/resource and referenced object bytes, native roots, exclusions and independently reopened payloads. Refuse unsafe, changed, incomplete or unresolved sources without writing.",
+    "Publish the retained native bundle through CLI, structured request and library entry points; verify unchanged source inventory, exact ZIP bytes/hash and no overwrite. Reject missing payloads, incomplete histories, unsafe destinations and changes before atomic publication; preserve actual images on failure.",
+    "15.i.W: publish a separate package_kind=work ZIP to a create-only external file while retaining checkpoint observation; restore the actual saved generations 0/1/2 and replay the exact result. Preserve sources and existing or raced destinations. Real unresolved native transactions block project full bundles with code 5; unsupported normative Work export remains code 6 without Recovery or writes.",
+    "15.i.R: restore from an explicitly selected canonical file and mandatory external SHA-256 after actual Work/source loss or backup relocation. Recheck the retained file across every generation. Reject missing/mutated payloads and prompt/report substitutes before allocation; preserve the real published prefix on later source loss. A newer prompt does not advance an older backup.",
+    "15.i.C: separate the unchanged backup-file result projection from ongoing Work state and publication mechanics. Re-run the existing W/R behavior oracles, including exact generation-bound export values and the actual retained backup boundary after loss; no new behavior or tests."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0568",
   "test_ids": [
     "tests/test_bundle_work_backup.py::test_actual_unresolved_transaction_is_not_a_project_backup_or_work_export[committed]",
     "tests/test_bundle_work_backup.py::test_actual_unresolved_transaction_is_not_a_project_backup_or_work_export[first_target]",
@@ -149,8 +152,5 @@
     "tests/test_project_bundle_right.py::test_unresolved_or_unverified_history_prevents_normal_completion[.specroad/tmp/staging.json]",
     "tests/test_project_bundle_right.py::test_unresolved_or_unverified_history_prevents_normal_completion[.specroad/transactions/active/journal.json]",
     "tests/test_project_bundle_right.py::test_unresolved_or_unverified_history_prevents_normal_completion[.specroad/transactions/receipts/item/transaction.json]"
-  ],
-  "open_items": [
-    "Native-write Work portability, Work CLI and streaming/multipart remain separate unfinished Appendix P obligations. A local exported file does not prove survival outside a lost sandbox."
   ]
 }

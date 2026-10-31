@@ -1,47 +1,50 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0290",
-  "requirement_id": "SR-REQ-0290",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0022",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [
+    "SRV110"
+  ],
+  "expected_exit_codes": [],
   "fixture_ids": [
     "SR-FIX-SRX-FIELDS-v1",
     "SR-FIX-SRX-LOGIC-v1",
     "SR-FIX-SRX-COLLECTIONS-v1",
     "SR-FIX-SRX-QUANTIFIERS-v1"
   ],
-  "preconditions": [
-    "Explicit SRX program and owned JSON-only context."
+  "implementation_status": "partial",
+  "json_pointers": [
+    "/expression"
   ],
-  "steps": [
-    "Evaluate supported operators in documented order; check strict types, Missing and Boolean short circuit.",
-    "Evaluate any/all/none in array order using lexical item binding, strict Boolean predicates and empty-array identities."
+  "method": "automated_behavior",
+  "open_items": [
+    "Complete remaining SRX operator families, full effective profiles and rule-consumer integration."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "SRX MUSS jeden Operator ausschließlich mit den in Anhang B zugelassenen Operandentypen auswerten.",
     "scope": "Implemented field/logic/comparison families only; complete SRX and validation integration remain pending."
   },
-  "expected_diagnostics": [
-    "SRV110"
+  "preconditions": [
+    "Explicit SRX program and owned JSON-only context."
   ],
-  "expected_exit_codes": [],
-  "json_pointers": [
-    "/expression"
-  ],
+  "primary_verification_id": "SR-VER-0022",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0290",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Evaluate supported operators in documented order; check strict types, Missing and Boolean short circuit.",
+    "Evaluate any/all/none in array order using lexical item binding, strict Boolean predicates and empty-array identities."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0290",
   "test_ids": [
     "test_srx_fields.SrxFieldTests.test_all_value_kinds",
     "test_srx_fields.SrxFieldTests.test_missing_cannot_be_a_literal",
@@ -56,8 +59,5 @@
     "test_srx_quantifiers.SrxQuantifierTests.test_scalar_predicates_must_be_boolean",
     "test_srx_quantifiers.SrxQuantifierTests.test_missing_predicate_is_type_error",
     "test_srx_quantifiers.SrxQuantifierTests.test_non_array_inputs_are_not_coerced"
-  ],
-  "open_items": [
-    "Complete remaining SRX operator families, full effective profiles and rule-consumer integration."
   ]
 }

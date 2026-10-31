@@ -1,30 +1,12 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0345",
-  "requirement_id": "SR-REQ-0345",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0025",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [],
   "fixture_ids": [
     "SR-FIX-CODE-REFERENCE-STATE-v1",
     "SR-FIX-CODE-REFERENCE-STATE-RIGHT-v1"
   ],
-  "preconditions": [
-    "12.s.W: Validated code_ref and an explicit native ProjectBoundary or already bound GitObjectSource. Expected hashes, exact stored selectors and historical commits are supplied by owned fixtures.",
-    "12.s.R: An already admitted native file or immutable GitObjectSource capability. Real local SHA-1/SHA-256 object stores, exact record selectors and owned faults; no substitute source is created when admission fails."
-  ],
-  "steps": [
-    "12.s.W: Assess original file hashes and exact H.2 line/text/byte selections. Preserve current at the stored position despite outside changes/duplicate matches; report one relocation without rewriting. Observe absent file/Git paths, distinguish absent and ambiguous selections, retain source/selector failures and check detached reports. Recheck missing-path/root/store boundaries and exercise fresh audited Core/PYZ runtimes.",
-    "12.s.R: Cross every H.3 selection outcome with both raw-hash results and native file/SHA-1/SHA-256 sources. Remove bound commits, root/parent trees and blobs for every reference kind; assert missing without fabricated hashes. Corrupt objects, inject malformed/failed batch responses, reject unsafe parents, preserve read errors and verify exact stale reasons for empty/truncated/overlapping/Unicode/newline cases. Retain old reader errors, forbid fetch/fallback and audit fresh Core/PYZ Git reads."
-  ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "SpecRoad MUSS den Zustand eines `code_ref` ausschließlich nach der disjunkten Entscheidungstabelle in Anhang H.3 berechnen.",
-    "scope": "The first applicable H.3 rule yields one state. Absent admitted paths are missing/target_missing; file hash equality decides current versus stale/file_changed. Stored selection equality takes precedence over raw-file changes and other matches. Unique alternate matches relocate without writes; zero/multiple matches are stale with selection_missing/selection_ambiguous. Safety, source and decoding failures are not currency. The immutable projection binds original references and available source/location reports; no approval or write authority is conferred. 12.s.R completes the matrix over admitted sources. Only exact native batch absence of the requested full Git object ID is missing. Object content/type/size/identity, response shape, original root/store and safe parent traversal remain mandatory. Corruption, process failure and body/open/read errors yield no state; the original strict readers and source constructor keep their contracts."
-  },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
+  "implementation_status": "partial",
   "json_pointers": [
     "/state",
     "/reason",
@@ -40,17 +22,38 @@
     "/reference_state_evaluated",
     "/write_authorized"
   ],
+  "method": "automated_behavior",
+  "open_items": [
+    "12.s.R completes the H.3 matrix over admitted native sources. Structural separation remains 12.s.C; shared consumers remain 12.t. Unsupported passive kinds/legacy selectors and failed native source construction do not synthesize states or read capabilities. Requirement evidence stays partial pending integration; no full-suite or release success is claimed."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "SpecRoad MUSS den Zustand eines `code_ref` ausschließlich nach der disjunkten Entscheidungstabelle in Anhang H.3 berechnen.",
+    "scope": "The first applicable H.3 rule yields one state. Absent admitted paths are missing/target_missing; file hash equality decides current versus stale/file_changed. Stored selection equality takes precedence over raw-file changes and other matches. Unique alternate matches relocate without writes; zero/multiple matches are stale with selection_missing/selection_ambiguous. Safety, source and decoding failures are not currency. The immutable projection binds original references and available source/location reports; no approval or write authority is conferred. 12.s.R completes the matrix over admitted sources. Only exact native batch absence of the requested full Git object ID is missing. Object content/type/size/identity, response shape, original root/store and safe parent traversal remain mandatory. Corruption, process failure and body/open/read errors yield no state; the original strict readers and source constructor keep their contracts."
+  },
+  "preconditions": [
+    "12.s.W: Validated code_ref and an explicit native ProjectBoundary or already bound GitObjectSource. Expected hashes, exact stored selectors and historical commits are supplied by owned fixtures.",
+    "12.s.R: An already admitted native file or immutable GitObjectSource capability. Real local SHA-1/SHA-256 object stores, exact record selectors and owned faults; no substitute source is created when admission fails."
+  ],
+  "primary_verification_id": "SR-VER-0025",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0345",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "12.s.W: Assess original file hashes and exact H.2 line/text/byte selections. Preserve current at the stored position despite outside changes/duplicate matches; report one relocation without rewriting. Observe absent file/Git paths, distinguish absent and ambiguous selections, retain source/selector failures and check detached reports. Recheck missing-path/root/store boundaries and exercise fresh audited Core/PYZ runtimes.",
+    "12.s.R: Cross every H.3 selection outcome with both raw-hash results and native file/SHA-1/SHA-256 sources. Remove bound commits, root/parent trees and blobs for every reference kind; assert missing without fabricated hashes. Corrupt objects, inject malformed/failed batch responses, reject unsafe parents, preserve read errors and verify exact stale reasons for empty/truncated/overlapping/Unicode/newline cases. Retain old reader errors, forbid fetch/fallback and audit fresh Core/PYZ Git reads."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0345",
   "test_ids": [
     "tests/test_code_reference_state.py::test_absent_file_path_wins_before_selector_or_hint_evaluation[False-file]",
     "tests/test_code_reference_state.py::test_absent_file_path_wins_before_selector_or_hint_evaluation[False-generated_artifact]",
@@ -282,8 +285,5 @@
     "tests/test_code_reference_state_right.py::test_text_extent_and_normalization_preserve_distinct_stale_reasons[text-truncated]",
     "tests/test_code_reference_state_right.py::test_text_extent_and_normalization_preserve_distinct_stale_reasons[text-unicode]",
     "tests/test_code_reference_state_right.py::test_user_body_file_not_found_remains_an_error_in_optional_guard"
-  ],
-  "open_items": [
-    "12.s.R completes the H.3 matrix over admitted native sources. Structural separation remains 12.s.C; shared consumers remain 12.t. Unsupported passive kinds/legacy selectors and failed native source construction do not synthesize states or read capabilities. Requirement evidence stays partial pending integration; no full-suite or release success is claimed."
   ]
 }

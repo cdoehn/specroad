@@ -1,26 +1,5 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0252",
-  "requirement_id": "SR-REQ-0252",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0019",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
-  "fixture_ids": [
-    "SR-FIX-TRANSACTION-JOURNAL-v1"
-  ],
-  "preconditions": [
-    "Complete explicitly supplied publication preflight and live native writer lock; owned temporary Linux project."
-  ],
-  "steps": [
-    "Build a complete before/after-byte inventory, recheck plan and live sources, create and synchronize only the building journal.",
-    "Inject partial writes, fsync failures and process exit; require preserved operational evidence, exact file identity and no normative modification."
-  ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "Jeder tatsächlich ausgeführte `normative_write` MUSS vor der ersten normativen Veröffentlichung ein Journal nach Anhang C unter `.specroad/transactions/<TRANSACTION-ID>/journal.json` anlegen.",
-    "scope": "Exact changed artifact file list and complete byte hashes bound to the checked plan; preserved recovery blockers and no normative writes during building."
-  },
+  "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [],
   "expected_exit_codes": [
     0,
@@ -30,18 +9,43 @@
     6,
     7
   ],
+  "fixture_ids": [
+    "SR-FIX-TRANSACTION-JOURNAL-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "Native building journal only: preparation of all staging/before-image bytes, prepared/committing transitions, receipts and recovery remain in their assigned later steps.",
+    "Universal integration into every normative_write and the actual target filesystem/Python matrix remain unproven by these library tests."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Jeder tatsächlich ausgeführte `normative_write` MUSS vor der ersten normativen Veröffentlichung ein Journal nach Anhang C unter `.specroad/transactions/<TRANSACTION-ID>/journal.json` anlegen.",
+    "scope": "Exact changed artifact file list and complete byte hashes bound to the checked plan; preserved recovery blockers and no normative writes during building."
+  },
+  "preconditions": [
+    "Complete explicitly supplied publication preflight and live native writer lock; owned temporary Linux project."
+  ],
+  "primary_verification_id": "SR-VER-0019",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0252",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Build a complete before/after-byte inventory, recheck plan and live sources, create and synchronize only the building journal.",
+    "Inject partial writes, fsync failures and process exit; require preserved operational evidence, exact file identity and no normative modification."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0252",
   "test_ids": [
     "tests/test_transaction_journal.py::test_create_is_complete_synced_journal_only",
     "tests/test_transaction_journal.py::test_prepare_is_pure_and_does_not_stage_or_acquire_lock",
@@ -54,9 +58,5 @@
     "tests/test_transaction_journal_right.py::test_new_foreign_recovery_entry_during_write_is_preserved",
     "tests/test_transaction_journal_right.py::test_crash_after_creation_retains_record_and_excludes_new_writer",
     "tests/test_transaction_journal_right.py::test_portable_distributions_keep_journal_codec_and_creation"
-  ],
-  "open_items": [
-    "Native building journal only: preparation of all staging/before-image bytes, prepared/committing transitions, receipts and recovery remain in their assigned later steps.",
-    "Universal integration into every normative_write and the actual target filesystem/Python matrix remain unproven by these library tests."
   ]
 }

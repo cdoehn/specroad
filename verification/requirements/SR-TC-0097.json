@@ -1,45 +1,50 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0097",
-  "requirement_id": "SR-REQ-0097",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0007",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [
+    "SRV033",
+    "SRV053"
+  ],
+  "expected_exit_codes": [],
   "fixture_ids": [
     "SR-FIX-LITERAL-LINT-v1"
   ],
-  "preconditions": [
-    "Explicit valid artifact values, selected text fields, versioned policy and supplied term inventory."
+  "implementation_status": "partial",
+  "json_pointers": [
+    "/statement"
   ],
-  "steps": [
-    "Capture and validate owned records and exact selections.",
-    "Run literal checks on unchanged selected text and inspect structured findings and coverage."
+  "method": "automated_behavior",
+  "open_items": [
+    "Full lint/validation pipeline and CLI integration remain later steps.",
+    "Language policy and package composition are implemented in the following language stage, not inferred here.",
+    "Full target runtime matrix evidence remains necessary."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Ein `approved` Artefakt DARF NICHT `TBD`, `TODO`, `FIXME` oder einen profildefinierten offenen Platzhalter in normativen Feldern enthalten.",
     "scope": "Selected literal fields and Term schema only; no complete project, language quality or approval proof."
   },
-  "expected_diagnostics": [
-    "SRV033",
-    "SRV053"
+  "preconditions": [
+    "Explicit valid artifact values, selected text fields, versioned policy and supplied term inventory."
   ],
-  "expected_exit_codes": [],
-  "json_pointers": [
-    "/statement"
-  ],
+  "primary_verification_id": "SR-VER-0007",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0097",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Capture and validate owned records and exact selections.",
+    "Run literal checks on unchanged selected text and inspect structured findings and coverage."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0097",
   "test_ids": [
     "test_literal_lint.LiteralWorkTests.test_approved_core_placeholders_cannot_be_removed",
     "test_literal_lint.LiteralWorkTests.test_explicit_placeholder_is_scoped_to_declared_language",
@@ -47,10 +52,5 @@
     "test_literal_lint.LiteralWorkTests.test_unselected_text_is_not_scanned",
     "test_literal_lint_right.LiteralRightTests.test_repeated_placeholder_deduplicates_declarations_not_occurrences",
     "test_literal_lint_right.LiteralRightTests.test_nonapproved_maturities_do_not_produce_srv033"
-  ],
-  "open_items": [
-    "Full lint/validation pipeline and CLI integration remain later steps.",
-    "Language policy and package composition are implemented in the following language stage, not inferred here.",
-    "Full target runtime matrix evidence remains necessary."
   ]
 }

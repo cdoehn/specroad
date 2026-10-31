@@ -1,44 +1,47 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0291",
-  "requirement_id": "SR-REQ-0291",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0022",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [
+    "SRV110"
+  ],
+  "expected_exit_codes": [],
   "fixture_ids": [
     "SR-FIX-SRX-FIELDS-v1",
     "SR-FIX-SRX-LOGIC-v1"
   ],
-  "preconditions": [
-    "Explicit SRX program and owned JSON-only context."
+  "implementation_status": "partial",
+  "json_pointers": [
+    "/expression"
   ],
-  "steps": [
-    "Evaluate supported operators in documented order; check strict types, Missing and Boolean short circuit."
+  "method": "automated_behavior",
+  "open_items": [
+    "Complete remaining SRX operator families, full effective profiles and rule-consumer integration."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Ein fehlender Feldwert MUSS als interner Wert `missing` mit den in Anhang B.3 definierten Ergebnissen für `exists`, `eq`, `ne`, `lt`, `lte`, `gt` und `gte` behandelt werden.",
     "scope": "Implemented field/logic/comparison families only; complete SRX and validation integration remain pending."
   },
-  "expected_diagnostics": [
-    "SRV110"
+  "preconditions": [
+    "Explicit SRX program and owned JSON-only context."
   ],
-  "expected_exit_codes": [],
-  "json_pointers": [
-    "/expression"
-  ],
+  "primary_verification_id": "SR-VER-0022",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0291",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Evaluate supported operators in documented order; check strict types, Missing and Boolean short circuit."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0291",
   "test_ids": [
     "test_srx_fields.SrxFieldTests.test_exists_missing_is_false",
     "test_srx_fields.SrxFieldTests.test_exists_null_is_true",
@@ -52,8 +55,5 @@
     "tests/test_python310_compatibility.py::test_missing_as_mapping_key_keeps_identity_and_existing_memo_entries",
     "tests/test_python310_compatibility.py::test_missing_copy_does_not_depend_on_newer_enum_copy_helpers",
     "tests/test_python310_compatibility.py::test_portable_missing_copy_preserves_identity"
-  ],
-  "open_items": [
-    "Complete remaining SRX operator families, full effective profiles and rule-consumer integration."
   ]
 }

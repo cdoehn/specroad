@@ -1,45 +1,45 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0007",
-  "requirement_id": "SR-REQ-0007",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0001",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [],
   "fixture_ids": [
     "SR-FIX-OWNED-TEMP-v1"
   ],
-  "preconditions": [
-    "Owned project fixtures; installed development dependencies; isolated process state."
-  ],
-  "steps": [
-    "Read or validate the declared project resources and observe data, rejection and file effects."
+  "implementation_status": "partial",
+  "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "Full artifact schemas, resource inventory, transaction writes and cross-platform release evidence remain assigned to later steps."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "`specroad.json` MUSS mindestens `schema_version`, `project_id`, `project_name`, `id_prefix`, `default_locale`, `managed_paths`, `profiles`, `generated_path` und `validation_policy` enthalten.",
     "scope": "2.a: closed configuration, deterministic artifact paths, current root binding and input-only path classes."
   },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
+  "preconditions": [
+    "Owned project fixtures; installed development dependencies; isolated process state."
+  ],
+  "primary_verification_id": "SR-VER-0001",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0007",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Read or validate the declared project resources and observe data, rejection and file effects."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0007",
   "test_ids": [
     "test_model_configuration.ConfigurationWorkTests.test_required_fields_and_unknown_fields_are_rejected",
     "test_model_configuration.ConfigurationWorkTests.test_invalid_value_types_are_not_coerced",
     "test_model_configuration.ConfigurationWorkTests.test_configuration_owns_its_nested_data"
-  ],
-  "open_items": [
-    "Full artifact schemas, resource inventory, transaction writes and cross-platform release evidence remain assigned to later steps."
   ]
 }

@@ -1,17 +1,38 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0151",
-  "requirement_id": "SR-REQ-0151",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0011",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [],
   "fixture_ids": [
     "SR-FIX-BASELINE-VERIFICATION-v1"
   ],
+  "implementation_status": "partial",
+  "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "CLI, selected/configured scopes and installed language package snapshot providers remain separate integrations. The explicit common-pipeline gate requires host-supplied actual archive bytes and their live inventory/freshness checks.",
+    "Snapshot integrity is not historical full validation, original-project completeness, authorship authentication, atomic multi-file observation or release readiness."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "`specroad baseline verify <ID>` MUSS die Bytes aller referenzierten Snapshotobjekte gegen ihre Artefakt-, Profil-, Regel-, Mapping-, Konfigurations- und Anhangshashes sowie das rekonstruierte Manifest gegen den Modellwurzelhash prüfen, ohne den Arbeitsstand zu verändern.",
+    "scope": "Read-only independent reconstruction of actual archived unconfigured whole-project snapshot resources, effective profile, semantic configuration, full manifest and precreation model root; reject any missing/mismatched binding without fallback to current files."
+  },
   "preconditions": [
     "An explicit Baseline record byte value and an existing owned archive boundary; all resources come from actual archived object bytes."
   ],
+  "primary_verification_id": "SR-VER-0011",
+  "required_environment": {
+    "declared_minimum_python": "3.10",
+    "implementation": "cpython",
+    "measured_scope": "current-run-only"
+  },
+  "requirement_id": "SR-REQ-0151",
+  "resources": {
+    "harness_suite_timeout": null,
+    "harness_test_timeout": null,
+    "owned_temporary_files": true
+  },
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
   "steps": [
     "Verify unconfigured whole-project snapshots without original source files or Git, including a genuinely published native Baseline and moved archive.",
     "Reject missing or altered objects, forged declared roots/manifests, changed semantic configuration/profile, incomplete metadata, unsupported scopes and unsafe archive links.",
@@ -20,25 +41,8 @@
     "Inject late object deletion/corruption, noncanonical JSON aliases, resource metadata relabeling and semantic/operational mixing; verify a snapshot containing an older Baseline and its actual archive bytes.",
     "Re-run unchanged W/R behavior tests after separating the unchanged common-pipeline registration adapter from snapshot verification."
   ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "`specroad baseline verify <ID>` MUSS die Bytes aller referenzierten Snapshotobjekte gegen ihre Artefakt-, Profil-, Regel-, Mapping-, Konfigurations- und Anhangshashes sowie das rekonstruierte Manifest gegen den Modellwurzelhash prüfen, ohne den Arbeitsstand zu verändern.",
-    "scope": "Read-only independent reconstruction of actual archived unconfigured whole-project snapshot resources, effective profile, semantic configuration, full manifest and precreation model root; reject any missing/mismatched binding without fallback to current files."
-  },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
-  "required_environment": {
-    "implementation": "cpython",
-    "declared_minimum_python": "3.10",
-    "measured_scope": "current-run-only"
-  },
-  "resources": {
-    "owned_temporary_files": true,
-    "harness_test_timeout": null,
-    "harness_suite_timeout": null
-  },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0151",
   "test_ids": [
     "tests/test_baseline_verification.py::test_archive_object_reads_cannot_follow_links[hardlink]",
     "tests/test_baseline_verification.py::test_archive_object_reads_cannot_follow_links[symlink]",
@@ -104,9 +108,5 @@
     "tests/test_baseline_verification_right.py::test_unknown_snapshot_roles_fail_closed[None]",
     "tests/test_baseline_verification_right.py::test_unknown_snapshot_roles_fail_closed[unknown]",
     "tests/test_baseline_verification_right.py::test_unknown_snapshot_roles_fail_closed[value3]"
-  ],
-  "open_items": [
-    "CLI, selected/configured scopes and installed language package snapshot providers remain separate integrations. The explicit common-pipeline gate requires host-supplied actual archive bytes and their live inventory/freshness checks.",
-    "Snapshot integrity is not historical full validation, original-project completeness, authorship authentication, atomic multi-file observation or release readiness."
   ]
 }

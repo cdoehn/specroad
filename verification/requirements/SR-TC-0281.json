@@ -1,41 +1,45 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0281",
-  "requirement_id": "SR-REQ-0281",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0021",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [],
   "fixture_ids": [
     "SR-FIX-OWNED-TEMP-v1"
   ],
-  "preconditions": [
-    "Owned complete supplied TargetModel with exact Core-first profile resources and field-valid passive review history; no host or history authenticity is inferred."
-  ],
-  "steps": [
-    "Observe independently expected machine-readable policy/status/repair values from actual profile composition and supplied model bytes; verify invalid policy rejection, immutable input and no write attempts.",
-    "Compare legacy and enriched policy diagnostics; exercise structural/negative error floors and owned input boundaries; inspect actual native confirmation, unchanged proposed Requirement bytes and receipt replay.",
-    "Re-execute unchanged W/R behavioral oracles after extracting pure status row projection; retain public query behavior, error contracts, policy binding and absence of writes."
+  "implementation_status": "partial",
+  "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "Bind registered relation-status CLI/envelopes and authentic complete current project/history acquisition; integrate active review policy in remaining product assessments.",
+    "Verify applicable supported-platform and full product acceptance contracts."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "`specroad relation status [<ID>]` MUSS alle Relationsreviewzustände einschließlich auslösender Revisionen, letzter Reviewentscheidung und erforderlicher Reparatur stabil sortiert ausgeben.",
     "scope": "Owned read-only relation-status-v1 API reports stable incident-edge selection, current and reviewed endpoint revisions/hashes, controlling versus latest historical decision, hash-change causes, distinct required repairs, exact diagnostic positions and bound profile severity. No registered CLI, on-disk complete history acquisition or approval is claimed. R: compact and enriched APIs agree under active profile severity; protected structural and negative outcomes, exact history ties, passive metadata gaps, incident filtering and complete-input validation remain observable. Native rejection then confirmation and receipt retry leave the Requirement proposed/5 and byte-identical while the relation becomes current."
   },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
+  "preconditions": [
+    "Owned complete supplied TargetModel with exact Core-first profile resources and field-valid passive review history; no host or history authenticity is inferred."
+  ],
+  "primary_verification_id": "SR-VER-0021",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0281",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Observe independently expected machine-readable policy/status/repair values from actual profile composition and supplied model bytes; verify invalid policy rejection, immutable input and no write attempts.",
+    "Compare legacy and enriched policy diagnostics; exercise structural/negative error floors and owned input boundaries; inspect actual native confirmation, unchanged proposed Requirement bytes and receipt replay.",
+    "Re-execute unchanged W/R behavioral oracles after extracting pure status row projection; retain public query behavior, error contracts, policy binding and absence of writes."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0281",
   "test_ids": [
     "tests/test_relation_status_policy.py::test_artifact_filter_includes_outgoing_and_incoming_relations[source]",
     "tests/test_relation_status_policy.py::test_artifact_filter_includes_outgoing_and_incoming_relations[target]",
@@ -86,9 +90,5 @@
     "tests/test_relation_status_policy_right.py::test_latest_history_projection_uses_exact_time_tie_and_highest_review_id[True]",
     "tests/test_relation_status_policy_right.py::test_native_confirmation_and_retry_keep_requirement_proposed_and_bytes_unchanged",
     "tests/test_relation_status_policy_right.py::test_passive_legacy_audit_gaps_remain_unknown_instead_of_invented"
-  ],
-  "open_items": [
-    "Bind registered relation-status CLI/envelopes and authentic complete current project/history acquisition; integrate active review policy in remaining product assessments.",
-    "Verify applicable supported-platform and full product acceptance contracts."
   ]
 }

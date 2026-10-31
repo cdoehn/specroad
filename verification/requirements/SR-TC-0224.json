@@ -1,44 +1,48 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0224",
-  "requirement_id": "SR-REQ-0224",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0027",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [
+    0
+  ],
   "fixture_ids": [
     "SR-FIX-ISOLATED-CPYTHON-v1",
     "SR-FIX-OWNED-TEMP-v1",
     "SR-FIX-PATCHHARBOR-160-SNAPSHOT-v1"
   ],
-  "preconditions": [
-    "Use the current trusted checkout and a private temporary directory."
-  ],
-  "steps": [
-    "Execute the listed behavior tests in the current prescribed parallel gate; record the actual selected scope without asserting a full suite.",
-    "Observe the declared file effects, returned data and exit statuses without matching human text."
+  "implementation_status": "partial",
+  "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "Complete the remaining normative behavior and its requirement-specific oracle; obtain current evidence on required platforms.",
+    "Complete transport profiles and explicit host-only Git prerequisites in 15.n-15.o and M20. The lazy pinned 1.6.0 adapter and public snapshot path are exercised locally; Python 3.10-3.14 compatibility remains pending in manual CI, whose development-blocking effect is explicitly suspended until user reinstatement. Current tests do not prove the complete transport roundtrip."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Die entpackte Core-Distribution und die Core-Zipapp DÜRFEN NICHT für eine nicht Git-spezifische Core-Funktion extern zu installierende Laufzeitpakete voraussetzen; die PatchHarbor-Runtime für das Transportprofil MUSS offline mitgeliefert und ausschließlich bei dessen Nutzung geladen werden, während Analyzer-Zusatzvoraussetzungen getrennt Anhang T.6 folgen.",
     "scope": "Existing bootstrap/test-infrastructure behavior only; not complete requirement acceptance. The lazy transport adapter is additionally exercised with module and PYZ Core commands without any PatchHarbor installation or load."
   },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [
-    0
+  "preconditions": [
+    "Use the current trusted checkout and a private temporary directory."
   ],
-  "json_pointers": [],
+  "primary_verification_id": "SR-VER-0027",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0224",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Execute the listed behavior tests in the current prescribed parallel gate; record the actual selected scope without asserting a full suite.",
+    "Observe the declared file effects, returned data and exit statuses without matching human text."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0224",
   "test_ids": [
     "test_cli.EntryPointTests.test_module_and_zipapp_have_same_exit_and_file_effects",
     "test_core.CoreTests.test_isolated_standard_library_only_import",
@@ -100,9 +104,5 @@
     "tests/test_transport_snapshots.py::test_snapshot_input_errors_preserve_upstream_facts[digest]",
     "tests/test_transport_snapshots.py::test_snapshot_input_errors_preserve_upstream_facts[missing]",
     "tests/test_transport_snapshots.py::test_snapshot_input_errors_preserve_upstream_facts[relative]"
-  ],
-  "open_items": [
-    "Complete the remaining normative behavior and its requirement-specific oracle; obtain current evidence on required platforms.",
-    "Complete transport profiles and explicit host-only Git prerequisites in 15.n-15.o and M20. The lazy pinned 1.6.0 adapter and public snapshot path are exercised locally; Python 3.10-3.14 compatibility remains pending in manual CI, whose development-blocking effect is explicitly suspended until user reinstatement. Current tests do not prove the complete transport roundtrip."
   ]
 }

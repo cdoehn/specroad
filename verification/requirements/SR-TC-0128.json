@@ -1,43 +1,47 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0128",
-  "requirement_id": "SR-REQ-0128",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0009",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [],
   "fixture_ids": [
     "SR-FIX-ROADMAP-PROJECTION-RIGHT-v1",
     "SR-FIX-ROADMAP-PROJECTION-v1"
   ],
-  "preconditions": [
-    "Native supplied TargetModel with independently declared canonical artifact identities, stored fields and relations; owned temporary project and isolated distribution fixtures.",
-    "R fixtures include real read-only project modes, noncanonical input bytes, unrelated live roadmap/metadata files, passive estimates and deliberately changed bound inputs."
-  ],
-  "steps": [
-    "Invoke the native roadmap provider on the supplied model and source variants.",
-    "Compare explicit expected facts, source bindings, native refusals and original project bytes/modes; compare isolated Core and PYZ observations.",
-    "Exercise date/error boundaries and explicit dependency cycles without recomputation, mutation or live-source substitution; enforce process/network/write traps in isolated Core/PYZ."
+  "implementation_status": "partial",
+  "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "13.c.C still owns structural cleanup. This evidence covers the native supplied-model provider and its R boundary matrix only.",
+    "Roadmap View/Work integration remains assigned to 13.h; no full-suite or Release acceptance is claimed."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "SpecRoad DARF NICHT in Version 0.2 automatisch berechnete Termine, Aufwandsschätzungen oder einen kritischen Pfad als normative Daten in das Projektmodell schreiben.",
     "scope": "Stored target dates remain exact and absent dates stay absent; parent links do not imply dates or effort. No projection writes or approval; no estimated effort, dates or critical path. R: calendar and schema errors preserve exact sources and file modes; dependency cycles and passive extension estimates never retime, estimate or publish data. Bound-input changes refuse output; foreign live changes remain intact and unverified. All existing W facts remain required."
   },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
+  "preconditions": [
+    "Native supplied TargetModel with independently declared canonical artifact identities, stored fields and relations; owned temporary project and isolated distribution fixtures.",
+    "R fixtures include real read-only project modes, noncanonical input bytes, unrelated live roadmap/metadata files, passive estimates and deliberately changed bound inputs."
+  ],
+  "primary_verification_id": "SR-VER-0009",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0128",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Invoke the native roadmap provider on the supplied model and source variants.",
+    "Compare explicit expected facts, source bindings, native refusals and original project bytes/modes; compare isolated Core and PYZ observations.",
+    "Exercise date/error boundaries and explicit dependency cycles without recomputation, mutation or live-source substitution; enforce process/network/write traps in isolated Core/PYZ."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0128",
   "test_ids": [
     "tests/test_roadmap_projection.py::test_changed_source_facts_replace_projection_facts_and_bindings[capability-priority-low]",
     "tests/test_roadmap_projection.py::test_changed_source_facts_replace_projection_facts_and_bindings[release-target_date-2028-01-02]",
@@ -81,9 +85,5 @@
     "tests/test_roadmap_projection_right.py::test_unsupported_top_level_schedule_facts_are_not_silently_repaired[release-estimated_date-2027-02-01]",
     "tests/test_roadmap_projection_right.py::test_unsupported_top_level_schedule_facts_are_not_silently_repaired[task-effort-13]",
     "tests/test_roadmap_projection_right.py::test_unsupported_top_level_schedule_facts_are_not_silently_repaired[task-target_date-2027-02-01]"
-  ],
-  "open_items": [
-    "13.c.C still owns structural cleanup. This evidence covers the native supplied-model provider and its R boundary matrix only.",
-    "Roadmap View/Work integration remains assigned to 13.h; no full-suite or Release acceptance is claimed."
   ]
 }

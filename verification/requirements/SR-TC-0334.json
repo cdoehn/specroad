@@ -1,22 +1,52 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0334",
-  "requirement_id": "SR-REQ-0334",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0025",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [
+    "SRV043",
+    "SRV083",
+    "SRV090"
+  ],
+  "expected_exit_codes": [
+    0,
+    2,
+    3,
+    7
+  ],
   "fixture_ids": [
     "SR-FIX-JUNIT-XML-v1",
     "SR-FIX-JUNIT-XML-RIGHT-v1",
     "SR-FIX-JUNIT-MAPPING-v1",
     "SR-FIX-JUNIT-MAPPING-RIGHT-v1"
   ],
+  "implementation_status": "partial",
+  "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "The global evidence import junit command, cross-format diagnostic integration, abort/skip import policy, original attachments, complete run/subject/configuration binding and atomic publication remain later plan work.",
+    "Synthetic parser/mapping observations do not authenticate an external run or prove project-wide verification, release readiness or approval."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "`specroad evidence import junit <FILE>` MUSS das dokumentierte JUnit-XML-Kernprofil aus Testsuites, Testsuite, Testcase, Failure, Error, Skipped, System-out und System-err ohne Testausführung einlesen können.",
+    "scope": "12.f.W/R/C reads bounded passive JUnit core XML. 12.g.W/R adds strict exact-attribute candidates and complete context-aware mapping analysis, explicitly source-bound external IDs and separate diagnostics. The strict W API remains compatible. This is not the global import CLI, original-attachment publication or verified external execution."
+  },
   "preconditions": [
     "One explicitly supplied immutable XML byte document and native per-document hard limits; no project writer or external resolver.",
     "Owned JUnit XML and explicit versioned JSON mapping bytes plus supplied native VerificationTest/VerificationContract targets; no implicit inventory, external identifier, producer or run lookup.",
     "Explicit immutable JUnit document, closed mapping rules, native supplied Test/Verification targets and, when selected, a sidecar bound to the exact XML SHA-256 and core occurrence ordinals."
   ],
+  "primary_verification_id": "SR-VER-0025",
+  "required_environment": {
+    "declared_minimum_python": "3.10",
+    "implementation": "cpython",
+    "measured_scope": "current-run-only"
+  },
+  "requirement_id": "SR-REQ-0334",
+  "resources": {
+    "harness_suite_timeout": null,
+    "harness_test_timeout": null,
+    "owned_temporary_files": true
+  },
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
   "steps": [
     "Read complete suites and testcases with the documented children and attributes, retaining original bytes/hash and reported strings without evaluating outcomes.",
     "Reject DTD/entity declarations, external schema/include requests, processing instructions, malformed XML and violated limits without file/network/process access.",
@@ -33,34 +63,8 @@
     "Reject foreign source hashes, out-of-range or duplicate sidecar ordinals, unsafe types, invalid schemas and exceeded hard input boundaries without external access or partial publication.",
     "Preserve strict W behavior, native outcome classes, owned raw/canonical provenance, complete coverage of rejected occurrences, linear grouped diagnostics and isolated Core/PYZ behavior."
   ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "`specroad evidence import junit <FILE>` MUSS das dokumentierte JUnit-XML-Kernprofil aus Testsuites, Testsuite, Testcase, Failure, Error, Skipped, System-out und System-err ohne Testausführung einlesen können.",
-    "scope": "12.f.W/R/C reads bounded passive JUnit core XML. 12.g.W/R adds strict exact-attribute candidates and complete context-aware mapping analysis, explicitly source-bound external IDs and separate diagnostics. The strict W API remains compatible. This is not the global import CLI, original-attachment publication or verified external execution."
-  },
-  "expected_diagnostics": [
-    "SRV043",
-    "SRV083",
-    "SRV090"
-  ],
-  "expected_exit_codes": [
-    0,
-    2,
-    3,
-    7
-  ],
-  "json_pointers": [],
-  "required_environment": {
-    "implementation": "cpython",
-    "declared_minimum_python": "3.10",
-    "measured_scope": "current-run-only"
-  },
-  "resources": {
-    "owned_temporary_files": true,
-    "harness_test_timeout": null,
-    "harness_suite_timeout": null
-  },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0334",
   "test_ids": [
     "tests/test_junit_mapping.py::test_cached_values_are_not_a_substitute_for_owned_source_bytes",
     "tests/test_junit_mapping.py::test_candidate_result_can_feed_existing_construction_only_with_explicit_run_inputs[False]",
@@ -472,9 +476,5 @@
     "tests/test_junit_xml_right.py::test_text_budget_counts_decoded_unicode_across_all_content[<testsuite name=\"a&#x1f642;\"><system-out><![CDATA[\\xe9]]></system-out></testsuite>-3]",
     "tests/test_junit_xml_right.py::test_text_budget_counts_decoded_unicode_across_all_content[<testsuite xmlns:e=\"urn:e\"><e:x>a&amp;b</e:x></testsuite>-8]",
     "tests/test_junit_xml_right.py::test_text_budget_counts_decoded_unicode_across_all_content[<testsuite><!--abc--><extension name=\"de\">f</extension></testsuite>-6]"
-  ],
-  "open_items": [
-    "The global evidence import junit command, cross-format diagnostic integration, abort/skip import policy, original attachments, complete run/subject/configuration binding and atomic publication remain later plan work.",
-    "Synthetic parser/mapping observations do not authenticate an external run or prove project-wide verification, release readiness or approval."
   ]
 }

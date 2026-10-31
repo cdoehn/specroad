@@ -1,19 +1,39 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0628",
-  "requirement_id": "SR-REQ-0628",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0040",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [],
   "fixture_ids": [
     "SR-FIX-OWNED-TEMP-v1",
     "SR-FIX-BUNDLE-WORK-LOSS-R-v1"
   ],
+  "implementation_status": "partial",
+  "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "Initial read-only host APIs and whole-byte ZIP32 processing only. Full Work CLI, general executable workflows, normative work export with current transaction/receipt proof and explicit write-target mapping, incremental large export and multipart archives remain open. No native Recovery substitute, executable code loading, authenticity from internal self-consistency, semantic success from generic data, or release approval is claimed."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Work-Export und -Restore MÜSSEN die selbstenthaltene sichere Paketsemantik nach Anhang P.7 erfüllen.",
+    "scope": "A canonical ZIP_STORED codec admits safe regular entries with exact inventory and external byte identity. The package_kind=work transport retains every reachable generation, inventory segment, manifest and semantic object. All container, build, schema, original and successor bindings are checked before target publication. The target must be missing or private and empty under the native Work mutex; existing stores, symlinks and protected overlaps are refused. Restore republishes original generations through the durable native store, creates a fresh root-inode binding and preserves actual successful prefixes on I/O failure. Native write work is explicitly unsupported rather than exported with unknown Recovery state. Initial read-only host APIs and whole-byte ZIP32 processing only. Full Work CLI, general executable workflows, normative work export with current transaction/receipt proof and explicit write-target mapping, incremental large export and multipart archives remain open. No native Recovery substitute, executable code loading, authenticity from internal self-consistency, semantic success from generic data, or release approval is claimed. R additionally checks file/ancestor collisions, native inventory reproducibility before allocation, current runtime after complete validation and fresh destination inventories across every generation. Real lost bytes, locks, replaced roots and foreign arrivals are exercised. Preserved pointer bytes are not a claim that externally changed payloads remain usable. 15.i.R adds a required-hash file restore adapter, actual loss/path relocation and fresh-process recovery at exactly the retained generation. Complete byte validation precedes allocation; source parent identity and exact bytes are rechecked during restoration. No automatic backup discovery or prompt-based reconstruction occurs."
+  },
   "preconditions": [
     "Owned private Work/project/input/restore roots and externally retained package bytes/hash. Explicit recorded-build fixture and trusted host registry; actual closed handlers, sealed source capture, native checkpoint publication and isolated fresh process.",
     "File restore requires the actual retained ZIP and its complete external hash, explicit current protected boundaries and a disjoint missing/private-empty Work target; no old sandbox or chat description supplies payload bytes."
   ],
+  "primary_verification_id": "SR-VER-0040",
+  "required_environment": {
+    "declared_minimum_python": "3.10",
+    "implementation": "cpython",
+    "measured_scope": "current-run-only"
+  },
+  "requirement_id": "SR-REQ-0628",
+  "resources": {
+    "harness_suite_timeout": null,
+    "harness_test_timeout": null,
+    "owned_temporary_files": true
+  },
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
   "steps": [
     "Export the independently bound complete published read-only chain without writes, retain its exact archive bytes and external hash, and remove owned original Work/source data.",
     "Verify canonical ZIP bytes, exact nonrecursive inventory and every original Work generation before allocating a missing or private empty external destination.",
@@ -24,25 +44,8 @@
     "Introduce foreign or unsafe destination entries after the first and last real generation and replace the destination inode. Refuse further publication or false completion while preserving the actual pointer, foreign files and any owner that cannot safely be released.",
     "15.i.R: restore from an explicitly selected canonical file and mandatory external SHA-256 after actual Work/source loss or backup relocation. Recheck the retained file across every generation. Reject missing/mutated payloads and prompt/report substitutes before allocation; preserve the real published prefix on later source loss. A newer prompt does not advance an older backup."
   ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "Work-Export und -Restore MÜSSEN die selbstenthaltene sichere Paketsemantik nach Anhang P.7 erfüllen.",
-    "scope": "A canonical ZIP_STORED codec admits safe regular entries with exact inventory and external byte identity. The package_kind=work transport retains every reachable generation, inventory segment, manifest and semantic object. All container, build, schema, original and successor bindings are checked before target publication. The target must be missing or private and empty under the native Work mutex; existing stores, symlinks and protected overlaps are refused. Restore republishes original generations through the durable native store, creates a fresh root-inode binding and preserves actual successful prefixes on I/O failure. Native write work is explicitly unsupported rather than exported with unknown Recovery state. Initial read-only host APIs and whole-byte ZIP32 processing only. Full Work CLI, general executable workflows, normative work export with current transaction/receipt proof and explicit write-target mapping, incremental large export and multipart archives remain open. No native Recovery substitute, executable code loading, authenticity from internal self-consistency, semantic success from generic data, or release approval is claimed. R additionally checks file/ancestor collisions, native inventory reproducibility before allocation, current runtime after complete validation and fresh destination inventories across every generation. Real lost bytes, locks, replaced roots and foreign arrivals are exercised. Preserved pointer bytes are not a claim that externally changed payloads remain usable. 15.i.R adds a required-hash file restore adapter, actual loss/path relocation and fresh-process recovery at exactly the retained generation. Complete byte validation precedes allocation; source parent identity and exact bytes are rechecked during restoration. No automatic backup discovery or prompt-based reconstruction occurs."
-  },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
-  "required_environment": {
-    "implementation": "cpython",
-    "declared_minimum_python": "3.10",
-    "measured_scope": "current-run-only"
-  },
-  "resources": {
-    "owned_temporary_files": true,
-    "harness_test_timeout": null,
-    "harness_suite_timeout": null
-  },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0628",
   "test_ids": [
     "tests/test_bundle_work_backup_right.py::test_actual_sealed_inputs_and_complete_ancestry_are_required_after_loss[None]",
     "tests/test_bundle_work_backup_right.py::test_actual_sealed_inputs_and_complete_ancestry_are_required_after_loss[ancestor]",
@@ -216,8 +219,5 @@
     "tests/test_work_packages_right.py::test_runtime_change_during_actual_package_validation_prevents_target_allocation",
     "tests/test_work_packages_right.py::test_unsafe_restore_ancestors_are_rejected_without_probe_writes[protected_ancestor]",
     "tests/test_work_packages_right.py::test_unsafe_restore_ancestors_are_rejected_without_probe_writes[symlink_ancestor]"
-  ],
-  "open_items": [
-    "Initial read-only host APIs and whole-byte ZIP32 processing only. Full Work CLI, general executable workflows, normative work export with current transaction/receipt proof and explicit write-target mapping, incremental large export and multipart archives remain open. No native Recovery substitute, executable code loading, authenticity from internal self-consistency, semantic success from generic data, or release approval is claimed."
   ]
 }

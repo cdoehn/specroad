@@ -92,7 +92,7 @@ def run_measurement(root, journal, workers, **selection):
     nodes.write_text('\n'.join(request['selected']) + '\n')
     command = [sys.executable, '-I', '-B', str(Path(root) / 'tools/pytest_entry.py'),
         '-o', 'addopts=', '--disable-plugin-autoload', '-p', 'no:cacheprovider', '-p', 'no:doctest',
-        '-p', 'xdist.plugin', '-n', str(workers), '--dist', 'load', '--max-worker-restart=0',
+        '-p', 'xdist.plugin', '-n', str(workers), '--dist', 'worksteal', '--max-worker-restart=0',
         '--sr-expected-tests', str(len(request['selected'])),
         '--sr-runtime-journal', str(Path(journal).absolute()), '--sr-timing-request', str(path),
         '--sr-observations', str(path.parent / 'observations.json'), '@' + str(nodes)]

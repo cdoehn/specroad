@@ -1,33 +1,13 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0116",
-  "requirement_id": "SR-REQ-0116",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0008",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [],
   "fixture_ids": [
     "SR-FIX-DOMAIN-DRAFT-v1",
     "SR-FIX-ISOLATED-CPYTHON-v1",
     "SR-FIX-SCOPE-COMPARISON-v1"
   ],
-  "preconditions": [
-    "Owned supplied artifact sets and resolved scope observations. No live completeness or release authority.",
-    "Owned explicitly supplied field-valid artifact sets; optional paired project configurations and explicit timing semantics, without source completeness or authorization claims."
-  ],
-  "steps": [
-    "Compare canonical value bindings, field deltas and all immediate relation neighbours without I/O.",
-    "Compare semantic categories and exact values/identities with independent fixtures; check explicit unknown scope/currency, input hashes, read-only boundaries and isolated-process parity.",
-    "Compare declared and opaque text changes with independent exact-value, identity and pointer oracles; preserve machine-value classes, complete containers and all W behavior.",
-    "Re-run unchanged W/R cases through the public comparison after classifier extraction; retain exact values, identities, error contracts and read-only boundaries."
-  ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "Eine reine Änderung unstrukturierter Aussagefelder MUSS als `text_changed` ausgewiesen werden, wenn keine deterministische semantische Klassifikation möglich ist.",
-    "scope": "8.h.W adds compare_semantic over explicit ComparisonInputs. Every supplied stored artifact field contract is validated before classification. Existing artifact identities, hashes, presence flags, values and pointers remain visible. Threshold/text, scope/exception/relation/document/verification/code-reference differences retain their structural classes; applicability, product configuration, stored statuses and evidence result/binding/content changes are distinguished. Paired typed ProjectConfigurations compare through the existing semantic projection and also bind their raw declarations. Explicit requirement timing bounds alone enable exact tightened/relaxed/equivalent/incomparable duration observations; policies bind even unchanged input. Missing configuration is not_supplied. Supplied inventory membership deltas do not imply applicability-derived scope, which remains not_evaluated alongside evidence currency. Independent tests cover classes, exact values/identities, configuration and policy binding, invalid inputs, ownership, no writes and fresh-process parity. Existing 277 test files and 9227 IDs remain unchanged. Source adapters, Diff CLI, durable Work, effective profiles, applicability-derived scope, evidence-currentness services and platform/performance acceptance remain open; no release approval is claimed. R classifies additional unstructured domain text and text-bearing namespaced extension values as text_changed without interpreting words, languages, Markdown or numerical claims. Opaque extension keys never inherit Core timing/threshold/status/evidence semantics. Pure numeric/Boolean unknown deltas remain structural field_changed; declared enum, identity and path values keep their existing classes. Iterative value scanning retains complete containers, presence/null distinctions, escaped pointers and exact Unicode bytes. Independent tests cover twenty domain/record text positions, misleading extension names, typed machine values, deep/wide data, ownership, ordering and read-only boundaries. All 278 old test files and 9263 IDs remain unchanged; all W cases remain part of selected regression. Source/CLI/Work integration, effective profiles, evaluated scope/currency and platform/performance acceptance remain open. C moves all declared-field, opaque-text, paired-configuration and explicit-duration classifiers into a private module. All five extracted definitions and the public comparison function retain identical source and AST; only module ownership and necessary imports change. All 279 old test files and 9310 IDs remain unchanged. Existing W/R behavior is rerun through the public API; no new semantic classes, error contracts, side effects or authority are introduced. Later providers and acceptance remain open."
-  },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
+  "implementation_status": "partial",
   "json_pointers": [
     "/categories",
     "/changes",
@@ -38,17 +18,40 @@
     "/project_configuration",
     "/timing"
   ],
+  "method": "automated_behavior",
+  "open_items": [
+    "Complete planned source/CLI/Work integration, effective profile semantics, applicability-derived model scope, evaluated evidence currency and platform/performance acceptance; Merge integration remains a later consumer."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Eine reine Änderung unstrukturierter Aussagefelder MUSS als `text_changed` ausgewiesen werden, wenn keine deterministische semantische Klassifikation möglich ist.",
+    "scope": "8.h.W adds compare_semantic over explicit ComparisonInputs. Every supplied stored artifact field contract is validated before classification. Existing artifact identities, hashes, presence flags, values and pointers remain visible. Threshold/text, scope/exception/relation/document/verification/code-reference differences retain their structural classes; applicability, product configuration, stored statuses and evidence result/binding/content changes are distinguished. Paired typed ProjectConfigurations compare through the existing semantic projection and also bind their raw declarations. Explicit requirement timing bounds alone enable exact tightened/relaxed/equivalent/incomparable duration observations; policies bind even unchanged input. Missing configuration is not_supplied. Supplied inventory membership deltas do not imply applicability-derived scope, which remains not_evaluated alongside evidence currency. Independent tests cover classes, exact values/identities, configuration and policy binding, invalid inputs, ownership, no writes and fresh-process parity. Existing 277 test files and 9227 IDs remain unchanged. Source adapters, Diff CLI, durable Work, effective profiles, applicability-derived scope, evidence-currentness services and platform/performance acceptance remain open; no release approval is claimed. R classifies additional unstructured domain text and text-bearing namespaced extension values as text_changed without interpreting words, languages, Markdown or numerical claims. Opaque extension keys never inherit Core timing/threshold/status/evidence semantics. Pure numeric/Boolean unknown deltas remain structural field_changed; declared enum, identity and path values keep their existing classes. Iterative value scanning retains complete containers, presence/null distinctions, escaped pointers and exact Unicode bytes. Independent tests cover twenty domain/record text positions, misleading extension names, typed machine values, deep/wide data, ownership, ordering and read-only boundaries. All 278 old test files and 9263 IDs remain unchanged; all W cases remain part of selected regression. Source/CLI/Work integration, effective profiles, evaluated scope/currency and platform/performance acceptance remain open. C moves all declared-field, opaque-text, paired-configuration and explicit-duration classifiers into a private module. All five extracted definitions and the public comparison function retain identical source and AST; only module ownership and necessary imports change. All 279 old test files and 9310 IDs remain unchanged. Existing W/R behavior is rerun through the public API; no new semantic classes, error contracts, side effects or authority are introduced. Later providers and acceptance remain open."
+  },
+  "preconditions": [
+    "Owned supplied artifact sets and resolved scope observations. No live completeness or release authority.",
+    "Owned explicitly supplied field-valid artifact sets; optional paired project configurations and explicit timing semantics, without source completeness or authorization claims."
+  ],
+  "primary_verification_id": "SR-VER-0008",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0116",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Compare canonical value bindings, field deltas and all immediate relation neighbours without I/O.",
+    "Compare semantic categories and exact values/identities with independent fixtures; check explicit unknown scope/currency, input hashes, read-only boundaries and isolated-process parity.",
+    "Compare declared and opaque text changes with independent exact-value, identity and pointer oracles; preserve machine-value classes, complete containers and all W behavior.",
+    "Re-run unchanged W/R cases through the public comparison after classifier extraction; retain exact values, identities, error contracts and read-only boundaries."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0116",
   "test_ids": [
     "test_scope_comparison.ScopeComparisonTests.test_text_is_never_interpreted_as_a_timing_constraint",
     "test_scope_comparison_right.ScopeComparisonRightTests.test_ambiguous_timing_structure_does_not_claim_tightening",
@@ -137,8 +140,5 @@
     "tests/test_query_semantic_diff_right.py::test_unstructured_declared_text_fields_have_no_inferred_domain_effect[record-test-oracle-Pass at most ten-Pass at most five]",
     "tests/test_query_semantic_diff_right.py::test_unstructured_declared_text_fields_have_no_inferred_domain_effect[record-verification-procedure-old14-new14]",
     "tests/test_query_semantic_diff_right.py::test_wide_extension_text_changes_have_complete_identity_and_pointer_sets"
-  ],
-  "open_items": [
-    "Complete planned source/CLI/Work integration, effective profile semantics, applicability-derived model scope, evaluated evidence currency and platform/performance acceptance; Merge integration remains a later consumer."
   ]
 }

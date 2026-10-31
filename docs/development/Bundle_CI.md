@@ -1,12 +1,11 @@
-# Aktive Teststrategie ab 7. Oktober 2026
+# Aktive Teststrategie ab 31. Oktober 2026
 
-In `specroad-codex` läuft die vollständige Testsuite ausschließlich parallel.
-In `specroad-apply` führt `tools/run_apply_tests.py` den parallelen Volltest aus.
-Auch beim letzten Bundle-Zustand läuft ausschließlich der parallele Volltest.
-`--final-bundle-state` bleibt kompatibel und startet denselben einzelnen Lauf.
-Nur dessen Erfolg erlaubt den W/R/C-Commit.
-Die technischen Aufrufe stehen in [Testing.md](Testing.md). Die zentrale lokale
-Arbeitsanweisung ist `AGENTS.md`.
+Dev prüft neue und betroffene Tests gezielt parallel mit worksteal.
+Apply prüft pro Commit die fällige N=3-Gruppe abzüglich der aktuellen
+langsamsten 20 Prozent. Die manuelle vollständige CI prüft alle Tests
+unter CPython 3.10–3.14 in automatisch zeitgewichteten Paketen.
+Die technischen Aufrufe stehen in [Testing.md](Testing.md) und
+[CI_Packages.md](CI_Packages.md).
 
 GitHub-CI startet niemals automatisch. Full Regression wird ausschließlich
 vom Nutzer manuell per `workflow_dispatch` gestartet und führt die vollständige
@@ -70,7 +69,8 @@ Self-hosted-Runner zu wählen.
 
 Die Verlagerung auf manuelle Starts beschleunigt normale Entwicklungszyklen,
 verkürzt jedoch nicht automatisch die Laufzeit eines vollständigen Matrixlaufs.
-Mit einem Self-hosted-Runner werden die fünf Jobs weiterhin nacheinander ausgeführt.
+Mit nur einem Self-hosted-Runner laufen die Pakete nacheinander; dessen verfügbare
+Kapazität und Queue-Grenzen sind vor einem großen Full-Run zu berücksichtigen.
 
 ## Nachweise und Grenzen
 

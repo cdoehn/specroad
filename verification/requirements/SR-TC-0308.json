@@ -1,31 +1,5 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0308",
-  "requirement_id": "SR-REQ-0308",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0023",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
-  "fixture_ids": [
-    "SR-FIX-DOCUMENT-AUTHORING-v1",
-    "SR-FIX-DOCUMENT-MUTATIONS-v1"
-  ],
-  "preconditions": [
-    "Complete owned TargetModel and historical reservations, explicit prepared artifact/relation IDs, actor/time and saved native Change Plan; real host authority is independently required for publication."
-  ],
-  "steps": [
-    "11.h.W: prepare document.create, section.add and section.move as closed ordinary typed operation sequences; save and execute through the shared native writer. Verify exact affected artifacts, unchanged file inventories, native revisions and audit, receipts and idempotent replay, actor/host denial, primary-role validity, specialist closure and isolated Core/PYZ publication.",
-    "11.h.R: reject invalid parents, self/descendant/include cycles, stale relation hashes and actual on-disk bytes, identity reuse, forged operation shapes, missing lifecycle and host gate overrides. Preserve command/plan identity in structured failure audits. Verify unchanged full inventories on refusal and honest partial publication/recovery after an injected second-owner replace failure; conflicting retry preserves original receipt.",
-    "11.h.C: rerun unchanged W/R and affected regression tests after separating pure document graph-operation construction from native document target gates. Public create/add wrappers and all extracted construction/check functions retain identical AST; move construction statements are unchanged inside a private helper.",
-    "11.i.W: save and execute block.add/update/remove and section.remove as native typed operations. Verify all seven basic block kinds, actual block semantics, pure guarded retirement, recursive cascade and complete child reparenting, preserved identities and parent edges, exact owner revisions, native approved-content downgrade, receipts/replay and authority/refusal inventories.",
-    "11.i.R: reject missing/conflicting strategy options, invalid destinations, each stale retirement/relation guard, ID reuse and saved operation smuggling. Retire internally shared blocks exactly once with all historical ownership edges retained; reject outside-owned children. Check actual changed live source/profile bytes, authority boundaries, conflicting replay and real interrupted cascade publication with retained recovery journal.",
-    "11.i.C: rerun unchanged W/R and affected regressions after consolidating pure attached-creation, guarded reparenting and typed single-operation generators. Public signatures, strategy/field/semantic gates, saved-plan bindings, diagnostics and publication/recovery contracts remain unchanged."
-  ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "Die Befehle `document create`, `section add`, `section move`, `section remove` und `block add`, `block update`, `block remove` MÜSSEN vollständiges nichtinteraktives Dokument-Authoring über den gemeinsamen Change Plan ermöglichen.",
-    "scope": "Native document/section saved-plan authoring over complete supplied project inputs. Creation is an empty draft, addition creates and attaches a section atomically, and movement removes the hash-bound old contains edge and adds a fresh relation in one plan. Only affected relation owners change revision; original section/descendant and unrelated file bytes remain. Required native role/ownership/include checks cannot be replaced by a host gate. No presentation, documentation or fake semantic-service oracle. R retains the native invariant guards and closes the shared failure-adapter command registry for all three document commands. No complete-target approval or rollback is inferred from a failed write. C changes only module structure and delegation: operation sequence, plan/audit bindings, diagnostic/refusal contracts, native writer effects and recovery behavior retain their W/R contracts. 11.i.W adds block/removal prepared plans. Retirement preserves stored IDs/files and section ownership; cascade retires the complete subtree, moving children replaces each original guarded edge with a fresh edge at explicit positions. Native block semantics and exact complete lifecycle folds remain mandatory. Internal repeated block occurrences produce one guarded retirement per identity; all original contains relations remain stored. Rejected input preserves the complete file inventory. Interrupted publication honestly retains acknowledged and possibly renamed files plus committing journal; it does not claim rollback or safe automatic retry. C only consolidates the existing operation generators; no test oracle, operation contract or publication behavior changes."
-  },
+  "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [
     "creation_identity_exists",
     "document_authoring_gate_override",
@@ -59,22 +33,53 @@
     6,
     7
   ],
+  "fixture_ids": [
+    "SR-FIX-DOCUMENT-AUTHORING-v1",
+    "SR-FIX-DOCUMENT-MUTATIONS-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [
     "/operations",
     "/relations",
     "/document_role"
   ],
+  "method": "automated_behavior",
+  "open_items": [
+    "CLI writer registration, complete model/history discovery and ID allocation remain outside this explicit prepared-plan embedding API.",
+    "New mutation commands cover native block semantics; views, external attachment resources and unchanged non-draft history require actual explicit specialist services. Document creation and section addition retain their narrower service contract; section movement now uses the native block semantics and preservation guard under 11.j.",
+    "Targeted development and alternating Apply half-suite observations do not certify a full-suite or release pass."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Die Befehle `document create`, `section add`, `section move`, `section remove` und `block add`, `block update`, `block remove` MÜSSEN vollständiges nichtinteraktives Dokument-Authoring über den gemeinsamen Change Plan ermöglichen.",
+    "scope": "Native document/section saved-plan authoring over complete supplied project inputs. Creation is an empty draft, addition creates and attaches a section atomically, and movement removes the hash-bound old contains edge and adds a fresh relation in one plan. Only affected relation owners change revision; original section/descendant and unrelated file bytes remain. Required native role/ownership/include checks cannot be replaced by a host gate. No presentation, documentation or fake semantic-service oracle. R retains the native invariant guards and closes the shared failure-adapter command registry for all three document commands. No complete-target approval or rollback is inferred from a failed write. C changes only module structure and delegation: operation sequence, plan/audit bindings, diagnostic/refusal contracts, native writer effects and recovery behavior retain their W/R contracts. 11.i.W adds block/removal prepared plans. Retirement preserves stored IDs/files and section ownership; cascade retires the complete subtree, moving children replaces each original guarded edge with a fresh edge at explicit positions. Native block semantics and exact complete lifecycle folds remain mandatory. Internal repeated block occurrences produce one guarded retirement per identity; all original contains relations remain stored. Rejected input preserves the complete file inventory. Interrupted publication honestly retains acknowledged and possibly renamed files plus committing journal; it does not claim rollback or safe automatic retry. C only consolidates the existing operation generators; no test oracle, operation contract or publication behavior changes."
+  },
+  "preconditions": [
+    "Complete owned TargetModel and historical reservations, explicit prepared artifact/relation IDs, actor/time and saved native Change Plan; real host authority is independently required for publication."
+  ],
+  "primary_verification_id": "SR-VER-0023",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0308",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "11.h.W: prepare document.create, section.add and section.move as closed ordinary typed operation sequences; save and execute through the shared native writer. Verify exact affected artifacts, unchanged file inventories, native revisions and audit, receipts and idempotent replay, actor/host denial, primary-role validity, specialist closure and isolated Core/PYZ publication.",
+    "11.h.R: reject invalid parents, self/descendant/include cycles, stale relation hashes and actual on-disk bytes, identity reuse, forged operation shapes, missing lifecycle and host gate overrides. Preserve command/plan identity in structured failure audits. Verify unchanged full inventories on refusal and honest partial publication/recovery after an injected second-owner replace failure; conflicting retry preserves original receipt.",
+    "11.h.C: rerun unchanged W/R and affected regression tests after separating pure document graph-operation construction from native document target gates. Public create/add wrappers and all extracted construction/check functions retain identical AST; move construction statements are unchanged inside a private helper.",
+    "11.i.W: save and execute block.add/update/remove and section.remove as native typed operations. Verify all seven basic block kinds, actual block semantics, pure guarded retirement, recursive cascade and complete child reparenting, preserved identities and parent edges, exact owner revisions, native approved-content downgrade, receipts/replay and authority/refusal inventories.",
+    "11.i.R: reject missing/conflicting strategy options, invalid destinations, each stale retirement/relation guard, ID reuse and saved operation smuggling. Retire internally shared blocks exactly once with all historical ownership edges retained; reject outside-owned children. Check actual changed live source/profile bytes, authority boundaries, conflicting replay and real interrupted cascade publication with retained recovery journal.",
+    "11.i.C: rerun unchanged W/R and affected regressions after consolidating pure attached-creation, guarded reparenting and typed single-operation generators. Public signatures, strategy/field/semantic gates, saved-plan bindings, diagnostics and publication/recovery contracts remain unchanged."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0308",
   "test_ids": [
     "tests/test_document_authoring.py::test_create_enforces_the_actual_full_project_primary_role[first_document]",
     "tests/test_document_authoring.py::test_create_enforces_the_actual_full_project_primary_role[supporting_document]",
@@ -220,10 +225,5 @@
     "tests/test_document_mutations_right.py::test_strategy_inputs_are_explicit_and_never_silently_discarded[wrong_moves_type]",
     "tests/test_document_mutations_right.py::test_strategy_inputs_are_explicit_and_never_silently_discarded[wrong_retirements_type]",
     "tests/test_document_mutations_right.py::test_unrelated_non_draft_history_is_not_certified_by_mutation_lifecycle_gate"
-  ],
-  "open_items": [
-    "CLI writer registration, complete model/history discovery and ID allocation remain outside this explicit prepared-plan embedding API.",
-    "New mutation commands cover native block semantics; views, external attachment resources and unchanged non-draft history require actual explicit specialist services. Document creation and section addition retain their narrower service contract; section movement now uses the native block semantics and preservation guard under 11.j.",
-    "Targeted development and alternating Apply half-suite observations do not certify a full-suite or release pass."
   ]
 }

@@ -1,41 +1,45 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0282",
-  "requirement_id": "SR-REQ-0282",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0021",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [],
   "fixture_ids": [
     "SR-FIX-OWNED-TEMP-v1"
   ],
-  "preconditions": [
-    "Owned complete supplied TargetModel with exact Core-first profile resources and field-valid passive review history; no host or history authenticity is inferred."
-  ],
-  "steps": [
-    "Observe independently expected machine-readable policy/status/repair values from actual profile composition and supplied model bytes; verify invalid policy rejection, immutable input and no write attempts.",
-    "Compare legacy and enriched policy diagnostics; exercise structural/negative error floors and owned input boundaries; inspect actual native confirmation, unchanged proposed Requirement bytes and receipt replay.",
-    "Re-execute unchanged W/R behavioral oracles after extracting pure status row projection; retain public query behavior, error contracts, policy binding and absence of writes."
+  "implementation_status": "partial",
+  "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "Bind registered relation-status CLI/envelopes and authentic complete current project/history acquisition; integrate active review policy in remaining product assessments.",
+    "Verify applicable supported-platform and full product acceptance contracts."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Aktive Profile MÜSSEN je Relationstyp und Artefaktreifegrad festlegen können, ob `unreviewed` oder `suspect` als `info`, `warning` oder `error` gilt.",
     "scope": "Closed optional relation_review_policy selects unreviewed/suspect severity by stored relation type and source maturity. Actual profile resources and deterministic later-profile composition bind the decision into EffectiveProfile; later global overrides and same-profile scoped precedence are explicit. Invalid stays error and current creates no finding. Scope is the supplied byte-bound model API, not all product command integrations. R: the existing relation_review_diagnostics API also uses the byte-bound active profile without changing its response scope. Invalid remains error under permissive scopes and strict thresholds; global downgrades and malformed containers fail closed. Inactive resources do not affect active composition; native confirmation/retry grants no approval."
   },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
+  "preconditions": [
+    "Owned complete supplied TargetModel with exact Core-first profile resources and field-valid passive review history; no host or history authenticity is inferred."
+  ],
+  "primary_verification_id": "SR-VER-0021",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0282",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Observe independently expected machine-readable policy/status/repair values from actual profile composition and supplied model bytes; verify invalid policy rejection, immutable input and no write attempts.",
+    "Compare legacy and enriched policy diagnostics; exercise structural/negative error floors and owned input boundaries; inspect actual native confirmation, unchanged proposed Requirement bytes and receipt replay.",
+    "Re-execute unchanged W/R behavioral oracles after extracting pure status row projection; retain public query behavior, error contracts, policy binding and absence of writes."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0282",
   "test_ids": [
     "tests/test_relation_status_policy.py::test_current_has_no_finding_and_invalid_stays_error[error]",
     "tests/test_relation_status_policy.py::test_current_has_no_finding_and_invalid_stays_error[info]",
@@ -101,9 +105,5 @@
     "tests/test_relation_status_policy_right.py::test_malformed_review_policy_container_cannot_become_an_empty_policy[value1]",
     "tests/test_relation_status_policy_right.py::test_malformed_review_policy_container_cannot_become_an_empty_policy[value3]",
     "tests/test_relation_status_policy_right.py::test_native_confirmation_and_retry_keep_requirement_proposed_and_bytes_unchanged"
-  ],
-  "open_items": [
-    "Bind registered relation-status CLI/envelopes and authentic complete current project/history acquisition; integrate active review policy in remaining product assessments.",
-    "Verify applicable supported-platform and full product acceptance contracts."
   ]
 }

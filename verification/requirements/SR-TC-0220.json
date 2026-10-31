@@ -1,17 +1,38 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0220",
-  "requirement_id": "SR-REQ-0220",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0011",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [],
   "fixture_ids": [
     "SR-FIX-BASELINE-MATERIALIZATION-v1"
   ],
+  "implementation_status": "partial",
+  "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "CLI lookup/dispatch and selected/configured scopes remain separate integrations. Native materialization supports a missing destination under a private owned canonical Linux parent; no resume, atomic whole-directory publication or cross-platform write claim.",
+    "Comparison uses the following 10.f step. Snapshot integrity and materialization do not prove historical full validation, original-project completeness, authorship, approvals or release readiness."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "`specroad baseline show <ID>` MUSS das gespeicherte Baseline-Manifest und einen neu berechneten Integritätsstatus ausgeben, ohne den Arbeitsstand zu verändern.",
+    "scope": "Fresh stored-manifest integrity view and independent materialization of the already supported unconfigured whole-project snapshot; all semantic and binary bytes come from verified archived objects."
+  },
   "preconditions": [
     "Explicit Baseline record bytes, actual archive objects and a private owned external destination parent; every protected boundary is declared."
   ],
+  "primary_verification_id": "SR-VER-0011",
+  "required_environment": {
+    "declared_minimum_python": "3.10",
+    "implementation": "cpython",
+    "measured_scope": "current-run-only"
+  },
+  "requirement_id": "SR-REQ-0220",
+  "resources": {
+    "harness_suite_timeout": null,
+    "harness_test_timeout": null,
+    "owned_temporary_files": true
+  },
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
   "steps": [
     "Read stored Baseline data with freshly recomputed integrity, without writes or cached success.",
     "Restore the verified whole-project snapshot without Git or current files, preserving exact resource bytes and semantic configuration hashes; reconstruct the root again from actual output bytes.",
@@ -20,25 +41,8 @@
     "Check original objects again after output reconstruction, preserving actual interrupted files on late source/storage failure; restore an older Baseline and registry without any original project.",
     "Re-run the unchanged W/R behavior tests after separating the unchanged read-only view from native materialization."
   ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "`specroad baseline show <ID>` MUSS das gespeicherte Baseline-Manifest und einen neu berechneten Integritätsstatus ausgeben, ohne den Arbeitsstand zu verändern.",
-    "scope": "Fresh stored-manifest integrity view and independent materialization of the already supported unconfigured whole-project snapshot; all semantic and binary bytes come from verified archived objects."
-  },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
-  "required_environment": {
-    "implementation": "cpython",
-    "declared_minimum_python": "3.10",
-    "measured_scope": "current-run-only"
-  },
-  "resources": {
-    "owned_temporary_files": true,
-    "harness_test_timeout": null,
-    "harness_suite_timeout": null
-  },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0220",
   "test_ids": [
     "tests/test_baseline_materialization.py::test_conflicting_operational_output_path_is_rejected_before_creation",
     "tests/test_baseline_materialization.py::test_destination_must_be_private_external_and_outside_protected_inputs[archive]",
@@ -101,9 +105,5 @@
     "tests/test_baseline_materialization_right.py::test_show_preserves_security_failures_instead_of_showing_verified_integrity[hardlink]",
     "tests/test_baseline_materialization_right.py::test_show_preserves_security_failures_instead_of_showing_verified_integrity[symlink]",
     "tests/test_baseline_materialization_right.py::test_symlinked_external_parent_cannot_redirect_materialization"
-  ],
-  "open_items": [
-    "CLI lookup/dispatch and selected/configured scopes remain separate integrations. Native materialization supports a missing destination under a private owned canonical Linux parent; no resume, atomic whole-directory publication or cross-platform write claim.",
-    "Comparison uses the following 10.f step. Snapshot integrity and materialization do not prove historical full validation, original-project completeness, authorship, approvals or release readiness."
   ]
 }

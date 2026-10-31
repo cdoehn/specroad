@@ -1,20 +1,45 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0320",
-  "requirement_id": "SR-REQ-0320",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0024",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [
+    2,
+    3,
+    6,
+    7
+  ],
   "fixture_ids": [
     "SR-FIX-REQIF-TYPE-OBJECTS-v1",
     "SR-FIX-REQIF-TYPE-OBJECTS-R-v1",
     "SR-FIX-REQIF-STRUCTURE-XHTML-v1",
     "SR-FIX-REQIF-STRUCTURE-XHTML-R-v1"
   ],
+  "implementation_status": "partial",
+  "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "14.j/14.k and higher integration: loss/extension manifest, ReqIFZ, full native project export/import mapping, CLI, model validation and authorized transactions. These partial codec/adapter tests are not an XSD/tool-conformance, full-suite or release pass."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Der ReqIF-1.2-Export MUSS SpecRoad-Dokumente und -Abschnitte auf `SPECIFICATION` und `SPEC-HIERARCHY`, Artefakte auf `SPEC-OBJECT`, Beziehungen auf `SPEC-RELATION` und unterstützte Feldtypen auf passende ReqIF-Datentypen abbilden.",
+    "scope": "14.h.W passive reqif-object-profile-v1 subset: read/typed preservation/deterministic serialization of supported source definitions and Spec-Objects, explicit bound native mapping projection, source provenance and stable first-export object IDs. No native-field type inference, default materialization, numeric rounding/string fallback or write authority. Unsupported content retains source bytes and blocks a complete serialization claim. All higher ReqIF requirements remain partial. 14.h.R adds exact lexical range validation, the comprehensive boundary/default/safety corpus and a bound inverse mapping for an existing source object. Serialized candidates are revalidated; ambiguous inverse tables conflict, changed native values must reproject exactly, unchanged fields retain source spelling and absence. Metadata and remaining source data are not reconstructed from names. This remains partial ReqIF object transport, not a native project exporter or full integration. 14.i.W adds the explicit passive structure/XHTML profile, typed structures and bound pure adapters, semantic prose intersection and inverse field updates. Native tree checking is limited to supplied source bindings; this is not full native import/export, XSD conformance, external-tool interoperability or write authority. 14.i.R completes the declared structure/XHTML boundary corpus and fixes Unicode structural-space loss, all-space code delimiters, passive object fallback retention, original attachment resolution, competing identity/attachment targets and prose resource failure classification. Native graph policy and stable occurrence/edge identities remain bound to supplied model bytes; full native integration stays outside this partial adapter evidence. 14.i.C separates attachment/reference validation, inert XHTML shape validation and bound field updates from prose conversion and explicit native graph binding. The bounded M12 XML reader and native M11 prose/structure assessment remain authoritative; existing W/R semantic, diagnostic and side-effect oracles are unchanged."
+  },
   "preconditions": [
     "Caller-owned complete XML bytes and seven explicit positive per-document safety limits. Mapping resource/key/hash, source hash and external source context are explicit; no project or write authorization is supplied."
   ],
+  "primary_verification_id": "SR-VER-0024",
+  "required_environment": {
+    "declared_minimum_python": "3.10",
+    "implementation": "cpython",
+    "measured_scope": "current-run-only"
+  },
+  "requirement_id": "SR-REQ-0320",
+  "resources": {
+    "harness_suite_timeout": null,
+    "harness_test_timeout": null,
+    "owned_temporary_files": true
+  },
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
   "steps": [
     "Read and deterministically reserialize typed ReqIF scalar/enumeration definitions and objects; compare lexical values, IDs, metadata, explicit/default/absent provenance and original source bytes/hash.",
     "Project only definition/type IDs and valid JSON-intersection values through the existing bound mapping; independently verify first-export identity hashes and existing-context precedence.",
@@ -31,30 +56,8 @@
     "Check exact XML versus Unicode whitespace, code delimiters, namespace/attribute and nesting/list boundaries. Preserve passive object fallbacks, original values, explicit/default absence and simplified flag spelling; fail concretely when the native semantic intersection cannot retain a value.",
     "Require actual attachment bindings for original references as well as current values, reject conflicting bytes/media at one native path and ambiguous inverse aliases. Validate strict single URI decoding, traversal/external content, all XML budgets and real native prose budgets as safety failures; propagate host I/O/resource exceptions unchanged."
   ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "Der ReqIF-1.2-Export MUSS SpecRoad-Dokumente und -Abschnitte auf `SPECIFICATION` und `SPEC-HIERARCHY`, Artefakte auf `SPEC-OBJECT`, Beziehungen auf `SPEC-RELATION` und unterstützte Feldtypen auf passende ReqIF-Datentypen abbilden.",
-    "scope": "14.h.W passive reqif-object-profile-v1 subset: read/typed preservation/deterministic serialization of supported source definitions and Spec-Objects, explicit bound native mapping projection, source provenance and stable first-export object IDs. No native-field type inference, default materialization, numeric rounding/string fallback or write authority. Unsupported content retains source bytes and blocks a complete serialization claim. All higher ReqIF requirements remain partial. 14.h.R adds exact lexical range validation, the comprehensive boundary/default/safety corpus and a bound inverse mapping for an existing source object. Serialized candidates are revalidated; ambiguous inverse tables conflict, changed native values must reproject exactly, unchanged fields retain source spelling and absence. Metadata and remaining source data are not reconstructed from names. This remains partial ReqIF object transport, not a native project exporter or full integration. 14.i.W adds the explicit passive structure/XHTML profile, typed structures and bound pure adapters, semantic prose intersection and inverse field updates. Native tree checking is limited to supplied source bindings; this is not full native import/export, XSD conformance, external-tool interoperability or write authority. 14.i.R completes the declared structure/XHTML boundary corpus and fixes Unicode structural-space loss, all-space code delimiters, passive object fallback retention, original attachment resolution, competing identity/attachment targets and prose resource failure classification. Native graph policy and stable occurrence/edge identities remain bound to supplied model bytes; full native integration stays outside this partial adapter evidence. 14.i.C separates attachment/reference validation, inert XHTML shape validation and bound field updates from prose conversion and explicit native graph binding. The bounded M12 XML reader and native M11 prose/structure assessment remain authoritative; existing W/R semantic, diagnostic and side-effect oracles are unchanged."
-  },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [
-    2,
-    3,
-    6,
-    7
-  ],
-  "json_pointers": [],
-  "required_environment": {
-    "implementation": "cpython",
-    "declared_minimum_python": "3.10",
-    "measured_scope": "current-run-only"
-  },
-  "resources": {
-    "owned_temporary_files": true,
-    "harness_test_timeout": null,
-    "harness_suite_timeout": null
-  },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0320",
   "test_ids": [
     "tests/test_reqif_objects.py::test_bad_explicit_values_are_not_replaced_by_valid_defaults[BOOLEAN-False]",
     "tests/test_reqif_objects.py::test_bad_explicit_values_are_not_replaced_by_valid_defaults[DATE-2023-02-29T00:00:00Z]",
@@ -637,8 +640,5 @@
     "tests/test_reqif_structure_right.py::test_xml_structural_whitespace_is_distinct_from_inline_text[ ]",
     "tests/test_reqif_structure_right.py::test_xml_structural_whitespace_is_distinct_from_inline_text[\\r\\n]",
     "tests/test_reqif_structure_right.py::test_xml_structural_whitespace_is_distinct_from_inline_text[\\t]"
-  ],
-  "open_items": [
-    "14.j/14.k and higher integration: loss/extension manifest, ReqIFZ, full native project export/import mapping, CLI, model validation and authorized transactions. These partial codec/adapter tests are not an XSD/tool-conformance, full-suite or release pass."
   ]
 }

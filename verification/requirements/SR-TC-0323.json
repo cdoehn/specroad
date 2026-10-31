@@ -1,31 +1,5 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0323",
-  "requirement_id": "SR-REQ-0323",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0024",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
-  "fixture_ids": [
-    "SR-FIX-REQIFZ-CONTAINER-R-v1",
-    "SR-FIX-REQIFZ-CONTAINER-v1"
-  ],
-  "preconditions": [
-    "Explicit immutable member bytes, a nonempty unique document selection, expected full archive hash for reads, per-document ReqIFLimits and a positive hard expansion bound; no implicit filesystem or native target."
-  ],
-  "steps": [
-    "Compare actual generated ZIP bytes with an independently built canonical container, retaining exact XML, attachment, manifest-like and unused member bytes; derive the complete external transport manifest.",
-    "Resolve each original URI reference relative to its selected XML member, preserve document identity separation and require exact actual bytes without basename/case fallback or a private mandatory ZIP manifest.",
-    "Reject missing/changed bindings, invalid selected XML, unsafe members and noncanonical containers before returning data; enforce existing XML safety, portable targets and the explicit expansion bound.",
-    "Require the existing explicit native attachment descriptor for XHTML projection, preserve owned returned data, propagate host failures and verify the pure codec in isolated Core/PYZ distributions.",
-    "Verify local/central/end header agreement and contiguous real byte extents before any member read; reject forged sizes, overlapping or omitted data, hidden original filenames and every noncanonical metadata field.",
-    "Exercise actual CRC corruption, all document URI attributes and original/fallback subtrees, exact aggregate and per-XML hard bounds, interdocument passive references, owned results and real host failures."
-  ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "Ein ReqIFZ-Archiv MUSS als ZIP-Container nach dem Sicherheits- und Kanonisierungsprofil in Kapitel 10.16 verarbeitet werden.",
-    "scope": "14.k.W implements the pure reqifz-container-v1 codec over the shared canonical stored ZIP kernel. Explicit selected documents and real document-relative member bindings, byte-identical roundtrip and a nonrecursive external transport manifest are covered. Existing manifest-bound work archive APIs retain their behavior. This is a partial transport proof, not a complete project export/import, loss approval, full-suite or release result. 14.k.R adds the complete hostile metadata/extent, URI and per-document/aggregate-boundary matrix; invalid original ZIP path spelling is rejected before normalization. W behavior and legacy archive errors are retained."
-  },
+  "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [],
   "expected_exit_codes": [
     0,
@@ -34,18 +8,47 @@
     6,
     7
   ],
+  "fixture_ids": [
+    "SR-FIX-REQIFZ-CONTAINER-R-v1",
+    "SR-FIX-REQIFZ-CONTAINER-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "Full native project export scopes, deterministic snapshot metadata, CLI/import/write integration and foreign-tool interoperability are not established by this pure container proof."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Ein ReqIFZ-Archiv MUSS als ZIP-Container nach dem Sicherheits- und Kanonisierungsprofil in Kapitel 10.16 verarbeitet werden.",
+    "scope": "14.k.W implements the pure reqifz-container-v1 codec over the shared canonical stored ZIP kernel. Explicit selected documents and real document-relative member bindings, byte-identical roundtrip and a nonrecursive external transport manifest are covered. Existing manifest-bound work archive APIs retain their behavior. This is a partial transport proof, not a complete project export/import, loss approval, full-suite or release result. 14.k.R adds the complete hostile metadata/extent, URI and per-document/aggregate-boundary matrix; invalid original ZIP path spelling is rejected before normalization. W behavior and legacy archive errors are retained."
+  },
+  "preconditions": [
+    "Explicit immutable member bytes, a nonempty unique document selection, expected full archive hash for reads, per-document ReqIFLimits and a positive hard expansion bound; no implicit filesystem or native target."
+  ],
+  "primary_verification_id": "SR-VER-0024",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0323",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Compare actual generated ZIP bytes with an independently built canonical container, retaining exact XML, attachment, manifest-like and unused member bytes; derive the complete external transport manifest.",
+    "Resolve each original URI reference relative to its selected XML member, preserve document identity separation and require exact actual bytes without basename/case fallback or a private mandatory ZIP manifest.",
+    "Reject missing/changed bindings, invalid selected XML, unsafe members and noncanonical containers before returning data; enforce existing XML safety, portable targets and the explicit expansion bound.",
+    "Require the existing explicit native attachment descriptor for XHTML projection, preserve owned returned data, propagate host failures and verify the pure codec in isolated Core/PYZ distributions.",
+    "Verify local/central/end header agreement and contiguous real byte extents before any member read; reject forged sizes, overlapping or omitted data, hidden original filenames and every noncanonical metadata field.",
+    "Exercise actual CRC corruption, all document URI attributes and original/fallback subtrees, exact aggregate and per-XML hard bounds, interdocument passive references, owned results and real host failures."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0323",
   "test_ids": [
     "tests/test_reqifz.py::test_all_member_paths_are_checked_even_for_unused_members[../escape]",
     "tests/test_reqifz.py::test_all_member_paths_are_checked_even_for_unused_members[.git/config]",
@@ -241,8 +244,5 @@
     "tests/test_reqifz_right.py::test_unused_bytes_order_and_member_names_cannot_be_repaired_or_ignored[reversed]",
     "tests/test_reqifz_right.py::test_unused_bytes_order_and_member_names_cannot_be_repaired_or_ignored[tail]",
     "tests/test_reqifz_right.py::test_unused_bytes_order_and_member_names_cannot_be_repaired_or_ignored[truncated]"
-  ],
-  "open_items": [
-    "Full native project export scopes, deterministic snapshot metadata, CLI/import/write integration and foreign-tool interoperability are not established by this pure container proof."
   ]
 }

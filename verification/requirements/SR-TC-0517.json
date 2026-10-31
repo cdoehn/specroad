@@ -1,52 +1,52 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0517",
-  "requirement_id": "SR-REQ-0517",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0022",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [
+    "SRV110"
+  ],
+  "expected_exit_codes": [],
   "fixture_ids": [
     "SR-FIX-SRX-CONTEXT-v1"
   ],
-  "preconditions": [
-    "Explicit JSON-only caller projections and SRX 1.0 literal expression."
+  "implementation_status": "partial",
+  "json_pointers": [
+    "/expression",
+    "/version"
   ],
-  "steps": [
-    "Capture own immutable data; evaluate literal or reject invalid declarations without side effects."
+  "method": "automated_behavior",
+  "open_items": [
+    "Complete remaining SRX operators and integration with validation, configuration and profiles in the scheduled plan steps.",
+    "Structure/work policy and complete language conformance are not established by literal evaluation."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Jede SRX-Bedingung MUSS ein Objekt mit `language = \"srx\"`, `version = \"1.0\"` und einem `expression`-Knoten sein.",
     "scope": "Literal/context foundation only. Other operators, effective profile resolution, budget policy and CLI integration remain pending."
   },
-  "expected_diagnostics": [
-    "SRV110"
+  "preconditions": [
+    "Explicit JSON-only caller projections and SRX 1.0 literal expression."
   ],
-  "expected_exit_codes": [],
-  "json_pointers": [
-    "/expression",
-    "/version"
-  ],
+  "primary_verification_id": "SR-VER-0022",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0517",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Capture own immutable data; evaluate literal or reject invalid declarations without side effects."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0517",
   "test_ids": [
     "test_srx_context.SrxContextWorkTests.test_unknown_version_is_rejected",
     "test_srx_context.SrxContextWorkTests.test_textual_expression_is_rejected",
     "test_srx_context_right.SrxContextRightTests.test_unknown_language_or_numeric_version_no_fallback",
     "test_srx_context_right.SrxContextRightTests.test_missing_or_extra_envelope_fields_rejected"
-  ],
-  "open_items": [
-    "Complete remaining SRX operators and integration with validation, configuration and profiles in the scheduled plan steps.",
-    "Structure/work policy and complete language conformance are not established by literal evaluation."
   ]
 }

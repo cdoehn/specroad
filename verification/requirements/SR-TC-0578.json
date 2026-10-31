@@ -1,27 +1,5 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0578",
-  "requirement_id": "SR-REQ-0578",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0037",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
-  "fixture_ids": [
-    "SR-FIX-OWNED-TEMP-v1",
-    "SR-FIX-ISOLATED-CPYTHON-v1"
-  ],
-  "preconditions": [
-    "R: trusted synchronous operational drivers; complete explicit SRX inputs and owned temporary payload/transaction roots; fixture-labelled samples only for exact arithmetic/failure injection."
-  ],
-  "steps": [
-    "Drive real SRX/graph and bounded native payload work through pure interval signals; compare complete results and byte hashes with the unobserved execution.",
-    "Check intermediate unknown/regression/source changes, actual native publication phase boundaries and unchanged authority/receipt contracts for the selected cases."
-  ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "Die Budgetüberwachung MUSS die begrenzten internen Kontrollintervalle aus Anhang O.2 ohne externe Überwachungsprozesse einhalten.",
-    "scope": "Actual SRX dispatches yield at every 512 units, loaded-graph node/edge processing at every 128 units, and a guarded hashing reader at every 65536 actual bytes including short reads. Real runtime drivers sample these pure signals. Phase edges bracket validation, results, graph load/view sorting, hashing and the existing native prepared publication. Signals neither grant authority nor finalize receipts. 6.d.C centralizes operational metric projection and the CLI summary adapter only; the same unchanged W/R behavior cases bind measurements, semantic parity, unknown handling and native authority boundaries."
-  },
+  "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [],
   "expected_exit_codes": [
     0,
@@ -29,21 +7,46 @@
     3,
     7
   ],
+  "fixture_ids": [
+    "SR-FIX-OWNED-TEMP-v1",
+    "SR-FIX-ISOLATED-CPYTHON-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [
     "/summary/runtime/invocation/controls",
     "/summary/runtime/cumulative/control_checks"
   ],
+  "method": "automated_behavior",
+  "open_items": [
+    "Measured scope remains explicit in-process windows and the controlled SRX/loaded-graph, payload-hash and native prepared-publication drivers. Pure control signals are not durable checkpoints. Whole-command bootstrap/final delivery, all-phase subtotals, all remaining consumers, child processes, persistent Work identity/resume, other RSS platform adapters and full runtime/platform performance acceptance remain open. Graph input completeness and native publication authority remain independent existing contracts; PublishedFiles still requires receipt finalization."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Die Budgetüberwachung MUSS die begrenzten internen Kontrollintervalle aus Anhang O.2 ohne externe Überwachungsprozesse einhalten.",
+    "scope": "Actual SRX dispatches yield at every 512 units, loaded-graph node/edge processing at every 128 units, and a guarded hashing reader at every 65536 actual bytes including short reads. Real runtime drivers sample these pure signals. Phase edges bracket validation, results, graph load/view sorting, hashing and the existing native prepared publication. Signals neither grant authority nor finalize receipts. 6.d.C centralizes operational metric projection and the CLI summary adapter only; the same unchanged W/R behavior cases bind measurements, semantic parity, unknown handling and native authority boundaries."
+  },
+  "preconditions": [
+    "R: trusted synchronous operational drivers; complete explicit SRX inputs and owned temporary payload/transaction roots; fixture-labelled samples only for exact arithmetic/failure injection."
+  ],
+  "primary_verification_id": "SR-VER-0037",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0578",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Drive real SRX/graph and bounded native payload work through pure interval signals; compare complete results and byte hashes with the unobserved execution.",
+    "Check intermediate unknown/regression/source changes, actual native publication phase boundaries and unchanged authority/receipt contracts for the selected cases."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0578",
   "test_ids": [
     "tests/test_runtime_consumption_right.py::test_actual_srx_dispatch_boundaries_preserve_complete_value_and_usage[1022]",
     "tests/test_runtime_consumption_right.py::test_actual_srx_dispatch_boundaries_preserve_complete_value_and_usage[1023]",
@@ -78,8 +81,5 @@
     "tests/test_runtime_consumption_right.py::test_untyped_control_cannot_invoke_native_sampling_or_change_counts[None]",
     "tests/test_runtime_consumption_right.py::test_untyped_control_cannot_invoke_native_sampling_or_change_counts[control]",
     "tests/test_runtime_consumption_right.py::test_untyped_control_cannot_invoke_native_sampling_or_change_counts[point1]"
-  ],
-  "open_items": [
-    "Measured scope remains explicit in-process windows and the controlled SRX/loaded-graph, payload-hash and native prepared-publication drivers. Pure control signals are not durable checkpoints. Whole-command bootstrap/final delivery, all-phase subtotals, all remaining consumers, child processes, persistent Work identity/resume, other RSS platform adapters and full runtime/platform performance acceptance remain open. Graph input completeness and native publication authority remain independent existing contracts; PublishedFiles still requires receipt finalization."
   ]
 }

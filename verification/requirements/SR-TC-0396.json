@@ -1,27 +1,5 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0396",
-  "requirement_id": "SR-REQ-0396",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0028",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
-  "fixture_ids": [
-    "SR-FIX-RECORD-FIELDS-v1"
-  ],
-  "preconditions": [
-    "Owned current-schema SourceRelations and optional effective configuration values; no project loading, graph traversal or configuration inference."
-  ],
-  "steps": [
-    "Classify unconditional and conditional stored artifacts with and without an explicitly resolved configuration.",
-    "Evaluate allowed SRX expressions against effective values and constant common artifact metadata; require a Boolean result and reject project, relation, graph and nonmetadata access.",
-    "Require explicit configuration when requested, reject implicit truth testing of classifications and cross-project binding, and validate forbidden access throughout all executable branches including skipped quantifiers."
-  ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "Ein fachliches Artefakt außer `configuration` DARF ein optionales Feld `applicability` mit einer SRX-1.0-Bedingung besitzen, die ausschließlich auf die ausgewählte Konfiguration und konstante Artefaktmetadaten zugreift.",
-    "scope": "Supplied artifact applicability only with explicit applicable/excluded/potentially_applicable states. An exact Boolean require_configuration option rejects absent required selection; classifications cannot be used as implicit Boolean gate decisions. All executable branches obey the static metadata/configuration boundary and selected configuration shares the artifact project prefix."
-  },
+  "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [
     "configuration_project_mismatch",
     "configuration_required",
@@ -29,20 +7,45 @@
     "invalid_applicability"
   ],
   "expected_exit_codes": [],
+  "fixture_ids": [
+    "SR-FIX-RECORD-FIELDS-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [
     "/applicability"
   ],
+  "method": "automated_behavior",
+  "open_items": [
+    "Pure scope-stage cleanup follows in 9.c.C. Scope closure, project-level configuration-bound gates and command integration remain assigned to later M9 steps; the API guard is not a release approval."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Ein fachliches Artefakt außer `configuration` DARF ein optionales Feld `applicability` mit einer SRX-1.0-Bedingung besitzen, die ausschließlich auf die ausgewählte Konfiguration und konstante Artefaktmetadaten zugreift.",
+    "scope": "Supplied artifact applicability only with explicit applicable/excluded/potentially_applicable states. An exact Boolean require_configuration option rejects absent required selection; classifications cannot be used as implicit Boolean gate decisions. All executable branches obey the static metadata/configuration boundary and selected configuration shares the artifact project prefix."
+  },
+  "preconditions": [
+    "Owned current-schema SourceRelations and optional effective configuration values; no project loading, graph traversal or configuration inference."
+  ],
+  "primary_verification_id": "SR-VER-0028",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0396",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Classify unconditional and conditional stored artifacts with and without an explicitly resolved configuration.",
+    "Evaluate allowed SRX expressions against effective values and constant common artifact metadata; require a Boolean result and reject project, relation, graph and nonmetadata access.",
+    "Require explicit configuration when requested, reject implicit truth testing of classifications and cross-project binding, and validate forbidden access throughout all executable branches including skipped quantifiers."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0396",
   "test_ids": [
     "test_configuration_applicability.ConfigurationApplicabilityWorkTests.test_artifact_must_supply_original_source_bytes",
     "test_configuration_applicability.ConfigurationApplicabilityWorkTests.test_computed_verification_result_is_not_constant_metadata",
@@ -158,8 +161,5 @@
     "tests/test_configuration_applicability_right.py::test_selection_requirement_is_an_exact_boolean_option[value6]",
     "tests/test_configuration_applicability_right.py::test_source_byte_replacement_cannot_hide_configuration_applicability",
     "tests/test_configuration_applicability_right.py::test_source_identity_is_rebuilt_from_replacement_bytes"
-  ],
-  "open_items": [
-    "Pure scope-stage cleanup follows in 9.c.C. Scope closure, project-level configuration-bound gates and command integration remain assigned to later M9 steps; the API guard is not a release approval."
   ]
 }

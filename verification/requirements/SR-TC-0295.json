@@ -1,47 +1,51 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0295",
-  "requirement_id": "SR-REQ-0295",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0022",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [
+    "SRV110",
+    "SRV111"
+  ],
+  "expected_exit_codes": [],
   "fixture_ids": [
     "SR-FIX-SRX-RESOURCES-v1"
   ],
-  "preconditions": [
-    "Explicit SRX 1.0 program and immutable four-root context; versioned AST and work policy."
+  "implementation_status": "partial",
+  "json_pointers": [
+    "/expression",
+    "/project/resource_limits"
   ],
-  "steps": [
-    "Validate full executable AST against positive node/depth limits before evaluation.",
-    "Evaluate to completion beyond soft expression/quantifier/graph targets and inspect owned work observations.",
-    "Observe first soft overruns without hiding later actual errors; reject inactive forbidden expressions and foreign conversion hooks before execution."
+  "method": "automated_behavior",
+  "open_items": [
+    "Complete profile/CLI composition and persistent checkpoint/work adapters in their scheduled steps.",
+    "These counters do not measure CPU instructions, wall time, host memory or authenticate external quota data."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Die SRX-Konfiguration MUSS AST-Knoten und Strukturtiefe als explizite Strukturgrenzen sowie Iterations-, Graph- und Auswertungsschrittzahlen als weiche fortsetzbare Arbeitsziele nach Anhang O.1 unterscheiden.",
     "scope": "Explicit AST node/depth limits and deterministic work counters. Soft overrun continues in-process without fabricated checkpoint, truncated value or rule failure."
   },
-  "expected_diagnostics": [
-    "SRV110",
-    "SRV111"
+  "preconditions": [
+    "Explicit SRX 1.0 program and immutable four-root context; versioned AST and work policy."
   ],
-  "expected_exit_codes": [],
-  "json_pointers": [
-    "/expression",
-    "/project/resource_limits"
-  ],
+  "primary_verification_id": "SR-VER-0022",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0295",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Validate full executable AST against positive node/depth limits before evaluation.",
+    "Evaluate to completion beyond soft expression/quantifier/graph targets and inspect owned work observations.",
+    "Observe first soft overruns without hiding later actual errors; reject inactive forbidden expressions and foreign conversion hooks before execution."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0295",
   "test_ids": [
     "tests/test_srx_resources.py::test_exact_node_boundary_passes",
     "tests/test_srx_resources.py::test_node_boundary_reports_first_overflow_pointer",
@@ -51,9 +55,5 @@
     "tests/test_srx_resources_right.py::test_wide_ast_stops_at_small_limit_before_late_unknown_operator",
     "tests/test_srx_resources_right.py::test_deep_ast_is_validated_without_python_recursion",
     "tests/test_srx_resources_right.py::test_large_valid_ast_is_not_limited_by_work_target"
-  ],
-  "open_items": [
-    "Complete profile/CLI composition and persistent checkpoint/work adapters in their scheduled steps.",
-    "These counters do not measure CPU instructions, wall time, host memory or authenticate external quota data."
   ]
 }

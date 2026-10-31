@@ -38,6 +38,8 @@ def pytest_addoption(parser):
     group.addoption("--sr-runtime-journal", type=Path)
     group.addoption("--sr-timing-request", type=Path)
     group.addoption("--sr-expected-tests", type=int, help="Required number of collected tests")
+    group.addoption("--sr-ci-plan", type=Path, help="Bound complete CI package plan")
+    group.addoption("--sr-ci-shard", type=int, help="Exact package index from the CI plan")
 
 
 class VerificationSession:
@@ -63,6 +65,25 @@ class VerificationSession:
         self.specification = ROOT / "docs/specification/SpecRoad_Spezifikation.md"
         self.binding = None
         self.required_ids = set()
+        self.ci_plan = None
+        self.ci_shard = config.getoption('sr_ci_shard')
+        plan_path = config.getoption('sr_ci_plan')
+        if (plan_path is None) != (self.ci_shard is None):
+            raise CatalogError('CI plan and package must be supplied together')
+        if plan_path is not None:
+            from .ci_packages import validate_plan, selected_pairs
+            self.ci_plan = validate_plan(_load_report(plan_path))
+            selected = selected_pairs(self.ci_plan, self.ci_shard)
+            if (self.gate or self.expected != len(selected)
+                    or config.getoption('keyword') or config.getoption('markexpr')
+                    or config.getoption('ignore') or config.getoption('ignore_glob')
+                    or (not self.worker and (
+                        config.getoption('dist', default='no') != 'worksteal'
+                        or config.getoption('numprocesses', default=0) != 4))
+                    or source_identity(ROOT) != self.ci_plan['bindings']['source_sha256']
+                    or not platform_identity()['python'].startswith(self.ci_plan['context']['python']+'.')
+                    or [Path(a).absolute() for a in config.args] != [ROOT/'tests']):
+                raise CatalogError('CI package must use its exact unfiltered source and interpreter')
         if self.worker:
             self.required_ids = set(config.workerinput.get("sr_required_ids", []))
             if not config.getoption('collectonly'):
@@ -165,6 +186,23 @@ def pytest_configure(config):
         config._specroad_verification = VerificationSession(config)
     except (CatalogError, OSError, ValueError, sqlite3.Error) as error:
         raise pytest.UsageError(str(error)) from error
+
+
+@pytest.hookimpl(trylast=True)
+def pytest_collection_modifyitems(session, config, items):
+    state = config._specroad_verification
+    if state.ci_plan is None:
+        return
+    from .ci_packages import selected_pairs
+    actual = {item.nodeid: test_identity(item) for item in items}
+    expected = {t['nodeid']:t['test_id'] for t in state.ci_plan['tests']}
+    if len(actual) != len(items) or actual != expected:
+        raise pytest.UsageError('Full collection differs from the bound CI plan')
+    selected = selected_pairs(state.ci_plan, state.ci_shard)
+    indexed = {item.nodeid:item for item in items}
+    omitted = [item for item in items if item.nodeid not in selected]
+    items[:] = [indexed[node] for node in selected]
+    config.hook.pytest_deselected(items=omitted)
 
 
 @pytest.hookimpl(tryfirst=True)

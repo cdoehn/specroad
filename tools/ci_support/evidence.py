@@ -16,7 +16,8 @@ def inspect_report_archive(raw, request, version, *, run_id=None, attempt=None):
         if len(members) > 100 or sum(i.file_size for i in members) > MAX_BYTES:
             raise CIObservationError('oversized_report_archive')
         reports = {}
-        for name in ('parallel-evidence.json', 'serial-evidence.json', 'summary.json', 'run-context.json'):
+        for name in ('parallel-evidence.json', 'serial-evidence.json', 'summary.json', 'run-context.json',
+                     'ci-plan.json', 'shard-receipts.json'):
             matches = [i for i in members if i.filename.rsplit('/', 1)[-1] == name and not i.is_dir()]
             if len(matches) > 1:
                 raise CIObservationError('ambiguous_report_member')
@@ -48,6 +49,15 @@ def inspect_report_archive(raw, request, version, *, run_id=None, attempt=None):
                 or type(runtime.get('python')) is not str or not runtime['python'].startswith(version + '.')
                 or type(execution) is not dict or execution.get('workers') != (0 if name.startswith('serial') else 4)):
             raise CIObservationError('test_runtime_or_mode_mismatch')
+        if 'ci_packages' in report or 'ci_shards' in execution:
+            from verification_support.ci_packages import verify_aggregate
+            try:
+                plan = reports['ci-plan.json']
+                verify_aggregate(plan, reports['shard-receipts.json'], report)
+                if plan['context'] != context or execution.get('distribution') != 'worksteal':
+                    raise ValueError('Wrong aggregate execution context')
+            except (KeyError, TypeError, ValueError) as error:
+                raise CIObservationError('invalid_package_aggregate') from error
     comparison = None
     if request.mode == 'both':
         comparison = compare_reports([reports[name] for name in required])

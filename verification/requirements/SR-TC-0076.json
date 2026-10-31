@@ -1,39 +1,42 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0076",
-  "requirement_id": "SR-REQ-0076",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0006",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [],
   "fixture_ids": [
     "SR-FIX-REQUIREMENT-INPUT-v1"
   ],
-  "preconditions": [
-    "Explicit invocation of the bounded duration value constructor; no duration inference from arbitrary natural-language or custom semantics."
-  ],
-  "steps": [
-    "Read ISO designator durations or quantities with supported explicit UCUM time atoms; preserve values and reject unsupported/unitless forms."
+  "implementation_status": "partial",
+  "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "Full profile-bound duration/unit validation at designated semantic fields and coverage of additional valid ISO/UCUM representations remain open. Arbitrary preserved semantics are not declared fully duration-validated."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Zeitdauern in strukturierten Semantikfeldern MÜSSEN als ISO-8601-Duration oder als Wert mit expliziter UCUM-kompatibler Einheit gespeichert werden.",
     "scope": "Explicit duration value helper: known UCUM time atoms and unsigned ISO designator forms; no complete UCUM expression engine, dimensional conversion or automatic validation of arbitrary semantic trees."
   },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
+  "preconditions": [
+    "Explicit invocation of the bounded duration value constructor; no duration inference from arbitrary natural-language or custom semantics."
+  ],
+  "primary_verification_id": "SR-VER-0006",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0076",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Read ISO designator durations or quantities with supported explicit UCUM time atoms; preserve values and reject unsupported/unitless forms."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0076",
   "test_ids": [
     "test_requirement_right.RequirementDurationTests.test_iso_durations_preserved_without_unit_conversion",
     "test_requirement_right.RequirementDurationTests.test_quantity_requires_explicit_supported_time_unit",
@@ -41,8 +44,5 @@
     "test_requirement_right.RequirementDurationTests.test_invalid_iso_designators_rejected",
     "test_requirement_right.RequirementDurationTests.test_unknown_units_report_unsupported_not_validated",
     "test_requirement_right.RequirementDurationTests.test_explicit_duration_can_be_used_in_requirement_semantics"
-  ],
-  "open_items": [
-    "Full profile-bound duration/unit validation at designated semantic fields and coverage of additional valid ISO/UCUM representations remain open. Arbitrary preserved semantics are not declared fully duration-validated."
   ]
 }

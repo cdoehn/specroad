@@ -1,49 +1,52 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0601",
-  "requirement_id": "SR-REQ-0601",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0039",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [
+    0,
+    3
+  ],
   "fixture_ids": [
     "SR-FIX-OWNED-TEMP-v1",
     "SR-FIX-ISOLATED-CPYTHON-v1"
   ],
-  "preconditions": [
-    "Current trusted runtime/SRX APIs with owned in-memory model, plan, scope and graph fixtures; native environment command against owned temporary roots."
+  "implementation_status": "partial",
+  "json_pointers": [
+    "/result/resource_policy",
+    "/result/resource_policy/classified_limits"
   ],
-  "steps": [
-    "Resolve declared profiles and explicit operational targets through current command/library consumers.",
-    "Inspect complete machine outputs, actual SRX results/errors and bound semantic identities; compare immutable inputs before and after selection.",
-    "Exercise the R historical-quantity, complete-work and malformed-input cases listed below; preserve the W tests unchanged.",
-    "Re-run the unchanged W/R behavioral cases after separating internal runtime options from semantic constraints; retain the same result values, errors, origins and side effects."
+  "method": "automated_behavior",
+  "open_items": [
+    "Partial 6.c.W/R behavior evidence with unchanged C regression coverage. Adaptive work scheduling, measured aggregate consumption, persistent Work/checkpoints, future command consumers and the complete runtime/platform matrix remain open. Historical hash-policy migration is a later migration-plan responsibility; no existing baseline is rewritten. Supplied-model and query-page tests do not prove filesystem completeness or a complete query engine."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Eine Überschreitung eines weichen Arbeitsbudgets DARF NICHT allein einen fachlich ausführbaren Gesamtauftrag mit Fehler beenden.",
     "scope": "An actual complete SRX evaluation succeeds beyond its explicit soft operation target in both profiles, retaining the complete Boolean result and counters. Its hard structural overflow still raises the original structured error. The explicit count fixture also observes profile-specific soft meter thresholds without claiming a timed benchmark or persisted continuation. R executes complete supplied-target assessment, 1025 actual SRX iterations and multi-step graph work beyond explicit positive unit targets, retaining complete outputs. The independent hard AST check still blocks before operator execution even with large soft targets. C retains these same behavioral oracles and public machine contracts while separating the internal option and semantic-constraint types."
   },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [
-    0,
-    3
+  "preconditions": [
+    "Current trusted runtime/SRX APIs with owned in-memory model, plan, scope and graph fixtures; native environment command against owned temporary roots."
   ],
-  "json_pointers": [
-    "/result/resource_policy",
-    "/result/resource_policy/classified_limits"
-  ],
+  "primary_verification_id": "SR-VER-0039",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0601",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Resolve declared profiles and explicit operational targets through current command/library consumers.",
+    "Inspect complete machine outputs, actual SRX results/errors and bound semantic identities; compare immutable inputs before and after selection.",
+    "Exercise the R historical-quantity, complete-work and malformed-input cases listed below; preserve the W tests unchanged.",
+    "Re-run the unchanged W/R behavioral cases after separating internal runtime options from semantic constraints; retain the same result values, errors, origins and side effects."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0601",
   "test_ids": [
     "tests/test_runtime_resource_policy.py::test_profile_preserves_hard_structure_and_soft_excess_does_not_end_valid_evaluation[constrained]",
     "tests/test_runtime_resource_policy.py::test_profile_preserves_hard_structure_and_soft_excess_does_not_end_valid_evaluation[standard]",
@@ -57,8 +60,5 @@
     "tests/test_runtime_resource_policy_right.py::test_large_actual_srx_evaluation_completes_above_legacy_counters_with_same_output[standard]",
     "tests/test_runtime_resource_policy_right.py::test_large_work_target_never_bypasses_current_srx_structure_recheck[constrained]",
     "tests/test_runtime_resource_policy_right.py::test_large_work_target_never_bypasses_current_srx_structure_recheck[standard]"
-  ],
-  "open_items": [
-    "Partial 6.c.W/R behavior evidence with unchanged C regression coverage. Adaptive work scheduling, measured aggregate consumption, persistent Work/checkpoints, future command consumers and the complete runtime/platform matrix remain open. Historical hash-policy migration is a later migration-plan responsibility; no existing baseline is rewritten. Supplied-model and query-page tests do not prove filesystem completeness or a complete query engine."
   ]
 }

@@ -1,11 +1,7 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0130",
-  "requirement_id": "SR-REQ-0130",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0010",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [],
   "fixture_ids": [
     "SR-FIX-RECORD-FIELDS-v1",
     "SR-FIX-VERIFICATION-CONTRACTS-v1",
@@ -13,9 +9,33 @@
     "SR-FIX-VERIFICATION-REQUIRED-CHECKS-v1",
     "SR-FIX-VERIFICATION-REQUIRED-CHECKS-RIGHT-v1"
   ],
+  "implementation_status": "partial",
+  "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "Project evaluation-identity conflicts, Evidence/run selection, replacements, full aggregation, command/readiness integration and broader release/platform evidence remain open. Live inventory, resource-use and current-review provenance remain explicit provider responsibilities; hashes do not authenticate providers or external execution."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Ein Verification-Artefakt MUSS Vorbedingungen, Prüfgegenstand, Verfahren, Oracle oder Pass-Kriterium, erforderliche Evidence-Arten, vollständige `evidence_slots` nach Kapitel 10.5.2 und eine Konfigurationspolicy `independent` oder `bound` definieren.",
+    "scope": "Passive record-field contracts and lexical reference constraints only. No graph closure, payload hash verification, document rendering, successful verification or write authorization. Explicit-contract pair resolution and new-draft default are covered; supplied bytes do not prove live inventory or configuration applicability. Direct Test targets now contribute the normative implicit overall check with contract_id=test_id. Neither an invented Verification record nor a configuration-policy guess is produced. 12.l.W adds independent whole-supplied-project obligations for Requirements, Capabilities and Tasks, every explicit slot and direct Test contract. Unknown applicability remains incomplete, excluded required dependencies fail with SRV141, missing keys are incomplete/SRV176 and extra keys SRV175/code 3. Exact coverage is only ready, never passed or proof of live inventory. 12.l.R binds independent native scopes and complete provider inventory; native closure includes required dependencies before comparison. Query pages are recomputed without a verification evaluation. Missing-only keys stay incomplete; foreign keys produce SRV175 with both missing_checks and unexpected_keys and the independently bound required_set_sha256."
+  },
   "preconditions": [
     "Owned current-schema records and read-only model APIs; synthetic actors and hashes are not actual approvals or external test evidence."
   ],
+  "primary_verification_id": "SR-VER-0010",
+  "required_environment": {
+    "declared_minimum_python": "3.10",
+    "implementation": "cpython",
+    "measured_scope": "current-run-only"
+  },
+  "requirement_id": "SR-REQ-0130",
+  "resources": {
+    "harness_suite_timeout": null,
+    "harness_test_timeout": null,
+    "owned_temporary_files": true
+  },
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
   "steps": [
     "Load supported stored records, reject malformed local fields and compare original bytes without executing referenced operations.",
     "Resolve every declared slot for an explicit subject/contract verified_by pair; bind actual contract/test bytes and inspect passive metadata without executing code. Prepare only new draft defaults when no additional dimension is declared.",
@@ -23,25 +43,8 @@
     "Derive required keys independently from every applicable subject in an owned whole-project model, native verified_by targets and all slots. Compare descriptor coverage without changing the scope; retain missing or unresolved obligations and reject foreign keys. Bind explicit selected configuration and preserve input files without executing tests or Evidence.",
     "Rebuild native seeds, query pages and closure from a separately supplied ScopeDescriptor and explicit ClosureBindings matched to the whole model inventory. Verify that descriptor selections cannot replace subjects, drop strong dependencies or enlarge scope; report all missing and foreign keys separately."
   ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "Ein Verification-Artefakt MUSS Vorbedingungen, Prüfgegenstand, Verfahren, Oracle oder Pass-Kriterium, erforderliche Evidence-Arten, vollständige `evidence_slots` nach Kapitel 10.5.2 und eine Konfigurationspolicy `independent` oder `bound` definieren.",
-    "scope": "Passive record-field contracts and lexical reference constraints only. No graph closure, payload hash verification, document rendering, successful verification or write authorization. Explicit-contract pair resolution and new-draft default are covered; supplied bytes do not prove live inventory or configuration applicability. Direct Test targets now contribute the normative implicit overall check with contract_id=test_id. Neither an invented Verification record nor a configuration-policy guess is produced. 12.l.W adds independent whole-supplied-project obligations for Requirements, Capabilities and Tasks, every explicit slot and direct Test contract. Unknown applicability remains incomplete, excluded required dependencies fail with SRV141, missing keys are incomplete/SRV176 and extra keys SRV175/code 3. Exact coverage is only ready, never passed or proof of live inventory. 12.l.R binds independent native scopes and complete provider inventory; native closure includes required dependencies before comparison. Query pages are recomputed without a verification evaluation. Missing-only keys stay incomplete; foreign keys produce SRV175 with both missing_checks and unexpected_keys and the independently bound required_set_sha256."
-  },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
-  "required_environment": {
-    "implementation": "cpython",
-    "declared_minimum_python": "3.10",
-    "measured_scope": "current-run-only"
-  },
-  "resources": {
-    "owned_temporary_files": true,
-    "harness_test_timeout": null,
-    "harness_suite_timeout": null
-  },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0130",
   "test_ids": [
     "test_record_schemas.RecordWorkTests.test_minimum_required_fields_are_not_synthesized",
     "test_record_schemas.RecordWorkTests.test_reference_types_and_identity_grammars_are_checked",
@@ -219,8 +222,5 @@
     "tests/test_verification_required_checks_right.py::test_stale_or_reduced_scope_provider_inventory_is_rejected[inventory-hash]",
     "tests/test_verification_required_checks_right.py::test_stale_or_reduced_scope_provider_inventory_is_rejected[missing-resource]",
     "tests/test_verification_required_checks_right.py::test_stale_or_reduced_scope_provider_inventory_is_rejected[omit-record]"
-  ],
-  "open_items": [
-    "Project evaluation-identity conflicts, Evidence/run selection, replacements, full aggregation, command/readiness integration and broader release/platform evidence remain open. Live inventory, resource-use and current-review provenance remain explicit provider responsibilities; hashes do not authenticate providers or external execution."
   ]
 }

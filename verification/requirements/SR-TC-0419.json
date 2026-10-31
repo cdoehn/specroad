@@ -1,27 +1,5 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0419",
-  "requirement_id": "SR-REQ-0419",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0029",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
-  "fixture_ids": [
-    "SR-FIX-PROFILE-COMPOSITION-v1"
-  ],
-  "preconditions": [
-    "Explicit exact Core key, available resource bytes and ordered project/CLI selections."
-  ],
-  "steps": [
-    "Compose the selected chain and compare actual field/rule effects and canonical identities.",
-    "Supply deliberate conflicts; require a structured failure without any effective profile or success hash.",
-    "Compose explicit hard-limit, scalar-policy and typed language bindings; test conflicts, isolation and portable results."
-  ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "SpecRoad MUSS die exakte Core-Profilversion vor allen weiteren aktiven Profilen anwenden.",
-    "scope": "Ordered profile composition and conflicts over explicitly supplied resources; field effects only, no implicit project/CLI acquisition."
-  },
+  "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [
     "SRV142"
   ],
@@ -29,21 +7,47 @@
     0,
     3
   ],
+  "fixture_ids": [
+    "SR-FIX-PROFILE-COMPOSITION-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [
     "/profiles",
     "/merge"
   ],
+  "method": "automated_behavior",
+  "open_items": [
+    "Full model-command gating, actual CLI selection and the project-level policy pipeline remain later consumers; current functions take explicit supplied inputs.",
+    "A current supported-platform CI run is required; no project approval or source authenticity is implied."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "SpecRoad MUSS die exakte Core-Profilversion vor allen weiteren aktiven Profilen anwenden.",
+    "scope": "Ordered profile composition and conflicts over explicitly supplied resources; field effects only, no implicit project/CLI acquisition."
+  },
+  "preconditions": [
+    "Explicit exact Core key, available resource bytes and ordered project/CLI selections."
+  ],
+  "primary_verification_id": "SR-VER-0029",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0419",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Compose the selected chain and compare actual field/rule effects and canonical identities.",
+    "Supply deliberate conflicts; require a structured failure without any effective profile or success hash.",
+    "Compose explicit hard-limit, scalar-policy and typed language bindings; test conflicts, isolation and portable results."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0419",
   "test_ids": [
     "test_profile_composition.ProfileCompositionWorkTests.test_core_first_in_exact_order",
     "test_profile_composition.ProfileCompositionWorkTests.test_core_version_is_exact_not_latest",
@@ -51,9 +55,5 @@
     "test_profile_composition.ProfileCompositionWorkTests.test_duplicate_active_profile_identity_is_invalid",
     "test_profile_composition_right.ProfileCompositionRightTests.test_unselected_profiles_are_not_hash_inputs",
     "test_profile_composition_right.ProfileCompositionRightTests.test_tampered_profile_metadata_is_detected"
-  ],
-  "open_items": [
-    "Full model-command gating, actual CLI selection and the project-level policy pipeline remain later consumers; current functions take explicit supplied inputs.",
-    "A current supported-platform CI run is required; no project approval or source authenticity is implied."
   ]
 }

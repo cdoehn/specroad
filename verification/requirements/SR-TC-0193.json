@@ -1,43 +1,46 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0193",
-  "requirement_id": "SR-REQ-0193",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0013",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [],
   "fixture_ids": [
     "SR-FIX-CHANGED-SOURCES-v1",
     "SR-FIX-GIT-OBJECT-SOURCE-v1"
   ],
-  "preconditions": [
-    "Captured same-project Git base and current source; explicitly bound current profile paths and trusted optional ModelGate callbacks."
-  ],
-  "steps": [
-    "Compare real Git/current artifact and configuration inputs to obtain changed seeds, then execute native validation closure and Core lint.",
-    "Change a relation target, a declared dependency or actual SRX profile rule; retain failures outside the directly changed artifact and exact expanded IDs.",
-    "Reject missing bases, unbound profiles and unsupported resources; preserve source bytes, native incomplete/failure states and honest empty-scope results.",
-    "Exercise actual SRX outside-file failures, incomplete warning policy, blocked dependency discovery and exact native scope/error preservation with the Changed-only R cases."
+  "implementation_status": "partial",
+  "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "Complete CLI/Work integration; live source freshness, full resource/model semantics, literal/full lint, language-registry binding in this adapter, scalable processing and supported-platform acceptance remain open."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Die Option `--changed-only --against <REF>` MUSS Validierung und Linting auf geänderte Artefakte einschließlich der für deren Regeln erforderlichen Abhängigkeiten begrenzen.",
     "scope": "8.k.W composes captured Git/current sources, changed artifact/configuration seeds, byte-bound current profiles, native validation dependency expansion and Core lint. Incoming/transitive and declared gate dependencies are retained; actual SRX profile edits detect failures in unchanged artifacts. Profile/configuration changes and removals conservatively seed current artifacts; unsupported changed normative resources fail. Native reports, failure policy, exact checked/dependency IDs and raw bindings are retained. No-change/empty-current cases do not fabricate checks. This is loaded-model validation and Core lint only, not full-project, literal/full-lint, live-file, Work or approval coverage. 8.k.R preserves known warning-threshold failures even when required semantic services remain unavailable, without changing native reports, completion or unavailable-only unknown results. Real unchanged SRX graph rules find failures in unchanged artifacts after target or edge changes. Failed/unbound/incomplete dependency discovery never runs a falsely narrowed check; faulty check observations preserve native errors and actual scope. Coverage includes outside references, cyclic declared dependencies, unresolved real Git refs, early base guards, ambiguous/unused profiles, unexecuted empty scopes and owned snapshots without live freshness claims. All earlier behavior proofs and test identities are retained. 8.k.C extracts the same seed-selection and native validation/assessment/Core-lint blocks into two private helpers. A static AST extraction proof verifies the two substitutions and unchanged guards, reports, module bindings and profile behavior. All 285 existing test files and 9503 prior test IDs remain unchanged; targeted W/R regression rechecks behavior. No new semantics, error contracts, side effects or authority are introduced."
   },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
+  "preconditions": [
+    "Captured same-project Git base and current source; explicitly bound current profile paths and trusted optional ModelGate callbacks."
+  ],
+  "primary_verification_id": "SR-VER-0013",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0193",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Compare real Git/current artifact and configuration inputs to obtain changed seeds, then execute native validation closure and Core lint.",
+    "Change a relation target, a declared dependency or actual SRX profile rule; retain failures outside the directly changed artifact and exact expanded IDs.",
+    "Reject missing bases, unbound profiles and unsupported resources; preserve source bytes, native incomplete/failure states and honest empty-scope results.",
+    "Exercise actual SRX outside-file failures, incomplete warning policy, blocked dependency discovery and exact native scope/error preservation with the Changed-only R cases."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0193",
   "test_ids": [
     "tests/test_query_changed_only.py::test_added_artifact_is_selected_without_a_disconnected_unchanged_artifact",
     "tests/test_query_changed_only.py::test_changed_target_pulls_incoming_and_transitive_dependencies",
@@ -91,8 +94,5 @@
     "tests/test_query_changed_only_right.py::test_unexecuted_empty_scope_reports_no_structural_or_semantic_check[False]",
     "tests/test_query_changed_only_right.py::test_unexecuted_empty_scope_reports_no_structural_or_semantic_check[True]",
     "tests/test_query_changed_only_right.py::test_unresolved_real_git_ref_cannot_fall_back_to_current_files"
-  ],
-  "open_items": [
-    "Complete CLI/Work integration; live source freshness, full resource/model semantics, literal/full lint, language-registry binding in this adapter, scalable processing and supported-platform acceptance remain open."
   ]
 }

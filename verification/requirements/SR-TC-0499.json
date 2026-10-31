@@ -1,46 +1,46 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0499",
-  "requirement_id": "SR-REQ-0499",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0034",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [],
   "fixture_ids": [
     "SR-FIX-REQUIREMENT-APPROVAL-v1"
   ],
-  "preconditions": [
-    "Use a loaded candidate and dependency set bound to exact source bytes; trusted-service fixtures are explicitly synthetic."
-  ],
-  "steps": [
-    "Assess a detached in_review requirement under an explicit effective profile and service observations.",
-    "Require a current separately verified human review; compare structured findings, input bindings and unchanged original data."
+  "implementation_status": "partial",
+  "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "Integrate trusted authorization/review selection, complete current semantic service results and the write/lifecycle command in their assigned later plan steps. The library never grants write authority."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Die fachliche Spezifikationsprüfung MUSS durch menschliches Review bestätigte Compound Requirements als Freigabefehler melden, ohne eine automatische semantische Erkennung durch den Core vorauszusetzen.",
     "scope": "Requirement approval prerequisites over supplied bindings; no authentication implementation, lifecycle write, CLI or complete live-project approval is claimed."
   },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
+  "preconditions": [
+    "Use a loaded candidate and dependency set bound to exact source bytes; trusted-service fixtures are explicitly synthetic."
+  ],
+  "primary_verification_id": "SR-VER-0034",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0499",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Assess a detached in_review requirement under an explicit effective profile and service observations.",
+    "Require a current separately verified human review; compare structured findings, input bindings and unchanged original data."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0499",
   "test_ids": [
     "tests/test_requirement_approval.py::test_core_does_not_detect_compound_from_and_word",
     "tests/test_requirement_approval.py::test_human_confirmation_of_compound_is_error",
     "tests/test_requirement_approval_right.py::test_unauthenticated_compound_is_not_claimed_as_human_confirmation"
-  ],
-  "open_items": [
-    "Integrate trusted authorization/review selection, complete current semantic service results and the write/lifecycle command in their assigned later plan steps. The library never grants write authority."
   ]
 }

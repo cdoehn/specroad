@@ -1,43 +1,46 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0582",
-  "requirement_id": "SR-REQ-0582",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0038",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [],
   "fixture_ids": [
     "SR-FIX-RELATIONS-v1",
     "SR-FIX-OWNED-TEMP-v1"
   ],
-  "preconditions": [
-    "Owned complete current-artifact trees under a bound ProjectSource; current source membership is rechecked."
+  "implementation_status": "partial",
+  "json_pointers": [
+    "/relations"
   ],
-  "steps": [
-    "Build both adjacency directions from all current artifact records, select one artifact and inspect returned edge identities and byte bindings.",
-    "Compare an index-independent scan with fresh and stale hints; inject late sources, deletion, byte replacement, invalid sources and missing cache entries."
+  "method": "automated_behavior",
+  "open_items": [
+    "Integration into future CLI/impact/scope operations and non-relation dependency closure remain open; observations are not atomic snapshots."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Selektives Laden MUSS alle für das zugesagte Ergebnis erforderlichen Abhängigkeiten und inversen Beziehungen nachweislich berücksichtigen.",
     "scope": "Complete observed stored/inverse relations for current configured artifact sources. No atomic snapshot or full dependency closure is claimed."
   },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [
-    "/relations"
+  "preconditions": [
+    "Owned complete current-artifact trees under a bound ProjectSource; current source membership is rechecked."
   ],
+  "primary_verification_id": "SR-VER-0038",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0582",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Build both adjacency directions from all current artifact records, select one artifact and inspect returned edge identities and byte bindings.",
+    "Compare an index-independent scan with fresh and stale hints; inject late sources, deletion, byte replacement, invalid sources and missing cache entries."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0582",
   "test_ids": [
     "test_relation_index.RelationIndexTests.test_bound_source_is_required",
     "test_relation_index.RelationIndexTests.test_broken_unselected_source_is_an_error_not_partial_success",
@@ -93,8 +96,5 @@
     "test_relation_index_right.RelationIndexRightTests.test_unknown_strategy_is_rejected",
     "test_relation_index_right.RelationIndexRightTests.test_unreadable_current_source_never_falls_back_to_cached_success",
     "test_relation_index_right.RelationIndexRightTests.test_wrong_source_path_is_not_treated_as_valid_index_entry"
-  ],
-  "open_items": [
-    "Integration into future CLI/impact/scope operations and non-relation dependency closure remain open; observations are not atomic snapshots."
   ]
 }

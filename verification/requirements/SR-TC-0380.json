@@ -1,27 +1,5 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0380",
-  "requirement_id": "SR-REQ-0380",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0027",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
-  "fixture_ids": [
-    "SR-FIX-ISOLATED-CPYTHON-v1",
-    "SR-FIX-OWNED-TEMP-v1"
-  ],
-  "preconditions": [
-    "Current Core on native Linux with owned temporary project files, actual bound profile/registry resources and isolated CLI processes."
-  ],
-  "steps": [
-    "Invoke the real CLI, structured request and read-only Python inspection on the actual files.",
-    "Compare canonical semantic data, native runtime observations, actual side effects and explicit incomplete outcomes."
-  ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "`specroad project inspect --format json` MUSS sämtliche Pflichtangaben zu Projekt, Modell, Schema, Profilen, Artefakten, Migrationsbedarf, Diagnosen, Hauptdokumenten, Projektroot, Transaktion und Writer-Lock in den getrennten `semantic`-/`runtime`-Bereichen nach Kapitel 11.5.1 ausgeben.",
-    "scope": "Actual project-inspect-v1 payload, model root, schema, profile order, counts, primary documents, explicit unknowns and blocked runtime; no invented diagnostic success or unsupported migration result. R adds coherent repeated operational/lock observations, visible late blockers, final source rereads, orphan writers, complete journal inventory and exact semantic error/warning/info counts across relocation with passive runtime differences. Explicit host title predicates are test fixtures, not substitute production specialist services. C extracts the existing semantic projection unchanged from inspection orchestration. Existing W/R behavior tests and their expected results remain unchanged; this adds no behavior or release approval."
-  },
+  "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [],
   "expected_exit_codes": [
     0,
@@ -29,23 +7,50 @@
     5,
     6
   ],
+  "fixture_ids": [
+    "SR-FIX-ISOLATED-CPYTHON-v1",
+    "SR-FIX-OWNED-TEMP-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [
     "/result/format_version",
     "/result/runtime",
     "/result/semantic",
     "/summary/complete"
   ],
+  "method": "automated_behavior",
+  "open_items": [
+    "Required specialist model services (including document model) are not all available; diagnostic_summary remains null and incomplete operations fail.",
+    "Older/unknown schema migration and pre-handler CLI failure payloads remain open.",
+    "Collect the complete supported CPython/platform matrix and product acceptance before release; no atomic snapshot claim is made against noncooperating external writers."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "`specroad project inspect --format json` MUSS sämtliche Pflichtangaben zu Projekt, Modell, Schema, Profilen, Artefakten, Migrationsbedarf, Diagnosen, Hauptdokumenten, Projektroot, Transaktion und Writer-Lock in den getrennten `semantic`-/`runtime`-Bereichen nach Kapitel 11.5.1 ausgeben.",
+    "scope": "Actual project-inspect-v1 payload, model root, schema, profile order, counts, primary documents, explicit unknowns and blocked runtime; no invented diagnostic success or unsupported migration result. R adds coherent repeated operational/lock observations, visible late blockers, final source rereads, orphan writers, complete journal inventory and exact semantic error/warning/info counts across relocation with passive runtime differences. Explicit host title predicates are test fixtures, not substitute production specialist services. C extracts the existing semantic projection unchanged from inspection orchestration. Existing W/R behavior tests and their expected results remain unchanged; this adds no behavior or release approval."
+  },
+  "preconditions": [
+    "Current Core on native Linux with owned temporary project files, actual bound profile/registry resources and isolated CLI processes."
+  ],
+  "primary_verification_id": "SR-VER-0027",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0380",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Invoke the real CLI, structured request and read-only Python inspection on the actual files.",
+    "Compare canonical semantic data, native runtime observations, actual side effects and explicit incomplete outcomes."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0380",
   "test_ids": [
     "tests/test_project_inspection.py::test_actual_active_writer_blocks_before_model_loading[cli]",
     "tests/test_project_inspection.py::test_actual_active_writer_blocks_before_model_loading[python]",
@@ -81,10 +86,5 @@
     "tests/test_project_inspection_right.py::test_semantic_findings_are_counted_without_runtime_or_approval[error]",
     "tests/test_project_inspection_right.py::test_semantic_findings_are_counted_without_runtime_or_approval[info]",
     "tests/test_project_inspection_right.py::test_semantic_findings_are_counted_without_runtime_or_approval[warning]"
-  ],
-  "open_items": [
-    "Required specialist model services (including document model) are not all available; diagnostic_summary remains null and incomplete operations fail.",
-    "Older/unknown schema migration and pre-handler CLI failure payloads remain open.",
-    "Collect the complete supported CPython/platform matrix and product acceptance before release; no atomic snapshot claim is made against noncooperating external writers."
   ]
 }

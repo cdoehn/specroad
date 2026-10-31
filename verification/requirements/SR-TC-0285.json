@@ -1,19 +1,44 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0285",
-  "requirement_id": "SR-REQ-0285",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0021",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [
+    0,
+    3,
+    5
+  ],
   "fixture_ids": [
     "SR-FIX-FORMAT-ROUNDTRIPS-v1",
     "SR-FIX-IMPORT-WORK-v1"
   ],
+  "implementation_status": "partial",
+  "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "The bounded explicit-candidate adapter is not a complete import CLI or a general relation/attachment import parser. Existing W format-intersection losses remain explicit; memory-resident candidate and final whole-target evaluation are not a generic streaming-engine claim.",
+    "Synthetic test-host gates and publication authority authenticate no real human. Actual migration/merge, foreign-tool interoperability, whole-project bundle and cross-platform release evidence require their own bound executions."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Import, Migration und Merge MÜSSEN erhaltene Relationsreviews nur dann als `current` übernehmen, wenn Relation sowie Quell- und Ziel-Kontextprojektion nach der Operation exakt den im Review gebundenen Hashes entsprechen; andernfalls erscheinen sie als `suspect` oder `unreviewed`.",
+    "scope": "14.o.W: explicit nine-artifact corpus roundtrips in three languages. NDJSON and separate single-type typed-JSON CSV profiles preserve all artifact fields, review hashes, configuration values, ordered relations and transported attachments. Rebuilt model roots and actual relation-review statuses are compared. ReqIF/ReqIFZ preserve their explicitly mapped native/external identities, scalar/XHTML values, ordered hierarchy and relation identities plus attachment bytes; unsupported review/configuration/evidence records and native project resources remain explicit losses. No missing native data is filled from source-only records and no full import, review authentication, approval or release success is claimed. 14.o.R: changed native review bindings resolve to suspect/unreviewed. For the existing explicit_parsed_artifacts profile, durable per-candidate Work plus a whole-target reduction equals the direct import plan and actual published native target across CSV, NDJSON, ReqIF and ReqIFZ. Completed mapping/comparison units are reused; original inputs and mapping bytes remain owned in Work; final plan data alone grants no approval or execution truth. The native writer revalidates the full plan with current explicit inputs, trusted gates and live authority. Invalid plans retain their findings; incomplete, rehashed-inconsistent or incompatible Work is not promoted to completion. Fresh Core/PYZ process resumes and replay are checked on the current platform."
+  },
   "preconditions": [
     "Owned nine-artifact corpus with ordered document occurrences, external identities, two bound attachment payloads, a configuration artifact and synthetic hash-bound relation review; no real approval is claimed.",
     "Owned explicit parsed artifact candidates from real CSV, NDJSON, ReqIF and ReqIFZ codecs; supplied mappings and complete creation envelopes; retained synthetic relation review with native status checks; explicit trusted test-host gates and publication authority. No authentic human approval is claimed."
   ],
+  "primary_verification_id": "SR-VER-0021",
+  "required_environment": {
+    "declared_minimum_python": "3.10",
+    "implementation": "cpython",
+    "measured_scope": "current-run-only"
+  },
+  "requirement_id": "SR-REQ-0285",
+  "resources": {
+    "harness_suite_timeout": null,
+    "harness_test_timeout": null,
+    "owned_temporary_files": true
+  },
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
   "steps": [
     "Export and decode the corpus with the existing NDJSON envelope and explicit per-type CSV profiles; reconstruct only decoded artifacts and transported attachment bytes and compare native semantic model roots.",
     "Export and decode the declared ReqIF/ReqIFZ scalar/XHTML intersection; compare native/external identities, mapped values, ordered occurrence identities, the addresses relation and complete attachment bytes.",
@@ -25,29 +50,8 @@
     "Require complete object coverage after relocation and loss of the original source, no rerun of completed mapping kernels, original late-error contracts, preserved durable generations on checkpoint failure and refusal of inconsistent or incomplete evidence.",
     "Build actual Core and PYZ distributions, resume each Work unit in a fresh process after moving distribution and Work directories, and require identical completed planning results without live project writes or inferred authority."
   ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "Import, Migration und Merge MÜSSEN erhaltene Relationsreviews nur dann als `current` übernehmen, wenn Relation sowie Quell- und Ziel-Kontextprojektion nach der Operation exakt den im Review gebundenen Hashes entsprechen; andernfalls erscheinen sie als `suspect` oder `unreviewed`.",
-    "scope": "14.o.W: explicit nine-artifact corpus roundtrips in three languages. NDJSON and separate single-type typed-JSON CSV profiles preserve all artifact fields, review hashes, configuration values, ordered relations and transported attachments. Rebuilt model roots and actual relation-review statuses are compared. ReqIF/ReqIFZ preserve their explicitly mapped native/external identities, scalar/XHTML values, ordered hierarchy and relation identities plus attachment bytes; unsupported review/configuration/evidence records and native project resources remain explicit losses. No missing native data is filled from source-only records and no full import, review authentication, approval or release success is claimed. 14.o.R: changed native review bindings resolve to suspect/unreviewed. For the existing explicit_parsed_artifacts profile, durable per-candidate Work plus a whole-target reduction equals the direct import plan and actual published native target across CSV, NDJSON, ReqIF and ReqIFZ. Completed mapping/comparison units are reused; original inputs and mapping bytes remain owned in Work; final plan data alone grants no approval or execution truth. The native writer revalidates the full plan with current explicit inputs, trusted gates and live authority. Invalid plans retain their findings; incomplete, rehashed-inconsistent or incompatible Work is not promoted to completion. Fresh Core/PYZ process resumes and replay are checked on the current platform."
-  },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [
-    0,
-    3,
-    5
-  ],
-  "json_pointers": [],
-  "required_environment": {
-    "implementation": "cpython",
-    "declared_minimum_python": "3.10",
-    "measured_scope": "current-run-only"
-  },
-  "resources": {
-    "owned_temporary_files": true,
-    "harness_test_timeout": null,
-    "harness_suite_timeout": null
-  },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0285",
   "test_ids": [
     "tests/test_format_roundtrips.py::test_native_intersection_preserves_full_corpus_and_current_review[False-de-DE-csv]",
     "tests/test_format_roundtrips.py::test_native_intersection_preserves_full_corpus_and_current_review[False-de-DE-ndjson]",
@@ -95,9 +99,5 @@
     "tests/test_import_work.py::test_every_candidate_plan_and_native_target_equal_direct_execution[standard-2-ndjson]",
     "tests/test_import_work.py::test_every_candidate_plan_and_native_target_equal_direct_execution[standard-2-reqif]",
     "tests/test_import_work.py::test_every_candidate_plan_and_native_target_equal_direct_execution[standard-2-reqifz]"
-  ],
-  "open_items": [
-    "The bounded explicit-candidate adapter is not a complete import CLI or a general relation/attachment import parser. Existing W format-intersection losses remain explicit; memory-resident candidate and final whole-target evaluation are not a generic streaming-engine claim.",
-    "Synthetic test-host gates and publication authority authenticate no real human. Actual migration/merge, foreign-tool interoperability, whole-project bundle and cross-platform release evidence require their own bound executions."
   ]
 }

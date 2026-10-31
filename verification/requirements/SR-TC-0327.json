@@ -1,19 +1,47 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0327",
-  "requirement_id": "SR-REQ-0327",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0024",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [
+    3,
+    6
+  ],
   "fixture_ids": [
     "SR-FIX-NDJSON-NATIVE-CODEC-v1",
     "SR-FIX-NDJSON-STREAM-RESUME-v1"
   ],
+  "implementation_status": "partial",
+  "json_pointers": [
+    "/format_version",
+    "/object_kind",
+    "/object",
+    "/object/change_plan_sha256"
+  ],
+  "method": "automated_behavior",
+  "open_items": [
+    "Higher-layer CLI, native import/export planning, manifest/loss reporting, global model gates and actual authorized transactions remain required. A complete codec observation is not a successful import, approval, full-suite or release proof."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "NDJSON-Import und -Export MÜSSEN pro Zeile genau ein versioniertes SpecRoad-Artefakt oder Change-Plan-Objekt verarbeiten, leere Zeilen ignorieren und Kommentare ablehnen.",
+    "scope": "14.g.W/R/C passive native NDJSON v1 codec: all 28 native artifact kinds and regular plans retain values, versions, self-hashes, order, duplicates and original-byte provenance. Incremental feeds recognize only LF or explicit EOF, retain split UTF-8/escape/number bytes, report physical lines and hull-relative pointers, and never infer completion from pauses. Source-bound inert cursors revalidate consumed prefixes without re-emission; changed input/checkpoint bindings are conflict Code 6, malformed records/cursors Code 3, and resource/security exceptions retain their classes. No aggregate count/byte cutoff, write permission, file publication or implicit execution. Durable Work/CLI integration and higher import/export/model/manifest/authorization gates remain outside this codec proof."
+  },
   "preconditions": [
     "Caller-supplied complete UTF-8 byte source or explicit ordered envelopes; native resources use their existing schemas. No project, loader, live basis or authorization is supplied to this pure transport layer.",
     "Incremental feeds contain caller-owned immutable bytes; explicit finish or producer exhaustion declares actual EOF. Resume receives the original complete snapshot, stored cursor bytes and a separately retained cursor hash. Durable host storage and staging remain caller responsibilities."
   ],
+  "primary_verification_id": "SR-VER-0024",
+  "required_environment": {
+    "declared_minimum_python": "3.10",
+    "implementation": "cpython",
+    "measured_scope": "current-run-only"
+  },
+  "requirement_id": "SR-REQ-0327",
+  "resources": {
+    "harness_suite_timeout": null,
+    "harness_test_timeout": null,
+    "owned_temporary_files": true
+  },
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
   "steps": [
     "Decode multiple mixed native envelopes, re-encode their exact semantic values, compare canonical LF records and retain original source bytes/hash separately.",
     "Reject missing/extra/wrong transport fields, wrong payload kinds, incomplete native records, invalid local consistency, operations, result hashes and plan self-hashes without repair.",
@@ -23,33 +51,8 @@
     "Process a large line and repeated records without total-count/byte cutoffs; retain original resource/host exception classes and reject reuse after failure. Verify passive resume and the same API in isolated Core/PYZ while preserving all W oracles.",
     "Re-run the unchanged W/R behavior corpus and affected native JSON/plan/schema regressions after separating LF framing from strict JSON and native envelope validation; preserve physical diagnostics, cursor bytes, EOF/failure state, output order and passive boundaries."
   ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "NDJSON-Import und -Export MÜSSEN pro Zeile genau ein versioniertes SpecRoad-Artefakt oder Change-Plan-Objekt verarbeiten, leere Zeilen ignorieren und Kommentare ablehnen.",
-    "scope": "14.g.W/R/C passive native NDJSON v1 codec: all 28 native artifact kinds and regular plans retain values, versions, self-hashes, order, duplicates and original-byte provenance. Incremental feeds recognize only LF or explicit EOF, retain split UTF-8/escape/number bytes, report physical lines and hull-relative pointers, and never infer completion from pauses. Source-bound inert cursors revalidate consumed prefixes without re-emission; changed input/checkpoint bindings are conflict Code 6, malformed records/cursors Code 3, and resource/security exceptions retain their classes. No aggregate count/byte cutoff, write permission, file publication or implicit execution. Durable Work/CLI integration and higher import/export/model/manifest/authorization gates remain outside this codec proof."
-  },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [
-    3,
-    6
-  ],
-  "json_pointers": [
-    "/format_version",
-    "/object_kind",
-    "/object",
-    "/object/change_plan_sha256"
-  ],
-  "required_environment": {
-    "implementation": "cpython",
-    "declared_minimum_python": "3.10",
-    "measured_scope": "current-run-only"
-  },
-  "resources": {
-    "owned_temporary_files": true,
-    "harness_test_timeout": null,
-    "harness_suite_timeout": null
-  },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0327",
   "test_ids": [
     "tests/test_ndjson_codec.py::test_canonical_export_has_exact_envelope_bytes_lf_and_no_transport_metadata_in_payload",
     "tests/test_ndjson_codec.py::test_closed_envelope_cannot_be_filled_in_or_inferred[bare-artifact-decode]",
@@ -343,8 +346,5 @@
     "tests/test_ndjson_codec_right.py::test_saved_checkpoint_must_match_independently_retained_hash[bytes]",
     "tests/test_ndjson_codec_right.py::test_saved_checkpoint_must_match_independently_retained_hash[digest]",
     "tests/test_ndjson_codec_right.py::test_saved_checkpoint_must_match_independently_retained_hash[other-cursor]"
-  ],
-  "open_items": [
-    "Higher-layer CLI, native import/export planning, manifest/loss reporting, global model gates and actual authorized transactions remain required. A complete codec observation is not a successful import, approval, full-suite or release proof."
   ]
 }

@@ -1,41 +1,44 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0466",
-  "requirement_id": "SR-REQ-0466",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0031",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [],
   "fixture_ids": [
     "SR-FIX-NORMALIZATION-SCOPE-v1",
     "SR-FIX-OWNED-TEMP-v1",
     "SR-FIX-RECORD-FIELDS-v1"
   ],
-  "preconditions": [
-    "Complete supplied project model in an owned temporary root; native tests use explicit trusted test-only authorization and resource gates, never default production approval."
-  ],
-  "steps": [
-    "Prepare the full eligible JSON scope or explicit byte-bound operations; observe complete values, metadata, protected originals, actual write-free checks and native publication/recovery effects."
+  "implementation_status": "partial",
+  "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "Register public format/check CLI with complete live inventory and real trusted semantic services for profiles/rules/mappings and special-record currentness. Mixed semantic/representation operation sequences remain unsupported; no CLI, matrix or release approval is claimed."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Recorded Evidence, sealed Baselines, recorded Relationsreviews und unveränderbare Proposal-Endstände DÜRFEN NICHT formatiert werden.",
     "scope": "Library-level complete current JSON format selection and normalization-only transactions. Exact full values, source/target bytes, semantic roots and native journal/receipt/recovery effects are checked; human layout is excluded. Protected records are omitted by scope selection and rejected explicitly. Public format/check CLI and real host services remain later integration."
   },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
+  "preconditions": [
+    "Complete supplied project model in an owned temporary root; native tests use explicit trusted test-only authorization and resource gates, never default production approval."
+  ],
+  "primary_verification_id": "SR-VER-0031",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0466",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Prepare the full eligible JSON scope or explicit byte-bound operations; observe complete values, metadata, protected originals, actual write-free checks and native publication/recovery effects."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0466",
   "test_ids": [
     "tests/test_normalization_scope.py::test_active_proposals_preserve_control_and_content_metadata[approved-approved]",
     "tests/test_normalization_scope.py::test_active_proposals_preserve_control_and_content_metadata[checked-proposed]",
@@ -48,8 +51,5 @@
     "tests/test_normalization_scope.py::test_protected_records_are_excluded_and_explicit_operations_refused[proposal-rejected-rejected]",
     "tests/test_normalization_scope.py::test_protected_records_are_excluded_and_explicit_operations_refused[proposal-stale-retired]",
     "tests/test_normalization_scope.py::test_protected_records_are_excluded_and_explicit_operations_refused[relation_review-None-None]"
-  ],
-  "open_items": [
-    "Register public format/check CLI with complete live inventory and real trusted semantic services for profiles/rules/mappings and special-record currentness. Mixed semantic/representation operation sequences remain unsupported; no CLI, matrix or release approval is claimed."
   ]
 }

@@ -1,26 +1,5 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0188",
-  "requirement_id": "SR-REQ-0188",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0013",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
-  "fixture_ids": [
-    "SR-FIX-READ-ONLY-PROJECT-v1"
-  ],
-  "preconditions": [
-    "Owned existing project root; explicit profile or literal policy. Operational data is never changed."
-  ],
-  "steps": [
-    "Capture file names, original bytes and permissions; run read-only library APIs while trapping write attempts.",
-    "Check structured model/lint outcomes or metadata-only diagnostics; compare original files and generated/operational state."
-  ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "Read-only-Befehle MÜSSEN ohne Schreibzugriff auf den Projektroot und ohne vorausgesetzte Cache-Dateien funktionieren, sofern keine unvollständige Transaktion Recovery erfordert und keine explizite Ausgabedatei innerhalb des Projektroots angefordert wird.",
-    "scope": "Library-level current artifact validation, explicitly selected literal lint and shallow model-independent operational metadata diagnostics; real non-write observations, not full CLI conformance."
-  },
+  "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [],
   "expected_exit_codes": [
     0,
@@ -31,18 +10,45 @@
     5,
     7
   ],
+  "fixture_ids": [
+    "SR-FIX-READ-ONLY-PROJECT-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "CLI entrypoints and remaining read-only commands (query, render, diff, trace, etc.) are still later plan work.",
+    "No full transaction-state parser, lock-ownership proof, automatic recovery, preflight-detail cursor or atomic multi-file snapshot is implemented by this layer.",
+    "Trusted application callbacks must themselves respect the read-only contract; this library is not an OS sandbox.",
+    "Complete supported runtime/platform acceptance remains bound to real CI and target results."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Read-only-Befehle MÜSSEN ohne Schreibzugriff auf den Projektroot und ohne vorausgesetzte Cache-Dateien funktionieren, sofern keine unvollständige Transaktion Recovery erfordert und keine explizite Ausgabedatei innerhalb des Projektroots angefordert wird.",
+    "scope": "Library-level current artifact validation, explicitly selected literal lint and shallow model-independent operational metadata diagnostics; real non-write observations, not full CLI conformance."
+  },
+  "preconditions": [
+    "Owned existing project root; explicit profile or literal policy. Operational data is never changed."
+  ],
+  "primary_verification_id": "SR-VER-0013",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0188",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Capture file names, original bytes and permissions; run read-only library APIs while trapping write attempts.",
+    "Check structured model/lint outcomes or metadata-only diagnostics; compare original files and generated/operational state."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0188",
   "test_ids": [
     "test_read_only_validation.ReadOnlyValidationTests.test_valid_root_without_cache_is_checked_without_writes",
     "test_read_only_validation.ReadOnlyValidationTests.test_read_only_permissions_do_not_require_write_probe",
@@ -106,11 +112,5 @@
     "test_read_only_validation_right.ReadOnlyRobustnessTests.test_profile_conflict_is_configuration_exit_not_a_model_success",
     "test_read_only_validation_right.ReadOnlyRobustnessTests.test_absent_literal_checks_return_incomplete_not_success_exit",
     "test_read_only_validation_right.ReadOnlyRobustnessTests.test_lint_warning_threshold_retains_the_original_severity"
-  ],
-  "open_items": [
-    "CLI entrypoints and remaining read-only commands (query, render, diff, trace, etc.) are still later plan work.",
-    "No full transaction-state parser, lock-ownership proof, automatic recovery, preflight-detail cursor or atomic multi-file snapshot is implemented by this layer.",
-    "Trusted application callbacks must themselves respect the read-only contract; this library is not an OS sandbox.",
-    "Complete supported runtime/platform acceptance remains bound to real CI and target results."
   ]
 }

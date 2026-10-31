@@ -1,39 +1,42 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0482",
-  "requirement_id": "SR-REQ-0482",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0033",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [],
   "fixture_ids": [
     "SR-FIX-PARTIAL-BUNDLE-RIGHT-v1"
   ],
-  "preconditions": [
-    "Complete owned native origin and original selected configuration/parent bytes; empty operational history; explicit partial scope."
-  ],
-  "steps": [
-    "Create configured/unconfigured document and release containers; compare exact payloads, independent native hashes and read-only flags; publish with source rechecks and refuse invalid selection, metadata or output boundaries."
+  "implementation_status": "partial",
+  "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "15.d/15.e must independently verify arbitrary input bytes and retain/recheck partial and context-only membership after extraction. This is targeted partial evidence, not a full-suite or release proof."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Ein `document`- oder `release`-Bundle MUSS nach Extraktion als `partial` und `read_only` gekennzeichnet sein.",
     "scope": "Generated container/publication only; extraction remains open. 15.c.R adds generated partial ZIP bytes and configuration context without additional scope members, parent/content/formatting hash domains, excluded-anchor/strong-dependency rejection and native publication boundaries. Independent verification of arbitrary bundles, extraction and extracted read-only admission remain open."
   },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
+  "preconditions": [
+    "Complete owned native origin and original selected configuration/parent bytes; empty operational history; explicit partial scope."
+  ],
+  "primary_verification_id": "SR-VER-0033",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0482",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Create configured/unconfigured document and release containers; compare exact payloads, independent native hashes and read-only flags; publish with source rechecks and refuse invalid selection, metadata or output boundaries."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0482",
   "test_ids": [
     "tests/test_partial_bundle.py::test_consistent_codec_output_cannot_drop_selected_bytes_or_rebind_origin[metadata]",
     "tests/test_partial_bundle.py::test_consistent_codec_output_cannot_drop_selected_bytes_or_rebind_origin[payload]",
@@ -157,8 +160,5 @@
     "tests/test_partial_bundle_right.py::test_untyped_partial_request_cannot_fall_back_to_full_project[None]",
     "tests/test_partial_bundle_right.py::test_untyped_partial_request_cannot_fall_back_to_full_project[project]",
     "tests/test_partial_bundle_right.py::test_untyped_partial_request_cannot_fall_back_to_full_project[selector2]"
-  ],
-  "open_items": [
-    "15.d/15.e must independently verify arbitrary input bytes and retain/recheck partial and context-only membership after extraction. This is targeted partial evidence, not a full-suite or release proof."
   ]
 }

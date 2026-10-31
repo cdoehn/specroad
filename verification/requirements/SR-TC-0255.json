@@ -1,26 +1,5 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0255",
-  "requirement_id": "SR-REQ-0255",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0019",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
-  "fixture_ids": [
-    "SR-FIX-TRANSACTION-COMMITTING-v1"
-  ],
-  "preconditions": [
-    "Exact independently bound PreparedJournal and PublicationPreflight, current native writer lock, explicit host authority, local same-filesystem rename and fsync support."
-  ],
-  "steps": [
-    "Durably set committing; atomically replace targets in canonical path order and sync each acknowledgement before the next target; recompute the full live target root.",
-    "Inject errors at journal and target boundaries; preserve before images and active recovery blocker; never claim receipts, committed state or automatic rollback."
-  ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "Nach `prepared` MUSS SpecRoad den Journalzustand `committing` dauerhaft speichern und jede atomare Dateiveröffentlichung einzeln im Journal quittieren, bevor die nächste Datei veröffentlicht wird.",
-    "scope": "Native C.2 publication steps 1-4 for supported artifact targets: exact final bytes/root or a blocked recovery state, never a successful mixed model. Full receipt finalization, specialized operations and universal command integration remain open."
-  },
+  "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [],
   "expected_exit_codes": [
     0,
@@ -31,18 +10,43 @@
     6,
     7
   ],
+  "fixture_ids": [
+    "SR-FIX-TRANSACTION-COMMITTING-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "Durable transaction/request receipts and committed finalization (5.n), full crash recovery and integration of all normative writer commands remain in later plan steps.",
+    "Local native cooperative Linux semantics; actual cross-version CI and underlying hardware determine observed support, not the existence of these tests."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Nach `prepared` MUSS SpecRoad den Journalzustand `committing` dauerhaft speichern und jede atomare Dateiveröffentlichung einzeln im Journal quittieren, bevor die nächste Datei veröffentlicht wird.",
+    "scope": "Native C.2 publication steps 1-4 for supported artifact targets: exact final bytes/root or a blocked recovery state, never a successful mixed model. Full receipt finalization, specialized operations and universal command integration remain open."
+  },
+  "preconditions": [
+    "Exact independently bound PreparedJournal and PublicationPreflight, current native writer lock, explicit host authority, local same-filesystem rename and fsync support."
+  ],
+  "primary_verification_id": "SR-VER-0019",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0255",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Durably set committing; atomically replace targets in canonical path order and sync each acknowledgement before the next target; recompute the full live target root.",
+    "Inject errors at journal and target boundaries; preserve before images and active recovery blocker; never claim receipts, committed state or automatic rollback."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0255",
   "test_ids": [
     "tests/test_transaction_committing.py::test_all_targets_and_live_root_match_request",
     "tests/test_transaction_committing.py::test_receipt_and_committed_marker_are_not_fabricated",
@@ -81,9 +85,5 @@
     "tests/test_transaction_committing_right.py::test_inherited_lock_never_publishes_for_parent",
     "tests/test_transaction_committing_right.py::test_many_files_all_acknowledged_and_rehashed",
     "tests/test_transaction_committing_right.py::test_module_and_zipapp_publishing_and_reader_remain_portable"
-  ],
-  "open_items": [
-    "Durable transaction/request receipts and committed finalization (5.n), full crash recovery and integration of all normative writer commands remain in later plan steps.",
-    "Local native cooperative Linux semantics; actual cross-version CI and underlying hardware determine observed support, not the existence of these tests."
   ]
 }

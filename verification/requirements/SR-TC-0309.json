@@ -1,28 +1,5 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0309",
-  "requirement_id": "SR-REQ-0309",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0023",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
-  "fixture_ids": [
-    "SR-FIX-COMPOSITION-PRESERVATION-v1",
-    "SR-FIX-COMPOSITION-PRESERVATION-RIGHT-v1"
-  ],
-  "preconditions": [
-    "Complete owned TargetModel and prepared original relation hash/fresh identity; real host publication authority; canonical or original noncanonical source bytes."
-  ],
-  "steps": [
-    "11.j.W: move, nest, promote and reorder actual sections containing shared artifact_ref blocks. Save and publish the same native plan, read back exact files, receipts and composed/reference data. Only changed document/section relation owners gain revisions. Preserve all other original bytes and require actual block semantics.",
-    "11.j.R: compare original and candidate hashes for requirement/test/code_ref records in draft and stored approved states; only real supported targets publish. Missing lifecycle, review, evidence and external-resource services block publication. Guard owner fields and all nonrequested relations, detach operation bindings, reject forged saved-plan result artifacts, verify sequential moves/replay and preserve actual interrupted owner publication.",
-    "11.j.C: separate exact contains-edge owner checks from unchanged original source preservation, retaining all W/R behavior tests and public interfaces."
-  ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "Das Verschieben oder Neuordnen eines Abschnitts DARF NICHT die IDs oder Revisionen der darin referenzierten fachlichen Artefakte ändern; neue Revisionen entstehen ausschließlich für tatsächlich geänderte Dokumentartefakte.",
-    "scope": "Actual native writer publishes only changed document relation owners. Referenced content IDs, revision values, records and original bytes remain exact, including original noncanonical formatting. Shared reference targets remain one stored artifact; native composition/reference readback sees unchanged revisions. No render/UI/documentation oracle or permissive semantic-service success stub. Stored approval is preserved as data, not authenticated by this guard. Native candidate byte preservation and unavailable-service write refusal are separate from successful actual publication. Owner content and unrelated relation edges cannot be smuggled into a move."
-  },
+  "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [
     "document_composition_inventory_changed",
     "document_composition_owner_required",
@@ -42,22 +19,49 @@
     6,
     7
   ],
+  "fixture_ids": [
+    "SR-FIX-COMPOSITION-PRESERVATION-v1",
+    "SR-FIX-COMPOSITION-PRESERVATION-RIGHT-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [
     "/operations",
     "/relations",
     "/revision"
   ],
+  "method": "automated_behavior",
+  "open_items": [
+    "Unchanged approved history, evidence/currentness and external resources still require actual specialist services. This move guard does not attest stored approvals or supply those services.",
+    "CLI model/history discovery and identity allocation remain outside the prepared-plan embedding API. Targeted and alternating test observations are partial, not full-suite or release proof."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Das Verschieben oder Neuordnen eines Abschnitts DARF NICHT die IDs oder Revisionen der darin referenzierten fachlichen Artefakte ändern; neue Revisionen entstehen ausschließlich für tatsächlich geänderte Dokumentartefakte.",
+    "scope": "Actual native writer publishes only changed document relation owners. Referenced content IDs, revision values, records and original bytes remain exact, including original noncanonical formatting. Shared reference targets remain one stored artifact; native composition/reference readback sees unchanged revisions. No render/UI/documentation oracle or permissive semantic-service success stub. Stored approval is preserved as data, not authenticated by this guard. Native candidate byte preservation and unavailable-service write refusal are separate from successful actual publication. Owner content and unrelated relation edges cannot be smuggled into a move."
+  },
+  "preconditions": [
+    "Complete owned TargetModel and prepared original relation hash/fresh identity; real host publication authority; canonical or original noncanonical source bytes."
+  ],
+  "primary_verification_id": "SR-VER-0023",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0309",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "11.j.W: move, nest, promote and reorder actual sections containing shared artifact_ref blocks. Save and publish the same native plan, read back exact files, receipts and composed/reference data. Only changed document/section relation owners gain revisions. Preserve all other original bytes and require actual block semantics.",
+    "11.j.R: compare original and candidate hashes for requirement/test/code_ref records in draft and stored approved states; only real supported targets publish. Missing lifecycle, review, evidence and external-resource services block publication. Guard owner fields and all nonrequested relations, detach operation bindings, reject forged saved-plan result artifacts, verify sequential moves/replay and preserve actual interrupted owner publication.",
+    "11.j.C: separate exact contains-edge owner checks from unchanged original source preservation, retaining all W/R behavior tests and public interfaces."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0309",
   "test_ids": [
     "tests/test_document_composition_preservation.py::test_actual_move_changes_only_relation_owners_and_preserves_all_content_bytes[False-move_document]",
     "tests/test_document_composition_preservation.py::test_actual_move_changes_only_relation_owners_and_preserves_all_content_bytes[False-move_section]",
@@ -103,9 +107,5 @@
     "tests/test_document_composition_preservation_right.py::test_rehashed_saved_plan_cannot_add_a_content_or_approval_write[maturity-approved]",
     "tests/test_document_composition_preservation_right.py::test_rehashed_saved_plan_cannot_add_a_content_or_approval_write[revision-8]",
     "tests/test_document_composition_preservation_right.py::test_successive_real_moves_keep_shared_content_bytes_and_commit_each_owner_once"
-  ],
-  "open_items": [
-    "Unchanged approved history, evidence/currentness and external resources still require actual specialist services. This move guard does not attest stored approvals or supply those services.",
-    "CLI model/history discovery and identity allocation remain outside the prepared-plan embedding API. Targeted and alternating test observations are partial, not full-suite or release proof."
   ]
 }

@@ -1,25 +1,5 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0664",
-  "requirement_id": "SR-REQ-0664",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0045",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
-  "fixture_ids": [
-    "SR-FIX-CONTAINER-LANGUAGES-v1"
-  ],
-  "preconditions": [
-    "An explicit immutable source model and hash-bound registry are supplied."
-  ],
-  "steps": [
-    "Resolve project or contains/artifact_ref presentation membership; evaluate only declared requirement languages."
-  ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "Mischungsdiagnosen MÜSSEN die exakte deklarationsbasierte Container-/Requirement-Auswahl aus Anhang S.5 verwenden.",
-    "scope": "Complete S.5 membership and mixing over explicitly supplied models and resolved configuration/query observations; no physical project inventory, detector, renderer or approval claim."
-  },
+  "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [
     "SRV180",
     "SRV181"
@@ -29,21 +9,44 @@
     1,
     3
   ],
+  "fixture_ids": [
+    "SR-FIX-CONTAINER-LANGUAGES-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [
     "/language",
     "/language_policy_override/mixed_languages"
   ],
+  "method": "automated_behavior",
+  "open_items": [
+    "Connect the complete project/configuration inventory and document/query services in their planned steps; no whole-project approval is asserted."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Mischungsdiagnosen MÜSSEN die exakte deklarationsbasierte Container-/Requirement-Auswahl aus Anhang S.5 verwenden.",
+    "scope": "Complete S.5 membership and mixing over explicitly supplied models and resolved configuration/query observations; no physical project inventory, detector, renderer or approval claim."
+  },
+  "preconditions": [
+    "An explicit immutable source model and hash-bound registry are supplied."
+  ],
+  "primary_verification_id": "SR-VER-0045",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0664",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Resolve project or contains/artifact_ref presentation membership; evaluate only declared requirement languages."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0664",
   "test_ids": [
     "tests/test_container_languages.py::test_project_membership_excludes_only_historical_requirements",
     "tests/test_container_languages.py::test_presentation_uses_references_not_trace_closure",
@@ -51,8 +54,5 @@
     "tests/test_container_languages_right.py::test_each_inclusion_path_gets_own_query_result",
     "tests/test_container_languages_right.py::test_scope_uses_explicit_applicability_not_hidden_defaults",
     "tests/test_container_languages_right.py::test_query_result_not_cut_at_display_limit"
-  ],
-  "open_items": [
-    "Connect the complete project/configuration inventory and document/query services in their planned steps; no whole-project approval is asserted."
   ]
 }

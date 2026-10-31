@@ -1,45 +1,45 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0418",
-  "requirement_id": "SR-REQ-0418",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0029",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [],
   "fixture_ids": [
     "SR-FIX-RELATIONS-v1"
   ],
-  "preconditions": [
-    "Two explicit source-bound relation states, without writer permissions."
-  ],
-  "steps": [
-    "Compare stable relation keys and propose metadata changes; reject each changed identity field."
+  "implementation_status": "partial",
+  "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "Invoke the guard from authoring/import/merge paths and the folded transaction plan; no write authorization is provided here."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Die Felder `relation_id`, `id_scheme`, `type` und `target` einer gespeicherten Relation DÜRFEN NICHT durch Update geändert werden.",
     "scope": "Immutable relation-key and source guards, pure metadata proposals and retained-edge comparison."
   },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
+  "preconditions": [
+    "Two explicit source-bound relation states, without writer permissions."
+  ],
+  "primary_verification_id": "SR-VER-0029",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0418",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Compare stable relation keys and propose metadata changes; reject each changed identity field."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0418",
   "test_ids": [
     "test_relations_right.RelationRightTests.test_each_identity_key_update_is_rejected_without_changing_input",
     "test_relations_right.RelationRightTests.test_valid_metadata_update_preserves_keys",
     "test_relations_right.RelationRightTests.test_source_revision_comparison_rejects_retained_edge_retarget"
-  ],
-  "open_items": [
-    "Invoke the guard from authoring/import/merge paths and the folded transaction plan; no write authorization is provided here."
   ]
 }

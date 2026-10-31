@@ -1,48 +1,48 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0013",
-  "requirement_id": "SR-REQ-0013",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0002",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [],
   "fixture_ids": [
     "SR-FIX-OWNED-TEMP-v1"
   ],
-  "preconditions": [
-    "Owned project fixtures; installed development dependencies; isolated process state."
-  ],
-  "steps": [
-    "Read or validate the declared project resources and observe data, rejection and file effects."
+  "implementation_status": "partial",
+  "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "Complete per-artifact and persisted-resource schemas are implemented by later steps.",
+    "JCS serialization/hash implementation, full model inventory and transaction publication are not part of this reader."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Normative und generierte Textdateien MÜSSEN als UTF-8 gespeichert werden und für interne JSON-, Markdown-, HTML-, SARIF- und NDJSON-Dateien LF sowie für einen ausdrücklich referenzierten Austauschstandard dessen festgelegtes Zeilenende verwenden.",
     "scope": "Strict UTF-8 JSON resource reads, closed trusted descriptors, owned data and all-or-nothing explicit sets; exact decimal roundtrip rejection."
   },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
+  "preconditions": [
+    "Owned project fixtures; installed development dependencies; isolated process state."
+  ],
+  "primary_verification_id": "SR-VER-0002",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0013",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Read or validate the declared project resources and observe data, rejection and file effects."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0013",
   "test_ids": [
     "test_json_reader.JsonReaderWorkTests.test_utf8_object_returns_its_original_values",
     "test_json_reader.JsonReaderWorkTests.test_invalid_utf8_is_rejected_with_a_position",
     "test_json_reader.JsonReaderWorkTests.test_unpaired_surrogates_and_bom_are_rejected",
     "test_json_reader.JsonReaderWorkTests.test_typed_resource_retains_bytes_and_returns_owned_values",
     "test_json_reader.JsonReaderRightTests.test_invalid_utf8_after_multibyte_prefix_has_a_byte_offset"
-  ],
-  "open_items": [
-    "Complete per-artifact and persisted-resource schemas are implemented by later steps.",
-    "JCS serialization/hash implementation, full model inventory and transaction publication are not part of this reader."
   ]
 }

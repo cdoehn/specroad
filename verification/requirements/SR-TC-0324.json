@@ -1,20 +1,48 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0324",
-  "requirement_id": "SR-REQ-0324",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0024",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [
+    "SRV083"
+  ],
+  "expected_exit_codes": [
+    0,
+    2,
+    3,
+    7
+  ],
   "fixture_ids": [
     "SR-FIX-IMPORT-SECURITY-RIGHT-v1",
     "SR-FIX-IMPORT-SECURITY-v1",
     "SR-FIX-JUNIT-XML-RIGHT-v1",
     "SR-FIX-JUNIT-XML-v1"
   ],
+  "implementation_status": "partial",
+  "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "JUnit mapping and Evidence creation/publication, the global import CLI and ReqIF integration remain separate plan steps.",
+    "This proves parser behavior only, not an authentic external test run, verification success or release approval."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Der XML-Import MUSS DTDs, externe Entitäten, externe Schemas und Netzwerkauflösung ablehnen sowie dokumentierte Grenzen für Tiefe, Elementanzahl, Textlänge und Gesamtbytes durchsetzen.",
+    "scope": "12.f.W/R/C provides the bounded byte-only JUnit core reader. The common internal XML event reader owns input validation, parser protection, limits and error translation; the JUnit adapter owns only its documented profile and value assembly. Unmodified W/R tests preserve original bytes, reported content, errors and passive behavior, including ignored subtrees and Core/PYZ distributions. This remains a partial proof, not a complete import CLI, mapping, Evidence publication or ReqIF reader proof. 14.n.W adds cross-adapter entity rejection in isolated Core/PYZ, without filesystem reads/writes or network/process attempts. This additional corpus is limited to the actual entity scenarios; it does not claim complete ReqIF/project import or exhaustive XML security. 14.n.R adds 112 cross-adapter XML attack/bound/positive-boundary cases with audited zero external effects and unchanged owned project inventories. The same CPython/runtime and partial-verification limits apply. 14.n.C consolidates the reusable input corpus and reader construction without changing product code, attack bytes, expected outcomes, effect guards or test identities. The previously stated partial-proof boundaries remain."
+  },
   "preconditions": [
     "One explicitly supplied immutable XML byte document and native per-document hard limits; no project writer or external resolver."
   ],
+  "primary_verification_id": "SR-VER-0024",
+  "required_environment": {
+    "declared_minimum_python": "3.10",
+    "implementation": "cpython",
+    "measured_scope": "current-run-only"
+  },
+  "requirement_id": "SR-REQ-0324",
+  "resources": {
+    "harness_suite_timeout": null,
+    "harness_test_timeout": null,
+    "owned_temporary_files": true
+  },
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
   "steps": [
     "Read complete suites and testcases with the documented children and attributes, retaining original bytes/hash and reported strings without evaluating outcomes.",
     "Reject DTD/entity declarations, external schema/include requests, processing instructions, malformed XML and violated limits without file/network/process access.",
@@ -26,32 +54,8 @@
     "14.n.R: reject XML resolution, expansion, hidden namespace references, processing instructions, unsupported codecs and hard-bound overruns across ReqIF object/structure, selected ReqIFZ XML and JUnit in isolated Core/PYZ; preserve complete owned projects. Accept inert literal XML lookalikes at the exact byte boundary.",
     "14.n.C: rerun the unchanged W/R behavior cases through shared owned source fixtures and fixed adapter call constructors. Preserve every test identity, expectation, per-adapter limit and isolated runtime effect trap."
   ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "Der XML-Import MUSS DTDs, externe Entitäten, externe Schemas und Netzwerkauflösung ablehnen sowie dokumentierte Grenzen für Tiefe, Elementanzahl, Textlänge und Gesamtbytes durchsetzen.",
-    "scope": "12.f.W/R/C provides the bounded byte-only JUnit core reader. The common internal XML event reader owns input validation, parser protection, limits and error translation; the JUnit adapter owns only its documented profile and value assembly. Unmodified W/R tests preserve original bytes, reported content, errors and passive behavior, including ignored subtrees and Core/PYZ distributions. This remains a partial proof, not a complete import CLI, mapping, Evidence publication or ReqIF reader proof. 14.n.W adds cross-adapter entity rejection in isolated Core/PYZ, without filesystem reads/writes or network/process attempts. This additional corpus is limited to the actual entity scenarios; it does not claim complete ReqIF/project import or exhaustive XML security. 14.n.R adds 112 cross-adapter XML attack/bound/positive-boundary cases with audited zero external effects and unchanged owned project inventories. The same CPython/runtime and partial-verification limits apply. 14.n.C consolidates the reusable input corpus and reader construction without changing product code, attack bytes, expected outcomes, effect guards or test identities. The previously stated partial-proof boundaries remain."
-  },
-  "expected_diagnostics": [
-    "SRV083"
-  ],
-  "expected_exit_codes": [
-    0,
-    2,
-    3,
-    7
-  ],
-  "json_pointers": [],
-  "required_environment": {
-    "implementation": "cpython",
-    "declared_minimum_python": "3.10",
-    "measured_scope": "current-run-only"
-  },
-  "resources": {
-    "owned_temporary_files": true,
-    "harness_test_timeout": null,
-    "harness_suite_timeout": null
-  },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0324",
   "test_ids": [
     "tests/test_import_security.py::test_external_entities_are_refused_before_any_resolution_or_write[local-file-junit-core]",
     "tests/test_import_security.py::test_external_entities_are_refused_before_any_resolution_or_write[local-file-junit-pyz]",
@@ -394,9 +398,5 @@
     "tests/test_junit_xml_right.py::test_text_budget_counts_decoded_unicode_across_all_content[<testsuite name=\"a&#x1f642;\"><system-out><![CDATA[\\xe9]]></system-out></testsuite>-3]",
     "tests/test_junit_xml_right.py::test_text_budget_counts_decoded_unicode_across_all_content[<testsuite xmlns:e=\"urn:e\"><e:x>a&amp;b</e:x></testsuite>-8]",
     "tests/test_junit_xml_right.py::test_text_budget_counts_decoded_unicode_across_all_content[<testsuite><!--abc--><extension name=\"de\">f</extension></testsuite>-6]"
-  ],
-  "open_items": [
-    "JUnit mapping and Evidence creation/publication, the global import CLI and ReqIF integration remain separate plan steps.",
-    "This proves parser behavior only, not an authentic external test run, verification success or release approval."
   ]
 }

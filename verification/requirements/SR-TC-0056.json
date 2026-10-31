@@ -1,44 +1,44 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0056",
-  "requirement_id": "SR-REQ-0056",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0005",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [],
   "fixture_ids": [
     "SR-FIX-RELATIONS-v1"
   ],
-  "preconditions": [
-    "Explicit owned source records, distinct stable artifact IDs and the trusted Core type matrix."
-  ],
-  "steps": [
-    "Resolve stored directed relations against exactly the provided artifact set; validate endpoint types and reject self-links or missing targets."
+  "implementation_status": "partial",
+  "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "Connect this input-set validator to complete model loading, scope closures and authoring/transaction gates. Natural-language refinement meaning and lifecycle policy are not inferred."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Eine Beziehung DARF NICHT ein Artefakt auf sich selbst beziehen.",
     "scope": "Full source/target type matrix and exact references for supplied records, no assertion of complete project inventory or graph/lifecycle approval."
   },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
+  "preconditions": [
+    "Explicit owned source records, distinct stable artifact IDs and the trusted Core type matrix."
+  ],
+  "primary_verification_id": "SR-VER-0005",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0056",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Resolve stored directed relations against exactly the provided artifact set; validate endpoint types and reject self-links or missing targets."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0056",
   "test_ids": [
     "test_relation_references.RelationReferenceWorkTests.test_self_links_rejected",
     "test_relation_references_right.RelationReferenceRightTests.test_self_link_forbidden_for_all_types_and_all_stored_relations"
-  ],
-  "open_items": [
-    "Connect this input-set validator to complete model loading, scope closures and authoring/transaction gates. Natural-language refinement meaning and lifecycle policy are not inferred."
   ]
 }

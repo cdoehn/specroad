@@ -1,52 +1,52 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0492",
-  "requirement_id": "SR-REQ-0492",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0034",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [
+    0
+  ],
   "fixture_ids": [
     "SR-FIX-CATALOG-DATA-v1"
   ],
-  "preconditions": [
-    "Use the current trusted checkout and a private temporary directory."
-  ],
-  "steps": [
-    "Execute each listed unittest once in the current full suite.",
-    "Observe the declared file effects, returned data and exit statuses without matching human text."
+  "implementation_status": "partial",
+  "json_pointers": [],
+  "method": "automated_behavior",
+  "not_automated_by_user_policy": "TD-001",
+  "open_items": [
+    "The versioned catalog is an implementation inventory, not final requirement verification. Pending cases still need real fixtures and oracles.",
+    "TD-001 excludes presentation/documentation checks from automated coverage; this exception must remain visible in any final acceptance statement."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Jeder Requirement-Testfall MUSS Requirement-ID und -Revision, primären Verification Contract, Methode, Fixture, Schritte, Oracle, erwartete Diagnosen und Exit Codes, Umgebung und Evidence-Art deklarieren.",
     "scope": "Existing bootstrap/test-infrastructure behavior only; not complete requirement acceptance."
   },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [
-    0
+  "policy_excluded_scope": [
+    "Only human-output, rendering and documentation-test obligations. Machine data contracts and real behavioral obligations remain in scope."
   ],
-  "json_pointers": [],
+  "preconditions": [
+    "Use the current trusted checkout and a private temporary directory."
+  ],
+  "primary_verification_id": "SR-VER-0034",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0492",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Execute each listed unittest once in the current full suite.",
+    "Observe the declared file effects, returned data and exit statuses without matching human text."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0492",
   "test_ids": [
     "test_verification.CatalogWorkTests.test_manifest_delivers_requirement_fixture_and_verification_binding",
     "test_verification.CatalogWorkTests.test_unknown_fixture_is_not_an_executable_binding"
-  ],
-  "open_items": [
-    "The versioned catalog is an implementation inventory, not final requirement verification. Pending cases still need real fixtures and oracles.",
-    "TD-001 excludes presentation/documentation checks from automated coverage; this exception must remain visible in any final acceptance statement."
-  ],
-  "not_automated_by_user_policy": "TD-001",
-  "policy_excluded_scope": [
-    "Only human-output, rendering and documentation-test obligations. Machine data contracts and real behavioral obligations remain in scope."
   ]
 }

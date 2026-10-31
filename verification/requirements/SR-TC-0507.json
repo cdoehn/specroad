@@ -1,39 +1,42 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0507",
-  "requirement_id": "SR-REQ-0507",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0018",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [],
   "fixture_ids": [
     "SR-FIX-ORDERED-FOLD-v1"
   ],
-  "preconditions": [
-    "Supply stable, explicit, privately copied model values, ordered operations and base observations."
-  ],
-  "steps": [
-    "Evaluate create/update/relation-add/relation-remove operations in their array order on intermediate private states; inspect folded candidates and instrument that no later operation executes after failure."
+  "implementation_status": "partial",
+  "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "Integrate subsequent specialized planner operations, change-metadata-v1 (5.d), lifecycle gates (5.e), full final-state validation (5.f) and checked publication. All requirements remain partial; a candidate hash is not a confirmed final Change Plan result."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Eine fehlgeschlagene Change-Plan-Operation MUSS die Auswertung aller nachfolgenden Operationen verhindern.",
     "scope": "Ordered in-memory field candidates and fail-stop execution only. No metadata advancement, live file checks, specialized lifecycle/evidence/control planners, final target-model validation, declared final-root verification or publication."
   },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
+  "preconditions": [
+    "Supply stable, explicit, privately copied model values, ordered operations and base observations."
+  ],
+  "primary_verification_id": "SR-VER-0018",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0507",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Evaluate create/update/relation-add/relation-remove operations in their array order on intermediate private states; inspect folded candidates and instrument that no later operation executes after failure."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0507",
   "test_ids": [
     "tests/test_operation_folding.py::test_failure_prevents_later_operation_execution",
     "tests/test_operation_folding.py::test_stale_intermediate_guard_fails_at_the_right_operation",
@@ -42,8 +45,5 @@
     "tests/test_operation_folding_right.py::test_relation_failure_prevents_later_updates",
     "tests/test_operation_folding_right.py::test_subsequent_unknown_operation_is_not_semantically_dispatched",
     "tests/test_operation_folding_right.py::test_valid_failure_is_not_hidden_by_later_compensating_operation"
-  ],
-  "open_items": [
-    "Integrate subsequent specialized planner operations, change-metadata-v1 (5.d), lifecycle gates (5.e), full final-state validation (5.f) and checked publication. All requirements remain partial; a candidate hash is not a confirmed final Change Plan result."
   ]
 }

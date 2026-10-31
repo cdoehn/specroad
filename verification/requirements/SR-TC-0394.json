@@ -1,59 +1,59 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0394",
-  "requirement_id": "SR-REQ-0394",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0027",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
-  "fixture_ids": [
-    "SR-FIX-ISOLATED-CPYTHON-v1",
-    "SR-FIX-OWNED-TEMP-v1",
-    "SR-FIX-MODEL-MANIFEST-v1"
-  ],
-  "preconditions": [
-    "Bound local directory; untrusted data remains inert.",
-    "Explicit current-resource selection from one bound ProjectSource; supplied semantic profile projection, no claimed closure proof."
-  ],
-  "steps": [
-    "Exercise the single-root read boundary and reject prohibited execution before any handler.",
-    "Capture selected bytes, assemble a semantic manifest and compare hashes or observe rejection of mismatched project provenance."
-  ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "SpecRoad Version 0.2 MUSS als lokales Single-User-Werkzeug für genau ein Repository pro Projekt funktionieren.",
-    "scope": "Partial model-input/hash binding, not resolved scope completeness, full policy composition or transaction authorization."
-  },
+  "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [],
   "expected_exit_codes": [
     0,
     7
   ],
+  "fixture_ids": [
+    "SR-FIX-ISOLATED-CPYTHON-v1",
+    "SR-FIX-OWNED-TEMP-v1",
+    "SR-FIX-MODEL-MANIFEST-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [
     "/project/project_root",
     "/project_id",
     "/scope_descriptor",
     "/scope_sha256"
   ],
+  "method": "automated_behavior",
+  "open_items": [
+    "Integrate complete scope closure, actual effective-profile resolver, historical archive closures and locked transaction publication in their planned steps. Other requirement aspects and platform/release evidence remain open."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "SpecRoad Version 0.2 MUSS als lokales Single-User-Werkzeug für genau ein Repository pro Projekt funktionieren.",
+    "scope": "Partial model-input/hash binding, not resolved scope completeness, full policy composition or transaction authorization."
+  },
+  "preconditions": [
+    "Bound local directory; untrusted data remains inert.",
+    "Explicit current-resource selection from one bound ProjectSource; supplied semantic profile projection, no claimed closure proof."
+  ],
+  "primary_verification_id": "SR-VER-0027",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0394",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Exercise the single-root read boundary and reject prohibited execution before any handler.",
+    "Capture selected bytes, assemble a semantic manifest and compare hashes or observe rejection of mismatched project provenance."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0394",
   "test_ids": [
     "test_security.SafetyWorkTests.test_project_metadata_path_runs_without_git_network_or_processes",
     "test_model_root.ModelRootWorkTests.test_same_snapshot_under_another_root_has_same_hash",
     "test_model_root.ModelRootWorkTests.test_foreign_root_resources_cannot_be_merged",
     "test_model_root_right.ModelRootRightTests.test_project_relocation_requires_fresh_read_binding",
     "test_model_root_right.ModelRootRightTests.test_nested_project_is_not_merged"
-  ],
-  "open_items": [
-    "Integrate complete scope closure, actual effective-profile resolver, historical archive closures and locked transaction publication in their planned steps. Other requirement aspects and platform/release evidence remain open."
   ]
 }

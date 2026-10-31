@@ -1,31 +1,5 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0490",
-  "requirement_id": "SR-REQ-0490",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0033",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
-  "fixture_ids": [
-    "SR-FIX-PORTABLE-RECEIPTS-v1"
-  ],
-  "preconditions": [
-    "Native completed and cleaned-up transaction in an owned temporary project; authorization is supplied only by the test fixture. No local or transported data is treated as authentication or human approval."
-  ],
-  "steps": [
-    "Complete a native create transaction, retain its exact request/transaction/committed bytes, and create/verify/extract a closed project bundle.",
-    "Compare unchanged stored results and IDs on retry; reject missing/corrupt completion links, copied proof and changed operations without writes.",
-    "Exclude observed receipts explicitly, check local_only and exact exclusions, and keep partials without project write receipts.",
-    "Remove a whole originally transported receipt group while leaving all remaining groups internally complete; full, excluded, partial and publishing paths must refuse the lost history without writes.",
-    "Reject a consistent ZIP whose exclusions disguise native receipt paths as another content kind or claim a non-receipt path as an operational receipt before extraction.",
-    "Compare equal normative projects with distinct native receipt contents and explicit exclusions; model roots and semantic profile/configuration hashes stay equal while container/receipt hashes and exclusion metadata differ.",
-    "Transfer a real multi-operation completion and compare exact replay, case-sensitive request identity, actor/key-order independence, dry-run/absent-ID behavior and conflicts with both operation hashes. Exercise late namespace changes and special files with and without exclusion."
-  ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "Die Idempotenzentscheidung nach dem Transfer eines vollständigen Projektbundles MUSS dieselben Regeln wie `SR-REQ-0384` und `SR-REQ-0385` anwenden.",
-    "scope": "Completed native receipt sets retain project, request, operation and completion hash links separately from the unchanged normative model. Only the local inode-bound proof of verified project extraction admits historical foreign-root receipts; copied files, absent transported requests and changed bindings cannot trigger a replay or duplicate new request. Explicit exclusions and partials are local_only; replay performs no normative mutation and grants no live publication authority. Known imported receipt groups may not disappear on re-export; exclusion reasons must match native operational file paths. Receipt content/exclusion never changes the normative root. After transfer the native idempotency conflict, absence and non-authorizing replay contracts remain unchanged; unsafe files retain Code 7."
-  },
+  "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [
     "SRV002",
     "SRV060",
@@ -37,6 +11,10 @@
     6,
     7
   ],
+  "fixture_ids": [
+    "SR-FIX-PORTABLE-RECEIPTS-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [
     "/action",
     "/created_ids",
@@ -51,17 +29,42 @@
     "/result_object",
     "/write_authorized"
   ],
+  "method": "automated_behavior",
+  "open_items": [
+    "15.g.C separates pure receipt-byte validation from retained filesystem proof and the normative model-resource pipeline. Existing W/R behavior and test identities remain unchanged. Selected runs are partial evidence; full-suite, cross-version, release and real-approval proof remain open. Apply evidence remains bound to the resulting actual commit."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Die Idempotenzentscheidung nach dem Transfer eines vollständigen Projektbundles MUSS dieselben Regeln wie `SR-REQ-0384` und `SR-REQ-0385` anwenden.",
+    "scope": "Completed native receipt sets retain project, request, operation and completion hash links separately from the unchanged normative model. Only the local inode-bound proof of verified project extraction admits historical foreign-root receipts; copied files, absent transported requests and changed bindings cannot trigger a replay or duplicate new request. Explicit exclusions and partials are local_only; replay performs no normative mutation and grants no live publication authority. Known imported receipt groups may not disappear on re-export; exclusion reasons must match native operational file paths. Receipt content/exclusion never changes the normative root. After transfer the native idempotency conflict, absence and non-authorizing replay contracts remain unchanged; unsafe files retain Code 7."
+  },
+  "preconditions": [
+    "Native completed and cleaned-up transaction in an owned temporary project; authorization is supplied only by the test fixture. No local or transported data is treated as authentication or human approval."
+  ],
+  "primary_verification_id": "SR-VER-0033",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0490",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Complete a native create transaction, retain its exact request/transaction/committed bytes, and create/verify/extract a closed project bundle.",
+    "Compare unchanged stored results and IDs on retry; reject missing/corrupt completion links, copied proof and changed operations without writes.",
+    "Exclude observed receipts explicitly, check local_only and exact exclusions, and keep partials without project write receipts.",
+    "Remove a whole originally transported receipt group while leaving all remaining groups internally complete; full, excluded, partial and publishing paths must refuse the lost history without writes.",
+    "Reject a consistent ZIP whose exclusions disguise native receipt paths as another content kind or claim a non-receipt path as an operational receipt before extraction.",
+    "Compare equal normative projects with distinct native receipt contents and explicit exclusions; model roots and semantic profile/configuration hashes stay equal while container/receipt hashes and exclusion metadata differ.",
+    "Transfer a real multi-operation completion and compare exact replay, case-sensitive request identity, actor/key-order independence, dry-run/absent-ID behavior and conflicts with both operation hashes. Exercise late namespace changes and special files with and without exclusion."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0490",
   "test_ids": [
     "tests/test_bundle_receipts.py::test_changed_imported_completion_never_replays_or_becomes_new_request[bytes-committed]",
     "tests/test_bundle_receipts.py::test_changed_imported_completion_never_replays_or_becomes_new_request[bytes-request]",
@@ -144,8 +147,5 @@
     "tests/test_bundle_receipts_right.py::test_whole_imported_receipt_group_cannot_disappear_on_reexport[project-True]",
     "tests/test_bundle_receipts_right.py::test_whole_imported_receipt_group_cannot_disappear_on_reexport[publish-False]",
     "tests/test_bundle_receipts_right.py::test_whole_imported_receipt_group_cannot_disappear_on_reexport[publish-True]"
-  ],
-  "open_items": [
-    "15.g.C separates pure receipt-byte validation from retained filesystem proof and the normative model-resource pipeline. Existing W/R behavior and test identities remain unchanged. Selected runs are partial evidence; full-suite, cross-version, release and real-approval proof remain open. Apply evidence remains bound to the resulting actual commit."
   ]
 }

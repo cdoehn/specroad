@@ -1,26 +1,5 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0731",
-  "requirement_id": "SR-REQ-0731",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0051",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
-  "fixture_ids": [
-    "SR-FIX-PATCHHARBOR-160-SNAPSHOT-v1"
-  ],
-  "preconditions": [
-    "Use the pinned PatchHarbor 1.6.0 built from supplied source commit 29c9cfdc095517e7c4cfd4a4c0588cd90655f0b9 and native synthetic producer Results; preserve historical 1.4 Results unchanged."
-  ],
-  "steps": [
-    "Explicitly bootstrap the verified, pinned library and then read Results as passive data using the public snapshot API.",
-    "Compare all five layers with independent Git and filesystem oracles, reject incomplete layers, retain upstream failure facts, and check lazy Core, runtime trust and source preservation in isolated offline processes."
-  ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "Die Transportintegration MUSS PatchHarbor ausschließlich über die dokumentierte öffentliche Python-API ansprechen und fehlende erforderliche API-Fähigkeiten ohne CLI-Fallback, private Core-Imports oder eigene Nachbildung des PatchHarbor-Formats als nicht verfügbar melden.",
-    "scope": "15.m.W/R transport foundation: pinned 1.6.0 public API, native immutable five-layer snapshots, offline module/PYZ use, independent error mapping and historical original facts. Runtime preparation is explicit and separate from read-only snapshots: input data cannot select or execute a runtime or materialize project files. No outbound, return, host-apply, full Python-matrix or release acceptance is asserted."
-  },
+  "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [],
   "expected_exit_codes": [
     0,
@@ -30,18 +9,43 @@
     6,
     7
   ],
+  "fixture_ids": [
+    "SR-FIX-PATCHHARBOR-160-SNAPSHOT-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "Python 3.10-3.14 CI acceptance remains pending; by explicit user instruction its development-blocking effect is suspended until the user reinstates it. This does not claim compatibility or release evidence.",
+    "15.m.C and separate outbound/return/host-apply integration, human proposal gates and end-to-end acceptance remain open."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Die Transportintegration MUSS PatchHarbor ausschließlich über die dokumentierte öffentliche Python-API ansprechen und fehlende erforderliche API-Fähigkeiten ohne CLI-Fallback, private Core-Imports oder eigene Nachbildung des PatchHarbor-Formats als nicht verfügbar melden.",
+    "scope": "15.m.W/R transport foundation: pinned 1.6.0 public API, native immutable five-layer snapshots, offline module/PYZ use, independent error mapping and historical original facts. Runtime preparation is explicit and separate from read-only snapshots: input data cannot select or execute a runtime or materialize project files. No outbound, return, host-apply, full Python-matrix or release acceptance is asserted."
+  },
+  "preconditions": [
+    "Use the pinned PatchHarbor 1.6.0 built from supplied source commit 29c9cfdc095517e7c4cfd4a4c0588cd90655f0b9 and native synthetic producer Results; preserve historical 1.4 Results unchanged."
+  ],
+  "primary_verification_id": "SR-VER-0051",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0731",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Explicitly bootstrap the verified, pinned library and then read Results as passive data using the public snapshot API.",
+    "Compare all five layers with independent Git and filesystem oracles, reject incomplete layers, retain upstream failure facts, and check lazy Core, runtime trust and source preservation in isolated offline processes."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0731",
   "test_ids": [
     "tests/test_transport_runtime.py::test_core_commands_and_adapter_description_need_no_transport[module]",
     "tests/test_transport_runtime.py::test_core_commands_and_adapter_description_need_no_transport[zipapp]",
@@ -101,9 +105,5 @@
     "tests/test_transport_snapshots.py::test_snapshot_input_errors_preserve_upstream_facts[digest]",
     "tests/test_transport_snapshots.py::test_snapshot_input_errors_preserve_upstream_facts[missing]",
     "tests/test_transport_snapshots.py::test_snapshot_input_errors_preserve_upstream_facts[relative]"
-  ],
-  "open_items": [
-    "Python 3.10-3.14 CI acceptance remains pending; by explicit user instruction its development-blocking effect is suspended until the user reinstates it. This does not claim compatibility or release evidence.",
-    "15.m.C and separate outbound/return/host-apply integration, human proposal gates and end-to-end acceptance remain open."
   ]
 }

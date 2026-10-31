@@ -1,17 +1,37 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0395",
-  "requirement_id": "SR-REQ-0395",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0028",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [],
   "fixture_ids": [
     "SR-FIX-RECORD-FIELDS-v1"
   ],
+  "implementation_status": "partial",
+  "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "Graph-primitive cleanup follows in 9.b.C; project discovery, applicability evaluation and configuration-bound gates remain assigned to later M9 steps. Current supplied-record evidence is not a full release approval."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Ein `configuration`-Artefakt MUSS einen eindeutigen Namen, deklarierte Dimensionen, je Dimension zulässige Werte, eine konkrete Wertauswahl und optional genau eine Elternkonfiguration enthalten.",
+    "scope": "Explicit supplied-record resolution and complete selected parent-chain behavior, including deep chains, JSON scalar equivalence, invariant inherited declarations and immutable canonical manifests. The API does not claim project discovery, applicability evaluation or a release gate."
+  },
   "preconditions": [
     "Owned current-schema records and read-only model APIs; synthetic actors and hashes are not actual approvals or external test evidence."
   ],
+  "primary_verification_id": "SR-VER-0028",
+  "required_environment": {
+    "declared_minimum_python": "3.10",
+    "implementation": "cpython",
+    "measured_scope": "current-run-only"
+  },
+  "requirement_id": "SR-REQ-0395",
+  "resources": {
+    "harness_suite_timeout": null,
+    "harness_test_timeout": null,
+    "owned_temporary_files": true
+  },
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
   "steps": [
     "Load supported stored records, reject malformed local fields and compare original bytes without executing referenced operations.",
     "Resolve explicitly selected root configurations from owned SourceRelations, materialize selection/defaults and reject duplicate names or incomplete declared dimensions without changing source bytes.",
@@ -19,25 +39,8 @@
     "Resolve a selected multilevel parent chain, retain inherited declarations, apply child overrides before defaults, and bind canonical full-record hashes, revisions, dimensions and effective values.",
     "Exercise inherited scalar type boundaries, ancestor errors that valid child overrides cannot hide, delayed completion of new dimensions and immutable canonical chain bindings."
   ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "Ein `configuration`-Artefakt MUSS einen eindeutigen Namen, deklarierte Dimensionen, je Dimension zulässige Werte, eine konkrete Wertauswahl und optional genau eine Elternkonfiguration enthalten.",
-    "scope": "Explicit supplied-record resolution and complete selected parent-chain behavior, including deep chains, JSON scalar equivalence, invariant inherited declarations and immutable canonical manifests. The API does not claim project discovery, applicability evaluation or a release gate."
-  },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
-  "required_environment": {
-    "implementation": "cpython",
-    "declared_minimum_python": "3.10",
-    "measured_scope": "current-run-only"
-  },
-  "resources": {
-    "owned_temporary_files": true,
-    "harness_test_timeout": null,
-    "harness_suite_timeout": null
-  },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0395",
   "test_ids": [
     "test_configuration_inheritance.ConfigurationInheritanceWorkTests.test_boolean_override_is_not_replaced_by_parent_truthiness",
     "test_configuration_inheritance.ConfigurationInheritanceWorkTests.test_changed_inherited_allowed_values_are_rejected",
@@ -440,8 +443,5 @@
     "tests/test_configuration_values_right.py::test_unknown_dimension_never_uses_a_declared_default[None]",
     "tests/test_configuration_values_right.py::test_unknown_dimension_never_uses_a_declared_default[]",
     "tests/test_configuration_values_right.py::test_unknown_dimension_never_uses_a_declared_default[linux]"
-  ],
-  "open_items": [
-    "Graph-primitive cleanup follows in 9.b.C; project discovery, applicability evaluation and configuration-bound gates remain assigned to later M9 steps. Current supplied-record evidence is not a full release approval."
   ]
 }

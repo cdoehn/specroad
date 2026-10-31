@@ -1,47 +1,52 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0474",
-  "requirement_id": "SR-REQ-0474",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0032",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [],
   "fixture_ids": [
     "SR-FIX-DOMAIN-DRAFT-v1",
     "SR-FIX-RELATIONS-v1",
     "SR-FIX-SRX-CONTEXT-v1"
   ],
-  "preconditions": [
-    "Owned current-schema artifact bytes and actual Query selection on native CPython; no CLI or document-rendering claim."
+  "implementation_status": "partial",
+  "json_pointers": [
+    "/filters/full_text",
+    "/items"
   ],
-  "steps": [
-    "Search declared text fields with NFC-plus-casefold working copies and compare exact matching IDs.",
-    "Combine repeated fulltext alternatives with other groups and SRX; retain original source bytes, hashes and projected text.",
-    "Reject invalid known text field types; ensure no host locale, file, network or process use.",
-    "Check original bytes/hash ownership, current source replacement, exact non-fulltext fields, malformed known text and isolated real locale switches."
+  "method": "automated_behavior",
+  "open_items": [
+    "Supported platform/product acceptance remains open; current evidence measures native CPython and locally available locales only.",
+    "Public query CLI/live project adapter, public page delivery, load and full Work integration remain open.",
+    "Full specialist artifact/document validation, rendering/include traversal and attachment indexing are outside the current explicit-input text selection."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Volltextsuche MUSS Unicode-NFC und Unicode-Casefold locale-unabhängig anwenden.",
     "scope": "8.c.W integrates literal fulltext into actual Query selection. NFC/NFD equivalents, sharp-s casefold, sigma and dotted-I mappings have exact ID oracles. Declared text fields and own prose/admonition strings are searched without NFKC, accent stripping, locale collation, metadata stringification or execution. OR/AND composition, owned projection and original byte/hash preservation are observed. This is an unpaged supplied-inventory kernel, not full project validation, CLI delivery or approval. 8.c.R binds every search observation to an exact SourceRelations record, retaining original bytes and raw SHA-256 separately from immutable normalized copies. Repeated queries rebuild current copies even for the same ID; canonically equivalent sources and alternative JSON encodings retain distinct source bindings. Actual available locale switches occur only in an isolated child process, with exact hit, projection and byte oracles; C is mandatory, additional installed locales are covered without a cross-platform completeness claim. All prior W expectations remain unchanged. 8.c.C moves the identical field-selection/normalization function into a private pure working-copy module. SearchText and literal matching retain their module identity and source ownership behavior. All W/R tests and IDs remain unchanged; an AST proof binds the moved function and remaining source module to the authoritative R Result."
   },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [
-    "/filters/full_text",
-    "/items"
+  "preconditions": [
+    "Owned current-schema artifact bytes and actual Query selection on native CPython; no CLI or document-rendering claim."
   ],
+  "primary_verification_id": "SR-VER-0032",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0474",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Search declared text fields with NFC-plus-casefold working copies and compare exact matching IDs.",
+    "Combine repeated fulltext alternatives with other groups and SRX; retain original source bytes, hashes and projected text.",
+    "Reject invalid known text field types; ensure no host locale, file, network or process use.",
+    "Check original bytes/hash ownership, current source replacement, exact non-fulltext fields, malformed known text and isolated real locale switches."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0474",
   "test_ids": [
     "tests/test_query_full_text.py::test_canonically_equivalent_terms_match_both_stored_forms[CAF\\xc9]",
     "tests/test_query_full_text.py::test_canonically_equivalent_terms_match_both_stored_forms[Caf\\xc9]",
@@ -96,10 +101,5 @@
     "tests/test_query_full_text_right.py::test_search_observation_requires_a_real_source_not_decoded_data_or_a_claim[foreign2]",
     "tests/test_query_full_text_right.py::test_search_observation_requires_a_real_source_not_decoded_data_or_a_claim[foreign3]",
     "tests/test_query_full_text_right.py::test_search_observation_requires_a_real_source_not_decoded_data_or_a_claim[{}]"
-  ],
-  "open_items": [
-    "Supported platform/product acceptance remains open; current evidence measures native CPython and locally available locales only.",
-    "Public query CLI/live project adapter, public page delivery, load and full Work integration remain open.",
-    "Full specialist artifact/document validation, rendering/include traversal and attachment indexing are outside the current explicit-input text selection."
   ]
 }

@@ -1,49 +1,52 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0635",
-  "requirement_id": "SR-REQ-0635",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0040",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [
+    0,
+    2
+  ],
   "fixture_ids": [
     "SR-FIX-OWNED-TEMP-v1",
     "SR-FIX-ISOLATED-CPYTHON-v1"
   ],
-  "preconditions": [
-    "Current trusted runtime/SRX APIs with owned in-memory model, plan, scope and graph fixtures; native environment command against owned temporary roots."
+  "implementation_status": "partial",
+  "json_pointers": [
+    "/result/resource_policy",
+    "/result/resource_policy/classified_limits"
   ],
-  "steps": [
-    "Resolve declared profiles and explicit operational targets through current command/library consumers.",
-    "Inspect complete machine outputs, actual SRX results/errors and bound semantic identities; compare immutable inputs before and after selection.",
-    "Exercise the R historical-quantity, complete-work and malformed-input cases listed below; preserve the W tests unchanged.",
-    "Re-run the unchanged W/R behavioral cases after separating internal runtime options from semantic constraints; retain the same result values, errors, origins and side effects."
+  "method": "automated_behavior",
+  "open_items": [
+    "Partial 6.c.W/R behavior evidence with unchanged C regression coverage. Adaptive work scheduling, measured aggregate consumption, persistent Work/checkpoints, future command consumers and the complete runtime/platform matrix remain open. Historical hash-policy migration is a later migration-plan responsibility; no existing baseline is rewritten. Supplied-model and query-page tests do not prove filesystem completeness or a complete query engine."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Nicht bekannte Anbieterquoten DÜRFEN NICHT als bestimmte verfügbare Ressourcen oder als nachgewiesene Unausführbarkeit ausgegeben werden.",
     "scope": "The real environment command preserves unknown CPU/memory/storage observations despite large selected work targets. A supplied observed address-space ceiling remains separately qualified and unchanged; neither a target nor unknown quota implies available capacity or proven impossibility. R rejects contradictory, unqualified, negative/noninteger or non-UTF-8 host claims as usage errors without changing caller observations or converting uncertainty into capacity. C retains these same behavioral oracles and public machine contracts while separating the internal option and semantic-constraint types."
   },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [
-    0,
-    2
+  "preconditions": [
+    "Current trusted runtime/SRX APIs with owned in-memory model, plan, scope and graph fixtures; native environment command against owned temporary roots."
   ],
-  "json_pointers": [
-    "/result/resource_policy",
-    "/result/resource_policy/classified_limits"
-  ],
+  "primary_verification_id": "SR-VER-0040",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0635",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Resolve declared profiles and explicit operational targets through current command/library consumers.",
+    "Inspect complete machine outputs, actual SRX results/errors and bound semantic identities; compare immutable inputs before and after selection.",
+    "Exercise the R historical-quantity, complete-work and malformed-input cases listed below; preserve the W tests unchanged.",
+    "Re-run the unchanged W/R behavioral cases after separating internal runtime options from semantic constraints; retain the same result values, errors, origins and side effects."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0635",
   "test_ids": [
     "tests/test_runtime_resource_policy.py::test_known_host_ceiling_is_separate_from_soft_target_and_never_raised",
     "tests/test_runtime_resource_policy.py::test_unknown_host_quotas_remain_unknown_even_with_large_declared_targets[constrained]",
@@ -57,8 +60,5 @@
     "tests/test_runtime_resource_policy_right.py::test_invalid_host_claims_cannot_be_promoted_to_resource_capacity[changes6]",
     "tests/test_runtime_resource_policy_right.py::test_invalid_host_claims_cannot_be_promoted_to_resource_capacity[changes7]",
     "tests/test_runtime_resource_policy_right.py::test_invalid_host_claims_cannot_be_promoted_to_resource_capacity[changes8]"
-  ],
-  "open_items": [
-    "Partial 6.c.W/R behavior evidence with unchanged C regression coverage. Adaptive work scheduling, measured aggregate consumption, persistent Work/checkpoints, future command consumers and the complete runtime/platform matrix remain open. Historical hash-policy migration is a later migration-plan responsibility; no existing baseline is rewritten. Supplied-model and query-page tests do not prove filesystem completeness or a complete query engine."
   ]
 }

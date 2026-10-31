@@ -1,31 +1,5 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0402",
-  "requirement_id": "SR-REQ-0402",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0028",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
-  "fixture_ids": [
-    "SR-FIX-RECORD-FIELDS-v1",
-    "SR-FIX-MODEL-VALIDATION-v1",
-    "SR-FIX-PRODUCTION-VALIDATION-v1"
-  ],
-  "preconditions": [
-    "Original loaded model documents, an explicit configuration identity and explicitly supplied existing semantic services."
-  ],
-  "steps": [
-    "Refuse an absent or unknown selected configuration before a configuration gate can become not applicable.",
-    "Validate the same documents under two explicitly selected variants; compare original identities, revisions and source bindings.",
-    "Run the existing model validator with a fresh stored-relation configuration gate; preserve other failures/unavailable services and complete dependency paths.",
-    "Reconstruct owned documents, reject duplicate source labels and compare deterministic configuration failures across source orderings.",
-    "Inject changed model inputs at the validation boundary and require the current effective configuration manifest to match its gate binding; retain separate concurrent variant results and portable Python behavior."
-  ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "Requirements, Verification Contracts, Tests, Code-Referenzen und Inhaltsblöcke MÜSSEN über dieselbe stabile ID in beliebig vielen Dokumenten, Releases und Konfigurationen wiederverwendbar sein, ohne normative Kopien anzulegen.",
-    "scope": "The configured validation entrypoint requires an explicit selected configuration and preserves the same original model documents. Selection is part of the gate resource binding, while the complete model input binds source bytes. Consistency uses current applicability and full shortest stored-required-relation paths. Passing this gate does not replace structural checks, unavailable services or human approval; other semantic services retain their own scopes. Source documents are owned copies. Duplicate logical source labels are refused; selected configuration manifests are rechecked at the gate boundary. A changed selected or inherited revision/value cannot reuse the earlier binding. JSON formatting alone does not change semantic configuration identity. The gate context retains only detached configuration identity and digests; original artifact records are not used as mutable gate state."
-  },
+  "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [
     "SRV130",
     "SRV131",
@@ -36,21 +10,50 @@
     "configuration_gate_binding_changed"
   ],
   "expected_exit_codes": [],
+  "fixture_ids": [
+    "SR-FIX-RECORD-FIELDS-v1",
+    "SR-FIX-MODEL-VALIDATION-v1",
+    "SR-FIX-PRODUCTION-VALIDATION-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [
     "/applicability",
     "/selection"
   ],
+  "method": "automated_behavior",
+  "open_items": [
+    "The current Python entrypoint supplies a stored-relation configuration gate. Live command integration follows in 9.g; document/release rendering and external-resource/review approval services are not certified."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Requirements, Verification Contracts, Tests, Code-Referenzen und Inhaltsblöcke MÜSSEN über dieselbe stabile ID in beliebig vielen Dokumenten, Releases und Konfigurationen wiederverwendbar sein, ohne normative Kopien anzulegen.",
+    "scope": "The configured validation entrypoint requires an explicit selected configuration and preserves the same original model documents. Selection is part of the gate resource binding, while the complete model input binds source bytes. Consistency uses current applicability and full shortest stored-required-relation paths. Passing this gate does not replace structural checks, unavailable services or human approval; other semantic services retain their own scopes. Source documents are owned copies. Duplicate logical source labels are refused; selected configuration manifests are rechecked at the gate boundary. A changed selected or inherited revision/value cannot reuse the earlier binding. JSON formatting alone does not change semantic configuration identity. The gate context retains only detached configuration identity and digests; original artifact records are not used as mutable gate state."
+  },
+  "preconditions": [
+    "Original loaded model documents, an explicit configuration identity and explicitly supplied existing semantic services."
+  ],
+  "primary_verification_id": "SR-VER-0028",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0402",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Refuse an absent or unknown selected configuration before a configuration gate can become not applicable.",
+    "Validate the same documents under two explicitly selected variants; compare original identities, revisions and source bindings.",
+    "Run the existing model validator with a fresh stored-relation configuration gate; preserve other failures/unavailable services and complete dependency paths.",
+    "Reconstruct owned documents, reject duplicate source labels and compare deterministic configuration failures across source orderings.",
+    "Inject changed model inputs at the validation boundary and require the current effective configuration manifest to match its gate binding; retain separate concurrent variant results and portable Python behavior."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0402",
   "test_ids": [
     "tests/test_configuration_gates.py::test_a_caller_cannot_replace_the_selected_configuration_check",
     "tests/test_configuration_gates.py::test_absent_selected_id_never_falls_back_to_an_available_variant",
@@ -113,8 +116,5 @@
     "tests/test_configuration_gates_right.py::test_reconstructed_documents_reject_forged_cached_fields[path-]",
     "tests/test_configuration_gates_right.py::test_same_selected_values_at_distinct_revisions_produce_distinct_bindings",
     "tests/test_configuration_gates_right.py::test_two_concurrent_variants_keep_separate_results_over_the_same_original_model"
-  ],
-  "open_items": [
-    "The current Python entrypoint supplies a stored-relation configuration gate. Live command integration follows in 9.g; document/release rendering and external-resource/review approval services are not certified."
   ]
 }

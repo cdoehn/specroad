@@ -1,43 +1,46 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0131",
-  "requirement_id": "SR-REQ-0131",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0010",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [],
   "fixture_ids": [
     "SR-FIX-RECORD-FIELDS-v1",
     "SR-FIX-VERIFICATION-CONTRACTS-v1",
     "SR-FIX-VERIFICATION-CONTRACTS-RIGHT-v1"
   ],
-  "preconditions": [
-    "Owned current-schema records and read-only model APIs; synthetic actors and hashes are not actual approvals or external test evidence."
-  ],
-  "steps": [
-    "Load supported stored records, reject malformed local fields and compare original bytes without executing referenced operations.",
-    "Resolve every declared slot for an explicit subject/contract verified_by pair; bind actual contract/test bytes and inspect passive metadata without executing code. Prepare only new draft defaults when no additional dimension is declared.",
-    "Resolve direct verified_by tests into implicit overall contracts bound to original Test records. Preserve explicit-contract results and reject incomplete contracts, invalid identities and changed source bindings without file access or test execution."
+  "implementation_status": "partial",
+  "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "These are supplied-record and per-pair Contract checks, not project-wide required-check aggregation, configuration applicability, fresh Evidence evaluation or write authorization. Those later plan steps and broader platform/release evidence remain open."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Ein Test-Artefakt MUSS einen stabilen externen Testbezeichner oder einen projektinternen Pfad, den Testtyp und das erwartete Oracle referenzieren.",
     "scope": "Passive record-field contracts and lexical reference constraints only. No graph closure, payload hash verification, document rendering, successful verification or write authorization. Explicit-contract pair resolution and new-draft default are covered; supplied bytes do not prove live inventory or configuration applicability. Direct Test targets now contribute the normative implicit overall check with contract_id=test_id. Neither an invented Verification record nor a configuration-policy guess is produced."
   },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
+  "preconditions": [
+    "Owned current-schema records and read-only model APIs; synthetic actors and hashes are not actual approvals or external test evidence."
+  ],
+  "primary_verification_id": "SR-VER-0010",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0131",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Load supported stored records, reject malformed local fields and compare original bytes without executing referenced operations.",
+    "Resolve every declared slot for an explicit subject/contract verified_by pair; bind actual contract/test bytes and inspect passive metadata without executing code. Prepare only new draft defaults when no additional dimension is declared.",
+    "Resolve direct verified_by tests into implicit overall contracts bound to original Test records. Preserve explicit-contract results and reject incomplete contracts, invalid identities and changed source bindings without file access or test execution."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0131",
   "test_ids": [
     "test_record_schemas.RecordWorkTests.test_test_identity_has_one_external_or_local_form",
     "tests/test_verification_contracts.py::test_contract_resolution_has_identical_bindings_in_isolated_core_and_pyz[core]",
@@ -79,8 +82,5 @@
     "tests/test_verification_contracts_right.py::test_malformed_test_identities_are_rejected_for_direct_targets[identity9]",
     "tests/test_verification_contracts_right.py::test_nonverification_target_is_not_promoted_to_an_implicit_contract",
     "tests/test_verification_contracts_right.py::test_only_the_actual_test_artifact_id_selects_the_contract_not_equal_external_metadata"
-  ],
-  "open_items": [
-    "These are supplied-record and per-pair Contract checks, not project-wide required-check aggregation, configuration applicability, fresh Evidence evaluation or write authorization. Those later plan steps and broader platform/release evidence remain open."
   ]
 }

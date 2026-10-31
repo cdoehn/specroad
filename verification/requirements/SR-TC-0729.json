@@ -1,52 +1,52 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0729",
-  "requirement_id": "SR-REQ-0729",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0050",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
-  "fixture_ids": [
-    "SR-FIX-SRX-NUMERIC-v1"
-  ],
-  "preconditions": [
-    "Explicit SRX 1.0 context and numeric policy"
-  ],
-  "steps": [
-    "Evaluate actual numeric expressions and inspect values/structured errors."
-  ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "Numerische Fehler MÜSSEN die disjunkten Diagnosegründe aus Anhang U.2 erzeugen, statt vom globalen Python-Decimal-Kontext abhängig zu sein.",
-    "scope": "Pure arithmetic values and numeric policy only; no product or release approval."
-  },
+  "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [
     "SRV197"
   ],
   "expected_exit_codes": [
     2
   ],
+  "fixture_ids": [
+    "SR-FIX-SRX-NUMERIC-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [
     "/project/srx_policy",
     "/expression"
   ],
+  "method": "automated_behavior",
+  "open_items": [
+    "Full CI runtime matrix and integrated project validation/lifecycle are not proven by local selected tests."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Numerische Fehler MÜSSEN die disjunkten Diagnosegründe aus Anhang U.2 erzeugen, statt vom globalen Python-Decimal-Kontext abhängig zu sein.",
+    "scope": "Pure arithmetic values and numeric policy only; no product or release approval."
+  },
+  "preconditions": [
+    "Explicit SRX 1.0 context and numeric policy"
+  ],
+  "primary_verification_id": "SR-VER-0050",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0729",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Evaluate actual numeric expressions and inspect values/structured errors."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0729",
   "test_ids": [
     "tests/test_srx_arithmetic.py::test_nonfinite_direct_operands_have_numeric_diagnostic",
     "tests/test_srx_arithmetic_right.py::test_all_vectors_survive_modified_process_decimal_defaults",
     "tests/test_srx_arithmetic_right.py::test_context_raw_number_failure_is_not_expression_data"
-  ],
-  "open_items": [
-    "Full CI runtime matrix and integrated project validation/lifecycle are not proven by local selected tests."
   ]
 }

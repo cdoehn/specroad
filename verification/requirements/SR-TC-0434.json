@@ -1,43 +1,47 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0434",
-  "requirement_id": "SR-REQ-0434",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0030",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [],
   "fixture_ids": [
     "SR-FIX-OWNED-TEMP-v1",
     "SR-FIX-RECORD-FIELDS-v1"
   ],
-  "preconditions": [
-    "Owned current-schema records and read-only model APIs; synthetic actors and hashes are not actual approvals or external test evidence.",
-    "Owned temporary native project with two goals and a draft requirement, complete resource bindings, explicit human actor/source guards and actual writer/receipt services."
-  ],
-  "steps": [
-    "Load supported stored records, reject malformed local fields and compare original bytes without executing referenced operations.",
-    "Record a confirmed relation review under the real writer lock; inspect complete endpoint/context bindings, immutable revision-1 output and native receipts; replay the same request and reject changed intent, nonhuman actors, stale guards and tampered saved plans.",
-    "Reject invalid supplied graphs, stale source guards and incomplete known historical exclusions before lock/allocation; verify saved-plan isolation and exact immutable audit bindings, live endpoint byte conflicts and native interrupted publication evidence."
+  "implementation_status": "partial",
+  "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "General review-history/status selection belongs to 7.h; negative decisions and exact approval withdrawals belong to 7.i. Other relevant semantic subjects fail closed until their services exist.",
+    "Integrate registered CLI/dry-run/output, production model/history acquisition and supported-platform evidence; no complete requirement or release claim."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Ein Relationsreview-Artefakt MUSS atomar mit `review_state=recorded` und `maturity=approved` erzeugt werden.",
     "scope": "Native first confirmed human review: new random128 identity, exact relation/source/target IDs, revisions, full and context hashes, reviewer/time/reason/comment, recorded/approved creation through complete target checks and native journal/publication/receipt/cleanup, unchanged original files, historical request replay and immutable generic routes. The bound gates cover only the new review; general history/currentness, negative outcomes/withdrawals and CLI remain open. R: early graph/guard checks, known historical allocation exclusions, self-hashed record and mixed-plan rejection, live tag-only endpoint mutations, host-gate ownership, timestamp context discrimination and real before/after-rename recovery evidence. General history selection and negative reviews remain closed."
   },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
+  "preconditions": [
+    "Owned current-schema records and read-only model APIs; synthetic actors and hashes are not actual approvals or external test evidence.",
+    "Owned temporary native project with two goals and a draft requirement, complete resource bindings, explicit human actor/source guards and actual writer/receipt services."
+  ],
+  "primary_verification_id": "SR-VER-0030",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0434",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Load supported stored records, reject malformed local fields and compare original bytes without executing referenced operations.",
+    "Record a confirmed relation review under the real writer lock; inspect complete endpoint/context bindings, immutable revision-1 output and native receipts; replay the same request and reject changed intent, nonhuman actors, stale guards and tampered saved plans.",
+    "Reject invalid supplied graphs, stale source guards and incomplete known historical exclusions before lock/allocation; verify saved-plan isolation and exact immutable audit bindings, live endpoint byte conflicts and native interrupted publication evidence."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0434",
   "test_ids": [
     "test_record_schemas.RecordRightTests.test_all_special_endstates_refuse_every_generic_route",
     "test_record_schemas.RecordWorkTests.test_relation_reviews_require_a_human_declaration",
@@ -111,9 +115,5 @@
     "tests/test_relation_review_authoring_right.py::test_unmatched_historical_context_does_not_shift_new_review_time[relation_id]",
     "tests/test_relation_review_authoring_right.py::test_unmatched_historical_context_does_not_shift_new_review_time[source_context_sha256]",
     "tests/test_relation_review_authoring_right.py::test_unmatched_historical_context_does_not_shift_new_review_time[target_context_sha256]"
-  ],
-  "open_items": [
-    "General review-history/status selection belongs to 7.h; negative decisions and exact approval withdrawals belong to 7.i. Other relevant semantic subjects fail closed until their services exist.",
-    "Integrate registered CLI/dry-run/output, production model/history acquisition and supported-platform evidence; no complete requirement or release claim."
   ]
 }

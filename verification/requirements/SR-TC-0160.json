@@ -1,28 +1,5 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0160",
-  "requirement_id": "SR-REQ-0160",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0012",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
-  "fixture_ids": [
-    "SR-FIX-JSON-PATCH-v1",
-    "SR-FIX-DOMAIN-DRAFT-v1"
-  ],
-  "preconditions": [
-    "Owned JSON values or a field-valid explicitly supplied artifact plus an update with an expected revision and/or canonical hash."
-  ],
-  "steps": [
-    "Apply real RFC-6902 operations in order on an isolated value snapshot.",
-    "Compile ordered set/unset inputs without implicit parent creation or type conversion.",
-    "Check supplied target, revision/hash and controlled fields before returning a field-valid candidate; ensure original values are unchanged."
-  ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "Eine `update`-Operation MUSS einen RFC-6902-kompatiblen JSON Patch verwenden.",
-    "scope": "Pure RFC-6902 value execution and guarded artifact candidates. No live storage reads, full Change Plan folding, metadata advancement, lifecycle approval, CLI command or publication."
-  },
+  "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [
     "SRV070",
     "SRV146"
@@ -30,23 +7,52 @@
   "expected_exit_codes": [
     3
   ],
+  "fixture_ids": [
+    "SR-FIX-JSON-PATCH-v1",
+    "SR-FIX-DOMAIN-DRAFT-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [
     "/patch",
     "/target",
     "/expected_revision",
     "/expected_sha256"
   ],
+  "method": "automated_behavior",
+  "open_items": [
+    "Wire artifact-update CLI and planner to the same preview/normalization path in the scheduled authoring step.",
+    "Apply full Change Plan folding, metadata advancement, profile/lifecycle validation and transaction-bound live preconditions in later steps.",
+    "Proposal planning must include both revision and hash; this authoring input API accepts either and checks both when supplied.",
+    "Full supported Python matrix is evaluated by CI; local selected tests are not complete suite evidence."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Eine `update`-Operation MUSS einen RFC-6902-kompatiblen JSON Patch verwenden.",
+    "scope": "Pure RFC-6902 value execution and guarded artifact candidates. No live storage reads, full Change Plan folding, metadata advancement, lifecycle approval, CLI command or publication."
+  },
+  "preconditions": [
+    "Owned JSON values or a field-valid explicitly supplied artifact plus an update with an expected revision and/or canonical hash."
+  ],
+  "primary_verification_id": "SR-VER-0012",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0160",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Apply real RFC-6902 operations in order on an isolated value snapshot.",
+    "Compile ordered set/unset inputs without implicit parent creation or type conversion.",
+    "Check supplied target, revision/hash and controlled fields before returning a field-valid candidate; ensure original values are unchanged."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0160",
   "test_ids": [
     "tests/test_json_patch.py::test_rfc6902_examples",
     "tests/test_json_patch.py::test_array_operations_use_the_previous_operation_result",
@@ -58,11 +64,5 @@
     "tests/test_json_patch_right.py::test_move_array_indices_match_independent_list_oracle",
     "tests/test_json_patch_right.py::test_deep_values_do_not_require_python_recursion",
     "tests/test_json_patch_right.py::test_strict_raw_inputs_never_silently_round_numbers"
-  ],
-  "open_items": [
-    "Wire artifact-update CLI and planner to the same preview/normalization path in the scheduled authoring step.",
-    "Apply full Change Plan folding, metadata advancement, profile/lifecycle validation and transaction-bound live preconditions in later steps.",
-    "Proposal planning must include both revision and hash; this authoring input API accepts either and checks both when supplied.",
-    "Full supported Python matrix is evaluated by CI; local selected tests are not complete suite evidence."
   ]
 }

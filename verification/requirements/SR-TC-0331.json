@@ -1,33 +1,5 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0331",
-  "requirement_id": "SR-REQ-0331",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0024",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
-  "fixture_ids": [
-    "SR-FIX-ARTIFACT-IMPORT-EXECUTION-v1",
-    "SR-FIX-ARTIFACT-IMPORT-PLAN-REUSE-v1",
-    "SR-FIX-ARTIFACT-IMPORT-PLAN-v1"
-  ],
-  "preconditions": [
-    "Explicit parsed artifact candidates, actual source bytes, exact selected mapping, complete supplied TargetModel and explicit native creation envelopes/actor/time. Trusted target policy/gates are caller registrations, not source data."
-  ],
-  "steps": [
-    "Plan new and matched artifacts through real mapping selection, native lookup, conflict evaluation and the ordinary complete-target Change Plan service.",
-    "Inspect exact byte/canonical bindings, operations, native IDs, regular metadata/history, preserved local fields, attachment references, skipped objects, unresolved conflicts and individual losses.",
-    "Verify normal saved-plan target equivalence, blocking target gates, passive detached reports and isolated Core/PYZ availability without filesystem writes.",
-    "Reassess saved canonical import envelopes against independently supplied current source bytes, format, parsed candidates, mapping, basis and explicit request metadata/policy; rerun all current target gates.",
-    "Reject stale raw/semantic inputs and forged operations, results, losses, success or authority claims; preserve invalid reports, original input ownership and project/operational inventory. Verify Core/PYZ availability.",
-    "Distinguish the submitted passive import report from actual native execution/receipt, including no-op and historical idempotent replay; never relabel a current proposal as a new historical publication.",
-    "Report expected import failures without manufacturing completion, loss consent or rollback. Interrupt both real artifact replacements before and after the syscall; block ordinary reads/retries, explicitly recover to the exact basis or complete target, and verify original receipts and unrelated bytes."
-  ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "Ein Importabschlussbericht MUSS Eingabehash, Mappinghash, Change-Plan-ID, erzeugte und aktualisierte IDs, übersprungene Objekte, Konflikte, Verluste, Anhänge, Diagnosen und Zielmodellwurzel enthalten.",
-    "scope": "14.d.W implements an owned artifact-import-plan-v1 observation from explicit parsed artifact candidates. Actual mapping bytes, native-owner lookup and the five-case policy derive regular create/update operations with explicit IDs, actor and time. The ordinary Change Plan service recomputes regular revisions/history and validates the complete supplied target. Exact input bytes, canonical and byte mapping hashes, candidate content, base/root, resource/source bindings and Change Plan hash are retained. Reports include planned created/updated IDs, skipped objects, unresolved conflicts, individual unaccepted unmapped-field losses and byte-verified existing attachment references. No-op/local/skip/reject preserve native history; safe adoption keeps the same ID and preserves unrelated fields and identities. A missing gate, divergent conflict, unaccepted loss or invalid complete target never exposes a valid executable plan. The regular saved plan reproduces the target on the same supplied model. No input parsing, filesystem completeness, authorization, transaction or completed import is claimed. 14.d.R adds assess_import_plan: strict JSON bytes are passive saved data. Full re-preparation from explicit current inputs must reproduce every bound field and observation; no expected input, actor/time, policy or gate is taken from the saved report. All source/resource bytes, candidates, untouched base members, reservations, metadata and current target checks remain bound. A changed gate result or input requires a new preparation; matching invalid reports remain non-executable. JSON envelope layout may differ, not the bound source bytes. No live inventory, source parsing, authority, transaction or import completion is claimed. 14.e.W separately exposes submitted_import_plan and native execution. Only the native execution/receipt attests actual publication; a replay reports original audit facts and explicitly does not verify the current target. The submitted report stays passive, even on successful publication. Existing attachment bytes are verified and bound. This additive service does not implement a final CLI/format-level import-completion report or claim full SR-REQ-0331 completion. 14.e.R adds execute_import_plan, preserving the raising API. Failure reports retain only freshly assessed submitted plans, never untrusted saved observations. Expected model/security/I/O failures retain native exits and proven write states; missing writer evidence is unknown with recovery required. No automatic retry, rollback or approval. Multiple artifact publication interrupted at each replacement boundary stays quarantined from ordinary reads; explicit native recovery restores the exact basis or completes the entire target with durable original receipts. Full targets are never rolled back. Late staging/receipt/cleanup failures retain actual operational state. Unexpected programming errors propagate. This covers the existing explicit artifact-candidate profile, not future source-format parsing or loss-acceptance workflows. 14.e.C separates passive execution/failure report projection into one private module and keeps both public entry points on the same format-independent native publication route with explicit keyword-bound writer arguments. Public signatures, output fields, native exit codes, write-state conservatism, authorization, input ownership, replay and recovery effects remain unchanged. Existing W/R behavior tests and their identities/oracles are retained; no new product capability or completed requirement is claimed."
-  },
+  "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [
     "SRV070",
     "SRV090",
@@ -43,6 +15,12 @@
     6,
     7
   ],
+  "fixture_ids": [
+    "SR-FIX-ARTIFACT-IMPORT-EXECUTION-v1",
+    "SR-FIX-ARTIFACT-IMPORT-PLAN-REUSE-v1",
+    "SR-FIX-ARTIFACT-IMPORT-PLAN-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [
     "/binding",
     "/operations",
@@ -64,17 +42,42 @@
     "/recovery_required",
     "/submitted_import_plan_sha256"
   ],
+  "method": "automated_behavior",
+  "open_items": [
+    "CLI/source format parsing, relation/registry candidates, incoming attachment byte publication, explicit loss acceptance and a complete format-level import-completion report remain in assigned import work."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Ein Importabschlussbericht MUSS Eingabehash, Mappinghash, Change-Plan-ID, erzeugte und aktualisierte IDs, übersprungene Objekte, Konflikte, Verluste, Anhänge, Diagnosen und Zielmodellwurzel enthalten.",
+    "scope": "14.d.W implements an owned artifact-import-plan-v1 observation from explicit parsed artifact candidates. Actual mapping bytes, native-owner lookup and the five-case policy derive regular create/update operations with explicit IDs, actor and time. The ordinary Change Plan service recomputes regular revisions/history and validates the complete supplied target. Exact input bytes, canonical and byte mapping hashes, candidate content, base/root, resource/source bindings and Change Plan hash are retained. Reports include planned created/updated IDs, skipped objects, unresolved conflicts, individual unaccepted unmapped-field losses and byte-verified existing attachment references. No-op/local/skip/reject preserve native history; safe adoption keeps the same ID and preserves unrelated fields and identities. A missing gate, divergent conflict, unaccepted loss or invalid complete target never exposes a valid executable plan. The regular saved plan reproduces the target on the same supplied model. No input parsing, filesystem completeness, authorization, transaction or completed import is claimed. 14.d.R adds assess_import_plan: strict JSON bytes are passive saved data. Full re-preparation from explicit current inputs must reproduce every bound field and observation; no expected input, actor/time, policy or gate is taken from the saved report. All source/resource bytes, candidates, untouched base members, reservations, metadata and current target checks remain bound. A changed gate result or input requires a new preparation; matching invalid reports remain non-executable. JSON envelope layout may differ, not the bound source bytes. No live inventory, source parsing, authority, transaction or import completion is claimed. 14.e.W separately exposes submitted_import_plan and native execution. Only the native execution/receipt attests actual publication; a replay reports original audit facts and explicitly does not verify the current target. The submitted report stays passive, even on successful publication. Existing attachment bytes are verified and bound. This additive service does not implement a final CLI/format-level import-completion report or claim full SR-REQ-0331 completion. 14.e.R adds execute_import_plan, preserving the raising API. Failure reports retain only freshly assessed submitted plans, never untrusted saved observations. Expected model/security/I/O failures retain native exits and proven write states; missing writer evidence is unknown with recovery required. No automatic retry, rollback or approval. Multiple artifact publication interrupted at each replacement boundary stays quarantined from ordinary reads; explicit native recovery restores the exact basis or completes the entire target with durable original receipts. Full targets are never rolled back. Late staging/receipt/cleanup failures retain actual operational state. Unexpected programming errors propagate. This covers the existing explicit artifact-candidate profile, not future source-format parsing or loss-acceptance workflows. 14.e.C separates passive execution/failure report projection into one private module and keeps both public entry points on the same format-independent native publication route with explicit keyword-bound writer arguments. Public signatures, output fields, native exit codes, write-state conservatism, authorization, input ownership, replay and recovery effects remain unchanged. Existing W/R behavior tests and their identities/oracles are retained; no new product capability or completed requirement is claimed."
+  },
+  "preconditions": [
+    "Explicit parsed artifact candidates, actual source bytes, exact selected mapping, complete supplied TargetModel and explicit native creation envelopes/actor/time. Trusted target policy/gates are caller registrations, not source data."
+  ],
+  "primary_verification_id": "SR-VER-0024",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0331",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Plan new and matched artifacts through real mapping selection, native lookup, conflict evaluation and the ordinary complete-target Change Plan service.",
+    "Inspect exact byte/canonical bindings, operations, native IDs, regular metadata/history, preserved local fields, attachment references, skipped objects, unresolved conflicts and individual losses.",
+    "Verify normal saved-plan target equivalence, blocking target gates, passive detached reports and isolated Core/PYZ availability without filesystem writes.",
+    "Reassess saved canonical import envelopes against independently supplied current source bytes, format, parsed candidates, mapping, basis and explicit request metadata/policy; rerun all current target gates.",
+    "Reject stale raw/semantic inputs and forged operations, results, losses, success or authority claims; preserve invalid reports, original input ownership and project/operational inventory. Verify Core/PYZ availability.",
+    "Distinguish the submitted passive import report from actual native execution/receipt, including no-op and historical idempotent replay; never relabel a current proposal as a new historical publication.",
+    "Report expected import failures without manufacturing completion, loss consent or rollback. Interrupt both real artifact replacements before and after the syscall; block ordinary reads/retries, explicitly recover to the exact basis or complete target, and verify original receipts and unrelated bytes."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0331",
   "test_ids": [
     "tests/test_import_execution.py::test_bound_attachment_and_source_reference_share_the_complete_native_target[fresh]",
     "tests/test_import_execution.py::test_bound_attachment_and_source_reference_share_the_complete_native_target[saved]",
@@ -330,8 +333,5 @@
     "tests/test_import_planning_right.py::test_selected_mapping_is_bound_by_actual_bytes_and_full_versioned_content[content]",
     "tests/test_import_planning_right.py::test_selected_mapping_is_bound_by_actual_bytes_and_full_versioned_content[identity]",
     "tests/test_import_planning_right.py::test_selected_mapping_is_bound_by_actual_bytes_and_full_versioned_content[version]"
-  ],
-  "open_items": [
-    "CLI/source format parsing, relation/registry candidates, incoming attachment byte publication, explicit loss acceptance and a complete format-level import-completion report remain in assigned import work."
   ]
 }

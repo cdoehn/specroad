@@ -1,11 +1,14 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0446",
-  "requirement_id": "SR-REQ-0446",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0030",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [
+    "SRV175",
+    "SRV176",
+    "SRV146"
+  ],
+  "expected_exit_codes": [
+    3,
+    7
+  ],
   "fixture_ids": [
     "SR-FIX-VERIFICATION-EVALUATION-ROLES-v1",
     "SR-FIX-VERIFICATION-EVALUATION-v1",
@@ -18,6 +21,22 @@
     "SR-FIX-VERIFICATION-AGGREGATION-v1",
     "SR-FIX-VERIFICATION-AGGREGATION-RIGHT-v1"
   ],
+  "implementation_status": "partial",
+  "json_pointers": [
+    "/evaluated_subject/manifest",
+    "/evaluated_subject/state_sha256",
+    "/required_runs",
+    "/replacements"
+  ],
+  "method": "automated_behavior",
+  "open_items": [
+    "12.o.C will clean the aggregation structure without changing results or side effects. Project evaluation-identity conflicts, command/query/readiness integration, actual live inventory and provider provenance remain separate follow-up gates. Capability/Task context projections remain unsupported rather than invented. Declared roles/producer/human replacement identity are not authenticated, and no external execution or release pass is inferred."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "SpecRoad MUSS `verification_result` durch die vollständige Bewertungs-, Pflichtprüfungs- und Nachweisauswahl samt anschließender priorisierter Ergebnisaggregation aus Kapitel 10.5 berechnen.",
+    "scope": "12.k.W/R: Actual bytes bind product and descriptor hashes. Explicit checker/importer role inventory excludes Evidence, check outputs, evaluation and selection metadata from inputs; unlisted declared inputs cannot disappear. Missing evaluation or unavailable binding is incomplete/SRV176; forbidden manifest roles are SRV175/code 3. Ready means input binding only, never passed or external execution/approval. Roles are declared, not authenticated. 12.l.W adds independent whole-supplied-project obligations for Requirements, Capabilities and Tasks, every explicit slot and direct Test contract. Unknown applicability remains incomplete, excluded required dependencies fail with SRV141, missing keys are incomplete/SRV176 and extra keys SRV175/code 3. Exact coverage is only ready, never passed or proof of live inventory. 12.l.R binds independent native scopes and complete provider inventory; native closure includes required dependencies before comparison. Query pages are recomputed without a verification evaluation. Missing-only keys stay incomplete; foreign keys produce SRV175 with both missing_checks and unexpected_keys and the independently bound required_set_sha256. 12.m.W selects all supplied same-product observed and expected run candidates per independent key, preserving every raw result and original Evidence binding. Bound configuration must match; cross-configuration independence requires an explicit current contract. Selection is not freshness, replacement, final aggregation or a passed verification result. 12.m.R adds a separate pure disposition assessment over the unchanged candidate API. Historical/unbound records never witness expected runs. Empty expectations are missing, existing stale observations remain present, supported context comparisons use Appendix L, unsupported subject projections stay incomplete. No time/ID order chooses a winner; old W behavior remains intact. No replacements or final verification result are evaluated. 12.n.W adds assess_run_replacements as a separate owned selection stage. Only a complete human decision with exact old Evidence-set hash and all current complete reachable end runs supersedes the named per-key candidate. Additional old Evidence changes the set even when excluded by configuration; no historical bytes are rewritten. Failed end runs retain their result; no aggregate pass is claimed. SRV175/code 3 rejects structural violations, code 7 nonhuman authority; ineffective binding is incomplete/SRV176 replacement_binding_changed. Existing candidate/context APIs keep their prior contracts. 12.n.R closes the missing-old-candidate case: a matching hash of excluded records cannot satisfy an old expectation or intermediate chain binding. All reachable end-run reasons and raw failed results remain visible in terminal_runs; invalid intermediate decisions prevent dependent replacements but not independent valid decisions. Stale intermediates may themselves be validly replaced. Native context, scope and product conflict errors are preserved. New old-run observations or changed full artifacts invalidate the old human set; no original Evidence bytes or unchanged W test oracles are rewritten. 12.o.W adds aggregate_verification_results as a separate owned computation. Exclusion precedes effective waiver, then not_planned, incomplete binding, current failure, running, missing obligations, exclusively stale evidence for a required check, and complete current passes. A later success or missing other expected run cannot hide a current failure. Mixed current/stale observations do not pass. Effective replacement terminals retain failed results; ineffective replacements block aggregation. Waiver expiry is evaluated at the explicit time, with native content/scope/configuration and trusted human-review checks. Existing evidence and plan status are never rewritten. The report retains all native bindings and makes live inventory, evaluation-identity history, external execution and release-readiness limits explicit. 12.o.R adds evidence_result/reasons per required key and blocking_observations per active run without weakening Subject-level input, plan or waiver gates. A current failure retains priority and all other blocker reasons. Unresolved Subject context remains incomplete even when another assessed context is stale. Complete current and stale runs of one check yield incomplete/required_check_mixed_freshness; a solely stale required check beside another current passed check follows the literal Subject stale rule. Evidence detail cannot replace missing input binding. Existing native conflicts, strict descriptor errors, explicit waiver deadline and full replacement-set binding remain effective. Original W tests and Evidence bytes are preserved."
+  },
   "preconditions": [
     "Explicit owned descriptor or None, available input bytes or None, and independently supplied logical-path roles or None. No host discovery or inferred file roles.",
     "12.m.W: Owned TargetModel plus explicit evaluation and configuration, with optional independent native scope bindings. Only supplied Evidence is observed; input bytes and roles are assessed separately.",
@@ -27,6 +46,19 @@
     "12.o.W: Explicit original model/descriptor bytes, independently supplied product inputs and logical roles, native scope/configuration and expected/observed run inventory. Evaluation time is required UTC. Any waiver uses an explicitly supplied trusted host verifier; synthetic review data alone grants no exception.",
     "12.o.R: Native independent required keys, bound inputs/roles and explicit selected model; literal decision matrices cover one/two checks and planned/running status. Every unresolved context and raw result remains visible. Waiver and replacement fixtures are explicit synthetic human declarations, not real authorization."
   ],
+  "primary_verification_id": "SR-VER-0030",
+  "required_environment": {
+    "declared_minimum_python": "3.10",
+    "implementation": "cpython",
+    "measured_scope": "current-run-only"
+  },
+  "requirement_id": "SR-REQ-0446",
+  "resources": {
+    "harness_suite_timeout": null,
+    "harness_test_timeout": null,
+    "owned_temporary_files": true
+  },
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
   "steps": [
     "Retain W manifest/hash and isolated runtime checks. Check exact role/byte binding, reject Evidence/output/descriptor/selection inputs without filtering, preserve missing binding observations as incomplete/SRV176, verify ownership and isolated Core/PYZ.",
     "Derive required keys independently from every applicable subject in an owned whole-project model, native verified_by targets and all slots. Compare descriptor coverage without changing the scope; retain missing or unresolved obligations and reject foreign keys. Bind explicit selected configuration and preserve input files without executing tests or Evidence.",
@@ -38,37 +70,8 @@
     "12.o.W: Aggregate subject results with section 10.5 priorities over native input binding, required keys, all active run observations and effective replacements. Check failure over running and other missing runs, invalid replacement over failure, exclusion and exact valid waiver precedence, expired/changed/unconfirmed/legacy waivers, stale and incomplete evidence, foreign observations, per-subject isolation, immutable source/report bytes and isolated Core/PYZ parity.",
     "12.o.R: Evaluate all 144 mixed pairs; require exact per-subject priorities and per-key evidence details. Preserve every blocking observation; reject positive defaults for missing or unresolved runs and for unsupported subject contexts beside stale tests. Check higher binding gates, native run conflicts, expired or differently scoped waivers, ineffective replacement terminals and changed old sets, independently scoped subjects, input ordering, ownership and isolated Core/PYZ."
   ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "SpecRoad MUSS `verification_result` durch die vollständige Bewertungs-, Pflichtprüfungs- und Nachweisauswahl samt anschließender priorisierter Ergebnisaggregation aus Kapitel 10.5 berechnen.",
-    "scope": "12.k.W/R: Actual bytes bind product and descriptor hashes. Explicit checker/importer role inventory excludes Evidence, check outputs, evaluation and selection metadata from inputs; unlisted declared inputs cannot disappear. Missing evaluation or unavailable binding is incomplete/SRV176; forbidden manifest roles are SRV175/code 3. Ready means input binding only, never passed or external execution/approval. Roles are declared, not authenticated. 12.l.W adds independent whole-supplied-project obligations for Requirements, Capabilities and Tasks, every explicit slot and direct Test contract. Unknown applicability remains incomplete, excluded required dependencies fail with SRV141, missing keys are incomplete/SRV176 and extra keys SRV175/code 3. Exact coverage is only ready, never passed or proof of live inventory. 12.l.R binds independent native scopes and complete provider inventory; native closure includes required dependencies before comparison. Query pages are recomputed without a verification evaluation. Missing-only keys stay incomplete; foreign keys produce SRV175 with both missing_checks and unexpected_keys and the independently bound required_set_sha256. 12.m.W selects all supplied same-product observed and expected run candidates per independent key, preserving every raw result and original Evidence binding. Bound configuration must match; cross-configuration independence requires an explicit current contract. Selection is not freshness, replacement, final aggregation or a passed verification result. 12.m.R adds a separate pure disposition assessment over the unchanged candidate API. Historical/unbound records never witness expected runs. Empty expectations are missing, existing stale observations remain present, supported context comparisons use Appendix L, unsupported subject projections stay incomplete. No time/ID order chooses a winner; old W behavior remains intact. No replacements or final verification result are evaluated. 12.n.W adds assess_run_replacements as a separate owned selection stage. Only a complete human decision with exact old Evidence-set hash and all current complete reachable end runs supersedes the named per-key candidate. Additional old Evidence changes the set even when excluded by configuration; no historical bytes are rewritten. Failed end runs retain their result; no aggregate pass is claimed. SRV175/code 3 rejects structural violations, code 7 nonhuman authority; ineffective binding is incomplete/SRV176 replacement_binding_changed. Existing candidate/context APIs keep their prior contracts. 12.n.R closes the missing-old-candidate case: a matching hash of excluded records cannot satisfy an old expectation or intermediate chain binding. All reachable end-run reasons and raw failed results remain visible in terminal_runs; invalid intermediate decisions prevent dependent replacements but not independent valid decisions. Stale intermediates may themselves be validly replaced. Native context, scope and product conflict errors are preserved. New old-run observations or changed full artifacts invalidate the old human set; no original Evidence bytes or unchanged W test oracles are rewritten. 12.o.W adds aggregate_verification_results as a separate owned computation. Exclusion precedes effective waiver, then not_planned, incomplete binding, current failure, running, missing obligations, exclusively stale evidence for a required check, and complete current passes. A later success or missing other expected run cannot hide a current failure. Mixed current/stale observations do not pass. Effective replacement terminals retain failed results; ineffective replacements block aggregation. Waiver expiry is evaluated at the explicit time, with native content/scope/configuration and trusted human-review checks. Existing evidence and plan status are never rewritten. The report retains all native bindings and makes live inventory, evaluation-identity history, external execution and release-readiness limits explicit. 12.o.R adds evidence_result/reasons per required key and blocking_observations per active run without weakening Subject-level input, plan or waiver gates. A current failure retains priority and all other blocker reasons. Unresolved Subject context remains incomplete even when another assessed context is stale. Complete current and stale runs of one check yield incomplete/required_check_mixed_freshness; a solely stale required check beside another current passed check follows the literal Subject stale rule. Evidence detail cannot replace missing input binding. Existing native conflicts, strict descriptor errors, explicit waiver deadline and full replacement-set binding remain effective. Original W tests and Evidence bytes are preserved."
-  },
-  "expected_diagnostics": [
-    "SRV175",
-    "SRV176",
-    "SRV146"
-  ],
-  "expected_exit_codes": [
-    3,
-    7
-  ],
-  "json_pointers": [
-    "/evaluated_subject/manifest",
-    "/evaluated_subject/state_sha256",
-    "/required_runs",
-    "/replacements"
-  ],
-  "required_environment": {
-    "implementation": "cpython",
-    "declared_minimum_python": "3.10",
-    "measured_scope": "current-run-only"
-  },
-  "resources": {
-    "owned_temporary_files": true,
-    "harness_test_timeout": null,
-    "harness_suite_timeout": null
-  },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0446",
   "test_ids": [
     "tests/test_verification_aggregation.py::test_all_observations_of_one_run_participate_without_a_newest_success_rule",
     "tests/test_verification_aggregation.py::test_configuration_exclusion_has_priority_without_a_descriptor_or_product_bytes[not_planned]",
@@ -747,8 +750,5 @@
     "tests/test_verification_run_selection_right.py::test_untyped_model_is_rejected_without_discovery[None]",
     "tests/test_verification_run_selection_right.py::test_untyped_model_is_rejected_without_discovery[current-model]",
     "tests/test_verification_run_selection_right.py::test_untyped_model_is_rejected_without_discovery[untyped1]"
-  ],
-  "open_items": [
-    "12.o.C will clean the aggregation structure without changing results or side effects. Project evaluation-identity conflicts, command/query/readiness integration, actual live inventory and provider provenance remain separate follow-up gates. Capability/Task context projections remain unsupported rather than invented. Declared roles/producer/human replacement identity are not authenticated, and no external execution or release pass is inferred."
   ]
 }

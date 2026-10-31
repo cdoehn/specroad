@@ -1,32 +1,5 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0565",
-  "requirement_id": "SR-REQ-0565",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0036",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
-  "fixture_ids": [
-    "SR-FIX-OWNED-TEMP-v1",
-    "SR-FIX-ISOLATED-CPYTHON-v1"
-  ],
-  "preconditions": [
-    "Current trusted registry/runtime and isolated owned project inputs; no target operation is executed."
-  ],
-  "steps": [
-    "Invoke environment.check through CLI, structured request and registry entry; inspect actual machine report and exit status.",
-    "Record native startup accesses and reject write/process/network attempts beside broken unselected projects, invalid model contents and pending transactions.",
-    "Request registered target prerequisites without calling its handler; retain unknown missing arguments/project/Git/write capabilities.",
-    "Read qualified process-limit observations, unavailable API results and declared constrained/standard targets; preserve genuine failure classes.",
-    "Diagnose actual chmod-restricted roots under native write/process/network traps, including fresh isolated startup and unknown lock metadata.",
-    "Inject native getrlimit and metadata open failures; observe unchanged owned bytes, retained error classes and no invented quota or recovery certainty. Preserve regular shared configuration format checks without acquiring write authority.",
-    "Change owned configuration and operational metadata during real reads, reject the stale diagnosis, and validate actual environment documents against the public schema."
-  ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "SpecRoad MUSS `environment check` vollständig nach dem Operations- und Ergebnisvertrag aus Anhang N.4 bereitstellen.",
-    "scope": "A real registered environment.check emits environment-v1 using only current runtime/distribution and optional explicit project metadata. No-project calls never discover a root; malformed model/history is uninspected. Active state blocks without recovery. Target aliases resolve to their registered contract without handler execution; missing required prerequisites remain unknown with code 0 and compatible=null. Optional unavailable quotas remain unknown; an observed RLIMIT_AS is qualified only as a process address-space ceiling. Native access recording and effect traps prove the current tested scope is free from probe writes, subprocesses, network and semantic model validation. R preserves W cases and distinguishes proven pending journals from unclassified operational entries: the latter block with code 5 but keep recovery_required=null. Readonly roots, optional invalid/unavailable native limits, unknown CPU/storage quotas, permission failures, unsafe symlinks, regular configuration aliases and concurrent metadata changes retain their actual failure classes without repair. The public environment schema requires runtime/build identity fields and null values for unknown observations; no project secrets or extra environment fields are accepted. C separates optional resource observation from required prerequisites by an AST-preserving extraction; existing machine results and all W/R behavior oracles remain unchanged."
-  },
+  "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [
     "CORE_CONFLICT",
     "CORE_ENVIRONMENT",
@@ -41,6 +14,11 @@
     6,
     7
   ],
+  "fixture_ids": [
+    "SR-FIX-OWNED-TEMP-v1",
+    "SR-FIX-ISOLATED-CPYTHON-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [
     "/result/environment_format_version",
     "/result/compatible",
@@ -49,17 +27,42 @@
     "/result/observations",
     "/result/semantic_validation_performed"
   ],
+  "method": "automated_behavior",
+  "open_items": [
+    "Full runtime-budget-v2 resolution/integration remains assigned to 6.c; persistent Work and the complete runtime/platform matrix remain open. Early prerequisite failures retain the standard Core error envelope. No release or guaranteed host-capacity claim."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "SpecRoad MUSS `environment check` vollständig nach dem Operations- und Ergebnisvertrag aus Anhang N.4 bereitstellen.",
+    "scope": "A real registered environment.check emits environment-v1 using only current runtime/distribution and optional explicit project metadata. No-project calls never discover a root; malformed model/history is uninspected. Active state blocks without recovery. Target aliases resolve to their registered contract without handler execution; missing required prerequisites remain unknown with code 0 and compatible=null. Optional unavailable quotas remain unknown; an observed RLIMIT_AS is qualified only as a process address-space ceiling. Native access recording and effect traps prove the current tested scope is free from probe writes, subprocesses, network and semantic model validation. R preserves W cases and distinguishes proven pending journals from unclassified operational entries: the latter block with code 5 but keep recovery_required=null. Readonly roots, optional invalid/unavailable native limits, unknown CPU/storage quotas, permission failures, unsafe symlinks, regular configuration aliases and concurrent metadata changes retain their actual failure classes without repair. The public environment schema requires runtime/build identity fields and null values for unknown observations; no project secrets or extra environment fields are accepted. C separates optional resource observation from required prerequisites by an AST-preserving extraction; existing machine results and all W/R behavior oracles remain unchanged."
+  },
+  "preconditions": [
+    "Current trusted registry/runtime and isolated owned project inputs; no target operation is executed."
+  ],
+  "primary_verification_id": "SR-VER-0036",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0565",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Invoke environment.check through CLI, structured request and registry entry; inspect actual machine report and exit status.",
+    "Record native startup accesses and reject write/process/network attempts beside broken unselected projects, invalid model contents and pending transactions.",
+    "Request registered target prerequisites without calling its handler; retain unknown missing arguments/project/Git/write capabilities.",
+    "Read qualified process-limit observations, unavailable API results and declared constrained/standard targets; preserve genuine failure classes.",
+    "Diagnose actual chmod-restricted roots under native write/process/network traps, including fresh isolated startup and unknown lock metadata.",
+    "Inject native getrlimit and metadata open failures; observe unchanged owned bytes, retained error classes and no invented quota or recovery certainty. Preserve regular shared configuration format checks without acquiring write authority.",
+    "Change owned configuration and operational metadata during real reads, reject the stale diagnosis, and validate actual environment documents against the public schema."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0565",
   "test_ids": [
     "tests/test_environment_check.py::test_bad_distribution_record_is_an_explicit_blocker_with_complete_report",
     "tests/test_environment_check.py::test_environment_contract_is_described_retrievable_and_validates_actual_report",
@@ -135,8 +138,5 @@
     "tests/test_environment_check_right.py::test_unclassified_operational_entries_do_not_invent_recovery_certainty[unknown_file]",
     "tests/test_environment_check_right.py::test_unsafe_metadata_never_reads_foreign_content_or_changes_it[config_symlink]",
     "tests/test_environment_check_right.py::test_unsafe_metadata_never_reads_foreign_content_or_changes_it[operational_symlink]"
-  ],
-  "open_items": [
-    "Full runtime-budget-v2 resolution/integration remains assigned to 6.c; persistent Work and the complete runtime/platform matrix remain open. Early prerequisite failures retain the standard Core error envelope. No release or guaranteed host-capacity claim."
   ]
 }

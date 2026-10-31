@@ -1,32 +1,5 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0124",
-  "requirement_id": "SR-REQ-0124",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0009",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
-  "fixture_ids": [
-    "SR-FIX-ROADMAP-EXPLANATION-v1",
-    "SR-FIX-ROADMAP-EXPLANATION-RIGHT-v1"
-  ],
-  "preconditions": [
-    "Native owned TargetModel with explicit trace_depth, complete supplied relation inventory and independently declared source/path expectations.",
-    "Owned configured project with selected profiles and all current artifact/resource bytes; clear project-read preflight."
-  ],
-  "steps": [
-    "Invoke explain_roadmap for actual Tasks, Releases and Milestones on owned supplied inputs.",
-    "Compare exact shortest origin paths, original/inverse edge directions, assignment source pointers, direct dependencies and risk/assumption paths.",
-    "Check depth limits, malformed input refusals, byte preservation, detached results and fresh isolated Core/PYZ parity.",
-    "Invoke roadmap explain via the native live reader, CLI, structured request and isolated Core/PYZ processes.",
-    "Compare complete independently declared path/node sets and explicit missing schedule/implementation observations; validate the published closed result schema.",
-    "Reject stale sources, membership changes, operational blockers and unsafe inputs without publishing paths, writing state or performing recovery."
-  ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "`specroad roadmap explain <ID>` MUSS Ziele, enthaltene Requirements, Abhängigkeiten, Risiken, Annahmen und den Ursprung der Zuordnung erklären.",
-    "scope": "13.d.W/R/C: all shortest stored membership/implementation/origin paths within explicit trace_depth, with direct assignment/dependency/risk observations and exact source provenance. Missing schedule and Task subject references remain explicit for context artifacts. Public roadmap explain reads the configured inventory using native preflight and final byte/membership checks. No guessed origins, inferred scheduling, scope closure, applicability, atomic snapshot, readiness or write/approval authority."
-  },
+  "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [],
   "expected_exit_codes": [
     0,
@@ -36,23 +9,54 @@
     6,
     7
   ],
+  "fixture_ids": [
+    "SR-FIX-ROADMAP-EXPLANATION-v1",
+    "SR-FIX-ROADMAP-EXPLANATION-RIGHT-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [
     "/result/explanation/paths",
     "/result/explanation/missing_planning_references",
     "/result/explanation_sha256",
     "/result/coverage/source_bytes_rechecked"
   ],
+  "method": "automated_behavior",
+  "open_items": [
+    "Roadmap View/Work integration remains assigned to 13.h; the preserved W/R contracts cover the native supplied-model provider and the public read-only command.",
+    "Targeted W/R/C behavior checks are not full-suite or Release acceptance."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "`specroad roadmap explain <ID>` MUSS Ziele, enthaltene Requirements, Abhängigkeiten, Risiken, Annahmen und den Ursprung der Zuordnung erklären.",
+    "scope": "13.d.W/R/C: all shortest stored membership/implementation/origin paths within explicit trace_depth, with direct assignment/dependency/risk observations and exact source provenance. Missing schedule and Task subject references remain explicit for context artifacts. Public roadmap explain reads the configured inventory using native preflight and final byte/membership checks. No guessed origins, inferred scheduling, scope closure, applicability, atomic snapshot, readiness or write/approval authority."
+  },
+  "preconditions": [
+    "Native owned TargetModel with explicit trace_depth, complete supplied relation inventory and independently declared source/path expectations.",
+    "Owned configured project with selected profiles and all current artifact/resource bytes; clear project-read preflight."
+  ],
+  "primary_verification_id": "SR-VER-0009",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0124",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Invoke explain_roadmap for actual Tasks, Releases and Milestones on owned supplied inputs.",
+    "Compare exact shortest origin paths, original/inverse edge directions, assignment source pointers, direct dependencies and risk/assumption paths.",
+    "Check depth limits, malformed input refusals, byte preservation, detached results and fresh isolated Core/PYZ parity.",
+    "Invoke roadmap explain via the native live reader, CLI, structured request and isolated Core/PYZ processes.",
+    "Compare complete independently declared path/node sets and explicit missing schedule/implementation observations; validate the published closed result schema.",
+    "Reject stale sources, membership changes, operational blockers and unsafe inputs without publishing paths, writing state or performing recovery."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0124",
   "test_ids": [
     "tests/test_roadmap_explanation.py::test_assignments_keep_their_exact_source_and_parentage_is_separate",
     "tests/test_roadmap_explanation.py::test_assumptions_and_sources_remain_explicit_derived_from_paths",
@@ -144,9 +148,5 @@
     "tests/test_roadmap_explanation_right.py::test_unknown_and_untyped_start_ids_do_not_become_empty_successes[SR-TASK-00000000000000000000000033]",
     "tests/test_roadmap_explanation_right.py::test_unknown_and_untyped_start_ids_do_not_become_empty_successes[identifier1]",
     "tests/test_roadmap_explanation_right.py::test_unknown_and_untyped_start_ids_do_not_become_empty_successes[label]"
-  ],
-  "open_items": [
-    "Roadmap View/Work integration remains assigned to 13.h; the preserved W/R contracts cover the native supplied-model provider and the public read-only command.",
-    "Targeted W/R/C behavior checks are not full-suite or Release acceptance."
   ]
 }

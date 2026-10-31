@@ -1,28 +1,5 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0217",
-  "requirement_id": "SR-REQ-0217",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0018",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
-  "fixture_ids": [
-    "SR-FIX-OWNED-TEMP-v1"
-  ],
-  "preconditions": [
-    "Owned native Linux temporary projects with explicit complete current TargetModel bytes, real bound registry and synthetic minimal profile. Explicit caller-supplied historical identity inventory and PublicationAuthority; no CLI or general release-project loader claim."
-  ],
-  "steps": [
-    "Normalize field mapping/file/stdin through the shared input adapter, then invoke the actual native creation service.",
-    "Observe real writer-lock metadata during random128 allocation; verify exact canonical artifact bytes, path, draft revision1, actor/time, untouched prior files and confirmed cleanup/receipts.",
-    "Exercise same/conflicting historical requests before new allocation/plan/lock, actor and host refusals, unrelated invalid model data and missing required semantic gates.",
-    "Exercise collisions in current/archive/reserved IDs under real cross-process mutex exclusion; malformed draft fields, specialized records and inconsistent inventories must refuse before allocation. Check entropy failures, foreign writer/base state and injected failures before/after real target moves, preserving recovery evidence and blocking blind retries."
-  ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "`specroad artifact create` MUSS alle für den gewählten Typ erforderlichen Draft-Felder über typspezifische Optionen, stdin oder `--input <FILE>` verlangen, daraus über den gemeinsamen Change-Plan atomar ein schema-gültiges Artefakt im Reifegrad `draft` schreiben und dessen ID sowie projektrelativen Pfad ausgeben.",
-    "scope": "Native embedding service: real random128 allocation under the writer lock, complete supplied-target validation and existing durable journal/staging/publication/receipt/cleanup sequence. Fifteen draft types publish through all three input routes; nine types with missing semantic services fail closed. Historical retries retain original IDs and prove native completion. Partial requirement evidence; actual CLI and general project/history binding are still open. R also proves operational entropy errors, collision/retry exclusion and native partial-publication recovery preservation. Existing W examples remain unchanged."
-  },
+  "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [],
   "expected_exit_codes": [
     2,
@@ -31,18 +8,46 @@
     6,
     7
   ],
+  "fixture_ids": [
+    "SR-FIX-OWNED-TEMP-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "Register the actual CLI and its dry-run/stdout contract with a complete production project/history loader. Explicit inventory values do not attest full historical membership.",
+    "Real document-model, evidence-currentness, external-resource and configuration gates remain required for affected targets. No permissive replacement gates are provided.",
+    "Complete production history binding, platform and release validation remain open; the native interruption cases do not imply public CLI or general recovery orchestration coverage."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "`specroad artifact create` MUSS alle für den gewählten Typ erforderlichen Draft-Felder über typspezifische Optionen, stdin oder `--input <FILE>` verlangen, daraus über den gemeinsamen Change-Plan atomar ein schema-gültiges Artefakt im Reifegrad `draft` schreiben und dessen ID sowie projektrelativen Pfad ausgeben.",
+    "scope": "Native embedding service: real random128 allocation under the writer lock, complete supplied-target validation and existing durable journal/staging/publication/receipt/cleanup sequence. Fifteen draft types publish through all three input routes; nine types with missing semantic services fail closed. Historical retries retain original IDs and prove native completion. Partial requirement evidence; actual CLI and general project/history binding are still open. R also proves operational entropy errors, collision/retry exclusion and native partial-publication recovery preservation. Existing W examples remain unchanged."
+  },
+  "preconditions": [
+    "Owned native Linux temporary projects with explicit complete current TargetModel bytes, real bound registry and synthetic minimal profile. Explicit caller-supplied historical identity inventory and PublicationAuthority; no CLI or general release-project loader claim."
+  ],
+  "primary_verification_id": "SR-VER-0018",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0217",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Normalize field mapping/file/stdin through the shared input adapter, then invoke the actual native creation service.",
+    "Observe real writer-lock metadata during random128 allocation; verify exact canonical artifact bytes, path, draft revision1, actor/time, untouched prior files and confirmed cleanup/receipts.",
+    "Exercise same/conflicting historical requests before new allocation/plan/lock, actor and host refusals, unrelated invalid model data and missing required semantic gates.",
+    "Exercise collisions in current/archive/reserved IDs under real cross-process mutex exclusion; malformed draft fields, specialized records and inconsistent inventories must refuse before allocation. Check entropy failures, foreign writer/base state and injected failures before/after real target moves, preserving recovery evidence and blocking blind retries."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0217",
   "test_ids": [
     "tests/test_artifact_creation.py::test_actual_target_becomes_visible_only_as_complete_json",
     "tests/test_artifact_creation.py::test_authoring_policy_precedes_allocation_and_lock[ai-create-1-7]",
@@ -173,10 +178,5 @@
     "tests/test_artifact_creation_right.py::test_writer_revalidates_required_draft_fields_before_lock_or_entropy[null-test-test_identity]",
     "tests/test_artifact_creation_right.py::test_writer_revalidates_required_draft_fields_before_lock_or_entropy[null-verification-method]",
     "tests/test_artifact_creation_right.py::test_writer_revalidates_required_draft_fields_before_lock_or_entropy[null-view-scope_descriptor]"
-  ],
-  "open_items": [
-    "Register the actual CLI and its dry-run/stdout contract with a complete production project/history loader. Explicit inventory values do not attest full historical membership.",
-    "Real document-model, evidence-currentness, external-resource and configuration gates remain required for affected targets. No permissive replacement gates are provided.",
-    "Complete production history binding, platform and release validation remain open; the native interruption cases do not imply public CLI or general recovery orchestration coverage."
   ]
 }

@@ -1,17 +1,38 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0278",
-  "requirement_id": "SR-REQ-0278",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0021",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [],
   "fixture_ids": [
     "SR-FIX-OWNED-TEMP-v1"
   ],
+  "implementation_status": "partial",
+  "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "Integrate registered CLI/envelopes, complete authentic project/history loading and all applicable approval services, including the explicit in_review/approved transitions concluding R-36. Unsupported non-Requirement withdrawals and specialist lifecycle/approval subjects fail closed.",
+    "Verify complete R-35 through R-39 CLI/product acceptance and applicable supported-platform contracts; the current native integration cases are partial evidence."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "`specroad relation review <SOURCE-ID> --relation-id <RELATION-ID> --decision confirmed\\|rejected` MUSS den vollständig gebundenen menschlichen Review-Vorgang einschließlich atomarer Freigabefolgen, Diagnosen und Exit-Ergebnis nach Kapitel 11.13 ausführen.",
+    "scope": "Native coupled human review API with computed Requirement withdrawals, later reconfirmation without reapproval, unchanged supported standard states, exact composed relation obligations, separate review assessment and actual process-loss recovery. The existing first-confirmation API and native publication/receipt/recovery protocols retain their scope. This is not complete CLI, authentic host history or final approval integration."
+  },
   "preconditions": [
     "Owned temporary native project with explicitly supplied synthetic review history, composed profiles and trusted host-service fixtures; no real human authentication or genuine approval is claimed."
   ],
+  "primary_verification_id": "SR-VER-0021",
+  "required_environment": {
+    "declared_minimum_python": "3.10",
+    "implementation": "cpython",
+    "measured_scope": "current-run-only"
+  },
+  "requirement_id": "SR-REQ-0278",
+  "resources": {
+    "harness_suite_timeout": null,
+    "harness_test_timeout": null,
+    "owned_temporary_files": true
+  },
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
   "steps": [
     "Plan and publish one negative review with its exact Requirement withdrawal; inspect canonical source/review bytes, revision, context hashes, audit operation and durable receipt.",
     "Reject stale guards, nonhuman actors, altered withdrawal payloads, missing required gate, unrelated error and denied authority; verify stable request replay without additional writes.",
@@ -19,25 +40,8 @@
     "Compare a successful native receipt with a separate failed read-only review assessment; reject structural defects, nonhuman confirmation and mixed saved operations.",
     "Stop an actual child writer after the first or last coupled target replacement or after receipt commit; recover the exact full basis or target and replay the same native receipt without additional writes."
   ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "`specroad relation review <SOURCE-ID> --relation-id <RELATION-ID> --decision confirmed\\|rejected` MUSS den vollständig gebundenen menschlichen Review-Vorgang einschließlich atomarer Freigabefolgen, Diagnosen und Exit-Ergebnis nach Kapitel 11.13 ausführen.",
-    "scope": "Native coupled human review API with computed Requirement withdrawals, later reconfirmation without reapproval, unchanged supported standard states, exact composed relation obligations, separate review assessment and actual process-loss recovery. The existing first-confirmation API and native publication/receipt/recovery protocols retain their scope. This is not complete CLI, authentic host history or final approval integration."
-  },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
-  "required_environment": {
-    "implementation": "cpython",
-    "declared_minimum_python": "3.10",
-    "measured_scope": "current-run-only"
-  },
-  "resources": {
-    "owned_temporary_files": true,
-    "harness_test_timeout": null,
-    "harness_suite_timeout": null
-  },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0278",
   "test_ids": [
     "tests/test_negative_relation_review.py::test_another_gate_cannot_turn_an_error_into_an_exempt_review_outcome",
     "tests/test_negative_relation_review.py::test_denied_authority_preserves_both_original_source_and_review_history",
@@ -87,9 +91,5 @@
     "tests/test_negative_relation_review_right.py::test_structural_invalidity_is_not_a_review_outcome_exception[self_reference]",
     "tests/test_negative_relation_review_right.py::test_successful_negative_write_still_fails_separate_read_only_review_assessment[False]",
     "tests/test_negative_relation_review_right.py::test_successful_negative_write_still_fails_separate_read_only_review_assessment[True]"
-  ],
-  "open_items": [
-    "Integrate registered CLI/envelopes, complete authentic project/history loading and all applicable approval services, including the explicit in_review/approved transitions concluding R-36. Unsupported non-Requirement withdrawals and specialist lifecycle/approval subjects fail closed.",
-    "Verify complete R-35 through R-39 CLI/product acceptance and applicable supported-platform contracts; the current native integration cases are partial evidence."
   ]
 }

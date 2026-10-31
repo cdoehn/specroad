@@ -1,26 +1,5 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0467",
-  "requirement_id": "SR-REQ-0467",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0032",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
-  "fixture_ids": [
-    "SR-FIX-DOCUMENT-ROLES-v1"
-  ],
-  "preconditions": [
-    "Trusted caller supplies owned current-schema TargetModel bytes for the full supplied-project document-role contract; this does not prove on-disk inventory completeness or complete document semantics."
-  ],
-  "steps": [
-    "Check native document fields and exactly one non-retired primary specification; bind and return its exact stored data. Refuse missing or ambiguous primaries, preserve field diagnostics and compare order-independent observations and isolated Core/PYZ results without writes.",
-    "Refuse nonfull/configured declared scopes, malformed active or retired roles and invalid local fields. Request the bound full-project role stage in the actual shared validation pipeline; verify empty/missing/multiple primaries, unconnected selections, earlier schema/identity refusal, unchanged loaded-model defaults and absence of invented document services."
-  ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "Ein vollständiges Projekt MUSS genau ein nicht retirertes Dokument mit `document_role=primary_specification` besitzen.",
-    "scope": "11.a.W: full supplied-project document field and primary-role assessment using existing schemas. Exactly one non-retired primary produces its owned record, identity, revision, path and hashes. Missing or multiple candidates and invalid fields yield no selection; missing language is refused earlier by the common model schema. All other non-retired maturities count without lifecycle approval. This is source selection for a later specification view, not rendering, complete document-model validation, a live file inventory, a partial/legacy fallback or write authority. 11.a.R adds explicit closed/unconfigured project scope admission and a requested document_role_scope=full_project stage in shared validation. Cardinality inspects all supplied records after native schema/identity/reference/graph checks; empty inventories and outside-selection primaries cannot bypass it. Input hashes bind the contract; missing document_model providers remain unavailable. Actual partial/legacy fallback remains 11.q."
-  },
+  "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [
     "document_full_project_scope_required",
     "document_primary_missing",
@@ -37,18 +16,44 @@
   "expected_exit_codes": [
     3
   ],
+  "fixture_ids": [
+    "SR-FIX-DOCUMENT-ROLES-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "Complete section/composition/payload/include/view semantics in the assigned following document steps.",
+    "The built-in specification view and explicit partial/legacy fallback are assigned to 11.q; no rendered or fallback view is claimed here.",
+    "Targeted development observations and alternating Apply partitions are not a full-suite, cross-platform or release proof."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Ein vollständiges Projekt MUSS genau ein nicht retirertes Dokument mit `document_role=primary_specification` besitzen.",
+    "scope": "11.a.W: full supplied-project document field and primary-role assessment using existing schemas. Exactly one non-retired primary produces its owned record, identity, revision, path and hashes. Missing or multiple candidates and invalid fields yield no selection; missing language is refused earlier by the common model schema. All other non-retired maturities count without lifecycle approval. This is source selection for a later specification view, not rendering, complete document-model validation, a live file inventory, a partial/legacy fallback or write authority. 11.a.R adds explicit closed/unconfigured project scope admission and a requested document_role_scope=full_project stage in shared validation. Cardinality inspects all supplied records after native schema/identity/reference/graph checks; empty inventories and outside-selection primaries cannot bypass it. Input hashes bind the contract; missing document_model providers remain unavailable. Actual partial/legacy fallback remains 11.q."
+  },
+  "preconditions": [
+    "Trusted caller supplies owned current-schema TargetModel bytes for the full supplied-project document-role contract; this does not prove on-disk inventory completeness or complete document semantics."
+  ],
+  "primary_verification_id": "SR-VER-0032",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0467",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Check native document fields and exactly one non-retired primary specification; bind and return its exact stored data. Refuse missing or ambiguous primaries, preserve field diagnostics and compare order-independent observations and isolated Core/PYZ results without writes.",
+    "Refuse nonfull/configured declared scopes, malformed active or retired roles and invalid local fields. Request the bound full-project role stage in the actual shared validation pipeline; verify empty/missing/multiple primaries, unconnected selections, earlier schema/identity refusal, unchanged loaded-model defaults and absence of invented document services."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0467",
   "test_ids": [
     "tests/test_document_roles.py::test_assessment_and_selected_record_are_owned_and_cannot_be_promoted_by_detached_data",
     "tests/test_document_roles.py::test_document_selection_contract_runs_in_isolated_core_and_pyz[core]",
@@ -121,10 +126,5 @@
     "tests/test_document_roles_right.py::test_unbound_model_inputs_never_become_a_document_role_observation[none]",
     "tests/test_document_roles_right.py::test_unbound_model_inputs_never_become_a_document_role_observation[object]",
     "tests/test_document_roles_right.py::test_unbound_model_inputs_never_become_a_document_role_observation[sequence]"
-  ],
-  "open_items": [
-    "Complete section/composition/payload/include/view semantics in the assigned following document steps.",
-    "The built-in specification view and explicit partial/legacy fallback are assigned to 11.q; no rendered or fallback view is claimed here.",
-    "Targeted development observations and alternating Apply partitions are not a full-suite, cross-platform or release proof."
   ]
 }

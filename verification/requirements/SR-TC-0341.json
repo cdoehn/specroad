@@ -1,40 +1,43 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0341",
-  "requirement_id": "SR-REQ-0341",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0025",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [],
   "fixture_ids": [
     "SR-FIX-EVIDENCE-IMPORT-TRANSACTION-RIGHT-v1",
     "SR-FIX-EVIDENCE-IMPORT-TRANSACTION-v1"
   ],
-  "preconditions": [
-    "Explicit native Generic source/attachment bytes, exact subject/configuration/run bindings and caller actor/request/IDs; owned temporary native projects only."
-  ],
-  "steps": [
-    "Publish a complete saved Generic set, resolve exact original inputs before planning, reject changed bound requests with code 6, diagnose all semantic duplicate occurrences, and exercise target replacement failures and abrupt process exits through native rollback/completion/cleanup. Compare subjects, sources, created IDs and durable replay."
+  "implementation_status": "partial",
+  "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "Other format writers, external attachment ingestion and CLI integration remain follow-up work. This Generic Core/PYZ evidence is partial requirement evidence, not release approval."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Ein Evidence-Import MUSS vollständig geplant, validiert und als eine Transaktion veröffentlicht werden.",
     "scope": "12.j.W/R: Existing-attachment Generic full-set transaction. Verified input replay preserves historical IDs/audit without allocation or a current TargetModel; changed bound input is conflict 6. Versioned exact measurement identity diagnoses historical duplicates without dropping repeated new occurrences. Partial I/O and abrupt process exits retain native recovery evidence; explicit rollback or complete-target finalization preserves subjects and prevents duplicate/half-set success. No format-wide writer, external attachment import or CLI/release claim."
   },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
+  "preconditions": [
+    "Explicit native Generic source/attachment bytes, exact subject/configuration/run bindings and caller actor/request/IDs; owned temporary native projects only."
+  ],
+  "primary_verification_id": "SR-VER-0025",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0341",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Publish a complete saved Generic set, resolve exact original inputs before planning, reject changed bound requests with code 6, diagnose all semantic duplicate occurrences, and exercise target replacement failures and abrupt process exits through native rollback/completion/cleanup. Compare subjects, sources, created IDs and durable replay."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0341",
   "test_ids": [
     "tests/test_evidence_import_transaction.py::test_authority_denial_keeps_entire_set_and_project_unwritten",
     "tests/test_evidence_import_transaction.py::test_caller_must_supply_distinct_evidence_ids_for_exact_complete_set[evidence_ids0]",
@@ -84,8 +87,5 @@
     "tests/test_evidence_import_transaction_right.py::test_partial_publication_remains_pending_until_native_recovery[2-True]",
     "tests/test_evidence_import_transaction_right.py::test_real_process_exit_retains_partial_set_and_native_recovery_proof[1]",
     "tests/test_evidence_import_transaction_right.py::test_real_process_exit_retains_partial_set_and_native_recovery_proof[2]"
-  ],
-  "open_items": [
-    "Other format writers, external attachment ingestion and CLI integration remain follow-up work. This Generic Core/PYZ evidence is partial requirement evidence, not release approval."
   ]
 }

@@ -1,31 +1,5 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0064",
-  "requirement_id": "SR-REQ-0064",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0005",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
-  "fixture_ids": [
-    "SR-FIX-ISOLATED-CPYTHON-v1",
-    "SR-FIX-OWNED-TEMP-v1",
-    "SR-FIX-DOMAIN-DRAFT-v1",
-    "SR-FIX-RELATIONS-v1"
-  ],
-  "preconditions": [
-    "Owned current-project artifacts with explicit trace_depth, canonical complete relation references and protected hierarchies; no approval or atomic-snapshot claim."
-  ],
-  "steps": [
-    "Invoke the same Why through Python, CLI, structured requests and a portable zipapp.",
-    "Compare exact independent shortest-path sets, origin-specific distances, stored identities and configured depths.",
-    "Reject invalid configuration and complete-inventory graph errors; trap writes and observe currentness/writer/journal failures.",
-    "Resume exact search/path checkpoints, including independently trusted file-backed process restarts; preserve all shortest paths and reject changed graph/cursor data without project mutation."
-  ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "SpecRoad MUSS für jedes Artefakt erklären können, über welche Beziehungspfade es auf Goals oder Needs zurückgeführt wird.",
-    "scope": "8.f.W implements actual read-only why through Python, CLI, structured requests and the portable zipapp. An explicit configured trace_depth binds scope; a missing value is a model error, not an invented default. Stored directed edges plus symmetric inverse views define connectivity. Complete current references, canonical storage and protected hierarchies are validated. An iterative predecessor graph and path materialization return all shortest paths separately for every reachable Goal, Need and Source, preserving original identities and inverse flags, exact distances and exact path counts. No early origin, representative sample or soft count target discards promised paths. Current-project preflights and final source/configuration checks remain mandatory. The W baseline materialized index, predecessors and all paths. Coverage is not complete semantic validation or atomic-snapshot approval. R adds WhyTraversal with actual node/edge/path-frame work and canonical data checkpoints retaining both frontiers and the complete path prefix. Restore checks an independently retained trusted SHA-256 before parsing, then a closed contract and all supplied graph identities and stored relation data, including unreachable relations. Native file-backed fresh-process tests prove exact resumption without replaying completed search or materialized paths; an independent Cartesian-product oracle covers 8192 complete shortest paths. Malformed, changed-input, failed and cancelled states cannot publish a result. The public command drives the same producer synchronously with its existing project guards. The pure codec does not perform persistence/fsync, admit Work-v1 continuation or claim bounded total memory. Input validation, sorting, codec and final projection are indivisible; durable Work integration, adaptive runtime, external delivery, profile defaults and platform/performance acceptance remain open. C moves the unchanged predecessor search and iterative path materialization into separate private graph modules. The public WhyTraversal owner, both resumable phases, checkpoint bytes/validation, lifecycle and project adapter retain their existing behavior; all W/R tests remain unchanged."
-  },
+  "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [],
   "expected_exit_codes": [
     0,
@@ -34,23 +8,52 @@
     5,
     6
   ],
+  "fixture_ids": [
+    "SR-FIX-ISOLATED-CPYTHON-v1",
+    "SR-FIX-OWNED-TEMP-v1",
+    "SR-FIX-DOMAIN-DRAFT-v1",
+    "SR-FIX-RELATIONS-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [
     "/targets",
     "/paths",
     "/path_count",
     "/coverage"
   ],
+  "method": "automated_behavior",
+  "open_items": [
+    "Durable Work, adaptive runtime, external large-result delivery, effective profile/default resolution and supported-platform/performance acceptance remain open."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "SpecRoad MUSS für jedes Artefakt erklären können, über welche Beziehungspfade es auf Goals oder Needs zurückgeführt wird.",
+    "scope": "8.f.W implements actual read-only why through Python, CLI, structured requests and the portable zipapp. An explicit configured trace_depth binds scope; a missing value is a model error, not an invented default. Stored directed edges plus symmetric inverse views define connectivity. Complete current references, canonical storage and protected hierarchies are validated. An iterative predecessor graph and path materialization return all shortest paths separately for every reachable Goal, Need and Source, preserving original identities and inverse flags, exact distances and exact path counts. No early origin, representative sample or soft count target discards promised paths. Current-project preflights and final source/configuration checks remain mandatory. The W baseline materialized index, predecessors and all paths. Coverage is not complete semantic validation or atomic-snapshot approval. R adds WhyTraversal with actual node/edge/path-frame work and canonical data checkpoints retaining both frontiers and the complete path prefix. Restore checks an independently retained trusted SHA-256 before parsing, then a closed contract and all supplied graph identities and stored relation data, including unreachable relations. Native file-backed fresh-process tests prove exact resumption without replaying completed search or materialized paths; an independent Cartesian-product oracle covers 8192 complete shortest paths. Malformed, changed-input, failed and cancelled states cannot publish a result. The public command drives the same producer synchronously with its existing project guards. The pure codec does not perform persistence/fsync, admit Work-v1 continuation or claim bounded total memory. Input validation, sorting, codec and final projection are indivisible; durable Work integration, adaptive runtime, external delivery, profile defaults and platform/performance acceptance remain open. C moves the unchanged predecessor search and iterative path materialization into separate private graph modules. The public WhyTraversal owner, both resumable phases, checkpoint bytes/validation, lifecycle and project adapter retain their existing behavior; all W/R tests remain unchanged."
+  },
+  "preconditions": [
+    "Owned current-project artifacts with explicit trace_depth, canonical complete relation references and protected hierarchies; no approval or atomic-snapshot claim."
+  ],
+  "primary_verification_id": "SR-VER-0005",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0064",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Invoke the same Why through Python, CLI, structured requests and a portable zipapp.",
+    "Compare exact independent shortest-path sets, origin-specific distances, stored identities and configured depths.",
+    "Reject invalid configuration and complete-inventory graph errors; trap writes and observe currentness/writer/journal failures.",
+    "Resume exact search/path checkpoints, including independently trusted file-backed process restarts; preserve all shortest paths and reject changed graph/cursor data without project mutation."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0064",
   "test_ids": [
     "tests/test_query_why.py::test_active_writer_and_unresolved_journal_block_before_graph_loading",
     "tests/test_query_why.py::test_changes_during_path_materialization_block_final_success[configuration]",
@@ -134,8 +137,5 @@
     "tests/test_query_why_right.py::test_persisted_checkpoint_resumes_in_a_fresh_process_with_independent_digest[prefix]",
     "tests/test_query_why_right.py::test_public_why_uses_real_small_steps_and_checkpoint_codec_without_project_writes",
     "tests/test_query_why_right.py::test_unknown_start_and_invalid_index_are_not_empty_successes"
-  ],
-  "open_items": [
-    "Durable Work, adaptive runtime, external large-result delivery, effective profile/default resolution and supported-platform/performance acceptance remain open."
   ]
 }

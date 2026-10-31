@@ -1,20 +1,51 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0258",
-  "requirement_id": "SR-REQ-0258",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0019",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [
+    0,
+    5,
+    6,
+    7
+  ],
   "fixture_ids": [
     "SR-FIX-TRANSACTION-COMMITTING-v1",
     "SR-FIX-PROJECT-LOCK-v1"
   ],
+  "implementation_status": "partial",
+  "json_pointers": [
+    "/complete_target_verified",
+    "/critical_inputs_verified",
+    "/blockers",
+    "/base_model_root_sha256",
+    "/target_model_root_sha256"
+  ],
+  "method": "automated_behavior",
+  "open_items": [
+    "Automatic transaction preflight (5.t), the comprehensive fault-injection matrix (5.v) and full-source restore (15.j-15.l) remain in their assigned plan positions; the existing explicit recovery kernels do not establish those integrations."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Wenn alle Nachher-Hashes einer unterbrochenen Transaktion vorhanden sind und dem Journal entsprechen, MUSS Recovery fehlende Audit- und Request-Receipts aus dem Journal rekonstruieren und die Transaktion anschließend als `committed` abschließen, statt den vollständig veröffentlichten Zustand zurückzurollen.",
+    "scope": "Complete supported resource membership and exact byte equality bind independently prepared basis/target roots through the checked journal. Complete-target recovery adds immutable action evidence. Terminal cleanup and explicit audited orphan takeover retain exact target bytes across real process stops and lost durability responses. First-receipt creation/write/synchronization failures report possible operational mutation without claiming a normative write or completion. Operational directory, receipt, marker and terminal audit effects stay attributed to the current invocation; read-only conflicts do not imply its mutation. Bound rollback copies, cursor/terminal journals, completion receipts/marker and action/rollback receipts are published only after complete staging. Initial allocation/write failures expose no short canonical helper. Tested repeated native failures and real process stops remain explicitly resumable; foreign or altered bindings block publication, existing evidence retains its bytes and original authority, and mutation diagnostics retain possible operational changes. No automatic recovery, comprehensive fault-injection or restore acceptance."
+  },
   "preconditions": [
     "Owned native Linux transaction and independently checked publication model, plan and complete file inventories.",
     "Explicit transaction-bound host authority; real stopped Linux processes and native root mutex for orphan recovery; independent normative byte oracle.",
     "Recovery derivative publication requires native Linux O_TMPFILE support and a usable /proc/self/fd link; unsupported operations fail without a named-write fallback."
   ],
+  "primary_verification_id": "SR-VER-0019",
+  "required_environment": {
+    "declared_minimum_python": "3.10",
+    "implementation": "cpython",
+    "measured_scope": "current-run-only"
+  },
+  "requirement_id": "SR-REQ-0258",
+  "resources": {
+    "harness_suite_timeout": null,
+    "harness_test_timeout": null,
+    "owned_temporary_files": true
+  },
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
   "steps": [
     "Interrupt a real publication and observe the complete current normative membership and exact bytes.",
     "Complete the bound full target or restore the bound basis; preserve foreign files and all recovery evidence.",
@@ -26,36 +57,8 @@
     "Interrupt the remaining nine bound recovery derivative writes, repeat native interruptions and abruptly stop processes; resume with audited native lock takeover, retain original images and prove independent basis/full-target bytes without a second normative replacement.",
     "Reject foreign empty/short/conflicting or unsafe files and concurrent prefix collisions; recheck journal, lock, live normative bytes and prior evidence before publication. Reuse complete records without changing their authority attribution; finish existing preserving cleanup."
   ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "Wenn alle Nachher-Hashes einer unterbrochenen Transaktion vorhanden sind und dem Journal entsprechen, MUSS Recovery fehlende Audit- und Request-Receipts aus dem Journal rekonstruieren und die Transaktion anschließend als `committed` abschließen, statt den vollständig veröffentlichten Zustand zurückzurollen.",
-    "scope": "Complete supported resource membership and exact byte equality bind independently prepared basis/target roots through the checked journal. Complete-target recovery adds immutable action evidence. Terminal cleanup and explicit audited orphan takeover retain exact target bytes across real process stops and lost durability responses. First-receipt creation/write/synchronization failures report possible operational mutation without claiming a normative write or completion. Operational directory, receipt, marker and terminal audit effects stay attributed to the current invocation; read-only conflicts do not imply its mutation. Bound rollback copies, cursor/terminal journals, completion receipts/marker and action/rollback receipts are published only after complete staging. Initial allocation/write failures expose no short canonical helper. Tested repeated native failures and real process stops remain explicitly resumable; foreign or altered bindings block publication, existing evidence retains its bytes and original authority, and mutation diagnostics retain possible operational changes. No automatic recovery, comprehensive fault-injection or restore acceptance."
-  },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [
-    0,
-    5,
-    6,
-    7
-  ],
-  "json_pointers": [
-    "/complete_target_verified",
-    "/critical_inputs_verified",
-    "/blockers",
-    "/base_model_root_sha256",
-    "/target_model_root_sha256"
-  ],
-  "required_environment": {
-    "implementation": "cpython",
-    "declared_minimum_python": "3.10",
-    "measured_scope": "current-run-only"
-  },
-  "resources": {
-    "owned_temporary_files": true,
-    "harness_test_timeout": null,
-    "harness_suite_timeout": null
-  },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0258",
   "test_ids": [
     "tests/test_recovery_inventory.py::test_completion_rejects_additional_valid_normative_artifact",
     "tests/test_recovery_inventory.py::test_completion_matches_independently_bound_full_target_bytes_and_root",
@@ -205,8 +208,5 @@
     "tests/test_recovery_auxiliary_writes.py::test_real_auxiliary_process_stop_resumes_through_native_lock_takeover[prefix-completion_request]",
     "tests/test_recovery_auxiliary_writes.py::test_real_auxiliary_process_stop_resumes_through_native_lock_takeover[prefix-completion_transaction]",
     "tests/test_recovery_auxiliary_writes.py::test_existing_completion_marker_is_synced_before_journal_replacement"
-  ],
-  "open_items": [
-    "Automatic transaction preflight (5.t), the comprehensive fault-injection matrix (5.v) and full-source restore (15.j-15.l) remain in their assigned plan positions; the existing explicit recovery kernels do not establish those integrations."
   ]
 }

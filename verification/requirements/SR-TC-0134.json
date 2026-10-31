@@ -1,40 +1,43 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0134",
-  "requirement_id": "SR-REQ-0134",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0010",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [],
   "fixture_ids": [
     "SR-FIX-RECORD-FIELDS-v1",
     "SR-FIX-RESOURCE-INVENTORY-v1"
   ],
-  "preconditions": [
-    "Owned configured project root, known binary fixtures and declared attachment metadata."
-  ],
-  "steps": [
-    "Inventory current resource files and verify actual attachment bytes, including safe failure cases without project mutation."
+  "implementation_status": "partial",
+  "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "Integrate these read/verification contracts with the later Evidence authoring/import, scope, baseline and transaction workflows. No full requirement/release approval claimed."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Jeder Evidence-Anhang MUSS einen relativen Projektpfad, Medientyp, Größe und SHA-256-Hash besitzen.",
     "scope": "Passive record-field contracts and lexical reference constraints only. No graph closure, payload hash verification, document rendering, successful verification or write authorization. Read-only inventory and streamed byte verification of declared attachment sizes and hashes; not an atomic snapshot or authoring authorization."
   },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
+  "preconditions": [
+    "Owned configured project root, known binary fixtures and declared attachment metadata."
+  ],
+  "primary_verification_id": "SR-VER-0010",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0134",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Inventory current resource files and verify actual attachment bytes, including safe failure cases without project mutation."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0134",
   "test_ids": [
     "test_record_schemas.RecordWorkTests.test_evidence_attachments_are_bound_but_not_opened",
     "test_record_schemas.RecordRightTests.test_repeated_attachment_paths_are_rejected",
@@ -46,8 +49,5 @@
     "test_resource_inventory_right.ResourceRightTests.test_explicit_attachment_declarations_remain_part_of_recheck",
     "test_resource_inventory_right.ResourceRightTests.test_reference_changes_are_bound_even_with_unchanged_payload_bytes",
     "test_resource_inventory_right.ResourceRightTests.test_byte_sensitive_inventory_is_not_confused_with_canonical_model_hash"
-  ],
-  "open_items": [
-    "Integrate these read/verification contracts with the later Evidence authoring/import, scope, baseline and transaction workflows. No full requirement/release approval claimed."
   ]
 }

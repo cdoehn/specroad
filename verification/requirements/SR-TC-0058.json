@@ -1,41 +1,44 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0058",
-  "requirement_id": "SR-REQ-0058",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0005",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [],
   "fixture_ids": [
     "SR-FIX-RELATIONS-v1"
   ],
-  "preconditions": [
-    "Explicit, locally owned source-bound relation fixtures; not a full-project approval."
+  "implementation_status": "partial",
+  "json_pointers": [
+    "/relations"
   ],
-  "steps": [
-    "Validate supplied source records, compute the specific graph operation, inspect identities and errors without writes."
+  "method": "automated_behavior",
+  "open_items": [
+    "Controlled source-file authoring, full-project traversal and final end-to-end validation remain later work."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "SpecRoad MUSS inverse Beziehungssichten einschließlich `superseded_by` berechnen, ohne inverse Beziehungen als zweite normative Kopie zu speichern.",
     "scope": "Canonical symmetric proposals, exact reorder guard and inverse views over resolved inputs; no normative writer."
   },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [
-    "/relations"
+  "preconditions": [
+    "Explicit, locally owned source-bound relation fixtures; not a full-project approval."
   ],
+  "primary_verification_id": "SR-VER-0005",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0058",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Validate supplied source records, compute the specific graph operation, inspect identities and errors without writes."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0058",
   "test_ids": [
     "test_relation_views.RelationViewsWorkTests.test_boolean_direction_flag_is_required",
     "test_relation_views.RelationViewsWorkTests.test_canonicalization_is_idempotent",
@@ -81,8 +84,5 @@
     "test_relation_views_right.RelationViewsRightTests.test_source_bytes_are_preserved_after_repeated_queries",
     "test_relation_views_right.RelationViewsRightTests.test_view_flags_are_not_falsely_claimed_as_graph_approval",
     "test_relation_views_right.RelationViewsRightTests.test_wrong_reorder_value_types_rejected"
-  ],
-  "open_items": [
-    "Controlled source-file authoring, full-project traversal and final end-to-end validation remain later work."
   ]
 }

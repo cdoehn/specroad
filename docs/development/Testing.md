@@ -1,3 +1,11 @@
+# CI-PACKAGES-525: worksteal und manuelle CI-Pakete
+
+Alle normalen Teststarter verwenden vier Worker und `--dist worksteal`.
+Dies gilt auch für gezielte Auswahl, Apply, Volltests und Nachholmessungen.
+Die vorhandene sofortige Phasenmessung und N=3 mit aktuellem 20%-Filter
+bleiben erhalten; die CI und gezielte Dev-Auswahl bleiben vollständig ungefiltert.
+Siehe [CI-Pakete](CI_Packages.md) für Planung, Bedienung und Nachweise.
+
 # Testaufrufe ab 17. Oktober 2026
 
 Die verbindliche Arbeitsregel steht in der lokalen `AGENTS.md`. Die technische

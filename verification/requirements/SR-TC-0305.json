@@ -1,27 +1,5 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0305",
-  "requirement_id": "SR-REQ-0305",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0023",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
-  "fixture_ids": [
-    "SR-FIX-DOCUMENT-TABLES-v1"
-  ],
-  "preconditions": [
-    "Exact native TargetModel snapshot with real block/view/row/configuration source bytes and complete supplied relation graph. Query/table semantics are invoked explicitly; no passive field-read success is treated as rendering approval."
-  ],
-  "steps": [
-    "11.f.W: resolve embedded normalized queries and basic project views through the existing query engine; assert ordered typed rows, independent column projection, exact query totals/pagination, configuration filtering, unchanged source/revision/hash bindings, no 100-row view cap, explicit empty policy, literal width/types/copy rejection and Core/PYZ parity.",
-    "11.f.R: reject executable and alternate-source payloads, missing/wrong view references, incomplete view columns, unsupported scopes/providers, forged native queries and invalid pointers. Verify original byte/revision/model bindings, duplicate identity rejection, native sorting, exact cell errors and no file reads, writes, process or network effects.",
-    "11.f.C: rerun all unchanged W/R behavior tests after moving closed column/cell/literal/view declaration adaptation into a private helper. Snapshot binding and native query execution keep their original contracts; no separate block query language or new behavior is added."
-  ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "Ein Query-Inhaltsblock MUSS eine deklarative Query oder View-ID referenzieren und beim Rendern ausschließlich aus dem gebundenen Modellstand erzeugt werden.",
-    "scope": "11.f.W: immutable supplied-snapshot table data from native Query/SRX and original records, with exact query page plus separately declared typed column projection. Source/view/block/configuration/row hashes remain bound. Literal JSON remains data and copied artifact identities are refused; no templates, callbacks, I/O or rendering are executed. Tests do not inspect table layout or rendered Markdown/HTML. 11.f.R: full view columns are mandatory even when query columns override them or the filter is empty. No missing view/source identity fallback, scope widening or cached/fabricated source binding is allowed; original W contracts remain unchanged. 11.f.C changes only private structure: query normalization/filtering/order/pagination still use the existing Query/SRX engine and all W/R errors, typed rows, bindings and permitted effects remain unchanged."
-  },
+  "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [
     "table_query_empty",
     "table_column_contract",
@@ -40,6 +18,10 @@
     "query_verification_provider_required"
   ],
   "expected_exit_codes": [],
+  "fixture_ids": [
+    "SR-FIX-DOCUMENT-TABLES-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [
     "/payload/columns",
     "/payload/rows",
@@ -50,17 +32,39 @@
     "/scope_descriptor",
     "/block_id"
   ],
+  "method": "automated_behavior",
+  "open_items": [
+    "Full view scope/grouping/relation/computed/missing-value providers follow 11.k/11.l; document rendering follows 11.m. This data API does not claim complete document/project or release approval.",
+    "Targeted development tests and alternating Apply halves remain partial observations on their actual source states."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Ein Query-Inhaltsblock MUSS eine deklarative Query oder View-ID referenzieren und beim Rendern ausschließlich aus dem gebundenen Modellstand erzeugt werden.",
+    "scope": "11.f.W: immutable supplied-snapshot table data from native Query/SRX and original records, with exact query page plus separately declared typed column projection. Source/view/block/configuration/row hashes remain bound. Literal JSON remains data and copied artifact identities are refused; no templates, callbacks, I/O or rendering are executed. Tests do not inspect table layout or rendered Markdown/HTML. 11.f.R: full view columns are mandatory even when query columns override them or the filter is empty. No missing view/source identity fallback, scope widening or cached/fabricated source binding is allowed; original W contracts remain unchanged. 11.f.C changes only private structure: query normalization/filtering/order/pagination still use the existing Query/SRX engine and all W/R errors, typed rows, bindings and permitted effects remain unchanged."
+  },
+  "preconditions": [
+    "Exact native TargetModel snapshot with real block/view/row/configuration source bytes and complete supplied relation graph. Query/table semantics are invoked explicitly; no passive field-read success is treated as rendering approval."
+  ],
+  "primary_verification_id": "SR-VER-0023",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0305",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "11.f.W: resolve embedded normalized queries and basic project views through the existing query engine; assert ordered typed rows, independent column projection, exact query totals/pagination, configuration filtering, unchanged source/revision/hash bindings, no 100-row view cap, explicit empty policy, literal width/types/copy rejection and Core/PYZ parity.",
+    "11.f.R: reject executable and alternate-source payloads, missing/wrong view references, incomplete view columns, unsupported scopes/providers, forged native queries and invalid pointers. Verify original byte/revision/model bindings, duplicate identity rejection, native sorting, exact cell errors and no file reads, writes, process or network effects.",
+    "11.f.C: rerun all unchanged W/R behavior tests after moving closed column/cell/literal/view declaration adaptation into a private helper. Snapshot binding and native query execution keep their original contracts; no separate block query language or new behavior is added."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0305",
   "test_ids": [
     "tests/test_document_tables.py::test_basic_view_has_no_hidden_one_hundred_row_truncation",
     "tests/test_document_tables.py::test_data_is_detached_and_never_claims_rendering_whole_project_or_write_approval",
@@ -181,9 +185,5 @@
     "tests/test_document_tables_right.py::test_view_binding_requires_one_actual_reference_and_its_exact_stored_target[wrong_target_type-table_view]",
     "tests/test_document_tables_right.py::test_view_columns_cannot_hide_missing_declarations_behind_query_shorthand[query_view]",
     "tests/test_document_tables_right.py::test_view_columns_cannot_hide_missing_declarations_behind_query_shorthand[table_view]"
-  ],
-  "open_items": [
-    "Full view scope/grouping/relation/computed/missing-value providers follow 11.k/11.l; document rendering follows 11.m. This data API does not claim complete document/project or release approval.",
-    "Targeted development tests and alternating Apply halves remain partial observations on their actual source states."
   ]
 }

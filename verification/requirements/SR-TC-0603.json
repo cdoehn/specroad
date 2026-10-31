@@ -1,19 +1,39 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0603",
-  "requirement_id": "SR-REQ-0603",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0039",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [],
   "fixture_ids": [
     "SR-FIX-OWNED-TEMP-v1"
   ],
+  "implementation_status": "partial",
+  "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "Partial data contract only: the caller must supply a trusted prior work value; accepting that value from the same untrusted package is not authentication. Complete command-specific plan coverage and actual completion evidence, consistent snapshots, guarded work storage/locks, atomic publication, true resume, bounded whole-store memory and global finalization remain open. No Code 8, write authority, release approval or complete requirement satisfaction is claimed."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Jeder aufgeteilte Auftrag MUSS ein gehashtes vollständiges Aufgaben- und Eingangsmanifest nach Anhang P besitzen.",
+    "scope": "Initial work-v1 candidate hashes all supplied input bytes and the full caller-declared task plan in versioned segment trees. References bind ID, size, SHA-256 and count; missing or changed referenced data is rejected. Relative logical source locations survive relocation. Declared tool/source bindings are data, not independent provenance or an atomically captured snapshot. Full command-specific planners and portable persisted snapshots remain open. R checks the entire supplied object store as exact native hash-addressed bytes, including retained unreferenced objects. Repeated segment references are rejected before amplification. A caller-trusted preceding candidate anchors unchanged input/task hashes across immediate successors; self-consistent new input, source or task bindings cannot replace that work. C relocates identical closed data and request-binding definitions and shares the same pure phase expressions between reader and writer. Existing W/R behavior, test identities, typed refusals, partial status and open boundaries are unchanged. 6.k.W incrementally captures the explicit declared input set into immutable hash-addressed bytes. Progress is detached data; only guarded complete files can be materialized and the declared-set manifest is sealed last. Source errors preserve prior bytes, identify the logical resource, do not count the failed unit and do not trigger retry. Tests measure actual read offsets and limits, reuse captured files before the entire set, and roundtrip the completed input bytes through the existing inert Work codec. model_root_sha256 remains null, atomic_project_snapshot and durable_checkpoint remain false. Whole-project closure, writer/overarching consistency, cross-process persistence/resume and bounded total storage are not yet claimed. 6.k.R holds the existing native root-inode writer mutexes read-only across live capture, deduplicates physical source roots, and checks shallow operational state before reading and sealing. Active native guards, orphan owner records, unresolved transactions and unknown operational entries block confirmation. Every declared source is revalidated at closure; changed metadata triggers one bounded blockwise content rehash, and only hash-identical source bytes may confirm the previous binding. Changed content, missing files, unsafe paths or later observed changes retain prior captured bytes and invalidate the whole-set seal with a logical resource error. Unchanged captured prefixes are not reread per work window. Real child processes verify writer exclusion, release on seal/close/error, and fork ownership. Native guard and I/O fault injections are explicit. The scope remains an in-memory caller-declared input set: no atomic external filesystem snapshot, complete normative model closure, durable generation or cross-process resume is asserted. 6.k.C extracts the identical logical manifest and detached progress projections into a pure data module. Root paths, descriptors, native mutexes, process ownership and active hash objects stay in the runtime adapter. Structural inlining preserves the existing expressions; all W/R tests, data fields, content hashes, errors and operational boundaries remain unchanged. No additional requirement completion is inferred."
+  },
   "preconditions": [
     "Owned temporary source files and explicit fixture build/source declarations. Completion JSON is labelled planner data; one entropy test substitutes deterministic bytes. No production command is executed or durable work state published.",
     "Explicit caller-declared source paths under owned native ProjectBoundary fixtures. Live in-memory input capture only; no durable checkpoint or atomic normative model snapshot.",
     "6.k.R: owned native Linux roots and real child-process writer contention; fault seams are labelled. No capture writes, automatic recovery, durable checkpoint or atomic external filesystem snapshot."
   ],
+  "primary_verification_id": "SR-VER-0039",
+  "required_environment": {
+    "declared_minimum_python": "3.10",
+    "implementation": "cpython",
+    "measured_scope": "current-run-only"
+  },
+  "requirement_id": "SR-REQ-0603",
+  "resources": {
+    "harness_suite_timeout": null,
+    "harness_test_timeout": null,
+    "owned_temporary_files": true
+  },
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
   "steps": [
     "Roundtrip original owned input bytes and all declared units through bounded-fanout manifest trees.",
     "Relocate identical source bytes and verify unchanged semantic input/task bindings; change same-size content and observe different bindings.",
@@ -22,25 +42,8 @@
     "Capture real files in small work windows and bounded reads; compare every captured byte and hash, early complete-file reuse, stable manifests across block sizes and locations, concrete missing-input errors and unchanged source inventories.",
     "Capture and pause real files, change or remove already captured sources, require hash comparison for metadata changes, block active/orphan/transaction state, and verify retained bytes plus descriptor/mutex release."
   ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "Jeder aufgeteilte Auftrag MUSS ein gehashtes vollständiges Aufgaben- und Eingangsmanifest nach Anhang P besitzen.",
-    "scope": "Initial work-v1 candidate hashes all supplied input bytes and the full caller-declared task plan in versioned segment trees. References bind ID, size, SHA-256 and count; missing or changed referenced data is rejected. Relative logical source locations survive relocation. Declared tool/source bindings are data, not independent provenance or an atomically captured snapshot. Full command-specific planners and portable persisted snapshots remain open. R checks the entire supplied object store as exact native hash-addressed bytes, including retained unreferenced objects. Repeated segment references are rejected before amplification. A caller-trusted preceding candidate anchors unchanged input/task hashes across immediate successors; self-consistent new input, source or task bindings cannot replace that work. C relocates identical closed data and request-binding definitions and shares the same pure phase expressions between reader and writer. Existing W/R behavior, test identities, typed refusals, partial status and open boundaries are unchanged. 6.k.W incrementally captures the explicit declared input set into immutable hash-addressed bytes. Progress is detached data; only guarded complete files can be materialized and the declared-set manifest is sealed last. Source errors preserve prior bytes, identify the logical resource, do not count the failed unit and do not trigger retry. Tests measure actual read offsets and limits, reuse captured files before the entire set, and roundtrip the completed input bytes through the existing inert Work codec. model_root_sha256 remains null, atomic_project_snapshot and durable_checkpoint remain false. Whole-project closure, writer/overarching consistency, cross-process persistence/resume and bounded total storage are not yet claimed. 6.k.R holds the existing native root-inode writer mutexes read-only across live capture, deduplicates physical source roots, and checks shallow operational state before reading and sealing. Active native guards, orphan owner records, unresolved transactions and unknown operational entries block confirmation. Every declared source is revalidated at closure; changed metadata triggers one bounded blockwise content rehash, and only hash-identical source bytes may confirm the previous binding. Changed content, missing files, unsafe paths or later observed changes retain prior captured bytes and invalidate the whole-set seal with a logical resource error. Unchanged captured prefixes are not reread per work window. Real child processes verify writer exclusion, release on seal/close/error, and fork ownership. Native guard and I/O fault injections are explicit. The scope remains an in-memory caller-declared input set: no atomic external filesystem snapshot, complete normative model closure, durable generation or cross-process resume is asserted. 6.k.C extracts the identical logical manifest and detached progress projections into a pure data module. Root paths, descriptors, native mutexes, process ownership and active hash objects stay in the runtime adapter. Structural inlining preserves the existing expressions; all W/R tests, data fields, content hashes, errors and operational boundaries remain unchanged. No additional requirement completion is inferred."
-  },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
-  "required_environment": {
-    "implementation": "cpython",
-    "declared_minimum_python": "3.10",
-    "measured_scope": "current-run-only"
-  },
-  "resources": {
-    "owned_temporary_files": true,
-    "harness_test_timeout": null,
-    "harness_suite_timeout": null
-  },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0603",
   "test_ids": [
     "tests/test_input_snapshot.py::test_changed_open_source_never_becomes_a_complete_input[grow]",
     "tests/test_input_snapshot.py::test_changed_open_source_never_becomes_a_complete_input[replace]",
@@ -154,8 +157,5 @@
     "tests/test_work_manifest_right.py::test_self_consistent_foreign_work_cannot_replace_the_expected_order[scope]",
     "tests/test_work_manifest_right.py::test_shared_segment_amplification_is_rejected_before_repeated_leaf_decoding",
     "tests/test_work_manifest_right.py::test_successor_preserves_even_previously_referenced_bytes_not_in_the_new_root"
-  ],
-  "open_items": [
-    "Partial data contract only: the caller must supply a trusted prior work value; accepting that value from the same untrusted package is not authentication. Complete command-specific plan coverage and actual completion evidence, consistent snapshots, guarded work storage/locks, atomic publication, true resume, bounded whole-store memory and global finalization remain open. No Code 8, write authority, release approval or complete requirement satisfaction is claimed."
   ]
 }

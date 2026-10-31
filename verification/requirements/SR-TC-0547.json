@@ -1,45 +1,48 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0547",
-  "requirement_id": "SR-REQ-0547",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0028",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [
+    "unknown_field"
+  ],
+  "expected_exit_codes": [],
   "fixture_ids": [
     "SR-FIX-RECORD-FIELDS-v1"
   ],
-  "preconditions": [
-    "Owned configuration records from the current-schema fixture provider and an explicit SourceRelations inventory; no filesystem discovery or live project state."
+  "implementation_status": "partial",
+  "json_pointers": [
+    "/applicability"
   ],
-  "steps": [
-    "Add an applicability expression to an otherwise valid root or child configuration.",
-    "Resolve the selected configuration and require the unknown-field error at /applicability.",
-    "Reject every present applicability field on roots, intermediate parents and selected children, including null, Boolean and malformed object values."
+  "method": "automated_behavior",
+  "open_items": [
+    "Graph-primitive cleanup follows in 9.b.C; project discovery, applicability evaluation and configuration-bound gates remain assigned to later M9 steps. Current supplied-record evidence is not a full release approval."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Ein `configuration`-Artefakt DARF NICHT ein Feld `applicability` besitzen.",
     "scope": "Every present applicability field on a root, intermediate parent or selected child is rejected before effective values are exposed. Null, Boolean and malformed object forms do not bypass the prohibition; project integration remains open."
   },
-  "expected_diagnostics": [
-    "unknown_field"
+  "preconditions": [
+    "Owned configuration records from the current-schema fixture provider and an explicit SourceRelations inventory; no filesystem discovery or live project state."
   ],
-  "expected_exit_codes": [],
-  "json_pointers": [
-    "/applicability"
-  ],
+  "primary_verification_id": "SR-VER-0028",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0547",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Add an applicability expression to an otherwise valid root or child configuration.",
+    "Resolve the selected configuration and require the unknown-field error at /applicability.",
+    "Reject every present applicability field on roots, intermediate parents and selected children, including null, Boolean and malformed object values."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0547",
   "test_ids": [
     "test_configuration_inheritance.ConfigurationInheritanceWorkTests.test_child_configuration_cannot_have_applicability",
     "test_configuration_inheritance.ConfigurationInheritanceWorkTests.test_root_configuration_cannot_have_applicability",
@@ -55,8 +58,5 @@
     "tests/test_configuration_inheritance_right.py::test_any_present_applicability_field_in_the_chain_is_rejected[applicability3-0]",
     "tests/test_configuration_inheritance_right.py::test_any_present_applicability_field_in_the_chain_is_rejected[applicability3-1]",
     "tests/test_configuration_inheritance_right.py::test_any_present_applicability_field_in_the_chain_is_rejected[applicability3-2]"
-  ],
-  "open_items": [
-    "Graph-primitive cleanup follows in 9.b.C; project discovery, applicability evaluation and configuration-bound gates remain assigned to later M9 steps. Current supplied-record evidence is not a full release approval."
   ]
 }

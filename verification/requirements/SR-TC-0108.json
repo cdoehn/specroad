@@ -1,28 +1,5 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0108",
-  "requirement_id": "SR-REQ-0108",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0008",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
-  "fixture_ids": [
-    "SR-FIX-ISOLATED-CPYTHON-v1",
-    "SR-FIX-OWNED-TEMP-v1"
-  ],
-  "preconditions": [
-    "Current Core on native Linux with owned temporary projects, actual artifact files and closed-stdin isolated CLI processes."
-  ],
-  "steps": [
-    "Invoke artifact show and its show alias through CLI, structured request and Python on actual project files.",
-    "Compare complete artifact data, incoming/outgoing projections, stored relation identities, current project coverage and absence of writes.",
-    "Recheck current project bytes with incomplete, stale and foreign index hints; interleave real source/operational changes and inject read-permission failure without repair or stale success."
-  ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "`specroad show <ID>` MUSS das vollständige Artefakt sowie berechnete eingehende und ausgehende Beziehungen anzeigen.",
-    "scope": "Real project-bound Show returns full stored artifact data, every incoming/outgoing relation and original edge identity, including computed superseded_by. CLI alias, canonical command, structured request, Python and relocated distributions use the same reader. Existing read preflight and full artifact-source observation are enforced; no project writes, cache creation or approval are claimed. R adds complete results despite partial/stale/foreign hints, legacy IDs, retired sources and query pagination defaults. Current-byte changes, late writers/journals, disappeared bound sources, unsafe paths, missing endpoints and invalid canonical storage prevent a complete success payload. A vanished already-bound source is conflict 6; actual read permission failures remain I/O 5. C extracts the existing Show data projection unchanged from query orchestration. The same W/R behavior cases and expected results remain unchanged; this introduces no new behavior or release approval."
-  },
+  "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [],
   "expected_exit_codes": [
     0,
@@ -32,6 +9,11 @@
     6,
     7
   ],
+  "fixture_ids": [
+    "SR-FIX-ISOLATED-CPYTHON-v1",
+    "SR-FIX-OWNED-TEMP-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [
     "/result/artifact",
     "/result/incoming",
@@ -39,17 +21,39 @@
     "/result/coverage",
     "/summary/complete"
   ],
+  "method": "automated_behavior",
+  "open_items": [
+    "Complete supported CPython/platform and product acceptance; only the current native environment is measured.",
+    "Load evidence and full work-engine integration remain open; no atomic snapshot against noncooperating writers or full semantic validation is claimed."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "`specroad show <ID>` MUSS das vollständige Artefakt sowie berechnete eingehende und ausgehende Beziehungen anzeigen.",
+    "scope": "Real project-bound Show returns full stored artifact data, every incoming/outgoing relation and original edge identity, including computed superseded_by. CLI alias, canonical command, structured request, Python and relocated distributions use the same reader. Existing read preflight and full artifact-source observation are enforced; no project writes, cache creation or approval are claimed. R adds complete results despite partial/stale/foreign hints, legacy IDs, retired sources and query pagination defaults. Current-byte changes, late writers/journals, disappeared bound sources, unsafe paths, missing endpoints and invalid canonical storage prevent a complete success payload. A vanished already-bound source is conflict 6; actual read permission failures remain I/O 5. C extracts the existing Show data projection unchanged from query orchestration. The same W/R behavior cases and expected results remain unchanged; this introduces no new behavior or release approval."
+  },
+  "preconditions": [
+    "Current Core on native Linux with owned temporary projects, actual artifact files and closed-stdin isolated CLI processes."
+  ],
+  "primary_verification_id": "SR-VER-0008",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0108",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Invoke artifact show and its show alias through CLI, structured request and Python on actual project files.",
+    "Compare complete artifact data, incoming/outgoing projections, stored relation identities, current project coverage and absence of writes.",
+    "Recheck current project bytes with incomplete, stale and foreign index hints; interleave real source/operational changes and inject read-permission failure without repair or stale success."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0108",
   "test_ids": [
     "tests/test_artifact_show.py::test_actual_initialized_primary_document_is_read_without_specialist_approval",
     "tests/test_artifact_show.py::test_actual_writer_blocks_public_api_and_cli_before_relation_loading",
@@ -93,9 +97,5 @@
     "tests/test_artifact_show_right.py::test_source_disappearing_during_final_bound_read_is_a_conflict",
     "tests/test_artifact_show_right.py::test_stale_project_index_includes_new_source_and_excludes_removed_source",
     "tests/test_artifact_show_right.py::test_symlink_source_is_rejected_without_following_or_repair"
-  ],
-  "open_items": [
-    "Complete supported CPython/platform and product acceptance; only the current native environment is measured.",
-    "Load evidence and full work-engine integration remain open; no atomic snapshot against noncooperating writers or full semantic validation is claimed."
   ]
 }

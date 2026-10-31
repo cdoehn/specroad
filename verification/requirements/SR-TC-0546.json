@@ -1,47 +1,50 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0546",
-  "requirement_id": "SR-REQ-0546",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0028",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
-  "fixture_ids": [
-    "SR-FIX-RECORD-FIELDS-v1"
-  ],
-  "preconditions": [
-    "Owned configuration records from the current-schema fixture provider and an explicit SourceRelations inventory; no filesystem discovery or live project state."
-  ],
-  "steps": [
-    "Resolve explicit multilevel parent records in both inventory orders.",
-    "Resolve missing-parent, self-parent and two-node-cycle records; require ModelError without an effective result.",
-    "Resolve deep chains above the Python recursion limit and cycles of several sizes, including tails entering a cycle; verify exact error location and unchanged input bytes."
-  ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "Die Elternkette von `configuration`-Artefakten MUSS azyklisch sein.",
-    "scope": "Selected parent-chain traversal rejects self-parent and multiple-node cycles, including deep chains and tails entering a cycle, with a bounded configuration error and unchanged input bytes. Unselected chains are not resolved; no project-wide validation is claimed."
-  },
+  "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [
     "configuration_parent_missing",
     "configuration_self_parent",
     "configuration_parent_cycle"
   ],
   "expected_exit_codes": [],
+  "fixture_ids": [
+    "SR-FIX-RECORD-FIELDS-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [
     "/parent"
   ],
+  "method": "automated_behavior",
+  "open_items": [
+    "Graph-primitive cleanup follows in 9.b.C; project discovery, applicability evaluation and configuration-bound gates remain assigned to later M9 steps. Current supplied-record evidence is not a full release approval."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Die Elternkette von `configuration`-Artefakten MUSS azyklisch sein.",
+    "scope": "Selected parent-chain traversal rejects self-parent and multiple-node cycles, including deep chains and tails entering a cycle, with a bounded configuration error and unchanged input bytes. Unselected chains are not resolved; no project-wide validation is claimed."
+  },
+  "preconditions": [
+    "Owned configuration records from the current-schema fixture provider and an explicit SourceRelations inventory; no filesystem discovery or live project state."
+  ],
+  "primary_verification_id": "SR-VER-0028",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0546",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Resolve explicit multilevel parent records in both inventory orders.",
+    "Resolve missing-parent, self-parent and two-node-cycle records; require ModelError without an effective result.",
+    "Resolve deep chains above the Python recursion limit and cycles of several sizes, including tails entering a cycle; verify exact error location and unchanged input bytes."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0546",
   "test_ids": [
     "test_configuration_inheritance.ConfigurationInheritanceWorkTests.test_inventory_order_does_not_change_the_chain_or_hash",
     "test_configuration_inheritance.ConfigurationInheritanceWorkTests.test_missing_parent_cannot_be_replaced_by_root_defaults",
@@ -66,8 +69,5 @@
     "tests/test_configuration_inheritance_right.py::test_missing_grandparent_reports_the_record_with_the_broken_reference",
     "tests/test_configuration_inheritance_right.py::test_parent_cycle_outside_the_selected_chain_does_not_change_its_scope",
     "tests/test_configuration_inheritance_right.py::test_tail_entering_a_cycle_reports_the_first_repeated_ancestor"
-  ],
-  "open_items": [
-    "Graph-primitive cleanup follows in 9.b.C; project discovery, applicability evaluation and configuration-bound gates remain assigned to later M9 steps. Current supplied-record evidence is not a full release approval."
   ]
 }

@@ -1,42 +1,46 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0483",
-  "requirement_id": "SR-REQ-0483",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0033",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [],
   "fixture_ids": [
     "SR-FIX-PARTIAL-BUNDLE-RIGHT-v1",
     "SR-FIX-WEAK-BOUNDARY-v1"
   ],
-  "preconditions": [
-    "Explicit source bytes and complete dependency observations; no live inventory or origin-root authentication.",
-    "Complete owned native origin and original selected configuration/parent bytes; empty operational history; explicit partial scope."
-  ],
-  "steps": [
-    "Resolve closed/partial policy and check exact omitted-target bindings without weakening required edges.",
-    "Create configured/unconfigured document and release containers; compare exact payloads, independent native hashes and read-only flags; publish with source rechecks and refuse invalid selection, metadata or output boundaries."
+  "implementation_status": "partial",
+  "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "Integrate actual partial bundle export, verified origin/partial roots and archive reader in M15; full control exclusions in 3.i and normative scope-hash assembly in 3.j remain distinct.",
+    "15.d/15.e must independently verify arbitrary input bytes and retain/recheck partial and context-only membership after extraction. This is targeted partial evidence, not a full-suite or release proof."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Ein partielles Bundle MUSS Ursprungmodellwurzel, partiellen Scope Descriptor, partielle Modellwurzel und Boundary References speichern.",
     "scope": "Closure and seven-field boundary values over supplied observations. Generated archive publication is covered below; root authentication, extracted lifecycle and write admission are not claimed. 15.c.R adds generated partial ZIP bytes and configuration context without additional scope members, parent/content/formatting hash domains, excluded-anchor/strong-dependency rejection and native publication boundaries. Independent verification of arbitrary bundles, extraction and extracted read-only admission remain open."
   },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
+  "preconditions": [
+    "Explicit source bytes and complete dependency observations; no live inventory or origin-root authentication.",
+    "Complete owned native origin and original selected configuration/parent bytes; empty operational history; explicit partial scope."
+  ],
+  "primary_verification_id": "SR-VER-0033",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0483",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Resolve closed/partial policy and check exact omitted-target bindings without weakening required edges.",
+    "Create configured/unconfigured document and release containers; compare exact payloads, independent native hashes and read-only flags; publish with source rechecks and refuse invalid selection, metadata or output boundaries."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0483",
   "test_ids": [
     "test_boundary_references.BoundaryValidationTests.test_altered_local_source_fails_origin_check",
     "test_boundary_references.BoundaryValidationTests.test_closed_policy_forbids_declarations",
@@ -246,9 +250,5 @@
     "tests/test_partial_bundle_right.py::test_untyped_partial_request_cannot_fall_back_to_full_project[None]",
     "tests/test_partial_bundle_right.py::test_untyped_partial_request_cannot_fall_back_to_full_project[project]",
     "tests/test_partial_bundle_right.py::test_untyped_partial_request_cannot_fall_back_to_full_project[selector2]"
-  ],
-  "open_items": [
-    "Integrate actual partial bundle export, verified origin/partial roots and archive reader in M15; full control exclusions in 3.i and normative scope-hash assembly in 3.j remain distinct.",
-    "15.d/15.e must independently verify arbitrary input bytes and retain/recheck partial and context-only membership after extraction. This is targeted partial evidence, not a full-suite or release proof."
   ]
 }

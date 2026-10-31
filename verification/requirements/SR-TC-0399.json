@@ -1,32 +1,5 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0399",
-  "requirement_id": "SR-REQ-0399",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0028",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
-  "fixture_ids": [
-    "SR-FIX-RECORD-FIELDS-v1",
-    "SR-FIX-RELATIONS-v1",
-    "SR-FIX-READ-COMMANDS-v1",
-    "SR-FIX-READ-ONLY-PROJECT-v1"
-  ],
-  "preconditions": [
-    "Actual byte-bound configuration/artifact sources and canonical stored relations; the live command rereads project membership and source bytes."
-  ],
-  "steps": [
-    "Resolve the explicit selected parent chain and classify every artifact with deterministic reasons.",
-    "Report one complete shortest stored-strong-relation path for every applicable origin and reachable excluded endpoint, stopping at the first excluded node on each route.",
-    "Execute direct Python, structured command and CLI paths; preserve complete conflict data with SRV131/code3 and reject stale observations without output or writes.",
-    "Compare every three-node directed graph and applicability subset with an independent simple-path oracle; check artifact/relation tie ordering, all strong relation kinds and complete large conflict sets.",
-    "Reject source membership/configuration changes, symlinks, invalid conditions and configurations; execute the real command from the built PYZ."
-  ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "Wenn ein anwendbares Artefakt über eine zwingende Relation von einem ausgeschlossenen Artefakt abhängt, MUSS SpecRoad einen Konfigurationsfehler mit dem vollständigen kürzesten Abhängigkeitspfad ausgeben.",
-    "scope": "Configuration evaluation over all supplied/current project artifacts and stored strong relations. Explanations preserve full artifact/relation identities and direction, report all applicable-origin/excluded-endpoint conflicts, use shortest paths and never traverse an excluded intermediate. The live command is read-only and publishes only after currentness checks. Equal shortest paths use full artifact-ID order, then relation-ID order. Applicability errors are chosen in artifact identity order independently of input enumeration. Query pagination, trace depth and operational time targets never truncate these explanations. Configuration evaluation and Why use the same shortest predecessor discovery; Why retains all equal shortest predecessors and its existing resumable checkpoint state."
-  },
+  "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [
     "SRV130",
     "SRV131",
@@ -41,22 +14,52 @@
     6,
     7
   ],
+  "fixture_ids": [
+    "SR-FIX-RECORD-FIELDS-v1",
+    "SR-FIX-RELATIONS-v1",
+    "SR-FIX-READ-COMMANDS-v1",
+    "SR-FIX-READ-ONLY-PROJECT-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [
     "/applicability",
     "/configuration",
     "/inconsistent_dependencies"
   ],
+  "method": "automated_behavior",
+  "open_items": [
+    "This command evaluates stored strong relations; external resource/review providers, model roots and release approval are outside this evidence scope."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Wenn ein anwendbares Artefakt über eine zwingende Relation von einem ausgeschlossenen Artefakt abhängt, MUSS SpecRoad einen Konfigurationsfehler mit dem vollständigen kürzesten Abhängigkeitspfad ausgeben.",
+    "scope": "Configuration evaluation over all supplied/current project artifacts and stored strong relations. Explanations preserve full artifact/relation identities and direction, report all applicable-origin/excluded-endpoint conflicts, use shortest paths and never traverse an excluded intermediate. The live command is read-only and publishes only after currentness checks. Equal shortest paths use full artifact-ID order, then relation-ID order. Applicability errors are chosen in artifact identity order independently of input enumeration. Query pagination, trace depth and operational time targets never truncate these explanations. Configuration evaluation and Why use the same shortest predecessor discovery; Why retains all equal shortest predecessors and its existing resumable checkpoint state."
+  },
+  "preconditions": [
+    "Actual byte-bound configuration/artifact sources and canonical stored relations; the live command rereads project membership and source bytes."
+  ],
+  "primary_verification_id": "SR-VER-0028",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0399",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Resolve the explicit selected parent chain and classify every artifact with deterministic reasons.",
+    "Report one complete shortest stored-strong-relation path for every applicable origin and reachable excluded endpoint, stopping at the first excluded node on each route.",
+    "Execute direct Python, structured command and CLI paths; preserve complete conflict data with SRV131/code3 and reject stale observations without output or writes.",
+    "Compare every three-node directed graph and applicability subset with an independent simple-path oracle; check artifact/relation tie ordering, all strong relation kinds and complete large conflict sets.",
+    "Reject source membership/configuration changes, symlinks, invalid conditions and configurations; execute the real command from the built PYZ."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0399",
   "test_ids": [
     "tests/test_configuration_evaluation.py::test_all_applicable_origins_receive_complete_shortest_dependency_paths",
     "tests/test_configuration_evaluation.py::test_classifications_include_unconditional_matching_and_excluded_records",
@@ -127,8 +130,5 @@
     "tests/test_configuration_evaluation_right.py::test_source_and_edge_permutations_preserve_the_entire_evaluation",
     "tests/test_configuration_evaluation_right.py::test_tied_paths_choose_complete_artifact_identity_order_before_relation_ids",
     "tests/test_configuration_evaluation_right.py::test_unrelated_excluded_component_has_no_invented_dependency"
-  ],
-  "open_items": [
-    "This command evaluates stored strong relations; external resource/review providers, model roots and release approval are outside this evidence scope."
   ]
 }

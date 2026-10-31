@@ -1,21 +1,21 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.40
+## Version 0.2.41
 
 | Feld | Wert |
 |---|---|
 | Dokument-ID | `SR-SPEC-0001` |
-| Dokumentversion | `0.2.40` |
+| Dokumentversion | `0.2.41` |
 | Zielrelease | `SpecRoad Single-Repository Workbench 0.2.0` |
 | Status | **Fachlich konsolidierte Arbeitsgrundlage; technische Reviewentscheidung gesondert dokumentiert, formale Baseline-Freigabe und Produktabnahme nicht durch dieses Dokument erklärt** |
 | Stand | 30. Oktober 2026 |
 | Sprache | Deutsch; technische Feldnamen, Enum-Werte und CLI-Kommandos Englisch |
-| Fachliche Quelle | **Diese Repositoryfassung v0.2.40 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.40 liegt mit dieser Änderung nicht vor.** |
+| Fachliche Quelle | **Diese Repositoryfassung v0.2.41 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.41 liegt mit dieser Änderung nicht vor.** |
 | Bearbeitbare Satzquelle | Diese Datei; eine spätere PDF muss denselben versionierten Inhalt wiedergeben. |
 | Vorgängerversion | Repository-Spezifikation v0.2.39 vom 29. Oktober 2026; historische Nachweise bleiben unverändert. |
 | Prüf- und Entscheidungsgrundlage | Ausdrücklicher Nutzerauftrag RUNTIME-AUTO-521 vom 30. Oktober 2026: laufende Messhistorie und neueste Werte für den dynamischen Apply-Filter; vorhandene fachliche Entscheidungen bleiben erhalten. |
 | Änderungsart | Entwicklungsworkflow nach 2.5: automatische Messung in Dev und Apply, Historie erhalten, Fehler invalidieren, dynamische Auswahl ausschließlich in Apply. Keine Änderung der Produktabnahmen. |
 
-> **Verbindlicher Quellenwechsel:** Der ausdrücklich bestätigte Nutzerauftrag schreibt die Repository-Spezifikation als v0.2.40 fort. Frühere PDF- und Reviewnachweise bleiben historisch gebunden; keine Produktfreigabe wird erklärt.
+> **Verbindlicher Quellenwechsel:** Der ausdrücklich bestätigte Nutzerauftrag schreibt die Repository-Spezifikation als v0.2.41 fort. Frühere PDF- und Reviewnachweise bleiben historisch gebunden; keine Produktfreigabe wird erklärt.
 
 > **Fortbestehende Arbeitsprinzipien:** Weiche Budgets führen zu sparsamer vollständiger Weiterarbeit oder gesicherter Fortsetzung über mehrere Aufrufe beziehungsweise Prompts. Es werden keine erforderlichen Arbeiten stillschweigend ausgelassen. Reale Host-, Speicher-, Berechtigungs- und Sicherheitsgrenzen bleiben wirksam.
 
@@ -102,7 +102,7 @@ Bei einem Widerspruch innerhalb dieser Dokumentversion gilt:
 3. `SR-DEC-*` hat Vorrang vor erläuterndem Text, Diagrammen und Beispielen.
 4. Beispiele sind niemals normativ, sofern sie nicht ausdrücklich als Testvektor bezeichnet sind.
 5. Zwei widersprüchliche `SR-REQ-*`-Anforderungen besitzen **keine implizite Rangfolge** nach Nummer, Position oder Spezifität. Ein solcher Fund ist ein Spezifikationsfehler, muss als Issue gelöst werden und verhindert die Freigabe.
-6. Diese Dokumentversion 0.2.40 ersetzt die frühere fachliche Arbeitsgrundlage vollständig. Bis zur gesonderten PDF-Veröffentlichung ist diese versionierte Repositorydatei maßgeblich. Eine spätere PDF muss inhaltsgleich sein; frühere PDFs werden nicht als Nachweis der neuen Verträge ausgegeben. Inhalte verschiedener Fassungen dürfen nicht zu einer Mischspezifikation kombiniert werden.
+6. Diese Dokumentversion 0.2.41 ersetzt die frühere fachliche Arbeitsgrundlage vollständig. Bis zur gesonderten PDF-Veröffentlichung ist diese versionierte Repositorydatei maßgeblich. Eine spätere PDF muss inhaltsgleich sein; frühere PDFs werden nicht als Nachweis der neuen Verträge ausgegeben. Inhalte verschiedener Fassungen dürfen nicht zu einer Mischspezifikation kombiniert werden.
 7. Eine nachträgliche Änderung dieser veröffentlichten Datei erfordert mindestens eine neue Patch-Dokumentversion; stille Korrekturen unter derselben Dokumentversion sind unzulässig.
 8. Eine normative Tabelle, auf die eine `SR-REQ-*`-Anforderung ausdrücklich als Algorithmus oder Matrix verweist, ist Bestandteil des Passkriteriums dieser Anforderung.
 
@@ -508,6 +508,58 @@ Arbeit. Eine reine Teilungsentscheidung erzeugt kein Klärungsbundle.
 Die Arbeitsdetails stehen in der lokalen AGENTS.md, die konkreten
 Abnahmekriterien im Implementierungsplan. PatchHarbor bleibt die
 Übergabestelle; diese Regel startet oder stoppt keinen Dienst.
+
+#### 2.5.1 Laufzeitgewichtete manuelle CI — CI-PACKAGES-525
+
+Ausdrücklicher Nutzerauftrag vom 31. Oktober 2026. Normale Dev-, Apply-,
+gezielte Mess- und vollständige CI-Läufe verwenden standardmäßig vier Worker
+mit pytest-xdist `worksteal`. Ausführung und dynamische Umverteilung bleiben
+beim Testframework. Bereits laufende Einzeltests werden nicht geteilt.
+Automatische Phasenmessung, Historie, N=3 und der aktuelle Apply-Laufzeitfilter
+bleiben unverändert; gezielte Dev- und vollständige CI-Läufe filtern keine
+langsamen Tests. Es wird keine zusätzliche Vollsuite zur Kalibrierung gestartet.
+
+Vor jedem ausschließlich manuell per workflow_dispatch gestarteten CI-Lauf
+MUSS eine vollständige Collection pro CPython 3.10–3.14 den exakten Testcommit,
+Workflowcommit, Run und Attempt binden. Ein versionierter, lesend aus der
+vorhandenen Laufzeitdatenbank exportierter Zeitstand ist eine Schätzgrundlage,
+kein Testnachweis. Neue oder aktuell ungültige Testwerte erhalten zunächst
+300 Sekunden Schätzzeit; kein unbekannter Test entfällt. Ein aktualisierter
+Export nutzt den neuesten Versuch und ersetzt keine Historie. Ein CI-Runner
+hat keinen impliziten Zugriff auf die lokale Exchange-Datenbank.
+
+Die Paketanzahl wird für jeden Lauf automatisch aus dem aktuellen Testbestand
+berechnet, nicht fest auf fünf gesetzt. Ziel sind 180 Minuten geschätzte
+Joblaufzeit einschließlich 15 Minuten Vorbereitung/Abschluss. Initial gilt
+Faktor 1,5 auf die lokalen Einzeltestzeiten; CPU-, I/O-, Fixture- und
+Versionsunterschiede machen dies zu einer Schätzung, keiner Laufzeitzusage.
+Längste Tests werden deterministisch zuerst auf möglichst gleich belastete
+Pakete und die anfänglichen Worker-Warteschlangen verteilt. Testnummern und
+Apply-Rotation werden dabei nicht geändert. Jede Python-Version führt jeden
+aktuell gesammelten Test exakt einmal aus. Maximal 51 Pakete je Version und
+256 Testjobs insgesamt; Überschreitung oder ein allein zu langer Einzeltest
+MUSS vor Teststart konkret scheitern und DARF keine Tests entfernen oder das
+Zeitziel still erhöhen. Es gibt keinen eigenen Test-Scheduler oder Retry.
+
+Ein Paket weist ausschließlich seinen Teilumfang nach. Vollständiger CI-Erfolg
+setzt alle erwarteten erfolgreichen Pakete derselben gebundenen Version und
+des gleichen Testbestands voraus. Fehlende, doppelte, übersprungene,
+fehlgeschlagene, abgebrochene oder aus einem anderen Lauf/Attempt/Commit
+übernommene Nachweise verhindern den Erfolg. Quell-, Katalog-, Spezifikations-
+und Planhash, vollständige native Testidentitäten und Ergebnisse werden
+geprüft. Der zusammengeführte Bericht enthält die ursprünglichen Paketbelege;
+die externe CI-Auswertung prüft die Zusammenführung erneut. Historische
+ungeteilte CI-Berichte bleiben lesbar und unverändert.
+
+Jeder Testjob speichert seine nativen Zeiten bereits phasenweise dauerhaft.
+Die CI sichert nach Möglichkeit auch bei Testfehlern eine konsistente Kopie
+als eigenes Artefakt zusammen mit vorhandenen Teilberichten; unvollständige
+Zeiten sind kein Erfolg. Testschritt maximal 300 Minuten, Job maximal 330
+Minuten, damit vor der GitHub-Grenze Raum für Nachweissicherung bleibt.
+Ein vollständiger Runnerverlust garantiert keine Artefaktveröffentlichung.
+Die Matrix startet maximal 20 Testjobs gleichzeitig; wartende Jobs können
+die Gesamtdauer verlängern. Keine automatische Workflow-Auslösung, kein
+Push, Release, Dienststart oder Eingriff in Control/Watcher folgt daraus.
 
 ## 3. Produktziele
 

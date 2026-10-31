@@ -1,29 +1,5 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0257",
-  "requirement_id": "SR-REQ-0257",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0019",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
-  "fixture_ids": [
-    "SR-FIX-TRANSACTION-RECOVERY-v1",
-    "SR-FIX-DISCARD-RESTART-v1"
-  ],
-  "preconditions": [
-    "Owned pending transaction, independently bound base/source bytes and native local Linux filesystem."
-  ],
-  "steps": [
-    "Read journal status without normal model loading.",
-    "Under a held recovery lock, compare the complete live base inventory and preserve all original preparation bytes in an immutable audit on discard.",
-    "Exercise real publication, partial work, forged metadata, concurrent changes and durability failures; verify unchanged normative data and preserved evidence.",
-    "In separate fresh writer and recovery processes, reconstruct the prepared basis from product-persisted inputs, diagnose it, authorize discard under a new native lock, and verify original evidence, zero native normative writes and successful next-writer access."
-  ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "Eine Transaktion in `building` oder `prepared` MUSS ohne Veröffentlichung verworfen werden können.",
-    "scope": "Retained-preflight building/prepared discard and persisted-input restart are supported for the bound cases. Complete basis reconstruction uses current project files and persisted profile/resource selection without a Change Plan or regular model load. Independent full-root calculation, byte preservation, immutable audit/receipt and next-writer access cover normal writer exit and audited native takeover after actual process death. Persisted building prefixes and interrupted discard marker, receipt, barrier, archive and completion paths resume in fresh processes; contradictory roots/evidence, changed resources and unsafe owners remain blocked without normative writes."
-  },
+  "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [],
   "expected_exit_codes": [
     0,
@@ -33,6 +9,11 @@
     6,
     7
   ],
+  "fixture_ids": [
+    "SR-FIX-TRANSACTION-RECOVERY-v1",
+    "SR-FIX-DISCARD-RESTART-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [
     "/state",
     "/journal_sha256",
@@ -40,17 +21,40 @@
     "/permitted_actions",
     "/discard_completed"
   ],
+  "method": "automated_behavior",
+  "open_items": [
+    "AUDIT-REC-05.W/R/C provide explicit persisted-input restart and preserved discard completion. Journals without explicit basis selection and building-v1 without persisted staging proof are not silently upgraded. The comprehensive crash/environment matrix and general CLI integration are not claimed.",
+    "Public recovery CLI integration and automatic transaction preflight are not claimed; automatic preflight remains in 5.t."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Eine Transaktion in `building` oder `prepared` MUSS ohne Veröffentlichung verworfen werden können.",
+    "scope": "Retained-preflight building/prepared discard and persisted-input restart are supported for the bound cases. Complete basis reconstruction uses current project files and persisted profile/resource selection without a Change Plan or regular model load. Independent full-root calculation, byte preservation, immutable audit/receipt and next-writer access cover normal writer exit and audited native takeover after actual process death. Persisted building prefixes and interrupted discard marker, receipt, barrier, archive and completion paths resume in fresh processes; contradictory roots/evidence, changed resources and unsafe owners remain blocked without normative writes."
+  },
+  "preconditions": [
+    "Owned pending transaction, independently bound base/source bytes and native local Linux filesystem."
+  ],
+  "primary_verification_id": "SR-VER-0019",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0257",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Read journal status without normal model loading.",
+    "Under a held recovery lock, compare the complete live base inventory and preserve all original preparation bytes in an immutable audit on discard.",
+    "Exercise real publication, partial work, forged metadata, concurrent changes and durability failures; verify unchanged normative data and preserved evidence.",
+    "In separate fresh writer and recovery processes, reconstruct the prepared basis from product-persisted inputs, diagnose it, authorize discard under a new native lock, and verify original evidence, zero native normative writes and successful next-writer access."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0257",
   "test_ids": [
     "tests/test_transaction_recovery.py::test_discard_preserves_base_and_archives_all_evidence[building]",
     "tests/test_transaction_recovery.py::test_discard_preserves_base_and_archives_all_evidence[prepared]",
@@ -81,9 +85,5 @@
     "tests/test_discard_restart_right.py::test_terminal_restart_rechecks_audit_after_authorization",
     "tests/test_discard_restart_right.py::test_restart_proof_does_not_authorize_an_unsafe_owner_takeover[foreign-building]",
     "tests/test_discard_restart_right.py::test_self_consistent_staging_hash_cannot_contradict_the_bound_target_root"
-  ],
-  "open_items": [
-    "AUDIT-REC-05.W/R/C provide explicit persisted-input restart and preserved discard completion. Journals without explicit basis selection and building-v1 without persisted staging proof are not silently upgraded. The comprehensive crash/environment matrix and general CLI integration are not claimed.",
-    "Public recovery CLI integration and automatic transaction preflight are not claimed; automatic preflight remains in 5.t."
   ]
 }

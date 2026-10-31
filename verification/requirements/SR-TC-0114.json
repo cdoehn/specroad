@@ -1,11 +1,7 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0114",
-  "requirement_id": "SR-REQ-0114",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0008",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [],
   "fixture_ids": [
     "SR-FIX-BASELINE-COMPARISON-RIGHT-v1",
     "SR-FIX-BASELINE-COMPARISON-v1",
@@ -13,10 +9,35 @@
     "SR-FIX-COMPARISON-SOURCE-v1",
     "SR-FIX-GIT-OBJECT-SOURCE-v1"
   ],
+  "implementation_status": "partial",
+  "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "Baseline CLI/Work integration and selected/configured historical-snapshot readers remain separate integrations.",
+    "Only project configuration and artifact fields are compared. Profiles, rules, mappings, attachments and registry bytes remain opaque; differing opaque inventories fail, including mixed local/Baseline snapshots whose local reader has not observed binary payloads. No full-model equivalence, atomic observation, historical validation or write/release authority. Full bundles use the same current-JSON comparison scope as local/Git readers; binary and operational payload verification remains separate from field comparison."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "`specroad diff --against <BASE>` MUSS als Vergleichsbasis eine Baseline-ID, einen Git-Ref, ein verifiziertes Projektbundle oder ein lokales SpecRoad-Projektverzeichnis desselben Projekts akzeptieren.",
+    "scope": "Owned local/Git/Baseline source registry for project configuration and artifact fields. Baseline IDs or supplied record bytes load the already supported archived whole-project snapshot and bind its verified record/root/object hashes. The same compare_sources/compare_semantic path yields the field diff. Historical archive objects are represented by their verified stored Baseline record fields; other resource bytes remain opaque and differing inventories fail. Baseline CLI discovery, complete resource semantics and full semantic validation are not claimed. Capture completion rechecks the selected native record and actual archived objects. Missing records and missing objects have distinct path-bound diagnostics; host access denial and safety violations remain errors. Legacy schema migration/readers are not inferred from current data. 15.h.W adds a native verified full-bundle provider and explicit bundle-file Diff CLI/structured routing. Its current-JSON projection equals the existing local/Git configuration-and-artifact comparison; all ZIP payloads, including receipts, attachments and archives, remain bound and verified in separate provenance. This is not a full-resource or three-way merge equivalence claim. Opaque current JSON resource differences still fail, input bytes are rechecked, and no extraction, fallback, approval or writing is authorized. 15.h.R retains the original bundle observation until Diff completion; errors preserve initial native validation, host and security boundaries, and observed changes never publish a successful diff. These are non-atomic read observations, not locks or write authority."
+  },
   "preconditions": [
     "Explicit local/Git sources or verified unconfigured whole-project Baseline snapshots, with canonical Baseline IDs or supplied record bytes; source project identity must match.",
     "Explicit canonical project bundle verified by the native bundle reader; current supported schema and matching project identity. The existing comparison scope is project configuration and artifact fields."
   ],
+  "primary_verification_id": "SR-VER-0008",
+  "required_environment": {
+    "declared_minimum_python": "3.10",
+    "implementation": "cpython",
+    "measured_scope": "current-run-only"
+  },
+  "requirement_id": "SR-REQ-0114",
+  "resources": {
+    "harness_suite_timeout": null,
+    "harness_test_timeout": null,
+    "owned_temporary_files": true
+  },
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
   "steps": [
     "Acquire owned comparison sources with their actual bytes, project identity, schema and artifact-path checks; historical Baselines use only their record and archive objects.",
     "Compare Baseline pairs with the shared semantic-diff contract and independently materialized projects, preserving source bytes and existing local/Git behavior.",
@@ -29,25 +50,8 @@
     "Retain the original safe file boundary and owned ZIP bytes through final Diff observation. Detect disappearance or replacement (including malformed, foreign, partial and representation-only changes) as an observed-source conflict; a replaced parent stays a security failure. Observe the source again after final local target reads, while initially missing files remain environment failures.",
     "Run the existing local/Git/Baseline/bundle and public Diff behavior regressions after consolidating adapter results, immutable verification evidence and the final retained bundle observation; preserve all existing oracles and error boundaries (15.h.C)."
   ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "`specroad diff --against <BASE>` MUSS als Vergleichsbasis eine Baseline-ID, einen Git-Ref, ein verifiziertes Projektbundle oder ein lokales SpecRoad-Projektverzeichnis desselben Projekts akzeptieren.",
-    "scope": "Owned local/Git/Baseline source registry for project configuration and artifact fields. Baseline IDs or supplied record bytes load the already supported archived whole-project snapshot and bind its verified record/root/object hashes. The same compare_sources/compare_semantic path yields the field diff. Historical archive objects are represented by their verified stored Baseline record fields; other resource bytes remain opaque and differing inventories fail. Baseline CLI discovery, complete resource semantics and full semantic validation are not claimed. Capture completion rechecks the selected native record and actual archived objects. Missing records and missing objects have distinct path-bound diagnostics; host access denial and safety violations remain errors. Legacy schema migration/readers are not inferred from current data. 15.h.W adds a native verified full-bundle provider and explicit bundle-file Diff CLI/structured routing. Its current-JSON projection equals the existing local/Git configuration-and-artifact comparison; all ZIP payloads, including receipts, attachments and archives, remain bound and verified in separate provenance. This is not a full-resource or three-way merge equivalence claim. Opaque current JSON resource differences still fail, input bytes are rechecked, and no extraction, fallback, approval or writing is authorized. 15.h.R retains the original bundle observation until Diff completion; errors preserve initial native validation, host and security boundaries, and observed changes never publish a successful diff. These are non-atomic read observations, not locks or write authority."
-  },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
-  "required_environment": {
-    "implementation": "cpython",
-    "declared_minimum_python": "3.10",
-    "measured_scope": "current-run-only"
-  },
-  "resources": {
-    "owned_temporary_files": true,
-    "harness_test_timeout": null,
-    "harness_suite_timeout": null
-  },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0114",
   "test_ids": [
     "tests/test_baseline_comparison.py::test_baseline_and_local_sources_share_the_registry_when_resource_inventories_match",
     "tests/test_baseline_comparison.py::test_baseline_compare_and_independently_materialized_projects_have_the_same_diff",
@@ -245,9 +249,5 @@
     "tests/test_query_comparison_sources_right.py::test_typed_record_artifacts_share_the_snapshot_without_authenticating_their_status[git]",
     "tests/test_query_comparison_sources_right.py::test_typed_record_artifacts_share_the_snapshot_without_authenticating_their_status[local]",
     "tests/test_query_comparison_sources_right.py::test_uncommitted_artifact_never_expands_the_selected_commit_inventory"
-  ],
-  "open_items": [
-    "Baseline CLI/Work integration and selected/configured historical-snapshot readers remain separate integrations.",
-    "Only project configuration and artifact fields are compared. Profiles, rules, mappings, attachments and registry bytes remain opaque; differing opaque inventories fail, including mixed local/Baseline snapshots whose local reader has not observed binary payloads. No full-model equivalence, atomic observation, historical validation or write/release authority. Full bundles use the same current-JSON comparison scope as local/Git readers; binary and operational payload verification remains separate from field comparison."
   ]
 }

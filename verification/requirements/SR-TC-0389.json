@@ -1,31 +1,5 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0389",
-  "requirement_id": "SR-REQ-0389",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0027",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
-  "fixture_ids": [
-    "SR-FIX-BUNDLE-VERIFICATION-v1",
-    "SR-FIX-BUNDLE-VERIFICATION-RIGHT-v1"
-  ],
-  "preconditions": [
-    "Explicit canonical project or document/release partial ZIP bytes, with exact E.3.1 configuration context and E.3.2 boundary endpoint originals where required; no origin, extraction or execution provider. External whole-ZIP expectations come from the caller. Synthetic reviewers are fixtures, not real human approvals."
-  ],
-  "steps": [
-    "Reconstruct native configuration, effective profile, resource bindings, artifacts and closed scope from the exact payload bytes; compare independent native model roots to manifest assertions.",
-    "Reject malformed fields, missing references, missing bound resources and forged metadata even when the transport inventory is internally consistent.",
-    "Check read-only explicit file verification through CLI, structured request and direct API, external whole-ZIP binding, source recheck and absence of project selection or output files.",
-    "Reconstruct partial seeds, applicability, current review dependencies and least native closure; independently compare model/profile/configuration hashes and exact closure/configuration/proof payload union.",
-    "Retain full endpoint originals separately from members; verify identity, schema, canonical fullhash and native review context including audit-neutral changes, rejected and historical reviews, shared targets and dual configuration/proof roles.",
-    "Reject missing/extra/redundant proof bytes, forged boundaries, missing strong targets/resources, malformed configurations, unsafe ZIP entries and old external hashes without extraction or authority claims."
-  ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "`specroad bundle verify <FILE>` MUSS Formatkombination, ZIP-Struktur, nichtrekursive Manifest-/Payloadbindung, Scope, Hashes und Referenzen einschließlich einer angegebenen externen Voll-ZIP-Erwartung nach Anhang E prüfen, ohne das Bundle zu extrahieren oder das Projekt zu verändern.",
-    "scope": "15.d.R owned-byte project and document/release partial verification: native seed/closure/model reconstruction, separate original endpoint proofs and configuration parent context, canonical transport and external ZIP expectation. Partial origin root remains provenance only; currentness is derived from transported native history, never authentication or completeness of unknown history. No extraction, model writes, promotion or approval."
-  },
+  "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [
     "CORE_ENVIRONMENT",
     "CORE_CONFLICT",
@@ -42,6 +16,11 @@
     6,
     7
   ],
+  "fixture_ids": [
+    "SR-FIX-BUNDLE-VERIFICATION-v1",
+    "SR-FIX-BUNDLE-VERIFICATION-RIGHT-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [
     "/result/file/sha256",
     "/result/manifest/bundle_model_root_sha256",
@@ -50,17 +29,41 @@
     "/result/creator_authenticated",
     "/result/write_authorized"
   ],
+  "method": "automated_behavior",
+  "open_items": [
+    "Nonempty portable receipt-history verification remains in 15.g. No original-project completeness, creator authenticity, full semantic validation, release or write authority is attested."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "`specroad bundle verify <FILE>` MUSS Formatkombination, ZIP-Struktur, nichtrekursive Manifest-/Payloadbindung, Scope, Hashes und Referenzen einschließlich einer angegebenen externen Voll-ZIP-Erwartung nach Anhang E prüfen, ohne das Bundle zu extrahieren oder das Projekt zu verändern.",
+    "scope": "15.d.R owned-byte project and document/release partial verification: native seed/closure/model reconstruction, separate original endpoint proofs and configuration parent context, canonical transport and external ZIP expectation. Partial origin root remains provenance only; currentness is derived from transported native history, never authentication or completeness of unknown history. No extraction, model writes, promotion or approval."
+  },
+  "preconditions": [
+    "Explicit canonical project or document/release partial ZIP bytes, with exact E.3.1 configuration context and E.3.2 boundary endpoint originals where required; no origin, extraction or execution provider. External whole-ZIP expectations come from the caller. Synthetic reviewers are fixtures, not real human approvals."
+  ],
+  "primary_verification_id": "SR-VER-0027",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0389",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Reconstruct native configuration, effective profile, resource bindings, artifacts and closed scope from the exact payload bytes; compare independent native model roots to manifest assertions.",
+    "Reject malformed fields, missing references, missing bound resources and forged metadata even when the transport inventory is internally consistent.",
+    "Check read-only explicit file verification through CLI, structured request and direct API, external whole-ZIP binding, source recheck and absence of project selection or output files.",
+    "Reconstruct partial seeds, applicability, current review dependencies and least native closure; independently compare model/profile/configuration hashes and exact closure/configuration/proof payload union.",
+    "Retain full endpoint originals separately from members; verify identity, schema, canonical fullhash and native review context including audit-neutral changes, rejected and historical reviews, shared targets and dual configuration/proof roles.",
+    "Reject missing/extra/redundant proof bytes, forged boundaries, missing strong targets/resources, malformed configurations, unsafe ZIP entries and old external hashes without extraction or authority claims."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0389",
   "test_ids": [
     "tests/test_bundle_verification.py::test_additional_nonmodel_payload_is_not_silently_ignored[.env]",
     "tests/test_bundle_verification.py::test_additional_nonmodel_payload_is_not_silently_ignored[.specroad/locks/writer.json]",
@@ -201,8 +204,5 @@
     "tests/test_bundle_verification_right.py::test_zip_safety_and_inventory_precede_model_success[symlink]",
     "tests/test_bundle_verification_right.py::test_zip_safety_and_inventory_precede_model_success[traversal]",
     "tests/test_bundle_verification_right.py::test_zip_safety_and_inventory_precede_model_success[unlisted]"
-  ],
-  "open_items": [
-    "Nonempty portable receipt-history verification remains in 15.g. No original-project completeness, creator authenticity, full semantic validation, release or write authority is attested."
   ]
 }

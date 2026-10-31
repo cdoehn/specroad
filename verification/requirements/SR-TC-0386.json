@@ -1,27 +1,5 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0386",
-  "requirement_id": "SR-REQ-0386",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0027",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
-  "fixture_ids": [
-    "SR-FIX-PROJECT-BUNDLE-R-v1",
-    "SR-FIX-PROJECT-BUNDLE-W-v1"
-  ],
-  "preconditions": [
-    "A current native project with a completely observed empty request/transaction receipt inventory; no configuration filter or partial source promotion."
-  ],
-  "steps": [
-    "Prepare canonical project bytes from guarded native inventory and closure; compare unchanged artifact/resource and referenced object bytes, native roots, exclusions and independently reopened payloads. Refuse unsafe, changed, incomplete or unresolved sources without writing.",
-    "Publish the retained native bundle through CLI, structured request and library entry points; verify unchanged source inventory, exact ZIP bytes/hash and no overwrite. Reject missing payloads, incomplete histories, unsafe destinations and changes before atomic publication; preserve actual images on failure."
-  ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "`specroad bundle create --scope project\\|document\\|release` MUSS ein selbstbeschreibendes Bundle mit der kanonischen Scope-/Kind-/Read-only-Kombination aus Anhang E.3 und allen für diesen Scope notwendigen Payloads erzeugen.",
-    "scope": "15.b.W/R full-project preparation and generated-output publication for completely checked empty receipt histories. Exact native closure, source payloads, external ZIP hash, currentness rechecks, no-overwrite publication and fail-closed inventory/transaction/I/O behavior. No arbitrary-bundle semantic verifier, production extraction, nonempty portable receipt transfer or write/approval authority is claimed."
-  },
+  "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [
     "SRV002",
     "SRV060",
@@ -35,18 +13,44 @@
     6,
     7
   ],
+  "fixture_ids": [
+    "SR-FIX-PROJECT-BUNDLE-R-v1",
+    "SR-FIX-PROJECT-BUNDLE-W-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "15.b.C: structural cleanup of this same completed project-creation slice.",
+    "Document/release partial bundles (15.c), independent bundle verification (15.d), production extraction (15.e) and validated nonempty receipt selection/transfer/replay (15.g) remain open. Nonempty receipt histories currently fail closed instead of pretending portable completeness."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "`specroad bundle create --scope project\\|document\\|release` MUSS ein selbstbeschreibendes Bundle mit der kanonischen Scope-/Kind-/Read-only-Kombination aus Anhang E.3 und allen für diesen Scope notwendigen Payloads erzeugen.",
+    "scope": "15.b.W/R full-project preparation and generated-output publication for completely checked empty receipt histories. Exact native closure, source payloads, external ZIP hash, currentness rechecks, no-overwrite publication and fail-closed inventory/transaction/I/O behavior. No arbitrary-bundle semantic verifier, production extraction, nonempty portable receipt transfer or write/approval authority is claimed."
+  },
+  "preconditions": [
+    "A current native project with a completely observed empty request/transaction receipt inventory; no configuration filter or partial source promotion."
+  ],
+  "primary_verification_id": "SR-VER-0027",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0386",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Prepare canonical project bytes from guarded native inventory and closure; compare unchanged artifact/resource and referenced object bytes, native roots, exclusions and independently reopened payloads. Refuse unsafe, changed, incomplete or unresolved sources without writing.",
+    "Publish the retained native bundle through CLI, structured request and library entry points; verify unchanged source inventory, exact ZIP bytes/hash and no overwrite. Reject missing payloads, incomplete histories, unsafe destinations and changes before atomic publication; preserve actual images on failure."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0386",
   "test_ids": [
     "tests/test_project_bundle.py::test_baselines_keep_every_referenced_historical_object",
     "tests/test_project_bundle.py::test_changes_during_encoding_cannot_return_stale_success[archive]",
@@ -140,9 +144,5 @@
     "tests/test_project_bundle_right.py::test_unsafe_or_normative_destinations_are_refused_without_writes[generated]",
     "tests/test_project_bundle_right.py::test_unsafe_or_normative_destinations_are_refused_without_writes[spec/goals/overwrite.json]",
     "tests/test_project_bundle_right.py::test_unsafe_or_normative_destinations_are_refused_without_writes[specroad.json]"
-  ],
-  "open_items": [
-    "15.b.C: structural cleanup of this same completed project-creation slice.",
-    "Document/release partial bundles (15.c), independent bundle verification (15.d), production extraction (15.e) and validated nonempty receipt selection/transfer/replay (15.g) remain open. Nonempty receipt histories currently fail closed instead of pretending portable completeness."
   ]
 }

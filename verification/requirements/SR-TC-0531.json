@@ -1,31 +1,5 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0531",
-  "requirement_id": "SR-REQ-0531",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0023",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
-  "fixture_ids": [
-    "SR-FIX-BUILTIN-LEGACY-v1",
-    "SR-FIX-BUILTIN-PARTIAL-RIGHT-v1",
-    "SR-FIX-BUILTIN-PARTIAL-v1"
-  ],
-  "preconditions": [
-    "Actual owned source bytes from the declared supplied model or partial/legacy input; no origin authentication, full-project validation, write authority or approval is implied."
-  ],
-  "steps": [
-    "Use original supplied partial current-schema or legacy 0.1.0 record bytes without an active primary and project deterministically by type and identity; preserve absent legacy fields and passive relations without migration.",
-    "Require the actual partial scope root, native typed fields, all strong targets and exact weak-boundary declarations. Reject reversed or duplicate symmetric storage for both present and omitted targets.",
-    "Revalidate supplied boundary objects, own source holders before validation and bind output hashes to the same bytes; reject case/NFC path aliases without rewriting valid original paths.",
-    "Retain supporting or retired primary records without inventing an active primary; expose unavailable calculations and unverified origin/context flags, preserve real file inventories and observe isolated Core/PYZ parity.",
-    "11.q.C: rerun the unchanged W/R behavior tests and affected native regressions after extracting common source binding and passive projection construction. Public result/error classes, validation order, original bytes, hashes and effects remain unchanged."
-  ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "In einem partiellen Bundle oder einem vor der Migration geladenen Legacy-Projekt ohne Primärspezifikationsdokument MUSS die deterministische typbasierte Fallback-Ansicht verfügbar bleiben.",
-    "scope": "11.q.W/R/C: read-only type/ID fallback over explicitly supplied partial records or legacy identity/title/revision envelopes. Native partial boundary semantics and canonical symmetric storage are checked; original record fields, identity schemes, source bytes and paths stay unchanged. No fabricated primary, missing target record, origin/hash proof, full validation, migration or calculated success. The common private projection boundary reuses the existing calculations and result construction; no new report provider or semantic approval is introduced."
-  },
+  "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [
     "builtin_fallback_duplicate_path",
     "builtin_fallback_primary_present",
@@ -35,6 +9,12 @@
     "render_format_not_supported"
   ],
   "expected_exit_codes": [],
+  "fixture_ids": [
+    "SR-FIX-BUILTIN-LEGACY-v1",
+    "SR-FIX-BUILTIN-PARTIAL-RIGHT-v1",
+    "SR-FIX-BUILTIN-PARTIAL-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [
     "/source_kind",
     "/document_role",
@@ -42,17 +22,43 @@
     "/relations/1",
     "/output_format"
   ],
+  "method": "automated_behavior",
+  "open_items": [
+    "Actual partial-bundle acquisition/authentication belongs to M15; the full legacy reader/migration belongs to M16. Explicit source_kind is not proof of either origin.",
+    "Complete end-user CLI/source-provider integration remains pending. Legacy relations remain passive and legacy semantics are not claimed valid.",
+    "M12/M13 computations remain unavailable; targeted development and rotating Apply partitions do not establish full-suite success.",
+    "RESTORE-SCHEMA-SCOPE / Q.0 takes precedence for positive 0.1 qualification: a versioned complete source contract, source hash algorithms, closure/provenance and matching test vectors are required before supported registration and positive M16/Restore integration. Explicitly synthetic fixtures against that contract are permitted; real production data are not a general test prerequisite and historical external compatibility is not invented. Existing 0.2 identities/contracts, CLI aliases and passive presentation retain their documented limits. Current status and remaining M16 work are unchanged; no positive Legacy acceptance is claimed."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "In einem partiellen Bundle oder einem vor der Migration geladenen Legacy-Projekt ohne Primärspezifikationsdokument MUSS die deterministische typbasierte Fallback-Ansicht verfügbar bleiben.",
+    "scope": "11.q.W/R/C: read-only type/ID fallback over explicitly supplied partial records or legacy identity/title/revision envelopes. Native partial boundary semantics and canonical symmetric storage are checked; original record fields, identity schemes, source bytes and paths stay unchanged. No fabricated primary, missing target record, origin/hash proof, full validation, migration or calculated success. The common private projection boundary reuses the existing calculations and result construction; no new report provider or semantic approval is introduced."
+  },
+  "preconditions": [
+    "Actual owned source bytes from the declared supplied model or partial/legacy input; no origin authentication, full-project validation, write authority or approval is implied."
+  ],
+  "primary_verification_id": "SR-VER-0023",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0531",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Use original supplied partial current-schema or legacy 0.1.0 record bytes without an active primary and project deterministically by type and identity; preserve absent legacy fields and passive relations without migration.",
+    "Require the actual partial scope root, native typed fields, all strong targets and exact weak-boundary declarations. Reject reversed or duplicate symmetric storage for both present and omitted targets.",
+    "Revalidate supplied boundary objects, own source holders before validation and bind output hashes to the same bytes; reject case/NFC path aliases without rewriting valid original paths.",
+    "Retain supporting or retired primary records without inventing an active primary; expose unavailable calculations and unverified origin/context flags, preserve real file inventories and observe isolated Core/PYZ parity.",
+    "11.q.C: rerun the unchanged W/R behavior tests and affected native regressions after extracting common source binding and passive projection construction. Public result/error classes, validation order, original bytes, hashes and effects remain unchanged."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0531",
   "test_ids": [
     "tests/test_builtin_document_views.py::test_builtin_and_legacy_projection_contracts_work_in_isolated_distributions[core]",
     "tests/test_builtin_document_views.py::test_builtin_and_legacy_projection_contracts_work_in_isolated_distributions[pyz]",
@@ -138,11 +144,5 @@
     "tests/test_builtin_document_views_right.py::test_valid_symmetric_pair_keeps_original_storage_and_never_invents_the_omitted_record[False-duplicates]",
     "tests/test_builtin_document_views_right.py::test_valid_symmetric_pair_keeps_original_storage_and_never_invents_the_omitted_record[True-conflicts_with]",
     "tests/test_builtin_document_views_right.py::test_valid_symmetric_pair_keeps_original_storage_and_never_invents_the_omitted_record[True-duplicates]"
-  ],
-  "open_items": [
-    "Actual partial-bundle acquisition/authentication belongs to M15; the full legacy reader/migration belongs to M16. Explicit source_kind is not proof of either origin.",
-    "Complete end-user CLI/source-provider integration remains pending. Legacy relations remain passive and legacy semantics are not claimed valid.",
-    "M12/M13 computations remain unavailable; targeted development and rotating Apply partitions do not establish full-suite success.",
-    "RESTORE-SCHEMA-SCOPE / Q.0 takes precedence for positive 0.1 qualification: a versioned complete source contract, source hash algorithms, closure/provenance and matching test vectors are required before supported registration and positive M16/Restore integration. Explicitly synthetic fixtures against that contract are permitted; real production data are not a general test prerequisite and historical external compatibility is not invented. Existing 0.2 identities/contracts, CLI aliases and passive presentation retain their documented limits. Current status and remaining M16 work are unchanged; no positive Legacy acceptance is claimed."
   ]
 }

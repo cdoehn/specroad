@@ -1,41 +1,44 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0625",
-  "requirement_id": "SR-REQ-0625",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0040",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [],
   "fixture_ids": [
     "SR-FIX-OWNED-TEMP-v1"
   ],
-  "preconditions": [
-    "Owned private temporary project and Work roots; independently bound initial stores, explicit recorded-build fixture and closed trusted-host registry. Real native transactions, receipts and isolated process cuts; no presentation oracle."
-  ],
-  "steps": [
-    "Create and independently publish real supported Work; inspect continuation under write/process/network traps and compare complete retained byte inventories.",
-    "Execute the selected known host operation separately with its real explicit inputs, then inspect the next persisted state.",
-    "Exercise hostile data, incompatible state and changing proof as applicable; require actual refusal without authorization, execution or fabricated completion."
+  "implementation_status": "partial",
+  "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "Closed host-adapter continuation only. Full Work CLI and the exact executable CLI action required by P.8, general workflows, portable work-package discovery and the complete production agent contract remain open. No Code 8, global semantic success, process completion authentication or release approval is claimed. Every actual operation independently repeats its current checks; prompt data grants no write authority."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "SpecRoad DARF NICHT selbst einen neuen Chat, einen LLM-Aufruf oder eine autonome Nachricht zur Fortsetzung starten.",
     "scope": "Continuation construction is observational: real handlers, native preparations/commits and process-loss fixtures prove which subsequent operation is requested without invoking it. Write, process and network traps and complete byte inventories establish the absence of new execution, messages, project or Work mutation during prompt construction."
   },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
+  "preconditions": [
+    "Owned private temporary project and Work roots; independently bound initial stores, explicit recorded-build fixture and closed trusted-host registry. Real native transactions, receipts and isolated process cuts; no presentation oracle."
+  ],
+  "primary_verification_id": "SR-VER-0040",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0625",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Create and independently publish real supported Work; inspect continuation under write/process/network traps and compare complete retained byte inventories.",
+    "Execute the selected known host operation separately with its real explicit inputs, then inspect the next persisted state.",
+    "Exercise hostile data, incompatible state and changing proof as applicable; require actual refusal without authorization, execution or fabricated completion."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0625",
   "test_ids": [
     "tests/test_work_prompt.py::test_foreign_project_instructions_and_secrets_do_not_enter_continuation",
     "tests/test_work_prompt.py::test_native_next_step_requires_original_inputs_and_fresh_authority[0]",
@@ -52,8 +55,5 @@
     "tests/test_work_prompt.py::test_real_read_only_steps_are_selected_without_executing_them[schema.show]",
     "tests/test_work_prompt.py::test_real_read_only_steps_are_selected_without_executing_them[version]",
     "tests/test_work_prompt.py::test_work_location_is_typed_data_and_cannot_select_or_run_an_operation"
-  ],
-  "open_items": [
-    "Closed host-adapter continuation only. Full Work CLI and the exact executable CLI action required by P.8, general workflows, portable work-package discovery and the complete production agent contract remain open. No Code 8, global semantic success, process completion authentication or release approval is claimed. Every actual operation independently repeats its current checks; prompt data grants no write authority."
   ]
 }

@@ -1,26 +1,5 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0303",
-  "requirement_id": "SR-REQ-0303",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0023",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
-  "fixture_ids": [
-    "SR-FIX-DOCUMENT-STRUCTURE-v1"
-  ],
-  "preconditions": [
-    "Trusted caller supplies actual owned TargetModel bytes for the complete supplied inventory; source paths are bindings, not proof of live disk completeness."
-  ],
-  "steps": [
-    "Resolve source-owned relations using existing native checks, require one incoming contains per section and derive roots/children/preorder using position, target ID and relation ID. Compare nested permutations, stored relations and original bytes; reject cardinality, missing targets, cycles and missing fields; check immutable reports and isolated Core/PYZ parity.",
-    "Bind every conflicting incoming edge to its original source bytes and pointer; distinguish missing/multiple owners, preserve native position/identity/type failures, require an explicitly closed unconfigured project scope, and compare separate/deep trees and unchanged owned observations across Core/PYZ."
-  ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "Die Reihenfolge von Abschnitten und Inhaltsblöcken MUSS ausschließlich aus `position` der gespeicherten `contains`-Relationen und bei Gleichstand aus Ziel-ID und Relation-ID deterministisch berechnet werden.",
-    "scope": "11.b.W: supplied-model section ownership and deterministic contains composition. Every section needs exactly one incoming contains edge; duplicate edges from one parent count separately. Roots come only from document contains edges, equal positions use target/relation ID ties, and content-block occurrences retain relation identity. Input/source/record hashes bind the actual data. Native field/reference/hierarchy checks precede composition. No file-discovery, primary-role, include, payload-semantic, complete model validation, rendering or write-authority claim. 11.b.R adds actual incoming-relations provenance for cardinality failures and explicit full-project scope admission. Native negative/Boolean/missing positions and decimal-spelled document-field positions fail without rewriting bytes. Equal integer positions retain the full target/relation tie-breaker; retired records are not omitted. No fallback, partial inventory promotion, complete semantic provider or write approval is supplied."
-  },
+  "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [
     "document_id_required",
     "document_not_found",
@@ -38,18 +17,44 @@
   "expected_exit_codes": [
     3
   ],
+  "fixture_ids": [
+    "SR-FIX-DOCUMENT-STRUCTURE-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "Complete 11.b.C structural consolidation with unchanged W/R behavior.",
+    "Remaining document payload/include/rendering/authoring services follow their assigned steps; no full requirement or release approval is claimed.",
+    "Targeted development observations and alternating Apply partitions are partial tests on their actual individual source states."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Die Reihenfolge von Abschnitten und Inhaltsblöcken MUSS ausschließlich aus `position` der gespeicherten `contains`-Relationen und bei Gleichstand aus Ziel-ID und Relation-ID deterministisch berechnet werden.",
+    "scope": "11.b.W: supplied-model section ownership and deterministic contains composition. Every section needs exactly one incoming contains edge; duplicate edges from one parent count separately. Roots come only from document contains edges, equal positions use target/relation ID ties, and content-block occurrences retain relation identity. Input/source/record hashes bind the actual data. Native field/reference/hierarchy checks precede composition. No file-discovery, primary-role, include, payload-semantic, complete model validation, rendering or write-authority claim. 11.b.R adds actual incoming-relations provenance for cardinality failures and explicit full-project scope admission. Native negative/Boolean/missing positions and decimal-spelled document-field positions fail without rewriting bytes. Equal integer positions retain the full target/relation tie-breaker; retired records are not omitted. No fallback, partial inventory promotion, complete semantic provider or write approval is supplied."
+  },
+  "preconditions": [
+    "Trusted caller supplies actual owned TargetModel bytes for the complete supplied inventory; source paths are bindings, not proof of live disk completeness."
+  ],
+  "primary_verification_id": "SR-VER-0023",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0303",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Resolve source-owned relations using existing native checks, require one incoming contains per section and derive roots/children/preorder using position, target ID and relation ID. Compare nested permutations, stored relations and original bytes; reject cardinality, missing targets, cycles and missing fields; check immutable reports and isolated Core/PYZ parity.",
+    "Bind every conflicting incoming edge to its original source bytes and pointer; distinguish missing/multiple owners, preserve native position/identity/type failures, require an explicitly closed unconfigured project scope, and compare separate/deep trees and unchanged owned observations across Core/PYZ."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0303",
   "test_ids": [
     "tests/test_document_structure.py::test_document_structure_contract_runs_in_isolated_core_and_pyz[core]",
     "tests/test_document_structure.py::test_document_structure_contract_runs_in_isolated_core_and_pyz[pyz]",
@@ -117,10 +122,5 @@
     "tests/test_document_structure_right.py::test_unknown_or_wrong_kind_document_identity_never_selects_a_fallback[]",
     "tests/test_document_structure_right.py::test_unowned_section_in_another_part_of_the_inventory_blocks_document_selection",
     "tests/test_document_structure_right.py::test_valid_structure_does_not_supply_unavailable_complete_document_semantics"
-  ],
-  "open_items": [
-    "Complete 11.b.C structural consolidation with unchanged W/R behavior.",
-    "Remaining document payload/include/rendering/authoring services follow their assigned steps; no full requirement or release approval is claimed.",
-    "Targeted development observations and alternating Apply partitions are partial tests on their actual individual source states."
   ]
 }

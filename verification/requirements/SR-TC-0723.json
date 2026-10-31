@@ -1,18 +1,47 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0723",
-  "requirement_id": "SR-REQ-0723",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0049",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [
+    "SRV090"
+  ],
+  "expected_exit_codes": [
+    0,
+    3
+  ],
   "fixture_ids": [
     "SR-FIX-REQUIREMENT-EXCHANGE-RIGHT-v1",
     "SR-FIX-REQUIREMENT-EXCHANGE-v1"
   ],
+  "implementation_status": "partial",
+  "json_pointers": [
+    "/language",
+    "/normative_force",
+    "/statement"
+  ],
+  "method": "automated_behavior",
+  "open_items": [
+    "The core CSV/ReqIF mapping transports the language/force/statement projection only. Other native fields, including should deviation metadata, remain explicit losses; NDJSON retains the complete artifact. No full native CSV/ReqIF roundtrip, foreign-tool interoperability, product approval, migration completion or release success is asserted."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Der Austausch von Requirements MUSS language und normative_force über die expliziten CSV-/NDJSON-/ReqIF-Attribute aus Anhang S.7 erhalten oder einen vorhandenen Verlust ausweisen.",
+    "scope": "14.m.W/R/C provide explicit versioned content-tuple mappings and exact-bound ReqIF core definitions. Actual bytes preserve every S.4 tag plus stored mixed-case spelling, all four forces and complete original text. Missing requirement content mappings block import plans with unaccepted losses, no default/detector/keyword inference, no candidate operations and no history refresh. Strict mapper/native errors and export loss gates remain intact. CSV/ReqIF transport is the three-field projection, not a full native roundtrip. M2 new-draft construction and complete import projections share explicit language/force input construction. Missing mapping losses stay ahead of construction; authoring defaults and language canonicalization remain confined to new drafts. External interoperability and release approval are not asserted."
+  },
   "preconditions": [
     "Explicit exact core mapping and CSV-profile keys/hashes; actual native requirements with declared language, force and complete statement. ReqIF/ReqIFZ use bounded local codecs. No imported carrier is required for the exact ReqIF core definition."
   ],
+  "primary_verification_id": "SR-VER-0049",
+  "required_environment": {
+    "declared_minimum_python": "3.10",
+    "implementation": "cpython",
+    "measured_scope": "current-run-only"
+  },
+  "requirement_id": "SR-REQ-0723",
+  "resources": {
+    "harness_suite_timeout": null,
+    "harness_test_timeout": null,
+    "owned_temporary_files": true
+  },
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
   "steps": [
     "Export de-DE/en-IN requirements with each of must, must_not, should and may through CSV, NDJSON, ReqIF and ReqIFZ. Decode and explicitly map the actual output bytes back to native fields.",
     "Compare exact UTF-8 language, normative_force and complete statement, including CR/LF, quotes, XML metacharacters and distinct composed/decomposed Unicode; keep input bytes unchanged.",
@@ -25,34 +54,8 @@
     "Keep raw tab refusal in the existing RFC-4180 string profile and preserve its exact content via an explicitly selected typed-json-v1 cell; do not change or normalize the original text. Native import tests supply the real hash-bound offline registry for the mandatory language gate.",
     "Rerun the unchanged W/R transport, import and error oracles together with M2 new-draft authoring and language-package behavior after constructor consolidation; do not alter expected content, source provenance, defaults, missing-value distinctions or error contracts."
   ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "Der Austausch von Requirements MUSS language und normative_force über die expliziten CSV-/NDJSON-/ReqIF-Attribute aus Anhang S.7 erhalten oder einen vorhandenen Verlust ausweisen.",
-    "scope": "14.m.W/R/C provide explicit versioned content-tuple mappings and exact-bound ReqIF core definitions. Actual bytes preserve every S.4 tag plus stored mixed-case spelling, all four forces and complete original text. Missing requirement content mappings block import plans with unaccepted losses, no default/detector/keyword inference, no candidate operations and no history refresh. Strict mapper/native errors and export loss gates remain intact. CSV/ReqIF transport is the three-field projection, not a full native roundtrip. M2 new-draft construction and complete import projections share explicit language/force input construction. Missing mapping losses stay ahead of construction; authoring defaults and language canonicalization remain confined to new drafts. External interoperability and release approval are not asserted."
-  },
-  "expected_diagnostics": [
-    "SRV090"
-  ],
-  "expected_exit_codes": [
-    0,
-    3
-  ],
-  "json_pointers": [
-    "/language",
-    "/normative_force",
-    "/statement"
-  ],
-  "required_environment": {
-    "implementation": "cpython",
-    "declared_minimum_python": "3.10",
-    "measured_scope": "current-run-only"
-  },
-  "resources": {
-    "owned_temporary_files": true,
-    "harness_test_timeout": null,
-    "harness_suite_timeout": null
-  },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0723",
   "test_ids": [
     "tests/test_requirement_exchange.py::test_requirement_core_definitions_are_not_selected_by_name_alone",
     "tests/test_requirement_exchange.py::test_requirement_core_mapping_is_usable_through_live_export[csv]",
@@ -500,8 +503,5 @@
     "tests/test_requirement_exchange_right.py::test_target_without_content_mapping_keeps_export_loss_and_fail_on_loss[normative_force-csv]",
     "tests/test_requirement_exchange_right.py::test_target_without_content_mapping_keeps_export_loss_and_fail_on_loss[normative_force-reqif]",
     "tests/test_requirement_exchange_right.py::test_target_without_content_mapping_keeps_export_loss_and_fail_on_loss[normative_force-reqifz]"
-  ],
-  "open_items": [
-    "The core CSV/ReqIF mapping transports the language/force/statement projection only. Other native fields, including should deviation metadata, remain explicit losses; NDJSON retains the complete artifact. No full native CSV/ReqIF roundtrip, foreign-tool interoperability, product approval, migration completion or release success is asserted."
   ]
 }

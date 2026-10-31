@@ -1,17 +1,44 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0657",
-  "requirement_id": "SR-REQ-0657",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0044",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [],
   "fixture_ids": [
     "SR-FIX-OWNED-TEMP-v1"
   ],
+  "implementation_status": "partial",
+  "json_pointers": [
+    "/language",
+    "/normative_force",
+    "/statement",
+    "/revision"
+  ],
+  "method": "automated_behavior",
+  "open_items": [
+    "Complete downstream review/context-binding invalidation integration evidence and legitimate production approval/history binding in the remaining assigned plan steps.",
+    "Register the public command with complete production model/history loading, native missing semantic gates and dry-run/stdout contracts.",
+    "Supported-platform and Python-matrix completion requires actual manually requested CI evidence."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Eine Änderung von language oder normative_force MUSS als Fachinhaltsänderung nach dem bestehenden Lifecycle- und Kontextbindungsvertrag behandelt werden.",
+    "scope": "Actual native draft and structurally stored approved Requirement updates. Language/force/text changes receive common content/revision handling; approved changes become proposed, including removal of an approved-only field. These fixtures do not attest historic approval legitimacy or downstream review/evidence currentness; public CLI and release claims remain open."
+  },
   "preconditions": [
     "An explicit complete local Goal/Requirement TargetModel and actual project files, registered native host authority, declared actor/time/IDs and matching revision or canonical hash."
   ],
+  "primary_verification_id": "SR-VER-0044",
+  "required_environment": {
+    "declared_minimum_python": "3.10",
+    "implementation": "cpython",
+    "measured_scope": "current-run-only"
+  },
+  "requirement_id": "SR-REQ-0657",
+  "resources": {
+    "harness_suite_timeout": null,
+    "harness_test_timeout": null,
+    "owned_temporary_files": true
+  },
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
   "steps": [
     "Change requirement language, normative_force or statement through ordered field options, a saved RFC-6902 array or explicit binary stdin.",
     "Publish through the common full planner, lifecycle/metadata and real native transaction.",
@@ -19,30 +46,8 @@
     "Update structurally stored approved requirements (language, force, statement and removal of approved-only rationale), then check proposed, exactly one revision and durable native completion.",
     "Bind the native lifecycle gate to the original operation/model/metadata and recompute it at each full-target check; no permissive replacement gate supplies the proposed-state evidence."
   ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "Eine Änderung von language oder normative_force MUSS als Fachinhaltsänderung nach dem bestehenden Lifecycle- und Kontextbindungsvertrag behandelt werden.",
-    "scope": "Actual native draft and structurally stored approved Requirement updates. Language/force/text changes receive common content/revision handling; approved changes become proposed, including removal of an approved-only field. These fixtures do not attest historic approval legitimacy or downstream review/evidence currentness; public CLI and release claims remain open."
-  },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [
-    "/language",
-    "/normative_force",
-    "/statement",
-    "/revision"
-  ],
-  "required_environment": {
-    "implementation": "cpython",
-    "declared_minimum_python": "3.10",
-    "measured_scope": "current-run-only"
-  },
-  "resources": {
-    "owned_temporary_files": true,
-    "harness_test_timeout": null,
-    "harness_suite_timeout": null
-  },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0657",
   "test_ids": [
     "tests/test_artifact_update.py::test_language_force_and_text_publish_one_native_revision[hash-file-language-en-US]",
     "tests/test_artifact_update.py::test_language_force_and_text_publish_one_native_revision[hash-file-normative_force-should]",
@@ -67,10 +72,5 @@
     "tests/test_artifact_update_right.py::test_approved_content_change_publishes_proposed_with_one_revision[normative_force]",
     "tests/test_artifact_update_right.py::test_approved_content_change_publishes_proposed_with_one_revision[remove_rationale]",
     "tests/test_artifact_update_right.py::test_approved_content_change_publishes_proposed_with_one_revision[statement]"
-  ],
-  "open_items": [
-    "Complete downstream review/context-binding invalidation integration evidence and legitimate production approval/history binding in the remaining assigned plan steps.",
-    "Register the public command with complete production model/history loading, native missing semantic gates and dry-run/stdout contracts.",
-    "Supported-platform and Python-matrix completion requires actual manually requested CI evidence."
   ]
 }

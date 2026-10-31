@@ -1,27 +1,5 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0471",
-  "requirement_id": "SR-REQ-0471",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0032",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
-  "fixture_ids": [
-    "SR-FIX-DOCUMENT-MUTATIONS-v1"
-  ],
-  "preconditions": [
-    "Complete owned model, guarded native retirement operations, explicit strategy and prepared fresh identities/observed edge hashes for moved children."
-  ],
-  "steps": [
-    "11.i.W: retire an empty section, cascade through its complete native contains subtree, or move every child to one explicit section before publication; reject missing/conflicting strategies and incomplete/extra retirement sets without writes.",
-    "11.i.R: reject missing/conflicting strategy options, invalid destinations, each stale retirement/relation guard, ID reuse and saved operation smuggling. Retire internally shared blocks exactly once with all historical ownership edges retained; reject outside-owned children. Check actual changed live source/profile bytes, authority boundaries, conflicting replay and real interrupted cascade publication with retained recovery journal.",
-    "11.i.C: rerun unchanged W/R and affected regressions after consolidating pure attached-creation, guarded reparenting and typed single-operation generators. Public signatures, strategy/field/semantic gates, saved-plan bindings, diagnostics and publication/recovery contracts remain unchanged."
-  ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "`section remove` MUSS für einen nichtleeren Abschnitt genau eine Strategie aus `--cascade` oder `--move-children-to` verlangen.",
-    "scope": "Real saved plans and publications preserve all original IDs and files. Every stored section retains one owner; cascade retires the complete subtree, move strategy preserves child content/revisions while replacing only the original contains edges. No orphan or partial mutation is accepted on refused input. Internal repeated block occurrences produce one guarded retirement per identity; all original contains relations remain stored. Rejected input preserves the complete file inventory. Interrupted publication honestly retains acknowledged and possibly renamed files plus committing journal; it does not claim rollback or safe automatic retry. C only consolidates the existing operation generators; no test oracle, operation contract or publication behavior changes."
-  },
+  "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [
     "document_removal_strategy_required",
     "document_removal_strategy_conflict",
@@ -35,21 +13,46 @@
     6,
     7
   ],
+  "fixture_ids": [
+    "SR-FIX-DOCUMENT-MUTATIONS-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [
     "/operations",
     "/relations"
   ],
+  "method": "automated_behavior",
+  "open_items": [
+    "CLI command registration remains pending; this prepared-plan embedding contract is not a full-suite or release pass."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "`section remove` MUSS für einen nichtleeren Abschnitt genau eine Strategie aus `--cascade` oder `--move-children-to` verlangen.",
+    "scope": "Real saved plans and publications preserve all original IDs and files. Every stored section retains one owner; cascade retires the complete subtree, move strategy preserves child content/revisions while replacing only the original contains edges. No orphan or partial mutation is accepted on refused input. Internal repeated block occurrences produce one guarded retirement per identity; all original contains relations remain stored. Rejected input preserves the complete file inventory. Interrupted publication honestly retains acknowledged and possibly renamed files plus committing journal; it does not claim rollback or safe automatic retry. C only consolidates the existing operation generators; no test oracle, operation contract or publication behavior changes."
+  },
+  "preconditions": [
+    "Complete owned model, guarded native retirement operations, explicit strategy and prepared fresh identities/observed edge hashes for moved children."
+  ],
+  "primary_verification_id": "SR-VER-0032",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0471",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "11.i.W: retire an empty section, cascade through its complete native contains subtree, or move every child to one explicit section before publication; reject missing/conflicting strategies and incomplete/extra retirement sets without writes.",
+    "11.i.R: reject missing/conflicting strategy options, invalid destinations, each stale retirement/relation guard, ID reuse and saved operation smuggling. Retire internally shared blocks exactly once with all historical ownership edges retained; reject outside-owned children. Check actual changed live source/profile bytes, authority boundaries, conflicting replay and real interrupted cascade publication with retained recovery journal.",
+    "11.i.C: rerun unchanged W/R and affected regressions after consolidating pure attached-creation, guarded reparenting and typed single-operation generators. Public signatures, strategy/field/semantic gates, saved-plan bindings, diagnostics and publication/recovery contracts remain unchanged."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0471",
   "test_ids": [
     "tests/test_document_mutations.py::test_incomplete_or_conflicting_section_removal_never_writes[both]",
     "tests/test_document_mutations.py::test_incomplete_or_conflicting_section_removal_never_writes[extra_retirement]",
@@ -114,8 +117,5 @@
     "tests/test_document_mutations_right.py::test_strategy_inputs_are_explicit_and_never_silently_discarded[wrong_moves_type]",
     "tests/test_document_mutations_right.py::test_strategy_inputs_are_explicit_and_never_silently_discarded[wrong_retirements_type]",
     "tests/test_document_mutations_right.py::test_unrelated_non_draft_history_is_not_certified_by_mutation_lifecycle_gate"
-  ],
-  "open_items": [
-    "CLI command registration remains pending; this prepared-plan embedding contract is not a full-suite or release pass."
   ]
 }

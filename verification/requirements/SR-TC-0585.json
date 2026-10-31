@@ -1,41 +1,44 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0585",
-  "requirement_id": "SR-REQ-0585",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0037",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [],
   "fixture_ids": [
     "SR-FIX-OWNED-TEMP-v1"
   ],
-  "preconditions": [
-    "Prepared complete path sequence over explicitly supplied typed identities/views; the production spool performs no graph search. Owned protected project and external native POSIX storage."
-  ],
-  "steps": [
-    "Construct a layered reference fixture with exactly 128 equal-length shortest paths and pass every prepared path through tiny work, batch and delivery windows.",
-    "Compare the complete producer-defined path order and all artifact/relation identities, directions and duplicates; include zero-length and inverse paths.",
-    "Reject malformed path projections and disconnected typed relation walks; preserve protected project bytes."
+  "implementation_status": "partial",
+  "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "Graph computation/complete frontier, valid Why goals/needs/sources and configured maximum depth belong to 8.e/8.f. Persistent Work identity, input snapshot binding and checkpoint generations remain assigned to 6.i-6.l. Live iterator/merge/delivery continuation is not process-independent resume or a whole-project completeness proof."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Graphtraversierung und vollständige Pfadausgabe MÜSSEN bei Erreichen weicher Arbeitsschritt- oder Ausgabeschwellen ihren vollständigen Restauftrag nach Anhang P fortsetzbar erhalten.",
     "scope": "6.f.R output-transport subset only: PathRecord and the bounded PathSort/PathSpool preserve all already computed ordered paths and exact identities. A seven-layer binary fixture supplies all 128 equal shortest paths of eight edges; one-unit/one-record windows do not drop any path or call a prefix complete. Production shortest-path discovery, semantic endpoint selection and traversal/frontier persistence are not implemented by this transport proof. 6.f.C moves the unchanged immutable run reference, positive-count validation and guarded delivery cursor into shared storage segment/cursor primitives. Native file authority, work driver, codecs, result fields and all W/R behavior contracts remain unchanged; no additional requirement completion is inferred."
   },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "json_pointers": [],
+  "preconditions": [
+    "Prepared complete path sequence over explicitly supplied typed identities/views; the production spool performs no graph search. Owned protected project and external native POSIX storage."
+  ],
+  "primary_verification_id": "SR-VER-0037",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0585",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Construct a layered reference fixture with exactly 128 equal-length shortest paths and pass every prepared path through tiny work, batch and delivery windows.",
+    "Compare the complete producer-defined path order and all artifact/relation identities, directions and duplicates; include zero-length and inverse paths.",
+    "Reject malformed path projections and disconnected typed relation walks; preserve protected project bytes."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0585",
   "test_ids": [
     "tests/test_spooling_right.py::test_all_prepared_shortest_paths_survive_tiny_work_and_output_windows[1-1-1]",
     "tests/test_spooling_right.py::test_all_prepared_shortest_paths_survive_tiny_work_and_output_windows[65536-10000-1000]",
@@ -49,8 +52,5 @@
     "tests/test_spooling_right.py::test_path_record_codec_rejects_malformed_or_unowned_data[foreign_object]",
     "tests/test_spooling_right.py::test_path_record_codec_rejects_malformed_or_unowned_data[missing_field]",
     "tests/test_spooling_right.py::test_path_spool_preserves_inverse_edges_zero_length_and_duplicate_paths"
-  ],
-  "open_items": [
-    "Graph computation/complete frontier, valid Why goals/needs/sources and configured maximum depth belong to 8.e/8.f. Persistent Work identity, input snapshot binding and checkpoint generations remain assigned to 6.i-6.l. Live iterator/merge/delivery continuation is not process-independent resume or a whole-project completeness proof."
   ]
 }

@@ -1,6 +1,8 @@
 {
-  "format_version": 2,
   "anchor_commit": "1fff45ff0e1533bfa44de64c556a1688f3001628",
+  "format_version": 2,
+  "partition_count": 3,
+  "rotation_anchor_commit": "81d91ff9611f6466cb48d4fc96ddc550f8b911cc",
   "test_ids": [
     "test_artifact_identity.ArtifactIdentityRightTests.test_allocation_must_carry_exact_new_reservation",
     "test_artifact_identity.ArtifactIdentityRightTests.test_allocation_performs_no_file_network_or_process_operations",
@@ -22578,8 +22580,29 @@
     "tests/test_transport_snapshots.py::test_snapshot_input_errors_preserve_upstream_facts[bad_digest]",
     "tests/test_transport_snapshots.py::test_snapshot_input_errors_preserve_upstream_facts[digest]",
     "tests/test_transport_snapshots.py::test_snapshot_input_errors_preserve_upstream_facts[missing]",
-    "tests/test_transport_snapshots.py::test_snapshot_input_errors_preserve_upstream_facts[relative]"
-  ],
-  "partition_count": 3,
-  "rotation_anchor_commit": "81d91ff9611f6466cb48d4fc96ddc550f8b911cc"
+    "tests/test_transport_snapshots.py::test_snapshot_input_errors_preserve_upstream_facts[relative]",
+    "tests/test_ci_packages.py::test_changed_assignment_is_rejected_even_with_recomputed_hash",
+    "tests/test_ci_packages.py::test_export_reuses_first_dev_measurement_and_never_resurrects_old_success",
+    "tests/test_ci_packages.py::test_growing_suite_automatically_adds_balanced_packages_without_losing_tests",
+    "tests/test_ci_packages.py::test_long_tests_are_spread_across_jobs_and_initial_worksteal_queues",
+    "tests/test_ci_packages.py::test_matrix_contains_every_python_package_once",
+    "tests/test_ci_packages.py::test_matrix_limit_rejects_instead_of_dropping_tests",
+    "tests/test_ci_packages.py::test_matrix_rejects_plans_from_other_attempt_or_revision[change0]",
+    "tests/test_ci_packages.py::test_matrix_rejects_plans_from_other_attempt_or_revision[change1]",
+    "tests/test_ci_packages.py::test_matrix_rejects_plans_from_other_attempt_or_revision[change2]",
+    "tests/test_ci_packages.py::test_merge_reconstructs_one_complete_native_observation",
+    "tests/test_ci_packages.py::test_one_oversized_test_cannot_be_fixed_by_silently_exceeding_target",
+    "tests/test_ci_packages.py::test_partial_or_mixed_packages_never_produce_full_success[duplicate]",
+    "tests/test_ci_packages.py::test_partial_or_mixed_packages_never_produce_full_success[failed]",
+    "tests/test_ci_packages.py::test_partial_or_mixed_packages_never_produce_full_success[missing]",
+    "tests/test_ci_packages.py::test_partial_or_mixed_packages_never_produce_full_success[missing_phase]",
+    "tests/test_ci_packages.py::test_partial_or_mixed_packages_never_produce_full_success[other_attempt]",
+    "tests/test_ci_packages.py::test_partial_or_mixed_packages_never_produce_full_success[other_commit]",
+    "tests/test_ci_packages.py::test_partial_or_mixed_packages_never_produce_full_success[other_python]",
+    "tests/test_ci_packages.py::test_partial_or_mixed_packages_never_produce_full_success[skip]",
+    "tests/test_ci_packages.py::test_partial_or_mixed_packages_never_produce_full_success[wrong_test]",
+    "tests/test_ci_packages.py::test_plan_is_deterministic_under_collection_and_estimate_input_order",
+    "tests/test_ci_packages.py::test_real_parallel_packages_collect_all_then_execute_only_bound_tests",
+    "tests/test_ci_packages.py::test_unknown_and_invalid_current_durations_are_included_conservatively"
+  ]
 }

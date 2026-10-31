@@ -1,31 +1,5 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0329",
-  "requirement_id": "SR-REQ-0329",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0024",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
-  "fixture_ids": [
-    "SR-FIX-EXCHANGE-EXPORT-v1"
-  ],
-  "preconditions": [
-    "Actual TargetModel or live native project, complete existing scope selection/closure and explicit exact mapping/profile bindings; ReqIF uses original typed definitions and explicit XML limits, ReqIFZ additionally a hard expansion limit. Generated output is disjoint from normative project files."
-  ],
-  "steps": [
-    "Resolve project/document/query/release scopes with native configuration, paginated query seeds, strong closure, historical baseline objects and weak boundaries; compare actual native model roots before format projection.",
-    "Encode actual NDJSON/CSV/ReqIF/ReqIFZ bytes using existing codecs. Derive the separate closed manifest, exact maximum/epoch UTC timestamp, represented identities, individual losses and full attachment descriptors from actual sources and output.",
-    "Exercise all four formats through the real export CLI with explicit attachment and loss flags; bind actual attachment bytes or report their exclusion, forbid successful publication on remaining prohibited loss, and compare original normative inventory bytes.",
-    "Compare relocated/CWD-independent results, reject unsafe destinations and changed source bytes, and run real export through isolated Core and PYZ distributions.",
-    "Exercise changed, missing and stale source/scope/mapping/profile/attachment bindings, native prose/admonition attachment dependencies, exact partial weak boundaries and configuration-excluded mandatory dependencies across the four formats.",
-    "Check permutation, empty-query, exact-time and whole-omission behavior, detached manifests/loss details, conflicting loss identities, inapplicable options and actual caller/project/profile XML and archive hard limits.",
-    "Inject late source/input changes, create-only conflicts and partial I/O failures; verify no successful stale output, preserved complete images, no overwrites, no normative writes and rejection of target-prefix collisions, symlinks and nested external projects."
-  ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "Ein Export DARF NICHT normative Projektdateien verändern.",
-    "scope": "14.l.W provides real project export for all four formats through the CLI and pure preparation API. Native scope/model-root and exact deterministic time are distinct from format bytes and their SHA-256. The separate exchange-export-v1 manifest reports actual representation and attachment/format losses; generated publication rechecks source bytes and never writes normative files. ReqIF uses existing closed typed/carrier/loss contracts. The requirement remains partial; no release or interoperability approval is asserted. 14.l.R adds native prose attachment closure, strict format-option admission, conflict classification and final source rechecks after published-byte verification. The R adversarial matrix is bound to explicit test identities. 14.l.C separates native inventory, dependency resolution, query selection and canonical manifest projection, exact UTC comparison/formatting, and attachment/XML/archive binding. The same W/R behavioral expectations and the stated interoperability/approval limits are retained."
-  },
+  "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [],
   "expected_exit_codes": [
     0,
@@ -35,18 +9,47 @@
     6,
     7
   ],
+  "fixture_ids": [
+    "SR-FIX-EXCHANGE-EXPORT-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "ReqIF projection requires actual unambiguous original typed carriers and explicit external occurrence/relation bindings. Unsupported inverse relation value bindings fail closed. This partial implementation does not establish foreign-tool interoperability, loss approval, atomic multi-file publication, full-suite or release success."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Ein Export DARF NICHT normative Projektdateien verändern.",
+    "scope": "14.l.W provides real project export for all four formats through the CLI and pure preparation API. Native scope/model-root and exact deterministic time are distinct from format bytes and their SHA-256. The separate exchange-export-v1 manifest reports actual representation and attachment/format losses; generated publication rechecks source bytes and never writes normative files. ReqIF uses existing closed typed/carrier/loss contracts. The requirement remains partial; no release or interoperability approval is asserted. 14.l.R adds native prose attachment closure, strict format-option admission, conflict classification and final source rechecks after published-byte verification. The R adversarial matrix is bound to explicit test identities. 14.l.C separates native inventory, dependency resolution, query selection and canonical manifest projection, exact UTC comparison/formatting, and attachment/XML/archive binding. The same W/R behavioral expectations and the stated interoperability/approval limits are retained."
+  },
+  "preconditions": [
+    "Actual TargetModel or live native project, complete existing scope selection/closure and explicit exact mapping/profile bindings; ReqIF uses original typed definitions and explicit XML limits, ReqIFZ additionally a hard expansion limit. Generated output is disjoint from normative project files."
+  ],
+  "primary_verification_id": "SR-VER-0024",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0329",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "Resolve project/document/query/release scopes with native configuration, paginated query seeds, strong closure, historical baseline objects and weak boundaries; compare actual native model roots before format projection.",
+    "Encode actual NDJSON/CSV/ReqIF/ReqIFZ bytes using existing codecs. Derive the separate closed manifest, exact maximum/epoch UTC timestamp, represented identities, individual losses and full attachment descriptors from actual sources and output.",
+    "Exercise all four formats through the real export CLI with explicit attachment and loss flags; bind actual attachment bytes or report their exclusion, forbid successful publication on remaining prohibited loss, and compare original normative inventory bytes.",
+    "Compare relocated/CWD-independent results, reject unsafe destinations and changed source bytes, and run real export through isolated Core and PYZ distributions.",
+    "Exercise changed, missing and stale source/scope/mapping/profile/attachment bindings, native prose/admonition attachment dependencies, exact partial weak boundaries and configuration-excluded mandatory dependencies across the four formats.",
+    "Check permutation, empty-query, exact-time and whole-omission behavior, detached manifests/loss details, conflicting loss identities, inapplicable options and actual caller/project/profile XML and archive hard limits.",
+    "Inject late source/input changes, create-only conflicts and partial I/O failures; verify no successful stale output, preserved complete images, no overwrites, no normative writes and rejection of target-prefix collisions, symlinks and nested external projects."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0329",
   "test_ids": [
     "tests/test_exchange_export.py::test_export_applies_bound_configuration_before_query_selection",
     "tests/test_exchange_export.py::test_export_attachment_inventory_and_unchanged_native_root[False]",
@@ -208,8 +211,5 @@
     "tests/test_project_export_right.py::test_export_source_change_during_final_output_read_cannot_return_success[source]",
     "tests/test_project_export_right.py::test_export_unsafe_existing_parent_is_rejected_without_writes[foreign_project]",
     "tests/test_project_export_right.py::test_export_unsafe_existing_parent_is_rejected_without_writes[symlink]"
-  ],
-  "open_items": [
-    "ReqIF projection requires actual unambiguous original typed carriers and explicit external occurrence/relation bindings. Unsupported inverse relation value bindings fail closed. This partial implementation does not establish foreign-tool interoperability, loss approval, atomic multi-file publication, full-suite or release success."
   ]
 }

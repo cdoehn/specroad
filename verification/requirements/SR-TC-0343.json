@@ -1,30 +1,12 @@
 {
-  "test_case_format_version": 1,
-  "test_case_id": "SR-TC-0343",
-  "requirement_id": "SR-REQ-0343",
-  "specification_sha256": "0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4",
-  "primary_verification_id": "SR-VER-0025",
-  "implementation_status": "partial",
-  "method": "automated_behavior",
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [],
   "fixture_ids": [
     "SR-FIX-CODE-REFERENCE-SOURCES-v1",
     "SR-FIX-CODE-REFERENCE-SOURCES-RIGHT-v1"
   ],
-  "preconditions": [
-    "12.q.W: Owned validated code_ref RecordArtifact and an explicit native ProjectBoundary or GitObjectSource; original file/blob bytes and Git commit identities are supplied by the fixture, not inferred from source code.",
-    "12.q.R: Owned raw code_ref bytes, a native explicit source, actual before/after descriptor mutations and real local Git objects. Resource faults and audit traps are injected only inside owned fixtures; no external source or runtime is contacted."
-  ],
-  "steps": [
-    "12.q.W: Read the selected file or bound historical Git tree for each code reference kind; compare exact original bytes, size, SHA-256 and optional Git identities. Check immutable owned snapshots and unchanged worktree/index. Keep selectors and symbol hints passive. Reject mismatched bindings, missing paths and unsafe source boundaries. Resolve implemented_by targets through the native relation validator. Exercise the public read API in fresh Core/PYZ processes without third-party modules.",
-    "12.q.R: Create a nested project marker after the actual read; swap leaf/parent/root paths or grow the file; check fail-closed results and preservation of the changed state. Check static links and special files, denied descriptor safety, post-read I/O/memory/interrupt errors and closure of every owned descriptor. Revalidate unsafe stored paths. Exercise gitlink/symlink/nested/changed storage and missing/corrupt objects without fallback or fetch; compare exact SHA-256 Git identities. Keep hints/selectors passive and audit fresh Core/PYZ reads of all five kinds for process/network/write attempts."
-  ],
-  "oracle": {
-    "kind": "behavior",
-    "requirement_contract": "Die Referenzart eines `code_ref` MUSS `file`, `line_range`, `text_anchor`, `symbol_hint` oder `generated_artifact` sein und `symbol_hint` ohne eingebauten Resolver ausschließlich informativ behandeln, sodass es allein keine Aktualität beweist.",
-    "scope": "12.q.W: The explicitly selected safe source yields owned raw bytes and exact file/Git binding without checkout, source execution, symbol resolution or language-specific tools. Raw file hash comparison is separate from H2/H3 currency evaluation. Existing records and selectors stay unchanged; failed reads produce no hash result. Native implemented_by accepts capability/requirement/decision to code_ref. 12.q.R adds the same full-lifetime attachment descriptor guard to file reads, including nested-root detection after reading. All safety/resource failures propagate without a binding or retry; actual modified files remain. Native Git source guards retain no-fetch/no-checkout behavior and distinct exact SHA-1/SHA-256 object bindings. Matching raw hashes never promote passive hints or selectors to currency; audited fresh runtimes perform no process/network/write operation."
-  },
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
+  "implementation_status": "partial",
   "json_pointers": [
     "/file_hash_matches",
     "/file_sha256",
@@ -37,17 +19,38 @@
     "/selection_evaluated",
     "/symbol_resolved"
   ],
+  "method": "automated_behavior",
+  "open_items": [
+    "12.q.R completes source and hint boundary hardening. Structural cleanup is reserved for 12.q.C. H2 normalization/relocation (12.r), H3 status decisions (12.s) and consumer integration (12.t) remain separate planned steps. No full-suite, release or external execution success is claimed."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Die Referenzart eines `code_ref` MUSS `file`, `line_range`, `text_anchor`, `symbol_hint` oder `generated_artifact` sein und `symbol_hint` ohne eingebauten Resolver ausschließlich informativ behandeln, sodass es allein keine Aktualität beweist.",
+    "scope": "12.q.W: The explicitly selected safe source yields owned raw bytes and exact file/Git binding without checkout, source execution, symbol resolution or language-specific tools. Raw file hash comparison is separate from H2/H3 currency evaluation. Existing records and selectors stay unchanged; failed reads produce no hash result. Native implemented_by accepts capability/requirement/decision to code_ref. 12.q.R adds the same full-lifetime attachment descriptor guard to file reads, including nested-root detection after reading. All safety/resource failures propagate without a binding or retry; actual modified files remain. Native Git source guards retain no-fetch/no-checkout behavior and distinct exact SHA-1/SHA-256 object bindings. Matching raw hashes never promote passive hints or selectors to currency; audited fresh runtimes perform no process/network/write operation."
+  },
+  "preconditions": [
+    "12.q.W: Owned validated code_ref RecordArtifact and an explicit native ProjectBoundary or GitObjectSource; original file/blob bytes and Git commit identities are supplied by the fixture, not inferred from source code.",
+    "12.q.R: Owned raw code_ref bytes, a native explicit source, actual before/after descriptor mutations and real local Git objects. Resource faults and audit traps are injected only inside owned fixtures; no external source or runtime is contacted."
+  ],
+  "primary_verification_id": "SR-VER-0025",
   "required_environment": {
-    "implementation": "cpython",
     "declared_minimum_python": "3.10",
+    "implementation": "cpython",
     "measured_scope": "current-run-only"
   },
+  "requirement_id": "SR-REQ-0343",
   "resources": {
-    "owned_temporary_files": true,
+    "harness_suite_timeout": null,
     "harness_test_timeout": null,
-    "harness_suite_timeout": null
+    "owned_temporary_files": true
   },
-  "evidence_kind": "specroad-dev-pytest-v1",
+  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "steps": [
+    "12.q.W: Read the selected file or bound historical Git tree for each code reference kind; compare exact original bytes, size, SHA-256 and optional Git identities. Check immutable owned snapshots and unchanged worktree/index. Keep selectors and symbol hints passive. Reject mismatched bindings, missing paths and unsafe source boundaries. Resolve implemented_by targets through the native relation validator. Exercise the public read API in fresh Core/PYZ processes without third-party modules.",
+    "12.q.R: Create a nested project marker after the actual read; swap leaf/parent/root paths or grow the file; check fail-closed results and preservation of the changed state. Check static links and special files, denied descriptor safety, post-read I/O/memory/interrupt errors and closure of every owned descriptor. Revalidate unsafe stored paths. Exercise gitlink/symlink/nested/changed storage and missing/corrupt objects without fallback or fetch; compare exact SHA-256 Git identities. Keep hints/selectors passive and audit fresh Core/PYZ reads of all five kinds for process/network/write attempts."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0343",
   "test_ids": [
     "tests/test_code_reference_sources.py::test_all_five_kinds_bind_original_bytes_without_evaluating_selectors[file-file]",
     "tests/test_code_reference_sources.py::test_all_five_kinds_bind_original_bytes_without_evaluating_selectors[file-generated_artifact]",
@@ -77,8 +80,5 @@
     "tests/test_code_reference_sources_right.py::test_hints_and_selectors_never_become_currency_even_with_matching_file_bytes[True-line_range]",
     "tests/test_code_reference_sources_right.py::test_hints_and_selectors_never_become_currency_even_with_matching_file_bytes[True-symbol_hint]",
     "tests/test_code_reference_sources_right.py::test_hints_and_selectors_never_become_currency_even_with_matching_file_bytes[True-text_anchor]"
-  ],
-  "open_items": [
-    "12.q.R completes source and hint boundary hardening. Structural cleanup is reserved for 12.q.C. H2 normalization/relocation (12.r), H3 status decisions (12.s) and consumer integration (12.t) remain separate planned steps. No full-suite, release or external execution success is claimed."
   ]
 }
