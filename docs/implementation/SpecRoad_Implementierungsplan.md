@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 40 · **Stand:** 31. Oktober 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.41
+**Planrevision:** 41 · **Stand:** 31. Oktober 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.42
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 Schritte und 900 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; die ausdrücklich genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wird nach 10.7.10 innerhalb von 15.l.R vorgezogen. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -9,7 +9,7 @@ Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 S
 
 Fachliche Grundlage ist [`docs/specification/SpecRoad_Spezifikation.md`](../specification/SpecRoad_Spezifikation.md), einschließlich aller konsolidierten Korrekturen, 742 Requirements, 51 Verifikationsverträge, 46 Szenario-/E2E-Identitäten sowie R-01 bis R-75, Anhang U und den PatchHarbor-Rundweg aus Anhang W. Der [`Prüfbericht`](../reviews/SpecRoad_v0.2.7_Implementierungsreife_Pruefbericht.md) ist ein vorgelagerter Entwurfsreview, kein späterer Produktnachweis.
 
-Gebundene Spezifikations-SHA-256: `042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef`.
+Gebundene Spezifikations-SHA-256: `f11d36333567bdb9533c43212b8871cc278be697200e5cbdcaef341952ed3dbd`.
 Planungsbasis: Commit `fe2661d02ecf2f7eb483b58a4487eb009c6b3846`; sauberes Result-Bundle `specroad_Result_120209_0914_df3504.zip`; Repository-ID `3d2576df-d611-46fc-9d2b-92869468aaca`. Diese Angaben dokumentieren die Entstehung des Plans, nicht die zukünftige Patchbindung. **Jedes spätere Patchpaket bindet den dann aktuellen tatsächlichen Result-Zustand.**
 
 Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 2026 gelten zusätzlich und bei den nachfolgend benannten Konflikten vorrangig. Sonstige normative Spezifikationsinhalte werden nicht stillschweigend abgeschwächt. Neue fachliche Widersprüche, fehlende zwingende Angaben und Sicherheitsprobleme sind offen zu benennen, nicht durch erfundene Annahmen oder Scheinerfolge zu lösen.
@@ -91,12 +91,12 @@ GitHub-Vollsuite bleibt ausdrücklich manuell und durch Codex ungestartet.
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 40
+plan_revision: 41
 implementation_plan_commits_total: 900
 implementation_plan_commits_completed: 654
 last_completed_plan_commit: 15.m.C
 next_plan_commit: 15.n.W
-last_completed_numbered_bundle: 527
+last_completed_numbered_bundle: 528
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -33168,7 +33168,7 @@ PH-API-RESULT wird durch dieses Refactoring nicht vorweggenommen.
 **Anforderungsbezug:** `SR-REQ-0224`–`SR-REQ-0225`, `SR-REQ-0731`–`SR-REQ-0732`.
 **Verifikationsbezug:** `SR-VER-0051`; primäre Fälle `SR-TC-0731` bis `SR-TC-0742` gemäß Anhang A.
 
-**Zusätzliche Voraussetzung:** Die neue CPython-3.10-/3.11-fähige PatchHarbor-Version wird verwendet. **PH-API-RESULT** bleibt als externe Arbeit offen: öffentliche vollständige Resultprüfung und schreibfreie Snapshotausgabe in PatchHarbor dokumentieren und liefern lassen. Kein erfundener Funktionsname und kein eigener Resultreader; abhängige Fähigkeiten bleiben bis dahin gesperrt.
+**Zusätzliche Voraussetzung:** Die CPython-3.10-/3.11-fähige PatchHarbor-Version wird verwendet. **PH-API-RESULT** ist durch die in 15.m.R/C geprüfte öffentliche 1.6.0-Snapshot-API konkret erfüllt; die unten dokumentierte Distribution bleibt versions-/hashgebunden. Dies ist kein Beleg für spätere Hin-/Rückweg- oder Hostintegration und ersetzt keine reale Pythonmatrix. Ein eigener Resultreader oder privater API-Fallback bleibt ausgeschlossen.
 
 #### 15.m.W – Let it Work
 
@@ -33483,6 +33483,139 @@ CI-Workflow und Dienste bleiben unverändert.
 **Anforderungsbezug:** `SR-REQ-0733`–`SR-REQ-0734`, `SR-REQ-0737`.
 **Verifikationsbezug:** `SR-VER-0051`; primäre Fälle `SR-TC-0731` bis `SR-TC-0742` gemäß Anhang A.
 
+**OFF-PLAN TRANSPORT-OUTBOUND-528 — Hinpaket- und Runtimeeingabevertrag.**
+Autorität: delegiert gemäß **SPECROAD-DECISION-1**, §2.4.1–2.4.4;
+Control-Vertrag 3 ist gültig und erlaubt in diesem Auftrag eine Klärung.
+Keine persönliche Einzelentscheidung, Produktfreigabe oder menschliche
+Reviewbestätigung wird daraus abgeleitet. Übergabe ausschließlich als
+`spec_clarification`; 15.n.W bleibt offen und Produktfortschritt bleibt 654/900.
+
+**Geprüfte Grundlage und genaue Lücke.** Das erfolgreiche saubere Result 527
+`specroad-apply_Result_171724_1031_0e2893.zip`, SHA-256
+`5e53b2a5dcbb33bb05197f51de3053ddacf7e4794881ce76780fa45c260272d7`,
+gehört zur ausgelieferten C-ZIP
+`1e3f78a1f3d4eee19225eca187ffbb99b0928962c55cd2d4d8eea154eff0913a`
+und bestätigt Abschlusscommit `ae3f078ba818774c456c1abb8d73337958686ddf`.
+Die native öffentliche Resultprüfung erfasste alle 2.415 Snapshotdateien;
+Run-/Ausführungslogs bestätigen 6.107 bestandene Apply-Tests, Sequenz 236 /
+Gruppe 2 und den echten 15.m.C-Commit. Nur die dadurch bestätigten
+Fortschrittsmarker wurden in Dev abgeglichen; vorhandene Bytes bleiben erhalten.
+
+Untersucht wurden W.1–W.7, 11.2/11.7, Anhang E.1/E.2/E.3, 15.n.W/R/C und die
+aktive Anbindung aus 15.m. W.2 nennt bisher nur Mindestinhalte, aber keine
+interoperable geschlossene Feldmenge, Paket-ID-Projektion oder eindeutige
+Übergabe der vertrauenswürdigen Runtime-Artefakte. Die bestehende
+`bundle.create`-Registrierung bedient ausschließlich Anhang E; ein impliziter
+Runtimefund oder live zusammengesuchtes Projekt würde die neuen Grenzen
+nicht erfüllen. Diese normative Lücke muss vor dem öffentlichen Hinexport
+geschlossen werden; sie ist kein Grund zur Teilimplementierung von 15.n.W.
+
+Als technische Quellen wurden die gelieferte PatchHarbor-1.6.0-PYZ
+(SHA-256 `377e715d7cb443eb5e80a3e7f9e8405f36092a0f7c062745b70c8b3a2e3eb055`),
+der bereitgestellte dev-Referenzstand
+`d6c3450da8f3bc6731911141acfec62449e06a96`, dessen `docs/python-api.md`,
+öffentliche API-/Snapshottypen und der native Bundlepfad gelesen.
+`api.context`, `api.configuration`, `api.bundle`, `integration_capabilities`
+und `read_result_snapshot` sind vorhanden. Beobachtung am gelieferten Quellcode:
+`bundle_repository` wartet das konfigurierte Exchange auch bei explizitem
+`output_directory`; dies wird nicht als schreibfreie Aufnahme dargestellt.
+Auf SpecRoad-Seite wurden der vorhandene Distributionsbuilder und
+`specroad-dev-payload-v1`, die Transportbindung sowie Projektbundle-/Closure-,
+Receipt- und Ausgabeprimitiven untersucht. Kein Dienst oder API-Bundlelauf am
+realen Apply-Repository wurde dafür gestartet.
+
+**Alternativen und Wahl.** Ein offenes, implementationsabhängiges JSON und
+implizite Runtimeauswahl wären kürzer, erlaubten aber verschiedene inkompatible
+Paket- und Vertrauensdeutungen. Die Aufnahme eigener Zusatzmember in das
+PatchHarbor-Result widerspräche dessen geschlossenem Format. Gewählt ist das
+bereits vorgesehene äußere ZIP mit geschlossenem Manifest, selbstreferenzfreier
+Paket-ID, expliziten externen Runtime-Hashpaaren und ausschließlich nativer
+Snapshot-/Anhang-E-Projektion. Ein zusätzlicher Projektreader, neuer Transport
+ohne PatchHarbor, automatischer Download oder eigener Receipt-Ersatz wird
+nicht eingeführt. Lesende Liveinventare dienen nur dem Nachweis vollständiger
+Abdeckung; sie liefern keine fehlenden Snapshotbytes nach.
+
+**Grenzenprüfung.** (1) Die Entscheidung konkretisiert ausschließlich die
+bereits bestätigten SR-REQ-0733/0734/0737 und 15.n, ohne 15.o oder 18.q/r
+vorzuziehen. (2) Vorhandene öffentliche Snapshot-/Bundleverträge und native
+Projektprüfer bleiben die technische Basis; ihre vollständige Integration ist
+noch nachzuweisen. (3) Rechte, Review, Historie, Closed-Scope, Sicherheits- und
+Fehlergates sowie die Pflicht zur echten Kompatibilitätsabnahme bleiben bestehen.
+(4) Normativer Stand 0.2.42 und Planrevision 41 machen die Änderung rücknehmbar;
+historische Results, Evidence und ursprüngliche Artefakte werden nicht geändert.
+(5) Es wird keine ungemessene Plattform, Python-bundled-Distribution, CI-Matrix
+oder erfolgreiche Betriebsgrenzenprüfung behauptet. Sollte die Umsetzung einen
+unverzichtbaren öffentlichen Nachweis nicht liefern können, gilt §2.4.4 statt
+eines privaten Fallbacks. Die Entwicklungsbefugnis wird nicht erweitert.
+
+**Normative Zielregel und vollständige offene Abnahmen.** Maßgeblich sind
+W.2.1 und W.3.1 der Spezifikation 0.2.42. 15.n bleibt vollständig umzusetzen:
+
+1. Öffentliche CLI-/Command-Integration derselben `bundle.create`-Variante mit
+   exakt einer Klasse `transport_operational`, eindeutigen Pflichtpaaren,
+   Selbstbeschreibung, Preflight und unveränderten Planungs-/Budget-/Work-Grenzen.
+   Fehlende/falsche Optionen und nicht verfügbare Runtimeprofile werden vor
+   Transportwirkungen abgewiesen; normale E-Bundles bleiben unverändert.
+2. Echter Export aus registriertem lokalem Repository über öffentliche API;
+   keine Registrierung, Konfigurationsreparatur, Gitindex-/Historienmutation,
+   SpecRoad-Betriebs-/Normativwrites oder Apply-/Watcher-Aktivierung. Tatsächliche
+   PH-Exchange-/Recovery-/Archivierungswirkungen werden vorher offengelegt.
+3. Unabhängig erwartete Projekt-ID, Projektpfad (`.` sowie Unterprojekt), Scope,
+   Modellwurzel und vollständiges Projekt-/Receiptinventar stimmen mit dem
+   geprüften effektiven Result überein. Clean, staged, unstaged, untracked,
+   binäre/leere Dateien, Rename und Löschung bleiben durch reale Fixtures belegt.
+   Fehlende ignorierte Pflichtdaten, echte oder scheinbar leere Receiptgeschichte,
+   Partialmarker, offene Transaktionen und nachträgliche Änderungen führen nicht
+   zu einer ersatzweise erfolgreichen oder aus Livebytes ergänzten ZIP.
+4. Modul- und PYZ-Export mit expliziten Runtimebindungen; falsche Hashes,
+   Distribution/Build/Plattform, fremde Importe, unvollständige Archive und
+   nicht vorhandenes Python-bundled liefern keinen Scheinerfolg. Die volle
+   Python-3.10–3.14-Matrix bleibt die gesonderte manuelle CI-Pflichtabnahme.
+5. Unabhängige äußere Member-/Größen-/Hashprüfung einschließlich geschlossener
+   Manifestfelder, Paket-ID, innerer Runtime und Originalresultbytes. Gleiche
+   gefrorene Eingaben ergeben gleiche kanonische Paketbytes; kein Zeit-/Pfad-
+   oder Selbsthashzyklus. Doppelte/unbekannte Felder, falsche Typen, fremde Member,
+   Traversal, Links, Kollisionen und belegte Ausgabeziele werden verweigert.
+6. Reale Abbrüche und I/O-Fehler vor/bei Veröffentlichung erhalten tatsächlich
+   vorhandene PH-Resultate und private Diagnosebytes, aber veröffentlichen keine
+   halbe finale ZIP. Wiederholung ersetzt weder fremde Dateien noch eine
+   historische Basis. Erfolg ist nur Hinexport, keine Freigabe oder Übernahme.
+
+Die W-Abnahme liefert den vollständigen nutzbaren und sicheren Hinexport samt
+Integration; R vervollständigt dessen Rand-/Fehler- und Angriffsabnahmen; C
+bereinigt nur die Struktur. Kein Teilfortschritt oder interne Hilfsfunktion
+wird als eigener Abschluss ausgegeben. Dieses OFF-PLAN-Bundle enthält nur
+Spezifikation, Plan und erforderliche aktive Katalogbindungen. Die
+Implementierungszustände/aktuellen Testidentitäten werden dadurch nicht als
+bestanden oder implementiert umklassifiziert. Historische Nachweise bleiben
+byteidentisch. Keine neuen Dokumentationstests, keine zusätzliche Vollsuite;
+gezielte vorhandene parallele Verhaltenstests, Collection/Katalog und native
+Paketprüfung sichern den Lieferstand, nicht die noch offene neue Funktion.
+
+
+**Lieferprüfung dieses Klärungsbundles.** 112 unveränderte vorhandene
+Transport-/Core-Verhaltenstests in sechs Dateien bestanden ungefiltert mit vier
+parallelen Worksteal-Workern auf CPython 3.14.4; Exit 0, Abschluss
+`2026-10-31T17:37:08.937097+00:00`. Dies ist Bestandsschutz, kein Implementierungsnachweis
+für 15.n. Vollständige Collection/Katalogprüfung: 22.617 eindeutige aktive
+Testidentitäten, keine weitere Ausführung von Testkörpern. Alle 112 Versuche
+und 336 Phasen sind vollständig und gültig in der gemeinsamen Laufzeithistorie
+enthalten; Testidentitäten stimmen mit den beobachteten Ergebnissen überein.
+
+Geprüfter Liefer-Quellhash: `549632da4094c0354bfe16cb3b487ebb473d4ac7a5132055352aa10b059a27db`.
+Auswahlbericht: `c9054a9c254ae898bf3ac95eea18587461c59cb86b75e10f3e8c3d1ce3f1d808`;
+Einzeloutcomes: `c4405e68397e8ad8f79606610a1518790b427e3e2936fce89d72777a85e14ea3`;
+Collection: `f6491725e201350f611cd81267b17855dadc943ddf9559ab6e189e87b8191e4f`.
+Native ZIP-/Bindungs-/Payloadprüfung erfolgt vor atomarer Exchange-Übergabe.
+Der eine OFF-PLAN-Dokumentcommit lautet
+`OFF-PLAN TRANSPORT-OUTBOUND-528 docs(spec): Hinexportvertrag und Runtimebindungen präzisieren`.
+Er folgt erst nach erfolgreicher paralleler Apply-Sequenz **237 / Gruppe 0**
+mit dem dann aktuellen Laufzeitfilter und geprüfter v3-Auswahlbindung.
+Nur die Bundlezählung wechselt danach auf 528; 654/900, zuletzt 15.m.C und
+nächstens 15.n.W bleiben unverändert. Kein Apply-Erfolg wird bei Übergabe
+behauptet. Control/Watcher/Dienste und die manuell ausstehende Pythonmatrix
+werden nicht verändert oder gestartet.
+
 #### 15.n.W – Let it Work
 
 - [ ] **15.n.W** · Position **655/900** · Voraussetzung: `15.m.C`.
@@ -33490,7 +33623,7 @@ CI-Workflow und Dienste bleiben unverändert.
 
 **Umsetzung:** bundle create mit explizitem ai-runtime/outbound-Profil als transport_operational registrieren. api.bundle am bereits registrierten lokalen Git-Repository verwenden, aus dessen geprüftem Snapshot ein kanonisches Vollprojektbundle erzeugen und SpecRoad-PYZ, Originalresult und Projektbundle nach W.2 atomar verpacken.
 
-**Verhaltensabnahme:** Unabhängiges Inventar bestätigt Resultbytes, Projekt-ID, Scope, Modellwurzel, Receipts und alle äußeren Hash-/Größenbindungen; Source, Index und Git-Historie bleiben unverändert, PH-Betriebswirkungen sind ausgewiesen.
+**Verhaltensabnahme:** Unabhängiges Inventar bestätigt Resultbytes, Projekt-ID, Scope, Modellwurzel, Receipts und alle äußeren Hash-/Größenbindungen; Source, Index und Git-Historie bleiben unverändert, PH-Betriebswirkungen sind ausgewiesen. Maßgeblich sind zusätzlich die exakten Verträge W.2.1/W.3.1 und die vollständige offene Abnahmeliste TRANSPORT-OUTBOUND-528; CLI-/Preflight-/Work-Integration gehört zum Schritt.
 
 #### 15.n.R – Make it Right
 

@@ -31,7 +31,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "specification_sha256": "f11d36333567bdb9533c43212b8871cc278be697200e5cbdcaef341952ed3dbd",
   "steps": [
     "Plan one supported complete read-only handler without execution; publish initial work and run a resume through current runtime/context checks under a continuously held work mutex.",
     "Check exact stored machine results and unchanged request/work/plan bindings; resume again without rerunning the handler or creating a new generation.",

@@ -39,7 +39,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "specification_sha256": "f11d36333567bdb9533c43212b8871cc278be697200e5cbdcaef341952ed3dbd",
   "steps": [
     "Resolve configurable combinations of classname/name/file/external_id; keep same names with different selected Class/File contexts distinct, never infer an identifier from unknown XML or target metadata.",
     "Account for every testcase occurrence and return separate unmapped, ambiguous and contradictory diagnostics with grouped occurrence/mapping indices; retain only independently unambiguous candidates without choosing an import policy.",

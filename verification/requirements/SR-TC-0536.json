@@ -68,7 +68,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "specification_sha256": "f11d36333567bdb9533c43212b8871cc278be697200e5cbdcaef341952ed3dbd",
   "steps": [
     "Validate required stored range fields; strictly decode original source bytes in the stored encoding, normalize CRLF and CR to LF, select exactly the inclusive stored lines including their existing LF terminators, then compare SHA-256 over UTF-8 selection bytes. Check other Unicode separators and decomposed text remain unchanged, outside modifications do not change a matching selection, and wrong expected hashes are not accepted because the raw file hash matches. Reject unavailable ranges and encoding failures without truncation or replacement. Compare file/historical Git results and unchanged source data; exercise detached values and fresh standard-library-only Core/PYZ processes without I/O, execution or writes during selection.",
     "Check the complete stored window first; otherwise hash all complete windows of the declared line/byte extent, including overlapping positions. Accept only one other match as relocated; report none versus multiple separately, with no saved position changes. Exercise normalized text, original bytes, final-newline sensitivity, missing/truncated old ranges, missing/invalid encoding, unknown and conflicting anchor profiles, detached values, historical Git parity and guarded fresh Core/PYZ runtimes."

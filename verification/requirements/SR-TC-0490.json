@@ -53,7 +53,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "specification_sha256": "f11d36333567bdb9533c43212b8871cc278be697200e5cbdcaef341952ed3dbd",
   "steps": [
     "Complete a native create transaction, retain its exact request/transaction/committed bytes, and create/verify/extract a closed project bundle.",
     "Compare unchanged stored results and IDs on retry; reject missing/corrupt completion links, copied proof and changed operations without writes.",

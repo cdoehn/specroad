@@ -1,21 +1,21 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.41
+## Version 0.2.42
 
 | Feld | Wert |
 |---|---|
 | Dokument-ID | `SR-SPEC-0001` |
-| Dokumentversion | `0.2.41` |
+| Dokumentversion | `0.2.42` |
 | Zielrelease | `SpecRoad Single-Repository Workbench 0.2.0` |
 | Status | **Fachlich konsolidierte Arbeitsgrundlage; technische Reviewentscheidung gesondert dokumentiert, formale Baseline-Freigabe und Produktabnahme nicht durch dieses Dokument erklärt** |
-| Stand | 30. Oktober 2026 |
+| Stand | 31. Oktober 2026 |
 | Sprache | Deutsch; technische Feldnamen, Enum-Werte und CLI-Kommandos Englisch |
-| Fachliche Quelle | **Diese Repositoryfassung v0.2.41 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.41 liegt mit dieser Änderung nicht vor.** |
+| Fachliche Quelle | **Diese Repositoryfassung v0.2.42 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.42 liegt mit dieser Änderung nicht vor.** |
 | Bearbeitbare Satzquelle | Diese Datei; eine spätere PDF muss denselben versionierten Inhalt wiedergeben. |
 | Vorgängerversion | Repository-Spezifikation v0.2.39 vom 29. Oktober 2026; historische Nachweise bleiben unverändert. |
 | Prüf- und Entscheidungsgrundlage | Ausdrücklicher Nutzerauftrag RUNTIME-AUTO-521 vom 30. Oktober 2026: laufende Messhistorie und neueste Werte für den dynamischen Apply-Filter; vorhandene fachliche Entscheidungen bleiben erhalten. |
 | Änderungsart | Entwicklungsworkflow nach 2.5: automatische Messung in Dev und Apply, Historie erhalten, Fehler invalidieren, dynamische Auswahl ausschließlich in Apply. Keine Änderung der Produktabnahmen. |
 
-> **Verbindlicher Quellenwechsel:** Der ausdrücklich bestätigte Nutzerauftrag schreibt die Repository-Spezifikation als v0.2.41 fort. Frühere PDF- und Reviewnachweise bleiben historisch gebunden; keine Produktfreigabe wird erklärt.
+> **Verbindlicher Quellenwechsel:** Die delegierte Detailklärung TRANSPORT-OUTBOUND-528 gemäß SPECROAD-DECISION-1 schreibt die Repository-Spezifikation als v0.2.42 fort. Frühere PDF- und Reviewnachweise bleiben historisch gebunden; keine Produktfreigabe wird erklärt.
 
 > **Fortbestehende Arbeitsprinzipien:** Weiche Budgets führen zu sparsamer vollständiger Weiterarbeit oder gesicherter Fortsetzung über mehrere Aufrufe beziehungsweise Prompts. Es werden keine erforderlichen Arbeiten stillschweigend ausgelassen. Reale Host-, Speicher-, Berechtigungs- und Sicherheitsgrenzen bleiben wirksam.
 
@@ -102,7 +102,7 @@ Bei einem Widerspruch innerhalb dieser Dokumentversion gilt:
 3. `SR-DEC-*` hat Vorrang vor erläuterndem Text, Diagrammen und Beispielen.
 4. Beispiele sind niemals normativ, sofern sie nicht ausdrücklich als Testvektor bezeichnet sind.
 5. Zwei widersprüchliche `SR-REQ-*`-Anforderungen besitzen **keine implizite Rangfolge** nach Nummer, Position oder Spezifität. Ein solcher Fund ist ein Spezifikationsfehler, muss als Issue gelöst werden und verhindert die Freigabe.
-6. Diese Dokumentversion 0.2.41 ersetzt die frühere fachliche Arbeitsgrundlage vollständig. Bis zur gesonderten PDF-Veröffentlichung ist diese versionierte Repositorydatei maßgeblich. Eine spätere PDF muss inhaltsgleich sein; frühere PDFs werden nicht als Nachweis der neuen Verträge ausgegeben. Inhalte verschiedener Fassungen dürfen nicht zu einer Mischspezifikation kombiniert werden.
+6. Diese Dokumentversion 0.2.42 ersetzt die frühere fachliche Arbeitsgrundlage vollständig. Bis zur gesonderten PDF-Veröffentlichung ist diese versionierte Repositorydatei maßgeblich. Eine spätere PDF muss inhaltsgleich sein; frühere PDFs werden nicht als Nachweis der neuen Verträge ausgegeben. Inhalte verschiedener Fassungen dürfen nicht zu einer Mischspezifikation kombiniert werden.
 7. Eine nachträgliche Änderung dieser veröffentlichten Datei erfordert mindestens eine neue Patch-Dokumentversion; stille Korrekturen unter derselben Dokumentversion sind unzulässig.
 8. Eine normative Tabelle, auf die eine `SR-REQ-*`-Anforderung ausdrücklich als Algorithmus oder Matrix verweist, ist Bestandteil des Passkriteriums dieser Anforderung.
 
@@ -6158,6 +6158,7 @@ Die folgende Roadmap ist informativ und erzeugt keine Anforderungen an 0.2:
 
 | Version | Datum | Status | Änderung |
 |---|---|---|---|
+| 0.2.42 | 2026-10-31 | Delegiert gemäß SPECROAD-DECISION-1 | TRANSPORT-OUTBOUND-528: geschlossener Hinpaket-/Runtimeeingabevertrag, selbstreferenzfreie Paket-ID und vollständige Snapshot-/Receiptbindung; Implementierung 15.n bleibt offen, keine Produktfreigabe. |
 | 0.2.39 | 2026-10-29 | Ausdrückliche Nutzerentscheidung | RESTORE-SCHEMA-SCOPE: vollständige 0.2-Restore-Abnahme; sichere Abweisung nicht unterstützter deklarierter Altformate; positive 0.1-Unterstützung erst nach verbindlichem Quellvertrag und M16-Integration. Keine Produktabnahme. |
 | 0.2.40 | 2026-10-30 | Ausdrücklicher Nutzerauftrag | RUNTIME-AUTO-521: automatische Phasenmessung mit erhaltener Historie, nur neueste Werte, ungültige Fehlversuche und dynamischer Apply-Filter. Produktumfang und Freigaben unverändert. |
 | 0.2.35 | 2026-10-27 | Delegiert gemäß SPECROAD-DECISION-1 | RESTORE-WORK-OWNER-HANDOFF: explizite Übernahme des verwaisten äußeren Restore-Work-Owners mit nativen lokalen Ownerbelegen und dauerhafter Übergabe; Projekt-Recovery und Produktabnahmen bleiben getrennt/offen. |
@@ -9097,7 +9098,7 @@ Die Zuständigkeiten der öffentlichen Aufrufe sind fest:
 | Rückpaket erzeugen | `api.pack_patch(..., reference_bundle=..., entrypoint=...)`; SpecRoad bereitet den vollständigen Payload und den festen Entrypoint vor. PatchHarbor wählt keine Änderungen aus und erzeugt keinen Proposal. |
 | Rückpaket prüfen | `api.inspect_patch` und `api.validate_patch` mit ursprünglichem Result; lokale Zielbindung wird zusätzlich gegen das registrierte Ziel geprüft. Ein gültiges Paket ist keine Freigabe seiner Fachänderungen. |
 | Lokal übernehmen | Ausschließlich der bewusst aufgerufene lokale Integrationsadapter verwendet `api.apply` mit explizitem geprüftem Paket und Repository. Keine automatische Auswahl fremder Pakete, Watcher oder rekursiven Apply-/Bundle-Aufrufe. |
-| Result prüfen und Snapshot liefern | Erforderlicher **öffentlicher** API-Vertrag für vollständige Resultprüfung und schreibfreie Ausgabe des exakten effektiven Snapshotinventars. Diese Fähigkeit ist in der geprüften API noch nicht öffentlich vorhanden; ihr Name wird erst durch PatchHarbor festgelegt. |
+| Result prüfen und Snapshot liefern | `api.read_result_snapshot(..., expected_sha256=...)` mit `integration_capabilities().snapshot_contract_version == 1`; vollständige Resultprüfung und schreibfreie Ausgabe der Base-/Index-/Worktree-/Untracked-/Effective-Inventare. Die konkrete 1.6.0-Bindung wurde in 15.m nachgewiesen; jeder Aufruf muss sie weiterhin prüfen. |
 
 Die letzte Zeile ist eine ausdrückliche Integrationsvoraussetzung. Sie umfasst
 Manifest, Kontext, Runtime, Base, staged/unstaged Änderungen und untracked Daten
@@ -9127,7 +9128,7 @@ Memberraum eingefügt. Gewöhnliche Projekt-/Teilbundles nach Anhang E behalten 
 eigene Bedeutung und enthalten durch diese Erweiterung keine ausführbare Runtime.
 Die Moduldistribution kann dasselbe Hinpaket bedienen wie `specroad.pyz`.
 
-`handoff.json` bindet mindestens Formatversion, Paket-ID, `project_id`, relativen
+`handoff.json` bindet nach W.2.1 Formatversion, Paket-ID, `project_id`, relativen
 Projektpfad im Result, Scope Descriptor, Modellwurzel, die vollständige Result-
 SHA-256 sowie unveränderte `repo_id`, `base_commit`, `state_fingerprint` und
 `fingerprint_algorithm`. Für alle äußeren Payloads stehen Pfad, Größe und SHA-256
@@ -9163,6 +9164,144 @@ vor Veröffentlichung abgewiesen; automatisches Herunterladen oder Installieren
 ist ausgeschlossen. Analyzer-/NumPy-Pakete werden dadurch nicht vorausgesetzt
 oder stillschweigend mitgeliefert.
 
+### W.2.1 Geschlossener Hinexportvertrag (TRANSPORT-OUTBOUND-528)
+
+Dieser Vertrag konkretisiert den bereits beauftragten Hinexport für 15.n;
+er erweitert weder Projektumfang noch Freigaberechte. Die hier geschlossene
+v1-Ausprägung ist `python-present`. `python-bundled` bleibt die optionale
+Fähigkeit aus W.2: Solange keine vollständige, für ihr konkretes Plattform-/
+ABI-Profil geprüfte Distribution samt Manifest-/Startvertrag vorliegt, ist sie
+mit Exit 2 nicht verfügbar. Ein bloßer Schalter oder eine kopierte Binärdatei
+macht sie nicht verfügbar; diese Klärung erfindet keine solche Distribution.
+
+**Explizite Eingaben und öffentliche Variante.** Der Hinexport behält Command-ID
+`bundle.create` und die Syntax `--profile ai-runtime --direction outbound`.
+`--profile ai-runtime` wählt ausschließlich die Transportvariante, niemals ein
+anderes fachliches Projektprofil. Ohne diese Kombination bleiben die vorhandenen
+Anhang-E-Aufrufe und ihre Bytes unverändert. Der vollständige Aufruf verwendet:
+
+```text
+specroad bundle create --project <PROJEKTROOT>
+  --profile ai-runtime --direction outbound
+  --runtime-reference <VERTRAUENSWÜRDIGES-PH-RESULT>
+  --runtime-reference-sha256 <HEX>
+  --specroad-pyz <VERTRAUENSWÜRDIGE-SPECROAD-PYZ>
+  --specroad-pyz-sha256 <HEX>
+  --output-root <EXTERNER-AUSGABEROOT> --output <RELATIVER-ZIP-PFAD>
+  [--runtime-profile python-present]
+```
+
+Die vier Runtimeargumente sind vollständige Pflichtpaare; es gibt keine Suche
+in Exchange, keine implizite Installation und keinen Vertrauensdefault aus dem
+zu exportierenden Projekt. Die beiden Erwartungen sind extern übergebene,
+kleingeschriebene vollständige SHA-256-Werte. Projektroot, Runtimeeingaben und
+Ausgaberoot sind explizite absolute Pfade; Links und Sonderdateien erfüllen die
+Runtimeeingaben nicht. Das bereits vorhandene, getrennte Ausgabeverzeichnis
+liegt außerhalb des registrierten Repositorys und des Projekts. `--output` ist
+relativ dazu und folgt den vorhandenen sicheren Ausgabepfadregeln; vorhandene
+Ziele werden nicht ersetzt. Eigene private Arbeitsverzeichnisse für Bootstrap,
+Result und Snapshotprojektion dürfen nur in diesem ausgewiesenen externen
+Bereich entstehen, ohne fremde Inhalte zu löschen oder ungebundene alte
+Versuche zu übernehmen.
+
+Der vertrauensgebundene Bootstrap lädt ausschließlich die bereits in 15.m
+gebundene PatchHarbor-Distribution. Die Runtime-Referenz liefert Bibliothekscode,
+nicht die neue Projektbasis: Das neue `reference/result.zip` entsteht durch den
+expliziten öffentlichen `api.bundle`-Aufruf. Das vorhandene `api.context` liefert
+für den gewählten Projektroot den bereits registrierten Repositoryroot; genau
+dieser absolute Root wird an `api.bundle` übergeben. Keine eigene Git-Root-Suche,
+Registrierung oder Konfigurationskorrektur wird ergänzt. Der Projektroot muss
+eindeutig innerhalb dieses Repositorys liegen; Mehrprojekt-Auswahl entsteht
+hierdurch nicht.
+
+Die SpecRoad-PYZ wird als passive, stabil erfasste Datei gebunden und nicht zur
+Selbstprüfung gestartet oder importiert. Ihr extern erwarteter Artefakthash,
+die enthaltene Toolversion und ihr vollständig nach dem vorhandenen
+`specroad-dev-payload-v1`-Algorithmus nachgerechneter Buildhash müssen zur
+vertrauenswürdigen laufenden Distribution passen. Der generierte Buildrecord
+wird als Daten geprüft, nicht ausgeführt. Fehlende, widersprüchliche oder bloß
+selbstdeklarierte Buildwerte ersetzen den externen Vertrauensbeleg nicht.
+Modul- und PYZ-Aufruf verwenden denselben Vertrag; der Modulaufruf benötigt
+ebenfalls die explizite passende PYZ. Buildidentität und deklarierte Python-
+Unterstützung sind weder Releasefreigabe noch Ersatz für die reale CI-Matrix.
+
+In dieser Variante ist der einzige Scope das geschlossene, unkonfigurierte
+Vollprojekt mit portabler Idempotenzgeschichte. `--scope` darf fehlen oder exakt
+`project` sein. Dokument-/Release-Selektoren, `--configuration`,
+`--exclude-operational-receipts`, `--reference` und `--proposal` passen nicht zu
+diesem Hinauftrag und werden mit Exit 2 vor Transportwirkungen abgewiesen.
+`return` bleibt der eigenständige Planschritt 18.q, keine Fallthrough-Variante.
+Selbstbeschreibung und Preflight weisen genau `transport_operational` sowie
+Pflichteingaben, Ausgaben, tatsächliche Betriebswirkungen und die bestehenden
+Budget-/Work-Verträge aus. Kein Planungs-/Diagnoseaufruf darf als versteckter
+Export, Registrierung, Recovery oder anderer PH-Aufruf mit Schreibwirkung dienen.
+
+**Geschlossenes Manifest.** `handoff.json` ist genau ein RFC-8785-kanonisches
+UTF-8-JSON-Objekt ohne BOM, doppelte Schlüssel oder Fremdbytes. Alle folgenden
+Felder sind erforderlich, weitere Felder sind im v1-Vertrag unzulässig.
+Booleans gelten nicht als Zahlen; `null` ersetzt keinen Pflichtwert.
+
+| Feld | Exakter Vertrag |
+|---|---|
+| `format_version` | String `specroad-ai-handoff-v1`. |
+| `package_id` | Kleingeschriebener vollständiger SHA-256 nach der folgenden selbstreferenzfreien Projektion. |
+| `direction` | String `outbound`. |
+| `runtime_profile` | String `python-present` für diese verfügbare v1-Ausprägung. |
+| `project_id` | Exakte gültige Projekt-ID des geprüften Vollprojektbundles und seiner `specroad.json`. |
+| `project_path` | Relativer NFC-POSIX-Pfad des Projektroots im geprüften Result; ausschließlich für den Repositoryroot der String `.`. Sonst gelten die sicheren Pfadsegmentregeln aus E.2. Kein Hostpfad. |
+| `scope_descriptor` | Vollständiger unveränderter Anhang-E-Descriptor: `scope_kind=project`, leerer Selector, `configuration_id=null`, geschlossene Boundary-Policy. |
+| `model_root_sha256` | Exakter SHA-256 sowohl der Ursprungs- als auch der Bundlemodellwurzel des verifizierten `project/project.zip`. |
+| `reference` | Das unten geschlossene Referenzobjekt. |
+| `runtimes` | Objekt mit exakt den Schlüsseln `specroad` und `patchharbor`, jeweils nach dem folgenden Vertrag. |
+| `entries` | Vollständige sortierte Liste aller drei äußeren Payloads mit exakt `path`, `size` und `sha256` je Eintrag. |
+
+`reference` enthält exakt `path`, `sha256`, `repo_id`, `base_commit`,
+`state_fingerprint`, `fingerprint_algorithm`. `path` ist
+`reference/result.zip`; `sha256` ist der vollständige Hash dieser unveränderten
+Bytes und stimmt mit `entries` überein. Die vier weiteren Werte werden exakt
+als öffentliche native Resultwerte übernommen, einschließlich Git-Objektformat
+und Fingerprint-Algorithmus; kein Commit wird gekürzt oder neu abgeleitet.
+
+`runtimes.specroad` enthält exakt `path`, `tool_version`, `artifact_sha256`,
+`build_hash_algorithm`, `build_sha256`, `supported_cpython`, `platform_profile`.
+`path` ist `runtime/specroad.pyz`, `artifact_sha256` dessen voller Hash aus
+`entries`; Toolversion und Buildhash sind die oben tatsächlich geprüften Werte.
+`build_hash_algorithm` ist `specroad-dev-payload-v1`. `supported_cpython` ist die
+geordnete deklarierte Liste `["3.10","3.11","3.12","3.13","3.14"]`;
+`platform_profile` ist das bereits gebundene `linux-x86_64`-Transportprofil,
+keine Aussage über ungetestete weitere Profile.
+
+`runtimes.patchharbor` enthält exakt `path`, `member_path`, `tool_version`,
+`artifact_sha256`, `requires_python`, `distribution_profile`,
+`supported_cpython`, `platform_profile`, `integration_contract_version`,
+`snapshot_contract_version`. `path` ist `reference/result.zip`; `member_path`
+ist der tatsächliche vom nativen Resultvertrag gebundene innere PYZ-Memberpfad.
+Er wird nicht zu einem zusätzlichen äußeren Member. Version, voller
+Artefakthash, Pythonanforderung und Distributionsprofil müssen sowohl dem
+nativ geprüften Result als auch der tatsächlich verwendeten, in 15.m
+gebundenen Runtime entsprechen. Die beiden Vertragsversionen sind die
+geprüften öffentlichen Ganzzahlwerte 1, keine Booleans.
+`supported_cpython` und `platform_profile` haben die zuvor beschriebenen
+gebundenen Werte. Ein verfügbarer Bootstrap allein ist keine Resultprüfung.
+
+`entries` enthält genau `project/project.zip`, `reference/result.zip` und
+`runtime/specroad.pyz`, in dieser UTF-8-Pfadreihenfolge. Jeder `size`-Wert ist
+die tatsächliche nichtnegative JSON-Ganzzahl der Byteanzahl, jeder `sha256`
+der kleingeschriebene vollständige Bytehash. Jeder Payload steht exakt einmal
+in Liste und ZIP; `handoff.json` listet sich nicht selbst. ZIP-Regeln und
+harte native Format-/Größengrenzen bleiben unverändert. Innere ZIPs werden
+weder umkomprimiert noch umsortiert, repariert oder mit Hostdaten ergänzt.
+
+Für `package_id` wird das ansonsten vollständige Manifest nur um dieses Feld
+vermindert und RFC-8785-kanonisch serialisiert. Der Hashinput ist die
+UTF-8-Bytefolge `specroad-ai-handoff-v1`, ein einzelnes Nullbyte und danach
+diese kanonische Projektion. Zeitstempel, Hostpfade und äußere ZIP-SHA gehören
+nicht hinein. Identische gebundene Inhalte ergeben dieselbe Paket-ID und
+kanonische äußere ZIP; ein neuer Resultstand darf eine neue Identität ergeben.
+Die Paket-ID ist ein Inhaltsbezug, keine Signatur, Freigabe oder Replayquittung.
+Der Hash über die gesamten fertigen ZIP-Bytes bleibt ausschließlich außerhalb
+des ZIP im strukturierten Ausgabeergebnis.
+
 ## W.3 Einheitlicher Ausgangsstand
 
 Der Hinexport erfasst das Result über W.1 und erzeugt das Projektbundle aus
@@ -9181,6 +9320,57 @@ Projektinhalt. Offene Transaktionen, unklare Snapshotzustände, falsche Projekt-
 abweichende Dateihashes oder fehlende geschützte Geschichte verhindern den
 Abschluss. Die API-Runtime muss zum deklarierten Versions-/Fähigkeitsvertrag passen.
 Die Bestandteile bleiben während der Prüfung an stabile Bytes gebunden.
+
+### W.3.1 Vollständigkeit, Betriebsgrenze und Veröffentlichung des Hinexports
+
+Der Export MUSS das neu erzeugte Result vollständig über
+`api.read_result_snapshot` prüfen. Die Originalresultbytes und alle für das
+Projekt ausgewählten effektiven Snapshotdateien werden als stabile Eingaben
+gehalten. Die Projektprojektion benutzt die vorhandenen nativen Anhang-E-
+Prüfer einschließlich Closure, geschützter Geschichte und abgeschlossener
+Request-/Transaction-/Proposal-Receipts; sie wird nicht anhand eines anderen
+Working-Tree-Scans aufgebaut. Eine private materialisierte Projektion enthält
+nur geprüfte reguläre Snapshotbytes und führt keinen Projektcode aus.
+
+Lesende Inventar-/Frischevergleiche am ursprünglichen Projekt sind zulässig
+und erforderlich, soweit sie die Vollständigkeit der erfassten Pflichtdaten
+und die unveränderte Zuordnung nachweisen. Sie sind nur Abdeckungsbelege:
+Fehlende oder inzwischen geänderte Bytes werden niemals daraus nachgeliefert.
+Insbesondere darf ein im Result leer erscheinendes, tatsächlich gitignoriertes
+Receiptverzeichnis nicht als belegte leere portable Geschichte ausgegeben
+werden. Ignorierte Pflichtdaten, ungelöste Transaktionen, Partial-Root-Marker
+und abweichende Projekt-/Inventarbindungen verhindern den erfolgreichen Export.
+Eine zulässige leere Geschichte benötigt ebenso ihren tatsächlichen
+Abdeckungsnachweis. Das Paket bleibt `idempotency_scope=portable`; der Hinexport
+bietet keine stille oder explizite `local_only`-Ersatzfassung an.
+
+Vor dem erzeugenden API-Aufruf wird die tatsächliche, zur gebundenen Runtime
+gehörende Betriebsgrenze ausgewiesen und geprüft. Dazu gehören ausdrücklich
+auch das konfigurierte PH-Exchange, dessen native Recovery-/Archivierungswirkung
+sowie die eigenen externen Ausgabe-/Arbeitsbereiche. Ein explizites
+`output_directory` bei `api.bundle` unterdrückt diese Exchange-Wartung nicht.
+Keine PH-Konfiguration wird geändert, um diesen Befund zu umgehen. Die
+Schutzgrenzen aus 11.7 bleiben vollständig erhalten: kein Normativwrite,
+SpecRoad-Receipt, Gitindex-/Historienwrite oder Start von Apply/Watcher/Control.
+Fehlt ein verlässlicher Nachweis zulässiger Betriebswirkungen, ist das ein
+konkreter technischer Blocker, keine Erlaubnis für private API-Abkürzungen.
+
+Vor atomarer create-only-Veröffentlichung werden sämtliche äußeren und inneren
+Bindings einschließlich Anhang-E-Manifest, Projekt-ID, Root, Scope, Receiptbytes
+und Runtimebezüge geprüft. Der Erfolg enthält den vollständigen Manifestwert,
+Ausgabepfad, Größe und äußeren SHA-256 sowie die tatsächlich verwendeten
+Referenz-/Runtimebindungen und ausgewiesenen PH-Betriebswirkungen. Er bezeichnet
+nur den fertigen Hinexport; `approval_granted=false` und
+`write_authorized=false` bleiben explizit. Er behauptet weder Transportempfang
+noch Proposalprüfung, Fachanwendung, CI- oder Releasefreigabe.
+
+Bei Fehler/Abbruch wird keine unvollständige Datei am endgültigen ZIP-Ziel
+veröffentlicht. Bereits abgeschlossene PH-Resultate, tatsächliche Wartungs-
+wirkungen und notwendige private Diagnosebytes werden nicht als ungeschehen
+ausgegeben oder blind gelöscht. Ein neuer Exportversuch braucht einen
+expliziten Auftrag; gültig gebundene Work-Fortsetzung nach Anhang P bleibt
+erhalten. Er darf weder fremde Ausgaben ersetzen noch das frühere Result
+unbemerkt neu binden. Fehlerklassifikation und Erhaltungsregeln aus W.6 gelten.
 
 ## W.4 Öffnen in der internen Python-Laufzeitumgebung
 

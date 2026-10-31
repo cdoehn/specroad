@@ -39,7 +39,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "specification_sha256": "f11d36333567bdb9533c43212b8871cc278be697200e5cbdcaef341952ed3dbd",
   "steps": [
     "Normalize field mapping/file/stdin through the shared input adapter, then invoke the actual native creation service.",
     "Observe real writer-lock metadata during random128 allocation; verify exact canonical artifact bytes, path, draft revision1, actor/time, untouched prior files and confirmed cleanup/receipts.",

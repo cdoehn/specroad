@@ -49,7 +49,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "specification_sha256": "f11d36333567bdb9533c43212b8871cc278be697200e5cbdcaef341952ed3dbd",
   "steps": [
     "Load all seven kinds through ContentBlock and validate the same payloads with their detached standalone schemas. Check alternative source/mode branches, reject foreign outer fields, preserve original bytes and immutable detached values, bind source/record/payload/schema hashes, and compare actual isolated Core/PYZ results without filesystem effects.",
     "11.c.R: reject incomplete stored relation identities/metadata through the existing SourceRelations validator, preserve required-reference cardinality and target-kind errors, reject mixed/missing/ill-typed payload fields and duplicate JSON keys, retain complete reference bytes without resolving targets, and compare isolated Core/PYZ failures.",

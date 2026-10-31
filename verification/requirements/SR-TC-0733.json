@@ -8,7 +8,8 @@
   "method": "pending",
   "open_items": [
     "Implement planned step 15.n and its integration/acceptance contributions under SpecRoad 0.2.8 Annex W; define real fixtures and behavior tests before claiming implementation.",
-    "Public PatchHarbor API capabilities and concrete CPython-compatible distribution must be verified; no current feature or test evidence is claimed."
+    "Public PatchHarbor API capabilities and concrete CPython-compatible distribution must be verified; no current feature or test evidence is claimed.",
+    "TRANSPORT-OUTBOUND-528 defines the still-unimplemented outbound contribution of 15.n in specification 0.2.42 W.2.1/W.3.1. Manifest, explicit runtime trust, snapshot/receipt coverage, public command integration and failure acceptance remain open; no product evidence is claimed."
   ],
   "oracle": {
     "kind": "pending",
@@ -28,7 +29,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "specification_sha256": "f11d36333567bdb9533c43212b8871cc278be697200e5cbdcaef341952ed3dbd",
   "steps": [],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0733",

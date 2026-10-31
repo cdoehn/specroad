@@ -34,7 +34,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "specification_sha256": "f11d36333567bdb9533c43212b8871cc278be697200e5cbdcaef341952ed3dbd",
   "steps": [
     "Bind the complete original Task, ordered Done criteria, model sources and exact scope to an explicit status-update intention.",
     "Require human confirmation of every criterion and a typed current host verification bound to context and full review hashes.",

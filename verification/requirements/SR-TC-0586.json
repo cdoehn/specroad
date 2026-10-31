@@ -31,7 +31,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef",
+  "specification_sha256": "f11d36333567bdb9533c43212b8871cc278be697200e5cbdcaef341952ed3dbd",
   "steps": [
     "Execute each supported real handler and finalize its fully stored result under the Work lease; replay the same terminal bytes without handler execution or extra generations.",
     "Keep declared global work open until confirmed; retain complete failed outcome data and every provided diagnostic in labelled planner fixtures.",
