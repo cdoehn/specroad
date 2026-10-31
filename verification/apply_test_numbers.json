@@ -22625,6 +22625,13 @@
     "tests/test_ci_packages_right.py::test_plan_rejects_boolean_indices_or_estimates[shard]",
     "tests/test_ci_packages_right.py::test_plan_rejects_boolean_indices_or_estimates[test_index]",
     "tests/test_ci_packages_right.py::test_python_specific_collection_can_grow_without_losing_other_versions",
-    "tests/test_ci_packages_right.py::test_three_real_packages_merge_to_full_evidence_and_observer_rejects_missing_receipts"
+    "tests/test_ci_packages_right.py::test_three_real_packages_merge_to_full_evidence_and_observer_rejects_missing_receipts",
+    "tests/test_import_guards.py::test_optional_jython_probe_cannot_load_available_foreign_code[absent]",
+    "tests/test_import_guards.py::test_optional_jython_probe_cannot_load_available_foreign_code[module]",
+    "tests/test_import_guards.py::test_optional_jython_probe_cannot_load_available_foreign_code[package]",
+    "tests/test_import_guards.py::test_other_foreign_imports_cannot_be_hidden_by_importerror_handlers[False-organization_probe]",
+    "tests/test_import_guards.py::test_other_foreign_imports_cannot_be_hidden_by_importerror_handlers[False-thirdparty_guard_probe]",
+    "tests/test_import_guards.py::test_other_foreign_imports_cannot_be_hidden_by_importerror_handlers[True-organization_probe]",
+    "tests/test_import_guards.py::test_other_foreign_imports_cannot_be_hidden_by_importerror_handlers[True-thirdparty_guard_probe]"
   ]
 }

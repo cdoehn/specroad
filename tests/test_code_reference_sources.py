@@ -13,6 +13,7 @@ from specroad.query.git_source import GitObjectSource
 from specroad.security import ProjectBoundary, SafetyViolation
 from specroad.storage.record_artifact import RecordArtifact
 from specroad.verification import CodeReferenceSource, read_code_reference
+from support.import_guards import CORE_STDLIB_IMPORT_GUARD
 from support.artifacts import artifact_bytes
 from support.git_objects import GitFixture
 from support.model import put
@@ -292,12 +293,7 @@ def test_public_reader_in_fresh_standard_library_only_runtime(tmp_path, mode):
     project = tmp_path / 'project'; project.mkdir()
     put(project, PATH, RAW)
     record = reference('symbol_hint')
-    body = '''import sys,json
-class OnlyCoreAndStdlib:
-    def find_spec(self, fullname, path=None, target=None):
-        if fullname.split('.')[0] not in sys.stdlib_module_names | {'specroad'}:
-            raise AssertionError('third-party import attempted: ' + fullname)
-sys.meta_path.insert(0, OnlyCoreAndStdlib())
+    body = CORE_STDLIB_IMPORT_GUARD + '''import sys,json
 from specroad.verification import read_code_reference
 from specroad.security import ProjectBoundary
 from specroad.storage.record_artifact import RecordArtifact

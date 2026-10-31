@@ -9,6 +9,7 @@ import unittest
 SOURCE = Path(__file__).resolve().parents[1] / "src"
 
 
+from support.import_guards import CORE_STDLIB_IMPORT_GUARD
 from support import run_core
 from support.virtualenvs import create_no_pip_venv
 
@@ -21,12 +22,7 @@ class CoreHarness:
 class CoreTests(CoreHarness, unittest.TestCase):
     def test_isolated_standard_library_only_import(self):
         # The child cannot import an installed dependency, even accidentally.
-        body = """
-class OnlyCoreAndStdlib:
-    def find_spec(self, fullname, path=None, target=None):
-        if fullname.split('.')[0] not in sys.stdlib_module_names | {'specroad'}:
-            raise AssertionError('third-party import attempted: ' + fullname)
-sys.meta_path.insert(0, OnlyCoreAndStdlib())
+        body = CORE_STDLIB_IMPORT_GUARD + """
 import specroad
 assert specroad.check_runtime() is None
 """

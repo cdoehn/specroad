@@ -11,6 +11,7 @@ from specroad.model.errors import ModelError
 from specroad.query.git_source import GitObjectSource
 from specroad.security import ProjectBoundary
 from specroad.verification import CodeLineSelection, read_code_reference, select_code_lines
+from support.import_guards import CORE_STDLIB_IMPORT_GUARD
 from support.git_objects import GitFixture
 from support.model import put
 from support.portable import build_distribution
@@ -226,12 +227,7 @@ def test_public_selection_runs_in_fresh_standard_library_only_runtime(tmp_path, 
     selected = b'__import__("os").system("compiler")\n'
     put(project, PATH, raw)
     record = line_reference(raw, selected, start=2, end=2)
-    body = '''import json,os,sys
-class OnlyCoreAndStdlib:
-    def find_spec(self, fullname, path=None, target=None):
-        if fullname.split('.')[0] not in sys.stdlib_module_names | {'specroad'}:
-            raise AssertionError('third-party import attempted: '+fullname)
-sys.meta_path.insert(0, OnlyCoreAndStdlib())
+    body = CORE_STDLIB_IMPORT_GUARD + '''import json,os,sys
 from specroad.verification import read_code_reference,select_code_lines
 from specroad.security import ProjectBoundary
 from specroad.storage.record_artifact import RecordArtifact

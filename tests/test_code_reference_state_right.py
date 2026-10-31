@@ -14,6 +14,7 @@ from specroad.query import _git_reader
 from specroad.security import ProjectBoundary, SafetyViolation
 from specroad.security.resource_access import opened_resource
 from specroad.verification import assess_code_reference, read_code_reference
+from support.import_guards import CORE_STDLIB_IMPORT_GUARD
 from support.git_objects import GitFixture
 from support.model import put
 from support.portable import build_distribution
@@ -271,12 +272,7 @@ def test_native_git_status_runs_in_fresh_core_without_execution_or_fetch(tmp_pat
     source, repo = native_source(tmp_path, 'sha1', b'x\nA\n')
     record = line_reference(b'old', b'A\n', git_commit=source.commit_id)
     if absent: object_path(repo, path_objects(repo, source)['blob']).unlink()
-    body = '''import json,os,stat,sys
-class OnlyCoreAndStdlib:
-    def find_spec(self, fullname, path=None, target=None):
-        if fullname.split('.')[0] not in sys.stdlib_module_names | {'specroad'}:
-            raise AssertionError('third-party import: '+fullname)
-sys.meta_path.insert(0, OnlyCoreAndStdlib())
+    body = CORE_STDLIB_IMPORT_GUARD + '''import json,os,stat,sys
 from specroad.verification import assess_code_reference
 from specroad.query.git_source import GitObjectSource
 from specroad.storage.record_artifact import RecordArtifact
