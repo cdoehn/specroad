@@ -22632,6 +22632,11 @@
     "tests/test_import_guards.py::test_other_foreign_imports_cannot_be_hidden_by_importerror_handlers[False-organization_probe]",
     "tests/test_import_guards.py::test_other_foreign_imports_cannot_be_hidden_by_importerror_handlers[False-thirdparty_guard_probe]",
     "tests/test_import_guards.py::test_other_foreign_imports_cannot_be_hidden_by_importerror_handlers[True-organization_probe]",
-    "tests/test_import_guards.py::test_other_foreign_imports_cannot_be_hidden_by_importerror_handlers[True-thirdparty_guard_probe]"
+    "tests/test_import_guards.py::test_other_foreign_imports_cannot_be_hidden_by_importerror_handlers[True-thirdparty_guard_probe]",
+    "tests/test_setup_dev.py::test_help_and_invalid_arguments_do_not_begin_setup[arguments0]",
+    "tests/test_setup_dev.py::test_help_and_invalid_arguments_do_not_begin_setup[arguments1]",
+    "tests/test_setup_dev.py::test_new_setup_installs_all_interpreters_and_one_project_environment",
+    "tests/test_setup_dev.py::test_repeated_setup_preserves_existing_environment_and_local_contents",
+    "tests/test_setup_dev.py::test_user_local_uv_is_found_without_changing_shell_configuration"
   ]
 }
