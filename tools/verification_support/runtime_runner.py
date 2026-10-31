@@ -6,6 +6,7 @@ import subprocess
 import sys
 import tempfile
 
+from .execution_policy import DEFAULT_DISTRIBUTION
 from .catalog_check import run_catalog_preflight
 from .ci_reference import _load_report
 from .common import json_bytes
@@ -92,7 +93,7 @@ def run_measurement(root, journal, workers, **selection):
     nodes.write_text('\n'.join(request['selected']) + '\n')
     command = [sys.executable, '-I', '-B', str(Path(root) / 'tools/pytest_entry.py'),
         '-o', 'addopts=', '--disable-plugin-autoload', '-p', 'no:cacheprovider', '-p', 'no:doctest',
-        '-p', 'xdist.plugin', '-n', str(workers), '--dist', 'worksteal', '--max-worker-restart=0',
+        '-p', 'xdist.plugin', '-n', str(workers), '--dist', DEFAULT_DISTRIBUTION, '--max-worker-restart=0',
         '--sr-expected-tests', str(len(request['selected'])),
         '--sr-runtime-journal', str(Path(journal).absolute()), '--sr-timing-request', str(path),
         '--sr-observations', str(path.parent / 'observations.json'), '@' + str(nodes)]

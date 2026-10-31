@@ -89,3 +89,20 @@ eines neuen Attempts dürfen keine alten Paketpläne oder Erfolge übernehmen.
 
 Der vollständige Matrixerfolg ist keine Produkt-Releasefreigabe. Weder
 Paketplanung noch Apply startet GitHub-CI, Control oder einen Dienst.
+
+## Lokale Entwicklungsabnahme zu Bundle 525
+
+Drei getrennte Entwicklungsstände: W mit 541, R mit 563 und C mit 677
+bestandenen gezielten Tests unter CPython 3.14.4 und vier Workern. 45 neue
+Tests prüfen Paketwachstum, Verteilungsgrenzen, Fehlerfälle, echte Ausführung
+dreier Pakete, vollständige Zusammenführung und dauerhafte Phasendaten.
+Der vollständige Katalog umfasst 22.617 Tests; eine Vollsuite wurde hierfür
+nicht gestartet. Die zusätzlichen Requirements-Dateien binden ausschließlich
+den neuen Spezifikationshash, ihre Anforderungen bleiben unverändert.
+
+Der mitgelieferte Export enthält 22.572 bereits gemessene Testidentitäten.
+Die 45 neuen Workflowtests werden bis zum nächsten Export konservativ geschätzt.
+Damit ergeben sich aktuell fünf Pakete je Python-Version mit etwa
+175,9 Minuten geschätzter Dauer einschließlich Reserven. Das ist kein gemessener
+GitHub-Lauf. Die tatsächliche Matrix und deren Laufzeiten müssen noch durch
+einen ausdrücklich gestarteten manuellen CI-Lauf bestätigt werden.

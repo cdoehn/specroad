@@ -1,5 +1,6 @@
 """pytest hooks and xdist transport; only the controller publishes evidence."""
 
+from .execution_policy import DEFAULT_DISTRIBUTION
 from .common import CatalogError
 from .outcomes import RunLedger, bind_test_ids
 from .collection_identity import test_identity
@@ -78,7 +79,7 @@ class VerificationSession:
                     or config.getoption('keyword') or config.getoption('markexpr')
                     or config.getoption('ignore') or config.getoption('ignore_glob')
                     or (not self.worker and (
-                        config.getoption('dist', default='no') != 'worksteal'
+                        config.getoption('dist', default='no') != DEFAULT_DISTRIBUTION
                         or config.getoption('numprocesses', default=0) != 4))
                     or source_identity(ROOT) != self.ci_plan['bindings']['source_sha256']
                     or not platform_identity()['python'].startswith(self.ci_plan['context']['python']+'.')

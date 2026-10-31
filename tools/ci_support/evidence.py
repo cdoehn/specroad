@@ -5,6 +5,7 @@ from io import BytesIO
 import json
 import re
 import zipfile
+from verification_support.execution_policy import DEFAULT_DISTRIBUTION
 from .contract import (REPOSITORY, PYTHONS, MAX_BYTES, PREFIX, CIObservationError, json_bytes, decode_json, error_record)
 from .transport import records
 
@@ -55,7 +56,7 @@ def inspect_report_archive(raw, request, version, *, run_id=None, attempt=None):
             try:
                 plan = reports['ci-plan.json']
                 verify_aggregate(plan, reports['shard-receipts.json'], report)
-                if plan['context'] != context or execution.get('distribution') != 'worksteal':
+                if plan['context'] != context or execution.get('distribution') != DEFAULT_DISTRIBUTION:
                     raise ValueError('Wrong aggregate execution context')
             except (KeyError, TypeError, ValueError) as error:
                 raise CIObservationError('invalid_package_aggregate') from error

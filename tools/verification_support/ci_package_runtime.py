@@ -1,6 +1,5 @@
 """Execute/collect explicit CI packages and preserve their native observations."""
 from datetime import datetime, timezone
-import json
 import os
 from pathlib import Path
 import sqlite3
@@ -8,18 +7,19 @@ import subprocess
 import sys
 import uuid
 
+from .execution_policy import DEFAULT_DISTRIBUTION
 from .catalog import load_catalog
 from .catalog_check import run_catalog_preflight
 from .catalog_contract import validate_preflight_report
 from .ci_reference import _load_report
 from .ci_packages import (DEFAULT_RULES, checked_context, digest, make_plan, merge_shards,
                           require, selected_pairs, validate_plan, verify_aggregate)
-from .common import json_bytes, sha256
+from .common import json_bytes
 from .evidence import make_report
 from .identity import source_identity, platform_identity
 from .outcomes import ObservedExecution
 from .process_environment import test_environment
-from .runtime_history import policy, LOCAL
+from .runtime_history import policy, LOCAL, latest_snapshot
 from .runtime_store import journal_path
 from .selected_contract import new_report_directory, verify_observation
 
@@ -44,19 +44,11 @@ def export_estimates(database, identities):
         require(db.execute('PRAGMA quick_check').fetchall() == [('ok',)]
                 and db.execute('SELECT version FROM metadata WHERE id=1').fetchall() == [(1,)],
                 'Invalid runtime database')
-        db.execute('BEGIN')
-        attempts = db.execute('''SELECT a.test,a.invalid,a.complete,SUM(p.duration)
-            FROM attempts a LEFT JOIN phases p ON p.attempt=a.id
-            WHERE a.id IN (SELECT MAX(id) FROM attempts GROUP BY test) GROUP BY a.id''').fetchall()
-        seeds = db.execute('''SELECT test,duration FROM seeds
-            WHERE id IN (SELECT MAX(id) FROM seeds GROUP BY test)''').fetchall()
-        db.rollback()
-    latest = {t: d if not invalid and complete else None for t,invalid,complete,d in attempts}
-    historic = dict(seeds)
+        snapshot = latest_snapshot(db, identities)
     return dict(format_version=1, kind='specroad-ci-runtime-estimates-v1',
                 captured_at=datetime.now(timezone.utc).isoformat(),
-                tests=[dict(test_id=t, duration_ns=latest.get(t, historic.get(t)))
-                       for t in sorted(set(identities))])
+                tests=[dict(test_id=row['test_id'], duration_ns=row['duration_ns'])
+                       for row in snapshot['tests']])
 
 
 def execution_context(root, environment):
@@ -108,7 +100,7 @@ def run_package(root, plan_path, shard, outdir, *, environment=None, runner=None
     observed_path = outdir / 'observations.json'
     command = [sys.executable, '-I', '-B', str(root/'tools/pytest_entry.py'),
         '-o','addopts=', '--disable-plugin-autoload', '-p','no:cacheprovider', '-p','no:doctest',
-        '-p','xdist.plugin', '-n',str(plan['rules']['workers']), '--dist','worksteal',
+        '-p','xdist.plugin', '-n',str(plan['rules']['workers']), '--dist',DEFAULT_DISTRIBUTION,
         '--max-worker-restart=0', '--sr-observations',str(observed_path),
         '--sr-expected-tests',str(len(pairs)), '--sr-ci-plan',str(plan_path),
         '--sr-ci-shard',str(shard), str(root/'tests')]
@@ -131,7 +123,7 @@ def run_package(root, plan_path, shard, outdir, *, environment=None, runner=None
         errors.append('nonpassing_or_unbound_package')
     receipt = dict(format_version=1, kind='specroad-ci-package-result-v1', context=context,
         plan_sha256=plan['plan_sha256'], bindings=plan['bindings'], shard=shard,
-        workers=plan['rules']['workers'], distribution='worksteal', runtime=platform_identity(),
+        workers=plan['rules']['workers'], distribution=DEFAULT_DISTRIBUTION, runtime=platform_identity(),
         selected_passed=not errors, full_suite_passed=None, exit_code=0 if not errors else 1,
         process_exit_code=code, errors=errors, observation=observation)
     write_json(outdir / 'package-result.json', receipt)
@@ -150,7 +142,7 @@ def aggregate(root, plan_path, receipt_paths, outdir, *, environment=None):
     require(catalog.catalog_sha256 == plan['bindings']['catalog_sha256']
             and catalog.specification_sha256 == plan['bindings']['specification_sha256'],
             'Aggregate catalog changed')
-    execution = dict(engine='pytest', workers=plan['rules']['workers'], distribution='worksteal',
+    execution = dict(engine='pytest', workers=plan['rules']['workers'], distribution=DEFAULT_DISTRIBUTION,
                      ci_shards=len(plan['shards']), test_timeout=None, suite_timeout=None)
     binding = dict(run_id=str(uuid.uuid4()), tool_build_sha256=plan['bindings']['source_sha256'],
                    platform_sha256=digest(runtime), configuration_sha256=digest(execution))

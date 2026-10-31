@@ -1,10 +1,10 @@
 """Deterministic duration-weighted CI packages; no test execution or scheduling."""
-from copy import deepcopy
 from hashlib import sha256
 import heapq
 import math
 import re
 
+from .execution_policy import DEFAULT_DISTRIBUTION
 from .common import json_bytes
 from .selected_contract import verify_observation
 
@@ -224,7 +224,7 @@ def merge_shards(plan, receipts):
                 and receipt.get('bindings') == plan['bindings']
                 and type(receipt.get('workers')) is int
                 and receipt['workers'] == plan['rules']['workers']
-                and receipt.get('distribution') == 'worksteal'
+                and receipt.get('distribution') == DEFAULT_DISTRIBUTION
                 and receipt.get('full_suite_passed') is None
                 and receipt.get('selected_passed') is True
                 and receipt.get('errors') == []
@@ -267,7 +267,7 @@ def verify_aggregate(plan, receipts, report):
     execution = report.get('execution')
     require(type(execution) is dict and execution.get('engine') == 'pytest'
             and execution.get('workers') == plan['rules']['workers']
-            and execution.get('distribution') == 'worksteal'
+            and execution.get('distribution') == DEFAULT_DISTRIBUTION
             and type(execution.get('ci_shards')) is int
             and execution['ci_shards'] == len(plan['shards'])
             and report.get('platform_sha256') == digest(runtime)

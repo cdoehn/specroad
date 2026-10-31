@@ -6,6 +6,7 @@ import re
 import subprocess
 import sys
 
+from .execution_policy import DEFAULT_DISTRIBUTION
 from .catalog_check import run_catalog_preflight
 from .ci_reference import _load_report, _unique_object
 from .identity import source_identity
@@ -71,7 +72,7 @@ def parallel_command(root, outdir, expected, workers):
     return [sys.executable, "-I", "-B", str(root / "tools/pytest_entry.py"),
             "-o", "addopts=", "--disable-plugin-autoload", "-p", "no:cacheprovider",
             "-p", "no:doctest", "-p", "xdist.plugin", "-n", str(workers),
-            "--dist", "worksteal", "--max-worker-restart=0", "--sr-observations",
+            "--dist", DEFAULT_DISTRIBUTION, "--max-worker-restart=0", "--sr-observations",
             str(outdir / "observations.json"), "--sr-expected-tests", str(expected),
             "@" + str(outdir / "nodeids.txt")]
 

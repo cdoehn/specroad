@@ -191,24 +191,7 @@ class RuntimeHistory:
             raise ValueError('The successful observation lacks matching durable phases')
 
     def snapshot(self, identities):
-        ids = sorted(set(identities))
-        # Both queries must see the same database generation.
-        self.db.execute('BEGIN')
-        try:
-            attempts = self.db.execute('''SELECT a.id,a.test,a.invalid,a.complete,SUM(p.duration)
-                FROM attempts a LEFT JOIN phases p ON p.attempt=a.id
-                WHERE a.id IN (SELECT MAX(id) FROM attempts GROUP BY test) GROUP BY a.id''').fetchall()
-            seeds = self.db.execute('''SELECT test,duration,origin FROM seeds
-                WHERE id IN (SELECT MAX(id) FROM seeds GROUP BY test)''').fetchall()
-        finally:
-            self.db.rollback()
-        latest = {test: {'test_id': test, 'attempt': attempt,
-                        'duration_ns': duration if not invalid and complete else None}
-                  for attempt, test, invalid, complete, duration in attempts}
-        historic = {test: {'test_id': test, 'origin_sha256': origin, 'duration_ns': duration}
-                    for test, duration, origin in seeds}
-        return {'format_version': 1, 'kind': 'specroad-latest-runtime-snapshot-v1',
-                'tests': [latest.get(i, historic.get(i, {'test_id': i, 'duration_ns': None})) for i in ids]}
+        return latest_snapshot(self.db, identities)
 
     def close(self):
         if self.db is not None:
@@ -220,6 +203,28 @@ class RuntimeHistory:
 
     def __exit__(self, *_):
         self.close()
+
+
+def latest_snapshot(db, identities):
+    """Read one consistent generation; incomplete latest attempts hide old success."""
+    ids = sorted(set(identities))
+    # Both queries must see the same database generation.
+    db.execute('BEGIN')
+    try:
+        attempts = db.execute('''SELECT a.id,a.test,a.invalid,a.complete,SUM(p.duration)
+            FROM attempts a LEFT JOIN phases p ON p.attempt=a.id
+            WHERE a.id IN (SELECT MAX(id) FROM attempts GROUP BY test) GROUP BY a.id''').fetchall()
+        seeds = db.execute('''SELECT test,duration,origin FROM seeds
+            WHERE id IN (SELECT MAX(id) FROM seeds GROUP BY test)''').fetchall()
+    finally:
+        db.rollback()
+    latest = {test: {'test_id': test, 'attempt': attempt,
+                    'duration_ns': duration if not invalid and complete else None}
+              for attempt, test, invalid, complete, duration in attempts}
+    historic = {test: {'test_id': test, 'origin_sha256': origin, 'duration_ns': duration}
+                for test, duration, origin in seeds}
+    return {'format_version': 1, 'kind': 'specroad-latest-runtime-snapshot-v1',
+            'tests': [latest.get(i, historic.get(i, {'test_id': i, 'duration_ns': None})) for i in ids]}
 
 
 def filter_latest(selected, snapshot):

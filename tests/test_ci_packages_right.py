@@ -1,7 +1,5 @@
 """Real package execution, exact attempt evidence, failures and durable timings."""
-from copy import deepcopy
 import json
-from pathlib import Path
 import sqlite3
 import sys
 

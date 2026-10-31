@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 38 · **Stand:** 31. Oktober 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.41
+**Planrevision:** 39 · **Stand:** 31. Oktober 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.41
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 Schritte und 900 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; die ausdrücklich genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wird nach 10.7.10 innerhalb von 15.l.R vorgezogen. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -9,7 +9,7 @@ Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 S
 
 Fachliche Grundlage ist [`docs/specification/SpecRoad_Spezifikation.md`](../specification/SpecRoad_Spezifikation.md), einschließlich aller konsolidierten Korrekturen, 742 Requirements, 51 Verifikationsverträge, 46 Szenario-/E2E-Identitäten sowie R-01 bis R-75, Anhang U und den PatchHarbor-Rundweg aus Anhang W. Der [`Prüfbericht`](../reviews/SpecRoad_v0.2.7_Implementierungsreife_Pruefbericht.md) ist ein vorgelagerter Entwurfsreview, kein späterer Produktnachweis.
 
-Gebundene Spezifikations-SHA-256: `0b2f3b74c3c64189322f7e15439243d8f7dcb0e35e09643c0153e4adbad411a4`.
+Gebundene Spezifikations-SHA-256: `042967f020ba4f21eab3915eb7ac60430d480059d9a6dafd380b62ecf5c205ef`.
 Planungsbasis: Commit `fe2661d02ecf2f7eb483b58a4487eb009c6b3846`; sauberes Result-Bundle `specroad_Result_120209_0914_df3504.zip`; Repository-ID `3d2576df-d611-46fc-9d2b-92869468aaca`. Diese Angaben dokumentieren die Entstehung des Plans, nicht die zukünftige Patchbindung. **Jedes spätere Patchpaket bindet den dann aktuellen tatsächlichen Result-Zustand.**
 
 Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 2026 gelten zusätzlich und bei den nachfolgend benannten Konflikten vorrangig. Sonstige normative Spezifikationsinhalte werden nicht stillschweigend abgeschwächt. Neue fachliche Widersprüche, fehlende zwingende Angaben und Sicherheitsprobleme sind offen zu benennen, nicht durch erfundene Annahmen oder Scheinerfolge zu lösen.
@@ -49,15 +49,23 @@ bleiben erhalten. Keine Vollsuite zur Messung, keine automatische GitHub-CI.
 Lokale Abnahmen und native Paketprüfung werden vor Übergabe dokumentiert;
 Apply- und echte GitHub-Nachweise bleiben bis zur tatsächlichen Ausführung offen.
 
+Lokale gezielte Abnahmen (CPython 3.14.4, vier worksteal-Worker):
+W: 541 bestanden; R: 563 bestanden; C: 677 bestanden. 45 neue Tests,
+Gesamtkatalog 22.617 eindeutig gesammelt. Drei echte Beispielpakete ergeben
+einen vollständigen Nachweis; fehlende Pakete verhindern Gesamterfolg.
+Apply-Abschluss CI-PACKAGES-525: W/R/C-Gates erfolgreich; Bundle 525 abgeschlossen.
+Die manuelle CPython-Matrix 3.10–3.14 bleibt ausstehend; kein CI-Start.
+
+
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 38
+plan_revision: 39
 implementation_plan_commits_total: 900
 implementation_plan_commits_completed: 653
 last_completed_plan_commit: 15.m.R
 next_plan_commit: 15.m.C
-last_completed_numbered_bundle: 524
+last_completed_numbered_bundle: 525
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null

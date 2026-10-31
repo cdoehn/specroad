@@ -11,7 +11,7 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT / "tools") not in sys.path:
     sys.path.insert(0, str(ROOT / "tools"))
 from verification_support.process_environment import test_environment
-from verification_support.execution_policy import DEFAULT_WORKERS
+from verification_support.execution_policy import DEFAULT_WORKERS, DEFAULT_DISTRIBUTION
 from verification_support.runtime_runner import prepare_request
 
 
@@ -48,7 +48,7 @@ def pytest_arguments(args):
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--workers", "-n", type=worker_count, default=str(DEFAULT_WORKERS))
-    parser.add_argument("--dist", choices=("load", "worksteal", "loadscope", "loadfile"), default="worksteal")
+    parser.add_argument("--dist", choices=("load", "worksteal", "loadscope", "loadfile"), default=DEFAULT_DISTRIBUTION)
     parser.add_argument("--evidence", type=Path)
     parser.add_argument("--observations", type=Path)
     parser.add_argument("--expected-tests", type=int)
