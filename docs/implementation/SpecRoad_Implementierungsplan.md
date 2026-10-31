@@ -171,6 +171,7 @@ Testnummern bleiben erhalten, neue Identitäten werden hinten angehängt.
 15.n.W bleibt offen; dies behebt keine PatchHarbor-Transportvoraussetzung.
 Eine tatsächliche Einrichtung des Laptops wird durch das Bundle nicht gestartet.
 Lokale Dev-Abnahme DEV-ENV-530.W: 5 gezielte Tests bestanden, vier worksteal-Worker, vollständige Collection 22629 gültig. Kein Vollsuite- oder Apply-Nachweis.
+Lokale Dev-Abnahme DEV-ENV-530.R: 27 gezielte Tests bestanden, vier worksteal-Worker, vollständige Collection 22651 gültig. Kein Vollsuite- oder Apply-Nachweis.
 Apply-Abschluss DEV-ENV-530: noch offen; erst nach allen drei Gates abgeschlossen.
 
 ## Fortschritt – einzige maßgebliche Planstelle

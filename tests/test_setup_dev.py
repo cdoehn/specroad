@@ -60,6 +60,10 @@ if args[0] == 'venv':
     python.chmod(0o755)
 elif args[:2] == ['pip', 'install']:
     (Path.cwd() / '.venv/dependencies-installed').write_text('dev + editable')
+elif args[:2] == ['python', 'install'] and os.environ.get('CREATE_DURING_INSTALL'):
+    env = Path.cwd() / '.venv'
+    env.mkdir()
+    (env / 'other-process').write_text('preserve')
 elif args[:2] != ['python', 'install']:
     raise SystemExit('unexpected tool command')
 '''
@@ -126,3 +130,107 @@ def test_help_and_invalid_arguments_do_not_begin_setup(setup_project, arguments)
     assert result.returncode == (0 if arguments == ('--help',) else 2)
     assert not calls()
     assert not (root / '.venv').exists()
+
+
+@pytest.mark.parametrize('tool', ['git', 'uv'])
+def test_missing_required_tool_fails_before_downloads_or_environment_changes(setup_project, tool):
+    root, binary, _, invoke, calls = setup_project
+    (binary / tool).unlink()
+    result = invoke()
+    assert result.returncode == 1
+    assert tool.lower() in result.stderr.lower()
+    assert not calls() and not (root / '.venv').exists()
+
+
+@pytest.mark.parametrize('contents', ['', '3.13\n', '3.14\n3.14\n',
+                                     '3.14\n--default\n', '3.14\n3.11-dev\n'])
+def test_invalid_version_requests_do_not_reach_uv(setup_project, contents):
+    root, _, _, invoke, calls = setup_project
+    (root / '.python-versions').write_text(contents)
+    result = invoke()
+    assert result.returncode == 1
+    assert '.python-versions' in result.stderr
+    assert not calls() and not (root / '.venv').exists()
+
+
+@pytest.mark.parametrize('state', ['file', 'linked', 'empty', 'missing_python',
+                                  'wrong_version', 'foreign_prefix', 'system_python',
+                                  'linked_config', 'invalid_reply'])
+def test_incompatible_existing_environment_is_preserved_before_uv_runs(setup_project, state):
+    root, _, _, invoke, calls = setup_project
+    environment = root / '.venv'
+    if state == 'file':
+        environment.write_bytes(b'not an environment')
+    elif state == 'linked':
+        target = root / 'foreign'
+        target.mkdir()
+        (target / 'keep-me').write_bytes(b'do not touch')
+        environment.symlink_to(target, target_is_directory=True)
+    elif state == 'empty':
+        environment.mkdir()
+    else:
+        virtual_environment(root, version=[3, 13] if state == 'wrong_version' else None,
+                            prefix=str(root / 'foreign') if state == 'foreign_prefix' else None,
+                            base_prefix=str(environment) if state == 'system_python' else '/base')
+        if state == 'missing_python':
+            (environment / 'bin/python').unlink()
+        elif state == 'linked_config':
+            config = environment / 'pyvenv.cfg'
+            config.rename(root / 'foreign.cfg')
+            config.symlink_to(root / 'foreign.cfg')
+        elif state == 'invalid_reply':
+            executable(environment / 'bin/python', "print('null')\n")
+    before = {str(p.relative_to(root)): p.read_bytes()
+              for p in root.rglob('*') if p.is_file()}
+    result = invoke()
+    assert result.returncode == 1
+    assert 'Development setup failed:' in result.stderr
+    assert not calls()
+    after = {str(p.relative_to(root)): p.read_bytes()
+             for p in root.rglob('*') if p.is_file()}
+    assert after == before
+    if state == 'linked':
+        assert environment.is_symlink()
+
+
+@pytest.mark.parametrize('command,count', [('python install', 1), ('venv', 2), ('pip install', 3)])
+def test_tool_failure_prevents_later_steps_and_does_not_claim_success(setup_project, command, count):
+    root, _, _, invoke, calls = setup_project
+    result = invoke(FAIL_COMMAND=command)
+    assert result.returncode == 1
+    assert len(calls()) == count
+    assert not (root / '.venv/dependencies-installed').exists()
+    assert 'Development environment ready:' not in result.stdout
+    if command == 'pip install':
+        assert (root / '.venv/pyvenv.cfg').is_file()
+
+
+def test_wrong_created_python_cannot_receive_project_packages(setup_project):
+    root, _, _, invoke, calls = setup_project
+    result = invoke(CREATED_VERSION='[3, 13]')
+    assert result.returncode == 1
+    assert len(calls()) == 2
+    assert (root / '.venv/pyvenv.cfg').is_file()
+    assert not (root / '.venv/dependencies-installed').exists()
+
+
+def test_inherited_active_environment_cannot_redirect_setup(setup_project):
+    root, _, home, invoke, calls = setup_project
+    foreign = home / 'another-environment'
+    foreign.mkdir()
+    marker = foreign / 'keep-me'
+    marker.write_bytes(b'foreign environment')
+    result = invoke(VIRTUAL_ENV=str(foreign))
+    assert result.returncode == 0, result.stderr
+    assert marker.read_bytes() == b'foreign environment'
+    assert (root / '.venv/dependencies-installed').is_file()
+    assert str(foreign) not in repr(calls())
+
+
+def test_environment_created_during_download_is_not_replaced(setup_project):
+    root, _, _, invoke, calls = setup_project
+    result = invoke(CREATE_DURING_INSTALL='1')
+    assert result.returncode == 1
+    assert len(calls()) == 1
+    assert (root / '.venv/other-process').read_text() == 'preserve'
+    assert not (root / '.venv/dependencies-installed').exists()

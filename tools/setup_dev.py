@@ -40,6 +40,7 @@ def setup(root):
     exists = os.path.lexists(environment)
     if exists:
         if (environment.is_symlink() or not environment.is_dir()
+                or (environment / "pyvenv.cfg").is_symlink()
                 or not (environment / "pyvenv.cfg").is_file() or not python.is_file()):
             raise ValueError("Existing .venv is incomplete or linked; preserved without replacement")
         result = subprocess.run([str(python), "-I", "-B", "-c", probe], cwd=root,
@@ -49,6 +50,8 @@ def setup(root):
             raise ValueError("Existing .venv must be a Python 3.14 virtual environment; preserved")
     subprocess.run([uv, "python", "install", *versions], cwd=root, check=True)
     if not exists:
+        if os.path.lexists(environment):
+            raise ValueError(".venv appeared during interpreter installation; preserved")
         subprocess.run([uv, "venv", "--python", DEFAULT_PYTHON,
                         "--no-python-downloads", str(environment)], cwd=root, check=True)
     result = subprocess.run([str(python), "-I", "-B", "-c", probe], cwd=root,
@@ -67,7 +70,7 @@ def main(argv=None):
     parser.parse_args(argv)
     try:
         setup(ROOT)
-    except (OSError, ValueError, subprocess.CalledProcessError) as error:
+    except (OSError, ValueError, TypeError, subprocess.CalledProcessError) as error:
         print("Development setup failed: " + str(error), file=sys.stderr)
         return 1
     return 0
