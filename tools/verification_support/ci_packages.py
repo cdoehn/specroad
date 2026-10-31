@@ -157,7 +157,8 @@ def validate_plan(plan):
             and plan['kind'] == 'specroad-ci-package-plan-v1', 'Invalid CI package plan')
     require(plan['plan_sha256'] == digest({k:v for k,v in plan.items() if k != 'plan_sha256'}),
             'Changed package plan')
-    checked_context(plan['context']); rules = checked_rules(plan['rules'])
+    require(checked_context(plan['context']) == plan['context'], 'Noncanonical CI context')
+    rules = checked_rules(plan['rules'])
     require(type(plan['bindings']) is dict and set(plan['bindings']) ==
             {'source_sha256', 'specification_sha256', 'catalog_sha256'}, 'Invalid plan bindings')
     for value in [*plan['bindings'].values(), plan['runtime_estimates_sha256']]:
@@ -178,6 +179,11 @@ def validate_plan(plan):
                 max(1, math.ceil(base * rules['duration_factor'])), 'Invalid test estimate')
         nodes.append(row['nodeid']); ids.append(row['test_id'])
     require(nodes == sorted(set(nodes)) and len(set(ids)) == len(ids), 'Duplicate planned test')
+    require(type(plan['shards']) is list and all(type(s) is dict
+            and set(s) == {'shard','tests','estimated_seconds'}
+            and type(s['shard']) is int and type(s['estimated_seconds']) is int
+            and type(s['tests']) is list and all(type(i) is int for i in s['tests'])
+            for s in plan['shards']), 'Invalid package assignment types')
     require(plan['shards'] == _packages(tests, rules), 'Noncanonical or incomplete package assignment')
     return plan
 
@@ -198,6 +204,9 @@ def matrix(plans):
         include.extend(dict(python=version, shard=s['shard']) for s in plan['shards'])
     require(sorted(versions) == list(PYTHONS) and all(c == contexts[0] for c in contexts),
             'Mixed, duplicate or missing Python plans')
+    require(all(all(p[k] == plans[0][k] for k in
+            ('bindings', 'rules', 'runtime_estimates_sha256')) for p in plans),
+            'Mixed source, catalog, estimates or planning policy')
     require(len(include) <= 256, 'Matrix exceeds 256 jobs')
     return {'include': sorted(include, key=lambda r: (PYTHONS.index(r['python']), r['shard']))}
 
@@ -213,10 +222,14 @@ def merge_shards(plan, receipts):
                 and receipt.get('context') == plan['context']
                 and receipt.get('plan_sha256') == plan['plan_sha256']
                 and receipt.get('bindings') == plan['bindings']
-                and receipt.get('workers') == plan['rules']['workers']
+                and type(receipt.get('workers')) is int
+                and receipt['workers'] == plan['rules']['workers']
                 and receipt.get('distribution') == 'worksteal'
                 and receipt.get('full_suite_passed') is None
                 and receipt.get('selected_passed') is True
+                and receipt.get('errors') == []
+                and type(receipt.get('process_exit_code')) is int
+                and receipt['process_exit_code'] == 0
                 and type(receipt.get('exit_code')) is int and receipt['exit_code'] == 0,
                 'Failed, unbound or incompatible CI package')
         shard = receipt.get('shard'); pairs = selected_pairs(plan, shard)
@@ -251,6 +264,15 @@ def merge_shards(plan, receipts):
 
 def verify_aggregate(plan, receipts, report):
     observation, runtime = merge_shards(plan, receipts)
+    execution = report.get('execution')
+    require(type(execution) is dict and execution.get('engine') == 'pytest'
+            and execution.get('workers') == plan['rules']['workers']
+            and execution.get('distribution') == 'worksteal'
+            and type(execution.get('ci_shards')) is int
+            and execution['ci_shards'] == len(plan['shards'])
+            and report.get('platform_sha256') == digest(runtime)
+            and report.get('configuration_sha256') == digest(execution),
+            'Aggregate execution or platform binding changed')
     require(report.get('observation') == observation and report.get('runtime') == runtime
             and report.get('test_outcomes') == observation['test_outcomes']
             and report.get('tests_run') == len(plan['tests'])

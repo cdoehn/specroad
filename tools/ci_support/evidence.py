@@ -49,7 +49,8 @@ def inspect_report_archive(raw, request, version, *, run_id=None, attempt=None):
                 or type(runtime.get('python')) is not str or not runtime['python'].startswith(version + '.')
                 or type(execution) is not dict or execution.get('workers') != (0 if name.startswith('serial') else 4)):
             raise CIObservationError('test_runtime_or_mode_mismatch')
-        if 'ci_packages' in report or 'ci_shards' in execution:
+        if ('ci_packages' in report or 'ci_shards' in execution
+                or 'ci-plan.json' in reports or 'shard-receipts.json' in reports):
             from verification_support.ci_packages import verify_aggregate
             try:
                 plan = reports['ci-plan.json']

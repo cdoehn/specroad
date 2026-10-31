@@ -114,9 +114,13 @@ def run_package(root, plan_path, shard, outdir, *, environment=None, runner=None
         '--sr-ci-shard',str(shard), str(root/'tests')]
     runner = subprocess.run if runner is None else runner
     process_env = test_environment(env); process_env['PYTHONHASHSEED'] = '117'
-    code = runner(command, cwd=root, env=process_env, stdin=subprocess.DEVNULL,
-                  check=False).returncode
     errors = []; observation = None
+    try:
+        code = runner(command, cwd=root, env=process_env, stdin=subprocess.DEVNULL,
+                      check=False).returncode
+    except OSError:
+        code = None
+        errors.append('package_process_not_started')
     try:
         observation = _load_report(observed_path)
         verify_observation(observation, sorted({n.split('::',1)[0] for n in pairs}), len(pairs))
@@ -168,9 +172,10 @@ def aggregate(root, plan_path, receipt_paths, outdir, *, environment=None):
 
 def preserve_history(root, output):
     """A consistent copy also preserves incomplete attempts; it is not pass evidence."""
-    source = history_path(root); output = Path(output).absolute()
+    source = history_path(root); output = journal_path(output, root)
     require(source.is_file(), 'No runtime history was created')
     output.parent.mkdir(parents=True, exist_ok=True)
+    journal_path(output, root)
     with output.open('xb'):
         pass
     with sqlite3.connect(source.as_uri()+'?mode=ro', uri=True) as db:

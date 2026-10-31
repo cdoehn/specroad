@@ -44,7 +44,7 @@ def receipts(p):
             plan_sha256=p['plan_sha256'],bindings=p['bindings'],shard=shard['shard'],workers=4,
             distribution='worksteal',runtime=dict(implementation='cpython',python=p['context']['python']+'.4',
                 system='Linux',machine='x86_64'),selected_passed=True,full_suite_passed=None,
-            exit_code=0,observation=observation))
+            exit_code=0,process_exit_code=0,errors=[],observation=observation))
     return result
 
 
