@@ -41,7 +41,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "f11d36333567bdb9533c43212b8871cc278be697200e5cbdcaef341952ed3dbd",
+  "specification_sha256": "01abcaa7c891b6c17f659a674631d29918cb5d1478d43e8ab1c1768244499770",
   "steps": [
     "Observe and bind the actual stored Release revision, record and optional evaluation hash without claiming descriptor validity or readiness.",
     "Prepare and publish ordinary and configuration-bound working Baselines through the unchanged native saved-plan path.",

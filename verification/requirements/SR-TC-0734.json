@@ -9,7 +9,8 @@
   "open_items": [
     "Implement planned step 15.n and its integration/acceptance contributions under SpecRoad 0.2.8 Annex W; define real fixtures and behavior tests before claiming implementation.",
     "Public PatchHarbor API capabilities and concrete CPython-compatible distribution must be verified; no current feature or test evidence is claimed.",
-    "TRANSPORT-OUTBOUND-528 defines the still-unimplemented outbound contribution of 15.n in specification 0.2.42 W.2.1/W.3.1. Manifest, explicit runtime trust, snapshot/receipt coverage, public command integration and failure acceptance remain open; no product evidence is claimed."
+    "TRANSPORT-OUTBOUND-528 defines the still-unimplemented outbound contribution of 15.n in specification 0.2.42 W.2.1/W.3.1. Manifest, explicit runtime trust, snapshot/receipt coverage, public command integration and failure acceptance remain open; no product evidence is claimed.",
+    "TRANSPORT-SAFE-531 manually binds the verified PatchHarbor 1.7.0 Core-PYZ and public safe-reference contract 1 in specification 0.2.43 W.1.1. Full 15.n integration, operating-boundary checks, conversion/stale/partial-publication and prior acceptance remain open; historical 1.6.0 evidence is unchanged."
   ],
   "oracle": {
     "kind": "pending",
@@ -29,7 +30,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "f11d36333567bdb9533c43212b8871cc278be697200e5cbdcaef341952ed3dbd",
+  "specification_sha256": "01abcaa7c891b6c17f659a674631d29918cb5d1478d43e8ab1c1768244499770",
   "steps": [],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0734",

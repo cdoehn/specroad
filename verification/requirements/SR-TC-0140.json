@@ -48,7 +48,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "f11d36333567bdb9533c43212b8871cc278be697200e5cbdcaef341952ed3dbd",
+  "specification_sha256": "01abcaa7c891b6c17f659a674631d29918cb5d1478d43e8ab1c1768244499770",
   "steps": [
     "12.p.W: Compute one owned read input, then compare exact requirement/kind/dimension sets and counts. Keep result/freshness and Subject/check priorities separate. Require source-order invariance, detached values, exact model/query bindings, independent plan/result filters, sorting before paging, same view coverage, explicit provider refusals, no IO and Core/PYZ equivalence.",
     "12.p.R: Compare exact independent gap identities/counts for missing contract/test/selection/evidence and stale observations, active versus historical/superseded runs, configured exclusions and invalid references. Resolve actual Release scope and stored selection precedence; reject conflicts. Preserve full descriptor/time/scope/hash through native Work storage and fresh Core/PYZ process; recompute and reject changed inputs. Compare incremental query pages and provenance to the synchronous path without model writes."

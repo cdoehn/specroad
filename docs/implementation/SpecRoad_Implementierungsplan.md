@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 42 · **Stand:** 31. Oktober 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.42
+**Planrevision:** 43 · **Stand:** 31. Oktober 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.43
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 Schritte und 900 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; die ausdrücklich genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wird nach 10.7.10 innerhalb von 15.l.R vorgezogen. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -9,7 +9,7 @@ Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 S
 
 Fachliche Grundlage ist [`docs/specification/SpecRoad_Spezifikation.md`](../specification/SpecRoad_Spezifikation.md), einschließlich aller konsolidierten Korrekturen, 742 Requirements, 51 Verifikationsverträge, 46 Szenario-/E2E-Identitäten sowie R-01 bis R-75, Anhang U und den PatchHarbor-Rundweg aus Anhang W. Der [`Prüfbericht`](../reviews/SpecRoad_v0.2.7_Implementierungsreife_Pruefbericht.md) ist ein vorgelagerter Entwurfsreview, kein späterer Produktnachweis.
 
-Gebundene Spezifikations-SHA-256: `f11d36333567bdb9533c43212b8871cc278be697200e5cbdcaef341952ed3dbd`.
+Gebundene Spezifikations-SHA-256: `01abcaa7c891b6c17f659a674631d29918cb5d1478d43e8ab1c1768244499770`.
 Planungsbasis: Commit `fe2661d02ecf2f7eb483b58a4487eb009c6b3846`; sauberes Result-Bundle `specroad_Result_120209_0914_df3504.zip`; Repository-ID `3d2576df-d611-46fc-9d2b-92869468aaca`. Diese Angaben dokumentieren die Entstehung des Plans, nicht die zukünftige Patchbindung. **Jedes spätere Patchpaket bindet den dann aktuellen tatsächlichen Result-Zustand.**
 
 Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 2026 gelten zusätzlich und bei den nachfolgend benannten Konflikten vorrangig. Sonstige normative Spezifikationsinhalte werden nicht stillschweigend abgeschwächt. Neue fachliche Widersprüche, fehlende zwingende Angaben und Sicherheitsprobleme sind offen zu benennen, nicht durch erfundene Annahmen oder Scheinerfolge zu lösen.
@@ -178,12 +178,12 @@ Apply-Abschluss DEV-ENV-530: W/R/C-Gates erfolgreich; Bundle 530 abgeschlossen.
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 42
+plan_revision: 43
 implementation_plan_commits_total: 900
 implementation_plan_commits_completed: 654
 last_completed_plan_commit: 15.m.C
 next_plan_commit: 15.n.W
-last_completed_numbered_bundle: 530
+last_completed_numbered_bundle: 531
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -33703,21 +33703,160 @@ nächstens 15.n.W bleiben unverändert. Kein Apply-Erfolg wird bei Übergabe
 behauptet. Control/Watcher/Dienste und die manuell ausstehende Pythonmatrix
 werden nicht verändert oder gestartet.
 
+**OFF-PLAN TRANSPORT-SAFE-531 — geprüfte sichere PatchHarbor-Referenzerzeugung.**
+
+**Autorität und Grenze.** Ausdrücklicher manueller Nutzerauftrag vom
+31. Oktober 2026 nach Prüfung der PatchHarbor-dev-Lieferung: Klärung erstellen,
+danach den aktuellen Planschritt fortsetzen. Dies ist die manuelle Befugnis
+nach §2.4.3, keine aus dem gesperrten Control-Auftrag abgeleitete Erlaubnis.
+Der gespeicherte Control-Vertrag, Restbudget, alte Antworten und Blockaden
+bleiben unverändert. Eigenständige Übergabe als `spec_clarification`, ein
+OFF-PLAN-Dokumentcommit; keine Produktimplementierung oder künstliche W/R/C-
+Folge. Der reguläre Schritt 15.n.W bleibt offen bei Produktstand 654/900.
+
+**Maßgebliche Grundlage.** Erfolgreiches sauberes SpecRoad-Result 530
+`specroad-apply_Result_201119_1031_644d47.zip`, SHA-256
+`9c40a45c47109bea5e1da8c9ee33a859f7e8cadbbdd3f90cde83c1600ef49985`,
+Abschlusscommit `cabe0f99207d9f5b4ba99bbbd6544bdb9b4e2af2`.
+Native Resultprüfung, Metadaten, vollständige 2.421-Dateien-Basis und Logs
+stimmen überein. Die drei tatsächlich erfolgreichen Apply-Gruppen aus 530
+enthielten 5.998, 6.096 und 6.134 Tests. Sie sind Teilprüfungen verschiedener
+Zwischenstände, kein Vollsuite-Nachweis. Sechs lokale Abweichungen wurden
+gegen diesen Snapshot abgeglichen; vorher vorhandene lokale Bytes wurden
+gesichert, Git-Historie und Index nicht verändert.
+
+**Lücke und technische Quellen.** W.1/W.2.1 binden den Hinexport bisher an die
+in 15.m geprüfte 1.6.0-Runtime. Deren normaler Git-Capture kann konfigurierte
+Clean-Filter ausführen und garantiert die geforderte Quellgrenze nicht.
+W.3.1 beschreibt zudem die Wartung des Exchange durch den alten Aufruf.
+Die geprüfte 1.7.0-Lieferung stellt dafür einen gesonderten sicheren öffentlichen
+Pfad bereit; bloßer Artefaktaustausch würde die bisherige normative Bindung
+verletzen. Untersucht wurden SpecRoad W.1–W.7, 11.7/11.8, §2.4/2.5,
+15.n.W/R/C, die bestehende Runtime-/Snapshotintegration und PatchHarbors
+`docs/python-api.md`, `docs/safe-reference-integration.md`, öffentliche
+Capability-/SafeExport-Typen sowie die gelieferten realen Artefakte/Referenzen.
+
+PatchHarbor-Provenienz: Commit `299782e02bec55a7b8593bd99ee5b11f6122a432`,
+Liefermanifest-SHA `87b49dd7e1811cd57a6373e32ab09893220aecf1c27d14a408a9af7fd02ff480`,
+Apply-Result-SHA `9aa4b4f6a64b900fb261bb34d8a79251c667073a98fd3eec9accbf9db8b22795`.
+Die 441 Quelldateien stimmen mit dem bestätigten nativen Result überein;
+16 Lieferartefakte wurden gehasht, Wheel-RECORD und vier Clean-/Dirty-Result-
+Referenzen nativ geprüft. Der letzte PatchHarbor-Gate meldet 3.522 bestanden,
+15 übersprungen, Exit 0, zwölf parallele Worker auf Linux/CPython 3.14.4.
+Das ist kein SpecRoad-Produkt- oder externer Pythonmatrix-Nachweis.
+
+Die vorhandene unabhängige Prüfung umfasst zwölf Fälle mit vier parallelen
+Workern, je sechs mit echter PYZ und verifiziertem Wheel: Clean, gemischter
+Git-Zustand, Filter bei Kontextaufnahme, nach Vorbereitung aktivierter Filter,
+veraltete Quelle und geänderte Exchange-Grenze. Alle zwölf letzten Ergebnisse
+sind erfolgreich; Filteraufrufe blieben null, Quelle/Index/Git und fremde
+Exchange-Dateien unverändert. Ein anfänglich falscher Vergleich verschiedener
+Kontext-Dataclasses im Prüfskript wurde diagnostiziert und auf Bindungsfelder,
+Dirty-Flag und Pfad korrigiert; die vier betroffenen Fälle wurden erfolgreich
+parallel wiederholt. Diese Originalbeobachtungen bleiben erhalten. Es wird
+kein neuer Lauf und keine PatchHarbor-Produktkorrektur behauptet.
+
+**Alternativen und Wahl.** 1.6.0 unverändert weiterzuverwenden erfüllt die
+Quellgrenze nicht. Eigenes Git-Capture, Filterabschaltung durch Konfigurations-
+mutation oder private PH-API-Nachbauten verletzen die vorgegebenen Grenzen.
+Ein ungeprüftes 1.7.0 oder ein Default-`bundle` ohne sicheren Modus genügt
+ebenfalls nicht. Gewählt ist ausschließlich die versions-/hashgebundene
+1.7.0-Core-PYZ mit exakt geprüftem sicherem Vertrag 1 und der öffentlichen
+Folge Safe-Kontext → schreibfreie Vorbereitung → SpecRoad-Grenzprüfung →
+Safe-Bundle → extern gehashter nativer Snapshot. Das vorhandene äußere
+Hinpaketformat bleibt geschlossen und unverändert.
+
+**Abgleich mit §2.4.1.** (1) Nur die unmittelbar benötigte Voraussetzung für
+den bestehenden 15.n-Hinexport wird angepasst; 15.o/18.q/18.r werden nicht
+vorgezogen. (2) API und Artefakt sind tatsächlich geliefert und geprüft;
+die bisherige explizite Runtimebindung wird durch den manuellen Auftrag
+normativ ersetzt. (3) Alle Scope-, Quellen-, Review-, Sicherheits-, W/R/C-
+und Nachweispflichten bleiben erhalten. (4) Version 0.2.43/Planrevision 43
+und genaue Artefakthashes erlauben nachvollziehbare spätere Anpassung;
+historische 1.6.0-Daten werden weder ersetzt noch umklassifiziert. (5) Offene
+CI-/Plattformabnahmen bleiben offen; keine Review- oder Risikoakzeptanz wird
+erfunden. Keine Erweiterung der delegierten Entwicklungsbefugnis selbst.
+
+**Normative Zielregel und vollständiger Rest.** Maßgeblich sind W.1.1,
+W.2.1 und W.3.1 in Spezifikation 0.2.43. Die sechs Abnahmegruppen aus
+TRANSPORT-OUTBOUND-528 bleiben vollständig bestehen; deren Punkt 2 wird für
+die neue Erzeugung durch die sichere Betriebsgrenze aus W.1.1 konkretisiert:
+keine Recovery-/Archivierungswirkung, ausschließlich freigegebene Output-/
+Diagnosebereiche und PH-Locks. Ergänzend muss 15.n nachweisen:
+
+1. Exakte Runtime-/Hash-/Capabilityprüfung vor Quellaufnahme; fehlende,
+   boolesche oder unbekannte Vertragswerte und falsche Artefakte ablehnen.
+   1.6.0 bleibt historische Regression, kein unsicherer Export-Fallback.
+2. Öffentliche Safe-Kontext-/Vorbereitungs-/Bundle-Folge, unveränderter opaker
+   Plan und tatsächlich geprüfte Schreibgrenzen. Keine Writes bei reiner
+   Vorbereitung; keine Wartung von fremdem Exchange, keine Registrierung,
+   Konfigurationsreparatur oder Änderung von Source, Index und Historie.
+3. Reale Filter-/Encoding-/Ident-/EOL-Angriffe vor und nach Vorbereitung,
+   stale Quelle und geänderte Betriebsgrenze: null Helferausführungen,
+   keine still erneuerte Basis. Clean-/Dirty-Inventare und ignorierte
+   Pflichtdaten folgen weiter den unabhängigen Abdeckungsprüfungen.
+4. Öffentliche semantische Fehler und konkrete Seiteneffekte erhalten;
+   Lockkonflikt, echter I/O-/Abbruch- und später Cleanupfehler bleiben Fehler.
+   Ein bereits vollständig veröffentlichtes PH-Result wird mit seiner
+   Identität erhalten, nie als fehlend oder erfolgreicher Hinexport ausgegeben.
+5. Öffentliche CLI-/Command-/Preflight-/Planungs-/Work-Integration, Modul/PYZ,
+   vollständige Projekt-/Receiptprojektion, kanonisches geschlossenes Manifest
+   und atomarer create-only-Hinexport. Keine innere Teilfunktion ersetzt diese
+   Integration; Fortsetzung bindet dieselbe erwartete Quelle erneut sicher.
+6. Sämtliche vorher offenen positiven, negativen, Crash-/I/O- und
+   Kompatibilitätsabnahmen bleiben bestehen. Die vollständige native
+   CPython-3.10–3.14-/Plattformmatrix bleibt der gesonderte manuelle CI-Nachweis;
+   vorhandene Entwicklungsfreigaben ersetzen keinen Releasebeleg.
+
+**Liefergrenze.** Dieses Bundle 531 liefert ausschließlich Spezifikation,
+Plan und notwendige aktive Katalogbindungen. Bestehende Anforderungszustände,
+Testidentitäten, historische Evidence, ausführbarer Code und Runtimeartefakte
+bleiben unverändert. Keine Dokumentationstests und keine zusätzliche Vollsuite.
+Vor Übergabe gelten gezielte vorhandene parallele Verhaltenstests als
+Bestandsschutz, vollständige Collection/Katalogprüfung und native Paketprüfung.
+Apply prüft Sequenz **242 / Gruppe 2 von 3** mit der aktuellen Laufzeitfilterung
+und v3-Auswahlbindung vor genau einem OFF-PLAN-Commit:
+`OFF-PLAN TRANSPORT-SAFE-531 docs(spec): sichere PatchHarbor-1.7-Referenzerzeugung binden`.
+Nur der erfolgreiche Commit schaltet die Rotation und Bundlezählung weiter.
+Produktstand 654/900, zuletzt 15.m.C und nächstens 15.n.W bleiben unverändert.
+
+Nach dem zugeordneten erfolgreichen sauberen Apply-Result darf 15.n.W auf
+dieser neuen technischen Basis vollständig umgesetzt werden. Diese Trennung
+folgt §2.4.3 und ist keine vorsorgliche fachliche Teilung des Planschritts.
+Es werden weder Control-Zustand noch Dienste verändert; kein eigener
+Apply-/Warte-/Fortsetzungsloop wird gestartet.
+
+
+**Lokale Lieferprüfung TRANSPORT-SAFE-531.** 112 unveränderte vorhandene
+Transport-/Core-Verhaltenstests bestanden ungefiltert mit vier parallelen
+worksteal-Workern auf CPython 3.14.4, Exit 0; Abschluss
+`2026-10-31T21:43:08.227027+00:00`. Alle 112 Versuche und 336 Phasen
+sind vollständig und gültig in der gemeinsamen Laufzeithistorie gespeichert.
+Vollständige Collection/Katalogprüfung: 22.651 eindeutige aktive Identitäten,
+keine zusätzlichen Testkörper; bisherige Testnummern und Rotationsanker bleiben
+unverändert. Dies ist Bestandsschutz, kein 15.n-Implementierungsnachweis.
+Geprüfter Liefer-Quellhash: `e8f0acf9dc184a4e2a330a59fe1078fa9f8adad660f2ae8c7b86363d7c89c883`.
+Auswahlbeleg: `cbdc547cb8270f8fa590ad3d09ac423ae702e14580fd66846bc5855360812a9b`;
+Einzeloutcomes: `c4405e68397e8ad8f79606610a1518790b427e3e2936fce89d72777a85e14ea3`;
+Collection: `90cc00c862e8c33c94a95ce89a23a083ce75d0b1eb5e10137579b90f9886703b`.
+Native Paket-/Payloadprüfung erfolgt vor atomarer Übergabe; das zugehörige
+Apply-Result und der OFF-PLAN-Commit werden bei Lieferung nicht vorweggenommen.
+
 #### 15.n.W – Let it Work
 
 - [ ] **15.n.W** · Position **655/900** · Voraussetzung: `15.m.C`.
 **Exakte Commit-Message:** `15.n.W feat(transport): Gebundenes Hinpaket exportieren aufbauen`
 
-**Umsetzung:** bundle create mit explizitem ai-runtime/outbound-Profil als transport_operational registrieren. api.bundle am bereits registrierten lokalen Git-Repository verwenden, aus dessen geprüftem Snapshot ein kanonisches Vollprojektbundle erzeugen und SpecRoad-PYZ, Originalresult und Projektbundle nach W.2 atomar verpacken.
+**Umsetzung:** bundle create mit explizitem ai-runtime/outbound-Profil als transport_operational registrieren. Die in W.1.1 gebundene 1.7.0-Runtime über Safe-Kontext, schreibfreie Vorbereitung, explizite Betriebsgrenzenprüfung und api.bundle mit unverändertem SafeExportPlan am bereits registrierten lokalen Git-Repository verwenden, aus dessen geprüftem Snapshot ein kanonisches Vollprojektbundle erzeugen und SpecRoad-PYZ, Originalresult und Projektbundle nach W.2 atomar verpacken.
 
-**Verhaltensabnahme:** Unabhängiges Inventar bestätigt Resultbytes, Projekt-ID, Scope, Modellwurzel, Receipts und alle äußeren Hash-/Größenbindungen; Source, Index und Git-Historie bleiben unverändert, PH-Betriebswirkungen sind ausgewiesen. Maßgeblich sind zusätzlich die exakten Verträge W.2.1/W.3.1 und die vollständige offene Abnahmeliste TRANSPORT-OUTBOUND-528; CLI-/Preflight-/Work-Integration gehört zum Schritt.
+**Verhaltensabnahme:** Unabhängiges Inventar bestätigt Resultbytes, Projekt-ID, Scope, Modellwurzel, Receipts und alle äußeren Hash-/Größenbindungen; Source, Index und Git-Historie bleiben unverändert, PH-Betriebswirkungen sind ausgewiesen. Maßgeblich sind zusätzlich W.1.1/W.2.1/W.3.1, die vollständige offene Abnahmeliste TRANSPORT-OUTBOUND-528 und deren Ergänzung TRANSPORT-SAFE-531; CLI-/Preflight-/Work-Integration gehört zum Schritt.
 
 #### 15.n.R – Make it Right
 
 - [ ] **15.n.R** · Position **656/900** · Voraussetzung: `15.n.W`.
 **Exakte Commit-Message:** `15.n.R feat(transport): Gebundenes Hinpaket exportieren vervollständigen`
 
-**Vervollständigung:** Dirty-Resultschichten vollständig binden; ignorierte Pflichtbytes, Partialquellen, aktive Transaktionen, Paketpfadkollisionen und zwischenzeitlich geänderte Eingaben verweigern. Python-present verbindlich anbieten; Python-bundled nur mit kompletter geprüfter Plattformdistribution.
+**Vervollständigung:** Dirty-Resultschichten vollständig binden; ignorierte Pflichtbytes, Partialquellen, aktive Transaktionen, Paketpfadkollisionen und zwischenzeitlich geänderte Eingaben verweigern. Filter-/Konversionsangriffe, stale Exportpläne, veränderte Betriebsgrenzen und tatsächlich veröffentlichte Teilresultate gemäß W.1.1 absichern. Python-present verbindlich anbieten; Python-bundled nur mit kompletter geprüfter Plattformdistribution.
 
 **Verhaltensabnahme:** Kein gemischter oder lückenhafter Snapshot besteht. Fehlendes Runtimeprofil, Abbruch und I/O-Fehler hinterlassen kein als fertig ausgewiesenes Hinpaket; normale Anhang-E-Bundles behalten ihre Bytes und Semantik.
 

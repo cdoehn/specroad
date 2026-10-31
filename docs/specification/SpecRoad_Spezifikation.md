@@ -1,21 +1,21 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.42
+## Version 0.2.43
 
 | Feld | Wert |
 |---|---|
 | Dokument-ID | `SR-SPEC-0001` |
-| Dokumentversion | `0.2.42` |
+| Dokumentversion | `0.2.43` |
 | Zielrelease | `SpecRoad Single-Repository Workbench 0.2.0` |
 | Status | **Fachlich konsolidierte Arbeitsgrundlage; technische Reviewentscheidung gesondert dokumentiert, formale Baseline-Freigabe und Produktabnahme nicht durch dieses Dokument erklärt** |
 | Stand | 31. Oktober 2026 |
 | Sprache | Deutsch; technische Feldnamen, Enum-Werte und CLI-Kommandos Englisch |
-| Fachliche Quelle | **Diese Repositoryfassung v0.2.42 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.42 liegt mit dieser Änderung nicht vor.** |
+| Fachliche Quelle | **Diese Repositoryfassung v0.2.43 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.43 liegt mit dieser Änderung nicht vor.** |
 | Bearbeitbare Satzquelle | Diese Datei; eine spätere PDF muss denselben versionierten Inhalt wiedergeben. |
-| Vorgängerversion | Repository-Spezifikation v0.2.39 vom 29. Oktober 2026; historische Nachweise bleiben unverändert. |
-| Prüf- und Entscheidungsgrundlage | Ausdrücklicher Nutzerauftrag RUNTIME-AUTO-521 vom 30. Oktober 2026: laufende Messhistorie und neueste Werte für den dynamischen Apply-Filter; vorhandene fachliche Entscheidungen bleiben erhalten. |
-| Änderungsart | Entwicklungsworkflow nach 2.5: automatische Messung in Dev und Apply, Historie erhalten, Fehler invalidieren, dynamische Auswahl ausschließlich in Apply. Keine Änderung der Produktabnahmen. |
+| Vorgängerversion | Repository-Spezifikation v0.2.42 vom 31. Oktober 2026; historische Nachweise bleiben unverändert. |
+| Prüf- und Entscheidungsgrundlage | Ausdrücklicher manueller Nutzerauftrag TRANSPORT-SAFE-531 vom 31. Oktober 2026 nach Prüfung der PatchHarbor-1.7.0-Lieferung; bestehende fachliche Entscheidungen und Nachweise bleiben erhalten. |
+| Änderungsart | Hinexport nach W.1.1/W.2.1/W.3.1: geprüfte 1.7.0-Runtime, sichere öffentliche Referenzerzeugung und explizite Betriebsgrenzen; 15.n.W bleibt offen. |
 
-> **Verbindlicher Quellenwechsel:** Die delegierte Detailklärung TRANSPORT-OUTBOUND-528 gemäß SPECROAD-DECISION-1 schreibt die Repository-Spezifikation als v0.2.42 fort. Frühere PDF- und Reviewnachweise bleiben historisch gebunden; keine Produktfreigabe wird erklärt.
+> **Verbindlicher Quellenwechsel:** Der ausdrückliche manuelle Auftrag TRANSPORT-SAFE-531 schreibt die Repository-Spezifikation als v0.2.43 fort. Frühere PDF- und Reviewnachweise bleiben historisch gebunden; keine Produktfreigabe wird erklärt.
 
 > **Fortbestehende Arbeitsprinzipien:** Weiche Budgets führen zu sparsamer vollständiger Weiterarbeit oder gesicherter Fortsetzung über mehrere Aufrufe beziehungsweise Prompts. Es werden keine erforderlichen Arbeiten stillschweigend ausgelassen. Reale Host-, Speicher-, Berechtigungs- und Sicherheitsgrenzen bleiben wirksam.
 
@@ -6158,6 +6158,7 @@ Die folgende Roadmap ist informativ und erzeugt keine Anforderungen an 0.2:
 
 | Version | Datum | Status | Änderung |
 |---|---|---|---|
+| 0.2.43 | 2026-10-31 | Ausdrücklicher manueller Nutzerauftrag | TRANSPORT-SAFE-531: versions-/hashgebundene PatchHarbor-1.7.0-Core-PYZ, sichere öffentliche Referenzerzeugung, Betriebsgrenzen und Fehlererhaltung; 15.n.W und externe Abnahmen bleiben offen. |
 | 0.2.42 | 2026-10-31 | Delegiert gemäß SPECROAD-DECISION-1 | TRANSPORT-OUTBOUND-528: geschlossener Hinpaket-/Runtimeeingabevertrag, selbstreferenzfreie Paket-ID und vollständige Snapshot-/Receiptbindung; Implementierung 15.n bleibt offen, keine Produktfreigabe. |
 | 0.2.39 | 2026-10-29 | Ausdrückliche Nutzerentscheidung | RESTORE-SCHEMA-SCOPE: vollständige 0.2-Restore-Abnahme; sichere Abweisung nicht unterstützter deklarierter Altformate; positive 0.1-Unterstützung erst nach verbindlichem Quellvertrag und M16-Integration. Keine Produktabnahme. |
 | 0.2.40 | 2026-10-30 | Ausdrücklicher Nutzerauftrag | RUNTIME-AUTO-521: automatische Phasenmessung mit erhaltener Historie, nur neueste Werte, ungültige Fehlversuche und dynamischer Apply-Filter. Produktumfang und Freigaben unverändert. |
@@ -9094,11 +9095,11 @@ Die Zuständigkeiten der öffentlichen Aufrufe sind fest:
 
 | Aufgabe | API und Grenze |
 |---|---|
-| Lokalen Referenzstand erfassen | `api.bundle(repository=..., output_directory=...)`; bereits registriertes Git-Repository mit vorhandenem HEAD, explizite absolute Pfade und Ausgabe außerhalb des Projekts. Keine implizite Registrierung oder Remoteaktion. |
+| Lokalen Referenzstand erfassen | Ausschließlich die öffentliche Safe-Folge aus W.1.1: `api.context(..., capture_mode="safe")`, `api.prepare_reference_export(...)`, Grenzprüfung und `api.bundle(..., capture_mode="safe", export_plan=...)`. Bereits registriertes Repository mit HEAD; keine implizite Registrierung oder Remoteaktion. |
 | Rückpaket erzeugen | `api.pack_patch(..., reference_bundle=..., entrypoint=...)`; SpecRoad bereitet den vollständigen Payload und den festen Entrypoint vor. PatchHarbor wählt keine Änderungen aus und erzeugt keinen Proposal. |
 | Rückpaket prüfen | `api.inspect_patch` und `api.validate_patch` mit ursprünglichem Result; lokale Zielbindung wird zusätzlich gegen das registrierte Ziel geprüft. Ein gültiges Paket ist keine Freigabe seiner Fachänderungen. |
 | Lokal übernehmen | Ausschließlich der bewusst aufgerufene lokale Integrationsadapter verwendet `api.apply` mit explizitem geprüftem Paket und Repository. Keine automatische Auswahl fremder Pakete, Watcher oder rekursiven Apply-/Bundle-Aufrufe. |
-| Result prüfen und Snapshot liefern | `api.read_result_snapshot(..., expected_sha256=...)` mit `integration_capabilities().snapshot_contract_version == 1`; vollständige Resultprüfung und schreibfreie Ausgabe der Base-/Index-/Worktree-/Untracked-/Effective-Inventare. Die konkrete 1.6.0-Bindung wurde in 15.m nachgewiesen; jeder Aufruf muss sie weiterhin prüfen. |
+| Result prüfen und Snapshot liefern | `api.read_result_snapshot(..., expected_sha256=...)` mit `integration_capabilities().snapshot_contract_version == 1`; vollständige Resultprüfung und schreibfreie Ausgabe der Base-/Index-/Worktree-/Untracked-/Effective-Inventare. Die in 15.m nachgewiesene 1.6.0-Bindung bleibt historisch erhalten; für den neuen Hinexport gilt die konkrete 1.7.0-Bindung aus W.1.1, die bei jedem Aufruf geprüft wird. |
 
 Die letzte Zeile ist eine ausdrückliche Integrationsvoraussetzung. Sie umfasst
 Manifest, Kontext, Runtime, Base, staged/unstaged Änderungen und untracked Daten
@@ -9107,6 +9108,119 @@ erfolgreicher Runtime-Bootstrap beweist diese Vollprüfung nicht. Vor Freigabe d
 Hinexports muss die Fähigkeit in PatchHarbor öffentlich dokumentiert, ausgeliefert
 und mit SpecRoad nachgewiesen sein. SpecRoad baut keinen privaten Resultreader,
 Patchinterpreter oder eigenen PatchHarbor-Formatvalidator als Umgehung.
+
+### W.1.1 Sichere Referenzerzeugung und Runtimebindung (TRANSPORT-SAFE-531)
+
+Der ausdrückliche manuelle Nutzerauftrag zur Übernahme der geprüften
+PatchHarbor-Lieferung bindet für den Hinexport ab 15.n die **Core-PYZ 1.7.0**:
+SHA-256 `00a08c96748d90629b52672f1a5e95f300371408871b8c11880d2a3f5bf0f6fb`,
+Profil `patchharbor-core-no-watcher-v1`, Pythonanforderung `>=3.10`.
+Die externe Provenienz ist der bestätigte PatchHarbor-dev-Commit
+`299782e02bec55a7b8593bd99ee5b11f6122a432`; dessen Liefermanifest hat SHA-256
+`87b49dd7e1811cd57a6373e32ab09893220aecf1c27d14a408a9af7fd02ff480`.
+Version, Hash, Profil und öffentliche Fähigkeiten werden gemeinsam geprüft;
+eine Versionszeichenfolge oder ein selbstdeklarierter innerer Hash genügt nicht.
+Diese Bindung ersetzt für die neue Hinexporterzeugung die bisherige 1.6.0-
+Bindung aus 15.m. Historische 1.6.0-Artefakte, Fixtures, Hashes, Resultate und
+15.m-Nachweise bleiben unverändert und werden nicht als 1.7.0-Nachweise gewertet.
+Eine andere Runtime benötigt eine neue ausdrückliche Bindung; kein automatischer
+Download, Austausch fremder Imports oder stiller Rückfall auf 1.6.0 ist erlaubt.
+
+Vor jeder Quellaufnahme verlangt der Adapter von
+`api.integration_capabilities()` exakt die Ganzzahl `1` für
+`contract_version`, `snapshot_contract_version` und
+`safe_reference_contract_version`; Boolean, fehlender Wert und unbekannte
+Version sind inkompatibel. Die benötigten öffentlichen Funktionen müssen
+vorhanden sein. Der neue Erzeuger unterstützt `linux-x86_64` auf CPython
+3.10–3.14 mit Git, `/proc/self/fd` und exklusiver atomarer Hardlink-Veröffentlichung.
+Das ist ein deklarierter Vertrag, keine Behauptung einer vollständig ausgeführten
+Python-/Plattformmatrix. Der native Snapshotreader bleibt ohne Git, Shell und
+Netzwerk nutzbar; die vollständigen Abnahmen nach W.7 bleiben erforderlich.
+
+Die Hinexportfolge ist verbindlich und verwendet nur die öffentliche API:
+
+1. `api.context(repository=<Projektroot>, capture_mode="safe")` ermittelt die
+   eindeutige vorhandene Registrierung und ihren Repositoryroot, Dirty-Zustand
+   und die vier vollständigen Bindungswerte. Keine eigene Git-Root-Suche.
+2. `api.prepare_reference_export(repository=<ermittelter Repositoryroot>,
+   output_directory=<bestehender externer Ausgabebereich>,
+   expected_context=<genau dieser Kontext>)` liefert den unveränderlichen
+   `SafeExportPlan`. Kontextaufnahme und Vorbereitung bleiben schreibfrei:
+   keine Registrierung, Verzeichniserzeugung, Locks oder Konfigurationsreparatur.
+3. SpecRoad prüft den tatsächlichen Plan vor der Erzeugung gegen seine
+   Schreibgrenze: Repository-/Projektzuordnung und Vierfachbindung,
+   `output_directory`, `diagnostics_parent`, beide `lock_paths`,
+   `configured_exchange`, `maintenance_enabled` und `binding_sha256`.
+   `maintenance_enabled` muss exakt `False` sein. Output und Diagnosen müssen
+   im ausdrücklich ausgewiesenen externen Bereich liegen, getrennt von allen
+   registrierten Repositorys und PH-Konfigurations-/Zustandsverzeichnissen.
+   Die zwei Locks müssen zur vorhandenen PH-Registry-/Repository-Lockgrenze
+   gehören; sie werden nicht als beliebige zusätzliche Schreibpfade akzeptiert.
+   Die nativen Besitz-, Verzeichnis-, Link- und Rechteprüfungen bleiben wirksam.
+   Der Planhash ist ein Bindungsbeleg, keine selbst erteilte Freigabe.
+4. Erst nach erfolgreicher Grenzprüfung folgt
+   `api.bundle(repository=<derselbe Repositoryroot>, capture_mode="safe",
+   export_plan=<derselbe unveränderte Plan>)`. Der Plan bleibt ein opakes
+   Objekt desselben Prozesses; SpecRoad konstruiert, verändert, serialisiert
+   oder rekonstruiert ihn nicht. Ein neuer Prozess bereitet nach Prüfung
+   derselben erwarteten Quelle einen neuen Plan vor. Work-Checkpoints ersetzen
+   weder den Plan noch die erneute Prüfung und erlauben keine neue Quellbindung.
+5. Der Adapter erfasst die tatsächlich veröffentlichten Resultbytes stabil,
+   berechnet ihren vollständigen externen SHA-256 und liest sie mit
+   `api.read_result_snapshot(..., expected_sha256=...)`. Resultkontext,
+   `BundleResult.context` und freigegebener Plankontext müssen in allen vier
+   Bindungswerten übereinstimmen. Danach gelten W.2.1/W.3.1 unverändert für
+   Projektprojektion, Abdeckung und äußere Paketveröffentlichung.
+
+Der sichere Aufruf darf ausschließlich seine beiden PH-Locks, eine exklusive
+temporäre ZIP samt fertigem Resultnamen und eigene private Diagnosebytes im
+freigegebenen Ausgabebereich schreiben. Er führt keine Exchange-Suche,
+Recovery, Archivierung, Replayänderung, Apply-, Watcher- oder Dienstaktion aus.
+Das konfigurierte Exchange wird als beobachtete Grenze ausgewiesen, auch wenn
+ein anderes Ausgabeziel gewählt wurde; es wird nicht dafür umkonfiguriert.
+PH prüft seinen eingefrorenen Zustand vor Betriebswrites, nach Lockübernahme
+und unmittelbar vor Veröffentlichung erneut. Geänderte Quelle, Registrierung,
+Konfiguration oder Verzeichnisidentität erlauben weder automatische Neuplanung
+noch Wiederholung gegen einen anderen Stand. Enddateien werden nie ersetzt.
+
+Quelle, Index, Refs, Historie und Konfiguration bleiben unverändert. Aktive
+Filter, `working-tree-encoding`, `ident` und nicht eindeutig rohe EOL-Semantik
+werden ohne Helferausführung verweigert, auch auf aktuell sauberen Pfaden und
+bei Änderungen nach Vorbereitung. Ebenso bleiben die nativen Grenzen für
+besondere Indexzustände, Links, Submodule und unvollständige Objektspeicher
+wirksam. Keine Probeausführung eines vermeintlich harmlosen Filters und kein
+Rückfall auf `capture_mode="git"`. Die sicheren Clean-/Dirty-Fälle samt
+binären/leeren Dateien, Rename/Löschung und Modi behalten die native
+Result-3-/state-v1-Semantik. Ignorierte Pflichtdaten bleiben nach W.3.1 ein
+Abdeckungsfehler; dieser Vertrag macht sie nicht nachträglich verfügbar.
+
+Fehler werden anhand öffentlicher semantischer Felder nach 11.8/W.6 umgesetzt,
+nicht durch Wiederverwendung numerischer PatchHarbor-CLI-Exitcodes:
+
+| Öffentlicher Befund | SpecRoad-Exitcode |
+|---|---:|
+| Fehlende/inkompatible Fähigkeit oder ungültige API-Argumente | 2 |
+| `SafeExportError.code=configuration` | 2 |
+| `unsupported_host`, `repository`, `io`, `interrupted`, `cleanup` | 5 |
+| `stale` oder nativer `LockBusyError` | 6 |
+| `unsupported_conversion`, `unsafe_path`, harte `resource_limit` | 7 |
+
+Ein tatsächlich zugrunde liegender I/O-Fehler behält den vorhandenen Vorrang
+von Exit 5. Native Result-/Modelldatenfehler folgen weiter den bestehenden
+W.6-/Snapshotverträgen; ein unerwarteter interner Fehler wird nicht zu Erfolg.
+Der ursprüngliche semantische Fehler, `emergency_diagnostics_path`,
+`emergency_diagnostics_failed` und ein vorhandener `published_path` bleiben
+im maschinenlesbaren Fehlerbefund erhalten. Lokale Diagnose-/Lockpfade gehören
+nicht in `handoff.json` oder Projektpayloads.
+
+Ein erst nach fertiger Resultveröffentlichung gemeldeter Cleanup-/Abbruchfehler
+bleibt ein fehlgeschlagener Hinexport. Das veröffentlichte PH-Result und eigene
+notwendige Diagnosebytes werden erhalten; keine automatische Wiederholung und
+kein als vollständig erfolgreich behauptetes äußeres Hinpaket. Nach hartem
+Prozessabbruch sind versteckte `.tmp`-Bytes kein fertiges Result. Vor Fortsetzung
+müssen tatsächlicher Teilzustand und unveränderte Auftragsbindung geprüft
+werden; Anhang P erteilt keine Umgehung dieser Prüfung.
+
 
 ## W.2 Paketformat und Runtimeprofile
 
@@ -9204,12 +9318,13 @@ Result und Snapshotprojektion dürfen nur in diesem ausgewiesenen externen
 Bereich entstehen, ohne fremde Inhalte zu löschen oder ungebundene alte
 Versuche zu übernehmen.
 
-Der vertrauensgebundene Bootstrap lädt ausschließlich die bereits in 15.m
-gebundene PatchHarbor-Distribution. Die Runtime-Referenz liefert Bibliothekscode,
+Der vertrauensgebundene Bootstrap lädt für den Hinexport ausschließlich die
+nach W.1.1 gebundene PatchHarbor-1.7.0-Distribution. Die Runtime-Referenz liefert Bibliothekscode,
 nicht die neue Projektbasis: Das neue `reference/result.zip` entsteht durch den
-expliziten öffentlichen `api.bundle`-Aufruf. Das vorhandene `api.context` liefert
-für den gewählten Projektroot den bereits registrierten Repositoryroot; genau
-dieser absolute Root wird an `api.bundle` übergeben. Keine eigene Git-Root-Suche,
+expliziten öffentlichen sicheren `api.bundle`-Aufruf nach W.1.1. Das sichere
+`api.context(..., capture_mode="safe")` liefert für den gewählten Projektroot
+den bereits registrierten Repositoryroot; genau dieser absolute Root wird
+für Vorbereitung und Erzeugung mit dem unveränderten SafeExportPlan verwendet. Keine eigene Git-Root-Suche,
 Registrierung oder Konfigurationskorrektur wird ergänzt. Der Projektroot muss
 eindeutig innerhalb dieses Repositorys liegen; Mehrprojekt-Auswahl entsteht
 hierdurch nicht.
@@ -9278,8 +9393,10 @@ keine Aussage über ungetestete weitere Profile.
 ist der tatsächliche vom nativen Resultvertrag gebundene innere PYZ-Memberpfad.
 Er wird nicht zu einem zusätzlichen äußeren Member. Version, voller
 Artefakthash, Pythonanforderung und Distributionsprofil müssen sowohl dem
-nativ geprüften Result als auch der tatsächlich verwendeten, in 15.m
-gebundenen Runtime entsprechen. Die beiden Vertragsversionen sind die
+nativ geprüften Result als auch der tatsächlich verwendeten, in W.1.1
+gebundenen 1.7.0-Runtime entsprechen. Die zusätzliche sichere Fähigkeit wird
+nach W.1.1 zur Ausführung geprüft; sie erzeugt kein zusätzliches Feld in diesem
+geschlossenen v1-Manifest. Die beiden hier gespeicherten Vertragsversionen sind die
 geprüften öffentlichen Ganzzahlwerte 1, keine Booleans.
 `supported_cpython` und `platform_profile` haben die zuvor beschriebenen
 gebundenen Werte. Ein verfügbarer Bootstrap allein ist keine Resultprüfung.
@@ -9344,16 +9461,16 @@ Eine zulässige leere Geschichte benötigt ebenso ihren tatsächlichen
 Abdeckungsnachweis. Das Paket bleibt `idempotency_scope=portable`; der Hinexport
 bietet keine stille oder explizite `local_only`-Ersatzfassung an.
 
-Vor dem erzeugenden API-Aufruf wird die tatsächliche, zur gebundenen Runtime
-gehörende Betriebsgrenze ausgewiesen und geprüft. Dazu gehören ausdrücklich
-auch das konfigurierte PH-Exchange, dessen native Recovery-/Archivierungswirkung
-sowie die eigenen externen Ausgabe-/Arbeitsbereiche. Ein explizites
-`output_directory` bei `api.bundle` unterdrückt diese Exchange-Wartung nicht.
-Keine PH-Konfiguration wird geändert, um diesen Befund zu umgehen. Die
-Schutzgrenzen aus 11.7 bleiben vollständig erhalten: kein Normativwrite,
-SpecRoad-Receipt, Gitindex-/Historienwrite oder Start von Apply/Watcher/Control.
-Fehlt ein verlässlicher Nachweis zulässiger Betriebswirkungen, ist das ein
-konkreter technischer Blocker, keine Erlaubnis für private API-Abkürzungen.
+Vor dem erzeugenden API-Aufruf wird die tatsächliche Betriebsgrenze anhand
+des schreibfrei vorbereiteten SafeExportPlan nach W.1.1 ausgewiesen und geprüft.
+Die dort gebundene sichere Variante unterdrückt Exchange-Wartung vollständig;
+die historische Wartungswirkung des Default-Aufrufs ist keine zulässige
+Alternative. Ausschließlich die ausgewiesenen PH-Locks und externen eigenen
+Ausgabe-/Diagnosebereiche dürfen betroffen sein. Das konfigurierte Exchange
+wird nicht geändert. Die Schutzgrenzen aus 11.7 bleiben vollständig erhalten:
+kein Normativwrite, SpecRoad-Receipt, Gitindex-/Historienwrite oder Start von
+Apply/Watcher/Control. Fehlt der Nachweis zulässiger Betriebswirkungen, ist
+das ein technischer Blocker, keine Erlaubnis für private API-Abkürzungen.
 
 Vor atomarer create-only-Veröffentlichung werden sämtliche äußeren und inneren
 Bindings einschließlich Anhang-E-Manifest, Projekt-ID, Root, Scope, Receiptbytes
@@ -9365,7 +9482,7 @@ nur den fertigen Hinexport; `approval_granted=false` und
 noch Proposalprüfung, Fachanwendung, CI- oder Releasefreigabe.
 
 Bei Fehler/Abbruch wird keine unvollständige Datei am endgültigen ZIP-Ziel
-veröffentlicht. Bereits abgeschlossene PH-Resultate, tatsächliche Wartungs-
+veröffentlicht. Bereits abgeschlossene PH-Resultate, tatsächliche zulässige Betriebs-
 wirkungen und notwendige private Diagnosebytes werden nicht als ungeschehen
 ausgegeben oder blind gelöscht. Ein neuer Exportversuch braucht einen
 expliziten Auftrag; gültig gebundene Work-Fortsetzung nach Anhang P bleibt
@@ -9517,4 +9634,4 @@ Implementierungsschritten nachgewiesen sein.
 
 ---
 
-**Ende der SpecRoad-Produktspezifikation v0.2.34.**
+**Ende der SpecRoad-Produktspezifikation v0.2.43.**

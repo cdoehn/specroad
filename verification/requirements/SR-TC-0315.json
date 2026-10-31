@@ -56,7 +56,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "f11d36333567bdb9533c43212b8871cc278be697200e5cbdcaef341952ed3dbd",
+  "specification_sha256": "01abcaa7c891b6c17f659a674631d29918cb5d1478d43e8ab1c1768244499770",
   "steps": [
     "Publish a fresh or explicitly reassessed saved loss-free import plan through the ordinary native writer; compare actual files, revisions, identity history, whole-target root and durable transaction receipt.",
     "Repeat the same request, including a changed plan envelope with identical operations: verify original receipt/audit and no new lock or publication. Conflicting operations under that request fail without modifying its receipt.",
