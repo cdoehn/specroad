@@ -5,6 +5,7 @@ import sys
 
 import pytest
 
+from support.catalog_project import make_catalog_project, check
 from test_ci_packages import context, inputs, plan, receipts
 from verification_support.ci_packages import (
     DEFAULT_RULES, PYTHONS, digest, make_plan, matrix, merge_shards, validate_plan,
@@ -89,7 +90,6 @@ def test_durable_backup_keeps_partial_attempts_and_rejects_source_or_links(tmp_p
 
 
 def test_three_real_packages_merge_to_full_evidence_and_observer_rejects_missing_receipts(tmp_path,monkeypatch):
-    from support.catalog_project import make_catalog_project,check
     from verification_support import ci_package_runtime as runtime
     from ci_support.contract import Request, CIObservationError
     from ci_support.evidence import inspect_report_archive

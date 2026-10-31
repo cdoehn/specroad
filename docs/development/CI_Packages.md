@@ -106,3 +106,27 @@ Damit ergeben sich aktuell fünf Pakete je Python-Version mit etwa
 175,9 Minuten geschätzter Dauer einschließlich Reserven. Das ist kein gemessener
 GitHub-Lauf. Die tatsächliche Matrix und deren Laufzeiten müssen noch durch
 einen ausdrücklich gestarteten manuellen CI-Lauf bestätigt werden.
+
+## Workflow-Kontexte prüfen — Korrektur 526
+
+`runner.temp` ist in `jobs.<job>.env` nicht verfügbar. Die Jobs `plan`,
+`packages` und `behavior` initialisieren ihre temporären Pfade deshalb im
+ersten Bash-Schritt aus `RUNNER_TEMP` und geben sie über `GITHUB_ENV` an
+nachfolgende Schritte weiter. Artefakt- und Pfadnamen behalten Run, Attempt,
+Python-Version und gegebenenfalls Paketnummer. Der Startschritt benötigt
+weder Checkout noch Python-Installation.
+
+Vor der Übergabe einer Workflow-Änderung zusätzlich einen GitHub-spezifischen
+Validator ausführen, zum Beispiel mit actionlint 1.7.12:
+
+```sh
+actionlint -shellcheck= -pyflakes= .github/workflows/behavior.yml
+```
+
+Dieser Aufruf prüft YAML, Workflow-Struktur und Ausdruckskontexte. Die beiden
+zusätzlichen Shell-/Python-Linter sind dabei deaktiviert; er startet keine
+Jobs. Ein gewöhnlicher YAML-Parser und grüne Python-Tests ersetzen diese
+Prüfung nicht. Der ursprüngliche Stand erzeugt sechs Kontextfehler, die
+Korrektur keinen. Die tatsächlichen drei Initialisierungsskripte wurden
+zusätzlich in 40 parallelen Fällen mit wechselnder Version, Attempt und
+Paketnummer sowie einem Temp-Pfad mit Leerzeichen und Dollarzeichen geprüft.

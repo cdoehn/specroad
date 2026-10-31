@@ -6,6 +6,7 @@ import sys
 
 import pytest
 
+from support.catalog_project import make_catalog_project, check, execute
 from verification_support.ci_packages import (
     DEFAULT_RULES, PYTHONS, digest, make_plan, matrix, merge_shards, selected_pairs, validate_plan,
 )
@@ -156,7 +157,6 @@ def test_export_reuses_first_dev_measurement_and_never_resurrects_old_success(tm
 
 
 def test_real_parallel_packages_collect_all_then_execute_only_bound_tests(tmp_path):
-    from support.catalog_project import make_catalog_project,check,execute
     from verification_support.runtime_history import RuntimeHistory
     root=make_catalog_project(tmp_path)
     code,c=check(root)

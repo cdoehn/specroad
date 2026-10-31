@@ -71,8 +71,15 @@ jobs:
         python: ['3.10', '3.11', '3.12', '3.13', '3.14']
     env:
       SR_TEST_SHA: ${{ needs.select.outputs.commit_sha }}
-      SR_PLAN: ${{ runner.temp }}/ci-plan-${{ github.run_id }}-${{ github.run_attempt }}-${{ matrix.python }}
     steps:
+      - name: Initialize bound CI paths on runner
+        shell: bash
+        env:
+          SR_PYTHON: ${{ matrix.python }}
+        run: |
+          printf '%s\n' \
+            "SR_PLAN=${RUNNER_TEMP}/ci-plan-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}-${SR_PYTHON}" \
+            >> "$GITHUB_ENV"
       - uses: actions/checkout@v7
         with:
           ref: ${{ needs.select.outputs.commit_sha }}
@@ -130,10 +137,17 @@ jobs:
       matrix: ${{ fromJSON(needs.matrix.outputs.packages) }}
     env:
       SR_TEST_SHA: ${{ needs.select.outputs.commit_sha }}
-      SR_PLAN: ${{ runner.temp }}/ci-plan-${{ github.run_id }}-${{ github.run_attempt }}-${{ matrix.python }}
       SR_PACKAGE: ${{ matrix.shard }}
-      SR_OUT: ${{ runner.temp }}/ci-package-${{ github.run_id }}-${{ github.run_attempt }}-${{ matrix.python }}-${{ matrix.shard }}
     steps:
+      - name: Initialize bound CI paths on runner
+        shell: bash
+        env:
+          SR_PYTHON: ${{ matrix.python }}
+        run: |
+          printf '%s\n' \
+            "SR_PLAN=${RUNNER_TEMP}/ci-plan-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}-${SR_PYTHON}" \
+            "SR_OUT=${RUNNER_TEMP}/ci-package-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}-${SR_PYTHON}-${SR_PACKAGE}" \
+            >> "$GITHUB_ENV"
       - uses: actions/checkout@v7
         with:
           ref: ${{ needs.select.outputs.commit_sha }}
@@ -177,10 +191,17 @@ jobs:
         python: ['3.10', '3.11', '3.12', '3.13', '3.14']
     env:
       SR_TEST_SHA: ${{ needs.select.outputs.commit_sha }}
-      SR_PLAN: ${{ runner.temp }}/ci-plan-${{ github.run_id }}-${{ github.run_attempt }}-${{ matrix.python }}
-      SR_RECEIPTS: ${{ runner.temp }}/ci-receipts-${{ github.run_id }}-${{ github.run_attempt }}-${{ matrix.python }}
-      SR_OUT: ${{ runner.temp }}/ci-full-${{ github.run_id }}-${{ github.run_attempt }}-${{ matrix.python }}
     steps:
+      - name: Initialize bound CI paths on runner
+        shell: bash
+        env:
+          SR_PYTHON: ${{ matrix.python }}
+        run: |
+          printf '%s\n' \
+            "SR_PLAN=${RUNNER_TEMP}/ci-plan-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}-${SR_PYTHON}" \
+            "SR_RECEIPTS=${RUNNER_TEMP}/ci-receipts-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}-${SR_PYTHON}" \
+            "SR_OUT=${RUNNER_TEMP}/ci-full-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}-${SR_PYTHON}" \
+            >> "$GITHUB_ENV"
       - uses: actions/checkout@v7
         with:
           ref: ${{ needs.select.outputs.commit_sha }}
