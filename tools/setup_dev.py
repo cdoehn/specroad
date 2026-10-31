@@ -13,6 +13,15 @@ DEFAULT_PYTHON = "3.14"
 ROOT = Path(__file__).resolve().parents[1]
 
 
+def check_python(root, environment, python, message):
+    probe = "import json,sys; print(json.dumps([list(sys.version_info[:2]),sys.prefix,sys.base_prefix]))"
+    result = subprocess.run([str(python), "-I", "-B", "-c", probe], cwd=root,
+                            check=True, capture_output=True, text=True)
+    version, prefix, base_prefix = json.loads(result.stdout)
+    if version != [3, 14] or Path(prefix).resolve() != environment or prefix == base_prefix:
+        raise ValueError(message)
+
+
 def setup(root):
     """Install the listed interpreters and reuse or create one Python 3.14 venv."""
     root = Path(root).resolve()
@@ -36,29 +45,22 @@ def setup(root):
     subprocess.run([git, "--version"], cwd=root, check=True)
     environment = root / ".venv"
     python = environment / ("Scripts/python.exe" if os.name == "nt" else "bin/python")
-    probe = "import json,sys; print(json.dumps([list(sys.version_info[:2]),sys.prefix,sys.base_prefix]))"
     exists = os.path.lexists(environment)
     if exists:
         if (environment.is_symlink() or not environment.is_dir()
                 or (environment / "pyvenv.cfg").is_symlink()
                 or not (environment / "pyvenv.cfg").is_file() or not python.is_file()):
             raise ValueError("Existing .venv is incomplete or linked; preserved without replacement")
-        result = subprocess.run([str(python), "-I", "-B", "-c", probe], cwd=root,
-                                check=True, capture_output=True, text=True)
-        version, prefix, base_prefix = json.loads(result.stdout)
-        if version != [3, 14] or Path(prefix).resolve() != environment or prefix == base_prefix:
-            raise ValueError("Existing .venv must be a Python 3.14 virtual environment; preserved")
+        check_python(root, environment, python,
+                     "Existing .venv must be a Python 3.14 virtual environment; preserved")
     subprocess.run([uv, "python", "install", *versions], cwd=root, check=True)
     if not exists:
         if os.path.lexists(environment):
             raise ValueError(".venv appeared during interpreter installation; preserved")
         subprocess.run([uv, "venv", "--python", DEFAULT_PYTHON,
                         "--no-python-downloads", str(environment)], cwd=root, check=True)
-    result = subprocess.run([str(python), "-I", "-B", "-c", probe], cwd=root,
-                            check=True, capture_output=True, text=True)
-    version, prefix, base_prefix = json.loads(result.stdout)
-    if version != [3, 14] or Path(prefix).resolve() != environment or prefix == base_prefix:
-        raise ValueError("Setup did not produce a Python 3.14 virtual environment; preserved")
+    check_python(root, environment, python,
+                 "Setup did not produce a Python 3.14 virtual environment; preserved")
     subprocess.run([uv, "pip", "install", "--python", str(python), "--link-mode", "copy",
                     "--group", "dev", "--editable", "."], cwd=root, check=True)
     print("Development environment ready: " + str(python))

@@ -172,7 +172,8 @@ Testnummern bleiben erhalten, neue Identitäten werden hinten angehängt.
 Eine tatsächliche Einrichtung des Laptops wird durch das Bundle nicht gestartet.
 Lokale Dev-Abnahme DEV-ENV-530.W: 5 gezielte Tests bestanden, vier worksteal-Worker, vollständige Collection 22629 gültig. Kein Vollsuite- oder Apply-Nachweis.
 Lokale Dev-Abnahme DEV-ENV-530.R: 27 gezielte Tests bestanden, vier worksteal-Worker, vollständige Collection 22651 gültig. Kein Vollsuite- oder Apply-Nachweis.
-Apply-Abschluss DEV-ENV-530: noch offen; erst nach allen drei Gates abgeschlossen.
+Lokale Dev-Abnahme DEV-ENV-530.C: 27 gezielte Tests bestanden, vier worksteal-Worker, vollständige Collection 22651 gültig. Kein Vollsuite- oder Apply-Nachweis.
+Apply-Abschluss DEV-ENV-530: W/R/C-Gates erfolgreich; Bundle 530 abgeschlossen.
 
 ## Fortschritt – einzige maßgebliche Planstelle
 
@@ -182,7 +183,7 @@ implementation_plan_commits_total: 900
 implementation_plan_commits_completed: 654
 last_completed_plan_commit: 15.m.C
 next_plan_commit: 15.n.W
-last_completed_numbered_bundle: 529
+last_completed_numbered_bundle: 530
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
