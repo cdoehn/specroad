@@ -9,16 +9,10 @@ The returned API grants no proposal, review or automatic host-apply authority.
 import importlib
 from pathlib import Path
 import platform
-import re
 import sys
 from zipimport import zipimporter
 
-
-_VERSION = '1.6.0'
-_ARTIFACT_SHA256 = '377e715d7cb443eb5e80a3e7f9e8405f36092a0f7c062745b70c8b3a2e3eb055'
-_PYTHONS = ((3, 10), (3, 11), (3, 12), (3, 13), (3, 14))
-_OPERATIONS = ('bundle', 'inspect_patch', 'validate_patch', 'pack_patch', 'apply',
-               'integration_capabilities', 'read_result_snapshot')
+from . import _contract
 
 
 class TransportUnavailable(ValueError):
@@ -37,6 +31,42 @@ class TransportUnavailable(ValueError):
                 'cause_type': self.cause_type, 'full_reference_valid': False}
 
 
+def _check_request(required):
+    if (type(required) is not tuple
+            or any(type(name) is not str for name in required)):
+        raise TransportUnavailable('invalid_capability_request')
+    for name in required:
+        if name != 'PH-API-RESULT' and name not in _contract.OPERATIONS:
+            raise TransportUnavailable('api_capability_unavailable', capability=name)
+
+
+def _check_platform():
+    if (sys.implementation.name != 'cpython'
+            or sys.version_info[:2] not in _contract.PYTHONS):
+        raise TransportUnavailable('unsupported_transport_python')
+    if sys.platform != 'linux' or platform.machine() != 'x86_64':
+        raise TransportUnavailable('unsupported_transport_platform')
+
+
+def _check_distribution(assessment):
+    if (assessment.version != _contract.VERSION
+            or assessment.artifact_sha256 != _contract.ARTIFACT_SHA256
+            or assessment.requires_python != _contract.REQUIRES_PYTHON):
+        raise TransportUnavailable('unsupported_runtime_distribution', exit_code=7)
+
+
+def _check_api(api):
+    for name in _contract.OPERATIONS:
+        if not callable(getattr(api, name, None)):
+            raise TransportUnavailable('api_capability_unavailable', capability=name)
+    capabilities = api.integration_capabilities()
+    if (type(capabilities.contract_version) is not int
+            or capabilities.contract_version != 1
+            or type(capabilities.snapshot_contract_version) is not int
+            or capabilities.snapshot_contract_version != 1):
+        raise TransportUnavailable('unsupported_api_contract', capability='PH-API-RESULT')
+
+
 class PatchHarborRuntime:
     """Bind a trusted Result and a new private runtime directory, without loading.
 
@@ -48,8 +78,7 @@ class PatchHarborRuntime:
     """
 
     def __init__(self, reference, *, trusted_source_sha256, workspace):
-        if (type(trusted_source_sha256) is not str
-                or re.fullmatch(r'[0-9a-f]{64}', trusted_source_sha256) is None):
+        if not _contract.valid_digest(trusted_source_sha256):
             raise TransportUnavailable('trusted_result_digest_required', exit_code=7)
         try:
             reference, workspace = Path(reference), Path(workspace)
@@ -66,22 +95,27 @@ class PatchHarborRuntime:
 
     def describe(self):
         """Return the bound distribution contract, not fabricated acceptance."""
-        return {
-            'distribution': 'patchharbor', 'version': _VERSION,
-            'artifact_sha256': _ARTIFACT_SHA256,
-            'profile': 'patchharbor-core-no-watcher-v1',
-            'runtime_profile': 'python-present', 'requires_python': '>=3.10',
-            'supported_cpython': ['%d.%d' % pair for pair in _PYTHONS],
-            'platform_profiles': ['linux-x86_64'],
-            'source_result_sha256': self._trusted_sha256,
-            'api_capabilities': {name: True for name in _OPERATIONS},
-            'unavailable_capabilities': [],
-            'integration_contract_version': 1,
-            'snapshot_contract_version': 1,
-            'runtime_loaded': self._api is not None,
-            'capability_scope': 'pinned_distribution_contract',
-            'full_reference_valid': False,
-        }
+        return _contract.describe_distribution(self._trusted_sha256, loaded=self._api is not None)
+
+    def _check_origins(self):
+        """Keep foreign/partially loaded modules; never evict or repair them."""
+        if self._prepared is None:
+            if any(name == 'patchharbor' or name.startswith('patchharbor.')
+                   for name in sys.modules):
+                raise TransportUnavailable('runtime_origin_conflict', exit_code=7)
+            return
+        for name, module in tuple(sys.modules.items()):
+            if name != 'patchharbor' and not name.startswith('patchharbor.'):
+                continue
+            spec = getattr(module, '__spec__', None)
+            loader = getattr(spec, 'loader', None)
+            prefix = str(self._prepared.path) + '/'
+            if (not isinstance(loader, zipimporter)
+                    or Path(loader.archive) != self._prepared.path
+                    or not str(getattr(spec, 'origin', '')).startswith(prefix)
+                    or not str(getattr(module, '__file__', '')).startswith(prefix)):
+                self._failed = True
+                raise TransportUnavailable('runtime_origin_conflict', exit_code=7)
 
     def load_api(self, *, required=()):
         """Use only the documented bootstrap and return ``patchharbor.api``.
@@ -90,60 +124,21 @@ class PatchHarborRuntime:
         Snapshot reads are a separate, read-only operation and never bootstrap
         a library from their input. API presence is not Result validation.
         """
-        if (type(required) is not tuple
-                or any(type(name) is not str for name in required)):
-            raise TransportUnavailable('invalid_capability_request')
-        for name in required:
-            if name == 'PH-API-RESULT':
-                continue
-            if name not in _OPERATIONS:
-                raise TransportUnavailable('api_capability_unavailable', capability=name)
-        if (sys.implementation.name != 'cpython'
-                or sys.version_info[:2] not in _PYTHONS):
-            raise TransportUnavailable('unsupported_transport_python')
-        if sys.platform != 'linux' or platform.machine() != 'x86_64':
-            raise TransportUnavailable('unsupported_transport_platform')
+        _check_request(required)
+        _check_platform()
         if self._failed:
             raise TransportUnavailable('fresh_process_required')
-        if self._prepared is None and any(
-                name == 'patchharbor' or name.startswith('patchharbor.')
-                for name in sys.modules):
-            raise TransportUnavailable('runtime_origin_conflict', exit_code=7)
-        if self._prepared is not None:
-            for name, module in tuple(sys.modules.items()):
-                if name != 'patchharbor' and not name.startswith('patchharbor.'):
-                    continue
-                spec = getattr(module, '__spec__', None)
-                loader = getattr(spec, 'loader', None)
-                prefix = str(self._prepared.path) + '/'
-                if (not isinstance(loader, zipimporter)
-                        or Path(loader.archive) != self._prepared.path
-                        or not str(getattr(spec, 'origin', '')).startswith(prefix)
-                        or not str(getattr(module, '__file__', '')).startswith(prefix)):
-                    self._failed = True
-                    raise TransportUnavailable('runtime_origin_conflict', exit_code=7)
+        self._check_origins()
 
         bootstrap = importlib.import_module('specroad.transport._pyz_bootstrap')
         try:
             assessment = bootstrap.assess(
                 self._reference, trusted_source_sha256=self._trusted_sha256)
-            if (assessment.version != _VERSION
-                    or assessment.artifact_sha256 != _ARTIFACT_SHA256
-                    or assessment.requires_python != '>=3.10'):
-                raise TransportUnavailable('unsupported_runtime_distribution', exit_code=7)
+            _check_distribution(assessment)
             if self._prepared is None:
                 self._prepared = bootstrap.prepare(assessment, self._workspace)
             api = bootstrap.import_api(self._prepared)
-            for name in _OPERATIONS:
-                if not callable(getattr(api, name, None)):
-                    raise TransportUnavailable('api_capability_unavailable', capability=name)
-            capabilities = api.integration_capabilities()
-            if (type(capabilities.contract_version) is not int
-                    or capabilities.contract_version != 1
-                    or type(capabilities.snapshot_contract_version) is not int
-                    or capabilities.snapshot_contract_version != 1):
-                raise TransportUnavailable('unsupported_api_contract',
-                                           capability='PH-API-RESULT')
+            _check_api(api)
         except TransportUnavailable:
             self._failed = True
             raise

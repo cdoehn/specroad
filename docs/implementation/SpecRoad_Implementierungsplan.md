@@ -93,10 +93,10 @@ GitHub-Vollsuite bleibt ausdrücklich manuell und durch Codex ungestartet.
 ```yaml
 plan_revision: 40
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 653
-last_completed_plan_commit: 15.m.R
-next_plan_commit: 15.m.C
-last_completed_numbered_bundle: 526
+implementation_plan_commits_completed: 654
+last_completed_plan_commit: 15.m.C
+next_plan_commit: 15.n.W
+last_completed_numbered_bundle: 527
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -33412,12 +33412,70 @@ bleiben eigenständige offene Schritte. Control und Dienste bleiben unverändert
 
 #### 15.m.C – Make it Clean
 
-- [ ] **15.m.C** · Position **654/900** · Voraussetzung: `15.m.R`.
+- [x] **15.m.C** · Position **654/900** · Voraussetzung: `15.m.R`.
 **Exakte Commit-Message:** `15.m.C refactor(transport): Öffentliche PatchHarbor-API und Runtimebindung bereinigen`
 
 **Bereinigung:** Vertrauensprüfung, API-Fähigkeitsprüfung und Ergebnismapping bündeln; keine privaten Imports oder CLI-Subprozessabkürzung ergänzen.
 
 **Verhaltensabnahme:** Alle W-/R-Verhaltenstests sowie betroffene Regressionen prüfen unveränderte Fachwerte, Fehlerverträge und Seiteneffekte; keine Darstellungs- oder Dokumentationstests.
+
+
+**Vollständiger lokaler C-Umfang, Bundle 527 (31. Oktober 2026).**
+Maßgebliche Quelle ist das erfolgreiche saubere Result 526
+`specroad-apply_Result_154922_1031_277505.zip`, SHA-256
+`675d74f0d93ca416153a76f3a99b7626c3b9ae79f9f130fb5fd68efd9d2ce41b`,
+Abschlusscommit `52615c8543107dd3522411c0c3f76068686f6b28`.
+Die native vollständige Resultprüfung bestätigt alle 2.414 Snapshotdateien;
+das zugeordnete Apply-Gate bestand 6.069 Tests bei Sequenz 235 / Gruppe 1.
+Die inzwischen angewendeten Änderungen aus 525 und 526 wurden anhand der
+vollständigen erfolgreichen Resultkette mit der zuvor gelieferten Dev-Arbeit
+abgeglichen; deren ursprüngliche Bytes wurden vor dem Abgleich gesichert.
+
+**Bereinigung ohne neues Fachverhalten.** Ein gemeinsamer interner Vertrag
+bündelt Versions-/Artefaktbindung, Pythonprofil, öffentliche Fähigkeiten und
+Digestform. Beschreibung und Prüfung verwenden dieselben gebundenen Fakten.
+Benannte Prüfungen trennen Anfrage, Plattform, Modulherkunft, Distribution
+und API-Vertrag vom expliziten Laden. Die Fehlerbehandlung erhält dieselben
+öffentlichen Klassen, Felder, Exitcodes, Ursachen und Zustandsübergänge.
+Das Ergebnismapping trennt die semantischen Prioritäten von der zyklusfesten
+I/O-Ursachensuche; I/O bleibt vorrangig, danach Admission-/Snapshotgrund vor
+dem allgemeinen PatchHarbor-Grund. Die öffentliche Snapshot-API, der originale
+Bootstrap, die gepinnte 1.6.0-Distribution und alle historischen Fixtures bleiben
+unverändert. Kein privater PatchHarbor-Produktimport, eigener Resultreader,
+CLI-Fallback oder neues Transport-/Freigabeverhalten wird eingeführt.
+
+**Gezielte Abnahme.** Alle 112 vorhandenen W-/R- und betroffenen
+Regressionstests in `test_transport_runtime.py`, `test_transport_snapshots.py`,
+`test_core.py`, `test_cli.py`, `test_venv_runtime.py` und `test_identity.py`
+bestanden unverändert und ungefiltert auf CPython 3.14.4 mit vier parallelen
+Workern und pytest-xdist `worksteal`: Exit 0, Abschluss
+`2026-10-31T17:14:48.844654+00:00`. Die vollständige Collection/Katalogprüfung ist gültig
+mit 22.617 Testidentitäten, ohne Ausführung weiterer Testkörper. Bestehende
+Testnummern, Katalogbindungen und Spezifikationsbytes bleiben gleich.
+Die gemeinsame Messhistorie enthält alle 112 vollständigen gültigen Versuche
+mit 336 bestandenen Setup-/Call-/Teardown-Phasen; die Identitäten stimmen mit
+dem tatsächlichen Testbericht überein. Keine neue Dokumentationsprüfung und
+kein zusätzlicher Volltest.
+
+Geprüfter Quell-SHA-256: `ac49bdebb5551c1dc56c59e57dfe5d076975df03e8d3fec9cb7f7dd3c88ff010`.
+Auswahlbericht: `11646a52acf4e5c8184170d0aee2eb913c960d755a5d1d367d8604597096c970`;
+Einzeloutcomes: `e771c3413b5d7473fc5d6011f79e32fc272e0cd08809a8306bef9ef11bb7a270`;
+Collection: `62437428b1a8b3ace922f1dabc5bb93b4b08041456b1181eba97c5c954c2b949`.
+
+**Übergabe und verbleibende Schritte.** Genau ein vollständiger C-Zustand
+mit der oben festgelegten Commitmessage. Der Entrypoint prüft vor Änderungen
+die vier gebundenen Werte und führt **N=3-Sequenz 236 / Gruppe 2** parallel
+mit vier Worksteal-Workern aus. Die dynamische Auswahl verwendet erst dann den
+neuesten gültigen Messsnapshot und prüft Identitäten, Snapshot-Hash und
+v3-Bindung. Erst nach erfolgreichem Apply-Gate markiert er 15.m.C als erledigt,
+setzt Fortschritt 654/900, zuletzt 15.m.C, nächstens 15.n.W, Bundle 527 und
+committet den C-Zustand. Ein Apply-Erfolg wird bei Übergabe noch nicht behauptet;
+bei Fehlern bleiben tatsächliche Arbeitsbytes und vorhandene Commits erhalten.
+Die Python-3.10–3.14-Matrix bleibt gemäß ausdrücklicher Nutzerentscheidung
+offen und bis auf Widerruf kein Entwicklungsblocker. Kein Vollsuite-, Matrix-
+oder Releaseerfolg wird daraus abgeleitet. Die eigenständigen Hin-/Rückweg-
+und Hostintegrationsschritte ab 15.n bleiben offen. Control, Watcher,
+CI-Workflow und Dienste bleiben unverändert.
 
 <a id="step-15-n"></a>
 ### 15.n – Gebundenes Hinpaket exportieren
