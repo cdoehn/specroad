@@ -209,3 +209,68 @@ print(json.dumps({'code':r.returncode}))''')
     assert tree(tmp_path/'output')==preserved
     assert (tmp_path/'output/handoff.zip').exists()==(point=='after_publish')
     assert len(list((tmp_path/'output').glob('*.zip')))==(2 if point=='after_publish' else 0)
+
+
+@pytest.mark.parametrize('mixed', (False,True))
+def test_legacy_runtime_result_options_are_not_aliases(tmp_path,distribution,mixed):
+    root=tmp_path/'repo';project(root)
+    value=request(tmp_path,root,distribution[1]);options=value['options']
+    for new,old in (('--patchharbor-pyz','--runtime-reference'),
+                    ('--patchharbor-pyz-sha256','--runtime-reference-sha256')):
+        options[old]=options[new]
+        if not mixed:del options[new]
+    before=tree(tmp_path)
+    result=run_request(tmp_path,value)
+    assert result['code']==2,result
+    assert tree(tmp_path)==before
+
+
+@pytest.mark.parametrize('change', ('options','source','tasks','digest'))
+def test_old_or_mixed_work_runtime_bindings_are_not_reinterpreted(tmp_path,distribution,change):
+    root=tmp_path/'repo';project(root);register(tmp_path,root)
+    value=request(tmp_path,root,distribution[1]);value['options']['--work-dir']=str(tmp_path/'work')
+    body='''
+import json
+from hashlib import sha256
+from pathlib import Path
+from specroad.cli.application import execute_request
+from specroad.model.canonical import canonical_json_bytes
+from specroad.transport import TransportFailure
+import specroad.work.transport as transport
+original=transport._create_manifest
+observed=[]
+def capture(*args,**kwargs):
+    value=original(*args,**kwargs);observed.append(value);return value
+transport._create_manifest=capture
+result=execute_request('''+repr(value)+''').result
+assert result.exit_code==8
+initial=observed[0]
+value=initial.as_dict();objects=dict(initial.objects)
+inputs=[dict(row) for row in initial.entries('inputs')]
+tasks=[dict(row) for row in initial.entries('tasks')]
+def files():
+    return {str(p):p.read_bytes() for p in (Path.cwd()/'work').rglob('*') if p.is_file()}
+before=files()
+change='''+repr(change)+'''
+if change=='options':
+    options=value['normalized_arguments']['options']
+    options['--runtime-reference']=options.pop('--patchharbor-pyz')
+    options['--runtime-reference-sha256']=options.pop('--patchharbor-pyz-sha256')
+elif change=='tasks':
+    tasks[0]['range']={'adapter':'source-safe-outbound-v1'}
+else:
+    bound=json.loads(objects[inputs[0]['sha256']])
+    if change=='source':bound['runtime_reference_sha256']=bound.pop('patchharbor_pyz_sha256')
+    else:bound['patchharbor_pyz_sha256']='0'*64
+    raw=canonical_json_bytes(bound);digest=sha256(raw).hexdigest();objects[digest]=raw
+    inputs[0].update(sha256=digest,size=len(raw))
+try:transport._checked(value,objects,inputs,tasks,[])
+except TransportFailure as error:
+    print(json.dumps({'code':error.exit_code,'reason':error.reason,'preserved':files()==before,
+        'references':len(list((Path.cwd()/'output').glob('*.zip')))}))
+else:raise AssertionError('old runtime binding was reinterpreted')
+'''
+    result=child(tmp_path,body,source=distribution[0])
+    reasons={'options':'outbound_work_runtime_contract_invalid','source':'outbound_work_source_invalid',
+             'tasks':'outbound_work_units_invalid','digest':'outbound_work_runtime_binding_invalid'}
+    assert result=={'code':7,'reason':reasons[change],'preserved':True,'references':0}

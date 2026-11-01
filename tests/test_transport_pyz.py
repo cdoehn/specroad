@@ -110,3 +110,107 @@ else: raise AssertionError('new request omitted its own runtime binding')
 '''
     assert probe(tmp_path,body)=={'code':5,'retained':True}
     assert not (tmp_path/'second').exists()
+
+
+@pytest.mark.parametrize('target', ('source','private'))
+@pytest.mark.parametrize('when', ('reuse','import'))
+@pytest.mark.parametrize('same_bytes', (False,True))
+def test_atomic_replacement_is_detected_even_with_identical_bytes(tmp_path,target,when,same_bytes):
+    source,digest=runtime_artifact(tmp_path)
+    changed=source if target=='source' else tmp_path/'private/patchharbor-1.8.0.pyz'
+    body=adapter_source(source,digest,tmp_path/'private')+'''
+def replace_input():
+    path=Path('''+repr(str(changed))+''')
+    raw=path.read_bytes() if '''+repr(same_bytes)+''' else b'changed after original capture'
+    replacement=path.with_name('replacement.pyz')
+    replacement.write_bytes(raw);replacement.chmod(0o600);replacement.replace(path)
+'''
+    if when=='reuse':
+        body+='api=runtime.load_api()\nreplace_input()\n'
+    else:
+        body+='''
+import specroad.transport.runtime as adapter
+from types import SimpleNamespace
+original=adapter.importlib.import_module
+def changed_import(name):
+    api=original(name)
+    replace_input()
+    return api
+adapter.importlib=SimpleNamespace(import_module=changed_import)
+'''
+    body+='''
+try: runtime.load_api()
+except TransportUnavailable as error:
+    code=error.exit_code
+else: raise AssertionError('replacement was adopted')
+try: runtime.load_api()
+except TransportUnavailable as error:
+    print(json.dumps({'code':code,'again':error.reason,
+        'retained':'patchharbor.api' in sys.modules}))
+else: raise AssertionError('failed import retried')
+'''
+    assert probe(tmp_path,body)=={'code':7,'again':'fresh_process_required','retained':True}
+
+
+@pytest.mark.parametrize('target', ('directory','file'))
+def test_runtime_copy_must_remain_private_between_calls(tmp_path,target):
+    source,digest=runtime_artifact(tmp_path)
+    path=tmp_path/'private'
+    if target=='file': path=path/'patchharbor-1.8.0.pyz'
+    body=adapter_source(source,digest,tmp_path/'private')+'''
+api=runtime.load_api()
+Path('''+repr(str(path))+''').chmod(0o777)
+try: runtime.load_api()
+except TransportUnavailable as error:
+    print(json.dumps({'code':error.exit_code,'retained':api is sys.modules['patchharbor.api']}))
+else: raise AssertionError('publicly writable runtime copy reused')
+'''
+    assert probe(tmp_path,body)=={'code':7,'retained':True}
+
+
+@pytest.mark.parametrize('failure', ('RuntimeError','KeyboardInterrupt'))
+def test_partial_import_failure_requires_fresh_process_and_preserves_modules(tmp_path,failure):
+    source,digest=runtime_artifact(tmp_path)
+    body=adapter_source(source,digest,tmp_path/'private')+'''
+import specroad.transport.runtime as adapter
+from types import SimpleNamespace
+original=adapter.importlib.import_module
+def interrupted(name):
+    original(name)
+    raise '''+failure+'''('interrupted after imports')
+adapter.importlib=SimpleNamespace(import_module=interrupted)
+try: runtime.load_api()
+except '''+failure+''': pass
+else: raise AssertionError('failure suppressed')
+try: runtime.load_api()
+except TransportUnavailable as error: first=error.reason
+else: raise AssertionError('failed request retried')
+other=PatchHarborRuntime('''+repr(str(source))+''',trusted_artifact_sha256='''+repr(digest)+''',
+    workspace=str(Path.cwd()/'other'))
+try: other.load_api()
+except TransportUnavailable as error:
+    print(json.dumps({'first':first,'new':error.reason,
+        'retained':'patchharbor.api' in sys.modules,'loaded':runtime.describe()['runtime_loaded']}))
+else: raise AssertionError('partial import adopted')
+'''
+    assert probe(tmp_path,body)=={'first':'fresh_process_required','new':'runtime_origin_conflict',
+                                  'retained':True,'loaded':False}
+    assert not (tmp_path/'other').exists()
+
+
+@pytest.mark.parametrize('field', ('contract_version','snapshot_contract_version',
+                                 'guarded_apply_contract_version','safe_reference_contract_version'))
+@pytest.mark.parametrize('value', (None,True,2))
+def test_all_required_capability_versions_are_strict_on_reuse(tmp_path,field,value):
+    source,digest=runtime_artifact(tmp_path)
+    body=adapter_source(source,digest,tmp_path/'private',safe_reference=True)+'''
+from dataclasses import replace
+api=runtime.load_api()
+caps=api.integration_capabilities()
+api.integration_capabilities=lambda:replace(caps,**{'''+repr(field)+':'+repr(value)+'''})
+try: runtime.load_api()
+except TransportUnavailable as error:
+    print(json.dumps({'code':error.exit_code,'retained':api is sys.modules['patchharbor.api']}))
+else: raise AssertionError('invalid capability version accepted')
+'''
+    assert probe(tmp_path,body)=={'code':2,'retained':True}

@@ -81,8 +81,9 @@ sys.addaudithook(deny_external)
     return json.loads(result.stdout)
 
 
-def adapter_source(reference, digest, workspace):
+def adapter_source(reference, digest, workspace, *, safe_reference=False):
     return ('from specroad.transport import PatchHarborRuntime, TransportUnavailable\n'
             'runtime = PatchHarborRuntime(' + repr(str(reference)) +
             ', trusted_artifact_sha256=' + repr(digest) +
-            ', workspace=' + repr(str(workspace)) + ')\n')
+            ', workspace=' + repr(str(workspace)) +
+            ', safe_reference=' + repr(safe_reference) + ')\n')

@@ -13,6 +13,7 @@ from ..cli.result_schemas import validate_result_document
 from ..model.canonical import canonical_json_bytes
 from ..storage.json_syntax import parse_json_object
 from ..transport._files import require
+from ..transport import _contract as runtime_contract
 from ..transport.outbound import OutboundExport
 from ._request_binding import _command
 from .manifest import (_create_manifest, _bytes, _entries, partition_work_manifest,
@@ -53,6 +54,12 @@ def _checked(value, objects, inputs, tasks, completed):
     require(set(bound) == {'source_binding', 'repository_root', 'project_path', 'plan_sha256',
                           'coverage_sha256', 'core_sha256', 'patchharbor_pyz_sha256'},
             'outbound_work_source_invalid')
+    options = value['normalized_arguments']['options']
+    require('--patchharbor-pyz' in options and '--patchharbor-pyz-sha256' in options
+            and not {'--runtime-reference', '--runtime-reference-sha256'}.intersection(options),
+            'outbound_work_runtime_contract_invalid')
+    require(bound['patchharbor_pyz_sha256'] == options['--patchharbor-pyz-sha256']
+            == runtime_contract.ARTIFACT_SHA256, 'outbound_work_runtime_binding_invalid')
     require([{k: unit[k] for k in ('key','phase','range')} for unit in tasks] == _units()
             and [row['unit_id'] for row in completed] == [t['unit_id'] for t in tasks[:len(completed)]],
             'outbound_work_units_invalid')
@@ -73,7 +80,7 @@ def _checked(value, objects, inputs, tasks, completed):
         validate_result_document('bundle-create-v1', result)
         require(result['file']['sha256'] == evidence[2]['sha256']
                 and result['file']['size'] == evidence[2]['size'], 'outbound_work_result_changed')
-    return value['normalized_arguments']['options'], bound, evidence
+    return options, bound, evidence
 
 
 def checked(current):

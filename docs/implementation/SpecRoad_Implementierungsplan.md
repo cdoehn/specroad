@@ -100,6 +100,16 @@ Zustände, reale CPython-Matrix in der ausschließlich vom Nutzer gestarteten CI
 und die übrigen Produktabnahmen aus 15.n.R/C, 15.o und späterer Rück-/Hostintegration.
 Keine automatische CI, kein Dienststart, kein eigener Apply oder Wiederholungsloop.
 
+**Vorbereiteter R-Zustand:** Die private Runtimekopie prüft vor jeder Nutzung
+Besitz und Rechte von Datei und Verzeichnis zusätzlich zu Identität und Bytes.
+Nach Import/Fähigkeitsabfrage werden die externe Quelle und private Kopie
+nochmals geprüft, bevor eine API oder Prozesswiederverwendung freigegeben wird.
+Die Work-Prüfung bindet explizite neue Optionen, gespeicherten Artefakthash und
+festen 1.8.0-Pin gemeinsam. Austausch mit identischen Bytes, Rechteausweitung,
+Teilimport/KeyboardInterrupt, alle vier Capability-Versionen sowie alte oder
+vermischte Work-Bindungen erhalten eigene echte Verhaltenstests. Dev hat diese
+nicht ausgeführt; die tatsächliche Abnahme erfolgt im R-Apply-Gate.
+
 ## OFF-PLAN RESTORE-TEST-FLOW-540 — Baseline-Inventur und Mapping-Bundle kürzen
 
 Autorität: ausdrücklicher Nutzerauftrag vom 1. November 2026, beide zuletzt

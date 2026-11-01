@@ -7,6 +7,7 @@ import importlib
 import os
 from pathlib import Path
 import platform
+import stat
 import sys
 from zipimport import zipimporter
 
@@ -100,6 +101,10 @@ class _PreparedRuntime:
         from ._files import directory, require
         boundary = directory(self.path.parent, owned=True)
         require(boundary._root_identity == self.identity, 'runtime_workspace_changed')
+        for path in (self.path.parent, self.path):
+            info = path.lstat()
+            require(info.st_uid == os.getuid() and not stat.S_IMODE(info.st_mode) & 0o077,
+                    'runtime_private_access_changed')
         self.captured.verify_current()
 
 
@@ -180,6 +185,11 @@ The immutable distribution pin is additional to the caller's expected digest.
             if getattr(sys.modules.get('patchharbor'), '__version__', None) != _contract.VERSION:
                 raise TransportUnavailable('unsupported_runtime_distribution', exit_code=7)
             _check_api(api, safe_reference=self._safe_reference)
+            # Imports/capability calls may have yielded control. Recheck both
+            # physical inputs before adopting any API or publishing the cache.
+            directory(self._source_path.parent)
+            self._source.verify_current()
+            self._prepared.verify()
         except BaseException as error:
             # Retain evidence and partial modules; never retry/switch in place.
             self._failed = True
