@@ -26,6 +26,7 @@ from specroad.work.restore import read_restore_work_manifest
 from specroad.work.restore_delivery import RestoreWorkCompletion
 from specroad.work.restore_progress import resume_restore_work, RestoreWorkProgressError
 from specroad.work.root import WorkDirectory
+from support.languages import small_restore_registry
 from support.read_only import inventory, no_write_attempts
 from support.restore import restore_case, plan_for
 from support.processes import run_python
@@ -53,7 +54,7 @@ def payload(current):
 
 @pytest.mark.parametrize('kind', ['project_bundle', 'baseline'])
 def test_full_delivery_is_durable_and_completed_replay_never_rechecks_changed_project(recorded, tmp_path, monkeypatch, kind):
-    options, _, _ = restore_case(tmp_path, kind)
+    options, _, _ = restore_case(tmp_path, kind, language_registry=small_restore_registry())
     plan = plan_for(options); initial, location, store = stored(tmp_path, plan)
     observed = []
     def check(request):
@@ -98,7 +99,7 @@ def test_full_delivery_is_durable_and_completed_replay_never_rechecks_changed_pr
 
 
 def test_existing_execution_unit_completes_without_overwriting_its_original_proof(recorded, tmp_path):
-    options, plan, selection, _, _ = fixture(tmp_path)
+    options, plan, selection, _, _ = fixture(tmp_path, language_registry=small_restore_registry())
     initial, location, store = stored(tmp_path, plan, selection)
     first = advance(store).manifest
     (options['source_root'] / options['source_path']).unlink()
@@ -113,7 +114,7 @@ def test_existing_execution_unit_completes_without_overwriting_its_original_proo
 
 def test_partial_native_target_rolls_back_without_delivery_or_completed_work(recorded, tmp_path):
     from test_work_restore_progress import interrupt as interrupt_progress
-    options, plan, selection, changed, _ = fixture(tmp_path)
+    options, plan, selection, changed, _ = fixture(tmp_path, language_registry=small_restore_registry())
     initial, location, store = stored(tmp_path, plan, selection)
     originals = {p: (options['project_root'] / p).read_bytes() for p in changed}
     interrupt_progress(store, plan, 'partial')
@@ -172,7 +173,7 @@ def interrupt(store, plan, stage):
 
 @pytest.mark.parametrize('stage,generation', [('payload', 1), ('file_manifest', 1), ('delivery', 2), ('completed', 3)])
 def test_actual_crashes_keep_last_complete_generation_and_resume_without_second_restore(recorded, tmp_path, stage, generation):
-    options, plan, selection, _, _ = fixture(tmp_path)
+    options, plan, selection, _, _ = fixture(tmp_path, language_registry=small_restore_registry())
     initial, location, store = stored(tmp_path, plan, selection)
     interrupt(store, plan, stage)
     current = store.read(); assert current.as_dict()['checkpoint_generation'] == generation
@@ -199,7 +200,7 @@ def test_actual_crashes_keep_last_complete_generation_and_resume_without_second_
 
 @pytest.mark.parametrize('after', [False, True])
 def test_terminal_io_error_retains_actual_generation_and_needs_no_second_publication(recorded, tmp_path, monkeypatch, after):
-    options, _, _ = restore_case(tmp_path); plan = plan_for(options)
+    options, _, _ = restore_case(tmp_path, language_registry=small_restore_registry()); plan = plan_for(options)
     initial, location, store = stored(tmp_path, plan)
     original = CheckpointStore._publish_held
     def publish(self, held, candidate, pointer):
@@ -224,7 +225,7 @@ def test_terminal_io_error_retains_actual_generation_and_needs_no_second_publica
 
 
 def test_completed_file_loss_or_corruption_blocks_return_without_reexecution_or_repair(recorded, tmp_path, monkeypatch):
-    options, _, _ = restore_case(tmp_path); plan = plan_for(options)
+    options, _, _ = restore_case(tmp_path, language_registry=small_restore_registry()); plan = plan_for(options)
     _, location, store = stored(tmp_path, plan); result = resume(store); value = result.as_dict()
     def forbidden(*args, **kwargs): raise AssertionError('Output loss invoked native execution')
     monkeypatch.setattr(progress, '_native_held', forbidden)
@@ -242,7 +243,7 @@ def test_completed_file_loss_or_corruption_blocks_return_without_reexecution_or_
 
 
 def test_self_hashed_final_payload_cannot_replace_native_result_or_drop_findings(recorded, tmp_path):
-    options, plan, selection, _, _ = fixture(tmp_path)
+    options, plan, selection, _, _ = fixture(tmp_path, language_registry=small_restore_registry())
     _, _, store = stored(tmp_path, plan, selection)
     current = resume(store).manifest
     original = payload(current)
@@ -266,7 +267,7 @@ def test_self_hashed_final_payload_cannot_replace_native_result_or_drop_findings
 
 @pytest.mark.parametrize('fault', ['build', 'pointer'])
 def test_late_work_change_during_output_publication_never_marks_delivery_complete(recorded, tmp_path, monkeypatch, fault):
-    options, _, _ = restore_case(tmp_path); plan = plan_for(options)
+    options, _, _ = restore_case(tmp_path, language_registry=small_restore_registry()); plan = plan_for(options)
     _, location, store = stored(tmp_path, plan)
     original = delivery._publish_file
     def change(held, *args):

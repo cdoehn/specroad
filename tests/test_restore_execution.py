@@ -21,6 +21,7 @@ from specroad.recovery._execution_store import RestoreStore
 from specroad.security import ProjectBoundary
 from specroad.storage.operational_preflight import observe_operational_preflight
 from support.model import put
+from support.languages import small_restore_registry
 from support.read_only import inventory, no_write_attempts
 from support.restore import restore_case, plan_for
 from support.records import record_value, ref
@@ -58,7 +59,7 @@ def damage(options, original):
 @pytest.mark.parametrize('kind', ['project_bundle', 'baseline'])
 @pytest.mark.parametrize('journal', ['tree', 'empty_file', 'empty_directory', 'absent'])
 def test_initial_restore_reaches_exact_full_target_and_retains_selected_originals(tmp_path, kind, journal, monkeypatch):
-    options, original, _ = restore_case(tmp_path, kind)
+    options, original, _ = restore_case(tmp_path, kind, language_registry=small_restore_registry())
     root = options['project_root']
     damaged = damage(options, original)
     journal_path = '.specroad/transactions/corrupt'
@@ -146,7 +147,7 @@ def test_initial_restore_reaches_exact_full_target_and_retains_selected_original
 
 @pytest.mark.parametrize('selection', ['omitted', 'empty', 'one'])
 def test_unselected_active_entries_prevent_even_operational_writes(tmp_path, selection):
-    options, original, _ = restore_case(tmp_path)
+    options, original, _ = restore_case(tmp_path, language_registry=small_restore_registry())
     damage(options, original)
     paths = ['.specroad/transactions/first', '.specroad/recovery/second']
     for path in paths: put(options['project_root'], path, b'{broken')
@@ -162,7 +163,7 @@ def test_unselected_active_entries_prevent_even_operational_writes(tmp_path, sel
 
 @pytest.mark.parametrize('fault', ['denied', 'non_bool', 'mutated', 'no_authority', 'target', 'ai_request'])
 def test_initial_authority_and_independent_target_are_mandatory_and_write_free(tmp_path, fault):
-    options, _, _ = restore_case(tmp_path)
+    options, _, _ = restore_case(tmp_path, language_registry=small_restore_registry())
     plan = plan_for(options)
     kwargs, code = {}, 7
     if fault == 'denied': kwargs['authority'] = RecoveryAuthority('test', '1', lambda r: False)
@@ -183,7 +184,7 @@ def test_initial_authority_and_independent_target_are_mandatory_and_write_free(t
 
 
 def test_revalidation_and_authority_under_kernel_mutex_precede_owner_creation(tmp_path):
-    options, _, _ = restore_case(tmp_path)
+    options, _, _ = restore_case(tmp_path, language_registry=small_restore_registry())
     root = options['project_root']; plan = plan_for(options)
     calls = []
     def check(request):
@@ -205,7 +206,7 @@ def test_revalidation_and_authority_under_kernel_mutex_precede_owner_creation(tm
 
 @pytest.mark.parametrize('which', ['source', 'current'])
 def test_late_authorizer_input_change_is_detected_before_first_restore_write(tmp_path, which):
-    options, original, source = restore_case(tmp_path)
+    options, original, source = restore_case(tmp_path, language_registry=small_restore_registry())
     plan = plan_for(options); calls = []
     def check(request):
         calls.append(request)
@@ -220,7 +221,7 @@ def test_late_authorizer_input_change_is_detected_before_first_restore_write(tmp
 
 
 def test_existing_owner_is_not_removed_or_interpreted_as_permission(tmp_path):
-    options, _, _ = restore_case(tmp_path)
+    options, _, _ = restore_case(tmp_path, language_registry=small_restore_registry())
     plan = plan_for(options); root = options['project_root']
     with project_lock(root, kind='recovery', command='recover run', project_id=plan.data['project_id'], transaction_id='existing'):
         before = inventory(root)
@@ -232,7 +233,7 @@ def test_existing_owner_is_not_removed_or_interpreted_as_permission(tmp_path):
 
 @pytest.mark.parametrize('when', ['before', 'after'])
 def test_publication_io_failure_retains_active_barrier_original_backup_and_actual_bytes(tmp_path, monkeypatch, when):
-    options, original, _ = restore_case(tmp_path)
+    options, original, _ = restore_case(tmp_path, language_registry=small_restore_registry())
     root = options['project_root']; path = damage(options, original)
     old = (root / path).read_bytes()
     put(root, '.specroad/transactions/corrupt/journal.json', b'{original')
@@ -267,7 +268,7 @@ def test_publication_io_failure_retains_active_barrier_original_backup_and_actua
     ('duplicate', 3), ('unsorted', 3), ('extra', 3), ('bom', 3), ('invalid_hash', 3),
     ('root', 7), ('locks', 7), ('receipt', 7), ('audit', 7), ('archive', 7), ('traversal', 7)])
 def test_explicit_selection_never_expands_into_a_different_binding_or_area(tmp_path, fault, code):
-    options, _, _ = restore_case(tmp_path)
+    options, _, _ = restore_case(tmp_path, language_registry=small_restore_registry())
     paths = ['.specroad/transactions/a', '.specroad/transactions/b']
     for path in paths: put(options['project_root'], path + '/journal.json', b'{broken')
     plan = plan_for(options)
@@ -293,7 +294,7 @@ def test_explicit_selection_never_expands_into_a_different_binding_or_area(tmp_p
 
 
 def test_exact_request_binds_authority_and_original_state_even_for_zero_model_effects(tmp_path):
-    options, _, _ = restore_case(tmp_path)
+    options, _, _ = restore_case(tmp_path, language_registry=small_restore_registry())
     root = options['project_root']
     put(root, '.specroad/recovery/damaged', b'')
     plan = plan_for(options)
@@ -310,7 +311,7 @@ def test_exact_request_binds_authority_and_original_state_even_for_zero_model_ef
 
 
 def test_unpublished_mutable_addition_is_removed_only_after_exact_backup(tmp_path):
-    options, _, _ = restore_case(tmp_path)
+    options, _, _ = restore_case(tmp_path, language_registry=small_restore_registry())
     value = domain_value('goal', id=ref('GOAL', '1'))
     path = artifact_path('goal', value['id'], 'SR')
     raw = canonical_json_bytes(value)
@@ -324,7 +325,7 @@ def test_unpublished_mutable_addition_is_removed_only_after_exact_backup(tmp_pat
 
 
 def test_foreign_bytes_inside_own_archive_are_not_an_inventory_exception(tmp_path):
-    options, original, _ = restore_case(tmp_path)
+    options, original, _ = restore_case(tmp_path, language_registry=small_restore_registry())
     root = options['project_root']; damaged = damage(options, original)
     before_image = (root / damaged).read_bytes(); plan = plan_for(options)
     calls = []

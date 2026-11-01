@@ -18,6 +18,7 @@ from specroad.recovery._execution_store import RestoreStore
 from specroad.security import ProjectBoundary
 from specroad.storage.operational_preflight import observe_operational_preflight
 from support.model import put
+from support.languages import small_restore_registry
 from support.read_only import inventory, no_write_attempts
 from support.restore import plan_for, restore_case
 from test_restore_execution import ACTOR, execute, files, selected
@@ -122,7 +123,7 @@ def recovered(plan, selection, root, *, restored, originals):
 ])
 def test_forward_io_failure_preserves_actual_state_and_requires_explicit_safe_recovery(
         tmp_path, monkeypatch, boundary):
-    options, plan, selection, changed, old = fixture(tmp_path)
+    options, plan, selection, changed, old = fixture(tmp_path, language_registry=small_restore_registry())
     root = options['project_root']
     originals = {p: (root / p).read_bytes() for p in files(plan, 'target')}
     backup = files(plan, 'backup')
@@ -192,7 +193,7 @@ def test_forward_io_failure_preserves_actual_state_and_requires_explicit_safe_re
 @pytest.mark.parametrize('after', [False, True], ids=['before', 'after'])
 def test_rollback_io_failure_can_resume_without_forward_publication_or_lost_originals(
         tmp_path, monkeypatch, effect, after):
-    options, original, _ = restore_case(tmp_path)
+    options, original, _ = restore_case(tmp_path, language_registry=small_restore_registry())
     root = options['project_root']
     document = next(p for p in original if p.startswith('spec/documents/'))
     goal = next(p for p in original if p.startswith('spec/goals/'))
@@ -239,7 +240,7 @@ def test_rollback_io_failure_can_resume_without_forward_publication_or_lost_orig
 @pytest.mark.parametrize('after', [False, True], ids=['before-sync', 'after-sync'])
 def test_recovery_resynchronization_failure_preserves_proof_and_actual_target(
         tmp_path, monkeypatch, completed_target, after):
-    options, plan, selection, changed, _ = fixture(tmp_path)
+    options, plan, selection, changed, _ = fixture(tmp_path, language_registry=small_restore_registry())
     root = options['project_root']
     originals = {p: (root / p).read_bytes() for p in files(plan, 'target')}
     path = changed[-1] if completed_target else changed[0]
@@ -259,7 +260,7 @@ def test_recovery_resynchronization_failure_preserves_proof_and_actual_target(
 @pytest.mark.parametrize('boundary', ['stage', 'published', 'release-before', 'release-after'])
 def test_terminal_barrier_has_exact_original_binding_and_is_released_only_after_durable_archive(
         tmp_path, monkeypatch, boundary):
-    options, plan, selection, _, _ = fixture(tmp_path)
+    options, plan, selection, _, _ = fixture(tmp_path, language_registry=small_restore_registry())
     root = options['project_root']
     create = boundary in ('stage', 'published')
     choose = lambda args: args[0].startswith('.specroad/recovery/pending-restore-')
@@ -290,7 +291,7 @@ def test_terminal_barrier_has_exact_original_binding_and_is_released_only_after_
 
 @pytest.mark.parametrize('fault', ['bytes', 'binding', 'extra-file', 'link'])
 def test_terminal_barrier_conflict_cannot_be_treated_as_completed_recovery(tmp_path, monkeypatch, fault):
-    options, plan, selection, _, _ = fixture(tmp_path)
+    options, plan, selection, _, _ = fixture(tmp_path, language_registry=small_restore_registry())
     root = options['project_root']
     with io_fault(monkeypatch, 'archive', lambda args: args[0].startswith('.specroad/recovery/restore-'),
                   'rename', after=True):
@@ -317,7 +318,7 @@ def test_terminal_barrier_conflict_cannot_be_treated_as_completed_recovery(tmp_p
 
 @pytest.mark.parametrize('after', [False, True], ids=['active', 'terminal'])
 def test_legacy_execution_without_terminal_derivative_keeps_its_original_bytes(tmp_path, monkeypatch, after):
-    options, plan, selection, _, _ = fixture(tmp_path)
+    options, plan, selection, _, _ = fixture(tmp_path, language_registry=small_restore_registry())
     root = options['project_root']
     # Reproduce the previous producer's on-disk effects: the new independent
     # terminal derivative is never created. Original journal bytes are not
@@ -351,7 +352,7 @@ def test_legacy_execution_without_terminal_derivative_keeps_its_original_bytes(t
 
 
 def test_source_loss_after_full_durable_target_does_not_block_terminal_release(tmp_path, monkeypatch):
-    options, plan, selection, _, _ = fixture(tmp_path)
+    options, plan, selection, _, _ = fixture(tmp_path, language_registry=small_restore_registry())
     root = options['project_root']
     native = RestoreStore.archive
     observed = []

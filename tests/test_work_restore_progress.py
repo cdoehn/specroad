@@ -28,6 +28,7 @@ from specroad.work.restore_progress import (advance_restore_work, RestoreWorkPro
                                           RestoreWorkProgressError)
 from specroad.work.root import WorkDirectory
 from support.processes import run_python
+from support.languages import small_restore_registry
 from support.read_only import inventory, no_write_attempts
 from support.restore import restore_case, plan_for
 from test_restore_execution import ACTOR, ALLOW, execute, files
@@ -58,7 +59,7 @@ def proof(current):
 
 @pytest.mark.parametrize('kind', ['project_bundle', 'baseline'])
 def test_success_retains_native_completion_and_pending_delivery_under_one_live_owner(recorded, tmp_path, kind):
-    options, _, _ = restore_case(tmp_path, kind)
+    options, _, _ = restore_case(tmp_path, kind, language_registry=small_restore_registry())
     plan = plan_for(options)
     initial, location, store = stored(tmp_path, plan)
     observed = []
@@ -99,7 +100,7 @@ def test_success_retains_native_completion_and_pending_delivery_under_one_live_o
 
 
 def test_handoff_keeps_exact_replacement_owner_through_native_execution_and_checkpoint(recorded, tmp_path):
-    options, plan, selection, _, _ = fixture(tmp_path)
+    options, plan, selection, _, _ = fixture(tmp_path, language_registry=small_restore_registry())
     initial, location, store = stored(tmp_path, plan, selection)
     old = orphan(store); observed = []
     def check(request):
@@ -127,7 +128,7 @@ def test_handoff_keeps_exact_replacement_owner_through_native_execution_and_chec
     {'expected_work_lock_sha256': 'a' * 64, 'work_recovery_reason': '  '},
 ])
 def test_outer_pair_is_explicit_current_input_before_any_write(recorded, tmp_path, options):
-    setup, _, _ = restore_case(tmp_path); plan = plan_for(setup)
+    setup, _, _ = restore_case(tmp_path, language_registry=small_restore_registry()); plan = plan_for(setup)
     _, _, store = stored(tmp_path, plan)
     before = inventory(tmp_path)
     with no_write_attempts(), pytest.raises(RestoreWorkProgressError) as caught:
@@ -139,7 +140,7 @@ def test_outer_pair_is_explicit_current_input_before_any_write(recorded, tmp_pat
 @pytest.mark.parametrize('override', [{}, {'force': True, 'expected_lock_sha256': 'a' * 64,
                                           'reason': 'project force is not outer consent'}])
 def test_retained_outer_owner_blocks_without_its_own_pair(recorded, tmp_path, override):
-    setup, _, _ = restore_case(tmp_path); plan = plan_for(setup)
+    setup, _, _ = restore_case(tmp_path, language_registry=small_restore_registry()); plan = plan_for(setup)
     initial, location, store = stored(tmp_path, plan)
     orphan(store); before = inventory(tmp_path)
     with no_write_attempts(), pytest.raises(RestoreWorkProgressError) as caught:
@@ -159,7 +160,7 @@ def test_read_only_work_is_not_granted_recovery_by_this_adapter(recorded, tmp_pa
 
 @pytest.mark.parametrize('confirm_first', [False, True])
 def test_fresh_authority_denial_never_confirms_or_republishes_native_work(recorded, tmp_path, confirm_first):
-    setup, _, _ = restore_case(tmp_path); plan = plan_for(setup)
+    setup, _, _ = restore_case(tmp_path, language_registry=small_restore_registry()); plan = plan_for(setup)
     _, location, store = stored(tmp_path, plan)
     if confirm_first: advance(store)
     current = store.read(); before = inventory(tmp_path); calls = []
@@ -174,7 +175,7 @@ def test_fresh_authority_denial_never_confirms_or_republishes_native_work(record
 
 @pytest.mark.parametrize('fault', ['unknown', 'delivery_first', 'foreign_attribution'])
 def test_saved_work_progress_is_not_native_execution_truth(recorded, tmp_path, fault):
-    setup, _, _ = restore_case(tmp_path); plan = plan_for(setup)
+    setup, _, _ = restore_case(tmp_path, language_registry=small_restore_registry()); plan = plan_for(setup)
     initial, location, store = stored(tmp_path, plan)
     if fault == 'foreign_attribution':
         native = execute(plan).data
@@ -193,7 +194,7 @@ def test_saved_work_progress_is_not_native_execution_truth(recorded, tmp_path, f
 
 
 def test_missing_native_completion_cannot_turn_confirmed_progress_into_a_new_restore(recorded, tmp_path):
-    options, _, _ = restore_case(tmp_path); plan = plan_for(options)
+    options, _, _ = restore_case(tmp_path, language_registry=small_restore_registry()); plan = plan_for(options)
     initial, _, store = stored(tmp_path, plan)
     result = advance(store).as_dict(); root = options['project_root']
     # Remove only test-created completed native history. The target was already
@@ -263,7 +264,7 @@ def interrupt(store, plan, stage):
 
 @pytest.mark.parametrize('stage', ['partial', 'full', 'native_returned', 'objects', 'checkpoint', 'pointer'])
 def test_real_exit_recovers_native_truth_before_work_progress_even_after_source_loss(recorded, tmp_path, stage):
-    options, plan, selection, changed, old = fixture(tmp_path)
+    options, plan, selection, changed, old = fixture(tmp_path, language_registry=small_restore_registry())
     initial, location, store = stored(tmp_path, plan, selection)
     root = options['project_root']; originals = {p: (root / p).read_bytes() for p in changed}
     interrupt(store, plan, stage)
@@ -294,7 +295,7 @@ def test_real_exit_recovers_native_truth_before_work_progress_even_after_source_
 
 @pytest.mark.parametrize('after_pointer', [False, True])
 def test_work_io_failure_preserves_native_completion_and_actual_checkpoint(recorded, tmp_path, monkeypatch, after_pointer):
-    options, plan, selection, _, _ = fixture(tmp_path)
+    options, plan, selection, _, _ = fixture(tmp_path, language_registry=small_restore_registry())
     initial, location, store = stored(tmp_path, plan, selection)
     native = CheckpointStore._publish_held
     def fail(self, *args):
@@ -315,7 +316,7 @@ def test_work_io_failure_preserves_native_completion_and_actual_checkpoint(recor
 
 @pytest.mark.parametrize('fault', ['build', 'pointer', 'owner'])
 def test_live_authority_cannot_change_work_binding_before_restore(recorded, tmp_path, monkeypatch, fault):
-    options, plan, selection, _, _ = fixture(tmp_path)
+    options, plan, selection, _, _ = fixture(tmp_path, language_registry=small_restore_registry())
     initial, location, store = stored(tmp_path, plan, selection)
     project = inventory(options['project_root'])
     def change(request):
@@ -334,7 +335,7 @@ def test_live_authority_cannot_change_work_binding_before_restore(recorded, tmp_
 @pytest.mark.parametrize('state,code', [('uncompleted', 3), ('corrupt', 6)])
 def test_retained_handoff_history_is_mandatory_even_without_an_owner(recorded, tmp_path, state, code):
     from test_work_restore_owner import child as owner_child, recover
-    options, _, _ = restore_case(tmp_path); plan = plan_for(options)
+    options, _, _ = restore_case(tmp_path, language_registry=small_restore_registry()); plan = plan_for(options)
     initial, location, store = stored(tmp_path, plan)
     orphan(store)
     if state == 'uncompleted':
@@ -356,7 +357,7 @@ def test_retained_handoff_history_is_mandatory_even_without_an_owner(recorded, t
 
 def test_live_handoff_history_change_cannot_authorize_project_writes(recorded, tmp_path):
     from test_work_restore_owner import recover
-    options, _, _ = restore_case(tmp_path); plan = plan_for(options)
+    options, _, _ = restore_case(tmp_path, language_registry=small_restore_registry()); plan = plan_for(options)
     initial, location, store = stored(tmp_path, plan)
     orphan(store); recover(store)
     directory = location.path / 'checkpoints/restore-owner-handoffs'

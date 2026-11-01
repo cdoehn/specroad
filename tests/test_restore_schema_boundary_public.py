@@ -4,6 +4,7 @@ import pytest
 from specroad.cli.application import execute, execute_request
 from specroad.cli.results import thaw
 from support.model import put
+from support.languages import small_restore_registry
 from support.read_only import inventory, no_write_attempts
 from support.restore import restore_case
 from test_restore_invocation import planning
@@ -14,7 +15,7 @@ from test_work_resume import recorded
 
 
 def damaged_format(tmp_path, kind):
-    options, _, _ = restore_case(tmp_path)
+    options, _, _ = restore_case(tmp_path, language_registry=small_restore_registry())
     if kind == 'legacy':
         put(options['project_root'], 'mappings/legacy-manifest.json', legacy_registration())
     elif kind == 'attachment':

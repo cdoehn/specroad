@@ -16,8 +16,9 @@ from support.read_only import no_write_attempts
 from support.records import record_value
 
 
-def draft(tmp_path):
-    model = inspection_project(tmp_path / 'origin', artifacts=[record_value('document'), domain_value('goal')])
+def draft(tmp_path, *, language_registry=None):
+    model = inspection_project(tmp_path / 'origin', artifacts=[record_value('document'), domain_value('goal')],
+                               language_registry=language_registry)
     root = specification_manifest(model).sha256
     plan = document([], [])
     plan['base'] = {'scope_descriptor': deepcopy(SPECIFICATION_SCOPE), 'model_root_sha256': root}

@@ -17,6 +17,7 @@ from specroad.work import restore_owner as implementation
 from specroad.work._restore_owner_records import read_file_binding, unblob
 from specroad.work.restore_owner import (recover_restore_work_owner,
     RestoreWorkOwnerRecovery, RestoreWorkOwnerError)
+from support.languages import small_restore_registry
 from support.read_only import inventory, no_write_attempts
 from support.restore import restore_case, plan_for
 from support.processes import run_python
@@ -101,7 +102,7 @@ def orphan(store):
 
 @pytest.fixture
 def case(recorded, tmp_path):
-    options, original, _ = restore_case(tmp_path)
+    options, original, _ = restore_case(tmp_path, language_registry=small_restore_registry())
     plan = plan_for(options)
     initial, location, store = stored(tmp_path, plan)
     return initial, location, store, plan

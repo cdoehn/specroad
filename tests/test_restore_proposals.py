@@ -11,6 +11,7 @@ from specroad.cli.requests import CommandRequest
 from specroad.cli.results import thaw
 from specroad.recovery import RestoreServices, prepare_restore_plan, RestorePlan
 from support.model import put
+from support.languages import small_restore_registry
 from support.read_only import inventory, no_write_attempts
 from test_proposal_history import history, verifier
 from test_proposal_completion import completed
@@ -20,8 +21,11 @@ from test_work_resume import recorded
 
 
 def project(tmp_path, status):
-    inputs, model = (completed(tmp_path) if status == 'applied'
-                     else history(tmp_path, status=status, decision='rejected' if status == 'rejected' else 'approved'))
+    registry = small_restore_registry()
+    inputs, model = (completed(tmp_path, language_registry=registry) if status == 'applied'
+                     else history(tmp_path, status=status,
+                         decision='rejected' if status == 'rejected' else 'approved',
+                         language_registry=registry))
     origin, current = tmp_path / 'origin', tmp_path / 'current'
     current.mkdir()
     for path, raw in model.source_files.items():

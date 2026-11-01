@@ -29,6 +29,7 @@ from specroad.work.restore_execution import (RestoreWorkExecution,
     prepare_restore_work, execute_restore_work)
 from specroad.work.root import WorkDirectory
 from support.model import put
+from support.languages import small_restore_registry
 from support.read_only import inventory, no_write_attempts
 from support.restore import restore_case, plan_for
 from test_restore_execution import ACTOR, ALLOW, execute, selected, files
@@ -78,7 +79,7 @@ def takeover(plan):
 @pytest.mark.parametrize('kind', ['project_bundle', 'baseline'])
 @pytest.mark.parametrize('journal', [False, True])
 def test_bound_work_executes_exact_native_target_without_transport_or_work_completion(recorded, tmp_path, kind, journal):
-    options, original, _ = restore_case(tmp_path, kind)
+    options, original, _ = restore_case(tmp_path, kind, language_registry=small_restore_registry())
     root = options['project_root']
     damaged = next(p for p in original if p.startswith('spec/goals/'))
     put(root, damaged, b'\xffbroken')
@@ -137,7 +138,7 @@ def test_bound_work_executes_exact_native_target_without_transport_or_work_compl
 @pytest.mark.parametrize('fault,code', [('missing', 2), ('denied', 7), ('non_bool', 7), ('mutated', 7),
                                      ('wrong_actor', 6), ('source', 6), ('inventory', 6)])
 def test_fresh_native_gates_refuse_before_any_write(recorded, tmp_path, fault, code):
-    options, plan, selection, changed, _ = fixture(tmp_path)
+    options, plan, selection, changed, _ = fixture(tmp_path, language_registry=small_restore_registry())
     _, _, store = stored(tmp_path, plan, selection)
     changes = {}
     if fault == 'missing': changes['authority'] = None
@@ -160,7 +161,7 @@ def test_fresh_native_gates_refuse_before_any_write(recorded, tmp_path, fault, c
 
 @pytest.mark.parametrize('fault', ['tasks', 'progress', 'runtime', 'unprotected', 'source_overlap'])
 def test_only_the_bound_closed_execution_path_can_reach_restore(recorded, tmp_path, monkeypatch, fault):
-    options, plan, selection, _, _ = fixture(tmp_path)
+    options, plan, selection, _, _ = fixture(tmp_path, language_registry=small_restore_registry())
     initial = None
     if fault == 'tasks':
         request = request_for(plan, selection)
@@ -232,7 +233,7 @@ abrupt_work(json.load(sys.stdin))
 
 @pytest.mark.parametrize('boundary', ['partial', 'full', 'audit', 'returned'])
 def test_real_process_exit_uses_native_journal_before_lost_source_and_retains_work(recorded, tmp_path, boundary):
-    options, plan, selection, changed, old = fixture(tmp_path)
+    options, plan, selection, changed, old = fixture(tmp_path, language_registry=small_restore_registry())
     initial, location, store = stored(tmp_path, plan, selection)
     root = options['project_root']; before_images = {p: (root / p).read_bytes() for p in changed}
     work_before = inventory(location.path)
@@ -271,7 +272,7 @@ def test_real_process_exit_uses_native_journal_before_lost_source_and_retains_wo
 
 
 def test_other_work_original_actor_cannot_adopt_existing_native_execution(recorded, tmp_path):
-    options, plan, selection, _, _ = fixture(tmp_path)
+    options, plan, selection, _, _ = fixture(tmp_path, language_registry=small_restore_registry())
     interrupted(plan, selection, 'publish', count=2)
     request = with_options(request_for(plan, selection), **{'--actor-id': 'different-original'})
     _, _, store = stored(tmp_path, plan, selection, request=request)
@@ -283,7 +284,7 @@ def test_other_work_original_actor_cannot_adopt_existing_native_execution(record
 
 
 def test_saved_takeover_is_not_a_current_request(recorded, tmp_path):
-    options, plan, selection, _, _ = fixture(tmp_path)
+    options, plan, selection, _, _ = fixture(tmp_path, language_registry=small_restore_registry())
     interrupted(plan, selection, 'publish', count=2)
     current = takeover(plan)
     request = with_options(request_for(plan, selection), **{
@@ -302,7 +303,7 @@ def test_saved_takeover_is_not_a_current_request(recorded, tmp_path):
 @pytest.mark.parametrize('when', [2, 3])
 @pytest.mark.parametrize('damage', ['pointer', 'build', 'work_root'])
 def test_host_callback_cannot_change_work_binding_before_native_writes(recorded, tmp_path, monkeypatch, when, damage):
-    options, plan, selection, changed, _ = fixture(tmp_path)
+    options, plan, selection, changed, _ = fixture(tmp_path, language_registry=small_restore_registry())
     _, location, store = stored(tmp_path, plan, selection)
     original = {p: (options['project_root'] / p).read_bytes() for p in changed}
     calls = []

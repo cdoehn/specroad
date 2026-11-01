@@ -13,6 +13,7 @@ from specroad.proposals import (ProposalContext, ProposalInputs, ProposalReviewO
 from specroad.proposals.history import native_check
 from specroad.storage.json_syntax import parse_json_object
 from specroad.validation import ModelDocument
+from support.languages import small_restore_registry
 from support.read_only import no_write_attempts
 from test_proposal_originals import draft, original
 
@@ -38,8 +39,10 @@ def verifier(*, current=True, origin=True, calls=None):
     return ProposalVerifier('synthetic-original-decisions', '1', check)
 
 
-def history(tmp_path, *, actors=(HUMAN,), minimum=1, status='approved', decision='approved', draft_factory=draft):
-    model, value = draft_factory(tmp_path)
+def history(tmp_path, *, actors=(HUMAN,), minimum=1, status='approved', decision='approved',
+            draft_factory=draft, language_registry=None):
+    model, value = (draft_factory(tmp_path) if language_registry is None else
+                    draft_factory(tmp_path, language_registry=language_registry))
     if minimum != 1:
         from specroad.changes.target_model import TargetModel
         configuration = model.configuration.data
@@ -101,7 +104,8 @@ def history(tmp_path, *, actors=(HUMAN,), minimum=1, status='approved', decision
 
 
 def test_control_revisions_preserve_review_binding_and_real_distinct_quorum(tmp_path):
-    inputs, model = history(tmp_path, actors=(HUMAN, Actor('human', 'synthetic-second')), minimum=2)
+    inputs, model = history(tmp_path, actors=(HUMAN, Actor('human', 'synthetic-second')), minimum=2,
+        language_registry=small_restore_registry())
     with no_write_attempts():
         report = assess_proposal(inputs.originals[-1], inputs, model)
     assert report['historical_valid'] and report['current_approval']
@@ -111,14 +115,14 @@ def test_control_revisions_preserve_review_binding_and_real_distinct_quorum(tmp_
 
 @pytest.mark.parametrize('actors', [(HUMAN,), (HUMAN, HUMAN), (HUMAN, Actor('ai', 'synthetic-ai'))])
 def test_missing_duplicate_and_nonhuman_approvals_cannot_fill_quorum(tmp_path, actors):
-    inputs, model = history(tmp_path, actors=actors, minimum=2)
+    inputs, model = history(tmp_path, actors=actors, minimum=2, language_registry=small_restore_registry())
     with no_write_attempts(), pytest.raises(ProposalError, match='quorum_not_met'):
         assess_proposal(inputs.originals[-1], inputs, model)
 
 
 @pytest.mark.parametrize('fault', ['current', 'origin', 'binding', 'missing_context', 'missing_control', 'missing_review'])
 def test_original_contexts_and_fresh_verifiers_are_required(tmp_path, fault):
-    inputs, model = history(tmp_path)
+    inputs, model = history(tmp_path, language_registry=small_restore_registry())
     if fault == 'current':
         inputs = replace(inputs, verifier=verifier(current=False))
     elif fault == 'origin':
@@ -138,7 +142,8 @@ def test_original_contexts_and_fresh_verifiers_are_required(tmp_path, fault):
 
 
 def test_stale_current_basis_does_not_erase_valid_rejected_history(tmp_path):
-    inputs, model = history(tmp_path, status='rejected', decision='rejected')
+    inputs, model = history(tmp_path, status='rejected', decision='rejected',
+        language_registry=small_restore_registry())
     goal = next(a for a in model.artifacts if a['artifact_type'] == 'goal')
     goal['statement'] = 'Subsequent valid project content'
     from specroad.model.paths import artifact_path
@@ -151,7 +156,7 @@ def test_stale_current_basis_does_not_erase_valid_rejected_history(tmp_path):
 
 
 def test_active_checks_reobserve_the_same_trusted_verifier(tmp_path):
-    inputs, model = history(tmp_path)
+    inputs, model = history(tmp_path, language_registry=small_restore_registry())
     calls = []
     inputs = replace(inputs, verifier=verifier(calls=calls))
     assess_proposal(inputs.originals[-1], inputs, model)
@@ -162,7 +167,7 @@ def test_active_checks_reobserve_the_same_trusted_verifier(tmp_path):
 
 @pytest.mark.parametrize('status,decision', [('stale', 'approved'), ('rejected', 'rejected')])
 def test_terminal_negative_originals_keep_their_original_bytes(tmp_path, status, decision):
-    inputs, model = history(tmp_path, status=status, decision=decision)
+    inputs, model = history(tmp_path, status=status, decision=decision, language_registry=small_restore_registry())
     raw = inputs.originals[-1].source_bytes
     with no_write_attempts():
         report = assess_proposal(inputs.originals[-1], inputs, model)
@@ -172,7 +177,7 @@ def test_terminal_negative_originals_keep_their_original_bytes(tmp_path, status,
 
 
 def test_current_approved_cannot_hide_a_different_actual_basis(tmp_path):
-    inputs, model = history(tmp_path)
+    inputs, model = history(tmp_path, language_registry=small_restore_registry())
     goal = next(a for a in model.artifacts if a['artifact_type'] == 'goal')
     goal['statement'] = 'Subsequent project content'
     from specroad.model.paths import artifact_path
@@ -183,7 +188,7 @@ def test_current_approved_cannot_hide_a_different_actual_basis(tmp_path):
 
 
 def test_content_edit_resets_status_and_does_not_reuse_previous_approvals(tmp_path):
-    inputs, model = history(tmp_path)
+    inputs, model = history(tmp_path, language_registry=small_restore_registry())
     before = inputs.originals[-1]
     value = deepcopy(before.data)
     value.update(revision=value['revision'] + 1, content_revision=2,
@@ -203,7 +208,7 @@ def test_content_edit_resets_status_and_does_not_reuse_previous_approvals(tmp_pa
 
 
 def test_actual_withdrawal_removes_that_actor_from_quorum(tmp_path):
-    inputs, model = history(tmp_path, actors=(HUMAN,), status='in_review')
+    inputs, model = history(tmp_path, actors=(HUMAN,), status='in_review', language_registry=small_restore_registry())
     prior = inputs.originals[-1]
     context = inputs.contexts[-1]
     value = deepcopy(prior.data)
@@ -226,7 +231,8 @@ def test_actual_withdrawal_removes_that_actor_from_quorum(tmp_path):
 
 
 def test_later_repetition_cannot_replace_the_original_review_observation(tmp_path):
-    inputs, model = history(tmp_path, actors=(HUMAN, Actor('human', 'synthetic-second')), minimum=2)
+    inputs, model = history(tmp_path, actors=(HUMAN, Actor('human', 'synthetic-second')), minimum=2,
+        language_registry=small_restore_registry())
     changed = replace(inputs.reviews[0], original=inputs.originals[-1])
     inputs = replace(inputs, reviews=(changed, *inputs.reviews[1:]))
     with no_write_attempts(), pytest.raises(ProposalError, match='original_revision_mismatch'):

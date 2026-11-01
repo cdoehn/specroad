@@ -18,18 +18,19 @@ from specroad.proposals.receipts import read_proposal_receipts
 from specroad.storage.json_syntax import parse_json_object
 from specroad.validation import ModelDocument
 from support.change_plans import document, result
+from support.languages import small_restore_registry
 from support.read_only import no_write_attempts
 from test_proposal_history import HUMAN, history
 from test_proposal_originals import original
 
 
-def edited_draft(tmp_path):
+def edited_draft(tmp_path, *, language_registry=None):
     from test_proposal_originals import draft
     from specroad.changes.lifecycle import prepare_change_lifecycle
     from specroad.model.paths import artifact_path
     from specroad.proposals.context import specification_manifest
     from specroad.proposals.values import content_sha256
-    model, value = draft(tmp_path)
+    model, value = draft(tmp_path, language_registry=language_registry)
     source = next(a for a in model.artifacts if a['artifact_type'] == 'goal')
     operations = [{'op': 'update', 'target': source['id'], 'expected_revision': source['revision'],
         'expected_sha256': canonical_json_sha256(source),
@@ -49,9 +50,10 @@ def edited_draft(tmp_path):
     return model, value
 
 
-def completed(tmp_path, *, changed=False):
+def completed(tmp_path, *, changed=False, language_registry=None):
     from test_proposal_originals import draft
-    inputs, before = history(tmp_path, draft_factory=edited_draft if changed else draft)
+    inputs, before = history(tmp_path, draft_factory=edited_draft if changed else draft,
+                            language_registry=language_registry)
     approved = inputs.originals[-1]
     context = inputs.contexts[-1]
     checked = native_check(context)
@@ -139,7 +141,7 @@ def completed(tmp_path, *, changed=False):
 
 @pytest.mark.parametrize('changed', [False, True])
 def test_original_applied_completion_is_checked_but_never_reapplied(tmp_path, changed):
-    inputs, model = completed(tmp_path, changed=changed)
+    inputs, model = completed(tmp_path, changed=changed, language_registry=small_restore_registry())
     from specroad.bundles._receipts import completed_receipts
     files = {d.path: d.content for d in inputs.publications[0].receipts}
     with no_write_attempts():
@@ -159,7 +161,7 @@ def test_original_applied_completion_is_checked_but_never_reapplied(tmp_path, ch
 
 @pytest.mark.parametrize('fault', ['missing_receipt', 'target', 'plan', 'request', 'original'])
 def test_completed_label_and_rehashed_foreign_receipts_do_not_prove_apply(tmp_path, fault):
-    inputs, model = completed(tmp_path)
+    inputs, model = completed(tmp_path, language_registry=small_restore_registry())
     proof = inputs.publications[0]
     if fault == 'missing_receipt':
         proof = replace(proof, receipts=proof.receipts[:-1])

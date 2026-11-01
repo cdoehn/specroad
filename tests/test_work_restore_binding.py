@@ -20,6 +20,7 @@ from specroad.work.manifest import (partition_work_manifest,
 from specroad.work.restore import create_restore_work_manifest, read_restore_work_manifest
 from specroad.work.root import WorkDirectory
 from support.model import put
+from support.languages import small_restore_registry
 from support.read_only import inventory, no_write_attempts
 from support.restore import restore_case, plan_for
 from test_restore_execution import selected
@@ -41,8 +42,8 @@ def registry(**overrides):
     return CommandRegistry((CommandSpec(**arguments),))
 
 
-def setup(tmp_path, kind='project_bundle', *, journal=False):
-    options, files, _ = restore_case(tmp_path, kind)
+def setup(tmp_path, kind='project_bundle', *, journal=False, language_registry=None):
+    options, files, _ = restore_case(tmp_path, kind, language_registry=language_registry)
     broken = next(path for path in files if path.startswith('spec/goals/'))
     put(options['project_root'], broken, b'\xff{broken')
     if journal:
@@ -73,7 +74,7 @@ def with_options(request, **options):
 @pytest.mark.parametrize('kind', ['project_bundle', 'baseline'])
 @pytest.mark.parametrize('journal', [False, True])
 def test_original_plan_and_selection_are_complete_inputs_without_handler_or_io(tmp_path, kind, journal):
-    options, plan, request = setup(tmp_path, kind, journal=journal)
+    options, plan, request = setup(tmp_path, kind, journal=journal, language_registry=small_restore_registry())
     selection = None
     if journal:
         request = with_options(request, **{'--selection-root': '/unopened', '--affected-journals': 'chosen.json'})
@@ -112,7 +113,7 @@ def test_original_plan_and_selection_are_complete_inputs_without_handler_or_io(t
 @pytest.mark.parametrize('actor', ['human', 'tool', 'ai', 'ci'])
 @pytest.mark.parametrize('identity', [None, 'explicit-original-request'])
 def test_original_actor_and_optional_request_keep_native_rules(tmp_path, actor, identity):
-    _, plan, request = setup(tmp_path)
+    _, plan, request = setup(tmp_path, language_registry=small_restore_registry())
     request = with_options(request, **{'--actor-type': actor},
         **({} if identity is None else {'--request-id': identity}))
     with no_io_attempts():
@@ -127,7 +128,7 @@ def test_original_actor_and_optional_request_keep_native_rules(tmp_path, actor, 
 
 
 def test_real_checkpoint_chain_retains_original_binding_without_external_plan_or_source(tmp_path):
-    options, plan, request = setup(tmp_path)
+    options, plan, request = setup(tmp_path, language_registry=small_restore_registry())
     initial = create(plan, request)
     location = WorkDirectory(initial, protected_roots=(ProjectBoundary(options['project_root']),),
                              directory=tmp_path / 'work')
@@ -152,7 +153,7 @@ def test_real_checkpoint_chain_retains_original_binding_without_external_plan_or
 
 
 def test_transport_relocation_preserves_units_but_cannot_rewrite_a_trusted_successor(tmp_path):
-    _, plan, request = setup(tmp_path)
+    _, plan, request = setup(tmp_path, language_registry=small_restore_registry())
     initial = create(plan, request)
     moved = create(plan, with_options(request, **{'--plan-root': '/different/transport', '--plan': 'moved.json'}))
     assert initial.entries('tasks') == moved.entries('tasks')
@@ -167,7 +168,7 @@ def test_transport_relocation_preserves_units_but_cannot_rewrite_a_trusted_succe
 
 @pytest.mark.parametrize('replacement', [{'--actor-id': 'different-operator'}, {'--request-id': 'different-request'}])
 def test_consistently_rehashed_other_request_cannot_replace_a_trusted_work(tmp_path, replacement):
-    _, plan, request = setup(tmp_path)
+    _, plan, request = setup(tmp_path, language_registry=small_restore_registry())
     initial = create(plan, request)
     other = create(plan, with_options(request, **replacement))
     assert initial.entries('inputs') == other.entries('inputs')
@@ -185,7 +186,7 @@ def test_consistently_rehashed_other_request_cannot_replace_a_trusted_work(tmp_p
 @pytest.mark.parametrize('field', ['actor', 'request_id', 'source_project', 'source_scope', 'model_root',
                                   'inner_hash', 'operations', 'target', 'project'])
 def test_resealed_inconsistent_original_binding_is_a_conflict(tmp_path, field):
-    _, plan, request = setup(tmp_path)
+    _, plan, request = setup(tmp_path, language_registry=small_restore_registry())
     initial = create(plan, request); value = initial.as_dict()
     if field == 'actor': value['actor']['actor_id'] = 'replacement'
     elif field == 'request_id': value['request_id'] = 'invented'
@@ -204,7 +205,7 @@ def test_resealed_inconsistent_original_binding_is_a_conflict(tmp_path, field):
 @pytest.mark.parametrize('field', ['plan_source', 'journal_selection'])
 @pytest.mark.parametrize('damage', ['missing', 'bytes', 'size', 'bool_size', 'not_input'])
 def test_every_referenced_byte_must_be_present_and_bound_as_an_input(tmp_path, field, damage):
-    _, plan, request = setup(tmp_path)
+    _, plan, request = setup(tmp_path, language_registry=small_restore_registry())
     initial = create(plan, request); value = initial.as_dict(); objects = dict(initial.objects)
     reference = value['plan_binding'][field]
     if damage == 'missing': del objects[reference['sha256']]
@@ -224,7 +225,7 @@ def test_every_referenced_byte_must_be_present_and_bound_as_an_input(tmp_path, f
 @pytest.mark.parametrize('damage', ['unknown_binding', 'foreign_binding', 'extra_field', 'missing_actor',
                                    'missing_request', 'planning', 'saved_authority'])
 def test_invalid_stored_contract_is_not_a_new_call_or_authority(tmp_path, damage):
-    _, plan, request = setup(tmp_path)
+    _, plan, request = setup(tmp_path, language_registry=small_restore_registry())
     initial = create(plan, request); value = initial.as_dict()
     if damage == 'unknown_binding': value['plan_binding']['format_version'] = 'future-binding'
     elif damage == 'foreign_binding': value['plan_binding']['format_version'] = 'work-change-plan-v1'
@@ -248,7 +249,7 @@ def test_invalid_stored_contract_is_not_a_new_call_or_authority(tmp_path, damage
 
 
 def test_nonempty_selection_is_never_inferred_from_original_journals(tmp_path):
-    _, plan, request = setup(tmp_path, journal=True)
+    _, plan, request = setup(tmp_path, journal=True, language_registry=small_restore_registry())
     with no_io_attempts(), pytest.raises(RestoreError) as error:
         create(plan, request)
     assert error.value.exit_code == 5 and error.value.recovery_required
@@ -263,7 +264,7 @@ def test_nonempty_selection_is_never_inferred_from_original_journals(tmp_path):
 
 @pytest.mark.parametrize('damage,code', [('noncanonical', 3), ('wrong_plan', 6), ('wrong_inventory', 6), ('unsafe', 7)])
 def test_native_selection_checks_apply_to_work_inputs(tmp_path, damage, code):
-    _, plan, request = setup(tmp_path, journal=True)
+    _, plan, request = setup(tmp_path, journal=True, language_registry=small_restore_registry())
     request = with_options(request, **{'--selection-root': '/unopened', '--affected-journals': 'chosen.json'})
     value = json.loads(selected(plan, ['.specroad/transactions/old']))
     if damage == 'wrong_plan': value['restore_plan_sha256'] = 'a' * 64
@@ -286,7 +287,7 @@ def test_restore_actor_options_do_not_spread_to_other_command_contracts(override
 
 
 def test_fixture_host_registration_grants_no_public_command_or_recovery_authority(tmp_path):
-    _, plan, request = setup(tmp_path)
+    _, plan, request = setup(tmp_path, language_registry=small_restore_registry())
     with no_io_attempts():
         initial = create(plan, request)
         # The public R integration now supplies its own native handler.

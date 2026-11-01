@@ -15,12 +15,13 @@ from specroad.recovery import (RestoreError, execute_restore, publish_restore_pl
                                read_restore_inputs, verify_restore_plan)
 from specroad.recovery import files as transport
 from support.model import put
+from support.languages import small_restore_registry
 from support.read_only import inventory, no_write_attempts
 from support.restore import restore_case, plan_for
 
 
-def case(tmp_path, kind='project_bundle', *, journal=False):
-    options, originals, _ = restore_case(tmp_path, kind)
+def case(tmp_path, kind='project_bundle', *, journal=False, language_registry=None):
+    options, originals, _ = restore_case(tmp_path, kind, language_registry=language_registry)
     damaged = next(p for p in originals if p.startswith('spec/goals/'))
     put(options['project_root'], damaged, b'\x00broken\xff')
     if journal:
@@ -41,7 +42,7 @@ def selection(plan):
 
 @pytest.mark.parametrize('kind', ['project_bundle', 'baseline'])
 def test_publish_complete_original_plan_then_read_and_execute_selected_journals(tmp_path, kind):
-    options, _, plan, out = case(tmp_path, kind, journal=True)
+    options, _, plan, out = case(tmp_path, kind, journal=True, language_registry=small_restore_registry())
     before = {k: inventory(options[k]) for k in ('project_root', 'source_root')}
     result = publish_restore_plan(plan.source_bytes, output_root=out, output='plans/restore.json')
     assert result.source_bytes == (out / 'plans/restore.json').read_bytes() == plan.source_bytes
@@ -77,7 +78,7 @@ def test_publish_complete_original_plan_then_read_and_execute_selected_journals(
 
 @pytest.mark.parametrize('existing', ['same', 'different', 'directory'])
 def test_existing_output_is_never_overwritten(tmp_path, existing):
-    _, _, plan, out = case(tmp_path)
+    _, _, plan, out = case(tmp_path, language_registry=small_restore_registry())
     if existing == 'directory': (out / 'plan.json').mkdir()
     else: put(out, 'plan.json', plan.source_bytes if existing == 'same' else b'foreign')
     before = inventory(tmp_path)
@@ -89,7 +90,7 @@ def test_existing_output_is_never_overwritten(tmp_path, existing):
 @pytest.mark.parametrize('location', ['project', 'descendant', 'ancestor', 'source_project',
                                     'other_project', 'symlink', 'relative', 'missing', 'none'])
 def test_output_root_restrictions_are_checked_without_writes(tmp_path, location):
-    options, _, plan, out = case(tmp_path)
+    options, _, plan, out = case(tmp_path, language_registry=small_restore_registry())
     roots = {'project': options['project_root'], 'ancestor': tmp_path,
              'source_project': options['source_root'], 'none': None,
              'relative': 'relative', 'missing': tmp_path / 'missing'}
@@ -109,7 +110,7 @@ def test_output_root_restrictions_are_checked_without_writes(tmp_path, location)
 @pytest.mark.parametrize('path', ['../escape', '/absolute', 'bad\\path', '.specroad/plan.json',
                                'specroad.json', 'Plan.json', 'link/plan.json', 'nested/plan.json'])
 def test_unsafe_output_paths_aliases_and_nested_projects_are_rejected(tmp_path, path):
-    _, _, plan, out = case(tmp_path)
+    _, _, plan, out = case(tmp_path, language_registry=small_restore_registry())
     put(out, 'plan.json', b'foreign')
     (out / 'link').symlink_to(out, target_is_directory=True)
     put(out, 'nested/specroad.json', b'other project')
@@ -121,7 +122,7 @@ def test_unsafe_output_paths_aliases_and_nested_projects_are_rejected(tmp_path, 
 
 @pytest.mark.parametrize('changed', ['source', 'inventory', 'missing_source', 'missing_root'])
 def test_stale_plan_cannot_publish_even_a_private_output(tmp_path, changed):
-    options, _, plan, out = case(tmp_path)
+    options, _, plan, out = case(tmp_path, language_registry=small_restore_registry())
     if changed == 'source': put(options['source_root'], options['source_path'], b'changed')
     elif changed == 'inventory': put(options['project_root'], 'spec/new', b'changed')
     elif changed == 'missing_source': (options['source_root'] / options['source_path']).unlink()
@@ -134,7 +135,7 @@ def test_stale_plan_cannot_publish_even_a_private_output(tmp_path, changed):
 
 @pytest.mark.parametrize('changed', ['source', 'inventory', 'project_inode', 'parent_inode', 'image', 'target'])
 def test_recheck_between_staging_and_atomic_publication_preserves_real_state(tmp_path, monkeypatch, changed):
-    options, _, plan, out = case(tmp_path)
+    options, _, plan, out = case(tmp_path, language_registry=small_restore_registry())
     native = transport._write_new
     def stage(parent, name, raw):
         identity = native(parent, name, raw)
@@ -160,7 +161,7 @@ def test_recheck_between_staging_and_atomic_publication_preserves_real_state(tmp
 
 @pytest.mark.parametrize('when', ['staging', 'before_move', 'after_move'])
 def test_io_failure_preserves_external_images_and_never_mutates_project(tmp_path, monkeypatch, when):
-    options, _, plan, out = case(tmp_path)
+    options, _, plan, out = case(tmp_path, language_registry=small_restore_registry())
     before = inventory(options['project_root'])
     native = transport.replace_bound_image
     def fail(*args, **kwargs):
@@ -175,7 +176,7 @@ def test_io_failure_preserves_external_images_and_never_mutates_project(tmp_path
 
 
 def test_external_mutex_conflict_does_not_acquire_a_project_writer(tmp_path):
-    options, _, plan, out = case(tmp_path)
+    options, _, plan, out = case(tmp_path, language_registry=small_restore_registry())
     before = inventory(tmp_path)
     with LockFiles(out) as held:
         held.acquire()
@@ -186,7 +187,7 @@ def test_external_mutex_conflict_does_not_acquire_a_project_writer(tmp_path):
 
 @pytest.mark.parametrize('point', ['staged', 'published'])
 def test_real_process_exit_leaves_only_private_or_complete_external_plan(tmp_path, point):
-    options, _, plan, out = case(tmp_path)
+    options, _, plan, out = case(tmp_path, language_registry=small_restore_registry())
     before = inventory(options['project_root'])
     script = '''import sys, os
 sys.path.insert(0, sys.argv[1])
@@ -215,7 +216,7 @@ files.publish_restore_plan(sys.stdin.buffer.read(), output_root=root, output='pl
 
 @pytest.mark.parametrize('bad', ['malformed', 'noncanonical', 'hash', 'symlink', 'hardlink', 'fifo'])
 def test_untrusted_plan_files_are_rejected_without_writes(tmp_path, bad):
-    _, _, plan, out = case(tmp_path)
+    _, _, plan, out = case(tmp_path, language_registry=small_restore_registry())
     target = out / 'plan.json'
     if bad == 'symlink': target.symlink_to(out / 'original'); put(out, 'original', plan.source_bytes)
     elif bad == 'hardlink': put(out, 'original', plan.source_bytes); os.link(out / 'original', target)
@@ -234,7 +235,7 @@ def test_untrusted_plan_files_are_rejected_without_writes(tmp_path, bad):
 
 @pytest.mark.parametrize('bad', ['omitted', 'empty', 'wrong_plan', 'wrong_tree', 'unpaired', 'malformed'])
 def test_selection_file_is_explicit_and_bound_to_original_plan(tmp_path, bad):
-    _, _, plan, out = case(tmp_path, journal=True)
+    _, _, plan, out = case(tmp_path, journal=True, language_registry=small_restore_registry())
     put(out, 'plan.json', plan.source_bytes)
     raw = json.loads(selection(plan))
     if bad == 'empty': raw['entries'] = []
@@ -253,7 +254,7 @@ def test_selection_file_is_explicit_and_bound_to_original_plan(tmp_path, bad):
 
 @pytest.mark.parametrize('changed', ['plan', 'selection', 'missing_plan'])
 def test_input_files_are_reread_after_qualification(tmp_path, monkeypatch, changed):
-    _, _, plan, out = case(tmp_path, journal=True)
+    _, _, plan, out = case(tmp_path, journal=True, language_registry=small_restore_registry())
     put(out, 'plan.json', plan.source_bytes); put(out, 'selection.json', selection(plan))
     native = transport.journal_selection
     def checked(*args):
@@ -268,7 +269,7 @@ def test_input_files_are_reread_after_qualification(tmp_path, monkeypatch, chang
 
 
 def test_reading_original_plan_does_not_forge_live_freshness_or_authority(tmp_path):
-    options, _, plan, out = case(tmp_path)
+    options, _, plan, out = case(tmp_path, language_registry=small_restore_registry())
     put(out, 'plan.json', plan.source_bytes)
     (options['source_root'] / options['source_path']).unlink()
     before = inventory(tmp_path)

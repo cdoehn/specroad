@@ -45,9 +45,44 @@ def select(trace, scenario):
     return targets[0 if scenario == 'rollback' else -1]
 
 
+@pytest.fixture(scope='module')
+def writer_control_events(tmp_path_factory):
+    """Discover native multi-file boundaries once per worker in this run.
+
+    Only immutable JSON of normalized event descriptions is retained. Live
+    projects, process identities, plans and completion proofs are not shared
+    with any crash case. Each consumer decodes its own event dictionaries.
+    """
+    _, trace = control(tmp_path_factory.mktemp('multi-writer-control'))
+    return json.dumps(trace['events'])
+
+
+@pytest.fixture
+def writer_control(writer_control_events):
+    return {'events': json.loads(writer_control_events)}
+
+
+@pytest.fixture(scope='module')
+def recovery_control_events(tmp_path_factory, writer_control_events):
+    """Lazily discover each recovery scenario in a separate native project."""
+    saved = {}
+
+    def events_for(scenario):
+        if scenario not in saved:
+            start = select({'events': json.loads(writer_control_events)}, scenario)
+            root = tmp_path_factory.mktemp('recovery-control-' + scenario)
+            expected = cut_writer(root, start)
+            completed, = child(root, 'recover')
+            assert_result(expected, completed)
+            saved[scenario] = json.dumps(completed['events'])
+        return json.loads(saved[scenario])
+
+    return events_for
+
+
 @pytest.mark.parametrize('phase', PHASES)
-def test_multi_file_writer_boundaries_never_accept_a_mixed_model(tmp_path, phase):
-    _, trace = control(tmp_path / 'control')
+def test_multi_file_writer_boundaries_never_accept_a_mixed_model(tmp_path, phase, writer_control):
+    trace = writer_control
     events = [e for e in trace['events'] if e['phase'] == phase]
     assert events
     outcomes, mixed = [], 0
@@ -73,8 +108,8 @@ def test_multi_file_writer_boundaries_never_accept_a_mixed_model(tmp_path, phase
 
 
 @pytest.mark.parametrize('missing', ['transaction', 'request', 'both'])
-def test_missing_receipts_before_committed_marker_are_reconstructed_exactly(tmp_path, missing):
-    _, trace = control(tmp_path / 'control')
+def test_missing_receipts_before_committed_marker_are_reconstructed_exactly(tmp_path, missing, writer_control):
+    trace = writer_control
     root = tmp_path / 'project'
     bound = cut_writer(root, select(trace, 'receipts'))
     journal = journal_at(root)
@@ -95,8 +130,9 @@ def test_missing_receipts_before_committed_marker_are_reconstructed_exactly(tmp_
 
 @pytest.mark.parametrize('receipt', ['transaction', 'request'])
 @pytest.mark.parametrize('change', ['missing', 'foreign'])
-def test_damaged_receipt_after_committed_marker_keeps_target_blocked_and_evidence(tmp_path, receipt, change):
-    _, trace = control(tmp_path / 'control')
+def test_damaged_receipt_after_committed_marker_keeps_target_blocked_and_evidence(
+        tmp_path, receipt, change, writer_control):
+    trace = writer_control
     event = next(e for e in trace['events'] if e['phase'] == 'receipts'
                  and e['operation'] == 'replace' and e['paths'][0].endswith('/journal.complete'))
     root = tmp_path / 'project'
@@ -117,18 +153,15 @@ def test_damaged_receipt_after_committed_marker_keeps_target_blocked_and_evidenc
 
 @pytest.mark.parametrize('scenario', ['discard', 'rollback', 'complete'])
 @pytest.mark.parametrize('group', range(4))
-def test_every_recovery_boundary_survives_another_interrupted_recovery(tmp_path, scenario, group):
-    _, writer_trace = control(tmp_path / 'writer-control')
+def test_every_recovery_boundary_survives_another_interrupted_recovery(
+        tmp_path, scenario, group, writer_control, recovery_control_events):
+    writer_trace = writer_control
     start = select(writer_trace, scenario)
-    control_root = tmp_path / 'recovery-control'
-    expected = cut_writer(control_root, start)
-    completed, = child(control_root, 'recover')
-    assert_result(expected, completed)
-    events = completed['events']
+    events = recovery_control_events(scenario)
     assert events and any(e['operation'] == 'link' for e in events)
     observed = []
-    # All four collected groups cover the complete native trace, without a
-    # boundary limit or dependence on another test's execution order.
+    # All four collected groups cover the complete native trace discovered in
+    # this worker, without a boundary limit or test execution order dependency.
     for event in events[group::4]:
         root = tmp_path / ('cut-' + str(event['ordinal']))
         bound = cut_writer(root, start)
@@ -155,12 +188,13 @@ def test_every_recovery_boundary_survives_another_interrupted_recovery(tmp_path,
 
 
 @pytest.mark.parametrize('change', ['foreign', 'authority_prefix', 'rollback_binding'])
-def test_partial_writer_successor_cannot_be_adopted_after_its_binding_changes(tmp_path, change):
+def test_partial_writer_successor_cannot_be_adopted_after_its_binding_changes(
+        tmp_path, change, writer_control):
     from specroad.changes import (RecoveryError, RecoveryAuthority, LockRecord,
         RolledBackJournal, transaction_recovery_lock, rollback_interrupted_transaction,
         cleanup_recovered_transaction)
     from specroad.model.canonical import canonical_json_bytes
-    _, trace = control(tmp_path / 'control')
+    trace = writer_control
     successors = [e for e in trace['events'] if e['phase'] == 'publishing'
                   and e['operation'] == 'fsync' and e['paths'][0].endswith('/journal.next')]
     root = tmp_path / 'project'

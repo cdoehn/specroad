@@ -16,6 +16,7 @@ from specroad.recovery._execution_store import RestoreStore
 from specroad.security import ProjectBoundary
 from specroad.storage.operational_preflight import observe_operational_preflight
 from support.model import put
+from support.languages import small_restore_registry
 from support.read_only import inventory, no_write_attempts
 from support.restore import restore_case, plan_for
 from support.project_locks import Probe
@@ -23,8 +24,8 @@ from test_restore_execution import ACTOR, execute, selected, files
 from test_transaction_recovery_lock import child
 
 
-def fixture(tmp_path):
-    options, original, _ = restore_case(tmp_path)
+def fixture(tmp_path, *, language_registry=None):
+    options, original, _ = restore_case(tmp_path, language_registry=language_registry)
     changed = sorted(p for p in original if p.startswith(('spec/documents/', 'spec/goals/')))
     assert len(changed) >= 2
     for i, path in enumerate(changed):
@@ -95,7 +96,7 @@ def continue_restore(plan, selection, **kwargs):
 @pytest.mark.parametrize('boundary', ['intent', 'plan', 'manifest', 'staging', 'prepared', 'committing',
     'partial', 'partial-before-sync', 'full', 'full-before-sync', 'audit', 'archived-old', 'terminal'])
 def test_actual_process_exit_preserves_original_request_and_recovers_only_proven_state(tmp_path, boundary):
-    options, plan, selection, changed, old = fixture(tmp_path)
+    options, plan, selection, changed, old = fixture(tmp_path, language_registry=small_restore_registry())
     root = options['project_root']
     before = {p: (root / p).read_bytes() for p in changed}
     if boundary in ('intent', 'plan', 'manifest', 'prepared', 'committing'):
@@ -132,7 +133,7 @@ def test_actual_process_exit_preserves_original_request_and_recovers_only_proven
 
 @pytest.mark.parametrize('fault', ['backup', 'intent', 'foreign', 'target', 'selection', 'ordinary-owner'])
 def test_unproven_partial_state_is_never_overwritten_by_recovery(tmp_path, fault):
-    options, plan, selection, changed, old = fixture(tmp_path)
+    options, plan, selection, changed, old = fixture(tmp_path, language_registry=small_restore_registry())
     root = options['project_root']
     interrupted(plan, selection, 'publish', count=1)
     if fault == 'backup':
@@ -163,7 +164,7 @@ def test_unproven_partial_state_is_never_overwritten_by_recovery(tmp_path, fault
 
 @pytest.mark.parametrize('fault', ['missing_force', 'missing_hash', 'missing_reason', 'risk_without_force', 'hash_type'])
 def test_incomplete_takeover_arguments_are_usage_errors_before_any_write(tmp_path, fault):
-    options, plan, selection, _, _ = fixture(tmp_path)
+    options, plan, selection, _, _ = fixture(tmp_path, language_registry=small_restore_registry())
     kwargs = {'force': True, 'expected_lock_sha256': 'a' * 64, 'reason': 'Synthetic reason'}
     if fault == 'missing_force': kwargs.pop('force')
     elif fault == 'missing_hash': kwargs.pop('expected_lock_sha256')
@@ -180,7 +181,7 @@ def test_incomplete_takeover_arguments_are_usage_errors_before_any_write(tmp_pat
 @pytest.mark.parametrize('boundary', ['owner-replace', 'owner-complete', 'rollback-intent',
                                      'rollback-publication', 'rollback-before-sync'])
 def test_repeated_real_crashes_during_takeover_and_rollback_keep_original_bytes(tmp_path, boundary):
-    options, plan, selection, changed, old = fixture(tmp_path)
+    options, plan, selection, changed, old = fixture(tmp_path, language_registry=small_restore_registry())
     root = options['project_root']
     before = {p: (root / p).read_bytes() for p in changed}
     interrupted(plan, selection, 'publish', count=1)
@@ -219,7 +220,7 @@ with project_lock(root, kind='recovery', command='recover run', project_id=sys.a
 
 @pytest.mark.parametrize('kind', ['writer', 'recovery'])
 def test_new_restore_explicitly_transfers_only_selected_old_owner_and_keeps_both_requests(tmp_path, kind):
-    options, plan, selection, changed, old = fixture(tmp_path)
+    options, plan, selection, changed, old = fixture(tmp_path, language_registry=small_restore_registry())
     root = options['project_root']
     owner = old_owner(plan, kind=kind)
     calls = []
@@ -244,7 +245,7 @@ def test_new_restore_explicitly_transfers_only_selected_old_owner_and_keeps_both
 @pytest.mark.parametrize('fault', ['hash', 'project', 'root', 'transaction', 'restore_owner', 'corrupt',
                                  'alive', 'alive-with-risk', 'foreign', 'unknown', 'reused', 'denied', 'nonbool', 'mutated'])
 def test_invalid_or_unauthorized_owner_takeover_is_write_free(tmp_path, fault):
-    options, plan, selection, _, _ = fixture(tmp_path)
+    options, plan, selection, _, _ = fixture(tmp_path, language_registry=small_restore_registry())
     root = options['project_root']
     changes = {}
     if fault == 'project': changes['project_id'] = 'other-project'
@@ -278,7 +279,7 @@ def test_invalid_or_unauthorized_owner_takeover_is_write_free(tmp_path, fault):
 
 @pytest.mark.parametrize('state', ['foreign', 'unverifiable', 'pid_reused'])
 def test_explicit_remote_risk_is_fresh_and_audited_for_nonlive_owner(tmp_path, state):
-    options, plan, selection, _, _ = fixture(tmp_path)
+    options, plan, selection, _, _ = fixture(tmp_path, language_registry=small_restore_registry())
     root = options['project_root']; owner = old_owner(plan)
     probe = {'foreign': Probe('another-host', 'absent'), 'unverifiable': Probe(None, 'absent'),
              'pid_reused': Probe(owner.data['host_id'], 'alive', 'another-start')}[state]
@@ -292,7 +293,7 @@ def test_explicit_remote_risk_is_fresh_and_audited_for_nonlive_owner(tmp_path, s
 
 @pytest.mark.parametrize('boundary', ['intent', 'owner-replace', 'completed'])
 def test_new_restore_handoff_crash_before_execution_journal_never_starts_operation_on_retry(tmp_path, boundary):
-    options, plan, selection, changed, old = fixture(tmp_path)
+    options, plan, selection, changed, old = fixture(tmp_path, language_registry=small_restore_registry())
     root = options['project_root']; owner = old_owner(plan)
     before = {p: (root / p).read_bytes() for p in changed}
     if boundary == 'owner-replace':
@@ -309,7 +310,7 @@ def test_new_restore_handoff_crash_before_execution_journal_never_starts_operati
 @pytest.mark.parametrize('change_target', [False, True])
 def test_source_changed_at_committing_publication_is_rejected_before_any_target_effect(tmp_path, monkeypatch, change_target):
     from specroad.recovery import _execution_store
-    options, original, _ = restore_case(tmp_path)
+    options, original, _ = restore_case(tmp_path, language_registry=small_restore_registry())
     root = options['project_root']
     if change_target:
         path = next(p for p in original if p.startswith('spec/goals/'))
@@ -333,7 +334,7 @@ def test_source_changed_at_committing_publication_is_rejected_before_any_target_
 
 def test_force_does_not_override_the_real_native_mutex(tmp_path):
     from specroad.changes import project_lock
-    options, plan, selection, _, _ = fixture(tmp_path)
+    options, plan, selection, _, _ = fixture(tmp_path, language_registry=small_restore_registry())
     root = options['project_root']
     with project_lock(root, kind='recovery', command='recover run', project_id=plan.data['project_id'],
                       transaction_id='old', request_id='original-old-request') as held:
@@ -349,7 +350,7 @@ def test_force_does_not_override_the_real_native_mutex(tmp_path):
 def test_partial_recovery_reverses_creation_and_removal_with_exact_original_membership(tmp_path, effect):
     from support.records import record_value, ref
     from specroad.model.paths import artifact_path
-    options, original, _ = restore_case(tmp_path)
+    options, original, _ = restore_case(tmp_path, language_registry=small_restore_registry())
     root = options['project_root']
     goal = next(p for p in original if p.startswith('spec/goals/'))
     put(root, goal, b'original damaged goal')
@@ -382,7 +383,7 @@ def test_partial_recovery_reverses_creation_and_removal_with_exact_original_memb
 
 @pytest.mark.parametrize('fault', ['missing-backup', 'denied-current-authority', 'changed-completed-target'])
 def test_recovery_requires_complete_original_evidence_current_authority_and_actual_target(tmp_path, fault):
-    options, plan, selection, changed, _ = fixture(tmp_path)
+    options, plan, selection, changed, _ = fixture(tmp_path, language_registry=small_restore_registry())
     root = options['project_root']
     if fault == 'changed-completed-target':
         execute(plan, affected_journals=selection)
