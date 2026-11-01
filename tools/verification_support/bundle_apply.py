@@ -9,6 +9,7 @@ import stat
 import subprocess
 import sys
 import tempfile
+import uuid
 
 
 def canonical(value):
@@ -29,6 +30,13 @@ def validate_bundle(data):
         raise ValueError('Invalid Apply bundle plan')
     if set(data['binding']) != {'repo_id', 'base_commit', 'state_fingerprint', 'fingerprint_algorithm'}:
         raise ValueError('Incomplete native Result binding')
+    binding = data['binding']
+    identity = uuid.UUID(binding['repo_id'])
+    if (identity.version != 4 or str(identity) != binding['repo_id']
+            or not re.fullmatch(r'[0-9a-f]{40}|[0-9a-f]{64}', binding['base_commit'])
+            or not re.fullmatch(r'[0-9a-f]{16}', binding['state_fingerprint'])
+            or binding['fingerprint_algorithm'] != 'patchharbor-state-v1'):
+        raise ValueError('Invalid native Result binding')
     ids = []
     for stage in data['stages']:
         if (set(stage) != {'commit_id', 'message', 'before', 'after', 'payloads', 'source_sha256', 'test_plan'}
@@ -43,7 +51,7 @@ def validate_bundle(data):
         for name, digest in {**stage['before'], **stage['after']}.items():
             path = PurePosixPath(name)
             if (path.is_absolute() or str(path) != name or '\\' in name
-                    or any(p in ('.', '..', '.git', '.patchharbor') for p in path.parts)
+                    or any(p.lower() in ('.', '..', '.git', '.patchharbor') for p in path.parts)
                     or not re.fullmatch(r'[A-Za-z0-9_./-]+', name)
                     or not re.fullmatch(r'[0-9a-f]{64}', digest)):
                 raise ValueError('Unsafe stage path or hash')
@@ -75,16 +83,24 @@ def remaining_commits(plan, progress, *, result_head):
     ids = [s['commit_id'] for s in plan['stages']]
     done = progress['committed']
     completed_ids = [s['commit_id'] for s in done]
-    if (progress['plan_sha256'] != sha256(canonical(plan)).hexdigest()
+    if (type(progress.get('format_version')) is not int or progress['format_version'] != 1
+            or progress.get('kind') != 'specroad-apply-progress-v1'
+            or progress['source_result_sha256'] != plan['source_result_sha256']
+            or progress['plan_sha256'] != sha256(canonical(plan)).hexdigest()
             or progress['phase'] != 'failed' or completed_ids != ids[:len(done)]
+            or len(done) > len(ids) or len(set(ids)) != len(ids)
             or progress['remaining_commit_ids'] != ids[len(done):]
             or progress['actual_head'] != result_head):
         raise ValueError('Unproven remaining commit sequence')
     parent = plan['binding']['base_commit']
+    seen = {parent}
     for row in done:
-        if row['parent'] != parent or not re.fullmatch(r'[0-9a-f]{40}|[0-9a-f]{64}', row['commit']):
+        if (row['parent'] != parent or row['commit'] in seen
+                or not re.fullmatch(r'[0-9a-f]{40}|[0-9a-f]{64}', row['commit'])
+                or not re.fullmatch(r'[0-9a-f]{64}', row['gate']['selection_sha256'])):
             raise ValueError('Unproven completed commit chain')
         parent = row['commit']
+        seen.add(parent)
     if result_head != parent:
         raise ValueError('HEAD moved without a proved completed stage; inspect the Result')
     return plan['stages'][len(done):]
@@ -194,6 +210,11 @@ class NativeApply:
         if self.report_dir is not None:
             with (self.report_dir / ('progress-%04d.json' % self.event)).open('xb') as stream:
                 stream.write(raw); stream.flush(); os.fsync(stream.fileno())
+            descriptor = os.open(self.report_dir, os.O_RDONLY | os.O_DIRECTORY)
+            try:
+                os.fsync(descriptor)
+            finally:
+                os.close(descriptor)
             self.event += 1
         print('SPECROAD_APPLY_PROGRESS ' + raw.decode().rstrip(), flush=True)
 
@@ -211,8 +232,9 @@ class NativeApply:
             for parent in path.parents:
                 if not stat.S_ISDIR(parent.lstat().st_mode):
                     raise ValueError('Linked stage parent: ' + name)
-            mode = path.lstat().st_mode
-            if (not stat.S_ISREG(mode) or mode & 0o7111
+            info = path.lstat()
+            mode = info.st_mode
+            if (not stat.S_ISREG(mode) or mode & 0o7111 or info.st_nlink != 1
                     or sha256(path.read_bytes()).hexdigest() != digest):
                 raise ValueError('Unexpected stage bytes/type/mode: ' + name)
 
@@ -277,6 +299,12 @@ class NativeApply:
                 or self.names('ls-files', '--others', '--exclude-standard', '-z')):
             raise ValueError('Index has unexpected commit contents')
         self.git('diff', '--cached', '--check')
+        for record in self.git('ls-files', '--stage', '-z', '--', *paths).split(b'\0'):
+            if record:
+                metadata, _ = record.split(b'\t', 1)
+                mode, _, index_stage = metadata.split()
+                if mode != b'100644' or index_stage != b'0':
+                    raise ValueError('Index mode or merge stage differs from regular payloads')
         for name, digest in stage['after'].items():
             if sha256(self.git('show', ':' + name)).hexdigest() != digest:
                 raise ValueError('Index bytes differ from the tested stage')

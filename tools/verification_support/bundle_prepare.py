@@ -1,7 +1,9 @@
 """Prepare real file states and a private entrypoint; never run tests or Git."""
 import base64
 from hashlib import sha256
-from pathlib import Path
+from pathlib import Path, PurePosixPath
+import re
+import stat
 import shlex
 import zlib
 
@@ -20,6 +22,16 @@ def prepare_stage(before, after, paths, *, commit_id, message, test_plan):
     validate_plan(plan, commit_id)
     prior, payloads, final = {}, {}, {}
     for name in paths:
+        relative = PurePosixPath(name)
+        if (relative.is_absolute() or str(relative) != name
+                or not re.fullmatch(r'[A-Za-z0-9_./-]+', name)
+                or any(p.lower() in ('.', '..', '.git', '.patchharbor') for p in relative.parts)):
+            raise ValueError('Unsafe stage preparation path')
+        for source in (before, after):
+            for parent in (source/name).parents:
+                if parent.exists() or parent.is_symlink():
+                    if not stat.S_ISDIR(parent.lstat().st_mode):
+                        raise ValueError('Linked stage preparation parent')
         path = after / name
         if not path.is_file() or path.is_symlink():
             raise ValueError('Stage v1 requires a regular final file: ' + name)

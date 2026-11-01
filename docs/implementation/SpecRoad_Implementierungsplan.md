@@ -57,6 +57,12 @@ Fortsetzung mit vollständigem Rest ohne Wiederholung des ersten Commits.
 Die bestehenden Rotations-, Laufzeit- und Beobachtungsregressionen gehören
 zusätzlich zur Pflichtauswahl. Testerfolg bleibt bis zum Apply offen.
 
+R-Abnahme vorbereitet: echte parallele Mini-Projekte mit N=3 plus langsamen
+Pflichttests, alle dauerhaft erfassten Phasen, rote Gates ohne Commit,
+veränderte Reports/Quellbindungen, defekte Pflichtpläne, untergeschobene
+Restschritte und falsche Commitketten. Fremde Indexmodi bleiben gesperrt.
+Kein Test wurde im Dev ausgeführt; die Abnahme erfolgt im Apply.
+
 ## OFF-PLAN CI-PACKAGES-525 — manuelle CI und worksteal
 
 Autorität: ausdrücklicher Nutzerauftrag 31.10.2026; Spezifikation 2.5.1.
