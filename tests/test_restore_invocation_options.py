@@ -52,7 +52,9 @@ def reject(value, code=2):
     assert not error.value.mutation_possible and not error.value.recovery_required
 
 
-@pytest.mark.parametrize('options', [PLAN, EXECUTE])
+@pytest.mark.parametrize('options', [PLAN, EXECUTE,
+    pytest.param({**PLAN, '--source-kind': 'baseline', '--from': 'baseline.json',
+                  '--default-locale': 'en-GB', '--generated-path': 'output'}, id='baseline')])
 def test_argv_mapping_and_owned_request_have_identical_fresh_parameters(options):
     with no_io_attempts():
         argv = restore_request(invocation(options, 'argv'))

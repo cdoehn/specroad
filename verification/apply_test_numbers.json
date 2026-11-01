@@ -22834,6 +22834,7 @@
     "tests/test_host_test_execution_right.py::test_real_selected_run_inherits_priority_and_durably_records_each_phase[1]",
     "tests/test_host_test_execution_right.py::test_unpartitioned_ci_evidence_also_binds_actual_host_resources[None]",
     "tests/test_host_test_execution_right.py::test_unpartitioned_ci_evidence_also_binds_actual_host_resources[nice]",
-    "tests/test_host_test_execution_right.py::test_unpartitioned_ci_evidence_also_binds_actual_host_resources[workers]"
+    "tests/test_host_test_execution_right.py::test_unpartitioned_ci_evidence_also_binds_actual_host_resources[workers]",
+    "tests/test_restore_invocation_options.py::test_argv_mapping_and_owned_request_have_identical_fresh_parameters[baseline]"
   ]
 }

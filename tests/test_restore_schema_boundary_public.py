@@ -7,6 +7,7 @@ from support.model import put
 from support.languages import small_restore_registry
 from support.read_only import inventory, no_write_attempts
 from support.restore import restore_case
+from support.restore_work import capture_pending_planning_units
 from test_restore_invocation import planning
 from test_restore_invocation_options import invocation
 from test_restore_legacy_history import legacy_registration, unsupported, attach_current_evidence
@@ -46,12 +47,19 @@ def test_work_partial_capture_never_qualifies_unsupported_originals(recorded, tm
     original = {key: inventory(options[key]) for key in ('project_root', 'source_root')}
     result = start({**planning(options, output), '--work-dir': str(location)}, representation)
     assert result.exit_code == 8, thaw(result.details)
-    bound = result.continuation.claim.total_units
-    for _ in range(bound):
-        result = work('resume', location, representation=representation)
-        if result.exit_code != 8:
-            break
+    assert result.continuation.claim.completed_units == 1
+    capture_pending_planning_units(location)
+    assert not (output / 'plans/original.json').exists()
+    assert not (location / 'results/restore-plan.json').exists()
+    result = work('resume', location, representation=representation)
     assert result.exit_code == 3, thaw(result.details)
+    assert result.details['reason'] == 'restore_unsupported_source_schema_version'
+    assert result.details['path'] == ('attachments/original.json' if kind == 'attachment'
+                                      else 'spec/evidence/SR-EVD-' + '0' * 26 + '.json')
+    assert result.details['pointer'] == '/schema_version'
+    assert result.details['highest_supported'] == '0.2.0'
+    assert result.details['mutation_possible'] is False
+    assert result.details['recovery_required'] is False
     assert not (output / 'plans/original.json').exists()
     assert all(inventory(options[key]) == value for key, value in original.items())
     status = work('status', location, representation=representation)
