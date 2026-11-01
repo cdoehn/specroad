@@ -2,7 +2,9 @@
 import argparse
 import json
 import os
+import stat
 from pathlib import Path
+from .cpu_capacity import available_cpus
 
 POLICY = 'verification/test_execution_policy.json'
 DEFAULT_WORKER_LIMIT = 10
@@ -27,6 +29,12 @@ def enabled(root):
         return False
     if path.is_symlink() or not path.is_file():
         raise ValueError('Invalid test execution policy file')
+    for parent in path.absolute().parents:
+        if not stat.S_ISDIR(parent.lstat().st_mode):
+            raise ValueError('Linked execution policy parent')
+    before = path.stat()
+    if before.st_nlink != 1 or before.st_size > 4096:
+        raise ValueError('Invalid execution policy file size or links')
     def unique(pairs):
         result = {}
         for key, value in pairs:
@@ -34,17 +42,15 @@ def enabled(root):
                 raise ValueError('Duplicate execution policy key')
             result[key] = value
         return result
-    value = json.loads(path.read_bytes(), object_pairs_hook=unique)
+    raw = path.read_bytes()
+    after = path.stat()
+    if (before.st_dev, before.st_ino, before.st_mtime_ns, before.st_size) != (
+            after.st_dev, after.st_ino, after.st_mtime_ns, after.st_size):
+        raise ValueError('Execution policy changed while reading')
+    value = json.loads(raw, object_pairs_hook=unique)
     if value != POLICY_VALUE or any(type(n) is not int for n in value.values()):
         raise ValueError('Unknown test execution policy')
     return True
-
-
-def available_cpus():
-    counts = [max(1, os.cpu_count() or 1)]
-    if hasattr(os, 'sched_getaffinity'):
-        counts.append(max(1, len(os.sched_getaffinity(0))))
-    return min(counts)
 
 
 def select_workers(root, workers=None, *, worker_limit=DEFAULT_WORKER_LIMIT, environment=None):
@@ -95,13 +101,22 @@ def configure_pytest(config, root):
     if config.getoption('collectonly') or not enabled(root):
         return None
     if hasattr(config, 'workerinput'):
-        resources = validate_resources(config.workerinput['sr_host_resources'])
+        resources = validate_resources(config.workerinput.get('sr_host_resources'))
     else:
         count, resources = select_workers(root, config.getoption('numprocesses', default=None),
             worker_limit=config.getoption('worker_limit'))
         if config.getoption('dist', default='no') != 'worksteal':
             raise ValueError('Host test execution requires worksteal')
+        maximum = config.getoption('maxprocesses', default=None)
+        if maximum is not None:
+            if type(maximum) is not int or maximum < 1:
+                raise ValueError('Invalid xdist worker maximum')
+            count = min(count, maximum)
+            resources['workers'] = count
         config.option.numprocesses = count
+        # xdist constructed its process list in pytest_cmdline_main, before
+        # pytest_configure. Keep that list in sync for direct -n requests too.
+        config.option.tx = ['popen'] * count
     actual = lower_priority()
     os.environ[NESTED] = '1'
     return {**resources, 'nice_actual': actual}

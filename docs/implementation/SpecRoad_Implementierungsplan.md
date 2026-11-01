@@ -55,6 +55,12 @@ Dev führt keine Verhaltenstests aus. Syntax, Collection und Paketprüfung
 sind keine Testabnahme. Dieses Bundle wird zunächst außerhalb des überwachten
 Exchange bereitgestellt; der Nutzer hat keinen vollen Apply-Lauf beauftragt.
 
+R-Abnahme vorbereitet: Linux-cgroup v1/v2 samt Elternquoten, Teil-CPU,
+Subtree-Mounts, falsche Quoten/Policies und fehlgeschlagene Priorität.
+Kleine echte Runner-Projekte prüfen Nice-Vererbung, verschachtelte Läufe,
+dauerhafte Phasen, dynamische Apply-Auswahlbindung v5 sowie CI-Job und
+externe Aggregatprüfung. Diese Tests werden ausschließlich im Apply ausgeführt.
+
 ### Fortsetzung nach Fehler-Result 537 mit Korrekturbundle 538
 
 Das maßgebliche Result `specroad-apply_Result_162822_1101_2359ca.zip`

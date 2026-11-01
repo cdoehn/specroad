@@ -49,12 +49,24 @@ def inspect_report_archive(raw, request, version, *, run_id=None, attempt=None):
         packaged = ('ci_packages' in report or (type(execution) is dict and 'ci_shards' in execution)
                     or 'ci-plan.json' in reports or 'shard-receipts.json' in reports)
         workers = execution.get('workers') if type(execution) is dict else None
+        host_bound = type(execution) is dict and 'host_resources' in execution
         if (type(runtime) is not dict or runtime.get('implementation') != 'cpython'
                 or type(runtime.get('python')) is not str or not runtime['python'].startswith(version + '.')
                 or type(execution) is not dict
                 or (packaged and (type(workers) is not int or workers < 1))
-                or (not packaged and workers != (0 if name.startswith('serial') else 4))):
+                or (not packaged and not host_bound and workers != (0 if name.startswith('serial') else 4))):
             raise CIObservationError('test_runtime_or_mode_mismatch')
+        if host_bound:
+            from verification_support.host_execution import validate_resources, verify_resources
+            try:
+                actual = execution['host_resources']
+                resources = validate_resources({k:v for k,v in actual.items() if k != 'nice_actual'})
+                verify_resources(report['observation'], resources)
+                if (name.startswith('serial') or workers != resources['workers']
+                        or actual != report['observation']['host_resources']):
+                    raise ValueError('Wrong execution host evidence')
+            except (KeyError, TypeError, ValueError, AttributeError) as error:
+                raise CIObservationError('invalid_host_resources') from error
         if packaged:
             from verification_support.ci_packages import verify_aggregate
             try:

@@ -21,7 +21,8 @@ from test_apply_rotation import NEXT
 
 
 @pytest.mark.parametrize('failing', [False, True])
-def test_real_parallel_union_records_every_phase_and_red_gate_keeps_head(tmp_path, failing):
+@pytest.mark.parametrize('host_policy', [False, True])
+def test_real_parallel_union_records_every_phase_and_red_gate_keeps_head(tmp_path, failing, host_policy):
     ids = [f'tests/test_subject.py::test_{i}' for i in range(9)]
     source = '\n'.join(f'def test_{i}():\n    assert {not (failing and i == 8)}\n' for i in range(9))
     root = make_catalog_project(tmp_path/'repo', ids=ids, source=source)
@@ -29,6 +30,9 @@ def test_real_parallel_union_records_every_phase_and_red_gate_keeps_head(tmp_pat
     (root/'verification/test_runtime_policy.json').write_bytes(canonical({
         'format_version':1,'selection':'latest_valid_fifth','database':LOCAL}))
     (root/POLICY).write_bytes(canonical(POLICY_VALUE))
+    if host_policy:
+        from verification_support import host_execution as host
+        (root/host.POLICY).write_bytes(canonical(host.POLICY_VALUE))
     hooks = root/'build/empty-hooks'; hooks.mkdir()
     def git(*args):
         return subprocess.run(['git', '-c', 'user.name=Apply Fixture', '-c', 'user.email=fixture@example.invalid',
@@ -51,13 +55,21 @@ def test_real_parallel_union_records_every_phase_and_red_gate_keeps_head(tmp_pat
     expected_source = source_identity(root)
     out = root/'build/gate'
     process = execute(root,'run_apply_tests.py',['--test-plan',str(plan_path),
-        '--commit-id','step.W','--outdir',str(out)])
+        '--commit-id','step.W','--outdir',str(out),'--worker-limit','2'],
+        environment={'SPECROAD_NESTED_TEST_RUN':'0'})
     assert process.returncode == (1 if failing else 0), (process.stdout+process.stderr).decode()
     report = json.loads((out/'selection.json').read_bytes())
     selected = {ids[i] for i in (0,1,3,6,8)}
     assert set(report['nodeid_to_test_id'].values()) == selected
     assert report['required_tests']['restored_slow_test_ids'] == [ids[8]]
     assert report['full_suite_passed'] is None
+    if host_policy:
+        count, resources = host.select_workers(root,worker_limit=2,environment={})
+        assert report['host_resources'] == resources and report['workers'] == count
+        observed = json.loads((out/'observations.json').read_bytes())
+        host.verify_resources(observed,resources)
+        assert observed['host_resources']['nice_actual'] >= 10
+        assert report['format_version'] == 4
     assert git('rev-parse','HEAD').decode().strip() == head
     with RuntimeHistory(root) as history:
         run = history.db.execute('SELECT MAX(id) FROM runs').fetchone()[0]

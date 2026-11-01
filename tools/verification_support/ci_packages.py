@@ -149,7 +149,10 @@ def make_plan(collection, estimates, context, *, rules=None, host_resources=None
                 tests=tests, shards=_packages(tests, rules))
     if host_resources is not None:
         validate_resources(host_resources)
-        require(host_resources['workers'] == rules['workers'], 'Planning worker count differs from host')
+        require(host_resources['workers'] == rules['workers']
+                and not host_resources['nested']
+                and rules['workers'] == min(host_resources['available_cpus'],host_resources['worker_limit']),
+                'Planning worker count differs from host')
         plan.update(format_version=2, kind='specroad-ci-package-plan-v2', host_resources=host_resources)
     else:
         require(rules['workers'] == 4, 'Historical CI plans require four workers')
@@ -164,7 +167,10 @@ def validate_plan(plan):
             and plan['kind'] == 'specroad-ci-package-plan-v' + str(version), 'Invalid CI package plan')
     if version == 2:
         validate_resources(plan['host_resources'])
-        require(plan['rules']['workers'] == plan['host_resources']['workers'], 'Wrong planning worker count')
+        resources = plan['host_resources']
+        require(plan['rules']['workers'] == resources['workers'] and not resources['nested']
+                and resources['workers'] == min(resources['available_cpus'],resources['worker_limit']),
+                'Wrong planning worker count')
     else:
         require(plan['rules']['workers'] == 4, 'Historical CI plans require four workers')
     require(plan['plan_sha256'] == digest({k:v for k,v in plan.items() if k != 'plan_sha256'}),
