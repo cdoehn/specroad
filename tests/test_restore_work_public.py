@@ -11,6 +11,7 @@ from specroad.cli.results import thaw
 from specroad.cli.result_schemas import validate_result_document
 from specroad.work.open_existing import open_restore_work
 from support.read_only import inventory, no_write_attempts
+from support.languages import small_restore_registry
 from support.restore import restore_case, plan_for
 from test_restore_invocation import planning, execution, authority
 from test_restore_invocation_options import invocation
@@ -52,7 +53,7 @@ def assert_historical_replay(replay, completed):
 @pytest.mark.parametrize('kind', ['project_bundle', 'baseline'])
 @pytest.mark.parametrize('representation', ['argv', 'mapping'])
 def test_planning_work_keeps_exact_original_and_delivers_full_plan(recorded, tmp_path, kind, representation):
-    options, _, _ = restore_case(tmp_path, kind)
+    options, _, _ = restore_case(tmp_path, kind, language_registry=small_restore_registry())
     expected = plan_for(options)
     out = tmp_path / 'out'; out.mkdir()
     location = tmp_path / 'work'

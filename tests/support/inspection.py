@@ -13,9 +13,9 @@ from .model import configuration_value, put
 from .profiles import profile_data
 
 
-def inspection_project(root, *, artifacts=None, extra_profiles=()):
+def inspection_project(root, *, artifacts=None, extra_profiles=(), language_registry=None):
     root.mkdir(exist_ok=True)
-    registry = bundled_language_registry()
+    registry = bundled_language_registry() if language_registry is None else language_registry
     profile = ProfileResource(canonical_json_bytes(profile_data(profile_id='core')))
     resources = [profile, *extra_profiles]
     keys = [p.key for p in extra_profiles]
@@ -111,9 +111,10 @@ def _restore_example_inputs(root, command):
     from specroad.work.open_existing import protected_paths
     from specroad.work.restore_planning import prepare_planning_work
     from specroad.work.root import WorkDirectory
+    from .languages import small_restore_registry
     from .restore import restore_case, plan_for
 
-    options, _, _ = restore_case(root)
+    options, _, _ = restore_case(root, language_registry=small_restore_registry())
     output = root / 'output'; output.mkdir()
     planning = {'--project': str(options['project_root']), '--source-root': str(options['source_root']),
         '--from': options['source_path'], '--source-kind': 'project_bundle', '--dry-run': True,

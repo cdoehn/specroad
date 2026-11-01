@@ -20,6 +20,18 @@ def load_registry(raw=None, version="2020-01-01"):
     return LanguageRegistry(raw, expected_sha256=sha256(raw).hexdigest(), expected_version=version)
 
 
+def small_restore_registry():
+    """Synthetic, natively parsed fixture for de-DE projects and en-GB baselines.
+
+    This is not the distribution's IANA snapshot. Explicit recovery callers
+    use only these four records; other fixtures keep their complete registry.
+    """
+    return load_registry(registry_bytes(
+        ("language", "de"), ("region", "DE"),
+        ("language", "en"), ("region", "GB"),
+    ))
+
+
 def project_registry(root, raw=None):
     registry = load_registry(raw)
     binding = registry_binding(registry)

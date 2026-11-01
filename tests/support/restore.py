@@ -10,10 +10,12 @@ from .model import put
 from .records import record_value, ref
 
 
-def restore_case(tmp_path, kind='project_bundle', *, baseline_kind='working', values=None):
+def restore_case(tmp_path, kind='project_bundle', *, baseline_kind='working', values=None,
+                 language_registry=None):
     origin, current = tmp_path / 'origin', tmp_path / 'current'
     model = inspection_project(origin, artifacts=values if values is not None else
-                               [record_value('document'), domain_value('goal')])
+                               [record_value('document'), domain_value('goal')],
+                               language_registry=language_registry)
     current.mkdir()
     files = model.source_files
     for path, raw in files.items():
