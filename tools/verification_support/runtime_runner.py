@@ -7,7 +7,7 @@ import sys
 import tempfile
 
 from .execution_policy import DEFAULT_DISTRIBUTION
-from .host_execution import DEFAULT_WORKER_LIMIT, select_workers, verify_resources, enabled
+from .host_execution import DEFAULT_WORKER_LIMIT, select_workers
 from .catalog_check import run_catalog_preflight
 from .ci_reference import _load_report
 from .common import json_bytes

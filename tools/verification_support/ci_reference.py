@@ -9,8 +9,7 @@ import sys
 
 from compare_test_runs import _signature
 from .process_environment import test_environment
-from .execution_policy import DEFAULT_WORKERS
-from .host_execution import DEFAULT_WORKER_LIMIT, select_workers, verify_resources, enabled
+from .host_execution import DEFAULT_WORKER_LIMIT, select_workers, verify_resources
 
 ROOT = Path(__file__).resolve().parents[2]
 

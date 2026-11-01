@@ -12,14 +12,14 @@ from verification_support.ci_reference import run_reference
 from verification_support.execution_policy import DEFAULT_WORKERS
 
 
-from verification_support.host_execution import positive_limit, DEFAULT_WORKER_LIMIT
+from verification_support.host_execution import add_worker_limit, DEFAULT_WORKER_LIMIT
 
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--outdir", required=True, type=Path)
     parser.add_argument("--workers", type=int, default=None)
-    parser.add_argument("--worker-limit", type=positive_limit, default=DEFAULT_WORKER_LIMIT)
+    add_worker_limit(parser)
     args = parser.parse_args(argv)
     try:
         result = run_reference(args.outdir, workers=args.workers, worker_limit=args.worker_limit)

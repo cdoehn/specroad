@@ -5,7 +5,7 @@ from pathlib import Path
 import subprocess
 import sys
 from .execution_policy import DEFAULT_DISTRIBUTION
-from .host_execution import DEFAULT_WORKER_LIMIT, select_workers, verify_resources, enabled
+from .host_execution import DEFAULT_WORKER_LIMIT, select_workers, verify_resources
 from .identity import source_identity
 from .process_environment import test_environment
 from .ci_reference import _load_report

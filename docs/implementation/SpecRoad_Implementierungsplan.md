@@ -61,6 +61,10 @@ Kleine echte Runner-Projekte prüfen Nice-Vererbung, verschachtelte Läufe,
 dauerhafte Phasen, dynamische Apply-Auswahlbindung v5 sowie CI-Job und
 externe Aggregatprüfung. Diese Tests werden ausschließlich im Apply ausgeführt.
 
+C vereinheitlicht die CLI-Definition der Workergrenze im gemeinsamen Helfer
+und entfernt ungenutzte Importe. Verhalten, Testauswahl und Nachweisverträge
+bleiben gegenüber R unverändert. Keine Verhaltenstests im Dev ausgeführt.
+
 ### Fortsetzung nach Fehler-Result 537 mit Korrekturbundle 538
 
 Das maßgebliche Result `specroad-apply_Result_162822_1101_2359ca.zip`

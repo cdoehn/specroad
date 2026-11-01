@@ -13,7 +13,7 @@ if str(ROOT / "tools") not in sys.path:
 from verification_support.process_environment import test_environment
 from verification_support.execution_policy import DEFAULT_WORKERS, DEFAULT_DISTRIBUTION
 from verification_support.runtime_runner import prepare_request
-from verification_support.host_execution import enabled, select_workers, positive_limit, DEFAULT_WORKER_LIMIT
+from verification_support.host_execution import enabled, select_workers, add_worker_limit, DEFAULT_WORKER_LIMIT
 
 
 def worker_count(value):
@@ -55,7 +55,7 @@ def main(argv=None):
     parser.add_argument("--expected-tests", type=int)
     parser.add_argument("--runtime-measurement", type=Path)
     parser.add_argument("--runtime-journal", type=Path)
-    parser.add_argument("--worker-limit", type=positive_limit, default=DEFAULT_WORKER_LIMIT)
+    add_worker_limit(parser)
     args = parser.parse_args(argv)
     if enabled(ROOT):
         requested = None if args.workers in (None, "auto") else int(args.workers)

@@ -10,7 +10,7 @@ POLICY = 'verification/test_execution_policy.json'
 DEFAULT_WORKER_LIMIT = 10
 NICE_MINIMUM = 10
 NESTED = 'SPECROAD_NESTED_TEST_RUN'
-POLICY_VALUE = {'format_version': 1, 'worker_limit': 10, 'nice_minimum': 10}
+POLICY_VALUE = {'format_version': 1, 'worker_limit': DEFAULT_WORKER_LIMIT, 'nice_minimum': NICE_MINIMUM}
 
 
 def positive_limit(value):
@@ -21,6 +21,12 @@ def positive_limit(value):
     if isinstance(value, bool) or str(number) != str(value) or number < 1:
         raise argparse.ArgumentTypeError('Worker limit must be a positive integer')
     return number
+
+
+def add_worker_limit(parser, *, default=DEFAULT_WORKER_LIMIT):
+    """One CLI contract for all explicit test runners and CI package commands."""
+    return parser.add_argument('--worker-limit', type=positive_limit, default=default,
+        help='Maximum worker processes; use available host CPUs up to this positive limit (default: 10)')
 
 
 def enabled(root):

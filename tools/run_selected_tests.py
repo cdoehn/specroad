@@ -11,7 +11,7 @@ from verification_support.catalog_check import run_catalog_preflight
 from verification_support.publication import evidence_target
 
 
-from verification_support.host_execution import positive_limit, DEFAULT_WORKER_LIMIT
+from verification_support.host_execution import add_worker_limit, DEFAULT_WORKER_LIMIT
 
 
 def main(argv=None):
@@ -20,7 +20,7 @@ def main(argv=None):
     parser.add_argument("--expected-tests", type=int, required=True)
     parser.add_argument("--outdir", type=Path, required=True)
     parser.add_argument("--workers", type=int, default=None)
-    parser.add_argument("--worker-limit", type=positive_limit, default=DEFAULT_WORKER_LIMIT)
+    add_worker_limit(parser)
     args = parser.parse_args(argv)
     try:
         # A checked full collection is not a full test run. Its fresh report is

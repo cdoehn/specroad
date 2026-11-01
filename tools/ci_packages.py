@@ -8,7 +8,7 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT/'tools'))
 from verification_support.ci_packages import DEFAULT_RULES, matrix
-from verification_support.host_execution import positive_limit, DEFAULT_WORKER_LIMIT
+from verification_support.host_execution import add_worker_limit, DEFAULT_WORKER_LIMIT
 from verification_support.ci_reference import _load_report
 from verification_support.ci_package_runtime import (
     aggregate, export_estimates, plan_run, preserve_history, run_package, write_json,
@@ -27,14 +27,14 @@ def main(argv=None):
     plan.add_argument('--estimates', type=Path, default=ROOT/'verification/ci_runtime_estimates.json')
     plan.add_argument('--target-minutes', type=int, default=180)
     plan.add_argument('--duration-factor', type=float, default=1.5)
-    plan.add_argument('--worker-limit', type=positive_limit, default=DEFAULT_WORKER_LIMIT)
+    add_worker_limit(plan)
     combine = subs.add_parser('matrix')
     combine.add_argument('--plans', type=Path, required=True)
     run = subs.add_parser('run')
     run.add_argument('--plan', type=Path, required=True)
     run.add_argument('--shard', type=int, required=True)
     run.add_argument('--outdir', type=Path, required=True)
-    run.add_argument('--worker-limit', type=positive_limit)
+    add_worker_limit(run, default=None)
     merge = subs.add_parser('aggregate')
     merge.add_argument('--plan', type=Path, required=True)
     merge.add_argument('--receipts', type=Path, required=True)

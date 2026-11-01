@@ -14,7 +14,7 @@ from verification_support.runtime_runner import run_measurement
 from verification_support.runtime_store import read_store, measurement_from_store
 
 
-from verification_support.host_execution import positive_limit, DEFAULT_WORKER_LIMIT
+from verification_support.host_execution import add_worker_limit, DEFAULT_WORKER_LIMIT
 
 
 def main(argv=None):
@@ -29,7 +29,7 @@ def main(argv=None):
     parser.add_argument('--test-id', action='append', default=[])
     parser.add_argument('--selection-file', action='append', default=[], type=Path)
     parser.add_argument('--workers', type=int, default=None)
-    parser.add_argument("--worker-limit", type=positive_limit, default=DEFAULT_WORKER_LIMIT)
+    add_worker_limit(parser)
     args = parser.parse_args(argv)
     explicit = bool(args.test_file or args.test_id or args.selection_file)
     if (args.status or args.export) and explicit:
