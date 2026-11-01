@@ -63,6 +63,26 @@ veränderte Reports/Quellbindungen, defekte Pflichtpläne, untergeschobene
 Restschritte und falsche Commitketten. Fremde Indexmodi bleiben gesperrt.
 Kein Test wurde im Dev ausgeführt; die Abnahme erfolgt im Apply.
 
+C trennt canonical/validate_bundle/public_plan/remaining_commits in den
+reinen bundle_contract-Helfer. Der Hosttreiber und der generierte private
+Entrypoint verwenden dieselben Funktionen; Verhalten und Pflichtauswahl
+bleiben erhalten. Der Quellstand enthält 45 neue Verhaltenstests. Alle
+drei Zwischenstände werden ausschließlich im Apply geprüft.
+
+### C-Fortsetzung mit Korrekturbundle 536
+
+Bundle 535 hat W mit 6.282 und R mit 6.326 bestandenen Apply-Tests
+erfolgreich committed. Die 6.138 C-Tests bestanden ebenfalls; die
+anschließende Git-Formatprüfung verhinderte den C-Commit wegen zusätzlicher
+Leerzeilen am Ende von `bundle_contract.py`. W und R bleiben erhalten.
+
+Korrekturbundle 536 bindet das Fehler-Result und übernimmt ausschließlich
+die offene Commit-ID `APPLY-ONLY-535.C` samt vollständigem erhaltenem
+C-Zwischenstand und Pflichtauswahl. Es entfernt die überzähligen Leerzeilen
+ohne Verhaltensänderung. Das C-Gate wird vor dem Abschlusscommit erneut
+ausgeführt; frühere Testerfolge ersetzen diesen Nachweis nicht. Im Dev
+finden nur statische Prüfungen statt. Produktstand 655/900 und 15.n.R bleiben.
+
 ## OFF-PLAN CI-PACKAGES-525 — manuelle CI und worksteal
 
 Autorität: ausdrücklicher Nutzerauftrag 31.10.2026; Spezifikation 2.5.1.
@@ -366,7 +386,7 @@ implementation_plan_commits_total: 900
 implementation_plan_commits_completed: 655
 last_completed_plan_commit: 15.n.W
 next_plan_commit: 15.n.R
-last_completed_numbered_bundle: 534
+last_completed_numbered_bundle: 536
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null

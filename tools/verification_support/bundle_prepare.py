@@ -54,6 +54,11 @@ def render_entrypoint(data, *, core_python):
     if not Path(core_python).is_absolute() or '\n' in str(core_python):
         raise ValueError('An explicit installed PatchHarbor interpreter is required')
     driver = Path(__file__).with_name('bundle_apply.py').read_text()
+    contract = Path(__file__).with_name('bundle_contract.py').read_text()
+    import_line = 'from .bundle_contract import canonical, validate_bundle, public_plan, remaining_commits\n'
+    if driver.count(import_line) != 1:
+        raise ValueError('Unexpected Apply driver imports')
+    driver = contract + '\n' + driver.replace(import_line, '', 1)
     packed = base64.b64encode(zlib.compress(canonical(data), 9)).decode()
     program = (driver + '\nimport zlib\nDATA = json.loads(zlib.decompress(base64.b64decode('
                + repr(packed) + ')))\n'
