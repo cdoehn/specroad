@@ -34,7 +34,7 @@ def journal_path(path, root):
 
 
 def binding(source, pairs, workers):
-    if (type(workers) is not int or workers < 2 or not pairs
+    if (type(workers) is not int or workers < 1 or not pairs
             or len(set(pairs.values())) != len(pairs)):
         raise ValueError('Parallel complete unique collection is required')
     return {'format_version': 1, 'source_sha256': source,

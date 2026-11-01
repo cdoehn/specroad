@@ -106,8 +106,21 @@ def test_parallel_framework_matches_serial_test_identities():
     assert serial["suite_passed"] and parallel["suite_passed"]
     assert serial["test_outcomes"] == parallel["test_outcomes"]
     assert serial["nodeids"] == parallel["nodeids"]
+    # The installed backend belongs to the main repo; these are separate roots
+    # without its execution policy and retain their explicit fixture modes.
+    assert "host_resources" not in serial and "host_resources" not in parallel
     assert parallel["tests_run"] == 5
     assert len([count for count in parallel["worker_test_counts"].values() if count > 0]) == 2
+    # An independent fixture can also opt into its own host resource policy.
+    from verification_support.host_execution import POLICY_VALUE
+    code, observed = run_pytest_fixture(PASSING, workers="auto",
+        extra=("--dist", "worksteal", "--worker-limit", "1"), execution_policy=POLICY_VALUE)
+    assert code == 0
+    assert observed["suite_passed"] and observed["tests_run"] == 5
+    assert observed["workers"] == ["gw0"]
+    assert observed["host_resources"]["workers"] == 1
+    assert observed["host_resources"]["worker_limit"] == 1
+    assert observed["host_resources"]["nice_actual"] >= 10
 
 
 def test_parallel_framework_transports_failures_and_subtest_outcomes():

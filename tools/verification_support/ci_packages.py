@@ -5,6 +5,7 @@ import math
 import re
 
 from .execution_policy import DEFAULT_DISTRIBUTION
+from .host_execution import validate_resources, verify_resources
 from .common import json_bytes
 from .selected_contract import verify_observation
 
@@ -42,7 +43,7 @@ def checked_rules(rules):
     require(type(rules) is dict and set(rules) == set(DEFAULT_RULES), 'Invalid package rules')
     for key in set(rules) - {'duration_factor'}:
         require(type(rules[key]) is int and rules[key] > 0, 'Positive integer rule required')
-    require(rules['workers'] == 4 and rules['max_matrix_jobs'] <= 256
+    require(rules['max_matrix_jobs'] <= 256
             and rules['overhead_seconds'] < rules['target_seconds'] <= 18000,
             'Invalid worker, matrix or time budget')
     factor = rules['duration_factor']
@@ -120,7 +121,7 @@ def _packages(tests, rules):
     raise ValueError('The estimated target requires more than 256 matrix jobs; no tests were omitted')
 
 
-def make_plan(collection, estimates, context, *, rules=None):
+def make_plan(collection, estimates, context, *, rules=None, host_resources=None):
     context = checked_context(context)
     rules = checked_rules(DEFAULT_RULES if rules is None else rules)
     require(type(collection) is dict and collection.get('catalog_valid') is True
@@ -146,15 +147,26 @@ def make_plan(collection, estimates, context, *, rules=None):
     plan = dict(format_version=1, kind='specroad-ci-package-plan-v1', context=context,
                 bindings=bindings, rules=rules, runtime_estimates_sha256=digest(estimates),
                 tests=tests, shards=_packages(tests, rules))
+    if host_resources is not None:
+        validate_resources(host_resources)
+        require(host_resources['workers'] == rules['workers'], 'Planning worker count differs from host')
+        plan.update(format_version=2, kind='specroad-ci-package-plan-v2', host_resources=host_resources)
+    else:
+        require(rules['workers'] == 4, 'Historical CI plans require four workers')
     plan['plan_sha256'] = digest(plan)
     return plan
 
 
 def validate_plan(plan):
-    require(type(plan) is dict and set(plan) == {'format_version', 'kind', 'context', 'bindings',
-            'rules', 'runtime_estimates_sha256', 'tests', 'shards', 'plan_sha256'}
-            and type(plan['format_version']) is int and plan['format_version'] == 1
-            and plan['kind'] == 'specroad-ci-package-plan-v1', 'Invalid CI package plan')
+    version = plan.get('format_version') if type(plan) is dict else None
+    fields = {'format_version', 'kind', 'context', 'bindings', 'rules', 'runtime_estimates_sha256', 'tests', 'shards', 'plan_sha256'}
+    require(type(version) is int and version in (1, 2) and set(plan) == fields | ({'host_resources'} if version == 2 else set())
+            and plan['kind'] == 'specroad-ci-package-plan-v' + str(version), 'Invalid CI package plan')
+    if version == 2:
+        validate_resources(plan['host_resources'])
+        require(plan['rules']['workers'] == plan['host_resources']['workers'], 'Wrong planning worker count')
+    else:
+        require(plan['rules']['workers'] == 4, 'Historical CI plans require four workers')
     require(plan['plan_sha256'] == digest({k:v for k,v in plan.items() if k != 'plan_sha256'}),
             'Changed package plan')
     require(checked_context(plan['context']) == plan['context'], 'Noncanonical CI context')
@@ -204,8 +216,14 @@ def matrix(plans):
         include.extend(dict(python=version, shard=s['shard']) for s in plan['shards'])
     require(sorted(versions) == list(PYTHONS) and all(c == contexts[0] for c in contexts),
             'Mixed, duplicate or missing Python plans')
+    def planning_policy(plan):
+        if plan['format_version'] == 1:
+            return (1, plan['rules'])
+        return (2, {k:v for k,v in plan['rules'].items() if k != 'workers'},
+                plan['host_resources']['worker_limit'])
     require(all(all(p[k] == plans[0][k] for k in
-            ('bindings', 'rules', 'runtime_estimates_sha256')) for p in plans),
+            ('bindings', 'runtime_estimates_sha256'))
+            and planning_policy(p) == planning_policy(plans[0]) for p in plans),
             'Mixed source, catalog, estimates or planning policy')
     require(len(include) <= 256, 'Matrix exceeds 256 jobs')
     return {'include': sorted(include, key=lambda r: (PYTHONS.index(r['python']), r['shard']))}
@@ -217,13 +235,14 @@ def merge_shards(plan, receipts):
     found = {}; runtime = None
     all_pairs = {}; outcomes = {}; counts = {}
     for receipt in receipts:
-        require(type(receipt) is dict and receipt.get('kind') == 'specroad-ci-package-result-v1'
-                and receipt.get('format_version') == 1 and type(receipt['format_version']) is int
+        require(type(receipt) is dict and receipt.get('kind') == 'specroad-ci-package-result-v' + str(plan['format_version'])
+                and receipt.get('format_version') == plan['format_version'] and type(receipt['format_version']) is int
                 and receipt.get('context') == plan['context']
                 and receipt.get('plan_sha256') == plan['plan_sha256']
                 and receipt.get('bindings') == plan['bindings']
                 and type(receipt.get('workers')) is int
-                and receipt['workers'] == plan['rules']['workers']
+                and receipt['workers'] >= 1
+                and (plan['format_version'] == 2 or receipt['workers'] == plan['rules']['workers'])
                 and receipt.get('distribution') == DEFAULT_DISTRIBUTION
                 and receipt.get('full_suite_passed') is None
                 and receipt.get('selected_passed') is True
@@ -238,6 +257,15 @@ def merge_shards(plan, receipts):
         observed = receipt.get('observation')
         verify_observation(observed, sorted({n.split('::',1)[0] for n in pairs}), len(pairs))
         require(observed['nodeid_to_test_id'] == pairs, 'Unexpected package test identities')
+        if plan['format_version'] == 2:
+            resources = validate_resources(receipt['host_resources'])
+            require(resources['worker_limit'] == plan['host_resources']['worker_limit']
+                    and resources['workers'] == receipt['workers'] and not resources['nested']
+                    and resources['workers'] == min(resources['available_cpus'], resources['worker_limit']),
+                    'CI job must use its own maximal bounded worker count')
+            verify_resources(observed, resources)
+            require(receipt['estimated_seconds_actual_host'] == estimate_on_host(plan, shard, receipt['workers']),
+                    'Wrong actual-host estimate')
         actual_runtime = receipt.get('runtime')
         require(type(actual_runtime) is dict and actual_runtime.get('implementation') == 'cpython'
                 and type(actual_runtime.get('python')) is str
@@ -247,7 +275,7 @@ def merge_shards(plan, receipts):
             runtime = actual_runtime
         require(runtime == actual_runtime, 'Mixed package platforms')
         for worker, count in observed['worker_test_counts'].items():
-            require(re.fullmatch('gw[0-9]+', worker) and int(worker[2:]) < plan['rules']['workers'],
+            require(re.fullmatch('gw[0-9]+', worker) and int(worker[2:]) < receipt['workers'],
                     'Unexpected package worker')
             counts[f'shard{shard}-{worker}'] = count
         require(not set(all_pairs) & set(pairs), 'Overlapping CI packages')
@@ -266,13 +294,16 @@ def verify_aggregate(plan, receipts, report):
     observation, runtime = merge_shards(plan, receipts)
     execution = report.get('execution')
     require(type(execution) is dict and execution.get('engine') == 'pytest'
-            and execution.get('workers') == plan['rules']['workers']
+            and execution.get('workers') == (max(r['workers'] for r in receipts) if plan['format_version'] == 2 else plan['rules']['workers'])
             and execution.get('distribution') == DEFAULT_DISTRIBUTION
             and type(execution.get('ci_shards')) is int
             and execution['ci_shards'] == len(plan['shards'])
             and report.get('platform_sha256') == digest(runtime)
             and report.get('configuration_sha256') == digest(execution),
             'Aggregate execution or platform binding changed')
+    if plan['format_version'] == 2:
+        require(execution.get('ci_worker_counts') == [r['workers'] for r in sorted(receipts, key=lambda r:r['shard'])],
+                'Aggregate worker counts differ from executed CI jobs')
     require(report.get('observation') == observation and report.get('runtime') == runtime
             and report.get('test_outcomes') == observation['test_outcomes']
             and report.get('tests_run') == len(plan['tests'])
@@ -281,3 +312,15 @@ def verify_aggregate(plan, receipts, report):
             and report.get('ci_packages') == {'plan_sha256': plan['plan_sha256'],
                                              'count': len(plan['shards'])},
             'Aggregate does not match its complete native package receipts')
+
+
+def estimate_on_host(plan, shard, workers):
+    """Bound estimate for the actual initial queues; never a runtime guarantee."""
+    require(type(workers) is int and workers > 0, 'Positive actual worker count required')
+    indices = plan['shards'][shard]['tests']
+    offset = 0; remaining = len(indices); loads = []
+    for left in range(workers, 0, -1):
+        count = remaining // left
+        loads.append(sum(plan['tests'][i]['estimate_ns'] for i in indices[offset:offset+count]))
+        offset += count; remaining -= count
+    return math.ceil(max(loads) / 1e9) + plan['rules']['overhead_seconds']

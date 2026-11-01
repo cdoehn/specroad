@@ -78,7 +78,7 @@ def partition_metadata(registry, sequence):
             "partition_index": sequence % 3, "rotation_anchor_commit": registry["rotation_anchor_commit"]}
 
 
-def selection_receipt(registry, raw, selected, head, sequence, runtime_filter=None, required_tests=None):
+def selection_receipt(registry, raw, selected, head, sequence, runtime_filter=None, required_tests=None, host_resources=None):
     """Bind the actual numbered selection, without claiming a full-suite run."""
     numbers = {identity: number for number, identity in enumerate(registry["test_ids"])}
     binding = {"format_version": 1, "kind": "apply-selection-binding-v1",
@@ -95,5 +95,9 @@ def selection_receipt(registry, raw, selected, head, sequence, runtime_filter=No
         if runtime_filter is None or runtime_filter.get('format_version') != 2:
             raise ValueError('Required tests need the current durable runtime snapshot')
         binding.update(format_version=4, kind='apply-selection-binding-v4', required_tests=required_tests)
+    if host_resources is not None:
+        from .host_execution import validate_resources
+        validate_resources(host_resources)
+        binding.update(format_version=5, kind="apply-selection-binding-v5", host_resources=host_resources)
     encoded = json.dumps(binding, sort_keys=True, ensure_ascii=True, allow_nan=False, separators=(",", ":")).encode()
     return {"selection_binding": binding, "selection_sha256": sha256(encoded).hexdigest()}

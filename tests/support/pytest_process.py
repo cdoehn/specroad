@@ -12,12 +12,15 @@ from verification_support.process_environment import test_environment
 REPOSITORY = Path(__file__).resolve().parents[2]
 
 
-def run_pytest_fixture(source, *, workers="0", extra=(), gate=False):
+def run_pytest_fixture(source, *, workers="0", extra=(), gate=False, execution_policy=None):
     # No tests are skipped when xdist is absent: explicit parallel runs fail.
     with tempfile.TemporaryDirectory(prefix="specroad-pytest-contract-") as directory:
         root = Path(directory)
         (root / "pytest.ini").write_text("[pytest]\n", encoding="utf-8")
         (root / "test_subject.py").write_text(source, encoding="utf-8")
+        if execution_policy is not None:
+            (root / "verification").mkdir()
+            (root / "verification/test_execution_policy.json").write_text(json.dumps(execution_policy))
         output = root / "observation.json"
         arguments = [sys.executable, "-I", "-B", str(REPOSITORY / "tools/pytest_entry.py"),
                      "-c", str(root / "pytest.ini"), "--confcutdir", str(root),

@@ -15,7 +15,7 @@ Selektor bindet Testcommit und Workflowcommit und wählt den Runner. Danach:
 2. Die Matrixprüfung verlangt alle fünf konsistent gebundenen Pläne. Sie
    erzeugt automatisch die benötigten Kombinationen aus Python und Paket.
 3. Jeder Paketjob prüft die vollständige Collection erneut, führt ausschließlich
-   seine exakten Testidentitäten mit vier Worksteal-Workern aus und schreibt
+   seine exakten Testidentitäten mit hostabhängigen Worksteal-Workern aus und schreibt
    einen Teilbericht. Kein N=3 und kein Langsamtest-Ausschluss in CI.
 4. Je Python-Version werden alle Pakete geprüft und zusammengeführt. Die
    ursprünglichen Belege und der Plan bleiben im vollständigen Artefakt.
@@ -130,3 +130,14 @@ Prüfung nicht. Der ursprüngliche Stand erzeugt sechs Kontextfehler, die
 Korrektur keinen. Die tatsächlichen drei Initialisierungsskripte wurden
 zusätzlich in 40 parallelen Fällen mit wechselnder Version, Attempt und
 Paketnummer sowie einem Temp-Pfad mit Leerzeichen und Dollarzeichen geprüft.
+
+## Hostabhängige Worker ab HOST-WORKERS-537
+
+Die manuelle Eingabe `worker_limit` begrenzt jeden Job (Standard 10). Jeder
+Planer und Testjob ermittelt seine eigenen verfügbaren logischen CPUs samt
+Affinität/CPU-Quoten. Die Jobzahl an Workern wird nicht vom Laptop oder
+Planer übernommen. Plan/Teilbeleg v2 binden die jeweilige Kapazität. Bei
+abweichender Kapazität enthält der Jobbeleg eine neue Paketschätzung; der
+Testumfang bleibt unverändert. Drei Stunden sind ein Schätzziel. Nice +10
+und Worksteal gelten auch in CI. Einzelheiten und CLI-Beispiele stehen in
+[Testing.md](Testing.md#worker-und-cpu-priorität--host-workers-537).

@@ -46,12 +46,16 @@ def inspect_report_archive(raw, request, version, *, run_id=None, attempt=None):
             raise CIObservationError('test_source_binding_mismatch')
         runtime = report.get('runtime', {})
         execution = report.get('execution', {})
+        packaged = ('ci_packages' in report or (type(execution) is dict and 'ci_shards' in execution)
+                    or 'ci-plan.json' in reports or 'shard-receipts.json' in reports)
+        workers = execution.get('workers') if type(execution) is dict else None
         if (type(runtime) is not dict or runtime.get('implementation') != 'cpython'
                 or type(runtime.get('python')) is not str or not runtime['python'].startswith(version + '.')
-                or type(execution) is not dict or execution.get('workers') != (0 if name.startswith('serial') else 4)):
+                or type(execution) is not dict
+                or (packaged and (type(workers) is not int or workers < 1))
+                or (not packaged and workers != (0 if name.startswith('serial') else 4))):
             raise CIObservationError('test_runtime_or_mode_mismatch')
-        if ('ci_packages' in report or 'ci_shards' in execution
-                or 'ci-plan.json' in reports or 'shard-receipts.json' in reports):
+        if packaged:
             from verification_support.ci_packages import verify_aggregate
             try:
                 plan = reports['ci-plan.json']

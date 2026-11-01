@@ -9,6 +9,7 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT / "tools") not in sys.path:
     sys.path.insert(0, str(ROOT / "tools"))
 from verification_support.apply_rotation import run_apply_partition
+from verification_support.host_execution import positive_limit, DEFAULT_WORKER_LIMIT
 
 
 def main(argv=None):
@@ -18,11 +19,14 @@ def main(argv=None):
     parser.add_argument("--outdir", type=Path)
     parser.add_argument("--test-plan", type=Path)
     parser.add_argument("--commit-id")
+    parser.add_argument("--worker-limit", type=positive_limit, default=DEFAULT_WORKER_LIMIT)
     args = parser.parse_args(argv)
     outdir = args.outdir or Path(tempfile.mkdtemp(prefix="specroad-apply-tests-")) / "gate"
     try:
         options = {} if args.test_plan is None and args.commit_id is None else {
             'test_plan': args.test_plan, 'commit_id': args.commit_id}
+        if args.worker_limit != DEFAULT_WORKER_LIMIT:
+            options["worker_limit"] = args.worker_limit
         result = run_apply_partition(ROOT, outdir, **options)
         print(json.dumps({**{k: v for k, v in result.items() if k not in (
                               "nodeid_to_test_id", "selection_binding", "runtime_filter", "required_tests")},

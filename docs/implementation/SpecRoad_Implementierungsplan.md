@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 44 · **Stand:** 1. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.44
+**Planrevision:** 45 · **Stand:** 1. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.45
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 Schritte und 900 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; die ausdrücklich genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wird nach 10.7.10 innerhalb von 15.l.R vorgezogen. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -9,7 +9,7 @@ Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 S
 
 Fachliche Grundlage ist [`docs/specification/SpecRoad_Spezifikation.md`](../specification/SpecRoad_Spezifikation.md), einschließlich aller konsolidierten Korrekturen, 742 Requirements, 51 Verifikationsverträge, 46 Szenario-/E2E-Identitäten sowie R-01 bis R-75, Anhang U und den PatchHarbor-Rundweg aus Anhang W. Der [`Prüfbericht`](../reviews/SpecRoad_v0.2.7_Implementierungsreife_Pruefbericht.md) ist ein vorgelagerter Entwurfsreview, kein späterer Produktnachweis.
 
-Gebundene Spezifikations-SHA-256: `cf299d1478d56231df8905a077adecef458503b1f351f5cb1ef9ce04a5b6a8b3`.
+Gebundene Spezifikations-SHA-256: `d3638d2acf7bb696f911a650f2f7fa69dc1ee2e40fb6af75c2dd16a199012058`.
 Planungsbasis: Commit `fe2661d02ecf2f7eb483b58a4487eb009c6b3846`; sauberes Result-Bundle `specroad_Result_120209_0914_df3504.zip`; Repository-ID `3d2576df-d611-46fc-9d2b-92869468aaca`. Diese Angaben dokumentieren die Entstehung des Plans, nicht die zukünftige Patchbindung. **Jedes spätere Patchpaket bindet den dann aktuellen tatsächlichen Result-Zustand.**
 
 Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 2026 gelten zusätzlich und bei den nachfolgend benannten Konflikten vorrangig. Sonstige normative Spezifikationsinhalte werden nicht stillschweigend abgeschwächt. Neue fachliche Widersprüche, fehlende zwingende Angaben und Sicherheitsprobleme sind offen zu benennen, nicht durch erfundene Annahmen oder Scheinerfolge zu lösen.
@@ -32,6 +32,52 @@ Ketten erfordert erst den belegten erfolgreichen normalen Abschluss.
 Produktfreigaben und die Grenzen aus 2.4.1/2.4.2/2.4.4 bleiben unverändert.
 Dieser Plan ändert keine alten Aufträge, Antworten, Blockaden oder
 Laufzeitdaten und ist keine Start-/Resume-Anweisung.
+
+## OFF-PLAN HOST-WORKERS-537 — verfügbare CPUs, optionale Grenze, niedrige Priorität
+
+Autorität: Nutzerauftrag 1. November 2026, Spezifikation 2.5.3.
+C-Korrekturbundle 536 ist erfolgreich: 6.138 Apply-Tests und Commit
+`a62ff18daaaba258a2d46583b7b77cdfe7c3b1a4`. Maßgebliches Result-SHA:
+`827856bd05b5d0213815847490916539c78d9dc576189c6b85892c2d3bb94e00`.
+Produktfortschritt bleibt 655/900; 15.n.R bleibt der nächste Produktcommit.
+
+Ein Bundle mit drei echten Zuständen. W verbindet automatische Host-Worker,
+`--worker-limit` (Standard 10), Nice +10, manuelle Starter, Apply und CI samt
+gebundenen Ressourcenbelegen. R ergänzt CPU-Quoten und Fehlergrenzen sowie
+echte kleine Runner-Integrationsfälle. C vereinheitlicht ausschließlich
+die gemeinsame Konfiguration ohne Verhaltensänderung. Jeder Zustand hat
+eine begründete Pflichtauswahl; neue/geänderte Testdateien laufen vollständig.
+
+W-Abnahme vorbereitet: Host- und Grenzwertauswahl, Ein-CPU-Betrieb,
+verschachtelte Runner, Prioritätserhaltung, CLI-Weitergabe, unterschiedliche
+CI-Planer und Jobs sowie Ablehnung widersprüchlicher Ressourcenbelege.
+Dev führt keine Verhaltenstests aus. Syntax, Collection und Paketprüfung
+sind keine Testabnahme. Dieses Bundle wird zunächst außerhalb des überwachten
+Exchange bereitgestellt; der Nutzer hat keinen vollen Apply-Lauf beauftragt.
+
+### Fortsetzung nach Fehler-Result 537 mit Korrekturbundle 538
+
+Das maßgebliche Result `specroad-apply_Result_162822_1101_2359ca.zip`
+(SHA-256 `877e812bbe77856a69684a00abcceb662f36660efccd065807676cc8d8a36aa5`)
+beendet W mit 6.488 bestandenen und zehn fehlgeschlagenen Tests. Kein Commit
+entstand; HEAD bleibt `a62ff18daaaba258a2d46583b7b77cdfe7c3b1a4`.
+Der erhaltene W-Arbeitsstand bleibt Grundlage; R und C wurden nicht ausgebracht.
+
+Ein alter Argumenttest lehnte einen zulässigen einzelnen xdist-Worker ab.
+Neun Framework-Fälle scheiterten, weil die neue Policy am Installationspfad
+des Backends statt an der tatsächlich geprüften Projektwurzel ausgewählt
+wurde. Die Korrektur bindet die Policy an `config.rootpath`, erhält die
+isolierten negativen/seriellen Framework-Fixtures und prüft zusätzlich
+deren eigene explizite Hostpolicy. Die echte Argumentdatei-Regression wird
+mit einem und zwei xdist-Workern vorbereitet; ungültige Werte bleiben rot.
+
+Bundle 538 bindet exakt dieses Fehler-Result und führt alle offenen IDs
+`HOST-WORKERS-537.W`, `.R`, `.C` fort. W übernimmt seinen vollständigen
+erhaltenen Umfang plus Korrektur; R und C folgen erst nach ihren echten
+Apply-Gates und Commits. Registrynummern und Historie bleiben erhalten.
+Vorbereitung ausschließlich statisch und per Collection, ohne Dev-Tests.
+Übergabe in Exchange ist ausdrücklich beauftragt; der vorhandene Watcher
+übernimmt Apply. Kein Control-/CI-Start; Produktfortschritt bleibt 655/900.
 
 ## OFF-PLAN APPLY-ONLY-535 — Pflichtauswahl und Commit-Gates ausschließlich im Apply
 

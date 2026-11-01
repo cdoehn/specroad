@@ -52,7 +52,7 @@ def validate_baseline(value):
             or value["kind"] != "specroad-frozen-runtime-filter-v1"
             or not _hash(value["measured_source_sha256"]) or not _hash(value["measurement_sha256"])
             or not _timestamp(value["measured_at"])
-            or type(value["workers"]) is not int or value["workers"] < 2
+            or type(value["workers"]) is not int or value["workers"] < 1
             or type(value["exclude_numerator"]) is not int or value["exclude_numerator"] != 1
             or type(value["exclude_denominator"]) is not int or value["exclude_denominator"] != 5
             or type(value["tests"]) is not list or not value["tests"]

@@ -86,3 +86,12 @@ und C. Die fällige Gruppe bleibt für R unverändert, weil der gescheiterte
 Versuch keinen Commit erzeugt hat. Die aktuellen Zeiten werden beim neuen
 Versuch frisch gelesen. Es werden keine früheren Gate-Erfolge als Nachweis
 für den reparierten Code wiederverwendet.
+
+## Ressourcen des ausführenden Hosts
+
+Ab HOST-WORKERS-537 verwendet der gemeinsame Apply-Runner automatisch
+`min(verfügbare CPUs, 10)` Worker, Worksteal und mindestens Nice +10.
+`run_apply_tests.py --worker-limit N` erlaubt eine positive andere Grenze;
+der Standard-Entrypoint verwendet 10. Jeder Commit erhält weiterhin genau
+ein Gate. Auswahlbindung v5 und Beobachtungen binden die tatsächlichen
+Ressourcen. Details: [Testing.md](Testing.md).

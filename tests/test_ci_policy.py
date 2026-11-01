@@ -193,3 +193,11 @@ def test_current_github_gate_runs_only_parallel_and_requires_complete_evidence(t
     assert result["suite_passed"] is (code == 0 and write)
     assert result["comparison"] is None
     assert not (tmp_path / "parallel" / "serial-evidence.json").exists()
+
+
+@pytest.fixture(autouse=True)
+def legacy_runner_root(tmp_path, monkeypatch):
+    import run_tests
+    from verification_support import ci_reference
+    monkeypatch.setattr(run_tests, 'ROOT', tmp_path)
+    monkeypatch.setattr(ci_reference, 'ROOT', tmp_path)

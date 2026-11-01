@@ -8,6 +8,7 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT/'tools'))
 from verification_support.ci_packages import DEFAULT_RULES, matrix
+from verification_support.host_execution import positive_limit, DEFAULT_WORKER_LIMIT
 from verification_support.ci_reference import _load_report
 from verification_support.ci_package_runtime import (
     aggregate, export_estimates, plan_run, preserve_history, run_package, write_json,
@@ -26,12 +27,14 @@ def main(argv=None):
     plan.add_argument('--estimates', type=Path, default=ROOT/'verification/ci_runtime_estimates.json')
     plan.add_argument('--target-minutes', type=int, default=180)
     plan.add_argument('--duration-factor', type=float, default=1.5)
+    plan.add_argument('--worker-limit', type=positive_limit, default=DEFAULT_WORKER_LIMIT)
     combine = subs.add_parser('matrix')
     combine.add_argument('--plans', type=Path, required=True)
     run = subs.add_parser('run')
     run.add_argument('--plan', type=Path, required=True)
     run.add_argument('--shard', type=int, required=True)
     run.add_argument('--outdir', type=Path, required=True)
+    run.add_argument('--worker-limit', type=positive_limit)
     merge = subs.add_parser('aggregate')
     merge.add_argument('--plan', type=Path, required=True)
     merge.add_argument('--receipts', type=Path, required=True)
@@ -48,7 +51,7 @@ def main(argv=None):
         elif args.action == 'plan':
             rules = {**DEFAULT_RULES, 'target_seconds':args.target_minutes*60,
                      'duration_factor':args.duration_factor}
-            value = plan_run(ROOT,args.outdir,args.estimates,rules=rules)
+            value = plan_run(ROOT,args.outdir,args.estimates,rules=rules,worker_limit=args.worker_limit)
             print(json.dumps({'python':value['context']['python'], 'packages':len(value['shards']),
                               'tests':len(value['tests']), 'plan_sha256':value['plan_sha256'],
                               'estimated_seconds':[s['estimated_seconds'] for s in value['shards']]}))
@@ -60,7 +63,7 @@ def main(argv=None):
                 stream.write('matrix='+encoded+'\n')
             print(encoded)
         elif args.action == 'run':
-            return run_package(ROOT,args.plan,args.shard,args.outdir)['exit_code']
+            return run_package(ROOT,args.plan,args.shard,args.outdir,worker_limit=args.worker_limit)['exit_code']
         elif args.action == 'aggregate':
             value = aggregate(ROOT,args.plan,sorted(args.receipts.glob('*/package-result.json')),args.outdir)
             print(json.dumps({'tests_run':value['tests_run'],'suite_passed':value['suite_passed'],

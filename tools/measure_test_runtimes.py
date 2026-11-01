@@ -14,6 +14,9 @@ from verification_support.runtime_runner import run_measurement
 from verification_support.runtime_store import read_store, measurement_from_store
 
 
+from verification_support.host_execution import positive_limit, DEFAULT_WORKER_LIMIT
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--journal', type=Path, required=True)
@@ -25,7 +28,8 @@ def main(argv=None):
     parser.add_argument('--test-file', action='append', default=[])
     parser.add_argument('--test-id', action='append', default=[])
     parser.add_argument('--selection-file', action='append', default=[], type=Path)
-    parser.add_argument('--workers', type=int, default=4)
+    parser.add_argument('--workers', type=int, default=None)
+    parser.add_argument("--worker-limit", type=positive_limit, default=DEFAULT_WORKER_LIMIT)
     args = parser.parse_args(argv)
     explicit = bool(args.test_file or args.test_id or args.selection_file)
     if (args.status or args.export) and explicit:
@@ -42,7 +46,7 @@ def main(argv=None):
         if not args.status:
             code = run_measurement(ROOT, journal, args.workers, all_tests=args.all,
                 remaining=args.remaining, files=args.test_file, identities=args.test_id,
-                selections=args.selection_file)
+                selections=args.selection_file, worker_limit=args.worker_limit)
         meta, complete, info = read_store(journal, ROOT)
         missing = {n: i for n, i in meta['pairs'].items() if n not in complete}
         print(json.dumps({'measured_tests': len(complete), 'expected_tests': len(meta['pairs']),

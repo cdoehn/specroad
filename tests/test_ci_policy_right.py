@@ -8,7 +8,7 @@ from run_ci_tests import run_reference
 from test_ci_policy import evidence, fake_runner
 
 
-@pytest.mark.parametrize("value", [0, -1, True, 1.5, "4", "auto", None])
+@pytest.mark.parametrize("value", [0, -1, True, 1.5, "4", "invalid"])
 def test_invalid_parallel_worker_selection_has_no_effect(tmp_path, value):
     calls = []
     target = tmp_path / "run"
@@ -102,3 +102,11 @@ def test_two_ci_invocations_never_share_evidence(tmp_path):
     first=json.loads((tmp_path/"one/parallel-evidence.json").read_text())
     second=json.loads((tmp_path/"two/parallel-evidence.json").read_text())
     assert first["run_id"]!=second["run_id"]
+
+
+@pytest.fixture(autouse=True)
+def legacy_runner_root(tmp_path, monkeypatch):
+    import run_tests
+    from verification_support import ci_reference
+    monkeypatch.setattr(run_tests, 'ROOT', tmp_path)
+    monkeypatch.setattr(ci_reference, 'ROOT', tmp_path)

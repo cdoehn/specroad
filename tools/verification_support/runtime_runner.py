@@ -7,6 +7,7 @@ import sys
 import tempfile
 
 from .execution_policy import DEFAULT_DISTRIBUTION
+from .host_execution import DEFAULT_WORKER_LIMIT, select_workers, verify_resources, enabled
 from .catalog_check import run_catalog_preflight
 from .ci_reference import _load_report
 from .common import json_bytes
@@ -43,8 +44,8 @@ def choose(pairs, *, files=(), identities=(), selections=()):
 def prepare_request(root, journal, workers, *, all_tests=False, remaining=False,
                     files=(), identities=(), selections=(), keep_complete=False):
     root = Path(root).resolve()
-    if type(workers) is not int or workers < 2:
-        raise ValueError('Timing measurements require at least two workers')
+    if type(workers) is not int or workers < 1:
+        raise ValueError('Timing measurements require at least one worker process')
     journal = journal_path(journal, root)
     parent = root / 'build'
     parent.mkdir(exist_ok=True)
@@ -85,7 +86,8 @@ def prepare_request(root, journal, workers, *, all_tests=False, remaining=False,
     return path, request
 
 
-def run_measurement(root, journal, workers, **selection):
+def run_measurement(root, journal, workers=None, *, worker_limit=DEFAULT_WORKER_LIMIT, **selection):
+    workers, resources = select_workers(root, workers, worker_limit=worker_limit)
     path, request = prepare_request(root, journal, workers, **selection)
     if not request['selected']:
         return 0
@@ -93,7 +95,7 @@ def run_measurement(root, journal, workers, **selection):
     nodes.write_text('\n'.join(request['selected']) + '\n')
     command = [sys.executable, '-I', '-B', str(Path(root) / 'tools/pytest_entry.py'),
         '-o', 'addopts=', '--disable-plugin-autoload', '-p', 'no:cacheprovider', '-p', 'no:doctest',
-        '-p', 'xdist.plugin', '-n', str(workers), '--dist', DEFAULT_DISTRIBUTION, '--max-worker-restart=0',
+        '-p', 'xdist.plugin', '-n', str(workers), '--dist', DEFAULT_DISTRIBUTION, '--worker-limit', str(worker_limit), '--max-worker-restart=0',
         '--sr-expected-tests', str(len(request['selected'])),
         '--sr-runtime-journal', str(Path(journal).absolute()), '--sr-timing-request', str(path),
         '--sr-observations', str(path.parent / 'observations.json'), '@' + str(nodes)]

@@ -1,6 +1,7 @@
 """pytest hooks and xdist transport; only the controller publishes evidence."""
 
 from .execution_policy import DEFAULT_DISTRIBUTION
+from .host_execution import configure_pytest, positive_limit, DEFAULT_WORKER_LIMIT, enabled, select_workers, verify_resources
 from .common import CatalogError
 from .outcomes import RunLedger, bind_test_ids
 from .collection_identity import test_identity
@@ -32,6 +33,7 @@ ROOT = Path(__file__).resolve().parents[2]
 
 def pytest_addoption(parser):
     group = parser.getgroup("specroad-development")
+    group.addoption("--worker-limit", type=positive_limit, default=DEFAULT_WORKER_LIMIT)
     group.addoption("--sr-gate", action="store_true", help="Verify the complete behavior catalog")
     group.addoption("--sr-evidence", type=Path, help="Exclusive path for bound development evidence")
     group.addoption("--sr-observations", type=Path, help="Exclusive path for test-run observations")
@@ -46,6 +48,7 @@ def pytest_addoption(parser):
 class VerificationSession:
     def __init__(self, config):
         self.config = config
+        self.host_resources = configure_pytest(config, Path(config.rootpath).resolve())
         self.worker = hasattr(config, "workerinput")
         self.worker_id = config.workerinput["workerid"] if self.worker else "main"
         self.ledger = RunLedger()
@@ -80,7 +83,7 @@ class VerificationSession:
                     or config.getoption('ignore') or config.getoption('ignore_glob')
                     or (not self.worker and (
                         config.getoption('dist', default='no') != DEFAULT_DISTRIBUTION
-                        or config.getoption('numprocesses', default=0) != 4))
+                        or config.getoption('numprocesses', default=0) != (self.host_resources['workers'] if self.host_resources else self.ci_plan['rules']['workers'])))
                     or source_identity(ROOT) != self.ci_plan['bindings']['source_sha256']
                     or not platform_identity()['python'].startswith(self.ci_plan['context']['python']+'.')
                     or [Path(a).absolute() for a in config.args] != [ROOT/'tests']):
@@ -123,6 +126,8 @@ class VerificationSession:
                               "workers": config.getoption("numprocesses", default=0),
                               "distribution": config.getoption("dist", default="no"),
                               "test_timeout": None, "suite_timeout": None}
+            if self.host_resources is not None:
+                self.execution["host_resources"] = self.host_resources
             self.binding = {"run_id": str(uuid.uuid4()), "tool_build_sha256": self.source,
                             "platform_sha256": sha256(json_bytes(self.runtime)),
                             "configuration_sha256": sha256(json_bytes(self.execution))}
@@ -182,6 +187,7 @@ def _version(name):
         return None
 
 
+@pytest.hookimpl(tryfirst=True)
 def pytest_configure(config):
     try:
         config._specroad_verification = VerificationSession(config)
@@ -225,6 +231,8 @@ def pytest_configure_node(node):
     state = node.config._specroad_verification
     node.workerinput["sr_required_ids"] = sorted(state.required_ids)
     node.workerinput['sr_history_run'] = state.history_run
+    if state.host_resources is not None:
+        node.workerinput['sr_host_resources'] = {k:v for k,v in state.host_resources.items() if k != 'nice_actual'}
 
 
 @pytest.hookimpl(optionalhook=True)
@@ -243,6 +251,13 @@ def pytest_xdist_node_collection_finished(node, ids):
 def pytest_testnodedown(node, error):
     state = node.config._specroad_verification
     output = getattr(node, "workeroutput", {}) or {}
+    if state.host_resources is not None:
+        expected = {k:v for k,v in state.host_resources.items() if k != 'nice_actual'}
+        try:
+            verify_resources({'host_resources': output.get('sr_host_resources'),
+                              'workers': ['gw'+str(i) for i in range(expected['workers'])]}, expected)
+        except (ValueError, TypeError, KeyError):
+            state.ledger.error('worker_resource_policy_mismatch')
     pairs = output.get("sr_collection")
     if output.get("exitstatus") != 0:
         state.ledger.error("worker_nonzero_exit")
@@ -324,6 +339,8 @@ def pytest_sessionstart(session):
 def pytest_sessionfinish(session, exitstatus):
     state = session.config._specroad_verification
     if state.worker:
+        if state.host_resources is not None:
+            session.config.workeroutput['sr_host_resources'] = state.host_resources
         return
     if state.history is not None:
         try:
@@ -346,6 +363,8 @@ def pytest_sessionfinish(session, exitstatus):
             state.history.close()
     try:
         observation = state.ledger.snapshot(exitstatus)
+        if state.host_resources is not None:
+            observation['host_resources'] = state.host_resources
         if state.gate:
             discovered = bind_test_ids(state.catalog, (state.ledger.aliases.get(n, n) for n in state.ledger.nodeids))
             if (source_identity(ROOT) != state.source
@@ -414,3 +433,11 @@ def pytest_unconfigure(config):
         state.timing_store.close()
     if state is not None and state.history is not None:
         state.history.close()
+
+
+@pytest.hookimpl(optionalhook=True, tryfirst=True)
+def pytest_xdist_auto_num_workers(config):
+    root = Path(config.rootpath).resolve()
+    if not config.getoption('collectonly') and enabled(root):
+        return select_workers(root, worker_limit=config.getoption('worker_limit'))[0]
+    return None

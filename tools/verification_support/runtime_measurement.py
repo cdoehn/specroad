@@ -89,7 +89,7 @@ def validate_measurement(value):
             or type(value["format_version"]) is not int or value["format_version"] != 1
             or value["kind"] != "specroad-full-test-runtimes-v1"
             or not _hash(value["source_sha256"]) or not _timestamp(value["measured_at"])
-            or type(value["workers"]) is not int or value["workers"] < 2
+            or type(value["workers"]) is not int or value["workers"] < 1
             or value["full_suite_passed"] is not True
             or type(value["tests"]) is not list or not value["tests"]):
         raise ValueError("A complete passing parallel measurement is required")
@@ -130,7 +130,7 @@ class RuntimeMeasurements:
         workers = observation["workers"]
         if (self.invalid or observation["suite_passed"] is not True
                 or observation["pytest_exit_code"] != 0 or observation["errors"]
-                or len(workers) < 2 or any(not w.startswith("gw") for w in workers)
+                or len(workers) < 1 or any(not w.startswith("gw") for w in workers)
                 or set(self.phases) != set(aliases)
                 or set(observation["nodeids"]) != set(aliases)
                 or observation["tests_run"] != len(aliases)

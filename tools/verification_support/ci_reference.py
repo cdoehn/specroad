@@ -10,6 +10,7 @@ import sys
 from compare_test_runs import _signature
 from .process_environment import test_environment
 from .execution_policy import DEFAULT_WORKERS
+from .host_execution import DEFAULT_WORKER_LIMIT, select_workers, verify_resources, enabled
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -32,7 +33,7 @@ def _load_report(path):
                       parse_constant=invalid_number)
 
 
-def run_reference(outdir, *, workers=DEFAULT_WORKERS, environment=None, runner=None):
+def run_reference(outdir, *, workers=None, worker_limit=DEFAULT_WORKER_LIMIT, environment=None, runner=None):
     """Run one complete parallel gate, never retry or hide failures.
 
     The environment flag prevents an accidental local reference run. It is not
@@ -42,6 +43,7 @@ def run_reference(outdir, *, workers=DEFAULT_WORKERS, environment=None, runner=N
     environment = dict(os.environ if environment is None else environment)
     if environment.get("GITHUB_ACTIONS") != "true":
         raise ValueError("CI full runs require GitHub Actions")
+    workers, resources = select_workers(ROOT, workers, worker_limit=worker_limit, environment=environment)
     if type(workers) is not int or workers <= 0:
         raise ValueError("The parallel reference needs a positive worker count")
     outdir = Path(outdir).absolute()
@@ -55,7 +57,7 @@ def run_reference(outdir, *, workers=DEFAULT_WORKERS, environment=None, runner=N
         env = test_environment(environment)
         env["PYTHONHASHSEED"] = seed
         command = [sys.executable, "-I", "-B", str(ROOT / "tools/run_tests.py"),
-                   "--workers", str(count), "--evidence", str(path)]
+                   "--workers", str(count), "--worker-limit", str(worker_limit), "--evidence", str(path)]
         try:
             code = runner(command, cwd=ROOT, env=env, stdin=subprocess.DEVNULL,
                           check=False).returncode
@@ -69,6 +71,7 @@ def run_reference(outdir, *, workers=DEFAULT_WORKERS, environment=None, runner=N
         try:
             reports = [_load_report(path) for path in paths]
             _signature(reports[0])
+            verify_resources(reports[0]["observation"], resources)
             passed = True
         except (OSError, ValueError, TypeError, KeyError, AttributeError, RecursionError):
             errors.append("invalid_or_non_equivalent_evidence")

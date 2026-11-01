@@ -13,6 +13,7 @@ if str(ROOT / "tools") not in sys.path:
 from verification_support.process_environment import test_environment
 from verification_support.execution_policy import DEFAULT_WORKERS, DEFAULT_DISTRIBUTION
 from verification_support.runtime_runner import prepare_request
+from verification_support.host_execution import enabled, select_workers, positive_limit, DEFAULT_WORKER_LIMIT
 
 
 def worker_count(value):
@@ -33,7 +34,7 @@ def pytest_arguments(args):
     if args.workers != "0":
         arguments += ["-p", "xdist.plugin", "-n", args.workers,
                       "--dist", args.dist, "--max-worker-restart=0"]
-    arguments += ["--sr-gate", str(ROOT / "tests")]
+    arguments += ["--worker-limit", str(getattr(args, "worker_limit", DEFAULT_WORKER_LIMIT)), "--sr-gate", str(ROOT / "tests")]
     for option, value in (("--sr-evidence", args.evidence),
                           ("--sr-observations", args.observations),
                           ("--sr-expected-tests", args.expected_tests),
@@ -47,18 +48,28 @@ def pytest_arguments(args):
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--workers", "-n", type=worker_count, default=str(DEFAULT_WORKERS))
+    parser.add_argument("--workers", "-n", type=worker_count, default=None)
     parser.add_argument("--dist", choices=("load", "worksteal", "loadscope", "loadfile"), default=DEFAULT_DISTRIBUTION)
     parser.add_argument("--evidence", type=Path)
     parser.add_argument("--observations", type=Path)
     parser.add_argument("--expected-tests", type=int)
     parser.add_argument("--runtime-measurement", type=Path)
     parser.add_argument("--runtime-journal", type=Path)
+    parser.add_argument("--worker-limit", type=positive_limit, default=DEFAULT_WORKER_LIMIT)
     args = parser.parse_args(argv)
+    if enabled(ROOT):
+        requested = None if args.workers in (None, "auto") else int(args.workers)
+        try:
+            count, _ = select_workers(ROOT, requested, worker_limit=args.worker_limit)
+        except ValueError as error:
+            parser.error(str(error))
+        args.workers = str(count)
+    elif args.workers is None:
+        args.workers = str(DEFAULT_WORKERS)
     if args.expected_tests is not None and args.expected_tests <= 0:
         parser.error("Expected tests must be positive")
     # Publication paths are interpreted relative to the caller, not a later cwd.
-    if args.runtime_measurement is not None and args.workers in ("0", "1"):
+    if args.runtime_measurement is not None and (args.workers == "0" or (args.workers == "1" and not enabled(ROOT))):
         parser.error("One-time calibration requires parallel workers")
     for name in ("evidence", "observations", "runtime_measurement", "runtime_journal"):
         value = getattr(args, name)

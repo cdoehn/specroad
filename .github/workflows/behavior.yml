@@ -8,6 +8,11 @@ on:
         description: 'Optional full SHA reachable from dev; empty tests the exact dispatch revision'
         required: false
         type: string
+      worker_limit:
+        description: 'Maximum workers per executing host; available CPUs may be fewer'
+        required: false
+        default: '10'
+        type: string
       runner:
         description: 'Fresh Hetzner availability check, with explicit Ubuntu 24.04 fallback'
         required: true
@@ -71,6 +76,7 @@ jobs:
         python: ['3.10', '3.11', '3.12', '3.13', '3.14']
     env:
       SR_TEST_SHA: ${{ needs.select.outputs.commit_sha }}
+      SR_WORKER_LIMIT: ${{ inputs.worker_limit }}
     steps:
       - name: Initialize bound CI paths on runner
         shell: bash
@@ -93,7 +99,7 @@ jobs:
           uv venv --python python --no-python-downloads .venv
           uv pip install --python .venv/bin/python --link-mode copy --group dev
       - name: Collect complete suite and balance three-hour packages
-        run: .venv/bin/python -I -B tools/ci_packages.py plan --outdir "$SR_PLAN"
+        run: .venv/bin/python -I -B tools/ci_packages.py plan --outdir "$SR_PLAN" --worker-limit "$SR_WORKER_LIMIT"
       - uses: actions/upload-artifact@v7
         with:
           name: ci-plan-${{ github.run_id }}-${{ github.run_attempt }}-${{ matrix.python }}
@@ -137,6 +143,7 @@ jobs:
       matrix: ${{ fromJSON(needs.matrix.outputs.packages) }}
     env:
       SR_TEST_SHA: ${{ needs.select.outputs.commit_sha }}
+      SR_WORKER_LIMIT: ${{ inputs.worker_limit }}
       SR_PACKAGE: ${{ matrix.shard }}
     steps:
       - name: Initialize bound CI paths on runner
@@ -166,7 +173,7 @@ jobs:
           path: ${{ env.SR_PLAN }}
       - name: Run exact package with worksteal
         timeout-minutes: 300
-        run: .venv/bin/python -I -B tools/ci_packages.py run --plan "$SR_PLAN/plan.json" --shard "$SR_PACKAGE" --outdir "$SR_OUT"
+        run: .venv/bin/python -I -B tools/ci_packages.py run --plan "$SR_PLAN/plan.json" --shard "$SR_PACKAGE" --outdir "$SR_OUT" --worker-limit "$SR_WORKER_LIMIT"
       - name: Preserve durable native runtime history including partial attempts
         if: always()
         run: .venv/bin/python -I -B tools/ci_packages.py preserve-history --output "$SR_OUT/runtime-history.sqlite3"
@@ -191,6 +198,7 @@ jobs:
         python: ['3.10', '3.11', '3.12', '3.13', '3.14']
     env:
       SR_TEST_SHA: ${{ needs.select.outputs.commit_sha }}
+      SR_WORKER_LIMIT: ${{ inputs.worker_limit }}
     steps:
       - name: Initialize bound CI paths on runner
         shell: bash

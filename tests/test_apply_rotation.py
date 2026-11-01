@@ -90,7 +90,7 @@ def test_missing_anchor_or_lost_committed_registry_fails(tmp_path):
             rotation.commit_context(tmp_path, registry(), runner=git_reader(tmp_path, history))
 
 
-@pytest.mark.parametrize("workers", [0, 1, -1, True, "4"])
+@pytest.mark.parametrize("workers", [0, -1, True, "4"])
 def test_nonparallel_workers_are_rejected(tmp_path, workers):
     with pytest.raises(ValueError): rotation.parallel_command(tmp_path, tmp_path, 3, workers)
 
@@ -104,23 +104,27 @@ def test_invalid_selection_cannot_become_a_gate(bad):
 @pytest.mark.parametrize("parity,failing", [(0, False), (1, False), (1, True)])
 def test_real_parallel_argument_file_runs_only_selected_tests(tmp_path, parity, failing):
     root = Path(__file__).resolve().parents[1]
-    (tmp_path / "pytest.ini").write_text("[pytest]\n")
-    lines = [f"def test_{n}():\n    assert {not (failing and n == 1)}\n" for n in range(4)]
-    (tmp_path / "test_sample.py").write_text("\n".join(lines))
-    selected = [f"test_sample.py::test_{n}" for n in range(4) if n % 2 == parity]
-    (tmp_path / "nodeids.txt").write_text("\n".join(selected) + "\n")
-    command = rotation.parallel_command(root, tmp_path, 2, 2)
-    command[-1:-1] = ["-c", str(tmp_path / "pytest.ini"), "--confcutdir", str(tmp_path),
-                     "-p", "verification_support.pytest_backend"]
-    result = subprocess.run(command, cwd=tmp_path, env=controlled_environment(os.environ),
-                            stdin=subprocess.DEVNULL, stdout=subprocess.PIPE,
-                            stderr=subprocess.PIPE, check=False)
-    observed = json.loads((tmp_path / "observations.json").read_text())
-    assert result.returncode == (1 if failing else 0)
-    assert set(observed["nodeids"]) == set(selected)
-    assert observed["tests_run"] == 2
-    assert observed["suite_passed"] is (not failing)
-    assert all(name.startswith("gw") for name in observed["worker_test_counts"])
+    for workers in (1, 2):
+        case_path = tmp_path / str(workers)
+        case_path.mkdir()
+        (case_path / "pytest.ini").write_text("[pytest]\n")
+        lines = [f"def test_{n}():\n    assert {not (failing and n == 1)}\n" for n in range(4)]
+        (case_path / "test_sample.py").write_text("\n".join(lines))
+        selected = [f"test_sample.py::test_{n}" for n in range(4) if n % 2 == parity]
+        (case_path / "nodeids.txt").write_text("\n".join(selected) + "\n")
+        command = rotation.parallel_command(root, case_path, 2, workers)
+        command[-1:-1] = ["-c", str(case_path / "pytest.ini"), "--confcutdir", str(case_path),
+                         "-p", "verification_support.pytest_backend"]
+        result = subprocess.run(command, cwd=case_path, env=controlled_environment(os.environ),
+                                stdin=subprocess.DEVNULL, stdout=subprocess.PIPE,
+                                stderr=subprocess.PIPE, check=False)
+        observed = json.loads((case_path / "observations.json").read_text())
+        assert result.returncode == (1 if failing else 0)
+        assert set(observed["nodeids"]) == set(selected)
+        assert observed["tests_run"] == 2
+        assert observed["suite_passed"] is (not failing)
+        assert set(observed["workers"]) == {"gw" + str(i) for i in range(workers)}
+        assert all(name.startswith("gw") for name in observed["worker_test_counts"])
 
 
 @pytest.mark.parametrize("fault", [None, "skip", "wrong_ids", "process", "source", "head", "missing"])

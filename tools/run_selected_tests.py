@@ -11,12 +11,16 @@ from verification_support.catalog_check import run_catalog_preflight
 from verification_support.publication import evidence_target
 
 
+from verification_support.host_execution import positive_limit, DEFAULT_WORKER_LIMIT
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--test-file", action="append", required=True)
     parser.add_argument("--expected-tests", type=int, required=True)
     parser.add_argument("--outdir", type=Path, required=True)
-    parser.add_argument("--workers", type=int, default=4)
+    parser.add_argument("--workers", type=int, default=None)
+    parser.add_argument("--worker-limit", type=positive_limit, default=DEFAULT_WORKER_LIMIT)
     args = parser.parse_args(argv)
     try:
         # A checked full collection is not a full test run. Its fresh report is
@@ -28,7 +32,7 @@ def main(argv=None):
             print("Catalog preflight failed; selected tests not started: " + str(catalog_report), file=sys.stderr)
             return 4
         result = run_selected(ROOT, args.test_file, args.outdir,
-                              expected=args.expected_tests, workers=args.workers)
+                              expected=args.expected_tests, workers=args.workers, worker_limit=args.worker_limit)
         print(json.dumps({k:v for k,v in result.items() if k != "observation"}, sort_keys=True))
         return result["exit_code"]
     except (OSError, ValueError):

@@ -22,7 +22,7 @@ def test_invalid_full_measurement_cannot_hide_any_test(fault):
     elif fault=='negative': value['tests'][0]['phase_ns']['call']=-1
     elif fault=='bool': value['tests'][0]['phase_ns']['call']=True
     elif fault=='wrong_version': value['format_version']=True
-    elif fault=='serial': value['workers']=1
+    elif fault=='serial': value['workers']=0
     elif fault=='bad_hash': value['source_sha256']='invented'
     else: value['measured_at']='yesterday'
     with pytest.raises(ValueError): make_baseline(value)

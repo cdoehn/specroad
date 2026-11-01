@@ -10,6 +10,7 @@ from .common import json_bytes
 from .identity import source_identity
 from .runtime_history import filter_latest
 from .selected_contract import verify_observation
+from .host_execution import enabled, validate_resources, verify_resources
 
 
 def verify_commit_gate(root, directory, *, source, head, test_plan):
@@ -33,8 +34,9 @@ def verify_commit_gate(root, directory, *, source, head, test_plan):
     partition = select_partition(pairs, registry, sequence, previous)
     filtered, runtime = filter_latest(partition, snapshot, allow_empty=True)
     selected, required = union_selection(filtered, pairs, test_plan, runtime)
-    receipt = selection_receipt(registry, raw, selected, head, sequence, runtime, required)
-    if (report['format_version'] != 3 or report['test_scope'] != SCOPE
+    resources = validate_resources(report["host_resources"]) if enabled(root) else None
+    receipt = selection_receipt(registry, raw, selected, head, sequence, runtime, required, resources)
+    if (report['format_version'] != (4 if resources is not None else 3) or report['test_scope'] != SCOPE
             or report['selected_passed'] is not True or report['full_suite_passed'] is not None
             or report['source_sha256'] != source or report['base_commit'] != head
             or report['commit_id'] != test_plan['commit_id'] or report['commit_sequence'] != sequence
@@ -43,12 +45,13 @@ def verify_commit_gate(root, directory, *, source, head, test_plan):
             or report['rotation_anchor_commit'] != registry['rotation_anchor_commit']
             or report['expected_tests'] != len(selected) or report['collected_tests'] != len(pairs)
             or report['nodeid_to_test_id'] != selected or report['runtime_filter'] != runtime
-            or report['required_tests'] != required or report['workers'] != 4
+            or report['required_tests'] != required or report['workers'] != (resources['workers'] if resources else 4)
             or report['exit_code'] != 0 or report['process_exit_code'] != 0 or report['errors']
             or any(report[k] != v for k, v in receipt.items())):
         raise ValueError('The commit gate does not prove its exact rotation/required union')
     observation = _load_report(directory / 'observations.json')
     verify_observation(observation, {n.split('::', 1)[0] for n in selected}, len(selected))
+    verify_resources(observation, resources)
     if (observation['nodeid_to_test_id'] != selected
             or any(not name.startswith('gw') for name in observation['worker_test_counts'])):
         raise ValueError('The commit gate has foreign test observations')

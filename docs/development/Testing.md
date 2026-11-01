@@ -54,14 +54,14 @@ unbekannte/ungültige Messungen bleiben zugelassen. Pflichtauswahl überstimmt
 Filter und Gruppe. Überlappungen laufen einmal pro Commit. Jeder andere
 Commitzustand erhält sein eigenes Gate. Kein zusätzlicher Schlusslauf.
 
-Alle ausgewählten Tests laufen mit vier xdist-Workern und `--dist worksteal`.
+Alle ausgewählten Tests laufen mit hostabhängigen xdist-Workern und `--dist worksteal` gemäß dem folgenden Abschnitt.
 Die vorhandene automatische SQLite-Messung speichert Setup/Call/Teardown
 sofort dauerhaft, auch für zusätzlich aufgenommene langsame Pflichttests.
 Historie, Seeds und bestehende Messwerte werden nicht gelöscht. Der neueste
 Versuch bleibt maßgeblich; ein ungültiger neuer Versuch fällt nicht auf alte
 Erfolge zurück. Eine neue Messung ändert nicht die bereits gebundene Auswahl.
 
-`selection.json` Format 3, Auswahlbindung v4 und
+`selection.json` Format 4, Auswahlbindung v5 mit Host-Ressourcen und
 `stable_modulo_partition_with_latest_runtime_filter_and_required_tests`
 weisen den genauen Quellstand, HEAD, Commit-ID, Pflichtplan, Snapshot,
 Testnummern, Vereinigungsmenge, zusätzlich aufgenommene und wieder zugelassene
@@ -69,6 +69,46 @@ langsame Tests nach. `full_suite_passed` bleibt `null`.
 `tools/verify_apply_commit.py` prüft diesen Nachweis unabhängig erneut,
 ohne Tests auszuführen. Fehler, Skips, fehlende Tests, veränderte Daten oder
 fehlende Messphasen erlauben keinen Commit.
+
+## Worker und CPU-Priorität — HOST-WORKERS-537
+
+Jeder Rechner und jeder CI-Job nutzt seine eigenen verfügbaren logischen CPUs:
+`Worker = min(CPU-Kapazität, --worker-limit)`, Standardgrenze **10**.
+CPU-Affinität und Linux-cgroup-Quoten werden berücksichtigt. Ein CPU-Anteil
+unter eins ergibt einen xdist-Worker. Es gibt keinen zusätzlichen seriellen
+Durchlauf. Eine vorhandene `--workers`-Angabe ist eine weitere Obergrenze;
+`auto` bedeutet automatische Ermittlung. `PYTEST_XDIST_AUTO_NUM_WORKERS`
+überschreibt diese Projektpolicy nicht. Die Grenze zählt Worker pro Lauf,
+nicht alle Prozesse des Rechners. Test-Unterläufe erben einen Worker als
+Grenze gegen rekursive Vervielfachung; produktive Unterprozesse erben Nice.
+
+Der Controller und seine Worker laufen unter POSIX mindestens mit Nice **+10**.
+Ein höherer Nice-Wert bedeutet niedrigere CPU-Priorität. Ein bereits vorhandenes
+Nice +15 bleibt daher +15. Fehlende Prioritätsunterstützung verhindert den
+Teststart. Nice begrenzt weder RAM noch Festplattenlast und garantiert keine
+vollständige Auslastung, etwa wenn zuletzt nur ein langer Test übrig ist.
+
+`--worker-limit` steht bei `run_apply_tests.py`, `run_selected_tests.py`,
+`run_tests.py`, `run_ci_tests.py`, `measure_test_runtimes.py` und den
+`ci_packages.py plan/run`-Unterbefehlen zur Verfügung. Positive Ganzzahl,
+keine Null als Sonderwert. Beispiele (Ausführung nur nach geltender Freigabe):
+
+```sh
+# Sechs Worker höchstens; auf einem Vier-CPU-Host tatsächlich vier:
+.venv/bin/python -I -B tools/run_apply_tests.py --worker-limit 6 \
+  --test-plan "$specroad_commit_test_plan" --commit-id "$specroad_commit_id" \
+  --outdir "$specroad_fresh_gate_directory"
+# Mehr als zehn erlauben; niemals mehr als die verfügbare CPU-Kapazität:
+.venv/bin/python -I -B tools/run_tests.py --worker-limit 24
+```
+
+Der Bundle-Entrypoint nutzt ohne Zusatzkonfiguration die Standardgrenze 10.
+Die manuelle CI bietet das Eingabefeld `worker_limit`, ebenfalls Standard 10.
+Der Planer schätzt mit seinen Ressourcen; jeder Testjob ermittelt seine eigene
+Zahl und weist eine entsprechend angepasste Paketschätzung aus. Jobs dürfen
+mehr oder weniger CPUs als der Planer haben. Der Aggregator prüft ihre
+einzelnen Nachweise. Frühere Vier-Worker-Nachweise bleiben historisch.
+Die nachfolgenden älteren Vier-Worker-Anleitungen werden dadurch ersetzt.
 
 ## Bundles und Korrekturen
 
@@ -243,3 +283,17 @@ Die frühere fachbezogene Apply-Auswahl und die am 15. Oktober 2026 eingeführte
 Gerade/Ungerade-Rotation sind historische Verfahren. Ab Bundle 295 gilt die
 oben beschriebene Drittelrotation.
 `run_selected_tests.py` bleibt das Hilfsmittel für gezielte Entwicklungstests.
+
+## Isolierte Framework-Testprojekte — Korrekturbundle 538
+
+Die Workerpolicy gehört zur aktuellen pytest-Projektwurzel (`config.rootpath`).
+Ein aus SpecRoad importierter Backend-Code überträgt die Produktionspolicy
+nicht auf ein separates temporäres Testprojekt ohne diese Policydatei.
+Solche kleinen Framework-Fixtures können gezielt historische serielle oder
+parallele Modi und Fehlerfälle prüfen. Ein Fixture mit eigener Policydatei
+wendet diese dagegen an, einschließlich Workergrenze, Nice und Messnachweis.
+Der normale SpecRoad-Apply-/CI-Lauf behält seine aktivierte Hostpolicy;
+seine vollständigen Gates prüfen weiterhin die gebundenen Ressourcen.
+Ein einzelner xdist-Worker ist für einen Ein-CPU-Host zulässig und führt
+keinen zusätzlichen seriellen Lauf aus. Null und ungültige Workerwerte
+bleiben unzulässig.

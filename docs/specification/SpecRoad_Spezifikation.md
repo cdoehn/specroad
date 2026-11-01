@@ -1,21 +1,21 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.44
+## Version 0.2.45
 
 | Feld | Wert |
 |---|---|
 | Dokument-ID | `SR-SPEC-0001` |
-| Dokumentversion | `0.2.44` |
+| Dokumentversion | `0.2.45` |
 | Zielrelease | `SpecRoad Single-Repository Workbench 0.2.0` |
 | Status | **Fachlich konsolidierte Arbeitsgrundlage; technische Reviewentscheidung gesondert dokumentiert, formale Baseline-Freigabe und Produktabnahme nicht durch dieses Dokument erklärt** |
-| Stand | 31. Oktober 2026 |
+| Stand | 1. November 2026 |
 | Sprache | Deutsch; technische Feldnamen, Enum-Werte und CLI-Kommandos Englisch |
-| Fachliche Quelle | **Diese Repositoryfassung v0.2.44 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.44 liegt mit dieser Änderung nicht vor.** |
+| Fachliche Quelle | **Diese Repositoryfassung v0.2.45 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.45 liegt mit dieser Änderung nicht vor.** |
 | Bearbeitbare Satzquelle | Diese Datei; eine spätere PDF muss denselben versionierten Inhalt wiedergeben. |
-| Vorgängerversion | Repository-Spezifikation v0.2.42 vom 31. Oktober 2026; historische Nachweise bleiben unverändert. |
+| Vorgängerversion | Repository-Spezifikation v0.2.44 vom 1. November 2026; historische Nachweise bleiben unverändert. |
 | Prüf- und Entscheidungsgrundlage | Ausdrücklicher manueller Nutzerauftrag TRANSPORT-SAFE-531 vom 31. Oktober 2026 nach Prüfung der PatchHarbor-1.7.0-Lieferung; bestehende fachliche Entscheidungen und Nachweise bleiben erhalten. |
-| Änderungsart | Hinexport nach W.1.1/W.2.1/W.3.1: geprüfte 1.7.0-Runtime, sichere öffentliche Referenzerzeugung und explizite Betriebsgrenzen; 15.n.W bleibt offen. |
+| Änderungsart | HOST-WORKERS-537: hostabhängige Worker mit optionaler Grenze 10, niedriger CPU-Priorität und gebundenen Ausführungsbelegen; Produktplan unverändert. |
 
-> **Verbindlicher Quellenwechsel:** Der ausdrückliche Nutzerauftrag APPLY-ONLY-535 vom 1. November 2026 schreibt den Entwicklungsworkflow als v0.2.44 fort. Frühere PDF- und Reviewnachweise bleiben historisch gebunden; keine Produktfreigabe wird erklärt.
+> **Verbindlicher Quellenwechsel:** Der ausdrückliche Nutzerauftrag HOST-WORKERS-537 vom 1. November 2026 schreibt den Entwicklungsworkflow als v0.2.45 fort. Frühere PDF- und Reviewnachweise bleiben historisch gebunden; keine Produktfreigabe wird erklärt.
 
 > **Fortbestehende Arbeitsprinzipien:** Weiche Budgets führen zu sparsamer vollständiger Weiterarbeit oder gesicherter Fortsetzung über mehrere Aufrufe beziehungsweise Prompts. Es werden keine erforderlichen Arbeiten stillschweigend ausgelassen. Reale Host-, Speicher-, Berechtigungs- und Sicherheitsgrenzen bleiben wirksam.
 
@@ -513,8 +513,8 @@ Abnahmekriterien im Implementierungsplan. PatchHarbor bleibt die
 #### 2.5.1 Laufzeitgewichtete manuelle CI — CI-PACKAGES-525
 
 Ausdrücklicher Nutzerauftrag vom 31. Oktober 2026. Apply-, ausdrücklich
-beauftragte gezielte Mess- und vollständige CI-Läufe verwenden standardmäßig vier Worker
-mit pytest-xdist `worksteal`. Ausführung und dynamische Umverteilung bleiben
+beauftragte gezielte Mess- und vollständige CI-Läufe verwenden die hostabhängige
+Workerzahl nach 2.5.3 mit pytest-xdist `worksteal`. Ausführung und dynamische Umverteilung bleiben
 beim Testframework. Bereits laufende Einzeltests werden nicht geteilt.
 Automatische Phasenmessung, Historie, N=3 und der aktuelle Apply-Laufzeitfilter
 bleiben unverändert; ausdrücklich beauftragte manuelle Auswahl- und vollständige CI-Läufe filtern keine
@@ -592,13 +592,13 @@ Test einschließlich der zusätzlichen Pflichttests unverändert phasenweise
 fortgeschrieben. Historie, Nummern, Rotationsanker und aktuelle Filterregel
 bleiben erhalten. Der einmal erfasste Auswahl-Snapshot gilt für diesen
 Lauf; der nächste Commit nutzt den dann aktuellen Stand. Berichte tragen
-Auswahlbindung v4 und test_scope
+Auswahlbindung v5 einschließlich Host-Ressourcen und test_scope
 `stable_modulo_partition_with_latest_runtime_filter_and_required_tests`.
 Sie binden Commit-ID, Quellstand, HEAD, Registry, Snapshot, Pflichtplan und
 exakte Vereinigungsmenge. Vollständige erfolgreiche native Beobachtungen
 und erhaltene Messphasen sind Pflicht; fehlende, doppelte, übersprungene,
 fehlgeschlagene oder veränderte Nachweise erlauben keinen Commit. Weiterhin
-vier worksteal-Worker, kein serieller Fallback, kein doppelter Schlusslauf.
+worksteal gemäß 2.5.3, kein stiller serieller Fallback, kein doppelter Schlusslauf.
 
 Erst nach grünem Gate entsteht der jeweilige echte Commit. Erst danach
 folgt der nächste Zustand. Ein Fehler beendet den Bundle-Versuch ohne
@@ -621,6 +621,45 @@ Result-Erzeugung und Archivierung. Control wird nicht verändert. Kein
 Dienststart, Modellaufruf, GitHub-CI-Start, Tag oder Produktplanfortschritt
 folgt aus dieser Workflow-Umstellung. Die manuellen vollständigen CI-Läufe
 und ihre Python-Matrix bleiben unverändert.
+
+#### 2.5.3 Hostabhängige Testressourcen — HOST-WORKERS-537
+
+Ausdrücklicher Nutzerauftrag vom 1. November 2026. Jeder ausführende Host
+ermittelt seine nutzbaren logischen CPUs selbst. Standardmäßig laufen
+`min(verfügbare CPUs, worker_limit)` xdist-Worker mit `worksteal`.
+`--worker-limit` ist eine positive optionale Ganzzahl, Standard 10;
+größere ausdrücklich gewählte Grenzen erlauben mehr als zehn Worker.
+Eine vorhandene explizite `--workers`-Angabe begrenzt zusätzlich. Null,
+negative Werte und ungültige Angaben werden vor Testbeginn abgelehnt.
+CPU-Affinität und erkennbare Linux-cgroup-CPU-Quoten begrenzen die
+verfügbare Kapazität; eine Teil-CPU erlaubt mindestens einen Worker.
+Ein Ein-CPU-Host nutzt weiterhin xdist mit einem Worker. Die Anzahl ist
+keine Speicherzusage und keine Garantie dauerhaft voller CPU-Auslastung.
+
+Der Testcontroller setzt unter POSIX mindestens Nice +10, bevor Worker
+oder Test-Unterprozesse entstehen. Eine bereits niedrigere Priorität
+(höherer Nice-Wert) bleibt erhalten. Fehlt die Prioritätsfunktion oder
+kann sie nicht hergestellt werden, startet kein Verhaltenstest. Worker
+bestätigen ihre tatsächliche Priorität. Von Tests gestartete weitere
+Test-Runner erben den Kontext und nutzen höchstens einen eigenen Worker;
+so vervielfacht sich die automatische Parallelität nicht rekursiv.
+Collection setzt keine Testpriorität und startet keine Testkörper.
+
+Jeder CI-Planer und jeder Testjob ermittelt die Kapazität auf seinem eigenen
+Rechner. Die Laptop- oder Planer-Workerzahl wird nicht als feste Jobzahl
+übernommen. Alle Jobs eines Laufs verwenden dieselbe explizite Grenze.
+CI-Plan v2 bindet die Planungskapazität, jeder Teilbeleg v2 seine tatsächlich
+verwendete Workerzahl, Grenze und Priorität. Ein Job mit abweichender
+Kapazität berechnet die Laufzeitschätzung für sein unverändertes Paket neu;
+die Drei-Stunden-Zielgröße ist weiterhin keine Garantie. Die Zusammenführung
+prüft sämtliche tatsächlichen Jobbelege, auch bei unterschiedlichen Zahlen.
+Historische Pläne und Belege behalten ihren ursprünglichen Vertrag.
+
+Apply-Auswahlbindung v5 bindet die Host-Ressourcen zusätzlich zur exakten
+Vereinigungsmenge; fehlende oder widersprüchliche Ressourcenbelege erlauben
+keinen Commit. N=3, aktueller Laufzeitfilter, Pflichtauswahl und dauerhafte
+Setup-/Call-/Teardown-Messhistorie bleiben unverändert. Kein Dev-Testlauf,
+kein CI-Start und kein Apply-Start folgt aus der Vorbereitung dieses Bundles.
 
 ## 3. Produktziele
 
@@ -6219,7 +6258,7 @@ Die folgende Roadmap ist informativ und erzeugt keine Anforderungen an 0.2:
 
 | Version | Datum | Status | Änderung |
 |---|---|---|---|
-| 0.2.44 | 2026-11-01 | Ausdrücklicher Nutzerauftrag | APPLY-ONLY-535: Dev bereitet Testpläne vor; Apply prüft je Commit N=3 plus Pflichtauswahl, misst dauerhaft und erhält Teilfortschritt für gebundene Korrekturbundles. |
+| 0.2.45 | 2026-11-01 | Ausdrücklicher Nutzerauftrag | APPLY-ONLY-535: Dev bereitet Testpläne vor; Apply prüft je Commit N=3 plus Pflichtauswahl, misst dauerhaft und erhält Teilfortschritt für gebundene Korrekturbundles. |
 | 0.2.43 | 2026-10-31 | Ausdrücklicher manueller Nutzerauftrag | TRANSPORT-SAFE-531: versions-/hashgebundene PatchHarbor-1.7.0-Core-PYZ, sichere öffentliche Referenzerzeugung, Betriebsgrenzen und Fehlererhaltung; 15.n.W und externe Abnahmen bleiben offen. |
 | 0.2.42 | 2026-10-31 | Delegiert gemäß SPECROAD-DECISION-1 | TRANSPORT-OUTBOUND-528: geschlossener Hinpaket-/Runtimeeingabevertrag, selbstreferenzfreie Paket-ID und vollständige Snapshot-/Receiptbindung; Implementierung 15.n bleibt offen, keine Produktfreigabe. |
 | 0.2.39 | 2026-10-29 | Ausdrückliche Nutzerentscheidung | RESTORE-SCHEMA-SCOPE: vollständige 0.2-Restore-Abnahme; sichere Abweisung nicht unterstützter deklarierter Altformate; positive 0.1-Unterstützung erst nach verbindlichem Quellvertrag und M16-Integration. Keine Produktabnahme. |

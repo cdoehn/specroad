@@ -8,12 +8,13 @@ import sys
 import uuid
 
 from .execution_policy import DEFAULT_DISTRIBUTION
+from .host_execution import DEFAULT_WORKER_LIMIT, select_workers, verify_resources, enabled
 from .catalog import load_catalog
 from .catalog_check import run_catalog_preflight
 from .catalog_contract import validate_preflight_report
 from .ci_reference import _load_report
 from .ci_packages import (DEFAULT_RULES, checked_context, digest, make_plan, merge_shards,
-                          require, selected_pairs, validate_plan, verify_aggregate)
+                          require, selected_pairs, validate_plan, verify_aggregate, estimate_on_host)
 from .common import json_bytes
 from .evidence import make_report
 from .identity import source_identity, platform_identity
@@ -66,13 +67,17 @@ def execution_context(root, environment):
     return checked_context(context)
 
 
-def plan_run(root, outdir, estimates_path, *, rules=None, environment=None):
+def plan_run(root, outdir, estimates_path, *, rules=None, worker_limit=DEFAULT_WORKER_LIMIT, environment=None):
     root = Path(root).resolve()
     context = execution_context(root, os.environ if environment is None else environment)
     outdir = new_report_directory(outdir, root)
     catalog_path = outdir / 'catalog.json'
     require(run_catalog_preflight(root, catalog_path), 'CI collection failed; no packages started')
-    plan = make_plan(_load_report(catalog_path), _load_report(estimates_path), context, rules=rules)
+    workers, resources = select_workers(root, worker_limit=worker_limit, environment=environment)
+    effective = dict(DEFAULT_RULES if rules is None else rules)
+    if resources is not None:
+        effective['workers'] = workers
+    plan = make_plan(_load_report(catalog_path), _load_report(estimates_path), context, rules=effective, host_resources=resources)
     write_json(outdir / 'plan.json', plan)
     return plan
 
@@ -87,11 +92,20 @@ def verify_plan_inputs(root, plan, context, collection):
             'Plan differs from actual complete collection')
 
 
-def run_package(root, plan_path, shard, outdir, *, environment=None, runner=None):
+def run_package(root, plan_path, shard, outdir, *, worker_limit=None, environment=None, runner=None):
     root = Path(root).resolve(); plan_path = Path(plan_path).absolute()
     env = dict(os.environ if environment is None else environment)
     context = execution_context(root, env)
     plan = validate_plan(_load_report(plan_path)); pairs = selected_pairs(plan, shard)
+    resources = None; workers = plan['rules']['workers']
+    limit = DEFAULT_WORKER_LIMIT if worker_limit is None else worker_limit
+    if plan['format_version'] == 2:
+        limit = plan['host_resources']['worker_limit'] if worker_limit is None else worker_limit
+        require(limit == plan['host_resources']['worker_limit'], 'CI limit differs from bound plan')
+        workers, resources = select_workers(root, worker_limit=limit, environment=env)
+        require(resources is not None and not resources['nested'], 'Current standalone CI host policy required')
+    elif enabled(root):
+        raise ValueError('New CI source requires a host-aware plan')
     outdir = new_report_directory(outdir, root)
     write_json(outdir / 'run-context.json', context)
     collection_path = outdir / 'catalog.json'
@@ -100,7 +114,7 @@ def run_package(root, plan_path, shard, outdir, *, environment=None, runner=None
     observed_path = outdir / 'observations.json'
     command = [sys.executable, '-I', '-B', str(root/'tools/pytest_entry.py'),
         '-o','addopts=', '--disable-plugin-autoload', '-p','no:cacheprovider', '-p','no:doctest',
-        '-p','xdist.plugin', '-n',str(plan['rules']['workers']), '--dist',DEFAULT_DISTRIBUTION,
+        '-p','xdist.plugin', '-n',str(workers), '--dist',DEFAULT_DISTRIBUTION, '--worker-limit',str(limit),
         '--max-worker-restart=0', '--sr-observations',str(observed_path),
         '--sr-expected-tests',str(len(pairs)), '--sr-ci-plan',str(plan_path),
         '--sr-ci-shard',str(shard), str(root/'tests')]
@@ -116,6 +130,7 @@ def run_package(root, plan_path, shard, outdir, *, environment=None, runner=None
     try:
         observation = _load_report(observed_path)
         verify_observation(observation, sorted({n.split('::',1)[0] for n in pairs}), len(pairs))
+        verify_resources(observation, resources)
         require(code == 0 and observation['nodeid_to_test_id'] == pairs
                 and source_identity(root) == plan['bindings']['source_sha256']
                 and _load_report(plan_path) == plan, 'Changed inputs or failed CI package')
@@ -123,9 +138,12 @@ def run_package(root, plan_path, shard, outdir, *, environment=None, runner=None
         errors.append('nonpassing_or_unbound_package')
     receipt = dict(format_version=1, kind='specroad-ci-package-result-v1', context=context,
         plan_sha256=plan['plan_sha256'], bindings=plan['bindings'], shard=shard,
-        workers=plan['rules']['workers'], distribution=DEFAULT_DISTRIBUTION, runtime=platform_identity(),
+        workers=workers, distribution=DEFAULT_DISTRIBUTION, runtime=platform_identity(),
         selected_passed=not errors, full_suite_passed=None, exit_code=0 if not errors else 1,
         process_exit_code=code, errors=errors, observation=observation)
+    if resources is not None:
+        receipt.update(format_version=2, kind='specroad-ci-package-result-v2', host_resources=resources,
+                       estimated_seconds_actual_host=estimate_on_host(plan, shard, workers))
     write_json(outdir / 'package-result.json', receipt)
     return receipt
 
@@ -144,6 +162,9 @@ def aggregate(root, plan_path, receipt_paths, outdir, *, environment=None):
             'Aggregate catalog changed')
     execution = dict(engine='pytest', workers=plan['rules']['workers'], distribution=DEFAULT_DISTRIBUTION,
                      ci_shards=len(plan['shards']), test_timeout=None, suite_timeout=None)
+    if plan['format_version'] == 2:
+        execution.update(workers=max(r['workers'] for r in receipts),
+                         ci_worker_counts=[r['workers'] for r in sorted(receipts,key=lambda r:r['shard'])])
     binding = dict(run_id=str(uuid.uuid4()), tool_build_sha256=plan['bindings']['source_sha256'],
                    platform_sha256=digest(runtime), configuration_sha256=digest(execution))
     observed = ObservedExecution(observation['test_outcomes'], observation['tests_run'], 0, ())

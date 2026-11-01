@@ -7,6 +7,7 @@ import subprocess
 import sys
 
 from .execution_policy import DEFAULT_DISTRIBUTION
+from .host_execution import DEFAULT_WORKER_LIMIT, select_workers, verify_resources, enabled
 from .catalog_check import run_catalog_preflight
 from .ci_reference import _load_report, _unique_object
 from .identity import source_identity
@@ -67,18 +68,18 @@ def commit_context(root, registry, *, runner=None):
     return history[0], sequence, previous
 
 
-def parallel_command(root, outdir, expected, workers):
-    if type(workers) is not int or workers < 2:
-        raise ValueError("Apply tests require parallel workers")
+def parallel_command(root, outdir, expected, workers, worker_limit=DEFAULT_WORKER_LIMIT):
+    if type(workers) is not int or workers < 1:
+        raise ValueError("Apply tests require worker processes")
     return [sys.executable, "-I", "-B", str(root / "tools/pytest_entry.py"),
             "-o", "addopts=", "--disable-plugin-autoload", "-p", "no:cacheprovider",
             "-p", "no:doctest", "-p", "xdist.plugin", "-n", str(workers),
-            "--dist", DEFAULT_DISTRIBUTION, "--max-worker-restart=0", "--sr-observations",
+            "--dist", DEFAULT_DISTRIBUTION, "--worker-limit", str(worker_limit), "--max-worker-restart=0", "--sr-observations",
             str(outdir / "observations.json"), "--sr-expected-tests", str(expected),
             "@" + str(outdir / "nodeids.txt")]
 
 
-def run_apply_partition(root, outdir, *, workers=4, runner=None, test_plan=None, commit_id=None):
+def run_apply_partition(root, outdir, *, workers=None, worker_limit=DEFAULT_WORKER_LIMIT, runner=None, test_plan=None, commit_id=None):
     root = Path(root).resolve()
     required_policy = plan_required(root)
     if (test_plan is None) != (commit_id is None) or (required_policy and test_plan is None):
@@ -87,8 +88,9 @@ def run_apply_partition(root, outdir, *, workers=4, runner=None, test_plan=None,
     if test_plan is not None:
         plan_raw, plan = read_object(test_plan)
         validate_plan(plan, commit_id)
-    if type(workers) is not int or workers < 2:
-        raise ValueError("Apply tests require parallel workers")
+    workers, resources = select_workers(root, workers, worker_limit=worker_limit)
+    if resources is None and workers < 2:
+        raise ValueError("Historical Apply requires parallel workers")
     outdir = new_report_directory(outdir, root)
     catalog_path = outdir / "catalog.json"
     if not run_catalog_preflight(root, catalog_path):
@@ -125,7 +127,7 @@ def run_apply_partition(root, outdir, *, workers=4, runner=None, test_plan=None,
         selected, required_tests = union_selection(selected, catalog['nodeid_to_test_id'], plan, runtime_filter)
     receipt = {}
     if registry["format_version"] == 2:
-        receipt = selection_receipt(registry, registry_raw, selected, head, sequence, runtime_filter, required_tests)
+        receipt = selection_receipt(registry, registry_raw, selected, head, sequence, runtime_filter, required_tests, resources)
         if (source_identity(root) != binding or (root / REGISTRY).read_bytes() != registry_raw
                 or load_baseline(root) != baseline
                 or runtime_policy(root) != policy
@@ -135,7 +137,7 @@ def run_apply_partition(root, outdir, *, workers=4, runner=None, test_plan=None,
             raise ValueError("Apply inputs changed before the selected tests could start")
     (outdir / "nodeids.txt").write_text("\n".join(selected) + "\n", encoding="utf-8")
     # pytest's native argument-file support avoids OS argument-length limits.
-    command = parallel_command(root, outdir, len(selected), workers)
+    command = parallel_command(root, outdir, len(selected), workers, worker_limit)
     runner = subprocess.run if runner is None else runner
     try:
         code = runner(command, cwd=root, env=test_environment(os.environ),
@@ -147,6 +149,7 @@ def run_apply_partition(root, outdir, *, workers=4, runner=None, test_plan=None,
         observation = _load_report(outdir / "observations.json")
         files = {n.split("::", 1)[0] for n in selected}
         verify_observation(observation, files, len(selected))
+        verify_resources(observation, resources)
         if (observation["nodeid_to_test_id"] != selected
                 or any(not name.startswith("gw") for name in observation["worker_test_counts"])
                 or code != 0 or source_identity(root) != binding
@@ -175,6 +178,8 @@ def run_apply_partition(root, outdir, *, workers=4, runner=None, test_plan=None,
     if required_tests is not None:
         result.update(format_version=3, test_scope=SCOPE, commit_id=commit_id,
                       required_tests=required_tests)
+    if resources is not None:
+        result.update(format_version=4, host_resources=resources)
     with (outdir / "selection.json").open("x", encoding="utf-8") as stream:
         json.dump(result, stream, allow_nan=False, sort_keys=True)
         stream.write("\n")
