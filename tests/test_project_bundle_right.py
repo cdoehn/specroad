@@ -31,10 +31,16 @@ def test_cli_registry_declares_implemented_project_and_partial_creation():
     assert command.preflight_profile.value == 'project_read'
     assert command.effect_scope.value == 'external_output'
     assert next(o for o in command.options if o.flag == '--scope').choices == ('project', 'document', 'release')
-    assert not any(o.flag == '--profile' for o in command.options)
+    # The ordinary route keeps its class and E-bundle scopes. The new profile
+    # selector is a closed transport variant, not a project-profile override.
+    assert any(o.flag == '--profile' for o in command.options)
+    assert dispatch_result(['bundle', 'create', '--profile', 'software-de']).exit_code == 2
     assert any(o.flag == '--exclude-operational-receipts' and not o.takes_value for o in command.options)
     result = dispatch_result(['command', 'describe', 'bundle.create'])
     assert result.exit_code == 0, result.as_dict()
+    variant = result.as_dict()['result']['variants'][0]
+    assert variant['when'] == {'--profile': ['ai-runtime'], '--direction': 'outbound'}
+    assert variant['command_class'] == 'transport_operational'
     schema = dispatch_result(['schema', 'show', 'bundle-create-v1'])
     assert schema.exit_code == 0, schema.as_dict()
 

@@ -21,6 +21,9 @@ from ._public_errors import work_errors
 
 def protected_paths(initial):
     value = initial.as_dict()
+    if value['command_class'] == 'transport_operational':
+        from .transport import protected_paths as transport_paths
+        return transport_paths(initial)
     require(value['command_id'] == 'recover.restore', 'work_command_adapter_unavailable', exit_code=2)
     options = value['normalized_arguments']['options']
     paths = {options['--project']}
@@ -76,7 +79,9 @@ def open_restore_work(path, *, registry):
             'initial_checkpoint_sha256': root['initial_checkpoint_sha256'], 'tool_build': build}
         chain = _decode(metadata, payloads, registry, build)
         initial = chain[0]
-        require(initial.as_dict()['command_id'] == 'recover.restore',
+        require(initial.as_dict()['command_id'] == 'recover.restore' or (
+            initial.as_dict()['command_id'] == 'bundle.create'
+            and initial.as_dict()['command_class'] == 'transport_operational'),
                 'work_command_adapter_unavailable', exit_code=2)
         checked_location = WorkDirectory(initial, protected_roots=(),
             protected_paths=protected_paths(initial), directory=path)

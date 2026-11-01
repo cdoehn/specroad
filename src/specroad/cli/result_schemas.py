@@ -150,12 +150,14 @@ def _fields(schema_id):
             'creator_authenticated': {'const': False}, 'full_semantic_validation': {'const': False},
             'approval_granted': {'const': False}, 'write_authorized': {'const': False}})
     if schema_id == 'bundle-create-v1':
-        return _object({'format_version': {'const': 'bundle-create-v1'}, 'manifest': obj,
+        schema = _object({'format_version': {'const': 'bundle-create-v1'}, 'manifest': obj,
             'file': _object({'path': nonempty, 'size': count, 'sha256': sha}),
             'generated': {'const': True}, 'normative': {'const': False},
             'atomic_snapshot': {'const': False}, 'source_bytes_rechecked': {'const': True},
             'full_semantic_validation': {'const': False}, 'approval_granted': {'const': False},
             'write_authorized': {'const': False}})
+        schema['properties'].update(transport=obj, runtime_profile={'const': 'python-present'})
+        return schema
     if schema_id == 'exchange-export-v1':
         mapping = _object({'mapping_id': nonempty, 'mapping_version': nonempty, 'sha256': sha})
         loss_identity = {'resource_id': nonempty, 'pointer': text,
@@ -361,7 +363,7 @@ def _fields(schema_id):
             "build_identity_status": text, "runtime": runtime, "python_support": support, "supported_schema_versions": strings,
             "supported_output_format_versions": {"type": "object", "additionalProperties": strings}})
     if schema_id == "command-description-v1":
-        return _object({"format_version": {"const": "1.0.0"}, **surface, "budget_policy_version": _nullable(text),
+        schema = _object({"format_version": {"const": "1.0.0"}, **surface, "budget_policy_version": _nullable(text),
             "lock_kind": {"enum": ['none', 'bootstrap', 'recovery']}, "work": work,
             "parameters": _array(_object({"name": text, "kind": {"const": "positional"},
                 "datatype": text, "required": boolean, "choices": strings})),
@@ -376,6 +378,10 @@ def _fields(schema_id):
             "write_effects": _object({"scope": text, "required_write_paths": strings, "external_work": strings}),
             "requires_project": boolean, "requires_git": boolean,
             "request_schema": obj, "examples": _array(obj)})
+        schema['properties']['variants'] = _array(_object({**surface, 'when': obj,
+            'required_options': strings, 'effect_scope': text, 'requires_git': boolean,
+            'budget_policy_version': text, 'work': work, 'operating_effects': strings, 'example': obj}))
+        return schema
     if schema_id == "capabilities-v1":
         semantic = _object({"program_version": text, "distribution": _object(distribution),
             "capability_ids": strings, "commands": _array(_object({**surface, "output_formats": strings,

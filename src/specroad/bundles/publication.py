@@ -94,6 +94,10 @@ def _publish(container, source, verify_current, output, output_root):
         check_location()
     # The ZIP hash stays outside its manifest. Publication is neither a verifier
     # for arbitrary input bundles nor extraction, approval or write admission.
+    return publication_result(container, path)
+
+
+def publication_result(container, path):
     return {'format_version': 'bundle-create-v1', 'manifest': container.manifest,
             'file': {'path': path, 'size': len(container.source_bytes), 'sha256': container.sha256},
             'generated': True, 'normative': False, 'atomic_snapshot': False,

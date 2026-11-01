@@ -57,6 +57,15 @@ def api_failure(api, error):
         facts = {'reason': error.reason.value, 'kind': error.error_kind.value,
                  'code': error.code.value if isinstance(error, api.ResultSnapshotError) else None}
         code = _semantic_exit_code(facts)
+        safe_error = getattr(api, 'SafeExportError', None)
+        if safe_error is not None and isinstance(error, safe_error):
+            facts.update(code=error.code.value,
+                published_path=None if error.published_path is None else str(error.published_path),
+                emergency_diagnostics_path=None if error.emergency_diagnostics_path is None else
+                    str(error.emergency_diagnostics_path),
+                emergency_diagnostics_failed=error.emergency_diagnostics_failed)
+            code = {'configuration': 2, 'stale': 6, 'unsupported_conversion': 7,
+                    'unsafe_path': 7, 'resource_limit': 7}.get(facts['code'], 5)
         if _has_io_cause(error):
             code = 5
         return TransportFailure(code, reason='patchharbor_operation_failed',

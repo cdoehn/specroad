@@ -31,7 +31,8 @@ _FIELDS = ('format_version', 'package_kind', 'work_id', 'checkpoint_generation',
 def _supported(manifest):
     value = manifest.as_dict()
     restore = value['command_class'] == 'recovery_write' and value['command_id'] == 'recover.restore'
-    if value['command_class'] != 'read_only' and not restore:
+    transport = value['command_class'] == 'transport_operational' and value['command_id'] == 'bundle.create'
+    if value['command_class'] != 'read_only' and not restore and not transport:
         raise ArchiveError('normative_work_package_requires_native_binding', exit_code=6)
 
 
@@ -238,7 +239,7 @@ def restore_work_package(raw, *, expected_sha256, registry, protected_roots, dir
     from .restore_control import delivered_files
     from .result_files import _publish_file, _verify_files
     reserved = (protected_paths(chain[0])
-                if chain[0].as_dict()['command_id'] == 'recover.restore' else ())
+                if chain[0].as_dict()['command_id'] in ('recover.restore', 'bundle.create') else ())
     location = WorkDirectory(chain[0], protected_roots=protected_roots,
                              protected_paths=reserved, directory=directory)
     results = delivered_files(chain[-1])

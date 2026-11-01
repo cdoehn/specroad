@@ -6,21 +6,29 @@ from ..cli.requests import CommandRequest
 from ._data_contract import WorkManifestError, _require, _text, _copy, _object, _hash
 
 
-def _command(registry, request, *, normative=False, recovery=False):
+def _command(registry, request, *, normative=False, recovery=False, transport=False):
     _require(type(registry) is CommandRegistry and type(request) is CommandRequest)
     # Read-only requests still accept no guessed option projection. Restore
     # uses its own closed parser and explicit transport projection separately.
-    _require(type(normative) is bool and type(recovery) is bool and not (normative and recovery)
-             and (normative or recovery or not request.options))
+    _require(all(type(v) is bool for v in (normative, recovery, transport))
+             and sum((normative, recovery, transport)) <= 1
+             and (normative or recovery or transport or not request.options))
     _text(request.command_id)
-    _copy({'arguments': dict(request.arguments), 'options': dict(request.options)})
+    def options(value):
+        return {k: list(v) if transport and k == '--profile' and type(v) is tuple else v
+                for k, v in value.items()}
+    _copy({'arguments': dict(request.arguments), 'options': options(request.options)})
     try:
         invocation = registry.bind_request(request)
     except CommandUsageError as error:
         raise WorkManifestError('Invalid registered work request') from error
-    expected = (CommandClass.RECOVERY_WRITE if recovery else
+    expected = (CommandClass.TRANSPORT_OPERATIONAL if transport else CommandClass.RECOVERY_WRITE if recovery else
                 CommandClass.NORMATIVE_WRITE if normative else CommandClass.READ_ONLY)
     _require(invocation.command.command_class is expected)
+    if transport:
+        from ..cli._transport import outbound_options
+        _require(request.command_id == 'bundle.create' and outbound_options(invocation.options)
+                 and invocation.command.effect_scope is EffectScope.TRANSPORT_OUTPUT)
     if recovery:
         from ..cli._restore_options import restore_request
         _require(invocation.command.command_id == 'recover.restore'
@@ -30,7 +38,7 @@ def _command(registry, request, *, normative=False, recovery=False):
         restore_request(CommandRequest(request.command_id, invocation.options, invocation.arguments))
     return {'command_id': request.command_id, 'command_class': expected.value,
             'normalized_arguments': {'arguments': dict(invocation.arguments),
-                                    'options': dict(invocation.options) if normative or recovery else {}}}
+                                    'options': options(invocation.options) if normative or recovery or transport else {}}}
 
 
 def _tool(value):

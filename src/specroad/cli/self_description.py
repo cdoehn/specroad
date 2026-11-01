@@ -33,7 +33,7 @@ def output_formats(command):
 def describe_command(registry, command_id):
     command, protocol = published_contract(registry, command_id)
     formats = output_formats(command)
-    return {
+    result = {
         "format_version": DESCRIPTION_VERSION,
         **command_surface(command),
         "budget_policy_version": command.budget_policy_version,
@@ -59,3 +59,13 @@ def describe_command(registry, command_id):
         "request_schema": request_schema(command),
         "examples": [protocol.example.as_dict()],
     }
+    variants = registry.variants(command)
+    if variants:
+        result['variants'] = [{**command_surface(v), 'when': {'--profile': ['ai-runtime'], '--direction': 'outbound'},
+            'required_options': sorted(o.flag for o in v.options if o.required),
+            'effect_scope': v.effect_scope.value, 'requires_git': v.requires_git,
+            'budget_policy_version': v.budget_policy_version, 'work': v.protocol.work.as_dict(),
+            'operating_effects': ['external_private_runtime', 'patchharbor_registry_and_repository_locks',
+                                  'external_reference_and_diagnostics', 'external_create_only_handoff'],
+            'example': v.protocol.example.as_dict()} for v in variants]
+    return result

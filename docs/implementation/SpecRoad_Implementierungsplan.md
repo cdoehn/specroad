@@ -180,10 +180,10 @@ Apply-Abschluss DEV-ENV-530: W/R/C-Gates erfolgreich; Bundle 530 abgeschlossen.
 ```yaml
 plan_revision: 43
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 654
-last_completed_plan_commit: 15.m.C
-next_plan_commit: 15.n.W
-last_completed_numbered_bundle: 531
+implementation_plan_commits_completed: 655
+last_completed_plan_commit: 15.n.W
+next_plan_commit: 15.n.R
+last_completed_numbered_bundle: 532
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -33844,12 +33844,96 @@ Apply-Result und der OFF-PLAN-Commit werden bei Lieferung nicht vorweggenommen.
 
 #### 15.n.W – Let it Work
 
-- [ ] **15.n.W** · Position **655/900** · Voraussetzung: `15.m.C`.
+- [x] **15.n.W** · Position **655/900** · Voraussetzung: `15.m.C`.
 **Exakte Commit-Message:** `15.n.W feat(transport): Gebundenes Hinpaket exportieren aufbauen`
 
 **Umsetzung:** bundle create mit explizitem ai-runtime/outbound-Profil als transport_operational registrieren. Die in W.1.1 gebundene 1.7.0-Runtime über Safe-Kontext, schreibfreie Vorbereitung, explizite Betriebsgrenzenprüfung und api.bundle mit unverändertem SafeExportPlan am bereits registrierten lokalen Git-Repository verwenden, aus dessen geprüftem Snapshot ein kanonisches Vollprojektbundle erzeugen und SpecRoad-PYZ, Originalresult und Projektbundle nach W.2 atomar verpacken.
 
 **Verhaltensabnahme:** Unabhängiges Inventar bestätigt Resultbytes, Projekt-ID, Scope, Modellwurzel, Receipts und alle äußeren Hash-/Größenbindungen; Source, Index und Git-Historie bleiben unverändert, PH-Betriebswirkungen sind ausgewiesen. Maßgeblich sind zusätzlich W.1.1/W.2.1/W.3.1, die vollständige offene Abnahmeliste TRANSPORT-OUTBOUND-528 und deren Ergänzung TRANSPORT-SAFE-531; CLI-/Preflight-/Work-Integration gehört zum Schritt.
+
+**Lieferstand 15.n.W / Bundle 532 (Apply-Abnahme noch offen).**
+Grundlage ist das nativ vollständig geprüfte Result 531 mit SHA-256
+`15ebe03056b32e802cd9b61aa4b9dd30a76847d093b4bbe07202d3734665aacf`,
+Abschlusscommit `ba825eb82dfe0f2bda2db3e37798e05e32e7b1d4`, sauberem
+state-v1-Fingerprint `7c9d2a24e397e0e5` und 5.953 erfolgreichen parallelen
+Apply-Tests. SPECROAD-DECISION-1/Vertrag 3 ist vorhanden; der aktuelle Auftrag
+sperrt weitere automatische Klärung. Dieses Bundle implementiert den bereits
+geklärten W-Vertrag, ohne normative Änderung oder zusätzliche Planvorziehung.
+
+Der vollständige Hinexport ist über argv und strukturierte Commands angebunden:
+explizite `ai-runtime/outbound`-Variante, Pflichtpaare, transport_operational,
+Preflight, Selbstbeschreibung und Ressourcen-/Work-Verträge. Die fest gebundene
+1.7.0-Runtime erreicht ausschließlich den öffentlichen Safe-Kontext, opaken
+Plan und Safe-Export. Die 1.6.0-Fixtures und der übernommene Bootstrap bleiben
+historischer Bestandsschutz. Native effektive Resultbytes liefern die gesamte
+Projektprojektion; Livebeobachtungen dienen nur Abdeckung und Aktualität.
+Historische Receipts bleiben unverändert und werden portabel geprüft; ihre
+ursprüngliche lokale Verzeichnisbindung wird nicht an die temporäre Projektion
+umgeschrieben. Originalresult, passende passive SpecRoad-PYZ und Vollprojekt-ZIP
+werden mit geschlossenem Inventar und Paket-ID kanonisch create-only verpackt.
+
+Die native Work-Kette bindet Originalargumente, Build, Quellzustand und
+vollständige Phasen. Frische Prozesse bereiten einen neuen opaken Plan nur
+für dieselbe erwartete Quelle vor. Eine dauerhafte Exportabsicht steht vor
+dem einzigen erzeugenden PH-Aufruf; ein unklar unterbrochener Versuch wird
+nicht automatisch wiederholt. Erfasste Resultate werden mit externer SHA
+weiterverwendet; fertige Ergebnisse können historisch erneut gelesen werden.
+Status, Prompt, Cancel vor Export sowie native Work-Transport-/Restore-Grenzen
+bleiben wirksam. Ungebundene Source-Builds erzeugen keine dauerhaften
+Work-Nachweise. Fremde bzw. verwaiste native Work-Locks werden nicht übernommen.
+
+Gezielte Abnahmen umfassen echte registrierte Testrepositorys, Root und
+Unterprojekt, Modul/PYZ, argv/Command und prozessübergreifende Fortsetzung,
+staged/unstaged/untracked Bytes, Binär-/Leerdateien, Rename/Löschung, vollständige
+historische Receipts, ignorierte Pflichtbytes, Partialmarker, offene Transaktionen,
+Konversionsangriffe ohne Helferausführung, falsche Runtimebindungen, belegte Ziele,
+semantische PH-Fehler und erhaltene späte Teilresultate. Echte Prozessabbrüche
+prüfen die Erhaltung der tatsächlichen Ausgabe und die Sperre blinder Wiederholung.
+Normale Anhang-E-Bundles, bestehende Work-Verträge und CLI bleiben Regressionen.
+Es gibt keine vorsorgliche Teilung, keinen zusätzlichen W-Teilcommit und keinen
+vorgezogenen R-/C-Abschluss. 15.n.R und 15.n.C sowie der gesonderte manuelle
+CPython-3.10–3.14-/Plattformnachweis bleiben offen; dies ist weder Vollsuite-
+noch Release- oder Rundwegfreigabe.
+
+**Abgeschlossene gezielte Lieferprüfung.** 1144 Verhaltenstests
+in 35 betroffenen Dateien bestanden ungefiltert mit zwölf parallelen
+Worksteal-Workern auf CPython 3.14.4; Exit 0, Abschluss
+`2026-11-01T02:13:46.544816+00:00`. Die vollständige Collection/Katalogprüfung
+erfasste 22718 eindeutige aktive Testidentitäten und führte keine weiteren
+Testkörper aus. Die 67 neuen Identitäten wurden ausschließlich hinten an die
+bestehende Apply-Nummerierung angehängt. Alle 1144 aktuellen Versuche
+und 3432 Setup-/Call-/Teardown-Phasen sind vollständig und gültig in
+der gemeinsamen Laufzeithistorie gespeichert; ältere Fehler-/Abbruchversuche
+bleiben erhalten und sind kein Erfolg dieses Zustands.
+
+Die Diagnose korrigierte veraltete Registry-Abnahmen für die ausdrücklich neue
+Transportvariante sowie die Verwechslung eigener Sicherheitsfehler mit
+ungültigen öffentlichen API-Aufrufen. Eine bei der Paketvorprüfung gefundene
+einzelne nachgestellte Leerstelle wurde vor der Lieferprüfung entfernt.
+Der erste vollständige Lieferlauf dieses Quellstands bestand zwar alle 1144
+Verhaltenstests, erhielt aber keine Gate-Freigabe: Ein entgegen der Annahme noch
+laufender älterer Testprozess schrieb seinen wegen Quelländerung ungültigen
+Bericht in den wiederverwendeten Zielpfad. Der neuere Prozess verweigerte das
+Überschreiben korrekt; sein Wrapper endete mit Exit 4. Diese Berichte und die
+originalen Laufzeithistorien bleiben unverändert erhalten. Nach belegtem Ende
+aller alten Prozesse wurde die vollständige gezielte Auswahl auf unverändertem
+Quellstand mit zwölf Workern und einem neuen, eindeutig benannten Berichtspfad
+erneut ausgeführt. Nur dieser regulär erzeugte, vollständig bestandene
+Abschlussbericht begründet die Lieferfreigabe. Keine Teilung,
+keine geänderte normative Abnahme und keine künstliche W/R/C-Folge.
+
+Liefer-Quellhash: `e05cfc922d1854b8c3c114640f17d5ef31e6b4706f1f4b1df9dea786c944afa4`.
+Auswahlbericht: `246520b15ca177995ab8c31b70479357abc1b1585a9bbc13a854519702328eac`;
+Einzeloutcomes: `526084ae0a9024ebb1a44636809f3fbd70b3dcd586b58d0c267ffbe421fa36d1`;
+Collection/Katalog: `79fa70b25d27aabcb7f623eba7783c3123d26aa60b97097e6c46f8c1d4eb0591`.
+Die native ZIP-/Vierfachbindungs-/Payloadprüfung erfolgt vor der atomaren
+Exchange-Übergabe; ein Apply-Erfolg wird dadurch nicht behauptet.
+
+Der Entrypoint liefert genau diesen W-Zustand, führt die fällige parallele
+Apply-Gruppe **0 von 3 / Sequenz 243** mit aktueller Laufzeitselektion aus
+und setzt Fortschritt sowie Bundlemarker erst nach erfolgreichem Gate.
+Vor dem eigenen Commit bleibt 15.n.W offen. Weder Control noch Watcher,
+GitHub-Workflow, lokale AGENTS oder historische Messbaseline werden geändert.
 
 #### 15.n.R – Make it Right
 

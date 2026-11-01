@@ -7,6 +7,9 @@ VERSION = '1.6.0'
 ARTIFACT_SHA256 = '377e715d7cb443eb5e80a3e7f9e8405f36092a0f7c062745b70c8b3a2e3eb055'
 PYTHONS = ((3, 10), (3, 11), (3, 12), (3, 13), (3, 14))
 REQUIRES_PYTHON = '>=3.10'
+SAFE_VERSION = '1.7.0'
+SAFE_ARTIFACT_SHA256 = '00a08c96748d90629b52672f1a5e95f300371408871b8c11880d2a3f5bf0f6fb'
+SAFE_OPERATIONS = ('context', 'prepare_reference_export', 'repositories', 'configuration')
 OPERATIONS = ('bundle', 'inspect_patch', 'validate_patch', 'pack_patch', 'apply',
               'integration_capabilities', 'read_result_snapshot')
 

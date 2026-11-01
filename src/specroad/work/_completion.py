@@ -6,6 +6,10 @@ from ._data_contract import _copy, _count, _hash, _object, _parse, _require
 
 
 def _result(value, objects, document, exit_code, registry):
+    if value['command_class'] == 'transport_operational':
+        from .transport import final_outcome
+        final_outcome(value, objects, document, exit_code)
+        return 'outbound-work-finalization-v1', []
     if value['command_class'] == 'recovery_write':
         if '--from' in value['normalized_arguments']['options']:
             from .restore_planning import final_outcome

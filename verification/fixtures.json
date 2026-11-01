@@ -392,6 +392,10 @@
       "kind": "owned artifact snapshots and ordered change operations; no live root, metadata, lifecycle, authentication or write proof",
       "provider": "tests/support/folds.py:goal"
     },
+    "SR-FIX-OUTBOUND-SAFE-170-v1": {
+      "kind": "Owned temporary Git repositories registered with the real pinned PatchHarbor 1.7.0 public API; original native SpecRoad projects and completed portable receipts. Explicit synthetic runtime-only trust envelopes load only the pinned Core artifact, then real safe exports produce independently checked native Results. Clean/dirty/index/effective layers, isolated module/PYZ execution, original source bytes and Git state, Work continuation and actual process-loss/I/O boundaries are observed. No real human approval, host Apply, full platform matrix or return export is asserted.",
+      "provider": "tests/support/transport_outbound.py:register,request,child,tree;tests/test_transport_outbound.py:distribution;tests/test_transport_outbound_edges.py:_export_setup;tests/fixtures/patchharbor170/provenance.json"
+    },
     "SR-FIX-OWNED-TEMP-v1": {
       "kind": "owned byte fixture; not a future-schema project",
       "provider": "tests/support/files.py:temporary_project"
@@ -906,6 +910,7 @@
     "SR-FIX-NORMALIZATION-SCOPE-v1",
     "SR-FIX-NORMALIZATION-TRANSACTION-v1",
     "SR-FIX-ORDERED-FOLD-v1",
+    "SR-FIX-OUTBOUND-SAFE-170-v1",
     "SR-FIX-OWNED-TEMP-v1",
     "SR-FIX-PARTIAL-BUNDLE-RIGHT-v1",
     "SR-FIX-PARTIAL-READ-v1",

@@ -149,6 +149,7 @@ class RegistryRobustnessTests(unittest.TestCase):
             CommandClass.RECOVERY_WRITE: EffectScope.RECOVERY_TRANSACTION,
             CommandClass.ROOT_CREATION: EffectScope.NEW_ROOT,
             CommandClass.WORK_OPERATIONAL: EffectScope.EXTERNAL_WORK,
+            CommandClass.TRANSPORT_OPERATIONAL: EffectScope.TRANSPORT_OUTPUT,
         }
         self.assertEqual(set(pairs), set(CommandClass))
         for cls, scope in pairs.items():

@@ -17,10 +17,12 @@ FIXTURE = ROOT / 'tests/fixtures/patchharbor160'
 ARTIFACT_SHA256 = '377e715d7cb443eb5e80a3e7f9e8405f36092a0f7c062745b70c8b3a2e3eb055'
 
 
-def envelope(root, *, unavailable=False):
-    artifact = (FIXTURE / 'patchharbor-1.6.0.pyz').read_bytes()
-    assert sha256(artifact).hexdigest() == ARTIFACT_SHA256
-    metadata = json.loads((FIXTURE / 'runtime.json').read_bytes())
+def envelope(root, *, unavailable=False, fixture=FIXTURE):
+    metadata = json.loads((fixture / 'runtime.json').read_bytes())
+    artifact = (fixture / Path(metadata['artifact']['path']).name).read_bytes()
+    assert sha256(artifact).hexdigest() == metadata['artifact']['sha256']
+    if fixture == FIXTURE:
+        assert sha256(artifact).hexdigest() == ARTIFACT_SHA256
     if unavailable:
         metadata.update(status='unavailable', reason='artifact_missing')
         for key in ('artifact', 'profile', 'content_id', 'content_id_algorithm',

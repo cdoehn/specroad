@@ -36,6 +36,7 @@ class CommandClass(str, Enum):
     RECOVERY_WRITE = "recovery_write"
     ROOT_CREATION = "root_creation"
     WORK_OPERATIONAL = "work_operational"
+    TRANSPORT_OPERATIONAL = "transport_operational"
 
 
 class PreflightProfile(str, Enum):
@@ -56,6 +57,7 @@ class EffectScope(str, Enum):
     RECOVERY_TRANSACTION = "recovery_transaction"
     NEW_ROOT = "new_root"
     EXTERNAL_WORK = "external_work"
+    TRANSPORT_OUTPUT = "transport_output"
 
 
 from .parameters import OptionSpec, PositionalSpec
@@ -213,7 +215,12 @@ class CommandSpec:
             raise CommandUsageError('Recovery locking requires the native Restore command')
         if (self.protocol is not None and self.protocol.work.continuation_supported
                 and not (restore or (self.command_id == 'work.resume'
-                    and self.command_class is CommandClass.WORK_OPERATIONAL))):
+                    and self.command_class is CommandClass.WORK_OPERATIONAL)
+                    or (self.command_id == 'bundle.create'
+                        and self.words == ('bundle', 'create')
+                        and self.preflight_profile is PreflightProfile.PROJECT_READ
+                        and self.command_class is CommandClass.TRANSPORT_OPERATIONAL
+                        and self.effect_scope is EffectScope.TRANSPORT_OUTPUT))):
             raise CommandUsageError('No installed continuation adapter for this command')
         if self.command_class is not CommandClass.NORMATIVE_WRITE and normative_flags.intersection(flags):
             raise CommandUsageError("Normative write option on a non-write command")
@@ -230,6 +237,7 @@ class CommandSpec:
             CommandClass.RECOVERY_WRITE: {EffectScope.RECOVERY_TRANSACTION},
             CommandClass.ROOT_CREATION: {EffectScope.NEW_ROOT},
             CommandClass.WORK_OPERATIONAL: {EffectScope.EXTERNAL_WORK},
+            CommandClass.TRANSPORT_OPERATIONAL: {EffectScope.TRANSPORT_OUTPUT},
         }
         if self.effect_scope not in allowed_scopes[self.command_class]:
             raise CommandUsageError("Side-effect boundary contradicts command class")

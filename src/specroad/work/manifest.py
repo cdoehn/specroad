@@ -319,7 +319,8 @@ def read_work_manifest(raw, objects, *, registry, expected_tool_build):
     except CommandUsageError as error:
         raise WorkManifestError('Invalid structured work request') from error
     command = _command(registry, request, normative=value['command_class'] == 'normative_write',
-                       recovery=value['command_class'] == 'recovery_write')
+                       recovery=value['command_class'] == 'recovery_write',
+                       transport=value['command_class'] == 'transport_operational')
     _require(all(value[name] == item for name, item in command.items()))
     _require(value['blocked_reason'] is None)
     _sources(value['source_bindings'])

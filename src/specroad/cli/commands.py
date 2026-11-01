@@ -7,6 +7,7 @@ from .registry import CommandClass, CommandRegistry, CommandSpec, EffectScope, O
 from .results import CommandResult, FailureKind, OperationFailure
 from .contracts import CommandProtocol, PositionalSpec, WorkContract
 from .result_schemas import validate_result_document
+from .options import global_options
 
 
 def _published_result(invocation, payload):
@@ -147,6 +148,9 @@ def _export(invocation):
 
 
 def _bundle_create(invocation):
+    if invocation.command.command_class is CommandClass.TRANSPORT_OPERATIONAL:
+        from ._transport import create_outbound_command
+        return create_outbound_command(invocation)
     from ..bundles.publication import create_command
     return create_command(invocation)
 
@@ -227,6 +231,11 @@ def builtin_registry() -> CommandRegistry:
         configuration_schema_required=True,
         options=(OptionSpec('--scope', takes_value=True, choices=BUNDLE_SCOPE_KINDS),
             OptionSpec('--exclude-operational-receipts'),
+            *global_options('--profile'),
+            *(OptionSpec(flag, takes_value=True) for flag in ('--direction', '--runtime-profile',
+                '--runtime-reference', '--runtime-reference-sha256', '--specroad-pyz', '--specroad-pyz-sha256',
+                '--reference', '--proposal', '--work-dir')),
+            *_read_runtime_options(),
             *(OptionSpec('--' + name, takes_value=True) for name in
               ('output', 'output-root', 'configuration', 'document', 'release', 'project')),
             OptionSpec('--format', takes_value=True, choices=('pretty', 'json')),

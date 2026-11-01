@@ -51,7 +51,10 @@ def continuation(command, store, expected):
             current = store._read_chain(held, pointer[0])
             require(current.raw == expected.raw and current.as_dict()['state'] == 'running'
                     and current.as_dict()['tool_build'] == _build(), 'work_continuation_changed', exit_code=6)
-            if '--from' in value['normalized_arguments']['options']:
+            if value['command_class'] == 'transport_operational':
+                from ..work.transport import checked
+                checked(current)
+            elif '--from' in value['normalized_arguments']['options']:
                 from ..work.restore_planning import checked
                 checked(current)
             else:
@@ -157,6 +160,8 @@ def _work(invocation):
         return _payload(operation, inspect_work_status(store))
     if operation == 'prompt':
         return _payload(operation, _prompt(store, options))
+    if store._initial.as_dict()['command_class'] == 'transport_operational':
+        return _transport_work(invocation, store, operation)
     if operation == 'cancel':
         from ..work.restore_control import cancel_restore_work
         return _payload(operation, cancel_restore_work(store, reason=options['--reason']))
@@ -194,3 +199,40 @@ def work_command(invocation):
         return _work(invocation)
     except RestoreError as error:
         raise OperationFailure(FailureKind(error.exit_code), error.reason, details=error.diagnostic()) from error
+
+
+def _transport_work(invocation, store, operation):
+    from ..work.transport import resume, cancel, checked
+    from ..transport._files import require as require_transport
+    from ..transport.snapshots import TransportFailure
+    from ..transport.runtime import TransportUnavailable
+    from ..bundles.errors import BundleError
+    from ..model.errors import ModelError
+    from ..security import SafetyViolation
+    try:
+        original, _, evidence = checked(store.read())
+        options = invocation.options
+        require_transport(not any(key in options for key in ('--force', '--expected-lock-sha256',
+            '--accept-remote-risk', '--expected-work-lock-sha256', '--work-recovery-reason')),
+            'outbound_work_takeover_not_supported', 2)
+        if '--project' in options:
+            require_transport(str(absolute(options['--project'])) == original['--project'],
+                              'outbound_work_project_changed', 6)
+        if operation == 'cancel':
+            return _payload(operation, cancel(store, options['--reason']))
+        if operation == 'export':
+            from ..work.package_publication import publish_work_package
+            require_transport(not evidence or store.read().as_dict()['state'] == 'completed',
+                              'outbound_pending_export_requires_inspection', 6)
+            output = absolute(options['--output'])
+            return _payload(operation, publish_work_package(store, output_root=output.parent, output=output.name))
+        require_transport(operation == 'resume', 'outbound_work_operation_unavailable', 2)
+        current, document = resume(store)
+        if document is None:
+            return continuation('work.resume', store, current)
+        return _payload(operation, document)
+    except (TransportFailure, TransportUnavailable, BundleError, ModelError, SafetyViolation, OSError) as error:
+        code = 7 if isinstance(error, SafetyViolation) else 5 if isinstance(error, OSError) else getattr(error, 'exit_code', 3)
+        reason = getattr(error, 'reason', 'outbound_work_io_or_boundary_failure')
+        facts = error.as_dict() if isinstance(error, (TransportFailure, TransportUnavailable)) else {'reason': reason}
+        raise OperationFailure(FailureKind(code), reason, details=facts) from error

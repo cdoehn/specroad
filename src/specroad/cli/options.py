@@ -64,7 +64,11 @@ def resolve_options(invocation: Invocation, *, cwd: Path | None = None,
     _validate_layers(profile_layers, configuration_layer)
     preflight = {}
     root, source, project = select_project(invocation.command, invocation.options, cwd, preflight=preflight)
-    values, history = _compose_values(project, invocation.options, profile_layers, configuration_layer)
+    explicit = invocation.options
+    if invocation.command.command_class.value == 'transport_operational':
+        explicit = {k: v for k, v in explicit.items() if k != '--profile'}
+        preflight['command_class'] = 'transport_operational'
+    values, history = _compose_values(project, explicit, profile_layers, configuration_layer)
     origin = None
     if (invocation.command.preflight_for(invocation.options) in (PreflightProfile.ROOT_CREATION, PreflightProfile.INPUT_READ)
             or invocation.command.command_id in ('query', 'diff', 'export')):

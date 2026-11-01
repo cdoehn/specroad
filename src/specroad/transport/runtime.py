@@ -15,6 +15,11 @@ from zipimport import zipimporter
 from . import _contract
 
 
+# Only a fully checked safe runtime may be reused by another explicit request
+# in this process. Foreign/partial imports are never adopted or evicted.
+_safe_prepared = None
+
+
 class TransportUnavailable(ValueError):
     """Machine-readable refusal; it never represents transport or gate success."""
 
@@ -31,12 +36,13 @@ class TransportUnavailable(ValueError):
                 'cause_type': self.cause_type, 'full_reference_valid': False}
 
 
-def _check_request(required):
+def _check_request(required, *, safe_reference=False):
     if (type(required) is not tuple
             or any(type(name) is not str for name in required)):
         raise TransportUnavailable('invalid_capability_request')
     for name in required:
-        if name != 'PH-API-RESULT' and name not in _contract.OPERATIONS:
+        if name != 'PH-API-RESULT' and name not in (_contract.OPERATIONS +
+                (_contract.SAFE_OPERATIONS if safe_reference else ())):
             raise TransportUnavailable('api_capability_unavailable', capability=name)
 
 
@@ -48,15 +54,17 @@ def _check_platform():
         raise TransportUnavailable('unsupported_transport_platform')
 
 
-def _check_distribution(assessment):
-    if (assessment.version != _contract.VERSION
-            or assessment.artifact_sha256 != _contract.ARTIFACT_SHA256
+def _check_distribution(assessment, *, safe_reference=False):
+    version = _contract.SAFE_VERSION if safe_reference else _contract.VERSION
+    digest = _contract.SAFE_ARTIFACT_SHA256 if safe_reference else _contract.ARTIFACT_SHA256
+    if (assessment.version != version
+            or assessment.artifact_sha256 != digest
             or assessment.requires_python != _contract.REQUIRES_PYTHON):
         raise TransportUnavailable('unsupported_runtime_distribution', exit_code=7)
 
 
-def _check_api(api):
-    for name in _contract.OPERATIONS:
+def _check_api(api, *, safe_reference=False):
+    for name in _contract.OPERATIONS + (_contract.SAFE_OPERATIONS if safe_reference else ()):
         if not callable(getattr(api, name, None)):
             raise TransportUnavailable('api_capability_unavailable', capability=name)
     capabilities = api.integration_capabilities()
@@ -65,6 +73,9 @@ def _check_api(api):
             or type(capabilities.snapshot_contract_version) is not int
             or capabilities.snapshot_contract_version != 1):
         raise TransportUnavailable('unsupported_api_contract', capability='PH-API-RESULT')
+    if safe_reference and (type(getattr(capabilities, 'safe_reference_contract_version', None)) is not int
+            or capabilities.safe_reference_contract_version != 1):
+        raise TransportUnavailable('unsupported_safe_reference_contract')
 
 
 class PatchHarborRuntime:
@@ -77,7 +88,10 @@ class PatchHarborRuntime:
     do not try to switch runtimes in that process.
     """
 
-    def __init__(self, reference, *, trusted_source_sha256, workspace):
+    def __init__(self, reference, *, trusted_source_sha256, workspace, safe_reference=False):
+        if type(safe_reference) is not bool:
+            raise TransportUnavailable('invalid_runtime_contract')
+        self._safe_reference = safe_reference
         if not _contract.valid_digest(trusted_source_sha256):
             raise TransportUnavailable('trusted_result_digest_required', exit_code=7)
         try:
@@ -95,7 +109,12 @@ class PatchHarborRuntime:
 
     def describe(self):
         """Return the bound distribution contract, not fabricated acceptance."""
-        return _contract.describe_distribution(self._trusted_sha256, loaded=self._api is not None)
+        value = _contract.describe_distribution(self._trusted_sha256, loaded=self._api is not None)
+        if self._safe_reference:
+            value.update(version=_contract.SAFE_VERSION, artifact_sha256=_contract.SAFE_ARTIFACT_SHA256,
+                         safe_reference_contract_version=1)
+            value['api_capabilities'].update({name: True for name in _contract.SAFE_OPERATIONS})
+        return value
 
     def _check_origins(self):
         """Keep foreign/partially loaded modules; never evict or repair them."""
@@ -124,21 +143,24 @@ class PatchHarborRuntime:
         Snapshot reads are a separate, read-only operation and never bootstrap
         a library from their input. API presence is not Result validation.
         """
-        _check_request(required)
+        global _safe_prepared
+        _check_request(required, safe_reference=self._safe_reference)
         _check_platform()
         if self._failed:
             raise TransportUnavailable('fresh_process_required')
+        if self._safe_reference and self._prepared is None and _safe_prepared is not None:
+            self._prepared = _safe_prepared
         self._check_origins()
 
         bootstrap = importlib.import_module('specroad.transport._pyz_bootstrap')
         try:
             assessment = bootstrap.assess(
                 self._reference, trusted_source_sha256=self._trusted_sha256)
-            _check_distribution(assessment)
+            _check_distribution(assessment, safe_reference=self._safe_reference)
             if self._prepared is None:
                 self._prepared = bootstrap.prepare(assessment, self._workspace)
             api = bootstrap.import_api(self._prepared)
-            _check_api(api)
+            _check_api(api, safe_reference=self._safe_reference)
         except TransportUnavailable:
             self._failed = True
             raise
@@ -155,6 +177,8 @@ class PatchHarborRuntime:
             raise TransportUnavailable('runtime_validation_failed', exit_code=7,
                                        cause_type=type(error).__name__) from error
         self._api = api
+        if self._safe_reference:
+            _safe_prepared = self._prepared
         return api
 
     def read_snapshot(self, result, *, expected_sha256):

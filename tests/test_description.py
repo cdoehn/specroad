@@ -253,12 +253,19 @@ class DescriptionRobustnessTests(unittest.TestCase):
                 self.assertIn('--project', accepted)
             else:
                 rejected += ('--project',)
-            # Native Restore is the explicitly integrated writer; every other
-            # command retains its declared option boundary.
+            # Native Restore is the integrated writer. bundle.create declares
+            # Work only for its explicit outbound variant; ordinary project
+            # bundles still reject that option before any effect.
             if command.command_id == 'recover.restore':
                 rejected = ('--resume', '--as-proposal')
             for flag in rejected:
-                self.assertNotIn(flag, accepted)
+                if command.command_id == 'bundle.create' and flag == '--work-dir':
+                    self.assertIn(flag, accepted)
+                    self.assertFalse(document['work']['continuation_supported'])
+                    self.assertTrue(document['variants'][0]['work']['continuation_supported'])
+                    self.assertEqual(document['variants'][0]['command_class'], 'transport_operational')
+                else:
+                    self.assertNotIn(flag, accepted)
                 example = document['examples'][0]
                 example['options'][flag] = 'unavailable'
                 self.assertEqual(execute_request(example).result.exit_code, 2)

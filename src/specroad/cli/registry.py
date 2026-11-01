@@ -29,9 +29,23 @@ class CommandRegistry:
                 routes[route] = command
         self._commands = MappingProxyType(by_id)
         self._routes = MappingProxyType(routes)
+        self._outbound = None
+        if 'bundle.create' in by_id and any(o.flag == '--direction' for o in by_id['bundle.create'].options):
+            from ._transport import outbound_contract
+            self._outbound = outbound_contract(by_id['bundle.create'])
         for command in self.commands:
             if command.protocol is not None:
                 self.bind_request(command.protocol.example)
+
+    def _bound_variant(self, command, options):
+        if self._outbound is not None and command.command_id == 'bundle.create':
+            from ._transport import outbound_options
+            if outbound_options(options):
+                return self._outbound
+        return command
+
+    def variants(self, command):
+        return (self._outbound,) if self._outbound is not None and command.command_id == 'bundle.create' else ()
 
     @property
     def commands(self) -> tuple[CommandSpec, ...]:
@@ -68,7 +82,7 @@ class CommandRegistry:
                 values, positions = bind_options(tuple(arguments), route, command.options, command.positionals)
             except CommandUsageError:
                 continue
-            candidates.append(Invocation(command, values, arguments=positions))
+            candidates.append(Invocation(self._bound_variant(command, values), values, arguments=positions))
         if len(candidates) != 1:
             raise CommandUsageError("Unknown, invalid or ambiguous invocation")
         return candidates[0]
@@ -78,7 +92,8 @@ class CommandRegistry:
         if not isinstance(request, CommandRequest):
             raise CommandUsageError("A structured CommandRequest is required")
         command = self.resolve(request.command_id)
-        return Invocation(command, bind_values(request.options, command.options),
+        values = bind_values(request.options, command.options)
+        return Invocation(self._bound_variant(command, values), values,
                           arguments=bind_arguments(request.arguments, command.positionals))
 
     def invoke(self, arguments: list[str] | tuple[str, ...], **context_inputs) -> int:
@@ -98,7 +113,8 @@ class CommandRegistry:
 
     def _require_registered(self, invocation):
         if (not isinstance(invocation, Invocation)
-                or self.resolve(invocation.command.command_id) is not invocation.command):
+                or self._bound_variant(self.resolve(invocation.command.command_id), invocation.options)
+                   is not invocation.command):
             raise CommandUsageError("Invocation is not bound to this registry")
 
     def _run_handler(self, invocation: Invocation) -> CommandResult:
