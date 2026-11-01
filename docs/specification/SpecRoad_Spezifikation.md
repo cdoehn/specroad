@@ -1,21 +1,21 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.43
+## Version 0.2.44
 
 | Feld | Wert |
 |---|---|
 | Dokument-ID | `SR-SPEC-0001` |
-| Dokumentversion | `0.2.43` |
+| Dokumentversion | `0.2.44` |
 | Zielrelease | `SpecRoad Single-Repository Workbench 0.2.0` |
 | Status | **Fachlich konsolidierte Arbeitsgrundlage; technische Reviewentscheidung gesondert dokumentiert, formale Baseline-Freigabe und Produktabnahme nicht durch dieses Dokument erklärt** |
 | Stand | 31. Oktober 2026 |
 | Sprache | Deutsch; technische Feldnamen, Enum-Werte und CLI-Kommandos Englisch |
-| Fachliche Quelle | **Diese Repositoryfassung v0.2.43 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.43 liegt mit dieser Änderung nicht vor.** |
+| Fachliche Quelle | **Diese Repositoryfassung v0.2.44 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.44 liegt mit dieser Änderung nicht vor.** |
 | Bearbeitbare Satzquelle | Diese Datei; eine spätere PDF muss denselben versionierten Inhalt wiedergeben. |
 | Vorgängerversion | Repository-Spezifikation v0.2.42 vom 31. Oktober 2026; historische Nachweise bleiben unverändert. |
 | Prüf- und Entscheidungsgrundlage | Ausdrücklicher manueller Nutzerauftrag TRANSPORT-SAFE-531 vom 31. Oktober 2026 nach Prüfung der PatchHarbor-1.7.0-Lieferung; bestehende fachliche Entscheidungen und Nachweise bleiben erhalten. |
 | Änderungsart | Hinexport nach W.1.1/W.2.1/W.3.1: geprüfte 1.7.0-Runtime, sichere öffentliche Referenzerzeugung und explizite Betriebsgrenzen; 15.n.W bleibt offen. |
 
-> **Verbindlicher Quellenwechsel:** Der ausdrückliche manuelle Auftrag TRANSPORT-SAFE-531 schreibt die Repository-Spezifikation als v0.2.43 fort. Frühere PDF- und Reviewnachweise bleiben historisch gebunden; keine Produktfreigabe wird erklärt.
+> **Verbindlicher Quellenwechsel:** Der ausdrückliche Nutzerauftrag APPLY-ONLY-535 vom 1. November 2026 schreibt den Entwicklungsworkflow als v0.2.44 fort. Frühere PDF- und Reviewnachweise bleiben historisch gebunden; keine Produktfreigabe wird erklärt.
 
 > **Fortbestehende Arbeitsprinzipien:** Weiche Budgets führen zu sparsamer vollständiger Weiterarbeit oder gesicherter Fortsetzung über mehrere Aufrufe beziehungsweise Prompts. Es werden keine erforderlichen Arbeiten stillschweigend ausgelassen. Reale Host-, Speicher-, Berechtigungs- und Sicherheitsgrenzen bleiben wirksam.
 
@@ -432,8 +432,8 @@ Dieser Auftrag ersetzt die einmalig eingefrorene Laufzeitauswahl aus
 WORKFLOW-514. Er ändert nur den Entwicklungsworkflow; Produktanforderungen,
 menschliche Freigaben und historische Nachweise bleiben erhalten.
 
-**Automatische dauerhafte Messung.** Jeder tatsächlich ausgeführte Dev-,
-Apply- oder ausdrücklich gestartete Volltestlauf speichert native Setup-,
+**Automatische dauerhafte Messung.** Jeder tatsächlich ausgeführte Apply-
+oder ausdrücklich beauftragte manuelle Testlauf speichert native Setup-,
 Call- und Teardown-Dauern unverzüglich transaktional mit SQLite
 `synchronous=FULL`. Reine Collection startet keine Messung. Die Historie
 bleibt erhalten, einschließlich Testidentität, Node-ID, Quellbindung,
@@ -476,8 +476,9 @@ Identitäten werden vor Ausführung gebunden. Änderungen der Datenbank während
 des Laufs verändern dessen Auswahl nicht; der nächste Apply-Lauf berechnet
 neu. Neue Berichte verwenden `stable_modulo_partition_with_latest_runtime_filter`
 und Auswahlbindung v3. Alte Berichte und feste Listen werden nicht umgedeutet.
-Gezielte Dev-Auswahlen und ausdrücklich gestartete Vollsuites laufen vollständig
-ungefiltert und aktualisieren ebenfalls die Messdatenbank. Alle normalen Tests
+Ausdrücklich beauftragte manuelle Auswahlläufe und Vollsuites laufen vollständig
+ungefiltert und aktualisieren ebenfalls die Messdatenbank. Die normale Entwicklung
+führt gemäß 2.5.2 keine Tests aus. Alle normalen Tests
 bleiben parallel; es wird kein zusätzlicher Volltest zur Messung gestartet.
 Teiltests behaupten weder Vollsuite- noch Releaseerfolg. Control und Watcher,
 die tatsächliche Commitfolge und sämtliche Produktfreigaben bleiben unverändert.
@@ -511,12 +512,12 @@ Abnahmekriterien im Implementierungsplan. PatchHarbor bleibt die
 
 #### 2.5.1 Laufzeitgewichtete manuelle CI — CI-PACKAGES-525
 
-Ausdrücklicher Nutzerauftrag vom 31. Oktober 2026. Normale Dev-, Apply-,
-gezielte Mess- und vollständige CI-Läufe verwenden standardmäßig vier Worker
+Ausdrücklicher Nutzerauftrag vom 31. Oktober 2026. Apply-, ausdrücklich
+beauftragte gezielte Mess- und vollständige CI-Läufe verwenden standardmäßig vier Worker
 mit pytest-xdist `worksteal`. Ausführung und dynamische Umverteilung bleiben
 beim Testframework. Bereits laufende Einzeltests werden nicht geteilt.
 Automatische Phasenmessung, Historie, N=3 und der aktuelle Apply-Laufzeitfilter
-bleiben unverändert; gezielte Dev- und vollständige CI-Läufe filtern keine
+bleiben unverändert; ausdrücklich beauftragte manuelle Auswahl- und vollständige CI-Läufe filtern keine
 langsamen Tests. Es wird keine zusätzliche Vollsuite zur Kalibrierung gestartet.
 
 Vor jedem ausschließlich manuell per workflow_dispatch gestarteten CI-Lauf
@@ -560,6 +561,66 @@ Ein vollständiger Runnerverlust garantiert keine Artefaktveröffentlichung.
 Die Matrix startet maximal 20 Testjobs gleichzeitig; wartende Jobs können
 die Gesamtdauer verlängern. Keine automatische Workflow-Auslösung, kein
 Push, Release, Dienststart oder Eingriff in Control/Watcher folgt daraus.
+
+#### 2.5.2 Tests ausschließlich im Apply — APPLY-ONLY-535
+
+Ausdrücklicher Nutzerauftrag vom 1. November 2026. Diese Regel ersetzt für
+neue Lieferungen alle älteren verpflichtenden Dev-Testläufe und Dev-Gates.
+Historische Testnachweise und bereits veröffentlichte Bundles bleiben unverändert.
+Dev erstellt Code, Verhaltenstests, echte aufeinanderfolgende Commitzustände
+und je Commit eine begründete maschinenlesbare Pflichtauswahl. Dev startet
+keine Testkörper, Fixtures oder Test-Unterprozesse. Statische Prüfung,
+Syntaxprüfung, native Paketprüfung und reine Collection sind zulässig;
+Collection importiert vertrauenswürdige Testmodule, erzeugt aber keinen
+Test-Erfolgsnachweis. Eine gesonderte ausdrückliche manuelle Testanweisung
+bleibt möglich. Ohne Apply darf ein Zustand nicht als bestanden gelten.
+
+Vor JEDEM Commit im Bundle stellt der Entrypoint genau dessen Zustand her.
+Die Testmenge ist die Vereinigungsmenge aus der aktuellen gefilterten
+N=3-Gruppe gemäß 2.5 und der vollständigen Pflichtauswahl dieses Commits.
+Ein Test wird je Commit genau einmal ausgeführt, auch bei mehrfacher
+Auswahl. Pflichtauswahl über Testidentität oder vollständige Testdatei;
+jede ausgewählte Datei umfasst alle aktuell gesammelten Varianten. Alle
+neuen oder geänderten Testdateien gehören automatisch dazu. Relevante
+Regressionstests und Auswirkungen geänderter Testhelfer begründet Dev
+zusätzlich. Unbekannte, entfernte, leere oder falsch zugeordnete Auswahlen
+verhindern den Commit. Ein langsamer oder gruppenfremder Pflichttest läuft
+ungefiltert. Ungemessene und ungültig gemessene Tests bleiben zugelassen.
+
+Die gemeinsame bestehende SQLite-Messhistorie wird für JEDEN ausgeführten
+Test einschließlich der zusätzlichen Pflichttests unverändert phasenweise
+fortgeschrieben. Historie, Nummern, Rotationsanker und aktuelle Filterregel
+bleiben erhalten. Der einmal erfasste Auswahl-Snapshot gilt für diesen
+Lauf; der nächste Commit nutzt den dann aktuellen Stand. Berichte tragen
+Auswahlbindung v4 und test_scope
+`stable_modulo_partition_with_latest_runtime_filter_and_required_tests`.
+Sie binden Commit-ID, Quellstand, HEAD, Registry, Snapshot, Pflichtplan und
+exakte Vereinigungsmenge. Vollständige erfolgreiche native Beobachtungen
+und erhaltene Messphasen sind Pflicht; fehlende, doppelte, übersprungene,
+fehlgeschlagene oder veränderte Nachweise erlauben keinen Commit. Weiterhin
+vier worksteal-Worker, kein serieller Fallback, kein doppelter Schlusslauf.
+
+Erst nach grünem Gate entsteht der jeweilige echte Commit. Erst danach
+folgt der nächste Zustand. Ein Fehler beendet den Bundle-Versuch ohne
+Modellaufruf, automatischen Retry oder globale Rückabwicklung. Frühere
+Commits, Index und aktuelle Dateien bleiben erhalten. Der Entrypoint
+protokolliert den vollständigen Commitplan, eine geordnete belegte
+Commitkette, den aktiven Schritt, den vollständigen Rest und tatsächlichen
+HEAD maschinenlesbar im von PatchHarbor übernommenen Ausführungslog.
+Ein Korrekturbundle wird ausschließlich an das neueste nativ geprüfte
+Fehler-Result gebunden. Es repariert den fehlgeschlagenen Zwischenstand
+und übernimmt alle noch offenen Commit-IDs in derselben Reihenfolge.
+Erfolgreiche Commits werden nicht wiederholt. Eine unbewiesene HEAD-Bewegung
+oder fremde Änderung wird konkret geklärt, nicht durch Reset oder vermutete
+Erfolge übergangen. Ein Fehler ohne Commit schaltet die Rotation nicht weiter.
+
+Der externe Bundle-Vertrag bleibt PatchHarbor Format 1. Projektcode enthält
+wiederverwendbare Vorbereitung, Gateprüfung und Apply-Orchestrierung;
+Core und Watcher behalten Registrierung, Lock, Payload-Ausbringung,
+Result-Erzeugung und Archivierung. Control wird nicht verändert. Kein
+Dienststart, Modellaufruf, GitHub-CI-Start, Tag oder Produktplanfortschritt
+folgt aus dieser Workflow-Umstellung. Die manuellen vollständigen CI-Läufe
+und ihre Python-Matrix bleiben unverändert.
 
 ## 3. Produktziele
 
@@ -6158,6 +6219,7 @@ Die folgende Roadmap ist informativ und erzeugt keine Anforderungen an 0.2:
 
 | Version | Datum | Status | Änderung |
 |---|---|---|---|
+| 0.2.44 | 2026-11-01 | Ausdrücklicher Nutzerauftrag | APPLY-ONLY-535: Dev bereitet Testpläne vor; Apply prüft je Commit N=3 plus Pflichtauswahl, misst dauerhaft und erhält Teilfortschritt für gebundene Korrekturbundles. |
 | 0.2.43 | 2026-10-31 | Ausdrücklicher manueller Nutzerauftrag | TRANSPORT-SAFE-531: versions-/hashgebundene PatchHarbor-1.7.0-Core-PYZ, sichere öffentliche Referenzerzeugung, Betriebsgrenzen und Fehlererhaltung; 15.n.W und externe Abnahmen bleiben offen. |
 | 0.2.42 | 2026-10-31 | Delegiert gemäß SPECROAD-DECISION-1 | TRANSPORT-OUTBOUND-528: geschlossener Hinpaket-/Runtimeeingabevertrag, selbstreferenzfreie Paket-ID und vollständige Snapshot-/Receiptbindung; Implementierung 15.n bleibt offen, keine Produktfreigabe. |
 | 0.2.39 | 2026-10-29 | Ausdrückliche Nutzerentscheidung | RESTORE-SCHEMA-SCOPE: vollständige 0.2-Restore-Abnahme; sichere Abweisung nicht unterstützter deklarierter Altformate; positive 0.1-Unterstützung erst nach verbindlichem Quellvertrag und M16-Integration. Keine Produktabnahme. |

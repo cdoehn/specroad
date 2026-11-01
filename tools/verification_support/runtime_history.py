@@ -227,7 +227,7 @@ def latest_snapshot(db, identities):
             'tests': [latest.get(i, historic.get(i, {'test_id': i, 'duration_ns': None})) for i in ids]}
 
 
-def filter_latest(selected, snapshot):
+def filter_latest(selected, snapshot, *, allow_empty=False):
     if (set(snapshot) != {'format_version', 'kind', 'tests'} or snapshot['format_version'] != 1
             or snapshot['kind'] != 'specroad-latest-runtime-snapshot-v1'):
         raise ValueError('Unknown runtime snapshot')
@@ -254,7 +254,7 @@ def filter_latest(selected, snapshot):
     excluded = sorted(r['test_id'] for r in sorted(measured,
         key=lambda r: (-r['duration_ns'], r['test_id']))[:len(measured)//5])
     kept = {n: i for n, i in selected.items() if i not in set(excluded)}
-    if not kept:
+    if not kept and not allow_empty:
         raise ValueError('An empty filtered partition cannot pass')
     receipt = {'format_version': 2, 'snapshot_sha256': sha256(json_bytes(snapshot)).hexdigest(),
                'current_tests': len(rows), 'measured_tests': len(measured),

@@ -31,7 +31,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "01abcaa7c891b6c17f659a674631d29918cb5d1478d43e8ab1c1768244499770",
+  "specification_sha256": "cf299d1478d56231df8905a077adecef458503b1f351f5cb1ef9ce04a5b6a8b3",
   "steps": [
     "Read commit-bound raw files through real temporary Git objects; compare exact bytes and identities while preserving branch, index, working tree and foreign files.",
     "Exercise inert hooks/pager/filters, ignored inherited Git redirection, fixed refs, raw binary/Unicode, missing and corrupted objects, nested projects and unsafe paths.",

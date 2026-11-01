@@ -15,6 +15,7 @@ from .selected_contract import new_report_directory, verify_observation
 from .runtime_baseline import load_baseline, filter_partition
 from .runtime_history import RuntimeHistory, policy as runtime_policy, filter_latest
 from .common import json_bytes
+from .commit_tests import plan_required, read_object, validate_plan, union_selection, SCOPE
 
 from ._apply_registry import (REGISTRY, validate_registry, validate_registry_shape,
                               select_partition, partition_metadata, selection_receipt)
@@ -77,8 +78,15 @@ def parallel_command(root, outdir, expected, workers):
             "@" + str(outdir / "nodeids.txt")]
 
 
-def run_apply_partition(root, outdir, *, workers=4, runner=None):
+def run_apply_partition(root, outdir, *, workers=4, runner=None, test_plan=None, commit_id=None):
     root = Path(root).resolve()
+    required_policy = plan_required(root)
+    if (test_plan is None) != (commit_id is None) or (required_policy and test_plan is None):
+        raise ValueError('A required test plan and commit ID are mandatory for this Apply')
+    plan_raw = plan = None
+    if test_plan is not None:
+        plan_raw, plan = read_object(test_plan)
+        validate_plan(plan, commit_id)
     if type(workers) is not int or workers < 2:
         raise ValueError("Apply tests require parallel workers")
     outdir = new_report_directory(outdir, root)
@@ -105,17 +113,24 @@ def run_apply_partition(root, outdir, *, workers=4, runner=None):
         with RuntimeHistory(root) as history:
             history.seed(root)
             snapshot = history.snapshot(catalog['nodeid_to_test_id'].values())
-        selected, runtime_filter = filter_latest(selected, snapshot)
+        selected, runtime_filter = filter_latest(selected, snapshot, allow_empty=plan is not None)
         snapshot_raw = json_bytes(snapshot)
         (outdir / 'runtime-snapshot.json').write_bytes(snapshot_raw)
     else:
         selected, runtime_filter = filter_partition(selected, baseline)
+    required_tests = None
+    if plan is not None:
+        if policy is None or registry['format_version'] != 2:
+            raise ValueError('Required tests require N=3 and durable runtime measurements')
+        selected, required_tests = union_selection(selected, catalog['nodeid_to_test_id'], plan, runtime_filter)
     receipt = {}
     if registry["format_version"] == 2:
-        receipt = selection_receipt(registry, registry_raw, selected, head, sequence, runtime_filter)
+        receipt = selection_receipt(registry, registry_raw, selected, head, sequence, runtime_filter, required_tests)
         if (source_identity(root) != binding or (root / REGISTRY).read_bytes() != registry_raw
                 or load_baseline(root) != baseline
                 or runtime_policy(root) != policy
+                or plan_required(root) != required_policy
+                or (test_plan is not None and read_object(test_plan)[0] != plan_raw)
                 or commit_context(root, registry) != (head, sequence, previous)):
             raise ValueError("Apply inputs changed before the selected tests could start")
     (outdir / "nodeids.txt").write_text("\n".join(selected) + "\n", encoding="utf-8")
@@ -138,6 +153,8 @@ def run_apply_partition(root, outdir, *, workers=4, runner=None):
                 or (root / REGISTRY).read_bytes() != registry_raw
                 or load_baseline(root) != baseline
                 or runtime_policy(root) != policy
+                or plan_required(root) != required_policy
+                or (test_plan is not None and read_object(test_plan)[0] != plan_raw)
                 or (snapshot_raw is not None and (outdir / 'runtime-snapshot.json').read_bytes() != snapshot_raw)
                 or commit_context(root, registry) != (head, sequence, previous)):
             raise ValueError("Nonpassing, changed or unbound Apply selection")
@@ -155,6 +172,9 @@ def run_apply_partition(root, outdir, *, workers=4, runner=None):
                  else 'stable_modulo_partition_with_frozen_runtime_filter')
         result.update(test_scope=scope,
                       runtime_filter=runtime_filter)
+    if required_tests is not None:
+        result.update(format_version=3, test_scope=SCOPE, commit_id=commit_id,
+                      required_tests=required_tests)
     with (outdir / "selection.json").open("x", encoding="utf-8") as stream:
         json.dump(result, stream, allow_nan=False, sort_keys=True)
         stream.write("\n")

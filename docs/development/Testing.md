@@ -1,97 +1,102 @@
-# CI-PACKAGES-525: worksteal und manuelle CI-Pakete
+# APPLY-ONLY-535: Testauswahl in Dev, Ausführung im Apply
 
-Alle normalen Teststarter verwenden vier Worker und `--dist worksteal`.
-Dies gilt auch für gezielte Auswahl, Apply, Volltests und Nachholmessungen.
-Die vorhandene sofortige Phasenmessung und N=3 mit aktuellem 20%-Filter
-bleiben erhalten; die CI und gezielte Dev-Auswahl bleiben vollständig ungefiltert.
-Siehe [CI-Pakete](CI_Packages.md) für Planung, Bedienung und Nachweise.
+Verbindliche Nutzeranweisung vom 1. November 2026; Spezifikation 2.5.2.
+Dev schreibt Code und Tests und bereitet echte aufeinanderfolgende
+Commitzustände vor. Es führt keine Tests aus. Statische Prüfung, Syntax,
+reine Collection und native Paketvalidierung sind erlaubt, aber kein
+Verhaltenstest-Erfolg. Die nachfolgenden historischen Abschnitte erklären
+ältere Werkzeuge und Nachweise und erteilen keine Dev-Testfreigabe.
 
-# Testaufrufe ab 17. Oktober 2026
+## Testplan für jeden Commit
 
-Die verbindliche Arbeitsregel steht in der lokalen `AGENTS.md`. Die technische
-Aufteilung ist: gezielte parallele Verhaltenstests in `specroad-codex`,
-eine von drei nummerierten Testgruppen parallel in `specroad-apply`
-vor jedem einzelnen Commit.
-Das gilt für jeden W/R/C-Zustand und auch für den letzten Zustand eines Bundles.
-Der doppelte Dev-Volltest entfällt; es gibt keinen seriellen Abschlusslauf.
+Jeder Zustand erhält eine eigene eindeutige Commit-ID und einen Plan:
 
-Entwicklung in `specroad-codex`: neue und betroffene Testdateien auswählen,
-die tatsächliche Anzahl ihrer gesammelten Tests ermitteln und ein frisches
-Ausgabeverzeichnis angeben. Beispiel mit vorher gesetzten Auftragswerten:
-
-```sh
-.venv/bin/python -I -B tools/run_selected_tests.py --workers 4 \
-  --test-file "$specroad_test_file" --expected-tests "$specroad_test_count" \
-  --outdir "$specroad_test_report_dir"
+```json
+{
+  "format_version": 1,
+  "commit_id": "15.n.R",
+  "test_ids": [],
+  "test_files": ["tests/test_transport_outbound.py"],
+  "reason": "Geänderte Exportverträge und ihre Fehlerfälle vollständig prüfen"
+}
 ```
 
-`--test-file` ist für weitere betroffene Dateien wiederholbar. Der bestehende
-Runner prüft zuerst durch vollständige Collection die Katalogbindung, führt
-danach ausschließlich die ausgewählten Dateien parallel aus und bindet die
-Beobachtungen an den Quellstand. `selection.json` weist
-`test_scope: selected_files_only` und `full_suite_passed: null` aus. Ein grüner
-Auswahllauf ist ausdrücklich kein bestandener Volltest. Paketprüfungen bleiben
-zusätzlich erforderlich.
+`test_ids` bezeichnet exakte native Testidentitäten aus der Collection;
+alte unittest-Identitäten bleiben erhalten. `test_files` wählt vollständige
+Testdateien einschließlich aller gesammelten Varianten. Unbekannte IDs,
+fehlende Dateien und leere Pflichtauswahlen werden abgelehnt. Neue oder
+geänderte Testdateien müssen vollständig enthalten sein; der Stage-Builder
+ergänzt sie automatisch. Für Änderungen an Helfern und Produktcode ergänzt
+Dev eine begründete Auswahl aller notwendigen betroffenen Prüfungen.
 
-Apply-Entrypoint in `specroad-apply`, für jeden Zwischenstand:
+Die tatsächliche Testanzahl wird im Apply aus der vollständigen Collection
+ermittelt. Kein im Dev geschätzter Zähler ersetzt den exakten Mengennachweis.
+
+## Apply-Gate
 
 ```sh
-.venv/bin/python -I -B tools/run_apply_tests.py
+.venv/bin/python -I -B tools/run_apply_tests.py \
+  --test-plan "$specroad_commit_test_plan" \
+  --commit-id "$specroad_commit_id" \
+  --outdir "$specroad_fresh_gate_directory"
 ```
 
-Der Apply-Runner sammelt zuerst alle Tests und prüft die Katalogbindung. Die
-festen Nummern stehen in `verification/apply_test_numbers.json`; die Position
-in `test_ids` ist die Testnummer, beginnend bei 0. Bei der Einführung wird die vollständige
-Sammlung nach Testidentität sortiert. Danach werden ausschließlich neue IDs
-sortiert hinten angefügt; alte Nummern bleiben auch bei Entfernung reserviert.
+`verification/apply_commit_policy.json` verlangt bei neuen Ständen einen
+Testplan. Alte Fixtures/Results ohne diese Policy behalten ihren alten
+Vertrag; bereits veröffentlichte Bundles werden nicht umgeschrieben.
 
-Der reine Registry-/Auswahlvertrag liegt in
-`tools/verification_support/_apply_registry.py`; `apply_rotation.py` bindet
-Git-Zustand, Collection, parallelen Prozess und Beobachtungen daran.
+Die Menge lautet: **gefilterte fällige N=3-Gruppe vereinigt mit Pflichtauswahl**.
+Nummern und Rotationsanker in `verification/apply_test_numbers.json` bleiben
+append-only. Nur echte erfolgreiche Commits schalten die First-Parent-
+Rotation weiter. Der globale aktuelle Laufzeitfilter entfernt die langsamsten
+`floor(gültig gemessene aktuelle Tests / 5)` aus der Rotationsgruppe;
+unbekannte/ungültige Messungen bleiben zugelassen. Pflichtauswahl überstimmt
+Filter und Gruppe. Überlappungen laufen einmal pro Commit. Jeder andere
+Commitzustand erhält sein eigenes Gate. Kein zusätzlicher Schlusslauf.
 
-Registry-Version 2 enthält `partition_count: 3` und einen eigenen
-`rotation_anchor_commit`. Die stabile Nummerierung und ihr ursprünglicher
-`anchor_commit` bleiben erhalten. Der Umstellungsanker ist der bestätigte
-Apply-HEAD vor dem ersten Drittellauf. Die Migration von Version 1 darf nur
-dort beginnen; nach einem Commit bleiben beide Anker und die Gruppenzahl fest.
-Historische Registry-Version 1 behält ihren damaligen Halbierungsvertrag.
+Alle ausgewählten Tests laufen mit vier xdist-Workern und `--dist worksteal`.
+Die vorhandene automatische SQLite-Messung speichert Setup/Call/Teardown
+sofort dauerhaft, auch für zusätzlich aufgenommene langsame Pflichttests.
+Historie, Seeds und bestehende Messwerte werden nicht gelöscht. Der neueste
+Versuch bleibt maßgeblich; ein ungültiger neuer Versuch fällt nicht auf alte
+Erfolge zurück. Eine neue Messung ändert nicht die bereits gebundene Auswahl.
 
-Die tatsächliche First-Parent-Commitzahl seit `rotation_anchor_commit` bestimmt
-die Gruppe modulo 3: zuerst 0, dann 1, dann 2 und wieder 0. Ein Test gehört zur
-Gruppe seiner festen Testnummer modulo 3. Fehlversuche ohne Commit schalten
-nicht weiter. Neue und entfernte Tests verändern keine vorhandenen Nummern.
+`selection.json` Format 3, Auswahlbindung v4 und
+`stable_modulo_partition_with_latest_runtime_filter_and_required_tests`
+weisen den genauen Quellstand, HEAD, Commit-ID, Pflichtplan, Snapshot,
+Testnummern, Vereinigungsmenge, zusätzlich aufgenommene und wieder zugelassene
+langsame Tests nach. `full_suite_passed` bleibt `null`.
+`tools/verify_apply_commit.py` prüft diesen Nachweis unabhängig erneut,
+ohne Tests auszuführen. Fehler, Skips, fehlende Tests, veränderte Daten oder
+fehlende Messphasen erlauben keinen Commit.
 
-Die gewählte Gruppe läuft mit vier Workern über pytest-Argumentdateien.
-`selection.json` Version 2 enthält `test_scope: stable_modulo_partition`,
-`partition_count`, `partition_index`, beide Anker, Commitfolge, exakte
-Testidentitäten, Quellbindung und `full_suite_passed: null`. Exitcode 0 setzt
-vollständige erfolgreiche Beobachtungen genau dieser Gruppe voraus. Über drei
-Commits sind bei unverändertem Bestand alle Tests vertreten, auf drei
-Codezuständen; das ergibt keinen Vollsuite- oder Release-Erfolgsnachweis.
-Der vollständige Bericht bindet zusätzlich die exakten Registrybytes und jede
-ausgewählte Testnummer in `selection_binding`; `selection_sha256` bindet dessen
-kanonische JSON-Darstellung. Die kompakte Prozessausgabe nennt den Hash, die
-vollständigen Zuordnungen stehen in `selection.json`. Änderungen von Quellen,
-Registry oder Commitbasis vor beziehungsweise während des Laufs verhindern
-einen Erfolgsnachweis. Fehlgeschlagene Reports bleiben erhalten.
-Berichte liegen außerhalb der Quellen; `--outdir` legt ein frisches Ziel fest.
-`--final-bundle-state` bleibt akzeptiert und ändert die Auswahl nicht.
-Es gibt keine Wiederholung und keinen seriellen Fallback.
+## Bundles und Korrekturen
 
-GitHub-CI startet niemals automatisch. Full Regression wird ausschließlich
-vom Nutzer manuell per `workflow_dispatch` gestartet und führt die vollständige
-Testsuite parallel auf Python 3.10–3.14 aus. Codex startet keine CI-Workflows.
-In GitHub gibt es keinen seriellen Volltest.
-Die frühere 5er-Bundle-Regel bleibt entfernt.
+Siehe [Apply-Commitpläne](Apply_Commit_Plans.md). Ein gemeinsamer Entrypoint
+stellt jeden Zustand erst nach dem vorherigen erfolgreichen Commit her.
+Bei Fehlern endet das Bundle. Erfolgreiche Commits, Index und aktuelle
+Dateien bleiben erhalten. Der vollständige Rest steht maschinenlesbar im
+PatchHarbor-Ausführungslog und damit im Result. Kein Modell ist beim
+Ausführen, Messen oder Committen beteiligt. Das Korrekturbundle bindet das
+neue Fehler-Result und führt die offenen Commit-IDs fort.
 
-Getestet werden Verhalten und maschinenlesbare fachliche Verträge. Keine Tests
-auf GUI, menschlich lesbare Konsolenausgabe, Farben, ANSI, Tabellenlayout,
-Spinner, README, Markdowndarstellung oder Dokumentation. Sonst keine weitere
-Testregel.
+## Manuelle Tests und CI
 
-Entwicklung ausschließlich in specroad-codex; kein Push aus dieser Kopie.
-Commit-Erzeugung und Übergabe nach specroad-apply ausschließlich durch PatchHarbor.
-Fehler erhalten erfolgreiche frühere Commits und den tatsächlichen Arbeitszustand.
+Nur ein gesonderter ausdrücklicher Nutzerauftrag erlaubt einen manuellen
+Testlauf in Dev, etwa eine volle Suite oder eine Nachholmessung. Die
+vorhandenen Starter bleiben dafür verfügbar. `run_selected_tests.py` ist
+kein normaler Entwicklungsschritt mehr. Manuelle Auswahlen sind ungefiltert
+und messen ebenfalls. Collection allein startet keine Testkörper.
+
+GitHub-CI bleibt ausschließlich vom Nutzer manuell über workflow_dispatch
+gestartet. Alle Tests laufen über die bestehende zeitgewichtete Paketmatrix
+auf CPython 3.10–3.14. Keine automatische CI, keine automatische Vollsuite
+zur Messung. Die Anleitungen in [CI_Packages.md](CI_Packages.md) gelten weiter.
+
+## Historische Infrastruktur und Nachweise
+
+Die folgenden älteren Beschreibungen dokumentieren frühere Teststrategien.
+Bei Aussagen zu Dev-/Apply-Umfang gilt ausschließlich die obige Regel.
 
 # SpecRoad: parallele Testentwicklung
 

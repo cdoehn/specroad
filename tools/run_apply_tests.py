@@ -1,4 +1,4 @@
-"""Run the next stable test group after each successful Apply commit."""
+"""Run the required rotation/commit-test union before the next Apply commit."""
 import argparse
 import json
 from pathlib import Path
@@ -16,11 +16,16 @@ def main(argv=None):
     # Compatibility only: the last commit follows the same rotation.
     parser.add_argument("--final-bundle-state", action="store_true")
     parser.add_argument("--outdir", type=Path)
+    parser.add_argument("--test-plan", type=Path)
+    parser.add_argument("--commit-id")
     args = parser.parse_args(argv)
     outdir = args.outdir or Path(tempfile.mkdtemp(prefix="specroad-apply-tests-")) / "gate"
     try:
-        result = run_apply_partition(ROOT, outdir)
-        print(json.dumps({**{k: v for k, v in result.items() if k not in ("nodeid_to_test_id", "selection_binding")},
+        options = {} if args.test_plan is None and args.commit_id is None else {
+            'test_plan': args.test_plan, 'commit_id': args.commit_id}
+        result = run_apply_partition(ROOT, outdir, **options)
+        print(json.dumps({**{k: v for k, v in result.items() if k not in (
+                              "nodeid_to_test_id", "selection_binding", "runtime_filter", "required_tests")},
                           "report_directory": str(outdir)}, sort_keys=True))
         return result["exit_code"]
     except (OSError, ValueError, TypeError, KeyError):

@@ -38,7 +38,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "01abcaa7c891b6c17f659a674631d29918cb5d1478d43e8ab1c1768244499770",
+  "specification_sha256": "cf299d1478d56231df8905a077adecef458503b1f351f5cb1ef9ce04a5b6a8b3",
   "steps": [
     "Classify unconditional and conditional stored artifacts with and without an explicitly resolved configuration.",
     "Evaluate allowed SRX expressions against effective values and constant common artifact metadata; require a Boolean result and reject project, relation, graph and nonmetadata access.",

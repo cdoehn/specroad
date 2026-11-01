@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 43 · **Stand:** 31. Oktober 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.43
+**Planrevision:** 44 · **Stand:** 1. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.44
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 Schritte und 900 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; die ausdrücklich genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wird nach 10.7.10 innerhalb von 15.l.R vorgezogen. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -9,7 +9,7 @@ Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 S
 
 Fachliche Grundlage ist [`docs/specification/SpecRoad_Spezifikation.md`](../specification/SpecRoad_Spezifikation.md), einschließlich aller konsolidierten Korrekturen, 742 Requirements, 51 Verifikationsverträge, 46 Szenario-/E2E-Identitäten sowie R-01 bis R-75, Anhang U und den PatchHarbor-Rundweg aus Anhang W. Der [`Prüfbericht`](../reviews/SpecRoad_v0.2.7_Implementierungsreife_Pruefbericht.md) ist ein vorgelagerter Entwurfsreview, kein späterer Produktnachweis.
 
-Gebundene Spezifikations-SHA-256: `01abcaa7c891b6c17f659a674631d29918cb5d1478d43e8ab1c1768244499770`.
+Gebundene Spezifikations-SHA-256: `cf299d1478d56231df8905a077adecef458503b1f351f5cb1ef9ce04a5b6a8b3`.
 Planungsbasis: Commit `fe2661d02ecf2f7eb483b58a4487eb009c6b3846`; sauberes Result-Bundle `specroad_Result_120209_0914_df3504.zip`; Repository-ID `3d2576df-d611-46fc-9d2b-92869468aaca`. Diese Angaben dokumentieren die Entstehung des Plans, nicht die zukünftige Patchbindung. **Jedes spätere Patchpaket bindet den dann aktuellen tatsächlichen Result-Zustand.**
 
 Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 2026 gelten zusätzlich und bei den nachfolgend benannten Konflikten vorrangig. Sonstige normative Spezifikationsinhalte werden nicht stillschweigend abgeschwächt. Neue fachliche Widersprüche, fehlende zwingende Angaben und Sicherheitsprobleme sind offen zu benennen, nicht durch erfundene Annahmen oder Scheinerfolge zu lösen.
@@ -32,6 +32,30 @@ Ketten erfordert erst den belegten erfolgreichen normalen Abschluss.
 Produktfreigaben und die Grenzen aus 2.4.1/2.4.2/2.4.4 bleiben unverändert.
 Dieser Plan ändert keine alten Aufträge, Antworten, Blockaden oder
 Laufzeitdaten und ist keine Start-/Resume-Anweisung.
+
+## OFF-PLAN APPLY-ONLY-535 — Pflichtauswahl und Commit-Gates ausschließlich im Apply
+
+Autorität: ausdrücklicher Nutzerauftrag 1. November 2026, Spezifikation 2.5.2.
+Diese Regel ersetzt für neue Arbeit alle älteren Dev-Testpflichten dieses
+Plans; historische Ausführungsnachweise bleiben unverändert. Keine Testläufe
+im Dev. Collection/Syntax/Paketprüfung sind keine bestandenen Verhaltenstests.
+Produktfortschritt bleibt 655/900; 15.n.R ist weiterhin der nächste Produktcommit.
+
+Ein Bundle mit drei echten Zuständen: W stellt Pflichtauswahl, Vereinigungs-
+gate, Vorbereitung, Commitfolge und vollständigen Restbericht her. R sichert
+falsche Eingaben, veränderte Belege, tatsächliche parallele Testmessung und
+Teilfortschritt durch weitere Verhaltensfälle ab. C trennt den reinen
+Bundle-Vertrag von der Host-Orchestrierung ohne Verhaltensänderung.
+Jeder Zustand erhält seine Pflichtauswahl und wird erst im Apply parallel
+geprüft und dann einzeln committed. Kein Vorab-Endzustand, kein Dev-Testlauf,
+kein Push-/CI-/Dienststart. Bestehende Runtime-Historie bleibt erhalten.
+
+W-Abnahme vorbereitet: langsame/gruppenfremde Pflichttests, Deduplizierung,
+vollständige Dateiauswahl, unbekannte IDs, falsche Commit-ID, exakte v4-
+Nachweise, drei Test/Commit-Schritte, Fehler im mittleren Schritt und
+Fortsetzung mit vollständigem Rest ohne Wiederholung des ersten Commits.
+Die bestehenden Rotations-, Laufzeit- und Beobachtungsregressionen gehören
+zusätzlich zur Pflichtauswahl. Testerfolg bleibt bis zum Apply offen.
 
 ## OFF-PLAN CI-PACKAGES-525 — manuelle CI und worksteal
 

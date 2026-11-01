@@ -54,7 +54,7 @@ python311="$(uv python find --managed-python --no-project 3.11)"
 ```
 
 Die zusätzlichen Interpreter erhalten dadurch keine eigene Kopie der
-Dev-Pakete; diese liegen in der regulären `.venv` für Python 3.14. Gezielte
-Tests verwenden weiterhin den vorhandenen parallelen Starter aus
-[Testing.md](docs/development/Testing.md). Die Einrichtung ändert weder
-Testauswahl und Apply-Rotation noch CI, Control oder den PatchHarbor-Watcher.
+Dev-Pakete; diese liegen in der regulären `.venv` für Python 3.14. Dev führt keine Tests aus, sondern liefert eine Pflichtauswahl je Commit.
+Apply prüft diese zusätzlich zur gefilterten N=3-Gruppe; die Messhistorie
+läuft dabei weiter. Siehe [Testing.md](docs/development/Testing.md). Der Umgebungsaufbau startet keine Tests und ändert weder Apply-Rotation
+noch CI, Control oder den PatchHarbor-Watcher.

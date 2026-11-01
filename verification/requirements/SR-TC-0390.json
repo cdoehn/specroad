@@ -39,7 +39,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "01abcaa7c891b6c17f659a674631d29918cb5d1478d43e8ab1c1768244499770",
+  "specification_sha256": "cf299d1478d56231df8905a077adecef458503b1f351f5cb1ef9ce04a5b6a8b3",
   "steps": [
     "Extract verified owned bytes through direct, CLI, structured-request and registry routes into missing or empty targets; compare original payload and manifest bytes, reopen complete projects and reproduce their bundle.",
     "Preserve partial configuration and review proof files separately; reject complete-project loading and full export, including after root-manifest removal while the retained bootstrap proof remains.",
