@@ -8,11 +8,11 @@ from zipfile import ZipFile
 import pytest
 
 from support.portable import build_distribution, files_under
-from support.transport_runtime import FIXTURE, adapter_source, probe
+from support.transport_runtime import FIXTURE, RUNTIME_FIXTURE, adapter_source, probe
 
 
 def ready(root):
-    provider = FIXTURE / 'result-clean.zip'
+    provider = RUNTIME_FIXTURE / 'patchharbor-1.8.0.pyz'
     return adapter_source(provider, sha256(provider.read_bytes()).hexdigest(), root / 'runtime') + '''
 api = runtime.load_api(required=('PH-API-RESULT',))
 from specroad.transport import TransportFailure

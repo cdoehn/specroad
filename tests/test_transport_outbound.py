@@ -57,9 +57,13 @@ def test_native_outbound_binds_exact_project_runtime_and_reference(tmp_path,dist
         assert manifest['reference']['base_commit']==registered['base_commit']
         frozen={k:v for k,v in manifest.items() if k!='package_id'}
         assert manifest['package_id']==sha256(b'specroad-ai-handoff-v1\0'+canonical_json_bytes(frozen)).hexdigest()
-        assert manifest['runtimes']['patchharbor']['tool_version']=='1.7.0'
-        assert manifest['runtimes']['patchharbor']['artifact_sha256']=='00a08c96748d90629b52672f1a5e95f300371408871b8c11880d2a3f5bf0f6fb'
+        assert manifest['runtimes']['patchharbor']['tool_version']=='1.8.0'
+        assert manifest['runtimes']['patchharbor']['artifact_sha256']=='050cc2d1dc3ecbb1478f6a40c9a5123d1d34d350215d5cc0303025ea08dc4f1e'
         assert z.read('reference/result.zip')==Path(result['transport']['reference_published']).read_bytes()
+        with ZipFile(BytesIO(z.read('reference/result.zip'))) as reference:
+            member=manifest['runtimes']['patchharbor']['member_path']
+            assert member=='runtime/patchharbor-1.8.0.pyz'
+            assert sha256(reference.read(member)).hexdigest()==manifest['runtimes']['patchharbor']['artifact_sha256']
     assert result['file']['sha256']==sha256(raw).hexdigest()
     assert result['approval_granted'] is result['write_authorized'] is False
     assert result['transport']['maintenance_enabled'] is False
@@ -83,7 +87,7 @@ def test_public_variant_and_metadata_do_not_export(tmp_path):
 def test_invalid_requests_precede_all_transport_effects(tmp_path,distribution,change):
     root=tmp_path/'project';project(root)
     value=request(tmp_path,root,distribution[1]);options=value['options']
-    if change=='missing_hash':del options['--runtime-reference-sha256']
+    if change=='missing_hash':del options['--patchharbor-pyz-sha256']
     if change=='bad_hash':options['--specroad-pyz-sha256']='short'
     if change=='python_bundled':options['--runtime-profile']='python-bundled'
     if change=='return':options['--direction']='return'

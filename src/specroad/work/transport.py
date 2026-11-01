@@ -26,14 +26,14 @@ _SOURCES = {'project_id': None, 'scope': ['project'], 'model_root_sha256': None}
 
 
 def _units():
-    return [{'key': name, 'phase': name, 'range': {'adapter': 'source-safe-outbound-v1'}}
+    return [{'key': name, 'phase': name, 'range': {'adapter': 'source-safe-outbound-pyz-v2'}}
             for name in _PHASES]
 
 
 def _export(options, *, recover=False):
     return OutboundExport(options['--project'], output_root=options['--output-root'],
-        output=options['--output'], runtime_reference=options['--runtime-reference'],
-        runtime_reference_sha256=options['--runtime-reference-sha256'],
+        output=options['--output'], patchharbor_pyz=options['--patchharbor-pyz'],
+        patchharbor_pyz_sha256=options['--patchharbor-pyz-sha256'],
         specroad_pyz=options['--specroad-pyz'], specroad_pyz_sha256=options['--specroad-pyz-sha256'],
         allow_existing=recover)
 
@@ -41,7 +41,7 @@ def _export(options, *, recover=False):
 def protected_paths(initial):
     options, bound, _ = checked(initial)
     return tuple(sorted({options[key] for key in ('--project', '--output-root',
-        '--specroad-pyz', '--runtime-reference')} | {bound['repository_root']}))
+        '--specroad-pyz', '--patchharbor-pyz')} | {bound['repository_root']}))
 
 
 def _checked(value, objects, inputs, tasks, completed):
@@ -51,7 +51,7 @@ def _checked(value, objects, inputs, tasks, completed):
             and inputs[0]['path'] == 'source.json', 'outbound_work_source_invalid')
     bound = parse_json_object(_bytes({k: inputs[0][k] for k in ('sha256','size')}, objects))
     require(set(bound) == {'source_binding', 'repository_root', 'project_path', 'plan_sha256',
-                          'coverage_sha256', 'core_sha256', 'runtime_reference_sha256'},
+                          'coverage_sha256', 'core_sha256', 'patchharbor_pyz_sha256'},
             'outbound_work_source_invalid')
     require([{k: unit[k] for k in ('key','phase','range')} for unit in tasks] == _units()
             and [row['unit_id'] for row in completed] == [t['unit_id'] for t in tasks[:len(completed)]],

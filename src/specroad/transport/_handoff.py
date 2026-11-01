@@ -13,13 +13,28 @@ FORMAT = 'specroad-ai-handoff-v1'
 MAX_BYTES = 512 * 1024 * 1024
 
 
+def reference_runtime_member(snapshot):
+    """Map the fully validated native Result-3 contract to its canonical member.
+
+    No Result bytes are interpreted here. The public snapshot reader has already
+    verified the inner artifact inventory; these are the consumer's pinned facts.
+    """
+    runtime = snapshot.runtime
+    require(snapshot.format_version == 3 and runtime.status == 'embedded'
+            and runtime.version == _contract.VERSION
+            and runtime.artifact_sha256 == _contract.ARTIFACT_SHA256
+            and runtime.artifact_size == _contract.ARTIFACT_SIZE
+            and runtime.content_id == _contract.CONTENT_ID
+            and runtime.requires_python == _contract.REQUIRES_PYTHON
+            and runtime.profile == _contract.PROFILE, 'reference_runtime_mismatch')
+    return 'runtime/' + _contract.ARTIFACT_FILENAME
+
+
 class OutboundContainer:
     def __init__(self, project, result, snapshot, core, core_identity, project_path):
         runtime = snapshot.runtime
-        require(runtime.status == 'embedded' and runtime.version == _contract.SAFE_VERSION
-                and runtime.artifact_sha256 == _contract.SAFE_ARTIFACT_SHA256
-                and runtime.requires_python == _contract.REQUIRES_PYTHON
-                and runtime.profile == 'patchharbor-core-no-watcher-v1', 'reference_runtime_mismatch')
+        member = reference_runtime_member(snapshot)
+        require(result.runtime_member == member, 'reference_runtime_member_mismatch')
         require(snapshot.sha256 == result.sha256, 'reference_bytes_changed', 6)
         require(project_path == '.' or (project_path and not project_path.startswith('/')),
                 'transport_project_path_invalid')
@@ -41,7 +56,7 @@ class OutboundContainer:
             'runtimes': {'specroad': core_identity, 'patchharbor': {
                 'path': 'reference/result.zip',
                 # The native Result reader has validated the complete runtime
-                # descriptor. Bootstrap assess returns its exact member name;
+                # descriptor. The Result-3 contract fixes the member name;
                 # no second PH format validator or Result interpreter is used.
                 'member_path': result.runtime_member,
                 'tool_version': runtime.version, 'artifact_sha256': runtime.artifact_sha256,

@@ -16,7 +16,7 @@
     8
   ],
   "fixture_ids": [
-    "SR-FIX-OUTBOUND-SAFE-170-v1"
+    "SR-FIX-OUTBOUND-SAFE-180-v1"
   ],
   "implementation_status": "partial",
   "json_pointers": [],
@@ -28,11 +28,11 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Der Hinexport MUSS ein vollständiges Paket nach W.2 mit SpecRoad-Distribution, unverändertem PatchHarbor-Result einschließlich dessen Runtime, verifiziertem Vollprojektbundle und einem lückenlosen Größen-/Hashinventar erzeugen.",
-    "scope": "15.n.W public python-present outbound export with pinned 1.7.0 safe preparation/production, native effective-byte projection, exact portable history, closed canonical handoff, explicit failure preservation and native Work integration. R/C and the independent Python matrix remain open."
+    "scope": "15.n.W with OFF-PLAN TRANSPORT-PYZ-541 public python-present outbound export with pinned standalone 1.8.0 safe preparation/production, native effective-byte projection, exact portable history, closed canonical handoff, explicit failure preservation and native Work integration. R/C and the independent Python matrix remain open."
   },
   "preconditions": [
     "An explicitly registered local repository with HEAD, complete native project and portable history.",
-    "Externally trusted full runtime hashes, pinned safe-reference contract 1 and a separate owned output area."
+    "Explicit --patchharbor-pyz/--patchharbor-pyz-sha256, canonical pinned 1.8.0, safe-reference contract 1 and a separate owned output area; no Runtime-Result bootstrap."
   ],
   "primary_verification_id": "SR-VER-0051",
   "required_environment": {
@@ -46,10 +46,10 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d3638d2acf7bb696f911a650f2f7fa69dc1ee2e40fb6af75c2dd16a199012058",
+  "specification_sha256": "c1f48fcdaeefdf868e7b59d0e16e755bc268d83b9e8e45c83849d30ba7a21933",
   "steps": [
     "Execute public argv and structured outbound bundle.create through source, module and PYZ paths.",
-    "Independently compare complete inner project/receipt bytes, native reference binding and outer manifest/member sizes and hashes.",
+    "Independently compare complete inner project/receipt bytes, native reference binding and exact embedded 1.8.0 PYZ member with outer manifest/member sizes and hashes.",
     "Observe unchanged source/index/history, explicit public PH operating effects, refusal contracts and retained actual output after faults.",
     "Resume native Work in fresh processes against the same source; verify source-change refusal, single capture, controls and terminal replay."
   ],

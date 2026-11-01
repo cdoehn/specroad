@@ -49,7 +49,7 @@ def test_dirty_native_snapshot_preserves_binary_empty_deleted_and_historical_rec
     parsed=child(tmp_path, '''
 import json
 from pathlib import Path
-sys.path.insert(0, '''+repr(str(FIXTURE/'patchharbor-1.7.0.pyz'))+''')
+sys.path.insert(0, '''+repr(str(FIXTURE/'patchharbor-1.8.0.pyz'))+''')
 from patchharbor import api
 p=Path('''+repr(str(source))+''')
 s=api.read_result_snapshot(p, expected_sha256='''+repr(sha256(source.read_bytes()).hexdigest())+''')
@@ -126,7 +126,7 @@ def test_refusals_keep_source_and_never_publish_handoff(tmp_path,distribution,ch
     if change=='old_runtime':
         from support.transport_runtime import envelope
         old=tmp_path/'old';old.mkdir();ref,digest=envelope(old)
-        value['options'].update({'--runtime-reference':str(ref),'--runtime-reference-sha256':digest})
+        value['options'].update({'--patchharbor-pyz':str(ref),'--patchharbor-pyz-sha256':digest})
     elif change=='occupied':(tmp_path/'output/handoff.zip').write_bytes(b'not replaceable')
     elif change=='core_hash':value['options']['--specroad-pyz-sha256']='f'*64
     elif change=='foreign_import':before="import types\nsys.modules['patchharbor']=types.ModuleType('patchharbor')\n"

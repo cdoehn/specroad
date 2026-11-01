@@ -32,7 +32,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d3638d2acf7bb696f911a650f2f7fa69dc1ee2e40fb6af75c2dd16a199012058",
+  "specification_sha256": "c1f48fcdaeefdf868e7b59d0e16e755bc268d83b9e8e45c83849d30ba7a21933",
   "steps": [],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0500",

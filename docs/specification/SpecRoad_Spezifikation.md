@@ -1,21 +1,21 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.45
+## Version 0.2.46
 
 | Feld | Wert |
 |---|---|
 | Dokument-ID | `SR-SPEC-0001` |
-| Dokumentversion | `0.2.45` |
+| Dokumentversion | `0.2.46` |
 | Zielrelease | `SpecRoad Single-Repository Workbench 0.2.0` |
 | Status | **Fachlich konsolidierte Arbeitsgrundlage; technische Reviewentscheidung gesondert dokumentiert, formale Baseline-Freigabe und Produktabnahme nicht durch dieses Dokument erklärt** |
 | Stand | 1. November 2026 |
 | Sprache | Deutsch; technische Feldnamen, Enum-Werte und CLI-Kommandos Englisch |
-| Fachliche Quelle | **Diese Repositoryfassung v0.2.45 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.45 liegt mit dieser Änderung nicht vor.** |
+| Fachliche Quelle | **Diese Repositoryfassung v0.2.46 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.46 liegt mit dieser Änderung nicht vor.** |
 | Bearbeitbare Satzquelle | Diese Datei; eine spätere PDF muss denselben versionierten Inhalt wiedergeben. |
-| Vorgängerversion | Repository-Spezifikation v0.2.44 vom 1. November 2026; historische Nachweise bleiben unverändert. |
-| Prüf- und Entscheidungsgrundlage | Ausdrücklicher manueller Nutzerauftrag TRANSPORT-SAFE-531 vom 31. Oktober 2026 nach Prüfung der PatchHarbor-1.7.0-Lieferung; bestehende fachliche Entscheidungen und Nachweise bleiben erhalten. |
-| Änderungsart | HOST-WORKERS-537: hostabhängige Worker mit optionaler Grenze 10, niedriger CPU-Priorität und gebundenen Ausführungsbelegen; Produktplan unverändert. |
+| Vorgängerversion | Repository-Spezifikation v0.2.45 vom 1. November 2026; historische Nachweise bleiben unverändert. |
+| Prüf- und Entscheidungsgrundlage | Ausdrücklicher Nutzerauftrag TRANSPORT-PYZ-541 vom 1. November 2026 nach Build und Prüfung der kanonischen PatchHarbor-1.8.0-PYZ; bestehende fachliche Entscheidungen und Nachweise bleiben erhalten. |
+| Änderungsart | TRANSPORT-PYZ-541: direkte, versions- und hashgebundene PYZ-Anbindung ohne Runtime-Result; explizite CLI- und Work-Bindungen; Produktplan unverändert. |
 
-> **Verbindlicher Quellenwechsel:** Der ausdrückliche Nutzerauftrag HOST-WORKERS-537 vom 1. November 2026 schreibt den Entwicklungsworkflow als v0.2.45 fort. Frühere PDF- und Reviewnachweise bleiben historisch gebunden; keine Produktfreigabe wird erklärt.
+> **Verbindlicher Quellenwechsel:** Der ausdrückliche Nutzerauftrag TRANSPORT-PYZ-541 vom 1. November 2026 schreibt die Transport-Runtimebindung als v0.2.46 fort. Frühere PDF- und Reviewnachweise bleiben historisch gebunden; keine Produktfreigabe wird erklärt.
 
 > **Fortbestehende Arbeitsprinzipien:** Weiche Budgets führen zu sparsamer vollständiger Weiterarbeit oder gesicherter Fortsetzung über mehrere Aufrufe beziehungsweise Prompts. Es werden keine erforderlichen Arbeiten stillschweigend ausgelassen. Reale Host-, Speicher-, Berechtigungs- und Sicherheitsgrenzen bleiben wirksam.
 
@@ -6258,6 +6258,7 @@ Die folgende Roadmap ist informativ und erzeugt keine Anforderungen an 0.2:
 
 | Version | Datum | Status | Änderung |
 |---|---|---|---|
+| 0.2.46 | 2026-11-01 | Ausdrücklicher Nutzerauftrag | TRANSPORT-PYZ-541: direkte kanonische PatchHarbor-1.8.0-PYZ statt Runtime-Result; externe Artefaktbindung, private Lazy-Imports und versionierter CLI-/Work-Vertrag; historische Resultdaten bleiben erhalten. |
 | 0.2.45 | 2026-11-01 | Ausdrücklicher Nutzerauftrag | APPLY-ONLY-535: Dev bereitet Testpläne vor; Apply prüft je Commit N=3 plus Pflichtauswahl, misst dauerhaft und erhält Teilfortschritt für gebundene Korrekturbundles. |
 | 0.2.43 | 2026-10-31 | Ausdrücklicher manueller Nutzerauftrag | TRANSPORT-SAFE-531: versions-/hashgebundene PatchHarbor-1.7.0-Core-PYZ, sichere öffentliche Referenzerzeugung, Betriebsgrenzen und Fehlererhaltung; 15.n.W und externe Abnahmen bleiben offen. |
 | 0.2.42 | 2026-10-31 | Delegiert gemäß SPECROAD-DECISION-1 | TRANSPORT-OUTBOUND-528: geschlossener Hinpaket-/Runtimeeingabevertrag, selbstreferenzfreie Paket-ID und vollständige Snapshot-/Receiptbindung; Implementierung 15.n bleibt offen, keine Produktfreigabe. |
@@ -9200,7 +9201,7 @@ Die Zuständigkeiten der öffentlichen Aufrufe sind fest:
 | Rückpaket erzeugen | `api.pack_patch(..., reference_bundle=..., entrypoint=...)`; SpecRoad bereitet den vollständigen Payload und den festen Entrypoint vor. PatchHarbor wählt keine Änderungen aus und erzeugt keinen Proposal. |
 | Rückpaket prüfen | `api.inspect_patch` und `api.validate_patch` mit ursprünglichem Result; lokale Zielbindung wird zusätzlich gegen das registrierte Ziel geprüft. Ein gültiges Paket ist keine Freigabe seiner Fachänderungen. |
 | Lokal übernehmen | Ausschließlich der bewusst aufgerufene lokale Integrationsadapter verwendet `api.apply` mit explizitem geprüftem Paket und Repository. Keine automatische Auswahl fremder Pakete, Watcher oder rekursiven Apply-/Bundle-Aufrufe. |
-| Result prüfen und Snapshot liefern | `api.read_result_snapshot(..., expected_sha256=...)` mit `integration_capabilities().snapshot_contract_version == 1`; vollständige Resultprüfung und schreibfreie Ausgabe der Base-/Index-/Worktree-/Untracked-/Effective-Inventare. Die in 15.m nachgewiesene 1.6.0-Bindung bleibt historisch erhalten; für den neuen Hinexport gilt die konkrete 1.7.0-Bindung aus W.1.1, die bei jedem Aufruf geprüft wird. |
+| Result prüfen und Snapshot liefern | `api.read_result_snapshot(..., expected_sha256=...)` mit `integration_capabilities().snapshot_contract_version == 1`; vollständige Resultprüfung und schreibfreie Ausgabe der Base-/Index-/Worktree-/Untracked-/Effective-Inventare. Die in 15.m nachgewiesene 1.6.0-Bindung bleibt historisch erhalten; für alle aktiven Adapter gilt die konkrete direkte 1.8.0-Bindung aus W.1.1, die bei jedem Aufruf geprüft wird. |
 
 Die letzte Zeile ist eine ausdrückliche Integrationsvoraussetzung. Sie umfasst
 Manifest, Kontext, Runtime, Base, staged/unstaged Änderungen und untracked Daten
@@ -9210,27 +9211,60 @@ Hinexports muss die Fähigkeit in PatchHarbor öffentlich dokumentiert, ausgelie
 und mit SpecRoad nachgewiesen sein. SpecRoad baut keinen privaten Resultreader,
 Patchinterpreter oder eigenen PatchHarbor-Formatvalidator als Umgehung.
 
-### W.1.1 Sichere Referenzerzeugung und Runtimebindung (TRANSPORT-SAFE-531)
+### W.1.1 Sichere Referenzerzeugung und direkte Runtimebindung (TRANSPORT-PYZ-541)
 
-Der ausdrückliche manuelle Nutzerauftrag zur Übernahme der geprüften
-PatchHarbor-Lieferung bindet für den Hinexport ab 15.n die **Core-PYZ 1.7.0**:
-SHA-256 `00a08c96748d90629b52672f1a5e95f300371408871b8c11880d2a3f5bf0f6fb`,
-Profil `patchharbor-core-no-watcher-v1`, Pythonanforderung `>=3.10`.
-Die externe Provenienz ist der bestätigte PatchHarbor-dev-Commit
-`299782e02bec55a7b8593bd99ee5b11f6122a432`; dessen Liefermanifest hat SHA-256
-`87b49dd7e1811cd57a6373e32ab09893220aecf1c27d14a408a9af7fd02ff480`.
-Version, Hash, Profil und öffentliche Fähigkeiten werden gemeinsam geprüft;
-eine Versionszeichenfolge oder ein selbstdeklarierter innerer Hash genügt nicht.
-Diese Bindung ersetzt für die neue Hinexporterzeugung die bisherige 1.6.0-
-Bindung aus 15.m. Historische 1.6.0-Artefakte, Fixtures, Hashes, Resultate und
-15.m-Nachweise bleiben unverändert und werden nicht als 1.7.0-Nachweise gewertet.
-Eine andere Runtime benötigt eine neue ausdrückliche Bindung; kein automatischer
-Download, Austausch fremder Imports oder stiller Rückfall auf 1.6.0 ist erlaubt.
+Der ausdrückliche Nutzerauftrag vom 1. November 2026 bindet alle aktiven
+Transportadapter an die separat gelieferte **Core-PYZ 1.8.0**:
+SHA-256 `050cc2d1dc3ecbb1478f6a40c9a5123d1d34d350215d5cc0303025ea08dc4f1e`,
+Größe 1.049.613 Bytes, Profil `patchharbor-core-no-watcher-v1`, Python `>=3.10`.
+Quellcommit ist `2121d3abd2ca4b6c523d9e0698d997a86581d5bc`, Content-ID
+`f144df901034f6dd6b3211a2a6b5e613646fa1afb2f7ce19c75862a7a4c4bf21`.
+Der lokale offizielle Build wurde gegen den bytegleichen Kandidaten desselben
+Commits geprüft. Sein lokales Runtime-Manifest hat SHA-256
+`05bd2ce38ecde037d64516bbe22eda44395ed4a05a6c1745df0a05d87ad70811`;
+das bereits vorhandene Kandidatenmanifest hat SHA-256
+`7101ba8465112aabb69b4a77381c209ab9f845d96ffb5c9d47705f719ddca159`.
+Dies belegt Herkunft und lokale Artefaktprüfung, keine veröffentlichte Release-
+oder vollständige Plattformabnahme. Die Provenienz wird außerhalb der PYZ
+geführt; ihre Originalbytes werden weder umgebaut noch nachträglich ergänzt.
+
+Die Codequelle ist ausschließlich eine explizite reguläre PYZ-Datei mit extern
+übergebenem vollständigem SHA-256 **und** der fest gebundenen Artefaktidentität.
+Konstruktion und Beschreibung des Adapters lesen keine Runtime und laden kein
+PatchHarbor. Erst ausdrücklich angefordertes Laden prüft Host/Python, sichere
+Pfade, Dateityp, harte Größenbegrenzung und Hash vor dem ersten Codeimport.
+Links, Hardlinks, Sonderdateien und Traversal sind keine gültigen Eingaben.
+Ein Result-ZIP oder ein selbstdeklarierter Manifesthash erfüllt den Vertrag
+nicht; andere, auch ältere authentische PYZ-Versionen werden verweigert.
+
+Die geprüften Bytes werden exklusiv in ein neues privates Verzeichnis kopiert
+(POSIX 0700, Datei 0600). Der Import und alle späteren Lazy-Imports müssen aus
+genau dieser gebundenen Kopie stammen. Vor jeder Wiederverwendung werden
+Quellidentität/Bytes, private Kopie, Modulherkunft und API-Verträge erneut
+geprüft. Ein anderer expliziter Auftrag darf dieselbe vollständig geprüfte
+Kopie nur nach Prüfung seiner eigenen Quelldatei wiederverwenden. Fremde oder
+teilweise fehlgeschlagene Imports werden niemals entfernt oder übernommen;
+ein fehlgeschlagener Ladeversuch benötigt einen frischen Prozess. Eigene
+Teilartefakte bleiben als tatsächlicher Fehlerzustand erhalten; fremde
+Verzeichnisse und vorhandene Dateien werden nicht ersetzt.
+
+Kein Result-Bootstrap, CLI-Unterprozess, pip/Installer, Download, Suchpfad-
+Fallback oder Import aus der Hostinstallation wird angeboten. Die öffentliche
+PatchHarbor-API bleibt die einzige fachliche Schnittstelle; ein Resultreader
+oder privater PatchHarbor-Provider wird nicht nachgebaut. Beschreibung nennt
+`runtime_source=standalone_pyz` und `source_artifact_sha256` sowie die konkrete
+Version/Hash/Content-ID/Herkunft und Fähigkeiten. `full_reference_valid=false`
+bleibt bis zur gesonderten nativen Resultprüfung wahrheitsgemäß.
+
+Diese Bindung ersetzt die aktive 1.6.0-/1.7.0-Ladebindung. Historische Fixtures,
+Resultbytes, Originalhashes und Nachweise bleiben unverändert erhalten und
+werden ausschließlich als passive Daten mit ihren tatsächlichen Fakten
+gelesen. Eine andere Runtime benötigt eine neue ausdrückliche Bindung.
 
 Vor jeder Quellaufnahme verlangt der Adapter von
 `api.integration_capabilities()` exakt die Ganzzahl `1` für
-`contract_version`, `snapshot_contract_version` und
-`safe_reference_contract_version`; Boolean, fehlender Wert und unbekannte
+`contract_version`, `snapshot_contract_version`,
+`guarded_apply_contract_version` und `safe_reference_contract_version`; Boolean, fehlender Wert und unbekannte
 Version sind inkompatibel. Die benötigten öffentlichen Funktionen müssen
 vorhanden sein. Der neue Erzeuger unterstützt `linux-x86_64` auf CPython
 3.10–3.14 mit Git, `/proc/self/fd` und exklusiver atomarer Hardlink-Veröffentlichung.
@@ -9398,13 +9432,23 @@ Anhang-E-Aufrufe und ihre Bytes unverändert. Der vollständige Aufruf verwendet
 ```text
 specroad bundle create --project <PROJEKTROOT>
   --profile ai-runtime --direction outbound
-  --runtime-reference <VERTRAUENSWÜRDIGES-PH-RESULT>
-  --runtime-reference-sha256 <HEX>
+  --patchharbor-pyz <VERTRAUENSWÜRDIGE-PATCHHARBOR-PYZ>
+  --patchharbor-pyz-sha256 <HEX>
   --specroad-pyz <VERTRAUENSWÜRDIGE-SPECROAD-PYZ>
   --specroad-pyz-sha256 <HEX>
   --output-root <EXTERNER-AUSGABEROOT> --output <RELATIVER-ZIP-PFAD>
   [--runtime-profile python-present]
 ```
+
+Die früheren `--runtime-reference`-/`--runtime-reference-sha256`-Optionen
+sind keine Aliase: Aufrufe mit diesen Optionen werden vor Transportwirkungen
+mit Exit 2 abgewiesen. Laufende gespeicherte alte Work-Aufträge werden nicht
+migriert oder an eine andere Quelle gebunden. Der neue Work-Vertrag verwendet
+`source-safe-outbound-pyz-v2` und `patchharbor_pyz_sha256` in seiner geschlossenen
+Quellbindung. Nur exakt passende Auftrags-, Build- und Quellenbindungen dürfen
+fortgesetzt werden; alte oder vermischte Bindungen werden unter Erhaltung
+ihrer Originaldaten kontrolliert verweigert. Ein neuer Hinexport ist ein
+neuer ausdrücklicher Auftrag.
 
 Die vier Runtimeargumente sind vollständige Pflichtpaare; es gibt keine Suche
 in Exchange, keine implizite Installation und keinen Vertrauensdefault aus dem
@@ -9419,8 +9463,8 @@ Result und Snapshotprojektion dürfen nur in diesem ausgewiesenen externen
 Bereich entstehen, ohne fremde Inhalte zu löschen oder ungebundene alte
 Versuche zu übernehmen.
 
-Der vertrauensgebundene Bootstrap lädt für den Hinexport ausschließlich die
-nach W.1.1 gebundene PatchHarbor-1.7.0-Distribution. Die Runtime-Referenz liefert Bibliothekscode,
+Der direkte PYZ-Adapter lädt für den Hinexport ausschließlich die
+nach W.1.1 gebundene PatchHarbor-1.8.0-Distribution. Die explizite PYZ liefert Bibliothekscode,
 nicht die neue Projektbasis: Das neue `reference/result.zip` entsteht durch den
 expliziten öffentlichen sicheren `api.bundle`-Aufruf nach W.1.1. Das sichere
 `api.context(..., capture_mode="safe")` liefert für den gewählten Projektroot
@@ -9495,7 +9539,7 @@ ist der tatsächliche vom nativen Resultvertrag gebundene innere PYZ-Memberpfad.
 Er wird nicht zu einem zusätzlichen äußeren Member. Version, voller
 Artefakthash, Pythonanforderung und Distributionsprofil müssen sowohl dem
 nativ geprüften Result als auch der tatsächlich verwendeten, in W.1.1
-gebundenen 1.7.0-Runtime entsprechen. Die zusätzliche sichere Fähigkeit wird
+gebundenen 1.8.0-Runtime entsprechen. Die zusätzliche sichere Fähigkeit wird
 nach W.1.1 zur Ausführung geprüft; sie erzeugt kein zusätzliches Feld in diesem
 geschlossenen v1-Manifest. Die beiden hier gespeicherten Vertragsversionen sind die
 geprüften öffentlichen Ganzzahlwerte 1, keine Booleans.
@@ -9597,8 +9641,10 @@ SpecRoad-PYZ mit dem vorhandenen Python. Ein erwarteter Paket-/Runtimehash muss
 aus einer bereits vertrauenswürdigen Quelle stammen; Selbsthashes innerhalb
 eines beliebig austauschbaren ZIP sind kein Herkunftsbeweis. Prüfung von Manifest,
 Runtimehashes, Plattform und Pythonversion geht jedem Laden mitgelieferten Codes
-voraus. Der dokumentierte verifizierte PatchHarbor-PYZ-Bootstrap darf die öffentliche
-API bereitstellen; Projektpfade dürfen dabei keine Module unterschieben.
+voraus. Der direkte Adapter aus W.1.1 lädt die separat bereitgestellte und
+geprüfte PatchHarbor-PYZ; er verlangt dafür kein Result. Ein im Hinpaket
+mitgeliefertes Artefakt muss vor seiner ausdrücklichen Bereitstellung dieselbe
+Vertrauens- und Hashprüfung erfüllen. Projektpfade dürfen keine Module unterschieben.
 
 `bundle verify --profile ai-runtime` verändert keine Projekt- oder Runtimepfade.
 `bundle extract --profile ai-runtime` prüft zuerst das vollständige Hinpaket,
@@ -9703,6 +9749,17 @@ SpecRoad-Arbeitsbudgets und sichere Fortsetzung ändern diese Formatgrenzen nich
 SR-VER-0051 und SR-E2E-0013 prüfen reale ausgelieferte SpecRoad- und
 PatchHarbor-Artefakte, keine nachgebaute Transportimplementierung:
 
+Zusätzlich für TRANSPORT-PYZ-541: direkter Import ohne Result in Modul- und
+PYZ-Distribution; bytegleicher öffentlicher Runtime-Export; fehlende/falsche/
+ältere Runtime, Link-/Pfad-/Größenfehler, bereits belegtes Ziel, Fremdimports,
+Quell-/Kopiewechsel auch bei identischen Bytes, widerrufene private Rechte,
+Abbruch/Teilimport und falsche Fähigkeiten. Native Hinpakete müssen genau
+die gebundene 1.8.0-PYZ im tatsächlichen Result-Member enthalten. Neue Work-
+Aufträge werden über Prozessgrenzen fortgesetzt; alte Result-Aufrufe und alte
+Work-Bindungen werden weder akzeptiert noch still umgedeutet. Historische
+Results bleiben native schreibfreie Eingaben mit unveränderten Originalfakten.
+
+
 1. Registriertes lokales Repository → Hinexport → frische netzwerkisolierte
    Linux-x86-64-Sandbox → Proposal erstellen/ändern/prüfen → Rückexport →
    Paketprüfung und bewusst autorisierter Empfang → menschliches Reviewfixture
@@ -9735,4 +9792,4 @@ Implementierungsschritten nachgewiesen sein.
 
 ---
 
-**Ende der SpecRoad-Produktspezifikation v0.2.43.**
+**Ende der SpecRoad-Produktspezifikation v0.2.46.**

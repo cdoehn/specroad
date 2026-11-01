@@ -10,22 +10,23 @@
     7
   ],
   "fixture_ids": [
-    "SR-FIX-PATCHHARBOR-160-SNAPSHOT-v1"
+    "SR-FIX-PATCHHARBOR-160-SNAPSHOT-v1",
+    "SR-FIX-PATCHHARBOR-180-RUNTIME-v1"
   ],
   "implementation_status": "partial",
   "json_pointers": [],
   "method": "automated_behavior",
   "open_items": [
     "Python 3.10-3.14 CI acceptance remains pending; by explicit user instruction its development-blocking effect is suspended until the user reinstates it. This does not claim compatibility or release evidence.",
-    "15.m.C and separate outbound/return/host-apply integration, human proposal gates and end-to-end acceptance remain open."
+    "Remaining 15.n.R/C, 15.o and return/host-apply integration, human proposal gates and end-to-end acceptance remain open."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Die Transportintegration MUSS PatchHarbor ausschließlich über die dokumentierte öffentliche Python-API ansprechen und fehlende erforderliche API-Fähigkeiten ohne CLI-Fallback, private Core-Imports oder eigene Nachbildung des PatchHarbor-Formats als nicht verfügbar melden.",
-    "scope": "15.m.W/R transport foundation: pinned 1.6.0 public API, native immutable five-layer snapshots, offline module/PYZ use, independent error mapping and historical original facts. Runtime preparation is explicit and separate from read-only snapshots: input data cannot select or execute a runtime or materialize project files. No outbound, return, host-apply, full Python-matrix or release acceptance is asserted."
+    "scope": "15.m foundation with OFF-PLAN TRANSPORT-PYZ-541: pinned standalone 1.8.0 public API, native immutable five-layer snapshots, offline module/PYZ use, independent error mapping and historical original facts. Runtime preparation is explicit and separate from read-only snapshots: input data cannot select or execute a runtime or materialize project files. No outbound, return, host-apply, full Python-matrix or release acceptance is asserted."
   },
   "preconditions": [
-    "Use the pinned PatchHarbor 1.6.0 built from supplied source commit 29c9cfdc095517e7c4cfd4a4c0588cd90655f0b9 and native synthetic producer Results; preserve historical 1.4 Results unchanged."
+    "Use the original canonical standalone PatchHarbor 1.8.0 PYZ from commit 2121d3abd2ca4b6c523d9e0698d997a86581d5bc with externally approved SHA-256 050cc2d1dc3ecbb1478f6a40c9a5123d1d34d350215d5cc0303025ea08dc4f1e. Preserve historical 1.4/1.6/1.7 fixtures unchanged."
   ],
   "primary_verification_id": "SR-VER-0051",
   "required_environment": {
@@ -39,14 +40,27 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d3638d2acf7bb696f911a650f2f7fa69dc1ee2e40fb6af75c2dd16a199012058",
+  "specification_sha256": "c1f48fcdaeefdf868e7b59d0e16e755bc268d83b9e8e45c83849d30ba7a21933",
   "steps": [
-    "Explicitly bootstrap the verified, pinned library and then read Results as passive data using the public snapshot API.",
+    "Load the explicit hash-pinned standalone PYZ without a Result or host installation; use only its public API to inspect/read passive Results and to export byte-identical runtime artifacts.",
     "Compare all five layers with independent Git and filesystem oracles, reject incomplete layers, retain upstream failure facts, and check lazy Core, runtime trust and source preservation in isolated offline processes."
   ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0731",
   "test_ids": [
+    "tests/test_transport_pyz.py::test_direct_runtime_and_public_export_need_no_result_or_bootstrap",
+    "tests/test_transport_pyz.py::test_missing_standalone_runtime_is_not_discovered_or_installed",
+    "tests/test_transport_pyz.py::test_new_request_rechecks_its_own_artifact_before_reusing_a_loaded_runtime",
+    "tests/test_transport_pyz.py::test_older_standalone_pyz_is_rejected_even_with_its_correct_external_hash[1.4.0]",
+    "tests/test_transport_pyz.py::test_older_standalone_pyz_is_rejected_even_with_its_correct_external_hash[1.6.0]",
+    "tests/test_transport_pyz.py::test_older_standalone_pyz_is_rejected_even_with_its_correct_external_hash[1.7.0]",
+    "tests/test_transport_pyz.py::test_same_process_requests_reuse_only_the_checked_private_copy",
+    "tests/test_transport_pyz.py::test_standalone_runtime_rejects_unsafe_inputs_before_import[directory]",
+    "tests/test_transport_pyz.py::test_standalone_runtime_rejects_unsafe_inputs_before_import[fifo]",
+    "tests/test_transport_pyz.py::test_standalone_runtime_rejects_unsafe_inputs_before_import[hardlink]",
+    "tests/test_transport_pyz.py::test_standalone_runtime_rejects_unsafe_inputs_before_import[oversize]",
+    "tests/test_transport_pyz.py::test_standalone_runtime_rejects_unsafe_inputs_before_import[parent_link]",
+    "tests/test_transport_pyz.py::test_standalone_runtime_rejects_unsafe_inputs_before_import[symlink]",
     "tests/test_transport_runtime.py::test_core_commands_and_adapter_description_need_no_transport[module]",
     "tests/test_transport_runtime.py::test_core_commands_and_adapter_description_need_no_transport[zipapp]",
     "tests/test_transport_runtime.py::test_declared_unavailable_runtime_is_not_replaced_or_installed",

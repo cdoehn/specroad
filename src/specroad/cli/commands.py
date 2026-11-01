@@ -233,7 +233,7 @@ def builtin_registry() -> CommandRegistry:
             OptionSpec('--exclude-operational-receipts'),
             *global_options('--profile'),
             *(OptionSpec(flag, takes_value=True) for flag in ('--direction', '--runtime-profile',
-                '--runtime-reference', '--runtime-reference-sha256', '--specroad-pyz', '--specroad-pyz-sha256',
+                '--patchharbor-pyz', '--patchharbor-pyz-sha256', '--specroad-pyz', '--specroad-pyz-sha256',
                 '--reference', '--proposal', '--work-dir')),
             *_read_runtime_options(),
             *(OptionSpec('--' + name, takes_value=True) for name in

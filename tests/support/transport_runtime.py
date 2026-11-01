@@ -1,8 +1,4 @@
-"""Real delivered PYZ in explicitly synthetic runtime-descriptor envelopes.
-
-These envelopes are not full Results or snapshot-validation fixtures. No claim
-about a repository, Apply, a proposal or the missing PH-API-RESULT is made.
-"""
+"""Pinned standalone runtime; historical descriptor envelopes are negative data."""
 
 from hashlib import sha256
 import json
@@ -14,7 +10,18 @@ from support.processes import run_python
 
 ROOT = Path(__file__).resolve().parents[2]
 FIXTURE = ROOT / 'tests/fixtures/patchharbor160'
-ARTIFACT_SHA256 = '377e715d7cb443eb5e80a3e7f9e8405f36092a0f7c062745b70c8b3a2e3eb055'
+RUNTIME_FIXTURE = ROOT / 'tests/fixtures/patchharbor180'
+ARTIFACT_SHA256 = '050cc2d1dc3ecbb1478f6a40c9a5123d1d34d350215d5cc0303025ea08dc4f1e'
+LEGACY_SHA256 = '377e715d7cb443eb5e80a3e7f9e8405f36092a0f7c062745b70c8b3a2e3eb055'
+
+
+def runtime_artifact(root):
+    source = RUNTIME_FIXTURE / 'patchharbor-1.8.0.pyz'
+    raw = source.read_bytes()
+    assert sha256(raw).hexdigest() == ARTIFACT_SHA256
+    target = root / source.name
+    target.write_bytes(raw)
+    return target, ARTIFACT_SHA256
 
 
 def envelope(root, *, unavailable=False, fixture=FIXTURE):
@@ -22,7 +29,7 @@ def envelope(root, *, unavailable=False, fixture=FIXTURE):
     artifact = (fixture / Path(metadata['artifact']['path']).name).read_bytes()
     assert sha256(artifact).hexdigest() == metadata['artifact']['sha256']
     if fixture == FIXTURE:
-        assert sha256(artifact).hexdigest() == ARTIFACT_SHA256
+        assert sha256(artifact).hexdigest() == LEGACY_SHA256
     if unavailable:
         metadata.update(status='unavailable', reason='artifact_missing')
         for key in ('artifact', 'profile', 'content_id', 'content_id_algorithm',
@@ -77,5 +84,5 @@ sys.addaudithook(deny_external)
 def adapter_source(reference, digest, workspace):
     return ('from specroad.transport import PatchHarborRuntime, TransportUnavailable\n'
             'runtime = PatchHarborRuntime(' + repr(str(reference)) +
-            ', trusted_source_sha256=' + repr(digest) +
+            ', trusted_artifact_sha256=' + repr(digest) +
             ', workspace=' + repr(str(workspace)) + ')\n')

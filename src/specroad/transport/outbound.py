@@ -15,11 +15,10 @@ from ..bundles.verification import verify_bundle
 from ..bundles.publication import _publish
 from ..model.paths import project_path as safe_project_path
 from ..model.canonical import canonical_json_bytes
-from . import _pyz_bootstrap
 from ._core_artifact import core_artifact
 from ._export_boundary import authorize, binding, repository_root, pre_bootstrap_output
 from ._files import PassiveFile, absolute, directory, overlap, require
-from ._handoff import OutboundContainer
+from ._handoff import OutboundContainer, reference_runtime_member
 from .runtime import PatchHarborRuntime, _check_api
 from .snapshots import TransportFailure, api_failure, read_snapshot
 
@@ -40,7 +39,7 @@ class OutboundExport:
     this object. Partial outputs remain available as actual operating facts.
     """
 
-    def __init__(self, root, *, runtime_reference, runtime_reference_sha256,
+    def __init__(self, root, *, patchharbor_pyz, patchharbor_pyz_sha256,
                  specroad_pyz, specroad_pyz_sha256, output_root, output, allow_existing=False):
         self.project = directory(root)
         self.output = directory(output_root, owned=True)
@@ -50,7 +49,8 @@ class OutboundExport:
         self.output_name = output
         require(allow_existing or not os.path.lexists(self.output.root / output), 'transport_output_exists', 6)
         self.core, self.core_identity = core_artifact(specroad_pyz, specroad_pyz_sha256)
-        self.reference = PassiveFile(runtime_reference, expected_sha256=runtime_reference_sha256)
+        self.runtime_input = PassiveFile(patchharbor_pyz, expected_sha256=patchharbor_pyz_sha256,
+                                         limit=16 * 1024 * 1024)
         self.observation = ProjectBundleSnapshot(self.project.root)
         self.workspace = None
         self.api = self.context = self.plan = None
@@ -64,8 +64,8 @@ class OutboundExport:
         # caller's explicit external area. They are disclosed even on failure.
         self.workspace = Path(tempfile.mkdtemp(prefix='.specroad-outbound-', dir=self.output.root))
         self.effects['private_workspace'] = str(self.workspace)
-        self.runtime = PatchHarborRuntime(self.reference.path,
-            trusted_source_sha256=self.reference.sha256, workspace=self.workspace / 'runtime',
+        self.runtime = PatchHarborRuntime(self.runtime_input.path,
+            trusted_artifact_sha256=self.runtime_input.sha256, workspace=self.workspace / 'runtime',
             safe_reference=True)
         self.api = self.runtime.load_api(required=('context', 'prepare_reference_export', 'bundle'))
         self.context = _api_call(self.api, self.api.context, self.project.root, capture_mode='safe')
@@ -82,7 +82,7 @@ class OutboundExport:
 
     def verify_inputs(self):
         self.project._check_root(); self.output._check_root()
-        self.core.verify_current(); self.reference.verify_current()
+        self.core.verify_current(); self.runtime_input.verify_current()
         self.observation.verify_current()
 
     def expected_source(self):
@@ -91,7 +91,7 @@ class OutboundExport:
                 'project_path': self.project_path, 'plan_sha256': self.plan.binding_sha256,
                 'coverage_sha256': sha256(canonical_json_bytes([
                     {'path': name, 'sha256': sha256(raw).hexdigest()} for name, raw in sorted(required.items())
-                ])).hexdigest(), 'core_sha256': self.core.sha256, 'runtime_reference_sha256': self.reference.sha256}
+                ])).hexdigest(), 'core_sha256': self.core.sha256, 'patchharbor_pyz_sha256': self.runtime_input.sha256}
 
     def capture(self):
         require(self.api is not None and not self._attempted, 'transport_export_not_prepared', 6)
@@ -118,8 +118,7 @@ class OutboundExport:
         snapshot = read_snapshot(self.api, result.path, expected_sha256=result.sha256)
         require(binding(self.context) == binding(snapshot.context),
                 'transport_reference_context_mismatch', 6)
-        assessment = _pyz_bootstrap.assess(result.path, trusted_source_sha256=result.sha256)
-        result.runtime_member = assessment.artifact_name
+        result.runtime_member = reference_runtime_member(snapshot)
         self.verify_inputs()
         # A freshly generated private projection has no foreign files or links.
         # Every byte originates in the native reader's validated effective layer.

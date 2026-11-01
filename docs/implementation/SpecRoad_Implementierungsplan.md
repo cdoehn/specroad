@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 45 · **Stand:** 1. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.45
+**Planrevision:** 46 · **Stand:** 1. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.46
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 Schritte und 900 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; die ausdrücklich genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wird nach 10.7.10 innerhalb von 15.l.R vorgezogen. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -9,7 +9,7 @@ Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 S
 
 Fachliche Grundlage ist [`docs/specification/SpecRoad_Spezifikation.md`](../specification/SpecRoad_Spezifikation.md), einschließlich aller konsolidierten Korrekturen, 742 Requirements, 51 Verifikationsverträge, 46 Szenario-/E2E-Identitäten sowie R-01 bis R-75, Anhang U und den PatchHarbor-Rundweg aus Anhang W. Der [`Prüfbericht`](../reviews/SpecRoad_v0.2.7_Implementierungsreife_Pruefbericht.md) ist ein vorgelagerter Entwurfsreview, kein späterer Produktnachweis.
 
-Gebundene Spezifikations-SHA-256: `d3638d2acf7bb696f911a650f2f7fa69dc1ee2e40fb6af75c2dd16a199012058`.
+Gebundene Spezifikations-SHA-256: `c1f48fcdaeefdf868e7b59d0e16e755bc268d83b9e8e45c83849d30ba7a21933`.
 Planungsbasis: Commit `fe2661d02ecf2f7eb483b58a4487eb009c6b3846`; sauberes Result-Bundle `specroad_Result_120209_0914_df3504.zip`; Repository-ID `3d2576df-d611-46fc-9d2b-92869468aaca`. Diese Angaben dokumentieren die Entstehung des Plans, nicht die zukünftige Patchbindung. **Jedes spätere Patchpaket bindet den dann aktuellen tatsächlichen Result-Zustand.**
 
 Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 2026 gelten zusätzlich und bei den nachfolgend benannten Konflikten vorrangig. Sonstige normative Spezifikationsinhalte werden nicht stillschweigend abgeschwächt. Neue fachliche Widersprüche, fehlende zwingende Angaben und Sicherheitsprobleme sind offen zu benennen, nicht durch erfundene Annahmen oder Scheinerfolge zu lösen.
@@ -32,6 +32,73 @@ Ketten erfordert erst den belegten erfolgreichen normalen Abschluss.
 Produktfreigaben und die Grenzen aus 2.4.1/2.4.2/2.4.4 bleiben unverändert.
 Dieser Plan ändert keine alten Aufträge, Antworten, Blockaden oder
 Laufzeitdaten und ist keine Start-/Resume-Anweisung.
+
+## OFF-PLAN TRANSPORT-PYZ-541 — Direkte PatchHarbor-1.8.0-Anbindung
+
+Autorität: ausdrücklicher Nutzerauftrag vom 1. November 2026, die geprüfte
+1.8.0-PYZ ohne vorgeschaltetes Runtime-Result zu verwenden, die Spezifikation
+anzupassen und genau ein Offplan-Bundle an den bestehenden Watcher zu liefern.
+Die CLI-/Work-Detailentscheidung erfolgt im beauftragten Umfang gemäß
+SPECROAD-DECISION-1. Produktfortschritt bleibt **655/900**, nächster Produktcommit
+**15.n.R**; die vollständige noch offene Hin-/Rück-/Hostabnahme wird nicht vorgezogen.
+
+Basis: vollständig nativ geprüftes sauberes Result
+`specroad-apply_Result_180715_1101_8a1715.zip`, SHA-256
+`f9333169b5eb67a08a0b79f4332ae17bce4991f93a7ea70da71f6fb220bcd099`,
+HEAD `1411d04545449c9a0eaeb64cd38f5458db15853a`, Bundle 540 mit 6.420
+bestandenen Apply-Tests. Die nächste fällige Rotationsgruppe ist 2.
+
+Geprüfte Quellen: Spec Anhang W, aktive Adapter/CLI/Work-Verträge, originale
+1.4/1.6/1.7-Fixtures, PatchHarbor-dev-Commit
+`2121d3abd2ca4b6c523d9e0698d997a86581d5bc`, dessen öffentliche Runtime-/API-
+Dokumentation und offizieller lokaler Build. Die neue PYZ hat SHA-256
+`050cc2d1dc3ecbb1478f6a40c9a5123d1d34d350215d5cc0303025ea08dc4f1e`.
+Native Artefaktprüfung, offline API-/CLI-Exporte aus Wheel/sdist/PYZ, Bytegleichheit
+mit dem vorhandenen Kandidaten desselben Commits und passive Prüfung des
+aktuellen SpecRoad-Results wurden vor dieser Umsetzung auf Linux/CPython 3.14.4
+belegt. Dies ist kein SpecRoad-Verhaltenstest und keine vollständige CI-Matrix.
+
+Entscheidung: `--patchharbor-pyz` und `--patchharbor-pyz-sha256` sind explizite
+Pflichtpaare. `PatchHarborRuntime` bindet den direkten Pfad und
+`trusted_artifact_sha256`. Die geschlossene Work-Quellbindung verwendet
+`patchharbor_pyz_sha256`, die Aufgabenkennung `source-safe-outbound-pyz-v2`.
+Die vorherigen Optionen bleiben als historische Verträge dokumentiert und
+werden nicht zu Aliasen umgedeutet. Bestehende Daten werden nicht migriert.
+Ein neuer ausdrücklicher Export bleibt jederzeit möglich. Der öffentliche
+Resultreader und die tatsächlichen Projekt-Results bleiben Bestandteil des
+Rundwegs; die Kopplung zum Result als Codequelle entfällt vollständig.
+
+Alternativen: Result-Optionen als Alias verschleierten die geänderte Bedeutung
+alter Requests; Hostinstallation/pip machten die Codequelle umgebungsabhängig;
+Import direkt aus einer veränderbaren Eingabe gäbe die private Lazy-Import-
+Grenze auf. Gewählt ist eine explizit hashgebundene eigene Kopie mit bestehenden
+SpecRoad-Pfad-/Dateiprüfern und ausschließlich öffentlicher PatchHarbor-API.
+Norm, Tests und aktive Kataloghashes werden gemeinsam fortgeschrieben; Original-
+Fixtures und historische Evidence bleiben unverändert. Keine neue Requirement-ID,
+Produktposition, automatische Hostfreigabe oder zusätzliche Plattform entsteht.
+
+Echte aufeinanderfolgende Zustände im selben Bundle:
+
+- **TRANSPORT-PYZ-541.W:** vollständiger direkter Adapter, native 1.8.0-Fixture,
+  CLI/Selbstbeschreibung/Work/Hinexport, Spec 0.2.46, aktive Katalogbindungen und
+  positive/negative Import-, Snapshot- und Hinexportabnahmen.
+- **TRANSPORT-PYZ-541.R:** fortlaufender Besitz-/Rechteschutz der privaten Kopie,
+  Nachprüfung nach Imports, Unterbrechungs-/Austausch-/Capability-Grenzen und
+  alte Work-Vertragsabnahmen desselben Ausschnitts.
+- **TRANSPORT-PYZ-541.C:** Datei-/Importmechanik vom öffentlichen Adapter lösen,
+  gebundene Fakten zentral verwenden; keine neue Funktion oder Formatsemantik.
+
+Je Zustand vollständige geänderte Testdateien plus relevante Runtime-/Snapshot-,
+Hinexport-, Work-/Checkpoint-, CLI-/Distributionsregression als ungefilterte
+Pflichtauswahl. Apply vereinigt sie mit der aktuell gefilterten N=3-Gruppe,
+prüft einmal parallel und committet erst danach. Dev führt ausschließlich
+statische Prüfung, reine Collection und native Paketvalidierung aus. Historische
+Testnummern bleiben unverändert; neue Identitäten werden hinten ergänzt.
+
+Offen bis zu den tatsächlichen Gates: Apply-Verhaltensabnahme aller drei
+Zustände, reale CPython-Matrix in der ausschließlich vom Nutzer gestarteten CI
+und die übrigen Produktabnahmen aus 15.n.R/C, 15.o und späterer Rück-/Hostintegration.
+Keine automatische CI, kein Dienststart, kein eigener Apply oder Wiederholungsloop.
 
 ## OFF-PLAN RESTORE-TEST-FLOW-540 — Baseline-Inventur und Mapping-Bundle kürzen
 
@@ -33944,6 +34011,13 @@ CI-Workflow und Dienste bleiben unverändert.
 
 <a id="step-15-n"></a>
 ### 15.n – Gebundenes Hinpaket exportieren
+
+**Aktive Runtimevoraussetzung ab OFF-PLAN TRANSPORT-PYZ-541:** Für sämtliche
+weiteren aktiven Abnahmen gilt der direkte 1.8.0-Vertrag aus Spec W.1.1/W.2.1
+mit `--patchharbor-pyz`/`--patchharbor-pyz-sha256` und neuer Work-Quellbindung.
+Die nachfolgenden 1.6.0-/1.7.0- und Runtime-Result-Angaben in bisherigen
+Liefernachweisen sind historische Originalbelege, keine aktive Ladeanforderung.
+
 
 **Anforderungsbezug:** `SR-REQ-0733`–`SR-REQ-0734`, `SR-REQ-0737`.
 **Verifikationsbezug:** `SR-VER-0051`; primäre Fälle `SR-TC-0731` bis `SR-TC-0742` gemäß Anhang A.

@@ -7,11 +7,11 @@ import shutil
 import subprocess
 import sys
 
-from support.transport_runtime import envelope
+from support.transport_runtime import runtime_artifact
 
 
 ROOT = Path(__file__).resolve().parents[2]
-FIXTURE = ROOT / 'tests/fixtures/patchharbor170'
+FIXTURE = ROOT / 'tests/fixtures/patchharbor180'
 
 
 def child(root, body, *, source=None):
@@ -31,7 +31,7 @@ def register(root, repository):
     return child(root, '''
 import json, subprocess
 from pathlib import Path
-sys.path.insert(0, ''' + repr(str(FIXTURE/'patchharbor-1.7.0.pyz')) + ''')
+sys.path.insert(0, ''' + repr(str(FIXTURE/'patchharbor-1.8.0.pyz')) + ''')
 from patchharbor import api
 repo = Path(''' + repr(str(repository)) + ''')
 def git(*args):
@@ -46,11 +46,11 @@ print(json.dumps({'repo_id':str(context.repo_id),'base_commit':str(context.base_
 
 
 def request(root, project, artifact):
-    reference, digest = envelope(root, fixture=FIXTURE)
+    reference, digest = runtime_artifact(root)
     output = root/'output'; output.mkdir()
     return {'command_id':'bundle.create', 'options':{
         '--project':str(project), '--profile':['ai-runtime'], '--direction':'outbound',
-        '--runtime-reference':str(reference), '--runtime-reference-sha256':digest,
+        '--patchharbor-pyz':str(reference), '--patchharbor-pyz-sha256':digest,
         '--specroad-pyz':str(artifact), '--specroad-pyz-sha256':sha256(artifact.read_bytes()).hexdigest(),
         '--output-root':str(output), '--output':'handoff.zip', '--format':'json'}}
 

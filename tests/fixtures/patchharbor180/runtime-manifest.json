@@ -1,0 +1,27 @@
+{
+  "capability_host": {
+    "implementation": "CPython",
+    "machine": "x86_64",
+    "python": "3.14.4",
+    "system": "Linux"
+  },
+  "format_version": 1,
+  "integration_capabilities": {
+    "contract_version": 1,
+    "guarded_apply_contract_version": 1,
+    "safe_reference_contract_version": 1,
+    "snapshot_contract_version": 1
+  },
+  "marker": "patchharbor-runtime-release",
+  "runtime": {
+    "content_id": "f144df901034f6dd6b3211a2a6b5e613646fa1afb2f7ce19c75862a7a4c4bf21",
+    "filename": "patchharbor-1.8.0.pyz",
+    "profile": "patchharbor-core-no-watcher-v1",
+    "requires_python": ">=3.10",
+    "sha256": "050cc2d1dc3ecbb1478f6a40c9a5123d1d34d350215d5cc0303025ea08dc4f1e",
+    "size": 1049613
+  },
+  "source_commit": "2121d3abd2ca4b6c523d9e0698d997a86581d5bc",
+  "tag": "v1.8.0",
+  "version": "1.8.0"
+}

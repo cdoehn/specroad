@@ -3,15 +3,19 @@
 import re
 
 
-VERSION = '1.6.0'
-ARTIFACT_SHA256 = '377e715d7cb443eb5e80a3e7f9e8405f36092a0f7c062745b70c8b3a2e3eb055'
+VERSION = '1.8.0'
+ARTIFACT_SHA256 = '050cc2d1dc3ecbb1478f6a40c9a5123d1d34d350215d5cc0303025ea08dc4f1e'
 PYTHONS = ((3, 10), (3, 11), (3, 12), (3, 13), (3, 14))
 REQUIRES_PYTHON = '>=3.10'
-SAFE_VERSION = '1.7.0'
-SAFE_ARTIFACT_SHA256 = '00a08c96748d90629b52672f1a5e95f300371408871b8c11880d2a3f5bf0f6fb'
+PROFILE = 'patchharbor-core-no-watcher-v1'
+ARTIFACT_FILENAME = 'patchharbor-1.8.0.pyz'
+ARTIFACT_SIZE = 1049613
+MAX_ARTIFACT_BYTES = 16 * 1024 * 1024
+CONTENT_ID = 'f144df901034f6dd6b3211a2a6b5e613646fa1afb2f7ce19c75862a7a4c4bf21'
+SOURCE_COMMIT = '2121d3abd2ca4b6c523d9e0698d997a86581d5bc'
 SAFE_OPERATIONS = ('context', 'prepare_reference_export', 'repositories', 'configuration')
 OPERATIONS = ('bundle', 'inspect_patch', 'validate_patch', 'pack_patch', 'apply',
-              'integration_capabilities', 'read_result_snapshot')
+              'integration_capabilities', 'read_result_snapshot', 'export_runtime')
 
 
 def valid_digest(value):
@@ -24,15 +28,18 @@ def describe_distribution(source_sha256, *, loaded):
     return {
         'distribution': 'patchharbor', 'version': VERSION,
         'artifact_sha256': ARTIFACT_SHA256,
-        'profile': 'patchharbor-core-no-watcher-v1',
+        'profile': PROFILE,
+        'artifact_size': ARTIFACT_SIZE, 'content_id': CONTENT_ID, 'source_commit': SOURCE_COMMIT,
         'runtime_profile': 'python-present', 'requires_python': REQUIRES_PYTHON,
         'supported_cpython': ['%d.%d' % pair for pair in PYTHONS],
         'platform_profiles': ['linux-x86_64'],
-        'source_result_sha256': source_sha256,
+        'source_artifact_sha256': source_sha256,
+        'runtime_source': 'standalone_pyz',
         'api_capabilities': {name: True for name in OPERATIONS},
         'unavailable_capabilities': [],
         'integration_contract_version': 1,
         'snapshot_contract_version': 1,
+        'guarded_apply_contract_version': 1,
         'runtime_loaded': loaded,
         'capability_scope': 'pinned_distribution_contract',
         'full_reference_valid': False,

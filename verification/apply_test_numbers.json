@@ -22835,6 +22835,19 @@
     "tests/test_host_test_execution_right.py::test_unpartitioned_ci_evidence_also_binds_actual_host_resources[None]",
     "tests/test_host_test_execution_right.py::test_unpartitioned_ci_evidence_also_binds_actual_host_resources[nice]",
     "tests/test_host_test_execution_right.py::test_unpartitioned_ci_evidence_also_binds_actual_host_resources[workers]",
-    "tests/test_restore_invocation_options.py::test_argv_mapping_and_owned_request_have_identical_fresh_parameters[baseline]"
+    "tests/test_restore_invocation_options.py::test_argv_mapping_and_owned_request_have_identical_fresh_parameters[baseline]",
+    "tests/test_transport_pyz.py::test_direct_runtime_and_public_export_need_no_result_or_bootstrap",
+    "tests/test_transport_pyz.py::test_missing_standalone_runtime_is_not_discovered_or_installed",
+    "tests/test_transport_pyz.py::test_new_request_rechecks_its_own_artifact_before_reusing_a_loaded_runtime",
+    "tests/test_transport_pyz.py::test_older_standalone_pyz_is_rejected_even_with_its_correct_external_hash[1.4.0]",
+    "tests/test_transport_pyz.py::test_older_standalone_pyz_is_rejected_even_with_its_correct_external_hash[1.6.0]",
+    "tests/test_transport_pyz.py::test_older_standalone_pyz_is_rejected_even_with_its_correct_external_hash[1.7.0]",
+    "tests/test_transport_pyz.py::test_same_process_requests_reuse_only_the_checked_private_copy",
+    "tests/test_transport_pyz.py::test_standalone_runtime_rejects_unsafe_inputs_before_import[directory]",
+    "tests/test_transport_pyz.py::test_standalone_runtime_rejects_unsafe_inputs_before_import[fifo]",
+    "tests/test_transport_pyz.py::test_standalone_runtime_rejects_unsafe_inputs_before_import[hardlink]",
+    "tests/test_transport_pyz.py::test_standalone_runtime_rejects_unsafe_inputs_before_import[oversize]",
+    "tests/test_transport_pyz.py::test_standalone_runtime_rejects_unsafe_inputs_before_import[parent_link]",
+    "tests/test_transport_pyz.py::test_standalone_runtime_rejects_unsafe_inputs_before_import[symlink]"
   ]
 }

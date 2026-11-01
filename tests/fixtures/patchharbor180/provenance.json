@@ -1,0 +1,12 @@
+{
+  "fixture_scope": "Original canonical bytes. Historical 1.4/1.6/1.7 fixtures are preserved.",
+  "kind": "standalone-canonical-pyz",
+  "local_build_verified": true,
+  "published_release_verified": false,
+  "reference_candidate_manifest_sha256": "7101ba8465112aabb69b4a77381c209ab9f845d96ffb5c9d47705f719ddca159",
+  "runtime_manifest_sha256": "05bd2ce38ecde037d64516bbe22eda44395ed4a05a6c1745df0a05d87ad70811",
+  "same_commit_candidate_byte_identity": true,
+  "sha256": "050cc2d1dc3ecbb1478f6a40c9a5123d1d34d350215d5cc0303025ea08dc4f1e",
+  "source_commit": "2121d3abd2ca4b6c523d9e0698d997a86581d5bc",
+  "version": "1.8.0"
+}

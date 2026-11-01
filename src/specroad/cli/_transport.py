@@ -5,7 +5,7 @@ from .contracts import CommandClass, CommandUsageError, EffectScope, WorkContrac
 from .requests import CommandRequest
 
 
-RUNTIME_FLAGS = ('--runtime-reference', '--runtime-reference-sha256',
+RUNTIME_FLAGS = ('--patchharbor-pyz', '--patchharbor-pyz-sha256',
                  '--specroad-pyz', '--specroad-pyz-sha256')
 VARIANT_FLAGS = frozenset(('--profile', '--direction', '--runtime-profile', *RUNTIME_FLAGS))
 REQUIRED = frozenset(('--project', '--profile', '--direction', '--output', '--output-root', *RUNTIME_FLAGS))
@@ -30,23 +30,23 @@ def outbound_options(options):
     from ..model.errors import ModelError
     from ..transport.snapshots import TransportFailure
     try:
-        for name in ('--project', '--runtime-reference', '--specroad-pyz', '--output-root'):
+        for name in ('--project', '--patchharbor-pyz', '--specroad-pyz', '--output-root'):
             absolute(options[name])
         project_path(options['--output'])
     except (TransportFailure, ModelError, ValueError) as error:
         raise CommandUsageError('Explicit absolute inputs and a safe relative output are required') from error
-    if any(not valid_digest(options[name]) for name in ('--runtime-reference-sha256', '--specroad-pyz-sha256')):
+    if any(not valid_digest(options[name]) for name in ('--patchharbor-pyz-sha256', '--specroad-pyz-sha256')):
         raise CommandUsageError('Both external full runtime hashes are required')
     return True
 
 
 def outbound_contract(base):
     example = CommandRequest('bundle.create', {'--profile': ['ai-runtime'], '--direction': 'outbound',
-        '--project': '/project', '--runtime-reference': '/trusted/runtime-result.zip',
-        '--runtime-reference-sha256': '1' * 64, '--specroad-pyz': '/trusted/specroad.pyz',
+        '--project': '/project', '--patchharbor-pyz': '/trusted/patchharbor-1.8.0.pyz',
+        '--patchharbor-pyz-sha256': '1' * 64, '--specroad-pyz': '/trusted/specroad.pyz',
         '--specroad-pyz-sha256': '2' * 64, '--output-root': '/output', '--output': 'outbound.zip'})
     protocol = replace(base.protocol, example=example, handler_exit_codes=(*base.protocol.handler_exit_codes, 8),
-        diagnostic_codes=tuple(dict.fromkeys((*base.protocol.diagnostic_codes, 'CORE_USAGE'))), work=WorkContract('source_safe_outbound_export',
+        diagnostic_codes=tuple(dict.fromkeys((*base.protocol.diagnostic_codes, 'CORE_USAGE'))), work=WorkContract('source_safe_outbound_pyz_export',
         ('explicit_runtime_hashes', 'registered_repository', 'complete_project_and_receipts',
          'external_output', 'safe_reference_contract_1'), continuation_supported=True,
         external_side_effects=('external_work_directory',), checkpoint_algorithms=('work-manifest-segments-v1',)))
@@ -80,8 +80,8 @@ def create_outbound_command(invocation):
                 from ..work.transport import start
                 return start(invocation)
             export = OutboundExport(options['--project'], output_root=options['--output-root'],
-                output=options['--output'], runtime_reference=options['--runtime-reference'],
-                runtime_reference_sha256=options['--runtime-reference-sha256'],
+                output=options['--output'], patchharbor_pyz=options['--patchharbor-pyz'],
+                patchharbor_pyz_sha256=options['--patchharbor-pyz-sha256'],
                 specroad_pyz=options['--specroad-pyz'], specroad_pyz_sha256=options['--specroad-pyz-sha256'])
             yield 'loaded'
             export.prepare()
