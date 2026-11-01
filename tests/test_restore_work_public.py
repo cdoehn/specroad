@@ -4,10 +4,12 @@ import shutil
 import pytest
 
 from specroad.cli.application import execute, execute_request
+from specroad.cli.commands import builtin_registry
 from specroad.cli.invocation_context import InvocationContextBuilder
 from specroad.cli.requests import CommandRequest
 from specroad.cli.results import thaw
 from specroad.cli.result_schemas import validate_result_document
+from specroad.work.open_existing import open_restore_work
 from support.read_only import inventory, no_write_attempts
 from support.languages import small_restore_registry
 from support.restore import restore_case, plan_for
@@ -61,14 +63,28 @@ def test_planning_work_keeps_exact_original_and_delivers_full_plan(recorded, tmp
     assert first.exit_code == 8, str(thaw(first.details))
     assert first.continuation.claim.completed_units == 1
     completed_units = range(2, first.continuation.claim.total_units)
-    if (representation, kind) == ('mapping', 'baseline'):
+    if representation == 'mapping':
         # Keep the first public capture resume and both public final phases.
-        # argv-baseline below remains the full per-unit checkpoint reference.
+        # argv-project_bundle remains the full per-unit checkpoint reference.
         second = work('resume', location, representation=representation)
         assert second.exit_code == 8, second
         assert second.continuation.claim.completed_units == 2
         capture_pending_planning_units(location)
         completed_units = (first.continuation.claim.total_units - 1,)
+    elif kind == 'baseline':
+        # Exercise every Baseline source capture and both inventory boundaries.
+        tasks = open_restore_work(location, registry=builtin_registry()).read().entries('tasks')
+        source_units = sum(task['phase'] == 'source_capture' for task in tasks)
+        assert source_units > 1
+        assert all(task['phase'] == 'source_capture' for task in tasks[:source_units])
+        assert tasks[source_units]['phase'] == 'inventory_capture'
+        for completed in range(2, source_units + 2):
+            result = work('resume', location, representation=representation)
+            assert result.exit_code == 8, result
+            assert result.continuation.claim.completed_units == completed
+        capture_pending_planning_units(location, keep_last_inventory=True)
+        completed_units = (first.continuation.claim.total_units - 2,
+                           first.continuation.claim.total_units - 1)
     for completed in completed_units:
         result = work('resume', location, representation=representation)
         assert result.exit_code == 8, result
