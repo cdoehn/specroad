@@ -110,6 +110,16 @@ Teilimport/KeyboardInterrupt, alle vier Capability-Versionen sowie alte oder
 vermischte Work-Bindungen erhalten eigene echte Verhaltenstests. Dev hat diese
 nicht ausgeführt; die tatsächliche Abnahme erfolgt im R-Apply-Gate.
 
+**Vorbereiteter C-Zustand:** Exklusive Runtimekopie und fortlaufende Dateiprüfung
+liegen in `_runtime_files`; der öffentliche Adapter behält Auftrags-, Import-
+und Fähigkeitssteuerung. Die Größenbegrenzung stammt aus demselben gebundenen
+Vertrag. Die ungenutzte frühere Result-Bootstrap-Implementierung ist entfernt;
+der alte private Modulpfad enthält nur noch den historischen Stilllegungshinweis.
+Original-Resultate und deren geprüfte Helferbytes bleiben unverändert. Keine
+Dateilöschung oder zusätzlicher Payloadmechanismus wird benötigt. Die gleichen
+Tests und ihre Nummern gelten weiter; kein neues Fachverhalten, kein behaupteter
+Dev-Test- oder Apply-Erfolg.
+
 ## OFF-PLAN RESTORE-TEST-FLOW-540 — Baseline-Inventur und Mapping-Bundle kürzen
 
 Autorität: ausdrücklicher Nutzerauftrag vom 1. November 2026, beide zuletzt

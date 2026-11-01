@@ -16,6 +16,7 @@ from ..bundles.publication import _publish
 from ..model.paths import project_path as safe_project_path
 from ..model.canonical import canonical_json_bytes
 from ._core_artifact import core_artifact
+from ._contract import MAX_ARTIFACT_BYTES
 from ._export_boundary import authorize, binding, repository_root, pre_bootstrap_output
 from ._files import PassiveFile, absolute, directory, overlap, require
 from ._handoff import OutboundContainer, reference_runtime_member
@@ -50,7 +51,7 @@ class OutboundExport:
         require(allow_existing or not os.path.lexists(self.output.root / output), 'transport_output_exists', 6)
         self.core, self.core_identity = core_artifact(specroad_pyz, specroad_pyz_sha256)
         self.runtime_input = PassiveFile(patchharbor_pyz, expected_sha256=patchharbor_pyz_sha256,
-                                         limit=16 * 1024 * 1024)
+                                         limit=MAX_ARTIFACT_BYTES)
         self.observation = ProjectBundleSnapshot(self.project.root)
         self.workspace = None
         self.api = self.context = self.plan = None
@@ -60,7 +61,7 @@ class OutboundExport:
     def prepare(self, *, expected=None):
         require(self.api is None, 'transport_already_prepared', 6)
         self.verify_inputs()
-        # The only bootstrap writes are in a newly owned private child of the
+        # Runtime preparation writes only into a newly owned private child of the
         # caller's explicit external area. They are disclosed even on failure.
         self.workspace = Path(tempfile.mkdtemp(prefix='.specroad-outbound-', dir=self.output.root))
         self.effects['private_workspace'] = str(self.workspace)

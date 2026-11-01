@@ -5,7 +5,6 @@ import stat
 
 import pytest
 
-from support.portable import files_under
 from support.transport_runtime import (
     ROOT, ARTIFACT_SHA256, adapter_source, probe, runtime_artifact,
 )
