@@ -1,21 +1,21 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.46
+## Version 0.2.47
 
 | Feld | Wert |
 |---|---|
 | Dokument-ID | `SR-SPEC-0001` |
-| Dokumentversion | `0.2.46` |
+| Dokumentversion | `0.2.47` |
 | Zielrelease | `SpecRoad Single-Repository Workbench 0.2.0` |
 | Status | **Fachlich konsolidierte Arbeitsgrundlage; technische Reviewentscheidung gesondert dokumentiert, formale Baseline-Freigabe und Produktabnahme nicht durch dieses Dokument erklärt** |
-| Stand | 1. November 2026 |
+| Stand | 2. November 2026 |
 | Sprache | Deutsch; technische Feldnamen, Enum-Werte und CLI-Kommandos Englisch |
-| Fachliche Quelle | **Diese Repositoryfassung v0.2.46 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.46 liegt mit dieser Änderung nicht vor.** |
+| Fachliche Quelle | **Diese Repositoryfassung v0.2.47 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.47 liegt mit dieser Änderung nicht vor.** |
 | Bearbeitbare Satzquelle | Diese Datei; eine spätere PDF muss denselben versionierten Inhalt wiedergeben. |
-| Vorgängerversion | Repository-Spezifikation v0.2.45 vom 1. November 2026; historische Nachweise bleiben unverändert. |
-| Prüf- und Entscheidungsgrundlage | Ausdrücklicher Nutzerauftrag TRANSPORT-PYZ-541 vom 1. November 2026 nach Build und Prüfung der kanonischen PatchHarbor-1.8.0-PYZ; bestehende fachliche Entscheidungen und Nachweise bleiben erhalten. |
-| Änderungsart | TRANSPORT-PYZ-541: direkte, versions- und hashgebundene PYZ-Anbindung ohne Runtime-Result; explizite CLI- und Work-Bindungen; Produktplan unverändert. |
+| Vorgängerversion | Repository-Spezifikation v0.2.46 vom 1. November 2026; historische Nachweise bleiben unverändert. |
+| Prüf- und Entscheidungsgrundlage | Detailentscheidung TRANSPORT-OPEN-543, delegiert gemäß SPECROAD-DECISION-1 und dessen ausdrücklich erlaubtem Control-Vertrag 3; bestehende fachliche Entscheidungen und Nachweise bleiben erhalten. |
+| Änderungsart | TRANSPORT-OPEN-543: explizite Runtime-/Prüfbereichseingaben für Verify/Extract, vollständige Innenprüfung, dauerhafte Originalreferenzen und getrennte Ergebnisse; Umsetzung 15.o bleibt offen. |
 
-> **Verbindlicher Quellenwechsel:** Der ausdrückliche Nutzerauftrag TRANSPORT-PYZ-541 vom 1. November 2026 schreibt die Transport-Runtimebindung als v0.2.46 fort. Frühere PDF- und Reviewnachweise bleiben historisch gebunden; keine Produktfreigabe wird erklärt.
+> **Verbindlicher Quellenwechsel:** Die delegierte Detailentscheidung TRANSPORT-OPEN-543 vom 2. November 2026 schreibt den Öffnungsvertrag als v0.2.47 fort; die ausdrücklich getrennte 1.8.0-PYZ-Bindung bleibt erhalten. Frühere PDF- und Reviewnachweise bleiben historisch gebunden; keine Produktfreigabe wird erklärt.
 
 > **Fortbestehende Arbeitsprinzipien:** Weiche Budgets führen zu sparsamer vollständiger Weiterarbeit oder gesicherter Fortsetzung über mehrere Aufrufe beziehungsweise Prompts. Es werden keine erforderlichen Arbeiten stillschweigend ausgelassen. Reale Host-, Speicher-, Berechtigungs- und Sicherheitsgrenzen bleiben wirksam.
 
@@ -102,7 +102,7 @@ Bei einem Widerspruch innerhalb dieser Dokumentversion gilt:
 3. `SR-DEC-*` hat Vorrang vor erläuterndem Text, Diagrammen und Beispielen.
 4. Beispiele sind niemals normativ, sofern sie nicht ausdrücklich als Testvektor bezeichnet sind.
 5. Zwei widersprüchliche `SR-REQ-*`-Anforderungen besitzen **keine implizite Rangfolge** nach Nummer, Position oder Spezifität. Ein solcher Fund ist ein Spezifikationsfehler, muss als Issue gelöst werden und verhindert die Freigabe.
-6. Diese Dokumentversion 0.2.42 ersetzt die frühere fachliche Arbeitsgrundlage vollständig. Bis zur gesonderten PDF-Veröffentlichung ist diese versionierte Repositorydatei maßgeblich. Eine spätere PDF muss inhaltsgleich sein; frühere PDFs werden nicht als Nachweis der neuen Verträge ausgegeben. Inhalte verschiedener Fassungen dürfen nicht zu einer Mischspezifikation kombiniert werden.
+6. Diese Dokumentversion 0.2.47 ersetzt die frühere fachliche Arbeitsgrundlage vollständig. Bis zur gesonderten PDF-Veröffentlichung ist diese versionierte Repositorydatei maßgeblich. Eine spätere PDF muss inhaltsgleich sein; frühere PDFs werden nicht als Nachweis der neuen Verträge ausgegeben. Inhalte verschiedener Fassungen dürfen nicht zu einer Mischspezifikation kombiniert werden.
 7. Eine nachträgliche Änderung dieser veröffentlichten Datei erfordert mindestens eine neue Patch-Dokumentversion; stille Korrekturen unter derselben Dokumentversion sind unzulässig.
 8. Eine normative Tabelle, auf die eine `SR-REQ-*`-Anforderung ausdrücklich als Algorithmus oder Matrix verweist, ist Bestandteil des Passkriteriums dieser Anforderung.
 
@@ -6216,6 +6216,19 @@ Freigaben bleiben getrennt und uneingeschränkt. Umsetzung und Nachweise
 bleiben in 15.l.R offen; Produktstand 649/900 unverändert. Nur aktive
 Kataloghashbindungen werden fortgeschrieben.
 
+### 20.30 Öffnen gebundener Hinpakete v0.2.47
+
+`TRANSPORT-OPEN-543`, delegiert gemäß SPECROAD-DECISION-1 unter dem ausdrücklich
+erlaubten Control-Vertrag 3, schließt in W.4.1 die Runtime-/Prüfbereichseingaben,
+die vollständige native Innenprüfung, das dauerhafte Sandbox-Referenzinventar
+und die getrennten maschinenlesbaren Ergebnisse. Die direkte kanonische
+PatchHarbor-1.8.0-PYZ bleibt die einzige Codequelle; es gibt keinen Result-
+Bootstrap, impliziten Projektwrite oder Herkunfts-/Freigabeersatz. Bestehende
+Paketformate, Anhang-E-Verträge, menschliche Reviews und Originalnachweise
+bleiben erhalten. Umsetzung und Modul-/PYZ-/Offline-/Abbruchabnahmen bleiben
+in 15.o.W/R/C offen; Produktfortschritt bleibt 657/900. Der Dokumentcommit
+ist eine Spezifikationsklärung, kein Produkt- oder Release-Erfolgsnachweis.
+
 ## 21. Entscheidungsstatus und nicht blockierende Restpunkte
 
 | ID | Thema | Stand |
@@ -6258,6 +6271,7 @@ Die folgende Roadmap ist informativ und erzeugt keine Anforderungen an 0.2:
 
 | Version | Datum | Status | Änderung |
 |---|---|---|---|
+| 0.2.47 | 2026-11-02 | Delegiert gemäß SPECROAD-DECISION-1, Vertrag 3 | TRANSPORT-OPEN-543: geschlossene Verify-/Extract-Eingaben, expliziter privater Prüfbereich, vollständige Innenprüfung und originale Referenzhaltung; 15.o.W/R/C bleibt offen. |
 | 0.2.46 | 2026-11-01 | Ausdrücklicher Nutzerauftrag | TRANSPORT-PYZ-541: direkte kanonische PatchHarbor-1.8.0-PYZ statt Runtime-Result; externe Artefaktbindung, private Lazy-Imports und versionierter CLI-/Work-Vertrag; historische Resultdaten bleiben erhalten. |
 | 0.2.45 | 2026-11-01 | Ausdrücklicher Nutzerauftrag | APPLY-ONLY-535: Dev bereitet Testpläne vor; Apply prüft je Commit N=3 plus Pflichtauswahl, misst dauerhaft und erhält Teilfortschritt für gebundene Korrekturbundles. |
 | 0.2.43 | 2026-10-31 | Ausdrücklicher manueller Nutzerauftrag | TRANSPORT-SAFE-531: versions-/hashgebundene PatchHarbor-1.7.0-Core-PYZ, sichere öffentliche Referenzerzeugung, Betriebsgrenzen und Fehlererhaltung; 15.n.W und externe Abnahmen bleiben offen. |
@@ -9646,7 +9660,9 @@ geprüfte PatchHarbor-PYZ; er verlangt dafür kein Result. Ein im Hinpaket
 mitgeliefertes Artefakt muss vor seiner ausdrücklichen Bereitstellung dieselbe
 Vertrauens- und Hashprüfung erfüllen. Projektpfade dürfen keine Module unterschieben.
 
-`bundle verify --profile ai-runtime` verändert keine Projekt- oder Runtimepfade.
+`bundle verify --profile ai-runtime` verändert keine Projektpfade, Runtimeeingaben
+oder veröffentlichten Sandboxpfade. Der ausdrücklich angeforderte neue externe
+Prüfbereich nach W.4.1 ist davon getrennt; es gibt keine impliziten Betriebswrites.
 `bundle extract --profile ai-runtime` prüft zuerst das vollständige Hinpaket,
 Result und Projektbundle und veröffentlicht anschließend ausschließlich einen
 neuen Zielroot mit getrennten `runtime/`, `reference/` und `project/`-Bereichen.
@@ -9662,6 +9678,200 @@ Die KI bedient das Projekt über die vorhandene SpecRoad-CLI, erzeugt und prüft
 Proposals und erhält keine menschliche Freigabekompetenz. Ein neuer Prozess oder
 Sandboxpfad benötigt keinen alten Chat-/Prozesszustand. Work-Fortsetzung bleibt
 ein gesonderter, nach Anhang P geprüfter Vertrag.
+
+### W.4.1 Geschlossener Öffnungsvertrag (TRANSPORT-OPEN-543)
+
+Diese Detailentscheidung konkretisiert 15.o unter SPECROAD-DECISION-1.
+Das Hinformat aus W.2.1 und die direkte 1.8.0-Codequelle aus W.1.1 bleiben
+unverändert. Die folgenden Varianten bedienen ausschließlich vollständige
+`outbound`-Pakete mit `runtime_profile=python-present`; sie sind weder
+Rückpaketannahme noch Proposalübernahme oder Projektmigration.
+
+**Aufruf und ausdrücklich gewählte Betriebsgrenze.** Die Command-IDs bleiben
+`bundle.verify` und `bundle.extract`. Beide Varianten verlangen genau einmal
+`--profile ai-runtime` und das vollständige Pflichtpaar `--patchharbor-pyz` /
+`--patchharbor-pyz-sha256` nach W.1.1. Zusätzlich ist
+`--runtime-workspace <NEUER-EXTERNER-PFAD>` erforderlich. Dies bezeichnet einen
+noch nicht vorhandenen privaten Prüfbereich unter einem vorhandenen, sicher
+geprüften Elternverzeichnis; es ist eine ausdrücklich angeforderte externe
+Betriebsausgabe im Sinne von 11.7, kein Projekt-, Runtimeeingabe- oder Work-Root.
+
+```text
+specroad bundle verify <HINPAKET>
+  --profile ai-runtime
+  --patchharbor-pyz <VERTRAUENSWÜRDIGE-PATCHHARBOR-PYZ>
+  --patchharbor-pyz-sha256 <HEX>
+  --runtime-workspace <NEUER-EXTERNER-PRÜFBEREICH>
+  [--expected-sha256 <HEX>]
+
+specroad bundle extract <HINPAKET>
+  --profile ai-runtime
+  --patchharbor-pyz <VERTRAUENSWÜRDIGE-PATCHHARBOR-PYZ>
+  --patchharbor-pyz-sha256 <HEX>
+  --runtime-workspace <NEUER-EXTERNER-PRÜFBEREICH>
+  --output <NEUER-ODER-LEERER-SANDBOXROOT>
+  [--expected-sha256 <HEX>]
+```
+
+Paket, PYZ, Prüfbereich und gegebenenfalls Ziel sind explizite absolute Pfade
+ohne Traversal, Links oder Sonderdateien; Hardlinks sind keine gültigen
+Paket-/PYZ-Eingaben. Die vorhandenen stabilen Dateileser und Rootgrenzen gelten.
+Der Prüfbereich liegt außerhalb eines vorhandenen SpecRoad-Projektroots und
+des Sandboxziels; er überlappt keine Eingabe. Fehlende oder widersprüchliche
+Optionen, zusätzliche Profile, `--direction`, `--runtime-profile`,
+`--specroad-pyz`, Projekt-/Scope-/Konfigurations-/Proposal-/Referenzselektoren,
+`--output-root`, die alten Runtime-Resultoptionen und `--work-dir` sind in
+diesen Varianten Nutzungsfehler vor jeder Wirkung. `verify` erlaubt kein
+`--output`. Die bestehenden Darstellungsoptionen behalten ihre Bedeutung.
+Ein Aufruf ohne Transportvariante behält vollständig den Anhang-E-Vertrag;
+transportbezogene Optionen allein wählen keine implizite Variante.
+
+`verify` bleibt `read_only` mit `input_read`-Preflight, `extract` bleibt
+`root_creation` mit entsprechendem Preflight und Bootstrap-Lock. Beide brauchen
+weder Projektwahl noch Git. Beschreibung und Preflight nennen den ausdrücklich
+gewählten privaten Prüfbereich und die beiden passiven Eingaben; sie erzeugen
+selbst keine Datei und laden keine PatchHarbor-Runtime. Der Prüfbereich ist
+kein Anhang-P-Auftrag und erteilt keine Wiederaufnahme- oder Suchbefugnis.
+Allgemeine Budgetregeln aus O bleiben erhalten; ein Budget darf keine Prüfung
+entfallen lassen und keinen Teilerfolg als fertiges Öffnen melden.
+
+**Vertrauen, Code und vollständige Prüfung.** Der Befehl MUSS zuerst die
+stabil aufgenommenen äußeren Bytes nach E.2/W.2.1 prüfen: Pfade, Typen, Limits,
+geschlossene kanonische Manifestfelder, exakte Payloadbijektion, alle Größen
+und Hashes sowie die selbstreferenzfreie Paket-ID. Ein angegebener äußerer
+Erwartungshash MUSS passen. Er authentifiziert keine Person und erteilt keine
+Fachfreigabe. Ohne diesen Hash bleibt `external_hash_verified=false`.
+
+Vor einem Import werden Host/Python und die explizite standalone PYZ nach
+W.1.1 geprüft. Die mitgelieferte SpecRoad-PYZ bleibt passive Eingabe: Ihre
+vollständige Payload, Version und nachgerechnete Buildidentität MÜSSEN zur
+bereits vertrauenswürdigen laufenden Modul-/PYZ-Distribution passen, nach
+demselben Identitätsvertrag wie W.2.1. Ihr Buildrecord wird nicht ausgeführt.
+Eine andere SpecRoad-Distribution wird nicht allein wegen eines passenden
+äußeren Hashes geladen oder still migriert. Das erhält die bereits gebundene
+Codevertrauensgrenze auch beim optionalen äußeren Erwartungshash.
+
+Erst nach diesen passiven Vorprüfungen darf der ausdrücklich angeforderte
+Prüfbereich exklusiv entstehen. Er enthält ausschließlich die geprüfte private
+Runtimekopie nach W.1.1 und eigene passive Prüfdateien, insbesondere die
+unveränderten Resultbytes für die pfadbasierte öffentliche Snapshot-API.
+Verzeichnisse haben POSIX 0700, private Dateien 0600. Eingaben, vorhandene
+Runtimeverteilungen und Projekt-/Sandboxpfade bleiben dabei unverändert.
+Es gibt keinen Import direkt aus `reference/result.zip`, keine Runtimegewinnung
+aus diesem Result als Voraussetzung des Imports und keinen Hostimportfallback.
+Nur die ausdrücklich getrennt gelieferte und gebundene PYZ liefert PH-Code.
+
+Die vollständige innere Resultprüfung MUSS über
+`api.read_result_snapshot(..., expected_sha256=...)` erfolgen. Ein eigener
+Resultreader oder eine bloße Manifest-/Bootstrapprüfung ersetzt sie nicht.
+Result-SHA, alle vier nativen Zustandsbindungen und die native Runtimebindung
+müssen mit `handoff.json` übereinstimmen. Der tatsächlich gebundene innere
+Runtime-Member muss bytegleich zur separaten 1.8.0-PYZ sein; er wird als Daten
+geprüft, nicht als alternative Codequelle benutzt.
+
+`project/project.zip` MUSS vollständig nach Anhang E geprüft werden. Zulässig
+ist ausschließlich dessen geschlossene, unkonfigurierte, schreibbare
+Vollprojektvariante mit portablen Receipts nach W.2.1. Projekt-ID,
+Scope Descriptor, Ursprungs- und Bundlemodellwurzel müssen auch mit dem äußeren
+Manifest übereinstimmen. Seine tatsächlichen normativen Ressourcen und
+Receiptbytes müssen exakt die entsprechende vollständige Projektprojektion
+unter `project_path` im nativ rekonstruierten Effective-Inventar bilden.
+Die vorhandene Modell-/Closureauswahl bestimmt die erforderlichen Ressourcen;
+ein bloßer Hashvergleich zweier ungeprüfter Deklarationen genügt nicht.
+Fehlende Ressourcen, zusätzliche normative Projektpayloads, fremde Receipts,
+partielle Herkunft oder offene Transaktionen werden nach W.3.1 verweigert.
+Sonstige Repositorydateien werden weder ausgeführt noch als Projekt kopiert.
+
+Ein erfolgreicher Verify-Befund setzt alle diese Gates voraus. Es gibt keinen
+positiven Ersatzbefund nur für die äußere ZIP, wenn Runtime oder innere Prüfung
+fehlen. Ohne äußeren Erwartungshash ist dies weiterhin eine vollständige
+Datenintegritätsprüfung mit separat gebundenem vertrauenswürdigem Prüfcode,
+keine behauptete Herkunft des Projektinhalts. Kein Befehl lädt Projektmodule.
+Quellen, private Kopie und Verzeichnisidentitäten werden vor Wiederverwendung,
+vor erstem Zielwrite und unmittelbar vor Erfolg erneut geprüft. Veränderungen
+führen zu Fehler, nicht zu Neuaufnahme, Rebinding oder automatischem Retry.
+
+**Dauerhafte Sandbox und Bootstrap.** Erst nach vollständiger Prüfung darf
+`extract` sein fehlendes oder leeres Ziel nach 11.7 erzeugen. Die folgende
+Nutzlast wird unter genau einem Sandboxroot veröffentlicht:
+
+| Relativer Pfad | Unveränderter Inhalt beziehungsweise Bedeutung |
+|---|---|
+| `runtime/specroad.pyz` | Vollständig geprüfte Originalbytes des äußeren Runtime-Members. |
+| `runtime/patchharbor-1.8.0.pyz` | Originalbytes der separat geprüften PYZ; zuvor nachgewiesen bytegleich zum nativen Result-Member. |
+| `reference/outbound.zip` | Byteidentisches vollständiges Eingangs-Hinpaket; maßgeblicher späterer `--reference`-Eingang nach W.5. |
+| `reference/result.zip` | Byteidentisches inneres Originalresult; seine Bindung wird niemals aus dem später veränderten Projekt neu abgeleitet. |
+| `project/` | Vollständig geprüfter Projektpayload samt ursprünglichem `bundle-manifest.json`, portablen Originalreceipts und den bestehenden lokalen Extraktionsnachweisen nach Anhang E. |
+
+Transport-/Runtimebytes und der äußere Bootstrapnachweis gehören nicht in die
+Modellwurzel. Ein zweites frei interpretierbares Referenzmarkerformat wird
+nicht eingeführt. Die originalen ZIPs bleiben die nachzuprüfende Referenz;
+ihre Kopie allein ist keine Freigabe. Ein späterer Prozess oder verschobener
+Sandboxpfad prüft die Originalbytes erneut, ohne alte Chat-, Prozess- oder
+Hostpfade vorauszusetzen. Runtimeausführung erfolgt weiterhin ausdrücklich
+über Python; Entpacken startet weder die kopierte SpecRoad-PYZ noch Projektcode.
+Historische Receipts behalten ihre Bytes und die Anhang-E-Wirkung, insbesondere
+keine Übernahme alter Root-/Inodewerte als aktuelle lokale Schreibberechtigung.
+
+Die Veröffentlichung verwendet die vorhandenen deskriptorgebundenen
+Root-Erzeugungs-, Journal- und No-Replace-Primitiven. Ihr eigener Bootstrap-
+Nachweis bindet mindestens die äußere Paket-SHA, die vollständige geplante
+Pfad-/Byteinventur und die tatsächlichen Besitz-/Dateiidentitäten. Er ersetzt
+keine Eingangsprüfung. Fremde oder geänderte Ziele werden nie überschrieben.
+Nach Abbruch darf nur der gleiche, erneut vollständig geprüfte Paketauftrag
+die belegten eigenen Bootstrapdaten abschließen oder zurückrollen; unbekannte
+oder geänderte Daten sperren die Wiederherstellung. Vollständig veröffentlichte
+Sandboxes sind belegte Ziele, kein stiller Wiederholungsauftrag. Die getrennten
+Anhang-E-Nachweise des Projektbereichs bleiben gültig und unabhängig prüfbar.
+
+Prüfbereiche sind ausschließlich dem jeweiligen Aufruf zugeordnet. Sie bleiben
+nach dem Aufruf als tatsächlich ausgewiesene private Betriebsdaten erhalten;
+fehlgeschlagene Imports oder Teilbytes werden weder als wiederverwendbarer
+Cache noch als Autorisierung zur automatischen Bereinigung behandelt. Ein neuer
+Aufruf benennt einen neuen Prüfbereich. Erhaltene Runtimekopien dürfen nur
+während desselben Prozesses und unter den vollständigen W.1.1-Nachprüfungen
+verwendet werden. Eine spätere Bereinigung braucht einen eigenen Auftrag und
+darf keine fremden Inhalte entfernen. Fehlender Platz oder fehlende Rechte
+werden als Fehler ausgewiesen, nicht durch einen unbenannten Temp-/Projektpfad
+umgangen. Das Sandboxziel wird nach Fehlern gemäß seinem eigenen Bootstrap-
+Journal erhalten oder zurückgerollt; der Prüfbereich erweitert diese Befugnis nicht.
+
+**Maschinenlesbare Ergebnisse.** Das bestehende Command-Envelope bleibt
+unverändert. Die Varianten verwenden separate geschlossene Ergebnisschemas
+`ai-runtime-verify-v1` und `ai-runtime-extract-v1`; die bisherigen
+`bundle-verify-v1`-/`bundle-extract-v1`-Schemas bleiben unverändert.
+Beide Erfolgsschemas enthalten genau die folgenden gemeinsamen Pflichtfelder:
+
+| Feld | Vertrag |
+|---|---|
+| `format_version` | Der jeweilige neue Schemaname. |
+| `file` | Exakt `size` als nichtnegative Ganzzahl und `sha256` der vollständigen äußeren ZIP. |
+| `manifest` | Das vollständig geprüfte geschlossene W.2.1-Manifest mit tatsächlichen Originalwerten. |
+| `validation_scope` | Exakt `ai_runtime_outbound_complete`. |
+| `container_verified`, `full_reference_valid`, `model_root_verified`, `closure_verified`, `runtime_binding_verified` | Jeweils exakt `true`, erst nach den zugehörigen vollständigen Prüfungen. |
+| `external_hash_verified` | Boolean; genau dann `true`, wenn ein externer äußerer Erwartungshash angegeben und geprüft wurde. |
+| `runtime_source` | Exakt `standalone_pyz`; kein Result als Codequelle. |
+| `runtime_workspace` | Der tatsächlich verwendete absolute private Prüfpfad, ausschließlich im lokalen Ausgabeergebnis. |
+| `creator_authenticated`, `approval_granted`, `full_semantic_validation`, `write_authorized` | Jeweils exakt `false`; das Paket verleiht keine fachlichen Freigaben oder Schreibrechte. |
+
+Nur Extract enthält zusätzlich genau `sandbox_root` und `project_root` als
+tatsächliche absolute Zielpfade, `bootstrap_state` mit Wert `complete`,
+`files` als nach relativem Pfad sortierte Liste der veröffentlichten Nutzdateien
+mit exakt `path`, `size`, `sha256`, sowie `directories` als sortierte Liste ihrer
+relativen Verzeichnisse. Betriebsjournale werden separat als Betriebsdaten
+ausgewiesen und nicht als ursprüngliche Paketnutzlast ausgegeben. Ein Extract-
+Erfolg bedeutet vollständige Root-Erzeugung, weder Proposalempfang noch Apply.
+Falsche Typen, zusätzliche Felder und verkürzte Hashes sind unzulässig.
+
+Fehler bleiben im bestehenden Command-Fehlerenvelope mit konkretem `reason`
+und, soweit vorhanden, ursprünglichen öffentlichen PH-Fehlerfakten. Exitcodes
+folgen 11.8/W.6: Optionen/Fähigkeiten 2, ungültige Daten 3, I/O/Host/Recovery 5,
+Hash-/Quellwechsel/Zielkonflikte 6, Sicherheitsverweigerung 7. Es gibt keinen
+erfolgreichen Teilstatus im Erfolgsschema. Tatsächlich erzeugte Prüf-/Bootstrap-
+Pfadbelege und ein möglicher Teilzustand werden im Fehlerbefund ausgewiesen.
+Diese Präzisierung ist eine Sollvorgabe; Umsetzung und reale Modul-/PYZ-,
+Offline-, Receipt-, Negativ- und Abbruchnachweise bleiben 15.o.W/R/C zugeordnet.
+
 
 ## W.5 Rückexport, Transportübernahme und fachliche Freigabe
 
@@ -9792,4 +10002,4 @@ Implementierungsschritten nachgewiesen sein.
 
 ---
 
-**Ende der SpecRoad-Produktspezifikation v0.2.46.**
+**Ende der SpecRoad-Produktspezifikation v0.2.47.**

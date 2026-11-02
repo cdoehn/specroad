@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 47 · **Stand:** 1. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.46
+**Planrevision:** 48 · **Stand:** 2. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.47
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 Schritte und 900 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; die ausdrücklich genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wird nach 10.7.10 innerhalb von 15.l.R vorgezogen. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -9,7 +9,7 @@ Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 S
 
 Fachliche Grundlage ist [`docs/specification/SpecRoad_Spezifikation.md`](../specification/SpecRoad_Spezifikation.md), einschließlich aller konsolidierten Korrekturen, 742 Requirements, 51 Verifikationsverträge, 46 Szenario-/E2E-Identitäten sowie R-01 bis R-75, Anhang U und den PatchHarbor-Rundweg aus Anhang W. Der [`Prüfbericht`](../reviews/SpecRoad_v0.2.7_Implementierungsreife_Pruefbericht.md) ist ein vorgelagerter Entwurfsreview, kein späterer Produktnachweis.
 
-Gebundene Spezifikations-SHA-256: `c1f48fcdaeefdf868e7b59d0e16e755bc268d83b9e8e45c83849d30ba7a21933`.
+Gebundene Spezifikations-SHA-256: `e59010a6c6a2ba8e8eff3381d3755353b441810e9cd05d3f2cdc2177965ee4a7`.
 Planungsbasis: Commit `fe2661d02ecf2f7eb483b58a4487eb009c6b3846`; sauberes Result-Bundle `specroad_Result_120209_0914_df3504.zip`; Repository-ID `3d2576df-d611-46fc-9d2b-92869468aaca`. Diese Angaben dokumentieren die Entstehung des Plans, nicht die zukünftige Patchbindung. **Jedes spätere Patchpaket bindet den dann aktuellen tatsächlichen Result-Zustand.**
 
 Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 2026 gelten zusätzlich und bei den nachfolgend benannten Konflikten vorrangig. Sonstige normative Spezifikationsinhalte werden nicht stillschweigend abgeschwächt. Neue fachliche Widersprüche, fehlende zwingende Angaben und Sicherheitsprobleme sind offen zu benennen, nicht durch erfundene Annahmen oder Scheinerfolge zu lösen.
@@ -32,6 +32,40 @@ Ketten erfordert erst den belegten erfolgreichen normalen Abschluss.
 Produktfreigaben und die Grenzen aus 2.4.1/2.4.2/2.4.4 bleiben unverändert.
 Dieser Plan ändert keine alten Aufträge, Antworten, Blockaden oder
 Laufzeitdaten und ist keine Start-/Resume-Anweisung.
+
+## OFF-PLAN TRANSPORT-OPEN-543 — Öffnungsvertrag präzisieren
+
+Maßgebliche technische Basis: vollständig nativ geprüftes Result
+`specroad-apply_Result_071220_1102_9a204a.zip`, SHA-256
+`95b7fada43879e3eba6bec68d034f83c4f74a0c02aee4c42ccd42a047c9cb522`,
+sauberer HEAD `e5dd00bab638b002a2c6dba58413451dfda0c480`.
+Bundle 542 schloss die echten Commits 15.n.R und 15.n.C mit 7.123 und 7.133
+bestandenen Apply-Tests ab. Das sind gefilterte Gruppen plus Pflichtauswahl,
+kein Vollsuite-, Offline-Rundweg- oder Plattformfreigabenachweis.
+
+Der folgende Dokumentzustand enthält genau einen OFF-PLAN-Commit:
+`TRANSPORT-OPEN-543` mit Nachricht
+`OFF-PLAN TRANSPORT-OPEN-543 docs(spec): Sandbox-Öffnungsvertrag präzisieren`.
+Entscheidungsbeleg, Alternativen und sämtliche offenen W/R/C-Abnahmen stehen
+bei 15.o. Die normative Regel ist Spec 0.2.47/W.4.1. Produktfortschritt bleibt
+**657/900**, nächster Produktcommit **15.o.W**. Keine Checkbox von 15.o wird
+geschlossen. Die neue Bundlenummer gilt erst nach erfolgreichem Apply-Gate
+und tatsächlichem Dokumentcommit; Log und Commitpräfix bleiben maßgeblich.
+
+Geändert sind nur Spezifikation, Plan und die 743 aktiven Spezifikationshash-
+Bindungen im Katalog. Produktcode, Tests, Fixtures, Oracles, Testnummern,
+Runner, Messhistorie und alte Evidence bleiben bytegleich. Dev führt keine
+Tests aus. Reine Collection/Katalogprüfung und native Paketvalidierung sind
+keine Verhaltensabnahme. Apply prüft einmal seine fällige gefilterte Gruppe
+**1 von 3** plus die ungefilterte, begründete maschinenlesbare Katalog-Pflicht-
+auswahl; erst danach erfolgt der Commit. Hostabhängige Worker/Nice-Regeln
+bleiben erhalten. Keine automatische CI und kein Dienststart.
+
+Diese Übergabe ist `spec_clarification` nach SPECROAD-DECISION-1-V3 und dem
+aktuellen Control-Vertrag 3 mit Restbudget 3/3. Sie erneuert das Budget nicht,
+startet kein Apply und erlaubt keine eigene Folgeschleife. Nach der einen
+atomaren Exchange-Übergabe endet der Auftrag; erst Control beauftragt auf dem
+zugehörigen geprüften Result die vollständige 15.o-Umsetzung.
 
 ## PLAN 15.n.R/C — Hinexport vervollständigen (Bundle 542)
 
@@ -689,12 +723,12 @@ Kein offener Produktplanschritt wird durch diese Testoptimierung abgeschlossen.
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 47
+plan_revision: 48
 implementation_plan_commits_total: 900
 implementation_plan_commits_completed: 657
 last_completed_plan_commit: 15.n.C
 next_plan_commit: 15.o.W
-last_completed_numbered_bundle: 542
+last_completed_numbered_bundle: 543
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -34479,12 +34513,119 @@ GitHub-Workflow, lokale AGENTS oder historische Messbaseline werden geändert.
 
 **Zusätzliche Voraussetzung:** Dieser Meilenstein liefert den Hinweg. Der Rückexport wird erst nach 18.q und lokale Proposalübernahme erst nach 18.r als verfügbar angeboten; die Gesamtfreigabe folgt M20.
 
+**Entscheidungsbeleg TRANSPORT-OPEN-543 — 2. November 2026.**
+
+Autorität: **delegiert gemäß SPECROAD-DECISION-1**, insbesondere 2.4.1–2.4.3
+und die ausdrückliche Projektfreigabe SPECROAD-DECISION-1-V3. Der aktuelle
+Control-Vertrag 3 erlaubt eine Klärung (`clarification_allowed=true`,
+Restbudget 3/3). Dies ist keine persönliche Einzelentscheidung oder fingierte
+menschliche Freigabe; Control erteilt selbst keine fachliche Befugnis.
+
+**Genaue Lücke und geprüfte Quellen.** Das native Result von Bundle 542,
+SHA-256 `95b7fada43879e3eba6bec68d034f83c4f74a0c02aee4c42ccd42a047c9cb522`,
+bestätigt 15.n.R/C. Sein vollständiger Snapshot entspricht den gelieferten
+Zuständen. Maßgeblich sind Spec 0.2.46, W.1.1/W.2.1/W.4/W.5, 11.7,
+Anhang E/N/O, SR-REQ-0735/0736/0741/0742 und der unverändert offene Schritt 15.o.
+Gelesen wurden auch die aktiven CLI-/Ergebnisschemas, `PatchHarborRuntime`,
+dessen privater Dateischreiber, die bestehenden Bundle-Verifikations-/
+Extraktions- und Receiptmechanismen sowie die öffentliche API in der exakt
+gebundenen 1.8.0-PYZ. Deren `read_result_snapshot` nimmt einen Dateipfad,
+keinen äußeren ZIP-Member oder Bytestring. Der vorgeschriebene direkte
+Runtimeadapter erzeugt vor dem Import eine eigene private Kopie.
+
+W.4 bestimmt Ziel und Gates, aber noch nicht die separaten Runtimeeingaben
+von Verify/Extract, den dafür ausdrücklich autorisierten externen Prüfbereich,
+das genaue dauerhafte Referenzinventar oder den maschinenlesbaren Varianten-
+Erfolg. Ohne Entscheidung würde die Umsetzung diese öffentlich sichtbaren
+Details erfinden; ein Import aus dem Result widerspräche dem Nutzerauftrag
+TRANSPORT-PYZ-541. Ein bloßer äußerer Integritätsbefund wäre keine vollständige
+native Resultprüfung. W.5 benötigt später das Originalhinpaket, nicht nur
+kopierte Bindungsmarker. Dies ist eine fachliche Vertragslücke, keine Teilung
+wegen Laufzeit, Modellkapazität oder Umfang des vollständigen 15.o-Schritts.
+
+**Alternativen und Entscheidung.**
+
+| Alternative | Bewertung |
+|---|---|
+| Runtime aus dem Result entnehmen und als Importquelle benutzen | Verworfen: widerspricht der ausdrücklich getrennten PYZ-Codequelle; äußerer Selbsthash ist kein neuer Vertrauensbeleg. |
+| Hostinstallation, implizites Tempverzeichnis oder Import direkt aus dem Eingabepfad | Verworfen: ungebundene Herkunft beziehungsweise nicht offengelegte Writes oder Aufgabe der privaten Lazy-Import-Grenze. |
+| Eigener Resultreader oder positive äußere Teilprüfung ohne native Innenprüfung | Verworfen: umgeht W.1/W.4 und bietet die zugesagte vollständige Prüfung nicht an. |
+| Explizite standalone PYZ plus eigener expliziter externer Prüfbereich; native Innenprüfung; originale Referenz-ZIPs dauerhaft behalten | Gewählt: verwendet vorhandene Grenzen und öffentliche API, macht notwendige Betriebswrites sichtbar und hält Projekt-/Runtimeeingaben unverändert. |
+
+**Normative Lösung.** Spec 0.2.47/W.4.1 schließt die beiden Varianten:
+`--patchharbor-pyz` und `--patchharbor-pyz-sha256` wie beim vorhandenen Adapter,
+zusätzlich `--runtime-workspace` als neuer ausdrücklich ausgewählter privater
+Prüfbereich. Kein Result-Bootstrap, kein impliziter Cache, kein Projektwrite
+bei Verify. Optionale äußere Hashbindung bleibt optional; die getrennte PH-PYZ
+und die vollständige Übereinstimmung des passiven Core-Payloads mit der laufenden
+vertrauenswürdigen Distribution sichern unabhängig davon den Prüfcode.
+Alle äußeren/inneren Prüfungen und der vollständige Ressourcen-/Receiptabgleich
+bleiben Pflicht. Extract bewahrt Originalhinpaket und Originalresult getrennt
+vom materialisierten Vollprojekt. Eigene geschlossene Varianten-Ergebnisschemas
+verhindern eine Änderung vorhandener Anhang-E-Schemas oder falsche Applyaussagen.
+
+**Abgleich mit sämtlichen Delegationsgrenzen aus 2.4.1.**
+
+1. Umfang bleibt genau das Öffnen nach 15.o; Rückexport 18.q, Empfang 18.r und
+   Gesamtfreigabe M20 bleiben offen. Keine zusätzliche Produktposition.
+2. Die Lösung verbindet die reale pfadbasierte öffentliche API mit dem
+   bestehenden privaten Runtimeadapter und den Root-/Receiptmechanismen.
+   Es gibt keinen gleichrangigen Requirement-Konflikt und keine neue PH-Fähigkeit.
+3. Klassen, Modellclosure, Vollprüfungen, menschliche Reviews, Fail-closed-
+   Grenzen und Datenintegrität bleiben erhalten. Der explizite externe
+   Prüfbereich ist die bereits in 11.7 erlaubte externe Ausgabe, keine stille
+   Erweiterung der Projekt-/Runtimeeingabeschreibrechte. Gewöhnliche Bundles,
+   das äußere v1-Hinformat und vorhandene Export-/Work-Aufträge bleiben kompatibel.
+4. Die versionierte additive Detailregel lässt sich durch eine spätere
+   ausdrückliche Dokumentänderung ersetzen. Originalpakete, bestehende Daten,
+   Historie und Nachweise bleiben bytegleich; kein Reset oder Löschen wird erlaubt.
+5. Die tatsächlich gelieferte 1.8.0-API wurde passiv gelesen. Es werden weder
+   externe Fähigkeiten noch eine Plattformabnahme, Testerfolge oder menschliche
+   Fachentscheidungen angenommen. Die nötigen Verhaltensnachweise bleiben offen.
+
+**Abnahmen des unverändert vollständigen 15.o-Umfangs.**
+
+- W: Native echte Hinpakete über Modul und PYZ mit getrennt gelieferter PH-PYZ
+  in frischer Linux-x86-64-Sandbox öffnen; kein Git/Shell/Netzwerk/Installer.
+  Verify verändert Eingaben und Projekt nicht; nur der ausdrücklich gewählte
+  private Prüfbereich entsteht. Alle Schemafakten, Original-ZIP-SHAs,
+  Ressourcen, Projekt-/Modellidentität und portable Receiptwirkungen werden
+  unabhängig erwartet. Verify/Extract auch ohne optionalen äußeren Hash;
+  dabei niemals eine Herkunft oder fachliche Freigabe behaupten.
+- R: Unvollständige/alte Optionen, Runtime-/Buildabweichungen, Fremdimporte,
+  Manipulation aller Archive/Manifeste, Links/Hardlinks/Traversal/Kollisionen,
+  partielle Quelle, fehlende oder zusätzliche normative Bytes, falsche Receipts,
+  belegte/ausgetauschte Pfade, Rechteverlust und Quellenwechsel verweigern.
+  Falsche äußere Hashes dürfen keinen privaten Prüfbereich erzeugen.
+  Unterbrechungen, I/O-Fehler und Root-Recovery erhalten reale Teilzustände;
+  ausschließlich nachweislich eigene Daten dürfen beendet/zurückgerollt werden.
+  Prozess-/Pfadwechsel prüft Originalreferenzen erneut; alter Prüfbereich wird
+  nicht still adoptiert. Kein Paketcode oder Projektcode vor zulässigen Gates.
+- C: Gleiche positiven, negativen und Grenzfallabnahmen schützen die gemeinsame
+  Root-Erzeugung und passive Referenzhaltung ohne neue Fachregeln. Bestehende
+  Anhang-E-Extraktion, Teilprojektsperren, CLI und Receipts behalten ihr Verhalten.
+
+**Offener Rest und Übergabe.** Nur diese Entscheidung, Norm und Planabnahmen
+werden als ein echter OFF-PLAN-Dokumentcommit übergeben. Aktive Kataloghashes
+werden an 0.2.47 gebunden; Testidentitäten, Methoden, Oracles und offene
+Implementierungsstände werden nicht als umgesetzt umetikettiert. Es entstehen
+keine Dokumentationstests. Die bestehende maschinenlesbare Katalogprüfung gehört
+zur begründeten Pflichtauswahl des einen Apply-Commits; zusätzlich gilt die
+fällige gefilterte N=3-Gruppe. Keine Testausführung im Dev, keine CI.
+
+Status der Übergabe ist `spec_clarification`, kein Produktpatch und kein
+Budget-Reset. Produktstand bleibt **657/900**, nächster Commit **15.o.W**;
+W, R und C bleiben sämtlich offen und werden nicht vorzeitig geteilt.
+Erst ein neuer gebundener Auftrag nach dem zugehörigen Apply-Result setzt die
+Umsetzung fort. Dieser Auftrag endet nach genau einer atomaren ZIP-Übergabe.
+
+
 #### 15.o.W – Let it Work
 
 - [ ] **15.o.W** · Position **658/900** · Voraussetzung: `15.n.C`.
 **Exakte Commit-Message:** `15.o.W feat(transport): Hinpaket prüfen und Sandbox öffnen aufbauen`
 
-**Umsetzung:** ai-runtime-Verify und -Extract mit read_only beziehungsweise root_creation registrieren. Nach vollständiger äußerer und innerer Prüfung Runtime, Originalreferenz und Projekt in einen neuen Root materialisieren; Referenzbindings für spätere Rückgabe erhalten.
+**Umsetzung:** Den vollständigen Öffnungsvertrag aus W.4/W.4.1 umsetzen; ai-runtime-Verify und -Extract mit read_only beziehungsweise root_creation und explizitem externem Prüfbereich registrieren. Nach vollständiger äußerer und innerer Prüfung Runtime, Originalreferenz und Projekt in einen neuen Root materialisieren; Referenzbindings für spätere Rückgabe erhalten.
 
 **Verhaltensabnahme:** Frische offline Linux-x86-64-Sandbox ohne Git/Shell/Paketmanager öffnet echte Pakete über Modul und PYZ; Projektwurzel, unveränderte Referenz und Receiptwirkung stimmen unabhängig nachprüfbar.
 
@@ -34493,7 +34634,7 @@ GitHub-Workflow, lokale AGENTS oder historische Messbaseline werden geändert.
 - [ ] **15.o.R** · Position **659/900** · Voraussetzung: `15.o.W`.
 **Exakte Commit-Message:** `15.o.R feat(transport): Hinpaket prüfen und Sandbox öffnen vervollständigen`
 
-**Vervollständigung:** Vertrauenshash, fremde oder manipulierte Runtime, doppelte/gefährliche ZIP-Pfade, Links, belegte Ziele, partielle Quellen und Bootstrapabbruch prüfen. Keine dynamische Codeausführung aus Projektdateien und keine stille Rechteerweiterung.
+**Vervollständigung:** Alle negativen und Grenzfallabnahmen aus W.4.1 und TRANSPORT-OPEN-543 erfüllen: Vertrauenshash, fremde oder manipulierte Runtime, doppelte/gefährliche ZIP-Pfade, Links, belegte Ziele, partielle Quellen und Bootstrapabbruch prüfen. Keine dynamische Codeausführung aus Projektdateien und keine stille Rechteerweiterung.
 
 **Verhaltensabnahme:** Negativfälle führen zu keiner unerlaubten Ausführung oder Überschreibung; Prozess-/Pfadwechsel erhält die Referenz. Wiederherstellung verwendet nur belegte eigene Bootstrapdaten.
 
