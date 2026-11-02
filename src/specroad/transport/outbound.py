@@ -7,12 +7,17 @@ Result, Git patch, receipt or canonical model format is interpreted here.
 import os
 from hashlib import sha256
 from pathlib import Path
+import stat
 import tempfile
 
 from ..bundles._project_snapshot import ProjectBundleSnapshot
 from ..bundles.project import prepare_project_bundle
 from ..bundles.verification import verify_bundle
 from ..bundles.publication import _publish
+from ..changes._lock_files import LockFiles
+from ..changes._staging_files import _write_new
+from ..changes.lock_values import ProjectLockError
+from ..changes.staging_values import StagingError
 from ..model.paths import project_path as safe_project_path
 from ..model.canonical import canonical_json_bytes
 from ._core_artifact import core_artifact
@@ -31,6 +36,34 @@ def _api_call(api, call, *args, **kwargs):
         raise
     except (api.PatchHarborError, OSError, TypeError, ValueError) as error:
         raise api_failure(api, error) from error
+
+
+def _write_projection(boundary, selected, names):
+    """Only native effective bytes enter an exclusively created private root."""
+    projection = boundary.root / 'project'
+    try:
+        with LockFiles(boundary.root) as workspace:
+            require(workspace.boundary._root_identity == boundary._root_identity,
+                    'transport_private_workspace_changed', 6)
+            workspace.acquire()
+            require(not os.path.lexists(projection), 'transport_projection_exists', 6)
+            os.mkdir('project', mode=0o700, dir_fd=workspace.root_fd)
+            info = os.stat('project', dir_fd=workspace.root_fd, follow_symlinks=False)
+            with LockFiles(projection) as files:
+                require(files.boundary._root_identity == (info.st_dev, info.st_ino),
+                        'transport_projection_changed', 6)
+                files.acquire()
+                for name in sorted(names):
+                    safe_project_path(name)
+                    parts = tuple(name.split('/'))
+                    with files.directory(parts[:-1], create=True) as parent:
+                        _write_new(parent, parts[-1], selected[name].content)
+                files.check_root()
+            workspace.check_root()
+    except (ProjectLockError, StagingError) as error:
+        raise TransportFailure(error.exit_code, reason=error.reason,
+                               cause_type=type(error).__name__) from error
+    return projection
 
 
 class OutboundExport:
@@ -54,6 +87,7 @@ class OutboundExport:
                                          limit=MAX_ARTIFACT_BYTES)
         self.observation = ProjectBundleSnapshot(self.project.root)
         self.workspace = None
+        self._workspace_boundary = None
         self.api = self.context = self.plan = None
         self.effects = {'export_started': False, 'reference_published': None}
         self._attempted = False
@@ -64,6 +98,7 @@ class OutboundExport:
         # Runtime preparation writes only into a newly owned private child of the
         # caller's explicit external area. They are disclosed even on failure.
         self.workspace = Path(tempfile.mkdtemp(prefix='.specroad-outbound-', dir=self.output.root))
+        self._workspace_boundary = directory(self.workspace, owned=True)
         self.effects['private_workspace'] = str(self.workspace)
         self.runtime = PatchHarborRuntime(self.runtime_input.path,
             trusted_artifact_sha256=self.runtime_input.sha256, workspace=self.workspace / 'runtime',
@@ -83,8 +118,19 @@ class OutboundExport:
 
     def verify_inputs(self):
         self.project._check_root(); self.output._check_root()
+        directory(self.output.root, owned=True)
+        if self._workspace_boundary is not None:
+            self._workspace_boundary._check_root()
+            info = self.workspace.lstat()
+            require(info.st_uid == os.getuid() and not stat.S_IMODE(info.st_mode) & 0o077,
+                    'transport_private_workspace_changed')
         self.core.verify_current(); self.runtime_input.verify_current()
         self.observation.verify_current()
+        if self.api is not None:
+            # Retained API objects do not bypass the adapter's continued private
+            # copy, source, module-origin and capability checks.
+            require(self.runtime.load_api(required=('context', 'prepare_reference_export', 'bundle')) is self.api,
+                    'transport_runtime_api_changed')
 
     def expected_source(self):
         required = {**self.observation.payloads, **self.observation.receipts.payloads}
@@ -111,6 +157,9 @@ class OutboundExport:
                 'source_binding': binding(bundle.context), 'effects': dict(self.effects)}
 
     def assemble(self, reference):
+        self.verify_inputs()
+        _api_call(self.api, authorize, self.api, self.context, self.plan,
+                  project_root=self.project.root, output_root=self.output.root)
         require(binding(self.context) == reference['source_binding'], 'transport_reference_context_mismatch', 6)
         result = PassiveFile(reference['path'], expected_sha256=reference['sha256'])
         require(result.path.parent == self.output.root, 'transport_reference_outside_output')
@@ -123,8 +172,6 @@ class OutboundExport:
         self.verify_inputs()
         # A freshly generated private projection has no foreign files or links.
         # Every byte originates in the native reader's validated effective layer.
-        projection = self.workspace / 'project'
-        projection.mkdir(mode=0o700)
         prefix = '' if self.project_path == '.' else self.project_path + '/'
         selected = {name[len(prefix):]: file for name, file in snapshot.effective.files.items()
                     if name.startswith(prefix)}
@@ -141,14 +188,7 @@ class OutboundExport:
         if marker is not None:
             require('bundle-manifest.json' in selected and selected['bundle-manifest.json'].content == marker,
                     'transport_required_snapshot_bytes_missing', 6)
-        for name in sorted(projection_names):
-            file = selected[name]
-            safe_project_path(name)
-            target = projection / name
-            target.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
-            with target.open('xb') as stream:
-                stream.write(file.content)
-            target.chmod(0o600)
+        projection = _write_projection(self._workspace_boundary, selected, projection_names)
         project = prepare_project_bundle(projection)
         if self.observation.receipts.payloads:
             from ..bundles.container import BundleContainer, encode_bundle
@@ -162,6 +202,8 @@ class OutboundExport:
 
         def verify_current():
             self.verify_inputs(); result.verify_current()
+            _api_call(self.api, authorize, self.api, self.context, self.plan,
+                      project_root=self.project.root, output_root=self.output.root)
             current = _api_call(self.api, self.api.context, repository_root(self.context), capture_mode='safe')
             require(current == self.context, 'transport_source_changed', 6)
 

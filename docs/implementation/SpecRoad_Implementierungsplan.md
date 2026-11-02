@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 46 · **Stand:** 1. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.46
+**Planrevision:** 47 · **Stand:** 1. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.46
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 Schritte und 900 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; die ausdrücklich genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wird nach 10.7.10 innerhalb von 15.l.R vorgezogen. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -32,6 +32,45 @@ Ketten erfordert erst den belegten erfolgreichen normalen Abschluss.
 Produktfreigaben und die Grenzen aus 2.4.1/2.4.2/2.4.4 bleiben unverändert.
 Dieser Plan ändert keine alten Aufträge, Antworten, Blockaden oder
 Laufzeitdaten und ist keine Start-/Resume-Anweisung.
+
+## PLAN 15.n.R/C — Hinexport vervollständigen (Bundle 542)
+
+Maßgebliche technische Basis: vollständig nativ geprüftes Result
+`specroad-apply_Result_193743_1101_7902d2.zip`, SHA-256
+`b2b4dc57257d5e6dba543cda76dbcf653299ae4bba16efee518e6fbf8012d6ec`,
+sauberer HEAD `d17b048a823492a53e2e83412f7f782632fb3f89`.
+Bundle 541 ist mit echten W/R/C-Commits und 6573/6609/6645 bestandenen
+Apply-Tests abgeschlossen. Dies sind gefilterte Rotationsgruppen plus
+Pflichtauswahl, kein Vollsuite- oder Plattformfreigabenachweis.
+
+Der einmalige N-Auftrag setzt den bereits geklärten Produktplan fort;
+keine Spezifikationsklärung, Scope-Erweiterung oder neue normative Entscheidung.
+Spec 0.2.46 mit W.1.1/W.2.1/W.3.1/W.6 bleibt unverändert maßgeblich.
+R und danach C bilden zwei vollständige Zustände desselben Hinexports.
+15.o und der Rückweg bleiben eigenständige offene Produktabschnitte.
+
+R vervollständigt die Nachprüfung der gebundenen Runtime und Betriebsgrenzen
+vor Capture, Snapshotnutzung und finaler Veröffentlichung. Private Kopien,
+Workspace-Identität/Rechte, neue registrierte Repositorys, geänderte Exchanges,
+Quellen und belegte Ziele dürfen weder ungebundene Writes noch Erfolg erzeugen.
+Die private Projektion verwendet die vorhandenen deskriptorgebundenen
+Verzeichnis-/Dateischreiber. Fehlgeschlagene Aufrufe bewahren tatsächliche
+Referenzen und Diagnosebytes; keine automatische Wiederholung oder Neuplanung.
+
+Vorbereitete Abnahmematrix: bestehende native Dirty-Schichten/Receipts und
+ignorierte Pflichtbytes; Filter/Konversionen; Runtime-/Workspaceaustausch an
+mehreren Phasengrenzen; veränderte Betriebsgrenzen; Pfadkollisionen, falsche
+Profile und Teilpublikation; vollständiger öffentlicher Modul-/PYZ-Hinexport
+und fortgesetzte Work-Kette. C trennt nur Projektprojektion und Kodierung vom
+Ablauf. Die gleiche vollständige Pflichtauswahl schützt beide Zustände.
+
+Dev führt keine Testkörper, Fixtures oder Testprozesse aus. Syntax, reine
+Collection/Katalogprüfung und native Paketprüfung sind keine Verhaltensabnahme.
+Jeder vorbereitete Fortschrittsmarker gilt erst mit dem zugehörigen erfolgreichen
+Apply-Gate UND echten Commit; bei einem Fehler sind Log und tatsächlicher
+Commitpräfix maßgeblich. Apply testet pro Zustand genau einmal die Vereinigung
+seiner fälligen gefilterten N=3-Gruppe und ungefilterten Pflichtauswahl mit
+hostabhängigen worksteal-Workern. Keine CI und kein Dienststart.
 
 ## OFF-PLAN TRANSPORT-PYZ-541 — Direkte PatchHarbor-1.8.0-Anbindung
 
@@ -643,12 +682,12 @@ Kein offener Produktplanschritt wird durch diese Testoptimierung abgeschlossen.
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 43
+plan_revision: 47
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 655
-last_completed_plan_commit: 15.n.W
-next_plan_commit: 15.n.R
-last_completed_numbered_bundle: 536
+implementation_plan_commits_completed: 656
+last_completed_plan_commit: 15.n.R
+next_plan_commit: 15.n.C
+last_completed_numbered_bundle: 541
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -34409,7 +34448,7 @@ GitHub-Workflow, lokale AGENTS oder historische Messbaseline werden geändert.
 
 #### 15.n.R – Make it Right
 
-- [ ] **15.n.R** · Position **656/900** · Voraussetzung: `15.n.W`.
+- [x] **15.n.R** · Position **656/900** · Voraussetzung: `15.n.W`.
 **Exakte Commit-Message:** `15.n.R feat(transport): Gebundenes Hinpaket exportieren vervollständigen`
 
 **Vervollständigung:** Dirty-Resultschichten vollständig binden; ignorierte Pflichtbytes, Partialquellen, aktive Transaktionen, Paketpfadkollisionen und zwischenzeitlich geänderte Eingaben verweigern. Filter-/Konversionsangriffe, stale Exportpläne, veränderte Betriebsgrenzen und tatsächlich veröffentlichte Teilresultate gemäß W.1.1 absichern. Python-present verbindlich anbieten; Python-bundled nur mit kompletter geprüfter Plattformdistribution.

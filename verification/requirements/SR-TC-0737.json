@@ -22,14 +22,14 @@
   "json_pointers": [],
   "method": "automated_behavior",
   "open_items": [
-    "15.n.R and 15.n.C remain open for the planned robustness/attack acceptance and structural cleanup.",
+    "15.n.R acceptance is pending its Apply gate; 15.n.C remains open for structural cleanup.",
     "Full native CPython 3.10–3.14/platform evidence remains pending manual CI; targeted local gates are not release or full-suite evidence.",
     "18.q return export and its original-reference binding remain unimplemented; this evidence covers only the outbound direction."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Hin- und Rückexport MÜSSEN denselben Befehl `bundle create --profile ai-runtime` mit expliziter Richtung verwenden; der Rückexport MUSS seine PatchHarbor-Bindungswerte unverändert aus dem ursprünglichen Result übernehmen.",
-    "scope": "15.n.W with OFF-PLAN TRANSPORT-PYZ-541 public python-present outbound export with pinned standalone 1.8.0 safe preparation/production, native effective-byte projection, exact portable history, closed canonical handoff, explicit failure preservation and native Work integration. R/C and the independent Python matrix remain open."
+    "scope": "Prepared 15.n.R completes native outbound runtime/workspace continuity and operating-boundary checks through final publication, using the pinned 1.8.0 API and native effective bytes. Behavior is not executed in Dev; Apply and the independent Python matrix remain required."
   },
   "preconditions": [
     "An explicitly registered local repository with HEAD, complete native project and portable history.",
@@ -52,7 +52,8 @@
     "Execute public argv and structured outbound bundle.create through source, module and PYZ paths.",
     "Independently compare complete inner project/receipt bytes, native reference binding and exact embedded 1.8.0 PYZ member with outer manifest/member sizes and hashes.",
     "Observe unchanged source/index/history, explicit public PH operating effects, refusal contracts and retained actual output after faults.",
-    "Resume native Work in fresh processes against the same source; verify source-change refusal, single capture, controls and terminal replay."
+    "Resume native Work in fresh processes against the same source; verify source-change refusal, single capture, controls and terminal replay.",
+    "Change retained runtime/workspace identity or permissions, registry/output boundaries and input bytes between phases; require refusal with retained actual reference, foreign files and unchanged project; inject a short projection write without a complete outer ZIP."
   ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0737",
@@ -129,6 +130,49 @@
     "tests/test_transport_outbound_edges.py::test_safe_semantic_errors_retain_native_diagnostics[unsafe_path-7]",
     "tests/test_transport_outbound_edges.py::test_safe_semantic_errors_retain_native_diagnostics[unsupported_conversion-7]",
     "tests/test_transport_outbound_edges.py::test_safe_semantic_errors_retain_native_diagnostics[unsupported_host-5]",
-    "tests/test_transport_outbound_edges.py::test_staged_and_unstaged_layers_are_both_native_effective_inputs"
+    "tests/test_transport_outbound_edges.py::test_staged_and_unstaged_layers_are_both_native_effective_inputs",
+    "tests/test_transport_outbound_right.py::test_changed_source_after_capture_never_gets_a_new_reference[assemble]",
+    "tests/test_transport_outbound_right.py::test_changed_source_after_capture_never_gets_a_new_reference[publish]",
+    "tests/test_transport_outbound_right.py::test_incomplete_projection_write_is_an_io_failure_with_reference_retained",
+    "tests/test_transport_outbound_right.py::test_late_output_collisions_preserve_foreign_files[casefold]",
+    "tests/test_transport_outbound_right.py::test_late_output_collisions_preserve_foreign_files[existing]",
+    "tests/test_transport_outbound_right.py::test_late_output_collisions_preserve_foreign_files[parent_casefold]",
+    "tests/test_transport_outbound_right.py::test_late_output_collisions_preserve_foreign_files[symlink]",
+    "tests/test_transport_outbound_right.py::test_operating_boundary_is_rechecked_after_reference_capture[exchange-6-assemble]",
+    "tests/test_transport_outbound_right.py::test_operating_boundary_is_rechecked_after_reference_capture[exchange-6-publish]",
+    "tests/test_transport_outbound_right.py::test_operating_boundary_is_rechecked_after_reference_capture[new_repository-7-assemble]",
+    "tests/test_transport_outbound_right.py::test_operating_boundary_is_rechecked_after_reference_capture[new_repository-7-publish]",
+    "tests/test_transport_outbound_right.py::test_operating_boundary_is_rechecked_after_reference_capture[output_permissions-7-assemble]",
+    "tests/test_transport_outbound_right.py::test_operating_boundary_is_rechecked_after_reference_capture[output_permissions-7-publish]",
+    "tests/test_transport_outbound_right.py::test_operating_boundary_is_rechecked_after_reference_capture[plan_boundary-6-assemble]",
+    "tests/test_transport_outbound_right.py::test_operating_boundary_is_rechecked_after_reference_capture[plan_boundary-6-publish]",
+    "tests/test_transport_outbound_right.py::test_private_workspace_cannot_be_replaced_or_exposed[permissions-assemble]",
+    "tests/test_transport_outbound_right.py::test_private_workspace_cannot_be_replaced_or_exposed[permissions-capture]",
+    "tests/test_transport_outbound_right.py::test_private_workspace_cannot_be_replaced_or_exposed[permissions-publish]",
+    "tests/test_transport_outbound_right.py::test_private_workspace_cannot_be_replaced_or_exposed[replacement-assemble]",
+    "tests/test_transport_outbound_right.py::test_private_workspace_cannot_be_replaced_or_exposed[replacement-capture]",
+    "tests/test_transport_outbound_right.py::test_private_workspace_cannot_be_replaced_or_exposed[replacement-publish]",
+    "tests/test_transport_outbound_right.py::test_private_workspace_cannot_be_replaced_or_exposed[symlink-assemble]",
+    "tests/test_transport_outbound_right.py::test_private_workspace_cannot_be_replaced_or_exposed[symlink-capture]",
+    "tests/test_transport_outbound_right.py::test_private_workspace_cannot_be_replaced_or_exposed[symlink-publish]",
+    "tests/test_transport_outbound_right.py::test_projection_collision_is_preserved_without_adding_project_bytes",
+    "tests/test_transport_outbound_right.py::test_runtime_is_still_bound_at_each_export_phase[copy_bytes-assemble]",
+    "tests/test_transport_outbound_right.py::test_runtime_is_still_bound_at_each_export_phase[copy_bytes-capture]",
+    "tests/test_transport_outbound_right.py::test_runtime_is_still_bound_at_each_export_phase[copy_bytes-publish]",
+    "tests/test_transport_outbound_right.py::test_runtime_is_still_bound_at_each_export_phase[copy_directory_mode-assemble]",
+    "tests/test_transport_outbound_right.py::test_runtime_is_still_bound_at_each_export_phase[copy_directory_mode-capture]",
+    "tests/test_transport_outbound_right.py::test_runtime_is_still_bound_at_each_export_phase[copy_directory_mode-publish]",
+    "tests/test_transport_outbound_right.py::test_runtime_is_still_bound_at_each_export_phase[copy_identity-assemble]",
+    "tests/test_transport_outbound_right.py::test_runtime_is_still_bound_at_each_export_phase[copy_identity-capture]",
+    "tests/test_transport_outbound_right.py::test_runtime_is_still_bound_at_each_export_phase[copy_identity-publish]",
+    "tests/test_transport_outbound_right.py::test_runtime_is_still_bound_at_each_export_phase[copy_mode-assemble]",
+    "tests/test_transport_outbound_right.py::test_runtime_is_still_bound_at_each_export_phase[copy_mode-capture]",
+    "tests/test_transport_outbound_right.py::test_runtime_is_still_bound_at_each_export_phase[copy_mode-publish]",
+    "tests/test_transport_outbound_right.py::test_runtime_is_still_bound_at_each_export_phase[foreign_module-assemble]",
+    "tests/test_transport_outbound_right.py::test_runtime_is_still_bound_at_each_export_phase[foreign_module-capture]",
+    "tests/test_transport_outbound_right.py::test_runtime_is_still_bound_at_each_export_phase[foreign_module-publish]",
+    "tests/test_transport_outbound_right.py::test_runtime_is_still_bound_at_each_export_phase[source_identity-assemble]",
+    "tests/test_transport_outbound_right.py::test_runtime_is_still_bound_at_each_export_phase[source_identity-capture]",
+    "tests/test_transport_outbound_right.py::test_runtime_is_still_bound_at_each_export_phase[source_identity-publish]"
   ]
 }
