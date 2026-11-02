@@ -23,6 +23,39 @@ def _nullable(schema):
     return {"anyOf": [{"type": "null"}, schema]}
 
 
+def _opening_manifest_schema():
+    from ..transport import _contract
+    from .._metadata import __version__
+    text = {'type': 'string', 'minLength': 1}
+    sha = {'type': 'string', 'pattern': r'^[0-9a-f]{64}(?![\s\S])'}
+    platforms = {'supported_cpython': {'const': ['3.10', '3.11', '3.12', '3.13', '3.14']},
+                 'platform_profile': {'const': 'linux-x86_64'}}
+    return _object({'format_version': {'const': 'specroad-ai-handoff-v1'}, 'package_id': sha,
+        'direction': {'const': 'outbound'}, 'runtime_profile': {'const': 'python-present'},
+        'project_id': text, 'project_path': text, 'model_root_sha256': sha,
+        'scope_descriptor': {'const': {'scope_version': 'scope-v1', 'scope_kind': 'project',
+            'selector': {}, 'configuration_id': None, 'closure_profile': 'core-closure-v1',
+            'boundary_policy': 'closed'}},
+        'reference': _object({'path': {'const': 'reference/result.zip'}, 'sha256': sha,
+            'repo_id': {'type': 'string', 'pattern': r'^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}(?![\s\S])'},
+            'base_commit': {'type': 'string', 'pattern': r'^(?:[0-9a-f]{40}|[0-9a-f]{64})(?![\s\S])'},
+            'state_fingerprint': {'type': 'string', 'pattern': r'^[0-9a-f]{16}(?![\s\S])'},
+            'fingerprint_algorithm': {'const': 'patchharbor-state-v1'}}),
+        'runtimes': _object({'specroad': _object({**platforms,
+            'path': {'const': 'runtime/specroad.pyz'}, 'tool_version': {'const': __version__},
+            'artifact_sha256': sha, 'build_sha256': sha,
+            'build_hash_algorithm': {'const': 'specroad-dev-payload-v1'}}),
+            'patchharbor': _object({**platforms, 'path': {'const': 'reference/result.zip'},
+                'member_path': {'const': 'runtime/' + _contract.ARTIFACT_FILENAME},
+                'tool_version': {'const': _contract.VERSION}, 'artifact_sha256': {'const': _contract.ARTIFACT_SHA256},
+                'requires_python': {'const': _contract.REQUIRES_PYTHON},
+                'distribution_profile': {'const': _contract.PROFILE},
+                'integration_contract_version': {'type': 'integer', 'const': 1},
+                'snapshot_contract_version': {'type': 'integer', 'const': 1}})}),
+        'entries': _array(_object({'path': {'enum': ['project/project.zip', 'reference/result.zip', 'runtime/specroad.pyz']},
+                                  'size': {'type': 'integer', 'minimum': 0}, 'sha256': sha}))})
+
+
 def _with_currentness(schema, *, comparison=False):
     """Optional native read observation; legacy payloads keep their contract."""
     text = {'type': 'string'}
@@ -111,7 +144,7 @@ def _fields(schema_id):
             _object({**common, 'mode': {'const': 'execute'}, 'restore_plan': {'type': 'null'},
                 'execution': obj, 'plan_file': {'type': 'null'}})]}
     if schema_id in ('ai-runtime-verify-v1', 'ai-runtime-extract-v1'):
-        fields = {'format_version': {'const': schema_id}, 'manifest': obj,
+        fields = {'format_version': {'const': schema_id}, 'manifest': _opening_manifest_schema(),
             'file': _object({'size': count, 'sha256': sha}),
             'validation_scope': {'const': 'ai_runtime_outbound_complete'},
             'external_hash_verified': boolean, 'runtime_source': {'const': 'standalone_pyz'},

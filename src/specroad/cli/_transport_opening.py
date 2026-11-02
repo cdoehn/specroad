@@ -77,7 +77,8 @@ def opening_command(invocation):
             details={'command_class': invocation.command.command_class.value, 'transport': dict(opening.effects)})
     except (TransportUnavailable, TransportFailure, BootstrapError, BundleError, ProjectLockError,
             ModelError, SafetyViolation, ArchiveError, OSError) as error:
-        code = (7 if isinstance(error, SafetyViolation) else 5 if isinstance(error, OSError)
+        code = (7 if isinstance(error, SafetyViolation) else 6 if isinstance(error, FileExistsError)
+                else 5 if isinstance(error, OSError)
                 else getattr(error, 'exit_code', 3))
         reason = getattr(error, 'reason', 'opening_io_or_boundary_failure')
         facts = error.as_dict() if isinstance(error, (TransportUnavailable, TransportFailure)) else {

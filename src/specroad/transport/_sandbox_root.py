@@ -17,6 +17,7 @@ from ..bundles.extraction import extract_bundle, _check_names, _directories
 from ..bundles.manifest import MANIFEST_NAME
 from ..changes._lock_files import LockFiles
 from ..model.canonical import canonical_json_bytes
+from ..model.errors import ModelError
 from ..storage.json_syntax import parse_json_object
 
 COMPLETED = ('.specroad', 'recovery', 'sandbox-bootstrap')
@@ -94,6 +95,7 @@ class SandboxTree(BootstrapTree):
         self.check()
         verify_tree(self.fd, self.inventory)
         journal = {'format': FORMAT, 'state': 'prepared',
+            'source_sha256': self.opening.source.sha256,
             'root_identity': identity(os.fstat(self.held.root_fd)), 'root_created': root_created,
             'stage_identity': self.stage_identity, 'units': self.units,
             'reused_directories': {}, 'entries': self.inventory}
@@ -112,10 +114,11 @@ def _restore(tree, content):
     raw, journal_metadata = _read(tree.fd, 'journal.json', limit)
     value = parse_json_object(raw)
     _require(set(value) == {'format', 'state', 'root_identity', 'root_created', 'stage_identity',
-        'units', 'reused_directories', 'entries'} and canonical_json_bytes(value) == raw)
+        'units', 'reused_directories', 'entries', 'source_sha256'} and canonical_json_bytes(value) == raw)
     _require(value['format'] == FORMAT and value['state'] == 'prepared'
         and value['root_identity'] == identity(os.fstat(tree.held.root_fd))
         and value['stage_identity'] == tree.stage_identity
+        and value['source_sha256'] == tree.opening.source.sha256
         and type(value['root_created']) is bool and value['reused_directories'] == {})
     staged = info_at(tree.fd, 'project') is not None
     published = info_at(tree.held.root_fd, 'project') is not None
@@ -155,11 +158,13 @@ def publish_sandbox(opening):
         parent_held = stack.enter_context(LockFiles(parent)); parent_held.acquire()
         _require(parent_held.boundary._root_identity == opening.output_parent._root_identity)
         destination = BootstrapRoot(parent_held, target)
+        _require((destination.current is None) == (opening.output_boundary is None))
         opening.verify_current()
         try:
             if destination.current is None:
                 destination.create()
             held = destination.acquire(stack)
+            opening.effects.update(sandbox_root=str(target), bootstrap_state='publishing')
             def guard():
                 parent_held.require_held()
                 _check_names(held, tree)
@@ -167,7 +172,10 @@ def publish_sandbox(opening):
             if info_at(held.root_fd, STAGING) is not None:
                 recovering = True
                 tree = SandboxTree(held, function, opening)
-                _restore(tree, content)
+                try:
+                    _restore(tree, content)
+                except (ModelError, ValueError, TypeError, KeyError, RecursionError) as error:
+                    raise BootstrapError('sandbox_bootstrap_inventory_invalid') from error
             else:
                 if os.listdir(held.root_fd):
                     raise BootstrapError('sandbox_target_not_empty')
@@ -181,16 +189,24 @@ def publish_sandbox(opening):
         except BaseException as original:
             # Recovery must never use a partially decoded journal for cleanup.
             if recovering:
+                opening.effects['bootstrap_state'] = 'recovery_required'
                 raise
-            if tree is not None and tree.units:
-                destination.rollback(tree, original)
-            elif destination.created:
-                destination.rollback(tree, original)
+            try:
+                if tree is not None or destination.created:
+                    destination.rollback(tree, original)
+            except BaseException:
+                opening.effects['bootstrap_state'] = 'recovery_required'
+                raise
+            opening.effects['bootstrap_state'] = ('complete' if tree is not None and tree.committed
+                else 'rolled_back' if tree is not None else 'not_started')
+            if not os.path.lexists(target):
+                opening.effects['sandbox_root'] = None
             raise
         finally:
             if tree is not None:
                 tree.close()
     payload = {**content, **{'project/' + p: b for p, b in _project_content(opening.container.project).items()}}
+    opening.effects['bootstrap_state'] = 'complete'
     directories = {p.rsplit('/', 1)[0] for p in payload if '/' in p}
     directories |= {p.split('/')[0] for p in payload}
     for name in tuple(directories):

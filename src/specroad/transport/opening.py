@@ -2,6 +2,7 @@
 from hashlib import sha256
 from io import BytesIO
 import os
+import stat
 from zipfile import ZipFile
 
 from . import _contract
@@ -40,6 +41,8 @@ class SandboxOpening:
         self.parent = _external(self.workspace)
         self.output = None if output is None else absolute(output)
         self.output_parent = None if self.output is None else _external(self.output)
+        self.output_boundary = (directory(self.output, owned=True)
+            if self.output is not None and os.path.lexists(self.output) else None)
         for path in (self.source.path, self.pyz.path):
             require(not overlap(self.workspace, path)
                     and (self.output is None or not overlap(self.output, path)), 'opening_input_overlap')
@@ -58,12 +61,21 @@ class SandboxOpening:
         if self.output_parent is not None:
             self.output_parent._check_root()
             _external(self.output)
+            if self.output_boundary is not None:
+                self.output_boundary._check_root()
         if self.workspace_boundary is not None:
             self.workspace_boundary._check_root()
             require(directory(self.workspace, owned=True)._root_identity == self.workspace_boundary._root_identity,
                     'opening_workspace_changed', 6)
+            require(stat.S_IMODE(self.workspace.lstat().st_mode) == 0o700,
+                    'opening_workspace_not_private')
+            require(set(os.listdir(self.workspace)) <= {'result.zip', 'code'},
+                    'opening_workspace_foreign_content')
         if self.reference is not None:
             self.reference.verify_current()
+            info = self.reference.path.lstat()
+            require(info.st_uid == os.getuid() and stat.S_IMODE(info.st_mode) == 0o600,
+                    'opening_reference_not_private')
         if self.runtime is not None:
             self.runtime.load_api(required=('read_result_snapshot',))
 
@@ -137,7 +149,6 @@ class SandboxOpening:
         require(self.output is not None and self.snapshot is not None, 'opening_target_and_verification_required', 2)
         from ._sandbox_root import publish_sandbox
         self.verify_current()
-        self.effects.update(sandbox_root=str(self.output), bootstrap_state='publishing')
         content, directories = publish_sandbox(self)
         self.verify_current()
         self.effects['bootstrap_state'] = 'complete'

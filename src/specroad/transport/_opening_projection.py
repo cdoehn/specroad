@@ -62,6 +62,11 @@ def verify_projection(snapshot, container):
     registry = configuration.data.get('language_registry')
     if registry is not None:
         normative.add(registry['path'])
+    archives = [p for p in configuration.managed_paths if p.split('/')[0] == 'archive']
+    for path in files:
+        if any(_under(path, root) for root in archives):
+            require(classify_path(path, configuration) is PathClass.ARCHIVE_OBJECT,
+                    'handoff_unclassified_archive_resource', 3)
     payloads = set()
     for path in sorted(normative):
         require(path in files, 'handoff_required_resource_missing', 3)
@@ -84,12 +89,16 @@ def verify_projection(snapshot, container):
         from hashlib import sha256
         require(record.get('format') == 'specroad-bundle-bootstrap-v1' and marker is not None
             and record.get('state') == 'prepared', 'handoff_extracted_origin_invalid', 7)
-        entry = record.get('entries', {}).get('bundle-manifest.json', {})
+        entries = record.get('entries')
+        require(type(entries) is dict, 'handoff_extracted_origin_invalid', 7)
+        entry = entries.get('bundle-manifest.json')
+        require(type(entry) is dict, 'handoff_extracted_origin_invalid', 7)
         require(entry.get('size') == len(marker) and entry.get('sha256') == sha256(marker).hexdigest(),
                 'handoff_extracted_origin_changed', 7)
     if marker is not None:
         previous = parse_json_object(marker)
         require(marker == canonical_json_bytes(previous), 'handoff_origin_noncanonical', 3)
+        require('entries' in previous, 'handoff_origin_entries_missing', 3)
         check_entries(previous['entries'])
         previous_metadata = owned_metadata({k: v for k, v in previous.items() if k != 'entries'})
         require(previous_metadata['bundle_kind'] == 'project'
