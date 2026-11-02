@@ -23093,6 +23093,18 @@
     "tests/test_transport_opening_right.py::test_unsafe_operating_paths_preserve_foreign_bytes[subproject-target-file]",
     "tests/test_transport_opening_right.py::test_unsafe_operating_paths_preserve_foreign_bytes[subproject-target-link]",
     "tests/test_transport_opening_right.py::test_unsafe_operating_paths_preserve_foreign_bytes[subproject-workspace-exists]",
-    "tests/test_transport_opening_right.py::test_unsafe_operating_paths_preserve_foreign_bytes[subproject-workspace-in-project]"
+    "tests/test_transport_opening_right.py::test_unsafe_operating_paths_preserve_foreign_bytes[subproject-workspace-in-project]",
+    "tests/test_migration_graph.py::test_admission_and_resolution_never_invoke_any_provider",
+    "tests/test_migration_graph.py::test_equal_schema_label_with_different_provenance_needs_an_actual_step",
+    "tests/test_migration_graph.py::test_known_but_disconnected_contract_is_unsupported",
+    "tests/test_migration_graph.py::test_multiple_real_transformations_match_independent_vectors_and_return",
+    "tests/test_migration_graph.py::test_real_preconditions_prevent_field_loss_and_invalid_derived_values[forward]",
+    "tests/test_migration_graph.py::test_real_preconditions_prevent_field_loss_and_invalid_derived_values[reverse]",
+    "tests/test_migration_graph.py::test_required_inverse_is_explicit_for_every_edge",
+    "tests/test_migration_graph.py::test_synthetic_registry_never_advertises_a_product_legacy_path",
+    "tests/test_migration_graph.py::test_unknown_contracts_are_not_noops[both]",
+    "tests/test_migration_graph.py::test_unknown_contracts_are_not_noops[source]",
+    "tests/test_migration_graph.py::test_unknown_contracts_are_not_noops[target]",
+    "tests/test_migration_graph.py::test_vector_and_registry_inputs_cannot_be_mutated_after_admission"
   ]
 }

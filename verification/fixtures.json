@@ -360,6 +360,10 @@
       "kind": "Owned exact-tag glossary terms, literal text selectors and explicit placeholders; no linguistic interpretation, live inventory or approval.",
       "provider": "tests/support/literal_lint.py:observe"
     },
+    "SR-FIX-MIGRATION-GRAPH-v1": {
+      "kind": "Complete isolated synthetic schemas 90.0.0/90.1.0/90.2.0 with explicit profile and content bindings; compiled rename/derived-length transformations, strict pre/postconditions and independent literal Unicode/empty/decomposed input/output vectors for both directions. Separate complete empty-object contracts cover graph topology. No historical SpecRoad 0.1 schema, native reader, file migration, human approval or external compatibility claim.",
+      "provider": "tests/fixtures/migration_graph_v1.json;tests/support/migration.py:chain,contract,identity_step"
+    },
     "SR-FIX-MODEL-MANIFEST-v1": {
       "kind": "Owned single-root resources; explicit hash inputs, not resolved scopes, authentic profile composition or write permission.",
       "provider": "tests/test_model_root.py:fixture"
@@ -906,6 +910,7 @@
     "SR-FIX-LANGUAGE-POLICY-v1",
     "SR-FIX-LANGUAGE-REGISTRY-v1",
     "SR-FIX-LITERAL-LINT-v1",
+    "SR-FIX-MIGRATION-GRAPH-v1",
     "SR-FIX-MODEL-MANIFEST-v1",
     "SR-FIX-MODEL-VALIDATION-v1",
     "SR-FIX-NATIVE-IMPORT-IDENTITIES-v1",

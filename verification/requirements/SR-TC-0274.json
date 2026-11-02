@@ -1,20 +1,33 @@
 {
   "evidence_kind": "specroad-dev-pytest-v1",
-  "expected_diagnostics": [],
+  "expected_diagnostics": [
+    "unknown_source",
+    "unknown_target",
+    "unsupported_path",
+    "reverse_not_implemented",
+    "precondition_failed"
+  ],
   "expected_exit_codes": [],
-  "fixture_ids": [],
-  "implementation_status": "open",
+  "fixture_ids": [
+    "SR-FIX-MIGRATION-GRAPH-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [],
-  "method": "pending",
+  "method": "automated_behavior",
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Current bound Apply behavior evidence is still required; Dev performs collection/static checks only.",
+    "16.b and the actual 0.1 migration/Restore path require the full versioned Q.0 source contract.",
+    "Migration CLI, saved plan freshness/binding, native writers, backups, audit and M16 integration remain outside 16.a."
   ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "SpecRoad DARF ein Downgrade nur anbieten, wenn ein ausdrücklich implementierter verlustfreier Rückweg existiert.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "16.a graph/step kernel only: real synthetic transformations and exact contract/path/inverse boundaries. Known identity is the only no-op; resolution never transforms or publishes. No product legacy compatibility, actual project migration, CLI success, full-suite or release proof. Behavior tests are prepared for the separate Apply gate, not executed in Dev."
   },
-  "preconditions": [],
+  "preconditions": [
+    "Only trusted compiled providers; immutable complete synthetic contract identities.",
+    "The built-in product registry is isolated and advertises no historical migration path."
+  ],
   "primary_verification_id": "SR-VER-0020",
   "required_environment": {
     "declared_minimum_python": "3.10",
@@ -28,8 +41,25 @@
     "owned_temporary_files": true
   },
   "specification_sha256": "15607c51272c8cb1c730a2bee1b28357d5d09f1f049946d82d8b9065d2ff67d6",
-  "steps": [],
+  "steps": [
+    "Admit full step contracts; resolve forward and explicit reverse routes without invoking providers or writes.",
+    "Execute actual transforms against independent literal vectors, including strict pre/postconditions.",
+    "Observe exact typed refusals, preservation of caller inputs and the unchanged product support boundary."
+  ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0274",
-  "test_ids": []
+  "test_ids": [
+    "tests/test_migration_graph.py::test_admission_and_resolution_never_invoke_any_provider",
+    "tests/test_migration_graph.py::test_equal_schema_label_with_different_provenance_needs_an_actual_step",
+    "tests/test_migration_graph.py::test_known_but_disconnected_contract_is_unsupported",
+    "tests/test_migration_graph.py::test_multiple_real_transformations_match_independent_vectors_and_return",
+    "tests/test_migration_graph.py::test_real_preconditions_prevent_field_loss_and_invalid_derived_values[forward]",
+    "tests/test_migration_graph.py::test_real_preconditions_prevent_field_loss_and_invalid_derived_values[reverse]",
+    "tests/test_migration_graph.py::test_required_inverse_is_explicit_for_every_edge",
+    "tests/test_migration_graph.py::test_synthetic_registry_never_advertises_a_product_legacy_path",
+    "tests/test_migration_graph.py::test_unknown_contracts_are_not_noops[both]",
+    "tests/test_migration_graph.py::test_unknown_contracts_are_not_noops[source]",
+    "tests/test_migration_graph.py::test_unknown_contracts_are_not_noops[target]",
+    "tests/test_migration_graph.py::test_vector_and_registry_inputs_cannot_be_mutated_after_admission"
+  ]
 }

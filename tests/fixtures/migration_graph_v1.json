@@ -1,0 +1,25 @@
+{
+  "kind": "isolated synthetic graph contracts; no historical SpecRoad schema",
+  "contracts": [
+    {
+      "schema_version": "90.0.0",
+      "profile": {"profile_id": "synthetic-migration", "profile_version": "1.0.0"},
+      "schema": {"type": "object", "additionalProperties": false, "required": ["id", "label", "tags"], "properties": {"id": {"type": "string", "minLength": 1}, "label": {"type": "string"}, "tags": {"type": "array", "items": {"type": "string"}}}}
+    },
+    {
+      "schema_version": "90.1.0",
+      "profile": {"profile_id": "synthetic-migration", "profile_version": "1.0.0"},
+      "schema": {"type": "object", "additionalProperties": false, "required": ["id", "title", "tags"], "properties": {"id": {"type": "string", "minLength": 1}, "title": {"type": "string"}, "tags": {"type": "array", "items": {"type": "string"}}}}
+    },
+    {
+      "schema_version": "90.2.0",
+      "profile": {"profile_id": "synthetic-migration", "profile_version": "1.0.0", "invariant": "title_length equals the Unicode code point count of title"},
+      "schema": {"type": "object", "additionalProperties": false, "required": ["id", "title", "tags", "title_length"], "properties": {"id": {"type": "string", "minLength": 1}, "title": {"type": "string"}, "tags": {"type": "array", "items": {"type": "string"}}, "title_length": {"type": "integer", "minimum": 0}}}
+    }
+  ],
+  "vectors": [
+    {"name": "unicode", "a": {"id": "one", "label": "café", "tags": ["é", "a"]}, "b": {"id": "one", "title": "café", "tags": ["é", "a"]}, "c": {"id": "one", "title": "café", "tags": ["é", "a"], "title_length": 4}},
+    {"name": "empty", "a": {"id": "two", "label": "", "tags": []}, "b": {"id": "two", "title": "", "tags": []}, "c": {"id": "two", "title": "", "tags": [], "title_length": 0}},
+    {"name": "decomposed", "a": {"id": "three", "label": "é", "tags": ["x", "x"]}, "b": {"id": "three", "title": "é", "tags": ["x", "x"]}, "c": {"id": "three", "title": "é", "tags": ["x", "x"], "title_length": 2}}
+  ]
+}

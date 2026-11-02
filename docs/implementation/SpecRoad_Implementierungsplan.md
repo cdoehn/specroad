@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 53 · **Stand:** 2. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.48
+**Planrevision:** 54 · **Stand:** 2. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.48
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 Schritte und 900 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; die ausdrücklich genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wird nach 10.7.10 innerhalb von 15.l.R vorgezogen. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -32,6 +32,52 @@ Ketten erfordert erst den belegten erfolgreichen normalen Abschluss.
 Produktfreigaben und die Grenzen aus 2.4.1/2.4.2/2.4.4 bleiben unverändert.
 Dieser Plan ändert keine alten Aufträge, Antworten, Blockaden oder
 Laufzeitdaten und ist keine Start-/Resume-Anweisung.
+
+## Bundle 550 — vollständiger Versionsgraphkern 16.a.W/R/C
+
+Maßgeblich ist das vollständig nativ geprüfte Result
+`specroad-apply_Result_213053_1102_695cc8.zip`, SHA-256
+`53af97b92806c0dacb0c2d7fce755d684c12821c3ccf780f9b876139b833e778`,
+sauberer HEAD `edbaab666e2fbe29489ee80d95926ec97459fd07`.
+Bundle 549 wurde mit 6.279 bestandenen Apply-Tests (Gruppe 2 plus
+109 Pflichttests) abgeschlossen; sein Fortschrittsrecord ist completed ohne
+offene Commit-IDs. Das ist keine Vollsuite- oder Produktfreigabe.
+Die Klärung MIGRATION-GRAPH-549 ist damit Grundlage der normalen Umsetzung;
+Spec 0.2.48 und ihre bestehenden Bindungen bleiben bytegleich.
+
+Diese ZIP liefert drei echte aufeinanderfolgende Zustände mit den exakten
+Commit-IDs und Nachrichten von 16.a.W, 16.a.R und 16.a.C. W implementiert
+den vollständigen Graph-/Schrittvertrag, atomare Zulassung, sichere reine
+Auflösung und explizite Transformation mit eigenen unabhängigen Vektoren.
+R ergänzt lineare DAG-Pfadzählung, widersprüchliche Vektorabwehr und echte
+beidseitige inverse Rundläufe sowie die vollständigen Rand-/Fehlerabnahmen.
+C trennt unverändert Graphalgorithmen, Vertragszulassung und Ausführung.
+Versionierte interne Schritt-IDs besitzen ein explizites `.v<N>`-Suffix.
+Die kleinen vollständigen Testschemas 90.x sind ausdrücklich synthetisch;
+sie registrieren keinen produktiven 0.1-Pfad und behaupten kein Q.0.
+
+Der hier gespeicherte Phasenstand 16.a.W und sein Fortschrittsmarker gelten
+erst nach dem zugehörigen erfolgreichen Apply-Gate UND tatsächlichen Commit.
+Vorher bleibt nur der durch das Quell-Result belegte Stand 660/900 gesichert.
+Apply bringt C nicht vor W/R aus. Bei einem Fehler bleiben Commitpräfix und
+Arbeitsstand erhalten; die noch offenen IDs werden nicht übersprungen.
+Dev hat keine Tests ausgeführt. Syntax, reine Collection und native Paket-
+prüfung sind keine Verhaltensabnahme. Jede Phase bindet alle neuen Testdateien
+vollständig sowie Katalog-, kanonische JSON-, Profil- und Restore-Schemagrenzen
+als ungefilterte Pflichtauswahl. Apply prüft pro Commit genau einmal deren
+Vereinigung mit der fälligen gefilterten N=3-Gruppe (erwartet 0, 1, 2), mit
+Hostworkern, worksteal, Nice und unveränderter dauerhafter Messhistorie.
+Testnummern werden ausschließlich hinten ergänzt. Keine CI oder Dienststarts.
+
+SR-TC-0263/0264/0265/0274 erhalten ausschließlich partielle Kernelabnahmen;
+CLI, echte native Migration, Planbindung, Backup/Audit und Restore-Integration
+bleiben offen. Die historische Klärungsbeschreibung unter 16.a dokumentiert
+den damaligen offenen Stand, nicht die neue Phasenabnahme.
+Nach C ist 16.b.W der nächste vollständige Schritt. Sein unverzichtbarer
+Q.0-Quellvertrag liegt weiterhin nicht vor; ohne ihn bleibt 0.1 unregistriert.
+Dies ist kein aufgeteiltes 16.a und kein Abschluss von M16. M15-Integrations-,
+Vollsuiten- und Plattformgates sowie 18.q/18.r bleiben ebenfalls offen.
+Keine Fakten, Freigaben oder historischen Schemadetails werden erfunden.
 
 ## OFF-PLAN MIGRATION-GRAPH-549 — Versionsgraph und Rückwege präzisieren
 
@@ -973,11 +1019,11 @@ Kein offener Produktplanschritt wird durch diese Testoptimierung abgeschlossen.
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 53
+plan_revision: 54
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 660
-last_completed_plan_commit: 15.o.C
-next_plan_commit: 16.a.W
+implementation_plan_commits_completed: 661
+last_completed_plan_commit: 16.a.W
+next_plan_commit: 16.a.R
 last_completed_numbered_bundle: 549
 implementation_state: in_progress
 audit_followup_status: closed
@@ -35027,7 +35073,7 @@ auf Apply. Nur Control beauftragt den nächsten Durchlauf aus dessen Result.
 
 #### 16.a.W – Let it Work
 
-- [ ] **16.a.W** · Position **661/900** · Voraussetzung: `15.o.C`.
+- [x] **16.a.W** · Position **661/900** · Voraussetzung: `15.o.C`.
 **Exakte Commit-Message:** `16.a.W feat(migration): Versionsgraph und Migrationsschrittvertrag aufbauen`
 
 **Umsetzung:** Den vollständigen Schritt-/Versionsgraphvertrag aus 12.20.1 umsetzen: versionierte Schritte mit exakt gebundener Quelle und Ziel, Voraussetzungen, Transformation, Nachbedingungen, Reversibilität und eigenen unabhängigen Vektoren registrieren. Isolierte Testverträge erzeugen keine produktive 0.1-Unterstützung.
