@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 52 · **Stand:** 2. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.47
+**Planrevision:** 53 · **Stand:** 2. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.48
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 Schritte und 900 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; die ausdrücklich genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wird nach 10.7.10 innerhalb von 15.l.R vorgezogen. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -9,7 +9,7 @@ Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 S
 
 Fachliche Grundlage ist [`docs/specification/SpecRoad_Spezifikation.md`](../specification/SpecRoad_Spezifikation.md), einschließlich aller konsolidierten Korrekturen, 742 Requirements, 51 Verifikationsverträge, 46 Szenario-/E2E-Identitäten sowie R-01 bis R-75, Anhang U und den PatchHarbor-Rundweg aus Anhang W. Der [`Prüfbericht`](../reviews/SpecRoad_v0.2.7_Implementierungsreife_Pruefbericht.md) ist ein vorgelagerter Entwurfsreview, kein späterer Produktnachweis.
 
-Gebundene Spezifikations-SHA-256: `e59010a6c6a2ba8e8eff3381d3755353b441810e9cd05d3f2cdc2177965ee4a7`.
+Gebundene Spezifikations-SHA-256: `15607c51272c8cb1c730a2bee1b28357d5d09f1f049946d82d8b9065d2ff67d6`.
 Planungsbasis: Commit `fe2661d02ecf2f7eb483b58a4487eb009c6b3846`; sauberes Result-Bundle `specroad_Result_120209_0914_df3504.zip`; Repository-ID `3d2576df-d611-46fc-9d2b-92869468aaca`. Diese Angaben dokumentieren die Entstehung des Plans, nicht die zukünftige Patchbindung. **Jedes spätere Patchpaket bindet den dann aktuellen tatsächlichen Result-Zustand.**
 
 Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 2026 gelten zusätzlich und bei den nachfolgend benannten Konflikten vorrangig. Sonstige normative Spezifikationsinhalte werden nicht stillschweigend abgeschwächt. Neue fachliche Widersprüche, fehlende zwingende Angaben und Sicherheitsprobleme sind offen zu benennen, nicht durch erfundene Annahmen oder Scheinerfolge zu lösen.
@@ -32,6 +32,45 @@ Ketten erfordert erst den belegten erfolgreichen normalen Abschluss.
 Produktfreigaben und die Grenzen aus 2.4.1/2.4.2/2.4.4 bleiben unverändert.
 Dieser Plan ändert keine alten Aufträge, Antworten, Blockaden oder
 Laufzeitdaten und ist keine Start-/Resume-Anweisung.
+
+## OFF-PLAN MIGRATION-GRAPH-549 — Versionsgraph und Rückwege präzisieren
+
+Maßgebliche technische Basis: vollständig nativ geprüftes Result
+`specroad-apply_Result_180648_1102_32a595.zip`, SHA-256
+`941d6cac954cb0efb1b2c74fefba98b84e36f2e9e1058105289e73f1587623fa`,
+sauberer HEAD `ed49dcb6c2c5530b39ca05b05a83d19e88800b4f`.
+Der echte Restlauf in Bundle 548 hat 15.o.R als
+`a13846faa96ff0f4ea735c3039d57ad95b154f70` nach 7.508 bestandenen Tests
+und 15.o.C als `ed49dcb6c2c5530b39ca05b05a83d19e88800b4f` nach 7.621
+bestandenen Tests committed. SPECROAD_APPLY_PROGRESS meldet completed ohne
+offene Commit-IDs. Es waren Gruppen 0/1 plus jeweils 1.713 Pflichttests,
+keine Vollsuite- oder Meilensteinfreigabe. Die alten Fehler-Results und die
+erhaltene Commitkette bleiben unverändert; die historische Markierung 547
+in den identischen Produktbytes ersetzt nicht den tatsächlichen Restlauf 548.
+
+Diese Übergabe enthält genau einen Dokumentcommit `MIGRATION-GRAPH-549` mit
+Nachricht `OFF-PLAN MIGRATION-GRAPH-549 docs(spec): Versionsgraph und Rückwege präzisieren`.
+Entscheidung, Alternativen und vollständige offene W/R/C-Abnahmen stehen
+bei 16.a; normative Grundlage ist Spec 0.2.48/12.20.1. Der Produktstand bleibt
+**660/900**, nächster Produktcommit **16.a.W**. Alle Produktcheckboxen bleiben
+unverändert. Die vorbereitete Bundlenummer 549 gilt erst nach dem erfolgreichen
+Apply-Gate und tatsächlichen Dokumentcommit. Bis dahin ist 548 der letzte
+vollständig belegte Bundleabschluss.
+
+Geändert sind ausschließlich Spezifikation, Plan und 743 aktive
+Spezifikationshashbindungen im Katalog. Code, Tests, Fixtures, Oracles,
+Testnummern, Runner, Messhistorie und historische Evidence bleiben erhalten.
+Dev führt keine Tests aus. Reine Collection, statische Katalogprüfung und
+native Paketvalidierung sind keine Verhaltensabnahme. Apply prüft vor dem
+einen Commit genau einmal die fällige gefilterte Gruppe **2 von 3** plus
+die begründete ungefilterte Pflichtauswahl. Hostworker und Nice-Regeln bleiben.
+Keine CI, kein eigener Apply-, Watcher- oder Control-Start.
+
+Klassifikation: `spec_clarification` unter SPECROAD-DECISION-1-V3 und gültigem
+Control-Vertrag 3 mit Restbudget 3/3. Die Klärung verbraucht einen Platz;
+sie ist kein normaler Produktpatch und erneuert kein Budget. Der Auftrag
+endet nach genau einer atomaren Exchange-Übergabe. Nur ein neuer gebundener
+Control-Auftrag auf dem zugehörigen Result setzt die Umsetzung fort.
 
 ## KORREKTUR 547 — manipulierbare PYZ-Testpakete, vollständiger 15.o.R/C-Rest
 
@@ -934,12 +973,12 @@ Kein offener Produktplanschritt wird durch diese Testoptimierung abgeschlossen.
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 52
+plan_revision: 53
 implementation_plan_commits_total: 900
 implementation_plan_commits_completed: 660
 last_completed_plan_commit: 15.o.C
 next_plan_commit: 16.a.W
-last_completed_numbered_bundle: 547
+last_completed_numbered_bundle: 549
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -34876,21 +34915,131 @@ Umsetzung fort. Dieser Auftrag endet nach genau einer atomaren ZIP-Übergabe.
 **Anforderungsbezug:** `SR-REQ-0263`–`SR-REQ-0265`, `SR-REQ-0274`.
 **Verifikationsbezug:** `SR-VER-0020`. Die exakten SR-TC-Identitäten stehen in der vollständigen Matrix.
 
+**Entscheidungsbeleg MIGRATION-GRAPH-549 — 2. November 2026.**
+
+Autorität: **delegiert gemäß SPECROAD-DECISION-1**, Grenzen 2.4.1–2.4.4 und
+ausdrückliche Projektfreigabe SPECROAD-DECISION-1-V3. Der aktuelle gültige
+Control-Vertrag 3 erlaubt eine Klärung mit Restbudget 3/3. Dies ist keine
+persönliche Einzelzustimmung, kein menschliches Review und keine von Control
+erteilte fachliche Befugnis.
+
+**Maßgebliche Quellen und Lücke.** Das vollständig nativ geprüfte Result
+`specroad-apply_Result_180648_1102_32a595.zip`, SHA-256
+`941d6cac954cb0efb1b2c74fefba98b84e36f2e9e1058105289e73f1587623fa`,
+bindet den sauberen HEAD `ed49dcb6c2c5530b39ca05b05a83d19e88800b4f` und
+den vollständigen Snapshot. Gelesen wurden Spec 0.2.47, 2.4, 10.7.11,
+12.20/SR-REQ-0263–0265/0274, Q.0–Q.5 und S.7 sowie die vollständigen
+16.a-W/R/C-Abnahmen und die anschließenden M16-Voraussetzungen. Im Snapshot
+existiert noch kein Migrationsregister; der aktuelle Core-Versionswert allein
+ist kein Quellvertrag. Die bestehenden Authoring-/Lock-Verweise auf
+`migrate apply` liefern keinen Versionsgraphen. Aktive SR-TC-0263/0264/0265/0274
+sind offen; daraus wird kein positiver Testnachweis abgeleitet.
+
+Der offene Schritt verlangt Zyklusabwehr und zugleich ausdrücklich
+implementierbare verlustfreie Rückwege. Bei unterschiedsloser Registrierung
+aller Richtungen wäre bereits ein erlaubtes inverses Paar ein Zyklus.
+Außerdem fehlt die Auswahlregel, wenn mehrere vollständig implementierte
+Ketten dieselben Endpunkte verbinden. Unterschiedliche Schritte können
+unterschiedliche Verlust-/Pflichtfeldentscheidungen tragen; eine automatische
+Kürzestpfadwahl wäre deshalb eine neue Fachregel. S.7 kennt zudem verschiedene
+Entwurfsverträge mit gleichem Daten-Schemaversionstext; reine Versionsstrings
+würden unzulässige Gleichheit beziehungsweise einen falschen No-op erzeugen.
+Diese Details betreffen die beobachtbaren Sicherheits-/Ergebnisverträge von
+16.a. Sie sind keine Lücke im unverändert ausdrücklich offenen Q.0-Quellvertrag.
+
+**Alternativen und Auswahl.**
+
+| Alternative | Bewertung |
+|---|---|
+| Alle Richtungen als gewöhnliche Kanten registrieren und alle Zyklen ablehnen | Verworfen: verhindert bereits den ausdrücklich zulässigen vollständigen Rückweg eines einzelnen Schritts. |
+| Zyklen zulassen oder Rückkanten aus einem Reversibilitätsflag ableiten | Verworfen: schwächt die Zyklus- beziehungsweise Implementierungs-/Verlustfreiheitsgrenze. |
+| Kürzesten, ersten oder lexikographisch kleinsten Pfad wählen | Verworfen: wählt ohne fachlichen Nachweis zwischen möglicherweise verschiedenen Transformationen oder Verlusten. |
+| Jeden Versionsstring als vollständigen Vertrag behandeln | Verworfen: umgeht Herkunftsbindung nach S.7 und kann fehlende Quellverträge beziehungsweise einen falschen No-op verdecken. |
+| Azyklischer Vorwärtsgraph, explizit zugeordnete geprüfte Rückwege, genau eine zulässige Kette und vollständige Vertragsidentität | Gewählt: erfüllt die bestehenden Anforderungen gleichzeitig, benötigt keinen impliziten Fallback und bewahrt alle offenen Kompatibilitätsnachweise. |
+
+**Normative Entscheidung.** Spec 0.2.48/12.20.1 legt die Registrierung,
+Richtungsgrenze, Mehrdeutigkeitsabwehr und bekannte Identitätsgleichheit fest.
+Pfadauflösung bleibt schreibfrei und getrennt von tatsächlicher Transformation
+und CLI. Eigene unabhängige Vektoren sind Pflicht. Vollständig definierte,
+isolierte synthetische Graphverträge ermöglichen positive Kernelabnahmen;
+sie sind keine produktive 0.1-Registrierung und erfüllen Q.0 nicht nebenbei.
+Der spätere Migrationspfad und sein Quellvertrag werden nicht vorgezogen.
+
+**Abgleich mit jeder Delegationsgrenze aus 2.4.1.**
+
+1. Der Umfang bleibt Versionsgraph/Schrittvertrag von 16.a. Keine neue
+   Produktposition, kein Vorziehen von Quellleser, Migration, CLI oder Restore.
+2. Die Lösung erhält die Rangfolge und vereinbart Zyklusabwehr mit dem nur bei
+   expliziter verlustfreier Implementierung zulässigen Rückweg. Sie ersetzt
+   keine gleichrangige Requirement und benötigt keine zusätzliche externe API.
+3. Unterstützung, Originalerhaltung, Verlustfreigaben, Q.0, S.7 und menschliche
+   Reviews bleiben unverändert verbindlich. Bestehende Projekt-/Plan-/CLI-
+   Formate und tatsächliche Daten werden nicht verändert. Fehler sind keine
+   Produktabnahme; leere oder nur ablehnende Graphen erfüllen W/R nicht.
+4. Die versionierte Detailregel ist durch eine spätere ausdrückliche
+   Spezifikationsänderung ersetzbar. Keine existierenden Migrationsdaten oder
+   Nachweise werden umgeschrieben; Reset, Löschen oder neue History sind nicht
+   erlaubt. Nur aktive Katalogbindungen wechseln den Dokumenthash.
+5. Die Entscheidung benötigt keine erfundenen alten Schemas, historischen
+   Hashalgorithmen, Produktivdaten, externen Fähigkeiten oder Fachfreigaben.
+   Die tatsächliche 0.1-Herkunft bleibt ungeklärt nach Q.0. Isolierte explizite
+   Testverträge behaupten ausschließlich ihre eigene definierte Semantik.
+
+**Verbindliche Abnahmen des vollständigen offenen 16.a-Umfangs.**
+
+- W: Vollständige Schrittverträge und unabhängige fachliche Vektoren
+  registrieren; eine mehrstufige Vorwärtskette geordnet auflösen; ihre
+  Transformationen samt Vor-/Nachbedingungen an den Vektoren prüfen.
+  Unbekannte Quelle und unbekanntes Ziel ablehnen. Auflösung ruft keinen
+  Transformer auf und verändert keine Daten oder Registereinträge.
+- R: Selbstkanten, längere und nicht vom Auftrag erreichte Vorwärtszyklen,
+  doppelte Identitäten/Endpunkte, fehlende Funktionen/Vektoren, offene
+  Vertragsbindungen, Pfadlücken und mehrere Pfade einschließlich ungleicher
+  Länge ablehnen. Der Befund ist von Registrierungsreihenfolge unabhängig.
+  Ein implementiertes inverses Paar bleibt zulässig; mehrstufige Rückkehr
+  verlangt alle expliziten verlustfreien Rückschritte und deren eigene
+  Vektoren. Flag ohne Implementierung, widersprüchliche Reversibilität,
+  fehlender Rückschritt oder nicht erfüllte Vorbedingungen erlauben kein
+  Downgrade. Gleiche bekannte Vertragsidentität liefert eine leere Kette;
+  unbekannte gleiche Labels oder unterschiedliche Herkunft bei gleichem
+  `schema_version` umgehen die Prüfungen nicht. Testregister bleiben isoliert
+  vom produktiven Unterstützungskatalog; 0.1 bleibt ohne Q.0 unregistriert.
+- C: Pfadauflösung, Schritt-/Vertragsprüfung und tatsächliche Transformation
+  strukturell trennen. Alle W-/R-Oracles, Fehlerunterscheidungen,
+  Reihenfolgen und erlaubten Seiteneffekte bleiben unverändert. Bestehende
+  Restore-/CLI-Schemagrenzen werden nicht abgeschwächt.
+
+**Offener Rest und Übergabe.** 16.a.W, R und C bleiben vollständig offen;
+Produktfortschritt bleibt **660/900**, nächster Produktcommit **16.a.W**.
+16.b benötigt weiterhin Q.0; M15-Integrations-/Vollsuiten-/Plattformgates,
+der vollständige M16-Nachweis und 18.q/18.r bleiben gesondert offen.
+Ein einzelner OFF-PLAN-Dokumentcommit schreibt zuerst Entscheidung, Norm und
+Planabnahmen fort. Produktcode, Tests, Fixtures, Oracles und Testnummern
+bleiben unverändert. Keine Dokumentations- oder Darstellungstests.
+Bestehende maschinenlesbare Katalogprüfungen und relevante Restore-
+Schemagrenzen werden begründet als ungefilterte Apply-Pflichtauswahl
+gebunden; hinzu kommt genau einmal die aktuelle gefilterte N=3-Gruppe.
+Dev führt keine Verhaltenstests aus. Die Übergabe meldet
+`spec_clarification`, verbraucht einen Platz und erneuert kein Budget.
+Nach der einen atomaren Veröffentlichung endet dieser Auftrag ohne Warten
+auf Apply. Nur Control beauftragt den nächsten Durchlauf aus dessen Result.
+
+
 #### 16.a.W – Let it Work
 
 - [ ] **16.a.W** · Position **661/900** · Voraussetzung: `15.o.C`.
 **Exakte Commit-Message:** `16.a.W feat(migration): Versionsgraph und Migrationsschrittvertrag aufbauen`
 
-**Umsetzung:** Versionierte Schritte mit Quelle, Ziel, Voraussetzungen, Transformation, Nachbedingungen und Reversibilität registrieren.
+**Umsetzung:** Den vollständigen Schritt-/Versionsgraphvertrag aus 12.20.1 umsetzen: versionierte Schritte mit exakt gebundener Quelle und Ziel, Voraussetzungen, Transformation, Nachbedingungen, Reversibilität und eigenen unabhängigen Vektoren registrieren. Isolierte Testverträge erzeugen keine produktive 0.1-Unterstützung.
 
-**Verhaltensabnahme:** Ein vollständig unterstützter Pfad ist geordnet auflösbar; unbekanntes Ziel bleibt unzulässig.
+**Verhaltensabnahme:** Ein vollständig implementierter mehrstufiger Pfad ist geordnet und ohne Transformationsaufruf auflösbar; seine fachlichen Vektoren belegen separat Transformation und Vor-/Nachbedingungen. Unbekannte Quelle und unbekanntes Ziel bleiben unzulässig. Alle zusätzlichen W-Abnahmen aus MIGRATION-GRAPH-549 gelten.
 
 #### 16.a.R – Make it Right
 
 - [ ] **16.a.R** · Position **662/900** · Voraussetzung: `16.a.W`.
 **Exakte Commit-Message:** `16.a.R feat(migration): Versionsgraph und Migrationsschrittvertrag vervollständigen`
 
-**Vervollständigung:** Lücken, Zyklen und nicht implementierte Rückwege ablehnen; kein pauschales Downgrade anbieten.
+**Vervollständigung:** Nach 12.20.1 Lücken, Vorwärtszyklen, Mehrdeutigkeit, Registerkonflikte und nicht implementierte Rückwege ablehnen. Explizit implementierte verlustfreie inverse Paare gesondert prüfen; kein pauschales Downgrade, kein Herkunfts- oder Gleichheitsfallback. Sämtliche R-Grenzfälle aus MIGRATION-GRAPH-549 bleiben Pflicht.
 
 **Verhaltensabnahme:** Jeder registrierte Schritt besitzt eigene fachliche Eingabe-/Ergebnisvektoren. Die W-Nachweise bleiben zusätzlich grün.
 

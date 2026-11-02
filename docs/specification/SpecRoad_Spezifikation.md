@@ -1,21 +1,21 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.47
+## Version 0.2.48
 
 | Feld | Wert |
 |---|---|
 | Dokument-ID | `SR-SPEC-0001` |
-| Dokumentversion | `0.2.47` |
+| Dokumentversion | `0.2.48` |
 | Zielrelease | `SpecRoad Single-Repository Workbench 0.2.0` |
 | Status | **Fachlich konsolidierte Arbeitsgrundlage; technische Reviewentscheidung gesondert dokumentiert, formale Baseline-Freigabe und Produktabnahme nicht durch dieses Dokument erklärt** |
 | Stand | 2. November 2026 |
 | Sprache | Deutsch; technische Feldnamen, Enum-Werte und CLI-Kommandos Englisch |
-| Fachliche Quelle | **Diese Repositoryfassung v0.2.47 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.47 liegt mit dieser Änderung nicht vor.** |
+| Fachliche Quelle | **Diese Repositoryfassung v0.2.48 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.48 liegt mit dieser Änderung nicht vor.** |
 | Bearbeitbare Satzquelle | Diese Datei; eine spätere PDF muss denselben versionierten Inhalt wiedergeben. |
-| Vorgängerversion | Repository-Spezifikation v0.2.46 vom 1. November 2026; historische Nachweise bleiben unverändert. |
-| Prüf- und Entscheidungsgrundlage | Detailentscheidung TRANSPORT-OPEN-543, delegiert gemäß SPECROAD-DECISION-1 und dessen ausdrücklich erlaubtem Control-Vertrag 3; bestehende fachliche Entscheidungen und Nachweise bleiben erhalten. |
-| Änderungsart | TRANSPORT-OPEN-543: explizite Runtime-/Prüfbereichseingaben für Verify/Extract, vollständige Innenprüfung, dauerhafte Originalreferenzen und getrennte Ergebnisse; Umsetzung 15.o bleibt offen. |
+| Vorgängerversion | Repository-Spezifikation v0.2.47 vom 2. November 2026; historische Nachweise bleiben unverändert. |
+| Prüf- und Entscheidungsgrundlage | Detailentscheidung MIGRATION-GRAPH-549, delegiert gemäß SPECROAD-DECISION-1 und dessen ausdrücklich erlaubtem Control-Vertrag 3; bestehende fachliche Entscheidungen und Nachweise bleiben erhalten. |
+| Änderungsart | MIGRATION-GRAPH-549: eindeutiger azyklischer Vorwärtsgraph, ausdrücklich implementierte verlustfreie Rückwege und vollständige Vertragsidentität; 16.a und Q.0-Nachweise bleiben offen. |
 
-> **Verbindlicher Quellenwechsel:** Die delegierte Detailentscheidung TRANSPORT-OPEN-543 vom 2. November 2026 schreibt den Öffnungsvertrag als v0.2.47 fort; die ausdrücklich getrennte 1.8.0-PYZ-Bindung bleibt erhalten. Frühere PDF- und Reviewnachweise bleiben historisch gebunden; keine Produktfreigabe wird erklärt.
+> **Verbindlicher Quellenwechsel:** Die delegierte Detailentscheidung MIGRATION-GRAPH-549 vom 2. November 2026 präzisiert den Versionsgraphen als v0.2.48; bestehende Transportverträge und die ausdrücklich offene Q.0-Voraussetzung bleiben erhalten. Frühere PDF- und Reviewnachweise bleiben historisch gebunden; keine Produktfreigabe wird erklärt.
 
 > **Fortbestehende Arbeitsprinzipien:** Weiche Budgets führen zu sparsamer vollständiger Weiterarbeit oder gesicherter Fortsetzung über mehrere Aufrufe beziehungsweise Prompts. Es werden keine erforderlichen Arbeiten stillschweigend ausgelassen. Reale Host-, Speicher-, Berechtigungs- und Sicherheitsgrenzen bleiben wirksam.
 
@@ -102,7 +102,7 @@ Bei einem Widerspruch innerhalb dieser Dokumentversion gilt:
 3. `SR-DEC-*` hat Vorrang vor erläuterndem Text, Diagrammen und Beispielen.
 4. Beispiele sind niemals normativ, sofern sie nicht ausdrücklich als Testvektor bezeichnet sind.
 5. Zwei widersprüchliche `SR-REQ-*`-Anforderungen besitzen **keine implizite Rangfolge** nach Nummer, Position oder Spezifität. Ein solcher Fund ist ein Spezifikationsfehler, muss als Issue gelöst werden und verhindert die Freigabe.
-6. Diese Dokumentversion 0.2.47 ersetzt die frühere fachliche Arbeitsgrundlage vollständig. Bis zur gesonderten PDF-Veröffentlichung ist diese versionierte Repositorydatei maßgeblich. Eine spätere PDF muss inhaltsgleich sein; frühere PDFs werden nicht als Nachweis der neuen Verträge ausgegeben. Inhalte verschiedener Fassungen dürfen nicht zu einer Mischspezifikation kombiniert werden.
+6. Diese Dokumentversion 0.2.48 ersetzt die frühere fachliche Arbeitsgrundlage vollständig. Bis zur gesonderten PDF-Veröffentlichung ist diese versionierte Repositorydatei maßgeblich. Eine spätere PDF muss inhaltsgleich sein; frühere PDFs werden nicht als Nachweis der neuen Verträge ausgegeben. Inhalte verschiedener Fassungen dürfen nicht zu einer Mischspezifikation kombiniert werden.
 7. Eine nachträgliche Änderung dieser veröffentlichten Datei erfordert mindestens eine neue Patch-Dokumentversion; stille Korrekturen unter derselben Dokumentversion sind unzulässig.
 8. Eine normative Tabelle, auf die eine `SR-REQ-*`-Anforderung ausdrücklich als Algorithmus oder Matrix verweist, ist Bestandteil des Passkriteriums dieser Anforderung.
 
@@ -4577,6 +4577,116 @@ Langlebige Projekte werden über geplante, verlustbewusste, gesicherte und verif
 | SR-REQ-0273 | Die Migration 0.1.0 nach 0.2.0 MUSS Relations-IDs reproduzierbar nach der Ableitungs- und Legacy-Projektionsregel in Anhang Q bilden. | SR-NEED-0003, SR-NEED-0009, SR-NEED-0014 | SR-VER-0020 | SR-TC-0273 |
 | SR-REQ-0274 | SpecRoad DARF ein Downgrade nur anbieten, wenn ein ausdrücklich implementierter verlustfreier Rückweg existiert. | SR-NEED-0009, SR-NEED-0011, SR-NEED-0014 | SR-VER-0020 | SR-TC-0274 |
 
+#### 12.20.1 Eindeutiger Versionsgraph und explizite Rückwege
+
+**MIGRATION-GRAPH-549**, delegiert gemäß SPECROAD-DECISION-1 und dem
+ausdrücklich freigegebenen Control-Vertrag 3. Dieser Detailvertrag präzisiert
+16.a und SR-REQ-0263–0265/0274. Er definiert keinen historischen 0.1-Vertrag,
+keinen neuen Migrationspfad und keine Freigabe nach Q.0. Die tatsächlichen
+Leser, Transformationen, Change Plans und Writer bleiben gesonderte M16-Arbeit.
+
+**Vertragsidentität und Registrierung.** Ein Graphknoten bezeichnet einen
+konkreten, versioniert definierten Datenvertrag, nicht nur einen Versionsstring.
+Zur Identität gehören die Daten-Schemaversion und die unveränderliche Bindung
+der zugehörigen Schema-/Profilverträge; bei Entwurfsmigration zusätzlich die
+explizite Herkunft nach S.7. Zwei unterschiedliche Quellverträge mit demselben
+`schema_version`-Wert dürfen weder verschmolzen noch als No-op behandelt werden.
+Eine Dokumentversion wird nicht ohne den zugehörigen Datenvertrag zur
+Daten-Schemaversion. Fehlende oder widersprüchliche Vertragsbindungen erteilen
+keine Unterstützung. Bestehende Manifest-/Originalhashbindungen bleiben erhalten;
+dieser Graphvertrag definiert keinen Ersatz für Q.0 oder S.7.
+
+Das produktive Register enthält ausschließlich ausdrücklich ausgelieferte
+Core-Implementierungen. Projekt-, Mapping- oder Planinhalte dürfen keine
+ausführbaren Schritte registrieren, Module benennen oder Code nachladen.
+Ein registrierter Schritt besitzt eine eindeutige versionierte Schrittidentität,
+exakte Quell-/Zielvertragsidentitäten, überprüfbare Vorbedingungen, eine
+implementierte deterministische Transformation, überprüfbare Nachbedingungen,
+eine ausdrückliche Reversibilitätsangabe und eigene unabhängige Eingabe-/
+Ergebnisvektoren. Leere Platzhalter, bloße Funktionsnamen, fehlende Endpunkte
+und doppelte Schrittidentitäten sind keine vollständigen Registrierungen.
+Mehrere Vorwärtsschritte mit denselben Endpunkten werden nicht still ersetzt
+oder nach Registrierungsreihenfolge ausgewählt. Sie sind ein Registerkonflikt.
+Unvollständige oder widersprüchliche Registrierung wird als Ganzes abgewiesen;
+es darf kein scheinbar gültiges Teilregister aus ihr entstehen.
+
+**Vorwärtsgraph.** Die ausdrücklich registrierten Vorwärtsschritte bilden einen
+endlichen gerichteten azyklischen Graphen. Selbstkanten und längere Zyklen sind
+unzulässig, auch in einem vom angefragten Pfad nicht erreichten Teilregister.
+Eine Überführung in eine ältere Schemaversion oder einen früheren Entwurfsvertrag
+ist ein Rückweg; sie darf nicht durch Umetikettieren als Vorwärtskante die
+Downgradegrenze umgehen. Der Ordnungsbezug kommt aus den tatsächlich definierten
+Verträgen, nicht aus lexikographischem Sortieren beliebiger Versionslabels.
+
+**Expliziter Rückweg.** Ein Rückweg ist dem konkreten Vorwärtsschritt eindeutig
+zugeordnet und vertauscht dessen exakte Endpunkte. Er ist kein zusätzlicher
+Vorwärtsschritt. Deshalb macht das ausdrücklich implementierte inverse Paar
+den Vorwärtsgraphen nicht zyklisch. Seine Transformation, Vor-/Nachbedingungen
+und eigenen Eingabe-/Ergebnisvektoren müssen tatsächlich vorliegen. Die
+Verlustfreiheit muss für den angebotenen Eingabebereich gelten; passende
+Hin-/Rückvektoren allein autorisieren keinen darüber hinausgehenden Bereich.
+Ein Flag `reversible`, ein vorhandenes Sicherungsbundle oder ein früherer
+Erfolg erzeugt weder automatisch eine inverse Funktion noch eine Freigabe.
+Ein als irreversibel deklarierter Schritt und ein dennoch angebotener Rückweg
+sind widersprüchlich. Ein unvollständiger Rückweg wird nicht angeboten.
+
+Eine Rückwärtskette ist nur verfügbar, wenn jeder darin benötigte Rückschritt
+ausdrücklich implementiert und für die konkreten Eingaben verlustfrei zulässig
+ist. Kein Umgehen einer fehlenden Rückkante durch einen beliebigen alten
+Snapshot, eine Vorwärtskante oder stillen Datenverlust. Die Pfadsuche verwendet
+entweder Vorwärtsketten oder die expliziten Rückwege einer solchen Kette; sie
+kombiniert sie nicht zu Hin-und-zurück-Umwegen. Vorbedingungen und sämtliche
+Verlust-, Originalerhaltungs- und Freigaberegeln bleiben zusätzlich wirksam.
+
+**Pfadauflösung.** Quelle und Ziel müssen als konkrete Vertragsidentitäten
+bekannt sein. Für unterschiedliche Endpunkte wird genau ein vollständig
+zusammenhängender Pfad in der zulässigen Richtung verlangt. Kein Pfad bedeutet
+`unsupported_path`; mehrere mögliche Pfade bedeuten `ambiguous_path`.
+Weder kürzester Pfad, lexikographische Ordnung noch Registrierungsreihenfolge
+entscheidet zwischen fachlich möglicherweise unterschiedlichen Transformationen.
+Alle möglichen zulässigen Wege zählen, nicht nur gleich lange. Es gibt keinen
+impliziten Fallback auf eine andere Quelle, Zielversion oder Herkunft.
+Der gefundene Pfad enthält jeden Schritt in Ausführungsreihenfolge; ausgelassene
+Zwischenschritte oder ein Richtungswechsel sind keine gültige Auflösung.
+
+Nur bei derselben bekannten vollständigen Vertragsidentität ist ein leerer
+Pfad zulässig. Das ist ein Befund des Graphkerns, kein Beweis für gültige
+Projektbytes, ein gültiges Planfile oder ein bereits erfolgreich migriertes
+Projekt. Die späteren Plan-/Apply-Gates einschließlich SR-REQ-0270 bleiben
+erforderlich. Auch `unbekannt -> unbekannt` wird nicht dadurch zulässig, dass
+die übergebenen Labels gleich sind. Unbekannte Quelle, unbekanntes Ziel,
+Registerkonflikt, Zyklus, Pfadlücke, Mehrdeutigkeit und nicht implementierter
+Rückweg müssen maschinenlesbar unterscheidbar bleiben.
+
+Die Auflösung ist eine schreibfreie Operation auf dem geprüften Register.
+Sie ruft weder Transformationen noch fachliche Vor-/Nachbedingungsfunktionen
+auf, verändert weder Eingabedaten noch das Register und erzeugt kein Backup,
+Projekt, Receipt oder Journal. Das Vorliegen der Funktionen und Vektoren ist
+Registrierungsbedingung; ihre tatsächliche fachliche Anwendung folgt erst im
+dafür vorgesehenen Plan-/Transformationspfad. Die spätere CLI ordnet diese
+Befunde in die bestehenden Fehlerklassen ein; dieser Vertrag ändert keine
+Exitcodes oder vorhandenen CLI-, Request- oder Change-Plan-Formate.
+
+**Abnahme und ehrliche Unterstützungsgrenze.** Die positive 16.a-Abnahme
+verlangt echte registrierte Implementierungen mit vollständig definierten,
+ausdrücklich synthetischen Testverträgen und unabhängig vorgegebenen
+Eingabe-/Ergebnisvektoren. Sie prüft geordnete mehrstufige Vorwärts- und
+ausdrücklich implementierte Rückpfade sowie die tatsächlichen Transformationen
+und Vor-/Nachbedingungen dieser Schritte. Ein leeres Register, reine Labels
+oder ausschließlich ablehnende Tests erfüllen diese positive Abnahme nicht.
+Solche isolierten Testregistrierungen dürfen nicht in den produktiven
+Unterstützungskatalog gelangen oder als Kompatibilität mit realen Altformaten
+bezeichnet werden. Neue Testvektoren werden vor ihrer Verwendung festgelegt;
+erwartete Ergebnisse dürfen nicht aus dem getesteten Transformer errechnet
+und als unabhängiges Oracle ausgegeben werden.
+
+Die tatsächliche produktive 0.1-Unterstützung bleibt bis zum vollständigen
+Quellvertrag und zur geprüften nativen Implementierung nach Q.0 unregistriert.
+16.b, die übrigen M16-Schritte, Restore-Integration, aktuelle Reviews und
+Meilensteinfreigaben bleiben offen. Synthetische Graphverträge ersetzen weder
+den historischen Quellvertrag noch die spätere vollständige Migration.
+
+
 ### 12.21 Suspect Relations und fachliche Relationsreviews
 
 Relationsgültigkeit und fachliche Bestätigung werden an konkrete Endpunkthashes gebunden.
@@ -6229,6 +6339,18 @@ bleiben erhalten. Umsetzung und Modul-/PYZ-/Offline-/Abbruchabnahmen bleiben
 in 15.o.W/R/C offen; Produktfortschritt bleibt 657/900. Der Dokumentcommit
 ist eine Spezifikationsklärung, kein Produkt- oder Release-Erfolgsnachweis.
 
+### 20.31 Versionsgraph und explizite Rückwege v0.2.48
+
+`MIGRATION-GRAPH-549`, delegiert gemäß SPECROAD-DECISION-1 unter dem ausdrücklich
+erlaubten Control-Vertrag 3, präzisiert in 12.20.1 den zyklusfreien
+Vorwärtsgraphen, dessen ausdrücklich implementierte verlustfreie Rückwege,
+eindeutige Pfadauflösung und vollständige Vertragsidentität. Eine mehrdeutige
+Kette wird nicht nach Länge oder Registrierungsreihenfolge ausgewählt.
+Synthetische positive Graphabnahmen ersetzen weder Q.0 noch tatsächliche
+Altformat-/Restore-Kompatibilität. 16.a.W/R/C und sämtliche M16-Abnahmen
+bleiben offen; Produktfortschritt bleibt 660/900. Der Dokumentcommit ist eine
+Spezifikationsklärung, kein Produkt-, Vollsuite- oder Release-Erfolgsnachweis.
+
 ## 21. Entscheidungsstatus und nicht blockierende Restpunkte
 
 | ID | Thema | Stand |
@@ -6271,6 +6393,7 @@ Die folgende Roadmap ist informativ und erzeugt keine Anforderungen an 0.2:
 
 | Version | Datum | Status | Änderung |
 |---|---|---|---|
+| 0.2.48 | 2026-11-02 | Delegiert gemäß SPECROAD-DECISION-1, Vertrag 3 | MIGRATION-GRAPH-549: eindeutiger Vorwärtsgraph, explizite verlustfreie Rückwege und vollständige Vertragsidentität; 16.a.W/R/C und Q.0 bleiben offen. |
 | 0.2.47 | 2026-11-02 | Delegiert gemäß SPECROAD-DECISION-1, Vertrag 3 | TRANSPORT-OPEN-543: geschlossene Verify-/Extract-Eingaben, expliziter privater Prüfbereich, vollständige Innenprüfung und originale Referenzhaltung; 15.o.W/R/C bleibt offen. |
 | 0.2.46 | 2026-11-01 | Ausdrücklicher Nutzerauftrag | TRANSPORT-PYZ-541: direkte kanonische PatchHarbor-1.8.0-PYZ statt Runtime-Result; externe Artefaktbindung, private Lazy-Imports und versionierter CLI-/Work-Vertrag; historische Resultdaten bleiben erhalten. |
 | 0.2.45 | 2026-11-01 | Ausdrücklicher Nutzerauftrag | APPLY-ONLY-535: Dev bereitet Testpläne vor; Apply prüft je Commit N=3 plus Pflichtauswahl, misst dauerhaft und erhält Teilfortschritt für gebundene Korrekturbundles. |
@@ -10002,4 +10125,4 @@ Implementierungsschritten nachgewiesen sein.
 
 ---
 
-**Ende der SpecRoad-Produktspezifikation v0.2.47.**
+**Ende der SpecRoad-Produktspezifikation v0.2.48.**

@@ -51,7 +51,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "e59010a6c6a2ba8e8eff3381d3755353b441810e9cd05d3f2cdc2177965ee4a7",
+  "specification_sha256": "15607c51272c8cb1c730a2bee1b28357d5d09f1f049946d82d8b9065d2ff67d6",
   "steps": [
     "Retain W manifest/hash and isolated runtime checks. Check exact role/byte binding, reject Evidence/output/descriptor/selection inputs without filtering, preserve missing binding observations as incomplete/SRV176, verify ownership and isolated Core/PYZ.",
     "12.m.W: Build independent obligations first, then retain the union of declared expected runs and all matching supplied observations; require exact product/key/configuration binding and preserve each Evidence result, including simultaneous failure after a later success. Check multiple slots and subjects, missing declarations, native run conflicts, ownership and isolated Core/PYZ contracts.",
