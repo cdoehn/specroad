@@ -56,7 +56,7 @@ Versionierte interne Schritt-IDs besitzen ein explizites `.v<N>`-Suffix.
 Die kleinen vollständigen Testschemas 90.x sind ausdrücklich synthetisch;
 sie registrieren keinen produktiven 0.1-Pfad und behaupten kein Q.0.
 
-Der hier gespeicherte Phasenstand 16.a.R und sein Fortschrittsmarker gelten
+Der hier gespeicherte Phasenstand 16.a.C und sein Fortschrittsmarker gelten
 erst nach dem zugehörigen erfolgreichen Apply-Gate UND tatsächlichen Commit.
 Vorher bleibt nur der durch das Quell-Result belegte Stand 660/900 gesichert.
 Apply bringt C nicht vor W/R aus. Bei einem Fehler bleiben Commitpräfix und
@@ -1021,10 +1021,10 @@ Kein offener Produktplanschritt wird durch diese Testoptimierung abgeschlossen.
 ```yaml
 plan_revision: 54
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 662
-last_completed_plan_commit: 16.a.R
-next_plan_commit: 16.a.C
-last_completed_numbered_bundle: 549
+implementation_plan_commits_completed: 663
+last_completed_plan_commit: 16.a.C
+next_plan_commit: 16.b.W
+last_completed_numbered_bundle: 550
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -35091,7 +35091,7 @@ auf Apply. Nur Control beauftragt den nächsten Durchlauf aus dessen Result.
 
 #### 16.a.C – Make it Clean
 
-- [ ] **16.a.C** · Position **663/900** · Voraussetzung: `16.a.R`.
+- [x] **16.a.C** · Position **663/900** · Voraussetzung: `16.a.R`.
 **Exakte Commit-Message:** `16.a.C refactor(migration): Versionsgraph und Migrationsschrittvertrag bereinigen`
 
 **Bereinigung:** Pfadauflösung von tatsächlicher Transformation und CLI trennen.

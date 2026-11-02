@@ -1,34 +1,14 @@
-"""Pure graph admission/resolution and explicit in-memory transformation.
+"""Atomic trusted registry admission and pure path resolution.
 
 Construct registries only in trusted Core code. No project representation is
 deserialized into functions. Resolving a path never invokes a provider.
 """
-from collections import deque
 from dataclasses import dataclass
-import json
 from types import MappingProxyType
 
 from .contracts import (DataContract, MigrationError, MigrationStep, ResolvedStep,
-                        _encoded, _version)
-
-
-def _topological(nodes, edges):
-    degree = dict.fromkeys(nodes, 0)
-    for rows in edges.values():
-        for row in rows:
-            degree[row.target] += 1
-    pending = deque(node for node in nodes if degree[node] == 0)
-    ordered = []
-    while pending:
-        node = pending.popleft()
-        ordered.append(node)
-        for row in edges[node]:
-            degree[row.target] -= 1
-            if degree[row.target] == 0:
-                pending.append(row.target)
-    if len(ordered) != len(nodes):
-        raise MigrationError('cycle')
-    return tuple(ordered)
+                        _version)
+from ._paths import _topological, _paths, _reachable
 
 
 def _forward_order(step):
@@ -39,42 +19,6 @@ def _forward_order(step):
         raise MigrationError('backward_as_forward', step_id=step.step_id)
     if first == last and (a is None or b is None or _version(a) >= _version(b)):
         raise MigrationError('unordered_contracts', step_id=step.step_id)
-
-
-def _paths(source, target, edges, order):
-    """Count DAG paths in O(V+E), saturating at two; keep one predecessor."""
-    counts, previous = {source: 1}, {}
-    for node in order:
-        count = counts.get(node, 0)
-        if count:
-            for edge in edges[node]:
-                counts[edge.target] = min(2, counts.get(edge.target, 0) + count)
-                previous[edge.target] = edge
-    count = counts.get(target, 0)
-    if count > 1:
-        raise MigrationError('ambiguous_path')
-    if not count:
-        return None
-    path, node = [], target
-    while node != source:
-        edge = previous[node]
-        path.append(edge)
-        node = edge.source
-    return tuple(reversed(path))
-
-
-def _reachable(source, target, edges):
-    """Direction diagnostic only: ambiguity in an unavailable inverse is irrelevant."""
-    pending, seen = [source], {source}
-    while pending:
-        node = pending.pop()
-        if node == target:
-            return True
-        for edge in edges[node]:
-            if edge.target not in seen:
-                seen.add(edge.target)
-                pending.append(edge.target)
-    return False
 
 
 @dataclass(frozen=True, init=False)
@@ -133,46 +77,6 @@ class MigrationRegistry:
         if _reachable(target, source, self._forward):
             raise MigrationError('reverse_not_implemented')
         raise MigrationError('unsupported_path')
-
-
-def execute_step(resolved, value):
-    """Invoke one trusted implementation on detached JSON values; never publish."""
-    if type(resolved) is not ResolvedStep:
-        raise MigrationError('invalid_step')
-    program = resolved.transformation
-    before = _encoded(value)
-    phase = 'precondition'
-    try:
-        if program.precondition(json.loads(before)) is not True:
-            raise MigrationError('precondition_failed', step_id=resolved.step.step_id)
-        phase = 'transformation'
-        after = _encoded(program.transform(json.loads(before)))
-        phase = 'postcondition'
-        if program.postcondition(json.loads(before), json.loads(after)) is not True:
-            raise MigrationError('postcondition_failed', step_id=resolved.step.step_id)
-    except MigrationError:
-        raise
-    except Exception as error:
-        raise MigrationError(phase + '_failed', step_id=resolved.step.step_id) from error
-    return json.loads(after)
-
-
-def verify_vectors(registry):
-    """Explicit behavior verification, used by Apply tests; never during admission."""
-    if type(registry) is not MigrationRegistry:
-        raise MigrationError('invalid_registry')
-    for step in registry.steps:
-        for reverse in (False, True) if step.backward is not None else (False,):
-            edge = ResolvedStep(step, reverse)
-            for vector in edge.transformation.vectors:
-                actual = execute_step(edge, vector.before)
-                if _encoded(actual) != vector._after:
-                    raise MigrationError('vector_mismatch', step_id=step.step_id)
-                if step.backward is not None:
-                    restored = execute_step(ResolvedStep(step, not reverse), actual)
-                    if _encoded(restored) != vector._before:
-                        raise MigrationError('reverse_not_lossless', step_id=step.step_id)
-    return None
 
 
 def builtin_registry():
