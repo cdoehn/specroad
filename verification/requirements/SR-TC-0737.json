@@ -22,14 +22,14 @@
   "json_pointers": [],
   "method": "automated_behavior",
   "open_items": [
-    "15.n.R acceptance is pending its Apply gate; 15.n.C remains open for structural cleanup.",
+    "Prepared 15.n.R/C still require their individual Apply gates and actual commits; no behavior tests were executed in Dev.",
     "Full native CPython 3.10–3.14/platform evidence remains pending manual CI; targeted local gates are not release or full-suite evidence.",
     "18.q return export and its original-reference binding remain unimplemented; this evidence covers only the outbound direction."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Hin- und Rückexport MÜSSEN denselben Befehl `bundle create --profile ai-runtime` mit expliziter Richtung verwenden; der Rückexport MUSS seine PatchHarbor-Bindungswerte unverändert aus dem ursprünglichen Result übernehmen.",
-    "scope": "Prepared 15.n.R completes native outbound runtime/workspace continuity and operating-boundary checks through final publication, using the pinned 1.8.0 API and native effective bytes. Behavior is not executed in Dev; Apply and the independent Python matrix remain required."
+    "scope": "Prepared 15.n.R/C completes native outbound runtime/workspace continuity and operating-boundary checks through final publication, using the pinned 1.8.0 API and native effective bytes. Behavior is not executed in Dev; Apply and the independent Python matrix remain required."
   },
   "preconditions": [
     "An explicitly registered local repository with HEAD, complete native project and portable history.",

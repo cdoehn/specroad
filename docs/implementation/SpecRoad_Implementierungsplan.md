@@ -72,6 +72,13 @@ Commitpräfix maßgeblich. Apply testet pro Zustand genau einmal die Vereinigung
 seiner fälligen gefilterten N=3-Gruppe und ungefilterten Pflichtauswahl mit
 hostabhängigen worksteal-Workern. Keine CI und kein Dienststart.
 
+Vorbereiteter C-Zustand: `_snapshot_project` fasst nur die bestehende native
+Snapshotprojektion, den exklusiven Stagingwriter und die anschließende
+Projektbundle-/Receiptprüfung zusammen. Ein AST-Vergleich belegt unveränderte
+Anweisungen nach Ersetzung der drei expliziten Abhängigkeiten. Der öffentliche
+Export behält Reihenfolge, Fehler, Runtime-/Betriebsprüfungen und Ausgabegrenzen.
+Keine neue Fachfunktion, keine neue Requirement-ID und kein Testkörperlauf.
+
 ## OFF-PLAN TRANSPORT-PYZ-541 — Direkte PatchHarbor-1.8.0-Anbindung
 
 Autorität: ausdrücklicher Nutzerauftrag vom 1. November 2026, die geprüfte
@@ -684,10 +691,10 @@ Kein offener Produktplanschritt wird durch diese Testoptimierung abgeschlossen.
 ```yaml
 plan_revision: 47
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 656
-last_completed_plan_commit: 15.n.R
-next_plan_commit: 15.n.C
-last_completed_numbered_bundle: 541
+implementation_plan_commits_completed: 657
+last_completed_plan_commit: 15.n.C
+next_plan_commit: 15.o.W
+last_completed_numbered_bundle: 542
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -34457,7 +34464,7 @@ GitHub-Workflow, lokale AGENTS oder historische Messbaseline werden geändert.
 
 #### 15.n.C – Make it Clean
 
-- [ ] **15.n.C** · Position **657/900** · Voraussetzung: `15.n.R`.
+- [x] **15.n.C** · Position **657/900** · Voraussetzung: `15.n.R`.
 **Exakte Commit-Message:** `15.n.C refactor(transport): Gebundenes Hinpaket exportieren bereinigen`
 
 **Bereinigung:** Projektbundle-, Hash-/Inventar- und atomare Ausgabeprimitiven wiederverwenden; PH-Format bleibt ausschließlich bei dessen öffentlicher API.
