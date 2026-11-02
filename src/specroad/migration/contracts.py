@@ -86,6 +86,14 @@ class Transformation:
                 or type(self.lossless) is not bool or type(self.vectors) is not tuple
                 or not self.vectors or any(type(v) is not TestVector for v in self.vectors)):
             raise MigrationError('incomplete_transformation')
+        names, expected = set(), {}
+        for vector in self.vectors:
+            if vector.name in names:
+                raise MigrationError('duplicate_vector')
+            if vector._before in expected and expected[vector._before] != vector._after:
+                raise MigrationError('vector_conflict')
+            names.add(vector.name)
+            expected[vector._before] = vector._after
 
 
 @dataclass(frozen=True)

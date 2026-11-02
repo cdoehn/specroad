@@ -56,7 +56,7 @@ Versionierte interne Schritt-IDs besitzen ein explizites `.v<N>`-Suffix.
 Die kleinen vollständigen Testschemas 90.x sind ausdrücklich synthetisch;
 sie registrieren keinen produktiven 0.1-Pfad und behaupten kein Q.0.
 
-Der hier gespeicherte Phasenstand 16.a.W und sein Fortschrittsmarker gelten
+Der hier gespeicherte Phasenstand 16.a.R und sein Fortschrittsmarker gelten
 erst nach dem zugehörigen erfolgreichen Apply-Gate UND tatsächlichen Commit.
 Vorher bleibt nur der durch das Quell-Result belegte Stand 660/900 gesichert.
 Apply bringt C nicht vor W/R aus. Bei einem Fehler bleiben Commitpräfix und
@@ -1021,9 +1021,9 @@ Kein offener Produktplanschritt wird durch diese Testoptimierung abgeschlossen.
 ```yaml
 plan_revision: 54
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 661
-last_completed_plan_commit: 16.a.W
-next_plan_commit: 16.a.R
+implementation_plan_commits_completed: 662
+last_completed_plan_commit: 16.a.R
+next_plan_commit: 16.a.C
 last_completed_numbered_bundle: 549
 implementation_state: in_progress
 audit_followup_status: closed
@@ -35082,7 +35082,7 @@ auf Apply. Nur Control beauftragt den nächsten Durchlauf aus dessen Result.
 
 #### 16.a.R – Make it Right
 
-- [ ] **16.a.R** · Position **662/900** · Voraussetzung: `16.a.W`.
+- [x] **16.a.R** · Position **662/900** · Voraussetzung: `16.a.W`.
 **Exakte Commit-Message:** `16.a.R feat(migration): Versionsgraph und Migrationsschrittvertrag vervollständigen`
 
 **Vervollständigung:** Nach 12.20.1 Lücken, Vorwärtszyklen, Mehrdeutigkeit, Registerkonflikte und nicht implementierte Rückwege ablehnen. Explizit implementierte verlustfreie inverse Paare gesondert prüfen; kein pauschales Downgrade, kein Herkunfts- oder Gleichheitsfallback. Sämtliche R-Grenzfälle aus MIGRATION-GRAPH-549 bleiben Pflicht.

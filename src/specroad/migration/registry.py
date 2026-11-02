@@ -42,18 +42,39 @@ def _forward_order(step):
 
 
 def _paths(source, target, edges, order):
-    """Return at most two concrete DAG paths; no unbounded recursion."""
-    found = []
-    pending = [(source, ())]
-    while pending and len(found) < 2:
-        node, path = pending.pop()
-        if node == target:
-            found.append(path)
-        else:
-            pending.extend((edge.target, (*path, edge)) for edge in edges[node])
-    if len(found) > 1:
+    """Count DAG paths in O(V+E), saturating at two; keep one predecessor."""
+    counts, previous = {source: 1}, {}
+    for node in order:
+        count = counts.get(node, 0)
+        if count:
+            for edge in edges[node]:
+                counts[edge.target] = min(2, counts.get(edge.target, 0) + count)
+                previous[edge.target] = edge
+    count = counts.get(target, 0)
+    if count > 1:
         raise MigrationError('ambiguous_path')
-    return found[0] if found else None
+    if not count:
+        return None
+    path, node = [], target
+    while node != source:
+        edge = previous[node]
+        path.append(edge)
+        node = edge.source
+    return tuple(reversed(path))
+
+
+def _reachable(source, target, edges):
+    """Direction diagnostic only: ambiguity in an unavailable inverse is irrelevant."""
+    pending, seen = [source], {source}
+    while pending:
+        node = pending.pop()
+        if node == target:
+            return True
+        for edge in edges[node]:
+            if edge.target not in seen:
+                seen.add(edge.target)
+                pending.append(edge.target)
+    return False
 
 
 @dataclass(frozen=True, init=False)
@@ -109,7 +130,7 @@ class MigrationRegistry:
         path = _paths(source, target, self._backward, tuple(reversed(self._order)))
         if path is not None:
             return path
-        if _paths(target, source, self._forward, self._order) is not None:
+        if _reachable(target, source, self._forward):
             raise MigrationError('reverse_not_implemented')
         raise MigrationError('unsupported_path')
 
@@ -147,8 +168,8 @@ def verify_vectors(registry):
                 actual = execute_step(edge, vector.before)
                 if _encoded(actual) != vector._after:
                     raise MigrationError('vector_mismatch', step_id=step.step_id)
-                if reverse:
-                    restored = execute_step(ResolvedStep(step), actual)
+                if step.backward is not None:
+                    restored = execute_step(ResolvedStep(step, not reverse), actual)
                     if _encoded(restored) != vector._before:
                         raise MigrationError('reverse_not_lossless', step_id=step.step_id)
     return None
