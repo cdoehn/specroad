@@ -57,10 +57,10 @@ def _record(raw):
     return ast.literal_eval(tree.body[1].value)
 
 
-def core_artifact(path, digest):
-    captured = PassiveFile(path, expected_sha256=digest)
+def core_identity(raw):
+    """Check owned passive bytes against the trusted running Core; no write/import."""
     try:
-        with ZipFile(BytesIO(captured.raw)) as archive:
+        with ZipFile(BytesIO(raw)) as archive:
             infos = archive.infolist()
             require(len(infos) < 10000, 'core_artifact_limit')
             names = [i.filename.rstrip('/') for i in infos]
@@ -93,9 +93,15 @@ def core_artifact(path, digest):
         if isinstance(error, TransportFailure):
             raise
         raise TransportFailure(7, reason='invalid_core_artifact', cause_type=type(error).__name__) from error
-    captured.verify_current()
-    return captured, {'path': 'runtime/specroad.pyz', 'tool_version': __version__,
-        'artifact_sha256': captured.sha256, 'build_hash_algorithm': ALGORITHM,
+    return {'path': 'runtime/specroad.pyz', 'tool_version': __version__,
+        'artifact_sha256': sha256(raw).hexdigest(), 'build_hash_algorithm': ALGORITHM,
         'build_sha256': identity['build_sha256'],
         'supported_cpython': ['3.10', '3.11', '3.12', '3.13', '3.14'],
         'platform_profile': 'linux-x86_64'}
+
+
+def core_artifact(path, digest):
+    captured = PassiveFile(path, expected_sha256=digest)
+    identity = core_identity(captured.raw)
+    captured.verify_current()
+    return captured, identity

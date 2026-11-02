@@ -203,6 +203,9 @@ def builtin_registry() -> CommandRegistry:
         handler=_bundle_extract, positionals=(PositionalSpec('file'),), requires_write_paths=('output',),
         options=(OptionSpec('--output', takes_value=True, required=True),
             OptionSpec('--expected-sha256', takes_value=True),
+            *global_options('--profile'),
+            *(OptionSpec(flag, takes_value=True) for flag in
+              ('--patchharbor-pyz', '--patchharbor-pyz-sha256', '--runtime-workspace')),
             OptionSpec('--format', takes_value=True, choices=('pretty', 'json')),
             OptionSpec('--no-color'), OptionSpec('--quiet')),
         protocol=CommandProtocol('bundle-extract-v1', {'command_id': 'bundle.extract',
@@ -216,6 +219,9 @@ def builtin_registry() -> CommandRegistry:
         preflight_profile=PreflightProfile.INPUT_READ, effect_scope=EffectScope.NONE, handler=_bundle_verify,
         positionals=(PositionalSpec('file'),),
         options=(OptionSpec('--expected-sha256', takes_value=True),
+            *global_options('--profile'),
+            *(OptionSpec(flag, takes_value=True) for flag in
+              ('--patchharbor-pyz', '--patchharbor-pyz-sha256', '--runtime-workspace')),
             OptionSpec('--format', takes_value=True, choices=('pretty', 'json')),
             OptionSpec('--no-color'), OptionSpec('--quiet')),
         protocol=CommandProtocol('bundle-verify-v1', {'command_id': 'bundle.verify',

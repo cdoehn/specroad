@@ -1,4 +1,5 @@
 """15.n.W: native public export, closed byte bindings and unchanged host input."""
+from copy import deepcopy
 from hashlib import sha256
 from io import BytesIO
 import json
@@ -12,6 +13,8 @@ from specroad.bundles import prepare_project_bundle
 from specroad.cli.application import dispatch_result
 from specroad.cli.commands import builtin_registry
 from specroad.cli.requests import CommandRequest
+from specroad.cli.result_schemas import validate_result_document
+from specroad.model.errors import ModelError
 from specroad.model.canonical import canonical_json_bytes
 from support.transport_outbound import ROOT, child, register, request, run_request, tree
 from support.read_only import no_write_attempts
@@ -79,7 +82,18 @@ def test_public_variant_and_metadata_do_not_export(tmp_path):
     invocation=registry.bind_request(CommandRequest.from_mapping(variant['example']))
     assert invocation.command.command_class.value=='transport_operational'
     assert registry.resolve('bundle.create').command_class.value=='generated_output'
+    assert variant['budget_policy_version'] == 'runtime-budget-v2'
+    assert variant['result_schema'] == invocation.command.protocol.result_schema
+    assert variant['required_write_paths'] == list(invocation.command.requires_write_paths)
+    document = described.as_dict()['result']
     with no_write_attempts():
+        validate_result_document('command-description-v1', document)
+        for field, value in (('result_schema', ''), ('required_write_paths', False),
+                ('budget_policy_version', 3), ('undeclared_authority', True)):
+            invalid = deepcopy(document)
+            invalid['variants'][0][field] = value
+            with pytest.raises(ModelError):
+                validate_result_document('command-description-v1', invalid)
         assert dispatch_result(['environment','check','--for-command','bundle.create']).exit_code==0
 
 

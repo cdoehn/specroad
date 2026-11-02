@@ -61,11 +61,16 @@ def describe_command(registry, command_id):
     }
     variants = registry.variants(command)
     if variants:
-        result['variants'] = [{**command_surface(v), 'when': {'--profile': ['ai-runtime'], '--direction': 'outbound'},
+        result['variants'] = [{**command_surface(v), 'when': ({'--profile': ['ai-runtime'], '--direction': 'outbound'}
+                if v.command_id == 'bundle.create' else {'--profile': ['ai-runtime']}),
             'required_options': sorted(o.flag for o in v.options if o.required),
             'effect_scope': v.effect_scope.value, 'requires_git': v.requires_git,
             'budget_policy_version': v.budget_policy_version, 'work': v.protocol.work.as_dict(),
             'operating_effects': ['external_private_runtime', 'patchharbor_registry_and_repository_locks',
-                                  'external_reference_and_diagnostics', 'external_create_only_handoff'],
+                                  'external_reference_and_diagnostics', 'external_create_only_handoff']
+                if v.command_id == 'bundle.create' else ['explicit_external_private_workspace',
+                    'standalone_runtime_private_copy', 'passive_reference_file']
+                    + (['new_sandbox_root', 'native_project_extraction'] if v.command_id == 'bundle.extract' else []),
+            'result_schema': v.protocol.result_schema, 'required_write_paths': list(v.requires_write_paths),
             'example': v.protocol.example.as_dict()} for v in variants]
     return result

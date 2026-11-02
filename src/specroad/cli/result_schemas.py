@@ -110,6 +110,20 @@ def _fields(schema_id):
                 'plan_file': _object({'root': nonempty, 'path': nonempty, 'size': count, 'sha256': sha})}),
             _object({**common, 'mode': {'const': 'execute'}, 'restore_plan': {'type': 'null'},
                 'execution': obj, 'plan_file': {'type': 'null'}})]}
+    if schema_id in ('ai-runtime-verify-v1', 'ai-runtime-extract-v1'):
+        fields = {'format_version': {'const': schema_id}, 'manifest': obj,
+            'file': _object({'size': count, 'sha256': sha}),
+            'validation_scope': {'const': 'ai_runtime_outbound_complete'},
+            'external_hash_verified': boolean, 'runtime_source': {'const': 'standalone_pyz'},
+            'runtime_workspace': nonempty,
+            **{k: {'const': True, 'type': 'boolean'} for k in ('container_verified', 'full_reference_valid',
+                'model_root_verified', 'closure_verified', 'runtime_binding_verified')},
+            **{k: {'const': False, 'type': 'boolean'} for k in ('creator_authenticated',
+                'full_semantic_validation', 'approval_granted', 'write_authorized')}}
+        if schema_id == 'ai-runtime-extract-v1':
+            fields.update(sandbox_root=nonempty, project_root=nonempty, bootstrap_state={'const': 'complete'},
+                files=_array(_object({'path': nonempty, 'size': count, 'sha256': sha})), directories=strings)
+        return _object(fields)
     if schema_id == 'bundle-extract-v1':
         return _object({'format_version': {'const': 'bundle-extract-v1'}, 'project_root': nonempty,
             'manifest': obj, 'file': _object({'size': count, 'sha256': sha}),
@@ -380,7 +394,8 @@ def _fields(schema_id):
             "request_schema": obj, "examples": _array(obj)})
         schema['properties']['variants'] = _array(_object({**surface, 'when': obj,
             'required_options': strings, 'effect_scope': text, 'requires_git': boolean,
-            'budget_policy_version': text, 'work': work, 'operating_effects': strings, 'example': obj}))
+            'budget_policy_version': _nullable(text), 'work': work, 'operating_effects': strings,
+            'result_schema': nonempty, 'required_write_paths': strings, 'example': obj}))
         return schema
     if schema_id == "capabilities-v1":
         semantic = _object({"program_version": text, "distribution": _object(distribution),

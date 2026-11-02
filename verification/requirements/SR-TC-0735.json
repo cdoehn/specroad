@@ -1,21 +1,38 @@
 {
   "evidence_kind": "specroad-dev-pytest-v1",
-  "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "fixture_ids": [],
-  "implementation_status": "open",
+  "expected_diagnostics": [
+    "CORE_USAGE",
+    "CORE_MODEL",
+    "CORE_ENVIRONMENT",
+    "CORE_CONFLICT",
+    "CORE_SECURITY"
+  ],
+  "expected_exit_codes": [
+    0,
+    2,
+    3,
+    5,
+    6,
+    7
+  ],
+  "fixture_ids": [
+    "SR-FIX-SANDBOX-OPEN-180-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [],
-  "method": "pending",
+  "method": "automated_behavior",
   "open_items": [
-    "Implement planned step 15.o and its integration/acceptance contributions under SpecRoad 0.2.8 Annex W; define real fixtures and behavior tests before claiming implementation.",
-    "Public PatchHarbor API capabilities and concrete CPython-compatible distribution must be verified; no current feature or test evidence is claimed."
+    "Correction bundle 546 retains 15.o.W after the failed W budget-metadata test oracle (1 failed, 7341 passed, no commit). This phase still requires its own successful Apply gate and actual commit; no Dev behavior tests ran.",
+    "Full native CPython 3.10–3.14/platform evidence and the M15 full-suite/integration gate remain pending explicit manual execution."
   ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Das Öffnen eines Hinpakets MUSS die Vertrauens-, Versions-, Plattform- und Integritätsprüfungen aus W.4 vor dem Laden einer mitgelieferten Runtime durchführen.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Prepared offline inbound verification/extraction contribution only: exact native reference/project bytes, trusted standalone code, original receipts and guarded root publication. No return-path, release or completed execution evidence is claimed."
   },
-  "preconditions": [],
+  "preconditions": [
+    "Linux x86-64 CPython, explicit trusted standalone PatchHarbor 1.8.0 PYZ and external hash, actual closed outbound package and fresh private workspace."
+  ],
   "primary_verification_id": "SR-VER-0051",
   "required_environment": {
     "declared_minimum_python": "3.10",
@@ -29,8 +46,66 @@
     "owned_temporary_files": true
   },
   "specification_sha256": "e59010a6c6a2ba8e8eff3381d3755353b441810e9cd05d3f2cdc2177965ee4a7",
-  "steps": [],
+  "steps": [
+    "Open actual repository-root and subproject packages via module/PYZ and argv/structured requests in a Python-only audited subprocess.",
+    "Compare independent project manifest, every original reference/runtime byte, model root and portable receipt replay; relocate the sandbox and revalidate in a fresh process.",
+    "Refuse invalid options without writes; run the prepared security and bootstrap fault cases in Apply.",
+    "Validate the public command-description schema for opening and outbound variants, including nullable budget metadata; refuse unknown fields, missing mandatory fields and false types.",
+    "Verify metadata preserves runtime-budget-v2 for bundle.verify and null for bundle.extract in normal and transport contracts; retain all closed-schema rejection checks."
+  ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0735",
-  "test_ids": []
+  "test_ids": [
+    "tests/test_transport_opening.py::test_complete_verify_offline_keeps_inputs_and_separates_private_output[repository-root-False-module]",
+    "tests/test_transport_opening.py::test_complete_verify_offline_keeps_inputs_and_separates_private_output[repository-root-False-pyz]",
+    "tests/test_transport_opening.py::test_complete_verify_offline_keeps_inputs_and_separates_private_output[repository-root-True-module]",
+    "tests/test_transport_opening.py::test_complete_verify_offline_keeps_inputs_and_separates_private_output[repository-root-True-pyz]",
+    "tests/test_transport_opening.py::test_complete_verify_offline_keeps_inputs_and_separates_private_output[subproject-False-module]",
+    "tests/test_transport_opening.py::test_complete_verify_offline_keeps_inputs_and_separates_private_output[subproject-False-pyz]",
+    "tests/test_transport_opening.py::test_complete_verify_offline_keeps_inputs_and_separates_private_output[subproject-True-module]",
+    "tests/test_transport_opening.py::test_complete_verify_offline_keeps_inputs_and_separates_private_output[subproject-True-pyz]",
+    "tests/test_transport_opening.py::test_extract_publishes_exact_originals_and_native_project[repository-root-argv-False-module]",
+    "tests/test_transport_opening.py::test_extract_publishes_exact_originals_and_native_project[repository-root-argv-False-pyz]",
+    "tests/test_transport_opening.py::test_extract_publishes_exact_originals_and_native_project[repository-root-argv-True-module]",
+    "tests/test_transport_opening.py::test_extract_publishes_exact_originals_and_native_project[repository-root-argv-True-pyz]",
+    "tests/test_transport_opening.py::test_extract_publishes_exact_originals_and_native_project[repository-root-structured-False-module]",
+    "tests/test_transport_opening.py::test_extract_publishes_exact_originals_and_native_project[repository-root-structured-False-pyz]",
+    "tests/test_transport_opening.py::test_extract_publishes_exact_originals_and_native_project[repository-root-structured-True-module]",
+    "tests/test_transport_opening.py::test_extract_publishes_exact_originals_and_native_project[repository-root-structured-True-pyz]",
+    "tests/test_transport_opening.py::test_extract_publishes_exact_originals_and_native_project[subproject-argv-False-module]",
+    "tests/test_transport_opening.py::test_extract_publishes_exact_originals_and_native_project[subproject-argv-False-pyz]",
+    "tests/test_transport_opening.py::test_extract_publishes_exact_originals_and_native_project[subproject-argv-True-module]",
+    "tests/test_transport_opening.py::test_extract_publishes_exact_originals_and_native_project[subproject-argv-True-pyz]",
+    "tests/test_transport_opening.py::test_extract_publishes_exact_originals_and_native_project[subproject-structured-False-module]",
+    "tests/test_transport_opening.py::test_extract_publishes_exact_originals_and_native_project[subproject-structured-False-pyz]",
+    "tests/test_transport_opening.py::test_extract_publishes_exact_originals_and_native_project[subproject-structured-True-module]",
+    "tests/test_transport_opening.py::test_extract_publishes_exact_originals_and_native_project[subproject-structured-True-pyz]",
+    "tests/test_transport_opening.py::test_invalid_requests_cannot_create_operating_paths[repository-root-bad-hash]",
+    "tests/test_transport_opening.py::test_invalid_requests_cannot_create_operating_paths[repository-root-direction]",
+    "tests/test_transport_opening.py::test_invalid_requests_cannot_create_operating_paths[repository-root-extra-profile]",
+    "tests/test_transport_opening.py::test_invalid_requests_cannot_create_operating_paths[repository-root-missing-digest]",
+    "tests/test_transport_opening.py::test_invalid_requests_cannot_create_operating_paths[repository-root-missing-runtime]",
+    "tests/test_transport_opening.py::test_invalid_requests_cannot_create_operating_paths[repository-root-missing-workspace]",
+    "tests/test_transport_opening.py::test_invalid_requests_cannot_create_operating_paths[repository-root-no-profile]",
+    "tests/test_transport_opening.py::test_invalid_requests_cannot_create_operating_paths[repository-root-relative-input]",
+    "tests/test_transport_opening.py::test_invalid_requests_cannot_create_operating_paths[repository-root-relative-workspace]",
+    "tests/test_transport_opening.py::test_invalid_requests_cannot_create_operating_paths[repository-root-return-reference]",
+    "tests/test_transport_opening.py::test_invalid_requests_cannot_create_operating_paths[repository-root-work]",
+    "tests/test_transport_opening.py::test_invalid_requests_cannot_create_operating_paths[subproject-bad-hash]",
+    "tests/test_transport_opening.py::test_invalid_requests_cannot_create_operating_paths[subproject-direction]",
+    "tests/test_transport_opening.py::test_invalid_requests_cannot_create_operating_paths[subproject-extra-profile]",
+    "tests/test_transport_opening.py::test_invalid_requests_cannot_create_operating_paths[subproject-missing-digest]",
+    "tests/test_transport_opening.py::test_invalid_requests_cannot_create_operating_paths[subproject-missing-runtime]",
+    "tests/test_transport_opening.py::test_invalid_requests_cannot_create_operating_paths[subproject-missing-workspace]",
+    "tests/test_transport_opening.py::test_invalid_requests_cannot_create_operating_paths[subproject-no-profile]",
+    "tests/test_transport_opening.py::test_invalid_requests_cannot_create_operating_paths[subproject-relative-input]",
+    "tests/test_transport_opening.py::test_invalid_requests_cannot_create_operating_paths[subproject-relative-workspace]",
+    "tests/test_transport_opening.py::test_invalid_requests_cannot_create_operating_paths[subproject-return-reference]",
+    "tests/test_transport_opening.py::test_invalid_requests_cannot_create_operating_paths[subproject-work]",
+    "tests/test_transport_opening.py::test_metadata_binds_variant_effects_without_loading_runtime[bundle.extract-root_creation]",
+    "tests/test_transport_opening.py::test_metadata_binds_variant_effects_without_loading_runtime[bundle.verify-read_only]",
+    "tests/test_transport_opening.py::test_receipts_keep_native_historical_replay_after_project_move",
+    "tests/test_transport_opening.py::test_untrusted_cwd_cannot_supply_runtime_modules[repository-root]",
+    "tests/test_transport_opening.py::test_untrusted_cwd_cannot_supply_runtime_modules[subproject]"
+  ]
 }

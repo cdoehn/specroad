@@ -68,6 +68,9 @@ def resolve_options(invocation: Invocation, *, cwd: Path | None = None,
     if invocation.command.command_class.value == 'transport_operational':
         explicit = {k: v for k, v in explicit.items() if k != '--profile'}
         preflight['command_class'] = 'transport_operational'
+    if invocation.command.protocol is not None and invocation.command.protocol.result_schema in (
+            'ai-runtime-verify-v1', 'ai-runtime-extract-v1'):
+        explicit = {k: v for k, v in explicit.items() if k != '--profile'}
     values, history = _compose_values(project, explicit, profile_layers, configuration_layer)
     origin = None
     if (invocation.command.preflight_for(invocation.options) in (PreflightProfile.ROOT_CREATION, PreflightProfile.INPUT_READ)

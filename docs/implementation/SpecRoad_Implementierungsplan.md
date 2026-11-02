@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 48 · **Stand:** 2. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.47
+**Planrevision:** 51 · **Stand:** 2. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.47
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 Schritte und 900 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; die ausdrücklich genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wird nach 10.7.10 innerhalb von 15.l.R vorgezogen. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -32,6 +32,155 @@ Ketten erfordert erst den belegten erfolgreichen normalen Abschluss.
 Produktfreigaben und die Grenzen aus 2.4.1/2.4.2/2.4.4 bleiben unverändert.
 Dieser Plan ändert keine alten Aufträge, Antworten, Blockaden oder
 Laufzeitdaten und ist keine Start-/Resume-Anweisung.
+
+## KORREKTUR 546 — Budget-Testoracle und vollständiger offener 15.o-Rest
+
+Maßgebliche technische Basis: vollständig nativ geprüftes Result
+`specroad-apply_Result_103419_1102_69b82a.zip`, SHA-256
+`2ea77b1d8d2ee127d25310f3b6028fedeb8e34027f652dbca45db10327d228ef`,
+HEAD `28470da477edb6c8f8d80807d0b2731f670e1741`, Dirty-Fingerprint
+`23f1a18fe04f4d3b`. Das native Effective-Inventar entspricht exakt dem
+ausgelieferten W-Zustand von Bundle 545; der Base-Snapshot blieb unverändert.
+
+**Tatsächlicher Befund:** Bundle 545 scheiterte am 2. November 2026 vor dem
+ersten Commit mit **1 fehlgeschlagenen und 7.341 bestandenen** Tests in
+1.207,12 Sekunden. Die fällige Gruppe 2 plus Pflichtauswahl umfasste 7.342 Tests.
+Die sechs ursprünglichen Fehler aus Bundle 544 sind in dieser Auswahl enthalten;
+übrig blieb die neue falsche Null-Erwartung für die Budgetkennung von Verify.
+Kein Commit entstand, die Rotation bleibt bei Gruppe 2. Der tatsächliche
+Produktfortschritt beträgt weiterhin **657/900**, nicht den vorbereiteten
+W-Marker im uncommitteten Working Tree. SPECROAD_APPLY_PLAN/PROGRESS bindet
+den vollständigen offenen Rest `15.o.W`, `15.o.R`, `15.o.C` an Plan-SHA-256
+`ab8e0962837759c34f911b047aee94fa3b5262482ef488d07a9a12905714ec81`.
+
+**Diagnose und gezielte Korrektur:** Der in Bundle 545 ergänzte Metadatentest
+erwartete für beide Öffnungsvarianten `budget_policy_version=null`. Das war
+für `bundle.verify` falsch: Der bestehende lesende Command Contract trägt
+`runtime-budget-v2`; die Transportvariante erhält diesen Vertrag. Nur
+`bundle.extract` hat hier die Kennung `null`. W.4.1 erhält ausdrücklich die
+allgemeinen Budgetregeln aus Anhang O und den bestehenden Anhang-E-Vertrag.
+Auch die pauschale Nichtbudgetierungsannahme im historischen Abschnitt 545
+ist damit berichtigt. Es besteht keine offene Spezifikationsentscheidung.
+
+Der Test verwendet nun getrennte konkrete Erwartungswerte für Verify und
+Extract und prüft sie sowohl an der öffentlichen Variantenbeschreibung als
+auch am gebundenen Command und der normalen Beschreibung. Sämtliche
+Negativprüfungen für zusätzliche/falsch typisierte oder fehlende Schemafelder
+bleiben bestehen. Produktcode und normative Spezifikation werden gegenüber
+den entsprechenden bereits gelieferten W-/R-/C-Zuständen nicht geändert.
+Kein Produktverhalten wird zum Erfüllen eines falschen Tests abgeschwächt.
+
+Bundle 546 ist eine echte technische Korrektur des durch Apply belegten
+Testfehlers und erhält den gesamten bisher offenen Implementierungsumfang.
+Alle drei Commit-IDs, Nachrichten und echten Zustände bleiben erhalten;
+R folgt erst nach dem erfolgreichen W-Gate und Commit, C erst nach R.
+Die geänderte Testdatei, alle bisherigen Pflichtregressionen und zusätzliche
+Budgetpolicy-Regressionen sind in jedem Zustand ungefiltert verpflichtend.
+Testidentitäten, Nummern, Fixtures, Katalog-Oracles und Messhistorie bleiben
+erhalten. Keine Teilung, kein Reset und kein vorgezogener R-/C-Endzustand.
+
+Die vorbereiteten Fortschrittsmarker gelten ausschließlich nach dem jeweiligen
+erfolgreichen Apply-Gate UND tatsächlichen Commit. Das letzte vollständig
+abgeschlossene Bundle bleibt 543; 546 ist erst nach der gesamten Folge
+abgeschlossen. Dev führt keine Verhaltenstests aus. Syntax, reine Collection
+und native Paketprüfung ersetzen keine Verhaltensabnahme. Spec 0.2.47 und ihr
+Hash bleiben unverändert; dies ist keine `spec_clarification` und erneuert kein
+Klärungsbudget. M15-Vollsuite, Integration, Plattformfreigaben, 18.q/18.r und
+die spätere vollständige Rundwegabnahme bleiben offen.
+
+## KORREKTUR 545 — vollständige 15.o-Folge nach gescheitertem W-Gate
+
+Maßgebliche technische Basis: vollständig nativ geprüftes Result
+`specroad-apply_Result_095606_1102_b7d3c4.zip`, SHA-256
+`c6926c562a62e5688346915a7da5d182ab99d026b011c0c142814581508c3249`,
+HEAD `28470da477edb6c8f8d80807d0b2731f670e1741`, erhaltener Dirty-Fingerprint
+`3b3f8712a244d0e2`. Das native Effective-Inventar entspricht vollständig dem
+ausgelieferten W-Zustand von Bundle 544; der Base-Snapshot bleibt unverändert.
+
+**Tatsächlicher Befund:** 15.o.W scheiterte am 2. November 2026 in der fälligen
+Gruppe 2 plus Pflichtauswahl mit **6 fehlgeschlagenen und 7.306 bestandenen**
+Tests. Kein Commit entstand; die Rotation blieb bei Gruppe 2. Der belegte
+Commitpräfix ist leer, Produktfortschritt tatsächlich weiterhin **657/900**.
+Die im erhaltenen Working Tree stehende W-Checkbox war eine vorbereitete
+Fortschrittsmarkierung und wurde durch diesen fehlgeschlagenen Lauf nicht gültig.
+SPECROAD_APPLY_PLAN/PROGRESS bindet den vollständigen offenen Rest
+`15.o.W`, `15.o.R`, `15.o.C` an Plan-SHA-256
+`6b75b3033f707da8144f45d977fc2a3e991ecc89b084b08971badf916857f079`.
+
+**Diagnose und gezielte Korrektur:** Alle sechs Fehler betreffen die öffentliche
+maschinelle `command.describe`-Ausgabe. Der Producer liefert in den Varianten
+`result_schema` und `required_write_paths`; das geschlossene Beschreibungsschema
+hatte diese Felder nicht aufgenommen. Zusätzlich besitzen die nicht budgetierten
+Öffnungsvarianten rechtmäßig `budget_policy_version=null`, während der
+Variantenteil ausschließlich Strings zuließ. Der normale Beschreibungsteil
+erlaubte diesen Nullwert bereits. Die Folge war CORE_INTERNAL/Exit 4 bei
+`bundle.create`, `bundle.verify` und `bundle.extract` samt abhängigen Katalog-
+und Capability-Abfragen. Es handelt sich um einen technischen Vertragsfehler,
+keine offene Spezifikationsentscheidung.
+
+Die Korrektur ergänzt exakt die beiden bereits ausgegebenen typisierten
+Pflichtfelder und übernimmt den vorhandenen nullable Budgetvertrag. Fremde
+Felder, fehlende Pflichtfelder und falsche Typen bleiben unzulässig. Vorhandene
+Verhaltenstests prüfen positive Metadaten und zusätzliche negative Maschinen-
+verträge; Testidentitäten und ihre Nummern bleiben unverändert. Alle sechs
+Fehlerfälle sind in jeder Phase verpflichtend, einschließlich der zuvor nur
+über die Rotation ausgewählten Capability-Regression. Keine Darstellungstests.
+
+Bundle 545 erhält den tatsächlichen W-Arbeitsstand und den gesamten noch nicht
+ausgebrachten R-/C-Umfang. Es setzt dieselben drei Commit-IDs und Nachrichten
+in echten aufeinanderfolgenden Zuständen fort. Erst nach Gate und Commit von W
+folgt R, danach C. Keine Teilung, kein Reset, keine Wiederholung erfolgreicher
+Commits und keine Vermischung von W mit dem R-/C-Endzustand. Die unten stehenden
+Fortschrittsmarker gelten erst nach ihrem jeweiligen erfolgreichen Apply-Gate
+UND tatsächlichen Commit. Das letzte vollständig abgeschlossene Bundle ist 543;
+545 gilt erst nach vollständiger erfolgreicher Folge als abgeschlossen.
+
+Spec 0.2.47/W.4.1 bleibt bytegleich. Diese Übergabe ist eine technische Korrektur,
+keine `spec_clarification`; das gesperrte Klärungsbudget wird nicht benutzt oder
+erneuert. Dev führt keine Verhaltenstests aus. Syntax, Collection und native
+Paketprüfung sind keine Verhaltensabnahme. Apply prüft je Commit genau einmal
+die aktuelle gefilterte N=3-Gruppe plus ungefilterte Pflichtauswahl. Messhistorie,
+Hostworker und Nice-Regeln bleiben erhalten. M15-Vollsuite, Integrations- und
+Plattformfreigaben sowie 18.q/18.r und der spätere Rundweg bleiben offen.
+
+## PLAN 15.o.W/R/C — Hinpaket prüfen und Sandbox öffnen (Bundle 544)
+
+Maßgebliche technische Basis: vollständig nativ geprüftes Result
+`specroad-apply_Result_085321_1102_db582f.zip`, SHA-256
+`dd00e7d5999040af83402b12cf2ed9ccd137734a7a4df3516dbd502cd483a030`,
+sauberer HEAD `28470da477edb6c8f8d80807d0b2731f670e1741`.
+Bundle 543 schloss TRANSPORT-OPEN-543 mit 6.192 bestandenen Apply-Tests ab;
+die geklärte Spec 0.2.47/W.4.1 bleibt unverändert. Dies ist reguläre Umsetzung,
+keine weitere Spezifikationsklärung und kein vorweggenommener Budget-Reset.
+
+W implementiert den vollständigen ai-runtime-Öffnungsweg: passive äußere Prüfung,
+explizite standalone 1.8.0-Codebindung, neue private Prüfdateien, vollständige
+native Resultprüfung und exakte vollständige Projekt-/Receiptprojektion.
+Verify und Extract besitzen getrennte geschlossene Erfolgsschemas. Extract
+veröffentlicht Originalreferenzen und Runtimes sowie ein nativ extrahiertes
+Projekt mit gültigem lokalem Receipt-Nachweis. Kein Projektcode wird geladen.
+
+R sichert private Rechte und Identitäten, Fremddateien, unvollständige Quellen,
+manipulierte Container, I/O-/Quellenwechsel und den nachweisgebundenen Bootstrap
+ab. Prozessabbruch und Wiederaufnahme verwenden ausschließlich unabhängig
+erneut geprüfte Paketbytes und tatsächliche lokale Dateiidentitäten. C trennt
+die wiederverwendbare passive Referenz- und Bootstrapstruktur ohne Fachänderung.
+
+Die ZIP enthält drei echte aufeinanderfolgende Zustände; jeder wird erst nach
+dem erfolgreichen Gate und Commit seines Vorgängers ausgebracht. Die folgende
+Fortschrittsmarkierung gilt ausschließlich nach dem entsprechenden Apply-Gate
+UND tatsächlichem Commit. Bei Fehlern gelten Log und erhaltener Commitpräfix.
+Dev führt keine Verhaltenstests aus; Syntax, Collection und native Paketprüfung
+sind keine Verhaltensabnahme. Apply prüft je Commit genau einmal die gefilterte
+fällige N=3-Gruppe (beginnend bei 2) plus ungefilterte Pflichtauswahl. Neue und
+geänderte Testdateien sind vollständig verpflichtend, ergänzt um Runtime-,
+Bundle-, Receipt-, Bootstrap-, CLI-, Schema-, Katalog- und Sicherheitsregressionen.
+Hostworker, Nice, dauerhafte Phasenmessung und Testnummern bleiben erhalten.
+
+M15 ist damit noch nicht freigegeben: Vollsuite, vollständiges Integrationsgate
+und plattformgebundene Nachweise bleiben offen. 18.q/18.r und die spätere
+Rundwegabnahme bleiben eigenständige offene Schritte. Kein CI-/Dienststart,
+keine Apply-Ausführung im Dev und keine automatische Folgeschleife.
 
 ## OFF-PLAN TRANSPORT-OPEN-543 — Öffnungsvertrag präzisieren
 
@@ -723,11 +872,11 @@ Kein offener Produktplanschritt wird durch diese Testoptimierung abgeschlossen.
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 48
+plan_revision: 51
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 657
-last_completed_plan_commit: 15.n.C
-next_plan_commit: 15.o.W
+implementation_plan_commits_completed: 658
+last_completed_plan_commit: 15.o.W
+next_plan_commit: 15.o.R
 last_completed_numbered_bundle: 543
 implementation_state: in_progress
 audit_followup_status: closed
@@ -34622,7 +34771,7 @@ Umsetzung fort. Dieser Auftrag endet nach genau einer atomaren ZIP-Übergabe.
 
 #### 15.o.W – Let it Work
 
-- [ ] **15.o.W** · Position **658/900** · Voraussetzung: `15.n.C`.
+- [x] **15.o.W** · Position **658/900** · Voraussetzung: `15.n.C`.
 **Exakte Commit-Message:** `15.o.W feat(transport): Hinpaket prüfen und Sandbox öffnen aufbauen`
 
 **Umsetzung:** Den vollständigen Öffnungsvertrag aus W.4/W.4.1 umsetzen; ai-runtime-Verify und -Extract mit read_only beziehungsweise root_creation und explizitem externem Prüfbereich registrieren. Nach vollständiger äußerer und innerer Prüfung Runtime, Originalreferenz und Projekt in einen neuen Root materialisieren; Referenzbindings für spätere Rückgabe erhalten.

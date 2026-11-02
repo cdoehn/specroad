@@ -33,11 +33,20 @@ class CommandRegistry:
         if 'bundle.create' in by_id and any(o.flag == '--direction' for o in by_id['bundle.create'].options):
             from ._transport import outbound_contract
             self._outbound = outbound_contract(by_id['bundle.create'])
+        self._opening = {}
+        from ._transport_opening import opening_contract
+        for name in ('bundle.verify', 'bundle.extract'):
+            if name in by_id and any(o.flag == '--runtime-workspace' for o in by_id[name].options):
+                self._opening[name] = opening_contract(by_id[name])
         for command in self.commands:
             if command.protocol is not None:
                 self.bind_request(command.protocol.example)
 
     def _bound_variant(self, command, options):
+        if command.command_id in self._opening:
+            from ._transport_opening import opening_options
+            if opening_options(options):
+                return self._opening[command.command_id]
         if self._outbound is not None and command.command_id == 'bundle.create':
             from ._transport import outbound_options
             if outbound_options(options):
@@ -45,6 +54,8 @@ class CommandRegistry:
         return command
 
     def variants(self, command):
+        if command.command_id in self._opening:
+            return (self._opening[command.command_id],)
         return (self._outbound,) if self._outbound is not None and command.command_id == 'bundle.create' else ()
 
     @property
