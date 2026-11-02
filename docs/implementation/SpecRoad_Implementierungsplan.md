@@ -936,10 +936,10 @@ Kein offener Produktplanschritt wird durch diese Testoptimierung abgeschlossen.
 ```yaml
 plan_revision: 52
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 659
-last_completed_plan_commit: 15.o.R
-next_plan_commit: 15.o.C
-last_completed_numbered_bundle: 543
+implementation_plan_commits_completed: 660
+last_completed_plan_commit: 15.o.C
+next_plan_commit: 16.a.W
+last_completed_numbered_bundle: 547
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -34851,7 +34851,7 @@ Umsetzung fort. Dieser Auftrag endet nach genau einer atomaren ZIP-Übergabe.
 
 #### 15.o.C – Make it Clean
 
-- [ ] **15.o.C** · Position **660/900** · Voraussetzung: `15.o.R`.
+- [x] **15.o.C** · Position **660/900** · Voraussetzung: `15.o.R`.
 **Exakte Commit-Message:** `15.o.C refactor(transport): Hinpaket prüfen und Sandbox öffnen bereinigen`
 
 **Bereinigung:** Gemeinsame sichere Root-Erzeugung und getrennte passive Referenzhaltung verwenden; keine neue Schreibbefugnis oder verkürzte innere Prüfung.

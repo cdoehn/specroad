@@ -22,7 +22,7 @@
   "json_pointers": [],
   "method": "automated_behavior",
   "open_items": [
-    "Correction bundle 547 retains 15.o.R after four R fixture-construction failures (7523 passed); W committed as a2929c3eaceefbd3376099c3324d43fd4c805edc after 7414 passing tests. This phase still requires its own successful Apply gate and actual commit; no Dev behavior tests ran.",
+    "Correction bundle 547 retains 15.o.C after four R fixture-construction failures (7523 passed); W committed as a2929c3eaceefbd3376099c3324d43fd4c805edc after 7414 passing tests. This phase still requires its own successful Apply gate and actual commit; no Dev behavior tests ran.",
     "Full native CPython 3.10–3.14/platform evidence and the M15 full-suite/integration gate remain pending explicit manual execution.",
     "Return transport/receive, end-to-end round trip and platform acceptance remain open in 18.q/18.r/20.f/20.h/20.m."
   ],

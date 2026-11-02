@@ -38,7 +38,8 @@ class OpeningContainer:
                              validate_paths=validate_portable_archive_paths)
         require(set(payloads) == {'handoff.json', 'runtime/specroad.pyz',
             'reference/result.zip', 'project/project.zip'}, 'handoff_members', 3)
-        manifest = parse_json_object(payloads.pop('handoff.json'))
+        original = payloads.pop('handoff.json')
+        manifest = parse_json_object(original)
         require(set(manifest) == {'format_version', 'package_id', 'direction', 'runtime_profile',
             'project_id', 'project_path', 'scope_descriptor', 'model_root_sha256',
             'reference', 'runtimes', 'entries'}, 'handoff_fields', 3)
@@ -71,8 +72,6 @@ class OpeningContainer:
         expected['package_id'] = sha256(FORMAT.encode() + b'\0' + canonical_json_bytes(expected)).hexdigest()
         # Canonical bytes also distinguish JSON booleans from integer 0/1.
         require(canonical_json_bytes(manifest) == canonical_json_bytes(expected), 'handoff_manifest_binding', 3)
-        original = decode_zip(raw, max_uncompressed_bytes=MAX_BYTES,
-                              validate_paths=validate_portable_archive_paths)['handoff.json']
         require(original == canonical_json_bytes(expected), 'handoff_manifest_noncanonical', 3)
         self.raw, self.sha256 = raw, sha256(raw).hexdigest()
         self.payloads, self.manifest, self.project = payloads, expected, project
