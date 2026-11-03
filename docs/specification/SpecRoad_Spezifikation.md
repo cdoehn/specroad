@@ -1,19 +1,19 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.54
+## Version 0.2.55
 
 | Feld | Wert |
 |---|---|
 | Dokument-ID | `SR-SPEC-0001` |
-| Dokumentversion | `0.2.54` |
+| Dokumentversion | `0.2.55` |
 | Zielrelease | `SpecRoad Single-Repository Workbench 0.2.0` |
 | Status | **Fachlich konsolidierte Arbeitsgrundlage; technische Reviewentscheidung gesondert dokumentiert, formale Baseline-Freigabe und Produktabnahme nicht durch dieses Dokument erklärt** |
 | Stand | 3. November 2026 |
 | Sprache | Deutsch; technische Feldnamen, Enum-Werte und CLI-Kommandos Englisch |
-| Fachliche Quelle | **Diese Repositoryfassung v0.2.54 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.54 liegt mit dieser Änderung nicht vor.** |
+| Fachliche Quelle | **Diese Repositoryfassung v0.2.55 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.55 liegt mit dieser Änderung nicht vor.** |
 | Bearbeitbare Satzquelle | Diese Datei; eine spätere PDF muss denselben versionierten Inhalt wiedergeben. |
-| Vorgängerversion | Repository-Spezifikation v0.2.49 vom 3. November 2026; historische Nachweise bleiben unverändert. |
-| Prüf- und Entscheidungsgrundlage | REFERENCE-RELEASE-552: ausdrückliche manuelle Ausnahme für Klärung und folgende Plancommits in einer ZIP; explizite Release-Bindung im neuen Quellvertrag 1.0.1. |
-| Änderungsart | Vollständig versionierter 0.1-Referenzquellvertrag mit gebundenen Schemas, Original-/Hash-/Baseline-Regeln und Sollvektoren; native Implementierung, Migration und Restore-Abnahmen bleiben offen. |
+| Vorgängerversion | Repository-Spezifikation v0.2.54 vom 3. November 2026; historische Nachweise bleiben unverändert. |
+| Prüf- und Entscheidungsgrundlage | MIGRATION-BACKUP-561: delegierte Detailentscheidung gemäß SPECROAD-DECISION-1/2.4.3.1 unter erteiltem Vertrag 4; separate Apply-Gates für Klärung und 16.d.W/R/C. |
+| Änderungsart | Versionierte vollständige Quellsicherung mit unveränderten 0.1-Originalen, getrennten Hashdomänen und gebundenem Sicherungsbericht; Migrationswriter, öffentliche Integration und Release-Abnahmen bleiben offen. |
 
 > **Verbindlicher Quellenwechsel:** Die ausdrückliche Nutzerentscheidung REFERENCE-SOURCE-551 wird als v0.2.50 umgesetzt. Der neue Quellvertrag ist Entwurfsarbeit vom 3. November 2026, kein Nachweis eines früher existierenden Formats. Bestehende 0.2-Verträge, Transport-, Sicherheits- und Reviewgrenzen bleiben erhalten.
 
@@ -505,7 +505,21 @@ erfolgreichen Abschluss. Die ausdrückliche Bedienausnahme steht in 2.4.3.2. Feh
 Blockaden und Pausen werden durch Installation nicht freigegeben. Installation
 startet weder Control noch Watcher noch einen Modellturn.
 
-#### 2.4.3.2 Ausdrücklicher Übergang einer alten Kette — CONTROL-CLARIFICATION-560
+#**CONTROL-PLAN-LIMIT-561 — ausdrückliche Nutzerergänzung vom 3. November 2026.**
+Der entpackte UTF-8-JSON-Commitplan darf einschließlich seiner eingebetteten
+Payloadkodierungen bis einschließlich **64 MiB (67.108.864 Bytes)** groß sein.
+Die gleiche maximale Planlänge gilt für reguläre und gemischte Übergaben,
+Reconciliation und belegte Fortsetzungen. Ein ausdrücklich kleineres
+internes Prüflimit bleibt möglich; ein größeres Limit, Boolean oder ein
+nichtpositiver/nichtganzzahliger Wert darf die 64-MiB-Obergrenze nicht umgehen.
+Die begrenzte Dekompression muss bei Übergröße, unvollständigem Stream oder
+zusätzlichen komprimierten/fremden Nachbytes scheitern. Alle Bindungs-, Rollen-,
+Payloadhash- und Gateprüfungen bleiben Pflicht. Diese Entscheidung erweitert
+nur die entpackte Commitplanlänge; ZIP-Mitglieds-, Snapshot-, History- und
+Antwortgrenzen sowie die Fachbefugnisse bleiben unverändert. Änderungen an
+installierten Diensten oder Betriebsdaten sind kein Teil dieses Bundles.
+
+### 2.4.3.2 Ausdrücklicher Übergang einer alten Kette — CONTROL-CLARIFICATION-560
 
 **Ausdrücklicher Nutzerauftrag vom 3. November 2026.** Für leichte und normale
 Detaillücken innerhalb von SPECROAD-DECISION-1 soll die bestehende optionale
@@ -6822,6 +6836,7 @@ Die folgende Roadmap ist informativ und erzeugt keine Anforderungen an 0.2:
 
 | Version | Datum | Status | Änderung |
 |---|---|---|---|
+| 0.2.55 | 2026-11-03 | Delegiert gemäß SPECROAD-DECISION-1, Vertrag 4 | MIGRATION-BACKUP-561: eigener versionierter 0.1-Quellsicherungsvertrag, vollständige Originalbytebindung und unveränderte M15-/Writergrenzen. |
 | 0.2.54 | 2026-11-03 | Ausdrücklicher Nutzerauftrag | CONTROL-CLARIFICATION-560: protokollierte Freigabe neuer Aufträge einer alten Kette nach Vertrag 4 mit erhaltenem Restbudget und unveränderten alten Versuchen. |
 | 0.2.53 | 2026-11-03 | Ausdrücklicher Nutzerauftrag | CONTROL-INTEGRATION-556: integrierte Entwicklungssteuerung, gemeinsame Tests, zentrales privates Datenverzeichnis und gebundene Offline-Installation/Migration. |
 | 0.2.52 | 2026-11-03 | Ausdrücklicher Nutzerauftrag | MIXED-BUNDLE-555: optionaler Klärungscommit vor vollständiger Umsetzung, Vertrag 4, typisierte Rollen, gebundene Restfortsetzung und unveränderte Test-/Reviewgrenzen; aktive Dokumentmetadaten angeglichen. |
@@ -9351,6 +9366,94 @@ Planung identifiziert unveränderbare Ressourcen und alle Referenzpayloads, erze
 `migrate verify` prüft mindestens byteidentische Originalressourcen vor/nach Migration, identische historische Baseline-Hashes, vollständige Manifestreferenzen, unveränderte Legacy-IDs und neue gültige 0.2-Ressourcen. Jede unbeabsichtigte Originaländerung ist Fehler. Wiederholung nach erfolgreicher Migration ist No-op beziehungsweise liefert das gespeicherte Request-Ergebnis. Der Migrationsauftrag kann während Planung und Prüfung nach Anhang P aufgeteilt werden; die abschließende Veröffentlichung bleibt eine Transaktion.
 
 
+### Q.5.1 Vollständige Quellsicherung — MIGRATION-BACKUP-561
+
+**Entscheidung gemäß SPECROAD-DECISION-1 und 2.4.3.1, Vertrag 4.**
+16.d verlangt unveränderte 0.1-Originale; E.1.1 erlaubt im regulären
+Projektmanifest nur Schema 0.2.0. Eine Vorabtransformation, eine falsche
+0.2-Kennzeichnung oder ein ungeprüftes generisches ZIP würde diese Verträge
+verletzen. Eine Erweiterung aller regulären Bundle-/Restore-Leser wäre ein
+unnötiger Eingriff in deren Scope. Gewählt wird deshalb eine eng begrenzte,
+ausdrücklich versionierte Migrationsquellsicherung mit dem unveränderten
+M15-Archivcodec und eigenem Quellleser. Die normalen E.1.1-/E.3-Bundles und
+historischen Referenzverträge bleiben unverändert. Die Klärung selbst ist
+kein Produktnachweis und schließt 16.d nicht ab.
+
+**Format.** Das deterministische ZIP folgt vollständig E.2. Es enthält
+`migration-source-manifest.json` und für jede Originaldatei genau
+`source/<ursprünglicher relativer Pfad>`. Der Präfix verhindert Kollisionen
+mit vorhandenen Manifestdateien; auch solche Originaldateien bleiben erhalten.
+Das kanonische RFC-8785-Manifest hat exakt folgende Pflichtfelder:
+
+- `backup_format_version`: `migration-source-backup-v1`;
+- `bundle_kind`: `migration_source`; `read_only`: JSON-Boolean true;
+- `project_id`: unveränderte Quellprojekt-ID; `tool_version`: nichtleere
+  tatsächliche erzeugende SpecRoad-Version, keine Freigabe;
+- `source_contract`: exakt `contract_id=specroad-reference-0.1`,
+  `contract_version=1.0.1`, `schema_version=0.1.0`,
+  `contract_sha256=7c4af8bb230fed758267a9a45c4957b26e015e0f112c8ad5d0f42b9b93fee72e`;
+- `scope_descriptor`: der vollständige reference01-scope-v1 aus Q.0.2;
+- `source_model_root_sha256`: nach reference01-model-root-v1 aus den
+  enthaltenen Originalen einschließlich vollständiger historischer Closure
+  neu berechnete Quellwurzel;
+- `source_files_sha256`: SHA-256 der kanonischen vollständigen Liste von
+  Zeilen mit exakt `path,size,sha256`, sortiert nach Originalpfad-UTF-8-Bytes;
+- `entries`: vollständige E.1-Transportinventarliste einschließlich Präfix,
+  ohne das Manifest selbst, exakt mit `path,size,media_type,sha256`.
+
+Alle Originalbytes bleiben unverändert, auch nichtkanonisch eingerücktes
+Quell-JSON, leere Dateien, binäre Anhänge, historische Archivobjekte,
+unreferenzierte Dateien und generierte Ausgaben. Keine Scopeauswahl,
+Konfigurationsfilterung, Objektoptimierung oder Regeneration ist erlaubt.
+Die Dateiliste umfasst den gesamten Projektdateibestand, nicht nur die
+semantische Closure. Die Quellwurzel allein beweist diese Vollständigkeit
+nicht: Verifikation verlangt zusätzlich den außerhalb der Sicherung gebundenen
+`source_files_sha256` und den vollständigen ZIP-SHA-256. Beide sind Pflicht.
+Unbekannte Felder/Versionen, fehlende/zusätzliche Bytes, falsche Typen,
+Hash-/Closurefehler, nichtkanonische oder unsichere ZIPs werden abgewiesen.
+Eine konsistent umgeschriebene Sicherung ersetzt keine externe Bindung.
+
+**Projekt- und Sicherheitsgrenze.** Git-Verwaltung und private fremde
+Werkzeug-/Zugangsdaten unter den exakten Rootnamen `.git`, `.codex`,
+`.agents`, `.aws`, `.ssh`, `.patchharbor` sind keine Projektoriginale;
+sie werden weder geöffnet noch transportiert. Diese Namen sind kein
+allgemeiner Ignore-Mechanismus. Eine fachliche Referenz dorthin ist ein
+Fehler, keine Ausnahme von vollständiger Closure. Entsprechende geschützte
+Segmente innerhalb anderer Payloadpfade werden abgewiesen. Andere reguläre
+Dateien werden vollständig gesichert. Links, Spezialdateien, Pfadkollisionen
+und verschachtelte Projekte bleiben verboten. Verzeichnis-Metadaten, ACLs,
+leere Verzeichnisse und Git-Historie sind kein Inhalt dieses Dateibyteformats.
+
+Vorhandene passive `.specroad`-Originaldateien bleiben ebenfalls bytegleich
+enthalten, getrennt von der semantischen Modellwurzel. Nur die bereits
+zentral definierten passiven Betriebsverzeichnisse sind zulässig; ein aktiver
+oder ungeklärter Lock-/Journal-/Recovery-Zustand blockiert die Sicherung.
+Die Rohdatenkopie erklärt weder Receipts für gültig noch portable Idempotenz,
+Restore-Zulässigkeit oder Schreibberechtigung. Kein Betriebszustand wird
+aktiviert, ausgeführt oder beim Lesen repariert.
+
+**Veröffentlichung und Bindung.** Die Sicherung wird vor jeder späteren
+Schemamutation in einen ausdrücklich gewählten, kanonischen externen
+Ausgaberoot außerhalb aller Projekte geschrieben. Die native Veröffentlichung
+ist atomar und create-only; bestehende Ziele werden nie ersetzt. Die Quelle
+wird vollständig descriptorgebunden gelesen und vor/nach Veröffentlichung
+auf Dateimenge, Bytes und Betriebszustand erneut geprüft. Das ist ohne
+späteren Writerlock kein atomarer Mehrdateisnapshot und keine Autorisierung.
+Ein Fehler, Platzmangel oder Quellwechsel liefert keinen erfolgreichen
+Sicherungsbericht und ändert kein Quellschema. Tatsächliche private/komplette
+Fehlerartefakte bleiben erhalten; kein fremdes Ziel wird gelöscht.
+
+`migration-source-backup-report-v1` bindet exakt `format_version`,
+`file` mit absolutem `path,size,sha256`, `source_model_root_sha256`,
+`source_files_sha256`, `backup_verified=true`, `source_bytes_rechecked=true`,
+`atomic_snapshot=false`, `write_authorized=false`, `approval_granted=false`.
+Der Bericht wird erst nach erneutem Lesen und nativer Verifikation der
+veröffentlichten Datei erzeugt. Die spätere Migration muss diese konkreten
+Bytes sowie die erneut beobachtete Quelle unter ihrem eigenen Writer-/Plan-
+Gate binden. Ein gespeicherter Bericht oder ein angeblich verifiziertes
+Pythonobjekt allein genügt nicht. 16.i und die öffentliche Migrations-/
+Restore-Integration behalten ihre vollständigen Abnahmen und bleiben offen.
+
 # Anhang R — Kontraktübergreifende Abnahmefälle
 
 Diese Fälle sind Solltests für die spätere Implementierung. Die bloße Aufnahme in die Spezifikation ist kein bestandener Produktnachweis. Die kleinen Orakel sind vollständig bestimmbar und ergänzen die einzelnen Requirement-Testfälle.
@@ -10635,4 +10738,4 @@ Implementierungsschritten nachgewiesen sein.
 
 ---
 
-**Ende der SpecRoad-Produktspezifikation v0.2.54.**
+**Ende der SpecRoad-Produktspezifikation v0.2.55.**

@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 63 · **Stand:** 3. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.54
+**Planrevision:** 64 · **Stand:** 3. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.55
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 Schritte und 900 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; die ausdrücklich genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wird nach 10.7.10 innerhalb von 15.l.R vorgezogen. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -9,7 +9,7 @@ Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 S
 
 Fachliche Grundlage ist [`docs/specification/SpecRoad_Spezifikation.md`](../specification/SpecRoad_Spezifikation.md), einschließlich aller konsolidierten Korrekturen, 742 Requirements, 51 Verifikationsverträge, 46 Szenario-/E2E-Identitäten sowie R-01 bis R-75, Anhang U und den PatchHarbor-Rundweg aus Anhang W. Der [`Prüfbericht`](../reviews/SpecRoad_v0.2.7_Implementierungsreife_Pruefbericht.md) ist ein vorgelagerter Entwurfsreview, kein späterer Produktnachweis.
 
-Gebundene Spezifikations-SHA-256: `d3f591ae53166dda40fd65c97f0bc1d717140406db88410c7927e7c3359a8e0a`.
+Gebundene Spezifikations-SHA-256: `ffab6e96a19a881b665229964462339c01afac673bc51a5e9d15c389e407f87b`.
 Planungsbasis: Commit `fe2661d02ecf2f7eb483b58a4487eb009c6b3846`; sauberes Result-Bundle `specroad_Result_120209_0914_df3504.zip`; Repository-ID `3d2576df-d611-46fc-9d2b-92869468aaca`. Diese Angaben dokumentieren die Entstehung des Plans, nicht die zukünftige Patchbindung. **Jedes spätere Patchpaket bindet den dann aktuellen tatsächlichen Result-Zustand.**
 
 Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 2026 gelten zusätzlich und bei den nachfolgend benannten Konflikten vorrangig. Sonstige normative Spezifikationsinhalte werden nicht stillschweigend abgeschwächt. Neue fachliche Widersprüche, fehlende zwingende Angaben und Sicherheitsprobleme sind offen zu benennen, nicht durch erfundene Annahmen oder Scheinerfolge zu lösen.
@@ -33,6 +33,51 @@ ausdrückliche Bedienausnahme aus 2.4.3.2 bleibt zusätzlich anwendbar.
 Produktfreigaben und die Grenzen aus 2.4.1/2.4.2/2.4.4 bleiben unverändert.
 Dieser Plan ändert keine alten Aufträge, Antworten, Blockaden oder
 Laufzeitdaten und ist keine Start-/Resume-Anweisung.
+
+## OFF-PLAN MIGRATION-BACKUP-561 — Quellsicherung und vollständiges 16.d
+
+Gebundene Basis ist das erfolgreiche saubere Result 59223b,
+SHA-256 `b9c3b129c4fbf9451df5acb3b4573f5394c38fb4156dc4cb3db8a073ac4fad1d`.
+Die normale Detaillücke zwischen E.1.1 (0.2) und unveränderter 0.1-Sicherung
+wird gemäß SPECROAD-DECISION-1/2.4.3.1 unter erteiltem Vertrag 4 in Q.5.1
+begründet geschlossen. Alternativen und Grenzen stehen dort normativ.
+Ein Klärungscommit zuerst, danach vollständiges 16.d.W/R/C; je ein echter
+Zwischenstand mit eigenem N=3-plus-Pflichttests-Gate vor dem Commit.
+Keine Verhaltenstests in Dev; vorbereitete Abnahmen sind keine Testerfolge.
+Die Pflichtauswahl enthält alle neuen/geänderten Tests und die betroffenen
+M15-/Quellleser-/Migrationsplan-/sicheren I/O-Regressionen.
+
+W: kanonische Quellsicherung, vollständiger Dateibytebestand einschließlich
+Legacy-/generierter/unreferenzierter Originale, externe atomare create-only
+Veröffentlichung und gebundener Bericht. Unabhängige ZIP-Inventar-/Byte-
+Orakel, Vollrekonstruktion, Wiederholbarkeit und unverändertes Quellschema.
+R: externe Hash-/Bestandsbindung bei erneutem Öffnen, streng geschlossener
+Quellmanifestvertrag, manipulierte/fehlende Bytes und historische Closure,
+aktive/ungeklärte Betriebsdaten, Quellwechsel und No-space verhindern Erfolg.
+C: Quellinventur und Quellcontainer strukturell trennen, gemeinsame M15-
+Archiv-/Publikationsprimitiven weiterverwenden; alle R-Tests unverändert.
+16.e behandelt anschließend explizite Sprach-/Verbindlichkeitsmigration;
+diese separate Fachentscheidung wird nicht mit dem Sicherungsschritt vermischt.
+16.i und spätere CLI-/Restoreintegration bleiben vollständig offen.
+
+### Ausdrückliche Ergänzung CONTROL-PLAN-LIMIT-561
+
+Der Nutzer ergänzt im laufenden, noch nicht übergebenen Bundle die Zulassung
+entpackter Commitpläne bis 64 MiB. Diese zusätzliche technische Änderung
+wird innerhalb derselben tatsächlichen W/R/C-Zustände von Bundle 561 geführt;
+die Produktpositionen zählen weiterhin ausschließlich 16.d. Keine zusätzliche
+Klärungsstage und kein Scope-/Budgetwechsel aus eigener Befugnis.
+W ergänzt die eigene 64-MiB-Planobergrenze und echte komprimierte Planfälle
+oberhalb 32 MiB, exakt 64 MiB und einen Byte darüber. R prüft kleinere Grenzen,
+ungültige Grenzwerte und unvollständige/angehängte Streams, ohne fachliche
+Planprüfungen zu lockern. C vereinheitlicht die bisher doppelte 64-MiB-Konstante
+mit der vorhandenen Blocked-Recovery-Prüfung; R-Tests bleiben bytegleich.
+Alle neuen Testdateien und die betroffenen Control-/Mixed-/Reconciliation-/
+Recovery-Tests sind ungefiltert Pflicht. Dev führt weiterhin nur Collection,
+Syntax und native Paketprüfung aus. Die Übergabe selbst bleibt unter der
+bisher installierten 32-MiB-Grenze; die Codeänderung wirkt erst in einer
+später tatsächlich installierten, erfolgreich geprüften Control-Version.
+Kein Dienststart, keine Installation und kein Eingriff in Betriebsdaten.
 
 ## OFF-PLAN CONTROL-CLARIFICATION-560 — ausdrückliche Freigabe neuer Aufträge
 
@@ -1532,7 +1577,7 @@ Kein offener Produktplanschritt wird durch diese Testoptimierung abgeschlossen.
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 63
+plan_revision: 64
 implementation_plan_commits_total: 900
 implementation_plan_commits_completed: 669
 last_completed_plan_commit: 16.c.C
@@ -35754,6 +35799,10 @@ mit den obigen positiven, negativen und Original-/Autoritätsabnahmen.
 
 <a id="step-16-d"></a>
 ### 16.d – Vollständige verifizierte Quellsicherung
+
+Zusätzlich verbindlich: Q.5.1 MIGRATION-BACKUP-561. Ungefilterte Originalbyte-
+Sicherung mit eigenem Quellmanifest; keine Umdeklaration als 0.2-Projektbundle.
+Die W-/R-/C-Abnahmen im obigen OFF-PLAN-Abschnitt gelten vollständig.
 
 **Anforderungsbezug:** `SR-REQ-0266`.
 **Verifikationsbezug:** `SR-VER-0020`. Die exakten SR-TC-Identitäten stehen in der vollständigen Matrix.
