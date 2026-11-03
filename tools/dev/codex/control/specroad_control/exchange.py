@@ -1,15 +1,13 @@
 """Select Result/Patch candidates by native-core-verified identity and binding."""
 from pathlib import Path
 import stat
-import zipfile
-import zlib
 from .config import Config
 from .contracts import timestamp
 from .core import Core
 from .errors import ControlError
 from .hints import hint, signature  # Maintain the public import used by clients.
 
-BINDING = ("repo_id", "base_commit", "state_fingerprint", "fingerprint_algorithm")
+from .patch_source import BINDING, matches_source
 
 
 class Exchange:
@@ -92,50 +90,9 @@ class Exchange:
         matched = {}
         for data in self.candidates("patch", lambda m: all(m.get(k) == source["binding"][k] for k in BINDING)):
             checked = self.core.validate(Path(data["path"]), source)
-            if self._matches_source(source, checked):
+            if matches_source(self, source, checked):
                 matched[checked["sha256"]] = checked
         return list(matched.values())
-
-    def _matches_source(self, source, patch):
-        try:
-            return self._typed_source_match(source, patch)
-        except ControlError:
-            raise
-        except (OSError, ValueError, TypeError, KeyError, IndexError, RuntimeError):
-            raise ControlError('patch_source_unproven', 'Native source selection evidence is unavailable or malformed.') from None
-
-    def _typed_source_match(self, source, patch):
-        """A typed plan binds exact Result bytes in addition to repository state."""
-        from .apply_reconcile_proof import archive_bytes, plan
-        try:
-            data, _ = plan(patch)
-        except (ControlError, ValueError, TypeError, KeyError, IndexError, SyntaxError,
-                RecursionError, zipfile.BadZipFile, zlib.error, RuntimeError,
-                NotImplementedError, OverflowError):
-            # Opaque/legacy packages cannot be excluded by an unproven hint.
-            # Recheck the native hash even when parsing cannot establish v2.
-            archive_bytes(patch)
-            return True
-        if data['format_version'] != 2:
-            return True
-        bound = source
-        if data['source_result_sha256'] != source['sha256']:
-            candidates = {r['sha256']: r for r in self.candidates('result',
-                lambda m: all(m.get(k) == source['binding'][k] for k in BINDING))
-                if r['sha256'] == data['source_result_sha256']}
-            if len(candidates) != 1:
-                raise ControlError('patch_source_unproven', 'The exact typed source Result is unavailable.')
-            bound = self.source(next(iter(candidates.values())))
-        if (data['binding'] != patch['binding'] or data['binding'] != bound['binding']
-                or data['apply_repository'] != bound['repository_path']
-                or bound['repository_path'] != source['repository_path']
-                or data['initial_dirty'] != bound['dirty'] or bound['dry_run']):
-            raise ControlError('patch_source_unproven', 'Typed source metadata contradicts native evidence.')
-        checked = self.core.validate(Path(patch['path']), bound)
-        if (checked['sha256'] != patch['sha256'] or checked['binding'] != bound['binding']
-                or checked['reference_sha256'] != bound['sha256'] or not checked['binding_matches']):
-            raise ControlError('patch_source_unproven', 'The typed patch changed during selection.')
-        return data['source_result_sha256'] == source['sha256']
 
     def following(self, source: dict, patch_sha: str) -> list[dict]:
         found = {}

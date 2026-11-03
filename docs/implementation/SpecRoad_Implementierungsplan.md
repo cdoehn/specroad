@@ -79,7 +79,7 @@ C: passive Auswahl aus Exchange in eigenes Modul trennen, alle R-Tests und
 Fachregeln unverändert. Jeder echte Zustand erhält volle Control-Regression
 plus Apply-/Katalog-Pflichtauswahl zusätzlich zur fälligen gefilterten N=3-Gruppe.
 
-Vorbereitete Zuordnungsphase: R. Abnahme gilt erst nach dem eigenen Apply-Gate.
+Vorbereitete Zuordnungsphase: C. Abnahme gilt erst nach dem eigenen Apply-Gate.
 Produktstand bleibt 672/900, nächster Produktcommit 16.e.W. Danach geprüfte
 Releasekopie installieren und wie beauftragt die Automatik starten. Die
 manuelle Fehlergrenze von höchstens vier Korrekturbundles gilt weiter; bisher
@@ -1755,7 +1755,7 @@ implementation_plan_commits_total: 900
 implementation_plan_commits_completed: 672
 last_completed_plan_commit: 16.d.C
 next_plan_commit: 16.e.W
-last_completed_numbered_bundle: 565
+last_completed_numbered_bundle: 567
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
