@@ -69,6 +69,8 @@ def public_plan(data):
 
 
 def plan(fact, *, data_limit=PLAN_LIMIT):
+    if type(data_limit) is not int or not 0 < data_limit <= PLAN_LIMIT:
+        fail('Commit plan limit must be a positive integer no greater than 64 MiB.')
     metadata = decode_object(member(fact, 'patch.json'))
     expected_members = {'patch.json', 'run.sh', 'PATCHHARBOR_META/environment.json',
                         'PATCHHARBOR_META/CHAT_INSTRUCTIONS.md'}

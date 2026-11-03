@@ -218,6 +218,37 @@ def create_source_backup(root, *, output, output_root, expected_source_files_sha
         verified = verify_source_backup(raw, expected_sha256=backup.sha256,
                                          expected_source_files_sha256=expected_source_files_sha256)
         check_current()
-        return _report(verified, boundary.root / published['file']['path'])
+        return verify_source_backup_file(root, output=published['file']['path'],
+            output_root=output_root, expected_sha256=verified.sha256,
+            expected_source_files_sha256=expected_source_files_sha256)
+    except OSError as error:
+        raise BundleError('migration_backup_host_io', code=None, exit_code=5) from error
+
+
+def verify_source_backup_file(root, *, output, output_root, expected_sha256,
+                              expected_source_files_sha256):
+    """Reopen a concrete backup against the actual complete current source.
+
+    Neither a stored report nor a forged SourceBackup instance is admitted.
+    This is a precondition for later migration admission, not a writer lock.
+    """
+    from ..documents._export_targets import _output_boundary, _target_path
+    require(output_root is not None, 'migration_backup_external_output_required')
+    require_hash(expected_sha256); require_hash(expected_source_files_sha256)
+    try:
+        files, source, check_current = _observe(root)
+        require(digest(file_bindings(files)) == expected_source_files_sha256,
+                'migration_backup_source_changed', code='SRV060')
+        boundary = _output_boundary(output_root, source)
+        path, _ = _target_path(output, source, output_root)
+        raw = boundary.read_bytes(path)
+        verified = verify_source_backup(raw, expected_sha256=expected_sha256,
+                                         expected_source_files_sha256=expected_source_files_sha256)
+        # Compare all originals as well as the independently recomputed binding.
+        require(verified.files == files, 'migration_backup_source_changed', code='SRV060')
+        check_current()
+        require(boundary.read_bytes(path) == raw, 'migration_backup_published_changed', code='SRV060')
+        check_current()
+        return _report(verified, boundary.root / path)
     except OSError as error:
         raise BundleError('migration_backup_host_io', code=None, exit_code=5) from error

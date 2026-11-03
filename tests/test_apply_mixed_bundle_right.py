@@ -73,3 +73,27 @@ def test_correction_cannot_invent_new_clarification_or_replay_commit(fault):
         first=value['stages'][0]; name=next(iter(first['after'])); raw=b'Another normative decision'
         first['after'][name]=sha256(raw).hexdigest(); first['payloads'][name]=base64.b64encode(raw).decode()
     with pytest.raises(ValueError): validate_continuation(previous, progress, value)
+
+
+@pytest.mark.parametrize('fault', ['no-binding', 'clean-marker', 'wrong-plan', 'new-target',
+                                  'extra-target', 'role', 'omit', 'completed-prefix'])
+def test_retained_clarification_cannot_bypass_bound_continuation(fault):
+    previous, progress, value = correction('DECISION')
+    first = value['stages'][0]
+    first['before'] = dict(first['after'])
+    if fault == 'no-binding': value['correction_of'] = None
+    elif fault == 'clean-marker': value['initial_dirty'] = False
+    elif fault == 'wrong-plan': value['correction_of']['plan_sha256'] = '0' * 64
+    elif fault in ('new-target', 'extra-target'):
+        name = next(iter(first['after'])) if fault == 'new-target' else 'verification/requirements/SR-TC-9999.json'
+        raw = b'Unapproved target'
+        first['after'][name] = sha256(raw).hexdigest()
+        first['payloads'][name] = base64.b64encode(raw).decode()
+    elif fault == 'role': first['role'] = 'correction'
+    elif fault == 'omit':
+        value['stages'].pop()
+        value['correction_of']['remaining_commit_ids'] = [s['commit_id'] for s in value['stages']]
+    else:
+        _, progress, _ = correction('step.W')
+    with pytest.raises(ValueError):
+        validate_continuation(previous, progress, value)

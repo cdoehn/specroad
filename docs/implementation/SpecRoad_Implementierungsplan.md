@@ -1652,9 +1652,9 @@ Kein offener Produktplanschritt wird durch diese Testoptimierung abgeschlossen.
 ```yaml
 plan_revision: 66
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 670
-last_completed_plan_commit: 16.d.W
-next_plan_commit: 16.d.R
+implementation_plan_commits_completed: 671
+last_completed_plan_commit: 16.d.R
+next_plan_commit: 16.d.C
 last_completed_numbered_bundle: 560
 implementation_state: in_progress
 audit_followup_status: closed
@@ -35891,7 +35891,7 @@ Die W-/R-/C-Abnahmen im obigen OFF-PLAN-Abschnitt gelten vollständig.
 
 #### 16.d.R – Make it Right
 
-- [ ] **16.d.R** · Position **671/900** · Voraussetzung: `16.d.W`.
+- [x] **16.d.R** · Position **671/900** · Voraussetzung: `16.d.W`.
 **Exakte Commit-Message:** `16.d.R feat(migration): Vollständige verifizierte Quellsicherung vervollständigen`
 
 **Vervollständigung:** Fehlende Bytes, unverifiziertes Bundle und unvollständige Closure verhindern Veröffentlichung.

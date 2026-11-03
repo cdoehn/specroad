@@ -218,3 +218,26 @@ class MixedGuardTests(MixedCase):
         self.assertEqual(self.ledger().request_contract(), selected)
         self.outcome(); self.engine.tick()
         self.assertEqual(self.ledger().request_contract(), new_contract(version=4))
+
+
+    def test_materialized_prefix_still_requires_exact_native_ancestry_and_preimages(self):
+        self.dispatch(True); self.outcome(completed=0, dirty=True); self.engine.tick()
+        selected = self.ledger().request_contract()
+        original = self.correction()
+        for fault in ('changed-target', 'wrong-preimage', 'no-binding', 'wrong-plan', 'role', 'omit'):
+            data = deepcopy(original); first = data['stages'][0]
+            if fault == 'changed-target':
+                raw = b'Another normative decision'
+                first['after'][SPEC] = sha256(raw).hexdigest()
+                first['payloads'][SPEC] = base64.b64encode(raw).decode()
+            elif fault == 'wrong-preimage': first['before'][SPEC] = '0' * 64
+            elif fault == 'no-binding': data['correction_of'] = None
+            elif fault == 'wrong-plan': data['correction_of']['plan_sha256'] = '0' * 64
+            elif fault == 'role': first['role'] = 'correction'
+            else:
+                data['stages'].pop()
+                data['correction_of']['remaining_commit_ids'] = [s['commit_id'] for s in data['stages']]
+            fact = patch_package(self.exchange / (fault + '.zip'), data)
+            with self.subTest(fault=fault), self.assertRaises((ControlError, ValueError)):
+                verify_handoff(self.engine, self.following, fact, selected, MIXED)
+        self.assertEqual(self.ledger().request_contract(), selected)
