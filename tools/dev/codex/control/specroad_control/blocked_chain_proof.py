@@ -5,7 +5,7 @@ import zipfile
 import zlib
 
 from .apply_reconcile_proof import (member, plan, public_plan, completion,
-                                    hashed, fail, unique)
+                                    hashed, fail, unique, PLAN_LIMIT)
 from .contracts import timestamp
 from .errors import ControlError
 from .local import decode_object
@@ -13,7 +13,6 @@ from .local import decode_object
 from .apply_snapshot import (safe_path, no_collisions, blob, lf_lines, modified_files,
                              snapshot, inventory_hash, apply_stage, FILE_LIMIT, SNAPSHOT_LIMIT)
 
-PLAN_LIMIT = 64 * 1024 * 1024
 
 
 def test_selection(stage):
