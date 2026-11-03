@@ -1,0 +1,15 @@
+{
+  "format_version": 1,
+  "control_source_result_sha256": "d170766ec4c66690fbfcbd90be68761535330bce8e488675757b94cb88aba229",
+  "control_source_commit": "8df145f6441d6d71bb6930a20ef75c5504d95609",
+  "control_source_state_fingerprint": "fd182b824cd8f100",
+  "pending_bundle_sha256": "6263e9365ef77f2f617ea1b212b7b29084bbcfa99394ef8216b8c6250635e04d",
+  "pending_commits": [
+    "MIXED-BUNDLE-025.W",
+    "MIXED-BUNDLE-025.R",
+    "MIXED-BUNDLE-025.C"
+  ],
+  "pending_commits_completed": false,
+  "integration_bundle": "556",
+  "tests_executed_in_dev": 0
+}

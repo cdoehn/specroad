@@ -1,15 +1,15 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.52
+## Version 0.2.53
 
 | Feld | Wert |
 |---|---|
 | Dokument-ID | `SR-SPEC-0001` |
-| Dokumentversion | `0.2.52` |
+| Dokumentversion | `0.2.53` |
 | Zielrelease | `SpecRoad Single-Repository Workbench 0.2.0` |
 | Status | **Fachlich konsolidierte Arbeitsgrundlage; technische Reviewentscheidung gesondert dokumentiert, formale Baseline-Freigabe und Produktabnahme nicht durch dieses Dokument erklärt** |
 | Stand | 3. November 2026 |
 | Sprache | Deutsch; technische Feldnamen, Enum-Werte und CLI-Kommandos Englisch |
-| Fachliche Quelle | **Diese Repositoryfassung v0.2.52 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.52 liegt mit dieser Änderung nicht vor.** |
+| Fachliche Quelle | **Diese Repositoryfassung v0.2.53 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.53 liegt mit dieser Änderung nicht vor.** |
 | Bearbeitbare Satzquelle | Diese Datei; eine spätere PDF muss denselben versionierten Inhalt wiedergeben. |
 | Vorgängerversion | Repository-Spezifikation v0.2.49 vom 3. November 2026; historische Nachweise bleiben unverändert. |
 | Prüf- und Entscheidungsgrundlage | REFERENCE-RELEASE-552: ausdrückliche manuelle Ausnahme für Klärung und folgende Plancommits in einer ZIP; explizite Release-Bindung im neuen Quellvertrag 1.0.1. |
@@ -758,6 +758,59 @@ Vereinigungsmenge; fehlende oder widersprüchliche Ressourcenbelege erlauben
 keinen Commit. N=3, aktueller Laufzeitfilter, Pflichtauswahl und dauerhafte
 Setup-/Call-/Teardown-Messhistorie bleiben unverändert. Kein Dev-Testlauf,
 kein CI-Start und kein Apply-Start folgt aus der Vorbereitung dieses Bundles.
+
+#### 2.5.4 Integrierte Codex-Entwicklungssteuerung — CONTROL-INTEGRATION-556
+
+**Ausdrücklicher Nutzerauftrag vom 3. November 2026.** SpecRoad Control wird
+als internes Entwicklungswerkzeug vollständig unter
+`tools/dev/codex/control/` gepflegt. Seine Verhaltenssuite liegt unter
+`tests/codex_control_tests/` und nimmt am gemeinsamen nummerierten N=3-Gate,
+an der ungefilterten Pflichtauswahl und der dauerhaften Laufzeitmessung teil.
+Control ist nicht Teil des ausgelieferten SpecRoad-Core-Pythonpakets.
+Die mitgeführte Control-Spezifikation und ihr historischer Commitplan bleiben
+nachvollziehbar; bei Konflikten gelten diese aktuelle Regel und 2.4/2.5.
+Dev führt keine Testkörper aus. Apply erzeugt die echten W/R/C-Commits.
+
+Alle Control-eigenen Betriebsdaten liegen unter genau einem konfigurierbaren
+Datenverzeichnis: `SPECROAD_CONTROL_HOME`, standardmäßig
+`~/.local/share/specroad/dev/codex/control/`. Darunter liegen `config/`,
+`state/`, `run/`, `logs/`, `backups/` und versionierte `releases/` sowie private
+Migrations-/Installationsbelege. Diese Daten gehören weder ins Repository
+noch in Patch-Payloads. Die systemd-User-Unit bleibt als Betriebssystem-
+Registrierung unter dem konfigurierten XDG-Konfigurationsverzeichnis.
+Codex-eigene Anmeldungen und Sessions sowie PatchHarbor-/Exchange-Daten
+bleiben im Zuständigkeitsbereich ihrer bisherigen Werkzeuge.
+
+Der Dienst startet ausschließlich eine installierte Codeversion aus einem
+vollständig erfolgreichen, sauberen, nativ geprüften SpecRoad-Apply-Result
+mit Abschlusscommit. Der aktive Releasebeleg bindet Result-SHA, Commit und
+sämtliche Laufzeit-Codebytes. Ein veränderter oder unvollständiger Release
+ist kein Startkandidat. Der Dienst läuft nicht aus einer veränderlichen
+Dev-Kopie. Neue Installation/Umstellung startet und aktiviert keinen Dienst,
+keinen Watcher, kein Modell und keine CI. Pause, Klärungsbefugnis und die
+optionale Stellung des Klärungscommits nach Vertrag 4 bleiben erhalten.
+
+Die explizite Offline-Migration setzt inaktiven Dienst, MainPID 0 und beide
+Instanzlocks voraus. Sie sichert vor dem ersten Kopieren alle Control-eigenen
+Altdaten und die alte Unit in einem privaten geprüften ZIP. Sie übernimmt
+Konfigurationsbytes einschließlich Speichergrenze, SQLite-History samt
+Sidecars, Jobs, Recovery- und Handover-Belege bytegleich. Keine Ersetzung von
+Seeds, IDs, Aufträgen, Budgets oder Pause; keine erfundenen Erfolge. Quell-
+und Zielbytes werden geprüft, SQLite in einer isolierten Kopie validiert.
+Ein persistenter Beleg sperrt den Betrieb bei unvollständiger Migration.
+Wiederholung darf nur denselben unveränderten Quellstand fertigstellen;
+abweichende Ziel-/Quellbytes, Verknüpfungen, Rechtefehler oder Platzmangel
+blockieren. Altdaten bleiben als Rückfallkopie bestehen. Historische absolute
+Pfadangaben in Belegen werden nicht nachträglich umgeschrieben.
+
+Migration und Releaseinstallation sind explizite Bedienaktionen nach
+Apply-Abnahme. Ein gewöhnliches Patch-Apply installiert ausschließlich Code,
+Tests und Dokumentation. Es ändert keine lokalen Einrichtungsdaten oder Units.
+Der aktuelle Integrationsauftrag erlaubt die anschließende Offline-Umstellung,
+aber keinen automatischen Start/Resume und keine eigene Warte-/Modellschleife.
+Ein unterbrochener Releasewechsel sperrt Start; dieselbe explizite Installation
+kann den geprüften Wechsel fortsetzen. Fehler beim Unit-Reload stellen die
+vorherige Unit/Releasezuordnung wieder her oder bleiben sichtbar gesperrt.
 
 ## 3. Produktziele
 
@@ -6702,6 +6755,7 @@ Die folgende Roadmap ist informativ und erzeugt keine Anforderungen an 0.2:
 
 | Version | Datum | Status | Änderung |
 |---|---|---|---|
+| 0.2.53 | 2026-11-03 | Ausdrücklicher Nutzerauftrag | CONTROL-INTEGRATION-556: integrierte Entwicklungssteuerung, gemeinsame Tests, zentrales privates Datenverzeichnis und gebundene Offline-Installation/Migration. |
 | 0.2.52 | 2026-11-03 | Ausdrücklicher Nutzerauftrag | MIXED-BUNDLE-555: optionaler Klärungscommit vor vollständiger Umsetzung, Vertrag 4, typisierte Rollen, gebundene Restfortsetzung und unveränderte Test-/Reviewgrenzen; aktive Dokumentmetadaten angeglichen. |
 | 0.2.51 | 2026-11-03 | Manuelle Ausnahme, Verlaufszeile nachgetragen | MIGRATION-PLAN-554: gebundener Migrationsplan nach 12.20.2; einmaliger Klärungscommit plus 16.c.W/R/C. |
 | 0.2.50 | 2026-11-03 | Ausdrückliche manuelle Nutzerentscheidung | REFERENCE-RELEASE-552: versionierte Release-Auswahlbindung; einmalige gemeinsame ZIP mit separaten Commitgates. |
@@ -10513,4 +10567,4 @@ Implementierungsschritten nachgewiesen sein.
 
 ---
 
-**Ende der SpecRoad-Produktspezifikation v0.2.52.**
+**Ende der SpecRoad-Produktspezifikation v0.2.53.**

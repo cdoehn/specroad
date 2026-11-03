@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 58 · **Stand:** 3. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.52
+**Planrevision:** 61 · **Stand:** 3. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.53
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 Schritte und 900 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; die ausdrücklich genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wird nach 10.7.10 innerhalb von 15.l.R vorgezogen. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -9,7 +9,7 @@ Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 S
 
 Fachliche Grundlage ist [`docs/specification/SpecRoad_Spezifikation.md`](../specification/SpecRoad_Spezifikation.md), einschließlich aller konsolidierten Korrekturen, 742 Requirements, 51 Verifikationsverträge, 46 Szenario-/E2E-Identitäten sowie R-01 bis R-75, Anhang U und den PatchHarbor-Rundweg aus Anhang W. Der [`Prüfbericht`](../reviews/SpecRoad_v0.2.7_Implementierungsreife_Pruefbericht.md) ist ein vorgelagerter Entwurfsreview, kein späterer Produktnachweis.
 
-Gebundene Spezifikations-SHA-256: `7d1bc669e4430dba078deee959aae64aa032aa2e1f7cbc2d805dbf4b9c8e5de9`.
+Gebundene Spezifikations-SHA-256: `c735356888b833d5066cce814d3c6e3a0c6fbe9eb567a974ed4c3007c30cd778`.
 Planungsbasis: Commit `fe2661d02ecf2f7eb483b58a4487eb009c6b3846`; sauberes Result-Bundle `specroad_Result_120209_0914_df3504.zip`; Repository-ID `3d2576df-d611-46fc-9d2b-92869468aaca`. Diese Angaben dokumentieren die Entstehung des Plans, nicht die zukünftige Patchbindung. **Jedes spätere Patchpaket bindet den dann aktuellen tatsächlichen Result-Zustand.**
 
 Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 2026 gelten zusätzlich und bei den nachfolgend benannten Konflikten vorrangig. Sonstige normative Spezifikationsinhalte werden nicht stillschweigend abgeschwächt. Neue fachliche Widersprüche, fehlende zwingende Angaben und Sicherheitsprobleme sind offen zu benennen, nicht durch erfundene Annahmen oder Scheinerfolge zu lösen.
@@ -32,6 +32,125 @@ Ketten erfordert erst den belegten erfolgreichen normalen Abschluss.
 Produktfreigaben und die Grenzen aus 2.4.1/2.4.2/2.4.4 bleiben unverändert.
 Dieser Plan ändert keine alten Aufträge, Antworten, Blockaden oder
 Laufzeitdaten und ist keine Start-/Resume-Anweisung.
+
+## OFF-PLAN CONTROL-INTEGRATION-CORRECTION-558 — Release-Selbstprüfung
+
+Ausdrücklicher Korrekturauftrag vom 3. November 2026. Maßgeblich ist das
+nativ geprüfte Fehler-Result ef506d, SHA-256
+`6154aadc6411a99e2b7af5c7eaade1d571bd07ba7f5c78866cd95d6fd01f8d3f`,
+Basiscommit `0883e7f919c6c1fbce921db59802e1813e330173`,
+Arbeitsstand-Fingerprint `21fff3a4221b58a1`. Bundle 557 erzeugte keinen
+Commit: 7108 Tests bestanden, 66 scheiterten. Die früheren TMPDIR- und
+Importpfadkorrekturen samt ihren Abnahmen bleiben vollständig erhalten.
+Der vollständige W-Arbeitsstand wird übernommen; alle drei offenen IDs
+CONTROL-INTEGRATION-556.W/R/C behalten Reihenfolge, Pflichtsuite und eigenes
+N=3-Gate. Kein Produktfortschritt: 669/900, nächster Produktcommit 16.d.W.
+
+58 Workerfehler melden dieselbe Codepfadsperre; vier weitere Worker enden
+vorzeitig mit Exit 1 über denselben Startpfad. Der installierte Prozess prüft
+seine Releasebytes bisher mit Betriebsdatenhelfern, die korrekt den aktuell
+laufenden Codebaum sperren. Ein gesonderter rein lesender Zugriff auf die
+gebundene Release-Inventur ersetzt diese Verwechslung. Der externe Release-
+Elternordner bleibt Git-/Symlink-geprüft; relative Verzeichnisdeskriptoren,
+private Rechte/Eigentümer, Dateityp, Hardlink-/Größen-/Inventargrenzen und
+Dateihashes werden geprüft. Fehlende Verzeichnisse werden nicht angelegt.
+Die Betriebsdatenhelfer bleiben unverändert und erlauben keine Schreibzugriffe
+in den laufenden Code. Alternative, die Codepfadsperre generell zu öffnen,
+wird verworfen. R behält sämtliche ursprünglichen Release-/Recovery-Härtungen.
+
+Vier weitere Fehler entstehen beim Versand von Subtest-Berichten im parallelen
+Runner: Funktionen, Ausnahmen und Path-Objekte sind nicht transportierbar.
+Nur ihre Diagnoseparameter werden durch eindeutige primitive Kennzeichnungen
+ersetzt. Ausgeführte Fälle, Aufrufe und fachliche Assertions bleiben erhalten.
+
+W-Abnahmen: echter installierter Worker startet und stoppt ohne Codeänderung,
+Selbstprüfung erlaubt keine Betriebsdatenschreibzugriffe, fehlendes Release
+wird nicht repariert. R-Abnahmen: Hash-/Inventar-/Receipt-Manipulation,
+Datei-/Verzeichnis-/Root-Symlinks, FIFO, Hardlinks, Rechte, Dateigröße und
+Git-Verzeichnis bleiben gesperrt. Die komplette Control-Suite einschließlich
+der vier Subtest-Fälle läuft verpflichtend parallel in jeder Stage.
+C bleibt reine Strukturarbeit, R/C-Tests und Testnummern bytegleich.
+
+Spezifikation 0.2.53 und aktive Katalogbindungen unverändert; keine neue
+fachliche Entscheidung. Dev führt keine Verhaltenstests aus. Collection,
+Syntax- und native Paketprüfung ersetzen keine Apply-Abnahme. Betriebsmigration,
+Dienste, Automatik und lokale Konfigurationen bleiben außerhalb der Payload.
+
+## OFF-PLAN CONTROL-INTEGRATION-CORRECTION-557 — erhaltene W/R/C-Folge
+
+Ausdrücklicher Korrekturauftrag vom 3. November 2026. Maßgeblich ist das
+nativ geprüfte Fehler-Result da723a, SHA-256
+`66ee61add2a2d98e3afbc45a7b2abc4af3bf08cca0ebf8009c347bed6db5c4b5`,
+Basiscommit `0883e7f919c6c1fbce921db59802e1813e330173`,
+Arbeitsstand-Fingerprint `cdc758925ed0bd99`. Bundle 556 erzeugte keinen
+Commit: 6424 Tests bestanden, 788 scheiterten, drei Teardown-Fehler.
+Der vollständige erhaltene W-Arbeitsstand wird übernommen. Alle drei IDs
+CONTROL-INTEGRATION-556.W/R/C bleiben in derselben Reihenfolge offen;
+jede erhält ihr eigenes N=3-plus-Pflichtauswahl-Gate vor dem Commit.
+
+Die 788 Aufruffehler entstanden beim Fixture-Setup: Apply setzt TMPDIR in
+seinen Git-Arbeitsbaum; Controls korrekte Betriebsdatengrenze lehnt diesen
+Ort ab. Control-Testhomes verwenden deshalb exklusiv angelegte kurze private
+Verzeichnisse außerhalb von Git, unabhängig von TMPDIR und tempfile-Cache.
+Die echten Git-/Symlink-/Rechtegrenzen bleiben aktiv, einschließlich der
+Protokollfixtures; Socketpfade passen in das Linux-Limit, Cleanup ist gebunden.
+Die drei Teardown-Fehler stammen von sys.path-Mutationen des importierten
+Capability-Lesers. Nur der separat gestartete Bridge-Entrypoint richtet
+seinen Paketpfad ein; der wiederverwendbare Leser verändert ihn nicht.
+
+Abnahmen: geerbter langer Git-TMPDIR mit gesetztem tempfile-Cache,
+echtes Socket-Binden, private Rechte und Cleanup, unveränderte Prozessdaten,
+gültige/fehlende/defekte Capability und falscher Hash; in R zusätzlich
+Git-/Symlink-Ablehnung, privater Ersatzpfad und Cleanup nach Längenfehler.
+Sämtliche bisherigen Control-Tests bleiben in jeder Stage Pflicht. Die
+ursprünglichen R-Härtungen und der reine C-Refaktor bleiben vollständig
+enthalten; C übernimmt Tests und Nummern aus R bytegleich.
+
+Keine fachliche Klärung: Spezifikation 0.2.53, ihre Katalogbindungen und
+Produktstand 669/900 (nächster Commit 16.d.W) bleiben unverändert.
+Keine Dev-Verhaltenstests; statische Prüfung, Collection und native
+ZIP-/Zustandsvalidierung sind kein bestandenes Apply-Gate. Betriebsmigration
+und Dienststart sind nicht Bestandteil dieses Korrekturbundles.
+
+## OFF-PLAN CONTROL-INTEGRATION-556 — Control im gemeinsamen Dev-Repository
+
+Vorbereiteter Zustand CONTROL-INTEGRATION-556.W; Abschluss ausschließlich nach
+seinem tatsächlichen Apply-Gate und Commit. Produktstand bleibt 669/900,
+nächster Produktcommit 16.d.W. Vollständiger Nutzerauftrag vom 3. November 2026:
+Control zunächst pushen und sichern, danach Quell-/Betriebsstruktur integrieren.
+Push und private Sicherung sind Bedienaktionen außerhalb der Payload.
+
+Geprüfte SpecRoad-Basis: Result 3faa88, SHA-256
+`2e5dd14d257575d86f5b6a1e9c5bfc0bcac149ca1f38f88bb847bbb841c99173`,
+sauberer Abschluss `0883e7f919c6c1fbce921db59802e1813e330173`.
+Control-Quelle: Result d56e7a, SHA-256
+`d170766ec4c66690fbfcbd90be68761535330bce8e488675757b94cb88aba229`.
+Control025 scheiterte ohne Commit nach 859/860 bestandenen W-Tests an einem
+veralteten _enqueue-Testdouble. Seine authentisch gebundenen geplanten W/R/C-
+Payloads werden vollständig übernommen, einschließlich der Signaturkorrektur.
+Die alten Control025-Commits werden dadurch nicht als abgeschlossen erklärt;
+der vollständige fachliche Rest erhält hier neue gemeinsame Apply-Gates.
+Herkunft: tools/dev/codex/control/provenance.json. Kein Reset der alten Kopie.
+
+W: vollständiger Quellimport, gemeinsame Testidentitäten/Pflichtauswahl,
+zentraler Datenpfad, Releasebindung und offline gesicherte byteerhaltende
+Migration. Abnahmen: alle bisherigen Control-Protokolle, optionale Klärung,
+History-/Pause-/Budgeterhalt, Dienst-inaktiv-/Lockgrenzen, privates Backup,
+Ablehnung geänderter Releases und Daten, unterbrochene Kopie bleibt gesperrt.
+R: fortsetzbarer unterbrochener Releasewechsel, Erstinstallation ohne alte
+Unit, schärfere Typ-/Pfad-/Archivgrenzen und Fehler-/Rollbacknachweise.
+C: reine Trennung des Release-Datenvertrags von Dateischreiben/Systemd,
+W/R-Verhalten und Tests bytegleich erhalten. Kein neuer fachlicher Umfang.
+
+Alternativen: dauerhaft zweites Repository erhält doppelte Übergabe und
+uneinheitliche Tests; Dienst direkt aus Dev führt unvollständige Zustände aus;
+Betriebsdaten im Git gefährden private Daten und Recovery. Gewählt: ein
+Quellrepository, ein externer Datenbaum und Result-gebundene Releasekopien.
+Belegbare Migration benötigt erfolgreichen Apply-Abschluss; der Bundle-
+Entrypoint führt keine Betriebsmigration und keinen Dienststart aus.
+Dev-Verhaltenstests nicht ausgeführt; Collection/AST/Paketprüfung ersetzen
+kein Apply-Gate. Neue/geänderte Tests und alle Control-Regressionen sind für
+jede Stage ungefiltert Pflicht. Vorhandene Nummern bleiben erhalten.
 
 ## OFF-PLAN MIXED-BUNDLE-555 — Vertrag 4 und optionaler Klärungscommit
 
@@ -1328,7 +1447,7 @@ Kein offener Produktplanschritt wird durch diese Testoptimierung abgeschlossen.
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 57
+plan_revision: 61
 implementation_plan_commits_total: 900
 implementation_plan_commits_completed: 669
 last_completed_plan_commit: 16.c.C

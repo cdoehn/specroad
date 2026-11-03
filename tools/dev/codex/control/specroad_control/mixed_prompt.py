@@ -1,0 +1,54 @@
+"""Version-4 delegation: no clarification unless a real permitted gap exists."""
+import json
+from .legacy_job_contract import legacy_prompt
+
+
+def mixed_prompt(source, selected):
+    original = legacy_prompt(source).replace('bei Unklarheit status=blocked',
+        'bei einer ausserhalb der Projektbefugnis liegenden Unklarheit status=blocked')
+    return original + '\nCONTROL_DECISION_CONTRACT\n' + json.dumps(selected, sort_keys=True) + (
+        '\nVertrag 4: Pruefe die massgebliche Projektregel SPECROAD-DECISION-1 samt '
+        'ausdruecklicher Freigabe fuer optionale Klaerung und Umsetzung in einer ZIP '
+        'nach 2.4.3.1 sowie verification/development_contract.json. Control erteilt '
+        'diese fachliche Befugnis nicht selbst. Der Klaerungscommit ist OPTIONAL. '
+        'Ohne notwendige normative Spezifikationsluecke nur vollstaendige sinnvolle '
+        'Plan-/Korrekturcommits und status=patch_ready. Keine kuenstliche Klaerung. '
+        'Bei einer zulaessigen normalen Detailluecke pruefe Alternativen, waehle die '
+        'kleinste konsistente konservative reversible Loesung und schreibe zuerst '
+        'Begruendung, normative Spec, Planabnahmen und aktive Katalogbindungen fort. '
+        'Bei clarification_allowed=true und positivem Restbudget genau EINEN '
+        'OFF-PLAN-Klaerungscommit an den Anfang derselben ZIP setzen; anschliessend '
+        'eine sinnvolle Anzahl vollstaendiger zusammenhaengender Plancommits. '
+        'Eine solche ZIP meldet status=patch_ready_with_clarification, keinen '
+        'verdeckten patch_ready- oder spec_clarification-Status. Ein reines '
+        'Klaerungsbundle ist unter Vertrag 4 nicht erlaubt. '
+        'Keine feste Commitzahl, kein vorsorglich verkuerzter Planschritt. Echte '
+        'W/R/C-Zustaende bleiben getrennt und erhalten jeweils ihr eigenes '
+        'Apply-Testgate vor dem Commit; nie den Endstand vorab installieren. '
+        'Verwende den vorhandenen Apply-Commitplan v2: handoff_kind entspricht '
+        'dem Status; role ist clarification, implementation oder correction. '
+        'Ein Mischbundle hat genau eine clarification zuerst und danach echte '
+        'implementation. Normale Bundles haben keine clarification. '
+        'clarification_allowed=false sperrt NEUE Klaerung, nicht klare Umsetzung. '
+        'Nur clarification_continuation=true erlaubt den aus dem nativen '
+        'Fehler-Result und urspruenglichen Plan belegten noch offenen '
+        'Klaerungspraefix: dessen Zieldateien bleiben bytegleich, keine neue '
+        'Detailentscheidung. Alle offenen IDs und Rollen fortfuehren, bereits '
+        'erfolgreiche Commits nicht wiederholen. Korrekturbindung und vollstaendige '
+        'Vorherbytes an das neue Result anpassen. Die Fortsetzung ist erneut '
+        'patch_ready_with_clarification; nach bereits committedem Klaerungsstand '
+        'ist der Rest normales patch_ready. Keine eigene Budgetaenderung. '
+        'Eine neue Mischuebergabe verbraucht einen Platz; derselbe belegte '
+        'Klaerungsrest keinen zweiten. Erst vollstaendiges erfolgreiches sauberes '
+        'Apply aller angekuendigten Stages erneuert drei Plaetze. Ein gruener '
+        'Dokumentcommit mit anschliessendem Fehler, Retry, Pause, Neustart, '
+        'Recovery und unbekannte Handoffs erneuern nichts. '
+        'Explizite Nutzerentscheidungen, Scope, Sicherheit, Kompatibilitaet, '
+        'menschliche Reviews und erforderliche Nachweise bleiben unveraendert. '
+        'Keine erfundenen Fakten oder Freigaben. Ausserhalb dieser Grenzen oder '
+        'bei unverzichtbaren fehlenden Fakten: blocked mit konkreter Frage, '
+        'Empfehlung und Begruendung; kein Alibi-Produktcommit. '
+        'Genau eine kanonische state-gebundene ZIP pro Result, vier unveraenderte '
+        'Antwortfelder, echte vollstaendige SHA-256. Nativ validieren, atomar '
+        'in Exchange uebergeben und sofort beenden. Keine eigene Apply-, '
+        'Warte-, Modell- oder Wiederholungsschleife; Watcher und Control uebernehmen.')

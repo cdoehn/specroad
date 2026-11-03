@@ -24,12 +24,13 @@ version = {attr = "specroad._metadata.__version__"}
 dev = [
     "pytest==9.0.2",
     "pytest-xdist==3.8.0",
+    "tomli==2.2.1; python_version < '3.11'",
 ]
 
 [tool.pytest.ini_options]
 minversion = "9.0"
 testpaths = ["tests"]
-pythonpath = ["src", "tests", "tools"]
+pythonpath = ["src", "tests", "tools", "tools/dev/codex/control"]
 python_files = ["test_*.py"]
 addopts = "--disable-plugin-autoload -p no:cacheprovider -p no:doctest -p xdist.plugin -n auto --dist worksteal --max-worker-restart=0"
 
