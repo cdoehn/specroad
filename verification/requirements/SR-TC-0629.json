@@ -31,7 +31,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "5e54dc498f30c90cf3aa82a8244a23b93b162b5353a546ae8e9a6272a5941e68",
+  "specification_sha256": "3520bd732f16f15601548962f37123c360292f3001e4f33fcc8ce0f53b167a54",
   "steps": [
     "Publish complete initial and immediate successor generations; verify every original byte, private mode, retained predecessor, segmented inventory and fsync ordering before atomic pointer replacement.",
     "Read the actual current generation in another process; abruptly terminate publishers during object storage and immediately before/after pointer replacement, retaining the orphan record and verifying data-only read access.",

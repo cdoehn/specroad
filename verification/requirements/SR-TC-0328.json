@@ -38,7 +38,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "5e54dc498f30c90cf3aa82a8244a23b93b162b5353a546ae8e9a6272a5941e68",
+  "specification_sha256": "3520bd732f16f15601548962f37123c360292f3001e4f33fcc8ce0f53b167a54",
   "steps": [
     "Resolve project/document/query/release scopes with native configuration, paginated query seeds, strong closure, historical baseline objects and weak boundaries; compare actual native model roots before format projection.",
     "Encode actual NDJSON/CSV/ReqIF/ReqIFZ bytes using existing codecs. Derive the separate closed manifest, exact maximum/epoch UTC timestamp, represented identities, individual losses and full attachment descriptors from actual sources and output.",

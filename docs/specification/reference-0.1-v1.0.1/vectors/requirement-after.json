@@ -1,0 +1,42 @@
+{
+  "artifact_type": "requirement",
+  "created_at": "2026-11-03T00:00:00Z",
+  "created_by": {
+    "actor_id": "synthetic-author",
+    "actor_type": "human"
+  },
+  "criticality": "normal",
+  "extensions": {
+    "example.note": {
+      "value": "é"
+    }
+  },
+  "id": "SR-REQ-0001",
+  "id_scheme": "legacy-sequential-v1",
+  "implementation_status": "not_started",
+  "language": "en",
+  "maturity": "draft",
+  "normative_force": "must",
+  "priority": "high",
+  "relations": [
+    {
+      "extensions": {},
+      "external_identities": [],
+      "id_scheme": "derived128-v1",
+      "relation_id": "REL-62Z6E501RHRRJZ06XBGZX8KRB9",
+      "target": "SR-GOAL-0001",
+      "type": "addresses"
+    }
+  ],
+  "requirement_kind": "functional",
+  "revision": 2,
+  "schema_version": "0.2.0",
+  "statement": "Preserve original bytes.",
+  "title": "Preserve original data",
+  "updated_at": "2026-11-03T01:00:00Z",
+  "updated_by": {
+    "actor_id": "synthetic-migrator",
+    "actor_type": "tool"
+  },
+  "verification_plan_status": "not_planned"
+}

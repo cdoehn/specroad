@@ -1,0 +1,49 @@
+{
+  "expected_sha256": "d655445d048d189105971c736a27421c1ba606f7f7a58b8c04078b21732cfb7e",
+  "preimage": {
+    "algorithm": "reference01-proposal-basis-v1",
+    "entries": [
+      {
+        "artifact_id": null,
+        "canonical_sha256": "fb55f01c415d02ad64f8ad1d2642eb913759aac00377c506d27b41a8409dc3f6",
+        "media_type": "application/json",
+        "path": "profiles/core-reference01.json",
+        "revision": null,
+        "role": "profile"
+      },
+      {
+        "artifact_id": "SR-DOC-0001",
+        "canonical_sha256": "8e58a0e05af6d4cd149040e106e1550f5bd9c7b7d2a31585459af7214e7740eb",
+        "media_type": "application/json",
+        "path": "spec/documents/SR-DOC-0001.json",
+        "revision": 1,
+        "role": "artifact"
+      },
+      {
+        "artifact_id": "SR-GOAL-0001",
+        "canonical_sha256": "6127e7586294bfbb20af3df34543623d499376a57836f4ad534f9e1d177b04f9",
+        "media_type": "application/json",
+        "path": "spec/goals/SR-GOAL-0001.json",
+        "revision": 1,
+        "role": "artifact"
+      },
+      {
+        "artifact_id": null,
+        "canonical_sha256": "02d069e40d08b67070a0b41f4d68673339c9bfc30ad96b187c6109aa14e23747",
+        "media_type": "application/json",
+        "path": "specroad.json",
+        "revision": null,
+        "role": "configuration"
+      }
+    ],
+    "project_id": "synthetic-reference-project",
+    "scope_descriptor": {
+      "boundary_policy": "closed",
+      "closure_profile": "core-closure-v1",
+      "configuration_id": null,
+      "scope_kind": "specification",
+      "scope_version": "scope-v1",
+      "selector": {}
+    }
+  }
+}

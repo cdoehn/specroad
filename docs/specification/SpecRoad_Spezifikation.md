@@ -1,21 +1,21 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.49
+## Version 0.2.50
 
 | Feld | Wert |
 |---|---|
 | Dokument-ID | `SR-SPEC-0001` |
-| Dokumentversion | `0.2.49` |
+| Dokumentversion | `0.2.50` |
 | Zielrelease | `SpecRoad Single-Repository Workbench 0.2.0` |
 | Status | **Fachlich konsolidierte Arbeitsgrundlage; technische Reviewentscheidung gesondert dokumentiert, formale Baseline-Freigabe und Produktabnahme nicht durch dieses Dokument erklärt** |
 | Stand | 3. November 2026 |
 | Sprache | Deutsch; technische Feldnamen, Enum-Werte und CLI-Kommandos Englisch |
-| Fachliche Quelle | **Diese Repositoryfassung v0.2.49 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.49 liegt mit dieser Änderung nicht vor.** |
+| Fachliche Quelle | **Diese Repositoryfassung v0.2.50 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.50 liegt mit dieser Änderung nicht vor.** |
 | Bearbeitbare Satzquelle | Diese Datei; eine spätere PDF muss denselben versionierten Inhalt wiedergeben. |
-| Vorgängerversion | Repository-Spezifikation v0.2.48 vom 2. November 2026; historische Nachweise bleiben unverändert. |
-| Prüf- und Entscheidungsgrundlage | REFERENCE-SOURCE-551: ausdrückliche Nutzerentscheidung vom 3. November 2026 für ein neu definiertes Referenzformat; technische Konkretisierung gemäß SPECROAD-DECISION-1, keine erfundene historische Kompatibilität. |
+| Vorgängerversion | Repository-Spezifikation v0.2.49 vom 3. November 2026; historische Nachweise bleiben unverändert. |
+| Prüf- und Entscheidungsgrundlage | REFERENCE-RELEASE-552: ausdrückliche manuelle Ausnahme für Klärung und folgende Plancommits in einer ZIP; explizite Release-Bindung im neuen Quellvertrag 1.0.1. |
 | Änderungsart | Vollständig versionierter 0.1-Referenzquellvertrag mit gebundenen Schemas, Original-/Hash-/Baseline-Regeln und Sollvektoren; native Implementierung, Migration und Restore-Abnahmen bleiben offen. |
 
-> **Verbindlicher Quellenwechsel:** Die ausdrückliche Nutzerentscheidung REFERENCE-SOURCE-551 wird als v0.2.49 umgesetzt. Der neue Quellvertrag ist Entwurfsarbeit vom 3. November 2026, kein Nachweis eines früher existierenden Formats. Bestehende 0.2-Verträge, Transport-, Sicherheits- und Reviewgrenzen bleiben erhalten.
+> **Verbindlicher Quellenwechsel:** Die ausdrückliche Nutzerentscheidung REFERENCE-SOURCE-551 wird als v0.2.50 umgesetzt. Der neue Quellvertrag ist Entwurfsarbeit vom 3. November 2026, kein Nachweis eines früher existierenden Formats. Bestehende 0.2-Verträge, Transport-, Sicherheits- und Reviewgrenzen bleiben erhalten.
 
 > **Fortbestehende Arbeitsprinzipien:** Weiche Budgets führen zu sparsamer vollständiger Weiterarbeit oder gesicherter Fortsetzung über mehrere Aufrufe beziehungsweise Prompts. Es werden keine erforderlichen Arbeiten stillschweigend ausgelassen. Reale Host-, Speicher-, Berechtigungs- und Sicherheitsgrenzen bleiben wirksam.
 
@@ -102,7 +102,7 @@ Bei einem Widerspruch innerhalb dieser Dokumentversion gilt:
 3. `SR-DEC-*` hat Vorrang vor erläuterndem Text, Diagrammen und Beispielen.
 4. Beispiele sind niemals normativ, sofern sie nicht ausdrücklich als Testvektor bezeichnet sind.
 5. Zwei widersprüchliche `SR-REQ-*`-Anforderungen besitzen **keine implizite Rangfolge** nach Nummer, Position oder Spezifität. Ein solcher Fund ist ein Spezifikationsfehler, muss als Issue gelöst werden und verhindert die Freigabe.
-6. Diese Dokumentversion 0.2.49 ersetzt die frühere fachliche Arbeitsgrundlage vollständig. Bis zur gesonderten PDF-Veröffentlichung ist diese versionierte Repositorydatei maßgeblich. Eine spätere PDF muss inhaltsgleich sein; frühere PDFs werden nicht als Nachweis der neuen Verträge ausgegeben. Inhalte verschiedener Fassungen dürfen nicht zu einer Mischspezifikation kombiniert werden.
+6. Diese Dokumentversion 0.2.50 ersetzt die frühere fachliche Arbeitsgrundlage vollständig. Bis zur gesonderten PDF-Veröffentlichung ist diese versionierte Repositorydatei maßgeblich. Eine spätere PDF muss inhaltsgleich sein; frühere PDFs werden nicht als Nachweis der neuen Verträge ausgegeben. Inhalte verschiedener Fassungen dürfen nicht zu einer Mischspezifikation kombiniert werden.
 7. Eine nachträgliche Änderung dieser veröffentlichten Datei erfordert mindestens eine neue Patch-Dokumentversion; stille Korrekturen unter derselben Dokumentversion sind unzulässig.
 8. Eine normative Tabelle, auf die eine `SR-REQ-*`-Anforderung ausdrücklich als Algorithmus oder Matrix verweist, ist Bestandteil des Passkriteriums dieser Anforderung.
 
@@ -6408,6 +6408,7 @@ Die folgende Roadmap ist informativ und erzeugt keine Anforderungen an 0.2:
 
 | Version | Datum | Status | Änderung |
 |---|---|---|---|
+| 0.2.50 | 2026-11-03 | Ausdrückliche manuelle Nutzerentscheidung | REFERENCE-RELEASE-552: versionierte Release-Auswahlbindung; einmalige gemeinsame ZIP mit separaten Commitgates. |
 | 0.2.49 | 2026-11-03 | Ausdrückliche Nutzerentscheidung; technische Details gemäß SPECROAD-DECISION-1 | REFERENCE-SOURCE-551: neuer vollständiger 0.1-Referenzvertrag; keine historische Kompatibilitätsbehauptung, native M16- und Restore-Gates offen. |
 | 0.2.48 | 2026-11-02 | Delegiert gemäß SPECROAD-DECISION-1, Vertrag 3 | MIGRATION-GRAPH-549: eindeutiger Vorwärtsgraph, explizite verlustfreie Rückwege und vollständige Vertragsidentität; 16.a.W/R/C und Q.0 bleiben offen. |
 | 0.2.47 | 2026-11-02 | Delegiert gemäß SPECROAD-DECISION-1, Vertrag 3 | TRANSPORT-OPEN-543: geschlossene Verify-/Extract-Eingaben, expliziter privater Prüfbereich, vollständige Innenprüfung und originale Referenzhaltung; 15.o.W/R/C bleibt offen. |
@@ -8848,6 +8849,37 @@ Historische Originale und ihre Evidenz bleiben unverändert. Die bisherige
 Blockade und ihre damaligen Result-/Control-Records werden nicht umgeschrieben.
 Diese Entscheidung ist keine Start-/Resume-Anweisung an Control.
 
+### Q.0.2 Explizite Release-Bindung — REFERENCE-RELEASE-552
+
+Ab dieser Fassung beziehen sich die positiven 16.b-/M16-Referenzabnahmen auf
+`specroad-reference-0.1` / `1.0.1` in
+[`reference-0.1-v1.0.1/contract.md`](reference-0.1-v1.0.1/contract.md).
+Manifest-Originalbyte-SHA-256: `7c4af8bb230fed758267a9a45c4957b26e015e0f112c8ad5d0f42b9b93fee72e`.
+Der Vertrag aus Q.0.1 bleibt historisch bytegleich; seine Definition wird
+nicht nachträglich umgeschrieben und erhält keine erfundene Unterstützung.
+
+Die Nutzerentscheidung vom 3. November 2026 erlaubt für Bundle 552 einmalig
+den Klärungscommit und die folgenden regulären 16.b.W/R/C-Commits in derselben
+ZIP. Jeder Zwischenstand wird einzeln getestet und erst danach committed.
+Die erste Phase ist ausdrücklich eine Spezifikationsklärung. Erst echte
+Produktcommits schließen Planschritte ab. Keine permanente Änderung von
+2.4.3, keine automatische Klassifikation als reines Umsetzungsbundle, kein
+Control-Budgetreset, Start oder Resume folgt aus dieser manuellen Ausnahme.
+
+Abschnitt 6.1 des neuen Vertrags bindet jede Release-Baseline an eine explizite
+`release_id` im historischen Vollsnapshot und die exakt gespeicherte
+`verification_evaluation`. Die Auswahl anhand gleicher Evaluationen oder
+des heutigen Bestands ist ausgeschlossen. Vollsnapshot, Originalclosure,
+Hashregeln, menschliche Reviews und erforderliche Readinessnachweise bleiben
+verbindlich. Die Definition selbst ist keine bestandene Reader-Abnahme. Abschnitt 5.1
+schließt außerdem die beim Implementieren erkannten Speicherfeldlücken für
+Textanker sowie Proposal-Review- und Kontrollhistorien gemäß 2.4.1/2.4.2.
+Abschnitt 5.2 definiert die kontrollfreie Proposal-Basis mit eigener
+Source-Hashdomäne und bindet ihre tatsächlichen Originale; ein veralteter
+Basisbezug bleibt als solcher sichtbar. Explizit gebundene generierte
+Code-Payloads bleiben Originalbytes nach Abschnitt 6, keine ausführbaren
+Quellprovider. Diese Entscheidungen begründen keine aktuelle Freigabe.
+
 ## Q.1 Exakte Einteilung der Bestandsdaten
 
 `migrate plan` teilt jeden Quellpfad vor der Transformation in `mutable`, `immutable_legacy` oder `referenced_payload` ein. `immutable_legacy` umfasst aufgezeichnete Evidence, erzeugte Baselines, vorhandene unveränderbare Relationsreviews sowie Proposals in einem nach ihrer Quellversion abgeschlossenen unveränderbaren Zustand. Alle von historischen Baselines oder Evidence referenzierten Archiv-/Anhangsbytes bleiben ebenfalls unverändert. Eine unklare oder ungültige Quellversion ist ein Migrationsfehler, keine Erlaubnis zur mutmaßlichen Reparatur.
@@ -10185,4 +10217,4 @@ Implementierungsschritten nachgewiesen sein.
 
 ---
 
-**Ende der SpecRoad-Produktspezifikation v0.2.49.**
+**Ende der SpecRoad-Produktspezifikation v0.2.50.**

@@ -1,0 +1,33 @@
+{
+  "cases": [
+    {
+      "baseline_release_id": "SR-REL-0002",
+      "expected_selected_release_id": "SR-REL-0002",
+      "same_evaluation_on_both_releases": true
+    },
+    {
+      "baseline_release_id": null,
+      "expected": "source_closure_incomplete"
+    },
+    {
+      "baseline_release_id": "SR-REL-0003",
+      "expected": "source_closure_incomplete"
+    },
+    {
+      "baseline_release_id": "SR-REL-0001",
+      "changed_evaluation_field": "evaluated_subject.state_sha256",
+      "expected": "source_hash_mismatch"
+    },
+    {
+      "baseline_kind": "working",
+      "baseline_release_id": "SR-REL-0001",
+      "expected": "source_schema_invalid"
+    }
+  ],
+  "evaluation_comparison": "complete JSON value, not evaluation_id alone",
+  "kind": "selection-only synthetic oracle; no human review or readiness evidence",
+  "release_ids": [
+    "SR-REL-0001",
+    "SR-REL-0002"
+  ]
+}

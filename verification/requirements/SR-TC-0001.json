@@ -35,7 +35,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "5e54dc498f30c90cf3aa82a8244a23b93b162b5353a546ae8e9a6272a5941e68",
+  "specification_sha256": "3520bd732f16f15601548962f37123c360292f3001e4f33fcc8ce0f53b167a54",
   "steps": [
     "Execute the real init CLI, structured-request and registry routes on missing, empty and collision-free existing targets; independently inspect the required directories, exactly one native valid draft primary document, configuration and pinned distribution resources.",
     "Verify existing bytes/inodes/modes survive collisions and ordinary preparation/publication failures, including an error after the real native rename; inspect the durable journal before each publication and configuration-last order.",

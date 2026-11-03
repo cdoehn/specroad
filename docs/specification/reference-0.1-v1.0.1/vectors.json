@@ -1,0 +1,150 @@
+{
+  "baseline": {
+    "archived_originals": "vectors/archive/objects",
+    "artifact": "vectors/sealed-baseline.json",
+    "expected_canonical_sha256": "75d43c9f705c52aa443988e4a095d22b6da91a14951b9a380882bbbb82d30046",
+    "expected_classification": "immutable_legacy",
+    "expected_model_root_sha256": "6192d2c3dd0288402b4ec9d6cb8730b8768f312ca6600520859d57226d09a02d",
+    "expected_original_byte_sha256": "53cfd3788afe708c7c52959f416eeaf29aa5df793373bc70116e4dedc3637e06",
+    "note": "Synthetic sealed working snapshot; no release approval or observed Apply success."
+  },
+  "classification": [
+    {
+      "artifact_type": "evidence",
+      "expected": "immutable_legacy",
+      "state": "recorded",
+      "state_field": "evidence_state"
+    },
+    {
+      "artifact_type": "baseline",
+      "expected": "immutable_legacy",
+      "state": "sealed",
+      "state_field": "baseline_state"
+    },
+    {
+      "artifact_type": "relation_review",
+      "expected": "immutable_legacy",
+      "state": "recorded",
+      "state_field": "review_state"
+    },
+    {
+      "artifact_type": "proposal",
+      "expected": "immutable_legacy",
+      "state": "applied",
+      "state_field": "proposal_status"
+    },
+    {
+      "artifact_type": "proposal",
+      "expected": "immutable_legacy",
+      "state": "rejected",
+      "state_field": "proposal_status"
+    },
+    {
+      "artifact_type": "proposal",
+      "expected": "immutable_legacy",
+      "state": "stale",
+      "state_field": "proposal_status"
+    }
+  ],
+  "kind": "normative synthetic input/output vectors; not observed test evidence",
+  "negative_vectors": [
+    {
+      "change": "remove /source_contract from vectors/project/specroad.json",
+      "expected": "source_contract_required"
+    },
+    {
+      "change": "change /source_contract/contract_version to 9.0.0",
+      "expected": "unsupported_source_contract"
+    },
+    {
+      "change": "add /id_scheme to vectors/project/spec/goals/SR-GOAL-0001.json",
+      "expected": "source_schema_invalid"
+    },
+    {
+      "change": "replace source goal id token 0001 with a random128 token",
+      "expected": "source_schema_invalid"
+    },
+    {
+      "change": "add an undeclared JSON resource under rules/",
+      "expected": "source_resource_unsupported"
+    },
+    {
+      "change": "remove the primary document while retaining a reference to it",
+      "expected": "source_closure_incomplete"
+    },
+    {
+      "change": "declare a baseline snapshot entry with a missing archive object",
+      "expected": "source_payload_missing"
+    },
+    {
+      "change": "alter one byte of a bound archive object",
+      "expected": "source_hash_mismatch"
+    }
+  ],
+  "project": {
+    "directory": "vectors/project",
+    "expected_classifications": {
+      "profiles/core-reference01.json": "mutable",
+      "spec/documents/SR-DOC-0001.json": "mutable",
+      "spec/goals/SR-GOAL-0001.json": "mutable",
+      "specroad.json": "mutable"
+    },
+    "expected_inventory": "vectors/project-manifest.json",
+    "expected_model_root_sha256": "6192d2c3dd0288402b4ec9d6cb8730b8768f312ca6600520859d57226d09a02d",
+    "root_preimage": "vectors/project-root-preimage.json"
+  },
+  "raw_and_canonical": {
+    "domain": "canonical primitive vector only; these two objects are not source artifacts",
+    "expected_byte_sha256_a": "e8d38819d39f705646bfb643368eca78f7db476c16471dbc33b941b27326410d",
+    "expected_byte_sha256_b": "b26e28183af2409f8a1aad43ac765c8943f5d39b2ab3213540852ab30afc10eb",
+    "expected_canonical_sha256": "43258cff783fe7036d8a43033f830adfc60ec037382473548ac742b888292777",
+    "expected_canonical_utf8": "{\"a\":1,\"b\":2}",
+    "raw_a_utf8": "{\"a\":1,\"b\":2}\n",
+    "raw_b_utf8": "{\r\n  \"b\": 2, \"a\": 1\r\n}\r\n"
+  },
+  "relation": {
+    "expected_preimage_utf8": "[\"specroad-relation-migration-0.1-to-0.2-v1\",\"synthetic-reference-project\",\"SR-REQ-0001\",0,{\"extensions\":{},\"external_identities\":[],\"target\":\"SR-GOAL-0001\",\"type\":\"addresses\"}]",
+    "expected_relation_id": "REL-62Z6E501RHRRJZ06XBGZX8KRB9",
+    "expected_sha256": "c2f99c500711c625f01bab87fa89e169b228450378fbc41e1a5780f71f651a98",
+    "input": [
+      "specroad-relation-migration-0.1-to-0.2-v1",
+      "synthetic-reference-project",
+      "SR-REQ-0001",
+      0,
+      {
+        "extensions": {},
+        "external_identities": [],
+        "target": "SR-GOAL-0001",
+        "type": "addresses"
+      }
+    ]
+  },
+  "release_binding": "vectors/release-binding.json",
+  "requirement_migration": {
+    "after": "vectors/requirement-after.json",
+    "before": "vectors/requirement-before.json",
+    "expected_after_canonical_sha256": "520e42f0647bae17a37b8bf8c1c9717fa274a890f0164e97f7ecebeb817ffcb3",
+    "explicit_mapping": {
+      "artifact_id": "SR-REQ-0001",
+      "expected_full_sha256": "daa18b3e2044390d3f9fe948c1e5617ee3bc97b9ae36987fd6a8d87f48c74d7b",
+      "language": "en",
+      "normative_force": "must",
+      "statement": "Preserve original bytes."
+    },
+    "metadata_binding": {
+      "actor": {
+        "actor_id": "synthetic-migrator",
+        "actor_type": "tool"
+      },
+      "timestamp": "2026-11-03T01:00:00Z"
+    },
+    "scope": "Artifact transformation vector with an explicitly supplied synthetic mapping; not a whole-project publication or human approval."
+  },
+  "unicode": {
+    "composed_utf8": "é",
+    "decomposed_utf8": "é",
+    "expected_composed_sha256": "4a99557e4033c3539de2eb65472017cad5f9557f7a0625a09f1c3f6e2ba69c4c",
+    "expected_decomposed_sha256": "bf12767b0f2a56b2190075bae8169f656e3ce8d6357d4aff184bc6c7ea48f9f6",
+    "normalization": "none"
+  }
+}

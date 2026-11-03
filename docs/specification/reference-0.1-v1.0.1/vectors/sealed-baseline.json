@@ -1,0 +1,77 @@
+{
+  "artifact_type": "baseline",
+  "baseline_kind": "working",
+  "baseline_state": "sealed",
+  "created_at": "2026-11-03T00:00:00Z",
+  "created_by": {
+    "actor_id": "synthetic-author",
+    "actor_type": "human"
+  },
+  "extensions": {},
+  "id": "SR-BASE-0001",
+  "manifest": [
+    {
+      "artifact_id": null,
+      "byte_sha256": "4f912ab50e97f5092e460f184d21328f068c8642dc858e3f28e6a900cbaa25e5",
+      "canonical_sha256": "fb55f01c415d02ad64f8ad1d2642eb913759aac00377c506d27b41a8409dc3f6",
+      "media_type": "application/json",
+      "path": "profiles/core-reference01.json",
+      "revision": null,
+      "role": "profile",
+      "size": 127
+    },
+    {
+      "artifact_id": "SR-DOC-0001",
+      "byte_sha256": "17dd2b63f106553afcc9c2018adbbe86a088dfc2233d0aab5d3ead7275c8b098",
+      "canonical_sha256": "8e58a0e05af6d4cd149040e106e1550f5bd9c7b7d2a31585459af7214e7740eb",
+      "media_type": "application/json",
+      "path": "spec/documents/SR-DOC-0001.json",
+      "revision": 1,
+      "role": "artifact",
+      "size": 515
+    },
+    {
+      "artifact_id": "SR-GOAL-0001",
+      "byte_sha256": "a6d0aa62f04780b6164454466251cdb62f3974301f0630620b87ee940982c416",
+      "canonical_sha256": "6127e7586294bfbb20af3df34543623d499376a57836f4ad534f9e1d177b04f9",
+      "media_type": "application/json",
+      "path": "spec/goals/SR-GOAL-0001.json",
+      "revision": 1,
+      "role": "artifact",
+      "size": 457
+    },
+    {
+      "artifact_id": null,
+      "byte_sha256": "7a2ac0df12ef48bb60ab661a048fe88199fe90ababc2ad3bb2ede3bc164b2fd7",
+      "canonical_sha256": "02d069e40d08b67070a0b41f4d68673339c9bfc30ad96b187c6109aa14e23747",
+      "media_type": "application/json",
+      "path": "specroad.json",
+      "revision": null,
+      "role": "configuration",
+      "size": 410
+    }
+  ],
+  "maturity": "approved",
+  "model_root_algorithm": "reference01-model-root-v1",
+  "model_root_sha256": "6192d2c3dd0288402b4ec9d6cb8730b8768f312ca6600520859d57226d09a02d",
+  "profiles": [
+    "core-reference01@1.0.0"
+  ],
+  "project_id": "synthetic-reference-project",
+  "relations": [],
+  "revision": 1,
+  "schema_version": "0.1.0",
+  "scope_descriptor": {
+    "boundary_policy": "closed",
+    "configuration_id": null,
+    "scope_kind": "project",
+    "scope_version": "reference01-scope-v1",
+    "selector": {}
+  },
+  "title": "Synthetic sealed snapshot",
+  "updated_at": "2026-11-03T00:00:00Z",
+  "updated_by": {
+    "actor_id": "synthetic-author",
+    "actor_type": "human"
+  }
+}

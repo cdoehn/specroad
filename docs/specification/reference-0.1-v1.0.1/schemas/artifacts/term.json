@@ -1,0 +1,663 @@
+{
+  "$comment": "New reference contract defined 2026-11-03; no historical compatibility claim. Full validation also requires contract.md.",
+  "$defs": {
+    "actor": {
+      "additionalProperties": false,
+      "properties": {
+        "actor_id": {
+          "minLength": 1,
+          "not": {
+            "pattern": "\\u0000"
+          },
+          "pattern": "\\S",
+          "type": "string"
+        },
+        "actor_type": {
+          "enum": [
+            "human",
+            "ai",
+            "ci",
+            "tool"
+          ]
+        }
+      },
+      "required": [
+        "actor_type",
+        "actor_id"
+      ],
+      "type": "object"
+    },
+    "text": {
+      "minLength": 1,
+      "not": {
+        "pattern": "\\u0000"
+      },
+      "pattern": "\\S",
+      "type": "string"
+    },
+    "utc": {
+      "format": "date-time",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}[Tt][0-9]{2}:[0-9]{2}:[0-9]{2}(?:\\.[0-9]+)?Z(?![\\s\\S])",
+      "type": "string"
+    }
+  },
+  "$id": "urn:specroad:reference-0.1-v1:artifact:term",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Source term field grammar; see contract.md for global constraints.",
+  "properties": {
+    "applicability": {
+      "type": "object"
+    },
+    "artifact_type": {
+      "const": "term"
+    },
+    "created_at": {
+      "$ref": "#/$defs/utc"
+    },
+    "created_by": {
+      "$ref": "#/$defs/actor"
+    },
+    "definition": {
+      "$ref": "#/$defs/text"
+    },
+    "display_id": {
+      "$ref": "#/$defs/text"
+    },
+    "extensions": {
+      "propertyNames": {
+        "pattern": "^[^\\s.\\x00-\\x1f\\x7f]+(?:\\.[^\\s.\\x00-\\x1f\\x7f]+)+(?![\\s\\S])",
+        "type": "string"
+      },
+      "type": "object"
+    },
+    "external_identities": {
+      "items": {
+        "additionalProperties": false,
+        "anyOf": [
+          {
+            "required": [
+              "mapping_id",
+              "last_imported_projection_sha256",
+              "last_source_projection_sha256",
+              "last_source_payload_sha256",
+              "imported_at"
+            ]
+          },
+          {
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "mapping_id"
+                  ]
+                },
+                {
+                  "required": [
+                    "last_imported_projection_sha256"
+                  ]
+                },
+                {
+                  "required": [
+                    "last_source_projection_sha256"
+                  ]
+                },
+                {
+                  "required": [
+                    "last_source_payload_sha256"
+                  ]
+                },
+                {
+                  "required": [
+                    "imported_at"
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "properties": {
+          "extensions": {
+            "propertyNames": {
+              "pattern": "^[^\\s.\\x00-\\x1f\\x7f]+(?:\\.[^\\s.\\x00-\\x1f\\x7f]+)+(?![\\s\\S])",
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "external_id": {
+            "minLength": 1,
+            "pattern": "^(?=[\\s\\S]*\\S)(?![\\s\\S]*\\x00)",
+            "type": "string"
+          },
+          "external_revision": {
+            "type": "string"
+          },
+          "imported_at": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "last_imported_projection_sha256": {
+            "pattern": "^[0-9a-f]{64}(?![\\s\\S])",
+            "type": "string"
+          },
+          "last_source_payload_sha256": {
+            "pattern": "^[0-9a-f]{64}(?![\\s\\S])",
+            "type": "string"
+          },
+          "last_source_projection_sha256": {
+            "pattern": "^[0-9a-f]{64}(?![\\s\\S])",
+            "type": "string"
+          },
+          "mapping_id": {
+            "minLength": 1,
+            "pattern": "^(?=[\\s\\S]*\\S)(?![\\s\\S]*\\x00)",
+            "type": "string"
+          },
+          "source_document": {
+            "minLength": 1,
+            "pattern": "^(?=[\\s\\S]*\\S)(?![\\s\\S]*\\x00)",
+            "type": "string"
+          },
+          "source_system": {
+            "minLength": 1,
+            "pattern": "^(?=[\\s\\S]*\\S)(?![\\s\\S]*\\x00)",
+            "type": "string"
+          }
+        },
+        "required": [
+          "source_system",
+          "source_document",
+          "external_id"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "forbidden_synonyms": {
+      "items": {
+        "$ref": "#/$defs/text"
+      },
+      "type": "array"
+    },
+    "id": {
+      "pattern": "^[A-Z][A-Z0-9]{1,7}-TERM-[0-9]{4}(?![\\s\\S])",
+      "type": "string"
+    },
+    "language": {
+      "format": "bcp47",
+      "type": "string"
+    },
+    "maturity": {
+      "enum": [
+        "draft",
+        "proposed",
+        "in_review",
+        "approved",
+        "rejected",
+        "superseded",
+        "retired"
+      ]
+    },
+    "owner": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/text"
+        },
+        {
+          "$ref": "#/$defs/actor"
+        }
+      ]
+    },
+    "provenance": {
+      "items": {
+        "additionalProperties": false,
+        "allOf": [
+          {
+            "anyOf": [
+              {
+                "required": [
+                  "source_id"
+                ]
+              },
+              {
+                "required": [
+                  "locator"
+                ]
+              }
+            ]
+          },
+          {
+            "anyOf": [
+              {
+                "required": [
+                  "excerpt"
+                ]
+              },
+              {
+                "required": [
+                  "content_sha256"
+                ]
+              }
+            ]
+          }
+        ],
+        "properties": {
+          "captured_at": {
+            "$ref": "#/$defs/utc"
+          },
+          "content_sha256": {
+            "pattern": "^[0-9a-f]{64}(?![\\s\\S])",
+            "type": "string"
+          },
+          "excerpt": {
+            "$ref": "#/$defs/text"
+          },
+          "extensions": {
+            "propertyNames": {
+              "pattern": "^[^\\s.\\x00-\\x1f\\x7f]+(?:\\.[^\\s.\\x00-\\x1f\\x7f]+)+(?![\\s\\S])",
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "locator": {
+            "$ref": "#/$defs/text"
+          },
+          "source_id": {
+            "pattern": "^[A-Z][A-Z0-9]{1,7}-SRC-[0-9]{4}(?![\\s\\S])",
+            "type": "string"
+          }
+        },
+        "required": [
+          "captured_at"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "relations": {
+      "items": {
+        "additionalProperties": false,
+        "allOf": [
+          {
+            "anyOf": [
+              {
+                "properties": {
+                  "type": {
+                    "const": "contains"
+                  }
+                },
+                "required": [
+                  "position"
+                ]
+              },
+              {
+                "not": {
+                  "required": [
+                    "position"
+                  ]
+                },
+                "properties": {
+                  "type": {
+                    "not": {
+                      "const": "contains"
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        ],
+        "properties": {
+          "created_at": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "created_by": {
+            "additionalProperties": false,
+            "properties": {
+              "actor_id": {
+                "minLength": 1,
+                "pattern": "^(?=[\\s\\S]*\\S)(?![\\s\\S]*\\x00)",
+                "type": "string"
+              },
+              "actor_type": {
+                "enum": [
+                  "human",
+                  "ai",
+                  "ci",
+                  "tool"
+                ]
+              }
+            },
+            "required": [
+              "actor_type",
+              "actor_id"
+            ],
+            "type": "object"
+          },
+          "extensions": {
+            "propertyNames": {
+              "pattern": "^[^\\s.\\x00-\\x1f\\x7f]+(?:\\.[^\\s.\\x00-\\x1f\\x7f]+)+(?![\\s\\S])",
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "external_identities": {
+            "items": {
+              "additionalProperties": false,
+              "anyOf": [
+                {
+                  "required": [
+                    "mapping_id",
+                    "last_imported_projection_sha256",
+                    "last_source_projection_sha256",
+                    "last_source_payload_sha256",
+                    "imported_at"
+                  ]
+                },
+                {
+                  "not": {
+                    "anyOf": [
+                      {
+                        "required": [
+                          "mapping_id"
+                        ]
+                      },
+                      {
+                        "required": [
+                          "last_imported_projection_sha256"
+                        ]
+                      },
+                      {
+                        "required": [
+                          "last_source_projection_sha256"
+                        ]
+                      },
+                      {
+                        "required": [
+                          "last_source_payload_sha256"
+                        ]
+                      },
+                      {
+                        "required": [
+                          "imported_at"
+                        ]
+                      }
+                    ]
+                  }
+                }
+              ],
+              "properties": {
+                "extensions": {
+                  "propertyNames": {
+                    "pattern": "^[^\\s.\\x00-\\x1f\\x7f]+(?:\\.[^\\s.\\x00-\\x1f\\x7f]+)+(?![\\s\\S])",
+                    "type": "string"
+                  },
+                  "type": "object"
+                },
+                "external_id": {
+                  "minLength": 1,
+                  "pattern": "^(?=[\\s\\S]*\\S)(?![\\s\\S]*\\x00)",
+                  "type": "string"
+                },
+                "external_revision": {
+                  "type": "string"
+                },
+                "imported_at": {
+                  "format": "date-time",
+                  "type": "string"
+                },
+                "last_imported_projection_sha256": {
+                  "pattern": "^[0-9a-f]{64}(?![\\s\\S])",
+                  "type": "string"
+                },
+                "last_source_payload_sha256": {
+                  "pattern": "^[0-9a-f]{64}(?![\\s\\S])",
+                  "type": "string"
+                },
+                "last_source_projection_sha256": {
+                  "pattern": "^[0-9a-f]{64}(?![\\s\\S])",
+                  "type": "string"
+                },
+                "mapping_id": {
+                  "minLength": 1,
+                  "pattern": "^(?=[\\s\\S]*\\S)(?![\\s\\S]*\\x00)",
+                  "type": "string"
+                },
+                "source_document": {
+                  "minLength": 1,
+                  "pattern": "^(?=[\\s\\S]*\\S)(?![\\s\\S]*\\x00)",
+                  "type": "string"
+                },
+                "source_system": {
+                  "minLength": 1,
+                  "pattern": "^(?=[\\s\\S]*\\S)(?![\\s\\S]*\\x00)",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "source_system",
+                "source_document",
+                "external_id"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "position": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "rationale": {
+            "type": "string"
+          },
+          "target": {
+            "anyOf": [
+              {
+                "pattern": "^[A-Z][A-Z0-9]{1,7}-GOAL-[0-9]{4}(?![\\s\\S])",
+                "type": "string"
+              },
+              {
+                "pattern": "^[A-Z][A-Z0-9]{1,7}-NEED-[0-9]{4}(?![\\s\\S])",
+                "type": "string"
+              },
+              {
+                "pattern": "^[A-Z][A-Z0-9]{1,7}-CAP-[0-9]{4}(?![\\s\\S])",
+                "type": "string"
+              },
+              {
+                "pattern": "^[A-Z][A-Z0-9]{1,7}-REQ-[0-9]{4}(?![\\s\\S])",
+                "type": "string"
+              },
+              {
+                "pattern": "^[A-Z][A-Z0-9]{1,7}-SCN-[0-9]{4}(?![\\s\\S])",
+                "type": "string"
+              },
+              {
+                "pattern": "^[A-Z][A-Z0-9]{1,7}-DEC-[0-9]{4}(?![\\s\\S])",
+                "type": "string"
+              },
+              {
+                "pattern": "^[A-Z][A-Z0-9]{1,7}-RISK-[0-9]{4}(?![\\s\\S])",
+                "type": "string"
+              },
+              {
+                "pattern": "^[A-Z][A-Z0-9]{1,7}-ASM-[0-9]{4}(?![\\s\\S])",
+                "type": "string"
+              },
+              {
+                "pattern": "^[A-Z][A-Z0-9]{1,7}-COMP-[0-9]{4}(?![\\s\\S])",
+                "type": "string"
+              },
+              {
+                "pattern": "^[A-Z][A-Z0-9]{1,7}-IFC-[0-9]{4}(?![\\s\\S])",
+                "type": "string"
+              },
+              {
+                "pattern": "^[A-Z][A-Z0-9]{1,7}-SRC-[0-9]{4}(?![\\s\\S])",
+                "type": "string"
+              },
+              {
+                "pattern": "^[A-Z][A-Z0-9]{1,7}-VER-[0-9]{4}(?![\\s\\S])",
+                "type": "string"
+              },
+              {
+                "pattern": "^[A-Z][A-Z0-9]{1,7}-TEST-[0-9]{4}(?![\\s\\S])",
+                "type": "string"
+              },
+              {
+                "pattern": "^[A-Z][A-Z0-9]{1,7}-EVD-[0-9]{4}(?![\\s\\S])",
+                "type": "string"
+              },
+              {
+                "pattern": "^[A-Z][A-Z0-9]{1,7}-REL-[0-9]{4}(?![\\s\\S])",
+                "type": "string"
+              },
+              {
+                "pattern": "^[A-Z][A-Z0-9]{1,7}-MS-[0-9]{4}(?![\\s\\S])",
+                "type": "string"
+              },
+              {
+                "pattern": "^[A-Z][A-Z0-9]{1,7}-TASK-[0-9]{4}(?![\\s\\S])",
+                "type": "string"
+              },
+              {
+                "pattern": "^[A-Z][A-Z0-9]{1,7}-TERM-[0-9]{4}(?![\\s\\S])",
+                "type": "string"
+              },
+              {
+                "pattern": "^[A-Z][A-Z0-9]{1,7}-PROP-[0-9]{4}(?![\\s\\S])",
+                "type": "string"
+              },
+              {
+                "pattern": "^[A-Z][A-Z0-9]{1,7}-BASE-[0-9]{4}(?![\\s\\S])",
+                "type": "string"
+              },
+              {
+                "pattern": "^[A-Z][A-Z0-9]{1,7}-ISSUE-[0-9]{4}(?![\\s\\S])",
+                "type": "string"
+              },
+              {
+                "pattern": "^[A-Z][A-Z0-9]{1,7}-DOC-[0-9]{4}(?![\\s\\S])",
+                "type": "string"
+              },
+              {
+                "pattern": "^[A-Z][A-Z0-9]{1,7}-SEC-[0-9]{4}(?![\\s\\S])",
+                "type": "string"
+              },
+              {
+                "pattern": "^[A-Z][A-Z0-9]{1,7}-BLOCK-[0-9]{4}(?![\\s\\S])",
+                "type": "string"
+              },
+              {
+                "pattern": "^[A-Z][A-Z0-9]{1,7}-VIEW-[0-9]{4}(?![\\s\\S])",
+                "type": "string"
+              },
+              {
+                "pattern": "^[A-Z][A-Z0-9]{1,7}-CODE-[0-9]{4}(?![\\s\\S])",
+                "type": "string"
+              },
+              {
+                "pattern": "^[A-Z][A-Z0-9]{1,7}-RREV-[0-9]{4}(?![\\s\\S])",
+                "type": "string"
+              },
+              {
+                "pattern": "^[A-Z][A-Z0-9]{1,7}-CFG-[0-9]{4}(?![\\s\\S])",
+                "type": "string"
+              }
+            ]
+          },
+          "type": {
+            "enum": [
+              "addresses",
+              "refines",
+              "derived_from",
+              "depends_on",
+              "conflicts_with",
+              "constrains",
+              "allocated_to",
+              "implemented_by",
+              "verified_by",
+              "produces",
+              "mitigates",
+              "scheduled_for",
+              "part_of",
+              "supersedes",
+              "duplicates",
+              "contains",
+              "references"
+            ]
+          }
+        },
+        "required": [
+          "type",
+          "target",
+          "external_identities",
+          "extensions"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "revision": {
+      "minimum": 1,
+      "type": "integer"
+    },
+    "schema_version": {
+      "const": "0.1.0"
+    },
+    "synonyms": {
+      "items": {
+        "$ref": "#/$defs/text"
+      },
+      "type": "array"
+    },
+    "tags": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "term": {
+      "$ref": "#/$defs/text"
+    },
+    "text_direction": {
+      "enum": [
+        "ltr",
+        "rtl",
+        "auto"
+      ]
+    },
+    "title": {
+      "$ref": "#/$defs/text"
+    },
+    "updated_at": {
+      "$ref": "#/$defs/utc"
+    },
+    "updated_by": {
+      "$ref": "#/$defs/actor"
+    }
+  },
+  "required": [
+    "schema_version",
+    "id",
+    "artifact_type",
+    "title",
+    "maturity",
+    "revision",
+    "created_at",
+    "updated_at",
+    "created_by",
+    "updated_by",
+    "relations",
+    "extensions",
+    "language",
+    "term",
+    "definition",
+    "synonyms",
+    "forbidden_synonyms",
+    "owner"
+  ],
+  "type": "object",
+  "x-specroad-validation-scope": "reference01-local-fields-plus-normative-contract"
+}

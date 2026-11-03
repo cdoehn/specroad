@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 55 · **Stand:** 3. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.49
+**Planrevision:** 56 · **Stand:** 3. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.50
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 Schritte und 900 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; die ausdrücklich genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wird nach 10.7.10 innerhalb von 15.l.R vorgezogen. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -9,7 +9,7 @@ Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 S
 
 Fachliche Grundlage ist [`docs/specification/SpecRoad_Spezifikation.md`](../specification/SpecRoad_Spezifikation.md), einschließlich aller konsolidierten Korrekturen, 742 Requirements, 51 Verifikationsverträge, 46 Szenario-/E2E-Identitäten sowie R-01 bis R-75, Anhang U und den PatchHarbor-Rundweg aus Anhang W. Der [`Prüfbericht`](../reviews/SpecRoad_v0.2.7_Implementierungsreife_Pruefbericht.md) ist ein vorgelagerter Entwurfsreview, kein späterer Produktnachweis.
 
-Gebundene Spezifikations-SHA-256: `5e54dc498f30c90cf3aa82a8244a23b93b162b5353a546ae8e9a6272a5941e68`.
+Gebundene Spezifikations-SHA-256: `3520bd732f16f15601548962f37123c360292f3001e4f33fcc8ce0f53b167a54`.
 Planungsbasis: Commit `fe2661d02ecf2f7eb483b58a4487eb009c6b3846`; sauberes Result-Bundle `specroad_Result_120209_0914_df3504.zip`; Repository-ID `3d2576df-d611-46fc-9d2b-92869468aaca`. Diese Angaben dokumentieren die Entstehung des Plans, nicht die zukünftige Patchbindung. **Jedes spätere Patchpaket bindet den dann aktuellen tatsächlichen Result-Zustand.**
 
 Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 2026 gelten zusätzlich und bei den nachfolgend benannten Konflikten vorrangig. Sonstige normative Spezifikationsinhalte werden nicht stillschweigend abgeschwächt. Neue fachliche Widersprüche, fehlende zwingende Angaben und Sicherheitsprobleme sind offen zu benennen, nicht durch erfundene Annahmen oder Scheinerfolge zu lösen.
@@ -32,6 +32,76 @@ Ketten erfordert erst den belegten erfolgreichen normalen Abschluss.
 Produktfreigaben und die Grenzen aus 2.4.1/2.4.2/2.4.4 bleiben unverändert.
 Dieser Plan ändert keine alten Aufträge, Antworten, Blockaden oder
 Laufzeitdaten und ist keine Start-/Resume-Anweisung.
+
+## Bundle 552 — einmalige Klärung mit nachfolgendem 16.b.W/R/C
+
+**Autorität:** ausdrücklicher Nutzerauftrag vom 3. November 2026:
+„Dann machen wir jetzt eine Ausnahme um dieses Vorgehen zu testen!
+Bei der klärung gehen wir nach deiner Empfehlung“.
+Die Ausnahme gilt ausschließlich für diese gemeinsame ZIP. Allgemeine
+SPECROAD-DECISION-1-/Vertrag-3-Regeln, Control-Zustände und Restbudgets werden
+nicht geändert. Klärung wird nicht als Produktfortschritt verborgen.
+
+**Basis:** Result `specroad-apply_Result_061829_1103_1a789d.zip`, SHA-256
+`5404b2523291c7fb2f92f91e908544a853207c893289337f3bef01c2a1ac103c`,
+sauberer HEAD `dec79aea39232da94b4ce41046db8153e277b6fa`.
+551 ist mit 6.267 Tests (Gruppe 0, 175 Pflicht) abgeschlossen; keine Vollsuite.
+
+**Diagnose und Entscheidung:** Der geschlossene v1.0.0-Baselinevertrag hat
+Projekt-Scope, aber keine eindeutige Release-ID. Die Evaluation bezeichnet
+Prüfeingänge und kann mehreren Releases gemeinsam sein. Ein erstes Release
+zu raten, alle Policies zu mischen oder Release-Baselines aus dem zugesagten
+Source-Umfang zu streichen wäre inkonsistent. Gewählt ist deshalb die kleine,
+versionierte Erweiterung `release_id` mit Pflichtbindung der vollständigen
+Evaluation und des ausgewählten Release-Originals über das vorhandene
+Vollmanifest. Alte Vertragsbytes und Originale bleiben erhalten. Eine neue
+Manifestrolle oder zusätzliche redundante Snapshotidentität ist nicht nötig.
+Die Entscheidung akzeptiert keine Risiken und erfindet keine Human-Reviews.
+
+**Ergänzende konkrete Feldprüfung:** H.2 und die gespeicherten
+Code-Ref-Schemas besitzen keinen geschlossenen Ankerselektor; 10.3 und
+Proposal-Schemas binden zwar die Fachsemantik, lassen Review-/Kontrollzeilen
+offen. Bestehende native Beobachtungsobjekte sind keine gespeicherte
+Quellformatdefinition. Gewählt sind die zwei unmittelbar aus H.2 ableitbaren
+Positionsvarianten sowie exakt gespeicherte Reviewtupel und eingebettete
+Originalresultatbytes. Raten, generische unprüfbare Objekte oder Ablehnung
+aller betroffenen Typen wären keine vollständige 16.b-Umsetzung. Die neuen
+Feldregeln stehen vor dem Produktcode in Vertrag 5.1; positive und negative
+Abnahmen sind dort verbindlich. Grenzen aus 2.4.1: gleicher zugesagter Scope;
+keine Gate-/Reviewabschwächung; alte Bytes bleiben unverändert; versioniert
+rücknehmbar; keine externen Fakten oder persönlichen Reviews werden erfunden.
+Autorität der Details: delegiert gemäß SPECROAD-DECISION-1; keine behauptete
+persönliche Einzelentscheidung des Nutzers über diese Feldnamen.
+
+
+**Echte Abfolge:** `REFERENCE-RELEASE-552` (normative Klärung), `16.b.W`,
+`16.b.R`, `16.b.C`. Jeder Zustand wird erst nach bestandenem eigenem Apply-Gate
+committed; die nächste Phase wird erst anschließend ausgebracht. Bei Fehlern
+bleiben erfolgreiche Commits und tatsächlicher Arbeitsstand erhalten.
+Dev-Verhaltenstests: nicht ausgeführt. Collection und native ZIP-Prüfung sind
+keine Verhaltensabnahme. Pflichtauswahl je Commit ergänzt die fällige gefilterte
+N=3-Gruppe, erwartet 1/2/0/1. Kein CI-, Apply-, Watcher- oder Control-Start.
+
+Die Klärungsphase lässt Produktstand 663/900 und 16.b.W vollständig offen.
+Abnahmen ergänzen alle bestehenden 16.b-Anforderungen: Release-ID muss im
+gebundenen historischen Snapshot existieren; mehrere Releases mit identischer
+Evaluation sind über ihre ID eindeutig. Fehlende/abweichende Auswahl,
+Evaluation oder Manifestbindung scheitert. Alle 28 Typen, vollständige
+transitive Originalclosure, Hashdomänen, Spezialzustände und native Core-/PYZ-
+Parität bleiben verpflichtend. Spätere Migration und Restore bleiben offen.
+Die Bundlenummer 552 gilt erst nach dem letzten tatsächlichen Commit.
+
+### Ergänzende Feld-/Hashentscheidung vor der Umsetzung
+
+Die vollständige Umsetzung konkretisiert nach SPECROAD-DECISION-1 im ersten
+Klärungscommit auch den kontrollfreien Proposal-Basisalgorithmus (Vertrag 5.2).
+Die vollständige Projektwurzel wäre selbstreferenziell; behauptete Hashes oder
+ein aktueller Loader wären kein Originalnachweis. Der gewählte separate Hash
+bindet tatsächliche Spezifikationsoriginale und weist ältere Basen sichtbar aus.
+Explizit referenzierte generierte Code-Payloads werden als Originale gebunden,
+nicht ausgeführt oder erzeugt. Abnahmen prüfen unabhängige Sollhashes,
+Kontrollrecord-Unabhängigkeit, fehlende Basisoriginale, sichtbare Veraltung und
+Originalerhalt. Alle menschlichen Reviews und tatsächlichen Prüfgates bleiben.
 
 ## OFF-PLAN REFERENCE-SOURCE-551 — neuer vollständiger Referenzquellvertrag
 
@@ -1070,7 +1140,7 @@ Kein offener Produktplanschritt wird durch diese Testoptimierung abgeschlossen.
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 55
+plan_revision: 56
 implementation_plan_commits_total: 900
 implementation_plan_commits_completed: 663
 last_completed_plan_commit: 16.a.C
@@ -35228,7 +35298,7 @@ offen. M15-Integrations-/Vollsuiten-/Plattformgates und 18.q/18.r bleiben offen.
 - [ ] **16.b.W** · Position **664/900** · Voraussetzung: `16.a.C`.
 **Exakte Commit-Message:** `16.b.W feat(migration): Quellinventur und historischer Core-Leser aufbauen`
 
-**Umsetzung:** Den neu definierten Quellvertrag nach Q.0.1/REFERENCE-SOURCE-551 vollständig als nativen Reader und Inventur mit mutable, immutable_legacy und referenced_payload umsetzen. Alle zusätzlichen W-Abnahmen des Entscheidungsbelegs gelten; kein historischer Kompatibilitätsanspruch.
+**Umsetzung:** Den nach Q.0.2/REFERENCE-RELEASE-552 gebundenen Quellvertrag 1.0.1 vollständig als nativen Reader und Inventur mit mutable, immutable_legacy und referenced_payload umsetzen. Alle zusätzlichen W-Abnahmen des Entscheidungsbelegs gelten; kein historischer Kompatibilitätsanspruch.
 
 **Verhaltensabnahme:** Vollständige ausdrücklich synthetische Referenzprojekte einschließlich aller Quelltypen, unveränderbarer Nachweise und transitiver Originalclosure werden ohne Fremdpaket und ohne Änderung ihrer Bytes eingelesen. Unabhängige Source-/Snapshot-/Hashvektoren stimmen; kein Ersatz durch Envelope- oder reine Abweisungstests.
 

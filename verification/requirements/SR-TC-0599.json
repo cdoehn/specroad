@@ -35,7 +35,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "5e54dc498f30c90cf3aa82a8244a23b93b162b5353a546ae8e9a6272a5941e68",
+  "specification_sha256": "3520bd732f16f15601548962f37123c360292f3001e4f33fcc8ce0f53b167a54",
   "steps": [
     "Build the actual core module tree and zipapp and invoke their trusted host evaluation adapter in independent isolated Python processes with no PATH discovery.",
     "Move runtime, Work and protected project roots between invocations, remove original captured source files and alternate resource profiles; resume from durable bytes.",

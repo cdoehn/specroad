@@ -1,0 +1,13 @@
+{
+  "$comment": "New reference contract defined 2026-11-03; no historical compatibility claim. Full validation also requires contract.md.",
+  "$id": "urn:specroad:reference-0.1-v1:profile",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "const": {
+    "profile_format_version": "reference01-profile-v1",
+    "profile_id": "core-reference01",
+    "schema_version": "0.1.0",
+    "version": "1.0.0"
+  },
+  "description": "The one exact compiled source profile; no project code or external schema provider.",
+  "x-specroad-validation-scope": "reference01-local-fields-plus-normative-contract"
+}
