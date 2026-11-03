@@ -55,7 +55,8 @@ def own_package(root, handoff, raw=None):
 
 
 @pytest.mark.parametrize('damage', ('extra', 'unknown-field', 'bool-size', 'noncanonical',
-    'truncated', 'duplicate', 'traversal', 'link', 'foreign-core', 'forged-build', 'wrong-hash', 'wrong-runtime'))
+    'truncated', 'duplicate', 'traversal', 'link', 'foreign-core', 'forged-build',
+    'foreign-reference-contract', 'foreign-reference-registry', 'wrong-hash', 'wrong-runtime'))
 def test_passive_rejections_precede_workspace_and_code(tmp_path, distribution, handoff, damage):
     raw = handoff['source'].read_bytes(); files = members(raw)
     if damage == 'extra':
@@ -79,8 +80,13 @@ def test_passive_rejections_precede_workspace_and_code(tmp_path, distribution, h
             else:
                 archive.writestr('handoff.json' if damage == 'duplicate' else '../escape', b'foreign')
         raw = stream.getvalue()
-    elif damage in ('foreign-core', 'forged-build'):
-        changed = 'specroad/_build.py' if damage == 'forged-build' else 'specroad/__init__.py'
+    elif damage in ('foreign-core', 'forged-build', 'foreign-reference-contract', 'foreign-reference-registry'):
+        changed = {
+            'foreign-core': 'specroad/__init__.py',
+            'forged-build': 'specroad/_build.py',
+            'foreign-reference-contract': 'specroad/reference01_data/contract.json',
+            'foreign-reference-registry': 'specroad/reference01_data/registry.txt',
+        }[damage]
         stream = BytesIO()
         # A Python zipapp includes directories; the production bundle writer
         # intentionally accepts only file payloads. Preserve the actual PYZ
@@ -90,7 +96,9 @@ def test_passive_rejections_precede_workspace_and_code(tmp_path, distribution, h
             for entry in original.infolist():
                 content = original.read(entry)
                 if entry.filename == changed:
-                    content += b'\nraise AssertionError("untrusted code executed")\n'
+                    # A trailing newline preserves JSON values but changes bound bytes.
+                    content += (b'\n' if damage.startswith('foreign-reference-')
+                                else b'\nraise AssertionError("untrusted code executed")\n')
                 modified.writestr(copy(entry), content)
         files['runtime/specroad.pyz'] = stream.getvalue()
         manifest = json.loads(files['handoff.json'])
@@ -106,10 +114,12 @@ def test_passive_rejections_precede_workspace_and_code(tmp_path, distribution, h
     before = tree(tmp_path)
     result = offline(tmp_path, distribution[1], request)
     assert result['code'] in (3, 6, 7), result
-    if damage in ('foreign-core', 'forged-build'):
+    if damage in ('foreign-core', 'forged-build', 'foreign-reference-contract', 'foreign-reference-registry'):
         assert result['code'] == 7, result
         assert result['outcome']['summary']['transport_failure']['reason'] == {
             'foreign-core': 'core_distribution_mismatch',
+            'foreign-reference-contract': 'core_distribution_mismatch',
+            'foreign-reference-registry': 'core_distribution_mismatch',
             'forged-build': 'invalid_core_build_record',
         }[damage]
     assert result['outcome']['result'] is None and tree(tmp_path) == before

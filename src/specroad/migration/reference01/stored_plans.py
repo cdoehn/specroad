@@ -173,6 +173,35 @@ def proposal_history(value, path, snapshots, assets):
         require(number not in revisions or jcs(revisions[number]) == jcs(original),
                 'source_identity_conflict', path, 'proposal_revision_conflict')
         revisions[number] = original
+    ordered = [revisions[n] for n in sorted(revisions) if n <= value['revision']]
+    require([item['revision'] for item in ordered] == list(range(1, int(value['revision']) + 1)),
+            'source_closure_incomplete', path, 'proposal_revision_chain_incomplete')
+    from ...changes.metadata_time import next_update_time
+    for prior, current in zip(ordered, ordered[1:]):
+        require(prior['proposal_status'] not in ('applied', 'rejected', 'stale'),
+                'source_state_invalid', path, 'immutable_proposal_reactivated')
+        require(all(current[field] == prior[field] for field in ('created_at','created_by')),
+                'source_state_invalid', path, 'proposal_creation_metadata_changed')
+        for field in ('reviews', 'control_history'):
+            require(current.get(field, [])[:len(prior.get(field, []))] == prior.get(field, []),
+                    'source_state_invalid', path, 'proposal_history_rewritten')
+        changed = current['content_sha256'] != prior['content_sha256']
+        require(current['content_revision'] == prior['content_revision'] + int(changed),
+                'source_state_invalid', path, 'proposal_content_revision')
+        events = current['control_history'][len(prior['control_history']):]
+        if changed:
+            require(current['proposal_status'] == 'draft' and not events,
+                    'source_state_invalid', path, 'proposal_authoring_not_invalidated')
+        if events:
+            require(all(e['observed_revision'] == prior['revision'] and e['binding'] == binding(prior)
+                    and e['actor'] == current['updated_by']
+                    and next_update_time(e['occurred_at'], prior['updated_at']) == current['updated_at']
+                    and e['occurred_at'] == events[0]['occurred_at'] for e in events),
+                    'source_state_invalid', path, 'proposal_control_metadata')
+            if any(e['to'] in ('validated', 'checked', 'in_review') for e in events):
+                require([(e['from'],e['to']) for e in events] ==
+                    [('draft','validated'),('validated','checked'),('checked','in_review')],
+                    'source_state_invalid', path, 'proposal_review_start_not_atomic')
     approvals = {}
     for field in ('reviews', 'control_history'):
         for row in value.get(field, ()):

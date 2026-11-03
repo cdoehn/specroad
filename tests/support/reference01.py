@@ -179,3 +179,38 @@ def release_project():
     second = copy.deepcopy(first); second['id'] = 'SR-REL-0002'; second['revision'] = 1; put(files, second)
     seal(files, 2, baseline_kind='release', release_id=second['id'], verification_evaluation=evaluation)
     return files
+
+
+def finish_proposal(files, status):
+    """Declared synthetic histories; no real check/review authority is claimed."""
+    import base64
+    value = json.loads(files['spec/proposals/SR-PROP-0001.json'])
+    def bound(item):
+        return {'proposal_id': item['id'], 'content_revision': item['content_revision'],
+            'content_sha256': item['content_sha256'], 'base_model_root_sha256': item['base']['model_root_sha256'],
+            'change_plan_sha256': item['change_plan']['change_plan_sha256']}
+    groups = ([('draft', status)] if status in ('rejected','stale') else
+              [('draft','validated'),('validated','checked'),('checked','in_review')])
+    def advance(events, new_status, maturity, review=False):
+        nonlocal value
+        seal(files, value['revision'] + 1)
+        prior = copy.deepcopy(value); value['revision'] += 1
+        stamp = '2026-11-03T00:00:' + str(value['revision']).zfill(2) + 'Z'
+        value.update(updated_at=stamp, updated_by=ACTOR, proposal_status=new_status,maturity=maturity)
+        original = b'{"kind":"synthetic-declared-result","not_real_evidence":true}\n'
+        for before, after in events:
+            value['control_history'].append({'binding':bound(prior),'actor':ACTOR,'occurred_at':stamp,
+                'observed_revision':prior['revision'],'from':before,'to':after,'reason':'Synthetic test history',
+                'result_sha256':sha256(original).hexdigest(),'result_bytes_base64':base64.b64encode(original).decode()})
+        if review:
+            value.setdefault('reviews',[]).append({'binding':bound(prior),'reviewer':ACTOR,
+                'reviewed_at':stamp,'observed_revision':prior['revision'],'decision':'approved'})
+        put(files,value)
+    if status in ('rejected','stale'):
+        advance(groups,status,'rejected' if status=='rejected' else 'retired')
+    else:
+        advance(groups,'in_review','in_review')
+        if status in ('approved','applied'):
+            advance([('in_review','approved')],'approved','approved',True)
+        if status=='applied':advance([('approved','applied')],'applied','approved')
+    return files

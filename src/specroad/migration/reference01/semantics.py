@@ -262,6 +262,19 @@ def release_selection(baseline, snapshot):
 
 
 def historical_bindings(snapshots, assets):
+    versions, immutable = {}, {}
+    for snapshot in snapshots:
+        for path, value in snapshot['index'].values():
+            key = value['id'], value['revision']
+            full = digest(value)
+            require(key not in versions or versions[key] == full,
+                    'source_identity_conflict', path, 'conflicting_original_revision')
+            versions[key] = full
+            if value['artifact_type'] in ('evidence','baseline','relation_review'):
+                raw = snapshot['files'][path]
+                require(value['id'] not in immutable or immutable[value['id']] == raw,
+                        'source_state_invalid', path, 'immutable_original_rewritten')
+                immutable[value['id']] = raw
     def original(identity, revision, full_hash, root=None):
         found = []
         for snapshot in snapshots:
@@ -286,6 +299,10 @@ def historical_bindings(snapshots, assets):
             if kind == 'relation_review':
                 source = original(value['source_id'], value['source_revision'], value['source_artifact_sha256'])
                 target = original(value['target_id'], value['target_revision'], value['target_artifact_sha256'])
+                require(any(value['source_id'] in frame['index'] and value['target_id'] in frame['index']
+                    and digest(frame['index'][value['source_id']][1]) == value['source_artifact_sha256']
+                    and digest(frame['index'][value['target_id']][1]) == value['target_artifact_sha256']
+                    for frame in snapshots), 'source_closure_incomplete', path, 'review_endpoints_never_coexisted')
                 locator = value['relation_locator']
                 require(locator['source_id'] == source['id'] and locator['index'] < len(source['relations']),
                         'source_closure_incomplete', path, 'review_locator')

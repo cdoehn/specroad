@@ -4,6 +4,7 @@ The source schema family is compiled Core data. No current artifact loader,
 writer, project provider, migration registration or approval is used here.
 """
 from dataclasses import dataclass
+from functools import lru_cache
 from hashlib import sha256
 from importlib import resources
 import json
@@ -59,12 +60,19 @@ def path_name(value):
 
 
 def paths(names):
-    seen = set()
+    seen, prefixes = set(), {}
     for name in names:
         path_name(name)
         key = unicodedata.normalize('NFC', name).casefold()
         require(key not in seen, 'source_identity_conflict', name, 'portable_path_collision')
         seen.add(key)
+        parts = name.split('/')
+        for index in range(1, len(parts) + 1):
+            original = '/'.join(parts[:index])
+            portable = unicodedata.normalize('NFC', original).casefold()
+            require(portable not in prefixes or prefixes[portable] == original,
+                    'source_identity_conflict', name, 'portable_directory_collision')
+            prefixes[portable] = original
 
 
 def parsed(raw, path=None):
@@ -146,6 +154,7 @@ class SourceInventory:
         raise TypeError('A source inventory is not migration or release approval')
 
 
+@lru_cache(maxsize=1)
 def _assets():
     raw = resources.files('specroad.reference01_data').joinpath('contract.json').read_bytes()
     value = parsed(raw)
@@ -170,6 +179,8 @@ class _Reader:
         require(type(files) is dict and all(type(k) is str and type(v) is bytes
             for k, v in files.items()), 'source_schema_invalid', detail='owned_byte_mapping_required')
         paths(files)
+        require(not any(name.startswith(('.specroad/locks/', '.specroad/transactions/', '.specroad/recovery/')) for name in files),
+                'source_state_invalid', detail='operational_source_is_not_completed')
         self.files = dict(files)
         self.assets = _assets()
         self.snapshots = {}
@@ -194,6 +205,10 @@ class _Reader:
         require(config['source_contract'] == {'contract_id': CONTRACT_ID,
                 'contract_version': CONTRACT_VERSION}, 'unsupported_source_contract', 'specroad.json')
         _schema(config, 'project.json', self.assets, 'specroad.json')
+        from .semantics import _languages
+        locale = _languages().inspect(config['default_locale'])
+        require(locale.syntax_valid and not locale.unknown_subtags,
+                'source_schema_invalid', 'specroad.json', 'invalid_default_locale')
         if self.project_id is None:
             self.project_id = config['project_id']
         require(config['project_id'] == self.project_id, 'source_identity_conflict', 'specroad.json')
@@ -240,6 +255,8 @@ class _Reader:
                 historical = 'git_commit' in data or 'git_blob' in data
                 actual = ('archive/objects/' + data['file_sha256'][:2] + '/' + data['file_sha256']
                           if historical else path)
+                require(path != 'specroad.json' and not path.startswith(('.git/', '.specroad/', 'profiles/', 'rules/', 'mappings/')),
+                        'source_resource_unsupported', path)
                 raw = self.needed(actual, raw_sha=data['file_sha256']) if baseline is None else files.get(path)
                 require(raw is not None and sha256(raw).hexdigest() == data['file_sha256'],
                         'source_payload_missing', path)
@@ -248,9 +265,11 @@ class _Reader:
                 if path not in roles:
                     item = {'path': path, 'media_type': 'application/octet-stream', 'size': len(raw),
                             'sha256': data['file_sha256']}
-                    require(path not in attachments or attachments[path] == item,
-                            'source_identity_conflict', path)
-                    attachments[path] = item
+                    if path in attachments:
+                        require(attachments[path]['size'] == len(raw) and attachments[path]['sha256'] == data['file_sha256'],
+                                'source_identity_conflict', path)
+                    else:
+                        attachments[path] = item
                     files = {**files, path: raw}
                 from .semantics import code_selection
                 code_selection(data, raw, name)
@@ -353,7 +372,15 @@ class _Reader:
 
 def inventory_bytes(files):
     """Qualify an explicitly owned complete source snapshot, never guess a version."""
-    return _Reader(files).read()
+    try:
+        return _Reader(files).read()
+    except SourceError:
+        raise
+    except ModelError as error:
+        raise SourceError('source_schema_invalid', path=error.path, pointer=error.pointer,
+                          detail=error.reason) from error
+    except RecursionError as error:
+        raise SourceError('source_resource_limit', detail='source_nesting_limit', exit_code=4) from error
 
 
 def inventory_project(root):

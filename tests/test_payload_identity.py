@@ -9,7 +9,7 @@ from zipfile import ZipFile
 
 from support.portable import build_distribution, copy_source_fixture, files_under
 from support.payload_identity import (
-    LANGUAGE_RESOURCES, PROFILE_RESOURCES, SHIPPED_RESOURCES,
+    LANGUAGE_RESOURCES, PROFILE_RESOURCES, REFERENCE01_RESOURCES, SHIPPED_RESOURCES,
     reference_digest, reference_payload,
 )
 
@@ -73,6 +73,19 @@ class PayloadIdentityTests(unittest.TestCase):
     def test_each_language_resource_binds_its_actual_bytes(self):
         baseline = self.build_and_check()
         for relative in LANGUAGE_RESOURCES:
+            with self.subTest(resource=relative):
+                path = self.package / relative
+                before = path.read_bytes()
+                try:
+                    path.write_bytes(before + b"\n")
+                    self.assertNotEqual(self.build_and_check(), baseline)
+                finally:
+                    path.write_bytes(before)
+        self.assertEqual(self.build_and_check(), baseline)
+
+    def test_each_reference01_resource_binds_its_actual_bytes(self):
+        baseline = self.build_and_check()
+        for relative in REFERENCE01_RESOURCES:
             with self.subTest(resource=relative):
                 path = self.package / relative
                 before = path.read_bytes()
