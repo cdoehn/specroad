@@ -115,7 +115,8 @@ class PayloadIdentityTests(unittest.TestCase):
         sentinel = self.root / "UNEXPECTED_EXECUTION"
         poison = ("open(" + repr(str(sentinel)) + ", 'w').write('bad')").encode()
         for name in ("unregistered.json", "profile_data/unregistered.json",
-                     "language_data/packages/unregistered.json", "host.tmp",
+                     "language_data/packages/unregistered.json",
+                     "reference01_data/unregistered.json", "host.tmp",
                      "__pycache__/poison.py", "__pycache__/cache.pyc"):
             path = self.package / name
             path.parent.mkdir(parents=True, exist_ok=True)

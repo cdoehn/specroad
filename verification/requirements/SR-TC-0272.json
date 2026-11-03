@@ -1,21 +1,38 @@
 {
   "evidence_kind": "specroad-dev-pytest-v1",
-  "expected_diagnostics": [],
+  "expected_diagnostics": [
+    "source_contract_required",
+    "unsupported_source_contract",
+    "source_schema_invalid",
+    "source_identity_conflict",
+    "source_state_invalid",
+    "source_resource_unsupported",
+    "source_closure_incomplete",
+    "source_payload_missing",
+    "source_hash_mismatch",
+    "source_snapshot_cycle"
+  ],
   "expected_exit_codes": [],
-  "fixture_ids": [],
-  "implementation_status": "open",
+  "fixture_ids": [
+    "SR-FIX-REFERENCE01-SOURCE-v1_0_1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [],
-  "method": "pending",
+  "method": "automated_behavior",
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence.",
-    "RESTORE-SCHEMA-SCOPE / Q.0 takes precedence for positive 0.1 qualification: a versioned complete source contract, source hash algorithms, closure/provenance and matching test vectors are required before supported registration and positive M16/Restore integration. Explicitly synthetic fixtures against that contract are permitted; real production data are not a general test prerequisite and historical external compatibility is not invented. Existing 0.2 identities/contracts, CLI aliases and passive presentation retain their documented limits. Current status and remaining M16 work are unchanged; no positive Legacy acceptance is claimed."
+    "Bound Apply behavior evidence remains required; no behavior tests were run in Dev.",
+    "Actual target migration, target identity metadata/manifest, new human reviews, transaction/backup, public CLI and Restore integration remain open in subsequent M16 steps.",
+    "Stored synthetic source statuses and integrity observations do not prove human authority, actual historical approvals or current release readiness."
   ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Für einen nach Q.0 verbindlich definierten und nativ unterstützten 0.1.0-Quellvertrag MUSS Version 0.2 eine verlustfreie Migration nach 0.2.0 gemäß Anhang Q bereitstellen, die veränderbare Artefakte ergänzt und unveränderbare Nachweise unter Erhalt ihrer Originalbytes einbindet; bis dahin darf der Pfad nicht als unterstützt gelten.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "16.b source reader/inventory only: version-bound local/global fields, complete source originals and transitive manifest/payload integrity, immutable classification, detached observations and safe file access. No target write, migration registration, current approval/readiness, external historical compatibility, full suite or release proof."
   },
-  "preconditions": [],
+  "preconditions": [
+    "Source selects exactly the compiled specroad-reference-0.1 contract version 1.0.1.",
+    "Complete original source and reachable snapshot/payload bytes are supplied; sources remain read-only."
+  ],
   "primary_verification_id": "SR-VER-0020",
   "required_environment": {
     "declared_minimum_python": "3.10",
@@ -29,8 +46,26 @@
     "owned_temporary_files": true
   },
   "specification_sha256": "3520bd732f16f15601548962f37123c360292f3001e4f33fcc8ce0f53b167a54",
-  "steps": [],
+  "steps": [
+    "Read complete source schemas and original closures without the current artifact loader or writer.",
+    "Compare literal hash vectors, full current/historical inventory, identity/reference/state bindings and protected original bytes.",
+    "Observe explicit release selection, retained synthetic histories, safe refusal and native Core/PYZ parity without optional packages."
+  ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0272",
-  "test_ids": []
+  "test_ids": [
+    "tests/test_reference01_reader.py::test_all_28_types_and_complete_classification_keep_originals",
+    "tests/test_reference01_reader.py::test_core_and_pyz_reference_reader_parity_without_optional_packages",
+    "tests/test_reference01_reader.py::test_json_whitespace_changes_bytes_without_changing_model_root",
+    "tests/test_reference01_reader.py::test_literal_normative_snapshot_oracles[baseline]",
+    "tests/test_reference01_reader.py::test_literal_normative_snapshot_oracles[project]",
+    "tests/test_reference01_reader.py::test_literal_proposal_basis_oracle_and_control_records_are_separate",
+    "tests/test_reference01_reader.py::test_nonempty_original_plan_is_preserved_without_applying_operations",
+    "tests/test_reference01_reader.py::test_owned_projections_cannot_mutate_originals",
+    "tests/test_reference01_reader.py::test_project_read_has_no_writes_process_or_network_side_effects",
+    "tests/test_reference01_reader.py::test_release_baseline_explicit_id_binds_one_of_two_equal_evaluations",
+    "tests/test_reference01_reader.py::test_source_anchor_uses_bound_original_bytes[selector0]",
+    "tests/test_reference01_reader.py::test_source_anchor_uses_bound_original_bytes[selector1]",
+    "tests/test_reference01_reader.py::test_transitive_historical_originals_do_not_resolve_to_current_revision"
+  ]
 }

@@ -33,6 +33,51 @@ Produktfreigaben und die Grenzen aus 2.4.1/2.4.2/2.4.4 bleiben unverändert.
 Dieser Plan ändert keine alten Aufträge, Antworten, Blockaden oder
 Laufzeitdaten und ist keine Start-/Resume-Anweisung.
 
+## Bundle 553 — technische Korrektur und Fortsetzung von 16.b.W/R/C
+
+**Maßgebliche Basis:** Fehler-Result `specroad-apply_Result_084825_1103_2f3e4e.zip`,
+SHA-256 `c7094c73f42acbaf084559c3de462498defdf5613e45dd04c68286d898756ede`,
+HEAD `4a2f19d0d235981bb8f8515af8069f9d060cd69b`, erhaltener Fingerprint
+`f352efd2ce18ec98`. Der Klärungscommit `REFERENCE-RELEASE-552` ist nach
+6.333 bestandenen Apply-Tests (Gruppe 1, 175 Pflicht) erfolgreich. 16.b.W
+endete ohne Commit mit 7.035 bestandenen, vier fehlgeschlagenen Tests und
+einem Setupfehler. R und C wurden noch nicht ausgebracht. Der belegte
+Produktstand bleibt 663/900; kein fehlgeschlagenes Gate zählt als Abnahme.
+
+**Ursachen und Korrektur:** Der Builder liefert die zwei festen
+`reference01_data`-Ressourcen aus; die unabhängige Packaging-Testinventur und
+die passive Core-Identitätsprüfung führten sie noch nicht. Die expliziten
+Listen werden um genau `contract.json` und `registry.txt` ergänzt. Vollständige
+Bytegleichheit, Buildhash und die Ablehnung unregistrierter Dateien bleiben.
+Der Baseline-Test hatte sein normatives Original vor der Inventur neu
+serialisiert. Er übernimmt nun die ursprünglichen Dateibytes unverändert und
+prüft zusätzlich deren Erhalt. Die literalen Sollhashes bleiben unverändert.
+
+W korrigiert den erhaltenen Stand vollständig; die unabhängigen bestehenden
+Core/PYZ-Inventur- und Hashprüfungen umfassen beide Ressourcen. R ergänzt
+gezielte Byteänderungen jeder Ressource im realen Build und deren Ablehnung
+bei neu berechnetem äußerem Transporthash, ohne Workspace-Schreibzugriff. C erhält diese Testbytes und
+bereinigt wie vorbereitet ausschließlich die Reader-Struktur.
+
+**Fortsetzung:** `correction_of` bindet den ursprünglichen Plan-SHA-256
+`022b63f13f0885f3c691386995e313478900d56ea2cd9a1168b6097657569512`
+und die verbleibenden IDs `16.b.W`, `16.b.R`, `16.b.C` in dieser Reihenfolge.
+Der erste Zustand enthält den gesamten erhaltenen W-Umfang samt Korrekturen.
+Der erfolgreiche Klärungscommit wird nicht wiederholt. Spec 0.2.50 und beide
+normativen Quellvertragsstände bleiben bytegleich. Die einmalige Ausnahme
+aus Bundle 552 wird nicht erweitert; Control und Klärungsbudget bleiben gleich.
+
+Alle bisherigen Pflichtauswahlen bleiben erhalten; alle geänderten Testdateien
+sowie die Packaging- und ein-/ausgehenden Transportregressionen sind vollständig
+Pflicht. Neue Nummern werden je tatsächlichem Zwischenstand an die Nummern des
+erhaltenen Results angehängt. Die noch nicht ausgebrachten R-Testnummern werden
+aus diesem fortgesetzten W-Stand abgeleitet; bestehende Nummern bleiben stabil.
+Erwartete N=3-Gruppen sind weiterhin 2/0/1. Ausschließlich Apply führt die
+Verhaltenstests vor jedem echten Commit aus. Dev prüft Syntax, reine Collection
+und das native Paket; dies ist kein Verhaltens-, Vollsuite- oder Releasebeleg.
+Bundlenummer 553 und die vorbereiteten Fortschrittsmarker gelten erst nach
+ihren tatsächlichen erfolgreichen Gates und Commits. Danach folgt 16.c.W.
+
 ## Bundle 552 — einmalige Klärung mit nachfolgendem 16.b.W/R/C
 
 **Autorität:** ausdrücklicher Nutzerauftrag vom 3. November 2026:
@@ -102,6 +147,29 @@ Explizit referenzierte generierte Code-Payloads werden als Originale gebunden,
 nicht ausgeführt oder erzeugt. Abnahmen prüfen unabhängige Sollhashes,
 Kontrollrecord-Unabhängigkeit, fehlende Basisoriginale, sichtbare Veraltung und
 Originalerhalt. Alle menschlichen Reviews und tatsächlichen Prüfgates bleiben.
+
+### Vorbereiteter Produktstand 16.b.W
+
+Dieser Marker gilt erst nach seinem tatsächlichen erfolgreichen Apply-Gate
+und Commit. Durch das Quell-Result gesichert ist weiterhin 663/900.
+W liefert den eingebauten, getrennten 1.0.1-Reader mit vollständiger Schema-
+und Originalinventur für alle 28 Typen, festen Ressourcen, den Quellhashdomänen,
+aktuellen und transitiv archivierten Snapshots, unveränderten Nachweisen und
+expliziter Release-/Proposalbindung. Die Eingaben und Projektionen bleiben
+getrennt; produktive Migrationsregistrierung, 0.2-Writer und Restore bleiben
+unverändert. Eine gespeicherte Genehmigung wird nicht zu aktueller Autorität.
+R ergänzt Pfad-/Ressourcen-/JSON-/Sprachgrenzen, Original- und Historyfehler,
+Spezialzustände, sichere Dateizugriffe und unveränderbare Endfassungen.
+C trennt Wert-/Vertragsobjekte und Inventur; die Funktions-/Klassen-ASTs und
+alle W-/R-Testbytes bleiben gleich. Es gibt keinen vorgezogenen C-Endstand.
+
+Die neuen Testdateien sind vollständig Pflicht pro betroffener Phase, ergänzt
+um relevante Katalog-, JSON-, Modell-, Sicherheits-, Packaging-, Graph- und
+Restoregrenzen. Neue Testnummern werden nur hinten angefügt. Dev-Verhaltenstests
+bleiben nicht ausgeführt; Collection, Syntax und Paketprüfung sind keine
+Abnahme. SR-TC-0247/0272/0639/0641 erhalten ausschließlich partielle Reader-
+Nachweise; Zielmigration und alle späteren M16-/Restore-Gates bleiben offen.
+Nach erfolgreichem 16.b.C folgt der vollständige Schritt 16.c.W.
 
 ## OFF-PLAN REFERENCE-SOURCE-551 — neuer vollständiger Referenzquellvertrag
 
@@ -1142,9 +1210,9 @@ Kein offener Produktplanschritt wird durch diese Testoptimierung abgeschlossen.
 ```yaml
 plan_revision: 56
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 663
-last_completed_plan_commit: 16.a.C
-next_plan_commit: 16.b.W
+implementation_plan_commits_completed: 664
+last_completed_plan_commit: 16.b.W
+next_plan_commit: 16.b.R
 last_completed_numbered_bundle: 551
 implementation_state: in_progress
 audit_followup_status: closed
@@ -35295,7 +35363,7 @@ offen. M15-Integrations-/Vollsuiten-/Plattformgates und 18.q/18.r bleiben offen.
 
 #### 16.b.W – Let it Work
 
-- [ ] **16.b.W** · Position **664/900** · Voraussetzung: `16.a.C`.
+- [x] **16.b.W** · Position **664/900** · Voraussetzung: `16.a.C`.
 **Exakte Commit-Message:** `16.b.W feat(migration): Quellinventur und historischer Core-Leser aufbauen`
 
 **Umsetzung:** Den nach Q.0.2/REFERENCE-RELEASE-552 gebundenen Quellvertrag 1.0.1 vollständig als nativen Reader und Inventur mit mutable, immutable_legacy und referenced_payload umsetzen. Alle zusätzlichen W-Abnahmen des Entscheidungsbelegs gelten; kein historischer Kompatibilitätsanspruch.

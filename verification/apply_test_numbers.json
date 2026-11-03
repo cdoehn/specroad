@@ -23159,6 +23159,19 @@
     "tests/test_migration_graph_right.py::test_semver_forward_order_is_numeric_and_prerelease_aware[90.0.0-alpha.9-90.0.0-alpha.10]",
     "tests/test_migration_graph_right.py::test_semver_forward_order_is_numeric_and_prerelease_aware[90.0.0-rc.1-90.0.0]",
     "tests/test_migration_graph_right.py::test_semver_forward_order_is_numeric_and_prerelease_aware[90.2.0-90.10.0]",
-    "tests/test_migration_graph_right.py::test_unavailable_inverse_is_not_confused_with_forward_ambiguity"
+    "tests/test_migration_graph_right.py::test_unavailable_inverse_is_not_confused_with_forward_ambiguity",
+    "tests/test_reference01_reader.py::test_all_28_types_and_complete_classification_keep_originals",
+    "tests/test_reference01_reader.py::test_core_and_pyz_reference_reader_parity_without_optional_packages",
+    "tests/test_reference01_reader.py::test_json_whitespace_changes_bytes_without_changing_model_root",
+    "tests/test_reference01_reader.py::test_literal_normative_snapshot_oracles[baseline]",
+    "tests/test_reference01_reader.py::test_literal_normative_snapshot_oracles[project]",
+    "tests/test_reference01_reader.py::test_literal_proposal_basis_oracle_and_control_records_are_separate",
+    "tests/test_reference01_reader.py::test_nonempty_original_plan_is_preserved_without_applying_operations",
+    "tests/test_reference01_reader.py::test_owned_projections_cannot_mutate_originals",
+    "tests/test_reference01_reader.py::test_project_read_has_no_writes_process_or_network_side_effects",
+    "tests/test_reference01_reader.py::test_release_baseline_explicit_id_binds_one_of_two_equal_evaluations",
+    "tests/test_reference01_reader.py::test_source_anchor_uses_bound_original_bytes[selector0]",
+    "tests/test_reference01_reader.py::test_source_anchor_uses_bound_original_bytes[selector1]",
+    "tests/test_reference01_reader.py::test_transitive_historical_originals_do_not_resolve_to_current_revision"
   ]
 }

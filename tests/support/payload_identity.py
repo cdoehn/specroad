@@ -30,7 +30,11 @@ LANGUAGE_RESOURCES = (
     "language_data/packages/ja.json",
     "language_data/packages/zh-Hans.json",
 )
-SHIPPED_RESOURCES = PROFILE_RESOURCES + LANGUAGE_RESOURCES
+REFERENCE01_RESOURCES = (
+    "reference01_data/contract.json",
+    "reference01_data/registry.txt",
+)
+SHIPPED_RESOURCES = PROFILE_RESOURCES + LANGUAGE_RESOURCES + REFERENCE01_RESOURCES
 
 
 def reference_payload(package: Path, launcher: bytes) -> dict[str, bytes]:

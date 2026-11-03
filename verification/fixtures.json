@@ -488,6 +488,10 @@
       "kind": "Owned source documents with independent expected missing-target, relation-matrix, field and review findings; the companion missing-reference cases use the same model helpers. Real model/read-only API comparisons preserve selection, deterministic findings and strict identity barriers; no invalid resolved graph or approval/write authority.",
       "provider": "tests/test_validation_reference_sets.py:reference_case"
     },
+    "SR-FIX-REFERENCE01-SOURCE-v1_0_1": {
+      "kind": "Explicitly synthetic complete 1.0.1 source snapshots, all 28 types, original byte variants, transitive archived baseline objects, old/current revisions, literal independent source hash vectors, closed inert proposal histories and explicit release/evaluation bindings. Actors and stored results are synthetic data, never genuine human approvals or current readiness evidence. No migration/Restore support is advertised.",
+      "provider": "tests/support/reference01.py:full_project,minimal,release_project;docs/specification/reference-0.1-v1.0.1/vectors.json"
+    },
     "SR-FIX-RELATION-OBLIGATIONS-v1": {
       "kind": "Synthetic common envelopes and explicit relation inventories, no actual approval or authenticated reviews.",
       "provider": "tests/test_relation_obligations.py:satisfied_fixture"
@@ -947,6 +951,7 @@
     "SR-FIX-READINESS-MIGRATION-v1",
     "SR-FIX-RECORD-FIELDS-v1",
     "SR-FIX-REFERENCE-FINDINGS-v1",
+    "SR-FIX-REFERENCE01-SOURCE-v1_0_1",
     "SR-FIX-RELATION-OBLIGATIONS-v1",
     "SR-FIX-RELATIONS-v1",
     "SR-FIX-RELEASE-BASELINE-BOUNDARY-v1",
