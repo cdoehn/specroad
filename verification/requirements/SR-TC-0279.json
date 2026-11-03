@@ -32,7 +32,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "c735356888b833d5066cce814d3c6e3a0c6fbe9eb567a974ed4c3007c30cd778",
+  "specification_sha256": "d3f591ae53166dda40fd65c97f0bc1d717140406db88410c7927e7c3359a8e0a",
   "steps": [
     "Observe deterministic status from current relation/context hashes and supplied review history; inspect machine-readable selections and reasons; verify immutable inputs, detached outputs and no write attempts.",
     "Inspect typed SRV025/SRV026/SRV027 findings, exact stored pointers and failure policy; verify structural and newest-current rejection precedence, lifecycle/audit exclusions, semantic changes and retained read-only boundaries."

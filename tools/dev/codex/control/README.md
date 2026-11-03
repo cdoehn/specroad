@@ -58,3 +58,36 @@ unverändert; Altverzeichnisse bis zur verifizierten Betriebsabnahme aufbewahren
 Der reguläre Control-Host verwendet Python 3.11 oder neuer. Für die gemeinsame
 Python-3.10-Testmatrix enthält ausschließlich die Dev-Abhängigkeitsgruppe den
 TOML-Backport tomli 2.2.1; das SpecRoad-Core-Paket bleibt abhängigkeitsfrei.
+
+## Klärung für eine alte Automationskette ausdrücklich freigeben
+
+Neue freigegebene Aufträge verwenden Vertrag 4: falls notwendig ein optionaler
+Klärungscommit vor echten Plancommits in derselben ZIP. Die Grenzen aus
+SPECROAD-DECISION-1 gelten. Drei Restplätze allein erteilen keine Befugnis.
+
+Nach erfolgreichem Apply und Installation dieser Version kann der Betreiber
+für einen noch nicht beanspruchten direkten sauberen Nachfolger ausdrücklich
+freigeben (Platzhalter durch die geprüften Werte ersetzen):
+
+```sh
+python3 -B tools/dev/codex/control/control authorize-clarification \
+  --source-sha256 <SHA256_DES_BISHERIGEN_RESULTS> \
+  --result /absoluter/pfad/zum/erfolgreichen/Nachfolge-Result.zip \
+  --reason "Optionale Detailklärung für künftige Aufträge freigegeben"
+```
+
+Der Dienst muss für diesen Offline-Bedienbefehl gestoppt sein. Eine aktive
+Chatnachricht verhindert nur die spätere Übernahme, nicht das Vormerken.
+`status` zeigt `clarification_authorization` an. Der Befehl startet nichts,
+setzt keine Pause zurück und ändert noch keinen laufenden Auftrag. Nach
+separatem Start/Resume wartet der Worker auf den freien Thread und übernimmt
+den gebundenen neuen Auftrag atomar. Alter Vertrag, Fehler und Versuche sowie
+das vorhandene Restbudget bleiben erhalten. Installation/Recovery allein
+führen diese Freigabe nie aus. Eine identische Wiederholung ist idempotent.
+
+Abgelehnt werden insbesondere fehlendes/erschöpftes Budget, offene Klärungs-
+fortsetzung, unvollständiger Apply, unklare Paketfolge, bereits beanspruchte
+Ziel-Results und geänderte Nachweise. Alte Verträge ohne gespeichertes Budget
+benötigen weiterhin einen regulären belegten Umsetzungsabschluss. Eine
+Spezifikationsklärung wird durch den Bedienbefehl weder ausgeführt noch als
+Produktfortschritt verbucht. Maßgeblich: SpecRoad-Spezifikation 2.4.3.2.

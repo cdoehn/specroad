@@ -12,7 +12,7 @@ from .local import Paths
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description="SpecRoad Control: manually operated, event-driven Dev automation.")
     parser.add_argument("--config", help="Absolute path to the external config.toml")
-    parser.add_argument("command", choices=("install", "start", "stop", "pause", "resume", "status", "run", "configure", "check", "probe", "recover", "handover", "reconcile-apply", "reconcile-blocked", "disk-space", "migrate", "deploy"))
+    parser.add_argument("command", choices=("install", "start", "stop", "pause", "resume", "status", "run", "configure", "check", "probe", "recover", "handover", "reconcile-apply", "reconcile-blocked", "disk-space", "migrate", "deploy", "authorize-clarification"))
     parser.add_argument('--min-free-gb', type=float, help='Minimum free decimal GB; only with disk-space')
     parser.add_argument("--thread-id", help="Explicit existing Dev thread UUID")
     parser.add_argument("--thread-cwd", help="Explicit existing metadata cwd of the new Dev thread")
@@ -24,7 +24,13 @@ def main(argv=None) -> int:
     parser.add_argument("--codex", help="Absolute existing Codex executable")
     parser.add_argument("--core-python", help="Absolute Python in the existing PatchHarbor installation")
     parser.add_argument("--transport", choices=("exec", "app-server-proxy"))
+    parser.add_argument('--source-sha256', help='Exact previous Result SHA-256; only with authorize-clarification')
+    parser.add_argument('--reason', help='Explicit operator authorization reason; only with authorize-clarification')
     args = parser.parse_args(argv)
+    if args.command == 'authorize-clarification' and not (args.result and args.source_sha256 and args.reason):
+        parser.error('authorize-clarification requires --result, --source-sha256 and --reason')
+    if args.command != 'authorize-clarification' and (args.source_sha256 or args.reason):
+        parser.error('--source-sha256 and --reason are only allowed with authorize-clarification')
     if args.min_free_gb is not None and args.command != 'disk-space':
         parser.error('--min-free-gb is only allowed with disk-space')
     if args.command == "configure" and not args.thread_id:
@@ -37,7 +43,7 @@ def main(argv=None) -> int:
         parser.error("--thread-id is only allowed with configure or handover")
     if args.command in ("reconcile-apply", "reconcile-blocked") and not args.result:
         parser.error(args.command + " requires --result")
-    if args.command not in ("configure", "reconcile-apply", "reconcile-blocked", "deploy") and args.result:
+    if args.command not in ("configure", "reconcile-apply", "reconcile-blocked", "deploy", "authorize-clarification") and args.result:
         parser.error("--result is only allowed with configure, reconciliation or deploy")
     if args.command != "configure" and any((args.codex, args.core_python, args.transport)):
         parser.error("setup options are only allowed with configure")
@@ -80,6 +86,9 @@ def main(argv=None) -> int:
         elif args.command in ("reconcile-apply", "reconcile-blocked"):
             from .apply_reconcile import enqueue
             result = enqueue(paths, args.result, blocked=args.command == "reconcile-blocked")
+        elif args.command == 'authorize-clarification':
+            from .clarification_authorization import enqueue
+            result = enqueue(paths, args.result, source_sha256=args.source_sha256, reason=args.reason)
         elif args.command == "configure":
             result = commands.configure(paths, thread_id=args.thread_id, result=args.result,
                                         codex=args.codex, core_python=args.core_python, transport=args.transport)
@@ -111,6 +120,13 @@ def main(argv=None) -> int:
                     result['apply_reconciliation'] = pending_apply
             except ControlError as exc:
                 result['apply_reconciliation'] = {'error': exc.code}
+            from .clarification_authorization import public_status as authorization_status
+            try:
+                pending_authorization = authorization_status(paths)
+                if pending_authorization is not None:
+                    result['clarification_authorization'] = pending_authorization
+            except ControlError as exc:
+                result['clarification_authorization'] = {'error': exc.code}
             if not result.get('worker_reachable'):
                 from .disk_space import status as disk_status
                 try:

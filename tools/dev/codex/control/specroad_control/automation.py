@@ -82,6 +82,12 @@ class Engine(OverloadWaiting):
         ledger = Ledger(self.paths.state / "automation.sqlite3", scope(self.config))
         try:
             from .apply_reconcile import validate_history, verify_completed, tick as reconcile_tick
+            from .clarification_authorization_history import validate_history as authorization_history
+            from .clarification_authorization import tick as authorization_tick, verify_completed as verify_authorized
+            authorization = authorization_history(ledger)
+            if authorization is not None:
+                return authorization_tick(self, ledger, authorization)
+            verify_authorized(self, ledger)
             reconciliation = validate_history(ledger)
             if reconciliation is not None:
                 return reconcile_tick(self, ledger, reconciliation)

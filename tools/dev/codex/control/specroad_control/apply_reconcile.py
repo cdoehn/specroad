@@ -76,6 +76,8 @@ def enqueue(paths, result, *, blocked=False):
     with configured_offline(paths, allow_apply_reconciliation=True) as (config, engine):
         ledger = Ledger(paths.state / 'automation.sqlite3', scope(config))
         try:
+            from .clarification_authorization_history import require_no_pending as require_no_authorization
+            require_no_authorization(ledger)
             requested_path = Path(result)
             if not requested_path.is_absolute():
                 fail('An explicit absolute Result path is required.')

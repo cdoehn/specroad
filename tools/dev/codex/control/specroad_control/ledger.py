@@ -97,6 +97,8 @@ class Ledger(RetryHistory, RecoveryHistory, WaitHistory, DecisionHistory):
                     raise ValueError
             from .apply_reconcile_history import validate_history
             validate_history(self)
+            from .clarification_authorization_history import validate_history as validate_authorizations
+            validate_authorizations(self)
         except (sqlite3.Error, ValueError, KeyError, TypeError, UnicodeError, ControlError) as exc:
             if hasattr(self, "db"):
                 self.db.close()

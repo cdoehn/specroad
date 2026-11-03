@@ -52,7 +52,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "c735356888b833d5066cce814d3c6e3a0c6fbe9eb567a974ed4c3007c30cd778",
+  "specification_sha256": "d3f591ae53166dda40fd65c97f0bc1d717140406db88410c7927e7c3359a8e0a",
   "steps": [
     "Execute native transition/retire through complete target validation, real writer lock, live checks, publication and completion.",
     "Compare complete old/new artifacts and their fach projections, exactly one revision, unrelated files/modes, native operation and bound actor/time in the actual transaction receipt.",

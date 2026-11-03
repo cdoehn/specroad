@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 62 · **Stand:** 3. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.53
+**Planrevision:** 63 · **Stand:** 3. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.54
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 Schritte und 900 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; die ausdrücklich genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wird nach 10.7.10 innerhalb von 15.l.R vorgezogen. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -9,7 +9,7 @@ Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 S
 
 Fachliche Grundlage ist [`docs/specification/SpecRoad_Spezifikation.md`](../specification/SpecRoad_Spezifikation.md), einschließlich aller konsolidierten Korrekturen, 742 Requirements, 51 Verifikationsverträge, 46 Szenario-/E2E-Identitäten sowie R-01 bis R-75, Anhang U und den PatchHarbor-Rundweg aus Anhang W. Der [`Prüfbericht`](../reviews/SpecRoad_v0.2.7_Implementierungsreife_Pruefbericht.md) ist ein vorgelagerter Entwurfsreview, kein späterer Produktnachweis.
 
-Gebundene Spezifikations-SHA-256: `c735356888b833d5066cce814d3c6e3a0c6fbe9eb567a974ed4c3007c30cd778`.
+Gebundene Spezifikations-SHA-256: `d3f591ae53166dda40fd65c97f0bc1d717140406db88410c7927e7c3359a8e0a`.
 Planungsbasis: Commit `fe2661d02ecf2f7eb483b58a4487eb009c6b3846`; sauberes Result-Bundle `specroad_Result_120209_0914_df3504.zip`; Repository-ID `3d2576df-d611-46fc-9d2b-92869468aaca`. Diese Angaben dokumentieren die Entstehung des Plans, nicht die zukünftige Patchbindung. **Jedes spätere Patchpaket bindet den dann aktuellen tatsächlichen Result-Zustand.**
 
 Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 2026 gelten zusätzlich und bei den nachfolgend benannten Konflikten vorrangig. Sonstige normative Spezifikationsinhalte werden nicht stillschweigend abgeschwächt. Neue fachliche Widersprüche, fehlende zwingende Angaben und Sicherheitsprobleme sind offen zu benennen, nicht durch erfundene Annahmen oder Scheinerfolge zu lösen.
@@ -27,11 +27,53 @@ Für die Begrenzung automatischer Klärungsübergaben gilt zusätzlich der
 ausdrückliche Nutzerauftrag **SPECROAD-DECISION-1-V3** vom 26. Oktober 2026
 nach **2.4.3** und dem folgenden OFF-PLAN-Abschnitt: Unter gültigem Vertrag 3
 sind höchstens drei aufeinanderfolgende Klärungsbundles mit dauerhaftem
-Restbudget zulässig; **Version 2 behält die Einerregel**. Ein Wechsel alter
-Ketten erfordert erst den belegten erfolgreichen normalen Abschluss.
+Restbudget zulässig; **Version 2 behält die Einerregel**. Ein automatischer Wechsel alter
+Ketten erfordert erst den belegten erfolgreichen normalen Abschluss; die
+ausdrückliche Bedienausnahme aus 2.4.3.2 bleibt zusätzlich anwendbar.
 Produktfreigaben und die Grenzen aus 2.4.1/2.4.2/2.4.4 bleiben unverändert.
 Dieser Plan ändert keine alten Aufträge, Antworten, Blockaden oder
 Laufzeitdaten und ist keine Start-/Resume-Anweisung.
+
+## OFF-PLAN CONTROL-CLARIFICATION-560 — ausdrückliche Freigabe neuer Aufträge
+
+Ausdrücklicher Nutzerauftrag vom 3. November 2026: den protokollierten Übergang
+auf Vertrag 4 ergänzen; den angefangenen Produktplanschritt zurückstellen.
+Geprüfte Basis: Result 5a7df9, SHA-256
+`c4b1e2eac77931fe9edbbb7e63b212b7ea46d284dc9e76b5d533c1c448677ae5`,
+sauberer Abschluss `7a66ba048339defe719560979a7cb2b2803131ba`.
+Bundle 559 ist erfolgreich; sein W/R/C-Stand bleibt vollständig erhalten.
+16.d.W wurde ausschließlich analysiert, ohne Produktänderung, Patch oder
+Commit. Er bleibt offen, Stand 669/900 und nächster Produktcommit 16.d.W.
+Kein Git-Reset, keine Löschung von Betriebsbelegen oder Testhistorie.
+
+Ursache: Der neue V4-Marker war installiert, aber die wiederaufgenommene
+Kette erbte V3/clarification_allowed=false aus unbekannten manuellen
+Übergaben. Drei Restplätze sind keine Befugnis. Eine automatische Lockerung
+würde alte Aufträge umdeuten; ein Löschen/Neuinitialisieren der History würde
+Nachweise und Budgets verlieren. Gewählt wird eine ausdrückliche Bedien-
+absicht für genau ein neues sauberes Result mit überprüfbarer direkter
+Apply-Herkunft. Keine pauschale Konfigurationsoption zur Umgehung von Fehlern.
+
+W: vollständiger neuer Befehl authorize-clarification, gebundene private
+Absicht, echte normale Apply-/Snapshotnachweise, budgeterhaltender neuer
+V4-Auftrag, atomarer Wechsel nach freiem Thread und offenem Betriebsgate.
+Abnahmen: kein Modell-/Dienst-/Apply-Start durch den Befehl; alter Auftrag
+und Versuche bleiben, gleicher Befehl idempotent, Pause erhält Absicht,
+positives Restbudget unverändert, optionaler Klärungspräfix im nächsten
+Auftrag erlaubt, normale Arbeit ohne Klärung weiterhin möglich.
+R: beschädigte/konkurrierende Absichten, fehlende/geänderte Archivbelege,
+Konfigurations-/Versuchswechsel und Unterbrechung der Übernahme strikt
+ablehnen; atomarer Rollback und erneute Nachweisprüfung vor Ausgabe.
+C: rein strukturelle Trennung der passiven Quell-/Paketprüfung von Queue,
+Worker und Persistenz; sämtliche R-Abnahmen und Tests unverändert erhalten.
+
+Spezifikation 0.2.54 und aktive Katalogbindungen werden zuerst in W ergänzt.
+Drei echte Zustände mit je eigenem N=3-plus-Pflichtauswahl-Gate. Alle neuen/
+geänderten Tests sowie Control-, Recovery-, Budget-, Mixed- und Apply-
+Regressionen sind verpflichtend. Dev führt keine Verhaltenstests aus.
+Der Code ist bis zum erfolgreichen Apply unbestätigt. Installation und
+Bedienfreigabe benötigen den tatsächlichen Erfolgsnachfolger; die Payload
+kopiert keine echten Betriebsdaten und führt keine Bedienaktion aus.
 
 ## OFF-PLAN CONTROL-INTEGRATION-CORRECTION-559 — offene R/C-Folge
 
@@ -1488,7 +1530,7 @@ Kein offener Produktplanschritt wird durch diese Testoptimierung abgeschlossen.
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 62
+plan_revision: 63
 implementation_plan_commits_total: 900
 implementation_plan_commits_completed: 669
 last_completed_plan_commit: 16.c.C

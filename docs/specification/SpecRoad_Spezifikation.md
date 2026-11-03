@@ -1,15 +1,15 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.53
+## Version 0.2.54
 
 | Feld | Wert |
 |---|---|
 | Dokument-ID | `SR-SPEC-0001` |
-| Dokumentversion | `0.2.53` |
+| Dokumentversion | `0.2.54` |
 | Zielrelease | `SpecRoad Single-Repository Workbench 0.2.0` |
 | Status | **Fachlich konsolidierte Arbeitsgrundlage; technische Reviewentscheidung gesondert dokumentiert, formale Baseline-Freigabe und Produktabnahme nicht durch dieses Dokument erklärt** |
 | Stand | 3. November 2026 |
 | Sprache | Deutsch; technische Feldnamen, Enum-Werte und CLI-Kommandos Englisch |
-| Fachliche Quelle | **Diese Repositoryfassung v0.2.53 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.53 liegt mit dieser Änderung nicht vor.** |
+| Fachliche Quelle | **Diese Repositoryfassung v0.2.54 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.54 liegt mit dieser Änderung nicht vor.** |
 | Bearbeitbare Satzquelle | Diese Datei; eine spätere PDF muss denselben versionierten Inhalt wiedergeben. |
 | Vorgängerversion | Repository-Spezifikation v0.2.49 vom 3. November 2026; historische Nachweise bleiben unverändert. |
 | Prüf- und Entscheidungsgrundlage | REFERENCE-RELEASE-552: ausdrückliche manuelle Ausnahme für Klärung und folgende Plancommits in einer ZIP; explizite Release-Bindung im neuen Quellvertrag 1.0.1. |
@@ -500,10 +500,77 @@ nativ geprüften Result die installierte Unterstützung: Format 1,
 Er ersetzt nicht Devs Prüfung der tatsächlichen Projektregeln. Control darf
 Vertrag 4 erst für einen neuen Auftrag mit dieser belegten Unterstützung
 ausstellen. Ein bereits gespeicherter alter Auftrag wird nicht umgeschrieben;
-der Wechsel einer alten Kette benötigt einen belegten normalen erfolgreichen
-Abschluss. Fehlgeschlagene oder unbekannte manuelle Übergaben, bestehende
+der automatische Wechsel einer alten Kette benötigt einen belegten normalen
+erfolgreichen Abschluss. Die ausdrückliche Bedienausnahme steht in 2.4.3.2. Fehlgeschlagene oder unbekannte manuelle Übergaben, bestehende
 Blockaden und Pausen werden durch Installation nicht freigegeben. Installation
 startet weder Control noch Watcher noch einen Modellturn.
+
+#### 2.4.3.2 Ausdrücklicher Übergang einer alten Kette — CONTROL-CLARIFICATION-560
+
+**Ausdrücklicher Nutzerauftrag vom 3. November 2026.** Für leichte und normale
+Detaillücken innerhalb von SPECROAD-DECISION-1 soll die bestehende optionale
+Klärung nach Vertrag 4 auch nach Wiederaufnahme alter Automationsketten
+nutzbar sein. Die fachlichen Grenzen aus 2.4.1/2.4.2/2.4.4 bleiben vollständig
+erhalten. Es entsteht keine Freigabe für Umfangsänderungen, Sicherheits- oder
+Kompatibilitätsabsenkungen, fehlende externe Fakten oder menschliche Reviews.
+
+Die installierte Projektfreigabe wird zusätzlich im nativ geprüften Result
+unter `verification/clarification_authorization.json` belegt: exakt
+`format_version=1`, `decision_rule=SPECROAD-DECISION-1`,
+`decision_contract_version=4`, `authorization_mode=explicit_successor` und
+`budget_policy=preserve`. Dieser Marker erlaubt nur die ausdrückliche
+Bedienaktion; allein sein Vorhandensein erteilt keine neue Befugnis.
+Ein früherer V4-Marker ohne diese Projektfreigabe reicht nicht aus.
+
+Als eng begrenzte ausdrückliche Ausnahme zur automatischen Wechselregel in
+2.4.3.1 darf der Bedienbefehl `authorize-clarification` einen neuen Auftrag
+auf einem noch nicht beanspruchten sauberen Nachfolge-Result freigeben.
+Er verlangt den vollständigen SHA-256 des bisherigen Quell-Results, einen
+expliziten Resultpfad und eine kurze Begründung. Kein globales Überschreiben
+von `clarification_allowed`, keine Änderung alter Aufträge/Versuche und keine
+Neuausgabe eines bereits beanspruchten Results. Ohne Bedienauftrag gelten
+die bisherigen Vererbungsregeln unverändert.
+
+Voraussetzungen: bisheriger Auftrag `uncertain` wegen `dev_blocked` oder
+`codex_turn_failed` ohne klassifiziertes/publiziertes Bundle, oder eine
+unbekannte manuelle Übergabe in `waiting_result`; vorhandener gültiger
+Vertrag 3/4 mit positivem dauerhaftem Restbudget, ohne offenen
+`clarification_continuation`-Präfix. Verträge ohne nachgewiesenes Restbudget
+werden nicht hochgestuft. Es muss genau ein natives direkt gebundenes
+normales Umsetzungs-/Korrekturbundle mit Apply-Commitplan v2 und genau ein
+zugehöriges erfolgreiches, sauberes Apply-Result mit Abschlusscommit geben.
+Alle angekündigten Gates/Commits, ursprüngliche Bindung, Result-Snapshot,
+Zeitfolge und installierte Unterstützung für Vertrag 4 müssen belegt sein.
+Ein Klärungsbundle, unvollständiger/fehlerhafter Apply, konkurrierende Pakete,
+spätere fremde Results oder bereits beanspruchte Nachfolger reichen nicht.
+
+Die Freigabe wird zunächst ausschließlich als private dauerhafte Absicht
+mit Quell-/Zielhash, Paketnachweis, Originalvertrag, unverändertem Restbudget,
+Begründung sowie Konfigurations-, History- und Versuchsbindungen gespeichert.
+Gleiche Wiederholung ist idempotent; abweichende oder beschädigte Belege
+blockieren. Offline-Instanzlocks verhindern konkurrierende Schreiber.
+Der Befehl startet keinen Dienst, keinen Turn, kein Apply und hebt Pause
+nicht auf. Die Absicht darf während eines bekannten aktiven Threads erfasst
+werden; unbekannter Threadzustand sperrt. Bei später ausdrücklich laufender
+Automatik wartet Control auf den inaktiven Thread und prüft alle Belege erneut.
+Pause/Stop müssen bis zur atomaren Übernahme wirksam bleiben.
+
+In einer Transaktion werden der alte Auftrag nachvollziehbar abgelöst,
+der neue Resultauftrag mit Vertrag 4 und exakt dem bisherigen Restbudget
+angelegt und die Freigabe als übernommen markiert. Der alte Fehlerstatus,
+Vertrag, Outputklassifikation und die Originalversuchsdateien bleiben als
+Historie erhalten; dies behauptet keinen erfolgreichen alten Dev-Turn.
+Der alte Quell-Result wird nicht erneut ausgegeben. Ein Abbruch darf keinen
+halben Übergang hinterlassen. Vor der ersten neuen Ausgabe werden die
+archivierten Paket-/Versuchsnachweise erneut geprüft. Es wird weder Budget
+auf drei gesetzt noch eine Klärung verbraucht. Danach gelten unverändert die
+normalen Verbrauchs-, Fehler- und Erneuerungsregeln aus 2.4.3.1.
+
+Der am 3. November nur analysierte Schritt 16.d.W wird auf ausdrücklichen
+Nutzerwunsch als offen weitergeführt. Es gab hierfür weder ein Folgepaket
+noch einen Produktcommit; 669/900 bleiben erhalten. Die Detailentscheidung
+zur 0.1-Quellsicherung wird in diesem Bedienänderungsbundle nicht vorweggenommen.
+Erst ein neuer freigegebener Produktauftrag darf sie nach 2.4.3.1 behandeln.
 
 #### 2.4.4 Echte Blocker und Erhaltung des Betriebszustands
 
@@ -6755,6 +6822,7 @@ Die folgende Roadmap ist informativ und erzeugt keine Anforderungen an 0.2:
 
 | Version | Datum | Status | Änderung |
 |---|---|---|---|
+| 0.2.54 | 2026-11-03 | Ausdrücklicher Nutzerauftrag | CONTROL-CLARIFICATION-560: protokollierte Freigabe neuer Aufträge einer alten Kette nach Vertrag 4 mit erhaltenem Restbudget und unveränderten alten Versuchen. |
 | 0.2.53 | 2026-11-03 | Ausdrücklicher Nutzerauftrag | CONTROL-INTEGRATION-556: integrierte Entwicklungssteuerung, gemeinsame Tests, zentrales privates Datenverzeichnis und gebundene Offline-Installation/Migration. |
 | 0.2.52 | 2026-11-03 | Ausdrücklicher Nutzerauftrag | MIXED-BUNDLE-555: optionaler Klärungscommit vor vollständiger Umsetzung, Vertrag 4, typisierte Rollen, gebundene Restfortsetzung und unveränderte Test-/Reviewgrenzen; aktive Dokumentmetadaten angeglichen. |
 | 0.2.51 | 2026-11-03 | Manuelle Ausnahme, Verlaufszeile nachgetragen | MIGRATION-PLAN-554: gebundener Migrationsplan nach 12.20.2; einmaliger Klärungscommit plus 16.c.W/R/C. |
@@ -10567,4 +10635,4 @@ Implementierungsschritten nachgewiesen sein.
 
 ---
 
-**Ende der SpecRoad-Produktspezifikation v0.2.53.**
+**Ende der SpecRoad-Produktspezifikation v0.2.54.**

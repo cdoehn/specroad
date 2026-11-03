@@ -7,9 +7,12 @@ from .mixed_contract import MIXED
 
 
 class DecisionHistory:
-    def request_contract(self):
+    def request_contract(self, source_sha=None):
         try:
-            current = self.current()
+            current = self.current() if source_sha is None else self.db.execute(
+                'SELECT * FROM jobs WHERE sha=?', (source_sha,)).fetchone()
+            if current is None:
+                raise ValueError
             has_continuations = self.db.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='clarification_continuations'").fetchone()
             continuations = (self.db.execute('SELECT pending FROM clarification_continuations WHERE sha=?', (current['sha'],)).fetchall() if has_continuations else [])
             has_budgets = self.db.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='clarification_budgets'").fetchone()

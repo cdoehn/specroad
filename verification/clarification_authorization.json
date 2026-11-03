@@ -1,0 +1,7 @@
+{
+  "authorization_mode": "explicit_successor",
+  "budget_policy": "preserve",
+  "decision_contract_version": 4,
+  "decision_rule": "SPECROAD-DECISION-1",
+  "format_version": 1
+}

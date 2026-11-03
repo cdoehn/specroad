@@ -120,6 +120,8 @@ def complete(ledger, doc, actual):
         raise ControlError('apply_reconciliation_persist_failed', 'Proof and advancement rolled back together.') from None
 
 def require_no_pending(ledger):
+    from .clarification_authorization_history import require_no_pending as require_no_authorization
+    require_no_authorization(ledger)
     if validate_history(ledger) is not None:
         raise ControlError('apply_reconciliation_pending', 'A pinned Apply recovery must finish before configuration, handover or other offline work.')
 

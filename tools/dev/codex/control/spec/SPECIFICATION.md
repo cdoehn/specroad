@@ -1,3 +1,7 @@
+> CONTROL-CLARIFICATION-560: Zusätzlich gilt SpecRoad-Spezifikation 2.4.3.2
+> für den ausdrücklichen budgeterhaltenden Übergang auf einen neuen V4-Auftrag.
+> Alte Versuche bleiben unverändert; Recovery/Installation allein geben nichts frei.
+
 > Integration 556: Diese Datei dokumentiert die übernommene Control-Fachbasis.
 > Aktuelle Quell-/Betriebs-/Testregeln: SpecRoad-Spezifikation 2.5.4 und
 > OFF-PLAN CONTROL-INTEGRATION-556 im gemeinsamen Implementierungsplan.
