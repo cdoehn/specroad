@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 70 · **Stand:** 3. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.57
+**Planrevision:** 72 · **Stand:** 4. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.57
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 Schritte und 900 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; die ausdrücklich genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wird nach 10.7.10 innerhalb von 15.l.R vorgezogen. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -33,6 +33,75 @@ ausdrückliche Bedienausnahme aus 2.4.3.2 bleibt zusätzlich anwendbar.
 Produktfreigaben und die Grenzen aus 2.4.1/2.4.2/2.4.4 bleiben unverändert.
 Dieser Plan ändert keine alten Aufträge, Antworten, Blockaden oder
 Laufzeitdaten und ist keine Start-/Resume-Anweisung.
+
+## Korrektur 569 — vollständige should-Testdaten und unveränderter Rest
+
+Das nativ geprüfte Result mit SHA-256
+`d260ed25293d4fc40bc2f83c10403a70ba1e514382739b5e04242e733499030f`
+belegt das fehlgeschlagene Gate von 16.e.W: 6955 Tests bestanden, ein Fehler
+im neuen positiven should-Fall. Kein Commit entstand. Der tatsächliche
+Produktstand bleibt 672/900; alle IDs 16.e.W, 16.e.R und 16.e.C sind offen.
+Der erhaltene W-Arbeitsstand ist vollständig in der ersten Korrekturstufe
+enthalten; bereits vorbereitete Häkchen sind kein Commit-Erfolgsnachweis.
+
+Ursache: Der positive Test lieferte normative_force=should ohne die nach S.2
+und SR-REQ-0071 zwingenden Abweichungsbedingungen und die zuständige Autorität.
+Die vorhandene Zielvalidierung wies diesen unvollständigen Datensatz korrekt
+mit schema_any_of ab. Die synthetische Quelle enthält diese Angaben jetzt
+ausdrücklich vor der Vollhashbindung; der Test prüft ihre unveränderte
+Übernahme. Keine Erweiterung des geschlossenen Mappings und keine erfundene
+fachliche Freigabe. Drei negative Fälle verlangen weiterhin die Abweisung,
+wenn jeweils ein Pflichtwert oder beide fehlen; die Quelle bleibt bytegleich.
+
+Produktcode, normative Spezifikation und W/R/C-Verhalten bleiben unverändert.
+Fortgesetzt wird der vollständige ursprüngliche Commitplan mit unveränderten
+IDs, Messages und Rollen implementation. Korrekturbindung und sämtliche
+Vorherbytes beziehen sich ausschließlich auf dieses neue Fehler-Result.
+Jede Stufe erhält erneut ihr eigenes N=3-plus-Pflichtauswahl-Gate in Apply;
+W bleibt in Gruppe 1, anschließend folgen 2 und 0. Dev führt keine Tests aus.
+Nach einem erfolgreichen C-Commit wäre 675/900 erreicht, 16.f.W bleibt danach
+offen. Keine neue Klärung und keine Änderung des Control-Budgets.
+
+## Planbundle 568 — 16.e: explizite Requiremententscheidungen
+
+Basis ist das vollständig nativ geprüfte saubere Result mit SHA-256
+`ff3629d4988b9826286e5a62df638da027adbbfff30661865348d02f4b4c58d3`
+und Abschlusscommit `698c7d38976f3ea268211e9f8bb341db52ed8a07`.
+Der vorherige Korrekturrest 566.R/C ist durch zwei eigene erfolgreiche
+Apply-Gates abgeschlossen. Der Produktplan beginnt weiter bei 16.e.W.
+
+Die bestehende Spezifikation 12.20.2 und S.7 legt den vollständigen Vertrag
+bereits fest. Keine neue Detailentscheidung oder Klärungsstage: explizite
+Zuordnung je veränderbarem Requirement mit ID, altem Vollhash, Zielsprache,
+Verbindlichkeit und vollständigem autorisierten Zieltext. Der ausdrücklich
+gelieferte gemeinsame Sprachdefault wird vor dem geschlossenen Kernformat
+materialisiert; Konfiguration, Priorität, Text und Detektor liefern keinen
+Ersatz. Die gespeicherten v1-Eingaben bleiben unverändert geschlossen.
+
+W ergänzt den expliziten Sprachdefault und bindet vollständige Mapping-
+Abnahmen an den bestehenden nativen 0.1/1.0.1-Planer: unabhängiger Zielvektor,
+alle vier Verbindlichkeiten, mehrere Sprachen, ID-/Metadatenerhalt,
+Quellhashkonflikte, fehlende Angaben und unveränderte Autorenbytes.
+R weist syntaktisch ungültige explizite Sprachen auch bei gleichzeitig
+fehlenden Zieleingaben als Fehler ab; keine positive Teilplanung. Zusätzliche
+Abnahmen schützen Defaults, Zielpolicy, gespeicherte Planbindungen, alte
+Approval und sämtliche immutable Originale samt Archiv-/Nachweishashes.
+C trennt die Aufbereitung und Projektion autorisierter Mappingwerte in ein
+eigenes Modul; Schemaergänzungen bleiben im separaten Planfeld gebunden.
+Keine Änderung an erwarteten W-/R-Fachwerten oder Fehlern.
+
+Jeder Zustand erhält vor seinem Commit die fällige gefilterte N=3-Gruppe
+plus die vollständig verpflichtenden Mapping-, Plan-, Source-Reader-,
+Backup-, Change-Plan- und Sprachregressionen. Dev führt ausschließlich
+Syntax-/Collection-/native Paketprüfung aus, keine Verhaltenstests.
+Die vorbereiteten Planhäkchen werden nur mit dem jeweiligen erfolgreichen
+Apply-Gate committed. Kein behaupteter Test-, Review- oder Releaseerfolg.
+
+Vorbereiteter Zwischenstand: W. Die nachfolgenden M16-Schritte behalten
+ihre vollständigen Abnahmen; insbesondere sind öffentliche CLI-/Restore-
+Unterstützung, Writer, aktuelle Verification und Transaktionsfreigabe kein
+Ergebnis dieser schreibfreien Mappingarbeit. Andere Entwurfsquellverträge
+werden nicht aus dem neuen 0.1-Referenzformat abgeleitet.
 
 ## Korrektur 567 — Neustartabnahme mit ausdrücklichem Vertrag
 
@@ -1750,11 +1819,11 @@ Kein offener Produktplanschritt wird durch diese Testoptimierung abgeschlossen.
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 70
+plan_revision: 72
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 672
-last_completed_plan_commit: 16.d.C
-next_plan_commit: 16.e.W
+implementation_plan_commits_completed: 673
+last_completed_plan_commit: 16.e.W
+next_plan_commit: 16.e.R
 last_completed_numbered_bundle: 567
 implementation_state: in_progress
 audit_followup_status: closed
@@ -36017,7 +36086,7 @@ Die W-/R-/C-Abnahmen im obigen OFF-PLAN-Abschnitt gelten vollständig.
 
 #### 16.e.W – Let it Work
 
-- [ ] **16.e.W** · Position **673/900** · Voraussetzung: `16.d.C`.
+- [x] **16.e.W** · Position **673/900** · Voraussetzung: `16.d.C`.
 **Exakte Commit-Message:** `16.e.W feat(migration): Explizite Sprach- und Verbindlichkeitsmigration aufbauen`
 
 **Umsetzung:** Für alte veränderbare Requirements autorisierte Zuordnung von language, normative_force und Zielstatement verlangen.

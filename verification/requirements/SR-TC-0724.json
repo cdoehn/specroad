@@ -2,19 +2,27 @@
   "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [],
   "expected_exit_codes": [],
-  "fixture_ids": [],
-  "implementation_status": "open",
+  "fixture_ids": [
+    "SR-FIX-MIGRATION-PLAN-v1",
+    "SR-FIX-MIGRATION-REQUIREMENTS-v1",
+    "SR-FIX-REFERENCE01-SOURCE-v1_0_1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [],
-  "method": "pending",
+  "method": "automated_behavior",
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Behavior tests are prepared for the separate Apply gate; none ran in Dev.",
+    "Public migration/CLI/Restore and transaction/global verification gates remain in subsequent M16 steps; no other draft source format is newly qualified.",
+    "Synthetic source reviews and authored test mappings grant no actual human approval or current release readiness."
   ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Die Übernahme alter Entwurfsanforderungen MUSS ein autorisiertes explizites Mapping von Sprache, Verbindlichkeit und Zielaussage nach Anhang S.7 verlangen.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "16.e W: explicit author mapping on the native reference migration planner, with exact language/force/text, default expansion, original-byte preservation and no inherited approval. No public migration execution, current review, CLI/Restore, full-suite or release proof."
   },
-  "preconditions": [],
+  "preconditions": [
+    "Qualified reference-0.1/1.0.1 source and explicit authored target mappings under 12.20.2 and S.7; no inferred historical compatibility."
+  ],
   "primary_verification_id": "SR-VER-0049",
   "required_environment": {
     "declared_minimum_python": "3.10",
@@ -28,8 +36,37 @@
     "owned_temporary_files": true
   },
   "specification_sha256": "d41e46bb1a3d064c6c533d98fda6a724b16b1ce5d4327e1a35ba924dfc75eafd",
-  "steps": [],
+  "steps": [
+    "Materialize only an explicitly supplied language default; require each source-bound force and full target text; compare independent target bytes/fields and hashes.",
+    "Reject missing, invalid, duplicate, foreign or stale decisions; preserve original identity, metadata, Unicode and opaque fields.",
+    "Keep schema additions separate from authored decisions; a new target is not an old approval and immutable original bytes/hashes are never rewritten.",
+    "Supply source-bound should deviation conditions/authority explicitly; preserve both in the target and reject either/both missing without changing source bytes."
+  ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0724",
-  "test_ids": []
+  "test_ids": [
+    "tests/test_migration_requirements.py::test_authored_language_default_matches_the_independent_literal_target",
+    "tests/test_migration_requirements.py::test_authored_mapping_is_bound_to_the_old_full_hash_not_just_identity",
+    "tests/test_migration_requirements.py::test_decisions_are_detached_from_mutable_caller_rows_and_resources",
+    "tests/test_migration_requirements.py::test_default_expansion_and_explicit_rows_produce_the_same_bound_plan",
+    "tests/test_migration_requirements.py::test_each_requirement_override_survives_a_shared_explicit_language_default",
+    "tests/test_migration_requirements.py::test_explicit_force_and_complete_target_text_are_used_without_interpretation[may]",
+    "tests/test_migration_requirements.py::test_explicit_force_and_complete_target_text_are_used_without_interpretation[must]",
+    "tests/test_migration_requirements.py::test_explicit_force_and_complete_target_text_are_used_without_interpretation[must_not]",
+    "tests/test_migration_requirements.py::test_explicit_force_and_complete_target_text_are_used_without_interpretation[should]",
+    "tests/test_migration_requirements.py::test_language_default_never_supplies_another_required_decision[artifact_id]",
+    "tests/test_migration_requirements.py::test_language_default_never_supplies_another_required_decision[normative_force]",
+    "tests/test_migration_requirements.py::test_language_default_never_supplies_another_required_decision[source_sha256]",
+    "tests/test_migration_requirements.py::test_language_default_never_supplies_another_required_decision[statement]",
+    "tests/test_migration_requirements.py::test_missing_requirement_mapping_blocks_the_whole_plan_even_with_a_default",
+    "tests/test_migration_requirements.py::test_no_implicit_value_completes_an_incomplete_requirement_decision[artifact_id]",
+    "tests/test_migration_requirements.py::test_no_implicit_value_completes_an_incomplete_requirement_decision[language]",
+    "tests/test_migration_requirements.py::test_no_implicit_value_completes_an_incomplete_requirement_decision[normative_force]",
+    "tests/test_migration_requirements.py::test_no_implicit_value_completes_an_incomplete_requirement_decision[source_sha256]",
+    "tests/test_migration_requirements.py::test_no_implicit_value_completes_an_incomplete_requirement_decision[statement]",
+    "tests/test_migration_requirements.py::test_requirement_schema_fields_and_authored_decisions_have_distinct_plan_bindings",
+    "tests/test_migration_requirements.py::test_should_mapping_rejects_missing_deviation_details_without_source_mutation[both]",
+    "tests/test_migration_requirements.py::test_should_mapping_rejects_missing_deviation_details_without_source_mutation[deviation_authority]",
+    "tests/test_migration_requirements.py::test_should_mapping_rejects_missing_deviation_details_without_source_mutation[deviation_conditions]"
+  ]
 }

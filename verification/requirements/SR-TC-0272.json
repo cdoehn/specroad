@@ -26,26 +26,28 @@
   "expected_exit_codes": [],
   "fixture_ids": [
     "SR-FIX-MIGRATION-PLAN-v1",
+    "SR-FIX-MIGRATION-REQUIREMENTS-v1",
     "SR-FIX-REFERENCE01-SOURCE-v1_0_1"
   ],
   "implementation_status": "partial",
   "json_pointers": [],
   "method": "automated_behavior",
   "open_items": [
-    "Bound Apply behavior evidence is required; no behavior tests were run in Dev.",
-    "Public migration CLI/registration, the full unfiltered backup, native lock/transaction/publication, global target validation, audit/recovery and Restore integration remain open in the subsequent M16 steps.",
-    "Synthetic stored reviews and source states do not establish actual historical human approval, current authorization, target global validity, readiness or release support."
+    "Behavior tests are prepared for the separate Apply gate; none ran in Dev.",
+    "Public migration/CLI/Restore and transaction/global verification gates remain in subsequent M16 steps; no other draft source format is newly qualified.",
+    "Synthetic source reviews and authored test mappings grant no actual human approval or current release readiness."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Für einen nach Q.0 verbindlich definierten und nativ unterstützten 0.1.0-Quellvertrag MUSS Version 0.2 eine verlustfreie Migration nach 0.2.0 gemäß Anhang Q bereitstellen, die veränderbare Artefakte ergänzt und unveränderbare Nachweise unter Erhalt ihrer Originalbytes einbindet; bis dahin darf der Pfad nicht als unterstützt gelten.",
-    "scope": "16.b source reader/inventory only: version-bound local/global fields, complete source originals and transitive manifest/payload integrity, immutable classification, detached observations and safe file access. No target write, migration registration, current approval/readiness, external historical compatibility, full suite or release proof. 16.c prepares the complete read-only reference migration plan, original-byte legacy manifest and explicit target mappings in the common typed Change Plan. R additionally checks actual source membership/bytes, external request bindings and native recomputation, including internally consistent forgery. No actual migration, approval, CLI, full-suite or release success is claimed."
+    "scope": "16.b source reader/inventory only: version-bound local/global fields, complete source originals and transitive manifest/payload integrity, immutable classification, detached observations and safe file access. No target write, migration registration, current approval/readiness, external historical compatibility, full suite or release proof. 16.c prepares the complete read-only reference migration plan, original-byte legacy manifest and explicit target mappings in the common typed Change Plan. R additionally checks actual source membership/bytes, external request bindings and native recomputation, including internally consistent forgery. No actual migration, approval, CLI, full-suite or release success is claimed. 16.e W: explicit author mapping on the native reference migration planner, with exact language/force/text, default expansion, original-byte preservation and no inherited approval. No public migration execution, current review, CLI/Restore, full-suite or release proof."
   },
   "preconditions": [
-    "Source selects exactly the compiled specroad-reference-0.1 contract version 1.0.1.",
     "Complete original source and reachable snapshot/payload bytes are supplied; sources remain read-only.",
-    "The complete reference source 1.0.1 and all explicit target resources/mappings are supplied as owned bytes; no host defaults or guessed semantic values.",
-    "Only read-only planning is exercised. Actual migration publication still requires the later native lock, full backup, global validation, audit, recovery and authority gates."
+    "Only read-only planning is exercised. Actual migration publication still requires the later native lock, full backup, global validation, audit, recovery and authority gates.",
+    "Qualified reference-0.1/1.0.1 source and explicit authored target mappings under 12.20.2 and S.7; no inferred historical compatibility.",
+    "Source selects exactly the compiled specroad-reference-0.1 contract version 1.0.1.",
+    "The complete reference source 1.0.1 and all explicit target resources/mappings are supplied as owned bytes; no host defaults or guessed semantic values."
   ],
   "primary_verification_id": "SR-VER-0020",
   "required_environment": {
@@ -66,7 +68,11 @@
     "Observe explicit release selection, retained synthetic histories, safe refusal and native Core/PYZ parity without optional packages.",
     "Prepare the native migration branch of the shared Change Plan and compare explicit target fields, literal normative hashes, current/legacy roots, complete file bindings and unchanged original bytes.",
     "Reject missing/invalid mappings and forbid using the migration branch as ordinary authoring or current review/readiness evidence.",
-    "Recompute saved plans from the actual supplied source files and externally bound target version, input hash and plan hash; reject stale sources and self-consistently rehashed target forgery."
+    "Recompute saved plans from the actual supplied source files and externally bound target version, input hash and plan hash; reject stale sources and self-consistently rehashed target forgery.",
+    "Materialize only an explicitly supplied language default; require each source-bound force and full target text; compare independent target bytes/fields and hashes.",
+    "Reject missing, invalid, duplicate, foreign or stale decisions; preserve original identity, metadata, Unicode and opaque fields.",
+    "Keep schema additions separate from authored decisions; a new target is not an old approval and immutable original bytes/hashes are never rewritten.",
+    "Supply source-bound should deviation conditions/authority explicitly; preserve both in the target and reject either/both missing without changing source bytes."
   ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0272",
@@ -140,6 +146,29 @@
     "tests/test_migration_planning_right.py::test_target_mapping_paths_cannot_select_code_or_operational_state[profiles/../escape.json]",
     "tests/test_migration_planning_right.py::test_target_mapping_paths_cannot_select_code_or_operational_state[profiles\\\\evil.json]",
     "tests/test_migration_planning_right.py::test_timestamp_at_source_boundary_advances_by_one_microsecond_without_a_clock",
+    "tests/test_migration_requirements.py::test_authored_language_default_matches_the_independent_literal_target",
+    "tests/test_migration_requirements.py::test_authored_mapping_is_bound_to_the_old_full_hash_not_just_identity",
+    "tests/test_migration_requirements.py::test_decisions_are_detached_from_mutable_caller_rows_and_resources",
+    "tests/test_migration_requirements.py::test_default_expansion_and_explicit_rows_produce_the_same_bound_plan",
+    "tests/test_migration_requirements.py::test_each_requirement_override_survives_a_shared_explicit_language_default",
+    "tests/test_migration_requirements.py::test_explicit_force_and_complete_target_text_are_used_without_interpretation[may]",
+    "tests/test_migration_requirements.py::test_explicit_force_and_complete_target_text_are_used_without_interpretation[must]",
+    "tests/test_migration_requirements.py::test_explicit_force_and_complete_target_text_are_used_without_interpretation[must_not]",
+    "tests/test_migration_requirements.py::test_explicit_force_and_complete_target_text_are_used_without_interpretation[should]",
+    "tests/test_migration_requirements.py::test_language_default_never_supplies_another_required_decision[artifact_id]",
+    "tests/test_migration_requirements.py::test_language_default_never_supplies_another_required_decision[normative_force]",
+    "tests/test_migration_requirements.py::test_language_default_never_supplies_another_required_decision[source_sha256]",
+    "tests/test_migration_requirements.py::test_language_default_never_supplies_another_required_decision[statement]",
+    "tests/test_migration_requirements.py::test_missing_requirement_mapping_blocks_the_whole_plan_even_with_a_default",
+    "tests/test_migration_requirements.py::test_no_implicit_value_completes_an_incomplete_requirement_decision[artifact_id]",
+    "tests/test_migration_requirements.py::test_no_implicit_value_completes_an_incomplete_requirement_decision[language]",
+    "tests/test_migration_requirements.py::test_no_implicit_value_completes_an_incomplete_requirement_decision[normative_force]",
+    "tests/test_migration_requirements.py::test_no_implicit_value_completes_an_incomplete_requirement_decision[source_sha256]",
+    "tests/test_migration_requirements.py::test_no_implicit_value_completes_an_incomplete_requirement_decision[statement]",
+    "tests/test_migration_requirements.py::test_requirement_schema_fields_and_authored_decisions_have_distinct_plan_bindings",
+    "tests/test_migration_requirements.py::test_should_mapping_rejects_missing_deviation_details_without_source_mutation[both]",
+    "tests/test_migration_requirements.py::test_should_mapping_rejects_missing_deviation_details_without_source_mutation[deviation_authority]",
+    "tests/test_migration_requirements.py::test_should_mapping_rejects_missing_deviation_details_without_source_mutation[deviation_conditions]",
     "tests/test_reference01_reader.py::test_all_28_types_and_complete_classification_keep_originals",
     "tests/test_reference01_reader.py::test_core_and_pyz_reference_reader_parity_without_optional_packages",
     "tests/test_reference01_reader.py::test_json_whitespace_changes_bytes_without_changing_model_root",

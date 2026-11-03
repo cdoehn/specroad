@@ -2,19 +2,27 @@
   "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [],
   "expected_exit_codes": [],
-  "fixture_ids": [],
-  "implementation_status": "open",
+  "fixture_ids": [
+    "SR-FIX-MIGRATION-PLAN-v1",
+    "SR-FIX-MIGRATION-REQUIREMENTS-v1",
+    "SR-FIX-REFERENCE01-SOURCE-v1_0_1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [],
-  "method": "pending",
+  "method": "automated_behavior",
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Behavior tests are prepared for the separate Apply gate; none ran in Dev.",
+    "Public migration/CLI/Restore and transaction/global verification gates remain in subsequent M16 steps; no other draft source format is newly qualified.",
+    "Synthetic source reviews and authored test mappings grant no actual human approval or current release readiness."
   ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Die Migration DARF NICHT unveränderbare historische Nachweise zur Ergänzung neuer Sprach- oder Verbindlichkeitsfelder überschreiben.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "16.e W: explicit author mapping on the native reference migration planner, with exact language/force/text, default expansion, original-byte preservation and no inherited approval. No public migration execution, current review, CLI/Restore, full-suite or release proof."
   },
-  "preconditions": [],
+  "preconditions": [
+    "Qualified reference-0.1/1.0.1 source and explicit authored target mappings under 12.20.2 and S.7; no inferred historical compatibility."
+  ],
   "primary_verification_id": "SR-VER-0049",
   "required_environment": {
     "declared_minimum_python": "3.10",
@@ -28,8 +36,23 @@
     "owned_temporary_files": true
   },
   "specification_sha256": "d41e46bb1a3d064c6c533d98fda6a724b16b1ce5d4327e1a35ba924dfc75eafd",
-  "steps": [],
+  "steps": [
+    "Materialize only an explicitly supplied language default; require each source-bound force and full target text; compare independent target bytes/fields and hashes.",
+    "Reject missing, invalid, duplicate, foreign or stale decisions; preserve original identity, metadata, Unicode and opaque fields.",
+    "Keep schema additions separate from authored decisions; a new target is not an old approval and immutable original bytes/hashes are never rewritten."
+  ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0725",
-  "test_ids": []
+  "test_ids": [
+    "tests/test_migration_planning.py::test_all_originals_and_transitive_archives_remain_verifiable_bytes",
+    "tests/test_migration_planning.py::test_finished_proposals_stay_original_immutable_records[applied]",
+    "tests/test_migration_planning.py::test_finished_proposals_stay_original_immutable_records[rejected]",
+    "tests/test_migration_planning.py::test_finished_proposals_stay_original_immutable_records[stale]",
+    "tests/test_migration_planning.py::test_full_native_source_family_materializes_all_types_and_protects_legacy",
+    "tests/test_migration_planning.py::test_legacy_hashes_use_original_bytes_and_bind_manifest_in_shared_root",
+    "tests/test_migration_planning_right.py::test_old_approved_mutable_artifact_needs_new_approval_and_retains_its_old_bytes",
+    "tests/test_migration_planning_right.py::test_old_approved_proposal_reviews_are_retained_but_do_not_approve_new_content",
+    "tests/test_migration_planning_right.py::test_original_revision_byte_conflict_cannot_be_hidden_by_equal_canonical_hash",
+    "tests/test_migration_requirements.py::test_requirement_schema_fields_and_authored_decisions_have_distinct_plan_bindings"
+  ]
 }

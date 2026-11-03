@@ -13,8 +13,15 @@ from .plan_contract import validate_inputs
 
 
 def migration_inputs(*, target_configuration=None, target_resources=None,
-                     requirement_mappings=(), proposal_mappings=()):
-    """Normalize explicitly supplied input order, never fill missing semantic data."""
+                     requirement_mappings=(), proposal_mappings=(),
+                     requirement_default_language=None):
+    """Materialize authored mappings, without inferring text, force or language.
+
+    Only an explicitly supplied language default fills an absent language key.
+    Every requirement still needs its own source hash, force and complete text.
+    The normalized, detached v1 value binds each resulting decision individually;
+    supplying it is neither a human review nor authorization to apply a plan.
+    """
     require(target_configuration is None or type(target_configuration) is bytes,
             'migration_configuration_bytes_required')
     resources = owned_files({} if target_resources is None else target_resources)
@@ -22,7 +29,14 @@ def migration_inputs(*, target_configuration=None, target_resources=None,
     for rows in (requirement_mappings, proposal_mappings):
         require(type(rows) in (tuple, list) and all(type(r) is dict and
             type(r.get('artifact_id')) is str for r in rows), 'migration_mapping_required')
-        sequences.append(sorted(rows, key=lambda r: r['artifact_id'].encode('utf-8')))
+        sequences.append(sorted((dict(row) for row in rows),
+                                key=lambda r: r['artifact_id'].encode('utf-8')))
+    if requirement_default_language is not None:
+        from ..model.language_tags import parse_language_tag
+        parse_language_tag(requirement_default_language)
+        for row in sequences[0]:
+            if 'language' not in row:
+                row['language'] = requirement_default_language
     value = {'format_version': 'migration-inputs-v1',
         'target_configuration': None if target_configuration is None else b64(target_configuration),
         'target_resources': [{'path': p, 'bytes_base64': b64(b)} for p, b in sorted(resources.items())],
