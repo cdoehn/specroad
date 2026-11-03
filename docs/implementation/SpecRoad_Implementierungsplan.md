@@ -148,7 +148,7 @@ nicht ausgeführt oder erzeugt. Abnahmen prüfen unabhängige Sollhashes,
 Kontrollrecord-Unabhängigkeit, fehlende Basisoriginale, sichtbare Veraltung und
 Originalerhalt. Alle menschlichen Reviews und tatsächlichen Prüfgates bleiben.
 
-### Vorbereiteter Produktstand 16.b.R
+### Vorbereiteter Produktstand 16.b.C
 
 Dieser Marker gilt erst nach seinem tatsächlichen erfolgreichen Apply-Gate
 und Commit. Durch das Quell-Result gesichert ist weiterhin 663/900.
@@ -1210,10 +1210,10 @@ Kein offener Produktplanschritt wird durch diese Testoptimierung abgeschlossen.
 ```yaml
 plan_revision: 56
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 665
-last_completed_plan_commit: 16.b.R
-next_plan_commit: 16.b.C
-last_completed_numbered_bundle: 551
+implementation_plan_commits_completed: 666
+last_completed_plan_commit: 16.b.C
+next_plan_commit: 16.c.W
+last_completed_numbered_bundle: 553
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -35381,7 +35381,7 @@ offen. M15-Integrations-/Vollsuiten-/Plattformgates und 18.q/18.r bleiben offen.
 
 #### 16.b.C – Make it Clean
 
-- [ ] **16.b.C** · Position **666/900** · Voraussetzung: `16.b.R`.
+- [x] **16.b.C** · Position **666/900** · Voraussetzung: `16.b.R`.
 **Exakte Commit-Message:** `16.b.C refactor(migration): Quellinventur und historischer Core-Leser bereinigen`
 
 **Bereinigung:** Versionsleser strikt von regulärem 0.2-Writer und In-memory-Projektion abgrenzen.

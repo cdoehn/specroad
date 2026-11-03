@@ -19,7 +19,7 @@ from ...graph._graph_traversal import _cycle_witness
 from ...verification.evaluation import VerificationEvaluation
 from ...planning._readiness_policy import readiness_policy
 from ...srx import parse_program
-from .reader import SourceError, require, path_name, context_sha256, _schema, classification
+from .values import SourceError, require, path_name, context_sha256, _schema, classification
 
 
 @lru_cache(maxsize=1)

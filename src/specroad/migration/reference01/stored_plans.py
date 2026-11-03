@@ -7,7 +7,7 @@ from ...graph.scope_descriptors import ScopeDescriptor
 from ...changes._patch_policy import _patch, _CONTROLLED
 from ...model.record_contracts import SPECIAL_STATES
 from ...proposals.values import CONTENT_EXCLUSIONS
-from .reader import require, path_name, _schema, SourceError
+from .values import require, path_name, _schema, SourceError
 
 TRANSITIONS = {'draft': {'validated', 'rejected', 'stale'},
     'validated': {'checked', 'rejected', 'stale'}, 'checked': {'in_review', 'rejected', 'stale'},
