@@ -51,9 +51,15 @@ def inventory(old):
     return files
 
 
-def stopped(paths):
+def stopped(paths, *, allow_uninstalled=False):
     from . import service
-    props = service.verify_owned(paths)
+    if allow_uninstalled and not paths.unit.exists():
+        props = service.inspect()
+        service.verify_properties(paths, props)
+        if props.get('LoadState') != 'not-found':
+            fail('A loaded unit without its owned file requires review.')
+    else:
+        props = service.verify_owned(paths)
     if props.get('ActiveState') not in ('inactive', 'failed'):
         fail('Stop Control and let current work finish before migration.')
     reply = service.checked(['show', service.UNIT, '--property=MainPID', '--value'])
@@ -97,6 +103,11 @@ def copy_record(source, target, expected):
         if digest(Path(temporary)) != expected or digest(source) != expected:
             fail('Source changed during copy.')
         os.link(temporary, target, follow_symlinks=False)  # Never replace existing data.
+        fd = os.open(target.parent, os.O_RDONLY | os.O_DIRECTORY)
+        try:
+            os.fsync(fd)
+        finally:
+            os.close(fd)
     finally:
         os.unlink(temporary)
 
@@ -176,8 +187,12 @@ def migrate(paths, *, legacy_config=None):
             journal = {'format_version': 1, 'phase': 'copying', 'legacy_config': str(old.config),
                        'inventory_sha256': inventory_sha, 'backup_sha256': backup_sha}
             json_write(journal_path, journal)
-        elif journal.get('format_version') != 1 or journal.get('inventory_sha256') != inventory_sha:
+        elif (type(journal.get('format_version')) is not int or journal['format_version'] != 1
+              or journal.get('phase') != 'copying' or journal.get('legacy_config') != str(old.config)
+              or journal.get('inventory_sha256') != inventory_sha):
             fail('Legacy files changed after the migration began.')
+        if backup(paths.home, files, old.unit) != journal['backup_sha256']:
+            fail('The migration backup changed.')
         for name, row in files.items():
             copy_record(Path(row['source']), paths.home / name, row['sha256'])
         if inventory(old) != files:
@@ -201,5 +216,6 @@ def migrate(paths, *, legacy_config=None):
 
 def require_complete(paths):
     journal = json_read(paths.home / 'migration.json')
-    if journal is not None and journal.get('phase') != 'completed':
+    if journal is not None and (type(journal.get('format_version')) is not int
+                                or journal['format_version'] != 1 or journal.get('phase') != 'completed'):
         fail('An incomplete offline migration must be completed explicitly.')

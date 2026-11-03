@@ -7,6 +7,7 @@ from specroad_control.daemon import request
 from specroad_control.local import write_private
 from codex_control_tests.automation_support import AutomationCase
 from codex_control_tests.retry_support import initialize_git
+from codex_control_tests.worker_observation import wait_stage
 
 
 class RetryWorkerTests(AutomationCase):
@@ -17,12 +18,8 @@ class RetryWorkerTests(AutomationCase):
         self.settings(overload=True)
 
     def wait_stage(self, stage, seconds=10):
-        end=time.monotonic()+seconds
-        while time.monotonic()<end:
-            state=request(self.paths,'status')['state']
-            if (state.get('automation') or {}).get('stage')==stage:return state
-            time.sleep(.03)
-        self.fail('Worker did not reach requested persisted stage')
+        return wait_stage(self.paths, self.last_worker_process, self.last_worker_log,
+                          stage, seconds)
 
     def calls(self):
         return len((self.codex_home/'calls.jsonl').read_text().splitlines())

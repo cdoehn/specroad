@@ -19,7 +19,7 @@ def main(argv=None) -> int:
     parser.add_argument("--from-thread-cwd", help="Explicit present cwd of the original thread")
     parser.add_argument("--defer", action="store_true", help="Queue handover for the existing worker")
     parser.add_argument("--resume-after", action="store_true", help="Resume development after deferred handover")
-    parser.add_argument("--result", help="Initial Result for configure, or completed Result for reconcile-apply/reconcile-blocked")
+    parser.add_argument("--result", help="Initial Result for configure, completed Result for reconciliation/deploy")
     parser.add_argument("--legacy-config", help="Explicit legacy config for offline migration")
     parser.add_argument("--codex", help="Absolute existing Codex executable")
     parser.add_argument("--core-python", help="Absolute Python in the existing PatchHarbor installation")
@@ -38,7 +38,7 @@ def main(argv=None) -> int:
     if args.command in ("reconcile-apply", "reconcile-blocked") and not args.result:
         parser.error(args.command + " requires --result")
     if args.command not in ("configure", "reconcile-apply", "reconcile-blocked", "deploy") and args.result:
-        parser.error("--result is only allowed with configure, reconcile-apply or reconcile-blocked")
+        parser.error("--result is only allowed with configure, reconciliation or deploy")
     if args.command != "configure" and any((args.codex, args.core_python, args.transport)):
         parser.error("setup options are only allowed with configure")
     if args.command != "handover" and (args.from_thread_cwd or args.defer or args.resume_after):

@@ -18,11 +18,13 @@ def reject():
 
 
 def release_files(raw, facts, repo_id):
-    if (facts.get('kind') != 'result' or facts.get('operation') != 'apply' or facts.get('dry_run')
-            or not facts.get('success') or facts.get('dirty') or not facts.get('entrypoint_started')
+    if (facts.get('kind') != 'result' or facts.get('operation') != 'apply' or facts.get('dry_run') is not False
+            or facts.get('success') is not True or facts.get('dirty') is not False or facts.get('entrypoint_started') is not True
             or facts.get('completed_commit') != facts.get('binding', {}).get('base_commit')
             or facts.get('binding', {}).get('repo_id') != repo_id
             or sha256(raw).hexdigest() != facts.get('sha256')):
+        reject()
+    if re.fullmatch(r'[0-9a-f]{40}|[0-9a-f]{64}', str(facts.get('completed_commit'))) is None:
         reject()
     files = {}
     with zipfile.ZipFile(io.BytesIO(raw)) as archive:
@@ -36,7 +38,8 @@ def release_files(raw, facts, repo_id):
             if p.is_absolute() or str(p) != name or any(part in ('.', '..') for part in p.parts):
                 reject()
             if name == 'control' or (name.startswith('specroad_control/') and name.endswith('.py')):
-                if info.file_size > 2 * 1024 * 1024:
+                if (info.file_size > 65536 or (info.external_attr >> 16) & 0o170000 not in (0, 0o100000)
+                        or not re.fullmatch(r'control|specroad_control/[A-Za-z0-9_]+\.py', name)):
                     reject()
                 files[name] = archive.read(info)
     if not {'control', 'specroad_control/__init__.py', 'specroad_control/cli.py',
@@ -121,7 +124,7 @@ def deploy(paths, result):
             stack.enter_context(lock(paths.state/name))
         if read_private(paths.config) != config_bytes:
             reject()
-        stopped(paths)
+        stopped(paths, allow_uninstalled=True)
         root = paths.home / 'releases' / receipt['commit']
         private_dir(root)
         for name, raw in files.items():
@@ -138,20 +141,40 @@ def deploy(paths, result):
         json_write(root/'release.json', receipt)
         verify_release(paths, receipt)
         pending = json_read(paths.home/'deployment.json')
+        current = json_read(paths.home/'active-release.json')
+        old_unit = read_private(paths.unit) if paths.unit.exists() else None
+        expected_unit = service.unit_text(paths, entrypoint=root/'control').encode()
+        if pending is not None and pending.get('phase') not in ('completed', 'rolled_back', 'switching'):
+            reject()
         if pending and pending.get('phase') == 'switching':
-            raise ControlError('deployment_incomplete', 'An interrupted deployment needs explicit recovery before replacement.')
-        previous = json_read(paths.home/'active-release.json')
-        old_unit = read_private(paths.unit)
-        journal = {'format_version': 1, 'phase': 'switching', 'previous': previous,
-                   'next': receipt, 'previous_unit': old_unit.decode()}
-        json_write(paths.home/'deployment.json', journal)
+            if (pending.get('format_version') != 1 or pending.get('next') != receipt
+                    or current not in (pending.get('previous'), receipt)):
+                reject()
+            original = pending.get('previous_unit')
+            if original is not None and not isinstance(original, str):
+                reject()
+            original = None if original is None else original.encode()
+            if old_unit not in (original, expected_unit):
+                reject()
+            previous, old_unit, journal = pending['previous'], original, pending
+        else:
+            previous = current
+            journal = {'format_version': 1, 'phase': 'switching', 'previous': previous,
+                       'next': receipt, 'previous_unit': None if old_unit is None else old_unit.decode()}
+            json_write(paths.home/'deployment.json', journal)
         json_write(paths.home/'active-release.json', receipt)
         try:
             private_dir(paths.logs)
-            write_private(paths.unit, service.unit_text(paths, entrypoint=root/'control').encode())
+            from .local import user_dir
+            user_dir(paths.unit.parent)
+            write_private(paths.unit, expected_unit)
             service.checked(['daemon-reload'])
         except BaseException:
-            write_private(paths.unit, old_unit)
+            if old_unit is None:
+                if paths.unit.exists():
+                    paths.unit.unlink()
+            else:
+                write_private(paths.unit, old_unit)
             if previous is None:
                 (paths.home/'active-release.json').unlink()
             else:

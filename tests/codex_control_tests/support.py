@@ -40,6 +40,7 @@ class LocalCase(unittest.TestCase):
         self.addCleanup(log.close)
         child = subprocess.Popen([sys.executable, "-B", str(self.paths.home / 'releases' / ('a' * 40) / 'control'), "run"],
                                  env=dict(os.environ), stdin=subprocess.DEVNULL, stdout=log, stderr=log)
+        self.last_worker_process, self.last_worker_log = child, log
         def cleanup():
             if child.poll() is None:
                 child.terminate()
