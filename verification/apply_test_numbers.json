@@ -24452,6 +24452,12 @@
     "codex_control_tests.test_start_delay.DelayConfigTests.test_explicit_values_roundtrip",
     "codex_control_tests.test_start_delay.DelayConfigTests.test_new_and_existing_configuration_default_to_sixty_without_rewrite",
     "codex_control_tests.test_start_delay.StartDelayWorkerTests.test_default_wait_preserves_history_and_accepts_pause_resume_stop",
-    "codex_control_tests.test_start_delay.StartDelayWorkerTests.test_expiry_dispatches_and_does_not_delay_every_followup"
+    "codex_control_tests.test_start_delay.StartDelayWorkerTests.test_expiry_dispatches_and_does_not_delay_every_followup",
+    "codex_control_tests.test_start_delay_right.DelayBoundaryWorkerTests.test_pause_outlives_deadline_and_resume_does_not_restart_it",
+    "codex_control_tests.test_start_delay_right.DelayBoundaryWorkerTests.test_restart_keeps_pause_and_uses_full_new_deadline",
+    "codex_control_tests.test_start_delay_right.DelayBoundaryWorkerTests.test_sigterm_during_delay_has_no_model_or_ledger_claim",
+    "codex_control_tests.test_start_delay_right.DelayBoundaryWorkerTests.test_storage_stop_precedes_long_delay",
+    "codex_control_tests.test_start_delay_right.DelayValidationTests.test_invalid_delay_preserves_config",
+    "codex_control_tests.test_start_delay_right.DelayValidationTests.test_old_state_and_zero_delay_are_valid_but_bad_new_status_is_preserved"
   ]
 }

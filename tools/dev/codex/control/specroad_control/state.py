@@ -29,6 +29,16 @@ def read_state(paths: Paths) -> dict | None:
             raise ValueError
         if previous["phase"] in ("idle", "paused", "stopped") and previous["active_job"]:
             raise ValueError
+        delay = previous.get('start_delay')
+        if 'start_delay' in previous:
+            if (type(delay) is not dict or set(delay) != {'seconds', 'remaining_seconds', 'waiting'}
+                    or type(delay['seconds']) not in (int, float) or not 0 <= delay['seconds'] <= 86400
+                    or type(delay['remaining_seconds']) not in (int, float)
+                    or not 0 <= delay['remaining_seconds'] <= delay['seconds']
+                    or type(delay['waiting']) is not bool
+                    or delay['waiting'] != (delay['remaining_seconds'] > 0)
+                    or delay['waiting'] and (previous['active_job'] or previous['phase'] == 'stopped')):
+                raise ValueError
     except (ValueError, KeyError, TypeError, AttributeError):
         raise ControlError("invalid_state", "Persisted state is invalid; it has been preserved for review.") from None
     return previous
