@@ -1,1 +1,89 @@
-{"evidence_kind":"specroad-dev-pytest-v1","expected_diagnostics":[],"expected_exit_codes":[0,2,3,4,5,6,7],"fixture_ids":["SR-FIX-TRANSACTION-COMMITTING-v1"],"implementation_status":"partial","json_pointers":[],"method":"automated_behavior","open_items":["Durable transaction/request receipts and committed finalization (5.n), full crash recovery and integration of all normative writer commands remain in later plan steps.","Local native cooperative Linux semantics; actual cross-version CI and underlying hardware determine observed support, not the existence of these tests."],"oracle":{"kind":"behavior","requirement_contract":"Jeder tats\u00e4chlich ausgef\u00fchrte `normative_write` MUSS seine normativen Zieldateien ausschlie\u00dflich \u00fcber Staging, Synchronisation und die Journal-/Commit-Sequenz aus Anhang C ver\u00f6ffentlichen.","scope":"Native C.2 publication steps 1-4 for supported artifact targets: exact final bytes/root or a blocked recovery state, never a successful mixed model. Full receipt finalization, specialized operations and universal command integration remain open."},"preconditions":["Exact independently bound PreparedJournal and PublicationPreflight, current native writer lock, explicit host authority, local same-filesystem rename and fsync support."],"primary_verification_id":"SR-VER-0019","required_environment":{"declared_minimum_python":"3.10","implementation":"cpython","measured_scope":"current-run-only"},"requirement_id":"SR-REQ-0189","resources":{"harness_suite_timeout":null,"harness_test_timeout":null,"owned_temporary_files":true},"specification_sha256":"ffab6e96a19a881b665229964462339c01afac673bc51a5e9d15c389e407f87b","steps":["Durably set committing; atomically replace targets in canonical path order and sync each acknowledgement before the next target; recompute the full live target root.","Inject errors at journal and target boundaries; preserve before images and active recovery blocker; never claim receipts, committed state or automatic rollback."],"test_case_format_version":1,"test_case_id":"SR-TC-0189","test_ids":["tests/test_transaction_committing.py::test_all_targets_and_live_root_match_request","tests/test_transaction_committing.py::test_receipt_and_committed_marker_are_not_fabricated","tests/test_transaction_committing.py::test_before_images_retained_staging_consumed","tests/test_transaction_committing.py::test_empty_write_set_still_has_committing_journal","tests/test_transaction_committing.py::test_create_has_exact_bytes_and_no_before_image","tests/test_transaction_committing.py::test_committing_is_durable_before_target_and_ack_before_next","tests/test_transaction_committing.py::test_target_file_replacement_is_atomic_for_open_reader","tests/test_transaction_committing.py::test_stale_source_is_rejected_before_committing","tests/test_transaction_committing.py::test_authorization_denial_does_not_start_publication","tests/test_transaction_committing.py::test_missing_lock_rejected","tests/test_transaction_committing.py::test_reusing_old_prepared_cannot_write_twice","tests/test_transaction_committing.py::test_additional_recovery_entry_prevents_any_target_write","tests/test_transaction_committing.py::test_changed_journal_not_overwritten","tests/test_transaction_committing.py::test_committing_fsync_failure_prevents_first_target","tests/test_transaction_committing.py::test_lost_target_rename_result_has_no_retry_or_false_rollback","tests/test_transaction_committing.py::test_ack_failure_prevents_second_target","tests/test_transaction_committing.py::test_journal_values_are_independent_and_not_success","tests/test_transaction_committing.py::test_self_consistent_short_inventory_cannot_replace_independent_binding","tests/test_transaction_committing.py::test_earlier_target_tampering_blocks_next_ack_and_publication","tests/test_transaction_committing_right.py::test_complete_journal_is_read_without_write_or_unlock","tests/test_transaction_committing_right.py::test_completed_file_phase_still_blocks_normal_project_reads","tests/test_transaction_committing_right.py::test_short_journal_writes_are_completed","tests/test_transaction_committing_right.py::test_lost_committing_rename_result_stops_before_targets","tests/test_transaction_committing_right.py::test_lost_acknowledgement_result_is_not_retried","tests/test_transaction_committing_right.py::test_unacknowledged_move_is_refused_by_reader_not_repaired","tests/test_transaction_committing_right.py::test_reader_rejects_other_project_instance","tests/test_transaction_committing_right.py::test_reader_expected_raw_digest_is_checked","tests/test_transaction_committing_right.py::test_acknowledgements_are_a_strict_canonical_prefix","tests/test_transaction_committing_right.py::test_preserves_explicit_target_rwx_modes","tests/test_transaction_committing_right.py::test_missing_target_parents_are_created_only_when_publishing","tests/test_transaction_committing_right.py::test_target_permissions_changed_during_authority_stop_before_mutation","tests/test_transaction_committing_right.py::test_same_byte_image_replacement_during_authority_is_detected","tests/test_transaction_committing_right.py::test_no_following_file_after_unchanged_dependency_tampered","tests/test_transaction_committing_right.py::test_both_before_images_and_remaining_stages_survive_real_child_crash","tests/test_transaction_committing_right.py::test_inherited_lock_never_publishes_for_parent","tests/test_transaction_committing_right.py::test_many_files_all_acknowledged_and_rehashed","tests/test_transaction_committing_right.py::test_module_and_zipapp_publishing_and_reader_remain_portable"]}
+{
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [
+    0,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "fixture_ids": [
+    "SR-FIX-TRANSACTION-COMMITTING-v1"
+  ],
+  "implementation_status": "partial",
+  "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "Durable transaction/request receipts and committed finalization (5.n), full crash recovery and integration of all normative writer commands remain in later plan steps.",
+    "Local native cooperative Linux semantics; actual cross-version CI and underlying hardware determine observed support, not the existence of these tests."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Jeder tatsächlich ausgeführte `normative_write` MUSS seine normativen Zieldateien ausschließlich über Staging, Synchronisation und die Journal-/Commit-Sequenz aus Anhang C veröffentlichen.",
+    "scope": "Native C.2 publication steps 1-4 for supported artifact targets: exact final bytes/root or a blocked recovery state, never a successful mixed model. Full receipt finalization, specialized operations and universal command integration remain open."
+  },
+  "preconditions": [
+    "Exact independently bound PreparedJournal and PublicationPreflight, current native writer lock, explicit host authority, local same-filesystem rename and fsync support."
+  ],
+  "primary_verification_id": "SR-VER-0019",
+  "required_environment": {
+    "declared_minimum_python": "3.10",
+    "implementation": "cpython",
+    "measured_scope": "current-run-only"
+  },
+  "requirement_id": "SR-REQ-0189",
+  "resources": {
+    "harness_suite_timeout": null,
+    "harness_test_timeout": null,
+    "owned_temporary_files": true
+  },
+  "specification_sha256": "1598079cf97a2844f96649851fff698e882760f5e72f8fa4c0003387e557ee6c",
+  "steps": [
+    "Durably set committing; atomically replace targets in canonical path order and sync each acknowledgement before the next target; recompute the full live target root.",
+    "Inject errors at journal and target boundaries; preserve before images and active recovery blocker; never claim receipts, committed state or automatic rollback."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0189",
+  "test_ids": [
+    "tests/test_transaction_committing.py::test_all_targets_and_live_root_match_request",
+    "tests/test_transaction_committing.py::test_receipt_and_committed_marker_are_not_fabricated",
+    "tests/test_transaction_committing.py::test_before_images_retained_staging_consumed",
+    "tests/test_transaction_committing.py::test_empty_write_set_still_has_committing_journal",
+    "tests/test_transaction_committing.py::test_create_has_exact_bytes_and_no_before_image",
+    "tests/test_transaction_committing.py::test_committing_is_durable_before_target_and_ack_before_next",
+    "tests/test_transaction_committing.py::test_target_file_replacement_is_atomic_for_open_reader",
+    "tests/test_transaction_committing.py::test_stale_source_is_rejected_before_committing",
+    "tests/test_transaction_committing.py::test_authorization_denial_does_not_start_publication",
+    "tests/test_transaction_committing.py::test_missing_lock_rejected",
+    "tests/test_transaction_committing.py::test_reusing_old_prepared_cannot_write_twice",
+    "tests/test_transaction_committing.py::test_additional_recovery_entry_prevents_any_target_write",
+    "tests/test_transaction_committing.py::test_changed_journal_not_overwritten",
+    "tests/test_transaction_committing.py::test_committing_fsync_failure_prevents_first_target",
+    "tests/test_transaction_committing.py::test_lost_target_rename_result_has_no_retry_or_false_rollback",
+    "tests/test_transaction_committing.py::test_ack_failure_prevents_second_target",
+    "tests/test_transaction_committing.py::test_journal_values_are_independent_and_not_success",
+    "tests/test_transaction_committing.py::test_self_consistent_short_inventory_cannot_replace_independent_binding",
+    "tests/test_transaction_committing.py::test_earlier_target_tampering_blocks_next_ack_and_publication",
+    "tests/test_transaction_committing_right.py::test_complete_journal_is_read_without_write_or_unlock",
+    "tests/test_transaction_committing_right.py::test_completed_file_phase_still_blocks_normal_project_reads",
+    "tests/test_transaction_committing_right.py::test_short_journal_writes_are_completed",
+    "tests/test_transaction_committing_right.py::test_lost_committing_rename_result_stops_before_targets",
+    "tests/test_transaction_committing_right.py::test_lost_acknowledgement_result_is_not_retried",
+    "tests/test_transaction_committing_right.py::test_unacknowledged_move_is_refused_by_reader_not_repaired",
+    "tests/test_transaction_committing_right.py::test_reader_rejects_other_project_instance",
+    "tests/test_transaction_committing_right.py::test_reader_expected_raw_digest_is_checked",
+    "tests/test_transaction_committing_right.py::test_acknowledgements_are_a_strict_canonical_prefix",
+    "tests/test_transaction_committing_right.py::test_preserves_explicit_target_rwx_modes",
+    "tests/test_transaction_committing_right.py::test_missing_target_parents_are_created_only_when_publishing",
+    "tests/test_transaction_committing_right.py::test_target_permissions_changed_during_authority_stop_before_mutation",
+    "tests/test_transaction_committing_right.py::test_same_byte_image_replacement_during_authority_is_detected",
+    "tests/test_transaction_committing_right.py::test_no_following_file_after_unchanged_dependency_tampered",
+    "tests/test_transaction_committing_right.py::test_both_before_images_and_remaining_stages_survive_real_child_crash",
+    "tests/test_transaction_committing_right.py::test_inherited_lock_never_publishes_for_parent",
+    "tests/test_transaction_committing_right.py::test_many_files_all_acknowledged_and_rehashed",
+    "tests/test_transaction_committing_right.py::test_module_and_zipapp_publishing_and_reader_remain_portable"
+  ]
+}

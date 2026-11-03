@@ -1,5 +1,5 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.55
+## Version 0.2.56
 
 | Feld | Wert |
 |---|---|
@@ -892,6 +892,51 @@ aber keinen automatischen Start/Resume und keine eigene Warte-/Modellschleife.
 Ein unterbrochener Releasewechsel sperrt Start; dieselbe explizite Installation
 kann den geprüften Wechsel fortsetzen. Fehler beim Unit-Reload stellen die
 vorherige Unit/Releasezuordnung wieder her oder bleiben sichtbar gesperrt.
+
+#### 2.5.4.1 Konfigurierbare Startwartezeit — CONTROL-START-DELAY-564
+
+**Ausdrücklicher Nutzerauftrag vom 3. November 2026.** Nach jedem tatsächlichen
+Start des Control-Workers wartet die Entwicklungsautomatik standardmäßig
+60 Sekunden. Die externe Hauptkonfiguration erlaubt unter `[automation]`
+`start_delay_seconds`: eine endliche Zahl von 0 bis einschließlich 86400,
+auch mit Sekundenbruchteilen, niemals Boolean oder Zeichenkette. Null schaltet
+die Startwartezeit bewusst aus. Fehlende Angabe bedeutet 60; bestehende
+Konfigurationsbytes werden beim Lesen oder Installieren nicht umgeschrieben.
+Änderungen wirken erst beim nächsten ausdrücklich gestarteten Worker.
+
+Die Frist beginnt einmal pro Worker mit einer monotonen Uhr. Der vorhandene
+Event-Loop bleibt ansprechbar; kein blockierendes Sleep, externer Timer oder
+zusätzlicher Modellprozess. Bis zum Fristablauf darf kein Automation-Tick,
+Modellauftrag oder Recovery-/Handover-Übergang beginnen. Exchange-Ereignisse
+und `resume` dürfen die Frist nicht verkürzen; spätere Entprell-/Retryfristen
+gelten zusätzlich. Folgebundles erhalten keine erneute Startwartezeit.
+`start` auf einem bereits laufenden Dienst setzt die Frist nicht zurück.
+Ein tatsächlich neu gestarteter Worker erhält eine volle neue Frist.
+
+Status, Pause und kontrollierter Stop/SIGTERM bleiben währenddessen bedienbar.
+Pause bleibt über Neustart erhalten. Resume hebt nur die Pause auf, verkürzt
+keine noch laufende Startfrist und startet eine abgelaufene Frist nicht neu.
+Stop verhindert neue Arbeit sofort und wartet nicht auf die Startfrist.
+Die bestehende 10-GB-Speicherschranke prüft weiterhin auch während des Wartens;
+ein Speicherfehler stoppt kontrolliert vor jeder neuen Arbeit. Die Wartezeit
+ersetzt weder Thread-Inaktivitätsprüfung noch Paket-/Result-/Budgetnachweise.
+Foundation-only ohne aktivierte Entwicklung bleibt ohne Entwicklungsarbeit.
+
+Der maschinenlesbare Status ergänzt `start_delay` mit `seconds`,
+`remaining_seconds` und Boolean `waiting`. Restzeit ist nicht negativ und
+höchstens die konfigurierte Dauer; nach Stop ist sie null. Gespeicherte
+Restzeit dient nur der Diagnose, niemals als Uhr für einen späteren Start.
+Alte Zustände ohne dieses Feld bleiben lesbar; ungültige neue Statuswerte
+sperren den Start statt vorhandene Belege zu reparieren. Keine bestehende
+History, Pause, Freigabe oder Klärungsbudget wird durch die neue Frist geändert.
+
+Die Änderung wird als OFF-PLAN-W/R/C-Bundle ausschließlich über Apply
+abgenommen. Der aktuelle Nutzerauftrag erlaubt anschließend Installation,
+die separate Reparatur der mehrdeutigen Paketzuordnung und danach den Start.
+Als einmalige manuelle Ausnahme sind höchstens vier Korrekturbundles für
+auftretende Fehler erlaubt. Dies erteilt keine dauerhafte autonome Dev-Schleife
+und ändert keine künftigen Control-Aufträge. Produktplan bleibt bei 672/900,
+nächster Produktcommit 16.e.W; echte lokale Betriebsdaten fehlen in Payloads.
 
 ## 3. Produktziele
 
@@ -6836,6 +6881,7 @@ Die folgende Roadmap ist informativ und erzeugt keine Anforderungen an 0.2:
 
 | Version | Datum | Status | Änderung |
 |---|---|---|---|
+| 0.2.56 | 2026-11-03 | Ausdrücklicher Nutzerauftrag | CONTROL-START-DELAY-564: konfigurierbare monotone Startwartezeit, Standard 60 Sekunden, ansprechbarer Stop/Status und unveränderte Betriebsschranken. |
 | 0.2.55 | 2026-11-03 | Delegiert gemäß SPECROAD-DECISION-1, Vertrag 4 | MIGRATION-BACKUP-561: eigener versionierter 0.1-Quellsicherungsvertrag, vollständige Originalbytebindung und unveränderte M15-/Writergrenzen. |
 | 0.2.54 | 2026-11-03 | Ausdrücklicher Nutzerauftrag | CONTROL-CLARIFICATION-560: protokollierte Freigabe neuer Aufträge einer alten Kette nach Vertrag 4 mit erhaltenem Restbudget und unveränderten alten Versuchen. |
 | 0.2.53 | 2026-11-03 | Ausdrücklicher Nutzerauftrag | CONTROL-INTEGRATION-556: integrierte Entwicklungssteuerung, gemeinsame Tests, zentrales privates Datenverzeichnis und gebundene Offline-Installation/Migration. |
@@ -10738,4 +10784,4 @@ Implementierungsschritten nachgewiesen sein.
 
 ---
 
-**Ende der SpecRoad-Produktspezifikation v0.2.55.**
+**Ende der SpecRoad-Produktspezifikation v0.2.56.**

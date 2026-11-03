@@ -1,1 +1,58 @@
-{"evidence_kind":"specroad-dev-pytest-v1","expected_diagnostics":["SRV197"],"expected_exit_codes":[2],"fixture_ids":["SR-FIX-SRX-NUMERIC-v1","SR-FIX-SRX-CONFORMANCE-v1"],"implementation_status":"partial","json_pointers":["/project/srx_policy","/expression"],"method":"automated_behavior","open_items":["Fresh full CI evidence across CPython 3.10\u20133.14 is required; local selected gates do not prove the runtime matrix.","Integrated project/profile validation and CLI/lifecycle diagnosis follow their scheduled steps."],"oracle":{"kind":"behavior","requirement_contract":"Die SRX-Testabnahme MUSS s\u00e4mtliche Entscheidungsvektoren aus Anhang U.3 einschlie\u00dflich ver\u00e4nderter Prozessdefaults nachweisen.","scope":"Executable SRX 1.0 conformance corpus for 29 operators and all nine concrete Annex U.3 arithmetic decisions; diagnostics preserve rule ID, pointers and types with passive repair hints. Full project/profile/CLI integration and the runtime matrix require separate evidence."},"preconditions":["Explicit SRX 1.0 context and numeric policy"],"primary_verification_id":"SR-VER-0050","required_environment":{"declared_minimum_python":"3.10","implementation":"cpython","measured_scope":"current-run-only"},"requirement_id":"SR-REQ-0730","resources":{"harness_suite_timeout":null,"harness_test_timeout":null,"owned_temporary_files":true},"specification_sha256":"ffab6e96a19a881b665229964462339c01afac673bc51a5e9d15c389e407f87b","steps":["Evaluate actual numeric expressions and inspect values/structured errors.","Execute versioned positive, negative, boundary and diagnostic vectors against real SRX APIs; compare typed values and exact error pointers, never presentation strings.","Repeat the full conformance corpus, including all Annex U decisions, under changed Decimal current/default contexts, object-key order, execution order and fresh process defaults; compare machine values/errors and preserve process state."],"test_case_format_version":1,"test_case_id":"SR-TC-0730","test_ids":["tests/test_srx_arithmetic.py::test_normative_decision_vectors","tests/test_srx_arithmetic_right.py::test_all_vectors_survive_modified_process_decimal_defaults","test_srx_conformance.SrxConformanceWorkTests.test_appendix_u_decisions","test_srx_conformance_right.SrxConformanceRightTests.test_full_corpus_under_changed_decimal_defaults","test_srx_conformance_right.SrxConformanceRightTests.test_corpus_in_fresh_processes_with_distinct_hash_seeds_and_locales"]}
+{
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [
+    "SRV197"
+  ],
+  "expected_exit_codes": [
+    2
+  ],
+  "fixture_ids": [
+    "SR-FIX-SRX-NUMERIC-v1",
+    "SR-FIX-SRX-CONFORMANCE-v1"
+  ],
+  "implementation_status": "partial",
+  "json_pointers": [
+    "/project/srx_policy",
+    "/expression"
+  ],
+  "method": "automated_behavior",
+  "open_items": [
+    "Fresh full CI evidence across CPython 3.10–3.14 is required; local selected gates do not prove the runtime matrix.",
+    "Integrated project/profile validation and CLI/lifecycle diagnosis follow their scheduled steps."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Die SRX-Testabnahme MUSS sämtliche Entscheidungsvektoren aus Anhang U.3 einschließlich veränderter Prozessdefaults nachweisen.",
+    "scope": "Executable SRX 1.0 conformance corpus for 29 operators and all nine concrete Annex U.3 arithmetic decisions; diagnostics preserve rule ID, pointers and types with passive repair hints. Full project/profile/CLI integration and the runtime matrix require separate evidence."
+  },
+  "preconditions": [
+    "Explicit SRX 1.0 context and numeric policy"
+  ],
+  "primary_verification_id": "SR-VER-0050",
+  "required_environment": {
+    "declared_minimum_python": "3.10",
+    "implementation": "cpython",
+    "measured_scope": "current-run-only"
+  },
+  "requirement_id": "SR-REQ-0730",
+  "resources": {
+    "harness_suite_timeout": null,
+    "harness_test_timeout": null,
+    "owned_temporary_files": true
+  },
+  "specification_sha256": "1598079cf97a2844f96649851fff698e882760f5e72f8fa4c0003387e557ee6c",
+  "steps": [
+    "Evaluate actual numeric expressions and inspect values/structured errors.",
+    "Execute versioned positive, negative, boundary and diagnostic vectors against real SRX APIs; compare typed values and exact error pointers, never presentation strings.",
+    "Repeat the full conformance corpus, including all Annex U decisions, under changed Decimal current/default contexts, object-key order, execution order and fresh process defaults; compare machine values/errors and preserve process state."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0730",
+  "test_ids": [
+    "tests/test_srx_arithmetic.py::test_normative_decision_vectors",
+    "tests/test_srx_arithmetic_right.py::test_all_vectors_survive_modified_process_decimal_defaults",
+    "test_srx_conformance.SrxConformanceWorkTests.test_appendix_u_decisions",
+    "test_srx_conformance_right.SrxConformanceRightTests.test_full_corpus_under_changed_decimal_defaults",
+    "test_srx_conformance_right.SrxConformanceRightTests.test_corpus_in_fresh_processes_with_distinct_hash_seeds_and_locales"
+  ]
+}

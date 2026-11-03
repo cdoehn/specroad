@@ -20,6 +20,28 @@ from .telemetry import record
 from .disk_space import DiskGuard, CHECK_SECONDS, STOP_ERRORS
 
 
+class StartDelay:
+    """One monotonic deadline per worker; events and resume cannot shorten it."""
+    def __init__(self, seconds, *, clock=None):
+        self.seconds = seconds
+        self.clock = clock or time.monotonic
+        self.deadline = self.clock() + seconds
+
+    def remaining(self):
+        return max(0.0, self.deadline - self.clock())
+
+    def ready(self):
+        return self.remaining() == 0
+
+    def due(self, proposed):
+        return max(self.deadline, proposed)
+
+    def snapshot(self, *, stopping=False):
+        remaining = 0.0 if stopping else self.remaining()
+        return {'seconds': self.seconds, 'remaining_seconds': remaining,
+                'waiting': remaining > 0}
+
+
 def run(paths: Paths) -> int:
     private_dir(paths.state)
     private_dir(paths.runtime)
@@ -46,9 +68,10 @@ def _locked_run(paths: Paths, config: Config | None = None, *, queued=None) -> i
         if state_read(paths, queued)['phase'] == 'armed':
             desired = 'running'  # Explicit observation only; no development before handover.
     lifecycle = Lifecycle(desired)
+    delay = StartDelay(config.start_delay_seconds if config.enabled else 0.0)
     disk = DiskGuard(config, paths) if config.enabled else None
     gate = Gate(guard=disk)
-    gate.set(desired == "running")
+    gate.set(desired == "running" and delay.ready())
     engine = watcher = None
     future = None
     run_id = str(uuid.uuid4())
@@ -67,6 +90,7 @@ def _locked_run(paths: Paths, config: Config | None = None, *, queued=None) -> i
                 "driver": config.transport if config.enabled else "foundation-only",
                 "automation": engine.summary() if engine else None, "runtime_error": runtime_error,
                 "stop_reason": stop_reason, "disk_space": disk.snapshot() if disk else None,
+                "start_delay": delay.snapshot(stopping=lifecycle.stopping),
                 **({'handover_request_id': engine.request_id} if hasattr(engine, 'request_id') else {})}
 
     def save():
@@ -160,7 +184,7 @@ def _locked_run(paths: Paths, config: Config | None = None, *, queued=None) -> i
                     check_storage()
                     if lifecycle.phase == 'stopped':
                         break
-                gate.set(lifecycle.desired == "running" and not lifecycle.stopping and runtime_error is None)
+                gate.set(lifecycle.desired == "running" and not lifecycle.stopping and runtime_error is None and delay.ready())
                 if future is not None and future.done():
                     try:
                         result = future.result()
@@ -202,7 +226,7 @@ def _locked_run(paths: Paths, config: Config | None = None, *, queued=None) -> i
                     save()
                     if lifecycle.phase == "stopped":
                         break
-                if engine and pending_scan and future is None and lifecycle.phase == "idle" and runtime_error is None and time.monotonic() >= due:
+                if engine and pending_scan and future is None and lifecycle.phase == "idle" and runtime_error is None and time.monotonic() >= delay.due(due):
                     check_storage()
                     if lifecycle.stopping:
                         break
@@ -212,14 +236,14 @@ def _locked_run(paths: Paths, config: Config | None = None, *, queued=None) -> i
                     future = pool.submit(engine.tick)
                     future.add_done_callback(wake)
                     pending_scan = False
-                timeout = max(0, due - time.monotonic()) if engine and pending_scan and future is None and lifecycle.phase == "idle" and runtime_error is None else None
+                timeout = max(0, delay.due(due) - time.monotonic()) if engine and pending_scan and future is None and lifecycle.phase == "idle" and runtime_error is None else None
                 if disk is not None and not lifecycle.stopping:
                     remaining = max(0, disk_due - time.monotonic())
                     timeout = remaining if timeout is None else min(timeout, remaining)
                 for key, _mask in selector.select(timeout):
                     if key.fileobj == read_fd:
                         os.read(read_fd, 4096)
-                        gate.set(lifecycle.desired == "running" and not lifecycle.stopping and runtime_error is None)
+                        gate.set(lifecycle.desired == "running" and not lifecycle.stopping and runtime_error is None and delay.ready())
                         save()
                         continue
                     if watcher and key.fileobj is watcher:
@@ -248,7 +272,7 @@ def _locked_run(paths: Paths, config: Config | None = None, *, queued=None) -> i
                                 if command == "resume" and runtime_error:
                                     raise ControlError("needs_review", "A runtime error requires review and a controlled restart.")
                                 lifecycle.request(command)
-                                gate.set(lifecycle.desired == "running" and not lifecycle.stopping and runtime_error is None)
+                                gate.set(lifecycle.desired == "running" and not lifecycle.stopping and runtime_error is None and delay.ready())
                                 if command == "resume":
                                     pending_scan, due = config.enabled, time.monotonic()
                                 save()

@@ -1,1 +1,52 @@
-{"evidence_kind":"specroad-dev-pytest-v1","expected_diagnostics":["SRV110"],"expected_exit_codes":[],"fixture_ids":["SR-FIX-SRX-CONTEXT-v1"],"implementation_status":"partial","json_pointers":["/expression","/version"],"method":"automated_behavior","open_items":["Complete remaining SRX operators and integration with validation, configuration and profiles in the scheduled plan steps.","Structure/work policy and complete language conformance are not established by literal evaluation."],"oracle":{"kind":"behavior","requirement_contract":"Profil- und Lintbedingungen M\u00dcSSEN in der versionierten, rein deklarativen JSON-AST-Sprache `SRX 1.0` gespeichert werden.","scope":"Literal/context foundation only. Other operators, effective profile resolution, budget policy and CLI integration remain pending."},"preconditions":["Explicit JSON-only caller projections and SRX 1.0 literal expression."],"primary_verification_id":"SR-VER-0022","required_environment":{"declared_minimum_python":"3.10","implementation":"cpython","measured_scope":"current-run-only"},"requirement_id":"SR-REQ-0286","resources":{"harness_suite_timeout":null,"harness_test_timeout":null,"owned_temporary_files":true},"specification_sha256":"ffab6e96a19a881b665229964462339c01afac673bc51a5e9d15c389e407f87b","steps":["Capture own immutable data; evaluate literal or reject invalid declarations without side effects."],"test_case_format_version":1,"test_case_id":"SR-TC-0286","test_ids":["test_srx_context.SrxContextWorkTests.test_literal_object_preserves_nested_values","test_srx_context.SrxContextWorkTests.test_unsupported_operator_is_not_false","test_srx_context_right.SrxContextRightTests.test_raw_program_preserves_original_bytes","test_srx_context_right.SrxContextRightTests.test_duplicate_literal_key_rejected"]}
+{
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [
+    "SRV110"
+  ],
+  "expected_exit_codes": [],
+  "fixture_ids": [
+    "SR-FIX-SRX-CONTEXT-v1"
+  ],
+  "implementation_status": "partial",
+  "json_pointers": [
+    "/expression",
+    "/version"
+  ],
+  "method": "automated_behavior",
+  "open_items": [
+    "Complete remaining SRX operators and integration with validation, configuration and profiles in the scheduled plan steps.",
+    "Structure/work policy and complete language conformance are not established by literal evaluation."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Profil- und Lintbedingungen MÜSSEN in der versionierten, rein deklarativen JSON-AST-Sprache `SRX 1.0` gespeichert werden.",
+    "scope": "Literal/context foundation only. Other operators, effective profile resolution, budget policy and CLI integration remain pending."
+  },
+  "preconditions": [
+    "Explicit JSON-only caller projections and SRX 1.0 literal expression."
+  ],
+  "primary_verification_id": "SR-VER-0022",
+  "required_environment": {
+    "declared_minimum_python": "3.10",
+    "implementation": "cpython",
+    "measured_scope": "current-run-only"
+  },
+  "requirement_id": "SR-REQ-0286",
+  "resources": {
+    "harness_suite_timeout": null,
+    "harness_test_timeout": null,
+    "owned_temporary_files": true
+  },
+  "specification_sha256": "1598079cf97a2844f96649851fff698e882760f5e72f8fa4c0003387e557ee6c",
+  "steps": [
+    "Capture own immutable data; evaluate literal or reject invalid declarations without side effects."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0286",
+  "test_ids": [
+    "test_srx_context.SrxContextWorkTests.test_literal_object_preserves_nested_values",
+    "test_srx_context.SrxContextWorkTests.test_unsupported_operator_is_not_false",
+    "test_srx_context_right.SrxContextRightTests.test_raw_program_preserves_original_bytes",
+    "test_srx_context_right.SrxContextRightTests.test_duplicate_literal_key_rejected"
+  ]
+}

@@ -91,3 +91,18 @@ Ziel-Results und geänderte Nachweise. Alte Verträge ohne gespeichertes Budget
 benötigen weiterhin einen regulären belegten Umsetzungsabschluss. Eine
 Spezifikationsklärung wird durch den Bedienbefehl weder ausgeführt noch als
 Produktfortschritt verbucht. Maßgeblich: SpecRoad-Spezifikation 2.4.3.2.
+
+## Startwartezeit
+
+`start` startet den installierten Dienst. Die Entwicklungsautomatik wartet
+danach standardmäßig 60 Sekunden; Status, Pause und Stop reagieren sofort.
+Unter `[automation]` in der externen config.toml ist
+`start_delay_seconds = 60` konfigurierbar (0 bis 86400, Bruchteile erlaubt).
+Null bedeutet ausdrücklich ohne Startwartezeit. Bestehende Dateien ohne
+diesen Eintrag verwenden 60, ohne beim Lesen geändert zu werden. Eine neue
+Einstellung gilt beim nächsten ausdrücklich gestarteten Worker. Ein laufender
+Dienst wird durch erneutes `start` nicht verzögert oder neu gestartet.
+`status` liefert `start_delay.seconds`, `remaining_seconds` und `waiting`.
+Pause/Resume verkürzen die Frist nicht; eine bereits abgelaufene Frist beginnt
+durch Resume nicht erneut. Der Stop wartet nicht auf die Frist. Thread-,
+Speicher-, Result- und Budgetprüfungen bleiben zusätzlich wirksam.

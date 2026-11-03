@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 64 · **Stand:** 3. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.55
+**Planrevision:** 68 · **Stand:** 3. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.56
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 Schritte und 900 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; die ausdrücklich genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wird nach 10.7.10 innerhalb von 15.l.R vorgezogen. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -9,7 +9,7 @@ Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 S
 
 Fachliche Grundlage ist [`docs/specification/SpecRoad_Spezifikation.md`](../specification/SpecRoad_Spezifikation.md), einschließlich aller konsolidierten Korrekturen, 742 Requirements, 51 Verifikationsverträge, 46 Szenario-/E2E-Identitäten sowie R-01 bis R-75, Anhang U und den PatchHarbor-Rundweg aus Anhang W. Der [`Prüfbericht`](../reviews/SpecRoad_v0.2.7_Implementierungsreife_Pruefbericht.md) ist ein vorgelagerter Entwurfsreview, kein späterer Produktnachweis.
 
-Gebundene Spezifikations-SHA-256: `ffab6e96a19a881b665229964462339c01afac673bc51a5e9d15c389e407f87b`.
+Gebundene Spezifikations-SHA-256: `1598079cf97a2844f96649851fff698e882760f5e72f8fa4c0003387e557ee6c`.
 Planungsbasis: Commit `fe2661d02ecf2f7eb483b58a4487eb009c6b3846`; sauberes Result-Bundle `specroad_Result_120209_0914_df3504.zip`; Repository-ID `3d2576df-d611-46fc-9d2b-92869468aaca`. Diese Angaben dokumentieren die Entstehung des Plans, nicht die zukünftige Patchbindung. **Jedes spätere Patchpaket bindet den dann aktuellen tatsächlichen Result-Zustand.**
 
 Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 2026 gelten zusätzlich und bei den nachfolgend benannten Konflikten vorrangig. Sonstige normative Spezifikationsinhalte werden nicht stillschweigend abgeschwächt. Neue fachliche Widersprüche, fehlende zwingende Angaben und Sicherheitsprobleme sind offen zu benennen, nicht durch erfundene Annahmen oder Scheinerfolge zu lösen.
@@ -33,6 +33,55 @@ ausdrückliche Bedienausnahme aus 2.4.3.2 bleibt zusätzlich anwendbar.
 Produktfreigaben und die Grenzen aus 2.4.1/2.4.2/2.4.4 bleiben unverändert.
 Dieser Plan ändert keine alten Aufträge, Antworten, Blockaden oder
 Laufzeitdaten und ist keine Start-/Resume-Anweisung.
+
+## Korrektur 565 — neuen Konfigurationsvertrag in Bootstrap-Abnahmen erhalten
+
+Das native Fehler-Result c158372ff3450354cebb64aa1eebfc711ea183ced5ca9e6ceb8cf8b797b62403
+belegt 7309 bestandene und elf fehlgeschlagene W-Tests, ohne Commit.
+Alle elf Fehler stammen aus drei noch unveränderten alten Feldmengenprüfungen:
+start_delay_seconds war dort nicht enthalten. Der neue normative Vertrag bleibt;
+die Prüfungen bleiben geschlossen und ergänzen das Feld samt Werterhaltung.
+Ein gezielt erweiterter Fall belegt den Erhalt einer ausdrücklich gewählten Verzögerung
+bei Legacy-Migration ohne History-Reset oder Modell-/Dienststart. Keine Tests
+werden entfernt oder abgeschwächt, keine Laufzeitbehauptung ersetzt ein Gate.
+
+Die vollständig erhaltenen W-Dateien sind die neue Vorherbasis. Alle offenen
+IDs CONTROL-START-DELAY-564.W/R/C bleiben samt Rollen, Reihenfolge, vollständigem
+Umfang und Pflichtauswahl erhalten. Bereits erfolgreiche Commits: keine.
+Erstes Korrekturbundle innerhalb der einmaligen Grenze von höchstens vier.
+Dev hat keine Testkörper ausgeführt; erneute Abnahme vollständig durch Apply.
+
+## OFF-PLAN CONTROL-START-DELAY-564 — Startfrist vor Automation
+
+Nutzerauftrag vom 3. November 2026: konfigurierbare Verzögerung, Standard 60 s;
+nach Apply installieren, danach ambiguous_patch separat reparieren und erst
+dann die Automatik starten. Höchstens vier Korrekturbundles als ausdrückliche
+manuelle Ausnahme; Fehler anhand des jeweiligen nativen Results korrigieren.
+Keine generelle Änderung der Control-Entscheidungs-/Budgetverträge.
+
+Basis: erfolgreiches sauberes Result 563, SHA-256
+`1ac02454e9b0002e43bd385e6b11c741609b2771fb24662e68659043c225f862`.
+4c45d6e041a143dd19ac1232b858c2432374a830 beendet 16.d.C. Produktfortschritt
+bleibt 672/900, 16.e.W offen. Die Auswahl eines externen systemd-Timers würde
+weiter eine separate Bedienaktion erfordern; ein blockierendes Sleep würde
+Status/Stop verzögern. Gewählt ist eine einmalige monotone Schranke im
+vorhandenen Event-Loop; konfigurierte Null ist der explizite Sofortstart.
+
+W: vollständige konfigurierte Startfrist, Legacy-Default ohne Config-Rewrite,
+monotone Deadline, Statusrestzeit, IPC/Stop/Pause, Exchange-/Resume-Schranke,
+laufende Speicherkontrolle. Abnahmen: Default 60, 0 und Bruchteile, kein früher
+Tick/Modell/History-Wechsel, automatischer Ablauf, keine Folgeauftragspause.
+R: strenger persistierter Statusvertrag, ungültige Grenzwerte und unveränderte
+Fehlerbytes, Neustart unter Pause, Pause über Ablauf, SIGTERM und Speicherstop
+während langer Startfrist. Kein Warten von 60 Sekunden in den Verhaltenstests.
+C: Fristberechnung vom Event-Loop trennen; alle R-Tests und Fachregeln erhalten.
+
+Vorbereitete Phase: W. Der Marker gilt ausschließlich nach ihrem eigenen
+erfolgreichen Apply-Gate. Jeder Zustand erhält die volle Control-Suite plus
+Katalog-/Apply-Regressionsauswahl ungefiltert zusätzlich zur N=3-Gruppe.
+Dev führt nur Syntax, Collection und native Paketprüfung aus; keine Testkörper.
+Der Entrypoint installiert keine Releasekopie und verändert keinen Dienst.
+Diese Bedienaktionen folgen erst nach nativ bestätigtem vollständigem Erfolg.
 
 ## Technische Fortsetzung 563 — bestätigte Host-Ursache beseitigt
 
@@ -1650,7 +1699,7 @@ Kein offener Produktplanschritt wird durch diese Testoptimierung abgeschlossen.
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 66
+plan_revision: 68
 implementation_plan_commits_total: 900
 implementation_plan_commits_completed: 672
 last_completed_plan_commit: 16.d.C

@@ -27,6 +27,7 @@ class Config:
     command_path: str = ""
     retry_delays_seconds: tuple = (60, 180, 600, 1800)
     thread_cwd: Path | None = None
+    start_delay_seconds: float = 60.0
 
 
 def template() -> str:
@@ -51,6 +52,7 @@ def render(config: Config) -> str:
             + "\narchive_directory = " + q(config.archive_directory)
             + "\n\n[automation]\nenabled = " + str(config.enabled).lower()
             + "\nsettle_seconds = " + str(config.settle_seconds)
+            + "\nstart_delay_seconds = " + str(config.start_delay_seconds)
             + "\nretry_delays_seconds = " + json.dumps(list(config.retry_delays_seconds)) + "\n")
 
 
@@ -100,7 +102,7 @@ def parse(doc: dict, paths: Paths) -> Config:
         raise ValueError
     if set(ph) - {"exchange", "repo_id", "python_executable", "archive_directory"}:
         raise ValueError
-    if set(auto) - {"enabled", "seed_result", "seed_sha256", "settle_seconds", "retry_delays_seconds"}:
+    if set(auto) - {"enabled", "seed_result", "seed_sha256", "settle_seconds", "retry_delays_seconds", "start_delay_seconds"}:
         raise ValueError
     # Blank legacy template keys remain readable until explicit setup rewrites
     # them. Nonempty old bootstrap data must be migrated, never silently dropped.
@@ -115,6 +117,9 @@ def parse(doc: dict, paths: Paths) -> Config:
         raise ValueError
     settle = auto.get("settle_seconds", 0.5)
     if type(settle) not in (int, float) or not math.isfinite(settle) or not 0.05 <= settle <= 30:
+        raise ValueError
+    delay = auto.get("start_delay_seconds", 60.0)
+    if type(delay) not in (int, float) or not 0 <= delay <= 86400:
         raise ValueError
     retry_delays = auto.get("retry_delays_seconds", [60, 180, 600, 1800])
     if (not isinstance(retry_delays, list) or len(retry_delays) > 8
@@ -134,7 +139,8 @@ def parse(doc: dict, paths: Paths) -> Config:
                     codex_home=absolute(dev.get("codex_home", ""), optional=True),
                     transport=transport, settle_seconds=float(settle), archive_directory=archive,
                     command_path=text(dev.get("command_path", "")), retry_delays_seconds=tuple(retry_delays),
-                    thread_cwd=absolute(dev.get("thread_cwd", ""), optional=True))
+                    thread_cwd=absolute(dev.get("thread_cwd", ""), optional=True),
+                    start_delay_seconds=float(delay))
     repo_real, exchange_real = repo.resolve(), exchange.resolve()
     if config.thread_cwd is not None:
         target = config.thread_cwd

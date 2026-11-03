@@ -174,7 +174,7 @@ class AutomationCase(LocalCase):
         self.python = self.home / 'fake-core'
         self.python.write_text('#!' + sys.executable + '\n' + CORE_SCRIPT); self.python.chmod(0o700)
         self.config = Config(self.dev, self.exchange, self.thread, True, self.repo_id,
-                             self.python, self.binary, self.codex_home, settle_seconds=.05)
+                             self.python, self.binary, self.codex_home, settle_seconds=.05, start_delay_seconds=0)
         self.settings()
         self.codex_daemon = SocketDaemon(self.codex_home, self.dev)
         self.addCleanup(self.codex_daemon.close)

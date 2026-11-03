@@ -1,3 +1,6 @@
+> CONTROL-START-DELAY-564: aktuelle normative Startfrist und Statusvertrag
+> in SpecRoad-Spezifikation 2.5.4.1; Standard 60 s, konfigurierbar 0..86400.
+
 > CONTROL-CLARIFICATION-560: Zusätzlich gilt SpecRoad-Spezifikation 2.4.3.2
 > für den ausdrücklichen budgeterhaltenden Übergang auf einen neuen V4-Auftrag.
 > Alte Versuche bleiben unverändert; Recovery/Installation allein geben nichts frei.

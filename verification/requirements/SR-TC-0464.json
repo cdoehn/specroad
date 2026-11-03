@@ -1,1 +1,82 @@
-{"evidence_kind":"specroad-dev-pytest-v1","expected_diagnostics":[],"expected_exit_codes":[],"fixture_ids":["SR-FIX-OWNED-TEMP-v1","SR-FIX-DOMAIN-DRAFT-v1","SR-FIX-RECORD-FIELDS-v1","SR-FIX-NORMALIZATION-TRANSACTION-v1","SR-FIX-NORMALIZATION-SCOPE-v1"],"implementation_status":"partial","json_pointers":[],"method":"automated_behavior","open_items":["Register public format/check CLI with complete live inventory and real trusted semantic services for profiles/rules/mappings and special-record currentness. Mixed semantic/representation operation sequences remain unsupported; no CLI, matrix or release approval is claimed."],"oracle":{"kind":"behavior","requirement_contract":"Eine tats\u00e4chliche Formatierung MUSS jede ge\u00e4nderte Datei durch `representation_normalize` mit erwartetem und resultierendem Byte-Hash planen.","scope":"Library-level complete current JSON format selection and normalization-only transactions. Exact full values, source/target bytes, semantic roots and native journal/receipt/recovery effects are checked; human layout is excluded. Protected records are omitted by scope selection and rejected explicitly. Public format/check CLI and real host services remain later integration."},"preconditions":["Complete supplied project model in an owned temporary root; native tests use explicit trusted test-only authorization and resource gates, never default production approval."],"primary_verification_id":"SR-VER-0031","required_environment":{"declared_minimum_python":"3.10","implementation":"cpython","measured_scope":"current-run-only"},"requirement_id":"SR-REQ-0464","resources":{"harness_suite_timeout":null,"harness_test_timeout":null,"owned_temporary_files":true},"specification_sha256":"ffab6e96a19a881b665229964462339c01afac673bc51a5e9d15c389e407f87b","steps":["Prepare the full eligible JSON scope or explicit byte-bound operations; observe complete values, metadata, protected originals, actual write-free checks and native publication/recovery effects."],"test_case_format_version":1,"test_case_id":"SR-TC-0464","test_ids":["test_representation.RepresentationWorkTests.test_byte_bindings_are_independent_of_value_hash","test_representation.RepresentationWorkTests.test_repeated_normalization_has_no_further_change","test_representation_right.RepresentationRightTests.test_source_precondition_rejects_even_semantically_identical_new_bytes","test_representation_right.RepresentationRightTests.test_observed_single_file_change_is_rejected_before_return","test_representation_right.RepresentationRightTests.test_earlier_batch_member_is_rechecked_after_later_reads","test_representation_right.RepresentationRightTests.test_stale_candidate_does_not_overwrite_current_bytes","tests/test_normalization_target.py::test_common_preconditions_are_not_bypassed[absent]","tests/test_normalization_target.py::test_common_preconditions_are_not_bypassed[artifact]","tests/test_normalization_target.py::test_common_preconditions_are_not_bypassed[file]","tests/test_normalization_target.py::test_semantic_root_guards_still_apply[base]","tests/test_normalization_target.py::test_semantic_root_guards_still_apply[target]","tests/test_normalization_target.py::test_semantically_identical_new_source_cannot_reuse_old_byte_precondition","tests/test_normalization_target.py::test_wrong_bytehash_is_rejected_even_with_a_valid_plan_self_hash[expected_byte_sha256]","tests/test_normalization_target.py::test_wrong_bytehash_is_rejected_even_with_a_valid_plan_self_hash[target_byte_sha256]","tests/test_normalization_transactions.py::test_changed_staging_bytes_cannot_be_published_even_with_equal_semantic_values","tests/test_normalization_transactions.py::test_native_writer_normalizes_only_selected_artifact_and_finalizes_real_receipts","tests/test_normalization_transactions.py::test_recovery_completes_exact_normalized_target_despite_equal_model_roots","tests/test_normalization_transactions.py::test_stale_selected_or_untouched_bytes_refuse_before_journal_creation[0]","tests/test_normalization_transactions.py::test_stale_selected_or_untouched_bytes_refuse_before_journal_creation[1]","tests/test_normalization_scope.py::test_complete_scope_has_exact_bytehashes_and_preserves_every_value","tests/test_normalization_scope.py::test_explicit_single_resource_plan_uses_the_same_target_path[mappings/sample.json]","tests/test_normalization_scope.py::test_explicit_single_resource_plan_uses_the_same_target_path[profiles/core.json]","tests/test_normalization_scope.py::test_explicit_single_resource_plan_uses_the_same_target_path[rules/sample.json]","tests/test_normalization_scope.py::test_explicit_single_resource_plan_uses_the_same_target_path[specroad.json]","tests/test_normalization_scope_transactions.py::test_fresh_process_recovery_reaches_exact_base_or_target_and_requires_new_request[building]","tests/test_normalization_scope_transactions.py::test_fresh_process_recovery_reaches_exact_base_or_target_and_requires_new_request[committed]","tests/test_normalization_scope_transactions.py::test_fresh_process_recovery_reaches_exact_base_or_target_and_requires_new_request[configuration_move]","tests/test_normalization_scope_transactions.py::test_fresh_process_recovery_reaches_exact_base_or_target_and_requires_new_request[partial]","tests/test_normalization_scope_transactions.py::test_fresh_process_recovery_reaches_exact_base_or_target_and_requires_new_request[prepared]","tests/test_normalization_scope_transactions.py::test_full_scope_is_published_and_cleaned_without_value_or_metadata_changes","tests/test_normalization_scope_transactions.py::test_recovery_rejects_unbound_live_configuration_without_altering_evidence[policy_value]","tests/test_normalization_scope_transactions.py::test_recovery_rejects_unbound_live_configuration_without_altering_evidence[third_representation]","tests/test_normalization_scope_transactions.py::test_stale_resource_bytes_block_before_building_journal[mappings/sample.json]","tests/test_normalization_scope_transactions.py::test_stale_resource_bytes_block_before_building_journal[profiles/core.json]","tests/test_normalization_scope_transactions.py::test_stale_resource_bytes_block_before_building_journal[rules/sample.json]","tests/test_normalization_scope_transactions.py::test_stale_resource_bytes_block_before_building_journal[specroad.json]"]}
+{
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [],
+  "fixture_ids": [
+    "SR-FIX-OWNED-TEMP-v1",
+    "SR-FIX-DOMAIN-DRAFT-v1",
+    "SR-FIX-RECORD-FIELDS-v1",
+    "SR-FIX-NORMALIZATION-TRANSACTION-v1",
+    "SR-FIX-NORMALIZATION-SCOPE-v1"
+  ],
+  "implementation_status": "partial",
+  "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "Register public format/check CLI with complete live inventory and real trusted semantic services for profiles/rules/mappings and special-record currentness. Mixed semantic/representation operation sequences remain unsupported; no CLI, matrix or release approval is claimed."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Eine tatsächliche Formatierung MUSS jede geänderte Datei durch `representation_normalize` mit erwartetem und resultierendem Byte-Hash planen.",
+    "scope": "Library-level complete current JSON format selection and normalization-only transactions. Exact full values, source/target bytes, semantic roots and native journal/receipt/recovery effects are checked; human layout is excluded. Protected records are omitted by scope selection and rejected explicitly. Public format/check CLI and real host services remain later integration."
+  },
+  "preconditions": [
+    "Complete supplied project model in an owned temporary root; native tests use explicit trusted test-only authorization and resource gates, never default production approval."
+  ],
+  "primary_verification_id": "SR-VER-0031",
+  "required_environment": {
+    "declared_minimum_python": "3.10",
+    "implementation": "cpython",
+    "measured_scope": "current-run-only"
+  },
+  "requirement_id": "SR-REQ-0464",
+  "resources": {
+    "harness_suite_timeout": null,
+    "harness_test_timeout": null,
+    "owned_temporary_files": true
+  },
+  "specification_sha256": "1598079cf97a2844f96649851fff698e882760f5e72f8fa4c0003387e557ee6c",
+  "steps": [
+    "Prepare the full eligible JSON scope or explicit byte-bound operations; observe complete values, metadata, protected originals, actual write-free checks and native publication/recovery effects."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0464",
+  "test_ids": [
+    "test_representation.RepresentationWorkTests.test_byte_bindings_are_independent_of_value_hash",
+    "test_representation.RepresentationWorkTests.test_repeated_normalization_has_no_further_change",
+    "test_representation_right.RepresentationRightTests.test_source_precondition_rejects_even_semantically_identical_new_bytes",
+    "test_representation_right.RepresentationRightTests.test_observed_single_file_change_is_rejected_before_return",
+    "test_representation_right.RepresentationRightTests.test_earlier_batch_member_is_rechecked_after_later_reads",
+    "test_representation_right.RepresentationRightTests.test_stale_candidate_does_not_overwrite_current_bytes",
+    "tests/test_normalization_target.py::test_common_preconditions_are_not_bypassed[absent]",
+    "tests/test_normalization_target.py::test_common_preconditions_are_not_bypassed[artifact]",
+    "tests/test_normalization_target.py::test_common_preconditions_are_not_bypassed[file]",
+    "tests/test_normalization_target.py::test_semantic_root_guards_still_apply[base]",
+    "tests/test_normalization_target.py::test_semantic_root_guards_still_apply[target]",
+    "tests/test_normalization_target.py::test_semantically_identical_new_source_cannot_reuse_old_byte_precondition",
+    "tests/test_normalization_target.py::test_wrong_bytehash_is_rejected_even_with_a_valid_plan_self_hash[expected_byte_sha256]",
+    "tests/test_normalization_target.py::test_wrong_bytehash_is_rejected_even_with_a_valid_plan_self_hash[target_byte_sha256]",
+    "tests/test_normalization_transactions.py::test_changed_staging_bytes_cannot_be_published_even_with_equal_semantic_values",
+    "tests/test_normalization_transactions.py::test_native_writer_normalizes_only_selected_artifact_and_finalizes_real_receipts",
+    "tests/test_normalization_transactions.py::test_recovery_completes_exact_normalized_target_despite_equal_model_roots",
+    "tests/test_normalization_transactions.py::test_stale_selected_or_untouched_bytes_refuse_before_journal_creation[0]",
+    "tests/test_normalization_transactions.py::test_stale_selected_or_untouched_bytes_refuse_before_journal_creation[1]",
+    "tests/test_normalization_scope.py::test_complete_scope_has_exact_bytehashes_and_preserves_every_value",
+    "tests/test_normalization_scope.py::test_explicit_single_resource_plan_uses_the_same_target_path[mappings/sample.json]",
+    "tests/test_normalization_scope.py::test_explicit_single_resource_plan_uses_the_same_target_path[profiles/core.json]",
+    "tests/test_normalization_scope.py::test_explicit_single_resource_plan_uses_the_same_target_path[rules/sample.json]",
+    "tests/test_normalization_scope.py::test_explicit_single_resource_plan_uses_the_same_target_path[specroad.json]",
+    "tests/test_normalization_scope_transactions.py::test_fresh_process_recovery_reaches_exact_base_or_target_and_requires_new_request[building]",
+    "tests/test_normalization_scope_transactions.py::test_fresh_process_recovery_reaches_exact_base_or_target_and_requires_new_request[committed]",
+    "tests/test_normalization_scope_transactions.py::test_fresh_process_recovery_reaches_exact_base_or_target_and_requires_new_request[configuration_move]",
+    "tests/test_normalization_scope_transactions.py::test_fresh_process_recovery_reaches_exact_base_or_target_and_requires_new_request[partial]",
+    "tests/test_normalization_scope_transactions.py::test_fresh_process_recovery_reaches_exact_base_or_target_and_requires_new_request[prepared]",
+    "tests/test_normalization_scope_transactions.py::test_full_scope_is_published_and_cleaned_without_value_or_metadata_changes",
+    "tests/test_normalization_scope_transactions.py::test_recovery_rejects_unbound_live_configuration_without_altering_evidence[policy_value]",
+    "tests/test_normalization_scope_transactions.py::test_recovery_rejects_unbound_live_configuration_without_altering_evidence[third_representation]",
+    "tests/test_normalization_scope_transactions.py::test_stale_resource_bytes_block_before_building_journal[mappings/sample.json]",
+    "tests/test_normalization_scope_transactions.py::test_stale_resource_bytes_block_before_building_journal[profiles/core.json]",
+    "tests/test_normalization_scope_transactions.py::test_stale_resource_bytes_block_before_building_journal[rules/sample.json]",
+    "tests/test_normalization_scope_transactions.py::test_stale_resource_bytes_block_before_building_journal[specroad.json]"
+  ]
+}

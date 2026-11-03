@@ -1,1 +1,35 @@
-{"evidence_kind":"specroad-dev-pytest-v1","expected_diagnostics":[],"expected_exit_codes":[],"fixture_ids":[],"implementation_status":"open","json_pointers":[],"method":"pending","open_items":["Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."],"oracle":{"kind":"pending","requirement_contract":"SpecRoad MUSS unbekannte zul\u00e4ssige Finding-Namespaces und Extensions als Daten erhalten, ohne deren Semantik oder Ausf\u00fchrung zu erfinden.","scope":"Not implemented. No automated pass oracle is claimed."},"preconditions":[],"primary_verification_id":"SR-VER-0046","required_environment":{"declared_minimum_python":"3.10","implementation":"cpython","measured_scope":"current-run-only"},"requirement_id":"SR-REQ-0684","resources":{"harness_suite_timeout":null,"harness_test_timeout":null,"owned_temporary_files":true},"specification_sha256":"ffab6e96a19a881b665229964462339c01afac673bc51a5e9d15c389e407f87b","steps":[],"test_case_format_version":1,"test_case_id":"SR-TC-0684","test_ids":[]}
+{
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [],
+  "fixture_ids": [],
+  "implementation_status": "open",
+  "json_pointers": [],
+  "method": "pending",
+  "open_items": [
+    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+  ],
+  "oracle": {
+    "kind": "pending",
+    "requirement_contract": "SpecRoad MUSS unbekannte zulässige Finding-Namespaces und Extensions als Daten erhalten, ohne deren Semantik oder Ausführung zu erfinden.",
+    "scope": "Not implemented. No automated pass oracle is claimed."
+  },
+  "preconditions": [],
+  "primary_verification_id": "SR-VER-0046",
+  "required_environment": {
+    "declared_minimum_python": "3.10",
+    "implementation": "cpython",
+    "measured_scope": "current-run-only"
+  },
+  "requirement_id": "SR-REQ-0684",
+  "resources": {
+    "harness_suite_timeout": null,
+    "harness_test_timeout": null,
+    "owned_temporary_files": true
+  },
+  "specification_sha256": "1598079cf97a2844f96649851fff698e882760f5e72f8fa4c0003387e557ee6c",
+  "steps": [],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0684",
+  "test_ids": []
+}

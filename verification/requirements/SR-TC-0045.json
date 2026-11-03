@@ -1,1 +1,58 @@
-{"evidence_kind":"specroad-dev-pytest-v1","expected_diagnostics":["SRV030"],"expected_exit_codes":[0,2,3],"fixture_ids":["SR-FIX-CHANGE-LIFECYCLE-v1"],"implementation_status":"partial","json_pointers":["/maturity","/revision","/operations"],"method":"automated_behavior","open_items":["Full target validation and live publication are future planner/transaction steps.","Dedicated complete approval gates are required for transitions to approved; this adapter refuses them.","Historical completeness and specialized lifecycles are not established by this regular adapter."],"oracle":{"kind":"behavior","requirement_contract":"Ein jemals `approved` gewesenes Artefakt DARF NICHT physisch aus dem normativen Modell entfernt werden.","scope":"Standard lifecycle candidate planning under 9.6.1/9.6.3; changes precede audit stamping/hashing. No write or legitimate approval proof. Saved plans recompute final lifecycle/audit values and verify declared hashes. Explicit history reservations are not a full history or authentication proof."},"preconditions":["Owned standard-artifact values and ordered operations; explicit bound actor and time."],"primary_verification_id":"SR-VER-0004","required_environment":{"declared_minimum_python":"3.10","implementation":"cpython","measured_scope":"current-run-only"},"requirement_id":"SR-REQ-0045","resources":{"harness_suite_timeout":null,"harness_test_timeout":null,"owned_temporary_files":true},"specification_sha256":"ffab6e96a19a881b665229964462339c01afac673bc51a5e9d15c389e407f87b","steps":["Prepare lifecycle candidates without I/O; compare final status, metadata, content hashes and operation audit."],"test_case_format_version":1,"test_case_id":"SR-TC-0045","test_ids":["tests/test_change_lifecycle.py::test_different_artifacts_can_change_content_and_retire_independently","tests/test_change_lifecycle_right.py::test_history_known_ids_remain_reserved_even_if_absent_from_current_scope","tests/test_change_lifecycle_right.py::test_observed_approved_identity_survives_retirement_and_content_change","tests/test_change_lifecycle_right.py::test_delete_not_a_regular_operation_even_for_unapproved_artifacts"]}
+{
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [
+    "SRV030"
+  ],
+  "expected_exit_codes": [
+    0,
+    2,
+    3
+  ],
+  "fixture_ids": [
+    "SR-FIX-CHANGE-LIFECYCLE-v1"
+  ],
+  "implementation_status": "partial",
+  "json_pointers": [
+    "/maturity",
+    "/revision",
+    "/operations"
+  ],
+  "method": "automated_behavior",
+  "open_items": [
+    "Full target validation and live publication are future planner/transaction steps.",
+    "Dedicated complete approval gates are required for transitions to approved; this adapter refuses them.",
+    "Historical completeness and specialized lifecycles are not established by this regular adapter."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Ein jemals `approved` gewesenes Artefakt DARF NICHT physisch aus dem normativen Modell entfernt werden.",
+    "scope": "Standard lifecycle candidate planning under 9.6.1/9.6.3; changes precede audit stamping/hashing. No write or legitimate approval proof. Saved plans recompute final lifecycle/audit values and verify declared hashes. Explicit history reservations are not a full history or authentication proof."
+  },
+  "preconditions": [
+    "Owned standard-artifact values and ordered operations; explicit bound actor and time."
+  ],
+  "primary_verification_id": "SR-VER-0004",
+  "required_environment": {
+    "declared_minimum_python": "3.10",
+    "implementation": "cpython",
+    "measured_scope": "current-run-only"
+  },
+  "requirement_id": "SR-REQ-0045",
+  "resources": {
+    "harness_suite_timeout": null,
+    "harness_test_timeout": null,
+    "owned_temporary_files": true
+  },
+  "specification_sha256": "1598079cf97a2844f96649851fff698e882760f5e72f8fa4c0003387e557ee6c",
+  "steps": [
+    "Prepare lifecycle candidates without I/O; compare final status, metadata, content hashes and operation audit."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0045",
+  "test_ids": [
+    "tests/test_change_lifecycle.py::test_different_artifacts_can_change_content_and_retire_independently",
+    "tests/test_change_lifecycle_right.py::test_history_known_ids_remain_reserved_even_if_absent_from_current_scope",
+    "tests/test_change_lifecycle_right.py::test_observed_approved_identity_survives_retirement_and_content_change",
+    "tests/test_change_lifecycle_right.py::test_delete_not_a_regular_operation_even_for_unapproved_artifacts"
+  ]
+}

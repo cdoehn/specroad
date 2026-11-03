@@ -1,1 +1,105 @@
-{"evidence_kind":"specroad-dev-pytest-v1","expected_diagnostics":[],"expected_exit_codes":[],"fixture_ids":["SR-FIX-DOMAIN-DRAFT-v1","SR-FIX-RELATIONS-v1","SR-FIX-SRX-CONTEXT-v1"],"implementation_status":"partial","json_pointers":["/filters/full_text","/items"],"method":"automated_behavior","open_items":["Supported platform/product acceptance remains open; current evidence measures native CPython and locally available locales only.","Public query CLI/live project adapter, public page delivery, load and full Work integration remain open.","Full specialist artifact/document validation, rendering/include traversal and attachment indexing are outside the current explicit-input text selection."],"oracle":{"kind":"behavior","requirement_contract":"Volltextsuche MUSS Unicode-NFC und Unicode-Casefold locale-unabh\u00e4ngig anwenden.","scope":"8.c.W integrates literal fulltext into actual Query selection. NFC/NFD equivalents, sharp-s casefold, sigma and dotted-I mappings have exact ID oracles. Declared text fields and own prose/admonition strings are searched without NFKC, accent stripping, locale collation, metadata stringification or execution. OR/AND composition, owned projection and original byte/hash preservation are observed. This is an unpaged supplied-inventory kernel, not full project validation, CLI delivery or approval. 8.c.R binds every search observation to an exact SourceRelations record, retaining original bytes and raw SHA-256 separately from immutable normalized copies. Repeated queries rebuild current copies even for the same ID; canonically equivalent sources and alternative JSON encodings retain distinct source bindings. Actual available locale switches occur only in an isolated child process, with exact hit, projection and byte oracles; C is mandatory, additional installed locales are covered without a cross-platform completeness claim. All prior W expectations remain unchanged. 8.c.C moves the identical field-selection/normalization function into a private pure working-copy module. SearchText and literal matching retain their module identity and source ownership behavior. All W/R tests and IDs remain unchanged; an AST proof binds the moved function and remaining source module to the authoritative R Result."},"preconditions":["Owned current-schema artifact bytes and actual Query selection on native CPython; no CLI or document-rendering claim."],"primary_verification_id":"SR-VER-0032","required_environment":{"declared_minimum_python":"3.10","implementation":"cpython","measured_scope":"current-run-only"},"requirement_id":"SR-REQ-0474","resources":{"harness_suite_timeout":null,"harness_test_timeout":null,"owned_temporary_files":true},"specification_sha256":"ffab6e96a19a881b665229964462339c01afac673bc51a5e9d15c389e407f87b","steps":["Search declared text fields with NFC-plus-casefold working copies and compare exact matching IDs.","Combine repeated fulltext alternatives with other groups and SRX; retain original source bytes, hashes and projected text.","Reject invalid known text field types; ensure no host locale, file, network or process use.","Check original bytes/hash ownership, current source replacement, exact non-fulltext fields, malformed known text and isolated real locale switches."],"test_case_format_version":1,"test_case_id":"SR-TC-0474","test_ids":["tests/test_query_full_text.py::test_canonically_equivalent_terms_match_both_stored_forms[CAF\\xc9]","tests/test_query_full_text.py::test_canonically_equivalent_terms_match_both_stored_forms[Caf\\xc9]","tests/test_query_full_text.py::test_canonically_equivalent_terms_match_both_stored_forms[cafe\\u0301]","tests/test_query_full_text.py::test_casefold_handles_sharp_s_without_lowercase_shortcuts[STRASSE]","tests/test_query_full_text.py::test_casefold_handles_sharp_s_without_lowercase_shortcuts[Stra\\xdfe]","tests/test_query_full_text.py::test_casefold_handles_sharp_s_without_lowercase_shortcuts[strasse]","tests/test_query_full_text.py::test_declared_type_specific_main_text_is_searched[assumption-statement-Annahme Caf\\xe9]","tests/test_query_full_text.py::test_declared_type_specific_main_text_is_searched[component-responsibility-Aufgabe Caf\\xe9]","tests/test_query_full_text.py::test_declared_type_specific_main_text_is_searched[decision-decision-Entscheidung Caf\\xe9]","tests/test_query_full_text.py::test_declared_type_specific_main_text_is_searched[goal-statement-Ziel Caf\\xe9]","tests/test_query_full_text.py::test_declared_type_specific_main_text_is_searched[milestone-objective-Meilenstein Caf\\xe9]","tests/test_query_full_text.py::test_declared_type_specific_main_text_is_searched[need-statement-Bedarf Caf\\xe9]","tests/test_query_full_text.py::test_declared_type_specific_main_text_is_searched[release-objective-Release Caf\\xe9]","tests/test_query_full_text.py::test_declared_type_specific_main_text_is_searched[requirement-statement-Pflicht Caf\\xe9]","tests/test_query_full_text.py::test_declared_type_specific_main_text_is_searched[term-definition-Definition Caf\\xe9]","tests/test_query_full_text.py::test_document_prose_is_passive_text_at_its_own_block_identity[admonition]","tests/test_query_full_text.py::test_document_prose_is_passive_text_at_its_own_block_identity[prose]","tests/test_query_full_text.py::test_dotted_i_uses_unicode_mapping_without_locale_specific_replacement","tests/test_query_full_text.py::test_greek_sigma_forms_share_casefold_search","tests/test_query_full_text.py::test_identity_owner_tags_and_extension_payload_are_not_arbitrary_search_text","tests/test_query_full_text.py::test_nfc_does_not_remove_accents_or_apply_compatibility_normalization","tests/test_query_full_text.py::test_prose_includes_and_non_prose_payload_are_not_opened_or_stringified","tests/test_query_full_text.py::test_punctuation_and_regex_looking_terms_are_literal_substrings","tests/test_query_full_text.py::test_repeated_search_terms_are_or_and_other_groups_and_srx_remain_and","tests/test_query_full_text.py::test_search_does_not_consult_host_locale_or_execute_host_operations","tests/test_query_full_text.py::test_selected_known_text_field_with_wrong_type_is_error_not_python_repr","tests/test_query_full_text.py::test_source_bytes_hashes_and_projection_stay_in_their_original_unicode_form","tests/test_query_full_text.py::test_title_description_term_and_scenario_steps_are_searchable","tests/test_query_full_text_right.py::test_actual_locale_switches_in_isolated_process_preserve_hits_and_source_bytes","tests/test_query_full_text_right.py::test_equivalent_json_encodings_do_not_collapse_raw_source_identity","tests/test_query_full_text_right.py::test_equivalent_term_spellings_bind_the_same_query_without_rewriting_input","tests/test_query_full_text_right.py::test_equivalent_unicode_sources_match_but_keep_distinct_original_bindings","tests/test_query_full_text_right.py::test_foreign_source_lookalike_is_rejected_without_reading_its_properties","tests/test_query_full_text_right.py::test_malformed_prose_text_is_an_error_without_modifying_source[None]","tests/test_query_full_text_right.py::test_malformed_prose_text_is_an_error_without_modifying_source[payload1]","tests/test_query_full_text_right.py::test_malformed_prose_text_is_an_error_without_modifying_source[payload2]","tests/test_query_full_text_right.py::test_malformed_prose_text_is_an_error_without_modifying_source[payload3]","tests/test_query_full_text_right.py::test_malformed_scenario_main_text_never_becomes_searchable_python_text[bad1]","tests/test_query_full_text_right.py::test_malformed_scenario_main_text_never_becomes_searchable_python_text[bad2]","tests/test_query_full_text_right.py::test_malformed_scenario_main_text_never_becomes_searchable_python_text[not-an-array]","tests/test_query_full_text_right.py::test_owned_search_observation_keeps_exact_bytes_and_hash[Caf\\xe9]","tests/test_query_full_text_right.py::test_owned_search_observation_keeps_exact_bytes_and_hash[Cafe\\u0301]","tests/test_query_full_text_right.py::test_owned_search_observation_keeps_exact_bytes_and_hash[STRASSE]","tests/test_query_full_text_right.py::test_owned_search_observation_keeps_exact_bytes_and_hash[Stra\\xdfe]","tests/test_query_full_text_right.py::test_owned_search_observation_keeps_exact_bytes_and_hash[\\u0130zmir]","tests/test_query_full_text_right.py::test_owned_search_observation_keeps_exact_bytes_and_hash[i\\u0307zmir]","tests/test_query_full_text_right.py::test_reusing_identity_after_source_change_cannot_reuse_an_old_search_copy","tests/test_query_full_text_right.py::test_search_normalization_never_changes_exact_owner_tags_or_projection","tests/test_query_full_text_right.py::test_search_observation_requires_a_real_source_not_decoded_data_or_a_claim[Caf\\xe9]","tests/test_query_full_text_right.py::test_search_observation_requires_a_real_source_not_decoded_data_or_a_claim[None]","tests/test_query_full_text_right.py::test_search_observation_requires_a_real_source_not_decoded_data_or_a_claim[foreign2]","tests/test_query_full_text_right.py::test_search_observation_requires_a_real_source_not_decoded_data_or_a_claim[foreign3]","tests/test_query_full_text_right.py::test_search_observation_requires_a_real_source_not_decoded_data_or_a_claim[{}]"]}
+{
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [],
+  "fixture_ids": [
+    "SR-FIX-DOMAIN-DRAFT-v1",
+    "SR-FIX-RELATIONS-v1",
+    "SR-FIX-SRX-CONTEXT-v1"
+  ],
+  "implementation_status": "partial",
+  "json_pointers": [
+    "/filters/full_text",
+    "/items"
+  ],
+  "method": "automated_behavior",
+  "open_items": [
+    "Supported platform/product acceptance remains open; current evidence measures native CPython and locally available locales only.",
+    "Public query CLI/live project adapter, public page delivery, load and full Work integration remain open.",
+    "Full specialist artifact/document validation, rendering/include traversal and attachment indexing are outside the current explicit-input text selection."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Volltextsuche MUSS Unicode-NFC und Unicode-Casefold locale-unabhängig anwenden.",
+    "scope": "8.c.W integrates literal fulltext into actual Query selection. NFC/NFD equivalents, sharp-s casefold, sigma and dotted-I mappings have exact ID oracles. Declared text fields and own prose/admonition strings are searched without NFKC, accent stripping, locale collation, metadata stringification or execution. OR/AND composition, owned projection and original byte/hash preservation are observed. This is an unpaged supplied-inventory kernel, not full project validation, CLI delivery or approval. 8.c.R binds every search observation to an exact SourceRelations record, retaining original bytes and raw SHA-256 separately from immutable normalized copies. Repeated queries rebuild current copies even for the same ID; canonically equivalent sources and alternative JSON encodings retain distinct source bindings. Actual available locale switches occur only in an isolated child process, with exact hit, projection and byte oracles; C is mandatory, additional installed locales are covered without a cross-platform completeness claim. All prior W expectations remain unchanged. 8.c.C moves the identical field-selection/normalization function into a private pure working-copy module. SearchText and literal matching retain their module identity and source ownership behavior. All W/R tests and IDs remain unchanged; an AST proof binds the moved function and remaining source module to the authoritative R Result."
+  },
+  "preconditions": [
+    "Owned current-schema artifact bytes and actual Query selection on native CPython; no CLI or document-rendering claim."
+  ],
+  "primary_verification_id": "SR-VER-0032",
+  "required_environment": {
+    "declared_minimum_python": "3.10",
+    "implementation": "cpython",
+    "measured_scope": "current-run-only"
+  },
+  "requirement_id": "SR-REQ-0474",
+  "resources": {
+    "harness_suite_timeout": null,
+    "harness_test_timeout": null,
+    "owned_temporary_files": true
+  },
+  "specification_sha256": "1598079cf97a2844f96649851fff698e882760f5e72f8fa4c0003387e557ee6c",
+  "steps": [
+    "Search declared text fields with NFC-plus-casefold working copies and compare exact matching IDs.",
+    "Combine repeated fulltext alternatives with other groups and SRX; retain original source bytes, hashes and projected text.",
+    "Reject invalid known text field types; ensure no host locale, file, network or process use.",
+    "Check original bytes/hash ownership, current source replacement, exact non-fulltext fields, malformed known text and isolated real locale switches."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0474",
+  "test_ids": [
+    "tests/test_query_full_text.py::test_canonically_equivalent_terms_match_both_stored_forms[CAF\\xc9]",
+    "tests/test_query_full_text.py::test_canonically_equivalent_terms_match_both_stored_forms[Caf\\xc9]",
+    "tests/test_query_full_text.py::test_canonically_equivalent_terms_match_both_stored_forms[cafe\\u0301]",
+    "tests/test_query_full_text.py::test_casefold_handles_sharp_s_without_lowercase_shortcuts[STRASSE]",
+    "tests/test_query_full_text.py::test_casefold_handles_sharp_s_without_lowercase_shortcuts[Stra\\xdfe]",
+    "tests/test_query_full_text.py::test_casefold_handles_sharp_s_without_lowercase_shortcuts[strasse]",
+    "tests/test_query_full_text.py::test_declared_type_specific_main_text_is_searched[assumption-statement-Annahme Caf\\xe9]",
+    "tests/test_query_full_text.py::test_declared_type_specific_main_text_is_searched[component-responsibility-Aufgabe Caf\\xe9]",
+    "tests/test_query_full_text.py::test_declared_type_specific_main_text_is_searched[decision-decision-Entscheidung Caf\\xe9]",
+    "tests/test_query_full_text.py::test_declared_type_specific_main_text_is_searched[goal-statement-Ziel Caf\\xe9]",
+    "tests/test_query_full_text.py::test_declared_type_specific_main_text_is_searched[milestone-objective-Meilenstein Caf\\xe9]",
+    "tests/test_query_full_text.py::test_declared_type_specific_main_text_is_searched[need-statement-Bedarf Caf\\xe9]",
+    "tests/test_query_full_text.py::test_declared_type_specific_main_text_is_searched[release-objective-Release Caf\\xe9]",
+    "tests/test_query_full_text.py::test_declared_type_specific_main_text_is_searched[requirement-statement-Pflicht Caf\\xe9]",
+    "tests/test_query_full_text.py::test_declared_type_specific_main_text_is_searched[term-definition-Definition Caf\\xe9]",
+    "tests/test_query_full_text.py::test_document_prose_is_passive_text_at_its_own_block_identity[admonition]",
+    "tests/test_query_full_text.py::test_document_prose_is_passive_text_at_its_own_block_identity[prose]",
+    "tests/test_query_full_text.py::test_dotted_i_uses_unicode_mapping_without_locale_specific_replacement",
+    "tests/test_query_full_text.py::test_greek_sigma_forms_share_casefold_search",
+    "tests/test_query_full_text.py::test_identity_owner_tags_and_extension_payload_are_not_arbitrary_search_text",
+    "tests/test_query_full_text.py::test_nfc_does_not_remove_accents_or_apply_compatibility_normalization",
+    "tests/test_query_full_text.py::test_prose_includes_and_non_prose_payload_are_not_opened_or_stringified",
+    "tests/test_query_full_text.py::test_punctuation_and_regex_looking_terms_are_literal_substrings",
+    "tests/test_query_full_text.py::test_repeated_search_terms_are_or_and_other_groups_and_srx_remain_and",
+    "tests/test_query_full_text.py::test_search_does_not_consult_host_locale_or_execute_host_operations",
+    "tests/test_query_full_text.py::test_selected_known_text_field_with_wrong_type_is_error_not_python_repr",
+    "tests/test_query_full_text.py::test_source_bytes_hashes_and_projection_stay_in_their_original_unicode_form",
+    "tests/test_query_full_text.py::test_title_description_term_and_scenario_steps_are_searchable",
+    "tests/test_query_full_text_right.py::test_actual_locale_switches_in_isolated_process_preserve_hits_and_source_bytes",
+    "tests/test_query_full_text_right.py::test_equivalent_json_encodings_do_not_collapse_raw_source_identity",
+    "tests/test_query_full_text_right.py::test_equivalent_term_spellings_bind_the_same_query_without_rewriting_input",
+    "tests/test_query_full_text_right.py::test_equivalent_unicode_sources_match_but_keep_distinct_original_bindings",
+    "tests/test_query_full_text_right.py::test_foreign_source_lookalike_is_rejected_without_reading_its_properties",
+    "tests/test_query_full_text_right.py::test_malformed_prose_text_is_an_error_without_modifying_source[None]",
+    "tests/test_query_full_text_right.py::test_malformed_prose_text_is_an_error_without_modifying_source[payload1]",
+    "tests/test_query_full_text_right.py::test_malformed_prose_text_is_an_error_without_modifying_source[payload2]",
+    "tests/test_query_full_text_right.py::test_malformed_prose_text_is_an_error_without_modifying_source[payload3]",
+    "tests/test_query_full_text_right.py::test_malformed_scenario_main_text_never_becomes_searchable_python_text[bad1]",
+    "tests/test_query_full_text_right.py::test_malformed_scenario_main_text_never_becomes_searchable_python_text[bad2]",
+    "tests/test_query_full_text_right.py::test_malformed_scenario_main_text_never_becomes_searchable_python_text[not-an-array]",
+    "tests/test_query_full_text_right.py::test_owned_search_observation_keeps_exact_bytes_and_hash[Caf\\xe9]",
+    "tests/test_query_full_text_right.py::test_owned_search_observation_keeps_exact_bytes_and_hash[Cafe\\u0301]",
+    "tests/test_query_full_text_right.py::test_owned_search_observation_keeps_exact_bytes_and_hash[STRASSE]",
+    "tests/test_query_full_text_right.py::test_owned_search_observation_keeps_exact_bytes_and_hash[Stra\\xdfe]",
+    "tests/test_query_full_text_right.py::test_owned_search_observation_keeps_exact_bytes_and_hash[\\u0130zmir]",
+    "tests/test_query_full_text_right.py::test_owned_search_observation_keeps_exact_bytes_and_hash[i\\u0307zmir]",
+    "tests/test_query_full_text_right.py::test_reusing_identity_after_source_change_cannot_reuse_an_old_search_copy",
+    "tests/test_query_full_text_right.py::test_search_normalization_never_changes_exact_owner_tags_or_projection",
+    "tests/test_query_full_text_right.py::test_search_observation_requires_a_real_source_not_decoded_data_or_a_claim[Caf\\xe9]",
+    "tests/test_query_full_text_right.py::test_search_observation_requires_a_real_source_not_decoded_data_or_a_claim[None]",
+    "tests/test_query_full_text_right.py::test_search_observation_requires_a_real_source_not_decoded_data_or_a_claim[foreign2]",
+    "tests/test_query_full_text_right.py::test_search_observation_requires_a_real_source_not_decoded_data_or_a_claim[foreign3]",
+    "tests/test_query_full_text_right.py::test_search_observation_requires_a_real_source_not_decoded_data_or_a_claim[{}]"
+  ]
+}

@@ -1,1 +1,46 @@
-{"evidence_kind":"specroad-dev-pytest-v1","expected_diagnostics":[],"expected_exit_codes":[],"fixture_ids":["SR-FIX-REQUIREMENT-APPROVAL-v1"],"implementation_status":"partial","json_pointers":[],"method":"automated_behavior","open_items":["Integrate trusted authorization/review selection, complete current semantic service results and the write/lifecycle command in their assigned later plan steps. The library never grants write authority."],"oracle":{"kind":"behavior","requirement_contract":"Die fachliche Spezifikationspr\u00fcfung MUSS durch menschliches Review best\u00e4tigte Compound Requirements als Freigabefehler melden, ohne eine automatische semantische Erkennung durch den Core vorauszusetzen.","scope":"Requirement approval prerequisites over supplied bindings; no authentication implementation, lifecycle write, CLI or complete live-project approval is claimed."},"preconditions":["Use a loaded candidate and dependency set bound to exact source bytes; trusted-service fixtures are explicitly synthetic."],"primary_verification_id":"SR-VER-0034","required_environment":{"declared_minimum_python":"3.10","implementation":"cpython","measured_scope":"current-run-only"},"requirement_id":"SR-REQ-0499","resources":{"harness_suite_timeout":null,"harness_test_timeout":null,"owned_temporary_files":true},"specification_sha256":"ffab6e96a19a881b665229964462339c01afac673bc51a5e9d15c389e407f87b","steps":["Assess a detached in_review requirement under an explicit effective profile and service observations.","Require a current separately verified human review; compare structured findings, input bindings and unchanged original data."],"test_case_format_version":1,"test_case_id":"SR-TC-0499","test_ids":["tests/test_requirement_approval.py::test_core_does_not_detect_compound_from_and_word","tests/test_requirement_approval.py::test_human_confirmation_of_compound_is_error","tests/test_requirement_approval_right.py::test_unauthenticated_compound_is_not_claimed_as_human_confirmation"]}
+{
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [],
+  "fixture_ids": [
+    "SR-FIX-REQUIREMENT-APPROVAL-v1"
+  ],
+  "implementation_status": "partial",
+  "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "Integrate trusted authorization/review selection, complete current semantic service results and the write/lifecycle command in their assigned later plan steps. The library never grants write authority."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Die fachliche Spezifikationsprüfung MUSS durch menschliches Review bestätigte Compound Requirements als Freigabefehler melden, ohne eine automatische semantische Erkennung durch den Core vorauszusetzen.",
+    "scope": "Requirement approval prerequisites over supplied bindings; no authentication implementation, lifecycle write, CLI or complete live-project approval is claimed."
+  },
+  "preconditions": [
+    "Use a loaded candidate and dependency set bound to exact source bytes; trusted-service fixtures are explicitly synthetic."
+  ],
+  "primary_verification_id": "SR-VER-0034",
+  "required_environment": {
+    "declared_minimum_python": "3.10",
+    "implementation": "cpython",
+    "measured_scope": "current-run-only"
+  },
+  "requirement_id": "SR-REQ-0499",
+  "resources": {
+    "harness_suite_timeout": null,
+    "harness_test_timeout": null,
+    "owned_temporary_files": true
+  },
+  "specification_sha256": "1598079cf97a2844f96649851fff698e882760f5e72f8fa4c0003387e557ee6c",
+  "steps": [
+    "Assess a detached in_review requirement under an explicit effective profile and service observations.",
+    "Require a current separately verified human review; compare structured findings, input bindings and unchanged original data."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0499",
+  "test_ids": [
+    "tests/test_requirement_approval.py::test_core_does_not_detect_compound_from_and_word",
+    "tests/test_requirement_approval.py::test_human_confirmation_of_compound_is_error",
+    "tests/test_requirement_approval_right.py::test_unauthenticated_compound_is_not_claimed_as_human_confirmation"
+  ]
+}

@@ -1,1 +1,49 @@
-{"evidence_kind":"specroad-dev-pytest-v1","expected_diagnostics":[],"expected_exit_codes":[0,2],"fixture_ids":["SR-FIX-OWNED-TEMP-v1","SR-FIX-ISOLATED-CPYTHON-v1"],"implementation_status":"partial","json_pointers":[],"method":"automated_behavior","open_items":["Complete the remaining normative behavior and its requirement-specific oracle; obtain current evidence on required platforms."],"oracle":{"kind":"behavior","requirement_contract":"Die globale Option `--project <PATH>` MUSS die automatische Projekterkennung \u00fcberschreiben.","scope":"Existing bootstrap/test-infrastructure behavior only; not complete requirement acceptance."},"preconditions":["Use the current trusted checkout and a private temporary directory."],"primary_verification_id":"SR-VER-0001","required_environment":{"declared_minimum_python":"3.10","implementation":"cpython","measured_scope":"current-run-only"},"requirement_id":"SR-REQ-0006","resources":{"harness_suite_timeout":null,"harness_test_timeout":null,"owned_temporary_files":true},"specification_sha256":"ffab6e96a19a881b665229964462339c01afac673bc51a5e9d15c389e407f87b","steps":["Execute each listed unittest once in the current full suite.","Observe the declared file effects, returned data and exit statuses without matching human text."],"test_case_format_version":1,"test_case_id":"SR-TC-0006","test_ids":["test_options.OptionWorkTests.test_explicit_relative_project_overrides_ancestor_search","test_options.OptionWorkTests.test_explicit_invalid_root_never_falls_back_or_initializes"]}
+{
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [
+    0,
+    2
+  ],
+  "fixture_ids": [
+    "SR-FIX-OWNED-TEMP-v1",
+    "SR-FIX-ISOLATED-CPYTHON-v1"
+  ],
+  "implementation_status": "partial",
+  "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "Complete the remaining normative behavior and its requirement-specific oracle; obtain current evidence on required platforms."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Die globale Option `--project <PATH>` MUSS die automatische Projekterkennung überschreiben.",
+    "scope": "Existing bootstrap/test-infrastructure behavior only; not complete requirement acceptance."
+  },
+  "preconditions": [
+    "Use the current trusted checkout and a private temporary directory."
+  ],
+  "primary_verification_id": "SR-VER-0001",
+  "required_environment": {
+    "declared_minimum_python": "3.10",
+    "implementation": "cpython",
+    "measured_scope": "current-run-only"
+  },
+  "requirement_id": "SR-REQ-0006",
+  "resources": {
+    "harness_suite_timeout": null,
+    "harness_test_timeout": null,
+    "owned_temporary_files": true
+  },
+  "specification_sha256": "1598079cf97a2844f96649851fff698e882760f5e72f8fa4c0003387e557ee6c",
+  "steps": [
+    "Execute each listed unittest once in the current full suite.",
+    "Observe the declared file effects, returned data and exit statuses without matching human text."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0006",
+  "test_ids": [
+    "test_options.OptionWorkTests.test_explicit_relative_project_overrides_ancestor_search",
+    "test_options.OptionWorkTests.test_explicit_invalid_root_never_falls_back_or_initializes"
+  ]
+}

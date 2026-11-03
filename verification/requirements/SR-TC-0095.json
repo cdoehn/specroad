@@ -1,1 +1,53 @@
-{"evidence_kind":"specroad-dev-pytest-v1","expected_diagnostics":["SRV033","SRV053"],"expected_exit_codes":[],"fixture_ids":["SR-FIX-LITERAL-LINT-v1"],"implementation_status":"partial","json_pointers":["/statement"],"method":"automated_behavior","open_items":["Full lint/validation pipeline and CLI integration remain later steps.","Language policy and package composition are implemented in the following language stage, not inferred here.","Full target runtime matrix evidence remains necessary."],"oracle":{"kind":"behavior","requirement_contract":"`specroad lint` MUSS deterministische Qualit\u00e4tsregeln ausf\u00fchren, die nicht f\u00fcr die strukturelle Modellg\u00fcltigkeit erforderlich sind.","scope":"Selected literal fields and Term schema only; no complete project, language quality or approval proof."},"preconditions":["Explicit valid artifact values, selected text fields, versioned policy and supplied term inventory."],"primary_verification_id":"SR-VER-0007","required_environment":{"declared_minimum_python":"3.10","implementation":"cpython","measured_scope":"current-run-only"},"requirement_id":"SR-REQ-0095","resources":{"harness_suite_timeout":null,"harness_test_timeout":null,"owned_temporary_files":true},"specification_sha256":"ffab6e96a19a881b665229964462339c01afac673bc51a5e9d15c389e407f87b","steps":["Capture and validate owned records and exact selections.","Run literal checks on unchanged selected text and inspect structured findings and coverage."],"test_case_format_version":1,"test_case_id":"SR-TC-0095","test_ids":["test_literal_lint.LiteralWorkTests.test_complete_report_is_reproducible_and_has_no_linguistic_success","test_literal_lint.LiteralWorkTests.test_offsets_are_unicode_codepoints_not_bytes","test_literal_lint_right.LiteralRightTests.test_result_order_is_severity_then_path_pointer_and_code"]}
+{
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [
+    "SRV033",
+    "SRV053"
+  ],
+  "expected_exit_codes": [],
+  "fixture_ids": [
+    "SR-FIX-LITERAL-LINT-v1"
+  ],
+  "implementation_status": "partial",
+  "json_pointers": [
+    "/statement"
+  ],
+  "method": "automated_behavior",
+  "open_items": [
+    "Full lint/validation pipeline and CLI integration remain later steps.",
+    "Language policy and package composition are implemented in the following language stage, not inferred here.",
+    "Full target runtime matrix evidence remains necessary."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "`specroad lint` MUSS deterministische Qualitätsregeln ausführen, die nicht für die strukturelle Modellgültigkeit erforderlich sind.",
+    "scope": "Selected literal fields and Term schema only; no complete project, language quality or approval proof."
+  },
+  "preconditions": [
+    "Explicit valid artifact values, selected text fields, versioned policy and supplied term inventory."
+  ],
+  "primary_verification_id": "SR-VER-0007",
+  "required_environment": {
+    "declared_minimum_python": "3.10",
+    "implementation": "cpython",
+    "measured_scope": "current-run-only"
+  },
+  "requirement_id": "SR-REQ-0095",
+  "resources": {
+    "harness_suite_timeout": null,
+    "harness_test_timeout": null,
+    "owned_temporary_files": true
+  },
+  "specification_sha256": "1598079cf97a2844f96649851fff698e882760f5e72f8fa4c0003387e557ee6c",
+  "steps": [
+    "Capture and validate owned records and exact selections.",
+    "Run literal checks on unchanged selected text and inspect structured findings and coverage."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0095",
+  "test_ids": [
+    "test_literal_lint.LiteralWorkTests.test_complete_report_is_reproducible_and_has_no_linguistic_success",
+    "test_literal_lint.LiteralWorkTests.test_offsets_are_unicode_codepoints_not_bytes",
+    "test_literal_lint_right.LiteralRightTests.test_result_order_is_severity_then_path_pointer_and_code"
+  ]
+}
