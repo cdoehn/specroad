@@ -35,7 +35,7 @@ Laufzeitdaten und ist keine Start-/Resume-Anweisung.
 
 ## OFF-PLAN MIXED-BUNDLE-555 — Vertrag 4 und optionaler Klärungscommit
 
-Vorbereiteter Zustand MIXED-BUNDLE-555.R; erst nach seinem erfolgreichen Apply-Gate committed.
+Vorbereiteter Zustand MIXED-BUNDLE-555.C; erst nach seinem erfolgreichen Apply-Gate committed.
 
 Ausdrücklicher Nutzerauftrag vom 3. November 2026: Zuerst diese SpecRoad-
 Änderung, anschließend ein getrenntes Control-Bundle. Ohne notwendige
@@ -1333,7 +1333,7 @@ implementation_plan_commits_total: 900
 implementation_plan_commits_completed: 669
 last_completed_plan_commit: 16.c.C
 next_plan_commit: 16.d.W
-last_completed_numbered_bundle: 554
+last_completed_numbered_bundle: 555
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null

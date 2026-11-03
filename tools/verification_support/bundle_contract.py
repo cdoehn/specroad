@@ -72,30 +72,7 @@ def validate_bundle(data):
                 or proof['remaining_commit_ids'] != ids):
             raise ValueError('Correction must retain the exact remaining commit sequence')
     if version == 2:
-        roles = [stage['role'] for stage in data['stages']]
-        if any(role not in ('clarification', 'implementation', 'correction') for role in roles):
-            raise ValueError('Unknown stage role')
-        if data['handoff_kind'] == 'patch_ready':
-            if 'clarification' in roles:
-                raise ValueError('A normal handoff cannot hide clarification')
-        elif data['handoff_kind'] == 'patch_ready_with_clarification':
-            if roles[0] != 'clarification' or roles.count('clarification') != 1 or 'implementation' not in roles[1:]:
-                raise ValueError('Mixed handoff requires one clarification prefix and implementation')
-            paths = set(data['stages'][0]['after'])
-            required = {'docs/specification/SpecRoad_Spezifikation.md',
-                        'docs/implementation/SpecRoad_Implementierungsplan.md'}
-            if not required <= paths or any(not (name in required or name == 'verification/catalog.json'
-                    or re.fullmatch(r'verification/requirements/SR-TC-[0-9]{4}\.json', name)) for name in paths):
-                raise ValueError('Clarification must update specification and plan within the document/catalog scope')
-            first = data['stages'][0]
-            if any(first['before'].get(name) == first['after'][name] for name in required):
-                raise ValueError('Clarification cannot be an unchanged document marker')
-            if not any(stage['role'] == 'implementation' and any(
-                    not name.startswith(('docs/', 'verification/')) and stage['before'].get(name) != digest
-                    for name, digest in stage['after'].items()) for stage in data['stages'][1:]):
-                raise ValueError('Mixed handoff requires an actual implementation change')
-        else:
-            raise ValueError('Unknown handoff classification')
+        _validate_roles(data)
     return data
 
 
@@ -152,3 +129,31 @@ def validate_continuation(previous, progress, data):
             if old['role'] == 'clarification' and old['after'] != new['after']:
                 raise ValueError('Pending clarification cannot become a new decision')
     return data
+
+
+def _validate_roles(data):
+    """Validate optional clarification roles without changing execution order."""
+    roles = [stage['role'] for stage in data['stages']]
+    if any(role not in ('clarification', 'implementation', 'correction') for role in roles):
+        raise ValueError('Unknown stage role')
+    if data['handoff_kind'] == 'patch_ready':
+        if 'clarification' in roles:
+            raise ValueError('A normal handoff cannot hide clarification')
+    elif data['handoff_kind'] == 'patch_ready_with_clarification':
+        if roles[0] != 'clarification' or roles.count('clarification') != 1 or 'implementation' not in roles[1:]:
+            raise ValueError('Mixed handoff requires one clarification prefix and implementation')
+        paths = set(data['stages'][0]['after'])
+        required = {'docs/specification/SpecRoad_Spezifikation.md',
+                    'docs/implementation/SpecRoad_Implementierungsplan.md'}
+        if not required <= paths or any(not (name in required or name == 'verification/catalog.json'
+                or re.fullmatch(r'verification/requirements/SR-TC-[0-9]{4}\.json', name)) for name in paths):
+            raise ValueError('Clarification must update specification and plan within the document/catalog scope')
+        first = data['stages'][0]
+        if any(first['before'].get(name) == first['after'][name] for name in required):
+            raise ValueError('Clarification cannot be an unchanged document marker')
+        if not any(stage['role'] == 'implementation' and any(
+                not name.startswith(('docs/', 'verification/')) and stage['before'].get(name) != digest
+                for name, digest in stage['after'].items()) for stage in data['stages'][1:]):
+            raise ValueError('Mixed handoff requires an actual implementation change')
+    else:
+        raise ValueError('Unknown handoff classification')
