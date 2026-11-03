@@ -155,7 +155,7 @@ und Dienststart sind nicht Bestandteil dieses Korrekturbundles.
 
 ## OFF-PLAN CONTROL-INTEGRATION-556 — Control im gemeinsamen Dev-Repository
 
-Vorbereiteter Zustand CONTROL-INTEGRATION-556.R; Abschluss ausschließlich nach
+Vorbereiteter Zustand CONTROL-INTEGRATION-556.C; Abschluss ausschließlich nach
 seinem tatsächlichen Apply-Gate und Commit. Produktstand bleibt 669/900,
 nächster Produktcommit 16.d.W. Vollständiger Nutzerauftrag vom 3. November 2026:
 Control zunächst pushen und sichern, danach Quell-/Betriebsstruktur integrieren.
@@ -1493,7 +1493,7 @@ implementation_plan_commits_total: 900
 implementation_plan_commits_completed: 669
 last_completed_plan_commit: 16.c.C
 next_plan_commit: 16.d.W
-last_completed_numbered_bundle: 555
+last_completed_numbered_bundle: 559
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
