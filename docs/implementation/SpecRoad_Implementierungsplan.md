@@ -91,6 +91,30 @@ relevante Shared-Plan-, Hash-, Source-, Proposal-, Sicherheits- und
 Distributionsregressionen kommen hinzu. N=3 und Host-Workerregeln bleiben.
 Alle Meilenstein-, Vollsuite-, Plattform- und Releasegates bleiben offen.
 
+### Vorbereiteter Produktstand 16.c.W
+
+Dieser Fortschrittsmarker gilt erst nach seinem tatsächlichen erfolgreichen
+Apply-Gate und Commit. Das geprüfte Quell-Result belegt weiterhin 666/900.
+W liefert den vollständigen Read-only-Planer für den expliziten Referenzvertrag
+1.0.1: native Zielressourcen und Mappings, alle 28 Quelltypen, erhaltene aktuelle
+und historische Originale, Legacy-Manifest, deterministische REL-Projektionen,
+Metadaten, Zielwurzel und Ressourcenbytes im gemeinsamen Change Plan.
+Fehlende Eingaben liefern Blocker; keine Dummy-Zielwurzel und keine Freigabe.
+R ergänzt gespeicherte Plan-Rechecks mit tatsächlicher Dateimenge, externen
+Auftragsbindungen und vollständiger nativer Neuberechnung. Auch ein neu
+selbstgehashter falscher Plan genügt nicht. C trennt Inputs, Originalerhaltung,
+Zielprojektion und Fassade; Funktions-/Klassen-ASTs und W/R-Testbytes bleiben
+unverändert. Jeder Zustand wird erst nach dem vorherigen Gate installiert.
+
+Die neuen/geänderten Testdateien und betroffenen gemeinsamen Plan-, Modell-,
+Schema-, Source-, Proposal- und Distributionsverträge sind ungefilterte
+Apply-Pflicht. Neue Testnummern werden nur hinten ergänzt. Dev führt keine
+Verhaltenstests aus. SR-TC-0263/0264/0267/0272/0639/0641 bleiben ausdrücklich
+partiell; bisherige Graph-/Source-Testidentitäten bleiben erhalten.
+Diese Planabnahme ist keine globale Zielvalidierung und keine Autorisierung.
+Vollbackup, Writer/Lock, Journal/Recovery, CLI und Restore bleiben den offenen
+M16-Schritten vorbehalten. Nach erfolgreichem 16.c.C folgt vollständig 16.d.W.
+
 ## Bundle 553 — technische Korrektur und Fortsetzung von 16.b.W/R/C
 
 **Maßgebliche Basis:** Fehler-Result `specroad-apply_Result_084825_1103_2f3e4e.zip`,
@@ -1268,9 +1292,9 @@ Kein offener Produktplanschritt wird durch diese Testoptimierung abgeschlossen.
 ```yaml
 plan_revision: 57
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 666
-last_completed_plan_commit: 16.b.C
-next_plan_commit: 16.c.W
+implementation_plan_commits_completed: 667
+last_completed_plan_commit: 16.c.W
+next_plan_commit: 16.c.R
 last_completed_numbered_bundle: 553
 implementation_state: in_progress
 audit_followup_status: closed
@@ -35459,7 +35483,7 @@ mit den obigen positiven, negativen und Original-/Autoritätsabnahmen.
 
 #### 16.c.W – Let it Work
 
-- [ ] **16.c.W** · Position **667/900** · Voraussetzung: `16.b.C`.
+- [x] **16.c.W** · Position **667/900** · Voraussetzung: `16.b.C`.
 **Exakte Commit-Message:** `16.c.W feat(migration): Read-only-Migrationsplan aufbauen`
 
 **Umsetzung:** Transformation samt neuen Pflichtfeldern, Verlustkennungen, Operationen und erwarteter Zielwurzel schreibfrei planen.

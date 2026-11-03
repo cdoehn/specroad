@@ -1,42 +1,52 @@
 {
   "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [
+    "ambiguous_path",
+    "backward_as_forward",
+    "cycle",
+    "duplicate_edge",
+    "duplicate_step",
+    "incomplete_transformation",
+    "migration_mapping_source_changed",
+    "migration_original_revision_conflict",
+    "migration_project_mismatch",
+    "migration_proposal_target_basis_mismatch",
+    "migration_target_core_not_builtin",
+    "postcondition_failed",
+    "precondition_failed",
+    "reverse_not_implemented",
+    "reverse_not_lossless",
+    "specialist_migration_workflow_required",
     "unknown_source",
     "unknown_target",
+    "unordered_contracts",
     "unsupported_path",
-    "reverse_not_implemented",
-    "precondition_failed",
-    "cycle",
-    "ambiguous_path",
-    "duplicate_step",
-    "duplicate_edge",
-    "incomplete_transformation",
-    "vector_conflict",
-    "reverse_not_lossless",
-    "postcondition_failed",
-    "backward_as_forward",
-    "unordered_contracts"
+    "vector_conflict"
   ],
   "expected_exit_codes": [],
   "fixture_ids": [
-    "SR-FIX-MIGRATION-GRAPH-v1"
+    "SR-FIX-MIGRATION-GRAPH-v1",
+    "SR-FIX-MIGRATION-PLAN-v1"
   ],
   "implementation_status": "partial",
   "json_pointers": [],
   "method": "automated_behavior",
   "open_items": [
-    "Current bound Apply behavior evidence is still required; Dev performs collection/static checks only.",
-    "16.b and the actual 0.1 migration/Restore path require the full versioned Q.0 source contract.",
-    "Migration CLI, saved plan freshness/binding, native writers, backups, audit and M16 integration remain outside 16.a."
+    "Bound Apply behavior evidence is required; no behavior tests were run in Dev.",
+    "Public migration CLI/registration, the full unfiltered backup, native lock/transaction/publication, global target validation, audit/recovery and Restore integration remain open in the subsequent M16 steps.",
+    "Synthetic stored reviews and source states do not establish actual historical human approval, current authorization, target global validity, readiness or release support.",
+    "Saved-plan recomputation belongs to the next separate 16.c.R state and is not yet delivered in this W commit."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "`specroad migrate plan [--to <SCHEMA-VERSION>]` MUSS aktuelle und Zielversion, geordnete Migrationsschritte, betroffene Dateien, erwartete Verluste, neue Pflichtfelder, einen ausführbaren Change Plan und die erwartete Zielmodellwurzel ausgeben, ohne Projektdateien zu verändern.",
-    "scope": "16.a graph/step kernel only: real synthetic transformations and exact contract/path/inverse boundaries. Known identity is the only no-op; resolution never transforms or publishes. No product legacy compatibility, actual project migration, CLI success, full-suite or release proof. Behavior tests are prepared for the separate Apply gate, not executed in Dev."
+    "scope": "16.a graph/step kernel only: real synthetic transformations and exact contract/path/inverse boundaries. Known identity is the only no-op; resolution never transforms or publishes. No product legacy compatibility, actual project migration, CLI success, full-suite or release proof. Behavior tests are prepared for the separate Apply gate, not executed in Dev. 16.c prepares the complete read-only reference migration plan, original-byte legacy manifest and explicit target mappings in the common typed Change Plan. W does not claim saved-plan recomputation. No actual migration, approval, CLI, full-suite or release success is claimed."
   },
   "preconditions": [
     "Only trusted compiled providers; immutable complete synthetic contract identities.",
-    "The built-in product registry is isolated and advertises no historical migration path."
+    "The built-in product registry is isolated and advertises no historical migration path.",
+    "The complete reference source 1.0.1 and all explicit target resources/mappings are supplied as owned bytes; no host defaults or guessed semantic values.",
+    "Only read-only planning is exercised. Actual migration publication still requires the later native lock, full backup, global validation, audit, recovery and authority gates."
   ],
   "primary_verification_id": "SR-VER-0020",
   "required_environment": {
@@ -54,7 +64,9 @@
   "steps": [
     "Admit full step contracts; resolve forward and explicit reverse routes without invoking providers or writes.",
     "Execute actual transforms against independent literal vectors, including strict pre/postconditions.",
-    "Observe exact typed refusals, preservation of caller inputs and the unchanged product support boundary."
+    "Observe exact typed refusals, preservation of caller inputs and the unchanged product support boundary.",
+    "Prepare the native migration branch of the shared Change Plan and compare explicit target fields, literal normative hashes, current/legacy roots, complete file bindings and unchanged original bytes.",
+    "Reject missing/invalid mappings and forbid using the migration branch as ordinary authoring or current review/readiness evidence."
   ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0263",
@@ -124,6 +136,28 @@
     "tests/test_migration_graph_right.py::test_semver_forward_order_is_numeric_and_prerelease_aware[90.0.0-alpha.9-90.0.0-alpha.10]",
     "tests/test_migration_graph_right.py::test_semver_forward_order_is_numeric_and_prerelease_aware[90.0.0-rc.1-90.0.0]",
     "tests/test_migration_graph_right.py::test_semver_forward_order_is_numeric_and_prerelease_aware[90.2.0-90.10.0]",
-    "tests/test_migration_graph_right.py::test_unavailable_inverse_is_not_confused_with_forward_ambiguity"
+    "tests/test_migration_graph_right.py::test_unavailable_inverse_is_not_confused_with_forward_ambiguity",
+    "tests/test_migration_planning.py::test_all_originals_and_transitive_archives_remain_verifiable_bytes",
+    "tests/test_migration_planning.py::test_common_plan_schema_is_retrievable_and_validates_the_real_specialist_plan",
+    "tests/test_migration_planning.py::test_core_and_pyz_materialize_identical_plans_without_optional_packages",
+    "tests/test_migration_planning.py::test_deterministic_plan_ignores_dictionary_order_and_has_explicit_bound_metadata",
+    "tests/test_migration_planning.py::test_finished_proposals_stay_original_immutable_records[applied]",
+    "tests/test_migration_planning.py::test_finished_proposals_stay_original_immutable_records[rejected]",
+    "tests/test_migration_planning.py::test_finished_proposals_stay_original_immutable_records[stale]",
+    "tests/test_migration_planning.py::test_full_native_source_family_materializes_all_types_and_protects_legacy",
+    "tests/test_migration_planning.py::test_legacy_hashes_use_original_bytes_and_bind_manifest_in_shared_root",
+    "tests/test_migration_planning.py::test_literal_independent_requirement_and_relation_vector_matches_exactly",
+    "tests/test_migration_planning.py::test_migration_policy_cannot_be_mixed_with_generic_operations",
+    "tests/test_migration_planning.py::test_missing_inputs_report_every_missing_mapping_without_dummy_roots_or_writes",
+    "tests/test_migration_planning.py::test_missing_target_core_is_visible_and_a_fabricated_core_is_not_accepted",
+    "tests/test_migration_planning.py::test_native_planning_does_not_create_project_files_or_run_source_code",
+    "tests/test_migration_planning.py::test_open_proposal_requires_an_explicit_current_basis_and_preserves_prior_content",
+    "tests/test_migration_planning.py::test_regular_policy_label_cannot_launder_a_migration_operation",
+    "tests/test_migration_planning.py::test_release_baseline_and_explicit_original_release_selection_are_unchanged",
+    "tests/test_migration_planning.py::test_same_source_and_mappings_keep_original_representations_out_of_semantic_roots_only",
+    "tests/test_migration_planning.py::test_shared_change_plan_roundtrip_and_specialist_route_never_authorize_regular_apply",
+    "tests/test_migration_planning.py::test_source_hash_mismatch_is_a_conflict_instead_of_a_missing_mapping",
+    "tests/test_migration_planning.py::test_source_plan_does_not_register_public_migration_or_restore_support",
+    "tests/test_migration_planning.py::test_values_are_detached_and_input_objects_are_never_rewritten"
   ]
 }

@@ -62,7 +62,12 @@ def _result_bindings(value):
 def _validate_plan(value, *, hash_present=True):
     if type(value) is not dict:
         raise ChangePlanError("plan_object_required")
-    if value.get("metadata_policy_version") != METADATA_POLICY:
+    migration = value.get("metadata_policy_version") == "migration-metadata-v1"
+    operations = value.get("operations")
+    if migration and not (type(operations) is list and len(operations) == 1
+            and type(operations[0]) is dict and operations[0].get("op") == "schema_migrate"):
+        raise ChangePlanError("unsupported_regular_metadata_policy", pointer="/metadata_policy_version", code="SRV174")
+    if not migration and value.get("metadata_policy_version") != METADATA_POLICY:
         raise ChangePlanError("unsupported_regular_metadata_policy", pointer="/metadata_policy_version", code="SRV174")
     schema = change_plan_schema()
     # Dispatch tagged operation validation separately for precise diagnostics;
@@ -76,7 +81,8 @@ def _validate_plan(value, *, hash_present=True):
     _at("/request_id", normalize_request_id, value["request_id"])
     _at("/planned_at", UtcTimestamp, value["planned_at"])
     _at("/actor", Actor, **value["actor"])
-    _at("/base/scope_descriptor", ScopeDescriptor, value["base"]["scope_descriptor"])
+    if not migration:
+        _at("/base/scope_descriptor", ScopeDescriptor, value["base"]["scope_descriptor"])
     for index, operation in enumerate(value["operations"]):
         _validate_operation(operation, "/operations/" + str(index))
     for index, precondition in enumerate(value["preconditions"]):
@@ -95,6 +101,9 @@ def _validate_plan(value, *, hash_present=True):
         if canonical_json_sha256(result["artifact"]) != result["sha256"]:
             raise ChangePlanError("result_hash_mismatch", pointer=at + "/sha256", code="SRV146")
     _result_bindings(value)
+    if migration:
+        from ..migration.plan_contract import validate_migration_envelope
+        _at("", validate_migration_envelope, value)
     if hash_present:
         expected = canonical_json_sha256({k: v for k, v in value.items() if k != "change_plan_sha256"})
         if expected != value["change_plan_sha256"]:

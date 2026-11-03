@@ -80,8 +80,8 @@ class SchemaCatalogChangePlanTests(unittest.TestCase):
         resource = self.catalog.get(CHANGE_PLAN_ID)
         self.assertEqual(resource.version, '1.2.0')
         self.assertEqual(resource.schema['properties']['format_version']['const'], '1.2.0')
-        self.assertEqual(resource.schema['properties']['metadata_policy_version']['const'],
-                         'change-metadata-v1')
+        self.assertEqual(resource.schema['properties']['metadata_policy_version']['enum'],
+                         ['change-metadata-v1', 'migration-metadata-v1'])
 
     def test_change_plan_ids_are_not_normalized_or_resolved(self):
         for schema_id in ('change-plan', 'change-plan-v1', CHANGE_PLAN_ID.upper(),
@@ -158,8 +158,8 @@ class SchemaCatalogChangePlanTests(unittest.TestCase):
         self.catalog.validate(CHANGE_PLAN_ID, plan.data)
         self.assertEqual(ChangePlan(plan.canonical_bytes).data, plan.data)
         branches = self.catalog.get(CHANGE_PLAN_ID).schema['properties']['operations']['items']['anyOf']
-        self.assertEqual({branch['properties']['op']['const'] for branch in branches}, set(OPERATION_TYPES))
-        self.assertEqual(len(branches), len(OPERATION_TYPES))
+        self.assertEqual({branch['properties']['op']['const'] for branch in branches}, set(OPERATION_TYPES) | {'schema_migrate'})
+        self.assertEqual(len(branches), len(OPERATION_TYPES) + 1)
         for index, op in enumerate(operations):
             with self.subTest(kind=op['op']):
                 self.assertIn(operation_schema(op['op']), branches)

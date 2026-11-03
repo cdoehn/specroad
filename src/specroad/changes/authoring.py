@@ -41,6 +41,8 @@ def prepare_authoring_request(*, command_id, actor, operations, request_id=None,
     if type(operations) not in (list, tuple):
         raise AuthoringError('explicit_operation_sequence_required', pointer='/operations')
     owned = [ChangeOperation(op).data for op in operations]
+    if any(op['op'] == 'schema_migrate' for op in owned):
+        raise AuthoringError('specialist_migration_workflow_required', exit_code=7)
     return AuthoringRequest._create({
         'format_version': AUTHORING_VERSION, 'namespace': 'normative_write',
         'command_id': command_id, 'actor': actor.as_fields(),
@@ -60,6 +62,8 @@ def bind_plan_authoring(plan, *, dry_run=False, as_proposal=False):
     # Re-read bytes rather than trusting mutable objects supplied by a caller.
     plan = ChangePlan(plan.source_bytes)
     data = plan.data
+    if data['metadata_policy_version'] != 'change-metadata-v1':
+        raise AuthoringError('specialist_migration_workflow_required', exit_code=7)
     request = prepare_authoring_request(command_id='change apply', actor=data['actor'],
         operations=data['operations'], request_id=data['request_id'],
         dry_run=dry_run, as_proposal=as_proposal)

@@ -364,6 +364,10 @@
       "kind": "Complete isolated synthetic schemas 90.0.0/90.1.0/90.2.0 with explicit profile and content bindings; compiled rename/derived-length transformations, strict pre/postconditions and independent literal Unicode/empty/decomposed input/output vectors for both directions. Separate complete empty-object contracts cover graph topology. No historical SpecRoad 0.1 schema, native reader, file migration, human approval or external compatibility claim.",
       "provider": "tests/fixtures/migration_graph_v1.json;tests/support/migration.py:chain,contract,identity_step"
     },
+    "SR-FIX-MIGRATION-PLAN-v1": {
+      "kind": "Explicitly synthetic complete reference-0.1/1.0.1 sources with explicit native target configuration/core profile, source-bound requirement mappings and independently provided target proposal plans. Includes immutable originals, transitive archived snapshots, literal normative requirement/REL/hash vectors and adversarial saved-plan bindings. Stored review records are synthetic source history, never actual human approval or current readiness evidence.",
+      "provider": "tests/support/migration_plans.py:target_inputs,mapped_inputs,vector_source;tests/support/reference01.py:full_project,release_project;docs/specification/reference-0.1-v1.0.1/vectors.json"
+    },
     "SR-FIX-MODEL-MANIFEST-v1": {
       "kind": "Owned single-root resources; explicit hash inputs, not resolved scopes, authentic profile composition or write permission.",
       "provider": "tests/test_model_root.py:fixture"
@@ -915,6 +919,7 @@
     "SR-FIX-LANGUAGE-REGISTRY-v1",
     "SR-FIX-LITERAL-LINT-v1",
     "SR-FIX-MIGRATION-GRAPH-v1",
+    "SR-FIX-MIGRATION-PLAN-v1",
     "SR-FIX-MODEL-MANIFEST-v1",
     "SR-FIX-MODEL-VALIDATION-v1",
     "SR-FIX-NATIVE-IMPORT-IDENTITIES-v1",

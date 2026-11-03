@@ -1,37 +1,47 @@
 {
   "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [
-    "source_contract_required",
-    "unsupported_source_contract",
-    "source_schema_invalid",
-    "source_identity_conflict",
-    "source_state_invalid",
-    "source_resource_unsupported",
+    "migration_mapping_source_changed",
+    "migration_original_revision_conflict",
+    "migration_project_mismatch",
+    "migration_proposal_target_basis_mismatch",
+    "migration_target_core_not_builtin",
     "source_closure_incomplete",
-    "source_payload_missing",
+    "source_contract_required",
     "source_hash_mismatch",
-    "source_snapshot_cycle"
+    "source_identity_conflict",
+    "source_payload_missing",
+    "source_resource_unsupported",
+    "source_schema_invalid",
+    "source_snapshot_cycle",
+    "source_state_invalid",
+    "specialist_migration_workflow_required",
+    "unsupported_source_contract"
   ],
   "expected_exit_codes": [],
   "fixture_ids": [
+    "SR-FIX-MIGRATION-PLAN-v1",
     "SR-FIX-REFERENCE01-SOURCE-v1_0_1"
   ],
   "implementation_status": "partial",
   "json_pointers": [],
   "method": "automated_behavior",
   "open_items": [
-    "Bound Apply behavior evidence remains required; no behavior tests were run in Dev.",
-    "Actual target migration, target identity metadata/manifest, new human reviews, transaction/backup, public CLI and Restore integration remain open in subsequent M16 steps.",
-    "Stored synthetic source statuses and integrity observations do not prove human authority, actual historical approvals or current release readiness."
+    "Bound Apply behavior evidence is required; no behavior tests were run in Dev.",
+    "Public migration CLI/registration, the full unfiltered backup, native lock/transaction/publication, global target validation, audit/recovery and Restore integration remain open in the subsequent M16 steps.",
+    "Synthetic stored reviews and source states do not establish actual historical human approval, current authorization, target global validity, readiness or release support.",
+    "Saved-plan recomputation belongs to the next separate 16.c.R state and is not yet delivered in this W commit."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Jede in ein 0.2-Modell eingebundene unveränderbare Legacy-Ressource MUSS durch das normative Manifest und die Originalhashbindung aus Anhang Q registriert sein.",
-    "scope": "16.b source reader/inventory only: version-bound local/global fields, complete source originals and transitive manifest/payload integrity, immutable classification, detached observations and safe file access. No target write, migration registration, current approval/readiness, external historical compatibility, full suite or release proof."
+    "scope": "16.b source reader/inventory only: version-bound local/global fields, complete source originals and transitive manifest/payload integrity, immutable classification, detached observations and safe file access. No target write, migration registration, current approval/readiness, external historical compatibility, full suite or release proof. 16.c prepares the complete read-only reference migration plan, original-byte legacy manifest and explicit target mappings in the common typed Change Plan. W does not claim saved-plan recomputation. No actual migration, approval, CLI, full-suite or release success is claimed."
   },
   "preconditions": [
     "Source selects exactly the compiled specroad-reference-0.1 contract version 1.0.1.",
-    "Complete original source and reachable snapshot/payload bytes are supplied; sources remain read-only."
+    "Complete original source and reachable snapshot/payload bytes are supplied; sources remain read-only.",
+    "The complete reference source 1.0.1 and all explicit target resources/mappings are supplied as owned bytes; no host defaults or guessed semantic values.",
+    "Only read-only planning is exercised. Actual migration publication still requires the later native lock, full backup, global validation, audit, recovery and authority gates."
   ],
   "primary_verification_id": "SR-VER-0042",
   "required_environment": {
@@ -49,11 +59,35 @@
   "steps": [
     "Read complete source schemas and original closures without the current artifact loader or writer.",
     "Compare literal hash vectors, full current/historical inventory, identity/reference/state bindings and protected original bytes.",
-    "Observe explicit release selection, retained synthetic histories, safe refusal and native Core/PYZ parity without optional packages."
+    "Observe explicit release selection, retained synthetic histories, safe refusal and native Core/PYZ parity without optional packages.",
+    "Prepare the native migration branch of the shared Change Plan and compare explicit target fields, literal normative hashes, current/legacy roots, complete file bindings and unchanged original bytes.",
+    "Reject missing/invalid mappings and forbid using the migration branch as ordinary authoring or current review/readiness evidence."
   ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0641",
   "test_ids": [
+    "tests/test_migration_planning.py::test_all_originals_and_transitive_archives_remain_verifiable_bytes",
+    "tests/test_migration_planning.py::test_common_plan_schema_is_retrievable_and_validates_the_real_specialist_plan",
+    "tests/test_migration_planning.py::test_core_and_pyz_materialize_identical_plans_without_optional_packages",
+    "tests/test_migration_planning.py::test_deterministic_plan_ignores_dictionary_order_and_has_explicit_bound_metadata",
+    "tests/test_migration_planning.py::test_finished_proposals_stay_original_immutable_records[applied]",
+    "tests/test_migration_planning.py::test_finished_proposals_stay_original_immutable_records[rejected]",
+    "tests/test_migration_planning.py::test_finished_proposals_stay_original_immutable_records[stale]",
+    "tests/test_migration_planning.py::test_full_native_source_family_materializes_all_types_and_protects_legacy",
+    "tests/test_migration_planning.py::test_legacy_hashes_use_original_bytes_and_bind_manifest_in_shared_root",
+    "tests/test_migration_planning.py::test_literal_independent_requirement_and_relation_vector_matches_exactly",
+    "tests/test_migration_planning.py::test_migration_policy_cannot_be_mixed_with_generic_operations",
+    "tests/test_migration_planning.py::test_missing_inputs_report_every_missing_mapping_without_dummy_roots_or_writes",
+    "tests/test_migration_planning.py::test_missing_target_core_is_visible_and_a_fabricated_core_is_not_accepted",
+    "tests/test_migration_planning.py::test_native_planning_does_not_create_project_files_or_run_source_code",
+    "tests/test_migration_planning.py::test_open_proposal_requires_an_explicit_current_basis_and_preserves_prior_content",
+    "tests/test_migration_planning.py::test_regular_policy_label_cannot_launder_a_migration_operation",
+    "tests/test_migration_planning.py::test_release_baseline_and_explicit_original_release_selection_are_unchanged",
+    "tests/test_migration_planning.py::test_same_source_and_mappings_keep_original_representations_out_of_semantic_roots_only",
+    "tests/test_migration_planning.py::test_shared_change_plan_roundtrip_and_specialist_route_never_authorize_regular_apply",
+    "tests/test_migration_planning.py::test_source_hash_mismatch_is_a_conflict_instead_of_a_missing_mapping",
+    "tests/test_migration_planning.py::test_source_plan_does_not_register_public_migration_or_restore_support",
+    "tests/test_migration_planning.py::test_values_are_detached_and_input_objects_are_never_rewritten",
     "tests/test_reference01_reader.py::test_all_28_types_and_complete_classification_keep_originals",
     "tests/test_reference01_reader.py::test_core_and_pyz_reference_reader_parity_without_optional_packages",
     "tests/test_reference01_reader.py::test_json_whitespace_changes_bytes_without_changing_model_root",

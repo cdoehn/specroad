@@ -51,6 +51,10 @@ class ManifestResource:
             "attachment": {"kind", "path", "size", "media_type", "sha256"},
             "archive": {"kind", "path", "size", "sha256"},
         }
+        legacy = kind == 'artifact' and data.get('hash_domain') == 'legacy-original-bytes-v1'
+        if legacy:
+            fields['artifact'] = fields['artifact'] | {'hash_domain', 'legacy_manifest_sha256'}
+            _hash(data.get('legacy_manifest_sha256'))
         if type(kind) is not str or kind not in fields or set(data) != fields[kind]:
             raise ModelError("invalid_manifest_resource")
         _hash(data["sha256"])

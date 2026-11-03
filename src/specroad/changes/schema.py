@@ -1,4 +1,4 @@
-"""Closed, detached schema for regular Change Plans, format 1.2.0."""
+"""Closed, detached schema for regular and migration Change Plans, format 1.2.0."""
 from ..model.schema_identity import (DIALECT, CHANGE_PLAN_VERSION as FORMAT_VERSION,
                                      CHANGE_PLAN_ID as SCHEMA_ID, CHANGE_PLAN_SCOPE)
 from ..model.audit_fields import audit_definitions
@@ -20,16 +20,24 @@ def change_plan_schema():
     defs = audit_definitions()
     fields = {
         "format_version": {"const": FORMAT_VERSION},
-        "metadata_policy_version": {"const": METADATA_POLICY},
+        "metadata_policy_version": {"enum": [METADATA_POLICY, "migration-metadata-v1"]},
         "change_plan_id": text(), "request_id": request_id_schema(),
         "planned_at": defs["utc"], "actor": defs["actor"],
         "base": obj({"scope_descriptor": {"type": "object"}, "model_root_sha256": digest()}),
-        "operations": arr({"anyOf": [operation_schema(kind) for kind in OPERATION_TYPES]}),
+        "operations": arr({"anyOf": [operation_schema(kind) for kind in (*OPERATION_TYPES, "schema_migrate")]}),
         "preconditions": arr(precondition_schema()),
         "result_artifacts": arr(obj({"artifact": {"type": "object"}, "sha256": digest()})),
         "expected_result": obj({"model_root_sha256": digest()}),
         "change_plan_sha256": digest(),
     }
-    return {**obj(fields), "$defs": defs, "$schema": DIALECT, "$id": SCHEMA_ID,
+    result = obj(fields)
+    result["anyOf"] = [
+        {"properties": {"metadata_policy_version": {"const": METADATA_POLICY},
+            "operations": {"items": {"not": {"properties": {"op": {"const": "schema_migrate"}}, "required": ["op"]}}}}},
+        {"properties": {"metadata_policy_version": {"const": "migration-metadata-v1"},
+            "operations": {"minItems": 1, "not": {"minItems": 2},
+                "items": operation_schema("schema_migrate")}}},
+    ]
+    return {**result, "$defs": defs, "$schema": DIALECT, "$id": SCHEMA_ID,
             "x-specroad-validation-scope": CHANGE_PLAN_SCOPE,
-            "description": "Regular typed Change Plan. No execution, state validation or write authorization."}
+            "description": "Typed Change Plan. No execution, state validation or write authorization."}

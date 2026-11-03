@@ -68,12 +68,19 @@ OPERATION_TYPES = tuple(_CONTRACTS)
 
 
 def operation_schema(kind):
+    if kind == "schema_migrate":
+        from ..migration.plan_contract import migration_operation_schema
+        return migration_operation_schema()
     if type(kind) is not str or kind not in _CONTRACTS:
         raise ValueError("Unknown compiled operation kind")
     return _CONTRACTS[kind].schema_factory()
 
 
 def validate_operation(value, pointer=""):
+    if type(value) is dict and value.get("op") == "schema_migrate":
+        from ..migration.plan_contract import validate_migration_operation
+        _at(pointer, validate_migration_operation, value, pointer)
+        return value
     if type(value) is not dict or type(value.get("op")) is not str or value["op"] not in _CONTRACTS:
         raise ChangePlanError("unknown_operation", pointer=pointer + "/op")
     kind = value["op"]
@@ -93,9 +100,13 @@ def validate_operation(value, pointer=""):
 
 def result_owners(value):
     """Use only a previously validated payload; no execution/folding implied."""
+    if value["op"] == "schema_migrate":
+        return tuple(value["result_ids"])
     return _CONTRACTS[value["op"]].result_owners(value)
 
 
 def required_workflow(kind):
     """Return a routing label, never an authentication or authority token."""
+    if kind == "schema_migrate":
+        return "schema_migrate"
     return _CONTRACTS[kind].workflow
