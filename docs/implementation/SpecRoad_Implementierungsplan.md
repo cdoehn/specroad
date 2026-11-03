@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 56 · **Stand:** 3. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.50
+**Planrevision:** 57 · **Stand:** 3. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.51
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 Schritte und 900 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; die ausdrücklich genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wird nach 10.7.10 innerhalb von 15.l.R vorgezogen. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -9,7 +9,7 @@ Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 S
 
 Fachliche Grundlage ist [`docs/specification/SpecRoad_Spezifikation.md`](../specification/SpecRoad_Spezifikation.md), einschließlich aller konsolidierten Korrekturen, 742 Requirements, 51 Verifikationsverträge, 46 Szenario-/E2E-Identitäten sowie R-01 bis R-75, Anhang U und den PatchHarbor-Rundweg aus Anhang W. Der [`Prüfbericht`](../reviews/SpecRoad_v0.2.7_Implementierungsreife_Pruefbericht.md) ist ein vorgelagerter Entwurfsreview, kein späterer Produktnachweis.
 
-Gebundene Spezifikations-SHA-256: `3520bd732f16f15601548962f37123c360292f3001e4f33fcc8ce0f53b167a54`.
+Gebundene Spezifikations-SHA-256: `6f94a1721c93c2bd22e880d91ce45f35beadc024bdd011752267a35861184f90`.
 Planungsbasis: Commit `fe2661d02ecf2f7eb483b58a4487eb009c6b3846`; sauberes Result-Bundle `specroad_Result_120209_0914_df3504.zip`; Repository-ID `3d2576df-d611-46fc-9d2b-92869468aaca`. Diese Angaben dokumentieren die Entstehung des Plans, nicht die zukünftige Patchbindung. **Jedes spätere Patchpaket bindet den dann aktuellen tatsächlichen Result-Zustand.**
 
 Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 2026 gelten zusätzlich und bei den nachfolgend benannten Konflikten vorrangig. Sonstige normative Spezifikationsinhalte werden nicht stillschweigend abgeschwächt. Neue fachliche Widersprüche, fehlende zwingende Angaben und Sicherheitsprobleme sind offen zu benennen, nicht durch erfundene Annahmen oder Scheinerfolge zu lösen.
@@ -32,6 +32,64 @@ Ketten erfordert erst den belegten erfolgreichen normalen Abschluss.
 Produktfreigaben und die Grenzen aus 2.4.1/2.4.2/2.4.4 bleiben unverändert.
 Dieser Plan ändert keine alten Aufträge, Antworten, Blockaden oder
 Laufzeitdaten und ist keine Start-/Resume-Anweisung.
+
+## Bundle 554 — MIGRATION-PLAN-554 und 16.c.W/R/C
+
+**Ausdrückliche einmalige Freigabe vom 3. November 2026:** Der Nutzer beauftragt
+Klärung und anschließende sinnvolle Plancommits in genau einem Bundle.
+Reihenfolge: OFF-PLAN MIGRATION-PLAN-554, 16.c.W, 16.c.R, 16.c.C.
+Jeder Zustand erhält sein eigenes Apply-Gate und erst danach seinen Commit.
+Die automatische Klärungssperre des vorigen Auftrags bleibt historisch richtig;
+dieser manuelle Auftrag ersetzt sie ausschließlich für dieses Bundle.
+Control-Konfiguration, gespeicherte Budgets und Recovery-Records werden nicht
+verändert. Die gemischte Lieferung wird nicht als reine technische Korrektur
+oder verdeckter Budgetreset klassifiziert.
+
+**Geprüfte Basis:** Result f8c449, SHA256
+`5986315ac0703acfb7d8e625168798ba1993087b226aaa6740929322ade35304`,
+sauberer Abschluss `a052c2c567572e31f1fccede94ac14f0fa77df2c`.
+16.b.C ist tatsächlich abgeschlossen; belegter Produktstand 666/900.
+Der Klärungscommit erhöht diesen Zähler nicht.
+
+**Lücken und geprüfte Alternativen:** 10.1/K.4 nennen die Migrationspolicy,
+aber kein ausführbares Ressourcenpayload; Q.2/Q.3 lassen genaue Legacy-
+Hashzeilen offen, und offene Source-Proposals benötigen explizite Zielpläne.
+Freie update-/Dateioperationen würden Kontrollfelder umgehen. Ein separater
+Migrationswriter/-Plan widerspräche SR-DEC-0020/16.c.C. Ein ausschließlich
+ablehnender Planer oder synthetische 90.x-Beispiele erfüllen 16.c nicht.
+Gewählt wird der kleinste native Spezialzweig im bestehenden Change Plan,
+mit vollständigen originalbytegebundenen Inputs, getrennten Legacy-Zeilen
+und zwingenden expliziten Proposal-Zielplänen. Keine automatische Umdeutung
+historischer Inhalte, Menschenreviews oder Scope-Erweiterung.
+
+**Entscheidungsautorität:** delegiert gemäß SPECROAD-DECISION-1 plus obigem
+explizitem manuellen Bündelauftrag. 2.4.1: bestätigter M16-Scope; vereinbare
+konservative native Lösung; Original-/Review-/Verlustschutz bleibt; neue
+versionierte Datenregel rücknehmbar ohne Originalvernichtung; keine fremden
+Tatsachen oder echte menschliche Prüfungen erfunden. Normative Regel:
+Spezifikation 12.20.2 MIGRATION-PLAN-554. Historische Verträge 1.0.0/1.0.1
+bleiben bytegleich. Öffentliche Apply-/Restore-Unterstützung bleibt bis zu
+deren tatsächlichen M16-Gates gesperrt.
+
+**Abnahmen:** W plant tatsächliche vollständige Referenzquellen einschließlich
+aller 28 Typen, unveränderbarer Nachweise, transitiver Archive, expliziter
+Zielressourcen und offener Proposals deterministisch ohne Projektwrites.
+Literal/extern aufgebauter Hashvektor, erhaltene Originalbytes, Metadaten und
+Current-/Legacy-Domänen werden geprüft. Fehlende Mappings sind sichtbare
+Blocker; ungültige Mappings, Konflikte und unsichere Pfade Fehler.
+R prüft gespeicherte Planfiles gegen aktuelle Dateien, erwartete Mapping-
+und Zielbindung, erkennt auch neu selbstgehashte Manipulationen und erhält
+No-write-/Autoritätsgrenzen. C trennt Transformation, Werte/Verträge und
+Recheck ohne Fachänderung; alle W/R-Nachweise bleiben Pflicht.
+Die drei Produktcommits sind eine zusammenhängende fachliche Einheit.
+Die vollständige Quellsicherung 16.d folgt auf die echte Planabnahme.
+
+Dev entwickelt Tests, führt aber keine Verhaltenstests aus. Reine Collection,
+Syntax-/Katalogbindung und native ZIP-/Payloadprüfung ersetzen kein Apply-Gate.
+Neue/geänderte Testdateien sind vollständig ungefilterte Pflicht je Phase;
+relevante Shared-Plan-, Hash-, Source-, Proposal-, Sicherheits- und
+Distributionsregressionen kommen hinzu. N=3 und Host-Workerregeln bleiben.
+Alle Meilenstein-, Vollsuite-, Plattform- und Releasegates bleiben offen.
 
 ## Bundle 553 — technische Korrektur und Fortsetzung von 16.b.W/R/C
 
@@ -1208,7 +1266,7 @@ Kein offener Produktplanschritt wird durch diese Testoptimierung abgeschlossen.
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 56
+plan_revision: 57
 implementation_plan_commits_total: 900
 implementation_plan_commits_completed: 666
 last_completed_plan_commit: 16.b.C
@@ -35392,6 +35450,9 @@ offen. M15-Integrations-/Vollsuiten-/Plattformgates und 18.q/18.r bleiben offen.
 
 <a id="step-16-c"></a>
 ### 16.c – Read-only-Migrationsplan
+
+Zusätzlich gilt der vollständige Vertrag MIGRATION-PLAN-554 aus 12.20.2
+mit den obigen positiven, negativen und Original-/Autoritätsabnahmen.
 
 **Anforderungsbezug:** `SR-REQ-0263`–`SR-REQ-0264`.
 **Verifikationsbezug:** `SR-VER-0020`. Die exakten SR-TC-Identitäten stehen in der vollständigen Matrix.

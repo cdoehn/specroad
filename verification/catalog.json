@@ -762,7 +762,7 @@
     "SR-TC-0741",
     "SR-TC-0742"
   ],
-  "specification_sha256": "3520bd732f16f15601548962f37123c360292f3001e4f33fcc8ce0f53b167a54",
+  "specification_sha256": "6f94a1721c93c2bd22e880d91ce45f35beadc024bdd011752267a35861184f90",
   "test_case_ids": [
     "SR-TC-0001",
     "SR-TC-0002",

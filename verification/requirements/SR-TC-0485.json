@@ -47,7 +47,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "3520bd732f16f15601548962f37123c360292f3001e4f33fcc8ce0f53b167a54",
+  "specification_sha256": "6f94a1721c93c2bd22e880d91ce45f35beadc024bdd011752267a35861184f90",
   "steps": [
     "Encode and independently inspect actual canonical ZIP members and exact nonrecursive manifest inventory.",
     "Read the exact bytes with optional external SHA-256; check scope/type/version/identity, payload and exclusion bindings and reject unsafe paths before payload access.",

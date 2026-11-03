@@ -38,7 +38,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "3520bd732f16f15601548962f37123c360292f3001e4f33fcc8ce0f53b167a54",
+  "specification_sha256": "6f94a1721c93c2bd22e880d91ce45f35beadc024bdd011752267a35861184f90",
   "steps": [
     "Change requirement language, normative_force or statement through ordered field options, a saved RFC-6902 array or explicit binary stdin.",
     "Publish through the common full planner, lifecycle/metadata and real native transaction.",

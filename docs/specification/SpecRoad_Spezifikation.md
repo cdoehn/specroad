@@ -1,5 +1,5 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.50
+## Version 0.2.51
 
 | Feld | Wert |
 |---|---|
@@ -4690,6 +4690,202 @@ Quellvertrag und zur geprüften nativen Implementierung nach Q.0 unregistriert.
 16.b, die übrigen M16-Schritte, Restore-Integration, aktuelle Reviews und
 Meilensteinfreigaben bleiben offen. Synthetische Graphverträge ersetzen weder
 den historischen Quellvertrag noch die spätere vollständige Migration.
+
+
+#### 12.20.2 Gebundener Migrationsplan — MIGRATION-PLAN-554
+
+**Autorität.** Ausdrücklicher manueller Nutzerauftrag vom 3. November 2026:
+ein Bundle mit Klärungscommit und anschließenden sinnvollen Plancommits.
+Dies erlaubt einmalig den Dokumentcommit und 16.c.W/R/C in einer ZIP trotz
+des zuvor gesperrten automatischen Klärungsauftrags. Es ändert weder 2.4.3
+noch Control-Zustand, Klassifikation, Restbudget oder frühere Blockaden.
+Die Detailwahl folgt SPECROAD-DECISION-1; sie ist keine menschliche Freigabe
+von verwalteten Requirements, Proposals oder Releases.
+
+**Planungsgrenze.** 16.c liefert den vollständigen schreibfreien nativen
+Planer für den Quellvertrag aus Q.0.2. Die folgenden M16-Schritte behalten
+Backup, öffentliche Registrierung, Writer, Recovery, Verification und
+CLI-/Restore-Integration samt ihren eigenen Abnahmen. Ein maschinenlesbarer
+Change Plan ist ein Plan, kein Schreibrecht, Backupbeleg, Review oder
+Nachweis einer bereits unterstützten öffentlichen Apply-Schnittstelle.
+Der Planer muss mit vollständigen expliziten Eingaben positive echte
+0.1-Referenzpläne liefern; reine Abweisung und 90.x-Graphbeispiele genügen
+nicht. Er führt keine im Datenbestand gespeicherten Operationen aus.
+
+**Explizite Eingaben.** Quelle sind die tatsächlichen Dateibytes des
+vollständigen übergebenen Quellstands; die 16.b-Inventur qualifiziert seine
+normativen Originale und transitive Closure. Zusätzlich werden gebunden:
+Akteur, planned_at, Change-Plan-ID, Request-ID, Zielversion, vollständige
+Zielkonfiguration, Zielprofil-/Regel-/Mapping-/Sprachressourcen und die
+Mappings. Es gibt keine Uhrzeit-, Zufalls-, Host-Locale-, Netzwerk- oder
+Profilannahme. Zielkonfiguration behält Projekt-ID und ID-Präfix. Quellen
+und Zielressourcen dürfen weder Codeprovider noch einen Writer auswählen.
+Der feste Source-Vertrag wird weder als Zielprofil ausgegeben noch geändert.
+
+`migration-inputs-v1` ist ein geschlossenes Objekt mit `format_version`,
+`target_configuration` (Base64 der Bytes oder null), `target_resources`
+(nach Pfad sortierte Zeilen mit exakt `path,bytes_base64`),
+`requirement_mappings` und `proposal_mappings`. Die beiden Mappinglisten
+sind nach ID sortiert und eindeutig. Ein Requirementmapping enthält genau
+`artifact_id,source_sha256,language,normative_force,statement` gemäß S.7;
+`source_sha256` ist der volle JCS-Hash der aktuellen Source-Fassung.
+Ein Proposalmapping enthält genau `artifact_id,source_sha256,change_plan`.
+Der letzte Wert ist ein vollständiger regulärer Ziel-Change-Plan nach 10.1.
+Keine bloße Boolean-Zustimmung ersetzt diese Daten oder spätere Freigaben.
+Unbekannte Felder, doppelte IDs, falsche Source-Hashes und zusätzliche
+Mappings ohne passendes veränderbares Subject werden abgewiesen.
+Die gemeinsamen Sprachdefaults nach S.7 können vor diesem normalisierten
+Kernformat explizit materialisiert werden; der Kern errät sie nicht.
+
+Fehlende Zielkonfiguration, Zielressourcen, Requirement- oder erforderliche
+Proposalmappings liefern eine vollständige ehrliche Plan-/Blockerausgabe.
+`change_plan` und `expected_target_model_root_sha256` sind dann null;
+`ready=false`. Source-Integrität bleibt unabhängig geprüft. Ungültige oder
+manipulierte Angaben sind Fehler, keine positiven Teilpläne. Es dürfen
+keine Dummyhashes oder leeren Ersatztexte als fehlende Daten eingesetzt werden.
+
+**Transformation und historische Inhalte.** Veränderbare Source-Artefakte
+behalten ID, Erstellungsmetadaten, Arrayreihenfolge, unbekannte gültige
+Extensions und alle nicht ausdrücklich gemappten Fachwerte. Sie erhalten
+0.2-Schema, legacy-sequential-v1, die Relationsidentitäten nach Q.3 und K.4.
+Nur typisierte relation_locator/relation_locators-Werte werden umgebunden;
+Opaque Extensions, Freitexte und fremde Nutzdaten bleiben unangetastet.
+Requirementtexte und die beiden neuen Pflichtfelder kommen ausschließlich
+aus ihrem Mapping. Neue fachliche Inhalte übernehmen keine alte Approval;
+veränderbare genehmigte Entwurfsartefakte werden bei der Überführung auf
+draft zurückgeführt. Spezialstatus dürfen dadurch nicht frei umgeschrieben
+werden. Jede alte Fassung bleibt zusätzlich mit ihren Originalbytes erhalten.
+
+Für offene Source-Proposals wird kein alter Plan still auf die neue Basis
+umgehängt. Ein explizites Proposalmapping bindet einen regulären Zielplan an
+den geplanten 0.2-Spezifikationsscope. Ohne dieses Mapping bleibt die gesamte
+Migration blockiert. Die neue Proposal-Fassung behält ihre ID, erhöht
+revision und content_revision einmal, setzt proposal_status/maturity auf
+draft und bildet content_sha256 neu. Alte Review-/Kontrollzeilen bleiben
+unverändert als Source-Historie erhalten; sie gelten nicht für die neue
+Inhaltsbindung. Der Manifest-Provenienzübergang bindet die alte Fassung,
+ihre vollständige Source-Basis und die neue Revision. Eine spätere aktuelle
+Proposalprüfung muss historische Source-Fassungen mit ihrem Source-Leser
+qualifizieren und darf sie nicht als erfundene 0.2-Originale ausgeben.
+Diese Planregel erteilt weder automatische Zustimmung noch eine Neuausführung
+alter Proposaloperationen. Alle abgeschlossenen Proposals bleiben Q.1-Originale.
+
+**Originalarchiv und Legacy-Manifest.** Unveränderbare aktuelle Dateien und
+referenzierte Payloads bleiben an ihren Pfaden bytegleich. Zusätzlich werden
+sämtliche qualifizierten aktuellen und historischen Originale unter
+`archive/objects/<sha[:2]>/<sha>` als Originalbytes eingeplant. Bereits
+vorhandene gleiche Objekte werden wiederverwendet, andere Bytes an derselben
+Adresse abgewiesen. Das ersetzt nicht die unfiltrierte Vollsicherung aus 16.d.
+Auch sonstige übergebene nichtnormative Dateien bleiben unverändert erhalten.
+Das feste Source-Profil wird aus dem aktuellen Profilverzeichnis entfernt,
+aber seine tatsächlichen Bytes bleiben im Originalarchiv und Manifest.
+
+Q.2 wird für die exakte Speicherung ergänzt: `source` enthält
+`project_id,schema_version,contract_id,contract_version,contract_sha256`;
+`target` enthält `project_id,schema_version,contract_sha256`.
+`entries` enthält die dort verlangten Felder sowie `role` und
+`logical_path`. `path` ist der physische aktuelle oder archivierte Originalpfad;
+`logical_path` der damalige Pfad im Source-Snapshot. Nichtartefakt-Originale
+setzen artifact_id, artifact_type und original_revision auf null.
+`identity_projection` ist für Artefakte exakt `{id_scheme:legacy-sequential-v1}`,
+sonst null. Jede Relationsprojektion enthält `index,relation_id,id_scheme,original`;
+`original` ist der unveränderte Relationswert. Payloadzeilen enthalten exakt
+`path,size,sha256`. `migration_provenance` bindet `contract_id,contract_version,
+contract_sha256,source_snapshot_root`. Einträge sind eindeutig nach
+`(path,source_model_root_sha256,logical_path)` und in dieser UTF-8-Ordnung
+sortiert. Originale derselben Artefakt-ID und Revision dürfen keine
+widersprüchlichen Originalbytes haben; verschiedene historische Revisionen
+werden nicht verwechselt. `proposal_transitions` enthält je neuem Proposal
+`artifact_id,source_revision,source_sha256,target_revision,target_content_revision`.
+Es enthält keine menschlichen Zustimmungen. Die vollständige Manifestressource
+besitzt neben Q.2s Versions-/Identitätsfeldern genau source, target, entries
+und proposal_transitions. Sie bindet keinen eigenen Zielmodellhash und
+vermeidet damit eine Hashselbstreferenz.
+
+**Exakte Zielwurzel.** Die vorhandene Projektion `model-manifest-v1` bleibt
+für ausschließlich aktuelle Ressourcen unverändert. Ein aktuelles Legacy-
+Artefakt benutzt in `artifacts` exakt die bisherigen Zeilenfelder
+`kind=artifact,id,artifact_type,revision,sha256` plus
+`hash_domain=legacy-original-bytes-v1,legacy_manifest_sha256`.
+sha256 ist sein Originalbytehash, revision die Source-Revision und
+legacy_manifest_sha256 der JCS-Hash der gesamten Manifestressource.
+Solche Zeilen sind keine 0.2-Artefaktprojektionen. Der Planbefund
+ready bedeutet vollständig materialisierbar und lokal schema-/profilfeldgültig,
+nicht aktuell genehmigt oder zum Write autorisiert. Die vorhandenen globalen
+Prüf-/Review-/Transaktionsgates bleiben vor Veröffentlichung erforderlich. Die Legacy-Mappingressource
+wird wie jede Mappingressource zusätzlich unter resources gebunden.
+Alle durch sie gebundenen Archivobjekte gehen mit Originalgröße und Bytehash
+in archive_objects ein. Reguläre Zielartefakte behalten ihre JCS-Hashdomäne.
+Anhänge behalten ihre ursprünglichen Payloadbindungen; Code- und andere
+Nicht-Anhangspayloads sind über Originalarchiv und Manifest gebunden.
+Sortierungen, semantische Konfiguration, effektives Profil und scope_sha256
+folgen dem gemeinsamen Manifestkern. Der Projekt-Scope ist geschlossen;
+der Proposal-Spezifikationsscope schließt aktuelle Proposal-/Baseline-
+Artefaktzeilen aus, erhält aber die festen historischen Originalressourcen.
+
+**Gemeinsame Planoperation.** Format 1.2.0 wird um genau den typisierten
+Spezialzweig `schema_migrate` mit `migration-metadata-v1` erweitert.
+Ein solcher Plan enthält genau eine Operation und keine reguläre
+Operation daneben. Reguläres Authoring akzeptiert diese Operation nicht.
+Der bisherige reguläre Operationskatalog bleibt unverändert; der gemeinsame
+Parser erkennt zusätzlich den Spezialzweig. Er ist niemals ein frei
+verwendbarer Datei-/Schema-Patch. result_artifacts sind genau die geänderten
+aktuellen 0.2-Artefakte; historische Originale gehören nicht hinein.
+
+Die Operation hat genau `op,format_version,source_contract,target_contract,
+steps,inputs,inputs_sha256,source_files,target_files,changes,result_ids,
+source_model_root_sha256,target_model_root_sha256,target_manifest,
+new_required_fields,losses,protected_paths`. format_version ist
+`schema-migrate-v1`. Vertragsobjekte enthalten schema_version und
+contract_sha256. Die feste Schrittkennung lautet `reference01-to-current.v1`;
+der eine Schritt enthält `step_id,source_contract,target_contract,direction=forward,
+reversible=false`. Die Source-Bindung ist Q.0.2s Manifesthash. Der Targethash
+ist SHA256(JCS({contract_version:"migration-target-v1",schemas:<Objekt>}));
+schemas bindet die vollständigen aktuellen nativen Schemas für alle
+Artefakttypen, project und change_plan unter diesen Schlüsseln; profile
+bindet den vollständigen ausgelieferten nativen core-Profilwert. Als Core
+wird ausschließlich dieses native Profil akzeptiert, keine gleichnamige
+Abschwächung aus dem Projekt.
+Damit ist ein Versionslabel allein kein Versionspfad. Projektprofile und
+Sprachressourcen sind zusätzlich in inputs und Dateibindungen enthalten.
+
+source_files und target_files sind vollständige sortierte Dateibindungen
+mit genau path,size,sha256 über die Originalbytes. changes enthält nur
+abweichende Pfade, sortiert, mit exakt path,before_sha256,after_sha256,
+after_bytes_base64; fehlende Vorher-/Nachherdatei wird durch null bezeichnet.
+Null-Nachherbytes erlauben ausschließlich die explizit geplante Ersetzung
+veränderbarer Ressourcen, niemals das Entfernen geschützter Originale.
+Alle nicht genannten Pfade sind bytegleich. result_ids ist die sortierte
+Menge der result_artifacts-IDs. target_manifest ist die vollständige
+oben definierte Projektion; sein JCS-Hash steht innen und außen als
+Zielmodellwurzel. inputs_sha256 bindet das vollständige normalisierte
+Eingabeobjekt. new_required_fields enthält Zeilen path,fields; losses
+enthält beim hier vollständig verlustfrei vorgesehenen Pfad keine Einträge.
+Andere verlustbehaftete Pfade werden dadurch nicht still freigegeben.
+protected_paths bindet alle aktuell unveränderbaren Dateien und erforderlichen
+Originalpayloads. Preconditions binden alle Source-Dateihashes und die
+Abwesenheit neu anzulegender Pfade.
+
+Die äußere Basis behält den tatsächlichen reference01-Scope und Source-Root.
+Akteur, Zeit und IDs sind im gemeinsamen Umschlag gebunden. Der bestehende
+Planhash wird wie bisher über den vollständigen Plan ohne sein eigenes
+Hashfeld gebildet. Regelmäßige Planparser und Writer dürfen nicht durch
+freie Wahl der Metadatenpolicy oder erneutes Selbsthashen zu Migrationswritern
+werden. Ein erfolgreicher Parse bedeutet weiterhin nur Feldintegrität.
+
+**Recheck vor späterem Apply.** Der native schreibfreie Recheck verlangt
+den gespeicherten Plan, tatsächliche Source-Bytes, ausdrücklich erwartete
+Zielversion, erwarteten inputs_sha256 aus dem beauftragten Mapping und den
+expected_plan_sha256 des tatsächlich beauftragten vollständigen Plans.
+Diese erwarteten Bindungen stammen vom Aufruferauftrag, nicht aus einem
+unbeaufsichtigt neu gehashten Planfile.
+Er qualifiziert die Source erneut, vergleicht sämtliche Dateibindungen,
+prüft den festen nativen Versionspfad und baut die Transformation vollständig
+neu. Nur byte-/wertgleiche Planergebnisse bestehen. Geänderte Quelle,
+zusätzliche/fehlende Datei, neu gehashte manipulierte Ergebnisbytes, andere
+Zielversion, andere Mappings oder andere Metadaten scheitern vor Mutation.
+Ein Planhash allein ist kein Autorisierungsbeleg. Backup-, Review-, Lock-,
+Journal-/Recovery- und öffentliche M16-Gates bleiben zusätzlich erforderlich.
 
 
 ### 12.21 Suspect Relations und fachliche Relationsreviews

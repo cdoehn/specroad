@@ -57,7 +57,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "3520bd732f16f15601548962f37123c360292f3001e4f33fcc8ce0f53b167a54",
+  "specification_sha256": "6f94a1721c93c2bd22e880d91ce45f35beadc024bdd011752267a35861184f90",
   "steps": [
     "11.f.W: resolve embedded normalized queries and basic project views through the existing query engine; assert ordered typed rows, independent column projection, exact query totals/pagination, configuration filtering, unchanged source/revision/hash bindings, no 100-row view cap, explicit empty policy, literal width/types/copy rejection and Core/PYZ parity.",
     "11.f.R: reject executable and alternate-source payloads, missing/wrong view references, incomplete view columns, unsupported scopes/providers, forged native queries and invalid pointers. Verify original byte/revision/model bindings, duplicate identity rejection, native sorting, exact cell errors and no file reads, writes, process or network effects.",

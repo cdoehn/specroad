@@ -35,7 +35,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "3520bd732f16f15601548962f37123c360292f3001e4f33fcc8ce0f53b167a54",
+  "specification_sha256": "6f94a1721c93c2bd22e880d91ce45f35beadc024bdd011752267a35861184f90",
   "steps": [
     "Compare actual direct native validation/graph/SRX outcomes with durable windows of one, two and many units under constrained and standard resource profiles.",
     "Delete the original captured source files and use absent, empty or corrupt project caches; confirm saved inputs and previously completed units are reused.",
