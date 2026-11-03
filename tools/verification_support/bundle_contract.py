@@ -13,10 +13,13 @@ def canonical(value):
 
 
 def validate_bundle(data):
+    version = data.get('format_version') if type(data) is dict else None
     fields = {'format_version', 'bundle_number', 'source_result_sha256', 'binding',
               'apply_repository', 'branch', 'initial_dirty', 'stages', 'correction_of'}
+    if version == 2:
+        fields.add('handoff_kind')
     if (type(data) is not dict or set(data) != fields
-            or type(data['format_version']) is not int or data['format_version'] != 1
+            or type(version) is not int or version not in (1, 2)
             or type(data['initial_dirty']) is not bool or data['branch'] != 'dev'
             or not re.fullmatch(r'[0-9]{3,}', data['bundle_number'])
             or not re.fullmatch(r'[0-9a-f]{64}', data['source_result_sha256'])
@@ -34,7 +37,10 @@ def validate_bundle(data):
         raise ValueError('Invalid native Result binding')
     ids = []
     for stage in data['stages']:
-        if (set(stage) != {'commit_id', 'message', 'before', 'after', 'payloads', 'source_sha256', 'test_plan'}
+        stage_fields = {'commit_id', 'message', 'before', 'after', 'payloads', 'source_sha256', 'test_plan'}
+        if version == 2:
+            stage_fields.add('role')
+        if (type(stage) is not dict or set(stage) != stage_fields
                 or not re.fullmatch(r'[A-Za-z0-9_.-]{1,128}', stage['commit_id'])
                 or not stage['message'] or '\n' in stage['message'] or '\0' in stage['message']
                 or not stage['after'] or set(stage['payloads']) != set(stage['after'])
@@ -65,6 +71,24 @@ def validate_bundle(data):
                 or not re.fullmatch(r'[0-9a-f]{64}', proof['plan_sha256'])
                 or proof['remaining_commit_ids'] != ids):
             raise ValueError('Correction must retain the exact remaining commit sequence')
+    if version == 2:
+        roles = [stage['role'] for stage in data['stages']]
+        if any(role not in ('clarification', 'implementation', 'correction') for role in roles):
+            raise ValueError('Unknown stage role')
+        if data['handoff_kind'] == 'patch_ready':
+            if 'clarification' in roles:
+                raise ValueError('A normal handoff cannot hide clarification')
+        elif data['handoff_kind'] == 'patch_ready_with_clarification':
+            if roles[0] != 'clarification' or roles.count('clarification') != 1 or 'implementation' not in roles[1:]:
+                raise ValueError('Mixed handoff requires one clarification prefix and implementation')
+            paths = set(data['stages'][0]['after'])
+            required = {'docs/specification/SpecRoad_Spezifikation.md',
+                        'docs/implementation/SpecRoad_Implementierungsplan.md'}
+            if not required <= paths or any(not (name in required or name == 'verification/catalog.json'
+                    or re.fullmatch(r'verification/requirements/SR-TC-[0-9]{4}\.json', name)) for name in paths):
+                raise ValueError('Clarification must update specification and plan within the document/catalog scope')
+        else:
+            raise ValueError('Unknown handoff classification')
     return data
 
 

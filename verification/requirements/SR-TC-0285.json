@@ -38,7 +38,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "6f94a1721c93c2bd22e880d91ce45f35beadc024bdd011752267a35861184f90",
+  "specification_sha256": "7d1bc669e4430dba078deee959aae64aa032aa2e1f7cbc2d805dbf4b9c8e5de9",
   "steps": [
     "Export and decode the corpus with the existing NDJSON envelope and explicit per-type CSV profiles; reconstruct only decoded artifacts and transported attachment bytes and compare native semantic model roots.",
     "Export and decode the declared ReqIF/ReqIFZ scalar/XHTML intersection; compare native/external identities, mapped values, ordered occurrence identities, the addresses relation and complete attachment bytes.",

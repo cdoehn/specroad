@@ -95,3 +95,18 @@ Ab HOST-WORKERS-537 verwendet der gemeinsame Apply-Runner automatisch
 der Standard-Entrypoint verwendet 10. Jeder Commit erhält weiterhin genau
 ein Gate. Auswahlbindung v5 und Beobachtungen binden die tatsächlichen
 Ressourcen. Details: [Testing.md](Testing.md).
+
+## Optionale Klärung und typisierte Stages (Vertrag 4)
+
+Neue V4-Bundles verwenden `format_version: 2` mit `handoff_kind` und
+`role` je Stage. Ohne Klärung: `patch_ready`, nur `implementation`/`correction`.
+Mit notwendiger zulässiger Klärung: `patch_ready_with_clarification`, genau
+eine `clarification` zuerst, danach mindestens eine `implementation`.
+`prepare_stage(..., role=...)` ergänzt die Rolle; ohne Argument bleibt v1.
+Die normative Regel und Markerstruktur stehen in Spezifikation 2.4.3.1.
+Der Klärungscommit ist niemals Pflicht und besitzt keinen Produktplanzähler.
+Er ändert Spec, Plan und aktive Katalogbindungen; jede Stage behält ihr Gate.
+`remaining_commits` liefert nach einem Fehler auch die unveränderten Rollen
+zurück. Eine Fortsetzung nach abgeschlossenem Klärungscommit ist `patch_ready`;
+ein noch offener Klärungspräfix bleibt ein gebundener Rest, keine neue Klärung.
+Alte v1-Pakete, ihre Hashes, Stages und Logs werden nicht nachträglich ergänzt.

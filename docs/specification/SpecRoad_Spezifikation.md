@@ -1,15 +1,15 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.51
+## Version 0.2.52
 
 | Feld | Wert |
 |---|---|
 | Dokument-ID | `SR-SPEC-0001` |
-| Dokumentversion | `0.2.50` |
+| Dokumentversion | `0.2.52` |
 | Zielrelease | `SpecRoad Single-Repository Workbench 0.2.0` |
 | Status | **Fachlich konsolidierte Arbeitsgrundlage; technische Reviewentscheidung gesondert dokumentiert, formale Baseline-Freigabe und Produktabnahme nicht durch dieses Dokument erklärt** |
 | Stand | 3. November 2026 |
 | Sprache | Deutsch; technische Feldnamen, Enum-Werte und CLI-Kommandos Englisch |
-| Fachliche Quelle | **Diese Repositoryfassung v0.2.50 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.50 liegt mit dieser Änderung nicht vor.** |
+| Fachliche Quelle | **Diese Repositoryfassung v0.2.52 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.52 liegt mit dieser Änderung nicht vor.** |
 | Bearbeitbare Satzquelle | Diese Datei; eine spätere PDF muss denselben versionierten Inhalt wiedergeben. |
 | Vorgängerversion | Repository-Spezifikation v0.2.49 vom 3. November 2026; historische Nachweise bleiben unverändert. |
 | Prüf- und Entscheidungsgrundlage | REFERENCE-RELEASE-552: ausdrückliche manuelle Ausnahme für Klärung und folgende Plancommits in einer ZIP; explizite Release-Bindung im neuen Quellvertrag 1.0.1. |
@@ -406,6 +406,104 @@ Apply-Testrotation mit N=3 und Laufzeitfilterung nach 2.5 bleiben maßgeblich. C
 Paket- und Result-Prüfungen bleiben bestehen. Ein Dokumentcommit erhöht
 keinen regulären Produktzähler und erklärt keine Produktabnahme.
 
+
+#### 2.4.3.1 Optionale Klärung vor Umsetzung in einer ZIP — Vertrag 4
+
+**Ausdrücklicher Nutzerauftrag vom 3. November 2026, MIXED-BUNDLE-555.**
+Für neue dafür freigegebene automatische Aufträge gilt ergänzend Vertrag 4.
+Die folgende Regel ersetzt für diese Aufträge die getrennte Klärungsübergabe
+aus Vertrag 3. Bestehende Aufträge und Verträge 1–3 bleiben unverändert.
+Die Befugnisgrenzen aus 2.4.1, Belege aus 2.4.2 und echten Blocker aus 2.4.4
+gelten weiterhin; sie werden durch die gemeinsame ZIP nicht erweitert.
+
+**Der Klärungscommit ist optional.** Ohne notwendige normative Detaillücke
+liefert Dev ausschließlich vollständige beauftragte Plan-/Korrekturcommits
+und meldet `patch_ready`. Weder ein künstlicher Dokumentcommit noch ein
+vorsorglicher Klärungsschritt darf verlangt werden. Sind innerhalb der
+bestätigten Arbeit zulässige Detailregeln zu klären, prüft Dev Alternativen
+und wählt die kleinste konsistente konservative reversible Lösung. Alle
+für den gewählten zusammenhängenden Lieferumfang notwendigen Klärungen
+werden vor dessen Umsetzung in genau einem OFF-PLAN-Klärungscommit gebündelt.
+Dieser erste Zustand schreibt Begründung, normative Spezifikation,
+Planabnahmen und aktive Katalogbindungen fort. Anschließend folgen in
+derselben ZIP echte, vollständige Implementierungszustände in Planreihenfolge.
+Eine Mischung meldet `patch_ready_with_clarification`. Ein reines
+Spezifikationsbundle ist unter Vertrag 4 kein Ersatz für die beauftragte
+Umsetzung und kein gültiger Mischstatus. Fehlende unverzichtbare Fakten
+oder Entscheidungen außerhalb der Befugnis ergeben weiterhin `blocked`.
+
+Die sinnvolle Anzahl der Plancommits bestimmt Dev nach vollständigem Umfang,
+Zusammenhang und erfüllbaren Gates, nicht nach einer festen Commitzahl.
+Echte W/R/C-Zustände bleiben getrennt. Jeder Zustand wird einzeln ausgebracht,
+mit der fälligen gefilterten N=3-Gruppe plus ungefilterter Pflichtauswahl
+getestet und erst danach committed. Kein Endstand vor dem ersten Gate;
+bei einem Fehler endet Apply unter Erhalt des Commitpräfixes und Arbeitsstands.
+Auch der optionale Klärungscommit hat ein eigenes reguläres Gate, ohne
+Dokumentations- oder Darstellungstests zu erfinden. Er erhöht keinen
+Produktplanzähler und ersetzt keine menschliche Produktfreigabe.
+
+**Auftrag und Budget.** Vertrag 4 besitzt dieselben streng typisierten Felder
+wie Vertrag 3, jedoch `version=4`, sowie den zusätzlichen Pflicht-Boolean
+`clarification_continuation`; `clarification_limit=3` und der dauerhaft
+gespeicherte Restwert 0…3 bleiben erhalten. `clarification_continuation=true`
+ist nur bei `clarification_allowed=false` zulässig und bezeichnet ausschließlich
+den aus Plan/Fehler-Result belegten noch offenen Klärungspräfix. Dieser
+Boolean ist keine neue Klärungsbefugnis. Ohne solchen Beleg bleibt er false.
+`clarification_allowed=false`
+oder Restwert 0 sperren eine neue optionale Klärung, nicht klare Umsetzung
+oder die ausdrücklich belegte Fortsetzung desselben Klärungspräfixes.
+Die vier Antwortfelder bleiben unverändert. `spec_clarification` gehört
+nicht zum Antwortschema eines neuen Vertrags 4; die alten Verträge behalten
+ihre bisherige Bedeutung. Pro Auftrag und Quell-Result höchstens eine ZIP;
+nach atomarer Übergabe sofort beenden, keine eigene Modell-/Apply-Schleife.
+
+Eine gemischte Übergabe verbraucht bei Übernahme ihres eindeutig gebundenen
+Folge-Results genau einen Platz, auch bei Fehler. Nur ihr vollständig
+erfolgreiches sauberes Apply mit belegtem Abschluss aller angekündigten
+Klärungs- und Implementierungscommits eröffnet wieder drei Plätze.
+Ein erfolgreicher Klärungscommit mit anschließend fehlgeschlagener Umsetzung
+genügt nicht. Ein echtes normales Umsetzungs-/Korrekturbundle erneuert das
+Budget erst nach seinem vollständig belegten sauberen Abschluss. Unbekannte
+Handoffs, Fehler, Retry, Overload, Pause, Neustart und Recovery erteilen keine
+zusätzliche Befugnis. Bereits erfolgreiche Klärungs- oder Produktcommits
+werden nicht wiederholt. Die neue ZIP bindet das tatsächliche Fehler-Result
+und führt alle verbleibenden Commit-IDs und Rollen in derselben Reihenfolge
+fort. Ist der Klärungscommit abgeschlossen, ist diese Fortsetzung normale
+Umsetzung/Korrektur ohne erneute Klärung. Ist er noch offen, darf genau dessen
+belegter Rest als `patch_ready_with_clarification` fortgeführt werden; dies
+ist keine neue Detailentscheidung und kein zweiter Budgetverbrauch. Dabei
+bleiben alle Dateien des offenen Klärungszustands bytegleich zum ursprünglichen
+angekündigten Ziel; nur die Vorherbindung wird am erhaltenen Stand erneuert. Neue
+Klärung nach einem Fehler bleibt gesperrt. Control muss diese Restfortsetzung
+aus dem ursprünglichen Plan, Commitpräfix, Result und Korrekturbindung beweisen.
+
+**Maschinenlesbare Kennzeichnung.** Der interne SpecRoad-Apply-Commitplan v2
+erweitert v1 ausschließlich um `handoff_kind` auf Bundleebene und `role` je
+Stage. `handoff_kind` ist `patch_ready` oder `patch_ready_with_clarification`.
+Rollen sind `clarification`, `implementation`, `correction`. Im Normalfall
+gibt es keinen Klärungszustand. Ein Mischbundle enthält genau eine
+`clarification` an Position 0 und danach mindestens eine `implementation`;
+ein Alibi-Korrekturcommit genügt nicht. Der Klärungszustand ändert nur
+normative Spec-/Plan-Dateien und deren aktive Katalogbindungen, mindestens
+die Spezifikation und den Implementierungsplan. Alle übrigen Payload-,
+Vierfachbindungs-, Pflicht-Testplan-, Fortschritts- und Korrekturverträge
+bleiben erhalten. Rolle und Klassifikation sind im öffentlichen Plan und
+dessen Hash enthalten. Das ist technische Zuordnung, keine automatische
+Prüfung fachlicher Qualität durch Control. V1 wird unverändert weiter gelesen.
+
+Der versionierte Marker `verification/development_contract.json` zeigt im
+nativ geprüften Result die installierte Unterstützung: Format 1,
+`decision_rule=SPECROAD-DECISION-1`, `decision_contract_version=4`,
+`bundle_plan_format_version=2`, `mixed_status=patch_ready_with_clarification`,
+`clarification_limit=3`, `max_clarification_stages=1`,
+`clarification_position=prefix`, `implementation_required=true`.
+Er ersetzt nicht Devs Prüfung der tatsächlichen Projektregeln. Control darf
+Vertrag 4 erst für einen neuen Auftrag mit dieser belegten Unterstützung
+ausstellen. Ein bereits gespeicherter alter Auftrag wird nicht umgeschrieben;
+der Wechsel einer alten Kette benötigt einen belegten normalen erfolgreichen
+Abschluss. Fehlgeschlagene oder unbekannte manuelle Übergaben, bestehende
+Blockaden und Pausen werden durch Installation nicht freigegeben. Installation
+startet weder Control noch Watcher noch einen Modellturn.
 
 #### 2.4.4 Echte Blocker und Erhaltung des Betriebszustands
 
@@ -6604,6 +6702,8 @@ Die folgende Roadmap ist informativ und erzeugt keine Anforderungen an 0.2:
 
 | Version | Datum | Status | Änderung |
 |---|---|---|---|
+| 0.2.52 | 2026-11-03 | Ausdrücklicher Nutzerauftrag | MIXED-BUNDLE-555: optionaler Klärungscommit vor vollständiger Umsetzung, Vertrag 4, typisierte Rollen, gebundene Restfortsetzung und unveränderte Test-/Reviewgrenzen; aktive Dokumentmetadaten angeglichen. |
+| 0.2.51 | 2026-11-03 | Manuelle Ausnahme, Verlaufszeile nachgetragen | MIGRATION-PLAN-554: gebundener Migrationsplan nach 12.20.2; einmaliger Klärungscommit plus 16.c.W/R/C. |
 | 0.2.50 | 2026-11-03 | Ausdrückliche manuelle Nutzerentscheidung | REFERENCE-RELEASE-552: versionierte Release-Auswahlbindung; einmalige gemeinsame ZIP mit separaten Commitgates. |
 | 0.2.49 | 2026-11-03 | Ausdrückliche Nutzerentscheidung; technische Details gemäß SPECROAD-DECISION-1 | REFERENCE-SOURCE-551: neuer vollständiger 0.1-Referenzvertrag; keine historische Kompatibilitätsbehauptung, native M16- und Restore-Gates offen. |
 | 0.2.48 | 2026-11-02 | Delegiert gemäß SPECROAD-DECISION-1, Vertrag 3 | MIGRATION-GRAPH-549: eindeutiger Vorwärtsgraph, explizite verlustfreie Rückwege und vollständige Vertragsidentität; 16.a.W/R/C und Q.0 bleiben offen. |
@@ -10413,4 +10513,4 @@ Implementierungsschritten nachgewiesen sein.
 
 ---
 
-**Ende der SpecRoad-Produktspezifikation v0.2.50.**
+**Ende der SpecRoad-Produktspezifikation v0.2.52.**

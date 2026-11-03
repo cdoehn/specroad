@@ -23338,6 +23338,16 @@
     "tests/test_migration_planning_right.py::test_target_mapping_paths_cannot_select_code_or_operational_state[/absolute.json]",
     "tests/test_migration_planning_right.py::test_target_mapping_paths_cannot_select_code_or_operational_state[profiles/../escape.json]",
     "tests/test_migration_planning_right.py::test_target_mapping_paths_cannot_select_code_or_operational_state[profiles\\\\evil.json]",
-    "tests/test_migration_planning_right.py::test_timestamp_at_source_boundary_advances_by_one_microsecond_without_a_clock"
+    "tests/test_migration_planning_right.py::test_timestamp_at_source_boundary_advances_by_one_microsecond_without_a_clock",
+    "tests/test_apply_mixed_bundle.py::test_failure_retains_exact_commit_prefix_and_all_unfinished_roles[DECISION-0]",
+    "tests/test_apply_mixed_bundle.py::test_failure_retains_exact_commit_prefix_and_all_unfinished_roles[step.C-3]",
+    "tests/test_apply_mixed_bundle.py::test_failure_retains_exact_commit_prefix_and_all_unfinished_roles[step.R-2]",
+    "tests/test_apply_mixed_bundle.py::test_failure_retains_exact_commit_prefix_and_all_unfinished_roles[step.W-1]",
+    "tests/test_apply_mixed_bundle.py::test_no_gap_requires_no_clarification_commit",
+    "tests/test_apply_mixed_bundle.py::test_optional_prefix_is_gated_and_committed_before_implementation",
+    "tests/test_apply_mixed_bundle.py::test_rendered_entrypoint_binds_roles_in_literal_data_without_execution[False]",
+    "tests/test_apply_mixed_bundle.py::test_rendered_entrypoint_binds_roles_in_literal_data_without_execution[True]",
+    "tests/test_apply_mixed_bundle.py::test_stage_preparation_keeps_v1_default_and_supports_explicit_v2_role",
+    "tests/test_apply_mixed_bundle.py::test_v1_contract_and_public_hash_stay_unextended"
   ]
 }

@@ -1,0 +1,11 @@
+{
+  "bundle_plan_format_version": 2,
+  "clarification_limit": 3,
+  "clarification_position": "prefix",
+  "decision_contract_version": 4,
+  "decision_rule": "SPECROAD-DECISION-1",
+  "format_version": 1,
+  "implementation_required": true,
+  "max_clarification_stages": 1,
+  "mixed_status": "patch_ready_with_clarification"
+}

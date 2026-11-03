@@ -12,7 +12,7 @@ from .commit_tests import validate_plan
 from .identity import source_identity
 
 
-def prepare_stage(before, after, paths, *, commit_id, message, test_plan):
+def prepare_stage(before, after, paths, *, commit_id, message, test_plan, role=None):
     before, after = Path(before), Path(after)
     paths = sorted(set(paths))
     plan = dict(test_plan, commit_id=commit_id)
@@ -43,8 +43,13 @@ def prepare_stage(before, after, paths, *, commit_id, message, test_plan):
             if not old.is_file() or old.is_symlink():
                 raise ValueError('Stage v1 requires a regular preimage: ' + name)
             prior[name] = sha256(old.read_bytes()).hexdigest()
-    return {'commit_id': commit_id, 'message': message, 'before': prior, 'after': final,
-            'payloads': payloads, 'source_sha256': source_identity(after), 'test_plan': plan}
+    result = {'commit_id': commit_id, 'message': message, 'before': prior, 'after': final,
+              'payloads': payloads, 'source_sha256': source_identity(after), 'test_plan': plan}
+    if role is not None:
+        if role not in ('clarification', 'implementation', 'correction'):
+            raise ValueError('Unknown stage role')
+        result['role'] = role
+    return result
 
 
 def render_entrypoint(data, *, core_python):

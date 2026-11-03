@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 57 · **Stand:** 3. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.51
+**Planrevision:** 58 · **Stand:** 3. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.52
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 Schritte und 900 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; die ausdrücklich genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wird nach 10.7.10 innerhalb von 15.l.R vorgezogen. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -9,7 +9,7 @@ Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 S
 
 Fachliche Grundlage ist [`docs/specification/SpecRoad_Spezifikation.md`](../specification/SpecRoad_Spezifikation.md), einschließlich aller konsolidierten Korrekturen, 742 Requirements, 51 Verifikationsverträge, 46 Szenario-/E2E-Identitäten sowie R-01 bis R-75, Anhang U und den PatchHarbor-Rundweg aus Anhang W. Der [`Prüfbericht`](../reviews/SpecRoad_v0.2.7_Implementierungsreife_Pruefbericht.md) ist ein vorgelagerter Entwurfsreview, kein späterer Produktnachweis.
 
-Gebundene Spezifikations-SHA-256: `6f94a1721c93c2bd22e880d91ce45f35beadc024bdd011752267a35861184f90`.
+Gebundene Spezifikations-SHA-256: `7d1bc669e4430dba078deee959aae64aa032aa2e1f7cbc2d805dbf4b9c8e5de9`.
 Planungsbasis: Commit `fe2661d02ecf2f7eb483b58a4487eb009c6b3846`; sauberes Result-Bundle `specroad_Result_120209_0914_df3504.zip`; Repository-ID `3d2576df-d611-46fc-9d2b-92869468aaca`. Diese Angaben dokumentieren die Entstehung des Plans, nicht die zukünftige Patchbindung. **Jedes spätere Patchpaket bindet den dann aktuellen tatsächlichen Result-Zustand.**
 
 Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 2026 gelten zusätzlich und bei den nachfolgend benannten Konflikten vorrangig. Sonstige normative Spezifikationsinhalte werden nicht stillschweigend abgeschwächt. Neue fachliche Widersprüche, fehlende zwingende Angaben und Sicherheitsprobleme sind offen zu benennen, nicht durch erfundene Annahmen oder Scheinerfolge zu lösen.
@@ -32,6 +32,44 @@ Ketten erfordert erst den belegten erfolgreichen normalen Abschluss.
 Produktfreigaben und die Grenzen aus 2.4.1/2.4.2/2.4.4 bleiben unverändert.
 Dieser Plan ändert keine alten Aufträge, Antworten, Blockaden oder
 Laufzeitdaten und ist keine Start-/Resume-Anweisung.
+
+## OFF-PLAN MIXED-BUNDLE-555 — Vertrag 4 und optionaler Klärungscommit
+
+Vorbereiteter Zustand MIXED-BUNDLE-555.W; erst nach seinem erfolgreichen Apply-Gate committed.
+
+Ausdrücklicher Nutzerauftrag vom 3. November 2026: Zuerst diese SpecRoad-
+Änderung, anschließend ein getrenntes Control-Bundle. Ohne notwendige
+Spezifikationsklärung ausschließlich Plancommits; bei zulässigen normalen
+Detail­lücken ein OFF-PLAN-Klärungscommit zuerst, danach vollständige sinnvolle
+Plancommits in derselben ZIP. Keine automatische Befugniserweiterung aus
+einem alten Vertrag. Verbindlicher Vertrag: Spezifikation 2.4.3.1.
+
+Geprüfte technische Basis ist Result 72894e, SHA-256
+`b3e090440068352bcfe98ecb89dfb4685f7be14e2d528cea4761e5ab08f46b29`.
+Bundle 554 hat alle vier Gates bestanden und sauber abgeschlossen;
+Produktstand 669/900, nächster Produktcommit 16.d.W. Dieser OFF-PLAN-Auftrag
+ändert den Produktzähler nicht. Alternativen: Nur den Prompt ändern würde
+Klassifikation/Budget/Recovery widersprechen; eine neue Apply-Engine wäre
+unnötig. Gewählt wird der additive Rollenvertrag der bestehenden Commitfolge.
+
+MIXED-BUNDLE-555.W: v2-Plan/Stage-Rollen und optionaler Klärungspräfix,
+Vorbereitung/Entrypoint, versionierter Projektmarker und normative Regel.
+Abnahme: normale Folge ohne Dokumentcommit sowie gemischte Folge mit einem
+Dokumentcommit; Installation, Gate, Commit und nächster Zustand bleiben strikt
+geordnet. V1 bleibt unverändert unterstützt.
+MIXED-BUNDLE-555.R: unzulässige Rollen, versteckte/mehrfache/nachgestellte
+Klärung, reine Klärung, falscher Scope, Verlust der Rollenbindung und erhaltene
+Restfolge nach Fehler sicher ablehnen; keine Wiederholung erfolgreicher Stages.
+MIXED-BUNDLE-555.C: interne Vertragsprüfung strukturieren, W/R-Verhalten und
+Testbytes unverändert. Alle neuen/geänderten Testdateien sowie vorhandene
+Apply-/Katalog-/Runnerregressionen sind pro betroffener Stage Pflicht.
+
+Dev-Verhaltenstests bleiben nicht ausgeführt. Reine Collection, statische
+Prüfung und native Paketrekonstruktion sind keine Apply-Abnahme. Installation
+ändert keinen Control-Zustand und startet keinen Dienst. Control folgt als
+separate Lieferung auf seiner eigenen Resultbindung. Alte Aufträge und
+Recovery-Belege bleiben erhalten; neue V4-Aufträge brauchen installierte
+Unterstützung und den zulässigen Versionsübergang.
 
 ## Bundle 554 — MIGRATION-PLAN-554 und 16.c.W/R/C
 
