@@ -68,8 +68,8 @@ C: rein strukturelle Trennung der passiven Quell-/Paketprüfung von Queue,
 Worker und Persistenz; sämtliche R-Abnahmen und Tests unverändert erhalten.
 
 Spezifikation 0.2.54 und aktive Katalogbindungen werden zuerst in W ergänzt.
-Vorbereiteter R-Zustand: streng gebundene Absichts-/Versuchsformen und
-Nachprüfung beider Seiten nach Archivprüfung, atomarer Fehlerrollback.
+Vorbereiteter C-Zustand: passive Nachfolgerprüfung in eigenem Modul;
+Verhalten, Tests und Nachweise des R-Zustands bleiben unverändert.
 Drei echte Zustände mit je eigenem N=3-plus-Pflichtauswahl-Gate. Alle neuen/
 geänderten Tests sowie Control-, Recovery-, Budget-, Mixed- und Apply-
 Regressionen sind verpflichtend. Dev führt keine Verhaltenstests aus.
@@ -1537,7 +1537,7 @@ implementation_plan_commits_total: 900
 implementation_plan_commits_completed: 669
 last_completed_plan_commit: 16.c.C
 next_plan_commit: 16.d.W
-last_completed_numbered_bundle: 559
+last_completed_numbered_bundle: 560
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
