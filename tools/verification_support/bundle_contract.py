@@ -87,6 +87,13 @@ def validate_bundle(data):
             if not required <= paths or any(not (name in required or name == 'verification/catalog.json'
                     or re.fullmatch(r'verification/requirements/SR-TC-[0-9]{4}\.json', name)) for name in paths):
                 raise ValueError('Clarification must update specification and plan within the document/catalog scope')
+            first = data['stages'][0]
+            if any(first['before'].get(name) == first['after'][name] for name in required):
+                raise ValueError('Clarification cannot be an unchanged document marker')
+            if not any(stage['role'] == 'implementation' and any(
+                    not name.startswith(('docs/', 'verification/')) and stage['before'].get(name) != digest
+                    for name, digest in stage['after'].items()) for stage in data['stages'][1:]):
+                raise ValueError('Mixed handoff requires an actual implementation change')
         else:
             raise ValueError('Unknown handoff classification')
     return data
@@ -123,3 +130,25 @@ def remaining_commits(plan, progress, *, result_head):
     if result_head != parent:
         raise ValueError('HEAD moved without a proved completed stage; inspect the Result')
     return plan['stages'][len(done):]
+
+
+def validate_continuation(previous, progress, data):
+    """Bind a correction to the exact failed public plan and retained commit prefix.
+
+    The caller must native-validate the source Result first. This pure helper
+    grants neither fresh clarification authority nor permission to replay work.
+    """
+    validate_bundle(data)
+    rest = remaining_commits(previous, progress, result_head=data['binding']['base_commit'])
+    expected = {'plan_sha256': sha256(canonical(previous)).hexdigest(),
+                'remaining_commit_ids': [s['commit_id'] for s in rest]}
+    if (data['format_version'] != previous['format_version'] or data['correction_of'] != expected
+            or [s['commit_id'] for s in data['stages']] != expected['remaining_commit_ids']):
+        raise ValueError('Correction differs from the bound remaining sequence')
+    if data['format_version'] == 2:
+        if [s['role'] for s in data['stages']] != [s['role'] for s in rest]:
+            raise ValueError('Correction cannot relabel remaining stage roles')
+        for old, new in zip(rest, data['stages']):
+            if old['role'] == 'clarification' and old['after'] != new['after']:
+                raise ValueError('Pending clarification cannot become a new decision')
+    return data
