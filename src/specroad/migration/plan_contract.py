@@ -58,6 +58,11 @@ def validate_inputs(value):
     for name, key in [('target_resources', 'path'), ('requirement_mappings', 'artifact_id'),
                       ('proposal_mappings', 'artifact_id')]:
         _sorted_rows(value[name], key)
+    # Invalid authored languages are errors even when another input is missing.
+    # This is syntax checking, never language detection or registry inference.
+    from ..model.language_tags import parse_language_tag
+    for row in value['requirement_mappings']:
+        parse_language_tag(row['language'])
     if value['target_configuration'] is not None:
         unb64(value['target_configuration'])
     for row in value['target_resources']:

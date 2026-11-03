@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 72 · **Stand:** 4. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.57
+**Planrevision:** 73 · **Stand:** 4. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.57
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 Schritte und 900 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; die ausdrücklich genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wird nach 10.7.10 innerhalb von 15.l.R vorgezogen. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -33,6 +33,45 @@ ausdrückliche Bedienausnahme aus 2.4.3.2 bleibt zusätzlich anwendbar.
 Produktfreigaben und die Grenzen aus 2.4.1/2.4.2/2.4.4 bleiben unverändert.
 Dieser Plan ändert keine alten Aufträge, Antworten, Blockaden oder
 Laufzeitdaten und ist keine Start-/Resume-Anweisung.
+
+## Korrektur 570 — vollständige Approved-Quelle; W bleibt committed
+
+Das nativ geprüfte Result mit SHA-256
+`ceecb0718794d957f6f7ae5633e9f2164155169034a341f1b971fb1b3b161c00`
+belegt den erfolgreichen Commit 16.e.W nach 6948 bestandenen Tests:
+`e6948140dff3eac912f5a44a16d04d88158c845d`. Damit sind 673/900
+Produktcommits tatsächlich abgeschlossen. Anschließend bestand das R-Gate
+6982 Tests; ein neuer Test scheiterte. R ist nicht committed, C nicht
+ausgebracht. Vorbereitete Planhäkchen im erhaltenen R-Arbeitsstand sind
+kein Erfolgsnachweis. Der erfolgreiche W-Commit wird nicht wiederholt.
+
+Ursache: Der positive Test für den Entzug alter Approval setzte ein
+synthetisches Source-Requirement auf approved, ohne die vorgeschriebene
+verified_by-Beziehung. Der Quellleser wies es daher bereits vor der
+Migration korrekt mit source_state_invalid / verification_required ab.
+Der eingefrorene Quellvertrag reference-0.1/1.0.1, Abschnitt 2, nimmt nur
+die neuen Requirement-Felder language/normative_force aus; Herkunft und
+sonstige Zustandsbedingungen bleiben Pflicht. 12.20.2 verlangt anschließend
+die Rückführung veränderbarer genehmigter Artefakte auf draft.
+
+Die Testquelle enthält jetzt einen ausdrücklich synthetischen Verification
+Contract für genau dieses Requirement und die vollständige verified_by-
+Beziehung. Erst danach wird der erwartete alte Vollhash gebildet. Die
+positive Abnahme prüft einen fertigen Plan, unveränderte Source-Bytes,
+unveränderten Zieltext, draft, erhöhte Revision, erhaltene Verifikations-
+beziehung und archivierte Originalbytes. Synthetische gespeicherte Approval
+ist weder ein realer menschlicher Review noch eine aktuelle Freigabe.
+Produktcode, normative Spezifikation und bestehende Testidentitäten bleiben
+unverändert; kein Validator wird gelockert und keine neue Klärung eingeführt.
+
+Der vollständige belegte Rest 16.e.R und 16.e.C behält IDs, Messages und
+Rollen implementation. Alle erhaltenen R-Änderungen sind in der ersten
+Payload enthalten; vollständige Vorherbytes und correction_of binden dieses
+Fehler-Result und den ursprünglichen Plan. R erhält Gruppe 2 plus die
+ungefilterte Pflichtauswahl, erst nach seinem Commit folgt C mit Gruppe 0
+und eigenem Gate. Dev führt keine Verhaltenstests aus. Erst erfolgreicher
+C-Abschluss würde 675/900 und Bundle 570 abschließen; 16.f.W bleibt offen.
+Control-Zustand und Klärungsbudget werden nicht verändert.
 
 ## Korrektur 569 — vollständige should-Testdaten und unveränderter Rest
 
@@ -97,7 +136,7 @@ Syntax-/Collection-/native Paketprüfung aus, keine Verhaltenstests.
 Die vorbereiteten Planhäkchen werden nur mit dem jeweiligen erfolgreichen
 Apply-Gate committed. Kein behaupteter Test-, Review- oder Releaseerfolg.
 
-Vorbereiteter Zwischenstand: W. Die nachfolgenden M16-Schritte behalten
+Vorbereiteter Zwischenstand: R. Die nachfolgenden M16-Schritte behalten
 ihre vollständigen Abnahmen; insbesondere sind öffentliche CLI-/Restore-
 Unterstützung, Writer, aktuelle Verification und Transaktionsfreigabe kein
 Ergebnis dieser schreibfreien Mappingarbeit. Andere Entwurfsquellverträge
@@ -1819,11 +1858,11 @@ Kein offener Produktplanschritt wird durch diese Testoptimierung abgeschlossen.
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 72
+plan_revision: 73
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 673
-last_completed_plan_commit: 16.e.W
-next_plan_commit: 16.e.R
+implementation_plan_commits_completed: 674
+last_completed_plan_commit: 16.e.R
+next_plan_commit: 16.e.C
 last_completed_numbered_bundle: 567
 implementation_state: in_progress
 audit_followup_status: closed
@@ -36095,7 +36134,7 @@ Die W-/R-/C-Abnahmen im obigen OFF-PLAN-Abschnitt gelten vollständig.
 
 #### 16.e.R – Make it Right
 
-- [ ] **16.e.R** · Position **674/900** · Voraussetzung: `16.e.W`.
+- [x] **16.e.R** · Position **674/900** · Voraussetzung: `16.e.W`.
 **Exakte Commit-Message:** `16.e.R feat(migration): Explizite Sprach- und Verbindlichkeitsmigration vervollständigen`
 
 **Vervollständigung:** Fehlende Zuordnung nicht aus shall, MUSS, Priorität oder Detektor schätzen; fachliche Änderungen widerrufen alte Inhaltsfreigaben.

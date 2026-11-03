@@ -18,7 +18,7 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Die Übernahme alter Entwurfsanforderungen MUSS ein autorisiertes explizites Mapping von Sprache, Verbindlichkeit und Zielaussage nach Anhang S.7 verlangen.",
-    "scope": "16.e W: explicit author mapping on the native reference migration planner, with exact language/force/text, default expansion, original-byte preservation and no inherited approval. No public migration execution, current review, CLI/Restore, full-suite or release proof."
+    "scope": "16.e R: explicit author mapping on the native reference migration planner, with exact language/force/text, default expansion, original-byte preservation and no inherited approval. No public migration execution, current review, CLI/Restore, full-suite or release proof."
   },
   "preconditions": [
     "Qualified reference-0.1/1.0.1 source and explicit authored target mappings under 12.20.2 and S.7; no inferred historical compatibility."
@@ -67,6 +67,40 @@
     "tests/test_migration_requirements.py::test_requirement_schema_fields_and_authored_decisions_have_distinct_plan_bindings",
     "tests/test_migration_requirements.py::test_should_mapping_rejects_missing_deviation_details_without_source_mutation[both]",
     "tests/test_migration_requirements.py::test_should_mapping_rejects_missing_deviation_details_without_source_mutation[deviation_authority]",
-    "tests/test_migration_requirements.py::test_should_mapping_rejects_missing_deviation_details_without_source_mutation[deviation_conditions]"
+    "tests/test_migration_requirements.py::test_should_mapping_rejects_missing_deviation_details_without_source_mutation[deviation_conditions]",
+    "tests/test_migration_requirements_right.py::test_changed_requirement_decisions_never_fill_fields_into_immutable_evidence_or_reviews",
+    "tests/test_migration_requirements_right.py::test_default_does_not_bypass_closed_mapping_identity_or_authority[approval_flag]",
+    "tests/test_migration_requirements_right.py::test_default_does_not_bypass_closed_mapping_identity_or_authority[detector_value]",
+    "tests/test_migration_requirements_right.py::test_default_does_not_bypass_closed_mapping_identity_or_authority[duplicate]",
+    "tests/test_migration_requirements_right.py::test_default_does_not_bypass_closed_mapping_identity_or_authority[non_requirement]",
+    "tests/test_migration_requirements_right.py::test_default_does_not_bypass_closed_mapping_identity_or_authority[unknown]",
+    "tests/test_migration_requirements_right.py::test_direct_normalized_inputs_reject_invalid_language_before_missing_target_blockers[de--DE]",
+    "tests/test_migration_requirements_right.py::test_direct_normalized_inputs_reject_invalid_language_before_missing_target_blockers[en-u-ca-u-nu]",
+    "tests/test_migration_requirements_right.py::test_direct_normalized_inputs_reject_invalid_language_before_missing_target_blockers[en-u]",
+    "tests/test_migration_requirements_right.py::test_direct_normalized_inputs_reject_invalid_language_before_missing_target_blockers[en_US]",
+    "tests/test_migration_requirements_right.py::test_incomplete_mapping_reports_all_missing_subjects_without_a_partial_target",
+    "tests/test_migration_requirements_right.py::test_invalid_explicit_default_is_rejected_even_when_every_row_has_a_language[0]",
+    "tests/test_migration_requirements_right.py::test_invalid_explicit_default_is_rejected_even_when_every_row_has_a_language[False]",
+    "tests/test_migration_requirements_right.py::test_invalid_explicit_default_is_rejected_even_when_every_row_has_a_language[]",
+    "tests/test_migration_requirements_right.py::test_invalid_explicit_default_is_rejected_even_when_every_row_has_a_language[de--DE]",
+    "tests/test_migration_requirements_right.py::test_invalid_explicit_default_is_rejected_even_when_every_row_has_a_language[de\\n]",
+    "tests/test_migration_requirements_right.py::test_invalid_explicit_default_is_rejected_even_when_every_row_has_a_language[en-u-ca-u-nu]",
+    "tests/test_migration_requirements_right.py::test_invalid_explicit_default_is_rejected_even_when_every_row_has_a_language[en-u]",
+    "tests/test_migration_requirements_right.py::test_invalid_explicit_default_is_rejected_even_when_every_row_has_a_language[en_US]",
+    "tests/test_migration_requirements_right.py::test_invalid_explicit_default_is_rejected_even_when_every_row_has_a_language[language3]",
+    "tests/test_migration_requirements_right.py::test_invalid_explicit_default_is_rejected_even_when_every_row_has_a_language[language4]",
+    "tests/test_migration_requirements_right.py::test_mapping_and_planning_do_not_detect_translate_write_or_start_a_process",
+    "tests/test_migration_requirements_right.py::test_migration_needs_new_approval_even_when_the_author_keeps_the_old_statement",
+    "tests/test_migration_requirements_right.py::test_saved_plan_recheck_binds_every_authored_decision_independently[language]",
+    "tests/test_migration_requirements_right.py::test_saved_plan_recheck_binds_every_authored_decision_independently[normative_force]",
+    "tests/test_migration_requirements_right.py::test_saved_plan_recheck_binds_every_authored_decision_independently[statement]",
+    "tests/test_migration_requirements_right.py::test_shared_default_never_repairs_an_explicit_invalid_row_value[False]",
+    "tests/test_migration_requirements_right.py::test_shared_default_never_repairs_an_explicit_invalid_row_value[None]",
+    "tests/test_migration_requirements_right.py::test_shared_default_never_repairs_an_explicit_invalid_row_value[]",
+    "tests/test_migration_requirements_right.py::test_shared_default_never_repairs_an_explicit_invalid_row_value[de--DE]",
+    "tests/test_migration_requirements_right.py::test_shared_default_never_repairs_an_explicit_invalid_row_value[en-u]",
+    "tests/test_migration_requirements_right.py::test_shared_default_never_repairs_an_explicit_invalid_row_value[en_US]",
+    "tests/test_migration_requirements_right.py::test_target_language_policy_still_rejects_an_explicit_disallowed_default",
+    "tests/test_migration_requirements_right.py::test_target_locale_and_configuration_default_do_not_author_requirement_language"
   ]
 }
