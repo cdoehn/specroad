@@ -136,7 +136,7 @@ Syntax-/Collection-/native Paketprüfung aus, keine Verhaltenstests.
 Die vorbereiteten Planhäkchen werden nur mit dem jeweiligen erfolgreichen
 Apply-Gate committed. Kein behaupteter Test-, Review- oder Releaseerfolg.
 
-Vorbereiteter Zwischenstand: R. Die nachfolgenden M16-Schritte behalten
+Vorbereiteter Zwischenstand: C. Die nachfolgenden M16-Schritte behalten
 ihre vollständigen Abnahmen; insbesondere sind öffentliche CLI-/Restore-
 Unterstützung, Writer, aktuelle Verification und Transaktionsfreigabe kein
 Ergebnis dieser schreibfreien Mappingarbeit. Andere Entwurfsquellverträge
@@ -1860,10 +1860,10 @@ Kein offener Produktplanschritt wird durch diese Testoptimierung abgeschlossen.
 ```yaml
 plan_revision: 73
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 674
-last_completed_plan_commit: 16.e.R
-next_plan_commit: 16.e.C
-last_completed_numbered_bundle: 567
+implementation_plan_commits_completed: 675
+last_completed_plan_commit: 16.e.C
+next_plan_commit: 16.f.W
+last_completed_numbered_bundle: 570
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -36143,7 +36143,7 @@ Die W-/R-/C-Abnahmen im obigen OFF-PLAN-Abschnitt gelten vollständig.
 
 #### 16.e.C – Make it Clean
 
-- [ ] **16.e.C** · Position **675/900** · Voraussetzung: `16.e.R`.
+- [x] **16.e.C** · Position **675/900** · Voraussetzung: `16.e.R`.
 **Exakte Commit-Message:** `16.e.C refactor(migration): Explizite Sprach- und Verbindlichkeitsmigration bereinigen`
 
 **Bereinigung:** Schemaergänzung und menschlich autorisierte Inhaltsentscheidung separat im Plan halten.

@@ -13,6 +13,7 @@ from .plan_contract import validate_inputs
 from .plan_inputs import migration_inputs, target_contract, _target
 from .plan_originals import _relation, _original_archive
 from .plan_target import _target_fields, _stamp, _manifest
+from .requirement_mapping import authored_fields
 
 PROJECT_SCOPE = {'scope_version': 'scope-v1', 'scope_kind': 'project', 'selector': {},
     'configuration_id': None, 'closure_profile': 'core-closure-v1', 'boundary_policy': 'closed'}
@@ -77,7 +78,7 @@ def _plan(files, *, inputs, actor, planned_at, change_plan_id, request_id, targe
         if old['relations']: fields.extend(['relations/*/relation_id', 'relations/*/id_scheme'])
         if old['artifact_type'] == 'requirement':
             row = requirements[old['id']]
-            value.update({k: row[k] for k in ('language', 'normative_force', 'statement')})
+            value.update(authored_fields(row))
             fields += ['language', 'normative_force']
         if old['artifact_type'] == 'proposal':
             manifest['proposal_transitions'].append({'artifact_id': old['id'], 'source_revision': old['revision'],

@@ -10,6 +10,7 @@ from ..profiles.values import ProfileResource
 from ..profiles.composition import compose_profiles
 from .plan_values import require, owned_files, b64, unb64, MANIFEST_PATH
 from .plan_contract import validate_inputs
+from .requirement_mapping import materialize_language_default
 
 
 def migration_inputs(*, target_configuration=None, target_resources=None,
@@ -31,12 +32,7 @@ def migration_inputs(*, target_configuration=None, target_resources=None,
             type(r.get('artifact_id')) is str for r in rows), 'migration_mapping_required')
         sequences.append(sorted((dict(row) for row in rows),
                                 key=lambda r: r['artifact_id'].encode('utf-8')))
-    if requirement_default_language is not None:
-        from ..model.language_tags import parse_language_tag
-        parse_language_tag(requirement_default_language)
-        for row in sequences[0]:
-            if 'language' not in row:
-                row['language'] = requirement_default_language
+    materialize_language_default(sequences[0], requirement_default_language)
     value = {'format_version': 'migration-inputs-v1',
         'target_configuration': None if target_configuration is None else b64(target_configuration),
         'target_resources': [{'path': p, 'bytes_base64': b64(b)} for p, b in sorted(resources.items())],
