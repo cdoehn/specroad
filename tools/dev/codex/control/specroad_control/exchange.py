@@ -97,6 +97,14 @@ class Exchange:
         return list(matched.values())
 
     def _matches_source(self, source, patch):
+        try:
+            return self._typed_source_match(source, patch)
+        except ControlError:
+            raise
+        except (OSError, ValueError, TypeError, KeyError, IndexError, RuntimeError):
+            raise ControlError('patch_source_unproven', 'Native source selection evidence is unavailable or malformed.') from None
+
+    def _typed_source_match(self, source, patch):
         """A typed plan binds exact Result bytes in addition to repository state."""
         from .apply_reconcile_proof import archive_bytes, plan
         try:
@@ -124,7 +132,8 @@ class Exchange:
                 or data['initial_dirty'] != bound['dirty'] or bound['dry_run']):
             raise ControlError('patch_source_unproven', 'Typed source metadata contradicts native evidence.')
         checked = self.core.validate(Path(patch['path']), bound)
-        if checked['sha256'] != patch['sha256']:
+        if (checked['sha256'] != patch['sha256'] or checked['binding'] != bound['binding']
+                or checked['reference_sha256'] != bound['sha256'] or not checked['binding_matches']):
             raise ControlError('patch_source_unproven', 'The typed patch changed during selection.')
         return data['source_result_sha256'] == source['sha256']
 

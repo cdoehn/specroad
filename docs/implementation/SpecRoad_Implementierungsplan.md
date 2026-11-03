@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 69 · **Stand:** 3. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.57
+**Planrevision:** 70 · **Stand:** 3. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.57
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 Schritte und 900 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; die ausdrücklich genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wird nach 10.7.10 innerhalb von 15.l.R vorgezogen. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -34,6 +34,24 @@ Produktfreigaben und die Grenzen aus 2.4.1/2.4.2/2.4.4 bleiben unverändert.
 Dieser Plan ändert keine alten Aufträge, Antworten, Blockaden oder
 Laufzeitdaten und ist keine Start-/Resume-Anweisung.
 
+## Korrektur 567 — Neustartabnahme mit ausdrücklichem Vertrag
+
+Das native Fehler-Result 6ca066cfb202b6336dbda0eda4aca2971902f03ed27d5a628a1fc4fe86d4a8b1
+belegt CONTROL-SOURCE-SELECTION-566.W als erfolgreichen Commit
+1fb803f62fa6f2f8285fe382d1020994fdf53b01 mit 7390 bestandenen Tests.
+Im R-Gate bestanden 7377 von 7378 Tests. Der neue Neustarttest erwartete
+output_kind=unknown, ohne zuvor einen Entscheidungsvertrag einzurichten;
+korrekt blieb die Legacy-Klassifikation dabei None. Der Test richtet nun
+seinen beabsichtigten Vertrag 4 ausdrücklich vor der manuellen Übergabe ein.
+Assertions für Paketbindung, unbekannte Übergabe, Vertragserhalt und keinen
+Modellaufruf bleiben vollständig erhalten. Produktcode bleibt unverändert.
+
+Nur die vollständigen offenen IDs CONTROL-SOURCE-SELECTION-566.R und .C
+werden samt Rollen correction fortgesetzt. W wird nicht wiederholt. Das
+native erhaltene R-Dateibild ist die neue Vorherbasis; alle uncommitteten
+Dateien gehören in den ersten Restzustand. Zweites Korrekturbundle innerhalb
+der einmaligen Grenze vier; erneute echte Abnahme ausschließlich durch Apply.
+
 ## OFF-PLAN CONTROL-SOURCE-SELECTION-566 — Korrekturen eindeutig zuordnen
 
 Basis ist das nativ geprüfte saubere Result 565 mit SHA-256
@@ -61,7 +79,7 @@ C: passive Auswahl aus Exchange in eigenes Modul trennen, alle R-Tests und
 Fachregeln unverändert. Jeder echte Zustand erhält volle Control-Regression
 plus Apply-/Katalog-Pflichtauswahl zusätzlich zur fälligen gefilterten N=3-Gruppe.
 
-Vorbereitete Zuordnungsphase: W. Abnahme gilt erst nach dem eigenen Apply-Gate.
+Vorbereitete Zuordnungsphase: R. Abnahme gilt erst nach dem eigenen Apply-Gate.
 Produktstand bleibt 672/900, nächster Produktcommit 16.e.W. Danach geprüfte
 Releasekopie installieren und wie beauftragt die Automatik starten. Die
 manuelle Fehlergrenze von höchstens vier Korrekturbundles gilt weiter; bisher
@@ -1732,7 +1750,7 @@ Kein offener Produktplanschritt wird durch diese Testoptimierung abgeschlossen.
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 69
+plan_revision: 70
 implementation_plan_commits_total: 900
 implementation_plan_commits_completed: 672
 last_completed_plan_commit: 16.d.C
