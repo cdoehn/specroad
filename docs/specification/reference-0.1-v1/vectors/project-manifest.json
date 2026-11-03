@@ -1,0 +1,42 @@
+[
+  {
+    "artifact_id": null,
+    "byte_sha256": "4f912ab50e97f5092e460f184d21328f068c8642dc858e3f28e6a900cbaa25e5",
+    "canonical_sha256": "fb55f01c415d02ad64f8ad1d2642eb913759aac00377c506d27b41a8409dc3f6",
+    "media_type": "application/json",
+    "path": "profiles/core-reference01.json",
+    "revision": null,
+    "role": "profile",
+    "size": 127
+  },
+  {
+    "artifact_id": "SR-DOC-0001",
+    "byte_sha256": "17dd2b63f106553afcc9c2018adbbe86a088dfc2233d0aab5d3ead7275c8b098",
+    "canonical_sha256": "8e58a0e05af6d4cd149040e106e1550f5bd9c7b7d2a31585459af7214e7740eb",
+    "media_type": "application/json",
+    "path": "spec/documents/SR-DOC-0001.json",
+    "revision": 1,
+    "role": "artifact",
+    "size": 515
+  },
+  {
+    "artifact_id": "SR-GOAL-0001",
+    "byte_sha256": "a6d0aa62f04780b6164454466251cdb62f3974301f0630620b87ee940982c416",
+    "canonical_sha256": "6127e7586294bfbb20af3df34543623d499376a57836f4ad534f9e1d177b04f9",
+    "media_type": "application/json",
+    "path": "spec/goals/SR-GOAL-0001.json",
+    "revision": 1,
+    "role": "artifact",
+    "size": 457
+  },
+  {
+    "artifact_id": null,
+    "byte_sha256": "fa153ce0038c2561347ad39d9b41b1e2e8c77f657fdefedf21dedd48e1e7541b",
+    "canonical_sha256": "83c10d72cebede80a0de1d9ea3b4363f80df61d80a2caa0b1c0598c87e83bcee",
+    "media_type": "application/json",
+    "path": "specroad.json",
+    "revision": null,
+    "role": "configuration",
+    "size": 410
+  }
+]

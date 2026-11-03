@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 54 · **Stand:** 2. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.48
+**Planrevision:** 55 · **Stand:** 3. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.49
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 Schritte und 900 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; die ausdrücklich genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wird nach 10.7.10 innerhalb von 15.l.R vorgezogen. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -9,7 +9,7 @@ Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 S
 
 Fachliche Grundlage ist [`docs/specification/SpecRoad_Spezifikation.md`](../specification/SpecRoad_Spezifikation.md), einschließlich aller konsolidierten Korrekturen, 742 Requirements, 51 Verifikationsverträge, 46 Szenario-/E2E-Identitäten sowie R-01 bis R-75, Anhang U und den PatchHarbor-Rundweg aus Anhang W. Der [`Prüfbericht`](../reviews/SpecRoad_v0.2.7_Implementierungsreife_Pruefbericht.md) ist ein vorgelagerter Entwurfsreview, kein späterer Produktnachweis.
 
-Gebundene Spezifikations-SHA-256: `15607c51272c8cb1c730a2bee1b28357d5d09f1f049946d82d8b9065d2ff67d6`.
+Gebundene Spezifikations-SHA-256: `5e54dc498f30c90cf3aa82a8244a23b93b162b5353a546ae8e9a6272a5941e68`.
 Planungsbasis: Commit `fe2661d02ecf2f7eb483b58a4487eb009c6b3846`; sauberes Result-Bundle `specroad_Result_120209_0914_df3504.zip`; Repository-ID `3d2576df-d611-46fc-9d2b-92869468aaca`. Diese Angaben dokumentieren die Entstehung des Plans, nicht die zukünftige Patchbindung. **Jedes spätere Patchpaket bindet den dann aktuellen tatsächlichen Result-Zustand.**
 
 Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 2026 gelten zusätzlich und bei den nachfolgend benannten Konflikten vorrangig. Sonstige normative Spezifikationsinhalte werden nicht stillschweigend abgeschwächt. Neue fachliche Widersprüche, fehlende zwingende Angaben und Sicherheitsprobleme sind offen zu benennen, nicht durch erfundene Annahmen oder Scheinerfolge zu lösen.
@@ -32,6 +32,57 @@ Ketten erfordert erst den belegten erfolgreichen normalen Abschluss.
 Produktfreigaben und die Grenzen aus 2.4.1/2.4.2/2.4.4 bleiben unverändert.
 Dieser Plan ändert keine alten Aufträge, Antworten, Blockaden oder
 Laufzeitdaten und ist keine Start-/Resume-Anweisung.
+
+## OFF-PLAN REFERENCE-SOURCE-551 — neuer vollständiger Referenzquellvertrag
+
+**Autorität:** ausdrückliche Nutzerentscheidung vom 3. November 2026,
+„Wir legen ein neues Format fest“, mit anschließendem Auftrag zur erneuten
+gründlichen Ausarbeitung. Technische Details werden innerhalb dieser
+Entscheidung gemäß SPECROAD-DECISION-1 konkretisiert. Das ist keine behauptete
+Einzelzustimmung zu jedem Feld und kein menschlicher Produktreview.
+
+**Technische Basis:** nativ geprüftes Result
+`specroad-apply_Result_215550_1102_1662e4.zip`, SHA-256
+`6fd173d5778e8b153a3dbfc8324d5af50aa0439d226893e23a7d4db2ce5fef4b`,
+sauberer HEAD `e17c8276ecaf9cb83f188aac0a8f556481386b81`.
+Bundle 550 hat 16.a.W nach 6.310 Tests als
+`e506617477a6510c1a1553584d358987bc2c07ee`, 16.a.R nach 6.426 Tests als
+`81a978bd49eb8f4a219f5b1452a744ea02da535a` und 16.a.C nach 6.408 Tests als
+`e17c8276ecaf9cb83f188aac0a8f556481386b81` abgeschlossen. Es waren Gruppen
+0/1/2 mit 246/300/300 Pflichttests, keine Vollsuite. Fortschrittsrecord ist
+completed; kompletter Snapshot entspricht exakt dem ausgelieferten C-Zustand.
+
+Der vorherige N-Durchlauf blieb korrekt ohne Patch blockiert, weil Q.0s
+Quellvertrag fehlte. Der manuelle Nutzerauftrag legt nun ausdrücklich einen
+neuen Referenzvertrag fest. Seine Regeln werden nicht als alte externe Fakten
+ausgegeben. Vorherige Blockade, Antworten, Laufzeitdaten und Control-Zustände
+bleiben erhalten. Die hier vorbereitete Bundlenummer 551 gilt erst nach dem
+erfolgreichen Apply-Gate UND tatsächlichen Dokumentcommit.
+
+Genau ein Commit: `REFERENCE-SOURCE-551` mit Nachricht
+`OFF-PLAN REFERENCE-SOURCE-551 docs(spec): Vollständiges 0.1-Referenzformat festlegen`.
+Normative Grundlage ist Spec 0.2.49/Q.0.1 mit vollständig bytegebundenem
+Vertrag `specroad-reference-0.1` / `1.0.0`. Produktstand bleibt **663/900**,
+nächster Produktcommit **16.b.W**; keine Produktcheckbox wird abgeschlossen.
+
+Klassifikation: **spec_clarification**, ausdrücklich manuell beauftragt.
+Der Auftrag setzt kein Control-Restbudget, keinen Claim und keinen
+`dev_blocked`-Zustand zurück und startet keine Automatik. Es gibt keinen
+Alibi-Produktcommit, keine Runtime-Registrierung und keinen vorgezogenen Leser.
+Geändert werden nur normative Dokument-/Schema-/Vektordaten, Plan und aktive
+Spezifikationshashbindungen; Produktcode, vorhandene Tests/Fixtures/Oracles,
+Testnummern, historische Nachweise und Messhistorie bleiben bytegleich.
+Schema-Erzeugung dient der Erstellung normativer Dokumentartefakte; es ist
+keine Ausführung von Validatoren, Testkörpern, Fixtures oder Migrationen.
+Dev führt keine Verhaltenstests aus. Statische Schema-/Hashprüfung, reine
+Collection und native ZIP-Prüfung sind keine Migrationsabnahme.
+
+Apply prüft vor dem Dokumentcommit genau einmal die fällige gefilterte
+N=3-Gruppe (erwartet 0) plus ungefilterte Katalog-, Graph- und Restore-
+Schemagrenzregressionen. Hostworker, worksteal, Nice und dauerhafte Messung
+bleiben unverändert. Die eine ZIP wird atomar auf Exchange übergeben.
+Kein eigener Apply-, CI-, Watcher- oder Control-Start und kein Warten auf
+ein Folge-Result. Die folgenden Produktarbeiten benötigen dessen neue Bindung.
 
 ## Bundle 550 — vollständiger Versionsgraphkern 16.a.W/R/C
 
@@ -1019,12 +1070,12 @@ Kein offener Produktplanschritt wird durch diese Testoptimierung abgeschlossen.
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 54
+plan_revision: 55
 implementation_plan_commits_total: 900
 implementation_plan_commits_completed: 663
 last_completed_plan_commit: 16.a.C
 next_plan_commit: 16.b.W
-last_completed_numbered_bundle: 550
+last_completed_numbered_bundle: 551
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -35108,14 +35159,78 @@ auf Apply. Nur Control beauftragt den nächsten Durchlauf aus dessen Result.
 **Anforderungsbezug:** `SR-REQ-0247`, `SR-REQ-0272`, `SR-REQ-0639`, `SR-REQ-0641`.
 **Verifikationsbezug:** `SR-VER-0018`, `SR-VER-0020`, `SR-VER-0042`. Die exakten SR-TC-Identitäten stehen in der vollständigen Matrix.
 
+**Entscheidungsbeleg REFERENCE-SOURCE-551 — 3. November 2026.**
+
+Die nach Q.0 unverzichtbaren Quellregeln waren nicht vorhanden; weder die
+passiven Legacy-Envelopes noch die 90.x-Testgraphen definieren ein Altformat.
+Geprüft wurden das vollständige gebundene Result, Spec 2.4, 10.7.11,
+12.20.1, Q.0–Q.5, S.7 und alle offenen M16-Abnahmen. Die Nutzerentscheidung
+definiert nun einen **neuen** Referenzvertrag. Die Existenz oder Nichtexistenz
+realer externer 0.1-Projekte wird daraus nicht behauptet.
+
+Alternativen: Historische Regeln aus heutigen Daten erraten ist unzulässig;
+auf unbenannte Altdaten warten löst den ausdrücklich neu beauftragten Entwurf
+nicht; bloße Graph-/Envelope-Fixtures erfüllen den vollständigen Leser nicht.
+Eine vollständige unabhängige zweite Modellarchitektur würde unnötige
+Fachabweichungen einführen. Gewählt wird deshalb eine eingefrorene bekannte
+0.2.48-Feldgrundlage mit expliziten, vollständig gespeicherten Quellschemas
+und eng bestimmten Referenzabweichungen. Alle 28 Typen bleiben im Source-
+Umfang. Das neue v1 kennt genau ein festes Quellprofil und keine zusätzlichen
+Rule-/Mapping-/Sprachpaketressourcen; unbekannte Ressourcen werden abgewiesen.
+Dies ist eine ausdrücklich begrenzte neue Formatdefinition, keine Kürzung
+einer zugesagten historischen oder bestehenden 0.2-Unterstützung.
+
+Die Source-Vertragskennung verhindert die Gleichsetzung mit beliebigen alten
+0.1-Labels. Vierstellige Artefakt-IDs, positionsgebundene Relationen, explizite
+fehlende Requirement-Sprach-/Verbindlichkeitsfelder und getrennte Original-,
+Kontext- und Snapshot-Hashdomänen machen die Migration konkret prüfbar.
+Geschlossene Proposal-Fassungen, Evidence, Relationsreviews und Baselines
+bleiben Originale. Sollvektoren liefern unabhängig vorgegebene Werte; sie
+behaupten keine ausgeführten Verhaltenstests und keinen echten Human-Review.
+
+Grenzabgleich 2.4.1: (1) Arbeit bleibt die ausdrücklich neu beauftragte
+Quellvertragsdefinition für 16.b/M16. (2) Q.0 wird durch echte normative
+Dateien, Felder, Algorithmen und Vektoren erfüllt, nicht durch eine Ausnahme.
+(3) Originalschutz, Zielvalidierung, Autorisierung, Loss-Acceptance, Reviews
+und bestehende 0.2-/Restore-Verträge bleiben wirksam. (4) Die neue Definition
+ist versioniert ersetzbar; alte Vertragsbytes/Originale werden nicht gelöscht
+oder nachträglich geändert. (5) Keine unbekannte historische Tatsache wird
+als wahr eingesetzt; Herkunft und Geltung sind die heutige Nutzerentscheidung.
+Feldregeln erhalten keinen behaupteten menschlichen Reviewstatus.
+
+**Vollständige offene Abnahmen:**
+
+- W: Eingebauten dependency-freien Reader für die vollständige gebundene
+  Schemafamilie bereitstellen. Expliziten Vertrag auswählen; vollständige
+  Source-Konfiguration, festes Profil und alle 28 Artefakttypen nativ prüfen.
+  Aktuelle und historische Originale sowie transitive Payloadclosure erfassen,
+  Original-/JCS-/Kontext-/Baseline-Hashes mit unabhängigen Vektoren prüfen und
+  vollständig `mutable`, `immutable_legacy`, `referenced_payload` inventarisieren.
+  Quellen, Archive und Projektbetriebsdaten bleiben unverändert. Native Core-
+  und PYZ-Parität ohne optionale Pakete; kein alter oder aktueller Writer.
+- R: Alle Negativ-/Grenzfälle aus Vertrag 8 einschließlich Quellkennung,
+  Referenzen, Typ-/Pfad-/ID-Konflikten, Spezialzuständen, Originalverlust,
+  Archivmanipulation, historischen Revisionen, Zyklen und no-write/no-code-
+  Nebenwirkungen. Alte Labels dürfen weder Quellprüfung noch Herkunft ersetzen.
+- C: Reader, Inventur, Originalbindung und spätere Projektion trennen;
+  sämtliche W-/R-Oracles und sichere aktuelle Restore-Abweisung erhalten.
+
+Die übrigen 16.c–16.p-Abnahmen gelten vollständig gegen diesen neuen Vertrag,
+einschließlich genehmigter Zielmappings, neuer Metadaten, Originalclosure,
+Manifest, Baselineverifikation, Work, Transaktion und öffentlicher Restore-
+Integration. Sie sind durch die Definition nicht implementiert oder erledigt.
+Nach übernommenem Dokumentcommit fehlt für 16.b nicht mehr die normative
+Source-Definition; seine Umsetzung und sämtliche zugehörigen Nachweise bleiben
+offen. M15-Integrations-/Vollsuiten-/Plattformgates und 18.q/18.r bleiben offen.
+
 #### 16.b.W – Let it Work
 
 - [ ] **16.b.W** · Position **664/900** · Voraussetzung: `16.a.C`.
 **Exakte Commit-Message:** `16.b.W feat(migration): Quellinventur und historischer Core-Leser aufbauen`
 
-**Umsetzung:** Nach erfülltem Q.0-Quellvertrag eingebaute 0.1-Leser und Inventur mit mutable, immutable_legacy und referenced_payload bereitstellen.
+**Umsetzung:** Den neu definierten Quellvertrag nach Q.0.1/REFERENCE-SOURCE-551 vollständig als nativen Reader und Inventur mit mutable, immutable_legacy und referenced_payload umsetzen. Alle zusätzlichen W-Abnahmen des Entscheidungsbelegs gelten; kein historischer Kompatibilitätsanspruch.
 
-**Verhaltensabnahme:** Gültige alte Projektfixture wird ohne Fremdpaket und ohne Änderung ihrer Bytes vollständig eingelesen.
+**Verhaltensabnahme:** Vollständige ausdrücklich synthetische Referenzprojekte einschließlich aller Quelltypen, unveränderbarer Nachweise und transitiver Originalclosure werden ohne Fremdpaket und ohne Änderung ihrer Bytes eingelesen. Unabhängige Source-/Snapshot-/Hashvektoren stimmen; kein Ersatz durch Envelope- oder reine Abweisungstests.
 
 #### 16.b.R – Make it Right
 

@@ -1,0 +1,220 @@
+{
+  "authority": "Explicit user decision REFERENCE-SOURCE-551; technical details under SPECROAD-DECISION-1.",
+  "basis_specification_sha256": "15607c51272c8cb1c730a2bee1b28357d5d09f1f049946d82d8b9065d2ff67d6",
+  "basis_specification_version": "0.2.48",
+  "contract_id": "specroad-reference-0.1",
+  "contract_version": "1.0.0",
+  "defined_at": "2026-11-03",
+  "external_historical_compatibility_claimed": false,
+  "files": {
+    "artifact-types.json": {
+      "sha256": "17187b68ffc49d58149406dff1affb66ef67e223a786d4ff02af246a1a122f18",
+      "size": 3366
+    },
+    "basis-0.2.48.md": {
+      "sha256": "15607c51272c8cb1c730a2bee1b28357d5d09f1f049946d82d8b9065d2ff67d6",
+      "size": 1010035
+    },
+    "contract.md": {
+      "sha256": "b209fae9e61a70b25e8a4da040fedee9ad6dd68221adb98392052db3ef3fd4ff",
+      "size": 28641
+    },
+    "core-profile.json": {
+      "sha256": "a73c24e499baef8db242efd8d713e98cf96f18eef28d98c1fffc1d1d373a0ef2",
+      "size": 144
+    },
+    "language-registry.txt": {
+      "sha256": "3016607e64244c05b1ee2f9d469e399377fda86169c6f255bffd995b838c2fd4",
+      "size": 777560
+    },
+    "schemas/artifacts/assumption.json": {
+      "sha256": "719245e8200b858c2dccbdaaf26ecc5a86d80204ee2d994fd4cb462cb676a489",
+      "size": 18236
+    },
+    "schemas/artifacts/baseline.json": {
+      "sha256": "dc9514facfe0bd18674914b58a872d20ea3e54d46c44ab5737ba1a95d7d08fbd",
+      "size": 38185
+    },
+    "schemas/artifacts/capability.json": {
+      "sha256": "f7708fe87f0fcb8abe08484dc4b64f254b8ea8085d4332a98330e7d7ed03c1b0",
+      "size": 21879
+    },
+    "schemas/artifacts/code_ref.json": {
+      "sha256": "00dbd079679cef4ca90a6f3496c46fa352dba0425065c6391d8b1de69bbfb496",
+      "size": 32576
+    },
+    "schemas/artifacts/component.json": {
+      "sha256": "5a1828293e092b0029636bcc00c374562b10d0279a5d110e213a66486a5bc17f",
+      "size": 17950
+    },
+    "schemas/artifacts/configuration.json": {
+      "sha256": "541f2435dcad68311e73c8031bc6aa11909e261e71760a03f5f58c7fd95dcac9",
+      "size": 31113
+    },
+    "schemas/artifacts/content_block.json": {
+      "sha256": "7e38e062543fd172f33337d0f063e24bc0bfbf1cb6d7e87e3e70767f9ebe9cc4",
+      "size": 36842
+    },
+    "schemas/artifacts/decision.json": {
+      "sha256": "bfd927f0fa2174d288e2fd3b19f696eadaddf90a245229cc0fa301c438604a94",
+      "size": 18350
+    },
+    "schemas/artifacts/document.json": {
+      "sha256": "c722254456d539764586ce748fc4627ee416a5f008e962bf773bb013649531d2",
+      "size": 31425
+    },
+    "schemas/artifacts/evidence.json": {
+      "sha256": "4835fbddd1e731418358ed287a11b91b12f54133f8a529529ba043c8612024bf",
+      "size": 32603
+    },
+    "schemas/artifacts/goal.json": {
+      "sha256": "7b3de8997909c385b0f928e0205525d96c054fbbb596ba8ff341603234b971e5",
+      "size": 18215
+    },
+    "schemas/artifacts/interface.json": {
+      "sha256": "78355f17c74ca73c4c5f27c7df28eb3851c8e73023fec4ddc276ab6ac55cc83e",
+      "size": 18838
+    },
+    "schemas/artifacts/issue.json": {
+      "sha256": "d83c314132a9fe000e87b1c979fcfbe41de418119727b97b2f2fb606a674a1a0",
+      "size": 31487
+    },
+    "schemas/artifacts/milestone.json": {
+      "sha256": "66709fce85deae5405f1122bc2fece6706c3cf3dd40975cee74d2ab155f41fee",
+      "size": 18101
+    },
+    "schemas/artifacts/need.json": {
+      "sha256": "5e461c7517db560486cb6d35ac4de76bb420710ecff62459a03309dbb301a481",
+      "size": 18331
+    },
+    "schemas/artifacts/proposal.json": {
+      "sha256": "d154cee54575362ce2229d6cab09a0343f696f061c81c52e007595e7d73f6b03",
+      "size": 33235
+    },
+    "schemas/artifacts/relation_review.json": {
+      "sha256": "8c5f199ba1f22652f14501f2b1e7e462a59b1e965d5e0e7c26c9527b2f079dc6",
+      "size": 36647
+    },
+    "schemas/artifacts/release.json": {
+      "sha256": "700279b0f082fe45277985f38eb43f20877efa6e6b3b95acdb15c15f7f51c83b",
+      "size": 18229
+    },
+    "schemas/artifacts/requirement.json": {
+      "sha256": "b3bcf66afb25b6efce71462b49329d4aee7a50c4e80a71fab39c1446f6828172",
+      "size": 23916
+    },
+    "schemas/artifacts/risk.json": {
+      "sha256": "088aee10ccac0aec69e91fba3655b81a03a9cf3c2b6136feb7779ba651c4671b",
+      "size": 18199
+    },
+    "schemas/artifacts/scenario.json": {
+      "sha256": "70ed524214ee451e10807835bebe7211f63eadeb17c0bedcba490fce81dbeae6",
+      "size": 18731
+    },
+    "schemas/artifacts/section.json": {
+      "sha256": "b8a4c06f519692e1c910a5aaf745cb4170974439ba98a437a0b5b54fbd14af1b",
+      "size": 30875
+    },
+    "schemas/artifacts/source.json": {
+      "sha256": "43eca3b0a311465a953f2c391dcfd9ae38060adf394675153c05950eb464aa85",
+      "size": 31308
+    },
+    "schemas/artifacts/task.json": {
+      "sha256": "0852f31e57e0d77d01dd3ca040ec796c2d0d7d14f4924b5f7a93a232dd787c47",
+      "size": 21528
+    },
+    "schemas/artifacts/term.json": {
+      "sha256": "fd5592b60afe67dbc9c0d102b9709157adb7e1eb2127d2bd4a5f05ba848560a6",
+      "size": 17985
+    },
+    "schemas/artifacts/test.json": {
+      "sha256": "ce4c635866f78915512ad87a93ac0496e95a08ac4332f671a570b635c491d277",
+      "size": 30958
+    },
+    "schemas/artifacts/verification.json": {
+      "sha256": "e8c207af27985d077c55139a2486f51e6d84dc91fa33663b195f8f5eb3cc22cc",
+      "size": 32247
+    },
+    "schemas/artifacts/view.json": {
+      "sha256": "e85f36379dcdb80a89786ffa6450f8320581311d8a307e58551afbaee58e0c43",
+      "size": 31744
+    },
+    "schemas/manifest-entry.json": {
+      "sha256": "1ae68d6884fad1398fcaa47575688c6aec13d15b385f91b93650454c2c2f7071",
+      "size": 5454
+    },
+    "schemas/profile.json": {
+      "sha256": "d712d1b4837c016d355fe319d43e4bcc3a6cdd7fda15e84e0a5af884c0a30931",
+      "size": 607
+    },
+    "schemas/project.json": {
+      "sha256": "a7144dad288789fff269cf4be7dae88ad17df8067e28559295c879d924c256ca",
+      "size": 2191
+    },
+    "schemas/relation.json": {
+      "sha256": "d4005340ac4f23a489e01dee0779217e50f48fa4568d0b8358d8673955f930d9",
+      "size": 8553
+    },
+    "vectors.json": {
+      "sha256": "70e820b439e9829db1fa7ebdc7c3c0c5436aefd7a7139c9041955b5b3d846929",
+      "size": 5556
+    },
+    "vectors/archive/objects/17/17dd2b63f106553afcc9c2018adbbe86a088dfc2233d0aab5d3ead7275c8b098": {
+      "sha256": "17dd2b63f106553afcc9c2018adbbe86a088dfc2233d0aab5d3ead7275c8b098",
+      "size": 515
+    },
+    "vectors/archive/objects/4f/4f912ab50e97f5092e460f184d21328f068c8642dc858e3f28e6a900cbaa25e5": {
+      "sha256": "4f912ab50e97f5092e460f184d21328f068c8642dc858e3f28e6a900cbaa25e5",
+      "size": 127
+    },
+    "vectors/archive/objects/a6/a6d0aa62f04780b6164454466251cdb62f3974301f0630620b87ee940982c416": {
+      "sha256": "a6d0aa62f04780b6164454466251cdb62f3974301f0630620b87ee940982c416",
+      "size": 457
+    },
+    "vectors/archive/objects/fa/fa153ce0038c2561347ad39d9b41b1e2e8c77f657fdefedf21dedd48e1e7541b": {
+      "sha256": "fa153ce0038c2561347ad39d9b41b1e2e8c77f657fdefedf21dedd48e1e7541b",
+      "size": 410
+    },
+    "vectors/project-manifest.json": {
+      "sha256": "8b6b5dde2bde8a6a88203a0ac7f4d12ba2e9c01bb325fb73ca24031b10dbf583",
+      "size": 1438
+    },
+    "vectors/project-root-preimage.json": {
+      "sha256": "b966d2996abdefe377bc726c89ce6c7fb86c6b1fcc4445b0cc3949655666bd49",
+      "size": 1381
+    },
+    "vectors/project/profiles/core-reference01.json": {
+      "sha256": "4f912ab50e97f5092e460f184d21328f068c8642dc858e3f28e6a900cbaa25e5",
+      "size": 127
+    },
+    "vectors/project/spec/documents/SR-DOC-0001.json": {
+      "sha256": "17dd2b63f106553afcc9c2018adbbe86a088dfc2233d0aab5d3ead7275c8b098",
+      "size": 515
+    },
+    "vectors/project/spec/goals/SR-GOAL-0001.json": {
+      "sha256": "a6d0aa62f04780b6164454466251cdb62f3974301f0630620b87ee940982c416",
+      "size": 457
+    },
+    "vectors/project/specroad.json": {
+      "sha256": "fa153ce0038c2561347ad39d9b41b1e2e8c77f657fdefedf21dedd48e1e7541b",
+      "size": 410
+    },
+    "vectors/requirement-after.json": {
+      "sha256": "65814d2630d412be7072006e94a84a84db47b84b42da6aa77f51b39c174ee2e6",
+      "size": 1032
+    },
+    "vectors/requirement-before.json": {
+      "sha256": "a7cd012daf103170a25636152f31cf3467966275f23fe7e4ad1b4737e163e64b",
+      "size": 852
+    },
+    "vectors/sealed-baseline.json": {
+      "sha256": "f7f7024cdbe1a06a9629e4f8958d9656895a1eecf733c783545266e756a8e544",
+      "size": 2482
+    }
+  },
+  "format_version": 1,
+  "kind": "specroad-reference-source-contract",
+  "origin": "newly_defined_reference_format",
+  "schema_derivation_commit": "e17c8276ecaf9cb83f188aac0a8f556481386b81",
+  "schema_version": "0.1.0"
+}

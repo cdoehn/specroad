@@ -1,0 +1,1236 @@
+{
+  "$comment": "New reference contract defined 2026-11-03; no historical compatibility claim. Full validation also requires contract.md.",
+  "$defs": {
+    "actor": {
+      "additionalProperties": false,
+      "properties": {
+        "actor_id": {
+          "minLength": 1,
+          "not": {
+            "pattern": "\\u0000"
+          },
+          "pattern": "\\S",
+          "type": "string"
+        },
+        "actor_type": {
+          "enum": [
+            "human",
+            "ai",
+            "ci",
+            "tool"
+          ]
+        }
+      },
+      "required": [
+        "actor_type",
+        "actor_id"
+      ],
+      "type": "object"
+    },
+    "artifact_ref": {
+      "anyOf": [
+        {
+          "pattern": "^[A-Z][A-Z0-9]{1,7}-GOAL-[0-9]{4}(?![\\s\\S])",
+          "type": "string"
+        },
+        {
+          "pattern": "^[A-Z][A-Z0-9]{1,7}-NEED-[0-9]{4}(?![\\s\\S])",
+          "type": "string"
+        },
+        {
+          "pattern": "^[A-Z][A-Z0-9]{1,7}-CAP-[0-9]{4}(?![\\s\\S])",
+          "type": "string"
+        },
+        {
+          "pattern": "^[A-Z][A-Z0-9]{1,7}-REQ-[0-9]{4}(?![\\s\\S])",
+          "type": "string"
+        },
+        {
+          "pattern": "^[A-Z][A-Z0-9]{1,7}-SCN-[0-9]{4}(?![\\s\\S])",
+          "type": "string"
+        },
+        {
+          "pattern": "^[A-Z][A-Z0-9]{1,7}-DEC-[0-9]{4}(?![\\s\\S])",
+          "type": "string"
+        },
+        {
+          "pattern": "^[A-Z][A-Z0-9]{1,7}-RISK-[0-9]{4}(?![\\s\\S])",
+          "type": "string"
+        },
+        {
+          "pattern": "^[A-Z][A-Z0-9]{1,7}-ASM-[0-9]{4}(?![\\s\\S])",
+          "type": "string"
+        },
+        {
+          "pattern": "^[A-Z][A-Z0-9]{1,7}-COMP-[0-9]{4}(?![\\s\\S])",
+          "type": "string"
+        },
+        {
+          "pattern": "^[A-Z][A-Z0-9]{1,7}-IFC-[0-9]{4}(?![\\s\\S])",
+          "type": "string"
+        },
+        {
+          "pattern": "^[A-Z][A-Z0-9]{1,7}-SRC-[0-9]{4}(?![\\s\\S])",
+          "type": "string"
+        },
+        {
+          "pattern": "^[A-Z][A-Z0-9]{1,7}-VER-[0-9]{4}(?![\\s\\S])",
+          "type": "string"
+        },
+        {
+          "pattern": "^[A-Z][A-Z0-9]{1,7}-TEST-[0-9]{4}(?![\\s\\S])",
+          "type": "string"
+        },
+        {
+          "pattern": "^[A-Z][A-Z0-9]{1,7}-EVD-[0-9]{4}(?![\\s\\S])",
+          "type": "string"
+        },
+        {
+          "pattern": "^[A-Z][A-Z0-9]{1,7}-REL-[0-9]{4}(?![\\s\\S])",
+          "type": "string"
+        },
+        {
+          "pattern": "^[A-Z][A-Z0-9]{1,7}-MS-[0-9]{4}(?![\\s\\S])",
+          "type": "string"
+        },
+        {
+          "pattern": "^[A-Z][A-Z0-9]{1,7}-TASK-[0-9]{4}(?![\\s\\S])",
+          "type": "string"
+        },
+        {
+          "pattern": "^[A-Z][A-Z0-9]{1,7}-TERM-[0-9]{4}(?![\\s\\S])",
+          "type": "string"
+        },
+        {
+          "pattern": "^[A-Z][A-Z0-9]{1,7}-PROP-[0-9]{4}(?![\\s\\S])",
+          "type": "string"
+        },
+        {
+          "pattern": "^[A-Z][A-Z0-9]{1,7}-BASE-[0-9]{4}(?![\\s\\S])",
+          "type": "string"
+        },
+        {
+          "pattern": "^[A-Z][A-Z0-9]{1,7}-ISSUE-[0-9]{4}(?![\\s\\S])",
+          "type": "string"
+        },
+        {
+          "pattern": "^[A-Z][A-Z0-9]{1,7}-DOC-[0-9]{4}(?![\\s\\S])",
+          "type": "string"
+        },
+        {
+          "pattern": "^[A-Z][A-Z0-9]{1,7}-SEC-[0-9]{4}(?![\\s\\S])",
+          "type": "string"
+        },
+        {
+          "pattern": "^[A-Z][A-Z0-9]{1,7}-BLOCK-[0-9]{4}(?![\\s\\S])",
+          "type": "string"
+        },
+        {
+          "pattern": "^[A-Z][A-Z0-9]{1,7}-VIEW-[0-9]{4}(?![\\s\\S])",
+          "type": "string"
+        },
+        {
+          "pattern": "^[A-Z][A-Z0-9]{1,7}-CODE-[0-9]{4}(?![\\s\\S])",
+          "type": "string"
+        },
+        {
+          "pattern": "^[A-Z][A-Z0-9]{1,7}-RREV-[0-9]{4}(?![\\s\\S])",
+          "type": "string"
+        },
+        {
+          "pattern": "^[A-Z][A-Z0-9]{1,7}-CFG-[0-9]{4}(?![\\s\\S])",
+          "type": "string"
+        }
+      ]
+    },
+    "attachment": {
+      "additionalProperties": false,
+      "properties": {
+        "media_type": {
+          "$ref": "#/$defs/text"
+        },
+        "path": {
+          "$ref": "#/$defs/text"
+        },
+        "sha256": {
+          "pattern": "^[0-9a-f]{64}(?![\\s\\S])",
+          "type": "string"
+        },
+        "size": {
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "path",
+        "media_type",
+        "size",
+        "sha256"
+      ],
+      "type": "object"
+    },
+    "check_id": {
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}(?![\\s\\S])",
+      "type": "string"
+    },
+    "dimension": {
+      "additionalProperties": false,
+      "properties": {
+        "allowed_values": {
+          "items": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "default": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "name": {
+          "$ref": "#/$defs/text"
+        }
+      },
+      "required": [
+        "name",
+        "allowed_values"
+      ],
+      "type": "object"
+    },
+    "evidence_slot": {
+      "additionalProperties": false,
+      "properties": {
+        "check_id": {
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}(?![\\s\\S])",
+          "type": "string"
+        },
+        "dimension": {
+          "$ref": "#/$defs/text"
+        },
+        "test_id": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "pattern": "^[A-Z][A-Z0-9]{1,7}-TEST-[0-9]{4}(?![\\s\\S])",
+              "type": "string"
+            }
+          ]
+        }
+      },
+      "required": [
+        "check_id",
+        "test_id",
+        "dimension"
+      ],
+      "type": "object"
+    },
+    "evidence_subject": {
+      "additionalProperties": false,
+      "properties": {
+        "artifact_id": {
+          "anyOf": [
+            {
+              "pattern": "^[A-Z][A-Z0-9]{1,7}-GOAL-[0-9]{4}(?![\\s\\S])",
+              "type": "string"
+            },
+            {
+              "pattern": "^[A-Z][A-Z0-9]{1,7}-NEED-[0-9]{4}(?![\\s\\S])",
+              "type": "string"
+            },
+            {
+              "pattern": "^[A-Z][A-Z0-9]{1,7}-CAP-[0-9]{4}(?![\\s\\S])",
+              "type": "string"
+            },
+            {
+              "pattern": "^[A-Z][A-Z0-9]{1,7}-REQ-[0-9]{4}(?![\\s\\S])",
+              "type": "string"
+            },
+            {
+              "pattern": "^[A-Z][A-Z0-9]{1,7}-SCN-[0-9]{4}(?![\\s\\S])",
+              "type": "string"
+            },
+            {
+              "pattern": "^[A-Z][A-Z0-9]{1,7}-DEC-[0-9]{4}(?![\\s\\S])",
+              "type": "string"
+            },
+            {
+              "pattern": "^[A-Z][A-Z0-9]{1,7}-RISK-[0-9]{4}(?![\\s\\S])",
+              "type": "string"
+            },
+            {
+              "pattern": "^[A-Z][A-Z0-9]{1,7}-ASM-[0-9]{4}(?![\\s\\S])",
+              "type": "string"
+            },
+            {
+              "pattern": "^[A-Z][A-Z0-9]{1,7}-COMP-[0-9]{4}(?![\\s\\S])",
+              "type": "string"
+            },
+            {
+              "pattern": "^[A-Z][A-Z0-9]{1,7}-IFC-[0-9]{4}(?![\\s\\S])",
+              "type": "string"
+            },
+            {
+              "pattern": "^[A-Z][A-Z0-9]{1,7}-SRC-[0-9]{4}(?![\\s\\S])",
+              "type": "string"
+            },
+            {
+              "pattern": "^[A-Z][A-Z0-9]{1,7}-VER-[0-9]{4}(?![\\s\\S])",
+              "type": "string"
+            },
+            {
+              "pattern": "^[A-Z][A-Z0-9]{1,7}-TEST-[0-9]{4}(?![\\s\\S])",
+              "type": "string"
+            },
+            {
+              "pattern": "^[A-Z][A-Z0-9]{1,7}-EVD-[0-9]{4}(?![\\s\\S])",
+              "type": "string"
+            },
+            {
+              "pattern": "^[A-Z][A-Z0-9]{1,7}-REL-[0-9]{4}(?![\\s\\S])",
+              "type": "string"
+            },
+            {
+              "pattern": "^[A-Z][A-Z0-9]{1,7}-MS-[0-9]{4}(?![\\s\\S])",
+              "type": "string"
+            },
+            {
+              "pattern": "^[A-Z][A-Z0-9]{1,7}-TASK-[0-9]{4}(?![\\s\\S])",
+              "type": "string"
+            },
+            {
+              "pattern": "^[A-Z][A-Z0-9]{1,7}-TERM-[0-9]{4}(?![\\s\\S])",
+              "type": "string"
+            },
+            {
+              "pattern": "^[A-Z][A-Z0-9]{1,7}-PROP-[0-9]{4}(?![\\s\\S])",
+              "type": "string"
+            },
+            {
+              "pattern": "^[A-Z][A-Z0-9]{1,7}-BASE-[0-9]{4}(?![\\s\\S])",
+              "type": "string"
+            },
+            {
+              "pattern": "^[A-Z][A-Z0-9]{1,7}-ISSUE-[0-9]{4}(?![\\s\\S])",
+              "type": "string"
+            },
+            {
+              "pattern": "^[A-Z][A-Z0-9]{1,7}-DOC-[0-9]{4}(?![\\s\\S])",
+              "type": "string"
+            },
+            {
+              "pattern": "^[A-Z][A-Z0-9]{1,7}-SEC-[0-9]{4}(?![\\s\\S])",
+              "type": "string"
+            },
+            {
+              "pattern": "^[A-Z][A-Z0-9]{1,7}-BLOCK-[0-9]{4}(?![\\s\\S])",
+              "type": "string"
+            },
+            {
+              "pattern": "^[A-Z][A-Z0-9]{1,7}-VIEW-[0-9]{4}(?![\\s\\S])",
+              "type": "string"
+            },
+            {
+              "pattern": "^[A-Z][A-Z0-9]{1,7}-CODE-[0-9]{4}(?![\\s\\S])",
+              "type": "string"
+            },
+            {
+              "pattern": "^[A-Z][A-Z0-9]{1,7}-RREV-[0-9]{4}(?![\\s\\S])",
+              "type": "string"
+            },
+            {
+              "pattern": "^[A-Z][A-Z0-9]{1,7}-CFG-[0-9]{4}(?![\\s\\S])",
+              "type": "string"
+            }
+          ]
+        },
+        "artifact_sha256": {
+          "pattern": "^[0-9a-f]{64}(?![\\s\\S])",
+          "type": "string"
+        },
+        "revision": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "verification_context_sha256": {
+          "pattern": "^[0-9a-f]{64}(?![\\s\\S])",
+          "type": "string"
+        }
+      },
+      "required": [
+        "artifact_id",
+        "revision",
+        "artifact_sha256",
+        "verification_context_sha256"
+      ],
+      "type": "object"
+    },
+    "hash": {
+      "pattern": "^[0-9a-f]{64}(?![\\s\\S])",
+      "type": "string"
+    },
+    "producer": {
+      "additionalProperties": false,
+      "properties": {
+        "producer_id": {
+          "$ref": "#/$defs/text"
+        },
+        "producer_type": {
+          "enum": [
+            "human",
+            "tool",
+            "ci",
+            "monitoring",
+            "ai"
+          ]
+        }
+      },
+      "required": [
+        "producer_type",
+        "producer_id"
+      ],
+      "type": "object"
+    },
+    "run_context": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "check_id": {
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}(?![\\s\\S])",
+              "type": "string"
+            },
+            "run_id": {
+              "$ref": "#/$defs/text"
+            },
+            "subject_id": {
+              "$ref": "#/$defs/text"
+            },
+            "subject_state_sha256": {
+              "pattern": "^[0-9a-f]{64}(?![\\s\\S])",
+              "type": "string"
+            },
+            "test_id": {
+              "anyOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "pattern": "^[A-Z][A-Z0-9]{1,7}-TEST-[0-9]{4}(?![\\s\\S])",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "required": [
+            "subject_id",
+            "subject_state_sha256",
+            "run_id",
+            "check_id",
+            "test_id"
+          ],
+          "type": "object"
+        }
+      ]
+    },
+    "scalar": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "test_identity": {
+      "anyOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "external_id": {
+              "$ref": "#/$defs/text"
+            }
+          },
+          "required": [
+            "external_id"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "path": {
+              "$ref": "#/$defs/text"
+            }
+          },
+          "required": [
+            "path"
+          ],
+          "type": "object"
+        }
+      ]
+    },
+    "test_ref": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "pattern": "^[A-Z][A-Z0-9]{1,7}-TEST-[0-9]{4}(?![\\s\\S])",
+          "type": "string"
+        }
+      ]
+    },
+    "text": {
+      "minLength": 1,
+      "not": {
+        "pattern": "\\u0000"
+      },
+      "pattern": "\\S",
+      "type": "string"
+    },
+    "tool": {
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "$ref": "#/$defs/text"
+        },
+        "version": {
+          "$ref": "#/$defs/text"
+        }
+      },
+      "required": [
+        "name",
+        "version"
+      ],
+      "type": "object"
+    },
+    "utc": {
+      "format": "date-time",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}[Tt][0-9]{2}:[0-9]{2}:[0-9]{2}(?:\\.[0-9]+)?Z(?![\\s\\S])",
+      "type": "string"
+    }
+  },
+  "$id": "urn:specroad:reference-0.1-v1:artifact:verification",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Source verification field grammar; see contract.md for global constraints.",
+  "properties": {
+    "applicability": {
+      "type": "object"
+    },
+    "artifact_type": {
+      "const": "verification"
+    },
+    "configuration_policy": {
+      "enum": [
+        "independent",
+        "bound"
+      ]
+    },
+    "created_at": {
+      "$ref": "#/$defs/utc"
+    },
+    "created_by": {
+      "$ref": "#/$defs/actor"
+    },
+    "dimensions": {
+      "items": {
+        "$ref": "#/$defs/text"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "display_id": {
+      "$ref": "#/$defs/text"
+    },
+    "evidence_kinds": {
+      "items": {
+        "$ref": "#/$defs/text"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "evidence_slots": {
+      "items": {
+        "$ref": "#/$defs/evidence_slot"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "extensions": {
+      "propertyNames": {
+        "pattern": "^[^\\s.\\x00-\\x1f\\x7f]+(?:\\.[^\\s.\\x00-\\x1f\\x7f]+)+(?![\\s\\S])",
+        "type": "string"
+      },
+      "type": "object"
+    },
+    "external_identities": {
+      "items": {
+        "additionalProperties": false,
+        "anyOf": [
+          {
+            "required": [
+              "mapping_id",
+              "last_imported_projection_sha256",
+              "last_source_projection_sha256",
+              "last_source_payload_sha256",
+              "imported_at"
+            ]
+          },
+          {
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "mapping_id"
+                  ]
+                },
+                {
+                  "required": [
+                    "last_imported_projection_sha256"
+                  ]
+                },
+                {
+                  "required": [
+                    "last_source_projection_sha256"
+                  ]
+                },
+                {
+                  "required": [
+                    "last_source_payload_sha256"
+                  ]
+                },
+                {
+                  "required": [
+                    "imported_at"
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "properties": {
+          "extensions": {
+            "propertyNames": {
+              "pattern": "^[^\\s.\\x00-\\x1f\\x7f]+(?:\\.[^\\s.\\x00-\\x1f\\x7f]+)+(?![\\s\\S])",
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "external_id": {
+            "minLength": 1,
+            "pattern": "^(?=[\\s\\S]*\\S)(?![\\s\\S]*\\x00)",
+            "type": "string"
+          },
+          "external_revision": {
+            "type": "string"
+          },
+          "imported_at": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "last_imported_projection_sha256": {
+            "pattern": "^[0-9a-f]{64}(?![\\s\\S])",
+            "type": "string"
+          },
+          "last_source_payload_sha256": {
+            "pattern": "^[0-9a-f]{64}(?![\\s\\S])",
+            "type": "string"
+          },
+          "last_source_projection_sha256": {
+            "pattern": "^[0-9a-f]{64}(?![\\s\\S])",
+            "type": "string"
+          },
+          "mapping_id": {
+            "minLength": 1,
+            "pattern": "^(?=[\\s\\S]*\\S)(?![\\s\\S]*\\x00)",
+            "type": "string"
+          },
+          "source_document": {
+            "minLength": 1,
+            "pattern": "^(?=[\\s\\S]*\\S)(?![\\s\\S]*\\x00)",
+            "type": "string"
+          },
+          "source_system": {
+            "minLength": 1,
+            "pattern": "^(?=[\\s\\S]*\\S)(?![\\s\\S]*\\x00)",
+            "type": "string"
+          }
+        },
+        "required": [
+          "source_system",
+          "source_document",
+          "external_id"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "id": {
+      "pattern": "^[A-Z][A-Z0-9]{1,7}-VER-[0-9]{4}(?![\\s\\S])",
+      "type": "string"
+    },
+    "language": {
+      "format": "bcp47",
+      "type": "string"
+    },
+    "maturity": {
+      "enum": [
+        "draft",
+        "proposed",
+        "in_review",
+        "approved",
+        "rejected",
+        "superseded",
+        "retired"
+      ]
+    },
+    "method": {
+      "enum": [
+        "inspection",
+        "review",
+        "analysis",
+        "simulation",
+        "automated_test",
+        "manual_test",
+        "formal_proof",
+        "monitoring",
+        "audit",
+        "measurement"
+      ]
+    },
+    "oracle": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/text"
+        },
+        {
+          "not": {
+            "const": {}
+          },
+          "type": "object"
+        }
+      ]
+    },
+    "owner": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/text"
+        },
+        {
+          "$ref": "#/$defs/actor"
+        }
+      ]
+    },
+    "preconditions": {
+      "items": {
+        "$ref": "#/$defs/text"
+      },
+      "minItems": 0,
+      "type": "array"
+    },
+    "procedure": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/text"
+        },
+        {
+          "items": {
+            "$ref": "#/$defs/text"
+          },
+          "minItems": 1,
+          "type": "array"
+        }
+      ]
+    },
+    "provenance": {
+      "items": {
+        "additionalProperties": false,
+        "allOf": [
+          {
+            "anyOf": [
+              {
+                "required": [
+                  "source_id"
+                ]
+              },
+              {
+                "required": [
+                  "locator"
+                ]
+              }
+            ]
+          },
+          {
+            "anyOf": [
+              {
+                "required": [
+                  "excerpt"
+                ]
+              },
+              {
+                "required": [
+                  "content_sha256"
+                ]
+              }
+            ]
+          }
+        ],
+        "properties": {
+          "captured_at": {
+            "$ref": "#/$defs/utc"
+          },
+          "content_sha256": {
+            "pattern": "^[0-9a-f]{64}(?![\\s\\S])",
+            "type": "string"
+          },
+          "excerpt": {
+            "$ref": "#/$defs/text"
+          },
+          "extensions": {
+            "propertyNames": {
+              "pattern": "^[^\\s.\\x00-\\x1f\\x7f]+(?:\\.[^\\s.\\x00-\\x1f\\x7f]+)+(?![\\s\\S])",
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "locator": {
+            "$ref": "#/$defs/text"
+          },
+          "source_id": {
+            "pattern": "^[A-Z][A-Z0-9]{1,7}-SRC-[0-9]{4}(?![\\s\\S])",
+            "type": "string"
+          }
+        },
+        "required": [
+          "captured_at"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "relations": {
+      "items": {
+        "additionalProperties": false,
+        "allOf": [
+          {
+            "anyOf": [
+              {
+                "properties": {
+                  "type": {
+                    "const": "contains"
+                  }
+                },
+                "required": [
+                  "position"
+                ]
+              },
+              {
+                "not": {
+                  "required": [
+                    "position"
+                  ]
+                },
+                "properties": {
+                  "type": {
+                    "not": {
+                      "const": "contains"
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        ],
+        "properties": {
+          "created_at": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "created_by": {
+            "additionalProperties": false,
+            "properties": {
+              "actor_id": {
+                "minLength": 1,
+                "pattern": "^(?=[\\s\\S]*\\S)(?![\\s\\S]*\\x00)",
+                "type": "string"
+              },
+              "actor_type": {
+                "enum": [
+                  "human",
+                  "ai",
+                  "ci",
+                  "tool"
+                ]
+              }
+            },
+            "required": [
+              "actor_type",
+              "actor_id"
+            ],
+            "type": "object"
+          },
+          "extensions": {
+            "propertyNames": {
+              "pattern": "^[^\\s.\\x00-\\x1f\\x7f]+(?:\\.[^\\s.\\x00-\\x1f\\x7f]+)+(?![\\s\\S])",
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "external_identities": {
+            "items": {
+              "additionalProperties": false,
+              "anyOf": [
+                {
+                  "required": [
+                    "mapping_id",
+                    "last_imported_projection_sha256",
+                    "last_source_projection_sha256",
+                    "last_source_payload_sha256",
+                    "imported_at"
+                  ]
+                },
+                {
+                  "not": {
+                    "anyOf": [
+                      {
+                        "required": [
+                          "mapping_id"
+                        ]
+                      },
+                      {
+                        "required": [
+                          "last_imported_projection_sha256"
+                        ]
+                      },
+                      {
+                        "required": [
+                          "last_source_projection_sha256"
+                        ]
+                      },
+                      {
+                        "required": [
+                          "last_source_payload_sha256"
+                        ]
+                      },
+                      {
+                        "required": [
+                          "imported_at"
+                        ]
+                      }
+                    ]
+                  }
+                }
+              ],
+              "properties": {
+                "extensions": {
+                  "propertyNames": {
+                    "pattern": "^[^\\s.\\x00-\\x1f\\x7f]+(?:\\.[^\\s.\\x00-\\x1f\\x7f]+)+(?![\\s\\S])",
+                    "type": "string"
+                  },
+                  "type": "object"
+                },
+                "external_id": {
+                  "minLength": 1,
+                  "pattern": "^(?=[\\s\\S]*\\S)(?![\\s\\S]*\\x00)",
+                  "type": "string"
+                },
+                "external_revision": {
+                  "type": "string"
+                },
+                "imported_at": {
+                  "format": "date-time",
+                  "type": "string"
+                },
+                "last_imported_projection_sha256": {
+                  "pattern": "^[0-9a-f]{64}(?![\\s\\S])",
+                  "type": "string"
+                },
+                "last_source_payload_sha256": {
+                  "pattern": "^[0-9a-f]{64}(?![\\s\\S])",
+                  "type": "string"
+                },
+                "last_source_projection_sha256": {
+                  "pattern": "^[0-9a-f]{64}(?![\\s\\S])",
+                  "type": "string"
+                },
+                "mapping_id": {
+                  "minLength": 1,
+                  "pattern": "^(?=[\\s\\S]*\\S)(?![\\s\\S]*\\x00)",
+                  "type": "string"
+                },
+                "source_document": {
+                  "minLength": 1,
+                  "pattern": "^(?=[\\s\\S]*\\S)(?![\\s\\S]*\\x00)",
+                  "type": "string"
+                },
+                "source_system": {
+                  "minLength": 1,
+                  "pattern": "^(?=[\\s\\S]*\\S)(?![\\s\\S]*\\x00)",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "source_system",
+                "source_document",
+                "external_id"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "position": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "rationale": {
+            "type": "string"
+          },
+          "target": {
+            "anyOf": [
+              {
+                "pattern": "^[A-Z][A-Z0-9]{1,7}-GOAL-[0-9]{4}(?![\\s\\S])",
+                "type": "string"
+              },
+              {
+                "pattern": "^[A-Z][A-Z0-9]{1,7}-NEED-[0-9]{4}(?![\\s\\S])",
+                "type": "string"
+              },
+              {
+                "pattern": "^[A-Z][A-Z0-9]{1,7}-CAP-[0-9]{4}(?![\\s\\S])",
+                "type": "string"
+              },
+              {
+                "pattern": "^[A-Z][A-Z0-9]{1,7}-REQ-[0-9]{4}(?![\\s\\S])",
+                "type": "string"
+              },
+              {
+                "pattern": "^[A-Z][A-Z0-9]{1,7}-SCN-[0-9]{4}(?![\\s\\S])",
+                "type": "string"
+              },
+              {
+                "pattern": "^[A-Z][A-Z0-9]{1,7}-DEC-[0-9]{4}(?![\\s\\S])",
+                "type": "string"
+              },
+              {
+                "pattern": "^[A-Z][A-Z0-9]{1,7}-RISK-[0-9]{4}(?![\\s\\S])",
+                "type": "string"
+              },
+              {
+                "pattern": "^[A-Z][A-Z0-9]{1,7}-ASM-[0-9]{4}(?![\\s\\S])",
+                "type": "string"
+              },
+              {
+                "pattern": "^[A-Z][A-Z0-9]{1,7}-COMP-[0-9]{4}(?![\\s\\S])",
+                "type": "string"
+              },
+              {
+                "pattern": "^[A-Z][A-Z0-9]{1,7}-IFC-[0-9]{4}(?![\\s\\S])",
+                "type": "string"
+              },
+              {
+                "pattern": "^[A-Z][A-Z0-9]{1,7}-SRC-[0-9]{4}(?![\\s\\S])",
+                "type": "string"
+              },
+              {
+                "pattern": "^[A-Z][A-Z0-9]{1,7}-VER-[0-9]{4}(?![\\s\\S])",
+                "type": "string"
+              },
+              {
+                "pattern": "^[A-Z][A-Z0-9]{1,7}-TEST-[0-9]{4}(?![\\s\\S])",
+                "type": "string"
+              },
+              {
+                "pattern": "^[A-Z][A-Z0-9]{1,7}-EVD-[0-9]{4}(?![\\s\\S])",
+                "type": "string"
+              },
+              {
+                "pattern": "^[A-Z][A-Z0-9]{1,7}-REL-[0-9]{4}(?![\\s\\S])",
+                "type": "string"
+              },
+              {
+                "pattern": "^[A-Z][A-Z0-9]{1,7}-MS-[0-9]{4}(?![\\s\\S])",
+                "type": "string"
+              },
+              {
+                "pattern": "^[A-Z][A-Z0-9]{1,7}-TASK-[0-9]{4}(?![\\s\\S])",
+                "type": "string"
+              },
+              {
+                "pattern": "^[A-Z][A-Z0-9]{1,7}-TERM-[0-9]{4}(?![\\s\\S])",
+                "type": "string"
+              },
+              {
+                "pattern": "^[A-Z][A-Z0-9]{1,7}-PROP-[0-9]{4}(?![\\s\\S])",
+                "type": "string"
+              },
+              {
+                "pattern": "^[A-Z][A-Z0-9]{1,7}-BASE-[0-9]{4}(?![\\s\\S])",
+                "type": "string"
+              },
+              {
+                "pattern": "^[A-Z][A-Z0-9]{1,7}-ISSUE-[0-9]{4}(?![\\s\\S])",
+                "type": "string"
+              },
+              {
+                "pattern": "^[A-Z][A-Z0-9]{1,7}-DOC-[0-9]{4}(?![\\s\\S])",
+                "type": "string"
+              },
+              {
+                "pattern": "^[A-Z][A-Z0-9]{1,7}-SEC-[0-9]{4}(?![\\s\\S])",
+                "type": "string"
+              },
+              {
+                "pattern": "^[A-Z][A-Z0-9]{1,7}-BLOCK-[0-9]{4}(?![\\s\\S])",
+                "type": "string"
+              },
+              {
+                "pattern": "^[A-Z][A-Z0-9]{1,7}-VIEW-[0-9]{4}(?![\\s\\S])",
+                "type": "string"
+              },
+              {
+                "pattern": "^[A-Z][A-Z0-9]{1,7}-CODE-[0-9]{4}(?![\\s\\S])",
+                "type": "string"
+              },
+              {
+                "pattern": "^[A-Z][A-Z0-9]{1,7}-RREV-[0-9]{4}(?![\\s\\S])",
+                "type": "string"
+              },
+              {
+                "pattern": "^[A-Z][A-Z0-9]{1,7}-CFG-[0-9]{4}(?![\\s\\S])",
+                "type": "string"
+              }
+            ]
+          },
+          "type": {
+            "enum": [
+              "addresses",
+              "refines",
+              "derived_from",
+              "depends_on",
+              "conflicts_with",
+              "constrains",
+              "allocated_to",
+              "implemented_by",
+              "verified_by",
+              "produces",
+              "mitigates",
+              "scheduled_for",
+              "part_of",
+              "supersedes",
+              "duplicates",
+              "contains",
+              "references"
+            ]
+          }
+        },
+        "required": [
+          "type",
+          "target",
+          "external_identities",
+          "extensions"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "revision": {
+      "minimum": 1,
+      "type": "integer"
+    },
+    "schema_version": {
+      "const": "0.1.0"
+    },
+    "subjects": {
+      "items": {
+        "$ref": "#/$defs/artifact_ref"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "tags": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "text_direction": {
+      "enum": [
+        "ltr",
+        "rtl",
+        "auto"
+      ]
+    },
+    "title": {
+      "$ref": "#/$defs/text"
+    },
+    "updated_at": {
+      "$ref": "#/$defs/utc"
+    },
+    "updated_by": {
+      "$ref": "#/$defs/actor"
+    }
+  },
+  "required": [
+    "schema_version",
+    "id",
+    "artifact_type",
+    "title",
+    "maturity",
+    "revision",
+    "created_at",
+    "updated_at",
+    "created_by",
+    "updated_by",
+    "relations",
+    "extensions",
+    "method",
+    "subjects",
+    "preconditions",
+    "procedure",
+    "oracle",
+    "evidence_kinds",
+    "evidence_slots",
+    "dimensions",
+    "configuration_policy"
+  ],
+  "type": "object",
+  "x-specroad-validation-scope": "reference01-local-fields-plus-normative-contract"
+}

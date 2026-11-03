@@ -1,0 +1,91 @@
+{
+  "$comment": "New reference contract defined 2026-11-03; no historical compatibility claim. Full validation also requires contract.md.",
+  "$id": "urn:specroad:reference-0.1-v1:project",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Explicit source selector and complete project configuration.",
+  "properties": {
+    "default_locale": {
+      "minLength": 1,
+      "pattern": "^(?=[\\s\\S]*\\S)(?![\\s\\S]*\\x00)",
+      "type": "string"
+    },
+    "extensions": {
+      "propertyNames": {
+        "pattern": "^[^\\s.\\x00-\\x1f\\x7f]+(?:\\.[^\\s.\\x00-\\x1f\\x7f]+)+(?![\\s\\S])",
+        "type": "string"
+      },
+      "type": "object"
+    },
+    "generated_path": {
+      "const": "generated"
+    },
+    "id_prefix": {
+      "pattern": "^[A-Z][A-Z0-9]{1,7}(?![\\s\\S])",
+      "type": "string"
+    },
+    "managed_paths": {
+      "const": [
+        "spec",
+        "profiles",
+        "rules",
+        "mappings"
+      ]
+    },
+    "profiles": {
+      "const": [
+        "core-reference01@1.0.0"
+      ]
+    },
+    "project_id": {
+      "minLength": 1,
+      "pattern": "^(?=[\\s\\S]*\\S)(?![\\s\\S]*\\x00)",
+      "type": "string"
+    },
+    "project_name": {
+      "minLength": 1,
+      "pattern": "^(?=[\\s\\S]*\\S)(?![\\s\\S]*\\x00)",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "0.1.0"
+    },
+    "source_contract": {
+      "const": {
+        "contract_id": "specroad-reference-0.1",
+        "contract_version": "1.0.0"
+      }
+    },
+    "validation_policy": {
+      "additionalProperties": false,
+      "properties": {
+        "fail_on": {
+          "enum": [
+            "info",
+            "warning",
+            "error"
+          ]
+        }
+      },
+      "required": [
+        "fail_on"
+      ],
+      "type": "object"
+    }
+  },
+  "required": [
+    "schema_version",
+    "source_contract",
+    "project_id",
+    "project_name",
+    "id_prefix",
+    "default_locale",
+    "managed_paths",
+    "generated_path",
+    "profiles",
+    "validation_policy",
+    "extensions"
+  ],
+  "type": "object",
+  "x-specroad-validation-scope": "reference01-local-fields-plus-normative-contract"
+}

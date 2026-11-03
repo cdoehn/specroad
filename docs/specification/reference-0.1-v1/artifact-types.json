@@ -1,0 +1,142 @@
+{
+  "assumption": {
+    "directory": "assumptions",
+    "prefix": "ASM",
+    "schema": "schemas/artifacts/assumption.json"
+  },
+  "baseline": {
+    "directory": "baselines",
+    "prefix": "BASE",
+    "schema": "schemas/artifacts/baseline.json"
+  },
+  "capability": {
+    "directory": "capabilities",
+    "prefix": "CAP",
+    "schema": "schemas/artifacts/capability.json"
+  },
+  "code_ref": {
+    "directory": "code-refs",
+    "prefix": "CODE",
+    "schema": "schemas/artifacts/code_ref.json"
+  },
+  "component": {
+    "directory": "components",
+    "prefix": "COMP",
+    "schema": "schemas/artifacts/component.json"
+  },
+  "configuration": {
+    "directory": "configurations",
+    "prefix": "CFG",
+    "schema": "schemas/artifacts/configuration.json"
+  },
+  "content_block": {
+    "directory": "content-blocks",
+    "prefix": "BLOCK",
+    "schema": "schemas/artifacts/content_block.json"
+  },
+  "decision": {
+    "directory": "decisions",
+    "prefix": "DEC",
+    "schema": "schemas/artifacts/decision.json"
+  },
+  "document": {
+    "directory": "documents",
+    "prefix": "DOC",
+    "schema": "schemas/artifacts/document.json"
+  },
+  "evidence": {
+    "directory": "evidence",
+    "prefix": "EVD",
+    "schema": "schemas/artifacts/evidence.json"
+  },
+  "goal": {
+    "directory": "goals",
+    "prefix": "GOAL",
+    "schema": "schemas/artifacts/goal.json"
+  },
+  "interface": {
+    "directory": "interfaces",
+    "prefix": "IFC",
+    "schema": "schemas/artifacts/interface.json"
+  },
+  "issue": {
+    "directory": "issues",
+    "prefix": "ISSUE",
+    "schema": "schemas/artifacts/issue.json"
+  },
+  "milestone": {
+    "directory": "milestones",
+    "prefix": "MS",
+    "schema": "schemas/artifacts/milestone.json"
+  },
+  "need": {
+    "directory": "needs",
+    "prefix": "NEED",
+    "schema": "schemas/artifacts/need.json"
+  },
+  "proposal": {
+    "directory": "proposals",
+    "prefix": "PROP",
+    "schema": "schemas/artifacts/proposal.json"
+  },
+  "relation_review": {
+    "directory": "relation-reviews",
+    "prefix": "RREV",
+    "schema": "schemas/artifacts/relation_review.json"
+  },
+  "release": {
+    "directory": "releases",
+    "prefix": "REL",
+    "schema": "schemas/artifacts/release.json"
+  },
+  "requirement": {
+    "directory": "requirements",
+    "prefix": "REQ",
+    "schema": "schemas/artifacts/requirement.json"
+  },
+  "risk": {
+    "directory": "risks",
+    "prefix": "RISK",
+    "schema": "schemas/artifacts/risk.json"
+  },
+  "scenario": {
+    "directory": "scenarios",
+    "prefix": "SCN",
+    "schema": "schemas/artifacts/scenario.json"
+  },
+  "section": {
+    "directory": "sections",
+    "prefix": "SEC",
+    "schema": "schemas/artifacts/section.json"
+  },
+  "source": {
+    "directory": "sources",
+    "prefix": "SRC",
+    "schema": "schemas/artifacts/source.json"
+  },
+  "task": {
+    "directory": "tasks",
+    "prefix": "TASK",
+    "schema": "schemas/artifacts/task.json"
+  },
+  "term": {
+    "directory": "terms",
+    "prefix": "TERM",
+    "schema": "schemas/artifacts/term.json"
+  },
+  "test": {
+    "directory": "tests",
+    "prefix": "TEST",
+    "schema": "schemas/artifacts/test.json"
+  },
+  "verification": {
+    "directory": "verifications",
+    "prefix": "VER",
+    "schema": "schemas/artifacts/verification.json"
+  },
+  "view": {
+    "directory": "views",
+    "prefix": "VIEW",
+    "schema": "schemas/artifacts/view.json"
+  }
+}
