@@ -91,7 +91,7 @@ relevante Shared-Plan-, Hash-, Source-, Proposal-, Sicherheits- und
 Distributionsregressionen kommen hinzu. N=3 und Host-Workerregeln bleiben.
 Alle Meilenstein-, Vollsuite-, Plattform- und Releasegates bleiben offen.
 
-### Vorbereiteter Produktstand 16.c.W
+### Vorbereiteter Produktstand 16.c.R
 
 Dieser Fortschrittsmarker gilt erst nach seinem tatsächlichen erfolgreichen
 Apply-Gate und Commit. Das geprüfte Quell-Result belegt weiterhin 666/900.
@@ -1292,9 +1292,9 @@ Kein offener Produktplanschritt wird durch diese Testoptimierung abgeschlossen.
 ```yaml
 plan_revision: 57
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 667
-last_completed_plan_commit: 16.c.W
-next_plan_commit: 16.c.R
+implementation_plan_commits_completed: 668
+last_completed_plan_commit: 16.c.R
+next_plan_commit: 16.c.C
 last_completed_numbered_bundle: 553
 implementation_state: in_progress
 audit_followup_status: closed
@@ -35492,7 +35492,7 @@ mit den obigen positiven, negativen und Original-/Autoritätsabnahmen.
 
 #### 16.c.R – Make it Right
 
-- [ ] **16.c.R** · Position **668/900** · Voraussetzung: `16.c.W`.
+- [x] **16.c.R** · Position **668/900** · Voraussetzung: `16.c.W`.
 **Exakte Commit-Message:** `16.c.R feat(migration): Read-only-Migrationsplan vervollständigen`
 
 **Vervollständigung:** Übergebenes Planfile an aktuelle Quellenhashes, Versionspfad und Zielversion binden.
