@@ -368,6 +368,10 @@
       "kind": "Explicitly synthetic complete reference-0.1/1.0.1 sources with explicit native target configuration/core profile, source-bound requirement mappings and independently provided target proposal plans. Includes immutable originals, transitive archived snapshots, literal normative requirement/REL/hash vectors and adversarial saved-plan bindings. Stored review records are synthetic source history, never actual human approval or current readiness evidence.",
       "provider": "tests/support/migration_plans.py:target_inputs,mapped_inputs,vector_source;tests/support/reference01.py:full_project,release_project;docs/specification/reference-0.1-v1.0.1/vectors.json"
     },
+    "SR-FIX-MIGRATION-SOURCE-BACKUP-v1": {
+      "kind": "Synthetic reference-0.1/1.0.1 originals including full historical closure, noncanonical JSON, binary/empty/unreferenced/generated/passive operational bytes. Independent full-file and ZIP inventories, real external create-only publication and unchanged source schema. No real historical authority, current human approval, migration writer or portable receipt claim.",
+      "provider": "tests/support/migration_backups.py:file_hash,write_project,disk_files;tests/test_migration_backup.py"
+    },
     "SR-FIX-MODEL-MANIFEST-v1": {
       "kind": "Owned single-root resources; explicit hash inputs, not resolved scopes, authentic profile composition or write permission.",
       "provider": "tests/test_model_root.py:fixture"
@@ -920,6 +924,7 @@
     "SR-FIX-LITERAL-LINT-v1",
     "SR-FIX-MIGRATION-GRAPH-v1",
     "SR-FIX-MIGRATION-PLAN-v1",
+    "SR-FIX-MIGRATION-SOURCE-BACKUP-v1",
     "SR-FIX-MODEL-MANIFEST-v1",
     "SR-FIX-MODEL-VALIDATION-v1",
     "SR-FIX-NATIVE-IMPORT-IDENTITIES-v1",

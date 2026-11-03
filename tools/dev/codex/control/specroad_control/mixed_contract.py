@@ -43,7 +43,11 @@ def validate_roles(data):
         if not required <= paths or any(not (name in required or name == 'verification/catalog.json'
                 or re.fullmatch(r'verification/requirements/SR-TC-[0-9]{4}\.json', name)) for name in paths):
             raise ValueError('Clarification scope is not the normative document/catalog scope')
-        if any(first['before'].get(name) == first['after'][name] for name in required):
+        # A failed Apply may already have installed the complete prefix.
+        # Its exact targets/roles still need validate_continuation or the
+        # native source_parent/remaining_roles proof; this is only shape validation.
+        if (any(first['before'].get(name) == first['after'][name] for name in required)
+                and not (data['initial_dirty'] and data['correction_of'] is not None)):
             raise ValueError('Clarification requires actual specification and plan changes')
         if not any(s['role'] == 'implementation' and any(not name.startswith(('docs/', 'verification/'))
                 and s['before'].get(name) != digest for name, digest in s['after'].items()) for s in data['stages'][1:]):

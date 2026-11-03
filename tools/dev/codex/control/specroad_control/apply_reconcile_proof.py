@@ -18,6 +18,7 @@ from .errors import ControlError
 from .local import decode_object
 
 LIMIT = 32 * 1024 * 1024
+PLAN_LIMIT = 64 * 1024 * 1024
 MARKER = "SPECROAD_APPLY_COMMIT_PLAN"
 
 
@@ -67,7 +68,7 @@ def public_plan(data):
             'stages': [{k: v for k, v in stage.items() if k != 'payloads'} for stage in data['stages']]}
 
 
-def plan(fact, *, data_limit=LIMIT):
+def plan(fact, *, data_limit=PLAN_LIMIT):
     metadata = decode_object(member(fact, 'patch.json'))
     expected_members = {'patch.json', 'run.sh', 'PATCHHARBOR_META/environment.json',
                         'PATCHHARBOR_META/CHAT_INSTRUCTIONS.md'}
@@ -159,6 +160,8 @@ def plan(fact, *, data_limit=LIMIT):
 def compare(original, resumed, source, checkpoint):
     left, left_program = plan(original)
     right, right_program = plan(resumed)
+    if left['format_version'] == 2 and left['stages'][0]['role'] == 'clarification':
+        fail('An unfinished clarification requires a native failed Apply Result and its original plan; a recovery checkpoint is not continuation authority.')
     if (left_program != right_program or left['binding'] != source['binding']
             or left['source_result_sha256'] != source['sha256']
             or right['binding'] != checkpoint['binding']

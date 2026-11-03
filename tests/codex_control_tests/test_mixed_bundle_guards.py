@@ -204,3 +204,17 @@ class MixedGuardTests(MixedCase):
         self.assertEqual(ledger.request_contract(),new_contract(version=4))
         for table in ('jobs','request_contracts','clarification_budgets','clarification_continuations'):
             self.assertEqual(ledger.db.execute('SELECT COUNT(*) FROM '+table).fetchone()[0],1)
+
+
+    def test_retained_pending_prefix_keeps_targets_and_consumes_no_second_slot(self):
+        self.dispatch(True); self.outcome(completed=0, dirty=True); self.engine.tick()
+        selected = self.ledger().request_contract()
+        self.assertEqual(selected, new_contract(2, allowed=False, version=4, continuation=True))
+        data = self.correction()
+        first = data['stages'][0]
+        self.assertEqual(first['before'], first['after'])
+        self.assertEqual(first['after'], self.latest_data['stages'][0]['after'])
+        self.assertFalse(self.dispatch(True, data)['halted'])
+        self.assertEqual(self.ledger().request_contract(), selected)
+        self.outcome(); self.engine.tick()
+        self.assertEqual(self.ledger().request_contract(), new_contract(version=4))

@@ -34,6 +34,79 @@ Produktfreigaben und die Grenzen aus 2.4.1/2.4.2/2.4.4 bleiben unverändert.
 Dieser Plan ändert keine alten Aufträge, Antworten, Blockaden oder
 Laufzeitdaten und ist keine Start-/Resume-Anweisung.
 
+## Technische Fortsetzung 563 — bestätigte Host-Ursache beseitigt
+
+Nutzerauftrag vom 3. November 2026: Reparatur mit ausdrücklich aktiviertem
+Vollzugriff fortsetzen. Maßgebliches natives Fehler-Result:
+`02c6c29d601777e42e8db9e554e1a6539c9b2393eb536e9da991b02a2b932251`.
+Bundle 562 endete vor dem ersten Commit: 6.925 bestandene Tests, acht Fehler.
+Alle acht Fehler entstanden an der produktiven Git-Arbeitsbaum-Schranke für
+temporäre Control-Testdaten unter /tmp. Die vollständigen erhaltenen Dateien
+entsprechen weiterhin exakt dem angekündigten Klärungsziel; kein Commit,
+keine Umsetzung und keine erfolgreiche Testabnahme werden hinzuerfunden.
+
+Die zwischenzeitlichen Sandbox-Statusabfragen konnten den Git-Marker unter
+/tmp erneut erzeugen. Die vorherige Wiederholung erreichte deshalb die erst
+in W ausgebrachte dauerhafte Testverzeichniskorrektur nicht. Der Nutzer hat
+nun die Sandbox ausdrücklich deaktiviert. Die anschließende direkte
+Host-Prüfung belegt: /tmp/.git und /var/tmp/.git fehlen, kein entsprechender
+Sandbox-Mount ist vorhanden. Der externe Auslöser ist damit derzeit entfernt;
+dieser Umweltbefund ist kein bestandener Verhaltenstest und keine Garantie
+gegen spätere externe Änderungen. Keine Dateien oder Schutzprüfungen werden
+dafür gelöscht, umgeschrieben oder umgangen.
+
+Alle acht fehlgeschlagenen Testdateien werden in jedem verbliebenen Gate
+vollständig ungefiltert Pflicht. N=3, Laufzeitdatenbank, Historie und echte
+separate Gates bleiben bestehen. Der Klärungspräfix bleibt bytegleich;
+darauf folgen unverändert vollständiges 16.d.W/R/C, die 64-MiB-Erweiterung,
+die streng gebundene Fortsetzung und die dauerhafte Wahl von /var/tmp.
+Keine neue Detailentscheidung, kein zusätzlicher Klärungsplatz, kein Reset.
+Unveränderte Code-/Test-/Katalogeingaben werden durch Hashgleichheit belegt;
+ihre vorhandenen reinen Collection-Nachweise bleiben verwendbar. Dev führt
+keine Testkörper aus. Control bleibt gestoppt; kein Dienststart oder Deployment.
+
+## Technische Korrektur 562 — erhaltenen Klärungsstand fortführen
+
+Nutzerauftrag vom 3. November 2026: „Repariere“. Maßgeblich ist das nativ
+geprüfte Fehler-Result `7cf68464e9dbd1cc9520be63554b0c8d0092966266c7211ea8100d302bfbd6af`.
+Bundle 561 scheiterte vor MIGRATION-BACKUP-561: 6.755 erfolgreiche Tests,
+zwei Fehler in Control-Tests durch einen nachträglich erschienenen Git-Marker
+über deren /tmp-Testverzeichnis; kein Commit. Die erhaltenen 745 Dateien
+entsprechen exakt dem angekündigten Klärungsziel. Alle vier offenen IDs und
+Rollen bleiben erhalten: MIGRATION-BACKUP-561, 16.d.W, 16.d.R, 16.d.C.
+
+Der Klärungspräfix bleibt bytegleich, einschließlich dieses Plans in seinem
+ersten Zustand. Er erhält nur neue Vorherbindung und Pflichtauswahl. Die
+Erweiterung auf 64 MiB und die vollständige Quellsicherung bleiben enthalten.
+Keine neue fachliche Entscheidung, kein neuer Klärungsplatz, kein Reset.
+
+Der bisherige Formvalidator verweigerte auch bei belegter Fortsetzung einen
+bereits vollständig ausgebrachten Klärungspräfix (Vorherbytes = Zielbytes).
+Die technische Korrektur setzt die vorhandene Norm 2.4.3.1 um: nur dirty
+Korrektur mit kompletter Korrekturbindung darf diesen Zustand darstellen.
+Die separate Prüfung des nativen Fehler-Results, ursprünglichen Plans,
+vollständigen Rests, identischen Klärungsziele und aktuellen Vorherbytes
+bleibt zwingend. Neue unveränderte Klärungsmarker und reine Recovery-
+Checkpoints bleiben unzulässig. Der gebündelte Apply-Treiber verwendet
+diesen korrigierten Formvalidator bereits zur Darstellung des ersten
+Zustands; Repository- und Control-Änderungen folgen erst in W.
+
+W ergänzt die Vorherbindungskorrektur samt Apply-/Control-Regressionen und
+verlegt Control-Testdaten während ihrer gesamten Lebensdauer nach /var/tmp.
+Unbenutzbare oder unsichere Kandidaten führen weiterhin zum Fehler; kein
+Zurückfallen auf das zeitweise durch Sandbox-Initialisierung berührte /tmp,
+keine Änderung der produktiven Git-/Symlinkprüfung. Ein isolierter Test
+erzeugt den nachträglichen Git-Marker ausschließlich in eigenen Verzeichnissen.
+R ergänzt manipulierte Zielbytes, Vorherbytes, Rollen, Herkunft und Restfolgen.
+C erhält sämtliche Tests und bereinigt weiterhin die vollständige 16.d-Implementierung.
+
+Dev: keine Testkörper ausgeführt. Collection, Syntax und passive native
+Paket-/Fortsetzungsprüfung sind keine Verhaltensabnahme. Der erste Gate prüft
+den unveränderten Klärungsstand einschließlich beider zuvor fehlgeschlagener
+Testdateien erneut; der Testverzeichnis-Fix wird regelkonform erst mit W
+ausgebracht. Control bleibt gestoppt; keine Installation oder Änderung an
+Betriebsdaten, Aufträgen oder Budgets. Jedes Gate entscheidet erst im Apply.
+
 ## OFF-PLAN MIGRATION-BACKUP-561 — Quellsicherung und vollständiges 16.d
 
 Gebundene Basis ist das erfolgreiche saubere Result 59223b,
@@ -1577,11 +1650,11 @@ Kein offener Produktplanschritt wird durch diese Testoptimierung abgeschlossen.
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 64
+plan_revision: 66
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 669
-last_completed_plan_commit: 16.c.C
-next_plan_commit: 16.d.W
+implementation_plan_commits_completed: 670
+last_completed_plan_commit: 16.d.W
+next_plan_commit: 16.d.R
 last_completed_numbered_bundle: 560
 implementation_state: in_progress
 audit_followup_status: closed
@@ -35809,7 +35882,7 @@ Die W-/R-/C-Abnahmen im obigen OFF-PLAN-Abschnitt gelten vollständig.
 
 #### 16.d.W – Let it Work
 
-- [ ] **16.d.W** · Position **670/900** · Voraussetzung: `16.c.C`.
+- [x] **16.d.W** · Position **670/900** · Voraussetzung: `16.c.C`.
 **Exakte Commit-Message:** `16.d.W feat(migration): Vollständige verifizierte Quellsicherung aufbauen`
 
 **Umsetzung:** Vor erster Migration den unfiltrierten Ausgangsstand in deterministischem Vollbundle sichern und Hash/Pfad binden.

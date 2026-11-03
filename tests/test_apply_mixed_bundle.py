@@ -97,3 +97,18 @@ def test_v1_contract_and_public_hash_stay_unextended():
     validate_bundle(old)
     assert canonical(public_plan(old)) == original
     assert 'handoff_kind' not in old and all('role' not in s for s in old['stages'])
+
+
+def test_retained_clarification_rebinds_preimage_without_replaying_commits():
+    from verification_support.bundle_contract import validate_continuation
+    from test_apply_mixed_bundle_right import correction
+    previous, progress, value = correction('DECISION')
+    first = value['stages'][0]
+    first['before'] = dict(first['after'])
+    assert validate_continuation(previous, progress, value) == value
+    backend = Backend()
+    final = run_bundle(value, backend)
+    assert [s['commit_id'] for s in final['committed']] == progress['remaining_commit_ids']
+    assert backend.calls == [(action, name) for name in progress['remaining_commit_ids']
+                             for action in ('install', 'test', 'commit')]
+    assert first['after'] == previous['stages'][0]['after']

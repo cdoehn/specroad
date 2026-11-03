@@ -80,3 +80,32 @@ def test_capability_reader_preserves_import_path_on_every_outcome(tmp_path, case
                 actual = development_capability(path, expected)
                 assert actual == (None if case == 'absent' else CAPABILITY)
             assert sys.path == original
+
+
+def test_external_home_survives_git_marker_in_shared_temporary_root(monkeypatch):
+    """Model the sandbox race in owned directories, never in the host /tmp."""
+    from codex_control_tests import external_temp
+    with temporary_directory(prefix='sr-') as raw:
+        root = Path(raw)
+        shared, persistent = root / 't', root / 'v'
+        shared.mkdir(); persistent.mkdir()
+        parents = {Path('/tmp'): shared, Path('/var/tmp'): persistent}
+        real_outside = external_temp.outside
+        real_temporary = external_temp.tempfile.TemporaryDirectory
+
+        def observed_outside(path):
+            return real_outside(parents.get(path, path))
+
+        def observed_temporary(*, prefix, dir):
+            return real_temporary(prefix=prefix, dir=parents.get(dir, dir))
+
+        monkeypatch.setattr(external_temp, 'outside', observed_outside)
+        monkeypatch.setattr(external_temp.tempfile, 'TemporaryDirectory', observed_temporary)
+        with external_temp.temporary_directory(prefix='h-', socket_suffix='s') as home:
+            # The marker appears after initial admission but before later I/O.
+            (shared / '.git').mkdir()
+            private_dir(Path(home) / 'state')
+            assert real_outside(Path(home)) == Path(home)
+            assert Path(home).parent == persistent
+            assert list(shared.iterdir()) == [shared / '.git']
+        assert not Path(home).exists()

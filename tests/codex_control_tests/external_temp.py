@@ -7,7 +7,10 @@ from specroad_control.errors import ControlError
 from specroad_control.local import outside
 
 
-TEMP_PARENTS = (Path('/tmp'), Path('/var/tmp'))
+# Sandbox setup can transiently create /tmp/.git after a home was admitted.
+# Keep the entire lifetime on the independent persistent temporary root.
+# Unavailable/unsafe /var/tmp fails closed; never fall back to the shared /tmp.
+TEMP_PARENTS = (Path('/var/tmp'),)
 DAEMON_SOCKET = 'codex-home/app-server-control/app-server-control.sock'
 
 

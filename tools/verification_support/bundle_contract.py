@@ -149,7 +149,11 @@ def _validate_roles(data):
                 or re.fullmatch(r'verification/requirements/SR-TC-[0-9]{4}\.json', name)) for name in paths):
             raise ValueError('Clarification must update specification and plan within the document/catalog scope')
         first = data['stages'][0]
-        if any(first['before'].get(name) == first['after'][name] for name in required):
+        # A failed Apply may already have installed the complete prefix.
+        # Its exact targets/roles still need validate_continuation or the
+        # native source_parent/remaining_roles proof; this is only shape validation.
+        if (any(first['before'].get(name) == first['after'][name] for name in required)
+                and not (data['initial_dirty'] and data['correction_of'] is not None)):
             raise ValueError('Clarification cannot be an unchanged document marker')
         if not any(stage['role'] == 'implementation' and any(
                 not name.startswith(('docs/', 'verification/')) and stage['before'].get(name) != digest
