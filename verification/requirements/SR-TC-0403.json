@@ -53,7 +53,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "1598079cf97a2844f96649851fff698e882760f5e72f8fa4c0003387e557ee6c",
+  "specification_sha256": "d41e46bb1a3d064c6c533d98fda6a724b16b1ce5d4327e1a35ba924dfc75eafd",
   "steps": [
     "Compare semantic categories and exact values/identities with independent fixtures; check explicit unknown scope/currency, input hashes, read-only boundaries and isolated-process parity.",
     "Compare declared and opaque text changes with independent exact-value, identity and pointer oracles; preserve machine-value classes, complete containers and all W behavior.",

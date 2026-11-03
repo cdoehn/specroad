@@ -68,7 +68,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "1598079cf97a2844f96649851fff698e882760f5e72f8fa4c0003387e557ee6c",
+  "specification_sha256": "d41e46bb1a3d064c6c533d98fda6a724b16b1ce5d4327e1a35ba924dfc75eafd",
   "steps": [
     "Qualify both original full-project bundle and sealed project-Baseline sources using complete defined 0.2 native model, profile/rule, document/include/view, configuration, lifecycle, primary-document and specialist checks. Independently reconstruct the exact source and complete target roots; no container-only success or partial target is sufficient.",
     "Resolve damaged or absent current configuration only through independent intact configuration or retained sealed Baseline evidence with identical identity and managed coverage. Bind complete original files, directories, empty entries and root/parent identities; preserve all observed before bytes.",

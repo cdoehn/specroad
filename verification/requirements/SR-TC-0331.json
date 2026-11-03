@@ -66,7 +66,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "1598079cf97a2844f96649851fff698e882760f5e72f8fa4c0003387e557ee6c",
+  "specification_sha256": "d41e46bb1a3d064c6c533d98fda6a724b16b1ce5d4327e1a35ba924dfc75eafd",
   "steps": [
     "Plan new and matched artifacts through real mapping selection, native lookup, conflict evaluation and the ordinary complete-target Change Plan service.",
     "Inspect exact byte/canonical bindings, operations, native IDs, regular metadata/history, preserved local fields, attachment references, skipped objects, unresolved conflicts and individual losses.",

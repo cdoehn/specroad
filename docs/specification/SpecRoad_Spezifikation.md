@@ -1,5 +1,5 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.56
+## Version 0.2.57
 
 | Feld | Wert |
 |---|---|
@@ -937,6 +937,44 @@ Als einmalige manuelle Ausnahme sind höchstens vier Korrekturbundles für
 auftretende Fehler erlaubt. Dies erteilt keine dauerhafte autonome Dev-Schleife
 und ändert keine künftigen Control-Aufträge. Produktplan bleibt bei 672/900,
 nächster Produktcommit 16.e.W; echte lokale Betriebsdaten fehlen in Payloads.
+
+#### 2.5.4.2 Exakte Result-Zuordnung von Korrekturen — CONTROL-SOURCE-SELECTION-566
+
+**Ausdrücklicher Nutzerauftrag vom 3. November 2026.** Die manuell beobachtete
+Blockade `ambiguous_patch` ist technisch zu korrigieren: Verschiedene native
+Result-ZIPs können nach fehlgeschlagenem Apply dieselben vier Zustandswerte
+tragen. Ein gültiger Apply-Commitplan v2 bindet zusätzlich die vollständige
+`source_result_sha256`; diese Bindung entscheidet auch über die Paketzuordnung.
+Zeitstempel, Dateinamen und eine vermeintlich neueste ZIP entscheiden niemals.
+
+Nach nativer Vierfachprüfung liest Control den vorhandenen geschlossenen
+v2-Commitplan ausschließlich passiv und begrenzt nach 2.4.3.1. Eine ZIP für
+ein anderes Result wird nur ausgeschlossen, wenn dessen exakte SHA durch ein
+natives nicht simuliertes Result im Exchange oder Archiv belegt ist. Innere
+und äußere Bindung, Apply-Repository und Dirty-Zustand müssen zum gebundenen
+Result passen; dessen Repository muss mit dem aktuellen übereinstimmen.
+Fehlende, geänderte oder widersprüchliche Quellnachweise sperren die Zuordnung
+mit `patch_source_unproven` beziehungsweise dem bestehenden nativen Fehler;
+keine stillschweigende Umdeutung auf das aktuelle Result. Veränderte ZIP-Bytes
+sind kein Legacy-Fallback. Gleiches Run-ID-Paar mit verschiedenen Bytes bleibt
+ein Identitätskonflikt. Ein Ergebnis kann normal ins Archiv verschoben werden.
+
+V1 oder nicht als vollständiger v2-Vertrag lesbare native Alt-/Fremdpakete
+bleiben konservativ Kandidaten nach ihren vier Bindungswerten. Aus einzelnen
+Texttreffern, defekten DATA-Werten oder unvollständigen Plänen darf Control
+keine ausschließende Quellbehauptung ableiten. Zwei verschiedene ZIP-Hashes
+für dasselbe exakte Quell-Result bleiben `ambiguous_patch`; identische Bytes
+unter mehreren Namen zählen einmal. Keine Paketprogramme ausführen.
+
+Die Zuordnung ersetzt keine Handoff-, Fortschritts-, Snapshot-, Gate- oder
+Rollenprüfung. Bereits publizierte/verbrauchte Pakete bleiben ausgeschlossen.
+Bekannte manuelle Korrekturketten dürfen beim nächsten ausdrücklich gestarteten
+Betrieb in ihrer belegten Reihenfolge weiterlaufen. Unbekannte manuelle
+Übergaben bleiben unbekannt und erneuern weder Klärungsfreigabe noch Budget.
+Alte History, Versuche, Pause und Original-ZIPs bleiben erhalten; keine
+Ledger-Reparatur, Paketlöschung oder künstliche neue Freigabe. Installation
+allein startet nichts. Der aktuelle manuelle Auftrag erlaubt nach erfolgreicher
+Apply-Abnahme und Installation den Start mit der konfigurierten Wartezeit.
 
 ## 3. Produktziele
 
@@ -6881,6 +6919,7 @@ Die folgende Roadmap ist informativ und erzeugt keine Anforderungen an 0.2:
 
 | Version | Datum | Status | Änderung |
 |---|---|---|---|
+| 0.2.57 | 2026-11-03 | Ausdrücklicher Nutzerauftrag | CONTROL-SOURCE-SELECTION-566: exakte v2-Quell-SHA bei gleicher Vierfachbindung, konservativer Legacy-Erhalt und unveränderte Befugnisse. |
 | 0.2.56 | 2026-11-03 | Ausdrücklicher Nutzerauftrag | CONTROL-START-DELAY-564: konfigurierbare monotone Startwartezeit, Standard 60 Sekunden, ansprechbarer Stop/Status und unveränderte Betriebsschranken. |
 | 0.2.55 | 2026-11-03 | Delegiert gemäß SPECROAD-DECISION-1, Vertrag 4 | MIGRATION-BACKUP-561: eigener versionierter 0.1-Quellsicherungsvertrag, vollständige Originalbytebindung und unveränderte M15-/Writergrenzen. |
 | 0.2.54 | 2026-11-03 | Ausdrücklicher Nutzerauftrag | CONTROL-CLARIFICATION-560: protokollierte Freigabe neuer Aufträge einer alten Kette nach Vertrag 4 mit erhaltenem Restbudget und unveränderten alten Versuchen. |
@@ -10784,4 +10823,4 @@ Implementierungsschritten nachgewiesen sein.
 
 ---
 
-**Ende der SpecRoad-Produktspezifikation v0.2.56.**
+**Ende der SpecRoad-Produktspezifikation v0.2.57.**

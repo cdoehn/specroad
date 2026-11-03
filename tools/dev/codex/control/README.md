@@ -106,3 +106,13 @@ Dienst wird durch erneutes `start` nicht verzögert oder neu gestartet.
 Pause/Resume verkürzen die Frist nicht; eine bereits abgelaufene Frist beginnt
 durch Resume nicht erneut. Der Stop wartet nicht auf die Frist. Thread-,
 Speicher-, Result- und Budgetprüfungen bleiben zusätzlich wirksam.
+
+## Korrekturen mit unverändertem Repositoryzustand
+
+Control ordnet kanonische v2-Pakete zusätzlich über die exakte Quell-Result-SHA
+zu. Unterschiedliche Result-ZIPs mit denselben vier Zustandswerten erzeugen
+damit keine falsche `ambiguous_patch`-Blockade. Der passende native Quellbeleg
+muss im Exchange oder Archiv vorhanden sein. Fehlender/widersprüchlicher
+Beleg sperrt mit `patch_source_unproven`; zwei Pakete für dasselbe Result
+bleiben mehrdeutig. Alte Pakete und die History bleiben erhalten. Die Auswahl
+ändert keine Freigabe und erneuert kein Budget unbekannter manueller Übergaben.

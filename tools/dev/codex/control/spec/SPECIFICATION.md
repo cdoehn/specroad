@@ -1,3 +1,6 @@
+> CONTROL-SOURCE-SELECTION-566: exakte Result-SHA nach SpecRoad 2.5.4.2;
+> keine History-Umschreibung oder Budgeterneuerung durch Paketzuordnung.
+
 > CONTROL-START-DELAY-564: aktuelle normative Startfrist und Statusvertrag
 > in SpecRoad-Spezifikation 2.5.4.1; Standard 60 s, konfigurierbar 0..86400.
 

@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 68 · **Stand:** 3. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.56
+**Planrevision:** 69 · **Stand:** 3. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.57
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 Schritte und 900 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; die ausdrücklich genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wird nach 10.7.10 innerhalb von 15.l.R vorgezogen. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -9,7 +9,7 @@ Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 S
 
 Fachliche Grundlage ist [`docs/specification/SpecRoad_Spezifikation.md`](../specification/SpecRoad_Spezifikation.md), einschließlich aller konsolidierten Korrekturen, 742 Requirements, 51 Verifikationsverträge, 46 Szenario-/E2E-Identitäten sowie R-01 bis R-75, Anhang U und den PatchHarbor-Rundweg aus Anhang W. Der [`Prüfbericht`](../reviews/SpecRoad_v0.2.7_Implementierungsreife_Pruefbericht.md) ist ein vorgelagerter Entwurfsreview, kein späterer Produktnachweis.
 
-Gebundene Spezifikations-SHA-256: `1598079cf97a2844f96649851fff698e882760f5e72f8fa4c0003387e557ee6c`.
+Gebundene Spezifikations-SHA-256: `d41e46bb1a3d064c6c533d98fda6a724b16b1ce5d4327e1a35ba924dfc75eafd`.
 Planungsbasis: Commit `fe2661d02ecf2f7eb483b58a4487eb009c6b3846`; sauberes Result-Bundle `specroad_Result_120209_0914_df3504.zip`; Repository-ID `3d2576df-d611-46fc-9d2b-92869468aaca`. Diese Angaben dokumentieren die Entstehung des Plans, nicht die zukünftige Patchbindung. **Jedes spätere Patchpaket bindet den dann aktuellen tatsächlichen Result-Zustand.**
 
 Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 2026 gelten zusätzlich und bei den nachfolgend benannten Konflikten vorrangig. Sonstige normative Spezifikationsinhalte werden nicht stillschweigend abgeschwächt. Neue fachliche Widersprüche, fehlende zwingende Angaben und Sicherheitsprobleme sind offen zu benennen, nicht durch erfundene Annahmen oder Scheinerfolge zu lösen.
@@ -33,6 +33,39 @@ ausdrückliche Bedienausnahme aus 2.4.3.2 bleibt zusätzlich anwendbar.
 Produktfreigaben und die Grenzen aus 2.4.1/2.4.2/2.4.4 bleiben unverändert.
 Dieser Plan ändert keine alten Aufträge, Antworten, Blockaden oder
 Laufzeitdaten und ist keine Start-/Resume-Anweisung.
+
+## OFF-PLAN CONTROL-SOURCE-SELECTION-566 — Korrekturen eindeutig zuordnen
+
+Basis ist das nativ geprüfte saubere Result 565 mit SHA-256
+`ffb1a445d05513bcc1872a55ac299fcef44f0a838138e5d33e60c765704e81b9`.
+CONTROL-START-DELAY-564.W/R/C ist durch drei Apply-Gates mit 7367, 7375 und
+7324 bestandenen Tests abgeschlossen; Commit 20dd536eedb98b95d0997ddadd2b4cc3f7befef9
+ist als Control-Release installiert. Standardwartezeit 60 s und 64-MiB-Grenze
+sind erhalten; Betriebsdaten blieben bytegleich. Der Dienst ist gestoppt.
+
+Die vorhandenen Korrekturen 562 und 563 teilen vier Zustandswerte, verweisen
+aber auf verschiedene vollständige native Quell-Results. Die bisherige
+Suche berücksichtigte deren exakte SHA im v2-Plan nicht. Gewählt ist die
+gebundene Quellprüfung. Auswahl nach Datum/Name oder Löschen alter Pakete
+wären unbelegte Umgehungen; eine Umschreibung der History wäre keine Reparatur.
+Dies ist der ausdrücklich beauftragte technische Fehlerfix, keine neue
+fachliche Klärung und keine zusätzliche Produktimplementierung.
+
+W: passive v2-Zuordnung samt nativer Prüfung des fremden Quell-Results;
+gleiche Vierfachbindung, Archiv/Duplikate, echte Konkurrenz und vollständige
+manuelle Fehlerkette ohne Modellaufruf oder Budgeterneuerung abnehmen.
+R: unvollständige/falsche Quellbelege, innere/äußere Bindung, Repository/Dirty,
+Run-ID-Konflikte und Dateirennen absichern; Legacy-/opaque Kandidaten und
+bestehende klare Umsetzung bewahren. Neustart setzt keine History zurück.
+C: passive Auswahl aus Exchange in eigenes Modul trennen, alle R-Tests und
+Fachregeln unverändert. Jeder echte Zustand erhält volle Control-Regression
+plus Apply-/Katalog-Pflichtauswahl zusätzlich zur fälligen gefilterten N=3-Gruppe.
+
+Vorbereitete Zuordnungsphase: W. Abnahme gilt erst nach dem eigenen Apply-Gate.
+Produktstand bleibt 672/900, nächster Produktcommit 16.e.W. Danach geprüfte
+Releasekopie installieren und wie beauftragt die Automatik starten. Die
+manuelle Fehlergrenze von höchstens vier Korrekturbundles gilt weiter; bisher
+wurde eines für den Bootstrap-Testvertrag benötigt. Kein Testkörper in Dev.
 
 ## Korrektur 565 — neuen Konfigurationsvertrag in Bootstrap-Abnahmen erhalten
 
@@ -1699,7 +1732,7 @@ Kein offener Produktplanschritt wird durch diese Testoptimierung abgeschlossen.
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 68
+plan_revision: 69
 implementation_plan_commits_total: 900
 implementation_plan_commits_completed: 672
 last_completed_plan_commit: 16.d.C

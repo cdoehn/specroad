@@ -34,7 +34,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "1598079cf97a2844f96649851fff698e882760f5e72f8fa4c0003387e557ee6c",
+  "specification_sha256": "d41e46bb1a3d064c6c533d98fda6a724b16b1ce5d4327e1a35ba924dfc75eafd",
   "steps": [
     "Read stored Baseline data with freshly recomputed integrity, without writes or cached success.",
     "Restore the verified whole-project snapshot without Git or current files, preserving exact resource bytes and semantic configuration hashes; reconstruct the root again from actual output bytes.",
