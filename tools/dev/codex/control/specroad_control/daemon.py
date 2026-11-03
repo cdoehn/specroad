@@ -12,34 +12,13 @@ from .automation import Engine, Gate
 from .config import Config, load
 from .errors import ControlError
 from .lifecycle import Lifecycle
+from .start_delay import StartDelay
 from .local import Paths, json_write, lock, private_dir
 from .ipc import receive, request, same_user, scope
 from .notifications import Notifications
 from .state import read_state
 from .telemetry import record
 from .disk_space import DiskGuard, CHECK_SECONDS, STOP_ERRORS
-
-
-class StartDelay:
-    """One monotonic deadline per worker; events and resume cannot shorten it."""
-    def __init__(self, seconds, *, clock=None):
-        self.seconds = seconds
-        self.clock = clock or time.monotonic
-        self.deadline = self.clock() + seconds
-
-    def remaining(self):
-        return max(0.0, self.deadline - self.clock())
-
-    def ready(self):
-        return self.remaining() == 0
-
-    def due(self, proposed):
-        return max(self.deadline, proposed)
-
-    def snapshot(self, *, stopping=False):
-        remaining = 0.0 if stopping else self.remaining()
-        return {'seconds': self.seconds, 'remaining_seconds': remaining,
-                'waiting': remaining > 0}
 
 
 def run(paths: Paths) -> int:

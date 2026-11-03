@@ -76,7 +76,7 @@ Fehlerbytes, Neustart unter Pause, Pause über Ablauf, SIGTERM und Speicherstop
 während langer Startfrist. Kein Warten von 60 Sekunden in den Verhaltenstests.
 C: Fristberechnung vom Event-Loop trennen; alle R-Tests und Fachregeln erhalten.
 
-Vorbereitete Phase: R. Der Marker gilt ausschließlich nach ihrem eigenen
+Vorbereitete Phase: C. Der Marker gilt ausschließlich nach ihrem eigenen
 erfolgreichen Apply-Gate. Jeder Zustand erhält die volle Control-Suite plus
 Katalog-/Apply-Regressionsauswahl ungefiltert zusätzlich zur N=3-Gruppe.
 Dev führt nur Syntax, Collection und native Paketprüfung aus; keine Testkörper.
@@ -1704,7 +1704,7 @@ implementation_plan_commits_total: 900
 implementation_plan_commits_completed: 672
 last_completed_plan_commit: 16.d.C
 next_plan_commit: 16.e.W
-last_completed_numbered_bundle: 563
+last_completed_numbered_bundle: 565
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
