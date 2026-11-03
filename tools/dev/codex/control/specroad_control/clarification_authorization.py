@@ -97,7 +97,9 @@ def verify(engine, ledger, doc):
             or evidence(engine, ledger, doc['source_sha256'], doc['previous_contract']) != doc['evidence']):
         fail('Configuration or original attempt evidence changed after authorization.')
     actual = prove(engine, ledger, doc['artifacts']['source'], doc['artifacts']['result'])
-    if stable(actual) != stable(doc['artifacts']):
+    if (stable(actual) != stable(doc['artifacts'])
+            or evidence(engine, ledger, doc['source_sha256'], doc['previous_contract']) != doc['evidence']
+            or sha256(read_private(engine.paths.config)).hexdigest() != doc['config_sha256']):
         fail('Pinned native Apply evidence changed.')
     return actual
 
@@ -131,7 +133,8 @@ def enqueue(paths, result, *, source_sha256, reason):
                 if pending is not None:
                     fail('Another authorization is pending.')
                 row, selected = original(ledger)
-                if row['sha'] != source_sha256 or requested['run_id'] in ledger.known_runs():
+                if (row['sha'] != source_sha256 or requested['run_id'] in ledger.known_runs()
+                        or ledger.db.execute('SELECT 1 FROM jobs WHERE sha=?', (requested['sha256'],)).fetchone()):
                     fail('The exact old source and a previously unclaimed successor are required.')
                 artifacts = prove(engine, ledger, row['source'], requested)
                 if row['patch_sha'] not in (None, artifacts['patch']['sha256']):

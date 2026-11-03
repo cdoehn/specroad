@@ -1,4 +1,5 @@
 """Atomic, additive user authorization; original attempts and budgets survive."""
+import math
 import sqlite3
 import time
 
@@ -7,6 +8,9 @@ from .handover_history import history_digest
 from .job_contract import contract, new_contract
 from .local import decode_object
 from .errors import ControlError
+from .config import digest
+from .contracts import facts
+from .mixed_contract import supports_v4
 
 TABLE = 'clarification_authorizations'
 
@@ -41,6 +45,25 @@ def validate_history(ledger):
                     or row['state'] not in ('pending', 'completed') or row['source_sha'] != doc['source_sha256']
                     or row['target_sha'] != doc['target_sha256'] or row['source_sha'] == row['target_sha']):
                 raise ValueError
+            for key in ('source_sha256', 'target_sha256', 'scope', 'config_sha256', 'history_sha256'):
+                digest(doc[key])
+            if (not isinstance(doc['reason'], str) or not doc['reason'].strip()
+                    or doc['reason'] != doc['reason'].strip() or len(doc['reason']) > 512
+                    or not doc['reason'].isprintable()
+                    or set(doc['evidence']) != {'attempt.json', 'dispatch.json', 'protocol-completion.json', 'completion.json'}):
+                raise ValueError
+            for value in doc['evidence'].values():
+                if value is not None:
+                    digest(value)
+            before = doc['original_job']
+            if (set(before) != {'stage', 'error', 'patch_sha', 'updated'}
+                    or type(before['updated']) not in (int, float) or not math.isfinite(before['updated'])
+                    or before['stage'] not in ('uncertain', 'waiting_result')
+                    or (before['stage'] == 'uncertain' and (before['error'] not in ('dev_blocked', 'codex_turn_failed')
+                        or before['patch_sha'] is not None or doc['evidence']['attempt.json'] is None))):
+                raise ValueError
+            if before['stage'] == 'waiting_result':
+                digest(before['patch_sha'])
             previous, selected = contract(doc['previous_contract']), contract(doc['selected_contract'])
             if (previous['version'] not in (3, 4) or previous['clarifications_remaining'] <= 0
                     or previous.get('clarification_continuation', False)
@@ -48,6 +71,17 @@ def validate_history(ledger):
                     or ledger.request_contract(row['source_sha']) != previous):
                 raise ValueError
             artifacts = doc['artifacts']
+            if set(artifacts) != {'source', 'patch', 'result', 'plan_sha256', 'completion_sha256'}:
+                raise ValueError
+            for key in ('plan_sha256', 'completion_sha256'):
+                digest(artifacts[key])
+            for key in ('source', 'patch', 'result'):
+                facts(artifacts[key], 'patch' if key == 'patch' else 'result')
+            target = artifacts['result']
+            if (not target['success'] or target['dirty'] or target['dry_run'] or target['operation'] != 'apply'
+                    or not target['entrypoint_started'] or not target.get('completed_commit')
+                    or target['completed_commit'] != target['binding']['base_commit'] or not supports_v4(target)):
+                raise ValueError
             if (artifacts['source']['sha256'] != row['source_sha'] or artifacts['result']['sha256'] != row['target_sha']
                     or artifacts['patch']['binding'] != artifacts['source']['binding']
                     or artifacts['result']['expected'] != artifacts['source']['binding']
@@ -56,7 +90,17 @@ def validate_history(ledger):
             old = ledger.db.execute('SELECT * FROM jobs WHERE sha=?', (row['source_sha'],)).fetchone()
             if old is None or stable({'source': decode_object(old['source'])}) != stable({'source': artifacts['source']}):
                 raise ValueError
+            if (old['error'] != before['error'] or old['patch_sha'] != before['patch_sha']
+                    or (before['patch_sha'] is not None and before['patch_sha'] != artifacts['patch']['sha256'])):
+                raise ValueError
+            output = ledger.db.execute('SELECT output_kind FROM request_contracts WHERE sha=?', (row['source_sha'],)).fetchone()[0]
+            if output != ('unknown' if before['stage'] == 'waiting_result' else None):
+                raise ValueError
             if row['state'] == 'pending':
+                if old['stage'] != before['stage'] or old['updated'] != before['updated']:
+                    raise ValueError
+                if ledger.db.execute('SELECT scope FROM meta WHERE id=1').fetchone()[0] != doc['scope']:
+                    raise ValueError
                 from .clarification_authorization import original
                 current, _ = original(ledger)
                 if current['sha'] != row['source_sha'] or history_hash(ledger) != doc['history_sha256']:
@@ -71,6 +115,10 @@ def validate_history(ledger):
                         or stable({'result': decode_object(target['source'])}) != stable({'result': artifacts['result']})
                         or ledger.request_contract(row['target_sha']) != selected):
                     raise ValueError
+        if pending:
+            from .apply_reconcile_history import records as reconciliations
+            if any(row['state'] == 'pending' for row in reconciliations(ledger)):
+                raise ValueError
         if len(pending) > 1:
             raise ValueError
         return pending[0] if pending else None
