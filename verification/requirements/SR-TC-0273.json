@@ -2,20 +2,25 @@
   "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [],
   "expected_exit_codes": [],
-  "fixture_ids": [],
-  "implementation_status": "open",
+  "fixture_ids": [
+    "SR-FIX-MIGRATION-RELATIONS-v1",
+    "SR-FIX-REFERENCE01-SOURCE-v1_0_1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [],
-  "method": "pending",
+  "method": "automated_behavior",
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence.",
-    "RESTORE-SCHEMA-SCOPE / Q.0 takes precedence for positive 0.1 qualification: a versioned complete source contract, source hash algorithms, closure/provenance and matching test vectors are required before supported registration and positive M16/Restore integration. Explicitly synthetic fixtures against that contract are permitted; real production data are not a general test prerequisite and historical external compatibility is not invented. Existing 0.2 identities/contracts, CLI aliases and passive presentation retain their documented limits. Current status and remaining M16 work are unchanged; no positive Legacy acceptance is claimed."
+    "Behavior tests are prepared for separate Apply gates; no test bodies ran in Dev.",
+    "Public migration/CLI/Restore, general legacy loading and transaction/global verification remain in subsequent M16 steps; no other source contract is qualified."
   ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Die Migration 0.1.0 nach 0.2.0 MUSS Relations-IDs reproduzierbar nach der Ableitungs- und Legacy-Projektionsregel in Anhang Q bilden.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "16.f W: deterministic source-bound relations in the native read-only reference migration planner and restriction against ordinary derived allocation. Public migration/CLI/Restore, legacy loader and transaction gates remain separate."
   },
-  "preconditions": [],
+  "preconditions": [
+    "Qualified reference-0.1/1.0.1 original snapshots; explicit target inputs; literal independent Q.3 vectors, never invented human review or migration authorization."
+  ],
   "primary_verification_id": "SR-VER-0020",
   "required_environment": {
     "declared_minimum_python": "3.10",
@@ -29,8 +34,29 @@
     "owned_temporary_files": true
   },
   "specification_sha256": "d41e46bb1a3d064c6c533d98fda6a724b16b1ce5d4327e1a35ba924dfc75eafd",
-  "steps": [],
+  "steps": [
+    "Compare exact namespace/project/source/index/relation JCS preimages, SHA-256 and Crockford IDs with independently authored fixed vectors.",
+    "Bind manifest and mutable target projections to original bytes/snapshot/classification; preserve immutable originals and regular random allocation."
+  ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0273",
-  "test_ids": []
+  "test_ids": [
+    "tests/test_migration_relations.py::test_bound_projections_are_owned_and_cannot_mutate_later_materialization",
+    "tests/test_migration_relations.py::test_exact_q3_preimage_digest_and_crockford_identity[normative]",
+    "tests/test_migration_relations.py::test_exact_q3_preimage_digest_and_crockford_identity[numeric_canonical]",
+    "tests/test_migration_relations.py::test_exact_q3_preimage_digest_and_crockford_identity[ordered_unicode]",
+    "tests/test_migration_relations.py::test_exact_q3_preimage_digest_and_crockford_identity[ordered_unicode_reversed]",
+    "tests/test_migration_relations.py::test_exact_q3_preimage_digest_and_crockford_identity[original_index]",
+    "tests/test_migration_relations.py::test_exact_q3_preimage_digest_and_crockford_identity[position_is_not_index]",
+    "tests/test_migration_relations.py::test_exact_q3_preimage_digest_and_crockford_identity[project_identity]",
+    "tests/test_migration_relations.py::test_exact_q3_preimage_digest_and_crockford_identity[second_target]",
+    "tests/test_migration_relations.py::test_exact_q3_preimage_digest_and_crockford_identity[second_target_index]",
+    "tests/test_migration_relations.py::test_exact_q3_preimage_digest_and_crockford_identity[source_identity]",
+    "tests/test_migration_relations.py::test_immutable_relation_is_only_projected_in_manifest_and_original_bytes_remain",
+    "tests/test_migration_relations.py::test_native_derivation_never_uses_entropy_clock_or_a_file_writer",
+    "tests/test_migration_relations.py::test_native_plan_and_manifest_use_the_same_qualified_relation_identity",
+    "tests/test_migration_relations.py::test_original_array_order_is_not_replaced_by_target_sort_or_position",
+    "tests/test_migration_relations.py::test_repeated_source_is_stable_across_sandbox_and_file_enumeration",
+    "tests/test_migration_relations.py::test_unrelated_artifact_metadata_and_original_json_layout_do_not_change_relation_id"
+  ]
 }

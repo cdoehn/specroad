@@ -58,7 +58,7 @@ def _plan(files, *, inputs, actor, planned_at, change_plan_id, request_id, targe
     # Missing proposal plans do not prevent calculation of their required basis.
     if target is None or any(b['reason'] != 'proposal_mapping_required' for b in blockers):
         return MigrationPlanning._create(report)
-    archive, manifest, relation_seen = _original_archive(inventory, source, report['target_contract'])
+    archive, manifest, source_relations = _original_archive(inventory, source, report['target_contract'])
     current = dict(source); current.pop('profiles/core-reference01.json', None)
     current.update(target['files']); current['specroad.json'] = target['configuration_bytes']
     for path, raw in archive.items():
@@ -72,8 +72,7 @@ def _plan(files, *, inputs, actor, planned_at, change_plan_id, request_id, targe
         if original.classification == 'immutable_legacy':
             legacy.append(original); continue
         value = _stamp(old, actor, planned_at)
-        value['relations'] = [_relation(inv['project_id'], old['id'], i, r, relation_seen)
-                              for i, r in enumerate(old['relations'])]
+        value['relations'] = source_relations.materialize(original)
         fields = ['id_scheme']
         if old['relations']: fields.extend(['relations/*/relation_id', 'relations/*/id_scheme'])
         if old['artifact_type'] == 'requirement':

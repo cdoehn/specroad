@@ -1,0 +1,75 @@
+{
+  "provenance": "Synthetic Q.3 conformance data: authored literal RFC-8785 preimages, SHA-256 via Python standard library and independent 130-bit grouping; no SpecRoad implementation or fixture executed. First ID is also the frozen reference-contract vector.",
+  "vectors": [
+    {
+      "name": "normative",
+      "preimage_utf8": "[\"specroad-relation-migration-0.1-to-0.2-v1\",\"synthetic-reference-project\",\"SR-REQ-0001\",0,{\"extensions\":{},\"external_identities\":[],\"target\":\"SR-GOAL-0001\",\"type\":\"addresses\"}]",
+      "preimage_sha256": "c2f99c500711c625f01bab87fa89e169b228450378fbc41e1a5780f71f651a98",
+      "digest128_hex": "c2f99c500711c625f01bab87fa89e169",
+      "relation_id": "REL-62Z6E501RHRRJZ06XBGZX8KRB9"
+    },
+    {
+      "name": "original_index",
+      "preimage_utf8": "[\"specroad-relation-migration-0.1-to-0.2-v1\",\"synthetic-reference-project\",\"SR-REQ-0001\",1,{\"extensions\":{},\"external_identities\":[],\"target\":\"SR-GOAL-0001\",\"type\":\"addresses\"}]",
+      "preimage_sha256": "52491911a3c37eba48e92ce46df25d98d55922136366814384b14c04cf5a950e",
+      "digest128_hex": "52491911a3c37eba48e92ce46df25d98",
+      "relation_id": "REL-2J94CH38Y3FTX4HT9CWHPZ4QCR"
+    },
+    {
+      "name": "source_identity",
+      "preimage_utf8": "[\"specroad-relation-migration-0.1-to-0.2-v1\",\"synthetic-reference-project\",\"SR-REQ-0002\",0,{\"extensions\":{},\"external_identities\":[],\"target\":\"SR-GOAL-0001\",\"type\":\"addresses\"}]",
+      "preimage_sha256": "00b39f494ef504bcca0c3a863ebe5fe113bf4a9c98c56ba79e17f0ebc37a9cf2",
+      "digest128_hex": "00b39f494ef504bcca0c3a863ebe5fe1",
+      "relation_id": "REL-00PEFMJKQN0JYCM31TGRZBWQZ1"
+    },
+    {
+      "name": "project_identity",
+      "preimage_utf8": "[\"specroad-relation-migration-0.1-to-0.2-v1\",\"synthetic-別-project\",\"SR-REQ-0001\",0,{\"extensions\":{},\"external_identities\":[],\"target\":\"SR-GOAL-0001\",\"type\":\"addresses\"}]",
+      "preimage_sha256": "e53343abd2405bc01e793c067dcfc4f475dfe25336d23f8568e6c6066cc9d534",
+      "digest128_hex": "e53343abd2405bc01e793c067dcfc4f4",
+      "relation_id": "REL-756D1TQMJ0BF01WY9W0SYWZH7M"
+    },
+    {
+      "name": "second_target",
+      "preimage_utf8": "[\"specroad-relation-migration-0.1-to-0.2-v1\",\"synthetic-reference-project\",\"SR-REQ-0001\",0,{\"extensions\":{},\"external_identities\":[],\"target\":\"SR-GOAL-0002\",\"type\":\"addresses\"}]",
+      "preimage_sha256": "a960b02f0e08fcdf504a6760074205fd8048cfb1094cf3e3f7d13149b55355b4",
+      "digest128_hex": "a960b02f0e08fcdf504a6760074205fd",
+      "relation_id": "REL-59C2R2Y3G8ZKFN0JK7C03M41FX"
+    },
+    {
+      "name": "second_target_index",
+      "preimage_utf8": "[\"specroad-relation-migration-0.1-to-0.2-v1\",\"synthetic-reference-project\",\"SR-REQ-0001\",1,{\"extensions\":{},\"external_identities\":[],\"target\":\"SR-GOAL-0002\",\"type\":\"addresses\"}]",
+      "preimage_sha256": "efce60594cf4c0c608f8ef0cbb10d8641865754c2e84675a63d2056e0b1fc55b",
+      "digest128_hex": "efce60594cf4c0c608f8ef0cbb10d864",
+      "relation_id": "REL-7FSSG5JK7MR330HY7F1JXH1P34"
+    },
+    {
+      "name": "ordered_unicode",
+      "preimage_utf8": "[\"specroad-relation-migration-0.1-to-0.2-v1\",\"synthetic-reference-project\",\"SR-REQ-0001\",0,{\"extensions\":{\"example.unicode\":{\"array\":[\"é\",\"é\"],\"𐀀\":\"supplementary-first\",\"\":\"bmp-second\"}},\"external_identities\":[],\"target\":\"SR-GOAL-0001\",\"type\":\"addresses\"}]",
+      "preimage_sha256": "c7e450f112bea61efc16d6adf71557551b7e178845495cb0cfdc7d35aba9da00",
+      "digest128_hex": "c7e450f112bea61efc16d6adf7155755",
+      "relation_id": "REL-67WH8F24NYMRFFR5PPNQVHANTN"
+    },
+    {
+      "name": "ordered_unicode_reversed",
+      "preimage_utf8": "[\"specroad-relation-migration-0.1-to-0.2-v1\",\"synthetic-reference-project\",\"SR-REQ-0001\",0,{\"extensions\":{\"example.unicode\":{\"array\":[\"é\",\"é\"],\"𐀀\":\"supplementary-first\",\"\":\"bmp-second\"}},\"external_identities\":[],\"target\":\"SR-GOAL-0001\",\"type\":\"addresses\"}]",
+      "preimage_sha256": "f6df5d38dd1df0454bc69d7277f76969e011b1bbbf3847813622c0f62f05d5db",
+      "digest128_hex": "f6df5d38dd1df0454bc69d7277f76969",
+      "relation_id": "REL-7PVXEKHQ8XY12MQHMXE9VZETB9"
+    },
+    {
+      "name": "numeric_canonical",
+      "preimage_utf8": "[\"specroad-relation-migration-0.1-to-0.2-v1\",\"synthetic-reference-project\",\"SR-REQ-0001\",0,{\"extensions\":{\"example.numbers\":[0,1,1e-7,1e+30]},\"external_identities\":[],\"target\":\"SR-GOAL-0001\",\"type\":\"addresses\"}]",
+      "preimage_sha256": "1e50a925f425067d4568a065da17abef110dae0b75962ac9eb4154802d6da506",
+      "digest128_hex": "1e50a925f425067d4568a065da17abef",
+      "relation_id": "REL-0YA2MJBX150SYMAT50CQD1FAZF"
+    },
+    {
+      "name": "position_is_not_index",
+      "preimage_utf8": "[\"specroad-relation-migration-0.1-to-0.2-v1\",\"synthetic-reference-project\",\"SR-DOC-0001\",7,{\"extensions\":{},\"external_identities\":[],\"position\":3,\"target\":\"SR-SEC-0001\",\"type\":\"contains\"}]",
+      "preimage_sha256": "38d5f50a41be1477b6e3afeb74c8c6c1ce037a827d99bfbda75e755ce86feffd",
+      "digest128_hex": "38d5f50a41be1477b6e3afeb74c8c6c1",
+      "relation_id": "REL-1RTQTGMGDY2HVVDRXFXDTCHHP1"
+    }
+  ]
+}

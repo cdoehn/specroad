@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 73 · **Stand:** 4. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.57
+**Planrevision:** 74 · **Stand:** 4. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.57
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 Schritte und 900 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; die ausdrücklich genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wird nach 10.7.10 innerhalb von 15.l.R vorgezogen. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -33,6 +33,57 @@ ausdrückliche Bedienausnahme aus 2.4.3.2 bleibt zusätzlich anwendbar.
 Produktfreigaben und die Grenzen aus 2.4.1/2.4.2/2.4.4 bleiben unverändert.
 Dieser Plan ändert keine alten Aufträge, Antworten, Blockaden oder
 Laufzeitdaten und ist keine Start-/Resume-Anweisung.
+
+## Planbundle 571 — 16.f: quellgebundene Relationsidentität
+
+Basis ist das vollständig nativ geprüfte saubere Result mit SHA-256
+`6a7729727fea4dd7d94f95ac74b37bee9566e51511db71ea7ce2009c5fe4c13f`
+und Abschlusscommit `037bf769bdda60f9f83d71ac27109b178ef6afe7`.
+Der Korrekturrest 16.e.R/C ist mit eigenen Gates (6981 beziehungsweise 6939
+bestandene Tests) und beiden Commits vollständig abgeschlossen. Der tatsächliche
+Ausgangspunkt umfasst 675/900 Produktcommits. Frühere Erfolge bleiben erhalten.
+
+Q.3, 9.2, 12.20.2 und SR-REQ-0273/0509 legen die Fachregel bereits vollständig
+fest. Keine normative Lücke, kein Klärungspräfix und keine neue Spezifikations-
+fassung. Die in 16.c benötigte Grundberechnung wird zum an Originale gebundenen
+gemeinsamen Relationsinventar vervollständigt. Das Inventar gehört ausschließlich
+zum qualifizierten Referenzquellvertrag 0.1/1.0.1; es registriert keinen freien
+Generator und erteilt keine Schreib-, Review- oder menschliche Freigabebefugnis.
+
+W berechnet die Q.3-Projektionen für aktuelle und transitive historische
+Originale. Originalbytes, Snapshot, Pfad, Rolle und Klassifikation binden jede
+Abfrage. Manifest und veränderbares Ziel verwenden dieselben Projektionen.
+Immutable Originale bleiben bytegleich und dürfen nur navigierbare Manifest-
+projektionen erhalten. Ausgegeben werden eigene Kopien, kein mutierbarer Alias.
+Unabhängig verfasste Datenvektoren binden den exakten Namespace, Projekt-ID,
+Source-ID, Originalindex, RFC-8785-UTF-8, SHA-256/erste 16 Bytes und 26-stelliges
+Crockford-Token. Unicode-Reihenfolge, Zahlen, Arrays und unveränderte Quell-
+darstellung gehören dazu. Die Testdaten wurden ohne Produktcode erzeugt;
+Vektorerzeugung und Collection sind keine ausgeführten Verhaltenstests.
+
+R prüft das gesamte Ableitungsinventar bereits vor fehlenden Zieleingaben.
+Unterschiedliche kanonische Ableitungseingaben mit derselben ID scheitern;
+gleiche Eingaben in mehreren Snapshots bleiben zulässig. Keine zufällige
+Umbenennung und kein Ausweichen auf einen zweiten Namespace. Zusätzliche
+Gegenproben schützen historische Kollisionen, exakte Originalbindungen,
+unveränderbare Klassifikation, ungeeignete Quellwerte und reguläre Zufalls-IDs.
+C trennt die gemeinsame Ableitung vom Originalarchiv und vom regulären
+random128-v1-Erzeuger. Testdaten, erwartete Werte, Fehler und Katalog bleiben
+gegenüber R bytegleich; keine neue Fachentscheidung im Refactoring.
+
+Jeder echte W/R/C-Zustand erhält seine eigene fällige N=3-Gruppe (1/2/0)
+plus vollständige ungefilterte Pflichtauswahl vor seinem Commit. Dev führt
+keine Testkörper oder Fixtures aus. Source-/Plan-/Hash-/Identity-Regressionen
+und alle neuen Testdateien sind Pflicht. Keine Vollsuite- oder Releasebehauptung.
+Vorbereiteter Zwischenstand: W; Häkchen werden nur nach Apply-Gate committed.
+
+Die weiteren M16-Gates bleiben offen: öffentliche Registrierung, Writer,
+aktuelle Legacy-Lesbarkeit, Verification, CLI/Restore und Abschluss. Die
+Querreferenzen SR-REQ-0512/0513 verlangen weiterhin Einzelverlustberichte
+und den Sicherungsbundle-Verweis ohne verlustfreien Downgrade. Ihre Kataloge
+bleiben unverändert offen; Relations-IDs werden nicht als deren Abnahme
+ausgegeben. Diese Pflichten bleiben zusätzlich bei 16.h/16.k nachvollziehbar.
+Nach erfolgreichem C wäre 678/900 erreicht; nächster Schritt ist 16.g.W.
 
 ## Korrektur 570 — vollständige Approved-Quelle; W bleibt committed
 
@@ -1858,11 +1909,11 @@ Kein offener Produktplanschritt wird durch diese Testoptimierung abgeschlossen.
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 73
+plan_revision: 74
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 675
-last_completed_plan_commit: 16.e.C
-next_plan_commit: 16.f.W
+implementation_plan_commits_completed: 676
+last_completed_plan_commit: 16.f.W
+next_plan_commit: 16.f.R
 last_completed_numbered_bundle: 570
 implementation_state: in_progress
 audit_followup_status: closed
@@ -36160,7 +36211,7 @@ Die W-/R-/C-Abnahmen im obigen OFF-PLAN-Abschnitt gelten vollständig.
 
 #### 16.f.W – Let it Work
 
-- [ ] **16.f.W** · Position **676/900** · Voraussetzung: `16.e.C`.
+- [x] **16.f.W** · Position **676/900** · Voraussetzung: `16.e.C`.
 **Exakte Commit-Message:** `16.f.W feat(migration): Deterministische Relationsidentität aufbauen`
 
 **Umsetzung:** Bestehende 0.1-Relationen exakt nach Anhang Q.3 in derived128-v1-IDs überführen.
@@ -39367,11 +39418,11 @@ Jede der 742 Requirement-IDs (730 bestehende und zwölf neue) ist mindestens ein
 | `SR-REQ-0506` | [5.i](#step-5-i) | — | `SR-TC-0506` | SR-VER-0019 |
 | `SR-REQ-0507` | [5.c](#step-5-c) | — | `SR-TC-0507` | SR-VER-0018 |
 | `SR-REQ-0508` | [2.g](#step-2-g) | — | `SR-TC-0508` | SR-VER-0018 |
-| `SR-REQ-0509` | [2.h](#step-2-h) | — | `SR-TC-0509` | SR-VER-0018 |
+| `SR-REQ-0509` | [2.h](#step-2-h) | [16.f](#step-16-f) | `SR-TC-0509` | SR-VER-0018 |
 | `SR-REQ-0510` | [2.h](#step-2-h) | — | `SR-TC-0510` | SR-VER-0026 |
 | `SR-REQ-0511` | [5.r](#step-5-r) | — | `SR-TC-0511` | SR-VER-0019 |
-| `SR-REQ-0512` | [16.f](#step-16-f) | — | `SR-TC-0512` | SR-VER-0020 |
-| `SR-REQ-0513` | [16.f](#step-16-f) | — | `SR-TC-0513` | SR-VER-0020 |
+| `SR-REQ-0512` | [16.f](#step-16-f) | [16.h](#step-16-h), [16.k](#step-16-k) | `SR-TC-0512` | SR-VER-0020 |
+| `SR-REQ-0513` | [16.f](#step-16-f) | [16.d](#step-16-d), [16.k](#step-16-k) | `SR-TC-0513` | SR-VER-0020 |
 | `SR-REQ-0514` | [3.k](#step-3-k) | — | `SR-TC-0514` | SR-VER-0021 |
 | `SR-REQ-0515` | [7.i](#step-7-i) | — | `SR-TC-0515` | SR-VER-0021 |
 | `SR-REQ-0516` | [13.f](#step-13-f) | — | `SR-TC-0516` | SR-VER-0021 |

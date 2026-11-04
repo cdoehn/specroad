@@ -368,6 +368,10 @@
       "kind": "Explicitly synthetic complete reference-0.1/1.0.1 sources with explicit native target configuration/core profile, source-bound requirement mappings and independently provided target proposal plans. Includes immutable originals, transitive archived snapshots, literal normative requirement/REL/hash vectors and adversarial saved-plan bindings. Stored review records are synthetic source history, never actual human approval or current readiness evidence.",
       "provider": "tests/support/migration_plans.py:target_inputs,mapped_inputs,vector_source;tests/support/reference01.py:full_project,release_project;docs/specification/reference-0.1-v1.0.1/vectors.json"
     },
+    "SR-FIX-MIGRATION-RELATIONS-v1": {
+      "kind": "Synthetic qualified reference-0.1/1.0.1 current/history sources with independently authored literal Q.3 preimages, hashes and Crockford tokens; no real review, migration execution or historical external compatibility claim.",
+      "provider": "tests/data/migration_relation_vectors.json;tests/support/migration_relations.py:VECTORS,pair_source,immutable_source;tests/support/migration_plans.py:vector_source;tests/support/reference01.py:seal"
+    },
     "SR-FIX-MIGRATION-REQUIREMENTS-v1": {
       "kind": "Synthetic explicit author mappings for qualified reference-0.1/1.0.1 sources. Independent literal target/hash oracle, all forces, exact text/Unicode, explicit shared language and per-row overrides. Adversarial missing/invalid decisions, source/request changes and byte-exact historical evidence. No actual human approval or old-draft compatibility claim. The should vector includes explicit source-bound deviation conditions and authority; omission of either or both is a negative target-validation case. The stored-approved source has an explicit synthetic Verification Contract and verified_by edge before source-hash binding; no real approval is claimed.",
       "provider": "tests/support/migration_requirements.py:decision,supplied;tests/support/migration_plans.py:vector_source;tests/support/reference01.py:artifact,relation,full_project,finish_proposal,seal;docs/specification/reference-0.1-v1.0.1/vectors/requirement-after.json"
@@ -928,6 +932,7 @@
     "SR-FIX-LITERAL-LINT-v1",
     "SR-FIX-MIGRATION-GRAPH-v1",
     "SR-FIX-MIGRATION-PLAN-v1",
+    "SR-FIX-MIGRATION-RELATIONS-v1",
     "SR-FIX-MIGRATION-REQUIREMENTS-v1",
     "SR-FIX-MIGRATION-SOURCE-BACKUP-v1",
     "SR-FIX-MODEL-MANIFEST-v1",

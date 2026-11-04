@@ -2,7 +2,9 @@
 from hashlib import sha256
 from ..model.canonical import canonical_json_bytes as jcs
 from ..model.identity_tokens import encode128
-from .reference01.values import CONTRACT_ID, CONTRACT_VERSION, READER_ID
+from ..storage.json_syntax import parse_json_object as parsed
+from .reference01.values import (CONTRACT_ID, CONTRACT_VERSION, READER_ID,
+                                 SourceInventory, SourceOriginal)
 from .plan_values import require, SOURCE_CONTRACT
 
 
@@ -14,11 +16,48 @@ def _relation(project, identity, index, relation, seen):
     return {'relation_id': rid, 'id_scheme': 'derived128-v1', **relation}
 
 
+class _SourceRelations:
+    """Owned Q.3 projections of exact qualified source originals only.
+
+    The source key includes original bytes, snapshot, role and classification.
+    A navigation projection cannot be relabelled as a writable legacy record.
+    This internal inventory neither registers a migration nor grants a write.
+    """
+
+    def __init__(self, inventory):
+        require(type(inventory) is SourceInventory, 'migration_source_inventory_required')
+        self._rows = {}
+        seen = {}
+        project = inventory.data['project_id']
+        for original in inventory.originals:
+            if original.role != 'artifact':
+                continue
+            value = original.data
+            rows = []
+            for index, relation in enumerate(value['relations']):
+                projected = _relation(project, value['id'], index, relation, seen)
+                rows.append({'index': index, 'relation_id': projected['relation_id'],
+                    'id_scheme': projected['id_scheme'], 'original': relation})
+            self._rows[original] = jcs({'rows': rows})
+
+    def projections(self, original):
+        require(type(original) is SourceOriginal and original in self._rows,
+                'migration_relation_source_unbound')
+        return parsed(self._rows[original])['rows']
+
+    def materialize(self, original):
+        rows = self.projections(original)
+        require(original.classification == 'mutable', 'migration_immutable_relations')
+        return [{**row['original'], 'relation_id': row['relation_id'],
+                 'id_scheme': row['id_scheme']} for row in rows]
+
+
 def _original_archive(inventory, source, target_contract_value):
     """Keep source originals separate from every derived navigation value."""
     originals = inventory.originals; current_root = inventory.model_root_sha256
     by_snapshot = {(o.snapshot_root, o.path): o for o in originals}
-    archive = dict(inventory.payloads); entries, seen, identities = [], {}, {}
+    archive = dict(inventory.payloads); entries, identities = [], {}
+    source_relations = _SourceRelations(inventory)
     for original in originals:
         raw = original.source_bytes; address = 'archive/objects/' + original.byte_sha256[:2] + '/' + original.byte_sha256
         require(address not in source or source[address] == raw, 'migration_archive_collision', path=address)
@@ -30,11 +69,7 @@ def _original_archive(inventory, source, target_contract_value):
             key = (value['id'], value['revision'])
             require(key not in identities or identities[key] == raw, 'migration_original_revision_conflict')
             identities[key] = raw
-        relation_rows = []
-        for index, relation in enumerate(value.get('relations', [])):
-            projected = _relation(inventory.data['project_id'], value['id'], index, relation, seen)
-            relation_rows.append({'index': index, 'relation_id': projected['relation_id'],
-                'id_scheme': 'derived128-v1', 'original': relation})
+        relation_rows = source_relations.projections(original) if artifact else []
         payloads = {}
         if value.get('artifact_type') == 'baseline':
             for row in value['manifest']:
@@ -81,4 +116,4 @@ def _original_archive(inventory, source, target_contract_value):
                    'contract_id': CONTRACT_ID, 'contract_version': CONTRACT_VERSION},
         'target': {'project_id': inventory.data['project_id'], **target_contract_value},
         'entries': [unique[k] for k in sorted(unique)], 'proposal_transitions': []}
-    return archive, manifest, seen
+    return archive, manifest, source_relations
