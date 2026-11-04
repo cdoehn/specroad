@@ -75,7 +75,7 @@ Jeder echte W/R/C-Zustand erhält seine eigene fällige N=3-Gruppe (1/2/0)
 plus vollständige ungefilterte Pflichtauswahl vor seinem Commit. Dev führt
 keine Testkörper oder Fixtures aus. Source-/Plan-/Hash-/Identity-Regressionen
 und alle neuen Testdateien sind Pflicht. Keine Vollsuite- oder Releasebehauptung.
-Vorbereiteter Zwischenstand: W; Häkchen werden nur nach Apply-Gate committed.
+Vorbereiteter Zwischenstand: R; Häkchen werden nur nach Apply-Gate committed.
 
 Die weiteren M16-Gates bleiben offen: öffentliche Registrierung, Writer,
 aktuelle Legacy-Lesbarkeit, Verification, CLI/Restore und Abschluss. Die
@@ -1911,9 +1911,9 @@ Kein offener Produktplanschritt wird durch diese Testoptimierung abgeschlossen.
 ```yaml
 plan_revision: 74
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 676
-last_completed_plan_commit: 16.f.W
-next_plan_commit: 16.f.R
+implementation_plan_commits_completed: 677
+last_completed_plan_commit: 16.f.R
+next_plan_commit: 16.f.C
 last_completed_numbered_bundle: 570
 implementation_state: in_progress
 audit_followup_status: closed
@@ -36220,7 +36220,7 @@ Die W-/R-/C-Abnahmen im obigen OFF-PLAN-Abschnitt gelten vollständig.
 
 #### 16.f.R – Make it Right
 
-- [ ] **16.f.R** · Position **677/900** · Voraussetzung: `16.f.W`.
+- [x] **16.f.R** · Position **677/900** · Voraussetzung: `16.f.W`.
 **Exakte Commit-Message:** `16.f.R feat(migration): Deterministische Relationsidentität vervollständigen`
 
 **Vervollständigung:** Kollision unterschiedlicher Ableitungsinputs ablehnen; Ausnahme auf diesen Migrationspfad beschränken.

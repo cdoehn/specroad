@@ -52,12 +52,11 @@ class _SourceRelations:
                  'id_scheme': row['id_scheme']} for row in rows]
 
 
-def _original_archive(inventory, source, target_contract_value):
+def _original_archive(inventory, source, target_contract_value, source_relations):
     """Keep source originals separate from every derived navigation value."""
     originals = inventory.originals; current_root = inventory.model_root_sha256
     by_snapshot = {(o.snapshot_root, o.path): o for o in originals}
     archive = dict(inventory.payloads); entries, identities = [], {}
-    source_relations = _SourceRelations(inventory)
     for original in originals:
         raw = original.source_bytes; address = 'archive/objects/' + original.byte_sha256[:2] + '/' + original.byte_sha256
         require(address not in source or source[address] == raw, 'migration_archive_collision', path=address)

@@ -11,7 +11,7 @@ from .plan_values import (POLICY, STEP, SOURCE_CONTRACT, MANIFEST_PATH, Migratio
     MigrationPlanning, require, owned_files, file_bindings, changes)
 from .plan_contract import validate_inputs
 from .plan_inputs import migration_inputs, target_contract, _target
-from .plan_originals import _relation, _original_archive
+from .plan_originals import _relation, _original_archive, _SourceRelations
 from .plan_target import _target_fields, _stamp, _manifest
 from .requirement_mapping import authored_fields
 
@@ -44,6 +44,8 @@ def _plan(files, *, inputs, actor, planned_at, change_plan_id, request_id, targe
     from ..changes.request_ids import normalize_request_id
     normalize_request_id(request_id)
     inventory = inventory_bytes(source); inv = inventory.data
+    # Invalid derivations cannot be hidden by missing target inputs.
+    source_relations = _SourceRelations(inventory)
     originals = tuple(o for o in inventory.originals if o.snapshot_root == inventory.model_root_sha256)
     config_source = parsed(source['specroad.json'])
     target, blockers = _target(inputs, inv['project_id'], config_source['id_prefix'])
@@ -58,7 +60,7 @@ def _plan(files, *, inputs, actor, planned_at, change_plan_id, request_id, targe
     # Missing proposal plans do not prevent calculation of their required basis.
     if target is None or any(b['reason'] != 'proposal_mapping_required' for b in blockers):
         return MigrationPlanning._create(report)
-    archive, manifest, source_relations = _original_archive(inventory, source, report['target_contract'])
+    archive, manifest, source_relations = _original_archive(inventory, source, report['target_contract'], source_relations)
     current = dict(source); current.pop('profiles/core-reference01.json', None)
     current.update(target['files']); current['specroad.json'] = target['configuration_bytes']
     for path, raw in archive.items():

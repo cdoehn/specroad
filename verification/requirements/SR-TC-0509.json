@@ -17,7 +17,7 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Eine regulär neu erzeugte `relation_id` DARF NICHT aus Quelle, Ziel oder Position abgeleitet werden; ausschließlich die Bestandsmigration nach SR-REQ-0273 verwendet `derived128-v1`.",
-    "scope": "16.f W: deterministic source-bound relations in the native read-only reference migration planner and restriction against ordinary derived allocation. Public migration/CLI/Restore, legacy loader and transaction gates remain separate."
+    "scope": "16.f R: deterministic source-bound relations in the native read-only reference migration planner and restriction against ordinary derived allocation. Public migration/CLI/Restore, legacy loader and transaction gates remain separate."
   },
   "preconditions": [
     "Owned synthetic model inputs; no authoring, ancestry discovery or external state mutation.",
@@ -39,7 +39,8 @@
   "steps": [
     "Exercise the real model contracts and invalid input; preserve exact input values and resource bytes.",
     "Compare exact namespace/project/source/index/relation JCS preimages, SHA-256 and Crockford IDs with independently authored fixed vectors.",
-    "Bind manifest and mutable target projections to original bytes/snapshot/classification; preserve immutable originals and regular random allocation."
+    "Bind manifest and mutable target projections to original bytes/snapshot/classification; preserve immutable originals and regular random allocation.",
+    "Reject distinct-input collisions across current/history even with missing target inputs; accept repeated identical derivations without random renaming."
   ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0509",
@@ -49,6 +50,7 @@
     "test_relation_identity.RelationIdentityTests.test_migrated_scheme_is_readable_not_regularly_reservable",
     "test_relation_identity_right.RelationIdentityRightTests.test_derived_identity_cannot_be_forged_as_new_allocation",
     "test_relation_identity_right.RelationIdentityRightTests.test_regular_update_cannot_change_scheme",
-    "tests/test_migration_relations.py::test_native_derivation_never_uses_entropy_clock_or_a_file_writer"
+    "tests/test_migration_relations.py::test_native_derivation_never_uses_entropy_clock_or_a_file_writer",
+    "tests/test_migration_relations_right.py::test_regular_creation_remains_random_and_cannot_reserve_a_derived_projection"
   ]
 }

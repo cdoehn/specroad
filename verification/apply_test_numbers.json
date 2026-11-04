@@ -24545,6 +24545,26 @@
     "tests/test_migration_relations.py::test_native_plan_and_manifest_use_the_same_qualified_relation_identity",
     "tests/test_migration_relations.py::test_original_array_order_is_not_replaced_by_target_sort_or_position",
     "tests/test_migration_relations.py::test_repeated_source_is_stable_across_sandbox_and_file_enumeration",
-    "tests/test_migration_relations.py::test_unrelated_artifact_metadata_and_original_json_layout_do_not_change_relation_id"
+    "tests/test_migration_relations.py::test_unrelated_artifact_metadata_and_original_json_layout_do_not_change_relation_id",
+    "tests/test_migration_relations_right.py::test_collision_is_an_error_even_when_target_inputs_are_missing[configuration]",
+    "tests/test_migration_relations_right.py::test_collision_is_an_error_even_when_target_inputs_are_missing[mapping]",
+    "tests/test_migration_relations_right.py::test_collision_is_an_error_even_when_target_inputs_are_missing[nothing]",
+    "tests/test_migration_relations_right.py::test_collision_is_an_error_even_when_target_inputs_are_missing[resources]",
+    "tests/test_migration_relations_right.py::test_collision_is_checked_across_historical_and_current_relation_inputs",
+    "tests/test_migration_relations_right.py::test_existing_current_identity_fields_cannot_be_laundered_as_a_source_relation[id_scheme]",
+    "tests/test_migration_relations_right.py::test_existing_current_identity_fields_cannot_be_laundered_as_a_source_relation[relation_id]",
+    "tests/test_migration_relations_right.py::test_identical_derivation_repeated_in_archived_and_current_snapshot_is_not_a_collision",
+    "tests/test_migration_relations_right.py::test_immutable_projection_cannot_be_materialized_or_relabelled_as_mutable",
+    "tests/test_migration_relations_right.py::test_original_relation_object_key_order_is_not_a_distinct_derivation",
+    "tests/test_migration_relations_right.py::test_projection_inventory_requires_the_qualified_source_value_type[0.1.0]",
+    "tests/test_migration_relations_right.py::test_projection_inventory_requires_the_qualified_source_value_type[None]",
+    "tests/test_migration_relations_right.py::test_projection_inventory_requires_the_qualified_source_value_type[source1]",
+    "tests/test_migration_relations_right.py::test_projection_inventory_requires_the_qualified_source_value_type[source2]",
+    "tests/test_migration_relations_right.py::test_regular_creation_remains_random_and_cannot_reserve_a_derived_projection",
+    "tests/test_migration_relations_right.py::test_relation_lookup_rejects_a_changed_or_unbound_original[bytes]",
+    "tests/test_migration_relations_right.py::test_relation_lookup_rejects_a_changed_or_unbound_original[classification]",
+    "tests/test_migration_relations_right.py::test_relation_lookup_rejects_a_changed_or_unbound_original[path]",
+    "tests/test_migration_relations_right.py::test_relation_lookup_rejects_a_changed_or_unbound_original[role]",
+    "tests/test_migration_relations_right.py::test_relation_lookup_rejects_a_changed_or_unbound_original[snapshot]"
   ]
 }
