@@ -26,13 +26,27 @@ class LoadedGraph:
     _visible_ids: frozenset
     validation_scope: str
 
-    def __init__(self, sources, *, rule_id, artifact_ids=None, partial=None):
+    def __init__(self, sources, *, rule_id, artifact_ids=None, partial=None, legacy=None):
         from .validation import _rule_id
         rule_id = _rule_id(rule_id)
         if type(sources) not in (list, tuple):
             raise SrxError("loaded_sources_required", rule_id=rule_id,
                            expected="list or tuple of SourceRelations", actual=json_type(sources),
                            subject="context", pointer="/graph")
+        legacy_records = {}
+        if legacy is not None:
+            try:
+                if partial is not None:
+                    raise ModelError('validation_legacy_full_scope_required')
+                from ..validation._legacy_inputs import qualified_legacy_records
+                from ..validation.values import ModelDocument
+                documents = tuple(ModelDocument(source.path,source.source_bytes)
+                    for source in sources if type(source) is SourceRelations)
+                legacy_records = qualified_legacy_records(legacy,documents)
+            except ModelError as error:
+                raise SrxError('graph_model_invalid',rule_id=rule_id,
+                    expected='source bytes with native original qualification',actual=error.reason,
+                    subject='context',pointer='/graph') from None
         records = []
         for source in sources:
             if type(source) is not SourceRelations:
@@ -41,7 +55,12 @@ class LoadedGraph:
                                subject="context", pointer="/graph")
             # Do not retain a caller's record containers or cached projections.
             try:
-                records.append(SourceRelations(source.source_bytes))
+                if source.path in legacy_records:
+                    # Re-qualify actual original bytes and source projections;
+                    # never trust the caller's cached identity/scope label.
+                    records.append(legacy_records[source.path])
+                else:
+                    records.append(SourceRelations(source.source_bytes))
             except ModelError as error:
                 raise SrxError("graph_model_invalid", rule_id=rule_id,
                                expected="valid source records", actual=error.reason,

@@ -57,6 +57,8 @@ def _field_target_error(target, target_kind, index, path, pointer):
 
 def _field_targets(record, relations=None):
     """Declared fields only; review endpoint dependencies need resolved relations."""
+    if record.storage_class == "legacy_immutable":
+        return []  # Historical field references were verified by the native source closure.
     data = record.data
     kind = data["artifact_type"]
     candidates = []
@@ -124,7 +126,7 @@ def _reference_issues(records):
         # Missing review relations are independent facts. A present relation's
         # endpoints are checked above; an invalid one never creates a secondary
         # missing-review or fabricated endpoint finding.
-        if data["artifact_type"] == "relation_review":
+        if record.storage_class != "legacy_immutable" and data["artifact_type"] == "relation_review":
             error = _review_relation_error(data, relation_ids, record.path)
             if error is not None:
                 issues.append(_issue(error, record.identity.id))

@@ -33,7 +33,7 @@ from .production import production_gates, formal_findings, profile_applies
 
 def validate_model(documents, *, profile=None, selected_ids=None, gates=(), resources=None,
                    configuration_id=None, document_role_scope=None, currentness=None, partial=None,
-                   approval_contexts=()):
+                   approval_contexts=(), legacy=None):
     """Validate all loaded documents, or a conservatively expanded selection.
 
     Parsing/schema/reference checks inspect the ENTIRE supplied model, even for
@@ -60,6 +60,14 @@ def validate_model(documents, *, profile=None, selected_ids=None, gates=(), reso
     if len({d.path for d in documents}) != len(documents):
         raise ModelError("duplicate_validation_source")
     documents = tuple(sorted(documents, key=lambda d: d.path))
+    legacy_records = {}
+    if legacy is not None:
+        from ._legacy_inputs import qualified_legacy_records
+        legacy_records = qualified_legacy_records(legacy, documents)
+    legacy_ids = {r.identity.id for r in legacy_records.values()}
+    if legacy is not None and (partial is not None or currentness is not None
+                              or configuration_id is not None or selected_ids is not None):
+        raise ModelError('validation_legacy_full_scope_required')
     approval_contexts = _sequence(approval_contexts, 'approval_contexts_required')
     if any(type(c) is not ApprovalContext for c in approval_contexts):
         raise ModelError('approval_context_required')
@@ -111,6 +119,7 @@ def validate_model(documents, *, profile=None, selected_ids=None, gates=(), reso
     basis = canonical_json_sha256({"version": VALIDATION_VERSION,
         **({'partial_observation_sha256': partial.observation_sha256} if partial is not None else {}),
         **({'currentness_sha256': observed['sha256']} if observed is not None else {}),
+        **({"legacy_manifest_sha256": legacy.sha256} if legacy is not None else {}),
         **({"document_role_scope": document_role_scope} if document_role_scope is not None else {}),
         **({"resources_sha256": resources.sha256} if resources is not None else {}),
         **({'selected_configuration': configuration.binding} if configuration is not None else {}),
@@ -122,6 +131,8 @@ def validate_model(documents, *, profile=None, selected_ids=None, gates=(), reso
     stages, records, checked = [], [], ()
 
     def applies(name, value):
+        if value["id"] in legacy_ids and not name.startswith("extension:"):
+            return False
         if name == "profile_lint" and resources is not None:
             return profile is not None and profile_applies(profile.data, value)
         return _applies(name, value, profile)
@@ -139,6 +150,8 @@ def validate_model(documents, *, profile=None, selected_ids=None, gates=(), reso
         complete = all(s["status"] in ("passed", "failed", "not_applicable") for s in stages)
         return ValidationReport._create({"format_version": VALIDATION_VERSION,
             **({'currentness': observed} if observed is not None else {}),
+            **({"legacy_manifest_sha256": legacy.sha256, "legacy_original_ids": sorted(legacy_ids),
+                 "legacy_current_evidence": False} if legacy is not None else {}),
             **({"document_role_scope": document_role_scope} if document_role_scope is not None else {}),
             **({'selected_configuration': configuration.binding} if configuration is not None else {}),
             "input_sha256": basis, "validation_scope": ("partial_bundle_artifacts" if partial is not None else
@@ -164,6 +177,9 @@ def validate_model(documents, *, profile=None, selected_ids=None, gates=(), reso
     schema_errors = []
     for document, data in parsed:
         try:
+            if document.path in legacy_records:
+                records.append(legacy_records[document.path])
+                continue
             kind = data.get("artifact_type")
             if type(kind) is not str:
                 raise ModelError("artifact_type_required", pointer="/artifact_type")
@@ -184,6 +200,11 @@ def validate_model(documents, *, profile=None, selected_ids=None, gates=(), reso
         stage("model_dependencies", status="blocked")
         return report()
     records = tuple(sorted(records, key=lambda r: r.identity.id))
+    if legacy is not None:
+        stage("qualified_legacy_originals", [{"reason": "migration_context_unverified",
+            "severity": "info", "artifact_id": r.identity.id, "path": r.path}
+            for r in legacy_records.values() if r.identity.artifact_type == "evidence"],
+            ids=tuple(sorted(legacy_ids)))
     reference_issues = _reference_issues(records) if partial is None else []
     if reference_issues:
         stage("identities_references", reference_issues)
@@ -235,7 +256,7 @@ def validate_model(documents, *, profile=None, selected_ids=None, gates=(), reso
         if not subjects:
             continue
         context = GateContext._create(records, documents, profile, subjects, gate, "dependencies", basis,
-                                      configuration=None if configuration is None else configuration.data)
+                                      configuration=None if configuration is None else configuration.data, legacy=legacy)
         try:
             observation = gate.dependencies(context)
             if (type(observation) is not GateDependencies or observation.input_sha256 != context.input_sha256
@@ -267,6 +288,8 @@ def validate_model(documents, *, profile=None, selected_ids=None, gates=(), reso
     else:
         field_errors = []
         for identity in checked:
+            if identity in legacy_ids:
+                continue
             field_errors.extend({**d,"artifact_id":identity,"path":index[identity].path}
                                 for d in check_composed_fields(profile, index[identity].data)["diagnostics"])
         stage("profiles", field_errors, ids=checked)
@@ -294,7 +317,7 @@ def validate_model(documents, *, profile=None, selected_ids=None, gates=(), reso
                   status="unavailable", ids=subjects)
             continue
         context = GateContext._create(records, documents, profile, subjects, gate, "check", basis,
-                                      configuration=None if configuration is None else configuration.data)
+                                      configuration=None if configuration is None else configuration.data, legacy=legacy)
         try:
             outcome = gate.check(context)
             if (type(outcome) is not GateResult or outcome.input_sha256 != context.input_sha256

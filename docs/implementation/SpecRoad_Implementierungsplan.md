@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 78 · **Stand:** 4. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.59
+**Planrevision:** 80 · **Stand:** 4. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.59
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 Schritte und 900 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; die ausdrücklich genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wird nach 10.7.10 innerhalb von 15.l.R vorgezogen. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -33,6 +33,107 @@ ausdrückliche Bedienausnahme aus 2.4.3.2 bleibt zusätzlich anwendbar.
 Produktfreigaben und die Grenzen aus 2.4.1/2.4.2/2.4.4 bleiben unverändert.
 Dieser Plan ändert keine alten Aufträge, Antworten, Blockaden oder
 Laufzeitdaten und ist keine Start-/Resume-Anweisung.
+
+## Korrekturbundle 577 — vollständiger Rest 16.i.W/R/C
+
+Das maßgebliche native Fehler-Result hat SHA-256
+`2cbe7e5baa0be59cbb18d8286b8b617fe666da1696934903ebc7570a7d691a57`,
+HEAD `eb91b55282e7a2ff9528412cfa60fd684a1d46bb` und den erhaltenen
+Dirty-Fingerprint `19e5f87d2ee36b2f`. Bundle 576 stoppte erneut vor 16.i.W:
+8643 Tests bestanden, einer scheiterte, kein Commit entstand. Der erhaltene
+Arbeitsstand entspricht exakt der angekündigten W-Stage. Der erfolgreiche
+Klärungscommit aus Bundle 575 bleibt erhalten; Produktstand tatsächlich
+684/900. Alle drei Produktstufen bleiben vollständig offen.
+
+Betroffen ist ausschließlich der partial-Fall von
+test_old_publication_observation_cannot_survive_recovery_without_live_recheck.
+Der Log zeigt einen Schreibversuch bei der Journalanlage nach durchlaufener
+Publikationsprüfung. Diese vergleicht weiterhin frisch gelesene Bytes und
+vollständige Dateibindungen mit der ursprünglichen Beobachtung. Die native
+Recovery stellt Teilwrites durch neue Before-Image-Kopien wieder her. Der
+Test nahm dabei ungeprüft an, dass die ursprüngliche, freigegebene Inode-Nummer
+nicht wiederverwendet wird. Gleiche zurückgeführte Bytes und eine wieder
+vergebene Inode-Nummer lassen diese beabsichtigte Konfliktvorbedingung entfallen.
+Die Ableitung folgt aus Log und gebundenem Code; konkrete alte/neue Inodewerte
+wurden im fehlgeschlagenen Lauf nicht protokolliert.
+
+Die Testkorrektur hält deshalb ausschließlich lesende Originalhandles über
+Writer, Recovery und erneute Publikationsprüfung offen. Kein Hardlink, keine
+Produktmanipulation, kein Schlafen und kein Dateisystem-Mock. Die Original-
+Dateiobjekte bleiben damit belegt. Der Test weist danach tatsächlich geänderte
+Dateiidentität nach und prüft beim Teilrollback zusätzlich exakte Originalbytes.
+Die ursprüngliche Write-Falle, Exitklasse 6, unveränderte Inventur und fehlendes
+neues Requestreceipt bleiben erforderlich. Hinzu kommt der konkrete Fehlergrund:
+publication_footprint_changed bei Teilrollback, publication_base_changed bei
+vollständig publiziertem/committedem Ziel. Es wird kein beliebiger Fehler als
+Erfolg akzeptiert. SR-TC-0256 dokumentiert diese überprüfbaren Voraussetzungen.
+
+Normativer Bezug: 10.6/10.7 und N.2/N.3 verlangen echte Basis-/Zielwiederherstellung,
+eine getrennte Folgeoperation und frische Prüfung unter dem Writerlock. Sie
+verlangen keine globale Historie freigegebener Inode-Nummern. Der bestehende
+Vertrag akzeptiert reine Zeitstempeländerungen bei gleichen Bytes/Identitäten;
+eine neue timestampabhängige Produktverweigerung wäre keine passende Reparatur.
+Alle Produktbytes bleiben je Stage bytegleich zu Bundle 576. Die bereits
+enthaltene Importkorrektur bleibt erhalten. Spezifikation 0.2.59, Quellvertrag,
+Testidentitäten und Testnummern bleiben unverändert; keine neue Detailklärung.
+
+Die vollständigen IDs und Rollen bleiben 16.i.W, 16.i.R und 16.i.C mit
+role=implementation. correction_of bindet den ursprünglichen Planhash
+`7d8b257dc25caf25750aa48a84a3bc54267c49794c0047552eafc778e03b65a6`
+und genau diesen Rest. Erste Stage und Vorherbytes umfassen den gesamten
+erhaltenen Dirty-Stand. R und C bleiben die echten angekündigten Zustände;
+C erhält unveränderte R-Tests und dieselbe Strukturänderung. Jede Stage
+bekommt erneut Rotation 0/1/2 plus vollständige ungefilterte Pflichtauswahl,
+einschließlich der gesamten geänderten Regressionstestdatei. Kein früherer
+Gateerfolg wird für den neuen Stand verwendet. Verhaltenstests nur in Apply;
+Dev prüft statisch, durch reine Collection und native Paketvalidierung.
+Keine Dienst-, Control-, Budget- oder Betriebsdatenänderung und keine Schleife.
+Vorbereiteter Zwischenstand: W; Häkchen und Zähler gelten erst nach
+erfolgreichem Apply-Gate und echtem Commit. Nach vollständigem Abschluss
+wäre 687/900 erreicht; nächster offener Schritt bleibt 16.j.W.
+
+## Korrekturbundle 576 — vollständiger Rest 16.i.W/R/C
+
+Das maßgebliche native Fehler-Result hat SHA-256
+`75415bcd0a94e111604994a422dc416829dd0019acf1494db441b3a923da5b1f`,
+HEAD `eb91b55282e7a2ff9528412cfa60fd684a1d46bb` und den erhaltenen
+Dirty-Fingerprint `b77867cc9d0554c5`. Bundle 575 übernahm den Klärungscommit
+MIGRATION-TRANSACTION-575 nach 6800 erfolgreichen Tests. Er bleibt erhalten.
+16.i.W scheiterte danach an genau einem Regressionstest; 8651 Tests bestanden.
+Der Produktstand bleibt tatsächlich 684/900. Der vollständige Arbeitsstand
+entspricht der angekündigten W-Stage; R und C wurden noch nicht ausgebracht.
+
+Ursache: validate_model importierte den neuen Legacy-Helfer bedingungslos
+während jedes Aufrufs. Der bestehende Test
+ModelValidationRightTests.test_validating_does_not_read_files_or_import_adapters
+verbietet solche Imports und Datei-I/O im gewöhnlichen geladenen Modellpfad.
+Die Korrektur führt den Legacy-Import und die Qualifikation ausschließlich
+bei einem ausdrücklich übergebenen Legacy-Manifest aus. Ohne Manifest bleibt
+die Legacy-Zuordnung leer; aktuelle Schema-, Profil- und Graphprüfungen werden
+unverändert ausgeführt. Mit Manifest bleiben die vollständige native Prüfung,
+Originalbindungen, Scope-Grenzen und Fehlerverträge erhalten. Das entspricht
+der vorhandenen Trennung expliziter Zusatzkontexte im gemeinsamen Validator.
+
+Keine neue Detailentscheidung und kein Klärungspräfix: Spezifikation 0.2.59,
+Quellvertrag, alle Testbytes, Katalogbindungen und stabilen Testnummern bleiben
+je angekündigter Stage unverändert. Der bestehende fehlgeschlagene Test wird
+nicht abgeschwächt oder ausgeblendet. Alle neuen Migrationsabnahmen und die
+vollständigen relevanten Regressionen bleiben Pflichtauswahl. Die identische
+technische Korrektur wird in W, R und C fortgeführt; C behält seine echte
+Strukturänderung mit unveränderten Funktionskörpern und R-Tests.
+
+Alle offenen IDs und Rollen bleiben erhalten: 16.i.W, 16.i.R, 16.i.C mit
+role=implementation. correction_of bindet den ursprünglichen Planhash
+`32179489cee8116649728c445045bce288196a158e8e25a54fdc753e324e8707`
+und genau diesen Rest. Vollständige Vorherbytes und Dirty-Scope binden das
+Fehler-Result; erfolgreiche Commits werden weder wiederholt noch zurückgesetzt.
+Jede Stage erhält erneut ihre fällige N=3-Gruppe (0/1/2) plus ungefilterte
+Pflichtauswahl vor ihrem Commit. Dev führt ausschließlich statische Prüfung,
+reine Collection und native Paketprüfung aus, keine Verhaltenstests.
+Keine Änderung an Control, Budget oder Betriebsdaten; keine eigene Schleife.
+Vorbereiteter Zwischenstand: W; Häkchen und Zähler gelten erst nach
+jeweiligem erfolgreichen Apply-Gate und echtem Commit. Nach vollständigem
+Abschluss wäre 687/900 erreicht; 16.j.W bleibt der nächste offene Schritt.
 
 ## MIGRATION-TRANSACTION-575 — Klärungspräfix und vollständiges 16.i
 
@@ -69,7 +170,7 @@ Mutations-/Sicherungs-/Abbruchgrenzen. C: gemeinsame interne Zustands- und
 Beweisprüfungen strukturieren; Fachwerte und Fehlerverträge beibehalten.
 Jede Phase erhält eine vollständige begründete Pflichtauswahl plus fällige
 N=3-Gruppe (2/0/1/2 einschließlich Klärung); keine Testkörper in Dev.
-Vorbereiteter Stand: Klärung; 16.i bleibt offen. Häkchen zählen erst nach
+Vorbereiteter Stand: 16.i.W; nachfolgende Planphasen bleiben offen. Häkchen zählen erst nach
 jeweiligem erfolgreichen Apply-Gate und echtem Commit.
 
 ## MIGRATION-LOSS-574 — optionale Detailklärung und vollständiges 16.h
@@ -2094,9 +2195,9 @@ Kein offener Produktplanschritt wird durch diese Testoptimierung abgeschlossen.
 ```yaml
 plan_revision: 78
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 684
-last_completed_plan_commit: 16.h.C
-next_plan_commit: 16.i.W
+implementation_plan_commits_completed: 685
+last_completed_plan_commit: 16.i.W
+next_plan_commit: 16.i.R
 last_completed_numbered_bundle: 574
 implementation_state: in_progress
 audit_followup_status: closed
@@ -36501,7 +36602,7 @@ Die W-/R-/C-Abnahmen im obigen OFF-PLAN-Abschnitt gelten vollständig.
 
 #### 16.i.W – Let it Work
 
-- [ ] **16.i.W** · Position **685/900** · Voraussetzung: `16.h.C`.
+- [x] **16.i.W** · Position **685/900** · Voraussetzung: `16.h.C`.
 **Exakte Commit-Message:** `16.i.W feat(migration): Migrationstransaktion und Metadaten aufbauen`
 
 **Umsetzung:** Unterstützte Transformation atomar mit migration-metadata-v1 über den gemeinsamen Writer anwenden.

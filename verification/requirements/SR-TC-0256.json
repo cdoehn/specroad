@@ -25,7 +25,8 @@
     "scope": "Bounded shallow transaction metadata gate for supplied normal command classes, integrated into current read-only project observation. No artifact or historical receipt scan occurs before a recovery decision. The library is not yet full CLI invocation preflight or external continuation. R additionally proves separate interpreter invocations with fresh basis/authority, refusal of old PublicationPreflight bindings, distinct unstarted request identity, conservative owner/context checks and exact pending cleanup/discard retries without following supplied reference paths."
   },
   "preconditions": [
-    "Owned local Linux project, explicit command class and actual persisted native transaction bytes; recovery authority is a trusted test host, not a project-data permission."
+    "Owned local Linux project, explicit command class and actual persisted native transaction bytes; recovery authority is a trusted test host, not a project-data permission.",
+    "The old-publication-binding regression holds read-only descriptors to the original artifact files across writer and recovery, preventing reuse of their freed inode identities. It proves an actual replacement; the partial rollback must also restore the exact original bytes."
   ],
   "primary_verification_id": "SR-VER-0019",
   "required_environment": {
@@ -43,7 +44,8 @@
   "steps": [
     "Observe transaction metadata before loading a model; compare all original project/operational files and actual forbidden write attempts.",
     "For permitted automatic recovery, compare independently planned base/target bytes, durable terminal receipts and subsequent fresh access; assert the new request remains unconsumed.",
-    "Recover in one interpreter, then start a separate normal invocation with current model bytes and fresh host authorization; verify a real native new commit and refusal of old publication bindings. Resume interrupted terminal archival using only exact canonical evidence."
+    "Recover in one interpreter, then start a separate normal invocation with current model bytes and fresh host authorization; verify a real native new commit and refusal of old publication bindings. Resume interrupted terminal archival using only exact canonical evidence.",
+    "Before any next journal write, reject that demonstrably changed binding with publication_footprint_changed after partial rollback, or publication_base_changed after complete/committed publication; preserve the project inventory and leave the new request without a receipt."
   ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0256",

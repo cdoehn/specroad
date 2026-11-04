@@ -37,7 +37,7 @@ def _mapping_index(rows, originals, kind):
 
 
 def _plan(files, *, inputs, actor, planned_at, change_plan_id, request_id, target_version):
-    source = owned_files(files)
+    source = owned_files(files, passive=True)
     inputs = parsed(jcs(inputs)); validate_inputs(inputs)
     require(target_version == '0.2.0', 'migration_target_version_mismatch')
     require(type(actor) is dict and set(actor) == {'actor_type', 'actor_id'}, 'migration_actor_required')
@@ -45,7 +45,7 @@ def _plan(files, *, inputs, actor, planned_at, change_plan_id, request_id, targe
     require(type(change_plan_id) is str and bool(change_plan_id.strip()), 'migration_plan_id_required')
     from ..changes.request_ids import normalize_request_id
     normalize_request_id(request_id)
-    inventory = inventory_bytes(source); inv = inventory.data
+    inventory = inventory_bytes({p: b for p, b in source.items() if not p.startswith(".specroad/")}); inv = inventory.data
     # Invalid derivations cannot be hidden by missing target inputs.
     source_relations = _SourceRelations(inventory)
     originals = tuple(o for o in inventory.originals if o.snapshot_root == inventory.model_root_sha256)
@@ -114,7 +114,7 @@ def _plan(files, *, inputs, actor, planned_at, change_plan_id, request_id, targe
         ProposalOriginal(jcs(value), path=original.path)
         regular.append(value); current[original.path] = jcs(value) + b'\n'
     # Cross-resource collisions and file/directory conflicts are checked before any output.
-    current = owned_files(current)
+    current = owned_files(current, passive=True)
     preservation = _assess_qualified(inventory, source, current, inputs, actor, planned_at, source_relations)
     report['loss_report'] = preservation.data
     if not preservation.lossless:
@@ -127,6 +127,7 @@ def _plan(files, *, inputs, actor, planned_at, change_plan_id, request_id, targe
     source_rows, target_rows = file_bindings(source), file_bindings(current)
     protected = {o.path for o in originals if o.classification != 'mutable'
                  and source.get(o.path) == o.source_bytes} | set(dict(inventory.payloads))
+    protected |= {p for p in source if p.startswith(".specroad/")}
     require(all(p in current and current[p] == source[p] for p in protected), 'migration_original_changed')
     operation = {'op': 'schema_migrate', 'format_version': 'schema-migrate-v1',
         'source_contract': SOURCE_CONTRACT, 'target_contract': report['target_contract'],

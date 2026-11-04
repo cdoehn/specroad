@@ -58,7 +58,7 @@ def recheck_migration_plan(raw, files, *, expected_target_version,
                 'migration_target_version_mismatch', exit_code=6)
         require(op['inputs_sha256'] == expected_inputs_sha256, 'migration_mapping_request_changed', exit_code=6)
         require(op['target_contract'] == target_contract(), 'migration_target_contract_changed', exit_code=6)
-        sources = owned_files(files); binding = file_bindings(sources)
+        sources = owned_files(files, passive=True); binding = file_bindings(sources)
         require(binding == op['source_files'], 'migration_source_files_changed', exit_code=6)
         rebuilt = plan_migration(sources, inputs=op['inputs'], actor=value['actor'],
             planned_at=value['planned_at'], change_plan_id=value['change_plan_id'],

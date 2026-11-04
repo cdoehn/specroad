@@ -131,7 +131,8 @@ class RequestReceipt:
                   'actor', 'operations_sha256', 'base_model_root_sha256',
                   'target_model_root_sha256', 'result', 'created_ids', 'result_object',
                   'transaction_receipt'}
-        if (set(value) != fields or value['format_version'] != 'request-receipt-v1'
+        if (set(value) != fields or value['format_version'] not in
+                ('request-receipt-v1','schema-transition-request-receipt-v1')
                 or value['namespace'] != 'normative_write' or value['result'] != 'committed'):
             raise ReceiptError('invalid_request_receipt_schema')
         from .authoring import normalize_authoring_actor
@@ -165,7 +166,16 @@ class RequestReceipt:
             raise ReceiptError('invalid_request_receipt_result')
         from ._journal_codec import _target_path
         try:
-            for path in result['published_paths']: _target_path(path)
+            for path in result['published_paths']:
+                if (value['format_version']=='schema-transition-request-receipt-v1'
+                        and path.startswith('profiles/language-data/') and path.endswith('.txt')):
+                    # The new closed branch may publish the actual bound registry
+                    # text. Completion still requires its native transition
+                    # journal/configuration and full byte proof; this is syntax.
+                    from ..migration.plan_values import safe_path
+                    safe_path(path)
+                else:
+                    _target_path(path)
         except (ModelError, ChangeExecutionError) as error:
             raise ReceiptError('invalid_request_receipt_result') from error
         object.__setattr__(self, '_raw', raw)

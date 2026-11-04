@@ -1,4 +1,5 @@
 """Recovery retries retain proof; independent normal calls reread their basis."""
+from contextlib import ExitStack
 import json
 import os
 
@@ -74,24 +75,42 @@ print(json.dumps({'gate': gate, 'result': result, 'new_request': NEW_REQUEST,
 @pytest.mark.parametrize('state', ['partial', 'complete', 'committed'])
 def test_old_publication_observation_cannot_survive_recovery_without_live_recheck(tmp_path, state):
     checks = []
+    originals = {}
+    with ExitStack() as retained:
+        def capture(model):
+            # A rollback restores bytes, not the original file object. Keep
+            # that object alive: otherwise its freed inode may be reused and
+            # the intended changed-identity input would not be established.
+            for document in model.documents:
+                stream = retained.enter_context((tmp_path / document.path).open('rb'))
+                originals[document.path] = (stream, document.content)
+            change = plan(model, [edit(model.artifacts[0], 'Unstarted stale request')], request_id=NEW_REQUEST)
+            checks.append(prepare_publication_check(change, model, policy=POLICY))
 
-    def capture(model):
-        change = plan(model, [edit(model.artifacts[0], 'Unstarted stale request')], request_id=NEW_REQUEST)
-        checks.append(prepare_publication_check(change, model, policy=POLICY))
-
-    with writer(tmp_path, state, on_basis=capture):
-        pass
-    assert fresh_process(tmp_path, RECOVER_PROCESS)['recovery_completed']
-    assert automatic(tmp_path).exit_code == 0
-    before = inventory(tmp_path)
-    with project_lock(tmp_path, kind='writer', command='change apply', project_id='sample',
-                      request_id=NEW_REQUEST, transaction_id='next-transaction') as held:
-        with no_write_attempts(), pytest.raises(PublicationCheckError) as error:
-            begin_building_journal(checks[0], held_lock=held,
-                transaction_id='next-transaction', authority=WRITE)
-    assert error.value.exit_code == 6
-    assert inventory(tmp_path) == before
-    assert not (tmp_path / request_receipt_path(NEW_REQUEST)).exists()
+        with writer(tmp_path, state, on_basis=capture):
+            pass
+        assert fresh_process(tmp_path, RECOVER_PROCESS)['recovery_completed']
+        assert automatic(tmp_path).exit_code == 0
+        replaced = []
+        for path, (stream, original) in originals.items():
+            old, current = os.fstat(stream.fileno()), (tmp_path / path).stat()
+            assert stream.read() == original
+            if (old.st_dev, old.st_ino) != (current.st_dev, current.st_ino):
+                replaced.append(path)
+            if state == 'partial':
+                assert (tmp_path / path).read_bytes() == original
+        assert replaced, 'The stale-binding case requires an actually replaced input'
+        before = inventory(tmp_path)
+        with project_lock(tmp_path, kind='writer', command='change apply', project_id='sample',
+                          request_id=NEW_REQUEST, transaction_id='next-transaction') as held:
+            with no_write_attempts(), pytest.raises(PublicationCheckError) as error:
+                begin_building_journal(checks[0], held_lock=held,
+                    transaction_id='next-transaction', authority=WRITE)
+        assert error.value.reason == ('publication_footprint_changed' if state == 'partial'
+                                      else 'publication_base_changed')
+        assert error.value.exit_code == 6
+        assert inventory(tmp_path) == before
+        assert not (tmp_path / request_receipt_path(NEW_REQUEST)).exists()
 
 
 def test_fresh_clear_gate_and_prior_recovery_do_not_replace_current_write_authority(tmp_path):

@@ -26,7 +26,7 @@ def profile_applies(profile, artifact):
 
 
 def _observed_sources(context):
-    sources = tuple(SourceRelations(d.content, path=d.path) for d in context.documents)
+    sources = context.source_records
     return sources, {source.identity.id: source.path for source in sources}
 
 
@@ -39,7 +39,8 @@ def _language(context, resources):
         report = evaluate_language(value["language"], policy=policy, registry=resources.registry)
         findings.extend({**item, "artifact_id": identity, "path": paths[identity],
                          "pointer": "/language"} for item in report["diagnostics"])
-    model = ContainerModel(tuple(d.content for d in context.documents))
+    current_paths = {r.path for r in context.source_records if r.storage_class == "current"}
+    model = ContainerModel(tuple(d.content for d in context.documents if d.path in current_paths))
     mixed = evaluate_project_languages(model, policy=policy, registry=resources.registry)
     # Declarations were checked above, including historical Requirements. The
     # existing container kernel owns the active project mixing membership.
@@ -70,7 +71,7 @@ def _profile(context, resources):
     findings = []
     for rule in context.profile_data["merge"]["lint_rules"]:
         rule_id = rule["rule_id"]
-        graph = LoadedGraph(sources, rule_id=rule_id)
+        graph = LoadedGraph(sources, rule_id=rule_id, legacy=context.legacy_manifest)
         for identity in context.subjects:
             artifact = context.artifact(identity)
             if not rule_applies(rule, artifact):

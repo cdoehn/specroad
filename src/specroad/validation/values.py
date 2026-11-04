@@ -162,7 +162,7 @@ class GateContext:
         raise TypeError("Gate contexts are created by the validation pipeline")
 
     @classmethod
-    def _create(cls, records, documents, profile, subjects, gate, phase, basis, *, configuration=None):
+    def _create(cls, records, documents, profile, subjects, gate, phase, basis, *, configuration=None, legacy=None):
         obj = object.__new__(cls)
         subjects = _ids(subjects)
         binding = canonical_json_sha256({"model": basis, "gate": gate.gate_id,
@@ -173,6 +173,8 @@ class GateContext:
                             ("_profile_bytes", profile.canonical_bytes if profile is not None else None),
                             ('_configuration_bytes', None if configuration is None else canonical_json_bytes(configuration)),
                             ("_records", tuple((r.identity.id, r.source_bytes) for r in records)),
+                            ("source_records", tuple(records)),
+                            ("legacy_manifest", legacy),
                             ("resources_sha256", gate.resources_sha256)):
             object.__setattr__(obj, name, value)
         return obj

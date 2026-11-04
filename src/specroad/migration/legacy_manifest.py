@@ -43,7 +43,7 @@ def validate_legacy_manifest(files, *, project_id):
     Files are owned input bytes. No project-selected schema, import, writer,
     historical approval or current readiness is trusted or manufactured here.
     """
-    files = owned_files(files)
+    files = owned_files(files, passive=True)
     require(MANIFEST_PATH in files, 'legacy_manifest_required')
     raw = files[MANIFEST_PATH]
     names = manifest_paths(raw)
@@ -85,7 +85,7 @@ def validate_legacy_manifest(files, *, project_id):
     require(len(roots) == 1, 'legacy_source_root_ambiguous')
     source = dict(by_snapshot[next(iter(roots))])
     source.update({p: files[p] for p in names if p.startswith('archive/objects/')})
-    inventory = inventory_bytes(source)
+    inventory = inventory_bytes({p: b for p, b in source.items() if not p.startswith(".specroad/")})
     require(inventory.data['project_id'] == project_id, 'legacy_project_mismatch')
     relations = _SourceRelations(inventory)
     archives, expected, _ = _original_archive(inventory, source, target_contract(), relations)

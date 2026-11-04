@@ -388,6 +388,10 @@
       "kind": "Synthetic reference-0.1/1.0.1 originals including full historical closure, noncanonical JSON, binary/empty/unreferenced/generated/passive operational bytes. Independent full-file and ZIP inventories, real external create-only publication and unchanged source schema. No real historical authority, current human approval, migration writer or portable receipt claim. Independent rehashed malformed containers and metadata; real source/output boundary changes plus injected ENOSPC/EACCES/corruption, stale readbacks and forged prepared objects; no false successful report.",
       "provider": "tests/support/migration_backups.py:file_hash,write_project,disk_files;tests/test_migration_backup.py;tests/test_migration_backup_right.py:repack"
     },
+    "SR-FIX-MIGRATION-TRANSACTION-v1": {
+      "kind": "Synthetic qualified reference-0.1 source bytes, an explicit bound target registry/profile and real external source ZIP; real native writer/recovery, OS file-prefix interruptions and dead local owner. No real data, review, consent or user configuration.",
+      "provider": "tests/support/migration_transaction.py:setup,execution_inputs;tests/support/reference01.py:seal"
+    },
     "SR-FIX-MODEL-MANIFEST-v1": {
       "kind": "Owned single-root resources; explicit hash inputs, not resolved scopes, authentic profile composition or write permission.",
       "provider": "tests/test_model_root.py:fixture"
@@ -945,6 +949,7 @@
     "SR-FIX-MIGRATION-RELATIONS-v1",
     "SR-FIX-MIGRATION-REQUIREMENTS-v1",
     "SR-FIX-MIGRATION-SOURCE-BACKUP-v1",
+    "SR-FIX-MIGRATION-TRANSACTION-v1",
     "SR-FIX-MODEL-MANIFEST-v1",
     "SR-FIX-MODEL-VALIDATION-v1",
     "SR-FIX-NATIVE-IMPORT-IDENTITIES-v1",

@@ -15,24 +15,24 @@
   ],
   "expected_exit_codes": [],
   "fixture_ids": [
-    "SR-FIX-MIGRATION-PLAN-v1"
+    "SR-FIX-MIGRATION-PLAN-v1",
+    "SR-FIX-MIGRATION-TRANSACTION-v1"
   ],
   "implementation_status": "partial",
   "json_pointers": [],
   "method": "automated_behavior",
   "open_items": [
-    "Bound Apply behavior evidence is required; no behavior tests were run in Dev.",
-    "Public migration CLI/registration, the full unfiltered backup, native lock/transaction/publication, global target validation, audit/recovery and Restore integration remain open in the subsequent M16 steps.",
-    "Synthetic stored reviews and source states do not establish actual historical human approval, current authorization, target global validity, readiness or release support."
+    "The prepared behavior tests require their real separate Apply gates; no test bodies ran in Dev.",
+    "Public registration, remaining historical reports, migrate verify/CLI and Restore integration remain in the following M16 steps. No historical human decision is invented.",
+    "16.i.R adds crash recovery, no-op and proven historical request replay before 16.i.C refactoring."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Eine Migration MUSS den gemeinsamen Change-Plan-, Lock-, Validierungs-, Journal- und Recovery-Vertrag verwenden, ohne einen teilweisen Schema-Mischzustand als regulären Projektstand zu veröffentlichen.",
-    "scope": "Partial shared Change Plan integration only; no lock, writer, journal or recovery execution. 16.c prepares the complete read-only reference migration plan, original-byte legacy manifest and explicit target mappings in the common typed Change Plan. R additionally checks actual source membership/bytes, external request bindings and native recomputation, including internally consistent forgery. No actual migration, approval, CLI, full-suite or release success is claimed."
+    "scope": "Native 16.i W library writer, complete byte-bound target validation and metadata; R adds full explicit recovery and historical request/no-op behavior. Public 0.1 registration, detailed historical evaluation, CLI/verify and Restore remain in 16.j/k/l; no completed Apply or release evidence is claimed."
   },
   "preconditions": [
-    "The complete reference source 1.0.1 and all explicit target resources/mappings are supplied as owned bytes; no host defaults or guessed semantic values.",
-    "Only read-only planning is exercised. Actual migration publication still requires the later native lock, full backup, global validation, audit, recovery and authority gates."
+    "Exact native migration plan and actual qualified source bytes, explicit target resources, real external source ZIP, host authority and the common native kernel mutex. No stored success substitutes for a required check."
   ],
   "primary_verification_id": "SR-VER-0020",
   "required_environment": {
@@ -48,9 +48,8 @@
   },
   "specification_sha256": "afce182331ecc65570abb7eb552207ed747cf95422e261c4d4d6772dfc5ae1dc",
   "steps": [
-    "Prepare the native migration branch of the shared Change Plan and compare explicit target fields, literal normative hashes, current/legacy roots, complete file bindings and unchanged original bytes.",
-    "Reject missing/invalid mappings and forbid using the migration branch as ordinary authoring or current review/readiness evidence.",
-    "Recompute saved plans from the actual supplied source files and externally bound target version, input hash and plan hash; reject stale sources and self-consistently rehashed target forgery."
+    "Execute the complete native source/backup/plan/target/authority gates and inspect actual published files, original archives, revision changes and unchanged historical bytes.",
+    "Reject stale bindings, unproven resources, missing gates/authority, unsafe paths, foreign locks and altered source images before accepting any success."
   ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0267",
@@ -123,6 +122,39 @@
     "tests/test_migration_planning_right.py::test_target_mapping_paths_cannot_select_code_or_operational_state[/absolute.json]",
     "tests/test_migration_planning_right.py::test_target_mapping_paths_cannot_select_code_or_operational_state[profiles/../escape.json]",
     "tests/test_migration_planning_right.py::test_target_mapping_paths_cannot_select_code_or_operational_state[profiles\\\\evil.json]",
-    "tests/test_migration_planning_right.py::test_timestamp_at_source_boundary_advances_by_one_microsecond_without_a_clock"
+    "tests/test_migration_planning_right.py::test_timestamp_at_source_boundary_advances_by_one_microsecond_without_a_clock",
+    "tests/test_migration_transaction.py::test_active_operational_source_is_never_migration_input",
+    "tests/test_migration_transaction.py::test_actual_backup_is_required_not_report_claim[bytes]",
+    "tests/test_migration_transaction.py::test_actual_backup_is_required_not_report_claim[inside]",
+    "tests/test_migration_transaction.py::test_actual_backup_is_required_not_report_claim[link]",
+    "tests/test_migration_transaction.py::test_actual_backup_is_required_not_report_claim[missing]",
+    "tests/test_migration_transaction.py::test_ai_actor_cannot_bypass_proposal_policy",
+    "tests/test_migration_transaction.py::test_authority_cannot_change_source_behind_gate",
+    "tests/test_migration_transaction.py::test_changed_real_source_is_never_rebased[changed]",
+    "tests/test_migration_transaction.py::test_changed_real_source_is_never_rebased[extra]",
+    "tests/test_migration_transaction.py::test_changed_real_source_is_never_rebased[missing]",
+    "tests/test_migration_transaction.py::test_changed_real_source_is_never_rebased[permission]",
+    "tests/test_migration_transaction.py::test_changed_real_source_is_never_rebased[symlink]",
+    "tests/test_migration_transaction.py::test_current_validation_does_not_accept_raw_legacy_without_manifest",
+    "tests/test_migration_transaction.py::test_every_source_original_archived_exactly",
+    "tests/test_migration_transaction.py::test_explicit_input_binding_refuses_before_normative_change[backup_sha256-3333333333333333333333333333333333333333333333333333333333333333]",
+    "tests/test_migration_transaction.py::test_explicit_input_binding_refuses_before_normative_change[backup_size-1]",
+    "tests/test_migration_transaction.py::test_explicit_input_binding_refuses_before_normative_change[backup_source_files_sha256-2222222222222222222222222222222222222222222222222222222222222222]",
+    "tests/test_migration_transaction.py::test_explicit_input_binding_refuses_before_normative_change[expected_inputs_sha256-1111111111111111111111111111111111111111111111111111111111111111]",
+    "tests/test_migration_transaction.py::test_explicit_input_binding_refuses_before_normative_change[expected_plan_sha256-0000000000000000000000000000000000000000000000000000000000000000]",
+    "tests/test_migration_transaction.py::test_explicit_input_binding_refuses_before_normative_change[expected_target_version-0.1.0]",
+    "tests/test_migration_transaction.py::test_explicit_input_binding_refuses_before_normative_change[transaction_id-../escape]",
+    "tests/test_migration_transaction.py::test_full_backup_preserves_unreferenced_binary_and_empty_files",
+    "tests/test_migration_transaction.py::test_historical_baseline_and_source_closure_survive_real_write",
+    "tests/test_migration_transaction.py::test_missing_language_service_cannot_be_a_successful_stub",
+    "tests/test_migration_transaction.py::test_native_complete_target_and_exact_revisions",
+    "tests/test_migration_transaction.py::test_passive_operational_source_bytes_remain_bound_and_unchanged",
+    "tests/test_migration_transaction.py::test_real_boolean_host_authority_required[1]",
+    "tests/test_migration_transaction.py::test_real_boolean_host_authority_required[False]",
+    "tests/test_migration_transaction.py::test_real_boolean_host_authority_required[None]",
+    "tests/test_migration_transaction.py::test_real_boolean_host_authority_required[yes]",
+    "tests/test_migration_transaction.py::test_required_semantic_gate_is_not_skipped",
+    "tests/test_migration_transaction.py::test_shared_kernel_mutex_excludes_migration_writer",
+    "tests/test_migration_transaction.py::test_staging_never_installs_final_state_early"
   ]
 }

@@ -127,7 +127,11 @@ def project_lock(root, *, kind, command, project_id, transaction_id=None, reques
     Unknown host/start metadata stays null and later requires explicit recovery.
     """
     selected = _request(kind, command, project_id, request_id, transaction_id)
-    source = ProjectSource(root, expected_project_id=project_id) if selected is LockKind.WRITER else None
+    if selected is LockKind.WRITER and command == 'migrate apply':
+        from ..migration.transaction_source import MigrationLockSource
+        source = MigrationLockSource(root, expected_project_id=project_id)
+    else:
+        source = ProjectSource(root, expected_project_id=project_id) if selected is LockKind.WRITER else None
     probe = LinuxOwnerProbe()
     owner = probe.current()
     with LockFiles(root) as files:

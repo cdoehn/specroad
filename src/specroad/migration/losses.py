@@ -196,11 +196,11 @@ def assess_migration_preservation(files, candidate, *, inputs, actor, planned_at
     This is not target-schema validation or permission to execute the candidate.
     Serialized reports cannot be substituted for native source observations.
     """
-    source, target = owned_files(files), owned_files(candidate)
+    source, target = owned_files(files, passive=True), owned_files(candidate, passive=True)
     inputs = parsed(jcs(inputs)); validate_inputs(inputs)
     require(type(actor) is dict and set(actor) == {'actor_type', 'actor_id'}, 'migration_actor_required')
     actor = Actor(**actor).as_fields(); UtcTimestamp(planned_at)
-    inventory = inventory_bytes(source)
+    inventory = inventory_bytes({p: b for p, b in source.items() if not p.startswith(".specroad/")})
     from .planning import _mapping_index
     from .plan_inputs import _target
     originals = tuple(o for o in inventory.originals if o.snapshot_root == inventory.model_root_sha256)

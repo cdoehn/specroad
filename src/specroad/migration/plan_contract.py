@@ -4,7 +4,7 @@ from ..changes._schema_fields import obj, arr, text, digest as hash_schema
 from ..changes.errors import ChangePlanError
 from ..model.canonical import canonical_json_sha256 as digest
 from ..model._schema import validate_builtin
-from .plan_values import (POLICY, STEP, SOURCE_CONTRACT, safe_path, unb64,
+from .plan_values import (POLICY, STEP, SOURCE_CONTRACT, safe_path, source_path, unb64,
                           MigrationPlanError)
 from .reference01.values import SCOPE
 from .requirement_mapping import validate_mapping_languages
@@ -80,12 +80,16 @@ def validate_migration_operation(value, pointer=''):
         _check(not value['losses'], 'migration_loss_path_unsupported')
         for field in ('source_files', 'target_files', 'changes', 'new_required_fields'):
             _sorted_rows(value[field], 'path')
-            for row in value[field]: safe_path(row['path'])
+            for row in value[field]:
+                (source_path if field in ('source_files', 'target_files') else safe_path)(row['path'])
         for field in ('result_ids', 'protected_paths'):
             _check(value[field] == sorted(set(value[field]), key=lambda s: s.encode('utf-8')),
                    'migration_noncanonical_order')
         before = {r['path']: r for r in value['source_files']}
         after = {r['path']: r for r in value['target_files']}
+        passive = {p for p in set(before) | set(after) if p.startswith('.specroad/')}
+        _check(all(p in before and before[p] == after.get(p) and p in value['protected_paths'] for p in passive),
+               'migration_original_changed')
         actual = {p for p in set(before) | set(after) if before.get(p) != after.get(p)}
         _check({r['path'] for r in value['changes']} == actual, 'migration_change_set_mismatch')
         for row in value['changes']:
@@ -101,7 +105,7 @@ def validate_migration_operation(value, pointer=''):
                 _check(len(raw) == new['size'] and sha256(raw).hexdigest() == new['sha256'],
                        'migration_target_bytes_mismatch')
         for name in value['protected_paths']:
-            safe_path(name)
+            source_path(name)
             _check(name in before and before[name] == after.get(name), 'migration_original_changed')
         manifest = value['target_manifest']
         _check(digest(manifest) == value['target_model_root_sha256'], 'migration_target_root_mismatch')

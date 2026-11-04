@@ -32,7 +32,7 @@ def replace_bound_image(source_dir, source_name, target_dir, target_name, *,
                         size, digest, identity, mode=None,
                         source_changed: Callable[[], Exception],
                         before_open=None, before_mutation=None,
-                        before_replace=None, after_replace=None, create_only=False):
+                        before_replace=None, after_replace=None, create_only=False, single_link_create=False):
     """Atomically move one exact regular image between already-bound directories.
 
     ``mode=None`` preserves the source mode.  Policy checks and caller state
@@ -56,7 +56,14 @@ def replace_bound_image(source_dir, source_name, target_dir, target_name, *,
         info = os.fstat(fd)
         if before_replace is not None:
             before_replace()
-        if create_only:
+        if create_only and single_link_create:
+            # Schema transitions need an unambiguous effect prefix after every
+            # crash: never expose the two names of the older hard-link path.
+            # The default v1 publication contract stays unchanged.
+            from ..authoring._bootstrap_io import rename_function, _rename_native
+            _image(source_dir, source_name, size, digest, identity=identity)
+            _rename_native(rename_function(), source_dir, source_name, target_dir, target_name)
+        elif create_only:
             # Atomic no-replace publication for immutable archive bytes. A
             # failed unlink leaves both actual names recovery-blocked; never
             # claim success or remove an independently existing target.

@@ -47,12 +47,22 @@ def safe_path(name):
     return name
 
 
-def owned_files(files):
+def source_path(name):
+    if name.startswith(".specroad/"):
+        from ..model.operational_paths import PASSIVE_ROOTS, PASSIVE_JOURNAL_DIRECTORIES
+        roots = tuple(PASSIVE_ROOTS) + tuple(".specroad/" + a + "/" + b for a, b in PASSIVE_JOURNAL_DIRECTORIES)
+        require(any(name.startswith(r + "/") for r in roots), "migration_protected_path", path=name)
+        safe_path(name[len(".specroad/"):])
+        return name
+    return safe_path(name)
+
+
+def owned_files(files, *, passive=False):
     require(type(files) is dict and all(type(n) is str and type(b) is bytes
             for n, b in files.items()), 'migration_file_bytes_required')
     paths(files)
     for name in files:
-        safe_path(name)
+        (source_path if passive else safe_path)(name)
     names = set(files)
     require(not any('/'.join(n.split('/')[:i]) in names for n in names
                     for i in range(1, len(n.split('/')))), 'migration_path_overlap')
