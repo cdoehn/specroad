@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 74 · **Stand:** 4. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.57
+**Planrevision:** 76 · **Stand:** 4. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.57
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 Schritte und 900 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; die ausdrücklich genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wird nach 10.7.10 innerhalb von 15.l.R vorgezogen. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -33,6 +33,102 @@ ausdrückliche Bedienausnahme aus 2.4.3.2 bleibt zusätzlich anwendbar.
 Produktfreigaben und die Grenzen aus 2.4.1/2.4.2/2.4.4 bleiben unverändert.
 Dieser Plan ändert keine alten Aufträge, Antworten, Blockaden oder
 Laufzeitdaten und ist keine Start-/Resume-Anweisung.
+
+## Korrekturbundle 573 — vollständiger Rest 16.g.W/R/C
+
+Das nativ geprüfte Fehler-Result hat SHA-256
+`6e144ca261a092b83d48668345b72d810616a6fda5a2c484aa7a9046978f6f62`,
+HEAD `1759ac767dadbbc9ecdfe4f8fa45c65976e1f15b` und den erhaltenen Dirty-
+Fingerprint `bc38fddd6812850d`. Bundle 572 stoppte vor 16.g.W: 7200 Tests
+bestanden, ein Test scheiterte; kein neuer Commit entstand. Der tatsächliche
+abgeschlossene Produktstand bleibt 678/900. Der vollständige erhaltene W-
+Zustand stimmt mit der nativ rekonstruierten ursprünglichen Stage überein.
+R und C wurden noch nicht ausgebracht und bleiben vollständig angekündigt.
+
+Ursache: Bei direkt veränderten Originalbytes meldet der gebundene Leser
+bereits legacy_original_bytes_changed. Die spätere Frischeprüfung meldet
+für geänderte Manifest-/Archivbytes legacy_manifest_changed. Der W-Test
+verlangte fälschlich für alle drei Fälle ausschließlich die zweite Diagnose.
+Die Schutzfunktion hat korrekt abgewiesen; keine Produktkorrektur ist nötig.
+
+Der Test erwartet jetzt für jede Änderung die konkrete maschinenlesbare
+reason, Exitklasse 6 und den tatsächlichen betroffenen Pfad. Zusätzlich
+prüft er, dass die fehlerhaften Bytes nach der Ablehnung unverändert bleiben:
+kein Repair als Nebenwirkung. Weder ein beliebiger Fehler noch ein allgemeiner
+Regex wird als Ersatz akzeptiert. Keine Sicherheits- oder Abnahmeanforderung
+wird abgeschwächt. Die gleiche Testkorrektur wird in R und C fortgeführt.
+Alle Produktbytes bleiben je Stage bytegleich zum angekündigten Bundle 572;
+C behält die echte Strukturänderung aus dem ursprünglichen W/R/C-Plan.
+
+Keine normative Spezifikationslücke, kein Klärungspräfix. Spezifikation,
+Quelldatenformat und sämtliche bestehenden Testidentitäten/Nummern bleiben
+unverändert. Plan, Katalog und Pflichtauswahl dokumentieren die technische
+Korrektur. Die Rollen implementation sowie IDs 16.g.W, 16.g.R, 16.g.C bleiben
+in derselben Reihenfolge. correction_of bindet den ursprünglichen Planhash
+und genau diesen vollständigen Rest; alle Vorherbytes binden das Fehler-Result.
+
+Dev führt weiterhin keine Verhaltenstests, Fixtures oder Test-Unterprozesse
+aus. Jede Stage erhält erneut ihre fällige N=3-Gruppe (1/2/0) plus vollständige
+ungefilterte Pflichtauswahl, bevor Apply ihren Commit erzeugen darf. Keine
+Wiederverwendung des fehlgeschlagenen Gates als Erfolgsbeleg. Keine direkte
+Apply-Änderung, kein Dienststart, keine Budgetänderung und keine eigene Schleife.
+Vorbereiteter Zwischenstand: W; Produktzähler/Häkchen gelten erst nach Gate.
+Nach erfolgreichem Abschluss wäre 681/900 erreicht; nächster Schritt 16.h.W.
+
+## Planbundle 572 — 16.g: Legacy-Manifest und Hashdomänen
+
+Basis ist das vollständig nativ geprüfte saubere Result mit SHA-256
+`ea561f4d30f5fb6b8363ef50dfeb60f57920b998750b6852e62f61d52cdd5888`
+und Abschlusscommit `1759ac767dadbbc9ecdfe4f8fa45c65976e1f15b`.
+16.f.W/R/C ist mit drei eigenen Gates (6992, 7007 und 6963 bestandene Tests)
+und allen drei Commits abgeschlossen. Ausgangspunkt: 678/900 Produktcommits.
+Erfolgreiche Vorgänger werden nicht wiederholt. Q.0/Q.2/Q.3 und 12.20.2
+bestimmen den Vertrag vollständig; keine normative Lücke und kein Klärungs-
+präfix. Spezifikation und bestehende Freigabegrenzen bleiben unverändert.
+
+W vervollständigt den vorhandenen Manifestgenerator um die tatsächliche
+Lesebindung. Das vollständige registrierte Originalinventar wird aus den
+Archivbytes rekonstruiert und durch den eingebauten Referenzleser 0.1/1.0.1
+qualifiziert. Der gemeinsame native Generator rekonstruiert alle Manifest-
+felder einschließlich Quellvertrag, Originalhashes, Identitäts-/Relations-
+projektionen, Payloads, Provenienz und Proposal-Transitions; der geschlossene
+Vergleich erlaubt keine frei behaupteten Projektionen oder Quellschemata.
+
+Projektgebundene Common-/Record-/Domain-Leser liefern qualifizierte Originale
+mit storage_class legacy_immutable und unveränderten Quellbytes. Separat
+abfragbare Navigation ergänzt Identitäten; sie behält schema_version 0.1.0
+und ist kein materialisiertes 0.2-Original. Reguläre Relationsleser und Show
+nutzen diese Projektionen und geben das historische Artefakt unverändert
+zurück. Inventarisierung und explizite Modellroot-Erfassung integrieren den
+Manifestvertrag. Auch ein eingeschränkter expliziter Ressourcensatz bindet
+Manifest und vollständiges registriertes Originalarchiv. Artefaktrows verwenden
+legacy-original-bytes-v1, Originalbytehash und Manifest-JCS-Hash; aktuelle
+Artefakte behalten ihre bestehende JCS-Domäne. Historische Baselinehashes
+werden nicht neu geschrieben. Die Qualifikation beginnt erst beim Modelllesen.
+
+R ergänzt explizite Konflikte bei abweichenden Originalbytes derselben
+Identität/Revision, projektgebundene Hashprojektionen und frische Write-Target-
+Prüfung. Gegenproben decken falsche Source-/Target-Verträge, fehlende Originale,
+unzulässige Pfade/Symlinks, entfernte/duplizierte/umgeordnete Einträge,
+gefälschte Projektionen und nachträglich geänderte Bytes ab. Registrierte
+Original-, Archiv- und Manifestpfade sind keine regulären Schreibziele.
+C trennt owned Original-/Manifestwerte von Qualifikation und Dateizugriff.
+Funktions-/Klassen-ASTs bleiben identisch zu R, ebenso Tests und Kataloge.
+
+Jeder echte W/R/C-Zustand erhält seine eigene fällige N=3-Gruppe (1/2/0)
+plus vollständige ungefilterte Pflichtauswahl vor seinem Commit. Keine
+Testkörper, Fixtures oder Test-Unterprozesse in Dev. Collection, Syntax und
+native Paketrekonstruktion sind keine Verhaltensabnahme. Alle neuen Tests
+sowie betroffene Source-, Plan-, Lese-, Hash-, Graph- und Sicherheits-
+regressionen sind Pflicht. Keine Vollsuite- oder Releasebehauptung.
+Vorbereiteter Zwischenstand: W; Häkchen gelten erst nach Apply-Gate.
+
+Die weiteren M16-Gates bleiben offen: Verlustbehandlung, öffentliche
+Migrationsregistrierung und Writer, volle globale Zielvalidierung, historische
+Verification/Readiness, CLI/Restore, Audit und Recovery. Insbesondere erzeugt
+die Lesbarkeit weder aktuelle Nachweisgültigkeit noch menschliche Freigabe.
+Der bestehende Restore-Formatblock bleibt erhalten. Nach erfolgreichem C
+wäre 681/900 erreicht; nächster Schritt ist 16.h.W.
 
 ## Planbundle 571 — 16.f: quellgebundene Relationsidentität
 
@@ -1909,11 +2005,11 @@ Kein offener Produktplanschritt wird durch diese Testoptimierung abgeschlossen.
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 74
+plan_revision: 76
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 678
-last_completed_plan_commit: 16.f.C
-next_plan_commit: 16.g.W
+implementation_plan_commits_completed: 679
+last_completed_plan_commit: 16.g.W
+next_plan_commit: 16.g.R
 last_completed_numbered_bundle: 571
 implementation_state: in_progress
 audit_followup_status: closed
@@ -36248,7 +36344,7 @@ Die W-/R-/C-Abnahmen im obigen OFF-PLAN-Abschnitt gelten vollständig.
 
 #### 16.g.W – Let it Work
 
-- [ ] **16.g.W** · Position **679/900** · Voraussetzung: `16.f.C`.
+- [x] **16.g.W** · Position **679/900** · Voraussetzung: `16.f.C`.
 **Exakte Commit-Message:** `16.g.W feat(migration): Legacy-Manifest und Hashdomänen aufbauen`
 
 **Umsetzung:** legacy-manifest.json mit allen Originalhashes, Quellschema, Identitäts-/Relationsprojektionen und Payloadbindungen erzeugen.

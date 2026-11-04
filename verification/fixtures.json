@@ -356,6 +356,10 @@
       "kind": "synthetic bound IANA-format byte fixtures; full distribution snapshot is separately frozen and hash bound, not a linguistic or release approval",
       "provider": "tests/support/languages.py:registry_bytes"
     },
+    "SR-FIX-LEGACY-MANIFEST-v1": {
+      "kind": "Synthetic qualified reference-0.1/1.0.1 migration targets and transitive original archives; independent original-byte, field, membership and hash-domain observations. No human review, actual migration execution or external historical compatibility claim.",
+      "provider": "tests/support/legacy_manifest.py:migrated,write_files;tests/support/reference01.py:full_project,finish_proposal;tests/support/migration_relations.py:immutable_source"
+    },
     "SR-FIX-LITERAL-LINT-v1": {
       "kind": "Owned exact-tag glossary terms, literal text selectors and explicit placeholders; no linguistic interpretation, live inventory or approval.",
       "provider": "tests/support/literal_lint.py:observe"
@@ -929,6 +933,7 @@
     "SR-FIX-LANGUAGE-PACKAGES-v1",
     "SR-FIX-LANGUAGE-POLICY-v1",
     "SR-FIX-LANGUAGE-REGISTRY-v1",
+    "SR-FIX-LEGACY-MANIFEST-v1",
     "SR-FIX-LITERAL-LINT-v1",
     "SR-FIX-MIGRATION-GRAPH-v1",
     "SR-FIX-MIGRATION-PLAN-v1",

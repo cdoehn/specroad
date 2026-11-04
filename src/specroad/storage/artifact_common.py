@@ -52,7 +52,11 @@ def read_common_artifact(source, path, *, expected_type=None):
     """
     if source.classify(path) is not PathClass.ARTIFACT:
         raise ModelError("resource_path_class_mismatch", path=path)
-    resource = CommonArtifact(source.read_normative(path), expected_type=expected_type, path=path)
+    raw = source.read_normative(path)
+    from .legacy import legacy_artifact
+    resource = legacy_artifact(source, path, raw, expected_type=expected_type)
+    if resource is None:
+        resource = CommonArtifact(raw, expected_type=expected_type, path=path)
     target = artifact_path(resource.artifact_type, resource.id, source.configuration.id_prefix)
     if target != path:
         raise ModelError("artifact_path_identity_mismatch", path=path)

@@ -41,6 +41,9 @@ class RecordArtifact:
 def read_record_artifact(source, path, *, expected_type=None):
     """Read through the same fresh project-root/path/ID boundary as other types."""
     common = read_common_artifact(source, path, expected_type=expected_type)
+    from ..migration.legacy_manifest import LegacyArtifact
+    if type(common) is LegacyArtifact:
+        return common
     record = RecordArtifact(common.source_bytes, expected_type=expected_type, path=path)
     source.check_current()
     return record

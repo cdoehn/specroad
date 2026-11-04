@@ -81,6 +81,24 @@ class SourceRelations:
         object.__setattr__(self, "path", path)
         object.__setattr__(self, "validation_scope", "relation_fields_only")
 
+    @classmethod
+    def from_legacy(cls, original):
+        from ..migration.legacy_manifest import LegacyArtifact
+        if type(original) is not LegacyArtifact:
+            raise ModelError('legacy_original_required')
+        result = object.__new__(cls)
+        values = dict(source_bytes=original.source_bytes, identity=original.identity,
+            relations=tuple(Relation(original.identity, row) for row in original.navigation['relations']),
+            path=original.path, validation_scope=original.validation_scope)
+        for name, value in values.items():
+            object.__setattr__(result, name, value)
+        return result
+
+    @property
+    def storage_class(self):
+        return ('legacy_immutable' if self.validation_scope == 'qualified_reference01_original_and_manifest'
+                else 'current')
+
     @property
     def data(self):
         return parse_json_object(self.source_bytes, path=self.path)

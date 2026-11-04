@@ -34,6 +34,12 @@ class CapturedModelInputs:
 
 def _json_resource(source, path, raw, binding):
     # Reader retains the observation boundary; projection itself is pure.
+    from ..model.paths import PathClass
+    if source.classify(path) is PathClass.ARTIFACT:
+        from .legacy import legacy_artifact
+        legacy = legacy_artifact(source, path, raw)
+        if legacy is not None:
+            return legacy.manifest_resource(binding)
     return project_json_resource(source.configuration, path, raw, binding)
 
 
@@ -45,6 +51,10 @@ def capture_model_inputs(source, resource_paths, *, attachments=()):
     """
     binding = _binding(source)
     names = source._paths(resource_paths)
+    legacy = source._legacy_manifest
+    if legacy is not None:
+        from ..migration.plan_values import MANIFEST_PATH
+        names = tuple(sorted(set(names) | {MANIFEST_PATH}))
     if len({name.casefold() for name in names}) != len(names):
         raise ModelError("resource_path_collision")
     resources, observed = [], []
@@ -53,6 +63,13 @@ def capture_model_inputs(source, resource_paths, *, attachments=()):
         if path != "specroad.json":
             resources.append(_json_resource(source, path, raw, binding))
         observed.append((path, len(raw), sha256(raw).hexdigest()))
+    if legacy is not None:
+        for path, size, byte_hash in legacy.byte_bindings:
+            if path.startswith('archive/objects/'):
+                resources.append(ManifestResource(binding, {'kind': 'archive', 'path': path,
+                    'size': size, 'sha256': byte_hash}))
+            if path not in names:
+                observed.append((path, size, byte_hash))
     registry = source.configuration.data.get("language_registry")
     if registry is not None:
         path = registry["path"]
@@ -70,7 +87,12 @@ def capture_model_inputs(source, resource_paths, *, attachments=()):
         observed.append((path, item.size, item.sha256))
     for item in verify_attachments(source, attachments):
         resources.append(ManifestResource(binding, {"kind": "attachment", **item.data}))
-        observed.append((item.path, item.size, item.sha256))
+        observation = (item.path, item.size, item.sha256)
+        prior = next((row for row in observed if row[0] == item.path), None)
+        if prior is not None and prior != observation:
+            raise ModelError('model_input_changed', path=item.path)
+        if prior is None:
+            observed.append(observation)
     if len({path.casefold() for path, _, _ in observed}) != len(observed):
         raise ModelError("resource_path_collision")
     result = CapturedModelInputs(binding, source.configuration_bytes, tuple(resources), tuple(observed))

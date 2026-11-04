@@ -28,6 +28,18 @@ class ProjectSource:
         if expected_project_id is not None and self.configuration.project_id != expected_project_id:
             raise ModelError("project_identity_mismatch")
 
+        self._legacy_observed = False
+        self._legacy_value = None
+
+    @property
+    def _legacy_manifest(self):
+        # Qualification starts at the first model read, after caller preflight.
+        if not self._legacy_observed:
+            from .legacy import capture_legacy_manifest
+            self._legacy_value = capture_legacy_manifest(self)
+            self._legacy_observed = True
+        return self._legacy_value
+
     def _fresh_configuration(self):
         from ..bundles._extracted_root import require_complete_root
         if require_complete_root(self.boundary) != self._bundle_origin:
@@ -38,6 +50,8 @@ class ProjectSource:
     def check_current(self):
         """Validate that this reader still refers to its original project."""
         self._fresh_configuration()
+        from .legacy import check_legacy_current
+        check_legacy_current(self, self._legacy_manifest)
 
     @staticmethod
     def _paths(values):
@@ -83,6 +97,9 @@ class ProjectSource:
         """
         self._fresh_configuration()
         path = project_path(path)
+        if self._legacy_manifest is not None and path in self._legacy_manifest.protected_paths:
+            from ..migration.plan_values import require
+            require(False, 'legacy_immutable_write_forbidden', path=path)
         kind = self.classify(path)
         if kind not in CURRENT_JSON_CLASSES and kind not in PAYLOAD_CLASSES:
             raise ModelError("outside_managed_paths", path=path)

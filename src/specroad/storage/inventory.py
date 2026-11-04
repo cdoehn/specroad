@@ -23,12 +23,18 @@ from .resource_discovery import current_json_paths as _scan_json_paths
 def _read_json_entry(source, path):
     raw = source.read_normative(path)
     value = parse_json_object(raw, path=path)
-    if value.get("schema_version") != SCHEMA_VERSION:
+    kind = source.classify(path)
+    legacy = None
+    if kind is PathClass.ARTIFACT:
+        from .legacy import legacy_artifact
+        legacy = legacy_artifact(source, path, raw)
+    if legacy is None and value.get("schema_version") != SCHEMA_VERSION:
         raise ModelError("unsupported_schema_version", path=path, pointer="/schema_version",
                          highest_supported=SCHEMA_VERSION)
     kind = source.classify(path)
     if kind is PathClass.ARTIFACT:
-        validate_common_fields(value)
+        if legacy is None:
+            validate_common_fields(value)
         if artifact_path(value["artifact_type"], value["id"], source.configuration.id_prefix) != path:
             raise ModelError("artifact_path_identity_mismatch", path=path)
     return ResourceEntry(path, kind.value, len(raw), sha256(raw).hexdigest(),

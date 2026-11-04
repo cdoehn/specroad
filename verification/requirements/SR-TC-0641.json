@@ -1,6 +1,8 @@
 {
   "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [
+    "legacy_manifest_changed",
+    "legacy_original_bytes_changed",
     "migration_mapping_request_changed",
     "migration_mapping_source_changed",
     "migration_native_plan_mismatch",
@@ -25,6 +27,7 @@
   ],
   "expected_exit_codes": [],
   "fixture_ids": [
+    "SR-FIX-LEGACY-MANIFEST-v1",
     "SR-FIX-MIGRATION-PLAN-v1",
     "SR-FIX-REFERENCE01-SOURCE-v1_0_1"
   ],
@@ -32,20 +35,20 @@
   "json_pointers": [],
   "method": "automated_behavior",
   "open_items": [
-    "Bound Apply behavior evidence is required; no behavior tests were run in Dev.",
-    "Public migration CLI/registration, the full unfiltered backup, native lock/transaction/publication, global target validation, audit/recovery and Restore integration remain open in the subsequent M16 steps.",
-    "Synthetic stored reviews and source states do not establish actual historical human approval, current authorization, target global validity, readiness or release support."
+    "Behavior tests are prepared for separate Apply gates; no test bodies ran in Dev.",
+    "Public migration/CLI/Restore, transaction/global target verification and historical readiness remain in subsequent M16 steps; no other source contract is qualified."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Jede in ein 0.2-Modell eingebundene unveränderbare Legacy-Ressource MUSS durch das normative Manifest und die Originalhashbindung aus Anhang Q registriert sein.",
-    "scope": "16.b source reader/inventory only: version-bound local/global fields, complete source originals and transitive manifest/payload integrity, immutable classification, detached observations and safe file access. No target write, migration registration, current approval/readiness, external historical compatibility, full suite or release proof. 16.c prepares the complete read-only reference migration plan, original-byte legacy manifest and explicit target mappings in the common typed Change Plan. R additionally checks actual source membership/bytes, external request bindings and native recomputation, including internally consistent forgery. No actual migration, approval, CLI, full-suite or release success is claimed."
+    "scope": "16.b source reader/inventory only: version-bound local/global fields, complete source originals and transitive manifest/payload integrity, immutable classification, detached observations and safe file access. No target write, migration registration, current approval/readiness, external historical compatibility, full suite or release proof. 16.c prepares the complete read-only reference migration plan, original-byte legacy manifest and explicit target mappings in the common typed Change Plan. R additionally checks actual source membership/bytes, external request bindings and native recomputation, including internally consistent forgery. No actual migration, approval, CLI, full-suite or release success is claimed. 16.g W: complete manifest qualification and regular original readers/hash domains. Full target validation, historical readiness, productive migration and Restore remain separate. Correction 573: direct original replacement has legacy_original_bytes_changed; manifest/archive freshness failures have legacy_manifest_changed. All remain conflict failures without writes."
   },
   "preconditions": [
     "Source selects exactly the compiled specroad-reference-0.1 contract version 1.0.1.",
     "Complete original source and reachable snapshot/payload bytes are supplied; sources remain read-only.",
     "The complete reference source 1.0.1 and all explicit target resources/mappings are supplied as owned bytes; no host defaults or guessed semantic values.",
-    "Only read-only planning is exercised. Actual migration publication still requires the later native lock, full backup, global validation, audit, recovery and authority gates."
+    "Only read-only planning is exercised. Actual migration publication still requires the later native lock, full backup, global validation, audit, recovery and authority gates.",
+    "Native read-only migration targets with complete original archive, fixed source contract and manifest; no actual migration or human approval."
   ],
   "primary_verification_id": "SR-VER-0042",
   "required_environment": {
@@ -66,11 +69,37 @@
     "Observe explicit release selection, retained synthetic histories, safe refusal and native Core/PYZ parity without optional packages.",
     "Prepare the native migration branch of the shared Change Plan and compare explicit target fields, literal normative hashes, current/legacy roots, complete file bindings and unchanged original bytes.",
     "Reject missing/invalid mappings and forbid using the migration branch as ordinary authoring or current review/readiness evidence.",
-    "Recompute saved plans from the actual supplied source files and externally bound target version, input hash and plan hash; reject stale sources and self-consistently rehashed target forgery."
+    "Recompute saved plans from the actual supplied source files and externally bound target version, input hash and plan hash; reject stale sources and self-consistently rehashed target forgery.",
+    "Reconstruct qualified source history and compare the complete manifest against the native projection, including original bytes, schema, identity, relations, payloads and provenance.",
+    "Read immutable records and navigate their relations through regular project-bound readers without substituting projection bytes.",
+    "Compare regular model roots with the native planned root; bind original-byte domain, manifest and complete archive even for restricted explicit inputs.",
+    "For changed original, manifest and archive bytes, assert the precise reason, conflict exit class 6, affected path and absence of implicit repair."
   ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0641",
   "test_ids": [
+    "tests/test_legacy_manifest.py::test_complete_inventory_accepts_only_manifest_qualified_legacy",
+    "tests/test_legacy_manifest.py::test_completed_proposals_are_regularly_readable_originals[applied]",
+    "tests/test_legacy_manifest.py::test_completed_proposals_are_regularly_readable_originals[rejected]",
+    "tests/test_legacy_manifest.py::test_completed_proposals_are_regularly_readable_originals[stale]",
+    "tests/test_legacy_manifest.py::test_current_mutable_reader_still_requires_current_schema",
+    "tests/test_legacy_manifest.py::test_different_current_revision_can_coexist_with_archived_original",
+    "tests/test_legacy_manifest.py::test_even_empty_explicit_scope_binds_registered_manifest_and_archive",
+    "tests/test_legacy_manifest.py::test_integral_source_number_spelling_preserves_original_byte_hash[1.0]",
+    "tests/test_legacy_manifest.py::test_integral_source_number_spelling_preserves_original_byte_hash[1e0]",
+    "tests/test_legacy_manifest.py::test_navigation_is_detached_and_never_replaces_original_relations",
+    "tests/test_legacy_manifest.py::test_public_show_navigates_legacy_edges_but_returns_original_artifact[indexed]",
+    "tests/test_legacy_manifest.py::test_public_show_navigates_legacy_edges_but_returns_original_artifact[scan]",
+    "tests/test_legacy_manifest.py::test_reader_detects_bound_bytes_changed_after_capture[archive]",
+    "tests/test_legacy_manifest.py::test_reader_detects_bound_bytes_changed_after_capture[manifest]",
+    "tests/test_legacy_manifest.py::test_reader_detects_bound_bytes_changed_after_capture[original]",
+    "tests/test_legacy_manifest.py::test_registration_checks_have_no_writes_processes_or_mutable_aliases",
+    "tests/test_legacy_manifest.py::test_registry_requalifies_complete_transitive_history_and_owned_originals",
+    "tests/test_legacy_manifest.py::test_regular_bound_reader_preserves_immutable_original_without_current_schema_claim[spec/baselines/SR-BASE-0001.json]",
+    "tests/test_legacy_manifest.py::test_regular_bound_reader_preserves_immutable_original_without_current_schema_claim[spec/evidence/SR-EVD-0001.json]",
+    "tests/test_legacy_manifest.py::test_regular_bound_reader_preserves_immutable_original_without_current_schema_claim[spec/relation-reviews/SR-RREV-0001.json]",
+    "tests/test_legacy_manifest.py::test_regular_model_root_agrees_with_native_plan_and_binds_byte_domain",
+    "tests/test_legacy_manifest.py::test_unregistered_old_schema_is_not_sufficient_to_read",
     "tests/test_migration_planning.py::test_all_originals_and_transitive_archives_remain_verifiable_bytes",
     "tests/test_migration_planning.py::test_common_plan_schema_is_retrievable_and_validates_the_real_specialist_plan",
     "tests/test_migration_planning.py::test_core_and_pyz_materialize_identical_plans_without_optional_packages",

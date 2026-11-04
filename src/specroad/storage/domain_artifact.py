@@ -40,6 +40,9 @@ class DomainArtifact:
 def read_domain_artifact(source, path, *, expected_type=None):
     """Read one bound artifact, retaining the existing root/type/path protection."""
     common = read_common_artifact(source, path, expected_type=expected_type)
+    from ..migration.legacy_manifest import LegacyArtifact
+    if type(common) is LegacyArtifact:
+        return common
     resource = DomainArtifact(common.source_bytes, expected_type=expected_type, path=path)
     source.check_current()
     return resource

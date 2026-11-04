@@ -7,7 +7,9 @@ from .artifact_common import read_common_artifact
 
 def read_source_relations(source, path, *, expected_type=None):
     common = read_common_artifact(source, path, expected_type=expected_type)
-    result = SourceRelations(common.source_bytes, expected_type=expected_type, path=path)
+    from ..migration.legacy_manifest import LegacyArtifact
+    result = (SourceRelations.from_legacy(common) if type(common) is LegacyArtifact else
+              SourceRelations(common.source_bytes, expected_type=expected_type, path=path))
     # An observed replacement, even with equal semantic values, invalidates
     # this byte-bound read. This is not an atomic snapshot or a write permit.
     if source.read_normative(path) != common.source_bytes:
