@@ -56,7 +56,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d41e46bb1a3d064c6c533d98fda6a724b16b1ce5d4327e1a35ba924dfc75eafd",
+  "specification_sha256": "453cfffee201512305bce7ca0ab12c0a6a94e097c1eb67ba94679f76cce9ea3c",
   "steps": [
     "Normalize content-bound query data; execute value/SRX filtering against the entire supplied graph and project exact pointer values.",
     "Compare independently expected identities and values, distinguish missing/null and Boolean SRX results, and require explicit errors for unavailable providers.",

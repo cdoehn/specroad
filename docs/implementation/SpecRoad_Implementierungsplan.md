@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 76 · **Stand:** 4. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.57
+**Planrevision:** 77 · **Stand:** 4. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.58
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 Schritte und 900 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; die ausdrücklich genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wird nach 10.7.10 innerhalb von 15.l.R vorgezogen. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -9,7 +9,7 @@ Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 S
 
 Fachliche Grundlage ist [`docs/specification/SpecRoad_Spezifikation.md`](../specification/SpecRoad_Spezifikation.md), einschließlich aller konsolidierten Korrekturen, 742 Requirements, 51 Verifikationsverträge, 46 Szenario-/E2E-Identitäten sowie R-01 bis R-75, Anhang U und den PatchHarbor-Rundweg aus Anhang W. Der [`Prüfbericht`](../reviews/SpecRoad_v0.2.7_Implementierungsreife_Pruefbericht.md) ist ein vorgelagerter Entwurfsreview, kein späterer Produktnachweis.
 
-Gebundene Spezifikations-SHA-256: `d41e46bb1a3d064c6c533d98fda6a724b16b1ce5d4327e1a35ba924dfc75eafd`.
+Gebundene Spezifikations-SHA-256: `453cfffee201512305bce7ca0ab12c0a6a94e097c1eb67ba94679f76cce9ea3c`.
 Planungsbasis: Commit `fe2661d02ecf2f7eb483b58a4487eb009c6b3846`; sauberes Result-Bundle `specroad_Result_120209_0914_df3504.zip`; Repository-ID `3d2576df-d611-46fc-9d2b-92869468aaca`. Diese Angaben dokumentieren die Entstehung des Plans, nicht die zukünftige Patchbindung. **Jedes spätere Patchpaket bindet den dann aktuellen tatsächlichen Result-Zustand.**
 
 Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 2026 gelten zusätzlich und bei den nachfolgend benannten Konflikten vorrangig. Sonstige normative Spezifikationsinhalte werden nicht stillschweigend abgeschwächt. Neue fachliche Widersprüche, fehlende zwingende Angaben und Sicherheitsprobleme sind offen zu benennen, nicht durch erfundene Annahmen oder Scheinerfolge zu lösen.
@@ -33,6 +33,55 @@ ausdrückliche Bedienausnahme aus 2.4.3.2 bleibt zusätzlich anwendbar.
 Produktfreigaben und die Grenzen aus 2.4.1/2.4.2/2.4.4 bleiben unverändert.
 Dieser Plan ändert keine alten Aufträge, Antworten, Blockaden oder
 Laufzeitdaten und ist keine Start-/Resume-Anweisung.
+
+## MIGRATION-LOSS-574 — optionale Detailklärung und vollständiges 16.h
+
+Autorität: delegiert gemäß SPECROAD-DECISION-1/2.4.3.1, erteilter Vertrag 4
+mit clarification_allowed=true und drei verfügbaren Plätzen. Genau ein
+OFF-PLAN-Klärungspräfix, danach echte 16.h.W/R/C-Implementierung. Kein
+Control-Zustand, Budget oder Review wird verändert. Technische Basis:
+Result-SHA 58326e08934ce8fd5a857dcec62e2b8abcffdb1eb13d4bb60820731faaea337f,
+sauberer Abschlusscommit 4a96a3f5241f8e9d1a96122842b197bb5ec1accb.
+16.g.W/R/C ist durch echte Gates mit 7195/7241/7205 erfolgreichen Tests
+und drei Commits belegt. Produktstand vor diesem Bundle: 681/900.
+
+Lücke: SR-REQ-0268/0269/0512 verlangen Erhalt und Einzelzustimmung, definieren
+aber keine stabilen gebundenen LOSS-IDs, maschinenlesbare Inventur oder
+Grenze der Zustimmung gegenüber SR-REQ-0272/Q. Geprüft wurden der gebundene
+Quellvertrag 1.0.1, 12.20.1/2, Q, Source-/Plan-/Manifestcode und bestehende
+Importverluste. Deren Zustimmung bleibt gesondert und wird nicht erweitert.
+
+Alternativen: Laufende Nummern wären von Sortierung/anderen Verlusten abhängig;
+pauschale Zustimmung oder freie verlustbehaftete Referenztransformation würde
+den Originalschutz abschwächen; ein neues allgemeines Migrationsformat wäre
+unnötig. Gewählt ist die vollständige native source-/target-/input-gebundene
+Inventur aus 12.20.3 mit SHA-256-IDs und passivem Einzelzustimmungsgate.
+Der vorhandene Change Plan bleibt unverändert. Der Referenzpfad bleibt
+verlustfrei; fehlerhafte Kandidaten erhalten keinen ausführbaren Plan.
+
+Grenzprüfung 2.4.1: Die Entscheidung liegt vollständig in 16.h, ändert
+keine Nutzerentscheidung, reale Daten oder öffentliche Pfadunterstützung.
+IDs, Anhänge, Originale, Audit, Kompatibilität, Sicherheit und menschliche
+Reviews bleiben erhalten. Neue Diagnose-/Beobachtungswerte sind versioniert;
+eine spätere Rücknahme betrifft nur diesen Vertrag und Code, niemals alte
+Originale, Nachweise oder Results. Es fehlen keine externen Pflichtfakten.
+Einzelfreigabe oder reale Risikoakzeptanz wird nicht erfunden.
+
+W liefert den vollständigen schreibfreien Erhaltungsvergleich samt gebundener
+Verlustinventur und verhindert stille Konfigurations-Extensionverluste im
+nativen Planer. R vervollständigt das explizite Einzelzustimmungsgate,
+Bindungs-/Alias-/Typ-/Manipulationsgrenzen und negative Abnahmen. C teilt
+die strukturelle JSON-Verlustinventur mit Import, erhält aber dessen
+bestehenden Bericht und unveränderte Verweigerung nicht akzeptierter Verluste.
+Unabhängige Sollwerte, mehrere Verluste, Quellen-/Zielwechsel, fehlende
+Zustimmungen, leere Inventur und vollständig passive Zustimmung werden
+abgenommen. Öffentliche CLI, Writer/Recovery, Abschlussbericht und globale
+Zielverification bleiben in ihren bestätigten späteren M16-Schritten.
+
+Vorbereiteter Stand: Klärung; 16.h bleibt offen. Keine Testkörper oder Fixtures
+in Dev. Jede Stage erhält ein eigenes Apply-Gate (Rotation 1/2/0/1) plus
+ungefilterte vollständige Pflichtauswahl. Häkchen und Produktzähler gelten
+erst nach ihrem Gate; Dokumentänderung ist kein Produktabschluss.
 
 ## Korrekturbundle 573 — vollständiger Rest 16.g.W/R/C
 
@@ -2005,7 +2054,7 @@ Kein offener Produktplanschritt wird durch diese Testoptimierung abgeschlossen.
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 76
+plan_revision: 77
 implementation_plan_commits_total: 900
 implementation_plan_commits_completed: 681
 last_completed_plan_commit: 16.g.C
@@ -36374,7 +36423,7 @@ Die W-/R-/C-Abnahmen im obigen OFF-PLAN-Abschnitt gelten vollständig.
 <a id="step-16-h"></a>
 ### 16.h – Verlustbehandlung und Erweiterungserhalt
 
-**Anforderungsbezug:** `SR-REQ-0268`–`SR-REQ-0269`.
+**Anforderungsbezug:** `SR-REQ-0268`–`SR-REQ-0269`, `SR-REQ-0512`; Detailvertrag 12.20.3.
 **Verifikationsbezug:** `SR-VER-0020`. Die exakten SR-TC-Identitäten stehen in der vollständigen Matrix.
 
 #### 16.h.W – Let it Work

@@ -40,7 +40,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d41e46bb1a3d064c6c533d98fda6a724b16b1ce5d4327e1a35ba924dfc75eafd",
+  "specification_sha256": "453cfffee201512305bce7ca0ab12c0a6a94e097c1eb67ba94679f76cce9ea3c",
   "steps": [
     "Create divergent local/source projections with valid separate historical hashes under all four explicit strategies.",
     "Observe SRV148, no adopted target or refreshed history, and unchanged original inputs; exercise canonical type/Unicode distinctions and rejected invalid projections.",

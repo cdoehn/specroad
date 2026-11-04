@@ -1,19 +1,19 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.57
+## Version 0.2.58
 
 | Feld | Wert |
 |---|---|
 | Dokument-ID | `SR-SPEC-0001` |
-| Dokumentversion | `0.2.55` |
+| Dokumentversion | `0.2.58` |
 | Zielrelease | `SpecRoad Single-Repository Workbench 0.2.0` |
 | Status | **Fachlich konsolidierte Arbeitsgrundlage; technische Reviewentscheidung gesondert dokumentiert, formale Baseline-Freigabe und Produktabnahme nicht durch dieses Dokument erklärt** |
-| Stand | 3. November 2026 |
+| Stand | 4. November 2026 |
 | Sprache | Deutsch; technische Feldnamen, Enum-Werte und CLI-Kommandos Englisch |
-| Fachliche Quelle | **Diese Repositoryfassung v0.2.55 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.55 liegt mit dieser Änderung nicht vor.** |
+| Fachliche Quelle | **Diese Repositoryfassung v0.2.58 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.58 liegt mit dieser Änderung nicht vor.** |
 | Bearbeitbare Satzquelle | Diese Datei; eine spätere PDF muss denselben versionierten Inhalt wiedergeben. |
-| Vorgängerversion | Repository-Spezifikation v0.2.54 vom 3. November 2026; historische Nachweise bleiben unverändert. |
-| Prüf- und Entscheidungsgrundlage | MIGRATION-BACKUP-561: delegierte Detailentscheidung gemäß SPECROAD-DECISION-1/2.4.3.1 unter erteiltem Vertrag 4; separate Apply-Gates für Klärung und 16.d.W/R/C. |
-| Änderungsart | Versionierte vollständige Quellsicherung mit unveränderten 0.1-Originalen, getrennten Hashdomänen und gebundenem Sicherungsbericht; Migrationswriter, öffentliche Integration und Release-Abnahmen bleiben offen. |
+| Vorgängerversion | Repository-Spezifikation v0.2.57 vom 3. November 2026; historische Nachweise bleiben unverändert. |
+| Prüf- und Entscheidungsgrundlage | MIGRATION-LOSS-574: delegiert gemäß SPECROAD-DECISION-1/2.4.3.1 unter erteiltem Vertrag 4; Klärung und 16.h.W/R/C mit eigenen Apply-Gates. |
+| Änderungsart | Gebundene Verlustinventur und Einzelzustimmung, unveränderter Originalschutz und verlustfreier Referenzpfad. Kein neuer öffentlicher Migrationspfad oder Produktreview. |
 
 > **Verbindlicher Quellenwechsel:** Die ausdrückliche Nutzerentscheidung REFERENCE-SOURCE-551 wird als v0.2.50 umgesetzt. Der neue Quellvertrag ist Entwurfsarbeit vom 3. November 2026, kein Nachweis eines früher existierenden Formats. Bestehende 0.2-Verträge, Transport-, Sicherheits- und Reviewgrenzen bleiben erhalten.
 
@@ -5202,6 +5202,118 @@ Zielversion, andere Mappings oder andere Metadaten scheitern vor Mutation.
 Ein Planhash allein ist kein Autorisierungsbeleg. Backup-, Review-, Lock-,
 Journal-/Recovery- und öffentliche M16-Gates bleiben zusätzlich erforderlich.
 
+
+#### 12.20.3 Verlustinventur und Einzelzustimmung — MIGRATION-LOSS-574
+
+Diese delegierte Detailentscheidung nach SPECROAD-DECISION-1 und 2.4.3.1
+konkretisiert 16.h und SR-REQ-0268/0269/0512. Verlust-IDs, ihre Bindung und
+die Abgrenzung zur zugesagten Verlustfreiheit waren bisher nicht definiert.
+Der Vertrag ergänzt eine schreibfreie Inventur; er führt weder einen neuen
+verlustbehafteten Versionspfad noch eine allgemeine Löschfreigabe ein.
+
+**Erhaltungsvergleich.** Vor einem positiven nativen Migrationsplan werden
+die tatsächlichen vollständigen Quell- und Kandidatenbytes verglichen.
+Die Quelle muss durch ihren eingebauten Leser vollständig qualifiziert sein.
+Alle ursprünglichen aktuellen und historischen Originale bleiben an ihrer
+Inhaltsadresse bytegleich; unveränderbare aktuelle Dateien, Payloads und
+sonstige übergebene Dateien bleiben zusätzlich an ihrem bestehenden Pfad
+bytegleich. Nur die in 12.20.2 ausdrücklich ersetzten veränderbaren Artefakte,
+die Projektkonfiguration und das archivierte feste Quellprofil sind von
+diesem zusätzlichen Gleichheitsvergleich am aktuellen Pfad ausgenommen.
+Ein fehlendes Original, eine fehlende Datei oder ein beschädigter Anhang
+wird nicht durch eine vorhandene gleiche ID oder eine Zustimmung ersetzt.
+
+Bei veränderbaren Artefakten werden die übrigen Fachwerte nach JCS verglichen,
+einschließlich IDs, Erstellungsmetadaten, Provenienz, externer Identitäten,
+Audit-/Reviewbezüge und aller unbekannten gültigen Extensions. Ausgenommen
+sind ausschließlich die in 12.20.2 tatsächlich gebundenen Änderungen:
+Schema/ID-Schema, Revision und Änderungsmetadaten; approved nach draft;
+gemappte Requirementfelder; ergänzte Relationsidentitäten nach Q.3; die
+genannten Basis-/Plan-/Inhalts-/Statusfelder offener Proposals. Eine solche
+Ausnahme gilt nur für ihren exakt vorgeschriebenen Zielwert, niemals als
+pauschale Freigabe, das gesamte Feld zu verändern. Alte Werte bleiben im
+Originalarchiv. Historische Freigabe ist weiterhin keine aktuelle Freigabe.
+
+Die explizite vollständige Zielkonfiguration darf ihre nach 12.20.2 gebundenen
+Konfigurationswerte festlegen, muss aber jeden vorhandenen Extension-Namespace
+mit seinem gesamten ursprünglichen JSON-Wert enthalten. Zusätzliche neue
+Namespaces sind möglich. Fehlende oder abweichende Source-Extensions sind
+ein sichtbarer Verlust, kein Default zum Löschen; der Aufrufer muss seine
+Zielkonfiguration korrigieren. Die Runtime ergänzt keine versteckten Mappings.
+
+**Geschlossene Beobachtung.** `migration-loss-report-v1` enthält exakt
+`format_version,binding,losses,lossless,write_authorized,approval_granted,
+report_sha256`. Beide Autoritätsfelder sind false; lossless ist genau dann
+true, wenn losses leer ist. binding enthält exakt `step_id,source_contract,
+target_contract,source_model_root_sha256,source_files_sha256,
+target_files_sha256,inputs_sha256`. Verträge und Schrittkennung stammen aus
+12.20.2; Dateilisten und Eingaben werden vollständig in derselben JCS-Domäne
+wie der Plan gebunden. Die Inventur ist keine globale Zielvalidierung.
+
+Jede Verlustzeile enthält exakt `loss_id,path,pointer,reason,hash_domain,
+before,after`. reason ist `missing` oder `changed`; hash_domain ist `json`
+oder `bytes`. before/after enthalten jeweils exakt `present,value`.
+Bei fehlendem Wert ist present=false und value=null, bei vorhandenem
+JSON-null dagegen present=true und value=null. In der JSON-Domäne ist value
+der vertraglich zu erhaltende Sollwert beziehungsweise der tatsächlich
+beobachtete Kandidatenwert. Der Sollwert entspricht dem Quellwert, außer
+bei den oben abschließend genannten, explizit gebundenen Transformationen;
+dort wird ausschließlich deren exakter Zielwert erwartet. In der Byte-Domäne
+ist value genau `{size,sha256}`
+der tatsächlichen Bytes. Bytezeilen haben den leeren Pointer. JSON-Pointer
+folgen RFC 6901 ohne Unicode-Normalisierung. Objektänderungen werden nach
+Mitglied aufgelöst; ein fehlendes Mitglied wird einmal samt vollständigem
+Wert gemeldet. Arrays sind geordnete atomare Werte, keine Mengen oder anhand
+ähnlicher Inhalte neu zugeordneten Datensätze. Unterschiedliche JSON-Typen,
+insbesondere true und 1, sind verschieden; 1 und 1.0 sind nach JCS gleich.
+Unbekannte Extensions werden nie interpretiert oder als Code ausgeführt.
+
+Zeilen sind nach `(path,pointer,hash_domain)` in UTF-8-Byteordnung eindeutig
+sortiert. Die vollständige ID lautet `LOSS-` plus die 64 kleingeschriebenen
+Hexziffern von SHA256(JCS(["migration-loss-v1",binding,<Zeile ohne loss_id>])).
+Eine weitere Quelle, ein anderes Ziel, Mapping oder Vertragsstand erzeugt
+andere IDs; kein Index und kein gekürzter Hash ist eine Verlustidentität.
+report_sha256 ist SHA256(JCS(<Bericht ohne report_sha256>)). Eine gespeicherte
+oder neu selbstgehashte Behauptung ersetzt keine native Neuberechnung.
+Bei noch fehlenden Planungsangaben ist loss_report null, keine leere
+Erfolgsinventur. Ein vollständiger Planungsbefund bindet die tatsächliche
+Inventur im zusätzlichen Feld loss_report; das bestehende geschlossene
+Change-Plan-/migration-inputs-v1-Format bleibt unverändert.
+
+**Einzelzustimmung.** Das gemeinsame schreibfreie Verlustgate verlangt die
+native Inventur, ihren ausdrücklich erwarteten vollen Berichtshash und die
+Liste der vom Aufrufer einzeln angegebenen LOSS-IDs. Standard ist die leere
+Liste. Boolesche Pauschalfreigaben, Wildcards, Duplikate, unbekannte IDs und
+IDs einer anderen Quelle oder eines anderen Ziels sind ungültig. Fehlende
+Einzelzustimmungen werden vollständig gemeldet; kein Teilwrite ist zulässig.
+Ein gültiger vollständiger Vergleich liefert `migration-loss-acceptance-v1`
+mit exakt `format_version,report_sha256,accepted_losses,write_authorized,
+approval_granted`: accepted_losses enthält jede vollständige Verlustzeile
+in Berichtsreihenfolge, die Autoritätsfelder bleiben false. Das Ergebnis
+ist passiv und für den späteren Abschlussbericht verwendbar, kein Review,
+Receipt, unterstützter Pfad oder Write-Token. Die Einbindung in öffentliche
+CLI, Transaktion und Abschlussbericht verbleibt in 16.i/16.k/16.l.
+
+**Unübergehbare Grenze.** Der Referenzpfad 0.1/1.0.1 nach 0.2 bleibt nach
+SR-REQ-0272 und Q vollständig verlustfrei. Jede nichtleere Inventur verhindert
+einen ausführbaren Plan (`ready=false`, change_plan und erwartete Zielwurzel
+null, Blocker `migration_lossless_contract_violation`), auch wenn eine
+passive Einzelzustimmung vorliegt. Quellfehler bleiben Quellfehler, fehlende
+Mappings bleiben Blocker. Das Gate bietet keine Möglichkeit, Originalschutz,
+Schemas, Sicherheitsgates, Human-Reviews oder die Downgradegrenze aufzuheben.
+Es registriert auch keinen hypothetischen verlustbehafteten Pfad. Neue
+solche Pfade benötigen ihren eigenen normativen und nativen Vertrag.
+
+**Abnahme.** Positive Abnahmen prüfen unbekannte verschachtelte Unicode-
+Extensions in Artefakten, Relationen und Konfiguration, externe Identitäten,
+Originalarchive, Payloads und historische Auditbezüge. Negative Abnahmen
+verändern oder entfernen mehrere unabhängige Werte und Originalbytes,
+prüfen vollständige Einzelinventur, stabile gebundene IDs, Null/Fehlen,
+Typ-/Arraygrenzen, fehlende und fremde Zustimmung sowie Quelle-/Zielwechsel.
+Vollständige passive Zustimmung ist positiv prüfbar, bleibt aber getrennt
+von der streng verlustfreien Referenzmigration. Kein Dev-Testlauf, kein
+erfundener menschlicher Review und kein Verlust echter Nutzerdaten werden
+durch diesen Detailvertrag behauptet oder autorisiert.
 
 ### 12.21 Suspect Relations und fachliche Relationsreviews
 
