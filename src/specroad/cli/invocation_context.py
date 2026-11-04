@@ -25,12 +25,14 @@ class InvocationContextBuilder:
     recovery_authority: object = None
     recovery_actor: object = None
     restore_services: object = None
+    publication_authority: object = None
+    migration_gates: tuple = ()
 
     def prepare(self, invocation, *, cwd=None, profile_layers=(), configuration_layer=None):
         if not isinstance(invocation, Invocation):
             raise CommandUsageError("A parsed invocation is required")
         # An old context is not a reusable preflight certificate.
-        current = replace(invocation, resolved=None, recovery_authority=None, recovery_actor=None, restore_services=None)
+        current = replace(invocation, resolved=None, recovery_authority=None, recovery_actor=None, restore_services=None, publication_authority=None, migration_gates=())
         check = runtime.check_runtime if self.runtime_check is None else self.runtime_check
         resolve = resolve_options if self.option_resolver is None else self.option_resolver
         try:
@@ -41,6 +43,16 @@ class InvocationContextBuilder:
             from ..changes.recovery_values import RecoveryAuthority
             if type(self.recovery_authority) is not RecoveryAuthority:
                 raise CommandUsageError('A trusted RecoveryAuthority is required')
+        if self.publication_authority is not None:
+            from ..changes.publication_values import PublicationAuthority
+            if type(self.publication_authority) is not PublicationAuthority:
+                raise CommandUsageError('A trusted PublicationAuthority is required')
+        if type(self.migration_gates) is not tuple:
+            raise CommandUsageError('Trusted native migration gates are required')
+        if self.migration_gates:
+            from ..validation import ModelGate
+            if any(type(g) is not ModelGate for g in self.migration_gates):
+                raise CommandUsageError('Trusted native migration gates are required')
         services = None
         # Bootstrap does not load project services merely to create defaults.
         # Explicit host inputs still receive their native type validation.
@@ -52,7 +64,7 @@ class InvocationContextBuilder:
         if self.recovery_actor is not None:
             from ..changes.authoring import normalize_authoring_actor
             actor = normalize_authoring_actor(self.recovery_actor).as_fields()
-        return replace(current, recovery_authority=self.recovery_authority, recovery_actor=actor, restore_services=services, resolved=resolve(
+        return replace(current, publication_authority=self.publication_authority, migration_gates=self.migration_gates, recovery_authority=self.recovery_authority, recovery_actor=actor, restore_services=services, resolved=resolve(
             current, cwd=cwd, profile_layers=profile_layers,
             configuration_layer=configuration_layer))
 

@@ -22,6 +22,11 @@ def check_history(current, target, current_configuration, target_model):
     Corrupt readable mutable bytes remain backup bytes, not model inputs.
     """
     check_operational_history(current, target, current_configuration.project_id)
+    from ..migration.model_inputs import qualified
+    if 'mappings/legacy-manifest.json' in current:
+        legacy = qualified(current, current_configuration.project_id)
+        require(all(target.get(p) == current[p] for p in legacy.protected_paths),
+                'restore_protected_history_conflict', exit_code=6)
     for path, raw in current.items():
         if path == 'specroad.json':
             continue

@@ -506,6 +506,8 @@ def builtin_registry() -> CommandRegistry:
     commands += read_commands()
     commands += metadata_commands()
     commands += work_commands()
+    from .migration_commands import migration_commands
+    commands += migration_commands()
     readers = {'artifact.show', 'query', 'trace', 'why', 'impact', 'diff', 'configuration.evaluate', 'roadmap.explain', 'export', 'bundle.verify', 'render', 'view.render', 'diagram'}
     return CommandRegistry(tuple(replace(command, options=command.options + _read_runtime_options(),
         budget_policy_version='runtime-budget-v2') if command.command_id in readers else command

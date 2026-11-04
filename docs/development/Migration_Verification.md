@@ -36,9 +36,8 @@ Der Writer prüft Source und Ziel frisch unter dem gemeinsamen Writerlock,
 publiziert eine Transaktion und erhält die bisherigen Receipt-/Recoveryregeln.
 Ein Work-Replay startet keine automatische Recovery und erhöht keine Revision.
 
-Diese Bibliotheksarbeit registriert keine noch ungeprüften öffentlichen
-CLI-/Restorepfade. Die verbleibenden M16-Integrationsgates bleiben ausdrücklich
-offen. Tests verwenden klar bezeichnete synthetische Daten, Hostautorität
-und Buildbindungen; sie erfinden keine echten Reviews oder externen Läufe.
-Verhaltenstests laufen ausschließlich in Apply vor jedem einzelnen Commit.
-Collection und AST-/Paketprüfung sind kein Testerfolg.
+Die öffentliche Anbindung mit expliziten Eingaben, Hostautorität und realem
+Bundle-/Restore-Rundweg ist in Migration_CLI.md beschrieben. Historische
+Originale bleiben an Q.0 gebunden. Die tatsächlichen Apply-Results und die
+volle verfügbare C-Suite entscheiden über den M16-Abschluss; vorbereiteter
+Code, Collection und statische Paketprüfung sind keine Verhaltensnachweise.

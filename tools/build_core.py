@@ -46,7 +46,7 @@ def build_core(source_root: Path, output: Path) -> tuple[Path, Path]:
         # files under src remain excluded, including host/editor artifacts.
         relative_package = path.relative_to(package).as_posix()
         if path.suffix != ".py" and relative_package not in {
-            "reference01_data/contract.json", "reference01_data/registry.txt",
+            "reference01_data/contract.json", "reference01_data/registry.txt", "reference01_data/migration-vector.json",
             "profile_data/profiles.json", "profile_data/core.json",
             "profile_data/software-de.json", "profile_data/software-en.json",
             "language_data/registry.txt", "language_data/snapshot.json",

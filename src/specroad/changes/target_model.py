@@ -109,9 +109,15 @@ class TargetModel:
         paths = ['specroad.json', *(d.path for d in documents + files)]
         if len(set(p.casefold() for p in paths)) != len(paths):
             raise TargetError('target_duplicate_path')
+        from ..migration.model_inputs import qualified, original
+        legacy = qualified({'specroad.json': configuration_bytes,
+            **{d.path: d.content for d in documents + files}}, configuration.project_id)
+        object.__setattr__(self, 'legacy_manifest', legacy)
         records, seen = [], set()
         for document in documents:
-            r = SourceRelations(document.content, path=document.path)
+            item = original(legacy, document.path, document.content)
+            r = (SourceRelations.from_legacy(item) if item is not None else
+                 SourceRelations(document.content, path=document.path))
             identity = r.identity
             if identity.id in seen: raise TargetError('target_duplicate_artifact_id')
             seen.add(identity.id)
@@ -206,7 +212,9 @@ class TargetModel:
                 **{d.path:d.content for d in self.documents + self.resource_files}}
 
     @property
-    def artifacts(self): return [parse_json_object(d.content) for d in self.documents]
+    def artifacts(self):
+        from ..migration.model_inputs import records
+        return [r.data for r in records(self)]
 
     @property
     def resources_sha256(self):
@@ -220,9 +228,11 @@ class TargetModel:
         resources = list(self.resources)
         attachments = {r.data['path']:r.data for r in resources if r.data['kind'] == 'attachment'}
         archives = {r.data['path']:r.data for r in resources if r.data['kind'] == 'archive'}
-        referenced_archives = set()
+        legacy = self.legacy_manifest
+        referenced_archives = {p for p in (() if legacy is None else legacy.protected_paths)
+                               if p.startswith('archive/objects/')}
         for artifact in artifacts:
-            if artifact['artifact_type'] == 'baseline':
+            if artifact['artifact_type'] == 'baseline' and artifact.get('schema_version') != '0.1.0':
                 for row in artifact.get('manifest', []):
                     if 'object_path' in row:
                         referenced_archives.add(row['object_path'])
@@ -234,9 +244,8 @@ class TargetModel:
                 a = AttachmentDescriptor.from_data(declared)
                 if attachments.get(a.path) != {'kind':'attachment', **a.data}:
                     raise TargetError('target_referenced_attachment_unbound')
-            resources.append(ManifestResource(self.binding, {'kind':'artifact', 'id':artifact['id'],
-                'artifact_type':artifact['artifact_type'], 'revision':artifact['revision'],
-                'sha256':canonical_json_sha256(artifact)}))
+            from ..migration.model_inputs import artifact_resource
+            resources.append(artifact_resource(self, artifact))
         if set(archives) != referenced_archives:
             raise TargetError('target_unreferenced_archive_object')
         return assemble_model_manifest(self.configuration, self.binding, resources,

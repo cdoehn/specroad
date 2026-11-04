@@ -50,6 +50,19 @@ def declared_resource(raw, path, *, normative=False):
 
 def declared_files(files, *, include_payloads=True):
     """Visit normative paths and, when required, their preserved byte closure."""
+    from ..migration.model_inputs import qualified
+    from .values import require
+    legacy = None
+    if 'mappings/legacy-manifest.json' in files:
+        try:
+            project_id = parse_json_object(files['specroad.json'])['project_id']
+            legacy = qualified(files, project_id)
+        except (ModelError, KeyError) as error:
+            raise RestoreError('restore_legacy_source_contract_required',
+                               path='mappings/legacy-manifest.json') from error
+    protected = () if legacy is None else legacy.protected_paths
     for path, raw in sorted(files.items()):
+        if path in protected:
+            continue
         if _normative_path(path) or include_payloads and path.startswith(('archive/', 'attachments/')):
             declared_resource(raw, path)

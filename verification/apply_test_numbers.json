@@ -24900,6 +24900,14 @@
     "tests/test_migration_work.py::test_writer_interruption_requires_native_recovery_not_work_replay[archived]",
     "tests/test_migration_work.py::test_writer_interruption_requires_native_recovery_not_work_replay[committed]",
     "tests/test_migration_work.py::test_writer_interruption_requires_native_recovery_not_work_replay[journal:prepared:0]",
-    "tests/test_migration_work.py::test_writer_interruption_requires_native_recovery_not_work_replay[receipts]"
+    "tests/test_migration_work.py::test_writer_interruption_requires_native_recovery_not_work_replay[receipts]",
+    "tests/test_migration_cli.py::test_builtin_provider_executes_independent_full_project_vector",
+    "tests/test_migration_cli.py::test_incomplete_explicit_mapping_yields_an_honest_non_executable_plan",
+    "tests/test_migration_cli.py::test_public_apply_can_plan_from_explicit_inputs_and_is_idempotent",
+    "tests/test_migration_cli.py::test_public_migration_plan_apply_verify_and_restore_roundtrip[argv]",
+    "tests/test_migration_cli.py::test_public_migration_plan_apply_verify_and_restore_roundtrip[mapping]",
+    "tests/test_migration_cli.py::test_public_request_replay_uses_native_completed_journal",
+    "tests/test_migration_graph.py::test_synthetic_registry_cannot_register_an_unknown_product_source_contract",
+    "tests/test_migration_planning.py::test_source_plan_uses_only_the_explicit_builtin_reference_path"
   ]
 }

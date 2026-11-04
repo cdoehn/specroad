@@ -58,7 +58,7 @@ def _plan(files, *, inputs, actor, planned_at, change_plan_id, request_id, targe
         'inputs_sha256': digest(inputs), 'ready': False, 'blockers': sorted(blockers, key=lambda x: (x['path'], x['reason'])),
         'change_plan': None, 'expected_target_model_root_sha256': None,
         'expected_proposal_basis_sha256': None, 'write_authorized': False, 'approval_granted': False,
-        'public_apply_supported': False, 'backup_verified': False, 'current_readiness_verified': False,
+        'public_apply_supported': True, 'backup_verified': False, 'current_readiness_verified': False,
         'loss_report': None}
     # Missing proposal plans do not prevent calculation of their required basis.
     if target is None or any(b['reason'] != 'proposal_mapping_required' for b in blockers):

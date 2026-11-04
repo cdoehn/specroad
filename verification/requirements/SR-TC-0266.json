@@ -1,8 +1,13 @@
 {
   "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [],
-  "expected_exit_codes": [],
+  "expected_exit_codes": [
+    0,
+    3,
+    6
+  ],
   "fixture_ids": [
+    "SR-FIX-MIGRATION-PUBLIC-INTEGRATION-v1",
     "SR-FIX-MIGRATION-SOURCE-BACKUP-v1",
     "SR-FIX-REFERENCE01-SOURCE-v1_0_1"
   ],
@@ -10,17 +15,17 @@
   "json_pointers": [],
   "method": "automated_behavior",
   "open_items": [
-    "Behavior tests are prepared for the separate Apply gate; none ran in Dev.",
-    "End-to-end migration transaction, lock-bound final admission and CLI/Restore integration remain open in later M16 steps.",
-    "A source backup grants neither human approval nor portable idempotency, historical authenticity or current release readiness."
+    "R completes negative public/portable Work integration; the independent Apply gates and C full-suite execution remain required."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Vor einer Migration MUSS SpecRoad ein verifiziertes, deterministisches Projektbundle des vollständigen Ausgangszustands erzeugen und dessen Pfad und Hash im Migrationsbericht speichern.",
-    "scope": "16.d R: complete original-byte migration source backup and external path/hash report using the native source reader and M15 archive/publication primitives. Independent ZIP/file inventories and real error boundaries; no migration writer, end-to-end CLI, release or human approval success claimed."
+    "scope": "M16-INTEGRATION-588.W: public CLI and Restore integration, actual native byte/history/backup/transaction/work contracts. Implementation state is not execution evidence; Apply must execute its own bound mandatory gate before committing. C requires the entire available suite. Synthetic fixtures grant no human review or release authority."
   },
   "preconditions": [
-    "Q.5.1 MIGRATION-BACKUP-561; complete reference source 1.0.1, explicit full-file and ZIP hash bindings; no inferred historical compatibility."
+    "Q.5.1 MIGRATION-BACKUP-561; complete reference source 1.0.1, explicit full-file and ZIP hash bindings; no inferred historical compatibility.",
+    "Only the explicitly defined reference-0.1-v1 v1.0.1 synthetic contract is supported; no historical real projects or 0.2 draft compatibility is asserted.",
+    "Actual current public command registry, explicit authored target mapping, source/plan/report hashes, external backup and fresh host authority; no persisted successful report grants a write."
   ],
   "primary_verification_id": "SR-VER-0020",
   "required_environment": {
@@ -39,7 +44,9 @@
     "Capture every original file, create the canonical source-format ZIP and independently reconstruct exact original bytes.",
     "Verify source format and transitive historical closure plus independently bound ZIP/full-file hashes.",
     "Publish create-only outside project roots, re-read actual durable bytes and report their full path/hash; source schema and originals remain unchanged.",
-    "Reopen backup files against full current source; reject forged metadata, incomplete closure, stale sources, unsafe paths, I/O/no-space and post-publication corruption without schema mutation."
+    "Reopen backup files against full current source; reject forged metadata, incomplete closure, stale sources, unsafe paths, I/O/no-space and post-publication corruption without schema mutation.",
+    "Execute public migrate plan/apply/verify on complete synthetic source files, then create a real full project bundle and restore a damaged mutable artifact; compare every preserved original/hash and full target model binding.",
+    "Execute the independently authored full-project provider vector; retain exact IDs, extensions, provenance and audit semantics; same target is a no-op and original request replay uses its native journal."
   ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0266",
@@ -109,6 +116,12 @@
     "tests/test_migration_backup_right.py::test_unsafe_source_entries_fail_before_publication[collision]",
     "tests/test_migration_backup_right.py::test_unsafe_source_entries_fail_before_publication[fifo]",
     "tests/test_migration_backup_right.py::test_unsafe_source_entries_fail_before_publication[nested_project]",
-    "tests/test_migration_backup_right.py::test_unsafe_source_entries_fail_before_publication[symlink]"
+    "tests/test_migration_backup_right.py::test_unsafe_source_entries_fail_before_publication[symlink]",
+    "tests/test_migration_cli.py::test_builtin_provider_executes_independent_full_project_vector",
+    "tests/test_migration_cli.py::test_incomplete_explicit_mapping_yields_an_honest_non_executable_plan",
+    "tests/test_migration_cli.py::test_public_apply_can_plan_from_explicit_inputs_and_is_idempotent",
+    "tests/test_migration_cli.py::test_public_migration_plan_apply_verify_and_restore_roundtrip[argv]",
+    "tests/test_migration_cli.py::test_public_migration_plan_apply_verify_and_restore_roundtrip[mapping]",
+    "tests/test_migration_cli.py::test_public_request_replay_uses_native_completed_journal"
   ]
 }

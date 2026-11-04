@@ -24,6 +24,8 @@ def receipt_path(path):
 def _path_kind(path):
     if re.fullmatch(re.escape(REQUESTS_ROOT) + r'/[0-9a-f]{64}\.json', path):
         return 'request'
+    if re.fullmatch(re.escape(RECEIPTS_ROOT) + r'/[0-9a-f]{64}/(?:journal\.json|source\.zip|(?:before|staging|moves)/[^/]+|journal\.[0-9a-f]{64}\.pending|recovery-[^/]+\.json)', path):
+        return 'migration_original'
     match = re.fullmatch(re.escape(RECEIPTS_ROOT) + r'/[0-9a-f]{64}/(transaction|committed)\.json', path)
     require(match is not None, 'bundle_receipt_path_invalid')
     return match[1]
@@ -37,6 +39,9 @@ def completed_receipts(files, project_id):
         # the live change-apply journal/retry constructors.
         from ..proposals.receipts import read_proposal_receipts
         from ..changes.receipt_values import transaction_receipt_path, request_receipt_path
+        from ..migration.receipts import completed_migration_receipts
+        migration_journals, migration_names = completed_migration_receipts(files, project_id)
+        files = {p: b for p, b in files.items() if p not in migration_names}
         remaining = dict(files)
         proposal_journals, claimed = [], set()
         for path, raw in files.items():
@@ -62,6 +67,7 @@ def completed_receipts(files, project_id):
         values = {}
         for path, raw in files.items():
             kind = _path_kind(path)
+            require(kind != 'migration_original', 'bundle_receipt_completion_missing', code='SRV060')
             value = {'request': RequestReceipt, 'transaction': TransactionReceipt,
                      'committed': CommittedJournal}[kind](raw)
             expected = completion_marker_path(value.data['transaction_id']) if kind == 'committed' else value.path
@@ -97,7 +103,7 @@ def completed_receipts(files, project_id):
             used.update(linked)
             journals.append(journal)
         require(used == set(files), 'bundle_receipt_completion_missing', code='SRV060')
-        return tuple(journals + proposal_journals)
+        return tuple(journals + proposal_journals) + migration_journals
     except (ReceiptError, ModelError) as error:
         raise BundleError(error.reason) from error
 

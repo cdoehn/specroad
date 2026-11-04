@@ -33,6 +33,7 @@
   "fixture_ids": [
     "SR-FIX-LEGACY-MANIFEST-v1",
     "SR-FIX-MIGRATION-PLAN-v1",
+    "SR-FIX-MIGRATION-PUBLIC-INTEGRATION-v1",
     "SR-FIX-MIGRATION-VERIFY-WORK-v1",
     "SR-FIX-REFERENCE01-SOURCE-v1_0_1"
   ],
@@ -40,15 +41,12 @@
   "json_pointers": [],
   "method": "automated_behavior",
   "open_items": [
-    "Behavior tests are prepared for separate Apply gates; no test bodies ran in Dev.",
-    "Public migration/CLI/Restore, transaction/global target verification and historical readiness remain in subsequent M16 steps; no other source contract is qualified.",
-    "Prepared 16.k behavior requires its own actual Apply gates. Static checks and collection are not behavior evidence.",
-    "The M16 public CLI/path/Restore integration gate and full available suite remain explicitly unproved; nonexistent 16.l is not a substitute."
+    "R completes negative public/portable Work integration; the independent Apply gates and C full-suite execution remain required."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Jede in ein 0.2-Modell eingebundene unveränderbare Legacy-Ressource MUSS durch das normative Manifest und die Originalhashbindung aus Anhang Q registriert sein.",
-    "scope": "16.k.R native complete verification of owned/live targets, all byte inventories and source-native historical algorithms. R adds native Work planning/verification, portable checkpoint replay and actual final writer/recovery integration. No Dev behavior test was executed; no public CLI/Restore or M16 release success is claimed."
+    "scope": "M16-INTEGRATION-588.W: public CLI and Restore integration, actual native byte/history/backup/transaction/work contracts. Implementation state is not execution evidence; Apply must execute its own bound mandatory gate before committing. C requires the entire available suite. Synthetic fixtures grant no human review or release authority."
   },
   "preconditions": [
     "Source selects exactly the compiled specroad-reference-0.1 contract version 1.0.1.",
@@ -56,7 +54,9 @@
     "The complete reference source 1.0.1 and all explicit target resources/mappings are supplied as owned bytes; no host defaults or guessed semantic values.",
     "Only read-only planning is exercised. Actual migration publication still requires the later native lock, full backup, global validation, audit, recovery and authority gates.",
     "Native read-only migration targets with complete original archive, fixed source contract and manifest; no actual migration or human approval.",
-    "Complete actual source backup, explicit original native plan/report and external bindings; full target bytes, genuine host semantic services and no invented authority."
+    "Complete actual source backup, explicit original native plan/report and external bindings; full target bytes, genuine host semantic services and no invented authority.",
+    "Only the explicitly defined reference-0.1-v1 v1.0.1 synthetic contract is supported; no historical real projects or 0.2 draft compatibility is asserted.",
+    "Actual current public command registry, explicit authored target mapping, source/plan/report hashes, external backup and fresh host authority; no persisted successful report grants a write."
   ],
   "primary_verification_id": "SR-VER-0042",
   "required_environment": {
@@ -87,7 +87,9 @@
     "Observe a real completed native migration with verified receipts; reject stale or incomplete targets, extra files, unsafe paths, active recovery and tampered bindings/reports without writes.",
     "Resume every native source/plan/verification phase through actual Work checkpoints and hash-bound external packages into a new sandbox and process; compare full results with direct execution.",
     "Reject forged phases/completion, changed runtime, missing source/backup/authority and interrupted checkpoints; preserve the confirmed prefix or return a concrete blocker.",
-    "Publish one final actual native migration transaction with fresh live checks, then prove historical request replay and explicit recovery after interruption."
+    "Publish one final actual native migration transaction with fresh live checks, then prove historical request replay and explicit recovery after interruption.",
+    "Execute public migrate plan/apply/verify on complete synthetic source files, then create a real full project bundle and restore a damaged mutable artifact; compare every preserved original/hash and full target model binding.",
+    "Execute the independently authored full-project provider vector; retain exact IDs, extensions, provenance and audit semantics; same target is a no-op and original request replay uses its native journal."
   ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0641",
@@ -158,6 +160,12 @@
     "tests/test_legacy_manifest_right.py::test_write_target_authorization_refuses_protected_originals[current]",
     "tests/test_legacy_manifest_right.py::test_write_target_authorization_refuses_protected_originals[manifest]",
     "tests/test_legacy_manifest_right.py::test_wrong_expected_type_never_uses_legacy_bypass",
+    "tests/test_migration_cli.py::test_builtin_provider_executes_independent_full_project_vector",
+    "tests/test_migration_cli.py::test_incomplete_explicit_mapping_yields_an_honest_non_executable_plan",
+    "tests/test_migration_cli.py::test_public_apply_can_plan_from_explicit_inputs_and_is_idempotent",
+    "tests/test_migration_cli.py::test_public_migration_plan_apply_verify_and_restore_roundtrip[argv]",
+    "tests/test_migration_cli.py::test_public_migration_plan_apply_verify_and_restore_roundtrip[mapping]",
+    "tests/test_migration_cli.py::test_public_request_replay_uses_native_completed_journal",
     "tests/test_migration_planning.py::test_all_originals_and_transitive_archives_remain_verifiable_bytes",
     "tests/test_migration_planning.py::test_common_plan_schema_is_retrievable_and_validates_the_real_specialist_plan",
     "tests/test_migration_planning.py::test_core_and_pyz_materialize_identical_plans_without_optional_packages",
@@ -178,7 +186,7 @@
     "tests/test_migration_planning.py::test_same_source_and_mappings_keep_original_representations_out_of_semantic_roots_only",
     "tests/test_migration_planning.py::test_shared_change_plan_roundtrip_and_specialist_route_never_authorize_regular_apply",
     "tests/test_migration_planning.py::test_source_hash_mismatch_is_a_conflict_instead_of_a_missing_mapping",
-    "tests/test_migration_planning.py::test_source_plan_does_not_register_public_migration_or_restore_support",
+    "tests/test_migration_planning.py::test_source_plan_uses_only_the_explicit_builtin_reference_path",
     "tests/test_migration_planning.py::test_values_are_detached_and_input_objects_are_never_rewritten",
     "tests/test_migration_planning_right.py::test_colliding_derived_relation_id_does_not_get_randomly_renamed",
     "tests/test_migration_planning_right.py::test_every_real_source_byte_and_membership_change_is_stale[addition]",

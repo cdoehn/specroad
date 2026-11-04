@@ -1,25 +1,31 @@
 {
   "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [],
-  "expected_exit_codes": [],
+  "expected_exit_codes": [
+    0,
+    3,
+    6
+  ],
   "fixture_ids": [
+    "SR-FIX-MIGRATION-PUBLIC-INTEGRATION-v1",
     "SR-FIX-MIGRATION-TRANSACTION-v1"
   ],
   "implementation_status": "partial",
   "json_pointers": [],
   "method": "automated_behavior",
   "open_items": [
-    "The prepared behavior tests require their real separate Apply gates; no test bodies ran in Dev.",
-    "Public registration, remaining historical reports, migrate verify/CLI and Restore integration remain in the following M16 steps. No historical human decision is invented."
+    "R completes negative public/portable Work integration; the independent Apply gates and C full-suite execution remain required."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Eine wiederholte Migration auf dieselbe bereits erreichte Zielversion MUSS ohne semantische Änderung erfolgreich und idempotent enden oder eindeutig als nicht erforderlich gemeldet werden.",
-    "scope": "Native 16.i R library writer, complete byte-bound target validation and metadata; R adds full explicit recovery and historical request/no-op behavior. Public 0.1 registration, detailed historical evaluation, CLI/verify and Restore remain in 16.j/k/l; no completed Apply or release evidence is claimed."
+    "scope": "M16-INTEGRATION-588.W: public CLI and Restore integration, actual native byte/history/backup/transaction/work contracts. Implementation state is not execution evidence; Apply must execute its own bound mandatory gate before committing. C requires the entire available suite. Synthetic fixtures grant no human review or release authority."
   },
   "preconditions": [
     "Exact native migration plan and actual qualified source bytes, explicit target resources, real external source ZIP, host authority and the common native kernel mutex. No stored success substitutes for a required check.",
-    "After rollback, replan and create an actual external backup from every current source file, including all retained passive audit bytes, before probing the independent consumed-ID boundary."
+    "After rollback, replan and create an actual external backup from every current source file, including all retained passive audit bytes, before probing the independent consumed-ID boundary.",
+    "Only the explicitly defined reference-0.1-v1 v1.0.1 synthetic contract is supported; no historical real projects or 0.2 draft compatibility is asserted.",
+    "Actual current public command registry, explicit authored target mapping, source/plan/report hashes, external backup and fresh host authority; no persisted successful report grants a write."
   ],
   "primary_verification_id": "SR-VER-0020",
   "required_environment": {
@@ -45,11 +51,19 @@
     "Reject a rollback marker more than one unacknowledged effect ahead, changed marker bytes and a mismatching digest filename while preserving the original journal, unknown marker and actual project bytes.",
     "After successful rollback and read-only reentry, reject the original stale plan/backup with transition_source_changed and exit 6, preserving the complete project tree and absence of a new journal.",
     "Build a fresh native plan and real external source ZIP; verify exact source_files, protected passive paths and reopened backup contents. Reject reuse of the rolled-back transaction ID with transition_id_collision and exit 6 while preserving all source, journal and backup bytes.",
-    "With the same fresh plan and backup, a new transaction ID must publish the exact normative target and preserve every original passive audit file and the external backup byte for byte."
+    "With the same fresh plan and backup, a new transaction ID must publish the exact normative target and preserve every original passive audit file and the external backup byte for byte.",
+    "Execute public migrate plan/apply/verify on complete synthetic source files, then create a real full project bundle and restore a damaged mutable artifact; compare every preserved original/hash and full target model binding.",
+    "Execute the independently authored full-project provider vector; retain exact IDs, extensions, provenance and audit semantics; same target is a no-op and original request replay uses its native journal."
   ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0270",
   "test_ids": [
+    "tests/test_migration_cli.py::test_builtin_provider_executes_independent_full_project_vector",
+    "tests/test_migration_cli.py::test_incomplete_explicit_mapping_yields_an_honest_non_executable_plan",
+    "tests/test_migration_cli.py::test_public_apply_can_plan_from_explicit_inputs_and_is_idempotent",
+    "tests/test_migration_cli.py::test_public_migration_plan_apply_verify_and_restore_roundtrip[argv]",
+    "tests/test_migration_cli.py::test_public_migration_plan_apply_verify_and_restore_roundtrip[mapping]",
+    "tests/test_migration_cli.py::test_public_request_replay_uses_native_completed_journal",
     "tests/test_migration_transaction.py::test_active_operational_source_is_never_migration_input",
     "tests/test_migration_transaction.py::test_actual_backup_is_required_not_report_claim[bytes]",
     "tests/test_migration_transaction.py::test_actual_backup_is_required_not_report_claim[inside]",

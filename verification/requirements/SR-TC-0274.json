@@ -17,26 +17,31 @@
     "backward_as_forward",
     "unordered_contracts"
   ],
-  "expected_exit_codes": [],
+  "expected_exit_codes": [
+    0,
+    3,
+    6
+  ],
   "fixture_ids": [
-    "SR-FIX-MIGRATION-GRAPH-v1"
+    "SR-FIX-MIGRATION-GRAPH-v1",
+    "SR-FIX-MIGRATION-PUBLIC-INTEGRATION-v1"
   ],
   "implementation_status": "partial",
   "json_pointers": [],
   "method": "automated_behavior",
   "open_items": [
-    "Current bound Apply behavior evidence is still required; Dev performs collection/static checks only.",
-    "16.b and the actual 0.1 migration/Restore path require the full versioned Q.0 source contract.",
-    "Migration CLI, saved plan freshness/binding, native writers, backups, audit and M16 integration remain outside 16.a."
+    "R completes negative public/portable Work integration; the independent Apply gates and C full-suite execution remain required."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "SpecRoad DARF ein Downgrade nur anbieten, wenn ein ausdrücklich implementierter verlustfreier Rückweg existiert.",
-    "scope": "16.a graph/step kernel only: real synthetic transformations and exact contract/path/inverse boundaries. Known identity is the only no-op; resolution never transforms or publishes. No product legacy compatibility, actual project migration, CLI success, full-suite or release proof. Behavior tests are prepared for the separate Apply gate, not executed in Dev."
+    "scope": "M16-INTEGRATION-588.W: public CLI and Restore integration, actual native byte/history/backup/transaction/work contracts. Implementation state is not execution evidence; Apply must execute its own bound mandatory gate before committing. C requires the entire available suite. Synthetic fixtures grant no human review or release authority."
   },
   "preconditions": [
     "Only trusted compiled providers; immutable complete synthetic contract identities.",
-    "The built-in product registry is isolated and advertises no historical migration path."
+    "The built-in product registry is isolated and advertises no historical migration path.",
+    "Only the explicitly defined reference-0.1-v1 v1.0.1 synthetic contract is supported; no historical real projects or 0.2 draft compatibility is asserted.",
+    "Actual current public command registry, explicit authored target mapping, source/plan/report hashes, external backup and fresh host authority; no persisted successful report grants a write."
   ],
   "primary_verification_id": "SR-VER-0020",
   "required_environment": {
@@ -54,11 +59,19 @@
   "steps": [
     "Admit full step contracts; resolve forward and explicit reverse routes without invoking providers or writes.",
     "Execute actual transforms against independent literal vectors, including strict pre/postconditions.",
-    "Observe exact typed refusals, preservation of caller inputs and the unchanged product support boundary."
+    "Observe exact typed refusals, preservation of caller inputs and the unchanged product support boundary.",
+    "Execute public migrate plan/apply/verify on complete synthetic source files, then create a real full project bundle and restore a damaged mutable artifact; compare every preserved original/hash and full target model binding.",
+    "Execute the independently authored full-project provider vector; retain exact IDs, extensions, provenance and audit semantics; same target is a no-op and original request replay uses its native journal."
   ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0274",
   "test_ids": [
+    "tests/test_migration_cli.py::test_builtin_provider_executes_independent_full_project_vector",
+    "tests/test_migration_cli.py::test_incomplete_explicit_mapping_yields_an_honest_non_executable_plan",
+    "tests/test_migration_cli.py::test_public_apply_can_plan_from_explicit_inputs_and_is_idempotent",
+    "tests/test_migration_cli.py::test_public_migration_plan_apply_verify_and_restore_roundtrip[argv]",
+    "tests/test_migration_cli.py::test_public_migration_plan_apply_verify_and_restore_roundtrip[mapping]",
+    "tests/test_migration_cli.py::test_public_request_replay_uses_native_completed_journal",
     "tests/test_migration_graph.py::test_admission_and_resolution_never_invoke_any_provider",
     "tests/test_migration_graph.py::test_equal_schema_label_with_different_provenance_needs_an_actual_step",
     "tests/test_migration_graph.py::test_known_but_disconnected_contract_is_unsupported",
@@ -66,7 +79,7 @@
     "tests/test_migration_graph.py::test_real_preconditions_prevent_field_loss_and_invalid_derived_values[forward]",
     "tests/test_migration_graph.py::test_real_preconditions_prevent_field_loss_and_invalid_derived_values[reverse]",
     "tests/test_migration_graph.py::test_required_inverse_is_explicit_for_every_edge",
-    "tests/test_migration_graph.py::test_synthetic_registry_never_advertises_a_product_legacy_path",
+    "tests/test_migration_graph.py::test_synthetic_registry_cannot_register_an_unknown_product_source_contract",
     "tests/test_migration_graph.py::test_unknown_contracts_are_not_noops[both]",
     "tests/test_migration_graph.py::test_unknown_contracts_are_not_noops[source]",
     "tests/test_migration_graph.py::test_unknown_contracts_are_not_noops[target]",

@@ -66,12 +66,15 @@ class InspectionSnapshot:
         keys = tuple(key for key in keys if key not in ('core', 'core@0.2.0'))
         profile = compose_profiles(profile_sources, core_key='core@0.2.0',
             cli_profiles=keys, language_registry=registry, language_packages=selected_packages)
-        archives = set()
+        legacy = source._legacy_manifest
+        archives = {p for p in (() if legacy is None else legacy.protected_paths)
+                    if p.startswith('archive/objects/')}
         if include_archive_objects:
             from ..archive.objects import ObjectReference
             for document in documents:
                 value = parse_json_object(document.content)
-                if value.get('artifact_type') == 'baseline':
+                if (value.get('artifact_type') == 'baseline'
+                        and not (legacy is not None and document.path in legacy.protected_paths)):
                     for row in value.get('manifest', []):
                         reference = ObjectReference(row.get('sha256'), row.get('size'))
                         if row.get('object_path') != reference.path:

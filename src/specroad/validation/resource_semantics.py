@@ -26,6 +26,11 @@ def check_normative_resources(model):
             raise ModelError('standalone_rule_reader_required', path=document.path)
         if kind is not PathClass.MAPPING:
             continue
+        if document.path == 'mappings/legacy-manifest.json':
+            from ..migration.model_inputs import qualified
+            if qualified(model.source_files, model.configuration.project_id) is None:
+                raise ModelError('legacy_manifest_required')
+            continue
         value = parse_json_object(document.content)
         reader = readers.get(value.get('mapping_format_version'))
         if reader is None:

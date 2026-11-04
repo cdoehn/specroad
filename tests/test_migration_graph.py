@@ -112,11 +112,11 @@ def test_real_preconditions_prevent_field_loss_and_invalid_derived_values(direct
     assert value == original
 
 
-def test_synthetic_registry_never_advertises_a_product_legacy_path():
+def test_synthetic_registry_cannot_register_an_unknown_product_source_contract():
     registry, _ = chain()
     verify_vectors(registry)
     product = builtin_registry()
-    assert product.contracts == product.steps == ()
+    assert len(product.steps) == 1 and product.steps[0].step_id == 'reference01-to-current.v1'
     with pytest.raises(MigrationError) as caught:
         product.resolve(contract('0.1.0'), contract('0.2.0'))
     assert caught.value.reason == 'unknown_source'

@@ -36,15 +36,20 @@ def _images(journal, backup):
 
 
 def _verify_images(files, prefix, journal, backup, *, partial=False):
-    expected = _images(journal, backup)
-    # Known pending journal/move files are retained, but each actual byte must
-    # match its deterministic purpose. Unknown work never gets cleaned away.
     from ..migration._backup_source import _scan
-    names = [p[len(prefix)+1:] for p in _scan(files) if p.startswith(prefix + '/')]
+    originals = {p[len(prefix)+1:]: read(files, p) for p in _scan(files)
+                 if p.startswith(prefix + '/')}
+    verify_owned_images(originals, journal, backup, partial=partial)
+
+
+def verify_owned_images(originals, journal, backup, *, partial=False):
+    """Same exact native byte proof, without filesystem authority or root claims."""
+    expected = _images(journal, backup)
+    names = tuple(originals)
     required = {'journal.json'} | (set() if partial else set(expected))
     require(required <= set(names), 'transition_images_missing')
     for name in names:
-        raw = read(files, prefix + '/' + name)
+        raw = originals[name]
         if name == 'journal.json':
             require(raw == journal.source_bytes, 'transition_journal_changed')
         elif name in expected:

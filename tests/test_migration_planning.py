@@ -113,7 +113,7 @@ def test_shared_change_plan_roundtrip_and_specialist_route_never_authorize_regul
     assert plan.execution_ready is False and plan.write_authorized is False
     with pytest.raises(AuthoringError) as caught: bind_plan_authoring(plan)
     assert caught.value.exit_code == 7
-    assert result.write_authorized is False and result.data['public_apply_supported'] is False
+    assert result.write_authorized is False and result.data['public_apply_supported'] is True
     assert result.data['backup_verified'] is False and result.data['current_readiness_verified'] is False
     with pytest.raises(TypeError): bool(result)
 
@@ -220,9 +220,12 @@ def test_common_plan_schema_is_retrievable_and_validates_the_real_specialist_pla
     assert len(plan.operations)==1
 
 
-def test_source_plan_does_not_register_public_migration_or_restore_support():
+def test_source_plan_uses_only_the_explicit_builtin_reference_path():
     files=vector_source(); result=plan_migration(files,inputs=target_inputs(files),**FIELDS)
-    assert result.ready and builtin_registry().steps==()
+    assert result.ready
+    graph = builtin_registry()
+    assert len(graph.steps) == 1 and graph.steps[0].step_id == 'reference01-to-current.v1'
+    assert graph.steps[0].source.contract_sha256 == result.data['source_contract']['contract_sha256']
 
 
 def test_core_and_pyz_materialize_identical_plans_without_optional_packages(tmp_path):

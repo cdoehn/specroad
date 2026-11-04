@@ -1,8 +1,13 @@
 {
   "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [],
-  "expected_exit_codes": [],
+  "expected_exit_codes": [
+    0,
+    3,
+    6
+  ],
   "fixture_ids": [
+    "SR-FIX-MIGRATION-PUBLIC-INTEGRATION-v1",
     "SR-FIX-MIGRATION-RELATIONS-v1",
     "SR-FIX-REFERENCE01-SOURCE-v1_0_1"
   ],
@@ -10,16 +15,17 @@
   "json_pointers": [],
   "method": "automated_behavior",
   "open_items": [
-    "Behavior tests are prepared for separate Apply gates; no test bodies ran in Dev.",
-    "Public migration/CLI/Restore, general legacy loading and transaction/global verification remain in subsequent M16 steps; no other source contract is qualified."
+    "R completes negative public/portable Work integration; the independent Apply gates and C full-suite execution remain required."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Die Migration 0.1.0 nach 0.2.0 MUSS Relations-IDs reproduzierbar nach der Ableitungs- und Legacy-Projektionsregel in Anhang Q bilden.",
-    "scope": "16.f R: deterministic source-bound relations in the native read-only reference migration planner and restriction against ordinary derived allocation. Public migration/CLI/Restore, legacy loader and transaction gates remain separate."
+    "scope": "M16-INTEGRATION-588.W: public CLI and Restore integration, actual native byte/history/backup/transaction/work contracts. Implementation state is not execution evidence; Apply must execute its own bound mandatory gate before committing. C requires the entire available suite. Synthetic fixtures grant no human review or release authority."
   },
   "preconditions": [
-    "Qualified reference-0.1/1.0.1 original snapshots; explicit target inputs; literal independent Q.3 vectors, never invented human review or migration authorization."
+    "Qualified reference-0.1/1.0.1 original snapshots; explicit target inputs; literal independent Q.3 vectors, never invented human review or migration authorization.",
+    "Only the explicitly defined reference-0.1-v1 v1.0.1 synthetic contract is supported; no historical real projects or 0.2 draft compatibility is asserted.",
+    "Actual current public command registry, explicit authored target mapping, source/plan/report hashes, external backup and fresh host authority; no persisted successful report grants a write."
   ],
   "primary_verification_id": "SR-VER-0020",
   "required_environment": {
@@ -37,11 +43,19 @@
   "steps": [
     "Compare exact namespace/project/source/index/relation JCS preimages, SHA-256 and Crockford IDs with independently authored fixed vectors.",
     "Bind manifest and mutable target projections to original bytes/snapshot/classification; preserve immutable originals and regular random allocation.",
-    "Reject distinct-input collisions across current/history even with missing target inputs; accept repeated identical derivations without random renaming."
+    "Reject distinct-input collisions across current/history even with missing target inputs; accept repeated identical derivations without random renaming.",
+    "Execute public migrate plan/apply/verify on complete synthetic source files, then create a real full project bundle and restore a damaged mutable artifact; compare every preserved original/hash and full target model binding.",
+    "Execute the independently authored full-project provider vector; retain exact IDs, extensions, provenance and audit semantics; same target is a no-op and original request replay uses its native journal."
   ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0273",
   "test_ids": [
+    "tests/test_migration_cli.py::test_builtin_provider_executes_independent_full_project_vector",
+    "tests/test_migration_cli.py::test_incomplete_explicit_mapping_yields_an_honest_non_executable_plan",
+    "tests/test_migration_cli.py::test_public_apply_can_plan_from_explicit_inputs_and_is_idempotent",
+    "tests/test_migration_cli.py::test_public_migration_plan_apply_verify_and_restore_roundtrip[argv]",
+    "tests/test_migration_cli.py::test_public_migration_plan_apply_verify_and_restore_roundtrip[mapping]",
+    "tests/test_migration_cli.py::test_public_request_replay_uses_native_completed_journal",
     "tests/test_migration_relations.py::test_bound_projections_are_owned_and_cannot_mutate_later_materialization",
     "tests/test_migration_relations.py::test_exact_q3_preimage_digest_and_crockford_identity[normative]",
     "tests/test_migration_relations.py::test_exact_q3_preimage_digest_and_crockford_identity[numeric_canonical]",

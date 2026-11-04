@@ -26,7 +26,8 @@ def evidence_assessments(model):
             subjects[identity] = reader(document.content, path=document.path)
     reports = []
     for identity, value in sorted(state.items()):
-        if value['artifact_type'] != 'evidence':
+        from ..migration.model_inputs import is_original
+        if value['artifact_type'] != 'evidence' or is_original(model, documents[identity]):
             continue
         document = documents[identity]
         record = RecordArtifact(document.content, expected_type='evidence', path=document.path)

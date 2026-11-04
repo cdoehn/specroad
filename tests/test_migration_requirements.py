@@ -144,6 +144,6 @@ def test_requirement_schema_fields_and_authored_decisions_have_distinct_plan_bin
     fields = next(r['fields'] for r in op['new_required_fields'] if r['path'] == REQUIREMENT_PATH)
     assert fields == ['id_scheme', 'language', 'normative_force', 'relations/*/id_scheme', 'relations/*/relation_id']
     assert result.data['approval_granted'] is False and result.write_authorized is False
-    assert result.data['backup_verified'] is False and result.data['public_apply_supported'] is False
+    assert result.data['backup_verified'] is False and result.data['public_apply_supported'] is True
     original = files[REQUIREMENT_PATH]; h = sha256(original).hexdigest()
     assert planned_files(files, result.change_plan)['archive/objects/' + h[:2] + '/' + h] == original

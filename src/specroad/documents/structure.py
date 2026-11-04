@@ -79,7 +79,8 @@ def assess_document_structure(model, *, scope_descriptor=None):
             or descriptor['configuration_id'] is not None):
         raise DocumentStructureError('document_structure_full_project_scope_required', pointer='/scope_descriptor')
     model = model.snapshot()
-    records = tuple(SourceRelations(d.content, path=d.path) for d in model.documents)
+    from ..migration.model_inputs import records as model_records
+    records = model_records(model)
     index = {r.identity.id: r for r in records}
     values = {identity: source.data for identity, source in index.items()}
     diagnostics = []

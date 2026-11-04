@@ -19,9 +19,31 @@ def receipt_history(files, project_id):
 def check_receipt_targets(journals, target):
     # Follow only exact before/after byte bindings of complete native writes.
     # Timestamps and transaction-name order never establish publication order.
+    from ..migration.receipts import HistoricalMigrationJournal
+    def effects(journal):
+        if type(journal) is HistoricalMigrationJournal:
+            op = journal.plan.data['operations'][0]
+            before = {r['path']: r['size'] for r in op['source_files']}
+            after = {r['path']: r['size'] for r in op['target_files']}
+            return [dict(row, existed_before=row['before_sha256'] is not None,
+                         before_size=before.get(row['path']), after_size=after.get(row['path']))
+                    for row in op['changes']
+                    if row['after_sha256'] is not None]
+        return journal.data['files']
+    def operations(journal):
+        if type(journal) is HistoricalMigrationJournal:
+            from ..migration.plan_values import unb64
+            result = []
+            for row in effects(journal):
+                if row['path'].startswith('spec/'):
+                    value = parse_json_object(unb64(row['after_bytes_base64']))
+                    result.append({'op': 'migration', 'target': value['id'],
+                                   'expected_revision': value['revision'] - 1})
+            return result
+        return journal.data['authoring_binding']['operations']
     edges = {}
     for journal in journals:
-        for item in journal.data['files']:
+        for item in effects(journal):
             if item['existed_before']:
                 edges.setdefault(item['path'], {}).setdefault(
                     (item['before_size'], item['before_sha256']), set()).add(
@@ -30,8 +52,8 @@ def check_receipt_targets(journals, target):
         # A complete inventory binds the original transaction, not perpetual
         # membership of every unchanged file in all later Restore targets.
         # Only actual successful writes can establish a new published revision.
-        operations = journal.data['authoring_binding']['operations']
-        for entry in journal.data['files']:
+        native_operations = operations(journal)
+        for entry in effects(journal):
             row = {'path': entry['path'], 'size': entry['after_size'],
                    'sha256': entry['after_sha256']}
             path = row['path']
@@ -60,7 +82,7 @@ def check_receipt_targets(journals, target):
                 from ._history import protected_record
                 require(not protected_record(candidate),
                         'restore_receipt_history_conflict', path=path, exit_code=6)
-                relevant = [op for op in operations if identity.id in
+                relevant = [op for op in native_operations if identity.id in
                     (op.get('target'), op.get('source'), op.get('artifact', {}).get('id'))]
                 revisions = [op['expected_revision'] + 1 for op in relevant if 'expected_revision' in op]
                 revisions.extend(1 for op in relevant if op['op'] == 'create')

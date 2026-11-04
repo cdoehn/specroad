@@ -79,6 +79,8 @@ class ProjectBundleSnapshot:
         descriptor = ScopeDescriptor(_default_scope())
         model = snapshot.model
         for artifact in model.artifacts:
+            if artifact.get('schema_version') == '0.1.0' and model.legacy_manifest is not None:
+                continue  # TargetModel already requalified the exact original closure.
             (validate_domain_fields if artifact['artifact_type'] in DOMAIN_TYPES else
              validate_record_fields)(artifact)
         closure, native, artifacts, _ = export_scope(model, descriptor)

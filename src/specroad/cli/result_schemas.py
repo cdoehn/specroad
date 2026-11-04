@@ -85,6 +85,9 @@ def _with_currentness(schema, *, comparison=False):
 
 
 def _fields(schema_id):
+    if schema_id == 'migration-command-v1':
+        from .migration_result import schema
+        return schema()
     text = {"type": "string"}; nonempty = {"type": "string", "minLength": 1}
     obj = {"type": "object"}; boolean = {"type": "boolean"}
     count = {"type": "integer", "minimum": 0}
@@ -411,7 +414,7 @@ def _fields(schema_id):
             "supported_output_format_versions": {"type": "object", "additionalProperties": strings}})
     if schema_id == "command-description-v1":
         schema = _object({"format_version": {"const": "1.0.0"}, **surface, "budget_policy_version": _nullable(text),
-            "lock_kind": {"enum": ['none', 'bootstrap', 'recovery']}, "work": work,
+            "lock_kind": {"enum": ['none', 'bootstrap', 'recovery', 'writer']}, "work": work,
             "parameters": _array(_object({"name": text, "kind": {"const": "positional"},
                 "datatype": text, "required": boolean, "choices": strings})),
             "options": _array(_object({"flag": text, "datatype": text, "repeatable": boolean,

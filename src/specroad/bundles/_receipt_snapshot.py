@@ -35,6 +35,19 @@ def _observe(source):
         require(directory and re.fullmatch('[0-9a-f]{64}', name) is not None, 'bundle_receipt_path_invalid')
         parent = RECEIPTS_ROOT + '/' + name
         entries = names(parent)
+        if ('journal.json', False) in entries:
+            pending = [parent]
+            while pending:
+                directory_path = pending.pop()
+                for child, is_directory in names(directory_path):
+                    path = directory_path + '/' + child
+                    if is_directory:
+                        pending.append(path)
+                    else:
+                        require(_path_kind(path) in ('migration_original', 'transaction'),
+                                'bundle_receipt_path_invalid')
+                        paths.append(path)
+            continue
         require(set(entries) == {('transaction.json', False), ('committed.json', False)},
                 'bundle_receipt_completion_missing', code='SRV060')
         paths.extend(parent + '/' + child for child, _ in entries)
@@ -67,6 +80,7 @@ class ReceiptSnapshot:
     def verify_current(self):
         self._recheck_files()
         from ..proposals.receipts import HistoricalProposalJournal
+        from ..migration.receipts import HistoricalMigrationJournal
         # Pure historical completion readers must not route through the active
         # journal/retry API. Recheck their complete owned group and unchanged
         # directory/inode/byte observations, never current publication authority.
@@ -75,7 +89,7 @@ class ReceiptSnapshot:
                 tuple(j.source_bytes for j in self.journals), 'bundle_receipt_inventory_changed')
         try:
             for journal in self.journals:
-                if type(journal) is not HistoricalProposalJournal:
+                if type(journal) not in (HistoricalProposalJournal, HistoricalMigrationJournal):
                     read_transaction_completion(self.source, journal.data['transaction_id'])
         except ReceiptError as error:
             raise BundleError(error.reason, code=None, exit_code=error.exit_code) from error

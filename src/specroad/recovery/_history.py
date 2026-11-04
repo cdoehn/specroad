@@ -25,9 +25,14 @@ def history_target(files, additions, current, configuration):
     their original bytes and complete dependencies. Their current native
     qualification is separate. No mutable source data is guessed here.
     """
-    fold = _HistoryFold(files, additions, current, configuration)
-    fold.retain_current()
     declared_files(current, include_payloads=False)
+    fold = _HistoryFold(files, additions, current, configuration)
+    from ..migration.model_inputs import qualified
+    if 'mappings/legacy-manifest.json' in current:
+        legacy = qualified(current, configuration.project_id)
+        for path in legacy.protected_paths:
+            fold._add(path, current[path], 'protected_reference_original')
+    fold.retain_current()
     fold.close_baselines()
     fold.retain_archives()
     fold.retain_attachments(fold.attachment_bindings())

@@ -34,7 +34,7 @@ def _native_options(invocation):
         work_recovery_reason=options.get('--work-recovery-reason'))
 
 
-def continuation(command, store, expected):
+def continuation(command, store, expected, *, migration_gates=()):
     value = expected.as_dict()
     path = store._location.path
     claim = ContinuationClaim(value['work_id'], value['progress']['completed_units'],
@@ -51,7 +51,10 @@ def continuation(command, store, expected):
             current = store._read_chain(held, pointer[0])
             require(current.raw == expected.raw and current.as_dict()['state'] == 'running'
                     and current.as_dict()['tool_build'] == _build(), 'work_continuation_changed', exit_code=6)
-            if value['command_class'] == 'transport_operational':
+            if value['command_id'] in ('migrate.plan','migrate.verify'):
+                from .migration_work import checked
+                checked(current, gates=migration_gates)
+            elif value['command_class'] == 'transport_operational':
                 from ..work.transport import checked
                 checked(current)
             elif '--from' in value['normalized_arguments']['options']:
@@ -160,6 +163,9 @@ def _work(invocation):
         return _payload(operation, inspect_work_status(store))
     if operation == 'prompt':
         return _payload(operation, _prompt(store, options))
+    if store._initial.as_dict()['command_id'] in ('migrate.plan','migrate.verify'):
+        from .migration_work import work_command as migration_work_command
+        return migration_work_command(invocation, store, operation)
     if store._initial.as_dict()['command_class'] == 'transport_operational':
         return _transport_work(invocation, store, operation)
     if operation == 'cancel':

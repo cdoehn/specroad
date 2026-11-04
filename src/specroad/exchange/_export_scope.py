@@ -34,10 +34,14 @@ def _archive_bindings(model, records):
         if record.identity.artifact_type == 'baseline':
             from ..archive.verification import verify_baseline_objects
             from ..archive.objects import SnapshotObject
-            verify_baseline_objects(record.source_bytes,
-                tuple(SnapshotObject(d.content) for d in model.resource_files
-                      if d.path.startswith('archive/objects/')))
-            archives[record.identity.id] = tuple(sorted({r['object_path'] for r in record.data['manifest']}))
+            if record.storage_class != 'legacy_immutable':
+                verify_baseline_objects(record.source_bytes,
+                    tuple(SnapshotObject(d.content) for d in model.resource_files
+                          if d.path.startswith('archive/objects/')))
+            archives[record.identity.id] = tuple(sorted({
+                'archive/objects/' + r['byte_sha256'][:2] + '/' + r['byte_sha256']
+                if record.storage_class == 'legacy_immutable' else r['object_path']
+                for r in record.data['manifest']}))
     return archives
 
 
@@ -101,7 +105,7 @@ def _artifact_uses(records, active, attachments, registries, by_resource):
                 pending.extend(node.get('children', []))
         identities = list(data.get('external_identities', []))
         for relation in data['relations']:
-            for identity in relation['external_identities']:
+            for identity in relation.get('external_identities', []):
                 identities.append(identity)
                 kind = 'hierarchy' if relation['type'] == 'contains' else 'relation'
                 for registry in registries:
@@ -137,9 +141,8 @@ def _native_manifest(model, descriptor, inventory, seeds, closure, records, by_r
     """Project the selected native bytes through the canonical manifest domain."""
     selected = {r.identity.id: r for r in records if r.identity.id in closure.artifact_ids}
     manifest_resources = [by_resource[key] for key in closure.resource_ids]
-    manifest_resources.extend(ManifestResource(model.binding, {'kind': 'artifact', 'id': key,
-        'artifact_type': r.identity.artifact_type, 'revision': r.data['revision'],
-        'sha256': canonical_json_sha256(r.data)}) for key, r in selected.items())
+    from ..migration.model_inputs import artifact_resource
+    manifest_resources.extend(artifact_resource(model, r.data) for r in selected.values())
     rows = [r.data for r in manifest_resources]
     native = ModelManifest(project_manifest_value(model.configuration.project_id, descriptor.data,
         [r for r in rows if r['kind'] == 'artifact'],
@@ -153,12 +156,18 @@ def _native_manifest(model, descriptor, inventory, seeds, closure, records, by_r
 
 def export_scope(model, descriptor):
     """Bind native selection and closure; never accept asserted inventories/hashes."""
-    records = tuple(SourceRelations(d.content, path=d.path) for d in model.documents)
+    from ..migration.model_inputs import records as model_records
+    records = model_records(model)
     by_resource, resources = _scope_resources(model)
     archives = _archive_bindings(model, records)
     inventory = ScopeSeedInputs(model.configuration, records, resources, archive_bindings=archives)
     active = {r.resource_id for r in resources if r.active}
     uses, registries = _resource_uses(model, by_resource)
+    legacy = getattr(model, 'legacy_manifest', None)
+    if legacy is not None:
+        uses[resource_node('legacy-preservation@1.0.0')] = {
+            resource_node(p) for p in legacy.protected_paths if p.startswith(('archive/', 'attachments/'))}
+
     attachments = {d.path: d for d in model.attachment_descriptors}
     uses.update(_artifact_uses(records, active, attachments, registries, by_resource))
     reviews = RelationReviewStatuses(records)

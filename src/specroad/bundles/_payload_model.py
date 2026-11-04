@@ -47,6 +47,9 @@ def owned_payload_model(files, *, source_label, partial=False):
         require(registry_path in files, 'bundle_language_registry_missing')
         registry = LanguageRegistry(files[registry_path], expected_sha256=registry_binding['sha256'],
                                     expected_version=registry_binding['registry_version'])
+    from ..migration.model_inputs import qualified, original
+    legacy = qualified(files, configuration.project_id)
+    require(legacy is None or not partial, 'bundle_legacy_full_project_required')
     documents, resources, profiles, packages, attachments = [], [], [], {}, {}
     for path, raw in files.items():
         if path == 'specroad.json' or (partial and path.startswith('bundle-context/')):
@@ -56,8 +59,9 @@ def owned_payload_model(files, *, source_label, partial=False):
         if kind is PathClass.ARTIFACT:
             value = parse_json_object(raw, path=path)
             require(type(value.get('artifact_type')) is str, 'bundle_artifact_type')
-            (validate_domain_fields if value.get('artifact_type') in DOMAIN_TYPES
-             else validate_record_fields)(value)
+            if original(legacy, path, raw) is None:
+                (validate_domain_fields if value.get('artifact_type') in DOMAIN_TYPES
+                 else validate_record_fields)(value)
             documents.append(document)
             for item in value.get('attachments', []):
                 attachment = AttachmentDescriptor.from_data(item)

@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 91 · **Stand:** 4. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.61
+**Planrevision:** 92 · **Stand:** 4. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.61
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 Schritte und 900 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; die ausdrücklich genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wird nach 10.7.10 innerhalb von 15.l.R vorgezogen. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -34,6 +34,42 @@ Produktfreigaben und die Grenzen aus 2.4.1/2.4.2/2.4.4 bleiben unverändert.
 Dieser Plan ändert keine alten Aufträge, Antworten, Blockaden oder
 Laufzeitdaten und ist keine Start-/Resume-Anweisung.
 
+## Korrekturbundle 589 — vollständiger offener Rest M16-INTEGRATION-588.W/R/C
+
+Nativ geprüftes Fehler-Result:
+`04f67b36428bd1d4664a6f72549988bf0ba22d2d1f4b7c44e25e017ac1ccb92f`,
+HEAD `df4d8ca0a696a72a750a3219aab97076de192066`, Dirty-Fingerprint
+`df1bdc49d54d7894`. M16-SCOPE-588 wurde nach 7307 bestandenen Tests
+committed. W scheiterte mit 10 Fehlern bei 9485 bestandenen Tests; R/C
+wurden nicht begonnen. Der vollständige Arbeitsstand entspricht der
+angekündigten W-Stage. Der erfolgreiche Klärungscommit bleibt erhalten.
+
+Die tatsächlichen Fehler betreffen die neue Integrationsgrenze:
+- Das unabhängige Build-Inventar muss auch den neu installierten synthetischen
+  Migrationsvektor binden; Bytes und fehlende Ressourcen bleiben geprüft.
+- Registry-/Capability-Erwartungen enthalten die drei neuen Migrationsbefehle
+  und ihre echten Plan-/Schreibklassen. Eine Registry ohne Work-fähige Befehle
+  muss weiterhin fehlende Work-Fähigkeit melden.
+- Bootstrap lädt den ModelGate-Typ erst für ausdrücklich übergebene Gates;
+  leere Standardgates aktivieren keine Sicherheits-/Projektbausteine.
+- Das handgeschriebene Vektor-Manifest verwendet die eingefrorene Vertrags-ID
+  specroad-reference-0.1; Referenzordnername und Vertragsidentität sind verschieden.
+  Vollständige unabhängige Zielbytes bleiben der Vergleichsmaßstab.
+- Die öffentlichen Bundle-Aufrufe der Integrationstests wählen explizit den
+  vollständigen Projektscope, bevor Restore beziehungsweise Ablehnung geprüft wird.
+- Restore prüft die deklarierte Quellformatgrenze vor dem History-Fold, sodass
+  eine unqualifizierbare Legacy-Registrierung den bestehenden Fehlervertrag behält.
+
+Spezifikation 0.2.61 und aktive Katalogbindungen bleiben unverändert. Keine
+neue Klärung, keine Freigabe und keine Budgetänderung. Alle offenen IDs und
+Rollen W/R/C werden vollständig fortgeführt, mit Vorherbytes aus diesem Result.
+Zusätzlich zu den ursprünglichen Pflichtauswahlen werden Build-Identität,
+Registry, Capabilities und Bootstrap vollständig geprüft. Jede Stage erhält
+ihr eigenes N=3-plus-Pflichtgate (Gruppen 2/0/1) vor ihrem Commit. C behält
+alle verfügbaren Tests als ungefilterte Pflichtauswahl und bytegleiche R-Tests.
+Dev führt keine Verhaltenstests aus. M16 bleibt bis zum tatsächlichen
+erfolgreichen C-Commit und vollständigen Suite-Gate offen; Produktstand 693/900.
+
 ## M16-INTEGRATION-588 — manueller Klärungspräfix und vollständiges W/R/C
 
 Ausdrücklicher Nutzerauftrag vom 4. November 2026: Es existieren noch keine
@@ -65,6 +101,16 @@ Jede Stage wird erst nach ihrem eigenen erfolgreichen Apply-Testgate committed.
 Keine Testkörper oder manuellen Verhaltensproben in Dev. W/R/C sind ein
 OFF-PLAN-Integrationsabschluss für M16, kein erfundener nummerierter 16.l und
 kein vorgezogener 17.a-Commit. M16 bleibt bis zum gebundenen C-Abschluss offen.
+
+Vorbereiteter Integrationsstand W: öffentliche Registrierung ausschließlich
+für Q.0 reference-0.1-v1 v1.0.1 → 0.2.0, vollständige CLI-Eingaben, deterministische
+externe Sicherung vor dem gemeinsamen Writer, native Verify-, Bundle- und
+Restore-Anbindung. W prüft einen positiven öffentlichen Rundweg und den echten
+Providervektor. R ergänzt vollständige Fehlergrenzen, verschachtelte historische
+Originale, echte Writer-Unterbrechung/Recovery und portierbare passive Work-
+Fortsetzung mit neuer Autorität am endgültigen Apply. Keine realen Reviews oder
+Altprojekte werden behauptet. Die tatsächliche Abnahme entsteht ausschließlich
+in den jeweiligen gebundenen Apply-Results, nicht durch diesen vorbereiteten Text.
 
 ## Korrekturbundle 587 — vollständiger offener Rest 16.k.R/C
 

@@ -62,11 +62,16 @@ def validate_project(files, *, services=None):
     archives = {p: b for p, b in files.items() if classify_path(p, model.configuration) is PathClass.ARCHIVE_OBJECT}
     current = {a['id']: a for a in model.artifacts}
     for document in model.documents:
-        if parse_json_object(document.content)['artifact_type'] == 'baseline':
+        from ..migration.model_inputs import is_original
+        if (not is_original(model, document)
+                and parse_json_object(document.content)['artifact_type'] == 'baseline'):
             originals = baseline_objects(document.content, lambda p: _archive(archives, p))
             _archived_history(document.content, originals, current, files, model.configuration)
     # Native Evidence freshness is reported separately. Historical failed/stale
     # observations are allowed by restore-preserve-v1, never turned into passed.
+    if model.legacy_manifest is not None:
+        from ..migration.history import verify_migrated_history
+        verify_migrated_history(files, project_id=model.configuration.project_id)
     evidence_assessments(model)
     from ._specialists import (approval_checks, review_checks, configuration_checks,
                               task_gate, external_checks, proposal_checks)
@@ -93,7 +98,7 @@ def validate_project(files, *, services=None):
             elif item['artifact_type'] == 'view':
                 from ..documents.views import resolve_view
                 resolve_view(model, item['id'])
-        _include_graph(model.documents, DocumentIncludeCycleError)
+        _include_graph(model.documents, DocumentIncludeCycleError, model=model)
         _block_semantics(model)
         return context.result()
 
@@ -149,7 +154,8 @@ def validate_project(files, *, services=None):
     gates += task_gate(model, services)
     report = validate_model(model.documents, profile=model.profile, resources=validation_resources(model),
                             gates=gates, document_role_scope='full_project',
-                            approval_contexts=tuple(pair[0] for pair in approvals.values()))
+                            approval_contexts=tuple(pair[0] for pair in approvals.values()),
+                            legacy=model.legacy_manifest)
     for stage in report.data['stages']:
         if stage['status'] == 'unavailable':
             require(False, 'restore_' + stage['stage'] + '_provider_required')

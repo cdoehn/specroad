@@ -1,7 +1,7 @@
 """Native migration adapter for the common schema-transition writer.
 
-This library is not public path registration or CLI/Restore completion. Hosts
-supply real authority and any required semantic services, never project code.
+Public commands delegate to this adapter. Hosts supply real authority and any
+required semantic services, never project code or persisted success flags.
 """
 from ..changes.values import ChangePlan
 from ..changes.locking import project_lock

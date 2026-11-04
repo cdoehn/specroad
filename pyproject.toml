@@ -35,7 +35,7 @@ python_files = ["test_*.py"]
 addopts = "--disable-plugin-autoload -p no:cacheprovider -p no:doctest -p xdist.plugin -n auto --dist worksteal --max-worker-restart=0"
 
 [tool.setuptools.package-data]
-"specroad.reference01_data" = ["contract.json", "registry.txt"]
+"specroad.reference01_data" = ["contract.json", "registry.txt", "migration-vector.json"]
 "specroad.language_data" = ["registry.txt", "snapshot.json", "packages.json", "minimum_corpus.json", "packages/*.json"]
 
 "specroad.profile_data" = ["profiles.json", "core.json", "software-de.json", "software-en.json"]

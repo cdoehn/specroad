@@ -80,9 +80,7 @@ class MigrationRegistry:
 
 
 def builtin_registry():
-    """No supported migration path until real source contracts/providers exist.
-
-    Test registries cannot modify this fixed Core entrypoint. Current native
-    0.2 loading remains independent; this does not register a 0.1 reader.
-    """
-    return MigrationRegistry((), ())
+    """Only the newly defined, frozen reference contract is registered."""
+    from .builtin_path import registered_step
+    step = registered_step()
+    return MigrationRegistry((step.source, step.target), (step,))

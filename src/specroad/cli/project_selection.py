@@ -91,6 +91,31 @@ def _read_configuration(path: Path, *, project_read=False, schema_required=False
 def select_project(command, options, cwd, *, preflight=None):
     explicit = options.get("--project")
     profile = command.preflight_for(options)
+    if command.command_id in ('migrate.plan','migrate.apply','migrate.verify'):
+        from ..recovery._inventory import boundary
+        from ..recovery.values import RestoreError
+        from .results import FailureKind, OperationFailure
+        try:
+            if explicit is None:
+                raise RestoreError('migration_explicit_project_required', exit_code=2)
+            selected = boundary(explicit)
+            raw = selected.read_bytes('specroad.json')
+            from ..storage.json_syntax import parse_json_object
+            data = parse_json_object(raw)
+            from ..security import check_project_declarations
+            check_project_declarations(data)
+        except RestoreError as error:
+            raise OperationFailure(FailureKind(error.exit_code),error.reason) from error
+        except SafetyViolation as error:
+            raise OperationFailure(FailureKind.SECURITY,'migration_unsafe_project') from error
+        except OSError as error:
+            raise OperationFailure(FailureKind.ENVIRONMENT,'migration_project_unavailable') from error
+        except ValueError as error:
+            raise OperationFailure(FailureKind.MODEL,'migration_invalid_project_configuration') from error
+        if preflight is not None:
+            preflight.update(profile='input_read', normal_operation_started=False,
+                model_loaded=False, write_authorized=False, inspection_scope='explicit_source_root')
+        return selected.root, 'cli', {}  # Project data cannot select migration inputs or authority.
     if command.command_id.startswith('work.'):
         # A resume root is compared with the original by the installed adapter,
         # never loaded as a new valid project base.

@@ -33,6 +33,7 @@ LANGUAGE_RESOURCES = (
 REFERENCE01_RESOURCES = (
     "reference01_data/contract.json",
     "reference01_data/registry.txt",
+    "reference01_data/migration-vector.json",
 )
 SHIPPED_RESOURCES = PROFILE_RESOURCES + LANGUAGE_RESOURCES + REFERENCE01_RESOURCES
 

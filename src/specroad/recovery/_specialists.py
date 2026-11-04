@@ -5,6 +5,7 @@ from ..graph.relation_obligations import RelationObligations
 from ..validation.approval import assess_requirement_approval
 from ..validation.approval_values import ApprovalContext
 from .services import RequirementReviewInputs
+from ..storage.json_syntax import parse_json_object
 from .values import require
 
 
@@ -38,10 +39,12 @@ def approval_checks(model, services):
 
 def review_checks(model):
     """Keep historic negative/stale records; never turn them into approval."""
-    records = tuple(SourceRelations(d.content, path=d.path) for d in model.documents)
+    from ..migration.model_inputs import records as model_records
+    records = model_records(model)
     statuses = RelationReviewStatuses(records)
     by_relation = {s.relation_id: s for s in statuses.statuses}
-    approved = {a['id'] for a in model.artifacts if a['maturity'] == 'approved'}
+    approved = {a['id'] for a in model.artifacts if a['maturity'] == 'approved'
+                and a.get('schema_version') == '0.2.0'}
     obligations = RelationObligations(records, profile_rules=model.profile.minimum_relation_rules())
     for check in obligations.checks:
         if check.artifact_id in approved and check.minimum > 0 and check.severity == 'error':
@@ -56,7 +59,8 @@ def proposal_checks(model, services):
     from ..storage.json_syntax import parse_json_object
     results = {}
     for document in model.documents:
-        if parse_json_object(document.content)['artifact_type'] != 'proposal':
+        from ..migration.model_inputs import is_original
+        if is_original(model, document) or parse_json_object(document.content)['artifact_type'] != 'proposal':
             continue
         original = ProposalOriginal(document.content, path=document.path)
         require(services.proposal_inputs is not None,
@@ -70,7 +74,8 @@ def proposal_checks(model, services):
 def configuration_checks(model):
     from ..configurations.evaluation import evaluate_configuration
     from ..configurations.applicability import evaluate_applicability
-    records = tuple(SourceRelations(d.content, path=d.path) for d in model.documents)
+    from ..migration.model_inputs import records as model_records
+    records = model_records(model)
     configurations = [a['id'] for a in model.artifacts if a['artifact_type'] == 'configuration']
     for identity in configurations:
         value = evaluate_configuration(records, identity).data
@@ -78,7 +83,8 @@ def configuration_checks(model):
     # Applicability contracts are checked by evaluate_configuration, including
     # inheritance and native expressions. The unconfigured project is retained.
     for record in records:
-        evaluate_applicability(record)
+        if record.storage_class != 'legacy_immutable':
+            evaluate_applicability(record)
 
 
 def task_gate(model, services):
@@ -93,10 +99,10 @@ def task_gate(model, services):
 def external_checks(model, services, subjects):
     from ..storage.record_artifact import RecordArtifact
     from ..verification.code_reference_state import assess_code_reference
-    documents = {SourceRelations(d.content).identity.id: d for d in model.documents}
+    documents = {parse_json_object(d.content)['id']: d for d in model.documents}
     for identity in subjects:
         document = documents[identity]
-        kind = SourceRelations(document.content).identity.artifact_type
+        kind = parse_json_object(document.content)['artifact_type']
         if kind == 'source':
             from hashlib import sha256
             record = RecordArtifact(document.content, expected_type='source', path=document.path)

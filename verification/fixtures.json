@@ -380,6 +380,10 @@
       "kind": "Explicitly synthetic complete reference-0.1/1.0.1 sources with explicit native target configuration/core profile, source-bound requirement mappings and independently provided target proposal plans. Includes immutable originals, transitive archived snapshots, literal normative requirement/REL/hash vectors and adversarial saved-plan bindings. Stored review records are synthetic source history, never actual human approval or current readiness evidence.",
       "provider": "tests/support/migration_plans.py:target_inputs,mapped_inputs,vector_source;tests/support/reference01.py:full_project,release_project;docs/specification/reference-0.1-v1.0.1/vectors.json"
     },
+    "SR-FIX-MIGRATION-PUBLIC-INTEGRATION-v1": {
+      "kind": "Explicitly synthetic reference-0.1 projects on real files, public argv/structured CLI calls, native complete external backup, actual shared writer/receipts and project bundle/Restore. R adds nested Baseline/Evidence originals, fault/recovery and real portable Work. No real projects, historical users, reviews or external runs are asserted.",
+      "provider": "tests/support/migration_cli.py:case,invoke,planned,verified,restore;tests/support/migration_history.py:evidence_source,historical_contract_host"
+    },
     "SR-FIX-MIGRATION-RELATIONS-v1": {
       "kind": "Synthetic qualified reference-0.1/1.0.1 current/history sources with independently authored literal Q.3 preimages, hashes and Crockford tokens; no real review, migration execution or historical external compatibility claim.",
       "provider": "tests/data/migration_relation_vectors.json;tests/support/migration_relations.py:VECTORS,pair_source,immutable_source;tests/support/migration_plans.py:vector_source;tests/support/reference01.py:seal"
@@ -955,6 +959,7 @@
     "SR-FIX-MIGRATION-HISTORY-v1",
     "SR-FIX-MIGRATION-LOSS-v1",
     "SR-FIX-MIGRATION-PLAN-v1",
+    "SR-FIX-MIGRATION-PUBLIC-INTEGRATION-v1",
     "SR-FIX-MIGRATION-RELATIONS-v1",
     "SR-FIX-MIGRATION-REQUIREMENTS-v1",
     "SR-FIX-MIGRATION-SOURCE-BACKUP-v1",
