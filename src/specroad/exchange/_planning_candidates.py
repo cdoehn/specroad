@@ -9,6 +9,7 @@ from dataclasses import dataclass
 from ..changes._patch_policy import _mutable_pointer
 from ..graph.relations import SourceRelations
 from ..model.canonical import canonical_json_bytes, canonical_json_sha256
+from ..model.information_loss import LossInventory, pointer_segment as _pointer
 from ..model._requirement_inputs import REQUIREMENT_CONTENT_FIELDS, _prepare_requirement_inputs
 from .comparison import ImportComparison
 from .identities import ExternalIdentity, ImportIdentityError, NativeIdentityIndex
@@ -23,16 +24,13 @@ class _CandidateChanges:
     conflicts: list
 
 
-def _pointer(value):
-    return "/" + value.replace("~", "~0").replace("/", "~1")
-
-
 def _prepare_candidate_changes(model, candidates, selected, *, strategy,
                                input_bytes, planned_at, start_index=0, prior_objects=()):
     resource = selected.resource
     native = NativeIdentityIndex([SourceRelations(d.content, path=d.path) for d in model.documents])
     artifacts = {value["id"]: value for value in model.artifacts}
-    operations, objects, losses, diagnostics, conflicts = [], [], [], [], []
+    operations, objects, diagnostics, conflicts = [], [], [], []
+    losses = LossInventory()
     # A resumed window retains the original global positions and claims.
     # Reconstruct only uniqueness indexes; never remap completed candidates.
     keys = {ExternalIdentity(item['identity']).key for item in prior_objects}
@@ -138,4 +136,4 @@ def _prepare_candidate_changes(model, candidates, selected, *, strategy,
             if patch:
                 operations.append({"op": "update", "target": native_id,
                     "expected_sha256": canonical_json_sha256(old), "patch": patch})
-    return _CandidateChanges(operations, objects, losses, diagnostics, conflicts)
+    return _CandidateChanges(operations, objects, losses.rows, diagnostics, conflicts)

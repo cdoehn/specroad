@@ -6,6 +6,7 @@ import re
 
 from ..model.canonical import canonical_json_bytes as jcs, canonical_json_sha256 as digest
 from ..model.audit_values import Actor, UtcTimestamp
+from ..model.information_loss import LossInventory, json_differences
 from ..changes.metadata_time import next_update_time
 from ..storage.json_syntax import parse_json_object as parsed
 from .plan_values import (STEP, SOURCE_CONTRACT, MANIFEST_PATH, require, owned_files,
@@ -15,39 +16,6 @@ from .plan_inputs import target_contract
 from .reference01 import inventory_bytes
 from .relation_derivation import _SourceRelations
 from .plan_originals import _original_archive
-
-
-class LossInventory:
-    """Ordered detached JSON observations; interpretation belongs to each caller."""
-    def __init__(self):
-        self._rows = []
-
-    def append(self, row):
-        self._rows.append(jcs(row))
-
-    @property
-    def rows(self):
-        return [json.loads(raw) for raw in self._rows]
-
-
-def _pointer(name):
-    return '/' + name.replace('~', '~0').replace('/', '~1')
-
-
-def _differences(before, after, pointer=''):
-    """Exact JSON values, atomic ordered arrays, presence separate from null."""
-    if jcs(before) == jcs(after):
-        return
-    if type(before) is dict and type(after) is dict:
-        for key in sorted(set(before) | set(after), key=lambda s: s.encode('utf-8')):
-            at = pointer + _pointer(key)
-            if key not in before or key not in after:
-                yield at, {'present': key in before, 'value': before.get(key)}, {
-                    'present': key in after, 'value': after.get(key)}
-            else:
-                yield from _differences(before[key], after[key], at)
-    else:
-        yield pointer, {'present': True, 'value': before}, {'present': True, 'value': after}
 
 
 @dataclass(frozen=True, init=False)
@@ -210,7 +178,7 @@ def _assess_qualified(inventory, source, candidate, inputs, actor, planned_at, r
         if path not in candidate:
             differences = [('', {'present': True, 'value': expected}, {'present': False, 'value': None})]
         else:
-            differences = _differences(expected, parsed(candidate[path]))
+            differences = json_differences(expected, parsed(candidate[path]))
         for pointer, before, after in differences:
             rows.append({'path': path, 'pointer': pointer,
                 'reason': 'changed' if after['present'] else 'missing',
