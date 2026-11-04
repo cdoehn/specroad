@@ -50,7 +50,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "05fc7c2105c7deb731f8a6f46e9f6e2e366ecb8189c856bcccac587e130ef3fa",
+  "specification_sha256": "800a48357f9bad959bb3459db4aa2c3fb2d2e620497abd1ed97e5d8aa3521d9e",
   "steps": [
     "Load supported stored records, reject malformed local fields and compare original bytes without executing referenced operations.",
     "Resolve source-owned relations using existing native checks, require one incoming contains per section and derive roots/children/preorder using position, target ID and relation ID. Compare nested permutations, stored relations and original bytes; reject cardinality, missing targets, cycles and missing fields; check immutable reports and isolated Core/PYZ parity.",

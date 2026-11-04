@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 90 · **Stand:** 4. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.60
+**Planrevision:** 91 · **Stand:** 4. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.61
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 Schritte und 900 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; die ausdrücklich genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wird nach 10.7.10 innerhalb von 15.l.R vorgezogen. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -9,7 +9,7 @@ Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 S
 
 Fachliche Grundlage ist [`docs/specification/SpecRoad_Spezifikation.md`](../specification/SpecRoad_Spezifikation.md), einschließlich aller konsolidierten Korrekturen, 742 Requirements, 51 Verifikationsverträge, 46 Szenario-/E2E-Identitäten sowie R-01 bis R-75, Anhang U und den PatchHarbor-Rundweg aus Anhang W. Der [`Prüfbericht`](../reviews/SpecRoad_v0.2.7_Implementierungsreife_Pruefbericht.md) ist ein vorgelagerter Entwurfsreview, kein späterer Produktnachweis.
 
-Gebundene Spezifikations-SHA-256: `05fc7c2105c7deb731f8a6f46e9f6e2e366ecb8189c856bcccac587e130ef3fa`.
+Gebundene Spezifikations-SHA-256: `800a48357f9bad959bb3459db4aa2c3fb2d2e620497abd1ed97e5d8aa3521d9e`.
 Planungsbasis: Commit `fe2661d02ecf2f7eb483b58a4487eb009c6b3846`; sauberes Result-Bundle `specroad_Result_120209_0914_df3504.zip`; Repository-ID `3d2576df-d611-46fc-9d2b-92869468aaca`. Diese Angaben dokumentieren die Entstehung des Plans, nicht die zukünftige Patchbindung. **Jedes spätere Patchpaket bindet den dann aktuellen tatsächlichen Result-Zustand.**
 
 Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 2026 gelten zusätzlich und bei den nachfolgend benannten Konflikten vorrangig. Sonstige normative Spezifikationsinhalte werden nicht stillschweigend abgeschwächt. Neue fachliche Widersprüche, fehlende zwingende Angaben und Sicherheitsprobleme sind offen zu benennen, nicht durch erfundene Annahmen oder Scheinerfolge zu lösen.
@@ -33,6 +33,38 @@ ausdrückliche Bedienausnahme aus 2.4.3.2 bleibt zusätzlich anwendbar.
 Produktfreigaben und die Grenzen aus 2.4.1/2.4.2/2.4.4 bleiben unverändert.
 Dieser Plan ändert keine alten Aufträge, Antworten, Blockaden oder
 Laufzeitdaten und ist keine Start-/Resume-Anweisung.
+
+## M16-INTEGRATION-588 — manueller Klärungspräfix und vollständiges W/R/C
+
+Ausdrücklicher Nutzerauftrag vom 4. November 2026: Es existieren noch keine
+SpecRoad-Projekte. Alte reale Projekte und undokumentierte Entwurfsformate
+müssen nicht unterstützt werden. S.7 wird entsprechend bereinigt; der neu
+festgelegte synthetische Q.0-Referenzvertrag bleibt verbindlich. Historische
+Vertragsdateien werden nicht geändert. Q.5.3 dokumentiert Alternativen,
+Entscheidung, öffentliche Eingaben und vollständige Abnahmen.
+
+Technische Basis: sauberes natives Result
+`a0f27d967b175db597b0a101cf987cd20f78e969776793fd09c1922120ba3475`,
+HEAD `61b91d9e386be937d091d5f3cc106c6d3b7217ad`. Bundle 587 schloss
+16.k.R mit 8067 und 16.k.C mit 8038 bestandenen Tests erfolgreich ab.
+Diese N=3-/Pflichtauswahl-Gates waren keine volle verfügbare Suite.
+Produktfortschritt 693/900; 17.a.W wartet auf den tatsächlichen M16-Abschluss.
+Dieser manuelle Auftrag startet weder Control noch eine automatische Schleife.
+
+Geplante getrennte Stages derselben ZIP:
+- `M16-SCOPE-588`: fachliche Klärung, Spec, Plan und aktive Katalogbindungen.
+- `M16-INTEGRATION-588.W`: vollständige öffentliche Migrations-CLI, echte
+  Versionspfadregistrierung, native Work-/Bundle-/Restore-Integration und
+  positiver automatischer Ablauf mit synthetischem Projekt.
+- `M16-INTEGRATION-588.R`: negative Bindungs-/Versions-/Mapping-/I/O-Fälle,
+  unveränderliche Originale, reale Unterbrechung/Recovery und Work-Fortsetzung.
+- `M16-INTEGRATION-588.C`: rein strukturelle Bereinigung; unveränderte Tests;
+  vollständige verfügbare Suite als ungefilterte Pflichtauswahl.
+
+Jede Stage wird erst nach ihrem eigenen erfolgreichen Apply-Testgate committed.
+Keine Testkörper oder manuellen Verhaltensproben in Dev. W/R/C sind ein
+OFF-PLAN-Integrationsabschluss für M16, kein erfundener nummerierter 16.l und
+kein vorgezogener 17.a-Commit. M16 bleibt bis zum gebundenen C-Abschluss offen.
 
 ## Korrekturbundle 587 — vollständiger offener Rest 16.k.R/C
 
@@ -2717,7 +2749,7 @@ Kein offener Produktplanschritt wird durch diese Testoptimierung abgeschlossen.
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 90
+plan_revision: 91
 implementation_plan_commits_total: 900
 implementation_plan_commits_completed: 693
 last_completed_plan_commit: 16.k.C
@@ -37225,7 +37257,7 @@ Die W-/R-/C-Abnahmen im obigen OFF-PLAN-Abschnitt gelten vollständig.
 
 **Regressionsabnahme:** Alle vorhandenen W-/R-Verhaltenstests dieses Schritts und die vom Refactoring betroffenen bisherigen Verhaltenstests erneut ausführen; erwartete Fachwerte nicht passend zum Refactoring umschreiben. Bei reinen Präsentations-/Dokuschritten keine solchen Tests erfinden.
 
-**Offene M16-Integrationsabnahme nach 16.k.C:** Der lokale Bibliotheks-
+**Offene M16-Integrationsabnahme nach 16.k.C (vollständig beauftragt als M16-INTEGRATION-588 nach Q.5.3):** Der lokale Bibliotheks-
 schritt ersetzt weder die öffentliche CLI-/Pfadregistrierung noch die positive
 Restore-Integration oder die volle verfügbare Verhaltenssuite. Diese Nachweise
 sind weiterhin offen. 17.a.W ist die nächste nummerierte Produktposition,

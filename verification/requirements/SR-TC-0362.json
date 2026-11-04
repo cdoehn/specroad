@@ -32,7 +32,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "05fc7c2105c7deb731f8a6f46e9f6e2e366ecb8189c856bcccac587e130ef3fa",
+  "specification_sha256": "800a48357f9bad959bb3459db4aa2c3fb2d2e620497abd1ed97e5d8aa3521d9e",
   "steps": [
     "Read only the explicit ZIP, verify its full container, closure and native model root without extraction, then project current JSON resources into the common source registry and existing semantic comparator; bind full verification evidence separately.",
     "Compare unchanged and changed bundle sources against independent local/Git/bundle captures, exercise public diff --against-kind bundle including relative structured requests, and reject invalid native bytes, partial full-source promotion, foreign identity, symlinks and observed input replacement.",

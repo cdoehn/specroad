@@ -1,19 +1,19 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.60
+## Version 0.2.61
 
 | Feld | Wert |
 |---|---|
 | Dokument-ID | `SR-SPEC-0001` |
-| Dokumentversion | `0.2.60` |
+| Dokumentversion | `0.2.61` |
 | Zielrelease | `SpecRoad Single-Repository Workbench 0.2.0` |
 | Status | **Fachlich konsolidierte Arbeitsgrundlage; technische Reviewentscheidung gesondert dokumentiert, formale Baseline-Freigabe und Produktabnahme nicht durch dieses Dokument erklärt** |
 | Stand | 4. November 2026 |
 | Sprache | Deutsch; technische Feldnamen, Enum-Werte und CLI-Kommandos Englisch |
-| Fachliche Quelle | **Diese Repositoryfassung v0.2.60 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.60 liegt mit dieser Änderung nicht vor.** |
+| Fachliche Quelle | **Diese Repositoryfassung v0.2.61 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.61 liegt mit dieser Änderung nicht vor.** |
 | Bearbeitbare Satzquelle | Diese Datei; eine spätere PDF muss denselben versionierten Inhalt wiedergeben. |
-| Vorgängerversion | Repository-Spezifikation v0.2.59 vom 4. November 2026; historische Nachweise bleiben unverändert. |
-| Prüf- und Entscheidungsgrundlage | MIGRATION-VERIFY-WORK-585 gemäß SPECROAD-DECISION-1/2.4.3.1, Vertrag 4: optionaler Klärungspräfix und vollständiges 16.k.W/R/C mit eigenen Apply-Gates. |
-| Änderungsart | Vollständige lesende Migrationsprüfung und passive, transportierbare Planung/Prüfung über Work; Veröffentlichung bleibt ausschließlich die bestehende native Migrationstransaktion. |
+| Vorgängerversion | Repository-Spezifikation v0.2.60 vom 4. November 2026; historische Nachweise bleiben unverändert. |
+| Prüf- und Entscheidungsgrundlage | M16-INTEGRATION-588: ausdrücklicher manueller Nutzerauftrag vom 4. November 2026; es existieren nach Nutzerangabe noch keine SpecRoad-Projekte. Klärungspräfix und vollständiges W/R/C-Tripel mit getrennten Apply-Gates. |
+| Änderungsart | Keine Unterstützung früherer realer Projekte oder undokumentierter Entwurfsschemas; vollständige Migration des neu festgelegten Referenzformats, öffentliche CLI, Restore-Integration und synthetischer Abschlussnachweis für M16. |
 
 > **Verbindlicher Quellenwechsel:** Die ausdrückliche Nutzerentscheidung REFERENCE-SOURCE-551 wird als v0.2.50 umgesetzt. Der neue Quellvertrag ist Entwurfsarbeit vom 3. November 2026, kein Nachweis eines früher existierenden Formats. Bestehende 0.2-Verträge, Transport-, Sicherheits- und Reviewgrenzen bleiben erhalten.
 
@@ -4908,8 +4908,7 @@ Leser, Transformationen, Change Plans und Writer bleiben gesonderte M16-Arbeit.
 **Vertragsidentität und Registrierung.** Ein Graphknoten bezeichnet einen
 konkreten, versioniert definierten Datenvertrag, nicht nur einen Versionsstring.
 Zur Identität gehören die Daten-Schemaversion und die unveränderliche Bindung
-der zugehörigen Schema-/Profilverträge; bei Entwurfsmigration zusätzlich die
-explizite Herkunft nach S.7. Zwei unterschiedliche Quellverträge mit demselben
+der zugehörigen Schema-/Profilverträge; eine Herkunftsangabe allein registriert nach S.7 kein älteres Entwurfsformat. Zwei unterschiedliche Quellverträge mit demselben
 `schema_version`-Wert dürfen weder verschmolzen noch als No-op behandelt werden.
 Eine Dokumentversion wird nicht ohne den zugehörigen Datenvertrag zur
 Daten-Schemaversion. Fehlende oder widersprüchliche Vertragsbindungen erteilen
@@ -9940,8 +9939,7 @@ berechneten Zielstand. Ihr Ergebnis unterscheidet diesen geplanten Zielstand
 ausdrücklich vom tatsächlichen Projekt. Prüf-Work bindet eine vollständige
 bereitgestellte Zielbeobachtung; spätere Zustandsänderungen verlangen erneut
 frische Projektverifikation und werden nicht durch alte Work-Ergebnisse geheilt.
-Die Adapter sind explizite Host-APIs mit echter registrierter CommandRegistry;
-sie registrieren keinen öffentlichen CLI-/Restorepfad durch Work-Daten.
+Die Adapter sind explizite Host-APIs mit echter registrierter CommandRegistry. Die öffentliche Registrierung erfolgt ausschließlich durch vertrauenswürdigen Core-Code nach Q.5.3, niemals durch Work-Daten.
 
 **Abschluss.** Nur ein vollständig erneut geprüftes Planungs-Work kann seinen
 ursprünglichen Plan an apply_migration_plan übergeben. Der Host liefert die
@@ -9968,6 +9966,91 @@ Die öffentlichen CLI-/Pfad- und Restore-Abnahmen sowie die volle verfügbare
 Suite bleiben eigene offene M16-Abschlussgates, solange sie nicht tatsächlich
 nachgewiesen sind; ein nicht existierender Planschritt 16.l wird nicht als
 Nachweis oder stillschweigende Auslagerung verwendet.
+
+
+### Q.5.3 Öffentliche Integration und M16-Abschluss — M16-INTEGRATION-588
+
+**Autorität und Auswahl.** Der ausdrückliche manuelle Nutzerauftrag entfernt die
+Zusage für alte reale Projekte (S.7), nicht die Migrationsfunktionen oder deren
+Sicherheitsnachweise. Erratene Altverträge wären unbelegt; ein Wegfall der
+Migration oder bloße CLI-Stubs erfüllten den Auftrag nicht. Gewählt wird die
+Integration der vorhandenen nativen Referenzleser, Planner, Work-Phasen und
+des gemeinsamen Schema-Writers. Die Entscheidung benötigt keine erfundenen
+Altprojekte, Reviews oder Risikoakzeptanzen und ist durch neue versionierte
+Adapter reversibel. Unveränderliche Originale bleiben unverändert.
+
+**Öffentliche Befehle.** Die feste Core-Registry registriert `migrate plan`,
+`migrate apply` und `migrate verify` für argv und strukturierte Requests.
+Selbstbeschreibung, Resultschemas und diagnostische Fehlerklassen gehören zur
+Integration. Der einzige positive Versionspfad ist der explizite Q.0-Vertrag
+0.1.0 nach 0.2.0 mit dem bereits festgelegten Schritt
+`reference01-to-current.v1`; es gibt keinen impliziten Downgrade.
+Planung erhält eine explizite Projektwurzel, die geschlossenen Mappingbytes
+`migration-inputs-v1` unter eigenem Inputroot, Akteur, Planzeit, Plan-ID und
+optionale Request-ID. Sie erfindet keine fehlenden Sachangaben. Das externe
+Planfile ist der vollständige native Planungsbericht `migration-planning-v1`
+einschließlich ausführbarem Change Plan. Sein Bytehash und die kanonischen
+Plan-/Inputhashes werden ausgewiesen. Eine unvollständige Planung darf ihre
+ehrlichen Blocker ausgeben, erteilt aber keine Apply-Erlaubnis.
+
+Apply bindet Zielversion und entweder genau dieses ursprüngliche Planfile
+mit expliziten Plan-/Inputhashes oder dieselben vollständigen Planungseingaben
+für eine unmittelbar vor Ausführung berechnete Planung. Die tatsächlich
+beobachteten Sourcebytes werden unter dem vorhandenen Writerlock erneut
+geprüft. Die vollständige deterministische Quellsicherung wird vor dem ersten
+Projektwrite in einem expliziten externen Sicherungsroot veröffentlicht und
+neu gelesen; ihr konkreter Pfad, Bytehash, Größe und Source-Dateilistenhash
+stehen im Ergebnis. Ein existierendes fremdes Ziel wird nicht überschrieben.
+Eine identische vorhandene Sicherung kann nur nach vollständiger nativer
+Neuverifikation wiederverwendet werden. Wiederholung und bereits erreichtes
+Zielschema verwenden ausschließlich den nativen Request-/No-op-Vertrag.
+Der verlustfreie Referenzpfad nimmt keine fingierte Verlustakzeptanz an.
+
+Die Schreibautorität und zusätzliche erforderliche native Fachdienste stammen
+wie bei der vorhandenen Restore-Integration aus dem vertrauenswürdigen Host-
+Kontext, niemals aus Optionen, Plan-, Projekt- oder Work-Daten. Ein fehlender
+Dienst oder eine fehlende Autorität bleibt ein konkreter Fehler. Externe
+Eingabe-/Ausgabegrenzen benutzen die vorhandenen sicheren Dateioperationen;
+Planung und Verify ändern keine Projektbytes. Verify liest Quellbundle und
+ursprünglichen Bericht mit expliziten Hashes und prüft das lebende Ziel samt
+nativem Abschlussjournal neu. Es meldet keine aktuelle Evidence- oder
+Releasefreigabe. Teilweise publizierte Schemaübergänge verlangen weiterhin
+ausdrückliche native Recovery; die CLI startet keine eigene Recovery-Schleife.
+
+Plan-/Verify-Work verwenden die vorhandenen festen nativen Phasen, die komplette
+Eingabebindung und exportierbare Checkpoints. Öffentliche Fortsetzung führt
+nur passive Arbeit fort. Das Prüfergebnis unterscheidet bereitgestellte Bytes
+von einer frisch erneut beobachteten Projektwurzel. Gespeicherte Erfolgsmeldungen
+oder fremde Work-Pakete ersetzen keine aktuelle Schreibautorität.
+
+**Restore-Integration.** Ein vollständig migriertes 0.2-Projekt darf als
+vollständiges Projektbundle wiederhergestellt werden. Sein natives Legacy-
+Manifest muss sämtliche Originalbytes und den tatsächlichen Referenzvertrag
+vollständig qualifizieren. Nur diese gebundenen Originale dürfen die reguläre
+0.2-Schemaprüfung durch ihren bereits implementierten ursprünglichen Leser
+ersetzen. Ungebundene, manipulierte oder unbekannte Altressourcen bleiben
+Fehler. Historische Evidence und Reviews bleiben historische Originale,
+niemals aktuelle positive Nachweise. Aktuelle veränderbare Zielartefakte
+unterliegen weiterhin sämtlichen regulären Validierungs- und Reviewgates.
+Historische Source-Baselines werden vollständig über ihren eigenen Vertrag
+geprüft und unverändert aufbewahrt; sie werden nicht als aktueller Restore-
+Quellstand umgedeutet. Der aktuelle vollständige Projektbundle ist der
+positive Restore-Einstieg. Migration ist niemals eine heimliche Restore-Aktion.
+Native Abschlussreceipts werden verlustfrei und vollständig gebunden
+transportiert; lokale Locks, aktive Journale und Schreibautoritäten nicht.
+
+**Abschlussabnahme.** Ausschließlich synthetische Projekte dienen dem
+positiven Ablauf: öffentliche Planung, wirkliche native Migration mit
+verifiziertem Backup, erneute lesende Verifikation, vollständiger Bundle-
+Rundweg und wirkliche Wiederherstellung beschädigter veränderbarer Zielbytes.
+Originale, Historienhashes und Receipts bleiben erhalten. Negative Bindungs-,
+Pfad-, Versions-, Mapping-, Manipulations- und Unterbrechungsfälle sowie
+Work-Fortsetzung gehören zu R. C ändert keine Fachsemantik oder Test-Erwartung.
+Jede W/R/C-Stage erhält ein eigenes Apply-Gate; C wählt zusätzlich **jeden
+verfügbaren gesammelten Verhaltenstest** ungefiltert aus. M16 ist erst mit
+allen erfolgreichen Stages, letztem C-Commit und gebundenem tatsächlichem
+Vollsuite-Ergebnis abgeschlossen. Vorbereitete Häkchen sind keine Ausführung.
+Plattformgebundene, auf diesem Host unmögliche Releasebelege bleiben offen.
 
 
 ## R.1 Ergänzende Mehrsprachen- und Analyzer-Sollfälle
@@ -10138,11 +10221,12 @@ In dieser Version existiert **keine eingebaute Prüfung der Bedeutung des Textes
 
 `language`, `normative_force` und die Sprachpolicy sind normative Werte und Teil von Diff, Change Plan, Profil-/Konfigurationshash, Verification Context und Relationskontext. Sie werden durch CSV-, NDJSON-, ReqIF-Mapping und generierte Ansichten erhalten. Im ReqIF-Kernmapping werden `specroad.language` als Stringattribut und `specroad.normative_force` als Enum mit den vier exakten Werten exportiert. CSV/NDJSON verwenden die gleichnamigen Felder. Fehlende Werte verlangen ein explizites Mapping; sie werden nicht aus Priorität oder Textschlüsselwörtern abgeleitet. Ein Austauschziel, das diese Attribute nicht erhält, erzeugt den bestehenden Verlustbericht und keine behauptete verlustfreie Rückübertragung.
 
-Diese Dokumentversion erweitert den noch nicht freigegebenen Entwurf des Zielreleases 0.2.0. Sie behauptet keine rückwärtskompatible Änderung eines bereits veröffentlichten produktiven 0.2.0-Schemas. Daten, die nach einer älteren SpecRoad-Entwurfsspezifikation erzeugt wurden, werden vor regulärer neuer Nutzung über `migrate plan --from-spec 0.2.5 --mapping <FILE>` beziehungsweise den bestehenden 0.1-Migrationspfad behandelt. `--from-spec` ist nur für die dokumentierten 0.2.0–0.2.5-Entwurfssnapshots zulässig; die exakte Quellschema- und Profilsammlung wird im Plan gebunden. Ohne diese ausdrückliche Herkunftsauswahl werden fehlende Pflichtfelder nicht als kompatibel akzeptiert.
+Diese Dokumentversion erweitert den noch nicht freigegebenen Entwurf des Zielreleases 0.2.0. Nach ausdrücklicher Nutzerangabe vom 4. November 2026 existieren noch keine SpecRoad-Projekte. Die frühere Zusage zur Migration von Projekten nach Entwurfsspezifikationen 0.2.0–0.2.5 entfällt ausdrücklich. Solche alten Projekte, unbekannte Altformate und `--from-spec` werden nicht unterstützt; fehlende Pflichtfelder werden nicht als kompatibel akzeptiert. Historische Spezifikationen bleiben Dokumentationsnachweise und werden weder als Quellschemas ausgeführt noch nachträglich umgeschrieben.
 
+Der nach Q.0 neu definierte, eingefrorene Referenzvertrag `reference-0.1-v1` (Revision v1.0.1) bleibt verbindlicher synthetischer Ausgangspunkt der Migrationsentwicklung. Er ist kein behauptetes früher eingesetztes Projektformat. Nur sein hashgebundener nativer Leser und der tatsächlich implementierte verlustfreie Pfad nach 0.2.0 werden registriert. Andere Quellverträge, Entwurfsetiketten oder Rückwege erfordern eine neue ausdrückliche Umsetzung und sind bis dahin Fehler.
 Das Mapping benennt für jedes zu migrierende Requirement dessen ID, erwarteten alten Vollhash, explizite Zielsprache, explizite Zielverbindlichkeit und den geprüften vollständigen Zielsachverhalt. Ein Autor darf eine gemeinsame Sprache ausdrücklich als Mappingdefault bestimmen; eine normative Stärke wird immer pro Requirement festgelegt. `statement` darf nur mit einem im Mapping gelieferten, autorisierten Zieltext verändert werden. Es gibt weder automatische Schlüsselwortentfernung noch py3langid als migrationsentscheidende Quelle.
 
-Bereits unveränderbare Evidence, Baselines und Relationsreviews behalten Originalbytes und ihre früheren Schema-/Profilbindungen nach Anhang Q. Der Migrationsnachweis bindet zusätzlich die Quellspezifikationsversion, damit gleiche frühere Entwurfs-Schemaetiketten keine falsche Gleichheit behaupten. Neue Fachfelder erzeugen neue fachliche Kontextbindungen; alte Nachweise werden nicht zur aktuellen Erfüllung umgedeutet. Unvollständige Mappings blockieren nur den Apply, nicht eine ehrliche Plan-/Konfliktausgabe. Vollständige Migration erfolgt weiterhin gesichert, transaktional und ohne autonome menschliche Freigabe.
+Bereits unveränderbare Evidence, Baselines und Relationsreviews behalten Originalbytes und ihre früheren Schema-/Profilbindungen nach Anhang Q. Der Migrationsnachweis bindet den unveränderlichen Referenzvertrag einschließlich Schema-/Profilhash; ein gleiches Versionsetikett ohne diese Bindung ist keine unterstützte Quelle. Neue Fachfelder erzeugen neue fachliche Kontextbindungen; alte Nachweise werden nicht zur aktuellen Erfüllung umgedeutet. Unvollständige Mappings blockieren nur den Apply, nicht eine ehrliche Plan-/Konfliktausgabe. Vollständige Migration erfolgt weiterhin gesichert, transaktional und ohne autonome menschliche Freigabe.
 
 ## S.8 Rückverfolgbare fachliche Grenzen
 
