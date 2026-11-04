@@ -26,11 +26,16 @@
     "specialist_migration_workflow_required",
     "unsupported_source_contract"
   ],
-  "expected_exit_codes": [],
+  "expected_exit_codes": [
+    0,
+    3,
+    6
+  ],
   "fixture_ids": [
     "SR-FIX-LEGACY-MANIFEST-v1",
     "SR-FIX-MIGRATION-HISTORY-v1",
     "SR-FIX-MIGRATION-PLAN-v1",
+    "SR-FIX-MIGRATION-VERIFY-WORK-v1",
     "SR-FIX-REFERENCE01-SOURCE-v1_0_1"
   ],
   "implementation_status": "partial",
@@ -38,17 +43,20 @@
   "method": "automated_behavior",
   "open_items": [
     "Prepared tests require the real separate Apply gates; no test bodies or fixtures ran in Dev.",
-    "Migrate verify, public migration registration/CLI and Restore remain separate following steps. No current approval or real external historical compatibility is invented."
+    "Migrate verify, public migration registration/CLI and Restore remain separate following steps. No current approval or real external historical compatibility is invented.",
+    "Prepared 16.k behavior requires its own actual Apply gates. Static checks and collection are not behavior evidence.",
+    "The M16 public CLI/path/Restore integration gate and full available suite remain explicitly unproved; nonexistent 16.l is not a substitute."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Die Migration MUSS die Originalbytes jeder als `immutable_legacy` klassifizierten Ressource unverändert erhalten.",
-    "scope": "16.b source reader/inventory only: version-bound local/global fields, complete source originals and transitive manifest/payload integrity, immutable classification, detached observations and safe file access. No target write, migration registration, current approval/readiness, external historical compatibility, full suite or release proof. 16.c prepares the complete read-only reference migration plan, original-byte legacy manifest and explicit target mappings in the common typed Change Plan. R additionally checks actual source membership/bytes, external request bindings and native recomputation, including internally consistent forgery. No actual migration, approval, CLI, full-suite or release success is claimed. 16.g R: complete manifest qualification and regular original readers/hash domains. Full target validation, historical readiness, productive migration and Restore remain separate. Correction 573: direct original replacement has legacy_original_bytes_changed; manifest/archive freshness failures have legacy_manifest_changed. All remain conflict failures without writes. 16.j R: complete historical source-integrity reports and original baseline verification; current readiness is separate. R adds explicit stale context and native write-refusal boundaries. Collection is not a behavior pass; public CLI/migration registration/Restore remain in following M16 steps. Correction 583 fixes only invalid synthetic configuration declarations; original test bodies, pass criteria and production validation remain unchanged. Correction 584 retains full product gates and actual migration, compares native host observations, and adds an R refusal case without the required host."
+    "scope": "16.k.W native complete verification of owned/live targets, all byte inventories and source-native historical algorithms. No Dev behavior test was executed; no public CLI/Restore or M16 release success is claimed."
   },
   "preconditions": [
     "Actual complete source bytes and the fixed qualified source contract; postmigration full native legacy registry and all originals. Synthetic data claim no external run or human decision.",
     "Correction 583: the unconfigured synthetic Verification contract and its Evidence explicitly declare independent configuration; original context hashes and sealed snapshots are constructed after this declaration.",
-    "Correction 584: the actual writer test registers a narrow native-checking host for its draft Verification contract; old Evidence remains explicitly context-unverified."
+    "Correction 584: the actual writer test registers a narrow native-checking host for its draft Verification contract; old Evidence remains explicitly context-unverified.",
+    "Complete actual source backup, explicit original native plan/report and external bindings; full target bytes, genuine host semantic services and no invented authority."
   ],
   "primary_verification_id": "SR-VER-0042",
   "required_environment": {
@@ -68,7 +76,9 @@
     "Check stored fixed baseline vectors, nested snapshots, unchanged negative results and exact noncanonical original bytes without current approval.",
     "Compare qualified old Evidence with a transformed current subject: always stale/migration_context_unverified; separately construct fresh current Evidence with a new allocated identity.",
     "Reject missing/changed registry originals, unsafe/open live sources, invented algorithms and unbound projections; refuse legacy format/update/lifecycle writes.",
-    "Without the required current-contract host, native migration must fail before journal creation and preserve every normative source byte."
+    "Without the required current-contract host, native migration must fail before journal creation and preserve every normative source byte.",
+    "Recompute the full planning/loss report and target model from original source bytes; verify every source/target byte, current native model and unchanged historical original/hash closure.",
+    "Observe a real completed native migration with verified receipts; reject stale or incomplete targets, extra files, unsafe paths, active recovery and tampered bindings/reports without writes."
   ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0639",
@@ -264,6 +274,38 @@
     "tests/test_migration_planning_right.py::test_target_mapping_paths_cannot_select_code_or_operational_state[profiles/../escape.json]",
     "tests/test_migration_planning_right.py::test_target_mapping_paths_cannot_select_code_or_operational_state[profiles\\\\evil.json]",
     "tests/test_migration_planning_right.py::test_timestamp_at_source_boundary_advances_by_one_microsecond_without_a_clock",
+    "tests/test_migration_verification.py::test_complete_byte_inventory_and_native_target_validation_are_read_only",
+    "tests/test_migration_verification.py::test_every_external_binding_is_required[expected_backup_sha256]",
+    "tests/test_migration_verification.py::test_every_external_binding_is_required[expected_inputs_sha256]",
+    "tests/test_migration_verification.py::test_every_external_binding_is_required[expected_plan_sha256]",
+    "tests/test_migration_verification.py::test_every_external_binding_is_required[expected_report_sha256]",
+    "tests/test_migration_verification.py::test_every_external_binding_is_required[expected_source_files_sha256]",
+    "tests/test_migration_verification.py::test_every_external_binding_is_required[expected_target_version]",
+    "tests/test_migration_verification.py::test_historical_originals_and_hashes_survive_full_verification[failed-False]",
+    "tests/test_migration_verification.py::test_historical_originals_and_hashes_survive_full_verification[failed-True]",
+    "tests/test_migration_verification.py::test_historical_originals_and_hashes_survive_full_verification[incomplete-False]",
+    "tests/test_migration_verification.py::test_historical_originals_and_hashes_survive_full_verification[incomplete-True]",
+    "tests/test_migration_verification.py::test_historical_originals_and_hashes_survive_full_verification[passed-False]",
+    "tests/test_migration_verification.py::test_historical_originals_and_hashes_survive_full_verification[passed-True]",
+    "tests/test_migration_verification.py::test_historical_originals_and_hashes_survive_full_verification[skipped-False]",
+    "tests/test_migration_verification.py::test_historical_originals_and_hashes_survive_full_verification[skipped-True]",
+    "tests/test_migration_verification.py::test_live_target_and_receipts_must_still_exist_unchanged[active]",
+    "tests/test_migration_verification.py::test_live_target_and_receipts_must_still_exist_unchanged[extra]",
+    "tests/test_migration_verification.py::test_live_target_and_receipts_must_still_exist_unchanged[receipt]",
+    "tests/test_migration_verification.py::test_live_target_and_receipts_must_still_exist_unchanged[symlink]",
+    "tests/test_migration_verification.py::test_live_target_and_receipts_must_still_exist_unchanged[target]",
+    "tests/test_migration_verification.py::test_live_verifier_qualifies_real_transaction_and_current_target",
+    "tests/test_migration_verification.py::test_no_source_or_target_byte_can_be_omitted_from_validation[additional]",
+    "tests/test_migration_verification.py::test_no_source_or_target_byte_can_be_omitted_from_validation[archive]",
+    "tests/test_migration_verification.py::test_no_source_or_target_byte_can_be_omitted_from_validation[changed]",
+    "tests/test_migration_verification.py::test_no_source_or_target_byte_can_be_omitted_from_validation[configuration]",
+    "tests/test_migration_verification.py::test_no_source_or_target_byte_can_be_omitted_from_validation[legacy]",
+    "tests/test_migration_verification.py::test_no_source_or_target_byte_can_be_omitted_from_validation[missing]",
+    "tests/test_migration_verification.py::test_old_history_does_not_replace_required_current_semantic_service",
+    "tests/test_migration_verification.py::test_rehashed_positive_report_is_recomputed_not_trusted[expected_target_model_root_sha256]",
+    "tests/test_migration_verification.py::test_rehashed_positive_report_is_recomputed_not_trusted[loss_report]",
+    "tests/test_migration_verification.py::test_rehashed_positive_report_is_recomputed_not_trusted[ready]",
+    "tests/test_migration_verification.py::test_rehashed_positive_report_is_recomputed_not_trusted[write_authorized]",
     "tests/test_reference01_reader.py::test_all_28_types_and_complete_classification_keep_originals",
     "tests/test_reference01_reader.py::test_core_and_pyz_reference_reader_parity_without_optional_packages",
     "tests/test_reference01_reader.py::test_json_whitespace_changes_bytes_without_changing_model_root",

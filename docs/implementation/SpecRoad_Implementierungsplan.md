@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 88 · **Stand:** 4. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.60
+**Planrevision:** 89 · **Stand:** 4. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.60
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 Schritte und 900 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; die ausdrücklich genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wird nach 10.7.10 innerhalb von 15.l.R vorgezogen. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -33,6 +33,42 @@ ausdrückliche Bedienausnahme aus 2.4.3.2 bleibt zusätzlich anwendbar.
 Produktfreigaben und die Grenzen aus 2.4.1/2.4.2/2.4.4 bleiben unverändert.
 Dieser Plan ändert keine alten Aufträge, Antworten, Blockaden oder
 Laufzeitdaten und ist keine Start-/Resume-Anweisung.
+
+## Korrekturbundle 586 — vollständiger offener Rest 16.k.W/R/C
+
+Maßgeblich ist das nativ geprüfte Fehler-Result mit SHA-256
+`c4a94e6fc7ba490c57d6089632421bd0f8d2263c952405e60cf999fbe065396b`,
+HEAD `c1fc6402950bdd6590526c4e4865fe2995417777` und Dirty-Fingerprint
+`d35aa97e295564b6`. MIGRATION-VERIFY-WORK-585 wurde nach 7175 bestandenen
+Tests committed. Die anschließende Stage 16.k.W scheiterte bei genau einem
+Test; 7243 weitere Tests bestanden. Der fehlgeschlagene Arbeitsstand ist
+vollständig erhalten und entspricht exakt der ursprünglich angekündigten
+W-Stage. Der tatsächliche Produktfortschritt bleibt 690/900. Der erfolgreiche
+Klärungscommit wird nicht wiederholt; keine neue Spezifikationsentscheidung.
+
+Die Fehlerstelle liegt im Negativtest für manipulierte Transaktionsreceipts:
+Die Fixture sucht unter .specroad/receipts, während der gemeinsame Writer
+Receipts unter .specroad/transactions/receipts/<gebundener Token>/ ablegt.
+Die Suche endet deshalb mit StopIteration, bevor die beabsichtigte Manipulation
+und anschließende Verifikation stattfinden. Der neue Produktverifier ist
+an dieser Stelle noch gar nicht aufgerufen worden.
+
+Der Test verwendet jetzt den wirklichen Receipt-Pfad aus dem erfolgreichen
+nativen Writerergebnis und prüft die unveränderten ursprünglichen Bytes gegen
+dessen vollen SHA-256, bevor er genau diese Datei beschädigt. Anschließend
+muss die tatsächliche lesende Verifikation den nativen Receipt-Bindungsfehler
+melden. Es gibt keine neue Ersatzfixture, keinen gespeicherten Scheinerfolg
+und keine Lockerung der fachlichen Prüfungen. Alle übrigen Testfälle und
+sämtlicher Produktcode bleiben je Phase bytegleich zum angekündigten Stand.
+
+Die vollständigen offenen IDs 16.k.W, 16.k.R und 16.k.C behalten ihre Rollen,
+Reihenfolge und vollständigen Pflichtauswahlen. Native Originalbindungen und
+sämtliche Vorherzustände werden an dieses neue Dirty-Result angepasst.
+Spezifikation 0.2.60, Q.5.2 und aktive Katalogbindungen bleiben unverändert.
+W/R/C werden jeweils erst nach ihrem eigenen N=3-plus-Pflichtgate committed;
+Rotationsgruppen sind 1/2/0. Dev hat keine Verhaltenstests ausgeführt.
+M16-Integrations-/Vollsuitegates bleiben offen; Häkchen sind vorbereitete
+Stände und gelten erst nach dem jeweiligen tatsächlichen Apply-Commit.
 
 ## MIGRATION-VERIFY-WORK-585 — optionale Klärung und vollständiges 16.k
 
@@ -66,7 +102,7 @@ Work-Planung/Prüfung, Paket-/Sandboxfortsetzung, Manipulations-/Unterbrechungs-
 fälle und abschließende echte native Transaktion. C strukturiert gemeinsame
 Inventar-/Report-/Workbeweise ohne Fachänderung. Alle Phasen besitzen eigene
 ungefilterte Pflichtauswahlen zusätzlich zur fälligen N=3-Gruppe. Keine
-Verhaltenstests in Dev. Vorbereiteter Stand: Klärung; 16.k bleibt offen.
+Verhaltenstests in Dev. Vorbereiteter Stand: 16.k.W; M16-Abschlussgates bleiben offen.
 Häkchen gelten erst nach jeweiligem erfolgreichen Apply-Gate und Commit.
 
 ## Korrekturbundle 584 — vollständiger offener Rest 16.j.W/R/C
@@ -2644,11 +2680,11 @@ Kein offener Produktplanschritt wird durch diese Testoptimierung abgeschlossen.
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 88
+plan_revision: 89
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 690
-last_completed_plan_commit: 16.j.C
-next_plan_commit: 16.k.W
+implementation_plan_commits_completed: 691
+last_completed_plan_commit: 16.k.W
+next_plan_commit: 16.k.R
 last_completed_numbered_bundle: 584
 implementation_state: in_progress
 audit_followup_status: closed
@@ -37125,7 +37161,7 @@ Die W-/R-/C-Abnahmen im obigen OFF-PLAN-Abschnitt gelten vollständig.
 
 #### 16.k.W – Let it Work
 
-- [ ] **16.k.W** · Position **691/900** · Voraussetzung: `16.j.C`.
+- [x] **16.k.W** · Position **691/900** · Voraussetzung: `16.j.C`.
 **Exakte Commit-Message:** `16.k.W feat(migration): Migrate verify und fortsetzbarer Abschluss aufbauen`
 
 **Umsetzung:** Quellbundle, Bericht, Zielwurzel, Referenzen, Legacy-Bytes und deklarierte Invarianten lesend verifizieren.

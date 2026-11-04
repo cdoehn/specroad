@@ -396,6 +396,10 @@
       "kind": "Synthetic qualified reference-0.1 source bytes, an explicit bound target registry/profile and real external source ZIP; real native writer/recovery, OS file-prefix interruptions and dead local owner. No real data, review, consent or user configuration.",
       "provider": "tests/support/migration_transaction.py:setup,execution_inputs;tests/support/reference01.py:seal;tests/test_migration_transaction_right.py:interrupt,recover"
     },
+    "SR-FIX-MIGRATION-VERIFY-WORK-v1": {
+      "kind": "Synthetic reference-0.1 projects, real native source ZIP/plan and full target observations; actual shared writer and Work storage/transport. Explicit synthetic host gates, build binding and authority, never real reviews, external runs or local configuration.",
+      "provider": "tests/support/migration_verification.py:case;tests/support/migration_work.py:create,registry (R/C);tests/support/migration_history.py:historical_contract_host"
+    },
     "SR-FIX-MODEL-MANIFEST-v1": {
       "kind": "Owned single-root resources; explicit hash inputs, not resolved scopes, authentic profile composition or write permission.",
       "provider": "tests/test_model_root.py:fixture"
@@ -955,6 +959,7 @@
     "SR-FIX-MIGRATION-REQUIREMENTS-v1",
     "SR-FIX-MIGRATION-SOURCE-BACKUP-v1",
     "SR-FIX-MIGRATION-TRANSACTION-v1",
+    "SR-FIX-MIGRATION-VERIFY-WORK-v1",
     "SR-FIX-MODEL-MANIFEST-v1",
     "SR-FIX-MODEL-VALIDATION-v1",
     "SR-FIX-NATIVE-IMPORT-IDENTITIES-v1",
