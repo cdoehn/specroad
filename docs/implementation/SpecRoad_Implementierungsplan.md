@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 83 · **Stand:** 4. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.59
+**Planrevision:** 84 · **Stand:** 4. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.59
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 Schritte und 900 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; die ausdrücklich genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wird nach 10.7.10 innerhalb von 15.l.R vorgezogen. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -33,6 +33,59 @@ ausdrückliche Bedienausnahme aus 2.4.3.2 bleibt zusätzlich anwendbar.
 Produktfreigaben und die Grenzen aus 2.4.1/2.4.2/2.4.4 bleiben unverändert.
 Dieser Plan ändert keine alten Aufträge, Antworten, Blockaden oder
 Laufzeitdaten und ist keine Start-/Resume-Anweisung.
+
+## Korrekturbundle 581 — vollständiger Rest 16.i.C
+
+Das maßgebliche native Fehler-Result hat SHA-256
+`cda66cc58ea66092bc705ae12293d8cddf2cfb93c31f0264dce7a8295167d7a2`,
+HEAD `f5e584be69696d46ea5711d7988c8948893ced1e` und den erhaltenen
+Dirty-Fingerprint `633bc6e295935c03`. In Bundle 580 bestand 16.i.R alle
+9041 ausgewählten Tests und wurde mit diesem HEAD committed. Der frühere
+W-Commit und der neue R-Commit bleiben erhalten; tatsächlicher Produktstand
+686/900. Danach scheiterte das eigene C-Gate mit 9030 bestandenen und
+22 fehlgeschlagenen Tests. Kein C-Commit entstand. Der erhaltene Arbeitsstand
+entspricht exakt der angekündigten C-Stage einschließlich ihrer Extraktion.
+
+Ursache ist ein fehlender Modulimport in _schema_transition_proof:
+_verify_images verwendet transaction_receipt zum erneuten Prüfen der echten
+transaction.json-Bytes. Der Funktionskörper wurde unverändert extrahiert,
+sein bisher im Writermodul vorhandener Import aber nicht mit übernommen.
+19 Fehlerberichte zeigen denselben NameError an dieser Stelle; bei drei
+weiteren Prüfungen werden die späteren receipts-/archived-Unterbrechungspunkte
+nicht mehr erreicht. Die erfolgreichen R-Tests und die unveränderten
+Funktionskörper belegen keine vollständige C-Modulbindung. Die bisherige
+reine AST-Gleichheitsprüfung der Funktionen konnte diesen Importfehler nicht
+erkennen.
+
+Die Korrektur ergänzt genau den bisherigen transaction_receipt-Import aus
+schema_transition_values im extrahierten Modul. Keine Receiptprüfung wird
+übersprungen, kein Funktionskörper geändert und kein Fehler anders behandelt.
+Zusätzlich prüft die statische Paketvorbereitung die globalen Namensbindungen
+aller extrahierten und verbliebenen Funktionen gegen den erfolgreich
+committeden R-Stand. Unaufgelöste globale Namen sind Fehler; importierte
+Abhängigkeiten müssen dieselben Ursprünge behalten. Diese Analyse führt
+weder Produktfunktionen noch Testkörper aus.
+
+Die vorhandenen W-/R-Verhaltenstests erfassen den Fehler bereits vollständig.
+Alle Tests, Testidentitäten, Nummern, Registry und aktiven Katalogbindungen
+bleiben bytegleich zum erfolgreichen R-Stand. Die vollständigen Migrations-,
+Receipt-, Recovery-, Sicherungs-, Validierungs- und bestehenden gemeinsamen
+Writerregressionen sowie die bisherige übrige Pflichtauswahl bleiben für
+das C-Gate verpflichtend. Keine neue Spezifikationslücke, Klärung oder
+Budgetänderung; Normspec 0.2.59 bleibt bytegleich.
+
+Die einzige offene ID 16.i.C behält role=implementation. correction_of bindet
+Planhash `9f8f3d6519c4189d954fabdc9a88ebf2451b31c156b8529bb806dc1d95791535`
+und genau diesen Rest. Die vollständige erhaltene C-Extraktion einschließlich
+aller Vorherbytes wird an das neue Result gebunden. W und R werden nicht
+wiederholt. Gruppe 2 und die vollständige ungefilterte Pflichtauswahl laufen
+vor dem C-Commit; kein erfolgreicher Abschluss wird vorweggenommen.
+
+Dev führt keine Verhaltenstests aus. Vorbereiteter Zwischenstand: C;
+Häkchen und Zähler gelten erst nach erfolgreichem Apply-Gate und echtem
+Commit. Vollständiger Abschluss ergäbe 687/900; danach bleibt 16.j.W offen.
+Kein CI-, Watcher-, Control- oder Dienststart, keine lokale Konfiguration
+in der Payload und keine eigene Warte-/Apply-Schleife.
 
 ## Korrekturbundle 580 — vollständiger Rest 16.i.R/C
 
@@ -88,7 +141,7 @@ die angekündigte reine Extraktion der Beweisfunktionen; Funktions-ASTs sind
 zu R identisch, Tests und Kataloge bytegleich. Kein erfolgreicher Präfix
 wird wiederholt und kein Endstand vorab installiert.
 
-Dev führt keine Verhaltenstests aus. Vorbereiteter Zwischenstand: R;
+Dev führt keine Verhaltenstests aus. Vorbereiteter Zwischenstand: C;
 Häkchen und Zähler gelten erst nach erfolgreichem Apply-Gate und echtem
 Commit. Vollständiger Abschluss ergäbe 687/900; danach bleibt 16.j.W offen.
 Kein CI-, Watcher-, Control- oder Dienststart, keine lokale Konfiguration
@@ -155,7 +208,7 @@ jeweils mit eigener vollständiger ungefilterter Pflichtauswahl vor dem Commit.
 C bleibt die bereits angekündigte reine Extraktion der Beweisfunktionen;
 Funktions-ASTs sind zu R identisch, Tests und Kataloge bytegleich.
 
-Dev führt keine Verhaltenstests aus. Vorbereiteter Zwischenstand: R;
+Dev führt keine Verhaltenstests aus. Vorbereiteter Zwischenstand: C;
 Häkchen und Zähler gelten erst nach erfolgreichem Apply-Gate und echtem
 Commit. Vollständiger Abschluss ergäbe 687/900; danach bleibt 16.j.W offen.
 Kein CI-, Watcher-, Control- oder Dienststart, keine lokale Konfiguration
@@ -220,7 +273,7 @@ wiederholter erfolgreicher W-Commit.
 
 Verhaltenstests wurden in Dev nicht ausgeführt; statische Prüfung, reine
 Collection und native Paketvalidierung ersetzen die beiden Apply-Gates
-nicht. Vorbereiteter Zwischenstand: R; Häkchen und Zähler gelten erst
+nicht. Vorbereiteter Zwischenstand: C; Häkchen und Zähler gelten erst
 nach erfolgreichem Gate und echtem Commit. Vollständiger Abschluss ergäbe
 687/900, anschließend 16.j.W. Kein Dienst-, CI-, Watcher- oder Controlstart;
 keine lokalen Betriebsdaten in der Payload und keine eigene Folgeschleife.
@@ -279,7 +332,7 @@ einschließlich der gesamten geänderten Regressionstestdatei. Kein früherer
 Gateerfolg wird für den neuen Stand verwendet. Verhaltenstests nur in Apply;
 Dev prüft statisch, durch reine Collection und native Paketvalidierung.
 Keine Dienst-, Control-, Budget- oder Betriebsdatenänderung und keine Schleife.
-Vorbereiteter Zwischenstand: R; Häkchen und Zähler gelten erst nach
+Vorbereiteter Zwischenstand: C; Häkchen und Zähler gelten erst nach
 erfolgreichem Apply-Gate und echtem Commit. Nach vollständigem Abschluss
 wäre 687/900 erreicht; nächster offener Schritt bleibt 16.j.W.
 
@@ -322,7 +375,7 @@ Jede Stage erhält erneut ihre fällige N=3-Gruppe (0/1/2) plus ungefilterte
 Pflichtauswahl vor ihrem Commit. Dev führt ausschließlich statische Prüfung,
 reine Collection und native Paketprüfung aus, keine Verhaltenstests.
 Keine Änderung an Control, Budget oder Betriebsdaten; keine eigene Schleife.
-Vorbereiteter Zwischenstand: R; Häkchen und Zähler gelten erst nach
+Vorbereiteter Zwischenstand: C; Häkchen und Zähler gelten erst nach
 jeweiligem erfolgreichen Apply-Gate und echtem Commit. Nach vollständigem
 Abschluss wäre 687/900 erreicht; 16.j.W bleibt der nächste offene Schritt.
 
@@ -361,7 +414,7 @@ Mutations-/Sicherungs-/Abbruchgrenzen. C: gemeinsame interne Zustands- und
 Beweisprüfungen strukturieren; Fachwerte und Fehlerverträge beibehalten.
 Jede Phase erhält eine vollständige begründete Pflichtauswahl plus fällige
 N=3-Gruppe (2/0/1/2 einschließlich Klärung); keine Testkörper in Dev.
-Vorbereiteter Stand: 16.i.R; nachfolgende Planphasen bleiben offen. Häkchen zählen erst nach
+Vorbereiteter Stand: 16.i.C; nachfolgende Planphasen bleiben offen. Häkchen zählen erst nach
 jeweiligem erfolgreichen Apply-Gate und echtem Commit.
 
 ## MIGRATION-LOSS-574 — optionale Detailklärung und vollständiges 16.h
@@ -2386,10 +2439,10 @@ Kein offener Produktplanschritt wird durch diese Testoptimierung abgeschlossen.
 ```yaml
 plan_revision: 78
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 686
-last_completed_plan_commit: 16.i.R
-next_plan_commit: 16.i.C
-last_completed_numbered_bundle: 574
+implementation_plan_commits_completed: 687
+last_completed_plan_commit: 16.i.C
+next_plan_commit: 16.j.W
+last_completed_numbered_bundle: 575
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -36811,7 +36864,7 @@ Die W-/R-/C-Abnahmen im obigen OFF-PLAN-Abschnitt gelten vollständig.
 
 #### 16.i.C – Make it Clean
 
-- [ ] **16.i.C** · Position **687/900** · Voraussetzung: `16.i.R`.
+- [x] **16.i.C** · Position **687/900** · Voraussetzung: `16.i.R`.
 **Exakte Commit-Message:** `16.i.C refactor(migration): Migrationstransaktion und Metadaten bereinigen`
 
 **Bereinigung:** Gemeinsame read-only Source-/Bild-/Präfixbeweise aus Writer und Recovery strukturieren; keine gesonderten Lock-, Journal- oder Publikationsabkürzungen. Funktionskörper und echte W-/R-Testdateien bleiben unverändert; jedes eigene Apply-Gate bleibt erforderlich.
