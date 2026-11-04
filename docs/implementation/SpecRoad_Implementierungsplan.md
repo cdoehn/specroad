@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 80 · **Stand:** 4. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.59
+**Planrevision:** 83 · **Stand:** 4. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.59
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 Schritte und 900 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; die ausdrücklich genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wird nach 10.7.10 innerhalb von 15.l.R vorgezogen. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -33,6 +33,197 @@ ausdrückliche Bedienausnahme aus 2.4.3.2 bleibt zusätzlich anwendbar.
 Produktfreigaben und die Grenzen aus 2.4.1/2.4.2/2.4.4 bleiben unverändert.
 Dieser Plan ändert keine alten Aufträge, Antworten, Blockaden oder
 Laufzeitdaten und ist keine Start-/Resume-Anweisung.
+
+## Korrekturbundle 580 — vollständiger Rest 16.i.R/C
+
+Das maßgebliche native Fehler-Result hat SHA-256
+`6ee245cc91dbae7490e1e7041e264dc65b8aee7e9af98f1fa0c658d68600f253`,
+HEAD `b3e452022899f419b0a427017bb68abfc4ac3173` und den erhaltenen
+Dirty-Fingerprint `70697cdb5a178057`. Bundle 579 sammelte 24763 Tests
+und führte die fällige Gruppe 1 mit der ungefilterten Pflichtauswahl aus:
+9045 bestanden, ein Test fehlgeschlagen. Kein Commit entstand; der erhaltene
+Arbeitsstand entspricht exakt der angekündigten R-Stage. Der erfolgreiche
+W-Commit bleibt erhalten, tatsächlicher Produktstand weiterhin 685/900.
+
+Die einzige fehlgeschlagene Prüfung war die letzte Fehlererwartung in
+test_recovery_reentry_after_lost_rollback_effect. Die echte Unterbrechung,
+fortgesetzter Rollback, exakte Wiederherstellung der normativen Quelle und
+schreibfreie wiederholte Recovery hatten ihre Prüfungen bestanden. Der
+anschließende Apply-Aufruf verwendete aber den ursprünglichen Migrationsplan
+und die ursprüngliche Sicherung. Beide binden das neue passive Rollback-Audit
+noch nicht. Daher lehnt der Writer zuerst mit transition_source_changed ab,
+bevor er die verbrauchte Transaktions-ID prüfen kann. Diese Reihenfolge ist
+mit der vollständigen Quellbindung einschließlich passiver Daten vereinbar;
+Produktcode oder Spezifikation werden für den Test nicht gelockert.
+
+Die technische Korrektur ergänzt den tatsächlichen Testaufbau: Der alte
+Plan mit alter Sicherung muss weiterhin mit transition_source_changed und
+Exit 6 ohne Änderung der vollständigen Quelle abgelehnt werden. Anschließend
+entstehen aus allen aktuellen Dateien ein neuer nativer Plan und eine echte
+externe Sicherung. Der Test prüft deren vollständige Dateibindung, die
+geschützten Auditpfade und die tatsächlich wieder geöffneten Backupbytes.
+Mit diesen gültigen Eingaben muss dieselbe bereits verbrauchte Transaktions-ID
+mit transition_id_collision und Exit 6 scheitern, ohne Journal, Quelldateien
+oder Backup zu ändern. Als positive Gegenprobe muss eine neue Transaktions-ID
+denselben frisch gebundenen Plan veröffentlichen, das exakte normative Ziel
+erreichen und alle vorherigen passiven Auditbytes sowie die Sicherung erhalten.
+Kein Audit wird entfernt, kein Produktgate ersetzt und kein Fehler pauschal
+akzeptiert. Die ursprüngliche Crash-/Recoveryprüfung bleibt vollständig.
+
+Die aktive Testfallbeschreibung SR-TC-0270 dokumentiert diese bereits aus
+12.20.4 folgenden Nachweise. Testidentitäten, Nummern, Registry, Normspec
+0.2.59 und alle Produkt-/Runnerdateien bleiben je Stage bytegleich zu 579.
+Keine neue normative Detaillücke, Klärung oder Budgetänderung. Die bestehenden
+Recovery- und Nummernkorrekturen bleiben erhalten. Der gesamte geänderte Test
+und die bisherigen Writer-, Recovery-, Backup-, Validierungs-, Nummern- und
+Apply-Regressionen gehören weiterhin ungefiltert zur Pflichtauswahl.
+
+Die vollständigen offenen IDs 16.i.R und 16.i.C behalten role=implementation.
+correction_of bindet Planhash
+`b6cf009528173ffeead068b9d73688d5e6910a97b169c47b6ed0ebbee83aaed1`
+und genau diesen Rest. Erste Stage und Vorherbytes umfassen den gesamten
+erhaltenen Dirty-Stand. R erhält Gruppe 1, C anschließend Gruppe 2; jede
+Stage wird erst nach eigenem N=3-plus-Pflichtauswahl-Gate committed. C bleibt
+die angekündigte reine Extraktion der Beweisfunktionen; Funktions-ASTs sind
+zu R identisch, Tests und Kataloge bytegleich. Kein erfolgreicher Präfix
+wird wiederholt und kein Endstand vorab installiert.
+
+Dev führt keine Verhaltenstests aus. Vorbereiteter Zwischenstand: R;
+Häkchen und Zähler gelten erst nach erfolgreichem Apply-Gate und echtem
+Commit. Vollständiger Abschluss ergäbe 687/900; danach bleibt 16.j.W offen.
+Kein CI-, Watcher-, Control- oder Dienststart, keine lokale Konfiguration
+in der Payload und keine eigene Warte-/Apply-Schleife.
+
+## Korrekturbundle 579 — vollständiger Rest 16.i.R/C
+
+Das maßgebliche native Fehler-Result hat SHA-256
+`02ae83d6f8e63aabfe4e58f1d490454afc99fe3937b8818291d04095c0af07df`,
+HEAD `b3e452022899f419b0a427017bb68abfc4ac3173` und den erhaltenen
+Dirty-Fingerprint `685622155c49182b`. Bundle 578 stoppte in 16.i.R nach
+gültiger Collection von 24763 Tests, aber vor jedem Testkörper mit
+apply_partition_rejected. Kein Commit entstand. Der erhaltene Arbeitsstand
+entspricht exakt der angekündigten R-Stage. Der bereits bestätigte W-Commit
+bleibt erhalten; tatsächlicher Produktstand weiterhin 685/900.
+
+Ursache: _apply_registry verglich den kompletten seit HEAD angehängten
+Nummernblock mit einer erneut alphabetisch sortierten Menge. Am letzten
+Commit waren 24718 Nummern registriert. Der fehlgeschlagene R-Stand hatte
+bereits 49 weitere vergeben; Bundle 578 hängte sechs neue Regressionen an.
+Alle 24773 Nummern sind eindeutig, der vollständige committed-Präfix bleibt
+unverändert, und die 55 Ergänzungen entsprechen exakt der Collection.
+Nur ihre globale Neusortierung würde 30 Positionen verschieben. Das ist
+mit der dauerhaften Nummernvergabe und der Erhaltung des Fehlerstands nach
+AGENTS und 2.5.2 unvereinbar. Die bisherige Dev-Paketprüfung gegen den letzten
+Arbeitsstand übersah, dass Apply gegen den älteren committed-Stand prüft.
+
+Technische Korrektur: Bei bereits bestehender N=3-Registry prüft der
+Validator die exakte Ergänzungsmenge, ohne zuvor angehängte Blöcke erneut
+zu sortieren. Der vollständige vorherige Präfix, eindeutige IDs, vollständige
+Zuordnung zur aktuellen Collection sowie Nummerierungs- und Rotationsanker
+bleiben zwingend. Unbekannte Ergänzungen und fehlende aktuelle IDs bleiben
+Fehler. Erste Nummerierung, historische Zweierrotation und deren erstmaliger
+Übergang zu N=3 behalten die bisherigen strengen Sortierregeln. Die reale
+Registry bleibt in dieser Korrektur vollständig bytegleich; weder alte noch
+neue Testnummern werden geändert, entfernt oder wiederverwendet.
+
+Die bestehende Regression für Ergänzungen und reservierte alte Nummern wird
+um zwei nachfolgende Korrekturen vor dem nächsten Commit erweitert. Dabei
+sortieren die neuen Identitäten vor schon vergebenen, werden aber am Ende
+angehängt. Beide Vergleichsbasen — letzter Commit und erhaltener Versuch —
+müssen dieselben Nummern ergeben. Alle drei Gruppen, ihre Wiederholung am
+gleichen HEAD, exakte Auswahlbelege und fehlende Umnummerierung werden
+geprüft. Änderungen am erhaltenen Präfix und nicht gesammelte Ergänzungen
+bleiben verboten; historische Verträge werden nicht neu ausgelegt. Keine
+neuen Testidentitäten erforderlich; alle bestehenden Regressionen bleiben.
+
+Zusätzlich validiert die native Paketvorbereitung nun die tatsächlichen
+Registry-/Collection-Artefakte gegen beide Basen, einschließlich der im
+Apply maßgeblichen committed-Registry. Das ist Metadatenprüfung, keine
+Ausführung von Testkörpern. Alle Rotation-, Registry-, Laufzeitfilter- und
+Commitplan-Regressionen werden für Apply ausdrücklich verpflichtend gewählt.
+N=3, Pflichtvereinigung, Laufzeitdatenbank und erfolgreiche Commitrotation
+bleiben unverändert; kein Gate wird übersprungen oder als grün behauptet.
+
+Sämtliche Produkt- und Recoverykorrekturen aus Bundle 578 bleiben je Stage
+bytegleich. Spezifikation 0.2.59 und aktive Katalogbindungen bleiben erhalten;
+keine neue normative Detaillücke, Klärung oder Budgetänderung. Die vollständigen
+IDs 16.i.R und 16.i.C behalten role=implementation. correction_of bindet
+Planhash `c066a222848097cfc2e08e4b334804ed147d0c1a96453ba7d4e56182b7050123`
+und genau diesen Rest. Erste Stage und Vorherbytes umfassen den gesamten
+erhaltenen Dirty-Stand. R erhält Gruppe 1 und C anschließend Gruppe 2,
+jeweils mit eigener vollständiger ungefilterter Pflichtauswahl vor dem Commit.
+C bleibt die bereits angekündigte reine Extraktion der Beweisfunktionen;
+Funktions-ASTs sind zu R identisch, Tests und Kataloge bytegleich.
+
+Dev führt keine Verhaltenstests aus. Vorbereiteter Zwischenstand: R;
+Häkchen und Zähler gelten erst nach erfolgreichem Apply-Gate und echtem
+Commit. Vollständiger Abschluss ergäbe 687/900; danach bleibt 16.j.W offen.
+Kein CI-, Watcher-, Control- oder Dienststart, keine lokale Konfiguration
+in der Payload und keine eigene Warte-/Apply-Schleife.
+
+## Korrekturbundle 578 — vollständiger Rest 16.i.R/C
+
+Das maßgebliche native Fehler-Result hat SHA-256
+`22618ea1359d91370f6576fed0b5e3ee6c1d5ac36729e85f8570a86ae270297d`,
+HEAD `b3e452022899f419b0a427017bb68abfc4ac3173` und den erhaltenen
+Dirty-Fingerprint `e182f35e16bc62fc`. Bundle 577 hat 16.i.W nach 8634
+bestandenen Tests tatsächlich committed. In 16.i.R bestanden 8725 Tests,
+sieben scheiterten; R wurde nicht committed. Der erhaltene Arbeitsstand ist
+bytegleich zur angekündigten R-Stage. Tatsächlicher Produktstand: 685/900.
+Der erfolgreiche W-Commit und der frühere Klärungscommit bleiben erhalten;
+ausschließlich R und C werden vollständig fortgeführt.
+
+Zwei Fehler betreffen den bisherigen v1-Discard-Test mit verlinktem Journal.
+Der neue read-only Formatdispatch lag vor der bestehenden Fehlerübersetzung:
+JournalError beziehungsweise SafetyViolation entkamen dem öffentlichen
+RecoveryError-Vertrag. Alle drei gemeinsamen Recovery-Einstiege verwenden
+nun dieselbe ausschließlich lesende Probe mit der bereits vorhandenen
+recovery_failure-Übersetzung. Vorliegende Gründe, Exitklassen und Pfade
+bleiben erhalten; die Probe behauptet keine Mutation. Unsichere Journale
+werden weiterhin abgelehnt, nicht als alter Writerzweig umgangen. Die
+bestehende Linkregression prüft zusätzlich Completion und Rollback samt
+unveränderten Bytes, ausbleibender Autorisierung und null Normativwrites.
+
+Die übrigen fünf Fehler haben dieselbe Ursache: Nach einem tatsächlich
+erfolgten, aber unquittierten Dateieffekt liegt der echte Zielpräfix genau
+eins vor published_count. Die unabhängige Byteprüfung erkannte diesen Stand
+bereits korrekt. Beim ersten Rollback-Marker fehlte jedoch dessen gültiger
+Zähler in der Liste exakt belegbarer temporärer Journalbilder. Nur für
+committing wird nun dieses eine deterministische rolling_back-Bild zusätzlich
+anerkannt, begrenzt auf die wirkliche Anzahl geplanter Änderungen. Name,
+Hash und sämtliche vorhandenen Bytes müssen weiterhin exakt zum erwarteten
+Bild passen. Die eigenständige Source-/Target-Präfixprüfung, Ein-Schritt-
+Grenze, Autorität, Sicherungsbindung und frischen Lockprüfungen bleiben.
+Unbekannte oder abweichende Bilder werden weder überschrieben noch entfernt.
+
+Die vollständige vorhandene Effekt-/Quittierungsmatrix, echte verlorene
+Rename-/Unlink-Antworten, tote Writer und erneut unterbrochene Rollbacks
+bleiben Pflicht. Sechs zusätzliche Testidentitäten prüfen leere, partielle
+und vollständige unquittierte erste Rollback-Marker sowie manipulierte
+Zähler, Bytes und Dateinamen. Bestehende Testnummern bleiben erhalten; neue
+Nummern werden ausschließlich angehängt. SR-TC-0270 bindet diese Nachweise.
+Normativer Bezug: 12.20.4 verlangt bereits genaue eigene Bytepräfixe und
+belegte verlorene Effekte; die gemeinsamen Recovery-Fehlerverträge gelten
+auch vor der Formatauswahl. Spezifikation 0.2.59 bleibt bytegleich. Dies ist
+eine technische Korrektur, keine neue Detailklärung oder Budgetänderung.
+
+Die offenen IDs 16.i.R und 16.i.C behalten role=implementation.
+correction_of bindet Planhash
+`4d608304dd027bc75b98e398269ba54c5b905adedf9f13b9691b2684b6b5cac3`
+und genau diesen vollständigen Rest. Erste Stage und Vorherbytes umfassen
+den gesamten erhaltenen Dirty-Stand. R erhält Gruppe 1, C anschließend
+Gruppe 2; beide zusätzlich die vollständige ungefilterte Pflichtauswahl.
+Die C-Stage behält ausschließlich die angekündigte Strukturbereinigung:
+ausgelagerte Beweisfunktionen sind AST-gleich zum korrigierten R, Tests und
+Katalogbindungen bytegleich. Keine vorab installierte Endfassung und kein
+wiederholter erfolgreicher W-Commit.
+
+Verhaltenstests wurden in Dev nicht ausgeführt; statische Prüfung, reine
+Collection und native Paketvalidierung ersetzen die beiden Apply-Gates
+nicht. Vorbereiteter Zwischenstand: R; Häkchen und Zähler gelten erst
+nach erfolgreichem Gate und echtem Commit. Vollständiger Abschluss ergäbe
+687/900, anschließend 16.j.W. Kein Dienst-, CI-, Watcher- oder Controlstart;
+keine lokalen Betriebsdaten in der Payload und keine eigene Folgeschleife.
 
 ## Korrekturbundle 577 — vollständiger Rest 16.i.W/R/C
 
@@ -88,7 +279,7 @@ einschließlich der gesamten geänderten Regressionstestdatei. Kein früherer
 Gateerfolg wird für den neuen Stand verwendet. Verhaltenstests nur in Apply;
 Dev prüft statisch, durch reine Collection und native Paketvalidierung.
 Keine Dienst-, Control-, Budget- oder Betriebsdatenänderung und keine Schleife.
-Vorbereiteter Zwischenstand: W; Häkchen und Zähler gelten erst nach
+Vorbereiteter Zwischenstand: R; Häkchen und Zähler gelten erst nach
 erfolgreichem Apply-Gate und echtem Commit. Nach vollständigem Abschluss
 wäre 687/900 erreicht; nächster offener Schritt bleibt 16.j.W.
 
@@ -131,7 +322,7 @@ Jede Stage erhält erneut ihre fällige N=3-Gruppe (0/1/2) plus ungefilterte
 Pflichtauswahl vor ihrem Commit. Dev führt ausschließlich statische Prüfung,
 reine Collection und native Paketprüfung aus, keine Verhaltenstests.
 Keine Änderung an Control, Budget oder Betriebsdaten; keine eigene Schleife.
-Vorbereiteter Zwischenstand: W; Häkchen und Zähler gelten erst nach
+Vorbereiteter Zwischenstand: R; Häkchen und Zähler gelten erst nach
 jeweiligem erfolgreichen Apply-Gate und echtem Commit. Nach vollständigem
 Abschluss wäre 687/900 erreicht; 16.j.W bleibt der nächste offene Schritt.
 
@@ -170,7 +361,7 @@ Mutations-/Sicherungs-/Abbruchgrenzen. C: gemeinsame interne Zustands- und
 Beweisprüfungen strukturieren; Fachwerte und Fehlerverträge beibehalten.
 Jede Phase erhält eine vollständige begründete Pflichtauswahl plus fällige
 N=3-Gruppe (2/0/1/2 einschließlich Klärung); keine Testkörper in Dev.
-Vorbereiteter Stand: 16.i.W; nachfolgende Planphasen bleiben offen. Häkchen zählen erst nach
+Vorbereiteter Stand: 16.i.R; nachfolgende Planphasen bleiben offen. Häkchen zählen erst nach
 jeweiligem erfolgreichen Apply-Gate und echtem Commit.
 
 ## MIGRATION-LOSS-574 — optionale Detailklärung und vollständiges 16.h
@@ -2195,9 +2386,9 @@ Kein offener Produktplanschritt wird durch diese Testoptimierung abgeschlossen.
 ```yaml
 plan_revision: 78
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 685
-last_completed_plan_commit: 16.i.W
-next_plan_commit: 16.i.R
+implementation_plan_commits_completed: 686
+last_completed_plan_commit: 16.i.R
+next_plan_commit: 16.i.C
 last_completed_numbered_bundle: 574
 implementation_state: in_progress
 audit_followup_status: closed
@@ -36611,7 +36802,7 @@ Die W-/R-/C-Abnahmen im obigen OFF-PLAN-Abschnitt gelten vollständig.
 
 #### 16.i.R – Make it Right
 
-- [ ] **16.i.R** · Position **686/900** · Voraussetzung: `16.i.W`.
+- [x] **16.i.R** · Position **686/900** · Voraussetzung: `16.i.W`.
 **Exakte Commit-Message:** `16.i.R feat(migration): Migrationstransaktion und Metadaten vervollständigen`
 
 **Vervollständigung:** Wiederholung bleibt No-op beziehungsweise gespeicherter Request; nach Abbruch kein regulär ladbarer Mischstand.

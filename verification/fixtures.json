@@ -390,7 +390,7 @@
     },
     "SR-FIX-MIGRATION-TRANSACTION-v1": {
       "kind": "Synthetic qualified reference-0.1 source bytes, an explicit bound target registry/profile and real external source ZIP; real native writer/recovery, OS file-prefix interruptions and dead local owner. No real data, review, consent or user configuration.",
-      "provider": "tests/support/migration_transaction.py:setup,execution_inputs;tests/support/reference01.py:seal"
+      "provider": "tests/support/migration_transaction.py:setup,execution_inputs;tests/support/reference01.py:seal;tests/test_migration_transaction_right.py:interrupt,recover"
     },
     "SR-FIX-MODEL-MANIFEST-v1": {
       "kind": "Owned single-root resources; explicit hash inputs, not resolved scopes, authentic profile composition or write permission.",

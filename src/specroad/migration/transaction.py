@@ -35,8 +35,31 @@ def apply_migration_plan(root, raw, *, expected_plan_sha256, expected_inputs_sha
     config = parse_json_object(unb64(op['inputs']['target_configuration']))
     descriptor = {'path': backup_path, 'output_root': backup_root, 'sha256': backup_sha256,
         'size': backup_size, 'source_files_sha256': backup_source_files_sha256}
-    with project_lock(root, kind='writer', command='migrate apply', project_id=config['project_id'],
+    from ..changes._lock_files import LockFiles
+    from ..changes.schema_transition_recovery import historical_request
+    from ..storage.operational_preflight import observe_operational_preflight
+    with LockFiles(root) as files:
+        require(observe_operational_preflight(files.boundary)['consistency_state'] == 'consistent',
+                'migration_recovery_required', exit_code=5)
+        actual = parse_json_object(files.boundary.read_bytes('specroad.json'))
+        require(actual.get('project_id') == config['project_id'], 'transition_project_binding')
+        historical = historical_request(files, plan, config['project_id'])
+        if historical is not None:
+            return historical
+        actual = parse_json_object(files.boundary.read_bytes('specroad.json'))
+        if actual.get('schema_version') == expected_target_version:
+            from ..storage.project import ProjectSource
+            source = ProjectSource(root, expected_project_id=config['project_id'])
+            source.check_current()
+            require(observe_operational_preflight(source.boundary)['consistency_state'] == 'consistent',
+                    'migration_recovery_required', exit_code=5)
+            return {'format_version':'migration-transaction-v1','status':'not_required','exit_code':0,
+                'write_state':'not_committed','no_change':True,'replayed':False,
+                'current_target_verified':False,'approval_granted':False,'write_authorized':False}
+    with project_lock(root, kind='writer' , command='migrate apply', project_id=config['project_id'],
             request_id=plan.data['request_id'], transaction_id=transaction_id) as held:
+        historical = historical_request(held._files, plan, config['project_id'])
+        if historical is not None: return historical
         try:
             return publish_schema_transition(plan, held_lock=held, backup_descriptor=descriptor,
                                              authority=authority, gates=gates)

@@ -24,9 +24,18 @@ Der Writer startet keine automatische Wiederholung oder Rückführung.
 Die echte externe Sicherung muss bis zum vollständigen Abschluss erhalten
 bleiben; der historische Receipt bewahrt zusätzlich seine eigenen Originale.
 
-Die vollständige Wiederaufnahme über die gemeinsamen Recovery-Einstiegspunkte
-und der dauerhaft geprüfte Request-Replay folgen in 16.i.R. Offene Journale
-bleiben bis zur ausdrücklichen Recovery blockierend.
+Die gemeinsamen Recovery-Einstiegspunkte erkennen das neue Journal explizit.
+Voller Journalhash, Originalbackup, native Ownerbindung und RecoveryAuthority
+sind Pflicht. Vollständig publizierte Targets werden quittiert, unvollständige
+Präfixe vollständig auf Source zurückgeführt. Alle Intents und Workbytes werden
+atomar archiviert; keine neue Transaktion wird automatisch gestartet. Reale
+tote Writer benötigen weiterhin den bestehenden expliziten Owner-Takeover.
+Die Sourcepolicy erteilt keine automatische Recoveryfreigabe.
+
+Ein identischer Request liefert nur nach vollständiger historischer Receipt-
+Prüfung das gespeicherte Ergebnis und behauptet keine heutige Zielgültigkeit.
+Ein neuer Request am erreichten Schema endet ohne Revision oder Receipt als
+not_required. Ein Requestkonflikt und eine beschädigte Historie bleiben Fehler.
 
 Es wird weiterhin kein öffentlicher 0.1-Migrationspfad registriert. Die noch
 offenen historischen Detailberichte, migrate verify, öffentliche CLI und

@@ -77,6 +77,14 @@ def _verify_images(files, prefix, journal, backup, *, partial=False):
                     ('rolling_back',journal.data['published_count']),
                     ('rolling_back',max(0,journal.data['published_count']-1)),
                     ('rolled_back',0), ('committed',len(journal.plan.data['operations'][0]['changes'])))]
+            if journal.data['state'] == 'committing':
+                # Recovery may observe one completed effect whose journal ack
+                # was lost. Its first rollback marker binds that proven count.
+                # This permits only the deterministic marker bytes; the actual
+                # source/target prefix is still checked independently.
+                count = min(len(journal.plan.data['operations'][0]['changes']),
+                            journal.data['published_count'] + 1)
+                possible.append(journal.successor('rolling_back', count).source_bytes)
             require(any(name == 'journal.' + sha256(value).hexdigest() + '.pending'
                         and value.startswith(raw) for value in possible),
                     'transition_pending_journal_changed')
@@ -84,6 +92,9 @@ def _verify_images(files, prefix, journal, backup, *, partial=False):
             possible = [(p, b) for p, b in backup.files.items()] + list(materialized_files(journal.plan, backup.files).items())
             require(any(name == 'moves/' + sha256((p + ':' + sha256(b).hexdigest()).encode()).hexdigest() + '.bin'
                         and b.startswith(raw) for p, b in possible), 'transition_pending_image_changed')
+        elif name.startswith('recovery-') and name.endswith('.json'):
+            from .schema_transition_recovery import check_recovery_intent
+            check_recovery_intent(name,raw,journal)
         elif name == 'transaction.json' and journal.data['state'] == 'committed':
             require(transaction_receipt(journal).startswith(raw), 'transition_receipt_changed')
         else:
@@ -141,6 +152,7 @@ class _Session:
         self.prepared = journal.data['images_prepared']
         self.archived = False
         self.receipts_complete = False
+        self.extra_evidence = {}
 
     def guard(self, *, work=True):
         _held(self.held, self.journal)
@@ -158,7 +170,7 @@ class _Session:
             receipt = request_receipt(self.journal)
             if receipt is not None:
                 require(read(self.files,receipt.path) == receipt.source_bytes, 'transition_request_receipt_changed')
-        actual, modes, _ = project_files(self.files, exclude=_exclude(self.journal, self.prefix))
+        actual, modes, _ = project_files(self.files, exclude=(*_exclude(self.journal, self.prefix), *self.extra_evidence))
         require(_prefix(self.journal, self.source, actual) == self.live_count, 'transition_file_prefix_changed')
         for path, mode in modes.items():
             expected = self.journal.data['source_modes'].get(path, 0o644)
@@ -172,6 +184,10 @@ class _Session:
             raw = read(self.files, request_receipt_path(request_id), optional=True)
             expected = request_receipt(self.journal) if self.journal.data['state'] == 'committed' else None
             require(raw is None or expected is not None and expected.source_bytes.startswith(raw), 'transition_request_collision')
+        if self.recover:
+            from .schema_transition_recovery import takeover_evidence
+            require(takeover_evidence(self.files, self.journal) == self.extra_evidence,
+                    'transition_takeover_evidence_changed')
         require(external_backup(self.files,self.journal.data['backup']).source_bytes == self.backup.source_bytes,
                 'transition_backup_changed')
         self.held.check()

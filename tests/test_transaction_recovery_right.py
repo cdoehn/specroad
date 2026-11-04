@@ -186,6 +186,19 @@ def test_linked_journal_or_evidence_is_never_followed_for_discard(tmp_path, entr
         before = tree(tmp_path)
         with pytest.raises(RecoveryError) as error: discard(c, j, held)
         assert not error.value.mutation_possible and tree(tmp_path) == before
+        if entry == 'journal':
+            from specroad.changes.recovery import (complete_published_transaction,
+                                                   rollback_interrupted_transaction)
+            calls = []
+            authority = RecoveryAuthority('test-probe', '1', lambda request: calls.append(request) or True)
+            for action in (complete_published_transaction, rollback_interrupted_transaction):
+                with pytest.raises(RecoveryError) as caught:
+                    action(TRANSACTION, held_lock=held, authority=authority,
+                           expected_journal_sha256=j.sha256)
+                assert caught.value.exit_code == (7 if kind == 'hardlink' else 5)
+                assert not caught.value.mutation_possible
+                assert caught.value.normative_writes_by_recovery == 0
+                assert tree(tmp_path) == before and calls == []
     assert outside.exists()
 
 

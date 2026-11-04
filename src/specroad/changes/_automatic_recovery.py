@@ -40,6 +40,12 @@ def recover_selected_transaction(decision: RecoveryDecision, data):
         journal = selected_journal(files, transaction_id, config.project_id, barrier)
         if request_id == journal.data['request_id']:
             raise RecoveryError('preflight_request_id_conflicts_with_recovery', exit_code=6)
+        from .schema_transition_values import TransitionJournal
+        if type(journal) is TransitionJournal:
+            # The source 0.1 contract defines no automatic-recovery authority.
+            # A partially published target policy cannot authorize source writes.
+            data.update(reason='migration_recovery_requires_explicit_authority')
+            return
         integrity = inspect_critical_inputs(files, journal)
     if integrity['blockers']:
         raise RecoveryError(integrity['blockers'][0]['reason'], exit_code=6)

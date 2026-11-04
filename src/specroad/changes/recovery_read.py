@@ -25,7 +25,7 @@ def inspect_recovery(root, *, transaction_id=None, expected_project_id=None, pre
         with LockFiles(root) as files:
             active = files.journal_entries()
             selected = ('.specroad/transactions/' + transaction_id,) if transaction_id is not None else active
-            rows, captured, input_captures = [], {}, {}
+            rows, captured, input_captures, transition_captures = [], {}, {}, {}
             for path in selected:
                 row = {'path': path + '/journal.json', 'state': 'unknown', 'observed_state': None,
                        'journal_schema_validated': False, 'state_actions': [],
@@ -70,6 +70,15 @@ def inspect_recovery(root, *, transaction_id=None, expected_project_id=None, pre
                     journal = _parse(raw, txn, files, expected_project_id)
                     row['journal_schema_validated'] = True
                     d = journal.data
+                    from .schema_transition_values import TransitionJournal
+                    if type(journal) is TransitionJournal:
+                        from .schema_transition_recovery import status_transition
+                        phase = 'schema_transition_inputs'
+                        details = status_transition(files,journal,path)
+                        row.update(details)
+                        transition_captures[txn] = (journal,path,details)
+                        rows.append(row)
+                        continue
                     row.update(state=d['state'], transaction_id=d['transaction_id'], project_id=d['project_id'], base_model_root_sha256=d['base_model_root_sha256'],
                                target_model_root_sha256=d['target_model_root_sha256'],
                                published_count=d['published_count'],
@@ -98,7 +107,7 @@ def inspect_recovery(root, *, transaction_id=None, expected_project_id=None, pre
                 except (ChangeExecutionError, SafetyViolation, ModelError, OSError, ValueError) as error:
                     row['diagnostic'] = getattr(error, 'reason', 'recovery_input_unreadable')
                     # A caller's wrong expected project is not proof of corrupt bytes.
-                    invalid = (phase in ('journal_read', 'journal_parse')
+                    invalid = (phase in ('journal_read', 'journal_parse','schema_transition_inputs')
                                and row['diagnostic'] != 'recovery_journal_binding_mismatch'
                                and path in active)
                     if invalid:
@@ -107,6 +116,9 @@ def inspect_recovery(root, *, transaction_id=None, expected_project_id=None, pre
                         row['blockers'] = [{'path': row['path'], 'role': 'journal',
                                             'reason': row['diagnostic']}]
                 rows.append(row)
+            for journal, path, details in transition_captures.values():
+                if status_transition(files,journal,path) != details:
+                    raise RecoveryError('recovery_status_changed',exit_code=6)
             for txn, (journal, integrity) in input_captures.items():
                 if inspect_critical_inputs(files, journal) != integrity:
                     raise RecoveryError('recovery_status_changed', exit_code=6)

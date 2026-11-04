@@ -32,8 +32,18 @@ def validate_registry(value, current_ids, previous=None):
     else:
         validate_registry_shape(previous)
         old = previous["test_ids"]
+        additions = ids[len(old):]
+        current_additions = set(current_ids) - set(old)
+        # A failed N=3 attempt can already have assigned an appended block.
+        # A correction appends further IDs; globally sorting both blocks
+        # would renumber the first. Preserve the supplied order and require
+        # exactly the collected additions, with the full old prefix intact.
+        # Initial numbering and the historical/migration contracts stay strict.
+        additions_match = (set(additions) == current_additions
+            if version == previous["format_version"] == 2
+            else additions == sorted(current_additions))
         if (value["anchor_commit"] != previous["anchor_commit"] or ids[:len(old)] != old
-                or ids[len(old):] != sorted(set(current_ids) - set(old))):
+                or not additions_match):
             raise ValueError("Existing test numbers must not change or be reused")
         if previous["format_version"] == 2 and (version != 2
                 or value["rotation_anchor_commit"] != previous["rotation_anchor_commit"]

@@ -40,7 +40,10 @@ def _read_journal(files, transaction_id):
 def _parse(raw, transaction_id, files, expected_project_id=None):
     value = parse_json_object(raw)
     state = value.get('state')
-    if state == 'rolled_back':
+    if value.get('format_version') == 'schema-transition-journal-v1':
+        from .schema_transition_values import TransitionJournal
+        cls = TransitionJournal
+    elif state == 'rolled_back':
         cls = DiscardedJournal if 'discard' in value else RolledBackJournal
     else:
         cls = _KNOWN.get(state) if type(state) is str else None

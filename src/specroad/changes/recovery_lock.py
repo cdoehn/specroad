@@ -30,6 +30,13 @@ from ._recovery_terminal import read_terminal_journal, terminal_marker_path
 
 
 def _selected_journal(files, transaction_id, project_id):
+    from .schema_transition_recovery import find_journal
+    selected = find_journal(files,transaction_id)
+    if selected is not None:
+        journal,prefix = selected
+        journal = _parse(journal.source_bytes,transaction_id,files,project_id)
+        record = read_evidence(files,prefix+'/journal.json')
+        return journal,record,existing_recovery_record(files,record)
     record = read_evidence(files, journal_path(transaction_id))
     if record is None:
         # Terminal cleanup may already have moved the active journal. Select

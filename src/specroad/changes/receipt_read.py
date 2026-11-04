@@ -140,6 +140,20 @@ def read_transaction_completion(source, transaction_id, *, preflight=None):
     try:
         _transaction(transaction_id)
         with LockFiles(source.boundary.root) as files:
+            from .schema_transition_recovery import find_journal, completion_proof
+            from .schema_transition import completion_data
+            selected = find_journal(files, transaction_id)
+            if selected is not None:
+                if preflight is not None:
+                    raise ReceiptError('schema_transition_requires_native_validation', exit_code=3)
+                source.check_current()
+                journal = completion_proof(files, transaction_id)
+                if journal.data['project_id'] != source.configuration.project_id:
+                    raise ReceiptError('request_project_binding_mismatch', exit_code=6)
+                source.check_current()
+                from .recovery_values import RecoveryObservation
+                return RecoveryObservation._create({**completion_data(journal), 'cleanup_completed': True,
+                    'commit_completed': True, 'receipt_verified': True, 'current_target_verified': False})
             proof = _CompletionProof(files, source, transaction_id, preflight=preflight)
             work = proof.work_present()
             proof.check()

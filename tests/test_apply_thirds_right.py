@@ -105,6 +105,41 @@ def test_additions_and_retirements_keep_stable_modulo_membership(added):
         expected={i for i in current.values() if (int(i[-1])+(6 if i.startswith('new.') else 0)) % 3 == group}
         assert set(part.values())==expected
     assert value['test_ids'][2]=='case.2'
+    # Two corrections after an uncommitted attempt append lexically earlier
+    # IDs. Neither the retained numbers nor their modulo groups may move.
+    numbers=rotation.validate_registry(value,current.values(),previous)
+    for identity in ('new.-1','new.-2'):
+        retained=deepcopy(value); prior_numbers=dict(numbers); prior_parts=parts
+        current['tests/test_retry.py::test_'+str(len(value['test_ids']))]=identity
+        value=thirds([*retained['test_ids'],identity])
+        numbers=rotation.validate_registry(value,current.values(),previous)
+        assert numbers=={**prior_numbers,identity:len(retained['test_ids'])}
+        assert rotation.validate_registry(value,current.values(),retained)==numbers
+        parts=[rotation.select_partition(current,value,group,previous) for group in range(3)]
+        assert parts[0] | parts[1] | parts[2]==current
+        for group,part in enumerate(parts):
+            assert prior_parts[group].items() <= part.items()
+            assert set(part.values())=={test_id for test_id in current.values() if numbers[test_id] % 3==group}
+            # A retry keeps its sequence; three later commits wrap modulo.
+            assert rotation.select_partition(current,value,group,previous)==part
+            assert rotation.select_partition(current,value,group+3,previous)==part
+            receipt=rotation.selection_receipt(value,json.dumps(value).encode(),part,NEXT,group)
+            assert {row['test_id']:row['test_number'] for row in receipt['selection_binding']['tests']} == {
+                test_id:numbers[test_id] for test_id in part.values()}
+        changed=deepcopy(value)
+        changed['test_ids'][6],changed['test_ids'][-1]=changed['test_ids'][-1],changed['test_ids'][6]
+        with pytest.raises(ValueError):rotation.validate_registry(changed,current.values(),retained)
+        unknown=deepcopy(value);unknown['test_ids'].append('uncollected.retry')
+        with pytest.raises(ValueError):rotation.validate_registry(unknown,current.values(),previous)
+        assert value['test_ids'][2]=='case.2' and numbers['case.2']==2
+
+    # This repair does not reinterpret the historical two-group contract or
+    # the first migration to N=3, which had no earlier N=3 append block.
+    from test_apply_rotation import registry
+    with pytest.raises(ValueError):
+        rotation.validate_registry(registry(value['test_ids']),current.values(),registry())
+    with pytest.raises(ValueError):
+        rotation.validate_registry(value,current.values(),registry())
 
 
 def test_receipt_is_order_independent_but_binds_original_registry_bytes():

@@ -27,6 +27,21 @@ from ._discard_inputs import archived_discard, pending_discard, discard_work_inv
 from .recovery_read import inspect_recovery
 
 
+def _transition_journal(held_lock, transaction_id, *, failure_reason):
+    """Keep the read-only format probe inside the public recovery error contract."""
+    if type(held_lock) is not HeldProjectLock:
+        return None
+    from .schema_transition_recovery import find_journal
+    from ._recovery_mutation import recovery_failure
+    try:
+        return find_journal(held_lock._files, transaction_id)
+    except RecoveryError:
+        raise
+    except (ChangeExecutionError, SafetyViolation, ModelError, OSError, ValueError) as error:
+        raise recovery_failure(error, reason=failure_reason,
+                               mutation_possible=False) from error
+
+
 def discard_unpublished_transaction(preflight, transaction_id, *, held_lock,
                                    authority, actor, reason, expected_journal_sha256):
     """Discard ONLY proven unpublished preparations; retain all work in an audit.
@@ -36,6 +51,13 @@ def discard_unpublished_transaction(preflight, transaction_id, *, held_lock,
     normative target, request receipt, before image or prior audit is removed.
     Late failure keeps partial audit/terminal state for explicit diagnosis.
     """
+    from .schema_transition_recovery import recover_transition
+    if _transition_journal(held_lock, transaction_id, failure_reason='recovery_discard_failed') is not None:
+        if not _text(reason): raise RecoveryError('explicit_recovery_identity_and_reason_required',exit_code=2)
+        normalized_actor = normalize_authoring_actor(actor)
+        return recover_transition(transaction_id, held_lock=held_lock, authority=authority,
+            expected_journal_sha256=expected_journal_sha256, action='discard',
+            actor=normalized_actor.as_fields(),reason=reason)
     _transaction(transaction_id)
     if not _hash(expected_journal_sha256) or not _text(reason):
         raise RecoveryError('explicit_recovery_identity_and_reason_required', exit_code=2)
@@ -142,6 +164,10 @@ def discard_unpublished_transaction(preflight, transaction_id, *, held_lock,
 def complete_published_transaction(transaction_id, *, held_lock, authority,
                                    expected_journal_sha256):
     """Finish or verify a complete interrupted transaction without target writes."""
+    from .schema_transition_recovery import recover_transition
+    if _transition_journal(held_lock, transaction_id, failure_reason='recovery_completion_failed') is not None:
+        return recover_transition(transaction_id, held_lock=held_lock, authority=authority,
+            expected_journal_sha256=expected_journal_sha256, action='complete')
     from ._recovery_completion import complete_published_transaction as complete
     from ._recovery_files import write_recovery_file
     return complete(
@@ -157,6 +183,10 @@ def complete_published_transaction(transaction_id, *, held_lock, authority,
 def rollback_interrupted_transaction(transaction_id, *, held_lock, authority,
                                      expected_journal_sha256):
     """Restore an interrupted commit to its complete journal-bound basis."""
+    from .schema_transition_recovery import recover_transition
+    if _transition_journal(held_lock, transaction_id, failure_reason='recovery_rollback_failed') is not None:
+        return recover_transition(transaction_id, held_lock=held_lock, authority=authority,
+            expected_journal_sha256=expected_journal_sha256, action='rollback')
     from ._recovery_rollback import rollback_interrupted_transaction as rollback
     return rollback(transaction_id, held_lock=held_lock, authority=authority,
                     expected_journal_sha256=expected_journal_sha256)

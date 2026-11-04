@@ -55,6 +55,15 @@ def cleanup_recovered_transaction(transaction_id, *, held_lock, authority, expec
         raise RecoveryError('recovery_authority_required', exit_code=2)
     if type(held_lock) is not HeldProjectLock:
         raise RecoveryError('native_recovery_lock_required', exit_code=7)
+    from .schema_transition_recovery import find_journal, recover_transition
+    selected = find_journal(held_lock._files,transaction_id)
+    if selected is not None:
+        state = selected[0].data['state']
+        if state not in ('committed','rolled_back'):
+            raise RecoveryError('recovery_cleanup_nonterminal',exit_code=6)
+        return recover_transition(transaction_id,held_lock=held_lock,authority=authority,
+            expected_journal_sha256=expected_journal_sha256,
+            action='complete' if state=='committed' else 'rollback')
     mutated = False
     try:
         files = held_lock._files
