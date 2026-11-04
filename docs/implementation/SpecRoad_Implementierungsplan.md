@@ -78,7 +78,7 @@ Zustimmungen, leere Inventur und vollständig passive Zustimmung werden
 abgenommen. Öffentliche CLI, Writer/Recovery, Abschlussbericht und globale
 Zielverification bleiben in ihren bestätigten späteren M16-Schritten.
 
-Vorbereiteter Stand: 16.h.W; die nachfolgenden Planphasen bleiben offen. Keine Testkörper oder Fixtures
+Vorbereiteter Stand: 16.h.R; die nachfolgenden Planphasen bleiben offen. Keine Testkörper oder Fixtures
 in Dev. Jede Stage erhält ein eigenes Apply-Gate (Rotation 1/2/0/1) plus
 ungefilterte vollständige Pflichtauswahl. Häkchen und Produktzähler gelten
 erst nach ihrem Gate; Dokumentänderung ist kein Produktabschluss.
@@ -2056,9 +2056,9 @@ Kein offener Produktplanschritt wird durch diese Testoptimierung abgeschlossen.
 ```yaml
 plan_revision: 77
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 682
-last_completed_plan_commit: 16.h.W
-next_plan_commit: 16.h.R
+implementation_plan_commits_completed: 683
+last_completed_plan_commit: 16.h.R
+next_plan_commit: 16.h.C
 last_completed_numbered_bundle: 573
 implementation_state: in_progress
 audit_followup_status: closed
@@ -36437,7 +36437,7 @@ Die W-/R-/C-Abnahmen im obigen OFF-PLAN-Abschnitt gelten vollständig.
 
 #### 16.h.R – Make it Right
 
-- [ ] **16.h.R** · Position **683/900** · Voraussetzung: `16.h.W`.
+- [x] **16.h.R** · Position **683/900** · Voraussetzung: `16.h.W`.
 **Exakte Commit-Message:** `16.h.R feat(migration): Verlustbehandlung und Erweiterungserhalt vervollständigen`
 
 **Vervollständigung:** Jeden möglichen Informationsverlust einzeln benennen und vollständiges accept-loss verlangen.

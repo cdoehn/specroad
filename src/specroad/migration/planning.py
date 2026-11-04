@@ -15,7 +15,7 @@ from .plan_originals import _original_archive
 from .relation_derivation import _relation, _SourceRelations
 from .plan_target import _target_fields, _stamp, _manifest
 from .requirement_mapping import authored_fields
-from .losses import _assess_qualified
+from .losses import _assess_qualified, check_loss_acceptance
 
 PROJECT_SCOPE = {'scope_version': 'scope-v1', 'scope_kind': 'project', 'selector': {},
     'configuration_id': None, 'closure_profile': 'core-closure-v1', 'boundary_policy': 'closed'}
@@ -121,6 +121,7 @@ def _plan(files, *, inputs, actor, planned_at, change_plan_id, request_id, targe
         report['blockers'] = [{'reason': 'migration_lossless_contract_violation', 'path': path}
                              for path in sorted({r['path'] for r in preservation.data['losses']})]
         return MigrationPlanning._create(report)
+    check_loss_acceptance(preservation, expected_report_sha256=preservation.sha256)
     final = _manifest(target, regular, legacy, legacy_hash, archive, inventory, PROJECT_SCOPE)
     results = [{'artifact': v, 'sha256': digest(v)} for v in sorted(regular, key=lambda v: v['id'])]
     source_rows, target_rows = file_bindings(source), file_bindings(current)

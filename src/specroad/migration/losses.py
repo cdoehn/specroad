@@ -2,13 +2,14 @@
 from dataclasses import dataclass
 from hashlib import sha256
 import json
+import re
 
 from ..model.canonical import canonical_json_bytes as jcs, canonical_json_sha256 as digest
 from ..model.audit_values import Actor, UtcTimestamp
 from ..changes.metadata_time import next_update_time
 from ..storage.json_syntax import parse_json_object as parsed
 from .plan_values import (STEP, SOURCE_CONTRACT, MANIFEST_PATH, require, owned_files,
-                          file_bindings, unb64)
+                          file_bindings, unb64, MigrationPlanError)
 from .plan_contract import validate_inputs
 from .plan_inputs import target_contract
 from .reference01 import inventory_bytes
@@ -87,6 +88,60 @@ class MigrationLossReport:
 
     def __bool__(self):
         raise TypeError('A preservation observation is not write authorization')
+
+
+class MigrationLossError(MigrationPlanError):
+    """All missing or unknown individual decisions, without a partial grant."""
+    def __init__(self, reason, report, *, missing=(), unknown=(), exit_code=3):
+        super().__init__(reason, exit_code=exit_code)
+        self.report_sha256 = report.sha256
+        self.missing_loss_ids = tuple(missing)
+        self.unknown_loss_ids = tuple(unknown)
+
+    def diagnostic(self):
+        return {**super().diagnostic(), 'report_sha256': self.report_sha256,
+            'missing_loss_ids': list(self.missing_loss_ids), 'unknown_loss_ids': list(self.unknown_loss_ids)}
+
+
+@dataclass(frozen=True, init=False)
+class MigrationLossAcceptance:
+    """Passive full detail for a later report, never a review or writer token."""
+    _encoded: bytes
+
+    @property
+    def data(self):
+        return parsed(self._encoded)
+
+    @property
+    def write_authorized(self):
+        return False
+
+    def __bool__(self):
+        raise TypeError('Loss acceptance is not write authorization')
+
+
+def check_loss_acceptance(report, *, expected_report_sha256, accept_loss=()):
+    """Require every actual loss ID; accepting a loss cannot authorize a path."""
+    require(type(report) is MigrationLossReport, 'migration_native_loss_report_required')
+    require(type(expected_report_sha256) is str and
+        re.fullmatch('[0-9a-f]{64}', expected_report_sha256) is not None,
+        'migration_expected_hash_required')
+    if report.sha256 != expected_report_sha256:
+        raise MigrationLossError('migration_loss_report_changed', report, exit_code=6)
+    require(type(accept_loss) in (tuple, list) and all(type(v) is str and
+        re.fullmatch('LOSS-[0-9a-f]{64}', v) is not None for v in accept_loss),
+        'migration_loss_ids_required')
+    require(len(accept_loss) == len(set(accept_loss)), 'migration_duplicate_loss_acceptance')
+    rows = report.data['losses']; actual = {r['loss_id'] for r in rows}; selected = set(accept_loss)
+    missing, unknown = sorted(actual - selected), sorted(selected - actual)
+    if missing or unknown:
+        raise MigrationLossError('migration_loss_acceptance_mismatch' if unknown
+            else 'migration_loss_acceptance_required', report, missing=missing, unknown=unknown)
+    value = {'format_version': 'migration-loss-acceptance-v1', 'report_sha256': report.sha256,
+        'accepted_losses': rows, 'write_authorized': False, 'approval_granted': False}
+    result = object.__new__(MigrationLossAcceptance)
+    object.__setattr__(result, '_encoded', jcs(value))
+    return result
 
 
 def _expected_artifact(original, relations, inputs, actor, planned_at):
