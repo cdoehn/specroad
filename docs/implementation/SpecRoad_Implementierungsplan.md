@@ -72,7 +72,7 @@ aus. Jede Stage erhält erneut ihre fällige N=3-Gruppe (1/2/0) plus vollständi
 ungefilterte Pflichtauswahl, bevor Apply ihren Commit erzeugen darf. Keine
 Wiederverwendung des fehlgeschlagenen Gates als Erfolgsbeleg. Keine direkte
 Apply-Änderung, kein Dienststart, keine Budgetänderung und keine eigene Schleife.
-Vorbereiteter Zwischenstand: R; Produktzähler/Häkchen gelten erst nach Gate.
+Vorbereiteter Zwischenstand: C; Produktzähler/Häkchen gelten erst nach Gate.
 Nach erfolgreichem Abschluss wäre 681/900 erreicht; nächster Schritt 16.h.W.
 
 ## Planbundle 572 — 16.g: Legacy-Manifest und Hashdomänen
@@ -121,7 +121,7 @@ Testkörper, Fixtures oder Test-Unterprozesse in Dev. Collection, Syntax und
 native Paketrekonstruktion sind keine Verhaltensabnahme. Alle neuen Tests
 sowie betroffene Source-, Plan-, Lese-, Hash-, Graph- und Sicherheits-
 regressionen sind Pflicht. Keine Vollsuite- oder Releasebehauptung.
-Vorbereiteter Zwischenstand: R; Häkchen gelten erst nach Apply-Gate.
+Vorbereiteter Zwischenstand: C; Häkchen gelten erst nach Apply-Gate.
 
 Die weiteren M16-Gates bleiben offen: Verlustbehandlung, öffentliche
 Migrationsregistrierung und Writer, volle globale Zielvalidierung, historische
@@ -2007,10 +2007,10 @@ Kein offener Produktplanschritt wird durch diese Testoptimierung abgeschlossen.
 ```yaml
 plan_revision: 76
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 680
-last_completed_plan_commit: 16.g.R
-next_plan_commit: 16.g.C
-last_completed_numbered_bundle: 571
+implementation_plan_commits_completed: 681
+last_completed_plan_commit: 16.g.C
+next_plan_commit: 16.h.W
+last_completed_numbered_bundle: 573
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -36362,7 +36362,7 @@ Die W-/R-/C-Abnahmen im obigen OFF-PLAN-Abschnitt gelten vollständig.
 
 #### 16.g.C – Make it Clean
 
-- [ ] **16.g.C** · Position **681/900** · Voraussetzung: `16.g.R`.
+- [x] **16.g.C** · Position **681/900** · Voraussetzung: `16.g.R`.
 **Exakte Commit-Message:** `16.g.C refactor(migration): Legacy-Manifest und Hashdomänen bereinigen`
 
 **Bereinigung:** Manifestvalidierung und Projektionsleser auf genau einen Vertrag reduzieren.
