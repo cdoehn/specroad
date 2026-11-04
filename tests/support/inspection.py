@@ -85,6 +85,9 @@ def command_example_inputs(root, command):
     The Work fixture labels its synthetic build identity explicitly. No native
     model/recovery/checkpoint validator or command handler is replaced.
     """
+    if command.command_id.startswith('migrate.'):
+        yield _migration_example_inputs(root, command)
+        return
     if command.command_id == 'recover.restore' or command.command_id.startswith('work.'):
         from unittest.mock import patch
         from specroad import _build
@@ -158,4 +161,31 @@ def _restore_example_inputs(root, command):
         if command.command_id == 'work.export':
             transport = root / 'transport'; transport.mkdir()
             request['options']['--output'] = str(transport / 'work.zip')
+    return request
+
+
+def command_example_context(command):
+    """An explicit synthetic host grant; request/project bytes never grant it."""
+    if command.command_id != 'migrate.apply':
+        return None
+    from specroad.cli.invocation_context import InvocationContextBuilder
+    from specroad.changes.publication_values import PublicationAuthority
+    return InvocationContextBuilder(publication_authority=PublicationAuthority(
+        'synthetic-cli-host', '1', lambda request: True))
+
+
+def _migration_example_inputs(root, command):
+    from .migration_cli import case, planned, invoke, success
+    data = case(root)
+    request = command.protocol.example.as_dict()
+    if command.command_id == 'migrate.plan':
+        request['options'].update(data[2])
+        return request
+    _, options = planned(data)
+    request['options'].update(options)
+    if command.command_id == 'migrate.verify':
+        # Verification needs a real migrated target, original report and backup.
+        # All validators, writer and journal remain native; no outcome is faked.
+        applied = success(invoke('migrate.apply', options))
+        request['options']['--expected-backup-sha256'] = applied['backup']['file']['sha256']
     return request

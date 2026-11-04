@@ -19,6 +19,7 @@ _RESOURCES = frozenset(('profile_data/profiles.json', 'profile_data/core.json',
     'profile_data/software-de.json', 'profile_data/software-en.json', 'language_data/registry.txt',
     'language_data/snapshot.json', 'language_data/packages.json', 'language_data/minimum_corpus.json',
     'reference01_data/contract.json', 'reference01_data/registry.txt',
+    'reference01_data/migration-vector.json',
     *('language_data/packages/' + tag + '.json' for tag in
       ('de', 'en', 'hi', 'id', 'pt', 'es', 'ru', 'ja', 'zh-Hans'))))
 

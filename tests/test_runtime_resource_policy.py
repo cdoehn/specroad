@@ -135,8 +135,11 @@ def test_command_describes_resolved_policy_without_inventing_a_work_engine():
     assert capabilities == {'engine_available': True,
                             'checkpoint_algorithms': ['work-manifest-segments-v1'],
                             'budget_policy_version': 'runtime-budget-v2'}
-    without_work = CommandRegistry(tuple(command for command in builtin_registry().commands
+    migration_work_only = CommandRegistry(tuple(command for command in builtin_registry().commands
         if command.command_id != 'recover.restore' and not command.command_id.startswith('work.')))
+    assert dispatch_result(['capabilities'], registry=migration_work_only).as_dict()['result']['semantic']['work'] == capabilities
+    without_work = CommandRegistry(tuple(command for command in migration_work_only.commands
+        if not command.command_id.startswith('migrate.')))
     unavailable = dispatch_result(['capabilities'], registry=without_work)
     assert unavailable.exit_code == 0
     assert unavailable.as_dict()['result']['semantic']['work'] == {

@@ -60,7 +60,7 @@ def start_verification(invocation, root, options, backup, plan, report, observat
 @work_errors
 def completed_plan(invocation, options):
     from ..work.open_existing import open_restore_work
-    from .migration_command import _required
+    from .migration_inputs import _required
     _required(options,'--expected-plan-sha256','--expected-inputs-sha256')
     store = open_restore_work(options['--work-dir'], registry=invocation.registry)
     result = migration_work_result(store, gates=invocation.migration_gates)

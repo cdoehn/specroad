@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 93 · **Stand:** 4. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.61
+**Planrevision:** 94 · **Stand:** 4. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.61
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 Schritte und 900 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; die ausdrücklich genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wird nach 10.7.10 innerhalb von 15.l.R vorgezogen. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -33,6 +33,61 @@ ausdrückliche Bedienausnahme aus 2.4.3.2 bleibt zusätzlich anwendbar.
 Produktfreigaben und die Grenzen aus 2.4.1/2.4.2/2.4.4 bleiben unverändert.
 Dieser Plan ändert keine alten Aufträge, Antworten, Blockaden oder
 Laufzeitdaten und ist keine Start-/Resume-Anweisung.
+
+## Korrekturbundle 591 — manuelle Fortsetzung von M16-INTEGRATION-588.C
+
+Nativ geprüftes Timeout-Result:
+`6ec936506276ce1a06427fad870344b1bf593afc9fa7edb145c50fd94d2ecbb8`,
+HEAD `3a311f4052abe4402265f39dac270f21a1f955b3`, Dirty-Fingerprint
+`6eac241ae102d1f8`. Bundle 590 schloss R nach 9614 bestandenen Tests ab.
+PatchHarbor beendete den gesamten R/C-Versuch am 4. November 2026 um
+21:32:56 UTC nach seinem 10800-Sekunden-Entrypointlimit. Im anschließenden
+C-Volltest waren 24933 von 24935 Tests beendet: 24673 bestanden, 259
+fehlgeschlagen und ein wegen fehlgeschlagener Subtests ungültiger Nachweis;
+zwei Recovery-Tests blieben ohne Abschluss. Ein Vollsuite-Erfolg liegt nicht vor.
+
+Der letzte originale Fortschrittsrecord lautet testing, nicht failed. Er wird
+unverändert erhalten. Der native äußere Timeout, die Original-ZIP, der exakt
+nachgewiesene R-Commit samt Gate und der bytegleiche angekündigte C-Snapshot
+beweisen in dieser ausdrücklich beauftragten manuellen Fortsetzung den Rest.
+Eine abgeleitete Wiederaufnahmeansicht ist als solche gekennzeichnet; sie
+behauptet keinen vom Entrypoint ausgegebenen terminalen Record. Es werden
+weder ein Result umgeschrieben noch Control-Betriebsdaten oder dessen
+strengere automatische Prüfung verändert. Das Folgepaket bindet alle vier
+aktuellen Werte und ausschließlich die offene C-ID mit ursprünglicher Rolle.
+D/W/R werden nicht wiederholt. C erhält allein das unveränderte Apply-Zeitlimit.
+
+Die phasenweise Messdatenbank bindet die beobachteten Fehler an den tatsächlichen
+C-Quellhash. Der Timeout verhinderte Pytests abschließende Traceback-Ausgabe;
+die Korrektur stützt sich auf diese realen Fehleridentitäten und die statisch
+nachvollziehbaren Vertragsverletzungen, nicht auf erfundene Fehlermeldungen:
+
+- Der vertrauenswürdige Runtime-Payloadvergleich berücksichtigt den bereits
+  ausgelieferten unveränderten migration-vector.json mit exakten Bytes. Seine
+  fehlende Aufnahme ließ die eigene Distribution vor dem Transport scheitern.
+  Hash-, Fremddatei-, Versions- und Sicherheitsprüfungen bleiben vollständig.
+- MigrationLockSource übernimmt vor dem Lock und bei jeder erneuten Beobachtung
+  die bestehende vollständige Projektwurzelprüfung. Extrahierte Teilprojekte
+  und veränderte Herkunftsmarker dürfen keine Schreibautorität erhalten.
+- Die allgemeinen CLI-Vertragstests erhalten wirkliche synthetische Quellprojekte,
+  originale Pläne und Backups sowie für Apply einen ausdrücklich eingebetteten
+  synthetischen Hostgrant. Verify verwendet ein zuvor wirklich migriertes Ziel.
+  Keine Validatoren, Writer, Recovery oder Ergebnisse werden gemockt.
+- Exakte Befehls-/Resultkataloge und Work-/Lock-/Optionslisten enthalten die schon
+  freigegebenen drei Migrationsbefehle. Der Test ohne Work-Engine entfernt auch
+  die Migrations-Work-Befehle und prüft zusätzlich deren tatsächliche Deklaration.
+
+Die ursprüngliche C-Strukturbereinigung bleibt erhalten. Dies repariert ihren
+fehlgeschlagenen Integrationsstand nach 2.5; neue Features, neue Detailentscheidungen
+oder abgeschwächte fachliche Testorakel werden nicht hinzugefügt. Insbesondere
+bleibt der echte Teilprojekt-Abweisungstest unverändert. Die historischen
+Ankündigungen bytegleicher R/C-Tests beschreiben Bundle 590; diese ausdrücklich
+bezeichnete technische Korrektur führt zusätzlich veraltete allgemeine Fixtures
+und Inventarlisten auf die bereits verbindlichen Q.5.3-Verträge nach.
+Spezifikation 0.2.61, aktive Katalogbindungen, sämtliche 24935 Testidentitäten
+und Nummern bleiben unverändert. C prüft erneut jeden gesammelten Test ungefiltert
+vor dem Commit. Dev führt keine Verhaltenstests aus. M16 bleibt bis zu diesem
+gebundenen erfolgreichen C-Commit und Vollsuite-Ergebnis offen; Stand 693/900.
 
 ## Korrekturbundle 590 — vollständiger offener Rest M16-INTEGRATION-588.R/C
 
@@ -141,7 +196,7 @@ Keine Testkörper oder manuellen Verhaltensproben in Dev. W/R/C sind ein
 OFF-PLAN-Integrationsabschluss für M16, kein erfundener nummerierter 16.l und
 kein vorgezogener 17.a-Commit. M16 bleibt bis zum gebundenen C-Abschluss offen.
 
-Vorbereiteter Integrationsstand R: öffentliche Registrierung ausschließlich
+Vorbereiteter Integrationsstand C: öffentliche Registrierung ausschließlich
 für Q.0 reference-0.1-v1 v1.0.1 → 0.2.0, vollständige CLI-Eingaben, deterministische
 externe Sicherung vor dem gemeinsamen Writer, native Verify-, Bundle- und
 Restore-Anbindung. W prüft einen positiven öffentlichen Rundweg und den echten
@@ -2839,7 +2894,7 @@ implementation_plan_commits_total: 900
 implementation_plan_commits_completed: 693
 last_completed_plan_commit: 16.k.C
 next_plan_commit: 17.a.W
-last_completed_numbered_bundle: 587
+last_completed_numbered_bundle: 591
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -37342,13 +37397,17 @@ Die W-/R-/C-Abnahmen im obigen OFF-PLAN-Abschnitt gelten vollständig.
 
 **Regressionsabnahme:** Alle vorhandenen W-/R-Verhaltenstests dieses Schritts und die vom Refactoring betroffenen bisherigen Verhaltenstests erneut ausführen; erwartete Fachwerte nicht passend zum Refactoring umschreiben. Bei reinen Präsentations-/Dokuschritten keine solchen Tests erfinden.
 
-**Offene M16-Integrationsabnahme nach 16.k.C (vollständig beauftragt als M16-INTEGRATION-588 nach Q.5.3):** Der lokale Bibliotheks-
-schritt ersetzt weder die öffentliche CLI-/Pfadregistrierung noch die positive
-Restore-Integration oder die volle verfügbare Verhaltenssuite. Diese Nachweise
-sind weiterhin offen. 17.a.W ist die nächste nummerierte Produktposition,
-aber seine Meilensteinvoraussetzung darf ohne diese Abnahme nicht als erfüllt
-behandelt werden. Es existiert kein 16.l; historische Verweise darauf sind
-keine ausgeführte Arbeit und kein positiver Nachweis.
+**M16-Integrationsabschluss M16-INTEGRATION-588.C:** Die fehlenden öffentlichen
+CLI-/Pfad- und Restore-Anbindungen sind implementiert und durch positive und
+negative synthetische Verhaltensverträge abgedeckt. Dieser C-Zustand wird erst
+nach der vollständigen verfügbaren Suite als ungefilterter Pflichtauswahl
+committed. Bei erfolgreichem gebundenem C-Result ist damit die lokale
+M16-Implementierung einschließlich Integration abgeschlossen und 17.a.W kann
+folgen; ein Fehler lässt diese Abnahme offen. Produktfortschritt bleibt 693/900,
+weil dies der beauftragte OFF-PLAN-Abschluss ist. Es existiert kein 16.l.
+Keine erfundenen Testzahlen oder Freigaben: der native Commitplan, die Auswahl-
+und Einzeloutcomebelege im tatsächlichen Result liefern den Abschlussnachweis.
+Plattform-/Releasefreigaben werden dadurch nicht stillschweigend erteilt.
 
 **Meilenstein 16 abgeschlossen erst nach:** letztem C-Commit, bestandenem oben genannten Integrationsgate, vollständiger verfügbarer Verhaltenssuite und nachvollziehbarer Ergebnisbindung. Noch fehlende plattformgebundene Nachweise bleiben als offen markiert und blockieren die jeweilige Freigabe, nicht still die bereits korrekt abgeschlossene lokale Arbeit.
 

@@ -167,10 +167,11 @@ class SchemaCatalogWorkTests(unittest.TestCase):
     def test_every_builtin_has_a_real_retrievable_result_contract(self):
         for command in builtin_registry().commands:
             with tempfile.TemporaryDirectory() as tmp:
-                from support.inspection import command_example_inputs
+                from support.inspection import command_example_inputs, command_example_context
                 with command_example_inputs(Path(tmp), command) as request:
                     self.catalog.validate("urn:specroad:schema:1.0.0:request:" + command.command_id, request)
-                    outcome = execute_request(request, cwd=Path(tmp)).result
+                    outcome = execute_request(request, cwd=Path(tmp),
+                        context_builder=command_example_context(command)).result
             self.assertEqual(outcome.exit_code, 0, (command.command_id, outcome.as_dict()))
             self.catalog.validate(command.protocol.result_schema, outcome.as_dict()['result'])
 

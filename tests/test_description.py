@@ -37,15 +37,17 @@ class DescriptionWorkTests(unittest.TestCase):
             for request in document['examples']:
                 with self.subTest(command=command.command_id):
                     with tempfile.TemporaryDirectory() as tmp:
-                        from support.inspection import command_example_inputs
+                        from support.inspection import command_example_inputs, command_example_context
                         with command_example_inputs(Path(tmp), command) as bound_request:
-                            result = execute_request(bound_request, registry=registry, cwd=Path(tmp)).result
+                            result = execute_request(bound_request, registry=registry, cwd=Path(tmp),
+                                context_builder=command_example_context(command)).result
                     self.assertEqual(result.exit_code, 0)
                     self.assertEqual(result.command, command.command_id)
-                    if command.requires_project and command.command_id != 'recover.restore':
+                    input_only = command.command_id in ('recover.restore', 'migrate.plan', 'migrate.apply', 'migrate.verify')
+                    if command.requires_project and not input_only:
                         self.assertEqual(result.project['project_root'], str(Path(tmp)))
                         self.assertEqual(result.project['project_id'], 'sample')
-                    elif command.command_id == 'recover.restore':
+                    elif input_only:
                         self.assertEqual(dict(result.project), {
                             'project_root': bound_request['options']['--project'],
                             'project_id': None, 'model_root_sha256': None})
@@ -209,7 +211,7 @@ class DescriptionRobustnessTests(unittest.TestCase):
         for command in registry.commands:
             document = describe_command(registry, command.command_id)
             work = document['work']
-            continuation = command.command_id in ('recover.restore', 'work.resume')
+            continuation = command.command_id in ('recover.restore', 'work.resume', 'migrate.plan', 'migrate.verify')
             self.assertEqual(work['continuation_supported'], continuation)
             self.assertEqual(document['stdout']['continuation']['supported'], continuation)
             self.assertEqual(work['external_side_effects'], ['external_work_directory'] if continuation else [])
@@ -217,13 +219,15 @@ class DescriptionRobustnessTests(unittest.TestCase):
             self.assertEqual(document['write_effects']['external_work'], work['external_side_effects'])
             self.assertEqual(document['lock_kind'],
                              'bootstrap' if command.command_id in ('init', 'bundle.extract') else
-                             'recovery' if command.command_id == 'recover.restore' else 'none')
+                             'recovery' if command.command_id == 'recover.restore' else
+                             'writer' if command.command_id == 'migrate.apply' else 'none')
             self.assertEqual(8 in document['exit_codes'], continuation)
             self.assertEqual(document['budget_policy_version'],
                              'runtime-budget-v2' if command.command_id in (
                                  'environment.check', 'artifact.show', 'query', 'trace', 'why', 'impact', 'diff',
                                  'configuration.evaluate', 'roadmap.explain', 'export', 'bundle.verify',
-                                 'render', 'view.render', 'diagram', 'recover.restore', 'work.resume') else None)
+                                 'render', 'view.render', 'diagram', 'recover.restore', 'work.resume',
+                                 'migrate.plan', 'migrate.apply', 'migrate.verify') else None)
             self.assertIsNone(document['stdout']['continuation']['sarif_fallback'])
 
     def test_minimum_step_limits_are_explicitly_unmeasured(self):
@@ -258,6 +262,12 @@ class DescriptionRobustnessTests(unittest.TestCase):
             # bundles still reject that option before any effect.
             if command.command_id == 'recover.restore':
                 rejected = ('--resume', '--as-proposal')
+            elif command.command_id in ('migrate.plan', 'migrate.apply'):
+                self.assertTrue({'--work-dir', '--request-id', '--actor-id'} <= accepted)
+                rejected = ('--resume', '--dry-run', '--as-proposal')
+            elif command.command_id == 'migrate.verify':
+                self.assertIn('--work-dir', accepted)
+                rejected = ('--resume', '--request-id', '--dry-run', '--actor-id', '--as-proposal')
             for flag in rejected:
                 if command.command_id == 'bundle.create' and flag == '--work-dir':
                     self.assertIn(flag, accepted)
