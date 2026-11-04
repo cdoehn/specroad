@@ -37,13 +37,20 @@ class RelationReviewStatuses:
                 raise ModelError('source_relations_required')
             value = source.data
             validator = validate_record_fields if value['artifact_type'] in RECORD_TYPES else validate_domain_fields
-            validator(value)
+            # A legacy source can only enter through the native LegacyArtifact
+            # constructor, which binds original bytes and their complete closure.
+            # Its historical schema is not the current record/domain contract.
+            if source.storage_class != 'legacy_immutable':
+                validator(value)
             if prefix is None:
                 prefix = source.identity.id_prefix
             for error in _source_identity_errors(source, index, prefix):
                 raise error
             index[source.identity.id] = source
-            if value['artifact_type'] == 'relation_review':
+            # Reference-0.1 reviews use their original locator and hash domain.
+            # They remain retained originals, never current review decisions.
+            if (value['artifact_type'] == 'relation_review'
+                    and source.storage_class != 'legacy_immutable'):
                 histories.setdefault(value['relation_id'], []).append(value)
         seen, external = set(), set()
         ordered = sorted(records, key=lambda source: source.identity.id)

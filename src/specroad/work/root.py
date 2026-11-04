@@ -35,13 +35,18 @@ class WorkDirectory:
                  protected_paths=()):
         if type(manifest) is not WorkManifest:
             raise ValueError('A trusted checked work manifest is required')
+        value = manifest.as_dict()
+        passive_migration = value['command_id'] in ('migrate.plan', 'migrate.verify')
+        if passive_migration:
+            from .migration import _inputs
+            _inputs(manifest)  # Fully owned native input closure, no saved live-root capability.
         if type(protected_paths) is not tuple:
             raise ValueError('Explicit protected paths are required')
         protected_paths = tuple(_path(path) for path in protected_paths)
-        if type(protected_roots) is not tuple or not (protected_roots or protected_paths) or any(
+        if type(protected_roots) is not tuple or not (protected_roots or protected_paths or passive_migration) or any(
                 type(boundary) is not ProjectBoundary for boundary in protected_roots):
             raise ValueError('Explicit protected project/input/output boundaries are required')
-        value = manifest.as_dict()
+        self._passive_migration = passive_migration
         self._work_id = value['work_id']
         self._initial_hash = value['checkpoint_sha256']
         self._protected = protected_roots
@@ -57,6 +62,13 @@ class WorkDirectory:
         return self._path
 
     def _outside(self, path):
+        if getattr(self, '_passive_migration', False):
+            for parent in (path, *path.parents):
+                try:
+                    (parent / 'specroad.json').lstat()
+                except FileNotFoundError:
+                    continue
+                raise SafetyViolation('Passive migration Work must remain outside every project')
         for reserved in self._reserved:
             if path.is_relative_to(reserved) or reserved.is_relative_to(path):
                 raise SafetyViolation('Work and protected paths overlap')

@@ -50,6 +50,15 @@ def test_regular_bound_reader_preserves_immutable_original_without_current_schem
         assert value.source_bytes == old[path] and value.data == json.loads(old[path])
         assert value.navigation['schema_version'] == '0.1.0'
         assert value.navigation['id_scheme'] == 'legacy-sequential-v1'
+    if expected == 'relation_review':
+        from specroad.graph.review_status import RelationReviewStatuses
+        source = ProjectSource(tmp_path)
+        records = tuple(read_source_relations(source, path) for path in sorted(target)
+                        if path.startswith('spec/') and path.endswith('.json'))
+        statuses = RelationReviewStatuses(records)
+        assert all(row.selected_review_id != value.id and value.id not in row.matching_review_ids
+                   for row in statuses.statuses)
+        assert not statuses.approval_granted
     assert {p.relative_to(tmp_path).as_posix(): p.read_bytes() for p in tmp_path.rglob('*') if p.is_file()} == target
 
 
@@ -90,6 +99,15 @@ def test_navigation_is_detached_and_never_replaces_original_relations(tmp_path):
     assert relation_source.source_bytes == old[BASELINE]
     assert relation_source.data == json.loads(old[BASELINE])
     assert relation_source.relations[0].data == record.navigation['relations'][0]
+    from specroad.graph.review_status import RelationReviewStatuses
+    source = ProjectSource(tmp_path)
+    records = tuple(read_source_relations(source, path) for path in sorted(target)
+                    if path.startswith('spec/') and path.endswith('.json'))
+    statuses = RelationReviewStatuses(records)
+    status = statuses.for_relation(record.id, relation_source.relations[0].identity.id)
+    assert (status.status, status.reason) == ('unreviewed', 'migration_context_unverified')
+    assert status.selected_review_id is None and status.matching_review_ids == ()
+    assert not statuses.approval_granted and (tmp_path/BASELINE).read_bytes() == old[BASELINE]
 
 
 @pytest.mark.parametrize('strategy', ['scan', 'indexed'])

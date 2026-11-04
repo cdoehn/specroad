@@ -13,8 +13,8 @@ from ._evidence_history import evidence_assessments
 def historical_findings(model):
     findings = list(evidence_assessments(model))
     if any(a['artifact_type'] == 'relation_review' for a in model.artifacts):
-        statuses = RelationReviewStatuses(tuple(SourceRelations(d.content, path=d.path)
-                                               for d in model.documents))
+        from ..migration.model_inputs import records
+        statuses = RelationReviewStatuses(records(model))
         for status in statuses.statuses:
             if status.status != 'current':
                 findings.append({'kind': 'relation_review_history',
@@ -23,6 +23,17 @@ def historical_findings(model):
     from ..proposals import ProposalOriginal
     for document in model.documents:
         if parse_json_object(document.content)['artifact_type'] != 'proposal':
+            continue
+        from ..migration.model_inputs import is_original
+        if is_original(model, document):
+            from hashlib import sha256
+            original = model.legacy_manifest.artifact(document.path, document.content,
+                expected_type='proposal')
+            findings.append({'kind': 'legacy_proposal_original_history', 'path': document.path,
+                'original_sha256': sha256(original.source_bytes).hexdigest(),
+                'legacy_manifest_sha256': model.legacy_manifest.sha256,
+                'observed_status': original.data['proposal_status'],
+                'current_qualification_checked': False, 'write_authorized': False})
             continue
         original = ProposalOriginal(document.content, path=document.path)
         value = original.data

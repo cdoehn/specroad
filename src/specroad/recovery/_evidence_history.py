@@ -27,7 +27,19 @@ def evidence_assessments(model):
     reports = []
     for identity, value in sorted(state.items()):
         from ..migration.model_inputs import is_original
-        if value['artifact_type'] != 'evidence' or is_original(model, documents[identity]):
+        if value['artifact_type'] != 'evidence':
+            continue
+        if is_original(model, documents[identity]):
+            from ..migration.history import historical_evidence_assessment
+            original = model.legacy_manifest.artifact(documents[identity].path,
+                documents[identity].content, expected_type='evidence')
+            for entry in value['subjects']:
+                subject_id = entry['artifact_id']
+                if subject_id not in subjects:
+                    subject = documents[subject_id]
+                    subjects[subject_id] = DomainArtifact(subject.content, path=subject.path)
+                context = VerificationContext(subjects[subject_id], configuration=None)
+                reports.append(historical_evidence_assessment(context, original, model.legacy_manifest))
             continue
         document = documents[identity]
         record = RecordArtifact(document.content, expected_type='evidence', path=document.path)

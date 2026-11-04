@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 92 · **Stand:** 4. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.61
+**Planrevision:** 93 · **Stand:** 4. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.61
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 Schritte und 900 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; die ausdrücklich genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wird nach 10.7.10 innerhalb von 15.l.R vorgezogen. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -33,6 +33,45 @@ ausdrückliche Bedienausnahme aus 2.4.3.2 bleibt zusätzlich anwendbar.
 Produktfreigaben und die Grenzen aus 2.4.1/2.4.2/2.4.4 bleiben unverändert.
 Dieser Plan ändert keine alten Aufträge, Antworten, Blockaden oder
 Laufzeitdaten und ist keine Start-/Resume-Anweisung.
+
+## Korrekturbundle 590 — vollständiger offener Rest M16-INTEGRATION-588.R/C
+
+Nativ geprüftes Fehler-Result:
+`7a7852b33536cd5cb59920e71a799d4a72f0c37baa40de2d89c1eec83c299c97`,
+HEAD `dd85dc712417ccc87e604d5b7563db8ebd1dbd23`, Dirty-Fingerprint
+`9b0978451db564b8`. Bundle 589 schloss W nach 9530 bestandenen Tests ab.
+R endete am 4. November 2026 um 18:12:52 UTC mit 9533 bestandenen Tests
+und fünf Fehlern; C begann nicht. Snapshot und nativer Fortschrittsbeleg
+entsprechen exakt dem angekündigten R-Stand. Der erfolgreiche Klärungs-
+und W-Commit bleiben erhalten; nur R/C werden vollständig fortgeführt.
+
+Vier Fehler stammen aus dem positiven Work-Pakettest: Sein Ausgabeordner
+war zugleich Vorfahr des Work-Verzeichnisses. Die bestehende Sicherheits-
+prüfung verweigert diese Überlappung korrekt. Der Test verlangt weiter die
+Abweisung und verwendet danach einen eigenen externen Paketordner; Export,
+Löschung der alten Work-Kopie, Restore, jede Phasengrenze, frische Autorität
+und echte Migration samt Replay bleiben vollständig im Test.
+
+Der historische Bundle-/Restore-Rundweg scheiterte beim Export mit
+unsupported_schema_version. Die native Relationsreview-Beobachtung leitete
+bereits qualifizierte unveränderliche Originale nochmals in den aktuellen
+Datensatzvalidator. Sie akzeptiert jetzt ausschließlich die schon durch
+LegacyArtifact/SourceRelations gebundenen Originale und prüft aktuelle
+Datensätze unverändert. Alte Revieworiginale werden nicht als aktuelle
+Reviewentscheidungen ausgewählt. Kanten mit historischen Endpunkten
+behalten eine ausdrückliche fehlende aktuelle Kontextqualifikation.
+Regressionen prüfen Originalbytes, historische Navigationskanten, fehlende
+aktuelle Freigabe und weiterhin abgewiesene ungültige aktuelle Datensätze.
+
+Keine neue Spezifikationsentscheidung: Q.5.3, Spezifikation 0.2.61 und
+sämtliche aktiven Katalogbindungen bleiben unverändert. Beide offenen IDs
+und implementation-Rollen behalten die vollständigen ursprünglichen
+Pflichtauswahlen. Zusätzlich laufen die gesamten Relationsreview- und
+Legacy-Manifestregressionen. R/C haben getrennte Gates der Gruppen 0/1.
+C bleibt strukturell, mit bytegleichen R-Tests und allen 24935 verfügbaren
+Tests als ungefilterter Pflichtauswahl. Dev führt keine Verhaltenstests aus.
+M16 bleibt bis zum tatsächlichen erfolgreichen C-Commit und gebundenen
+Vollsuite-Ergebnis offen; Produktstand 693/900. Keine Automatik-/Budgetänderung.
 
 ## Korrekturbundle 589 — vollständiger offener Rest M16-INTEGRATION-588.W/R/C
 
@@ -102,7 +141,7 @@ Keine Testkörper oder manuellen Verhaltensproben in Dev. W/R/C sind ein
 OFF-PLAN-Integrationsabschluss für M16, kein erfundener nummerierter 16.l und
 kein vorgezogener 17.a-Commit. M16 bleibt bis zum gebundenen C-Abschluss offen.
 
-Vorbereiteter Integrationsstand W: öffentliche Registrierung ausschließlich
+Vorbereiteter Integrationsstand R: öffentliche Registrierung ausschließlich
 für Q.0 reference-0.1-v1 v1.0.1 → 0.2.0, vollständige CLI-Eingaben, deterministische
 externe Sicherung vor dem gemeinsamen Writer, native Verify-, Bundle- und
 Restore-Anbindung. W prüft einen positiven öffentlichen Rundweg und den echten

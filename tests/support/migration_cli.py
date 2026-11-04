@@ -34,12 +34,13 @@ def argv(command, options):
         for item in ([key] if value is True else [key,str(value)])]
 
 
-def invoke(command, options, representation='argv', *, authorize=True, gates=(), authority=None):
+def invoke(command, options, representation='argv', *, authorize=True, gates=(), authority=None, arguments=None):
     host = authority if authority is not None else PublicationAuthority('synthetic-cli-host','1',lambda request:True) if authorize else None
     builder=InvocationContextBuilder(publication_authority=host,migration_gates=gates,
         recovery_authority=RecoveryAuthority('synthetic-cli-recovery','1',lambda request:True) if authorize else None)
-    response=(execute(argv(command,options),context_builder=builder) if representation=='argv'
-        else execute_request({'command_id':command,'options':options},context_builder=builder))
+    words=argv(command,options) + list((arguments or {}).values())
+    response=(execute(words,context_builder=builder) if representation=='argv'
+        else execute_request({'command_id':command,'options':options,'arguments':arguments or {}},context_builder=builder))
     return response.result
 
 

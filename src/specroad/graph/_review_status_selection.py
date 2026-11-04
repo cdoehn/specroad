@@ -54,6 +54,9 @@ def _status(source, relation, index, history):
                                 'noncanonical_symmetric_relation'):
             raise
         return result('invalid', error.reason)
+    if (source.storage_class == 'legacy_immutable'
+            or target.storage_class == 'legacy_immutable'):
+        return result('suspect' if history else 'unreviewed', 'migration_context_unverified')
     matching = [record for record in history
         if record['relation_content_sha256'] == context.relation_sha256
         and record['source_context_sha256'] == context.source.context_sha256
