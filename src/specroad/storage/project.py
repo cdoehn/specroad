@@ -95,7 +95,7 @@ class ProjectSource:
 
         No file is created. This is not a reusable race-free write capability.
         """
-        self._fresh_configuration()
+        self.check_current()
         path = project_path(path)
         if self._legacy_manifest is not None and path in self._legacy_manifest.protected_paths:
             from ..migration.plan_values import require
@@ -117,5 +117,5 @@ class ProjectSource:
                 raise ModelError("unsafe_write_target", path=path)
             if directory and os.path.lexists(cursor / "specroad.json"):
                 raise ModelError("foreign_project_root", path=path)
-        self._fresh_configuration()
+        self.check_current()
         return kind

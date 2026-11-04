@@ -46,6 +46,7 @@ class LegacyArtifact:
     path: str
     _row: bytes
     manifest_sha256: str
+    project_id: str
 
     @property
     def data(self):
@@ -97,6 +98,7 @@ class LegacyArtifact:
 
     def manifest_resource(self, binding):
         from ..model.model_manifest import ManifestResource
+        require(binding.project_id == self.project_id, 'legacy_project_mismatch')
         value = self.data
         return ManifestResource(binding, {'kind': 'artifact', 'id': value['id'],
             'artifact_type': value['artifact_type'], 'revision': int(value['revision']),
@@ -135,7 +137,8 @@ class LegacyManifest:
         require(expected_type is None or original.data['artifact_type'] == expected_type,
                 'artifact_type_mismatch', path=path)
         result = object.__new__(LegacyArtifact)
-        for key, value in dict(source_bytes=raw, path=path, _row=jcs(row), manifest_sha256=self.sha256).items():
+        for key, value in dict(source_bytes=raw, path=path, _row=jcs(row), manifest_sha256=self.sha256,
+                               project_id=self.data["source"]["project_id"]).items():
             object.__setattr__(result, key, value)
         return result
 
@@ -156,6 +159,7 @@ def validate_legacy_manifest(files, *, project_id):
     rows = value['entries']
     by_snapshot = {}
     referenced_roots = set()
+    identities = {}
     for row in rows:
         root = row.get('source_model_root_sha256')
         require(type(root) is str and re.fullmatch('[0-9a-f]{64}', root) is not None,
@@ -171,6 +175,14 @@ def validate_legacy_manifest(files, *, project_id):
         snapshot[logical] = physical
         if row['role'] == 'artifact':
             data = parsed(physical, path=logical)
+            identity, revision = data.get('id'), data.get('revision')
+            require(type(identity) is str and type(revision) in (int, float)
+                    and revision > 0 and int(revision) == revision,
+                    'legacy_original_identity_invalid')
+            key = (identity, revision)
+            require(key not in identities or identities[key] == physical,
+                    'legacy_original_revision_conflict', path=logical, exit_code=6)
+            identities[key] = physical
             if data.get('artifact_type') == 'baseline':
                 parent = data.get('model_root_sha256')
                 require(type(parent) is str, 'legacy_source_root_invalid')

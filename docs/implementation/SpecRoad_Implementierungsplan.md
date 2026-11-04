@@ -72,7 +72,7 @@ aus. Jede Stage erhält erneut ihre fällige N=3-Gruppe (1/2/0) plus vollständi
 ungefilterte Pflichtauswahl, bevor Apply ihren Commit erzeugen darf. Keine
 Wiederverwendung des fehlgeschlagenen Gates als Erfolgsbeleg. Keine direkte
 Apply-Änderung, kein Dienststart, keine Budgetänderung und keine eigene Schleife.
-Vorbereiteter Zwischenstand: W; Produktzähler/Häkchen gelten erst nach Gate.
+Vorbereiteter Zwischenstand: R; Produktzähler/Häkchen gelten erst nach Gate.
 Nach erfolgreichem Abschluss wäre 681/900 erreicht; nächster Schritt 16.h.W.
 
 ## Planbundle 572 — 16.g: Legacy-Manifest und Hashdomänen
@@ -121,7 +121,7 @@ Testkörper, Fixtures oder Test-Unterprozesse in Dev. Collection, Syntax und
 native Paketrekonstruktion sind keine Verhaltensabnahme. Alle neuen Tests
 sowie betroffene Source-, Plan-, Lese-, Hash-, Graph- und Sicherheits-
 regressionen sind Pflicht. Keine Vollsuite- oder Releasebehauptung.
-Vorbereiteter Zwischenstand: W; Häkchen gelten erst nach Apply-Gate.
+Vorbereiteter Zwischenstand: R; Häkchen gelten erst nach Apply-Gate.
 
 Die weiteren M16-Gates bleiben offen: Verlustbehandlung, öffentliche
 Migrationsregistrierung und Writer, volle globale Zielvalidierung, historische
@@ -2007,9 +2007,9 @@ Kein offener Produktplanschritt wird durch diese Testoptimierung abgeschlossen.
 ```yaml
 plan_revision: 76
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 679
-last_completed_plan_commit: 16.g.W
-next_plan_commit: 16.g.R
+implementation_plan_commits_completed: 680
+last_completed_plan_commit: 16.g.R
+next_plan_commit: 16.g.C
 last_completed_numbered_bundle: 571
 implementation_state: in_progress
 audit_followup_status: closed
@@ -36353,7 +36353,7 @@ Die W-/R-/C-Abnahmen im obigen OFF-PLAN-Abschnitt gelten vollständig.
 
 #### 16.g.R – Make it Right
 
-- [ ] **16.g.R** · Position **680/900** · Voraussetzung: `16.g.W`.
+- [x] **16.g.R** · Position **680/900** · Voraussetzung: `16.g.W`.
 **Exakte Commit-Message:** `16.g.R feat(migration): Legacy-Manifest und Hashdomänen vervollständigen`
 
 **Vervollständigung:** Projektion nicht als neue Originaldatei akzeptieren; unterschiedliche Originalbytes unter gleicher Identität blockieren.
