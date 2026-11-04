@@ -50,7 +50,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "453cfffee201512305bce7ca0ab12c0a6a94e097c1eb67ba94679f76cce9ea3c",
+  "specification_sha256": "afce182331ecc65570abb7eb552207ed747cf95422e261c4d4d6772dfc5ae1dc",
   "steps": [
     "Resolve the explicit selected parent chain and classify every artifact with deterministic reasons.",
     "Report one complete shortest stored-strong-relation path for every applicable origin and reachable excluded endpoint, stopping at the first excluded node on each route.",

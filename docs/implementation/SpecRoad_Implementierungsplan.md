@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 77 · **Stand:** 4. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.58
+**Planrevision:** 78 · **Stand:** 4. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.59
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 Schritte und 900 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; die ausdrücklich genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wird nach 10.7.10 innerhalb von 15.l.R vorgezogen. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -9,7 +9,7 @@ Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 S
 
 Fachliche Grundlage ist [`docs/specification/SpecRoad_Spezifikation.md`](../specification/SpecRoad_Spezifikation.md), einschließlich aller konsolidierten Korrekturen, 742 Requirements, 51 Verifikationsverträge, 46 Szenario-/E2E-Identitäten sowie R-01 bis R-75, Anhang U und den PatchHarbor-Rundweg aus Anhang W. Der [`Prüfbericht`](../reviews/SpecRoad_v0.2.7_Implementierungsreife_Pruefbericht.md) ist ein vorgelagerter Entwurfsreview, kein späterer Produktnachweis.
 
-Gebundene Spezifikations-SHA-256: `453cfffee201512305bce7ca0ab12c0a6a94e097c1eb67ba94679f76cce9ea3c`.
+Gebundene Spezifikations-SHA-256: `afce182331ecc65570abb7eb552207ed747cf95422e261c4d4d6772dfc5ae1dc`.
 Planungsbasis: Commit `fe2661d02ecf2f7eb483b58a4487eb009c6b3846`; sauberes Result-Bundle `specroad_Result_120209_0914_df3504.zip`; Repository-ID `3d2576df-d611-46fc-9d2b-92869468aaca`. Diese Angaben dokumentieren die Entstehung des Plans, nicht die zukünftige Patchbindung. **Jedes spätere Patchpaket bindet den dann aktuellen tatsächlichen Result-Zustand.**
 
 Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 2026 gelten zusätzlich und bei den nachfolgend benannten Konflikten vorrangig. Sonstige normative Spezifikationsinhalte werden nicht stillschweigend abgeschwächt. Neue fachliche Widersprüche, fehlende zwingende Angaben und Sicherheitsprobleme sind offen zu benennen, nicht durch erfundene Annahmen oder Scheinerfolge zu lösen.
@@ -33,6 +33,44 @@ ausdrückliche Bedienausnahme aus 2.4.3.2 bleibt zusätzlich anwendbar.
 Produktfreigaben und die Grenzen aus 2.4.1/2.4.2/2.4.4 bleiben unverändert.
 Dieser Plan ändert keine alten Aufträge, Antworten, Blockaden oder
 Laufzeitdaten und ist keine Start-/Resume-Anweisung.
+
+## MIGRATION-TRANSACTION-575 — Klärungspräfix und vollständiges 16.i
+
+Entscheidung nach SPECROAD-DECISION-1/2.4.3.1 bei ausdrücklichem Vertrag 4,
+clarification_allowed=true, drei verfügbaren Plätzen. Maßgebliche Basis:
+Result cb51c14c82e5a4c767a260bac590b3521c22c879b5161336c676b3cad8c5137c,
+Commit 38928f75ef696dd4a6425baf8aa726a438582142, sauber. Alle vier Gates
+von Bundle 574 sind erfolgreich: 6682/6915/6920/7749 Tests; vollständiger
+16.h-Abschluss, Produktstand 684/900. Keine erfundenen Dev-Testnachweise.
+
+Befund: Plan/Backup/Originalschutz sind nativ vorhanden; gemeinsamer Writer
+und v1-Journal setzen jedoch 0.2-Konfiguration und ausschließlich vorhandene
+Zielbilder voraus. Source-Schemawechsel, geplante Profilentfernung und ihre
+belegbare Recovery brauchen den ergänzten Detailvertrag 12.20.4.
+Geprüfte Alternativen: Vorab-Konfigurationswrite/zweiter Writer verletzen
+Atomarität; Umdeutung alter Journale gefährdet Kompatibilität. Gewählt ist
+ein enger versionierter Zweig in den gemeinsamen Writer-/Recoverypfaden.
+Gemeinsame Lock-, Autoritäts-, Pfad-, Bild-, Gate- und Sperrregeln gelten
+unverändert. Der Adapter qualifiziert den echten Sourcevertrag und ersetzt
+niemals Prüfungen durch gelieferte Flags. Reversibilität betrifft die
+vollständige gesicherte Dateibasis, kein neu autorisiertes Schema-Downgrade.
+
+Grenzprüfung 2.4.1: keine Änderung von Scope, Nutzerentscheidung, Sicherheit,
+öffentlicher Pfadunterstützung, Kompatibilität, menschlichen Reviews oder
+Nachweispflichten. Alte Nachweise bleiben bytegleich. Keine externen Fakten,
+Reviewentscheidungen oder Risikoakzeptanzen werden erfunden. Neue Formate
+sind geschlossen/versioniert und lassen sich ohne Umdeutung alter Nachweise
+zurücknehmen. 16.j/k/l bleiben vollständig erforderliche offene Folgearbeit.
+
+W: vollständiger nativer Plan-/Backup-/Validierungs-/Writerweg mit echten
+Metadaten, getrenntem historischen Originalschutz und gemeinsamen Gates.
+R: Crash-/Recoverymatrix, Idempotenz, historische Requestantworten und alle
+Mutations-/Sicherungs-/Abbruchgrenzen. C: gemeinsame interne Zustands- und
+Beweisprüfungen strukturieren; Fachwerte und Fehlerverträge beibehalten.
+Jede Phase erhält eine vollständige begründete Pflichtauswahl plus fällige
+N=3-Gruppe (2/0/1/2 einschließlich Klärung); keine Testkörper in Dev.
+Vorbereiteter Stand: Klärung; 16.i bleibt offen. Häkchen zählen erst nach
+jeweiligem erfolgreichen Apply-Gate und echtem Commit.
 
 ## MIGRATION-LOSS-574 — optionale Detailklärung und vollständiges 16.h
 
@@ -2054,7 +2092,7 @@ Kein offener Produktplanschritt wird durch diese Testoptimierung abgeschlossen.
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 77
+plan_revision: 78
 implementation_plan_commits_total: 900
 implementation_plan_commits_completed: 684
 last_completed_plan_commit: 16.h.C
@@ -36458,7 +36496,7 @@ Die W-/R-/C-Abnahmen im obigen OFF-PLAN-Abschnitt gelten vollständig.
 <a id="step-16-i"></a>
 ### 16.i – Migrationstransaktion und Metadaten
 
-**Anforderungsbezug:** `SR-REQ-0267`, `SR-REQ-0270`.
+**Anforderungsbezug:** `SR-REQ-0267`, `SR-REQ-0270`; Detailvertrag 12.20.4 mit vollständigen Writer-/Crash-/Recoveryabnahmen.
 **Verifikationsbezug:** `SR-VER-0020`. Die exakten SR-TC-Identitäten stehen in der vollständigen Matrix.
 
 #### 16.i.W – Let it Work
@@ -36468,7 +36506,7 @@ Die W-/R-/C-Abnahmen im obigen OFF-PLAN-Abschnitt gelten vollständig.
 
 **Umsetzung:** Unterstützte Transformation atomar mit migration-metadata-v1 über den gemeinsamen Writer anwenden.
 
-**Verhaltensabnahme:** Veränderbare Artefakte erhalten genau die vorgeschriebenen Revisionen; neue Begleitdaten Revision 1.
+**Verhaltensabnahme:** Tatsächliche Dateipublikation aus nativ erneut geprüftem Plan, vollständiger externer Sicherung und frischer gemeinsamer Zielvalidierung. Veränderbare Artefakte erhalten genau die vorgeschriebenen Revisionen; neue Begleitdaten Revision 1. Originale und passive Sourcebytes bleiben exakt erhalten. Quellen-/Sicherungs-/Zielwechsel, fehlende Gates, fehlende Autorität, KI-Bypass, unsichere Pfade und ein fremder Kernelmutex blockieren. Keine vorgezogene Endstandinstallation.
 
 #### 16.i.R – Make it Right
 
@@ -36477,14 +36515,14 @@ Die W-/R-/C-Abnahmen im obigen OFF-PLAN-Abschnitt gelten vollständig.
 
 **Vervollständigung:** Wiederholung bleibt No-op beziehungsweise gespeicherter Request; nach Abbruch kein regulär ladbarer Mischstand.
 
-**Verhaltensabnahme:** Crashmatrix, Idempotenz und explizite Sicherungsbindung werden gemeinsam geprüft. Die W-Nachweise bleiben zusätzlich grün.
+**Verhaltensabnahme:** Alle tatsächlichen Dateieffekte und Quittierungen sowie Staging-/Terminalgrenzen werden unterbrochen. Echte Bytes bestimmen vollständigen Abschluss oder vollständige Source-Rückführung; verlorene Rename-/Unlink-/fsync-Antworten und erneut unterbrochene Recovery bleiben prüfbar. Native Übernahme eines tatsächlich beendeten Writers, konservierte Intents, Root-/Sicherungs-/Bild-/Cursor-Manipulation und fehlende Autorität werden geprüft. Request-Replay verwendet gemeinsam verifizierte historische Receipts; neue Requests am erreichten Ziel erzeugen keine Revision. Qualifizierte Legacybytes erlauben keine Projektion als Original oder partielle Prüfungsumgehung. Die W-Nachweise bleiben zusätzlich grün.
 
 #### 16.i.C – Make it Clean
 
 - [ ] **16.i.C** · Position **687/900** · Voraussetzung: `16.i.R`.
 **Exakte Commit-Message:** `16.i.C refactor(migration): Migrationstransaktion und Metadaten bereinigen`
 
-**Bereinigung:** Keine gesonderten Lock-, Journal- oder Publikationsabkürzungen zulassen.
+**Bereinigung:** Gemeinsame read-only Source-/Bild-/Präfixbeweise aus Writer und Recovery strukturieren; keine gesonderten Lock-, Journal- oder Publikationsabkürzungen. Funktionskörper und echte W-/R-Testdateien bleiben unverändert; jedes eigene Apply-Gate bleibt erforderlich.
 
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 

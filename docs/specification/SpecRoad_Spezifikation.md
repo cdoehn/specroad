@@ -1,19 +1,19 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.58
+## Version 0.2.59
 
 | Feld | Wert |
 |---|---|
 | Dokument-ID | `SR-SPEC-0001` |
-| Dokumentversion | `0.2.58` |
+| Dokumentversion | `0.2.59` |
 | Zielrelease | `SpecRoad Single-Repository Workbench 0.2.0` |
 | Status | **Fachlich konsolidierte Arbeitsgrundlage; technische Reviewentscheidung gesondert dokumentiert, formale Baseline-Freigabe und Produktabnahme nicht durch dieses Dokument erklärt** |
 | Stand | 4. November 2026 |
 | Sprache | Deutsch; technische Feldnamen, Enum-Werte und CLI-Kommandos Englisch |
-| Fachliche Quelle | **Diese Repositoryfassung v0.2.58 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.58 liegt mit dieser Änderung nicht vor.** |
+| Fachliche Quelle | **Diese Repositoryfassung v0.2.59 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.59 liegt mit dieser Änderung nicht vor.** |
 | Bearbeitbare Satzquelle | Diese Datei; eine spätere PDF muss denselben versionierten Inhalt wiedergeben. |
-| Vorgängerversion | Repository-Spezifikation v0.2.57 vom 3. November 2026; historische Nachweise bleiben unverändert. |
-| Prüf- und Entscheidungsgrundlage | MIGRATION-LOSS-574: delegiert gemäß SPECROAD-DECISION-1/2.4.3.1 unter erteiltem Vertrag 4; Klärung und 16.h.W/R/C mit eigenen Apply-Gates. |
-| Änderungsart | Gebundene Verlustinventur und Einzelzustimmung, unveränderter Originalschutz und verlustfreier Referenzpfad. Kein neuer öffentlicher Migrationspfad oder Produktreview. |
+| Vorgängerversion | Repository-Spezifikation v0.2.58 vom 4. November 2026; historische Nachweise bleiben unverändert. |
+| Prüf- und Entscheidungsgrundlage | MIGRATION-TRANSACTION-575 gemäß SPECROAD-DECISION-1/2.4.3.1, Vertrag 4: optionaler Klärungspräfix und vollständiges 16.i.W/R/C mit eigenen Apply-Gates. |
+| Änderungsart | Eng gebundene Erweiterung des gemeinsamen Writers um Schemawechsel, vollständige Sicherungsbindung und erhaltende Recovery; keine neue öffentliche Pfadfreigabe oder Reviewentscheidung. |
 
 > **Verbindlicher Quellenwechsel:** Die ausdrückliche Nutzerentscheidung REFERENCE-SOURCE-551 wird als v0.2.50 umgesetzt. Der neue Quellvertrag ist Entwurfsarbeit vom 3. November 2026, kein Nachweis eines früher existierenden Formats. Bestehende 0.2-Verträge, Transport-, Sicherheits- und Reviewgrenzen bleiben erhalten.
 
@@ -5314,6 +5314,182 @@ Vollständige passive Zustimmung ist positiv prüfbar, bleibt aber getrennt
 von der streng verlustfreien Referenzmigration. Kein Dev-Testlauf, kein
 erfundener menschlicher Review und kein Verlust echter Nutzerdaten werden
 durch diesen Detailvertrag behauptet oder autorisiert.
+
+#### 12.20.4 Migration im gemeinsamen Transaktionssystem — MIGRATION-TRANSACTION-575
+
+Diese Detailentscheidung nach SPECROAD-DECISION-1 und 2.4.3.1 konkretisiert
+SR-REQ-0267/0270 und 16.i. Der gemeinsame bisherige Writer nimmt eine
+0.2-Konfiguration an und kennt nur neue/ersetzte Zielbilder. Eine Migration
+wechselt dagegen Konfiguration und Schema und entfernt das archivierte alte
+Profil. Ein vorgezogener Konfigurationswrite oder ein zweiter Lock-/Journal-
+Namensraum würde die gemeinsame Transaktion umgehen. Eine stillschweigende
+Neudeutung alter Journal-v1-Nachweise wäre ebenfalls unzulässig. Gewählt ist
+ein ausdrücklich versionierter schema-transition-Zweig des gemeinsamen
+Writers unter denselben Lock-, Transaktions-, Receipt- und Recoverypfaden.
+Bestehende v1-Nachweise, gewöhnliches Authoring und Restore bleiben gültig
+und werden nicht umgedeutet. Dies registriert keinen öffentlichen 0.1-Pfad;
+die übrigen M16-Abnahmen bleiben erforderlich.
+
+**Eingang und Prüfung.** Ausschließlich der eingebaute schema_migrate-Adapter
+kann diesen Zweig aus dem vollständigen Plan nach 12.20.2 vorbereiten. Quelle,
+Mapping, Metadaten, Zielversion und sämtliche Zielbytes werden nativ erneut
+berechnet; gespeicherte positive Befunde sind keine Berechtigung. Der
+Aufrufer bindet Planhash, Inputhash, Zielversion, Transaktions-ID und die
+wirkliche externe Quellsicherung mit kanonischem Pfad, Ausgaberoot, Größe,
+ZIP-Hash und vollständigem Source-Dateilistenhash. Die Sicherung wird erneut
+geöffnet und nativ gegen ihre vollständigen Originale geprüft. Alle realen
+Quelldateien müssen unter dem gemeinsamen Writerlock exakt übereinstimmen.
+Nur die eigenen neu erzeugten Lock-/Journal-/Receipt-Dateien werden aus
+diesem Vergleich ausgeschlossen; bestehende passive Betriebsdaten bleiben
+gebundene Originale. Fremde aktive oder unbekannte Betriebszustände blockieren.
+Die Source-/Target-Dateilisten nach 12.20.2 dürfen hierfür ausschließlich
+bereits vorhandene, nach den gemeinsamen Betriebsregeln passive .specroad-
+Dateien führen. Diese müssen in beiden Listen bytegleich und vollständig
+unter protected_paths stehen; die changes-Liste darf sie nicht verändern.
+Die bekannte Registry-Textdatei ist als exakt in der Zielkonfiguration
+gebundene und nativ validierte Ressource zulässig; sie wird weder als JSON-
+Artefakt noch als LanguagePackage umgedeutet.
+
+Die gemeinsame Akteur-/Request-/Proposalpolicy bleibt erhalten, ebenso die
+explizite Registrierung echter Host-Autorität. Ein KI-Akteur erhält keinen
+direkten Write durch das Migrationslabel. Plan und Projektdateien dürfen
+keinen ausführbaren Validator oder Autorisierungsprovider registrieren.
+Vor Journalanlage, nach Staging und vor Veröffentlichung werden vollständige
+Zielvalidierung und Autorität frisch geprüft. Fehlende semantische Dienste,
+ungültige oder unvollständige Ergebnisse bleiben Fehler. Ein lokaler
+Schemaerfolg, ein Backup oder eine boolesche readiness-Angabe genügt nicht.
+
+**Qualifizierte Legacy-Originale in der gemeinsamen Validierung.** Nur ein
+nativ aus den tatsächlichen Ziel-/Archivbytes vollständig qualifiziertes
+Legacy-Manifest darf Originale an den gemeinsamen Validator binden. Jedes
+betroffene Dokument muss bytegleich mit diesem Original sein; bloße IDs,
+Projektionen oder gespeicherte Berichte genügen nicht. Historische Schemas,
+Closure und Originalhashes werden mit dem festen Quellleser geprüft. Für
+aktuelle Graphidentitäten und Relationen dienen nur die getrennten Q.3-
+Projektionen; Originaldaten behalten Schema 0.1 und ihre Hashdomäne.
+Aktuelle Artefakte durchlaufen unverändert alle aktuellen Schema-, Profil-,
+Graph-, Lifecycle-, Ressourcen- und gegebenenfalls Reviewgates. Historische
+Kontrollfelder begründen keine aktuelle Freigabe. Legacy-Evidence wird
+sichtbar als historisch und für transformierte Subjects kontextunverifiziert
+behandelt; sie kann kein aktuelles positives Evidencegate erfüllen. Fehlende
+aktuelle Prüfungen bleiben sichtbar offen. Die detaillierten historischen
+Vergleichs-/Verifikationsausgaben nach 16.j und migrate verify nach 16.k
+bleiben eigene Planarbeit, keine hier behauptete Produktabnahme.
+
+**Gebundene Dateitransaktion.** Der neue Zweig verwendet
+`schema-transition-journal-v1` im vorhandenen aktiven Verzeichnis
+`.specroad/transactions/<transaction_id>/`. Sein geschlossenes Journal
+bindet exakte Planbytes und -hash, Projekt-/Rootidentität, Sicherungsdescriptor,
+Zielversion und die vollständigen Quell-/Zieldateilisten aus dem Plan.
+Zustände sind building, prepared, committing, committed, rolling_back und
+rolled_back. Ein bestätigter Präfixzähler beschreibt nur bereits quittierte
+Dateieffekte, nie einen vermuteten Write-Erfolg. Vor prepared werden die
+vollständigen Source-Bilder und alle geänderten Zielbilder dauerhaft
+abgelegt, zurückgelesen und unabhängig gegen Plan und Sicherung geprüft.
+Die Bilder bleiben für historische Ergebnisprüfung und Recovery erhalten.
+
+Das Journal ist kanonisches UTF-8-JCS mit genau den Feldern format_version,
+state, transaction_id, project_id, root_identity (Gerät/Inode), request_id,
+plan_bytes_base64, plan_sha256, backup, source_modes, published_count,
+images_prepared und validation. backup enthält genau path, output_root,
+size, sha256 und source_files_sha256. source_modes bindet den POSIX-Dateimodus
+jedes Sourcepfades. images_prepared ist bei building false, ab prepared true;
+bei einem Abbruch vor prepared bleibt es auch in rolling_back/rolled_back
+false und published_count muss `0` sein. Es erlaubt nur das erhaltende
+Verwerfen nach vollständig belegter Sourceprüfung, keine Targetpublikation.
+validation ist der vollständige native model-validation-v1-Befund mit allen
+Zieldokumentbindungen. Plan und vollständige Source-ZIP begründen unabhängig
+alle erwarteten before-/staging-Bilder. Partielle eigene temporäre Bilder
+dürfen nur bei exakt belegtem erwarteten Bytepräfix vervollständigt werden;
+fremde Bytes, unbekannte Namen oder ein unlesbares Primärjournal blockieren.
+Nach jedem Effekt wird der tatsächliche vollständige Dateienpräfix geprüft;
+ein verlorener Effekt darf höchstens einen Schritt vor/hinter seiner
+Quittierung liegen. Neu angelegte Normativdateien verwenden atomare
+No-Replace-Publikation ohne zeitweiligen zweiten Hardlink.
+
+Veröffentlichung verwendet die vorhandenen descriptorgebundenen Pfad-,
+Dateityp-, Geräte-, Modus-, create-only- und atomaren Bildregeln. Jeder
+Replace beziehungsweise die explizit geplante Entfernung des alten Profils
+wird samt Elternverzeichnis synchronisiert, bevor das Journal fortschreitet.
+Archive werden niemals überschrieben. Bestehende unbekannte Bytes, zusätzliche
+Dateien, Links, fremde Verzeichnisidentität, Rechte-/Platz-/I/O-Fehler oder
+Callbackänderungen stoppen den Lauf unter Erhalt des wirklichen Zustands.
+Die Konfiguration wird nicht vorab separat installiert. Solange ein aktives
+Journal besteht, darf kein gewöhnlicher Leser einen Mischstand laden.
+
+Erst vollständige Zielbytes, Zielwurzel und vollständige Validierung erlauben
+committed. Ein abgeschlossenes Journal samt Bildern wird atomar unter die
+bestehende passive Receiptwurzel verschoben; Originalhistorie wird niemals
+überschrieben oder gelöscht. Die Request-ID wird nach der gemeinsamen
+normative_write-Namensraumregel dauerhaft gebunden. Identische Wiederholung
+liefert die geprüften historischen Ergebnisdaten ohne neue Revisionen; eine
+andere Operation mit derselben ID ist ein Konflikt. Eine historische Antwort
+behauptet keine heutige Zielgültigkeit. Ein gleiches bereits erreichtes Ziel
+mit neuem Auftrag kann explizit als nicht erforderlich enden, ohne einen
+neuen Write oder eine künstliche Revision zu erzeugen.
+Das passive transaction.json verwendet schema-transition-receipt-v1 mit
+genau format_version, journal_sha256, transaction_id, plan_sha256,
+source_files_sha256, target_files_sha256, target_model_root_sha256 und
+validation_sha256. Der gemeinsame Reader erhält den zusätzlich geschlossenen Zweig
+schema-transition-request-receipt-v1 mit derselben Feldmenge und demselben
+normative_write-Namensraum wie request-receipt-v1. Nur dieser neue Zweig darf
+zusätzlich die native Registry-Textressource unter profiles/language-data/
+in published_paths führen. Die tatsächliche Registrybindung muss aus dem
+vollständig geprüften Transaktionsjournal hervorgehen. Alte Request-v1-Bytes
+und deren bisherige Pfadregeln bleiben unverändert. Die Transaktions-
+verknüpfung muss gegen dieses Journal, echte archivierte Bilder und den
+tatsächlichen Receipt geprüft werden. Eine Konfliktdiagnose
+mit receipt_verified darf erst nach dieser vollständigen Prüfung erfolgen.
+Abschlussdaten sind historische Konsistenznachweise, keine Signatur oder
+heutige Modellabnahme. Ein already-target-No-op behauptet keine semantische
+Zielgültigkeit. Eine neue Transaktion darf weder abgeschlossene noch
+zurückgeführte Transaktions-IDs oder vorhandene Auditziele wiederverwenden.
+
+**Recovery.** Die gemeinsamen Recovery-Einstiegspunkte wählen den nativen
+Journalzweig anhand der geschlossenen Versionskennung, nicht anhand frei
+registrierbaren Projektcodes. Erforderlich bleiben erwarteter voller
+Journalhash, derselbe Root, tatsächlich gehaltener gemeinsamer Recoverylock
+und registrierte RecoveryAuthority. Ziel-/Source-Bilder und Sicherungsbindung
+werden unabhängig neu geprüft. Ein nach tatsächlichen Bytes vollständig
+veröffentlichtes Ziel darf ohne erneute Targetwrites abgeschlossen werden;
+ein unvollständiger Zielpräfix wird vollständig auf die gesicherte Basis
+zurückgeführt. Ein verlorener Rename-/Unlink-/Journal-Antwortwert wird aus
+vorhandenen Bytes bestimmt, nicht durch Blindretry oder dem Zähler allein.
+Drittwerte, fehlende Beweise oder ein nicht belegbarer Präfix bleiben blockiert.
+Auch Recovery unterbricht bei Fehlern und erhält ihre Belege; keine automatische
+Rückabwicklung im normalen Writer. Weder Fehler noch Wiederholung ändern
+menschliche Freigaben, externe Risikoentscheidungen oder die Source-Verträge.
+Die 0.1-Quelle enthält keine automatische Recoveryfreigabe. Eine teilweise
+publizierte 0.2-Policy darf deshalb keine Sourcewrites legitimieren; dieser
+Zweig verlangt die ausdrücklich gebundene Recoveryaktion. Gemeinsame
+Ownerübernahme nach tatsächlich totem Writer bleibt unter ihren bisherigen
+Host-/Risiko-/Mutexregeln möglich. Native Übernahmebelege bleiben vollständig
+erhalten und werden einzeln geprüft, kein Auditunterbaum pauschal ignoriert.
+Vor mutierender Recovery wird ein kanonischer, unveränderbarer
+schema-transition-recovery-intent-v1 im eigenen Workverzeichnis bewahrt:
+format_version, request, journal_before_base64, authority_id und
+authority_version. request bindet action (discard/rollback/complete),
+transaction_id, project_id, journal_sha256, plan_sha256, backup,
+root_identity sowie actor/reason (beim vorhandenen Discard-Aufruf erforderlich,
+sonst null). Der Dateiname recovery-<SHA-256>.json bindet die exakten Bytes.
+Ein Intent behauptet keinen Erfolg. Erst der geprüfte tatsächliche Endzustand
+mit terminalem Journal erlaubt die atomare Überführung des gesamten Work
+unter die vorhandene passive Receipt- bzw. Recovery-Auditwurzel; Belege
+werden nicht gelöscht. Wiederaufnahme prüft auch diese ursprünglichen
+Intents und dieselbe reale externe Sicherung. Historischer Receipt-Replay
+benötigt dagegen nur die dauerhaft archivierten Originale und Bindungen.
+
+
+**Abnahmen.** Positive vollständige Writerfälle prüfen tatsächliche Dateien,
+Root-/Planhashes, Originalarchive, genau einmal erhöhte mutable Revisionen,
+Revision 1 neuer Begleitdaten und unveränderte Legacy-Originale. Fehlerfälle
+umfassen Sicherungs-/Plan-/Input-/Ziel-/Rootwechsel, Rechte und Pfade, fehlende
+Gates, verweigerte Autorität, Requestkonflikte und Callbackmutation. Die
+Crashmatrix unterbricht alle dauerhaften Zustandsgrenzen und Dateieffekte,
+prüft die gewöhnliche Lesesperre und weist vollständigen Abschluss oder
+vollständige Rückführung anhand echter Bytes nach. Kein gespeicherter
+Erfolgsbericht und kein fremdes Gate ersetzt diese Nachweise. W/R/C erhalten
+getrennte Apply-Gates; in Dev laufen keine Verhaltenstests.
 
 ### 12.21 Suspect Relations und fachliche Relationsreviews
 
