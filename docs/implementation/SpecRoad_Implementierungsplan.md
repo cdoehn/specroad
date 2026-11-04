@@ -75,7 +75,7 @@ Jeder echte W/R/C-Zustand erhält seine eigene fällige N=3-Gruppe (1/2/0)
 plus vollständige ungefilterte Pflichtauswahl vor seinem Commit. Dev führt
 keine Testkörper oder Fixtures aus. Source-/Plan-/Hash-/Identity-Regressionen
 und alle neuen Testdateien sind Pflicht. Keine Vollsuite- oder Releasebehauptung.
-Vorbereiteter Zwischenstand: R; Häkchen werden nur nach Apply-Gate committed.
+Vorbereiteter Zwischenstand: C; Häkchen werden nur nach Apply-Gate committed.
 
 Die weiteren M16-Gates bleiben offen: öffentliche Registrierung, Writer,
 aktuelle Legacy-Lesbarkeit, Verification, CLI/Restore und Abschluss. Die
@@ -1911,10 +1911,10 @@ Kein offener Produktplanschritt wird durch diese Testoptimierung abgeschlossen.
 ```yaml
 plan_revision: 74
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 677
-last_completed_plan_commit: 16.f.R
-next_plan_commit: 16.f.C
-last_completed_numbered_bundle: 570
+implementation_plan_commits_completed: 678
+last_completed_plan_commit: 16.f.C
+next_plan_commit: 16.g.W
+last_completed_numbered_bundle: 571
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -36229,7 +36229,7 @@ Die W-/R-/C-Abnahmen im obigen OFF-PLAN-Abschnitt gelten vollständig.
 
 #### 16.f.C – Make it Clean
 
-- [ ] **16.f.C** · Position **678/900** · Voraussetzung: `16.f.R`.
+- [x] **16.f.C** · Position **678/900** · Voraussetzung: `16.f.R`.
 **Exakte Commit-Message:** `16.f.C refactor(migration): Deterministische Relationsidentität bereinigen`
 
 **Bereinigung:** Ableitungshilfe vom normalen random128-v1-Erzeuger trennen.

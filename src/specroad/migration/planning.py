@@ -11,7 +11,8 @@ from .plan_values import (POLICY, STEP, SOURCE_CONTRACT, MANIFEST_PATH, Migratio
     MigrationPlanning, require, owned_files, file_bindings, changes)
 from .plan_contract import validate_inputs
 from .plan_inputs import migration_inputs, target_contract, _target
-from .plan_originals import _relation, _original_archive, _SourceRelations
+from .plan_originals import _original_archive
+from .relation_derivation import _relation, _SourceRelations
 from .plan_target import _target_fields, _stamp, _manifest
 from .requirement_mapping import authored_fields
 
