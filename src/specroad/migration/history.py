@@ -110,6 +110,58 @@ def verify_migrated_history(files, *, project_id):
     return _report(_registered_inventory(manifest), manifest)
 
 
+def historical_evidence_assessment(context, evidence, manifest, *, contract=None):
+    """Current-context refusal backed by actual, completely qualified originals.
+
+    The caller owns the supplied byte snapshot; a LegacyArtifact alone is not
+    proof of its registry. A current contract or matching projected context
+    cannot authenticate a new measurement of a transformed subject.
+    """
+    from .legacy_values import LegacyArtifact, LegacyManifest
+    from ..verification.context import VerificationContext
+    from ..verification.contracts import VerificationContract
+    from ..verification._context_subject import owned_subject
+    from ..verification._subject_binding import CONTEXT_HASH_ALGORITHM
+    require(type(context) is VerificationContext, 'typed_verification_context_required')
+    require(type(evidence) is LegacyArtifact, 'typed_legacy_evidence_required')
+    require(type(manifest) is LegacyManifest, 'legacy_manifest_required')
+    fresh = validate_legacy_manifest(dict(manifest._files), project_id=evidence.project_id)
+    require(fresh.sha256 == manifest.sha256 == evidence.manifest_sha256,
+            'legacy_manifest_changed', exit_code=6)
+    original = fresh.artifact(evidence.path, evidence.source_bytes, expected_type='evidence')
+    require(original._row == evidence._row, 'legacy_original_binding_mismatch')
+    current_contract = None
+    if contract is not None:
+        require(type(contract) is VerificationContract, 'typed_verification_contract_required')
+        current_contract = owned_subject(contract).binding
+    history = _report(_registered_inventory(fresh), fresh)
+    record = original.data
+    current = context.subject_binding
+    recorded = next((s for s in record['subjects'] if s['artifact_id'] == current['artifact_id']), None)
+    reasons = ['migration_context_unverified']
+    if recorded is None:
+        reasons.append('subject_not_recorded')
+    return {'format_version': 'verification-context-assessment-v1',
+        'hash_algorithm': CONTEXT_HASH_ALGORITHM, 'context_binding_sha256': context.sha256,
+        'subject': current, 'recorded_subject': recorded, 'evidence_id': record['id'],
+        'evidence_source_sha256': sha256(original.source_bytes).hexdigest(),
+        'evidence_sha256': sha256(jcs(record)).hexdigest(),
+        'configuration_hash': context.data['configuration_hash'],
+        'evidence_configuration_binding': {k: record[k] for k in
+            ('configuration_hash', 'configuration_policy') if k in record},
+        'evidence_result': record['result'], 'run_context': record['run_context'],
+        'historical_hash_algorithm': record['context_hash_algorithm'],
+        'legacy_manifest_sha256': fresh.sha256, 'history_binding_sha256': history.sha256,
+        'historical_source': {k: v for k, v in history.data['historical'].items() if k != 'records'},
+        'historical_integrity_verified': True, 'historical_external_run_verified': False,
+        'current_contract': current_contract, 'contract_reuse_evaluated': False,
+        'contract_configuration_independent': False,
+        'freshness': 'stale', 'context_current': False, 'reasons': reasons,
+        'full_verification_evaluated': False, 'configuration_applicability_evaluated': False,
+        'run_selection_evaluated': False, 'release_readiness_evaluated': False,
+        'test_code_executed': False, 'write_authorized': False, 'approval_granted': False}
+
+
 def _baseline_report(inventory, raw, manifest=None):
     require(type(raw) is bytes, 'baseline_record_bytes_required')
     originals = [o for o in inventory.originals if o.role == 'artifact'

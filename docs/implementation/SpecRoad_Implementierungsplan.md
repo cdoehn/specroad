@@ -89,7 +89,7 @@ behält sämtliche R-Tests und Kataloge bytegleich.
 Keine Spezifikationsklärung und kein Budgetreset. Dev führt keine Tests,
 Fixtures oder manuelle Produktvalidierung aus. Statische Prüfung, reine
 Collection und native Paketrekonstruktion sind keine Verhaltensabnahme.
-Vorbereiteter Stand: 16.j.W. Häkchen und Produktzähler werden erst nach dem
+Vorbereiteter Stand: 16.j.R. Häkchen und Produktzähler werden erst nach dem
 jeweiligen erfolgreichen Apply-Gate committed. Nach vollständigem Erfolg
 wären 690/900 erreicht; 16.k.W bleibt danach offen. Der Bundlezähler bleibt
 in W/R beim belegten Abschluss 581, erst der erfolgreiche C-Commit setzt
@@ -146,7 +146,7 @@ zusätzlich zur gefilterten Rotation. Kein doppelter Schlusslauf.
 Keine Spezifikationsklärung, kein Budgetreset und keine eigene Apply-Schleife.
 Dev führt keine Testkörper oder Fixtures aus. Statische Prüfung, reine
 Collection, native Bundleprüfung und Rekonstruktion sind keine bestandenen
-Verhaltenstests. Vorbereiteter Stand: 16.j.W. Häkchen/Zähler werden erst
+Verhaltenstests. Vorbereiteter Stand: 16.j.R. Häkchen/Zähler werden erst
 nach dem jeweiligen erfolgreichen Apply-Gate committed. Vollständiger
 Erfolg ergäbe 690/900; danach bleibt 16.k.W offen. Der bislang stehengebliebene
 Bundlezähler 575 wird auf den belegten letzten Abschluss 581 korrigiert;
@@ -199,7 +199,7 @@ Jeder Zustand erhält eine eigene ungefilterte Pflichtauswahl zusätzlich
 zur fälligen laufzeitgefilterten N=3-Gruppe, dann erst seinen Commit.
 Dev hat keine Testkörper, Fixtures oder Test-Unterprozesse ausgeführt;
 reine Collection und statische/native Paketprüfung sind keine Abnahme.
-Vorbereiteter Stand: 16.j.W. Häkchen und Zähler werden erst nach dem echten
+Vorbereiteter Stand: 16.j.R. Häkchen und Zähler werden erst nach dem echten
 Apply-Gate dieses Zustands committed. Vollständiger Erfolg ergibt 690/900.
 Danach folgt 16.k.W. Öffentliche Migrationsregistrierung/CLI, migrate verify
 und Restore bleiben in den folgenden Planschritten; historische Integrität
@@ -2611,9 +2611,9 @@ Kein offener Produktplanschritt wird durch diese Testoptimierung abgeschlossen.
 ```yaml
 plan_revision: 78
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 688
-last_completed_plan_commit: 16.j.W
-next_plan_commit: 16.j.R
+implementation_plan_commits_completed: 689
+last_completed_plan_commit: 16.j.R
+next_plan_commit: 16.j.C
 last_completed_numbered_bundle: 581
 implementation_state: in_progress
 audit_followup_status: closed
@@ -37064,7 +37064,7 @@ Die W-/R-/C-Abnahmen im obigen OFF-PLAN-Abschnitt gelten vollständig.
 
 #### 16.j.R – Make it Right
 
-- [ ] **16.j.R** · Position **689/900** · Voraussetzung: `16.j.W`.
+- [x] **16.j.R** · Position **689/900** · Voraussetzung: `16.j.W`.
 **Exakte Commit-Message:** `16.j.R feat(migration): Historische Evidence und Baselines vervollständigen`
 
 **Vervollständigung:** Legacy-Evidence für transformiertes Subject bleibt ohne neuen Kontextnachweis stale mit migration_context_unverified.

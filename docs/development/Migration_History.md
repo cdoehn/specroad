@@ -17,8 +17,16 @@ Dateisystemsicht. Aktuelle 0.2-Baselines behalten ihren bisherigen Verifier.
 Restore und materialisierte Vergleichsquellen behalten ihre bisherigen
 Schemaeinschränkungen bis zur eigenständigen vollständigen Integration.
 
-Die explizite aktuelle Kontextbewertung und zusätzliche Write-/Fehlergrenzen
-folgen in 16.j.R; die historische Prüfung selbst erteilt keine aktuelle Freigabe.
+assess_verification_context erhält für LegacyArtifact ausdrücklich
+legacy_manifest mit tatsächlichen Originalbytes. Das Manifest wird erneut
+nativ qualifiziert. Der Bericht bleibt stale/migration_context_unverified;
+ein aktueller oder unabhängiger Vertrag und eine Navigation ändern dies nicht.
+Das optionale Vertragsargument wird nativ geprüft, aber nicht zur Wiederverwendung
+alter Evidence eingesetzt. Eine neue Messung benötigt eine neue ID und
+prepare_evidence_record mit heutigem Subject-/Vertragskontext. Der alte Datensatz
+bleibt unverändert. Dieser Konstruktor ist noch keine persistierte Messung oder
+externe Laufbestätigung. Format und die regulären Update-/Lifecyclepfade lassen
+keine Legacy-Projektion als schreibbares aktuelles Original zu.
 
 Alle APIs lesen ausschließlich und interpretieren keine Payload als Programm.
 Ein positives Integritätsergebnis authentifiziert weder einen externen Lauf

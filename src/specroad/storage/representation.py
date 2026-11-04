@@ -16,6 +16,11 @@ def prepare_normalization(source: ProjectSource, path: str) -> NormalizationCand
     if kind not in CURRENT_JSON_CLASSES:
         raise ModelError("resource_not_formatable", path=path)
     raw = source.read_normative(path)
+    manifest = source._legacy_manifest
+    if manifest is not None and path in manifest.protected_paths:
+        # A canonical-looking navigation projection is still not an original
+        # eligible for rewriting; use the same native legacy write boundary.
+        source.require_write_target(path)
     try:
         _validate_format_input(source.configuration, path, raw, kind)
         candidate = NormalizationCandidate(path, raw)

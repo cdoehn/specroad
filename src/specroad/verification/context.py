@@ -96,7 +96,7 @@ class VerificationContextAssessment:
         raise TypeError('Context freshness is not verification success or approval')
 
 
-def assess_verification_context(context, evidence, *, contract=None):
+def assess_verification_context(context, evidence, *, contract=None, legacy_manifest=None):
     """Compare subject freshness and exact or explicitly independent configuration.
 
     Evidence's old full hash and revision remain audit data. Its result and run
@@ -106,6 +106,15 @@ def assess_verification_context(context, evidence, *, contract=None):
     """
     if type(context) is not VerificationContext:
         raise ModelError('typed_verification_context_required')
+    from ..migration.legacy_values import LegacyArtifact
+    if type(evidence) is LegacyArtifact:
+        from ..migration.history import historical_evidence_assessment
+        report = historical_evidence_assessment(context, evidence, legacy_manifest, contract=contract)
+        result = object.__new__(VerificationContextAssessment)
+        object.__setattr__(result, '_encoded', canonical_json_bytes(report))
+        return result
+    if legacy_manifest is not None:
+        raise ModelError('legacy_manifest_requires_legacy_evidence')
     if type(evidence) is not RecordArtifact:
         raise ModelError('typed_verification_evidence_required')
     observed = RecordArtifact(evidence.source_bytes, expected_type='evidence', path=evidence.path)
