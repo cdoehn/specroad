@@ -1,5 +1,4 @@
 """Complete native migration verification of owned bytes, never authorization."""
-from dataclasses import dataclass
 from hashlib import sha256
 
 from ..bundles.migration_source import verify_source_backup
@@ -13,29 +12,8 @@ from .transaction_target import validate_transaction_target
 from .history import verify_source_history, verify_migrated_history
 
 
-@dataclass(frozen=True, init=False)
-class MigrationVerification:
-    _encoded: bytes
 
-    def __init__(self, *args, **kwargs):
-        raise TypeError('Use the native migration verifier')
-
-    @property
-    def data(self):
-        return parsed(self._encoded)
-
-    @property
-    def sha256(self):
-        return sha256(self._encoded).hexdigest()
-
-    def __bool__(self):
-        raise TypeError('Migration verification is not write or release authority')
-
-
-def _result(value):
-    result = object.__new__(MigrationVerification)
-    object.__setattr__(result, '_encoded', jcs(value))
-    return result
+from ._verification_reports import MigrationVerification, _result
 
 
 def verify_migration(backup_raw, plan_raw, report_raw, target_files, *,

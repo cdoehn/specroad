@@ -139,7 +139,7 @@ Work-Planung/Prüfung, Paket-/Sandboxfortsetzung, Manipulations-/Unterbrechungs-
 fälle und abschließende echte native Transaktion. C strukturiert gemeinsame
 Inventar-/Report-/Workbeweise ohne Fachänderung. Alle Phasen besitzen eigene
 ungefilterte Pflichtauswahlen zusätzlich zur fälligen N=3-Gruppe. Keine
-Verhaltenstests in Dev. Vorbereiteter Stand: 16.k.R; M16-Abschlussgates bleiben offen.
+Verhaltenstests in Dev. Vorbereiteter Stand: 16.k.C; M16-Abschlussgates bleiben offen.
 Häkchen gelten erst nach jeweiligem erfolgreichen Apply-Gate und Commit.
 
 ## Korrekturbundle 584 — vollständiger offener Rest 16.j.W/R/C
@@ -2719,10 +2719,10 @@ Kein offener Produktplanschritt wird durch diese Testoptimierung abgeschlossen.
 ```yaml
 plan_revision: 90
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 692
-last_completed_plan_commit: 16.k.R
-next_plan_commit: 16.k.C
-last_completed_numbered_bundle: 584
+implementation_plan_commits_completed: 693
+last_completed_plan_commit: 16.k.C
+next_plan_commit: 17.a.W
+last_completed_numbered_bundle: 587
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -37216,7 +37216,7 @@ Die W-/R-/C-Abnahmen im obigen OFF-PLAN-Abschnitt gelten vollständig.
 
 #### 16.k.C – Make it Clean
 
-- [ ] **16.k.C** · Position **693/900** · Voraussetzung: `16.k.R`.
+- [x] **16.k.C** · Position **693/900** · Voraussetzung: `16.k.R`.
 **Exakte Commit-Message:** `16.k.C refactor(migration): Migrate verify und fortsetzbarer Abschluss bereinigen`
 
 **Bereinigung:** Migrationsnachweise über gemeinsame Inventur-/Workresultate erzeugen.
@@ -37224,6 +37224,14 @@ Die W-/R-/C-Abnahmen im obigen OFF-PLAN-Abschnitt gelten vollständig.
 **Unveränderlich:** Die oben beschriebenen Fachresultate, Fehlerklassen, zulässigen Seiteneffekte und Invarianten bleiben gleich. Keine neuen Features, Sicherheitsausnahmen oder Darstellungs-/Dokumentationstests.
 
 **Regressionsabnahme:** Alle vorhandenen W-/R-Verhaltenstests dieses Schritts und die vom Refactoring betroffenen bisherigen Verhaltenstests erneut ausführen; erwartete Fachwerte nicht passend zum Refactoring umschreiben. Bei reinen Präsentations-/Dokuschritten keine solchen Tests erfinden.
+
+**Offene M16-Integrationsabnahme nach 16.k.C:** Der lokale Bibliotheks-
+schritt ersetzt weder die öffentliche CLI-/Pfadregistrierung noch die positive
+Restore-Integration oder die volle verfügbare Verhaltenssuite. Diese Nachweise
+sind weiterhin offen. 17.a.W ist die nächste nummerierte Produktposition,
+aber seine Meilensteinvoraussetzung darf ohne diese Abnahme nicht als erfüllt
+behandelt werden. Es existiert kein 16.l; historische Verweise darauf sind
+keine ausgeführte Arbeit und kein positiver Nachweis.
 
 **Meilenstein 16 abgeschlossen erst nach:** letztem C-Commit, bestandenem oben genannten Integrationsgate, vollständiger verfügbarer Verhaltenssuite und nachvollziehbarer Ergebnisbindung. Noch fehlende plattformgebundene Nachweise bleiben als offen markiert und blockieren die jeweilige Freigabe, nicht still die bereits korrekt abgeschlossene lokale Arbeit.
 
