@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 87 · **Stand:** 4. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.59
+**Planrevision:** 88 · **Stand:** 4. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.60
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 Schritte und 900 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; die ausdrücklich genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wird nach 10.7.10 innerhalb von 15.l.R vorgezogen. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -9,7 +9,7 @@ Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 S
 
 Fachliche Grundlage ist [`docs/specification/SpecRoad_Spezifikation.md`](../specification/SpecRoad_Spezifikation.md), einschließlich aller konsolidierten Korrekturen, 742 Requirements, 51 Verifikationsverträge, 46 Szenario-/E2E-Identitäten sowie R-01 bis R-75, Anhang U und den PatchHarbor-Rundweg aus Anhang W. Der [`Prüfbericht`](../reviews/SpecRoad_v0.2.7_Implementierungsreife_Pruefbericht.md) ist ein vorgelagerter Entwurfsreview, kein späterer Produktnachweis.
 
-Gebundene Spezifikations-SHA-256: `afce182331ecc65570abb7eb552207ed747cf95422e261c4d4d6772dfc5ae1dc`.
+Gebundene Spezifikations-SHA-256: `05fc7c2105c7deb731f8a6f46e9f6e2e366ecb8189c856bcccac587e130ef3fa`.
 Planungsbasis: Commit `fe2661d02ecf2f7eb483b58a4487eb009c6b3846`; sauberes Result-Bundle `specroad_Result_120209_0914_df3504.zip`; Repository-ID `3d2576df-d611-46fc-9d2b-92869468aaca`. Diese Angaben dokumentieren die Entstehung des Plans, nicht die zukünftige Patchbindung. **Jedes spätere Patchpaket bindet den dann aktuellen tatsächlichen Result-Zustand.**
 
 Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 2026 gelten zusätzlich und bei den nachfolgend benannten Konflikten vorrangig. Sonstige normative Spezifikationsinhalte werden nicht stillschweigend abgeschwächt. Neue fachliche Widersprüche, fehlende zwingende Angaben und Sicherheitsprobleme sind offen zu benennen, nicht durch erfundene Annahmen oder Scheinerfolge zu lösen.
@@ -33,6 +33,41 @@ ausdrückliche Bedienausnahme aus 2.4.3.2 bleibt zusätzlich anwendbar.
 Produktfreigaben und die Grenzen aus 2.4.1/2.4.2/2.4.4 bleiben unverändert.
 Dieser Plan ändert keine alten Aufträge, Antworten, Blockaden oder
 Laufzeitdaten und ist keine Start-/Resume-Anweisung.
+
+## MIGRATION-VERIFY-WORK-585 — optionale Klärung und vollständiges 16.k
+
+Autorität: delegiert gemäß SPECROAD-DECISION-1 und 2.4.3.1; Vertrag 4 erlaubt
+neue optionale Klärung mit drei Plätzen. Basis ist das nativ geprüfte saubere
+Result 7142693dd520a9180ccaceed440a0c09ff57162d84de71e0b9794fa3fae6276e,
+HEAD 9e2322929bbe6d97a5a09492f5bf9c2361f0da46. Bundle 584 hat alle drei
+16.j-Commits abgeschlossen (7922/7994/8011 Tests bestanden); Produktstand
+690/900. Diese Teilgates sind kein Vollsuite- oder M16-Freigabenachweis.
+
+Lücke: Q.5 verlangt vollständige Verifikation und Work-Fortsetzung, legt aber
+die Bericht-/Work-Eingaben, Phasenbeweise und Übergabe an den inzwischen
+vorhandenen Schema-Writer nicht fest. Ein gespeichertes Erfolgsflag als
+Freigabe oder Zwischenwrites je Work-Phase verletzen bestehende Pflichten.
+Ein zweiter Writer/Transportweg wäre unnötig. Gewählt ist der eng gebundene
+passive Adapter nach Q.5.2 mit vollständigen Bytes, nativer Neuberechnung,
+bestehenden Work-Paketen und genau einer frischen Writertransaktion.
+
+Die Lösung ist konservativ und reversibel: neue Berichte und Adapter sind
+versioniert; bestehende Writer-, Receipt- und Workdaten behalten ihre Bedeutung.
+Keine Nutzerentscheidung, kein Scope, Sicherheitsniveau, menschliches Review,
+Kompatibilität oder erforderlicher Nachweis wird geändert. Keine fremden
+Fakten oder Risikoakzeptanz werden erfunden. Der tatsächliche Plan endet M16
+mit 16.k, nicht 16.l. Öffentliche Pfad-/CLI-/Restore-Integration und volle
+verfügbare Suite bleiben ausdrücklich unbewiesene M16-Abschlussgates; die
+frühere unzutreffende Verweisung auf 16.l ersetzt sie nicht.
+
+W liefert die vollständige native lesende Prüfung einschließlich Liveziel,
+Bericht, Invarianten und vollständigen Quellen/Zielen. R ergänzt vollständige
+Work-Planung/Prüfung, Paket-/Sandboxfortsetzung, Manipulations-/Unterbrechungs-
+fälle und abschließende echte native Transaktion. C strukturiert gemeinsame
+Inventar-/Report-/Workbeweise ohne Fachänderung. Alle Phasen besitzen eigene
+ungefilterte Pflichtauswahlen zusätzlich zur fälligen N=3-Gruppe. Keine
+Verhaltenstests in Dev. Vorbereiteter Stand: Klärung; 16.k bleibt offen.
+Häkchen gelten erst nach jeweiligem erfolgreichen Apply-Gate und Commit.
 
 ## Korrekturbundle 584 — vollständiger offener Rest 16.j.W/R/C
 
@@ -2609,7 +2644,7 @@ Kein offener Produktplanschritt wird durch diese Testoptimierung abgeschlossen.
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 78
+plan_revision: 88
 implementation_plan_commits_total: 900
 implementation_plan_commits_completed: 690
 last_completed_plan_commit: 16.j.C
@@ -37095,7 +37130,7 @@ Die W-/R-/C-Abnahmen im obigen OFF-PLAN-Abschnitt gelten vollständig.
 
 **Umsetzung:** Quellbundle, Bericht, Zielwurzel, Referenzen, Legacy-Bytes und deklarierte Invarianten lesend verifizieren.
 
-**Verhaltensabnahme:** Vollständiger Nachweis deckt jede Quelle und jedes geplante Zielobjekt ab.
+**Verhaltensabnahme:** Vollständiger Nachweis nach Q.5.2 deckt jede Quelle und jedes geplante Zielobjekt ab; tatsächliches Liveziel, Originale, alte Hashes, vollständige aktuelle Validierung und negative Bindungs-/Pfad-/Berichtsfälle werden lesend geprüft.
 
 #### 16.k.R – Make it Right
 
@@ -37104,7 +37139,7 @@ Die W-/R-/C-Abnahmen im obigen OFF-PLAN-Abschnitt gelten vollständig.
 
 **Vervollständigung:** Planung/Prüfung über Work fortsetzen, Abschluss aber als eine Transaktion veröffentlichen.
 
-**Verhaltensabnahme:** Wiederholter Lauf, Sandboxwechsel und Unterbrechung liefern denselben Zielstand oder einen echten Blocker. Die W-Nachweise bleiben zusätzlich grün.
+**Verhaltensabnahme:** Jede native Work-Phase, exportiertes Paket und neue Sandbox erhalten vollständige Eingaben und Ergebnisse. Wiederholter Lauf, Fälschung und Unterbrechung liefern denselben Zielstand oder einen echten Blocker. Abschließend erfolgt genau eine tatsächliche native Migrationstransaktion; gespeicherte Work-Erfolge ersetzen keine frische Prüfung oder Autorität. Die W-Nachweise bleiben zusätzlich grün.
 
 #### 16.k.C – Make it Clean
 

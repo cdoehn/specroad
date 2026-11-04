@@ -37,7 +37,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "afce182331ecc65570abb7eb552207ed747cf95422e261c4d4d6772dfc5ae1dc",
+  "specification_sha256": "05fc7c2105c7deb731f8a6f46e9f6e2e366ecb8189c856bcccac587e130ef3fa",
   "steps": [
     "Merge complete source bytes into the closed namespaced carrier; verify byte-exact recovery from actual native JSON target bytes, preserved foreign extensions, deterministic source ordering and idempotent merge.",
     "Reject incompatible existing carriers, duplicate keys, tampered size/hash/Base64, noncanonical encodings, changed source/extensions/target bindings and invalid locations without overwriting inputs.",

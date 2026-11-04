@@ -1,19 +1,19 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.59
+## Version 0.2.60
 
 | Feld | Wert |
 |---|---|
 | Dokument-ID | `SR-SPEC-0001` |
-| Dokumentversion | `0.2.59` |
+| Dokumentversion | `0.2.60` |
 | Zielrelease | `SpecRoad Single-Repository Workbench 0.2.0` |
 | Status | **Fachlich konsolidierte Arbeitsgrundlage; technische Reviewentscheidung gesondert dokumentiert, formale Baseline-Freigabe und Produktabnahme nicht durch dieses Dokument erklärt** |
 | Stand | 4. November 2026 |
 | Sprache | Deutsch; technische Feldnamen, Enum-Werte und CLI-Kommandos Englisch |
-| Fachliche Quelle | **Diese Repositoryfassung v0.2.59 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.59 liegt mit dieser Änderung nicht vor.** |
+| Fachliche Quelle | **Diese Repositoryfassung v0.2.60 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.60 liegt mit dieser Änderung nicht vor.** |
 | Bearbeitbare Satzquelle | Diese Datei; eine spätere PDF muss denselben versionierten Inhalt wiedergeben. |
-| Vorgängerversion | Repository-Spezifikation v0.2.58 vom 4. November 2026; historische Nachweise bleiben unverändert. |
-| Prüf- und Entscheidungsgrundlage | MIGRATION-TRANSACTION-575 gemäß SPECROAD-DECISION-1/2.4.3.1, Vertrag 4: optionaler Klärungspräfix und vollständiges 16.i.W/R/C mit eigenen Apply-Gates. |
-| Änderungsart | Eng gebundene Erweiterung des gemeinsamen Writers um Schemawechsel, vollständige Sicherungsbindung und erhaltende Recovery; keine neue öffentliche Pfadfreigabe oder Reviewentscheidung. |
+| Vorgängerversion | Repository-Spezifikation v0.2.59 vom 4. November 2026; historische Nachweise bleiben unverändert. |
+| Prüf- und Entscheidungsgrundlage | MIGRATION-VERIFY-WORK-585 gemäß SPECROAD-DECISION-1/2.4.3.1, Vertrag 4: optionaler Klärungspräfix und vollständiges 16.k.W/R/C mit eigenen Apply-Gates. |
+| Änderungsart | Vollständige lesende Migrationsprüfung und passive, transportierbare Planung/Prüfung über Work; Veröffentlichung bleibt ausschließlich die bestehende native Migrationstransaktion. |
 
 > **Verbindlicher Quellenwechsel:** Die ausdrückliche Nutzerentscheidung REFERENCE-SOURCE-551 wird als v0.2.50 umgesetzt. Der neue Quellvertrag ist Entwurfsarbeit vom 3. November 2026, kein Nachweis eines früher existierenden Formats. Bestehende 0.2-Verträge, Transport-, Sicherheits- und Reviewgrenzen bleiben erhalten.
 
@@ -9887,6 +9887,88 @@ Die zugehörigen Testfixtures liegen versioniert im Implementierungsrepository. 
 ---
 
 ---
+
+### Q.5.2 Lesende Verifikation und Work — MIGRATION-VERIFY-WORK-585
+
+Diese Detailentscheidung konkretisiert SR-REQ-0271, SR-REQ-0285 und 16.k,
+ohne die Integrations- und Freigabepflichten von M16 aufzuheben.
+
+**Vollständige Prüfgrundlage.** Der native Verifier nimmt tatsächliche Bytes
+des vollständigen Quell-ZIP, des ursprünglichen Change Plans und seines
+Planungs-/Verlustberichts sowie eine vollständige Zielbeobachtung entgegen.
+Der Aufrufer bindet ZIP-, Source-Dateilisten-, Plan-, Input- und Berichthash
+sowie die Zielversion ausdrücklich. Der Bericht wird aus Quelle und Plan
+neu berechnet; gelieferte Erfolgsfelder ersetzen keine Prüfung. Jede Quelle
+und jede geplante Zieldatei erhält ihren vollständigen Pfad-/Größen-/Bytehash-
+Nachweis. Fehlende, zusätzliche oder veränderte Bytes verhindern Erfolg.
+Die nativ neu berechnete Zielwurzel, die gemeinsame vollständige Zielvalidierung,
+Referenzen, Anhänge, neue Pflichtdaten und die deklarierte Verlustfreiheit
+werden gemeinsam geprüft. Historische Originale, IDs und Baselinehashes
+werden mit ihren eigenen Quellalgorithmen vor/nach Migration verglichen.
+Fehlende echte Host-Fachdienste sind weiterhin Blocker.
+
+Der geschlossene Bericht migration-verification-v1 unterscheidet bereitgestellte
+Zielbytes von einer frisch lesend geprüften Projektwurzel. Er bindet alle
+obigen Eingaben, vollständige Inventare, Legacy-/Historienbefund und das
+tatsächliche gemeinsame Validierungsergebnis. Er erteilt weder Schreib- noch
+Reviewfreigabe, behauptet keinen externen Testlauf, keine aktuelle Evidence-
+Gültigkeit und keine Release-Readiness. Eine stabile doppelte Dateibeobachtung
+ist kein atomarer Snapshot. Beim lebenden Ziel sind genau die eigenen nativ
+verifizierten Transaktions-/Request-/Recoverybelege separat ausgewiesen;
+vorhandene passive Source-Betriebsdateien bleiben unverändert im Inventar.
+Unbekannte oder aktive Betriebszustände, unsichere Pfade und Änderungen
+während der Beobachtung blockieren. Historische Receipts allein beweisen
+niemals die heutige Zielgültigkeit.
+
+**Passive Work-Fortsetzung.** Die eingebauten Bibliotheksadapter dürfen
+vollständige Planung (migrate.plan, plan_output) und Prüfung (migrate.verify,
+read_only) in endliche, fest eingebaute Work-Phasen zerlegen. Work bewahrt
+die vollständigen Originalbytes und expliziten Mapping-/Akteur-/Zeit-/Request-
+Eingaben. Kein Wert wird beim Resume still neu gewählt. Geschlossene
+Phasenpläne, Eingabehashes, gespeicherte Teilbefunde und Endbericht werden
+beim Fortsetzen gegen die nativen Berechnungen geprüft. Ein von Daten
+deklarierter Handler oder ein positives Flag kann keine Phase bestätigen.
+Die bestehenden privaten Work-Verzeichnisse, Checkpointketten, Buildbindung
+und extern hashgebundenen Work-Pakete werden wiederverwendet. Sandboxwechsel
+rekonstruiert ausschließlich passive Arbeit; Besitzer-/Inode-/Lockzustände
+werden nicht übertragen. Ein inkompatibler Build oder verlorene Originale
+bleiben konkrete Blocker. Jeder Aufruf bestätigt höchstens eine neue Phase;
+vollständig gespeicherte Daten sind noch kein Publikationsbeleg.
+
+Planung verwendet ausschließlich Source-/Mappingbytes und prüft den vollständig
+berechneten Zielstand. Ihr Ergebnis unterscheidet diesen geplanten Zielstand
+ausdrücklich vom tatsächlichen Projekt. Prüf-Work bindet eine vollständige
+bereitgestellte Zielbeobachtung; spätere Zustandsänderungen verlangen erneut
+frische Projektverifikation und werden nicht durch alte Work-Ergebnisse geheilt.
+Die Adapter sind explizite Host-APIs mit echter registrierter CommandRegistry;
+sie registrieren keinen öffentlichen CLI-/Restorepfad durch Work-Daten.
+
+**Abschluss.** Nur ein vollständig erneut geprüftes Planungs-Work kann seinen
+ursprünglichen Plan an apply_migration_plan übergeben. Der Host liefert die
+aktuelle Projektwurzel, tatsächliche externe Sicherung, Transaktions-ID,
+echte PublicationAuthority und Fachdienste neu. Work enthält keine solche
+Autorität. Plan-/Input-/Sicherungsbindung müssen exakt übereinstimmen.
+Der gemeinsame Writer prüft die tatsächlichen Sourcebytes unter dem nativen
+Writerlock, validiert das gesamte Ziel frisch und veröffentlicht weiterhin
+genau eine Schema-Transaktion. Es gibt weder Zwischenpublikation pro Work-
+Phase noch automatische Recovery. Nach Unterbrechung gelten ausschließlich
+die bestehenden Journal-/Recoveryregeln. Wiederholung desselben Requests
+liefert nur das nativ bewiesene historische Ergebnis; keine neue Revision.
+Ein fehlender oder veränderter aktueller Nachweis wird nicht als Erfolg
+oder als neue Freigabe umgedeutet.
+
+**Abnahmen.** Vollständige vor/nach-Inventare, reale Migration, alte Originale,
+Baselines, tatsächliche neue Zieldaten, Bericht-/Plan-/ZIP-/Mappingtausch und
+fehlende Fachdienste werden geprüft. Work-Abnahmen vergleichen Einzellauf
+und jede gespeicherte Phasengrenze einschließlich externem Paket und neuer
+Sandbox, unvollständige/gefälschte Befunde, fremde Builds und echte I/O-
+Unterbrechungen. Die abschließende native Transaktion, Request-Replay,
+veränderte Livequelle und aktive Recovery bleiben integriert erforderlich.
+Die öffentlichen CLI-/Pfad- und Restore-Abnahmen sowie die volle verfügbare
+Suite bleiben eigene offene M16-Abschlussgates, solange sie nicht tatsächlich
+nachgewiesen sind; ein nicht existierender Planschritt 16.l wird nicht als
+Nachweis oder stillschweigende Auslagerung verwendet.
+
 
 ## R.1 Ergänzende Mehrsprachen- und Analyzer-Sollfälle
 
