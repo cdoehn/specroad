@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 89 · **Stand:** 4. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.60
+**Planrevision:** 90 · **Stand:** 4. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.60
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 Schritte und 900 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; die ausdrücklich genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wird nach 10.7.10 innerhalb von 15.l.R vorgezogen. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -33,6 +33,43 @@ ausdrückliche Bedienausnahme aus 2.4.3.2 bleibt zusätzlich anwendbar.
 Produktfreigaben und die Grenzen aus 2.4.1/2.4.2/2.4.4 bleiben unverändert.
 Dieser Plan ändert keine alten Aufträge, Antworten, Blockaden oder
 Laufzeitdaten und ist keine Start-/Resume-Anweisung.
+
+## Korrekturbundle 587 — vollständiger offener Rest 16.k.R/C
+
+Maßgeblich ist das nativ geprüfte Fehler-Result mit SHA-256
+`8f4baf39ea1f80fe68e1c6822668506b489dca2ce55a6478eb6673e2936d420a`,
+HEAD `5defc333804018dd62f6fc04a155d1ceeb9f72a6` und Dirty-Fingerprint
+`390a7d858e50ff96`. 16.k.W wurde nach 7251 bestandenen Tests committed.
+Der erfolgreiche W-Stand einschließlich Receipt-Korrektur bleibt erhalten;
+auch der zuvor abgeschlossene Klärungscommit wird nicht wiederholt.
+16.k.R scheiterte an einem Test, 8063 weitere Tests bestanden. Das erhaltene
+Arbeitsinventar entspricht exakt der angekündigten R-Stage von Bundle 586.
+Der tatsächliche Produktfortschritt ist 691/900; R/C sind noch offen.
+
+Der Unterbrechungstest für den committed-Zustand verglich den nativen
+Checkpointnamen mit dem bloßen Fallnamen committed. Der gemeinsame Writer
+meldet nach dauerhafter Journalpublikation jedoch journal:committed:<Anzahl>,
+wobei die Anzahl sämtliche tatsächlichen Planänderungen umfasst. Die
+gewünschte Ausnahme wurde deshalb nicht ausgelöst; der Writer beendete die
+Transaktion regulär. Der vorhandene direkte Writer-Regressionsfall verwendet
+diese vollständige Checkpointbindung bereits.
+
+Die Work-Abnahme bindet den committed-Fall jetzt an genau diesen nativen
+Checkpoint mit der aus dem tatsächlichen Plan ermittelten Änderungsanzahl.
+Sie weist für jeden der vier Fälle die wirklich ausgelöste Unterbrechung
+genau einmal und den unbekannten Schreibzustand nach. Die anschließende
+Prüfung der gesperrten Wiederholung, der expliziten nativen Recovery und des
+Quell- beziehungsweise Zielstands bleibt vollständig erhalten. Testidentitäten,
+Nummern und alle übrigen Testfälle bleiben unverändert; kein Fall entfällt.
+
+Sämtlicher Produktcode und die Spezifikation 0.2.60 mit Q.5.2 bleiben je Phase
+bytegleich zum angekündigten Stand. Keine neue normative Detailentscheidung,
+Freigabe oder Budgetänderung. Alle Vorherbytes und Korrekturbindungen werden
+an das neue Dirty-Result angepasst. Die vollständigen IDs 16.k.R und 16.k.C
+behalten Reihenfolge, Rollen und Pflichtauswahlen. Apply prüft jede Stage
+vor ihrem eigenen Commit mit N=3 plus voller Pflichtauswahl, Gruppen 2/0.
+Dev hat keine Verhaltenstests ausgeführt. M16-Integrations-/Vollsuitegates
+bleiben offen; vorbereitete Planhäkchen gelten erst nach tatsächlichem Commit.
 
 ## Korrekturbundle 586 — vollständiger offener Rest 16.k.W/R/C
 
@@ -102,7 +139,7 @@ Work-Planung/Prüfung, Paket-/Sandboxfortsetzung, Manipulations-/Unterbrechungs-
 fälle und abschließende echte native Transaktion. C strukturiert gemeinsame
 Inventar-/Report-/Workbeweise ohne Fachänderung. Alle Phasen besitzen eigene
 ungefilterte Pflichtauswahlen zusätzlich zur fälligen N=3-Gruppe. Keine
-Verhaltenstests in Dev. Vorbereiteter Stand: 16.k.W; M16-Abschlussgates bleiben offen.
+Verhaltenstests in Dev. Vorbereiteter Stand: 16.k.R; M16-Abschlussgates bleiben offen.
 Häkchen gelten erst nach jeweiligem erfolgreichen Apply-Gate und Commit.
 
 ## Korrekturbundle 584 — vollständiger offener Rest 16.j.W/R/C
@@ -2680,11 +2717,11 @@ Kein offener Produktplanschritt wird durch diese Testoptimierung abgeschlossen.
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 89
+plan_revision: 90
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 691
-last_completed_plan_commit: 16.k.W
-next_plan_commit: 16.k.R
+implementation_plan_commits_completed: 692
+last_completed_plan_commit: 16.k.R
+next_plan_commit: 16.k.C
 last_completed_numbered_bundle: 584
 implementation_state: in_progress
 audit_followup_status: closed
@@ -37170,7 +37207,7 @@ Die W-/R-/C-Abnahmen im obigen OFF-PLAN-Abschnitt gelten vollständig.
 
 #### 16.k.R – Make it Right
 
-- [ ] **16.k.R** · Position **692/900** · Voraussetzung: `16.k.W`.
+- [x] **16.k.R** · Position **692/900** · Voraussetzung: `16.k.W`.
 **Exakte Commit-Message:** `16.k.R feat(migration): Migrate verify und fortsetzbarer Abschluss vervollständigen`
 
 **Vervollständigung:** Planung/Prüfung über Work fortsetzen, Abschluss aber als eine Transaktion veröffentlichen.

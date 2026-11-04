@@ -24,7 +24,7 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Eine Legacy-Evidence DARF NICHT allein aufgrund einer neuen Pflichtfeldprojektion als aktueller bestandener Nachweis eines transformierten Subjects zählen.",
-    "scope": "16.k.W native complete verification of owned/live targets, all byte inventories and source-native historical algorithms. No Dev behavior test was executed; no public CLI/Restore or M16 release success is claimed."
+    "scope": "16.k.R native complete verification of owned/live targets, all byte inventories and source-native historical algorithms. R adds native Work planning/verification, portable checkpoint replay and actual final writer/recovery integration. No Dev behavior test was executed; no public CLI/Restore or M16 release success is claimed."
   },
   "preconditions": [
     "Actual complete source bytes and the fixed qualified source contract; postmigration full native legacy registry and all originals. Synthetic data claim no external run or human decision.",
@@ -52,7 +52,10 @@
     "Reject missing/changed registry originals, unsafe/open live sources, invented algorithms and unbound projections; refuse legacy format/update/lifecycle writes.",
     "Without the required current-contract host, native migration must fail before journal creation and preserve every normative source byte.",
     "Recompute the full planning/loss report and target model from original source bytes; verify every source/target byte, current native model and unchanged historical original/hash closure.",
-    "Observe a real completed native migration with verified receipts; reject stale or incomplete targets, extra files, unsafe paths, active recovery and tampered bindings/reports without writes."
+    "Observe a real completed native migration with verified receipts; reject stale or incomplete targets, extra files, unsafe paths, active recovery and tampered bindings/reports without writes.",
+    "Resume every native source/plan/verification phase through actual Work checkpoints and hash-bound external packages into a new sandbox and process; compare full results with direct execution.",
+    "Reject forged phases/completion, changed runtime, missing source/backup/authority and interrupted checkpoints; preserve the confirmed prefix or return a concrete blocker.",
+    "Publish one final actual native migration transaction with fresh live checks, then prove historical request replay and explicit recovery after interruption."
   ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0642",
@@ -144,6 +147,42 @@
     "tests/test_migration_verification.py::test_rehashed_positive_report_is_recomputed_not_trusted[expected_target_model_root_sha256]",
     "tests/test_migration_verification.py::test_rehashed_positive_report_is_recomputed_not_trusted[loss_report]",
     "tests/test_migration_verification.py::test_rehashed_positive_report_is_recomputed_not_trusted[ready]",
-    "tests/test_migration_verification.py::test_rehashed_positive_report_is_recomputed_not_trusted[write_authorized]"
+    "tests/test_migration_verification.py::test_rehashed_positive_report_is_recomputed_not_trusted[write_authorized]",
+    "tests/test_migration_work.py::test_actual_partial_work_object_write_keeps_confirmed_prefix",
+    "tests/test_migration_work.py::test_changed_runtime_cannot_resume_or_publish",
+    "tests/test_migration_work.py::test_checkpoint_write_failure_retains_a_reusable_confirmed_prefix[0]",
+    "tests/test_migration_work.py::test_checkpoint_write_failure_retains_a_reusable_confirmed_prefix[1]",
+    "tests/test_migration_work.py::test_checkpoint_write_failure_retains_a_reusable_confirmed_prefix[2]",
+    "tests/test_migration_work.py::test_checkpoint_write_failure_retains_a_reusable_confirmed_prefix[3]",
+    "tests/test_migration_work.py::test_complete_work_then_exactly_one_real_transaction_and_historical_replay",
+    "tests/test_migration_work.py::test_every_phase_survives_external_package_and_sandbox_loss[0-plan]",
+    "tests/test_migration_work.py::test_every_phase_survives_external_package_and_sandbox_loss[0-verify]",
+    "tests/test_migration_work.py::test_every_phase_survives_external_package_and_sandbox_loss[1-plan]",
+    "tests/test_migration_work.py::test_every_phase_survives_external_package_and_sandbox_loss[1-verify]",
+    "tests/test_migration_work.py::test_every_phase_survives_external_package_and_sandbox_loss[2-plan]",
+    "tests/test_migration_work.py::test_every_phase_survives_external_package_and_sandbox_loss[2-verify]",
+    "tests/test_migration_work.py::test_every_phase_survives_external_package_and_sandbox_loss[3-plan]",
+    "tests/test_migration_work.py::test_every_phase_survives_external_package_and_sandbox_loss[3-verify]",
+    "tests/test_migration_work.py::test_every_phase_survives_external_package_and_sandbox_loss[4-plan]",
+    "tests/test_migration_work.py::test_every_phase_survives_external_package_and_sandbox_loss[4-verify]",
+    "tests/test_migration_work.py::test_final_publication_still_requires_fresh_native_live_bindings[authority]",
+    "tests/test_migration_work.py::test_final_publication_still_requires_fresh_native_live_bindings[backup]",
+    "tests/test_migration_work.py::test_final_publication_still_requires_fresh_native_live_bindings[source]",
+    "tests/test_migration_work.py::test_final_publication_still_requires_fresh_native_live_bindings[verify_mode]",
+    "tests/test_migration_work.py::test_forged_complete_result_is_not_a_write_capability",
+    "tests/test_migration_work.py::test_incomplete_work_cannot_publish_or_claim_final_verification[0]",
+    "tests/test_migration_work.py::test_incomplete_work_cannot_publish_or_claim_final_verification[1]",
+    "tests/test_migration_work.py::test_incomplete_work_cannot_publish_or_claim_final_verification[2]",
+    "tests/test_migration_work.py::test_incomplete_work_cannot_publish_or_claim_final_verification[3]",
+    "tests/test_migration_work.py::test_new_process_needs_only_bound_package_runtime_and_explicit_host",
+    "tests/test_migration_work.py::test_real_phases_equal_direct_native_results_and_preserve_source[plan]",
+    "tests/test_migration_work.py::test_real_phases_equal_direct_native_results_and_preserve_source[verify]",
+    "tests/test_migration_work.py::test_rehashed_fabricated_completed_phase_is_not_execution_proof[0]",
+    "tests/test_migration_work.py::test_rehashed_fabricated_completed_phase_is_not_execution_proof[1]",
+    "tests/test_migration_work.py::test_rehashed_fabricated_completed_phase_is_not_execution_proof[2]",
+    "tests/test_migration_work.py::test_writer_interruption_requires_native_recovery_not_work_replay[archived]",
+    "tests/test_migration_work.py::test_writer_interruption_requires_native_recovery_not_work_replay[committed]",
+    "tests/test_migration_work.py::test_writer_interruption_requires_native_recovery_not_work_replay[journal:prepared:0]",
+    "tests/test_migration_work.py::test_writer_interruption_requires_native_recovery_not_work_replay[receipts]"
   ]
 }

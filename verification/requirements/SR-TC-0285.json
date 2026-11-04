@@ -4,27 +4,32 @@
   "expected_exit_codes": [
     0,
     3,
-    5
+    5,
+    6
   ],
   "fixture_ids": [
     "SR-FIX-FORMAT-ROUNDTRIPS-v1",
-    "SR-FIX-IMPORT-WORK-v1"
+    "SR-FIX-IMPORT-WORK-v1",
+    "SR-FIX-MIGRATION-VERIFY-WORK-v1"
   ],
   "implementation_status": "partial",
   "json_pointers": [],
   "method": "automated_behavior",
   "open_items": [
     "The bounded explicit-candidate adapter is not a complete import CLI or a general relation/attachment import parser. Existing W format-intersection losses remain explicit; memory-resident candidate and final whole-target evaluation are not a generic streaming-engine claim.",
-    "Synthetic test-host gates and publication authority authenticate no real human. Actual migration/merge, foreign-tool interoperability, whole-project bundle and cross-platform release evidence require their own bound executions."
+    "Synthetic test-host gates and publication authority authenticate no real human. Actual migration/merge, foreign-tool interoperability, whole-project bundle and cross-platform release evidence require their own bound executions.",
+    "Prepared 16.k behavior requires its own actual Apply gates. Static checks and collection are not behavior evidence.",
+    "The M16 public CLI/path/Restore integration gate and full available suite remain explicitly unproved; nonexistent 16.l is not a substitute."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Import, Migration und Merge MÜSSEN erhaltene Relationsreviews nur dann als `current` übernehmen, wenn Relation sowie Quell- und Ziel-Kontextprojektion nach der Operation exakt den im Review gebundenen Hashes entsprechen; andernfalls erscheinen sie als `suspect` oder `unreviewed`.",
-    "scope": "14.o.W: explicit nine-artifact corpus roundtrips in three languages. NDJSON and separate single-type typed-JSON CSV profiles preserve all artifact fields, review hashes, configuration values, ordered relations and transported attachments. Rebuilt model roots and actual relation-review statuses are compared. ReqIF/ReqIFZ preserve their explicitly mapped native/external identities, scalar/XHTML values, ordered hierarchy and relation identities plus attachment bytes; unsupported review/configuration/evidence records and native project resources remain explicit losses. No missing native data is filled from source-only records and no full import, review authentication, approval or release success is claimed. 14.o.R: changed native review bindings resolve to suspect/unreviewed. For the existing explicit_parsed_artifacts profile, durable per-candidate Work plus a whole-target reduction equals the direct import plan and actual published native target across CSV, NDJSON, ReqIF and ReqIFZ. Completed mapping/comparison units are reused; original inputs and mapping bytes remain owned in Work; final plan data alone grants no approval or execution truth. The native writer revalidates the full plan with current explicit inputs, trusted gates and live authority. Invalid plans retain their findings; incomplete, rehashed-inconsistent or incompatible Work is not promoted to completion. Fresh Core/PYZ process resumes and replay are checked on the current platform."
+    "scope": "16.k.R native complete verification of owned/live targets, all byte inventories and source-native historical algorithms. R adds native Work planning/verification, portable checkpoint replay and actual final writer/recovery integration. No Dev behavior test was executed; no public CLI/Restore or M16 release success is claimed."
   },
   "preconditions": [
     "Owned nine-artifact corpus with ordered document occurrences, external identities, two bound attachment payloads, a configuration artifact and synthetic hash-bound relation review; no real approval is claimed.",
-    "Owned explicit parsed artifact candidates from real CSV, NDJSON, ReqIF and ReqIFZ codecs; supplied mappings and complete creation envelopes; retained synthetic relation review with native status checks; explicit trusted test-host gates and publication authority. No authentic human approval is claimed."
+    "Owned explicit parsed artifact candidates from real CSV, NDJSON, ReqIF and ReqIFZ codecs; supplied mappings and complete creation envelopes; retained synthetic relation review with native status checks; explicit trusted test-host gates and publication authority. No authentic human approval is claimed.",
+    "Complete actual source backup, explicit original native plan/report and external bindings; full target bytes, genuine host semantic services and no invented authority."
   ],
   "primary_verification_id": "SR-VER-0021",
   "required_environment": {
@@ -48,7 +53,12 @@
     "Persist all candidate units and the final whole-target reduction in real Work checkpoints, reopen after each window and compare exact canonical ImportPlan bytes to the single-run planner across all four formats, two resource profiles and three window sizes.",
     "Execute both plans through the existing native import writer with current inputs and explicit live authority; compare actual target bytes, semantic roots, audit operations, all four literal object values and the retained suspect review.",
     "Require complete object coverage after relocation and loss of the original source, no rerun of completed mapping kernels, original late-error contracts, preserved durable generations on checkpoint failure and refusal of inconsistent or incomplete evidence.",
-    "Build actual Core and PYZ distributions, resume each Work unit in a fresh process after moving distribution and Work directories, and require identical completed planning results without live project writes or inferred authority."
+    "Build actual Core and PYZ distributions, resume each Work unit in a fresh process after moving distribution and Work directories, and require identical completed planning results without live project writes or inferred authority.",
+    "Recompute the full planning/loss report and target model from original source bytes; verify every source/target byte, current native model and unchanged historical original/hash closure.",
+    "Observe a real completed native migration with verified receipts; reject stale or incomplete targets, extra files, unsafe paths, active recovery and tampered bindings/reports without writes.",
+    "Resume every native source/plan/verification phase through actual Work checkpoints and hash-bound external packages into a new sandbox and process; compare full results with direct execution.",
+    "Reject forged phases/completion, changed runtime, missing source/backup/authority and interrupted checkpoints; preserve the confirmed prefix or return a concrete blocker.",
+    "Publish one final actual native migration transaction with fresh live checks, then prove historical request replay and explicit recovery after interruption."
   ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0285",
@@ -98,6 +108,74 @@
     "tests/test_import_work.py::test_every_candidate_plan_and_native_target_equal_direct_execution[standard-2-csv]",
     "tests/test_import_work.py::test_every_candidate_plan_and_native_target_equal_direct_execution[standard-2-ndjson]",
     "tests/test_import_work.py::test_every_candidate_plan_and_native_target_equal_direct_execution[standard-2-reqif]",
-    "tests/test_import_work.py::test_every_candidate_plan_and_native_target_equal_direct_execution[standard-2-reqifz]"
+    "tests/test_import_work.py::test_every_candidate_plan_and_native_target_equal_direct_execution[standard-2-reqifz]",
+    "tests/test_migration_verification.py::test_complete_byte_inventory_and_native_target_validation_are_read_only",
+    "tests/test_migration_verification.py::test_every_external_binding_is_required[expected_backup_sha256]",
+    "tests/test_migration_verification.py::test_every_external_binding_is_required[expected_inputs_sha256]",
+    "tests/test_migration_verification.py::test_every_external_binding_is_required[expected_plan_sha256]",
+    "tests/test_migration_verification.py::test_every_external_binding_is_required[expected_report_sha256]",
+    "tests/test_migration_verification.py::test_every_external_binding_is_required[expected_source_files_sha256]",
+    "tests/test_migration_verification.py::test_every_external_binding_is_required[expected_target_version]",
+    "tests/test_migration_verification.py::test_historical_originals_and_hashes_survive_full_verification[failed-False]",
+    "tests/test_migration_verification.py::test_historical_originals_and_hashes_survive_full_verification[failed-True]",
+    "tests/test_migration_verification.py::test_historical_originals_and_hashes_survive_full_verification[incomplete-False]",
+    "tests/test_migration_verification.py::test_historical_originals_and_hashes_survive_full_verification[incomplete-True]",
+    "tests/test_migration_verification.py::test_historical_originals_and_hashes_survive_full_verification[passed-False]",
+    "tests/test_migration_verification.py::test_historical_originals_and_hashes_survive_full_verification[passed-True]",
+    "tests/test_migration_verification.py::test_historical_originals_and_hashes_survive_full_verification[skipped-False]",
+    "tests/test_migration_verification.py::test_historical_originals_and_hashes_survive_full_verification[skipped-True]",
+    "tests/test_migration_verification.py::test_live_target_and_receipts_must_still_exist_unchanged[active]",
+    "tests/test_migration_verification.py::test_live_target_and_receipts_must_still_exist_unchanged[extra]",
+    "tests/test_migration_verification.py::test_live_target_and_receipts_must_still_exist_unchanged[receipt]",
+    "tests/test_migration_verification.py::test_live_target_and_receipts_must_still_exist_unchanged[symlink]",
+    "tests/test_migration_verification.py::test_live_target_and_receipts_must_still_exist_unchanged[target]",
+    "tests/test_migration_verification.py::test_live_verifier_qualifies_real_transaction_and_current_target",
+    "tests/test_migration_verification.py::test_no_source_or_target_byte_can_be_omitted_from_validation[additional]",
+    "tests/test_migration_verification.py::test_no_source_or_target_byte_can_be_omitted_from_validation[archive]",
+    "tests/test_migration_verification.py::test_no_source_or_target_byte_can_be_omitted_from_validation[changed]",
+    "tests/test_migration_verification.py::test_no_source_or_target_byte_can_be_omitted_from_validation[configuration]",
+    "tests/test_migration_verification.py::test_no_source_or_target_byte_can_be_omitted_from_validation[legacy]",
+    "tests/test_migration_verification.py::test_no_source_or_target_byte_can_be_omitted_from_validation[missing]",
+    "tests/test_migration_verification.py::test_old_history_does_not_replace_required_current_semantic_service",
+    "tests/test_migration_verification.py::test_rehashed_positive_report_is_recomputed_not_trusted[expected_target_model_root_sha256]",
+    "tests/test_migration_verification.py::test_rehashed_positive_report_is_recomputed_not_trusted[loss_report]",
+    "tests/test_migration_verification.py::test_rehashed_positive_report_is_recomputed_not_trusted[ready]",
+    "tests/test_migration_verification.py::test_rehashed_positive_report_is_recomputed_not_trusted[write_authorized]",
+    "tests/test_migration_work.py::test_actual_partial_work_object_write_keeps_confirmed_prefix",
+    "tests/test_migration_work.py::test_changed_runtime_cannot_resume_or_publish",
+    "tests/test_migration_work.py::test_checkpoint_write_failure_retains_a_reusable_confirmed_prefix[0]",
+    "tests/test_migration_work.py::test_checkpoint_write_failure_retains_a_reusable_confirmed_prefix[1]",
+    "tests/test_migration_work.py::test_checkpoint_write_failure_retains_a_reusable_confirmed_prefix[2]",
+    "tests/test_migration_work.py::test_checkpoint_write_failure_retains_a_reusable_confirmed_prefix[3]",
+    "tests/test_migration_work.py::test_complete_work_then_exactly_one_real_transaction_and_historical_replay",
+    "tests/test_migration_work.py::test_every_phase_survives_external_package_and_sandbox_loss[0-plan]",
+    "tests/test_migration_work.py::test_every_phase_survives_external_package_and_sandbox_loss[0-verify]",
+    "tests/test_migration_work.py::test_every_phase_survives_external_package_and_sandbox_loss[1-plan]",
+    "tests/test_migration_work.py::test_every_phase_survives_external_package_and_sandbox_loss[1-verify]",
+    "tests/test_migration_work.py::test_every_phase_survives_external_package_and_sandbox_loss[2-plan]",
+    "tests/test_migration_work.py::test_every_phase_survives_external_package_and_sandbox_loss[2-verify]",
+    "tests/test_migration_work.py::test_every_phase_survives_external_package_and_sandbox_loss[3-plan]",
+    "tests/test_migration_work.py::test_every_phase_survives_external_package_and_sandbox_loss[3-verify]",
+    "tests/test_migration_work.py::test_every_phase_survives_external_package_and_sandbox_loss[4-plan]",
+    "tests/test_migration_work.py::test_every_phase_survives_external_package_and_sandbox_loss[4-verify]",
+    "tests/test_migration_work.py::test_final_publication_still_requires_fresh_native_live_bindings[authority]",
+    "tests/test_migration_work.py::test_final_publication_still_requires_fresh_native_live_bindings[backup]",
+    "tests/test_migration_work.py::test_final_publication_still_requires_fresh_native_live_bindings[source]",
+    "tests/test_migration_work.py::test_final_publication_still_requires_fresh_native_live_bindings[verify_mode]",
+    "tests/test_migration_work.py::test_forged_complete_result_is_not_a_write_capability",
+    "tests/test_migration_work.py::test_incomplete_work_cannot_publish_or_claim_final_verification[0]",
+    "tests/test_migration_work.py::test_incomplete_work_cannot_publish_or_claim_final_verification[1]",
+    "tests/test_migration_work.py::test_incomplete_work_cannot_publish_or_claim_final_verification[2]",
+    "tests/test_migration_work.py::test_incomplete_work_cannot_publish_or_claim_final_verification[3]",
+    "tests/test_migration_work.py::test_new_process_needs_only_bound_package_runtime_and_explicit_host",
+    "tests/test_migration_work.py::test_real_phases_equal_direct_native_results_and_preserve_source[plan]",
+    "tests/test_migration_work.py::test_real_phases_equal_direct_native_results_and_preserve_source[verify]",
+    "tests/test_migration_work.py::test_rehashed_fabricated_completed_phase_is_not_execution_proof[0]",
+    "tests/test_migration_work.py::test_rehashed_fabricated_completed_phase_is_not_execution_proof[1]",
+    "tests/test_migration_work.py::test_rehashed_fabricated_completed_phase_is_not_execution_proof[2]",
+    "tests/test_migration_work.py::test_writer_interruption_requires_native_recovery_not_work_replay[archived]",
+    "tests/test_migration_work.py::test_writer_interruption_requires_native_recovery_not_work_replay[committed]",
+    "tests/test_migration_work.py::test_writer_interruption_requires_native_recovery_not_work_replay[journal:prepared:0]",
+    "tests/test_migration_work.py::test_writer_interruption_requires_native_recovery_not_work_replay[receipts]"
   ]
 }

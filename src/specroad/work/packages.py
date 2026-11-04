@@ -32,7 +32,8 @@ def _supported(manifest):
     value = manifest.as_dict()
     restore = value['command_class'] == 'recovery_write' and value['command_id'] == 'recover.restore'
     transport = value['command_class'] == 'transport_operational' and value['command_id'] == 'bundle.create'
-    if value['command_class'] != 'read_only' and not restore and not transport:
+    migration_plan = value['command_class'] == 'plan_output' and value['command_id'] == 'migrate.plan'
+    if value['command_class'] != 'read_only' and not restore and not transport and not migration_plan:
         raise ArchiveError('normative_work_package_requires_native_binding', exit_code=6)
 
 
