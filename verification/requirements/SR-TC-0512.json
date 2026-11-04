@@ -2,19 +2,24 @@
   "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [],
   "expected_exit_codes": [],
-  "fixture_ids": [],
-  "implementation_status": "open",
+  "fixture_ids": [
+    "SR-FIX-MIGRATION-LOSS-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [],
-  "method": "pending",
+  "method": "automated_behavior",
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Prepared behavior tests require their actual separate Apply gates; none ran in Dev.",
+    "Public migration CLI, writer/Recovery and actual final execution report remain in subsequent M16 steps; no lossy reference path is authorized."
   ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Jeder ausdrücklich akzeptierte Migrationsverlust MUSS einzeln im Abschlussbericht ausgewiesen werden.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Complete native 16.h W preservation/loss observations; explicit acceptance library in R. Public CLI/transaction/final-report integration remains assigned to subsequent M16 steps. No full migration or release acceptance is claimed."
   },
-  "preconditions": [],
+  "preconditions": [
+    "Qualified synthetic source contract and actual owned candidate bytes; no public migration writer or real human consent."
+  ],
   "primary_verification_id": "SR-VER-0020",
   "required_environment": {
     "declared_minimum_python": "3.10",
@@ -28,8 +33,31 @@
     "owned_temporary_files": true
   },
   "specification_sha256": "453cfffee201512305bce7ca0ab12c0a6a94e097c1eb67ba94679f76cce9ea3c",
-  "steps": [],
+  "steps": [
+    "Preserve unknown nested extensions, IDs, external provenance, original archives, attachments and historical audit values across native planning.",
+    "Enumerate independent semantic and byte losses with actual values, canonical ordering, full source/target/input bindings and independently checked SHA-256 identities.",
+    "Refuse a lossy reference candidate before emitting any executable Change Plan; retain missing-input and original-protection boundaries."
+  ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0512",
-  "test_ids": []
+  "test_ids": [
+    "tests/test_migration_losses.py::test_closed_history_originals_payloads_and_audit_remain_byte_identical[applied]",
+    "tests/test_migration_losses.py::test_closed_history_originals_payloads_and_audit_remain_byte_identical[rejected]",
+    "tests/test_migration_losses.py::test_closed_history_originals_payloads_and_audit_remain_byte_identical[stale]",
+    "tests/test_migration_losses.py::test_conflicting_configuration_values_are_not_silently_repaired",
+    "tests/test_migration_losses.py::test_declared_target_resource_cannot_disappear_after_transformation",
+    "tests/test_migration_losses.py::test_each_protected_location_is_inventoried_without_rewriting[archive]",
+    "tests/test_migration_losses.py::test_each_protected_location_is_inventoried_without_rewriting[manifest]",
+    "tests/test_migration_losses.py::test_each_protected_location_is_inventoried_without_rewriting[original]",
+    "tests/test_migration_losses.py::test_each_protected_location_is_inventoried_without_rewriting[payload]",
+    "tests/test_migration_losses.py::test_explicit_configuration_preserves_old_namespaces_and_can_add_new_ones",
+    "tests/test_migration_losses.py::test_inventory_is_deterministic_and_owns_nested_values",
+    "tests/test_migration_losses.py::test_lossless_plan_still_passes_native_recheck_without_any_write_permission",
+    "tests/test_migration_losses.py::test_missing_configuration_namespace_is_visible_and_blocks_the_entire_plan",
+    "tests/test_migration_losses.py::test_missing_inputs_do_not_claim_an_empty_successful_loss_inventory",
+    "tests/test_migration_losses.py::test_multiple_losses_have_literal_values_and_fully_bound_independent_ids",
+    "tests/test_migration_losses.py::test_open_proposal_keeps_original_audit_and_its_original_archive",
+    "tests/test_migration_losses.py::test_planner_detects_accidental_transformer_loss_before_releasing_a_change_plan",
+    "tests/test_migration_losses.py::test_unknown_nested_extensions_and_external_provenance_remain_exact"
+  ]
 }

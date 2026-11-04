@@ -24631,6 +24631,24 @@
     "tests/test_legacy_manifest_right.py::test_write_target_authorization_refuses_protected_originals[archive]",
     "tests/test_legacy_manifest_right.py::test_write_target_authorization_refuses_protected_originals[current]",
     "tests/test_legacy_manifest_right.py::test_write_target_authorization_refuses_protected_originals[manifest]",
-    "tests/test_legacy_manifest_right.py::test_wrong_expected_type_never_uses_legacy_bypass"
+    "tests/test_legacy_manifest_right.py::test_wrong_expected_type_never_uses_legacy_bypass",
+    "tests/test_migration_losses.py::test_closed_history_originals_payloads_and_audit_remain_byte_identical[applied]",
+    "tests/test_migration_losses.py::test_closed_history_originals_payloads_and_audit_remain_byte_identical[rejected]",
+    "tests/test_migration_losses.py::test_closed_history_originals_payloads_and_audit_remain_byte_identical[stale]",
+    "tests/test_migration_losses.py::test_conflicting_configuration_values_are_not_silently_repaired",
+    "tests/test_migration_losses.py::test_declared_target_resource_cannot_disappear_after_transformation",
+    "tests/test_migration_losses.py::test_each_protected_location_is_inventoried_without_rewriting[archive]",
+    "tests/test_migration_losses.py::test_each_protected_location_is_inventoried_without_rewriting[manifest]",
+    "tests/test_migration_losses.py::test_each_protected_location_is_inventoried_without_rewriting[original]",
+    "tests/test_migration_losses.py::test_each_protected_location_is_inventoried_without_rewriting[payload]",
+    "tests/test_migration_losses.py::test_explicit_configuration_preserves_old_namespaces_and_can_add_new_ones",
+    "tests/test_migration_losses.py::test_inventory_is_deterministic_and_owns_nested_values",
+    "tests/test_migration_losses.py::test_lossless_plan_still_passes_native_recheck_without_any_write_permission",
+    "tests/test_migration_losses.py::test_missing_configuration_namespace_is_visible_and_blocks_the_entire_plan",
+    "tests/test_migration_losses.py::test_missing_inputs_do_not_claim_an_empty_successful_loss_inventory",
+    "tests/test_migration_losses.py::test_multiple_losses_have_literal_values_and_fully_bound_independent_ids",
+    "tests/test_migration_losses.py::test_open_proposal_keeps_original_audit_and_its_original_archive",
+    "tests/test_migration_losses.py::test_planner_detects_accidental_transformer_loss_before_releasing_a_change_plan",
+    "tests/test_migration_losses.py::test_unknown_nested_extensions_and_external_provenance_remain_exact"
   ]
 }

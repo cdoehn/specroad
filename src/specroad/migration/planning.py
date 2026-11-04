@@ -15,6 +15,7 @@ from .plan_originals import _original_archive
 from .relation_derivation import _relation, _SourceRelations
 from .plan_target import _target_fields, _stamp, _manifest
 from .requirement_mapping import authored_fields
+from .losses import _assess_qualified
 
 PROJECT_SCOPE = {'scope_version': 'scope-v1', 'scope_kind': 'project', 'selector': {},
     'configuration_id': None, 'closure_profile': 'core-closure-v1', 'boundary_policy': 'closed'}
@@ -57,7 +58,8 @@ def _plan(files, *, inputs, actor, planned_at, change_plan_id, request_id, targe
         'inputs_sha256': digest(inputs), 'ready': False, 'blockers': sorted(blockers, key=lambda x: (x['path'], x['reason'])),
         'change_plan': None, 'expected_target_model_root_sha256': None,
         'expected_proposal_basis_sha256': None, 'write_authorized': False, 'approval_granted': False,
-        'public_apply_supported': False, 'backup_verified': False, 'current_readiness_verified': False}
+        'public_apply_supported': False, 'backup_verified': False, 'current_readiness_verified': False,
+        'loss_report': None}
     # Missing proposal plans do not prevent calculation of their required basis.
     if target is None or any(b['reason'] != 'proposal_mapping_required' for b in blockers):
         return MigrationPlanning._create(report)
@@ -113,6 +115,12 @@ def _plan(files, *, inputs, actor, planned_at, change_plan_id, request_id, targe
         regular.append(value); current[original.path] = jcs(value) + b'\n'
     # Cross-resource collisions and file/directory conflicts are checked before any output.
     current = owned_files(current)
+    preservation = _assess_qualified(inventory, source, current, inputs, actor, planned_at, source_relations)
+    report['loss_report'] = preservation.data
+    if not preservation.lossless:
+        report['blockers'] = [{'reason': 'migration_lossless_contract_violation', 'path': path}
+                             for path in sorted({r['path'] for r in preservation.data['losses']})]
+        return MigrationPlanning._create(report)
     final = _manifest(target, regular, legacy, legacy_hash, archive, inventory, PROJECT_SCOPE)
     results = [{'artifact': v, 'sha256': digest(v)} for v in sorted(regular, key=lambda v: v['id'])]
     source_rows, target_rows = file_bindings(source), file_bindings(current)
