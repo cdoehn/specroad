@@ -24776,6 +24776,18 @@
     "tests/test_migration_transaction_right.py::test_recovery_rejects_unproven_bytes_without_normative_writes[pending_name]",
     "tests/test_migration_transaction_right.py::test_recovery_resumes_partial_initial_rollback_marker[0]",
     "tests/test_migration_transaction_right.py::test_recovery_resumes_partial_initial_rollback_marker[19]",
-    "tests/test_migration_transaction_right.py::test_recovery_resumes_partial_initial_rollback_marker[None]"
+    "tests/test_migration_transaction_right.py::test_recovery_resumes_partial_initial_rollback_marker[None]",
+    "tests/test_migration_history.py::test_actual_writer_preserves_historical_report_and_baseline_verifier",
+    "tests/test_migration_history.py::test_fixed_contract_baseline_uses_stored_original_root_and_bytes",
+    "tests/test_migration_history.py::test_historical_absent_configuration_is_not_invented",
+    "tests/test_migration_history.py::test_history_retains_exact_records_and_source_algorithms_across_migration[False-failed]",
+    "tests/test_migration_history.py::test_history_retains_exact_records_and_source_algorithms_across_migration[False-incomplete]",
+    "tests/test_migration_history.py::test_history_retains_exact_records_and_source_algorithms_across_migration[False-passed]",
+    "tests/test_migration_history.py::test_history_retains_exact_records_and_source_algorithms_across_migration[False-skipped]",
+    "tests/test_migration_history.py::test_history_retains_exact_records_and_source_algorithms_across_migration[True-failed]",
+    "tests/test_migration_history.py::test_history_retains_exact_records_and_source_algorithms_across_migration[True-incomplete]",
+    "tests/test_migration_history.py::test_history_retains_exact_records_and_source_algorithms_across_migration[True-passed]",
+    "tests/test_migration_history.py::test_history_retains_exact_records_and_source_algorithms_across_migration[True-skipped]",
+    "tests/test_migration_history.py::test_original_whitespace_bytes_and_historical_report_are_owned"
   ]
 }

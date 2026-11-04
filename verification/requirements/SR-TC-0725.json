@@ -3,6 +3,7 @@
   "expected_diagnostics": [],
   "expected_exit_codes": [],
   "fixture_ids": [
+    "SR-FIX-MIGRATION-HISTORY-v1",
     "SR-FIX-MIGRATION-PLAN-v1",
     "SR-FIX-MIGRATION-REQUIREMENTS-v1",
     "SR-FIX-REFERENCE01-SOURCE-v1_0_1"
@@ -11,17 +12,19 @@
   "json_pointers": [],
   "method": "automated_behavior",
   "open_items": [
-    "Behavior tests are prepared for the separate Apply gate; none ran in Dev.",
-    "Public migration/CLI/Restore and transaction/global verification gates remain in subsequent M16 steps; no other draft source format is newly qualified.",
-    "Synthetic source reviews and authored test mappings grant no actual human approval or current release readiness."
+    "Prepared tests require the real separate Apply gates; no test bodies or fixtures ran in Dev.",
+    "Migrate verify, public migration registration/CLI and Restore remain separate following steps. No current approval or real external historical compatibility is invented.",
+    "16.j.R completes explicit current-context stale assessment and write-refusal/negative cases."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Die Migration DARF NICHT unveränderbare historische Nachweise zur Ergänzung neuer Sprach- oder Verbindlichkeitsfelder überschreiben.",
-    "scope": "16.e R: explicit author mapping on the native reference migration planner, with exact language/force/text, default expansion, original-byte preservation and no inherited approval. No public migration execution, current review, CLI/Restore, full-suite or release proof."
+    "scope": "16.e R: explicit author mapping on the native reference migration planner, with exact language/force/text, default expansion, original-byte preservation and no inherited approval. No public migration execution, current review, CLI/Restore, full-suite or release proof. 16.j W: complete historical source-integrity reports and original baseline verification; current readiness is separate. R adds explicit stale context and native write-refusal boundaries. Collection is not a behavior pass; public CLI/migration registration/Restore remain in following M16 steps. Correction 583 fixes only invalid synthetic configuration declarations; original test bodies, pass criteria and production validation remain unchanged. Correction 584 retains full product gates and actual migration, compares native host observations, and adds an R refusal case without the required host."
   },
   "preconditions": [
-    "Qualified reference-0.1/1.0.1 source and explicit authored target mappings under 12.20.2 and S.7; no inferred historical compatibility."
+    "Actual complete source bytes and the fixed qualified source contract; postmigration full native legacy registry and all originals. Synthetic data claim no external run or human decision.",
+    "Correction 583: the unconfigured synthetic Verification contract and its Evidence explicitly declare independent configuration; original context hashes and sealed snapshots are constructed after this declaration.",
+    "Correction 584: the actual writer test registers a narrow native-checking host for its draft Verification contract; old Evidence remains explicitly context-unverified."
   ],
   "primary_verification_id": "SR-VER-0049",
   "required_environment": {
@@ -37,14 +40,24 @@
   },
   "specification_sha256": "afce182331ecc65570abb7eb552207ed747cf95422e261c4d4d6772dfc5ae1dc",
   "steps": [
-    "Materialize only an explicitly supplied language default; require each source-bound force and full target text; compare independent target bytes/fields and hashes.",
-    "Reject missing, invalid, duplicate, foreign or stale decisions; preserve original identity, metadata, Unicode and opaque fields.",
-    "Keep schema additions separate from authored decisions; a new target is not an old approval and immutable original bytes/hashes are never rewritten.",
-    "Use a complete synthetic approved source Requirement with its Verification Contract and verified_by relation; require a ready migration to draft with unchanged source bytes/text and archived originals, never inherited approval."
+    "Verify the real historical source closure and compare original Baseline hashes, Evidence bindings/results and byte hashes before and after an actual native migration.",
+    "Check stored fixed baseline vectors, nested snapshots, unchanged negative results and exact noncanonical original bytes without current approval."
   ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0725",
   "test_ids": [
+    "tests/test_migration_history.py::test_actual_writer_preserves_historical_report_and_baseline_verifier",
+    "tests/test_migration_history.py::test_fixed_contract_baseline_uses_stored_original_root_and_bytes",
+    "tests/test_migration_history.py::test_historical_absent_configuration_is_not_invented",
+    "tests/test_migration_history.py::test_history_retains_exact_records_and_source_algorithms_across_migration[False-failed]",
+    "tests/test_migration_history.py::test_history_retains_exact_records_and_source_algorithms_across_migration[False-incomplete]",
+    "tests/test_migration_history.py::test_history_retains_exact_records_and_source_algorithms_across_migration[False-passed]",
+    "tests/test_migration_history.py::test_history_retains_exact_records_and_source_algorithms_across_migration[False-skipped]",
+    "tests/test_migration_history.py::test_history_retains_exact_records_and_source_algorithms_across_migration[True-failed]",
+    "tests/test_migration_history.py::test_history_retains_exact_records_and_source_algorithms_across_migration[True-incomplete]",
+    "tests/test_migration_history.py::test_history_retains_exact_records_and_source_algorithms_across_migration[True-passed]",
+    "tests/test_migration_history.py::test_history_retains_exact_records_and_source_algorithms_across_migration[True-skipped]",
+    "tests/test_migration_history.py::test_original_whitespace_bytes_and_historical_report_are_owned",
     "tests/test_migration_planning.py::test_all_originals_and_transitive_archives_remain_verifiable_bytes",
     "tests/test_migration_planning.py::test_finished_proposals_stay_original_immutable_records[applied]",
     "tests/test_migration_planning.py::test_finished_proposals_stay_original_immutable_records[rejected]",

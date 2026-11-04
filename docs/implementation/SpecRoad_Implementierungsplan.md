@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 84 · **Stand:** 4. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.59
+**Planrevision:** 87 · **Stand:** 4. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.59
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 Schritte und 900 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; die ausdrücklich genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wird nach 10.7.10 innerhalb von 15.l.R vorgezogen. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -33,6 +33,178 @@ ausdrückliche Bedienausnahme aus 2.4.3.2 bleibt zusätzlich anwendbar.
 Produktfreigaben und die Grenzen aus 2.4.1/2.4.2/2.4.4 bleiben unverändert.
 Dieser Plan ändert keine alten Aufträge, Antworten, Blockaden oder
 Laufzeitdaten und ist keine Start-/Resume-Anweisung.
+
+## Korrekturbundle 584 — vollständiger offener Rest 16.j.W/R/C
+
+Maßgeblich ist das nativ geprüfte Fehler-Result mit SHA-256
+`9c2b90d3fd56af24a00c44382888af594b21dfc89f468763ee9b9dc2ac2bcbfe`,
+HEAD `e82ed6e1fa7c67f0f3a4bd68097bdf50bb2a73dc` und Dirty-Fingerprint
+`c723d897bbdaefd1`. Bundle 583 scheiterte vor dem ersten Commit in
+16.j.W: 7780 Tests bestanden, nur der echte Writer-Integrationstest
+scheiterte an migration_target_validation_failed. Der tatsächliche
+Produktstand bleibt 687/900. Der erhaltene Arbeitsstand entspricht exakt
+der angekündigten W-Stage. Kein erfolgreicher Commit wird wiederholt.
+
+Die statische Ursachenanalyse folgt dem tatsächlichen Fehlerpfad vom
+Writer zu validate_transaction_target und validate_model: Die Fixture
+enthält einen veränderbaren Draft-Verification-Vertrag, der als aktuelles
+0.2-Artefakt migriert wird. Der gemeinsame Validator verlangt dafür den
+evidence_currentness-Dienst. setup liefert bisher keinen solchen Hostdienst;
+die automatisch registrierten Sprach-, Profil- und Dokumentdienste ersetzen
+ihn nicht. Die vollständig qualifizierten alten Evidence-/Baselineoriginale
+sind dagegen ausdrücklich keine aktuellen Evidence-Gates. Die Ablehnung
+entspricht 12.20.3; die Produktvalidierung darf nicht gelockert werden.
+
+Der Integrationstest registriert nun einen expliziten, eng begrenzten
+synthetischen Hostdienst für genau seinen Draft-Vertrag ohne Test-Slots.
+Dieser liest die tatsächlichen aktuellen Vertragsbytes mit dem nativen
+VerificationContract, prüft die gebundenen Originaldokumente und qualifiziert
+die vollständige historische Closure mit verify_migrated_history erneut.
+Andere Subjects, nicht unterstützte Zustände und ausführbare Test-Slots
+werden nicht als erfüllt behauptet. migration_context_unverified bleibt
+als Info sichtbar; kein gegenwärtiger Lauf, Review, Ergebnis oder Freigabe
+wird erfunden. Der Test vergleicht auch die wirklich vom Host beobachteten
+historischen Daten und sämtliche negativen Autoritäts-/Currentnessflags.
+
+Die reale Migration samt Backup, Lock, vollständiger Zielvalidierung,
+Transaktion und Vorher-/Nachhervergleich bleibt erhalten. Ein zusätzlicher
+R-Negativtest verlangt ohne diesen Host weiter die tatsächliche Ablehnung,
+unveränderte normative Originalbytes und keine Journalanlage. W behält alle
+12 bestehenden Abnahmen und Nummern; R/C umfassen jetzt 56 Abnahmen dieses
+Schritts. Nur die neue R-Identität wird an die bereits angekündigte
+R-Nummernliste angehängt; keine alte Nummer wird verschoben oder ersetzt.
+Produktcode, feste Sourcevektoren und Normspec 0.2.59 bleiben bytegleich
+zu den jeweiligen angekündigten Zuständen aus Bundle 583.
+
+correction_of bindet den Planhash
+`22eeeb51b412ff9651b8c59f73fdb21959512d37113a1ca193d9e1200658545d`
+und genau die offenen IDs 16.j.W, 16.j.R und 16.j.C mit unveränderten
+implementation-Rollen. Vollständige Vorherbytes stammen aus diesem Result.
+Die erste Stage enthält auch den gesamten erhaltenen uncommitteden W-Umfang.
+Alle bisherigen Pflichtdateien bleiben erhalten; jede echte Stage erhält
+ihr vollständiges ungefiltertes Pflichtgate zusätzlich zur fälligen Gruppe
+0, danach 1 und 2 ausschließlich nach erfolgreichem Commit. Der C-Zustand
+behält sämtliche R-Tests und Kataloge bytegleich.
+
+Keine Spezifikationsklärung und kein Budgetreset. Dev führt keine Tests,
+Fixtures oder manuelle Produktvalidierung aus. Statische Prüfung, reine
+Collection und native Paketrekonstruktion sind keine Verhaltensabnahme.
+Vorbereiteter Stand: 16.j.W. Häkchen und Produktzähler werden erst nach dem
+jeweiligen erfolgreichen Apply-Gate committed. Nach vollständigem Erfolg
+wären 690/900 erreicht; 16.k.W bleibt danach offen. Der Bundlezähler bleibt
+in W/R beim belegten Abschluss 581, erst der erfolgreiche C-Commit setzt
+584. Keine Dienst-, CI-, Betriebsdaten- oder Schleifenänderung.
+
+## Korrekturbundle 583 — vollständiger offener Rest 16.j.W/R/C
+
+Maßgeblich ist das native Fehler-Result mit SHA-256
+`3296e38757ec47a75c5d668d56f55f267a0575ee24ed7e41508aee6ad540abb4`,
+HEAD `e82ed6e1fa7c67f0f3a4bd68097bdf50bb2a73dc` und erhaltenem
+Dirty-Fingerprint `6bd8385dc11c5fd0`. Bundle 582 scheiterte im Gate von
+16.j.W: 7784 Tests bestanden, zehn scheiterten. Kein Commit entstand;
+der tatsächliche Produktstand bleibt 687/900. Der erhaltene vollständige
+Arbeitsstand entspricht exakt der angekündigten W-Stage. R und C waren
+noch nicht installiert und werden aus dem nativ belegten ursprünglichen
+Commitplan vollständig fortgeführt, nicht durch einen Endstand ersetzt.
+
+Alle zehn Fehler stammen aus derselben synthetischen Fixture
+tests/support/migration_history.py: Sie deklarierte configuration_policy=bound
+bei configuration_hash=null. Der vorhandene Quellleser weist dies korrekt
+mit source_schema_invalid/missing_configuration_binding zurück. Der Fehler
+tritt vor der historischen Berichtsbildung beziehungsweise Migration auf.
+Die bestehenden Konfigurationsregeln und der vollständige Quellvertrag
+werden weder verändert noch durch einen geratenen Hash umgangen.
+
+Die Fixture modelliert keine ausgewählte Produktkonfiguration. Deshalb
+deklarieren ihr synthetischer Verification-Contract und ihre Evidence nun
+beide ausdrücklich configuration_policy=independent; der Hash bleibt null.
+Diese bereits erlaubte explizite Policy gilt nur für die künstlichen Daten
+und erteilt keine echte historische oder heutige Freigabe. Ein erfundener
+Konfigurationshash würde eine nicht vorhandene Auswahl vortäuschen; das
+Löschen der Policy würde den eigentlichen Kontextprüfpfad nicht abdecken.
+Die Korrektur erfolgt vor den schon vorhandenen Fixture-Hashbindungen und
+Snapshots, so dass deren vollständige Originale konsistent erzeugt werden.
+
+Alle zehn ursprünglich fehlgeschlagenen Tests bleiben mit unveränderten
+Testkörpern und Sollwerten Pflichtauswahl. Die vollständigen W-/R-Prüfungen,
+die tatsächliche native Migration und die aktuellen Evidence-Konstruktions-
+und Writerregressionen bleiben erhalten. W hat weiter 12 neue Abnahmen,
+R/C insgesamt 55. Produktcode, normative Spezifikation, feste Quellvektoren,
+alle Testidentitäten und dauerhaften Testnummern bleiben bytegleich zu den
+entsprechenden angekündigten Zuständen aus Bundle 582. Nur die gemeinsame
+synthetische Fixture sowie Plan-/Katalogbeschreibungen werden berichtigt.
+
+correction_of bindet den ursprünglichen Planhash
+`5f75d4ff603c1e95ad57679f39ed80046c8857da49764be4d6dab443a3938d9c`
+und exakt die offenen IDs 16.j.W, 16.j.R, 16.j.C; alle Rollen bleiben
+implementation. Die erste Stage enthält auch den vollständigen erhaltenen
+uncommitteden W-Umfang mit Vorherbytes aus diesem neuen Result. Gruppe 0
+bleibt fällig, danach folgen 1 und 2 erst nach erfolgreichen echten Commits.
+Jede Stage erhält ihre eigene vollständige ungefilterte Pflichtauswahl
+zusätzlich zur gefilterten Rotation. Kein doppelter Schlusslauf.
+
+Keine Spezifikationsklärung, kein Budgetreset und keine eigene Apply-Schleife.
+Dev führt keine Testkörper oder Fixtures aus. Statische Prüfung, reine
+Collection, native Bundleprüfung und Rekonstruktion sind keine bestandenen
+Verhaltenstests. Vorbereiteter Stand: 16.j.W. Häkchen/Zähler werden erst
+nach dem jeweiligen erfolgreichen Apply-Gate committed. Vollständiger
+Erfolg ergäbe 690/900; danach bleibt 16.k.W offen. Der bislang stehengebliebene
+Bundlezähler 575 wird auf den belegten letzten Abschluss 581 korrigiert;
+erst der erfolgreiche C-Commit dieses Bundles trägt 583 ein. Keine Änderung an Diensten,
+Betriebsdaten oder bereits erfolgreichen Produktcommits.
+
+## Bundle 582 — vollständige Folge 16.j.W/R/C
+
+Maßgebliche technische Basis ist das nativ geprüfte saubere Result mit SHA-256
+`76b2b65f5bc131cac2022e3aab64af4013a3d0c494a7d643071549365321baa0`,
+HEAD `e82ed6e1fa7c67f0f3a4bd68097bdf50bb2a73dc` und Fingerprint
+`7c9d2a24e397e0e5`. Bundle 581 schloss 16.i.C nach 9042 bestandenen
+ausgewählten Tests ab; Abschlusscommit, vollständiger Snapshot, Ausführungslog
+und nativer Commitfortschritt stimmen überein. Produktstand 687/900.
+Alle erfolgreichen W-/R-/C-Commits bleiben erhalten.
+
+Q.0.2 und der vollständige Quellvertrag specroad-reference-0.1/1.0.1
+sowie Q.1–Q.4 legen Quellalgorithmen, Originalclosure, Unveränderbarkeit
+und die fehlende aktuelle Evidenzwirkung bereits verbindlich fest.
+Keine zusätzliche normative Lücke und kein Klärungscommit. Normspec
+0.2.59 bleibt bytegleich. Diese Umsetzung meldet regulär patch_ready.
+
+W qualifiziert echte Quellbytes und alle transitiven historischen Snapshots
+über den nativen Quellleser. Nach Migration wird die vollständige originale
+Quelle aus dem erneut geprüften Legacy-Manifest rekonstruiert. Evidence-
+Subjects, Quellkontexthashes, Ergebnisse und Baseline-Manifeste bleiben
+historisch erhalten. verify_baseline_snapshot verwendet für registrierte
+Originale den gespeicherten reference01-model-root-v1 samt vollständiger
+Sourceprüfung; keine rückwirkende 0.2-Interpretation. Vorher-/Nachherprüfungen
+umfassen feste Quellvektoren und eine tatsächliche native Migration.
+
+R bindet die bestehende Kontextbewertung explizit an LegacyArtifact und
+die vollständigen Originalbytes eines nativ requalifizierten LegacyManifest.
+Eine alte Evidence bleibt stale mit migration_context_unverified, auch
+bei bestandenem historischen Ergebnis, ergänzter Projektion oder heutigem
+unabhängigem Vertrag. Neue Messungen verwenden den vorhandenen aktuellen
+Evidence-Konstruktor mit neuer reservierter ID und heutigem Kontext.
+Original und historische Bewertung ändern sich dadurch nicht. Format,
+freie Updates und Lifecycle bleiben für Legacy-Originale gesperrt.
+Fehlende/veränderte Originale, Hashalgorithmuswechsel, fremde Projekte,
+unbelegte Registrierungen und unsichere/offene Projektzustände werden
+in echten Eingangs- und Integrationspfaden abgewiesen.
+
+C trennt reine historische Berichtsbildung von Qualifikation, live
+Baselineprüfung und aktueller Kontextbewertung. Funktions-ASTs und globale
+Namensbindungen werden statisch gegen R verglichen. Sämtliche W-/R-Tests
+und Katalogbindungen bleiben in C bytegleich; keine Fehlervertragsänderung.
+
+Jeder Zustand erhält eine eigene ungefilterte Pflichtauswahl zusätzlich
+zur fälligen laufzeitgefilterten N=3-Gruppe, dann erst seinen Commit.
+Dev hat keine Testkörper, Fixtures oder Test-Unterprozesse ausgeführt;
+reine Collection und statische/native Paketprüfung sind keine Abnahme.
+Vorbereiteter Stand: 16.j.W. Häkchen und Zähler werden erst nach dem echten
+Apply-Gate dieses Zustands committed. Vollständiger Erfolg ergibt 690/900.
+Danach folgt 16.k.W. Öffentliche Migrationsregistrierung/CLI, migrate verify
+und Restore bleiben in den folgenden Planschritten; historische Integrität
+ist keine Behauptung von externen Testläufen, menschlichen Freigaben oder
+aktueller Readiness. Keine lokale Betriebsdaten-, Budget- oder Dienständerung.
 
 ## Korrekturbundle 581 — vollständiger Rest 16.i.C
 
@@ -2439,10 +2611,10 @@ Kein offener Produktplanschritt wird durch diese Testoptimierung abgeschlossen.
 ```yaml
 plan_revision: 78
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 687
-last_completed_plan_commit: 16.i.C
-next_plan_commit: 16.j.W
-last_completed_numbered_bundle: 575
+implementation_plan_commits_completed: 688
+last_completed_plan_commit: 16.j.W
+next_plan_commit: 16.j.R
+last_completed_numbered_bundle: 581
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -36883,12 +37055,12 @@ Die W-/R-/C-Abnahmen im obigen OFF-PLAN-Abschnitt gelten vollständig.
 
 #### 16.j.W – Let it Work
 
-- [ ] **16.j.W** · Position **688/900** · Voraussetzung: `16.i.C`.
+- [x] **16.j.W** · Position **688/900** · Voraussetzung: `16.i.C`.
 **Exakte Commit-Message:** `16.j.W feat(migration): Historische Evidence und Baselines aufbauen`
 
 **Umsetzung:** Historische Originalnachweise mit ihrem Quellalgorithmus verifizieren und aktuelle Evidence als getrennte neue Prüfung behandeln.
 
-**Verhaltensabnahme:** Alte Baselinehashes und Originalbytes bleiben vor und nach Migration identisch.
+**Verhaltensabnahme:** Alte Baselinehashes und Originalbytes bleiben vor und nach tatsächlicher nativer Migration identisch. Feste gespeicherte Quellvektoren, verschachtelte Snapshotclosure, unveränderte negative Evidence und nichtkanonische Originalbytes werden geprüft. Historische Integrität behauptet weder einen externen Lauf noch heutige Verifikation/Freigabe.
 
 #### 16.j.R – Make it Right
 
@@ -36897,7 +37069,7 @@ Die W-/R-/C-Abnahmen im obigen OFF-PLAN-Abschnitt gelten vollständig.
 
 **Vervollständigung:** Legacy-Evidence für transformiertes Subject bleibt ohne neuen Kontextnachweis stale mit migration_context_unverified.
 
-**Verhaltensabnahme:** Format, Update und Lifecycle lehnen legacy_immutable-Writes ab; Projektion hebt keine Freigabe an. Die W-Nachweise bleiben zusätzlich grün.
+**Verhaltensabnahme:** Format, Update und Lifecycle lehnen legacy_immutable-Writes ab; Projektion hebt keine Freigabe an. Native Kontextbewertung zeigt migration_context_unverified; neue aktuelle Evidence benötigt eine neue reservierte ID und echte heutige Subject-/Vertragsbytes. Vollständige fehlende/veränderte Originalclosure, falsche Registrierungen und Sourcealgorithmen sowie Livepfad-/Transaktionskonflikte verhindern historische Verifikation. Die W-Nachweise bleiben zusätzlich grün.
 
 #### 16.j.C – Make it Clean
 

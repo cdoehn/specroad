@@ -56,6 +56,11 @@ def verify_baseline_snapshot(boundary, baseline_record):
     """Verify a supplied record and fresh archived bytes without any writes."""
     if type(boundary) is not ProjectBoundary:
         raise ModelError('snapshot_object_boundary_required')
+    if type(baseline_record) is not bytes:
+        raise ModelError('baseline_record_bytes_required')
+    if parse_json_object(baseline_record).get('schema_version') == '0.1.0':
+        from ..migration.history import verify_historical_baseline
+        return verify_historical_baseline(boundary, baseline_record)
     return _verify_baseline(baseline_record,
         lambda reference: read_snapshot_object(boundary, reference),
         str(boundary.root), boundary._root_identity)
