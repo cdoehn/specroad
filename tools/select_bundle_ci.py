@@ -60,6 +60,13 @@ def resolve_selection(environment, *, runner=None, probe=None):
     return selection
 
 
+def write_selection_report(path, value):
+    """Create one JSON report without replacing any previous evidence."""
+    with Path(path).open("x", encoding="utf-8") as stream:
+        json.dump(value, stream, sort_keys=True, allow_nan=False)
+        stream.write("\n")
+
+
 def selection_failure(error, environment):
     """Bounded machine diagnostics; never copy commands, credentials or environment."""
     if isinstance(error, subprocess.CalledProcessError):
@@ -76,9 +83,7 @@ def selection_failure(error, environment):
               "error": code, "run_full": False, "tests_run": 0, "full_suite_passed": None}
     if environment.get("SR_SELECTION_REPORT"):
         try:
-            with Path(environment["SR_SELECTION_REPORT"]).open("x", encoding="utf-8") as stream:
-                json.dump(report, stream, sort_keys=True, allow_nan=False)
-                stream.write("\n")
+            write_selection_report(environment["SR_SELECTION_REPORT"], report)
         except OSError:
             pass  # Preserve an existing report and retain the original failure.
     return code
@@ -92,9 +97,7 @@ def main():
                 stream.write(key + "=" + selection[key] + "\n")
             stream.write("run_full=" + str(selection["run_full"]).lower() + "\n")
         if os.environ.get("SR_SELECTION_REPORT"):
-            with Path(os.environ["SR_SELECTION_REPORT"]).open("x", encoding="utf-8") as stream:
-                json.dump(selection, stream, sort_keys=True, allow_nan=False)
-                stream.write("\n")
+            write_selection_report(os.environ["SR_SELECTION_REPORT"], selection)
         print(json.dumps(selection, sort_keys=True))
         return 0
     except (OSError, ValueError, KeyError, subprocess.CalledProcessError) as error:
