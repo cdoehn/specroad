@@ -54,19 +54,22 @@ def require_complete_root(boundary):
     if os.path.lexists(boundary.root / STAGING):
         raise SafetyViolation('Unfinished bootstrap requires recovery')
     proof = _optional(boundary, '/'.join((*COMPLETED, 'journal.json')))
-    # Only roots published by this extractor have this additional proof.
-    # Existing readers keep their own marker/error/freshness contracts; the
-    # complete partial-command integration remains 15.f.
+    raw = _optional(boundary, MANIFEST_NAME)
+    return require_complete_markers(raw, proof)
+
+
+def require_complete_markers(raw, proof):
+    """Validate the retained marker/proof bytes, also for pinned Git objects.
+
+    Source adapters observe the bytes and unfinished staging independently.
+    This pure check never reads a mutable checkout or supplies write authority.
+    """
     if proof is None:
-        # A copied partial marker still cannot authorize a complete reader.
-        # Full-project marker validation remains with its existing consumers.
-        raw = _optional(boundary, MANIFEST_NAME)
         if raw is not None:
             value = parse_json_object(raw)
             if value.get('bundle_kind') == 'partial' or value.get('read_only') is True:
                 raise PartialRootMarker('A partial bundle is not a complete project')
         return None, None
-    raw = _optional(boundary, MANIFEST_NAME)
     try:
         if proof is not None:
             value = parse_json_object(proof)

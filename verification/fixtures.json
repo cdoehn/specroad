@@ -365,8 +365,8 @@
       "provider": "tests/support/literal_lint.py:observe"
     },
     "SR-FIX-MERGE-SOURCES-v1": {
-      "kind": "Owned synthetic complete native projects, exact archived records/objects, binary attachments, initialized language packages, verified full ZIPs and physical Git-object stores. Each source kind occupies each merge role; native roots and complete original byte inventories are independent oracles. Read-only Git commands and unchanged branch/index/worktree are observed. No authentication, atomic snapshot, full semantic validation or merge publication is claimed.",
-      "provider": "tests/test_merge_sources.py:sources,read_only_sources;tests/test_project_bundle.py:project,baseline_project"
+      "kind": "Owned synthetic complete native projects, exact archived records/objects, binary attachments, initialized language packages, verified full ZIPs and physical Git-object stores. Each source kind occupies each merge role; native roots and complete original byte inventories are independent oracles. Read-only Git commands and unchanged branch/index/worktree are observed. No authentication, atomic snapshot, full semantic validation or merge publication is claimed. R adds foreign identities, unsupported schemas, verified partials and retained extraction proofs, selected Baselines, historical effective profile chains, legacy originals, unsafe/missing Git blobs and changes during three-source acquisition.",
+      "provider": "tests/test_merge_sources.py:sources,read_only_sources;tests/test_project_bundle.py:project,baseline_project;tests/test_merge_sources_right.py:archived;tests/support/legacy_manifest.py:migrated"
     },
     "SR-FIX-MIGRATION-GRAPH-v1": {
       "kind": "Complete isolated synthetic schemas 90.0.0/90.1.0/90.2.0 with explicit profile and content bindings; compiled rename/derived-length transformations, strict pre/postconditions and independent literal Unicode/empty/decomposed input/output vectors for both directions. Separate complete empty-object contracts cover graph topology. No historical SpecRoad 0.1 schema, native reader, file migration, human approval or external compatibility claim.",

@@ -32,11 +32,13 @@ def payload_model(container, *, partial=False):
                                partial=partial)
 
 
-def owned_payload_model(files, *, source_label, partial=False):
+def owned_payload_model(files, *, source_label, partial=False, profile_keys=None):
     """Reconstruct supplied normative bytes; no container or disk assurance.
 
     Bundle and recovery readers independently qualify their envelopes and
     operational receipts before using this shared native model constructor.
+    A verified historical source can retain its explicit effective profile
+    chain without rewriting the archived semantic configuration.
     """
     files = dict(files)
     configuration = ProjectConfiguration(parse_json_object(files['specroad.json']))
@@ -90,7 +92,12 @@ def owned_payload_model(files, *, source_label, partial=False):
         require(key in packages, 'bundle_language_package_missing')
         selected.append(packages[key])
     keys = tuple(key for key in configuration.data.get('profiles', []) if key not in ('core', 'core@0.2.0'))
-    profile = compose_profiles(profiles, core_key='core@0.2.0', cli_profiles=keys,
+    core_key = 'core@0.2.0'
+    if profile_keys is not None:
+        require(not partial and type(profile_keys) is tuple and bool(profile_keys),
+                'bundle_profile_selection_invalid')
+        core_key, *keys = profile_keys
+    profile = compose_profiles(profiles, core_key=core_key, cli_profiles=keys,
                                language_registry=registry, language_packages=selected)
     # This is provenance for owned bytes, never an observed filesystem root.
     # The sentinel is excluded from native hashes and grants no disk authority.

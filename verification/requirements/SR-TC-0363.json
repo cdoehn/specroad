@@ -15,7 +15,7 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Ein Merge gegen Git-Refs MUSS deren Dateien lesen, ohne Branch, Index oder Arbeitsbaum auszuchecken oder zu verändern.",
-    "scope": "17.a.W implements complete immutable Base/Ours/Theirs source observations through native local, Git, Baseline and verified full-bundle readers. Complete original resource bytes, project/schema identity, default closed project scope, native model roots and source provenance are retained. No versioned merge plan, conflict resolution, CLI/Work integration or write authority is implemented by this slice."
+    "scope": "17.a.W implements complete immutable Base/Ours/Theirs source observations through native local, Git, Baseline and verified full-bundle readers. Complete original resource bytes, project/schema identity, default closed project scope, native model roots and source provenance are retained. No versioned merge plan, conflict resolution, CLI/Work integration or write authority is implemented by this slice. 17.a.R rejects partial/selected sources and mixed project/schema inputs without migration, preserves historical effective profile selection and qualified legacy bytes, checks pinned Git extraction proofs, and reobserves all three source acquisitions before returning. Observations remain non-atomic."
   },
   "preconditions": [
     "Explicit owned source selectors and complete synthetic project bytes; existing native source integrity and schema contracts apply. Test collection is not behavior-pass evidence."
@@ -34,7 +34,8 @@
   },
   "specification_sha256": "9e696ccc49ee8510b7b9a26b2adf02dd477820ed55587bfe8e8f312c7f28c19a",
   "steps": [
-    "Acquire three complete sources, compare exact bytes and native scope/model-root bindings, check immutable detached output and original source provenance, and verify no writes or Git checkout occur."
+    "Acquire three complete sources, compare exact bytes and native scope/model-root bindings, check immutable detached output and original source provenance, and verify no writes or Git checkout occur.",
+    "Reject partial markers/bundles and retained proof removal, foreign identities, old/new unsupported schemas, selected Baselines, unsafe or missing dependencies and late input changes; retain historic profiles and registered original bytes without changing them."
   ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0363",
@@ -42,6 +43,26 @@
     "tests/test_merge_sources.py::test_every_source_kind_in_every_role_keeps_native_root_and_full_inventory[0-git]",
     "tests/test_merge_sources.py::test_every_source_kind_in_every_role_keeps_native_root_and_full_inventory[1-git]",
     "tests/test_merge_sources.py::test_every_source_kind_in_every_role_keeps_native_root_and_full_inventory[2-git]",
-    "tests/test_merge_sources.py::test_git_source_ignores_mutable_ref_and_current_worktree_without_checkout"
+    "tests/test_merge_sources.py::test_git_source_ignores_mutable_ref_and_current_worktree_without_checkout",
+    "tests/test_merge_sources_right.py::test_first_source_is_rechecked_after_the_third_source_was_loaded[git]",
+    "tests/test_merge_sources_right.py::test_foreign_identity_is_rejected_for_each_source_kind_and_role[0-git]",
+    "tests/test_merge_sources_right.py::test_foreign_identity_is_rejected_for_each_source_kind_and_role[1-git]",
+    "tests/test_merge_sources_right.py::test_foreign_identity_is_rejected_for_each_source_kind_and_role[2-git]",
+    "tests/test_merge_sources_right.py::test_git_accepts_a_completed_full_extraction_without_consulting_checkout",
+    "tests/test_merge_sources_right.py::test_git_attachment_must_be_the_bound_regular_blob[corrupt]",
+    "tests/test_merge_sources_right.py::test_git_attachment_must_be_the_bound_regular_blob[gitlink]",
+    "tests/test_merge_sources_right.py::test_git_attachment_must_be_the_bound_regular_blob[missing]",
+    "tests/test_merge_sources_right.py::test_git_attachment_must_be_the_bound_regular_blob[symlink]",
+    "tests/test_merge_sources_right.py::test_git_cannot_erase_retained_partial_extraction_proof[removed]",
+    "tests/test_merge_sources_right.py::test_git_cannot_erase_retained_partial_extraction_proof[replaced]",
+    "tests/test_merge_sources_right.py::test_moving_git_ref_during_other_source_capture_does_not_rebind_the_selected_commit",
+    "tests/test_merge_sources_right.py::test_partial_markers_and_verified_partial_bundles_never_become_full_sources[document-git]",
+    "tests/test_merge_sources_right.py::test_partial_markers_and_verified_partial_bundles_never_become_full_sources[release-git]",
+    "tests/test_merge_sources_right.py::test_selectors_are_typed_and_never_silently_default_to_a_local_source[git-None]",
+    "tests/test_merge_sources_right.py::test_selectors_are_typed_and_never_silently_default_to_a_local_source[git-\\ud800]",
+    "tests/test_merge_sources_right.py::test_selectors_are_typed_and_never_silently_default_to_a_local_source[git-]",
+    "tests/test_merge_sources_right.py::test_selectors_are_typed_and_never_silently_default_to_a_local_source[git-bad\\x00ref]",
+    "tests/test_merge_sources_right.py::test_unsupported_input_is_not_implicitly_migrated_or_supplemented[0.1.0-git]",
+    "tests/test_merge_sources_right.py::test_unsupported_input_is_not_implicitly_migrated_or_supplemented[99.0.0-git]"
   ]
 }

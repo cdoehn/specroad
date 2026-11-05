@@ -76,7 +76,7 @@ weitergeschaltet. Dev führt nur statische Prüfung, reine Collection und
 native Paketvalidierung aus, keine Verhaltenstests. Ein erfolgreicher
 Abschluss von 17.a ist erst durch das folgende Apply-Result belegbar.
 
-## Bundle 594 — vollständige Quellenbindung 17.a.W
+## Bundle 594 — vollständige Quellenbindung 17.a.R
 
 Maßgebliche technische Basis: natives erfolgreiches sauberes Result
 `specroad-apply_Result_012305_1105_26449d.zip`, SHA-256
@@ -108,8 +108,8 @@ wiederverwendet; beide W/R-Testdateien bleiben bytegleich. Interne
 Quellenbindungen sind kein neu eingeführtes normatives Mergeplanformat.
 
 Vorbereitet sind genau die drei vollständigen zusammenhängenden Positionen
-17.a.W/R/C mit eigenen Apply-Gates. Stand dieser Stage: 17.a.W,
-Folgeposition `17.a.R`. Der Fortschrittsblock und die Checkboxen sind
+17.a.W/R/C mit eigenen Apply-Gates. Stand dieser Stage: 17.a.R,
+Folgeposition `17.a.C`. Der Fortschrittsblock und die Checkboxen sind
 Commitzielzustände: Sie gelten erst nach bestandenem Gate und echtem Commit;
 ein bloß materialisierter Fehlerstand beweist keinen Abschluss.
 Dev hat **keine Verhaltenstests** ausgeführt. Syntax, reine Collection und
@@ -3037,9 +3037,9 @@ Kein offener Produktplanschritt wird durch diese Testoptimierung abgeschlossen.
 ```yaml
 plan_revision: 96
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 694
-last_completed_plan_commit: 17.a.W
-next_plan_commit: 17.a.R
+implementation_plan_commits_completed: 695
+last_completed_plan_commit: 17.a.R
+next_plan_commit: 17.a.C
 last_completed_numbered_bundle: 593
 implementation_state: in_progress
 audit_followup_status: closed
@@ -37584,7 +37584,7 @@ Plattform-/Releasefreigaben werden dadurch nicht stillschweigend erteilt.
 
 #### 17.a.R – Make it Right
 
-- [ ] **17.a.R** · Position **695/900** · Voraussetzung: `17.a.W`.
+- [x] **17.a.R** · Position **695/900** · Voraussetzung: `17.a.W`.
 **Exakte Commit-Message:** `17.a.R feat(merge): Drei unveränderbar gebundene Quellen vervollständigen`
 
 **Vervollständigung:** Partials, unterschiedliche project_id und Versionsmischung ablehnen; erforderliche Migration nicht heimlich ausführen.

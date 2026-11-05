@@ -17,7 +17,7 @@ from ..query._comparison_capture import SourceCapture
 from ..query.baseline_source import baseline_source
 from ..query.comparison_sources import _git_json_paths
 from ..query.git_source import GitObjectSource
-from ..security import ProjectBoundary
+from ..security import ProjectBoundary, SafetyViolation
 from ..storage.json_syntax import parse_json_object
 
 
@@ -27,8 +27,22 @@ class SourceRequest:
     kind: str = 'local'
     reference: str | None = None
 
+    def __post_init__(self):
+        if type(self.kind) is not str or self.kind not in _READERS:
+            raise ModelError('merge_source_request_required')
+        if not isinstance(self.root, (str, Path)) or not str(self.root).strip() or '\0' in str(self.root):
+            raise ModelError('comparison_reference_required')
+        canonical_json_bytes(str(self.root))
+        if self.kind in ('local', 'bundle'):
+            if self.reference is not None:
+                raise ModelError('comparison_reference_not_allowed')
+        elif type(self.reference) is not str or not self.reference.strip() or '\0' in self.reference:
+            raise ModelError('comparison_reference_required')
+        else:
+            canonical_json_bytes(self.reference)
 
-def _complete_marker(raw):
+
+def _complete_marker(raw, project_id=None):
     if raw is None:
         return
     from ..bundles.manifest import check_entries, owned_metadata
@@ -37,6 +51,10 @@ def _complete_marker(raw):
     metadata = owned_metadata({k: v for k, v in value.items() if k != 'entries'})
     if metadata['bundle_kind'] != 'project' or metadata['read_only']:
         raise ModelError('merge_complete_project_required')
+    if raw != canonical_json_bytes(value):
+        raise ModelError('noncanonical_bundle_manifest')
+    if project_id is not None and metadata['project_id'] != project_id:
+        raise ModelError('bundle_configuration_binding')
 
 
 def _local(root, reference):
@@ -49,9 +67,18 @@ def _local(root, reference):
 
 
 def _git(root, reference):
+    from ..authoring._bootstrap_io import STAGING
+    from ..bundles._extraction_record import COMPLETED
+    from ..bundles._extracted_root import require_complete_markers
     source = GitObjectSource(root, reference)
-    _complete_marker(source.read_optional_bytes('bundle-manifest.json'))
+    if STAGING in source._entries:
+        raise SafetyViolation('Unfinished bootstrap requires recovery')
+    proof_path = '/'.join((*COMPLETED, 'journal.json'))
+    marker = source.read_optional_bytes('bundle-manifest.json')
+    proof = source.read_optional_bytes(proof_path)
+    require_complete_markers(marker, proof)
     configuration = ProjectConfiguration(parse_json_object(source.read_bytes('specroad.json')))
+    _complete_marker(marker, configuration.project_id)
     files = {p: source.read_bytes(p) for p in _git_json_paths(source, configuration)}
     registry = configuration.data.get('language_registry')
     if registry is not None:
@@ -75,20 +102,44 @@ def _git(root, reference):
                 payloads.add(item.path)
     for path in sorted(payloads):
         files[path] = source.read_bytes(path)
+
+    def check():
+        # Reobserve pinned objects, never resolve the mutable ref again. Missing
+        # commits/trees/blobs are failures even if an earlier read succeeded.
+        for path, raw in (*files.items(), ('bundle-manifest.json', marker), (proof_path, proof)):
+            if source.read_optional_bytes(path) != raw:
+                raise ModelError('comparison_source_changed', path=path)
+
     return SourceCapture(configuration, tuple(sorted(files.items())), str(source.root),
-                         commit_id=source.commit_id)
+                         commit_id=source.commit_id, check=check)
 
 
 def _baseline(root, reference):
     if type(reference) is not str:
         raise ModelError('comparison_baseline_reference_required')
+    from ..bundles._extracted_root import require_complete_root
+    boundary = ProjectBoundary(root)
+    markers = require_complete_root(boundary)
     capture = baseline_source(root, reference, None)
     # The native baseline reader supports selected configurations too. Such a
     # selection must not silently stand in for the complete merge input.
     evidence = parse_json_object(capture.finish())
     if 'configuration_binding' in evidence:
         raise ModelError('merge_complete_project_required')
-    return capture
+    record_raw = boundary.read_bytes(evidence['record_path'])
+    if sha256(record_raw).hexdigest() != evidence['record_sha256']:
+        raise ModelError('comparison_source_changed')
+    record = parse_json_object(record_raw)
+    keys = [row['profile_id'] + '@' + row['version'] for row in record['profiles']]
+
+    def check():
+        if require_complete_root(boundary) != markers:
+            raise ModelError('comparison_source_changed')
+        checked = parse_json_object(capture.finish())
+        return canonical_json_bytes({**checked, 'profile_keys': keys})
+
+    return SourceCapture(capture.configuration, capture.resources, capture.source_root,
+                         check=check, evidence_key=capture.evidence_key)
 
 
 def _bundle(root, reference):
@@ -108,7 +159,11 @@ def _bundle(root, reference):
     configuration = ProjectConfiguration(parse_json_object(files['specroad.json']))
 
     def check():
-        if boundary.read_bytes(path.name) != raw:
+        try:
+            current = boundary.read_bytes(path.name)
+        except FileNotFoundError as error:
+            raise ModelError('comparison_source_changed') from error
+        if current != raw:
             raise ModelError('comparison_source_changed')
         return canonical_json_bytes(verified)
 
@@ -133,6 +188,7 @@ class SourceSnapshot:
     schema_version: str
     _files: tuple
     _binding: bytes
+    _observation: object
 
     def __init__(self, request):
         if type(request) is not SourceRequest or type(request.kind) is not str or request.kind not in _READERS:
@@ -142,7 +198,11 @@ class SourceSnapshot:
         if configuration.data['schema_version'] != MODEL_SCHEMA_VERSION:
             raise ModelError('merge_schema_migration_required')
         files = tuple(sorted(capture.resources))
-        model = owned_payload_model(dict(files), source_label='merge:' + capture.source_root)
+        evidence = capture.finish()
+        details = None if evidence is None else parse_json_object(evidence)
+        keys = tuple(details['profile_keys']) if request.kind == 'baseline' else None
+        model = owned_payload_model(dict(files), source_label='merge:' + capture.source_root,
+                                    profile_keys=keys)
         descriptor = ScopeDescriptor(_default_scope())
         closure, native, artifacts, _ = export_scope(model, descriptor)
         if (set(closure.artifact_ids) != {a['id'] for a in model.artifacts}
@@ -150,8 +210,8 @@ class SourceSnapshot:
                 or closure.boundary_references
                 or native.sha256 != model.manifest(artifacts, descriptor.data).sha256):
             raise ModelError('merge_source_closure_incomplete')
-        evidence = capture.finish()
-        details = None if evidence is None else parse_json_object(evidence)
+        if capture.finish() != evidence:
+            raise ModelError('comparison_source_changed')
         if details is not None:
             expected = (details['model_root_sha256'] if request.kind == 'baseline' else
                         details['manifest']['bundle_model_root_sha256'])
@@ -168,8 +228,12 @@ class SourceSnapshot:
         for name, value in (('kind', request.kind), ('source_root', capture.source_root),
                 ('commit_id', capture.commit_id), ('project_id', configuration.project_id),
                 ('schema_version', configuration.data['schema_version']), ('_files', files),
-                ('_binding', canonical_json_bytes(binding))):
+                ('_binding', canonical_json_bytes(binding)), ('_observation', capture.finish)):
             object.__setattr__(self, name, value)
+
+    def verify_current(self):
+        """Recheck the original acquisition; retained bytes never refresh silently."""
+        self._observation()
 
     @property
     def files(self):
@@ -210,4 +274,7 @@ class MergeSources:
 
 def load_merge_sources(base, ours, theirs):
     """Load three complete native sources without planning or publishing a merge."""
-    return MergeSources(*(SourceSnapshot(request) for request in (base, ours, theirs)))
+    result = MergeSources(*(SourceSnapshot(request) for request in (base, ours, theirs)))
+    for source in (result.base, result.ours, result.theirs):
+        source.verify_current()
+    return result
