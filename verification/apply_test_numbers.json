@@ -25030,6 +25030,26 @@
     "tests/codex_control_tests/test_watcher_timeout_right.py::test_positive_timeout_bounds_remain_exact[1]",
     "tests/codex_control_tests/test_watcher_timeout_right.py::test_positive_timeout_bounds_remain_exact[2147483647]",
     "tests/codex_control_tests/test_watcher_timeout_right.py::test_positive_timeout_bounds_remain_exact[21600]",
-    "tests/codex_control_tests/test_watcher_timeout_right.py::test_unexpected_native_failure_propagates_without_success_json_or_retry"
+    "tests/codex_control_tests/test_watcher_timeout_right.py::test_unexpected_native_failure_propagates_without_success_json_or_retry",
+    "tests/test_merge_sources.py::test_baseline_uses_archived_originals_without_current_project_fallback",
+    "tests/test_merge_sources.py::test_every_source_kind_in_every_role_keeps_native_root_and_full_inventory[0-baseline]",
+    "tests/test_merge_sources.py::test_every_source_kind_in_every_role_keeps_native_root_and_full_inventory[0-bundle]",
+    "tests/test_merge_sources.py::test_every_source_kind_in_every_role_keeps_native_root_and_full_inventory[0-git]",
+    "tests/test_merge_sources.py::test_every_source_kind_in_every_role_keeps_native_root_and_full_inventory[0-local]",
+    "tests/test_merge_sources.py::test_every_source_kind_in_every_role_keeps_native_root_and_full_inventory[1-baseline]",
+    "tests/test_merge_sources.py::test_every_source_kind_in_every_role_keeps_native_root_and_full_inventory[1-bundle]",
+    "tests/test_merge_sources.py::test_every_source_kind_in_every_role_keeps_native_root_and_full_inventory[1-git]",
+    "tests/test_merge_sources.py::test_every_source_kind_in_every_role_keeps_native_root_and_full_inventory[1-local]",
+    "tests/test_merge_sources.py::test_every_source_kind_in_every_role_keeps_native_root_and_full_inventory[2-baseline]",
+    "tests/test_merge_sources.py::test_every_source_kind_in_every_role_keeps_native_root_and_full_inventory[2-bundle]",
+    "tests/test_merge_sources.py::test_every_source_kind_in_every_role_keeps_native_root_and_full_inventory[2-git]",
+    "tests/test_merge_sources.py::test_every_source_kind_in_every_role_keeps_native_root_and_full_inventory[2-local]",
+    "tests/test_merge_sources.py::test_foreign_project_cannot_become_one_branch_of_the_merge",
+    "tests/test_merge_sources.py::test_full_project_keeps_baseline_archive_and_raw_binary_resources",
+    "tests/test_merge_sources.py::test_git_source_ignores_mutable_ref_and_current_worktree_without_checkout",
+    "tests/test_merge_sources.py::test_merge_sources_require_real_owned_source_snapshots",
+    "tests/test_merge_sources.py::test_native_package_and_language_registry_bytes_remain_in_all_full_sources",
+    "tests/test_merge_sources.py::test_owned_snapshots_and_returned_bindings_cannot_be_changed_through_callers",
+    "tests/test_merge_sources.py::test_three_different_sources_preserve_each_independent_resource_change"
   ]
 }

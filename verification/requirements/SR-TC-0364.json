@@ -2,19 +2,24 @@
   "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [],
   "expected_exit_codes": [],
-  "fixture_ids": [],
-  "implementation_status": "open",
+  "fixture_ids": [
+    "SR-FIX-MERGE-SOURCES-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [],
-  "method": "pending",
+  "method": "automated_behavior",
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Current successful Apply evidence is still required for the prepared source stages; no Dev behavior tests were executed.",
+    "Remaining M17 merge-plan inventories/classifications, conflict algorithms, target model roots, resolution/publication and CLI/Work integration remain in their existing plan steps; bound full acceptance evidence is not claimed here."
   ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Der Merge-Plan MUSS für jedes Artefakt, jede Relation, jede normative Ressource und jeden Anhang die Basis-, Ours- und Theirs-Hashes, automatisch übernommene Änderungen, Konflikte, vorgeschlagene Auflösung und erwartete Zielmodellwurzel enthalten.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "17.a.W implements complete immutable Base/Ours/Theirs source observations through native local, Git, Baseline and verified full-bundle readers. Complete original resource bytes, project/schema identity, default closed project scope, native model roots and source provenance are retained. No versioned merge plan, conflict resolution, CLI/Work integration or write authority is implemented by this slice."
   },
-  "preconditions": [],
+  "preconditions": [
+    "Explicit owned source selectors and complete synthetic project bytes; existing native source integrity and schema contracts apply. Test collection is not behavior-pass evidence."
+  ],
   "primary_verification_id": "SR-VER-0026",
   "required_environment": {
     "declared_minimum_python": "3.10",
@@ -28,8 +33,25 @@
     "owned_temporary_files": true
   },
   "specification_sha256": "9e696ccc49ee8510b7b9a26b2adf02dd477820ed55587bfe8e8f312c7f28c19a",
-  "steps": [],
+  "steps": [
+    "Acquire three complete sources, compare exact bytes and native scope/model-root bindings, check immutable detached output and original source provenance, and verify no writes or Git checkout occur."
+  ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0364",
-  "test_ids": []
+  "test_ids": [
+    "tests/test_merge_sources.py::test_every_source_kind_in_every_role_keeps_native_root_and_full_inventory[0-baseline]",
+    "tests/test_merge_sources.py::test_every_source_kind_in_every_role_keeps_native_root_and_full_inventory[0-bundle]",
+    "tests/test_merge_sources.py::test_every_source_kind_in_every_role_keeps_native_root_and_full_inventory[0-git]",
+    "tests/test_merge_sources.py::test_every_source_kind_in_every_role_keeps_native_root_and_full_inventory[0-local]",
+    "tests/test_merge_sources.py::test_every_source_kind_in_every_role_keeps_native_root_and_full_inventory[1-baseline]",
+    "tests/test_merge_sources.py::test_every_source_kind_in_every_role_keeps_native_root_and_full_inventory[1-bundle]",
+    "tests/test_merge_sources.py::test_every_source_kind_in_every_role_keeps_native_root_and_full_inventory[1-git]",
+    "tests/test_merge_sources.py::test_every_source_kind_in_every_role_keeps_native_root_and_full_inventory[1-local]",
+    "tests/test_merge_sources.py::test_every_source_kind_in_every_role_keeps_native_root_and_full_inventory[2-baseline]",
+    "tests/test_merge_sources.py::test_every_source_kind_in_every_role_keeps_native_root_and_full_inventory[2-bundle]",
+    "tests/test_merge_sources.py::test_every_source_kind_in_every_role_keeps_native_root_and_full_inventory[2-git]",
+    "tests/test_merge_sources.py::test_every_source_kind_in_every_role_keeps_native_root_and_full_inventory[2-local]",
+    "tests/test_merge_sources.py::test_owned_snapshots_and_returned_bindings_cannot_be_changed_through_callers",
+    "tests/test_merge_sources.py::test_three_different_sources_preserve_each_independent_resource_change"
+  ]
 }

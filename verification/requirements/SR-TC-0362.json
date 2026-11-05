@@ -3,22 +3,24 @@
   "expected_diagnostics": [],
   "expected_exit_codes": [],
   "fixture_ids": [
-    "SR-FIX-BUNDLE-COMPARISON-v1"
+    "SR-FIX-BUNDLE-COMPARISON-v1",
+    "SR-FIX-MERGE-SOURCES-v1"
   ],
   "implementation_status": "partial",
   "json_pointers": [],
   "method": "automated_behavior",
   "open_items": [
-    "The common registry provider is preparatory work only. Full normative three-way merge sources, source combination, merge plans, CLI/Work integration and current bound release/matrix evidence remain open in M17.",
-    "No completed Merge or full-model equivalence is claimed by the common comparison-source adapter contract."
+    "Current successful Apply evidence is still required for the prepared source stages; no Dev behavior tests were executed.",
+    "Remaining M17 merge-plan inventories/classifications, conflict algorithms, target model roots, resolution/publication and CLI/Work integration remain in their existing plan steps; bound full acceptance evidence is not claimed here."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Als Merge-Eingaben MÜSSEN Baseline-IDs, Git-Refs, verifizierte Projektbundles und lokale SpecRoad-Projektverzeichnisse unterstützt werden, sofern alle drei Eingaben dieselbe `project_id` und dieselbe unterstützte Schema-Version besitzen.",
-    "scope": "15.h.W adds a native verified full-bundle provider and explicit bundle-file Diff CLI/structured routing. Its current-JSON projection equals the existing local/Git configuration-and-artifact comparison; all ZIP payloads, including receipts, attachments and archives, remain bound and verified in separate provenance. This is not a full-resource or three-way merge equivalence claim. Opaque current JSON resource differences still fail, input bytes are rechecked, and no extraction, fallback, approval or writing is authorized. 15.h.R retains the original bundle observation until Diff completion; errors preserve initial native validation, host and security boundaries, and observed changes never publish a successful diff. These are non-atomic read observations, not locks or write authority."
+    "scope": "Existing 15.h configuration/artifact Diff coverage is retained unchanged; full-resource merge inputs now have their own complete observation. 17.a.W implements complete immutable Base/Ours/Theirs source observations through native local, Git, Baseline and verified full-bundle readers. Complete original resource bytes, project/schema identity, default closed project scope, native model roots and source provenance are retained. No versioned merge plan, conflict resolution, CLI/Work integration or write authority is implemented by this slice."
   },
   "preconditions": [
-    "Explicit canonical project bundle verified by the native bundle reader; current supported schema and matching project identity. The existing comparison scope is project configuration and artifact fields."
+    "Explicit canonical project bundle verified by the native bundle reader; current supported schema and matching project identity. The existing comparison scope is project configuration and artifact fields.",
+    "Explicit owned source selectors and complete synthetic project bytes; existing native source integrity and schema contracts apply. Test collection is not behavior-pass evidence."
   ],
   "primary_verification_id": "SR-VER-0026",
   "required_environment": {
@@ -39,7 +41,8 @@
     "Bind a relative bundle input before retained read work starts; changing the process working directory before the first unit must not select another file.",
     "Reject invalid bundle file selectors before filesystem access; valid partial bundles remain unusable as full sources through direct, CLI and structured Diff. Reject foreign local/Git/bundle pairs in both directions and unsupported native schema or missing payloads without borrowing valid neighboring files.",
     "Retain the original safe file boundary and owned ZIP bytes through final Diff observation. Detect disappearance or replacement (including malformed, foreign, partial and representation-only changes) as an observed-source conflict; a replaced parent stays a security failure. Observe the source again after final local target reads, while initially missing files remain environment failures.",
-    "Run the existing local/Git/Baseline/bundle and public Diff behavior regressions after consolidating adapter results, immutable verification evidence and the final retained bundle observation; preserve all existing oracles and error boundaries (15.h.C)."
+    "Run the existing local/Git/Baseline/bundle and public Diff behavior regressions after consolidating adapter results, immutable verification evidence and the final retained bundle observation; preserve all existing oracles and error boundaries (15.h.C).",
+    "Acquire three complete sources, compare exact bytes and native scope/model-root bindings, check immutable detached output and original source provenance, and verify no writes or Git checkout occur."
   ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0362",
@@ -107,6 +110,26 @@
     "tests/test_bundle_comparison_right.py::test_retained_diff_rejects_every_observed_bundle_replacement[partial-evaluated]",
     "tests/test_bundle_comparison_right.py::test_retained_diff_rejects_every_observed_bundle_replacement[partial-loaded]",
     "tests/test_bundle_comparison_right.py::test_retained_diff_rejects_every_observed_bundle_replacement[representation-evaluated]",
-    "tests/test_bundle_comparison_right.py::test_retained_diff_rejects_every_observed_bundle_replacement[representation-loaded]"
+    "tests/test_bundle_comparison_right.py::test_retained_diff_rejects_every_observed_bundle_replacement[representation-loaded]",
+    "tests/test_merge_sources.py::test_baseline_uses_archived_originals_without_current_project_fallback",
+    "tests/test_merge_sources.py::test_every_source_kind_in_every_role_keeps_native_root_and_full_inventory[0-baseline]",
+    "tests/test_merge_sources.py::test_every_source_kind_in_every_role_keeps_native_root_and_full_inventory[0-bundle]",
+    "tests/test_merge_sources.py::test_every_source_kind_in_every_role_keeps_native_root_and_full_inventory[0-git]",
+    "tests/test_merge_sources.py::test_every_source_kind_in_every_role_keeps_native_root_and_full_inventory[0-local]",
+    "tests/test_merge_sources.py::test_every_source_kind_in_every_role_keeps_native_root_and_full_inventory[1-baseline]",
+    "tests/test_merge_sources.py::test_every_source_kind_in_every_role_keeps_native_root_and_full_inventory[1-bundle]",
+    "tests/test_merge_sources.py::test_every_source_kind_in_every_role_keeps_native_root_and_full_inventory[1-git]",
+    "tests/test_merge_sources.py::test_every_source_kind_in_every_role_keeps_native_root_and_full_inventory[1-local]",
+    "tests/test_merge_sources.py::test_every_source_kind_in_every_role_keeps_native_root_and_full_inventory[2-baseline]",
+    "tests/test_merge_sources.py::test_every_source_kind_in_every_role_keeps_native_root_and_full_inventory[2-bundle]",
+    "tests/test_merge_sources.py::test_every_source_kind_in_every_role_keeps_native_root_and_full_inventory[2-git]",
+    "tests/test_merge_sources.py::test_every_source_kind_in_every_role_keeps_native_root_and_full_inventory[2-local]",
+    "tests/test_merge_sources.py::test_foreign_project_cannot_become_one_branch_of_the_merge",
+    "tests/test_merge_sources.py::test_full_project_keeps_baseline_archive_and_raw_binary_resources",
+    "tests/test_merge_sources.py::test_git_source_ignores_mutable_ref_and_current_worktree_without_checkout",
+    "tests/test_merge_sources.py::test_merge_sources_require_real_owned_source_snapshots",
+    "tests/test_merge_sources.py::test_native_package_and_language_registry_bytes_remain_in_all_full_sources",
+    "tests/test_merge_sources.py::test_owned_snapshots_and_returned_bindings_cannot_be_changed_through_callers",
+    "tests/test_merge_sources.py::test_three_different_sources_preserve_each_independent_resource_change"
   ]
 }
