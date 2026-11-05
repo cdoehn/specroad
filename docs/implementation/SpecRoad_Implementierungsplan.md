@@ -117,7 +117,7 @@ und sichere Eingaben; C trennt passive Werte von quellengebundener Auflösung.
 17.i–17.l bleiben offen. Kein Scope, Sicherheitsgate, Kompatibilitätsvertrag,
 Review, Budget oder historischer Nachweis wird geändert.
 
-## Bundle 612 — vollständiger Commitzielstand 17.h.R
+## Bundle 612 — vollständiger Commitzielstand 17.h.C
 
 Technische Basis: nativ geprüftes Result `specroad-apply_Result_212633_1105_4a12a2.zip`,
 SHA-256 `735c6efa948bbedf0cacb8ff3f49d387b9759726396850d798a4734c1ac28ff6`, sauberer HEAD
@@ -126,7 +126,7 @@ Der erste eigenständig gegatete Commit MERGE-RESOLUTION-612 schließt nur die
 autorisierte Detailvertragslücke 10.15.5. Anschließend folgen echte 17.h.W/R/C-
 Stände; vor jeder Stage laufen deren eigene Pflichtauswahl und N=3-Gruppe.
 
-Dieser Zielstand enthält 716/900 und danach `17.h.C`. Zähler und
+Dieser Zielstand enthält 717/900 und danach `17.i.W`. Zähler und
 Checkboxen werden erst nach seinem erfolgreichen Apply-Gate mit echtem Commit
 wirksam. Die Vorbereitung behauptet keine ausgeführten Verhaltenstests.
 
@@ -4005,10 +4005,10 @@ Kein offener Produktplanschritt wird durch diese Testoptimierung abgeschlossen.
 ```yaml
 plan_revision: 107
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 716
-last_completed_plan_commit: 17.h.R
-next_plan_commit: 17.h.C
-last_completed_numbered_bundle: 611
+implementation_plan_commits_completed: 717
+last_completed_plan_commit: 17.h.C
+next_plan_commit: 17.i.W
+last_completed_numbered_bundle: 613
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -38806,7 +38806,7 @@ Plattform-/Releasefreigaben werden dadurch nicht stillschweigend erteilt.
 
 #### 17.h.C – Make it Clean
 
-- [ ] **17.h.C** · Position **717/900** · Voraussetzung: `17.h.R`.
+- [x] **17.h.C** · Position **717/900** · Voraussetzung: `17.h.R`.
 **Exakte Commit-Message:** `17.h.C refactor(merge): Explizite auditierte Konfliktauflösung bereinigen`
 
 **Bereinigung:** Auflösungen als deklarative Planänderungen ohne direkte Projektwrites behandeln.
