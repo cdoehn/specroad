@@ -365,8 +365,8 @@
       "provider": "tests/support/literal_lint.py:observe"
     },
     "SR-FIX-MERGE-FIELDS-v1": {
-      "kind": "Explicit owned three-way JSON values, nested independent changes and actual qualified native project resource bytes. Independent expected values distinguish absence, null, bool, number, string, object and array order. The field result is neither an executable plan nor a resource deletion/publication authorization.",
-      "provider": "tests/test_merge_fields.py;tests/test_merge_inventory.py:bind_files;tests/test_project_bundle.py:project"
+      "kind": "Explicit owned three-way JSON values, nested independent changes and actual qualified native project resource bytes. Independent expected values distinguish absence, null, bool, number, string, object and array order. The field result is neither an executable plan nor a resource deletion/publication authorization. Explicit symmetric success/conflict matrices, all three original observations, escaped pointers, invalid input in every role, deep object/array values, alias isolation and side-effect traps.",
+      "provider": "tests/test_merge_fields.py;tests/test_merge_inventory.py:bind_files;tests/test_project_bundle.py:project;tests/test_merge_fields_right.py"
     },
     "SR-FIX-MERGE-INVENTORY-v1": {
       "kind": "Owned complete native source fixtures in all four source kinds and three roles, explicit canonical MP identity, real original file hashes, native model-root oracles and individual relation observations. Inactive resources, language registry/packages, referenced archives and binary attachments remain visible. Presence patterns and source changes do not grant deletion, semantic approval or publication. Stored-plan forgery cases recompute self hashes; independent source reconstruction must reject them. R also covers missing dependencies, null/absence, empty payloads, duplicate relation identity, order-independent relation identity and qualified immutable original/navigation bindings.",
