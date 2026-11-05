@@ -33,7 +33,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d59268a394b613cf8496b67c8015bc608009f1d734786950c804315a03b29ed2",
+  "specification_sha256": "6ee0678a7cf525508891e4c367359f47ad5798851a537e3b884e5014b16c4261",
   "steps": [
     "Load supported stored records, reject malformed local fields and compare original bytes without executing referenced operations.",
     "Resolve every declared slot for an explicit subject/contract verified_by pair; bind actual contract/test bytes and inspect passive metadata without executing code. Prepare only new draft defaults when no additional dimension is declared.",

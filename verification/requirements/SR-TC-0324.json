@@ -42,7 +42,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d59268a394b613cf8496b67c8015bc608009f1d734786950c804315a03b29ed2",
+  "specification_sha256": "6ee0678a7cf525508891e4c367359f47ad5798851a537e3b884e5014b16c4261",
   "steps": [
     "Read complete suites and testcases with the documented children and attributes, retaining original bytes/hash and reported strings without evaluating outcomes.",
     "Reject DTD/entity declarations, external schema/include requests, processing instructions, malformed XML and violated limits without file/network/process access.",

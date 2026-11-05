@@ -48,7 +48,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d59268a394b613cf8496b67c8015bc608009f1d734786950c804315a03b29ed2",
+  "specification_sha256": "6ee0678a7cf525508891e4c367359f47ad5798851a537e3b884e5014b16c4261",
   "steps": [
     "Resolve source-owned relations using existing native checks, require one incoming contains per section and derive roots/children/preorder using position, target ID and relation ID. Compare nested permutations, stored relations and original bytes; reject cardinality, missing targets, cycles and missing fields; check immutable reports and isolated Core/PYZ parity.",
     "Bind every conflicting incoming edge to its original source bytes and pointer; distinguish missing/multiple owners, preserve native position/identity/type failures, require an explicitly closed unconfigured project scope, and compare separate/deep trees and unchanged owned observations across Core/PYZ."

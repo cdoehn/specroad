@@ -1,19 +1,19 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.67
+## Version 0.2.68
 
 | Feld | Wert |
 |---|---|
 | Dokument-ID | `SR-SPEC-0001` |
-| Dokumentversion | `0.2.67` |
+| Dokumentversion | `0.2.68` |
 | Zielrelease | `SpecRoad Single-Repository Workbench 0.2.0` |
 | Status | **Fachlich konsolidierte Arbeitsgrundlage; technische Reviewentscheidung gesondert dokumentiert, formale Baseline-Freigabe und Produktabnahme nicht durch dieses Dokument erklärt** |
 | Stand | 5. November 2026 |
 | Sprache | Deutsch; technische Feldnamen, Enum-Werte und CLI-Kommandos Englisch |
-| Fachliche Quelle | **Diese Repositoryfassung v0.2.67 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.67 liegt mit dieser Änderung nicht vor.** |
+| Fachliche Quelle | **Diese Repositoryfassung v0.2.68 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.68 liegt mit dieser Änderung nicht vor.** |
 | Bearbeitbare Satzquelle | Diese Datei; eine spätere PDF muss denselben versionierten Inhalt wiedergeben. |
-| Vorgängerversion | Repository-Spezifikation v0.2.66 vom 5. November 2026; historische Nachweise bleiben unverändert. |
-| Prüf- und Entscheidungsgrundlage | MERGE-RELATIONS-606, delegiert gemäß SPECROAD-DECISION-1, Vertrag 4; keine Produktfreigabe. |
-| Änderungsart | Quellgebundene Herkunftsbeobachtungen und schreibfreier Relationsmerge; bestehende Identitäts- und Reviewgrenzen bleiben. |
+| Vorgängerversion | Repository-Spezifikation v0.2.67 vom 5. November 2026; historische Nachweise bleiben unverändert. |
+| Prüf- und Entscheidungsgrundlage | MERGE-CONFLICTS-608, delegiert gemäß SPECROAD-DECISION-1, Vertrag 4; keine Produktfreigabe. |
+| Änderungsart | Stabile Konflikt-IDs, drei Anwesenheitswerte, direkter Impact und lesender CLI-Vertrag ohne Freigabe. |
 
 > **Verbindlicher Quellenwechsel:** Die ausdrückliche Nutzerentscheidung REFERENCE-SOURCE-551 wird als v0.2.50 umgesetzt. Der neue Quellvertrag ist Entwurfsarbeit vom 3. November 2026, kein Nachweis eines früher existierenden Formats. Bestehende 0.2-Verträge, Transport-, Sicherheits- und Reviewgrenzen bleiben erhalten.
 
@@ -4591,6 +4591,107 @@ Originalschutz, manipulierte Herkunftshüllen und unveränderte Quellen.
 bleiben erforderlich. Dieser lesende Baustein ist keine Produktabnahme.
 
 
+#### 10.15.4 Adressierbare, lesende Konfliktobjekte
+
+**MERGE-CONFLICTS-608, delegiert gemäß SPECROAD-DECISION-1 und 2.4.3.1,
+Vertrag 4.** Diese additive Detailfestlegung konkretisiert 17.g und
+SR-REQ-0371/0375. Sie definiert einen lesenden Mergeplan-Zwischenstand,
+keinen Change Plan, keine Auflösung und keine Freigabe. 17.h–17.l bleiben
+für auditierte Auflösung, Metadaten, Zielvalidierung und Veröffentlichung
+erforderlich; eine leere Konfliktliste ersetzt keines dieser Gates.
+
+Die geschlossene JSON-Hülle `merge-conflicts-v1` enthält genau
+`conflict_format_version`, `plan_id` (10.15.1), `source_bindings` (exakt die
+vollständigen drei nativen Bindungen), `source_bindings_sha256`,
+`history_input_sha256` (10.15.3), `conflicts`, `conflicts_sha256`,
+`pending_gates`, `ready=false`, `write_authorized=false` und
+`approval_granted=false`. `pending_gates` ist in dieser Fassung exakt
+`["audited_resolution", "merge_metadata", "target_validation", "publication"]`.
+Die Konfliktliste wird nach Konflikt-ID sortiert, enthält keine doppelte ID
+und wird vollständig mit kanonischem JSON-SHA-256 gebunden. Die ganze Hülle
+hat einen extern berechenbaren kanonischen SHA-256, kein selbstreferentes Feld.
+
+Jedes Konfliktobjekt enthält genau `conflict_id`, `identity` (kind/id/version
+nach 10.15.1), `artifact_ids`, `pointer`, `conflict_class`, `values`,
+`observations`, `element_keys`, `impact` und `allowed_resolutions`.
+`artifact_ids` enthält die betroffene Artefakt-ID bzw. bei Relationen alle
+beobachteten Besitzer-IDs, sortiert und eindeutig; bei projektweiten Ressourcen
+ist es leer. Der RFC-6901-Pointer bezieht sich auf die logische Ressource,
+nicht auf eine angenommene gemeinsame Position in einer Quellliste. Bei
+Relationen ist die Ressource das Paar owner_id/relation aus 10.15.3; bei
+Ressourcen-, Identitäts- und Lifecyclekonflikten ist der Pointer leer.
+`element_keys` enthält die kanonisch sortierten stabilen Collection-Schlüssel
+nach 10.15.2, andernfalls eine leere Liste. Alle ermittelten Konfliktzweige
+bleiben erhalten; weder der erste Treffer noch die Anzahl begrenzt die Liste.
+
+`values` und `observations` enthalten jeweils exakt base/ours/theirs.
+Beobachtungen sind die unveränderten Inventurbelege nach 10.15.1.
+Ein Wert ist exakt `{"state":"absent"}` oder
+`{"state":"present","domain":"json-v1","value":<JSON>}` oder
+`{"state":"present","domain":"bytes-v1","size":<Bytezahl>,"sha256":<SHA-256>}`.
+Damit sind fehlender Wert, JSON-null und leere Bytes verschieden. Binär-/Archiv-
+und Legacy-Originale werden durch tatsächliche Bytezahl und Hash beschrieben,
+nicht dekodiert oder als JSON-null ausgegeben. Bei einem Feldkonflikt sind es
+die drei Feldwerte; bei einer Collection die ganzen drei Collections. Die
+vollständigen Quellbelege bleiben zusätzlich erhalten.
+
+Die ID ist `MC-` plus der vollständige kleingeschriebene SHA-256 des
+kanonischen Objekts mit genau `conflict_format_version`, `plan_id`,
+`source_bindings_sha256`, `history_input_sha256`, `identity`, `pointer`,
+`conflict_class` und `element_keys`. Gleiche gebundene Eingaben ergeben die
+selbe ID, auch bei anderer Ausgabereihenfolge. Eine andere Plan-, Quell- oder
+Herkunftsbindung ergibt eine andere ID. IDs sind keine Zufallsnamen und kein
+Nachweis einer Auflösung; Hashgleichheit ersetzt keine Quellprüfung.
+
+`impact` enthält genau `scope="direct_source_relations"`, `depth=1`,
+`transitive=false` und `by_role`. Für jede Rolle steht eine vollständige,
+nach kanonischen Zeilenbytes sortierte Liste mit genau `relation_id`,
+`source_id`, `target_id`, `relation_type`: alle tatsächlich beobachteten
+Relationen mit mindestens einem Endpunkt in `artifact_ids`. Identische
+Endpunktpaare mit verschiedenen Relations-IDs bleiben getrennt. Kein
+transitiver Impact, keine vermutete Reviewgültigkeit und keine unbekannten
+Projektfolgen werden behauptet. Für Ressourcen ohne Artefaktbesitzer bleibt
+die Liste leer und dieser begrenzte Scope ausdrücklich bestehen.
+
+`allowed_resolutions` ist eine geordnete Teilmenge von
+`["take_ours", "take_theirs", "take_base", "value"]`. Für reine JSON-Feld-,
+Collection- und konkurrierende Binärwertkonflikte werden nur tatsächlich
+vorhandene Seiten angeboten; `value` nur für JSON. Bei Identitäts-/Herkunfts-,
+Absenz-ohne-Entfernungswunsch-, Lifecycle-, Originalschutz-, Besitzer- oder
+Erstellungsmetadatenkonflikten bleibt sie leer: Eingaben müssen fachlich
+geklärt werden; kein Take umgeht diese Schutzregeln. Wenn eine Ressource
+solch einen Schutzkonflikt besitzt, bietet auch ein zusätzlicher Inhalts-
+konflikt derselben Ressource keine Auflösung an. Bei remove-versus-edit auf
+Objektfeldern wird Abwesenheit nicht durch `take_*` zur Löschfreigabe;
+JSON-null als expliziter Wert bleibt möglich. Jede später gewählte Alternative
+ist erst mit 17.h-Audit und den unveränderten Folgegates anwendbar.
+
+Der Erzeuger sammelt die tatsächlichen Identitäts-, Relations-, Lifecycle-,
+Feld-/Collection- und Anhangkonflikte aus 17.c–17.f über vollständig nativ
+qualifizierten Quellen. Automatisch kombinierbare Werte erzeugen keinen
+Konflikt. Noch nicht berechnete K.3-Metadaten werden nicht durch einen
+gewöhnlichen Feldkonflikt ersetzt; Relationsarrays werden separat nach
+Relations-ID, nicht zusätzlich als geordnete Artefaktarrays behandelt.
+Fehlende Ressourcen sind ohne expliziten Entfernungswunsch keine Löschung.
+Die vorläufige Inventurkennzeichnung semantic_planning_required ist kein
+fertiger Konflikt. Ein natives Lesegate rekonstruiert alle Konflikte aus den
+aktuellen gebundenen Originalquellen und Herkunftseingaben; ausgelassene,
+zusätzliche oder manipulierte Konflikte werden auch nach Neuberechnung der
+Hashes abgewiesen.
+
+`specroad merge conflicts <MERGE-PLAN> --format json` bietet bereits den
+vollständigen maschinenlesbaren Zugriff auf diese gespeicherte Hülle. Es
+liest genau die explizite reguläre Datei ohne Symlink-/Spezialdateiverfolgung,
+prüft Form, Version, IDs und interne Hashbindungen und liefert den Plan mit
+`source_validation="not_revalidated"`. Die Anzeige öffnet keine im Plan
+referenzierten Quellen, URLs oder Git-Objekte; sie ist eine gespeicherte
+Beobachtung, keine aktuelle fachliche Verifikation. Für diese bleibt das
+native Lesegate mit echten Quellen erforderlich. Doppelte Schlüssel,
+unbekannte Felder/Versionen und ungültige Wertformen sind Fehler; Ausgabe-
+formatierung ist kein Testgegenstand. Es werden weder Projektdateien, Plan,
+Cache, Lock, Journal noch Git verändert.
+
+
 ### 10.16 Projektbundle und partieller Umfang
 
 Ein Bundle verwendet ausschließlich die kanonischen Werte `bundle_kind=project|partial` nach Anhang E.3; `document` und `release` sind Scope-Arten, keine Werte dieses Felds. Ein `project`-Bundle enthält einen geschlossenen, nicht konfigurationsgefilterten Projektscope und bildet nach Extraktion ein normales schreibbares SpecRoad-Projekt. Es enthält standardmäßig abgeschlossene Request- und Transaktionsreceipts in einer getrennten Betriebssektion, deren Hash im Bundlemanifest gebunden ist, aber nicht in die fachliche Modellwurzel eingeht.
@@ -7760,6 +7861,7 @@ Die folgende Roadmap ist informativ und erzeugt keine Anforderungen an 0.2:
 
 | Version | Datum | Status | Änderung |
 |---|---|---|---|
+| 0.2.68 | 2026-11-05 | Delegiert gemäß SPECROAD-DECISION-1, Vertrag 4 | MERGE-CONFLICTS-608: Vollständige lesende Konfliktobjekte mit stabilen IDs, Impact, Auflösungsarten und CLI-Inspektion. |
 | 0.2.67 | 2026-11-05 | Delegiert gemäß SPECROAD-DECISION-1, Vertrag 4 | MERGE-RELATIONS-606: Herkunftsbindung und globale Relationsidentität ohne implizite Lösch-/Schreibfreigabe. |
 | 0.2.66 | 2026-11-05 | Ausdrücklicher Nutzerauftrag | CONTROL-ACCEPT-CURRENT-605: ausgewählten geprüften Stand explizit übernehmen, optionale Klärung und konservatives Budget; alte Nachweiskette darf entfallen. |
 | 0.2.65 | 2026-11-05 | Einmalige ausdrückliche Nutzerfreigabe nach SPECROAD-DECISION-1 | MERGE-COLLECTIONS-603: schemafeste Mengen, atomare geordnete Folgen und Anhangkandidaten ohne implizite Lösch- oder Schreibfreigabe. |
@@ -11836,4 +11938,4 @@ Implementierungsschritten nachgewiesen sein.
 
 ---
 
-**Ende der SpecRoad-Produktspezifikation v0.2.67.**
+**Ende der SpecRoad-Produktspezifikation v0.2.68.**

@@ -32,7 +32,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d59268a394b613cf8496b67c8015bc608009f1d734786950c804315a03b29ed2",
+  "specification_sha256": "6ee0678a7cf525508891e4c367359f47ad5798851a537e3b884e5014b16c4261",
   "steps": [
     "11.l.W: select actual configured rows and eligible graph nodes through the same native Query service, compare stable ID ties and explicit ID ordering, and bind selected scope/configuration plus original bytes. Preserve all potential variants when no selection is supplied.",
     "11.l.R: preserve missing cells explicitly without null/type coercion; evaluate acyclic nested records projections with independent native graph bounds, stable target IDs and original source bindings; reject malformed/unused definitions before filtering.",

@@ -41,7 +41,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d59268a394b613cf8496b67c8015bc608009f1d734786950c804315a03b29ed2",
+  "specification_sha256": "6ee0678a7cf525508891e4c367359f47ad5798851a537e3b884e5014b16c4261",
   "steps": [
     "Evaluate supported operators in documented order; check strict types, Missing and Boolean short circuit.",
     "Evaluate any/all/none in array order using lexical item binding, strict Boolean predicates and empty-array identities.",

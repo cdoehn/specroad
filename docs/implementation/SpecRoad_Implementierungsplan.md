@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 105 · **Stand:** 5. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.67
+**Planrevision:** 106 · **Stand:** 5. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.68
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 Schritte und 900 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; die ausdrücklich genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wird nach 10.7.10 innerhalb von 15.l.R vorgezogen. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -9,7 +9,7 @@ Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 S
 
 Fachliche Grundlage ist [`docs/specification/SpecRoad_Spezifikation.md`](../specification/SpecRoad_Spezifikation.md), einschließlich aller konsolidierten Korrekturen, 742 Requirements, 51 Verifikationsverträge, 46 Szenario-/E2E-Identitäten sowie R-01 bis R-75, Anhang U und den PatchHarbor-Rundweg aus Anhang W. Der [`Prüfbericht`](../reviews/SpecRoad_v0.2.7_Implementierungsreife_Pruefbericht.md) ist ein vorgelagerter Entwurfsreview, kein späterer Produktnachweis.
 
-Gebundene Spezifikations-SHA-256: `d59268a394b613cf8496b67c8015bc608009f1d734786950c804315a03b29ed2`.
+Gebundene Spezifikations-SHA-256: `6ee0678a7cf525508891e4c367359f47ad5798851a537e3b884e5014b16c4261`.
 Planungsbasis: Commit `fe2661d02ecf2f7eb483b58a4487eb009c6b3846`; sauberes Result-Bundle `specroad_Result_120209_0914_df3504.zip`; Repository-ID `3d2576df-d611-46fc-9d2b-92869468aaca`. Diese Angaben dokumentieren die Entstehung des Plans, nicht die zukünftige Patchbindung. **Jedes spätere Patchpaket bindet den dann aktuellen tatsächlichen Result-Zustand.**
 
 Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 2026 gelten zusätzlich und bei den nachfolgend benannten Konflikten vorrangig. Sonstige normative Spezifikationsinhalte werden nicht stillschweigend abgeschwächt. Neue fachliche Widersprüche, fehlende zwingende Angaben und Sicherheitsprobleme sind offen zu benennen, nicht durch erfundene Annahmen oder Scheinerfolge zu lösen.
@@ -33,6 +33,42 @@ ausdrückliche Bedienausnahme aus 2.4.3.2 bleibt zusätzlich anwendbar.
 Produktfreigaben und die Grenzen aus 2.4.1/2.4.2/2.4.4 bleiben unverändert.
 Dieser Plan ändert keine alten Aufträge, Antworten, Blockaden oder
 Laufzeitdaten und ist keine Start-/Resume-Anweisung.
+
+## MERGE-CONFLICTS-608 — vollständiger Konfliktvertrag und Schritt 17.g
+
+Autorität: SPECROAD-DECISION-1, 2.4.3.1 und aktueller Control-Vertrag 4,
+clarification_allowed=true, Restbudget 3. Keine menschliche Reviewfreigabe
+wird behauptet. Das nativ geprüfte Result 1fa54a bindet SHA-256
+`75ab571ab381cceb5aee0518e9f736a16e06df5a13229b9f8d359afed0172078`
+an den sauberen HEAD `a75ef0e994c433d723314bb0f0b3638c124bb131`.
+Bundle 607 ist mit 17.f.W/R/C vollständig committed; seine Gates weisen
+7334, 7389 und 7890 bestandene Tests aus. Produktstand: 711/900.
+
+Lücke: SR-REQ-0371/0375 und 17.g verlangen stabile Konflikt-IDs, drei Werte,
+Impact, Auflösungsarten und maschinenlesbaren Zugriff, ohne deren JSON-Form,
+ID-Bindung oder Fehlend/null-Unterscheidung festzulegen. Geprüft wurden
+10.15.1–3, 12.26, K.3, 17.g–17.l, die bestehenden Feld-, Relations-,
+Lifecycle- und Anhangkonflikte sowie native Quellen und CLI-Verträge.
+
+Alternativen: flüchtige Listennummern; freie UUIDs; oder deterministische IDs
+mit vollständiger Plan-/Quell-/Herkunftsbindung. Gewählt ist letzteres.
+Für fehlende Werte wurde ein expliziter Anwesenheitstag statt JSON-null
+gewählt. Direkter belegter Relationsimpact vermeidet spekulative Folgen.
+Eine gespeicherte lesende CLI-Anzeige und ein separates natives Quelllesegate
+vermeiden erfundene Herkunftsprovider oder Zugriff auf fremde Quellpfade.
+Schutzkonflikte bleiben unauflösbar durch Take/Value; kein Sicherheitsgate
+wird abgeschwächt. Die additive, versionierte Hülle ist reversibel und
+ändert keine bestehenden Projektbytes, Kompatibilitätszusagen oder Reviews.
+
+Zuerst gelten 10.15.4, die folgenden Planabnahmen und aktive Katalogbindungen.
+Diese Klärungsstage lässt sämtliche Produktcommits offen. Danach folgt der
+vollständige 17.g-W/R/C-Schritt mit getrennten Apply-Gates. W liefert alle
+Konfliktzweige und den lesenden CLI-Zugriff. R härtet manipulierte Daten,
+Fehlend/null, Quellenwechsel und Schutzgrenzen. C trennt Datenmodell und
+Darstellung ohne neue Fachlogik. Folgeschritte 17.h–17.l bleiben offen;
+keine Auflösung, Metadatenberechnung, Zielvalidierung oder Publikation wird
+als fertig behauptet. Dev führt keine Verhaltenstests aus. Keine Änderung
+von Control, lokalen Betriebsdaten, Historie oder Budget.
 
 ## Bundle 607 — vollständiger Commitzielstand 17.f.C
 
@@ -3669,7 +3705,7 @@ Kein offener Produktplanschritt wird durch diese Testoptimierung abgeschlossen.
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 105
+plan_revision: 106
 implementation_plan_commits_total: 900
 implementation_plan_commits_completed: 711
 last_completed_plan_commit: 17.f.C
@@ -38424,14 +38460,14 @@ Plattform-/Releasefreigaben werden dadurch nicht stillschweigend erteilt.
 
 **Umsetzung:** Stabile Konfliktkennungen mit Pointer, drei Werten, Klasse, Impact und zulässiger Auflösung bereitstellen.
 
-**Verhaltensabnahme:** Jeder offene Konflikt ist als vollständiges Datenobjekt adressierbar.
+**Verhaltensabnahme:** Jeder offene Konflikt ist als vollständiges Datenobjekt adressierbar. 10.15.4 bindet stabile IDs, alle drei Anwesenheitswerte, direkte Relationsauswirkungen und zulässige Auflösungsarten; CLI und natives Quelllesegate bleiben ausdrücklich lesend.
 
 #### 17.g.R – Make it Right
 
 - [ ] **17.g.R** · Position **713/900** · Voraussetzung: `17.g.W`.
 **Exakte Commit-Message:** `17.g.R feat(merge): Konfliktobjekte und maschinenlesbarer Zugriff vervollständigen`
 
-**Vervollständigung:** Fehlender Wert bleibt von JSON-null unterscheidbar; Konfliktliste verliert keine Zweige.
+**Vervollständigung:** Fehlender Wert bleibt von JSON-null unterscheidbar; Konfliktliste verliert keine Zweige. 10.15.4 verlangt zusätzlich geschlossene Parser, Schutzkonflikte ohne Take-Umgehung sowie Ablehnung ausgelassener oder rehashter Konflikte am nativen Quelllesegate.
 
 **Verhaltensabnahme:** JSON-Datenvertrag und Fachimpact werden geprüft, nicht Konflikttabellen oder Pretty-Texte. Die W-Nachweise bleiben zusätzlich grün.
 
