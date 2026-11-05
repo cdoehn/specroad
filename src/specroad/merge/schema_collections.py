@@ -1,5 +1,5 @@
 """Explicit built-in collection rules, never field-name or element heuristics."""
-from ..model._schema import merge_annotation
+from ..model.merge_annotations import merge_annotation
 from ..model.canonical import canonical_json_bytes as jcs
 from ..model.errors import ModelError
 from .field_values import _MISSING

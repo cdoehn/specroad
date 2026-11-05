@@ -86,11 +86,11 @@ Pflichtauswahl. Erst danach folgt der nächste reale Zustand. Das Paket wird
 atomar an Exchange übergeben; kein Dienststart, keine eigene Apply-/Warte-
 oder Fortsetzungsschleife. Endziel bleibt 705/900, danach offen 17.e.W.
 
-## Bundle 603 — vollständiger Commitzielstand 17.d.R
+## Bundle 603 — vollständiger Commitzielstand 17.d.C
 
 Der einmalig manuell freigegebene Klärungspräfix MERGE-COLLECTIONS-603 mit
 Spezifikation 10.15.2 steht in derselben ZIP vor den getrennten W/R/C-Ständen.
-Diese Stage zielt auf 704/900 und danach `17.d.C`. Die Zähler und
+Diese Stage zielt auf 705/900 und danach `17.e.W`. Die Zähler und
 Checkboxen gelten erst nach erfolgreichem eigenem Apply-Gate und echtem Commit.
 Die gebundene technische Basis und die einmalige Befugnis stehen im folgenden
 Entscheidungsnachweis; Control-Vertrag, Historie und Budget bleiben unverändert.
@@ -3516,10 +3516,10 @@ Kein offener Produktplanschritt wird durch diese Testoptimierung abgeschlossen.
 ```yaml
 plan_revision: 103
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 704
-last_completed_plan_commit: 17.d.R
-next_plan_commit: 17.d.C
-last_completed_numbered_bundle: 602
+implementation_plan_commits_completed: 705
+last_completed_plan_commit: 17.d.C
+next_plan_commit: 17.e.W
+last_completed_numbered_bundle: 604
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -38177,7 +38177,7 @@ Plattform-/Releasefreigaben werden dadurch nicht stillschweigend erteilt.
 
 #### 17.d.C – Make it Clean
 
-- [ ] **17.d.C** · Position **705/900** · Voraussetzung: `17.d.R`.
+- [x] **17.d.C** · Position **705/900** · Voraussetzung: `17.d.R`.
 **Exakte Commit-Message:** `17.d.C refactor(merge): Mengen, geordnete Folgen und Anhänge bereinigen`
 
 **Bereinigung:** Feldsemantik aus dem Schema beziehen statt freie Arrayheuristiken einzubauen.

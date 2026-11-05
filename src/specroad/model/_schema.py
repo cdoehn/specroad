@@ -9,6 +9,7 @@ from datetime import date
 import re
 
 from .errors import ModelError
+from .merge_annotations import merge_annotation
 
 
 _KEYWORDS = frozenset({
@@ -71,21 +72,6 @@ def _datetime_utc(value):
     # Syntax supports a UTC leap-second candidate; this is not an IERS registry
     # lookup and makes no assertion that a future leap second was announced.
     return second != 60 or (hour == 23 and minute == 59 and (month, day) in ((6, 30), (12, 31)))
-
-
-def merge_annotation(node):
-    """Read a closed built-in annotation; it never changes field validation."""
-    rule = node['x-specroad-merge']
-    if type(rule) is not dict or node.get('type') != 'array':
-        raise ValueError('Invalid collection annotation')
-    if rule == {'kind': 'ordered'}:
-        return 'ordered', None
-    if set(rule) != {'kind', 'key'} or rule['kind'] != 'set':
-        raise ValueError('Invalid collection annotation')
-    key = rule['key']
-    if type(key) is not str or (key and not key.startswith('/')) or re.search(r'~(?![01])', key):
-        raise ValueError('Invalid collection key pointer')
-    return 'set', tuple(part.replace('~1', '/').replace('~0', '~') for part in key[1:].split('/')) if key else ()
 
 
 def _check_vocabulary(schema):
