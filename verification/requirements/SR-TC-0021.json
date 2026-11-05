@@ -31,7 +31,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "1fe1ab7ff8bd66412543935ea760749fe67c08546df6fc9e29b4527048559deb",
+  "specification_sha256": "e3994acf82c7c9ef4ae2cd14b2c5f5e26d6c78b5c2519a2723f5f6311298b593",
   "steps": [],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0021",

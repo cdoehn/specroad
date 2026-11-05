@@ -45,7 +45,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "1fe1ab7ff8bd66412543935ea760749fe67c08546df6fc9e29b4527048559deb",
+  "specification_sha256": "e3994acf82c7c9ef4ae2cd14b2c5f5e26d6c78b5c2519a2723f5f6311298b593",
   "steps": [
     "11.g.W: validate native structure/ownership and the whole contains/include graph before iterative expansion. Verify repeated content/section includes, deterministic source-bound ancestry, direct/transitive cycle witnesses, missing targets, native ordering, deep acyclic chains, changed revisions, immutable results, read-only behavior and isolated Core/PYZ parity.",
     "11.g.R: verify three-document and unreachable/mixed include cycles, lawful cross-document leaf-section reuse, diamonds and wide/repeated paths, exact malformed-edge/source rejection, detached cycle witnesses, byte-only rebinding, immutable source ownership and real read/process/network traps, including Core/PYZ diagnostic parity.",

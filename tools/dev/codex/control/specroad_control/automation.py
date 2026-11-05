@@ -84,6 +84,11 @@ class Engine(OverloadWaiting):
             from .apply_reconcile import validate_history, verify_completed, tick as reconcile_tick
             from .clarification_authorization_history import validate_history as authorization_history
             from .clarification_authorization import tick as authorization_tick, verify_completed as verify_authorized
+            from .blocked_authorization_history import validate_history as blocked_history
+            from .blocked_authorization import tick as blocked_tick
+            blocked_grant = blocked_history(ledger)
+            if blocked_grant is not None:
+                return blocked_tick(self, ledger, blocked_grant)
             authorization = authorization_history(ledger)
             if authorization is not None:
                 return authorization_tick(self, ledger, authorization)
@@ -115,7 +120,7 @@ class Engine(OverloadWaiting):
                 if (selected and selected['version'] in (2, 3, 4)
                         and ledger.output_kind() in ('patch_ready', 'spec_clarification', MIXED)):
                     retry = ledger.retry_info(source['sha256'])
-                    directory = attempt_directory(self.paths, source['sha256'], retry['number'] if retry else 0)
+                    directory = ledger.attempt_directory(self.paths, source['sha256'], retry['number'] if retry else 0)
                     attempt = json_read(directory/'attempt.json')
                     if not attempt or contract(attempt.get('request_contract')) != selected:
                         raise ControlError('request_contract_changed', 'Follow-up authority differs from the original attempt.')
@@ -156,7 +161,7 @@ class Engine(OverloadWaiting):
                 if wait > 0:
                     return {"halted": False, "again": False, "retry_after": wait}
                 try:
-                    self.check_retry(source, retry)
+                    self.check_retry(source, retry, ledger=ledger)
                 except ControlError as exc:
                     if exc.code in ('dev_turn_active', 'continuation_background_active'):
                         self.update(thread_status="active")
@@ -171,10 +176,13 @@ class Engine(OverloadWaiting):
                 self.update(stage=row["stage"], error=None)
                 return {"halted": False, "again": False}
             self.exchange.assert_current(source, ledger.known_runs())
-            job_dir = attempt_directory(self.paths, source["sha256"], number)
+            job_dir = ledger.attempt_directory(self.paths, source["sha256"], number)
             private_dir(job_dir)
             attempt = {"source_sha256": source["sha256"], "thread_id": self.config.session_id, "number": number}
-            continuing = retry['evidence'] if retry and retry['evidence'].get('mode') == 'continuation' else None
+            from .blocked_authorization_history import active as blocked_authority
+            grant = blocked_authority(ledger, source['sha256'])
+            fresh_grant = grant is not None and number == grant['attempt_number']
+            continuing = retry['evidence'] if retry and not fresh_grant and retry['evidence'].get('mode') == 'continuation' else None
             if continuing:
                 attempt['continuation'] = continuing
             previous = json_read(job_dir / "attempt.json")
@@ -182,7 +190,7 @@ class Engine(OverloadWaiting):
             # original version, including legacy absence of version metadata.
             origin = previous
             if origin is None and number:
-                origin = json_read(attempt_directory(self.paths, source['sha256'], 0) / 'attempt.json')
+                origin = json_read(ledger.attempt_origin(self.paths, source['sha256']) / 'attempt.json')
                 if origin is None:
                     origin = {}  # Legacy read-only recovery must stay legacy.
             selected = (contract(origin.get('request_contract')) if origin is not None else
@@ -292,9 +300,15 @@ class Engine(OverloadWaiting):
                retry_attempt=pending["number"], retry_at=pending["due"], wait_seconds=pending["due"]-self.clock())
         return pending
 
-    def check_retry(self, source, retry):
+    def check_retry(self, source, retry, *, ledger=None):
+        if ledger is None:
+            opened = Ledger(self.paths.state / "automation.sqlite3", scope(self.config))
+            try:
+                return self.check_retry(source, retry, ledger=opened)
+            finally:
+                opened.close()
         evidence = retry['evidence']
-        directory = attempt_directory(self.paths, source['sha256'], retry['number'] - 1)
+        directory = ledger.attempt_directory(self.paths, source['sha256'], retry['number'] - 1)
         if evidence.get('mode') == 'continuation':
             attempt = json_read(directory / 'attempt.json')
             if not attempt or attempt.get('number') != retry['number'] - 1:
@@ -353,12 +367,12 @@ class Engine(OverloadWaiting):
                 if retry['evidence'].get('mode') == 'continuation':
                     self.confirm_terminal(retry['evidence'])
                 else:
-                    self.check_retry(source, retry)
+                    self.check_retry(source, retry, ledger=ledger)
                 ledger.change('waiting_result', patch_sha=patches[0]['sha256'])
                 self.update(stage='waiting_result', error=None, retry_at=None)
                 record('retry_decision', source_sha256=source['sha256'], decision='adopt_output')
                 return False
-            self.check_retry(source, retry)
+            self.check_retry(source, retry, ledger=ledger)
         self.exchange.assert_current(source, ledger.known_runs())
         def claim():
             if request_guard is not None:
@@ -371,6 +385,8 @@ class Engine(OverloadWaiting):
 
     def authorize_request(self, ledger, source, directory, attempt, selected):
         def guard():
+            from .blocked_authorization import guard_dispatch
+            guard_dispatch(self, ledger, source)
             if ledger.request_contract() != selected or json_read(directory/'attempt.json') != attempt:
                 raise ControlError('request_contract_changed', 'Request authority changed during thread preflight.')
         guard()
@@ -382,7 +398,7 @@ class Engine(OverloadWaiting):
         selected = ledger.request_contract()
         if selected is not None and selected['version'] in (2, 3, 4):
             retry = ledger.retry_info(source['sha256'])
-            directory = attempt_directory(self.paths, source['sha256'], retry['number'] if retry else 0)
+            directory = ledger.attempt_directory(self.paths, source['sha256'], retry['number'] if retry else 0)
             attempt = json_read(directory/'attempt.json')
             if not attempt or contract(attempt.get('request_contract')) != selected:
                 raise ControlError('request_contract_changed', 'Completion authority does not match its original attempt.')

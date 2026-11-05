@@ -134,3 +134,24 @@ muss im Exchange oder Archiv vorhanden sein. Fehlender/widersprüchlicher
 Beleg sperrt mit `patch_source_unproven`; zwei Pakete für dasselbe Result
 bleiben mehrdeutig. Alte Pakete und die History bleiben erhalten. Die Auswahl
 ändert keine Freigabe und erneuert kein Budget unbekannter manueller Übergaben.
+
+## Nachträgliche Freigabe eines paketlos blockierten Versuchs
+
+Nach erfolgreichem Apply und Installation ist zusätzlich möglich:
+
+```sh
+python3 -B tools/dev/codex/control/control authorize-clarification --retry-blocked \
+  --source-sha256 <SHA256_DES_BLOCKIERTEN_RESULTS> \
+  --result /absoluter/pfad/zum/selben/Result.zip \
+  --reason "Optionale Detailklärung für diesen blockierten Versuch freigegeben"
+```
+
+Der Dienst muss gestoppt sein. Ein positiver V4-Restzähler, bisher verweigerte
+Klärungsbefugnis, vollständiger identischer blocked-Abschluss und ein weiterhin
+aktuelles sauberes Result ohne Folgepaket sind erforderlich. Der Befehl merkt
+nur vor; Status zeigt `blocked_clarification_authorization`. Späterer expliziter
+Start/Resume wartet auf den freien Thread. Originalvertrag, Budget und
+Versuchsdateien bleiben erhalten; der neue Versuch erhält eigene Dateien.
+Eine identische Wiederholung ist idempotent. Ein erneuter Blocker oder schon
+vorhandenes Paket wird nicht durch Wiederholen des Befehls überspielt.
+Normative Grenzen und Projektmarker: SpecRoad-Spezifikation 2.4.3.3.

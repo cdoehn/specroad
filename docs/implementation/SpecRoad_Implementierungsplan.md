@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 99 · **Stand:** 5. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.63
+**Planrevision:** 100 · **Stand:** 5. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.64
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 Schritte und 900 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; die ausdrücklich genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wird nach 10.7.10 innerhalb von 15.l.R vorgezogen. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -9,7 +9,7 @@ Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 S
 
 Fachliche Grundlage ist [`docs/specification/SpecRoad_Spezifikation.md`](../specification/SpecRoad_Spezifikation.md), einschließlich aller konsolidierten Korrekturen, 742 Requirements, 51 Verifikationsverträge, 46 Szenario-/E2E-Identitäten sowie R-01 bis R-75, Anhang U und den PatchHarbor-Rundweg aus Anhang W. Der [`Prüfbericht`](../reviews/SpecRoad_v0.2.7_Implementierungsreife_Pruefbericht.md) ist ein vorgelagerter Entwurfsreview, kein späterer Produktnachweis.
 
-Gebundene Spezifikations-SHA-256: `1fe1ab7ff8bd66412543935ea760749fe67c08546df6fc9e29b4527048559deb`.
+Gebundene Spezifikations-SHA-256: `e3994acf82c7c9ef4ae2cd14b2c5f5e26d6c78b5c2519a2723f5f6311298b593`.
 Planungsbasis: Commit `fe2661d02ecf2f7eb483b58a4487eb009c6b3846`; sauberes Result-Bundle `specroad_Result_120209_0914_df3504.zip`; Repository-ID `3d2576df-d611-46fc-9d2b-92869468aaca`. Diese Angaben dokumentieren die Entstehung des Plans, nicht die zukünftige Patchbindung. **Jedes spätere Patchpaket bindet den dann aktuellen tatsächlichen Result-Zustand.**
 
 Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 2026 gelten zusätzlich und bei den nachfolgend benannten Konflikten vorrangig. Sonstige normative Spezifikationsinhalte werden nicht stillschweigend abgeschwächt. Neue fachliche Widersprüche, fehlende zwingende Angaben und Sicherheitsprobleme sind offen zu benennen, nicht durch erfundene Annahmen oder Scheinerfolge zu lösen.
@@ -33,6 +33,44 @@ ausdrückliche Bedienausnahme aus 2.4.3.2 bleibt zusätzlich anwendbar.
 Produktfreigaben und die Grenzen aus 2.4.1/2.4.2/2.4.4 bleiben unverändert.
 Dieser Plan ändert keine alten Aufträge, Antworten, Blockaden oder
 Laufzeitdaten und ist keine Start-/Resume-Anweisung.
+
+## OFF-PLAN CONTROL-BLOCKED-601 — nachträgliche ausdrückliche Klärungsfreigabe (W)
+
+Manueller Nutzerauftrag vom 5. November 2026. Basis ist das erfolgreiche,
+saubere Result SHA-256 `810a1c0ead271a6264ff447cb8c9c02eb4b69f094b493edc217b432ed528bb63`,
+HEAD `291c67e7c8d9682f7ff4619ed18f21a9890ad721`. Bundle 600 ist vollständig
+abgeschlossen. Der folgende Versuch zu 17.d wurde ausschließlich analysiert
+und als paketlos blockiert abgeschlossen. Kein Produktcommit wird verworfen;
+702/900 und der nächste Produktcommit 17.d.W bleiben unverändert.
+
+Ursache: Der vorhandene Freigabebefehl verlangt einen unbeanspruchten direkten
+Apply-Nachfolger. Eine nachträgliche ausdrückliche Betreiberfreigabe kann so
+einen bereits beendeten paketlosen Blocker nicht lösen. History löschen oder
+bestehende Vertragszeilen überschreiben würde Nachweise verlieren. Gewählt
+wird ein eigener protokollierter Versuch auf derselben weiterhin gültigen
+Quelle, nur nach tatsächlichem paketlosem V4-Blockabschluss und positivem
+vorhandenem Budget. Kein allgemeiner Retry oder impliziter Freigabeschalter.
+
+CONTROL-BLOCKED-601.W: vollständiger Bedienweg, bindender Projektmarker und
+Spec 2.4.3.3; private additive Absicht, native Aktualitäts-/Paketprüfung,
+getrennte Versuchsdateien und wirksamer V4-Vertrag bei unveränderten alten
+Vertrags-/Budgetzeilen. Abnahme: Vormerken startet nichts; Pause/aktiver Thread
+halten zurück; normale und gemischte Übergabe funktionieren; genau ein
+Folgepaket und richtiger Budgetverbrauch/Erneuerung nach tatsächlichem Apply.
+CONTROL-BLOCKED-601.R: strikte Integrität, Proxy-Promptbindung, defekte oder
+konkurrierende Nachweise, spätere Pakete/Results, Unterbrechung und Race-Grenzen
+vor dem Dispatch; persistierter Retryrest und negative Matrix bleiben erhalten.
+CONTROL-BLOCKED-601.C: gemeinsame Nachweis-/Versuchshelfer strukturell trennen,
+keine neue Fachentscheidung; W/R-Tests und alle Budgetgrenzen unverändert.
+
+Drei echte Zwischenstände mit jeweils eigenem gefilterten N=3-Gate plus
+vollständiger Control-Regression und Apply-/Katalogregressionen. In Dev nur
+Syntax, Collection und native Paketvalidierung; kein Verhaltenstest und
+kein vorweggenommener Abnahmeerfolg. Installation und anschließende Freigabe/
+Start sind ausdrücklich beauftragte separate Bedienaktionen nach erfolgreichem
+Apply. Keine lokalen Konfigurationen, echten Session-IDs oder Zugangsdaten
+in der Payload. Die 17.d-Detailentscheidung bleibt dem späteren freigegebenen
+Produktauftrag vorbehalten; dieses manuelle Bundle verbraucht keinen Platz.
 
 ## Korrekturbundle 600 — gültiges Restore-Minimalfixture, vollständiger Rest (C)
 
@@ -3309,7 +3347,7 @@ Kein offener Produktplanschritt wird durch diese Testoptimierung abgeschlossen.
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 97
+plan_revision: 100
 implementation_plan_commits_total: 900
 implementation_plan_commits_completed: 702
 last_completed_plan_commit: 17.c.C

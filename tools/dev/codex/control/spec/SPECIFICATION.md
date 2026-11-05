@@ -1117,3 +1117,11 @@ vollstaendige zielgerichtete Turn-Beobachtung. Die Budgets und gemeinsame
 JSON-Bytezaehlung stehen in `codex_limits.py`. Oeffentliche Bedienbefehle,
 Fehlercodes, Grenzen und Retry-/Recovery-Entscheidungen bleiben gegenueber
 dem erfolgreich geprueften R-Zustand unveraendert.
+
+## CONTROL-BLOCKED-601
+
+Die zusätzliche explizite Bedienaktion `authorize-clarification --retry-blocked`
+unterliegt dem vollständigen Vertrag in SpecRoad-Spezifikation 2.4.3.3.
+Originalanfrage, Antwort, Budget und Fehlerbeleg bleiben erhalten; ein separat
+belegter Versuch darf höchstens das noch fehlende eine Folgepaket erzeugen.
+Keine implizite Freigabe durch Installation, Recovery oder Start.

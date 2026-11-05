@@ -42,7 +42,7 @@ def original(ledger):
 
 def evidence(engine, ledger, source_sha, selected):
     retry = ledger.retry_info(source_sha)
-    directory = attempt_directory(engine.paths, source_sha, retry['number'] if retry else 0)
+    directory = ledger.attempt_directory(engine.paths, source_sha, retry['number'] if retry else 0)
     values = {}
     for name in ('attempt.json', 'dispatch.json', 'protocol-completion.json', 'completion.json'):
         try:
@@ -89,6 +89,8 @@ def enqueue(paths, result, *, source_sha256, reason):
             require_installed(paths)
             ledger = Ledger(paths.state / 'automation.sqlite3', scope(config))
             try:
+                from .blocked_authorization_history import require_no_pending
+                require_no_pending(ledger)
                 if reconciliation(ledger) is not None:
                     fail('An Apply reconciliation is already pending.')
                 requested = engine.exchange.source(engine.core.result(requested_path))

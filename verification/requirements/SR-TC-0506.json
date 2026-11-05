@@ -34,7 +34,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "1fe1ab7ff8bd66412543935ea760749fe67c08546df6fc9e29b4527048559deb",
+  "specification_sha256": "e3994acf82c7c9ef4ae2cd14b2c5f5e26d6c78b5c2519a2723f5f6311298b593",
   "steps": [
     "Acquire shared native exclusion for writer/recovery kinds; recheck exact ownership and journal barriers before audited orphan removal.",
     "Keep ordinary forced lock recovery blocked by a real crashed writer journal; use separately authorized transaction-bound takeover only for journal recovery and terminal cleanup.",

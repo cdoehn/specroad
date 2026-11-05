@@ -58,7 +58,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "1fe1ab7ff8bd66412543935ea760749fe67c08546df6fc9e29b4527048559deb",
+  "specification_sha256": "e3994acf82c7c9ef4ae2cd14b2c5f5e26d6c78b5c2519a2723f5f6311298b593",
   "steps": [
     "Retain W manifest/hash and isolated runtime checks. Check exact role/byte binding, reject Evidence/output/descriptor/selection inputs without filtering, preserve missing binding observations as incomplete/SRV176, verify ownership and isolated Core/PYZ.",
     "Derive required keys independently from every applicable subject in an owned whole-project model, native verified_by targets and all slots. Compare descriptor coverage without changing the scope; retain missing or unresolved obligations and reject foreign keys. Bind explicit selected configuration and preserve input files without executing tests or Evidence.",

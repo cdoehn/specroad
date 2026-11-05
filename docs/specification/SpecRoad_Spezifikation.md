@@ -1,19 +1,19 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.63
+## Version 0.2.64
 
 | Feld | Wert |
 |---|---|
 | Dokument-ID | `SR-SPEC-0001` |
-| Dokumentversion | `0.2.63` |
+| Dokumentversion | `0.2.64` |
 | Zielrelease | `SpecRoad Single-Repository Workbench 0.2.0` |
 | Status | **Fachlich konsolidierte Arbeitsgrundlage; technische Reviewentscheidung gesondert dokumentiert, formale Baseline-Freigabe und Produktabnahme nicht durch dieses Dokument erklärt** |
 | Stand | 5. November 2026 |
 | Sprache | Deutsch; technische Feldnamen, Enum-Werte und CLI-Kommandos Englisch |
-| Fachliche Quelle | **Diese Repositoryfassung v0.2.63 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.63 liegt mit dieser Änderung nicht vor.** |
+| Fachliche Quelle | **Diese Repositoryfassung v0.2.64 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.64 liegt mit dieser Änderung nicht vor.** |
 | Bearbeitbare Satzquelle | Diese Datei; eine spätere PDF muss denselben versionierten Inhalt wiedergeben. |
-| Vorgängerversion | Repository-Spezifikation v0.2.62 vom 5. November 2026; historische Nachweise bleiben unverändert. |
-| Prüf- und Entscheidungsgrundlage | MERGE-INVENTORY-596: delegierte Detailfestlegung nach SPECROAD-DECISION-1 und Vertrag 4 für den vollständigen offenen Schritt 17.b. Keine persönliche Einzel- oder Produktfreigabe behauptet. |
-| Änderungsart | Versionierte vollständige Mergeinventur mit nativen Quellbindungen, expliziter Abwesenheit und unveränderten nachfolgenden Merge-/Writer-/Reviewgates. |
+| Vorgängerversion | Repository-Spezifikation v0.2.63 vom 5. November 2026; historische Nachweise bleiben unverändert. |
+| Prüf- und Entscheidungsgrundlage | CONTROL-BLOCKED-601: ausdrücklicher manueller Nutzerauftrag für die protokollierte Freigabe eines blockierten Versuchs; keine Produkt- oder Baseline-Freigabe. |
+| Änderungsart | Zusätzlicher enger Control-Bedienweg unter Erhalt von Originalversuchen, Klärungs- und Retrybudget; bestehende Produktverträge unverändert. |
 
 > **Verbindlicher Quellenwechsel:** Die ausdrückliche Nutzerentscheidung REFERENCE-SOURCE-551 wird als v0.2.50 umgesetzt. Der neue Quellvertrag ist Entwurfsarbeit vom 3. November 2026, kein Nachweis eines früher existierenden Formats. Bestehende 0.2-Verträge, Transport-, Sicherheits- und Reviewgrenzen bleiben erhalten.
 
@@ -500,7 +500,7 @@ Er ersetzt nicht Devs Prüfung der tatsächlichen Projektregeln. Control darf
 Vertrag 4 erst für einen neuen Auftrag mit dieser belegten Unterstützung
 ausstellen. Ein bereits gespeicherter alter Auftrag wird nicht umgeschrieben;
 der automatische Wechsel einer alten Kette benötigt einen belegten normalen
-erfolgreichen Abschluss. Die ausdrückliche Bedienausnahme steht in 2.4.3.2. Fehlgeschlagene oder unbekannte manuelle Übergaben, bestehende
+erfolgreichen Abschluss. Die ausdrücklichen Bedienausnahmen stehen in 2.4.3.2 und 2.4.3.3. Fehlgeschlagene oder unbekannte manuelle Übergaben, bestehende
 Blockaden und Pausen werden durch Installation nicht freigegeben. Installation
 startet weder Control noch Watcher noch einen Modellturn.
 
@@ -585,7 +585,69 @@ noch einen Produktcommit; 669/900 bleiben erhalten. Die Detailentscheidung
 zur 0.1-Quellsicherung wird in diesem Bedienänderungsbundle nicht vorweggenommen.
 Erst ein neuer freigegebener Produktauftrag darf sie nach 2.4.3.1 behandeln.
 
-#### 2.4.4 Echte Blocker und Erhaltung des Betriebszustands
+#### 2.4.3.3 Ausdrückliche Freigabe eines blockierten Versuchs — CONTROL-BLOCKED-601
+
+**Ausdrücklicher Nutzerauftrag vom 5. November 2026.** Zusätzlich zum
+Nachfolgerübergang aus 2.4.3.2 darf `authorize-clarification --retry-blocked`
+genau einen neuen Entwicklungsversuch auf demselben unveränderten, weiterhin
+maßgeblichen sauberen Result freigeben. Der Betreiber benennt dieses Result,
+seinen vollständigen SHA-256 und eine kurze ausdrückliche Begründung. Der
+Schalter ist ausschließlich mit `authorize-clarification` zulässig. Der
+bestehende Nachfolgerbefehl und seine Beweisregeln bleiben erhalten.
+
+Anlass ist ein vollständig beendeter, protokolliert mit `blocked` und leerem
+Paket-SHA abgeschlossener V4-Versuch wegen fehlender Klärungsfreigabe. Die
+persistierte operative Zusammenfassung muss `uncertain/dev_blocked` ohne
+Paket oder Outputklassifikation enthalten. Originalanfrage, Quellbindung,
+Vertrag, konfigurierte Threadbindung, Protokollabschluss und identische
+strukturierte Abschlussantwort müssen vorhanden und widerspruchsfrei sein.
+Bei Proxy-Ausführung müssen Dispatch und Abschluss denselben Turn belegen.
+Fehlerhafte oder unbekannt beendete Turns, `no_work`, laufende Versuche,
+fehlende Nachweise, bereits erteilte Klärungsbefugnis, ein offener
+Klärungspräfix oder fehlendes/erschöpftes Restbudget sind nicht zulässig.
+
+Voraussetzung ist erfolgreiche Apply-Abnahme und Installation der
+unterstützenden Control-Version. Das nativ geprüfte Result enthält zusätzlich
+`verification/blocked_clarification_authorization.json` mit exakt
+`format_version=1`, `decision_rule=SPECROAD-DECISION-1`,
+`decision_contract_version=4`, `authorization_mode=explicit_blocked_attempt`,
+`budget_policy=preserve`, `maximum_grants_per_source=1`. Der Marker allein
+gewährt keine Befugnis. Der neue Versuch erhält Vertrag 4 mit freigegebener
+optionaler Klärung und exakt dem bisherigen positiven Restbudget. Der
+ursprüngliche Vertrag und seine Budgetzeilen werden nicht umgeschrieben.
+
+Es darf noch kein natives an diese Quelle gebundenes Folgepaket existieren,
+auch kein unbekanntes, fehlgeschlagenes oder bereits archiviertes. Eine
+neue Quelle wird nicht erfunden und ein vorhandenes Paket nicht wiederholt.
+Aktualität, Originalbytes, Konfiguration und Paketfreiheit werden beim
+Vormerken, bei Übernahme und unmittelbar vor neuem Dispatch erneut geprüft.
+Ein inzwischen entstandenes Paket oder Result verhindert die Neuausgabe.
+Pro Result ist nur eine solche ausdrückliche Freigabe zulässig; identische
+Wiederholung ist idempotent und startet keinen weiteren Versuch.
+
+Die Bedienung läuft unter den bestehenden Offline-/Repository-/Threadlocks.
+Sie speichert zunächst nur einen zusätzlichen privaten Freigabebeleg mit
+alter operativer Zusammenfassung, Anfrage-/Abschluss-Hashes, Scope,
+Konfigurations-/History-Bindung, Begründung und altem/neuem Vertrag. Kein
+Dienst-, Modell- oder Apply-Start und keine implizite Aufhebung einer Pause.
+Ein bekannter aktiver Thread erlaubt nur das Vormerken; unbekannte Aktivität
+sperrt. Erst bei ausdrücklich laufender Automatik, inaktivem Thread und
+geöffnetem Betriebsgate wird der Beleg atomar aktiviert und die operative
+Zusammenfassung für den neuen Versuch auf `ready` gesetzt. Ein Abbruch
+hinterlässt keinen halben Übergang. Originaldateien bleiben bytegleich.
+Der neue Versuch verwendet einen getrennten Pfad unter dem Quellauftrag;
+auch weitere technische Retry-Versuche erhalten ihre eigenen Belege. Das
+bestehende Overload-Retrybudget wird dabei weder gelöscht noch erneuert.
+
+Ein erneuter Blocker wird wieder als solcher erhalten; Start, Recovery,
+Pause oder Wiederholung des Freigabebefehls lösen keinen weiteren neuen
+Versuch aus. Die Klärung bleibt ein optionaler Präfix vor echten Plancommits
+in einer ZIP. Maximal ein Folgepaket pro Result, W/R/C-Gates, Verbrauch und
+Erneuerung des Klärungsbudgets sowie alle fachlichen Grenzen aus
+SPECROAD-DECISION-1 bleiben vollständig bestehen. Die Bedienfreigabe selbst
+verbraucht keinen Klärungsplatz und ist kein Produktfortschritt.
+
+### 2.4.4 Echte Blocker und Erhaltung des Betriebszustands
 
 Ist keine Lösung innerhalb der Befugnis nachweisbar, MUSS der Agent stoppen
 und `blocked` mit der konkreten offenen Frage, seinem Lösungsvorschlag,
@@ -7414,6 +7476,7 @@ Die folgende Roadmap ist informativ und erzeugt keine Anforderungen an 0.2:
 
 | Version | Datum | Status | Änderung |
 |---|---|---|---|
+| 0.2.64 | 2026-11-05 | Ausdrücklicher Nutzerauftrag | CONTROL-BLOCKED-601: explizite Freigabe eines neuen Versuchs nach belegtem paketlosem Blocker, mit unveränderter Historie und Budget. |
 | 0.2.63 | 2026-11-05 | Delegiert gemäß SPECROAD-DECISION-1, Vertrag 4 | MERGE-INVENTORY-596: vollständiger Inventurzwischenstand mit drei Quellbindungen, getrennten Hashdomänen und Abwesenheit ohne Löschfreigabe; semantischer Merge und Produktabnahmen bleiben offen. |
 | 0.2.57 | 2026-11-03 | Ausdrücklicher Nutzerauftrag | CONTROL-SOURCE-SELECTION-566: exakte v2-Quell-SHA bei gleicher Vierfachbindung, konservativer Legacy-Erhalt und unveränderte Befugnisse. |
 | 0.2.56 | 2026-11-03 | Ausdrücklicher Nutzerauftrag | CONTROL-START-DELAY-564: konfigurierbare monotone Startwartezeit, Standard 60 Sekunden, ansprechbarer Stop/Status und unveränderte Betriebsschranken. |
@@ -11486,4 +11549,4 @@ Implementierungsschritten nachgewiesen sein.
 
 ---
 
-**Ende der SpecRoad-Produktspezifikation v0.2.62.**
+**Ende der SpecRoad-Produktspezifikation v0.2.64.**

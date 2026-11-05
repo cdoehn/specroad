@@ -45,7 +45,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "1fe1ab7ff8bd66412543935ea760749fe67c08546df6fc9e29b4527048559deb",
+  "specification_sha256": "e3994acf82c7c9ef4ae2cd14b2c5f5e26d6c78b5c2519a2723f5f6311298b593",
   "steps": [
     "11.i.W: retire an empty section, cascade through its complete native contains subtree, or move every child to one explicit section before publication; reject missing/conflicting strategies and incomplete/extra retirement sets without writes.",
     "11.i.R: reject missing/conflicting strategy options, invalid destinations, each stale retirement/relation guard, ID reuse and saved operation smuggling. Retire internally shared blocks exactly once with all historical ownership edges retained; reject outside-owned children. Check actual changed live source/profile bytes, authority boundaries, conflicting replay and real interrupted cascade publication with retained recovery journal.",

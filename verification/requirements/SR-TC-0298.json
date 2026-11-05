@@ -37,7 +37,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "1fe1ab7ff8bd66412543935ea760749fe67c08546df6fc9e29b4527048559deb",
+  "specification_sha256": "e3994acf82c7c9ef4ae2cd14b2c5f5e26d6c78b5c2519a2723f5f6311298b593",
   "steps": [
     "Evaluate any/all/none in array order using lexical item binding, strict Boolean predicates and empty-array identities.",
     "Execute versioned positive, negative, boundary and diagnostic vectors against real SRX APIs; compare typed values and exact error pointers, never presentation strings.",

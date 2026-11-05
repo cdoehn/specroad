@@ -25,7 +25,7 @@ def _evidence(engine, ledger, *, blocked=False):
     elif row['stage'] != 'waiting_result' or ledger.output_kind() not in IMPLEMENTATIONS:
         fail('Only a classified pending normal patch can be reconciled.')
     retry = ledger.retry_info(row['sha'])
-    directory = attempt_directory(engine.paths, row['sha'], retry['number'] if retry else 0)
+    directory = ledger.attempt_directory(engine.paths, row['sha'], retry['number'] if retry else 0)
     names = ('attempt.json', 'protocol-completion.json', 'completion.json')
     raw = {name: read_private(directory / name) for name in names}
     attempt, protocol, answer = [decode_object(raw[name]) for name in names]
@@ -157,7 +157,7 @@ def verify_completed(engine, ledger):
         chain = doc['artifacts']
         if row['state'] == 'completed' and chain['result']['sha256'] == current['sha']:
             retry = ledger.retry_info(chain['source']['sha256'])
-            directory = attempt_directory(engine.paths, chain['source']['sha256'], retry['number'] if retry else 0)
+            directory = ledger.attempt_directory(engine.paths, chain['source']['sha256'], retry['number'] if retry else 0)
             for name, expected in doc['evidence'].items():
                 if sha256(read_private(directory / name)).hexdigest() != expected:
                     fail('Original completion changed after recovery.')

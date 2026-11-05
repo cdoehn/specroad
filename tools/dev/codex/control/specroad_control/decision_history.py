@@ -8,6 +8,12 @@ from .mixed_contract import MIXED
 
 class DecisionHistory:
     def request_contract(self, source_sha=None):
+        from .blocked_authorization_history import active
+        source_sha = source_sha or self.current()['sha']
+        grant = active(self, source_sha)
+        return grant['selected_contract'] if grant else self.recorded_contract(source_sha)
+
+    def recorded_contract(self, source_sha=None):
         try:
             current = self.current() if source_sha is None else self.db.execute(
                 'SELECT * FROM jobs WHERE sha=?', (source_sha,)).fetchone()
@@ -82,15 +88,20 @@ class DecisionHistory:
 
     def inherit_contract(self, source, old, *, decision_evidence=None):
         previous = self.request_contract()
-        handoff = (self.db.execute('SELECT output_kind FROM request_contracts WHERE sha=?', (old['sha'],)).fetchone()[0]
-                   if previous else None)
+        handoff = self.output_kind() if previous else None
         return successor_contract(previous, handoff, source, **(decision_evidence or {}))
 
     def output_kind(self):
         if self.request_contract() is None:
             return None
-        return self.db.execute('SELECT output_kind FROM request_contracts WHERE sha=?',
+        table = self.output_table(self.current()['sha'])
+        key = 'source_sha' if table == 'blocked_clarification_authorizations' else 'sha'
+        return self.db.execute(f'SELECT output_kind FROM {table} WHERE {key}=?',
                                (self.current()['sha'],)).fetchone()[0]
+
+    def output_table(self, source_sha):
+        from .blocked_authorization_history import active
+        return 'blocked_clarification_authorizations' if active(self, source_sha) else 'request_contracts'
 
     def record_output_contract(self, selected_contract, row, output_kind):
         kind = output_kind or 'unknown'
@@ -100,7 +111,9 @@ class DecisionHistory:
             raise ControlError('clarification_limit', 'No new or proven pending clarification is authorized.')
         if kind == 'spec_clarification' and (selected_contract['version'] not in (2, 3) or not selected_contract['clarification_allowed']):
             raise ControlError('clarification_limit', 'No consecutive clarification handoff is permitted.')
-        previous_kind = self.db.execute('SELECT output_kind FROM request_contracts WHERE sha=?', (row['sha'],)).fetchone()[0]
+        table = self.output_table(row['sha'])
+        key = 'source_sha' if table == 'blocked_clarification_authorizations' else 'sha'
+        previous_kind = self.db.execute(f'SELECT output_kind FROM {table} WHERE {key}=?', (row['sha'],)).fetchone()[0]
         if previous_kind is not None and output_kind is not None and previous_kind != output_kind:
             raise ControlError('request_contract_changed', 'A recorded handoff cannot be reclassified.')
-        self.db.execute('UPDATE request_contracts SET output_kind=COALESCE(output_kind,?) WHERE sha=?', (kind, row['sha']))
+        self.db.execute(f'UPDATE {table} SET output_kind=COALESCE(output_kind,?) WHERE {key}=?', (kind, row['sha']))

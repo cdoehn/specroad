@@ -28,7 +28,10 @@ def main(argv=None) -> int:
     parser.add_argument("--transport", choices=("exec", "app-server-proxy"))
     parser.add_argument('--source-sha256', help='Exact previous Result SHA-256; only with authorize-clarification')
     parser.add_argument('--reason', help='Explicit operator authorization reason; only with authorize-clarification')
+    parser.add_argument('--retry-blocked', action='store_true', help='Authorize one new attempt after a patchless blocked V4 completion')
     args = parser.parse_args(argv)
+    if args.retry_blocked and args.command != 'authorize-clarification':
+        parser.error('--retry-blocked is only allowed with authorize-clarification')
     if args.extended_chain and args.command != 'reconcile-blocked':
         parser.error('--extended-chain is only allowed with reconcile-blocked')
     if args.command == 'authorize-clarification' and not (args.result and args.source_sha256 and args.reason):
@@ -94,7 +97,10 @@ def main(argv=None) -> int:
                 options['extended_chain'] = True
             result = enqueue(paths, args.result, **options)
         elif args.command == 'authorize-clarification':
-            from .clarification_authorization import enqueue
+            if args.retry_blocked:
+                from .blocked_authorization import enqueue
+            else:
+                from .clarification_authorization import enqueue
             result = enqueue(paths, args.result, source_sha256=args.source_sha256, reason=args.reason)
         elif args.command == "configure":
             result = commands.configure(paths, thread_id=args.thread_id, result=args.result,
@@ -134,6 +140,13 @@ def main(argv=None) -> int:
                     result['clarification_authorization'] = pending_authorization
             except ControlError as exc:
                 result['clarification_authorization'] = {'error': exc.code}
+            from .blocked_authorization import public_status as blocked_status
+            try:
+                pending_blocked = blocked_status(paths)
+                if pending_blocked is not None:
+                    result['blocked_clarification_authorization'] = pending_blocked
+            except ControlError as exc:
+                result['blocked_clarification_authorization'] = {'error': exc.code}
             if not result.get('worker_reachable'):
                 from .disk_space import status as disk_status
                 try:

@@ -160,7 +160,7 @@ def recover(paths: Paths) -> dict:
             source = engine.exchange.source(row["source"])
             engine.excluded = ledger.published_hashes() | {source.get("patch_sha256")}
             retry = ledger.retry_info(source["sha256"])
-            directory = attempt_directory(paths, source["sha256"], retry["number"] if retry else 0)
+            directory = ledger.attempt_directory(paths, source["sha256"], retry["number"] if retry else 0)
             protocol = json_read(directory / "protocol-completion.json")
             modern = (config.transport == 'app-server-proxy' and row['error'] == 'codex_turn_failed'
                       and protocol is None and json_read(directory / 'dispatch.json') is not None

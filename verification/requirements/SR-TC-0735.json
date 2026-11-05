@@ -45,7 +45,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "1fe1ab7ff8bd66412543935ea760749fe67c08546df6fc9e29b4527048559deb",
+  "specification_sha256": "e3994acf82c7c9ef4ae2cd14b2c5f5e26d6c78b5c2519a2723f5f6311298b593",
   "steps": [
     "Open actual repository-root and subproject packages via module/PYZ and argv/structured requests in a Python-only audited subprocess.",
     "Compare independent project manifest, every original reference/runtime byte, model root and portable receipt replay; relocate the sandbox and revalidate in a fresh process.",

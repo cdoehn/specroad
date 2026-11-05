@@ -43,7 +43,7 @@ class OverloadWaiting:
                 return {'halted': False, 'again': False}
             if saved['next_at'] > now:
                 return {'halted': False, 'again': False, 'retry_after': saved['next_at']-now}
-            directory = attempt_directory(self.paths, source['sha256'], saved['number'])
+            directory = ledger.attempt_directory(self.paths, source['sha256'], saved['number'])
             evidence, progress, ready = overload_wait.observe(
                 self.config, self.codex, directory, source, saved['number'], saved=saved)
             self.exchange.source(source)

@@ -50,7 +50,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "1fe1ab7ff8bd66412543935ea760749fe67c08546df6fc9e29b4527048559deb",
+  "specification_sha256": "e3994acf82c7c9ef4ae2cd14b2c5f5e26d6c78b5c2519a2723f5f6311298b593",
   "steps": [
     "11.e.W: parse allowed paragraph/inline/code/list/quote/break/attachment node families; compare semantic data, owned source and normalized hashes, admonition levels, structured forbidden-content errors, real unchanged files and isolated Core/PYZ results.",
     "11.e.R: preserve unchanged W nodes while completing lazy/nested container and indentation behavior; verify one-time escape/entity decoding, multiline definition rejection, obfuscated external/traversing paths, inert extension-like text, no reads/process/network/writes, bounded parser resources and isolated Core/PYZ parity.",

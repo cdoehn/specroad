@@ -50,7 +50,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "1fe1ab7ff8bd66412543935ea760749fe67c08546df6fc9e29b4527048559deb",
+  "specification_sha256": "e3994acf82c7c9ef4ae2cd14b2c5f5e26d6c78b5c2519a2723f5f6311298b593",
   "steps": [
     "Create canonical/raw snapshot objects, store and read exact bytes through real native I/O, deduplicate identical objects, preserve protected projects and failed preparation state, and reopen the stored objects in an isolated process.",
     "Check complete supplied byte inventories and declared references before a candidate change; reject removal of referenced objects and differing bytes under one identity. Recheck retained physical objects before and after put and exercise native corruption/path/publication failures.",
