@@ -34,7 +34,52 @@ Produktfreigaben und die Grenzen aus 2.4.1/2.4.2/2.4.4 bleiben unverändert.
 Dieser Plan ändert keine alten Aufträge, Antworten, Blockaden oder
 Laufzeitdaten und ist keine Start-/Resume-Anweisung.
 
-## Bundle 596 — vollständige Inventur 17.b.W
+## Korrekturbundle 597 — Archivorakel und vollständiger Rest 17.b.R/C
+
+Maßgebliche Basis ist das nativ geprüfte Fehler-Result
+`specroad-apply_Result_041543_1105_b1b763.zip`, SHA-256
+`26d928638b97ae0e80f53d1a301ac8af3f5df53d47eadb3512cb7be2561f21cf`.
+Die Klärung MERGE-INVENTORY-596 ist nach eigenem Gate mit 6.920 Tests als
+`a0b8e3fc3cb003a5908e9f5d30659aa5da91ad10` committed; 17.b.W ist nach
+7.459 Tests als `672ee73d40c50de3190ef65141606111f24a5ef4` committed.
+17.b.R scheiterte mit 7.529 bestandenen und einem fehlgeschlagenen Test.
+Der tatsächliche abgeschlossene Produktstand ist 697/900; die erhaltenen
+R-Checkboxen sind ausschließlich noch ungeprüfte Commitzielzustände.
+Die erfolgreichen Commits werden weder wiederholt noch zurückgesetzt.
+
+Ursache ist das neue Legacy-Inventurorakel: `role=artifact` im Legacy-Manifest
+beschreibt den historischen Inhalt. Derselbe Originalinhalt kann sowohl
+unter seinem qualifizierten `spec/...`-Pfad als auch als adressiertes
+`archive/objects/...` vorkommen. Der Test behandelte beide physischen Arten
+als aktuelle Legacy-Artefaktzeilen und erwartete überall `legacy_immutable`.
+Nach dem bereits committeden Vertrag 10.15.1 und dem bestehenden nativen
+`_original_archive` bleiben Archivdateien jedoch eigene Byteobjekte mit
+`kind=archive`, `value_domain=bytes-v1` und Speicherklasse `current`; letzteres
+ist ausdrücklich keine Änderungsfreigabe. Nur qualifizierte Artefakte unter
+`spec/...` besitzen die Legacy-Artefaktklasse und separate Relationsnavigation.
+
+Die Korrektur verändert keine Produktimplementierung und keine normative
+Regel. Das Orakel prüft jetzt beide physischen Arten ausdrücklich, für alle
+drei Quellen mit Originalgröße und Originalbytehash. Archivzeilen bleiben
+an den vollständigen Pfad und Rohbytehash gebunden und erzeugen keine
+scheinbaren aktuellen Relationen. Qualifizierte Artefakte und deren Relationen
+behalten sämtliche bisherigen Legacy-/Wertprüfungen; positive Mengenprüfungen
+verhindern ein unbemerktes Überspringen einer der beiden Fixturearten.
+Die R/C-Testdateien bleiben untereinander bytegleich. Alle angekündigten
+Testidentitäten, Pflichtdateien und vollständigen Stage-Umfänge bleiben erhalten.
+
+Korrekturbindung: ursprünglicher öffentlicher Plan
+`3663a1ba5f223c5005cd2a77751fd54a1bdb9228c7e4e2eb2adf4e16087d0e6d`,
+offene IDs/Rollen unverändert `17.b.R` und `17.b.C` / `implementation`.
+Der erste Zustand enthält auch alle erhaltenen Dirty-Pfade mit den exakten
+Vorherbytes des neuen Results; kein C-Endstand vor dem R-Gate. Jede Stage
+behält die fällige N=3-Gruppe plus ungefilterte Pflichtauswahl. Der Fehler
+hat die Rotation nicht weitergeschaltet. Dev führt keine Verhaltenstests
+aus, nur Syntax, Collection und native Paketvalidierung. Abschluss und
+Budgeterneuerung bedürfen erst des vollständig erfolgreichen Folge-Results.
+Keine erneute Klärung und kein neuer Produkt-/Alibicommit.
+
+## Bundle 596 — vollständige Inventur 17.b.R
 
 Technische Basis bleibt ausschließlich das nativ geprüfte erfolgreiche,
 saubere Result `specroad-apply_Result_030929_1105_0a58cb.zip`, SHA-256
@@ -64,7 +109,7 @@ C verschiebt ausschließlich die gemeinsame native Ressourcenbeobachtung nach
 Werte. Klassifikation und gespeicherter Mergeplan bleiben hinter der bestehenden
 Merge-Fassade. Die vollständigen W/R-Testdateien und Fachverträge bleiben bytegleich.
 
-Stand dieser Stage: 17.b.W, Folgeposition `17.b.R`. Checkboxen und Zähler
+Stand dieser Stage: 17.b.R, Folgeposition `17.b.C`. Checkboxen und Zähler
 sind ausschließlich Commitzielzustände: Sie gelten erst nach bestandenem eigenem
 Apply-Gate und echtem Commit. Jede Stage erhält gefilterte N=3-Auswahl plus
 ungefilterte Pflichtauswahl; neue Testdateien vollständig und relevante native
@@ -3140,9 +3185,9 @@ Kein offener Produktplanschritt wird durch diese Testoptimierung abgeschlossen.
 ```yaml
 plan_revision: 97
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 697
-last_completed_plan_commit: 17.b.W
-next_plan_commit: 17.b.R
+implementation_plan_commits_completed: 698
+last_completed_plan_commit: 17.b.R
+next_plan_commit: 17.b.C
 last_completed_numbered_bundle: 595
 implementation_state: in_progress
 audit_followup_status: closed
@@ -37722,7 +37767,7 @@ Plattform-/Releasefreigaben werden dadurch nicht stillschweigend erteilt.
 
 #### 17.b.R – Make it Right
 
-- [ ] **17.b.R** · Position **698/900** · Voraussetzung: `17.b.W`.
+- [x] **17.b.R** · Position **698/900** · Voraussetzung: `17.b.W`.
 **Exakte Commit-Message:** `17.b.R feat(merge): Ressourceninventur und Mergeplan vervollständigen`
 
 **Vervollständigung:** Fehlende Quellressource von bewusstem Löschen unterscheiden; kein unsichtbarer normativer Nebenbereich.

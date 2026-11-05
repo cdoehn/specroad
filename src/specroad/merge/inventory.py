@@ -98,6 +98,16 @@ def _source_rows(source):
         entries.append(ResourceEntry(path, identity['kind'], len(raw), observation['byte_sha256'],
             None if observation['value_domain'] == 'bytes-v1' else observation['value_sha256']))
     inventory = ResourceInventory(source.project_id, tuple(entries), source.source_root, (0, 0))
+    actual = [{'path': entry.path, 'size': entry.size, 'sha256': entry.sha256}
+              for entry in inventory.entries]
+    if (actual != binding['resources']
+            or binding['project_id'] != model.configuration.project_id
+            or binding['schema_version'] != model.configuration.data['schema_version']
+            or any(binding[name] != getattr(source, name)
+                   for name in ('kind', 'source_root', 'commit_id', 'project_id', 'schema_version'))
+            or model.manifest(model.artifacts, binding['scope_descriptor']).sha256
+               != binding['model_root_sha256']):
+        raise ModelError('merge_inventory_source_binding_mismatch')
     return rows, inventory
 
 
@@ -178,3 +188,18 @@ def build_merge_inventory(sources, *, plan_id):
         'source_bindings_sha256': digest(bindings), 'resources': rows,
         'inventory_sha256': digest(rows), 'expected_target_model_root_sha256': expected,
         'ready': False, 'write_authorized': False})
+
+
+def read_merge_inventory(raw, sources):
+    """Rebuild against original native sources; rehashed claims are not proof."""
+    if type(raw) is not bytes:
+        raise ModelError('merge_inventory_bytes_required')
+    value = parse_json_object(raw)
+    if value.get('inventory_format_version') != FORMAT:
+        raise ModelError('merge_inventory_version')
+    expected = build_merge_inventory(sources, plan_id=value.get('plan_id'))
+    # Comparing exact canonical bytes also rejects extra/missing fields, false
+    # versus zero, reordered rows, duplicate keys and noncanonical encodings.
+    if raw != expected.canonical_bytes:
+        raise ModelError('merge_inventory_binding_mismatch')
+    return expected
