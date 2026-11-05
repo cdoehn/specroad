@@ -99,6 +99,10 @@ def domain_schema(kind, version=SCHEMA_VERSION):
     schema["x-specroad-validation-scope"] = VALIDATION_SCOPE
     schema["required"] = list(dict.fromkeys([*schema["required"], *required]))
     schema["properties"].update(fields)
+    if kind == "term":
+        for field in ("synonyms", "forbidden_synonyms"):
+            schema["properties"][field] = {**schema["properties"][field],
+                "x-specroad-merge": {"kind": "set", "key": ""}}
     schema["additionalProperties"] = False
     conditions = []
     if kind == "requirement":

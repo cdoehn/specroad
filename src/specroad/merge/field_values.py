@@ -84,6 +84,12 @@ class FieldConflict:
     theirs: FieldValue
 
 
+@dataclass(frozen=True)
+class CollectionConflict(FieldConflict):
+    """Whole-array observations with stable keys, never a fictitious shared index."""
+    element_keys: tuple
+
+
 @dataclass(frozen=True, init=False, eq=False)
 class FieldMergeResult:
     _target: FieldValue

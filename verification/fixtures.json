@@ -364,6 +364,10 @@
       "kind": "Owned exact-tag glossary terms, literal text selectors and explicit placeholders; no linguistic interpretation, live inventory or approval.",
       "provider": "tests/support/literal_lint.py:observe"
     },
+    "SR-FIX-MERGE-COLLECTIONS-v1": {
+      "kind": "Owned synthetic artifact values and actual native qualified project sources with schema-declared tags, term synonyms and named configuration dimensions. Independent exact value, order, raw byte and hash oracles distinguish set equality, member absence, explicit removal intent and conflict. No writer, review, CLI or final-plan authority is claimed.",
+      "provider": "tests/test_merge_collections.py;tests/test_merge_attachments.py;tests/support/domain.py:domain_value;tests/support/records.py:record_value;tests/test_merge_inventory.py:bind_files;tests/test_project_bundle.py:project"
+    },
     "SR-FIX-MERGE-FIELDS-v1": {
       "kind": "Explicit owned three-way JSON values, nested independent changes and actual qualified native project resource bytes. Independent expected values distinguish absence, null, bool, number, string, object and array order. The field result is neither an executable plan nor a resource deletion/publication authorization. Explicit symmetric success/conflict matrices, all three original observations, escaped pointers, invalid input in every role, deep object/array values, alias isolation and side-effect traps.",
       "provider": "tests/test_merge_fields.py;tests/test_merge_inventory.py:bind_files;tests/test_project_bundle.py:project;tests/test_merge_fields_right.py"
@@ -967,6 +971,7 @@
     "SR-FIX-LANGUAGE-REGISTRY-v1",
     "SR-FIX-LEGACY-MANIFEST-v1",
     "SR-FIX-LITERAL-LINT-v1",
+    "SR-FIX-MERGE-COLLECTIONS-v1",
     "SR-FIX-MERGE-FIELDS-v1",
     "SR-FIX-MERGE-INVENTORY-v1",
     "SR-FIX-MERGE-SOURCES-v1",

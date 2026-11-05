@@ -156,6 +156,8 @@ def record_schema(kind, version=SCHEMA_VERSION):
                                       for block, payload in _block_payload().items()]})
     if kind == "configuration":
         schema["properties"].pop("applicability", None)
+        schema["properties"]["dimensions"]["x-specroad-merge"] = {"kind": "set", "key": "/name"}
+        schema["$defs"]["dimension"]["properties"]["allowed_values"]["x-specroad-merge"] = {"kind": "set", "key": ""}
     if kind == "source":
         conditions.append({"anyOf": [{"properties": {"maturity": {"not": {"const": "approved"}}}},
                                       {"required": ["content_sha256"]}, {"required": ["excerpt"]}]})

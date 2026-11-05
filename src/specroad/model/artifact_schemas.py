@@ -46,7 +46,8 @@ def _properties(kind):
         "created_by": dict(actor), "updated_by": dict(actor),
         "language": {"type": "string", "format": "bcp47"}, "text_direction": {"enum": ["ltr", "rtl", "auto"]},
         "owner": {"anyOf": [dict(text), dict(actor)]},
-        "tags": {"type": "array", "items": {"type": "string"}},
+        "tags": {"type": "array", "items": {"type": "string"},
+                 "x-specroad-merge": {"kind": "set", "key": ""}},
         "applicability": {"type": "object"},
         "relations": {"type": "array", "items": {
             "allOf": [relation_identity_fields()],

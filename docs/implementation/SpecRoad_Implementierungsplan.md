@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 102 · **Stand:** 5. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.65
+**Planrevision:** 103 · **Stand:** 5. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.65
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 Schritte und 900 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; die ausdrücklich genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wird nach 10.7.10 innerhalb von 15.l.R vorgezogen. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -33,6 +33,90 @@ ausdrückliche Bedienausnahme aus 2.4.3.2 bleibt zusätzlich anwendbar.
 Produktfreigaben und die Grenzen aus 2.4.1/2.4.2/2.4.4 bleiben unverändert.
 Dieser Plan ändert keine alten Aufträge, Antworten, Blockaden oder
 Laufzeitdaten und ist keine Start-/Resume-Anweisung.
+
+## Korrekturbundle 604 — deklarierte Anhänge im vollständigen Rest 17.d.W/R/C
+
+Manueller Korrekturauftrag vom 5. November 2026. Maßgeblich ist das native
+Fehler-Result `specroad-apply_Result_130938_1105_2d00df.zip`, SHA-256
+`410dcec8c0a308ef2a2d88d901d9c65fdb787698e492cce18104e0f66d7cdf4c`,
+HEAD `59473dea8df503bae58e99945a3e303b50b9c903`, Zustandsfingerprint
+`cbb384c1f99f3b69` nach `patchharbor-state-v1`.
+
+Der Klärungspräfix MERGE-COLLECTIONS-603 wurde nach 6.861 erfolgreichen Tests
+committed und bleibt vollständig erhalten. 17.d.W wurde ausgebracht, aber
+nicht committed: 7.409 von 7.410 ausgewählten Tests bestanden; der konkrete
+Integrationstest `test_qualified_project_sources_feed_collection_and_attachment_candidates_without_writes`
+scheiterte mit `KeyError: attachments/ours.bin`. R/C wurden noch nicht
+begonnen. Die bestätigte Produktposition bleibt 702/900; Checkboxen und Zähler
+in den folgenden Stage-Zielständen werden erst mit erfolgreichem Gate und
+echtem Commit wirksam. Die gemessenen Testgruppen sind kein Vollsuite-Nachweis.
+
+Ursache: Die neue Fixture legte die beiden zusätzlichen Binärdateien nur im
+Dateisystem ab. Der vorhandene native Projektsnapshot übernimmt deklarierte
+Anhänge aus Artefakt-Deskriptoren; ohne Deklaration gehören diese Dateien nicht
+zur qualifizierten Quellmenge. Das Merge-Ergebnis konnte sie daher nicht
+enthalten. Die vorhandene Quell-/Scope-Policy und der Mergealgorithmus werden
+nicht gelockert. Die Fixture erhält je Seite einen eigenen ausdrücklich
+synthetischen Evidence-Datensatz mit eindeutiger ID und korrektem
+AttachmentDescriptor (Pfad, Medientyp, Größe, tatsächlich berechneter Hash).
+Bestehende recorded Evidence und deren Anhänge bleiben bytegleich.
+
+Das ursprüngliche Integrationsorakel bleibt bestehen und wird verstärkt:
+Die vollständig qualifizierten Dateien müssen vor dem Merge mit den
+vorbereiteten Quelldateien übereinstimmen. Für jeden neuen Anhang prüft die
+Inventur tatsächliche Anwesenheit ausschließlich auf seiner Seite, Pfad,
+Größe, Rohbyte-/Werthash und bytes-v1. Danach bleiben die exakten ursprünglichen
+Merge- und Seiteneffektprüfungen bestehen. Alle Testidentitäten/Nummern,
+Fachregeln und Pflichtdateien aus Bundle 603 werden erhalten; passende
+Projektbundle-/Quellregressionen ergänzen die Pflichtauswahl.
+
+Bundle 604 enthält ausschließlich den vollständigen offenen Rest mit den
+ursprünglichen IDs und Rollen 17.d.W/R/C. Die erste Stage übernimmt alle
+19 erhaltenen dirty Pfade einschließlich der vier untracked Dateien, mit
+vollständigen Vorherbytes aus diesem Fehler-Result. Kein erfolgreicher
+Commit wird wiederholt, nichts zurückgesetzt und keine neue Detailklärung
+angelegt. Normative Spezifikation und aktive Katalogbindungen bleiben
+bytegleich zu den jeweiligen ursprünglichen 603-Zuständen. Nach dem bereits
+committeten Klärungspräfix ist diese Übergabe normales `patch_ready`.
+
+Dev führt ausschließlich Syntax, reine Collection und native Paketprüfung
+aus; keine Verhaltenstests und keine erfundene Abnahme. Jede Stage erhält
+vor ihrem Commit ihr eigenes gefiltertes N=3-Gate plus ungefilterte vollständige
+Pflichtauswahl. Erst danach folgt der nächste reale Zustand. Das Paket wird
+atomar an Exchange übergeben; kein Dienststart, keine eigene Apply-/Warte-
+oder Fortsetzungsschleife. Endziel bleibt 705/900, danach offen 17.e.W.
+
+## Bundle 603 — vollständiger Commitzielstand 17.d.W
+
+Der einmalig manuell freigegebene Klärungspräfix MERGE-COLLECTIONS-603 mit
+Spezifikation 10.15.2 steht in derselben ZIP vor den getrennten W/R/C-Ständen.
+Diese Stage zielt auf 703/900 und danach `17.d.R`. Die Zähler und
+Checkboxen gelten erst nach erfolgreichem eigenem Apply-Gate und echtem Commit.
+Die gebundene technische Basis und die einmalige Befugnis stehen im folgenden
+Entscheidungsnachweis; Control-Vertrag, Historie und Budget bleiben unverändert.
+
+W: native Schema-ID und deklarierte Schlüssel statt Arrayheuristiken,
+rekursive Mengenmatrix, vollständige Eingabeprüfung auch vor Abkürzungen,
+Rückhalten schemawidriger Kombinationen, echte unveränderte Anhangbytes und
+explizite Entfernungswünsche ohne Schreibfreigabe. Vorbereitete Tests zeigen
+unabhängige Ergänzungen, verschachtelte Mengen, stabile Konfliktschlüssel,
+Reihenfolge und die Integration mit vollständigen qualifizierten Quellen.
+
+R: konkurrierende geordnete Folgen erhalten ihre eindeutige Konfliktklasse;
+portable Komponenten-/Pfadalias und Datei/Unterpfadkollisionen werden geprüft.
+Ergänzende Matrix deckt Typen, gleiche Zahlen, Unicode ohne Normalisierung,
+fehlende Werte, tiefe Daten, verbotene Schemaannotation und Seiteneffekte ab.
+
+C: passive Schemaannotation, unveränderbare Anhangbeobachtungen und reine
+Pfad-/Eingabeprüfung sind strukturell getrennt. Fachverhalten, Fehlervertrag,
+vollständige W/R-Tests und Katalogeinträge bleiben gegenüber R bytegleich.
+
+Dev hat keine Verhaltenstests ausgeführt. Reine Collection bindet die realen
+Identitäten; neue Nummern werden ausschließlich angehängt. Jede Stage führt
+in Apply einmal die fällige gefilterte N=3-Gruppe plus ungefilterte vollständige
+Pflichtauswahl aus. Die neuen Tests sowie betroffene Feld-/Quell-/Inventur-,
+Schema-/Modell-, JCS- und Katalogregressionen sind verpflichtend. Dies ist kein
+Vollsuite-, CLI-, M17-, Review- oder Produktabschluss. 17.e–17.o bleiben offen.
 
 ## MERGE-COLLECTIONS-603 — einmalige Detailklärung und vollständiger Schritt 17.d
 
@@ -3430,11 +3514,11 @@ Kein offener Produktplanschritt wird durch diese Testoptimierung abgeschlossen.
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 102
+plan_revision: 103
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 702
-last_completed_plan_commit: 17.c.C
-next_plan_commit: 17.d.W
+implementation_plan_commits_completed: 703
+last_completed_plan_commit: 17.d.W
+next_plan_commit: 17.d.R
 last_completed_numbered_bundle: 602
 implementation_state: in_progress
 audit_followup_status: closed
@@ -38075,7 +38159,7 @@ Plattform-/Releasefreigaben werden dadurch nicht stillschweigend erteilt.
 
 #### 17.d.W – Let it Work
 
-- [ ] **17.d.W** · Position **703/900** · Voraussetzung: `17.c.C`.
+- [x] **17.d.W** · Position **703/900** · Voraussetzung: `17.c.C`.
 **Exakte Commit-Message:** `17.d.W feat(merge): Mengen, geordnete Folgen und Anhänge aufbauen`
 
 **Umsetzung:** Mengen nach schemafestem Schlüssel und Anhänge nach Pfad/Bytehash zusammenführen.

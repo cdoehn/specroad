@@ -13,7 +13,7 @@ from .errors import ModelError
 
 _KEYWORDS = frozenset({
     "$schema", "$id", "$defs", "$ref", "$comment", "description", "title",
-    "x-specroad-validation-scope", "type", "const", "enum", "required",
+    "x-specroad-validation-scope", "x-specroad-merge", "type", "const", "enum", "required",
     "properties", "propertyNames", "additionalProperties", "items", "minLength", "minItems",
     "minimum", "maximum", "pattern", "anyOf", "allOf", "not", "format",
     "default", "examples", "deprecated", "readOnly", "writeOnly", "dependentRequired",
@@ -73,6 +73,21 @@ def _datetime_utc(value):
     return second != 60 or (hour == 23 and minute == 59 and (month, day) in ((6, 30), (12, 31)))
 
 
+def merge_annotation(node):
+    """Read a closed built-in annotation; it never changes field validation."""
+    rule = node['x-specroad-merge']
+    if type(rule) is not dict or node.get('type') != 'array':
+        raise ValueError('Invalid collection annotation')
+    if rule == {'kind': 'ordered'}:
+        return 'ordered', None
+    if set(rule) != {'kind', 'key'} or rule['kind'] != 'set':
+        raise ValueError('Invalid collection annotation')
+    key = rule['key']
+    if type(key) is not str or (key and not key.startswith('/')) or re.search(r'~(?![01])', key):
+        raise ValueError('Invalid collection key pointer')
+    return 'set', tuple(part.replace('~1', '/').replace('~0', '~') for part in key[1:].split('/')) if key else ()
+
+
 def _check_vocabulary(schema):
     """Check all trusted branches, including those not selected by an instance."""
     def check(node, active=()):
@@ -80,6 +95,8 @@ def _check_vocabulary(schema):
             return
         if type(node) is not dict or node.keys() - _KEYWORDS:
             raise ValueError("Unsupported built-in schema vocabulary")
+        if 'x-specroad-merge' in node:
+            merge_annotation(node)
         if "type" in node and node["type"] not in (
                 "object", "array", "string", "boolean", "null", "number", "integer"):
             raise ValueError("Unsupported built-in schema type")
