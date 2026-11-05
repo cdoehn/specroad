@@ -15,7 +15,7 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Der Merge-Plan MUSS für jedes Artefakt, jede Relation, jede normative Ressource und jeden Anhang die Basis-, Ours- und Theirs-Hashes, automatisch übernommene Änderungen, Konflikte, vorgeschlagene Auflösung und erwartete Zielmodellwurzel enthalten.",
-    "scope": "17.a.W implements complete immutable Base/Ours/Theirs source observations through native local, Git, Baseline and verified full-bundle readers. Complete original resource bytes, project/schema identity, default closed project scope, native model roots and source provenance are retained. No versioned merge plan, conflict resolution, CLI/Work integration or write authority is implemented by this slice. 17.a.R rejects partial/selected sources and mixed project/schema inputs without migration, preserves historical effective profile selection and qualified legacy bytes, checks pinned Git extraction proofs, and reobserves all three source acquisitions before returning. Observations remain non-atomic."
+    "scope": "17.a.W implements complete immutable Base/Ours/Theirs source observations through native local, Git, Baseline and verified full-bundle readers. Complete original resource bytes, project/schema identity, default closed project scope, native model roots and source provenance are retained. No versioned merge plan, conflict resolution, CLI/Work integration or write authority is implemented by this slice. 17.a.R rejects partial/selected sources and mixed project/schema inputs without migration, preserves historical effective profile selection and qualified legacy bytes, checks pinned Git extraction proofs, and reobserves all three source acquisitions before returning. Observations remain non-atomic. 17.a.C moves the full-source registry into snapshots while preserving the public merge facade, native adapters, all W/R behavior tests and errors."
   },
   "preconditions": [
     "Explicit owned source selectors and complete synthetic project bytes; existing native source integrity and schema contracts apply. Test collection is not behavior-pass evidence."
@@ -35,7 +35,8 @@
   "specification_sha256": "9e696ccc49ee8510b7b9a26b2adf02dd477820ed55587bfe8e8f312c7f28c19a",
   "steps": [
     "Acquire three complete sources, compare exact bytes and native scope/model-root bindings, check immutable detached output and original source provenance, and verify no writes or Git checkout occur.",
-    "Reject partial markers/bundles and retained proof removal, foreign identities, old/new unsupported schemas, selected Baselines, unsafe or missing dependencies and late input changes; retain historic profiles and registered original bytes without changing them."
+    "Reject partial markers/bundles and retained proof removal, foreign identities, old/new unsupported schemas, selected Baselines, unsafe or missing dependencies and late input changes; retain historic profiles and registered original bytes without changing them.",
+    "Run unchanged W/R oracles and affected native bundle, Baseline, Git, extraction and legacy source regressions after moving shared source acquisition into snapshots."
   ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0364",

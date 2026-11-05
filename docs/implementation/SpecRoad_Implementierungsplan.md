@@ -76,7 +76,7 @@ weitergeschaltet. Dev führt nur statische Prüfung, reine Collection und
 native Paketvalidierung aus, keine Verhaltenstests. Ein erfolgreicher
 Abschluss von 17.a ist erst durch das folgende Apply-Result belegbar.
 
-## Bundle 594 — vollständige Quellenbindung 17.a.R
+## Bundle 594 — vollständige Quellenbindung 17.a.C
 
 Maßgebliche technische Basis: natives erfolgreiches sauberes Result
 `specroad-apply_Result_012305_1105_26449d.zip`, SHA-256
@@ -108,8 +108,8 @@ wiederverwendet; beide W/R-Testdateien bleiben bytegleich. Interne
 Quellenbindungen sind kein neu eingeführtes normatives Mergeplanformat.
 
 Vorbereitet sind genau die drei vollständigen zusammenhängenden Positionen
-17.a.W/R/C mit eigenen Apply-Gates. Stand dieser Stage: 17.a.R,
-Folgeposition `17.a.C`. Der Fortschrittsblock und die Checkboxen sind
+17.a.W/R/C mit eigenen Apply-Gates. Stand dieser Stage: 17.a.C,
+Folgeposition `17.b.W`. Der Fortschrittsblock und die Checkboxen sind
 Commitzielzustände: Sie gelten erst nach bestandenem Gate und echtem Commit;
 ein bloß materialisierter Fehlerstand beweist keinen Abschluss.
 Dev hat **keine Verhaltenstests** ausgeführt. Syntax, reine Collection und
@@ -3037,10 +3037,10 @@ Kein offener Produktplanschritt wird durch diese Testoptimierung abgeschlossen.
 ```yaml
 plan_revision: 96
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 695
-last_completed_plan_commit: 17.a.R
-next_plan_commit: 17.a.C
-last_completed_numbered_bundle: 593
+implementation_plan_commits_completed: 696
+last_completed_plan_commit: 17.a.C
+next_plan_commit: 17.b.W
+last_completed_numbered_bundle: 595
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -37593,7 +37593,7 @@ Plattform-/Releasefreigaben werden dadurch nicht stillschweigend erteilt.
 
 #### 17.a.C – Make it Clean
 
-- [ ] **17.a.C** · Position **696/900** · Voraussetzung: `17.a.R`.
+- [x] **17.a.C** · Position **696/900** · Voraussetzung: `17.a.R`.
 **Exakte Commit-Message:** `17.a.C refactor(merge): Drei unveränderbar gebundene Quellen bereinigen`
 
 **Bereinigung:** Die vervollständigte Snapshotregistry aus M8/M10/M15 wiederverwenden.
