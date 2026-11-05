@@ -2,19 +2,27 @@
   "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [],
   "expected_exit_codes": [],
-  "fixture_ids": [],
-  "implementation_status": "open",
+  "fixture_ids": [
+    "SR-FIX-MERGE-CONFLICTS-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [],
-  "method": "pending",
+  "method": "automated_behavior",
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Successful execution evidence is produced only by Apply; the prepared tests were not run in Dev.",
+    "17.h–17.l audited resolutions, final merge metadata/invariants, writer and completion report remain open.",
+    "Stored CLI display explicitly reports source_validation=not_revalidated; current source truth requires the native read gate."
   ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "`specroad merge conflicts <MERGE-PLAN>` MUSS Konflikte mit Artefakt-ID, JSON Pointer, drei Werten, Konfliktklasse, Impact und zulässigen Auflösungsarten ausgeben.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "17.g and 10.15.4: native source-bound merge-conflicts-v1 with every observed conflict, stable addresses, explicit three-way presence/value domains, complete source observations, direct relation impact and guarded allowed resolutions. Public merge conflicts CLI and structured request inspect a stored plan with source_validation=not_revalidated; native read_merge_conflicts rebuilds from current original sources and explicit history. C is AST-preserving value/parser extraction. Audit resolution, full merge metadata, target validation and publication remain pending; no requirement-wide successful execution or final merge plan/report is claimed."
   },
-  "preconditions": [],
+  "preconditions": [
+    "Original sources are natively qualified and provider observations describe explicitly known synthetic creation histories.",
+    "Stored-plan inspection never opens embedded paths or claims original-source revalidation.",
+    "Every target state requires its own successful Apply gate before its commit; Dev ran zero behavior tests."
+  ],
   "primary_verification_id": "SR-VER-0026",
   "required_environment": {
     "declared_minimum_python": "3.10",
@@ -28,8 +36,24 @@
     "owned_temporary_files": true
   },
   "specification_sha256": "6ee0678a7cf525508891e4c367359f47ad5798851a537e3b884e5014b16c4261",
-  "steps": [],
+  "steps": [
+    "Check all conflicting leaves, original values, source observations and deterministic plan/source/history-bound IDs.",
+    "Check explicit absent versus JSON null, known direct impact and no Take bypass for protection conflicts.",
+    "Invoke merge conflicts through real CLI and structured request; check JSON result and unchanged files, not terminal layout.",
+    "Read the complete catalogue against unchanged native original sources."
+  ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0371",
-  "test_ids": []
+  "test_ids": [
+    "tests/test_merge_conflicts.py::test_every_conflicting_leaf_is_addressable_with_three_original_values",
+    "tests/test_merge_conflicts.py::test_ids_are_repeatable_order_independent_and_bound_to_plan_source_and_history",
+    "tests/test_merge_conflicts.py::test_independent_fields_and_schema_sets_do_not_become_artificial_conflicts",
+    "tests/test_merge_conflicts.py::test_machine_cli_and_structured_request_inspect_same_passive_plan",
+    "tests/test_merge_conflicts.py::test_missing_member_and_json_null_are_distinct_and_absence_is_not_take_delete",
+    "tests/test_merge_conflicts.py::test_protection_conflicts_offer_no_bypass[immutable]",
+    "tests/test_merge_conflicts.py::test_protection_conflicts_offer_no_bypass[lifecycle]",
+    "tests/test_merge_conflicts.py::test_protection_conflicts_offer_no_bypass[origin]",
+    "tests/test_merge_conflicts.py::test_relation_conflicts_keep_all_fields_and_exact_direct_impact",
+    "tests/test_merge_conflicts.py::test_returned_data_is_detached_and_never_truthy_approval"
+  ]
 }

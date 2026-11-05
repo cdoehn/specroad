@@ -85,6 +85,9 @@ def command_example_inputs(root, command):
     The Work fixture labels its synthetic build identity explicitly. No native
     model/recovery/checkpoint validator or command handler is replaced.
     """
+    if command.command_id == 'merge.conflicts':
+        yield _merge_conflicts_example_inputs(root, command)
+        return
     if command.command_id.startswith('migrate.'):
         yield _migration_example_inputs(root, command)
         return
@@ -105,6 +108,24 @@ def command_example_inputs(root, command):
         inspection_project(origin)
         put(root, 'project.zip', prepare_project_bundle(origin).source_bytes)
     yield command.protocol.example.as_dict()
+
+
+def _merge_conflicts_example_inputs(root, command):
+    """A real stored conflict from native sources with known synthetic history."""
+    from specroad.merge import build_merge_conflicts
+    from .merge_lifecycle import artifact, bound_records, changed
+    from test_project_bundle import project
+
+    original = project(root / 'origin').raw
+    path, value = artifact(original)
+    source_root = root / 'sources'; source_root.mkdir()
+    sources, history = bound_records(source_root, original, path,
+        [changed(value, title=role) for role in ('base', 'ours', 'theirs')])
+    plan = build_merge_conflicts(sources, plan_id='MP-' + '0' * 26, history=history)
+    put(root, 'merge.json', plan.canonical_bytes)
+    request = command.protocol.example.as_dict()
+    request['arguments']['merge_plan'] = str(root / 'merge.json')
+    return request
 
 
 def _restore_example_inputs(root, command):

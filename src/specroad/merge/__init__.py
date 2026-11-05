@@ -13,3 +13,6 @@ __all__ = ['MergeSources', 'SourceRequest', 'SourceSnapshot', 'load_merge_source
            'inspect_merge_lifecycle', 'LifecycleMergeResult']
 from .relations import merge_relations, inspect_merge_identities, RelationMergeResult
 from .lifecycle import inspect_merge_lifecycle, LifecycleMergeResult
+
+from .conflicts import MergeConflicts, build_merge_conflicts, parse_merge_conflicts, read_merge_conflicts
+__all__ += ['MergeConflicts', 'build_merge_conflicts', 'parse_merge_conflicts', 'read_merge_conflicts']

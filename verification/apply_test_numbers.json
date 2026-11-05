@@ -25675,6 +25675,16 @@
     "tests/test_merge_lifecycle_right.py::test_specialist_status_conflicts_even_when_maturity_is_identical",
     "tests/test_merge_lifecycle_right.py::test_stale_history_binding_cannot_be_used_as_a_guard_input",
     "tests/test_merge_lifecycle_right.py::test_superseded_state_requires_an_actual_inverse_successor",
-    "tests/test_merge_lifecycle_right.py::test_typed_json_content_is_not_collapsed_by_python_boolean_numeric_equality"
+    "tests/test_merge_lifecycle_right.py::test_typed_json_content_is_not_collapsed_by_python_boolean_numeric_equality",
+    "tests/test_merge_conflicts.py::test_every_conflicting_leaf_is_addressable_with_three_original_values",
+    "tests/test_merge_conflicts.py::test_ids_are_repeatable_order_independent_and_bound_to_plan_source_and_history",
+    "tests/test_merge_conflicts.py::test_independent_fields_and_schema_sets_do_not_become_artificial_conflicts",
+    "tests/test_merge_conflicts.py::test_machine_cli_and_structured_request_inspect_same_passive_plan",
+    "tests/test_merge_conflicts.py::test_missing_member_and_json_null_are_distinct_and_absence_is_not_take_delete",
+    "tests/test_merge_conflicts.py::test_protection_conflicts_offer_no_bypass[immutable]",
+    "tests/test_merge_conflicts.py::test_protection_conflicts_offer_no_bypass[lifecycle]",
+    "tests/test_merge_conflicts.py::test_protection_conflicts_offer_no_bypass[origin]",
+    "tests/test_merge_conflicts.py::test_relation_conflicts_keep_all_fields_and_exact_direct_impact",
+    "tests/test_merge_conflicts.py::test_returned_data_is_detached_and_never_truthy_approval"
   ]
 }

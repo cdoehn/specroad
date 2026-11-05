@@ -368,6 +368,10 @@
       "kind": "Owned synthetic artifact values and actual native qualified project sources with schema-declared tags, term synonyms and named configuration dimensions. Independent exact value, order, raw byte and hash oracles distinguish set equality, member absence, explicit removal intent and conflict. No writer, review, CLI or final-plan authority is claimed. Full ordered-sequence matrix, nested duplicate/key/type checks, schema annotation rejection, portable path aliases, detached observations and side-effect traps; W fixtures and tests remain unchanged.",
       "provider": "tests/test_merge_collections.py;tests/test_merge_attachments.py;tests/support/domain.py:domain_value;tests/support/records.py:record_value;tests/test_merge_inventory.py:bind_files;tests/test_project_bundle.py:project;tests/test_merge_collections_right.py"
     },
+    "SR-FIX-MERGE-CONFLICTS-v1": {
+      "kind": "Complete native synthetic three-source projects, explicitly known synthetic origins, multiple conflicting leaves, exact direct relation impact, missing versus null, deterministic source-bound IDs and real read-only machine CLI; no human review or execution authority claim.",
+      "provider": "tests/test_merge_conflicts.py;tests/support/merge_lifecycle.py;tests/support/merge_relations.py;tests/test_merge_inventory.py:bind_files;tests/test_project_bundle.py:project"
+    },
     "SR-FIX-MERGE-FIELDS-v1": {
       "kind": "Explicit owned three-way JSON values, nested independent changes and actual qualified native project resource bytes. Independent expected values distinguish absence, null, bool, number, string, object and array order. The field result is neither an executable plan nor a resource deletion/publication authorization. Explicit symmetric success/conflict matrices, all three original observations, escaped pointers, invalid input in every role, deep object/array values, alias isolation and side-effect traps.",
       "provider": "tests/test_merge_fields.py;tests/test_merge_inventory.py:bind_files;tests/test_project_bundle.py:project;tests/test_merge_fields_right.py"
@@ -980,6 +984,7 @@
     "SR-FIX-LEGACY-MANIFEST-v1",
     "SR-FIX-LITERAL-LINT-v1",
     "SR-FIX-MERGE-COLLECTIONS-v1",
+    "SR-FIX-MERGE-CONFLICTS-v1",
     "SR-FIX-MERGE-FIELDS-v1",
     "SR-FIX-MERGE-INVENTORY-v1",
     "SR-FIX-MERGE-LIFECYCLE-v1",

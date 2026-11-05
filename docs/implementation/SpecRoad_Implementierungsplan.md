@@ -34,6 +34,51 @@ Produktfreigaben und die Grenzen aus 2.4.1/2.4.2/2.4.4 bleiben unverändert.
 Dieser Plan ändert keine alten Aufträge, Antworten, Blockaden oder
 Laufzeitdaten und ist keine Start-/Resume-Anweisung.
 
+## Korrekturbundle 609 — Bootstrap und native CLI-Beispiele, Rest 17.g.W/R/C
+
+Maßgeblich ist das nativ geprüfte Fehler-Result
+`specroad-apply_Result_194409_1105_6d1651.zip`, SHA-256
+`2fe99cf4d522bab64dd3963db00be4974389b77ccdbf96f5f5cef991240a1a3d`,
+HEAD `2317b0421e85e706636350bf1dbd1415b8b62411` und Dirty-Fingerprint
+`f3eaaded55a94a4d`. Der Klärungscommit MERGE-CONFLICTS-608 ist
+nach 6955 bestandenen Tests bereits committed. Seine normative Spezifikation
+0.2.68 und aktiven Bindungen bleiben unverändert; keine neue Klärung oder
+Budgetänderung. Die folgenden Abschnitte zu Bundle 608 bleiben historische
+Entscheidungs- und Umfangsbelege, nicht die neue technische Patchbasis.
+
+17.g.W ist mit sechs Fehlern und 7583 bestandenen Tests gescheitert, ohne
+Produktcommit. Bestätigt bleiben 711/900 und 17.f.C; der erhaltene W-Stand
+ist die vollständige Vorherbasis. Die drei Ursachen sind vorzeitige Fach-
+und Sicherheitsimporte bei der CLI-Registrierung (drei Bootstrap-/Identity-
+Regressionen), die unvollständige strikte Befehlsliste (eine Regression)
+und fehlende reale Eingaben für den neuen Befehl in den Schema-Beispielen
+(zwei Regressionen). Es handelt sich um Integrationsfehler, nicht um eine
+offene normative Entscheidung.
+
+609 verschiebt die Fachimporte in den tatsächlichen Handler, ergänzt
+`merge.conflicts` in der weiterhin exakten Befehlsliste und bindet die
+veröffentlichten Beispielpfade an einen realen gespeicherten Konfliktplan.
+Die Fixture verwendet vollständig qualifizierte synthetische Projekte,
+bekannte ausdrücklich synthetische Herkunft und die nativen Erzeuger.
+Sie ersetzt weder Parser noch Quellprüfung, Hashes, Handler oder Ergebnisse.
+Die vorhandenen Bootstrap-, Identity-, Request-, Schema- und Description-
+Verhaltenstests behalten ihre strikten Oracles und werden Pflichtauswahl.
+
+Alle offenen IDs und Rollen bleiben in Reihenfolge erhalten: 17.g.W,
+17.g.R, 17.g.C, jeweils implementation. W korrigiert die vollständige
+CLI-Integration, R behält die angekündigte Daten-/Quell-/Sicherheitshärtung,
+C die reine Extraktion des passiven Datenvertrags. Alle ursprünglichen
+Pflichttests bleiben enthalten; die vollständigen betroffenen Testdateien
+kommen hinzu. Jede Stage hat ihr eigenes gefiltertes N=3-plus-Pflichtgate
+vor dem Commit. Der W/R/C-Endstand wird nicht vorab installiert.
+
+Vorbereiteter Zielstand dieser Stage: 17.g.W, 712/900, danach
+`17.g.R`. Zähler und Checkboxen werden nur durch ihr eigenes
+erfolgreiches Apply-Gate mit Commit wirksam. Dev führt keine Verhaltenstests
+aus; Syntax, reine Collection und native Paketprüfung sind keine Abnahme.
+17.h–17.l, endgültige M17-Abnahme und Produktfreigabe bleiben offen.
+Kein CI-, Watcher- oder Control-Start und keine lokale Betriebsdaten-Payload.
+
 ## MERGE-CONFLICTS-608 — vollständiger Konfliktvertrag und Schritt 17.g
 
 Autorität: SPECROAD-DECISION-1, 2.4.3.1 und aktueller Control-Vertrag 4,
@@ -69,6 +114,44 @@ Darstellung ohne neue Fachlogik. Folgeschritte 17.h–17.l bleiben offen;
 keine Auflösung, Metadatenberechnung, Zielvalidierung oder Publikation wird
 als fertig behauptet. Dev führt keine Verhaltenstests aus. Keine Änderung
 von Control, lokalen Betriebsdaten, Historie oder Budget.
+
+## Bundle 608 — vollständiger Commitzielstand 17.g.W
+
+Technische Basis: nativ geprüftes Result `specroad-apply_Result_183245_1105_1fa54a.zip`,
+SHA-256 `75ab571ab381cceb5aee0518e9f736a16e06df5a13229b9f8d359afed0172078`, sauberer Commit
+`a75ef0e994c433d723314bb0f0b3638c124bb131` und Fingerprint `7c9d2a24e397e0e5`.
+Der zuerst getrennt gegatete Klärungscommit MERGE-CONFLICTS-608 konkretisiert
+nach Vertrag 4 ausschließlich den fehlenden Detailvertrag 10.15.4.
+
+Ziel dieser Stage: 712/900, danach `17.g.R`. Zähler und Checkboxen
+werden erst durch das eigene erfolgreiche Apply-Testgate mit echtem Commit
+wirksam. Die Vorbereitung behauptet keine bestandenen Verhaltenstests.
+
+W sammelt alle tatsächlich ermittelten Identitäts-, Relations-, Lifecycle-,
+Feld-/Collection- und Anhangkonflikte über vollständigen nativen Quellen.
+Stabile IDs binden Plan, Quellen und Herkunft. Drei getaggte Werte erhalten
+Fehlend/null/Binär-Unterschiede; direkte Relationen bilden den belegten
+Impact. Gesperrte Ressourcen erhalten keine Take-/Value-Umgehung.
+Die reale CLI `merge conflicts` liefert die gespeicherte Beobachtung
+maschinenlesbar; das separate native Lesegate prüft sie gegen Originalquellen.
+R vervollständigt widersprüchliche oder manipulierte Daten, neu gehashte
+Auslassungen/Ergänzungen, Collection-Schlüssel, Binärwerte einschließlich
+leerer Bytes, Quellaktualität sowie sichere Dateieingaben der lesenden CLI.
+C verschiebt ausschließlich die unveränderten Klassen/Funktionen des
+passiven Datenvertrags in eine eigene Schicht. Alle W/R-Testbytes bleiben
+identisch, Fachfunktionen behalten ihre ASTs und Fehlerverträge.
+
+SR-REQ-0371/0375 bleiben ehrlich teilweise katalogisiert; die neue CLI-
+Inspektion behauptet keine aktuelle Quellverifikation. 17.h–17.l müssen
+weiter auditierte Auflösung, Metadaten, Zielinvarianten, Writer und endgültige
+Abschlussberichte liefern. Eine leere Konfliktliste erlaubt keinen Write.
+Kein Scope wird vorzeitig als abgeschlossen erklärt oder still verschoben.
+
+Alle neuen Testdateien sowie relevante Merge-, Quellen-, Katalog-, Schema-
+und CLI-Regressionsdateien laufen ungefiltert als Pflichtauswahl zusätzlich
+zur fälligen gefilterten N=3-Gruppe im eigenen Apply-Gate jeder Stage.
+Dev hat nur Syntax, reine Collection und native Paketprüfung ausgeführt.
+Keine Vollsuite-, M17- oder Produktabnahme, kein Dienst-/CI-Start.
 
 ## Bundle 607 — vollständiger Commitzielstand 17.f.C
 
@@ -3707,9 +3790,9 @@ Kein offener Produktplanschritt wird durch diese Testoptimierung abgeschlossen.
 ```yaml
 plan_revision: 106
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 711
-last_completed_plan_commit: 17.f.C
-next_plan_commit: 17.g.W
+implementation_plan_commits_completed: 712
+last_completed_plan_commit: 17.g.W
+next_plan_commit: 17.g.R
 last_completed_numbered_bundle: 607
 implementation_state: in_progress
 audit_followup_status: closed
@@ -38455,7 +38538,7 @@ Plattform-/Releasefreigaben werden dadurch nicht stillschweigend erteilt.
 
 #### 17.g.W – Let it Work
 
-- [ ] **17.g.W** · Position **712/900** · Voraussetzung: `17.f.C`.
+- [x] **17.g.W** · Position **712/900** · Voraussetzung: `17.f.C`.
 **Exakte Commit-Message:** `17.g.W feat(merge): Konfliktobjekte und maschinenlesbarer Zugriff aufbauen`
 
 **Umsetzung:** Stabile Konfliktkennungen mit Pointer, drei Werten, Klasse, Impact und zulässiger Auflösung bereitstellen.
