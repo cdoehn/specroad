@@ -34,7 +34,7 @@ Produktfreigaben und die Grenzen aus 2.4.1/2.4.2/2.4.4 bleiben unverändert.
 Dieser Plan ändert keine alten Aufträge, Antworten, Blockaden oder
 Laufzeitdaten und ist keine Start-/Resume-Anweisung.
 
-## Bundle 598 — vollständiger Feldmerge 17.c.R
+## Bundle 598 — vollständiger Feldmerge 17.c.C
 
 Maßgebliche Basis ist ausschließlich das nativ geprüfte erfolgreiche, saubere
 Result `specroad-apply_Result_044408_1105_1e420b.zip`, SHA-256
@@ -78,7 +78,7 @@ Identität, Metadaten, Lifecycle/Originalschutz, Profil-/Invariantenprüfung,
 Zielvalidierung, vollständige Konflikt-/Auflösungspläne, CLI/Work und
 Veröffentlichung behalten sämtliche folgenden M17-Gates.
 
-Stand dieser Stage: 17.c.R, Folgeposition `17.c.C`. Checkboxen und
+Stand dieser Stage: 17.c.C, Folgeposition `17.d.W`. Checkboxen und
 Zähler sind Commitzielzustände und gelten erst nach bestandenem eigenem
 Apply-Gate und echtem Commit. Die ZIP enthält getrennte vollständige W/R/C-
 Zustände; der Endstand wird nicht vorab installiert. Jede Stage erhält die
@@ -3240,10 +3240,10 @@ Kein offener Produktplanschritt wird durch diese Testoptimierung abgeschlossen.
 ```yaml
 plan_revision: 97
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 701
-last_completed_plan_commit: 17.c.R
-next_plan_commit: 17.c.C
-last_completed_numbered_bundle: 597
+implementation_plan_commits_completed: 702
+last_completed_plan_commit: 17.c.C
+next_plan_commit: 17.d.W
+last_completed_numbered_bundle: 598
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -37866,7 +37866,7 @@ Plattform-/Releasefreigaben werden dadurch nicht stillschweigend erteilt.
 
 #### 17.c.C – Make it Clean
 
-- [ ] **17.c.C** · Position **702/900** · Voraussetzung: `17.c.R`.
+- [x] **17.c.C** · Position **702/900** · Voraussetzung: `17.c.R`.
 **Exakte Commit-Message:** `17.c.C refactor(merge): Rekursiver Feldmerge und Skalarmatrix bereinigen`
 
 **Bereinigung:** Rekursion und Konfliktentstehung als reine Funktionen gestalten.
