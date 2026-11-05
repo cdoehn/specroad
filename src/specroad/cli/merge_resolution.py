@@ -1,8 +1,10 @@
 """Native plan-only conflict resolution; imported only after command dispatch."""
 from pathlib import Path
 
+from ..bundles.errors import BundleError
+from ..srx.errors import SrxError
 from ..merge.resolution_schema import input_schema
-from ..merge.resolutions import resolve_merge_conflict, parse_resolution_value
+from ..merge.resolutions import resolve_merge_conflict, parse_resolution_value, _prepare_resolution
 from ..merge.sources import SourceRequest, load_merge_sources
 from ..model._schema import validate_builtin
 from ..model.errors import ModelError
@@ -27,6 +29,12 @@ def resolve_command(invocation):
         decision = ({'take': options['--take']} if '--take' in options else
                     {'value': parse_resolution_value(options['--value'].encode('utf-8'))})
         plan_file = _read_file(invocation.arguments['merge_plan'])
+        audit = {'actor': {'actor_type': options['--actor-type'], 'actor_id': options['--actor-id']},
+                 'resolved_at': options['--resolved-at']}
+        selection = {'expected_plan_sha256': options['--expected-plan-sha256'],
+                     'conflict_id': options['--conflict'], **audit, **decision}
+        # A bad plan/decision cannot cause access to otherwise irrelevant input paths.
+        _prepare_resolution(plan_file[2], **selection)
         inputs_file = _read_file(options['--inputs'])
         inputs = parse_json_object(inputs_file[2])
         validate_builtin(inputs, input_schema())
@@ -37,10 +45,7 @@ def resolve_command(invocation):
                 raise ModelError('merge_source_absolute_root_required')
             requests.append(SourceRequest(**item))
         sources = load_merge_sources(*requests)
-        plan = resolve_merge_conflict(plan_file[2], sources, history=inputs['history'],
-            expected_plan_sha256=options['--expected-plan-sha256'], conflict_id=options['--conflict'],
-            actor={'actor_type': options['--actor-type'], 'actor_id': options['--actor-id']},
-            resolved_at=options['--resolved-at'], **decision)
+        plan = resolve_merge_conflict(plan_file[2], sources, history=inputs['history'], **selection)
         for boundary, name, raw in (plan_file, inputs_file):
             if boundary.read_bytes(name) != raw:
                 raise SafetyViolation('Resolution input changed during reading')
@@ -48,7 +53,9 @@ def resolve_command(invocation):
             source.verify_current()
         return CommandResult('merge.resolve', result={'format_version': 'merge-resolve-command-v1',
             'source_validation': 'revalidated', 'plan_sha256': plan.sha256, 'plan': plan.data})
-    except ModelError as error:
+    except BundleError as error:
+        raise OperationFailure(FailureKind(error.exit_code), error.reason) from error
+    except (ModelError, SrxError) as error:
         raise OperationFailure(FailureKind.MODEL, error.reason) from error
     except SafetyViolation as error:
         raise OperationFailure(FailureKind.SECURITY, str(error)) from error

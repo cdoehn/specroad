@@ -132,23 +132,28 @@ def parse_resolution_plan(raw):
     return parse_merge_conflicts(raw)
 
 
-def read_merge_resolutions(raw, sources, *, history, expected_plan_sha256):
-    """Revalidate the entire selected plan and all three native original sources."""
+def _bound_plan(raw, expected_plan_sha256):
     if (type(expected_plan_sha256) is not str
             or re.fullmatch(r'[0-9a-f]{64}', expected_plan_sha256) is None):
         raise ModelError('merge_expected_plan_hash_required')
     plan = parse_resolution_plan(raw)
     if plan.sha256 != expected_plan_sha256:
         raise ModelError('merge_resolution_input_hash')
+    return plan
+
+
+def read_merge_resolutions(raw, sources, *, history, expected_plan_sha256):
+    """Revalidate the entire selected plan and all three native original sources."""
+    plan = _bound_plan(raw, expected_plan_sha256)
     data = plan.data
     catalogue = data['catalogue'] if type(plan) is MergeResolutions else data
     read_merge_conflicts(jcs(catalogue), sources, history=history)
     return plan
 
 
-def resolve_merge_conflict(raw, sources, *, history, expected_plan_sha256,
+def _prepare_resolution(raw, *, expected_plan_sha256,
                           conflict_id, actor, resolved_at, take=None, value=_MISSING):
-    """Append exactly one decision; never change an existing plan or project."""
+    """Reject invalid decisions before any original-source acquisition."""
     if (take is None) == (value is _MISSING):
         raise ModelError('merge_resolution_choice_required')
     if take is not None and (type(take) is not str or take not in ROLES):
@@ -158,8 +163,7 @@ def resolve_merge_conflict(raw, sources, *, history, expected_plan_sha256,
     # Detach explicit audit data before any caller-owned source callbacks.
     actor = read_actor(actor).as_fields()
     resolved_at = UtcTimestamp(resolved_at).value
-    plan = read_merge_resolutions(raw, sources, history=history,
-                                  expected_plan_sha256=expected_plan_sha256)
+    plan = _bound_plan(raw, expected_plan_sha256)
     data = plan.data
     catalogue = parse_merge_conflicts(jcs(data['catalogue'])) if type(plan) is MergeResolutions else plan
     events = data['resolutions'] if type(plan) is MergeResolutions else []
@@ -168,7 +172,15 @@ def resolve_merge_conflict(raw, sources, *, history, expected_plan_sha256,
         raise ModelError('merge_conflict_already_resolved')
     previous = digest(events[-1]) if events else catalogue.sha256
     events.append(_event(row, choice, actor, resolved_at, previous))
-    result = parse_merge_resolutions(jcs(_document(catalogue, events)))
+    return parse_merge_resolutions(jcs(_document(catalogue, events)))
+
+
+def resolve_merge_conflict(raw, sources, *, history, expected_plan_sha256,
+                          conflict_id, actor, resolved_at, take=None, value=_MISSING):
+    """Append one locally checked decision only after native source revalidation."""
+    result = _prepare_resolution(raw, expected_plan_sha256=expected_plan_sha256,
+        conflict_id=conflict_id, actor=actor, resolved_at=resolved_at, take=take, value=value)
+    read_merge_resolutions(raw, sources, history=history, expected_plan_sha256=expected_plan_sha256)
     for role in ROLES:
         getattr(sources, role).verify_current()
     return result
