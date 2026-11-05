@@ -34,7 +34,7 @@ Produktfreigaben und die Grenzen aus 2.4.1/2.4.2/2.4.4 bleiben unverändert.
 Dieser Plan ändert keine alten Aufträge, Antworten, Blockaden oder
 Laufzeitdaten und ist keine Start-/Resume-Anweisung.
 
-## Bundle 607 — vollständiger Commitzielstand 17.f.W
+## Bundle 607 — vollständiger Commitzielstand 17.f.R
 
 Technische Basis: nativ geprüftes Result `specroad-apply_Result_173721_1105_44275c.zip`,
 SHA-256 `c0fc468f75d99fd3932a0d1f4aa8bd5cc9629944c850287da4da0528762e4e12`, Abschlusscommit
@@ -44,7 +44,7 @@ Klärungspräfix und 17.e.W/R/C vollständig erfolgreich abgeschlossen.
 Dieses Bundle enthält reguläre Umsetzung ohne neue Detailentscheidung:
 9.6.2, 9.6.3, SR-REQ-0369 und K.3 legen die benötigten Schutzregeln bereits fest.
 
-Ziel dieser Stage: 709/900, danach `17.f.R`. Checkboxen und Zähler
+Ziel dieser Stage: 710/900, danach `17.f.C`. Checkboxen und Zähler
 werden ausschließlich nach ihrem eigenen erfolgreichen Apply-Testgate und
 echtem Commit wirksam; die Vorbereitung behauptet keinen Testerfolg.
 
@@ -3671,9 +3671,9 @@ Kein offener Produktplanschritt wird durch diese Testoptimierung abgeschlossen.
 ```yaml
 plan_revision: 105
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 709
-last_completed_plan_commit: 17.f.W
-next_plan_commit: 17.f.R
+implementation_plan_commits_completed: 710
+last_completed_plan_commit: 17.f.R
+next_plan_commit: 17.f.C
 last_completed_numbered_bundle: 606
 implementation_state: in_progress
 audit_followup_status: closed
@@ -38393,7 +38393,7 @@ Plattform-/Releasefreigaben werden dadurch nicht stillschweigend erteilt.
 
 #### 17.f.R – Make it Right
 
-- [ ] **17.f.R** · Position **710/900** · Voraussetzung: `17.f.W`.
+- [x] **17.f.R** · Position **710/900** · Voraussetzung: `17.f.W`.
 **Exakte Commit-Message:** `17.f.R feat(merge): Lifecycle und unveränderbare Geschichte vervollständigen`
 
 **Vervollständigung:** Retirement gegen Fachänderung und abweichende Evidence-/Baseline-/Review-/abgeschlossene Proposalbytes derselben ID bleiben Konflikte.

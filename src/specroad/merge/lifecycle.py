@@ -9,6 +9,7 @@ from hashlib import sha256
 from ..model.canonical import canonical_json_bytes as jcs
 from ..model.errors import ModelError
 from ..storage.json_syntax import parse_json_object
+from ..changes._lifecycle_policy import _content_hash
 from .identity_checks import ROLES, _history, _identity_conflicts, _conflict
 from .relation_inputs import _sources
 
@@ -25,13 +26,15 @@ def _lifecycle(value):
     return {key: value[key] for key in ('maturity', 'proposal_status') if key in value}
 
 
-def _successors(relations):
+def _successors(relations, *, inverse=True):
     result = {role: {} for role in ROLES}
     for role in ROLES:
         for entry in relations[role].values():
             relation = entry['relation']
             if relation['type'] == 'supersedes':
-                result[role].setdefault(relation['target'], set()).add(entry['owner_id'])
+                source, target = entry['owner_id'], relation['target']
+                key, value = (target, source) if inverse else (source, target)
+                result[role].setdefault(key, set()).add(value)
     return result
 
 
@@ -105,6 +108,7 @@ ancestry, transition event, review authority or deletion is guessed here.
     conflicts = _identity_conflicts(observed, origins)
     blocked = {jcs(row['identity']) for row in conflicts}
     successors = _successors(relations)
+    supersedes = _successors(relations, inverse=False)
     decisions, originals = [], {}
     files = {role: getattr(sources, role).files for role in ROLES}
     for key in sorted(set().union(*(set(observed[role]) for role in ROLES))):
@@ -120,22 +124,37 @@ ancestry, transition event, review authority or deletion is guessed here.
         kind, selected = None, None
         lifecycle = {role: _lifecycle(values[role]) for role in ROLES}
         targets = {role: sorted(successors[role].get(identity['id'], ())) for role in ROLES}
+        predecessors = {role: sorted(supersedes[role].get(identity['id'], ())) for role in ROLES}
         if protected and (len(set(raw.values())) != 1 or len(storage) != 1):
             kind = 'immutable_original_change'
         elif old is not None and (left is None or right is None):
             kind = 'artifact_absence_unproven'
         elif protected:
             selected = 'ours' if left is not None else 'theirs'
-        elif old is not None and left is not None and right is not None:
+        elif left is not None and right is not None:
             if (lifecycle['ours'] != lifecycle['base'] and lifecycle['theirs'] != lifecycle['base']
                     and lifecycle['ours'] != lifecycle['theirs']):
                 kind = 'lifecycle_transition_conflict'
             elif (targets['ours'] != targets['base'] and targets['theirs'] != targets['base']
                     and targets['ours'] != targets['theirs']):
                 kind = 'supersession_target_conflict'
+            elif (predecessors['ours'] != predecessors['base'] and predecessors['theirs'] != predecessors['base']
+                    and predecessors['ours'] != predecessors['theirs']):
+                kind = 'supersession_target_conflict'
+            elif old is not None and old['maturity'] != 'retired' and any(
+                    side['maturity'] == 'retired' and _content_hash(other) != _content_hash(old)
+                    for side, other in ((left, right), (right, left))):
+                kind = 'retirement_content_conflict'
+            elif old is not None and old['maturity'] == 'retired' and any(
+                    side['maturity'] != 'retired' for side in (left, right)):
+                kind = 'lifecycle_reactivation'
+        if kind is None and not protected and any(
+                values[role]['maturity'] == 'superseded' and not targets[role] for role in present):
+            kind = 'supersession_target_missing'
         if kind:
             conflicts.append(_conflict(identity, kind, observed, origins, key,
-                original_values=values, lifecycle_values=lifecycle, successor_ids=targets))
+                original_values=values, lifecycle_values=lifecycle, successor_ids=targets,
+                supersedes_ids=predecessors))
             continue
         original = None
         if selected is not None:
@@ -144,7 +163,8 @@ ancestry, transition event, review authority or deletion is guessed here.
             original = {'role': selected, 'path': path, 'byte_sha256': sha256(raw[selected]).hexdigest(),
                         'classification': 'unchanged_ours' if selected == 'ours' else 'adopt_existing'}
         decisions.append({'identity': identity, 'protected': protected, 'original': original,
-                          'lifecycle_values': lifecycle, 'successor_ids': targets})
+                          'lifecycle_values': lifecycle, 'successor_ids': targets,
+                          'supersedes_ids': predecessors})
     for role in ROLES:
         getattr(sources, role).verify_current()
     return LifecycleMergeResult._create(sources, history_hash, decisions, originals, conflicts)
