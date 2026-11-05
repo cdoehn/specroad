@@ -4,7 +4,6 @@ import hashlib
 from pathlib import Path
 import threading
 import time
-from .retry_ledger import attempt_directory
 from .retry_proof import proof
 from . import continuation
 from .overload_runtime import OverloadWaiting

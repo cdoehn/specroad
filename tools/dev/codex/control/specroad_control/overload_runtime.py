@@ -1,7 +1,6 @@
 """Worker waiting policy; evidence and SQLite checkpoints have separate owners."""
 from . import overload_wait
 from .errors import ControlError
-from .retry_ledger import attempt_directory
 from .telemetry import record
 
 

@@ -34,7 +34,7 @@ Produktfreigaben und die Grenzen aus 2.4.1/2.4.2/2.4.4 bleiben unverändert.
 Dieser Plan ändert keine alten Aufträge, Antworten, Blockaden oder
 Laufzeitdaten und ist keine Start-/Resume-Anweisung.
 
-## Korrekturbundle 602 — echte Releaseprüfung im Test, vollständiger R/C-Rest (R)
+## Korrekturbundle 602 — echte Releaseprüfung im Test, vollständiger R/C-Rest (C)
 
 Basis: natives Fehler-Result SHA-256 `27a2527111bcfcf697914297fa626f0e340482088af9221b1f3a75b5cc571e99`,
 HEAD `fb3bd6e8111c7f4d7dc621b7b2e0ac7226f98380`, dirty Fingerprint
@@ -59,7 +59,7 @@ rein strukturelle Bereinigung. 702/900 und 17.d.W bleiben unverändert.
 Beide Stages bekommen erneut ihr eigenes N=3-plus-vollständige-Pflichtauswahl-
 Gate. In Dev keine Verhaltenstests; dieser Text behauptet keinen Erfolg.
 
-## OFF-PLAN CONTROL-BLOCKED-601 — nachträgliche ausdrückliche Klärungsfreigabe (R)
+## OFF-PLAN CONTROL-BLOCKED-601 — nachträgliche ausdrückliche Klärungsfreigabe (C)
 
 Manueller Nutzerauftrag vom 5. November 2026. Basis ist das erfolgreiche,
 saubere Result SHA-256 `810a1c0ead271a6264ff447cb8c9c02eb4b69f094b493edc217b432ed528bb63`,
@@ -3377,7 +3377,7 @@ implementation_plan_commits_total: 900
 implementation_plan_commits_completed: 702
 last_completed_plan_commit: 17.c.C
 next_plan_commit: 17.d.W
-last_completed_numbered_bundle: 600
+last_completed_numbered_bundle: 602
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null

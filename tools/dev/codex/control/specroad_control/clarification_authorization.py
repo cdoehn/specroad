@@ -8,7 +8,6 @@ from .errors import ControlError
 from .job_contract import scope, new_contract, contract
 from .ledger import Ledger
 from .local import read_private, decode_object
-from .retry_ledger import attempt_directory
 
 
 def fail(message):

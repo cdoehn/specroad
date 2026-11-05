@@ -14,7 +14,6 @@ from .blocked_recovery import recover_blocked
 from .config import Config, load, parse, render, identity, setup_config
 from .errors import ControlError
 from .ledger import Ledger
-from .retry_ledger import attempt_directory
 from .telemetry import record
 from .local import Paths, lock, private_dir, json_read, json_write, write_private
 

@@ -10,7 +10,6 @@ from .job_contract import contract, scope
 from .mixed_contract import IMPLEMENTATIONS
 from .ledger import Ledger
 from .local import decode_object, read_private
-from .retry_ledger import attempt_directory
 
 from .apply_reconcile_history import (history_hash, stable, records, validate_history,
                                       persist, complete, require_no_pending)
