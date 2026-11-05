@@ -36,7 +36,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "e399e83b313950e91d3539470a8aad1c2c1d81fb6e8709bd375f2777fa558c72",
+  "specification_sha256": "d59268a394b613cf8496b67c8015bc608009f1d734786950c804315a03b29ed2",
   "steps": [
     "Evaluate static fields and exists; classify value types; reject malformed operands without coercion or side effects.",
     "Evaluate any/all/none in array order using lexical item binding, strict Boolean predicates and empty-array identities."

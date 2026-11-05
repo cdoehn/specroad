@@ -34,7 +34,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "e399e83b313950e91d3539470a8aad1c2c1d81fb6e8709bd375f2777fa558c72",
+  "specification_sha256": "d59268a394b613cf8496b67c8015bc608009f1d734786950c804315a03b29ed2",
   "steps": [
     "Compare explicit independent additions, same-key object changes, nested sets, adopted order and remove/edit observations against exact independent expected values.",
     "Validate every source before equality shortcuts; reject duplicate keys, unknown schema lookup and schema-invalid combined targets.",

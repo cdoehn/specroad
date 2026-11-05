@@ -1,19 +1,19 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.66
+## Version 0.2.67
 
 | Feld | Wert |
 |---|---|
 | Dokument-ID | `SR-SPEC-0001` |
-| Dokumentversion | `0.2.66` |
+| Dokumentversion | `0.2.67` |
 | Zielrelease | `SpecRoad Single-Repository Workbench 0.2.0` |
 | Status | **Fachlich konsolidierte Arbeitsgrundlage; technische Reviewentscheidung gesondert dokumentiert, formale Baseline-Freigabe und Produktabnahme nicht durch dieses Dokument erklärt** |
 | Stand | 5. November 2026 |
 | Sprache | Deutsch; technische Feldnamen, Enum-Werte und CLI-Kommandos Englisch |
-| Fachliche Quelle | **Diese Repositoryfassung v0.2.66 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.66 liegt mit dieser Änderung nicht vor.** |
+| Fachliche Quelle | **Diese Repositoryfassung v0.2.67 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.67 liegt mit dieser Änderung nicht vor.** |
 | Bearbeitbare Satzquelle | Diese Datei; eine spätere PDF muss denselben versionierten Inhalt wiedergeben. |
-| Vorgängerversion | Repository-Spezifikation v0.2.65 vom 5. November 2026; historische Nachweise bleiben unverändert. |
-| Prüf- und Entscheidungsgrundlage | CONTROL-ACCEPT-CURRENT-605: ausdrücklicher manueller Nutzerauftrag zur protokollierten Übernahme eines aktuell geprüften Stands; keine Produkt- oder Baseline-Freigabe. |
-| Änderungsart | Gemeinsamer Control-Bedienweg nach manueller Arbeit mit aktuellen nativen Apply-Nachweisen, optionaler Klärung und erhaltenem Restbudget. |
+| Vorgängerversion | Repository-Spezifikation v0.2.66 vom 5. November 2026; historische Nachweise bleiben unverändert. |
+| Prüf- und Entscheidungsgrundlage | MERGE-RELATIONS-606, delegiert gemäß SPECROAD-DECISION-1, Vertrag 4; keine Produktfreigabe. |
+| Änderungsart | Quellgebundene Herkunftsbeobachtungen und schreibfreier Relationsmerge; bestehende Identitäts- und Reviewgrenzen bleiben. |
 
 > **Verbindlicher Quellenwechsel:** Die ausdrückliche Nutzerentscheidung REFERENCE-SOURCE-551 wird als v0.2.50 umgesetzt. Der neue Quellvertrag ist Entwurfsarbeit vom 3. November 2026, kein Nachweis eines früher existierenden Formats. Bestehende 0.2-Verträge, Transport-, Sicherheits- und Reviewgrenzen bleiben erhalten.
 
@@ -4499,6 +4499,98 @@ unveränderten Inventur wird mit synthetischen Projektintegrationstests
 abgedeckt. Die folgenden Schritte 17.e–17.o bleiben vollständig offen.
 
 
+#### 10.15.3 Relationsidentität und gebundene Herkunftsbeobachtungen
+
+**MERGE-RELATIONS-606, delegiert gemäß SPECROAD-DECISION-1 und 2.4.3.1,
+Vertrag 4.** Diese additive Detailentscheidung konkretisiert ausschließlich
+17.e und SR-REQ-0368/0370. Sie ergänzt den vorhandenen neutralen
+HistoryOrigin-Vertrag um die Bindung an vollständige native Mergequellen.
+Sie erzeugt weder eine neue Projektdatei noch einen Herkunftsdienst, eine
+Signatur oder einen endgültigen Merge-/Applyplan.
+
+Die lesende Relationsmerge-API erhält die drei qualifizierten MergeSources
+und ausdrücklich übergebene Herkunftsbeobachtungen. Deren geschlossene
+JSON-Hülle enthält genau `history_format_version=merge-history-input-v1`,
+`source_bindings_sha256` (den kanonischen SHA-256 der vollständigen drei
+Quellbindungen) und `observations`. Jede Beobachtung hat genau `role`
+(base/ours/theirs), `identity` (die vollständige native Inventuridentität mit
+kind/id/version) und `origin`. Origin ist null oder genau das vorhandene
+HistoryOrigin-Paar `namespace`, `creation_event`, beide nichtleere
+UTF-8-Zeichenfolgen ohne NUL. Die subject_id ist die gebundene native ID.
+Beobachtungen betreffen nur tatsächlich vorhandene Identitäten aus
+Konfiguration, Artefakt, Relation, Profil, Regel, Mapping, Registry und
+Sprachpaket. Fremde, doppelte, unvollständige oder veraltete Bindungen sind
+Fehler; fehlende Beobachtungen bedeuten unbekannte Herkunft, niemals
+stillschweigende Übereinstimmung. Reihenfolge der Eingabe ist bedeutungslos;
+für die Bindung wird nach Rolle und kanonischer Identität sortiert.
+
+Diese Angaben sind explizite Herkunftseingaben des aufrufenden vertrauenswürdigen
+Geschichtsproviders, wie beim bisherigen HistoryObservation-Modell. Die API
+prüft ihre Quellzuordnung und Konsistenz, authentifiziert aber keinen
+Erzeugungsvorgang. Ein Hash, eine gleiche ID, ein Auditzeitstempel oder gleiche
+Bytes allein beweisen keine gemeinsame Historie. Es gibt keine automatische
+Ableitung von Namespace oder Creation Event aus solchen Werten. Eine spätere
+öffentliche CLI-/Planintegration muss ihre Herkunft aus tatsächlicher
+Ancestry/Provenienz beziehen; diese API akzeptiert keine behauptete
+Schreibfreigabe. Unbekannte Herkunft darf dort nicht durch erfundene Angaben
+ersetzt werden. Synthetische Tests dürfen eigene bekannte Erzeugungsereignisse
+angeben, ohne historische Projekte oder menschliche Reviews zu behaupten.
+
+Für jede mehrfach vorkommende native Identität wird vor Inhaltsgleichheit
+oder Einseitenabkürzungen geprüft: unterschiedliche id_scheme oder zwei
+unterschiedliche bekannte Ursprünge sind `identity_collision` mit SRV101.
+Fehlt sonst ein Ursprung, bleibt `identity_history_unresolved`. Ein sicherer
+Kollisionsbeleg hat Vorrang vor fehlenden anderen Angaben. Für eine nur auf
+einer Seite neu vorkommende ID ist kein Vergleich mit einer erfundenen zweiten
+Historie erforderlich. Ressourcenarten und Versionen bleiben getrennte
+Namensräume. Dieselbe Prüfung gilt für Artefakte, Relationen und die genannten
+normativen Ressourcen; Anhänge/Archive haben ihren gesonderten Bytevertrag.
+
+Relationen werden global nach relation_id verglichen, nie nach Arrayindex,
+Besitzerpfad oder Typ/Ziel-Paar. Unabhängige neue IDs bleiben beide erhalten,
+auch bei gleichem Inhalt oder gleichem Typ/Ziel. Eine gemeinsame Relation
+benötigt die gemeinsame Herkunft und dasselbe id_scheme. Verschiedene
+Besitzer bleiben als `relation_owner_change` blockiert; ihre neue Zuordnung
+wird nicht erraten. Unterschiedliche Erstellungsmetadaten derselben Relation
+werden nicht automatisch kombiniert. Für den Inhalt gilt anschließend die
+bestehende rekursive Feldmatrix, einschließlich konservativer Arrays. Jeder
+konfliktfreie kombinierte Relationswert wird erneut nativ validiert.
+
+Abwesenheit einer in Base vorhandenen Relation beweist keine Löschabsicht.
+Ohne ausdrücklich angegebenen Entfernungswunsch für genau die fehlende Seite
+bleibt `relation_absence_unproven`. Entfernungswünsche sind eindeutige Listen
+nativer Base-Relations-IDs; fremde, doppelte oder weiterhin vorhandene IDs
+sind Fehler. Explizites Entfernen gegen unverändert entfernt nur den
+Wertkandidaten, gegen Ändern ergibt `relation_remove_edit`. Beidseitiges
+explizites Entfernen ist gleich. Kein Entfernen, Konflikt oder unabhängiger
+Ursprung wird durch Zufallsumbenennung scheinbar gelöst.
+
+Aus qualifizierten Legacy-Originalen stammen die bereits nativ geprüften
+Navigationswerte. Ihre Relationen bleiben bei abweichenden Werten, Besitzern,
+Speicherklassen oder beabsichtigter Entfernung geschützt; identische Werte
+bleiben erhalten. Dies ist keine Lockerung des späteren vollständigen
+Lifecycle-/Originalbyteschutzes in 17.f.
+
+Die Ergebnisse binden die ursprünglichen drei Quellen und die kanonisch
+geordneten Herkunftseingaben. Konflikte benennen die native Identität, die
+Art und alle drei ursprünglichen Inventurbeobachtungen; Inhaltskonflikte
+bewahren zusätzlich die vollständigen Originalwerte und Feldzeiger. Ohne
+Konflikte liefert die API nach relation_id sortierte Paare aus owner_id und
+Relationswert. Sie erzeugt keine neue Artefaktdatei und ordnet insbesondere
+keine contains-Positionen um. Bei irgendeinem Identitäts- oder Relationskonflikt
+ist der Zielzugriff gesperrt. Alle Ergebnisse sind unabhängig von Änderungen
+an Eingabe-/Ausgabekopien; ready und write_authorized bleiben false.
+Quellen werden vor und nach der Berechnung auf Aktualität geprüft.
+
+Positive, negative und Grenzfallabnahmen umfassen echte qualifizierte
+synthetische Quellen, unabhängige neue Relationen, gleiche bekannte Historie,
+abweichende/fehlende Herkunft trotz gleicher Bytes, andere id_scheme,
+verschobene Arraypositionen, explizites Remove/Edit, Besitzerwechsel,
+Originalschutz, manipulierte Herkunftshüllen und unveränderte Quellen.
+17.f–17.o, Metadaten K.3, Zielinvarianten, CLI und alle Review-/Writergates
+bleiben erforderlich. Dieser lesende Baustein ist keine Produktabnahme.
+
+
 ### 10.16 Projektbundle und partieller Umfang
 
 Ein Bundle verwendet ausschließlich die kanonischen Werte `bundle_kind=project|partial` nach Anhang E.3; `document` und `release` sind Scope-Arten, keine Werte dieses Felds. Ein `project`-Bundle enthält einen geschlossenen, nicht konfigurationsgefilterten Projektscope und bildet nach Extraktion ein normales schreibbares SpecRoad-Projekt. Es enthält standardmäßig abgeschlossene Request- und Transaktionsreceipts in einer getrennten Betriebssektion, deren Hash im Bundlemanifest gebunden ist, aber nicht in die fachliche Modellwurzel eingeht.
@@ -7668,6 +7760,7 @@ Die folgende Roadmap ist informativ und erzeugt keine Anforderungen an 0.2:
 
 | Version | Datum | Status | Änderung |
 |---|---|---|---|
+| 0.2.67 | 2026-11-05 | Delegiert gemäß SPECROAD-DECISION-1, Vertrag 4 | MERGE-RELATIONS-606: Herkunftsbindung und globale Relationsidentität ohne implizite Lösch-/Schreibfreigabe. |
 | 0.2.66 | 2026-11-05 | Ausdrücklicher Nutzerauftrag | CONTROL-ACCEPT-CURRENT-605: ausgewählten geprüften Stand explizit übernehmen, optionale Klärung und konservatives Budget; alte Nachweiskette darf entfallen. |
 | 0.2.65 | 2026-11-05 | Einmalige ausdrückliche Nutzerfreigabe nach SPECROAD-DECISION-1 | MERGE-COLLECTIONS-603: schemafeste Mengen, atomare geordnete Folgen und Anhangkandidaten ohne implizite Lösch- oder Schreibfreigabe. |
 | 0.2.64 | 2026-11-05 | Ausdrücklicher Nutzerauftrag | CONTROL-BLOCKED-601: explizite Freigabe eines neuen Versuchs nach belegtem paketlosem Blocker, mit unveränderter Historie und Budget. |
@@ -11743,4 +11836,4 @@ Implementierungsschritten nachgewiesen sein.
 
 ---
 
-**Ende der SpecRoad-Produktspezifikation v0.2.66.**
+**Ende der SpecRoad-Produktspezifikation v0.2.67.**

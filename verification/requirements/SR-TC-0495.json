@@ -47,7 +47,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "e399e83b313950e91d3539470a8aad1c2c1d81fb6e8709bd375f2777fa558c72",
+  "specification_sha256": "d59268a394b613cf8496b67c8015bc608009f1d734786950c804315a03b29ed2",
   "steps": [
     "12.s.W: Assess original file hashes and exact H.2 line/text/byte selections. Preserve current at the stored position despite outside changes/duplicate matches; report one relocation without rewriting. Observe absent file/Git paths, distinguish absent and ambiguous selections, retain source/selector failures and check detached reports. Recheck missing-path/root/store boundaries and exercise fresh audited Core/PYZ runtimes.",
     "12.s.R: Cross every H.3 selection outcome with both raw-hash results and native file/SHA-1/SHA-256 sources. Remove bound commits, root/parent trees and blobs for every reference kind; assert missing without fabricated hashes. Corrupt objects, inject malformed/failed batch responses, reject unsafe parents, preserve read errors and verify exact stale reasons for empty/truncated/overlapping/Unicode/newline cases. Retain old reader errors, forbid fetch/fallback and audit fresh Core/PYZ Git reads."

@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 104 · **Stand:** 5. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.66
+**Planrevision:** 105 · **Stand:** 5. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.67
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 Schritte und 900 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; die ausdrücklich genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wird nach 10.7.10 innerhalb von 15.l.R vorgezogen. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -9,7 +9,7 @@ Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 S
 
 Fachliche Grundlage ist [`docs/specification/SpecRoad_Spezifikation.md`](../specification/SpecRoad_Spezifikation.md), einschließlich aller konsolidierten Korrekturen, 742 Requirements, 51 Verifikationsverträge, 46 Szenario-/E2E-Identitäten sowie R-01 bis R-75, Anhang U und den PatchHarbor-Rundweg aus Anhang W. Der [`Prüfbericht`](../reviews/SpecRoad_v0.2.7_Implementierungsreife_Pruefbericht.md) ist ein vorgelagerter Entwurfsreview, kein späterer Produktnachweis.
 
-Gebundene Spezifikations-SHA-256: `e399e83b313950e91d3539470a8aad1c2c1d81fb6e8709bd375f2777fa558c72`.
+Gebundene Spezifikations-SHA-256: `d59268a394b613cf8496b67c8015bc608009f1d734786950c804315a03b29ed2`.
 Planungsbasis: Commit `fe2661d02ecf2f7eb483b58a4487eb009c6b3846`; sauberes Result-Bundle `specroad_Result_120209_0914_df3504.zip`; Repository-ID `3d2576df-d611-46fc-9d2b-92869468aaca`. Diese Angaben dokumentieren die Entstehung des Plans, nicht die zukünftige Patchbindung. **Jedes spätere Patchpaket bindet den dann aktuellen tatsächlichen Result-Zustand.**
 
 Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 2026 gelten zusätzlich und bei den nachfolgend benannten Konflikten vorrangig. Sonstige normative Spezifikationsinhalte werden nicht stillschweigend abgeschwächt. Neue fachliche Widersprüche, fehlende zwingende Angaben und Sicherheitsprobleme sind offen zu benennen, nicht durch erfundene Annahmen oder Scheinerfolge zu lösen.
@@ -33,6 +33,55 @@ ausdrückliche Bedienausnahme aus 2.4.3.2 bleibt zusätzlich anwendbar.
 Produktfreigaben und die Grenzen aus 2.4.1/2.4.2/2.4.4 bleiben unverändert.
 Dieser Plan ändert keine alten Aufträge, Antworten, Blockaden oder
 Laufzeitdaten und ist keine Start-/Resume-Anweisung.
+
+## MERGE-RELATIONS-606 — gebundene Herkunft und vollständiger Schritt 17.e
+
+Autorität: delegiert gemäß SPECROAD-DECISION-1, 2.4.1/2.4.2/2.4.3.1 und
+aktuellem Control-Vertrag 4 mit Klärungsfreigabe. Keine persönliche Review-
+oder Risikoakzeptanz wird behauptet. Quell-Result SHA-256:
+`d24fdc9b741de1c0f5441c7143a8940c6226b33c7847f048a5ec466daadeca80`,
+sauberer HEAD `c550cf1a892cb05ff803e3b85f24ac3b5434d66b`. Die drei
+OFF-PLAN-605-Gates mit 7737, 7766 und 7756 bestandenen Tests und ihren echten
+Commits sind im Result belegt. Der Produktstand bleibt 705/900, 17.d.C.
+
+Lücke: 17.e verlangt gemeinsame Identitätshistorie; HistoryOrigin und
+HistoryObservation sind bereits reine, ausdrücklich vom Aufrufer gebundene
+Beobachtungen. Es fehlt die genaue Zuordnung solcher Beobachtungen zu den
+drei vollständigen nativen Quellen und normativen Ressourcen. Geprüft wurden
+17.e/17.f und Folgeschritte, SR-REQ-0368/0370, 10.15.1/2, K.3, native
+Quellinventur, Relation-/Identitätswerte und neutrale Historyvergleiche.
+
+Alternativen: gleiche IDs/Bytes/Zeitstempel als Herkunft erraten; beliebige
+neue Historienpersistenz in Projekte einführen; oder bestehende explizite
+Herkunftsbeobachtungen an vollständige Quellbindungen und native Identitäten
+binden. Gewählt ist der dritte Weg: kleinster lesender Anschluss, fehlende
+Herkunft bleibt ungeklärt, widersprüchliche Herkunft kollidiert. Er authentifiziert
+keinen erfundenen Ursprung und ersetzt den späteren Herkunftsprovider nicht.
+Für die öffentliche CLI bleibt tatsächliche Ancestry/Provenienz erforderlich.
+
+Grenzprüfung 2.4.1: ausschließlich bestätigter 17.e-Scope; keine vorgezogene
+CLI oder Architekturänderung; bestehende History-, Original-, Review- und
+Writerschutzregeln bleiben; keine Projektbytes/Altformate ändern sich; die
+additive API/Norm kann versioniert zurückgenommen werden; keine externen
+Fakten werden angenommen. Synthetische Erzeugungsereignisse sind als solche
+ausgewiesen. Native Quellhashes werden aus echten Quellen berechnet.
+
+Die normative Regel steht zuerst in 10.15.3 und aktiven Katalogbindungen.
+W liefert vollständige Relation-ID-Zuordnung, unabhängige Ergänzungen,
+Quell-/Herkunftsbindung und gemeinsame Identitätsprüfung. R vervollständigt
+explizite Entfernung gegen Änderung, Besitzer-/Erstellungsmetadatenschutz,
+Legacy-Schutz und manipulierte Eingaben. C trennt gemeinsame Identitätsprüfung
+und Relationsinhaltsmerge ohne Verhaltensänderung; W/R-Testbytes bleiben gleich.
+Die Klärungsstage lässt 17.e.W/R/C offen. Alle nachfolgenden Zähler gelten erst
+nach bestandenem eigenem Apply-Gate und echtem Commit. Keine Verhaltenstests
+in Dev; je Stage gefilterte fällige N=3-Gruppe plus ungefilterte Pflichtauswahl.
+
+17.e wird als vollständiger zusammenhängender W/R/C-Schritt geliefert.
+17.f behandelt danach eine eigene vollständige Lifecycle-/Originalbytepolitik
+für alle Ressourcen, nicht nur Relationskandidaten; seine Abnahmen bleiben
+offen, ebenso endgültige Metadaten, Zielinvarianten, CLI und Publikation.
+Kein Teil von 17.e wird in diese Folgeschritte verschoben. Kein Alibi-Commit,
+keine Änderung von Control-Konfiguration, Historie oder Klärungsbudget.
 
 ## OFF-PLAN CONTROL-ACCEPT-CURRENT-605 — aktuellen geprüften Stand übernehmen (C)
 
@@ -3553,7 +3602,7 @@ Kein offener Produktplanschritt wird durch diese Testoptimierung abgeschlossen.
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 104
+plan_revision: 105
 implementation_plan_commits_total: 900
 implementation_plan_commits_completed: 705
 last_completed_plan_commit: 17.d.C
@@ -38236,9 +38285,9 @@ Plattform-/Releasefreigaben werden dadurch nicht stillschweigend erteilt.
 - [ ] **17.e.W** · Position **706/900** · Voraussetzung: `17.d.C`.
 **Exakte Commit-Message:** `17.e.W feat(merge): Relationsmerge und Identitätskollisionen aufbauen`
 
-**Umsetzung:** Relation-ID als Vergleichsschlüssel verwenden und gemeinsame Identitätshistorie prüfen.
+**Umsetzung:** Relation-ID als Vergleichsschlüssel verwenden und gemeinsame Identitätshistorie prüfen. Quell- und Herkunftsbindung nach 10.15.3; keine Herkunft aus IDs/Bytes erraten.
 
-**Verhaltensabnahme:** Unabhängig neu angelegte Relationen werden beide übernommen.
+**Verhaltensabnahme:** Unabhängig neu angelegte Relationen werden beide übernommen. Vollständige native synthetische Quellen, globale IDs, echte Herkunftsbeobachtungen, fehlende Herkunft und unveränderte Eingaben nach 10.15.3 prüfen.
 
 #### 17.e.R – Make it Right
 
@@ -38247,7 +38296,7 @@ Plattform-/Releasefreigaben werden dadurch nicht stillschweigend erteilt.
 
 **Vervollständigung:** Ändern gegen Entfernen derselben Relation und gleiche ID bei anderer Provenienz oder id_scheme blockieren.
 
-**Verhaltensabnahme:** Kollision wird nicht durch Zufallsumbenennung scheinbar repariert. Die W-Nachweise bleiben zusätzlich grün.
+**Verhaltensabnahme:** Kollision wird nicht durch Zufallsumbenennung scheinbar repariert. Explizites Remove/Edit, Besitzer-/Metadaten-/Originalschutz und manipulierte Herkunftsbindung nach 10.15.3 prüfen. Die W-Nachweise bleiben zusätzlich grün.
 
 #### 17.e.C – Make it Clean
 
