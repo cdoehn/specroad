@@ -9,5 +9,7 @@ __all__ = ['MergeSources', 'SourceRequest', 'SourceSnapshot', 'load_merge_source
            'MergeInventory', 'build_merge_inventory', 'read_merge_inventory',
            'FieldValue', 'FieldConflict', 'FieldMergeResult', 'merge_fields', 'CollectionConflict',
            'AttachmentConflict', 'AttachmentMergeResult', 'merge_attachments',
-           'merge_relations', 'inspect_merge_identities', 'RelationMergeResult']
+           'merge_relations', 'inspect_merge_identities', 'RelationMergeResult',
+           'inspect_merge_lifecycle', 'LifecycleMergeResult']
 from .relations import merge_relations, inspect_merge_identities, RelationMergeResult
+from .lifecycle import inspect_merge_lifecycle, LifecycleMergeResult

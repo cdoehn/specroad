@@ -2,19 +2,27 @@
   "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [],
   "expected_exit_codes": [],
-  "fixture_ids": [],
-  "implementation_status": "open",
+  "fixture_ids": [
+    "SR-FIX-MERGE-LIFECYCLE-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [],
-  "method": "pending",
+  "method": "automated_behavior",
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Current successful Apply evidence for this stage is required; Dev ran zero behavior tests.",
+    "17.g–17.l conflict/resolution, full merge metadata, target invariants, current qualification, public CLI and writer integration remain required.",
+    "SR-REQ-0637/0638 remain partial until the complete merge-metadata-v1 Planner/Writer and adoption contract is integrated and proven."
   ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Planner und Writer MÜSSEN für Merge-Ergebnisse dieselbe ausdrücklich gebundene `merge-metadata-v1`-Policy anwenden.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "17.f native read-only lifecycle/history guards under 9.6.2, 9.6.3, 10.15.3 and K.3. The existing source-bound origin check precedes all content shortcuts. Concurrent lifecycle states and different inverse successors conflict; protected source originals remain byte-identical. Only a protected byte subset is returned, never a complete target or an approval. The result names merge-metadata-v1 but does not implement its later mutable-resource revision/timestamp calculation, Planner/Writer target equality or CLI/publication integration. These remain open; no requirement-wide pass is claimed."
   },
-  "preconditions": [],
+  "preconditions": [
+    "All three complete sources are natively qualified and their full original bindings match.",
+    "The explicit provider input describes known synthetic creation events, never inferred production ancestry.",
+    "Every prepared stage requires its own current successful Apply gate; no behavior execution in Dev."
+  ],
   "primary_verification_id": "SR-VER-0041",
   "required_environment": {
     "declared_minimum_python": "3.10",
@@ -28,8 +36,33 @@
     "owned_temporary_files": true
   },
   "specification_sha256": "d59268a394b613cf8496b67c8015bc608009f1d734786950c804315a03b29ed2",
-  "steps": [],
+  "steps": [
+    "Check conflicting lifecycle states and distinct successor identities against exact independent expected conflicts.",
+    "Check byte-identical protected original adoption and exact original-byte observations; every conflict blocks original extraction.",
+    "Check source bindings, stable detached results, no writes and no approval authority."
+  ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0637",
-  "test_ids": []
+  "test_ids": [
+    "tests/test_merge_lifecycle.py::test_conflicting_lifecycle_transitions_keep_all_three_original_values[states0]",
+    "tests/test_merge_lifecycle.py::test_conflicting_lifecycle_transitions_keep_all_three_original_values[states1]",
+    "tests/test_merge_lifecycle.py::test_conflicting_lifecycle_transitions_keep_all_three_original_values[states2]",
+    "tests/test_merge_lifecycle.py::test_detached_deterministic_result_is_never_truthy_approval",
+    "tests/test_merge_lifecycle.py::test_identical_recorded_original_is_retained_byte_for_byte[presence0]",
+    "tests/test_merge_lifecycle.py::test_identical_recorded_original_is_retained_byte_for_byte[presence1]",
+    "tests/test_merge_lifecycle.py::test_identical_recorded_original_is_retained_byte_for_byte[presence2]",
+    "tests/test_merge_lifecycle.py::test_identical_recorded_original_is_retained_byte_for_byte[presence3]",
+    "tests/test_merge_lifecycle.py::test_native_sources_cannot_be_replaced_by_unbound_dictionaries",
+    "tests/test_merge_lifecycle.py::test_one_or_identical_lifecycle_change_is_not_a_conflicting_transition[both]",
+    "tests/test_merge_lifecycle.py::test_one_or_identical_lifecycle_change_is_not_a_conflicting_transition[ours]",
+    "tests/test_merge_lifecycle.py::test_one_or_identical_lifecycle_change_is_not_a_conflicting_transition[theirs]",
+    "tests/test_merge_lifecycle.py::test_original_rewrite_conflicts_even_when_the_other_side_is_unchanged[both]",
+    "tests/test_merge_lifecycle.py::test_original_rewrite_conflicts_even_when_the_other_side_is_unchanged[ours]",
+    "tests/test_merge_lifecycle.py::test_original_rewrite_conflicts_even_when_the_other_side_is_unchanged[theirs]",
+    "tests/test_merge_lifecycle.py::test_supersession_uses_inverse_successor_ids_not_relation_array_positions[sides0-True]",
+    "tests/test_merge_lifecycle.py::test_supersession_uses_inverse_successor_ids_not_relation_array_positions[sides1-False]",
+    "tests/test_merge_lifecycle.py::test_supersession_uses_inverse_successor_ids_not_relation_array_positions[sides2-False]",
+    "tests/test_merge_lifecycle.py::test_supersession_uses_inverse_successor_ids_not_relation_array_positions[sides3-False]",
+    "tests/test_merge_lifecycle.py::test_unknown_history_never_turns_identical_originals_into_merge_authority"
+  ]
 }

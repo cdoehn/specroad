@@ -25591,6 +25591,26 @@
     "tests/test_merge_relations_right.py::test_removal_wishes_must_be_unique_absent_native_base_relations[value6]",
     "tests/test_merge_relations_right.py::test_sources_are_rechecked_after_candidate_computation",
     "tests/test_merge_relations_right.py::test_two_known_common_origins_are_not_sensitive_to_observation_order",
-    "tests/test_merge_relations_right.py::test_unique_new_id_does_not_require_an_invented_second_history"
+    "tests/test_merge_relations_right.py::test_unique_new_id_does_not_require_an_invented_second_history",
+    "tests/test_merge_lifecycle.py::test_conflicting_lifecycle_transitions_keep_all_three_original_values[states0]",
+    "tests/test_merge_lifecycle.py::test_conflicting_lifecycle_transitions_keep_all_three_original_values[states1]",
+    "tests/test_merge_lifecycle.py::test_conflicting_lifecycle_transitions_keep_all_three_original_values[states2]",
+    "tests/test_merge_lifecycle.py::test_detached_deterministic_result_is_never_truthy_approval",
+    "tests/test_merge_lifecycle.py::test_identical_recorded_original_is_retained_byte_for_byte[presence0]",
+    "tests/test_merge_lifecycle.py::test_identical_recorded_original_is_retained_byte_for_byte[presence1]",
+    "tests/test_merge_lifecycle.py::test_identical_recorded_original_is_retained_byte_for_byte[presence2]",
+    "tests/test_merge_lifecycle.py::test_identical_recorded_original_is_retained_byte_for_byte[presence3]",
+    "tests/test_merge_lifecycle.py::test_native_sources_cannot_be_replaced_by_unbound_dictionaries",
+    "tests/test_merge_lifecycle.py::test_one_or_identical_lifecycle_change_is_not_a_conflicting_transition[both]",
+    "tests/test_merge_lifecycle.py::test_one_or_identical_lifecycle_change_is_not_a_conflicting_transition[ours]",
+    "tests/test_merge_lifecycle.py::test_one_or_identical_lifecycle_change_is_not_a_conflicting_transition[theirs]",
+    "tests/test_merge_lifecycle.py::test_original_rewrite_conflicts_even_when_the_other_side_is_unchanged[both]",
+    "tests/test_merge_lifecycle.py::test_original_rewrite_conflicts_even_when_the_other_side_is_unchanged[ours]",
+    "tests/test_merge_lifecycle.py::test_original_rewrite_conflicts_even_when_the_other_side_is_unchanged[theirs]",
+    "tests/test_merge_lifecycle.py::test_supersession_uses_inverse_successor_ids_not_relation_array_positions[sides0-True]",
+    "tests/test_merge_lifecycle.py::test_supersession_uses_inverse_successor_ids_not_relation_array_positions[sides1-False]",
+    "tests/test_merge_lifecycle.py::test_supersession_uses_inverse_successor_ids_not_relation_array_positions[sides2-False]",
+    "tests/test_merge_lifecycle.py::test_supersession_uses_inverse_successor_ids_not_relation_array_positions[sides3-False]",
+    "tests/test_merge_lifecycle.py::test_unknown_history_never_turns_identical_originals_into_merge_authority"
   ]
 }
