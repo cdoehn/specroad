@@ -79,7 +79,7 @@ aus, nur Syntax, Collection und native Paketvalidierung. Abschluss und
 Budgeterneuerung bedürfen erst des vollständig erfolgreichen Folge-Results.
 Keine erneute Klärung und kein neuer Produkt-/Alibicommit.
 
-## Bundle 596 — vollständige Inventur 17.b.R
+## Bundle 596 — vollständige Inventur 17.b.C
 
 Technische Basis bleibt ausschließlich das nativ geprüfte erfolgreiche,
 saubere Result `specroad-apply_Result_030929_1105_0a58cb.zip`, SHA-256
@@ -109,7 +109,7 @@ C verschiebt ausschließlich die gemeinsame native Ressourcenbeobachtung nach
 Werte. Klassifikation und gespeicherter Mergeplan bleiben hinter der bestehenden
 Merge-Fassade. Die vollständigen W/R-Testdateien und Fachverträge bleiben bytegleich.
 
-Stand dieser Stage: 17.b.R, Folgeposition `17.b.C`. Checkboxen und Zähler
+Stand dieser Stage: 17.b.C, Folgeposition `17.c.W`. Checkboxen und Zähler
 sind ausschließlich Commitzielzustände: Sie gelten erst nach bestandenem eigenem
 Apply-Gate und echtem Commit. Jede Stage erhält gefilterte N=3-Auswahl plus
 ungefilterte Pflichtauswahl; neue Testdateien vollständig und relevante native
@@ -3185,10 +3185,10 @@ Kein offener Produktplanschritt wird durch diese Testoptimierung abgeschlossen.
 ```yaml
 plan_revision: 97
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 698
-last_completed_plan_commit: 17.b.R
-next_plan_commit: 17.b.C
-last_completed_numbered_bundle: 595
+implementation_plan_commits_completed: 699
+last_completed_plan_commit: 17.b.C
+next_plan_commit: 17.c.W
+last_completed_numbered_bundle: 597
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -37776,7 +37776,7 @@ Plattform-/Releasefreigaben werden dadurch nicht stillschweigend erteilt.
 
 #### 17.b.C – Make it Clean
 
-- [ ] **17.b.C** · Position **699/900** · Voraussetzung: `17.b.R`.
+- [x] **17.b.C** · Position **699/900** · Voraussetzung: `17.b.R`.
 **Exakte Commit-Message:** `17.b.C refactor(merge): Ressourceninventur und Mergeplan bereinigen`
 
 **Bereinigung:** Gemeinsame Ressourcenmodelle statt einer auf Artefakte verkürzten Parallelstruktur verwenden.

@@ -15,7 +15,7 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Merge-Plan, Konfliktauflösungen und Abschlussbericht MÜSSEN versionierte JSON-Formate besitzen.",
-    "scope": "17.b.W implements the complete merge-inventory-v1 planning intermediate from specification 10.15.1: every actual normative source file and native relation has an explicit identity, original three-role bindings and provisional classification. Canonical plan bytes, explicit MP identity, source and inventory hashes are deterministic. Only the complete identical-source case carries its proven native Ours root. Absence is not deletion; ready/write_authorized remain false. 17.b.R verifies complete source byte/root bindings and reconstructs stored inventories from the original native sources. Rehashed forgery, omissions, duplicates, unknown versions/fields, noncanonical input, missing dependencies and changed sources fail. Relation reorder retains identity while preserving original parent bytes; null and empty content are not absence. Qualified legacy originals remain exact. Semantic recursive merge, resolutions, final target validation, CLI/Work integration and publication remain in the subsequent M17 steps."
+    "scope": "17.b.W implements the complete merge-inventory-v1 planning intermediate from specification 10.15.1: every actual normative source file and native relation has an explicit identity, original three-role bindings and provisional classification. Canonical plan bytes, explicit MP identity, source and inventory hashes are deterministic. Only the complete identical-source case carries its proven native Ours root. Absence is not deletion; ready/write_authorized remain false. 17.b.R verifies complete source byte/root bindings and reconstructs stored inventories from the original native sources. Rehashed forgery, omissions, duplicates, unknown versions/fields, noncanonical input, missing dependencies and changed sources fail. Relation reorder retains identity while preserving original parent bytes; null and empty content are not absence. Qualified legacy originals remain exact. 17.b.C shares native resource observation in snapshots using existing ResourceEntry/ResourceInventory values; public merge APIs, all W/R test bytes, behavior and error contracts remain unchanged. Semantic recursive merge, resolutions, final target validation, CLI/Work integration and publication remain in the subsequent M17 steps."
   },
   "preconditions": [
     "Original natively qualified complete Base/Ours/Theirs sources and an explicit canonical MP plan identity; collection is not execution evidence."
@@ -35,7 +35,8 @@
   "specification_sha256": "1fe1ab7ff8bd66412543935ea760749fe67c08546df6fc9e29b4527048559deb",
   "steps": [
     "Inventory every source file and relation, compare native identities and actual raw/value hashes in all roles, classify provisional differences explicitly, and verify no source writes or invented deletion/approval.",
-    "Read canonical stored inventory against original sources, reject rehashed mutations and incomplete observations, and verify null/absence, empty bytes, stable relation identities and qualified legacy bytes."
+    "Read canonical stored inventory against original sources, reject rehashed mutations and incomplete observations, and verify null/absence, empty bytes, stable relation identities and qualified legacy bytes.",
+    "Execute unchanged W/R tests plus source, native resource/manifest, bundle, Git, baseline and legacy regressions after sharing source enumeration in snapshots."
   ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0375",
