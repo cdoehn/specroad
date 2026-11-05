@@ -60,6 +60,30 @@ def resolve_selection(environment, *, runner=None, probe=None):
     return selection
 
 
+def selection_failure(error, environment):
+    """Bounded machine diagnostics; never copy commands, credentials or environment."""
+    if isinstance(error, subprocess.CalledProcessError):
+        code = "revision_git_failed"
+    elif isinstance(error, KeyError):
+        code = "missing_environment"
+    elif isinstance(error, OSError):
+        code = "selection_io_failed"
+    elif str(error) in ("Missing or ambiguous bundle trailers", "Invalid bundle number", "Invalid completion trailer"):
+        code = "invalid_bundle_metadata"
+    else:
+        code = "invalid_selection"
+    report = {"format_version": 1, "kind": "specroad-ci-selection-failure-v1",
+              "error": code, "run_full": False, "tests_run": 0, "full_suite_passed": None}
+    if environment.get("SR_SELECTION_REPORT"):
+        try:
+            with Path(environment["SR_SELECTION_REPORT"]).open("x", encoding="utf-8") as stream:
+                json.dump(report, stream, sort_keys=True, allow_nan=False)
+                stream.write("\n")
+        except OSError:
+            pass  # Preserve an existing report and retain the original failure.
+    return code
+
+
 def main():
     try:
         selection = resolve_selection(os.environ)
@@ -73,8 +97,9 @@ def main():
                 stream.write("\n")
         print(json.dumps(selection, sort_keys=True))
         return 0
-    except (OSError, ValueError, KeyError, subprocess.CalledProcessError):
-        print("CI revision selection failed; no successful full gate is asserted.", file=sys.stderr)
+    except (OSError, ValueError, KeyError, subprocess.CalledProcessError) as error:
+        code = selection_failure(error, os.environ)
+        print("CI revision selection failed: " + code + "; no successful full gate is asserted.", file=sys.stderr)
         return 2
 
 

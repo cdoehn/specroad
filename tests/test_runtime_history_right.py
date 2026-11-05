@@ -50,7 +50,8 @@ def test_database_write_failure_keeps_prior_history_and_current_attempt_invalid(
         store.db.set_authorizer(lambda action,a,b,c,d: sqlite3.SQLITE_DENY
                                 if action==sqlite3.SQLITE_INSERT and a=='phases' else sqlite3.SQLITE_OK)
         with pytest.raises(sqlite3.DatabaseError):store.observe(run,node,'case','gw0','setup',1,'passed')
-        store.db.set_authorizer(None)
+        # An allowing callback works on the supported Python 3.10 minimum too.
+        store.db.set_authorizer(lambda *args: sqlite3.SQLITE_OK)
         assert store.snapshot(['case'])['tests'][0]['duration_ns'] is None
         assert store.db.execute('SELECT COUNT(*) FROM phases').fetchone()==(3,)
 

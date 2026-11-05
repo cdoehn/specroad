@@ -215,7 +215,9 @@ class NativeApply:
         for name, digest in stage['after'].items():
             if sha256(self.git('show', ':' + name)).hexdigest() != digest:
                 raise ValueError('Index bytes differ from the tested stage')
-        body = ('SpecRoad-Bundle: ' + self.data['bundle_number'] + '\nSpecRoad-Commit-ID: '
+        final = stage['commit_id'] == self.data['stages'][-1]['commit_id']
+        body = ('SpecRoad-Bundle: ' + self.data['bundle_number']
+                + '\nSpecRoad-Bundle-Final: ' + str(final).lower() + '\nSpecRoad-Commit-ID: '
                 + stage['commit_id'] + '\nApply-Selection-SHA256: ' + evidence['selection_sha256'])
         output = self.git('commit', '-m', stage['message'], '-m', body)
         print(output.decode(errors='replace'), end='', flush=True)

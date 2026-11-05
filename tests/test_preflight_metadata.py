@@ -179,11 +179,13 @@ def test_active_entry_bound_stops_classification_without_opening_any_journal(tmp
         with scan(path) as entries:
             yield (entry(value) for value in entries)
 
-    monkeypatch.setattr(os, 'stat', observe)
-    monkeypatch.setattr(os, 'scandir', scanning)
     calls = []
-    with startup_access(tmp_path):
-        result = execute_request(request(tmp_path), registry=registry(calls)).result
+    # Observation is scoped to the request; the independent inventory uses native I/O.
+    with monkeypatch.context() as observed:
+        observed.setattr(os, 'stat', observe)
+        observed.setattr(os, 'scandir', scanning)
+        with startup_access(tmp_path):
+            result = execute_request(request(tmp_path), registry=registry(calls)).result
     assert result.exit_code == 5 and calls == []
     data = result.as_dict()['summary']['preflight']
     assert data['reason'] == 'recovery_required'

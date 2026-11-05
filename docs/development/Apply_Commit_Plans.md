@@ -110,3 +110,13 @@ Er ändert Spec, Plan und aktive Katalogbindungen; jede Stage behält ihr Gate.
 zurück. Eine Fortsetzung nach abgeschlossenem Klärungscommit ist `patch_ready`;
 ein noch offener Klärungspräfix bleibt ein gebundener Rest, keine neue Klärung.
 Alte v1-Pakete, ihre Hashes, Stages und Logs werden nicht nachträglich ergänzt.
+
+## Commitmetadaten und manuelle CI
+
+Jeder neue native Apply-Commit schreibt SpecRoad-Bundle und
+SpecRoad-Bundle-Final sowie SpecRoad-Commit-ID und Apply-Selection-SHA256.
+Nur der letzte tatsächlich angekündigte Commit der jeweiligen ZIP erhält
+Bundle-Final true; eine Korrektur mit einem Restcommit ebenfalls. Die
+Metadaten starten keine CI. Eine manuelle Auswahl prüft weiterhin exakten
+Commit und dev-Herkunft. Ungültige Metadaten führen zum Fehler und nach
+Möglichkeit zu einem begrenzten Auswahlfehlerbericht ohne Zugangsdaten.

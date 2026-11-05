@@ -24950,6 +24950,7 @@
     "tests/test_migration_cli_work.py::test_public_planning_packages_survive_each_checkpoint_and_rebind_fresh_authority[3]",
     "tests/test_migration_cli_work.py::test_public_resume_in_another_process_uses_stored_bytes_but_no_authority",
     "tests/test_migration_cli_work.py::test_public_verify_work_is_only_a_provided_target_observation",
-    "tests/test_migration_cli_work.py::test_public_work_destination_cannot_overlap_project"
+    "tests/test_migration_cli_work.py::test_public_work_destination_cannot_overlap_project",
+    "tests/test_apply_ci_integration.py::test_actual_native_stage_commits_are_selectable_in_manual_ci"
   ]
 }

@@ -30,7 +30,16 @@ def scalar_project():
 
 
 def read_csv(raw):
-    records = list(csv.reader(io.StringIO(raw.decode('utf-8'), newline=''), strict=True))
+    text = raw.decode('utf-8')
+    # Python 3.10's reader rejects NUL, although the View byte contract retains it.
+    # Substitute one absent scalar only for parsing, then restore every field.
+    marker = next((chr(i) for i in range(0xE000, 0xF900) if chr(i) not in text), None) if '\0' in text else None
+    if '\0' in text and marker is None:
+        raise ValueError('No unused scalar for the CSV test reader')
+    parsed = text.replace('\0', marker) if marker is not None else text
+    records = list(csv.reader(io.StringIO(parsed, newline=''), strict=True))
+    if marker is not None:
+        records = [[cell.replace(marker, '\0') for cell in record] for record in records]
     metadata = json.loads(records[1][1])
     assert all(len(record) == 2 + len(metadata['columns']) for record in records)
     assert records[0][:2] == ['record_type', 'metadata']
