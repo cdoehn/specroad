@@ -52,6 +52,22 @@ def assert_historical_replay(replay, completed):
     assert historical == original
 
 
+def assert_planning_delivery_and_replay(final, expected, options, out, location, before, representation):
+    assert final.exit_code == 0, final
+    assert thaw(final.result['data']['restore_plan']) == expected.data
+    assert (out / 'plans/original.json').read_bytes() == expected.source_bytes
+    assert (location / 'results/restore-plan.json').read_bytes() == expected.source_bytes
+    assert inventory(options['project_root']) == before
+    saved = inventory(location)
+    shutil.rmtree(options['source_root'])
+    with no_write_attempts():
+        replay = work('resume', location, representation=representation)
+    assert replay.exit_code == 0, replay
+    assert final.result['data']['checkpoint_changed'] is True
+    assert_historical_replay(replay, final)
+    assert inventory(location) == saved
+
+
 @pytest.mark.parametrize('kind', ['project_bundle', 'baseline'])
 @pytest.mark.parametrize('representation', ['argv', 'mapping'])
 def test_planning_work_keeps_exact_original_and_delivers_full_plan(recorded, tmp_path, kind, representation):
@@ -99,19 +115,7 @@ def test_planning_work_keeps_exact_original_and_delivers_full_plan(recorded, tmp
         assert result.exit_code == 8, result
         assert result.continuation.claim.completed_units == completed
     final = work('resume', location, representation=representation)
-    assert final.exit_code == 0, final
-    assert thaw(final.result['data']['restore_plan']) == expected.data
-    assert (out / 'plans/original.json').read_bytes() == expected.source_bytes
-    assert (location / 'results/restore-plan.json').read_bytes() == expected.source_bytes
-    assert inventory(options['project_root']) == before
-    saved = inventory(location)
-    shutil.rmtree(options['source_root'])
-    with no_write_attempts():
-        replay = work('resume', location, representation=representation)
-    assert replay.exit_code == 0, replay
-    assert final.result['data']['checkpoint_changed'] is True
-    assert_historical_replay(replay, final)
-    assert inventory(location) == saved
+    assert_planning_delivery_and_replay(final, expected, options, out, location, before, representation)
 
 
 def test_minimal_planning_work_resumes_every_unit_through_public_argv(recorded, tmp_path):
@@ -140,19 +144,7 @@ def test_minimal_planning_work_resumes_every_unit_through_public_argv(recorded, 
         assert inventory(options['project_root']) == before
         assert not (out / 'plans/original.json').exists()
     final = work('resume', location, representation='argv')
-    assert final.exit_code == 0, final
-    assert thaw(final.result['data']['restore_plan']) == expected.data
-    assert (out / 'plans/original.json').read_bytes() == expected.source_bytes
-    assert (location / 'results/restore-plan.json').read_bytes() == expected.source_bytes
-    assert inventory(options['project_root']) == before
-    saved = inventory(location)
-    shutil.rmtree(options['source_root'])
-    with no_write_attempts():
-        replay = work('resume', location, representation='argv')
-    assert replay.exit_code == 0, replay
-    assert final.result['data']['checkpoint_changed'] is True
-    assert_historical_replay(replay, final)
-    assert inventory(location) == saved
+    assert_planning_delivery_and_replay(final, expected, options, out, location, before, 'argv')
 
 
 @pytest.mark.parametrize('representation', ['argv', 'mapping'])
