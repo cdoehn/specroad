@@ -34,6 +34,45 @@ Produktfreigaben und die Grenzen aus 2.4.1/2.4.2/2.4.4 bleiben unverändert.
 Dieser Plan ändert keine alten Aufträge, Antworten, Blockaden oder
 Laufzeitdaten und ist keine Start-/Resume-Anweisung.
 
+## Bundle 596 — vollständige Inventur 17.b.W
+
+Technische Basis bleibt ausschließlich das nativ geprüfte erfolgreiche,
+saubere Result `specroad-apply_Result_030929_1105_0a58cb.zip`, SHA-256
+`7a2b1fb27ccd29edc6793f8a51e1fbb756af0214209a643c9b197958ff871801`, Abschlusscommit
+`9a27a1e23e55bca4cdd22b9457285e06dd20bcbd`. Die eigene Klärungsstage
+MERGE-INVENTORY-596 steht in derselben ZIP vor diesen Implementierungsstufen.
+Sie lässt den Produktzähler unverändert und definiert ausschließlich die
+fehlenden Formatdetails aus 10.15.1; alle späteren M17-Gates bleiben erhalten.
+
+W erfasst sämtliche tatsächlichen normativen Dateien und jede Relation mit
+nativer Identität, drei ursprünglichen Byte-/Wertbindungen, expliziter
+Abwesenheit und vorläufiger Zielklasse. Dazu gehören auch inaktive Ressourcen,
+Registry, Sprachpakete, Archive, Kontrollartefakte und qualifizierte Originale.
+Die vollständigen nativen Quellen werden vor und nach der Erhebung geprüft.
+Es werden keine impliziten Dateien, Löschungen oder Zielwurzeln erfunden.
+
+R bindet die gemeinsame Quellinventur zusätzlich an deren Originalbyte- und
+native Modellwurzelbelege. Der gespeicherte Plan wird aus den Originalquellen
+vollständig rekonstruiert; selbst neu gehashte Kürzungen oder Manipulationen
+bleiben ungültig. Fehlende Abhängigkeiten, geänderte Quellen, falsche Versionen,
+Schlüssel oder Typen sind Fehler. Null, fehlend und leere Bytes bleiben getrennt;
+Relationsumordnung ändert nicht die native Relationsidentität. Legacy-Originale
+und ihre gesonderte qualifizierte Navigation behalten ihre bestehenden Grenzen.
+
+C verschiebt ausschließlich die gemeinsame native Ressourcenbeobachtung nach
+`snapshots/inventory.py` und verwendet bestehende ResourceEntry-/ResourceInventory-
+Werte. Klassifikation und gespeicherter Mergeplan bleiben hinter der bestehenden
+Merge-Fassade. Die vollständigen W/R-Testdateien und Fachverträge bleiben bytegleich.
+
+Stand dieser Stage: 17.b.W, Folgeposition `17.b.R`. Checkboxen und Zähler
+sind ausschließlich Commitzielzustände: Sie gelten erst nach bestandenem eigenem
+Apply-Gate und echtem Commit. Jede Stage erhält gefilterte N=3-Auswahl plus
+ungefilterte Pflichtauswahl; neue Testdateien vollständig und relevante native
+Regressionsdateien zusätzlich. Die bisherige Nummerierung bleibt append-only.
+Dev führt **keine Verhaltenstests** aus; Syntax, Collection und native Paketprüfung
+sind keine Abnahme. SR-TC-0361/0364/0375 bleiben teilweise umgesetzt; spätere
+Mergealgorithmen, Auflösungen, Zielvalidierung und CLI/Veröffentlichung bleiben offen.
+
 ## MERGE-INVENTORY-596 — Klärungspräfix und vollständiger Schritt 17.b
 
 Autorität: **delegiert gemäß SPECROAD-DECISION-1**, Vertrag 4 mit erlaubter
@@ -3101,9 +3140,9 @@ Kein offener Produktplanschritt wird durch diese Testoptimierung abgeschlossen.
 ```yaml
 plan_revision: 97
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 696
-last_completed_plan_commit: 17.a.C
-next_plan_commit: 17.b.W
+implementation_plan_commits_completed: 697
+last_completed_plan_commit: 17.b.W
+next_plan_commit: 17.b.R
 last_completed_numbered_bundle: 595
 implementation_state: in_progress
 audit_followup_status: closed
@@ -37674,7 +37713,7 @@ Plattform-/Releasefreigaben werden dadurch nicht stillschweigend erteilt.
 
 #### 17.b.W – Let it Work
 
-- [ ] **17.b.W** · Position **697/900** · Voraussetzung: `17.a.C`.
+- [x] **17.b.W** · Position **697/900** · Voraussetzung: `17.a.C`.
 **Exakte Commit-Message:** `17.b.W feat(merge): Ressourceninventur und Mergeplan aufbauen`
 
 **Umsetzung:** Artefakte, Relationen, Regeln, Profile, Mappings, Konfigurationen und Anhänge in einen versionierten vollständigen Plan aufnehmen.

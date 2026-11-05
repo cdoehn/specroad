@@ -2,20 +2,24 @@
   "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [],
   "expected_exit_codes": [],
-  "fixture_ids": [],
-  "implementation_status": "open",
+  "fixture_ids": [
+    "SR-FIX-MERGE-INVENTORY-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [],
-  "method": "pending",
+  "method": "automated_behavior",
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence.",
-    "MERGE-INVENTORY-596 / specification 10.15.1 defines the complete read-only inventory format. Implementation and bound Apply evidence remain open in 17.b; all subsequent semantic merge, review, target and publication gates remain required."
+    "Current successful Apply evidence is required for each prepared 17.b stage; no behavior tests were executed in Dev.",
+    "The inventory is an explicitly non-executable intermediate. Recursive merge, automatic adoption/combination, conflict resolution formats, final target roots, completion reports, CLI/Work and publication remain required in later M17 steps. No complete requirement or M17 success is claimed."
   ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Merge-Plan, Konfliktauflösungen und Abschlussbericht MÜSSEN versionierte JSON-Formate besitzen.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "17.b.W implements the complete merge-inventory-v1 planning intermediate from specification 10.15.1: every actual normative source file and native relation has an explicit identity, original three-role bindings and provisional classification. Canonical plan bytes, explicit MP identity, source and inventory hashes are deterministic. Only the complete identical-source case carries its proven native Ours root. Absence is not deletion; ready/write_authorized remain false. Semantic recursive merge, resolutions, final target validation, CLI/Work integration and publication remain in the subsequent M17 steps."
   },
-  "preconditions": [],
+  "preconditions": [
+    "Original natively qualified complete Base/Ours/Theirs sources and an explicit canonical MP plan identity; collection is not execution evidence."
+  ],
   "primary_verification_id": "SR-VER-0026",
   "required_environment": {
     "declared_minimum_python": "3.10",
@@ -29,8 +33,43 @@
     "owned_temporary_files": true
   },
   "specification_sha256": "1fe1ab7ff8bd66412543935ea760749fe67c08546df6fc9e29b4527048559deb",
-  "steps": [],
+  "steps": [
+    "Inventory every source file and relation, compare native identities and actual raw/value hashes in all roles, classify provisional differences explicitly, and verify no source writes or invented deletion/approval."
+  ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0375",
-  "test_ids": []
+  "test_ids": [
+    "tests/test_merge_inventory.py::test_absence_is_observed_in_each_role_without_inventing_a_deletion[presence0]",
+    "tests/test_merge_inventory.py::test_absence_is_observed_in_each_role_without_inventing_a_deletion[presence1]",
+    "tests/test_merge_inventory.py::test_absence_is_observed_in_each_role_without_inventing_a_deletion[presence2]",
+    "tests/test_merge_inventory.py::test_absence_is_observed_in_each_role_without_inventing_a_deletion[presence3]",
+    "tests/test_merge_inventory.py::test_absence_is_observed_in_each_role_without_inventing_a_deletion[presence4]",
+    "tests/test_merge_inventory.py::test_absence_is_observed_in_each_role_without_inventing_a_deletion[presence5]",
+    "tests/test_merge_inventory.py::test_all_resource_kinds_and_relations_are_individually_addressed",
+    "tests/test_merge_inventory.py::test_bound_baseline_archives_are_not_an_invisible_secondary_namespace",
+    "tests/test_merge_inventory.py::test_changed_fields_are_retained_but_not_prematurely_merged",
+    "tests/test_merge_inventory.py::test_dictionary_assertions_do_not_replace_native_three_source_values",
+    "tests/test_merge_inventory.py::test_every_language_package_and_registry_is_retained",
+    "tests/test_merge_inventory.py::test_every_native_source_kind_and_role_has_complete_original_file_bindings[0-baseline]",
+    "tests/test_merge_inventory.py::test_every_native_source_kind_and_role_has_complete_original_file_bindings[0-bundle]",
+    "tests/test_merge_inventory.py::test_every_native_source_kind_and_role_has_complete_original_file_bindings[0-git]",
+    "tests/test_merge_inventory.py::test_every_native_source_kind_and_role_has_complete_original_file_bindings[0-local]",
+    "tests/test_merge_inventory.py::test_every_native_source_kind_and_role_has_complete_original_file_bindings[1-baseline]",
+    "tests/test_merge_inventory.py::test_every_native_source_kind_and_role_has_complete_original_file_bindings[1-bundle]",
+    "tests/test_merge_inventory.py::test_every_native_source_kind_and_role_has_complete_original_file_bindings[1-git]",
+    "tests/test_merge_inventory.py::test_every_native_source_kind_and_role_has_complete_original_file_bindings[1-local]",
+    "tests/test_merge_inventory.py::test_every_native_source_kind_and_role_has_complete_original_file_bindings[2-baseline]",
+    "tests/test_merge_inventory.py::test_every_native_source_kind_and_role_has_complete_original_file_bindings[2-bundle]",
+    "tests/test_merge_inventory.py::test_every_native_source_kind_and_role_has_complete_original_file_bindings[2-git]",
+    "tests/test_merge_inventory.py::test_every_native_source_kind_and_role_has_complete_original_file_bindings[2-local]",
+    "tests/test_merge_inventory.py::test_plan_identity_is_explicit_and_canonical[1]",
+    "tests/test_merge_inventory.py::test_plan_identity_is_explicit_and_canonical[CP-00000000000000000000000000]",
+    "tests/test_merge_inventory.py::test_plan_identity_is_explicit_and_canonical[MP-88888888888888888888888888]",
+    "tests/test_merge_inventory.py::test_plan_identity_is_explicit_and_canonical[MP-iiiiiiiiiiiiiiiiiiiiiiiiii]",
+    "tests/test_merge_inventory.py::test_plan_identity_is_explicit_and_canonical[None]",
+    "tests/test_merge_inventory.py::test_plan_identity_is_explicit_and_canonical[True]",
+    "tests/test_merge_inventory.py::test_plan_identity_is_explicit_and_canonical[]",
+    "tests/test_merge_inventory.py::test_plan_identity_is_explicit_and_canonical[plan_id3]",
+    "tests/test_merge_inventory.py::test_plan_is_deterministic_owned_and_never_a_truthy_write_capability"
+  ]
 }

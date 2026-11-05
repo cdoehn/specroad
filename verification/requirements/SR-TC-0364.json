@@ -3,23 +3,24 @@
   "expected_diagnostics": [],
   "expected_exit_codes": [],
   "fixture_ids": [
+    "SR-FIX-MERGE-INVENTORY-v1",
     "SR-FIX-MERGE-SOURCES-v1"
   ],
   "implementation_status": "partial",
   "json_pointers": [],
   "method": "automated_behavior",
   "open_items": [
-    "Current successful Apply evidence is still required for the prepared source stages; no Dev behavior tests were executed.",
-    "Remaining M17 merge-plan inventories/classifications, conflict algorithms, target model roots, resolution/publication and CLI/Work integration remain in their existing plan steps; bound full acceptance evidence is not claimed here.",
-    "MERGE-INVENTORY-596 / specification 10.15.1 defines the complete read-only inventory format. Implementation and bound Apply evidence remain open in 17.b; all subsequent semantic merge, review, target and publication gates remain required."
+    "Current successful Apply evidence is required for each prepared 17.b stage; no behavior tests were executed in Dev.",
+    "The inventory is an explicitly non-executable intermediate. Recursive merge, automatic adoption/combination, conflict resolution formats, final target roots, completion reports, CLI/Work and publication remain required in later M17 steps. No complete requirement or M17 success is claimed."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Der Merge-Plan MUSS für jedes Artefakt, jede Relation, jede normative Ressource und jeden Anhang die Basis-, Ours- und Theirs-Hashes, automatisch übernommene Änderungen, Konflikte, vorgeschlagene Auflösung und erwartete Zielmodellwurzel enthalten.",
-    "scope": "17.a.W implements complete immutable Base/Ours/Theirs source observations through native local, Git, Baseline and verified full-bundle readers. Complete original resource bytes, project/schema identity, default closed project scope, native model roots and source provenance are retained. No versioned merge plan, conflict resolution, CLI/Work integration or write authority is implemented by this slice. 17.a.R rejects partial/selected sources and mixed project/schema inputs without migration, preserves historical effective profile selection and qualified legacy bytes, checks pinned Git extraction proofs, and reobserves all three source acquisitions before returning. Observations remain non-atomic. 17.a.C moves the full-source registry into snapshots while preserving the public merge facade, native adapters, all W/R behavior tests and errors."
+    "scope": "17.a.W implements complete immutable Base/Ours/Theirs source observations through native local, Git, Baseline and verified full-bundle readers. Complete original resource bytes, project/schema identity, default closed project scope, native model roots and source provenance are retained. No versioned merge plan, conflict resolution, CLI/Work integration or write authority is implemented by this slice. 17.a.R rejects partial/selected sources and mixed project/schema inputs without migration, preserves historical effective profile selection and qualified legacy bytes, checks pinned Git extraction proofs, and reobserves all three source acquisitions before returning. Observations remain non-atomic. 17.a.C moves the full-source registry into snapshots while preserving the public merge facade, native adapters, all W/R behavior tests and errors. 17.b.W implements the complete merge-inventory-v1 planning intermediate from specification 10.15.1: every actual normative source file and native relation has an explicit identity, original three-role bindings and provisional classification. Canonical plan bytes, explicit MP identity, source and inventory hashes are deterministic. Only the complete identical-source case carries its proven native Ours root. Absence is not deletion; ready/write_authorized remain false. Semantic recursive merge, resolutions, final target validation, CLI/Work integration and publication remain in the subsequent M17 steps."
   },
   "preconditions": [
-    "Explicit owned source selectors and complete synthetic project bytes; existing native source integrity and schema contracts apply. Test collection is not behavior-pass evidence."
+    "Explicit owned source selectors and complete synthetic project bytes; existing native source integrity and schema contracts apply. Test collection is not behavior-pass evidence.",
+    "Original natively qualified complete Base/Ours/Theirs sources and an explicit canonical MP plan identity; collection is not execution evidence."
   ],
   "primary_verification_id": "SR-VER-0026",
   "required_environment": {
@@ -37,11 +38,44 @@
   "steps": [
     "Acquire three complete sources, compare exact bytes and native scope/model-root bindings, check immutable detached output and original source provenance, and verify no writes or Git checkout occur.",
     "Reject partial markers/bundles and retained proof removal, foreign identities, old/new unsupported schemas, selected Baselines, unsafe or missing dependencies and late input changes; retain historic profiles and registered original bytes without changing them.",
-    "Run unchanged W/R oracles and affected native bundle, Baseline, Git, extraction and legacy source regressions after moving shared source acquisition into snapshots."
+    "Run unchanged W/R oracles and affected native bundle, Baseline, Git, extraction and legacy source regressions after moving shared source acquisition into snapshots.",
+    "Inventory every source file and relation, compare native identities and actual raw/value hashes in all roles, classify provisional differences explicitly, and verify no source writes or invented deletion/approval."
   ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0364",
   "test_ids": [
+    "tests/test_merge_inventory.py::test_absence_is_observed_in_each_role_without_inventing_a_deletion[presence0]",
+    "tests/test_merge_inventory.py::test_absence_is_observed_in_each_role_without_inventing_a_deletion[presence1]",
+    "tests/test_merge_inventory.py::test_absence_is_observed_in_each_role_without_inventing_a_deletion[presence2]",
+    "tests/test_merge_inventory.py::test_absence_is_observed_in_each_role_without_inventing_a_deletion[presence3]",
+    "tests/test_merge_inventory.py::test_absence_is_observed_in_each_role_without_inventing_a_deletion[presence4]",
+    "tests/test_merge_inventory.py::test_absence_is_observed_in_each_role_without_inventing_a_deletion[presence5]",
+    "tests/test_merge_inventory.py::test_all_resource_kinds_and_relations_are_individually_addressed",
+    "tests/test_merge_inventory.py::test_bound_baseline_archives_are_not_an_invisible_secondary_namespace",
+    "tests/test_merge_inventory.py::test_changed_fields_are_retained_but_not_prematurely_merged",
+    "tests/test_merge_inventory.py::test_dictionary_assertions_do_not_replace_native_three_source_values",
+    "tests/test_merge_inventory.py::test_every_language_package_and_registry_is_retained",
+    "tests/test_merge_inventory.py::test_every_native_source_kind_and_role_has_complete_original_file_bindings[0-baseline]",
+    "tests/test_merge_inventory.py::test_every_native_source_kind_and_role_has_complete_original_file_bindings[0-bundle]",
+    "tests/test_merge_inventory.py::test_every_native_source_kind_and_role_has_complete_original_file_bindings[0-git]",
+    "tests/test_merge_inventory.py::test_every_native_source_kind_and_role_has_complete_original_file_bindings[0-local]",
+    "tests/test_merge_inventory.py::test_every_native_source_kind_and_role_has_complete_original_file_bindings[1-baseline]",
+    "tests/test_merge_inventory.py::test_every_native_source_kind_and_role_has_complete_original_file_bindings[1-bundle]",
+    "tests/test_merge_inventory.py::test_every_native_source_kind_and_role_has_complete_original_file_bindings[1-git]",
+    "tests/test_merge_inventory.py::test_every_native_source_kind_and_role_has_complete_original_file_bindings[1-local]",
+    "tests/test_merge_inventory.py::test_every_native_source_kind_and_role_has_complete_original_file_bindings[2-baseline]",
+    "tests/test_merge_inventory.py::test_every_native_source_kind_and_role_has_complete_original_file_bindings[2-bundle]",
+    "tests/test_merge_inventory.py::test_every_native_source_kind_and_role_has_complete_original_file_bindings[2-git]",
+    "tests/test_merge_inventory.py::test_every_native_source_kind_and_role_has_complete_original_file_bindings[2-local]",
+    "tests/test_merge_inventory.py::test_plan_identity_is_explicit_and_canonical[1]",
+    "tests/test_merge_inventory.py::test_plan_identity_is_explicit_and_canonical[CP-00000000000000000000000000]",
+    "tests/test_merge_inventory.py::test_plan_identity_is_explicit_and_canonical[MP-88888888888888888888888888]",
+    "tests/test_merge_inventory.py::test_plan_identity_is_explicit_and_canonical[MP-iiiiiiiiiiiiiiiiiiiiiiiiii]",
+    "tests/test_merge_inventory.py::test_plan_identity_is_explicit_and_canonical[None]",
+    "tests/test_merge_inventory.py::test_plan_identity_is_explicit_and_canonical[True]",
+    "tests/test_merge_inventory.py::test_plan_identity_is_explicit_and_canonical[]",
+    "tests/test_merge_inventory.py::test_plan_identity_is_explicit_and_canonical[plan_id3]",
+    "tests/test_merge_inventory.py::test_plan_is_deterministic_owned_and_never_a_truthy_write_capability",
     "tests/test_merge_sources.py::test_every_source_kind_in_every_role_keeps_native_root_and_full_inventory[0-baseline]",
     "tests/test_merge_sources.py::test_every_source_kind_in_every_role_keeps_native_root_and_full_inventory[0-bundle]",
     "tests/test_merge_sources.py::test_every_source_kind_in_every_role_keeps_native_root_and_full_inventory[0-git]",
