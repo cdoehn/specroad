@@ -4,6 +4,24 @@ Der normale Dev-Auftrag endet mit einer nativ validierten PatchHarbor-ZIP.
 Vorher werden keine Tests ausgeführt. Eine reine Collection darf die
 Testidentitäten ermitteln. Alle Commits und Tests entstehen später im Apply.
 
+## Entwicklungsaufträge ausschließlich über Control
+
+Nutzerauftrag vom 5. November 2026, OFF-PLAN TEST-SPEED-CONTROL-599:
+Die bisherigen manuellen Chat-Kurzbefehle `S` und `N` sind aufgehoben.
+Control beauftragt jeweils genau einen vollständig gebundenen Dev-Durchlauf;
+Dev veröffentlicht höchstens eine ZIP und beendet den Turn. Watcher/Apply
+übernehmen Ausführung und Tests; Control beobachtet das Result und veranlasst
+bei freigegebener Automatik den nächsten Auftrag. Dev wartet nicht selbst.
+Start/Fortsetzen/Pause/Stopp erfolgen über ausdrückliche Control-Bedienaktionen.
+Manuelle Entwicklungsaufträge bleiben bei pausierter Automatik und ohne
+aktiven Control-Auftrag möglich; alle Bindungs- und Apply-Regeln gelten weiter.
+
+Die lokale Dev-AGENTS.md wird am Entwicklungsort bereinigt und gehört nicht
+in Produkt-Payloads. Historische Prompt-/Auftragsbytes, alte Nachweise und
+Recoverybindungen bleiben unverändert. Ein dort vorhandenes `N` ist keine
+aktuelle Definition eines Chat-Kurzbefehls. Die Testrotation N=3 bleibt
+unverändert. Dieses Bundle startet oder installiert keinen Dienst.
+
 ## Vorbereitung
 
 Ausgangspunkt ist immer das neueste nativ validierte Result mit vollständiger

@@ -13,6 +13,7 @@ from specroad.work.open_existing import open_restore_work
 from support.read_only import inventory, no_write_attempts
 from support.languages import small_restore_registry
 from support.restore import restore_case, plan_for
+from support.records import record_value
 from support.restore_work import capture_pending_planning_units
 from test_restore_invocation import planning, execution, authority
 from test_restore_invocation_options import invocation
@@ -65,17 +66,17 @@ def test_planning_work_keeps_exact_original_and_delivers_full_plan(recorded, tmp
     completed_units = range(2, first.continuation.claim.total_units)
     if representation == 'mapping':
         # Keep the first public capture resume and both public final phases.
-        # argv-project_bundle remains the full per-unit checkpoint reference.
+        # A separate minimal argv project remains the full per-unit reference.
         second = work('resume', location, representation=representation)
         assert second.exit_code == 8, second
         assert second.continuation.claim.completed_units == 2
         capture_pending_planning_units(location)
         completed_units = (first.continuation.claim.total_units - 1,)
-    elif kind == 'baseline':
-        # Exercise every Baseline source capture and both inventory boundaries.
+    else:
+        # Exercise every source capture and both inventory boundaries for both kinds.
         tasks = open_restore_work(location, registry=builtin_registry()).read().entries('tasks')
         source_units = sum(task['phase'] == 'source_capture' for task in tasks)
-        assert source_units > 1
+        assert source_units > (1 if kind == 'baseline' else 0)
         assert all(task['phase'] == 'source_capture' for task in tasks[:source_units])
         assert tasks[source_units]['phase'] == 'inventory_capture'
         for completed in range(2, source_units + 2):
@@ -99,6 +100,40 @@ def test_planning_work_keeps_exact_original_and_delivers_full_plan(recorded, tmp
     shutil.rmtree(options['source_root'])
     with no_write_attempts():
         replay = work('resume', location, representation=representation)
+    assert replay.exit_code == 0, replay
+    assert final.result['data']['checkpoint_changed'] is True
+    assert_historical_replay(replay, final)
+    assert inventory(location) == saved
+
+
+def test_minimal_planning_work_resumes_every_unit_through_public_argv(recorded, tmp_path):
+    # Full Restore qualification requires one primary specification document
+    # (10.14 / SR-REQ-0467). Keep that real artifact, configuration, profile and
+    # registry; the larger fixture's unrelated goal is unnecessary here.
+    options, _, _ = restore_case(tmp_path, 'project_bundle',
+                                values=[record_value('document', document_role='primary_specification')],
+                                language_registry=small_restore_registry())
+    expected = plan_for(options)
+    out = tmp_path / 'out'; out.mkdir()
+    location = tmp_path / 'work'
+    before = inventory(options['project_root'])
+    first = start({**planning(options, out), '--work-dir': str(location)}, 'argv')
+    assert first.exit_code == 8, str(thaw(first.details))
+    assert first.continuation.claim.completed_units == 1
+    for completed in range(2, first.continuation.claim.total_units):
+        result = work('resume', location, representation='argv')
+        assert result.exit_code == 8, result
+        assert result.continuation.claim.completed_units == completed
+    final = work('resume', location, representation='argv')
+    assert final.exit_code == 0, final
+    assert thaw(final.result['data']['restore_plan']) == expected.data
+    assert (out / 'plans/original.json').read_bytes() == expected.source_bytes
+    assert (location / 'results/restore-plan.json').read_bytes() == expected.source_bytes
+    assert inventory(options['project_root']) == before
+    saved = inventory(location)
+    shutil.rmtree(options['source_root'])
+    with no_write_attempts():
+        replay = work('resume', location, representation='argv')
     assert replay.exit_code == 0, replay
     assert final.result['data']['checkpoint_changed'] is True
     assert_historical_replay(replay, final)

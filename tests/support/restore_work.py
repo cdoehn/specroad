@@ -1,7 +1,7 @@
 """Native capture setup for tests whose subject is qualification or delivery.
 
-The public argv Bundle reference still resumes every individual capture.
-Baseline source captures and inventory boundaries can stay public as well.
+The minimal public argv Bundle reference resumes every individual capture.
+Larger Bundle/Baseline cases keep source captures and inventory boundaries public.
 This helper retains real originals and never qualifies or delivers a plan.
 """
 from specroad.cli.commands import builtin_registry

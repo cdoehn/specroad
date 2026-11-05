@@ -409,7 +409,7 @@
       "provider": "tests/support/migration_backups.py:file_hash,write_project,disk_files;tests/test_migration_backup.py;tests/test_migration_backup_right.py:repack"
     },
     "SR-FIX-MIGRATION-TRANSACTION-v1": {
-      "kind": "Synthetic qualified reference-0.1 source bytes, an explicit bound target registry/profile and real external source ZIP; real native writer/recovery, OS file-prefix interruptions and dead local owner. No real data, review, consent or user configuration.",
+      "kind": "Synthetic qualified reference-0.1 source bytes, an explicit bound target registry/profile and real external source ZIP; real native writer/recovery, OS file-prefix interruptions and dead local owner. No real data, review, consent or user configuration. OFF-PLAN 599 declares every effect/ack position separately; each case owns a complete real project/plan/backup. The native plan length must match the full declared index set.",
       "provider": "tests/support/migration_transaction.py:setup,execution_inputs;tests/support/reference01.py:seal;tests/test_migration_transaction_right.py:interrupt,recover"
     },
     "SR-FIX-MIGRATION-VERIFY-WORK-v1": {
@@ -665,7 +665,7 @@
       "provider": "tests/test_proposal_originals.py:draft,original;tests/test_proposal_history.py:history,verifier;tests/test_proposal_completion.py:completed;tests/test_restore_proposals.py:project"
     },
     "SR-FIX-RESTORE-PUBLIC-WORK-v1": {
-      "kind": "Actual public argv and structured command execution over original project/baseline bytes with explicit synthetic host services and authority. Real durable planning/execution Work checkpoints, status/prompt/cancel/export/restore and original result files, source/root loss and tampered inputs. Native process and syscall faults preserve actual effects; terminal replay is passive and does not renew authority.",
+      "kind": "Actual public argv and structured command execution over original project/baseline bytes with explicit synthetic host services and authority. Real durable planning/execution Work checkpoints, status/prompt/cancel/export/restore and original result files, source/root loss and tampered inputs. Native process and syscall faults preserve actual effects; terminal replay is passive and does not renew authority. OFF-PLAN 599 retains every public planning resume on the small native project with exactly one primary specification document. Larger Bundle/Baseline argv cases capture all source units and inventory boundaries publicly, with real middle inventory batching. Exact delivery and passive replay remain.",
       "provider": "tests/test_restore_public.py;tests/test_restore_work_public.py:work,start;tests/test_restore_invocation.py:planning,execution,authority;tests/test_work_resume.py:recorded"
     },
     "SR-FIX-RESTORE-RECOVERY-v1": {

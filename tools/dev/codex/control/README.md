@@ -10,6 +10,24 @@ Aufruf aus dem Repository: `python3 -B tools/dev/codex/control/control status`.
 Quellcode wird über das gemeinsame SpecRoad-PatchHarbor-Apply entwickelt.
 Dev führt keine Testkörper aus; jede W/R/C-Stage hat ihr eigenes reguläres Gate.
 
+## Entwicklungsaufträge ausschließlich über Control
+
+Nutzerauftrag vom 5. November 2026, OFF-PLAN TEST-SPEED-CONTROL-599:
+Die bisherigen manuellen Chat-Kurzbefehle `S` und `N` sind aufgehoben.
+Control beauftragt jeweils genau einen vollständig gebundenen Dev-Durchlauf;
+Dev veröffentlicht höchstens eine ZIP und beendet den Turn. Watcher/Apply
+übernehmen Ausführung und Tests; Control beobachtet das Result und veranlasst
+bei freigegebener Automatik den nächsten Auftrag. Dev wartet nicht selbst.
+Start/Fortsetzen/Pause/Stopp erfolgen über ausdrückliche Control-Bedienaktionen.
+Manuelle Entwicklungsaufträge bleiben bei pausierter Automatik und ohne
+aktiven Control-Auftrag möglich; alle Bindungs- und Apply-Regeln gelten weiter.
+
+Die lokale Dev-AGENTS.md wird am Entwicklungsort bereinigt und gehört nicht
+in Produkt-Payloads. Historische Prompt-/Auftragsbytes, alte Nachweise und
+Recoverybindungen bleiben unverändert. Ein dort vorhandenes `N` ist keine
+aktuelle Definition eines Chat-Kurzbefehls. Die Testrotation N=3 bleibt
+unverändert. Dieses Bundle startet oder installiert keinen Dienst.
+
 ## Datenverzeichnis und Installation
 
 `SPECROAD_CONTROL_HOME` überschreibt den Standard

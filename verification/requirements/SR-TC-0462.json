@@ -92,7 +92,8 @@
     "Inject actual abrupt process exits and native EIO/ENOSPC/short-or-zero-write/fsync/response-loss faults at backup/staging, intent/prepared/committing markers, partial/full target, audit/journal archival, owner exchange, rollback, external output and Work checkpoint/result boundaries. Check exact actual surviving files, active barriers and fresh authorized completion or rollback, including repeated failures.",
     "Exchange opened roots and parents with byte-identical, vanished or linked trees before mode/replace/unlink/rename/rmdir effects, including between staging sync and publication. Reject detached handles before additional effects; preserve original inode/namespace, staging and backup evidence.",
     "Reject declared unsupported 0.1/unknown normative schemas and Legacy registrations in source, current or required archive/attachment closure with Code 3 before project/internal operational/original writes. Enforce the same public planning/structured/Work boundary; do not silently skip, migrate or invent a supported legacy contract. Opaque foreign attachments and defined 0.2 legacy_ids retain their existing meaning.",
-    "Keep invalid/unsupported input Code 3, missing operational values Code 2, real IO Code 5, identity/stale-content conflict Code 6 and native path/root safety Code 7 distinct. Work partial continuation Code 8 is not completion. Current catalog implementation coverage is separate from pending frozen-state Dev/Apply execution evidence, full-suite results and human product release approval."
+    "Keep invalid/unsupported input Code 3, missing operational values Code 2, real IO Code 5, identity/stale-content conflict Code 6 and native path/root safety Code 7 distinct. Work partial continuation Code 8 is not completion. Current catalog implementation coverage is separate from pending frozen-state Dev/Apply execution evidence, full-suite results and human product release approval.",
+    "OFF-PLAN 599: a valid native project with one primary specification document preserves every public argv planning resume. The larger project-bundle case keeps all source captures, both inventory boundaries, qualification, delivery and passive replay public; only middle inventory captures use the existing real native capture/checkpoint helper. Exact complete plan and project byte oracles remain. No current test success is asserted by this catalog."
   ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0462",
@@ -1001,6 +1002,7 @@
     "tests/test_restore_work_public.py::test_execution_resume_needs_current_authority_and_delivers_original_native_result[argv]",
     "tests/test_restore_work_public.py::test_execution_resume_needs_current_authority_and_delivers_original_native_result[mapping]",
     "tests/test_restore_work_public.py::test_existing_work_directory_and_changed_resume_root_are_rejected",
+    "tests/test_restore_work_public.py::test_minimal_planning_work_resumes_every_unit_through_public_argv",
     "tests/test_restore_work_public.py::test_planning_work_keeps_exact_original_and_delivers_full_plan[argv-baseline]",
     "tests/test_restore_work_public.py::test_planning_work_keeps_exact_original_and_delivers_full_plan[argv-project_bundle]",
     "tests/test_restore_work_public.py::test_planning_work_keeps_exact_original_and_delivers_full_plan[mapping-baseline]",

@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 97 · **Stand:** 5. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.63
+**Planrevision:** 99 · **Stand:** 5. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.63
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 Schritte und 900 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; die ausdrücklich genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wird nach 10.7.10 innerhalb von 15.l.R vorgezogen. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -33,6 +33,77 @@ ausdrückliche Bedienausnahme aus 2.4.3.2 bleibt zusätzlich anwendbar.
 Produktfreigaben und die Grenzen aus 2.4.1/2.4.2/2.4.4 bleiben unverändert.
 Dieser Plan ändert keine alten Aufträge, Antworten, Blockaden oder
 Laufzeitdaten und ist keine Start-/Resume-Anweisung.
+
+## Korrekturbundle 600 — gültiges Restore-Minimalfixture, vollständiger Rest (W)
+
+Maßgebliche Basis ist das nativ geprüfte Fehler-Result
+`specroad-apply_Result_061443_1105_a9ad3c.zip`, SHA-256
+`759af684b6f0311af40de0b2c41aa8f747a6eb7c5ea94ca41e99404b7ee20d19`, unveränderter HEAD
+`1702704eb385f9ad1af5f401c58b1adc2ff828d6`, dirty Fingerprint
+`64aae7ee9c1e874d`. Das Result entspricht bytegenau dem
+ausgebrachten W-Zustand von Bundle 599. Das Gate endete mit 6.848 bestandenen
+Tests und einem Fehler, bevor irgendein Commit entstand. R/C wurden noch
+nicht ausgebracht; es gibt keinen erfolgreichen Commit zu wiederholen.
+
+Ursache: Dem neuen leeren Minimalfixture fehlte das nach 10.14 / SR-REQ-0467
+verpflichtende Primärdokument. Die native Restore-Qualifikation lehnte es
+korrekt mit document_primary_missing ab. Das korrigierte Fixture ergänzt
+genau ein echtes document mit document_role=primary_specification und
+behält Konfiguration, Profil, kleine Registry und jeden öffentlichen Resume.
+Sämtliche unabhängigen Plan-/Dateibyte- und Replay-Oracles bleiben unverändert;
+keine Änderung von Produktcode, Spezifikation, Sicherheitsprüfung oder Timeout.
+Die übrigen Beschleunigungen und die Aufhebung der lokalen Kurzbefehle bleiben.
+
+Alle offenen IDs und Rollen werden in derselben Reihenfolge fortgeführt:
+TEST-SPEED-CONTROL-599.W, TEST-SPEED-CONTROL-599.R,
+TEST-SPEED-CONTROL-599.C, jeweils implementation. Die erste Stage umfasst den
+vollständigen erhaltenen uncommitted Scope samt korrigiertem Fixture. R/C
+behalten die angekündigten eigenen Zwischenstände. Korrekturbindung und
+Vorherbytes stammen ausschließlich aus diesem Fehler-Result; kein Reset.
+Stage W ist ein Commitziel, kein vorweggenommener Apply-Erfolg.
+
+Die Pflichtauswahl enthält weiter alle bisherigen 132 Regressionen sowie die
+bestehenden Dokumentrollen-Regressionsprüfungen für vollständige Projekte.
+Jede Stage erhält ihr eigenes gefiltertes N=3-plus-Pflichtauswahl-Gate vor
+Commit; in Dev nur Syntax, Collection und native Paketvalidierung. Nummern,
+Messhistorie, Produktstand 702/900 und Folgeposition 17.d.W bleiben erhalten.
+Kein neuer Klärungscommit, kein CI-, Apply-, Watcher- oder Control-Start.
+
+## OFF-PLAN Bundle 599 — Testbeschleunigung und Control-Steuerung (W)
+
+Ausdrücklicher manueller Nutzerauftrag vom 5. November 2026. Basis ist das
+nativ geprüfte erfolgreiche saubere Result
+`specroad-apply_Result_051802_1105_972621.zip`, SHA-256
+`ce81d56bc40072a555100d29852448ba1532e9e54281f39f3abc3c4db9427d6a`, Abschlusscommit
+`1702704eb385f9ad1af5f401c58b1adc2ff828d6`. Bundle 598 ist vollständig abgeschlossen:
+17.c.W/R/C nach jeweils 6.985/7.059/7.075 bestandenen Tests. Keine offene
+Korrektur; Produktstand 702/900 und Folgeposition 17.d.W bleiben unverändert.
+
+Eine gemeinsame echte W/R/C-Folge, keine zusätzlichen Teil- oder
+Klärungscommits: TEST-SPEED-CONTROL-599.W macht beide Beschleunigungen
+nutzbar und dokumentiert die vom Nutzer aufgehobenen manuellen Kurzbefehle.
+TEST-SPEED-CONTROL-599.R ergänzt unabhängige Abdeckungs-, Phasen- und
+Recovery-Oracles. TEST-SPEED-CONTROL-599.C bereinigt ausschließlich das
+gemeinsame Ausgabe-/Replay-Oracle ohne weitere Fachänderung.
+Die genaue Abnahme und Messvergleichsgrenzen stehen in
+`docs/development/Test_Speed_Control_Handoff.md`.
+
+Alle 13 Migrationseffekte und ihre Bestätigungen bleiben enthalten, jeweils
+mit eigenem Projekt und echter Recovery. Ein vollständiger öffentlicher
+Restore-Ablauf bleibt auf einem kleinen gültigen Projekt erhalten; größere
+Fälle bündeln nur mittlere native Inventur-Captures. Quelle, Planbytes,
+Projektunverändertheit und terminaler Replay bleiben Pflichtoracles.
+Lokale Dev-Regeln entfernen S/N als manuelle Befehle außerhalb der Payload;
+Control ersetzt ihre Steuerungsaufgabe. Historische Promptbytes, Recovery-
+Belege, Control-Code, Dienstzustand und Testrotation N=3 bleiben unverändert.
+
+Stage W ist ein vorbereiteter Commitzielstand, kein vorweggenommener
+Test- oder Apply-Erfolg. Jede Stage erhält einmal die fällige gefilterte
+N=3-Gruppe plus vollständige betroffene Testdateien und relevante
+Migrations-/Capture-/Wiederanlaufregressionen. Testnummern nur anhängen,
+Historie erhalten. Keine Verhaltenstests in Dev, kein CI-/Dienststart.
+Die Produkt-Spezifikation 0.2.63 und alle Produktabnahmen bleiben unverändert;
+dieses manuelle OFF-PLAN-Bundle verbraucht keine automatische Klärung.
 
 ## Bundle 598 — vollständiger Feldmerge 17.c.C
 

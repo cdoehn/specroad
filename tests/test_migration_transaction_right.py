@@ -82,27 +82,36 @@ def test_unpublished_crashes_restore_exact_source_and_keep_evidence(tmp_path,mon
     assert observe_operational_preflight(ProjectBoundary(root))['consistency_state']=='consistent'
 
 
-@pytest.mark.parametrize('kind',['effect','ack'])
-def test_every_file_effect_and_ack_crash_has_one_proven_outcome(tmp_path,monkeypatch,kind):
-    # Iterate all actual native changes, including archive creates, removals,
-    # configuration, mapping and artifact replacements. No sampled prefix.
-    seed=tmp_path/'seed';seed.mkdir();_,_,seed_plan,_=setup(seed)
-    total=len(seed_plan.data['operations'][0]['changes'])
-    for index in range(total):
-        case=tmp_path/str(index);case.mkdir();root,source,plan,args=setup(case)
-        event='effect:'+str(index) if kind=='effect' else 'journal:committing:'+str(index+1)
-        journal=interrupt(root,plan,args,monkeypatch,event)
-        assert observe_operational_preflight(ProjectBoundary(root))['consistency_state']!='consistent'
-        status=inspect_recovery(root,transaction_id=args['transaction_id']).data['transactions'][0]
-        assert status['published_count']==index+1
-        assert status['recorded_published_count']==index+(kind=='ack')
-        assert status['critical_inputs_verified']
-        with pytest.raises(FAILURES):apply(root,plan,args)
-        outcome=recover(root,args)
-        expected=planned_files(source,plan) if index+1==total else source
-        assert normative(root)==expected
-        assert outcome['cleanup_completed'] and not journal_path(root,args).exists()
-        assert current_journal(root,args).data['state']==('committed' if index+1==total else 'rolled_back')
+# This literal synthetic fixture has thirteen native file effects. Collection
+# only declares cases; planning/backups and all I/O run inside each Apply test.
+FILE_CHANGE_INDICES = tuple(range(13))
+FILE_CRASH_CASES = tuple((kind, index) for kind in ('effect', 'ack')
+                        for index in FILE_CHANGE_INDICES)
+
+
+@pytest.mark.parametrize(('kind', 'index'), FILE_CRASH_CASES,
+                         ids=[f'{kind}-{index:02d}' for kind, index in FILE_CRASH_CASES])
+def test_every_file_effect_and_ack_crash_has_one_proven_outcome(tmp_path,monkeypatch,kind,index):
+    root,source,plan,args=setup(tmp_path)
+    changes=plan.data['operations'][0]['changes'];total=len(changes)
+    # Fail if the real plan gains/loses a position; never silently sample it.
+    assert tuple(range(total))==FILE_CHANGE_INDICES
+    event='effect:'+str(index) if kind=='effect' else 'journal:committing:'+str(index+1)
+    interrupt(root,plan,args,monkeypatch,event)
+    assert observe_operational_preflight(ProjectBoundary(root))['consistency_state']!='consistent'
+    status=inspect_recovery(root,transaction_id=args['transaction_id']).data['transactions'][0]
+    assert status['published_count']==index+1
+    assert status['recorded_published_count']==index+(kind=='ack')
+    assert status['critical_inputs_verified']
+    with pytest.raises(FAILURES):apply(root,plan,args)
+    # The status was already observed above. Real recovery still requalifies
+    # its inputs under the native lock; only a duplicate helper read disappears.
+    complete=index+1==total
+    outcome=recover(root,args,action='complete' if complete else 'rollback')
+    expected=planned_files(source,plan) if complete else source
+    assert normative(root)==expected
+    assert outcome['cleanup_completed'] and not journal_path(root,args).exists()
+    assert current_journal(root,args).data['state']==('committed' if complete else 'rolled_back')
 
 
 @pytest.mark.parametrize('point',['committed','receipts','archived'])
