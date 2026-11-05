@@ -80,9 +80,23 @@ def _removals(value, base, side):
     return result
 
 
+def _check_paths(paths):
+    """Reject aliases at every component and file/descendant collisions."""
+    folded_files = {path.casefold() for path in paths}
+    prefixes = {}
+    for path in sorted(paths):
+        parts = path.split('/')
+        for index in range(1, len(parts)+1):
+            prefix = '/'.join(parts[:index]); folded = prefix.casefold()
+            if (folded in prefixes and prefixes[folded] != prefix) or (index < len(parts) and folded in folded_files):
+                raise ModelError('merge_attachment_path_collision')
+            prefixes[folded] = prefix
+
+
 def merge_attachments(base, ours, theirs, *, removed_ours=(), removed_theirs=()):
     """Compare complete qualified attachment maps; never read or write a path."""
     base, ours, theirs = (_source(value) for value in (base, ours, theirs))
+    _check_paths(set(base) | set(ours) | set(theirs))
     removed_ours = _removals(removed_ours, base, ours)
     removed_theirs = _removals(removed_theirs, base, theirs)
     hashes = [{path: sha256(raw).hexdigest() for path, raw in source.items()} for source in (base, ours, theirs)]

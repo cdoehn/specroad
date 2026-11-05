@@ -13,14 +13,14 @@ def _kind(value):
             dict: 'object', list: 'array'}[type(value)]
 
 
-def _conflict_kind(base, ours, theirs):
+def _conflict_kind(base, ours, theirs, schema_aware=False):
     old, left, right = (_kind(value) for value in (base, ours, theirs))
     if 'missing' in (left, right):
         return 'remove_edit'
     if left != right or (left in ('object', 'array') and old not in ('missing', left)):
         return 'type_change'
     if left == 'array':
-        return 'collection_semantics_required'
+        return 'ordered_sequence_change' if schema_aware else 'collection_semantics_required'
     return 'scalar_change'
 
 
@@ -30,8 +30,8 @@ def _equal(left, right):
     return jcs(left) == jcs(right)
 
 
-def _conflict(pointer, base, ours, theirs):
-    return FieldConflict(pointer, _conflict_kind(base, ours, theirs),
+def _conflict(pointer, base, ours, theirs, schema_aware=False):
+    return FieldConflict(pointer, _conflict_kind(base, ours, theirs, schema_aware),
                          *(FieldValue._create(value) for value in (base, ours, theirs)))
 
 
@@ -89,7 +89,7 @@ def merge_owned(base, ours, theirs, rules=None):
         elif equal(old, right):
             target = left
         else:
-            reports.append(_conflict(pointer, old, left, right))
+            reports.append(_conflict(pointer, old, left, right, rules is not None))
             continue
         if target is not _MISSING:
             parent[name] = target

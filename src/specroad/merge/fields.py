@@ -3,7 +3,8 @@
 The caller supplies three present JSON values of the same logical resource.
 Missing object members are distinct from JSON null; a missing RESOURCE is not
 an input to this function. Results neither change the source inventory nor
-authorize deletion/publication. Concurrent arrays await schema-aware merging.
+authorize deletion/publication. Only an explicit built-in schema ID enables
+declared collection semantics; otherwise concurrent arrays remain unresolved.
 """
 from .field_values import FieldValue, FieldConflict, FieldMergeResult
 from ._field_merge import merge_owned

@@ -365,8 +365,8 @@
       "provider": "tests/support/literal_lint.py:observe"
     },
     "SR-FIX-MERGE-COLLECTIONS-v1": {
-      "kind": "Owned synthetic artifact values and actual native qualified project sources with schema-declared tags, term synonyms and named configuration dimensions. Independent exact value, order, raw byte and hash oracles distinguish set equality, member absence, explicit removal intent and conflict. No writer, review, CLI or final-plan authority is claimed.",
-      "provider": "tests/test_merge_collections.py;tests/test_merge_attachments.py;tests/support/domain.py:domain_value;tests/support/records.py:record_value;tests/test_merge_inventory.py:bind_files;tests/test_project_bundle.py:project"
+      "kind": "Owned synthetic artifact values and actual native qualified project sources with schema-declared tags, term synonyms and named configuration dimensions. Independent exact value, order, raw byte and hash oracles distinguish set equality, member absence, explicit removal intent and conflict. No writer, review, CLI or final-plan authority is claimed. Full ordered-sequence matrix, nested duplicate/key/type checks, schema annotation rejection, portable path aliases, detached observations and side-effect traps; W fixtures and tests remain unchanged.",
+      "provider": "tests/test_merge_collections.py;tests/test_merge_attachments.py;tests/support/domain.py:domain_value;tests/support/records.py:record_value;tests/test_merge_inventory.py:bind_files;tests/test_project_bundle.py:project;tests/test_merge_collections_right.py"
     },
     "SR-FIX-MERGE-FIELDS-v1": {
       "kind": "Explicit owned three-way JSON values, nested independent changes and actual qualified native project resource bytes. Independent expected values distinguish absence, null, bool, number, string, object and array order. The field result is neither an executable plan nor a resource deletion/publication authorization. Explicit symmetric success/conflict matrices, all three original observations, escaped pointers, invalid input in every role, deep object/array values, alias isolation and side-effect traps.",

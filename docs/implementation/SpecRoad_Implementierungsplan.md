@@ -86,11 +86,11 @@ Pflichtauswahl. Erst danach folgt der nächste reale Zustand. Das Paket wird
 atomar an Exchange übergeben; kein Dienststart, keine eigene Apply-/Warte-
 oder Fortsetzungsschleife. Endziel bleibt 705/900, danach offen 17.e.W.
 
-## Bundle 603 — vollständiger Commitzielstand 17.d.W
+## Bundle 603 — vollständiger Commitzielstand 17.d.R
 
 Der einmalig manuell freigegebene Klärungspräfix MERGE-COLLECTIONS-603 mit
 Spezifikation 10.15.2 steht in derselben ZIP vor den getrennten W/R/C-Ständen.
-Diese Stage zielt auf 703/900 und danach `17.d.R`. Die Zähler und
+Diese Stage zielt auf 704/900 und danach `17.d.C`. Die Zähler und
 Checkboxen gelten erst nach erfolgreichem eigenem Apply-Gate und echtem Commit.
 Die gebundene technische Basis und die einmalige Befugnis stehen im folgenden
 Entscheidungsnachweis; Control-Vertrag, Historie und Budget bleiben unverändert.
@@ -3516,9 +3516,9 @@ Kein offener Produktplanschritt wird durch diese Testoptimierung abgeschlossen.
 ```yaml
 plan_revision: 103
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 703
-last_completed_plan_commit: 17.d.W
-next_plan_commit: 17.d.R
+implementation_plan_commits_completed: 704
+last_completed_plan_commit: 17.d.R
+next_plan_commit: 17.d.C
 last_completed_numbered_bundle: 602
 implementation_state: in_progress
 audit_followup_status: closed
@@ -38168,7 +38168,7 @@ Plattform-/Releasefreigaben werden dadurch nicht stillschweigend erteilt.
 
 #### 17.d.R – Make it Right
 
-- [ ] **17.d.R** · Position **704/900** · Voraussetzung: `17.d.W`.
+- [x] **17.d.R** · Position **704/900** · Voraussetzung: `17.d.W`.
 **Exakte Commit-Message:** `17.d.R feat(merge): Mengen, geordnete Folgen und Anhänge vervollständigen`
 
 **Vervollständigung:** Konkurrierende geordnete Folgen ohne stabile Elementidentität und remove-versus-edit nicht willkürlich sortieren oder gewinnen lassen.
