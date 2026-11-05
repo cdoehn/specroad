@@ -53,6 +53,9 @@ def evidence(engine, ledger, *, blocked=False):
 
 
 def proof_function(doc):
+    if doc['version'] == 3:
+        from .blocked_chain_extended import prove as extended_prove
+        return extended_prove
     if doc['version'] == 2:
         from .blocked_chain_proof import prove as blocked_prove
         return blocked_prove
@@ -62,16 +65,19 @@ def proof_function(doc):
 def verify(engine, ledger, doc):
     if (sha256(read_private(engine.paths.config)).hexdigest() != doc['config_sha256']
             or scope(engine.config) != doc['scope'] or history_hash(ledger) != doc['history_sha256']
-            or evidence(engine, ledger, blocked=doc['version'] == 2) != doc['evidence']):
+            or evidence(engine, ledger, blocked=doc['version'] in (2, 3)) != doc['evidence']):
         fail('Configuration, history or original completion changed after the explicit request.')
     chain = doc['artifacts']
-    actual = proof_function(doc)(engine, chain['source'], chain['original']['sha256'], chain['result'])
+    original = chain['steps'][0]['patch'] if doc['version'] == 3 else chain['original']
+    actual = proof_function(doc)(engine, chain['source'], original['sha256'], chain['result'])
     if stable(actual) != stable(chain):
         fail('Pinned continuation proof changed.')
     return actual
 
 
-def enqueue(paths, result, *, blocked=False):
+def enqueue(paths, result, *, blocked=False, extended_chain=False):
+    if extended_chain and not blocked:
+        fail('Extended-chain recovery requires the explicit blocked-recovery command.')
     from .commands import configured_offline
     with configured_offline(paths, allow_apply_reconciliation=True) as (config, engine):
         ledger = Ledger(paths.state / 'automation.sqlite3', scope(config))
@@ -86,16 +92,19 @@ def enqueue(paths, result, *, blocked=False):
             requested = engine.exchange.source(requested)
             existing = validate_history(ledger)
             if existing:
-                if (existing['version'] != (2 if blocked else 1)
+                if (existing['version'] != (3 if extended_chain else 2 if blocked else 1)
                         or existing['artifacts']['result']['sha256'] != requested['sha256']):
                     fail('A different recovery is already pending.')
                 verify(engine, ledger, existing)
                 return reply(existing)
             row = ledger.current()
             receipt = evidence(engine, ledger, blocked=blocked)
-            version = 2 if blocked else 1
+            version = 3 if extended_chain else 2 if blocked else 1
             artifacts = proof_function({'version': version})(engine, row['source'], row['patch_sha'], requested)
-            if blocked and (artifacts['checkpoint']['run_id'] in ledger.known_runs()
+            if version == 3 and (any(step['result']['run_id'] in ledger.known_runs() for step in artifacts['steps'])
+                                 or any(step['patch']['sha256'] in ledger.published_hashes() for step in artifacts['steps'])):
+                fail('A chain Result or package was already assigned to another job.')
+            if version == 2 and (artifacts['checkpoint']['run_id'] in ledger.known_runs()
                             or any(artifacts[key]['sha256'] in ledger.published_hashes()
                                    for key in ('original', 'resumed'))):
                 fail('Intermediate Result or manual package was already assigned to another job.')
@@ -152,7 +161,8 @@ def verify_completed(engine, ledger):
             for name, expected in doc['evidence'].items():
                 if sha256(read_private(directory / name)).hexdigest() != expected:
                     fail('Original completion changed after recovery.')
-            actual = proof_function(doc)(engine, chain['source'], chain['original']['sha256'], chain['result'], check_current=False)
+            original = chain['steps'][0]['patch'] if doc['version'] == 3 else chain['original']
+            actual = proof_function(doc)(engine, chain['source'], original['sha256'], chain['result'], check_current=False)
             if stable(actual) != stable(chain):
                 fail('Completed recovery evidence changed before new work.')
 

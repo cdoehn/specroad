@@ -20,8 +20,55 @@ def history_hash(ledger):
 def stable(proof):
     # The opt-in is re-derived from the SAME hash-validated ZIP. Its additive
     # reader field must not invalidate older immutable recovery receipts.
+    if 'steps' in proof:
+        return {**stable({key: value for key, value in proof.items() if key != 'steps'}),
+                'steps': [{**{key: value for key, value in step.items() if key not in ('source', 'patch', 'result')},
+                           **{key: {name: value for name, value in step[key].items()
+                                    if name not in ('path', 'development_contract')}
+                              for key in ('source', 'patch', 'result')}} for step in proof['steps']]}
     return {k: ({key: item for key, item in value.items() if key not in ('path', 'development_contract')}
                 if k in ARTIFACTS else value) for k, value in proof.items()}
+
+
+def validate_extended(chain):
+    if set(chain) != {'source', 'result', 'steps', 'chain_sha256'} or not isinstance(chain['steps'], list) or not 0 < len(chain['steps']) <= 32:
+        raise ValueError
+    digest(chain['chain_sha256']); facts(chain['source'], 'result'); facts(chain['result'], 'result')
+    previous, seen, patches, hashes = chain['source'], {chain['source']['run_id']}, set(), []
+    for step in chain['steps']:
+        if set(step) != {'source', 'patch', 'result', 'kind', 'plan_sha256', 'program_sha256', 'progress_sha256', 'snapshot_sha256'}:
+            raise ValueError
+        for key in ('source', 'patch', 'result'):
+            facts(step[key], 'patch' if key == 'patch' else 'result')
+        source, patch, result = (step[key] for key in ('source', 'patch', 'result'))
+        if (stable({'source': source}) != stable({'source': previous})
+                or patch['binding'] != source['binding'] or result['expected'] != source['binding']
+                or result['patch_sha256'] != patch['sha256'] or result['run_id'] in seen
+                or patch['sha256'] in patches or result['repository_path'] != source['repository_path']
+                or result['operation'] != 'apply' or result['dry_run'] or not result['entrypoint_started']):
+            raise ValueError
+        if step['kind'] == 'unchanged_push':
+            if (step['plan_sha256'] is not None or step['program_sha256'] is not None
+                    or result['binding'] != source['binding'] or not result['success']
+                    or result['dirty'] or result['completed_commit'] is not None):
+                raise ValueError
+        elif step['kind'] in ('completed_plan', 'failed_gate', 'timeout'):
+            digest(step['plan_sha256']); digest(step['program_sha256'])
+            if step['kind'] == 'completed_plan':
+                if not result['success'] or result['dirty'] or result['completed_commit'] != result['binding']['base_commit']:
+                    raise ValueError
+            elif (result['success'] or not result['dirty'] or result['completed_commit'] is not None
+                  or result['primary_kind'] != ('timeout' if step['kind'] == 'timeout' else 'entrypoint_exit')):
+                raise ValueError
+        else:
+            raise ValueError
+        digest(step['progress_sha256']); digest(step['snapshot_sha256'])
+        hashes.append({key: value for key, value in step.items() if key not in ('source', 'patch', 'result')}
+                      | {key + '_sha256': step[key]['sha256'] for key in ('source', 'patch', 'result')})
+        seen.add(result['run_id']); patches.add(patch['sha256']); previous = result
+    if (chain['steps'][-1]['kind'] != 'completed_plan' or chain['chain_sha256'] != hashed(hashes)
+            or stable({'result': previous}) != stable({'result': chain['result']})):
+        raise ValueError
 
 def records(ledger):
     if not ledger.db.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name=?", (TABLE,)).fetchone():
@@ -34,7 +81,7 @@ def validate_history(ledger):
         for row in records(ledger):
             doc = decode_object(row['proof'])
             if (set(doc) != {'version', 'scope', 'config_sha256', 'history_sha256', 'evidence', 'artifacts'}
-                    or hashed(doc) != row['proof_sha'] or type(doc['version']) is not int or doc['version'] not in (1, 2)
+                    or hashed(doc) != row['proof_sha'] or type(doc['version']) is not int or doc['version'] not in (1, 2, 3)
                     or doc['artifacts']['source']['sha256'] != row['source_sha']
                     or row['state'] not in ('pending', 'completed')):
                 raise ValueError
@@ -46,28 +93,33 @@ def validate_history(ledger):
                 digest(value)
             chain = doc['artifacts']
             hash_fields = {'original_plan_sha256', 'resumed_plan_sha256', 'program_sha256', 'completion_sha256'}
-            blocked = doc['version'] == 2
-            if blocked:
+            blocked = doc['version'] in (2, 3)
+            extended = doc['version'] == 3
+            if blocked and not extended:
                 hash_fields |= {'checkpoint_progress_sha256', 'snapshot_sha256'}
-            if set(chain) != set(ARTIFACTS) | hash_fields:
-                raise ValueError
-            for key in hash_fields:
-                digest(chain[key])
-            for key in ARTIFACTS:
-                facts(chain[key], 'patch' if key in ('original', 'resumed') else 'result')
+            if extended:
+                validate_extended(chain)
+            else:
+                if set(chain) != set(ARTIFACTS) | hash_fields:
+                    raise ValueError
+                for key in hash_fields:
+                    digest(chain[key])
+                for key in ARTIFACTS:
+                    facts(chain[key], 'patch' if key in ('original', 'resumed') else 'result')
             old = ledger.db.execute('SELECT * FROM jobs WHERE sha=?', (row['source_sha'],)).fetchone()
             if (old is None or old['patch_sha'] != (None if blocked else chain['original']['sha256'])
                     or (blocked and old['error'] != 'dev_blocked')
                     or stable({'source': decode_object(old['source'])}) != stable({'source': chain['source']})):
                 raise ValueError
             kind = ledger.db.execute('SELECT output_kind FROM request_contracts WHERE sha=?', (row['source_sha'],)).fetchone()
-            if (kind is None or (kind[0] is not None if blocked else kind[0] not in IMPLEMENTATIONS)
-                    or chain['original']['binding'] != chain['source']['binding']
+            if kind is None or (kind[0] is not None if blocked else kind[0] not in IMPLEMENTATIONS):
+                raise ValueError
+            if not extended and (chain['original']['binding'] != chain['source']['binding']
                     or chain['resumed']['binding'] != chain['checkpoint']['binding']
                     or chain['result']['expected'] != chain['checkpoint']['binding']
                     or chain['result']['patch_sha256'] != chain['resumed']['sha256']):
                 raise ValueError
-            if blocked and (chain['checkpoint']['expected'] != chain['source']['binding']
+            if blocked and not extended and (chain['checkpoint']['expected'] != chain['source']['binding']
                             or chain['checkpoint']['patch_sha256'] != chain['original']['sha256']
                             or chain['checkpoint']['success'] or not chain['checkpoint']['dirty']
                             or not chain['result']['success'] or chain['result']['dirty']
@@ -109,7 +161,7 @@ def complete(ledger, doc, actual):
                 fail('The pending request changed before adoption.')
             if stable(actual) != stable(doc['artifacts']):
                 fail('Adoption facts differ from the pinned request.')
-            if doc['version'] == 2:
+            if doc['version'] in (2, 3):
                 adopt_blocked(ledger, actual['result'])
             else:
                 ledger._enqueue(actual['result'], decision_evidence={'verified': True})

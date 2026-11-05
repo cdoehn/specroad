@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 94 · **Stand:** 4. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.61
+**Planrevision:** 95 · **Stand:** 5. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.62
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 Schritte und 900 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; die ausdrücklich genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wird nach 10.7.10 innerhalb von 15.l.R vorgezogen. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -9,7 +9,7 @@ Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 S
 
 Fachliche Grundlage ist [`docs/specification/SpecRoad_Spezifikation.md`](../specification/SpecRoad_Spezifikation.md), einschließlich aller konsolidierten Korrekturen, 742 Requirements, 51 Verifikationsverträge, 46 Szenario-/E2E-Identitäten sowie R-01 bis R-75, Anhang U und den PatchHarbor-Rundweg aus Anhang W. Der [`Prüfbericht`](../reviews/SpecRoad_v0.2.7_Implementierungsreife_Pruefbericht.md) ist ein vorgelagerter Entwurfsreview, kein späterer Produktnachweis.
 
-Gebundene Spezifikations-SHA-256: `800a48357f9bad959bb3459db4aa2c3fb2d2e620497abd1ed97e5d8aa3521d9e`.
+Gebundene Spezifikations-SHA-256: `9e696ccc49ee8510b7b9a26b2adf02dd477820ed55587bfe8e8f312c7f28c19a`.
 Planungsbasis: Commit `fe2661d02ecf2f7eb483b58a4487eb009c6b3846`; sauberes Result-Bundle `specroad_Result_120209_0914_df3504.zip`; Repository-ID `3d2576df-d611-46fc-9d2b-92869468aaca`. Diese Angaben dokumentieren die Entstehung des Plans, nicht die zukünftige Patchbindung. **Jedes spätere Patchpaket bindet den dann aktuellen tatsächlichen Result-Zustand.**
 
 Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 2026 gelten zusätzlich und bei den nachfolgend benannten Konflikten vorrangig. Sonstige normative Spezifikationsinhalte werden nicht stillschweigend abgeschwächt. Neue fachliche Widersprüche, fehlende zwingende Angaben und Sicherheitsprobleme sind offen zu benennen, nicht durch erfundene Annahmen oder Scheinerfolge zu lösen.
@@ -33,6 +33,42 @@ ausdrückliche Bedienausnahme aus 2.4.3.2 bleibt zusätzlich anwendbar.
 Produktfreigaben und die Grenzen aus 2.4.1/2.4.2/2.4.4 bleiben unverändert.
 Dieser Plan ändert keine alten Aufträge, Antworten, Blockaden oder
 Laufzeitdaten und ist keine Start-/Resume-Anweisung.
+
+## OFF-PLAN CONTROL-RECOVERY-593 — belegte Korrekturkette und Watcher-Timeout
+
+Ausdrücklicher manueller Nutzerauftrag vom 5. November 2026. Voraussetzungen
+für den gewünschten Automatikstart: die CI-Reparaturen aus Bundle 592,
+mehrstufige Recovery des tatsächlichen M16-Verlaufs und echte Timeoutübergabe
+an den vorhandenen Watcher. Kein neuer Seed, keine umgeschriebene History,
+kein Budgetreset und keine automatische Klärungsfreigabe. Gewählt wird der
+zusätzliche explizite Befehl aus Spezifikation 2.5.4.3; die älteren Befehle
+behalten ihre Grenzen. Produktstand bleibt 693/900, nächster Schritt 17.a.W.
+
+W: geschlossene passive Kettenprüfung über Paket-/Result-SHA und vier Werte,
+mehrere Fehler/Korrekturen einschließlich echtem äußeren Timeout und engem
+zustandserhaltendem Push; vollständige Rest-IDs, Rollen, Pflichtauswahl,
+Snapshotbytes und Gates. Additive V3-Vormerkung, idempotente Speicherung,
+erneute Nachweise, atomare Übernahme erst bei inaktivem Thread. Bestehende
+Blockade-, Pause-, Archiv-, Transaction- und Budgetregressionen bleiben
+Pflicht. Watcheradapter delegiert an vorhandenen nativen Ereignisloop und
+übergibt den konfigurierten Timeout ausdrücklich in den isolierten Worker
+und `api.apply_next`, einschließlich leerem/fehlendem Scope.
+
+R: fehlende oder widersprüchliche Timeoutbelege, manipulierte Pushnachweise,
+ausgelassene Reste/Tests/Rollen, fremde Änderungen, Konkurrenz, Replay,
+Grenzen und Änderungen nach Vormerkung sperren. Native Fehler, Signale,
+Diagnosekanäle und ungewöhnliche Timeoutwerte werden erhalten/geprüft.
+C: reine strukturelle Trennung von Fortschritts- und Historyvalidierung;
+W-/R-Testdateien bleiben bytegleich. Keine Berechtigungs- oder Policyänderung.
+
+Spezifikation 0.2.62, Planrevision 95 und sämtliche aktiven Katalogbindungen
+werden mit W gemeinsam fortgeschrieben. Jede Stage erhält ihr eigenes
+N=3-plus-Pflichtauswahl-Gate; keine vorgezogene Endstandinstallation.
+Dev führt keine Verhaltenstests aus. Ergebnisse werden erst aus dem tatsächlichen
+nativen Apply gemeldet. Lokale Konfigurationen, Sessions, Units und
+Betriebsdaten fehlen in Payloads. Installation, Recovery-Vormerkung,
+Watcherumstellung und Automatikstart sind anschließend ausdrücklich erlaubt,
+bleiben aber an den geprüften Erfolgsnachfolger und die Betriebsgrenzen gebunden.
 
 ## OFF-PLAN CI-CORRECTION-592 — native Commitmetadaten und Python-Testkompatibilität
 
@@ -2914,7 +2950,7 @@ Kein offener Produktplanschritt wird durch diese Testoptimierung abgeschlossen.
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 91
+plan_revision: 95
 implementation_plan_commits_total: 900
 implementation_plan_commits_completed: 693
 last_completed_plan_commit: 16.k.C

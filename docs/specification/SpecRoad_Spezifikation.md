@@ -1,19 +1,19 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.61
+## Version 0.2.62
 
 | Feld | Wert |
 |---|---|
 | Dokument-ID | `SR-SPEC-0001` |
-| Dokumentversion | `0.2.61` |
+| Dokumentversion | `0.2.62` |
 | Zielrelease | `SpecRoad Single-Repository Workbench 0.2.0` |
 | Status | **Fachlich konsolidierte Arbeitsgrundlage; technische Reviewentscheidung gesondert dokumentiert, formale Baseline-Freigabe und Produktabnahme nicht durch dieses Dokument erklärt** |
-| Stand | 4. November 2026 |
+| Stand | 5. November 2026 |
 | Sprache | Deutsch; technische Feldnamen, Enum-Werte und CLI-Kommandos Englisch |
-| Fachliche Quelle | **Diese Repositoryfassung v0.2.61 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.61 liegt mit dieser Änderung nicht vor.** |
+| Fachliche Quelle | **Diese Repositoryfassung v0.2.62 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.62 liegt mit dieser Änderung nicht vor.** |
 | Bearbeitbare Satzquelle | Diese Datei; eine spätere PDF muss denselben versionierten Inhalt wiedergeben. |
-| Vorgängerversion | Repository-Spezifikation v0.2.60 vom 4. November 2026; historische Nachweise bleiben unverändert. |
-| Prüf- und Entscheidungsgrundlage | M16-INTEGRATION-588: ausdrücklicher manueller Nutzerauftrag vom 4. November 2026; es existieren nach Nutzerangabe noch keine SpecRoad-Projekte. Klärungspräfix und vollständiges W/R/C-Tripel mit getrennten Apply-Gates. |
-| Änderungsart | Keine Unterstützung früherer realer Projekte oder undokumentierter Entwurfsschemas; vollständige Migration des neu festgelegten Referenzformats, öffentliche CLI, Restore-Integration und synthetischer Abschlussnachweis für M16. |
+| Vorgängerversion | Repository-Spezifikation v0.2.61 vom 4. November 2026; historische Nachweise bleiben unverändert. |
+| Prüf- und Entscheidungsgrundlage | CONTROL-RECOVERY-593: ausdrücklicher manueller Auftrag, die drei CI-Korrekturen abzunehmen und die Automatik nach belegter Recovery und tatsächlicher Timeoutweitergabe wieder zu starten. |
+| Änderungsart | Opt-in für mehrstufige native Recovery; konfigurierbare Timeoutweitergabe an den vorhandenen Watcher. Produktverträge und M16-Abschluss bleiben erhalten. |
 
 > **Verbindlicher Quellenwechsel:** Die ausdrückliche Nutzerentscheidung REFERENCE-SOURCE-551 wird als v0.2.50 umgesetzt. Der neue Quellvertrag ist Entwurfsarbeit vom 3. November 2026, kein Nachweis eines früher existierenden Formats. Bestehende 0.2-Verträge, Transport-, Sicherheits- und Reviewgrenzen bleiben erhalten.
 
@@ -975,6 +975,94 @@ Alte History, Versuche, Pause und Original-ZIPs bleiben erhalten; keine
 Ledger-Reparatur, Paketlöschung oder künstliche neue Freigabe. Installation
 allein startet nichts. Der aktuelle manuelle Auftrag erlaubt nach erfolgreicher
 Apply-Abnahme und Installation den Start mit der konfigurierten Wartezeit.
+
+#### 2.5.4.3 Explizite mehrstufige Recovery und Watcher-Timeout — CONTROL-RECOVERY-593
+
+**Manueller Nutzerauftrag vom 5. November 2026.** Nach den beauftragten
+CI-Korrekturen soll die Automatik wieder anlaufen. Der vollständig belegte
+M16-Abschluss liegt hinter mehreren Fehler-/Korrektur-Results, einem äußeren
+Timeout und einem gesonderten Push. Die bestehende Ein-Korrektur-Recovery
+darf dafür nicht durch neue Seeds, umgeschriebene History oder fingierte
+Modellantworten umgangen werden. Gewählt wird ein ausdrücklicher zusätzlicher
+Nachweisweg; alte Bedienbefehle und gespeicherte Belege behalten ihre Verträge.
+
+`reconcile-blocked --extended-chain --result ABSOLUTER_RESULTPFAD` erstellt
+bei gestopptem Worker eine private Vormerkung Version 3 in der bestehenden
+Recovery-Tabelle. Der alte Auftrag muss weiterhin unklassifiziert
+`uncertain/dev_blocked` sein. Originale Attempt-/Abschlussbelege, Konfiguration,
+logische History und alle nativen Artefakte bleiben gebunden. Die Bedienaktion
+startet weder Dienst noch Modell, Apply oder CI. Nur der später separat
+gestartete Worker übernimmt nach bekannter Thread-Inaktivität und erneutem
+vollständigem Nachweis atomar. Pause, Stop, Startwartezeit und Plattengrenze
+gelten unverändert. Das bisherige Restbudget und die bisherige Befugnis werden
+mit der bestehenden Regel für unbekannte manuelle Übergaben vererbt; keine
+nachträgliche Klassifikation und kein Budgetreset.
+
+Die Kette enthält höchstens 32 native Apply-Verbindungen mit je höchstens
+128 angekündigten Stufen. Auswahl erfolgt rückwärts über Paket-SHA, exakten
+Quell-Result-SHA und alle vier Bindungswerte, niemals über Dateinamen oder
+den neuesten Zeitstempel. Zeitfolge ist nur ein zusätzliches Veto. Jede
+Verbindung verlangt genau ein natives Ergebnis und genau ein noch nicht
+verbrauchtes passendes Paket. Frühere, innerhalb derselben Kette bereits
+vollständig belegte Pakete mit gleicher Vierfachbindung gelten als verbraucht.
+Konkurrenz, fehlende Archive, Identitätswiederholung, fremde Repositorys,
+bereits zugeordnete Nachfolger und neuere fremde Results sperren.
+
+Fehlgeschlagene Stufen bleiben mit vollständigem Dirty-Snapshot erhalten.
+Jede Korrektur bindet den vorigen Planhash und alle noch offenen IDs,
+Nachrichten und Rollen in gleicher Reihenfolge. Programmbytes außerhalb
+des DATA-Literals bleiben innerhalb einer Korrekturfolge gleich. Pfadumfang
+und Pflichtauswahl dürfen nur ergänzt werden; offene Klärungszielbytes bleiben
+unverändert. Erfolgreiche IDs werden nie wiederholt. Jede übernommene Stufe
+braucht belegte Elternkette und bestandene Pflicht-/Auswahlgates. Null bereits
+erfolgreiche Stufen sind zulässig, sofern Basis und materialisierter erster
+Rest vollständig nachgewiesen sind. Unbekannte Fortschrittsformen sperren.
+
+Ein echter äußerer Timeout darf ohne erfundenen Fehlerabschluss aufgenommen
+werden, wenn das native `logs/run.json` den beendeten, nicht unterbrochenen
+Timeout des gestarteten Entrypoints ausweist. Der letzte ursprüngliche
+Fortschrittsbeleg bleibt `testing` ohne Fehlertext; er muss exakt den belegten
+Commitpräfix, aktiven Schritt, HEAD und vollständigen Rest nennen. Native
+Basis-/Dirty-Dateikarten müssen genau dem Präfix und materialisierten nächsten
+Schritt entsprechen. Dies ersetzt weder einen Test noch ein erfolgreiches Gate.
+
+Nach vollständig abgeschlossenem Rest dürfen weitere vollständige normale
+Pläne mit eigenen Gates folgen. Als enger zusätzlicher Übergang ist ein
+erfolgreicher nativer Push-Apply ohne neuen Commit zulässig: genau ein
+übereinstimmendes `SPECROAD_PUSH_START`/`SPECROAD_PUSH_COMPLETE`-Paar bindet
+Quell-SHA, Zielcommit, origin und refs/heads/dev, ohne Force, lokale Änderungen
+oder neuen Commit. Alle vier Werte und sämtliche sauberen Snapshotbytes vor
+und nach diesem Übergang müssen gleich sein. Ein Push allein ist kein
+Produktabschluss und erneuert keine Befugnis. Das ausdrücklich angegebene
+Endresult muss ein vollständig erfolgreicher sauberer Planabschluss mit
+Abschlusscommit sein; offene Restarbeit bleibt gesperrt.
+
+Der passive Leser behält seine Archiv-, Member-, DATA- und Snapshotgrenzen
+sowie die Ablehnung von Links, Binaerdiffs, Löschungen, Umbenennungen,
+Moduswechseln und staged Änderungen. Kein Patch-/Repositorycode wird dabei
+ausgeführt. Versionen 1/2 bleiben lesbar und werden nicht aufgewertet.
+Nach Archivverschiebung sind identische Bytes wieder auffindbar. Vor
+Speicherung, Übernahme und erster Ausgabe wird erneut geprüft. Eine
+unvollständige Transaktion hinterlässt keinen neuen Claim.
+
+Für den vorhandenen externen PatchHarbor-Watcher ergänzt die geprüfte
+Control-Releasekopie einen schmalen Startadapter `specroad_control/watcher.py`.
+`--timeout` ist eine positive ganze Sekundenzahl bis 2147483647, Standard
+10800 wie beim bisher installierten Core. Der isolierte Worker übergibt den
+Wert in jedem globalen oder eingeschränkten `api.apply_next` ausdrücklich.
+Leere und fehlende Scope-Werte bleiben verschieden. Discovery, Ereignisloop,
+Prozessgrenze, Sperren, Signale und JSON-/Fehlerprotokoll bleiben beim nativen
+Watcher; keine eigene Auswahl-, Poll-, Retry- oder Apply-Schleife. Verfügbarkeit
+der vorhandenen API ist Voraussetzung, kein stiller Versionsfallback.
+Deployment und lokale Timeoutwahl sind ausdrückliche nachgelagerte
+Bedienaktionen außerhalb der Payload, nach Apply-Abnahme. Ein laufender
+Apply erhält durch eine Konfigurationsänderung keinen neuen Timeout.
+
+W/R/C werden getrennt abgenommen: W implementiert den vollständigen Pfad und
+die native Timeoutweitergabe, R ergänzt Manipulations-, Grenz- und
+Unterbrechungsfälle, C trennt reine Beleg-/Historystrukturprüfung ohne
+Verhaltensänderung. Dev führt nur statische Prüfung/Collection aus.
+Der Produktplan bleibt bei 693/900 mit nächstem Produktcommit 17.a.W.
 
 ## 3. Produktziele
 
@@ -11277,4 +11365,4 @@ Implementierungsschritten nachgewiesen sein.
 
 ---
 
-**Ende der SpecRoad-Produktspezifikation v0.2.57.**
+**Ende der SpecRoad-Produktspezifikation v0.2.62.**

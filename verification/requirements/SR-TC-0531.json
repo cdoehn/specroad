@@ -49,7 +49,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "800a48357f9bad959bb3459db4aa2c3fb2d2e620497abd1ed97e5d8aa3521d9e",
+  "specification_sha256": "9e696ccc49ee8510b7b9a26b2adf02dd477820ed55587bfe8e8f312c7f28c19a",
   "steps": [
     "Use original supplied partial current-schema or legacy 0.1.0 record bytes without an active primary and project deterministically by type and identity; preserve absent legacy fields and passive relations without migration.",
     "Require the actual partial scope root, native typed fields, all strong targets and exact weak-boundary declarations. Reject reversed or duplicate symmetric storage for both present and omitted targets.",

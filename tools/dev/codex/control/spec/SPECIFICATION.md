@@ -1,3 +1,13 @@
+# CONTROL-RECOVERY-593 — ausdrückliche Ergänzung vom 5. November 2026
+
+Für die neue opt-in Bedienaktion `reconcile-blocked --extended-chain` und den
+nativen Watcher-Timeoutadapter gilt die übergeordnete SpecRoad-Spezifikation
+0.2.62, Abschnitt 2.5.4.3, einschließlich der W/R/C-Abnahmen im aktiven
+Implementierungsplan. Die historische Ein-Korrektur-Regel unten bleibt für
+`reconcile-blocked` ohne diesen Schalter unverändert. Eine nachgewiesene
+Timeout-/Mehrkorrekturkette verlangt explizit Version 3 der Vormerkung;
+alte Belege werden weder migriert noch als neue Befugnis ausgelegt.
+
 > CONTROL-SOURCE-SELECTION-566: exakte Result-SHA nach SpecRoad 2.5.4.2;
 > keine History-Umschreibung oder Budgeterneuerung durch Paketzuordnung.
 

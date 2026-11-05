@@ -20,6 +20,8 @@ def main(argv=None) -> int:
     parser.add_argument("--defer", action="store_true", help="Queue handover for the existing worker")
     parser.add_argument("--resume-after", action="store_true", help="Resume development after deferred handover")
     parser.add_argument("--result", help="Initial Result for configure, completed Result for reconciliation/deploy")
+    parser.add_argument('--extended-chain', action='store_true',
+                        help='Explicit bounded multi-correction/timeout/push proof; only with reconcile-blocked')
     parser.add_argument("--legacy-config", help="Explicit legacy config for offline migration")
     parser.add_argument("--codex", help="Absolute existing Codex executable")
     parser.add_argument("--core-python", help="Absolute Python in the existing PatchHarbor installation")
@@ -27,6 +29,8 @@ def main(argv=None) -> int:
     parser.add_argument('--source-sha256', help='Exact previous Result SHA-256; only with authorize-clarification')
     parser.add_argument('--reason', help='Explicit operator authorization reason; only with authorize-clarification')
     args = parser.parse_args(argv)
+    if args.extended_chain and args.command != 'reconcile-blocked':
+        parser.error('--extended-chain is only allowed with reconcile-blocked')
     if args.command == 'authorize-clarification' and not (args.result and args.source_sha256 and args.reason):
         parser.error('authorize-clarification requires --result, --source-sha256 and --reason')
     if args.command != 'authorize-clarification' and (args.source_sha256 or args.reason):
@@ -85,7 +89,10 @@ def main(argv=None) -> int:
                                   from_cwd=args.from_thread_cwd)
         elif args.command in ("reconcile-apply", "reconcile-blocked"):
             from .apply_reconcile import enqueue
-            result = enqueue(paths, args.result, blocked=args.command == "reconcile-blocked")
+            options = {'blocked': args.command == "reconcile-blocked"}
+            if args.extended_chain:
+                options['extended_chain'] = True
+            result = enqueue(paths, args.result, **options)
         elif args.command == 'authorize-clarification':
             from .clarification_authorization import enqueue
             result = enqueue(paths, args.result, source_sha256=args.source_sha256, reason=args.reason)
