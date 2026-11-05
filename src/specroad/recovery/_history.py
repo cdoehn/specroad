@@ -5,6 +5,7 @@ from ..model.attachments import AttachmentDescriptor
 from ..model.errors import ModelError
 from ..model.paths import PathClass, artifact_path, classify_path
 from ..storage.json_syntax import parse_json_object
+from ..model.history_protection import protected_record
 from ..storage.record_artifact import RecordArtifact
 from ._codec import file_row
 from ._sources import baseline_objects
@@ -12,10 +13,6 @@ from ._schema_boundary import declared_files
 from .values import require
 
 
-def protected_record(value):
-    return (value['artifact_type'] in ('baseline', 'evidence', 'relation_review') or
-            value['artifact_type'] == 'proposal' and
-            value['proposal_status'] in ('rejected', 'applied', 'stale'))
 
 
 def history_target(files, additions, current, configuration):

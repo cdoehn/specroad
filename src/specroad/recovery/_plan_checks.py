@@ -9,6 +9,7 @@ from ._codec import file_table, namespace
 from ._current_evidence import current_configuration
 from ._coverage import inventory_roots, OPERATIONAL_ROOTS
 from ._history import history_target
+from ..model.history_protection import protected_record
 from ._sources import reconstruct
 from ._validation import validate_project, project_bytes
 from ._operational_history import check_operational_history, operational_path
@@ -55,8 +56,7 @@ def check_history(current, target, current_configuration, target_model):
             continue
         require(artifact_path(value['artifact_type'], value['id'], current_configuration.id_prefix) == path,
                 'restore_current_identity_conflict', path=path, exit_code=6)
-        protected = (value['artifact_type'] in ('baseline', 'evidence', 'relation_review') or
-            value['artifact_type'] == 'proposal' and value['proposal_status'] in ('rejected', 'applied', 'stale'))
+        protected = protected_record(value)
         if protected:
             require(target.get(path) == raw, 'restore_protected_history_conflict', path=path, exit_code=6)
         if value['maturity'] == 'approved' or protected:

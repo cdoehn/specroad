@@ -3,7 +3,7 @@
 No dynamic policy/provider registration is read from plan data. This policy
 runs inside the planner before the existing metadata and result hash stages.
 """
-from ..model.canonical import canonical_json_sha256
+from ..model.lifecycle_content import _content_hash, _CONTENT_EXCLUDED
 from ..model.errors import ModelError
 from ..model.identity_values import artifact_identity
 from ._common import _generic, _text
@@ -20,11 +20,7 @@ _TRANSITIONS = {
     'retired': frozenset(),
 }
 
-_CONTENT_EXCLUDED = frozenset(('revision', 'created_at', 'created_by', 'updated_at', 'updated_by', 'maturity'))
 
-def _content_hash(artifact):
-    # Internal owned candidate: maturity can still require a dedicated gate.
-    return canonical_json_sha256({key: value for key, value in artifact.items() if key not in _CONTENT_EXCLUDED})
 
 def _transition(state, operation, index, binding):
     target = operation['target']

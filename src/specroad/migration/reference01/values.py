@@ -12,6 +12,7 @@ import unicodedata
 from ...model._schema import validate_builtin
 from ...model.canonical import canonical_json_bytes, canonical_json_sha256
 from ...model.errors import ModelError
+from ...model.history_protection import protected_record
 from ...storage.json_syntax import parse_json_object
 
 CONTRACT_ID = 'specroad-reference-0.1'
@@ -94,9 +95,7 @@ def model_root(project_id, entries):
 
 def classification(value):
     kind = value.get('artifact_type')
-    return ('immutable_legacy' if kind in ('evidence', 'baseline', 'relation_review')
-        or kind == 'proposal' and value['proposal_status'] in ('applied', 'rejected', 'stale')
-        else 'mutable')
+    return 'immutable_legacy' if kind is not None and protected_record(value) else 'mutable'
 
 
 @dataclass(frozen=True)

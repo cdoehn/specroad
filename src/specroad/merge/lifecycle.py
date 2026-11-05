@@ -3,21 +3,17 @@
 Only protected originals can be returned as bytes. Mutable field composition,
 merge metadata, current review qualification and publication remain separate.
 """
-from dataclasses import dataclass
 from hashlib import sha256
 
 from ..model.canonical import canonical_json_bytes as jcs
-from ..model.errors import ModelError
 from ..storage.json_syntax import parse_json_object
-from ..changes._lifecycle_policy import _content_hash
+from ..model.history_protection import protected_record
+from ..model.lifecycle_content import _content_hash
 from .identity_checks import ROLES, _history, _identity_conflicts, _conflict
 from .relation_inputs import _sources
+from .lifecycle_values import LifecycleMergeResult
 
 
-def protected_record(value):
-    return (value['artifact_type'] in ('baseline', 'evidence', 'relation_review') or
-            value['artifact_type'] == 'proposal' and
-            value['proposal_status'] in ('rejected', 'applied', 'stale'))
 
 
 def _lifecycle(value):
@@ -38,63 +34,6 @@ def _successors(relations, *, inverse=True):
     return result
 
 
-@dataclass(frozen=True, init=False)
-class LifecycleMergeResult:
-    _encoded: bytes
-    _originals: tuple
-
-    @classmethod
-    def _create(cls, sources, history_hash, decisions, originals, conflicts):
-        result = object.__new__(cls)
-        object.__setattr__(result, '_encoded', jcs({
-            'source_bindings': sources.binding, 'source_bindings_sha256': sources.sha256,
-            'history_sha256': history_hash, 'metadata_policy_version': 'merge-metadata-v1',
-            'decisions': decisions, 'conflicts': conflicts, 'ready': False,
-            'write_authorized': False, 'approval_granted': False}))
-        object.__setattr__(result, '_originals', tuple(sorted(originals.items())) if not conflicts else ())
-        return result
-
-    @property
-    def data(self):
-        return parse_json_object(self._encoded)
-
-    @property
-    def canonical_bytes(self):
-        return self._encoded
-
-    @property
-    def sha256(self):
-        return sha256(self._encoded).hexdigest()
-
-    @property
-    def conflicts(self):
-        return self.data['conflicts']
-
-    @property
-    def compatible(self):
-        return not self.conflicts
-
-    @property
-    def originals(self):
-        """Protected subset only, with exact source bytes; never a full target."""
-        if not self.compatible:
-            raise ModelError('unresolved_lifecycle_merge')
-        return dict(self._originals)
-
-    @property
-    def ready(self):
-        return False
-
-    @property
-    def write_authorized(self):
-        return False
-
-    @property
-    def approval_granted(self):
-        return False
-
-    def __bool__(self):
-        raise TypeError('History compatibility is not merge, write or review approval')
 
 
 def inspect_merge_lifecycle(sources, *, history):
