@@ -37,7 +37,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "6ee0678a7cf525508891e4c367359f47ad5798851a537e3b884e5014b16c4261",
+  "specification_sha256": "29178f3debf8c4f7a5bd14c9bbb2fd150e1a9024678576496d67a30251e06dd2",
   "steps": [
     "Hash a real 32 MiB attachment with 64 KiB and 4 KiB reusable buffers; bind the complete byte count and independent incremental SHA-256.",
     "Exercise smaller pre-read buffer allocation alternatives, short reads, exact control positions, guarded descriptor lifetime and unchanged critical fixture bytes on failure.",

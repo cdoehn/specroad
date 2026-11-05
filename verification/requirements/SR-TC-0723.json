@@ -41,7 +41,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "6ee0678a7cf525508891e4c367359f47ad5798851a537e3b884e5014b16c4261",
+  "specification_sha256": "29178f3debf8c4f7a5bd14c9bbb2fd150e1a9024678576496d67a30251e06dd2",
   "steps": [
     "Export de-DE/en-IN requirements with each of must, must_not, should and may through CSV, NDJSON, ReqIF and ReqIFZ. Decode and explicitly map the actual output bytes back to native fields.",
     "Compare exact UTF-8 language, normative_force and complete statement, including CR/LF, quotes, XML metacharacters and distinct composed/decomposed Unicode; keep input bytes unchanged.",

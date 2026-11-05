@@ -37,7 +37,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "6ee0678a7cf525508891e4c367359f47ad5798851a537e3b884e5014b16c4261",
+  "specification_sha256": "29178f3debf8c4f7a5bd14c9bbb2fd150e1a9024678576496d67a30251e06dd2",
   "steps": [
     "Select exact resources, decode literal UTF-8 RFC-4180 datasets and roundtrip explicit records without changing identity, types, values, order or field presence.",
     "Reject ambiguous/unsupported declarations, wrong resource bindings and nonrepresentable values before returning a result; preserve passive inputs and no-write boundaries.",

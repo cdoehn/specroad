@@ -1,19 +1,19 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.68
+## Version 0.2.69
 
 | Feld | Wert |
 |---|---|
 | Dokument-ID | `SR-SPEC-0001` |
-| Dokumentversion | `0.2.68` |
+| Dokumentversion | `0.2.69` |
 | Zielrelease | `SpecRoad Single-Repository Workbench 0.2.0` |
 | Status | **Fachlich konsolidierte Arbeitsgrundlage; technische Reviewentscheidung gesondert dokumentiert, formale Baseline-Freigabe und Produktabnahme nicht durch dieses Dokument erklärt** |
 | Stand | 5. November 2026 |
 | Sprache | Deutsch; technische Feldnamen, Enum-Werte und CLI-Kommandos Englisch |
-| Fachliche Quelle | **Diese Repositoryfassung v0.2.68 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.68 liegt mit dieser Änderung nicht vor.** |
+| Fachliche Quelle | **Diese Repositoryfassung v0.2.69 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.69 liegt mit dieser Änderung nicht vor.** |
 | Bearbeitbare Satzquelle | Diese Datei; eine spätere PDF muss denselben versionierten Inhalt wiedergeben. |
-| Vorgängerversion | Repository-Spezifikation v0.2.67 vom 5. November 2026; historische Nachweise bleiben unverändert. |
-| Prüf- und Entscheidungsgrundlage | MERGE-CONFLICTS-608, delegiert gemäß SPECROAD-DECISION-1, Vertrag 4; keine Produktfreigabe. |
-| Änderungsart | Stabile Konflikt-IDs, drei Anwesenheitswerte, direkter Impact und lesender CLI-Vertrag ohne Freigabe. |
+| Vorgängerversion | Repository-Spezifikation v0.2.68 vom 5. November 2026; historische Nachweise bleiben unverändert. |
+| Prüf- und Entscheidungsgrundlage | MERGE-RESOLUTION-612, delegiert gemäß SPECROAD-DECISION-1, Vertrag 4; keine Produktfreigabe. |
+| Änderungsart | Quellgeprüfte einzelne Konfliktauflösung mit unverändertem Katalog, explizitem Audit und realer Plan-CLI. |
 
 > **Verbindlicher Quellenwechsel:** Die ausdrückliche Nutzerentscheidung REFERENCE-SOURCE-551 wird als v0.2.50 umgesetzt. Der neue Quellvertrag ist Entwurfsarbeit vom 3. November 2026, kein Nachweis eines früher existierenden Formats. Bestehende 0.2-Verträge, Transport-, Sicherheits- und Reviewgrenzen bleiben erhalten.
 
@@ -4692,6 +4692,98 @@ formatierung ist kein Testgegenstand. Es werden weder Projektdateien, Plan,
 Cache, Lock, Journal noch Git verändert.
 
 
+### 10.15.5 Explizite auditierte Auflösung (`merge-resolutions-v1`)
+
+**MERGE-RESOLUTION-612, SPECROAD-DECISION-1, Vertrag 4.** Diese additive
+Detailklärung konkretisiert SR-REQ-0372/0375 und 17.h. Sie ersetzt weder
+Quellqualifikation noch Metadaten-, vollständige Zielvalidierungs- oder
+Publikationsgates. Auflösung ist eine deklarative Planänderung.
+
+Die geschlossene Hülle enthält `resolution_format_version` =
+`merge-resolutions-v1`, den unveränderten vollständigen `catalogue` nach
+10.15.4, dessen kanonischen `catalogue_sha256`, `resolutions`, deren
+`resolutions_sha256`, `targets`, `unresolved_conflict_ids`, `pending_gates`
+sowie `ready`, `write_authorized` und `approval_granted` jeweils `false`.
+Hashes sind SHA-256 über JCS nach dem bestehenden Zahlen-/JSON-Vertrag.
+Alle übernommenen Teilobjekte bleiben kanonisch bytegleich. Der anfängliche
+Eingabeplan darf auch unmittelbar der Konfliktkatalog nach 10.15.4 sein.
+
+Pro Aufruf MUSS genau ein bisher unaufgelöster Konflikt durch seine vollständige
+`conflict_id` adressiert werden. Die Auflösung MUSS in dessen
+`allowed_resolutions` stehen. `take_ours`, `take_theirs` und `take_base`
+übernehmen exakt den dort gebundenen Anwesenheits-/Wertbeleg; ein fehlender
+Wert erteilt keine Löschbefugnis. `value` bindet genau einen expliziten Wert
+im vorhandenen kanonischen JSON-Wertebereich, einschließlich JSON-null.
+Ungültige Syntax, doppelte Schlüssel, nicht endliche oder nicht darstellbare
+Zahlen, ungültiges Unicode und fremde Python-Werte sind unzulässig.
+Dies ist keine Behauptung semantischer Zielgültigkeit: Typ-, Profil-,
+Referenz- und Invarianzprüfungen des vollständigen zusammengestellten Ziels
+bleiben zwingend in 17.j. Binärkonflikte erlauben nur gebundene Quellübernahme,
+keinen JSON-Ersatz. Schutzkonflikte nach 10.15.4 erhalten keine Umgehung.
+
+Jede Auflösung enthält genau `resolution_id`, `previous_sha256`,
+`conflict_id`, `choice`, `value`, `actor` und `resolved_at`. `choice` ist
+entweder `{kind: take, role: base|ours|theirs}` oder
+`{kind: value, value: <JSON>}`. `value` ist der abgeleitete getaggte
+Wertbeleg aus 10.15.4. `actor` folgt dem bestehenden Actor-Vertrag;
+`resolved_at` ist ein ausdrücklich gelieferter gültiger UTC-Zeitstempel.
+Es gibt keinen automatischen Login, Akteur oder Wandzeitwert. Die erste
+`previous_sha256` ist der Kataloghash, danach der JCS-Hash der vorigen
+vollständigen Auflösung. `resolution_id` ist `MR-` plus SHA-256 über alle
+anderen Felder des Auflösungsobjekts. Die Ereignisreihenfolge ist bindend;
+jedes Konflikt-ID darf nur einmal auftreten. Vorige Auflösungen werden
+weder überschrieben noch nachträglich umsortiert. Eine andere Entscheidung
+erfordert einen ausdrücklich neu gewählten Eingabeplan, keine stille Revision.
+
+`targets` ist die nach Konflikt-ID sortierte deklarative Projektion der
+Auflösungen: je `conflict_id`, unveränderte `identity`, unveränderter
+`pointer` und abgeleiteter `value`. Sie verändert keine unabhängigen Felder,
+automatischen Übernahmen, Relationsbesitzer, Sammlungsschlüssel oder anderen
+Konflikte. Eine Sammlung wird am vorhandenen Konfliktpointer als ganzer Wert
+adressiert, niemals über erfundene positionsbezogene Elementidentität.
+Binärziele bleiben exakte Hash-/Größenbelege, keine neue Dateioperation.
+`unresolved_conflict_ids` ist die sortierte Differenz zur ursprünglichen Liste.
+`pending_gates` enthält `audited_resolution` genau solange diese Differenz
+nicht leer ist, danach immer `merge_metadata`, `target_validation`,
+`publication`. Auch ein vollständig aufgelöster Plan ist nicht schreibbereit.
+
+Vor Übernahme MUSS der Aufrufer den erwarteten kanonischen SHA-256 des gesamten
+Eingabeplans ausdrücklich binden. Das native Gate MUSS den ursprünglichen
+Katalog aus allen drei erneut qualifizierten Originalquellen und den expliziten
+Herkunftsbelegen rekonstruieren, vorhandene Auflösungen vollständig prüfen und
+die Quellen vor der Ausgabe nochmals auf unveränderte Beobachtung prüfen.
+Unbekannte/wiederholte Konflikte, falsche Auswahl, manipulierte Projektbindung,
+Auditkette, Projektion, Restliste oder nachträglich geänderte Quellen verhindern
+die Übernahme. Hashbindung belegt Konsistenz, keine Authentifizierung,
+Signatur, menschliche Reviewfreigabe oder zeitliche Wahrheit der Actor-Angabe.
+Ein nur gespeicherter Parser darf keine aktuelle Quellverifikation behaupten.
+
+Die reale CLI `merge resolve <MERGE-PLAN>` und der gleichwertige strukturierte
+Request `merge.resolve` verwenden `plan_output`/`input_read` und geben das
+vollständige Ergebnis `merge-resolve-command-v1` über den regulären Ausgabekanal
+aus. Erforderlich sind `--conflict`, genau eines von `--take` oder `--value`,
+`--expected-plan-sha256`, `--actor-type`, `--actor-id`, `--resolved-at` und
+`--inputs <DATEI>`. Es werden keine Projektdateien oder Plan-Eingabedateien
+überschrieben, kein Writer-Lock und kein Request-Receipt angelegt. Actor-Optionen
+sind hier ausschließlich Auditdaten des Plans, keine Write- oder Reviewbefugnis.
+Die bestehenden Write-Optionsperren für andere Nichtschreibbefehle bleiben.
+
+Die ausdrücklich ausgewählte Eingabedatei hat den geschlossenen Vertrag
+`merge-resolution-inputs-v1`: `format_version`, `sources`, `history`.
+`sources` enthält exakt `base`, `ours`, `theirs`, jeweils `kind`, absoluten
+`root` und `reference` nach dem vorhandenen SourceRequest-Vertrag
+(local/git/baseline/bundle). `history` ist der bestehende explizite
+`merge-history-input-v1`-Beleg. Die CLI öffnet nur diese ausdrücklich übergebenen
+Quellen; gespeicherte Katalogpfade sind keine automatische Öffnungsanweisung.
+Plan und Eingabedatei werden als sichere reguläre Dateien gelesen und vor
+Ausgabe erneut bytegleich geprüft. Unzulässige Pfade/Links/Spezialdateien
+bleiben Sicherheitsfehler. Es gibt weder Quell-Fallback noch erfundene Herkunft.
+Das Ergebnis enthält `format_version`, `source_validation: revalidated`,
+`plan_sha256` und `plan`. Dies beschreibt nur die aktuelle Leseprüfung.
+`merge conflicts` darf beide Planformen passiv anzeigen; seine bestehende
+Kennzeichnung `source_validation: not_revalidated` bleibt unverändert.
+
+
 ### 10.16 Projektbundle und partieller Umfang
 
 Ein Bundle verwendet ausschließlich die kanonischen Werte `bundle_kind=project|partial` nach Anhang E.3; `document` und `release` sind Scope-Arten, keine Werte dieses Felds. Ein `project`-Bundle enthält einen geschlossenen, nicht konfigurationsgefilterten Projektscope und bildet nach Extraktion ein normales schreibbares SpecRoad-Projekt. Es enthält standardmäßig abgeschlossene Request- und Transaktionsreceipts in einer getrennten Betriebssektion, deren Hash im Bundlemanifest gebunden ist, aber nicht in die fachliche Modellwurzel eingeht.
@@ -7861,6 +7953,7 @@ Die folgende Roadmap ist informativ und erzeugt keine Anforderungen an 0.2:
 
 | Version | Datum | Status | Änderung |
 |---|---|---|---|
+| 0.2.69 | 2026-11-05 | Delegiert gemäß SPECROAD-DECISION-1, Vertrag 4 | MERGE-RESOLUTION-612: Explizite auditierte Konfliktauflösung, deklarative Zielwerte und native CLI ohne Projektwrites. |
 | 0.2.68 | 2026-11-05 | Delegiert gemäß SPECROAD-DECISION-1, Vertrag 4 | MERGE-CONFLICTS-608: Vollständige lesende Konfliktobjekte mit stabilen IDs, Impact, Auflösungsarten und CLI-Inspektion. |
 | 0.2.67 | 2026-11-05 | Delegiert gemäß SPECROAD-DECISION-1, Vertrag 4 | MERGE-RELATIONS-606: Herkunftsbindung und globale Relationsidentität ohne implizite Lösch-/Schreibfreigabe. |
 | 0.2.66 | 2026-11-05 | Ausdrücklicher Nutzerauftrag | CONTROL-ACCEPT-CURRENT-605: ausgewählten geprüften Stand explizit übernehmen, optionale Klärung und konservatives Budget; alte Nachweiskette darf entfallen. |
@@ -11938,4 +12031,4 @@ Implementierungsschritten nachgewiesen sein.
 
 ---
 
-**Ende der SpecRoad-Produktspezifikation v0.2.68.**
+**Ende der SpecRoad-Produktspezifikation v0.2.69.**

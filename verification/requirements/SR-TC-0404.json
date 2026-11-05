@@ -49,7 +49,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "6ee0678a7cf525508891e4c367359f47ad5798851a537e3b884e5014b16c4261",
+  "specification_sha256": "29178f3debf8c4f7a5bd14c9bbb2fd150e1a9024678576496d67a30251e06dd2",
   "steps": [
     "Compare nested parent defaults and overrides, reject invalid inherited values and cycles on either side, preserve full dependency paths, and check actual source/CLI/Work parity, owned inputs, final currentness and read-only operation.",
     "Rerun unchanged W/R variant comparison reference cases after extracting the original-byte ownership and variant-scope classifiers into the existing general Diff classifier module."

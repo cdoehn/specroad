@@ -54,7 +54,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "6ee0678a7cf525508891e4c367359f47ad5798851a537e3b884e5014b16c4261",
+  "specification_sha256": "29178f3debf8c4f7a5bd14c9bbb2fd150e1a9024678576496d67a30251e06dd2",
   "steps": [
     "Compare canonical value bindings, field deltas and all immediate relation neighbours without I/O.",
     "Query all direct incoming/outgoing neighbours and Appendix J review observations; compare independent groups/reasons/identities and guard currentness and all read-only boundaries.",

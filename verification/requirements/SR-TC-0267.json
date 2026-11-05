@@ -53,7 +53,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "6ee0678a7cf525508891e4c367359f47ad5798851a537e3b884e5014b16c4261",
+  "specification_sha256": "29178f3debf8c4f7a5bd14c9bbb2fd150e1a9024678576496d67a30251e06dd2",
   "steps": [
     "Execute the complete native source/backup/plan/target/authority gates and inspect actual published files, original archives, revision changes and unchanged historical bytes.",
     "Reject stale bindings, unproven resources, missing gates/authority, unsafe paths, foreign locks and altered source images before accepting any success.",

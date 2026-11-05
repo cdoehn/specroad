@@ -43,7 +43,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "6ee0678a7cf525508891e4c367359f47ad5798851a537e3b884e5014b16c4261",
+  "specification_sha256": "29178f3debf8c4f7a5bd14c9bbb2fd150e1a9024678576496d67a30251e06dd2",
   "steps": [
     "Construct and parse the actual 1.2.0 plan; preserve ordered operations and bound values.",
     "Exercise real operation field contracts and generic-specialized routing; compare original inputs and structured rejections.",

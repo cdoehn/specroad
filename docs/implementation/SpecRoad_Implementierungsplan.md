@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 106 · **Stand:** 5. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.68
+**Planrevision:** 107 · **Stand:** 5. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.69
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 Schritte und 900 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; die ausdrücklich genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wird nach 10.7.10 innerhalb von 15.l.R vorgezogen. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -9,7 +9,7 @@ Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 S
 
 Fachliche Grundlage ist [`docs/specification/SpecRoad_Spezifikation.md`](../specification/SpecRoad_Spezifikation.md), einschließlich aller konsolidierten Korrekturen, 742 Requirements, 51 Verifikationsverträge, 46 Szenario-/E2E-Identitäten sowie R-01 bis R-75, Anhang U und den PatchHarbor-Rundweg aus Anhang W. Der [`Prüfbericht`](../reviews/SpecRoad_v0.2.7_Implementierungsreife_Pruefbericht.md) ist ein vorgelagerter Entwurfsreview, kein späterer Produktnachweis.
 
-Gebundene Spezifikations-SHA-256: `6ee0678a7cf525508891e4c367359f47ad5798851a537e3b884e5014b16c4261`.
+Gebundene Spezifikations-SHA-256: `29178f3debf8c4f7a5bd14c9bbb2fd150e1a9024678576496d67a30251e06dd2`.
 Planungsbasis: Commit `fe2661d02ecf2f7eb483b58a4487eb009c6b3846`; sauberes Result-Bundle `specroad_Result_120209_0914_df3504.zip`; Repository-ID `3d2576df-d611-46fc-9d2b-92869468aaca`. Diese Angaben dokumentieren die Entstehung des Plans, nicht die zukünftige Patchbindung. **Jedes spätere Patchpaket bindet den dann aktuellen tatsächlichen Result-Zustand.**
 
 Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 2026 gelten zusätzlich und bei den nachfolgend benannten Konflikten vorrangig. Sonstige normative Spezifikationsinhalte werden nicht stillschweigend abgeschwächt. Neue fachliche Widersprüche, fehlende zwingende Angaben und Sicherheitsprobleme sind offen zu benennen, nicht durch erfundene Annahmen oder Scheinerfolge zu lösen.
@@ -33,6 +33,42 @@ ausdrückliche Bedienausnahme aus 2.4.3.2 bleibt zusätzlich anwendbar.
 Produktfreigaben und die Grenzen aus 2.4.1/2.4.2/2.4.4 bleiben unverändert.
 Dieser Plan ändert keine alten Aufträge, Antworten, Blockaden oder
 Laufzeitdaten und ist keine Start-/Resume-Anweisung.
+
+## MERGE-RESOLUTION-612 — auditierte Auflösung und vollständiger Schritt 17.h
+
+Autorität: SPECROAD-DECISION-1, 2.4.3.1 und aktueller Vertrag 4 mit
+clarification_allowed=true, Restbudget 3. Das native Result 4a12a2 ist
+sauber an HEAD 5f0044d603ae5d7eb4f8bbe9293b1b66015920fc gebunden;
+SHA-256 735c6efa948bbedf0cacb8ff3f49d387b9759726396850d798a4734c1ac28ff6.
+17.g.C ist committed, sein Apply-Gate hat 7856 Tests bestanden; 714/900.
+Keine menschliche Freigabe oder lokale Verhaltensprüfung wird behauptet.
+
+Lücke: SR-REQ-0372/0375 verlangen explizite auditierte Einzelauflösung,
+aber bisher fehlen Ereignisformat, Kettenbindung, Akteur-/Zeitübergabe,
+Zielwertprojektion und die explizite Quellzuführung an die echte CLI.
+Geprüft: 10.15.1–4, 12.27, K.3, 17.h–17.l sowie native Quellen,
+Feld-/Collections-, Schutz-, Actor-/UTC- und CLI-Verträge.
+
+Alternativen: Konfliktzeilen überschreiben; freie ungebundene Audittexte;
+oder ursprünglichen Katalog unverändert bewahren und genau ein gebundenes
+Ereignis ergänzen. Gewählt ist das letzte, weil es reversibel, überprüfbar
+und ohne Projektwrites bleibt. Quellen könnten implizit aus gespeicherten
+Pfaden geöffnet werden; gewählt ist stattdessen ein ausdrücklich ausgewählter
+Deskriptor mit vorhandenen SourceRequests und tatsächlichen Herkunftsbelegen.
+Die vollständige erwartete Plan-SHA bindet die Auswahl des Aufrufers.
+Akteur und UTC sind explizite Auditdaten, keine erfundene Authentifizierung.
+Explizites JSON ist ein Kandidat im bestehenden kanonischen Wertebereich;
+die uneingeschränkte vollständige semantische Zielprüfung bleibt in 17.j.
+Schutzkonflikte bleiben unauflösbar; keine Lösch- oder Publikationsbefugnis.
+
+Zuerst werden 10.15.5, die nachstehenden Abnahmen und alle aktiven Katalog-
+Hashbindungen fortgeschrieben. Diese Stage lässt 17.h.W/R/C offen. Danach
+folgt derselbe vollständige fachliche Schritt als echte W/R/C-Stände, jeweils
+mit eigenem Apply-Gate. W umfasst native API, echte CLI, alle Take-Arten und
+explizite Werte; R härtet manipulierte Ketten, Quellenwechsel, ungültige Werte
+und sichere Eingaben; C trennt passive Werte von quellengebundener Auflösung.
+17.i–17.l bleiben offen. Kein Scope, Sicherheitsgate, Kompatibilitätsvertrag,
+Review, Budget oder historischer Nachweis wird geändert.
 
 ## Korrekturbundle 611 — vollständiges Befehlsinventar, Rest 17.g.C
 
@@ -3877,7 +3913,7 @@ Kein offener Produktplanschritt wird durch diese Testoptimierung abgeschlossen.
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 106
+plan_revision: 107
 implementation_plan_commits_total: 900
 implementation_plan_commits_completed: 714
 last_completed_plan_commit: 17.g.C
@@ -38667,7 +38703,7 @@ Plattform-/Releasefreigaben werden dadurch nicht stillschweigend erteilt.
 
 **Umsetzung:** take ours/theirs/base und expliziten gültigen JSON-Wert an genau einen gebundenen Konflikt anwenden.
 
-**Verhaltensabnahme:** Auflösung ändert nur den gewählten Konflikt und daraus abgeleitete Zielwerte.
+**Verhaltensabnahme:** Auflösung ändert nur den gewählten Konflikt und daraus abgeleitete Zielwerte. 10.15.5 bindet ursprünglichen Katalog, erwarteten Eingabeplanhash, ein explizites Auditereignis, drei native Quellen und die reale CLI einschließlich aller Take-Arten und JSON-null.
 
 #### 17.h.R – Make it Right
 
@@ -38676,7 +38712,7 @@ Plattform-/Releasefreigaben werden dadurch nicht stillschweigend erteilt.
 
 **Vervollständigung:** Unbekannter Konflikt, ungültiger Wert und nachträglich veränderte Basis verhindern Übernahme.
 
-**Verhaltensabnahme:** Restplan bleibt fachlich unverändert; Akteur und Auflösungsentscheidung sind nachvollziehbar gebunden. Die W-Nachweise bleiben zusätzlich grün.
+**Verhaltensabnahme:** Restplan bleibt fachlich unverändert; Akteur und Auflösungsentscheidung sind nachvollziehbar gebunden. 10.15.5 verlangt zusätzlich Ketten-/Projektionsprüfung, Ablehnung doppelter Auflösungen und Quelländerungen sowie sichere explizite CLI-Eingaben ohne Projektwrites. Die W-Nachweise bleiben zusätzlich grün.
 
 #### 17.h.C – Make it Clean
 

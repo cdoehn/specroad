@@ -39,7 +39,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "6ee0678a7cf525508891e4c367359f47ad5798851a537e3b884e5014b16c4261",
+  "specification_sha256": "29178f3debf8c4f7a5bd14c9bbb2fd150e1a9024678576496d67a30251e06dd2",
   "steps": [
     "Verify the real historical source closure and compare original Baseline hashes, Evidence bindings/results and byte hashes before and after an actual native migration.",
     "Check stored fixed baseline vectors, nested snapshots, unchanged negative results and exact noncanonical original bytes without current approval.",
