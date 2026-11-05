@@ -1,19 +1,19 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.64
+## Version 0.2.65
 
 | Feld | Wert |
 |---|---|
 | Dokument-ID | `SR-SPEC-0001` |
-| Dokumentversion | `0.2.64` |
+| Dokumentversion | `0.2.65` |
 | Zielrelease | `SpecRoad Single-Repository Workbench 0.2.0` |
 | Status | **Fachlich konsolidierte Arbeitsgrundlage; technische Reviewentscheidung gesondert dokumentiert, formale Baseline-Freigabe und Produktabnahme nicht durch dieses Dokument erklärt** |
 | Stand | 5. November 2026 |
 | Sprache | Deutsch; technische Feldnamen, Enum-Werte und CLI-Kommandos Englisch |
-| Fachliche Quelle | **Diese Repositoryfassung v0.2.64 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.64 liegt mit dieser Änderung nicht vor.** |
+| Fachliche Quelle | **Diese Repositoryfassung v0.2.65 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.65 liegt mit dieser Änderung nicht vor.** |
 | Bearbeitbare Satzquelle | Diese Datei; eine spätere PDF muss denselben versionierten Inhalt wiedergeben. |
-| Vorgängerversion | Repository-Spezifikation v0.2.63 vom 5. November 2026; historische Nachweise bleiben unverändert. |
-| Prüf- und Entscheidungsgrundlage | CONTROL-BLOCKED-601: ausdrücklicher manueller Nutzerauftrag für die protokollierte Freigabe eines blockierten Versuchs; keine Produkt- oder Baseline-Freigabe. |
-| Änderungsart | Zusätzlicher enger Control-Bedienweg unter Erhalt von Originalversuchen, Klärungs- und Retrybudget; bestehende Produktverträge unverändert. |
+| Vorgängerversion | Repository-Spezifikation v0.2.64 vom 5. November 2026; historische Nachweise bleiben unverändert. |
+| Prüf- und Entscheidungsgrundlage | MERGE-COLLECTIONS-603: einmalige ausdrückliche Nutzerfreigabe für die Detailklärung zu 17.d nach SPECROAD-DECISION-1; keine Produkt- oder Baseline-Freigabe. |
+| Änderungsart | Explizite eingebaute Mengenschlüssel, konservative geordnete Folgen und schreibfreier Anhangvergleich; nachfolgende M17-Gates bleiben bestehen. |
 
 > **Verbindlicher Quellenwechsel:** Die ausdrückliche Nutzerentscheidung REFERENCE-SOURCE-551 wird als v0.2.50 umgesetzt. Der neue Quellvertrag ist Entwurfsarbeit vom 3. November 2026, kein Nachweis eines früher existierenden Formats. Bestehende 0.2-Verträge, Transport-, Sicherheits- und Reviewgrenzen bleiben erhalten.
 
@@ -4307,6 +4307,109 @@ Angreifer die selbstreferenzfreien Inventur- und Planhashes neu berechnet.
 Unbekannte frühere Inventurversionen werden nicht still migriert.
 
 
+#### 10.15.2 Schemafeste Mengen, geordnete Folgen und Anhänge
+
+**Entscheidung MERGE-COLLECTIONS-603, einmaliger ausdrücklicher Nutzerauftrag
+vom 5. November 2026 nach SPECROAD-DECISION-1 und 2.4.3.1.** Diese
+Detailfestlegung konkretisiert den vollständigen Schritt 17.d und
+SR-REQ-0365, SR-REQ-0367 sowie SR-REQ-0542. Die Freigabe gilt für dieses
+eine Mischbundle. Sie aktiviert weder die Automatik noch ein allgemeines
+Klärungsbudget. Die folgenden Regeln definieren ausschließlich lesende
+Wertkandidaten; Quellqualifikation, immutable Ressourcen, Identität,
+Metadaten nach K.3, Relationshistorie, Zielvalidierung und Writer-/Reviewgates
+bleiben unverändert und werden nicht durch Feldgleichheit ersetzt.
+
+**Explizite Schemaquelle.** Die schemafähige Feldmerge-API erhält zusätzlich
+zu den drei vorhandenen JSON-Werten eine exakte `schema_id` aus dem nativen
+eingebauten Schemakatalog. Alle drei Eingaben müssen dessen Feldvertrag
+erfüllen. Freie Schemata, Pfade, URLs und erratene Mengenschlüssel sind keine
+Eingabe dieser API. Ohne `schema_id` bleibt der bisherige konservative
+17.c-Vertrag unverändert, einschließlich `collection_semantics_required`.
+Schema- und Ergebniskopien bleiben von den Aufruferdaten unabhängig.
+
+Ein eingebautes Arrayschema darf die geschlossene Annotation
+`x-specroad-merge` mit genau `{"kind":"set","key":"<Zeiger>"}` oder
+`{"kind":"ordered"}` besitzen. `key` ist ein RFC-6901-Zeiger auf einen
+skalaren JSON-Wert innerhalb des Elements; die leere Zeichenfolge bezeichnet
+das skalare Element selbst. Nichtleere Zeiger gehen ausschließlich durch
+Objektmitglieder, niemals über positionsabhängige Arrayindizes. Ein Schlüssel
+ist die kanonische JSON-Bytefolge des unveränderten Skalars: Boolean und Zahl
+sind verschieden, kanonisch gleiche Zahlen identisch; keine Normalisierung
+von Unicode, Großschreibung oder Leerraum. Fehlende, zusammengesetzte oder
+mehrfach vorhandene Schlüssel werden in jeder Quelle abgewiesen, auch vor
+Gleichheits-/Einseitenabkürzungen und in verschachtelten Mengen. Keine
+stillschweigende Deduplizierung. Ungültige oder widersprüchliche Annotationen
+sind Fehler. Annotationen in bedingten/alternativen oder negierten Zweigen
+sind in dieser Fassung nicht zugelassen; die Regeln werden nur aus expliziten
+`properties`, `items`, lokalen azyklischen Referenzen und `allOf` bezogen.
+
+Die initiale, abschließende Mengenbelegung lautet:
+
+| Eingebautes Feld | Stabiler Schlüssel |
+|---|---|
+| gemeinsame Artefaktfelder: `tags` | Element selbst (`key=""`) |
+| Term-Felder: `synonyms`, `forbidden_synonyms` | Element selbst |
+| Konfigurationsartefakt: `dimensions` | Objektmitglied `/name` |
+| Definition einer solchen Dimension: `allowed_values` | Element selbst |
+
+Andere Arrays bleiben atomare geordnete Folgen, auch wenn ihre Elemente
+zufällig ein Feld namens `id` oder `name` besitzen. Insbesondere werden
+`main_flow`, `done_criteria`, freie Erweiterungen und Relationen nicht durch
+Sortierung oder Vereinigung verändert. Relationsmerge folgt gesondert in
+17.e. Die Annotation erweitert die inspizierbaren eingebauten Schemaressourcen
+und deren tatsächliche Hashes; sie schreibt keine Projektdatei um, ändert
+keine gespeicherte Schema-Version und ersetzt keine fachlichen Nachprüfungen.
+
+**Dreiweg-Mengenmerge.** Für jedes stabile Element wird die vorhandene
+Dreiweg-Feldmatrix rekursiv angewendet. Unabhängige Ergänzungen sowie
+unabhängige Änderungen unterschiedlicher Felder desselben Objektelements
+bleiben erhalten. Entfernen gegen unverändert entfernt den Wertkandidaten;
+Entfernen gegen Ändern erzeugt einen Konflikt. Fehlendes Feld, leere Menge
+und JSON-null bleiben verschieden. Eine Umordnung allein ändert eine Menge
+nicht. Ist der Zielinhalt bereits auf einer Seite vorhanden, bleibt deren
+Reihenfolge erhalten (bei beidseitiger Gleichheit Ours). Nur eine tatsächlich
+kombinierte Menge wird nach den kanonischen Schlüsselbytes sortiert.
+Konflikte benennen den gemeinsamen Collection-Zeiger und die betroffenen
+stabilen Schlüssel und bewahren alle drei vollständigen Originalbeobachtungen;
+unterschiedliche Quellindizes werden nicht als gemeinsamer Index ausgegeben.
+Ein schemawidriger kombinierter Kandidat wird als Konflikt zurückgehalten.
+
+**Geordnete Folgen.** Eine einzige geänderte Seite wird unverändert übernommen;
+identische Änderungen beider Seiten sind ein gemeinsamer Zielwert. Zwei
+unterschiedliche konkurrierende Änderungen erzeugen `ordered_sequence_change`,
+auch bei vermeintlich unabhängigen Anhängen, Löschungen oder Umordnungen.
+Es gibt keine Indexheuristik, LCS-Reparatur oder automatische Sortierung.
+Remove-versus-edit bleibt ein Konflikt mit expliziter fehlender Beobachtung.
+
+**Binäranhänge.** Die reine Anhangmerge-API erhält drei vollständige, bereits
+aus den qualifizierten Quellen gewonnene Abbildungen aus kanonischem relativem
+`attachments/`-Pfad auf tatsächliche Bytes. Sie berechnet SHA-256 selbst;
+behauptete Hashes, Dateisystem-/Netzwerkauflösung und Archive sind keine Eingabe.
+Leere Bytes sind ein vorhandener Anhang. Identische Bytes bleiben exakt
+erhalten; einseitige Änderungen und neue unterschiedliche Pfade werden
+übernommen. Konkurrierende unterschiedliche Bytes am selben Pfad ergeben
+einen Binärkonflikt. Pfadnormalisierung findet nicht statt; unsichere Pfade,
+portable Schreibweisenkollisionen und Datei/Unterpfad-Kollisionen sind Fehler.
+
+Abwesenheit eines Base-Anhangs auf einer Seite beweist gemäß 10.15.1 keine
+Löschung und erzeugt ohne separat explizit übergebenen Entfernungswunsch
+`attachment_absence_unproven`. Jeder Entfernungswunsch muss einen tatsächlich
+in Base vorhandenen und auf genau dieser Seite fehlenden Pfad benennen;
+fremde, doppelte oder widersprüchliche Wünsche sind Fehler. Er ist nur eine
+Eingabe des Wertkandidaten, keine Writerfreigabe. Explizites Entfernen gegen
+unverändert entfernt den Kandidaten, gegen geänderte Bytes entsteht
+`attachment_remove_edit`; beidseitiges explizites Entfernen ist identisch.
+Konflikte enthalten Pfad, Art und drei tatsächliche Bytehashes, mit null
+ausschließlich für Abwesenheit. Kein Umbenennen oder Überschreiben löst sie.
+
+Auch konfliktfreie Ergebnisse haben stets `ready=false` und
+`write_authorized=false`; weder eine CLI noch ein ausführbarer Mergeplan
+oder eine Publikation wird hier vorweggenommen. Bei Konflikten ist der
+Zielzugriff gesperrt. Auswertung der echten qualifizierten Quellen und der
+unveränderten Inventur wird mit synthetischen Projektintegrationstests
+abgedeckt. Die folgenden Schritte 17.e–17.o bleiben vollständig offen.
+
+
 ### 10.16 Projektbundle und partieller Umfang
 
 Ein Bundle verwendet ausschließlich die kanonischen Werte `bundle_kind=project|partial` nach Anhang E.3; `document` und `release` sind Scope-Arten, keine Werte dieses Felds. Ein `project`-Bundle enthält einen geschlossenen, nicht konfigurationsgefilterten Projektscope und bildet nach Extraktion ein normales schreibbares SpecRoad-Projekt. Es enthält standardmäßig abgeschlossene Request- und Transaktionsreceipts in einer getrennten Betriebssektion, deren Hash im Bundlemanifest gebunden ist, aber nicht in die fachliche Modellwurzel eingeht.
@@ -7476,6 +7579,7 @@ Die folgende Roadmap ist informativ und erzeugt keine Anforderungen an 0.2:
 
 | Version | Datum | Status | Änderung |
 |---|---|---|---|
+| 0.2.65 | 2026-11-05 | Einmalige ausdrückliche Nutzerfreigabe nach SPECROAD-DECISION-1 | MERGE-COLLECTIONS-603: schemafeste Mengen, atomare geordnete Folgen und Anhangkandidaten ohne implizite Lösch- oder Schreibfreigabe. |
 | 0.2.64 | 2026-11-05 | Ausdrücklicher Nutzerauftrag | CONTROL-BLOCKED-601: explizite Freigabe eines neuen Versuchs nach belegtem paketlosem Blocker, mit unveränderter Historie und Budget. |
 | 0.2.63 | 2026-11-05 | Delegiert gemäß SPECROAD-DECISION-1, Vertrag 4 | MERGE-INVENTORY-596: vollständiger Inventurzwischenstand mit drei Quellbindungen, getrennten Hashdomänen und Abwesenheit ohne Löschfreigabe; semantischer Merge und Produktabnahmen bleiben offen. |
 | 0.2.57 | 2026-11-03 | Ausdrücklicher Nutzerauftrag | CONTROL-SOURCE-SELECTION-566: exakte v2-Quell-SHA bei gleicher Vierfachbindung, konservativer Legacy-Erhalt und unveränderte Befugnisse. |
@@ -11549,4 +11653,4 @@ Implementierungsschritten nachgewiesen sein.
 
 ---
 
-**Ende der SpecRoad-Produktspezifikation v0.2.64.**
+**Ende der SpecRoad-Produktspezifikation v0.2.65.**

@@ -40,7 +40,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "e3994acf82c7c9ef4ae2cd14b2c5f5e26d6c78b5c2519a2723f5f6311298b593",
+  "specification_sha256": "f6796f47fe4d41d64bcc7986c4cdd1428551de697b1472d658ddcee3e4a76b8c",
   "steps": [
     "Stage exact before/after bytes to new transaction-local files; sync each file and parent, hash and read back every image.",
     "Recheck current source, authority and complete image set; durably replace only the building journal with prepared and retain recovery data on failure."

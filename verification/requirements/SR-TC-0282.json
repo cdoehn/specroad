@@ -32,7 +32,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "e3994acf82c7c9ef4ae2cd14b2c5f5e26d6c78b5c2519a2723f5f6311298b593",
+  "specification_sha256": "f6796f47fe4d41d64bcc7986c4cdd1428551de697b1472d658ddcee3e4a76b8c",
   "steps": [
     "Observe independently expected machine-readable policy/status/repair values from actual profile composition and supplied model bytes; verify invalid policy rejection, immutable input and no write attempts.",
     "Compare legacy and enriched policy diagnostics; exercise structural/negative error floors and owned input boundaries; inspect actual native confirmation, unchanged proposed Requirement bytes and receipt replay.",

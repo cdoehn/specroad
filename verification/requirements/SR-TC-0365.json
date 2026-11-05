@@ -10,7 +10,8 @@
   "method": "automated_behavior",
   "open_items": [
     "Current successful Apply evidence is required for every prepared stage. No behavior tests ran in Dev.",
-    "Full-resource identity/history and profile/invariant gates, schema-aware collections and attachments, final target validation, versioned plan/conflict/resolution formats and CLI/Work publication remain in later M17 steps."
+    "Full-resource identity/history and profile/invariant gates, schema-aware collections and attachments, final target validation, versioned plan/conflict/resolution formats and CLI/Work publication remain in later M17 steps.",
+    "MERGE-COLLECTIONS-603 / specification 10.15.2 defines explicit built-in collection rules and byte-preserving attachment candidates. The clarification prefix alone does not implement 17.d or provide Apply evidence; all remaining M17 gates are preserved."
   ],
   "oracle": {
     "kind": "behavior",
@@ -33,7 +34,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "e3994acf82c7c9ef4ae2cd14b2c5f5e26d6c78b5c2519a2723f5f6311298b593",
+  "specification_sha256": "f6796f47fe4d41d64bcc7986c4cdd1428551de697b1472d658ddcee3e4a76b8c",
   "steps": [
     "Merge explicit nested disjoint changes and JSON-equivalent targets; compare against independent exact expected values.",
     "Observe every conflicting source value with its presence and RFC-6901 pointer; reject target access while unresolved.",

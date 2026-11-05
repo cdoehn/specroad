@@ -46,7 +46,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "e3994acf82c7c9ef4ae2cd14b2c5f5e26d6c78b5c2519a2723f5f6311298b593",
+  "specification_sha256": "f6796f47fe4d41d64bcc7986c4cdd1428551de697b1472d658ddcee3e4a76b8c",
   "steps": [
     "Execute public argv and structured outbound bundle.create through source, module and PYZ paths.",
     "Independently compare complete inner project/receipt bytes, native reference binding and exact embedded 1.8.0 PYZ member with outer manifest/member sizes and hashes.",

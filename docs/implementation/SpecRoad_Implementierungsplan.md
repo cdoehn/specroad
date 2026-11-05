@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 101 · **Stand:** 5. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.64
+**Planrevision:** 102 · **Stand:** 5. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.65
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 Schritte und 900 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; die ausdrücklich genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wird nach 10.7.10 innerhalb von 15.l.R vorgezogen. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -9,7 +9,7 @@ Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 S
 
 Fachliche Grundlage ist [`docs/specification/SpecRoad_Spezifikation.md`](../specification/SpecRoad_Spezifikation.md), einschließlich aller konsolidierten Korrekturen, 742 Requirements, 51 Verifikationsverträge, 46 Szenario-/E2E-Identitäten sowie R-01 bis R-75, Anhang U und den PatchHarbor-Rundweg aus Anhang W. Der [`Prüfbericht`](../reviews/SpecRoad_v0.2.7_Implementierungsreife_Pruefbericht.md) ist ein vorgelagerter Entwurfsreview, kein späterer Produktnachweis.
 
-Gebundene Spezifikations-SHA-256: `e3994acf82c7c9ef4ae2cd14b2c5f5e26d6c78b5c2519a2723f5f6311298b593`.
+Gebundene Spezifikations-SHA-256: `f6796f47fe4d41d64bcc7986c4cdd1428551de697b1472d658ddcee3e4a76b8c`.
 Planungsbasis: Commit `fe2661d02ecf2f7eb483b58a4487eb009c6b3846`; sauberes Result-Bundle `specroad_Result_120209_0914_df3504.zip`; Repository-ID `3d2576df-d611-46fc-9d2b-92869468aaca`. Diese Angaben dokumentieren die Entstehung des Plans, nicht die zukünftige Patchbindung. **Jedes spätere Patchpaket bindet den dann aktuellen tatsächlichen Result-Zustand.**
 
 Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 2026 gelten zusätzlich und bei den nachfolgend benannten Konflikten vorrangig. Sonstige normative Spezifikationsinhalte werden nicht stillschweigend abgeschwächt. Neue fachliche Widersprüche, fehlende zwingende Angaben und Sicherheitsprobleme sind offen zu benennen, nicht durch erfundene Annahmen oder Scheinerfolge zu lösen.
@@ -33,6 +33,64 @@ ausdrückliche Bedienausnahme aus 2.4.3.2 bleibt zusätzlich anwendbar.
 Produktfreigaben und die Grenzen aus 2.4.1/2.4.2/2.4.4 bleiben unverändert.
 Dieser Plan ändert keine alten Aufträge, Antworten, Blockaden oder
 Laufzeitdaten und ist keine Start-/Resume-Anweisung.
+
+## MERGE-COLLECTIONS-603 — einmalige Detailklärung und vollständiger Schritt 17.d
+
+Ausdrücklicher manueller Nutzerauftrag vom 5. November 2026: die bisher
+blockierte Detailklärung einmalig freigeben und nach Übergabe des Patches
+für Apply beenden. SPECROAD-DECISION-1 und 2.4.3.1 erlauben diesen einen
+Klärungspräfix vor der vollständigen Umsetzung in derselben ZIP. Der zuletzt
+automatisch verweigerte Vertrag und die Control-Historie werden nicht
+umgeschrieben; kein allgemeines Budget und keine Automatik werden aktiviert.
+
+Technische Grundlage: nativ geprüftes sauberes Result
+`specroad-apply_Result_121026_1105_a3436b.zip`, SHA-256
+`5cdcf3b1b199626bc715622bb1772d5b9364a8492549bb5eee1c3c4f2afa1d7d`,
+Abschlusscommit `6735602c06a864d03599b5e0f59fbdf08e35b456`.
+CONTROL-BLOCKED-601.R/C wurden im Korrekturbundle 602 mit 7.676/7.699 Tests
+jeweils erfolgreich committed. Der Produktstand ist weiterhin 702/900,
+letzter Plancommit 17.c.C. Diese Gruppen sind kein Vollsuite-Nachweis.
+
+Lücke: SR-REQ-0367 fordert schemafeste stabile Mengenschlüssel, aber die
+eingebauten Schemata deklarieren weder Collection-Art noch Schlüssel.
+17.c lässt konkurrierende Arrays daher absichtlich ungelöst. Geprüft wurden
+die vollständigen Schemafabriken, Feldmerge, Quellinventur, SR-REQ-0365/0367/
+0542, Abschnitt 10.15 und K.3 sowie die vollständigen Schritte 17.d–17.o.
+
+Alternativen: (1) aus Feldnamen/Elementformen automatisch Mengen erraten;
+(2) sämtliche Arrays dauerhaft als Konflikt behandeln und den Planschritt
+nur teilweise umsetzen; (3) eine kleine ausdrückliche Schemaannotation samt
+abschließender anfänglicher Feldbelegung festlegen. Gewählt wird (3): keine
+Heuristik, keine neue Identitäts- oder Schreibfreigabe, keine externen Fakten.
+Die Eingaben bleiben unverändert; die rein lesende Erweiterung ist durch
+spätere versionierte Vertragsänderung reversibel. Reihenfolge und Original-
+beobachtungen bleiben erhalten. Abwesenheit von Dateien wird nicht als
+bewusste Löschung interpretiert; dafür wird ein separater expliziter Wunsch
+gefordert, der weiterhin keine Writerberechtigung erteilt.
+
+Normative Festlegung steht zuerst in 10.15.2. Die aktive Katalogbindung wird
+mitgeführt; historische Nachweise bleiben unverändert. Die vorhandene API
+ohne Schema-ID behält ihr Verhalten. Nur tags, Term-Synonyme und die benannten
+Konfigurationsdimensionen erhalten deklarierte Mengensemantik. Relations-
+historie, unveränderbare Ressourcen, endgültige Zielvalidierung, CLI und
+Publikation bleiben Aufgaben der unveränderten nachfolgenden M17-Schritte.
+
+W liefert vollständige schemafähige Mengenmatrix mit stabilen Schlüsseln,
+verschachtelten Mengen, strikter Quellvalidierung und schreibfreiem Vergleich
+echter Anhangbytes einschließlich expliziter Entfernung. R vervollständigt
+die Fehlerklassen geordneter Folgen, portable Pfad-/Unterpfadkollisionen und
+die Robustheitsmatrix für verschachtelte, fehlende und widersprüchliche Werte.
+C trennt reine Schema-/Anhanghelfer ohne Fachänderung; W/R-Testbytes bleiben
+gleich. Synthetische Integration verwendet echte qualifizierte Mergequellen
+und die vollständige Inventur, keine ersatzweise erfundenen Modellwurzelhashes.
+
+Die Klärungsstage lässt alle drei 17.d-Commits offen. Nachfolgende Checkboxen
+und Produktzähler sind Commitzielzustände, erst nach bestandenem eigenem
+Apply-Gate und echtem Commit wirksam. Jede Stage erhält gefilterte fällige
+N=3-Gruppe plus vollständige ungefilterte Pflichtauswahl. Kein Endstand wird
+vorab ausgebracht. Dev führt nur Syntax, Collection und native Paketprüfung
+aus; keine Verhaltenstests und kein behaupteter Abnahmeerfolg. Nach atomarer
+Übergabe genau dieser ZIP endet der Auftrag ohne Apply-/Warteschleife.
 
 ## Korrekturbundle 602 — echte Releaseprüfung im Test, vollständiger R/C-Rest (C)
 
@@ -3372,7 +3430,7 @@ Kein offener Produktplanschritt wird durch diese Testoptimierung abgeschlossen.
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 101
+plan_revision: 102
 implementation_plan_commits_total: 900
 implementation_plan_commits_completed: 702
 last_completed_plan_commit: 17.c.C
@@ -38012,7 +38070,7 @@ Plattform-/Releasefreigaben werden dadurch nicht stillschweigend erteilt.
 <a id="step-17-d"></a>
 ### 17.d – Mengen, geordnete Folgen und Anhänge
 
-**Anforderungsbezug:** `SR-REQ-0365`, `SR-REQ-0367`.
+**Anforderungsbezug:** `SR-REQ-0365`, `SR-REQ-0367`, `SR-REQ-0542`; Detailvertrag 10.15.2.
 **Verifikationsbezug:** `SR-VER-0026`. Die exakten SR-TC-Identitäten stehen in der vollständigen Matrix.
 
 #### 17.d.W – Let it Work
@@ -38022,7 +38080,7 @@ Plattform-/Releasefreigaben werden dadurch nicht stillschweigend erteilt.
 
 **Umsetzung:** Mengen nach schemafestem Schlüssel und Anhänge nach Pfad/Bytehash zusammenführen.
 
-**Verhaltensabnahme:** Unabhängige Mengenergänzungen bleiben erhalten; identische Anhänge werden unverändert übernommen.
+**Verhaltensabnahme:** Unabhängige Mengenergänzungen bleiben erhalten; identische Anhänge werden unverändert übernommen. Eingebaute Schema-ID, deklarierte Schlüssel, verschachtelte Mengen und tatsächliche Bytehashes nach 10.15.2; keine freie Schema-/Dateisystemauflösung. Duplikate sind Fehler, Quell- und Ergebniskopien unabhängig. Echte qualifizierte synthetische Quellen bleiben unverändert.
 
 #### 17.d.R – Make it Right
 
@@ -38031,7 +38089,7 @@ Plattform-/Releasefreigaben werden dadurch nicht stillschweigend erteilt.
 
 **Vervollständigung:** Konkurrierende geordnete Folgen ohne stabile Elementidentität und remove-versus-edit nicht willkürlich sortieren oder gewinnen lassen.
 
-**Verhaltensabnahme:** Fallmatrix erhält absichtliche Reihenfolge und weist echte Binärkonflikte aus. Die W-Nachweise bleiben zusätzlich grün.
+**Verhaltensabnahme:** Fallmatrix erhält absichtliche Reihenfolge und weist echte Binärkonflikte aus. Null/Abwesenheit, gleiche Zahlen gegenüber Boolean, ungeordnete Schlüssel gegenüber geordneten Folgen und Entfernen gegen Ändern bleiben getrennt. Jeder Binärkonflikt enthält drei echte Hashbeobachtungen; Pfadalias und Datei/Unterpfadkollisionen sperren. Kein schemawidriger Zielkandidat oder unbekannter Entfernungswunsch wird freigegeben. Die W-Nachweise bleiben zusätzlich grün.
 
 #### 17.d.C – Make it Clean
 
