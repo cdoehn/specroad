@@ -175,11 +175,24 @@ def inspect_merge_identities(sources, *, history):
     return RelationMergeResult._create(sources, history_hash, [], conflicts)
 
 
-def merge_relations(sources, *, history):
+def _removals(values, base, side):
+    if type(values) not in (list, tuple):
+        raise ModelError('invalid_relation_removal')
+    seen = set()
+    for value in values:
+        if type(value) is not str or value in seen or value not in base or value in side:
+            raise ModelError('invalid_relation_removal')
+        seen.add(value)
+    return seen
+
+
+def merge_relations(sources, *, history, removed_ours=(), removed_theirs=()):
     """Combine global relation identities after source and origin validation."""
     observed, values, owners = _sources(sources)
     origins, history_hash = _history(history, sources, observed)
     conflicts = _identity_conflicts(observed, origins)
+    removed_ours = _removals(removed_ours, values['base'], values['ours'])
+    removed_theirs = _removals(removed_theirs, values['base'], values['theirs'])
     blocked = {jcs(row['identity']) for row in conflicts}
     candidates = []
     for identifier in sorted(set().union(*(set(values[role]) for role in ROLES))):
@@ -192,14 +205,20 @@ def merge_relations(sources, *, history):
         kind = None
         if len({value['owner_id'] for value in present}) != 1:
             kind = 'relation_owner_change'
-        elif old is not None and (left is None or right is None):
+        elif old is not None and ((left is None and identifier not in removed_ours)
+                                  or (right is None and identifier not in removed_theirs)):
             kind = 'relation_absence_unproven'
+        elif any(len({jcs({name: value['relation'][name]}) if name in value['relation'] else b''
+                      for value in present}) > 1 for name in ('created_at', 'created_by')):
+            kind = 'relation_origin_metadata_change'
         elif _same(left, right):
             target = left
         elif _same(old, left):
             target = right
         elif _same(old, right):
             target = left
+        elif left is None or right is None:
+            kind = 'relation_remove_edit'
         else:
             outcome = merge_fields({} if old is None else old, left, right)
             if not outcome.merged:
@@ -210,7 +229,8 @@ def merge_relations(sources, *, history):
             target = outcome.value
         if kind is None and any(observed[role][key][1]['storage_class'] == 'legacy_immutable'
                                 for role in ROLES if key in observed[role]):
-            if not all(_same(value, target) for value in present):
+            storage = {observed[role][key][1]['storage_class'] for role in ROLES if key in observed[role]}
+            if len(storage) > 1 or target is None or not all(_same(value, target) for value in present):
                 kind = 'relation_immutable_change'
         if kind:
             conflicts.append(_conflict(identity, kind, observed, origins, key))
