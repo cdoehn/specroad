@@ -22,17 +22,18 @@ class AcceptanceCase(AuthorizationCase):
         installed.start(); self.addCleanup(installed.stop)
         self.engine.core.current = Mock(return_value=None)
 
-    def manual(self, remaining=2, *, mixed=False, completed=None, mutate_base=None):
+    def manual(self, remaining=2, *, mixed=False, completed=None, mutate_base=None,
+               mutate_log=None, capability=CAPABILITY):
         self.ledger().bind_contract(new_contract(remaining, allowed=False, version=4))
         self.latest_data = self.data(mixed=mixed)
         first = self.latest_data['stages'][1 if mixed else 0]
-        raw = canonical(CAPABILITY)
+        raw = canonical(capability)
         first['after'][PATH] = sha256(raw).hexdigest()
         first['payloads'][PATH] = base64.b64encode(raw).decode()
         self.latest_patch = patch_package(self.exchange / 'manual.zip', self.latest_data)
         self.engine.gate.set(False)
         self.engine.tick()
-        return self.outcome(completed=completed, mutate_base=mutate_base)
+        return self.outcome(completed=completed, mutate_base=mutate_base, mutate_log=mutate_log)
 
     def accept_current(self, **changes):
         values = {'result': self.following['path'], 'clarification': True,

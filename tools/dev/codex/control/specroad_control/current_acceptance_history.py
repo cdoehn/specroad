@@ -67,6 +67,14 @@ def document(row):
             or not isinstance(doc['reason'], str) or doc['reason'] != doc['reason'].strip()
             or not doc['reason'] or len(doc['reason']) > 512 or not doc['reason'].isprintable()):
         raise ValueError('Invalid operator intent')
+    if before['error'] is not None and (not isinstance(before['error'], str) or not before['error']):
+        raise ValueError('Invalid original error')
+    if before['patch_sha'] is not None:
+        digest(before['patch_sha'])
+    if doc['mode'] == 'successor' and doc['attempt_number'] != 0:
+        raise ValueError('A new source has no prior attempt number')
+    if row['output_kind'] == 'patch_ready_with_clarification' and not selected['clarification_allowed']:
+        raise ValueError('Output exceeds explicit authority')
     if doc['mode'] != 'successor' and doc['previous_output_kind'] is not None:
         raise ValueError('Same-source retry already produced output')
     if doc['mode'] == 'same_ready' and (before['stage'] != 'ready' or before['patch_sha'] is not None or doc['attempt_number'] != 0):
@@ -140,6 +148,9 @@ def validate_history(ledger):
                         or any(old[k] != doc['original_job'][k] for k in ('error', 'patch_sha')))
                     or row['output_kind'] is not None and target['patch_sha'] is None):
                 raise ValueError('Completed adoption changed')
+            if row['state'] == 'completed' and doc['mode'] == 'successor':
+                if ledger.recorded_contract(row['target_sha']) != doc['selected_contract']:
+                    raise ValueError('Accepted source budget or base contract changed')
         if len(pending) > 1:
             raise ValueError('Competing acceptances')
         if pending:

@@ -34,7 +34,7 @@ Produktfreigaben und die Grenzen aus 2.4.1/2.4.2/2.4.4 bleiben unverändert.
 Dieser Plan ändert keine alten Aufträge, Antworten, Blockaden oder
 Laufzeitdaten und ist keine Start-/Resume-Anweisung.
 
-## OFF-PLAN CONTROL-ACCEPT-CURRENT-605 — aktuellen geprüften Stand übernehmen (W)
+## OFF-PLAN CONTROL-ACCEPT-CURRENT-605 — aktuellen geprüften Stand übernehmen (R)
 
 Manueller Nutzerauftrag vom 5. November 2026. Basis ist das vollständig
 erfolgreiche saubere Apply-Result SHA-256 `50333f80a2bf19d76af537a080fd1fb73a74adfb6562be7873a6e17fc67c6e21`,

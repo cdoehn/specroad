@@ -67,11 +67,11 @@ def prove(engine, target, *, unused=True):
     if base != work:
         fail('The selected snapshot is not clean.')
     if unused:
+        engine.core.current(result)  # Native nonblocking repository lock, read-only capture.
         # Even previously known later Results veto adoption of an old state.
         engine.exchange.assert_current(result, {result['run_id']})
         if engine.exchange.patches(result):
             fail('A follow-up already exists for the selected Result.')
-        engine.core.current(result)  # Native nonblocking repository lock, read-only capture.
     return {'parent': parent, 'patch': package, 'result': result,
             'plan_sha256': hashed(public_plan(data)), 'program_sha256': program,
             'snapshot_sha256': inventory_hash(work)}

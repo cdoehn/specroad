@@ -23,18 +23,33 @@ def require_release(paths):
 
 def blocked_evidence(engine, doc):
     from .blocked_authorization_proof import evidence
-    return evidence(engine, {**doc, 'source': doc['target']})
+    return evidence(engine, doc)  # Preserve the path in the immutable original request.
 
 
-def verify(engine, ledger, doc, *, unused=True):
+def guard_inputs(engine, ledger, doc):
     if (scope(engine.config) != doc['scope']
             or sha256(read_private(engine.paths.config)).hexdigest() != doc['config_sha256']):
         fail('Configuration changed after explicit acceptance.')
     if doc['mode'] == 'same_blocked' and blocked_evidence(engine, doc) != doc['evidence']:
         fail('Original blocked completion changed.')
+    if doc['mode'] == 'same_ready':
+        directory = engine.paths.state / 'jobs' / doc['target']['sha256']
+        completed = active(ledger, doc['target']['sha256']) is not None
+        if directory.is_symlink():
+            fail('The original attempt directory changed.')
+        if directory.exists():
+            for path in directory.rglob('*'):
+                if path.is_symlink() or (path.is_file()
+                        and not (completed and path.relative_to(directory).parts[0] == 'accepted')):
+                    fail('An original attempt appeared for the unissued Result.')
+
+
+def verify(engine, ledger, doc, *, unused=True):
+    guard_inputs(engine, ledger, doc)
     actual = checked(engine, doc['target'], unused=unused)
     if stable(actual) != stable(doc['artifacts']):
         fail('Pinned final Apply evidence changed.')
+    guard_inputs(engine, ledger, doc)
     return actual
 
 
@@ -130,7 +145,10 @@ def tick(engine, ledger, doc):
     if engine.codex.activity() == 'active':
         return {'halted': False, 'again': False, 'retry_after': 2}
     verify(engine, ledger, doc)
-    advanced = engine.gate.enter(lambda: complete(ledger, doc))
+    def adopt():
+        guard_inputs(engine, ledger, doc)
+        complete(ledger, doc)
+    advanced = engine.gate.enter(adopt)
     engine.update(stage='ready' if advanced else 'current_acceptance_pending',
         source_sha256=doc['target']['sha256'] if advanced else doc['source']['sha256'])
     return {'halted': False, 'again': advanced}
@@ -140,6 +158,12 @@ def guard_dispatch(engine, ledger, source):
     doc = active(ledger, source['sha256'])
     if doc is not None:
         verify(engine, ledger, doc)
+
+
+def guard_original(engine, ledger, source):
+    doc = active(ledger, source['sha256'])
+    if doc is not None:
+        guard_inputs(engine, ledger, doc)
 
 
 def public_status(paths):

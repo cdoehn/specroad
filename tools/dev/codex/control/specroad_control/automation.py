@@ -407,6 +407,8 @@ class Engine(OverloadWaiting):
         def guard():
             from .blocked_authorization import guard_original
             guard_original(self, ledger, source)
+            from .current_acceptance import guard_original as guard_accepted
+            guard_accepted(self, ledger, source)
             if ledger.request_contract() != selected or json_read(directory/'attempt.json') != attempt:
                 raise ControlError('request_contract_changed', 'Request authority changed during thread preflight.')
         guard()
