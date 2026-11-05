@@ -34,6 +34,31 @@ Produktfreigaben und die Grenzen aus 2.4.1/2.4.2/2.4.4 bleiben unverändert.
 Dieser Plan ändert keine alten Aufträge, Antworten, Blockaden oder
 Laufzeitdaten und ist keine Start-/Resume-Anweisung.
 
+## Bundle 606 — vollständiger Commitzielstand 17.e.W
+
+Diese Stage zielt auf 706/900 und danach `17.e.R`. Checkboxen und
+Zähler gelten erst nach bestandenem eigenem Apply-Gate und echtem Commit.
+Technische Basis und delegierte Detailentscheidung folgen im Entscheidungsbeleg.
+Der optionale Klärungspräfix und jede W/R/C-Stage bleiben getrennte Zustände.
+
+W: vollständige native Quellen, globale Relation-ID, ausdrücklich gebundene
+Herkunftsbeobachtungen und gemeinsame Identitätsprüfung; unabhängige Ergänzungen
+und rekursive Inhaltsänderungen bleiben erhalten. R ergänzt explizites
+Remove/Edit, Besitzer-/Erstellungsmetadaten-/Legacy-Schutz und manipulierte
+oder nachträglich geänderte Eingaben. C extrahiert die gemeinsame Herkunfts-
+und Identitätsprüfung für Artefakte, Relationen und normative Ressourcen,
+native Quellbeobachtung und Ergebniswerte. Alle vorhandenen Funktions- und
+Klassen-Syntaxbäume sowie die W/R-Testbytes bleiben gegenüber R unverändert.
+
+Die vollständigen neuen Testdateien und relevanten Quell-/Inventur-/Feldmerge-,
+History-/Relation-/Modell- und Katalog-/Commitplanregressionen sind Pflicht.
+Dev führte ausschließlich Syntax, reine Collection und native Paketprüfung
+aus. Apply führt je Stage genau einmal die fällige gefilterte N=3-Gruppe
+vereinigt mit der ungefilterten Pflichtauswahl aus, vor dem echten Commit.
+Keine Vollsuite, keine CI und kein M17-/Produktabschluss werden behauptet.
+Die endgültige Lifecycle-/Originalbytepolitik beginnt anschließend in 17.f;
+Metadaten, Invarianten, tatsächliche CLI-Herkunft und Publikation bleiben offen.
+
 ## MERGE-RELATIONS-606 — gebundene Herkunft und vollständiger Schritt 17.e
 
 Autorität: delegiert gemäß SPECROAD-DECISION-1, 2.4.1/2.4.2/2.4.3.1 und
@@ -3604,9 +3629,9 @@ Kein offener Produktplanschritt wird durch diese Testoptimierung abgeschlossen.
 ```yaml
 plan_revision: 105
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 705
-last_completed_plan_commit: 17.d.C
-next_plan_commit: 17.e.W
+implementation_plan_commits_completed: 706
+last_completed_plan_commit: 17.e.W
+next_plan_commit: 17.e.R
 last_completed_numbered_bundle: 605
 implementation_state: in_progress
 audit_followup_status: closed
@@ -38282,7 +38307,7 @@ Plattform-/Releasefreigaben werden dadurch nicht stillschweigend erteilt.
 
 #### 17.e.W – Let it Work
 
-- [ ] **17.e.W** · Position **706/900** · Voraussetzung: `17.d.C`.
+- [x] **17.e.W** · Position **706/900** · Voraussetzung: `17.d.C`.
 **Exakte Commit-Message:** `17.e.W feat(merge): Relationsmerge und Identitätskollisionen aufbauen`
 
 **Umsetzung:** Relation-ID als Vergleichsschlüssel verwenden und gemeinsame Identitätshistorie prüfen. Quell- und Herkunftsbindung nach 10.15.3; keine Herkunft aus IDs/Bytes erraten.

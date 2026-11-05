@@ -8,4 +8,6 @@ from .attachments import AttachmentConflict, AttachmentMergeResult, merge_attach
 __all__ = ['MergeSources', 'SourceRequest', 'SourceSnapshot', 'load_merge_sources',
            'MergeInventory', 'build_merge_inventory', 'read_merge_inventory',
            'FieldValue', 'FieldConflict', 'FieldMergeResult', 'merge_fields', 'CollectionConflict',
-           'AttachmentConflict', 'AttachmentMergeResult', 'merge_attachments']
+           'AttachmentConflict', 'AttachmentMergeResult', 'merge_attachments',
+           'merge_relations', 'inspect_merge_identities', 'RelationMergeResult']
+from .relations import merge_relations, inspect_merge_identities, RelationMergeResult
