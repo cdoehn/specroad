@@ -49,8 +49,9 @@ def push_source(result):
 def previous_result(engine, current, source_sha):
     candidates = engine.exchange.candidates('result',
         lambda m: all(m.get(key) == current['expected'][key] for key in BINDING))
-    return unique([item for item in candidates if item['sha256'] == source_sha],
-                  'The exact predecessor Result is missing or ambiguous.')
+    found = unique([item for item in candidates if item['sha256'] == source_sha],
+                   'The exact predecessor Result is missing or ambiguous.')
+    return engine.exchange.source(found)  # Reject conflicting bytes under the same run ID too.
 
 
 def walk_back(engine, source, requested):
@@ -164,6 +165,7 @@ def verify_links(links, source):
     if base != work:
         fail('Blocked source must have a complete clean snapshot.')
     pending, steps, committed_ids, bundle_numbers = None, [], set(), set()
+    committed_hashes = {source['binding']['base_commit']}
     for previous, package, result, data, program, progress_hash in links:
         result_base, result_work = snapshot(result)
         if data is None:
@@ -204,6 +206,11 @@ def verify_links(links, source):
                     fail('An incomplete plan needs a native dirty checkpoint.')
                 count, progress_hash = partial_progress(result, data)
                 pending = (data, count, program); kind = 'timeout' if result['primary_kind'] == 'timeout' else 'failed_gate'
+            commits = records(result, 'SPECROAD_APPLY_PROGRESS ')[-1]['committed']
+            for row in commits:
+                if row['commit'] in committed_hashes:
+                    fail('A commit hash is repeated across the recovery chain.')
+                committed_hashes.add(row['commit'])
             for stage in data['stages'][:count]:
                 work = apply_stage(work, stage)
                 committed_ids.add(stage['commit_id'])
