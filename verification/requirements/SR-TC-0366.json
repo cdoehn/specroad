@@ -2,19 +2,25 @@
   "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [],
   "expected_exit_codes": [],
-  "fixture_ids": [],
-  "implementation_status": "open",
+  "fixture_ids": [
+    "SR-FIX-MERGE-FIELDS-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [],
-  "method": "pending",
+  "method": "automated_behavior",
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Current successful Apply evidence is required for every prepared stage. No behavior tests ran in Dev.",
+    "Full-resource identity/history and profile/invariant gates, schema-aware collections and attachments, final target validation, versioned plan/conflict/resolution formats and CLI/Work publication remain in later M17 steps."
   ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Abweichende Änderungen desselben skalaren Feldes gegenüber der Basis MÜSSEN als Konflikt behandelt werden, sofern beide Zielwerte nicht nach JSON-Semantik identisch sind.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "17.c.W supplies the pure field engine for three present JSON resource values: recursive disjoint object changes, identical JSON targets, one-sided changes and explicit member absence. Equality uses the existing JCS value contract, not Python bool/number coercion. Conflicts retain all original observations and block target access. An actual native source/inventory fixture proves that computing a candidate does not approve or mutate the inventory. This is an internal value API, not a new stored merge-plan format. Schema-aware collections/attachments, identity/history, profile/invariant and final-target validation, persisted conflicts/resolutions, CLI/Work and publication remain later M17 gates. Concurrent arrays without those semantics remain explicitly unresolved. No complete requirement or M17 success is claimed."
   },
-  "preconditions": [],
+  "preconditions": [
+    "Three present, owned JSON values of the same logical resource; missing members are observed by actual key absence.",
+    "Prepared behavior tests execute only in the stage-specific Apply gate; Dev collection is not test evidence."
+  ],
   "primary_verification_id": "SR-VER-0026",
   "required_environment": {
     "declared_minimum_python": "3.10",
@@ -28,8 +34,31 @@
     "owned_temporary_files": true
   },
   "specification_sha256": "1fe1ab7ff8bd66412543935ea760749fe67c08546df6fc9e29b4527048559deb",
-  "steps": [],
+  "steps": [
+    "Merge explicit nested disjoint changes and JSON-equivalent targets; compare against independent exact expected values.",
+    "Observe every conflicting source value with its presence and RFC-6901 pointer; reject target access while unresolved.",
+    "Load actual native source bytes and retain their inventory/source bindings without writing or granting merge authority."
+  ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0366",
-  "test_ids": []
+  "test_ids": [
+    "tests/test_merge_fields.py::test_array_order_is_preserved_without_a_guessed_set_union",
+    "tests/test_merge_fields.py::test_conflicts_keep_exact_three_observations_and_block_target_access",
+    "tests/test_merge_fields.py::test_deletions_preserve_disjoint_edits_and_do_not_create_null_fields",
+    "tests/test_merge_fields.py::test_equivalent_json_numbers_and_object_order_are_not_conflicts",
+    "tests/test_merge_fields.py::test_identical_target_changes_do_not_conflict[0]",
+    "tests/test_merge_fields.py::test_identical_target_changes_do_not_conflict[False]",
+    "tests/test_merge_fields.py::test_identical_target_changes_do_not_conflict[None]",
+    "tests/test_merge_fields.py::test_identical_target_changes_do_not_conflict[]",
+    "tests/test_merge_fields.py::test_identical_target_changes_do_not_conflict[null]",
+    "tests/test_merge_fields.py::test_identical_target_changes_do_not_conflict[target5]",
+    "tests/test_merge_fields.py::test_identical_target_changes_do_not_conflict[target6]",
+    "tests/test_merge_fields.py::test_independent_additions_inside_same_new_object_are_recursive",
+    "tests/test_merge_fields.py::test_missing_and_null_conflict_observations_are_different",
+    "tests/test_merge_fields.py::test_nested_disjoint_edits_and_additions_keep_both_sides",
+    "tests/test_merge_fields.py::test_only_changed_side_is_taken_including_a_type_change[False]",
+    "tests/test_merge_fields.py::test_only_changed_side_is_taken_including_a_type_change[True]",
+    "tests/test_merge_fields.py::test_qualified_resource_values_can_be_merged_without_approving_the_inventory",
+    "tests/test_merge_fields.py::test_returned_values_are_owned_and_result_has_no_implicit_write_authority"
+  ]
 }

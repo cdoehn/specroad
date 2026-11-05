@@ -364,6 +364,10 @@
       "kind": "Owned exact-tag glossary terms, literal text selectors and explicit placeholders; no linguistic interpretation, live inventory or approval.",
       "provider": "tests/support/literal_lint.py:observe"
     },
+    "SR-FIX-MERGE-FIELDS-v1": {
+      "kind": "Explicit owned three-way JSON values, nested independent changes and actual qualified native project resource bytes. Independent expected values distinguish absence, null, bool, number, string, object and array order. The field result is neither an executable plan nor a resource deletion/publication authorization.",
+      "provider": "tests/test_merge_fields.py;tests/test_merge_inventory.py:bind_files;tests/test_project_bundle.py:project"
+    },
     "SR-FIX-MERGE-INVENTORY-v1": {
       "kind": "Owned complete native source fixtures in all four source kinds and three roles, explicit canonical MP identity, real original file hashes, native model-root oracles and individual relation observations. Inactive resources, language registry/packages, referenced archives and binary attachments remain visible. Presence patterns and source changes do not grant deletion, semantic approval or publication. Stored-plan forgery cases recompute self hashes; independent source reconstruction must reject them. R also covers missing dependencies, null/absence, empty payloads, duplicate relation identity, order-independent relation identity and qualified immutable original/navigation bindings.",
       "provider": "tests/test_merge_inventory.py:bind_files,row_for;tests/test_merge_sources.py:sources,read_only_sources;tests/test_project_bundle.py:project,baseline_project;tests/test_merge_inventory_right.py;tests/support/legacy_manifest.py:migrated"
@@ -963,6 +967,7 @@
     "SR-FIX-LANGUAGE-REGISTRY-v1",
     "SR-FIX-LEGACY-MANIFEST-v1",
     "SR-FIX-LITERAL-LINT-v1",
+    "SR-FIX-MERGE-FIELDS-v1",
     "SR-FIX-MERGE-INVENTORY-v1",
     "SR-FIX-MERGE-SOURCES-v1",
     "SR-FIX-MIGRATION-GRAPH-v1",

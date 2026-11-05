@@ -25196,6 +25196,24 @@
     "tests/test_merge_inventory_right.py::test_stored_inventory_is_rebuilt_from_each_native_source_kind[baseline]",
     "tests/test_merge_inventory_right.py::test_stored_inventory_is_rebuilt_from_each_native_source_kind[bundle]",
     "tests/test_merge_inventory_right.py::test_stored_inventory_is_rebuilt_from_each_native_source_kind[git]",
-    "tests/test_merge_inventory_right.py::test_stored_inventory_is_rebuilt_from_each_native_source_kind[local]"
+    "tests/test_merge_inventory_right.py::test_stored_inventory_is_rebuilt_from_each_native_source_kind[local]",
+    "tests/test_merge_fields.py::test_array_order_is_preserved_without_a_guessed_set_union",
+    "tests/test_merge_fields.py::test_conflicts_keep_exact_three_observations_and_block_target_access",
+    "tests/test_merge_fields.py::test_deletions_preserve_disjoint_edits_and_do_not_create_null_fields",
+    "tests/test_merge_fields.py::test_equivalent_json_numbers_and_object_order_are_not_conflicts",
+    "tests/test_merge_fields.py::test_identical_target_changes_do_not_conflict[0]",
+    "tests/test_merge_fields.py::test_identical_target_changes_do_not_conflict[False]",
+    "tests/test_merge_fields.py::test_identical_target_changes_do_not_conflict[None]",
+    "tests/test_merge_fields.py::test_identical_target_changes_do_not_conflict[]",
+    "tests/test_merge_fields.py::test_identical_target_changes_do_not_conflict[null]",
+    "tests/test_merge_fields.py::test_identical_target_changes_do_not_conflict[target5]",
+    "tests/test_merge_fields.py::test_identical_target_changes_do_not_conflict[target6]",
+    "tests/test_merge_fields.py::test_independent_additions_inside_same_new_object_are_recursive",
+    "tests/test_merge_fields.py::test_missing_and_null_conflict_observations_are_different",
+    "tests/test_merge_fields.py::test_nested_disjoint_edits_and_additions_keep_both_sides",
+    "tests/test_merge_fields.py::test_only_changed_side_is_taken_including_a_type_change[False]",
+    "tests/test_merge_fields.py::test_only_changed_side_is_taken_including_a_type_change[True]",
+    "tests/test_merge_fields.py::test_qualified_resource_values_can_be_merged_without_approving_the_inventory",
+    "tests/test_merge_fields.py::test_returned_values_are_owned_and_result_has_no_implicit_write_authority"
   ]
 }
