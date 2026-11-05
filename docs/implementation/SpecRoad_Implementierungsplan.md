@@ -34,6 +34,53 @@ Produktfreigaben und die Grenzen aus 2.4.1/2.4.2/2.4.4 bleiben unverändert.
 Dieser Plan ändert keine alten Aufträge, Antworten, Blockaden oder
 Laufzeitdaten und ist keine Start-/Resume-Anweisung.
 
+## Korrekturbundle 613 — Auditoptionen im CLI-Vertrag, Rest 17.h.W/R/C
+
+Maßgeblich ist das nativ geprüfte Fehler-Result
+`specroad-apply_Result_220901_1105_daf9f3.zip`, SHA-256
+`c51b2c8e5f7796a8e2114fd8187e84147f08b271c840e1e8a45a5c8cd91b0baa`.
+Seine vollständige Bindung lautet repo_id
+`a33ed6cf-0a97-4b73-b11a-d4239e7a2145`, HEAD
+`6602f56ad8990bbf0eebc694be2e9184d36e8c56`, Fingerprint
+`6327c14ed56da917`, Algorithmus `patchharbor-state-v1`.
+
+Das eigenständige Gate von MERGE-RESOLUTION-612 bestand mit 6955 Tests;
+der Klärungscommit ist der oben gebundene HEAD und bleibt erhalten.
+17.h.W scheiterte vor seinem Commit mit einem Fehler und 8027 bestandenen
+Tests. Der erhaltene Arbeitsstand ist vollständig der angekündigte W-Stand.
+Der bestätigte Produktfortschritt bleibt damit 714/900, zuletzt 17.g.C;
+die vorbereiteten W-Checkboxen sind noch kein erfolgreicher Produktcommit.
+
+Ursache ist die allgemeine Erwartung in
+`DescriptionRobustnessTests.test_current_handlers_reject_work_and_write_options_before_effects`:
+Sie verbot `--actor-id` pauschal auch für `merge.resolve`. Der bereits
+committete Vertrag 10.15.5 verlangt dort ausdrücklich Actor-/UTC-Auditdaten
+für einen deklarativen Plan; diese erteilen keine Schreib- oder Reviewbefugnis.
+Die Korrektur ergänzt genau diesen Befehlsfall im bestehenden Verhaltenstest:
+Actor-/Zeitoptionen sind Pflicht, die Klasse bleibt plan_output/input_read,
+ohne Writer-Lock, Projektpflicht, Schreibpfade oder externen Work-Zustand.
+Work-, Resume-, Request-, Dry-run-, Projekt- und Proposal-Optionen bleiben
+abgewiesen; alle bestehenden Sperren der übrigen Befehle bleiben unverändert.
+Produktcode, normative Spec und Abnahmekriterien werden nicht geändert.
+
+Diese normale Korrektur führt sämtliche offenen IDs und Rollen des Plans
+`a53ffe02d5aa80b49e33829688aead556e7b8057145593ae23755a87b69ecd40`
+vollständig fort: 17.h.W, 17.h.R und 17.h.C, jeweils implementation.
+Kein erneuter Klärungscommit, keine neue Detailentscheidung oder Budgetänderung.
+Die Vorherbytes und der komplette erhaltene W-Umfang werden neu an das
+Fehler-Result gebunden. W startet erneut in derselben N=3-Gruppe 1.
+Erst nach erfolgreichem eigenem Gate und Commit wird jeweils R bzw. C
+ausgebracht. Ihre unveränderten fachlichen Umfänge und die strukturelle
+R/C-Trennung bleiben erhalten; kein Endstand wird vorab installiert.
+
+Die vollständige Description-Regressionsdatei und alle ursprünglichen
+Pflichtdateien bleiben in jedem zugehörigen Apply-Gate ungefiltert enthalten.
+Testidentitäten und dauerhafte Nummern werden nicht geändert. Dev führt
+nur Syntaxprüfung, reine Collection und native Paket-/Rekonstruktionsprüfung
+aus, keine Verhaltenstests. Der jeweilige Zielzähler 715/716/717 und die
+Abschluss-Bundlenummer 613 werden erst mit dem entsprechenden erfolgreichen
+Apply-Commit wirksam. 17.i–17.l sowie die Gesamtfreigabe von M17 bleiben offen.
+
 ## MERGE-RESOLUTION-612 — auditierte Auflösung und vollständiger Schritt 17.h
 
 Autorität: SPECROAD-DECISION-1, 2.4.3.1 und aktueller Vertrag 4 mit
@@ -69,6 +116,49 @@ explizite Werte; R härtet manipulierte Ketten, Quellenwechsel, ungültige Werte
 und sichere Eingaben; C trennt passive Werte von quellengebundener Auflösung.
 17.i–17.l bleiben offen. Kein Scope, Sicherheitsgate, Kompatibilitätsvertrag,
 Review, Budget oder historischer Nachweis wird geändert.
+
+## Bundle 612 — vollständiger Commitzielstand 17.h.W
+
+Technische Basis: nativ geprüftes Result `specroad-apply_Result_212633_1105_4a12a2.zip`,
+SHA-256 `735c6efa948bbedf0cacb8ff3f49d387b9759726396850d798a4734c1ac28ff6`, sauberer HEAD
+`5f0044d603ae5d7eb4f8bbe9293b1b66015920fc`, Fingerprint `7c9d2a24e397e0e5`.
+Der erste eigenständig gegatete Commit MERGE-RESOLUTION-612 schließt nur die
+autorisierte Detailvertragslücke 10.15.5. Anschließend folgen echte 17.h.W/R/C-
+Stände; vor jeder Stage laufen deren eigene Pflichtauswahl und N=3-Gruppe.
+
+Dieser Zielstand enthält 715/900 und danach `17.h.R`. Zähler und
+Checkboxen werden erst nach seinem erfolgreichen Apply-Gate mit echtem Commit
+wirksam. Die Vorbereitung behauptet keine ausgeführten Verhaltenstests.
+
+W liefert die gesamte Einzelauflösung einschließlich echter CLI und
+strukturierter Requests: take ours/theirs/base sowie explizites kanonisches
+JSON werden auf einen gebundenen Konflikt angewendet. Unveränderter Katalog,
+explizite Actor-/UTC-Daten, Hashkette, erwartete Eingabeplan-SHA und erneute
+native Quellprüfung binden die Entscheidung. Nur die zugehörige deklarative
+Zielwertprojektion und Restliste ändern sich; kein Projektwrite entsteht.
+Relationen behalten ihren Besitzer, Sammlungen ihre ganzen Schlüsselwerte,
+Binärübernahmen ihre exakten Quellbelege. Schutzkonflikte bleiben geschützt.
+
+R vervollständigt falsche/fehlende/mehrfache Auswahl, Audit- und Projektions-
+manipulation, Quellwechsel und sichere Dateieingaben. Lokale Entscheidungs-
+fehler scheitern bereits vor dem Öffnen sonst irrelevanter Quelldateien.
+Tests verwenden tatsächlich qualifizierte lokale, Git-, Baseline- und Bundle-
+Quellen und wirkliche späte Dateiänderungen; keine Herkunft oder erfolgreiche
+Validierung wird erfunden. C extrahiert ausschließlich passive Werte/Parser
+aus der Quellprüfung. Alle Funktions-/Klassen-ASTs und W-/R-Testbytes bleiben.
+
+Die vollständige 17.h-CLI gibt ihren Plan über den regulären Ausgabekanal aus.
+Es gibt keine Planüberschreibung, Writer-Locks, Request-Receipts oder Freigabe.
+17.i–17.l bleiben ausdrücklich offen: Metadaten, vollständige Zielvalidierung,
+Transaktionsveröffentlichung und Abschlussintegration. Semantisch ungültige
+JSON-Kandidaten erhalten keine Zielgültigkeitsbehauptung oder Write-Befugnis.
+Eine leere Restkonfliktliste ersetzt keines dieser späteren Gates.
+
+Neue/geänderte Testdateien sowie native Quellen-, Merge-, Audit-, Katalog-,
+Schema-, Bootstrap- und CLI-Vertragsregressionen sind ungefilterte Pflicht-
+auswahl jeder zugehörigen Apply-Stage. Dev prüft nur Syntax, reine Collection
+und native Paket-/Rekonstruktionsbindung. Kein Dienst-/CI-Start, keine
+Vollsuite-, M17-, Produkt- oder menschliche Reviewabnahme.
 
 ## Korrekturbundle 611 — vollständiges Befehlsinventar, Rest 17.g.C
 
@@ -3915,9 +4005,9 @@ Kein offener Produktplanschritt wird durch diese Testoptimierung abgeschlossen.
 ```yaml
 plan_revision: 107
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 714
-last_completed_plan_commit: 17.g.C
-next_plan_commit: 17.h.W
+implementation_plan_commits_completed: 715
+last_completed_plan_commit: 17.h.W
+next_plan_commit: 17.h.R
 last_completed_numbered_bundle: 611
 implementation_state: in_progress
 audit_followup_status: closed
@@ -38698,7 +38788,7 @@ Plattform-/Releasefreigaben werden dadurch nicht stillschweigend erteilt.
 
 #### 17.h.W – Let it Work
 
-- [ ] **17.h.W** · Position **715/900** · Voraussetzung: `17.g.C`.
+- [x] **17.h.W** · Position **715/900** · Voraussetzung: `17.g.C`.
 **Exakte Commit-Message:** `17.h.W feat(merge): Explizite auditierte Konfliktauflösung aufbauen`
 
 **Umsetzung:** take ours/theirs/base und expliziten gültigen JSON-Wert an genau einen gebundenen Konflikt anwenden.

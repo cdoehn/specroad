@@ -3,25 +3,25 @@
   "expected_diagnostics": [],
   "expected_exit_codes": [],
   "fixture_ids": [
-    "SR-FIX-MERGE-CONFLICTS-v1"
+    "SR-FIX-MERGE-CONFLICTS-v1",
+    "SR-FIX-MERGE-RESOLUTION-v1"
   ],
   "implementation_status": "partial",
   "json_pointers": [],
   "method": "automated_behavior",
   "open_items": [
-    "Successful execution evidence is produced only by Apply; the prepared tests were not run in Dev.",
-    "17.h–17.l audited resolutions, final merge metadata/invariants, writer and completion report remain open.",
-    "Stored CLI display explicitly reports source_validation=not_revalidated; current source truth requires the native read gate."
+    "Successful execution evidence belongs to the stage-specific Apply run; zero behavior tests ran in Dev.",
+    "17.i–17.l must still integrate merge metadata, full semantic target validation, publication and final report; no merge write is authorized by this resolution plan."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Merge-Plan, Konfliktauflösungen und Abschlussbericht MÜSSEN versionierte JSON-Formate besitzen.",
-    "scope": "17.g and 10.15.4: native source-bound merge-conflicts-v1 with every observed conflict, stable addresses, explicit three-way presence/value domains, complete source observations, direct relation impact and guarded allowed resolutions. Public merge conflicts CLI and structured request inspect a stored plan with source_validation=not_revalidated; native read_merge_conflicts rebuilds from current original sources and explicit history. R rejects rehashed missing/injected/modified conflicts at the native gate and contradictory stored values; missing/null, whole collections, binary zero bytes, source currentness and secure CLI I/O are covered. C is AST-preserving value/parser extraction. Audit resolution, full merge metadata, target validation and publication remain pending; no requirement-wide successful execution or final merge plan/report is claimed."
+    "scope": "17.g/10.15.4 original source-bound conflict catalogue remains intact. 17.h/10.15.5 adds merge-resolutions-v1 and a real merge.resolve CLI/structured request. Exactly one unresolved conflict receives an explicitly selected take or canonical JSON candidate, actor, UTC and chained hash. The original catalogue and all preceding events/targets remain canonical-byte-identical; derived targets address only that conflict. The expected whole input hash, rebuilt original catalogue and current native sources are required before acceptance. Explicit source descriptors never turn stored paths or actor data into authorization. All target/metadata/publication gates stay pending. merge.conflicts accepts either stored form but still reports not_revalidated. C separates passive resolution values from source verification with identical function/class ASTs and unchanged W/R test bytes. No full-suite, final M17 or successful pre-Apply execution is claimed."
   },
   "preconditions": [
-    "Original sources are natively qualified and provider observations describe explicitly known synthetic creation histories.",
-    "Stored-plan inspection never opens embedded paths or claims original-source revalidation.",
-    "Every target state requires its own successful Apply gate before its commit; Dev ran zero behavior tests."
+    "All native sources represent complete qualified projects with explicit known synthetic histories.",
+    "The caller selects the whole expected input-plan hash and supplies actor and UTC; hashes are not authentication.",
+    "Every target stage needs its own successful Apply gate and commit; Dev executes no behavior tests."
   ],
   "primary_verification_id": "SR-VER-0026",
   "required_environment": {
@@ -37,10 +37,10 @@
   },
   "specification_sha256": "29178f3debf8c4f7a5bd14c9bbb2fd150e1a9024678576496d67a30251e06dd2",
   "steps": [
-    "Check all conflicting leaves, original values, source observations and deterministic plan/source/history-bound IDs.",
-    "Check explicit absent versus JSON null, known direct impact and no Take bypass for protection conflicts.",
-    "Invoke merge conflicts through real CLI and structured request; check JSON result and unchanged files, not terminal layout.",
-    "Rebuild the stored catalogue from native sources and reject forged or omitted conflict branches."
+    "Resolve one bound conflict using each permitted take or explicit canonical JSON including null; compare exact values and unchanged catalogue/other decisions.",
+    "Verify audit predecessor/event/list hashes, stable conflict identity and sorted declarative target/rest projections without write authority.",
+    "Invoke the real CLI and structured request against native sources and inspect both original/resolved plans with their honest source-validation states.",
+    "Preserve relation identity/owner, collection keys, immutable evidence protection and exact binary byte bindings."
   ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0375",
@@ -98,6 +98,31 @@
     "tests/test_merge_conflicts_right.py::test_native_reader_rejects_rehashed_forgery_not_just_broken_hashes[observation]",
     "tests/test_merge_conflicts_right.py::test_native_reader_rejects_rehashed_forgery_not_just_broken_hashes[source]",
     "tests/test_merge_conflicts_right.py::test_native_reader_rejects_rehashed_forgery_not_just_broken_hashes[value]",
-    "tests/test_merge_conflicts_right.py::test_relation_positions_do_not_turn_into_common_field_pointers"
+    "tests/test_merge_conflicts_right.py::test_relation_positions_do_not_turn_into_common_field_pointers",
+    "tests/test_merge_resolution.py::test_binary_take_keeps_exact_original_hash_and_size_without_writing",
+    "tests/test_merge_resolution.py::test_collections_keep_whole_stable_keyed_value",
+    "tests/test_merge_resolution.py::test_explicit_json_value_is_a_declarative_candidate_with_target_gate_pending[0]",
+    "tests/test_merge_resolution.py::test_explicit_json_value_is_a_declarative_candidate_with_target_gate_pending[False]",
+    "tests/test_merge_resolution.py::test_explicit_json_value_is_a_declarative_candidate_with_target_gate_pending[None]",
+    "tests/test_merge_resolution.py::test_explicit_json_value_is_a_declarative_candidate_with_target_gate_pending[explicit]",
+    "tests/test_merge_resolution.py::test_explicit_json_value_is_a_declarative_candidate_with_target_gate_pending[value4]",
+    "tests/test_merge_resolution.py::test_explicit_json_value_is_a_declarative_candidate_with_target_gate_pending[value5]",
+    "tests/test_merge_resolution.py::test_missing_member_cannot_be_selected_but_null_is_an_explicit_value",
+    "tests/test_merge_resolution.py::test_native_cli_and_structured_request_produce_identical_bound_plan[base]",
+    "tests/test_merge_resolution.py::test_native_cli_and_structured_request_produce_identical_bound_plan[ours]",
+    "tests/test_merge_resolution.py::test_native_cli_and_structured_request_produce_identical_bound_plan[theirs]",
+    "tests/test_merge_resolution.py::test_native_cli_and_structured_request_produce_identical_bound_plan[value]",
+    "tests/test_merge_resolution.py::test_relation_resolution_keeps_owner_identity_other_fields_and_impact",
+    "tests/test_merge_resolution.py::test_result_owns_audit_and_value_and_is_not_truthy_authority",
+    "tests/test_merge_resolution.py::test_second_decision_preserves_original_catalogue_first_event_and_other_target",
+    "tests/test_merge_resolution.py::test_strict_json_value_reader_preserves_native_value_domains[\"text\"-text]",
+    "tests/test_merge_resolution.py::test_strict_json_value_reader_preserves_native_value_domains[1-1]",
+    "tests/test_merge_resolution.py::test_strict_json_value_reader_preserves_native_value_domains[[null,1]-value4]",
+    "tests/test_merge_resolution.py::test_strict_json_value_reader_preserves_native_value_domains[false-False]",
+    "tests/test_merge_resolution.py::test_strict_json_value_reader_preserves_native_value_domains[null-None]",
+    "tests/test_merge_resolution.py::test_strict_json_value_reader_preserves_native_value_domains[{\"nested\":{\"x\":1}}-value5]",
+    "tests/test_merge_resolution.py::test_take_binds_exact_one_original_with_explicit_actor_and_time[base]",
+    "tests/test_merge_resolution.py::test_take_binds_exact_one_original_with_explicit_actor_and_time[ours]",
+    "tests/test_merge_resolution.py::test_take_binds_exact_one_original_with_explicit_actor_and_time[theirs]"
   ]
 }

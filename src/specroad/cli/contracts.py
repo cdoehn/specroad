@@ -213,6 +213,14 @@ class CommandSpec:
             and self.command_class is (CommandClass.PLAN_OUTPUT if self.command_id == 'migrate.plan' else CommandClass.READ_ONLY))
         if migration:
             normative_flags = {'--dry-run', '--as-proposal'}
+        resolution = (self.command_id == 'merge.resolve' and self.words == ('merge', 'resolve')
+            and self.command_class is CommandClass.PLAN_OUTPUT
+            and self.preflight_profile is PreflightProfile.INPUT_READ
+            and self.effect_scope is EffectScope.EXTERNAL_OUTPUT
+            and not self.requires_project and not self.requires_git and not self.requires_write_paths)
+        if resolution:
+            # Explicit actor data belongs to the immutable decision, never a write grant.
+            normative_flags = {'--request-id', '--dry-run', '--as-proposal'}
         if self.protocol is not None and self.protocol.lock_kind == 'writer' and self.command_class is not CommandClass.NORMATIVE_WRITE:
             raise CommandUsageError('Writer locking requires a normative command')
         if restore:

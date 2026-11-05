@@ -16,3 +16,8 @@ from .lifecycle import inspect_merge_lifecycle, LifecycleMergeResult
 
 from .conflicts import MergeConflicts, build_merge_conflicts, parse_merge_conflicts, read_merge_conflicts
 __all__ += ['MergeConflicts', 'build_merge_conflicts', 'parse_merge_conflicts', 'read_merge_conflicts']
+
+from .resolutions import (MergeResolutions, parse_merge_resolutions, parse_resolution_plan,
+                          parse_resolution_value, read_merge_resolutions, resolve_merge_conflict)
+__all__ += ['MergeResolutions', 'parse_merge_resolutions', 'parse_resolution_plan',
+            'parse_resolution_value', 'read_merge_resolutions', 'resolve_merge_conflict']

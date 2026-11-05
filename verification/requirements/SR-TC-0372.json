@@ -2,19 +2,26 @@
   "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [],
   "expected_exit_codes": [],
-  "fixture_ids": [],
-  "implementation_status": "open",
+  "fixture_ids": [
+    "SR-FIX-MERGE-RESOLUTION-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [],
-  "method": "pending",
+  "method": "automated_behavior",
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Successful execution evidence belongs to the stage-specific Apply run; zero behavior tests ran in Dev.",
+    "17.i–17.l must still integrate merge metadata, full semantic target validation, publication and final report; no merge write is authorized by this resolution plan."
   ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "`specroad merge resolve <MERGE-PLAN> --conflict <ID> --take ours\\|theirs\\|base` sowie `--value <JSON>` MUSS eine explizite, auditierte Auflösung binden und den restlichen Plan unverändert erhalten.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "17.g/10.15.4 original source-bound conflict catalogue remains intact. 17.h/10.15.5 adds merge-resolutions-v1 and a real merge.resolve CLI/structured request. Exactly one unresolved conflict receives an explicitly selected take or canonical JSON candidate, actor, UTC and chained hash. The original catalogue and all preceding events/targets remain canonical-byte-identical; derived targets address only that conflict. The expected whole input hash, rebuilt original catalogue and current native sources are required before acceptance. Explicit source descriptors never turn stored paths or actor data into authorization. All target/metadata/publication gates stay pending. merge.conflicts accepts either stored form but still reports not_revalidated. C separates passive resolution values from source verification with identical function/class ASTs and unchanged W/R test bytes. No full-suite, final M17 or successful pre-Apply execution is claimed."
   },
-  "preconditions": [],
+  "preconditions": [
+    "All native sources represent complete qualified projects with explicit known synthetic histories.",
+    "The caller selects the whole expected input-plan hash and supplies actor and UTC; hashes are not authentication.",
+    "Every target stage needs its own successful Apply gate and commit; Dev executes no behavior tests."
+  ],
   "primary_verification_id": "SR-VER-0026",
   "required_environment": {
     "declared_minimum_python": "3.10",
@@ -28,8 +35,39 @@
     "owned_temporary_files": true
   },
   "specification_sha256": "29178f3debf8c4f7a5bd14c9bbb2fd150e1a9024678576496d67a30251e06dd2",
-  "steps": [],
+  "steps": [
+    "Resolve one bound conflict using each permitted take or explicit canonical JSON including null; compare exact values and unchanged catalogue/other decisions.",
+    "Verify audit predecessor/event/list hashes, stable conflict identity and sorted declarative target/rest projections without write authority.",
+    "Invoke the real CLI and structured request against native sources and inspect both original/resolved plans with their honest source-validation states.",
+    "Preserve relation identity/owner, collection keys, immutable evidence protection and exact binary byte bindings."
+  ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0372",
-  "test_ids": []
+  "test_ids": [
+    "tests/test_merge_resolution.py::test_binary_take_keeps_exact_original_hash_and_size_without_writing",
+    "tests/test_merge_resolution.py::test_collections_keep_whole_stable_keyed_value",
+    "tests/test_merge_resolution.py::test_explicit_json_value_is_a_declarative_candidate_with_target_gate_pending[0]",
+    "tests/test_merge_resolution.py::test_explicit_json_value_is_a_declarative_candidate_with_target_gate_pending[False]",
+    "tests/test_merge_resolution.py::test_explicit_json_value_is_a_declarative_candidate_with_target_gate_pending[None]",
+    "tests/test_merge_resolution.py::test_explicit_json_value_is_a_declarative_candidate_with_target_gate_pending[explicit]",
+    "tests/test_merge_resolution.py::test_explicit_json_value_is_a_declarative_candidate_with_target_gate_pending[value4]",
+    "tests/test_merge_resolution.py::test_explicit_json_value_is_a_declarative_candidate_with_target_gate_pending[value5]",
+    "tests/test_merge_resolution.py::test_missing_member_cannot_be_selected_but_null_is_an_explicit_value",
+    "tests/test_merge_resolution.py::test_native_cli_and_structured_request_produce_identical_bound_plan[base]",
+    "tests/test_merge_resolution.py::test_native_cli_and_structured_request_produce_identical_bound_plan[ours]",
+    "tests/test_merge_resolution.py::test_native_cli_and_structured_request_produce_identical_bound_plan[theirs]",
+    "tests/test_merge_resolution.py::test_native_cli_and_structured_request_produce_identical_bound_plan[value]",
+    "tests/test_merge_resolution.py::test_relation_resolution_keeps_owner_identity_other_fields_and_impact",
+    "tests/test_merge_resolution.py::test_result_owns_audit_and_value_and_is_not_truthy_authority",
+    "tests/test_merge_resolution.py::test_second_decision_preserves_original_catalogue_first_event_and_other_target",
+    "tests/test_merge_resolution.py::test_strict_json_value_reader_preserves_native_value_domains[\"text\"-text]",
+    "tests/test_merge_resolution.py::test_strict_json_value_reader_preserves_native_value_domains[1-1]",
+    "tests/test_merge_resolution.py::test_strict_json_value_reader_preserves_native_value_domains[[null,1]-value4]",
+    "tests/test_merge_resolution.py::test_strict_json_value_reader_preserves_native_value_domains[false-False]",
+    "tests/test_merge_resolution.py::test_strict_json_value_reader_preserves_native_value_domains[null-None]",
+    "tests/test_merge_resolution.py::test_strict_json_value_reader_preserves_native_value_domains[{\"nested\":{\"x\":1}}-value5]",
+    "tests/test_merge_resolution.py::test_take_binds_exact_one_original_with_explicit_actor_and_time[base]",
+    "tests/test_merge_resolution.py::test_take_binds_exact_one_original_with_explicit_actor_and_time[ours]",
+    "tests/test_merge_resolution.py::test_take_binds_exact_one_original_with_explicit_actor_and_time[theirs]"
+  ]
 }

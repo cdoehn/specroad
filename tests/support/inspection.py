@@ -85,6 +85,10 @@ def command_example_inputs(root, command):
     The Work fixture labels its synthetic build identity explicitly. No native
     model/recovery/checkpoint validator or command handler is replaced.
     """
+    if command.command_id == 'merge.resolve':
+        from .merge_resolution import example_inputs
+        yield example_inputs(root, command)
+        return
     if command.command_id == 'merge.conflicts':
         yield _merge_conflicts_example_inputs(root, command)
         return

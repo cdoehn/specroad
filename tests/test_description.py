@@ -268,6 +268,17 @@ class DescriptionRobustnessTests(unittest.TestCase):
             elif command.command_id == 'migrate.verify':
                 self.assertIn('--work-dir', accepted)
                 rejected = ('--resume', '--request-id', '--dry-run', '--actor-id', '--as-proposal')
+            elif command.command_id == 'merge.resolve':
+                # Explicit actor/time values audit the plan; they grant no write authority.
+                required = {option['flag'] for option in document['options'] if option['required']}
+                self.assertTrue({'--actor-type', '--actor-id', '--resolved-at'} <= required)
+                self.assertEqual(document['command_class'], 'plan_output')
+                self.assertEqual(document['preflight_profile'], 'input_read')
+                self.assertEqual(document['lock_kind'], 'none')
+                self.assertFalse(document['requires_project'])
+                self.assertEqual(document['write_effects'], {
+                    'scope': 'external_output', 'required_write_paths': [], 'external_work': []})
+                rejected = ('--work-dir', '--resume', '--request-id', '--dry-run', '--project', '--as-proposal')
             for flag in rejected:
                 if command.command_id == 'bundle.create' and flag == '--work-dir':
                     self.assertIn(flag, accepted)

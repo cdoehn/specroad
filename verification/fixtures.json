@@ -388,6 +388,10 @@
       "kind": "Real native complete synthetic project sources with explicit known creation events, global relation IDs, independent exact target/conflict/byte hash assertions and read-only source checks. Origin observations are caller inputs, never invented production ancestry or human review. Explicit removal, owner/birth-metadata checks, qualified legacy navigation, source mutation and malformed-input boundaries are included.",
       "provider": "tests/test_merge_relations.py;tests/support/merge_relations.py;tests/test_project_bundle.py:project;tests/test_merge_inventory.py:bind_files;tests/test_merge_relations_right.py;tests/support/legacy_manifest.py:migrated"
     },
+    "SR-FIX-MERGE-RESOLUTION-v1": {
+      "kind": "Native complete synthetic projects and explicit known synthetic origin/audit data; take ours/theirs/base, explicit canonical JSON, immutable chained decisions and field/value projections through API and real CLI. No validator or successful operation outcome is fabricated.",
+      "provider": "tests/test_merge_resolution.py;tests/support/merge_resolution.py;tests/support/merge_lifecycle.py;tests/support/merge_relations.py;tests/test_merge_inventory.py:bind_files;tests/test_project_bundle.py:project"
+    },
     "SR-FIX-MERGE-SOURCES-v1": {
       "kind": "Owned synthetic complete native projects, exact archived records/objects, binary attachments, initialized language packages, verified full ZIPs and physical Git-object stores. Each source kind occupies each merge role; native roots and complete original byte inventories are independent oracles. Read-only Git commands and unchanged branch/index/worktree are observed. No authentication, atomic snapshot, full semantic validation or merge publication is claimed. R adds foreign identities, unsupported schemas, verified partials and retained extraction proofs, selected Baselines, historical effective profile chains, legacy originals, unsafe/missing Git blobs and changes during three-source acquisition.",
       "provider": "tests/test_merge_sources.py:sources,read_only_sources;tests/test_project_bundle.py:project,baseline_project;tests/test_merge_sources_right.py:archived;tests/support/legacy_manifest.py:migrated"
@@ -989,6 +993,7 @@
     "SR-FIX-MERGE-INVENTORY-v1",
     "SR-FIX-MERGE-LIFECYCLE-v1",
     "SR-FIX-MERGE-RELATIONS-v1",
+    "SR-FIX-MERGE-RESOLUTION-v1",
     "SR-FIX-MERGE-SOURCES-v1",
     "SR-FIX-MIGRATION-GRAPH-v1",
     "SR-FIX-MIGRATION-HISTORY-v1",
