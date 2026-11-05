@@ -1,5 +1,6 @@
 """Isolated real ledger and native-container doubles, no operator data or services."""
 from unittest.mock import Mock, patch
+from hashlib import sha256
 
 from specroad_control.apply_reconcile_proof import canonical
 from specroad_control.blocked_authorization import CAPABILITY, PATH, enqueue
@@ -27,7 +28,11 @@ class BlockedAuthorizationCase(AuthorizationCase):
             assert authorize()
             answer = {'source_result_sha256': self.seed['sha256'], 'status': 'blocked',
                       'patch_sha256': '', 'message': 'Detail contract needs operator authorization.'}
+            if self.config.transport == 'app-server-proxy':
+                json_write(directory / 'dispatch.json', {'thread_id': self.thread, 'turn_id': 'synthetic-blocked-turn',
+                    'prompt_sha256': sha256(prompt.encode()).hexdigest()})
             json_write(directory / 'protocol-completion.json', {
+                **({'turn_id': 'synthetic-blocked-turn'} if self.config.transport == 'app-server-proxy' else {}),
                 'transport': self.config.transport, 'thread_id': self.thread,
                 'completed': True, 'answer': answer})
             return answer

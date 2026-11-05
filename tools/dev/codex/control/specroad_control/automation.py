@@ -172,6 +172,10 @@ class Engine(OverloadWaiting):
                     self.update(stage="uncertain", error=exc.code)
                     record("retry_decision", source_sha256=source["sha256"], decision="blocked", reason=exc.code)
                     return {"halted": True, "again": False}
+            from .blocked_authorization_history import active as active_blocked
+            if active_blocked(ledger, source['sha256']) is not None and self.codex.activity() == 'active':
+                self.update(stage=row['stage'], thread_status='active')
+                return {'halted': False, 'again': False, 'retry_after': 2}
             if not self.gate.allowed:
                 self.update(stage=row["stage"], error=None)
                 return {"halted": False, "again": False}
@@ -374,6 +378,8 @@ class Engine(OverloadWaiting):
                 return False
             self.check_retry(source, retry, ledger=ledger)
         self.exchange.assert_current(source, ledger.known_runs())
+        from .blocked_authorization import guard_dispatch
+        guard_dispatch(self, ledger, source)
         def claim():
             if request_guard is not None:
                 request_guard()
@@ -384,9 +390,11 @@ class Engine(OverloadWaiting):
         return allowed
 
     def authorize_request(self, ledger, source, directory, attempt, selected):
+        from .blocked_authorization import guard_dispatch
+        guard_dispatch(self, ledger, source)
         def guard():
-            from .blocked_authorization import guard_dispatch
-            guard_dispatch(self, ledger, source)
+            from .blocked_authorization import guard_original
+            guard_original(self, ledger, source)
             if ledger.request_contract() != selected or json_read(directory/'attempt.json') != attempt:
                 raise ControlError('request_contract_changed', 'Request authority changed during thread preflight.')
         guard()

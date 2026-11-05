@@ -91,13 +91,14 @@ class DecisionHistory:
         handoff = self.output_kind() if previous else None
         return successor_contract(previous, handoff, source, **(decision_evidence or {}))
 
-    def output_kind(self):
-        if self.request_contract() is None:
+    def output_kind(self, source_sha=None):
+        source_sha = source_sha or self.current()['sha']
+        if self.request_contract(source_sha) is None:
             return None
-        table = self.output_table(self.current()['sha'])
+        table = self.output_table(source_sha)
         key = 'source_sha' if table == 'blocked_clarification_authorizations' else 'sha'
         return self.db.execute(f'SELECT output_kind FROM {table} WHERE {key}=?',
-                               (self.current()['sha'],)).fetchone()[0]
+                               (source_sha,)).fetchone()[0]
 
     def output_table(self, source_sha):
         from .blocked_authorization_history import active

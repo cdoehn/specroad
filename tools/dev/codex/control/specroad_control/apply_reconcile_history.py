@@ -111,8 +111,9 @@ def validate_history(ledger):
                     or (blocked and old['error'] != 'dev_blocked')
                     or stable({'source': decode_object(old['source'])}) != stable({'source': chain['source']})):
                 raise ValueError
-            kind = ledger.db.execute('SELECT output_kind FROM request_contracts WHERE sha=?', (row['source_sha'],)).fetchone()
-            if kind is None or (kind[0] is not None if blocked else kind[0] not in IMPLEMENTATIONS):
+            kind = ledger.output_kind(row['source_sha'])
+            if (ledger.request_contract(row['source_sha']) is None
+                    or (kind is not None if blocked else kind not in IMPLEMENTATIONS)):
                 raise ValueError
             if not extended and (chain['original']['binding'] != chain['source']['binding']
                     or chain['resumed']['binding'] != chain['checkpoint']['binding']

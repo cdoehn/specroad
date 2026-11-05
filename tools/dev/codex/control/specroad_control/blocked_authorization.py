@@ -51,12 +51,18 @@ def evidence(engine, doc):
             or answer['source_result_sha256'] != source['sha256']
             or answer['status'] != 'blocked' or answer['patch_sha256'] != ''):
         fail('No exact terminal patchless blocked answer with its original authority.')
+    if type(attempt.get('number')) is not int:
+        fail('Attempt number must be an exact integer.')
     if engine.config.transport == 'app-server-proxy':
         dispatch = files.get('dispatch.json', {})
         if (not isinstance(terminal.get('turn_id'), str) or not terminal['turn_id']
                 or dispatch.get('turn_id') != terminal['turn_id']
                 or dispatch.get('thread_id') != engine.config.session_id):
             fail('The exact proxy turn dispatch and completion are required.')
+        from .continuation import request_prompt
+        prompt = request_prompt(attempt, source)
+        if dispatch.get('prompt_sha256') != sha256(prompt.encode()).hexdigest():
+            fail('The proxy dispatch does not bind the original request prompt.')
     return values
 
 
@@ -107,7 +113,8 @@ def enqueue(paths, result, *, source_sha256, reason):
                 for row in records(ledger):
                     if row['source_sha'] == source_sha256:
                         doc = decode(ledger, row)
-                        if doc['reason'] != reason.strip() or doc['source'] != requested:
+                        from .clarification_authorization_history import stable
+                        if doc['reason'] != reason.strip() or stable({'source': doc['source']}) != stable({'source': requested}):
                             fail('A different authorization already exists for this source.')
                         verify(engine, ledger, doc, require_unused=row['state'] == 'pending')
                         return reply(doc, completed=row['state'] == 'completed')
@@ -121,7 +128,7 @@ def enqueue(paths, result, *, source_sha256, reason):
                         or previous['clarifications_remaining'] <= 0):
                     fail('Only an ungranted V4 blocked attempt with no handoff and a positive recorded budget is eligible.')
                 retry = ledger.retry_info(source_sha256)
-                doc = {'version': 1, 'source': requested, 'scope': scope(config),
+                doc = {'version': 1, 'source': current['source'], 'scope': scope(config),
                        'config_sha256': sha256(read_private(paths.config)).hexdigest(),
                        'history_sha256': history_hash(ledger), 'previous_contract': previous,
                        'selected_contract': new_contract(previous['clarifications_remaining'], version=4),
@@ -165,6 +172,14 @@ def guard_dispatch(engine, ledger, source):
     doc = active(ledger, source['sha256'])
     if doc is not None:
         verify(engine, ledger, doc)
+
+
+def guard_original(engine, ledger, source):
+    doc = active(ledger, source['sha256'])
+    if doc is not None and (scope(engine.config) != doc['scope']
+            or sha256(read_private(engine.paths.config)).hexdigest() != doc['config_sha256']
+            or evidence(engine, doc) != doc['evidence']):
+        fail('Original authorization inputs changed at dispatch.')
 
 
 def public_status(paths):

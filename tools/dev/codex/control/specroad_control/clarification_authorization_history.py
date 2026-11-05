@@ -93,7 +93,7 @@ def validate_history(ledger):
             if (old['error'] != before['error'] or old['patch_sha'] != before['patch_sha']
                     or (before['patch_sha'] is not None and before['patch_sha'] != artifacts['patch']['sha256'])):
                 raise ValueError
-            output = ledger.db.execute('SELECT output_kind FROM request_contracts WHERE sha=?', (row['source_sha'],)).fetchone()[0]
+            output = ledger.output_kind(row['source_sha'])
             if output != ('unknown' if before['stage'] == 'waiting_result' else None):
                 raise ValueError
             if row['state'] == 'pending':
@@ -157,5 +157,7 @@ def complete(ledger, doc, actual):
 
 
 def require_no_pending(ledger):
+    from .blocked_authorization_history import require_no_pending as blocked_pending
+    blocked_pending(ledger)
     if validate_history(ledger) is not None:
         raise ControlError('clarification_authorization_pending', 'Resolve the pinned authorization before other offline work.')

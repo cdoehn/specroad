@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 100 · **Stand:** 5. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.64
+**Planrevision:** 101 · **Stand:** 5. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.64
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 Schritte und 900 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; die ausdrücklich genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wird nach 10.7.10 innerhalb von 15.l.R vorgezogen. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -34,7 +34,32 @@ Produktfreigaben und die Grenzen aus 2.4.1/2.4.2/2.4.4 bleiben unverändert.
 Dieser Plan ändert keine alten Aufträge, Antworten, Blockaden oder
 Laufzeitdaten und ist keine Start-/Resume-Anweisung.
 
-## OFF-PLAN CONTROL-BLOCKED-601 — nachträgliche ausdrückliche Klärungsfreigabe (W)
+## Korrekturbundle 602 — echte Releaseprüfung im Test, vollständiger R/C-Rest (R)
+
+Basis: natives Fehler-Result SHA-256 `27a2527111bcfcf697914297fa626f0e340482088af9221b1f3a75b5cc571e99`,
+HEAD `fb3bd6e8111c7f4d7dc621b7b2e0ac7226f98380`, dirty Fingerprint
+`04585fea6361be23`. CONTROL-BLOCKED-601.W ist nach 7.651 bestandenen
+Tests committed und wird nicht wiederholt. Der vollständige erhaltene R-Stand
+entspricht bytegenau der angekündigten R-Stage. Das R-Gate bestand 7.677 Tests;
+ein Test scheiterte vor dem R-Commit. C wurde noch nicht ausgebracht.
+
+Ursache: Der Test importierte require_release erst nach dem Fixture-Setup,
+das genau diese Funktion für die isolierten Bedienfälle ersetzt. Dadurch
+prüfte der spezielle Release-Negativtest den Ersatz statt der echten Funktion.
+Die Korrektur bindet die echte Funktion bereits beim Modulimport, wie die
+bestehenden Release-Negativtests. Der Test ruft weiterhin die produktive
+Fähigkeitsprüfung auf; nur deren externe Installations-/Receipt-Eingaben
+bleiben kontrolliert. Kein Skip, kein Xfail, keine abgeschwächte Erwartung und
+keine Änderung des Control-Produktcodes oder der normativen Spezifikation.
+
+Offene IDs, Rollen, Reihenfolge und Nachrichten bleiben CONTROL-BLOCKED-601.R
+und CONTROL-BLOCKED-601.C, jeweils implementation. R enthält den gesamten
+erhaltenen uncommitted Scope samt dieser Korrektur; C erhält die angekündigte
+rein strukturelle Bereinigung. 702/900 und 17.d.W bleiben unverändert.
+Beide Stages bekommen erneut ihr eigenes N=3-plus-vollständige-Pflichtauswahl-
+Gate. In Dev keine Verhaltenstests; dieser Text behauptet keinen Erfolg.
+
+## OFF-PLAN CONTROL-BLOCKED-601 — nachträgliche ausdrückliche Klärungsfreigabe (R)
 
 Manueller Nutzerauftrag vom 5. November 2026. Basis ist das erfolgreiche,
 saubere Result SHA-256 `810a1c0ead271a6264ff447cb8c9c02eb4b69f094b493edc217b432ed528bb63`,
@@ -3347,7 +3372,7 @@ Kein offener Produktplanschritt wird durch diese Testoptimierung abgeschlossen.
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 100
+plan_revision: 101
 implementation_plan_commits_total: 900
 implementation_plan_commits_completed: 702
 last_completed_plan_commit: 17.c.C

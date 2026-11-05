@@ -81,6 +81,11 @@ def validate_history(ledger):
         pending = [decode(ledger, row) for row in records(ledger) if row['state'] == 'pending']
         for row in records(ledger):
             decode(ledger, row)
+        if pending:
+            from .clarification_authorization_history import records as successor_records
+            from .apply_reconcile_history import records as reconciliation_records
+            if any(row['state'] == 'pending' for row in successor_records(ledger) + reconciliation_records(ledger)):
+                raise ValueError('Competing offline transition')
         if len(pending) > 1:
             raise ValueError('Competing grants')
         return pending[0] if pending else None
