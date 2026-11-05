@@ -79,11 +79,19 @@ def test_planning_work_keeps_exact_original_and_delivers_full_plan(recorded, tmp
         assert source_units > (1 if kind == 'baseline' else 0)
         assert all(task['phase'] == 'source_capture' for task in tasks[:source_units])
         assert tasks[source_units]['phase'] == 'inventory_capture'
+        assert [task['phase'] for task in tasks[-2:]] == ['qualify_plan', 'deliver_plan']
+        assert all(task['phase'] == 'inventory_capture' for task in tasks[source_units:-2])
         for completed in range(2, source_units + 2):
             result = work('resume', location, representation=representation)
             assert result.exit_code == 8, result
             assert result.continuation.claim.completed_units == completed
         capture_pending_planning_units(location, keep_last_inventory=True)
+        observed = open_restore_work(location, registry=builtin_registry()).read()
+        assert len(observed.entries('completed')) == first.continuation.claim.total_units - 3
+        assert [task['phase'] for task in observed.entries('remaining')] == [
+            'inventory_capture', 'qualify_plan', 'deliver_plan']
+        assert inventory(options['project_root']) == before
+        assert not (out / 'plans/original.json').exists()
         completed_units = (first.continuation.claim.total_units - 2,
                            first.continuation.claim.total_units - 1)
     for completed in completed_units:
@@ -120,10 +128,17 @@ def test_minimal_planning_work_resumes_every_unit_through_public_argv(recorded, 
     first = start({**planning(options, out), '--work-dir': str(location)}, 'argv')
     assert first.exit_code == 8, str(thaw(first.details))
     assert first.continuation.claim.completed_units == 1
+    tasks = open_restore_work(location, registry=builtin_registry()).read().entries('tasks')
+    assert len(tasks) == first.continuation.claim.total_units
+    assert tasks[0]['phase'] == 'source_capture'
+    assert [task['phase'] for task in tasks[-2:]] == ['qualify_plan', 'deliver_plan']
+    assert any(task['phase'] == 'inventory_capture' for task in tasks)
     for completed in range(2, first.continuation.claim.total_units):
         result = work('resume', location, representation='argv')
         assert result.exit_code == 8, result
         assert result.continuation.claim.completed_units == completed
+        assert inventory(options['project_root']) == before
+        assert not (out / 'plans/original.json').exists()
     final = work('resume', location, representation='argv')
     assert final.exit_code == 0, final
     assert thaw(final.result['data']['restore_plan']) == expected.data

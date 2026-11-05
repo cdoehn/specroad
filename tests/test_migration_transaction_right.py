@@ -96,6 +96,11 @@ def test_every_file_effect_and_ack_crash_has_one_proven_outcome(tmp_path,monkeyp
     changes=plan.data['operations'][0]['changes'];total=len(changes)
     # Fail if the real plan gains/loses a position; never silently sample it.
     assert tuple(range(total))==FILE_CHANGE_INDICES
+    assert len({row['path'] for row in changes})==total
+    assert sum(row['before_sha256'] is None for row in changes)==8
+    assert sum(row['after_sha256'] is None for row in changes)==1
+    assert sum(row['before_sha256'] is not None and row['after_sha256'] is not None
+               for row in changes)==4
     event='effect:'+str(index) if kind=='effect' else 'journal:committing:'+str(index+1)
     interrupt(root,plan,args,monkeypatch,event)
     assert observe_operational_preflight(ProjectBoundary(root))['consistency_state']!='consistent'
@@ -107,11 +112,13 @@ def test_every_file_effect_and_ack_crash_has_one_proven_outcome(tmp_path,monkeyp
     # The status was already observed above. Real recovery still requalifies
     # its inputs under the native lock; only a duplicate helper read disappears.
     complete=index+1==total
+    assert status['complete_target_verified'] is complete
     outcome=recover(root,args,action='complete' if complete else 'rollback')
     expected=planned_files(source,plan) if complete else source
     assert normative(root)==expected
     assert outcome['cleanup_completed'] and not journal_path(root,args).exists()
     assert current_journal(root,args).data['state']==('committed' if complete else 'rolled_back')
+    assert observe_operational_preflight(ProjectBoundary(root))['consistency_state']=='consistent'
 
 
 @pytest.mark.parametrize('point',['committed','receipts','archived'])

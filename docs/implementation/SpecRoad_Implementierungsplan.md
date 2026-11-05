@@ -34,7 +34,7 @@ Produktfreigaben und die Grenzen aus 2.4.1/2.4.2/2.4.4 bleiben unverändert.
 Dieser Plan ändert keine alten Aufträge, Antworten, Blockaden oder
 Laufzeitdaten und ist keine Start-/Resume-Anweisung.
 
-## Korrekturbundle 600 — gültiges Restore-Minimalfixture, vollständiger Rest (W)
+## Korrekturbundle 600 — gültiges Restore-Minimalfixture, vollständiger Rest (R)
 
 Maßgebliche Basis ist das nativ geprüfte Fehler-Result
 `specroad-apply_Result_061443_1105_a9ad3c.zip`, SHA-256
@@ -60,7 +60,7 @@ TEST-SPEED-CONTROL-599.C, jeweils implementation. Die erste Stage umfasst den
 vollständigen erhaltenen uncommitted Scope samt korrigiertem Fixture. R/C
 behalten die angekündigten eigenen Zwischenstände. Korrekturbindung und
 Vorherbytes stammen ausschließlich aus diesem Fehler-Result; kein Reset.
-Stage W ist ein Commitziel, kein vorweggenommener Apply-Erfolg.
+Stage R ist ein Commitziel, kein vorweggenommener Apply-Erfolg.
 
 Die Pflichtauswahl enthält weiter alle bisherigen 132 Regressionen sowie die
 bestehenden Dokumentrollen-Regressionsprüfungen für vollständige Projekte.
@@ -69,7 +69,7 @@ Commit; in Dev nur Syntax, Collection und native Paketvalidierung. Nummern,
 Messhistorie, Produktstand 702/900 und Folgeposition 17.d.W bleiben erhalten.
 Kein neuer Klärungscommit, kein CI-, Apply-, Watcher- oder Control-Start.
 
-## OFF-PLAN Bundle 599 — Testbeschleunigung und Control-Steuerung (W)
+## OFF-PLAN Bundle 599 — Testbeschleunigung und Control-Steuerung (R)
 
 Ausdrücklicher manueller Nutzerauftrag vom 5. November 2026. Basis ist das
 nativ geprüfte erfolgreiche saubere Result
@@ -97,7 +97,7 @@ Lokale Dev-Regeln entfernen S/N als manuelle Befehle außerhalb der Payload;
 Control ersetzt ihre Steuerungsaufgabe. Historische Promptbytes, Recovery-
 Belege, Control-Code, Dienstzustand und Testrotation N=3 bleiben unverändert.
 
-Stage W ist ein vorbereiteter Commitzielstand, kein vorweggenommener
+Stage R ist ein vorbereiteter Commitzielstand, kein vorweggenommener
 Test- oder Apply-Erfolg. Jede Stage erhält einmal die fällige gefilterte
 N=3-Gruppe plus vollständige betroffene Testdateien und relevante
 Migrations-/Capture-/Wiederanlaufregressionen. Testnummern nur anhängen,
