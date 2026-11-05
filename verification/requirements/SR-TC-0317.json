@@ -43,7 +43,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "9e696ccc49ee8510b7b9a26b2adf02dd477820ed55587bfe8e8f312c7f28c19a",
+  "specification_sha256": "1fe1ab7ff8bd66412543935ea760749fe67c08546df6fc9e29b4527048559deb",
   "steps": [
     "Record canonical projection hashes and original payload hash while retaining external identity and extension values.",
     "Read artifact/relation candidates and resolve repeated external identities to existing native owners; reject ambiguous or malformed inventories.",

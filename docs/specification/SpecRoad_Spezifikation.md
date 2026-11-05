@@ -1,26 +1,25 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.62
+## Version 0.2.63
 
 | Feld | Wert |
 |---|---|
 | Dokument-ID | `SR-SPEC-0001` |
-| Dokumentversion | `0.2.62` |
+| Dokumentversion | `0.2.63` |
 | Zielrelease | `SpecRoad Single-Repository Workbench 0.2.0` |
 | Status | **Fachlich konsolidierte Arbeitsgrundlage; technische Reviewentscheidung gesondert dokumentiert, formale Baseline-Freigabe und Produktabnahme nicht durch dieses Dokument erklärt** |
 | Stand | 5. November 2026 |
 | Sprache | Deutsch; technische Feldnamen, Enum-Werte und CLI-Kommandos Englisch |
-| Fachliche Quelle | **Diese Repositoryfassung v0.2.62 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.62 liegt mit dieser Änderung nicht vor.** |
+| Fachliche Quelle | **Diese Repositoryfassung v0.2.63 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.63 liegt mit dieser Änderung nicht vor.** |
 | Bearbeitbare Satzquelle | Diese Datei; eine spätere PDF muss denselben versionierten Inhalt wiedergeben. |
-| Vorgängerversion | Repository-Spezifikation v0.2.61 vom 4. November 2026; historische Nachweise bleiben unverändert. |
-| Prüf- und Entscheidungsgrundlage | CONTROL-RECOVERY-593: ausdrücklicher manueller Auftrag, die drei CI-Korrekturen abzunehmen und die Automatik nach belegter Recovery und tatsächlicher Timeoutweitergabe wieder zu starten. |
-| Änderungsart | Opt-in für mehrstufige native Recovery; konfigurierbare Timeoutweitergabe an den vorhandenen Watcher. Produktverträge und M16-Abschluss bleiben erhalten. |
+| Vorgängerversion | Repository-Spezifikation v0.2.62 vom 5. November 2026; historische Nachweise bleiben unverändert. |
+| Prüf- und Entscheidungsgrundlage | MERGE-INVENTORY-596: delegierte Detailfestlegung nach SPECROAD-DECISION-1 und Vertrag 4 für den vollständigen offenen Schritt 17.b. Keine persönliche Einzel- oder Produktfreigabe behauptet. |
+| Änderungsart | Versionierte vollständige Mergeinventur mit nativen Quellbindungen, expliziter Abwesenheit und unveränderten nachfolgenden Merge-/Writer-/Reviewgates. |
 
 > **Verbindlicher Quellenwechsel:** Die ausdrückliche Nutzerentscheidung REFERENCE-SOURCE-551 wird als v0.2.50 umgesetzt. Der neue Quellvertrag ist Entwurfsarbeit vom 3. November 2026, kein Nachweis eines früher existierenden Formats. Bestehende 0.2-Verträge, Transport-, Sicherheits- und Reviewgrenzen bleiben erhalten.
 
 > **Fortbestehende Arbeitsprinzipien:** Weiche Budgets führen zu sparsamer vollständiger Weiterarbeit oder gesicherter Fortsetzung über mehrere Aufrufe beziehungsweise Prompts. Es werden keine erforderlichen Arbeiten stillschweigend ausgelassen. Reale Host-, Speicher-, Berechtigungs- und Sicherheitsgrenzen bleiben wirksam.
 
 > **Freigabeabgrenzung:** Alle Requirement-IDs sind verbindliche Sollvorgaben; ihr formaler Reifegrad bleibt bis zur dokumentierten Baseline-Entscheidung `proposed`. Technische Nachweise müssen den tatsächlich geprüften Dokumenthash binden. Diese Planungsänderung erklärt weder eine PDF-Veröffentlichung noch eine Produkt- oder Baseline-Freigabe.
-
 ---
 
 
@@ -4125,6 +4124,127 @@ Das CommonMark-Kernsubset umfasst Absätze, Emphasis, Strong, Inline-Code, Fence
 
 Ein Merge-Plan bindet `base`, `ours` und `theirs` jeweils an Projekt-ID, Scope Descriptor, Modellwurzel und Herkunft. Automatische Zusammenführungen und Konflikte werden feldweise dokumentiert. Eine Konfliktauflösung ist ein unveränderbarer Planbestandteil. Der Merge erzeugt keinen Git-Commit. Die Metadaten folgen Anhang K.
 
+#### 10.15.1 Vollständige Inventur vor der semantischen Mergeplanung
+
+**Entscheidung MERGE-INVENTORY-596, delegiert gemäß SPECROAD-DECISION-1
+und 2.4.3.1, Vertrag 4.** Die folgende additive Feld-/Hashfestlegung
+konkretisiert 17.b sowie SR-REQ-0361, 0364 und 0375. Sie ändert weder die
+vier Zielklassifikationen noch die Metadatenregeln aus K.3. Die Inventur
+ist ein vollständiger lesender Planungszwischenstand, kein ausführbarer
+Change Plan. Rekursiver Merge, Identitäts-/Historienkonflikte, Auflösungen,
+Zielvalidierung, CLI und Veröffentlichung bleiben in 17.c–17.o erforderlich.
+Insbesondere DARF ein Inventurkonflikt mit noch ausstehender Fachplanung
+nicht als endgültig unauflösbarer Konflikt oder abgeschlossener Merge gelten.
+
+**Geschlossene Hülle.** Der Inventurplan enthält exakt:
+
+| Feld | Vertrag |
+|---|---|
+| `inventory_format_version` | `merge-inventory-v1`; unabhängig von der Change-Plan-Version `1.2.0` |
+| `plan_id` | ausdrücklich übergebene `MP-`-Identität mit kanonischem `random128-v1`-Token; keine implizite Zufalls- oder Uhrzeiteingabe in die Inventurberechnung |
+| `metadata_policy_version` | ausschließlich `merge-metadata-v1` |
+| `project_id`, `schema_version` | gemeinsame, nativ geprüfte Identität und unterstützte Version der drei vollständigen Quellen |
+| `source_bindings` | exakt `base`, `ours`, `theirs`, jeweils die vollständige ursprüngliche 17.a-Bindung einschließlich Provenienz, Quellinventur und nativer Modellwurzel |
+| `source_bindings_sha256` | SHA-256 der kanonischen JSON-Bytes von `source_bindings` |
+| `resources` | vollständige, eindeutig identifizierte Ressourcenzeilen nach dem folgenden Vertrag |
+| `inventory_sha256` | SHA-256 der kanonischen JSON-Bytes der gesamten geordneten `resources`-Liste; kein Modellwurzelhash |
+| `expected_target_model_root_sha256` | native Ours-Wurzel nur im vollständig bytegleichen Drei-Quellen-Fall mit gleichen nativen Modellwurzeln; sonst JSON-null, niemals ein erfundener Zielhash |
+| `ready`, `write_authorized` | jeweils ausschließlich `false`; auch eine konfliktfreie Inventur ersetzt keine Zielvalidierung, Review-/Writerfreigabe oder Apply-Bindung |
+
+Die kanonische JSON-Darstellung verwendet die bestehenden SpecRoad-
+Kanonisierungsregeln. Unbekannte Felder, doppelte JSON-Schlüssel, falsche
+Typen und unbekannte Versionen werden abgewiesen. Die vollständige
+Planbindung ist SHA-256 der kanonischen Planbytes; sie steht außerhalb
+dieser Hülle und ist daher selbstreferenzfrei. Gleiche gebundene Quellen
+und gleiche explizite Plan-ID liefern identische Planbytes. Eine andere
+Quellprovenienz darf die Planbindung ändern, ohne eine andere fachliche
+Modellwurzel zu behaupten. Keine lokale Laufzeit- oder Uhrzeitinformation
+wird zusätzlich in die fachliche Inventur aufgenommen.
+
+**Vollständige Identitäten.** Jede Zeile hat exakt `identity`, `base`,
+`ours`, `theirs`, `target_classification` und `pending_reasons`.
+`identity` enthält exakt `kind`, `id`, `version`. Erlaubte Arten sind
+`configuration`, `artifact`, `relation`, `profile`, `rule`, `mapping`,
+`language_registry`, `language_package`, `attachment` und `archive`.
+Die Konfiguration verwendet die Projekt-ID, Artefakte ihre native ID,
+Relationen ihre native `relation_id`, versionierte Ressourcen ihre native
+ID und Version, Anhänge/Archivobjekte ihren vollständigen relativen Pfad.
+Nur die fünf versionierten Arten profile/rule/mapping/language_registry/
+language_package besitzen eine nicht-null Version. Arten bleiben getrennte
+Namensräume. Die Zeilen sind nach den kanonischen JSON-Bytes ihrer Identität
+aufsteigend sortiert. Doppelte Identitäten innerhalb derselben Quelle sind
+Fehler; insbesondere wird eine doppelte Relations-ID nicht durch den
+Besitzerpfad scheinbar eindeutig gemacht. Über Quellen hinweg bleiben
+abweichende Besitzer und `id_scheme` beobachtbare Konflikte; eine spätere
+Identitätsentscheidung wird nicht vorweggenommen.
+
+Alle tatsächlichen vollständigen Quelldateien werden genau einer
+Nichtrelationszeile zugeordnet. Dazu gehören `specroad.json`, alle
+Artefaktarten einschließlich Kontrollartefakten, aktive und inaktive
+Profile/Regeln/Mappings, Registry und sämtliche vorhandenen Sprachpakete,
+Binäranhänge, gebundene Archivobjekte sowie qualifizierte Legacy-Originale
+und deren Manifest. Zusätzlich wird jede in den nativen Artefakten
+beobachtete Relation einzeln aufgenommen. Implizite Core-Profildaten bleiben
+über die native Modell-/Profilbindung gebunden; dafür werden keine
+scheinbaren Quelldateien erfunden. Transportreceipts, Git, Cache und andere
+Betriebsdaten bleiben nach den vorhandenen nativen Quellverträgen außerhalb
+des normativen Scopes. Es gibt keine auf Artefakte verkürzte Ersatzinventur.
+
+**Drei Anwesenheitsbelege je Zeile.** Jede Rolle enthält exakt `state`,
+`path`, `pointer`, `size`, `byte_sha256`, `value_sha256`, `value_domain`,
+`owner_id`, `id_scheme`, `storage_class`. Bei `state=absent` sind alle
+anderen Felder null; dies bedeutet ausschließlich Nichtvorkommen in der
+bereits vollständig qualifizierten Quelle. Bei `state=present` sind:
+
+- `path` der native relative Quelldateipfad, `pointer` die leere Zeichenfolge
+  für eine Datei oder `/relations/<Index>` für eine Relation;
+- `size` und `byte_sha256` Länge und SHA-256 der unveränderten ganzen
+  Quelldatei, auch bei einer darin enthaltenen Relation;
+- `value_sha256` der kanonische JSON-Hash mit `value_domain=json-v1`, bei
+  Anhängen, Archivobjekten und Registry der Rohbytehash mit `bytes-v1`;
+  Relationen verwenden die vorhandene native Navigation mit
+  `relation-navigation-v1`, bei Legacy ausschließlich deren qualifizierte
+  Projektion und unveränderte Original-/Manifestbindung;
+- `owner_id` die Artefakt-ID einer Relation, sonst null; `id_scheme` die
+  native Artefakt-/Relationskennung, bei anderen Ressourcen null;
+- `storage_class` die native Artefaktklasse `current` oder
+  `legacy_immutable`, für Relationen die Klasse ihres Besitzers, bei anderen
+  Dateien `current`. Dies erteilt keine neue Änderbarkeitserlaubnis.
+
+Fehlende Pflichtdateien, fehlende referenzierte Anhänge/Objekte, unbekannte
+Quelldateien, manipulierte Hashes, Partialquellen oder während der Erhebung
+veränderte Eingaben erzeugen einen Fehler, keine `absent`-Beobachtung.
+Abwesenheit wird insbesondere niemals in eine Löschoperation umgewandelt.
+Eine bewusste Löschung benötigt die späteren expliziten Merge-/Konflikt-
+und Change-Plan-Verträge; diese Inventur bietet keine Löschfreigabe an.
+
+**Vorläufige Zielklassifikation.** In dieser Inventurstufe erhält eine
+Ressource `unchanged_ours` mit leerem `pending_reasons` genau dann, wenn
+alle drei Rollen vorhanden und gleich sind. Bei Dateien bedeutet gleich:
+gleicher Pfad, Rohbytehash, Wertdomäne, `id_scheme` und Speicherklasse.
+Bei Relationen werden stattdessen nativer Relationswerthash, Besitzer,
+`id_scheme` und Speicherklasse verglichen; bloß andere Arraypositionen
+oder andere Felder der Besitzerdatei ändern die Relationsidentität nicht.
+Alle anderen Zeilen haben vorläufig `conflict` und
+`pending_reasons=["semantic_planning_required"]`; sobald mindestens eine
+Rolle fehlt, folgt zusätzlich `"absence_not_deletion"` als zweiter Eintrag.
+`adopt_existing` und `combined` bleiben die bestehenden zulässigen
+Endklassifikationen, werden aber erst durch die dafür vorgeschriebenen
+semantischen, Identitäts-, Revisions- und Historienprüfungen vergeben.
+Diese Regel erweitert keine endgültige Konfliktklasse und ersetzt keine
+der nachfolgenden automatisch lösbaren Mergefälle aus 17.c–17.f.
+
+**Prüfung gespeicherter Inventuren.** Ein Leser nimmt zusätzlich die drei
+erneut nativ qualifizierten gebundenen Quellen entgegen, rekonstruiert die
+vollständige Inventur aus ihren Originalbytes und vergleicht sämtliche
+Felder und kanonischen Bytes. Eine behauptete Hashliste allein beweist
+weder Scope noch Abwesenheit. Fehlende oder zusätzliche Zeilen, geänderte
+Provenienz, ungebundene Quellbytes, falsche Klassifikation, Löschbehauptungen
+und manipulierte Ziel-/Freigabefelder werden auch dann abgewiesen, wenn ein
+Angreifer die selbstreferenzfreien Inventur- und Planhashes neu berechnet.
+Unbekannte frühere Inventurversionen werden nicht still migriert.
+
+
 ### 10.16 Projektbundle und partieller Umfang
 
 Ein Bundle verwendet ausschließlich die kanonischen Werte `bundle_kind=project|partial` nach Anhang E.3; `document` und `release` sind Scope-Arten, keine Werte dieses Felds. Ein `project`-Bundle enthält einen geschlossenen, nicht konfigurationsgefilterten Projektscope und bildet nach Extraktion ein normales schreibbares SpecRoad-Projekt. Es enthält standardmäßig abgeschlossene Request- und Transaktionsreceipts in einer getrennten Betriebssektion, deren Hash im Bundlemanifest gebunden ist, aber nicht in die fachliche Modellwurzel eingeht.
@@ -7294,6 +7414,7 @@ Die folgende Roadmap ist informativ und erzeugt keine Anforderungen an 0.2:
 
 | Version | Datum | Status | Änderung |
 |---|---|---|---|
+| 0.2.63 | 2026-11-05 | Delegiert gemäß SPECROAD-DECISION-1, Vertrag 4 | MERGE-INVENTORY-596: vollständiger Inventurzwischenstand mit drei Quellbindungen, getrennten Hashdomänen und Abwesenheit ohne Löschfreigabe; semantischer Merge und Produktabnahmen bleiben offen. |
 | 0.2.57 | 2026-11-03 | Ausdrücklicher Nutzerauftrag | CONTROL-SOURCE-SELECTION-566: exakte v2-Quell-SHA bei gleicher Vierfachbindung, konservativer Legacy-Erhalt und unveränderte Befugnisse. |
 | 0.2.56 | 2026-11-03 | Ausdrücklicher Nutzerauftrag | CONTROL-START-DELAY-564: konfigurierbare monotone Startwartezeit, Standard 60 Sekunden, ansprechbarer Stop/Status und unveränderte Betriebsschranken. |
 | 0.2.55 | 2026-11-03 | Delegiert gemäß SPECROAD-DECISION-1, Vertrag 4 | MIGRATION-BACKUP-561: eigener versionierter 0.1-Quellsicherungsvertrag, vollständige Originalbytebindung und unveränderte M15-/Writergrenzen. |

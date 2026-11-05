@@ -42,7 +42,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "9e696ccc49ee8510b7b9a26b2adf02dd477820ed55587bfe8e8f312c7f28c19a",
+  "specification_sha256": "1fe1ab7ff8bd66412543935ea760749fe67c08546df6fc9e29b4527048559deb",
   "steps": [
     "12.q.W: Read the selected file or bound historical Git tree for each code reference kind; compare exact original bytes, size, SHA-256 and optional Git identities. Check immutable owned snapshots and unchanged worktree/index. Keep selectors and symbol hints passive. Reject mismatched bindings, missing paths and unsafe source boundaries. Resolve implemented_by targets through the native relation validator. Exercise the public read API in fresh Core/PYZ processes without third-party modules."
   ],
