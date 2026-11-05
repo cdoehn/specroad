@@ -34,9 +34,9 @@ Produktfreigaben und die Grenzen aus 2.4.1/2.4.2/2.4.4 bleiben unverändert.
 Dieser Plan ändert keine alten Aufträge, Antworten, Blockaden oder
 Laufzeitdaten und ist keine Start-/Resume-Anweisung.
 
-## Bundle 606 — vollständiger Commitzielstand 17.e.R
+## Bundle 606 — vollständiger Commitzielstand 17.e.C
 
-Diese Stage zielt auf 707/900 und danach `17.e.C`. Checkboxen und
+Diese Stage zielt auf 708/900 und danach `17.f.W`. Checkboxen und
 Zähler gelten erst nach bestandenem eigenem Apply-Gate und echtem Commit.
 Technische Basis und delegierte Detailentscheidung folgen im Entscheidungsbeleg.
 Der optionale Klärungspräfix und jede W/R/C-Stage bleiben getrennte Zustände.
@@ -3629,10 +3629,10 @@ Kein offener Produktplanschritt wird durch diese Testoptimierung abgeschlossen.
 ```yaml
 plan_revision: 105
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 707
-last_completed_plan_commit: 17.e.R
-next_plan_commit: 17.e.C
-last_completed_numbered_bundle: 605
+implementation_plan_commits_completed: 708
+last_completed_plan_commit: 17.e.C
+next_plan_commit: 17.f.W
+last_completed_numbered_bundle: 606
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -38325,7 +38325,7 @@ Plattform-/Releasefreigaben werden dadurch nicht stillschweigend erteilt.
 
 #### 17.e.C – Make it Clean
 
-- [ ] **17.e.C** · Position **708/900** · Voraussetzung: `17.e.R`.
+- [x] **17.e.C** · Position **708/900** · Voraussetzung: `17.e.R`.
 **Exakte Commit-Message:** `17.e.C refactor(merge): Relationsmerge und Identitätskollisionen bereinigen`
 
 **Bereinigung:** Identitätsprüfung für Artefakte, Relationen und normative Ressourcen zusammenführen.
