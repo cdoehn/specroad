@@ -88,6 +88,52 @@ def _allowed(row, blocked):
     return choices
 
 
+def _stored_consistency(row):
+    """Reject contradictory passive observations without claiming source truth."""
+    identity = row['identity']
+    versioned = identity['kind'] in ('profile','rule','mapping','language_registry','language_package')
+    if versioned != (identity['version'] is not None):
+        raise ModelError('merge_conflict_resource_version')
+    expected_artifacts = ([identity['id']] if identity['kind']=='artifact' else sorted({
+        obs['owner_id'] for obs in row['observations'].values() if obs['owner_id'] is not None}))
+    if row['artifact_ids'] != expected_artifacts:
+        raise ModelError('merge_conflict_artifact_binding')
+    for role in ROLES:
+        observation, value = row['observations'][role], row['values'][role]
+        if observation['state']=='absent' and value['state']!='absent':
+            raise ModelError('merge_conflict_absent_source')
+        if observation['state']=='present':
+            if (identity['kind']=='relation') != (observation['owner_id'] is not None):
+                raise ModelError('merge_conflict_owner_binding')
+            if not row['pointer'] and value['state']!='present':
+                raise ModelError('merge_conflict_absent_resource')
+        if value['state']=='present':
+            if row['conflict_class'] in FIELD_CLASSES and value['domain']!='json-v1':
+                raise ModelError('merge_conflict_field_domain')
+            if row['conflict_class'] in BINARY_CLASSES and value['domain']!='bytes-v1':
+                raise ModelError('merge_conflict_binary_domain')
+            if value['domain']=='bytes-v1' and (row['pointer'] or value['sha256']!=observation['byte_sha256']
+                    or value['size']!=observation['size']):
+                raise ModelError('merge_conflict_byte_binding')
+            if value['domain']=='json-v1' and not row['pointer']:
+                original = value['value']
+                if identity['kind']=='relation':
+                    if (type(original) is not dict or set(original)!={'owner_id','relation'}
+                            or original['owner_id']!=observation['owner_id']):
+                        raise ModelError('merge_conflict_relation_value')
+                    original = original['relation']
+                if digest(original)!=observation['value_sha256']:
+                    raise ModelError('merge_conflict_value_binding')
+        impact = row['impact']['by_role'][role]
+        if len({edge['relation_id'] for edge in impact})!=len(impact):
+            raise ModelError('merge_conflict_impact_identity')
+    keys = row['element_keys']
+    if (row['conflict_class']=='set_element_conflict') != bool(keys) or any(type(key) in (dict,list) for key in keys):
+        raise ModelError('merge_conflict_collection_keys')
+    if row['conflict_class'] in GUARD_CLASSES+BINARY_CLASSES and row['pointer']:
+        raise ModelError('merge_conflict_resource_pointer')
+
+
 def parse_merge_conflicts(raw):
     """Inspect stored observations only; never open their claimed source paths."""
     if type(raw) is not bytes:
@@ -105,6 +151,7 @@ def parse_merge_conflicts(raw):
         raise ModelError('merge_conflicts_order')
     blocked = {jcs(row['identity']) for row in rows if row['conflict_class'] in GUARD_CLASSES}
     for row in rows:
+        _stored_consistency(row)
         if row['conflict_id'] != _identifier(document, row):
             raise ModelError('merge_conflict_identity')
         if row['artifact_ids'] != sorted(set(row['artifact_ids'])):
@@ -166,6 +213,9 @@ def _rules(value):
 def build_merge_conflicts(sources, *, plan_id, history):
     """Collect every current conflict; pending downstream gates stay explicit."""
     _plan_id(plan_id)
+    if type(history) is not dict:
+        raise ModelError('merge_history_input_required')
+    history = FieldValue._create(history).value
     observed, relations, _ = _sources(sources)
     _, history_hash = _history(history, sources, observed)
     relation_result = merge_relations(sources, history=history)
@@ -194,6 +244,8 @@ def build_merge_conflicts(sources, *, plan_id, history):
 
     guards = list(relation_result.conflicts) + list(lifecycle_result.conflicts)
     blocked = {jcs(row['identity']) for row in guards if row['kind']!='relation_content_change'}
+    unidentified = {jcs(row['identity']) for row in guards
+                    if row['kind'] in ('identity_collision','identity_history_unresolved')}
     for guard in guards:
         if guard['kind']=='relation_content_change':
             continue  # Expanded below into every individual original field branch.
@@ -209,10 +261,11 @@ def build_merge_conflicts(sources, *, plan_id, history):
             continue
         values = _originals(sources,observed,relations,key)
         old,left,right = (values[role] for role in ROLES)
-        if key in blocked:
+        if key in unidentified:
             continue
         if old is not _MISSING and (left is _MISSING or right is _MISSING):
-            add(identity,'resource_absence_unproven')
+            if key not in blocked:
+                add(identity,'resource_absence_unproven')
             continue
         if left is _MISSING or right is _MISSING:
             continue  # A single addition, not an implicit deletion.
@@ -221,6 +274,8 @@ def build_merge_conflicts(sources, *, plan_id, history):
             add(identity,'resource_location_conflict')
             continue
         if type(left) is bytes or type(right) is bytes or type(old) is bytes:
+            if key in blocked:
+                continue
             if identity['kind']=='archive' and any(value is not _MISSING and value!=left for value in values.values()):
                 add(identity,'immutable_original_change')
             elif left!=right and old!=left and old!=right:

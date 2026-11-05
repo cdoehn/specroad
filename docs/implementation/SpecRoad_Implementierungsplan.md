@@ -34,6 +34,52 @@ Produktfreigaben und die Grenzen aus 2.4.1/2.4.2/2.4.4 bleiben unverändert.
 Dieser Plan ändert keine alten Aufträge, Antworten, Blockaden oder
 Laufzeitdaten und ist keine Start-/Resume-Anweisung.
 
+## Korrekturbundle 610 — gültige Konfigurationsquelle, vollständiger Rest 17.g.R/C
+
+Maßgeblich ist das nativ geprüfte Fehler-Result
+`specroad-apply_Result_201242_1105_4dacd0.zip`, SHA-256
+`bf0be7d5f296df86be0872293bc747003b65f896f6adeb65873c4d870845149b`,
+HEAD `100680afb336412f94cb15068196ba4ec31fa1c1` und Dirty-Fingerprint
+`2d6b16c8e4bdcaaa`. 17.g.W wurde nach 7610 bestandenen
+Tests erfolgreich committed. Der Klärungscommit MERGE-CONFLICTS-608 und
+dieser W-Commit bleiben erhalten; bestätigt sind 712/900 und 17.g.W.
+Die folgenden Abschnitte zu 608/609 dokumentieren die historische Grundlage.
+Es gibt weder eine neue Klärung noch eine Budget- oder Specänderung.
+
+17.g.R scheiterte mit einem Fehler und 7667 bestandenen Tests. Die Fixture
+von `test_collection_conflict_keeps_whole_values_and_stable_keys` entfernte
+in ours die Dimension platform, ließ aber selection.platform=linux stehen.
+Die native Quellqualifizierung wies diesen widersprüchlichen Datensatz mit
+unknown_dimension ab, bevor der eigentliche Collection-Merge geprüft wurde.
+Anhang I verlangt bereits ausschließlich deklarierte Auswahlwerte;
+der bestehende Konfigurationsvalidator bleibt vollständig erhalten.
+
+Die Korrektur entfernt in derselben synthetischen Variante auch die Auswahl.
+Base und theirs sowie alle bisherigen fachlichen Oracles bleiben erhalten:
+genau ein Konflikt an /dimensions, stabiler Schlüssel platform, Klasse
+set_element_conflict und die vollständigen drei originalen Dimensionslisten.
+Weder native Quellqualifizierung noch Parser, Hashes, Konfliktumfang oder
+Erwartungswerte werden durch Mocks, Sonderfreigaben oder Filter abgeschwächt.
+Die zusätzlichen Konfigurationswert-Regressionsdateien sichern gültige leere
+Konfiguration und die unveränderte Ablehnung unbekannter Dimensionen.
+
+Der erhaltene R-Arbeitsstand ist die vollständige Vorherbasis. Genau die
+noch offenen IDs 17.g.R und 17.g.C mit Rolle implementation folgen in
+derselben Reihenfolge. R behält die vollständige angekündigte Härtung;
+C extrahiert weiterhin nur den passiven Datenvertrag mit unveränderten
+Funktions-/Klassen-ASTs und identischen R-Testbytes. Keine Wiederholung
+erfolgreicher Commits und kein vorab installierter C-Endstand.
+
+Vorbereiteter Commitzielstand dieser Stage: 17.g.R, 713/900, danach
+`17.g.C`. Zähler und Checkboxen werden erst nach dem eigenen
+erfolgreichen Apply-Gate mit echtem Commit wirksam. Jede Stage erhält
+die gefilterte fällige N=3-Gruppe plus alle bisherigen Pflichtdateien,
+die gesamte korrigierte Testdatei und die genannten Konfigurationsregressionen.
+Dev führt keine Verhaltenstests aus; Syntax, Collection und native
+Paketprüfung sind keine Verhaltensabnahme. 17.h–17.l und die endgültige
+M17-Abnahme bleiben offen. Kein CI-, Apply-, Watcher- oder Control-Start;
+keine lokale Konfiguration, Zugangsdaten oder Session-IDs in der Payload.
+
 ## Korrekturbundle 609 — Bootstrap und native CLI-Beispiele, Rest 17.g.W/R/C
 
 Maßgeblich ist das nativ geprüfte Fehler-Result
@@ -72,8 +118,8 @@ Pflichttests bleiben enthalten; die vollständigen betroffenen Testdateien
 kommen hinzu. Jede Stage hat ihr eigenes gefiltertes N=3-plus-Pflichtgate
 vor dem Commit. Der W/R/C-Endstand wird nicht vorab installiert.
 
-Vorbereiteter Zielstand dieser Stage: 17.g.W, 712/900, danach
-`17.g.R`. Zähler und Checkboxen werden nur durch ihr eigenes
+Vorbereiteter Zielstand dieser Stage: 17.g.R, 713/900, danach
+`17.g.C`. Zähler und Checkboxen werden nur durch ihr eigenes
 erfolgreiches Apply-Gate mit Commit wirksam. Dev führt keine Verhaltenstests
 aus; Syntax, reine Collection und native Paketprüfung sind keine Abnahme.
 17.h–17.l, endgültige M17-Abnahme und Produktfreigabe bleiben offen.
@@ -115,7 +161,7 @@ keine Auflösung, Metadatenberechnung, Zielvalidierung oder Publikation wird
 als fertig behauptet. Dev führt keine Verhaltenstests aus. Keine Änderung
 von Control, lokalen Betriebsdaten, Historie oder Budget.
 
-## Bundle 608 — vollständiger Commitzielstand 17.g.W
+## Bundle 608 — vollständiger Commitzielstand 17.g.R
 
 Technische Basis: nativ geprüftes Result `specroad-apply_Result_183245_1105_1fa54a.zip`,
 SHA-256 `75ab571ab381cceb5aee0518e9f736a16e06df5a13229b9f8d359afed0172078`, sauberer Commit
@@ -123,7 +169,7 @@ SHA-256 `75ab571ab381cceb5aee0518e9f736a16e06df5a13229b9f8d359afed0172078`, saub
 Der zuerst getrennt gegatete Klärungscommit MERGE-CONFLICTS-608 konkretisiert
 nach Vertrag 4 ausschließlich den fehlenden Detailvertrag 10.15.4.
 
-Ziel dieser Stage: 712/900, danach `17.g.R`. Zähler und Checkboxen
+Ziel dieser Stage: 713/900, danach `17.g.C`. Zähler und Checkboxen
 werden erst durch das eigene erfolgreiche Apply-Testgate mit echtem Commit
 wirksam. Die Vorbereitung behauptet keine bestandenen Verhaltenstests.
 
@@ -3790,9 +3836,9 @@ Kein offener Produktplanschritt wird durch diese Testoptimierung abgeschlossen.
 ```yaml
 plan_revision: 106
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 712
-last_completed_plan_commit: 17.g.W
-next_plan_commit: 17.g.R
+implementation_plan_commits_completed: 713
+last_completed_plan_commit: 17.g.R
+next_plan_commit: 17.g.C
 last_completed_numbered_bundle: 607
 implementation_state: in_progress
 audit_followup_status: closed
@@ -38547,7 +38593,7 @@ Plattform-/Releasefreigaben werden dadurch nicht stillschweigend erteilt.
 
 #### 17.g.R – Make it Right
 
-- [ ] **17.g.R** · Position **713/900** · Voraussetzung: `17.g.W`.
+- [x] **17.g.R** · Position **713/900** · Voraussetzung: `17.g.W`.
 **Exakte Commit-Message:** `17.g.R feat(merge): Konfliktobjekte und maschinenlesbarer Zugriff vervollständigen`
 
 **Vervollständigung:** Fehlender Wert bleibt von JSON-null unterscheidbar; Konfliktliste verliert keine Zweige. 10.15.4 verlangt zusätzlich geschlossene Parser, Schutzkonflikte ohne Take-Umgehung sowie Ablehnung ausgelassener oder rehashter Konflikte am nativen Quelllesegate.
