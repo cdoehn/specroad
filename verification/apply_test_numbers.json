@@ -24951,6 +24951,23 @@
     "tests/test_migration_cli_work.py::test_public_resume_in_another_process_uses_stored_bytes_but_no_authority",
     "tests/test_migration_cli_work.py::test_public_verify_work_is_only_a_provided_target_observation",
     "tests/test_migration_cli_work.py::test_public_work_destination_cannot_overlap_project",
-    "tests/test_apply_ci_integration.py::test_actual_native_stage_commits_are_selectable_in_manual_ci"
+    "tests/test_apply_ci_integration.py::test_actual_native_stage_commits_are_selectable_in_manual_ci",
+    "tests/test_apply_ci_integration.py::test_actual_native_stage_commits_are_selectable_in_manual_ci[1]",
+    "tests/test_apply_ci_integration.py::test_actual_native_stage_commits_are_selectable_in_manual_ci[2]",
+    "tests/test_apply_ci_integration.py::test_actual_native_stage_commits_are_selectable_in_manual_ci[3]",
+    "tests/test_ci_selection_failure.py::test_failed_diagnostic_write_does_not_replace_evidence_or_original_error[False]",
+    "tests/test_ci_selection_failure.py::test_failed_diagnostic_write_does_not_replace_evidence_or_original_error[True]",
+    "tests/test_ci_selection_failure.py::test_selection_failure_records_bounded_reason_without_a_success[error0-invalid_bundle_metadata]",
+    "tests/test_ci_selection_failure.py::test_selection_failure_records_bounded_reason_without_a_success[error1-invalid_bundle_metadata]",
+    "tests/test_ci_selection_failure.py::test_selection_failure_records_bounded_reason_without_a_success[error2-invalid_bundle_metadata]",
+    "tests/test_ci_selection_failure.py::test_selection_failure_records_bounded_reason_without_a_success[error3-invalid_selection]",
+    "tests/test_ci_selection_failure.py::test_selection_failure_records_bounded_reason_without_a_success[error4-missing_environment]",
+    "tests/test_ci_selection_failure.py::test_selection_failure_records_bounded_reason_without_a_success[error5-selection_io_failed]",
+    "tests/test_ci_selection_failure.py::test_selection_failure_records_bounded_reason_without_a_success[error6-revision_git_failed]",
+    "tests/test_csv_export_compatibility.py::test_scalar_control_bytes_and_bound_rows_survive_csv_quoting[\\ue000\\ue001\\x00\\ue000]",
+    "tests/test_csv_export_compatibility.py::test_scalar_control_bytes_and_bound_rows_survive_csv_quoting[\\x00\\x00]",
+    "tests/test_csv_export_compatibility.py::test_scalar_control_bytes_and_bound_rows_survive_csv_quoting[\\x00]",
+    "tests/test_csv_export_compatibility.py::test_scalar_control_bytes_and_bound_rows_survive_csv_quoting[a,\\x00\"b]",
+    "tests/test_csv_export_compatibility.py::test_scalar_control_bytes_and_bound_rows_survive_csv_quoting[a\\r\\n\\x00b]"
   ]
 }

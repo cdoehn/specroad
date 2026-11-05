@@ -48,3 +48,23 @@ def test_view_bytes_and_stricter_profile_character_gate_remain_distinct(control,
             codec.decode(("ID,Value\r\nx," + value + "\r\n").encode("utf-8"))
         assert caught.value.reason == "csv_invalid_character" and caught.value.column == 2
     assert supplied.source_files == before
+
+
+@pytest.mark.parametrize("value", ["\0", "\0\0", 'a,\0"b', "a\r\n\0b", "\ue000\ue001\0\ue000"])
+def test_scalar_control_bytes_and_bound_rows_survive_csv_quoting(value):
+    values = scalar_project()
+    for artifact in values[:-1]:
+        artifact["extensions"] = {"org.example": {"value": value}}
+    declaration = field_column("/extensions/org.example/value", "string")
+    declaration["heading"] = "Value"
+    values[-1].update(columns=[declaration], grouping=[])
+    supplied = model(values)
+    before = supplied.source_files
+    raw = export_view(supplied, ref("VIEW"), output_format="csv")
+    encoded = value.encode("utf-8")
+    if any(token in encoded for token in (b'"', b",", b"\r", b"\n")):
+        encoded = b'"' + encoded.replace(b'"', b'""') + b'"'
+    assert raw.split(b"\r\n", 2)[2] == (b"data,," + encoded + b"\r\n") * 4
+    metadata, rows = read_csv(raw)
+    assert rows == expected_rows(supplied)
+    assert metadata["row_count"] == 4 and supplied.source_files == before

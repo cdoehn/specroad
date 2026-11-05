@@ -8,7 +8,8 @@ import select_bundle_ci
 from verification_support.bundle_apply import NativeApply
 
 
-def test_actual_native_stage_commits_are_selectable_in_manual_ci(tmp_path, monkeypatch):
+@pytest.mark.parametrize("count", [1, 2, 3])
+def test_actual_native_stage_commits_are_selectable_in_manual_ci(tmp_path, monkeypatch, count):
     root = tmp_path / "apply-fixture"
     root.mkdir()
     def git(*args):
@@ -21,7 +22,8 @@ def test_actual_native_stage_commits_are_selectable_in_manual_ci(tmp_path, monke
     (root / "sample.py").write_text("VALUE = 0\n")
     git("add", "sample.py")
     git("commit", "-m", "fixture base")
-    stages = [{"commit_id": "CI-FIX.W"}, {"commit_id": "CI-FIX.R"}]
+    stages = [{"commit_id": "CI-FIX." + phase} for phase in "WRC"[-count:]]
+    history = []
     data = {"bundle_number": "592", "stages": stages, "branch": "dev",
             "apply_repository": str(root)}
     monkeypatch.chdir(root)
@@ -43,3 +45,11 @@ def test_actual_native_stage_commits_are_selectable_in_manual_ci(tmp_path, monke
         assert selection["bundle_final"] is (index == len(stages) - 1)
         assert git("show", "-s", "--format=%P", committed) == head
         assert not git("status", "--porcelain")
+        history.append(committed)
+    # Manual CI may deliberately select a proved earlier stage of the same history.
+    selection = select_bundle_ci.resolve_selection({
+        "GITHUB_EVENT_NAME": "workflow_dispatch", "GITHUB_REF": "refs/heads/dev",
+        "GITHUB_SHA": history[-1], "SR_COMMIT_SHA": history[0],
+        "SR_CI_RUNNER": "github-hosted"})
+    assert selection["commit_sha"] == history[0]
+    assert selection["bundle_final"] is (count == 1)
