@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 103 · **Stand:** 5. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.65
+**Planrevision:** 104 · **Stand:** 5. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.66
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 Schritte und 900 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; die ausdrücklich genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wird nach 10.7.10 innerhalb von 15.l.R vorgezogen. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -9,7 +9,7 @@ Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 S
 
 Fachliche Grundlage ist [`docs/specification/SpecRoad_Spezifikation.md`](../specification/SpecRoad_Spezifikation.md), einschließlich aller konsolidierten Korrekturen, 742 Requirements, 51 Verifikationsverträge, 46 Szenario-/E2E-Identitäten sowie R-01 bis R-75, Anhang U und den PatchHarbor-Rundweg aus Anhang W. Der [`Prüfbericht`](../reviews/SpecRoad_v0.2.7_Implementierungsreife_Pruefbericht.md) ist ein vorgelagerter Entwurfsreview, kein späterer Produktnachweis.
 
-Gebundene Spezifikations-SHA-256: `f6796f47fe4d41d64bcc7986c4cdd1428551de697b1472d658ddcee3e4a76b8c`.
+Gebundene Spezifikations-SHA-256: `e399e83b313950e91d3539470a8aad1c2c1d81fb6e8709bd375f2777fa558c72`.
 Planungsbasis: Commit `fe2661d02ecf2f7eb483b58a4487eb009c6b3846`; sauberes Result-Bundle `specroad_Result_120209_0914_df3504.zip`; Repository-ID `3d2576df-d611-46fc-9d2b-92869468aaca`. Diese Angaben dokumentieren die Entstehung des Plans, nicht die zukünftige Patchbindung. **Jedes spätere Patchpaket bindet den dann aktuellen tatsächlichen Result-Zustand.**
 
 Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 2026 gelten zusätzlich und bei den nachfolgend benannten Konflikten vorrangig. Sonstige normative Spezifikationsinhalte werden nicht stillschweigend abgeschwächt. Neue fachliche Widersprüche, fehlende zwingende Angaben und Sicherheitsprobleme sind offen zu benennen, nicht durch erfundene Annahmen oder Scheinerfolge zu lösen.
@@ -33,6 +33,45 @@ ausdrückliche Bedienausnahme aus 2.4.3.2 bleibt zusätzlich anwendbar.
 Produktfreigaben und die Grenzen aus 2.4.1/2.4.2/2.4.4 bleiben unverändert.
 Dieser Plan ändert keine alten Aufträge, Antworten, Blockaden oder
 Laufzeitdaten und ist keine Start-/Resume-Anweisung.
+
+## OFF-PLAN CONTROL-ACCEPT-CURRENT-605 — aktuellen geprüften Stand übernehmen (W)
+
+Manueller Nutzerauftrag vom 5. November 2026. Basis ist das vollständig
+erfolgreiche saubere Apply-Result SHA-256 `50333f80a2bf19d76af537a080fd1fb73a74adfb6562be7873a6e17fc67c6e21`,
+HEAD `957d07aaee91e60f5895b102e382eadc8962bc3e`. Die drei echten
+17.d.W/R/C-Commits aus Bundle 604 sind vollständig nachgewiesen. Der
+Produktstand bleibt 705/900 und der nächste Produktcommit bleibt 17.e.W.
+
+Die bisherigen speziellen Freigabe-/Recoverywege können nach mehreren
+manuellen Korrekturen eine nicht mehr rekonstruierbare ältere Kette verlangen.
+Alternativen: noch mehr spezielle Kettenregeln; History löschen/Erfolg erfinden;
+oder den ausdrücklich ausgewählten aktuellen geprüften Stand übernehmen.
+Gewählt wird der dritte Weg mit einem kurzen privaten Betreiberbeleg und
+Wiederverwendung vorhandener nativer Paket-, Commitplan-, Gate- und
+Snapshotprüfungen. Ältere Ketten dürfen entfallen; aktuelle Test-/Quellnachweise,
+aktive Arbeitszustände, Paketfreiheit und Restbudget bleiben verbindlich.
+
+CONTROL-ACCEPT-CURRENT-605.W: vollständiger Offline-Bedienweg, Spezifikation
+2.4.3.4, Projektmarker, additive SQLite-Übernahme, aktuelle native Livebindung
+und getrennte neue Versuche. Abnahme: manueller normaler/gemischter Abschluss,
+Korrektur mit dirty Vorherstand, noch unbenutztes Result und belegter paketloser
+Blocker funktionieren; Pause/Threadaktivität warten, Budget bleibt konservativ,
+ohne Flag keine neue Klärungsbefugnis und keine Start-/Apply-Nebenwirkung.
+CONTROL-ACCEPT-CURRENT-605.R: Integritäts- und Konkurrenzgrenzen gegen
+veränderte Budget-/Historybelege, Konfiguration, Marker, Pflichtauswahl,
+späte Pakete/Results/Versuchsdateien, aktive native Sperren und Wiederholungen.
+Reale Übergabe- und Verbrauchsprüfungen bleiben in isolierten Betriebsfixtures.
+CONTROL-ACCEPT-CURRENT-605.C: passive Vorbedingungen und kurze Dispatchprüfung
+strukturell trennen, keine neue Fachentscheidung, W/R-Tests und Registry bytegleich.
+
+Alle drei Stufen erhalten vor ihrem Commit ein eigenes gefiltertes N=3-Gate
+plus vollständige Control-Regression und Apply-/Katalogregressionen. Dev führt
+nur Syntax, reine Collection und native Paketvalidierung aus. Zielstände
+behaupten keinen bereits bestandenen Verhaltenstest. Dieses normale manuelle
+OFF-PLAN-Bundle enthält keinen künstlichen Klärungspräfix und verbraucht keinen
+Klärungsplatz. Installation, Betreiberfreigabe und Start bleiben spätere
+ausdrückliche Bedienaktionen nach erfolgreichem Apply. Keine lokalen
+Konfigurationen, Betriebsdaten oder echten Session-IDs in der Payload.
 
 ## Korrekturbundle 604 — deklarierte Anhänge im vollständigen Rest 17.d.W/R/C
 
@@ -3514,7 +3553,7 @@ Kein offener Produktplanschritt wird durch diese Testoptimierung abgeschlossen.
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 103
+plan_revision: 104
 implementation_plan_commits_total: 900
 implementation_plan_commits_completed: 705
 last_completed_plan_commit: 17.d.C

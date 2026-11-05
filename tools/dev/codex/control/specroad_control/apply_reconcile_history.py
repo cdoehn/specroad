@@ -173,6 +173,8 @@ def complete(ledger, doc, actual):
         raise ControlError('apply_reconciliation_persist_failed', 'Proof and advancement rolled back together.') from None
 
 def require_no_pending(ledger):
+    from .current_acceptance_history import require_no_pending as no_current_acceptance
+    no_current_acceptance(ledger)
     from .blocked_authorization_history import require_no_pending as blocked_pending
     blocked_pending(ledger)
     from .clarification_authorization_history import require_no_pending as require_no_authorization

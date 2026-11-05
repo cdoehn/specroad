@@ -29,10 +29,15 @@ def enqueue(paths, result, *, source_sha256, reason):
         if not Path(result).is_absolute() or not isinstance(reason, str) or not reason.strip() or len(reason) > 512 or not reason.isprintable():
             fail('An absolute Result and short explicit authorization reason are required.')
         with configured_offline(paths, allow_apply_reconciliation=True) as (config, engine):
+            from .current_acceptance_history import require_no_pending as no_current_acceptance
             require_release(paths)
             ledger = Ledger(paths.state / 'automation.sqlite3', scope(config))
             try:
+                no_current_acceptance(ledger)
                 requested = engine.exchange.source(engine.core.result(Path(result)))
+                from .current_acceptance_history import active as accepted
+                if accepted(ledger, requested['sha256']) is not None:
+                    fail('This Result already received an explicit current-state acceptance.')
                 if requested['sha256'] != source_sha256:
                     fail('This mode requires the exact same Result, not a successor.')
                 for row in records(ledger):

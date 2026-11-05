@@ -48,3 +48,10 @@ class Core:
         if data.get("reference_sha256") != source["sha256"] or data.get("binding_matches") is not True or data.get("binding") != source["binding"]:
             raise ControlError("binding_mismatch", "The patch or source Result changed.")
         return data
+
+    def current(self, source: dict) -> dict:
+        data = self.call("current", Path(source['path']))
+        if (data['sha256'] != source['sha256'] or data['binding'] != source['binding']
+                or data['repository_path'] != source['repository_path'] or data['dirty']):
+            raise ControlError('current_repository_mismatch', 'The live Apply repository differs from the clean selected Result.')
+        return data

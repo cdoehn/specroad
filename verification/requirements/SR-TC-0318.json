@@ -44,7 +44,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "f6796f47fe4d41d64bcc7986c4cdd1428551de697b1472d658ddcee3e4a76b8c",
+  "specification_sha256": "e399e83b313950e91d3539470a8aad1c2c1d81fb6e8709bd375f2777fa558c72",
   "steps": [
     "Evaluate the five specified historical/local/source cases under explicit strategies and observe classification, target candidate, retained identity and diagnostics.",
     "Reject malformed input and unsafe adoption while preserving legacy values, independent historical hashes and detached observations.",

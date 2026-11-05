@@ -88,6 +88,8 @@ def enqueue(paths, result, *, source_sha256, reason):
             require_installed(paths)
             ledger = Ledger(paths.state / 'automation.sqlite3', scope(config))
             try:
+                from .current_acceptance_history import require_no_pending as no_current_acceptance
+                no_current_acceptance(ledger)
                 from .blocked_authorization_history import require_no_pending
                 require_no_pending(ledger)
                 if reconciliation(ledger) is not None:

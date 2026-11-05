@@ -1,0 +1,8 @@
+{
+  "authorization_mode": "explicit_current",
+  "budget_policy": "preserve",
+  "decision_contract_version": 4,
+  "decision_rule": "SPECROAD-DECISION-1",
+  "format_version": 1,
+  "maximum_grants_per_result": 1
+}

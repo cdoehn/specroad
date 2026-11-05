@@ -40,7 +40,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "f6796f47fe4d41d64bcc7986c4cdd1428551de697b1472d658ddcee3e4a76b8c",
+  "specification_sha256": "e399e83b313950e91d3539470a8aad1c2c1d81fb6e8709bd375f2777fa558c72",
   "steps": [
     "Decode actual CSV, NDJSON, ReqIF and ReqIFZ bytes without filesystem opens, network or executable converters; pass the explicit goal-statement projection to the ordinary native import transaction.",
     "Require real committed output, verified target, incremented revision, exact original text and input hash; preserve unrelated project files and attachments.",

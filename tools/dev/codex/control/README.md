@@ -155,3 +155,33 @@ Versuchsdateien bleiben erhalten; der neue Versuch erhält eigene Dateien.
 Eine identische Wiederholung ist idempotent. Ein erneuter Blocker oder schon
 vorhandenes Paket wird nicht durch Wiederholen des Befehls überspielt.
 Normative Grenzen und Projektmarker: SpecRoad-Spezifikation 2.4.3.3.
+
+## Aktuellen geprüften Stand ausdrücklich übernehmen
+
+Nach erfolgreichem Apply und Installation der unterstützenden Version:
+
+```sh
+python3 -B tools/dev/codex/control/control accept-current \
+  --result /absoluter/pfad/zum/aktuellen/Result.zip \
+  --clarification --reason "Geprüften aktuellen Stand nach manueller Arbeit übernehmen"
+```
+
+Der Dienst muss gestoppt sein. Der Befehl merkt nur vor; `status` zeigt
+`current_acceptance`. `--clarification` ist optional und erteilt begrenzte
+Detailklärung innerhalb des belegten Restbudgets. Ohne Flag wird einem neuen
+Result keine neue Klärungsbefugnis erteilt. Kein Budgetreset und kein Dienststart.
+Danach erfolgen `start` beziehungsweise `resume` ausdrücklich. Die konfigurierte
+Startverzögerung, der freie Thread und die Plattenplatzgrenze gelten weiter.
+
+Benötigt werden der aktuelle erfolgreiche saubere Apply-Abschluss, das letzte
+Bundle und dessen unmittelbares Vorher-Result. Ältere Zwischenstände müssen
+nicht mehr vollständig rekonstruierbar sein. Das schließt mehrere manuelle
+Korrekturen mit dirty Vorherstand und gemischte Bundles ein. Ein unbenutztes
+`ready`-Result oder ein belegter paketloser `dev_blocked`-Abschluss ohne frühere
+Klärungsfreigabe kann ebenfalls übernommen werden. Alte Versuche bleiben
+erhalten, neue Dateien liegen getrennt unter `jobs/<Result-SHA>/accepted/`.
+Identische Wiederholung ist idempotent. Laufendes Apply/Dev, andere offene
+Bedienaktionen, spätere Results, Folgepakete, ein abweichender Arbeitsstand
+oder fehlende aktuelle Belege sperren. Ein Push ersetzt keine Testgates.
+Die bestehenden speziellen Recoverybefehle bleiben unverändert verfügbar.
+Verbindlicher Vertrag und Projektmarker: SpecRoad-Spezifikation 2.4.3.4.

@@ -33,6 +33,12 @@ def facts(value, operation):
     if not isinstance(value,dict):
         raise ValueError
     digest(value['sha256']); binding(value['binding'])
+    if operation == 'current':
+        if (set(value) != {'kind', 'sha256', 'binding', 'repository_path', 'dirty'}
+                or value['kind'] != 'current' or type(value['dirty']) is not bool
+                or not Path(text(value['repository_path'])).is_absolute()):
+            raise ValueError
+        return value
     expected = 'result' if operation == 'result' else 'patch'
     if value['kind'] != expected:
         raise ValueError

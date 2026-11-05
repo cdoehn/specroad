@@ -10,7 +10,8 @@ class DecisionHistory:
     def request_contract(self, source_sha=None):
         from .blocked_authorization_history import active
         source_sha = source_sha or self.current()['sha']
-        grant = active(self, source_sha)
+        from .current_acceptance_history import active as accepted
+        grant = accepted(self, source_sha) or active(self, source_sha)
         return grant['selected_contract'] if grant else self.recorded_contract(source_sha)
 
     def recorded_contract(self, source_sha=None):
@@ -96,12 +97,16 @@ class DecisionHistory:
         if self.request_contract(source_sha) is None:
             return None
         table = self.output_table(source_sha)
-        key = 'source_sha' if table == 'blocked_clarification_authorizations' else 'sha'
+        key = ('target_sha' if table == 'current_acceptances' else
+               'source_sha' if table == 'blocked_clarification_authorizations' else 'sha')
         return self.db.execute(f'SELECT output_kind FROM {table} WHERE {key}=?',
                                (source_sha,)).fetchone()[0]
 
     def output_table(self, source_sha):
         from .blocked_authorization_history import active
+        from .current_acceptance_history import active as accepted
+        if accepted(self, source_sha):
+            return 'current_acceptances'
         return 'blocked_clarification_authorizations' if active(self, source_sha) else 'request_contracts'
 
     def record_output_contract(self, selected_contract, row, output_kind):
@@ -113,7 +118,8 @@ class DecisionHistory:
         if kind == 'spec_clarification' and (selected_contract['version'] not in (2, 3) or not selected_contract['clarification_allowed']):
             raise ControlError('clarification_limit', 'No consecutive clarification handoff is permitted.')
         table = self.output_table(row['sha'])
-        key = 'source_sha' if table == 'blocked_clarification_authorizations' else 'sha'
+        key = ('target_sha' if table == 'current_acceptances' else
+               'source_sha' if table == 'blocked_clarification_authorizations' else 'sha')
         previous_kind = self.db.execute(f'SELECT output_kind FROM {table} WHERE {key}=?', (row['sha'],)).fetchone()[0]
         if previous_kind is not None and output_kind is not None and previous_kind != output_kind:
             raise ControlError('request_contract_changed', 'A recorded handoff cannot be reclassified.')

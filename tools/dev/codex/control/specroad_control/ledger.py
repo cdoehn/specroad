@@ -101,6 +101,8 @@ class Ledger(RetryHistory, RecoveryHistory, WaitHistory, DecisionHistory):
             validate_authorizations(self)
             from .blocked_authorization_history import validate_history as validate_blocked_authorizations
             validate_blocked_authorizations(self)
+            from .current_acceptance_history import validate_history as validate_current_acceptances
+            validate_current_acceptances(self)
         except (sqlite3.Error, ValueError, KeyError, TypeError, UnicodeError, ControlError) as exc:
             if hasattr(self, "db"):
                 self.db.close()
@@ -167,12 +169,17 @@ class Ledger(RetryHistory, RecoveryHistory, WaitHistory, DecisionHistory):
             self._insert_contract(source['sha256'], inherited)
 
     def attempt_directory(self, paths, source_sha, number):
+        from .current_acceptance_history import active
+        acceptance = active(self, source_sha)
+        if acceptance is not None and number >= acceptance['attempt_number']:
+            return paths.state / 'jobs' / source_sha / 'accepted' / f'{number:04d}'
         from .blocked_authorization_history import directory
         return directory(paths, self, source_sha, number)
 
     def attempt_origin(self, paths, source_sha):
+        from .current_acceptance_history import active as accepted
         from .blocked_authorization_history import active
-        grant = active(self, source_sha)
+        grant = accepted(self, source_sha) or active(self, source_sha)
         return self.attempt_directory(paths, source_sha, grant['attempt_number'] if grant else 0)
 
     def published_hashes(self):

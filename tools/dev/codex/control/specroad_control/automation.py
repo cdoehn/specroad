@@ -80,6 +80,11 @@ class Engine(OverloadWaiting):
     def tick(self):
         ledger = Ledger(self.paths.state / "automation.sqlite3", scope(self.config))
         try:
+            from .current_acceptance_history import validate_history as current_history
+            from .current_acceptance import tick as current_tick
+            acceptance = current_history(ledger)
+            if acceptance is not None:
+                return current_tick(self, ledger, acceptance)
             from .apply_reconcile import validate_history, verify_completed, tick as reconcile_tick
             from .clarification_authorization_history import validate_history as authorization_history
             from .clarification_authorization import tick as authorization_tick, verify_completed as verify_authorized
@@ -91,11 +96,14 @@ class Engine(OverloadWaiting):
             authorization = authorization_history(ledger)
             if authorization is not None:
                 return authorization_tick(self, ledger, authorization)
-            verify_authorized(self, ledger)
+            from .current_acceptance_history import active as accepted
+            if accepted(ledger, ledger.current()['sha']) is None:
+                verify_authorized(self, ledger)
             reconciliation = validate_history(ledger)
             if reconciliation is not None:
                 return reconcile_tick(self, ledger, reconciliation)
-            verify_completed(self, ledger)
+            if accepted(ledger, ledger.current()['sha']) is None:
+                verify_completed(self, ledger)
             row = ledger.current()
             self.update(stage=row["stage"], source_sha256=row["sha"], error=row["error"])
             if row["stage"] in ("running", "uncertain"):
@@ -172,7 +180,8 @@ class Engine(OverloadWaiting):
                     record("retry_decision", source_sha256=source["sha256"], decision="blocked", reason=exc.code)
                     return {"halted": True, "again": False}
             from .blocked_authorization_history import active as active_blocked
-            if active_blocked(ledger, source['sha256']) is not None and self.codex.activity() == 'active':
+            from .current_acceptance_history import active as accepted
+            if (accepted(ledger, source['sha256']) or active_blocked(ledger, source['sha256'])) and self.codex.activity() == 'active':
                 self.update(stage=row['stage'], thread_status='active')
                 return {'halted': False, 'again': False, 'retry_after': 2}
             if not self.gate.allowed:
@@ -183,7 +192,7 @@ class Engine(OverloadWaiting):
             private_dir(job_dir)
             attempt = {"source_sha256": source["sha256"], "thread_id": self.config.session_id, "number": number}
             from .blocked_authorization_history import active as blocked_authority
-            grant = blocked_authority(ledger, source['sha256'])
+            grant = accepted(ledger, source['sha256']) or blocked_authority(ledger, source['sha256'])
             fresh_grant = grant is not None and number == grant['attempt_number']
             continuing = retry['evidence'] if retry and not fresh_grant and retry['evidence'].get('mode') == 'continuation' else None
             if continuing:
@@ -192,7 +201,7 @@ class Engine(OverloadWaiting):
             # New sources opt into v3; existing and retried attempts retain their
             # original version, including legacy absence of version metadata.
             origin = previous
-            if origin is None and number:
+            if origin is None and number and not fresh_grant:
                 origin = json_read(ledger.attempt_origin(self.paths, source['sha256']) / 'attempt.json')
                 if origin is None:
                     origin = {}  # Legacy read-only recovery must stay legacy.
@@ -379,6 +388,8 @@ class Engine(OverloadWaiting):
         self.exchange.assert_current(source, ledger.known_runs())
         from .blocked_authorization import guard_dispatch
         guard_dispatch(self, ledger, source)
+        from .current_acceptance import guard_dispatch as guard_current
+        guard_current(self, ledger, source)
         def claim():
             if request_guard is not None:
                 request_guard()
@@ -391,6 +402,8 @@ class Engine(OverloadWaiting):
     def authorize_request(self, ledger, source, directory, attempt, selected):
         from .blocked_authorization import guard_dispatch
         guard_dispatch(self, ledger, source)
+        from .current_acceptance import guard_dispatch as guard_current
+        guard_current(self, ledger, source)
         def guard():
             from .blocked_authorization import guard_original
             guard_original(self, ledger, source)

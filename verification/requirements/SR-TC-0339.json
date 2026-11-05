@@ -40,7 +40,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "f6796f47fe4d41d64bcc7986c4cdd1428551de697b1472d658ddcee3e4a76b8c",
+  "specification_sha256": "e399e83b313950e91d3539470a8aad1c2c1d81fb6e8709bd375f2777fa558c72",
   "steps": [
     "Bind unchanged source/mapping/selected sidecar bytes, separate raw and canonical hashes, format, parser profile, explicit reporter and actual SpecRoad importer version in an immutable preparation.",
     "Apply abort_import to withhold all otherwise valid candidates when diagnostics exist, or skip_invalid_with_diagnostic to retain only independently valid occurrences with all diagnostics; failed test outcomes remain valid observations.",

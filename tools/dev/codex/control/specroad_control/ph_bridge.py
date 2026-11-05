@@ -59,6 +59,12 @@ def main():
             installed = development_capability(path, captured.sha256)
             if installed is not None:
                 data['development_contract'] = installed
+        elif operation == "current":
+            from patchharbor.repository_state import capture_repository_context
+            captured = capture_result_reference(path)
+            context = capture_repository_context(Path(captured.facts.context.repository_path), read_only=True)
+            data = {"kind": "current", "sha256": captured.sha256, "binding": binding(context),
+                    "repository_path": str(context.repository_path), "dirty": context.dirty}
         elif operation == "patch":
             info = api.inspect_patch(path)
             data = {"kind": "patch", "sha256": info.package_sha256, "binding": binding(info.manifest)}

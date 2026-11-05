@@ -157,6 +157,8 @@ def complete(ledger, doc, actual):
 
 
 def require_no_pending(ledger):
+    from .current_acceptance_history import require_no_pending as current_pending
+    current_pending(ledger)
     from .blocked_authorization_history import require_no_pending as blocked_pending
     blocked_pending(ledger)
     if validate_history(ledger) is not None:

@@ -1,19 +1,19 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.65
+## Version 0.2.66
 
 | Feld | Wert |
 |---|---|
 | Dokument-ID | `SR-SPEC-0001` |
-| Dokumentversion | `0.2.65` |
+| Dokumentversion | `0.2.66` |
 | Zielrelease | `SpecRoad Single-Repository Workbench 0.2.0` |
 | Status | **Fachlich konsolidierte Arbeitsgrundlage; technische Reviewentscheidung gesondert dokumentiert, formale Baseline-Freigabe und Produktabnahme nicht durch dieses Dokument erklärt** |
 | Stand | 5. November 2026 |
 | Sprache | Deutsch; technische Feldnamen, Enum-Werte und CLI-Kommandos Englisch |
-| Fachliche Quelle | **Diese Repositoryfassung v0.2.65 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.65 liegt mit dieser Änderung nicht vor.** |
+| Fachliche Quelle | **Diese Repositoryfassung v0.2.66 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.66 liegt mit dieser Änderung nicht vor.** |
 | Bearbeitbare Satzquelle | Diese Datei; eine spätere PDF muss denselben versionierten Inhalt wiedergeben. |
-| Vorgängerversion | Repository-Spezifikation v0.2.64 vom 5. November 2026; historische Nachweise bleiben unverändert. |
-| Prüf- und Entscheidungsgrundlage | MERGE-COLLECTIONS-603: einmalige ausdrückliche Nutzerfreigabe für die Detailklärung zu 17.d nach SPECROAD-DECISION-1; keine Produkt- oder Baseline-Freigabe. |
-| Änderungsart | Explizite eingebaute Mengenschlüssel, konservative geordnete Folgen und schreibfreier Anhangvergleich; nachfolgende M17-Gates bleiben bestehen. |
+| Vorgängerversion | Repository-Spezifikation v0.2.65 vom 5. November 2026; historische Nachweise bleiben unverändert. |
+| Prüf- und Entscheidungsgrundlage | CONTROL-ACCEPT-CURRENT-605: ausdrücklicher manueller Nutzerauftrag zur protokollierten Übernahme eines aktuell geprüften Stands; keine Produkt- oder Baseline-Freigabe. |
+| Änderungsart | Gemeinsamer Control-Bedienweg nach manueller Arbeit mit aktuellen nativen Apply-Nachweisen, optionaler Klärung und erhaltenem Restbudget. |
 
 > **Verbindlicher Quellenwechsel:** Die ausdrückliche Nutzerentscheidung REFERENCE-SOURCE-551 wird als v0.2.50 umgesetzt. Der neue Quellvertrag ist Entwurfsarbeit vom 3. November 2026, kein Nachweis eines früher existierenden Formats. Bestehende 0.2-Verträge, Transport-, Sicherheits- und Reviewgrenzen bleiben erhalten.
 
@@ -646,6 +646,95 @@ in einer ZIP. Maximal ein Folgepaket pro Result, W/R/C-Gates, Verbrauch und
 Erneuerung des Klärungsbudgets sowie alle fachlichen Grenzen aus
 SPECROAD-DECISION-1 bleiben vollständig bestehen. Die Bedienfreigabe selbst
 verbraucht keinen Klärungsplatz und ist kein Produktfortschritt.
+
+### 2.4.3.4 Ausdrückliche Übernahme des aktuellen geprüften Stands — CONTROL-ACCEPT-CURRENT-605
+
+**Ausdrücklicher manueller Nutzerauftrag vom 5. November 2026.** Der zusätzliche
+Offline-Befehl `accept-current --result <absolutes Result> --reason <Begründung>`
+darf eine alte unterbrochene Automationsfolge zugunsten eines ausdrücklich
+ausgewählten, vollständig geprüften aktuellen Zustands beenden. Mit dem
+optionalen Schalter `--clarification` erteilt der Betreiber die begrenzte
+optionale Detailklärungsbefugnis nach SPECROAD-DECISION-1 und Vertrag 4.
+Ohne diesen Schalter erhält ein neu übernommener Nachfolger keine neue
+Klärungsbefugnis. Bei demselben noch nicht beauftragten `ready`-Result bleibt
+eine bereits vorhandene Befugnis erhalten. Klärung ist nie Pflicht; fachlicher
+Scope, menschliche Reviews, Sicherheit und Produktabnahmen bleiben bestehen.
+
+Zweck ist ein gemeinsamer Bedienweg nach manuellen Bundles, vollständigen
+Korrekturfolgen oder unterbrochener alter Steuerung. Eine Rekonstruktion aller
+älteren Automationsschritte ist hier ausdrücklich nicht erforderlich. Erforderlich
+sind hingegen das ausgewählte native Result, dessen letztes tatsächliches
+Apply-Bundle und sein unmittelbares Vorher-Result. Alle drei SHA-256, vier
+Bindungswerte, der kanonische Commitplan v2 mit Rollen, jede angekündigte
+Commit-ID, Elternfolge, vollständige Testgates, Pflichtauswahlen und der aus
+allen Stages rekonstruierte vollständige Snapshot müssen übereinstimmen.
+Das Vorher-Result darf ein erhaltener dirty Fehlerstand sein. Der Zielstand
+muss erfolgreich, sauber und vollständig committed sein, ohne offenen Rest,
+Dry-run oder abgebrochenes Gate. Ein bloßer Git-Commit oder Push ist kein
+Testnachweis. Ein unveränderter direkter Git-Push lässt das letzte weiterhin
+gültige Apply-Result verwendbar; ein anderes natives Result wird nicht geraten.
+
+Vor Vormerkung, Übernahme und neuem Dispatch werden Aktualität und Paketfreiheit
+erneut nativ geprüft. Auch ein bereits in der History bekannter neuerer Result
+sperrt die ältere Auswahl. Der aktuell registrierte Apply-Repositoryzustand
+muss unter nicht blockierender nativer Repositorysperre lesend erfasst werden
+und exakt die vier Bindungswerte sowie `dirty=false` des Ziel-Results besitzen.
+Ein aktives Apply, abweichender HEAD/Arbeitsstand, mehrdeutige Ergebnisse oder
+ein bereits vorhandenes Folgepaket sperren die Übernahme. Die alte private
+History wird weder gelöscht noch als erfolgreich umgedeutet. Git allein
+enthält keine Freigabe-, Paket-, Testgate- oder Dispatchnachweise.
+
+Die erfolgreich getestete und installierte Control-Version muss diesen
+Bedienweg unterstützen. Das nativ geprüfte Result enthält zusätzlich
+`verification/current_acceptance.json` mit exakt `format_version=1`,
+`decision_rule=SPECROAD-DECISION-1`, `decision_contract_version=4`,
+`authorization_mode=explicit_current`, `budget_policy=preserve` und
+`maximum_grants_per_result=1`. Der Marker allein ist keine Betreiberfreigabe.
+
+Das vorhandene belegte Klärungsrestbudget wird konservativ übernommen und
+niemals durch Übernahme, Installation oder Start erneuert. Eine bereits
+klassifizierte Klärungs-/Mischübergabe, deren Verbrauch noch nicht durch den
+Resultübergang verbucht wurde, wird beim Archivieren einmal abgezogen.
+Eine bereits verbuchte Fortsetzung wird nicht noch einmal verbraucht.
+Fehlendes oder beschädigtes Budget, ein offener Klärungsfortsetzungsvertrag
+oder alte Verträge ohne Restzähler sind nicht über diesen Weg ersetzbar.
+Bei Rest null ist klare Arbeit ohne neue Klärung möglich; `--clarification`
+ist dann unzulässig. Erst ein späteres vollständig nachgewiesenes reguläres
+Apply aller angekündigten Stages erneuert das Budget gemäß 2.4.3.1.
+
+Ein bislang unbekannter aktueller Nachfolger kann einen alten Auftrag in
+`ready`, `uncertain`, `waiting_result` oder `no_work` ersetzen. Laufende,
+Retry- oder Overload-Aufträge dürfen nicht übersprungen werden. Bei demselben
+Result ist nur ein noch nicht ausgegebener `ready`-Auftrag ohne alte
+Versuchsdateien oder ein vollständig belegter paketloser V4-Abschluss
+`uncertain/dev_blocked` mit bisher verweigerter Klärungsbefugnis zulässig.
+Letzterer benötigt ausdrücklich `--clarification` und positive Restbefugnis;
+Originalanfrage, Protokoll-/Dispatchabschluss und Antwort bleiben bytegleich.
+Ein bereits autorisierter neuer Versuch, anderes unbekanntes Ende oder
+vorhandenes Paket auf demselben Result ist kein erneuter Freistart.
+
+Die Vormerkung benötigt einen kurzen expliziten Grund und hält einen privaten
+additiven Beleg mit alter Zusammenfassung, altem/neuem Vertrag, Scope,
+Konfigurations-/History-Bindung und den aktuellen technischen Nachweisen fest.
+Sie benötigt die vorhandenen Offline-/Repository-/Threadlocks und startet
+weder Dienst noch Modell, Apply oder CI. Pause bleibt erhalten. Der spätere
+ausdrückliche `start`/`resume` unterliegt weiterhin Startverzögerung, freien
+Threadzuständen, Plattenplatzgate und den vorhandenen Betriebsgrenzen. Bekannte
+Threadaktivität erlaubt das Vormerken, jedoch keine Übernahme oder neue
+Ausgabe. Unbekannte Aktivität sperrt. Übernahme und Historyänderung erfolgen
+atomar; der alte Fehler und die ursprüngliche Outputklassifikation bleiben
+erhalten. Eine frühere technisch vollständige Rekonstruktion kann durch diesen
+expliziten Beleg ersetzt werden, ohne deren historische Belege umzuschreiben.
+
+Pro Result höchstens eine solche wirksame Bedienfreigabe; eine bereits
+erfolgte gleichquellige Freigabe nach 2.4.3.3 ist nicht stapelbar. Identische
+Wiederholung ist idempotent und startet nichts erneut. Getrennte neue
+Versuchsdateien erhalten alle Originaldateien und die bisherige Retryzählung.
+Ein erneuter Blocker bleibt ein Blocker. Konkurrierende Vormerkungen, spätere
+Pakete, veränderte Quellnachweise oder Konfiguration verhindern die Ausgabe.
+Die normalen ein-Paket-pro-Result-, W/R/C-, N=3- und Apply-only-Regeln gelten
+unverändert. Dieser manuelle Infrastrukturauftrag ist kein automatisches
+Klärungsbundle und kein Produktfortschritt.
 
 ### 2.4.4 Echte Blocker und Erhaltung des Betriebszustands
 
@@ -7579,6 +7668,7 @@ Die folgende Roadmap ist informativ und erzeugt keine Anforderungen an 0.2:
 
 | Version | Datum | Status | Änderung |
 |---|---|---|---|
+| 0.2.66 | 2026-11-05 | Ausdrücklicher Nutzerauftrag | CONTROL-ACCEPT-CURRENT-605: ausgewählten geprüften Stand explizit übernehmen, optionale Klärung und konservatives Budget; alte Nachweiskette darf entfallen. |
 | 0.2.65 | 2026-11-05 | Einmalige ausdrückliche Nutzerfreigabe nach SPECROAD-DECISION-1 | MERGE-COLLECTIONS-603: schemafeste Mengen, atomare geordnete Folgen und Anhangkandidaten ohne implizite Lösch- oder Schreibfreigabe. |
 | 0.2.64 | 2026-11-05 | Ausdrücklicher Nutzerauftrag | CONTROL-BLOCKED-601: explizite Freigabe eines neuen Versuchs nach belegtem paketlosem Blocker, mit unveränderter Historie und Budget. |
 | 0.2.63 | 2026-11-05 | Delegiert gemäß SPECROAD-DECISION-1, Vertrag 4 | MERGE-INVENTORY-596: vollständiger Inventurzwischenstand mit drei Quellbindungen, getrennten Hashdomänen und Abwesenheit ohne Löschfreigabe; semantischer Merge und Produktabnahmen bleiben offen. |
@@ -11653,4 +11743,4 @@ Implementierungsschritten nachgewiesen sein.
 
 ---
 
-**Ende der SpecRoad-Produktspezifikation v0.2.65.**
+**Ende der SpecRoad-Produktspezifikation v0.2.66.**

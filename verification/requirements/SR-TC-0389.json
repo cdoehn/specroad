@@ -53,7 +53,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "f6796f47fe4d41d64bcc7986c4cdd1428551de697b1472d658ddcee3e4a76b8c",
+  "specification_sha256": "e399e83b313950e91d3539470a8aad1c2c1d81fb6e8709bd375f2777fa558c72",
   "steps": [
     "Reconstruct native configuration, effective profile, resource bindings, artifacts and closed scope from the exact payload bytes; compare independent native model roots to manifest assertions.",
     "Reject malformed fields, missing references, missing bound resources and forged metadata even when the transport inventory is internally consistent.",

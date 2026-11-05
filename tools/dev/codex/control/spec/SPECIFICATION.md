@@ -1125,3 +1125,12 @@ unterliegt dem vollständigen Vertrag in SpecRoad-Spezifikation 2.4.3.3.
 Originalanfrage, Antwort, Budget und Fehlerbeleg bleiben erhalten; ein separat
 belegter Versuch darf höchstens das noch fehlende eine Folgepaket erzeugen.
 Keine implizite Freigabe durch Installation, Recovery oder Start.
+
+## CONTROL-ACCEPT-CURRENT-605
+
+`accept-current --result <absolut> --reason <Grund> [--clarification]` ist die
+ausdrückliche Offline-Betreiberübernahme nach SpecRoad-Spezifikation 2.4.3.4.
+Die ältere Automationskette darf entfallen; der vollständige aktuelle native
+Apply-/Snapshotnachweis und die Livebindung bleiben Pflicht. Ein privater
+additiver Beleg erhält altes Ergebnis, Verträge, Budget und Originalversuche.
+Keine implizite Freigabe, Budgeterneuerung, Dienst-/Modell-/Apply-Ausführung.

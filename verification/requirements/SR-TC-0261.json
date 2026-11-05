@@ -33,7 +33,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "f6796f47fe4d41d64bcc7986c4cdd1428551de697b1472d658ddcee3e4a76b8c",
+  "specification_sha256": "e399e83b313950e91d3539470a8aad1c2c1d81fb6e8709bd375f2777fa558c72",
   "steps": [
     "Observe every successful native filesystem boundary in an uninterrupted single-artifact writer, then terminate a fresh writer after each boundary without finalizers and recover solely from persisted bytes.",
     "Retain the independently bound initial/final journal.next derivative during recovery and prove that foreign content, another cursor, unsafe links, size changes and authority-time mutation cannot be adopted.",
