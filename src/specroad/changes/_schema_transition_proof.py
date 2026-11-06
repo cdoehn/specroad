@@ -13,13 +13,11 @@ from ._schema_transition_io import read
 def _backup(journal, raw):
     descriptor = journal.data['backup']
     require(len(raw) == descriptor['size'], 'transition_backup_changed')
-    backup = verify_source_backup(raw, expected_sha256=descriptor['sha256'],
-        expected_source_files_sha256=descriptor['source_files_sha256'])
+    from ._snapshot_dispatch import verify_backup, recheck_source
+    backup = verify_backup(journal.plan,raw,descriptor)
     op = journal.plan.data['operations'][0]
     require(file_bindings(backup.files) == op['source_files'], 'transition_source_binding')
-    from ..migration.plan_recheck import recheck_migration_plan
-    recheck_migration_plan(journal.plan.source_bytes, backup.files, expected_target_version='0.2.0',
-        expected_inputs_sha256=op['inputs_sha256'], expected_plan_sha256=journal.plan.sha256)
+    recheck_source(journal.plan,backup.files)
     return backup
 
 

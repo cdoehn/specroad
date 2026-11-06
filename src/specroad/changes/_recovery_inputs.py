@@ -40,7 +40,7 @@ def _read_journal(files, transaction_id):
 def _parse(raw, transaction_id, files, expected_project_id=None):
     value = parse_json_object(raw)
     state = value.get('state')
-    if value.get('format_version') == 'schema-transition-journal-v1':
+    if value.get('format_version') in ('schema-transition-journal-v1','merge-transition-journal-v1'):
         from .schema_transition_values import TransitionJournal
         cls = TransitionJournal
     elif state == 'rolled_back':

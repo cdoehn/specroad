@@ -162,6 +162,95 @@ Scope-, Review-, Integritäts- und Katalogregressionen sind ungefilterte
 Pflichtauswahl. Dev prüft nur Syntax, Collection und native Paketrekonstruktion.
 Keine Vollsuite-, Release-, M17- oder menschliche Abnahme; kein Dienst-/CI-Start.
 
+## Korrekturbundle 620 — vollständiger offener Rest, Ziel 17.k.W
+
+Maßgeblich ist das nativ geprüfte Fehler-Result `specroad-apply_Result_092536_1106_b8b2fd.zip`,
+SHA-256 `cf277950127de98be07fb3bdc1a21be70de28610765b21986d1d22e5853938d0`, HEAD `f068a53573f3f5529171d0bcc3f9c492dd46aee0`,
+Fingerprint `0df7cd6c6f8c8deb`. Der erfolgreiche Präfix
+MERGE-PUBLICATION-619 ist mit 7037 bestandenen Tests committed und bleibt
+unverändert. 17.k.W scheiterte danach: acht fehlgeschlagene und 13390 bestandene
+Tests; kein regulärer 17.k-Commit entstand. Tatsächlich abgeschlossen bleiben
+723/900. Die W-Änderungen sind uncommitted im vollständigen Result erhalten.
+
+Diagnose: Sieben neue Mergepublikationstests scheitern bereits in der nativen
+Quellaufnahme, weil ihre synthetischen Goals das unzulässige Feld `description`
+enthalten. Das verbindliche Goal-Schema verlangt hier `statement`. Der achte
+Fehler zählt im Schemakatalog nur einen Spezialzweig, obwohl seit 10.15.8
+`schema_migrate` und `merge_publish` vorhanden sein müssen.
+
+Gezielte technische Korrektur: ausschließlich die Goal-Testeingaben in W und
+im noch nicht ausgeführten R verwenden `statement`; die Schemakatalogprüfung
+erwartet beide bereits normierten Spezialzweige. Die direkten Positivfälle
+prüfen zusätzlich unabhängig Titel und Statement im publizierten Goal sowie
+bytegleichen Erhalt bei Übernahme und unverändertem Ours. Fachliche Zielwerte,
+Negativfälle, Schema-Schließung, Produktcode und Sicherheitsgates bleiben erhalten.
+Keine neue Detailklärung, keine Änderung der normativen Spezifikation oder
+Planabnahmen, keine Budgeterneuerung durch den Dokumentcommit.
+
+Dieses Bundle führt alle offenen IDs und Rollen 17.k.W/R/C vollständig in der
+ursprünglichen Reihenfolge fort. Keine erfolgreichen Commits werden wiederholt.
+Die W-Stage bindet sämtliche tatsächlich erhaltenen Vorherbytes; R behält die
+reale Nachprüfung nach Receipt-/Archivdurabilität und alle Crash-/Recoveryfälle;
+C behält die reine Werteextraktion mit identischen R-Funktions-/Klassen-ASTs
+und Testbytes. Alle ursprünglichen Pflichtdateien bleiben ungefiltert ausgewählt.
+Jeder Zustand erhält ein eigenes N=3-plus-Pflichtauswahl-Gate vor seinem Commit.
+Der vorliegende Zielstand enthält 724/900 und danach `17.k.R` ausschließlich
+als erfolgreich zu prüfendes Commitziel, nicht als vorweggenommenen Nachweis.
+
+Dev führt null Verhaltenstests aus; Syntax, reine Collection und native
+Paketrekonstruktion sind keine Verhaltensabnahme. CLI-/Work-Endintegration,
+Quelltypen-/Resume-Parität und M17-Abschluss bleiben vollständig in 17.l offen.
+
+## Bundle 619 — vollständiger Commitzielstand 17.k.W
+
+Basis ist das nativ geprüfte saubere Result `specroad-apply_Result_061258_1106_824a96.zip`,
+SHA-256 `70f78cbe6d25441d66ab4d5274143ddd51866b87c044eee62b2822dc6326a1ee`, HEAD `b0bec0d99ee9e0b84925306c64984a2267be93d3`,
+Fingerprint `7c9d2a24e397e0e5`. Bundle 618 hat die noch
+offenen 17.j.R/C mit erfolgreichen nativen Gates committed; diese Commits
+werden nicht wiederholt. Der nächste reguläre Schritt ist vollständig 17.k.
+
+Nach dem zulässigen Detailpräfix MERGE-PUBLICATION-619 folgen drei echte
+vollständige Zwischenstände 17.k.W/R/C mit eigenem Pflichtauswahl-plus-N=3-Gate
+vor jedem Commit. Dieser Zielstand enthält 724/900 und danach `17.k.R`.
+Zähler und Checkboxen werden erst durch erfolgreiches Apply-Gate und echten
+Commit wirksam. Vorbereitung behauptet keinen ausgeführten Verhaltenstest.
+
+W liefert den spezialisierten Producer des geschlossenen Change Plans 1.2.0
+und den vollständigen Mergeadapter am gemeinsamen Full-Image-Writer.
+Originale Merge-/Metadaten-/Zielbytes werden unabhängig rekonstruiert;
+aktuelle Oursbytes, Quellbindungen, K.3-Ziel und Ergebniswurzel müssen passen.
+Vor der ersten Transaktion stehen ein exaktes externes Backup und die native
+vollständige Zielvalidierung. Gemeinsame Locks, Before-/Staging-Images,
+fsync-Grenzen, Journale und Receipts bleiben maßgeblich. Passive Projektdateien
+werden erhalten; administrative Daten kommen nicht in Mergequellen/Backup.
+
+Der Abschluss bewertet Relationsreviews, Evidence und echte Codebytes erneut.
+Negative oder veraltete historische Befunde bleiben sichtbar und unverändert;
+die vorhandenen nativen Prüf- und fail_on-Regeln werden nicht abgeschwächt.
+Es entsteht keine menschliche Freigabe. Ein aufgezeichneter Quellbeweis ist
+keine aktuelle Beobachtung seiner ursprünglichen Dateisystemquelle.
+Request-Wiederholung gibt nur den belegten historischen Abschluss zurück,
+auch nach unabhängigen späteren Änderungen und ohne erneuten Writerlauf.
+
+R ergänzt die letzte frische Prüfung nach Receipt-/Archivdurabilität.
+Ändern sich dort externe Eingaben, bleibt der tatsächliche Journalzustand
+erhalten und wird nicht als frisch geprüfter Erfolg zurückgegeben.
+Die vorbereiteten Tests ändern reale Quellen während der Host-Autorisierung,
+manipulieren neu gehashte Originale/Effekte und unterbrechen jede echte
+Schreibgrenze eines Mehrdatei-Merges. Native explizite Recovery beweist
+entweder das vollständige Ziel oder den exakten Ausgangsstand; manipulierte
+Backups, Journale, Before-/Staging-Images werden nicht automatisch repariert.
+Synthetische Review-/Evidence-/Hosteingaben sind keine tatsächliche Abnahme.
+C extrahiert ausschließlich passive Quell-/Befundwerte; sämtliche R-Funktions-
+und Klassen-ASTs sowie Verhaltenstestbytes bleiben identisch.
+
+Neue/geänderte Tests und betroffene Merge-, Change-Plan-, Writer-, Receipt-,
+Recovery-, Migrations-, Restore-, Bundle-, Validierungs- und Nachweisregressionen
+sind ungefilterte Pflichtauswahl. Dev prüft ausschließlich Syntax, Collection
+und native Paketrekonstruktion. Die vollständige CLI-/Work-Endintegration,
+Quelltypen-/Resume-Parität und M17-Gesamtabnahme bleiben in 17.l offen.
+Kein Dienst-/CI-Start, keine behauptete Vollsuite oder erfundene Reviewfreigabe.
+
 ## MERGE-PUBLICATION-619 — gemeinsamer Writer und echte aktuelle Nachweisbindung
 
 Delegiert gemäß SPECROAD-DECISION-1, 2.4.3.1 und Vertrag 4;
@@ -4321,9 +4410,9 @@ Kein offener Produktplanschritt wird durch diese Testoptimierung abgeschlossen.
 ```yaml
 plan_revision: 110
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 723
-last_completed_plan_commit: 17.j.C
-next_plan_commit: 17.k.W
+implementation_plan_commits_completed: 724
+last_completed_plan_commit: 17.k.W
+next_plan_commit: 17.k.R
 last_completed_numbered_bundle: 618
 implementation_state: in_progress
 audit_followup_status: closed
@@ -39209,7 +39298,7 @@ Plattform-/Releasefreigaben werden dadurch nicht stillschweigend erteilt.
 
 #### 17.k.W – Let it Work
 
-- [ ] **17.k.W** · Position **724/900** · Voraussetzung: `17.j.C`.
+- [x] **17.k.W** · Position **724/900** · Voraussetzung: `17.j.C`.
 **Exakte Commit-Message:** `17.k.W feat(merge): Atomarer Apply und aktuelle Nachweisbindung aufbauen`
 
 **Umsetzung nach 10.15.8:** Final aufgelösten Merge nur auf passende aktuelle Oursbasis transaktional publizieren und Abschlussbericht binden.

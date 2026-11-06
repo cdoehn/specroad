@@ -4,7 +4,7 @@ from ..model.canonical import canonical_json_bytes as jcs, canonical_json_sha256
 from ..storage.json_syntax import parse_json_object as parsed
 from ._journal_codec import _transaction, _hash, journal_path
 from ._schema_transition_io import read, external_backup, project_files
-from .schema_transition_values import (FORMAT, TransitionJournal, SchemaTransitionError,
+from .schema_transition_values import (FORMAT, FORMATS, TransitionJournal, SchemaTransitionError,
     require, request_receipt, transaction_receipt)
 from .schema_transition import (_backup, _verify_images, _prefix, _Session, _held,
     _exclude, completion_data, _archive_path)
@@ -23,7 +23,7 @@ def find_journal(files, transaction_id):
     require(len(found) <= 1, 'transition_multiple_journal_locations')
     if not found: return None
     path, raw = found[0]
-    if parsed(raw).get('format_version') != FORMAT: return None
+    if parsed(raw).get('format_version') not in FORMATS: return None
     journal = TransitionJournal(raw)
     require(journal.data['transaction_id'] == transaction_id
         and journal.data['root_identity'] == list(files.boundary._root_identity), 'transition_journal_root_binding')
@@ -80,7 +80,7 @@ def historical_request(files, plan, project_id):
 
 
 def inspect_transition(files, journal, prefix):
-    backup = external_backup(files,journal.data['backup'])
+    backup = external_backup(files,journal.data['backup'],plan=journal.plan)
     _backup(journal,backup.source_bytes)
     _verify_images(files,prefix,journal,backup,partial=not journal.data['images_prepared'])
     extras = takeover_evidence(files,journal)
@@ -126,7 +126,7 @@ def _recover_transition(transaction_id, *, held_lock, authority, expected_journa
             'recovery_completed':True, 'normative_writes_by_recovery':0})
     # The current kernel owner may have just written its native takeover audit.
     extras = takeover_evidence(files, journal)
-    backup = external_backup(files,journal.data['backup'])
+    backup = external_backup(files,journal.data['backup'],plan=journal.plan)
     _backup(journal,backup.source_bytes)
     _verify_images(files,prefix,journal,backup,partial=not journal.data['images_prepared'])
     actual = project_files(files,exclude=(*_exclude(journal,prefix),*extras))[0]

@@ -73,13 +73,13 @@ class MergeInventory:
 
 def build_merge_inventory(sources, *, plan_id):
     """Bind all original files and native relations without inventing deletions."""
-    if type(sources) is not MergeSources:
+    if not sources_type(sources):
         raise ModelError('merge_sources_required')
     _plan_id(plan_id)
     observed = {}
     for role in ROLES:
         source = getattr(sources, role)
-        source.verify_current()
+        verify_observation(source)
         observed[role], _ = source_resource_rows(source)
     rows = []
     for key in sorted(set().union(*(set(observed[role]) for role in ROLES))):
@@ -98,7 +98,7 @@ def build_merge_inventory(sources, *, plan_id):
     roots = [bindings[role]['model_root_sha256'] for role in ROLES]
     expected = roots[1] if files[0] == files[1] == files[2] and roots[0] == roots[1] == roots[2] else None
     for role in ROLES:
-        getattr(sources, role).verify_current()
+        verify_observation(getattr(sources, role))
     return MergeInventory._create({'inventory_format_version': FORMAT, 'plan_id': plan_id,
         'metadata_policy_version': 'merge-metadata-v1', 'project_id': sources.ours.project_id,
         'schema_version': sources.ours.schema_version, 'source_bindings': bindings,
@@ -120,3 +120,7 @@ def read_merge_inventory(raw, sources):
     if raw != expected.canonical_bytes:
         raise ModelError('merge_inventory_binding_mismatch')
     return expected
+
+from ._recorded import sources_type
+
+from ._recorded import verify_observation

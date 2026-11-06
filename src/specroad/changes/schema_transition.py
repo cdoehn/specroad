@@ -1,13 +1,13 @@
 """Schema changes in the shared writer/receipt/recovery namespaces.
 
-Only the native migration adapter prepares this closed branch. Existing v1
+Only compiled migration/merge adapters prepare these closed branches. Existing v1
 transactions retain their parser and behavior. No retry or rollback is implicit.
 """
 from hashlib import sha256
 import os
 from ..model.canonical import canonical_json_bytes as jcs
 from ..migration.plan_values import b64
-from ..migration.transaction_target import materialized_files, validate_transaction_target
+from ._snapshot_dispatch import materialized_files, validate_target, command_for, format_for, is_merge
 from .schema_transition_values import (FORMAT, TransitionJournal, TransitionRequest,
     SchemaTransitionError, require, authoring, transaction_receipt, request_receipt, result_object)
 from ._schema_transition_proof import _backup, _images, _verify_images, _prefix
@@ -33,7 +33,8 @@ def _held(held, journal):
     held.check()
     value = held.record.data; data = journal.data
     require(value['kind'] in ('writer', 'recovery')
-        and value['command'] in ('migrate apply', 'recover run', 'recover discard')
+        and value['command'] in (command_for(journal.plan), 'recover run', 'recover discard')
+        and (value['kind'] != 'writer' or value['command'] == command_for(journal.plan))
         and value['project_id'] == data['project_id'] and value['transaction_id'] == data['transaction_id']
         and (value['kind'] != 'writer' or value['request_id'] == journal.plan.data['request_id'])
         and list(held._files.boundary._root_identity) == data['root_identity'], 'transition_lock_binding', exit_code=7)
@@ -47,7 +48,8 @@ def _exclude(journal, prefix):
 
 
 class _Session:
-    def __init__(self, held, journal, backup, *, gates=(), authority=None, recover=False):
+    def __init__(self, held, journal, backup, *, gates=(), authority=None, recover=False, merge_context=None):
+        self.merge_context = merge_context
         self.held, self.files = held, held._files
         self.journal, self.backup = journal, backup
         self.gates, self.authority, self.recover = tuple(gates), authority, recover
@@ -98,8 +100,9 @@ class _Session:
             from .schema_transition_recovery import takeover_evidence
             require(takeover_evidence(self.files, self.journal) == self.extra_evidence,
                     'transition_takeover_evidence_changed')
-        require(external_backup(self.files,self.journal.data['backup']).source_bytes == self.backup.source_bytes,
+        require(external_backup(self.files,self.journal.data['backup'],plan=self.journal.plan).source_bytes == self.backup.source_bytes,
                 'transition_backup_changed')
+        if self.merge_context is not None: self.merge_context.check()
         self.held.check()
 
     def authorize(self):
@@ -110,11 +113,15 @@ class _Session:
         require(before._raw == TransitionRequest.from_journal(self.journal)._raw, 'transition_authority_input_changed')
 
     def validate(self):
-        report = validate_transaction_target(self.journal.plan, self.source, self.target, gates=self.gates)
+        report = validate_target(self.journal.plan, self.source, self.target, gates=self.gates,merge_context=self.merge_context)
         require(report.data == self.journal.data['validation'], 'transition_validation_changed')
-        actual = external_backup(self.files, self.journal.data['backup'])
+        actual = external_backup(self.files, self.journal.data['backup'],plan=self.journal.plan)
         require(actual.source_bytes == self.backup.source_bytes, 'transition_backup_changed')
-        self.authorize(); self.guard()
+        self.authorize()
+        if self.merge_context is not None:
+            refreshed=validate_target(self.journal.plan,self.source,self.target,merge_context=self.merge_context)
+            require(refreshed.data==self.journal.data['validation'],'transition_validation_changed')
+        self.guard()
 
     def save(self, state, count):
         self.guard()
@@ -169,19 +176,19 @@ class _Session:
         return journal
 
 
-def publish_schema_transition(plan, *, held_lock, backup_descriptor, authority, gates=()):
-    """Called only with the common live migrate-apply writer lock and real backup."""
+def publish_schema_transition(plan, *, held_lock, backup_descriptor, authority, gates=(), merge_context=None):
+    """Called only with the common live policy-bound writer lock and real backup."""
     require(type(held_lock) is HeldProjectLock and type(authority) is PublicationAuthority,
             'transition_native_inputs_required', exit_code=7)
-    require(held_lock.record.data['kind'] == 'writer' and held_lock.record.data['command'] == 'migrate apply',
+    require(held_lock.record.data['kind'] == 'writer' and held_lock.record.data['command'] == command_for(plan),
             'transition_writer_lock_required', exit_code=7)
     authoring(plan); rename_function()
     files = held_lock._files
-    backup = external_backup(files, backup_descriptor)
+    backup = external_backup(files, backup_descriptor,plan=plan)
     source, modes, _ = project_files(files, exclude=('.specroad/locks/project.json',))
     require(source == backup.files, 'transition_source_changed')
-    report = validate_transaction_target(plan, source, materialized_files(plan, source), gates=tuple(gates))
-    journal = TransitionJournal(jcs({'format_version': FORMAT, 'state': 'building',
+    report = validate_target(plan, source, materialized_files(plan, source), gates=tuple(gates),merge_context=merge_context)
+    journal = TransitionJournal(jcs({'format_version': format_for(plan), 'state': 'building',
         'transaction_id': held_lock.record.data['transaction_id'], 'project_id': backup.manifest['project_id'],
         'root_identity': list(files.boundary._root_identity), 'plan_bytes_base64': b64(plan.source_bytes),
         'request_id': plan.data['request_id'], 'plan_sha256': plan.sha256, 'backup': backup_descriptor, 'source_modes': modes,
@@ -191,9 +198,12 @@ def publish_schema_transition(plan, *, held_lock, backup_descriptor, authority, 
     allowed = authority.check(request)
     require(type(allowed) is bool and allowed and request._raw == TransitionRequest.from_journal(journal)._raw,
             'transition_not_authorized', exit_code=7)
+    if merge_context is not None:
+        refreshed=validate_target(plan,source,materialized_files(plan,source),merge_context=merge_context)
+        require(refreshed.data==report.data,'transition_validation_changed')
     require(not files.journal_entries(), 'transition_recovery_required', exit_code=5)
     require(project_files(files, exclude=('.specroad/locks/project.json',))[:2] == (source, modes), 'transition_source_changed')
-    require(external_backup(files, backup_descriptor).source_bytes == backup.source_bytes, 'transition_backup_changed')
+    require(external_backup(files, backup_descriptor,plan=plan).source_bytes == backup.source_bytes, 'transition_backup_changed')
     request_id = plan.data['request_id']
     if request_id is not None:
         require(read(files, request_receipt_path(request_id), optional=True) is None, 'transition_request_collision')
@@ -206,7 +216,7 @@ def publish_schema_transition(plan, *, held_lock, backup_descriptor, authority, 
         os.mkdir(journal.data['transaction_id'], mode=0o700, dir_fd=parent); os.fsync(parent)
     write_new(files, journal.path, journal.source_bytes)
     _checkpoint('journal:building:0')
-    session = _Session(held_lock, journal, backup, gates=gates, authority=authority)
+    session = _Session(held_lock, journal, backup, gates=gates, authority=authority,merge_context=merge_context)
     session.guard()
     for name, raw in _images(journal, backup).items():
         session.guard(); write_new(files, session.prefix + '/' + name, raw)
@@ -217,13 +227,16 @@ def publish_schema_transition(plan, *, held_lock, backup_descriptor, authority, 
     for index in range(len(plan.data['operations'][0]['changes'])): session.effect(index)
     session.validate(); session.save('committed', session.live_count)
     session.finish()
-    return completion_data(session.journal, current=True)
+    return {**completion_data(session.journal, current=True),
+        **({'evidence_currently_rechecked':True} if is_merge(plan) else {})}
 
 
 def completion_data(journal, *, current=False):
     receipt = request_receipt(journal)
     result = result_object(journal)
-    return {**result, 'format_version': 'migration-transaction-v1', 'backup': journal.data['backup'],
+    return {**result, **({'validation':journal.data['validation'],'evidence_currently_rechecked':False}
+                       if is_merge(journal.plan) else {}),
+        'format_version': 'merge-transaction-v1' if is_merge(journal.plan) else 'migration-transaction-v1', 'backup': journal.data['backup'],
         'plan_sha256': journal.plan.sha256, 'journal_sha256': journal.sha256,
         'replayed': not current, 'current_target_verified': current, 'approval_granted': False,
         'receipts': {'transaction': {'path': transaction_receipt_path(journal.data['transaction_id']),

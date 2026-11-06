@@ -62,12 +62,16 @@ def _result_bindings(value):
 def _validate_plan(value, *, hash_present=True):
     if type(value) is not dict:
         raise ChangePlanError("plan_object_required")
+    merge = value.get("metadata_policy_version") == "merge-metadata-v1"
     migration = value.get("metadata_policy_version") == "migration-metadata-v1"
     operations = value.get("operations")
     if migration and not (type(operations) is list and len(operations) == 1
             and type(operations[0]) is dict and operations[0].get("op") == "schema_migrate"):
         raise ChangePlanError("unsupported_regular_metadata_policy", pointer="/metadata_policy_version", code="SRV174")
-    if not migration and value.get("metadata_policy_version") != METADATA_POLICY:
+    if merge and not (type(operations) is list and len(operations) == 1
+            and type(operations[0]) is dict and operations[0].get("op") == "merge_publish"):
+        raise ChangePlanError("unsupported_regular_metadata_policy", pointer="/metadata_policy_version", code="SRV174")
+    if not migration and not merge and value.get("metadata_policy_version") != METADATA_POLICY:
         raise ChangePlanError("unsupported_regular_metadata_policy", pointer="/metadata_policy_version", code="SRV174")
     schema = change_plan_schema()
     # Dispatch tagged operation validation separately for precise diagnostics;
@@ -104,6 +108,9 @@ def _validate_plan(value, *, hash_present=True):
     if migration:
         from ..migration.plan_contract import validate_migration_envelope
         _at("", validate_migration_envelope, value)
+    if merge:
+        from ..merge.publication_contract import validate_publication_envelope
+        _at("", validate_publication_envelope, value)
     if hash_present:
         expected = canonical_json_sha256({k: v for k, v in value.items() if k != "change_plan_sha256"})
         if expected != value["change_plan_sha256"]:

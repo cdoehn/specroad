@@ -55,7 +55,7 @@ def prepare_merge_target(metadata_raw, plan_raw, sources, *, history,
         # Reobserve every native source even after a negative check or provider
         # failure. A stale source must never leave an apparently current result.
         for role in ROLES:
-            getattr(sources, role).verify_current()
+            verify_observation(getattr(sources, role))
     data = {'target_format_version': 'merge-target-validation-v1',
         'metadata_candidate_sha256': expected_metadata_sha256,
         'input_plan_sha256': expected_plan_sha256,
@@ -81,3 +81,5 @@ def verify_merge_target(target_raw, metadata_raw, plan_raw, sources, *, history,
     if jcs(stored) != current.canonical_bytes:
         raise ModelError('merge_target_binding_mismatch')
     return current
+
+from ._recorded import verify_observation

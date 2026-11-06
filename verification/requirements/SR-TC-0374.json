@@ -2,19 +2,26 @@
   "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [],
   "expected_exit_codes": [],
-  "fixture_ids": [],
-  "implementation_status": "open",
+  "fixture_ids": [
+    "SR-FIX-MERGE-PUBLICATION-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [],
-  "method": "pending",
+  "method": "automated_behavior",
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Successful stage-specific Apply execution evidence is required; Dev ran zero behavior tests.",
+    "17.l must complete CLI/Work/report integration and final source-type/resume parity. SR-REQ-0373/SR-REQ-0374 and M17 are not claimed complete."
   ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Nach einem Merge MÜSSEN Relationsreviews, Evidence und Code-Referenzen gemäß Relationsinhalt-, Kontext-, Konfigurations-, Datei- und Auswahlhashes neu bewertet und nicht mehr passende Nachweise oder Reviews als nicht aktuell klassifiziert werden.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "17.j native complete-project target validation remains mandatory. 17.k/10.15.8 adds the complete specialized merge-publication-v1 producer and merge-metadata-v1 Change Plan 1.2.0 branch on the existing native full-image writer. All current Ours bytes, original source/metadata/plan bindings, K.3 effects, exact external before backup, live lock, source modes and byte prefixes are checked. The common transaction namespace owns before/staging images, durable journals and receipts. Native full-project validation and fresh relation-review, Evidence and actual code-source assessments are bound to the completion report. Negative/stale records remain unchanged and cannot become approvals; existing fail_on and specialist requirements stay effective. Stored original-source proof is distinct from live source observation. Same-request replay proves the completed historical receipt without reexecution or a currentness claim. C extracts only passive recorded-source/report values and preserves every R function/class AST and all behavior test bytes. Prepared targets require separate successful Apply gates. Final CLI/Work integration and M17 acceptance remain open in 17.l; no requirement-wide completion or human review is claimed."
   },
-  "preconditions": [],
+  "preconditions": [
+    "Exact original plan/metadata/target bytes and native source snapshots with explicit source-bound history.",
+    "Live current Ours, explicit host PublicationAuthority, external exact backup, and existing native specialist providers; project data cannot supply executable callbacks or a success verifier.",
+    "Dev ran zero behavior tests. Apply must execute the mandatory selection and its due N=3 partition before each real stage commit."
+  ],
   "primary_verification_id": "SR-VER-0026",
   "required_environment": {
     "declared_minimum_python": "3.10",
@@ -28,8 +35,26 @@
     "owned_temporary_files": true
   },
   "specification_sha256": "fa3e492d18aaff24d9b22cd5c31a554a65173232c6d55a6147d526ed4fb81a09",
-  "steps": [],
+  "steps": [
+    "Publish independently prepared target bytes through the shared writer; compare exact file inventory, native root, full validation and matching transaction/request receipts.",
+    "Change relation/Evidence context and inspect fresh native classifications without rewriting their historical records. Check actual external code bytes without executing code.",
+    "Reject stale current Ours, extra normative resources, absent/negative authority, generic authoring injection and wrong plan policies without normative writes.",
+    "Replay the same completed request after independent project edits and deleted external backup; prove historical output and unchanged bytes/inodes.",
+    "Retain separate backup, lock, journal and receipt proof without inferring approval."
+  ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0374",
-  "test_ids": []
+  "test_ids": [
+    "tests/test_merge_publication.py::test_changed_evidence_subject_is_reassessed_without_rewriting_the_record",
+    "tests/test_merge_publication.py::test_changed_relation_context_preserves_review_original_as_suspect",
+    "tests/test_merge_publication.py::test_exact_k3_bytes_use_shared_transaction_and_bound_native_report[adopted]",
+    "tests/test_merge_publication.py::test_exact_k3_bytes_use_shared_transaction_and_bound_native_report[combined]",
+    "tests/test_merge_publication.py::test_exact_k3_bytes_use_shared_transaction_and_bound_native_report[unchanged]",
+    "tests/test_merge_publication.py::test_publication_refuses_missing_or_negative_real_host_authority",
+    "tests/test_merge_publication.py::test_real_external_code_bytes_are_rechecked_for_completion",
+    "tests/test_merge_publication.py::test_regular_authoring_cannot_relabel_or_inject_merge_operation",
+    "tests/test_merge_publication.py::test_request_replay_is_historical_and_never_reexecutes_or_requalifies",
+    "tests/test_merge_publication.py::test_stale_current_ours_or_extra_normative_file_is_not_silently_rebased[existing]",
+    "tests/test_merge_publication.py::test_stale_current_ours_or_extra_normative_file_is_not_silently_rebased[extra]"
+  ]
 }

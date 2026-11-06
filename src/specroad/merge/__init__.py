@@ -27,3 +27,7 @@ __all__ += ['MergeMetadata', 'prepare_merge_metadata', 'verify_merge_metadata']
 
 from .target import MergeTarget, prepare_merge_target, verify_merge_target
 __all__ += ['MergeTarget', 'prepare_merge_target', 'verify_merge_target']
+
+from .publication import plan_merge_publication, apply_merge_publication
+from .publication_backup import create_merge_backup
+__all__ += ['plan_merge_publication','apply_merge_publication','create_merge_backup']

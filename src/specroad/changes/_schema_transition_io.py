@@ -71,7 +71,7 @@ def complete_owned_image(files, path, expected, *, guard):
         _image(parent,name,len(expected),sha256(expected).hexdigest(),identity=identity)
 
 
-def external_backup(files, descriptor):
+def external_backup(files, descriptor, *, plan=None):
     from ..documents._export_targets import _output_boundary
     from ..bundles.migration_source import verify_source_backup
     source = SimpleNamespace(boundary=files.boundary)
@@ -79,8 +79,12 @@ def external_backup(files, descriptor):
     path = Path(descriptor['path']).relative_to(output.root).as_posix()
     raw = output.read_bytes(path)
     require(len(raw) == descriptor['size'], 'transition_backup_changed')
-    backup = verify_source_backup(raw, expected_sha256=descriptor['sha256'],
-        expected_source_files_sha256=descriptor['source_files_sha256'])
+    if plan is None:
+        backup = verify_source_backup(raw, expected_sha256=descriptor['sha256'],
+            expected_source_files_sha256=descriptor['source_files_sha256'])
+    else:
+        from ._snapshot_dispatch import verify_backup
+        backup = verify_backup(plan,raw,descriptor)
     require(output.read_bytes(path) == raw, 'transition_backup_changed')
     return backup
 

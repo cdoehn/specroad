@@ -11,12 +11,12 @@ def _same(left, right):
 
 
 def _sources(sources):
-    if type(sources) is not MergeSources:
+    if not sources_type(sources):
         raise ModelError('merge_sources_required')
     observed, relations, owners = {}, {}, {}
     for role in ROLES:
         source = getattr(sources, role)
-        source.verify_current()
+        verify_observation(source)
         observed[role], _ = source_resource_rows(source)
         relations[role], owners[role] = {}, {}
         # Use qualified navigation for legacy originals, not their raw arrays.
@@ -42,3 +42,7 @@ def _removals(values, base, side):
             raise ModelError('invalid_relation_removal')
         seen.add(value)
     return seen
+
+from ._recorded import sources_type
+
+from ._recorded import verify_observation

@@ -14,7 +14,7 @@ def inspect_merge_identities(sources, *, history):
     origins, history_hash = _history(history, sources, observed)
     conflicts = _identity_conflicts(observed, origins)
     for role in ROLES:
-        getattr(sources, role).verify_current()
+        verify_observation(getattr(sources, role))
     return RelationMergeResult._create(sources, history_hash, [], conflicts)
 
 
@@ -76,5 +76,7 @@ def merge_relations(sources, *, history, removed_ours=(), removed_theirs=()):
                 continue
             candidates.append(target)
     for role in ROLES:
-        getattr(sources, role).verify_current()
+        verify_observation(getattr(sources, role))
     return RelationMergeResult._create(sources, history_hash, candidates, conflicts)
+
+from ._recorded import verify_observation

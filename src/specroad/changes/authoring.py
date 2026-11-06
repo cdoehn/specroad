@@ -41,6 +41,8 @@ def prepare_authoring_request(*, command_id, actor, operations, request_id=None,
     if type(operations) not in (list, tuple):
         raise AuthoringError('explicit_operation_sequence_required', pointer='/operations')
     owned = [ChangeOperation(op).data for op in operations]
+    if any(op['op'] == 'merge_publish' for op in owned):
+        raise AuthoringError('specialist_merge_workflow_required', exit_code=7)
     if any(op['op'] == 'schema_migrate' for op in owned):
         raise AuthoringError('specialist_migration_workflow_required', exit_code=7)
     return AuthoringRequest._create({

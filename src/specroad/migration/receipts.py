@@ -1,6 +1,6 @@
 """Complete portable schema-transition history, never live publication proof."""
 from dataclasses import dataclass
-from ..changes.schema_transition_values import TransitionJournal, FORMAT, request_receipt, transaction_receipt
+from ..changes.schema_transition_values import TransitionJournal, FORMAT, FORMATS, request_receipt, transaction_receipt
 from ..changes._schema_transition_proof import _backup, verify_owned_images
 from ..storage.json_syntax import parse_json_object
 from .plan_values import require
@@ -28,7 +28,7 @@ def completed_migration_receipts(files, project_id):
     for path, raw in sorted(files.items()):
         if not path.startswith('.specroad/transactions/receipts/') or not path.endswith('/journal.json'):
             continue
-        if parse_json_object(raw).get('format_version') != FORMAT:
+        if parse_json_object(raw).get('format_version') not in FORMATS:
             continue
         journal = TransitionJournal(raw)
         prefix = journal.receipt_root

@@ -105,5 +105,7 @@ ancestry, transition event, review authority or deletion is guessed here.
                           'lifecycle_values': lifecycle, 'successor_ids': targets,
                           'supersedes_ids': predecessors})
     for role in ROLES:
-        getattr(sources, role).verify_current()
+        verify_observation(getattr(sources, role))
     return LifecycleMergeResult._create(sources, history_hash, decisions, originals, conflicts)
+
+from ._recorded import verify_observation

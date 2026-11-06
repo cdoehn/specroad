@@ -388,6 +388,10 @@
       "kind": "Complete native synthetic projects and original source bindings; explicit synthetic identity histories and actors. Real three-way candidates, exact byte adoption, central K.3 audit arithmetic and native root projection; no substituted source validators, generated fake roots or write authority. R adds genuine prepared native Baseline originals and objects with independently reconstructed historical roots, four native source kinds, real source mutations and forged projections.",
       "provider": "tests/test_merge_metadata.py;tests/support/merge_lifecycle.py;tests/support/merge_relations.py;tests/test_merge_inventory.py:bind_files;tests/test_project_bundle.py:project;tests/test_merge_metadata_right.py;tests/test_merge_sources.py:sources;tests/test_baseline_creation.py:project;specroad.changes.baselines:prepare_baseline_operation"
     },
+    "SR-FIX-MERGE-PUBLICATION-v1": {
+      "kind": "Native complete synthetic projects, original three-way byte snapshots and explicitly synthetic identity histories. Actual external backup ZIPs, common writer locks, before/staging images, journals, receipts and real native project checks. Native historical review/Evidence fixtures are explicitly synthetic; host authority callbacks are test authorization, never claimed human reviews or real project approval.",
+      "provider": "tests/support/merge_publication.py;tests/support/merge_target.py;tests/test_merge_publication.py;tests/test_relation_review_status.py;tests/test_verification_run_selection.py"
+    },
     "SR-FIX-MERGE-RELATIONS-v1": {
       "kind": "Real native complete synthetic project sources with explicit known creation events, global relation IDs, independent exact target/conflict/byte hash assertions and read-only source checks. Origin observations are caller inputs, never invented production ancestry or human review. Explicit removal, owner/birth-metadata checks, qualified legacy navigation, source mutation and malformed-input boundaries are included.",
       "provider": "tests/test_merge_relations.py;tests/support/merge_relations.py;tests/test_project_bundle.py:project;tests/test_merge_inventory.py:bind_files;tests/test_merge_relations_right.py;tests/support/legacy_manifest.py:migrated"
@@ -1001,6 +1005,7 @@
     "SR-FIX-MERGE-INVENTORY-v1",
     "SR-FIX-MERGE-LIFECYCLE-v1",
     "SR-FIX-MERGE-METADATA-v1",
+    "SR-FIX-MERGE-PUBLICATION-v1",
     "SR-FIX-MERGE-RELATIONS-v1",
     "SR-FIX-MERGE-RESOLUTION-v1",
     "SR-FIX-MERGE-SOURCES-v1",

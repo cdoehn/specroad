@@ -244,7 +244,7 @@ def prepare_merge_metadata(raw, sources, *, history, expected_plan_sha256):
               'pending_gates': ([] if not conflicts else ['merge_metadata']) + ['target_validation', 'publication'],
               'ready': False, 'write_authorized': False, 'approval_granted': False}
     for role in ROLES:
-        getattr(sources, role).verify_current()
+        verify_observation(getattr(sources, role))
     return MergeMetadata._create(result, files)
 
 
@@ -257,5 +257,7 @@ def verify_merge_metadata(candidate_raw, raw, sources, *, history, expected_plan
     if jcs(stored) != rebuilt.canonical_bytes:
         raise ModelError('merge_metadata_binding_mismatch')
     for role in ROLES:
-        getattr(sources, role).verify_current()
+        verify_observation(getattr(sources, role))
     return rebuilt
+
+from ._recorded import verify_observation

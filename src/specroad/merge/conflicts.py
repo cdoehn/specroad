@@ -152,7 +152,7 @@ def build_merge_conflicts(sources, *, plan_id, history):
     document['conflicts'] = sorted(rows.values(),key=lambda row:row['conflict_id'])
     document['conflicts_sha256'] = digest(document['conflicts'])
     for role in ROLES:
-        getattr(sources,role).verify_current()
+        verify_observation(getattr(sources,role))
     return parse_merge_conflicts(jcs(document))
 
 
@@ -162,3 +162,5 @@ def read_merge_conflicts(raw, sources, *, history):
     if stored.canonical_bytes != expected.canonical_bytes:
         raise ModelError('merge_conflicts_binding_mismatch')
     return expected
+
+from ._recorded import verify_observation

@@ -23,5 +23,7 @@ def resolve_merge_conflict(raw, sources, *, history, expected_plan_sha256,
         conflict_id=conflict_id, actor=actor, resolved_at=resolved_at, take=take, value=value)
     read_merge_resolutions(raw, sources, history=history, expected_plan_sha256=expected_plan_sha256)
     for role in ROLES:
-        getattr(sources, role).verify_current()
+        verify_observation(getattr(sources, role))
     return result
+
+from ._recorded import verify_observation

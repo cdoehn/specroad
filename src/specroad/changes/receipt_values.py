@@ -132,7 +132,7 @@ class RequestReceipt:
                   'target_model_root_sha256', 'result', 'created_ids', 'result_object',
                   'transaction_receipt'}
         if (set(value) != fields or value['format_version'] not in
-                ('request-receipt-v1','schema-transition-request-receipt-v1')
+                ('request-receipt-v1','schema-transition-request-receipt-v1','merge-transition-request-receipt-v1')
                 or value['namespace'] != 'normative_write' or value['result'] != 'committed'):
             raise ReceiptError('invalid_request_receipt_schema')
         from .authoring import normalize_authoring_actor

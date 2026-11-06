@@ -68,6 +68,9 @@ OPERATION_TYPES = tuple(_CONTRACTS)
 
 
 def operation_schema(kind):
+    if kind == "merge_publish":
+        from ..merge.publication_contract import publication_operation_schema
+        return publication_operation_schema()
     if kind == "schema_migrate":
         from ..migration.plan_contract import migration_operation_schema
         return migration_operation_schema()
@@ -77,6 +80,10 @@ def operation_schema(kind):
 
 
 def validate_operation(value, pointer=""):
+    if type(value) is dict and value.get("op") == "merge_publish":
+        from ..merge.publication_contract import validate_publication_operation
+        _at(pointer, validate_publication_operation, value, pointer)
+        return value
     if type(value) is dict and value.get("op") == "schema_migrate":
         from ..migration.plan_contract import validate_migration_operation
         _at(pointer, validate_migration_operation, value, pointer)
@@ -100,13 +107,13 @@ def validate_operation(value, pointer=""):
 
 def result_owners(value):
     """Use only a previously validated payload; no execution/folding implied."""
-    if value["op"] == "schema_migrate":
+    if value["op"] in ("schema_migrate", "merge_publish"):
         return tuple(value["result_ids"])
     return _CONTRACTS[value["op"]].result_owners(value)
 
 
 def required_workflow(kind):
     """Return a routing label, never an authentication or authority token."""
-    if kind == "schema_migrate":
-        return "schema_migrate"
+    if kind in ("schema_migrate", "merge_publish"):
+        return kind
     return _CONTRACTS[kind].workflow

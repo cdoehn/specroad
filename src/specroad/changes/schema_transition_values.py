@@ -13,6 +13,7 @@ from ._authoring_policy import select_route
 from ..migration.plan_values import b64, unb64
 
 FORMAT = 'schema-transition-journal-v1'
+FORMATS = (FORMAT,'merge-transition-journal-v1')
 
 
 class SchemaTransitionError(ChangeExecutionError):
@@ -29,7 +30,8 @@ def authoring(plan):
     data = plan.data
     actor = normalize_authoring_actor(data['actor'])
     identity = normalize_request_id(data['request_id'])
-    route = select_route('migrate apply', actor, identity, False, False)
+    from ._snapshot_dispatch import command_for
+    route = select_route(command_for(plan), actor, identity, False, False)
     require(route == 'direct', 'migration_direct_authoring_required', exit_code=7)
     return digest(data['operations'])
 
@@ -43,11 +45,13 @@ class TransitionJournal:
         value = parsed(raw)
         fields = {'format_version', 'state', 'transaction_id', 'project_id', 'root_identity',
             'request_id', 'plan_bytes_base64', 'plan_sha256', 'backup', 'source_modes', 'published_count', 'images_prepared', 'validation'}
-        require(set(value) == fields and value['format_version'] == FORMAT, 'transition_journal_schema')
+        require(set(value) == fields and value['format_version'] in FORMATS, 'transition_journal_schema')
         _transaction(value['transaction_id'])
         plan = ChangePlan(unb64(value['plan_bytes_base64']))
-        require(plan.data['metadata_policy_version'] == 'migration-metadata-v1' and plan.sha256 == value['plan_sha256'],
+        require(plan.data['metadata_policy_version'] in ('migration-metadata-v1','merge-metadata-v1') and plan.sha256 == value['plan_sha256'],
                 'transition_plan_binding')
+        from ._snapshot_dispatch import format_for, is_merge
+        require(value['format_version']==format_for(plan),'transition_format_policy_binding')
         authoring(plan)
         require(value['request_id'] == plan.data['request_id'], 'transition_request_binding')
         op = plan.data['operations'][0]
@@ -86,6 +90,12 @@ class TransitionJournal:
         require(state != 'building' or not prepared, 'transition_images_unprepared')
         require(state != 'committed' or count == len(op['changes']), 'transition_state')
         report = value['validation']
+        if is_merge(plan):
+            require(type(report) is dict and set(report)=={'format_version','native','assessment','relation_reviews','evidence','code_references'}
+                and report['format_version']=='merge-publication-validation-v1'
+                and all(type(report[k]) is list for k in ('relation_reviews','evidence','code_references')),
+                'merge_transition_validation_schema')
+            report=report['native']
         require(type(report) is dict and report.get('format_version') == 'model-validation-v1'
             and report.get('checks_complete') is True and report.get('model_valid') is True
             and report.get('structural_scope') == 'all_supplied_documents', 'transition_validation_incomplete')
@@ -117,7 +127,8 @@ class TransitionJournal:
 def transaction_receipt(journal):
     require(journal.data['state'] == 'committed', 'transition_not_committed')
     plan = journal.plan.data; op = plan['operations'][0]
-    return jcs({'format_version': 'schema-transition-receipt-v1', 'journal_sha256': journal.sha256,
+    from ._snapshot_dispatch import is_merge
+    return jcs({'format_version': 'merge-transition-receipt-v1' if is_merge(journal.plan) else 'schema-transition-receipt-v1', 'journal_sha256': journal.sha256,
         'transaction_id': journal.data['transaction_id'], 'plan_sha256': journal.plan.sha256,
         'source_files_sha256': digest(op['source_files']), 'target_files_sha256': digest(op['target_files']),
         'target_model_root_sha256': op['target_model_root_sha256'], 'validation_sha256': digest(journal.data['validation'])})
@@ -135,7 +146,8 @@ def request_receipt(journal):
     data, plan = journal.data, journal.plan.data
     if plan['request_id'] is None:
         return None
-    raw = jcs({'format_version': 'schema-transition-request-receipt-v1', 'namespace': 'normative_write',
+    from ._snapshot_dispatch import is_merge
+    raw = jcs({'format_version': 'merge-transition-request-receipt-v1' if is_merge(journal.plan) else 'schema-transition-request-receipt-v1', 'namespace': 'normative_write',
         'request_id': plan['request_id'], 'project_id': data['project_id'],
         'transaction_id': data['transaction_id'], 'actor': plan['actor'],
         'operations_sha256': digest(plan['operations']),
@@ -153,7 +165,8 @@ class TransitionRequest:
     @classmethod
     def from_journal(cls, journal):
         result = object.__new__(cls)
-        data = {'command_id': 'migrate apply', 'plan': journal.plan.data, 'plan_sha256': journal.plan.sha256,
+        from ._snapshot_dispatch import command_for
+        data = {'command_id': command_for(journal.plan), 'plan': journal.plan.data, 'plan_sha256': journal.plan.sha256,
             'backup': journal.data['backup'], 'root_identity': journal.data['root_identity'],
             'project_id': journal.data['project_id'], 'transaction_id': journal.data['transaction_id'],
             'validation': journal.data['validation'], 'write_authorized': False, 'approval_granted': False}

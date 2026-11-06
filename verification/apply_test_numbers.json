@@ -25993,6 +25993,17 @@
     "tests/test_merge_target_right.py::test_separately_valid_branches_form_a_forbidden_combined_hierarchy_cycle",
     "tests/test_merge_target_right.py::test_stored_success_shapes_cannot_substitute_native_services[boolean]",
     "tests/test_merge_target_right.py::test_stored_success_shapes_cannot_substitute_native_services[callable]",
-    "tests/test_merge_target_right.py::test_stored_success_shapes_cannot_substitute_native_services[mapping]"
+    "tests/test_merge_target_right.py::test_stored_success_shapes_cannot_substitute_native_services[mapping]",
+    "tests/test_merge_publication.py::test_changed_evidence_subject_is_reassessed_without_rewriting_the_record",
+    "tests/test_merge_publication.py::test_changed_relation_context_preserves_review_original_as_suspect",
+    "tests/test_merge_publication.py::test_exact_k3_bytes_use_shared_transaction_and_bound_native_report[adopted]",
+    "tests/test_merge_publication.py::test_exact_k3_bytes_use_shared_transaction_and_bound_native_report[combined]",
+    "tests/test_merge_publication.py::test_exact_k3_bytes_use_shared_transaction_and_bound_native_report[unchanged]",
+    "tests/test_merge_publication.py::test_publication_refuses_missing_or_negative_real_host_authority",
+    "tests/test_merge_publication.py::test_real_external_code_bytes_are_rechecked_for_completion",
+    "tests/test_merge_publication.py::test_regular_authoring_cannot_relabel_or_inject_merge_operation",
+    "tests/test_merge_publication.py::test_request_replay_is_historical_and_never_reexecutes_or_requalifies",
+    "tests/test_merge_publication.py::test_stale_current_ours_or_extra_normative_file_is_not_silently_rebased[existing]",
+    "tests/test_merge_publication.py::test_stale_current_ours_or_extra_normative_file_is_not_silently_rebased[extra]"
   ]
 }
