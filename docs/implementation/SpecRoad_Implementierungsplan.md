@@ -34,6 +34,91 @@ Produktfreigaben und die Grenzen aus 2.4.1/2.4.2/2.4.4 bleiben unverändert.
 Dieser Plan ändert keine alten Aufträge, Antworten, Blockaden oder
 Laufzeitdaten und ist keine Start-/Resume-Anweisung.
 
+## Korrekturbundle 615 — Relationenidentität und vollständiger Rest 17.i.W/R/C
+
+Maßgeblich ist das nativ geprüfte Fehler-Result `specroad-apply_Result_001533_1106_27b7b4.zip`,
+SHA-256 `a3443f49206a674f045cca62f5690e82a084cc6866227d26d5fae5774f0fed44`.
+Bindung: repo_id `a33ed6cf-0a97-4b73-b11a-d4239e7a2145`,
+HEAD `4fd62556ad4ea5c7b10ea733f49c3352236f7fc8`,
+Fingerprint `8aa2035a3b00ccdf`, Algorithmus `patchharbor-state-v1`.
+
+MERGE-METADATA-614 bestand sein eigenständiges Gate mit 6989 Tests und wurde
+als obiger HEAD committed. Danach scheiterte 17.i.W vor seinem Commit mit
+zwei Fehlern und 8167 bestandenen Tests. R und C wurden nicht begonnen.
+Der erhaltene Arbeitsstand entspricht vollständig dem angekündigten W-Stand.
+Der bestätigte Produktfortschritt bleibt 717/900, zuletzt 17.h.C; vorbereitete
+Checkboxen und Zielzähler sind noch keine erfolgreichen Produktcommits.
+
+Beide Fehler entstehen beim Sortieren der eingebetteten Relationsobjekte:
+Das native Payload-Feld heißt `relation_id`, nicht `id`. Die Korrektur verwendet
+dieses vorhandene Feld in W, R und C. Die Artefakt- und Inventaridentitäten
+bleiben unverändert. Der Test für disjunkte Relationen prüft die feste erwartete
+Reihenfolge der vollständigen Originalobjekte, einschließlich fehlender
+optionaler Auditfelder, statt die fehlerhafte Sortierberechnung zu wiederholen.
+Der Auflösungstest erhält explizite gültige gemeinsame Erstellungszeit und
+Erstellungsakteur: Bisher griff seine nachgelagerte Erwartung auf ein gar nicht
+vorhandenes optionales `created_at` zu. Er prüft nun das vollständige aufgelöste
+Relationsobjekt mit unveränderter Erstellungsherkunft und weiterhin die neue
+Besitzerrevision sowie den gebundenen Auflösungsakteur. Keine gemockte
+Validierung, keine normative Änderung oder abgeschwächte Abnahme.
+
+Diese normale Korrektur führt alle offenen IDs und Rollen aus Plan
+`73ee670dedf7a886372568ef21e236bcdc102af03872642d17b74f2710635611`
+fort: 17.i.W, 17.i.R und 17.i.C, jeweils implementation. Der erfolgreiche
+Klärungscommit wird nicht wiederholt; keine neue Klärung oder Budgetänderung.
+Die vollständigen Vorherbytes und der erhaltene W-Umfang binden an dieses
+Fehler-Result. W behält N=3-Gruppe 2. Erst nach erfolgreichem eigenem Gate
+und Commit folgt jeweils der nächste Zustand; der Endstand wird nie vorab
+installiert. Die vollständigen W/R/C-Umfänge und die R/C-Strukturtrennung
+bleiben erhalten. Die folgende ursprüngliche Bundle-614-Beschreibung bleibt
+als Entwurfsnachweis bestehen; maßgebliche Übergabe ist diese Korrektur 615.
+
+Alle ursprünglich verpflichtenden Testdateien bleiben ungefilterte
+Pflichtauswahl, insbesondere die gesamte geänderte Metadaten-Testdatei.
+Testidentitäten und dauerhafte Nummern bleiben unverändert. Dev führt nur
+Syntaxprüfung, reine Collection und native Paket-/Rekonstruktionsprüfung aus,
+keine Verhaltenstests. Zielzähler 718/719/720 und Abschluss-Bundlenummer 615
+werden erst durch das entsprechende erfolgreiche Apply-Gate und den echten
+Commit wirksam. 17.j–17.l, M17-Gesamtfreigabe und menschliche Reviews bleiben
+offen; keine Vollsuite- oder Releaseabnahme wird behauptet.
+
+## Bundle 614 — vollständiger Commitzielstand 17.i.W
+
+Basis ist das nativ geprüfte saubere Result `specroad-apply_Result_224038_1105_3250d1.zip`,
+SHA-256 `03a8324849f64333a4524906cacacad9e1d063f76059f45d3d7a1c5400bd4e42`, HEAD `5e6dc998bc4660d925439749eeec5df6b9887d73`,
+Fingerprint `7c9d2a24e397e0e5`. Bundle 613 hat 17.h.W/R/C
+mit drei erfolgreichen Gates committed; kein Rest wird wiederholt.
+
+Nach MERGE-METADATA-614 folgen drei echte Zwischenstände 17.i.W/R/C mit
+jeweils eigener Pflichtauswahl und N=3-Gruppe vor ihrem Commit. Dieser
+Zielstand enthält 718/900 und danach `17.i.R`. Zähler und
+Checkboxen werden erst nach erfolgreichem Apply-Gate mit echtem Commit
+wirksam. Keine ausgeführten Verhaltenstests werden durch Vorbereitung behauptet.
+
+W liefert alle vier K.3-Klassen und vollständige normative Dateikandidaten.
+Unveränderte/adoptierte Originalbytes bleiben exakt; kombinierte Artefakte
+verwenden ausschließlich den zentralen Merge-Metadatenmechanismus für
+Revision, gemeinsame Erstellungsherkunft, exakte Zeit und Tool-/Auflösungsakteur.
+Globale Relationen landen in ihrem tatsächlichen Besitzer. Die bestehende
+native Modellwurzelberechnung und unabhängige lesende Writer-Vorbereitung
+binden komplette Dateien, Metadaten und Eingabeplan. Kein Projekt wird geschrieben.
+W sperrt historische Übernahmen, deren Archivnachweis erst R vervollständigt.
+
+R rekonstruiert tatsächliche native Ours-Baselines und prüft Originale derselben
+Identität/Herkunft, damit höhere bekannte Revisionen nicht verloren gehen.
+Vorbereitete Tests decken Audit-/Wurzel-/Hashmanipulation, Kalender- und
+Zahlgrenzen, alle nativen Quellarten und wirkliche späte Dateiänderungen ab.
+C extrahiert passive Kandidatenwerte; R-Funktions-/Klassen-ASTs und Testbytes
+bleiben identisch. Die Policy bleibt im zentralen Metadatenmechanismus.
+
+Die volle semantische Zielvalidierung und spätere Transaktions-/CLI-Integration
+bleiben ausdrücklich in 17.j–17.l. `target_validation` und `publication`
+bleiben ausstehend; keine Freigabe, kein Lock, Receipt oder Journal entsteht.
+Neue/geänderte Tests und relevante Metadaten-, Quellen-, Merge-, Baseline-,
+Modellwurzel- und Katalogregressionen sind je Stage ungefilterte Pflichtauswahl.
+Dev prüft Syntax, reine Collection und native Paketrekonstruktion; keine
+Vollsuite-, Release-, M17- oder menschliche Reviewabnahme, kein Dienst-/CI-Start.
+
 ## MERGE-METADATA-614 — exakte Kandidaten und vollständiger Schritt 17.i
 
 Autorität: SPECROAD-DECISION-1, 2.4.3.1 und Vertrag 4, clarification_allowed=true,
@@ -4032,9 +4117,9 @@ Kein offener Produktplanschritt wird durch diese Testoptimierung abgeschlossen.
 ```yaml
 plan_revision: 108
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 717
-last_completed_plan_commit: 17.h.C
-next_plan_commit: 17.i.W
+implementation_plan_commits_completed: 718
+last_completed_plan_commit: 17.i.W
+next_plan_commit: 17.i.R
 last_completed_numbered_bundle: 613
 implementation_state: in_progress
 audit_followup_status: closed
@@ -38850,7 +38935,7 @@ Plattform-/Releasefreigaben werden dadurch nicht stillschweigend erteilt.
 
 #### 17.i.W – Let it Work
 
-- [ ] **17.i.W** · Position **718/900** · Voraussetzung: `17.h.C`.
+- [x] **17.i.W** · Position **718/900** · Voraussetzung: `17.h.C`.
 **Exakte Commit-Message:** `17.i.W feat(merge): Exakte Merge-Metadaten aufbauen`
 
 **Umsetzung:** unchanged_ours, adopt_existing, combined und conflict exakt nach merge-metadata-v1 behandeln.

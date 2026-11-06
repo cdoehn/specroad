@@ -21,3 +21,6 @@ from .resolutions import (MergeResolutions, parse_merge_resolutions, parse_resol
                           parse_resolution_value, read_merge_resolutions, resolve_merge_conflict)
 __all__ += ['MergeResolutions', 'parse_merge_resolutions', 'parse_resolution_plan',
             'parse_resolution_value', 'read_merge_resolutions', 'resolve_merge_conflict']
+
+from .metadata import MergeMetadata, prepare_merge_metadata, verify_merge_metadata
+__all__ += ['MergeMetadata', 'prepare_merge_metadata', 'verify_merge_metadata']

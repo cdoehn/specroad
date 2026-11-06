@@ -3,25 +3,25 @@
   "expected_diagnostics": [],
   "expected_exit_codes": [],
   "fixture_ids": [
-    "SR-FIX-MERGE-LIFECYCLE-v1"
+    "SR-FIX-MERGE-LIFECYCLE-v1",
+    "SR-FIX-MERGE-METADATA-v1"
   ],
   "implementation_status": "partial",
   "json_pointers": [],
   "method": "automated_behavior",
   "open_items": [
-    "Current successful Apply evidence for this stage is required; Dev ran zero behavior tests.",
-    "17.g–17.l conflict/resolution, full merge metadata, target invariants, current qualification, public CLI and writer integration remain required.",
-    "SR-REQ-0637/0638 remain partial until the complete merge-metadata-v1 Planner/Writer and adoption contract is integrated and proven."
+    "Successful execution evidence belongs to Apply; no tests executed in Dev.",
+    "17.j–17.l still require full semantic target validation, transactional publication and final CLI/report integration. No final M17 or requirement-wide pass is claimed."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Planner und Writer MÜSSEN für Merge-Ergebnisse dieselbe ausdrücklich gebundene `merge-metadata-v1`-Policy anwenden.",
-    "scope": "17.f native read-only lifecycle/history guards under 9.6.2, 9.6.3, 10.15.3 and K.3. The existing source-bound origin check precedes all content shortcuts. Concurrent lifecycle states and different inverse successors conflict; protected source originals remain byte-identical. R includes retirement versus normative content, direct supersedes targets, absent Base, retired reactivation, missing successors, all six protected record states, representation/revision rewrites, qualified legacy originals and late source mutation. Only a protected byte subset is returned, never a complete target or an approval. The result names merge-metadata-v1 but does not implement its later mutable-resource revision/timestamp calculation, Planner/Writer target equality or CLI/publication integration. These remain open; no requirement-wide pass is claimed."
+    "scope": "17.f source-bound identity/lifecycle/immutable-original guards remain prerequisites. 17.i/10.15.6 adds merge-metadata-v1 through the central changes metadata mechanism. All normative candidate bytes are reconstructed after source-bound conflict/resolution validation. unchanged_ours/adopt_existing preserve exact original bytes; combined uses max side revision +1, exact maximum source update time +1 microsecond, common creation origin and last explicitly affected resolution actor or the fixed tool actor. Relations retain original creation metadata and are assembled in their actual owner. Original conflicts block output. Native target model projection and a separate writer preparation recompute the whole file set, metadata and root from original inputs; stored hashes are never sufficient. W rejects lower current/Base revisions and withholds adoption pending archived-history verification. C extracts only passive values, preserving R function/class ASTs and test bytes. This does not implement the later full target validation or transaction/public CLI integration; requirement-wide acceptance remains open."
   },
   "preconditions": [
-    "All three complete sources are natively qualified and their full original bindings match.",
-    "The explicit provider input describes known synthetic creation events, never inferred production ancestry.",
-    "Every prepared stage requires its own current successful Apply gate; no behavior execution in Dev."
+    "Three complete natively qualified sources with explicit source-bound history and original plan bytes/hash.",
+    "Historical evidence is actual referentially bound native Baseline material, never a caller-supplied revision maximum.",
+    "Each stage requires its own successful Apply gate; Dev ran no behavior tests."
   ],
   "primary_verification_id": "SR-VER-0041",
   "required_environment": {
@@ -37,12 +37,11 @@
   },
   "specification_sha256": "8c35a0b0833be8edc1d29f79998dcb137b6fc76c4816a3873a1ace072e5c9b85",
   "steps": [
-    "Check conflicting lifecycle states and distinct successor identities against exact independent expected conflicts.",
-    "Check byte-identical protected original adoption and exact original-byte observations; every conflict blocks original extraction.",
-    "Check source bindings, stable detached results, no writes and no approval authority.",
-    "Distinguish normative content including typed JSON from audit/representation-only changes when retirement competes.",
-    "Exercise Evidence, sealed Baselines, RelationReviews and applied/rejected/stale Proposals, including equal values with different bytes.",
-    "Check missing originals, native source-kind parity, legacy originals and before/during source mutation without weakening W."
+    "Compare original exact bytes for unchanged/adopted artifacts and all normative resources; revision 7 stays 7.",
+    "Combine revisions 3/7 into 8, exact UTC maximum plus one microsecond, original creation and explicit/tool actor; include owned relations and resolved branches.",
+    "Rebuild the native target root independently and compare full metadata/file projections in writer preparation without any writes.",
+    "Withhold all target bytes/root for unresolved guards, differing origins or lower known revisions; reject invented approval and forged hashes.",
+    "Keep archived-history adoption fail-closed until its R verifier is present."
   ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0637",
@@ -130,6 +129,25 @@
     "tests/test_merge_lifecycle_right.py::test_specialist_status_conflicts_even_when_maturity_is_identical",
     "tests/test_merge_lifecycle_right.py::test_stale_history_binding_cannot_be_used_as_a_guard_input",
     "tests/test_merge_lifecycle_right.py::test_superseded_state_requires_an_actual_inverse_successor",
-    "tests/test_merge_lifecycle_right.py::test_typed_json_content_is_not_collapsed_by_python_boolean_numeric_equality"
+    "tests/test_merge_lifecycle_right.py::test_typed_json_content_is_not_collapsed_by_python_boolean_numeric_equality",
+    "tests/test_merge_metadata.py::test_combined_three_and_seven_becomes_eight_with_exact_time_and_native_root",
+    "tests/test_merge_metadata.py::test_different_creation_metadata_blocks_even_simple_adoption[created_at]",
+    "tests/test_merge_metadata.py::test_different_creation_metadata_blocks_even_simple_adoption[created_by]",
+    "tests/test_merge_metadata.py::test_disjoint_relations_are_joined_in_the_owner_without_restamping_relation_audit",
+    "tests/test_merge_metadata.py::test_immutable_evidence_conflict_cannot_be_reclassified_as_combined",
+    "tests/test_merge_metadata.py::test_last_bound_resolution_actor_in_owner_or_relation_order_controls_audit",
+    "tests/test_merge_metadata.py::test_lower_current_or_base_revision_is_not_adopted",
+    "tests/test_merge_metadata.py::test_no_changes_preserves_whole_normative_inventory_including_binary_originals",
+    "tests/test_merge_metadata.py::test_passive_result_owns_values_and_does_not_imply_authority",
+    "tests/test_merge_metadata.py::test_resolved_branch_forces_combined_revision_and_bound_human_actor[None]",
+    "tests/test_merge_metadata.py::test_resolved_branch_forces_combined_revision_and_bound_human_actor[base]",
+    "tests/test_merge_metadata.py::test_resolved_branch_forces_combined_revision_and_bound_human_actor[ours]",
+    "tests/test_merge_metadata.py::test_resolved_branch_forces_combined_revision_and_bound_human_actor[theirs]",
+    "tests/test_merge_metadata.py::test_unchanged_and_adopted_keep_original_bytes_and_history[equal]",
+    "tests/test_merge_metadata.py::test_unchanged_and_adopted_keep_original_bytes_and_history[ours_addition]",
+    "tests/test_merge_metadata.py::test_unchanged_and_adopted_keep_original_bytes_and_history[ours_changed]",
+    "tests/test_merge_metadata.py::test_unchanged_and_adopted_keep_original_bytes_and_history[theirs_addition]",
+    "tests/test_merge_metadata.py::test_unchanged_and_adopted_keep_original_bytes_and_history[theirs_changed]",
+    "tests/test_merge_metadata.py::test_unresolved_conflict_withholds_all_files_and_model_root"
   ]
 }

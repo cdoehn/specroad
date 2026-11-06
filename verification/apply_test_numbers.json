@@ -25852,6 +25852,25 @@
     "tests/test_merge_resolution_right.py::test_stored_resolution_rejects_inconsistent_audit_projection_or_authority[write]",
     "tests/test_merge_resolution_right.py::test_cli_malformed_native_bundle_is_a_model_error_not_an_internal_failure[PK\\x03\\x04truncated]",
     "tests/test_merge_resolution_right.py::test_cli_malformed_native_bundle_is_a_model_error_not_an_internal_failure[]",
-    "tests/test_merge_resolution_right.py::test_cli_malformed_native_bundle_is_a_model_error_not_an_internal_failure[not a zip]"
+    "tests/test_merge_resolution_right.py::test_cli_malformed_native_bundle_is_a_model_error_not_an_internal_failure[not a zip]",
+    "tests/test_merge_metadata.py::test_combined_three_and_seven_becomes_eight_with_exact_time_and_native_root",
+    "tests/test_merge_metadata.py::test_different_creation_metadata_blocks_even_simple_adoption[created_at]",
+    "tests/test_merge_metadata.py::test_different_creation_metadata_blocks_even_simple_adoption[created_by]",
+    "tests/test_merge_metadata.py::test_disjoint_relations_are_joined_in_the_owner_without_restamping_relation_audit",
+    "tests/test_merge_metadata.py::test_immutable_evidence_conflict_cannot_be_reclassified_as_combined",
+    "tests/test_merge_metadata.py::test_last_bound_resolution_actor_in_owner_or_relation_order_controls_audit",
+    "tests/test_merge_metadata.py::test_lower_current_or_base_revision_is_not_adopted",
+    "tests/test_merge_metadata.py::test_no_changes_preserves_whole_normative_inventory_including_binary_originals",
+    "tests/test_merge_metadata.py::test_passive_result_owns_values_and_does_not_imply_authority",
+    "tests/test_merge_metadata.py::test_resolved_branch_forces_combined_revision_and_bound_human_actor[None]",
+    "tests/test_merge_metadata.py::test_resolved_branch_forces_combined_revision_and_bound_human_actor[base]",
+    "tests/test_merge_metadata.py::test_resolved_branch_forces_combined_revision_and_bound_human_actor[ours]",
+    "tests/test_merge_metadata.py::test_resolved_branch_forces_combined_revision_and_bound_human_actor[theirs]",
+    "tests/test_merge_metadata.py::test_unchanged_and_adopted_keep_original_bytes_and_history[equal]",
+    "tests/test_merge_metadata.py::test_unchanged_and_adopted_keep_original_bytes_and_history[ours_addition]",
+    "tests/test_merge_metadata.py::test_unchanged_and_adopted_keep_original_bytes_and_history[ours_changed]",
+    "tests/test_merge_metadata.py::test_unchanged_and_adopted_keep_original_bytes_and_history[theirs_addition]",
+    "tests/test_merge_metadata.py::test_unchanged_and_adopted_keep_original_bytes_and_history[theirs_changed]",
+    "tests/test_merge_metadata.py::test_unresolved_conflict_withholds_all_files_and_model_root"
   ]
 }
