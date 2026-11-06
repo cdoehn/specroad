@@ -34,6 +34,50 @@ Produktfreigaben und die Grenzen aus 2.4.1/2.4.2/2.4.4 bleiben unverändert.
 Dieser Plan ändert keine alten Aufträge, Antworten, Blockaden oder
 Laufzeitdaten und ist keine Start-/Resume-Anweisung.
 
+## Korrektur 618 — gebundene Fortsetzung von 17.j.R/C
+
+Maßgeblich ist das nativ geprüfte Fehler-Result `specroad-apply_Result_035652_1106_59fcdc.zip`,
+SHA-256 `d685a41e0864305525e522918ddbc505983c8558ee1075ba08af590c8592bb73`, HEAD `08ecfe2349d710c2856e5e3dd7f96a472367e140`,
+Fingerprint `87ff4fcc58540c41`. Bundle 617 hat 17.j.W als
+08ecfe2349d710c2856e5e3dd7f96a472367e140 nach 10005 bestandenen Tests
+committed (Gruppe 0 plus 4069 Pflichttests). Dieser Commit und der bereits
+abgeschlossene Klärungscommit MERGE-TARGET-616 bleiben erhalten.
+17.j.R scheiterte vor seinem Commit mit elf Fehlern und 10079 bestandenen
+Tests; 17.j.C wurde nicht ausgeführt. Der vollständig rekonstruierte,
+erhaltene R-Arbeitsstand ist die Korrekturbasis, nicht nur der Base-Snapshot.
+
+Die elf Fehler liegen in `tests/test_merge_target_right.py`: neun Varianten
+der nativen Reviewprüfung und die Nachprüfung eines veralteten Reviews rufen
+die nicht vorhandene Methode `SourceSnapshot.load` auf. Sie verwenden nun
+den bestehenden öffentlichen Konstruktor `SourceSnapshot(SourceRequest(...))`.
+Die tatsächlichen nativen Revieweingaben und sämtliche positiven/negativen
+Erwartungen bleiben erhalten; kein Provider oder Validator wird ersetzt.
+
+Der Baseline-Quellartentest erhält bereits `target_validated=true`, vergleicht
+aber die rekonstruierte Konfiguration byteweise mit den Betriebsfeldern des
+ursprünglichen Arbeitsprojekts. Der bestehende Baselinevertrag bewahrt die
+semantische Konfiguration und rekonstruiert ausgeschlossene betriebliche Werte.
+Der korrigierte Test verlangt exakte Zielgleichheit mit der qualifizierten
+Quelle, dieselbe vollständige Pfadmenge und bytegleiche übrige Originaldateien.
+Die semantische Projektion wird zusätzlich mit den archivierten Originalbytes
+und ihrem Konfigurationshash verglichen; die Zielwurzel muss der archivierten
+Modellwurzel entsprechen. Local-, Bundle- und Git-Quellen behalten den
+vollständigen ursprünglichen Bytevergleich. Der Schreibfreiheitstest bleibt.
+
+Produktcode, normative Spezifikation, Klärungsabnahmen, Testidentitäten und
+Nummern bleiben unverändert. Die vollständigen offenen IDs/Rollen 17.j.R/C
+werden fortgeführt; keine neue Klärung und keine Budgetänderung. Beide Stufen
+enthalten denselben korrigierten Test. C erhält weiterhin ausschließlich die
+bereits angekündigte Strukturverschiebung passiver Ergebniswerte und seinen
+Planfortschritt. Kein späterer Zustand wird vor dem vorigen Gate installiert.
+
+Jede Stufe behält alle bisherigen ungefilterten Pflichtdateien und ihr eigenes
+N=3-plus-Pflichtauswahl-Gate. R bleibt Gruppe 1, danach folgt C mit Gruppe 2.
+Planfortschritt wird erst durch erfolgreiche Apply-Commits wirksam. Dev führt
+nur Syntax-/Collection-/Paketprüfung aus, keine Verhaltenstests. Der gesamte
+Schritt 17.j bleibt bis zum erfolgreichen Restabschluss offen; M17 sowie
+Transaktions-/CLI-/Work-Integration in 17.k–17.l bleiben weiterhin erforderlich.
+
 ## Korrektur 617 — gebundene Fortsetzung von 17.j.W/R/C
 
 Maßgeblich ist das nativ geprüfte Fehler-Result `specroad-apply_Result_024957_1106_83bbf2.zip`,
@@ -77,7 +121,7 @@ Planfortschritt wird nur durch erfolgreiche Commits wirksam. Dev führte keine
 Verhaltenstests aus. M17, Transaktions-/CLI-/Work-Integration in 17.k–17.l und
 menschliche Freigaben bleiben offen; dieser Nachweis ist keine Produktfreigabe.
 
-## Bundle 616 — vollständiger Commitzielstand 17.j.W
+## Bundle 616 — vollständiger Commitzielstand 17.j.R
 
 Basis ist das nativ geprüfte saubere Result `specroad-apply_Result_005413_1106_021a46.zip`,
 SHA-256 `6d0b1c88c57d557295acee96edbb2bceb89ec8c034a037d1de5810cd07cb698e`, HEAD `eb2ee51c97c23e68e75bfa2f726da03b1928ea26`,
@@ -86,7 +130,7 @@ mit drei erfolgreichen Gates committed; kein erfolgreicher Commit wird wiederhol
 
 Nach dem optionalen zulässigen Präfix MERGE-TARGET-616 folgen drei echte
 vollständige Zwischenstände 17.j.W/R/C mit eigenem Pflichtauswahl-plus-N=3-Gate
-vor jedem Commit. Dieser Zielstand enthält 721/900 und danach `17.j.R`.
+vor jedem Commit. Dieser Zielstand enthält 722/900 und danach `17.j.C`.
 Zähler und Checkboxen werden erst durch erfolgreiches Apply-Gate und echten
 Commit wirksam. Vorbereitung behauptet keinen ausgeführten Verhaltenstest.
 
@@ -4242,9 +4286,9 @@ Kein offener Produktplanschritt wird durch diese Testoptimierung abgeschlossen.
 ```yaml
 plan_revision: 109
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 721
-last_completed_plan_commit: 17.j.W
-next_plan_commit: 17.j.R
+implementation_plan_commits_completed: 722
+last_completed_plan_commit: 17.j.R
+next_plan_commit: 17.j.C
 last_completed_numbered_bundle: 615
 implementation_state: in_progress
 audit_followup_status: closed
@@ -39104,7 +39148,7 @@ Plattform-/Releasefreigaben werden dadurch nicht stillschweigend erteilt.
 
 #### 17.j.R – Make it Right
 
-- [ ] **17.j.R** · Position **722/900** · Voraussetzung: `17.j.W`.
+- [x] **17.j.R** · Position **722/900** · Voraussetzung: `17.j.W`.
 **Exakte Commit-Message:** `17.j.R feat(merge): Zielvalidierung und semantische Konflikte vervollständigen`
 
 **Vervollständigung:** Erst durch Kombination entstandene Zyklus-, Policy- oder Integritätsverletzung verhindert Veröffentlichung.

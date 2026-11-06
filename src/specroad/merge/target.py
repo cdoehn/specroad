@@ -79,28 +79,32 @@ def prepare_merge_target(metadata_raw, plan_raw, sources, *, history,
     metadata = candidate.data
     conflicts = list(metadata['conflicts'])
     validation, complete, valid, files = None, False, False, {}
-    if metadata['metadata_complete']:
-        files = candidate.files
-        try:
-            model, root, report = project_validation_report(files, services=services)
-            if root != metadata['expected_target_model_root_sha256']:
-                raise ModelError('merge_target_model_root_mismatch')
-            assessment = assess_validation(report,
-                fail_on=model.configuration.data['validation_policy'].get('fail_on', 'error'),
-                documents=model.documents)
-            validation = assessment.as_dict()
-            complete = report.complete
-            valid = complete and report.data['model_valid'] is True and assessment.passed
-            if not valid:
-                for stage in report.data['stages']:
-                    for item in stage['diagnostics']:
-                        conflicts.append({'stage': stage['stage'], **item})
-                if not conflicts:
-                    conflicts.append({'reason': 'merge_target_validation_incomplete'})
-        except ModelError as error:
-            conflicts.append({'stage': 'native_project', **error.diagnostic()})
-    for role in ROLES:
-        getattr(sources, role).verify_current()
+    try:
+        if metadata['metadata_complete']:
+            files = candidate.files
+            try:
+                model, root, report = project_validation_report(files, services=services)
+                if root != metadata['expected_target_model_root_sha256']:
+                    raise ModelError('merge_target_model_root_mismatch')
+                assessment = assess_validation(report,
+                    fail_on=model.configuration.data['validation_policy'].get('fail_on', 'error'),
+                    documents=model.documents)
+                validation = assessment.as_dict()
+                complete = report.complete
+                valid = complete and report.data['model_valid'] is True and assessment.passed
+                if not valid:
+                    for stage in report.data['stages']:
+                        for item in stage['diagnostics']:
+                            conflicts.append({'stage': stage['stage'], **item})
+                    if not conflicts:
+                        conflicts.append({'reason': 'merge_target_validation_incomplete'})
+            except ModelError as error:
+                conflicts.append({'stage': 'native_project', **error.diagnostic()})
+    finally:
+        # Reobserve every native source even after a negative check or provider
+        # failure. A stale source must never leave an apparently current result.
+        for role in ROLES:
+            getattr(sources, role).verify_current()
     data = {'target_format_version': 'merge-target-validation-v1',
         'metadata_candidate_sha256': expected_metadata_sha256,
         'input_plan_sha256': expected_plan_sha256,
@@ -112,3 +116,17 @@ def prepare_merge_target(metadata_raw, plan_raw, sources, *, history,
         'pending_gates': ([] if valid else ['target_validation']) + ['publication'],
         'ready': False, 'write_authorized': False, 'approval_granted': False}
     return MergeTarget._create(data, files if valid else {})
+
+
+def verify_merge_target(target_raw, metadata_raw, plan_raw, sources, *, history,
+                        expected_target_sha256, expected_metadata_sha256,
+                        expected_plan_sha256, services=None):
+    """Recompute a saved observation; neither its hashes nor success flags grant trust."""
+    _bound_bytes(target_raw, expected_target_sha256, 'observation')
+    stored = parsed(target_raw)
+    current = prepare_merge_target(metadata_raw, plan_raw, sources, history=history,
+        expected_metadata_sha256=expected_metadata_sha256,
+        expected_plan_sha256=expected_plan_sha256, services=services)
+    if jcs(stored) != current.canonical_bytes:
+        raise ModelError('merge_target_binding_mismatch')
+    return current

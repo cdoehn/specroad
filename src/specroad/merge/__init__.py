@@ -25,5 +25,5 @@ __all__ += ['MergeResolutions', 'parse_merge_resolutions', 'parse_resolution_pla
 from .metadata import MergeMetadata, prepare_merge_metadata, verify_merge_metadata
 __all__ += ['MergeMetadata', 'prepare_merge_metadata', 'verify_merge_metadata']
 
-from .target import MergeTarget, prepare_merge_target
-__all__ += ['MergeTarget', 'prepare_merge_target']
+from .target import MergeTarget, prepare_merge_target, verify_merge_target
+__all__ += ['MergeTarget', 'prepare_merge_target', 'verify_merge_target']
