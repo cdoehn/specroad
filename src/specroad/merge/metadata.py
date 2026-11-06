@@ -128,16 +128,40 @@ def _candidate(values, targets, *, artifact=False):
 
 
 def _known_revision(sources, values, identifier):
+    """Only native, content-bound Ours Baselines can contribute history."""
+    from ..archive.objects import SnapshotObject
+    from ..archive.verification import verify_baseline_objects
     known = max((artifact_audit(values[role]).revision.value for role in ('base', 'ours')
                  if values[role] is not None), default=0)
-    # W is fail-closed until R adds the archived-history verifier.
-    for path, raw in sources.ours.files.items():
-        if path.startswith('spec/'):
-            record = parsed(raw)
-            if record.get('artifact_type') == 'baseline' and any(
-                    row.get('role') == 'artifact' and row.get('id') == identifier
-                    for row in record.get('manifest', [])):
-                raise MetadataError('merge_metadata_history_verification_pending')
+    files = sources.ours.files
+    objects = None
+    for path, raw in sorted(files.items()):
+        if not path.startswith('spec/'):
+            continue
+        record = parsed(raw)
+        if record.get('artifact_type') != 'baseline':
+            continue
+        rows = [row for row in record.get('manifest', [])
+                if row.get('role') == 'artifact' and row.get('id') == identifier]
+        if not rows:
+            continue
+        if objects is None:
+            objects = [SnapshotObject(content) for name, content in files.items()
+                       if name.startswith('archive/objects/')]
+        # Reconstruct its native historical model root, not just row hashes.
+        verify_baseline_objects(raw, objects)
+        for row in rows:
+            historical = parsed(files[row['object_path']])
+            if (historical.get('id') != identifier or historical.get('artifact_type') != values['theirs']['artifact_type']
+                    or historical.get('schema_version') != values['theirs']['schema_version']):
+                raise MetadataError('merge_historical_identity_mismatch')
+            merge_creation((*values.values(), historical))
+            if protected_record(historical) or protected_record(values['theirs']):
+                # Existing immutable history is also an original, even when
+                # its identity is absent from the current Ours artifact set.
+                if files[row['object_path']] != sources.theirs.files.get(row['source_path']):
+                    raise MetadataError('merge_immutable_history_conflict')
+            known = max(known, artifact_audit(historical).revision.value)
     return known
 
 
@@ -207,7 +231,7 @@ def prepare_merge_metadata(raw, sources, *, history, expected_plan_sha256):
                 originals = {role: None if value is _MISSING else value for role, value in values.items()}
                 protected = any(obs['storage_class'] == 'legacy_immutable' for obs in observations.values())
                 protected = protected or artifact and any(type(value) is dict and protected_record(value) for value in originals.values())
-                if artifact and not protected:
+                if artifact and all(value is None or type(value) is dict for value in originals.values()):
                     merge_creation(tuple(originals.values()))
                     if classification == 'adopt_existing':
                         known = _known_revision(sources, originals, identity['id'])
@@ -275,4 +299,6 @@ def verify_merge_metadata(candidate_raw, raw, sources, *, history, expected_plan
     rebuilt = prepare_merge_metadata(raw, sources, history=history, expected_plan_sha256=expected_plan_sha256)
     if jcs(stored) != rebuilt.canonical_bytes:
         raise ModelError('merge_metadata_binding_mismatch')
+    for role in ROLES:
+        getattr(sources, role).verify_current()
     return rebuilt

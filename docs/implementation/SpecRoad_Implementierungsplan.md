@@ -82,7 +82,7 @@ werden erst durch das entsprechende erfolgreiche Apply-Gate und den echten
 Commit wirksam. 17.j–17.l, M17-Gesamtfreigabe und menschliche Reviews bleiben
 offen; keine Vollsuite- oder Releaseabnahme wird behauptet.
 
-## Bundle 614 — vollständiger Commitzielstand 17.i.W
+## Bundle 614 — vollständiger Commitzielstand 17.i.R
 
 Basis ist das nativ geprüfte saubere Result `specroad-apply_Result_224038_1105_3250d1.zip`,
 SHA-256 `03a8324849f64333a4524906cacacad9e1d063f76059f45d3d7a1c5400bd4e42`, HEAD `5e6dc998bc4660d925439749eeec5df6b9887d73`,
@@ -91,7 +91,7 @@ mit drei erfolgreichen Gates committed; kein Rest wird wiederholt.
 
 Nach MERGE-METADATA-614 folgen drei echte Zwischenstände 17.i.W/R/C mit
 jeweils eigener Pflichtauswahl und N=3-Gruppe vor ihrem Commit. Dieser
-Zielstand enthält 718/900 und danach `17.i.R`. Zähler und
+Zielstand enthält 719/900 und danach `17.i.C`. Zähler und
 Checkboxen werden erst nach erfolgreichem Apply-Gate mit echtem Commit
 wirksam. Keine ausgeführten Verhaltenstests werden durch Vorbereitung behauptet.
 
@@ -4117,9 +4117,9 @@ Kein offener Produktplanschritt wird durch diese Testoptimierung abgeschlossen.
 ```yaml
 plan_revision: 108
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 718
-last_completed_plan_commit: 17.i.W
-next_plan_commit: 17.i.R
+implementation_plan_commits_completed: 719
+last_completed_plan_commit: 17.i.R
+next_plan_commit: 17.i.C
 last_completed_numbered_bundle: 613
 implementation_state: in_progress
 audit_followup_status: closed
@@ -38944,7 +38944,7 @@ Plattform-/Releasefreigaben werden dadurch nicht stillschweigend erteilt.
 
 #### 17.i.R – Make it Right
 
-- [ ] **17.i.R** · Position **719/900** · Voraussetzung: `17.i.W`.
+- [x] **17.i.R** · Position **719/900** · Voraussetzung: `17.i.W`.
 **Exakte Commit-Message:** `17.i.R feat(merge): Exakte Merge-Metadaten vervollständigen`
 
 **Vervollständigung:** Niedrigere historische Revision nicht still übernehmen; Ursprungsmetadaten und Zeitmaxima korrekt binden.
