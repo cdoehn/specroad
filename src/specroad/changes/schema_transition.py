@@ -227,6 +227,10 @@ def publish_schema_transition(plan, *, held_lock, backup_descriptor, authority, 
     for index in range(len(plan.data['operations'][0]['changes'])): session.effect(index)
     session.validate(); session.save('committed', session.live_count)
     session.finish()
+    if merge_context is not None:
+        # Durable receipts remain historical if an external provider changes
+        # during the final fsync/archive boundary. Never return a fresh claim.
+        session.validate()
     return {**completion_data(session.journal, current=True),
         **({'evidence_currently_rechecked':True} if is_merge(plan) else {})}
 
