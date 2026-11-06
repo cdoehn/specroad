@@ -121,7 +121,7 @@ Planfortschritt wird nur durch erfolgreiche Commits wirksam. Dev führte keine
 Verhaltenstests aus. M17, Transaktions-/CLI-/Work-Integration in 17.k–17.l und
 menschliche Freigaben bleiben offen; dieser Nachweis ist keine Produktfreigabe.
 
-## Bundle 616 — vollständiger Commitzielstand 17.j.R
+## Bundle 616 — vollständiger Commitzielstand 17.j.C
 
 Basis ist das nativ geprüfte saubere Result `specroad-apply_Result_005413_1106_021a46.zip`,
 SHA-256 `6d0b1c88c57d557295acee96edbb2bceb89ec8c034a037d1de5810cd07cb698e`, HEAD `eb2ee51c97c23e68e75bfa2f726da03b1928ea26`,
@@ -130,7 +130,7 @@ mit drei erfolgreichen Gates committed; kein erfolgreicher Commit wird wiederhol
 
 Nach dem optionalen zulässigen Präfix MERGE-TARGET-616 folgen drei echte
 vollständige Zwischenstände 17.j.W/R/C mit eigenem Pflichtauswahl-plus-N=3-Gate
-vor jedem Commit. Dieser Zielstand enthält 722/900 und danach `17.j.C`.
+vor jedem Commit. Dieser Zielstand enthält 723/900 und danach `17.k.W`.
 Zähler und Checkboxen werden erst durch erfolgreiches Apply-Gate und echten
 Commit wirksam. Vorbereitung behauptet keinen ausgeführten Verhaltenstest.
 
@@ -4286,10 +4286,10 @@ Kein offener Produktplanschritt wird durch diese Testoptimierung abgeschlossen.
 ```yaml
 plan_revision: 109
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 722
-last_completed_plan_commit: 17.j.R
-next_plan_commit: 17.j.C
-last_completed_numbered_bundle: 615
+implementation_plan_commits_completed: 723
+last_completed_plan_commit: 17.j.C
+next_plan_commit: 17.k.W
+last_completed_numbered_bundle: 618
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -39157,7 +39157,7 @@ Plattform-/Releasefreigaben werden dadurch nicht stillschweigend erteilt.
 
 #### 17.j.C – Make it Clean
 
-- [ ] **17.j.C** · Position **723/900** · Voraussetzung: `17.j.R`.
+- [x] **17.j.C** · Position **723/900** · Voraussetzung: `17.j.R`.
 **Exakte Commit-Message:** `17.j.C refactor(merge): Zielvalidierung und semantische Konflikte bereinigen`
 
 **Bereinigung:** Normale Validierungsengine auf virtuellen Zielsnapshot anwenden.
