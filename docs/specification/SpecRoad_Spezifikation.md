@@ -1,19 +1,19 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.71
+## Version 0.2.72
 
 | Feld | Wert |
 |---|---|
 | Dokument-ID | `SR-SPEC-0001` |
-| Dokumentversion | `0.2.71` |
+| Dokumentversion | `0.2.72` |
 | Zielrelease | `SpecRoad Single-Repository Workbench 0.2.0` |
 | Status | **Fachlich konsolidierte Arbeitsgrundlage; technische Reviewentscheidung gesondert dokumentiert, formale Baseline-Freigabe und Produktabnahme nicht durch dieses Dokument erklärt** |
 | Stand | 6. November 2026 |
 | Sprache | Deutsch; technische Feldnamen, Enum-Werte und CLI-Kommandos Englisch |
-| Fachliche Quelle | **Diese Repositoryfassung v0.2.71 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.71 liegt mit dieser Änderung nicht vor.** |
+| Fachliche Quelle | **Diese Repositoryfassung v0.2.72 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.72 liegt mit dieser Änderung nicht vor.** |
 | Bearbeitbare Satzquelle | Diese Datei; eine spätere PDF muss denselben versionierten Inhalt wiedergeben. |
-| Vorgängerversion | Repository-Spezifikation v0.2.70 vom 6. November 2026; historische Nachweise bleiben unverändert. |
-| Prüf- und Entscheidungsgrundlage | MERGE-TARGET-616, delegiert gemäß SPECROAD-DECISION-1, Vertrag 4; keine Produktfreigabe. |
-| Änderungsart | Vollständige virtuelle Merge-Zielvalidierung mit nativen Prüfern, Eingabebindung und erhaltener Writer-/Reviewgrenze. |
+| Vorgängerversion | Repository-Spezifikation v0.2.71 vom 6. November 2026; historische Nachweise bleiben unverändert. |
+| Prüf- und Entscheidungsgrundlage | MERGE-PUBLICATION-619, delegiert gemäß SPECROAD-DECISION-1, Vertrag 4; keine Produktfreigabe. |
+| Änderungsart | Gebundene Merge-Publikation über den gemeinsamen Writer, aktuelle Nachweisbewertung und beweisgebundene Recovery. |
 
 > **Verbindlicher Quellenwechsel:** Die ausdrückliche Nutzerentscheidung REFERENCE-SOURCE-551 wird als v0.2.50 umgesetzt. Der neue Quellvertrag ist Entwurfsarbeit vom 3. November 2026, kein Nachweis eines früher existierenden Formats. Bestehende 0.2-Verträge, Transport-, Sicherheits- und Reviewgrenzen bleiben erhalten.
 
@@ -4923,6 +4923,85 @@ aktuelle externe Nachweiszusage. 17.j erwirbt keine Locks und schreibt keine
 Projektdateien, Backups, Receipts, Journale oder Git-Commits. Die tatsächliche
 CLI-/Work-/Transaktionsintegration aus 17.k–17.l bleibt erforderlich.
 
+### 10.15.8 Gebundene Merge-Publikation im gemeinsamen Writer
+
+**MERGE-PUBLICATION-619, delegiert gemäß SPECROAD-DECISION-1 und 2.4.3.1,
+Vertrag 4.** 17.k konkretisiert den Übergang von 10.15.7 zum vorhandenen
+Change-Plan-, Lock-, Journal-, Receipt- und Recovery-Vertrag. Merge ist ein
+spezialisierter Planproduzent; es gibt keinen zweiten Dateischreiber.
+
+Der gemeinsame Change Plan 1.2.0 erhält den ausschließlich spezialisierten
+Zweig `merge_publish` mit `merge-metadata-v1`. Reguläre Operationen dürfen ihn
+weder mischen noch durch Auswahl dieser Policy umgehen. Der geschlossene
+Operationsvertrag `merge-publication-v1` enthält `op`, `format_version`,
+`inputs`, `inputs_sha256`, `source_files`, `target_files`, `changes`,
+`result_ids`, `source_model_root_sha256` und `target_model_root_sha256`.
+`inputs` enthält genau die ursprünglichen `plan_bytes_base64`,
+`metadata_bytes_base64`, `target_bytes_base64`, jeweils den zugehörigen
+`plan_sha256`, `metadata_sha256`, `target_sha256`, den expliziten `history`-
+Beleg, `sources` und `target_configuration`. `sources` enthält pro Rolle
+Base/Ours/Theirs die ursprüngliche native `binding` und die vollständigen
+originalen `files` als nach Pfad geordnete `{path, bytes_base64}`-Liste.
+`target_configuration` sind die exakten Zielbytes, ebenfalls Base64.
+Diese gespeicherten Originale erlauben unabhängige historische Nachrechnung;
+sie behaupten keine aktuelle Beobachtung ihrer Herkunftsorte.
+
+Dateibindungen enthalten Pfad, Größe und SHA-256. Änderungen enthalten Pfad,
+`before_sha256`, `after_sha256` und `after_bytes_base64` mit null für fehlende
+Vorher-/Nachherdateien. Jede Änderung muss exakt aus den unabhängig erneut
+berechneten K.3-Kandidaten folgen. Die vollständige aktuelle Zieldateimenge
+vor Beginn wird gebunden; unbeteiligte Dateien und passive Betriebsoriginale
+bleiben bytegleich. System-/Git-/Credential-Verzeichnisse sind ausgeschlossen.
+Geschützte Originale werden weder verändert noch entfernt. Ergebnisartefakte,
+Dateivorbedingungen, Fehlstellen und beide Modellwurzeln werden vollständig
+abgeleitet; freies Einfügen von Dateieffekten ist unzulässig. Actor, Zeitpunkt,
+Plan-/Request-/Transaktions-ID bleiben ausdrücklich gelieferte Werte.
+
+Vor der Ausführung werden die ausdrücklich übergebenen drei nativen Quellen
+neu geprüft; gespeicherte Pfade werden niemals automatisch geöffnet. Der
+vollständige aktuelle normative Zielstand muss exakt Ours entsprechen.
+Der Writer prüft nach Erwerb seines nativen `merge apply`-Locks erneut die
+gebundene vollständige Dateimenge, Wurzel, Eigentümerschaft und unabhängigen
+Originalquellen. Ein abweichendes Ours, ein umgehashter manipulierter Plan,
+unaufgelöste Konflikte oder fehlende Fach-/Hostbefugnis erlauben keinen Write.
+Das durch den Writer erwartungsgemäß veränderte lokale Ours wird während der
+Publikation anhand der vollständig gebundenen Vorherbilder und des bewiesenen
+Effektpräfixes geprüft; es wird nicht still auf eine neue Basis umgeplant.
+
+Eine vorher separat außerhalb des Projekts veröffentlichte, bytegenau erneut
+geprüfte Sicherung `merge-source-backup-v1` enthält sämtliche gebundenen
+Vorherdateien. Der gemeinsame native Snapshot-Transaktionsschreiber verwendet
+sie zusammen mit Staging, Vorherbildern, fsync, aktivem Journal, Datei-
+Präfixprüfung und dauerhaften Request-/Transaktionsreceipts. Das spezialisierte
+Journal heißt `merge-transition-journal-v1`; aktive und passive Namensräume
+bleiben die bestehenden gemeinsamen Namensräume. Die vollständige native
+Zielprüfung aus 10.15.7 läuft erneut vor und nach den Dateieffekten. Aktive oder
+unbekannte Transaktionszustände sperren den normalen Projektzugriff. Atomar
+bedeutet diesen vorhandenen kooperativen Transaktionsvertrag, keine erfundene
+atomare Mehrdateioperation gegenüber beliebigen fremden Dateischreibern.
+
+Die gebundene Validierung `merge-publication-validation-v1` enthält den nativen
+vollständigen Modellbericht, seine unveränderte Policybewertung und die neu
+berechneten `relation_reviews`, `evidence`- und `code_references`-Befunde.
+Hierfür gelten die bestehenden nativen Relationsinhalt-/Kontext-, Vertrags-,
+Konfigurations-, Datei- und Auswahlhashregeln. Historische negative oder nicht
+aktuelle Daten bleiben als solche sichtbar; Originale werden nicht umgestempelt.
+Erforderliche aktuelle menschliche Reviews und Host-Provider bleiben Gates.
+Eine gespeicherte Validierung oder erfolgreiche Publikation ist keine neue
+menschliche Freigabe und keine zeitlich unbegrenzte Aktualitätszusage.
+
+`merge-transaction-v1` bindet Abschluss, Plan, Journal, erwartete Zielwurzel,
+Dateieffekte, Sicherung, Receipts und diese Validierung. Ein identischer
+Request wird erst nach vollständiger nativer Receiptprüfung historisch
+beantwortet; er führt keine Dateieffekte erneut aus und behauptet keine aktuelle
+Nachweisprüfung. Abweichende Operationen bei derselben Request-ID sind Konflikt.
+Ein Fehler erhält den realen Zustand; kein automatischer Retry/Rollback.
+Die vorhandene explizite Recovery darf nach vollständigem Bytepräfixbeweis
+einen fertigen Zielstand abschließen oder sonst die exakte Basis wiederherstellen.
+Sie erneuert keine fachlichen Reviews oder externen Aktualitätsbefunde.
+Die öffentliche CLI-/Work-Gesamtintegration und ihr vollständiger Endnachweis
+bleiben Aufgabe von 17.l; 17.k erklärt weder M17 noch die Produktabnahme fertig.
+
 ### 10.16 Projektbundle und partieller Umfang
 
 Ein Bundle verwendet ausschließlich die kanonischen Werte `bundle_kind=project|partial` nach Anhang E.3; `document` und `release` sind Scope-Arten, keine Werte dieses Felds. Ein `project`-Bundle enthält einen geschlossenen, nicht konfigurationsgefilterten Projektscope und bildet nach Extraktion ein normales schreibbares SpecRoad-Projekt. Es enthält standardmäßig abgeschlossene Request- und Transaktionsreceipts in einer getrennten Betriebssektion, deren Hash im Bundlemanifest gebunden ist, aber nicht in die fachliche Modellwurzel eingeht.
@@ -8092,6 +8171,7 @@ Die folgende Roadmap ist informativ und erzeugt keine Anforderungen an 0.2:
 
 | Version | Datum | Status | Änderung |
 |---|---|---|---|
+| 0.2.72 | 2026-11-06 | Delegiert gemäß SPECROAD-DECISION-1, Vertrag 4 | MERGE-PUBLICATION-619: spezialisierter Merge-Plan, gemeinsame Transaktion, Nachweisbindung und erhaltene Recovery-/Reviewgrenzen. |
 | 0.2.71 | 2026-11-06 | Delegiert gemäß SPECROAD-DECISION-1, Vertrag 4 | MERGE-TARGET-616: Vollständiger virtueller Zielbefund, native Spezialisten, erneute Nachprüfung und keine implizite Schreibfreigabe. |
 | 0.2.70 | 2026-11-06 | Delegiert gemäß SPECROAD-DECISION-1, Vertrag 4 | MERGE-METADATA-614: Exakte Metadatenkandidaten, historische Revisionsgrenze und unabhängige Writer-Vorbereitung ohne Projektwrites. |
 | 0.2.69 | 2026-11-05 | Delegiert gemäß SPECROAD-DECISION-1, Vertrag 4 | MERGE-RESOLUTION-612: Explizite auditierte Konfliktauflösung, deklarative Zielwerte und native CLI ohne Projektwrites. |
@@ -12172,4 +12252,4 @@ Implementierungsschritten nachgewiesen sein.
 
 ---
 
-**Ende der SpecRoad-Produktspezifikation v0.2.71.**
+**Ende der SpecRoad-Produktspezifikation v0.2.72.**

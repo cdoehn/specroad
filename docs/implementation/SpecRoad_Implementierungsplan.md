@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 109 · **Stand:** 6. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.71
+**Planrevision:** 110 · **Stand:** 6. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.72
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 Schritte und 900 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; die ausdrücklich genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wird nach 10.7.10 innerhalb von 15.l.R vorgezogen. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -9,7 +9,7 @@ Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 S
 
 Fachliche Grundlage ist [`docs/specification/SpecRoad_Spezifikation.md`](../specification/SpecRoad_Spezifikation.md), einschließlich aller konsolidierten Korrekturen, 742 Requirements, 51 Verifikationsverträge, 46 Szenario-/E2E-Identitäten sowie R-01 bis R-75, Anhang U und den PatchHarbor-Rundweg aus Anhang W. Der [`Prüfbericht`](../reviews/SpecRoad_v0.2.7_Implementierungsreife_Pruefbericht.md) ist ein vorgelagerter Entwurfsreview, kein späterer Produktnachweis.
 
-Gebundene Spezifikations-SHA-256: `3893ef283653d54695e1aca9b9552d82ecdd02753b5a9e523494176b2df6a255`.
+Gebundene Spezifikations-SHA-256: `fa3e492d18aaff24d9b22cd5c31a554a65173232c6d55a6147d526ed4fb81a09`.
 Planungsbasis: Commit `fe2661d02ecf2f7eb483b58a4487eb009c6b3846`; sauberes Result-Bundle `specroad_Result_120209_0914_df3504.zip`; Repository-ID `3d2576df-d611-46fc-9d2b-92869468aaca`. Diese Angaben dokumentieren die Entstehung des Plans, nicht die zukünftige Patchbindung. **Jedes spätere Patchpaket bindet den dann aktuellen tatsächlichen Result-Zustand.**
 
 Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 2026 gelten zusätzlich und bei den nachfolgend benannten Konflikten vorrangig. Sonstige normative Spezifikationsinhalte werden nicht stillschweigend abgeschwächt. Neue fachliche Widersprüche, fehlende zwingende Angaben und Sicherheitsprobleme sind offen zu benennen, nicht durch erfundene Annahmen oder Scheinerfolge zu lösen.
@@ -161,6 +161,41 @@ Neue/geänderte Tests sowie Merge-, native Validierungs-, Restore-, Profil-,
 Scope-, Review-, Integritäts- und Katalogregressionen sind ungefilterte
 Pflichtauswahl. Dev prüft nur Syntax, Collection und native Paketrekonstruktion.
 Keine Vollsuite-, Release-, M17- oder menschliche Abnahme; kein Dienst-/CI-Start.
+
+## MERGE-PUBLICATION-619 — gemeinsamer Writer und echte aktuelle Nachweisbindung
+
+Delegiert gemäß SPECROAD-DECISION-1, 2.4.3.1 und Vertrag 4;
+clarification_allowed=true, Restbudget 3. Result 824a96 bestätigt 17.j.R/C
+mit 10085/10099 bestandenen Tests und sauberem Abschlusscommit
+b0bec0d99ee9e0b84925306c64984a2267be93d3. 723/900; nächste Position 17.k.W.
+
+Lücke: 10.15.7 lässt den konkreten Writer-Eingang ausdrücklich 17.k.
+Planoperation, wiederherstellbare Originalbindung und Abschlussbefunde sind
+für den Merge-Zweig noch nicht geschlossen festgelegt. Geprüft wurden
+10.1–10.15.7, K.3, 17.k/l und die gemeinsamen Lock-, Snapshot-Writer-,
+Receipt-, Recovery- und nativen Review-/Evidence-/Code-Referenzprüfer.
+Alternativen: allgemeine Updates mit erneuter Metadatenstempelung; ein
+paralleler Merge-Dateischreiber; oder ein spezialisierter Planproduzent auf
+dem vorhandenen vollständigen Snapshot-Transaktionsschreiber. Gewählt wird
+die letzte, konservative Lösung nach 10.15.8: K.3-Bytes erhalten, gemeinsame
+Sicherheitsgrenzen wiederverwenden und vollständige Originale binden.
+
+Die neue typisierte Operation bleibt von regulärem Authoring getrennt.
+Vorhandene Planversion, Migration, Receipts und Normativdaten bleiben gültig.
+Neue versionierte Befunde sind ohne Verlust vorhandener Daten entfernbar;
+keine unbekannten Fakten, menschlichen Reviews oder Risikoakzeptanzen werden
+erfunden. Ausbleibende unverzichtbare Provider blockieren, statt Freigaben zu
+erfinden. Kein Scope-, Sicherheits- oder Kompatibilitätsabbau.
+
+Dieser Präfix lässt 17.k offen. W liefert seinen gesamten nutzbaren Writer-
+und Nachweisumfang mit gemeinsamer Sicherung, Transaktion und Receipts.
+R ergänzt echte Quellwechsel, manipulierte Plan-/Sicherungsbytes,
+Crash-Präfixe, Recovery und idempotente historische Antworten. C trennt
+nur Datenverträge von Orchestrierung. Alle drei Zustände erhalten ihre
+jeweils eigene Pflichtauswahl plus fällige gefilterte N=3-Gruppe vor dem
+Commit. CLI/Work-Endintegration bleibt vollständig in 17.l.
+Dev führt keine Verhaltenstests aus. Erst die tatsächlichen Apply-Gates
+belegen Erfolg; dieser Plantext behauptet keine Produkt- oder M17-Abnahme.
 
 ## MERGE-TARGET-616 — vollständiger virtueller Zielbefund für 17.j
 
@@ -4284,7 +4319,7 @@ Kein offener Produktplanschritt wird durch diese Testoptimierung abgeschlossen.
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 109
+plan_revision: 110
 implementation_plan_commits_total: 900
 implementation_plan_commits_completed: 723
 last_completed_plan_commit: 17.j.C
@@ -39177,7 +39212,7 @@ Plattform-/Releasefreigaben werden dadurch nicht stillschweigend erteilt.
 - [ ] **17.k.W** · Position **724/900** · Voraussetzung: `17.j.C`.
 **Exakte Commit-Message:** `17.k.W feat(merge): Atomarer Apply und aktuelle Nachweisbindung aufbauen`
 
-**Umsetzung:** Final aufgelösten Merge nur auf passende aktuelle Oursbasis transaktional publizieren und Abschlussbericht binden.
+**Umsetzung nach 10.15.8:** Final aufgelösten Merge nur auf passende aktuelle Oursbasis transaktional publizieren und Abschlussbericht binden.
 
 **Verhaltensabnahme:** Geänderte Kontexte aktualisieren die berechnete Freshness von Relationsreviews, Evidence und Codebezügen.
 

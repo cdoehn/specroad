@@ -67,7 +67,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "3893ef283653d54695e1aca9b9552d82ecdd02753b5a9e523494176b2df6a255",
+  "specification_sha256": "fa3e492d18aaff24d9b22cd5c31a554a65173232c6d55a6147d526ed4fb81a09",
   "steps": [
     "Invoke the same trace scope through Python, CLI, structured request and portable distribution.",
     "Compare independently expected node distances, edge directions, depth boundaries, original relation values and complete inventory bindings.",

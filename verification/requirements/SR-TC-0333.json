@@ -34,7 +34,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "3893ef283653d54695e1aca9b9552d82ecdd02753b5a9e523494176b2df6a255",
+  "specification_sha256": "fa3e492d18aaff24d9b22cd5c31a554a65173232c6d55a6147d526ed4fb81a09",
   "steps": [
     "Preview the isolated evidence.record operation, then publish the exact saved plan through native authorization, writer lock, journaling, receipts and cleanup.",
     "Compare actual stored bytes, subject revisions/hashes, configuration and attachment resources; replay the same request without a second record or lock.",
