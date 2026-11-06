@@ -1,19 +1,19 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.70
+## Version 0.2.71
 
 | Feld | Wert |
 |---|---|
 | Dokument-ID | `SR-SPEC-0001` |
-| Dokumentversion | `0.2.70` |
+| Dokumentversion | `0.2.71` |
 | Zielrelease | `SpecRoad Single-Repository Workbench 0.2.0` |
 | Status | **Fachlich konsolidierte Arbeitsgrundlage; technische Reviewentscheidung gesondert dokumentiert, formale Baseline-Freigabe und Produktabnahme nicht durch dieses Dokument erklärt** |
 | Stand | 6. November 2026 |
 | Sprache | Deutsch; technische Feldnamen, Enum-Werte und CLI-Kommandos Englisch |
-| Fachliche Quelle | **Diese Repositoryfassung v0.2.70 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.70 liegt mit dieser Änderung nicht vor.** |
+| Fachliche Quelle | **Diese Repositoryfassung v0.2.71 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.71 liegt mit dieser Änderung nicht vor.** |
 | Bearbeitbare Satzquelle | Diese Datei; eine spätere PDF muss denselben versionierten Inhalt wiedergeben. |
-| Vorgängerversion | Repository-Spezifikation v0.2.69 vom 5. November 2026; historische Nachweise bleiben unverändert. |
-| Prüf- und Entscheidungsgrundlage | MERGE-METADATA-614, delegiert gemäß SPECROAD-DECISION-1, Vertrag 4; keine Produktfreigabe. |
-| Änderungsart | Exakte Merge-Metadatenkandidaten mit Herkunftsbindung und unabhängiger nativer Zielwurzel-Nachrechnung. |
+| Vorgängerversion | Repository-Spezifikation v0.2.70 vom 6. November 2026; historische Nachweise bleiben unverändert. |
+| Prüf- und Entscheidungsgrundlage | MERGE-TARGET-616, delegiert gemäß SPECROAD-DECISION-1, Vertrag 4; keine Produktfreigabe. |
+| Änderungsart | Vollständige virtuelle Merge-Zielvalidierung mit nativen Prüfern, Eingabebindung und erhaltener Writer-/Reviewgrenze. |
 
 > **Verbindlicher Quellenwechsel:** Die ausdrückliche Nutzerentscheidung REFERENCE-SOURCE-551 wird als v0.2.50 umgesetzt. Der neue Quellvertrag ist Entwurfsarbeit vom 3. November 2026, kein Nachweis eines früher existierenden Formats. Bestehende 0.2-Verträge, Transport-, Sicherheits- und Reviewgrenzen bleiben erhalten.
 
@@ -4853,6 +4853,76 @@ Sie erwerben keine Locks und schreiben keine Projekte, Receipts oder Journale.
 Die echte Transaktionsveröffentlichung und Abschlussintegration bleiben in
 17.k–17.l; `target_validation` und `publication` bleiben ausstehende Gates.
 
+### 10.15.7 Vollständige virtuelle Zielvalidierung
+
+**MERGE-TARGET-616, delegiert gemäß SPECROAD-DECISION-1 und 2.4.3.1,
+Vertrag 4.** Nach 10.15.6 MUSS der vollständig rekonstruierte virtuelle
+Zielstand vor Veröffentlichung dieselben nativen Modell-, Ressourcen-,
+Profil-, Scope-, Referenz-, Graph-, Dokument-, Konfigurations-, Lebenszyklus-,
+Originalintegritäts- und erforderlichen Spezialprüfungen durchlaufen wie ein
+vollständiges geladenes Projekt. Keine Prüfung nur der geänderten Artefakte,
+kein temporäres Projekt, keine vom gespeicherten Plan wählbaren Gate-Callbacks.
+Vorhandene native Prüfungen und ihre Fehler-/Reviewverträge werden wiederverwendet.
+
+Die Prüfung nimmt die originalen Metadatenkandidaten- und Eingabeplanbytes
+mit jeweils erwarteter vollständiger SHA-256, die drei qualifizierten Quellen
+und den expliziten Herkunftsinput entgegen. Zuerst werden Metadaten, Dateien
+und Wurzel aus diesen Eingaben unabhängig nachgerechnet. Die volle normative
+Dateimenge wird im Speicher rekonstruiert, inklusive unveränderter Ressourcen,
+binärer Anhänge und historischer Originale. Die neu berechnete native
+Projektwurzel MUSS der Kandidatenwurzel entsprechen. Die Validierung gilt
+für den vollständigen Projektumfang, nicht eine still ausgewählte Teilmenge.
+
+Der geschlossene passive Befund `merge-target-validation-v1` enthält
+`target_format_version`, `metadata_candidate_sha256`, `input_plan_sha256`,
+`source_bindings_sha256`, `target_files_sha256`,
+`expected_target_model_root_sha256`, `validation`, `conflicts`,
+`checks_complete`, `target_validated`, `pending_gates`, `ready`,
+`write_authorized` und `approval_granted`.
+Die Eingabehashes binden die tatsächlich empfangenen Bytes; Quellen und
+Zieldateiliste folgen den bestehenden kanonischen Hashprojektionen.
+`validation` ist der unveränderte gemeinsame Validierungsbefund samt
+Diagnostikbewertung oder null, wenn ein vorgelagertes Gate keine solche
+Bewertung erlaubt. `conflicts` erhält vorhandene Metadatenkonflikte oder
+native Fehler mit ihren Orten und betroffenen Identitäten; es erfindet keine
+auflösbare Feldentscheidung für eine globale Invarianzverletzung.
+
+`target_validated=true` setzt vollständige Metadaten, identische Zielwurzel,
+vollständige native Prüfungen ohne fachlichen Fehler und eine bestandene
+Bewertung nach der Zielprojekt-`validation_policy.fail_on` voraus. Ein
+Warnungsbefund bleibt sichtbar und wirkt gemäß dieser bestehenden Policy;
+kein caller-seitiger Schalter schwächt sie ab. Unaufgelöste Feldkonflikte,
+kombinierte Zyklen, Profil-/Scope-/Referenzfehler, fehlende erforderliche
+Spezialisten, ungültige historische Originale oder Integritätsfehler liefern
+keine verwendbare Zieldateimenge. Nicht ausgeführte oder blockierte Prüfungen
+sind nicht vollständig. Die erwartete Kandidatenwurzel allein ist kein
+Validierungs- oder Freigabenachweis.
+
+Explizite vertrauenswürdige Host-Provider dürfen ausschließlich die bereits
+definierten nativen Review-, Proposal-, Task- und externen Quelleingaben
+liefern. Die bestehenden Prüfer bewerten sie erneut für das tatsächliche
+Zielmodell; ein Boolean, gespeicherter Erfolg oder fehlender Provider genügt
+nicht. Keine erfundenen Reviews und keine stillschweigende Umwandlung
+historischer oder veralteter Nachweise in aktuelle Freigaben. Provider werden
+nicht aus Projekt-/Planbytes geladen. Sicherheits-/I/O-Fehler werden nicht
+zu positiven Befunden umgedeutet.
+
+Eine lesende Nachprüfung eines gespeicherten Befunds rekonstruiert den
+gesamten Befund einschließlich nativer Prüfungen aus denselben originalen
+Eingaben erneut und vergleicht seinen vollständigen kanonischen Inhalt.
+Unbekannte Felder, umgerechnete manipulierte Hashes, gefälschte Prüfergebnisse
+und Quellenwechsel werden abgelehnt. Alle drei Quellen werden auch nach
+der Zielprüfung erneut beobachtet, einschließlich negativer Ergebnisse.
+
+`ready`, `write_authorized` und `approval_granted` bleiben immer false.
+`pending_gates` enthält bei ungültigem/unvollständigem Ziel
+`target_validation` und in jedem Fall `publication`. Ein gültiger Befund
+ist ausschließlich ein Kandidat für den noch erforderlichen Writer-Vertrag
+aus 17.k, keine Schreibfähigkeit, Transaktion, menschliche Freigabe oder
+aktuelle externe Nachweiszusage. 17.j erwirbt keine Locks und schreibt keine
+Projektdateien, Backups, Receipts, Journale oder Git-Commits. Die tatsächliche
+CLI-/Work-/Transaktionsintegration aus 17.k–17.l bleibt erforderlich.
+
 ### 10.16 Projektbundle und partieller Umfang
 
 Ein Bundle verwendet ausschließlich die kanonischen Werte `bundle_kind=project|partial` nach Anhang E.3; `document` und `release` sind Scope-Arten, keine Werte dieses Felds. Ein `project`-Bundle enthält einen geschlossenen, nicht konfigurationsgefilterten Projektscope und bildet nach Extraktion ein normales schreibbares SpecRoad-Projekt. Es enthält standardmäßig abgeschlossene Request- und Transaktionsreceipts in einer getrennten Betriebssektion, deren Hash im Bundlemanifest gebunden ist, aber nicht in die fachliche Modellwurzel eingeht.
@@ -8022,6 +8092,7 @@ Die folgende Roadmap ist informativ und erzeugt keine Anforderungen an 0.2:
 
 | Version | Datum | Status | Änderung |
 |---|---|---|---|
+| 0.2.71 | 2026-11-06 | Delegiert gemäß SPECROAD-DECISION-1, Vertrag 4 | MERGE-TARGET-616: Vollständiger virtueller Zielbefund, native Spezialisten, erneute Nachprüfung und keine implizite Schreibfreigabe. |
 | 0.2.70 | 2026-11-06 | Delegiert gemäß SPECROAD-DECISION-1, Vertrag 4 | MERGE-METADATA-614: Exakte Metadatenkandidaten, historische Revisionsgrenze und unabhängige Writer-Vorbereitung ohne Projektwrites. |
 | 0.2.69 | 2026-11-05 | Delegiert gemäß SPECROAD-DECISION-1, Vertrag 4 | MERGE-RESOLUTION-612: Explizite auditierte Konfliktauflösung, deklarative Zielwerte und native CLI ohne Projektwrites. |
 | 0.2.68 | 2026-11-05 | Delegiert gemäß SPECROAD-DECISION-1, Vertrag 4 | MERGE-CONFLICTS-608: Vollständige lesende Konfliktobjekte mit stabilen IDs, Impact, Auflösungsarten und CLI-Inspektion. |
@@ -12101,4 +12172,4 @@ Implementierungsschritten nachgewiesen sein.
 
 ---
 
-**Ende der SpecRoad-Produktspezifikation v0.2.70.**
+**Ende der SpecRoad-Produktspezifikation v0.2.71.**

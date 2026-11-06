@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 108 · **Stand:** 6. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.70
+**Planrevision:** 109 · **Stand:** 6. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.71
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 Schritte und 900 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; die ausdrücklich genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wird nach 10.7.10 innerhalb von 15.l.R vorgezogen. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -9,7 +9,7 @@ Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 S
 
 Fachliche Grundlage ist [`docs/specification/SpecRoad_Spezifikation.md`](../specification/SpecRoad_Spezifikation.md), einschließlich aller konsolidierten Korrekturen, 742 Requirements, 51 Verifikationsverträge, 46 Szenario-/E2E-Identitäten sowie R-01 bis R-75, Anhang U und den PatchHarbor-Rundweg aus Anhang W. Der [`Prüfbericht`](../reviews/SpecRoad_v0.2.7_Implementierungsreife_Pruefbericht.md) ist ein vorgelagerter Entwurfsreview, kein späterer Produktnachweis.
 
-Gebundene Spezifikations-SHA-256: `8c35a0b0833be8edc1d29f79998dcb137b6fc76c4816a3873a1ace072e5c9b85`.
+Gebundene Spezifikations-SHA-256: `3893ef283653d54695e1aca9b9552d82ecdd02753b5a9e523494176b2df6a255`.
 Planungsbasis: Commit `fe2661d02ecf2f7eb483b58a4487eb009c6b3846`; sauberes Result-Bundle `specroad_Result_120209_0914_df3504.zip`; Repository-ID `3d2576df-d611-46fc-9d2b-92869468aaca`. Diese Angaben dokumentieren die Entstehung des Plans, nicht die zukünftige Patchbindung. **Jedes spätere Patchpaket bindet den dann aktuellen tatsächlichen Result-Zustand.**
 
 Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 2026 gelten zusätzlich und bei den nachfolgend benannten Konflikten vorrangig. Sonstige normative Spezifikationsinhalte werden nicht stillschweigend abgeschwächt. Neue fachliche Widersprüche, fehlende zwingende Angaben und Sicherheitsprobleme sind offen zu benennen, nicht durch erfundene Annahmen oder Scheinerfolge zu lösen.
@@ -33,6 +33,47 @@ ausdrückliche Bedienausnahme aus 2.4.3.2 bleibt zusätzlich anwendbar.
 Produktfreigaben und die Grenzen aus 2.4.1/2.4.2/2.4.4 bleiben unverändert.
 Dieser Plan ändert keine alten Aufträge, Antworten, Blockaden oder
 Laufzeitdaten und ist keine Start-/Resume-Anweisung.
+
+## MERGE-TARGET-616 — vollständiger virtueller Zielbefund für 17.j
+
+Delegiert gemäß SPECROAD-DECISION-1, 2.4.3.1 und Vertrag 4;
+clarification_allowed=true, Restbudget 3. Das nativ geprüfte saubere Result
+021a46 bestätigt 17.i.W/R/C mit 8160/8206/8229 bestandenen Tests und
+Abschlusscommit eb2ee51c97c23e68e75bfa2f726da03b1928ea26, 720/900.
+Keine menschliche Einzelbestätigung, Review- oder Releasefreigabe wird erfunden.
+
+Lücke: 17.j und SR-REQ-0365/0373 verlangen vollständige Zielvalidierung;
+10.15.6 liefert erst einen Metadatenkandidaten. Eingabe-/Befundbindung,
+Blockierung bei fehlenden Spezialisten und die Grenze zur Schreibbefugnis
+sind für diesen neuen Übergang noch nicht festgelegt. Geprüft wurden
+10.15.1–6, K.3, 17.j–17.l, die gemeinsame Modellvalidierung, native
+Restore-Spezialisten und reale Quell-/Zielmodellkonstruktoren.
+
+Alternativen: Kandidatenwurzel als Erfolg behandeln; eine zweite Merge-
+Validierungsengine oder temporäre Projekte bauen; oder die vorhandene
+vollständige native Pipeline auf die originalen virtuellen Zielbytes anwenden.
+Gewählt wird die letzte, kleinste konservative Lösung. Der native Befund
+bleibt erhalten und seine Bewertung folgt der bestehenden Zielprojektpolicy.
+Benötigte Spezialisten liefern echte native Eingaben statt Erfolgscallbacks.
+Unvollständigkeit, Quellenwechsel oder ein semantischer Konflikt sperren
+Dateizugriff. Jeder gespeicherte Erfolg muss neu aus Originalen berechnet werden.
+
+Die Präzisierung 10.15.7 ändert weder Metadatenpolitik noch Scope, bestehende
+Formate/CLI-Verträge, Freigaben, Sicherheitsniveau oder menschliche Reviews.
+Sie benötigt keine unbekannten externen Fakten: fehlende echte Provider
+bleiben ein negativer Befund. Neue passive Befundbytes sind versioniert;
+Bestandsdaten und historische Nachweise bleiben unverändert und erhalten.
+Die Änderung ist ohne Datenverlust rücknehmbar. Alle Grenzen aus 2.4.1 gelten.
+
+Dieser Präfix schreibt Spec, Planabnahmen und aktive Katalogbindungen zuerst
+fort und lässt 17.j offen. Danach W: voller nativer Zielbefund inklusive
+Profil/Scope/Referenzen und fail_on-Policy; R: neu kombinierte Invarianzfehler,
+fehlende/wechselnde Provider, gespeicherte Manipulationen und späte
+Quellenwechsel; C: passive Befundwerte von nativer Orchestrierung trennen.
+Jede Stage erhält eigenes N=3-plus-Pflichtauswahl-Gate vor dem Commit.
+17.k–17.l einschließlich tatsächlicher Transaktion und CLI/Work bleiben offen.
+Dev führt keine Verhaltenstests aus; Collection und Paketprüfung sind keine
+Abnahme. Die dokumentierten Sollkriterien werden erst durch Apply nachgewiesen.
 
 ## Korrekturbundle 615 — Relationenidentität und vollständiger Rest 17.i.W/R/C
 
@@ -4115,7 +4156,7 @@ Kein offener Produktplanschritt wird durch diese Testoptimierung abgeschlossen.
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 108
+plan_revision: 109
 implementation_plan_commits_total: 900
 implementation_plan_commits_completed: 720
 last_completed_plan_commit: 17.i.C
@@ -38975,7 +39016,7 @@ Plattform-/Releasefreigaben werden dadurch nicht stillschweigend erteilt.
 
 **Umsetzung:** Vollständigen zusammengeführten Zielstand einschließlich Profilen, Scopes und Referenzen vor Apply validieren.
 
-**Verhaltensabnahme:** Ein syntaktisch konfliktfreier und fachlich gültiger Merge ist anwendbar.
+**Verhaltensabnahme:** Ein syntaktisch konfliktfreier und fachlich gültiger Merge liefert gemäß 10.15.7 einen vollständig validierten virtuellen Zielkandidaten; der tatsächliche Writer bleibt 17.k. Native Profile, gesamter Projektumfang, Referenzen und fail_on-Policy werden geprüft, ohne Schreib- oder Reviewfreigabe.
 
 #### 17.j.R – Make it Right
 
@@ -38984,7 +39025,7 @@ Plattform-/Releasefreigaben werden dadurch nicht stillschweigend erteilt.
 
 **Vervollständigung:** Erst durch Kombination entstandene Zyklus-, Policy- oder Integritätsverletzung verhindert Veröffentlichung.
 
-**Verhaltensabnahme:** Unaufgelöster oder semantisch ungültiger Plan führt zu keinem Teilwrite. Die W-Nachweise bleiben zusätzlich grün.
+**Verhaltensabnahme:** Unaufgelöster oder semantisch ungültiger Plan führt zu keinem Teilwrite und keiner verwendbaren Dateimenge. Kombinationen von Graph-, Profil-, Scope- und Originalintegritätsfehlern, fehlende native Spezialisten, gefälschte gespeicherte Befunde und späte Quellenwechsel bleiben blockiert. Lesende Nachprüfung nach 10.15.7 rekonstruiert jeden Befund vollständig. Die W-Nachweise bleiben zusätzlich grün.
 
 #### 17.j.C – Make it Clean
 

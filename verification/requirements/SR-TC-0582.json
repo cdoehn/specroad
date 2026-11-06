@@ -34,7 +34,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "8c35a0b0833be8edc1d29f79998dcb137b6fc76c4816a3873a1ace072e5c9b85",
+  "specification_sha256": "3893ef283653d54695e1aca9b9552d82ecdd02753b5a9e523494176b2df6a255",
   "steps": [
     "Build both adjacency directions from all current artifact records, select one artifact and inspect returned edge identities and byte bindings.",
     "Compare an index-independent scan with fresh and stale hints; inject late sources, deletion, byte replacement, invalid sources and missing cache entries."
