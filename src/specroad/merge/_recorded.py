@@ -1,5 +1,4 @@
 """Private owned historical inputs: byte proof, never live source acquisition."""
-from dataclasses import dataclass
 from hashlib import sha256
 from ..model.canonical import canonical_json_bytes as jcs, canonical_json_sha256 as digest
 from ..storage.json_syntax import parse_json_object as parsed
@@ -14,38 +13,8 @@ def require(ok, reason):
         raise ModelError(reason)
 
 
-@dataclass(frozen=True)
-class RecordedSource:
-    _binding: bytes
-    _files: tuple
-
-    @property
-    def binding(self): return parsed(self._binding)
-    @property
-    def files(self): return dict(self._files)
-    @property
-    def kind(self): return self.binding['kind']
-    @property
-    def source_root(self): return self.binding['source_root']
-    @property
-    def commit_id(self): return self.binding['commit_id']
-    @property
-    def project_id(self): return self.binding['project_id']
-    @property
-    def schema_version(self): return self.binding['schema_version']
-    def verify_owned(self):
-        source_resource_rows(self)
 
 
-@dataclass(frozen=True)
-class RecordedMergeSources:
-    base: RecordedSource
-    ours: RecordedSource
-    theirs: RecordedSource
-    @property
-    def binding(self): return {r: getattr(self, r).binding for r in ('base', 'ours', 'theirs')}
-    @property
-    def sha256(self): return digest(self.binding)
 
 
 def verify_observation(source):
@@ -97,3 +66,5 @@ def capture_sources(sources):
     return {role: {'binding': getattr(sources, role).binding,
         'files': [{'path': p, 'bytes_base64': b64(raw)} for p, raw in sorted(getattr(sources, role).files.items())]}
         for role in ('base', 'ours', 'theirs')}
+
+from ._recorded_values import RecordedMergeSources, RecordedSource

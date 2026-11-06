@@ -162,7 +162,7 @@ Scope-, Review-, Integritäts- und Katalogregressionen sind ungefilterte
 Pflichtauswahl. Dev prüft nur Syntax, Collection und native Paketrekonstruktion.
 Keine Vollsuite-, Release-, M17- oder menschliche Abnahme; kein Dienst-/CI-Start.
 
-## Korrekturbundle 620 — vollständiger offener Rest, Ziel 17.k.R
+## Korrekturbundle 620 — vollständiger offener Rest, Ziel 17.k.C
 
 Maßgeblich ist das nativ geprüfte Fehler-Result `specroad-apply_Result_092536_1106_b8b2fd.zip`,
 SHA-256 `cf277950127de98be07fb3bdc1a21be70de28610765b21986d1d22e5853938d0`, HEAD `f068a53573f3f5529171d0bcc3f9c492dd46aee0`,
@@ -194,14 +194,14 @@ reale Nachprüfung nach Receipt-/Archivdurabilität und alle Crash-/Recoveryfäl
 C behält die reine Werteextraktion mit identischen R-Funktions-/Klassen-ASTs
 und Testbytes. Alle ursprünglichen Pflichtdateien bleiben ungefiltert ausgewählt.
 Jeder Zustand erhält ein eigenes N=3-plus-Pflichtauswahl-Gate vor seinem Commit.
-Der vorliegende Zielstand enthält 725/900 und danach `17.k.C` ausschließlich
+Der vorliegende Zielstand enthält 726/900 und danach `17.l.W` ausschließlich
 als erfolgreich zu prüfendes Commitziel, nicht als vorweggenommenen Nachweis.
 
 Dev führt null Verhaltenstests aus; Syntax, reine Collection und native
 Paketrekonstruktion sind keine Verhaltensabnahme. CLI-/Work-Endintegration,
 Quelltypen-/Resume-Parität und M17-Abschluss bleiben vollständig in 17.l offen.
 
-## Bundle 619 — vollständiger Commitzielstand 17.k.R
+## Bundle 619 — vollständiger Commitzielstand 17.k.C
 
 Basis ist das nativ geprüfte saubere Result `specroad-apply_Result_061258_1106_824a96.zip`,
 SHA-256 `70f78cbe6d25441d66ab4d5274143ddd51866b87c044eee62b2822dc6326a1ee`, HEAD `b0bec0d99ee9e0b84925306c64984a2267be93d3`,
@@ -211,7 +211,7 @@ werden nicht wiederholt. Der nächste reguläre Schritt ist vollständig 17.k.
 
 Nach dem zulässigen Detailpräfix MERGE-PUBLICATION-619 folgen drei echte
 vollständige Zwischenstände 17.k.W/R/C mit eigenem Pflichtauswahl-plus-N=3-Gate
-vor jedem Commit. Dieser Zielstand enthält 725/900 und danach `17.k.C`.
+vor jedem Commit. Dieser Zielstand enthält 726/900 und danach `17.l.W`.
 Zähler und Checkboxen werden erst durch erfolgreiches Apply-Gate und echten
 Commit wirksam. Vorbereitung behauptet keinen ausgeführten Verhaltenstest.
 
@@ -4410,10 +4410,10 @@ Kein offener Produktplanschritt wird durch diese Testoptimierung abgeschlossen.
 ```yaml
 plan_revision: 110
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 725
-last_completed_plan_commit: 17.k.R
-next_plan_commit: 17.k.C
-last_completed_numbered_bundle: 618
+implementation_plan_commits_completed: 726
+last_completed_plan_commit: 17.k.C
+next_plan_commit: 17.l.W
+last_completed_numbered_bundle: 621
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
@@ -39316,7 +39316,7 @@ Plattform-/Releasefreigaben werden dadurch nicht stillschweigend erteilt.
 
 #### 17.k.C – Make it Clean
 
-- [ ] **17.k.C** · Position **726/900** · Voraussetzung: `17.k.R`.
+- [x] **17.k.C** · Position **726/900** · Voraussetzung: `17.k.R`.
 **Exakte Commit-Message:** `17.k.C refactor(merge): Atomarer Apply und aktuelle Nachweisbindung bereinigen`
 
 **Bereinigung:** Merge als spezialisierten Planproduzenten auf dem allgemeinen Writer halten.

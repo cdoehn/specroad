@@ -1,5 +1,4 @@
 """Independent historical byte reconstruction and fresh native target checks."""
-from dataclasses import dataclass
 from ..model.canonical import canonical_json_bytes as jcs, canonical_json_sha256 as digest
 from ..storage.json_syntax import parse_json_object as parsed
 from ..migration.plan_values import unb64, file_bindings, changes
@@ -63,11 +62,6 @@ def recheck_plan(plan, source):
     return sources,candidate,target
 
 
-@dataclass(frozen=True)
-class PublicationValidation:
-    _raw: bytes
-    @property
-    def data(self): return parsed(self._raw)
 
 
 def validate_publication_target(plan, source, target, *, services=None):
@@ -103,3 +97,5 @@ def validate_publication_target(plan, source, target, *, services=None):
         'native':report.data,'assessment':assessment.as_dict(),
         'relation_reviews':[row.as_fields() for row in reviews.statuses],
         'evidence':list(evidence_assessments(model)), 'code_references':code}))
+
+from .publication_values import PublicationValidation
