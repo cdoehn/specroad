@@ -19,8 +19,8 @@ from specroad.model.canonical import canonical_json_bytes as jcs,canonical_json_
 from specroad.recovery.services import RestoreServices
 from specroad.storage.operational_preflight import observe_operational_preflight
 from specroad.migration.plan_values import b64,unb64
-from support.merge_publication import setup,apply,tree,normative
-from support.merge_target import seed,replace
+from support.merge_publication import setup,apply,tree,normative,seed
+from support.merge_target import replace
 from support.merge_resolution import ACTOR
 
 FAILURES=(ModelError,ChangeExecutionError,SafetyViolation,OSError)
@@ -46,11 +46,12 @@ def recover(root,args,action):
         return fn(args['transaction_id'],**options).data
 
 
-def multiple(tmp_path):
+def multiple(tmp_path, *, full_registry=False):
     from support.domain import domain_value
     from support.records import record_value
     from specroad.model.paths import artifact_path
-    files=seed(tmp_path/'seed',values=[record_value('document'),domain_value('goal'),domain_value('need')])
+    files=seed(tmp_path/'seed',values=[record_value('document'),domain_value('goal'),domain_value('need')],
+        full_registry=full_registry)
     ours=replace(files,'goal',title='Ours title')
     theirs=replace(replace(files,'goal',statement='Merged statement'),'need',title='Adopted need')
     added=domain_value('component')
@@ -74,7 +75,7 @@ def interrupt(root,plan,args,monkeypatch,point):
     'effect:0','journal:committing:1','effect:1','journal:committing:2','effect:2','journal:committing:3',
     'journal:committed:3','receipts','archived'])
 def test_every_real_prefix_has_exact_recovery_outcome_without_approval(tmp_path,monkeypatch,point):
-    root,plan,args,target=multiple(tmp_path);before=normative(root)
+    root,plan,args,target=multiple(tmp_path,full_registry=point in ('effect:1','archived'));before=normative(root)
     assert len(plan.data['operations'][0]['changes'])==3
     interrupt(root,plan,args,monkeypatch,point)
     current=journal(root,args)

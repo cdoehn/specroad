@@ -12,9 +12,10 @@ from support.merge_resolution import PLAN_ID
 from test_merge_inventory import bind_files
 
 
-def seed(root, *, values=None, profiles=(), fail_on='error'):
+def seed(root, *, values=None, profiles=(), fail_on='error', language_registry=None):
     model = inspection_project(root, artifacts=values if values is not None else
-        [record_value('document'), domain_value('goal')], extra_profiles=profiles)
+        [record_value('document'), domain_value('goal')], extra_profiles=profiles,
+        language_registry=language_registry)
     files = model.source_files
     config = json.loads(files['specroad.json'])
     config['validation_policy']['fail_on'] = fail_on

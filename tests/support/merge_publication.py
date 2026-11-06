@@ -2,8 +2,19 @@
 from pathlib import Path
 from specroad.merge import plan_merge_publication,create_merge_backup,apply_merge_publication
 from specroad.changes.publication_values import PublicationAuthority
-from support.merge_target import seed,replace,inputs,target
+from support.merge_target import seed as target_seed,replace,inputs,target
 from support.merge_resolution import ACTOR,WHEN
+from support.languages import small_restore_registry
+
+
+def seed(root, *, full_registry=False, **options):
+    """Own real registry bytes; publication cases need only de-DE/en-GB.
+
+    Keep full-size publication and recovery cases explicit. The generic
+    merge-target fixture still uses the bundled IANA snapshot by default.
+    """
+    return target_seed(root, language_registry=None if full_registry else small_restore_registry(),
+                       **options)
 
 
 def setup(tmp_path, *, variants=None, services=None, fields=None):

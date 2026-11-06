@@ -13,13 +13,14 @@ from specroad.changes.authoring import prepare_authoring_request
 from specroad.model.errors import ModelError
 from specroad.model.canonical import canonical_json_bytes as jcs
 from specroad.recovery.services import RestoreServices
-from support.merge_target import seed,replace
-from support.merge_publication import setup,apply,tree,normative
+from support.merge_target import replace
+from support.merge_publication import setup,apply,tree,normative,seed
+from support.transition_journal import assert_owned_plan
 
 
 @pytest.mark.parametrize('variant',['unchanged','adopted','combined'])
 def test_exact_k3_bytes_use_shared_transaction_and_bound_native_report(tmp_path,variant):
-    files=seed(tmp_path/'seed')
+    files=seed(tmp_path/'seed',full_registry=variant=='combined')
     ours=replace(files,'goal',title='Ours') if variant=='combined' else files
     theirs=replace(files,'goal',statement='Theirs') if variant!='unchanged' else files
     root,plan,args,target=setup(tmp_path,variants=[files,ours,theirs])
@@ -43,6 +44,7 @@ def test_exact_k3_bytes_use_shared_transaction_and_bound_native_report(tmp_path,
     journal=TransitionJournal(tx.with_name('journal.json').read_bytes())
     assert journal.data['format_version']=='merge-transition-journal-v1'
     assert journal.plan.source_bytes==plan.source_bytes and journal.data['validation']==report
+    assert_owned_plan(journal,plan.source_bytes)
     assert sha256(tx.read_bytes()).hexdigest()==result['receipts']['transaction']['sha256']
     assert (root/request_receipt_path(plan.data['request_id'])).is_file()
     assert not (root/'.specroad/transactions'/args['transaction_id']).exists()

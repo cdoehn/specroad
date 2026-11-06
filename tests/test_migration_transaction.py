@@ -8,6 +8,9 @@ from tests.support.reference01 import minimal, artifact, put
 from specroad.model.errors import ModelError
 from specroad.changes.execution_values import ChangeExecutionError
 from specroad.security import SafetyViolation
+from specroad.changes.schema_transition_values import TransitionJournal
+from specroad.changes.receipt_values import transaction_receipt_path
+from tests.support.transition_journal import assert_owned_plan
 
 FAILURES = (ModelError, ChangeExecutionError, SafetyViolation, OSError)
 
@@ -29,6 +32,8 @@ def test_native_complete_target_and_exact_revisions(tmp_path):
     assert not journal_path(root,args).exists()
     assert result['backup']['sha256'] == args['backup_sha256']
     assert not result['approval_granted']
+    archived = (root/transaction_receipt_path(args['transaction_id'])).with_name('journal.json')
+    assert_owned_plan(TransitionJournal(archived.read_bytes()), plan.source_bytes)
 
 
 def test_every_source_original_archived_exactly(tmp_path):

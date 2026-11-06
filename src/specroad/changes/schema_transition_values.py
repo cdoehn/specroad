@@ -1,5 +1,5 @@
 """Closed schema-transition records in the common transaction namespaces."""
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from hashlib import sha256
 from pathlib import Path
 from ..model.canonical import canonical_json_bytes as jcs, canonical_json_sha256 as digest
@@ -39,6 +39,7 @@ def authoring(plan):
 @dataclass(frozen=True, init=False)
 class TransitionJournal:
     _raw: bytes
+    _plan: ChangePlan = field(repr=False, compare=False)
 
     def __init__(self, raw):
         require(type(raw) is bytes, 'transition_journal_bytes_required')
@@ -104,6 +105,9 @@ class TransitionJournal:
         require(report.get('source_bindings') == expected, 'transition_validation_binding')
         require(raw == jcs(value), 'transition_noncanonical_journal')
         object.__setattr__(self, '_raw', raw)
+        # This is the already validated immutable value owned by these exact
+        # journal bytes, never a cached live-state or authorization decision.
+        object.__setattr__(self, '_plan', plan)
 
     @property
     def data(self): return parsed(self._raw)
@@ -112,7 +116,7 @@ class TransitionJournal:
     @property
     def sha256(self): return sha256(self._raw).hexdigest()
     @property
-    def plan(self): return ChangePlan(unb64(self.data['plan_bytes_base64']))
+    def plan(self): return self._plan
     @property
     def path(self): return '.specroad/transactions/' + self.data['transaction_id'] + '/journal.json'
     @property
