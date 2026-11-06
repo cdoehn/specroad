@@ -47,7 +47,7 @@ def _project_bytes(files):
     return model, native.sha256
 
 
-def validate_project(files, *, services=None):
+def project_validation_report(files, *, services=None):
     """No user-supplied success callbacks, fake reviews or gate overrides.
 
     Full native model and specialist checks apply to the actual stored states.
@@ -156,6 +156,12 @@ def validate_project(files, *, services=None):
                             gates=gates, document_role_scope='full_project',
                             approval_contexts=tuple(pair[0] for pair in approvals.values()),
                             legacy=model.legacy_manifest)
+    return model, root, report
+
+
+def validate_project(files, *, services=None):
+    """Require the existing complete native gates; retain the original API."""
+    model, root, report = project_validation_report(files, services=services)
     for stage in report.data['stages']:
         if stage['status'] == 'unavailable':
             require(False, 'restore_' + stage['stage'] + '_provider_required')

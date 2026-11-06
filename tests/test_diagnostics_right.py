@@ -39,16 +39,20 @@ class DiagnosticRightTests(unittest.TestCase):
         for size in range(5):
             for sequence in product(("error","warning","info"),repeat=size):
                 values=[finding("VENDOR:"+str(i),severity=s) for i,s in enumerate(sequence)]
-                for threshold in ("error","warning"):
+                for threshold in ("error","warning","info"):
                     result=assess_diagnostics(values,fail_on=threshold)
-                    expected="error" in sequence or (threshold=="warning" and "warning" in sequence)
+                    expected="error" in sequence or (threshold in ("warning","info") and "warning" in sequence) or (threshold=="info" and "info" in sequence)
                     self.assertEqual(result.exit_code,1 if expected else 0)
                     self.assertEqual(sum(result.summary["diagnostics_by_severity"].values()),size)
 
     def test_strict_never_weakens_explicit_threshold(self):
-        for threshold in ("error","warning"):
+        for threshold in ("error","warning","info"):
             result=assess_diagnostics([finding()],fail_on=threshold,strict=True)
             self.assertEqual(result.exit_code,1);self.assertEqual(result.diagnostics[0].severity,"warning")
+            info=assess_diagnostics([finding(severity="info")],fail_on=threshold,strict=True)
+            self.assertEqual(info.exit_code,1 if threshold=="info" else 0)
+            self.assertEqual(info.as_dict()["fail_on"],"info" if threshold=="info" else "warning")
+            self.assertEqual(info.diagnostics[0].severity,"info")
 
     def test_policy_validates_all_items_before_short_circuit(self):
         class Foreign:

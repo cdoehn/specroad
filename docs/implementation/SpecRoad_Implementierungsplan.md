@@ -34,6 +34,90 @@ Produktfreigaben und die Grenzen aus 2.4.1/2.4.2/2.4.4 bleiben unverändert.
 Dieser Plan ändert keine alten Aufträge, Antworten, Blockaden oder
 Laufzeitdaten und ist keine Start-/Resume-Anweisung.
 
+## Korrektur 617 — gebundene Fortsetzung von 17.j.W/R/C
+
+Maßgeblich ist das nativ geprüfte Fehler-Result `specroad-apply_Result_024957_1106_83bbf2.zip`,
+SHA-256 `e1672a45d0db6f2e3a4c9059234746a027150664548cc78105e811d8f229c993`, HEAD `125e0a9ec51ab630c299c71845de659ae3c56d0f`,
+Fingerprint `e0ffe7718a51fb57`. Der Klärungscommit
+MERGE-TARGET-616 wurde als 125e0a9ec51ab630c299c71845de659ae3c56d0f
+nach 7016 bestandenen Tests committed. 17.j.W scheiterte vor seinem Commit
+mit einem Fehler und 9559 bestandenen Tests; 17.j.R/C wurden nicht ausgeführt.
+Der vollständige erhaltene W-Arbeitsstand ist die technische Korrekturbasis.
+
+Belegter Fehler: `test_bound_target_project_policy_controls_real_profile_warning[info-False]`
+endet in `FailPolicy` mit `ResultContractError: Unsupported fail threshold`.
+Die vorhandene native ProjectConfiguration samt veröffentlichtem JSON-Schema
+akzeptiert `validation_policy.fail_on=info`; die gemeinsame Diagnostikbewertung
+und ihr Ergebnis-Schema hatten diesen Wert noch ausgeschlossen. Der bereits
+committede Vertrag 10.15.7 verlangt gerade die Bewertung nach dieser Zielpolicy.
+Dies ist eine technische Inkonsistenz, keine neue normative Detailentscheidung.
+
+W/R/C erhalten dieselbe gezielte Korrektur: Die gemeinsame Bewertung unterstützt
+die bestehende Schwerefolge error, warning, info auch als Projektschwellwert.
+Ein info-Schwellwert blockiert jeden vorhandenen Befund, aber keinen vollständigen
+befundfreien Check. Strict darf die strengere info-Policy nicht abschwächen.
+Unvollständigkeit und unabhängige Fehlercodes bleiben vorrangig; beobachtete
+Schweregrade und native Originalberichte bleiben unverändert. Das gebundene
+model-validation-v1-Ergebnis kann den tatsächlich verwendeten info-Wert abbilden.
+Die CLI-Optionsdefinition `--fail-on error|warning` bleibt bytegleich; vorhandene
+Parser-/Optionsregressionen schützen weiterhin diese explizite Grenze.
+
+Die vorhandenen stabilen Testidentitäten werden um echte native Info-/Leerbefund-
+Projekte, Schemaabnahme und die vollständige Schwere-/Strict-Matrix ergänzt.
+Der ursprünglich fehlgeschlagene Test und sämtliche ursprünglichen Pflichtdateien
+bleiben erhalten. Alle Diagnose-, Modellbewertungs- und Optionsregressionen sowie
+betroffene Change-/Migrationspfade gehören zusätzlich in jedes Apply-Gate.
+Keine Quell-/Zielvalidatoren werden gemockt und keine Akzeptanz abgeschwächt.
+Spezifikation und Klärungsabnahmen bleiben unverändert; keine neue Klärungsstage,
+keine Budgetänderung. Die offenen IDs und Rollen 17.j.W/R/C bleiben vollständig.
+
+Jeder Zwischenstand wird erst nach seinem eigenen N=3-plus-Pflichtauswahl-Gate
+committed. Der fehlgeschlagene W-Versuch behält Gruppe 0; danach folgen 1 und 2.
+Planfortschritt wird nur durch erfolgreiche Commits wirksam. Dev führte keine
+Verhaltenstests aus. M17, Transaktions-/CLI-/Work-Integration in 17.k–17.l und
+menschliche Freigaben bleiben offen; dieser Nachweis ist keine Produktfreigabe.
+
+## Bundle 616 — vollständiger Commitzielstand 17.j.W
+
+Basis ist das nativ geprüfte saubere Result `specroad-apply_Result_005413_1106_021a46.zip`,
+SHA-256 `6d0b1c88c57d557295acee96edbb2bceb89ec8c034a037d1de5810cd07cb698e`, HEAD `eb2ee51c97c23e68e75bfa2f726da03b1928ea26`,
+Fingerprint `7c9d2a24e397e0e5`. Bundle 615 hat 17.i.W/R/C
+mit drei erfolgreichen Gates committed; kein erfolgreicher Commit wird wiederholt.
+
+Nach dem optionalen zulässigen Präfix MERGE-TARGET-616 folgen drei echte
+vollständige Zwischenstände 17.j.W/R/C mit eigenem Pflichtauswahl-plus-N=3-Gate
+vor jedem Commit. Dieser Zielstand enthält 721/900 und danach `17.j.R`.
+Zähler und Checkboxen werden erst durch erfolgreiches Apply-Gate und echten
+Commit wirksam. Vorbereitung behauptet keinen ausgeführten Verhaltenstest.
+
+W rekonstruiert die vollständigen Zielbytes aus den originalen gebundenen
+Metadaten- und Planbytes. Die vorhandene native Projektpipeline prüft alle
+Artefakte, Ressourcen, Profile, Scopes, Referenzen, Graphen, Dokumente,
+Konfigurationen, Lebenszyklen, historische Originale und erforderlichen
+Spezialisten. Wurzelgleichheit und die bestehende fail_on-Policy sind zwingend.
+Unvollständige oder ungültige Ziele liefern keine verwendbare Dateimenge.
+Der native Befund bleibt vollständig erhalten; Warnungen verschwinden nicht.
+
+R ergänzt die unabhängige Nachprüfung gespeicherter Befunde und die erneute
+Quellenbeobachtung auch nach negativen Prüfungen/Providerfehlern. Vorbereitete
+Tests kombinieren gültige Einzelzweige zu verbotenen Zyklen, Profilkonflikten,
+mehreren Primärdokumenten und ausgeschlossenen Konfigurationsabhängigkeiten.
+Sie verwenden reale Quellbytes, originale native Baselines und ausdrücklich
+synthetische native Revieweingaben; keine wirklichen Reviews werden behauptet.
+Gefälschte/umgehashte Berichte, fehlende/veraltete Eingaben und wirkliche späte
+Quellenänderungen bleiben blockiert. Vier native Quellarten werden lesend geprüft.
+C verschiebt nur passive Ergebniswerte; R-Funktions-/Klassen-ASTs und
+Verhaltenstestbytes bleiben identisch. Die gemeinsame Engine wird wiederverwendet.
+
+`ready`, `write_authorized` und `approval_granted` bleiben false;
+`publication` bleibt ausstehend. Es entstehen keine Projektwrites, temporären
+Projekte, Locks, Backups, Receipts, Journale oder Git-Commits durch diese API.
+Die vollständige Transaktions-/CLI-/Work-Integration bleibt in 17.k–17.l.
+Neue/geänderte Tests sowie Merge-, native Validierungs-, Restore-, Profil-,
+Scope-, Review-, Integritäts- und Katalogregressionen sind ungefilterte
+Pflichtauswahl. Dev prüft nur Syntax, Collection und native Paketrekonstruktion.
+Keine Vollsuite-, Release-, M17- oder menschliche Abnahme; kein Dienst-/CI-Start.
+
 ## MERGE-TARGET-616 — vollständiger virtueller Zielbefund für 17.j
 
 Delegiert gemäß SPECROAD-DECISION-1, 2.4.3.1 und Vertrag 4;
@@ -4158,9 +4242,9 @@ Kein offener Produktplanschritt wird durch diese Testoptimierung abgeschlossen.
 ```yaml
 plan_revision: 109
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 720
-last_completed_plan_commit: 17.i.C
-next_plan_commit: 17.j.W
+implementation_plan_commits_completed: 721
+last_completed_plan_commit: 17.j.W
+next_plan_commit: 17.j.R
 last_completed_numbered_bundle: 615
 implementation_state: in_progress
 audit_followup_status: closed
@@ -39011,7 +39095,7 @@ Plattform-/Releasefreigaben werden dadurch nicht stillschweigend erteilt.
 
 #### 17.j.W – Let it Work
 
-- [ ] **17.j.W** · Position **721/900** · Voraussetzung: `17.i.C`.
+- [x] **17.j.W** · Position **721/900** · Voraussetzung: `17.i.C`.
 **Exakte Commit-Message:** `17.j.W feat(merge): Zielvalidierung und semantische Konflikte aufbauen`
 
 **Umsetzung:** Vollständigen zusammengeführten Zielstand einschließlich Profilen, Scopes und Referenzen vor Apply validieren.

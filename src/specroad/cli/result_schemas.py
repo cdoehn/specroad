@@ -184,7 +184,7 @@ def _fields(schema_id):
         return _object({'diagnostic_format_version': {'const': 1}, 'diagnostics': _array(diagnostic),
             'checked_ids': strings, 'summary': obj, 'checks_complete': boolean,
             'status': {'enum': ['success', 'failed']}, 'exit_code': {'type': 'integer', 'minimum': 0, 'maximum': 7},
-            'fail_on': {'enum': ['error', 'warning']}, 'strict_requested': boolean,
+            'fail_on': {'enum': ['error', 'warning', 'info']}, 'strict_requested': boolean,
             'input_sha256': sha, 'validation_scope': nonempty, 'source_report': obj,
             **{k: {'const': False} for k in ('optional_lint_started', 'approval_granted', 'write_authorized')}})
     if schema_id == 'project-lock-v1':

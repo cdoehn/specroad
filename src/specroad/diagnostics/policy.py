@@ -10,20 +10,23 @@ class FailPolicy:
     strict: bool = False
 
     def __post_init__(self):
-        if type(self.fail_on) is not str or self.fail_on not in ("error", "warning"):
+        if type(self.fail_on) is not str or self.fail_on not in SEVERITIES:
             raise ResultContractError("Unsupported fail threshold")
         if type(self.strict) is not bool:
             raise ResultContractError("Strict must be a boolean")
 
     @property
     def threshold(self):
-        return "warning" if self.strict else self.fail_on
+        # Strict must not relax the already stronger project threshold info.
+        return "warning" if self.strict and self.fail_on == "error" else self.fail_on
 
     def reached(self, diagnostics):
         if type(diagnostics) not in (tuple, list) or any(type(d) is not Diagnostic for d in diagnostics):
             raise ResultContractError("Expected complete typed diagnostic sequence")
-        return any(d.severity == "error" or (self.threshold == "warning" and d.severity == "warning")
-                   for d in diagnostics)
+        # The native project schema permits all severities; CLI option parsing
+        # separately restricts --fail-on to error|warning.
+        failing = SEVERITIES[:SEVERITIES.index(self.threshold) + 1]
+        return any(d.severity in failing for d in diagnostics)
 
 
 @dataclass(frozen=True)

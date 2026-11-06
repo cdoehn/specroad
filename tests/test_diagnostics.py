@@ -115,7 +115,7 @@ class DiagnosticWorkTests(unittest.TestCase):
         self.assertTrue(assess_diagnostics([finding(severity="info")],strict=True).passed)
 
     def test_errors_fail_both_thresholds(self):
-        for threshold in ("warning","error"):
+        for threshold in ("warning","error","info"):
             self.assertEqual(assess_diagnostics([finding(severity="error")],fail_on=threshold).exit_code,1)
 
     def test_incomplete_empty_observation_is_never_success_or_checkpoint(self):
@@ -123,15 +123,19 @@ class DiagnosticWorkTests(unittest.TestCase):
         self.assertFalse(a.passed);self.assertEqual(a.exit_code,5)
         self.assertFalse(a.as_dict()["approval_granted"])
         with self.assertRaises(TypeError):bool(a)
+        info=assess_diagnostics([],fail_on="info",complete=False)
+        self.assertEqual(info.exit_code,5);self.assertFalse(info.passed)
+        self.assertTrue(assess_diagnostics([],fail_on="info").passed)
 
     def test_independent_model_error_retains_its_exit_class(self):
         for code in range(2,8):
-            self.assertEqual(assess_diagnostics([],operational_exit_code=code).exit_code,code)
+            for threshold in ("error","warning","info"):
+                self.assertEqual(assess_diagnostics([],fail_on=threshold,operational_exit_code=code).exit_code,code)
         for code in (0,1,8,False,"3"):
             with self.subTest(code=code),self.assertRaises(ResultContractError):assess_diagnostics([],operational_exit_code=code)
 
     def test_policy_rejects_coercible_values(self):
-        for value in (None,"info",[],1):
+        for value in (None,"never",[],1):
             with self.subTest(value=value),self.assertRaises(ResultContractError):FailPolicy(value)
         with self.assertRaises(ResultContractError):FailPolicy(strict=1)
 

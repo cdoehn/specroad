@@ -4,24 +4,25 @@
   "expected_exit_codes": [],
   "fixture_ids": [
     "SR-FIX-MERGE-COLLECTIONS-v1",
-    "SR-FIX-MERGE-FIELDS-v1"
+    "SR-FIX-MERGE-FIELDS-v1",
+    "SR-FIX-MERGE-TARGET-v1"
   ],
   "implementation_status": "partial",
   "json_pointers": [],
   "method": "automated_behavior",
   "open_items": [
-    "Successful Apply evidence is required for every prepared stage; Dev executed zero behavior tests.",
-    "Final full-resource merge classification, relations and identity/history, immutable metadata gates, profile/invariant and final target checks, persisted resolutions, CLI/Work and publication remain in later M17 steps."
+    "Successful stage-specific Apply execution evidence is required; Dev ran zero behavior tests.",
+    "17.k-17.l must still implement transactional merge publication/current evidence binding and final CLI/Work/report integration. SR-REQ-0373 and M17 are not complete."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Unabhängige Änderungen an unterschiedlichen Objektfeldern desselben Artefakts oder derselben JSON-Ressource MÜSSEN rekursiv automatisch zusammengeführt werden, sofern keine Profil- oder Invarianzregel einen semantischen Konflikt feststellt; Anhänge werden ausschließlich anhand Pfad und Byte-Hash zusammengeführt.",
-    "scope": "17.c field recursion remains required and unchanged without schema_id. 17.d.W adds an explicit built-in schema identity, declared stable scalar/object keys, recursive nested sets and actual path/byte attachment candidates according to 10.15.2. All sources are validated before shortcuts; duplicate keys and schema-invalid combinations cannot become a target. Unambiguous adoption retains existing sequence order and exact binary bytes. Independent additions survive; keyed conflicts retain whole original observations and stable keys. Missing attachment bytes alone do not authorize removal. 17.d.R additionally supplies explicit ordered_sequence_change conflicts, portable component/file-descendant collision rejection, typed identities and numeric equality, nested duplicates, absent/null distinctions, malformed/conditional annotations and side-effect boundaries. Real qualified sources feed both APIs while their original inventory and native bindings stay unchanged. This is a read-only candidate layer: ready/write_authorized remain false. Full identity/history, immutable-resource, metadata, profile/invariant, final-target, persisted-resolution and CLI/publication gates remain in later M17 steps. Prepared tests require current successful stage-specific Apply evidence; no requirement-wide completion is asserted."
+    "scope": "Existing 17.c/17.d field, keyed collection and binary attachment behavior remains required. The qualified 17.a-17.i pipeline supplies explicit history, resolved fields/relations, immutable originals and exact K.3 metadata. 17.j/10.15.7 reconstructs all target files from the original metadata and plan bytes, then invokes the full existing native project validation pipeline with its profile/SRX, scope, reference, graph, document, configuration, lifecycle, historical-integrity and required specialist checks. The native target root must match the metadata root. All unchanged artifacts/resources are checked; target validation is complete only with complete native checks, model validity and an assessment passing the target project fail_on policy. A warning stays visible. Unresolved metadata, unavailable native providers and semantic conflicts expose no usable target files. ready/write_authorized/approval_granted remain false and publication remains pending. This is the full virtual validation prerequisite, not the later transaction or merge apply CLI. C only relocates passive values; R function/class ASTs and behavior test bytes remain unchanged. Each prepared state requires a successful Apply gate; no requirement-wide or M17 completion is claimed."
   },
   "preconditions": [
-    "Three present owned JSON resources with an exact built-in schema ID; complete attachment maps come from qualified sources.",
-    "Removal wishes are explicit candidate inputs, never evidence of review or writer authorization.",
-    "Behavior tests run only in Apply; syntax and collection provide no pass evidence."
+    "Three native complete source snapshots, explicit source-bound identity history and exact original metadata/plan bytes with full expected SHA-256.",
+    "Trusted host providers supply only existing native review/source/task/proposal inputs; stored project data cannot select providers or supply a success gate.",
+    "Dev executes no behavior tests. Original source and target bytes are independently checked by Apply tests before each real commit."
   ],
   "primary_verification_id": "SR-VER-0026",
   "required_environment": {
@@ -37,12 +38,11 @@
   },
   "specification_sha256": "3893ef283653d54695e1aca9b9552d82ecdd02753b5a9e523494176b2df6a255",
   "steps": [
-    "Compare explicit independent additions, same-key object changes, nested sets, adopted order and remove/edit observations against exact independent expected values.",
-    "Validate every source before equality shortcuts; reject duplicate keys, unknown schema lookup and schema-invalid combined targets.",
-    "Hash actual binary bytes, distinguish missing from empty content, reject unproved absence/removal and preserve true binary conflicts.",
-    "Qualify real synthetic source projects, compute field/attachment candidates and prove source inventory and ready/write authority unchanged.",
-    "Exercise symmetric competing ordered changes without index/ID guesses; preserve exact original observations and refuse unresolved target access.",
-    "Reject malformed schema annotations, nested duplicates and path aliases/file descendants; preserve deep data and forbid external side effects."
+    "Independently recompute the exact virtual target bytes/root and compare the complete native full-project validation report.",
+    "Retain warnings and enforce the target validation policy; reject unresolved fields, invalid unchanged artifacts and missing primary documents without writes.",
+    "Check real profiles and graph invariants over every supplied artifact.",
+    "Keep missing required native inputs fail-closed.",
+    "Preserve exact original input bindings, passive values and withheld authority."
   ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0365",
@@ -259,6 +259,19 @@
     "tests/test_merge_fields_right.py::test_missing_null_scalar_and_object_success_matrix[matrix-20]",
     "tests/test_merge_fields_right.py::test_missing_null_scalar_and_object_success_matrix[matrix-21]",
     "tests/test_merge_fields_right.py::test_no_unicode_normalization_or_boolean_number_coercion_in_nested_values",
-    "tests/test_merge_fields_right.py::test_root_scalars_use_empty_pointer_and_null_remains_a_valid_result"
+    "tests/test_merge_fields_right.py::test_root_scalars_use_empty_pointer_and_null_remains_a_valid_result",
+    "tests/test_merge_target.py::test_bound_target_project_policy_controls_real_profile_warning[error-True]",
+    "tests/test_merge_target.py::test_bound_target_project_policy_controls_real_profile_warning[info-False]",
+    "tests/test_merge_target.py::test_bound_target_project_policy_controls_real_profile_warning[warning-False]",
+    "tests/test_merge_target.py::test_complete_valid_target_preserves_exact_candidates_and_native_root_without_writes[adopted]",
+    "tests/test_merge_target.py::test_complete_valid_target_preserves_exact_candidates_and_native_root_without_writes[combined]",
+    "tests/test_merge_target.py::test_complete_valid_target_preserves_exact_candidates_and_native_root_without_writes[unchanged]",
+    "tests/test_merge_target.py::test_forged_metadata_is_recomputed_even_with_updated_outer_hash",
+    "tests/test_merge_target.py::test_input_byte_hash_is_checked_before_any_target_claim[metadata]",
+    "tests/test_merge_target.py::test_input_byte_hash_is_checked_before_any_target_claim[plan]",
+    "tests/test_merge_target.py::test_passive_values_are_detached_and_no_truthiness_claims_publication",
+    "tests/test_merge_target.py::test_profile_error_and_absent_primary_document_cannot_be_ignored",
+    "tests/test_merge_target.py::test_unchanged_artifacts_with_hierarchy_cycle_are_still_checked",
+    "tests/test_merge_target.py::test_unresolved_field_conflict_has_no_target_or_native_validation_claim"
   ]
 }

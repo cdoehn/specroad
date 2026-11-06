@@ -55,6 +55,12 @@ class ValidationDiagnosticWorkTests(unittest.TestCase):
         a,b=assess_validation(r),assess_validation(r,strict=True)
         self.assertTrue(a.passed);self.assertEqual(b.exit_code,1)
         self.assertEqual(a.diagnostics,b.diagnostics);self.assertEqual(a.as_dict()["source_report"],b.as_dict()["source_report"])
+        from specroad.cli.result_schemas import validate_result_document
+        info=assess_validation(r,fail_on="info")
+        self.assertEqual(info.exit_code,1);self.assertEqual(info.diagnostics,a.diagnostics)
+        self.assertEqual(info.as_dict()["source_report"],r.data)
+        self.assertEqual(info.as_dict()["fail_on"],"info")
+        validate_result_document("model-validation-v1",info.as_dict())
 
     def test_unavailable_services_cannot_pass_an_empty_result(self):
         a=assess_validation(validate_model((doc(artifact()),)))
