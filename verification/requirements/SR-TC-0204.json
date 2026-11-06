@@ -40,7 +40,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "29178f3debf8c4f7a5bd14c9bbb2fd150e1a9024678576496d67a30251e06dd2",
+  "specification_sha256": "8c35a0b0833be8edc1d29f79998dcb137b6fc76c4816a3873a1ace072e5c9b85",
   "steps": [
     "Durably set committing; atomically replace targets in canonical path order and sync each acknowledgement before the next target; recompute the full live target root.",
     "Inject errors at journal and target boundaries; preserve before images and active recovery blocker; never claim receipts, committed state or automatic rollback."

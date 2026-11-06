@@ -40,7 +40,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "29178f3debf8c4f7a5bd14c9bbb2fd150e1a9024678576496d67a30251e06dd2",
+  "specification_sha256": "8c35a0b0833be8edc1d29f79998dcb137b6fc76c4816a3873a1ace072e5c9b85",
   "steps": [
     "Load the explicit hash-pinned standalone PYZ without a Result or host installation; use only its public API to inspect/read passive Results and to export byte-identical runtime artifacts.",
     "Compare all five layers with independent Git and filesystem oracles, reject incomplete layers, retain upstream failure facts, and check lazy Core, runtime trust and source preservation in isolated offline processes."

@@ -1,19 +1,19 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.69
+## Version 0.2.70
 
 | Feld | Wert |
 |---|---|
 | Dokument-ID | `SR-SPEC-0001` |
-| Dokumentversion | `0.2.69` |
+| Dokumentversion | `0.2.70` |
 | Zielrelease | `SpecRoad Single-Repository Workbench 0.2.0` |
 | Status | **Fachlich konsolidierte Arbeitsgrundlage; technische Reviewentscheidung gesondert dokumentiert, formale Baseline-Freigabe und Produktabnahme nicht durch dieses Dokument erklärt** |
-| Stand | 5. November 2026 |
+| Stand | 6. November 2026 |
 | Sprache | Deutsch; technische Feldnamen, Enum-Werte und CLI-Kommandos Englisch |
-| Fachliche Quelle | **Diese Repositoryfassung v0.2.69 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.69 liegt mit dieser Änderung nicht vor.** |
+| Fachliche Quelle | **Diese Repositoryfassung v0.2.70 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.70 liegt mit dieser Änderung nicht vor.** |
 | Bearbeitbare Satzquelle | Diese Datei; eine spätere PDF muss denselben versionierten Inhalt wiedergeben. |
-| Vorgängerversion | Repository-Spezifikation v0.2.68 vom 5. November 2026; historische Nachweise bleiben unverändert. |
-| Prüf- und Entscheidungsgrundlage | MERGE-RESOLUTION-612, delegiert gemäß SPECROAD-DECISION-1, Vertrag 4; keine Produktfreigabe. |
-| Änderungsart | Quellgeprüfte einzelne Konfliktauflösung mit unverändertem Katalog, explizitem Audit und realer Plan-CLI. |
+| Vorgängerversion | Repository-Spezifikation v0.2.69 vom 5. November 2026; historische Nachweise bleiben unverändert. |
+| Prüf- und Entscheidungsgrundlage | MERGE-METADATA-614, delegiert gemäß SPECROAD-DECISION-1, Vertrag 4; keine Produktfreigabe. |
+| Änderungsart | Exakte Merge-Metadatenkandidaten mit Herkunftsbindung und unabhängiger nativer Zielwurzel-Nachrechnung. |
 
 > **Verbindlicher Quellenwechsel:** Die ausdrückliche Nutzerentscheidung REFERENCE-SOURCE-551 wird als v0.2.50 umgesetzt. Der neue Quellvertrag ist Entwurfsarbeit vom 3. November 2026, kein Nachweis eines früher existierenden Formats. Bestehende 0.2-Verträge, Transport-, Sicherheits- und Reviewgrenzen bleiben erhalten.
 
@@ -4784,6 +4784,75 @@ Das Ergebnis enthält `format_version`, `source_validation: revalidated`,
 Kennzeichnung `source_validation: not_revalidated` bleibt unverändert.
 
 
+### 10.15.6 Exakte Metadatenkandidaten und unabhängige Nachrechnung
+
+Der lesende Vorbereitungsschritt nach der Konfliktauflösung bindet die exakten
+Eingabebytes samt erwarteter vollständiger Plan-SHA-256, den ursprünglichen
+Konfliktkatalog, den expliziten Herkunftsinput und alle drei erneut nativ
+geprüften Quellen. Er verwendet ausschließlich K.3 `merge-metadata-v1`;
+reguläre Änderungen erhalten dadurch keine Merge-Policy-Auswahl.
+
+Der geschlossene Kandidat `merge-metadata-candidates-v1` enthält
+`metadata_format_version`, `metadata_policy_version`, `input_plan`,
+`input_plan_sha256`, `resources`, `resources_sha256`, `target_files`,
+`target_files_sha256`, `expected_target_model_root_sha256`, `conflicts`,
+`metadata_complete`, `pending_gates`, `ready`, `write_authorized` und
+`approval_granted`. Die letzten drei Felder sind immer false. Eine Ressource
+wird mit ihrer Inventaridentität, ihrem Pfad und einer der vier K.3-Klassen
+gebunden; vorhandene Zielbytes werden durch SHA-256 und Größe ausgewiesen.
+Die Zieldateiliste ist nach Pfad geordnet. Es gibt keine relative oder frei
+gewählte Policy, Uhrzeit, Revision oder externe Dateiquelle im Kandidaten.
+
+Der Kandidat rekonstruiert alle normativen Dateien. Bestehende originale
+Ours-Bytes bleiben bei `unchanged_ours` exakt erhalten. `adopt_existing`
+übernimmt originale Theirs-Bytes exakt, einschließlich Revision und Audit.
+Beide Fälle setzen eine unveränderte Gegenrichtung beziehungsweise eine
+nur einseitige Ergänzung voraus. Unterschiedliche gemeinsame Ursprungs-
+metadaten sperren auch eine vermeintlich einfache Übernahme. Schutzklassen,
+fehlende Ressourcen und Herkunftskonflikte aus 10.15.4 werden nicht umgangen.
+
+Bei `combined` werden nur Geschäftsfelder zusammengeführt; Artefakt-Auditfelder
+kommen ausschließlich aus K.3. Relationen werden über ihre globale Identität
+zusammengeführt und in kombinierten Besitzerartefakten nach Relations-ID
+geordnet; ihre bestehenden Erstellungsfelder werden nicht neu gestempelt.
+Explizite Auflösungswerte ersetzen nur ihren gebundenen Konfliktzweig. Eine
+Auflösung im Artefakt oder in einer seiner Relationen bedeutet eine explizite
+kombinierte Änderung. Bei mehreren Ereignissen liefert das letzte betroffene
+Ereignis in der bereits gebundenen Auflösungsreihenfolge `updated_by` für
+diesen Besitzer. Die gesamte Ereigniskette bleibt unverändert nachvollziehbar.
+Ohne ein solches Ereignis gilt der K.3-Tool-Akteur. Auflösungszeitpunkte sind
+Audit der Entscheidung, kein zusätzlicher Eingang der K.3-Zeitmaximierung.
+
+Als bei Ours bekannte Revisionen zählen der aktuelle Ours-Stand, der gemeinsame
+gebundene Base-Stand und die in Ours durch native Baseline-Manifeste referenzierten
+Artefaktoriginale derselben Identität und Erstellungsherkunft. Historische
+Originale müssen ihre Referenz, vollständigen Auditfelder und Identität erfüllen;
+unbekannte oder abweichende Herkunft erzeugt einen Konflikt. Ungebundene
+Dateien, freie Revisionszahlen und vermutete Git-Historie sind kein Nachweis.
+Eine niedrigere `adopt_existing`-Revision bleibt blockiert. K.3 für `combined`
+bleibt unverändert max(Ours,Theirs)+1; diese Regel wird nicht durch eine neue
+Revisionsformel ersetzt. Zahlen und Zeitnachfolger müssen verlustfrei im
+bestehenden kanonischen Wertebereich darstellbar sein, sonst Konflikt.
+
+Unaufgelöste Eingangskonflikte oder Metadatenfehler liefern keine verwendbare
+Dateimenge und keine Zielwurzel. Bei vollständig berechneten Metadaten werden
+die Kandidatenbytes mit dem bestehenden nativen Zielmodell und dem gebundenen
+Ours-Umfang auf eine Modellwurzel projiziert. Ein strukturell nicht projizierbarer
+Kandidat bleibt blockiert. Eine berechnete Wurzel ersetzt ausdrücklich nicht
+die vollständige semantische Zielvalidierung aus 17.j.
+
+Die lesende Writer-Vorbereitung nimmt originale Eingabeplanbytes, deren
+erwarteten Hash, expliziten Herkunftsinput und erneut qualifizierte Quellen
+entgegen. Sie berechnet die gesamte Kandidatenmenge, Metadaten und native
+Modellwurzel unabhängig vom gespeicherten Kandidaten neu und vergleicht den
+vollständigen kanonischen Kandidaten. Umgerechnete Hashes manipulierten
+Inhalts sind kein Nachweis. Veraltete Quellen, unbekannte Felder, abweichende
+Policy, Datei-/Audit-/Wurzelprojektionen oder Freigabebehauptungen werden
+abgelehnt. Beide Vorbereitungen prüfen die Quellen nochmals vor Rückgabe.
+Sie erwerben keine Locks und schreiben keine Projekte, Receipts oder Journale.
+Die echte Transaktionsveröffentlichung und Abschlussintegration bleiben in
+17.k–17.l; `target_validation` und `publication` bleiben ausstehende Gates.
+
 ### 10.16 Projektbundle und partieller Umfang
 
 Ein Bundle verwendet ausschließlich die kanonischen Werte `bundle_kind=project|partial` nach Anhang E.3; `document` und `release` sind Scope-Arten, keine Werte dieses Felds. Ein `project`-Bundle enthält einen geschlossenen, nicht konfigurationsgefilterten Projektscope und bildet nach Extraktion ein normales schreibbares SpecRoad-Projekt. Es enthält standardmäßig abgeschlossene Request- und Transaktionsreceipts in einer getrennten Betriebssektion, deren Hash im Bundlemanifest gebunden ist, aber nicht in die fachliche Modellwurzel eingeht.
@@ -7953,6 +8022,7 @@ Die folgende Roadmap ist informativ und erzeugt keine Anforderungen an 0.2:
 
 | Version | Datum | Status | Änderung |
 |---|---|---|---|
+| 0.2.70 | 2026-11-06 | Delegiert gemäß SPECROAD-DECISION-1, Vertrag 4 | MERGE-METADATA-614: Exakte Metadatenkandidaten, historische Revisionsgrenze und unabhängige Writer-Vorbereitung ohne Projektwrites. |
 | 0.2.69 | 2026-11-05 | Delegiert gemäß SPECROAD-DECISION-1, Vertrag 4 | MERGE-RESOLUTION-612: Explizite auditierte Konfliktauflösung, deklarative Zielwerte und native CLI ohne Projektwrites. |
 | 0.2.68 | 2026-11-05 | Delegiert gemäß SPECROAD-DECISION-1, Vertrag 4 | MERGE-CONFLICTS-608: Vollständige lesende Konfliktobjekte mit stabilen IDs, Impact, Auflösungsarten und CLI-Inspektion. |
 | 0.2.67 | 2026-11-05 | Delegiert gemäß SPECROAD-DECISION-1, Vertrag 4 | MERGE-RELATIONS-606: Herkunftsbindung und globale Relationsidentität ohne implizite Lösch-/Schreibfreigabe. |
@@ -12031,4 +12101,4 @@ Implementierungsschritten nachgewiesen sein.
 
 ---
 
-**Ende der SpecRoad-Produktspezifikation v0.2.69.**
+**Ende der SpecRoad-Produktspezifikation v0.2.70.**

@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 107 · **Stand:** 5. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.69
+**Planrevision:** 108 · **Stand:** 6. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.70
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 Schritte und 900 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; die ausdrücklich genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wird nach 10.7.10 innerhalb von 15.l.R vorgezogen. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -9,7 +9,7 @@ Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 S
 
 Fachliche Grundlage ist [`docs/specification/SpecRoad_Spezifikation.md`](../specification/SpecRoad_Spezifikation.md), einschließlich aller konsolidierten Korrekturen, 742 Requirements, 51 Verifikationsverträge, 46 Szenario-/E2E-Identitäten sowie R-01 bis R-75, Anhang U und den PatchHarbor-Rundweg aus Anhang W. Der [`Prüfbericht`](../reviews/SpecRoad_v0.2.7_Implementierungsreife_Pruefbericht.md) ist ein vorgelagerter Entwurfsreview, kein späterer Produktnachweis.
 
-Gebundene Spezifikations-SHA-256: `29178f3debf8c4f7a5bd14c9bbb2fd150e1a9024678576496d67a30251e06dd2`.
+Gebundene Spezifikations-SHA-256: `8c35a0b0833be8edc1d29f79998dcb137b6fc76c4816a3873a1ace072e5c9b85`.
 Planungsbasis: Commit `fe2661d02ecf2f7eb483b58a4487eb009c6b3846`; sauberes Result-Bundle `specroad_Result_120209_0914_df3504.zip`; Repository-ID `3d2576df-d611-46fc-9d2b-92869468aaca`. Diese Angaben dokumentieren die Entstehung des Plans, nicht die zukünftige Patchbindung. **Jedes spätere Patchpaket bindet den dann aktuellen tatsächlichen Result-Zustand.**
 
 Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 2026 gelten zusätzlich und bei den nachfolgend benannten Konflikten vorrangig. Sonstige normative Spezifikationsinhalte werden nicht stillschweigend abgeschwächt. Neue fachliche Widersprüche, fehlende zwingende Angaben und Sicherheitsprobleme sind offen zu benennen, nicht durch erfundene Annahmen oder Scheinerfolge zu lösen.
@@ -33,6 +33,33 @@ ausdrückliche Bedienausnahme aus 2.4.3.2 bleibt zusätzlich anwendbar.
 Produktfreigaben und die Grenzen aus 2.4.1/2.4.2/2.4.4 bleiben unverändert.
 Dieser Plan ändert keine alten Aufträge, Antworten, Blockaden oder
 Laufzeitdaten und ist keine Start-/Resume-Anweisung.
+
+## MERGE-METADATA-614 — exakte Kandidaten und vollständiger Schritt 17.i
+
+Autorität: SPECROAD-DECISION-1, 2.4.3.1 und Vertrag 4, clarification_allowed=true,
+Restbudget 3. Result 3250d1 ist nativ geprüft, sauber und vollständig erfolgreich;
+17.h.W/R/C sind committed, 717/900. Technische Bindung siehe Bundle-Vertrag.
+Keine menschliche Freigabe oder in Dev ausgeführte Verhaltensabnahme wird behauptet.
+
+Lücke: K.3 legt die Metadatenarithmetik fest, aber noch nicht Kandidatenformat,
+unabhängige Nachrechnung, die Zuordnung mehrerer Auflösungsakteure oder die
+belegte historische Revisionsobergrenze. Geprüft: 10.15.1–5, K.1/K.3,
+17.i–17.l, native Quellinventare, Baseline-Originale und zentraler Metadatenpfad.
+Alternativen: Caller-Werte vertrauen; fertige Zielbytes ohne Herkunft übernehmen;
+oder die vollständigen gebundenen Originale in beiden Vorbereitungen nachrechnen.
+Gewählt ist die letzte konservative reversible Lösung. Das letzte explizite
+betroffene Ereignis bestimmt den Akteur; alle vorherigen Auditereignisse bleiben.
+Nur tatsächlich referenzierte Ours-Baseline-Originale und Base/Ours bestimmen
+bekannte Revisionen, keine erfundene Historie oder frei übergebene Maximalzahl.
+
+10.15.6, diese Abnahmen und aktive Katalogbindungen werden zuerst fortgeschrieben.
+Dieser Klärungscommit lässt 17.i offen. Anschließend folgen vollständige W/R/C-
+Stände desselben Schritts: W baut alle vier Klassen und volle native Dateiprojektion;
+R vervollständigt historische Revisionen, Ursprungs-/Zeitgrenzen und unabhängige
+Writer-Nachprüfung; C extrahiert passive Werte ohne Verhaltensänderung.
+Jede Stage braucht ein eigenes Apply-Gate und einen echten Commit. Die spätere
+Zielvalidierung/Publikation wird nicht vorgezogen oder für erledigt erklärt.
+Scope, Sicherheits-/Kompatibilitätsgrenzen, Reviews und Nachweise bleiben erhalten.
 
 ## Korrekturbundle 613 — Auditoptionen im CLI-Vertrag, Rest 17.h.W/R/C
 
@@ -4003,7 +4030,7 @@ Kein offener Produktplanschritt wird durch diese Testoptimierung abgeschlossen.
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 107
+plan_revision: 108
 implementation_plan_commits_total: 900
 implementation_plan_commits_completed: 717
 last_completed_plan_commit: 17.h.C
@@ -38828,7 +38855,7 @@ Plattform-/Releasefreigaben werden dadurch nicht stillschweigend erteilt.
 
 **Umsetzung:** unchanged_ours, adopt_existing, combined und conflict exakt nach merge-metadata-v1 behandeln.
 
-**Verhaltensabnahme:** Kombinieren von Revision 3 und 7 ergibt 8; unveränderte Übernahme von Theirs bleibt 7.
+**Verhaltensabnahme:** Kombinieren von Revision 3 und 7 ergibt 8; unveränderte Übernahme von Theirs bleibt 7. 10.15.6 bindet vollständige Originalbytes, alle vier Klassen, aufgelöste Zweige, Actor-Reihenfolge und den nativen Metadatenkandidaten ohne Schreibbefugnis.
 
 #### 17.i.R – Make it Right
 
@@ -38837,7 +38864,7 @@ Plattform-/Releasefreigaben werden dadurch nicht stillschweigend erteilt.
 
 **Vervollständigung:** Niedrigere historische Revision nicht still übernehmen; Ursprungsmetadaten und Zeitmaxima korrekt binden.
 
-**Verhaltensabnahme:** Planner und Writer berechnen unabhängig dieselbe Zielwurzel und identische Metadaten. Die W-Nachweise bleiben zusätzlich grün.
+**Verhaltensabnahme:** Planner und lesende Writer-Vorbereitung berechnen aus originalen Quellen unabhängig dieselbe native Zielwurzel und identische Metadaten gemäß 10.15.6; gefälschte gespeicherte Kandidaten werden abgelehnt. Historische Ours-Baseline-Revisionen, gemeinsame Herkunft, exakte Zeitgrenzen und Quellwechsel werden geprüft. Die W-Nachweise bleiben zusätzlich grün. Transaktionsveröffentlichung bleibt in 17.k–17.l.
 
 #### 17.i.C – Make it Clean
 

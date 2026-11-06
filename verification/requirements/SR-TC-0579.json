@@ -31,7 +31,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "29178f3debf8c4f7a5bd14c9bbb2fd150e1a9024678576496d67a30251e06dd2",
+  "specification_sha256": "8c35a0b0833be8edc1d29f79998dcb137b6fc76c4816a3873a1ace072e5c9b85",
   "steps": [
     "Run explicitly requested children synchronously with exact binary input/output and actual nonzero or signal status; observe completed child ownership through native waitpid.",
     "Exercise literal arguments, explicit environment, closed implicit stdin and closed unrelated descriptors. Reject malformed contracts before launch and preserve actual native launch failure without retry.",

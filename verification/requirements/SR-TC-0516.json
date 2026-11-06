@@ -43,7 +43,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "29178f3debf8c4f7a5bd14c9bbb2fd150e1a9024678576496d67a30251e06dd2",
+  "specification_sha256": "8c35a0b0833be8edc1d29f79998dcb137b6fc76c4816a3873a1ace072e5c9b85",
   "steps": [
     "Evaluate eight fixed gates over the native Release closure and existing verification aggregation, retaining every missing provider and blocker.",
     "Check native Task Done and human Requirement review, actual relation currentness, exact policy/selection binding and isolated Core/PYZ parity without writes.",
