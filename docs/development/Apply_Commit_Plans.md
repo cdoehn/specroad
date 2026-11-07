@@ -24,6 +24,14 @@ unverändert. Dieses Bundle startet oder installiert keinen Dienst.
 
 ## Vorbereitung
 
+Der [Implementierungsplan](../implementation/SpecRoad_Implementierungsplan.md)
+ist der zentrale Fortschrittseinstieg. Sein betroffener Meilenstein und die
+dort verlinkten ergänzenden Abnahmen bilden gemeinsam den vollständigen
+Schrittscope. Die [Projektregeln](../../DEVELOPMENT.md) und
+[Planpflege](../implementation/AGENTS.md) regeln, wo Fortschritt, Entscheidungen
+und Ausführungsnachweise fortgeschrieben werden. Eine reine Dokumentaufteilung
+verändert keine Produktposition und ersetzt keine Result- oder Testgatebindung.
+
 Ausgangspunkt ist immer das neueste nativ validierte Result mit vollständiger
 repo_id, base_commit, state_fingerprint und fingerprint_algorithm. Base,
 staged/unstaged Änderungen und untracked Dateien bilden zusammen den
@@ -128,6 +136,24 @@ Er ändert Spec, Plan und aktive Katalogbindungen; jede Stage behält ihr Gate.
 zurück. Eine Fortsetzung nach abgeschlossenem Klärungscommit ist `patch_ready`;
 ein noch offener Klärungspräfix bleibt ein gebundener Rest, keine neue Klärung.
 Alte v1-Pakete, ihre Hashes, Stages und Logs werden nicht nachträglich ergänzt.
+
+Bei der Planaufteilung bleibt die Pflicht zu tatsächlichen Änderungen an
+Spezifikation und Planeinstieg bestehen. Deren bisherige fachliche Inhalte
+liegen zusätzlich in geschlossenen Planpfaden: `milestones/M01.md` bis
+`M20.md`, `supplements/<1..20>-<a..z>.md`, `decisions/<kleinbuchstaben-ziffern-bindestriche>.md`,
+den fünf bestehenden Dateien in `matrices/`, `rules/Grundlagen.md`,
+`rules/C_Abnahme.md` und `audit/Audit_Nacharbeiten.md`, jeweils unter
+`docs/implementation/`. Das erste Zeichen einer Entscheidungskennung ist ein
+Kleinbuchstabe oder eine Ziffer. Apply und Control akzeptieren diese
+normativen Planbestandteile im selben Klärungspräfix. Dieser Ortswechsel
+erweitert keine fachliche Befugnis nach 2.4.3.1. Anweisungsdateien,
+Entwicklungsregeln, Historie, Produktcode und beliebige andere Dokumentpfade
+gehören weiterhin nicht in diesen Präfix. Vorherbytes, vollständige Restfolge,
+bytegleiche offene Klärungsziele, Budget und einzelne Gates bleiben gebunden.
+
+Für die neue Ablage muss auch die geprüfte Control-Releasekopie die angepasste
+Pfadprüfung enthalten. Nach erfolgreichem Apply offline mit dessen Result
+installieren; die Installation startet oder entsperrt keine Automatik.
 
 ## Commitmetadaten und manuelle CI
 

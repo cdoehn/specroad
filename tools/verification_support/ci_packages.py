@@ -5,6 +5,7 @@ import math
 import re
 
 from .execution_policy import DEFAULT_DISTRIBUTION
+from .worker_order import worker_order as _worker_order
 from .host_execution import validate_resources, verify_resources
 from .common import json_bytes
 from .selected_contract import verify_observation
@@ -67,29 +68,6 @@ def checked_estimates(value):
                 'Invalid runtime duration')
         result[row['test_id']] = duration
     return result
-
-
-def _worker_order(indices, tests, workers):
-    """Balance equal-count initial worksteal queues, longest tests first per queue.
-
-    xdist owns execution and subsequent stealing. Its initial queues divide the
-    collection by remaining test count / remaining workers. Matching these sizes
-    avoids putting every long test into the first contiguous initial queue.
-    """
-    remaining = len(indices)
-    capacities = []
-    for left in range(workers, 0, -1):
-        capacity = remaining // left
-        capacities.append(capacity)
-        remaining -= capacity
-    lanes = [[] for _ in capacities]
-    loads = [0] * workers
-    for index in sorted(indices, key=lambda i: (-tests[i]['estimate_ns'], tests[i]['nodeid'])):
-        lane = min((i for i in range(workers) if len(lanes[i]) < capacities[i]),
-                   key=lambda i: (loads[i], i))
-        lanes[lane].append(index)
-        loads[lane] += tests[index]['estimate_ns']
-    return [i for lane in lanes for i in lane], max(loads)
 
 
 def _packages(tests, rules):

@@ -84,8 +84,9 @@ def native_bindings(supplied):
     return observe(inventory, reviews=reviews)
 
 
-def context(values, *, evaluation=None, **options):
-    registry = bundled_language_registry(); binding = registry_binding(registry)
+def context(values, *, evaluation=None, language_registry=None, **options):
+    registry = bundled_language_registry() if language_registry is None else language_registry
+    binding = registry_binding(registry)
     original = model(values)
     profile = compose_profiles(original.profile_resources,
         core_key=original.profile.profile_chain[0], language_registry=registry)

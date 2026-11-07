@@ -55,6 +55,17 @@ def correction(failed):
     return backend.plan, progress, value
 
 
+def test_split_plan_does_not_allow_other_payload_paths():
+    from support.plan_scope import OUTSIDE_PLAN, add_plan_payload
+    for name in OUTSIDE_PLAN:
+        value = typed(True)
+        add_plan_payload(value['stages'][0], name)
+        backend = Backend()
+        with pytest.raises(ValueError):
+            run_bundle(value, backend)
+        assert not backend.calls and not backend.events, name
+
+
 @pytest.mark.parametrize('failed', ['DECISION', 'step.W', 'step.R', 'step.C'])
 def test_bound_correction_preserves_roles_and_complete_remainder(failed):
     previous, progress, value = correction(failed)

@@ -22,6 +22,7 @@ from specroad.security import ProjectBoundary
 from specroad.storage.json_syntax import parse_json_object
 from specroad.validation import ReviewVerifier, ReviewVerification
 from specroad.verification import VerificationEvaluation
+from support.languages import small_restore_registry
 from support.model import put
 from support.read_only import inventory, no_write_attempts
 from support.records import ref, record_value
@@ -42,11 +43,13 @@ def reasons(report):
     return {row['gate_id']: row['findings'] for row in report.data['gates'] if row['findings']}
 
 
-def release_project(root, *, values=None, evaluation=None, configuration_id=None):
+def release_project(root, *, values=None, evaluation=None, configuration_id=None,
+                    language_registry=None):
     """Own a real project root while retaining native scope/verification inputs."""
     if values is None:
         values, _ = release_case()
-    original = context(values, evaluation=evaluation, configuration_id=configuration_id)._model
+    original = context(values, evaluation=evaluation, configuration_id=configuration_id,
+                       language_registry=language_registry)._model
     root.mkdir(); info = root.stat()
     model = TargetModel(original.configuration_bytes,
         ProjectReadBinding(original.binding.project_id, str(root), (info.st_dev, info.st_ino)),
@@ -188,7 +191,10 @@ def test_unbound_or_unconfirmed_blocker_completion_never_seals_a_baseline(tmp_pa
 @pytest.mark.parametrize('kind,status', [('risk', 'accepted'), ('risk', 'closed'), ('issue', 'resolved')])
 def test_confirmed_blocker_completion_allows_real_sealed_publication(tmp_path, kind, status):
     values, decision = blocker_case(kind, status)
-    model, ctx = release_project(tmp_path / 'project', values=values)
+    # Vary blocker decisions on a small native registry; the full registry is
+    # retained by test_native_release_publication_binds_selection_scope_and_objects_without_changing_sources.
+    model, ctx = release_project(tmp_path / 'project', values=values,
+                                 language_registry=small_restore_registry())
     provided = services(ctx); options = dict(blocker_reviews=[passive(decision)], blocker_verifier=trusted())
     preview = prepare(model, ctx, gates=provided, **options)
     assert preview['target_validated'], preview['diagnostics']

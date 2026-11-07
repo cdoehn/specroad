@@ -26030,6 +26030,21 @@
     "tests/test_merge_publication_right.py::test_tampered_recovery_original_is_never_discarded_or_silently_repaired[backup]",
     "tests/test_merge_publication_right.py::test_tampered_recovery_original_is_never_discarded_or_silently_repaired[before]",
     "tests/test_merge_publication_right.py::test_tampered_recovery_original_is_never_discarded_or_silently_repaired[journal]",
-    "tests/test_merge_publication_right.py::test_tampered_recovery_original_is_never_discarded_or_silently_repaired[staging]"
+    "tests/test_merge_publication_right.py::test_tampered_recovery_original_is_never_discarded_or_silently_repaired[staging]",
+    "codex_control_tests.test_mixed_bundle_guards.MixedGuardTests.test_split_plan_scope_stays_closed_before_adoption",
+    "codex_control_tests.test_mixed_bundles.MixedBundleTests.test_split_plan_prefix_and_bound_remainder_keep_scope_and_budget",
+    "tests/test_apply_mixed_bundle.py::test_split_plan_prefix_preserves_separate_gates",
+    "tests/test_apply_mixed_bundle_right.py::test_split_plan_does_not_allow_other_payload_paths",
+    "tests/test_apply_runtime_order.py::test_latest_failed_or_interrupted_attempt_is_unknown_for_ordering[call]",
+    "tests/test_apply_runtime_order.py::test_latest_failed_or_interrupted_attempt_is_unknown_for_ordering[interrupted]",
+    "tests/test_apply_runtime_order.py::test_long_tests_start_in_every_initial_queue_instead_of_one_slow_queue",
+    "tests/test_apply_runtime_order.py::test_reordered_observations_cannot_hide_population_errors[duplicate]",
+    "tests/test_apply_runtime_order.py::test_reordered_observations_cannot_hide_population_errors[omit]",
+    "tests/test_apply_runtime_order.py::test_reordered_observations_cannot_hide_population_errors[substitute]",
+    "tests/test_apply_runtime_order.py::test_runner_orders_required_union_using_frozen_snapshot_then_independent_gate",
+    "tests/test_apply_runtime_order.py::test_ties_unknown_and_zero_durations_keep_all_tests_deterministically[10]",
+    "tests/test_apply_runtime_order.py::test_ties_unknown_and_zero_durations_keep_all_tests_deterministically[1]",
+    "tests/test_apply_runtime_order.py::test_ties_unknown_and_zero_durations_keep_all_tests_deterministically[2]",
+    "tests/test_apply_runtime_order.py::test_ties_unknown_and_zero_durations_keep_all_tests_deterministically[3]"
   ]
 }

@@ -35,6 +35,28 @@ class MixedBundleTests(MixedCase):
         self.assertEqual(self.ledger().current()['sha'], self.following['sha256'])
         self.assertEqual(self.codex.calls, 1)
 
+    def test_split_plan_prefix_and_bound_remainder_keep_scope_and_budget(self):
+        from support.plan_scope import PLAN_PARTS, add_plan_payload
+        data = self.data(mixed=True)
+        for name in PLAN_PARTS:
+            add_plan_payload(data['stages'][0], name)
+        self.assertFalse(self.dispatch(True, data)['halted'])
+        self.outcome(completed=0); self.engine.tick()
+        expected = new_contract(2, allowed=False, version=4, continuation=True)
+        self.assertEqual(self.ledger().request_contract(), expected)
+        remaining = self.correction()
+        changed = deepcopy(remaining)
+        add_plan_payload(changed['stages'][0], PLAN_PARTS[0], b'Changed acceptance\n')
+        fact = patch_package(self.exchange/'changed-plan-part.zip', changed)
+        with self.assertRaises(ControlError):
+            verify_handoff(self.engine, self.following, fact, expected, MIXED)
+        # The rejected package is not submitted to the next dispatch.
+        Path(fact['path']).unlink()
+        self.assertFalse(self.dispatch(True, remaining)['halted'])
+        self.outcome(); self.engine.tick()
+        self.assertEqual(self.ledger().request_contract(), new_contract(version=4))
+        self.assertEqual(self.codex.calls, 2)
+
     def test_result_does_not_complete_on_document_commit_alone(self):
         self.dispatch(True); self.outcome(completed=1); self.engine.tick()
         self.assertEqual(self.ledger().request_contract(), new_contract(2, allowed=False, version=4))

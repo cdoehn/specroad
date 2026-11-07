@@ -6,6 +6,10 @@ Anforderungen und deren Nachweise. Die Implementierung läuft nach dem
 die [Produktspezifikation](docs/specification/SpecRoad_Spezifikation.md)
 beschreibt das verbindliche Sollverhalten.
 
+Die [Projektregeln für Entwicklung und Nachweise](DEVELOPMENT.md) beschreiben
+den Arbeitsablauf und die Pflege des aufgeteilten Plans. Der Planeinstieg führt
+zu den einzelnen Meilensteinen, gemeinsamen Regeln und erhaltenen Nachweisen.
+
 ## Lokale Entwicklungsumgebung
 
 Voraussetzungen auf dem Laptop: Git, ein vorhandenes Python ab 3.10 und

@@ -25,6 +25,16 @@ def supports_v4(source):
     return True
 
 
+def _plan_document(name):
+    """Closed normative plan locations; never instructions, history or code."""
+    return re.fullmatch(r'docs/implementation/(?:'
+        r'milestones/M(?:0[1-9]|1[0-9]|20)|'
+        r'supplements/(?:[1-9]|1[0-9]|20)-[a-z]|'
+        r'decisions/[a-z0-9][a-z0-9-]*|'
+        r'matrices/(?:Requirements|Verifikation|Szenarien|Regressionen|Uebergabe)|'
+        r'rules/(?:Grundlagen|C_Abnahme)|audit/Audit_Nacharbeiten)\.md', name) is not None
+
+
 def validate_roles(data):
     """Same closed role/scope ABI as SpecRoad Apply plan v2; no execution."""
     roles = [s['role'] for s in data['stages']]
@@ -40,7 +50,7 @@ def validate_roles(data):
         required = {'docs/specification/SpecRoad_Spezifikation.md',
                     'docs/implementation/SpecRoad_Implementierungsplan.md'}
         paths = set(first['after'])
-        if not required <= paths or any(not (name in required or name == 'verification/catalog.json'
+        if not required <= paths or any(not (name in required or _plan_document(name) or name == 'verification/catalog.json'
                 or re.fullmatch(r'verification/requirements/SR-TC-[0-9]{4}\.json', name)) for name in paths):
             raise ValueError('Clarification scope is not the normative document/catalog scope')
         # A failed Apply may already have installed the complete prefix.

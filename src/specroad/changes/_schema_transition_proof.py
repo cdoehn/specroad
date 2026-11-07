@@ -43,6 +43,7 @@ def _verify_images(files, prefix, journal, backup, *, partial=False):
 def verify_owned_images(originals, journal, backup, *, partial=False):
     """Same exact native byte proof, without filesystem authority or root claims."""
     expected = _images(journal, backup)
+    data = journal.data
     names = tuple(originals)
     required = {'journal.json'} | (set() if partial else set(expected))
     require(required <= set(names), 'transition_images_missing')
@@ -53,21 +54,20 @@ def verify_owned_images(originals, journal, backup, *, partial=False):
         elif name in expected:
             require(raw == expected[name] or partial and expected[name].startswith(raw), 'transition_image_changed')
         elif name.startswith('journal.') and name.endswith('.pending'):
+            count = data['published_count']
+            total = len(journal.plan.data['operations'][0]['changes'])
             possible = [journal.successor(state, count).source_bytes
-                for state, count in ((journal.data['state'], journal.data['published_count']),
-                    ('prepared',0), ('committing',journal.data['published_count']),
-                    ('committing',min(len(journal.plan.data['operations'][0]['changes']),journal.data['published_count']+1)),
-                    ('rolling_back',journal.data['published_count']),
-                    ('rolling_back',max(0,journal.data['published_count']-1)),
-                    ('rolled_back',0), ('committed',len(journal.plan.data['operations'][0]['changes'])))]
-            if journal.data['state'] == 'committing':
+                for state, count in ((data['state'], count),
+                    ('prepared',0), ('committing',count),
+                    ('committing',min(total,count+1)),
+                    ('rolling_back',count), ('rolling_back',max(0,count-1)),
+                    ('rolled_back',0), ('committed',total))]
+            if data['state'] == 'committing':
                 # Recovery may observe one completed effect whose journal ack
                 # was lost. Its first rollback marker binds that proven count.
                 # This permits only the deterministic marker bytes; the actual
                 # source/target prefix is still checked independently.
-                count = min(len(journal.plan.data['operations'][0]['changes']),
-                            journal.data['published_count'] + 1)
-                possible.append(journal.successor('rolling_back', count).source_bytes)
+                possible.append(journal.successor('rolling_back', min(total,count+1)).source_bytes)
             require(any(name == 'journal.' + sha256(value).hexdigest() + '.pending'
                         and value.startswith(raw) for value in possible),
                     'transition_pending_journal_changed')
@@ -78,7 +78,7 @@ def verify_owned_images(originals, journal, backup, *, partial=False):
         elif name.startswith('recovery-') and name.endswith('.json'):
             from .schema_transition_recovery import check_recovery_intent
             check_recovery_intent(name,raw,journal)
-        elif name == 'transaction.json' and journal.data['state'] == 'committed':
+        elif name == 'transaction.json' and data['state'] == 'committed':
             require(transaction_receipt(journal).startswith(raw), 'transition_receipt_changed')
         else:
             raise SchemaTransitionError('transition_unknown_work')

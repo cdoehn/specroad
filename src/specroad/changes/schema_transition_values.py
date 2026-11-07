@@ -49,13 +49,14 @@ class TransitionJournal:
         require(set(value) == fields and value['format_version'] in FORMATS, 'transition_journal_schema')
         _transaction(value['transaction_id'])
         plan = ChangePlan(unb64(value['plan_bytes_base64']))
-        require(plan.data['metadata_policy_version'] in ('migration-metadata-v1','merge-metadata-v1') and plan.sha256 == value['plan_sha256'],
+        plan_data = plan.data
+        require(plan_data['metadata_policy_version'] in ('migration-metadata-v1','merge-metadata-v1') and plan_data['change_plan_sha256'] == value['plan_sha256'],
                 'transition_plan_binding')
         from ._snapshot_dispatch import format_for, is_merge
         require(value['format_version']==format_for(plan),'transition_format_policy_binding')
         authoring(plan)
-        require(value['request_id'] == plan.data['request_id'], 'transition_request_binding')
-        op = plan.data['operations'][0]
+        require(value['request_id'] == plan_data['request_id'], 'transition_request_binding')
+        op = plan_data['operations'][0]
         from ..model.configuration import ProjectConfiguration
         config = ProjectConfiguration(parsed(unb64(op['inputs']['target_configuration']))).data
         registry_path = config.get('language_registry', {}).get('path')
@@ -122,20 +123,22 @@ class TransitionJournal:
     @property
     def receipt_root(self): return transaction_receipt_path(self.data['transaction_id']).rsplit('/', 1)[0]
     def successor(self, state, count):
-        return TransitionJournal(jcs({**self.data, 'state': state, 'published_count': count,
+        data = self.data
+        return TransitionJournal(jcs({**data, 'state': state, 'published_count': count,
             'images_prepared': state in ('prepared','committing','committed') or
-                self.data['images_prepared'] and state != 'building'}))
+                data['images_prepared'] and state != 'building'}))
     def __bool__(self): raise TypeError('A journal is not a completed transaction')
 
 
 def transaction_receipt(journal):
-    require(journal.data['state'] == 'committed', 'transition_not_committed')
+    data = journal.data
+    require(data['state'] == 'committed', 'transition_not_committed')
     plan = journal.plan.data; op = plan['operations'][0]
     from ._snapshot_dispatch import is_merge
     return jcs({'format_version': 'merge-transition-receipt-v1' if is_merge(journal.plan) else 'schema-transition-receipt-v1', 'journal_sha256': journal.sha256,
-        'transaction_id': journal.data['transaction_id'], 'plan_sha256': journal.plan.sha256,
+        'transaction_id': data['transaction_id'], 'plan_sha256': plan['change_plan_sha256'],
         'source_files_sha256': digest(op['source_files']), 'target_files_sha256': digest(op['target_files']),
-        'target_model_root_sha256': op['target_model_root_sha256'], 'validation_sha256': digest(journal.data['validation'])})
+        'target_model_root_sha256': op['target_model_root_sha256'], 'validation_sha256': digest(data['validation'])})
 
 
 def result_object(journal):
@@ -170,10 +173,11 @@ class TransitionRequest:
     def from_journal(cls, journal):
         result = object.__new__(cls)
         from ._snapshot_dispatch import command_for
-        data = {'command_id': command_for(journal.plan), 'plan': journal.plan.data, 'plan_sha256': journal.plan.sha256,
-            'backup': journal.data['backup'], 'root_identity': journal.data['root_identity'],
-            'project_id': journal.data['project_id'], 'transaction_id': journal.data['transaction_id'],
-            'validation': journal.data['validation'], 'write_authorized': False, 'approval_granted': False}
+        value, plan = journal.data, journal.plan.data
+        data = {'command_id': command_for(journal.plan), 'plan': plan, 'plan_sha256': plan['change_plan_sha256'],
+            'backup': value['backup'], 'root_identity': value['root_identity'],
+            'project_id': value['project_id'], 'transaction_id': value['transaction_id'],
+            'validation': value['validation'], 'write_authorized': False, 'approval_granted': False}
         object.__setattr__(result, '_raw', jcs(data)); return result
     @property
     def data(self): return parsed(self._raw)

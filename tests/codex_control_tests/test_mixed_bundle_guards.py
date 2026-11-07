@@ -24,6 +24,14 @@ class MixedGuardTests(MixedCase):
         with self.assertRaises(ControlError):
             verify_handoff(self.engine, self.seed, patch_fact, new_contract(version=4), MIXED if mixed else 'patch_ready')
 
+    def test_split_plan_scope_stays_closed_before_adoption(self):
+        from support.plan_scope import OUTSIDE_PLAN, add_plan_payload
+        for name in OUTSIDE_PLAN:
+            data = self.data(mixed=True)
+            add_plan_payload(data['stages'][0], name)
+            with self.subTest(path=name):
+                self.rejected_plan(data, mixed=True)
+
     def test_incomplete_or_reordered_rest_is_not_a_correction(self):
         self.dispatch(True); self.outcome(completed=1); self.engine.tick()
         data = self.correction()

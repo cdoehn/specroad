@@ -24,8 +24,9 @@ def _checkpoint(event):
 
 
 def _archive_path(journal):
-    if journal.data['state'] == 'committed': return journal.receipt_root
-    return '.specroad/recovery/transaction-audit/schema-' + sha256(journal.data['transaction_id'].encode()).hexdigest()
+    data = journal.data
+    if data['state'] == 'committed': return journal.receipt_root
+    return '.specroad/recovery/transaction-audit/schema-' + sha256(data['transaction_id'].encode()).hexdigest()
 
 
 def _held(held, journal):
@@ -59,15 +60,19 @@ class _Session:
             info=os.fstat(fd);self.work_identity=(info.st_dev,info.st_ino)
         self.source = backup.files
         self.target = materialized_files(journal.plan, self.source)
-        self.live_count = journal.data['published_count']
+        data = journal.data
+        self.live_count = data['published_count']
         self.parents = check_parents(self.files, [r['path'] for r in journal.plan.data['operations'][0]['changes']])
-        self.prepared = journal.data['images_prepared']
+        self.prepared = data['images_prepared']
         self.archived = False
         self.receipts_complete = False
         self.extra_evidence = {}
 
     def guard(self, *, work=True):
         _held(self.held, self.journal)
+        # These values belong to this immutable journal only. Every guard still
+        # rereads the live files, lock, receipts, backup and external providers.
+        data, plan = self.journal.data, self.journal.plan.data
         with self.files.directory(tuple(self.prefix.split('/'))) as fd:
             require(fd is not None,'transition_work_changed')
             info=os.fstat(fd)
@@ -76,7 +81,7 @@ class _Session:
         require(self.files.journal_entries() == expected_active, 'transition_active_set_changed')
         if work:
             _verify_images(self.files, self.prefix, self.journal, self.backup, partial=not self.prepared)
-        if self.journal.data['state'] == 'committed' and (self.archived or self.receipts_complete):
+        if data['state'] == 'committed' and (self.archived or self.receipts_complete):
             require(read(self.files,self.prefix+'/transaction.json') == transaction_receipt(self.journal),
                     'transition_receipt_changed')
             receipt = request_receipt(self.journal)
@@ -85,22 +90,22 @@ class _Session:
         actual, modes, _ = project_files(self.files, exclude=(*_exclude(self.journal, self.prefix), *self.extra_evidence))
         require(_prefix(self.journal, self.source, actual) == self.live_count, 'transition_file_prefix_changed')
         for path, mode in modes.items():
-            expected = self.journal.data['source_modes'].get(path, 0o644)
+            expected = data['source_modes'].get(path, 0o644)
             require(mode == expected, 'transition_file_mode_changed')
-        current_parents = check_parents(self.files, [r['path'] for r in self.journal.plan.data['operations'][0]['changes']])
+        current_parents = check_parents(self.files, [r['path'] for r in plan['operations'][0]['changes']])
         for key, expected in self.parents.items():
             if expected is not None: require(current_parents[key] == expected, 'transition_parent_changed')
         self.parents = current_parents
-        request_id = self.journal.plan.data['request_id']
+        request_id = plan['request_id']
         if request_id is not None:
             raw = read(self.files, request_receipt_path(request_id), optional=True)
-            expected = request_receipt(self.journal) if self.journal.data['state'] == 'committed' else None
+            expected = request_receipt(self.journal) if data['state'] == 'committed' else None
             require(raw is None or expected is not None and expected.source_bytes.startswith(raw), 'transition_request_collision')
         if self.recover:
             from .schema_transition_recovery import takeover_evidence
             require(takeover_evidence(self.files, self.journal) == self.extra_evidence,
                     'transition_takeover_evidence_changed')
-        require(external_backup(self.files,self.journal.data['backup'],plan=self.journal.plan).source_bytes == self.backup.source_bytes,
+        require(external_backup(self.files,data['backup'],plan=self.journal.plan).source_bytes == self.backup.source_bytes,
                 'transition_backup_changed')
         if self.merge_context is not None: self.merge_context.check()
         self.held.check()
@@ -238,11 +243,12 @@ def publish_schema_transition(plan, *, held_lock, backup_descriptor, authority, 
 def completion_data(journal, *, current=False):
     receipt = request_receipt(journal)
     result = result_object(journal)
-    return {**result, **({'validation':journal.data['validation'],'evidence_currently_rechecked':False}
+    data = journal.data
+    return {**result, **({'validation':data['validation'],'evidence_currently_rechecked':False}
                        if is_merge(journal.plan) else {}),
-        'format_version': 'merge-transaction-v1' if is_merge(journal.plan) else 'migration-transaction-v1', 'backup': journal.data['backup'],
+        'format_version': 'merge-transaction-v1' if is_merge(journal.plan) else 'migration-transaction-v1', 'backup': data['backup'],
         'plan_sha256': journal.plan.sha256, 'journal_sha256': journal.sha256,
         'replayed': not current, 'current_target_verified': current, 'approval_granted': False,
-        'receipts': {'transaction': {'path': transaction_receipt_path(journal.data['transaction_id']),
+        'receipts': {'transaction': {'path': transaction_receipt_path(data['transaction_id']),
                                     'sha256': sha256(transaction_receipt(journal)).hexdigest()},
                      'request': None if receipt is None else {'path': receipt.path, 'sha256': receipt.sha256}}}

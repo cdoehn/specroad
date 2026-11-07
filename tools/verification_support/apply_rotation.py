@@ -15,6 +15,7 @@ from .process_environment import test_environment
 from .selected_contract import new_report_directory, verify_observation
 from .runtime_baseline import load_baseline, filter_partition
 from .runtime_history import RuntimeHistory, policy as runtime_policy, filter_latest
+from .worker_order import latest_runtime_order
 from .common import json_bytes
 from .commit_tests import plan_required, read_object, validate_plan, union_selection, SCOPE
 
@@ -135,7 +136,10 @@ def run_apply_partition(root, outdir, *, workers=None, worker_limit=DEFAULT_WORK
                 or (test_plan is not None and read_object(test_plan)[0] != plan_raw)
                 or commit_context(root, registry) != (head, sequence, previous)):
             raise ValueError("Apply inputs changed before the selected tests could start")
-    (outdir / "nodeids.txt").write_text("\n".join(selected) + "\n", encoding="utf-8")
+    # Only the execution order changes. Rotation, filtering, required-test union
+    # and their receipt remain bound to the exact same identity set.
+    ordered = list(selected) if policy is None else latest_runtime_order(selected, snapshot, workers)
+    (outdir / "nodeids.txt").write_text("\n".join(ordered) + "\n", encoding="utf-8")
     # pytest's native argument-file support avoids OS argument-length limits.
     command = parallel_command(root, outdir, len(selected), workers, worker_limit)
     runner = subprocess.run if runner is None else runner

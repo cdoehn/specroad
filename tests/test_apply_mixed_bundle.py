@@ -47,6 +47,20 @@ def test_optional_prefix_is_gated_and_committed_before_implementation():
     assert backend.plan['handoff_kind'] == 'patch_ready_with_clarification'
 
 
+def test_split_plan_prefix_preserves_separate_gates():
+    from support.plan_scope import PLAN_PARTS, add_plan_payload
+    value = typed(True)
+    for name in PLAN_PARTS:
+        add_plan_payload(value['stages'][0], name)
+    backend = Backend()
+    final = run_bundle(value, backend)
+    ids = ['DECISION', 'step.W', 'step.R', 'step.C']
+    assert [row['commit_id'] for row in final['committed']] == ids
+    assert backend.calls == [(action, identifier) for identifier in ids
+                             for action in ('install', 'test', 'commit')]
+    assert set(PLAN_PARTS) <= set(backend.plan['stages'][0]['after'])
+
+
 @pytest.mark.parametrize('mixed', [False, True])
 def test_rendered_entrypoint_binds_roles_in_literal_data_without_execution(mixed):
     value = typed(mixed)
