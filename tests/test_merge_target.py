@@ -9,7 +9,7 @@ from specroad.merge import prepare_merge_target
 from specroad.model.canonical import canonical_json_bytes as jcs
 from specroad.model.errors import ModelError
 from specroad.recovery._validation import validate_project
-from support.merge_target import seed, replace, inputs, target
+from support.merge_target import small_seed as seed, replace, inputs, target
 from support.profile_composition import profile, lint
 from support.read_only import inventory
 from support.relations import aid, edge

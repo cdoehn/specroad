@@ -22,6 +22,7 @@ from support.merge_lifecycle import artifact, bound_records, changed
 from support.merge_relations import history_for, bound_relations, edge
 from support.merge_resolution import PLAN_ID, ACTOR, WHEN
 from support.read_only import inventory
+from support.languages import small_restore_registry
 from test_merge_inventory import bind_files
 from test_merge_metadata import prepare, combined, row
 from test_merge_sources import read_only_sources, sources as native_sources, KINDS
@@ -30,13 +31,20 @@ from test_project_bundle import project
 
 @pytest.fixture(scope='module')
 def original(tmp_path_factory):
-    return project(tmp_path_factory.mktemp('metadata-right-seed') / 'project').raw
+    return project(tmp_path_factory.mktemp('metadata-right-seed') / 'project',
+                   language_registry=small_restore_registry()).raw
 
 
 @pytest.fixture
-def bound(tmp_path, original):
+def source_plan(tmp_path, original):
     sources, history, path, value = combined(tmp_path, original)
     plan = build_merge_conflicts(sources, plan_id=PLAN_ID, history=history)
+    return sources, history, plan, path, value
+
+
+@pytest.fixture
+def bound(source_plan):
+    sources, history, plan, path, value = source_plan
     result = prepare(sources, history, plan)
     return sources, history, plan, result, path, value
 
@@ -66,8 +74,8 @@ def test_rehashing_a_forged_byte_projection_cannot_create_writer_evidence(bound,
 
 
 @pytest.mark.parametrize('expected', [None, True, [], 'bad', '0' * 64])
-def test_selected_original_input_hash_is_mandatory(bound, expected):
-    sources, history, plan, _, _, _ = bound
+def test_selected_original_input_hash_is_mandatory(source_plan, expected):
+    sources, history, plan, _, _ = source_plan
     with pytest.raises(ModelError, match='merge_metadata_input_hash_mismatch'):
         prepare_merge_metadata(plan.canonical_bytes, sources, history=history, expected_plan_sha256=expected)
 

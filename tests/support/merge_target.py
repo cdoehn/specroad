@@ -6,6 +6,7 @@ from specroad.merge import build_merge_conflicts, prepare_merge_metadata, prepar
 from specroad.model.canonical import canonical_json_bytes as jcs
 from support.domain import domain_value
 from support.inspection import inspection_project
+from support.languages import small_restore_registry
 from support.records import record_value
 from support.merge_relations import history_for
 from support.merge_resolution import PLAN_ID
@@ -21,6 +22,16 @@ def seed(root, *, values=None, profiles=(), fail_on='error', language_registry=N
     config['validation_policy']['fail_on'] = fail_on
     files['specroad.json'] = jcs(config)
     return files
+
+
+def small_seed(root, *, values=None, profiles=(), fail_on='error'):
+    """Use native de-DE/en-GB resources for cases unrelated to registry size.
+
+    Full source-kind and publication references still use their full registries.
+    Every caller gets its own project, native validation and source bindings.
+    """
+    return seed(root, values=values, profiles=profiles, fail_on=fail_on,
+                language_registry=small_restore_registry())
 
 
 def replace(files, kind, *, identifier=None, **changes):

@@ -179,7 +179,8 @@ def test_unbound_or_unconfirmed_blocker_completion_never_seals_a_baseline(tmp_pa
             if case == 'untyped': return True
             return ReviewVerification('0' * 64, r.sha256, True, True)
         verifier = ReviewVerifier('synthetic-refusal', '1', check)
-    model, ctx = release_project(tmp_path / 'project', values=values)
+    model, ctx = release_project(tmp_path / 'project', values=values,
+                                 language_registry=small_restore_registry())
     provided = services(ctx); before = inventory(tmp_path)
     with no_write_attempts(), pytest.raises(ModelError) as error:
         prepare(model, ctx, gates=provided, blocker_reviews=[] if case == 'missing' else [review],
@@ -260,7 +261,8 @@ def test_publication_retains_original_stored_order_beside_normalized_selection_h
     stored['required_runs'].reverse()
     values[0]['readiness_policy']['verification_evaluation'] = stored
     values = refresh_reviews(values)
-    model, ctx = release_project(tmp_path / 'project', values=values)
+    model, ctx = release_project(tmp_path / 'project', values=values,
+                                 language_registry=small_restore_registry())
     provided = services(ctx)
     external = VerificationEvaluation(canonical_json_bytes(stored))
     native = assess_release_readiness(ctx, gates=provided)

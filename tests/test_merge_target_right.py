@@ -18,7 +18,7 @@ from specroad.security import ProjectBoundary, SafetyViolation
 from support.domain import domain_value
 from support.records import record_value, ref
 from support.model import put
-from support.merge_target import seed, replace, inputs, target
+from support.merge_target import small_seed as seed, replace, inputs, target
 from support.profile_composition import profile, lint
 from support.read_only import inventory
 from support.relations import aid, edge

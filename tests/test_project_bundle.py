@@ -24,14 +24,14 @@ from support.records import record_value
 from support.scopes import descriptor
 
 
-def project(root):
+def project(root, *, language_registry=None):
     """Native model, including a control artifact and an actual binary attachment."""
     content = b'\x00\xffattachment bytes\r\n'
     attachment = AttachmentDescriptor('attachments/owned.bin', 'application/octet-stream',
                                       len(content), sha256(content).hexdigest())
     values = [domain_value('goal'), domain_value('requirement'),
               record_value('proposal'), record_value('document')]
-    inspection_project(root, artifacts=values)
+    inspection_project(root, artifacts=values, language_registry=language_registry)
     evidence = record_value('evidence', attachments=[attachment.data])
     put(root, artifact_path('evidence', evidence['id'], 'SR'), canonical_json_bytes(evidence))
     put(root, attachment.path, content)

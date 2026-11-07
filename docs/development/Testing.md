@@ -7,6 +7,52 @@ reine Collection und native Paketvalidierung sind erlaubt, aber kein
 Verhaltenstest-Erfolg. Die nachfolgenden historischen Abschnitte erklären
 ältere Werkzeuge und Nachweise und erteilen keine Dev-Testfreigabe.
 
+## Effiziente Testdaten und Vorbereitung
+
+Nutzerauftrag vom 7. November 2026: Diese Regeln gelten für neue Tests und die
+Überarbeitung vorhandener Tests. Fachliche Abnahmen, TD-001, stabile IDs,
+Apply-only-Ausführung und die bestehende Pflichtauswahl bleiben maßgeblich.
+
+1. **Kleinste vollständige native Daten.** Nur die Artefakte, Registereinträge
+   und Ressourcen aufbauen, die der geprüfte Fall benötigt. Kleine Daten laufen
+   durch echte Parser, Validatoren und den beauftragten Schreib-/Lesepfad.
+   Größen-, Vollständigkeits-, Sprachregister-, Archiv- und Integrationsfälle
+   behalten ihre jeweils erforderlichen vollständigen Daten. Vor einer
+   Verkleinerung konkret benennen, welche vollständigen Referenzfälle bestehen
+   bleiben; keine Validatoren oder erforderlichen Services durch Erfolg ersetzen.
+2. **Gezielte Vorbereitung.** Eingabesyntax, Hash-/Optionsfehler und andere
+   Prüfungen vor Quellenzugriff brauchen keine wiederholte vollständige
+   Publikation oder Zielprüfung als Fixture. Basisplan, aktuelle Quellen und
+   vorbereitete Zielergebnisse getrennt bereitstellen; jeder Test fordert nur
+   seine tatsächlich erforderliche Stufe an. Gültige Ausgangsdaten weiterhin
+   mit den nativen Erzeugern gewinnen und die erwartete Fehlerklasse erhalten.
+3. **Unveränderliche Vorlagen, getrennte Zustände.** Einmal pro Modul/Worker
+   erzeugte Bytefolgen dürfen reine Eingabevarianten versorgen. Veränderliche
+   Dictionaries daraus je Test frisch dekodieren. Schreib-, Quellenwechsel-,
+   Autoritäts-, Lock- und Recoverytests bekommen eigene Projekte und aktuelle
+   Bindungen. Keine veränderlichen Verzeichnisse, Testakteure, Dateideskriptoren,
+   Freigaben oder Ergebnisse einer Live-Prüfung zwischen Fällen teilen.
+4. **Abdeckung sichtbar erhalten.** Vorhandene Test-IDs, Parametervarianten,
+   Fehlerfälle, Assertions und relevante Integration erhalten. Echte
+   Prozessabbrüche, Neustarts, Dateieffekte und Aktualitätsprüfungen bleiben,
+   wenn sie Teil der Aussage sind. Dauerhafte Speicherung und Testgates nicht
+   zur Beschleunigung abschwächen. Reine Fixture-Refactorings benötigen keine
+   künstlichen Produkttests, die nur ihre interne Struktur spiegeln.
+5. **Nach vorhandenen Messungen priorisieren.** Quelle, Zeitpunkt, Workerzahl,
+   Testauswahl und Setup/Call/Teardown berücksichtigen. Neben einzelnen
+   Ausreißern auch die summierte Zeit einer Testfamilie ansehen; Vorbereitung
+   innerhalb des Testkörpers erscheint unter Call. Summierte Workerzeit ist
+   keine Wartezeit. Unterschiedliche Auswahlen sind kein direkter Benchmark.
+   Neue Geschwindigkeitsbehauptungen erst aus tatsächlichen Apply-Messungen
+   ableiten; historische Werte weder löschen noch durch Schätzwerte ersetzen.
+
+Änderungen an gemeinsam genutzten Helfern erhalten eine begründete Pflichtauswahl
+der betroffenen Aufrufer einschließlich ihrer unveränderten Integrationsreferenzen.
+Produktseitige Caches sind eine gesondert zu begründende Änderung: Der Nutzen
+muss belegt sein, Schlüssel müssen die tatsächlichen unveränderlichen Eingaben
+binden, und alle erforderlichen aktuellen Datei-/Autoritätsprüfungen bleiben.
+Diese Regeln erlauben keine zusätzlichen Dev-Testläufe, CI-Starts oder Dienste.
+
 ## Testplan für jeden Commit
 
 Jeder Zustand erhält eine eigene eindeutige Commit-ID und einen Plan:

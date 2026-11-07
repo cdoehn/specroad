@@ -21,6 +21,7 @@ from support.merge_resolution import ACTOR, WHEN, PLAN_ID, ROLES, case, request_
 from support.merge_lifecycle import artifact, bound_records, changed
 from support.merge_relations import history_for
 from support.read_only import inventory
+from support.languages import small_restore_registry
 from support.model import put
 from test_merge_sources import sources as source_fixtures, read_only_sources
 from test_merge_conflicts_right import rehash
@@ -30,7 +31,8 @@ from test_project_bundle import project
 
 @pytest.fixture(scope='module')
 def original(tmp_path_factory):
-    return project(tmp_path_factory.mktemp('resolution-right-seed')/'project').raw
+    return project(tmp_path_factory.mktemp('resolution-right-seed')/'project',
+                   language_registry=small_restore_registry()).raw
 
 
 @pytest.fixture
@@ -43,17 +45,29 @@ def options(plan):
             'actor':ACTOR, 'resolved_at':WHEN, 'take':'ours'}
 
 
+@pytest.fixture(scope='module')
+def decision_inputs(tmp_path_factory, original):
+    """Share only immutable native plan/request bytes for pre-source rejection.
+
+    Filesystem/currentness cases continue to use the fresh per-test bound fixture.
+    No source, history, mutable request or approval is shared with these cases.
+    """
+    native = case(tmp_path_factory.mktemp('decision-inputs'), original)
+    plan = native[2]
+    unresolved = plan.canonical_bytes, jcs(options(plan))
+    resolved = resolve(native, take='ours')
+    request = options(plan)
+    request.update(expected_plan_sha256=resolved.sha256,
+                   conflict_id=resolved.data['resolutions'][0]['conflict_id'])
+    return unresolved, (resolved.canonical_bytes, jcs(request))
+
+
 @pytest.mark.parametrize('change', ['unknown','duplicate','choice_missing','choice_both','take_invalid',
     'actor_missing','actor_type','actor_empty','actor_extra','time_missing','time_invalid','input_hash','bad_hash'])
-def test_invalid_decision_is_rejected_before_source_access(bound, change):
-    _,_,plan = bound
-    request = options(plan); raw = plan.canonical_bytes
+def test_invalid_decision_is_rejected_before_source_access(decision_inputs, change):
+    raw, encoded_request = decision_inputs[change == 'duplicate']
+    request = json.loads(encoded_request)
     if change == 'unknown': request['conflict_id'] = 'MC-'+'f'*64
-    elif change == 'duplicate':
-        resolved = resolve(bound,take='ours')
-        raw = resolved.canonical_bytes
-        request['expected_plan_sha256'] = resolved.sha256
-        request['conflict_id'] = resolved.data['resolutions'][0]['conflict_id']
     elif change == 'choice_missing': del request['take']
     elif change == 'choice_both': request['value'] = 'both'
     elif change == 'take_invalid': request['take'] = 'force'
@@ -64,7 +78,7 @@ def test_invalid_decision_is_rejected_before_source_access(bound, change):
     elif change == 'time_missing': request['resolved_at'] = None
     elif change == 'time_invalid': request['resolved_at'] = '2026-02-30T25:00:00Z'
     elif change == 'input_hash': request['expected_plan_sha256'] = 'a'*64
-    else: request['expected_plan_sha256'] = 'a'*63+'\n'
+    elif change == 'bad_hash': request['expected_plan_sha256'] = 'a'*63+'\n'
     # None cannot be qualified; a local rejection must win without any source I/O.
     with pytest.raises(ModelError) as error:
         resolve_merge_conflict(raw,None,history=None,**request)

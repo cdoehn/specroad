@@ -40,6 +40,16 @@ und Darstellungstests werden gemäß TD-001 nicht als Produkttests eingeführt.
 Die bestehende Apply-Rotation, Laufzeithistorie und stabile Testnummerierung
 bleiben unverändert; GitHub-CI wird nur vom Nutzer manuell gestartet.
 
+## Verhaltenstests effizient gestalten
+
+Für neue und überarbeitete Tests gelten die [gemeinsamen Regeln für effiziente
+Testdaten und Vorbereitung](docs/development/Testing.md#effiziente-testdaten-und-vorbereitung).
+Das kleinste vollständige native Projekt verwenden, das die jeweilige Aussage
+trägt. Große Ressourcen gezielt durch vollständige Integrationsreferenzen
+abdecken; veränderliche Projektzustände bleiben pro Fall getrennt. Die Regeln
+ändern weder fachliche Abnahmen noch die Apply-Auswahl oder Teststartbefugnis.
+Der [Testbereich](tests/AGENTS.md) verweist auf dieselbe maßgebliche Regelstelle.
+
 ## Dokumentation fortschreiben
 
 - **Fortschritt:** Der YAML-Block im Planeinstieg ist die einzige zentrale
@@ -69,6 +79,9 @@ dokumentiert die getrennt vorbereitete Testoptimierung und ihre erhaltene Abdeck
 Die [anschließende Laufzeitbereinigung](docs/development/Test_Runtime_20261107.md)
 beschreibt lokale Journalwert-Wiederverwendung, Release-Testdaten und die
 Reihenfolge der unveränderten Apply-Testauswahl.
+Die [Fixture-Bereinigung](docs/development/Test_Fixture_Efficiency_20261107.md)
+erweitert kleine native Testdaten auf passende Merge-/Release-Fälle und trennt
+die Vorbereitung reiner Eingabeprüfungen von Prüfungen lebender Quellen.
 
 ## Control und manuelle Vorbereitung
 

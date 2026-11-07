@@ -16,6 +16,7 @@ from support.merge_lifecycle import artifact, bound_records, changed
 from support.merge_relations import bound_relations, edge, history_for
 from support.merge_resolution import PLAN_ID, ACTOR, WHEN
 from support.read_only import inventory
+from support.languages import small_restore_registry
 from test_merge_inventory import bind_files
 from test_merge_sources import read_only_sources
 from test_project_bundle import project
@@ -23,7 +24,8 @@ from test_project_bundle import project
 
 @pytest.fixture(scope='module')
 def original(tmp_path_factory):
-    return project(tmp_path_factory.mktemp('metadata-seed') / 'project').raw
+    return project(tmp_path_factory.mktemp('metadata-seed') / 'project',
+                   language_registry=small_restore_registry()).raw
 
 
 def prepare(sources, history, plan=None):
