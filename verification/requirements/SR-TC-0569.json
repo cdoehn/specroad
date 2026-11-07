@@ -34,7 +34,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "fa3e492d18aaff24d9b22cd5c31a554a65173232c6d55a6147d526ed4fb81a09",
+  "specification_sha256": "b8ac0887d9e53b4f436157accae9dfaefe71ea99929dfb6f9ce718346a999d24",
   "steps": [
     "Acquire shared native exclusion for writer/recovery kinds; recheck exact ownership and journal barriers before audited orphan removal.",
     "Apply existing risk-consent gates to transaction-bound takeover and reject live owners even with risk consent.",

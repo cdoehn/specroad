@@ -33,7 +33,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "fa3e492d18aaff24d9b22cd5c31a554a65173232c6d55a6147d526ed4fb81a09",
+  "specification_sha256": "b8ac0887d9e53b4f436157accae9dfaefe71ea99929dfb6f9ce718346a999d24",
   "steps": [
     "Resolve stored Release/Milestone/Task fields and directed relationships through common domain and graph validators; retain identities and exact source bindings.",
     "Publish valid scheduling or Milestone creation through the common writer; compare original targets, source revisions and read-only planning observations.",

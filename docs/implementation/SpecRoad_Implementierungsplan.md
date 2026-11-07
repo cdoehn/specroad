@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 110 · **Stand:** 6. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.72
+**Planrevision:** 111 · **Stand:** 7. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.73
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 Schritte und 900 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; die ausdrücklich genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wird nach 10.7.10 innerhalb von 15.l.R vorgezogen. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -9,10 +9,12 @@ Die Aufteilung vom 6. November 2026 ist ein reiner OFF-PLAN-Dokumentationsschrit
 
 Vor der Arbeit: [Projektregeln](../../DEVELOPMENT.md), [Grundlagen](rules/Grundlagen.md), [gemeinsame Arbeitsregeln](../development/Plan_Arbeitsregeln.md) und [Planpflege](AGENTS.md) lesen. Danach nur den betroffenen Meilenstein, seine verlinkten Ergänzungen und benötigten Matrizen lesen. Die Dateien bilden gemeinsam den vollständigen Plan.
 
+Detailentscheidung für 17.l: [MERGE-WORK-627](decisions/merge-work-627.md).
+
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 110
+plan_revision: 111
 implementation_plan_commits_total: 900
 implementation_plan_commits_completed: 726
 last_completed_plan_commit: 17.k.C

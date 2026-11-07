@@ -1,19 +1,19 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.72
+## Version 0.2.73
 
 | Feld | Wert |
 |---|---|
 | Dokument-ID | `SR-SPEC-0001` |
-| Dokumentversion | `0.2.72` |
+| Dokumentversion | `0.2.73` |
 | Zielrelease | `SpecRoad Single-Repository Workbench 0.2.0` |
 | Status | **Fachlich konsolidierte Arbeitsgrundlage; technische Reviewentscheidung gesondert dokumentiert, formale Baseline-Freigabe und Produktabnahme nicht durch dieses Dokument erklärt** |
-| Stand | 6. November 2026 |
+| Stand | 7. November 2026 |
 | Sprache | Deutsch; technische Feldnamen, Enum-Werte und CLI-Kommandos Englisch |
-| Fachliche Quelle | **Diese Repositoryfassung v0.2.72 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.72 liegt mit dieser Änderung nicht vor.** |
+| Fachliche Quelle | **Diese Repositoryfassung v0.2.73 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.73 liegt mit dieser Änderung nicht vor.** |
 | Bearbeitbare Satzquelle | Diese Datei; eine spätere PDF muss denselben versionierten Inhalt wiedergeben. |
-| Vorgängerversion | Repository-Spezifikation v0.2.71 vom 6. November 2026; historische Nachweise bleiben unverändert. |
-| Prüf- und Entscheidungsgrundlage | MERGE-PUBLICATION-619, delegiert gemäß SPECROAD-DECISION-1, Vertrag 4; keine Produktfreigabe. |
-| Änderungsart | Gebundene Merge-Publikation über den gemeinsamen Writer, aktuelle Nachweisbewertung und beweisgebundene Recovery. |
+| Vorgängerversion | Repository-Spezifikation v0.2.72 vom 6. November 2026; historische Nachweise bleiben unverändert. |
+| Prüf- und Entscheidungsgrundlage | MERGE-WORK-627, delegiert gemäß SPECROAD-DECISION-1, Vertrag 4; keine Produktfreigabe. |
+| Änderungsart | Passive, vollständige Merge-Vorbereitung auf unveränderbaren Work-Eingaben und Quelltypenparität. |
 
 > **Verbindlicher Quellenwechsel:** Die ausdrückliche Nutzerentscheidung REFERENCE-SOURCE-551 wird als v0.2.50 umgesetzt. Der neue Quellvertrag ist Entwurfsarbeit vom 3. November 2026, kein Nachweis eines früher existierenden Formats. Bestehende 0.2-Verträge, Transport-, Sicherheits- und Reviewgrenzen bleiben erhalten.
 
@@ -5001,6 +5001,71 @@ einen fertigen Zielstand abschließen oder sonst die exakte Basis wiederherstell
 Sie erneuert keine fachlichen Reviews oder externen Aktualitätsbefunde.
 Die öffentliche CLI-/Work-Gesamtintegration und ihr vollständiger Endnachweis
 bleiben Aufgabe von 17.l; 17.k erklärt weder M17 noch die Produktabnahme fertig.
+
+### 10.15.9 Passive Merge-Vorbereitung und Work — MERGE-WORK-627
+
+**Delegiert gemäß SPECROAD-DECISION-1, Vertrag 4, 7. November 2026.**
+Diese Detailregel konkretisiert die Vorbereitung aus 17.l und Anhang P.
+Sie ersetzt weder den Writer aus 10.15.8 noch die Pflicht zur späteren
+öffentlichen Apply-/Resume-Gesamtintegration und deren R-/C-Abnahme.
+
+`merge plan --base <ROOT> --ours <ROOT> --theirs <ROOT>` verwendet je Rolle
+den nativen Quellenadapter. `--base-kind`, `--ours-kind`, `--theirs-kind`
+wählen `local|git|baseline|bundle` (Default `local`); `--<rolle>-ref` ist nur
+für Git und Baseline erforderlich und zulässig. Bundle-ROOT ist die Datei.
+Git-Refs werden einmal auf den ursprünglichen Commit festgelegt. Partials,
+fremde Projekt-IDs und Schemawechsel bleiben unzulässig. `--history` benennt
+die explizite Datei des vorhandenen `merge-history-input-v1`, `--plan-id`
+die feste MP-Kennung. Herkunft darf nicht aus identischen IDs erfunden werden.
+Optional binden `--resolutions` und `--expected-plan-sha256` gemeinsam die
+exakten Originalbytes eines vorhandenen Konflikt-/Auflösungsplans derselben
+MP-Kennung und Quellen. Keine automatische Auflösung und kein neues Rebase.
+
+Der geschlossene passive Ergebnisvertrag `merge-preparation-v1` enthält
+`format_version`, `source_observation=sealed_snapshot`, `inventory`,
+`plan_bytes_base64`, `plan_sha256`, `metadata`, `target`, `changed`,
+`target_files` und die stets falschen Felder `project_writes_performed`,
+`approval_granted`, `write_authorized`. Inventur, Metadaten und Zielprüfung
+behalten ihre bestehenden Formate. `target_files` ist die sortierte vollständige
+Liste `{path, bytes_base64}` der tatsächlich validierten Zielbytes oder leer,
+wenn das Ziel nicht gültig ist. `changed` ist der vollständige Bytevergleich
+gegen Ours bei gültigem Ziel, sonst `null`. Ein vollständiger negativer Befund
+ist kein Write-Erfolg. `--fail-on-change` liefert 1 nur bei `changed=true`.
+Die Ausgabe bleibt maschinenlesbar; ein Plan kann auf stdout geliefert werden.
+
+`--work-dir` oder ein explizites weiches Schrittbudget verwendet den vorhandenen
+externen Work-Store. Die initiale Quellenqualifikation bleibt die native,
+vollständige Akquisition aus 17.a; erst ihre nachgeprüften Originalbytes werden
+als unveränderbarer vollständiger Eingang versiegelt. Kein unvollständiger
+Quellenstand erhält dabei eine erfundene Modellwurzel. Der Work-Auftrag bindet
+die ursprünglichen Quellenbelege, History, MP-Kennung und gegebenenfalls die
+Originalbytes des Auflösungsplans. Eingabedateien und Manifestlisten werden
+durch den vorhandenen segmentierten Store gespeichert. Eine gespeicherte
+Quellenadresse wird beim Resume nicht automatisch geöffnet.
+
+Der vollständige Aufgabenplan umfasst blockweise Prüfung aller gebundenen
+Dateien, native globale Inventur, Vergleich/Konflikte, exakte Metadaten,
+vollständige native Zielprüfung und abschließende unabhängige Nachrechnung
+vor Ergebnislieferung. Globale Closure-/Validierungsprüfungen bleiben echte
+native Prüfungen, keine Summe lokaler Erfolgsflags. Ein Resume bestätigt eine
+neue vollständige Einheit; bereits bestätigte fachliche Phasen werden nicht
+bei jedem Aufruf erneut als Arbeit ausgeführt. Notwendige Datenintegritäts-
+prüfungen und unabhängige abschließende Nachrechnung bleiben erhalten.
+Einheiten, Quellenhashes, Auflösungsbytes, Scope und Engine-/Toolbindung
+dürfen sich nicht ändern. Unvollständige, manipulierte oder inkompatible
+Checkpoints geben kein vollständiges Ergebnis frei. Zwischenstände sind
+keine Autorität; final wird aus Originaldaten nachgerechnet.
+
+Der synchrone und der fortgesetzte Lauf benutzen dieselben nativen Schritte
+und erzeugen für identische Eingaben exakt dasselbe Ergebnis. Zwischen
+Quelltypen bleiben Herkunftsbelege und davon abhängige IDs ausdrücklich
+verschieden; die fachlichen Konfliktwerte, Zielbytes und Modellwurzeln müssen
+bei äquivalenten Daten und äquivalent belegter History übereinstimmen.
+Resume eines versiegelten lesenden Auftrags behauptet keine Aktualität
+später veränderter Quellen. Publikation benötigt weiterhin ausdrücklich
+neu übergebene lebende Quellen, Zielbindung, Hostbefugnis, externe Sicherung,
+Writer-Lock, native Gates und Receipt nach 10.15.8. Workdaten können diese
+Voraussetzungen nicht liefern oder abschwächen.
 
 ### 10.16 Projektbundle und partieller Umfang
 

@@ -41,7 +41,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "fa3e492d18aaff24d9b22cd5c31a554a65173232c6d55a6147d526ed4fb81a09",
+  "specification_sha256": "b8ac0887d9e53b4f436157accae9dfaefe71ea99929dfb6f9ce718346a999d24",
   "steps": [
     "12.p.R: Compare exact independent gap identities/counts for missing contract/test/selection/evidence and stale observations, active versus historical/superseded runs, configured exclusions and invalid references. Resolve actual Release scope and stored selection precedence; reject conflicts. Preserve full descriptor/time/scope/hash through native Work storage and fresh Core/PYZ process; recompute and reject changed inputs. Compare incremental query pages and provenance to the synchronous path without model writes.",
     "For 13.f.R: Distinguish missing and stale evidence, absent required test references and additional declared dimensions. A valid explicit null test reference creates no executable-test requirement."

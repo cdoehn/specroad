@@ -31,7 +31,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "fa3e492d18aaff24d9b22cd5c31a554a65173232c6d55a6147d526ed4fb81a09",
+  "specification_sha256": "b8ac0887d9e53b4f436157accae9dfaefe71ea99929dfb6f9ce718346a999d24",
   "steps": [
     "Persist original plan and authoring bindings in initial and successive work data; perform a fresh read-only normative resume diagnostic without executing a handler.",
     "Check retained original bytes and IDs, reject changed current identity or actual target basis, and require the separate final native-lock writer gate."
