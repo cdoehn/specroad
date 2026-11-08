@@ -12,6 +12,7 @@ import sys
 sys.dont_write_bytecode = True
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from cli import Target, Terminal, error_output, number, parser_for, terminal
+from availability import capture_native_file
 
 
 def duration(nanoseconds):
@@ -32,8 +33,7 @@ def current_tests(repository):
     path = max(paths, key=lambda p: p.stat().st_mtime_ns, default=None)
     if path is None:
         return None, None
-    with path.open('rb') as stream:
-        value = json.load(stream)
+    value = json.loads(capture_native_file(path, 16_000_000))
     pairs = value.get('nodeid_to_test_id')
     if (value.get('catalog_valid') is not True or value.get('collection_exit_code') != 0
             or not isinstance(pairs, dict) or not pairs

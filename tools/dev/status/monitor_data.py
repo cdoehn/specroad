@@ -16,7 +16,8 @@ from .runtime_read import connection
 from .test_time import current_tests
 
 PHASES = ('setup', 'call', 'teardown')
-READ_ERRORS = (OSError, ValueError, TypeError, KeyError, AttributeError, sqlite3.Error)
+READ_ERRORS = (OSError, ValueError, TypeError, KeyError, AttributeError, RuntimeError, OverflowError, sqlite3.Error)
+MAX_PHASE_ROWS = 300000
 
 
 def targets(repository, directories=(), *, all_targets=False, database=None):
@@ -62,12 +63,20 @@ def unavailable(repository, error):
 def phase_rows(rows, run, now):
     attempts = {}
     for row in rows:
+        if (any(type(row[k]) is not int or row[k] < 1 for k in ('id', 'run'))
+                or any(not isinstance(row[k], str) or not row[k] for k in ('test', 'node', 'worker', 'started'))
+                or row['invalid'] not in (0, 1) or row['complete'] not in (0, 1)):
+            raise ValueError('Ungültiger Laufzeitversuch')
+        apply_status.stamp(row['started'])
         item = attempts.setdefault(row['id'], {**dict(row), 'phases': {}})
         if row['phase'] is not None:
             if row['phase'] not in PHASES or row['phase'] in item['phases']:
                 raise ValueError('Unbekannte oder doppelte Messphase')
-            if type(row['duration']) is not int or row['duration'] < 0:
+            if type(row['duration']) is not int or not 0 <= row['duration'] <= 86_400_000_000_000:
                 raise ValueError('Ungültige Phasendauer')
+            if row['outcome'] not in ('passed', 'failed', 'error', 'unexpected_success', 'skipped', 'expected_failure'):
+                raise ValueError('Unbekanntes Phasenergebnis')
+            apply_status.stamp(row['recorded'])
             item['phases'][row['phase']] = dict(row)
     result = []
     for item in attempts.values():
@@ -106,22 +115,46 @@ SELECT_PHASES = '''SELECT a.id,a.run,a.node,a.test,a.worker,a.started,a.invalid,
                   FROM attempts a LEFT JOIN phases p ON p.attempt=a.id'''
 
 
+def bounded_rows(cursor):
+    rows = cursor.fetchmany(MAX_PHASE_ROWS + 1)
+    if len(rows) > MAX_PHASE_ROWS:
+        raise ValueError('Laufzeitquelle überschreitet das Leselimit; keine Teilmessung ausgegeben.')
+    return rows
+
+
 def run_tests(database, expected_run, timeout=5):
     """Only the run already bound to the Apply gate, never the globally newest run."""
     with connection(database, timeout) as db:
         run = db.execute('SELECT * FROM runs WHERE id=?', (expected_run['id'],)).fetchone()
         if run is None or any(run[k] != expected_run[k] for k in ('id', 'source', 'started')):
             raise ValueError('Laufzeitquelle hat ihre Apply-Laufbindung gewechselt.')
-        rows = db.execute(SELECT_PHASES + ' WHERE a.run=? ORDER BY a.id', (run['id'],)).fetchall()
+        rows = bounded_rows(db.execute(SELECT_PHASES + ' WHERE a.run=? ORDER BY a.id', (run['id'],)))
         return phase_rows(rows, dict(run), time.time()), dict(run)
 
 
 def collect_status(repository, database=None, timeout=5):
     try:
-        view = apply_status.collect(repository, apply_directory=repository, database=database)
+        view = apply_status.collect(repository, apply_directory=repository, database=database, query_timeout=timeout)
         rows, run = [], None
         if view.get('tests') and view['tests'].get('run'):
+            bundle = Path(view['report_directory'])
+            progress, checkpoint = apply_status.progress_at(bundle)
+            if checkpoint.stat().st_mtime != view.get('progress_updated_at'):
+                raise ValueError('Apply wechselte während der Statusabfrage die Stage.')
+            gate = bundle / view['test_commit'] / 'gate'
+            catalog = apply_status.read_json(gate / 'catalog.json')
+            if catalog.get('catalog_valid') is not True or catalog.get('collection_exit_code') != 0:
+                raise ValueError('Unvollständige oder ungültige Apply-Collection')
+            pairs = catalog['nodeid_to_test_id']
+            nodes = apply_status.capture_native_file(gate / 'nodeids.txt', 16_000_000).decode('utf-8').splitlines()
+            if not nodes or len(nodes) != len(set(nodes)) or not set(nodes) <= pairs.keys():
+                raise ValueError('Ungültige native Apply-Testauswahl')
             rows, run = run_tests(Path(view['database']), view['tests']['run'], timeout)
+            selected_nodes = set(nodes)
+            if any(r['nodeid'] not in selected_nodes or pairs.get(r['nodeid']) != r['test_name'] for r in rows):
+                raise ValueError('Messphasen passen nicht zur gebundenen Apply-Testauswahl.')
+            if apply_status.progress_at(bundle)[1] != checkpoint:
+                raise ValueError('Apply wechselte während der Phasenabfrage die Stage.')
         return {'observed_at': observed(), 'report': view, 'tests': rows, 'run': run}
     except READ_ERRORS as error:
         return {'observed_at': observed(), 'report': unavailable(repository, error), 'tests': [], 'run': None}
@@ -130,15 +163,15 @@ def collect_status(repository, database=None, timeout=5):
 def history(database, identities=None, timeout=5):
     """Latest started attempts suppress all older success, even when unfinished."""
     with connection(database, timeout) as db:
-        rows = db.execute(SELECT_PHASES + '''
-            WHERE a.id IN (SELECT MAX(id) FROM attempts GROUP BY test) ORDER BY a.id''').fetchall()
+        rows = bounded_rows(db.execute(SELECT_PHASES + '''
+            WHERE a.id IN (SELECT MAX(id) FROM attempts GROUP BY test) ORDER BY a.id'''))
         result = phase_rows(rows, None, time.time())
         attempted = {row['test_name'] for row in result}
-        seeds = db.execute('SELECT test,duration FROM seeds WHERE id IN (SELECT MAX(id) FROM seeds GROUP BY test)').fetchall()
+        seeds = bounded_rows(db.execute('SELECT test,duration FROM seeds WHERE id IN (SELECT MAX(id) FROM seeds GROUP BY test)'))
         for row in seeds:
             if row['test'] in attempted:
                 continue
-            if type(row['duration']) is not int or row['duration'] < 0:
+            if not isinstance(row['test'], str) or not row['test'] or type(row['duration']) is not int or row['duration'] < 0:
                 raise ValueError('Ungültige Baseline-Dauer')
             result.append({'test_name': row['test'], 'nodeid': None, 'worker': None,
                 'run_id': None, 'attempt_id': None, 'origin': 'baseline', 'started_at': None,
@@ -183,8 +216,9 @@ def collect_history(repository, database=None, timeout=5):
 def filtered(rows, *, match='', minimum=0, sort='total', descending=True, limit=200):
     """Filter before limiting; stable name ties; unknown durations always last."""
     key = sort + '_seconds'
+    minimum_key = 'total_seconds' if sort == 'name' else key
     matches = [r for r in rows if match.casefold() in (r['test_name'] + ' ' + (r.get('nodeid') or '')).casefold()
-               and (minimum == 0 or r.get(key) is not None and r[key] >= minimum)]
+               and (minimum == 0 or r.get(minimum_key) is not None and r[minimum_key] >= minimum)]
     matches.sort(key=lambda r: r['test_name'])
     if sort == 'name':
         if descending:

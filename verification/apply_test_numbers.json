@@ -26122,6 +26122,26 @@
     "tests/test_test_monitor.py::test_monitor_filters_full_population_before_limit_with_stable_phase_sorting",
     "tests/test_test_monitor.py::test_monitor_one_broken_target_does_not_hide_the_other_or_create_sources",
     "tests/test_test_monitor.py::test_monitor_cannot_assign_one_database_to_multiple_targets",
-    "tests/test_test_monitor.py::test_monitor_discovers_additional_apply_lanes_without_registering_them"
+    "tests/test_test_monitor.py::test_monitor_discovers_additional_apply_lanes_without_registering_them",
+    "tests/test_test_monitor_right.py::test_monitor_failed_latest_attempt_retains_its_phases_without_old_success",
+    "tests/test_test_monitor_right.py::test_baseline_has_only_total_and_new_attempt_suppresses_it",
+    "tests/test_test_monitor_right.py::test_monitor_rejects_corrupt_latest_measurements_without_reusing_old_data[duration]",
+    "tests/test_test_monitor_right.py::test_monitor_rejects_corrupt_latest_measurements_without_reusing_old_data[phase]",
+    "tests/test_test_monitor_right.py::test_monitor_rejects_corrupt_latest_measurements_without_reusing_old_data[outcome]",
+    "tests/test_test_monitor_right.py::test_monitor_rejects_corrupt_latest_measurements_without_reusing_old_data[started]",
+    "tests/test_test_monitor_right.py::test_monitor_rejects_corrupt_latest_measurements_without_reusing_old_data[metadata]",
+    "tests/test_test_monitor_right.py::test_monitor_blocks_foreign_default_database_until_writer_policy_is_migrated",
+    "tests/test_test_monitor_right.py::test_phase_query_rejects_different_run_identity",
+    "tests/test_test_monitor_right.py::test_monitor_rejects_measurements_with_foreign_catalog_identity",
+    "tests/test_test_monitor_right.py::test_nonregular_progress_is_rejected_without_blocking_or_claiming_free",
+    "tests/test_test_monitor_right.py::test_readonly_query_enforces_deadline_and_cannot_write",
+    "tests/test_test_monitor_right.py::test_locked_database_is_reported_per_source_without_writing_or_hiding_peer",
+    "tests/test_test_monitor_right.py::test_independent_refresh_exposes_fast_sources_while_one_is_still_reading",
+    "tests/test_test_monitor_right.py::test_refresh_preserves_last_snapshot_marks_stale_and_recovers",
+    "tests/test_test_monitor_right.py::test_monitor_invalid_once_options_return_machine_error_without_creating_sources",
+    "tests/test_test_monitor_right.py::test_machine_phase_values_are_independent_of_time_view[total]",
+    "tests/test_test_monitor_right.py::test_machine_phase_values_are_independent_of_time_view[phases]",
+    "tests/test_test_monitor_right.py::test_machine_phase_values_are_independent_of_time_view[both]",
+    "tests/test_test_monitor_right.py::test_history_read_limit_is_an_explicit_error_not_partial_measurement"
   ]
 }

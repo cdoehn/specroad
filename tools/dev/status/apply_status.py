@@ -20,7 +20,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from cli import Target, Terminal, error_output, parser_for, terminal
 
 
-from availability import repository_availability
+from availability import capture_native_file, repository_availability
 from runtime_read import connection
 
 
@@ -34,10 +34,7 @@ AVAILABILITY = {
 
 
 def read_json(path, limit=16_000_000):
-    if path.stat().st_size > limit:
-        raise ValueError(f'Datei zu groß: {path.name}')
-    with path.open('rb') as stream:
-        value = json.load(stream)
+    value = json.loads(capture_native_file(path, limit))
     if not isinstance(value, dict):
         raise ValueError(f'Kein JSON-Objekt: {path.name}')
     return value
@@ -147,7 +144,7 @@ def progress_at(bundle):
     return value, path
 
 
-def runtime_counts(database, gate, stage_started, stage_ended=None):
+def runtime_counts(database, gate, stage_started, stage_ended=None, *, timeout=5):
     """Bind by code identity AND stage time AND selected native node IDs."""
     catalog_path, nodes_path = gate / 'catalog.json', gate / 'nodeids.txt'
     if not catalog_path.is_file() or not nodes_path.is_file():
@@ -156,13 +153,13 @@ def runtime_counts(database, gate, stage_started, stage_ended=None):
     source = catalog.get('source_sha256')
     if not isinstance(source, str) or not re.fullmatch('[0-9a-f]{64}', source):
         raise ValueError('Quellbindung der Collection fehlt')
-    nodes = nodes_path.read_text().splitlines()
+    nodes = capture_native_file(nodes_path, 16_000_000).decode('utf-8').splitlines()
     if not nodes or len(nodes) != len(set(nodes)):
         raise ValueError('Testauswahl ist leer oder mehrdeutig')
     selected = set(nodes)
     lower_bound = datetime.fromtimestamp(stage_started - 1, timezone.utc).isoformat()
     upper_bound = datetime.fromtimestamp(stage_ended + 1, timezone.utc).isoformat() if stage_ended else '9999'
-    with connection(database) as db:
+    with connection(database, timeout) as db:
         runs = db.execute('SELECT * FROM runs WHERE source=? AND started>=? AND started<=? ORDER BY id',
                           (source, lower_bound, upper_bound)).fetchall()
         # A second same-source run is ambiguous: never silently show another job.
@@ -221,7 +218,7 @@ def result_receipt(repository, head):
     path = state_home / 'patchharbor/exchange/state.json'
     if not path.is_file():
         return None
-    repo_id = (repository / '.patchharbor/id').read_text().strip()
+    repo_id = capture_native_file(repository / '.patchharbor/id', 128).decode('ascii').strip()
     state = read_json(path)
     matches = [item for item in state.get('entries', [])
                if item.get('kind') == 'patch_package' and item.get('completed_commit') == head
@@ -233,7 +230,7 @@ def result_receipt(repository, head):
     return None
 
 
-def collect(repository, *, apply_directory=None, database=None):
+def collect(repository, *, apply_directory=None, database=None, query_timeout=5):
     now = time.time()
     selected = Target.from_repository(repository, apply_directory=apply_directory, database=database)
     repository = selected.repository
@@ -285,7 +282,7 @@ def collect(repository, *, apply_directory=None, database=None):
         if testing and runtime_ready:
             try:
                 view['tests'] = runtime_counts(selected.database,
-                                               stage / 'gate', min(testing), min(gates_ended, default=None))
+                                               stage / 'gate', min(testing), min(gates_ended, default=None), timeout=query_timeout)
             except (OSError, ValueError, sqlite3.Error) as error:
                 view['warnings'].append('Testzahlen nicht sicher lesbar: ' + str(error))
         view['test_commit'] = current

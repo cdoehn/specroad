@@ -60,8 +60,9 @@ def detail_lines(target):
     view = report(target)
     tests = view.get('tests') or {}
     run = source(target, 'status').get('run') or tests.get('run') or {}
+    availability = 'UNKLAR (alter Stand)' if target['status']['stale'] else STATES.get(view.get('availability', {}).get('state'), 'unbekannt')
     lines = [target['repository'],
-             f'Belegung: {STATES.get(view.get("availability", {}).get("state"), "unbekannt")} '
+             f'Belegung: {availability} '
              f'· letzter Lauf: {view.get("status", "wird gelesen")} · {freshness(target)}']
     if run:
         start = datetime.fromisoformat(run['started']).timestamp()
@@ -75,31 +76,40 @@ def detail_lines(target):
 
 
 def rows_for(target, tab, state):
+    # Published reader snapshots are not mutated by the TUI. Reuse the query
+    # until its input list or filters change; keyboard polling need not sort
+    # tens of thousands of test identities five times per second.
+    original = source(target, 'history' if tab == 'runtimes' else 'status').get('tests', [])
+    query = (tab, state.match, state.minimum, state.sort, state.descending, state.limit)
+    if state.query_source is original and state.query_key == query:
+        return state.query_result
     if tab == 'runtimes':
-        rows = source(target, 'history').get('tests', [])
+        rows = original
     else:
-        rows = source(target, 'status').get('tests', [])
+        rows = original
         if tab == 'running':
             rows = [r for r in rows if not r['completed']]
         elif tab == 'failures':
             rows = [r for r in rows if r['status'] in ('failed', 'skipped', 'invalid')]
-    return filtered(rows, match=state.match, minimum=state.minimum, sort=state.sort,
-                    descending=state.descending, limit=state.limit)
+    state.query_source, state.query_key = original, query
+    state.query_result = filtered(rows, match=state.match, minimum=state.minimum, sort=state.sort,
+                                  descending=state.descending, limit=state.limit)
+    return state.query_result
 
 
 def times(row, mode):
     parts = []
     if mode != 'phases':
-        parts.append(f'{clock(row.get("total_seconds")):>12}')
+        parts.append(f'{clock(row.get("total_seconds")):>9}')
     if mode != 'total':
-        parts.extend(f'{clock(row.get(p + "_seconds")):>12}' for p in ('setup', 'call', 'teardown'))
-    parts.append(f'{clock(row.get("elapsed_seconds")):>12}')
+        parts.extend(f'{clock(row.get(p + "_seconds")):>9}' for p in ('setup', 'call', 'teardown'))
+    parts.append(f'{clock(row.get("elapsed_seconds")):>9}')
     return ' '.join(parts)
 
 
 def time_header(mode):
     labels = ([] if mode == 'phases' else ['Gesamt']) + ([] if mode == 'total' else ['Setup', 'Call', 'Teardown'])
-    return ' '.join(f'{label:>12}' for label in labels + ['Seit Start'])
+    return ' '.join(f'{label:>9}' for label in labels + ['Verstr.'])
 
 
 def notes(target):
@@ -130,6 +140,9 @@ class ViewState:
     focus: str = 'targets'
     selections: dict = field(default_factory=dict)
     offsets: dict = field(default_factory=dict)
+    query_source: object = field(default=None, repr=False)
+    query_key: object = field(default=None, repr=False)
+    query_result: object = field(default=None, repr=False)
 
     @classmethod
     def from_args(cls, args):
@@ -242,7 +255,7 @@ def run_tui(paths, args):
                 put(0, 1, 'SPECROAD  /  TEST MONITOR', 1)
                 put(1, 1, f'{len(paths)} Apply-Ziele · Status {args.interval:g}s / Historie {args.history_interval:g}s'
                     + f' · Fokus: {"Apply-Übersicht" if state.focus == "targets" else "Testliste"}', 1)
-                visible_targets = min(5, len(snapshots))
+                visible_targets = min(5, max(1, height - 18), len(snapshots))
                 first = max(0, min(state.target - visible_targets + 1, len(snapshots) - visible_targets))
                 for index in range(first, first + visible_targets):
                     item = snapshots[index]
@@ -359,5 +372,7 @@ def run_tui(paths, args):
 
     try:
         return curses.wrapper(session)
+    except curses.error as error:
+        raise ValueError('Terminal konnte nicht initialisiert oder aktualisiert werden: ' + str(error)) from None
     finally:
         refresh.close()

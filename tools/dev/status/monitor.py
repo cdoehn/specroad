@@ -122,6 +122,13 @@ def interval(value):
     return result
 
 
+def query_timeout(value):
+    result = seconds(value)
+    if not 0.1 <= result <= 30:
+        raise argparse.ArgumentTypeError('Abfragebudget zwischen 0.1 und 30 Sekunden angeben.')
+    return result
+
+
 def limit(value):
     result = int(value)
     if not 0 <= result <= 100000:
@@ -155,7 +162,7 @@ def parser(argv):
     mode.add_argument('--json', action='store_true', help='maschinenlesbare Momentaufnahme; setzt --once voraus')
     mode.add_argument('--interval', type=interval, default=5, help='Statusabfrage in Sekunden (Standard: 5)')
     mode.add_argument('--history-interval', type=interval, default=60, help='Laufzeithistorie in Sekunden (Standard: 60)')
-    mode.add_argument('--query-timeout', type=interval, default=5, help='SQLite-Abfragebudget in Sekunden (Standard: 5)')
+    mode.add_argument('--query-timeout', type=query_timeout, default=5, help='SQLite-Abfragebudget 0.1–30 Sekunden (Standard: 5)')
     filters = result.add_argument_group('Testliste')
     filters.add_argument('--match', default='', metavar='TEXT', help='Teiltextsuche in Testname und Node-ID')
     filters.add_argument('--min-seconds', type=seconds, default=0, help='Mindestdauer im gewählten Sortierfeld')
@@ -177,13 +184,12 @@ def main(repository=None, argv=None):
         args = parser(argv).parse_args(argv)
         if args.json and not args.once:
             raise ValueError('--json benötigt --once.')
-        if args.sort == 'name' and args.min_seconds:
-            raise ValueError('--min-seconds benötigt ein Zeitfeld als --sort.')
         paths = targets(repository or Path(__file__).resolve().parents[3], args.apply_dir,
                         all_targets=args.all, database=args.database)
         if args.once:
-            report = filtered_snapshot(snapshot_once(paths, database=args.database, timeout=args.query_timeout), args)
+            report = snapshot_once(paths, database=args.database, timeout=args.query_timeout)
             if args.json:
+                report = filtered_snapshot(report, args)
                 print(json.dumps(report, ensure_ascii=False, indent=2, allow_nan=False))
             else:
                 from .monitor_view import render_once
@@ -193,7 +199,7 @@ def main(repository=None, argv=None):
             raise ValueError('Die TUI braucht ein Terminal; für Skripte --once --json verwenden.')
         from .monitor_view import run_tui
         return run_tui(paths, args)
-    except (ValueError, OSError, ImportError) as error:
+    except (ValueError, OSError, ImportError, RuntimeError, OverflowError) as error:
         if '--json' in argv:
             print(json.dumps({'format_version': 1, 'kind': 'specroad-test-monitor',
                               'status': 'unavailable', 'error': str(error)}, ensure_ascii=False))

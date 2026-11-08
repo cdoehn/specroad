@@ -61,7 +61,8 @@ erhalten, solange der Test noch zu den Filtern passt. Die volle Node-ID des
 ausgewählten Tests steht unter der Liste.
 
 `--view`, `--time-view`, `--sort`, `--ascending`, `--match` und `--min-seconds`
-setzen Startansicht und Filter. Farben: `--color auto|always|never`, `--no-color`;
+setzen Startansicht und Filter. Bei Namenssortierung bezieht sich die Mindestdauer
+auf die Gesamtzeit. Farben: `--color auto|always|never`, `--no-color`;
 `NO_COLOR` wirkt bei auto. `--plain` unterdrückt Farben und grafische Zeichen
 in der Einmalausgabe. JSON enthält keine Terminalsteuerung.
 
@@ -90,8 +91,14 @@ Status wird standardmäßig alle 5 Sekunden, die teurere Historie alle 60 Sekund
 gelesen (`--interval`, `--history-interval`). Ziel und Quelle haben jeweils
 höchstens eine laufende Abfrage. Abfragen laufen außerhalb des Bildschirmthreads;
 SQLite wird mit kurzen lesenden Transaktionen, Sperrwartezeit und Abfragebudget
-(`--query-timeout`, Standard 5 Sekunden) geöffnet. Keine Schreibkonfiguration,
-Migration, Registrierung, Reservierung oder Änderung an Apply/Tests erfolgt.
+(`--query-timeout`, Standard 5 Sekunden) geöffnet.
+Das Budget darf zwischen 0,1 und 30 Sekunden liegen. Native Statusdateien
+werden begrenzt und ohne blockierende Sonderdateizugriffe gelesen; fehlerhafte
+Phasen, ausgetauschte Datenbanken und widersprüchliche Lauf-/Testbindungen
+erzeugen keine scheinbar gültige Messung. Pro Abfrage sind maximal 300.000
+Phasen-/Seedzeilen zugelassen; eine Überschreitung wird als Fehler gemeldet.
+Es erfolgt keine Schreibkonfiguration, Migration, Registrierung, Reservierung
+oder Änderung an Apply/Tests.
 
 Bei einem Lesefehler bleibt der letzte lesbare Stand mit **VERALTET** sichtbar.
 Eine alte Freimeldung wird nicht als aktuelle Freigabe dargestellt. Die anderen

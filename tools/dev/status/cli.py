@@ -10,6 +10,11 @@ import sys
 import textwrap
 import unicodedata
 
+if __package__:
+    from .availability import capture_native_file
+else:
+    from availability import capture_native_file
+
 
 def safe_text(value):
     return ''.join(char if char.isprintable() else ' ' for char in str(value))
@@ -204,9 +209,7 @@ class Target:
         elif (source / '.patchharbor/id').is_file() or (source / '.patchharbor/config.json').is_file():
             # A differently named registered Apply carries its own explicit target.
             config = source / '.patchharbor/config.json'
-            if config.stat().st_size > 65536:
-                raise ValueError('PatchHarbor-Konfiguration ist zu groß.')
-            value = json.loads(config.read_text())
+            value = json.loads(capture_native_file(config, 65536))
             directory = value.get('exchange_directory') if isinstance(value, dict) else None
             if not isinstance(directory, str) or not Path(directory).is_absolute():
                 raise ValueError('Registrierte Apply-Kopie ohne eindeutigen Exchange.')
@@ -244,9 +247,7 @@ class Target:
         policy = self.repository / 'verification/test_runtime_policy.json'
         if not policy.is_file():
             return False, 'Keine Testlaufzeit-Policy vorhanden; Schreibziel noch nicht bestätigt.'
-        if policy.stat().st_size > 65536:
-            raise ValueError('Testlaufzeit-Policy ist zu groß.')
-        value = json.loads(policy.read_text())
+        value = json.loads(capture_native_file(policy, 65536))
         if (not isinstance(value, dict) or set(value) != {'format_version', 'selection', 'database'}
                 or type(value.get('format_version')) is not int
                 or value['format_version'] != 1 or value.get('selection') != 'latest_valid_fifth'):
@@ -256,9 +257,7 @@ class Target:
             config = self.repository / '.patchharbor/config.json'
             if not config.is_file():
                 return False, 'PatchHarbor-Exchange ist für dieses Ziel noch nicht konfiguriert.'
-            if config.stat().st_size > 65536:
-                raise ValueError('PatchHarbor-Konfiguration ist zu groß.')
-            native = json.loads(config.read_text())
+            native = json.loads(capture_native_file(config, 65536))
             if (not isinstance(native, dict) or type(native.get('format_version')) is not int
                     or native['format_version'] != 1):
                 raise ValueError('Unbekanntes Format der PatchHarbor-Konfiguration.')
