@@ -98,7 +98,8 @@ def followups(engine, source, patch_sha, results):
         if candidate(result) and result['primary_kind'] == 'repository_busy' and result['binding'] == source['binding']:
             package = unique((p for p in engine.exchange.patches(source) if p['sha256'] == patch_sha),
                              'Pending package is missing.')
-            rejection(engine, source, package, result)
+            from .mixed_evidence import guarded
+            guarded(rejection, engine, source, package, result)
             ignored.add(result['run_id'])
         else:
             effective.append(result)

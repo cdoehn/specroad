@@ -250,6 +250,12 @@ class Engine(OverloadWaiting):
                 json_write(job_dir / "completion.json", answer)
                 self.accept(ledger, source, answer)
             except ControlError as exc:
+                from .handoff_rebase import candidate
+                if (exc.code == 'repository_busy' and candidate(source)
+                        and (ledger.request_contract() or {}).get('version') == 4
+                        and ledger.current()['stage'] == 'ready'):
+                    self.update(apply_wait_reason='repository_busy', stage='ready', error=None)
+                    return {'halted': False, 'again': False, 'retry_after': 30}
                 from .disk_space import STOP_ERRORS
                 if exc.code in STOP_ERRORS:
                     raise  # No dispatch occurred; preserve the claim for an explicit later start.
