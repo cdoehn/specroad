@@ -64,6 +64,12 @@ SELECT_PHASES = '''SELECT a.id,a.run,a.node,a.test,a.worker,a.started,a.invalid,
                   FROM attempts a LEFT JOIN phases p ON p.attempt=a.id'''
 
 
+def phase_query(db):
+    if db.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='attempt_hosts'").fetchone():
+        return SELECT_PHASES.replace('p.phase,p.duration', 'h.host,h.environment,p.phase,p.duration') + ' LEFT JOIN attempt_hosts h ON h.attempt=a.id'
+    return SELECT_PHASES.replace('p.phase,p.duration', 'NULL AS host,NULL AS environment,p.phase,p.duration')
+
+
 def bounded_rows(cursor):
     rows = cursor.fetchmany(MAX_PHASE_ROWS + 1)
     if len(rows) > MAX_PHASE_ROWS:
@@ -77,7 +83,7 @@ def run_tests(database, expected_run, timeout=5):
         run = db.execute('SELECT * FROM runs WHERE id=?', (expected_run['id'],)).fetchone()
         if run is None or any(run[k] != expected_run[k] for k in ('id', 'source', 'started')):
             raise ValueError('Laufzeitquelle hat ihre Apply-Laufbindung gewechselt.')
-        rows = bounded_rows(db.execute(SELECT_PHASES + ' WHERE a.run=? ORDER BY a.id', (run['id'],)))
+        rows = bounded_rows(db.execute(phase_query(db) + ' WHERE a.run=? ORDER BY a.id', (run['id'],)))
         return phase_rows(rows, dict(run), time.time()), dict(run)
 
 
@@ -112,7 +118,7 @@ def collect_status(repository, database=None, timeout=5):
 def history(database, identities=None, timeout=5):
     """Latest started attempts suppress all older success, even when unfinished."""
     with connection(database, timeout) as db:
-        rows = bounded_rows(db.execute(SELECT_PHASES + '''
+        rows = bounded_rows(db.execute(phase_query(db) + '''
             WHERE a.id IN (SELECT MAX(id) FROM attempts GROUP BY test) ORDER BY a.id'''))
         result = phase_rows(rows, None, time.time())
         attempted = {row['test_name'] for row in result}
@@ -122,7 +128,7 @@ def history(database, identities=None, timeout=5):
                 continue
             if not isinstance(row['test'], str) or not row['test'] or type(row['duration']) is not int or row['duration'] < 0:
                 raise ValueError('Ungültige Baseline-Dauer')
-            result.append({'test_name': row['test'], 'nodeid': None, 'worker': None,
+            result.append({'test_name': row['test'], 'nodeid': None, 'worker': None, 'host': None, 'environment_sha256': None,
                 'run_id': None, 'attempt_id': None, 'origin': 'baseline', 'started_at': None,
                 'status': 'baseline', 'completed': None, 'measurement_complete': False,
                 'valid_measurement': True, 'phase': None, 'phase_outcomes': dict.fromkeys(PHASES),

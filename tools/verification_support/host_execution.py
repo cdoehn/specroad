@@ -119,10 +119,12 @@ def configure_pytest(config, root):
                 raise ValueError('Invalid xdist worker maximum')
             count = min(count, maximum)
             resources['workers'] = count
-        config.option.numprocesses = count
+        pool = getattr(config, '_sr_host_profile', None)
+        config.option.numprocesses = len(pool['workers']) if pool else count
         # xdist constructed its process list in pytest_cmdline_main, before
         # pytest_configure. Keep that list in sync for direct -n requests too.
-        config.option.tx = ['popen'] * count
+        if not pool:
+            config.option.tx = ['popen'] * count
     actual = lower_priority()
     os.environ[NESTED] = '1'
     return {**resources, 'nice_actual': actual}

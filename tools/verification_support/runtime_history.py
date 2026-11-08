@@ -101,6 +101,9 @@ class RuntimeHistory:
                     os.close(directory)
             if self.db.execute('SELECT version FROM metadata WHERE id=1').fetchall() != [(1,)]:
                 raise ValueError('Unknown runtime history version')
+            # Additive extension: old attempts remain unlabelled, never relabelled.
+            self.db.execute('CREATE TABLE IF NOT EXISTS attempt_hosts (attempt INTEGER PRIMARY KEY, host TEXT NOT NULL, environment TEXT NOT NULL, FOREIGN KEY(attempt) REFERENCES attempts(id))')
+            self.db.commit()
             if self.db.execute('PRAGMA quick_check').fetchall() != [('ok',)]:
                 raise ValueError('Runtime history integrity check failed')
             self.file_identity = (opened.st_dev, opened.st_ino)
@@ -127,15 +130,19 @@ class RuntimeHistory:
             return self.db.execute('INSERT INTO runs(source,workers,platform,started) VALUES(?,?,?,?)',
                 (source, workers, json_bytes(platform_identity()).decode(), now())).lastrowid
 
-    def start(self, run, node, identity, worker):
+    def start(self, run, node, identity, worker, *, host=None, environment=None):
         if not all(type(v) is str and v for v in (node, identity, worker)):
             raise ValueError('A native test identity is required before execution')
         with self.db:
             state = self.db.execute('SELECT finished FROM runs WHERE id=?', (run,)).fetchone()
             if state != (None,):
                 raise ValueError('A live runtime attempt requires an unfinished run')
-            self.db.execute('INSERT INTO attempts(run,node,test,worker,started) VALUES(?,?,?,?,?)',
-                            (run, node, identity, worker, now()))
+            attempt = self.db.execute('INSERT INTO attempts(run,node,test,worker,started) VALUES(?,?,?,?,?)',
+                            (run, node, identity, worker, now())).lastrowid
+            if host is not None:
+                if not isinstance(host, str) or not host or not isinstance(environment, str) or len(environment) != 64:
+                    raise ValueError('Host measurement requires its exact environment')
+                self.db.execute('INSERT INTO attempt_hosts VALUES(?,?,?)', (attempt, host, environment))
 
     def observe(self, run, node, identity, worker, phase, duration, outcome, *, subtest=False):
         with self.db:

@@ -343,3 +343,13 @@ seine vollständigen Gates prüfen weiterhin die gebundenen Ressourcen.
 Ein einzelner xdist-Worker ist für einen Ein-CPU-Host zulässig und führt
 keinen zusätzlichen seriellen Lauf aus. Null und ungültige Workerwerte
 bleiben unzulässig.
+
+## Optionale SSH-Testhosts
+
+Für normale Apply-Läufe gilt der [Hostpool-Vertrag](Remote_Test_Hosts.md).
+Neue Host-/Scheduler-Tests verwenden kleine synthetische Projekte, injizierbare
+Transporte und mindestens einen echten execnet-Proxy-/Workerpfad. Sie benötigen
+keine externen Credentials und richten keine echten Hosts ein. Neue Hostfälle
+müssen verlorene/veränderte Messungen, unveränderte Auswahl und fehlgeschlagenen
+Worker nachweisen. Geschwindigkeitsannahmen dürfen keine Zeitbelege ersetzen.
+CI behält seine vorhandene Ausführung; Entwickler führen keine Testkörper aus.

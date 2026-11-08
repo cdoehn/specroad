@@ -43,11 +43,15 @@ def pytest_addoption(parser):
     group.addoption("--sr-expected-tests", type=int, help="Required number of collected tests")
     group.addoption("--sr-ci-plan", type=Path, help="Bound complete CI package plan")
     group.addoption("--sr-ci-shard", type=int, help="Exact package index from the CI plan")
+    group.addoption("--sr-host-run", type=Path, help="Private bound Apply host run")
 
 
 class VerificationSession:
     def __init__(self, config):
         self.config = config
+        if config.getoption('sr_host_run') is not None or 'sr_pool_worker' in getattr(config, 'workerinput', {}):
+            from dev.test_hosts.pytest_pool import configure
+            configure(config, Path(config.rootpath).resolve())
         self.host_resources = configure_pytest(config, Path(config.rootpath).resolve())
         self.worker = hasattr(config, "workerinput")
         self.worker_id = config.workerinput["workerid"] if self.worker else "main"
@@ -91,7 +95,11 @@ class VerificationSession:
         if self.worker:
             self.required_ids = set(config.workerinput.get("sr_required_ids", []))
             if not config.getoption('collectonly'):
-                self.history = RuntimeHistory(self.history_root)
+                if 'sr_history_channel' in config.workerinput:
+                    from dev.test_hosts.history import HistoryClient
+                    self.history = HistoryClient(config.workerinput['sr_history_channel'])
+                else:
+                    self.history = RuntimeHistory(self.history_root)
                 self.history_run = config.workerinput['sr_history_run']
             return
         if self.expected is not None and self.expected <= 0:
@@ -233,6 +241,16 @@ def pytest_configure_node(node):
     node.workerinput['sr_history_run'] = state.history_run
     if state.host_resources is not None:
         node.workerinput['sr_host_resources'] = {k:v for k,v in state.host_resources.items() if k != 'nice_actual'}
+    if getattr(node.config, '_sr_host_profile', None) is not None:
+        from dev.test_hosts.pytest_pool import setup_node
+        setup_node(node, state)
+
+
+@pytest.hookimpl(optionalhook=True)
+def pytest_xdist_make_scheduler(config, log):
+    if getattr(config, '_sr_host_profile', None) is not None:
+        from dev.test_hosts.scheduler import HostScheduling
+        return HostScheduling(config, log)
 
 
 @pytest.hookimpl(optionalhook=True)
@@ -251,8 +269,13 @@ def pytest_xdist_node_collection_finished(node, ids):
 def pytest_testnodedown(node, error):
     state = node.config._specroad_verification
     output = getattr(node, "workeroutput", {}) or {}
+    pool = getattr(node.config, '_sr_host_profile', None)
+    if pool is not None:
+        node.config._sr_pool_outputs[node.gateway.id] = output.get('sr_pool_proof', {})
     if state.host_resources is not None:
         expected = {k:v for k,v in state.host_resources.items() if k != 'nice_actual'}
+        if pool is not None:
+            expected = pool['workers'][node.gateway.id]['resources']
         try:
             verify_resources({'host_resources': output.get('sr_host_resources'),
                               'workers': ['gw'+str(i) for i in range(expected['workers'])]}, expected)
@@ -341,7 +364,21 @@ def pytest_sessionfinish(session, exitstatus):
     if state.worker:
         if state.host_resources is not None:
             session.config.workeroutput['sr_host_resources'] = state.host_resources
+        if 'sr_pool_worker' in session.config.workerinput:
+            from dev.test_hosts.pytest_pool import worker_proof
+            session.config.workeroutput['sr_pool_proof'] = worker_proof(session.config, state.host_resources)
         return
+    pool = None
+    if getattr(session.config, '_sr_host_profile', None) is not None:
+        from dev.test_hosts.pytest_pool import observation as pool_observation
+        pool = pool_observation(session.config)
+    if pool is not None:
+        try:
+            from dev.test_hosts.pool import verify_pool
+            verify_pool({**state.ledger.snapshot(exitstatus), 'host_pool': pool}, pool['binding'])
+        except (ValueError, KeyError, TypeError):
+            state.ledger.error('host_pool_contract_error')
+            session.exitstatus = pytest.ExitCode.USAGE_ERROR
     if state.history is not None:
         try:
             changed = state.history_source is not None and source_identity(ROOT) != state.history_source
@@ -365,6 +402,8 @@ def pytest_sessionfinish(session, exitstatus):
         observation = state.ledger.snapshot(exitstatus)
         if state.host_resources is not None:
             observation['host_resources'] = state.host_resources
+        if pool is not None:
+            observation['host_pool'] = pool
         if state.gate:
             discovered = bind_test_ids(state.catalog, (state.ledger.aliases.get(n, n) for n in state.ledger.nodeids))
             if (source_identity(ROOT) != state.source
@@ -428,6 +467,9 @@ def pytest_sessionfinish(session, exitstatus):
 
 
 def pytest_unconfigure(config):
+    if getattr(config, '_sr_pool_lease', None) is not None:
+        from dev.test_hosts.pytest_pool import close
+        close(config)
     state = getattr(config, "_specroad_verification", None)
     if state is not None and state.timing_store is not None:
         state.timing_store.close()

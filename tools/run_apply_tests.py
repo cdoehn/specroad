@@ -1,6 +1,7 @@
 """Run the required rotation/commit-test union before the next Apply commit."""
 import argparse
 import json
+import os
 from pathlib import Path
 import sys
 import tempfile
@@ -19,6 +20,9 @@ def main(argv=None):
     parser.add_argument("--outdir", type=Path)
     parser.add_argument("--test-plan", type=Path)
     parser.add_argument("--commit-id")
+    targets = parser.add_mutually_exclusive_group()
+    targets.add_argument('--hosts', type=Path, help='Local host pool configuration (Apply only)')
+    targets.add_argument('--local', action='store_true', help='Use the existing local runner without a host pool')
     add_worker_limit(parser)
     args = parser.parse_args(argv)
     outdir = args.outdir or Path(tempfile.mkdtemp(prefix="specroad-apply-tests-")) / "gate"
@@ -27,6 +31,10 @@ def main(argv=None):
             'test_plan': args.test_plan, 'commit_id': args.commit_id}
         if args.worker_limit != DEFAULT_WORKER_LIMIT:
             options["worker_limit"] = args.worker_limit
+        if not args.local and (args.hosts is not None or os.environ.get('SPECROAD_NESTED_TEST_RUN') != '1'):
+            path = Path(args.hosts or os.environ.get('SPECROAD_TEST_HOSTS') or Path.home() / '.config/specroad/test-hosts.json').expanduser()
+            if args.hosts is not None or path.exists():
+                options['hosts'] = path
         result = run_apply_partition(ROOT, outdir, **options)
         print(json.dumps({**{k: v for k, v in result.items() if k not in (
                               "nodeid_to_test_id", "selection_binding", "runtime_filter", "required_tests")},

@@ -88,7 +88,7 @@ def partition_metadata(registry, sequence):
             "partition_index": sequence % 3, "rotation_anchor_commit": registry["rotation_anchor_commit"]}
 
 
-def selection_receipt(registry, raw, selected, head, sequence, runtime_filter=None, required_tests=None, host_resources=None):
+def selection_receipt(registry, raw, selected, head, sequence, runtime_filter=None, required_tests=None, host_resources=None, host_pool=None):
     """Bind the actual numbered selection, without claiming a full-suite run."""
     numbers = {identity: number for number, identity in enumerate(registry["test_ids"])}
     binding = {"format_version": 1, "kind": "apply-selection-binding-v1",
@@ -109,5 +109,9 @@ def selection_receipt(registry, raw, selected, head, sequence, runtime_filter=No
         from .host_execution import validate_resources
         validate_resources(host_resources)
         binding.update(format_version=5, kind="apply-selection-binding-v5", host_resources=host_resources)
+    if host_pool is not None:
+        if host_resources is None or required_tests is None:
+            raise ValueError('Host pools require a complete Apply test/resource contract')
+        binding.update(format_version=6, kind='apply-selection-binding-v6', host_pool=host_pool)
     encoded = json.dumps(binding, sort_keys=True, ensure_ascii=True, allow_nan=False, separators=(",", ":")).encode()
     return {"selection_binding": binding, "selection_sha256": sha256(encoded).hexdigest()}

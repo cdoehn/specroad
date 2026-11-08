@@ -16,3 +16,4 @@ __pycache__/
 
 # Local coordination between development chats; never a payload.
 /CURRENT_WORK.txt
+/CURRENT_WORK_HISTORY.txt

@@ -1,19 +1,19 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.75
+## Version 0.2.76
 
 | Feld | Wert |
 |---|---|
 | Dokument-ID | `SR-SPEC-0001` |
-| Dokumentversion | `0.2.75` |
+| Dokumentversion | `0.2.76` |
 | Zielrelease | `SpecRoad Single-Repository Workbench 0.2.0` |
 | Status | **Fachlich konsolidierte Arbeitsgrundlage; technische Reviewentscheidung gesondert dokumentiert, formale Baseline-Freigabe und Produktabnahme nicht durch dieses Dokument erklärt** |
-| Stand | 7. November 2026 |
+| Stand | 8. November 2026 |
 | Sprache | Deutsch; technische Feldnamen, Enum-Werte und CLI-Kommandos Englisch |
-| Fachliche Quelle | **Diese Repositoryfassung v0.2.73 unter `docs/specification/SpecRoad_Spezifikation.md` ist die aktive fachliche Arbeitsgrundlage. Eine veröffentlichte PDF v0.2.73 liegt mit dieser Änderung nicht vor.** |
+| Fachliche Quelle | **Diese Repositoryfassung v0.2.76 ist die aktive fachliche Arbeitsgrundlage; eine entsprechende PDF wird hiermit nicht veröffentlicht.** |
 | Bearbeitbare Satzquelle | Diese Datei; eine spätere PDF muss denselben versionierten Inhalt wiedergeben. |
-| Vorgängerversion | Repository-Spezifikation v0.2.72 vom 6. November 2026; historische Nachweise bleiben unverändert. |
-| Prüf- und Entscheidungsgrundlage | MERGE-WORK-627, delegiert gemäß SPECROAD-DECISION-1, Vertrag 4; keine Produktfreigabe. |
-| Änderungsart | Passive, vollständige Merge-Vorbereitung auf unveränderbaren Work-Eingaben und Quelltypenparität. |
+| Vorgängerversion | Repository-Spezifikation v0.2.75; historische Nachweise bleiben unverändert. |
+| Prüf- und Entscheidungsgrundlage | Ausdrücklicher Nutzerauftrag REMOTE-TEST-HOSTS vom 8. November 2026; keine Produktfreigabe. |
+| Änderungsart | Ergänzung des Entwicklungsworkflows um optionale heterogene Apply-Testhosts. |
 
 > **Verbindlicher Quellenwechsel:** Die ausdrückliche Nutzerentscheidung REFERENCE-SOURCE-551 wird als v0.2.50 umgesetzt. Der neue Quellvertrag ist Entwurfsarbeit vom 3. November 2026, kein Nachweis eines früher existierenden Formats. Bestehende 0.2-Verträge, Transport-, Sicherheits- und Reviewgrenzen bleiben erhalten.
 
@@ -1261,6 +1261,73 @@ Apply-Testgates, stabile Testnummern, Pause/Stop und die ursprünglichen Versuch
 bleiben erhalten. Kein Ledger-Reset, kein Paketüberschreiben und keine eigene
 Apply-/Warteschleife in Dev. Ein fremdes Result ohne diese eindeutige Verbindung
 benötigt weiterhin die bestehende explizite `accept-current`-Prüfung.
+
+#### 2.5.5 Verteilte Apply-Tests — REMOTE-TEST-HOSTS
+
+Ausdrücklicher Nutzerauftrag vom 8. November 2026. Normale Apply-Testläufe
+DÜRFEN einen lokal konfigurierten Pool aus dem Hauptrechner und SSH-Hosts
+verwenden. CI bleibt unverändert und liest keine lokale Hostkonfiguration.
+Ohne Pool gilt weiterhin 2.5.3. Jede Linie behält ihre eigene Messdatenbank.
+
+Die Host-CLI MUSS vorhandene SSH-Aliase verwenden und eine lesende Prüfung
+sowie eine ausdrücklich ausgelöste idempotente Vorbereitung anbieten.
+Das erste Profil unterstützt CPython auf Ubuntu/Debian mit identischer
+Architektur. Python-Microversion, ABI und Paketversionen MÜSSEN zum
+Koordinator passen; Abweichung oder fehlende Voraussetzungen sperren den
+Teststart. Vorbereitung DARF benötigte Systempakete mit nativem sudo-Dialog
+installieren und MUSS Python/Pakete in einer eigenen Umgebung verwalten.
+Tests DÜRFEN weder Installationen noch interaktive Authentifizierung auslösen.
+SSH-Agent und private Multiplex-Sockets mit konfigurierbarer Leerlaufzeit
+übernehmen wiederverwendbare Sitzungen. SpecRoad speichert keine Passwörter,
+Passphrases oder privaten Schlüssel; unbeaufsichtigter Zugang bleibt eine
+explizite Administrationsaufgabe außerhalb des Repositorys.
+
+Jeder Host MUSS denselben aktuellen W/R/C-Quellstand einschließlich relevanter
+uncommittierter Dateien erhalten. Ein expliziter Quellumfang, vollständiges
+Dateimanifest, Hashes und Modi MÜSSEN vor Ausführung geprüft werden.
+Lokale Konfigurationen, Credentials, Sessiondaten, Git-Interna und fremde
+Arbeitsdaten DÜRFEN NICHT in Snapshots/Payloads gelangen. Remote-Runs erhalten
+getrennte Arbeitsverzeichnisse. Geänderte Quellen oder Umgebung nach dem Lauf
+verhindern einen erfolgreichen Gate-Nachweis.
+
+Der Apply-Pool ergänzt pytest-xdist um eine hostgewichtete Verteilung; dies
+ist die enge Ausnahme zur bisherigen ausschließlich frameworkeigenen
+Verteilung. Die gewählte Testmenge bleibt unverändert. Bekannte lange Tests
+werden früh nach erwarteter Fertigstellungszeit einschließlich Hostleistung
+und Restlast verteilt. Unbekannte Tests werden früh auf begrenzten schnellen
+Slots erkundet; kurze Tests bleiben zum Auffüllen. Aktuelle vollständige
+Host-/Umgebungsmessungen haben Vorrang vor konservativen Startschätzungen.
+Eine Anpassung der Prognose während des Laufs ist keine Messung und verändert
+weder Datenbankwerte noch den Auswahlfilter. Langsame Hosts dürfen zugunsten
+eines früheren erwarteten Endes frei bleiben. Laufende Tests werden nicht
+migriert, geteilt, spekulativ verdoppelt oder automatisch wiederholt.
+Die Hostmenge wird vor dem Lauf festgelegt; Verteilung noch nicht gestarteter
+Tests bleibt dynamisch. Ausfall und unvollständiger Nachweis sperren das Gate.
+
+Hostgrenzen MÜSSEN nutzbare CPUs, Affinität, Quoten und konfigurierte Workerzahl
+berücksichtigen. Pool-Worker desselben Betriebssystembenutzers teilen eine
+Host-Slotgrenze über Apply-Linien hinweg; Sperren bleiben bis zum Workerende
+gehalten. Eine belegte Grenze darf nicht still geändert werden. Tests laufen
+mindestens mit Nice +10 und I/O-Klasse 2/Priorität 7. Verschachtelte Runner
+bleiben auf einen eigenen Worker begrenzt. Diese Prioritäten sind keine
+Zusicherung fester CPU-, RAM- oder I/O-Anteile.
+
+Nur der Koordinator schreibt SQLite. Ein Worker MUSS vor Setup/Testkörper den
+dauerhaften Start bestätigen lassen, damit ein Abbruch keine alte Messung
+aktuell lässt. Jede native Setup-/Call-/Teardown-Phase wird synchron nach
+2.5 gespeichert und bestätigt. Host und Umgebung werden am neuen Versuch
+gebunden; historische unbekannte Hosts bleiben unbekannt. Fehlende ACKs,
+Speicherfehler, Identitäts-, Quellen- oder Ressourcenwidersprüche verhindern
+den Commit. Test-Monitor und JSON-Ausgabe zeigen Host und getrennte/gesamte
+Phasenzeiten; Prognosen werden nicht als gemessene Dauer ausgegeben.
+
+Apply-Bericht v5 und Auswahlbindung v6 binden zusätzlich Hostpool, Quelle,
+Snapshot, Umgebung und vollständige Workerbelege. Lokale v4/v5-Berichte
+bleiben gültig unter ihrem ursprünglichen Vertrag. N=3, unveränderte stabile
+IDs, neuester gültiger Rohmesswert, Fünftelfilter und vollständige Pflichtunion
+bleiben erhalten. Jeder echte W/R/C-Zustand erhält weiterhin sein eigenes
+Apply-Gate vor dem Commit. Die Implementierung erlaubt keine Tests in Dev,
+keine automatische CI und keinen Start von Control oder Watcher.
 
 ## 3. Produktziele
 

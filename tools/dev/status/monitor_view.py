@@ -271,7 +271,7 @@ def run_tui(paths, args):
                 line += 5
                 put(line, 1, f'Suche: {state.match or "—"} · {matches} Treffer / {len(rows)} angezeigt · '
                     f'{LABELS[state.sort]} {"↓" if state.descending else "↑"} · Zeiten: {state.time_view}', 1)
-                put(line + 1, 1, time_header(state.time_view) + '  Worker / Status / Test', 1)
+                put(line + 1, 1, time_header(state.time_view) + '  Host / Worker / Status / Test', 1)
                 list_start = line + 2
                 capacity = max(0, height - list_start - 4)
                 offset = state.offsets.get(key, 0)
@@ -280,7 +280,7 @@ def run_tui(paths, args):
                     offset = position - capacity + 1
                 state.offsets[key] = offset
                 for i, row in enumerate(rows[offset:offset + capacity]):
-                    text = times(row, state.time_view) + f'  {row.get("worker") or "—":<4} {row["status"]:<10} ' + row['test_name']
+                    text = times(row, state.time_view) + f'  {row.get("host") or "—":<14.14} {row.get("worker") or "—":<4} {row["status"]:<10} ' + row['test_name']
                     color = 4 if row['status'] == 'failed' else 3 if (row.get('total_seconds') or row.get('elapsed_seconds') or 0) >= 600 else 0
                     put(list_start + i, 1, text, color, selected=offset + i == position and state.focus == 'tests')
                 if not rows:
@@ -301,7 +301,7 @@ def run_tui(paths, args):
                     'Tab: Fokus zwischen Apply-Übersicht und Testliste wechseln.',
                     'Pfeile / j k: Ziel bzw. Test wählen. PgUp/PgDn, Home/End: Liste bewegen.',
                     '1 Status (alle gestarteten Tests), 2 offene Tests, 3 Laufzeithistorie, 4 Fehler/Quellen.',
-                    '/: Testname/Node-ID durchsuchen; Enter übernimmt; Esc verwirft; leer löscht.',
+                    '/: Testname/Node-ID/Host durchsuchen; Enter übernimmt; Esc verwirft; leer löscht.',
                     't: Gesamt / Setup+Call+Teardown / beide. Seit Start bleibt separat sichtbar.',
                     '[ und ]: Sortierfeld Gesamt/Setup/Call/Teardown/Seit Start wählen.',
                     'd: Dauer absteigend bzw. Richtung umkehren. n: Name bzw. Richtung umkehren.',

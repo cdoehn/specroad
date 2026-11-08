@@ -45,6 +45,7 @@ def phase_rows(rows, run, now):
         finish = (run or {}).get('finished')
         elapsed = max(0, (apply_status.stamp(finish) if finish else now) - apply_status.stamp(item['started']))
         result.append({'test_name': item['test'], 'nodeid': item['node'],
+            'host': item.get('host'), 'environment_sha256': item.get('environment'),
             'worker': item['worker'], 'run_id': item['run'], 'attempt_id': item['id'],
             'origin': 'attempt', 'started_at': item['started'], 'status': status,
             'completed': terminal, 'measurement_complete': complete, 'valid_measurement': valid,
@@ -58,7 +59,7 @@ def filtered(rows, *, match='', minimum=0, sort='total', descending=True, limit=
     """Filter before limiting; stable name ties; unknown durations always last."""
     key = sort + '_seconds'
     minimum_key = 'total_seconds' if sort == 'name' else key
-    matches = [r for r in rows if match.casefold() in (r['test_name'] + ' ' + (r.get('nodeid') or '')).casefold()
+    matches = [r for r in rows if match.casefold() in (r['test_name'] + ' ' + (r.get('nodeid') or '') + ' ' + (r.get('host') or '')).casefold()
                and (minimum == 0 or r.get(minimum_key) is not None and r[minimum_key] >= minimum)]
     matches.sort(key=lambda r: r['test_name'])
     if sort == 'name':

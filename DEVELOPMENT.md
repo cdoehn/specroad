@@ -130,6 +130,26 @@ ausdrücklich benennen. Keine Zugangsdaten oder Session-IDs aufnehmen.
 in Git noch in Produkt-/Patch-Payloads kopiert werden. Die lokale Datei ist
 kein zu commitender Entwicklungsnachweis.
 
+
+### Aufgabenhistorie mit Zeitstempeln
+
+Zusätzlich `CURRENT_WORK_HISTORY.txt` im Root der eigenen Dev-Kopie führen.
+Bei Beginn, Scopewechsel, Übergabe, Pause und Abschluss jeweils einen neuen
+Eintrag mit aktuellem ISO-8601-Zeitstempel einschließlich Zeitzone, Anlass und
+der vollständigen Aufgabenübersicht aus `CURRENT_WORK.txt` anhängen. Vor dem
+Ersetzen einer bisher nicht protokollierten Übersicht auch deren gelesenen
+Stand als Übernahme festhalten; der Zeitstempel bezeichnet die Protokollierung,
+nicht einen erfundenen früheren Arbeitsbeginn. Erledigte und offene Arbeiten
+sowie tatsächlich geprüfte Ergebnisse klar unterscheiden. Bestehende Einträge
+nicht überschreiben oder löschen; Fehler durch einen neuen Eintrag korrigieren.
+Kein automatisches Nachtragen unbelegter früherer Tätigkeiten.
+
+Beide Dateien bleiben lokale Abstimmungsdaten: `/CURRENT_WORK.txt` und
+`/CURRENT_WORK_HISTORY.txt` über `.gitignore` ausschließen, niemals als Payload
+oder Entwicklungsnachweis committen. Keine Zugangsdaten, Konfigurationen oder
+Session-IDs aufnehmen. Die Historie ersetzt keine Sperre, Git-Historie oder
+Apply-Abnahme und bezieht sich ausschließlich auf die eigene Entwicklungslinie.
+
 ## Abgewiesene oder überholte Patch-Übergaben
 
 Eine Ablehnung der Übergabe nach Exchange beendet den fachlichen Auftrag nicht.
@@ -156,3 +176,12 @@ kein blindes Wiederholen derselben abgewiesenen Datei. Vorbereitungen während
 eines laufenden Apply bleiben ausdrücklich vorläufig außerhalb von Exchange.
 Ein noch nicht veröffentlichtes Bundle kann um einen neuen Nutzerauftrag ergänzt
 werden; ein veröffentlichtes Bundle benötigt eine neue belegte Folgeübergabe.
+
+## Remote-Testhosts entwickeln
+
+Der ausdrücklich beauftragte Pool gilt ausschließlich für normale Apply-Gates.
+[Hostvertrag und Bedienung](docs/development/Remote_Test_Hosts.md) sind maßgeblich.
+Konfiguration, Schlüssel, SSH-Sockets, Messdatenbanken und Host-Arbeitsverzeichnisse
+bleiben lokal. Keine Einrichtung oder Dienstaktion als Nebenwirkung eines Bundles.
+Testabdeckung und Prioritäten nach den [Testregeln](docs/development/Testing.md)
+erhalten; echte W/R/C-Zustände bleiben getrennt.

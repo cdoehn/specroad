@@ -316,3 +316,7 @@
 - [Bundle 629: Nativer Dokumentprüfer für die Merge-Testvorlage](bundle-629-merge-fixture-document-gate.md)
 
 - [Bundle 633 — öffentliche Merge-/Work-Integration](bundle-633-merge-cli.md)
+
+- [Bundle 637 — verteilte Apply-Tests](bundle-637-remote-test-hosts.md)
+
+- [Bundle 638: Remote-Worker-Anbindung korrigieren und Aufgabenhistorie](bundle-638-remote-test-hosts-correction.md)
