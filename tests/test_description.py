@@ -211,7 +211,7 @@ class DescriptionRobustnessTests(unittest.TestCase):
         for command in registry.commands:
             document = describe_command(registry, command.command_id)
             work = document['work']
-            continuation = command.command_id in ('recover.restore', 'work.resume', 'migrate.plan', 'migrate.verify')
+            continuation = command.command_id in ('recover.restore', 'work.resume', 'migrate.plan', 'migrate.verify', 'merge.plan')
             self.assertEqual(work['continuation_supported'], continuation)
             self.assertEqual(document['stdout']['continuation']['supported'], continuation)
             self.assertEqual(work['external_side_effects'], ['external_work_directory'] if continuation else [])
@@ -227,7 +227,7 @@ class DescriptionRobustnessTests(unittest.TestCase):
                                  'environment.check', 'artifact.show', 'query', 'trace', 'why', 'impact', 'diff',
                                  'configuration.evaluate', 'roadmap.explain', 'export', 'bundle.verify',
                                  'render', 'view.render', 'diagram', 'recover.restore', 'work.resume',
-                                 'migrate.plan', 'migrate.apply', 'migrate.verify') else None)
+                                 'migrate.plan', 'migrate.apply', 'migrate.verify', 'merge.plan') else None)
             self.assertIsNone(document['stdout']['continuation']['sarif_fallback'])
 
     def test_minimum_step_limits_are_explicitly_unmeasured(self):
@@ -268,6 +268,14 @@ class DescriptionRobustnessTests(unittest.TestCase):
             elif command.command_id == 'migrate.verify':
                 self.assertIn('--work-dir', accepted)
                 rejected = ('--resume', '--request-id', '--dry-run', '--actor-id', '--as-proposal')
+            elif command.command_id == 'merge.plan':
+                self.assertIn('--work-dir', accepted)
+                self.assertTrue(document['work']['continuation_supported'])
+                self.assertEqual(document['command_class'], 'plan_output')
+                self.assertEqual(document['preflight_profile'], 'input_read')
+                self.assertEqual(document['lock_kind'], 'none')
+                self.assertFalse(document['requires_project'])
+                rejected = ('--resume', '--request-id', '--dry-run', '--actor-id', '--project', '--as-proposal')
             elif command.command_id == 'merge.resolve':
                 # Explicit actor/time values audit the plan; they grant no write authority.
                 required = {option['flag'] for option in document['options'] if option['required']}

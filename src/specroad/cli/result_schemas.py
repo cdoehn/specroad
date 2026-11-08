@@ -85,6 +85,9 @@ def _with_currentness(schema, *, comparison=False):
 
 
 def _fields(schema_id):
+    if schema_id == 'merge-preparation-v1':
+        from ..merge.preparation import result_schema
+        return result_schema()
     if schema_id == 'merge-resolve-command-v1':
         from .merge_commands import resolve_command_schema
         return resolve_command_schema()

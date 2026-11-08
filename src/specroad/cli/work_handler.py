@@ -51,7 +51,10 @@ def continuation(command, store, expected, *, migration_gates=()):
             current = store._read_chain(held, pointer[0])
             require(current.raw == expected.raw and current.as_dict()['state'] == 'running'
                     and current.as_dict()['tool_build'] == _build(), 'work_continuation_changed', exit_code=6)
-            if value['command_id'] in ('migrate.plan','migrate.verify'):
+            if value['command_id'] == 'merge.plan':
+                from ..work.merge import checked
+                checked(current)
+            elif value['command_id'] in ('migrate.plan','migrate.verify'):
                 from .migration_work import checked
                 checked(current, gates=migration_gates)
             elif value['command_class'] == 'transport_operational':
@@ -163,6 +166,9 @@ def _work(invocation):
         return _payload(operation, inspect_work_status(store))
     if operation == 'prompt':
         return _payload(operation, _prompt(store, options))
+    if store._initial.as_dict()['command_id'] == 'merge.plan':
+        from .merge_planning import work_command as merge_work_command
+        return merge_work_command(invocation, store, operation)
     if store._initial.as_dict()['command_id'] in ('migrate.plan','migrate.verify'):
         from .migration_work import work_command as migration_work_command
         return migration_work_command(invocation, store, operation)

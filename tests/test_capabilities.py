@@ -41,8 +41,12 @@ class CapabilitiesWorkTests(unittest.TestCase):
         self.assertTrue(semantic['work']['engine_available'])
         self.assertEqual(semantic['work']['checkpoint_algorithms'], ['work-manifest-segments-v1'])
         self.assertEqual(semantic['work']['budget_policy_version'], 'runtime-budget-v2')
+        merge_only = CommandRegistry(tuple(command for command in builtin_registry().commands
+            if command.command_id == 'merge.plan'))
+        self.assertEqual(capabilities(merge_only)['semantic']['work'], semantic['work'])
         read_only = CommandRegistry(tuple(command for command in builtin_registry().commands
-            if command.command_id != 'recover.restore' and not command.command_id.startswith(('work.', 'migrate.'))))
+            if command.command_id not in ('recover.restore', 'merge.plan')
+            and not command.command_id.startswith(('work.', 'migrate.'))))
         self.assertEqual(capabilities(read_only)['semantic']['work'],
             {'engine_available': False, 'checkpoint_algorithms': [], 'budget_policy_version': None})
 

@@ -53,7 +53,7 @@ def merge_conflicts_command(invocation):
 
 
 def merge_commands():
-    return (CommandSpec('merge.conflicts', ('merge','conflicts'), CommandClass.READ_ONLY,
+    return (planning_spec(), CommandSpec('merge.conflicts', ('merge','conflicts'), CommandClass.READ_ONLY,
         PreflightProfile.INPUT_READ, EffectScope.NONE, handler=merge_conflicts_command,
         positionals=(PositionalSpec('merge_plan'),),
         options=(OptionSpec('--format',takes_value=True,choices=('pretty','json')),
@@ -82,3 +82,32 @@ def merge_commands():
                 '--actor-id':'example-operator', '--resolved-at':'2026-01-01T00:00:00Z'}},
             handler_exit_codes=(0,2,3,4,5,7),
             diagnostic_codes=('CORE_USAGE','CORE_MODEL','CORE_ENVIRONMENT','CORE_SECURITY'))))
+
+
+def merge_planning_command(invocation):
+    from .merge_planning import planning_command
+    return planning_command(invocation)
+
+def planning_spec():
+    from .contracts import CommandClass, CommandProtocol, CommandSpec, EffectScope, PreflightProfile, WorkContract
+    from .parameters import OptionSpec
+    from .commands import _read_runtime_options
+    options = []
+    for role in ('base', 'ours', 'theirs'):
+        options.extend((OptionSpec('--'+role, takes_value=True),
+                        OptionSpec('--'+role+'-kind', takes_value=True, choices=('local', 'git', 'baseline', 'bundle')),
+                        OptionSpec('--'+role+'-ref', takes_value=True)))
+    options.extend(OptionSpec(flag, takes_value=True) for flag in
+        ('--history', '--plan-id', '--resolutions', '--expected-plan-sha256', '--work-dir'))
+    return CommandSpec('merge.plan', ('merge', 'plan'), CommandClass.PLAN_OUTPUT,
+        PreflightProfile.INPUT_READ, EffectScope.EXTERNAL_OUTPUT, handler=merge_planning_command,
+        options=(*options, *_read_runtime_options(), OptionSpec('--fail-on-change'),
+                 OptionSpec('--format', takes_value=True, choices=('pretty', 'json')),
+                 OptionSpec('--quiet'), OptionSpec('--no-color')),
+        budget_policy_version='runtime-budget-v2',
+        protocol=CommandProtocol('merge-preparation-v1', {'command_id': 'merge.plan', 'options': {
+            '--base': '/base', '--ours': '/ours', '--theirs': '/theirs', '--history': '/inputs/history.json',
+            '--plan-id': 'MP-00000000000000000000000000'}}, handler_exit_codes=tuple(range(9)),
+            diagnostic_codes=('CORE_USAGE', 'CORE_MODEL', 'CORE_ENVIRONMENT', 'CORE_CONFLICT', 'CORE_SECURITY'),
+            work=WorkContract('native_merge_phase', ('sealed_source_bindings',), True,
+                              ('external_work_directory',), ('work-manifest-segments-v1',))))

@@ -408,6 +408,10 @@
       "kind": "Complete native synthetic project bytes, original three-way source captures and explicit synthetic identity histories. Native project/profile/SRX/graph/scope/document checks, no fabricated roots or success callbacks. Real host code/source bytes, original native Baseline objects and actual source mutations. Human review fixtures are explicitly synthetic native verifier inputs, not actual reviews, acceptance or release authority.",
       "provider": "tests/support/merge_target.py;tests/test_merge_target.py;tests/test_merge_inventory.py:bind_files;tests/support/merge_relations.py:history_for;tests/test_merge_target_right.py;tests/test_restore_qualification.py;tests/support/restore.py;tests/support/git_objects.py"
     },
+    "SR-FIX-MERGE-WORK-v1": {
+      "kind": "Small complete native synthetic projects, real immutable working Baseline objects, original Git objects and complete project bundles. Independent source roots and actual native Work checkpoints. Synthetic identity history and explicitly synthetic build ID do not claim real reviews, product approval or installed build evidence. One explicit >64-KiB source case crosses the native integrity block boundary; existing full registry/reference regressions remain mandatory. The success template includes its primary document before native Baseline capture. A separate missing-primary-document case preserves the native negative gate; Git public calls use the existing read-only Git process trap.; Baseline host registers native primary-role and section-ownership checks on the proposed context; unsupported block/view specialists fail closed; no semantic-success stub",
+      "provider": "tests/support/merge_preparation.py;tests/support/merge_target.py;tests/support/merge_relations.py;tests/test_merge_preparation.py;tests/test_merge_planning_cli.py;tests/test_baseline_creation.py;tests/support/git_objects.py;tests/support/inspection.py;tests/support/languages.py;tests/test_merge_sources.py"
+    },
     "SR-FIX-MIGRATION-GRAPH-v1": {
       "kind": "Complete isolated synthetic schemas 90.0.0/90.1.0/90.2.0 with explicit profile and content bindings; compiled rename/derived-length transformations, strict pre/postconditions and independent literal Unicode/empty/decomposed input/output vectors for both directions. Separate complete empty-object contracts cover graph topology. No historical SpecRoad 0.1 schema, native reader, file migration, human approval or external compatibility claim.",
       "provider": "tests/fixtures/migration_graph_v1.json;tests/support/migration.py:chain,contract,identity_step"
@@ -1010,6 +1014,7 @@
     "SR-FIX-MERGE-RESOLUTION-v1",
     "SR-FIX-MERGE-SOURCES-v1",
     "SR-FIX-MERGE-TARGET-v1",
+    "SR-FIX-MERGE-WORK-v1",
     "SR-FIX-MIGRATION-GRAPH-v1",
     "SR-FIX-MIGRATION-HISTORY-v1",
     "SR-FIX-MIGRATION-LOSS-v1",

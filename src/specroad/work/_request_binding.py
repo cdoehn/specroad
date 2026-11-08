@@ -26,8 +26,8 @@ def _command(registry, request, *, normative=False, recovery=False, transport=Fa
                 CommandClass.NORMATIVE_WRITE if normative else CommandClass.PLAN_OUTPUT if planning else CommandClass.READ_ONLY)
     _require(invocation.command.command_class is expected)
     if planning:
-        _require(request.command_id == 'migrate.plan' and not request.options
-                 and not request.arguments and invocation.command.words == ('migrate', 'plan')
+        _require(request.command_id in ('migrate.plan', 'merge.plan') and not request.options
+                 and not request.arguments and invocation.command.words == tuple(request.command_id.split('.'))
                  and invocation.command.effect_scope is EffectScope.EXTERNAL_OUTPUT
                  and invocation.command.preflight_profile is PreflightProfile.INPUT_READ)
     if transport:

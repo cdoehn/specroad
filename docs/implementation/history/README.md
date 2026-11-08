@@ -309,3 +309,8 @@
 ## Neue Pflegeberichte
 
 - [6. November 2026: verlustfreie Planaufteilung](2026-11-06-plan-modularisierung.md)
+
+- [MERGE-WORK-627 — passive Vorbereitung und Work](../decisions/merge-work-627.md)
+- [Bundle 627 — vollständiger Zielstand 17.l.W](bundle-627-merge-work.md)
+- [Bundle 628 — Testkorrektur für den offenen Schritt 17.l.W](bundle-628-merge-work-correction.md)
+- [Bundle 629: Nativer Dokumentprüfer für die Merge-Testvorlage](bundle-629-merge-fixture-document-gate.md)

@@ -40,6 +40,11 @@ class WorkDirectory:
         if passive_migration:
             from .migration import _inputs
             _inputs(manifest)  # Fully owned native input closure, no saved live-root capability.
+        passive_merge = value['command_id'] == 'merge.plan'
+        if passive_merge:
+            from .merge import checked
+            checked(manifest)
+        passive_migration = passive_migration or passive_merge
         if type(protected_paths) is not tuple:
             raise ValueError('Explicit protected paths are required')
         protected_paths = tuple(_path(path) for path in protected_paths)

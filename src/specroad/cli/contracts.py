@@ -211,6 +211,11 @@ class CommandSpec:
             and self.words == tuple(self.command_id.split('.'))
             and self.preflight_profile is PreflightProfile.INPUT_READ
             and self.command_class is (CommandClass.PLAN_OUTPUT if self.command_id == 'migrate.plan' else CommandClass.READ_ONLY))
+        merge_planning = (self.command_id == 'merge.plan' and self.words == ('merge', 'plan')
+            and self.command_class is CommandClass.PLAN_OUTPUT
+            and self.preflight_profile is PreflightProfile.INPUT_READ
+            and self.effect_scope is EffectScope.EXTERNAL_OUTPUT
+            and not self.requires_project and not self.requires_git and not self.requires_write_paths)
         if migration:
             normative_flags = {'--dry-run', '--as-proposal'}
         resolution = (self.command_id == 'merge.resolve' and self.words == ('merge', 'resolve')
@@ -230,7 +235,7 @@ class CommandSpec:
         if self.protocol is not None and self.protocol.lock_kind == 'recovery' and not restore:
             raise CommandUsageError('Recovery locking requires the native Restore command')
         if (self.protocol is not None and self.protocol.work.continuation_supported
-                and not (restore or migration or (self.command_id == 'work.resume'
+                and not (restore or migration or merge_planning or (self.command_id == 'work.resume'
                     and self.command_class is CommandClass.WORK_OPERATIONAL)
                     or (self.command_id == 'bundle.create'
                         and self.words == ('bundle', 'create')
