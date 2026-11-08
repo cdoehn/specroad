@@ -63,6 +63,9 @@ def progress(result):
 
 
 def source_parent(engine, source):
+    from .handoff_rebase import candidate, original
+    if candidate(source):
+        return original(engine, source)
     old, failed = progress(source)
     patches = engine.exchange.candidates('patch', lambda m: all(m.get(k) == v for k, v in source['expected'].items()))
     original = unique((p for p in patches if p['sha256'] == source['patch_sha256']), 'Original typed patch is missing.')

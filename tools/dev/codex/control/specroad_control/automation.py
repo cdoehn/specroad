@@ -114,6 +114,11 @@ class Engine(OverloadWaiting):
             source = self.exchange.source(row["source"])
             if row["stage"] == "waiting_result":
                 next_results = self.exchange.following(source, row["patch_sha"])
+                from .handoff_rebase import followups, candidate, wait_if_busy
+                selected = ledger.request_contract()
+                busy_runs = set()
+                if selected and selected['version'] == 4:
+                    next_results, busy_runs = followups(self, source, row['patch_sha'], next_results)
                 recovered = ledger.blocked_recovery()
                 if recovered is not None and (len(next_results) != 1 or next_results[0]["sha256"] != recovered["sha256"]):
                     raise ControlError("recovery_evidence_changed", "The exact recovered Apply result is missing or changed.")
@@ -134,6 +139,10 @@ class Engine(OverloadWaiting):
                     continuation.request_prompt(attempt, source)
                 evidence = (verify_followup(self, source, row['patch_sha'], next_results[0], ledger.output_kind())
                             if selected and selected['version'] == 4 else None)
+                if selected and selected['version'] == 4 and candidate(next_results[0]):
+                    waiting = wait_if_busy(self, next_results[0], ledger.known_runs() | busy_runs)
+                    if waiting:
+                        return waiting
                 ledger.enqueue(next_results[0], decision_evidence=evidence)
                 source = next_results[0]
                 row = ledger.current()
@@ -188,6 +197,11 @@ class Engine(OverloadWaiting):
                 self.update(stage=row["stage"], error=None)
                 return {"halted": False, "again": False}
             self.exchange.assert_current(source, ledger.known_runs())
+            from .handoff_rebase import candidate, wait_if_busy
+            if (ledger.request_contract() or {}).get('version') == 4 and candidate(source):
+                waiting = wait_if_busy(self, source, ledger.known_runs())
+                if waiting:
+                    return waiting
             job_dir = ledger.attempt_directory(self.paths, source["sha256"], number)
             private_dir(job_dir)
             attempt = {"source_sha256": source["sha256"], "thread_id": self.config.session_id, "number": number}
@@ -386,6 +400,9 @@ class Engine(OverloadWaiting):
                 return False
             self.check_retry(source, retry, ledger=ledger)
         self.exchange.assert_current(source, ledger.known_runs())
+        from .handoff_rebase import candidate, require_current
+        if (ledger.request_contract() or {}).get('version') == 4 and candidate(source):
+            require_current(self, source, ledger.known_runs())
         from .blocked_authorization import guard_dispatch
         guard_dispatch(self, ledger, source)
         from .current_acceptance import guard_dispatch as guard_current

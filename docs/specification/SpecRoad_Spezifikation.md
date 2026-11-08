@@ -1,10 +1,10 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.74
+## Version 0.2.75
 
 | Feld | Wert |
 |---|---|
 | Dokument-ID | `SR-SPEC-0001` |
-| Dokumentversion | `0.2.73` |
+| Dokumentversion | `0.2.75` |
 | Zielrelease | `SpecRoad Single-Repository Workbench 0.2.0` |
 | Status | **Fachlich konsolidierte Arbeitsgrundlage; technische Reviewentscheidung gesondert dokumentiert, formale Baseline-Freigabe und Produktabnahme nicht durch dieses Dokument erklärt** |
 | Stand | 7. November 2026 |
@@ -1213,6 +1213,54 @@ die native Timeoutweitergabe, R ergänzt Manipulations-, Grenz- und
 Unterbrechungsfälle, C trennt reine Beleg-/Historystrukturprüfung ohne
 Verhaltensänderung. Dev führt nur statische Prüfung/Collection aus.
 Der Produktplan bleibt bei 693/900 mit nächstem Produktcommit 17.a.W.
+
+#### 2.5.4.4 Abgewiesene Übergaben neu binden — CONTROL-HANDOFF-REBASE
+
+**Ausdrücklicher Nutzerauftrag vom 8. November 2026.** Eine belegte Ablehnung
+wegen Apply-Belegung oder abweichendem Zustand beendet den fachlichen Auftrag
+nicht. Die Entwicklungsregel in DEVELOPMENT.md verlangt Prüfung und erneute
+inhaltliche Anpassung auf das neue maßgebliche Result. Veröffentlichte ZIPs
+bleiben unverändert. Keine Bindung raten und keine laufende Apply-Ausführung
+abbrechen. Dienste, Installation, CI und neue Klärungen werden dadurch nicht
+freigegeben.
+
+Control unterstützt dafür einen engen automatischen Nachfolgeweg: Beide
+nativen Quell-/Ablehnungs-Results müssen den Opt-in
+`verification/handoff_rebase.json` mit Modus `native_rejection_successor`
+tragen. Nur `state_mismatch` oder `repository_busy` vor Entrypointbeginn,
+ohne Erfolg oder Abschlusscommit, mit exakt belegter Paket-SHA, erwarteter
+Vierfachbindung, demselben Repository und späterem eindeutigem Run sind
+zugelassen. Paket, vollständiger v2-Plan, Vorherzustand, Snapshot und aktuelle
+Livebindung werden nativ/passiv geprüft. Unbekannte Fehler, mehrere mögliche
+Nachfolger, widersprüchliche Identitäten oder neue fremde Results sperren.
+Zeitstempel sind nur ein Veto; sie wählen keinen Nachfolger aus.
+
+Bei unverändertem Zustand und belegtem `repository_busy` bleibt genau die
+vorhandene Übergabe wartend; der vorhandene Watcher übernimmt die Ausführung.
+Diese Belegdateien bleiben erhalten. Ein späterer eindeutiger tatsächlicher
+Apply-Ausgang wird regulär geprüft. Bloß fehlende Prozesssicht ist kein
+Beleg für Belegung oder Verfügbarkeit. Bei einer weiterhin gehaltenen nativen
+Repositorysperre wartet Control ohne Modellaufruf und ohne History-Fortschritt.
+
+Bei geänderter Vierfachbindung wird die genaue native Ablehnung zum neuen
+Quell-Result eines einzigen gebundenen Dev-Auftrags. Alle Stufen des abgewiesenen
+Pakets sind noch offen; es gibt keinen erfundenen Commit-/Testfortschritt.
+Korrekturbezug bindet den alten öffentlichen Planhash und alle offenen IDs und
+Rollen in Reihenfolge. Vorherbytes werden auf das neue Result angepasst;
+Umfang und Pflichtprüfungen bleiben erhalten. Ein offener Klärungspräfix bleibt
+bytegleich, ohne neue Entscheidungsbefugnis. Das vorhandene Budget wird nach
+Vertrag 4 erhalten; derselbe belegte Klärungsrest kostet keinen zweiten Platz.
+Nur echter erfolgreicher sauberer Abschluss aller Stufen erneuert das Budget.
+
+Dev muss fachliche Änderungen portieren und fremde Arbeit erhalten; bloßer
+Hashaustausch ist kein Rebase. Konflikte außerhalb der bestehenden Befugnis
+werden konkret blockiert. Jede neue ZIP erhält eigene native Validierung und
+atomare Übergabe; anschließend endet der Dev-Turn. Erneute Ablehnungen führen
+nur über erneut belegte Results zu neuen Einzelaufträgen. W/R/C, eigene
+Apply-Testgates, stabile Testnummern, Pause/Stop und die ursprünglichen Versuche
+bleiben erhalten. Kein Ledger-Reset, kein Paketüberschreiben und keine eigene
+Apply-/Warteschleife in Dev. Ein fremdes Result ohne diese eindeutige Verbindung
+benötigt weiterhin die bestehende explizite `accept-current`-Prüfung.
 
 ## 3. Produktziele
 

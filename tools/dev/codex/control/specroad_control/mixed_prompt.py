@@ -6,6 +6,17 @@ from .legacy_job_contract import legacy_prompt
 def mixed_prompt(source, selected):
     original = legacy_prompt(source).replace('bei Unklarheit status=blocked',
         'bei einer ausserhalb der Projektbefugnis liegenden Unklarheit status=blocked')
+    if source.get('primary_kind') in ('state_mismatch', 'repository_busy') and not source.get('entrypoint_started'):
+        original += ('\nNATIVE_HANDOFF_REBASE: Der native Apply hat den vorherigen Patch vor dem Entrypoint '
+                     'abgewiesen. Lies zuerst dessen vollstaendige ZIP, exaktes Quell-Result und alle '
+                     'offenen Commit-IDs/Rollen. Pruefe die aktuellen Snapshotbytes und fremden Aenderungen; '
+                     'portiere den vorhandenen vollstaendigen Arbeitsumfang, ohne fremde Arbeit zu '
+                     'ueberschreiben. Korrekturbindung und alle Vorherbytes an dieses neue Result '
+                     'anpassen. Keinen bereits erfolgreichen Commit wiederholen. Ein offener '
+                     'Klaerungspraefix bleibt bytegleich und braucht die belegte Fortsetzungsbefugnis. '
+                     'Bei fachlichen Konflikten blocked; kein reines Umschreiben der Bindung. '
+                     'Erzeuge genau eine neu validierte ZIP fuer dieses Result, dann beenden. '
+                     'Belegung allein erzeugt keinen zweiten Patch; Warte-/Folgeauftraege steuert Control.')
     return original + '\nCONTROL_DECISION_CONTRACT\n' + json.dumps(selected, sort_keys=True) + (
         '\nVertrag 4: Pruefe die massgebliche Projektregel SPECROAD-DECISION-1 samt '
         'ausdruecklicher Freigabe fuer optionale Klaerung und Umsetzung in einer ZIP '

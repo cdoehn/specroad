@@ -1,0 +1,8 @@
+{
+  "format_version": 1,
+  "mode": "native_rejection_successor",
+  "busy_policy": "wait_for_existing_apply",
+  "budget_policy": "preserve",
+  "one_patch_per_result": true,
+  "clarification_targets": "unchanged"
+}

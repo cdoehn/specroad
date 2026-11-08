@@ -26,6 +26,9 @@ def handoff(engine, source, patch, selected, status):
         if data['correction_of'] != expected:
             fail('A failed source requires the exact complete remaining sequence.')
         rest = remaining_roles(previous, failed, data)
+        from .handoff_rebase import candidate, require_remaining_scope
+        if candidate(source):
+            require_remaining_scope(rest, data['stages'])
         pending = bool(rest and rest[0]['role'] == 'clarification')
         if selected['clarification_continuation'] != pending or (pending and status != MIXED):
             fail('Continuation authority does not match the actual unfinished prefix.')
@@ -47,6 +50,12 @@ def handoff(engine, source, patch, selected, status):
 
 def followup(engine, source, patch_sha, result, output_kind):
     patch = unique((p for p in engine.exchange.patches(source) if p['sha256'] == patch_sha), 'Pending typed ZIP is missing.')
+    from .handoff_rebase import candidate, rejection
+    if candidate(result):
+        data = rejection(engine, source, patch, result)
+        if (data['handoff_kind'] != output_kind or result['binding'] == source['binding']):
+            fail('The rejected handoff cannot authorize this successor.')
+        return {'verified': True, 'pending_clarification': data['stages'][0]['role'] == 'clarification'}
     data, _ = plan(patch)
     if (data['format_version'] != 2 or data['source_result_sha256'] != source['sha256']
             or data['binding'] != source['binding'] or result['expected'] != source['binding']

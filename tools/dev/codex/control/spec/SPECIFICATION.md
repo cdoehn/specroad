@@ -1134,3 +1134,8 @@ Die ältere Automationskette darf entfallen; der vollständige aktuelle native
 Apply-/Snapshotnachweis und die Livebindung bleiben Pflicht. Ein privater
 additiver Beleg erhält altes Ergebnis, Verträge, Budget und Originalversuche.
 Keine implizite Freigabe, Budgeterneuerung, Dienst-/Modell-/Apply-Ausführung.
+
+## CONTROL-HANDOFF-REBASE
+
+Native Ablehnungsnachfolger, Belegungswartephase und offene Restfolge folgen
+SpecRoad-Spezifikation 2.5.4.4. Keine neue Apply-Schleife oder Operatorfreigabe.

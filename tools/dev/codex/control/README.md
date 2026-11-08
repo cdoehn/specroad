@@ -185,3 +185,12 @@ Bedienaktionen, spätere Results, Folgepakete, ein abweichender Arbeitsstand
 oder fehlende aktuelle Belege sperren. Ein Push ersetzt keine Testgates.
 Die bestehenden speziellen Recoverybefehle bleiben unverändert verfügbar.
 Verbindlicher Vertrag und Projektmarker: SpecRoad-Spezifikation 2.4.3.4.
+
+## Abgewiesene Übergaben
+
+Mit installiertem Projekt-Opt-in erkennt Control native Ablehnungen vor dem
+Entrypoint. Belegung bei gleicher Bindung wartet auf den vorhandenen Watcher.
+Eine belegte neue Bindung erzeugt genau einen neuen Dev-Auftrag zum Portieren
+des vollständigen offenen Rests. Alte ZIPs, Budget und Klärungszielbytes bleiben
+erhalten. Unklare/fremde Results erfordern weiterhin die explizite aktuelle
+Übernahme; Details: SpecRoad-Spezifikation 2.5.4.4 und DEVELOPMENT.md.

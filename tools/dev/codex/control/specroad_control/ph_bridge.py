@@ -38,7 +38,7 @@ def development_capability(path, expected_sha):
 def main():
     from patchharbor import api
     from patchharbor.result_reader import capture_result_reference
-    from patchharbor.errors import PatchHarborError
+    from patchharbor.errors import PatchHarborError, FailureReason
     try:
         operation, raw = sys.argv[1:3]
         path = Path(raw)
@@ -77,7 +77,11 @@ def main():
             raise ValueError
         print(json.dumps({"ok": True, "data": data}))
         return 0
-    except (PatchHarborError, OSError, ValueError, TypeError, IndexError, zipfile.BadZipFile):
+    except PatchHarborError as error:
+        code = 'repository_busy' if error.reason is FailureReason.REPOSITORY_BUSY else 'core_rejected'
+        print(json.dumps({'ok': False, 'error': code}))
+        return 1
+    except (OSError, ValueError, TypeError, IndexError, zipfile.BadZipFile):
         print(json.dumps({"ok": False, "error": "core_rejected"}))
         return 1
 

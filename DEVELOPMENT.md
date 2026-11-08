@@ -129,3 +129,30 @@ ausdrücklich benennen. Keine Zugangsdaten oder Session-IDs aufnehmen.
 `/CURRENT_WORK.txt` bleibt über `.gitignore` ausgeschlossen und darf weder
 in Git noch in Produkt-/Patch-Payloads kopiert werden. Die lokale Datei ist
 kein zu commitender Entwicklungsnachweis.
+
+## Abgewiesene oder überholte Patch-Übergaben
+
+Eine Ablehnung der Übergabe nach Exchange beendet den fachlichen Auftrag nicht.
+Ablehnungsgrund, bisherige ZIP, Quell-Result und offene Commitfolge erhalten und
+prüfen. Bei belegter bloßer Belegung des richtigen Apply bleibt die vorhandene
+ZIP bestehen; Control/Watcher übernehmen das Warten. Kein zweiter Patch für
+dasselbe Result und keine eigene Warteschleife im Dev-Chat.
+
+Weicht der maßgebliche native Apply-Zustand inzwischen ab, zunächst dessen neues
+vollständiges Result prüfen. Die vorbereiteten Änderungen inhaltlich mit dessen
+Snapshot abgleichen und auf dieser Basis erneut vorbereiten: sämtliche Vorherbytes,
+alle vier Bindungswerte, exakter Quell-Result-SHA und Korrekturbezug aktualisieren.
+Fremde Änderungen erhalten, erfolgreiche Commits nicht wiederholen, alle offenen
+IDs/Rollen und Pflichtabnahmen fortführen. Nur Bindungsfelder auszutauschen reicht
+nicht. Ein belegter offener Klärungspräfix bleibt bytegleich; keine neue Entscheidung
+oder Budgetänderung durch diesen Wiederanlauf. Bei Konflikten ohne fachliche
+Befugnis oder unklarem aktuellen Result konkret blockieren.
+
+Anschließend genau eine neue ZIP für dieses neue Result nativ validieren und
+atomar nach Exchange übergeben. Bereits veröffentlichte ZIPs und Belege nicht
+überschreiben oder löschen. Nach der Übergabe endet der Dev-Turn. Control erteilt
+bei erneutem belegtem Zustandswechsel einen neuen gebundenen Einzelauftrag;
+kein blindes Wiederholen derselben abgewiesenen Datei. Vorbereitungen während
+eines laufenden Apply bleiben ausdrücklich vorläufig außerhalb von Exchange.
+Ein noch nicht veröffentlichtes Bundle kann um einen neuen Nutzerauftrag ergänzt
+werden; ein veröffentlichtes Bundle benötigt eine neue belegte Folgeübergabe.

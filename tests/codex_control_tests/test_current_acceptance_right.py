@@ -218,6 +218,7 @@ def test_native_bridge_uses_registered_nonmutating_capture_and_never_apply():
     modules['patchharbor.result_reader'].capture_result_reference = Mock(return_value=captured)
     capture = modules['patchharbor.repository_state'].capture_repository_context = Mock(return_value=context)
     modules['patchharbor.errors'].PatchHarborError = RuntimeError
+    modules['patchharbor.errors'].FailureReason = SimpleNamespace(REPOSITORY_BUSY=object())
     stream = io.StringIO()
     with patch.dict(sys.modules, modules), patch.object(sys, 'argv', ['bridge', 'current', '/exchange/result.zip']), redirect_stdout(stream):
         assert ph_bridge.main() == 0
