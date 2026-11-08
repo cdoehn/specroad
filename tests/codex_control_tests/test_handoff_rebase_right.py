@@ -14,7 +14,7 @@ from specroad_control.handoff_rebase import CAPABILITY_PATH, rejection, require_
 from specroad_control.job_contract import new_contract
 from specroad_control.mixed_evidence import verify_handoff, verify_followup
 from codex_control_tests.apply_reconcile_support import patch_package
-from codex_control_tests.test_handoff_rebase import RebaseCase
+from codex_control_tests.handoff_rebase_support import RebaseCase
 
 
 class HandoffRebaseGuardTests(RebaseCase):
