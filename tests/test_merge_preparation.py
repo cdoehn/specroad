@@ -1,11 +1,11 @@
 """17.l.W: complete source parity, exact target bytes and genuine Work progress."""
+from support.merge_matrix import template, recorded, source_kinds, work_windows
 from base64 import b64decode
 from hashlib import sha256
 import json
 
 import pytest
 
-from specroad import _build
 from specroad.cli.result_schemas import validate_result_document
 from specroad.merge.preparation import prepare_merge
 from specroad.merge import prepare_merge_target, resolve_merge_conflict
@@ -23,17 +23,6 @@ from support.languages import small_restore_registry
 from support.records import record_value, block_value
 from support.read_only import inventory, no_write_attempts
 from test_baseline_creation import preview
-
-
-@pytest.fixture(scope='module')
-def template(tmp_path_factory):
-    return baseline_template(tmp_path_factory.mktemp('native-merge-template')/'project')
-
-
-@pytest.fixture
-def recorded(monkeypatch):
-    monkeypatch.setattr(_build, 'BUILD_METADATA', {'format_version': 1,
-        'hash_algorithm': 'specroad-dev-payload-v1', 'build_sha256': '4'*64})
 
 
 @pytest.mark.parametrize('variant,reason', [
@@ -71,7 +60,7 @@ def test_native_baseline_document_gate_checks_real_target_without_authority(tmp_
         assert reason in {finding['reason'] for finding in stage['diagnostics']}
 
 
-@pytest.mark.parametrize('kind', ['local', 'git', 'baseline', 'bundle'])
+@source_kinds
 def test_each_native_source_kind_has_identical_complete_target_bytes(tmp_path, template, kind):
     sources, history, _ = adapter_case(tmp_path/'input', template, kind)
     before = inventory(tmp_path)
@@ -114,8 +103,8 @@ def test_missing_primary_document_remains_negative_after_complete_work(recorded,
     validate_result_document('merge-preparation-v1', result)
 
 
-@pytest.mark.parametrize('window', [1, 3, 100000])
-@pytest.mark.parametrize('kind', ['local', 'git', 'baseline', 'bundle'])
+@work_windows
+@source_kinds
 def test_direct_and_partitioned_work_keep_identical_all_phase_results(recorded, tmp_path, template, kind, window):
     sources, history, _ = adapter_case(tmp_path/'input', template, kind)
     expected = prepare_merge(sources, plan_id=PLAN_ID, history=history)

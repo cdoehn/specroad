@@ -5,7 +5,7 @@
 HEAD `64930b8f34f17e3171a84d705298ce3b1b2e2ce0`, saubere Hauptlinie.
 632 ist nachweislich abgeschlossen; 17.l.W wird nicht wiederholt.
 
-Dieser Stand ist die vorbereitete R-Stufe 17.l.R (728/900), keine Behauptung
+Dieser Stand ist die vorbereitete C-Stufe 17.l.C (729/900), keine Behauptung
 vorweggenommener Tests. Er erhält seinen eigenen Apply-Testgate vor dem Commit.
 Der Klärungspräfix [MERGE-CLI-633](../decisions/merge-cli-633.md) bindet zuvor
 die Schnittstelle in Spec 0.2.74 und Planrevision 112.
@@ -19,8 +19,10 @@ unterbrochene portable Vorbereitung und nichtkanonische auditierte Auflösungen
 sind in den tatsächlichen Verhaltensfällen abgedeckt. Prüfungen und Recovery
 werden nicht simuliert oder ersetzt.
 
-Die C-Stufe ist noch offen. Sie zentralisiert anschließend ausschließlich die
-Testmatrix. Für sie ist wegen des ausdrücklichen M17-Gates die vollständige
+Die C-Stufe zentralisiert die Quellen-/Work-/Aufrufmatrix und ihre kleinen
+nativen Originalfixtures in `tests/support/merge_matrix.py`. Alle Testnamen,
+Parameterwerte und fachlichen Funktionskörper bleiben erhalten; mutable
+Projekte und Work-Verzeichnisse bleiben pro Test getrennt. Für sie ist wegen des ausdrücklichen M17-Gates die vollständige
 verfügbare Suite als Pflichtmenge vorgesehen. Der Erfolg ist erst aus dem
 gebundenen Apply-Result abzulesen; Collection ist keine Verhaltensabnahme.
 Fehlende Plattform- und menschliche Freigaben bleiben weiterhin offen.

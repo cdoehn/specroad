@@ -1,11 +1,11 @@
 """17.l.R: complete public source/Work/Apply parity with the native writer."""
+from support.merge_matrix import originals, recorded, source_kinds, work_modes, representations
 from base64 import b64decode, b64encode
 from pathlib import Path
 import json
 
 import pytest
 
-from specroad import _build
 from specroad.merge.preparation import prepare_merge
 from specroad.merge import SourceRequest, SourceSnapshot
 from specroad.model.canonical import canonical_json_bytes as jcs
@@ -18,20 +18,9 @@ from support.read_only import inventory, no_write_attempts
 from test_merge_sources import read_only_sources
 
 
-@pytest.fixture(scope='module')
-def originals(tmp_path_factory):
-    return templates(tmp_path_factory.mktemp('merge-application-originals'))
-
-
-@pytest.fixture
-def recorded(monkeypatch):
-    monkeypatch.setattr(_build, 'BUILD_METADATA', {'format_version': 1,
-        'hash_algorithm': 'specroad-dev-payload-v1', 'build_sha256': '4'*64})
-
-
-@pytest.mark.parametrize('kind', ['local', 'git', 'baseline', 'bundle'])
-@pytest.mark.parametrize('mode', ['direct', 'resumed', 'portable'])
-@pytest.mark.parametrize('representation', ['argv', 'mapping'])
+@source_kinds
+@work_modes
+@representations
 def test_complete_public_merge_preserves_exact_target_for_all_sources_and_work_modes(recorded, tmp_path, originals, kind, mode, representation):
     data = case(tmp_path/'input', originals, kind)
     target, sources, history, _, _ = data
@@ -76,7 +65,7 @@ def test_all_adapter_fachresults_and_target_bytes_are_equal(recorded, tmp_path, 
     assert all(value == results[0] for value in results)
 
 
-@pytest.mark.parametrize('representation', ['argv', 'mapping'])
+@representations
 def test_historical_retry_proves_receipt_before_opening_old_sources_or_backup(recorded, tmp_path, originals, representation):
     data = case(tmp_path/'input', originals)
     _, filename, options, _ = publication(tmp_path, data)

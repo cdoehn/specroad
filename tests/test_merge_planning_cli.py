@@ -1,10 +1,11 @@
 """Public passive merge preparation and native Work lifecycle; no host approval."""
+from support.merge_matrix import template, recorded, source_kinds, representations
+from support.merge_application import work
 from pathlib import Path
 from specroad.cli.results import thaw
 
 import pytest
 
-from specroad import _build
 from specroad.cli.result_schemas import validate_result_document
 from specroad.merge.preparation import prepare_merge
 from specroad.model.canonical import canonical_json_bytes as jcs
@@ -13,17 +14,6 @@ from support.merge_resolution import PLAN_ID
 from support.migration_cli import invoke, success
 from support.read_only import inventory, no_write_attempts
 from test_merge_sources import read_only_sources
-
-
-@pytest.fixture(scope='module')
-def template(tmp_path_factory):
-    return baseline_template(tmp_path_factory.mktemp('cli-merge-template')/'project')
-
-
-@pytest.fixture
-def recorded(monkeypatch):
-    monkeypatch.setattr(_build, 'BUILD_METADATA', {'format_version': 1,
-        'hash_algorithm': 'specroad-dev-payload-v1', 'build_sha256': '4'*64})
 
 
 def case(root, template, kind='local'):
@@ -39,13 +29,8 @@ def case(root, template, kind='local'):
     return sources, history, options
 
 
-def work(operation, directory, options=None):
-    return invoke('work.'+operation, options or {}, authorize=False,
-                  arguments={'work_dir': str(directory)})
-
-
-@pytest.mark.parametrize('kind', ['local', 'git', 'baseline', 'bundle'])
-@pytest.mark.parametrize('representation', ['argv', 'mapping'])
+@source_kinds
+@representations
 def test_public_planner_matches_native_result_for_every_source(recorded, tmp_path, template, kind, representation):
     sources, history, options = case(tmp_path/'input', template, kind)
     expected = prepare_merge(sources, plan_id=PLAN_ID, history=history)

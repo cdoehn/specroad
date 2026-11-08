@@ -1,4 +1,5 @@
 """17.l.R: retained portable bytes, every global boundary and refused handoffs."""
+from support.merge_matrix import originals, recorded, phase_boundaries
 from base64 import b64decode
 from hashlib import sha256
 import json
@@ -22,18 +23,7 @@ from support.migration_cli import invoke, success
 from support.read_only import inventory
 
 
-@pytest.fixture(scope='module')
-def originals(tmp_path_factory):
-    return templates(tmp_path_factory.mktemp('merge-work-originals'))
-
-
-@pytest.fixture
-def recorded(monkeypatch):
-    monkeypatch.setattr(_build, 'BUILD_METADATA', {'format_version': 1,
-        'hash_algorithm': 'specroad-dev-payload-v1', 'build_sha256': '4'*64})
-
-
-@pytest.mark.parametrize('phase', ['input_integrity', 'inventory', 'comparison', 'metadata', 'target_validation', 'finalize', 'completed'])
+@phase_boundaries
 def test_public_package_resume_at_each_boundary_needs_no_old_sources(recorded, tmp_path, originals, phase):
     data = case(tmp_path/'input', originals)
     _, sources, history, options, _ = data
