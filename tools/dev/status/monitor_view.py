@@ -187,7 +187,7 @@ def view_database(target):
 
 def run_tui(paths, args):
     import curses
-    from .monitor import Refresh
+    from .monitor_refresh import Refresh
 
     refresh = Refresh(paths, database=args.database, interval=args.interval,
                       history_interval=args.history_interval, timeout=args.query_timeout)

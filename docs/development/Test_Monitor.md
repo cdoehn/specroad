@@ -141,3 +141,19 @@ Der Monitor ist OFF-PLAN-Entwicklungswerkzeug. Sein Bundle 632 enthält echte
 W/R/C-Zustände; Verhaltenstests und Regressionen laufen ausschließlich in
 ihren jeweiligen Apply-Gates. Collection/Paketvalidierung in Dev belegen
 keinen erfolgreichen Verhaltenstest. Produktposition 17.l.R bleibt offen.
+
+## Wartung
+
+Gemeinsamer Code liegt unter `tools/dev/status/`: `monitor.py` stellt die CLI
+und den JSON-Vertrag bereit, `monitor_data.py` bindet vorhandene Apply-Berichte
+und Datenbanken, `monitor_times.py` bündelt Phasenwerte und Filterregeln,
+`monitor_refresh.py` kapselt die unabhängigen Abfragen und `monitor_view.py`
+zeichnet die Terminalansicht. `runtime_read.py` begrenzt lesende SQLite-
+Transaktionen. Die vorhandenen Statushelfer und die native Sperrabfrage werden
+wiederverwendet. Es gibt keine zusätzliche Laufzeitdatenbank des Monitors.
+
+Neue Funktionen müssen die lesende Rolle, die Trennung der Apply-Linien,
+den Unterschied zwischen Messung und verstrichener Zeit sowie eindeutige
+Fehler-/Veraltungszustände erhalten. Regressionen prüfen die Datenverträge,
+Laufbindung und Dateierhaltung; Terminalfarben, Layout und Dokumentation
+werden gemäß den gemeinsamen Entwicklungsregeln nicht als Verhalten getestet.

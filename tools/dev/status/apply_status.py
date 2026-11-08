@@ -5,7 +5,6 @@ Run python3 tools/apply_status.py, --details, or --json inside the selected repo
 No product code is imported and no tests are started. Existing native locks
 are probed briefly without creating, changing or reserving any file.
 """
-from contextlib import closing
 from datetime import datetime, timezone
 import json
 import os
