@@ -25,6 +25,12 @@ def _result(command, document, code=0):
 
 
 def planning_command(invocation):
+    if invocation.options.get('--for-apply'):
+        from .merge_publication_plan import publication_plan_command
+        return publication_plan_command(invocation)
+    from .merge_publication_inputs import PUBLICATION_OPTIONS
+    if set(PUBLICATION_OPTIONS).intersection(invocation.options):
+        raise OperationFailure(FailureKind.USAGE, 'merge_publication_mode_required')
     try:
         options = invocation.options
         if not all('--'+key in options for key in ('base', 'ours', 'theirs', 'history', 'plan-id')):

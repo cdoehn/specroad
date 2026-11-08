@@ -110,3 +110,22 @@ erwarteter Zielstand ist keine bestätigte Result-Bindung. Vor späterer Überga
 müssen das neue maßgebliche Result, seine vollständigen Vorherbytes und der offene
 Rest geprüft, der Commitplan neu gebunden und die fertige PatchHarbor-ZIP nativ
 validiert werden. Ein vorbereiteter Arbeitsstand startet weder Dienst noch Apply.
+
+## Lokale Arbeitsabstimmung zwischen Entwicklungs-Chats
+
+Vor der ersten Änderung `CURRENT_WORK.txt` im Root der eigenen Dev-Kopie
+prüfen und für die eigene Arbeit anlegen beziehungsweise aktualisieren.
+Aufgabe, Entwicklungslinie/Branch, Zeitpunkt, Status und voraussichtlich
+betroffene Dateien oder eng abgegrenzte Bereiche nennen. Bei einer zweiten
+Entwicklungslinie auch deren vorhandene Notiz lesen, soweit sie zugänglich ist;
+Überschneidungen vor der Änderung abstimmen. Eine fremde aktive Notiz nicht
+überschreiben. Fehlende oder veraltete Notizen gelten nicht als Freigabe.
+Die Notiz ist eine Orientierung und ersetzt weder tatsächliche Diff-/Status-
+prüfung noch Sperren, Result-Bindung oder getrennte Apply-Zuständigkeiten.
+
+Die eigene Notiz bei Scopewechsel sowie unmittelbar vor Übergabe, Pause oder
+Abschluss aktualisieren; danach offene Arbeit und den aktuellen Status
+ausdrücklich benennen. Keine Zugangsdaten oder Session-IDs aufnehmen.
+`/CURRENT_WORK.txt` bleibt über `.gitignore` ausgeschlossen und darf weder
+in Git noch in Produkt-/Patch-Payloads kopiert werden. Die lokale Datei ist
+kein zu commitender Entwicklungsnachweis.

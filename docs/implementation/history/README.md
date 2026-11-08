@@ -314,3 +314,5 @@
 - [Bundle 627 — vollständiger Zielstand 17.l.W](bundle-627-merge-work.md)
 - [Bundle 628 — Testkorrektur für den offenen Schritt 17.l.W](bundle-628-merge-work-correction.md)
 - [Bundle 629: Nativer Dokumentprüfer für die Merge-Testvorlage](bundle-629-merge-fixture-document-gate.md)
+
+- [Bundle 633 — öffentliche Merge-/Work-Integration](bundle-633-merge-cli.md)

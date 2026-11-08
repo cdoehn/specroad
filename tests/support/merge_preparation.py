@@ -50,10 +50,10 @@ def baseline_document_gate(model):
                      dependencies, check, model._sources_sha256)
 
 
-def baseline_template(root):
+def baseline_template(root, *, values=None):
     # Full-project merge validation requires a primary document. Bind it into
     # the native Baseline before deriving equivalent inputs for every adapter.
-    model = inspection_project(root, artifacts=[record_value('document'), domain_value('goal')],
+    model = inspection_project(root, artifacts=[record_value('document'), domain_value('goal')] if values is None else values,
                                language_registry=small_restore_registry())
     prepared = preview(model, gates=(baseline_document_gate(model),))
     assert prepared['target_validated'], prepared['diagnostics']

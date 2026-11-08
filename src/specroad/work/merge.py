@@ -109,6 +109,12 @@ def checked(current):
             require(jcs(record['result']) == jcs(_block(task, rows)), 'merge_work_input_evidence_changed')
         else:
             require(type(record['result']) is dict, 'merge_work_phase_result_invalid')
+            if task['phase'] == 'comparison':
+                selected = record['result']
+                require(set(selected) == {'plan_bytes_base64', 'plan_sha256'}, 'merge_work_phase_result_invalid')
+                _hash(selected['plan_sha256'])
+                require(sha256(unb64(selected['plan_bytes_base64'])).hexdigest() == selected['plan_sha256'],
+                        'merge_work_phase_result_invalid')
             results[task['phase']] = record['result']
     inputs = {key: descriptor[key] for key in
         ('format_version', 'plan_id', 'history', 'plan_bytes_base64', 'plan_sha256')}

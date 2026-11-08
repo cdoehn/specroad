@@ -216,7 +216,7 @@ class CommandSpec:
             and self.preflight_profile is PreflightProfile.INPUT_READ
             and self.effect_scope is EffectScope.EXTERNAL_OUTPUT
             and not self.requires_project and not self.requires_git and not self.requires_write_paths)
-        if migration:
+        if migration or merge_planning:
             normative_flags = {'--dry-run', '--as-proposal'}
         resolution = (self.command_id == 'merge.resolve' and self.words == ('merge', 'resolve')
             and self.command_class is CommandClass.PLAN_OUTPUT

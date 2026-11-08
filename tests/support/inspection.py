@@ -85,6 +85,10 @@ def command_example_inputs(root, command):
     The Work fixture labels its synthetic build identity explicitly. No native
     model/recovery/checkpoint validator or command handler is replaced.
     """
+    if command.command_id == 'merge.apply':
+        from .merge_application import example_inputs
+        yield example_inputs(root, command)
+        return
     if command.command_id == 'merge.plan':
         from .merge_preparation import example_inputs
         yield example_inputs(root, command)
@@ -195,7 +199,7 @@ def _restore_example_inputs(root, command):
 
 def command_example_context(command):
     """An explicit synthetic host grant; request/project bytes never grant it."""
-    if command.command_id != 'migrate.apply':
+    if command.command_id not in ('migrate.apply', 'merge.apply'):
         return None
     from specroad.cli.invocation_context import InvocationContextBuilder
     from specroad.changes.publication_values import PublicationAuthority

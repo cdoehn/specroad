@@ -13,3 +13,6 @@ __pycache__/
 
 # Local PatchHarbor configuration/state
 .patchharbor/
+
+# Local coordination between development chats; never a payload.
+/CURRENT_WORK.txt

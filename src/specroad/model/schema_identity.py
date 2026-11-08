@@ -10,6 +10,7 @@ RESULT_IDS = (ENVELOPE_ID, "help-v1", "version-info-v1", "command-description-v1
               "artifact-query-v1", "artifact-diff-v1", "configuration-evaluation-v1", "roadmap-explain-v1", "exchange-export-v1", "bundle-create-v1", "bundle-verify-v1", "bundle-extract-v1", "document-read-v1", "model-validation-v1", "project-lock-v1", "recovery-status-v1", "restore-command-v1")
 RESULT_IDS += ('merge-conflicts-command-v1', 'migration-command-v1', 'work-command-v1', 'ai-runtime-verify-v1', 'ai-runtime-extract-v1')
 RESULT_IDS += ('merge-resolve-command-v1', 'merge-preparation-v1')
+RESULT_IDS += ('merge-plan-command-v1', 'merge-publication-plan-v1', 'merge-apply-command-v1')
 CHANGE_PLAN_VERSION = "1.2.0"
 CHANGE_PLAN_FAMILY = "change-plan"
 CHANGE_PLAN_ID = "urn:specroad:schema:" + CHANGE_PLAN_VERSION + ":" + CHANGE_PLAN_FAMILY
