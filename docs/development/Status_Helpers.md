@@ -1,5 +1,9 @@
 # Status und Testlaufzeiten
 
+Die gemeinsame interaktive Übersicht bietet der [Test-Monitor](Test_Monitor.md):
+`python3 tools/test-monitor --all`; eine maschinenlesbare Momentaufnahme liefert
+`python3 tools/test-monitor --all --once --json`.
+
 Die versionierten Einstiegspunkte liegen in `tools/apply_status.py` und
 `tools/test_time.py`. Sie benötigen nur Python ab 3.10 und die Standardbibliothek.
 Im Root der gewünschten Repository-Kopie:

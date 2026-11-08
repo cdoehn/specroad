@@ -26115,6 +26115,13 @@
     "tests/test_status_helpers_right.py::test_uncertain_native_binding_never_reports_free_or_repairs_files[registry-json]",
     "tests/test_status_helpers_right.py::test_uncertain_native_binding_never_reports_free_or_repairs_files[registry-mapping]",
     "tests/test_status_helpers_right.py::test_uncertain_native_binding_never_reports_free_or_repairs_files[registry-version]",
-    "tests/test_status_helpers_right.py::test_unfinished_progress_is_not_free_even_when_native_lock_is_free"
+    "tests/test_status_helpers_right.py::test_unfinished_progress_is_not_free_even_when_native_lock_is_free",
+    "tests/test_test_monitor.py::test_monitor_once_observes_each_lane_and_its_native_phase_durations",
+    "tests/test_test_monitor.py::test_monitor_default_is_repository_lane_and_explicit_targets_are_deduplicated",
+    "tests/test_test_monitor.py::test_monitor_partial_attempt_keeps_missing_phases_null_and_suppresses_old_success",
+    "tests/test_test_monitor.py::test_monitor_filters_full_population_before_limit_with_stable_phase_sorting",
+    "tests/test_test_monitor.py::test_monitor_one_broken_target_does_not_hide_the_other_or_create_sources",
+    "tests/test_test_monitor.py::test_monitor_cannot_assign_one_database_to_multiple_targets",
+    "tests/test_test_monitor.py::test_monitor_discovers_additional_apply_lanes_without_registering_them"
   ]
 }

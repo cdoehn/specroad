@@ -85,6 +85,11 @@ die Vorbereitung reiner Eingabeprüfungen von Prüfungen lebender Quellen.
 
 ## Control und manuelle Vorbereitung
 
+Der versionierte [Test-Monitor](docs/development/Test_Monitor.md) verbindet
+mehrere Apply-Ziele, laufbezogene Testphasen und ihre getrennten Laufzeithistorien
+in einer lesenden TUI: `python3 tools/test-monitor --all`. Für Skripte:
+`python3 tools/test-monitor --all --once --json`. Die Anzeige startet keine Dienste.
+
 Die versionierten [Statushelfer](docs/development/Status_Helpers.md) zeigen
 Apply-Fortschritt, Belegung und gemessene Testlaufzeiten:
 `python3 tools/apply_status.py --all` beziehungsweise

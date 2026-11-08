@@ -21,6 +21,7 @@ from cli import Target, Terminal, error_output, parser_for, terminal
 
 
 from availability import repository_availability
+from runtime_read import connection
 
 
 AVAILABILITY = {
@@ -161,10 +162,7 @@ def runtime_counts(database, gate, stage_started, stage_ended=None):
     selected = set(nodes)
     lower_bound = datetime.fromtimestamp(stage_started - 1, timezone.utc).isoformat()
     upper_bound = datetime.fromtimestamp(stage_ended + 1, timezone.utc).isoformat() if stage_ended else '9999'
-    with closing(sqlite3.connect(database.resolve().as_uri() + '?mode=ro', uri=True, timeout=2)) as db:
-        db.row_factory = sqlite3.Row
-        db.execute('PRAGMA query_only=ON')
-        db.execute('BEGIN')
+    with connection(database) as db:
         runs = db.execute('SELECT * FROM runs WHERE source=? AND started>=? AND started<=? ORDER BY id',
                           (source, lower_bound, upper_bound)).fetchall()
         # A second same-source run is ambiguous: never silently show another job.
