@@ -1,5 +1,5 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.73
+## Version 0.2.74
 
 | Feld | Wert |
 |---|---|
@@ -5067,7 +5067,83 @@ neu übergebene lebende Quellen, Zielbindung, Hostbefugnis, externe Sicherung,
 Writer-Lock, native Gates und Receipt nach 10.15.8. Workdaten können diese
 Voraussetzungen nicht liefern oder abschwächen.
 
-### 10.16 Projektbundle und partieller Umfang
+#### 10.15.10 Öffentliche Übergabe an Merge-Apply (MERGE-CLI-633)
+
+Die passive Vorbereitung nach 10.15.9 und der schreibbare Change-Plan nach
+10.15.8 sind verschiedene Verträge. `merge plan --for-apply` MUSS diese
+Übergabe ohne Projektänderung über den vorhandenen nativen Planproduzenten
+herstellen. Es MUSS dieselben expliziten Quellen-/History-Optionen und
+`--plan-id` wie die passive Vorbereitung sowie zusätzlich ein absolutes
+`--project`, `--change-plan-id`, `--actor-type`, `--actor-id`, `--planned-at`
+und gegebenenfalls `--request-id` verlangen. Die vorhandene Request-ID-Pflicht
+für AI/CI bleibt erhalten. Ohne `--for-apply` bleiben die bisherigen
+Vorbereitungsergebnisse bytegleich; die zusätzlichen Publication-Optionen
+DÜRFEN dort nicht still ignoriert werden.
+
+Mit `--for-apply --work-dir` MUSS ein bereits vollständig abgeschlossener
+nativer `merge.plan`-Auftrag gelesen und sein Ergebnis vollständig geprüft
+werden. Der Adapter DARF diesen Auftrag weder fortsetzen noch umschreiben.
+`--resolutions` und `--expected-plan-sha256` sind dann nicht zusätzlich zulässig;
+die exakten Originalplanbytes kommen aus dem geprüften Work-Ergebnis.
+Quellenbindungen einschließlich Herkunft und Originaldateien, History und
+Plan-ID MÜSSEN mit den explizit neu aufgenommenen aktuellen Eingaben
+übereinstimmen. Eine portable passive Fortsetzung braucht die alten
+Quellpfade nicht; eine aktuelle Veröffentlichung erhält dadurch keine
+stillschweigende Umadressierung oder Rebase-Erlaubnis. Ohne Work-Eingabe
+MUSS derselbe native Vorbereitungsweg verwendet werden. Soft-Budgetoptionen,
+`--resource-profile` und `--fail-on-change` sind im Übergabemodus nicht zulässig;
+große Vorbereitung MUSS vorher mit dem vorhandenen passiven Work-Vertrag
+abschließbar sein. Die abschließenden globalen Prüfungen bleiben vollständig.
+
+Der öffentliche Result-Schemavertrag von `merge.plan` heißt
+`merge-plan-command-v1` und umfasst unveränderte `merge-preparation-v1`-Daten
+sowie das geschlossene neue `merge-publication-plan-v1`: `format_version`,
+`change_plan` (vollständiger spezialisierter Change-Plan 1.2.0),
+`change_plan_sha256`, `project_writes_performed=false`,
+`approval_granted=false`, `write_authorized=false`. Dieses Result erteilt
+keine Freigabe. Die originalen Konflikt-/Auflösungsbytes, Metadaten und
+Zielbefunde bleiben gemäß 10.15.8 innerhalb des Change-Plans gebunden.
+
+`merge apply <MERGE-PLAN>` MUSS als Datei den ausgegebenen spezialisierten
+Change-Plan lesen, seine native `change_plan_sha256` gegen
+`--expected-plan-sha256` prüfen und ein explizites absolutes `--project`
+verlangen. Für einen neuen Schreibversuch MÜSSEN alle drei aktuellen Quellen
+mit denselben `--base`/`--ours`/`--theirs`-Kind-/Ref-Optionen ausdrücklich
+übergeben werden. Gespeicherte Quellpfade DÜRFEN nicht selbsttätig geöffnet
+werden. Der vollständige Plan MUSS mit den aktuellen Quellen und den
+gebundenen Originaleingaben nativ nachgerechnet werden. Ein ungelöster,
+ungültiger, fremder oder veralteter Plan DARF nicht veröffentlicht werden.
+
+`--dry-run` MUSS diese aktuelle Prüfung ohne Backup-Veröffentlichung, Writer,
+Projektänderung oder Host-Schreibfreigabe durchführen. Ein echter Apply MUSS
+zusätzlich `--backup-root`, `--backup` und `--transaction-id` verlangen sowie
+eine aktuelle typisierte Host-PublicationAuthority verwenden. Ein fehlender
+oder ablehnender Hostentscheid DARF keine Projektänderung freigeben. Das
+externe Before-Backup MUSS nativ erzeugt und geprüft werden; ein vorhandenes
+Ziel darf nur nach Beweis identischer vollständiger Backupbytes wiederverwendet,
+niemals überschrieben werden. Der gemeinsame native Writer, aktuelle
+Quellenprüfungen, vollständige Zielvalidierung, Freigaben und explizite Recovery
+nach 10.15.8 bleiben unverändert. Keine zusätzliche Merge-Transaktion,
+automatische Wiederholung oder automatische Rollback-Strategie entsteht.
+
+Bei bereits belegtem Abschluss derselben Request-ID MUSS der native
+historische Empfangsbeleg vor neuer Quellaufnahme und neuem Backup geprüft
+werden. Gleiche Operationsbytes liefern den früheren Abschluss zurück;
+abweichende Operationsbytes bleiben ein Request-ID-Konflikt. Der Rückgabewert
+DARF keine heutige Zielprüfung behaupten. Eine unvollständige oder manipulierte
+Quittung darf nicht in einen neuen Versuch umgedeutet werden. Dry-run verlangt
+hingegen weiterhin den aktuellen Befund und überspringt ihn nicht zugunsten
+einer historischen Quittung.
+
+Der geschlossene Resultvertrag `merge-apply-command-v1` enthält
+`format_version`, `mode` (`dry_run` oder `apply`), `change_plan_sha256`,
+`execution` (bei Dry-run `null`, sonst das native `merge-transaction-v1`),
+`project_writes_performed`, `approval_granted=false`, `write_authorized=false`.
+`project_writes_performed` ist bei Dry-run und historischem Replay `false`.
+Bei Fehlern bleiben die nativen Fehlerklassen und gegebenenfalls
+`write_state` erhalten. Kein Command-Result ist eine neue Hostberechtigung.
+
+## 10.16 Projektbundle und partieller Umfang
 
 Ein Bundle verwendet ausschließlich die kanonischen Werte `bundle_kind=project|partial` nach Anhang E.3; `document` und `release` sind Scope-Arten, keine Werte dieses Felds. Ein `project`-Bundle enthält einen geschlossenen, nicht konfigurationsgefilterten Projektscope und bildet nach Extraktion ein normales schreibbares SpecRoad-Projekt. Es enthält standardmäßig abgeschlossene Request- und Transaktionsreceipts in einer getrennten Betriebssektion, deren Hash im Bundlemanifest gebunden ist, aber nicht in die fachliche Modellwurzel eingeht.
 
