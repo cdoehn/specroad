@@ -26096,6 +26096,10 @@
     "tests/test_merge_preparation.py::test_native_baseline_document_gate_checks_real_target_without_authority[missing-primary]",
     "tests/test_merge_preparation.py::test_native_baseline_document_gate_checks_real_target_without_authority[orphan-section]",
     "tests/test_merge_preparation.py::test_native_baseline_document_gate_checks_real_target_without_authority[unsupported-block]",
-    "tests/test_merge_preparation.py::test_native_baseline_document_gate_checks_real_target_without_authority[valid]"
+    "tests/test_merge_preparation.py::test_native_baseline_document_gate_checks_real_target_without_authority[valid]",
+    "tests/test_status_helpers.py::test_explicit_paths_filter_current_measurements_without_writes",
+    "tests/test_status_helpers.py::test_missing_explicit_source_never_falls_back_or_creates_a_database",
+    "tests/test_status_helpers.py::test_overview_distinguishes_real_busy_and_free_locks_without_reserving",
+    "tests/test_status_helpers.py::test_repository_location_selects_own_status_and_runtime_history"
   ]
 }
