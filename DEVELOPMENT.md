@@ -85,6 +85,14 @@ die Vorbereitung reiner Eingabeprüfungen von Prüfungen lebender Quellen.
 
 ## Control und manuelle Vorbereitung
 
+Die versionierten [Statushelfer](docs/development/Status_Helpers.md) zeigen
+Apply-Fortschritt, Belegung und gemessene Testlaufzeiten:
+`python3 tools/apply_status.py --all` beziehungsweise
+`python3 tools/test_time.py -n 10`. Sie wählen standardmäßig die zur aufgerufenen
+Kopie gehörende Apply-Linie. Pfadoptionen überschreiben nur die lesenden Quellen.
+Eine Freimeldung ist eine Momentaufnahme, keine Reservierung oder Freigabe für
+ein ungebundenes Bundle. Die Skripte starten keine Tests oder Dienste.
+
 Control steuert die automatische Folge gebundener Einzelaufträge. Dev betreibt
 keine eigene Apply-, Status-, Warte- oder Fortsetzungsschleife. Die alten
 Chat-Kurzbefehle S und N bleiben aufgehoben; Testrotation N=3 bleibt bestehen.

@@ -90,3 +90,10 @@ Die Helfer starten weder Tests noch Apply, Watcher oder Control. Sie verändern
 keine Datenbanken, Registrierung, lokalen Einstellungen oder Git-Zustände.
 Gemeinsamer Code liegt in `tools/dev/status/`; die Laufzeit-Schreiber bleiben
 separat konfiguriert. Eine angepasste Anzeige installiert keine neue Policy.
+
+Die Einstiegspunkte importieren `apply_status.py` beziehungsweise `test_time.py`
+aus diesem Bereich. `cli.py` bündelt Zielwahl und Terminaldarstellung;
+`availability.py` kapselt die begrenzte native Registrierungs-/Sperrabfrage.
+Diese Trennung ändert keine JSON-Felder oder Belegungsregeln. Die Tests prüfen
+ausschließlich Datenzuordnung, native Sperrzustände, Messregeln und erhaltene
+Dateien; Farben und Konsolendarstellung gehören nicht zur Verhaltensabnahme.
