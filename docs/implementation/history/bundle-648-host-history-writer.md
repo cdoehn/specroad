@@ -9,7 +9,7 @@ bestandenen R-Gate-Nachweis. Der erfolgreiche W-Commit aus Bundle 646 bleibt
 erhalten; nur die offenen IDs 18.b.R und 18.b.C mit Rolle `implementation`
 werden in ihrer ursprünglichen Reihenfolge fortgesetzt.
 
-Diese Datei beschreibt den vorbereiteten Zielzustand **18.b.R**. Sein
+Diese Datei beschreibt den vorbereiteten Zielzustand **18.b.C**. Sein
 Planfortschritt gilt erst nach dem erfolgreichen eigenen Apply-Gate und Commit.
 Die Vorherbytes entsprechen vollständig dem erhaltenen R-Stand aus Result 647.
 Keine neue Detailklärung und keine Änderung des Klärungsbudgets.

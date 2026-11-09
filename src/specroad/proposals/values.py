@@ -7,7 +7,6 @@ from dataclasses import dataclass
 from hashlib import sha256
 
 from ..changes.values import ChangePlan
-from ..graph.scope_descriptors import ScopeDescriptor
 from ..model.canonical import canonical_json_bytes, canonical_json_sha256
 from ..model.errors import ModelError
 from ..model.paths import artifact_path
@@ -84,7 +83,7 @@ class ProposalOriginal:
         base = value['base']
         require('scope_descriptor' in base,
                 'proposal_specification_scope_required', path=path)
-        from .basis import require_proposal_scope
+        from .scope import require_proposal_scope
         require_proposal_scope(base['scope_descriptor'])
         plan = ChangePlan(canonical_json_bytes(value['change_plan']))
         from .authoring_fields import validate_explanations

@@ -1,5 +1,6 @@
 """One execution directory and write policy for both existing-thread transports."""
 from __future__ import annotations
+import json
 from pathlib import Path
 from typing import TYPE_CHECKING
 from .errors import ControlError
@@ -41,3 +42,17 @@ def policy(config, *, readonly=False):
     return {'approvalPolicy': 'never', 'sandboxPolicy': {
         'type': 'workspaceWrite', 'writableRoots': writable_roots(config),
         'networkAccess': False}}
+
+
+def exec_policy_options(config, *, readonly=False):
+    """Encode the same policy for exec resume; do not mix sandbox modes."""
+    turn_policy = policy(config, readonly=readonly)
+    sandbox = turn_policy['sandboxPolicy']
+    mode = {'readOnly': 'read-only', 'workspaceWrite': 'workspace-write',
+            'dangerFullAccess': 'danger-full-access'}[sandbox['type']]
+    args = ["-c", 'approval_policy="never"', "-c", 'sandbox_mode=' + json.dumps(mode)]
+    if sandbox['type'] == 'workspaceWrite':
+        args.extend(["-c", "sandbox_workspace_write.writable_roots=" + json.dumps(sandbox['writableRoots'])])
+    if sandbox['type'] != 'dangerFullAccess':
+        args.extend(["-c", "sandbox_workspace_write.network_access=false"])
+    return args

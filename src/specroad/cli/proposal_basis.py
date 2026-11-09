@@ -6,7 +6,7 @@ registration or a replacement for later authoring, review and writer gates.
 from pathlib import Path
 
 from ..model.errors import ModelError
-from ..proposals.basis import require_proposal_scope
+from ..proposals.scope import require_proposal_scope
 from ..security import ProjectBoundary, SafetyViolation
 from ..storage.json_syntax import parse_json_object
 from .results import FailureKind, OperationFailure

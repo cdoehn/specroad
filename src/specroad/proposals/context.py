@@ -5,20 +5,11 @@ from ..changes._target_materialization import materialize_target
 from ..changes._saved_plan_fold import fold_saved_plan
 from ..changes.target_model import TargetModel
 from ..changes.values import ChangePlan
-from ..exchange._export_scope import export_scope
-from ..graph.scope_descriptors import ScopeDescriptor
 from ..model.canonical import canonical_json_bytes, canonical_json_sha256
 from ..model.paths import artifact_path
 from ..validation import ModelDocument
-from .values import ProposalOriginal, SPECIFICATION_SCOPE, require
-
-
-def specification_manifest(model):
-    require(type(model) is TargetModel, 'proposal_native_model_required')
-    from .basis import fixed_proposal_scope
-    closure, manifest, _, _ = export_scope(model, fixed_proposal_scope())
-    require(not closure.boundary_references, 'proposal_basis_not_closed')
-    return manifest
+from .values import ProposalOriginal, require
+from .scope import specification_manifest
 
 
 @dataclass(frozen=True)

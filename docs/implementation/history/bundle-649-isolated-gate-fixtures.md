@@ -44,9 +44,9 @@ echten Remote-/execnet-/xdist-Regressionen gilt für beide Stages weiter.
 Es gibt keine Änderung am produktiven Hostpool, an Zugriffsschutz, Testnummern,
 Messhistorie oder Auswahlpolicy. Zusätzliche Testidentitäten sind nicht nötig.
 
-Dieser Bericht gehört zum vorbereiteten R-Zustand. C übernimmt danach
-ausschließlich die schon angekündigte Proposal-Scope- und Codex-CLI-Policy-
-Bereinigung; die Korrekturen bleiben bytegleich erhalten.
+Dieser Bericht gehört zum vorbereiteten C-Zustand. Er folgt erst auf den
+erfolgreichen R-Commit und enthält ausschließlich die schon angekündigte
+Proposal-Scope- und Codex-CLI-Policy-Bereinigung bei erhaltenen Korrekturen.
 
 Dev führt nur Syntax-, Collection-, Übergangs- und native Paketprüfungen aus.
 Jede Stage benötigt ihr eigenes Apply-Gate vor dem Commit. Vollzugriff und

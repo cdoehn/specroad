@@ -4,23 +4,7 @@ from dataclasses import dataclass
 from ..changes.target_model import TargetModel
 from ..model.model_manifest import ModelManifest
 from .values import require
-
-
-def fixed_proposal_scope():
-    """Fresh native descriptor; compatibility dictionaries are not authority."""
-    from ..graph.scope_descriptors import ScopeDescriptor
-    return ScopeDescriptor({'scope_version': 'scope-v1', 'scope_kind': 'specification',
-        'selector': {}, 'configuration_id': None, 'closure_profile': 'core-closure-v1',
-        'boundary_policy': 'closed'})
-
-
-def require_proposal_scope(value, *, exit_code=3):
-    """A valid general selector is not necessarily a valid Proposal selector."""
-    from ..graph.scope_descriptors import ScopeDescriptor
-    descriptor = ScopeDescriptor(value)
-    require(descriptor.data == fixed_proposal_scope().data, 'proposal_specification_scope_required',
-        pointer='/base/scope_descriptor', exit_code=exit_code)
-    return descriptor
+from .scope import fixed_proposal_scope, require_proposal_scope, specification_manifest
 
 
 @dataclass(frozen=True, init=False)
@@ -34,7 +18,6 @@ class ProposalBasis:
 
     def __init__(self, model):
         require(type(model) is TargetModel, 'proposal_native_model_required')
-        from .context import specification_manifest
         manifest = specification_manifest(model.snapshot())
         require_proposal_scope(manifest.data['scope_descriptor'])
         object.__setattr__(self, '_manifest_bytes', manifest.canonical_bytes)
