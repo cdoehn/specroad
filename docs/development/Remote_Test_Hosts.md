@@ -94,6 +94,25 @@ pytest-`nextitem`. Ein langsamer Host darf ungenutzt bleiben. Laufende Tests wer
 nicht verschoben oder spekulativ doppelt gestartet; ein ausgefallener Worker
 erzeugt einen fehlerhaften Gate-Ausgang. Es gibt keine Laufzeitzusage.
 
+Ein fehlender kurzfristig optimaler Folgetest beendet einen langsameren Worker
+nicht automatisch. Für einen bekannten kurzen Folgetest berücksichtigt der
+Scheduler zusätzlich die geschätzte Restlaufzeit des gesamten Pools: laufende
+und bereits zugeteilte Arbeit sowie den noch nicht verteilten Vorrat. Die
+Restarbeit wird einmal mit den bevorzugten Messungen eines schnellen Hosts
+normalisiert und bei Zuteilungen vermindert; die aktuelle Hostleistung bleibt
+in der Kapazitätsschätzung enthalten. Das ist ausschließlich eine Prognose,
+keine Änderung der gemessenen Historie oder der ausgewählten Testmenge.
+
+Ein kurzer Folgetest darf einen langsameren Worker weiter beschäftigen, wenn
+seine vorhergesagte Fertigstellung in dieses Zeitfenster passt. Tatsächliche
+hostbezogene Messungen gehen dabei vor: Ein auf dem Hauptrechner kurzer Test
+kann auf einem anderen Host zu lang sein. Unbekannte Tests werden nicht zum
+erzwungenen Auffüllen schwacher Hosts verwendet. Wenn kein geeigneter Folgetest
+übrig bleibt, erlaubt das Endsignal dem Worker, seinen letzten Test regulär
+auszuführen; abgeschaltete Worker erhalten keine weitere Arbeit. Ein schnellster
+Worker bleibt zur Fortschrittssicherung verfügbar. Damit bleiben sowohl die
+pytest-`nextitem`-Anforderung als auch der Schutz vor einem langen Nachlauf erhalten.
+
 Worker halten Betriebssystemsperren für ihre gesamte Lebensdauer. Derselbe
 Benutzer teilt `~/.local/state/specroad/test-host-slots` beziehungsweise den
 entsprechenden `XDG_STATE_HOME`-Pfad über beide Apply-Linien. Belegte Slots werden

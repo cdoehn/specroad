@@ -14,13 +14,16 @@ from dev.test_hosts.environment import environment, digest, account
 from dev.test_hosts.pool import public_proof, verify_pool, proxy_gateway
 from dev.test_hosts.snapshot import copy_snapshot, fingerprint
 from verification_support.cpu_capacity import available_cpus
+from verification_support.process_environment import test_environment as isolated_environment
 
 
-def run_isolated_pool(tmp_path, *, source=None, crash=False, workers=1):
-    ids = [f'tests/test_subject.py::test_{i}' for i in range(6)]
+def run_isolated_pool(tmp_path, *, source=None, crash=False, workers=1, durations=None,
+                      heterogeneous=False):
+    count = 6 if durations is None else len(durations)
+    ids = [f'tests/test_subject.py::test_{i}' for i in range(count)]
     source = source or 'import threading\n' + '\n'.join(
         f'def test_{i}():\n    assert {i} >= 0\n'
-        '    assert threading.current_thread() is threading.main_thread()\n' for i in range(6))
+        '    assert threading.current_thread() is threading.main_thread()\n' for i in range(count))
     if crash:
         source = source.replace('def test_0():', 'def test_0():\n    import os; os._exit(7)')
     root = make_catalog_project(tmp_path / 'controller', ids=ids, source=source)
@@ -37,17 +40,73 @@ def run_isolated_pool(tmp_path, *, source=None, crash=False, workers=1):
                 environment_sha256=digest(expected), resources=resources, speed=1.0,
                 spec='popen//via=srproxy0//python=' + sys.executable,
                 budget=workers, remote=True)
+    worker_profiles = {f'gw{i}': base.copy() for i in range(workers)}
+    if heterogeneous:
+        # Distinct synthetic forecast groups share real processes and leases
+        # on this machine. No remote credentials or real host speed are faked.
+        for i, row in enumerate(worker_profiles.values()):
+            row.update(host=f'synthetic-{i}', speed=1.0 if i == 0 else 0.5,
+                       resources={**resources, 'workers': 1, 'worker_limit': 1})
     profile = dict(format_version=1, source_sha256=source_identity(root), snapshot_sha256=fingerprint(manifest),
-                   environment=expected, workers={f'gw{i}': base.copy() for i in range(workers)},
+                   environment=expected, workers=worker_profiles,
                    proxies=[proxy_gateway('srproxy0', 'popen', sys.executable, str(target))],
-                   selected={n: n for n in ids}, estimates={}, baseline={n: 1.0 for n in ids})
+                   selected={n: n for n in ids}, estimates={},
+                   baseline=dict(zip(ids, [1.0] * count if durations is None else durations)))
     path = root / 'build/host-run.json'; path.write_text(json.dumps(profile))
-    result = execute(root, 'pytest_entry.py', ['-o', 'addopts=', '--disable-plugin-autoload', '-p', 'xdist.plugin',
+    args = ['-o', 'addopts=', '--disable-plugin-autoload', '-p', 'xdist.plugin',
         '-p', 'no:cacheprovider', '-p', 'no:doctest', '-n', str(workers), '--dist', 'worksteal', '--max-worker-restart=0',
-        '--worker-limit', str(workers), '--sr-host-run', str(path), '--sr-expected-tests', '6',
-        '--sr-observations', str(root / 'build/observations.json'), *ids],
-        environment={'SPECROAD_NESTED_TEST_RUN': '0', 'XDG_STATE_HOME': str(tmp_path / 'private-state')})
+        '--worker-limit', str(workers), '--sr-host-run', str(path), '--sr-expected-tests', str(count),
+        '--sr-observations', str(root / 'build/observations.json'), *ids]
+    env = isolated_environment(os.environ)
+    env.update(SPECROAD_NESTED_TEST_RUN='0', XDG_STATE_HOME=str(tmp_path / 'private-state'))
+    result = subprocess.run([sys.executable, '-I', '-B', str(root / 'tools/pytest_entry.py'), *args],
+        cwd=root, env=env, stdin=subprocess.DEVNULL, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+        check=False, timeout=90)
     return root, target, profile, result
+
+
+def test_real_slower_proxy_keeps_processing_successors_with_complete_native_phases(tmp_path):
+    durations = [100, 100, 80] + [1] * 80
+    source = '''import os
+from pathlib import Path
+import threading
+import time
+
+def exercise():
+    assert threading.current_thread() is threading.main_thread()
+    worker = os.environ['PYTEST_XDIST_WORKER']
+    marker = Path('build') / ('seen-' + worker)
+    marker.parent.mkdir(exist_ok=True)
+    count = int(marker.read_text()) + 1 if marker.exists() else 1
+    marker.write_text(str(count))
+    continued = marker.parent / 'slow-continued'
+    if worker == 'gw1' and count == 2:
+        continued.write_text('two native test bodies')
+    if worker == 'gw0' and count == 1 and int(os.environ['PYTEST_XDIST_WORKER_COUNT']) > 1:
+        deadline = time.monotonic() + 15
+        while not continued.exists() and time.monotonic() < deadline:
+            time.sleep(0.01)
+        assert continued.exists(), 'slower worker retired before its second test'
+'''
+    source += '\n'.join(f'def test_{i}():\n    exercise()\n' for i in range(len(durations)))
+    root, remote, profile, result = run_isolated_pool(tmp_path, source=source, workers=2,
+        durations=durations, heterogeneous=True)
+    assert result.returncode == 0, (result.stdout + result.stderr).decode()
+    observation = json.loads((root / 'build/observations.json').read_bytes())
+    verify_pool(observation, public_proof(profile))
+    assert observation['suite_passed'] and observation['tests_run'] == len(durations)
+    assert not (remote / 'build/test-runtime-history.sqlite3').exists()
+    with RuntimeHistory(root) as history:
+        attempts = history.db.execute('SELECT test,worker,complete,invalid FROM attempts').fetchall()
+        assert len(attempts) == len(durations)
+        assert {test for test, _, _, _ in attempts} == set(profile['selected'])
+        assert all(complete and not invalid for _, _, complete, invalid in attempts)
+        assert history.db.execute('SELECT COUNT(*) FROM phases').fetchone() == (3 * len(durations),)
+        assert {row[0] for row in history.db.execute('SELECT DISTINCT host FROM attempt_hosts')} == {
+            row['host'] for row in profile['workers'].values()}
+        if len(profile['workers']) > 1:
+            assert sum(worker == 'gw1' for _, worker, _, _ in attempts) >= 2
+            assert (remote / 'build/slow-continued').is_file()
 
 
 def test_real_proxy_workers_use_snapshot_and_ack_every_phase_to_coordinator(tmp_path):

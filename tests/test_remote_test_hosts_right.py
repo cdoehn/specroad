@@ -16,7 +16,7 @@ from dev.test_hosts.pool import public_proof, validate_profile, verify_pool
 from dev.test_hosts.snapshot import copy_snapshot, inventory
 from dev.test_hosts.ssh import Transport
 from verification_support.runtime_history import RuntimeHistory
-from test_remote_test_hosts import configured, Reply, scheduler
+from test_remote_test_hosts import configured, Reply, scheduler, scheduler_clock, drain_scheduler
 
 
 def profile():
@@ -160,6 +160,46 @@ def test_weak_host_does_not_receive_long_tail_just_to_fill_nextitem():
     slow = list(item.node2pending)[1]
     assert slow.sent == [4] and slow.shutting_down
     assert item.pending == [2, 3]
+
+
+def test_measured_expensive_successors_do_not_keep_a_slow_host_alive(monkeypatch):
+    clock = scheduler_clock(monkeypatch)
+    item = scheduler([100, 100, 80] + [1] * 80, [1, 0.5])
+    # Short on the reference host does not mean short on this particular host.
+    item.profile['estimates'] = {'node' + str(i) + '\n1': 10000.0 for i in range(3, 83)}
+    item.check_schedule()
+    slow = list(item.node2pending)[1]
+    assert slow.sent == [1] and slow.shutting_down
+    done = drain_scheduler(item, clock)
+    assert sum(node is slow for node, _ in done) == 1
+
+
+def test_unknown_only_work_never_forces_an_unmeasured_tail_on_a_weak_host(monkeypatch):
+    clock = scheduler_clock(monkeypatch)
+    item = scheduler([None] * 7, [1, 0.01])
+    fast, slow = item.node2pending
+    done = drain_scheduler(item, clock)
+    assert all(node is fast for node, _ in done)
+    assert not slow.sent and slow.shutting_down
+
+
+@pytest.mark.parametrize('count', [1, 2, 3, 10, 100])
+def test_short_and_final_queues_finish_once_without_nextitem_deadlock(count, monkeypatch):
+    clock = scheduler_clock(monkeypatch)
+    item = scheduler([1] * count, [1, 0.51])
+    nodes = list(item.node2pending)
+    drain_scheduler(item, clock)
+    assert all(node.shutting_down for node in nodes)
+
+
+def test_shared_host_workers_continue_across_multiple_completion_waves(monkeypatch):
+    clock = scheduler_clock(monkeypatch)
+    item = scheduler([100, 100, 80, 80] + [1] * 200, [1, 1, 0.51, 0.51])
+    for i, row in enumerate(item.profile['workers'].values()):
+        row['host'] = 'fast' if i < 2 else 'slow'
+    nodes = list(item.node2pending)
+    done = drain_scheduler(item, clock)
+    assert all(sum(node is worker for node, _ in done) > 1 for worker in nodes)
 
 
 def test_online_speed_observation_changes_future_unknown_host_ranking():

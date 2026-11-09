@@ -1,5 +1,6 @@
 """Host setup/transport, durable phases and heterogeneous dispatch contracts."""
 import json
+import heapq
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -162,6 +163,7 @@ class Node:
         self.shutting_down = False
         self.sent = []
     def send_runtest_some(self, indices):
+        assert not self.shutting_down, 'a retired worker cannot receive more tests'
         self.sent.extend(indices)
     def shutdown(self):
         self.shutting_down = True
@@ -179,6 +181,51 @@ def scheduler(durations, speeds):
         'baseline': {n: value for n, value in zip(item.collection, durations) if value is not None}, 'estimates': {}}
     item.started, item.scale, item.ready = {}, {}, False
     return item
+
+
+def scheduler_clock(monkeypatch):
+    clock = [0.0]
+    monkeypatch.setattr('dev.test_hosts.scheduler.time',
+                        SimpleNamespace(monotonic=lambda: clock[0]))
+    return clock
+
+
+def drain_scheduler(item, clock):
+    """Complete real dispatch decisions in time order, honoring xdist nextitem."""
+    item.check_schedule()
+    running, events, done = set(), [], []
+    serial = 0
+    while len(done) < len(item.collection):
+        for node, queue in item.node2pending.items():
+            # xdist cannot begin its final item until it receives shutdown.
+            if node in running or not queue or (len(queue) == 1 and not node.shutting_down):
+                continue
+            duration = item.duration(node, queue[0])
+            heapq.heappush(events, (clock[0] + duration, serial, node, queue[0], duration))
+            serial += 1
+            running.add(node)
+        assert events, 'selected tests remain, but no worker can make progress'
+        clock[0], _, node, index, duration = heapq.heappop(events)
+        running.remove(node)
+        done.append((node, index))
+        item.mark_test_complete(node, index, duration)
+    assert not events and not item.pending
+    assert not any(item.node2pending.values())
+    assert sorted(index for _, index in done) == list(range(len(item.collection)))
+    return done
+
+
+@pytest.mark.parametrize('speed', [0.5, 0.51])
+def test_slower_host_keeps_working_across_short_backlog_instead_of_retiring(speed, monkeypatch):
+    clock = scheduler_clock(monkeypatch)
+    item = scheduler([100, 100, 80] + [1] * 80, [1, speed])
+    item.check_schedule()
+    slow = list(item.node2pending)[1]
+    assert slow.sent[0] == 1
+    assert len(slow.sent) == 2 and slow.sent[1] >= 3
+    assert not slow.shutting_down
+    done = drain_scheduler(item, clock)
+    assert sum(node is slow for node, _ in done) > 2
 
 
 def test_unknown_is_explored_on_fast_host_while_known_long_jobs_start_early():

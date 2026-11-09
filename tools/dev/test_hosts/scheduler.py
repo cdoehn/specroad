@@ -51,6 +51,25 @@ class HostScheduling(WorkStealingScheduling):
             heapq.heappush(heap, item)
         return result
 
+    def pool_horizon(self, live):
+        """Estimate the whole remaining run, not the fastest next free slot."""
+        loads = [(self.available(node), self.speed(node)) for node in live
+                 if not node.shutting_down]
+        capacity = math.fsum(speed for _, speed in loads)
+        work = self.remaining_work + math.fsum(delay * speed for delay, speed in loads)
+        return max(max(delay for delay, _ in loads), work / capacity)
+
+    def short_successor(self, node, live):
+        # A real nextitem lets xdist execute the current item. A faster host's
+        # existence does not justify retiring this worker for the entire run.
+        # Unknowns are never used as speculative filler on a weaker host.
+        horizon = self.pool_horizon(live)
+        delay = self.available(node)
+        for index in self.candidates(self.short, 12):
+            if delay + self.duration(node, index) <= horizon + 0.001:
+                return index
+        return None
+
     def check_schedule(self):
         if self.collection is None:
             return
@@ -63,6 +82,12 @@ class HostScheduling(WorkStealingScheduling):
             self.short = [(-value, i) for value, i in self.long]
             heapq.heapify(self.long)
             heapq.heapify(self.short)
+            reference = max(self.nodes, key=self.speed)
+            # Freeze normalized work once. Host-specific measurements take
+            # precedence; online host scales change capacity, not this ledger.
+            self.work_weights = {i: self.duration(reference, i) * self.speed(reference)
+                                 for i in self.pending}
+            self.remaining_work = math.fsum(self.work_weights.values())
             self.ready = True
         live = [n for n in self.nodes if not n.shutting_down]
         if not live:
@@ -75,7 +100,7 @@ class HostScheduling(WorkStealingScheduling):
         for depth in (0, 1):
             for position, node in enumerate(live):
                 queue = self.node2pending[node]
-                if len(queue) > depth:
+                if node.shutting_down or len(queue) > depth:
                     continue
                 while self.unknown and self.unknown[-1] not in self.remaining:
                     self.unknown.pop()
@@ -93,20 +118,23 @@ class HostScheduling(WorkStealingScheduling):
                         chosen = index
                         break
                 if chosen is None and len(queue) == 1:
-                    # Supply a short lookahead where possible; never put an
-                    # unknown long task on a weak host solely for nextitem.
                     faster = any(not other.shutting_down and self.speed(other) > self.speed(node) for other in live)
-                    short = [] if faster else self.candidates(self.short, 1)
-                    if short:
-                        chosen = short[0]
-                    elif not faster and self.unknown:
-                        chosen = self.unknown[-1]
-                    else:
+                    chosen = self.short_successor(node, live)
+                    if chosen is None and not faster:
+                        # At least one fastest worker must keep making
+                        # progress even when the estimates cannot fit a pair.
+                        short = self.candidates(self.short, 1)
+                        if short:
+                            chosen = short[0]
+                        elif self.unknown:
+                            chosen = self.unknown[-1]
+                    if chosen is None:
                         node.shutdown()
                         continue
                 if chosen is not None:
                     self.remaining.remove(chosen)
                     self.pending.remove(chosen)
+                    self.remaining_work = max(0.0, self.remaining_work - self.work_weights[chosen])
                     if not queue:
                         self.started[node] = time.monotonic()
                     queue.append(chosen)

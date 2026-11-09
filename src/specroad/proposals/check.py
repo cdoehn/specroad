@@ -4,6 +4,7 @@ from datetime import datetime, timezone
 from hashlib import sha256
 from pathlib import Path, PurePosixPath
 import os
+import stat
 import shutil
 import tempfile
 
@@ -32,6 +33,7 @@ class CheckWorkspace:
     def __init__(self, project_root, keep):
         require(type(keep) is bool, 'proposal_debug_boolean_required', exit_code=2)
         self.path = None
+        self.identity = None
         self.keep = keep
         self.state = dict(retained=False, path=None, cleanup='not_created')
         self.project_root = Path(project_root).resolve()
@@ -53,9 +55,17 @@ class CheckWorkspace:
                 last_error = error
         else:
             raise last_error or OSError('No usable private Proposal workspace parent')
+        info = self.path.lstat()
+        self.identity = (info.st_dev, info.st_ino)
         return self
 
+    def verify(self):
+        info = self.path.lstat()
+        require(stat.S_ISDIR(info.st_mode) and (info.st_dev, info.st_ino) == self.identity,
+                'proposal_workspace_identity_changed', exit_code=7)
+
     def materialize(self, name, files):
+        self.verify()
         root = self.path / name
         root.mkdir(mode=0o700)
         for path, raw in sorted(files.items()):
@@ -73,6 +83,8 @@ class CheckWorkspace:
     def close(self):
         if self.path is None:
             return
+        self.state.update(path=str(self.path), cleanup='failed')
+        self.verify()
         if self.keep:
             self.state.update(retained=True, path=str(self.path), cleanup='retained')
         else:
@@ -187,6 +199,7 @@ def _isolated(snapshot, original, workspace, report, services):
     basis = _qualify(_specification_files(private.model, private.raw), report['checks'], 'basis', services)
     final = _qualify(_specification_files(actual.model, actual.raw), report['checks'], 'target', services)
     _services(basis, final, report)
+    workspace.verify()
     private.verify_current()
     actual.verify_current()
 
@@ -216,8 +229,10 @@ def check_proposal_project(root, operand, *, cwd=None, keep_workspace=False, ser
                 workspace.create()
                 _isolated(snapshot, original, workspace, report, services)
             finally:
-                workspace.close()
-                report['workspace'] = dict(workspace.state)
+                try:
+                    workspace.close()
+                finally:
+                    report['workspace'] = dict(workspace.state)
         finally:
             _preflight(source)
             source.check_current()
