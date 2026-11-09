@@ -5,7 +5,7 @@
 Commit `532218acf28f023a3d417f45c41d689de08d9083`. 7.955 Tests des damaligen
 Korrektur-Gates bestanden; keine offene Stage des Vorgängers.
 
-Diese Datei beschreibt den vorbereiteten Zielzustand **18.a.R**.
+Diese Datei beschreibt den vorbereiteten Zielzustand **18.a.C**.
 Erst das zugehörige erfolgreiche Apply-Testgate und der native Commit machen
 diesen Planfortschritt wirksam. Dev hat keine Verhaltenstests ausgeführt.
 

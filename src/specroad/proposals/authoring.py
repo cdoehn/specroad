@@ -7,18 +7,23 @@ from ..model.audit_values import UtcTimestamp
 from ..model.canonical import canonical_json_bytes
 from ..model.identity_values import ArtifactIdentity, RANDOM_SCHEME
 from ..model.versions import SCHEMA_VERSION
-from .values import ProposalOriginal, CONTENT_EXCLUSIONS, content_sha256, require
+from .values import ProposalOriginal, content_sha256, require
+from .authoring_models import ProposalContent, ProposalControl
 
 
 @dataclass(frozen=True, init=False)
 class Proposal:
     """A complete declarative authoring object, never an execution ticket."""
     original: ProposalOriginal
+    _content: ProposalContent
+    _control: ProposalControl
 
     def __init__(self, raw, *, path):
         original = ProposalOriginal(raw, path=path)
         require('changes' in original.data, 'proposal_explanations_required', pointer='/changes')
         object.__setattr__(self, 'original', original)
+        object.__setattr__(self, '_content', ProposalContent(original))
+        object.__setattr__(self, '_control', ProposalControl(original))
 
     @property
     def data(self):
@@ -34,11 +39,11 @@ class Proposal:
 
     @property
     def content_data(self):
-        return {name: value for name, value in self.data.items() if name not in CONTENT_EXCLUSIONS}
+        return self._content.data
 
     @property
     def control_data(self):
-        return {name: value for name, value in self.data.items() if name in CONTENT_EXCLUSIONS}
+        return self._control.data
 
     @property
     def write_authorized(self):
