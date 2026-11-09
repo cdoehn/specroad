@@ -729,3 +729,5 @@ Bestehende direkte Links führen weiterhin zum passenden Detailplan.
 <a id="audit-nacharbeiten"></a>[Audit-Nacharbeiten](audit/Audit_Nacharbeiten.md#audit-nacharbeiten)
 
 Off-Plan-Erweiterung: [CONTROL-HANDOFF-REBASE](../development/Handoff_Rebase.md); keine zusätzliche Produktposition.
+
+Aktive Präzisierung für 18.g: [PROPOSAL-CHECK-657](decisions/proposal-check-657.md).

@@ -1,17 +1,17 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.78
+## Version 0.2.79
 
 | Feld | Wert |
 |---|---|
 | Dokument-ID | `SR-SPEC-0001` |
-| Dokumentversion | `0.2.78` |
+| Dokumentversion | `0.2.79` |
 | Zielrelease | `SpecRoad Single-Repository Workbench 0.2.0` |
 | Status | **Fachlich konsolidierte Arbeitsgrundlage; technische Reviewentscheidung gesondert dokumentiert, formale Baseline-Freigabe und Produktabnahme nicht durch dieses Dokument erklärt** |
-| Stand | 8. November 2026 |
+| Stand | 9. November 2026 |
 | Sprache | Deutsch; technische Feldnamen, Enum-Werte und CLI-Kommandos Englisch |
-| Fachliche Quelle | **Diese Repositoryfassung v0.2.76 ist die aktive fachliche Arbeitsgrundlage; eine entsprechende PDF wird hiermit nicht veröffentlicht.** |
+| Fachliche Quelle | **Diese Repositoryfassung v0.2.79 ist die aktive fachliche Arbeitsgrundlage; eine entsprechende PDF wird hiermit nicht veröffentlicht.** |
 | Bearbeitbare Satzquelle | Diese Datei; eine spätere PDF muss denselben versionierten Inhalt wiedergeben. |
-| Vorgängerversion | Repository-Spezifikation v0.2.75; historische Nachweise bleiben unverändert. |
+| Vorgängerversion | Repository-Spezifikation v0.2.78; historische Nachweise bleiben unverändert. |
 | Prüf- und Entscheidungsgrundlage | Ausdrücklicher Nutzerauftrag REMOTE-TEST-HOSTS vom 8. November 2026; keine Produktfreigabe. |
 | Änderungsart | Ergänzung des Entwicklungsworkflows um optionale heterogene Apply-Testhosts. |
 
@@ -2187,6 +2187,70 @@ Diese Präzisierung konkretisiert 18.a ohne Vorziehen späterer öffentlicher
 CLI-/Writer-, Basisqualifikations-, Editier-, Review- oder Apply-Gates. Die
 Erzeugung einer reinen Datenstruktur ist weder Live-Basisqualifikation noch
 Nachweis einer menschlichen Freigabe.
+
+### 10.3.2 Isolierter Checkbericht (PROPOSAL-CHECK-657)
+
+Delegiert gemäß SPECROAD-DECISION-1 und 2.4.3.1, Vertrag 4. SR-REQ-0166
+bis 0170, 0178, 0195 und 0645 bleiben unverändert. Diese Präzisierung legt
+nur den bisher offenen Bericht und die ausdrücklich vorgesehene Debug-Bedienung
+fest; sie erteilt keine Review-, Schreib- oder externe Ausführungsbefugnis.
+
+`proposal check <PROP>` verwendet dieselbe explizite ID-/Dateiauswahl wie
+`proposal validate`. Zusätzlich zu `--project`, `--format pretty|json`,
+`--quiet` und `--no-color` ist `--keep-workspace` ein ausdrücklicher Boolean
+für Debug-Aufbewahrung. Kein Projektfeld kann ihn aktivieren. Standardmäßig
+wird ein privat erzeugter temporärer Workspace außerhalb des Projektroots
+auf Erfolg und Fehler entfernt; ein ungeeigneter temporärer Elternpfad wird
+abgewiesen. Aufbewahrt werden ausschließlich die Kopien und der geplante
+Zielstand, keine installierbaren Programme oder automatisch ausgeführten Hooks.
+Der tatsächlich erhaltene absolute Pfad wird im Bericht ausgegeben. Ein
+fehlgeschlagenes Aufräumen ist ein Fehler, kein erfolgreicher Check.
+
+Der Check rekonstruiert zunächst die unveränderten, vollständig erfassten
+nativen Basisbytes im Prüfbereich; der gebundene Plan wird nur auf einer
+zweiten Kopie angewandt. Native specification-Closure und Basis-/Zielroot
+bleiben maßgeblich. Proposal-/Baseline-Kontrollartefakte bleiben wie beim
+bestehenden nativen Proposal-Prüfkern außerhalb dieser Closure; ihre
+Erläuterungen sind keine ausführbaren Anweisungen. Vollständige native
+Modellprüfung von Basis und Ziel verlangt alle vorhandenen Spezialisten und
+Nachweise, ohne fehlende Prüfer durch Erfolg zu ersetzen. Der Zielstand
+liefert Core-Lint einschließlich Profilminima, sämtliche deklarierte
+Query-/Table-/View-Auswertungen und internes Rendering aller Dokumente/Views
+in ihren deklarierten Formaten (Dokumentdefault Markdown). Sprachliche
+Vermutungen oder optionale externe Analyzer sind keine stillschweigenden Gates.
+Semantischer Diff vergleicht die unveränderte Basis mit dem Ziel; direkte
+Impact-Ergebnisse für die tatsächlich geänderten Artefakte enthalten beide
+Seiten einschließlich entfernter Kanten. Leere Mengen sind ausgewiesen.
+Originalquellen werden abschließend erneut geprüft; das ist keine atomare
+Momentaufnahme gegenüber unkooperierenden fremden Schreibern.
+
+Der additive Resultvertrag `proposal-check-v1` enthält genau `format_version`,
+`passed`, `observed_status`, `eligible_transition`, `binding`, `proposal_sha256`,
+`context_sha256`, `target_model_root_sha256`, `target_sources_sha256`, `checks`,
+`audit`, `workspace`, `full_semantic_validation`, `approval_granted`,
+`write_authorized` und `result_sha256`. `binding` ist die unveränderte native
+fünffache Inhaltsbindung oder null vor ihrer erfolgreichen Erfassung;
+Original-/Kontexthashes binden die tatsächlichen gelesenen Bytes.
+`checks` enthält die tatsächlich erreichten nativen Ergebnisse unter
+`validation`, `lint`, `queries`, `renders`, `diff` und `impact`; nicht erreichte
+Prüfungen fehlen und sind kein Erfolg. Rendernachweise enthalten ID, Format,
+Bytezahl und SHA-256, keine installierten Ausgabedateien. Query-/Diff-/Impact-
+Ergebnisse behalten ihre nativen Scopegrenzen.
+
+`audit` enthält `proposal_id`, `base`, `tool_version`, `started_at`, `ended_at`
+(UTC), `outcome` (passed|failed), `diagnostics`, `created_ids`, `changed_ids`,
+`removed_ids`. Unbekannte ID/Basis sind null; Listen enthalten nur tatsächlich
+beobachtete Werte. `workspace` enthält `retained`, `path` und `cleanup`
+(not_created|removed|retained|failed). `result_sha256` ist SHA-256 der
+vorhandenen JCS-Kanonisierung des gesamten Ergebnisses ohne dieses Hashfeld.
+Zeit- und Debugpfadbindung bedeutet ausdrücklich keinen identischen Hash
+zweier getrennter Aufrufe. Ein fehlgeschlagener oder unvollständiger Check
+hat `passed=false`, `full_semantic_validation=false`, `eligible_transition=null`.
+Nur ein vollständig erfolgreicher Check eines beobachteten `validated`
+meldet `eligible_transition=checked`; andere beobachtete Zustände bleiben
+unverändert und melden null. Das erfolgreiche Ergebnis ersetzt weder die
+atomare Folge in `review start` noch eine menschliche Freigabe; beide
+Autorisierungsbooleans sind immer false. Es wird kein Kontrollstatus persistiert.
 
 ### 10.4 Spezial-Lifecycle-Vertrag
 
@@ -8489,6 +8553,7 @@ Die folgende Roadmap ist informativ und erzeugt keine Anforderungen an 0.2:
 
 | Version | Datum | Status | Änderung |
 |---|---|---|---|
+| 0.2.79 | 2026-11-09 | Delegiert gemäß SPECROAD-DECISION-1, Vertrag 4 | PROPOSAL-CHECK-657: isolierter nativer Checkbericht und ausdrückliche Debug-Aufbewahrung; keine Statuspersistenz oder Freigabe. |
 | 0.2.72 | 2026-11-06 | Delegiert gemäß SPECROAD-DECISION-1, Vertrag 4 | MERGE-PUBLICATION-619: spezialisierter Merge-Plan, gemeinsame Transaktion, Nachweisbindung und erhaltene Recovery-/Reviewgrenzen. |
 | 0.2.71 | 2026-11-06 | Delegiert gemäß SPECROAD-DECISION-1, Vertrag 4 | MERGE-TARGET-616: Vollständiger virtueller Zielbefund, native Spezialisten, erneute Nachprüfung und keine implizite Schreibfreigabe. |
 | 0.2.70 | 2026-11-06 | Delegiert gemäß SPECROAD-DECISION-1, Vertrag 4 | MERGE-METADATA-614: Exakte Metadatenkandidaten, historische Revisionsgrenze und unabhängige Writer-Vorbereitung ohne Projektwrites. |
