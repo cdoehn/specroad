@@ -7,6 +7,7 @@ import sys
 import tempfile
 
 from .environment import environment, digest
+from verification_support import runtime_environment
 from .ssh import Transport
 
 
@@ -21,7 +22,7 @@ def python_path(host, expected):
 def check(host, expected=None, *, transport=None):
     expected = environment() if expected is None else expected
     remote = transport or Transport(host)
-    script = Path(__file__).with_name('environment.py').read_text()
+    script = Path(runtime_environment.__file__).read_text()
     observed = remote.python(script, executable=sys.executable if host.ssh is None else python_path(host, expected))
     required = ('rsync', 'git', 'ionice') if host.ssh is not None else ('git', 'ionice')
     if observed['environment'] != expected or not all(observed['tools'].get(n) for n in required):
