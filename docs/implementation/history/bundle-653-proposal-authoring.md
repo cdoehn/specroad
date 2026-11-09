@@ -53,8 +53,8 @@ CLI-/Transaktionsabschlusses. Bereits bestehende Katalogabnahmen bleiben erhalte
 
 ## Übergabe
 
-Vorbereiteter W-Zustand: Die Fortschrittswerte gelten erst nach dem
-erfolgreichen eigenen Apply-Gate und Commit. R und C bleiben bis zu ihren eigenen Gates offen.
+Vorbereiteter R-Zustand: Die Fortschrittswerte gelten erst nach dem
+erfolgreichen eigenen Apply-Gate und Commit. C bleibt bis zu seinem eigenen Gate offen.
 
 Dev hat keine Verhaltenstests ausgeführt. Syntax und reine Collection sind
 keine bestandene Verhaltensabnahme. Die drei echten Zwischenstände besitzen je

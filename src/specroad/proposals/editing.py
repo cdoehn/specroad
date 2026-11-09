@@ -9,10 +9,23 @@ from dataclasses import dataclass
 from ..changes import ChangePlan
 from ..changes.authoring import prepare_authoring_request
 from ..changes.authoring_values import AuthoringRequest
+from ..model.audit_values import Actor, Revision, UtcTimestamp
 from .authoring import Proposal
 from .change_order import ProposalChanges
 from .revisions import ProposalRevision
 from .values import require
+
+
+_UNSET = object()
+
+
+def _arguments(action, change_id, position, explanation):
+    required = {'add': {'explanation'}, 'update': {'change_id', 'explanation'},
+                'remove': {'change_id'}, 'move': {'change_id', 'position'}}[action]
+    supplied = {key for key, value in (('change_id', change_id), ('position', position),
+                ('explanation', explanation)) if value is not _UNSET}
+    allowed = required | ({'position'} if action == 'add' else set())
+    require(required <= supplied <= allowed, 'proposal_change_arguments', exit_code=2)
 
 
 @dataclass(frozen=True, init=False)
@@ -50,8 +63,8 @@ class ProposalEdit:
 
 
 def prepare_proposal_change(proposal, *, action, change_plan, expected_revision,
-        actor, planned_at, request_id=None, dry_run=False, change_id=None,
-        position=None, explanation=None):
+        actor, planned_at, request_id=None, dry_run=False, change_id=_UNSET,
+        position=_UNSET, explanation=_UNSET):
     """Prepare add/update/remove/move, then advance the Proposal exactly once.
 
     The supplied plan is complete, including its declared target. For observed
@@ -61,13 +74,24 @@ def prepare_proposal_change(proposal, *, action, change_plan, expected_revision,
     require(type(proposal) is Proposal, 'native_proposal_required')
     require(type(action) is str and action in ('add', 'update', 'remove', 'move'),
             'proposal_change_action_invalid', pointer='/action', exit_code=2)
+    _arguments(action, change_id, position, explanation)
+    require(type(expected_revision) is Revision, 'proposal_expected_revision_required')
+    require(type(actor) is Actor and type(planned_at) is UtcTimestamp,
+            'proposal_explicit_audit_required')
+    before = proposal.data
+    require(expected_revision.value == before['revision'], 'proposal_revision_conflict', exit_code=6)
+    require(before['proposal_status'] not in ('rejected', 'stale', 'applied'),
+            'proposal_terminal_revision_changed')
+    require(before['proposal_status'] in ('draft', 'in_review', 'approved'),
+            'proposal_authoring_status_invalid')
     require(type(change_plan) is ChangePlan, 'native_proposal_plan_required')
     request = prepare_authoring_request(command_id='proposal change ' + action,
         actor=actor, operations=change_plan.data['operations'],
         request_id=request_id, dry_run=dry_run)
     changes = ProposalChanges(proposal)
     if action == 'add':
-        changes = changes.add(change_plan, explanation=explanation, position=position)
+        changes = changes.add(change_plan, explanation=explanation,
+                              position=None if position is _UNSET else position)
     elif action == 'update':
         changes = changes.update(change_id, change_plan=change_plan, explanation=explanation)
     elif action == 'remove':
