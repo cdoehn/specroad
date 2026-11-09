@@ -26320,6 +26320,16 @@
     "tests/test_local_runtime_hosts_right.py::test_local_environment_metadata_does_not_relabel_explicit_pool_records",
     "tests/test_local_runtime_hosts_right.py::test_local_gate_requires_the_original_host_and_environment[environment]",
     "tests/test_local_runtime_hosts_right.py::test_local_gate_requires_the_original_host_and_environment[host]",
-    "tests/test_local_runtime_hosts_right.py::test_local_gate_requires_the_original_host_and_environment[missing]"
+    "tests/test_local_runtime_hosts_right.py::test_local_gate_requires_the_original_host_and_environment[missing]",
+    "codex_control_tests.test_dispatch_boundary.DispatchBoundaryTests.test_busy_error_after_durable_claim_is_never_replayed",
+    "codex_control_tests.test_dispatch_boundary.DispatchBoundaryTests.test_exec_waits_for_late_user_turn_and_dispatches_once_after_idle",
+    "codex_control_tests.test_dispatch_boundary.DispatchBoundaryTests.test_invalid_apply_evidence_still_prevents_dispatch",
+    "codex_control_tests.test_dispatch_boundary.DispatchBoundaryTests.test_late_wrong_thread_directory_still_halts",
+    "codex_control_tests.test_dispatch_boundary.DispatchBoundaryTests.test_pause_during_final_metadata_check_prevents_claim",
+    "codex_control_tests.test_dispatch_boundary.DispatchBoundaryTests.test_proxy_waits_for_late_user_turn_and_dispatches_once_after_idle",
+    "codex_control_tests.test_dispatch_boundary.DispatchBoundaryTests.test_unknown_late_activity_still_halts_without_dispatch",
+    "tests/codex_control_tests/test_dispatch_boundary.py::test_rpc_rejection_logs_only_method_and_numeric_code[-32600--32600]",
+    "tests/codex_control_tests/test_dispatch_boundary.py::test_rpc_rejection_logs_only_method_and_numeric_code[True-None]",
+    "tests/codex_control_tests/test_dispatch_boundary.py::test_rpc_rejection_logs_only_method_and_numeric_code[private text-None]"
   ]
 }

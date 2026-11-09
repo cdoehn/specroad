@@ -52,8 +52,9 @@ class Proxy:
                 raise
             if message.get("id") == request_id and "method" not in message:
                 if "error" in message or not isinstance(message.get("result"), dict):
+                    rpc_code = message.get('error', {}).get('code') if isinstance(message.get('error'), dict) else None
                     raise ControlError("codex_request_rejected", "The existing daemon rejected the protocol operation.",
-                                       details={"rpc_code": message["error"].get("code") if isinstance(message.get("error"), dict) else None})
+                                       details={"rpc_method": method, "rpc_code": rpc_code if type(rpc_code) is int else None})
                 return message["result"]
             if "id" in message and "method" in message:
                 self.deny(message)
@@ -93,7 +94,8 @@ class Proxy:
         thread = self.inspect_thread()
         status = thread.get("status", {})
         if not isinstance(status, dict) or status.get("type") not in ("idle", "notLoaded"):
-            raise ControlError("dev_thread_busy", "The Dev thread is active or its activity cannot be established.")
+            raise ControlError("dev_thread_busy", "The Dev thread is active or its activity cannot be established.",
+                               details={'thread_status': 'active' if self.status_type(thread) == 'active' else 'unknown'})
         return thread
 
     @staticmethod

@@ -7,7 +7,7 @@ import time
 
 FIELDS = {"source_sha256", "turn_id", "thread_status", "turn_status", "codex_error",
           "codex_will_retry", "decision", "reason", "retry_attempt", "retry_at", "retry_mode",
-          "event_limit", "queued_events", "rpc_method", "limit_bytes", "announced_bytes", "wait_seconds", "error", "transport", "retry_blocked_reason", "overload_check_at"}
+          "event_limit", "queued_events", "rpc_method", "rpc_code", "limit_bytes", "announced_bytes", "wait_seconds", "error", "transport", "retry_blocked_reason", "overload_check_at"}
 
 
 def record(event, **values):

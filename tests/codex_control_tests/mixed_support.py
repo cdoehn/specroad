@@ -56,6 +56,11 @@ class TypedCodex:
         self.transform = lambda data: data
         self.data = None
 
+    def check(self):
+        # This protocol double has a resolved idle thread; actual transport and
+        # late activity checks are covered by the dispatch-boundary integration.
+        return {'thread_resolved': True, 'model_called': False, 'remote_visibility': 'not_verified'}
+
     def run(self, prompt, schema, directory, *, authorize, **kwargs):
         assert authorize()
         self.calls += 1

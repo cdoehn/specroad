@@ -262,6 +262,12 @@ class Engine(OverloadWaiting):
                 if exc.code == "dispatch_paused":
                     self.update(stage=ledger.current()["stage"], error=None)
                     return {"halted": False, "again": ledger.current()['stage'] == 'waiting_result'}
+                if (exc.code == 'dev_thread_busy' and exc.details.get('thread_status') == 'active'
+                        and ledger.current()['stage'] in ('ready', 'retry_wait')):
+                    # No durable dispatch claim exists. Preserve the attempt and
+                    # wait for the user's turn instead of pausing or steering it.
+                    self.update(stage=ledger.current()['stage'], thread_status='active', error=None)
+                    return {'halted': False, 'again': False, 'retry_after': 30}
                 if ledger.current()['stage'] == 'retry_wait' and exc.code in ('dev_turn_active', 'continuation_background_active'):
                     self.update(stage='retry_wait', error=None)
                     return {'halted': False, 'again': False, 'retry_after': 30}
@@ -384,7 +390,7 @@ class Engine(OverloadWaiting):
     def eligible_patches(self, source):
         return [patch for patch in self.exchange.patches(source) if patch["sha256"] not in self.excluded]
 
-    def authorize(self, ledger, source, *, request_guard=None):
+    def authorize(self, ledger, source, *, request_guard=None, thread_preflight=None):
         # The IPC thread can pause while native checks run. Acquire Gate only at
         # the final durable dispatch boundary, without long network work inside.
         self.exchange.source(source)
@@ -413,6 +419,8 @@ class Engine(OverloadWaiting):
         guard_dispatch(self, ledger, source)
         from .current_acceptance import guard_dispatch as guard_current
         guard_current(self, ledger, source)
+        if thread_preflight is not None:
+            thread_preflight()
         def claim():
             if request_guard is not None:
                 request_guard()
@@ -423,10 +431,9 @@ class Engine(OverloadWaiting):
         return allowed
 
     def authorize_request(self, ledger, source, directory, attempt, selected):
-        from .blocked_authorization import guard_dispatch
-        guard_dispatch(self, ledger, source)
-        from .current_acceptance import guard_dispatch as guard_current
-        guard_current(self, ledger, source)
+        # authorize() performs the full Apply proofs once, before Gate.enter.
+        # They can take minutes: the earlier transport preflight is not a fresh
+        # activity observation at the durable claim boundary.
         def guard():
             from .blocked_authorization import guard_original
             guard_original(self, ledger, source)
@@ -435,7 +442,8 @@ class Engine(OverloadWaiting):
             if ledger.request_contract() != selected or json_read(directory/'attempt.json') != attempt:
                 raise ControlError('request_contract_changed', 'Request authority changed during thread preflight.')
         guard()
-        return self.authorize(ledger, source, request_guard=guard)
+        return self.authorize(ledger, source, request_guard=guard,
+                              thread_preflight=None if attempt.get('continuation') else self.codex.check)
 
     def accept(self, ledger, source, answer):
         if not isinstance(answer, dict) or set(answer) != set(SCHEMA["required"]) or not all(isinstance(v, str) for v in answer.values()) or answer["source_result_sha256"] != source["sha256"]:

@@ -19,6 +19,13 @@ from .ssh import Transport
 from .contract import validate_profile, public_proof, verify_pool
 
 
+def proxy_gateway(identifier, transport, executable, work):
+    # The proxy serves concurrent forwarding channels, not pytest test bodies.
+    # xdist keeps each separate worker on its main_thread_only execution model.
+    return ('id=' + identifier + '//' + transport + '//python=' + executable
+            + '//chdir=' + work + '//execmodel=thread')
+
+
 def prepare_pool(root, outdir, config, selected, snapshot, worker_limit):
     hosts = load(config)
     if any(h.ssh is not None for h in hosts) and not shutil.which('rsync'):
@@ -67,7 +74,7 @@ print(json.dumps(True))
             cpus = transport.python(capacity_script, executable=executable)
             proxy = 'srproxy' + str(len(proxies))
             ssh = shlex.join([*transport.options(), host.ssh])
-            proxies.append('id=' + proxy + '//ssh=' + ssh + '//python=' + executable + '//chdir=' + work)
+            proxies.append(proxy_gateway(proxy, 'ssh=' + ssh, executable, work))
             spec = 'popen//via=' + proxy + '//python=' + executable
         count = min(cpus, host.workers, worker_limit)
         resources = dict(format_version=1, available_cpus=cpus, workers=count,

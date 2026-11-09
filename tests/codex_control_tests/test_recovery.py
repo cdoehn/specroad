@@ -147,10 +147,16 @@ class RecoveryTests(AutomationCase):
     def test_preflight_busy_can_be_rechecked_without_replaying_work(self):
         self.settings(thread_status='active')
         with Engine(self.config,self.paths,Gate(),core=FakeCore()) as engine:
-            self.assertTrue(engine.tick()['halted'])
-            with LedgerContext(self.paths,self.config) as ledger: self.assertEqual(ledger.current()['stage'],'ready')
+            self.assertEqual(engine.tick(), {'halted': False, 'again': False, 'retry_after': 30})
+            with LedgerContext(self.paths,self.config) as ledger:
+                self.assertEqual(ledger.current()['stage'],'ready')
+                self.assertIsNone(ledger.current()['error'])
+            self.assertFalse((self.codex_home/'calls.jsonl').exists())
+            attempt = self.paths.state/'jobs'/self.seed['sha256']/'attempt.json'
+            original = attempt.read_bytes()
             self.settings(mode='patch')
             self.assertTrue(engine.tick()['again'])
+            self.assertEqual(attempt.read_bytes(), original)
         self.assertEqual(len((self.codex_home/'calls.jsonl').read_text().splitlines()),1)
 
     def test_missing_configuration_field_is_not_implicitly_enabled(self):

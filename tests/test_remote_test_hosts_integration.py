@@ -11,14 +11,16 @@ from verification_support.host_execution import POLICY, POLICY_VALUE
 from verification_support.identity import source_identity
 from verification_support.runtime_history import RuntimeHistory
 from dev.test_hosts.environment import environment, digest, account
-from dev.test_hosts.pool import public_proof, verify_pool
+from dev.test_hosts.pool import public_proof, verify_pool, proxy_gateway
 from dev.test_hosts.snapshot import copy_snapshot, fingerprint
 from verification_support.cpu_capacity import available_cpus
 
 
-def run_isolated_pool(tmp_path, *, source=None, crash=False):
+def run_isolated_pool(tmp_path, *, source=None, crash=False, workers=1):
     ids = [f'tests/test_subject.py::test_{i}' for i in range(6)]
-    source = source or '\n'.join(f'def test_{i}():\n    assert {i} >= 0\n' for i in range(6))
+    source = source or 'import threading\n' + '\n'.join(
+        f'def test_{i}():\n    assert {i} >= 0\n'
+        '    assert threading.current_thread() is threading.main_thread()\n' for i in range(6))
     if crash:
         source = source.replace('def test_0():', 'def test_0():\n    import os; os._exit(7)')
     root = make_catalog_project(tmp_path / 'controller', ids=ids, source=source)
@@ -28,31 +30,33 @@ def run_isolated_pool(tmp_path, *, source=None, crash=False):
     # A proxy popen gateway exercises the same execnet via transport as SSH.
     # No credentials, external hosts or prepared live installations are needed.
     expected = environment()
-    resources = dict(format_version=1, available_cpus=available_cpus(), workers=1,
-                     worker_limit=1, nested=False, nice_minimum=10)
+    workers = min(workers, available_cpus())
+    resources = dict(format_version=1, available_cpus=available_cpus(), workers=workers,
+                     worker_limit=workers, nested=False, nice_minimum=10)
     base = dict(host='synthetic-host', hostname=platform.node(), account=account(), root=str(target),
                 environment_sha256=digest(expected), resources=resources, speed=1.0,
                 spec='popen//via=srproxy0//python=' + sys.executable,
-                budget=1, remote=True)
+                budget=workers, remote=True)
     profile = dict(format_version=1, source_sha256=source_identity(root), snapshot_sha256=fingerprint(manifest),
-                   environment=expected, workers={'gw0': base},
-                   proxies=['id=srproxy0//popen//python=' + sys.executable + '//chdir=' + str(target)],
+                   environment=expected, workers={f'gw{i}': base.copy() for i in range(workers)},
+                   proxies=[proxy_gateway('srproxy0', 'popen', sys.executable, str(target))],
                    selected={n: n for n in ids}, estimates={}, baseline={n: 1.0 for n in ids})
     path = root / 'build/host-run.json'; path.write_text(json.dumps(profile))
     result = execute(root, 'pytest_entry.py', ['-o', 'addopts=', '--disable-plugin-autoload', '-p', 'xdist.plugin',
-        '-p', 'no:cacheprovider', '-p', 'no:doctest', '-n', '1', '--dist', 'worksteal', '--max-worker-restart=0',
-        '--worker-limit', '1', '--sr-host-run', str(path), '--sr-expected-tests', '6',
+        '-p', 'no:cacheprovider', '-p', 'no:doctest', '-n', str(workers), '--dist', 'worksteal', '--max-worker-restart=0',
+        '--worker-limit', str(workers), '--sr-host-run', str(path), '--sr-expected-tests', '6',
         '--sr-observations', str(root / 'build/observations.json'), *ids],
         environment={'SPECROAD_NESTED_TEST_RUN': '0', 'XDG_STATE_HOME': str(tmp_path / 'private-state')})
     return root, target, profile, result
 
 
 def test_real_proxy_workers_use_snapshot_and_ack_every_phase_to_coordinator(tmp_path):
-    root, remote, profile, result = run_isolated_pool(tmp_path)
+    root, remote, profile, result = run_isolated_pool(tmp_path, workers=2)
     assert result.returncode == 0, (result.stdout + result.stderr).decode()
     observation = json.loads((root / 'build/observations.json').read_bytes())
     verify_pool(observation, public_proof(profile))
     assert observation['suite_passed'] and observation['tests_run'] == 6
+    assert set(observation['workers']) == set(profile['workers'])
     assert not (remote / 'build/test-runtime-history.sqlite3').exists()
     with RuntimeHistory(root) as history:
         assert history.db.execute('SELECT COUNT(*) FROM attempts').fetchone() == (6,)

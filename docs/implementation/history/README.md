@@ -324,3 +324,11 @@
 - [Bundle 639: Remote-Host-Testkorrektur, offener R-/C-Rest](bundle-639-remote-test-hosts-correction.md)
 
 - [Bundle 640: Hostdaten für lokale Testläufe](bundle-640-local-test-history.md)
+
+- [Korrekturbundle 641 — frische Chatprüfung vor Control-Dispatch](bundle-641-control-dispatch.md)
+
+- [Korrektur 642 — Control-Start nach SSH-Unterbrechung](bundle-642-control-dispatch.md)
+
+- [Bundle 643: parallele Proxy-Worker und vollständiger offener Control-Fix](bundle-643-control-dispatch.md)
+
+- [Bundle 644: Control-Testdoppelgänger und Busy-Wartevertrag korrigiert](bundle-644-control-dispatch.md)
