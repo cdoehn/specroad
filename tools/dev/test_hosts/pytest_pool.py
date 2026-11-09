@@ -1,5 +1,4 @@
 """Small adapter between the existing verification hooks and host execution."""
-from pathlib import Path
 import os
 import platform
 
@@ -8,9 +7,9 @@ import pytest
 from verification_support.identity import source_identity
 from .config import read_json
 from .environment import digest
-from .history import HistoryClient, HistoryServer
+from .history import HistoryServer
 from .lease import Lease, io_priority
-from .pool import public_proof, verify_pool, validate_profile
+from .contract import public_proof, validate_profile
 
 
 class RemoteBootstrap:

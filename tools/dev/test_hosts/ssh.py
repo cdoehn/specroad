@@ -1,7 +1,6 @@
 """SSH native authentication and private multiplexing; no credential handling."""
 from hashlib import sha256
 import json
-from pathlib import Path
 import shlex
 import subprocess
 

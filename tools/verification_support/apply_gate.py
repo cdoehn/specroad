@@ -37,7 +37,7 @@ def verify_commit_gate(root, directory, *, source, head, test_plan):
     resources = validate_resources(report["host_resources"]) if enabled(root) else None
     pool = report.get('host_pool')
     if pool is not None:
-        from dev.test_hosts.pool import public_proof
+        from dev.test_hosts.contract import public_proof
         profile = _load_report(directory / 'host-run.json')
         if public_proof(profile) != pool or profile['source_sha256'] != source or profile['selected'] != selected:
             raise ValueError('Host run does not bind the current Apply selection')
@@ -60,7 +60,7 @@ def verify_commit_gate(root, directory, *, source, head, test_plan):
     if pool is None:
         verify_resources(observation, resources)
     else:
-        from dev.test_hosts.pool import verify_pool
+        from dev.test_hosts.contract import verify_pool
         verify_pool(observation, pool)
     if (observation['nodeid_to_test_id'] != selected
             or any(not name.startswith('gw') for name in observation['worker_test_counts'])):

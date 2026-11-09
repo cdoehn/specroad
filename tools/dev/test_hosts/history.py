@@ -1,5 +1,4 @@
 """Synchronous durable history over execnet, separate from asynchronous reports."""
-from pathlib import Path
 import sqlite3
 import threading
 import math

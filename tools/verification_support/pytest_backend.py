@@ -374,7 +374,7 @@ def pytest_sessionfinish(session, exitstatus):
         pool = pool_observation(session.config)
     if pool is not None:
         try:
-            from dev.test_hosts.pool import verify_pool
+            from dev.test_hosts.contract import verify_pool
             verify_pool({**state.ledger.snapshot(exitstatus), 'host_pool': pool}, pool['binding'])
         except (ValueError, KeyError, TypeError):
             state.ledger.error('host_pool_contract_error')

@@ -1,6 +1,6 @@
 # Bundle 637 — verteilte Apply-Tests
 
-Vorbereitete Stage: `REMOTE-TEST-HOSTS.R`. Quelle ist das erfolgreiche saubere
+Vorbereitete Stage: `REMOTE-TEST-HOSTS.C`. Quelle ist das erfolgreiche saubere
 Result mit SHA-256 `7b89a989e74b5ba5d0acba9f950c481add6f6b2c5e1084827d183e950ffbac3c`.
 Die [Scope- und Abnahmeentscheidung](../decisions/remote-test-hosts-637.md) bindet
 den vollständigen W/R/C-Auftrag. Die technische Umsetzung nutzt eine eigene
@@ -15,3 +15,7 @@ Produktplanstatus und nächste Produktposition bleiben unverändert.
 R ergänzt geschlossene Profilverträge, Systembibliotheks-/Hostkonto-Prüfung,
 Nachrichten- und Speicherfehler, sichere Quotenänderung und Transportgrenzen.
 Kein Wiederholungs- oder Ausweichlauf erzeugt einen fiktiven Erfolg.
+
+C trennt die reine Profil-/Nachweisvalidierung von SSH und Laufvorbereitung.
+Bestehende Importstellen bleiben kompatibel; Testidentitäten, fachliche
+Ergebnisse, Fehlergrenzen und Pflichtauswahl bleiben erhalten.
