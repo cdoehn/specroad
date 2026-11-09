@@ -346,3 +346,5 @@
 - [Bundle 649 — isolierte Apply- und Control-Testfixtures](bundle-649-isolated-gate-fixtures.md)
 
 - [Bundle 650 — geordnete Proposal-Änderungen](bundle-650-proposal-change-order.md)
+
+- [Bundle 651 — Proposal-Inhaltsrevision und Hashprojektion](bundle-651-proposal-content-revisions.md)

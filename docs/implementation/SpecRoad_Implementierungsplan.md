@@ -27,9 +27,9 @@ Korrektur des weiterhin offenen R/C-Rests: [Bundle 648 — Hostpool-Laufzeitschr
 ```yaml
 plan_revision: 114
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 738
-last_completed_plan_commit: 18.c.C
-next_plan_commit: 18.d.W
+implementation_plan_commits_completed: 739
+last_completed_plan_commit: 18.d.W
+next_plan_commit: 18.d.R
 last_completed_numbered_bundle: 650
 implementation_state: in_progress
 audit_followup_status: closed

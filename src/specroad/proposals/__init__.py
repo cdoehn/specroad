@@ -1,6 +1,7 @@
 """Owned Proposal data and read-only Restore contracts; no implicit grants."""
 from .authoring import Proposal, prepare_proposal
 from .change_order import ProposalChanges
+from .revisions import ProposalRevision
 from .basis import ProposalBasis, build_proposal_basis, prepare_proposal_for_model
 from .values import ProposalOriginal, ProposalBinding, ProposalError
 from .context import ProposalContext, reconstruct_proposal_target
@@ -9,7 +10,7 @@ from .observations import (ProposalReviewObservation, ProposalControlObservation
     ProposalVerification, ProposalVerifier)
 from .publication import ProposalPublication
 
-__all__ = ['Proposal', 'prepare_proposal', 'ProposalChanges', 'ProposalBasis', 'build_proposal_basis',
+__all__ = ['Proposal', 'prepare_proposal', 'ProposalChanges', 'ProposalRevision', 'ProposalBasis', 'build_proposal_basis',
     'prepare_proposal_for_model', 'ProposalOriginal', 'ProposalBinding', 'ProposalError', 'ProposalContext',
     'ProposalInputs', 'assess_proposal', 'reconstruct_proposal_target',
     'ProposalReviewObservation', 'ProposalControlObservation', 'ProposalVerification',
