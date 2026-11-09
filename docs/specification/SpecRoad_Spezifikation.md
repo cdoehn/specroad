@@ -1,10 +1,10 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.77
+## Version 0.2.78
 
 | Feld | Wert |
 |---|---|
 | Dokument-ID | `SR-SPEC-0001` |
-| Dokumentversion | `0.2.76` |
+| Dokumentversion | `0.2.78` |
 | Zielrelease | `SpecRoad Single-Repository Workbench 0.2.0` |
 | Status | **Fachlich konsolidierte Arbeitsgrundlage; technische Reviewentscheidung gesondert dokumentiert, formale Baseline-Freigabe und Produktabnahme nicht durch dieses Dokument erklärt** |
 | Stand | 8. November 2026 |
@@ -2138,6 +2138,55 @@ Ein erfolgreicher `proposal review start` durchläuft `draft → validated → c
 Eine menschliche Freigabe bindet `(proposal_id, content_revision, content_sha256, base_model_root_sha256, change_plan_sha256)` sowie Reviewer und Entscheidung. Kontrolländerungen an Status, `maturity`, Review-/Kontrollhistorie und Auditmetadaten erhöhen die Artefaktrevision, erhalten aber Inhaltshash und Inhaltsrevision. Die Wirkung einer Freigabe bleibt dadurch bis zu Inhaltsänderung, Widerruf oder stale Basis erhalten. Die jeweils beim Review beobachtete Artefaktrevision wird zusätzlich für Audit gespeichert, ist aber nicht die Freigabegültigkeitsbedingung.
 
 Authoring über `proposal change add|update|remove|move` ist für `draft`, `in_review` und `approved` zulässig. Es erhöht beide Revisionen einmal, setzt Status und `maturity` auf `draft` und entzieht allen älteren Inhaltsbindungen die Freigabewirkung. Frühere Reviews bleiben als unwirksame Historie lesbar. Bei nachweislich unverändertem Inhalt darf der Befehl als No-op enden, ohne IDs oder Revisionen zu verändern.
+
+### 10.3.1 Proposalinhalt und Herkunft (PROPOSAL-DATA-645)
+
+Die gemeinsame Change-Plan-Struktur bleibt unverändert. Ein neu erzeugtes
+Proposal enthält zusätzlich `changes`: eine geordnete Liste mit genau einem
+Erläuterungsobjekt je `change_plan.operations`-Eintrag an derselben Position.
+Jedes Objekt besitzt ausschließlich `change_id`, `targets`, `rationale`,
+`requirement_or_issue_ids`, `sources`, `assumptions` und `confidence`.
+`change_id` ist eine innerhalb des Proposals eindeutige stabile `CHG-`-Kennung
+mit 26 Zeichen des vorhandenen random128-v1-Tokens. `targets` ist genau die
+geordnete Liste der Ergebnisartefakt-IDs des nativen Operationstyps; für die
+rein repräsentative Operation ohne Ergebnisartefakt ist es deren einzelner
+verwalteter `path`. Die Erläuterung dupliziert keine ausführbare Operation.
+`rationale` ist nichtleerer Text. `requirement_or_issue_ids` enthält eindeutige
+gültige Requirement-/Issue-Referenzen; eine ausdrücklich leere Liste behauptet
+keine betroffene Anforderung. `sources` benutzt den bestehenden passiven
+Provenienzvertrag mit Quellreferenz/Locator, Erfassungszeit und Exzerpt/Hash;
+`assumptions` ist eine Liste nichtleerer Texte. Leere Listen dokumentieren,
+dass keine Quellen beziehungsweise offenen Annahmen angegeben wurden; sie
+werden nicht aus der Umgebung ergänzt. Für KI-Autoren ist `confidence` eine
+endliche JSON-Zahl von 0 bis 1, ohne Boolean-Koerzierung; für andere Autoren
+ist zusätzlich `null` zulässig. Konfidenz ist keine Freigabe.
+
+Die fünf KI-Felder `provider`, `model_name`, `model_version_or_build`,
+`prompt_template_version`, `runner_version` liegen direkt im Proposal und
+sind nichtleere Texte. `unknown_reasons` ist ein geschlossenes Objekt mit
+genau den Namen der auf den Literalwert `unknown` gesetzten KI-Felder und
+jeweils einer nichtleeren Begründung. Bei KI-Autoren sind alle fünf Felder
+und dieses Objekt erforderlich; bei anderen Autoren darf der gesamte Satz
+fehlen, wird bei Angabe aber vollständig geprüft. Bekannte Werte werden
+unverändert erhalten, fehlende nicht erfunden. Der Autor und seine Zeit sind
+`created_by` und `created_at`; ein neues Proposal übernimmt sie aus `actor`
+und `planned_at` seines vollständigen gebundenen Plans, mit Revision 1,
+Inhaltsrevision 1, Status/maturity `draft` und leeren Review-/Kontrolllisten.
+Alle zusätzlichen Inhaltsfelder fallen unter die bestehende Hashprojektion.
+
+Der reine Erzeuger nimmt eine bereits über die vorhandene Identitätsfunktion
+zugeteilte random128-v1-Proposal-ID und einen vollständigen nativen Plan entgegen.
+Er liest weder Projektdateien noch Uhr, Netzwerk, Modell oder Nutzersitzung und
+verleiht keine Schreib- oder Reviewbefugnis. Historische Originalobjekte des
+lesenden Restore-Kerns ohne diese zusätzlichen Authoringfelder werden weiterhin
+bytegetreu gelesen; sie sind kein vollständiger neuer Authoringentwurf. Bei
+vorhandenen zusätzlichen Feldern gilt deren vollständiger Vertrag auch beim
+Lesen. Eine unsichtbare Migration oder erfundene Herkunft ist unzulässig.
+
+Diese Präzisierung konkretisiert 18.a ohne Vorziehen späterer öffentlicher
+CLI-/Writer-, Basisqualifikations-, Editier-, Review- oder Apply-Gates. Die
+Erzeugung einer reinen Datenstruktur ist weder Live-Basisqualifikation noch
+Nachweis einer menschlichen Freigabe.
 
 ### 10.4 Spezial-Lifecycle-Vertrag
 
