@@ -320,3 +320,5 @@
 - [Bundle 637 — verteilte Apply-Tests](bundle-637-remote-test-hosts.md)
 
 - [Bundle 638: Remote-Worker-Anbindung korrigieren und Aufgabenhistorie](bundle-638-remote-test-hosts-correction.md)
+
+- [Bundle 639: Remote-Host-Testkorrektur, offener R-/C-Rest](bundle-639-remote-test-hosts-correction.md)

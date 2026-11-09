@@ -40,3 +40,7 @@ gemessene Beschleunigung. Produktfortschritt 729/900 und nächster Schritt
 Die offene Folge wird nach dem fehlgeschlagenen W-Start mit
 [Korrekturbundle 638](../history/bundle-638-remote-test-hosts-correction.md)
 fortgeführt; Kennungen, Rollen und fachliche Abnahmen bleiben erhalten.
+
+W wurde mit Bundle 638 erfolgreich committed. Die beiden belegten R-Testfehler
+und der ausschließlich offene R-/C-Rest stehen im
+[Korrekturbericht 639](../history/bundle-639-remote-test-hosts-correction.md).

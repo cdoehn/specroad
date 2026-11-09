@@ -3,10 +3,14 @@ import hashlib
 import importlib.metadata
 import json
 import os
+from pathlib import Path
 import platform
 import shutil
+import sqlite3
+import ssl
 import sys
 import sysconfig
+import zlib
 
 
 def environment():
@@ -21,6 +25,7 @@ def environment():
     return dict(implementation=platform.python_implementation(), python=platform.python_version(),
                 machine=platform.machine(), system=platform.system(),
                 soabi=sysconfig.get_config_var('SOABI'),
+                sqlite=sqlite3.sqlite_version, openssl=ssl.OPENSSL_VERSION, zlib=zlib.ZLIB_RUNTIME_VERSION,
                 free_threaded=bool(sysconfig.get_config_var('Py_GIL_DISABLED')),
                 packages=dict(sorted(packages.items())))
 
@@ -31,8 +36,13 @@ def digest(value):
 
 def probe():
     return {'environment': environment(), 'hostname': platform.node(),
+            'account': account(),
             'uid': os.getuid(), 'tools': {n: bool(shutil.which(n)) for n in ('rsync', 'git', 'ionice')},
             'python': sys.executable}
+
+
+def account():
+    return digest({'machine_id': Path('/etc/machine-id').read_text().strip(), 'uid': os.getuid()})
 
 
 if __name__ == '__main__':

@@ -4,6 +4,8 @@ import json
 import os
 from pathlib import Path
 import subprocess
+import stat
+import tempfile
 
 from .config import private_directory
 
@@ -22,6 +24,8 @@ class Lease:
             if config.is_symlink():
                 raise ValueError('Linked host budget')
             old = json.loads(config.read_text()) if config.exists() else limit
+            if config.exists() and (not stat.S_ISREG(config.stat().st_mode) or config.stat().st_nlink != 1):
+                raise ValueError('Unsafe host budget file')
             if type(old) is not int or not 1 <= old <= 256:
                 raise ValueError('Invalid stored host budget')
             if old != limit:
@@ -33,7 +37,14 @@ class Lease:
                         fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
                     except BlockingIOError:
                         raise ValueError('Host budget change requires all slots to be idle') from None
-            config.write_text(json.dumps(limit))
+            fd, temporary = tempfile.mkstemp(prefix='.budget-', dir=root)
+            try:
+                with os.fdopen(fd, 'w') as stream:
+                    stream.write(json.dumps(limit)); stream.flush(); os.fsync(stream.fileno())
+                os.replace(temporary, config)
+            finally:
+                if os.path.exists(temporary):
+                    os.unlink(temporary)
             for fd in held:
                 os.close(fd)
             held.clear()

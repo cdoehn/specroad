@@ -46,23 +46,35 @@ def test_ssh_commands_reuse_private_master_and_do_not_prompt_during_tests(tmp_pa
 
 def test_setup_installs_exact_separate_environment_then_checks_it(tmp_path):
     expected = environment()
+    host = configured()
     binary = tmp_path / 'uv'; binary.write_bytes(b'synthetic installer input')
     calls = []
+    checked = []
     class Remote:
         def python(self, script, **kwargs):
-            if '/etc/os-release' in script:
-                return {'os': 'ID=ubuntu\n', 'machine': expected['machine']}
+            # The environment script also hashes the host account. Its explicit
+            # managed interpreter distinguishes it from the installer checksum.
+            if kwargs.get('executable') == python_path(host, expected):
+                assert 'sync' in calls[-1]
+                checked.append(kwargs['executable'])
+                return {'environment': expected, 'tools': dict.fromkeys(('rsync', 'git', 'ionice'), True)}
             if 'linked host directory' in script:
                 return True
-            return {'environment': expected, 'tools': dict.fromkeys(('rsync', 'git', 'ionice'), True)}
+            if 'hashlib.sha256' in script:
+                from hashlib import sha256
+                return sha256(binary.read_bytes()).hexdigest()
+            pytest.fail('unexpected preparation probe')
         def run(self, command, **kwargs):
             calls.append(command)
-            return SimpleNamespace(returncode=1 if command[0] == 'test' else 0)
+            return SimpleNamespace(returncode=1 if command[0] == 'test' else 0,
+                stdout='ID=ubuntu\n' if command[0] == 'cat' else expected['machine'] if command[0] == 'uname' else '')
         def copy(self, source, target):
             assert (Path(source) / 'requirements.txt').read_text().splitlines() == [f'{n}=={v}' for n, v in expected['packages'].items()]
-    result = prepare(configured(), transport=Remote(), uv=binary, non_interactive=True)
+    result = prepare(host, transport=Remote(), uv=binary, non_interactive=True)
     assert result['ready']
-    assert calls[0][:4] == ['sudo', '-n', 'apt-get', 'update']
+    assert result['environment'] == expected and result['environment_sha256'] == digest(expected)
+    assert checked == [python_path(host, expected)]
+    assert any(c[:4] == ['sudo', '-n', 'apt-get', 'update'] for c in calls)
     assert any('--managed-python' in c and expected['python'] in c for c in calls)
     assert any('sync' in c and '--only-binary' in c for c in calls)
     assert python_path(configured(), expected).endswith(digest(expected) + '/venv/bin/python')

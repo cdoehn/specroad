@@ -1,5 +1,7 @@
 """Small adapter between the existing verification hooks and host execution."""
 from pathlib import Path
+import os
+import platform
 
 import pytest
 
@@ -8,7 +10,7 @@ from .config import read_json
 from .environment import digest
 from .history import HistoryClient, HistoryServer
 from .lease import Lease, io_priority
-from .pool import public_proof, verify_pool
+from .pool import public_proof, verify_pool, validate_profile
 
 
 class RemoteBootstrap:
@@ -34,7 +36,9 @@ def configure(config, root):
         config._sr_pool_lease = Lease(worker['budget'])
         config._sr_pool_io = io_priority()
         return
-    profile = read_json(path)
+    if os.environ.get('SPECROAD_NESTED_TEST_RUN') == '1':
+        raise ValueError('Nested test runners cannot open a host pool')
+    profile = validate_profile(read_json(path))
     if profile['format_version'] != 1 or profile['source_sha256'] != source_identity(root) or not profile['workers']:
         raise ValueError('Stale or invalid host run')
     config._sr_host_profile = profile
@@ -65,13 +69,15 @@ def setup_node(node, state):
 
 def worker_proof(config, resources):
     row = config.workerinput['sr_pool_worker']
-    from .environment import environment
+    from .environment import environment, account
     from .snapshot import inventory, fingerprint
     if (source_identity(row['root']) != row['source_sha256']
             or fingerprint(inventory(row['root'])) != row['snapshot_sha256']
             or digest(environment()) != row['environment_sha256']):
         raise ValueError('Worker source or environment changed during tests')
     return {k: row[k] for k in ('host', 'environment_sha256', 'source_sha256', 'snapshot_sha256')} | {
+        'hostname': platform.node(),
+        'account': account(),
         'resources': resources, 'io_priority': config._sr_pool_io, 'slot': config._sr_pool_lease.slot}
 
 

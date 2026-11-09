@@ -1,6 +1,7 @@
 """Real execnet/xdist workers over isolated synthetic project snapshots."""
 import json
 import os
+import platform
 from pathlib import Path
 import subprocess
 import sys
@@ -9,7 +10,7 @@ from support.catalog_project import make_catalog_project, execute
 from verification_support.host_execution import POLICY, POLICY_VALUE
 from verification_support.identity import source_identity
 from verification_support.runtime_history import RuntimeHistory
-from dev.test_hosts.environment import environment, digest
+from dev.test_hosts.environment import environment, digest, account
 from dev.test_hosts.pool import public_proof, verify_pool
 from dev.test_hosts.snapshot import copy_snapshot, fingerprint
 from verification_support.cpu_capacity import available_cpus
@@ -29,7 +30,7 @@ def run_isolated_pool(tmp_path, *, source=None, crash=False):
     expected = environment()
     resources = dict(format_version=1, available_cpus=available_cpus(), workers=1,
                      worker_limit=1, nested=False, nice_minimum=10)
-    base = dict(host='synthetic-host', hostname='synthetic-host', root=str(target),
+    base = dict(host='synthetic-host', hostname=platform.node(), account=account(), root=str(target),
                 environment_sha256=digest(expected), resources=resources, speed=1.0,
                 spec='popen//via=srproxy0//python=' + sys.executable,
                 budget=1, remote=True)
@@ -104,11 +105,25 @@ def test_real_apply_pool_gate_preserves_rotation_union_and_rechecks_host_binding
     report = json.loads((gate / 'selection.json').read_bytes())
     assert report['format_version'] == 5 and report['selection_binding']['format_version'] == 6
     assert set(report['nodeid_to_test_id']) == {ids[i] for i in (0, 1, 3)}
-    assert apply_gate.verify_commit_gate(root, gate, source=source, head=head, test_plan=plan)['tests'] == 3
+    receipt = apply_gate.verify_commit_gate(root, gate, source=source, head=head, test_plan=plan)
+    assert receipt['tests'] == 3
     assert git('rev-parse', 'HEAD') == head
-    profile_path = gate / 'host-run.json'; profile = json.loads(profile_path.read_bytes())
-    profile['workers']['gw0']['host'] = 'invented-host'
-    profile_path.write_text(json.dumps(profile))
+    profile_path = gate / 'host-run.json'; original = profile_path.read_bytes()
+    workers = tuple(json.loads(original)['workers'])
     import pytest
-    with pytest.raises(ValueError, match='Host run'):
-        apply_gate.verify_commit_gate(root, gate, source=source, head=head, test_plan=plan)
+    try:
+        for changed in (('gw0',), workers):
+            profile = json.loads(original)
+            for worker in changed:
+                profile['workers'][worker]['host'] = 'invented-host'
+            if changed == workers:
+                # Even an internally consistent replacement must not match the
+                # frozen host proof; the other case can fail profile validation.
+                assert public_proof(profile) != report['host_pool']
+            profile_path.write_text(json.dumps(profile))
+            with pytest.raises(ValueError):
+                apply_gate.verify_commit_gate(root, gate, source=source, head=head, test_plan=plan)
+    finally:
+        profile_path.write_bytes(original)
+    assert apply_gate.verify_commit_gate(root, gate, source=source, head=head, test_plan=plan) == receipt
+    assert git('rev-parse', 'HEAD') == head

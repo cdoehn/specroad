@@ -2,6 +2,7 @@
 from pathlib import Path
 import sqlite3
 import threading
+import math
 
 from verification_support.runtime_history import RuntimeHistory
 
@@ -38,7 +39,7 @@ class HistoryClient:
         self.request('phase', [node, identity, worker, phase, duration, outcome, subtest])
 
     def close(self):
-        pass
+        self.channel.close()
 
 
 class HistoryServer:
@@ -70,6 +71,11 @@ class HistoryServer:
                 self.history.start(self.run, node, identity, worker, host=self.host, environment=self.environment)
             else:
                 phase, duration, outcome, subtest = values[3:]
+                if (phase not in ('setup', 'call', 'teardown') or type(duration) not in (int, float)
+                        or not math.isfinite(duration) or not 0 <= duration <= 86400
+                        or type(subtest) is not bool or outcome not in
+                        ('passed', 'failed', 'error', 'skipped', 'expected_failure', 'unexpected_success')):
+                    raise ValueError('Invalid native phase message')
                 self.history.observe(self.run, node, identity, worker, phase, duration, outcome, subtest=subtest)
             self.sequence = sequence
             self.channel.send((sequence, 'ok'))

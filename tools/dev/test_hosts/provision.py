@@ -1,5 +1,6 @@
 """Explicit, idempotent preparation. Never called by an Apply gate."""
 import json
+from hashlib import sha256
 from pathlib import Path
 import shutil
 import subprocess
@@ -37,7 +38,9 @@ def prepare(host, *, transport=None, uv=None, non_interactive=False):
     if host.ssh is not None and not non_interactive:
         remote.control('connect')
     # OS installation is a separate, visible native sudo prompt, not a stored password.
-    distro = remote.python("import json,platform; from pathlib import Path; print(json.dumps({'machine':platform.machine(),'os':Path('/etc/os-release').read_text()}))")
+    # These two base utilities work even before system Python is installed.
+    distro = {'os': remote.run(['cat', '/etc/os-release']).stdout,
+              'machine': remote.run(['uname', '-m']).stdout.strip()}
     entries = dict(line.split('=', 1) for line in distro['os'].splitlines() if '=' in line)
     if entries.get('ID', '').strip('"') not in ('ubuntu', 'debian') or distro['machine'] != expected['machine']:
         raise ValueError('Preparation requires Ubuntu/Debian with the coordinator architecture')
@@ -72,6 +75,9 @@ print(json.dumps(True))
         (local / 'environment.json').write_text(json.dumps(expected, sort_keys=True))
         remote.copy(str(local) + '/', str(destination) + '/')
     remote.run(['chmod', '700', str(destination / 'uv')])
+    copied = remote.python("import hashlib,json; from pathlib import Path; print(json.dumps(hashlib.sha256(Path(%r).read_bytes()).hexdigest()))" % str(destination / 'uv'))
+    if copied != sha256(binary.read_bytes()).hexdigest():
+        raise ValueError('Transferred uv executable differs from the local installer')
     prefix = ['env', 'UV_PYTHON_INSTALL_DIR=' + str(Path(host.directory) / 'python'),
               'UV_CACHE_DIR=' + str(Path(host.directory) / 'cache'), str(destination / 'uv')]
     remote.run([*prefix, 'python', 'install', expected['python']], timeout=1800)

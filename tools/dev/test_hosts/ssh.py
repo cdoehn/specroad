@@ -46,6 +46,8 @@ class Transport:
             raise ValueError(self.host.name + ': snapshot transfer failed')
 
     def python(self, script, *, executable=None, timeout=120):
+        # Manifests can exceed execve's per-argument limit. Stream the program
+        # over stdin; never embed a complete snapshot in a shell argument.
         result = self.run([executable or 'python3', '-I', '-B', '-'], input=script, timeout=timeout)
         try:
             return json.loads(result.stdout)

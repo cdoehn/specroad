@@ -20,6 +20,10 @@ class HostScheduling(WorkStealingScheduling):
     def identity(self, index):
         return self.profile['selected'][self.collection[index]]
 
+    def speed(self, node):
+        host = self.host(node)
+        return host['speed'] / self.scale.get(host['host'], 1.0)
+
     def duration(self, node, index):
         host = self.host(node)
         identity = self.identity(index)
@@ -63,9 +67,9 @@ class HostScheduling(WorkStealingScheduling):
         live = [n for n in self.nodes if not n.shutting_down]
         if not live:
             return
-        live.sort(key=lambda n: (-self.host(n)['speed'], n.gateway.id))
-        fastest = self.host(live[0])['speed']
-        exploration = max(1, math.ceil(sum(self.host(n)['speed'] == fastest for n in live) / 4))
+        live.sort(key=lambda n: (-self.speed(n), n.gateway.id))
+        fastest = self.speed(live[0])
+        exploration = max(1, math.ceil(sum(self.speed(n) == fastest for n in live) / 4))
         # Each worker needs a nextitem to execute its current item. Assign in
         # two rounds, so the fastest worker does not reserve all long tests.
         for depth in (0, 1):
@@ -78,7 +82,7 @@ class HostScheduling(WorkStealingScheduling):
                 candidates = self.candidates(self.long)
                 # Limited fast slots explore unknowns early. A known long test
                 # can still occupy the second position and other fast slots.
-                if self.unknown and ((position < exploration and depth == 0) or (not candidates and self.host(node)['speed'] == fastest)):
+                if self.unknown and ((position < exploration and depth == 0) or (not candidates and self.speed(node) == fastest)):
                     candidates.insert(0, self.unknown[-1])
                 candidates += self.candidates(self.short, 12)
                 chosen = None
@@ -91,10 +95,12 @@ class HostScheduling(WorkStealingScheduling):
                 if chosen is None and len(queue) == 1:
                     # Supply a short lookahead where possible; never put an
                     # unknown long task on a weak host solely for nextitem.
-                    faster = any(not other.shutting_down and self.host(other)['speed'] > self.host(node)['speed'] for other in live)
+                    faster = any(not other.shutting_down and self.speed(other) > self.speed(node) for other in live)
                     short = [] if faster else self.candidates(self.short, 1)
                     if short:
                         chosen = short[0]
+                    elif not faster and self.unknown:
+                        chosen = self.unknown[-1]
                     else:
                         node.shutdown()
                         continue

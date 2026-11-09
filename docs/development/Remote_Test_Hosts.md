@@ -50,7 +50,7 @@ auf Ubuntu/Debian fehlende Betriebssystempakete über den nativen sudo-Dialog,
 überträgt die lokale uv-Binärdatei und erstellt eine getrennte, durch den
 Umgebungshash adressierte Python-Umgebung. `--uv PFAD` wählt die Binärdatei.
 CPython einschließlich Microversion, ABI, Architektur und Python-Paketversionen
-müssen zur ausführenden Apply-Umgebung passen. Eine nicht verfügbare exakte
+sowie SQLite-, OpenSSL- und zlib-Laufzeit müssen zur ausführenden Apply-Umgebung passen. Eine nicht verfügbare exakte
 Version wird als Fehler gemeldet; kein stiller Wechsel auf System-Python.
 Die System-Python-Installation wird nicht ersetzt. Pakete werden ausschließlich
 als Wheels installiert. Ein erneuter Aufruf bringt dieselbe eigene Umgebung
@@ -124,3 +124,7 @@ Implementierungsgrundlagen: [xdist-Remote/Proxies](https://pytest-xdist.readthed
 [OpenSSH ControlPersist](https://man.openbsd.org/ssh_config#ControlPersist).
 Das Remoteprotokoll ist zunächst ausdrücklich an xdist 3.8.0 und execnet 2.1.2
 gebunden. Versionswechsel brauchen erneute native Integrationsabnahme.
+
+Die Hostkonto-Identität kombiniert die gehashte Maschinenkennung mit der
+Benutzer-ID. Gleiche Rechnernamen sind dadurch kein Identitätsbeweis; doppelte
+Aliase desselben Hostkontos werden abgewiesen. Große Manifeste werden gestreamt.

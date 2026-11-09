@@ -12,7 +12,10 @@ if __name__ == '__channelexec__':
     sys.dont_write_bytecode = True
     # Preserve only interpreter-owned paths. All project paths come from this
     # exact snapshot; no editable coordinator checkout can leak into a worker.
-    sys.path[:] = [str(root / p) for p in ('tools', 'tests', 'src')] + [p for p in sys.path if p and not p.startswith(str(root))]
+    prefixes = (Path(sys.prefix).resolve(), Path(sys.base_prefix).resolve())
+    interpreter_paths = [p for p in sys.path if p and any(
+        Path(p).resolve() == prefix or prefix in Path(p).resolve().parents for prefix in prefixes)]
+    sys.path[:] = [str(root / p) for p in ('tools', 'tests', 'src')] + interpreter_paths
     os.environ['PYTEST_DISABLE_PLUGIN_AUTOLOAD'] = '1'
     os.environ['PYTHONDONTWRITEBYTECODE'] = '1'
     for name, value in (('PYTEST_XDIST_TESTRUNUID', workerinput['testrunuid']),
