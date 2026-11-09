@@ -37,8 +37,8 @@ Alle Testdateien bleiben zwischen R und C bytegleich. Frühere Berichte 654 und
 655 bleiben in ihren tatsächlich erhaltenen Resultbytes bestehen; ihre
 vorbereiteten Zielaussagen ersetzen keinen erfolgreichen Apply-Commit.
 
-Vorbereiteter W-Zustand: Die Fortschrittswerte gelten erst nach dem
-erfolgreichen eigenen Apply-Gate und Commit. R und C bleiben offen.
+Vorbereiteter R-Zustand: Die Fortschrittswerte gelten erst nach dem
+erfolgreichen eigenen Apply-Gate und Commit. C bleibt offen.
 
 Die gesamte bisherige Pflichtauswahl bleibt erhalten, einschließlich der nun
 korrigierten vollständigen Requesttestdatei. Jede Stage wird einzeln ausgebracht,

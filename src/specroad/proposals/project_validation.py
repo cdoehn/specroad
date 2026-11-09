@@ -20,7 +20,7 @@ from ..storage.preflight_metadata import MetadataPhases
 from ..storage.project import ProjectSource
 from .context import ProposalContext
 from .values import ProposalOriginal, require
-from .validation import validate_proposal
+from .validation import validate_proposal, validation_failure
 
 
 def _preflight(source):
@@ -31,6 +31,8 @@ class _ProposalInput:
     def __init__(self, source, operand, cwd):
         if type(operand) is not str or not operand or operand == '-':
             raise OperationFailure(FailureKind.USAGE, 'proposal_file_or_id_required')
+        if any(ord(char) < 32 or ord(char) == 127 for char in operand):
+            raise SafetyViolation('Unsafe Proposal input path')
         root = source.boundary.root
         prefix = source.configuration.id_prefix
         self.requested_id = None
@@ -75,6 +77,7 @@ class _ProposalInput:
 def validate_proposal_project(root, operand, *, cwd=None):
     project = None
     source = snapshot = supplied = None
+    context = None
     details = read_details()
     try:
         source = ProjectSource(root)
@@ -84,7 +87,8 @@ def validate_proposal_project(root, operand, *, cwd=None):
         try:
             original = supplied.original()
             snapshot = InspectionSnapshot(root, None)
-            report = validate_proposal(ProposalContext(original, snapshot.model))
+            context = ProposalContext(original, snapshot.model)
+            report = validate_proposal(context)
         finally:
             # Invalid inputs receive the same final safety/currentness checks.
             _preflight(source)
@@ -99,7 +103,11 @@ def validate_proposal_project(root, operand, *, cwd=None):
         result = read_failure('proposal.validate', error, project, details)
         if isinstance(error, ModelError):
             result = replace(result, diagnostics=(from_model_error(error, code=getattr(error, 'code', None)),))
-        return result
+        payload = validation_failure(None if supplied is None else supplied.raw, context,
+            getattr(error, 'reason', None) or (str(error) if isinstance(error, OperationFailure)
+                                             else 'proposal_input_unavailable'))
+        validate_result_document('proposal-validation-v1', payload)
+        return replace(result, result=payload)
 
 
 def validate_command(invocation):
