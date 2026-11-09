@@ -504,6 +504,8 @@ def builtin_registry() -> CommandRegistry:
     from .document_commands import read_commands
     from .metadata_commands import metadata_commands
     commands += read_commands()
+    from .proposal_commands import proposal_commands
+    commands += proposal_commands()
     commands += metadata_commands()
     commands += work_commands()
     from .migration_commands import migration_commands

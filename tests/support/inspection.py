@@ -37,6 +37,9 @@ def inspection_project(root, *, artifacts=None, extra_profiles=(), language_regi
 
 def command_example_project(root, command_id):
     """Supply the real semantic inputs required by each published example."""
+    if command_id == 'proposal.validate':
+        from .proposal_validation import validation_project
+        return validation_project(root)[0]
     if command_id == 'configuration.evaluate':
         from .records import record_value
         return inspection_project(root, artifacts=[record_value('configuration')])

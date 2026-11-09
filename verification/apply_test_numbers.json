@@ -26798,6 +26798,21 @@
     "tests/test_proposal_editing_right.py::test_unknown_action_never_selects_another_workflow[]",
     "tests/test_proposal_editing_right.py::test_unknown_action_never_selects_another_workflow[action4]",
     "tests/test_proposal_editing_right.py::test_unknown_action_never_selects_another_workflow[create]",
-    "tests/test_proposal_editing_right.py::test_unknown_action_never_selects_another_workflow[review]"
+    "tests/test_proposal_editing_right.py::test_unknown_action_never_selects_another_workflow[review]",
+    "tests/test_proposal_validation.py::test_invalid_proposal_or_plan_never_changes_project[basis]",
+    "tests/test_proposal_validation.py::test_invalid_proposal_or_plan_never_changes_project[content]",
+    "tests/test_proposal_validation.py::test_invalid_proposal_or_plan_never_changes_project[explanation]",
+    "tests/test_proposal_validation.py::test_invalid_proposal_or_plan_never_changes_project[json]",
+    "tests/test_proposal_validation.py::test_invalid_proposal_or_plan_never_changes_project[target]",
+    "tests/test_proposal_validation.py::test_native_validation_binds_actual_original_and_basis_without_a_control_write[False-False]",
+    "tests/test_proposal_validation.py::test_native_validation_binds_actual_original_and_basis_without_a_control_write[False-True]",
+    "tests/test_proposal_validation.py::test_native_validation_binds_actual_original_and_basis_without_a_control_write[True-False]",
+    "tests/test_proposal_validation.py::test_public_argv_and_structured_requests_use_same_native_read_contract[absolute]",
+    "tests/test_proposal_validation.py::test_public_argv_and_structured_requests_use_same_native_read_contract[external]",
+    "tests/test_proposal_validation.py::test_public_argv_and_structured_requests_use_same_native_read_contract[id]",
+    "tests/test_proposal_validation.py::test_public_argv_and_structured_requests_use_same_native_read_contract[relative]",
+    "tests/test_proposal_validation.py::test_registry_advertises_only_implemented_read_operation",
+    "tests/test_proposal_validation.py::test_structure_validation_does_not_run_full_check_or_any_project_program",
+    "tests/test_proposal_validation.py::test_validation_result_is_owned_and_not_an_operation"
   ]
 }

@@ -352,3 +352,9 @@
 - [Bundle 652 — Extension-Testdaten und vollständiger 18.d-Rest](bundle-652-proposal-extension-fixture-correction.md)
 
 - [Bundle 653 — Proposal-Authoring und Endzustandsgrenzen](bundle-653-proposal-authoring.md)
+
+- [Bundle 654 — Öffentliche Proposal-Strukturvalidierung](bundle-654-proposal-validation.md)
+
+- [Bundle 655 — Korrektur der Proposal-Strukturvalidierung](bundle-655-proposal-validation-correction.md)
+
+- [Bundle 656 — Befehlsinventar der strukturierten Requests](bundle-656-request-command-inventory.md)

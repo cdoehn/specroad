@@ -76,7 +76,16 @@ class CapabilityScopeTests(unittest.TestCase):
         SchemaCatalog().validate(schema_id, record_value('proposal'))
         semantic = capabilities(builtin_registry())['semantic']
         self.assertEqual(semantic['supported_versions']['proposal'], [])
-        self.assertNotIn('proposal', semantic['command_groups'])
+        self.assertIn('proposal', semantic['command_groups'])
+        proposals = [command for command in semantic['commands']
+                     if command['command_id'].startswith('proposal.')]
+        self.assertEqual([command['command_id'] for command in proposals], ['proposal.validate'])
+        self.assertEqual(proposals[0]['command_class'], 'read_only')
+        self.assertEqual(proposals[0]['result_schema'], 'proposal-validation-v1')
+        # The real structural reader does not advertise any review/apply workflow.
+        without_proposals = CommandRegistry(tuple(command for command in builtin_registry().commands
+                                                  if not command.command_id.startswith('proposal.')))
+        self.assertNotIn('proposal', capabilities(without_proposals)['semantic']['command_groups'])
         self.assertEqual(semantic['exchange_formats'], ['csv', 'ndjson', 'reqif', 'reqifz'])
         without_export = CommandRegistry(tuple(command for command in builtin_registry().commands
                                                if command.command_id != 'export'))
