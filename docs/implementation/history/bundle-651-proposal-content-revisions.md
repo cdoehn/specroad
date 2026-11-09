@@ -59,8 +59,8 @@ weiterhin auf partial und behaupten keinen vollständigen CLI-Abschluss.
 - C: eine feste Inhaltsprojektion für Erzeugung, Originalprüfung, Revisions-
   vorbereitung und Freigabebindung; W-/R-Testbytes und Fehlerverträge bleiben.
 
-Vorbereiteter W-Zustand: Die Fortschrittswerte gelten erst nach dem
-erfolgreichen eigenen Apply-Gate und Commit. R und C bleiben bis zu ihren eigenen Gates offen.
+Vorbereiteter R-Zustand: Die Fortschrittswerte gelten erst nach dem
+erfolgreichen eigenen Apply-Gate und Commit. C bleibt bis zu seinem eigenen Gate offen.
 
 Dev führt keine Verhaltenstests aus. Syntax, reine Collection und native
 Paketvalidierung sind keine bestandenen Apply-Gates. Jede Stage verlangt die

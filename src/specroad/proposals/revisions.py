@@ -35,7 +35,8 @@ class ProposalRevision:
         require(type(candidate) is dict, 'proposal_object_required')
         value = parse_json_object(canonical_json_bytes(candidate))
         for field in _MANAGED:
-            require(field in value and value[field] == before[field],
+            require(field in value and canonical_json_bytes(value[field]) ==
+                    canonical_json_bytes(before[field]),
                     'proposal_managed_field_changed', pointer='/' + field)
         changed = canonical_json_bytes(value) != canonical_json_bytes(before)
         if changed:
@@ -45,12 +46,14 @@ class ProposalRevision:
             content_changed = digest != before['content_sha256']
             for field in ('reviews', 'control_history'):
                 old, new = before.get(field, []), value.get(field, [])
-                require(type(new) is list and new[:len(old)] == old,
+                require(type(new) is list and canonical_json_bytes(new[:len(old)]) ==
+                        canonical_json_bytes(old),
                         'proposal_history_rewritten', pointer='/' + field)
             if content_changed:
                 require(before['proposal_status'] in ('draft', 'in_review', 'approved'),
                         'proposal_authoring_status_invalid')
-                require(all(value.get(field) == before.get(field) for field in _CONTROL),
+                require(all(canonical_json_bytes(value.get(field)) ==
+                            canonical_json_bytes(before.get(field)) for field in _CONTROL),
                         'proposal_content_and_control_mixed')
                 value.update(maturity='draft', proposal_status='draft')
             require(value.get('proposal_status') not in ('validated', 'checked'),
@@ -60,7 +63,8 @@ class ProposalRevision:
                          content_sha256=digest,
                          updated_at=next_update_time(planned_at.value, before['updated_at']),
                          updated_by=actor.as_fields())
-            after = ProposalOriginal(canonical_json_bytes(value), path=original.path)
+            encoded = canonical_json_bytes(value)
+            after = ProposalOriginal(encoded, path=original.path)
         else:
             after = original
         object.__setattr__(self, 'before', original)

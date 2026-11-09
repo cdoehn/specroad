@@ -348,3 +348,5 @@
 - [Bundle 650 — geordnete Proposal-Änderungen](bundle-650-proposal-change-order.md)
 
 - [Bundle 651 — Proposal-Inhaltsrevision und Hashprojektion](bundle-651-proposal-content-revisions.md)
+
+- [Bundle 652 — Extension-Testdaten und vollständiger 18.d-Rest](bundle-652-proposal-extension-fixture-correction.md)
