@@ -5,18 +5,17 @@ results and root. Reordering operations never silently reuses a target hash.
 This value does not revise a Proposal, invalidate reviews or publish files.
 """
 from dataclasses import dataclass
-import secrets
 
 from ..changes import ChangePlan
 from ..model._schema import validate_builtin
 from ..model.audit_fields import audit_definitions
 from ..model.canonical import canonical_json_bytes
-from ..model.identity_tokens import encode128, decode128
 from ..model.proposal_fields import proposal_authoring_fields
 from ..storage.json_syntax import parse_json_object
 from .authoring import Proposal
 from .authoring_fields import validate_explanations
-from .values import ProposalError, require
+from .values import require
+from .change_ids import change_id as checked_change_id, allocate_change_id
 
 
 def _operations(plan):
@@ -58,12 +57,10 @@ class ProposalChanges:
         return False
 
     def _index(self, change_id):
-        require(type(change_id) is str and change_id.startswith('CHG-'),
-                'proposal_change_id_required', pointer='/change_id')
-        decode128(change_id[4:])
-        require(change_id in self.change_ids,
+        identity = checked_change_id(change_id)
+        require(identity in self.change_ids,
                 'proposal_change_not_found', pointer='/change_id')
-        return self.change_ids.index(change_id)
+        return self.change_ids.index(identity)
 
     def get(self, change_id):
         index = self._index(change_id)
@@ -126,13 +123,7 @@ class ProposalChanges:
         if parse_json_object(self._creator)['actor_type'] == 'ai':
             require(type(row['confidence']) in (int, float), 'proposal_confidence_required',
                     pointer='/explanation/confidence')
-        while True:
-            try:
-                identity = 'CHG-' + encode128(secrets.token_bytes(16))
-            except OSError as error:
-                raise ProposalError('proposal_change_entropy_unavailable', exit_code=5) from error
-            if identity not in self.change_ids:
-                break
+        identity = allocate_change_id(self.change_ids)
         row['change_id'] = identity
         changes.insert(index, row)
         return self._replace(change_plan, changes, operations, (identity,))
