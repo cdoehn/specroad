@@ -372,7 +372,8 @@ def pytest_sessionfinish(session, exitstatus):
         return
     pool = None
     if getattr(session.config, '_sr_host_profile', None) is not None:
-        from dev.test_hosts.pytest_pool import observation as pool_observation
+        from dev.test_hosts.pytest_pool import close_history, observation as pool_observation
+        close_history(session.config)
         pool = pool_observation(session.config)
     if pool is not None:
         try:
@@ -469,7 +470,8 @@ def pytest_sessionfinish(session, exitstatus):
 
 
 def pytest_unconfigure(config):
-    if getattr(config, '_sr_pool_lease', None) is not None:
+    if (getattr(config, '_sr_pool_lease', None) is not None
+            or getattr(config, '_sr_pool_history', None) is not None):
         from dev.test_hosts.pytest_pool import close
         close(config)
     state = getattr(config, "_specroad_verification", None)

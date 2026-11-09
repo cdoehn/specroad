@@ -5,7 +5,7 @@ from pathlib import Path
 import selectors
 import subprocess
 from .config import Config, child_environment
-from .execution_scope import execution_directory, writable_roots
+from .execution_scope import execution_directory, policy
 from .errors import ControlError
 from .local import decode_object, read_private, write_private, json_write
 
@@ -64,13 +64,17 @@ class Codex:
         write_private(schema_path, (json.dumps(schema) + "\n").encode(), exclusive=True)
         if answer_path.exists() or answer_path.is_symlink():
             raise ControlError("job_output_exists", "A previous job output will not be overwritten.")
+        turn_policy = policy(self.config, readonly=readonly)
+        sandbox = turn_policy['sandboxPolicy']
+        mode = {'readOnly': 'read-only', 'workspaceWrite': 'workspace-write',
+                'dangerFullAccess': 'danger-full-access'}[sandbox['type']]
         args = [str(self.config.codex_executable), "exec", "resume", "--json",
-                "-c", 'approval_policy="never"',
-                "-c", 'sandbox_mode="read-only"' if readonly else 'sandbox_mode="workspace-write"']
+                "-c", 'approval_policy="never"', "-c", 'sandbox_mode=' + json.dumps(mode)]
         args[2:2] = ["--cd", str(working)]
-        if not readonly:
-            args.extend(["-c", "sandbox_workspace_write.writable_roots=" + json.dumps(writable_roots(self.config))])
-        args.extend(["-c", "sandbox_workspace_write.network_access=false"])
+        if sandbox['type'] == 'workspaceWrite':
+            args.extend(["-c", "sandbox_workspace_write.writable_roots=" + json.dumps(sandbox['writableRoots'])])
+        if sandbox['type'] != 'dangerFullAccess':
+            args.extend(["-c", "sandbox_workspace_write.network_access=false"])
         args.extend(["--output-schema", str(schema_path), "--output-last-message", str(answer_path), self.config.session_id, "-"])
         stdout_path, stderr_path = directory / "events.jsonl", directory / "stderr.log"
         write_private(stdout_path, b"", exclusive=True)

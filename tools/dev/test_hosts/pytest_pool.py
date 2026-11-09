@@ -8,6 +8,7 @@ from verification_support.identity import source_identity
 from .config import read_json
 from .environment import digest
 from .history import HistoryServer
+from .history_writer import HistoryWriter
 from .lease import Lease, io_priority
 from .contract import public_proof, validate_profile
 
@@ -54,13 +55,16 @@ def setup_node(node, state):
     profile = getattr(node.config, '_sr_host_profile', None)
     if profile is None:
         return
+    if getattr(node.config, '_sr_pool_history', None) is None:
+        node.config._sr_pool_history = HistoryWriter(state.history_root)
     row = profile['workers'][node.gateway.id]
     node.workerinput['sr_host_resources'] = row['resources']
     node.workerinput['sr_pool_worker'] = {**row, 'source_sha256': profile['source_sha256'],
         'snapshot_sha256': profile['snapshot_sha256'], 'selected': list(profile['selected'])}
     channel = node.gateway.newchannel()
     server = HistoryServer(channel, state.history_root, state.history_run, node.gateway.id,
-                           row['host'], row['environment_sha256'], profile['selected'])
+                           row['host'], row['environment_sha256'], profile['selected'],
+                           writer=node.config._sr_pool_history)
     channel.setcallback(server.receive, endmarker=None)
     node.config._sr_pool_servers.append(server)
     node.workerinput['sr_history_channel'] = channel
@@ -88,7 +92,14 @@ def observation(config):
             'errors': [e for server in config._sr_pool_servers for e in server.errors]}
 
 
+def close_history(config):
+    writer = getattr(config, '_sr_pool_history', None)
+    if writer is not None:
+        writer.close()
+
+
 def close(config):
+    close_history(config)
     lease = getattr(config, '_sr_pool_lease', None)
     if lease is not None:
         lease.close()

@@ -5,7 +5,7 @@
 Commit `8cd3f431974586ff61d59c00ecf5b4dd545b4bee`. Alle vier angekündigten
 Stages einschließlich 18.a.W/R/C wurden committed; kein offener Rest.
 
-Diese Datei beschreibt den vorbereiteten Zielzustand **18.b.W**.
+Diese Datei beschreibt den vorbereiteten Zielzustand **18.b.R**.
 Erst das jeweilige erfolgreiche Apply-Testgate und der native Commit machen
 den zugehörigen Planfortschritt wirksam. Dev hat keine Verhaltenstests ausgeführt.
 Die bestehende Spezifikation 10.8.1 und 11.10 genügt; keine neue Detailklärung.

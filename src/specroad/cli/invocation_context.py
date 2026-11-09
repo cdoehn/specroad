@@ -39,6 +39,10 @@ class InvocationContextBuilder:
             check()
         except runtime.UnsupportedRuntimeError as error:
             raise OperationFailure(FailureKind.ENVIRONMENT, "The current runtime is unsupported.") from error
+        if (current.command.command_id.startswith('proposal.')
+                and current.command.words[0] == 'proposal'):
+            from .proposal_basis import check_proposal_basis_options
+            check_proposal_basis_options(current, cwd=cwd)
         if self.recovery_authority is not None:
             from ..changes.recovery_values import RecoveryAuthority
             if type(self.recovery_authority) is not RecoveryAuthority:

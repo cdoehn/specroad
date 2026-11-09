@@ -194,3 +194,34 @@ Eine belegte neue Bindung erzeugt genau einen neuen Dev-Auftrag zum Portieren
 des vollständigen offenen Rests. Alte ZIPs, Budget und Klärungszielbytes bleiben
 erhalten. Unklare/fremde Results erfordern weiterhin die explizite aktuelle
 Übernahme; Details: SpecRoad-Spezifikation 2.5.4.4 und DEVELOPMENT.md.
+
+
+## Codex-Zugriffsrechte ausdrücklich festlegen
+
+Control setzt bei jedem Modellaufruf eine Policy. Eine manuelle Änderung der
+Chat-Rechte allein ersetzt deshalb nicht die Control-Konfiguration.
+Nach erfolgreicher Apply-Abnahme und Offline-Installation dieser Version:
+
+```sh
+control configure --thread-id <bestehende-Dev-Thread-ID> --access-mode full-access
+```
+
+Den Dienst für configure wie bisher kontrolliert stoppen; keine aktive Dev-
+Arbeit unterbrechen. Die vorhandene Thread-ID verwenden. Bei bereits
+initialisierter History kein neues Seed-Result nötig. Die Antwort bestätigt
+`access_mode: full-access`, startet aber keinen Dienst. Erst eine ausdrücklich
+beauftragte Start-/Resume-Aktion setzt die Automatik fort.
+
+Die Wahl steht dauerhaft als `access_mode = "full-access"` im externen
+`[develop]`-Abschnitt. Beide Transporte und auch Probe-/Fortsetzungsturns behalten
+sie bei. Ohne Option bleibt eine gespeicherte Wahl bei configure erhalten.
+Alte Konfigurationen ohne Feld bleiben `workspace-write`; zum Zurückstellen
+explizit `--access-mode workspace-write` verwenden. Full Access erlaubt Codex
+Datei- und Netzwerkzugriff als angemeldeter Benutzer, liefert keine sudo-Rechte
+und speichert keine Passwörter. Fachliche Auftrags- und Apply-Regeln gelten weiter.
+
+Die Wahl wirkt für neu gestartete Turns. Ein laufender Turn wird nicht verändert.
+Wurde ein fehlgeschlagener Turn mit anderen Rechten gestartet, bleibt seine
+Fortsetzung wegen abweichender Belege gesperrt; Originale nicht umschreiben.
+Die Details einschließlich Probe-Verhalten stehen in
+[CONTROL-ACCESS-647](spec/SPECIFICATION.md#off-plan-control-access-647-expliziten-vollzugriff-beibehalten).

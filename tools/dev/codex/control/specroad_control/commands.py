@@ -61,9 +61,12 @@ def offline(paths: Paths):
 
 
 def configure(paths: Paths, *, thread_id: str, result: str | None = None, codex: str | None = None,
-              core_python: str | None = None, transport: str | None = None) -> dict:
+              core_python: str | None = None, transport: str | None = None,
+              access_mode: str | None = None) -> dict:
     with offline(paths):
         old, legacy = setup_config(paths)
+        if access_mode is not None and access_mode not in ('workspace-write', 'full-access'):
+            raise ControlError('invalid_access_mode', 'Select workspace-write or full-access explicitly.')
         try:
             identity(thread_id)
         except (ValueError, TypeError):
@@ -75,6 +78,7 @@ def configure(paths: Paths, *, thread_id: str, result: str | None = None, codex:
         home = old.codex_home or Path(os.environ.get("CODEX_HOME") or Path.home() / ".codex")
         candidate = replace(old, session_id=thread_id, codex_executable=codex_path,
                             core_python=python_path, codex_home=home, transport=transport or old.transport,
+                            access_mode=old.access_mode if access_mode is None else access_mode,
                             command_path=old.command_path or os.environ.get("PATH", ""))
         history_path = paths.state / "automation.sqlite3"
         exists, empty_history = inspect_history(candidate, history_path, legacy)
@@ -100,6 +104,7 @@ def configure(paths: Paths, *, thread_id: str, result: str | None = None, codex:
             # Repeating setup after an interrupted config write is idempotent.
             write_private(paths.config, render(candidate).encode())
         return {"configured": True, "service_started": False, "config": str(paths.config),
+                "access_mode": candidate.access_mode,
                 "runtime_state": str(history_path), "bootstrap_created": not exists or empty_history,
                 "legacy_seed_migrated": legacy is not None, **evidence}
 

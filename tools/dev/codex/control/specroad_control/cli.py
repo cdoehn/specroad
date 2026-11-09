@@ -26,6 +26,8 @@ def main(argv=None) -> int:
     parser.add_argument("--codex", help="Absolute existing Codex executable")
     parser.add_argument("--core-python", help="Absolute Python in the existing PatchHarbor installation")
     parser.add_argument("--transport", choices=("exec", "app-server-proxy"))
+    parser.add_argument("--access-mode", choices=("workspace-write", "full-access"),
+                        help="Persistent Codex permissions, including probes; only with configure")
     parser.add_argument('--source-sha256', help='Exact previous Result SHA-256; only with authorize-clarification')
     parser.add_argument('--reason', help='Explicit operator reason; with authorize-clarification or accept-current')
     parser.add_argument('--retry-blocked', action='store_true', help='Authorize one new attempt after a patchless blocked V4 completion')
@@ -58,7 +60,7 @@ def main(argv=None) -> int:
         parser.error(args.command + " requires --result")
     if args.command not in ("configure", "reconcile-apply", "reconcile-blocked", "deploy", "authorize-clarification", "accept-current") and args.result:
         parser.error("--result requires setup, reconciliation, authorization, acceptance or deploy")
-    if args.command != "configure" and any((args.codex, args.core_python, args.transport)):
+    if args.command != "configure" and any((args.codex, args.core_python, args.transport, args.access_mode)):
         parser.error("setup options are only allowed with configure")
     if args.command != "handover" and (args.from_thread_cwd or args.defer or args.resume_after):
         parser.error("handover options are only allowed with handover")
@@ -113,7 +115,8 @@ def main(argv=None) -> int:
             result = enqueue(paths, args.result, source_sha256=args.source_sha256, reason=args.reason)
         elif args.command == "configure":
             result = commands.configure(paths, thread_id=args.thread_id, result=args.result,
-                                        codex=args.codex, core_python=args.core_python, transport=args.transport)
+                                        codex=args.codex, core_python=args.core_python, transport=args.transport,
+                                        access_mode=args.access_mode)
         elif args.command in ("check", "probe", "recover"):
             result = getattr(commands, args.command)(paths)
         elif args.command in ("install", "start", "stop"):

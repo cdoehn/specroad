@@ -23,10 +23,11 @@ def receipts(config, directory, source):
               'prompt_sha256': sha(expected), **policy(config)}
     cwd = str(execution_directory(config))
     modern = {**wanted, 'cwd': cwd}
-    legacy = cwd == str(config.repository) and dispatch == wanted
+    legacy = (config.access_mode == 'workspace-write'
+              and cwd == str(config.repository) and dispatch == wanted)
     if (config.transport != 'app-server-proxy' or attempt.get('workspace_sha256') is None
             or not dispatch or not (dispatch == modern or legacy)):
-        raise ControlError('continuation_dispatch_unproven', 'Continuation requires its original bounded local dispatch receipt.')
+        raise ControlError('continuation_dispatch_unproven', 'Continuation requires its exact original cwd and access policy receipt.')
     if json_read(directory / 'protocol-completion.json') is not None:
         raise ControlError('retry_completion_conflict', 'Existing successful output must be recovered instead.')
     return failure, attempt, dispatch, expected

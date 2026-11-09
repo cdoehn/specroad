@@ -29,7 +29,15 @@ def writable_roots(config: Config) -> list[str]:
     return [str(execution_directory(config)), str(config.exchange)]
 
 
-def policy(config):
+def policy(config, *, readonly=False):
+    # Full access is an explicit operator choice, including visibility probes:
+    # Codex turn overrides persist into subsequent manual and automatic turns.
+    if config.access_mode not in ('workspace-write', 'full-access'):
+        raise ControlError('invalid_access_mode', 'Select workspace-write or full-access explicitly.')
+    if config.access_mode == 'full-access':
+        return {'approvalPolicy': 'never', 'sandboxPolicy': {'type': 'dangerFullAccess'}}
+    if readonly:
+        return {'approvalPolicy': 'never', 'sandboxPolicy': {'type': 'readOnly'}}
     return {'approvalPolicy': 'never', 'sandboxPolicy': {
         'type': 'workspaceWrite', 'writableRoots': writable_roots(config),
         'networkAccess': False}}

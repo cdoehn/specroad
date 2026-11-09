@@ -15,7 +15,8 @@ from .values import ProposalOriginal, SPECIFICATION_SCOPE, require
 
 def specification_manifest(model):
     require(type(model) is TargetModel, 'proposal_native_model_required')
-    closure, manifest, _, _ = export_scope(model, ScopeDescriptor(SPECIFICATION_SCOPE))
+    from .basis import fixed_proposal_scope
+    closure, manifest, _, _ = export_scope(model, fixed_proposal_scope())
     require(not closure.boundary_references, 'proposal_basis_not_closed')
     return manifest
 
@@ -60,7 +61,7 @@ def reconstruct_proposal_target(context):
     require(manifest.sha256 == plan.data['base']['model_root_sha256'],
             'proposal_original_basis_mismatch', path=original.path, exit_code=6)
     folded, normalize, _ = fold_saved_plan(plan, model,
-        observed_base_root=manifest.sha256, observed_scope=SPECIFICATION_SCOPE)
+        observed_base_root=manifest.sha256, observed_scope=manifest.data['scope_descriptor'])
     originals = {a['id']: d for a, d in zip(model.artifacts, model.documents)}
     documents = []
     from ..model.canonical import canonical_json_sha256

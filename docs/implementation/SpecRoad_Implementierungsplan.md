@@ -18,15 +18,19 @@ OFF-PLAN-Ergänzung: [Hostdaten für lokale Testläufe](decisions/local-test-his
 
 Detailentscheidung für 18.a: [PROPOSAL-DATA-645](decisions/proposal-data-645.md).
 
+Korrektur und ausdrückliche OFF-PLAN-Ergänzung: [Bundle 647 — 18.b.R/C und Control-Vollzugriff](history/bundle-647-correction-and-access.md).
+
+Korrektur des weiterhin offenen R/C-Rests: [Bundle 648 — Hostpool-Laufzeitschreiber](history/bundle-648-host-history-writer.md).
+
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
 plan_revision: 114
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 733
-last_completed_plan_commit: 18.b.W
-next_plan_commit: 18.b.R
-last_completed_numbered_bundle: 646
+implementation_plan_commits_completed: 734
+last_completed_plan_commit: 18.b.R
+next_plan_commit: 18.b.C
+last_completed_numbered_bundle: 649
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null

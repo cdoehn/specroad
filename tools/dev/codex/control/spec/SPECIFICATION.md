@@ -332,6 +332,11 @@ Keine neue Bedienfaehigkeit, kein Config-/Status-/Dienstzugriff durch Apply.
 
 ## OFF-PLAN THREAD-WORKSPACE-020: Thread-Workspace beibehalten
 
+Die Rechtevorgaben dieses Abschnitts beschreiben weiterhin den kompatiblen
+Modus `workspace-write`. Der ausdrückliche Nutzerauftrag
+[CONTROL-ACCESS-647](#off-plan-control-access-647-expliziten-vollzugriff-beibehalten)
+ergänzt den optionalen Modus `full-access`, einschließlich Probe-Turns.
+
 Ausdruecklicher Nutzerauftrag vom 2. November 2026: Der vorhandene Thread
 soll im konfigurierten Workspace-Elternordner bleiben und auf dessen gesamten
 Inhalt Schreibzugriff erhalten, einschliesslich Apply und Control. Diese
@@ -708,8 +713,9 @@ ein neuer Turn im selben Thread erhaelt den Auftrag, den erhaltenen Zwischenstan
 zuerst zu pruefen und denselben quellgebundenen Entwicklungsauftrag fortzusetzen.
 Kein neuer N-Auftrag, kein Reset, kein Modell-/Denkstufenwechsel.
 
-Erforderlich sind der eigene gespeicherte App-Server-Dispatch mit workspaceWrite
-nur fuer Dev/Exchange, networkAccess=false und approvalPolicy=never, der exakte
+Erforderlich sind der eigene gespeicherte App-Server-Dispatch mit der exakt
+konfigurierten Policy nach THREAD-WORKSPACE-020 beziehungsweise CONTROL-ACCESS-647
+und approvalPolicy=never, der exakte
 terminal fehlgeschlagene Turn mit serverOverloaded und willRetry=false sowie
 vollstaendige Items dieses Turns. Der Turn muss der neueste sein; ein spaeterer
 manueller Turn sperrt. thread/read darf idle, notLoaded oder systemError melden;
@@ -1139,3 +1145,58 @@ Keine implizite Freigabe, Budgeterneuerung, Dienst-/Modell-/Apply-Ausführung.
 
 Native Ablehnungsnachfolger, Belegungswartephase und offene Restfolge folgen
 SpecRoad-Spezifikation 2.5.4.4. Keine neue Apply-Schleife oder Operatorfreigabe.
+
+
+## OFF-PLAN CONTROL-ACCESS-647: Expliziten Vollzugriff beibehalten
+
+Ausdrücklicher Nutzerauftrag vom 9. November 2026, gemeinsam mit der offenen
+18.b.R/C-Korrektur: Control darf den vom Betreiber gewählten Vollzugriff nicht
+bei automatischen Aufrufen wieder einschränken. Diese Korrektur ersetzt im
+expliziten Modus `full-access` die Rechte- und Probevorgaben von
+THREAD-WORKSPACE-020; sie erweitert weder den Produktplan noch eine fachliche
+Aufgabe. Der vorhandene erfolgreiche W-Commit wird nicht wiederholt.
+
+`develop.access_mode` erlaubt genau `workspace-write` und `full-access`.
+Fehlendes Feld bedeutet den bisherigen Modus `workspace-write`; Lesen schreibt
+keine Config um. Unbekannte oder falsch typisierte Werte sperren. Die bestehende
+Offline-Aktion `configure --access-mode full-access` wählt den Modus ausdrücklich
+und dauerhaft. Ohne Option bleibt die gespeicherte Wahl erhalten; eine spätere
+explizite Wahl `workspace-write` ist möglich. Konfiguration, History, Pause,
+Result-Bindungen und Budgets werden dadurch nicht zurückgesetzt. Die Antwort
+auf configure nennt `access_mode`. Configure startet weder Dienst noch Modell.
+
+Jeder neue produktive Turn, Probe-Turn und zulässige Fortsetzungsturn verwendet
+in `full-access` `approvalPolicy=never` und `sandboxPolicy={type:dangerFullAccess}`.
+Der exec-resume-Transport setzt entsprechend `approval_policy="never"` und
+`sandbox_mode="danger-full-access"`; er ergänzt keine einschränkenden
+workspace-write-/Netzwerkoptionen. Keine zusätzlichen bypass-/full-auto-Flags,
+kein neues Modell und keine geänderte Denkstufe. Der App-Server erhält diese
+Werte bei turn/start; thread/resume bleibt eine Anbindung ohne eigenen
+Rechtewechsel. Codex speichert Turn-Overrides auch für nachfolgende Turns;
+deshalb ist auch ein Probe-Turn im Full-Access-Modus keine readOnly-Abstufung.
+Sein Auftrag bleibt unverändert: nur den Marker antworten, keine Tools oder
+Dateizugriffe. Ein Probe-Erfolg ist kein Nachweis externer Sichtbarkeit.
+
+Der kompatible Modus behält workspaceWrite mit den expliziten Schreibwurzeln,
+networkAccess=false und readOnly-Probes. Threadidentität, zulässiger kanonischer
+Arbeitsstamm, Aktivitätsprüfung, Pause am Dispatch, kein Fallback oder
+stillschweigender Retry, Ablehnung automatischer Approval-Anfragen sowie
+fachliche Dev-/Apply-Trennung bleiben in beiden Modi gleich. Vollzugriff
+bedeutet Codex-Zugriff als angemeldeter Benutzer, keine sudo-Freigabe, keine
+gespeicherten Passwörter und keine Umgehung von Betriebssystemrechten.
+
+Neue Fortsetzungsbelege binden die tatsächliche Policy und cwd. Nur deren exakte
+Übereinstimmung erlaubt die bestehende Fortsetzungsprüfung; ein Moduswechsel
+schreibt alte Belege nicht um und erteilt keine neue Wiederholungsbefugnis.
+Historische Belege ohne cwd gelten ausschließlich im kompatiblen Modus mit
+engem Dev-cwd. Vollständige Aktions-, Quellen-, Datei-, Terminal- und Budget-
+nachweise bleiben erforderlich; Vollzugriff lockert diese Kriterien nicht.
+
+Abnahme: Konfiguration einschließlich Altdaten, Roundtrip und Fehlwerten;
+beide tatsächlichen Transportpfade mit isolierten Gegenstellen, wiederholte
+Turns und Probes; Fortsetzung und unveränderte Ablehnung bei Pause, falschem/
+belegtem Thread, abweichender Policy, fehlendem cwd oder offenen Hintergrund-
+aktionen. Gesamte Control-Regression als Pflichtauswahl. Dev führt nur
+Collection und statische Prüfungen aus. Aktivierung erfolgt erst nach
+vollständig erfolgreichem Apply, geprüftem Offline-Deploy und expliziter
+Konfiguration. Das Bundle selbst installiert oder startet keinen Dienst.

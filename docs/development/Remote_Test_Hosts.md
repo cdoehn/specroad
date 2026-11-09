@@ -111,6 +111,14 @@ gespeichert. Fehlende Bestätigungen, Verbindungsabbrüche, Quellenwechsel oder
 unvollständige Phasen erlauben keinen Commit. Bereits vorhandene Datensätze
 werden weder gelöscht noch nachträglich einem Host zugeschrieben.
 
+Der Pool öffnet seinen gemeinsamen Laufzeitschreiber vor der ersten Worker-
+Anfrage. Ein eigener Thread hält die vollständig geprüfte SQLite-Verbindung;
+alle Kanäle warten auf ihre jeweilige abgeschlossene FULL-Transaktion. Dadurch
+konkurrieren Workerstarts nicht um wiederholte vollständige Datenbankprüfungen.
+Die Prüfung wird nicht übersprungen; ein Initialisierungsfehler verhindert den
+Start. Ein einzelnes Kanalende beendet nicht die Verbindung anderer Worker.
+Sessionabschluss und Unconfigure geben den Schreiber kontrolliert frei.
+
 `test-monitor` zeigt für neue Pool-Messungen Host, Worker und alle drei Phasen;
 die Suche umfasst auch den Hostnamen. `--once --json` enthält `host` und
 `environment_sha256`. Historische Datensätze ohne Hostbeleg bleiben `null`/`—`.

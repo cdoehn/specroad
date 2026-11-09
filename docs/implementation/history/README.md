@@ -338,3 +338,9 @@
 - [Bundle 645 – Proposalobjekt und Provenienz](bundle-645-proposal-data.md).
 
 - [Bundle 646 — Feste Proposalbasis und Kontrollausschluss](bundle-646-proposal-basis.md)
+
+- [Bundle 647 — 18.b.R/C-Korrektur und Control-Vollzugriff](bundle-647-correction-and-access.md)
+
+- [Bundle 648 — Hostpool-Laufzeitschreiber und offener 18.b.R/C-Rest](bundle-648-host-history-writer.md)
+
+- [Bundle 649 — isolierte Apply- und Control-Testfixtures](bundle-649-isolated-gate-fixtures.md)

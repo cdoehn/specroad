@@ -32,7 +32,7 @@ def run_proxy_turn(self, prompt, schema, directory, *, readonly=False, authorize
         write_private(directory / "schema.json", (json.dumps(schema) + "\n").encode(), exclusive=True)
         events = directory / "events.jsonl"
         write_private(events, b"", exclusive=True)
-        turn_policy = {'approvalPolicy': 'never', 'sandboxPolicy': {'type': 'readOnly'}} if readonly else policy(self.config)
+        turn_policy = policy(self.config, readonly=readonly)
         params = {"threadId": self.config.session_id, "cwd": str(working),
                   "input": [{"type": "text", "text": prompt}], **turn_policy, "outputSchema": schema}
         started = proxy.call("turn/start", params)

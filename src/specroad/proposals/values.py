@@ -82,9 +82,10 @@ class ProposalOriginal:
         require(content_sha256(value) == value['content_sha256'],
                 'proposal_content_hash_mismatch', path=path)
         base = value['base']
-        require('scope_descriptor' in base
-                and ScopeDescriptor(base['scope_descriptor']).data == SPECIFICATION_SCOPE,
+        require('scope_descriptor' in base,
                 'proposal_specification_scope_required', path=path)
+        from .basis import require_proposal_scope
+        require_proposal_scope(base['scope_descriptor'])
         plan = ChangePlan(canonical_json_bytes(value['change_plan']))
         from .authoring_fields import validate_explanations
         validate_explanations(value, plan)

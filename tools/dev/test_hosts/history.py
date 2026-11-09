@@ -42,16 +42,17 @@ class HistoryClient:
 
 
 class HistoryServer:
-    """Callback owns its SQLite connection; every ACK follows a FULL transaction."""
-    def __init__(self, channel, root, run, worker, host, environment, selected):
+    """Each channel validates its own sequence; ACK follows a FULL transaction."""
+    def __init__(self, channel, root, run, worker, host, environment, selected, *, writer=None):
         self.channel, self.root, self.run = channel, root, run
         self.worker, self.host, self.environment, self.selected = worker, host, environment, selected
-        self.sequence, self.history, self.errors = 0, None, []
+        self.sequence, self.history, self.errors = 0, writer, []
+        self.owns_history = writer is None
         self.closed = threading.Event()
 
     def receive(self, message):
         if message is None:
-            if self.history is not None:
+            if self.owns_history and self.history is not None:
                 self.history.close()
             self.closed.set()
             return
@@ -80,4 +81,9 @@ class HistoryServer:
             self.channel.send((sequence, 'ok'))
         except (ValueError, TypeError, KeyError, OSError, sqlite3.Error) as error:
             self.errors.append(type(error).__name__)
-            self.channel.send((self.sequence, 'rejected'))
+            try:
+                self.channel.send((self.sequence, 'rejected'))
+            except OSError:
+                # A disconnected peer cannot receive rejection either. Keep
+                # the failure in the pool evidence without killing callbacks.
+                pass

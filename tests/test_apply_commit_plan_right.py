@@ -54,17 +54,23 @@ def test_real_parallel_union_records_every_phase_and_red_gate_keeps_head(tmp_pat
     plan_path = root/'build/plan.json'; plan_path.write_bytes(canonical(plan))
     expected_source = source_identity(root)
     out = root/'build/gate'
+    # This fixture owns a local gate, never the operator's real SSH pool.
+    # A deliberately invalid pool makes accidental host-config use fail closed.
+    unwanted_pool = tmp_path/'unwanted-hosts.json'
+    unwanted_pool.write_text('not a host configuration')
     process = execute(root,'run_apply_tests.py',['--test-plan',str(plan_path),
-        '--commit-id','step.W','--outdir',str(out),'--worker-limit','2'],
-        environment={'SPECROAD_NESTED_TEST_RUN':'0'})
+        '--commit-id','step.W','--outdir',str(out),'--worker-limit','2','--local'],
+        environment={'SPECROAD_NESTED_TEST_RUN':'1', 'SPECROAD_TEST_HOSTS':str(unwanted_pool)})
     assert process.returncode == (1 if failing else 0), (process.stdout+process.stderr).decode()
     report = json.loads((out/'selection.json').read_bytes())
     selected = {ids[i] for i in (0,1,3,6,8)}
     assert set(report['nodeid_to_test_id'].values()) == selected
     assert report['required_tests']['restored_slow_test_ids'] == [ids[8]]
     assert report['full_suite_passed'] is None
+    assert 'host_pool' not in report and not (out/'host-run.json').exists()
     if host_policy:
-        count, resources = host.select_workers(root,worker_limit=2,environment={})
+        count, resources = host.select_workers(root,worker_limit=2,environment={host.NESTED:'1'})
+        assert count == 1 and resources['nested']
         assert report['host_resources'] == resources and report['workers'] == count
         observed = json.loads((out/'observations.json').read_bytes())
         host.verify_resources(observed,resources)

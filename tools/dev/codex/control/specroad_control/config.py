@@ -28,6 +28,7 @@ class Config:
     retry_delays_seconds: tuple = (60, 180, 600, 1800)
     thread_cwd: Path | None = None
     start_delay_seconds: float = 60.0
+    access_mode: str = "workspace-write"
 
 
 def template() -> str:
@@ -44,6 +45,7 @@ def render(config: Config) -> str:
             + "\ncodex_executable = " + q(config.codex_executable)
             + "\ncodex_home = " + q(config.codex_home)
             + "\ntransport = " + q(config.transport)
+            + "\naccess_mode = " + q(config.access_mode)
             + "\ncommand_path = " + q(config.command_path)
             + ("\nthread_cwd = " + q(config.thread_cwd) if config.thread_cwd is not None else "")
             + "\n\n[patchharbor]\nexchange = " + q(config.exchange)
@@ -98,7 +100,7 @@ def parse(doc: dict, paths: Paths) -> Config:
     dev, ph, auto = doc["develop"], doc["patchharbor"], doc.get("automation", {})
     if not all(isinstance(x, dict) for x in (dev, ph, auto)):
         raise ValueError
-    if set(dev) - {"repository", "session_id", "codex_executable", "codex_home", "transport", "command_path", "thread_cwd"}:
+    if set(dev) - {"repository", "session_id", "codex_executable", "codex_home", "transport", "command_path", "thread_cwd", "access_mode"}:
         raise ValueError
     if set(ph) - {"exchange", "repo_id", "python_executable", "archive_directory"}:
         raise ValueError
@@ -129,6 +131,9 @@ def parse(doc: dict, paths: Paths) -> Config:
     transport = text(dev.get("transport", "exec"))
     if transport not in ("exec", "app-server-proxy"):
         raise ValueError
+    access_mode = text(dev.get("access_mode", "workspace-write"))
+    if access_mode not in ("workspace-write", "full-access"):
+        raise ValueError
     archive = text(ph.get("archive_directory", "PatchHarbor-Archive"))
     if archive and (archive in (".", "..") or any(c not in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789._-" for c in archive)):
         raise ValueError
@@ -140,7 +145,7 @@ def parse(doc: dict, paths: Paths) -> Config:
                     transport=transport, settle_seconds=float(settle), archive_directory=archive,
                     command_path=text(dev.get("command_path", "")), retry_delays_seconds=tuple(retry_delays),
                     thread_cwd=absolute(dev.get("thread_cwd", ""), optional=True),
-                    start_delay_seconds=float(delay))
+                    start_delay_seconds=float(delay), access_mode=access_mode)
     repo_real, exchange_real = repo.resolve(), exchange.resolve()
     if config.thread_cwd is not None:
         target = config.thread_cwd
