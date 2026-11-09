@@ -23,10 +23,10 @@ Detailentscheidung für 18.a: [PROPOSAL-DATA-645](decisions/proposal-data-645.md
 ```yaml
 plan_revision: 114
 implementation_plan_commits_total: 900
-implementation_plan_commits_completed: 732
-last_completed_plan_commit: 18.a.C
-next_plan_commit: 18.b.W
-last_completed_numbered_bundle: 645
+implementation_plan_commits_completed: 733
+last_completed_plan_commit: 18.b.W
+next_plan_commit: 18.b.R
+last_completed_numbered_bundle: 646
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null

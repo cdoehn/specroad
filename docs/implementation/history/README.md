@@ -336,3 +336,5 @@
 - [PROPOSAL-DATA-645](../decisions/proposal-data-645.md): Datenformat und Herkunft für 18.a.
 
 - [Bundle 645 – Proposalobjekt und Provenienz](bundle-645-proposal-data.md).
+
+- [Bundle 646 — Feste Proposalbasis und Kontrollausschluss](bundle-646-proposal-basis.md)
