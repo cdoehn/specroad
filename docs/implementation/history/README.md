@@ -344,3 +344,5 @@
 - [Bundle 648 — Hostpool-Laufzeitschreiber und offener 18.b.R/C-Rest](bundle-648-host-history-writer.md)
 
 - [Bundle 649 — isolierte Apply- und Control-Testfixtures](bundle-649-isolated-gate-fixtures.md)
+
+- [Bundle 650 — geordnete Proposal-Änderungen](bundle-650-proposal-change-order.md)

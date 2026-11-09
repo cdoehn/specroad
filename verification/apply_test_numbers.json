@@ -26535,6 +26535,23 @@
     "tests/test_remote_test_history_writer.py::test_disconnected_history_peer_remains_an_error_without_a_second_send_exception",
     "tests/test_remote_test_history_writer.py::test_pool_initializes_one_thread_owned_writer_before_concurrent_worker_rpcs[14]",
     "tests/test_remote_test_history_writer.py::test_pool_initializes_one_thread_owned_writer_before_concurrent_worker_rpcs[1]",
-    "tests/test_remote_test_history_writer.py::test_pool_integrity_failure_stops_setup_before_any_history_channel"
+    "tests/test_remote_test_history_writer.py::test_pool_integrity_failure_stops_setup_before_any_history_channel",
+    "tests/test_proposal_changes.py::test_append_and_insert_follow_normative_vector_and_keep_existing_identities[0-CAB]",
+    "tests/test_proposal_changes.py::test_append_and_insert_follow_normative_vector_and_keep_existing_identities[1-ACB]",
+    "tests/test_proposal_changes.py::test_append_and_insert_follow_normative_vector_and_keep_existing_identities[2-ABC]",
+    "tests/test_proposal_changes.py::test_append_and_insert_follow_normative_vector_and_keep_existing_identities[None-ABC]",
+    "tests/test_proposal_changes.py::test_identity_lookup_and_update_remove_never_use_display_numbers",
+    "tests/test_proposal_changes.py::test_move_uses_index_after_removal_and_preserves_every_operation_explanation[0-1-BAC]",
+    "tests/test_proposal_changes.py::test_move_uses_index_after_removal_and_preserves_every_operation_explanation[0-2-BCA]",
+    "tests/test_proposal_changes.py::test_move_uses_index_after_removal_and_preserves_every_operation_explanation[1-0-BAC]",
+    "tests/test_proposal_changes.py::test_move_uses_index_after_removal_and_preserves_every_operation_explanation[1-1-ABC]",
+    "tests/test_proposal_changes.py::test_move_uses_index_after_removal_and_preserves_every_operation_explanation[1-2-ACB]",
+    "tests/test_proposal_changes.py::test_move_uses_index_after_removal_and_preserves_every_operation_explanation[2-0-CAB]",
+    "tests/test_proposal_changes.py::test_move_uses_index_after_removal_and_preserves_every_operation_explanation[2-1-ACB]",
+    "tests/test_proposal_changes.py::test_native_target_reconstruction_observes_order_of_two_edits_to_one_artifact",
+    "tests/test_proposal_changes.py::test_substituted_complete_plans_are_rejected_without_mutating_the_source[basis]",
+    "tests/test_proposal_changes.py::test_substituted_complete_plans_are_rejected_without_mutating_the_source[control_target]",
+    "tests/test_proposal_changes.py::test_substituted_complete_plans_are_rejected_without_mutating_the_source[lost_operation]",
+    "tests/test_proposal_changes.py::test_substituted_complete_plans_are_rejected_without_mutating_the_source[order]"
   ]
 }
