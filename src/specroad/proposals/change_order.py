@@ -11,7 +11,7 @@ from ..changes import ChangePlan
 from ..model._schema import validate_builtin
 from ..model.audit_fields import audit_definitions
 from ..model.canonical import canonical_json_bytes
-from ..model.identity_tokens import encode128
+from ..model.identity_tokens import encode128, decode128
 from ..model.proposal_fields import proposal_authoring_fields
 from ..storage.json_syntax import parse_json_object
 from .authoring import Proposal
@@ -58,7 +58,10 @@ class ProposalChanges:
         return False
 
     def _index(self, change_id):
-        require(type(change_id) is str and change_id in self.change_ids,
+        require(type(change_id) is str and change_id.startswith('CHG-'),
+                'proposal_change_id_required', pointer='/change_id')
+        decode128(change_id[4:])
+        require(change_id in self.change_ids,
                 'proposal_change_not_found', pointer='/change_id')
         return self.change_ids.index(change_id)
 
@@ -72,7 +75,7 @@ class ProposalChanges:
                 'proposal_change_position', pointer='/position', exit_code=2)
         return position
 
-    def _replace(self, plan, changes, operations, changed):
+    def _check_plan(self, plan, operations):
         actual = _operations(plan)
         require(canonical_json_bytes(actual) == canonical_json_bytes(operations),
                 'proposal_change_order_mismatch', pointer='/change_plan/operations')
@@ -82,6 +85,9 @@ class ProposalChanges:
                 and not any(row['artifact']['artifact_type'] in ('proposal', 'baseline')
                             for row in plan.data['result_artifacts']),
                 'proposal_control_operation_forbidden')
+
+    def _replace(self, plan, changes, operations, changed):
+        self._check_plan(plan, operations)
         validate_builtin(changes, {**proposal_authoring_fields()['changes'],
                                    '$defs': audit_definitions()})
         validate_explanations({'changes': changes, 'created_by': parse_json_object(self._creator)}, plan)
@@ -101,6 +107,9 @@ class ProposalChanges:
                 'proposal_change_order_mismatch', pointer='/change_plan/operations')
         operation = change_plan.operations[index]
         operations.insert(index, operation.data)
+        # Reject changed/missing/extra old operations or a substituted basis
+        # before drawing an identity, even when the entropy source is blocked.
+        self._check_plan(change_plan, operations)
         require(type(explanation) is dict and set(explanation) == {
             'rationale', 'requirement_or_issue_ids', 'sources', 'assumptions', 'confidence'},
             'proposal_change_explanation_required', pointer='/explanation')
@@ -111,6 +120,12 @@ class ProposalChanges:
         # Validate the input before requesting entropy; the temporary identity
         # is never returned. Uniqueness is checked on the final allocated row.
         validate_builtin([row], {**proposal_authoring_fields()['changes'], '$defs': audit_definitions()})
+        refs = row['requirement_or_issue_ids']
+        require(len(set(refs)) == len(refs), 'duplicate_proposal_requirement',
+                pointer='/explanation/requirement_or_issue_ids')
+        if parse_json_object(self._creator)['actor_type'] == 'ai':
+            require(type(row['confidence']) in (int, float), 'proposal_confidence_required',
+                    pointer='/explanation/confidence')
         while True:
             try:
                 identity = 'CHG-' + encode128(secrets.token_bytes(16))

@@ -47,8 +47,8 @@ die betroffenen Requirement-Kataloge führen diese Grenze ausdrücklich als
 - C: eigenständige Identitätsprüfung/-vergabe ohne Arraypositionen oder
   menschliche Nummerierung. Verhalten, Fehlerverträge und R-Tests bleiben gleich.
 
-Vorbereiteter W-Zustand: Die Fortschrittswerte gelten erst nach dem
-erfolgreichen eigenen Apply-Gate und Commit. R und C sind zu diesem Zeitpunkt weiterhin offen.
+Vorbereiteter R-Zustand: Die Fortschrittswerte gelten erst nach dem
+erfolgreichen eigenen Apply-Gate und Commit. C ist zu diesem Zeitpunkt weiterhin offen.
 
 Die gemeinsame Pflichtauswahl umfasst neue/geänderte Tests und Proposal-Daten,
 Basis, lesenden Restore-Kern, Change-Pläne, Fold, Metadaten, Lifecycle und
