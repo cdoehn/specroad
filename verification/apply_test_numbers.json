@@ -26864,6 +26864,17 @@
     "tests/test_proposal_validation_paths.py::test_external_relative_file_is_resolved_at_invocation_cwd_not_project_root[process_default-False]",
     "tests/test_proposal_validation_paths.py::test_external_relative_file_is_resolved_at_invocation_cwd_not_project_root[process_default-True]",
     "tests/test_proposal_validation_paths.py::test_managed_relative_path_uses_nested_invocation_directory[False]",
-    "tests/test_proposal_validation_paths.py::test_managed_relative_path_uses_nested_invocation_directory[True]"
+    "tests/test_proposal_validation_paths.py::test_managed_relative_path_uses_nested_invocation_directory[True]",
+    "tests/test_proposal_check.py::test_check_public_argv_and_request_use_the_same_read_operand_contract[absolute]",
+    "tests/test_proposal_check.py::test_check_public_argv_and_request_use_the_same_read_operand_contract[external]",
+    "tests/test_proposal_check.py::test_check_public_argv_and_request_use_the_same_read_operand_contract[id]",
+    "tests/test_proposal_check.py::test_check_public_argv_and_request_use_the_same_read_operand_contract[relative]",
+    "tests/test_proposal_check.py::test_check_uses_actual_target_and_full_native_gates_without_original_writes[False-False]",
+    "tests/test_proposal_check.py::test_check_uses_actual_target_and_full_native_gates_without_original_writes[False-True]",
+    "tests/test_proposal_check.py::test_check_uses_actual_target_and_full_native_gates_without_original_writes[True-False]",
+    "tests/test_proposal_check.py::test_full_check_rejects_a_model_which_passes_structure_only",
+    "tests/test_proposal_check.py::test_native_query_and_render_read_proposed_values",
+    "tests/test_proposal_check.py::test_real_workspace_contains_basis_and_separate_changed_target_only_when_retained[False]",
+    "tests/test_proposal_check.py::test_real_workspace_contains_basis_and_separate_changed_target_only_when_retained[True]"
   ]
 }

@@ -358,3 +358,11 @@
 - [Bundle 655 — Korrektur der Proposal-Strukturvalidierung](bundle-655-proposal-validation-correction.md)
 
 - [Bundle 656 — Befehlsinventar der strukturierten Requests](bundle-656-request-command-inventory.md)
+
+- [Bundle 657 — isolierter Proposal-Check](bundle-657-isolated-proposal-check.md)
+
+- [Bundle 658 — Proposal-Check und Schema-Katalog korrigieren](bundle-658-proposal-check-correction.md)
+
+- [Bundle 659 — Query-/Rendering-Test auf das tatsächlich geänderte Feld beziehen](bundle-659-proposal-query-test-correction.md)
+
+- [Bundle 660 — Proposal-Test und Scheduler-Reparatur](bundle-660-proposal-and-scheduler-correction.md)
