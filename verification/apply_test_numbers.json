@@ -26303,6 +26303,23 @@
     "tests/test_remote_test_host_hooks.py::test_native_and_host_controllers_keep_independent_valid_bootstrap_hooks",
     "tests/test_local_runtime_hosts.py::test_local_attempts_capture_host_and_pool_compatible_environment_once",
     "tests/test_local_runtime_hosts.py::test_old_unlabelled_and_other_host_measurements_remain_available",
-    "tests/test_local_runtime_hosts.py::test_real_local_workers_record_host_before_setup_without_host_configuration"
+    "tests/test_local_runtime_hosts.py::test_real_local_workers_record_host_before_setup_without_host_configuration",
+    "tests/test_local_runtime_hosts_right.py::test_collect_only_does_not_capture_host_or_open_history",
+    "tests/test_local_runtime_hosts_right.py::test_environment_capture_failure_cannot_become_unknown_host_success",
+    "tests/test_local_runtime_hosts_right.py::test_failed_latest_attempt_keeps_its_host_without_using_an_older_duration",
+    "tests/test_local_runtime_hosts_right.py::test_host_write_failure_rolls_back_the_whole_new_attempt",
+    "tests/test_local_runtime_hosts_right.py::test_invalid_local_identity_creates_no_runtime_history[ ]",
+    "tests/test_local_runtime_hosts_right.py::test_invalid_local_identity_creates_no_runtime_history[ host]",
+    "tests/test_local_runtime_hosts_right.py::test_invalid_local_identity_creates_no_runtime_history[None]",
+    "tests/test_local_runtime_hosts_right.py::test_invalid_local_identity_creates_no_runtime_history[\\x1bhost]",
+    "tests/test_local_runtime_hosts_right.py::test_invalid_local_identity_creates_no_runtime_history[]",
+    "tests/test_local_runtime_hosts_right.py::test_invalid_local_identity_creates_no_runtime_history[host ]",
+    "tests/test_local_runtime_hosts_right.py::test_invalid_local_identity_creates_no_runtime_history[host\\nline]",
+    "tests/test_local_runtime_hosts_right.py::test_invalid_local_identity_creates_no_runtime_history[two hosts]",
+    "tests/test_local_runtime_hosts_right.py::test_invalid_local_identity_creates_no_runtime_history[xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx]",
+    "tests/test_local_runtime_hosts_right.py::test_local_environment_metadata_does_not_relabel_explicit_pool_records",
+    "tests/test_local_runtime_hosts_right.py::test_local_gate_requires_the_original_host_and_environment[environment]",
+    "tests/test_local_runtime_hosts_right.py::test_local_gate_requires_the_original_host_and_environment[host]",
+    "tests/test_local_runtime_hosts_right.py::test_local_gate_requires_the_original_host_and_environment[missing]"
   ]
 }
