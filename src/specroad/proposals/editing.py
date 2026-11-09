@@ -9,10 +9,9 @@ from dataclasses import dataclass
 from ..changes import ChangePlan
 from ..changes.authoring import prepare_authoring_request
 from ..changes.authoring_values import AuthoringRequest
-from ..model.audit_values import Actor, Revision, UtcTimestamp
 from .authoring import Proposal
 from .change_order import ProposalChanges
-from .revisions import ProposalRevision
+from .revisions import ProposalRevision, revision_input, require_authoring_status
 from .values import require
 
 
@@ -75,15 +74,9 @@ def prepare_proposal_change(proposal, *, action, change_plan, expected_revision,
     require(type(action) is str and action in ('add', 'update', 'remove', 'move'),
             'proposal_change_action_invalid', pointer='/action', exit_code=2)
     _arguments(action, change_id, position, explanation)
-    require(type(expected_revision) is Revision, 'proposal_expected_revision_required')
-    require(type(actor) is Actor and type(planned_at) is UtcTimestamp,
-            'proposal_explicit_audit_required')
-    before = proposal.data
-    require(expected_revision.value == before['revision'], 'proposal_revision_conflict', exit_code=6)
-    require(before['proposal_status'] not in ('rejected', 'stale', 'applied'),
-            'proposal_terminal_revision_changed')
-    require(before['proposal_status'] in ('draft', 'in_review', 'approved'),
-            'proposal_authoring_status_invalid')
+    before = revision_input(proposal.original, expected_revision=expected_revision,
+                            actor=actor, planned_at=planned_at)
+    require_authoring_status(before)
     require(type(change_plan) is ChangePlan, 'native_proposal_plan_required')
     request = prepare_authoring_request(command_id='proposal change ' + action,
         actor=actor, operations=change_plan.data['operations'],

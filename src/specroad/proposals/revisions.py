@@ -5,7 +5,7 @@ An original or a prepared revision is never proof of a human decision.
 """
 from dataclasses import dataclass
 
-from ..changes.metadata_time import next_update_time
+from ..changes.metadata_update import updated_audit_fields
 from ..model.audit_values import Actor, Revision, UtcTimestamp
 from ..model.canonical import canonical_json_bytes
 from ..storage.json_syntax import parse_json_object
@@ -18,6 +18,25 @@ _MANAGED = ('schema_version', 'id', 'id_scheme', 'artifact_type', 'revision',
 _CONTROL = ('maturity', 'proposal_status', 'reviews', 'control_history')
 
 
+def revision_input(original, *, expected_revision, actor, planned_at):
+    """Shared guard before edit preparation and before revision stamping."""
+    require(type(original) is ProposalOriginal, 'proposal_original_required')
+    require(type(expected_revision) is Revision, 'proposal_expected_revision_required')
+    require(type(actor) is Actor and type(planned_at) is UtcTimestamp,
+            'proposal_explicit_audit_required')
+    before = original.data
+    require(expected_revision.value == before['revision'],
+            'proposal_revision_conflict', exit_code=6)
+    return before
+
+
+def require_authoring_status(before):
+    require(before['proposal_status'] not in ('rejected', 'stale', 'applied'),
+            'proposal_terminal_revision_changed')
+    require(before['proposal_status'] in ('draft', 'in_review', 'approved'),
+            'proposal_authoring_status_invalid')
+
+
 @dataclass(frozen=True, init=False)
 class ProposalRevision:
     """A checked before/after pair; byte ownership survives caller mutations."""
@@ -25,13 +44,8 @@ class ProposalRevision:
     after: ProposalOriginal
 
     def __init__(self, original, candidate, *, expected_revision, actor, planned_at):
-        require(type(original) is ProposalOriginal, 'proposal_original_required')
-        require(type(expected_revision) is Revision, 'proposal_expected_revision_required')
-        require(type(actor) is Actor and type(planned_at) is UtcTimestamp,
-                'proposal_explicit_audit_required')
-        before = original.data
-        require(expected_revision.value == before['revision'],
-                'proposal_revision_conflict', exit_code=6)
+        before = revision_input(original, expected_revision=expected_revision,
+                                actor=actor, planned_at=planned_at)
         require(type(candidate) is dict, 'proposal_object_required')
         value = parse_json_object(canonical_json_bytes(candidate))
         for field in _MANAGED:
@@ -50,19 +64,16 @@ class ProposalRevision:
                         canonical_json_bytes(old),
                         'proposal_history_rewritten', pointer='/' + field)
             if content_changed:
-                require(before['proposal_status'] in ('draft', 'in_review', 'approved'),
-                        'proposal_authoring_status_invalid')
+                require_authoring_status(before)
                 require(all(canonical_json_bytes(value.get(field)) ==
                             canonical_json_bytes(before.get(field)) for field in _CONTROL),
                         'proposal_content_and_control_mixed')
                 value.update(maturity='draft', proposal_status='draft')
             require(value.get('proposal_status') not in ('validated', 'checked'),
                     'proposal_review_start_incomplete')
-            value.update(revision=Revision(before['revision']).value + 1,
-                         content_revision=Revision(before['content_revision']).value + int(content_changed),
+            value.update(content_revision=Revision(before['content_revision']).value + int(content_changed),
                          content_sha256=digest,
-                         updated_at=next_update_time(planned_at.value, before['updated_at']),
-                         updated_by=actor.as_fields())
+                         **updated_audit_fields(before, actor=actor.as_fields(), planned_at=planned_at.value))
             encoded = canonical_json_bytes(value)
             after = ProposalOriginal(encoded, path=original.path)
         else:

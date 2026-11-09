@@ -7,12 +7,12 @@ silently fall through to this regular authoring interface.
 from dataclasses import dataclass
 from typing import Callable
 from ..model.audit import actor as read_actor
-from ..model.audit_values import UtcTimestamp, Revision
+from ..model.audit_values import UtcTimestamp
 from ..model.audit_fields import AUDIT_FIELDS
 from ..model.errors import ModelError
 from ..model.identity_values import artifact_identity
 from ._common import _generic
-from .metadata_time import next_update_time
+from .metadata_update import updated_audit_fields
 from .metadata_values import MetadataError
 
 REGULAR_METADATA_POLICY = "change-metadata-v1"
@@ -34,13 +34,9 @@ def _regular_fields(old, value, binding, identity):
     # Operation-level guards observe the folded, not yet stamped state.
     if any(value[name] != old[name] for name in AUDIT_FIELDS):
         raise MetadataError("intermediate_audit_changed", pointer="/artifacts/" + identity)
-    return "changed", {
-        "revision": Revision(old["revision"]).value + 1,
-        "created_at": old["created_at"],
-        "created_by": old["created_by"],
-        "updated_at": next_update_time(binding["planned_at"], old["updated_at"]),
-        "updated_by": binding["actor"],
-    }
+    return "changed", updated_audit_fields(old, actor=binding["actor"],
+                                           planned_at=binding["planned_at"])
+
 
 
 @dataclass(frozen=True)
