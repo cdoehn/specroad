@@ -24,16 +24,18 @@ def proposal_authoring_fields():
 
 
 def validate_model_provenance(value):
-    """W accepts complete known provenance; unknown handling follows in R."""
+    """Check declarations, never fill gaps or contact a model/provider."""
     fields = set(MODEL_FIELDS) | {'unknown_reasons'}
     present = fields.intersection(value)
-    if 'changes' not in value and not present:
-        return  # Historical passive originals remain readable.
+    is_authoring = 'changes' in value or bool(present)
+    if not is_authoring:
+        return  # Preserve historical passive records without rewriting them.
     if 'changes' not in value:
         raise ModelError('proposal_explanations_required', pointer='/changes')
     if value['created_by']['actor_type'] == 'ai' or present:
         missing = fields - value.keys()
         if missing:
             raise ModelError('proposal_model_fields_required', pointer='/' + sorted(missing)[0])
-        if any(value[name] == 'unknown' for name in MODEL_FIELDS) or value['unknown_reasons']:
-            raise ModelError('proposal_unknown_provenance_not_supported', pointer='/unknown_reasons')
+        unknown = {name for name in MODEL_FIELDS if value[name] == 'unknown'}
+        if set(value['unknown_reasons']) != unknown:
+            raise ModelError('proposal_unknown_reasons_mismatch', pointer='/unknown_reasons')
