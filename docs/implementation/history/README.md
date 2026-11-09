@@ -332,3 +332,7 @@
 - [Bundle 643: parallele Proxy-Worker und vollständiger offener Control-Fix](bundle-643-control-dispatch.md)
 
 - [Bundle 644: Control-Testdoppelgänger und Busy-Wartevertrag korrigiert](bundle-644-control-dispatch.md)
+
+- [PROPOSAL-DATA-645](../decisions/proposal-data-645.md): Datenformat und Herkunft für 18.a.
+
+- [Bundle 645 – Proposalobjekt und Provenienz](bundle-645-proposal-data.md).

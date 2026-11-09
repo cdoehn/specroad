@@ -18,6 +18,7 @@ from .versions import SCHEMA_VERSION
 from .record_contracts import RECORD_TYPES, SPECIAL_STATES, VALIDATION_SCOPE, record_contract
 from ._field_shapes import _object, _array, _typed_reference
 from ._content_block_fields import BLOCK_KINDS, _block_payload, _block_reference
+from .proposal_fields import proposal_authoring_fields, validate_model_provenance
 
 VERIFICATION_METHODS = (
     "inspection", "review", "analysis", "simulation", "automated_test", "manual_test",
@@ -89,7 +90,8 @@ def _type_fields(kind):
                       "profiles": _array(obj), "tool_version": text, "verification_evaluation": obj}),
         "proposal": (("content_revision", "content_sha256", "control_history", "base", "change_plan", "rationale"),
                      {"content_revision": {"type": "integer", "minimum": 1}, "content_sha256": sha,
-                      "control_history": _array(obj), "base": obj, "change_plan": obj, "rationale": text, "reviews": _array(obj)}),
+                      "control_history": _array(obj), "base": obj, "change_plan": obj, "rationale": text, "reviews": _array(obj),
+                      **proposal_authoring_fields()}),
         "issue": (("description", "issue_status", "owner"),
                   {"description": text, "issue_status": text, "resolution_criteria": {"anyOf": [text, _array(text, nonempty=True)]},
                    "permanent_status_reason": text}),
@@ -300,6 +302,7 @@ def _validate_local_record(value):
         if value.get("configuration_policy") == "bound" and value.get("configuration_hash") is None:
             raise ModelError("missing_configuration_binding", pointer="/configuration_hash")
     elif kind == "proposal":
+        validate_model_provenance(value)
         if value["content_revision"] > value["revision"]:
             raise ModelError("content_revision_exceeds_revision", pointer="/content_revision")
     elif kind in ("document", "section"):

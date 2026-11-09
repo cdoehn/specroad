@@ -86,6 +86,8 @@ class ProposalOriginal:
                 and ScopeDescriptor(base['scope_descriptor']).data == SPECIFICATION_SCOPE,
                 'proposal_specification_scope_required', path=path)
         plan = ChangePlan(canonical_json_bytes(value['change_plan']))
+        from .authoring_fields import validate_explanations
+        validate_explanations(value, plan)
         require(plan.data['base'] == base, 'proposal_plan_base_mismatch', path=path)
         for operation in plan.operations:
             require(operation.op not in ('proposal_control', 'baseline_create'),
