@@ -350,3 +350,5 @@
 - [Bundle 651 — Proposal-Inhaltsrevision und Hashprojektion](bundle-651-proposal-content-revisions.md)
 
 - [Bundle 652 — Extension-Testdaten und vollständiger 18.d-Rest](bundle-652-proposal-extension-fixture-correction.md)
+
+- [Bundle 653 — Proposal-Authoring und Endzustandsgrenzen](bundle-653-proposal-authoring.md)

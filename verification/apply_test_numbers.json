@@ -26728,6 +26728,25 @@
     "tests/test_proposal_revisions_right.py::test_terminal_records_cannot_gain_a_new_content_or_control_revision[applied]",
     "tests/test_proposal_revisions_right.py::test_terminal_records_cannot_gain_a_new_content_or_control_revision[rejected]",
     "tests/test_proposal_revisions_right.py::test_terminal_records_cannot_gain_a_new_content_or_control_revision[stale]",
-    "tests/test_proposal_revisions_right.py::test_timestamp_overflow_fails_before_returning_a_changed_candidate"
+    "tests/test_proposal_revisions_right.py::test_timestamp_overflow_fails_before_returning_a_changed_candidate",
+    "tests/test_proposal_editing.py::test_authoring_actions_reset_open_states_and_advance_exactly_once[add-ABC-approved]",
+    "tests/test_proposal_editing.py::test_authoring_actions_reset_open_states_and_advance_exactly_once[add-ABC-draft]",
+    "tests/test_proposal_editing.py::test_authoring_actions_reset_open_states_and_advance_exactly_once[add-ABC-in_review]",
+    "tests/test_proposal_editing.py::test_authoring_actions_reset_open_states_and_advance_exactly_once[move-BA-approved]",
+    "tests/test_proposal_editing.py::test_authoring_actions_reset_open_states_and_advance_exactly_once[move-BA-draft]",
+    "tests/test_proposal_editing.py::test_authoring_actions_reset_open_states_and_advance_exactly_once[move-BA-in_review]",
+    "tests/test_proposal_editing.py::test_authoring_actions_reset_open_states_and_advance_exactly_once[remove-B-approved]",
+    "tests/test_proposal_editing.py::test_authoring_actions_reset_open_states_and_advance_exactly_once[remove-B-draft]",
+    "tests/test_proposal_editing.py::test_authoring_actions_reset_open_states_and_advance_exactly_once[remove-B-in_review]",
+    "tests/test_proposal_editing.py::test_authoring_actions_reset_open_states_and_advance_exactly_once[update-AC-approved]",
+    "tests/test_proposal_editing.py::test_authoring_actions_reset_open_states_and_advance_exactly_once[update-AC-draft]",
+    "tests/test_proposal_editing.py::test_authoring_actions_reset_open_states_and_advance_exactly_once[update-AC-in_review]",
+    "tests/test_proposal_editing.py::test_authoring_binds_explicit_editor_to_common_specialist_request_policy[ai]",
+    "tests/test_proposal_editing.py::test_authoring_binds_explicit_editor_to_common_specialist_request_policy[ci]",
+    "tests/test_proposal_editing.py::test_authoring_binds_explicit_editor_to_common_specialist_request_policy[human]",
+    "tests/test_proposal_editing.py::test_authoring_binds_explicit_editor_to_common_specialist_request_policy[tool]",
+    "tests/test_proposal_editing.py::test_full_plan_and_explanations_are_owned_across_chained_edits",
+    "tests/test_proposal_editing.py::test_native_authoring_invalidates_approval_but_preserves_verified_history",
+    "tests/test_proposal_editing.py::test_native_edit_sequence_recomputes_ordered_target_without_extra_revision"
   ]
 }
