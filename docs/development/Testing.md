@@ -353,3 +353,6 @@ keine externen Credentials und richten keine echten Hosts ein. Neue Hostfälle
 müssen verlorene/veränderte Messungen, unveränderte Auswahl und fehlgeschlagenen
 Worker nachweisen. Geschwindigkeitsannahmen dürfen keine Zeitbelege ersetzen.
 CI behält seine vorhandene Ausführung; Entwickler führen keine Testkörper aus.
+
+Lokale Testläufe speichern ebenfalls Host und exakten Umgebungsfingerabdruck.
+[Hostzuordnung, erhaltene Historie und Fehlergrenzen](Remote_Test_Hosts.md#lokale-laufe-ohne-hostpool).

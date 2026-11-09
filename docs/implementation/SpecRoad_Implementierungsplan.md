@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 113 · **Stand:** 8. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.76
+**Planrevision:** 113 · **Stand:** 9. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.77
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 Schritte und 900 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; die ausdrücklich genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wird nach 10.7.10 innerhalb von 15.l.R vorgezogen. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -13,6 +13,8 @@ Detailentscheidungen für 17.l: [MERGE-WORK-627](decisions/merge-work-627.md) un
 Die zweite Ergänzung bindet ausschließlich die öffentliche Übergabe an den vorhandenen nativen Writer; Produktzähler und Freigabegates bleiben im Klärungsstand unverändert.
 
 OFF-PLAN-Auftrag: [Remote-Testhosts und W/R/C-Abnahmen](decisions/remote-test-hosts-637.md).
+
+OFF-PLAN-Ergänzung: [Hostdaten für lokale Testläufe](decisions/local-test-history-640.md).
 
 ## Fortschritt – einzige maßgebliche Planstelle
 

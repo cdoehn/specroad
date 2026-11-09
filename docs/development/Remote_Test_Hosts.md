@@ -128,3 +128,27 @@ gebunden. Versionswechsel brauchen erneute native Integrationsabnahme.
 Die Hostkonto-Identität kombiniert die gehashte Maschinenkennung mit der
 Benutzer-ID. Gleiche Rechnernamen sind dadurch kein Identitätsbeweis; doppelte
 Aliase desselben Hostkontos werden abgewiesen. Große Manifeste werden gestreamt.
+
+## Lokale Läufe ohne Hostpool
+
+<a id="lokale-laufe-ohne-hostpool"></a>
+
+Seit LOCAL-TEST-HISTORY erfassen auch gewöhnliche lokale Test-Runner automatisch
+Host und Umgebung, ohne `test-hosts.json` zu lesen oder einen Pool zu öffnen.
+Als Hostkennung dient der beobachtete Betriebssystem-Rechnername. Der
+Umgebungsfingerabdruck verwendet dieselben Interpreter-, Bibliotheks- und
+Paketmerkmale wie der Pool. Pro Runnerprozess wird er einmal ermittelt; jede
+neue Startzeile wird zusammen mit ihren Hostmetadaten dauerhaft gespeichert.
+Setup-, Call- und Teardown-Zeiten bleiben am jeweiligen Versuch erhalten.
+Fehlende Identität, Speicherfehler oder widersprüchliche Hostdaten verhindern
+einen erfolgreichen Laufnachweis. Reine Collection erfasst keine Hostidentität
+und legt weiterhin keine Laufzeitdatenbank an.
+
+Die bereits vorhandene Tabelle `attempt_hosts` wird verwendet. Es werden weder
+alte Datensätze nachbeschriftet noch Hostnamen automatisch umgedeutet. Poolläufe
+behalten ihre ausdrücklich konfigurierten Hostkennungen. Soll derselbe lokale
+Rechner in beiden Betriebsarten unter derselben Kennung verglichen werden,
+muss sein Poolname dem Rechnernamen entsprechen; eine bloße Namensgleichheit
+ist kein Beleg für physisch identische Rechner. Vorhandene historische Namen
+bleiben unverändert. `test-monitor` zeigt auch diese neuen lokalen Zuordnungen
+in seiner bestehenden Hostspalte und in `host`/`environment_sha256` der JSON-Ausgabe.

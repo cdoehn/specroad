@@ -26300,6 +26300,9 @@
     "tests/test_remote_test_hosts_right.py::test_rpc_database_write_failure_is_not_acknowledged",
     "tests/test_remote_test_hosts_right.py::test_symlinked_snapshot_never_copies_outside_bytes",
     "tests/test_remote_test_hosts_right.py::test_weak_host_does_not_receive_long_tail_just_to_fill_nextitem",
-    "tests/test_remote_test_host_hooks.py::test_native_and_host_controllers_keep_independent_valid_bootstrap_hooks"
+    "tests/test_remote_test_host_hooks.py::test_native_and_host_controllers_keep_independent_valid_bootstrap_hooks",
+    "tests/test_local_runtime_hosts.py::test_local_attempts_capture_host_and_pool_compatible_environment_once",
+    "tests/test_local_runtime_hosts.py::test_old_unlabelled_and_other_host_measurements_remain_available",
+    "tests/test_local_runtime_hosts.py::test_real_local_workers_record_host_before_setup_without_host_configuration"
   ]
 }

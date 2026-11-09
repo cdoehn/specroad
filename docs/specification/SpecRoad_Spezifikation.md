@@ -1,5 +1,5 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.76
+## Version 0.2.77
 
 | Feld | Wert |
 |---|---|
@@ -1320,6 +1320,19 @@ gebunden; historische unbekannte Hosts bleiben unbekannt. Fehlende ACKs,
 Speicherfehler, Identitäts-, Quellen- oder Ressourcenwidersprüche verhindern
 den Commit. Test-Monitor und JSON-Ausgabe zeigen Host und getrennte/gesamte
 Phasenzeiten; Prognosen werden nicht als gemessene Dauer ausgegeben.
+
+**LOCAL-TEST-HISTORY — ausdrücklicher Nutzerauftrag vom 9. November 2026.**
+Auch normale lokale Testläufe ohne Hostpool MÜSSEN künftig vor jedem Setup
+mit dem neuen Versuch den beobachteten Rechnernamen und denselben exakten
+Umgebungsfingerabdruck dauerhaft speichern. Die Identität wird einmal pro
+Runnerprozess ermittelt, ohne lokale Hostkonfiguration zu lesen. Fehlende
+Identität, unvollständige Speicherung oder abweichende Hostmetadaten verhindern
+einen erfolgreichen Laufnachweis. Reine Collection erfasst keine Identität.
+Bestehende Versuche bleiben unverändert; unbekannte frühere Hosts dürfen nicht
+nachträglich vermutet werden. Die vorhandene additive Hosttabelle und alle
+Phasen bleiben erhalten. Poolläufe behalten ihre expliziten Hostkennungen;
+es erfolgt keine automatische Aliaszusammenführung. Auswahl, Ausführung,
+CI-Steuerung und Messdatenbankpfade bleiben unverändert.
 
 Apply-Bericht v5 und Auswahlbindung v6 binden zusätzlich Hostpool, Quelle,
 Snapshot, Umgebung und vollständige Workerbelege. Lokale v4/v5-Berichte

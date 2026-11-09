@@ -8,6 +8,7 @@ from .collection_identity import test_identity
 from .runtime_baseline import RuntimeMeasurements
 from .runtime_store import TimingStore
 from .runtime_history import RuntimeHistory
+from .local_history import LocalRuntimeHistory
 from .ci_reference import _load_report
 
 import importlib.metadata
@@ -99,7 +100,7 @@ class VerificationSession:
                     from dev.test_hosts.history import HistoryClient
                     self.history = HistoryClient(config.workerinput['sr_history_channel'])
                 else:
-                    self.history = RuntimeHistory(self.history_root)
+                    self.history = LocalRuntimeHistory(self.history_root)
                 self.history_run = config.workerinput['sr_history_run']
             return
         if self.expected is not None and self.expected <= 0:
@@ -162,7 +163,8 @@ class VerificationSession:
         if not config.getoption('collectonly'):
             if self.history_root == ROOT:
                 self.history_source = source_identity(ROOT)
-            self.history = RuntimeHistory(self.history_root)
+            self.history = (RuntimeHistory(self.history_root) if getattr(config, '_sr_host_profile', None)
+                            else LocalRuntimeHistory(self.history_root))
             self.history.seed(self.history_root)
             self.history_run = self.history.begin(self.history_source,
                 config.getoption('numprocesses', default=0) or 0)
