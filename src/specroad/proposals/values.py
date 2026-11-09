@@ -7,36 +7,16 @@ from dataclasses import dataclass
 from hashlib import sha256
 
 from ..changes.values import ChangePlan
-from ..model.canonical import canonical_json_bytes, canonical_json_sha256
-from ..model.errors import ModelError
+from ..model.canonical import canonical_json_bytes
 from ..model.paths import artifact_path
 from ..storage.record_artifact import RecordArtifact
+from .content import CONTENT_EXCLUSIONS, content_sha256
+from .errors import ProposalError, require
 
 
-CONTENT_EXCLUSIONS = frozenset(('revision', 'created_at', 'created_by',
-    'updated_at', 'updated_by', 'content_revision', 'content_sha256', 'maturity',
-    'proposal_status', 'reviews', 'control_history'))
 SPECIFICATION_SCOPE = {'scope_version': 'scope-v1', 'scope_kind': 'specification',
     'selector': {}, 'configuration_id': None, 'closure_profile': 'core-closure-v1',
     'boundary_policy': 'closed'}
-
-
-class ProposalError(ModelError):
-    def __init__(self, reason, *, path=None, pointer='', exit_code=3):
-        super().__init__(reason, path=path, pointer=pointer)
-        self.exit_code = exit_code
-
-
-def require(condition, reason, *, path=None, pointer='', exit_code=3):
-    if not condition:
-        raise ProposalError(reason, path=path, pointer=pointer, exit_code=exit_code)
-
-
-def content_sha256(value):
-    """Exclude only management fields at the top level, never nested keys."""
-    require(type(value) is dict, 'proposal_object_required')
-    return canonical_json_sha256({k: v for k, v in value.items()
-                                 if k not in CONTENT_EXCLUSIONS})
 
 
 @dataclass(frozen=True)

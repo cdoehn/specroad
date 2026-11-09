@@ -7,7 +7,7 @@ from dataclasses import dataclass
 
 from ..model.canonical import canonical_json_bytes
 from ..storage.json_syntax import parse_json_object
-from .values import CONTENT_EXCLUSIONS
+from .content import CONTENT_EXCLUSIONS, content_projection
 
 
 @dataclass(frozen=True, init=False)
@@ -15,9 +15,7 @@ class ProposalContent:
     _encoded: bytes
 
     def __init__(self, original):
-        data = {key: value for key, value in original.data.items()
-                if key not in CONTENT_EXCLUSIONS}
-        object.__setattr__(self, '_encoded', canonical_json_bytes(data))
+        object.__setattr__(self, '_encoded', content_projection(original.data))
 
     @property
     def data(self):

@@ -43,8 +43,8 @@ Fehlerstand; dieser neue Beleg erklärt dessen tatsächlichen Ausgang.
 Die native `correction_of`-Bindung verweist auf den ursprünglichen Planhash
 `57f65ec6e4f7c2835d29266ce4a2b36451f6e31a2c39298ce3dc1333b08590ce`.
 
-Vorbereiteter R-Zustand: 740/900 und nächste Position 18.d.C gelten
-erst nach erfolgreichem eigenem Gate und Commit; C bleibt offen.
+Vorbereiteter C-Zustand: 741/900, nächste Position 18.e.W und Bundle 652
+als letzter Abschluss gelten erst nach erfolgreichem eigenen Gate und Commit.
 
 Die bestehenden Requirement-Bindungen für SR-REQ-0643/0644 bleiben `partial`:
 öffentliche Authoring-/Kontrollbefehle, menschliche Autorität und transaktionale
