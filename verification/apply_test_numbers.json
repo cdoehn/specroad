@@ -26962,6 +26962,10 @@
     "tests/test_runtime_exchange_right.py::test_invalid_exchange_fails_without_a_fallback_or_foreign_write[unknown-version]",
     "tests/test_runtime_exchange_right.py::test_native_parallel_runner_records_only_its_own_exchange",
     "codex_control_tests.test_exchange_discovery.ExactAcceptanceTests.test_unrelated_history_is_not_natively_validated_before_acceptance",
-    "tests/codex_control_tests/test_exchange_discovery.py::test_repeated_relevant_discovery_reuses_validation_and_reports_progress"
+    "tests/codex_control_tests/test_exchange_discovery.py::test_repeated_relevant_discovery_reuses_validation_and_reports_progress",
+    "tests/codex_control_tests/test_exchange_discovery_right.py::test_archive_move_reuses_only_exact_verified_content",
+    "tests/codex_control_tests/test_exchange_discovery_right.py::test_deleted_or_symlinked_artifact_is_not_served_from_cache",
+    "tests/codex_control_tests/test_exchange_discovery_right.py::test_native_rejection_is_never_cached_as_success",
+    "tests/codex_control_tests/test_exchange_discovery_right.py::test_replaced_bytes_and_late_followup_are_not_hidden_by_cache"
   ]
 }
