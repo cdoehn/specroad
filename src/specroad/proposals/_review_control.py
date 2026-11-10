@@ -158,3 +158,43 @@ def bind_control_authoring(plan):
     return AuthoringRequest._create({**request.data, 'plan_sha256': plan.sha256,
         'base_model_root_sha256': value['base']['model_root_sha256'],
         'scope_descriptor': value['base']['scope_descriptor']})
+
+
+def read_review_start_observations(original, start, context):
+    """Decode three stored originals; the host still owes provenance verification.
+
+    Neither these rows nor their hashes reconstruct the original project. The
+    explicit historical context remains mandatory; old row formats stay separate.
+    """
+    from .observations import ProposalControlObservation
+    require(type(original) is ProposalOriginal and type(context) is ProposalContext,
+            'proposal_native_original_context_required')
+    require(type(start) is int and start >= 0, 'proposal_observation_index_invalid')
+    require(original.data['revision'] == context.original.data['revision'] + 1,
+            'proposal_control_original_revision_mismatch')
+    rows = original.data['control_history'][start:start + 3]
+    require(len(rows) == 3, 'proposal_review_start_rows_incomplete')
+    fields = {'format_version', 'binding', 'actor', 'occurred_at', 'observed_revision',
+              'from', 'to', 'reason', 'result_sha256', 'result_bytes_base64'}
+    result = []
+    for index, ((before, after, reason), row) in enumerate(zip(TRANSITIONS, rows)):
+        require(set(row) == fields and row['format_version'] == CONTROL_VERSION,
+                'proposal_control_row_schema_invalid')
+        require(type(row['observed_revision']) is int and type(row['actor']) is dict
+            and set(row['actor']) == {'actor_type', 'actor_id'}, 'proposal_control_row_schema_invalid')
+        raw, report = decode_report(row['result_bytes_base64'],
+            'proposal-validation-v1' if index == 0 else 'proposal-check-v1')
+        require(row['binding'] == context.original.binding.data == original.binding.data
+            and row['observed_revision'] == context.original.data['revision']
+            and report['proposal_sha256'] == context.original.sha256
+            and report['binding'] == row['binding'] and report['context_sha256'] == context.sha256,
+            'proposal_control_context_mismatch', exit_code=6)
+        require((row['from'], row['to'], row['reason']) == (before, after, reason)
+            and row['result_sha256'] == sha256(raw).hexdigest(), 'proposal_control_events_mismatch')
+        require(row['actor'] == rows[0]['actor'] and row['occurred_at'] == rows[0]['occurred_at'],
+                'proposal_control_metadata_mismatch')
+        result.append(ProposalControlObservation(original, start + index, context,
+            Actor(**row['actor']), UtcTimestamp(row['occurred_at']), before, after, reason, raw))
+    require(rows[1]['result_bytes_base64'] == rows[2]['result_bytes_base64'],
+            'proposal_review_start_check_bytes_changed', exit_code=6)
+    return tuple(result)

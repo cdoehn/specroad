@@ -18,7 +18,7 @@
   "fixture_ids": [
     "SR-FIX-PROPOSAL-REVIEW-START-v1"
   ],
-  "implementation_status": "partial",
+  "implementation_status": "implemented",
   "json_pointers": [
     "/content_revision",
     "/content_sha256",
@@ -30,9 +30,7 @@
     "/revision"
   ],
   "method": "automated_behavior",
-  "open_items": [
-    "R robustness and stored-original reader follow in the next separately gated stage."
-  ],
+  "open_items": [],
   "oracle": {
     "expected": "One transaction produces draft→validated→checked→in_review with maturity=in_review and physical revision +1. Content revision/hash, existing histories and unrelated normative bytes are preserved; exact report bytes bind the original context. Dry-run or pre-publication failure does not change the Proposal. Durable receipt identity is unchanged on replay; a read with the actual PublicationPreflight independently verifies the current target, whereas historical and replay reads do not claim renewed current-target verification; injected staging failure retains native recovery evidence and cannot imply success.",
     "kind": "behavior",
@@ -58,7 +56,9 @@
   "steps": [
     "Run review start through current native Validate, isolated Check and the actual locked journal/staging/receipt pipeline.",
     "Read the resulting Proposal and durable completion; verify one physical revision, stable content and exactly three bound original reports, with no human approval.",
-    "Exercise managed-path selection and complete dry-run without normative files or receipts."
+    "Exercise managed-path selection and complete dry-run without normative files or receipts.",
+    "Reject tampered report bytes/contexts, request actor/revision conflicts, stale basis and denied authority; preserve real prepared-journal recovery evidence.",
+    "Use complete original contexts for an authored second revision and independently prove retry does not append another revision."
   ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0646",
@@ -72,6 +72,19 @@
     "tests/test_proposal_review_start.py::test_preconditions_do_not_change_the_original[change0-proposal_revision_conflict]",
     "tests/test_proposal_review_start.py::test_preconditions_do_not_change_the_original[change1-proposal_expected_revision_required]",
     "tests/test_proposal_review_start.py::test_preconditions_do_not_change_the_original[change2-proposal_host_publication_authority_required]",
-    "tests/test_proposal_review_start.py::test_preconditions_do_not_change_the_original[change3-normative_request_id_required]"
+    "tests/test_proposal_review_start.py::test_preconditions_do_not_change_the_original[change3-normative_request_id_required]",
+    "tests/test_proposal_review_start_right.py::test_content_revision_two_needs_complete_explicit_original_contexts",
+    "tests/test_proposal_review_start_right.py::test_denied_host_authority_and_stale_basis_leave_proposal_bytes_unchanged",
+    "tests/test_proposal_review_start_right.py::test_prepared_journal_failure_preserves_draft_and_native_recovery_evidence",
+    "tests/test_proposal_review_start_right.py::test_registered_cli_writes_with_explicit_host_authority_and_ci_request",
+    "tests/test_proposal_review_start_right.py::test_same_request_replays_confirmed_completion_and_actor_or_revision_conflicts",
+    "tests/test_proposal_review_start_right.py::test_stored_control_reader_binds_complete_bytes_but_never_grants_authority",
+    "tests/test_proposal_review_start_right.py::test_stored_control_rejects_tampering_even_after_outer_content_rehash[actor]",
+    "tests/test_proposal_review_start_right.py::test_stored_control_rejects_tampering_even_after_outer_content_rehash[bytes]",
+    "tests/test_proposal_review_start_right.py::test_stored_control_rejects_tampering_even_after_outer_content_rehash[context]",
+    "tests/test_proposal_review_start_right.py::test_stored_control_rejects_tampering_even_after_outer_content_rehash[extra]",
+    "tests/test_proposal_review_start_right.py::test_stored_control_rejects_tampering_even_after_outer_content_rehash[hash]",
+    "tests/test_proposal_review_start_right.py::test_stored_control_rejects_tampering_even_after_outer_content_rehash[order]",
+    "tests/test_proposal_review_start_right.py::test_stored_control_rejects_tampering_even_after_outer_content_rehash[revision]"
   ]
 }

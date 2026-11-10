@@ -27,7 +27,7 @@ from ..validation.values import HOOK_NAMES
 from ._check_report import _initial, _now
 from ._check_workspace import CheckWorkspace
 from ._review_control import (COMMAND, GATE, TRANSITIONS, EVIDENCE_VERSION,
-    prepare_control_candidates, reports)
+    prepare_control_candidates, reports, read_review_start_observations)
 from ._validation_input import ProposalInput
 from .check import _isolated
 from .context import ProposalContext
@@ -101,10 +101,10 @@ def _extended_services(snapshot, original, after, operation, actor, planned_at, 
     context = ProposalContext(original, snapshot.model)
     result_bytes = [pair[0] for pair in reports(operation)]
     offset = len(original.data['control_history'])
-    added = tuple(ProposalControlObservation(after, offset + index, context,
-        Actor(**actor), UtcTimestamp(planned_at), before, final, reason,
-        result_bytes[0 if index == 0 else 1])
-        for index, (before, final, reason) in enumerate(TRANSITIONS))
+    added = read_review_start_observations(after, offset, context)
+    require(all(item.actor.as_fields() == actor and item.occurred_at.value == planned_at
+        and item.result_bytes == result_bytes[0 if index == 0 else 1]
+        for index, item in enumerate(added)), 'proposal_live_control_binding_changed', exit_code=6)
 
     def verify(inputs):
         item = inputs.observation
