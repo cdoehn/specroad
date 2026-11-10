@@ -39,7 +39,7 @@ def prove(engine, target, *, unused=True):
             or result['operation'] != 'apply' or not result['entrypoint_started']
             or not result['completed_commit'] or result['completed_commit'] != result['binding']['base_commit']):
         fail('Select a clean committed successful Apply with explicit current-state support.')
-    candidates = engine.exchange.candidates('patch', lambda m: m.get('repo_id') == result['binding']['repo_id'])
+    candidates = engine.exchange.candidates('patch', lambda m: all(m.get(k) == v for k, v in result['expected'].items()))
     package = unique((p for p in candidates if p['sha256'] == result['patch_sha256']),
                      'The exact final Apply package is required.')
     data, program = plan(package)

@@ -60,7 +60,7 @@ class Engine(OverloadWaiting):
             descriptors = [self.stack.enter_context(lock(target_dir / (key + ".lock"))) for key in sorted(keys)]
             self.codex = codex or Codex(config, [fd for fd in descriptors if fd is not None])
             self.codex.observe = self.observe
-            self.exchange = Exchange(config, self.core)
+            self.exchange = Exchange(config, self.core, observe=self.update)
         except BaseException:
             self.stack.close()
             raise
@@ -238,7 +238,7 @@ class Engine(OverloadWaiting):
                 json_write(job_dir / "attempt.json", attempt)
             else:
                 attempt = previous
-            self.update(stage="checking_thread", error=None, retry_attempt=number, retry_at=None,
+            self.update(stage="checking_dispatch", error=None, retry_attempt=number, retry_at=None,
                         retry_blocked_reason=None, codex_error=None, codex_will_retry=None, turn_status=None,
                         turn_id=None, thread_status=None)
             try:

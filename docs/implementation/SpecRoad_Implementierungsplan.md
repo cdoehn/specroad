@@ -65,6 +65,11 @@ plan_setup_message: "docs(plan): add detailed SpecRoad WRC implementation plan"
 | 20 | [Gesamtabnahme und Release](milestones/M20.md#m20) | 14 | 42 | 859–900 |
 | **Gesamt** | **20 Meilensteine** | **300** | **900** | **1–900** |
 
+## Offene manuelle Control-Erweiterung
+
+[Control-Operations: Runtime-Voraussetzung und neun Control-Zustände](../development/Control_Operations.md).
+Vorbereitet in Dev2; Produktfortschritt und Betriebsfreigaben bleiben unverändert.
+
 ## Detaillierter Commitplan
 
 Die Meilensteinlinks in der Übersicht öffnen die vollständigen W/R/C-Positionen. Ergänzende Abnahmen sind direkt beim jeweiligen Schritt verlinkt.

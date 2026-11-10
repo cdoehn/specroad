@@ -26960,6 +26960,8 @@
     "tests/test_runtime_exchange_right.py::test_invalid_exchange_fails_without_a_fallback_or_foreign_write[relative]",
     "tests/test_runtime_exchange_right.py::test_invalid_exchange_fails_without_a_fallback_or_foreign_write[source]",
     "tests/test_runtime_exchange_right.py::test_invalid_exchange_fails_without_a_fallback_or_foreign_write[unknown-version]",
-    "tests/test_runtime_exchange_right.py::test_native_parallel_runner_records_only_its_own_exchange"
+    "tests/test_runtime_exchange_right.py::test_native_parallel_runner_records_only_its_own_exchange",
+    "codex_control_tests.test_exchange_discovery.ExactAcceptanceTests.test_unrelated_history_is_not_natively_validated_before_acceptance",
+    "tests/codex_control_tests/test_exchange_discovery.py::test_repeated_relevant_discovery_reuses_validation_and_reports_progress"
   ]
 }

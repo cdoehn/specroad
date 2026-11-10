@@ -1043,6 +1043,11 @@ Ein unterbrochener Releasewechsel sperrt Start; dieselbe explizite Installation
 kann den geprüften Wechsel fortsetzen. Fehler beim Unit-Reload stellen die
 vorherige Unit/Releasezuordnung wieder her oder bleiben sichtbar gesperrt.
 
+Die explizite Control-Erweiterung vom 10. November 2026 erhält sämtliche
+Result-, Budget- und Dispatchverträge. Paketidentität wird vor teurer Validierung
+gezielt eingegrenzt; Fortschritt und Wartephase müssen maschinenlesbar beobachtbar
+sein. Die Abnahmen stehen in [Control-Operations](../development/Control_Operations.md).
+
 #### 2.5.4.1 Konfigurierbare Startwartezeit — CONTROL-START-DELAY-564
 
 **Ausdrücklicher Nutzerauftrag vom 3. November 2026.** Nach jedem tatsächlichen
