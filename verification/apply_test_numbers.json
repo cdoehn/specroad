@@ -26982,6 +26982,11 @@
     "codex_control_tests.test_instances_right.InstanceGuards.test_named_legacy_migration_never_copies_default_history",
     "codex_control_tests.test_instances_right.InstanceGuards.test_resolved_apply_alias_and_thread_id_across_codex_homes_conflict",
     "codex_control_tests.test_instances_right.InstanceGuards.test_second_lane_seed_requires_exact_apply_path",
-    "codex_control_tests.test_instances_right.InstanceGuards.test_stop_and_offline_verification_route_to_named_unit"
+    "codex_control_tests.test_instances_right.InstanceGuards.test_stop_and_offline_verification_route_to_named_unit",
+    "codex_control_tests.test_control_monitor.MonitorDataTests.test_all_discovery_is_read_only_and_separates_instances",
+    "codex_control_tests.test_control_monitor.MonitorDataTests.test_live_observation_preserves_lifecycle_proof_and_budget",
+    "codex_control_tests.test_control_monitor.MonitorDataTests.test_monitor_does_not_modify_state_history_or_create_locks",
+    "codex_control_tests.test_control_monitor.MonitorDataTests.test_offline_file_is_explicitly_stale",
+    "codex_control_tests.test_control_monitor.MonitorDataTests.test_persisted_budget_and_job_are_read_without_opening_live_sqlite"
   ]
 }

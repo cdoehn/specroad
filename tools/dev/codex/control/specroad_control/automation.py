@@ -75,6 +75,9 @@ class Engine(OverloadWaiting):
     def tick(self):
         ledger = Ledger(self.paths.state / "automation.sqlite3", scope(self.config))
         try:
+            row = ledger.current()
+            self.update(job={key: row.get(key) for key in ("run_id", "sha", "stage", "patch_sha")},
+                        request_contract=ledger.request_contract())
             from .current_acceptance_history import validate_history as current_history
             from .current_acceptance import tick as current_tick
             acceptance = current_history(ledger)
@@ -217,6 +220,7 @@ class Engine(OverloadWaiting):
             selected = (contract(origin.get('request_contract')) if origin is not None else
                         ledger.request_contract() or (new_contract(version=4) if supports_v4(source) and source['success'] and not source['dirty'] else new_contract()))
             ledger.bind_contract(selected)
+            self.update(request_contract=dict(selected))
             if previous is not None and any(previous.get(k) != v for k, v in attempt.items()):
                 raise ControlError("retry_evidence_invalid", "An attempt directory belongs to different work.")
             if previous is not None and previous.get('continuation') != continuing:

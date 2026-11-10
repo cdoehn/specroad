@@ -62,7 +62,11 @@ def _locked_run(paths: Paths, config: Config | None = None, *, queued=None) -> i
     disk_due = due
 
     def snapshot():
-        return {"schema": 1, "run_id": run_id, "pid": os.getpid(), "started_at": started,
+        return {"instance": paths.instance,
+                "bindings": {"repository": str(config.repository), "apply_repository": str(config.apply_directory),
+                             "exchange": str(config.exchange), "repo_id": config.repo_id,
+                             "thread_id": config.session_id, "config": str(paths.config), "unit": paths.unit.name},
+                "schema": 1, "run_id": run_id, "pid": os.getpid(), "started_at": started,
                 "updated_at": time.time(), "phase": lifecycle.phase, "desired": lifecycle.desired,
                 "active_job": lifecycle.active_job, "development_enabled": config.enabled,
                 "capabilities": ["lifecycle", "development"] if config.enabled else ["lifecycle"],

@@ -47,3 +47,29 @@ Gemeinsame Sperren schützen Dev-Pfad, Codex-Home/Thread und native Apply-ID;
 getrennte Ziele dürfen parallel laufen. Bestehende Sperren der Standardinstanz
 werden zusätzlich gehalten. Die Legacy-Migration bleibt bei `default`.
 Dev2 wird weiterhin manuell bedient; dieses Bundle richtet keinen Dienst ein.
+
+## Control-Monitor
+
+`python3 tools/control-monitor --all` öffnet die lesende TUI. Mit `--instance
+NAME` wird eine einzelne Instanz ausgewählt. `--once --json` liefert dieselben
+Beobachtungen ohne Terminal. Ohne Auswahl gilt die Standardinstanz bzw.
+`SPECROAD_CONTROL_INSTANCE`. Die installierte Python-Paketkopie enthält dieselbe
+Monitorimplementierung (`python -m specroad_control.monitor`).
+
+Die Übersicht zeigt Frische, Lifecycle, Sollzustand und Automatikphase. Vier
+Detailansichten enthalten Betrieb, Bindung/Release/Unit, Paketprüfung/Budget
+sowie Fehler/Quellen. Links/rechts wählt eine Instanz, Tab oder 1–4 eine Ansicht,
+hoch/runter scrollt, r liest neu, ? zeigt Hilfe, q beendet.
+
+Live-Daten stammen aus dem Status-Socket. Bei Ausfall bleiben gespeicherte
+Zustände ausdrücklich VERALTET; eine alte PID beweist keinen laufenden Prozess.
+Release-Receipts werden als solche angezeigt, nicht als neue Codeprüfung.
+Abfragen laufen pro Instanz unabhängig mit einem Zeitbudget und höchstens einer
+offenen Abfrage je Instanz. Der Monitor startet keine Dienste, fragt kein Modell
+und öffnet keine schreibende SQLite-Verbindung.
+
+Budget, aktueller Job und die letzten Statuswerte von Acceptance-, Reconcile-
+und Freigabereceipts werden zusätzlich aus einer begrenzten Speicherkopie der
+Historie gelesen. Offene SQLite-Journale, geänderte Bytes oder ein überschrittenes
+Lesebudget ergeben einen Quellenfehler. Die Anzeige erteilt daraus keine neue
+Freigabe und verbindet SQLite niemals mit der Originaldatei.
