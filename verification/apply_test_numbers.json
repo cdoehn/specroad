@@ -26929,6 +26929,20 @@
     "tests/test_remote_test_hosts_right.py::test_short_and_final_queues_finish_once_without_nextitem_deadlock[1]",
     "tests/test_remote_test_hosts_right.py::test_short_and_final_queues_finish_once_without_nextitem_deadlock[2]",
     "tests/test_remote_test_hosts_right.py::test_short_and_final_queues_finish_once_without_nextitem_deadlock[3]",
-    "tests/test_remote_test_hosts_right.py::test_unknown_only_work_never_forces_an_unmeasured_tail_on_a_weak_host"
+    "tests/test_remote_test_hosts_right.py::test_unknown_only_work_never_forces_an_unmeasured_tail_on_a_weak_host",
+    "tests/test_apply_second_lane.py::test_explicit_second_branch_is_supported_without_changing_binding",
+    "tests/test_apply_second_lane.py::test_native_apply_location_rejects_dev_copies_wrong_branch_and_wrong_target[specroad-apply-dev2-specroad-apply2]",
+    "tests/test_apply_second_lane.py::test_native_apply_location_rejects_dev_copies_wrong_branch_and_wrong_target[specroad-apply2-dev-specroad-apply2]",
+    "tests/test_apply_second_lane.py::test_native_apply_location_rejects_dev_copies_wrong_branch_and_wrong_target[specroad-dev-dev-specroad-dev]",
+    "tests/test_apply_second_lane.py::test_native_apply_location_rejects_dev_copies_wrong_branch_and_wrong_target[specroad-dev2-dev2-specroad-dev2]",
+    "tests/test_apply_second_lane.py::test_unapproved_branch_is_rejected[DEV2]",
+    "tests/test_apply_second_lane.py::test_unapproved_branch_is_rejected[]",
+    "tests/test_apply_second_lane.py::test_unapproved_branch_is_rejected[dev3]",
+    "tests/test_apply_second_lane.py::test_unapproved_branch_is_rejected[main]",
+    "tests/test_runtime_exchange.py::test_existing_runtime_policies_keep_their_original_destination[legacy-shared]",
+    "tests/test_runtime_exchange.py::test_existing_runtime_policies_keep_their_original_destination[local]",
+    "tests/test_runtime_exchange.py::test_independent_exchanges_keep_same_test_identity_and_failures_separate",
+    "tests/test_runtime_exchange.py::test_reopening_configured_exchange_preserves_older_attempts",
+    "tests/test_runtime_exchange.py::test_unregistered_copies_without_config_use_separate_build_histories"
   ]
 }

@@ -75,7 +75,7 @@ class NativeApply:
         return self.git('rev-parse', 'HEAD').decode().strip()
 
     def location(self):
-        if (self.root != Path(self.data['apply_repository']) or self.root.name == 'specroad-codex'
+        if (self.root != Path(self.data['apply_repository']) or self.root.name in ('specroad-codex', 'specroad-dev', 'specroad-dev2')
                 or Path(self.git('rev-parse', '--show-toplevel').decode().strip()) != self.root
                 or self.git('branch', '--show-current').decode().strip() != self.data['branch']):
             raise ValueError('The bound Apply repository and branch are required')
