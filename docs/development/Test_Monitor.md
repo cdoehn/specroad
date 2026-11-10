@@ -175,8 +175,9 @@ keinen erfolgreichen Verhaltenstest. Produktposition 17.l.R bleibt offen.
 Gemeinsamer Code liegt unter `tools/dev/status/`: `monitor.py` stellt die CLI
 und den JSON-Vertrag bereit, `monitor_data.py` bindet vorhandene Apply-Berichte
 und Datenbanken, `monitor_times.py` bündelt Phasenwerte und Filterregeln,
-`monitor_refresh.py` kapselt die unabhängigen Abfragen und `monitor_view.py`
-zeichnet die Terminalansicht. `runtime_read.py` begrenzt lesende SQLite-
+`monitor_refresh.py` kapselt die unabhängigen Abfragen, `monitor_view.py`
+zeichnet die Terminalansicht und `monitor_overview.py` bündelt die Darstellung
+der Apply-Zeilen samt Fortschrittsbalken. `runtime_read.py` begrenzt lesende SQLite-
 Transaktionen. Die vorhandenen Statushelfer und die native Sperrabfrage werden
 wiederverwendet. Es gibt keine zusätzliche Laufzeitdatenbank des Monitors.
 

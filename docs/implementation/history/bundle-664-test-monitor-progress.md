@@ -40,4 +40,4 @@ keine Verhaltenstests in Dev. Ein erfolgreicher Apply-Abschluss dieses Bundles
 wird erst durch dessen späteres Result belegt. Keine neue Klärung, keine
 Änderung von Control-Budget, Diensten, Hostkonfiguration oder Produktpositionen.
 
-Vorbereiteter Zustand dieser Stage: `R`.
+Vorbereiteter Zustand dieser Stage: `C`.
