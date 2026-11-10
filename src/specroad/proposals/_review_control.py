@@ -198,3 +198,15 @@ def read_review_start_observations(original, start, context):
     require(rows[1]['result_bytes_base64'] == rows[2]['result_bytes_base64'],
             'proposal_review_start_check_bytes_changed', exit_code=6)
     return tuple(result)
+
+
+def _operation(original, validation, check):
+    return dict(op='proposal_control', target=original.data['id'],
+        expected_revision=original.data['revision'], expected_sha256=canonical_json_sha256(original.data),
+        **{k: v for k, v in original.binding.data.items() if k != 'proposal_id'},
+        events=[{'from': before, 'to': after, 'reason': reason,
+                 'result_sha256': sha256(validation if index == 0 else check).hexdigest()}
+                for index, (before, after, reason) in enumerate(TRANSITIONS)],
+        review_start=dict(format_version=EVIDENCE_VERSION,
+            validation_bytes_base64=b64encode(validation).decode('ascii'),
+            check_bytes_base64=b64encode(check).decode('ascii')))

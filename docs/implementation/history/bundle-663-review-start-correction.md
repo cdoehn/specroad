@@ -61,4 +61,4 @@ Dev führt nur statische Prüfung, reine Collection, Katalog-/Nummerierungs-
 und native Paketprüfung aus. Keine Testkörper, Fixtures, Dienste oder CI.
 Erst ein erfolgreiches späteres Apply-Result bestätigt den Produktfortschritt.
 
-Vorbereiteter Zustand dieser Stage: `18.h.R`. Danach bleibt C in derselben ZIP offen.
+Vorbereiteter Zustand dieser Stage: `18.h.C`. Nach erfolgreicher eigener Abnahme endet Bundle 663; danach folgt 18.i.W.
