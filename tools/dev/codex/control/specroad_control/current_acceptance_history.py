@@ -8,24 +8,11 @@ from .config import digest
 from .contracts import facts
 from .current_acceptance_proof import fail, stable
 from .handover_history import history_digest
-from .job_contract import contract, new_contract
+from .job_contract import contract
+from .current_acceptance_policy import selection
 from .local import decode_object
 
 TABLE = 'current_acceptances'
-
-
-def selection(previous, output_kind, clarification, mode, *, reset_budget=False):
-    if type(reset_budget) is not bool or (reset_budget and (clarification is not True or previous['version'] != 4)):
-        raise ValueError('An explicit V4 operator reset requires clarification authority')
-    # A published clarification may not yet have reached inherit_contract.
-    # Charge it once when archiving that source, never silently restore it.
-    debit = int(mode == 'successor' and (output_kind == 'spec_clarification'
-        or output_kind == 'patch_ready_with_clarification' and not previous.get('clarification_continuation')))
-    remaining = previous['clarifications_remaining'] - debit
-    if remaining < 0 or clarification and remaining == 0 and not reset_budget:
-        raise ValueError('No unspent clarification budget')
-    return new_contract(3 if reset_budget else remaining, version=4,
-        allowed=clarification or mode == 'same_ready' and previous['clarification_allowed'])
 
 
 def records(ledger):

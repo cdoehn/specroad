@@ -6,6 +6,7 @@ from .apply_snapshot import snapshot, inventory_hash
 from .blocked_chain_proof import test_selection
 from .contracts import timestamp
 from .errors import ControlError
+from .current_acceptance_policy import RESET_PATH, RESET_CAPABILITY, require_reset_marker
 from .local import decode_object
 from .mixed_contract import supports_v4
 from .mixed_evidence import verify_followup, guarded
@@ -16,18 +17,9 @@ CAPABILITY = {'format_version': 1, 'decision_rule': 'SPECROAD-DECISION-1',
               'budget_policy': 'preserve', 'maximum_grants_per_result': 1}
 
 
-RESET_PATH = 'verification/current_acceptance_reset.json'
-RESET_CAPABILITY = {'format_version': 1, 'decision_contract_version': 4,
-    'authorization_mode': 'explicit_current', 'budget_policy': 'explicit_operator_reset',
-    'clarification_limit': 3, 'receipt_version': 2, 'history_policy': 'preserve'}
-
-
 def require_reset_support(engine, target):
     raw = member(engine.exchange.source(target), 'base/' + RESET_PATH)
-    marker = decode_object(raw)
-    if (len(raw) > 4096 or set(marker) != set(RESET_CAPABILITY)
-            or any(type(marker[k]) is not type(v) or marker[k] != v for k, v in RESET_CAPABILITY.items())):
-        fail('The tested current Result must opt into an explicit operator budget reset.')
+    require_reset_marker(raw)
 
 
 def fail(message):
