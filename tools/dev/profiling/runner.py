@@ -11,14 +11,15 @@ import uuid
 from dev.test_hosts.snapshot import copy_snapshot
 from verification_support.cpu_capacity import available_cpus
 from verification_support.common import read_object
-from verification_support.host_execution import lower_priority, select_workers, verify_resources
+from verification_support.host_execution import lower_priority, select_workers
 from verification_support.identity import source_identity, platform_identity
 from verification_support.process_environment import test_environment
 from verification_support.runtime_paths import database_path, policy
 
-from .artifacts import capture
+from .artifacts import archive
 from .collect import pytest_arguments
-from .common import digest, output_path, test_key, write_json
+from .common import digest, output_path, write_json
+from .outcomes import check_observation
 from .process import execute, interrupt_on_term
 from .resources import cpu_slots
 from .selection import history_path, slowest
@@ -38,30 +39,6 @@ def execution_command(snapshot, directory, request, workers, limit, trace):
             '--sr-observations', str(directory / 'observations.json'),
             '--sr-profile-request', str(directory / 'execution.json'),
             *[str(snapshot / name) for name in scopes]]
-
-
-def check_observation(observation, pairs, code, resources):
-    if (not pairs or not isinstance(observation, dict) or code != 0 or observation.get('pytest_exit_code') != 0 or
-            observation.get('suite_passed') is not True or observation.get('errors') != [] or
-            observation.get('nodeid_to_test_id') != pairs or observation.get('tests_run') != len(pairs) or
-            observation.get('test_outcomes') != dict.fromkeys(pairs.values(), 'passed')):
-        raise ValueError('Native observations do not prove this complete selected run passed')
-    verify_resources(observation, resources)
-
-
-def archive(store, run, directory, pairs):
-    nodes = {test_key(node): node for node in pairs}
-    files = sorted(p for p in directory.iterdir() if p.is_file())
-    files.extend(sorted(p for p in (directory / 'raw').rglob('*') if p.is_file()))
-    for path in files:
-        node, pid = None, None
-        if path.parent.name in nodes:
-            node = nodes[path.parent.name]
-        if path.name.startswith('strace.') and path.suffix[1:].isdigit():
-            kind, pid = 'strace', int(path.suffix[1:])
-        else:
-            kind = 'cprofile' if path.suffix == '.pstats' else 'resources' if path.name == 'resources.jsonl' else 'metadata'
-        capture(store, run, directory, path, kind=kind, nodeid=node, pid=pid)
 
 
 def freeze(root, snapshot):

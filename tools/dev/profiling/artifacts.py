@@ -6,6 +6,8 @@ import stat
 import tempfile
 import zlib
 
+from .common import test_key
+
 CHUNK_SIZE = 1024 * 1024
 
 
@@ -88,3 +90,18 @@ def export(db, identifier, output):
         os.link(temporary, output)  # Publish only verified bytes, never replace.
     finally:
         Path(temporary).unlink()
+
+
+def archive(store, run, directory, pairs):
+    nodes = {test_key(node): node for node in pairs}
+    files = sorted(p for p in directory.iterdir() if p.is_file())
+    files.extend(sorted(p for p in (directory / 'raw').rglob('*') if p.is_file()))
+    for path in files:
+        node, pid = None, None
+        if path.parent.name in nodes:
+            node = nodes[path.parent.name]
+        if path.name.startswith('strace.') and path.suffix[1:].isdigit():
+            kind, pid = 'strace', int(path.suffix[1:])
+        else:
+            kind = 'cprofile' if path.suffix == '.pstats' else 'resources' if path.name == 'resources.jsonl' else 'metadata'
+        capture(store, run, directory, path, kind=kind, nodeid=node, pid=pid)
