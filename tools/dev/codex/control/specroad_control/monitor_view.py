@@ -63,7 +63,7 @@ def render_once(report):
 
 def run_tui(paths, args, errors):
     import curses
-    from .monitor import Refresh
+    from .monitor_refresh import Refresh
     refresh = Refresh(paths, interval=args.interval, timeout=args.query_timeout)
 
     def display(screen):
