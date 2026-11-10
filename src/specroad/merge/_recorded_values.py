@@ -5,6 +5,13 @@ from ..storage.json_syntax import parse_json_object as parsed
 from ..snapshots.inventory import source_resource_rows
 
 
+def _immutable_key(binding, files):
+    return not (type(binding) is not bytes or type(files) is not tuple
+                or any(type(row) is not tuple or len(row) != 2
+                       or type(row[0]) is not str or type(row[1]) is not bytes
+                       for row in files))
+
+
 @dataclass(frozen=True)
 class RecordedSource:
     _binding: bytes
@@ -28,10 +35,7 @@ class RecordedSource:
         binding, files = self._binding, self._files
         # Only exact owned byte tuples qualify. Preserve the existing checks
         # and their errors for unusual or tampered value representations.
-        if (type(binding) is not bytes or type(files) is not tuple
-                or any(type(row) is not tuple or len(row) != 2
-                       or type(row[0]) is not str or type(row[1]) is not bytes
-                       for row in files)):
+        if not _immutable_key(binding, files):
             source_resource_rows(self)
             return
         from ..recovery._owned_checks import checked_bytes

@@ -34,7 +34,11 @@ def parse_registry_records(raw):
     if type(raw) is not bytes or len(raw) > _MAX_CACHED_BYTES:
         return _parse_registry_records(raw)
     version, values = _cached_registry_values(raw)
-    return version, MappingProxyType({
+    return version, _fresh_records(values)
+
+
+def _fresh_records(values):
+    return MappingProxyType({
         identity: RegistryRecord(kind, value, fields)
         for identity, kind, value, fields in values
     })
