@@ -116,6 +116,8 @@ class RuntimeHistory:
     def __init__(self, root, *, path=None):
         root = Path(root).resolve()
         config = policy(root)
+        self.root = root
+        self.policy = config
         self.path = journal_path(path, root) if path else database_path(root, config)
         self.path.parent.mkdir(parents=True, exist_ok=True)
         journal_path(self.path, root)
@@ -239,6 +241,8 @@ class RuntimeHistory:
 
     def verify_run(self, run, pairs, outcomes):
         """A successful gate requires its own durable matching records, not old values."""
+        if policy(self.root) != self.policy:
+            raise ValueError('Runtime history destination changed during execution')
         current = self.path.lstat()
         if (current.st_nlink != 1 or not stat.S_ISREG(current.st_mode)
                 or (current.st_dev, current.st_ino) != self.file_identity):

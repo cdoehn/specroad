@@ -26943,6 +26943,23 @@
     "tests/test_runtime_exchange.py::test_existing_runtime_policies_keep_their_original_destination[local]",
     "tests/test_runtime_exchange.py::test_independent_exchanges_keep_same_test_identity_and_failures_separate",
     "tests/test_runtime_exchange.py::test_reopening_configured_exchange_preserves_older_attempts",
-    "tests/test_runtime_exchange.py::test_unregistered_copies_without_config_use_separate_build_histories"
+    "tests/test_runtime_exchange.py::test_unregistered_copies_without_config_use_separate_build_histories",
+    "tests/test_runtime_exchange_right.py::test_exchange_change_invalidates_gate_and_is_visible_to_selection_and_ci",
+    "tests/test_runtime_exchange_right.py::test_invalid_exchange_fails_without_a_fallback_or_foreign_write[ancestor]",
+    "tests/test_runtime_exchange_right.py::test_invalid_exchange_fails_without_a_fallback_or_foreign_write[bool-version]",
+    "tests/test_runtime_exchange_right.py::test_invalid_exchange_fails_without_a_fallback_or_foreign_write[config-link]",
+    "tests/test_runtime_exchange_right.py::test_invalid_exchange_fails_without_a_fallback_or_foreign_write[config-parent-link]",
+    "tests/test_runtime_exchange_right.py::test_invalid_exchange_fails_without_a_fallback_or_foreign_write[database-hardlink]",
+    "tests/test_runtime_exchange_right.py::test_invalid_exchange_fails_without_a_fallback_or_foreign_write[exchange-file]",
+    "tests/test_runtime_exchange_right.py::test_invalid_exchange_fails_without_a_fallback_or_foreign_write[exchange-link]",
+    "tests/test_runtime_exchange_right.py::test_invalid_exchange_fails_without_a_fallback_or_foreign_write[json]",
+    "tests/test_runtime_exchange_right.py::test_invalid_exchange_fails_without_a_fallback_or_foreign_write[missing-exchange]",
+    "tests/test_runtime_exchange_right.py::test_invalid_exchange_fails_without_a_fallback_or_foreign_write[missing]",
+    "tests/test_runtime_exchange_right.py::test_invalid_exchange_fails_without_a_fallback_or_foreign_write[object]",
+    "tests/test_runtime_exchange_right.py::test_invalid_exchange_fails_without_a_fallback_or_foreign_write[oversized]",
+    "tests/test_runtime_exchange_right.py::test_invalid_exchange_fails_without_a_fallback_or_foreign_write[relative]",
+    "tests/test_runtime_exchange_right.py::test_invalid_exchange_fails_without_a_fallback_or_foreign_write[source]",
+    "tests/test_runtime_exchange_right.py::test_invalid_exchange_fails_without_a_fallback_or_foreign_write[unknown-version]",
+    "tests/test_runtime_exchange_right.py::test_native_parallel_runner_records_only_its_own_exchange"
   ]
 }
