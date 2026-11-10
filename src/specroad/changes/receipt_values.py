@@ -99,7 +99,7 @@ class TransactionReceipt:
             operations = [ChangeOperation(op).data for op in value['operations']]
         except (ModelError, ChangeExecutionError) as error:
             raise ReceiptError('invalid_receipt_operations') from error
-        if (value['command_id'] != 'change apply'
+        if (value['command_id'] != journal.data['authoring_binding']['command_id']
                 or value['journal_sha256'] != journal.sha256
                 or value['operations_sha256'] != canonical_json_sha256(operations)):
             raise ReceiptError('receipt_binding_mismatch')

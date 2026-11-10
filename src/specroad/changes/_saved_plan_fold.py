@@ -19,7 +19,15 @@ def fold_saved_plan(plan, model, *, observed_base_root, observed_scope):
     baseline = baseline_mode(value['operations'])
     evidence = evidence_mode(value['operations'])
     imported = import_mode(value['operations'])
-    if evidence or imported:
+    from ..proposals._review_control import review_start_mode, prepare_control_candidates
+    if review_start_mode(value['operations']):
+        folded = prepare_control_candidates(model, value['operations'],
+            metadata_policy_version=value['metadata_policy_version'], actor=value['actor'],
+            planned_at=value['planned_at'], preconditions=value['preconditions'])
+        if {c.id: c.candidate_sha256 for c in folded.candidates} != {
+                r['artifact']['id']: r['sha256'] for r in value['result_artifacts']}:
+            raise TargetError('declared_proposal_control_result_mismatch')
+    elif evidence or imported:
         prepare = prepare_import_candidates if imported else prepare_evidence_candidates
         folded = prepare(model, value['operations'],
             metadata_policy_version=value['metadata_policy_version'], actor=value['actor'],

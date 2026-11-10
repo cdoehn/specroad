@@ -1,4 +1,4 @@
-"""Implemented read-only Proposal command and its machine result contract."""
+"""Implemented Proposal routes and machine result contracts."""
 from .contracts import CommandProtocol, PositionalSpec, WorkContract
 from .registry import CommandClass, CommandSpec, EffectScope, OptionSpec, PreflightProfile
 
@@ -11,6 +11,11 @@ def _validate(invocation):
 def _check(invocation):
     from ..proposals.check import check_command
     return check_command(invocation)
+
+
+def _review_start(invocation):
+    from ..proposals.review_start import review_start_command
+    return review_start_command(invocation)
 
 
 def proposal_commands():
@@ -37,7 +42,42 @@ def proposal_commands():
             'arguments': {'proposal': 'SR-PROP-' + '0' * 26}},
             handler_exit_codes=(0, 1, 2, 3, 4, 5, 6, 7), diagnostic_codes=(
                 'SRV001', 'SRV002', 'CORE_USAGE', 'CORE_MODEL', 'CORE_ENVIRONMENT', 'CORE_CONFLICT', 'CORE_SECURITY', 'SRV140'),
-            work=WorkContract('native_isolated_proposal_check', ('proposal_original', 'complete_native_basis')))),)
+            work=WorkContract('native_isolated_proposal_check', ('proposal_original', 'complete_native_basis')))),
+        CommandSpec('proposal.review.start', ('proposal', 'review', 'start'), CommandClass.NORMATIVE_WRITE,
+            PreflightProfile.PROJECT_WRITE, EffectScope.NORMATIVE_TRANSACTION, requires_project=True,
+            configuration_schema_required=True, handler=_review_start,
+            positionals=(PositionalSpec('proposal'),), options=(
+                OptionSpec('--expected-revision', takes_value=True, required=True),
+                OptionSpec('--actor-type', takes_value=True, required=True, choices=('human', 'ai', 'ci')),
+                OptionSpec('--actor-id', takes_value=True, required=True),
+                OptionSpec('--request-id', takes_value=True), OptionSpec('--dry-run'),
+                OptionSpec('--project', takes_value=True),
+                OptionSpec('--format', takes_value=True, choices=('pretty', 'json')),
+                OptionSpec('--quiet'), OptionSpec('--no-color')),
+            protocol=CommandProtocol('proposal-review-start-v1', {'command_id': 'proposal.review.start',
+                'arguments': {'proposal': 'SR-PROP-' + '0' * 26}, 'options': {
+                    '--expected-revision': '1', '--actor-type': 'human', '--actor-id': 'author'}},
+                handler_exit_codes=(0, 2, 3, 4, 5, 6, 7),
+                diagnostic_codes=('CORE_USAGE', 'CORE_MODEL', 'CORE_ENVIRONMENT', 'CORE_CONFLICT', 'CORE_SECURITY'),
+                lock_kind='writer', work=WorkContract('native_proposal_review_start',
+                    ('proposal_original', 'complete_native_basis', 'fresh_check', 'host_authority')))),)
+
+
+def review_start_schema():
+    from .result_schemas import _object, _nullable
+    sha = {'type': 'string', 'pattern': r'^[0-9a-f]{64}(?![\s\S])'}
+    return _object({'format_version': {'const': 'proposal-review-start-v1'},
+        'proposal_id': {'type': 'string', 'minLength': 1},
+        'revision': {'type': 'integer', 'minimum': 2},
+        'content_revision': {'type': 'integer', 'minimum': 1},
+        'content_sha256': sha, 'base_model_root_sha256': sha, 'change_plan_sha256': sha,
+        'proposal_status': {'const': 'in_review'}, 'maturity': {'const': 'in_review'},
+        'changed_change_ids': {'const': []},
+        'review_validity': _object({'current_approval': {'const': False},
+                                    'human_decision_required': {'const': True}}),
+        **{key: {'type': 'boolean'} for key in ('dry_run', 'replayed', 'project_writes_performed')},
+        'approval_granted': {'const': False}, 'write_authorized': {'const': False},
+        'completion': _nullable({'type': 'object'})})
 
 
 

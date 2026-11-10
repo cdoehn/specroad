@@ -81,7 +81,11 @@ def proposal_control_schema():
     ref = text()
     blob = {"type": "object"}
     event = obj({'from': text(), 'to': text(), 'reason': text(), 'result_sha256': digest()})
-    return obj({**base, 'target': ref, 'expected_revision': revision(), 'expected_sha256': digest(), 'content_revision': revision(), 'content_sha256': digest(), 'base_model_root_sha256': digest(), 'change_plan_sha256': digest(), 'events': {'type': 'array', 'items': event, 'minItems': 1}})
+    fields = {**base, 'target': ref, 'expected_revision': revision(), 'expected_sha256': digest(), 'content_revision': revision(), 'content_sha256': digest(), 'base_model_root_sha256': digest(), 'change_plan_sha256': digest(), 'events': {'type': 'array', 'items': event, 'minItems': 1}}
+    required = list(fields)
+    fields['review_start'] = obj({'format_version': {'const': 'proposal-review-start-evidence-v1'},
+        'validation_bytes_base64': text(), 'check_bytes_base64': text()})
+    return obj(fields, required)
 
 
 def baseline_create_schema():

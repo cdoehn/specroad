@@ -44,7 +44,13 @@ class DescriptionWorkTests(unittest.TestCase):
                     self.assertEqual(result.exit_code, 0)
                     self.assertEqual(result.command, command.command_id)
                     input_only = command.command_id in ('recover.restore', 'migrate.plan', 'migrate.apply', 'migrate.verify', 'merge.apply')
-                    if command.requires_project and not input_only:
+                    if command.command_id == 'proposal.review.start':
+                        # Like other writers, the handler returns its operation
+                        # result; the outer envelope only binds the selected root.
+                        self.assertEqual(dict(result.project), {
+                            'project_root': str(Path(tmp)),
+                            'project_id': None, 'model_root_sha256': None})
+                    elif command.requires_project and not input_only:
                         self.assertEqual(result.project['project_root'], str(Path(tmp)))
                         self.assertEqual(result.project['project_id'], 'sample')
                     elif input_only:
@@ -220,7 +226,7 @@ class DescriptionRobustnessTests(unittest.TestCase):
             self.assertEqual(document['lock_kind'],
                              'bootstrap' if command.command_id in ('init', 'bundle.extract') else
                              'recovery' if command.command_id == 'recover.restore' else
-                             'writer' if command.command_id in ('migrate.apply', 'merge.apply') else 'none')
+                             'writer' if command.command_id in ('migrate.apply', 'merge.apply', 'proposal.review.start') else 'none')
             self.assertEqual(8 in document['exit_codes'], continuation)
             self.assertEqual(document['budget_policy_version'],
                              'runtime-budget-v2' if command.command_id in (
@@ -281,6 +287,17 @@ class DescriptionRobustnessTests(unittest.TestCase):
                 self.assertEqual(document['lock_kind'], 'writer')
                 self.assertFalse(document['work']['continuation_supported'])
                 rejected = ('--work-dir', '--resume', '--request-id', '--actor-id', '--as-proposal')
+            elif command.command_id == 'proposal.review.start':
+                required = {option['flag'] for option in document['options'] if option['required']}
+                self.assertTrue({'--expected-revision', '--actor-type', '--actor-id'} <= required)
+                self.assertTrue({'--request-id', '--dry-run'} <= accepted)
+                self.assertEqual(document['command_class'], 'normative_write')
+                self.assertEqual(document['preflight_profile'], 'project_write')
+                self.assertEqual(document['lock_kind'], 'writer')
+                self.assertTrue(document['requires_project'])
+                self.assertEqual(document['write_effects']['scope'], 'normative_transaction')
+                self.assertFalse(document['work']['continuation_supported'])
+                rejected = ('--work-dir', '--resume', '--as-proposal')
             elif command.command_id == 'merge.resolve':
                 # Explicit actor/time values audit the plan; they grant no write authority.
                 required = {option['flag'] for option in document['options'] if option['required']}

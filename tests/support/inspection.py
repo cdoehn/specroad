@@ -37,7 +37,7 @@ def inspection_project(root, *, artifacts=None, extra_profiles=(), language_regi
 
 def command_example_project(root, command_id):
     """Supply the real semantic inputs required by each published example."""
-    if command_id in ('proposal.validate', 'proposal.check'):
+    if command_id in ('proposal.validate', 'proposal.check', 'proposal.review.start'):
         from .proposal_validation import validation_project
         return validation_project(root)[0]
     if command_id == 'configuration.evaluate':
@@ -202,7 +202,7 @@ def _restore_example_inputs(root, command):
 
 def command_example_context(command):
     """An explicit synthetic host grant; request/project bytes never grant it."""
-    if command.command_id not in ('migrate.apply', 'merge.apply'):
+    if command.command_id not in ('migrate.apply', 'merge.apply', 'proposal.review.start'):
         return None
     from specroad.cli.invocation_context import InvocationContextBuilder
     from specroad.changes.publication_values import PublicationAuthority

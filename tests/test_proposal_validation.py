@@ -74,7 +74,12 @@ def test_registry_advertises_only_implemented_read_operation():
     assert command.effect_scope is EffectScope.NONE
     assert command.protocol.result_schema == 'proposal-validation-v1'
     assert command.protocol.lock_kind == 'none'
-    assert 'proposal.review.start' not in commands and 'proposal.apply' not in commands
+    review_start = commands['proposal.review.start']
+    assert review_start.command_class is CommandClass.NORMATIVE_WRITE
+    assert review_start.effect_scope is EffectScope.NORMATIVE_TRANSACTION
+    assert review_start.protocol.result_schema == 'proposal-review-start-v1'
+    assert review_start.protocol.lock_kind == 'writer'
+    assert 'proposal.apply' not in commands
 
 
 @pytest.mark.parametrize('invalid', ['json', 'content', 'basis', 'target', 'explanation'])

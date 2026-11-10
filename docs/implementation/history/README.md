@@ -368,3 +368,7 @@
 - [Bundle 660 — Proposal-Test und Scheduler-Reparatur](bundle-660-proposal-and-scheduler-correction.md)
 
 - [OFF-PLAN 661 — expliziter Control-Budgetreset](bundle-661-control-budget-reset.md)
+
+- [Bundle 662 — atomarer Review start 18.h.W/R/C](bundle-662-review-start.md)
+
+- [Bundle 663 — Review-start-Korrektur und offener W/R/C-Rest](bundle-663-review-start-correction.md).

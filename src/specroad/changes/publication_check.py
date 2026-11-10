@@ -97,7 +97,12 @@ def _require_uncompleted_request(source, request):
     from .idempotency import resolve_normative_request
     from .receipt_values import ReceiptError
     try:
-        decision = resolve_normative_request(source, bind_plan_authoring(request.plan))
+        if request.data['authoring_binding']['command_id'] == 'proposal review start':
+            from ..proposals._review_control import bind_control_authoring
+            authoring = bind_control_authoring(request.plan)
+        else:
+            authoring = bind_plan_authoring(request.plan)
+        decision = resolve_normative_request(source, authoring)
     except ReceiptError as error:
         raise PublicationCheckError(error.reason, exit_code=error.exit_code, path=error.path) from error
     if decision.data['action'] == 'replay':

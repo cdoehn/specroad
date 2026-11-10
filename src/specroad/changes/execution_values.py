@@ -91,7 +91,13 @@ class PublicationRequest:
     @classmethod
     def _create(cls, assessment, model):
         from .authoring import require_direct_authoring
-        authoring = require_direct_authoring(assessment.plan)
+        if assessment.data['binding']['command']['command_id'] == 'proposal.review.start':
+            from ..proposals._review_control import bind_control_authoring, GATE
+            if not assessment.target_validated or GATE not in assessment.data['binding']['command']['required_gate_ids']:
+                raise ChangeExecutionError('proposal_review_start_gates_required', exit_code=7)
+            authoring = bind_control_authoring(assessment.plan)
+        else:
+            authoring = require_direct_authoring(assessment.plan)
         value = assessment.data
         old = model.source_files
         if {d.path for d in model.documents} - {d.path for d in assessment.documents}:
