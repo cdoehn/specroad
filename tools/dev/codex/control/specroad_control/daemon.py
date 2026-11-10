@@ -17,6 +17,7 @@ from .local import Paths, json_write, lock, private_dir
 from .ipc import receive, request, same_user, scope
 from .notifications import Notifications
 from .state import read_state
+from .status_wire import encoded
 from .telemetry import record
 from .disk_space import DiskGuard, CHECK_SECONDS, STOP_ERRORS
 
@@ -265,7 +266,7 @@ def _locked_run(paths: Paths, config: Config | None = None, *, queued=None) -> i
                         except (ValueError, KeyError, TypeError, OSError):
                             reply = {"ok": False, "error": "invalid_request"}
                         try:
-                            client.sendall((json.dumps(reply) + "\n").encode())
+                            client.sendall(encoded(reply))
                         except OSError:
                             pass
             gate.set(False)

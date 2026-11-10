@@ -40,7 +40,7 @@ def receive(sock: socket.socket, *, limit: int, timeout: float) -> dict:
 def exchange(sock: socket.socket, command: str, request_scope: str) -> dict:
     same_user(sock)
     sock.sendall((json.dumps({"command": command, "scope": request_scope}) + "\n").encode())
-    reply = receive(sock, limit=8192, timeout=2.0)
+    reply = receive(sock, limit=65536, timeout=2.0)
     if type(reply.get("ok")) is not bool:
         raise ControlError("protocol_error", "The controller reply has no boolean success field.")
     if not reply.get("ok"):
@@ -59,5 +59,5 @@ def request(paths: Paths, command: str) -> dict:
             return exchange(client, command, scope(paths))
     except (FileNotFoundError, ConnectionRefusedError):
         raise ControlError("not_running", "The background controller is not reachable.") from None
-    except (TimeoutError, ValueError, ConnectionError):
+    except (TimeoutError, ValueError, ConnectionError, RecursionError):
         raise ControlError("protocol_error", "The local controller did not provide a valid reply.") from None

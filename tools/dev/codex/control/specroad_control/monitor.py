@@ -39,7 +39,10 @@ class Refresh:
                 name, value = self.messages.get_nowait()
             except queue.Empty:
                 break
-            self.pending.pop(name, None)
+            started = self.pending.pop(name, now)
+            if now - started > self.timeout:
+                value = dict(value, stale=True, worker_reachable=False,
+                             errors=dict(value.get('errors', {}), refresh='deadline_exceeded'))
             self.rows[name] = dict(value, refreshing=False)
             self.due[name] = now + self.interval
         for path in self.paths:
@@ -64,7 +67,7 @@ class Refresh:
 
 
 def once(paths, *, timeout=5.0, collector=collect):
-    refresh = Refresh(paths, collector=collector, timeout=timeout)
+    refresh = Refresh(paths, collector=collector, timeout=timeout, interval=float("inf"))
     deadline = time.monotonic() + timeout
     try:
         refresh.poll()

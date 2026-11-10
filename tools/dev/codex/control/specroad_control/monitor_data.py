@@ -6,7 +6,7 @@ from .config import parse
 from .errors import ControlError
 from .ipc import request
 from .local import Paths, json_read, read_private
-from .state import read_state
+from .state import read_state, validate_state
 from .toml_compat import tomllib
 
 
@@ -46,6 +46,9 @@ def systemd(paths):
     props = dict(line.split('=', 1) for line in reply.stdout.splitlines() if '=' in line)
     if 'LoadState' not in props:
         raise ControlError('systemd_unavailable', 'The manager returned no unit information.')
+    fragment = props.get('FragmentPath')
+    if fragment and fragment != str(paths.unit):
+        raise ControlError('foreign_unit', 'The loaded service does not use the selected instance unit.')
     return props
 
 
@@ -57,7 +60,13 @@ def collect(paths):
         reply = request(paths, 'status')
         if not isinstance(reply.get('state'), dict):
             raise ControlError('protocol_error', 'Control returned no state object.')
-        report.update(state=reply['state'], stale=False, worker_reachable=True, source='ipc')
+        state = reply['state']
+        if state.get('instance', 'default') != paths.instance:
+            raise ControlError('wrong_scope', 'The status belongs to another instance.')
+        validate_state(state)
+        if state.get('automation') is not None and not isinstance(state['automation'], dict):
+            raise ControlError('invalid_state', 'Automation status must be an object.')
+        report.update(state=state, stale=False, worker_reachable=True, source='ipc')
     except (ControlError, OSError) as exc:
         report['errors']['ipc'] = getattr(exc, 'code', 'local_io_error')
         try:

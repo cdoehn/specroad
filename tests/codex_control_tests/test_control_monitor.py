@@ -16,7 +16,8 @@ class MonitorDataTests(AutomationCase):
         return result
 
     def test_live_observation_preserves_lifecycle_proof_and_budget(self):
-        state = {'phase': 'working', 'desired': 'running', 'automation': {
+        state = {'schema': 1, 'active_job': True, 'pid': 123, 'run_id': self.thread,
+                 'started_at': 1, 'updated_at': 2, 'phase': 'working', 'desired': 'running', 'automation': {
             'stage': 'checking_dispatch', 'validation': {'phase': 'validating', 'visited': 300},
             'request_contract': {'clarifications_remaining': 2}}}
         result = self.read({'state': state})

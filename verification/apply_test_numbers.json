@@ -26987,6 +26987,16 @@
     "codex_control_tests.test_control_monitor.MonitorDataTests.test_live_observation_preserves_lifecycle_proof_and_budget",
     "codex_control_tests.test_control_monitor.MonitorDataTests.test_monitor_does_not_modify_state_history_or_create_locks",
     "codex_control_tests.test_control_monitor.MonitorDataTests.test_offline_file_is_explicitly_stale",
-    "codex_control_tests.test_control_monitor.MonitorDataTests.test_persisted_budget_and_job_are_read_without_opening_live_sqlite"
+    "codex_control_tests.test_control_monitor.MonitorDataTests.test_persisted_budget_and_job_are_read_without_opening_live_sqlite",
+    "codex_control_tests.test_control_monitor_right.MonitorGuards.test_bad_socket_reply_and_corrupt_snapshot_are_reported_without_repair",
+    "codex_control_tests.test_control_monitor_right.MonitorGuards.test_cross_instance_reply_cannot_be_shown_as_live",
+    "codex_control_tests.test_control_monitor_right.MonitorGuards.test_invalid_discovered_instance_does_not_hide_other_instances",
+    "codex_control_tests.test_control_monitor_right.MonitorGuards.test_late_response_stays_stale_and_snapshots_are_detached",
+    "codex_control_tests.test_control_monitor_right.MonitorGuards.test_malformed_live_lifecycle_is_not_presented_as_fresh",
+    "codex_control_tests.test_control_monitor_right.MonitorGuards.test_once_has_one_budget_and_never_claims_an_unfinished_source_is_live",
+    "codex_control_tests.test_control_monitor_right.MonitorGuards.test_one_hung_instance_does_not_block_another_or_exit",
+    "codex_control_tests.test_control_monitor_right.MonitorGuards.test_open_sqlite_sidecars_produce_a_source_error_without_recovery",
+    "codex_control_tests.test_control_monitor_right.MonitorGuards.test_status_wire_allows_details_but_refuses_unbounded_output",
+    "codex_control_tests.test_control_monitor_right.MonitorGuards.test_systemd_reader_only_shows_the_selected_unit_with_a_deadline"
   ]
 }
