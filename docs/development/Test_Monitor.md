@@ -37,6 +37,24 @@ wird angezeigt. [Belegungsregeln und Pfadbindung](Status_Helpers.md) gelten weit
 Oben stehen Apply-Belegung, Bundle, Phase und Testfortschritt aller Ziele.
 Darunter folgen die Details des ausgewählten Ziels und eine Testliste.
 
+Bei laufenden Tests reicht der Hintergrund jeder Apply-Zeile über die gesamte
+Terminalbreite, einschließlich der Leerfläche rechts vom Text: Der Anteil
+abgeschlossener Tests ist grün, der Rest gelb. Grundlage ist der vorhandene
+Zähler `beendet / ausgewählt`; daneben steht der Prozentwert. Ein Test zählt
+erst nach seiner Teardown-Phase als beendet. Der Balken gehört zum aktuellen
+Testgate, nicht zur gesamten W/R/C-Folge, und ist keine Restzeitprognose.
+Grün bezeichnet abgearbeitete Tests, nicht bestandene Tests; Fehler werden
+zusätzlich als `FEHLER` mit ihrer Anzahl angezeigt.
+
+Freie Applies behalten den normalen Terminalhintergrund. Die Zielauswahl
+wird durch einen Pfeil und bei Fokus auf der Übersicht durch Fettschrift
+gekennzeichnet, ohne die ganze Zeile zu invertieren. Auch außerhalb der
+Testphase, bei fehlenden oder ungültigen Zählern und bei veralteten Statusdaten
+wird kein Fortschrittsbalken gezeichnet. Eine ausschließlich veraltete
+Laufzeithistorie (`VERALTET: history`) verhindert den Balken eines frisch
+gelesenen Testlaufs nicht. Ohne Farben bleiben Zustand, Zähler und Prozentwert
+lesbar; es wird kein Hintergrundbalken erzeugt.
+
 | Taste | Wirkung |
 |---|---|
 | Tab | Fokus zwischen Apply-Übersicht und Testliste |

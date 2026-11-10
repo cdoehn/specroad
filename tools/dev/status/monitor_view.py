@@ -43,14 +43,37 @@ def freshness(target):
     return 'lädt …' if any(target[s]['refreshing'] for s in ('status', 'history')) else 'gelesen'
 
 
+def progress_counts(target):
+    counts = report(target).get('tests') or {}
+    ended, total = counts.get('ended'), counts.get('total')
+    if type(ended) is int and type(total) is int and 0 <= ended <= total and total > 0:
+        return ended, total
+    return None
+
+
+def progress_active(target):
+    view = report(target)
+    run = (view.get('tests') or {}).get('run') or {}
+    return (not target['status']['stale'] and view.get('availability', {}).get('state') == 'busy'
+            and view.get('phase') == 'testing' and bool(run) and not run.get('finished')
+            and progress_counts(target) is not None)
+
+
 def overview(target):
     view = report(target)
     counts = view.get('tests') or {}
     state = STATES.get(view.get('availability', {}).get('state'), 'LÄDT')
     if target['status']['stale']:
         state = 'UNKLAR (alter Stand)'
+    if counts.get('failed', 0):
+        state += f' · FEHLER {counts["failed"]}'
     run = counts.get('run') or {}
     progress = f'{counts.get("ended", 0)}/{counts.get("total", "?")}' if counts else '—'
+    completed = progress_counts(target)
+    if completed is not None:
+        ended, total = completed
+        percent = 100.0 if ended == total else min(99.9, 100 * ended / total)
+        progress += f' · {percent:.1f} %'
     return (f'{target["repository"].rsplit("/", 1)[-1]:<21} {state:<23} '
             f'Bundle {view.get("bundle") or "—":>4}  {view.get("phase", view.get("status", "")):<12} '
             f'{progress:>12}  {run.get("workers", "—")} W  {freshness(target)}')
@@ -212,11 +235,15 @@ def run_tui(paths, args):
                 curses.init_pair(i, color, background)
         else:
             colored = False
+        progress_colors = colored and curses.COLOR_PAIRS > 6
+        if progress_colors:
+            for i, background in ((5, curses.COLOR_GREEN), (6, curses.COLOR_YELLOW)):
+                curses.init_pair(i, curses.COLOR_BLACK, background)
         search = None
         help_open = False
         refresh.request()
 
-        def put(y, x, text, color=0, selected=False):
+        def put(y, x, text, color=0, selected=False, bold=False):
             height, width = screen.getmaxyx()
             if y < 0 or y >= height or x >= width - 1:
                 return
@@ -231,10 +258,30 @@ def run_tui(paths, args):
             attr = curses.color_pair(color) if colored and color else 0
             if selected:
                 attr |= curses.A_REVERSE
+            if bold:
+                attr |= curses.A_BOLD
             try:
                 screen.addstr(y, x, cropped, attr)
             except (curses.error, UnicodeError):
                 pass  # resize or a terminal unable to encode one glyph
+
+        def put_target(y, item, selected, focused):
+            availability = report(item).get('availability', {}).get('state')
+            color = 3 if item['status']['stale'] else 2 if availability == 'free' else 3 if availability in ('unknown', 'busy') else 1
+            put(y, 1, ('› ' if selected else '  ') + overview(item), color, bold=focused)
+            if not progress_colors or not progress_active(item):
+                return
+            ended, total = progress_counts(item)
+            width = screen.getmaxyx()[1]
+            filled = width * ended // total
+            emphasis = curses.A_BOLD if focused else 0
+            try:
+                if filled:
+                    screen.chgat(y, 0, filled, curses.color_pair(5) | emphasis)
+                if filled < width:
+                    screen.chgat(y, filled, width - filled, curses.color_pair(6) | emphasis)
+            except curses.error:
+                pass  # the terminal may have resized between reads
 
         while True:
             refresh.harvest()
@@ -259,10 +306,8 @@ def run_tui(paths, args):
                 first = max(0, min(state.target - visible_targets + 1, len(snapshots) - visible_targets))
                 for index in range(first, first + visible_targets):
                     item = snapshots[index]
-                    availability = report(item).get('availability', {}).get('state')
-                    color = 3 if item['status']['stale'] else 2 if availability == 'free' else 3 if availability in ('unknown', 'busy') else 1
-                    put(3 + index - first, 1, ('› ' if index == state.target else '  ') + overview(item), color,
-                        selected=index == state.target and state.focus == 'targets')
+                    put_target(3 + index - first, item, index == state.target,
+                               index == state.target and state.focus == 'targets')
                 line = 4 + visible_targets
                 put(line, 1, '   '.join(('[' if view == state.tab else '') + f'{i + 1} {title}'
                     + (']' if view == state.tab else '') for i, (view, title) in enumerate(zip(VIEWS, TITLES))), 1)

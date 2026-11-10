@@ -372,3 +372,5 @@
 - [Bundle 662 — atomarer Review start 18.h.W/R/C](bundle-662-review-start.md)
 
 - [Bundle 663 — Review-start-Korrektur und offener W/R/C-Rest](bundle-663-review-start-correction.md).
+
+- [Bundle 664 — Fortschrittsbalken im Test-Monitor](bundle-664-test-monitor-progress.md).
