@@ -23,13 +23,18 @@ class AcceptanceCase(AuthorizationCase):
         self.engine.core.current = Mock(return_value=None)
 
     def manual(self, remaining=2, *, mixed=False, completed=None, mutate_base=None,
-               mutate_log=None, capability=CAPABILITY):
+               mutate_log=None, capability=CAPABILITY, reset_capability=None):
         self.ledger().bind_contract(new_contract(remaining, allowed=False, version=4))
         self.latest_data = self.data(mixed=mixed)
         first = self.latest_data['stages'][1 if mixed else 0]
         raw = canonical(capability)
         first['after'][PATH] = sha256(raw).hexdigest()
         first['payloads'][PATH] = base64.b64encode(raw).decode()
+        if reset_capability is not None:
+            from specroad_control.current_acceptance_proof import RESET_PATH
+            raw = canonical(reset_capability)
+            first['after'][RESET_PATH] = sha256(raw).hexdigest()
+            first['payloads'][RESET_PATH] = base64.b64encode(raw).decode()
         self.latest_patch = patch_package(self.exchange / 'manual.zip', self.latest_data)
         self.engine.gate.set(False)
         self.engine.tick()

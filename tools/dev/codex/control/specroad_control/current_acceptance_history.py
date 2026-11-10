@@ -14,15 +14,17 @@ from .local import decode_object
 TABLE = 'current_acceptances'
 
 
-def selection(previous, output_kind, clarification, mode):
+def selection(previous, output_kind, clarification, mode, *, reset_budget=False):
+    if type(reset_budget) is not bool or (reset_budget and (clarification is not True or previous['version'] != 4)):
+        raise ValueError('An explicit V4 operator reset requires clarification authority')
     # A published clarification may not yet have reached inherit_contract.
     # Charge it once when archiving that source, never silently restore it.
     debit = int(mode == 'successor' and (output_kind == 'spec_clarification'
         or output_kind == 'patch_ready_with_clarification' and not previous.get('clarification_continuation')))
     remaining = previous['clarifications_remaining'] - debit
-    if remaining < 0 or clarification and remaining == 0:
+    if remaining < 0 or clarification and remaining == 0 and not reset_budget:
         raise ValueError('No unspent clarification budget')
-    return new_contract(remaining, version=4,
+    return new_contract(3 if reset_budget else remaining, version=4,
         allowed=clarification or mode == 'same_ready' and previous['clarification_allowed'])
 
 
@@ -41,7 +43,11 @@ def document(row):
     fields = {'version', 'source', 'target', 'scope', 'config_sha256', 'history_sha256',
               'previous_contract', 'previous_output_kind', 'selected_contract', 'original_job', 'mode',
               'attempt_number', 'evidence', 'reason', 'clarification', 'artifacts'}
-    if (set(doc) != fields or type(doc['version']) is not int or doc['version'] != 1
+    reset_budget = doc.get('version') == 2
+    if reset_budget:
+        fields |= {'reset_budget'}
+    if (set(doc) != fields or type(doc['version']) is not int or doc['version'] not in (1, 2)
+            or reset_budget and doc.get('reset_budget') is not True
             or hashed(doc) != row['proof_sha'] or row['state'] not in ('pending', 'completed')
             or row['output_kind'] not in (None, 'patch_ready', 'patch_ready_with_clarification', 'unknown')):
         raise ValueError('Invalid acceptance receipt')
@@ -53,9 +59,9 @@ def document(row):
     previous, selected = contract(doc['previous_contract']), contract(doc['selected_contract'])
     if (previous['version'] not in (3, 4) or previous.get('clarification_continuation')
             or type(doc['clarification']) is not bool
-            or doc['clarification'] and previous['clarifications_remaining'] == 0
+            or doc['clarification'] and previous['clarifications_remaining'] == 0 and not reset_budget
             or doc['previous_output_kind'] not in (None, 'unknown', 'patch_ready', 'spec_clarification', 'patch_ready_with_clarification')
-            or selected != selection(previous, doc['previous_output_kind'], doc['clarification'], doc['mode'])):
+            or selected != selection(previous, doc['previous_output_kind'], doc['clarification'], doc['mode'], reset_budget=reset_budget)):
         raise ValueError('Receipt changed the preserved budget or selected authority')
     before = doc['original_job']
     if (set(before) != {'stage', 'error', 'patch_sha', 'updated'}

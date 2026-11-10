@@ -225,3 +225,23 @@ Wurde ein fehlgeschlagener Turn mit anderen Rechten gestartet, bleibt seine
 Fortsetzung wegen abweichender Belege gesperrt; Originale nicht umschreiben.
 Die Details einschließlich Probe-Verhalten stehen in
 [CONTROL-ACCESS-647](spec/SPECIFICATION.md#off-plan-control-access-647-expliziten-vollzugriff-beibehalten).
+
+
+## Klärungsbudget ausdrücklich erneuern
+
+Nur auf ausdrücklichen Betreiberauftrag und nach geprüftem Apply/Installation:
+
+```sh
+control accept-current --result /ABSOLUTES/AKTUELLES/Result.zip \
+  --clarification --reset-budget --reason "Betreiberauftrag: Klärung erlauben und Budget auf drei erneuern"
+```
+
+Der Dienst muss gestoppt sein. Der neue Betreiberbeleg bewahrt den Vorvertrag,
+erneuert ausdrücklich drei Plätze und schaltet die begrenzte Detailklärung frei.
+Auch ein gültiger Rest von null ist möglich. Ohne Flag bleibt das alte Budget
+erhalten; Restart, Recovery und bloße Installation ändern es nicht. Alte
+Übernahmen werden nicht ersetzt: für ein bereits akzeptiertes Result ist ein
+neuer sauberer erfolgreicher Apply-Nachfolger nötig. Aktuelles Result und
+vollständige Gates bleiben Pflicht. Anschließend `start` und `resume` ausdrücklich
+ausführen. Der Befehl selbst startet weder Dienst noch Modell; aktiver Thread
+verzögert die Übernahme. Details: Spezifikation 2.4.3.5.

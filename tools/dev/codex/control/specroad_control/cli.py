@@ -32,7 +32,11 @@ def main(argv=None) -> int:
     parser.add_argument('--reason', help='Explicit operator reason; with authorize-clarification or accept-current')
     parser.add_argument('--retry-blocked', action='store_true', help='Authorize one new attempt after a patchless blocked V4 completion')
     parser.add_argument('--clarification', action='store_true', help='Explicit optional detail clarification; only with accept-current')
+    parser.add_argument('--reset-budget', action='store_true',
+                        help='Explicitly renew three clarification slots; only with accept-current --clarification')
     args = parser.parse_args(argv)
+    if args.reset_budget and (args.command != 'accept-current' or not args.clarification):
+        parser.error('--reset-budget requires accept-current --clarification')
     if args.clarification and args.command != 'accept-current':
         parser.error('--clarification is only allowed with accept-current')
     if args.command == 'accept-current' and not (args.result and args.reason):
@@ -106,7 +110,8 @@ def main(argv=None) -> int:
             result = enqueue(paths, args.result, **options)
         elif args.command == 'accept-current':
             from .current_acceptance import enqueue
-            result = enqueue(paths, args.result, clarification=args.clarification, reason=args.reason)
+            options = {'reset_budget': True} if args.reset_budget else {}
+            result = enqueue(paths, args.result, clarification=args.clarification, reason=args.reason, **options)
         elif args.command == 'authorize-clarification':
             if args.retry_blocked:
                 from .blocked_authorization import enqueue

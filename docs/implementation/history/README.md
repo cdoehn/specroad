@@ -366,3 +366,5 @@
 - [Bundle 659 — Query-/Rendering-Test auf das tatsächlich geänderte Feld beziehen](bundle-659-proposal-query-test-correction.md)
 
 - [Bundle 660 — Proposal-Test und Scheduler-Reparatur](bundle-660-proposal-and-scheduler-correction.md)
+
+- [OFF-PLAN 661 — expliziter Control-Budgetreset](bundle-661-control-budget-reset.md)

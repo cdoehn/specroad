@@ -1,19 +1,19 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.79
+## Version 0.2.80
 
 | Feld | Wert |
 |---|---|
 | Dokument-ID | `SR-SPEC-0001` |
-| Dokumentversion | `0.2.79` |
+| Dokumentversion | `0.2.80` |
 | Zielrelease | `SpecRoad Single-Repository Workbench 0.2.0` |
 | Status | **Fachlich konsolidierte Arbeitsgrundlage; technische Reviewentscheidung gesondert dokumentiert, formale Baseline-Freigabe und Produktabnahme nicht durch dieses Dokument erklärt** |
-| Stand | 9. November 2026 |
+| Stand | 10. November 2026 |
 | Sprache | Deutsch; technische Feldnamen, Enum-Werte und CLI-Kommandos Englisch |
-| Fachliche Quelle | **Diese Repositoryfassung v0.2.79 ist die aktive fachliche Arbeitsgrundlage; eine entsprechende PDF wird hiermit nicht veröffentlicht.** |
+| Fachliche Quelle | **Diese Repositoryfassung v0.2.80 ist die aktive fachliche Arbeitsgrundlage; eine entsprechende PDF wird hiermit nicht veröffentlicht.** |
 | Bearbeitbare Satzquelle | Diese Datei; eine spätere PDF muss denselben versionierten Inhalt wiedergeben. |
-| Vorgängerversion | Repository-Spezifikation v0.2.78; historische Nachweise bleiben unverändert. |
-| Prüf- und Entscheidungsgrundlage | Ausdrücklicher Nutzerauftrag REMOTE-TEST-HOSTS vom 8. November 2026; keine Produktfreigabe. |
-| Änderungsart | Ergänzung des Entwicklungsworkflows um optionale heterogene Apply-Testhosts. |
+| Vorgängerversion | Repository-Spezifikation v0.2.79; historische Nachweise bleiben unverändert. |
+| Prüf- und Entscheidungsgrundlage | Ausdrücklicher Nutzerauftrag CONTROL-BUDGET-RESET-661 vom 10. November 2026; keine Produktfreigabe. |
+| Änderungsart | Ausdrücklicher protokollierter Betreiberreset des Control-Klärungsbudgets bei geprüfter aktueller Übernahme. |
 
 > **Verbindlicher Quellenwechsel:** Die ausdrückliche Nutzerentscheidung REFERENCE-SOURCE-551 wird als v0.2.50 umgesetzt. Der neue Quellvertrag ist Entwurfsarbeit vom 3. November 2026, kein Nachweis eines früher existierenden Formats. Bestehende 0.2-Verträge, Transport-, Sicherheits- und Reviewgrenzen bleiben erhalten.
 
@@ -753,6 +753,44 @@ nachträgliche Umdeutung alter Aufträge. Ihre Übernahme erfolgt ausschließlic
 nach dem bestehenden ausdrücklich beauftragten Control-Verfahren.
 
 ---
+
+### 2.4.3.5 Ausdrücklicher Betreiberreset — CONTROL-BUDGET-RESET-661
+
+Ausdrücklicher Nutzerauftrag vom 10. November 2026: Der Betreiber darf bei
+der aktuellen Übernahme nach 2.4.3.4 zusätzlich `--reset-budget` zusammen mit
+`--clarification` und einem nichtleeren `--reason` angeben. Dies erneuert
+ausdrücklich drei Klärungsplätze für den neuen Auftrag. Es ist keine automatische
+Regel und keine Befugnis eines normalen Dev-Auftrags, sein Budget selbst zu ändern.
+Ohne dieses Flag bleiben die bestehenden Erhaltungsregeln unverändert.
+
+Alle Prüfungen aus 2.4.3.4 bleiben erforderlich: gestoppter Dienst, aktuelle
+saubere erfolgreiche Apply-Basis, vollständige angekündigte Stages und Belege,
+keine konkurrierende Übergabe, keine laufende Arbeit oder offene Klärungsfortsetzung.
+Ein gültiger V4-Vorvertrag bleibt erforderlich; auch ein belegter Rest von null
+darf ausdrücklich erneuert werden. Widersprüchliche oder fehlende Budgets werden
+nicht repariert. Die Grenze bleibt drei; es gibt keinen beliebigen Zählerwert.
+
+Der Betreiberbeleg verwendet bei Reset Version 2 und ergänzt gegenüber dem
+unveränderten Version-1-Beleg ausschließlich `reset_budget: true`. Er bewahrt
+den tatsächlichen Vorvertrag und die bisherigen Versuche unverändert; der
+ausgewählte neue Vertrag enthält `clarification_allowed=true`,
+`clarifications_remaining=3`, `clarification_limit=3` und keine Fortsetzung.
+Die Aufnahme und Übernahme bleiben getrennt. Start/Resume sind weiterhin
+ausdrücklich nötig; Pause, Threadbelegung und sonstige Gates bleiben wirksam.
+Eine identische Wiederholung ist idempotent, geänderte Resetabsicht ersetzt
+keinen früheren Beleg. Pro Result bleibt höchstens eine aktuelle Übernahme
+zulässig; bei bereits übernommener Basis ist ein neuer geprüfter Apply-Nachfolger
+erforderlich. Alte Belege werden weder umklassifiziert noch überschrieben.
+
+Das maßgebliche Result muss zusätzlich `verification/current_acceptance_reset.json`
+mit genau `format_version=1`, `decision_contract_version=4`,
+`authorization_mode=explicit_current`, `budget_policy=explicit_operator_reset`,
+`clarification_limit=3`, `receipt_version=2` und `history_policy=preserve` enthalten.
+Die native Prüfung bindet diesen Marker beim Vormerken, Übernehmen und vor
+dem neuen Modellaufruf erneut an das Result. Der bisherige Marker aus 2.4.3.4
+bleibt unverändert. Installation, Restart, Recovery oder eine neue manuelle
+ZIP erneuern allein weiterhin kein Budget. SPECROAD-DECISION-1, echte
+Human-Reviews, W/R/C-Gates und eine einzige kanonische ZIP je Result bleiben.
 
 ### 2.5 Entwicklungsworkflow: aktuelle Laufzeitfilterung und vollständige Planschritte
 

@@ -1,0 +1,9 @@
+{
+  "authorization_mode": "explicit_current",
+  "budget_policy": "explicit_operator_reset",
+  "clarification_limit": 3,
+  "decision_contract_version": 4,
+  "format_version": 1,
+  "history_policy": "preserve",
+  "receipt_version": 2
+}

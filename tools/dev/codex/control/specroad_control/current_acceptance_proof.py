@@ -16,6 +16,20 @@ CAPABILITY = {'format_version': 1, 'decision_rule': 'SPECROAD-DECISION-1',
               'budget_policy': 'preserve', 'maximum_grants_per_result': 1}
 
 
+RESET_PATH = 'verification/current_acceptance_reset.json'
+RESET_CAPABILITY = {'format_version': 1, 'decision_contract_version': 4,
+    'authorization_mode': 'explicit_current', 'budget_policy': 'explicit_operator_reset',
+    'clarification_limit': 3, 'receipt_version': 2, 'history_policy': 'preserve'}
+
+
+def require_reset_support(engine, target):
+    raw = member(engine.exchange.source(target), 'base/' + RESET_PATH)
+    marker = decode_object(raw)
+    if (len(raw) > 4096 or set(marker) != set(RESET_CAPABILITY)
+            or any(type(marker[k]) is not type(v) or marker[k] != v for k, v in RESET_CAPABILITY.items())):
+        fail('The tested current Result must opt into an explicit operator budget reset.')
+
+
 def fail(message):
     raise ControlError('current_acceptance_rejected', message)
 
@@ -77,5 +91,9 @@ def prove(engine, target, *, unused=True):
             'snapshot_sha256': inventory_hash(work)}
 
 
-def checked(engine, target, *, unused=True):
-    return guarded(lambda: prove(engine, target, unused=unused))
+def checked(engine, target, *, unused=True, reset_budget=False):
+    def check():
+        if reset_budget:
+            require_reset_support(engine, target)
+        return prove(engine, target, unused=unused)
+    return guarded(check)

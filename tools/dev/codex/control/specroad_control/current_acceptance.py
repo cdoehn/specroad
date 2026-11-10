@@ -23,7 +23,7 @@ def require_release(paths):
         fail('Install the tested accept-current release before queuing this action.')
 
 
-def enqueue(paths, result, *, clarification=False, reason):
+def enqueue(paths, result, *, clarification=False, reason, reset_budget=False):
     from .commands import configured_offline
     from .apply_reconcile_history import validate_history as recoveries
     from .clarification_authorization_history import validate_history as successors
@@ -31,6 +31,7 @@ def enqueue(paths, result, *, clarification=False, reason):
     from .handover_queue import public_status as handover
     try:
         if (not Path(result).is_absolute() or type(clarification) is not bool
+                or type(reset_budget) is not bool or reset_budget and not clarification
                 or not isinstance(reason, str) or not reason.strip() or len(reason) > 512
                 or not reason.isprintable()):
             fail('An absolute Result and short explicit reason are required.')
@@ -42,7 +43,8 @@ def enqueue(paths, result, *, clarification=False, reason):
                 for row in records(ledger):
                     if row['target_sha'] == requested['sha256']:
                         doc = document(row)
-                        if doc['reason'] != reason.strip() or doc['clarification'] != clarification:
+                        if (doc['reason'] != reason.strip() or doc['clarification'] != clarification
+                                or doc.get('reset_budget', False) != reset_budget):
                             fail('A different acceptance already exists for this Result.')
                         verify(engine, ledger, doc, unused=row['state'] == 'pending')
                         return reply(doc, completed=row['state'] == 'completed')
@@ -52,7 +54,8 @@ def enqueue(paths, result, *, clarification=False, reason):
                 if (old['stage'] not in ('ready', 'uncertain', 'waiting_result', 'no_work')
                         or previous is None or previous['version'] not in (3, 4)
                         or previous.get('clarification_continuation')
-                        or clarification and previous['clarifications_remaining'] == 0):
+                        or clarification and previous['clarifications_remaining'] == 0 and not reset_budget
+                        or reset_budget and previous['version'] != 4):
                     fail('No active/retrying work, unknown budget or unfinished clarification may be bypassed.')
                 mode, number = 'successor', 0
                 if requested['sha256'] == old['sha']:
@@ -74,15 +77,17 @@ def enqueue(paths, result, *, clarification=False, reason):
                 elif (requested['run_id'] in ledger.known_runs()
                         or ledger.db.execute('SELECT 1 FROM jobs WHERE sha=?', (requested['sha256'],)).fetchone()):
                     fail('The selected successor was already claimed.')
-                doc = {'version': 1, 'source': old['source'], 'target': requested,
+                doc = {'version': 2 if reset_budget else 1, 'source': old['source'], 'target': requested,
                     'scope': scope(config), 'config_sha256': sha256(read_private(paths.config)).hexdigest(),
                     'history_sha256': history_hash(ledger), 'previous_contract': previous,
                     'previous_output_kind': ledger.output_kind(),
-                    'selected_contract': selection(previous, ledger.output_kind(), clarification, mode),
+                    'selected_contract': selection(previous, ledger.output_kind(), clarification, mode, reset_budget=reset_budget),
                     'original_job': {k: old[k] for k in ('stage', 'error', 'patch_sha', 'updated')},
                     'mode': mode, 'attempt_number': number, 'evidence': None,
                     'reason': reason.strip(), 'clarification': clarification,
-                    'artifacts': checked(engine, requested)}
+                    'artifacts': checked(engine, requested, reset_budget=reset_budget)}
+                if reset_budget:
+                    doc['reset_budget'] = True
                 if mode == 'same_blocked':
                     doc['evidence'] = blocked_evidence(engine, doc)
                 # A known active user turn permits queuing, never adoption.
@@ -101,7 +106,8 @@ def reply(doc, *, completed=False):
         'stage': 'current_acceptance_completed' if completed else 'current_acceptance_pending',
         'source_sha256': doc['source']['sha256'], 'result_sha256': doc['target']['sha256'],
         'request_contract': doc['selected_contract'], 'model_called': False,
-        'service_started': False, 'history_advanced': completed}
+        'service_started': False, 'history_advanced': completed,
+        **({'budget_reset': True} if doc.get('reset_budget') is True else {})}
 
 
 def tick(engine, ledger, doc):

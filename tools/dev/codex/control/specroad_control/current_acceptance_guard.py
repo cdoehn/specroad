@@ -30,7 +30,7 @@ def guard_inputs(engine, ledger, doc):
 
 def verify(engine, ledger, doc, *, unused=True):
     guard_inputs(engine, ledger, doc)
-    actual = checked(engine, doc['target'], unused=unused)
+    actual = checked(engine, doc['target'], unused=unused, reset_budget=doc.get('reset_budget', False))
     if stable(actual) != stable(doc['artifacts']):
         fail('Pinned final Apply evidence changed.')
     guard_inputs(engine, ledger, doc)
