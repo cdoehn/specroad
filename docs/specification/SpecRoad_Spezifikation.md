@@ -1,15 +1,15 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.80
+## Version 0.2.81
 
 | Feld | Wert |
 |---|---|
 | Dokument-ID | `SR-SPEC-0001` |
-| Dokumentversion | `0.2.80` |
+| Dokumentversion | `0.2.81` |
 | Zielrelease | `SpecRoad Single-Repository Workbench 0.2.0` |
 | Status | **Fachlich konsolidierte Arbeitsgrundlage; technische Reviewentscheidung gesondert dokumentiert, formale Baseline-Freigabe und Produktabnahme nicht durch dieses Dokument erklärt** |
 | Stand | 10. November 2026 |
 | Sprache | Deutsch; technische Feldnamen, Enum-Werte und CLI-Kommandos Englisch |
-| Fachliche Quelle | **Diese Repositoryfassung v0.2.80 ist die aktive fachliche Arbeitsgrundlage; eine entsprechende PDF wird hiermit nicht veröffentlicht.** |
+| Fachliche Quelle | **Diese Repositoryfassung v0.2.81 ist die aktive fachliche Arbeitsgrundlage; eine entsprechende PDF wird hiermit nicht veröffentlicht.** |
 | Bearbeitbare Satzquelle | Diese Datei; eine spätere PDF muss denselben versionierten Inhalt wiedergeben. |
 | Vorgängerversion | Repository-Spezifikation v0.2.79; historische Nachweise bleiben unverändert. |
 | Prüf- und Entscheidungsgrundlage | Ausdrücklicher Nutzerauftrag CONTROL-BUDGET-RESET-661 vom 10. November 2026; keine Produktfreigabe. |
@@ -2289,6 +2289,65 @@ meldet `eligible_transition=checked`; andere beobachtete Zustände bleiben
 unverändert und melden null. Das erfolgreiche Ergebnis ersetzt weder die
 atomare Folge in `review start` noch eine menschliche Freigabe; beide
 Autorisierungsbooleans sind immer false. Es wird kein Kontrollstatus persistiert.
+
+### 10.3.3 Persistierte Review-start-Belege — REVIEW-START-662
+
+Delegiert gemäß SPECROAD-DECISION-1 und 2.4.3.1. Dies präzisiert 18.h und
+ändert weder menschliche Freigaben noch die Originalkontextpflicht aus 10.7.10.
+Die vollständig unterstützte Folge bleibt ausschließlich
+`draft → validated → checked → in_review`. Der Writer MUSS alle drei Ereignisse
+in genau einem Write mit genau einer neuen Artefaktrevision und `maturity=in_review`
+speichern. Inhaltsrevision, Inhaltshash, Reviews und vorherige Kontrollzeilen
+bleiben unverändert. Bereits terminale oder nicht im Zustand draft vorliegende
+Fassungen werden abgewiesen; kein Zwischenstatus wird persistiert.
+
+Jede neu geschriebene Zeile besitzt genau `format_version` (Literal
+`proposal-control-v1`), `binding` (das fünffache Tupel aus 10.3), `actor`,
+`occurred_at` (die explizite UTC-Planzeit), `observed_revision` (die physische
+Eingangsrevision), `from`, `to`, `reason`, `result_sha256` und
+`result_bytes_base64`. Letzteres enthält die vollständigen unveränderten
+JCS-Bytes des nativen Prüfberichts in kanonischem RFC-4648-Base64.
+`result_sha256` ist der SHA-256 dieser vollständigen Bytes, einschließlich des
+internen selbstreferenzfrei berechneten Berichtshashfelds. Beide Hashbindungen
+werden geprüft; sie sind nicht miteinander gleichzusetzen.
+
+Das erste Ereignis bindet den frisch erzeugten `proposal-validation-v1`-Bericht,
+das zweite und dritte denselben frisch erzeugten `proposal-check-v1`-Bericht.
+Beide Berichte beobachten dieselben unveränderten draft-Originalbytes und
+denselben vollständigen nativen Kontext. Ihre tatsächlichen `observed_status`
+und `eligible_transition` werden NICHT umgeschrieben, um Zwischenfassungen
+vorzutäuschen. Nur ein vollständiger erfolgreicher Check mit aufgeräumtem
+Prüfbereich ist zulässig. Gründe sind die Literale `native_validation`,
+`native_check` und `review_start`. Keine Zeile erteilt menschliche Freigabe.
+Originale und Originalkontexte für spätere Historien-/Restoreprüfung bleiben
+separate native Eingaben nach 10.7.10; ein Hash oder diese Zeile ersetzt weder
+fehlende Originalquellen noch den expliziten Herkunftsverifier. Historische
+Zeilen ohne diesen Marker behalten ihren bisherigen Leser und ihre Bytes.
+
+Die vorhandene Operation `proposal_control` erhält für diese Folge optional
+`review_start`: ein geschlossenes Objekt mit `format_version` gleich
+`proposal-review-start-evidence-v1`, `validation_bytes_base64` und
+`check_bytes_base64`. Die unveränderten vier Ereignisfelder in `events`
+verweisen auf diese Bytes. Der native Reducer rekonstruiert daraus die drei
+vollständigen Zeilen; Ergebnisartefakte, Metadaten und fünfteilige Bindung
+müssen exakt zu Eingangsproposal, Plan und explizitem Akteur passen.
+Die reguläre generische Änderungsroute darf solche Operationen nicht schreiben.
+Nur die fest eingebaute Review-start-Route mit eigenen frischen nativen Gates
+und ausdrücklicher PublicationAuthority verwendet den bestehenden
+Writer-/Journal-/Receiptpfad. Auch KI/CI dürfen damit ausschließlich diesen
+Kontrollwrite ausführen; ihre stabile Request-ID bleibt erforderlich.
+
+Der öffentliche Aufruf aus 11.10 verwendet `--actor-type human|ai|ci` und
+`--actor-id`, optional `--request-id` und `--dry-run`. Fehlende Schreibbefugnis
+wird vor Publikation abgewiesen. Das Einbettungs-API nimmt explizite native
+Akteur-, Zeit-, Plan- und Transaktionswerte entgegen; die CLI erzeugt nur Zeit
+und technische Plan-/Transaktionskennungen. Dry-run führt die vollständigen
+Prüfungen aus, erzeugt aber weder Journal/Receipt noch normative Dateien.
+Ein belegter Retry derselben Request-ID, Actor-, Proposal- und
+expected-revision-Bindung liefert das ursprünglich bestätigte Ergebnis,
+ohne neue Prüfereignisse oder Revision; abweichende Eingaben ergeben Konflikt.
+Fehler vor Publikation lassen das Proposal unverändert; spätere I/O-Abbrüche
+erhalten die echten nativen Recoverybelege, niemals einen erfundenen Rollback.
 
 ### 10.4 Spezial-Lifecycle-Vertrag
 
