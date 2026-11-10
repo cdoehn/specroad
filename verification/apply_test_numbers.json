@@ -26997,6 +26997,25 @@
     "codex_control_tests.test_control_monitor_right.MonitorGuards.test_one_hung_instance_does_not_block_another_or_exit",
     "codex_control_tests.test_control_monitor_right.MonitorGuards.test_open_sqlite_sidecars_produce_a_source_error_without_recovery",
     "codex_control_tests.test_control_monitor_right.MonitorGuards.test_status_wire_allows_details_but_refuses_unbounded_output",
-    "codex_control_tests.test_control_monitor_right.MonitorGuards.test_systemd_reader_only_shows_the_selected_unit_with_a_deadline"
+    "codex_control_tests.test_control_monitor_right.MonitorGuards.test_systemd_reader_only_shows_the_selected_unit_with_a_deadline",
+    "tests/test_language_registry_reuse.py::test_distinct_registry_bytes_never_share_a_parsed_value",
+    "tests/test_language_registry_reuse.py::test_equal_bytes_parse_once_but_return_independent_public_records",
+    "tests/test_language_registry_reuse.py::test_invalid_inputs_are_checked_again_and_never_become_a_cache_hit",
+    "tests/test_language_registry_reuse.py::test_warm_cache_does_not_replace_each_callers_binding_check[hash-registry_hash_mismatch]",
+    "tests/test_language_registry_reuse.py::test_warm_cache_does_not_replace_each_callers_binding_check[version-registry_version_mismatch]",
+    "tests/test_merge_reuse.py::test_recorded_proofs_are_reused_only_inside_one_outer_invocation",
+    "tests/test_merge_reuse.py::test_relations_use_one_qualified_inventory_model_per_role",
+    "tests/test_work_checkpoint_reuse.py::test_a_later_reference_cannot_change_the_size_of_reused_bytes",
+    "tests/test_work_checkpoint_reuse.py::test_exhausted_reuse_budget_keeps_exact_results_and_current_file_checks[_MAX_REUSED_OBJECTS]",
+    "tests/test_work_checkpoint_reuse.py::test_exhausted_reuse_budget_keeps_exact_results_and_current_file_checks[_MAX_REUSED_OBJECT_BYTES]",
+    "tests/test_work_checkpoint_reuse.py::test_reused_bytes_do_not_hide_changes_before_chain_acceptance[hardlink]",
+    "tests/test_work_checkpoint_reuse.py::test_reused_bytes_do_not_hide_changes_before_chain_acceptance[missing]",
+    "tests/test_work_checkpoint_reuse.py::test_reused_bytes_do_not_hide_changes_before_chain_acceptance[public]",
+    "tests/test_work_checkpoint_reuse.py::test_reused_bytes_do_not_hide_changes_before_chain_acceptance[same_bytes_new_inode]",
+    "tests/test_work_checkpoint_reuse.py::test_reused_bytes_do_not_hide_changes_before_chain_acceptance[same_size]",
+    "tests/test_work_checkpoint_reuse.py::test_reused_bytes_do_not_hide_changes_before_chain_acceptance[symlink]",
+    "tests/test_work_checkpoint_reuse.py::test_reusing_a_payload_as_metadata_still_enforces_the_metadata_bound",
+    "tests/test_work_checkpoint_reuse.py::test_shared_bytes_are_read_once_per_chain_but_fresh_on_the_next_call",
+    "tests/test_work_checkpoint_reuse.py::test_shared_bytes_are_rechecked_at_the_pointer_publication_barrier"
   ]
 }

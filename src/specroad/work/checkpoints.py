@@ -17,6 +17,10 @@ from .manifest import WorkManifest, read_work_manifest, read_work_successor, _tr
 from .root import WorkDirectory
 
 
+_MAX_REUSED_OBJECT_BYTES = 16 * 1024 * 1024
+_MAX_REUSED_OBJECTS = 4096
+
+
 class CheckpointStorageError(ValueError):
     """A concrete logical storage failure without invented continuation bytes."""
 
@@ -75,25 +79,51 @@ def _ensure_file(held, folder, name, raw):
 
 
 class _StoredObjects:
-    """Lazy trusted adapter for the existing bounded-fanout manifest reader."""
+    """Bounded byte reuse for one chain read, closed by _verify_bindings.
+
+    Only descriptor-read, hash-checked immutable bytes are retained. File
+    signatures remain in the read set even for uncached objects; the caller
+    must verify the whole set before accepting the chain. No manifest verdict,
+    ownership check or publication barrier is reused across chain reads.
+    """
 
     def __init__(self, held, bindings):
         self.held = held
         self.bindings = bindings
         self.cache = {}
+        self.cached_bytes = 0
 
-    def get(self, digest, default=None):
+    def _bytes(self, digest, *, expected_size=None, maximum=None):
         _hash(digest)
-        if digest not in self.cache:
-            # A 64-entry inventory segment has only fixed hash references/counts.
-            # This metadata limit is unrelated to the size of stored input bytes.
-            raw = _read_file(self.held, 'objects', digest, maximum=65536, bindings=self.bindings)
+        raw = self.cache.get(digest)
+        if raw is None:
+            raw = _read_file(self.held, 'objects', digest, expected_size=expected_size,
+                             maximum=maximum, bindings=self.bindings)
             _check(sha256(raw).hexdigest() == digest, 'checkpoint_bytes_changed',
                    path='objects/' + digest)
-            _check(canonical_json_bytes(_parse(raw)) == raw, 'noncanonical_checkpoint_segment',
-                   path='objects/' + digest)
-            self.cache[digest] = raw
-        return self.cache[digest]
+            if (len(self.cache) < _MAX_REUSED_OBJECTS
+                    and self.cached_bytes + len(raw) <= _MAX_REUSED_OBJECT_BYTES):
+                self.cache[digest] = raw
+                self.cached_bytes += len(raw)
+        else:
+            # A later reference/role may require a different size or bound.
+            _check(expected_size is None or len(raw) == expected_size,
+                   'checkpoint_bytes_changed', path='objects/' + digest)
+            _check(maximum is None or len(raw) <= maximum,
+                   'checkpoint_metadata_too_large', path='objects/' + digest)
+        return raw
+
+    def read(self, reference):
+        _reference_check(reference)
+        return self._bytes(reference['sha256'], expected_size=reference['size'])
+
+    def get(self, digest, default=None):
+        # A 64-entry inventory segment has only fixed hash references/counts.
+        # This metadata limit is unrelated to the size of stored input bytes.
+        raw = self._bytes(digest, maximum=65536)
+        _check(canonical_json_bytes(_parse(raw)) == raw, 'noncanonical_checkpoint_segment',
+               path='objects/' + digest)
+        return raw
 
 
 class CheckpointStore:
@@ -136,6 +166,7 @@ class CheckpointStore:
         current = self._pointer_value(pointer)
         reference, generation = current['checkpoint'], current['checkpoint_generation']
         seen, chain, bindings = set(), [], {}
+        stored = _StoredObjects(held, bindings)
         while True:
             _reference_check(reference)
             _check(reference['sha256'] not in seen, 'checkpoint_cycle')
@@ -149,15 +180,14 @@ class CheckpointStore:
                    and record['work_id'] == current['work_id']
                    and record['checkpoint_generation'] == generation
                    and canonical_json_bytes(record) == raw)
-            stored = _StoredObjects(held, bindings)
             rows = _entries('checkpoint-objects', record['objects'], stored)
             objects = {}
             for row in rows:
                 _reference_check(row)
                 _check(row['sha256'] not in objects, 'duplicate_checkpoint_object')
-                objects[row['sha256']] = _read_reference(held, 'objects', row, bindings=bindings)
+                objects[row['sha256']] = stored.read(row)
             _check([row['sha256'] for row in rows] == sorted(objects))
-            manifest_raw = _read_reference(held, 'objects', record['manifest'], bindings=bindings)
+            manifest_raw = stored.read(record['manifest'])
             manifest = read_work_manifest(manifest_raw, objects, registry=self._registry,
                                           expected_tool_build=self._build)
             value = manifest.as_dict()

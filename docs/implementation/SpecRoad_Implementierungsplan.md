@@ -70,6 +70,13 @@ plan_setup_message: "docs(plan): add detailed SpecRoad WRC implementation plan"
 [Control-Operations: Runtime-Voraussetzung und neun Control-Zustände](../development/Control_Operations.md).
 Vorbereitet in Dev2; Produktfortschritt und Betriebsfreigaben bleiben unverändert.
 
+## Manuelle Testoptimierung und Profiling
+
+OFF-PLAN-Auftrag vom 10. November 2026:
+[Testoptimierungen und Profiling mit sechs W/R/C-Abnahmen](../development/Test_Optimization_Profiling.md).
+Die Produktpositionen und ihre Zähler bleiben unverändert. Vorbereitung ersetzt
+keinen erfolgreichen Apply- oder Laufzeitnachweis.
+
 ## Detaillierter Commitplan
 
 Die Meilensteinlinks in der Übersicht öffnen die vollständigen W/R/C-Positionen. Ergänzende Abnahmen sind direkt beim jeweiligen Schritt verlinkt.

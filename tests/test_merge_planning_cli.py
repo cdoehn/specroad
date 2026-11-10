@@ -57,13 +57,16 @@ def test_public_work_covers_all_phases_and_delivers_the_same_complete_result(rec
     assert prompt['control']['next_action']['command_id'] == 'work.resume'
     for _ in range(total+2):
         result = work('resume', directory)
-        assert result.exit_code in (0, 8), result
-        if result.exit_code == 0:
+        code = result.exit_code
+        assert code in (0, 8), result
+        if code == 0:
             document = success(result)
             assert jcs(document['data']) == jcs(expected)
             validate_result_document('work-command-v1', document)
             break
-        progress = success(work('status', directory))['data']['progress']['completed_units']
+        claim = result.continuation.claim
+        assert claim.work_id == status['work_id'] and claim.total_units == total
+        progress = claim.completed_units
         assert progress > previous
         previous = progress
     else:

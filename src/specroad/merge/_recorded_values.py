@@ -25,7 +25,22 @@ class RecordedSource:
     @property
     def schema_version(self): return self.binding['schema_version']
     def verify_owned(self):
-        source_resource_rows(self)
+        binding, files = self._binding, self._files
+        # Only exact owned byte tuples qualify. Preserve the existing checks
+        # and their errors for unusual or tampered value representations.
+        if (type(binding) is not bytes or type(files) is not tuple
+                or any(type(row) is not tuple or len(row) != 2
+                       or type(row[0]) is not str or type(row[1]) is not bytes
+                       for row in files)):
+            source_resource_rows(self)
+            return
+        from ..recovery._owned_checks import checked_bytes
+
+        def check():
+            source_resource_rows(RecordedSource(binding, files))
+            # Cache only a successful pure proof, never its mutable outputs.
+
+        checked_bytes('merge-recorded-source-v1', (binding, files), check)
 
 
 @dataclass(frozen=True)

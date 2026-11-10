@@ -1,5 +1,8 @@
 # SpecRoad entwickeln
 
+Die geordneten Abnahmen für den manuellen Auftrag zu Testoptimierungen und
+Profiling stehen unter [Testoptimierungen und Profiling](docs/development/Test_Optimization_Profiling.md).
+
 Diese portablen Projektregeln ergänzen den bestätigten Implementierungsplan.
 Explizite Nutzerentscheidungen und die für den Arbeitsort geltenden AGENTS.md
 bleiben maßgeblich. Lokale Konfigurationen, Zugangsdaten und Sitzungskennungen

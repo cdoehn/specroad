@@ -1,7 +1,7 @@
 """Native original source observations and explicit relation removal inputs."""
 from ..model.canonical import canonical_json_bytes as jcs
 from ..model.errors import ModelError
-from ..snapshots.inventory import source_resource_rows
+from ..snapshots.inventory import _source_resource_details
 from .sources import MergeSources
 from .identity_checks import ROLES
 
@@ -17,15 +17,10 @@ def _sources(sources):
     for role in ROLES:
         source = getattr(sources, role)
         verify_observation(source)
-        observed[role], _ = source_resource_rows(source)
+        observed[role], _, records = _source_resource_details(source)
         relations[role], owners[role] = {}, {}
         # Use qualified navigation for legacy originals, not their raw arrays.
-        from ..bundles._payload_model import owned_payload_model
-        from ..migration.model_inputs import records
-        keys = tuple(source.binding['baseline']['profile_keys']) if source.kind == 'baseline' else None
-        model = owned_payload_model(source.files, source_label='merge-relations:' + source.source_root,
-                                    profile_keys=keys)
-        for record in records(model):
+        for record in records:
             owners[role][record.identity.id] = record.identity
             for relation in record.relations:
                 relations[role][relation.identity.id] = {'owner_id': record.identity.id,

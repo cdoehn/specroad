@@ -10,6 +10,9 @@ from .language_lookup import assess_language_tag
 from .language_values import LanguageAssessment, LanguageRegistryError, RegistryRecord
 
 
+_HASH = re.compile(r"[0-9a-f]{64}")
+
+
 @dataclass(frozen=True, init=False)
 class LanguageRegistry:
     source_bytes: bytes
@@ -18,7 +21,7 @@ class LanguageRegistry:
     _records: object
 
     def __init__(self, raw, *, expected_sha256, expected_version):
-        if type(expected_sha256) is not str or not re.fullmatch(r"[0-9a-f]{64}", expected_sha256):
+        if type(expected_sha256) is not str or not _HASH.fullmatch(expected_sha256):
             raise LanguageRegistryError("invalid_registry_binding")
         if type(raw) is not bytes or sha256(raw).hexdigest() != expected_sha256:
             raise LanguageRegistryError("registry_hash_mismatch")
