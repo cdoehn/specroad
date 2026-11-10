@@ -26972,6 +26972,16 @@
     "codex_control_tests.test_instances.InstanceTests.test_explicit_apply_binding_roundtrips_without_changing_legacy_config",
     "codex_control_tests.test_instances.InstanceTests.test_named_locations_are_independent_and_default_is_unchanged",
     "codex_control_tests.test_instances.InstanceTests.test_service_inspection_routes_only_to_selected_unit",
-    "tests/codex_control_tests/test_instances.py::test_native_typed_plan_can_be_read_for_the_explicit_second_branch"
+    "tests/codex_control_tests/test_instances.py::test_native_typed_plan_can_be_read_for_the_explicit_second_branch",
+    "codex_control_tests.test_instances_right.InstanceGuards.test_apply_binding_cannot_overlap_dev_exchange_or_local_state",
+    "codex_control_tests.test_instances_right.InstanceGuards.test_different_data_homes_still_conflict_on_native_apply_identity",
+    "codex_control_tests.test_instances_right.InstanceGuards.test_environment_selection_is_persisted_and_cli_can_override_it",
+    "codex_control_tests.test_instances_right.InstanceGuards.test_invalid_names_and_config_crossing_fail_before_creation",
+    "codex_control_tests.test_instances_right.InstanceGuards.test_legacy_repository_lock_blocks_new_instance",
+    "codex_control_tests.test_instances_right.InstanceGuards.test_linked_instance_directory_is_rejected",
+    "codex_control_tests.test_instances_right.InstanceGuards.test_named_legacy_migration_never_copies_default_history",
+    "codex_control_tests.test_instances_right.InstanceGuards.test_resolved_apply_alias_and_thread_id_across_codex_homes_conflict",
+    "codex_control_tests.test_instances_right.InstanceGuards.test_second_lane_seed_requires_exact_apply_path",
+    "codex_control_tests.test_instances_right.InstanceGuards.test_stop_and_offline_verification_route_to_named_unit"
   ]
 }

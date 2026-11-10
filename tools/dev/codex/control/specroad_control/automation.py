@@ -54,7 +54,9 @@ class Engine(OverloadWaiting):
         # Keep legacy locks as well as the shared user-wide ownership namespace.
         keys = ["repo-" + hashlib.sha256(str(config.repository.resolve()).encode()).hexdigest(),
                 "thread-" + hashlib.sha256((str(config.codex_home.resolve()) + config.session_id).encode()).hexdigest(),
-                "apply-" + hashlib.sha256(config.repo_id.encode()).hexdigest()]
+                "apply-" + hashlib.sha256(config.repo_id.encode()).hexdigest(),
+                "apply-path-" + hashlib.sha256(str(config.apply_directory.resolve()).encode()).hexdigest(),
+                "thread-id-" + hashlib.sha256(config.session_id.encode()).hexdigest()]
         targets = sorted({root / (key + ".lock") for root in paths.lock_roots for key in keys})
         try:
             descriptors = [self.stack.enter_context(lock(target)) for target in targets]

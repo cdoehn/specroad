@@ -144,8 +144,11 @@ def _handover_locked(paths, *, thread_id, thread_cwd, from_cwd=None, request_sha
                 'model_called': False, 'service_started': False}
     with Engine(old, paths, Gate()) as engine, ExitStack() as stack:
         target_key = sha256((str(new.codex_home.resolve()) + new.session_id).encode()).hexdigest()
-        for root in paths.lock_roots:
-            stack.enter_context(lock(root / ('thread-' + target_key + '.lock')))
+        thread_id_key = sha256(new.session_id.encode()).hexdigest()
+        targets = sorted({root / (key + '.lock') for root in paths.lock_roots
+                          for key in ('thread-' + target_key, 'thread-id-' + thread_id_key)})
+        for target in targets:
+            stack.enter_context(lock(target))
         history = open_history(paths.state / 'automation.sqlite3', old, new, intent)
         stack.callback(history.close)
         row = check_boundary(history, paths)
