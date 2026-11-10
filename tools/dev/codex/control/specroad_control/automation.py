@@ -1,6 +1,5 @@
 """One model call per hash-bound source, then wait for the existing Apply daemon."""
 from contextlib import ExitStack
-import hashlib
 from pathlib import Path
 import threading
 import time
@@ -16,6 +15,7 @@ from .errors import ControlError
 from .exchange import Exchange
 from .ledger import Ledger
 from .local import Paths, lock, private_dir, json_write, json_read
+from .ownership import targets
 
 from .job_contract import SCHEMA, scope, prompt_for, contract, schema_for, new_contract
 from .mixed_contract import MIXED, supports_v4
@@ -51,15 +51,8 @@ class Engine(OverloadWaiting):
         self.stack = ExitStack()
         self.summary_lock = threading.Lock()
         self.view = {"stage": "initializing", "error": None, "remote_visibility": "not_verified"}
-        # Keep legacy locks as well as the shared user-wide ownership namespace.
-        keys = ["repo-" + hashlib.sha256(str(config.repository.resolve()).encode()).hexdigest(),
-                "thread-" + hashlib.sha256((str(config.codex_home.resolve()) + config.session_id).encode()).hexdigest(),
-                "apply-" + hashlib.sha256(config.repo_id.encode()).hexdigest(),
-                "apply-path-" + hashlib.sha256(str(config.apply_directory.resolve()).encode()).hexdigest(),
-                "thread-id-" + hashlib.sha256(config.session_id.encode()).hexdigest()]
-        targets = sorted({root / (key + ".lock") for root in paths.lock_roots for key in keys})
         try:
-            descriptors = [self.stack.enter_context(lock(target)) for target in targets]
+            descriptors = [self.stack.enter_context(lock(target)) for target in targets(config, paths)]
             self.codex = codex or Codex(config, [fd for fd in descriptors if fd is not None])
             self.codex.observe = self.observe
             self.exchange = Exchange(config, self.core, observe=self.update)
