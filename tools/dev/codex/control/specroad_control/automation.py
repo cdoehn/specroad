@@ -51,13 +51,13 @@ class Engine(OverloadWaiting):
         self.stack = ExitStack()
         self.summary_lock = threading.Lock()
         self.view = {"stage": "initializing", "error": None, "remote_visibility": "not_verified"}
-        # One Control data home owns repo/thread locks for this installation.
-        target_dir = paths.target_locks
-        private_dir(target_dir)
+        # Keep legacy locks as well as the shared user-wide ownership namespace.
         keys = ["repo-" + hashlib.sha256(str(config.repository.resolve()).encode()).hexdigest(),
-                "thread-" + hashlib.sha256((str(config.codex_home.resolve()) + config.session_id).encode()).hexdigest()]
+                "thread-" + hashlib.sha256((str(config.codex_home.resolve()) + config.session_id).encode()).hexdigest(),
+                "apply-" + hashlib.sha256(config.repo_id.encode()).hexdigest()]
+        targets = sorted({root / (key + ".lock") for root in paths.lock_roots for key in keys})
         try:
-            descriptors = [self.stack.enter_context(lock(target_dir / (key + ".lock"))) for key in sorted(keys)]
+            descriptors = [self.stack.enter_context(lock(target)) for target in targets]
             self.codex = codex or Codex(config, [fd for fd in descriptors if fd is not None])
             self.codex.observe = self.observe
             self.exchange = Exchange(config, self.core, observe=self.update)

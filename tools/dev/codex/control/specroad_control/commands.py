@@ -62,7 +62,8 @@ def offline(paths: Paths):
 
 def configure(paths: Paths, *, thread_id: str, result: str | None = None, codex: str | None = None,
               core_python: str | None = None, transport: str | None = None,
-              access_mode: str | None = None) -> dict:
+              access_mode: str | None = None, repository: str | None = None,
+              apply_repository: str | None = None, exchange: str | None = None) -> dict:
     with offline(paths):
         old, legacy = setup_config(paths)
         if access_mode is not None and access_mode not in ('workspace-write', 'full-access'):
@@ -80,6 +81,12 @@ def configure(paths: Paths, *, thread_id: str, result: str | None = None, codex:
                             core_python=python_path, codex_home=home, transport=transport or old.transport,
                             access_mode=old.access_mode if access_mode is None else access_mode,
                             command_path=old.command_path or os.environ.get("PATH", ""))
+        for value in (repository, apply_repository, exchange):
+            if value is not None and not Path(value).is_absolute():
+                raise ControlError("invalid_path", "Explicit workspace bindings must be absolute paths.")
+        candidate = replace(candidate, repository=Path(repository) if repository else old.repository,
+                            apply_repository=Path(apply_repository) if apply_repository else old.apply_repository,
+                            exchange=Path(exchange) if exchange else old.exchange)
         history_path = paths.state / "automation.sqlite3"
         exists, empty_history = inspect_history(candidate, history_path, legacy)
         source = select_source(candidate, result, legacy, needs_initial=not exists or empty_history)

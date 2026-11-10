@@ -111,7 +111,7 @@ def plan(fact, *, data_limit=PLAN_LIMIT):
     if version == 2:
         fields.add('handoff_kind')
     if (set(data) != fields or type(version) is not int or version not in (1, 2)
-            or data['branch'] != 'dev' or type(data['initial_dirty']) is not bool
+            or data['branch'] not in ('dev', 'dev2') or type(data['initial_dirty']) is not bool
             or not re.fullmatch('[0-9]{3,}', data['bundle_number'])
             or not Path(data['apply_repository']).is_absolute()
             or not isinstance(data['stages'], list) or not data['stages']):

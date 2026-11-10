@@ -29,3 +29,21 @@ Der Apply-Treiber akzeptiert ausschließlich die ausdrücklich gebundenen Branch
 dev und dev2 und verweigert bekannte Entwicklungskopien. Repositorypfad, native
 Repository-ID, vollständiger Zustand und tatsächlich ausgecheckter Branch werden
 weiter vor der Ausbringung sowie vor jedem Commit geprüft.
+
+## Instanzen
+
+Ohne Auswahl bleibt `default` mit bestehenden Pfaden, Historie und
+`specroad-control.service` erhalten. `control --instance NAME ...` wählt genau
+eine benannte Instanz. Namen bestehen aus kleinen ASCII-Buchstaben, Ziffern,
+Unterstrich oder Bindestrich, beginnen mit einem Buchstaben und sind höchstens
+32 Zeichen lang. Konfiguration, State, Jobs, Budgets, Socket, Logs und Releases
+liegen unter `$SPECROAD_CONTROL_HOME/instances/NAME/`. Die Unit heißt
+`specroad-control@NAME.service`; Installation oder Deployment startet sie nicht.
+
+Die ausdrückliche Ersteinrichtung erlaubt `configure --repository DEV
+--apply-repository APPLY --exchange EXCHANGE --thread-id UUID --result RESULT`.
+Die Bindung einer bestehenden Historie kann dadurch nicht überschrieben werden.
+Gemeinsame Sperren schützen Dev-Pfad, Codex-Home/Thread und native Apply-ID;
+getrennte Ziele dürfen parallel laufen. Bestehende Sperren der Standardinstanz
+werden zusätzlich gehalten. Die Legacy-Migration bleibt bei `default`.
+Dev2 wird weiterhin manuell bedient; dieses Bundle richtet keinen Dienst ein.

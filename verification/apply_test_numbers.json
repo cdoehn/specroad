@@ -26966,6 +26966,12 @@
     "tests/codex_control_tests/test_exchange_discovery_right.py::test_archive_move_reuses_only_exact_verified_content",
     "tests/codex_control_tests/test_exchange_discovery_right.py::test_deleted_or_symlinked_artifact_is_not_served_from_cache",
     "tests/codex_control_tests/test_exchange_discovery_right.py::test_native_rejection_is_never_cached_as_success",
-    "tests/codex_control_tests/test_exchange_discovery_right.py::test_replaced_bytes_and_late_followup_are_not_hidden_by_cache"
+    "tests/codex_control_tests/test_exchange_discovery_right.py::test_replaced_bytes_and_late_followup_are_not_hidden_by_cache",
+    "codex_control_tests.test_instances.InstanceTests.test_distinct_targets_can_hold_ownership_together",
+    "codex_control_tests.test_instances.InstanceTests.test_each_shared_target_blocks_a_second_owner",
+    "codex_control_tests.test_instances.InstanceTests.test_explicit_apply_binding_roundtrips_without_changing_legacy_config",
+    "codex_control_tests.test_instances.InstanceTests.test_named_locations_are_independent_and_default_is_unchanged",
+    "codex_control_tests.test_instances.InstanceTests.test_service_inspection_routes_only_to_selected_unit",
+    "tests/codex_control_tests/test_instances.py::test_native_typed_plan_can_be_read_for_the_explicit_second_branch"
   ]
 }

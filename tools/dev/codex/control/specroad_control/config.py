@@ -29,6 +29,14 @@ class Config:
     thread_cwd: Path | None = None
     start_delay_seconds: float = 60.0
     access_mode: str = "workspace-write"
+    apply_repository: Path | None = None
+
+    @property
+    def apply_directory(self):
+        if self.apply_repository is not None:
+            return self.apply_repository
+        name = "specroad-apply2" if self.repository.name == "specroad-dev2" else "specroad-apply"
+        return self.repository.parent / name
 
 
 def template() -> str:
@@ -49,6 +57,7 @@ def render(config: Config) -> str:
             + "\ncommand_path = " + q(config.command_path)
             + ("\nthread_cwd = " + q(config.thread_cwd) if config.thread_cwd is not None else "")
             + "\n\n[patchharbor]\nexchange = " + q(config.exchange)
+            + ("\nrepository = " + q(config.apply_repository) if config.apply_repository is not None else "")
             + "\nrepo_id = " + q(config.repo_id)
             + "\npython_executable = " + q(config.core_python)
             + "\narchive_directory = " + q(config.archive_directory)
@@ -102,7 +111,7 @@ def parse(doc: dict, paths: Paths) -> Config:
         raise ValueError
     if set(dev) - {"repository", "session_id", "codex_executable", "codex_home", "transport", "command_path", "thread_cwd", "access_mode"}:
         raise ValueError
-    if set(ph) - {"exchange", "repo_id", "python_executable", "archive_directory"}:
+    if set(ph) - {"exchange", "repo_id", "python_executable", "archive_directory", "repository"}:
         raise ValueError
     if set(auto) - {"enabled", "seed_result", "seed_sha256", "settle_seconds", "retry_delays_seconds", "start_delay_seconds"}:
         raise ValueError
@@ -145,8 +154,16 @@ def parse(doc: dict, paths: Paths) -> Config:
                     transport=transport, settle_seconds=float(settle), archive_directory=archive,
                     command_path=text(dev.get("command_path", "")), retry_delays_seconds=tuple(retry_delays),
                     thread_cwd=absolute(dev.get("thread_cwd", ""), optional=True),
-                    start_delay_seconds=float(delay), access_mode=access_mode)
+                    start_delay_seconds=float(delay), access_mode=access_mode,
+                    apply_repository=absolute(ph.get("repository", ""), optional=True))
     repo_real, exchange_real = repo.resolve(), exchange.resolve()
+    apply_real = config.apply_directory.resolve()
+    if (apply_real == repo_real or apply_real in repo_real.parents or repo_real in apply_real.parents
+            or apply_real == exchange_real or apply_real in exchange_real.parents or exchange_real in apply_real.parents):
+        raise ValueError
+    if any(p == apply_real or apply_real in p.parents for p in
+           (paths.config.resolve(), paths.state.resolve(), paths.runtime.resolve(), paths.unit.resolve())):
+        raise ControlError("local_path_in_repository", "Local data cannot be in Apply.")
     if config.thread_cwd is not None:
         target = config.thread_cwd
         if (not Path(dev['thread_cwd']).is_absolute() or target != target.resolve()

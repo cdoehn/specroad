@@ -54,7 +54,7 @@ def inventory(old):
 def stopped(paths, *, allow_uninstalled=False):
     from . import service
     if allow_uninstalled and not paths.unit.exists():
-        props = service.inspect()
+        props = service.inspect(paths)
         service.verify_properties(paths, props)
         if props.get('LoadState') != 'not-found':
             fail('A loaded unit without its owned file requires review.')
@@ -62,7 +62,7 @@ def stopped(paths, *, allow_uninstalled=False):
         props = service.verify_owned(paths)
     if props.get('ActiveState') not in ('inactive', 'failed'):
         fail('Stop Control and let current work finish before migration.')
-    reply = service.checked(['show', service.UNIT, '--property=MainPID', '--value'])
+    reply = service.checked(['show', paths.unit.name, '--property=MainPID', '--value'])
     if reply.stdout.strip() != '0':
         fail('The service still has a process.')
 
@@ -147,6 +147,8 @@ def backup(root, files, unit):
 
 
 def migrate(paths, *, legacy_config=None):
+    if paths.instance != 'default':
+        fail('Legacy migration belongs to the default instance; named instances require explicit setup.')
     old = Paths.legacy()
     if legacy_config:
         old = Paths(outside(Path(legacy_config)), old.state, old.runtime, old.unit)

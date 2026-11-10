@@ -23,7 +23,7 @@ def unit_text(paths: Paths, *, entrypoint=None) -> str:
     executable = str(Path(sys.executable).resolve())
     argv = [executable, "-B", str(entrypoint or active_entrypoint(paths)), "--config", str(paths.config), "run"]
     # Persist the same external state locations for the systemd user manager.
-    env = {"SPECROAD_CONTROL_HOME": str(paths.home), "XDG_CONFIG_HOME": str(paths.unit.parent.parent.parent)}
+    env = {"SPECROAD_CONTROL_HOME": str(paths.data_root), "SPECROAD_CONTROL_INSTANCE": paths.instance, "XDG_CONFIG_HOME": str(paths.unit.parent.parent.parent)}
     log_path = str(paths.logs / "control.log")
     quoted(log_path)  # Reject control characters; file: directives take a literal path.
     log_path = log_path.replace("%", "%%")

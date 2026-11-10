@@ -11,6 +11,10 @@ from .local import Paths
 
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description="SpecRoad Control: manually operated, event-driven Dev automation.")
+    parser.add_argument("--instance", help="Named Control instance; default preserves the existing installation")
+    parser.add_argument("--repository", help="Explicit Dev directory; only with configure")
+    parser.add_argument("--apply-repository", help="Explicit Apply directory; only with configure")
+    parser.add_argument("--exchange", help="Explicit Exchange directory; only with configure")
     parser.add_argument("--config", help="Absolute path to the external config.toml")
     parser.add_argument("command", choices=("install", "start", "stop", "pause", "resume", "status", "run", "configure", "check", "probe", "recover", "handover", "reconcile-apply", "reconcile-blocked", "disk-space", "migrate", "deploy", "authorize-clarification", "accept-current"))
     parser.add_argument('--min-free-gb', type=float, help='Minimum free decimal GB; only with disk-space')
@@ -60,7 +64,7 @@ def main(argv=None) -> int:
         parser.error(args.command + " requires --result")
     if args.command not in ("configure", "reconcile-apply", "reconcile-blocked", "deploy", "authorize-clarification", "accept-current") and args.result:
         parser.error("--result requires setup, reconciliation, authorization, acceptance or deploy")
-    if args.command != "configure" and any((args.codex, args.core_python, args.transport, args.access_mode)):
+    if args.command != "configure" and any((args.codex, args.core_python, args.transport, args.access_mode, args.repository, args.apply_repository, args.exchange)):
         parser.error("setup options are only allowed with configure")
     if args.command != "handover" and (args.from_thread_cwd or args.defer or args.resume_after):
         parser.error("handover options are only allowed with handover")
@@ -71,8 +75,8 @@ def main(argv=None) -> int:
     if args.command == 'deploy' and not args.result:
         parser.error('deploy requires --result from successful SpecRoad Apply')
     try:
-        paths = Paths.discover(args.config)
-        if args.command not in ('migrate', 'stop') and not paths.config.exists() and Paths.legacy().config.exists():
+        paths = Paths.discover(args.config, instance=args.instance)
+        if paths.instance == 'default' and args.command not in ('migrate', 'stop') and not paths.config.exists() and Paths.legacy().config.exists():
             raise ControlError('migration_required', 'Explicit offline migration is required; legacy state is preserved.')
         if args.command == 'migrate':
             from .migration import migrate
@@ -116,7 +120,8 @@ def main(argv=None) -> int:
         elif args.command == "configure":
             result = commands.configure(paths, thread_id=args.thread_id, result=args.result,
                                         codex=args.codex, core_python=args.core_python, transport=args.transport,
-                                        access_mode=args.access_mode)
+                                        access_mode=args.access_mode, repository=args.repository,
+                                        apply_repository=args.apply_repository, exchange=args.exchange)
         elif args.command in ("check", "probe", "recover"):
             result = getattr(commands, args.command)(paths)
         elif args.command in ("install", "start", "stop"):
@@ -132,7 +137,7 @@ def main(argv=None) -> int:
                     raise
                 result = {"worker_reachable": False, "state": None, "last_state": read_state(paths)}
             try:
-                result["systemd"] = service.inspect()
+                result["systemd"] = service.inspect(paths)
             except ControlError as exc:
                 result["systemd"] = {"error": exc.code}
             pending = public_status(paths)
