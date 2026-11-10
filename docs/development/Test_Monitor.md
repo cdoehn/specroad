@@ -44,7 +44,8 @@ Zähler `beendet / ausgewählt`; daneben steht der Prozentwert. Ein Test zählt
 erst nach seiner Teardown-Phase als beendet. Der Balken gehört zum aktuellen
 Testgate, nicht zur gesamten W/R/C-Folge, und ist keine Restzeitprognose.
 Grün bezeichnet abgearbeitete Tests, nicht bestandene Tests; Fehler werden
-zusätzlich als `FEHLER` mit ihrer Anzahl angezeigt.
+zusätzlich als roter Hinweis `FEHLER` mit ihrer Anzahl angezeigt. Ein
+fehlgeschlagenes Gate bleibt auch ohne lesbare Testanzahl als Fehler markiert.
 
 Freie Applies behalten den normalen Terminalhintergrund. Die Zielauswahl
 wird durch einen Pfeil und bei Fokus auf der Übersicht durch Fettschrift
@@ -54,6 +55,15 @@ wird kein Fortschrittsbalken gezeichnet. Eine ausschließlich veraltete
 Laufzeithistorie (`VERALTET: history`) verhindert den Balken eines frisch
 gelesenen Testlaufs nicht. Ohne Farben bleiben Zustand, Zähler und Prozentwert
 lesbar; es wird kein Hintergrundbalken erzeugt.
+
+Die Balkenbreite passt sich an die aktuelle Fensterbreite an. Text wird nach
+Terminalzellen gekürzt, ohne breite Zeichen zu zerschneiden; kombinierende
+Zeichen bleiben bei ihrem Grundzeichen. Der Füllstand verwendet nur plausible
+ganzzahlige Zähler mit positiver Gesamtzahl. Erst bei vollständigem Abschluss
+steht `100.0 %` in der Anzeige. Unterstützt das Terminal die benötigten
+Farbpaare nicht, bleibt die Übersicht mit Zählern und normalem Hintergrund
+benutzbar. Diese Darstellung ändert weder Datenquellen noch Aktualisierungsrate,
+Testauswahl, Laufzeitmessung oder das Format von `--once --json`.
 
 | Taste | Wirkung |
 |---|---|
