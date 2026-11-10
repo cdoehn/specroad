@@ -47,6 +47,12 @@
     "tests/test_language_registry_reuse.py::test_equal_bytes_parse_once_but_return_independent_public_records",
     "tests/test_language_registry_reuse.py::test_invalid_inputs_are_checked_again_and_never_become_a_cache_hit",
     "tests/test_language_registry_reuse.py::test_warm_cache_does_not_replace_each_callers_binding_check[hash-registry_hash_mismatch]",
-    "tests/test_language_registry_reuse.py::test_warm_cache_does_not_replace_each_callers_binding_check[version-registry_version_mismatch]"
+    "tests/test_language_registry_reuse.py::test_warm_cache_does_not_replace_each_callers_binding_check[version-registry_version_mismatch]",
+    "tests/test_language_registry_reuse_right.py::test_concurrent_registry_clients_own_all_exported_record_objects",
+    "tests/test_language_registry_reuse_right.py::test_large_valid_registry_is_allowed_without_retention",
+    "tests/test_language_registry_reuse_right.py::test_registry_entry_limit_evicts_without_changing_results",
+    "tests/test_language_registry_reuse_right.py::test_reuse_keeps_strict_encoding_and_exact_bytes_type[\\xef\\xbb\\xbfFile-Date: 2020-01-01]",
+    "tests/test_language_registry_reuse_right.py::test_reuse_keeps_strict_encoding_and_exact_bytes_type[\\xff]",
+    "tests/test_language_registry_reuse_right.py::test_reuse_keeps_strict_encoding_and_exact_bytes_type[raw0]"
   ]
 }

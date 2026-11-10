@@ -118,6 +118,11 @@
     "tests/test_merge_relations_right.py::test_two_known_common_origins_are_not_sensitive_to_observation_order",
     "tests/test_merge_relations_right.py::test_unique_new_id_does_not_require_an_invented_second_history",
     "tests/test_merge_reuse.py::test_recorded_proofs_are_reused_only_inside_one_outer_invocation",
-    "tests/test_merge_reuse.py::test_relations_use_one_qualified_inventory_model_per_role"
+    "tests/test_merge_reuse.py::test_relations_use_one_qualified_inventory_model_per_role",
+    "tests/test_merge_reuse_right.py::test_a_new_relation_observation_rejects_changes_to_a_previously_read_source",
+    "tests/test_merge_reuse_right.py::test_changed_historical_inputs_are_rejected_each_time_without_poisoning_valid_proof[binding]",
+    "tests/test_merge_reuse_right.py::test_changed_historical_inputs_are_rejected_each_time_without_poisoning_valid_proof[file]",
+    "tests/test_merge_reuse_right.py::test_live_sources_keep_current_verification_inside_historical_reuse_scope",
+    "tests/test_merge_reuse_right.py::test_nonimmutable_internal_file_container_is_never_cached"
   ]
 }

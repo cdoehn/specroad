@@ -27016,6 +27016,17 @@
     "tests/test_work_checkpoint_reuse.py::test_reused_bytes_do_not_hide_changes_before_chain_acceptance[symlink]",
     "tests/test_work_checkpoint_reuse.py::test_reusing_a_payload_as_metadata_still_enforces_the_metadata_bound",
     "tests/test_work_checkpoint_reuse.py::test_shared_bytes_are_read_once_per_chain_but_fresh_on_the_next_call",
-    "tests/test_work_checkpoint_reuse.py::test_shared_bytes_are_rechecked_at_the_pointer_publication_barrier"
+    "tests/test_work_checkpoint_reuse.py::test_shared_bytes_are_rechecked_at_the_pointer_publication_barrier",
+    "tests/test_language_registry_reuse_right.py::test_concurrent_registry_clients_own_all_exported_record_objects",
+    "tests/test_language_registry_reuse_right.py::test_large_valid_registry_is_allowed_without_retention",
+    "tests/test_language_registry_reuse_right.py::test_registry_entry_limit_evicts_without_changing_results",
+    "tests/test_language_registry_reuse_right.py::test_reuse_keeps_strict_encoding_and_exact_bytes_type[\\xef\\xbb\\xbfFile-Date: 2020-01-01]",
+    "tests/test_language_registry_reuse_right.py::test_reuse_keeps_strict_encoding_and_exact_bytes_type[\\xff]",
+    "tests/test_language_registry_reuse_right.py::test_reuse_keeps_strict_encoding_and_exact_bytes_type[raw0]",
+    "tests/test_merge_reuse_right.py::test_a_new_relation_observation_rejects_changes_to_a_previously_read_source",
+    "tests/test_merge_reuse_right.py::test_changed_historical_inputs_are_rejected_each_time_without_poisoning_valid_proof[binding]",
+    "tests/test_merge_reuse_right.py::test_changed_historical_inputs_are_rejected_each_time_without_poisoning_valid_proof[file]",
+    "tests/test_merge_reuse_right.py::test_live_sources_keep_current_verification_inside_historical_reuse_scope",
+    "tests/test_merge_reuse_right.py::test_nonimmutable_internal_file_container_is_never_cached"
   ]
 }
