@@ -27051,6 +27051,18 @@
     "tests/test_test_profiling.py::test_raw_artifact_is_lossless_in_database_without_original_file",
     "tests/test_test_profiling.py::test_selection_file_rejects_empty_and_option_injection",
     "tests/test_test_profiling_integration.py::test_frozen_selected_profile_has_exact_effects_and_native_outcomes[broken-False]",
-    "tests/test_test_profiling_integration.py::test_frozen_selected_profile_has_exact_effects_and_native_outcomes[second-True]"
+    "tests/test_test_profiling_integration.py::test_frozen_selected_profile_has_exact_effects_and_native_outcomes[second-True]",
+    "tests/test_test_profiling_right.py::test_changed_artifacts_keep_an_incomplete_import_and_cannot_be_exported[replace_inode]",
+    "tests/test_test_profiling_right.py::test_changed_artifacts_keep_an_incomplete_import_and_cannot_be_exported[same_size]",
+    "tests/test_test_profiling_right.py::test_complete_phases_do_not_hide_a_failed_or_unknown_process_exit[1]",
+    "tests/test_test_profiling_right.py::test_complete_phases_do_not_hide_a_failed_or_unknown_process_exit[False]",
+    "tests/test_test_profiling_right.py::test_complete_phases_do_not_hide_a_failed_or_unknown_process_exit[None]",
+    "tests/test_test_profiling_right.py::test_corrupt_chunk_streams_never_publish_an_export[gap]",
+    "tests/test_test_profiling_right.py::test_corrupt_chunk_streams_never_publish_an_export[oversized]",
+    "tests/test_test_profiling_right.py::test_corrupt_chunk_streams_never_publish_an_export[trailing]",
+    "tests/test_test_profiling_right.py::test_corrupt_chunk_streams_never_publish_an_export[truncated]",
+    "tests/test_test_profiling_right.py::test_linked_raw_artifacts_are_rejected_before_admission[hardlink]",
+    "tests/test_test_profiling_right.py::test_linked_raw_artifacts_are_rejected_before_admission[symlink]",
+    "tests/test_test_profiling_right.py::test_reimport_does_not_silently_associate_new_bytes_with_old_evidence"
   ]
 }

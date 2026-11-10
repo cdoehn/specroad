@@ -136,6 +136,12 @@ die erhaltenen Rohdateien ermöglichen spätere Reparatur/Auswertung. Ein hart
 getöteter Koordinator kann einen offenen Status hinterlassen; dieser ist kein
 Nachweis, dass der Prozess noch lebt.
 
+Der Import akzeptiert reguläre Dateien mit genau einem Link, bindet den offenen
+Dateideskriptor und prüft Inode, Größe, mtime und ctime vor und nach dem Lesen.
+Veränderte Dateien und abweichende erneute Importe werden abgewiesen. Bereits
+vollständig gespeicherte Originaldaten bleiben erhalten; angefangene Importe
+werden nicht als vollständig ausgegeben.
+
 Ein erfolgreicher Lauf verlangt passende native Beobachtungen, vollständige
 Profilphasen, Worker-Traces, unveränderte Snapshot-Quellen und abgeschlossenen
 Rohdatenimport. Exitcode 0 allein genügt nicht. `passed` bezieht sich auf die

@@ -110,6 +110,8 @@ class Store:
                             (outcome, run, node, phase))
 
     def finish(self, run, status, code, *, outcomes=None, error=None):
+        if status == 'passed' and (type(code) is not int or code != 0):
+            status, error = 'failed', 'A successful profiling run requires process exit code zero'
         with self.db:
             selected = self.db.execute('SELECT nodeid,test_id,started_ns,finished_ns FROM tests WHERE run_id=?', (run,)).fetchall()
             for node, identity, started, finished in selected:

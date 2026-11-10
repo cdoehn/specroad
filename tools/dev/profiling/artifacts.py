@@ -9,32 +9,47 @@ import zlib
 CHUNK_SIZE = 1024 * 1024
 
 
+def signature(info):
+    if not stat.S_ISREG(info.st_mode) or info.st_nlink != 1:
+        raise ValueError('A private regular artifact with one link is required')
+    return (info.st_dev, info.st_ino, info.st_size, info.st_mtime_ns, info.st_ctime_ns)
+
+
 def capture(store, run, directory, path, *, kind, nodeid=None, pid=None):
     directory, path = Path(directory).resolve(), Path(path)
     name = path.relative_to(directory).as_posix()
-    info = path.lstat()
-    if not stat.S_ISREG(info.st_mode) or path.resolve() != path.absolute():
+    initial = signature(path.lstat())
+    if path.resolve() != path.absolute():
         raise ValueError('Only regular artifacts inside the run directory are admitted')
-    previous = store.db.execute('SELECT id,state FROM artifacts WHERE run_id=? AND path=?', (run, name)).fetchone()
+    previous = store.db.execute('SELECT id,state,byte_count,sha256 FROM artifacts WHERE run_id=? AND path=?', (run, name)).fetchone()
     if previous:
         if previous[1] != 'complete':
             raise ValueError('Preserve and inspect incomplete artifact import: ' + name)
-        return previous[0]
-    with store.db:
-        identifier = store.db.execute('INSERT INTO artifacts(run_id,path,kind,nodeid,pid,state) VALUES(?,?,?,?,?,?)',
-                                      (run, name, kind, nodeid, pid, 'writing')).lastrowid
+        identifier = previous[0]
+    else:
+        with store.db:
+            identifier = store.db.execute('INSERT INTO artifacts(run_id,path,kind,nodeid,pid,state) VALUES(?,?,?,?,?,?)',
+                                          (run, name, kind, nodeid, pid, 'writing')).lastrowid
     digest, size = sha256(), 0
-    with path.open('rb') as stream:
+    fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
+    with os.fdopen(fd, 'rb') as stream:
+        if signature(os.fstat(stream.fileno())) != initial:
+            raise ValueError('Artifact changed before it was opened')
         for ordinal, raw in enumerate(iter(lambda: stream.read(CHUNK_SIZE), b'')):
             digest.update(raw)
             size += len(raw)
-            with store.db:
-                store.db.execute('INSERT INTO artifact_chunks VALUES(?,?,?,?)',
-                                 (identifier, ordinal, len(raw), zlib.compress(raw)))
-    after = path.stat()
-    if (info.st_dev, info.st_ino, info.st_size, info.st_mtime_ns) != (
-            after.st_dev, after.st_ino, after.st_size, after.st_mtime_ns) or size != after.st_size:
+            if previous is None:
+                with store.db:
+                    store.db.execute('INSERT INTO artifact_chunks VALUES(?,?,?,?)',
+                                     (identifier, ordinal, len(raw), zlib.compress(raw)))
+        if signature(os.fstat(stream.fileno())) != initial:
+            raise ValueError('Artifact changed while being read')
+    if signature(path.lstat()) != initial or size != initial[2]:
         raise ValueError('Artifact changed while being captured')
+    if previous:
+        if (size, digest.hexdigest()) != tuple(previous[2:]):
+            raise ValueError('Previously captured artifact has different bytes')
+        return identifier
     with store.db:
         store.db.execute('UPDATE artifacts SET state=?,byte_count=?,sha256=? WHERE id=?',
                          ('complete', size, digest.hexdigest(), identifier))
