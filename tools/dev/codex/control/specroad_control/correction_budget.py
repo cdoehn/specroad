@@ -122,6 +122,12 @@ def advance(ledger, previous, source, limit, *, verified):
     if old is None:
         old = _initial(previous, limit)
         _insert(ledger, old)
+    value = _successor(old, previous, source, limit, verified=verified)
+    _insert(ledger, value)
+
+
+def _successor(old, previous, source, limit, *, verified):
+    """Pure counter transition; storage and provenance are owned by the caller."""
     if verified and _complete(source):
         value = dict(_initial(source, limit), active=False, reason='verified_clean_apply')
     else:
@@ -135,7 +141,7 @@ def advance(ledger, previous, source, limit, *, verified):
                      active=old['active'] or not _complete(source),
                      reason='repair_result' if spent else 'preserved')
     value['previous_sha256'] = previous['sha256']
-    _insert(ledger, value)
+    return value
 
 
 def require_available(value):

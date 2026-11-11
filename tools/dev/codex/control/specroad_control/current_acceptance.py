@@ -23,6 +23,13 @@ def require_release(paths):
         fail('Install the tested accept-current release before queuing this action.')
 
 
+def _choice(config, supplied, reset_budget):
+    selected = config.clarification_allowed if supplied is None else supplied
+    if reset_budget and not selected:
+        fail('An explicit budget reset requires clarification authority.')
+    return selected
+
+
 def enqueue(paths, result, *, clarification=None, reason, reset_budget=False):
     from .commands import configured_offline
     from .apply_reconcile_history import validate_history as recoveries
@@ -37,9 +44,7 @@ def enqueue(paths, result, *, clarification=None, reason, reset_budget=False):
             fail('An absolute Result and short explicit reason are required.')
         with configured_offline(paths, allow_apply_reconciliation=True) as (config, engine):
             require_release(paths)
-            clarification = config.clarification_allowed if clarification is None else clarification
-            if reset_budget and not clarification:
-                fail('An explicit budget reset requires clarification authority.')
+            clarification = _choice(config, clarification, reset_budget)
             ledger = Ledger(paths.state / 'automation.sqlite3', scope(config))
             try:
                 requested = engine.exchange.source(engine.core.result(Path(result)))

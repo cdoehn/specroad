@@ -36,4 +36,4 @@ Dev prüft ausschließlich Syntax, reine Collection und native Paket-/Quellbindu
 Lokale Konfigurationen, Zugangsdaten und Sessionkennungen sind nicht enthalten.
 Kein Dienststart oder Resume als Nebenwirkung dieser Korrektur.
 
-Vorbereiteter Stagezustand: `CR`. Apply-Abnahme steht aus.
+Vorbereiteter Stagezustand: `CC`. Apply-Abnahme steht aus.
