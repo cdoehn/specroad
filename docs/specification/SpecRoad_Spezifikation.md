@@ -1,15 +1,15 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.81
+## Version 0.2.82
 
 | Feld | Wert |
 |---|---|
 | Dokument-ID | `SR-SPEC-0001` |
-| Dokumentversion | `0.2.81` |
+| Dokumentversion | `0.2.82` |
 | Zielrelease | `SpecRoad Single-Repository Workbench 0.2.0` |
 | Status | **Fachlich konsolidierte Arbeitsgrundlage; technische Reviewentscheidung gesondert dokumentiert, formale Baseline-Freigabe und Produktabnahme nicht durch dieses Dokument erklärt** |
 | Stand | 10. November 2026 |
 | Sprache | Deutsch; technische Feldnamen, Enum-Werte und CLI-Kommandos Englisch |
-| Fachliche Quelle | **Diese Repositoryfassung v0.2.81 ist die aktive fachliche Arbeitsgrundlage; eine entsprechende PDF wird hiermit nicht veröffentlicht.** |
+| Fachliche Quelle | **Diese Repositoryfassung v0.2.82 ist die aktive fachliche Arbeitsgrundlage; eine entsprechende PDF wird hiermit nicht veröffentlicht.** |
 | Bearbeitbare Satzquelle | Diese Datei; eine spätere PDF muss denselben versionierten Inhalt wiedergeben. |
 | Vorgängerversion | Repository-Spezifikation v0.2.79; historische Nachweise bleiben unverändert. |
 | Prüf- und Entscheidungsgrundlage | Ausdrücklicher Nutzerauftrag CONTROL-BUDGET-RESET-661 vom 10. November 2026; keine Produktfreigabe. |
@@ -791,6 +791,52 @@ dem neuen Modellaufruf erneut an das Result. Der bisherige Marker aus 2.4.3.4
 bleibt unverändert. Installation, Restart, Recovery oder eine neue manuelle
 ZIP erneuern allein weiterhin kein Budget. SPECROAD-DECISION-1, echte
 Human-Reviews, W/R/C-Gates und eine einzige kanonische ZIP je Result bleiben.
+
+### 2.4.3.6 Standardfreigabe und Budgets — CONTROL-DEFAULTS-666
+
+Ausdrücklicher Nutzerauftrag vom 11. November 2026: optionale Detailklärung
+innerhalb von SPECROAD-DECISION-1 ist für neue Control-Aufträge standardmäßig
+freigegeben. Die externe Automationseinstellung `clarification_allowed` ist
+Boolean, ihr Standard ist `true`. Explizites `false` bleibt möglich und sperrt
+neue Klärungen; normale Umsetzung und eine belegte unveränderte Fortsetzung
+werden dadurch nicht zu neuen Klärungen. `configure --clarification` bzw.
+`--no-clarification` speichert die Wahl. `accept-current` verwendet ohne eigene
+Wahl diese Einstellung; sein gleichnamiges Optionspaar überschreibt nur die
+konkrete Übernahme. Eine gespeicherte ausdrückliche Wahl bleibt bei späterem
+configure ohne diese Option erhalten.
+
+Das neue Standardmaximum des V4-Klärungsbudgets beträgt fünf. Historische
+V4-Aufträge mit Maximum drei und Altverträge 1–3 bleiben unverändert lesbar.
+Neue volle Budgets entstehen nur bei einem neu initialisierten Auftrag,
+einem vollständig belegten sauberen erfolgreichen Apply aller angekündigten
+Stages oder einem ausdrücklich beauftragten Betreiberreset. Installation,
+Neustart, Fehler, Teilcommit und Configänderung erhöhen keinen bestehenden
+Restzähler. Budgeterhaltende Übernahmen behalten auch das bisherige Maximum.
+Der erfolgreiche normale Folgepfad verwendet die konfigurierte Freigabe.
+Ein neuer Klärungspräfix verbraucht weiterhin genau einen Platz; derselbe
+belegte offene Präfix verbraucht keinen zweiten. Die numerischen Aussagen
+zu drei in älteren Abschnitten gelten weiterhin für deren historische
+Aufträge; für neue volle V4-Budgets gilt dieser Abschnitt mit fünf.
+
+Ein getrenntes Korrekturbudget begrenzt neue Reparaturbundles nach Apply-
+Fehlern standardmäßig auf fünf. Technische Modell-/Transportwiederholungen
+bleiben davon getrennt. Die externe Einstellung `correction_limit` ist eine
+Ganzzahl von eins bis fünf, Standard fünf. Ein erstmals beobachteter Apply-
+Fehler eröffnet die Reparaturfolge; jede tatsächlich übergebene Reparatur
+verbraucht genau einen Platz bei der Übernahme ihres gebundenen Folge-Results.
+Erst der vollständig belegte saubere Erfolg beendet die Fehlerfolge und
+öffnet ein neues volles Budget. Pause, Neustart, Modell-Retry, Teilcommit,
+unbekannte Übergabe und manuelle Übernahme erneuern eine laufende Folge nicht.
+Bei Erschöpfung startet kein neuer Entwicklungsauftrag; der konkrete Grund
+und der erhaltene Zähler sind im Status sichtbar. Bereits protokollierte
+Aufträge/Versuche werden nicht nachträglich umgerechnet. Beim erstmaligen
+Einführen des Zählers wird ein eigener gebundener Ausgangsbeleg angelegt,
+keine unbelegte frühere Messung erfunden. Configänderungen wirken auf neue
+Budgetfolgen; ein bestehender Rest bleibt erhalten.
+
+Die allgemeine Freigabe ersetzt keine menschliche Fachentscheidung,
+Originalbelege, Sicherheitsgrenzen, W/R/C-Gates oder die eine kanonische ZIP
+pro Result. Sie erlaubt keine Umschreibung eines schon erteilten Auftrags.
 
 ### 2.5 Entwicklungsworkflow: aktuelle Laufzeitfilterung und vollständige Planschritte
 
@@ -2376,6 +2422,80 @@ expected-revision-Bindung liefert das ursprünglich bestätigte Ergebnis,
 ohne neue Prüfereignisse oder Revision; abweichende Eingaben ergeben Konflikt.
 Fehler vor Publikation lassen das Proposal unverändert; spätere I/O-Abbrüche
 erhalten die echten nativen Recoverybelege, niemals einen erfundenen Rollback.
+
+### 10.3.4 Neue menschliche Reviewentscheidungen — PROPOSAL-REVIEW-666
+
+Delegiert gemäß SPECROAD-DECISION-1 / 2.4.3.1, nach ausdrücklicher Freigabe
+vom 11. November 2026. Dies präzisiert 18.i. Die lesende Grundlage aus
+10.7.10 bleibt zwingend; es werden keine historischen Quellen aus aktuellen
+Dateien oder Testcallbacks erfunden.
+
+Eine neue Entscheidung erhält eine geschlossene Zeile in `reviews` mit
+`format_version="proposal-review-v1"`, `binding` (das fünffache Tupel aus
+10.3), `reviewer` (Actor), `reviewed_at` (explizite UTC-Planzeit),
+`observed_revision` (physische Eingangsrevision), `decision` (`approved` oder
+`rejected`), `comment` (String oder null), `result_sha256` und
+`result_bytes_base64`. Die vollständigen unveränderten kanonischen
+Prüfergebnisbytes stehen inline in kanonischem RFC-4648-Base64; der Hash ist
+der SHA-256 dieser vollständigen Bytes. Der optionale Kommentar wird bei
+Nichtangabe als null gespeichert. Altzeilen behalten ihre ursprünglichen
+Formate und ihren expliziten Hostleser; es erfolgt keine Migration.
+
+Der native `proposal-review-assessment-v1`-Bericht bindet Proposaloriginal,
+Originalkontext und Freigabetupel, das vollständige aktuelle Ergebnis des
+lesenden Historienkerns, die daraus bestimmten wirksamen menschlichen
+Akteurskennungen und den vollständigen nativen Basis-/Planprüfbeleg. Sein
+`result_sha256` bindet selbstreferenzfrei alle übrigen Felder. Dies belegt
+technische Gültigkeit und bisherige Reviewwirksamkeit, niemals die neue
+menschliche Fachentscheidung. Diese stammt ausschließlich aus der expliziten
+Aufrufeingabe; `normative_force` und `statement` werden nicht durch einen
+Detektor oder erfolgreichen Check fachlich freigegeben.
+
+Die geschlossene Operation `proposal_control` erhält optional
+`review_decision`, mit `format_version="proposal-review-decision-v1"`,
+`decision`, `comment` und `assessment_bytes_base64`. `review_start` und
+`review_decision` schließen einander aus. Der native Fachreducer erzeugt aus
+geprüftem Eingangsproposal, Actor, Planzeit und Bericht genau eine neue
+Reviewzeile. Reine Zustandsfortsetzung bei unzureichendem Quorum verwendet
+`events=[]`: sie ist keine erfundene `in_review → in_review`-Transition.
+Alle anderen Operationen behalten ihre nichtleere Ereignispflicht. Sobald
+verschiedene wirksame menschliche `actor_id`s das tatsächliche konfigurierte
+Quorum erreichen, entsteht genau ein `in_review → approved`-Kontrollereignis;
+eine menschliche Ablehnung erzeugt `in_review → rejected`. Die Kontrollzeile
+verwendet `proposal-control-v1`, denselben Berichtsbeleg und den Grund
+`human_review`. Die vorhandene spezielle Behandlung von Widerrufen und
+weiteren negativen Zuständen bleibt dem vollständigen Schritt 18.j zugeordnet.
+
+Die Entscheidung ist nur am verwalteten Proposal in `in_review` zulässig.
+Der Actor muss `human` sein; AI/CI-Eingaben werden mit Code 7 abgewiesen und
+erzeugen keine Zeile oder zusätzliche Zustimmung. Mehrere Entscheidungen
+desselben Menschen erzeugen höchstens eine wirksame Zustimmung. Inhalt,
+Inhaltsrevision/-hash, Basis und Plan bleiben unverändert; jede neue echte
+Entscheidung erhöht die physische Revision genau einmal und erhält alle
+vorherigen Review-/Kontrollzeilen. Metadaten folgen der bestehenden nativen
+Policy. Erforderliche Originale, Kontexte und Herkunftsverifier kommen aus
+dem installierten Host nach 10.7.10; fehlende Belege sperren vor dem Write.
+Ein neues Array oder ein sichtbares `approved` ersetzt diese Herkunft nicht.
+
+`proposal review <PROP> --expected-revision <N> --decision approved|rejected`
+verwendet die bestehenden Actor-/Projekt-/Ausgabeoptionen, optional
+`--comment <TEXT>`, `--request-id` und `--dry-run`. Die CLI erzeugt nur Zeit
+und technische Plan-/Transaktionskennungen. Der Einbettungsaufruf verlangt
+explizite native Werte und PublicationAuthority. Beide verwenden denselben
+Reducer, Quorumkern und Writer-/Journal-/Receiptpfad. Generische Change-
+Operationen können diese Fachbefugnis nicht erteilen. Dry-run prüft den
+vollständigen Zielstand ohne normative Publikation, Journal oder Receipt.
+Ein bestätigter Retry derselben Request-ID, Actor-, Proposal-, Revisions-,
+Entscheidungs- und Kommentarbindung liefert das damalige Ergebnis ohne neue
+Revision; abweichende Eingaben ergeben Konflikt. Fehlende Rechte, stale
+Revision/Basis, manipulierte Berichte oder fehlende Originale führen zu
+keinem Write. Ein später I/O-Abbruch erhält native Recoverybelege.
+
+Der geschlossene Schreibbericht `proposal-review-v1` enthält die Felder aus
+11.10, die Entscheidung und den Kommentar sowie Dry-run-/Replay-/Writezustand
+und das native Completionreceipt. `review_validity` nennt aktuelle Freigabe,
+wirksame menschliche Zustimmungen und das verlangte Quorum. Ein Bericht
+verleiht keine wiederverwendbare Schreibbefugnis.
 
 ### 10.4 Spezial-Lifecycle-Vertrag
 
