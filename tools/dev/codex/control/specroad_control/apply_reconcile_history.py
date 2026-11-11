@@ -198,3 +198,5 @@ def adopt_blocked(ledger, source):
                       (source['run_id'], source['sha256'], canonical(source).decode(), time.time()))
     ledger.db.execute('UPDATE meta SET current=? WHERE id=1', (source['run_id'],))
     ledger._insert_contract(source['sha256'], selected)
+    from .correction_budget import preserve
+    preserve(ledger, old['sha'], source)

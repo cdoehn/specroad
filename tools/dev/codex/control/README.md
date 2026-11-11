@@ -167,9 +167,10 @@ python3 -B tools/dev/codex/control/control accept-current \
 ```
 
 Der Dienst muss gestoppt sein. Der Befehl merkt nur vor; `status` zeigt
-`current_acceptance`. `--clarification` ist optional und erteilt begrenzte
-Detailklärung innerhalb des belegten Restbudgets. Ohne Flag wird einem neuen
-Result keine neue Klärungsbefugnis erteilt. Kein Budgetreset und kein Dienststart.
+`current_acceptance`. Ohne Optionswahl gilt die konfigurierte Klärungsbefugnis
+(Standard `true`). `--clarification` beziehungsweise `--no-clarification`
+überschreibt sie für diesen Auftrag innerhalb des belegten Restbudgets.
+Kein Budgetreset und kein Dienststart.
 Danach erfolgen `start` beziehungsweise `resume` ausdrücklich. Die konfigurierte
 Startverzögerung, der freie Thread und die Plattenplatzgrenze gelten weiter.
 
@@ -233,11 +234,12 @@ Nur auf ausdrücklichen Betreiberauftrag und nach geprüftem Apply/Installation:
 
 ```sh
 control accept-current --result /ABSOLUTES/AKTUELLES/Result.zip \
-  --clarification --reset-budget --reason "Betreiberauftrag: Klärung erlauben und Budget auf drei erneuern"
+  --clarification --reset-budget --reason "Betreiberauftrag: Klärung erlauben und Budget auf den aktuellen Projektstandard erneuern"
 ```
 
 Der Dienst muss gestoppt sein. Der neue Betreiberbeleg bewahrt den Vorvertrag,
-erneuert ausdrücklich drei Plätze und schaltet die begrenzte Detailklärung frei.
+erneuert das volle Budget des geprüften Projektmarkers (aktuell fünf, bei
+historischen Markern drei) und schaltet die begrenzte Detailklärung frei.
 Auch ein gültiger Rest von null ist möglich. Ohne Flag bleibt das alte Budget
 erhalten; Restart, Recovery und bloße Installation ändern es nicht. Alte
 Übernahmen werden nicht ersetzt: für ein bereits akzeptiertes Result ist ein
@@ -245,3 +247,28 @@ neuer sauberer erfolgreicher Apply-Nachfolger nötig. Aktuelles Result und
 vollständige Gates bleiben Pflicht. Anschließend `start` und `resume` ausdrücklich
 ausführen. Der Befehl selbst startet weder Dienst noch Modell; aktiver Thread
 verzögert die Übernahme. Details: Spezifikation 2.4.3.5.
+
+
+## Standardfreigabe und getrennte Budgets (CONTROL-DEFAULTS-666)
+
+Die neue geprüfte Projektversion verwendet standardmäßig optionale Klärung
+und fünf Klärungsplätze. Die externe Konfiguration enthält unter `[automation]`
+`clarification_allowed = true` und `correction_limit = 5`. Explizites `false`
+bleibt erhalten. Bestehende gebundene Dreierverträge werden nicht umgerechnet.
+Neue volle V4-Budgets folgen dem geprüften `development_contract.json`; alte
+Projektmarker mit drei bleiben lesbar. Ein Configwechsel ist kein Budgetreset.
+
+`configure --clarification` beziehungsweise `--no-clarification` speichert die
+Wahl zusammen mit den bestehenden erforderlichen Setupangaben. Ohne Option
+bleibt eine vorhandene Wahl erhalten. `--correction-limit 1..5` konfiguriert
+neue Reparaturfolgen. `accept-current` verwendet ohne Wahl die konfigurierte
+Klärungsbefugnis; das Optionspaar überschreibt nur diesen Übernahmeauftrag.
+
+Der getrennte Korrekturzähler zählt neue gebundene Reparaturbundles nach
+Apply-Fehlern. Modell-/Transportwiederholungen sind weiterhin separat.
+Nur ein vollständig belegter sauberer Apply erneuert eine laufende Folge;
+Teilcommits, Pause, Neustart und unbekannte/manuelle Übergaben tun das nicht.
+`status` nennt `correction_budget` mit Maximum, Rest und aktiver Fehlerfolge.
+Nach Erschöpfung folgt `correction_budget_exhausted` ohne neuen Modellaufruf.
+Historien und Quellen bleiben erhalten. Die Installation startet keine Dienste
+und ändert keinen laufenden Auftrag. Normativ gilt Spec 2.4.3.6.

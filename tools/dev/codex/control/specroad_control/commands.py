@@ -63,9 +63,14 @@ def offline(paths: Paths):
 def configure(paths: Paths, *, thread_id: str, result: str | None = None, codex: str | None = None,
               core_python: str | None = None, transport: str | None = None,
               access_mode: str | None = None, repository: str | None = None,
-              apply_repository: str | None = None, exchange: str | None = None) -> dict:
+              apply_repository: str | None = None, exchange: str | None = None,
+              clarification: bool | None = None, correction_limit: int | None = None) -> dict:
     with offline(paths):
         old, legacy = setup_config(paths)
+        if clarification is not None and type(clarification) is not bool:
+            raise ControlError('invalid_config', 'Clarification must be Boolean.')
+        if correction_limit is not None and (type(correction_limit) is not int or not 1 <= correction_limit <= 5):
+            raise ControlError('invalid_config', 'Correction limit must be an integer from one to five.')
         if access_mode is not None and access_mode not in ('workspace-write', 'full-access'):
             raise ControlError('invalid_access_mode', 'Select workspace-write or full-access explicitly.')
         try:
@@ -80,6 +85,8 @@ def configure(paths: Paths, *, thread_id: str, result: str | None = None, codex:
         candidate = replace(old, session_id=thread_id, codex_executable=codex_path,
                             core_python=python_path, codex_home=home, transport=transport or old.transport,
                             access_mode=old.access_mode if access_mode is None else access_mode,
+                            clarification_allowed=old.clarification_allowed if clarification is None else clarification,
+                            correction_limit=old.correction_limit if correction_limit is None else correction_limit,
                             command_path=old.command_path or os.environ.get("PATH", ""))
         for value in (repository, apply_repository, exchange):
             if value is not None and not Path(value).is_absolute():
@@ -111,7 +118,8 @@ def configure(paths: Paths, *, thread_id: str, result: str | None = None, codex:
             # Repeating setup after an interrupted config write is idempotent.
             write_private(paths.config, render(candidate).encode())
         return {"configured": True, "service_started": False, "config": str(paths.config),
-                "access_mode": candidate.access_mode,
+                "access_mode": candidate.access_mode, "clarification_allowed": candidate.clarification_allowed,
+                "correction_limit": candidate.correction_limit,
                 "runtime_state": str(history_path), "bootstrap_created": not exists or empty_history,
                 "legacy_seed_migrated": legacy is not None, **evidence}
 

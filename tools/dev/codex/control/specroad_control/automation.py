@@ -17,7 +17,7 @@ from .ledger import Ledger
 from .local import Paths, lock, private_dir, json_write, json_read
 from .ownership import targets
 
-from .job_contract import SCHEMA, scope, prompt_for, contract, schema_for, new_contract
+from .job_contract import SCHEMA, scope, prompt_for, contract, schema_for, new_contract, fresh_contract
 from .mixed_contract import MIXED, supports_v4
 from .mixed_evidence import verify_handoff, verify_followup
 
@@ -141,7 +141,9 @@ class Engine(OverloadWaiting):
                     waiting = wait_if_busy(self, next_results[0], ledger.known_runs() | busy_runs)
                     if waiting:
                         return waiting
-                ledger.enqueue(next_results[0], decision_evidence=evidence)
+                ledger.enqueue(next_results[0], decision_evidence={**(evidence or {}),
+                    'clarification_allowed': self.config.clarification_allowed},
+                    correction_limit=self.config.correction_limit)
                 source = next_results[0]
                 row = ledger.current()
                 self.update(stage=row["stage"], source_sha256=row["sha"], error=row["error"])
@@ -200,6 +202,20 @@ class Engine(OverloadWaiting):
                 waiting = wait_if_busy(self, source, ledger.known_runs())
                 if waiting:
                     return waiting
+            from .correction_budget import bind, require_available
+            budget = bind(ledger, source, self.config.correction_limit)
+            self.update(correction_budget=budget)
+            try:
+                require_available(budget)
+            except ControlError as exc:
+                if exc.code != 'correction_budget_exhausted':
+                    raise
+                # No dispatch occurred. Keep the source and counter intact,
+                # persist the stop reason and let the worker pause normally.
+                stage = 'ready' if ledger.current()['stage'] == 'ready' else 'uncertain'
+                ledger.change(stage, error=exc.code)
+                self.update(stage=stage, error=exc.code)
+                return {'halted': True, 'again': False}
             job_dir = ledger.attempt_directory(self.paths, source["sha256"], number)
             private_dir(job_dir)
             attempt = {"source_sha256": source["sha256"], "thread_id": self.config.session_id, "number": number}
@@ -218,7 +234,7 @@ class Engine(OverloadWaiting):
                 if origin is None:
                     origin = {}  # Legacy read-only recovery must stay legacy.
             selected = (contract(origin.get('request_contract')) if origin is not None else
-                        ledger.request_contract() or (new_contract(version=4) if supports_v4(source) and source['success'] and not source['dirty'] else new_contract()))
+                        ledger.request_contract() or (fresh_contract(source, allowed=self.config.clarification_allowed) if supports_v4(source) and source['success'] and not source['dirty'] else new_contract(allowed=self.config.clarification_allowed)))
             ledger.bind_contract(selected)
             self.update(request_contract=dict(selected))
             if previous is not None and any(previous.get(k) != v for k, v in attempt.items()):

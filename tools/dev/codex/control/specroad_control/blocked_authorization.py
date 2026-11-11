@@ -61,7 +61,7 @@ def enqueue(paths, result, *, source_sha256, reason):
                 doc = {'version': 1, 'source': current['source'], 'scope': scope(config),
                        'config_sha256': sha256(read_private(paths.config)).hexdigest(),
                        'history_sha256': history_hash(ledger), 'previous_contract': previous,
-                       'selected_contract': new_contract(previous['clarifications_remaining'], version=4),
+                       'selected_contract': new_contract(previous['clarifications_remaining'], version=4, limit=previous['clarification_limit']),
                        'original_job': {k: current[k] for k in ('stage', 'error', 'patch_sha', 'updated')},
                        'attempt_number': retry['number'] if retry else 0, 'reason': reason.strip()}
                 doc['evidence'] = evidence(engine, doc)

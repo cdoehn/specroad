@@ -12,7 +12,9 @@ CAPABILITY = {'format_version': 1, 'decision_rule': 'SPECROAD-DECISION-1',
 
 def capability(value):
     if (type(value) is not dict or set(value) != set(CAPABILITY)
-            or any(type(value[k]) is not type(v) or value[k] != v for k, v in CAPABILITY.items())):
+            or any(type(value[k]) is not type(v) or
+                (value[k] not in (3, 5) if k == 'clarification_limit' else value[k] != v)
+                for k, v in CAPABILITY.items())):
         raise ValueError('Unsupported installed development contract')
     return value
 

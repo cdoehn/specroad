@@ -44,8 +44,10 @@ class BootstrapTests(AutomationCase):
         self.fresh()
         reply = self.setup_source(self.seed['path'])
         doc = tomllib.loads(self.paths.config.read_text())
-        self.assertEqual(set(doc['automation']), {'enabled', 'settle_seconds', 'retry_delays_seconds', 'start_delay_seconds'})
+        self.assertEqual(set(doc['automation']), {'enabled', 'settle_seconds', 'retry_delays_seconds', 'start_delay_seconds', 'clarification_allowed', 'correction_limit'})
         self.assertEqual(load(self.paths).start_delay_seconds, self.config.start_delay_seconds)
+        self.assertEqual(load(self.paths).clarification_allowed, self.config.clarification_allowed)
+        self.assertEqual(load(self.paths).correction_limit, self.config.correction_limit)
         self.assertNotIn(self.seed['path'], self.paths.config.read_text())
         self.assertNotIn(self.seed['sha256'], self.paths.config.read_text())
         self.assertEqual(self.row()['source']['sha256'], self.seed['sha256'])
@@ -172,8 +174,10 @@ class BootstrapTests(AutomationCase):
         write_private(self.paths.config, data.encode())
         self.assertTrue(load(self.paths).enabled)
         self.setup_source()
-        self.assertEqual(set(tomllib.loads(self.paths.config.read_text())['automation']), {'enabled', 'settle_seconds', 'retry_delays_seconds', 'start_delay_seconds'})
+        self.assertEqual(set(tomllib.loads(self.paths.config.read_text())['automation']), {'enabled', 'settle_seconds', 'retry_delays_seconds', 'start_delay_seconds', 'clarification_allowed', 'correction_limit'})
         self.assertEqual(load(self.paths).start_delay_seconds, self.config.start_delay_seconds)
+        self.assertEqual(load(self.paths).clarification_allowed, self.config.clarification_allowed)
+        self.assertEqual(load(self.paths).correction_limit, self.config.correction_limit)
 
     def test_nonempty_legacy_seed_requires_explicit_migration(self):
         data = self.paths.config.read_text() + '\nseed_result = ' + json.dumps(self.seed['path']) + '\nseed_sha256 = ' + json.dumps(self.seed['sha256']) + '\n'

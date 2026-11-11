@@ -160,7 +160,7 @@ class CurrentAcceptanceResetRightTests(AcceptanceCase):
 
 @pytest.mark.parametrize('args', [
     ['status', '--reset-budget'], ['resume', '--reset-budget'],
-    ['accept-current', '--result', '/x.zip', '--reason', 'reset', '--reset-budget'],
+    ['accept-current', '--result', '/x.zip', '--reason', 'reset', '--no-clarification', '--reset-budget'],
     ['accept-current', '--clarification', '--reset-budget'],
 ])
 def test_bad_reset_cli_options_stop_before_local_state_or_services(args):

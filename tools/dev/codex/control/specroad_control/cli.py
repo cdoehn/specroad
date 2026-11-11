@@ -35,14 +35,19 @@ def main(argv=None) -> int:
     parser.add_argument('--source-sha256', help='Exact previous Result SHA-256; only with authorize-clarification')
     parser.add_argument('--reason', help='Explicit operator reason; with authorize-clarification or accept-current')
     parser.add_argument('--retry-blocked', action='store_true', help='Authorize one new attempt after a patchless blocked V4 completion')
-    parser.add_argument('--clarification', action='store_true', help='Explicit optional detail clarification; only with accept-current')
+    parser.add_argument('--clarification', action=argparse.BooleanOptionalAction, default=None,
+                        help='Allow/disable optional detail clarification; configure or accept-current')
+    parser.add_argument('--correction-limit', type=int, choices=range(1, 6),
+                        help='Maximum consecutive Apply repair bundles (default: 5); configure only')
     parser.add_argument('--reset-budget', action='store_true',
-                        help='Explicitly renew three clarification slots; only with accept-current --clarification')
+                        help='Explicitly renew the tested project clarification maximum (default: 5); accept-current only')
     args = parser.parse_args(argv)
-    if args.reset_budget and (args.command != 'accept-current' or not args.clarification):
+    if args.reset_budget and (args.command != 'accept-current' or args.clarification is False):
         parser.error('--reset-budget requires accept-current --clarification')
-    if args.clarification and args.command != 'accept-current':
-        parser.error('--clarification is only allowed with accept-current')
+    if args.clarification is not None and args.command not in ('configure', 'accept-current'):
+        parser.error('--clarification/--no-clarification requires configure or accept-current')
+    if args.correction_limit is not None and args.command != 'configure':
+        parser.error('--correction-limit requires configure')
     if args.command == 'accept-current' and not (args.result and args.reason):
         parser.error('accept-current requires --result and --reason')
     if args.retry_blocked and args.command != 'authorize-clarification':
@@ -126,7 +131,8 @@ def main(argv=None) -> int:
             result = commands.configure(paths, thread_id=args.thread_id, result=args.result,
                                         codex=args.codex, core_python=args.core_python, transport=args.transport,
                                         access_mode=args.access_mode, repository=args.repository,
-                                        apply_repository=args.apply_repository, exchange=args.exchange)
+                                        apply_repository=args.apply_repository, exchange=args.exchange,
+                                        clarification=args.clarification, correction_limit=args.correction_limit)
         elif args.command in ("check", "probe", "recover"):
             result = getattr(commands, args.command)(paths)
         elif args.command in ("install", "start", "stop"):

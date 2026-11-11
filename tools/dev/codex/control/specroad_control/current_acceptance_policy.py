@@ -10,7 +10,7 @@ RESET_CAPABILITY = {'format_version': 1, 'decision_contract_version': 4,
 
 
 
-def selection(previous, output_kind, clarification, mode, *, reset_budget=False):
+def selection(previous, output_kind, clarification, mode, *, reset_budget=False, reset_limit=3):
     if type(reset_budget) is not bool or (reset_budget and (clarification is not True or previous['version'] != 4)):
         raise ValueError('An explicit V4 operator reset requires clarification authority')
     # A published clarification may not yet have reached inherit_contract.
@@ -20,7 +20,8 @@ def selection(previous, output_kind, clarification, mode, *, reset_budget=False)
     remaining = previous['clarifications_remaining'] - debit
     if remaining < 0 or clarification and remaining == 0 and not reset_budget:
         raise ValueError('No unspent clarification budget')
-    return new_contract(3 if reset_budget else remaining, version=4,
+    return new_contract(reset_limit if reset_budget else remaining, version=4,
+        limit=reset_limit if reset_budget else previous['clarification_limit'],
         allowed=clarification or mode == 'same_ready' and previous['clarification_allowed'])
 
 
@@ -28,5 +29,7 @@ def selection(previous, output_kind, clarification, mode, *, reset_budget=False)
 def require_reset_marker(raw):
     marker = decode_object(raw)
     if (len(raw) > 4096 or set(marker) != set(RESET_CAPABILITY)
-            or any(type(marker[k]) is not type(v) or marker[k] != v for k, v in RESET_CAPABILITY.items())):
+            or any(type(marker[k]) is not type(v) or
+                (marker[k] not in (3, 5) if k == 'clarification_limit' else marker[k] != v)
+                for k, v in RESET_CAPABILITY.items())):
         raise ControlError('current_acceptance_rejected', 'The tested current Result must opt into an explicit operator budget reset.')

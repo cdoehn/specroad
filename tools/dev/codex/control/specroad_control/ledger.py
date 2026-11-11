@@ -145,11 +145,11 @@ class Ledger(RetryHistory, RecoveryHistory, WaitHistory, DecisionHistory):
         except (sqlite3.Error, ValueError, KeyError, TypeError, UnicodeError):
             raise ControlError("invalid_ledger", "Stored job facts are invalid; no replay.") from None
 
-    def enqueue(self, source: dict, *, decision_evidence=None):
+    def enqueue(self, source: dict, *, decision_evidence=None, correction_limit=None):
         with self.transaction():
-            self._enqueue(source, decision_evidence=decision_evidence)
+            self._enqueue(source, decision_evidence=decision_evidence, correction_limit=correction_limit)
 
-    def _enqueue(self, source: dict, *, decision_evidence=None):
+    def _enqueue(self, source: dict, *, decision_evidence=None, correction_limit=None):
         existing = self.db.execute("SELECT sha FROM jobs WHERE run_id=? OR sha=?", (source["run_id"], source["sha256"])).fetchone()
         if existing is not None:
             raise ControlError("result_already_claimed", "No Result is scheduled twice.")
@@ -159,6 +159,13 @@ class Ledger(RetryHistory, RecoveryHistory, WaitHistory, DecisionHistory):
             if old["stage"] != "waiting_result":
                 raise ControlError("invalid_transition", "Only a bound follow-up can advance the ledger.")
             inherited = self.inherit_contract(source, old, decision_evidence=decision_evidence)
+            if correction_limit is not None:
+                from .correction_budget import advance
+                advance(self, old['source'], source, correction_limit,
+                        verified=bool((decision_evidence or {}).get('verified')))
+            else:
+                from .correction_budget import preserve
+                preserve(self, old['sha'], source)
             self.db.execute("UPDATE jobs SET stage='done', updated=? WHERE run_id=?", (time.time(), old["run_id"]))
         elif source["sha256"] != self.seed_sha:
             raise ControlError("bootstrap_conflict", "Empty history is already bound to a different initial Result.")

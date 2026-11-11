@@ -17,7 +17,7 @@ def mixed_prompt(source, selected):
                      'Bei fachlichen Konflikten blocked; kein reines Umschreiben der Bindung. '
                      'Erzeuge genau eine neu validierte ZIP fuer dieses Result, dann beenden. '
                      'Belegung allein erzeugt keinen zweiten Patch; Warte-/Folgeauftraege steuert Control.')
-    return original + '\nCONTROL_DECISION_CONTRACT\n' + json.dumps(selected, sort_keys=True) + (
+    result = original + '\nCONTROL_DECISION_CONTRACT\n' + json.dumps(selected, sort_keys=True) + (
         '\nVertrag 4: Pruefe die massgebliche Projektregel SPECROAD-DECISION-1 samt '
         'ausdruecklicher Freigabe fuer optionale Klaerung und Umsetzung in einer ZIP '
         'nach 2.4.3.1 sowie verification/development_contract.json. Control erteilt '
@@ -51,7 +51,7 @@ def mixed_prompt(source, selected):
         'ist der Rest normales patch_ready. Keine eigene Budgetaenderung. '
         'Eine neue Mischuebergabe verbraucht einen Platz; derselbe belegte '
         'Klaerungsrest keinen zweiten. Erst vollstaendiges erfolgreiches sauberes '
-        'Apply aller angekuendigten Stages erneuert drei Plaetze. Ein gruener '
+        'Apply aller angekuendigten Stages erneuert das im neuen Vertrag gebundene Maximum. Ein gruener '
         'Dokumentcommit mit anschliessendem Fehler, Retry, Pause, Neustart, '
         'Recovery und unbekannte Handoffs erneuern nichts. '
         'Explizite Nutzerentscheidungen, Scope, Sicherheit, Kompatibilitaet, '
@@ -63,3 +63,7 @@ def mixed_prompt(source, selected):
         'Antwortfelder, echte vollstaendige SHA-256. Nativ validieren, atomar '
         'in Exchange uebergeben und sofort beenden. Keine eigene Apply-, '
         'Warte-, Modell- oder Wiederholungsschleife; Watcher und Control uebernehmen.')
+
+    # Original three-slot prompts remain byte-identical for history/dispatch proof.
+    return result.replace('erneuert das im neuen Vertrag gebundene Maximum.',
+        'erneuert ' + ('drei' if selected['clarification_limit'] == 3 else 'fuenf') + ' Plaetze.')

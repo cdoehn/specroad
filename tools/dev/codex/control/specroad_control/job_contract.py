@@ -31,9 +31,10 @@ def contract(value=None):
     if isinstance(value, dict) and type(value.get('version')) is int and value['version'] in (3, 4):
         if (set(value) != ({'version', 'clarification_allowed', 'clarification_limit', 'clarifications_remaining'} | ({'clarification_continuation'} if value['version'] == 4 else set()))
                 or type(value.get('clarification_allowed')) is not bool
-                or type(value.get('clarification_limit')) is not int or value['clarification_limit'] != 3
+                or type(value.get('clarification_limit')) is not int
+                or value['clarification_limit'] not in ((3, 5) if value['version'] == 4 else (3,))
                 or type(value.get('clarifications_remaining')) is not int
-                or not 0 <= value['clarifications_remaining'] <= 3
+                or not 0 <= value['clarifications_remaining'] <= value['clarification_limit']
                 or (value['clarification_allowed'] and value['clarifications_remaining'] == 0)):
             raise ControlError('request_contract_invalid', 'Invalid bounded clarification authority.')
         if value['version'] == 4 and (type(value['clarification_continuation']) is not bool
@@ -48,8 +49,8 @@ def contract(value=None):
     return dict(value)
 
 
-def new_contract(remaining=3, *, allowed=None, version=3, continuation=False):
-    value = {'version': version, 'clarification_limit': 3,
+def new_contract(remaining=3, *, allowed=None, version=3, continuation=False, limit=3):
+    value = {'version': version, 'clarification_limit': limit,
              'clarifications_remaining': remaining,
              'clarification_allowed': remaining > 0 if allowed is None else allowed}
     if version == 4:
@@ -57,6 +58,17 @@ def new_contract(remaining=3, *, allowed=None, version=3, continuation=False):
     elif continuation:
         raise ControlError('request_contract_invalid', 'Legacy contracts cannot gain continuation authority.')
     return contract(value)
+
+
+def fresh_contract(source, *, allowed=True):
+    """A new full budget uses the tested project's declared maximum.
+
+    Legacy persisted constructors and their hash-bound receipts retain three.
+    """
+    from .mixed_contract import capability
+    marker = capability(source['development_contract'])
+    limit = marker['clarification_limit']
+    return new_contract(limit, allowed=allowed, version=4, limit=limit)
 
 
 def schema_for(value=None):

@@ -44,7 +44,7 @@ def decode(ledger, row):
     previous, selected = contract(doc['previous_contract']), contract(doc['selected_contract'])
     if (previous['version'] != 4 or previous['clarification_allowed']
             or previous['clarification_continuation'] or previous['clarifications_remaining'] <= 0
-            or selected != new_contract(previous['clarifications_remaining'], version=4)
+            or selected != new_contract(previous['clarifications_remaining'], version=4, limit=previous['clarification_limit'])
             or ledger.recorded_contract(row['source_sha']) != previous):
         raise ValueError('Original authority or budget changed')
     before = doc['original_job']

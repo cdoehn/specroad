@@ -67,7 +67,7 @@ def validate_history(ledger):
             previous, selected = contract(doc['previous_contract']), contract(doc['selected_contract'])
             if (previous['version'] not in (3, 4) or previous['clarifications_remaining'] <= 0
                     or previous.get('clarification_continuation', False)
-                    or selected != new_contract(previous['clarifications_remaining'], version=4)
+                    or selected != new_contract(previous['clarifications_remaining'], version=4, limit=previous['clarification_limit'])
                     or ledger.request_contract(row['source_sha']) != previous):
                 raise ValueError
             artifacts = doc['artifacts']
@@ -150,6 +150,8 @@ def complete(ledger, doc, actual):
                               (source['run_id'], source['sha256'], canonical(source).decode(), time.time()))
             ledger.db.execute('UPDATE meta SET current=? WHERE id=1', (source['run_id'],))
             ledger._insert_contract(source['sha256'], doc['selected_contract'])
+            from .correction_budget import preserve
+            preserve(ledger, doc['source_sha256'], source)
             ledger.db.execute("UPDATE clarification_authorizations SET state='completed' WHERE source_sha=?", (doc['source_sha256'],))
             validate_history(ledger)
     except sqlite3.Error:

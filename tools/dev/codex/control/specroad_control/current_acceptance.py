@@ -23,20 +23,23 @@ def require_release(paths):
         fail('Install the tested accept-current release before queuing this action.')
 
 
-def enqueue(paths, result, *, clarification=False, reason, reset_budget=False):
+def enqueue(paths, result, *, clarification=None, reason, reset_budget=False):
     from .commands import configured_offline
     from .apply_reconcile_history import validate_history as recoveries
     from .clarification_authorization_history import validate_history as successors
     from .blocked_authorization_history import validate_history as blocked, active as old_grant
     from .handover_queue import public_status as handover
     try:
-        if (not Path(result).is_absolute() or type(clarification) is not bool
-                or type(reset_budget) is not bool or reset_budget and not clarification
+        if (not Path(result).is_absolute() or clarification is not None and type(clarification) is not bool
+                or type(reset_budget) is not bool or reset_budget and clarification is False
                 or not isinstance(reason, str) or not reason.strip() or len(reason) > 512
                 or not reason.isprintable()):
             fail('An absolute Result and short explicit reason are required.')
         with configured_offline(paths, allow_apply_reconciliation=True) as (config, engine):
             require_release(paths)
+            clarification = config.clarification_allowed if clarification is None else clarification
+            if reset_budget and not clarification:
+                fail('An explicit budget reset requires clarification authority.')
             ledger = Ledger(paths.state / 'automation.sqlite3', scope(config))
             try:
                 requested = engine.exchange.source(engine.core.result(Path(result)))
@@ -77,11 +80,14 @@ def enqueue(paths, result, *, clarification=False, reason, reset_budget=False):
                 elif (requested['run_id'] in ledger.known_runs()
                         or ledger.db.execute('SELECT 1 FROM jobs WHERE sha=?', (requested['sha256'],)).fetchone()):
                     fail('The selected successor was already claimed.')
+                if mode == 'same_ready' and previous['clarification_allowed'] and not clarification:
+                    fail('The already granted ready request requires a separately bound disabled-selection receipt.')
                 doc = {'version': 2 if reset_budget else 1, 'source': old['source'], 'target': requested,
                     'scope': scope(config), 'config_sha256': sha256(read_private(paths.config)).hexdigest(),
                     'history_sha256': history_hash(ledger), 'previous_contract': previous,
                     'previous_output_kind': ledger.output_kind(),
-                    'selected_contract': selection(previous, ledger.output_kind(), clarification, mode, reset_budget=reset_budget),
+                    'selected_contract': selection(previous, ledger.output_kind(), clarification, mode, reset_budget=reset_budget,
+                        reset_limit=requested['development_contract']['clarification_limit']),
                     'original_job': {k: old[k] for k in ('stage', 'error', 'patch_sha', 'updated')},
                     'mode': mode, 'attempt_number': number, 'evidence': None,
                     'reason': reason.strip(), 'clarification': clarification,

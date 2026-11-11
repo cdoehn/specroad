@@ -376,3 +376,9 @@
 - [Bundle 664 — Fortschrittsbalken im Test-Monitor](bundle-664-test-monitor-progress.md).
 
 - [Dev2-Bundles 001–005 — Control, Testoptimierungen und Profiling abgenommen](dev2-control-profiling-001-005.md)
+
+- [Bundle 666 — Control-Standardbudgets und menschliche Proposal-Reviews](bundle-666-review-decision-control.md)
+
+- [Bundle 667 — Control-Testkorrektur und vollständiger Rest](bundle-667-control-defaults-correction.md)
+
+- [Bundle 668 — Dauerhafter Stopp bei erschöpftem Korrekturbudget](bundle-668-correction-budget-stop.md)

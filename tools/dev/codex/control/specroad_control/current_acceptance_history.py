@@ -48,7 +48,8 @@ def document(row):
             or type(doc['clarification']) is not bool
             or doc['clarification'] and previous['clarifications_remaining'] == 0 and not reset_budget
             or doc['previous_output_kind'] not in (None, 'unknown', 'patch_ready', 'spec_clarification', 'patch_ready_with_clarification')
-            or selected != selection(previous, doc['previous_output_kind'], doc['clarification'], doc['mode'], reset_budget=reset_budget)):
+            or selected != selection(previous, doc['previous_output_kind'], doc['clarification'], doc['mode'], reset_budget=reset_budget,
+                reset_limit=selected['clarification_limit'])):
         raise ValueError('Receipt changed the preserved budget or selected authority')
     before = doc['original_job']
     if (set(before) != {'stage', 'error', 'patch_sha', 'updated'}
@@ -184,6 +185,8 @@ def complete(ledger, doc):
                 ledger.db.execute("INSERT INTO jobs VALUES(?,?,?,'ready',NULL,NULL,?)",
                     (target['run_id'], target['sha256'], canonical(target).decode(), time.time()))
                 ledger._insert_contract(target['sha256'], doc['selected_contract'])
+                from .correction_budget import preserve
+                preserve(ledger, doc['source']['sha256'], target)
                 ledger.db.execute('UPDATE meta SET current=? WHERE id=1', (target['run_id'],))
             else:
                 ledger.db.execute("UPDATE jobs SET stage='ready',error=NULL,updated=? WHERE sha=?", (time.time(), target['sha256']))

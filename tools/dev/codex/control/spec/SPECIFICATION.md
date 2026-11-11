@@ -44,6 +44,11 @@ alte Belege werden weder migriert noch als neue Befugnis ausgelegt.
 
 # SpecRoad Control – Spezifikation
 
+Für neue Aufträge ersetzt CONTROL-DEFAULTS-666 nach SpecRoad 2.4.3.6 die
+unten historisch dokumentierten Standardwerte: optionale Klärung standardmäßig
+aktiv, fünf Klärungsplätze und ein getrenntes Apply-Korrekturbudget von fünf.
+Alte gebundene Drei-Plätze-Verträge und Promptbytes bleiben unverändert.
+
 ## OFF-PLAN MIXED-BUNDLE-025: Vertrag 4 mit optionaler Klaerung
 
 Ausdruecklicher Nutzerauftrag vom 3. November 2026: normale Spezifikations-
@@ -1200,3 +1205,18 @@ aktionen. Gesamte Control-Regression als Pflichtauswahl. Dev führt nur
 Collection und statische Prüfungen aus. Aktivierung erfolgt erst nach
 vollständig erfolgreichem Apply, geprüftem Offline-Deploy und expliziter
 Konfiguration. Das Bundle selbst installiert oder startet keinen Dienst.
+
+
+## CONTROL-DEFAULTS-666 — ausdrücklicher Nutzerauftrag vom 11. November 2026
+
+Maßgeblich ist SpecRoad-Spezifikation 2.4.3.6. Neue freigegebene Projektmarker
+haben Klärungsmaximum fünf; drei bleibt ausschließlich rückwärts lesbar.
+Standard `automation.clarification_allowed=true`, explizit abschaltbar.
+Standard `automation.correction_limit=5`, zulässig eins bis fünf. Die zweite
+Grenze zählt Apply-Reparaturbundles und ist vom technischen Retryzähler getrennt.
+Alle alten Belege behalten ihre Bytes und Maxima. Ein neuer persistierter
+Korrekturbeleg bindet Quelle, Vorgänger, Maximum, Rest und Fortschreibungsgrund.
+Nur native vollständige erfolgreiche saubere Apply-Evidence erneuert die Folge.
+W liefert den vollständigen normalen Ablauf; R ergänzt Konfigurations-/Beleg-
+Grenzen und explizite negative Übernahmeauswahl; C zentralisiert die reine
+Budgetfortschreibung. Alle früheren Sicherheits-/Quellen-/Gatepflichten bleiben.

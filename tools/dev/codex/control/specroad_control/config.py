@@ -30,6 +30,8 @@ class Config:
     start_delay_seconds: float = 60.0
     access_mode: str = "workspace-write"
     apply_repository: Path | None = None
+    clarification_allowed: bool = True
+    correction_limit: int = 5
 
     @property
     def apply_directory(self):
@@ -64,7 +66,9 @@ def render(config: Config) -> str:
             + "\n\n[automation]\nenabled = " + str(config.enabled).lower()
             + "\nsettle_seconds = " + str(config.settle_seconds)
             + "\nstart_delay_seconds = " + str(config.start_delay_seconds)
-            + "\nretry_delays_seconds = " + json.dumps(list(config.retry_delays_seconds)) + "\n")
+            + "\nretry_delays_seconds = " + json.dumps(list(config.retry_delays_seconds))
+            + "\nclarification_allowed = " + str(config.clarification_allowed).lower()
+            + "\ncorrection_limit = " + str(config.correction_limit) + "\n")
 
 
 def text(value) -> str:
@@ -113,7 +117,7 @@ def parse(doc: dict, paths: Paths) -> Config:
         raise ValueError
     if set(ph) - {"exchange", "repo_id", "python_executable", "archive_directory", "repository"}:
         raise ValueError
-    if set(auto) - {"enabled", "seed_result", "seed_sha256", "settle_seconds", "retry_delays_seconds", "start_delay_seconds"}:
+    if set(auto) - {"enabled", "seed_result", "seed_sha256", "settle_seconds", "retry_delays_seconds", "start_delay_seconds", "clarification_allowed", "correction_limit"}:
         raise ValueError
     # Blank legacy template keys remain readable until explicit setup rewrites
     # them. Nonempty old bootstrap data must be migrated, never silently dropped.
@@ -137,6 +141,10 @@ def parse(doc: dict, paths: Paths) -> Config:
             or any(type(v) is not int or not 1 <= v <= 86400 for v in retry_delays)
             or retry_delays != sorted(retry_delays)):
         raise ValueError
+    clarification = auto.get("clarification_allowed", True)
+    correction_limit = auto.get("correction_limit", 5)
+    if type(clarification) is not bool or type(correction_limit) is not int or not 1 <= correction_limit <= 5:
+        raise ValueError
     transport = text(dev.get("transport", "exec"))
     if transport not in ("exec", "app-server-proxy"):
         raise ValueError
@@ -155,7 +163,8 @@ def parse(doc: dict, paths: Paths) -> Config:
                     command_path=text(dev.get("command_path", "")), retry_delays_seconds=tuple(retry_delays),
                     thread_cwd=absolute(dev.get("thread_cwd", ""), optional=True),
                     start_delay_seconds=float(delay), access_mode=access_mode,
-                    apply_repository=absolute(ph.get("repository", ""), optional=True))
+                    apply_repository=absolute(ph.get("repository", ""), optional=True),
+                    clarification_allowed=clarification, correction_limit=correction_limit)
     repo_real, exchange_real = repo.resolve(), exchange.resolve()
     apply_real = config.apply_directory.resolve()
     if (apply_real == repo_real or apply_real in repo_real.parents or repo_real in apply_real.parents
