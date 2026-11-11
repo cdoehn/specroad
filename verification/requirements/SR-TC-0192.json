@@ -1,1 +1,57 @@
-{"evidence_kind":"specroad-dev-pytest-v1","expected_diagnostics":[],"expected_exit_codes":[0,2,3,5,6,7],"fixture_ids":["SR-FIX-PUBLICATION-RECHECK-v1"],"implementation_status":"partial","json_pointers":[],"method":"automated_behavior","open_items":["Complete production transaction writer/journal and specialized Proposal workflows in their assigned steps.","Existing prepared current-JSON inventory plus all bound resource bytes are checked; no complete archive/history or durable publication proof.","Native Linux support, actual filesystem/CPython matrix and host authentication require real target/CI verification."],"oracle":{"kind":"behavior","requirement_contract":"Ein schreibender Proposal-Befehl MUSS bei nicht zur erwarteten Basis passenden Änderungen innerhalb der `managed_paths` mit Exit Code 6 abbrechen.","scope":"Live final publication guard on supplied bound inputs; no native journal, atomic multi-file publication or CLI authorization yet."},"preconditions":["A checked plan, exact supplied TargetModel and owned on-disk files; actual held native writer lock and explicit host authority."],"primary_verification_id":"SR-VER-0013","required_environment":{"declared_minimum_python":"3.10","implementation":"cpython","measured_scope":"current-run-only"},"requirement_id":"SR-REQ-0192","resources":{"harness_suite_timeout":null,"harness_test_timeout":null,"owned_temporary_files":true},"specification_sha256":"e51dfdefef50b7f5dc389d8ad0da11bf009edb63d20645169369950868dc8b7d","steps":["Recheck original bytes, normative JSON membership, destination ancestry/permissions and lock/recovery state immediately before invoking the trusted publisher."],"test_case_format_version":1,"test_case_id":"SR-TC-0192","test_ids":["tests/test_publication_check.py::test_source_changed_after_preflight_refuses_before_publication[0]","tests/test_publication_check.py::test_source_changed_after_preflight_refuses_before_publication[1]","tests/test_publication_check.py::test_source_changed_after_preflight_refuses_before_publication[2]","tests/test_publication_check.py::test_new_normative_json_after_plan_invalidates_inventory","tests/test_publication_check_right.py::test_same_project_id_in_another_root_is_not_same_lock","tests/test_publication_check_right.py::test_language_package_changed_after_preflight_stops_writer"]}
+{
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [
+    0,
+    2,
+    3,
+    5,
+    6,
+    7
+  ],
+  "fixture_ids": [
+    "SR-FIX-PUBLICATION-RECHECK-v1"
+  ],
+  "implementation_status": "partial",
+  "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "Complete production transaction writer/journal and specialized Proposal workflows in their assigned steps.",
+    "Existing prepared current-JSON inventory plus all bound resource bytes are checked; no complete archive/history or durable publication proof.",
+    "Native Linux support, actual filesystem/CPython matrix and host authentication require real target/CI verification."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Ein schreibender Proposal-Befehl MUSS bei nicht zur erwarteten Basis passenden Änderungen innerhalb der `managed_paths` mit Exit Code 6 abbrechen.",
+    "scope": "Live final publication guard on supplied bound inputs; no native journal, atomic multi-file publication or CLI authorization yet."
+  },
+  "preconditions": [
+    "A checked plan, exact supplied TargetModel and owned on-disk files; actual held native writer lock and explicit host authority."
+  ],
+  "primary_verification_id": "SR-VER-0013",
+  "required_environment": {
+    "declared_minimum_python": "3.10",
+    "implementation": "cpython",
+    "measured_scope": "current-run-only"
+  },
+  "requirement_id": "SR-REQ-0192",
+  "resources": {
+    "harness_suite_timeout": null,
+    "harness_test_timeout": null,
+    "owned_temporary_files": true
+  },
+  "specification_sha256": "9a2839994fe9c209dded3f7f6dba142912a51a209c7a21d298441bd4dacee2b4",
+  "steps": [
+    "Recheck original bytes, normative JSON membership, destination ancestry/permissions and lock/recovery state immediately before invoking the trusted publisher."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0192",
+  "test_ids": [
+    "tests/test_publication_check.py::test_source_changed_after_preflight_refuses_before_publication[0]",
+    "tests/test_publication_check.py::test_source_changed_after_preflight_refuses_before_publication[1]",
+    "tests/test_publication_check.py::test_source_changed_after_preflight_refuses_before_publication[2]",
+    "tests/test_publication_check.py::test_new_normative_json_after_plan_invalidates_inventory",
+    "tests/test_publication_check_right.py::test_same_project_id_in_another_root_is_not_same_lock",
+    "tests/test_publication_check_right.py::test_language_package_changed_after_preflight_stops_writer"
+  ]
+}

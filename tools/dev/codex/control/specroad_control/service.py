@@ -1,4 +1,4 @@
-"""Only specroad-control.service is managed. Never start/enable PatchHarbor."""
+"""Manage only the selected manual Control instance; never start PatchHarbor."""
 from pathlib import Path
 import subprocess
 from .config import initialize, load
@@ -24,8 +24,8 @@ def checked(args: list[str]):
     return result
 
 
-def inspect() -> dict:
-    result = command(["show", UNIT, "--property=LoadState,ActiveState,SubState,UnitFileState,FragmentPath,DropInPaths"])
+def inspect(paths: Paths | None = None) -> dict:
+    result = command(["show", paths.unit.name if paths else UNIT, "--property=LoadState,ActiveState,SubState,UnitFileState,FragmentPath,DropInPaths"])
     if result.returncode not in (0, 4):
         raise ControlError("systemd_unavailable", "No usable systemd user manager. Run from your Ubuntu login session.")
     props = dict(line.split("=", 1) for line in result.stdout.splitlines() if "=" in line)
@@ -51,14 +51,14 @@ def verify_owned(paths: Paths):
         raise ControlError("not_installed", "Run control install before starting the service.") from None
     if not data.startswith(OWNER.encode()):
         raise ControlError("foreign_unit", "An unrelated service file will not be overwritten or controlled.")
-    properties = inspect()
+    properties = inspect(paths)
     verify_properties(paths, properties)
     return properties
 
 
 def install(paths: Paths) -> dict:
     with lock(paths.state / "operation.lock"):
-        properties = inspect()  # Do not create configuration when the manager is absent.
+        properties = inspect(paths)  # Do not create configuration when the manager is absent.
         verify_properties(paths, properties)
         if properties.get("ActiveState") not in (None, "inactive", "failed"):
             raise ControlError("service_active", "Stop the controller before installation or update.")
@@ -85,12 +85,12 @@ def start(paths: Paths) -> dict:
             raise ControlError("stopping", "Wait until the pending graceful stop has completed.")
         if read_private(paths.unit) != unit_text(paths).encode():
             raise ControlError("unit_conflict", "Installed service and current paths do not match.")
-        checked(["start", UNIT])
+        checked(["start", paths.unit.name])
         return {"start_requested": True}  # Not a claim of a ready worker or active development.
 
 
 def stop(paths: Paths) -> dict:
     with lock(paths.state / "operation.lock"):
         verify_owned(paths)  # Deliberately do not load config: stop works with broken config.
-        checked(["--no-block", "stop", UNIT])
+        checked(["--no-block", "stop", paths.unit.name])
         return {"stop_requested": True, "graceful": True}

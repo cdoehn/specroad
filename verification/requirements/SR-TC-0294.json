@@ -1,1 +1,50 @@
-{"evidence_kind":"specroad-dev-pytest-v1","expected_diagnostics":["SRV110"],"expected_exit_codes":[],"fixture_ids":["SR-FIX-SRX-LOGIC-v1"],"implementation_status":"partial","json_pointers":["/expression"],"method":"automated_behavior","open_items":["Complete remaining SRX operator families, full effective profiles and rule-consumer integration."],"oracle":{"kind":"behavior","requirement_contract":"`and` und `or` MÜSSEN von links nach rechts kurzschließend auswerten.","scope":"Implemented field/logic/comparison families only; complete SRX and validation integration remain pending."},"preconditions":["Explicit SRX program and owned JSON-only context."],"primary_verification_id":"SR-VER-0022","required_environment":{"declared_minimum_python":"3.10","implementation":"cpython","measured_scope":"current-run-only"},"requirement_id":"SR-REQ-0294","resources":{"harness_suite_timeout":null,"harness_test_timeout":null,"owned_temporary_files":true},"specification_sha256":"e51dfdefef50b7f5dc389d8ad0da11bf009edb63d20645169369950868dc8b7d","steps":["Evaluate supported operators in documented order; check strict types, Missing and Boolean short circuit."],"test_case_format_version":1,"test_case_id":"SR-TC-0294","test_ids":["test_srx_logic.SrxLogicTests.test_and_false_skips_bad_value","test_srx_logic.SrxLogicTests.test_or_true_skips_bad_value","test_srx_logic_right.SrxLogicRightTests.test_and_evaluates_fields_left_to_right","test_srx_logic_right.SrxLogicRightTests.test_or_stops_before_bad_field"]}
+{
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [
+    "SRV110"
+  ],
+  "expected_exit_codes": [],
+  "fixture_ids": [
+    "SR-FIX-SRX-LOGIC-v1"
+  ],
+  "implementation_status": "partial",
+  "json_pointers": [
+    "/expression"
+  ],
+  "method": "automated_behavior",
+  "open_items": [
+    "Complete remaining SRX operator families, full effective profiles and rule-consumer integration."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "`and` und `or` MÜSSEN von links nach rechts kurzschließend auswerten.",
+    "scope": "Implemented field/logic/comparison families only; complete SRX and validation integration remain pending."
+  },
+  "preconditions": [
+    "Explicit SRX program and owned JSON-only context."
+  ],
+  "primary_verification_id": "SR-VER-0022",
+  "required_environment": {
+    "declared_minimum_python": "3.10",
+    "implementation": "cpython",
+    "measured_scope": "current-run-only"
+  },
+  "requirement_id": "SR-REQ-0294",
+  "resources": {
+    "harness_suite_timeout": null,
+    "harness_test_timeout": null,
+    "owned_temporary_files": true
+  },
+  "specification_sha256": "9a2839994fe9c209dded3f7f6dba142912a51a209c7a21d298441bd4dacee2b4",
+  "steps": [
+    "Evaluate supported operators in documented order; check strict types, Missing and Boolean short circuit."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0294",
+  "test_ids": [
+    "test_srx_logic.SrxLogicTests.test_and_false_skips_bad_value",
+    "test_srx_logic.SrxLogicTests.test_or_true_skips_bad_value",
+    "test_srx_logic_right.SrxLogicRightTests.test_and_evaluates_fields_left_to_right",
+    "test_srx_logic_right.SrxLogicRightTests.test_or_stops_before_bad_field"
+  ]
+}

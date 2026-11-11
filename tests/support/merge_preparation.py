@@ -93,18 +93,20 @@ def adapter_case(root, template, kind):
 
 def store_for(root, sources, history, **options):
     initial = prepare_merge_work(builtin_registry(), sources, plan_id=PLAN_ID, history=history, **options)
-    protected = tuple(ProjectBoundary(Path(source.source_root).parent if source.kind == 'bundle'
-                                       else source.source_root) for source in
-                      (sources.base, sources.ours, sources.theirs))
+    paths = dict.fromkeys(Path(source.source_root).parent if source.kind == 'bundle'
+                          else Path(source.source_root) for source in
+                          (sources.base, sources.ours, sources.theirs))
+    protected = tuple(ProjectBoundary(path) for path in paths)
     store = CheckpointStore(WorkDirectory(initial, protected_roots=protected, directory=root), initial)
     store.publish(initial)
     return store
 
 
 def finish(store, window):
-    remaining = len(store.read().entries('remaining'))
+    current = store.read()
+    remaining = len(current.entries('remaining'))
     for _ in range(remaining+2):
-        before = store.read().as_dict()
+        before = current.as_dict()
         current = resume_merge_work(store, max_units=window)
         after = current.as_dict()
         if after['state'] == 'completed':

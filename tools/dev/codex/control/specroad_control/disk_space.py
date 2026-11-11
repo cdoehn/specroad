@@ -16,7 +16,7 @@ STOP_ERRORS = frozenset({'low_disk_space', 'disk_space_unavailable'})
 
 def locations(config, paths):
     result = [execution_directory(config), config.repository,
-              config.repository.parent / 'specroad-apply', REPO, config.exchange,
+              config.apply_directory, REPO, config.exchange,
               paths.state, Path('/var/tmp')]
     if config.codex_home is not None:
         result.append(config.codex_home)

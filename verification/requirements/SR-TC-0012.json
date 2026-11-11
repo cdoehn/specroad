@@ -1,1 +1,52 @@
-{"evidence_kind":"specroad-dev-pytest-v1","expected_diagnostics":[],"expected_exit_codes":[],"fixture_ids":["SR-FIX-OWNED-TEMP-v1"],"implementation_status":"partial","json_pointers":[],"method":"automated_behavior","open_items":["Complete per-artifact and persisted-resource schemas are implemented by later steps.","JCS serialization/hash implementation, full model inventory and transaction publication are not part of this reader."],"oracle":{"kind":"behavior","requirement_contract":"Jede normative Artefaktdatei MUSS genau ein Artefakt als JSON-Objekt enthalten.","scope":"Strict UTF-8 JSON resource reads, closed trusted descriptors, owned data and all-or-nothing explicit sets; exact decimal roundtrip rejection."},"preconditions":["Owned project fixtures; installed development dependencies; isolated process state."],"primary_verification_id":"SR-VER-0002","required_environment":{"declared_minimum_python":"3.10","implementation":"cpython","measured_scope":"current-run-only"},"requirement_id":"SR-REQ-0012","resources":{"harness_suite_timeout":null,"harness_test_timeout":null,"owned_temporary_files":true},"specification_sha256":"e51dfdefef50b7f5dc389d8ad0da11bf009edb63d20645169369950868dc8b7d","steps":["Read or validate the declared project resources and observe data, rejection and file effects."],"test_case_format_version":1,"test_case_id":"SR-TC-0012","test_ids":["test_json_reader.JsonReaderWorkTests.test_only_one_object_is_accepted","test_json_reader.JsonReaderWorkTests.test_duplicates_and_nonfinite_numbers_are_rejected","test_json_reader.JsonReaderWorkTests.test_failed_resource_set_has_no_partial_file_effects","test_json_reader.JsonReaderRightTests.test_duplicate_unescaped_keys_report_the_nested_json_pointer","test_json_reader.JsonReaderRightTests.test_number_syntax_and_trailing_documents_are_not_repaired","test_json_reader.JsonReaderRightTests.test_lossy_numbers_are_never_silently_rounded","test_json_reader.JsonReaderRightTests.test_exact_roundtrip_uses_decimal_spelling_not_float_expansion","test_json_reader.JsonReaderRightTests.test_empty_resource_request_still_checks_the_configuration_binding","test_json_reader.JsonReaderRightTests.test_loaded_set_keeps_order_and_data_ownership"]}
+{
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [],
+  "fixture_ids": [
+    "SR-FIX-OWNED-TEMP-v1"
+  ],
+  "implementation_status": "partial",
+  "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "Complete per-artifact and persisted-resource schemas are implemented by later steps.",
+    "JCS serialization/hash implementation, full model inventory and transaction publication are not part of this reader."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Jede normative Artefaktdatei MUSS genau ein Artefakt als JSON-Objekt enthalten.",
+    "scope": "Strict UTF-8 JSON resource reads, closed trusted descriptors, owned data and all-or-nothing explicit sets; exact decimal roundtrip rejection."
+  },
+  "preconditions": [
+    "Owned project fixtures; installed development dependencies; isolated process state."
+  ],
+  "primary_verification_id": "SR-VER-0002",
+  "required_environment": {
+    "declared_minimum_python": "3.10",
+    "implementation": "cpython",
+    "measured_scope": "current-run-only"
+  },
+  "requirement_id": "SR-REQ-0012",
+  "resources": {
+    "harness_suite_timeout": null,
+    "harness_test_timeout": null,
+    "owned_temporary_files": true
+  },
+  "specification_sha256": "9a2839994fe9c209dded3f7f6dba142912a51a209c7a21d298441bd4dacee2b4",
+  "steps": [
+    "Read or validate the declared project resources and observe data, rejection and file effects."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0012",
+  "test_ids": [
+    "test_json_reader.JsonReaderWorkTests.test_only_one_object_is_accepted",
+    "test_json_reader.JsonReaderWorkTests.test_duplicates_and_nonfinite_numbers_are_rejected",
+    "test_json_reader.JsonReaderWorkTests.test_failed_resource_set_has_no_partial_file_effects",
+    "test_json_reader.JsonReaderRightTests.test_duplicate_unescaped_keys_report_the_nested_json_pointer",
+    "test_json_reader.JsonReaderRightTests.test_number_syntax_and_trailing_documents_are_not_repaired",
+    "test_json_reader.JsonReaderRightTests.test_lossy_numbers_are_never_silently_rounded",
+    "test_json_reader.JsonReaderRightTests.test_exact_roundtrip_uses_decimal_spelling_not_float_expansion",
+    "test_json_reader.JsonReaderRightTests.test_empty_resource_request_still_checks_the_configuration_binding",
+    "test_json_reader.JsonReaderRightTests.test_loaded_set_keeps_order_and_data_ownership"
+  ]
+}

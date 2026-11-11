@@ -2,6 +2,7 @@
 from contextlib import ExitStack, closing
 from dataclasses import replace
 from hashlib import sha256
+from .ownership import targets
 import os
 from pathlib import Path
 import sqlite3
@@ -143,8 +144,8 @@ def _handover_locked(paths, *, thread_id, thread_cwd, from_cwd=None, request_sha
         return {'handed_over': False, 'already_configured': True,
                 'model_called': False, 'service_started': False}
     with Engine(old, paths, Gate()) as engine, ExitStack() as stack:
-        target_key = sha256((str(new.codex_home.resolve()) + new.session_id).encode()).hexdigest()
-        stack.enter_context(lock(paths.target_locks / ('thread-' + target_key + '.lock')))
+        for target in targets(new, paths, thread_only=True):
+            stack.enter_context(lock(target))
         history = open_history(paths.state / 'automation.sqlite3', old, new, intent)
         stack.callback(history.close)
         row = check_boundary(history, paths)

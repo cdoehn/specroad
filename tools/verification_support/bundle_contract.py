@@ -20,7 +20,7 @@ def validate_bundle(data):
         fields.add('handoff_kind')
     if (type(data) is not dict or set(data) != fields
             or type(version) is not int or version not in (1, 2)
-            or type(data['initial_dirty']) is not bool or data['branch'] != 'dev'
+            or type(data['initial_dirty']) is not bool or data['branch'] not in ('dev', 'dev2')
             or not re.fullmatch(r'[0-9]{3,}', data['bundle_number'])
             or not re.fullmatch(r'[0-9a-f]{64}', data['source_result_sha256'])
             or not Path(data['apply_repository']).is_absolute()

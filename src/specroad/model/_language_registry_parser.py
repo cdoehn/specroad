@@ -1,6 +1,7 @@
 """Strict parsing of the frozen RFC 5646 registry resource, without I/O."""
 
 from datetime import date
+from functools import lru_cache
 from types import MappingProxyType
 import re
 
@@ -8,7 +9,51 @@ from .language_tags import LanguageTagError, parse_language_tag
 from .language_values import LanguageRegistryError, RegistryRecord
 
 
+_HEADER = re.compile(r"File-Date: [0-9]{4}-[0-9]{2}-[0-9]{2}")
+_FIELD = re.compile(r"([A-Za-z][A-Za-z0-9-]*): (.+)")
+_DATE = re.compile(r"[0-9]{4}-[0-9]{2}-[0-9]{2}")
+_SUBTAG = re.compile(r"[A-Za-z0-9-]+(?:\.\.[A-Za-z0-9]+)?")
+_PREFIX = re.compile(r"[A-Za-z]{2,3}")
+_GRAMMAR = MappingProxyType({
+    kind: re.compile(pattern) for kind, pattern in {
+        "language": r"[A-Za-z]{2,8}", "extlang": r"[A-Za-z]{3}",
+        "script": r"[A-Za-z]{4}", "region": r"[A-Za-z]{2}|[0-9]{3}",
+        "variant": r"[A-Za-z0-9]{5,8}|[0-9][A-Za-z0-9]{3}",
+    }.items()
+})
+_MAX_CACHED_BYTES = 1024 * 1024
+
+
 def parse_registry_records(raw):
+    """Reuse pure byte parsing, but never share public record instances.
+
+    Keys are complete bytes, not paths or claimed hashes. Only successful
+    parses of at most one MiB enter the four-entry cache. Binding checks
+    remain in LanguageRegistry and run for every construction.
+    """
+    if type(raw) is not bytes or len(raw) > _MAX_CACHED_BYTES:
+        return _parse_registry_records(raw)
+    version, values = _cached_registry_values(raw)
+    return version, _fresh_records(values)
+
+
+def _fresh_records(values):
+    return MappingProxyType({
+        identity: RegistryRecord(kind, value, fields)
+        for identity, kind, value, fields in values
+    })
+
+
+@lru_cache(maxsize=4)
+def _cached_registry_values(raw):
+    version, records = _parse_registry_records(raw)
+    # Frozen dataclasses can still be modified with object.__setattr__.
+    # Retain only private strings/tuples, never any exported Record object.
+    return version, tuple((identity, record.kind, record.value, record.fields)
+                          for identity, record in records.items())
+
+
+def _parse_registry_records(raw):
     if type(raw) is not bytes or raw.startswith(b"\xef\xbb\xbf"):
         raise LanguageRegistryError("invalid_registry_encoding")
     try:
@@ -19,7 +64,7 @@ def parse_registry_records(raw):
         raise LanguageRegistryError("invalid_registry_encoding")
     lines = text.replace("\r\n", "\n").split("\n")
     if lines[-1:] == [""]: lines.pop()
-    if not lines or not re.fullmatch(r"File-Date: [0-9]{4}-[0-9]{2}-[0-9]{2}", lines[0]):
+    if not lines or not _HEADER.fullmatch(lines[0]):
         raise LanguageRegistryError("invalid_registry_date")
     version = lines[0].split(": ", 1)[1]
     try:
@@ -37,7 +82,7 @@ def parse_registry_records(raw):
             if not current: raise LanguageRegistryError("orphan_registry_continuation")
             key, value = current[-1]; current[-1] = (key, value + " " + line.lstrip())
         else:
-            match = re.fullmatch(r"([A-Za-z][A-Za-z0-9-]*): (.+)", line)
+            match = _FIELD.fullmatch(line)
             if not match: raise LanguageRegistryError("invalid_registry_field")
             current.append(match.groups())
     if not current: raise LanguageRegistryError("empty_registry_record")
@@ -58,22 +103,17 @@ def parse_registry_records(raw):
         for key in ("Added", "Deprecated"):
             if len(fields.get(key, ())) > 1: raise LanguageRegistryError("invalid_registry_record")
             for value in fields.get(key, ()):
-                if not re.fullmatch(r"[0-9]{4}-[0-9]{2}-[0-9]{2}", value):
+                if not _DATE.fullmatch(value):
                     raise LanguageRegistryError("invalid_registry_date")
                 try: date.fromisoformat(value)
                 except ValueError as error: raise LanguageRegistryError("invalid_registry_date") from error
         for key in ("Preferred-Value", "Suppress-Script", "Scope", "Macrolanguage"):
             if len(fields.get(key, ())) > 1: raise LanguageRegistryError("invalid_registry_record")
         value = fields[field][0]
-        if not value.isascii() or not re.fullmatch(r"[A-Za-z0-9-]+(?:\.\.[A-Za-z0-9]+)?", value):
+        if not value.isascii() or not _SUBTAG.fullmatch(value):
             raise LanguageRegistryError("invalid_registry_subtag")
-        grammar = {
-            "language": r"[A-Za-z]{2,8}", "extlang": r"[A-Za-z]{3}",
-            "script": r"[A-Za-z]{4}", "region": r"[A-Za-z]{2}|[0-9]{3}",
-            "variant": r"[A-Za-z0-9]{5,8}|[0-9][A-Za-z0-9]{3}",
-        }
         if ".." not in value:
-            if kind in grammar and not re.fullmatch(grammar[kind], value):
+            if kind in _GRAMMAR and not _GRAMMAR[kind].fullmatch(value):
                 raise LanguageRegistryError("invalid_registry_subtag")
             if kind in {"grandfathered", "redundant"}:
                 try:
@@ -101,7 +141,7 @@ def parse_registry_records(raw):
                    for k, v in records):
                 raise LanguageRegistryError("overlapping_registry_entries")
         if kind == "extlang" and (len(record.values("Prefix")) != 1
-                                  or not re.fullmatch(r"[A-Za-z]{2,3}", record.values("Prefix")[0])):
+                                  or not _PREFIX.fullmatch(record.values("Prefix")[0])):
             raise LanguageRegistryError("invalid_registry_prefix")
     return version, MappingProxyType(records)
 

@@ -1,1 +1,50 @@
-{"evidence_kind":"specroad-dev-pytest-v1","expected_diagnostics":[],"expected_exit_codes":[],"fixture_ids":["SR-FIX-SCOPE-SEEDS-v1"],"implementation_status":"partial","json_pointers":[],"method":"automated_behavior","open_items":["Full scope closure, effective configuration filtering, query engine validation/evaluation and automatic profile/baseline archive inventories remain in their respective plan steps."],"oracle":{"kind":"behavior","requirement_contract":"Jede Operation mit einem Teil- oder Vollumfang MUSS einen kanonischen Scope Descriptor nach Kapitel 10.8 verwenden.","scope":"Deterministic seed selection over explicitly supplied inputs only; no full closure/model approval, automatic completeness claim or write."},"preconditions":["Explicit source relations and passive resource inventories; query pages are synthetic trusted-resolver inputs, not query evaluation."],"primary_verification_id":"SR-VER-0029","required_environment":{"declared_minimum_python":"3.10","implementation":"cpython","measured_scope":"current-run-only"},"requirement_id":"SR-REQ-0405","resources":{"harness_suite_timeout":null,"harness_test_timeout":null,"owned_temporary_files":true},"specification_sha256":"e51dfdefef50b7f5dc389d8ad0da11bf009edb63d20645169369950868dc8b7d","steps":["Validate descriptor, select exact seeds and verify bound page membership and order."],"test_case_format_version":1,"test_case_id":"SR-TC-0405","test_ids":["test_scope_seeds.ScopeSeedTests.test_unknown_top_level_and_selector_fields_rejected","test_scope_seeds.ScopeSeedTests.test_descriptor_hash_ignores_object_key_order","test_scope_seeds.ScopeSeedTests.test_missing_version_is_not_filled","test_scope_seeds_right.ScopeRightTests.test_configuration_wrapper_contains_one_unbound_base","test_scope_seeds_right.ScopeRightTests.test_recursive_configuration_wrapper_is_rejected","test_scope_seeds_right.ScopeRightTests.test_already_configured_inner_scope_is_rejected","test_scope_seeds_right.ScopeRightTests.test_explicit_duplicate_or_unsorted_artifact_ids_fail","test_scope_seeds_right.ScopeRightTests.test_resource_order_is_utf8_not_locale_or_utf16"]}
+{
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [],
+  "fixture_ids": [
+    "SR-FIX-SCOPE-SEEDS-v1"
+  ],
+  "implementation_status": "partial",
+  "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "Full scope closure, effective configuration filtering, query engine validation/evaluation and automatic profile/baseline archive inventories remain in their respective plan steps."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Jede Operation mit einem Teil- oder Vollumfang MUSS einen kanonischen Scope Descriptor nach Kapitel 10.8 verwenden.",
+    "scope": "Deterministic seed selection over explicitly supplied inputs only; no full closure/model approval, automatic completeness claim or write."
+  },
+  "preconditions": [
+    "Explicit source relations and passive resource inventories; query pages are synthetic trusted-resolver inputs, not query evaluation."
+  ],
+  "primary_verification_id": "SR-VER-0029",
+  "required_environment": {
+    "declared_minimum_python": "3.10",
+    "implementation": "cpython",
+    "measured_scope": "current-run-only"
+  },
+  "requirement_id": "SR-REQ-0405",
+  "resources": {
+    "harness_suite_timeout": null,
+    "harness_test_timeout": null,
+    "owned_temporary_files": true
+  },
+  "specification_sha256": "9a2839994fe9c209dded3f7f6dba142912a51a209c7a21d298441bd4dacee2b4",
+  "steps": [
+    "Validate descriptor, select exact seeds and verify bound page membership and order."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0405",
+  "test_ids": [
+    "test_scope_seeds.ScopeSeedTests.test_unknown_top_level_and_selector_fields_rejected",
+    "test_scope_seeds.ScopeSeedTests.test_descriptor_hash_ignores_object_key_order",
+    "test_scope_seeds.ScopeSeedTests.test_missing_version_is_not_filled",
+    "test_scope_seeds_right.ScopeRightTests.test_configuration_wrapper_contains_one_unbound_base",
+    "test_scope_seeds_right.ScopeRightTests.test_recursive_configuration_wrapper_is_rejected",
+    "test_scope_seeds_right.ScopeRightTests.test_already_configured_inner_scope_is_rejected",
+    "test_scope_seeds_right.ScopeRightTests.test_explicit_duplicate_or_unsorted_artifact_ids_fail",
+    "test_scope_seeds_right.ScopeRightTests.test_resource_order_is_utf8_not_locale_or_utf16"
+  ]
+}

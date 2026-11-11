@@ -69,6 +69,23 @@ plan_setup_message: "docs(plan): add detailed SpecRoad WRC implementation plan"
 | 20 | [Gesamtabnahme und Release](milestones/M20.md#m20) | 14 | 42 | 859–900 |
 | **Gesamt** | **20 Meilensteine** | **300** | **900** | **1–900** |
 
+## In Apply2 abgenommene Control-Erweiterung
+
+[Control-Operations: Runtime-Voraussetzung und neun Control-Zustände](../development/Control_Operations.md).
+Die zwölf W/R/C-Commits sind über Dev2-Bundles 001–004 vollständig abgenommen.
+Der [Ausführungsnachweis](history/dev2-control-profiling-001-005.md) trennt den
+erfolgreichen Repository-Stand von der noch offenen Control-Installation.
+Produktfortschritt und Betriebsfreigaben bleiben unverändert.
+
+## Manuelle Testoptimierung und Profiling
+
+OFF-PLAN-Auftrag vom 10. November 2026:
+[Testoptimierungen und Profiling mit sechs W/R/C-Abnahmen](../development/Test_Optimization_Profiling.md).
+Alle sechs Commits sind mit Dev2-Bundle 005 erfolgreich abgenommen; siehe
+[Ausführungsnachweis](history/dev2-control-profiling-001-005.md). Der Vergleich
+der Vorher-/Nachher-Laufzeiten steht noch aus. Produktpositionen und Zähler
+bleiben unverändert.
+
 ## Detaillierter Commitplan
 
 Die Meilensteinlinks in der Übersicht öffnen die vollständigen W/R/C-Positionen. Ergänzende Abnahmen sind direkt beim jeweiligen Schritt verlinkt.

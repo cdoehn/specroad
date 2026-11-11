@@ -47,8 +47,9 @@ def complete(directory, representation='argv'):
     total = status['progress']['total_units']
     for _ in range(total+2):
         result = work('resume', directory, representation=representation)
-        assert result.exit_code in (0, 1, 8), (result.diagnostics, result.details)
-        if result.exit_code != 8:
+        code = result.exit_code
+        assert code in (0, 1, 8), (result.diagnostics, result.details)
+        if code != 8:
             return result
     raise AssertionError('Merge Work did not complete its finite inventory')
 

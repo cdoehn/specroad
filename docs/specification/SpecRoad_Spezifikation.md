@@ -1081,6 +1081,11 @@ Ein unterbrochener Releasewechsel sperrt Start; dieselbe explizite Installation
 kann den geprüften Wechsel fortsetzen. Fehler beim Unit-Reload stellen die
 vorherige Unit/Releasezuordnung wieder her oder bleiben sichtbar gesperrt.
 
+Die explizite Control-Erweiterung vom 10. November 2026 erhält sämtliche
+Result-, Budget- und Dispatchverträge. Paketidentität wird vor teurer Validierung
+gezielt eingegrenzt; Fortschritt und Wartephase müssen maschinenlesbar beobachtbar
+sein. Die Abnahmen stehen in [Control-Operations](../development/Control_Operations.md).
+
 #### 2.5.4.1 Konfigurierbare Startwartezeit — CONTROL-START-DELAY-564
 
 **Ausdrücklicher Nutzerauftrag vom 3. November 2026.** Nach jedem tatsächlichen
@@ -1379,6 +1384,29 @@ IDs, neuester gültiger Rohmesswert, Fünftelfilter und vollständige Pflichtuni
 bleiben erhalten. Jeder echte W/R/C-Zustand erhält weiterhin sein eigenes
 Apply-Gate vor dem Commit. Die Implementierung erlaubt keine Tests in Dev,
 keine automatische CI und keinen Start von Control oder Watcher.
+
+#### 2.5.6 Testoptimierungen und explizites Profiling
+
+Der ausdrückliche Nutzerauftrag vom 10. November 2026 erlaubt die begrenzte
+Wiederverwendung reiner Prüfungen exakt gleicher unveränderlicher Eingaben.
+Öffentliche Ergebnisobjekte bleiben unabhängig. Aktuelle Quellen, Besitz,
+Autorisierung, Dateibindungen und dauerhafte Veröffentlichung MÜSSEN weiterhin
+an ihren bestehenden Grenzen geprüft werden. Ein Cachetreffer darf keinen
+fehlgeschlagenen Nachweis oder eine fremde Bindung übernehmen. Fachliche
+Testfälle, Fehlerpfade und Integrationsreferenzen bleiben erhalten.
+
+Das separat und ausdrücklich gestartete Entwicklungswerkzeug darf alle Tests,
+die langsamsten N nach gültigen aktuellen Messungen oder eine freie native
+Testauswahl profilieren. Auswahl und Quellsnapshot MÜSSEN eindeutig gebunden
+sein. Python-Profile, Systemaufruf-Traces, Phasen-/Prozessdaten und Rohartefakte
+werden dauerhaft in einer eigenen versionierten Datenbank gespeichert.
+Instrumentierte Zeiten ersetzen keine normalen Apply-Messungen. Ein Lauf gilt
+nur bei vollständigen erfolgreichen Beobachtungen und gespeicherten Daten als
+abgeschlossen; Abbruch und Teilfehler bleiben sichtbar. Status und Export
+starten keine Tests. Bedienung und geordnete Abnahmen sind in
+[Testoptimierungen und Profiling](../development/Test_Optimization_Profiling.md)
+festgelegt. Dieser Auftrag startet keine Automatik oder CI und ändert keine
+Produktposition.
 
 ## 3. Produktziele
 

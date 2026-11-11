@@ -50,7 +50,7 @@ def select_source(config: Config, result: str | None, legacy: dict | None, *, ne
         raise ControlError("invalid_seed", "The initial Result must be directly in Exchange or its configured archive.")
     source = Core(config).result(path)
     if (Path(source["repository_path"]).resolve() == REPO or source["dry_run"]
-            or Path(source["repository_path"]).resolve() != config.repository.parent.resolve() / "specroad-apply"):
+            or Path(source["repository_path"]).resolve() != config.apply_directory.resolve()):
         raise ControlError("wrong_seed_repository", "Select a SpecRoad Apply Result, not a Control or Dev Result.")
     if legacy and legacy["sha256"] != source["sha256"]:
         raise ControlError("bootstrap_conflict", "Explicit source differs from the old approved seed; nothing is reset.")

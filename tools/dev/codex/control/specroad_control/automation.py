@@ -1,6 +1,5 @@
 """One model call per hash-bound source, then wait for the existing Apply daemon."""
 from contextlib import ExitStack
-import hashlib
 from pathlib import Path
 import threading
 import time
@@ -16,6 +15,7 @@ from .errors import ControlError
 from .exchange import Exchange
 from .ledger import Ledger
 from .local import Paths, lock, private_dir, json_write, json_read
+from .ownership import targets
 
 from .job_contract import SCHEMA, scope, prompt_for, contract, schema_for, new_contract
 from .mixed_contract import MIXED, supports_v4
@@ -51,16 +51,11 @@ class Engine(OverloadWaiting):
         self.stack = ExitStack()
         self.summary_lock = threading.Lock()
         self.view = {"stage": "initializing", "error": None, "remote_visibility": "not_verified"}
-        # One Control data home owns repo/thread locks for this installation.
-        target_dir = paths.target_locks
-        private_dir(target_dir)
-        keys = ["repo-" + hashlib.sha256(str(config.repository.resolve()).encode()).hexdigest(),
-                "thread-" + hashlib.sha256((str(config.codex_home.resolve()) + config.session_id).encode()).hexdigest()]
         try:
-            descriptors = [self.stack.enter_context(lock(target_dir / (key + ".lock"))) for key in sorted(keys)]
+            descriptors = [self.stack.enter_context(lock(target)) for target in targets(config, paths)]
             self.codex = codex or Codex(config, [fd for fd in descriptors if fd is not None])
             self.codex.observe = self.observe
-            self.exchange = Exchange(config, self.core)
+            self.exchange = Exchange(config, self.core, observe=self.update)
         except BaseException:
             self.stack.close()
             raise
@@ -80,6 +75,9 @@ class Engine(OverloadWaiting):
     def tick(self):
         ledger = Ledger(self.paths.state / "automation.sqlite3", scope(self.config))
         try:
+            row = ledger.current()
+            self.update(job={key: row.get(key) for key in ("run_id", "sha", "stage", "patch_sha")},
+                        request_contract=ledger.request_contract())
             from .current_acceptance_history import validate_history as current_history
             from .current_acceptance import tick as current_tick
             acceptance = current_history(ledger)
@@ -222,6 +220,7 @@ class Engine(OverloadWaiting):
             selected = (contract(origin.get('request_contract')) if origin is not None else
                         ledger.request_contract() or (new_contract(version=4) if supports_v4(source) and source['success'] and not source['dirty'] else new_contract()))
             ledger.bind_contract(selected)
+            self.update(request_contract=dict(selected))
             if previous is not None and any(previous.get(k) != v for k, v in attempt.items()):
                 raise ControlError("retry_evidence_invalid", "An attempt directory belongs to different work.")
             if previous is not None and previous.get('continuation') != continuing:
@@ -238,7 +237,7 @@ class Engine(OverloadWaiting):
                 json_write(job_dir / "attempt.json", attempt)
             else:
                 attempt = previous
-            self.update(stage="checking_thread", error=None, retry_attempt=number, retry_at=None,
+            self.update(stage="checking_dispatch", error=None, retry_attempt=number, retry_at=None,
                         retry_blocked_reason=None, codex_error=None, codex_will_retry=None, turn_status=None,
                         turn_id=None, thread_status=None)
             try:

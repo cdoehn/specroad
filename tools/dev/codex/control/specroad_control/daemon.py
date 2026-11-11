@@ -17,6 +17,7 @@ from .local import Paths, json_write, lock, private_dir
 from .ipc import receive, request, same_user, scope
 from .notifications import Notifications
 from .state import read_state
+from .status_wire import encoded
 from .telemetry import record
 from .disk_space import DiskGuard, CHECK_SECONDS, STOP_ERRORS
 
@@ -62,7 +63,11 @@ def _locked_run(paths: Paths, config: Config | None = None, *, queued=None) -> i
     disk_due = due
 
     def snapshot():
-        return {"schema": 1, "run_id": run_id, "pid": os.getpid(), "started_at": started,
+        return {"instance": paths.instance,
+                "bindings": {"repository": str(config.repository), "apply_repository": str(config.apply_directory),
+                             "exchange": str(config.exchange), "repo_id": config.repo_id,
+                             "thread_id": config.session_id, "config": str(paths.config), "unit": paths.unit.name},
+                "schema": 1, "run_id": run_id, "pid": os.getpid(), "started_at": started,
                 "updated_at": time.time(), "phase": lifecycle.phase, "desired": lifecycle.desired,
                 "active_job": lifecycle.active_job, "development_enabled": config.enabled,
                 "capabilities": ["lifecycle", "development"] if config.enabled else ["lifecycle"],
@@ -261,7 +266,7 @@ def _locked_run(paths: Paths, config: Config | None = None, *, queued=None) -> i
                         except (ValueError, KeyError, TypeError, OSError):
                             reply = {"ok": False, "error": "invalid_request"}
                         try:
-                            client.sendall((json.dumps(reply) + "\n").encode())
+                            client.sendall(encoded(reply))
                         except OSError:
                             pass
             gate.set(False)

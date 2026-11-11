@@ -1,1 +1,57 @@
-{"evidence_kind":"specroad-dev-pytest-v1","expected_diagnostics":["SRV110"],"expected_exit_codes":[],"fixture_ids":["SR-FIX-SRX-CONTEXT-v1","SR-FIX-SRX-QUANTIFIERS-v1"],"implementation_status":"partial","json_pointers":["/expression","/version"],"method":"automated_behavior","open_items":["Complete remaining SRX operators and integration with validation, configuration and profiles in the scheduled plan steps.","Structure/work policy and complete language conformance are not established by literal evaluation."],"oracle":{"kind":"behavior","requirement_contract":"SRX MUSS ausschließlich auf einem expliziten Auswertungskontext aus aktuellem Artefakt, effektiver Konfiguration, aktiven Profilen, berechneten Relationssichten und unveränderlichen Projektstatistiken arbeiten.","scope":"Literal/context foundation only. Other operators, effective profile resolution, budget policy and CLI integration remain pending."},"preconditions":["Explicit JSON-only caller projections and SRX 1.0 literal expression."],"primary_verification_id":"SR-VER-0022","required_environment":{"declared_minimum_python":"3.10","implementation":"cpython","measured_scope":"current-run-only"},"requirement_id":"SR-REQ-0287","resources":{"harness_suite_timeout":null,"harness_test_timeout":null,"owned_temporary_files":true},"specification_sha256":"e51dfdefef50b7f5dc389d8ad0da11bf009edb63d20645169369950868dc8b7d","steps":["Capture own immutable data; evaluate literal or reject invalid declarations without side effects.","Evaluate any/all/none in array order using lexical item binding, strict Boolean predicates and empty-array identities."],"test_case_format_version":1,"test_case_id":"SR-TC-0287","test_ids":["test_srx_context.SrxContextWorkTests.test_context_copies_each_root","test_srx_context.SrxContextWorkTests.test_external_item_context_is_rejected","test_srx_context.SrxContextWorkTests.test_foreign_root_is_rejected","test_srx_context_right.SrxContextRightTests.test_relation_callback_is_never_called","test_srx_context_right.SrxContextRightTests.test_context_is_unmodified_by_multiple_evaluations","test_srx_quantifiers.SrxQuantifierTests.test_item_cannot_be_supplied_in_public_context","test_srx_quantifiers.SrxQuantifierTests.test_all_explicit_roots_remain_available_in_predicate"]}
+{
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [
+    "SRV110"
+  ],
+  "expected_exit_codes": [],
+  "fixture_ids": [
+    "SR-FIX-SRX-CONTEXT-v1",
+    "SR-FIX-SRX-QUANTIFIERS-v1"
+  ],
+  "implementation_status": "partial",
+  "json_pointers": [
+    "/expression",
+    "/version"
+  ],
+  "method": "automated_behavior",
+  "open_items": [
+    "Complete remaining SRX operators and integration with validation, configuration and profiles in the scheduled plan steps.",
+    "Structure/work policy and complete language conformance are not established by literal evaluation."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "SRX MUSS ausschließlich auf einem expliziten Auswertungskontext aus aktuellem Artefakt, effektiver Konfiguration, aktiven Profilen, berechneten Relationssichten und unveränderlichen Projektstatistiken arbeiten.",
+    "scope": "Literal/context foundation only. Other operators, effective profile resolution, budget policy and CLI integration remain pending."
+  },
+  "preconditions": [
+    "Explicit JSON-only caller projections and SRX 1.0 literal expression."
+  ],
+  "primary_verification_id": "SR-VER-0022",
+  "required_environment": {
+    "declared_minimum_python": "3.10",
+    "implementation": "cpython",
+    "measured_scope": "current-run-only"
+  },
+  "requirement_id": "SR-REQ-0287",
+  "resources": {
+    "harness_suite_timeout": null,
+    "harness_test_timeout": null,
+    "owned_temporary_files": true
+  },
+  "specification_sha256": "9a2839994fe9c209dded3f7f6dba142912a51a209c7a21d298441bd4dacee2b4",
+  "steps": [
+    "Capture own immutable data; evaluate literal or reject invalid declarations without side effects.",
+    "Evaluate any/all/none in array order using lexical item binding, strict Boolean predicates and empty-array identities."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0287",
+  "test_ids": [
+    "test_srx_context.SrxContextWorkTests.test_context_copies_each_root",
+    "test_srx_context.SrxContextWorkTests.test_external_item_context_is_rejected",
+    "test_srx_context.SrxContextWorkTests.test_foreign_root_is_rejected",
+    "test_srx_context_right.SrxContextRightTests.test_relation_callback_is_never_called",
+    "test_srx_context_right.SrxContextRightTests.test_context_is_unmodified_by_multiple_evaluations",
+    "test_srx_quantifiers.SrxQuantifierTests.test_item_cannot_be_supplied_in_public_context",
+    "test_srx_quantifiers.SrxQuantifierTests.test_all_explicit_roots_remain_available_in_predicate"
+  ]
+}

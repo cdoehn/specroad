@@ -77,7 +77,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "e51dfdefef50b7f5dc389d8ad0da11bf009edb63d20645169369950868dc8b7d",
+  "specification_sha256": "9a2839994fe9c209dded3f7f6dba142912a51a209c7a21d298441bd4dacee2b4",
   "steps": [
     "Construct the fixed native specification closure and canonical basis from actual source bytes.",
     "Bind complete native plans to actual basis and reconstructed target; preserve unrelated project/control data.",

@@ -1,5 +1,8 @@
 # SpecRoad entwickeln
 
+Die geordneten Abnahmen für den manuellen Auftrag zu Testoptimierungen und
+Profiling stehen unter [Testoptimierungen und Profiling](docs/development/Test_Optimization_Profiling.md).
+
 Diese portablen Projektregeln ergänzen den bestätigten Implementierungsplan.
 Explizite Nutzerentscheidungen und die für den Arbeitsort geltenden AGENTS.md
 bleiben maßgeblich. Lokale Konfigurationen, Zugangsdaten und Sitzungskennungen
@@ -84,6 +87,11 @@ erweitert kleine native Testdaten auf passende Merge-/Release-Fälle und trennt
 die Vorbereitung reiner Eingabeprüfungen von Prüfungen lebender Quellen.
 
 ## Control und manuelle Vorbereitung
+
+Das [Test-Profiling](docs/development/Test_Profiling.md) bereitet ausdrücklich
+beauftragte Diagnoseläufe für alle Tests, die langsamsten Tests oder freie
+Testauswahlen vor. cProfile, strace und Ressourcenmessungen erhalten eine eigene
+SQLite-Datenbank; `status` und `export` starten keine Tests.
 
 Der versionierte [Test-Monitor](docs/development/Test_Monitor.md) verbindet
 mehrere Apply-Ziele, laufbezogene Testphasen und ihre getrennten Laufzeithistorien

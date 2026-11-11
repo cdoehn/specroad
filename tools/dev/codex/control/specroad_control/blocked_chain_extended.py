@@ -32,7 +32,7 @@ def push_source(result):
             or any(left[key] != right[key] for key in common)
             or left['force'] is not False or right['success'] is not True
             or right['local_product_changes'] is not False or right['new_commit_created'] is not False
-            or left['remote'] != 'origin' or left['ref'] != 'refs/heads/dev'
+            or left['remote'] != 'origin' or left['ref'] not in ('refs/heads/dev', 'refs/heads/dev2')
             or left['target_commit'] != result['binding']['base_commit']
             or right['remote_after'] != left['target_commit']
             or not re.fullmatch('[0-9a-f]{40}|[0-9a-f]{64}', left['remote_before'])

@@ -20,7 +20,8 @@ from .evidence import make_report
 from .identity import source_identity, platform_identity
 from .outcomes import ObservedExecution
 from .process_environment import test_environment
-from .runtime_history import policy, LOCAL, latest_snapshot
+from .runtime_history import latest_snapshot
+from .runtime_paths import policy, database_path
 from .runtime_store import journal_path
 from .selected_contract import new_report_directory, verify_observation
 
@@ -32,7 +33,7 @@ def write_json(path, value):
 
 def history_path(root):
     config = policy(root)
-    return journal_path(Path(root) / (config['database'] if config else LOCAL), root)
+    return database_path(root, config)
 
 
 def export_estimates(database, identities):

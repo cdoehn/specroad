@@ -1,1 +1,58 @@
-{"evidence_kind":"specroad-dev-pytest-v1","expected_diagnostics":[],"expected_exit_codes":[],"fixture_ids":["SR-FIX-LANGUAGE-REGISTRY-v1"],"implementation_status":"partial","json_pointers":[],"method":"automated_behavior","open_items":["Complete project-language policy and planned init/change workflows remain assigned to later steps. Release/complete platform evidence is not asserted."],"oracle":{"kind":"behavior","requirement_contract":"Der Core MUSS alle syntaktisch gültigen BCP-47-Kennzeichnungen gemäß der Registry-/Private-use-Policy verarbeiten können, ohne seine Inhaltsverarbeitung auf die Mindestsprachenliste zu beschränken.","scope":"Tag grammar and snapshot-relative registration are distinct. Frozen historical snapshot transport is checked independently from language permission, detection, and release approval."},"preconditions":["Use the explicitly hash-bound snapshot; no online or host-locale fallback."],"primary_verification_id":"SR-VER-0045","required_environment":{"declared_minimum_python":"3.10","implementation":"cpython","measured_scope":"current-run-only"},"requirement_id":"SR-REQ-0661","resources":{"harness_suite_timeout":null,"harness_test_timeout":null,"owned_temporary_files":true},"specification_sha256":"e51dfdefef50b7f5dc389d8ad0da11bf009edb63d20645169369950868dc8b7d","steps":["Run the referenced behavior cases with owned inputs and actual offline snapshot bytes."],"test_case_format_version":1,"test_case_id":"SR-TC-0661","test_ids":["test_language_tags.RegistryLookupTests.test_unsupported_language_is_retained_not_invalid","test_language_tags.RegistryLookupTests.test_private_suffix_does_not_hide_unknown_subtags","test_language_tags.RegistryLookupTests.test_no_extension_registration_claim","test_language_right.LanguageIntegrationTests.test_unknown_private_and_unspecified_remain_schema_valid","test_language_right.RegistryRobustnessTests.test_variant_prefix_advice_is_not_allowlist"]}
+{
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [],
+  "fixture_ids": [
+    "SR-FIX-LANGUAGE-REGISTRY-v1"
+  ],
+  "implementation_status": "partial",
+  "json_pointers": [],
+  "method": "automated_behavior",
+  "open_items": [
+    "Complete project-language policy and planned init/change workflows remain assigned to later steps. Release/complete platform evidence is not asserted."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Der Core MUSS alle syntaktisch gültigen BCP-47-Kennzeichnungen gemäß der Registry-/Private-use-Policy verarbeiten können, ohne seine Inhaltsverarbeitung auf die Mindestsprachenliste zu beschränken.",
+    "scope": "Tag grammar and snapshot-relative registration are distinct. Frozen historical snapshot transport is checked independently from language permission, detection, and release approval."
+  },
+  "preconditions": [
+    "Use the explicitly hash-bound snapshot; no online or host-locale fallback."
+  ],
+  "primary_verification_id": "SR-VER-0045",
+  "required_environment": {
+    "declared_minimum_python": "3.10",
+    "implementation": "cpython",
+    "measured_scope": "current-run-only"
+  },
+  "requirement_id": "SR-REQ-0661",
+  "resources": {
+    "harness_suite_timeout": null,
+    "harness_test_timeout": null,
+    "owned_temporary_files": true
+  },
+  "specification_sha256": "9a2839994fe9c209dded3f7f6dba142912a51a209c7a21d298441bd4dacee2b4",
+  "steps": [
+    "Run the referenced behavior cases with owned inputs and actual offline snapshot bytes."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0661",
+  "test_ids": [
+    "test_language_tags.RegistryLookupTests.test_unsupported_language_is_retained_not_invalid",
+    "test_language_tags.RegistryLookupTests.test_private_suffix_does_not_hide_unknown_subtags",
+    "test_language_tags.RegistryLookupTests.test_no_extension_registration_claim",
+    "test_language_right.LanguageIntegrationTests.test_unknown_private_and_unspecified_remain_schema_valid",
+    "test_language_right.RegistryRobustnessTests.test_variant_prefix_advice_is_not_allowlist",
+    "tests/test_language_registry_reuse.py::test_distinct_registry_bytes_never_share_a_parsed_value",
+    "tests/test_language_registry_reuse.py::test_equal_bytes_parse_once_but_return_independent_public_records",
+    "tests/test_language_registry_reuse.py::test_invalid_inputs_are_checked_again_and_never_become_a_cache_hit",
+    "tests/test_language_registry_reuse.py::test_warm_cache_does_not_replace_each_callers_binding_check[hash-registry_hash_mismatch]",
+    "tests/test_language_registry_reuse.py::test_warm_cache_does_not_replace_each_callers_binding_check[version-registry_version_mismatch]",
+    "tests/test_language_registry_reuse_right.py::test_concurrent_registry_clients_own_all_exported_record_objects",
+    "tests/test_language_registry_reuse_right.py::test_large_valid_registry_is_allowed_without_retention",
+    "tests/test_language_registry_reuse_right.py::test_registry_entry_limit_evicts_without_changing_results",
+    "tests/test_language_registry_reuse_right.py::test_reuse_keeps_strict_encoding_and_exact_bytes_type[\\xef\\xbb\\xbfFile-Date: 2020-01-01]",
+    "tests/test_language_registry_reuse_right.py::test_reuse_keeps_strict_encoding_and_exact_bytes_type[\\xff]",
+    "tests/test_language_registry_reuse_right.py::test_reuse_keeps_strict_encoding_and_exact_bytes_type[raw0]"
+  ]
+}

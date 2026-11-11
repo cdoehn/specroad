@@ -31,6 +31,16 @@ def _present(path, raw, *, value=None, domain='json-v1', pointer='', owner=None,
 
 def source_resource_rows(source):
     """Use native resource identities; keep every actual file and relation."""
+    rows, inventory, _ = _source_resource_details(source)
+    return rows, inventory
+
+
+def _source_resource_details(source):
+    """Share one qualified model's records with the immediate native caller.
+
+    This does not cache a model or replace the caller's live source check.
+    Returned values belong to this observation only.
+    """
     files, binding = source.files, source.binding
     keys = tuple(binding['baseline']['profile_keys']) if source.kind == 'baseline' else None
     model = owned_payload_model(files, source_label='merge-inventory:' + source.source_root,
@@ -92,4 +102,4 @@ def source_resource_rows(source):
             or model.manifest(model.artifacts, binding['scope_descriptor']).sha256
                != binding['model_root_sha256']):
         raise ModelError('merge_inventory_source_binding_mismatch')
-    return rows, inventory
+    return rows, inventory, tuple(records.values())

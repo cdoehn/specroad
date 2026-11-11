@@ -1,6 +1,7 @@
 """Select Result/Patch candidates by native-core-verified identity and binding."""
 from pathlib import Path
 import stat
+import time
 from .config import Config
 from .contracts import timestamp
 from .core import Core
@@ -8,13 +9,18 @@ from .errors import ControlError
 from .hints import hint, signature  # Maintain the public import used by clients.
 
 from .patch_source import BINDING, matches_source
+from .artifact_cache import ArtifactCache
+
+
 
 
 class Exchange:
-    def __init__(self, config: Config, core: Core):
+    def __init__(self, config: Config, core: Core, *, observe=None):
         self.config, self.core = config, core
         self.identity = (config.exchange.stat().st_dev, config.exchange.stat().st_ino)
-        self.cache = {}
+        self.artifacts = ArtifactCache()
+        self.cache = self.artifacts.facts
+        self.observe = observe or (lambda **values: None)
 
     def paths(self):
         directory = self.config.exchange
@@ -32,27 +38,52 @@ class Exchange:
                     yield path
 
     def candidates(self, kind: str, predicate):
-        for path in self.paths():
-            h = hint(path)
-            if h and h["kind"] == kind and h["manifest"].get("repo_id") == self.config.repo_id and predicate(h["manifest"]):
+        started = time.monotonic()
+        progress = dict(phase='discovering', kind=kind, visited=0, eligible=0,
+                        validated=0, cache_hits=0, current=None, elapsed_seconds=0.0)
+        def report(phase, current=None):
+            progress.update(phase=phase, current=current, elapsed_seconds=time.monotonic()-started)
+            self.observe(validation=dict(progress))
+        report('discovering')
+        try:
+            for path in self.paths():
+                progress['visited'] += 1
                 try:
                     sig = signature(path)
-                    key = (str(path), sig)
-                    data = self.cache.get(key)
+                    h = self.artifacts.hint(path, sig)
+                except (OSError, ValueError):
+                    continue
+                if progress['visited'] % 50 == 0:
+                    report('discovering')
+                if not (h and h['kind'] == kind and h['manifest'].get('repo_id') == self.config.repo_id
+                        and predicate(h['manifest'])):
+                    continue
+                progress['eligible'] += 1
+                try:
+                    sig = signature(path)
+                    data = self.artifacts.get(kind, path, sig)
                     if data is None:
+                        report('validating', path.name)
                         data = getattr(self.core, kind)(path)
                         if signature(path) != sig:
                             continue
-                        if len(self.cache) >= 256:
-                            self.cache.pop(next(iter(self.cache)))
-                        self.cache[key] = data
-                    if data.get("binding", {}).get("repo_id") == self.config.repo_id:
+                        self.artifacts.remember(kind, path, sig, data)
+                        progress['validated'] += 1
+                    else:
+                        progress['cache_hits'] += 1
+                    if signature(path) != sig:
+                        continue
+                    if data.get('binding', {}).get('repo_id') == self.config.repo_id:
                         yield data
                 except ControlError as exc:
-                    if exc.code not in ("core_rejected",):
+                    if exc.code != 'core_rejected':
                         raise
                 except (OSError, ValueError):
                     continue
+            report('complete')
+        except BaseException:
+            report('interrupted')
+            raise
 
     def source(self, source: dict) -> dict:
         # Paths may change through normal PatchHarbor archival, hashes may not.

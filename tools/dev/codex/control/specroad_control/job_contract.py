@@ -19,6 +19,8 @@ def scope(config: Config) -> str:
               config.session_id, str(config.codex_home.resolve())]
     if config.thread_cwd is not None:
         values.append(str(config.thread_cwd.resolve()))
+    if config.apply_repository is not None:
+        values.append({"apply_repository": str(config.apply_repository.resolve())})
     return hashlib.sha256(json.dumps(values).encode()).hexdigest()
 
 

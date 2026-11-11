@@ -61,7 +61,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "e51dfdefef50b7f5dc389d8ad0da11bf009edb63d20645169369950868dc8b7d",
+  "specification_sha256": "9a2839994fe9c209dded3f7f6dba142912a51a209c7a21d298441bd4dacee2b4",
   "steps": [
     "Load supported stored records, reject malformed local fields and compare original bytes without executing referenced operations.",
     "Prepare the four ordered authoring actions and reset changed open Proposals to draft with one physical/content revision.",

@@ -4,6 +4,7 @@ from dataclasses import dataclass
 import fcntl
 import json
 import os
+import re
 from pathlib import Path
 import stat
 import tempfile
@@ -32,6 +33,8 @@ class Paths:
     state: Path
     runtime: Path
     unit: Path
+    instance: str = "default"
+    root: Path | None = None
 
     @property
     def home(self):
@@ -42,8 +45,23 @@ class Paths:
         return self.home / "logs"
 
     @property
+    def data_root(self):
+        return self.root or self.home
+
+    @property
     def target_locks(self):
-        return self.state / "target-locks"
+        return (self.state / "target-locks" if self.root is None
+                else self.data_root / "state/target-locks")
+
+    @property
+    def ownership_locks(self):
+        # Independent of SPECROAD_CONTROL_HOME; all installations of this user
+        # must agree before acquiring a repository, thread or native Apply ID.
+        return outside(Path.home() / ".local/share/specroad/dev/codex/control-locks")
+
+    @property
+    def lock_roots(self):
+        return sorted({self.target_locks, self.ownership_locks})
 
     @classmethod
     def legacy(cls):
@@ -56,16 +74,24 @@ class Paths:
                    outside(cfg / "systemd/user/specroad-control.service"))
 
     @classmethod
-    def discover(cls, config: str | None = None):
+    def discover(cls, config: str | None = None, *, instance: str | None = None):
         home = Path.home()
         config_home = outside(Path(os.environ.get("XDG_CONFIG_HOME") or home / ".config"))
         data_home = outside(Path(os.environ.get("SPECROAD_CONTROL_HOME") or
                                  home / ".local/share/specroad/dev/codex/control"))
+        name = instance if instance is not None else os.environ.get("SPECROAD_CONTROL_INSTANCE", "default")
+        if not isinstance(name, str) or not re.fullmatch(r"[a-z][a-z0-9_-]{0,31}", name):
+            raise ControlError("invalid_instance", "Use a lowercase instance name of at most 32 characters.")
+        root = data_home
+        if name != "default":
+            data_home = outside(root / "instances" / name)
         config_path = outside(Path(config)) if config else data_home / "config/config.toml"
         if config_path.parent != data_home / "config":
             raise ControlError("config_outside_data_home", "Configuration must be under Control's data home/config.")
         paths = cls(config_path, data_home / "state", data_home / "run",
-                    outside(config_home / "systemd/user/specroad-control.service"))
+                    outside(config_home / "systemd/user" /
+                            ("specroad-control.service" if name == "default" else "specroad-control@" + name + ".service")),
+                    name, root)
         if len(os.fsencode(paths.socket)) >= 108:
             raise ControlError("socket_path_too_long", "The local control socket path is too long.")
         return paths

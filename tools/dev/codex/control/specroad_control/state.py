@@ -6,7 +6,10 @@ from .local import Paths, json_read
 
 
 def read_state(paths: Paths) -> dict | None:
-    previous = json_read(paths.state_file)
+    return validate_state(json_read(paths.state_file))
+
+
+def validate_state(previous):
     if previous is None:
         return None
     try:

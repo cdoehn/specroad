@@ -1,1 +1,60 @@
-{"evidence_kind":"specroad-dev-pytest-v1","expected_diagnostics":["SRV142"],"expected_exit_codes":[0,3],"fixture_ids":["SR-FIX-PROFILE-COMPOSITION-v1"],"implementation_status":"partial","json_pointers":["/profiles","/merge"],"method":"automated_behavior","open_items":["Full model-command gating, actual CLI selection and the project-level policy pipeline remain later consumers; current functions take explicit supplied inputs.","A current supported-platform CI run is required; no project approval or source authenticity is implied."],"oracle":{"kind":"behavior","requirement_contract":"Eine doppelte Regelidentität mit abweichender Version oder abweichendem Hash MUSS als Profilkonflikt gelten.","scope":"Ordered profile composition and conflicts over explicitly supplied resources; field effects only, no implicit project/CLI acquisition."},"preconditions":["Explicit exact Core key, available resource bytes and ordered project/CLI selections."],"primary_verification_id":"SR-VER-0029","required_environment":{"declared_minimum_python":"3.10","implementation":"cpython","measured_scope":"current-run-only"},"requirement_id":"SR-REQ-0423","resources":{"harness_suite_timeout":null,"harness_test_timeout":null,"owned_temporary_files":true},"specification_sha256":"e51dfdefef50b7f5dc389d8ad0da11bf009edb63d20645169369950868dc8b7d","steps":["Compose the selected chain and compare actual field/rule effects and canonical identities.","Supply deliberate conflicts; require a structured failure without any effective profile or success hash.","Compose explicit hard-limit, scalar-policy and typed language bindings; test conflicts, isolation and portable results."],"test_case_format_version":1,"test_case_id":"SR-TC-0423","test_ids":["test_profile_composition.ProfileCompositionWorkTests.test_identical_relation_rules_are_kept_once","test_profile_composition.ProfileCompositionWorkTests.test_lint_rules_keep_first_occurrence_order","test_profile_composition.ProfileCompositionWorkTests.test_rule_version_conflict_is_not_later_wins","test_profile_composition.ProfileCompositionWorkTests.test_rule_hash_conflict_is_not_later_wins","test_profile_composition_right.ProfileCompositionRightTests.test_cross_family_rule_collision_is_not_hidden","test_profile_composition_right.ProfileCompositionRightTests.test_conflicting_definition_cannot_be_hidden_by_override","test_profile_composition_right.ProfileCompositionRightTests.test_rule_binding_is_original_not_modified_effective_definition"]}
+{
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [
+    "SRV142"
+  ],
+  "expected_exit_codes": [
+    0,
+    3
+  ],
+  "fixture_ids": [
+    "SR-FIX-PROFILE-COMPOSITION-v1"
+  ],
+  "implementation_status": "partial",
+  "json_pointers": [
+    "/profiles",
+    "/merge"
+  ],
+  "method": "automated_behavior",
+  "open_items": [
+    "Full model-command gating, actual CLI selection and the project-level policy pipeline remain later consumers; current functions take explicit supplied inputs.",
+    "A current supported-platform CI run is required; no project approval or source authenticity is implied."
+  ],
+  "oracle": {
+    "kind": "behavior",
+    "requirement_contract": "Eine doppelte Regelidentität mit abweichender Version oder abweichendem Hash MUSS als Profilkonflikt gelten.",
+    "scope": "Ordered profile composition and conflicts over explicitly supplied resources; field effects only, no implicit project/CLI acquisition."
+  },
+  "preconditions": [
+    "Explicit exact Core key, available resource bytes and ordered project/CLI selections."
+  ],
+  "primary_verification_id": "SR-VER-0029",
+  "required_environment": {
+    "declared_minimum_python": "3.10",
+    "implementation": "cpython",
+    "measured_scope": "current-run-only"
+  },
+  "requirement_id": "SR-REQ-0423",
+  "resources": {
+    "harness_suite_timeout": null,
+    "harness_test_timeout": null,
+    "owned_temporary_files": true
+  },
+  "specification_sha256": "9a2839994fe9c209dded3f7f6dba142912a51a209c7a21d298441bd4dacee2b4",
+  "steps": [
+    "Compose the selected chain and compare actual field/rule effects and canonical identities.",
+    "Supply deliberate conflicts; require a structured failure without any effective profile or success hash.",
+    "Compose explicit hard-limit, scalar-policy and typed language bindings; test conflicts, isolation and portable results."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0423",
+  "test_ids": [
+    "test_profile_composition.ProfileCompositionWorkTests.test_identical_relation_rules_are_kept_once",
+    "test_profile_composition.ProfileCompositionWorkTests.test_lint_rules_keep_first_occurrence_order",
+    "test_profile_composition.ProfileCompositionWorkTests.test_rule_version_conflict_is_not_later_wins",
+    "test_profile_composition.ProfileCompositionWorkTests.test_rule_hash_conflict_is_not_later_wins",
+    "test_profile_composition_right.ProfileCompositionRightTests.test_cross_family_rule_collision_is_not_hidden",
+    "test_profile_composition_right.ProfileCompositionRightTests.test_conflicting_definition_cannot_be_hidden_by_override",
+    "test_profile_composition_right.ProfileCompositionRightTests.test_rule_binding_is_original_not_modified_effective_definition"
+  ]
+}

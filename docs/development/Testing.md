@@ -7,6 +7,31 @@ reine Collection und native Paketvalidierung sind erlaubt, aber kein
 Verhaltenstest-Erfolg. Die nachfolgenden historischen Abschnitte erklären
 ältere Werkzeuge und Nachweise und erteilen keine Dev-Testfreigabe.
 
+## Getrennte Entwicklungslinien und Laufzeithistorien
+
+Nutzerauftrag vom 8. November 2026: Jede unabhängige Entwicklungslinie besitzt
+ihren eigenen Exchange und ihre eigene dauerhafte Laufzeitdatenbank. Die
+Lesewerkzeuge der jeweiligen Dev-Linie und ihr Apply verwenden denselben
+Speicher; andere Linien übernehmen keine neuen Versuche aus diesem Speicher.
+Bestehende Historien und Seeds werden weder gelöscht noch als neue Messung
+umgedeutet. Die nummerierte Rotation und die Pflichtauswahl bleiben erhalten.
+
+Die Policy `database: "patchharbor-exchange"` löst das Ziel aus der lokalen
+`.patchharbor/config.json` des ausführenden Repositorys auf. Im dort explizit
+konfigurierten Exchange heißt die Datei `specroad-test-runtime-history.sqlite3`.
+Ein fehlendes, fehlerhaftes oder unsicheres Ziel einer registrierten Apply-Kopie
+ist ein Fehler; es gibt keinen Rückgriff auf den Exchange einer anderen Linie.
+Schreiber, Auswahlfilter und Export von CI-Laufzeiten verwenden dieselbe
+Pfadauflösung. Ein Wechsel während eines Laufs darf kein erfolgreiches Gate
+begründen. Absolute lokale Konfigurationen gehören nicht in Patch-Payloads.
+
+Eigenständige unregistrierte Test-/CI-Kopien ohne lokale Exchange-Konfiguration
+verwenden ihren eigenen `build/test-runtime-history.sqlite3`-Speicher. Damit
+benötigt die manuell gestartete CI keine Host-Registrierung. Die vorhandenen
+Policies für einen festen historischen Exchange oder den build-Speicher bleiben
+lesbar und behalten ihre ursprünglichen Pfade. Eine neue Policy verändert keine
+bereits laufende Ausführung und ist erst nach gebundenem Apply wirksam.
+
 ## Effiziente Testdaten und Vorbereitung
 
 Nutzerauftrag vom 7. November 2026: Diese Regeln gelten für neue Tests und die

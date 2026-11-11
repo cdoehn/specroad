@@ -15,24 +15,8 @@ from .identity import platform_identity
 from .runtime_baseline import load_baseline
 from .runtime_store import PHASES, journal_path
 
-POLICY = 'verification/test_runtime_policy.json'
-SHARED = '../exchange/specroad-test-runtime-history.sqlite3'
-LOCAL = 'build/test-runtime-history.sqlite3'
-
-
-def policy(root):
-    path = Path(root) / POLICY
-    if not os.path.lexists(path):
-        return None
-    if path.is_symlink() or not path.is_file():
-        raise ValueError('Unsafe runtime policy')
-    value = json.loads(path.read_bytes())
-    if (set(value) != {'format_version', 'selection', 'database'}
-            or type(value['format_version']) is not int or value['format_version'] != 1
-            or value['selection'] != 'latest_valid_fifth'
-            or value['database'] not in (LOCAL, SHARED)):
-        raise ValueError('Unknown runtime history policy')
-    return value
+from .runtime_paths import (POLICY, SHARED, LOCAL, EXCHANGE, configured_exchange_database,
+                            policy, database_path)
 
 
 def now():
@@ -64,7 +48,9 @@ class RuntimeHistory:
     def __init__(self, root, *, path=None):
         root = Path(root).resolve()
         config = policy(root)
-        self.path = journal_path(path or root / (config['database'] if config else LOCAL), root)
+        self.root = root
+        self.policy = config
+        self.path = journal_path(path, root) if path else database_path(root, config)
         self.path.parent.mkdir(parents=True, exist_ok=True)
         journal_path(self.path, root)
         self.db = None
@@ -187,6 +173,8 @@ class RuntimeHistory:
 
     def verify_run(self, run, pairs, outcomes):
         """A successful gate requires its own durable matching records, not old values."""
+        if policy(self.root) != self.policy:
+            raise ValueError('Runtime history destination changed during execution')
         current = self.path.lstat()
         if (current.st_nlink != 1 or not stat.S_ISREG(current.st_mode)
                 or (current.st_dev, current.st_ino) != self.file_identity):
