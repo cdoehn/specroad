@@ -13,6 +13,10 @@ from .model import configuration_value, put
 from .profiles import profile_data
 
 
+from contextvars import ContextVar
+_REVIEW_EXAMPLE = ContextVar('synthetic_review_example', default=None)
+
+
 def inspection_project(root, *, artifacts=None, extra_profiles=(), language_registry=None):
     root.mkdir(exist_ok=True)
     registry = bundled_language_registry() if language_registry is None else language_registry
@@ -88,6 +92,17 @@ def command_example_inputs(root, command):
     The Work fixture labels its synthetic build identity explicitly. No native
     model/recovery/checkpoint validator or command handler is replaced.
     """
+    if command.command_id == 'proposal.review':
+        from .proposal_decisions import ReviewCase
+        case = ReviewCase(root / 'review-project', minimum=1)
+        request = command.protocol.example.as_dict()
+        request['options']['--project'] = str(case.root)
+        token = _REVIEW_EXAMPLE.set(case)
+        try:
+            yield request
+        finally:
+            _REVIEW_EXAMPLE.reset(token)
+        return
     if command.command_id == 'merge.apply':
         from .merge_application import example_inputs
         yield example_inputs(root, command)
@@ -202,6 +217,11 @@ def _restore_example_inputs(root, command):
 
 def command_example_context(command):
     """An explicit synthetic host grant; request/project bytes never grant it."""
+    if command.command_id == 'proposal.review':
+        from specroad.cli.invocation_context import InvocationContextBuilder
+        case = _REVIEW_EXAMPLE.get()
+        assert case is not None
+        return InvocationContextBuilder(restore_services=case.services, publication_authority=case.authority)
     if command.command_id not in ('migrate.apply', 'merge.apply', 'proposal.review.start'):
         return None
     from specroad.cli.invocation_context import InvocationContextBuilder

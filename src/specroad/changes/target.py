@@ -124,7 +124,7 @@ def prepare_change_target(model, operations, *, change_plan_id, request_id, acto
     baseline = baseline_mode(operations)
     evidence = evidence_mode(operations)
     imported = import_mode(operations)
-    from ..proposals._review_control import review_start_mode, prepare_control_candidates
+    from ..proposals._control_dispatch import control_mode as review_start_mode, prepare_candidates as prepare_control_candidates
     if review_start_mode(operations):
         folded = prepare_control_candidates(model, operations,
             metadata_policy_version=metadata_policy_version, actor=actor,

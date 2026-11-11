@@ -79,13 +79,16 @@ class CapabilityScopeTests(unittest.TestCase):
         self.assertIn('proposal', semantic['command_groups'])
         proposals = [command for command in semantic['commands']
                      if command['command_id'].startswith('proposal.')]
-        self.assertEqual([command['command_id'] for command in proposals], ['proposal.check', 'proposal.review.start', 'proposal.validate'])
+        self.assertEqual([command['command_id'] for command in proposals], ['proposal.check', 'proposal.review', 'proposal.review.start', 'proposal.validate'])
         self.assertEqual(proposals[0]['command_class'], 'read_only')
         self.assertEqual(proposals[0]['result_schema'], 'proposal-check-v1')
         self.assertEqual(proposals[1]['command_class'], 'normative_write')
-        self.assertEqual(proposals[1]['result_schema'], 'proposal-review-start-v1')
-        self.assertEqual(proposals[2]['result_schema'], 'proposal-validation-v1')
-        # Review start is real; human decisions and Proposal apply remain unregistered.
+        self.assertEqual(proposals[1]['result_schema'], 'proposal-review-v1')
+        self.assertEqual(proposals[2]['command_class'], 'normative_write')
+        self.assertEqual(proposals[2]['result_schema'], 'proposal-review-start-v1')
+        self.assertEqual(proposals[3]['command_class'], 'read_only')
+        self.assertEqual(proposals[3]['result_schema'], 'proposal-validation-v1')
+        # Review start and human decisions are real; Proposal apply remains unregistered.
         without_proposals = CommandRegistry(tuple(command for command in builtin_registry().commands
                                                   if not command.command_id.startswith('proposal.')))
         self.assertNotIn('proposal', capabilities(without_proposals)['semantic']['command_groups'])

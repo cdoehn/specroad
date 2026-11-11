@@ -95,6 +95,9 @@ def validate_relation_review_record(value, pointer):
         _text(withdrawal['reason'], at + '/reason')
 
 def validate_proposal_control(value, pointer):
+    if ('review_start' in value and 'review_decision' in value
+            or not value['events'] and 'review_decision' not in value):
+        raise ChangePlanError('invalid_proposal_control_sequence', pointer=pointer)
     if _reference(value['target'], pointer + '/target').artifact_type != 'proposal':
         raise ChangePlanError('proposal_target_required', pointer=pointer + '/target')
     transitions = {'draft': {'validated', 'rejected', 'stale'}, 'validated': {'checked', 'rejected', 'stale'}, 'checked': {'in_review', 'rejected', 'stale'}, 'in_review': {'approved', 'rejected', 'stale'}, 'approved': {'applied', 'rejected', 'stale'}}

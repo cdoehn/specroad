@@ -25,10 +25,11 @@ def _gates(gates, policy, plan, model):
     required = set(policy.required_gate_ids)
     operations = plan.data['operations']
     if any(op['op'] == 'proposal_control' for op in operations):
-        from ..proposals._review_control import COMMAND, GATE
-        if policy.command_id != COMMAND:
+        from ..proposals._control_dispatch import adapter
+        command, gate, _, _ = adapter(operations)
+        if policy.command_id != command:
             raise TargetError('proposal_control_specialist_required')
-        required.add(GATE)
+        required.add(gate)
     if any(op['op'] == 'baseline_create' and op['record']['baseline_kind'] == 'release'
            for op in operations):
         from ..archive._release_gate import require_release_baseline_gate, RELEASE_GATE

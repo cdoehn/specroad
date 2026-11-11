@@ -97,8 +97,8 @@ def _require_uncompleted_request(source, request):
     from .idempotency import resolve_normative_request
     from .receipt_values import ReceiptError
     try:
-        if request.data['authoring_binding']['command_id'] == 'proposal review start':
-            from ..proposals._review_control import bind_control_authoring
+        if request.data['authoring_binding']['command_id'] in ('proposal review start', 'proposal review'):
+            from ..proposals._control_dispatch import bind_authoring as bind_control_authoring
             authoring = bind_control_authoring(request.plan)
         else:
             authoring = bind_plan_authoring(request.plan)

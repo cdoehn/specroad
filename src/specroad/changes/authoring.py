@@ -42,12 +42,17 @@ def prepare_authoring_request(*, command_id, actor, operations, request_id=None,
         raise AuthoringError('explicit_operation_sequence_required', pointer='/operations')
     owned = [ChangeOperation(op).data for op in operations]
     if any(op['op'] == 'proposal_control' for op in owned):
-        if command_id not in ('proposal review start', 'proposal apply'):
+        if command_id not in ('proposal review start', 'proposal review', 'proposal apply'):
             raise AuthoringError('proposal_control_specialist_required', exit_code=7)
         if command_id == 'proposal review start':
             from ..proposals._review_control import review_start_mode, reports
             review_start_mode(owned)
             reports(owned[0])
+        if command_id == 'proposal review':
+            from ..proposals._decision_control import review_mode
+            from ..proposals._decision_evidence import operation_proof
+            review_mode(owned)
+            operation_proof(owned[0])
     if any(op['op'] == 'merge_publish' for op in owned):
         raise AuthoringError('specialist_merge_workflow_required', exit_code=7)
     if any(op['op'] == 'schema_migrate' for op in owned):

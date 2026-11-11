@@ -37,7 +37,7 @@ def _result_bindings(value):
             final = results[operation["target"]]["artifact"]
             if (final["content_revision"] != operation["content_revision"]
                     or final["content_sha256"] != operation["content_sha256"]
-                    or final["proposal_status"] != operation["events"][-1]["to"]):
+                    or final["proposal_status"] != (operation["events"][-1]["to"] if operation["events"] else "in_review")):
                 raise ChangePlanError("proposal_control_result_mismatch", pointer=at, code="SRV146")
         if kind == "relation_add":
             identity = operation["relation"]["relation_id"]

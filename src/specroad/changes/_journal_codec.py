@@ -103,6 +103,8 @@ def validate_building_document(value, *, historical_proposal=False):
         if not historical_proposal and authoring.get('command_id') == 'proposal review start':
             # Rebuilding above checks the closed isolated native control evidence.
             command, route = 'proposal review start', 'proposal_management'
+        if not historical_proposal and authoring.get('command_id') == 'proposal review':
+            command, route = 'proposal review', 'human_review'
         if (authoring != expected or authoring['actor'] != value['actor']
                 or authoring['request_id'] != value['request_id']
                 or authoring['command_id'] != command

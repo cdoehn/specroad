@@ -74,6 +74,7 @@ def resolve_options(invocation: Invocation, *, cwd: Path | None = None,
     values, history = _compose_values(project, explicit, profile_layers, configuration_layer)
     origin = None
     if (invocation.command.preflight_for(invocation.options) in (PreflightProfile.ROOT_CREATION, PreflightProfile.INPUT_READ)
-            or invocation.command.command_id in ('query', 'diff', 'export', 'proposal.validate', 'proposal.check', 'proposal.review.start')):
+            or invocation.command.command_id in ('query', 'diff', 'export', 'proposal.validate', 'proposal.check',
+                                                 'proposal.review.start', 'proposal.review')):
         origin = Path.cwd() if cwd is None else Path(cwd)
     return ResolvedOptions(root, source, values, history, preflight or None, origin)

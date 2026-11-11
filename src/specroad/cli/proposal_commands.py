@@ -18,6 +18,11 @@ def _review_start(invocation):
     return review_start_command(invocation)
 
 
+def _review(invocation):
+    from ..proposals.review_decision import review_command
+    return review_command(invocation)
+
+
 def proposal_commands():
     return (CommandSpec('proposal.validate', ('proposal', 'validate'), CommandClass.READ_ONLY,
         PreflightProfile.PROJECT_READ, EffectScope.NONE, requires_project=True,
@@ -60,7 +65,7 @@ def proposal_commands():
                 handler_exit_codes=(0, 2, 3, 4, 5, 6, 7),
                 diagnostic_codes=('CORE_USAGE', 'CORE_MODEL', 'CORE_ENVIRONMENT', 'CORE_CONFLICT', 'CORE_SECURITY'),
                 lock_kind='writer', work=WorkContract('native_proposal_review_start',
-                    ('proposal_original', 'complete_native_basis', 'fresh_check', 'host_authority')))),)
+                    ('proposal_original', 'complete_native_basis', 'fresh_check', 'host_authority')))), _review_spec())
 
 
 def review_start_schema():
@@ -97,3 +102,42 @@ def validation_schema():
         'proposal_sha256': _nullable(sha), 'context_sha256': _nullable(sha),
         'failure_reason': _nullable(text), 'result_sha256': sha,
         **{key: {'const': False} for key in ('full_semantic_validation', 'approval_granted', 'write_authorized')}})
+
+
+def _review_spec():
+    return CommandSpec('proposal.review', ('proposal', 'review'), CommandClass.NORMATIVE_WRITE,
+        PreflightProfile.PROJECT_WRITE, EffectScope.NORMATIVE_TRANSACTION, requires_project=True,
+        configuration_schema_required=True, handler=_review,
+        positionals=(PositionalSpec('proposal'),), options=(
+            OptionSpec('--expected-revision', takes_value=True, required=True),
+            OptionSpec('--decision', takes_value=True, required=True, choices=('approved', 'rejected')),
+            OptionSpec('--comment', takes_value=True),
+            OptionSpec('--actor-type', takes_value=True, required=True, choices=('human', 'ai', 'ci')),
+            OptionSpec('--actor-id', takes_value=True, required=True),
+            OptionSpec('--request-id', takes_value=True), OptionSpec('--dry-run'),
+            OptionSpec('--project', takes_value=True),
+            OptionSpec('--format', takes_value=True, choices=('pretty', 'json')),
+            OptionSpec('--quiet'), OptionSpec('--no-color')),
+        protocol=CommandProtocol('proposal-review-v1', {'command_id': 'proposal.review',
+            'arguments': {'proposal': 'SR-PROP-' + '0' * 26}, 'options': {
+                '--expected-revision': '2', '--decision': 'approved', '--actor-type': 'human',
+                '--actor-id': 'reviewer'}}, handler_exit_codes=(0, 2, 3, 4, 5, 6, 7),
+            diagnostic_codes=('CORE_USAGE', 'CORE_MODEL', 'CORE_ENVIRONMENT', 'CORE_CONFLICT', 'CORE_SECURITY'),
+            lock_kind='writer', work=WorkContract('native_proposal_human_review',
+                ('proposal_original', 'complete_native_basis', 'human_decision', 'host_authority'))))
+
+
+def review_schema():
+    from .result_schemas import _object, _nullable
+    schema = review_start_schema()
+    fields = schema['properties']
+    fields['format_version'] = {'const': 'proposal-review-v1'}
+    fields['proposal_status'] = fields['maturity'] = {'enum': ['in_review', 'approved', 'rejected']}
+    fields['approval_granted'] = {'type': 'boolean'}
+    fields['decision'] = {'enum': ['approved', 'rejected']}
+    fields['comment'] = _nullable({'type': 'string'})
+    fields['review_validity'] = _object({'current_approval': {'type': 'boolean'},
+        'effective_human_approvals': {'type': 'integer', 'minimum': 0},
+        'minimum_human_approvals': {'type': 'integer', 'minimum': 1}})
+    schema['required'] = list(fields)
+    return schema

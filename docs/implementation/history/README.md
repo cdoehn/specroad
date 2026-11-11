@@ -382,3 +382,9 @@
 - [Bundle 667 — Control-Testkorrektur und vollständiger Rest](bundle-667-control-defaults-correction.md)
 
 - [Bundle 668 — Dauerhafter Stopp bei erschöpftem Korrekturbudget](bundle-668-correction-budget-stop.md)
+
+- [Bundle 669 — Proposal-Review-Schemas und Befehlsverträge korrigieren](bundle-669-proposal-review-correction.md)
+
+- [Bundle 670 — Exakten Commitumfang der Review-Korrektur herstellen](bundle-670-proposal-scope-correction.md)
+
+- [Bundle 671 — Review-Aufrufverzeichnis und Beispiel-Projektbindung](bundle-671-proposal-review-path-correction.md)
