@@ -44,4 +44,4 @@ Testgate vor dem Commit. Planfortschritte sind vorbereitete Zielwerte und gelten
 erst nach erfolgreicher Apply-Abnahme. Lokale Konfigurationen, Zugangsdaten und
 Sessionkennungen gehören nicht zur Payload.
 
-Vorbereiteter Stagezustand: `R`. Apply-Abnahme steht aus.
+Vorbereiteter Stagezustand: `C`. Apply-Abnahme steht aus.

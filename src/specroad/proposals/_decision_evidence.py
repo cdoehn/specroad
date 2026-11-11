@@ -14,19 +14,8 @@ VERSION = 'proposal-review-assessment-v1'
 
 
 def effective_actors(history):
-    effective = set()
-    for row in history['reviews']:
-        if not row['binding_current']:
-            continue
-        actor = row['actor_id']
-        if row['decision'] in ('rejected', 'withdrawn'):
-            effective.discard(actor)
-        elif row['human']:
-            if row['decision_current']:
-                effective.add(actor)
-            else:
-                effective.discard(actor)
-    return sorted(effective)
+    from .quorum import effective_actors as selected
+    return selected(history['reviews'])
 
 
 def assessment(snapshot, original, services):
@@ -111,19 +100,14 @@ def operation_proof(operation):
 def outcome(operation, actor):
     require(actor['actor_type'] == 'human', 'human_review_required', exit_code=7)
     raw, report = operation_proof(operation)
-    actors = set(report['effective_human_actor_ids'])
-    decision = operation['review_decision']['decision']
-    if decision == 'approved':
-        actors.add(actor['actor_id'])
-        status = 'approved' if len(actors) >= report['history']['minimum_human_approvals'] else 'in_review'
-    else:
-        actors.discard(actor['actor_id'])
-        status = 'rejected'
+    from .quorum import decision_outcome
+    status, count = decision_outcome(report['effective_human_actor_ids'], actor['actor_id'],
+        operation['review_decision']['decision'], report['history']['minimum_human_approvals'])
     events = [] if status == 'in_review' else [dict(
         from_='in_review', to=status, reason='human_review', result_sha256=sha256(raw).hexdigest())]
     for event in events:
         event['from'] = event.pop('from_')
-    return status, len(actors), events
+    return status, count, events
 
 
 def operation(original, raw, decision, comment, actor):

@@ -152,7 +152,7 @@ def assess_proposal(original, inputs, current_model, *, services=None):
     eligible = set()
     for revision, frame in by_revision.items():
         row = frame.data
-        approvals = {}
+        findings = []
         for item in inputs.reviews[:len(row.get('reviews', []))]:
             origin = item.context.original
             require(item.observed_revision == origin.data['revision']
@@ -162,12 +162,12 @@ def assess_proposal(original, inputs, current_model, *, services=None):
                 continue
             require(item.decision != 'approved' or origin.data['proposal_status'] == 'in_review',
                     'proposal_review_state_invalid')
-            key = item.reviewer.actor_id
-            verified = observations['reviews', item.index]
-            if item.decision in ('rejected', 'withdrawn'):
-                approvals.pop(key, None)
-            elif item.reviewer.actor_type == 'human':
-                approvals[key] = verified.decision_current
+            findings.append({'review_index': item.index, 'actor_id': item.reviewer.actor_id,
+                'decision': item.decision, 'binding_current': True,
+                'decision_current': observations['reviews', item.index].decision_current,
+                'human': item.reviewer.actor_type == 'human'})
+        from .quorum import approvals as select_approvals
+        approvals = select_approvals(findings)
         minimum = contexts[revision].minimum_approvals
         if row['proposal_status'] in ('approved', 'applied'):
             require(len(approvals) >= minimum, 'proposal_historical_quorum_not_met')
