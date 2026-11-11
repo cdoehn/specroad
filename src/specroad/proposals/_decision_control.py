@@ -119,6 +119,14 @@ def read_review_observations(original, context):
         and values[:index] == before.data.get('reviews', [])
         and original.data['control_history'] == [*before.data['control_history'], *expected_controls],
         'proposal_review_stored_rows_changed', exit_code=6)
+    candidate = before.data
+    candidate.update(proposal_status=status, maturity=status,
+        reviews=[*candidate.get('reviews', []), expected_review],
+        control_history=[*candidate['control_history'], *expected_controls])
+    expected = ProposalRevision(before, candidate, expected_revision=Revision(before.data['revision']),
+        actor=Actor(**row['reviewer']), planned_at=UtcTimestamp(row['reviewed_at'])).after
+    require(original.source_bytes == expected.source_bytes,
+            'proposal_review_original_metadata_changed', exit_code=6)
     review = ProposalReviewObservation(original, index, context, Actor(**row['reviewer']),
         UtcTimestamp(row['reviewed_at']), row['decision'], row['observed_revision'])
     controls = tuple(ProposalControlObservation(original, len(before.data['control_history']) + i,

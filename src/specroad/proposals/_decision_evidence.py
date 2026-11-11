@@ -56,6 +56,15 @@ def decode(encoded):
     require(raw == canonical_json_bytes(value), 'proposal_result_bytes_not_canonical')
     require(value['result_sha256'] == canonical_json_sha256(
         {k: v for k, v in value.items() if k != 'result_sha256'}), 'proposal_result_hash_mismatch')
+    from .values import ProposalBinding
+    require(type(value['binding']) is dict and set(value['binding']) == {
+        'proposal_id', 'content_revision', 'content_sha256', 'base_model_root_sha256',
+        'change_plan_sha256'}, 'proposal_review_assessment_schema_invalid')
+    ProposalBinding(**value['binding'])
+    require(all(type(value[key]) is str and len(value[key]) == 64
+        and all(c in '0123456789abcdef' for c in value[key])
+        for key in ('proposal_sha256', 'context_sha256', 'result_sha256')),
+        'proposal_review_assessment_schema_invalid')
     history, native = value['history'], value['native_check']
     require(type(history) is dict and set(history) == {'proposal_id', 'original_sha256',
         'observed_status', 'historical_valid', 'current_basis_matches', 'current_approval',
@@ -74,6 +83,8 @@ def decode(encoded):
             and row['decision'] in ('approved', 'rejected', 'withdrawn')
             and all(type(row[k]) is bool for k in ('binding_current', 'decision_current', 'human')),
             'proposal_review_assessment_invalid')
+    require([row['review_index'] for row in history['reviews']] == list(range(len(history['reviews']))),
+            'proposal_review_assessment_history_incomplete')
     require(value['effective_human_actor_ids'] == effective_actors(history)
         and len(value['effective_human_actor_ids']) == history['effective_human_approvals'],
         'proposal_review_quorum_mismatch')
