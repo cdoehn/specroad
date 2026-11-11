@@ -30,10 +30,12 @@ def document(row):
     fields = {'version', 'source', 'target', 'scope', 'config_sha256', 'history_sha256',
               'previous_contract', 'previous_output_kind', 'selected_contract', 'original_job', 'mode',
               'attempt_number', 'evidence', 'reason', 'clarification', 'artifacts'}
-    reset_budget = doc.get('version') == 2
-    if reset_budget:
+    strict_choice = doc.get('version') == 3
+    reset_budget = doc.get('version') == 2 or strict_choice and doc.get('reset_budget') is True
+    if doc.get('version') in (2, 3):
         fields |= {'reset_budget'}
-    if (set(doc) != fields or type(doc['version']) is not int or doc['version'] not in (1, 2)
+    if (set(doc) != fields or type(doc['version']) is not int or doc['version'] not in (1, 2, 3)
+            or strict_choice and type(doc.get('reset_budget')) is not bool
             or reset_budget and doc.get('reset_budget') is not True
             or hashed(doc) != row['proof_sha'] or row['state'] not in ('pending', 'completed')
             or row['output_kind'] not in (None, 'patch_ready', 'patch_ready_with_clarification', 'unknown')):
@@ -49,7 +51,7 @@ def document(row):
             or doc['clarification'] and previous['clarifications_remaining'] == 0 and not reset_budget
             or doc['previous_output_kind'] not in (None, 'unknown', 'patch_ready', 'spec_clarification', 'patch_ready_with_clarification')
             or selected != selection(previous, doc['previous_output_kind'], doc['clarification'], doc['mode'], reset_budget=reset_budget,
-                reset_limit=selected['clarification_limit'])):
+                reset_limit=selected['clarification_limit'], strict_choice=strict_choice)):
         raise ValueError('Receipt changed the preserved budget or selected authority')
     before = doc['original_job']
     if (set(before) != {'stage', 'error', 'patch_sha', 'updated'}

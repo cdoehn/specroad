@@ -21,7 +21,7 @@ def _canonical(value):
     return json.dumps(value, sort_keys=True, separators=(',', ':'), allow_nan=False)
 
 
-def read(ledger, source_sha):
+def _row(ledger, source_sha):
     try:
         if not ledger.db.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name=?", (TABLE,)).fetchone():
             return None
@@ -46,6 +46,42 @@ def read(ledger, source_sha):
         return value
     except (sqlite3.Error, ValueError, KeyError, TypeError):
         _fail()
+
+
+def read(ledger, source_sha):
+    value = _row(ledger, source_sha)
+    cursor, seen = value, set()
+    while cursor is not None:
+        identity = cursor['source_sha256']
+        if identity in seen:
+            _fail()
+        seen.add(identity)
+        parent = cursor['previous_sha256']
+        if parent is None:
+            if (cursor['reason'] != 'initial_checkpoint'
+                    or cursor['remaining'] != cursor['maximum']):
+                _fail()
+            break
+        old = _row(ledger, parent)
+        if old is None or cursor['reason'] == 'initial_checkpoint':
+            _fail()
+        if cursor['reason'] == 'verified_clean_apply':
+            job = ledger.db.execute('SELECT source FROM jobs WHERE sha=?', (identity,)).fetchone()
+            try:
+                complete = _complete(json.loads(job[0]))
+            except (ValueError, KeyError, TypeError):
+                _fail()
+            if not complete or cursor['active'] or cursor['remaining'] != cursor['maximum']:
+                _fail()
+        else:
+            debit = int(cursor['reason'] == 'repair_result')
+            if (cursor['maximum'] != old['maximum']
+                    or cursor['remaining'] != old['remaining'] - debit
+                    or debit and (not old['active'] or not cursor['active'])
+                    or old['active'] and not cursor['active']):
+                _fail()
+        cursor = old
+    return value
 
 
 def _insert(ledger, value):

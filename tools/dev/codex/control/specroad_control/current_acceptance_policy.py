@@ -10,7 +10,7 @@ RESET_CAPABILITY = {'format_version': 1, 'decision_contract_version': 4,
 
 
 
-def selection(previous, output_kind, clarification, mode, *, reset_budget=False, reset_limit=3):
+def selection(previous, output_kind, clarification, mode, *, reset_budget=False, reset_limit=3, strict_choice=False):
     if type(reset_budget) is not bool or (reset_budget and (clarification is not True or previous['version'] != 4)):
         raise ValueError('An explicit V4 operator reset requires clarification authority')
     # A published clarification may not yet have reached inherit_contract.
@@ -22,7 +22,7 @@ def selection(previous, output_kind, clarification, mode, *, reset_budget=False,
         raise ValueError('No unspent clarification budget')
     return new_contract(reset_limit if reset_budget else remaining, version=4,
         limit=reset_limit if reset_budget else previous['clarification_limit'],
-        allowed=clarification or mode == 'same_ready' and previous['clarification_allowed'])
+        allowed=clarification if strict_choice else clarification or mode == 'same_ready' and previous['clarification_allowed'])
 
 
 

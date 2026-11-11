@@ -80,20 +80,19 @@ def enqueue(paths, result, *, clarification=None, reason, reset_budget=False):
                 elif (requested['run_id'] in ledger.known_runs()
                         or ledger.db.execute('SELECT 1 FROM jobs WHERE sha=?', (requested['sha256'],)).fetchone()):
                     fail('The selected successor was already claimed.')
-                if mode == 'same_ready' and previous['clarification_allowed'] and not clarification:
-                    fail('The already granted ready request requires a separately bound disabled-selection receipt.')
-                doc = {'version': 2 if reset_budget else 1, 'source': old['source'], 'target': requested,
+                strict_choice = mode == 'same_ready' and previous['clarification_allowed'] and not clarification
+                doc = {'version': 3 if strict_choice else 2 if reset_budget else 1, 'source': old['source'], 'target': requested,
                     'scope': scope(config), 'config_sha256': sha256(read_private(paths.config)).hexdigest(),
                     'history_sha256': history_hash(ledger), 'previous_contract': previous,
                     'previous_output_kind': ledger.output_kind(),
                     'selected_contract': selection(previous, ledger.output_kind(), clarification, mode, reset_budget=reset_budget,
-                        reset_limit=requested['development_contract']['clarification_limit']),
+                        reset_limit=requested['development_contract']['clarification_limit'], strict_choice=strict_choice),
                     'original_job': {k: old[k] for k in ('stage', 'error', 'patch_sha', 'updated')},
                     'mode': mode, 'attempt_number': number, 'evidence': None,
                     'reason': reason.strip(), 'clarification': clarification,
                     'artifacts': checked(engine, requested, reset_budget=reset_budget)}
-                if reset_budget:
-                    doc['reset_budget'] = True
+                if strict_choice or reset_budget:
+                    doc['reset_budget'] = reset_budget
                 if mode == 'same_blocked':
                     doc['evidence'] = blocked_evidence(engine, doc)
                 # A known active user turn permits queuing, never adoption.
