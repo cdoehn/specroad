@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 147 · **Stand:** 11. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.82
+**Planrevision:** 148 · **Stand:** 12. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.83
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 Schritte und 900 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; die ausdrücklich genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wird nach 10.7.10 innerhalb von 15.l.R vorgezogen. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -38,10 +38,12 @@ Korrektur des exakten Commitumfangs: [Bundle 670](history/bundle-670-proposal-sc
 
 Korrektur der Review-Pfadübergabe und Beispielbindung: [Bundle 671](history/bundle-671-proposal-review-path-correction.md).
 
+Detailentscheidung für 18.j: [PROPOSAL-NEGATIVE-672](decisions/proposal-negative-672.md).
+
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 147
+plan_revision: 148
 implementation_plan_commits_total: 900
 implementation_plan_commits_completed: 756
 last_completed_plan_commit: 18.i.C

@@ -1,19 +1,19 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.82
+## Version 0.2.83
 
 | Feld | Wert |
 |---|---|
 | Dokument-ID | `SR-SPEC-0001` |
-| Dokumentversion | `0.2.82` |
+| Dokumentversion | `0.2.83` |
 | Zielrelease | `SpecRoad Single-Repository Workbench 0.2.0` |
 | Status | **Fachlich konsolidierte Arbeitsgrundlage; technische Reviewentscheidung gesondert dokumentiert, formale Baseline-Freigabe und Produktabnahme nicht durch dieses Dokument erklärt** |
 | Stand | 10. November 2026 |
 | Sprache | Deutsch; technische Feldnamen, Enum-Werte und CLI-Kommandos Englisch |
-| Fachliche Quelle | **Diese Repositoryfassung v0.2.82 ist die aktive fachliche Arbeitsgrundlage; eine entsprechende PDF wird hiermit nicht veröffentlicht.** |
+| Fachliche Quelle | **Diese Repositoryfassung v0.2.83 ist die aktive fachliche Arbeitsgrundlage; eine entsprechende PDF wird hiermit nicht veröffentlicht.** |
 | Bearbeitbare Satzquelle | Diese Datei; eine spätere PDF muss denselben versionierten Inhalt wiedergeben. |
-| Vorgängerversion | Repository-Spezifikation v0.2.79; historische Nachweise bleiben unverändert. |
-| Prüf- und Entscheidungsgrundlage | Ausdrücklicher Nutzerauftrag CONTROL-BUDGET-RESET-661 vom 10. November 2026; keine Produktfreigabe. |
-| Änderungsart | Ausdrücklicher protokollierter Betreiberreset des Control-Klärungsbudgets bei geprüfter aktueller Übernahme. |
+| Vorgängerversion | Repository-Spezifikation v0.2.82; historische Nachweise bleiben unverändert. |
+| Prüf- und Entscheidungsgrundlage | PROPOSAL-NEGATIVE-672, delegiert gemäß SPECROAD-DECISION-1; keine Produktfreigabe. |
+| Änderungsart | Additive negative Reviewentscheidungen und eigener Widerruf nach 10.3.5. |
 
 > **Verbindlicher Quellenwechsel:** Die ausdrückliche Nutzerentscheidung REFERENCE-SOURCE-551 wird als v0.2.50 umgesetzt. Der neue Quellvertrag ist Entwurfsarbeit vom 3. November 2026, kein Nachweis eines früher existierenden Formats. Bestehende 0.2-Verträge, Transport-, Sicherheits- und Reviewgrenzen bleiben erhalten.
 
@@ -2496,6 +2496,76 @@ Der geschlossene Schreibbericht `proposal-review-v1` enthält die Felder aus
 und das native Completionreceipt. `review_validity` nennt aktuelle Freigabe,
 wirksame menschliche Zustimmungen und das verlangte Quorum. Ein Bericht
 verleiht keine wiederverwendbare Schreibbefugnis.
+
+### 10.3.5 Ablehnung und eigener Widerruf — PROPOSAL-NEGATIVE-672
+
+Delegiert gemäß SPECROAD-DECISION-1 / 2.4.3.1. Dies vervollständigt die
+negativen Entscheidungen in 18.j; 18.k behält die öffentliche Apply-Transaktion.
+Die Kontrollmatrix aus 10.3 und die Original-/Herkunftspflichten aus 10.7.10
+bleiben unverändert. Ein gespeicherter Status ist keine aktuelle Freigabe.
+
+`proposal review` akzeptiert zusätzlich `--decision withdrawn`. Nur ein
+expliziter menschlicher Akteur darf seine eigene, für das aktuelle fünffache
+Inhaltstupel nachgewiesene Zustimmung zurücknehmen. Die letzte gebundene
+Entscheidung dieses Menschen muss approved sein; deren inzwischen entzogene
+aktuelle Wirksamkeit hindert eine wahrheitsgemäße Rücknahme nicht. Eine fremde
+Zustimmung, eine ältere Inhaltsbindung oder bereits zurückgenommene Zustimmung
+reicht nicht. Ein nichtleerer `--comment` begründet den Widerruf. Diese neue
+Eingabepflicht ändert den bisherigen optionalen Kommentar bei approved/rejected
+nicht. Nichtmenschliche Entscheidungen bleiben Code 7; fehlende eigene
+Zustimmung ebenfalls 7, fehlender Widerrufsgrund 2.
+
+Ablehnung ist bei draft, in_review und approved möglich und führt nach der
+bestehenden Kontrollmatrix zu rejected. Widerruf ist bei in_review oder
+approved möglich: in_review bleibt in_review ohne künstliches Statusereignis,
+approved wird rejected, auch wenn andere Zustimmungen übrig bleiben. Eine
+erneute Vorlage nach diesem Endstatus benötigt eine neue Proposal-ID. Andere
+Endzustände werden nicht verändert. Zustimmung bleibt ausschließlich in_review
+zulässig. Persistierte validated-/checked-Zwischenstände bleiben ungültig.
+Alle neuen Writes benötigen die vollständige gültige Originalhistorie und
+unveränderte aktuelle Basis; diese Funktion repariert keine ungültige Historie
+und schreibt ein stale Proposal nicht implizit um. Extern entzogene aktuelle
+Zustimmung in einem noch als approved gespeicherten Zustand bleibt deshalb
+ein blockierender Qualifikationsfehler, kein Ersatz für den expliziten Write.
+
+Die bestehende v1-Darstellung aus 10.3.4 bleibt unverändert lesbar und wird
+weiter für neue approved/rejected-Entscheidungen in_review verwendet. Für
+withdrawn sowie Ablehnung außerhalb in_review wird der additive geschlossene
+Vertrag v2 verwendet: `proposal-review-assessment-v2`,
+`proposal-review-decision-v2` und die gespeicherte Zeile `proposal-review-v2`.
+Ihre Feldmengen, Hashdomänen, kanonischen JSON-/Base64-Bytes und Originalbezüge
+sind exakt die von v1. Die v2-Operation erlaubt nur rejected/withdrawn;
+der Bericht beobachtet draft, in_review oder approved. Sein current_approval
+muss mit Status, aktuellem Quorum und tatsächlicher Basisprüfung übereinstimmen.
+Versionen dürfen nicht gemischt werden. Die Originalzeile muss exakt durch
+den nativen Reducer aus dem gebundenen vorherigen Original reproduzierbar sein.
+Der Hash authentifiziert weder Mensch noch Herkunft; der installierte Host
+prüft weiterhin die wirklichen Originale und Entscheidungen frisch.
+
+Eine echte negative Entscheidung hängt genau eine Reviewzeile an. Ein
+Statuswechsel hängt genau eine proposal-control-v1-Zeile an, mit demselben
+Bericht und Grund human_review für Ablehnung bzw. human_withdrawal für
+Widerruf. Vorheriger Status, beobachtete Revision, Actor und Zeit sind exakt
+gebunden. Inhalt, Inhaltsrevision/-hash, Basis und Plan bleiben byteinhaltlich
+unverändert; die physische Revision steigt genau einmal. Frühere Reviews und
+Kontrollbelege bleiben vollständig erhalten. Negative Entscheidungen erteilen
+keine Freigabe; die vorhandene Resultdarstellung proposal-review-v1 ergänzt
+nur den Entscheidungswert withdrawn.
+
+Der bestehende native Writer mit exklusivem Lock, aktueller PublicationAuthority,
+Journal und Receipt wird wiederverwendet. Dry-run prüft ohne Publikation;
+Retry derselben Request-ID und vollständigen Entscheidungsbindung liefert
+das bestätigte historische Ergebnis ohne zweite Zeile. Abweichung ist Konflikt.
+Fehler vor Publikation erhalten die Originaldateien; spätere I/O-Fehler behalten
+ihre nativen Recoverybelege. Generisches change apply darf diese Fachroute
+nicht freischalten. Keine Git-Aktion oder Ausführung von Projektcode entsteht.
+
+Für die heutige Qualifikation zählen ausschließlich aktuell wirksame
+menschliche Zustimmungen zur aktuellen Inhaltsbindung, pro actor_id höchstens
+einmal, in ursprünglicher Historienreihenfolge ausgewertet. Späteres Authoring
+entwertet frühere Bindungen ohne Historienlöschung. Stale Basis, fehlende
+Herkunft oder Freigabeentzug sperren aktuelle approved-Qualifikation auch bei
+unverändertem sichtbarem Status. Das ist keine vorgezogene 18.k-Publikation.
 
 ### 10.4 Spezial-Lifecycle-Vertrag
 
@@ -5983,7 +6053,7 @@ Schreibende Befehle dieser Gruppe sind `normative_write`, unterstützen `--dry-r
 | Validate | `proposal validate <PROP>` | Read-only Proposal-/Basisprüfung; kein persistierter Statuswechsel. |
 | Check | `proposal check <PROP>` | Read-only vollständiger isolierter Check; keine fachliche Freigabe. |
 | Review starten | `proposal review start <PROP> --expected-revision <N>` | Erforderliche Prüfungen vollständig ausführen und erfolgreiche Kontrollfolge nach 10.3 atomar bis `in_review` schreiben. Inhalt bleibt unverändert. |
-| Entscheiden | `proposal review <PROP> --expected-revision <N> --decision approved\|rejected` | Entscheidung mit Inhaltsbindung speichern; `approved` zählt nur von `human`. `in_review` ist Voraussetzung einer Freigabe. Ablehnung/Widerruf folgt 10.3. |
+| Entscheiden | `proposal review <PROP> --expected-revision <N> --decision approved\|rejected\|withdrawn` | Entscheidung mit Inhaltsbindung speichern; `approved` zählt nur von `human`. `in_review` ist Voraussetzung einer Freigabe. Ablehnung/Widerruf folgt 10.3. |
 | Apply | `proposal apply <PROP> --expected-revision <N>` | Aktuelle Inhaltsfreigabe, erwartete Basis und Plan prüfen; Zielmodell, Proposal-Endstatus und Receipt gemeinsam veröffentlichen. |
 
 `--operation -` liest stdin. Ohne ausdrücklichen stdin-Marker wartet kein Befehl auf stdin. Eine fehlende Pflichtoption ist Code 2, ungültiges JSON/Schema Code 3, stale Revision/Basis Code 6, unzulässiger Actor Code 7 und tatsächlicher I/O-Fehler Code 5. Ein noch nicht vollständiger vorbereitender Check liefert Code 8 und verändert das Proposal noch nicht.
