@@ -1,27 +1,22 @@
 """Public Proposal Apply: exact inner plan through the shared native writer."""
 from ..authoring._inspection_snapshot import InspectionSnapshot
 from ..changes import (PublicationAuthority, TargetPolicy, prepare_change_target,
-    prepare_authoring_request, project_lock, read_transaction_completion, resolve_normative_request)
+    prepare_authoring_request, project_lock)
 from ..changes._journal_codec import _transaction
-from ..changes._lock_files import LockFiles
-from ..changes._publication_observation import _root
-from ..changes.receipt_read import _CompletionProof, _read_confirmed_request
 from ..changes.target_model import _default_scope
 from ..model.audit_values import UtcTimestamp
-from ..model.canonical import canonical_json_bytes
 from ..recovery.services import native_services
 from ..storage.project import ProjectSource
-from ..validation import ModelDocument
-from ._apply_control import (COMMAND, GATE, assessment, operation, operation_proof,
+from ._apply_control import (COMMAND, GATE, assessment, operation,
                             prepare_apply_candidates)
 from ._apply_checks import gates as apply_gates
 from ._check_report import _initial, _now
 from ._review_transaction import _publish
 from ._validation_input import ProposalInput
-from .context import ProposalContext
 from .project_validation import _preflight
-from .publication import ProposalPublication, verify_proposal_publication
-from .values import ProposalOriginal, SPECIFICATION_SCOPE, require
+from .values import ProposalOriginal, require
+from ._apply_result import _result
+from ._apply_transaction import _replay, _verify_completion
 
 POLICY = TargetPolicy(COMMAND, '1', (GATE,))
 
@@ -36,73 +31,6 @@ def _failure_reason(error):
         if reason is None and isinstance(preflight, Mapping):
             reason = preflight.get('reason')
     return reason if type(reason) is str and reason else 'proposal_apply_failed'
-
-
-def _result(operations, completion, audit, *, dry_run=False, replayed=False):
-    from ..changes.values import ChangeOperation
-    from ..cli.result_schemas import validate_result_document
-    control = operations[-1]
-    _, proof = operation_proof(control)
-    created = set()
-    affected = set()
-    for op in operations:
-        ids = ChangeOperation(op).result_ids
-        affected.update(ids)
-        if op['op'] in ('create', 'evidence_record', 'relation_review_record'):
-            field = {'create': 'artifact', 'evidence_record': 'evidence', 'relation_review_record': 'record'}[op['op']]
-            created.add(op[field]['id'])
-    audit.update(proposal_id=control['target'], base={'scope_descriptor': SPECIFICATION_SCOPE, 'model_root_sha256': control['base_model_root_sha256']},
-        ended_at=_now(), outcome='dry_run' if dry_run else 'replayed' if replayed else 'committed',
-        created_ids=sorted(created), changed_ids=sorted(affected - created), removed_ids=[])
-    value = dict(format_version='proposal-apply-v1', proposal_id=control['target'],
-        revision=control['expected_revision'] + 1, content_revision=control['content_revision'],
-        content_sha256=control['content_sha256'], base_model_root_sha256=control['base_model_root_sha256'],
-        change_plan_sha256=control['change_plan_sha256'], proposal_status='applied', maturity='applied',
-        dry_run=dry_run, replayed=replayed, project_writes_performed=not dry_run and not replayed,
-        approval_granted=False, write_authorized=False,
-        completion=None if completion is None else completion.data, audit=audit)
-    validate_result_document('proposal-apply-v1', value)
-    return value
-
-
-def _replay(source, proposal_id, expected_revision, actor, request_id, audit):
-    if request_id is None:
-        return None
-    receipt = _read_confirmed_request(source, request_id)
-    if receipt is None:
-        return None
-    with LockFiles(source.boundary.root) as files:
-        proof = _CompletionProof(files, source, receipt.data['transaction_id'])
-        value = proof.journal.data
-        require(value['receipts']['request'] == {'path': receipt.path, 'sha256': receipt.sha256},
-                'proposal_request_receipt_changed', exit_code=6)
-        binding = value['authoring_binding']; operations = binding['operations']
-        require(binding['command_id'] == 'proposal apply' and bool(operations)
-            and operations[-1]['op'] == 'proposal_control'
-            and operations[-1]['target'] == proposal_id
-            and operations[-1]['expected_revision'] == expected_revision and binding['actor'] == actor,
-            'proposal_request_conflict', exit_code=6)
-        operation_proof(operations[-1])
-        request = prepare_authoring_request(command_id='proposal apply', actor=actor,
-            operations=operations, request_id=request_id)
-        resolution = resolve_normative_request(source, request).data
-        require(resolution['action'] == 'replay' and resolution['receipt'] == {
-            'path': receipt.path, 'sha256': receipt.sha256}, 'proposal_request_conflict', exit_code=6)
-        proof.check()
-        completion = read_transaction_completion(source, value['transaction_id'])
-        proof.check()
-        return _result(operations, completion, audit, replayed=True)
-
-
-def _verify_completion(transaction, plan, before, target, original, after):
-    source = _root(target)
-    with LockFiles(source.boundary.root) as files:
-        proof = _CompletionProof(files, source, transaction)
-        paths = [*proof.receipt_paths, proof.archive_path]
-        receipts = tuple(ModelDocument(path, proof.read(path)) for path in paths)
-        publication = ProposalPublication(plan, before, target, receipts)
-        verify_proposal_publication(publication, original, after, ProposalContext(after, before))
-        proof.check()
 
 
 def apply_project(root, operand, *, expected_revision, actor, planned_at, change_plan_id,
