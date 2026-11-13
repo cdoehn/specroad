@@ -41,4 +41,4 @@ Dev führt nur Syntax-, Collection-, Katalog-, Stage- und native Paketprüfung a
 keine Testkörper, Fixtures, Test-Unterprozesse, Apply-, CI- oder Dienststarts.
 18.k bleibt der nächste eigenständige Planschritt nach erfolgreichem 18.j.C.
 
-Vorbereiteter Zustand: `18.j.R`.
+Vorbereiteter Zustand: `18.j.C`.

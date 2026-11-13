@@ -9,15 +9,10 @@ from .context import ProposalContext
 from .history import assess_proposal, native_check
 from ._review_checks import _initial_inputs
 from .values import require
+from .quorum import decision_state
 
 VERSION = 'proposal-review-assessment-v1'
 NEGATIVE_VERSION = 'proposal-review-assessment-v2'
-
-
-def decision_state(status, decision):
-    allowed = ('in_review',) if decision == 'approved' else (
-        ('in_review', 'approved') if decision == 'withdrawn' else ('draft', 'in_review', 'approved'))
-    require(status in allowed, 'proposal_review_state_invalid')
 
 
 def assessment_version(original, decision):
@@ -132,18 +127,10 @@ def operation_proof(operation):
 def outcome(operation, actor):
     require(actor['actor_type'] == 'human', 'human_review_required', exit_code=7)
     raw, report = operation_proof(operation)
-    from .quorum import decision_outcome, approvals
+    from .quorum import review_outcome
     decision = operation['review_decision']['decision']
     before = report['history']['observed_status']
-    if decision == 'withdrawn':
-        require(actor['actor_id'] in approvals(report['history']['reviews']),
-                'proposal_own_approval_required', exit_code=7)
-        remaining = set(report['effective_human_actor_ids']) - {actor['actor_id']}
-        status = 'rejected' if before == 'approved' else 'in_review'
-        count = len(remaining)
-    else:
-        status, count = decision_outcome(report['effective_human_actor_ids'], actor['actor_id'],
-            decision, report['history']['minimum_human_approvals'])
+    status, count = review_outcome(report['history'], actor['actor_id'], decision)
     events = [] if status == before else [dict(
         from_=before, to=status, reason='human_withdrawal' if decision == 'withdrawn' else 'human_review',
         result_sha256=sha256(raw).hexdigest())]
