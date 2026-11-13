@@ -65,7 +65,7 @@ def proposal_commands():
                 handler_exit_codes=(0, 2, 3, 4, 5, 6, 7),
                 diagnostic_codes=('CORE_USAGE', 'CORE_MODEL', 'CORE_ENVIRONMENT', 'CORE_CONFLICT', 'CORE_SECURITY'),
                 lock_kind='writer', work=WorkContract('native_proposal_review_start',
-                    ('proposal_original', 'complete_native_basis', 'fresh_check', 'host_authority')))), _review_spec())
+                    ('proposal_original', 'complete_native_basis', 'fresh_check', 'host_authority')))), _review_spec(), _apply_spec())
 
 
 def review_start_schema():
@@ -141,3 +141,29 @@ def review_schema():
         'minimum_human_approvals': {'type': 'integer', 'minimum': 1}})
     schema['required'] = list(fields)
     return schema
+
+
+def _apply(invocation):
+    from ..proposals.apply import apply_command
+    return apply_command(invocation)
+
+
+def _apply_spec():
+    return CommandSpec('proposal.apply', ('proposal', 'apply'), CommandClass.NORMATIVE_WRITE,
+        PreflightProfile.PROJECT_WRITE, EffectScope.NORMATIVE_TRANSACTION, requires_project=True,
+        configuration_schema_required=True, handler=_apply,
+        positionals=(PositionalSpec('proposal'),), options=(
+            OptionSpec('--expected-revision', takes_value=True, required=True),
+            OptionSpec('--actor-type', takes_value=True, required=True, choices=('human', 'ai', 'ci')),
+            OptionSpec('--actor-id', takes_value=True, required=True),
+            OptionSpec('--request-id', takes_value=True), OptionSpec('--dry-run'),
+            OptionSpec('--project', takes_value=True),
+            OptionSpec('--format', takes_value=True, choices=('pretty', 'json')),
+            OptionSpec('--quiet'), OptionSpec('--no-color')),
+        protocol=CommandProtocol('proposal-apply-v1', {'command_id': 'proposal.apply',
+            'arguments': {'proposal': 'SR-PROP-' + '0' * 26}, 'options': {
+                '--expected-revision': '3', '--actor-type': 'human', '--actor-id': 'publisher'}},
+            handler_exit_codes=(0, 2, 3, 4, 5, 6, 7),
+            diagnostic_codes=('CORE_USAGE', 'CORE_MODEL', 'CORE_ENVIRONMENT', 'CORE_CONFLICT', 'CORE_SECURITY'),
+            lock_kind='writer', work=WorkContract('native_approved_proposal_apply',
+                ('proposal_original', 'complete_native_basis', 'current_human_reviews', 'host_authority'))))

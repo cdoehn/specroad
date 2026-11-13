@@ -5,7 +5,7 @@ callbacks or attribute names supplied by a profile document.
 """
 import json
 from types import MappingProxyType
-from ..model.artifact_schemas import MATURITIES
+from ..model.artifact_schemas import ALL_MATURITIES, artifact_maturities
 from ..model.canonical import canonical_json_bytes, canonical_json_sha256
 from .composition_values import _error
 
@@ -33,8 +33,10 @@ SEVERITY_RANK = {"info": 0, "warning": 1, "error": 2}
 
 def _cells(entry):
     for kind in sorted(entry["artifact_types"]):
-        for maturity in sorted(entry["maturities"] or MATURITIES):
-            yield kind, maturity
+        choices = artifact_maturities(kind)
+        for maturity in sorted(entry["maturities"] or choices):
+            if maturity in choices:
+                yield kind, maturity
 
 
 def _field_rows(values):
@@ -126,7 +128,7 @@ class _MergeProjection:
         # than its global code override, which has already been applied.
         for entry in entries:
             for kind in entry["relation_types"]:
-                for maturity in entry["maturities"] or MATURITIES:
+                for maturity in entry["maturities"] or ALL_MATURITIES:
                     self.review_severities[(kind, maturity, entry["status"])] = entry["severity"]
 
     def finish(self):

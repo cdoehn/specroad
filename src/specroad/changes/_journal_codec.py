@@ -105,6 +105,12 @@ def validate_building_document(value, *, historical_proposal=False):
             command, route = 'proposal review start', 'proposal_management'
         if not historical_proposal and authoring.get('command_id') == 'proposal review':
             command, route = 'proposal review', 'human_review'
+        if not historical_proposal and authoring.get('command_id') == 'proposal apply':
+            from ..proposals._apply_control import apply_mode, operation_proof
+            if not apply_mode(authoring['operations']):
+                raise JournalError('proposal_apply_evidence_required')
+            operation_proof(authoring['operations'][-1])
+            command, route = 'proposal apply', 'approved_proposal_apply'
         if (authoring != expected or authoring['actor'] != value['actor']
                 or authoring['request_id'] != value['request_id']
                 or authoring['command_id'] != command

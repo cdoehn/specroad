@@ -92,9 +92,11 @@ def command_example_inputs(root, command):
     The Work fixture labels its synthetic build identity explicitly. No native
     model/recovery/checkpoint validator or command handler is replaced.
     """
-    if command.command_id == 'proposal.review':
+    if command.command_id in ('proposal.review', 'proposal.apply'):
         from .proposal_decisions import ReviewCase
-        case = ReviewCase(root / 'review-project', minimum=1)
+        from .proposal_apply import ApplyCase
+        case = (ApplyCase(root / 'apply-project') if command.command_id == 'proposal.apply'
+                else ReviewCase(root / 'review-project', minimum=1))
         request = command.protocol.example.as_dict()
         request['options']['--project'] = str(case.root)
         token = _REVIEW_EXAMPLE.set(case)
@@ -217,7 +219,7 @@ def _restore_example_inputs(root, command):
 
 def command_example_context(command):
     """An explicit synthetic host grant; request/project bytes never grant it."""
-    if command.command_id == 'proposal.review':
+    if command.command_id in ('proposal.review', 'proposal.apply'):
         from specroad.cli.invocation_context import InvocationContextBuilder
         case = _REVIEW_EXAMPLE.get()
         assert case is not None

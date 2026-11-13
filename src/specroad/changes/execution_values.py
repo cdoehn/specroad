@@ -91,7 +91,7 @@ class PublicationRequest:
     @classmethod
     def _create(cls, assessment, model):
         from .authoring import require_direct_authoring
-        if assessment.data['binding']['command']['command_id'] in ('proposal.review.start', 'proposal.review'):
+        if assessment.data['binding']['command']['command_id'] in ('proposal.review.start', 'proposal.review', 'proposal.apply'):
             from ..proposals._control_dispatch import adapter
             command, GATE, _, bind_control_authoring = adapter(assessment.plan.data['operations'])
             if command != assessment.data['binding']['command']['command_id']:

@@ -41,8 +41,13 @@ class RecordContract:
 
 def _make_contract(kind: str) -> RecordContract:
     field, states = SPECIAL_STATES.get(kind, (None, {}))
+    pairs = tuple(states.items())
+    if kind == "proposal":
+        # Native Apply writes applied/applied (10.3.6). Keep the earlier
+        # applied/approved representation readable as passive data only.
+        pairs += (("applied", "applied"),)
     return RecordContract(kind, "urn:specroad:schema:" + SCHEMA_VERSION + ":artifact-record:" + kind,
-                          VALIDATION_SCOPE, field, tuple(states.items()))
+                          VALIDATION_SCOPE, field, pairs)
 
 
 _CONTRACTS = MappingProxyType({kind: _make_contract(kind) for kind in RECORD_TYPES})

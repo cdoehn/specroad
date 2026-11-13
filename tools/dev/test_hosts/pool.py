@@ -26,6 +26,20 @@ def proxy_gateway(identifier, transport, executable, work):
             + '//chdir=' + work + '//execmodel=thread')
 
 
+def run_forecasts(selected, workers, measured, snapshot):
+    """Project existing measurements onto this run; never alter history or selection."""
+    identities = set(selected.values())
+    hosts = {row['host'] for row in workers.values()}
+    current = {key: value for key, value in measured.items()
+               if key.rpartition('\n')[0] in identities
+               and key.rpartition('\n')[2] in hosts}
+    baseline = {row['test_id']: row['duration_ns'] / 1e9
+                for row in (snapshot or {}).get('tests', [])
+                if row['test_id'] in identities and row.get('duration_ns') is not None
+                and row.get('valid', True)}
+    return current, baseline
+
+
 def prepare_pool(root, outdir, config, selected, snapshot, worker_limit):
     hosts = load(config)
     if any(h.ssh is not None for h in hosts) and not shutil.which('rsync'):
@@ -85,11 +99,10 @@ print(json.dumps(True))
             workers[worker] = dict(host=host.name, hostname=observed['hostname'], account=observed['account'], root=work,
                 environment_sha256=digest(expected), resources=resources, speed=host.speed,
                 spec=spec, budget=min(cpus, host.workers), remote=host.ssh is not None)
+    measured, baseline = run_forecasts(selected, workers, estimates(root, digest(expected)), snapshot)
     profile = dict(format_version=1, source_sha256=source, snapshot_sha256=fingerprint(manifest),
                    environment=expected, workers=workers, proxies=proxies, selected=selected,
-                   estimates=estimates(root, digest(expected)),
-                   baseline={r['test_id']: r['duration_ns'] / 1e9 for r in (snapshot or {}).get('tests', [])
-                             if r.get('duration_ns') is not None and r.get('valid', True)})
+                   estimates=measured, baseline=baseline)
     if source_identity(root) != source or inventory(root) != manifest:
         raise ValueError('Source changed during remote preparation')
     path = outdir / 'host-run.json'

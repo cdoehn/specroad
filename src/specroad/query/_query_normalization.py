@@ -3,7 +3,7 @@ import unicodedata
 
 from ..graph._scope_selector_contract import _query
 from ..graph.relation_types import CORE_RELATION_TYPES
-from ..model.artifact_schemas import MATURITIES
+from ..model.artifact_schemas import ALL_MATURITIES
 from ..model.artifact_types import artifact_types
 from ..model.canonical import canonical_json_bytes, canonical_json_sha256
 from ..model.domain_fields import IMPLEMENTATION_STATUSES, VERIFICATION_PLAN_STATUSES
@@ -68,7 +68,7 @@ def normalize_query(*, filters=None, srx_filters=(), select=(), sort=(),
     canonical_json_bytes(value)
     _query(value)
     vocabularies = {'type': tuple(item.artifact_type for item in artifact_types()),
-        'maturity': MATURITIES, 'implementation_status': IMPLEMENTATION_STATUSES,
+        'maturity': ALL_MATURITIES, 'implementation_status': IMPLEMENTATION_STATUSES,
         'verification_plan_status': VERIFICATION_PLAN_STATUSES,
         'has_relation': (*CORE_RELATION_TYPES, 'superseded_by'),
         'missing_relation': (*CORE_RELATION_TYPES, 'superseded_by')}

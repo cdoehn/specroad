@@ -27,7 +27,7 @@ def effective_actors(history):
 
 
 def assessment(snapshot, original, services, *, version=VERSION):
-    require(version in (VERSION, NEGATIVE_VERSION), 'proposal_review_assessment_schema_invalid')
+    require(version in (VERSION, NEGATIVE_VERSION, 'proposal-apply-assessment-v1'), 'proposal_review_assessment_schema_invalid')
     context = ProposalContext(original, snapshot.model)
     history = assess_proposal(original, _initial_inputs(snapshot.model, original, services),
                               snapshot.model, services=services)
@@ -40,7 +40,7 @@ def assessment(snapshot, original, services, *, version=VERSION):
     return canonical_json_bytes(proof)
 
 
-def decode(encoded):
+def decode(encoded, *, versions=(VERSION, NEGATIVE_VERSION)):
     try:
         raw = b64decode(encoded, validate=True)
         require(b64encode(raw).decode('ascii') == encoded, 'proposal_result_encoding_invalid')
@@ -50,7 +50,7 @@ def decode(encoded):
     value = parse_json_object(raw)
     require(set(value) == {'format_version', 'binding', 'proposal_sha256', 'context_sha256',
         'history', 'effective_human_actor_ids', 'native_check', 'result_sha256'}
-        and value['format_version'] in (VERSION, NEGATIVE_VERSION), 'proposal_review_assessment_schema_invalid')
+        and value['format_version'] in versions, 'proposal_review_assessment_schema_invalid')
     require(raw == canonical_json_bytes(value), 'proposal_result_bytes_not_canonical')
     require(value['result_sha256'] == canonical_json_sha256(
         {k: v for k, v in value.items() if k != 'result_sha256'}), 'proposal_result_hash_mismatch')
@@ -70,6 +70,7 @@ def decode(encoded):
         'apply_performed'}, 'proposal_review_assessment_schema_invalid')
     require(history['historical_valid'] is True and history['current_basis_matches'] is True
         and history['observed_status'] in (('in_review',) if value['format_version'] == VERSION
+            else ('approved',) if value['format_version'] == 'proposal-apply-assessment-v1'
             else ('draft', 'in_review', 'approved'))
         and type(history['current_approval']) is bool
         and history['write_authorized'] is False and history['apply_performed'] is False

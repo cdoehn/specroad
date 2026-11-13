@@ -150,7 +150,7 @@ def record_schema(kind, version=SCHEMA_VERSION):
     if contract.requires_specialized_operation:
         field = contract.status_field
         schema["required"].append(field)
-        schema["properties"][field] = {"enum": [state for state, _ in contract.state_maturities]}
+        schema["properties"][field] = {"enum": list(dict.fromkeys(state for state, _ in contract.state_maturities))}
         conditions.append({"anyOf": [{"properties": {field: {"const": state}, "maturity": {"const": maturity}}}
                                       for state, maturity in contract.state_maturities]})
     if kind == "content_block":

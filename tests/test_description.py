@@ -44,7 +44,7 @@ class DescriptionWorkTests(unittest.TestCase):
                     self.assertEqual(result.exit_code, 0)
                     self.assertEqual(result.command, command.command_id)
                     input_only = command.command_id in ('recover.restore', 'migrate.plan', 'migrate.apply', 'migrate.verify', 'merge.apply')
-                    if command.command_id in ('proposal.review.start', 'proposal.review'):
+                    if command.command_id in ('proposal.review.start', 'proposal.review', 'proposal.apply'):
                         # Like other writers, the handler returns its operation
                         # result; the outer envelope only binds the selected root.
                         self.assertEqual(dict(result.project), {
@@ -226,7 +226,7 @@ class DescriptionRobustnessTests(unittest.TestCase):
             self.assertEqual(document['lock_kind'],
                              'bootstrap' if command.command_id in ('init', 'bundle.extract') else
                              'recovery' if command.command_id == 'recover.restore' else
-                             'writer' if command.command_id in ('migrate.apply', 'merge.apply', 'proposal.review.start', 'proposal.review') else 'none')
+                             'writer' if command.command_id in ('migrate.apply', 'merge.apply', 'proposal.review.start', 'proposal.review', 'proposal.apply') else 'none')
             self.assertEqual(8 in document['exit_codes'], continuation)
             self.assertEqual(document['budget_policy_version'],
                              'runtime-budget-v2' if command.command_id in (
@@ -287,7 +287,7 @@ class DescriptionRobustnessTests(unittest.TestCase):
                 self.assertEqual(document['lock_kind'], 'writer')
                 self.assertFalse(document['work']['continuation_supported'])
                 rejected = ('--work-dir', '--resume', '--request-id', '--actor-id', '--as-proposal')
-            elif command.command_id in ('proposal.review.start', 'proposal.review'):
+            elif command.command_id in ('proposal.review.start', 'proposal.review', 'proposal.apply'):
                 required = {option['flag'] for option in document['options'] if option['required']}
                 self.assertTrue({'--expected-revision', '--actor-type', '--actor-id'} <= required)
                 self.assertTrue({'--request-id', '--dry-run'} <= accepted)

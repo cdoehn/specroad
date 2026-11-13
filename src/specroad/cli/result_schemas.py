@@ -85,6 +85,9 @@ def _with_currentness(schema, *, comparison=False):
 
 
 def _fields(schema_id):
+    if schema_id == 'proposal-apply-v1':
+        from .proposal_apply_schema import apply_schema
+        return apply_schema()
     if schema_id == 'proposal-review-v1':
         from .proposal_commands import review_schema
         return review_schema()

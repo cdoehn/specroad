@@ -44,7 +44,9 @@ def _result_bindings(value):
             if identity in relations:
                 raise ChangePlanError("duplicate_new_relation_id", pointer=at + "/relation/relation_id")
             relations.add(identity)
-        if kind == "relation_review_record" and value["actor"]["actor_type"] != "human":
+        if (kind == "relation_review_record" and value["actor"]["actor_type"] != "human"
+                and not (value["operations"][-1]["op"] == "proposal_control"
+                         and "apply_check" in value["operations"][-1])):
             raise ChangePlanError("human_review_planner_required", pointer="/actor")
     if set(results) != owners:
         raise ChangePlanError("result_owner_set_mismatch", pointer="/result_artifacts", code="SRV146")

@@ -52,8 +52,8 @@ class CapabilityScopeTests(unittest.TestCase):
         actual_ids = {command['command_id'] for command in semantic['commands']}
         advertised_cli = {key[4:] for key in semantic['capability_ids'] if key.startswith('cli.')}
         self.assertEqual(advertised_cli, actual_ids)
-        self.assertTrue({'query', 'diff', 'validate'} <= actual_ids)
-        for command in ('srx.evaluate', 'proposal.create', 'proposal.apply'):
+        self.assertTrue({'query', 'diff', 'validate', 'proposal.apply'} <= actual_ids)
+        for command in ('srx.evaluate', 'proposal.create'):
             with self.subTest(command=command):
                 self.assertNotIn(command, actual_ids)
                 self.assertEqual(dispatch_result(command.split('.')).exit_code, 2)
@@ -79,16 +79,14 @@ class CapabilityScopeTests(unittest.TestCase):
         self.assertIn('proposal', semantic['command_groups'])
         proposals = [command for command in semantic['commands']
                      if command['command_id'].startswith('proposal.')]
-        self.assertEqual([command['command_id'] for command in proposals], ['proposal.check', 'proposal.review', 'proposal.review.start', 'proposal.validate'])
-        self.assertEqual(proposals[0]['command_class'], 'read_only')
-        self.assertEqual(proposals[0]['result_schema'], 'proposal-check-v1')
-        self.assertEqual(proposals[1]['command_class'], 'normative_write')
-        self.assertEqual(proposals[1]['result_schema'], 'proposal-review-v1')
-        self.assertEqual(proposals[2]['command_class'], 'normative_write')
-        self.assertEqual(proposals[2]['result_schema'], 'proposal-review-start-v1')
-        self.assertEqual(proposals[3]['command_class'], 'read_only')
-        self.assertEqual(proposals[3]['result_schema'], 'proposal-validation-v1')
-        # Review start and human decisions are real; Proposal apply remains unregistered.
+        self.assertEqual([(c['command_id'], c['command_class'], c['result_schema'])
+                          for c in proposals], [
+            ('proposal.apply', 'normative_write', 'proposal-apply-v1'),
+            ('proposal.check', 'read_only', 'proposal-check-v1'),
+            ('proposal.review', 'normative_write', 'proposal-review-v1'),
+            ('proposal.review.start', 'normative_write', 'proposal-review-start-v1'),
+            ('proposal.validate', 'read_only', 'proposal-validation-v1')])
+        # Registration comes from implemented commands, never passive schemas.
         without_proposals = CommandRegistry(tuple(command for command in builtin_registry().commands
                                                   if not command.command_id.startswith('proposal.')))
         self.assertNotIn('proposal', capabilities(without_proposals)['semantic']['command_groups'])

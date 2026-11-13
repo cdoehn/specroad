@@ -91,6 +91,8 @@ def proposal_control_schema():
         'assessment_bytes_base64': text()}) for version, decisions in (
             ('proposal-review-decision-v1', ['approved', 'rejected']),
             ('proposal-review-decision-v2', ['rejected', 'withdrawn']))]}
+    fields['apply_check'] = obj({'format_version': {'const': 'proposal-apply-evidence-v1'},
+        'assessment_bytes_base64': text()})
     return obj(fields, required)
 
 

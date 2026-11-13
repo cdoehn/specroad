@@ -57,6 +57,12 @@ def assess_change_target(plan, model, *, policy, gates=(), strict=False):
     target_model = model
     if baseline:
         target_model = materialize_target(model, documents + resource_documents)
+    if hasattr(folded, 'target_model'):
+        target_model = folded.target_model
+        documents = target_model.documents
+        artifact_paths = {d.path for d in documents}
+        resource_documents = tuple(ModelDocument(p, raw) for p, raw in sorted(target_model.source_files.items())
+            if p not in artifact_paths and model.source_files.get(p) != raw)
     target = target_model.manifest(artifacts, scope)
     if target.sha256 != value['expected_result']['model_root_sha256']:
         raise TargetError('target_result_root_mismatch', pointer='/expected_result/model_root_sha256')
@@ -120,16 +126,17 @@ def prepare_change_target(model, operations, *, change_plan_id, request_id, acto
     scope = _project_scope(scope_descriptor)
     operations = [ChangeOperation(v).data for v in _sequence(operations, 'target_operations_required')]
     preconditions = _snapshot(list(_sequence(preconditions, 'target_preconditions_required')), '/preconditions').data
-    normalize = normalization_mode(operations)
-    baseline = baseline_mode(operations)
-    evidence = evidence_mode(operations)
-    imported = import_mode(operations)
     from ..proposals._control_dispatch import control_mode as review_start_mode, prepare_candidates as prepare_control_candidates
-    if review_start_mode(operations):
+    controlled = review_start_mode(operations)
+    normalize = not controlled and normalization_mode(operations)
+    baseline = not controlled and baseline_mode(operations)
+    evidence = not controlled and evidence_mode(operations)
+    imported = not controlled and import_mode(operations)
+    if controlled:
         folded = prepare_control_candidates(model, operations,
             metadata_policy_version=metadata_policy_version, actor=actor,
             planned_at=planned_at, preconditions=preconditions)
-        target_model = model
+        target_model = getattr(folded, 'target_model', model)
     elif evidence or imported:
         prepare = prepare_import_candidates if imported else prepare_evidence_candidates
         folded = prepare(model, operations,

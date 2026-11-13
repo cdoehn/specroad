@@ -23,7 +23,16 @@ COMMON_REQUIRED = (
     "revision", "created_at", "updated_at", "created_by", "updated_by", "relations", "extensions",
 )
 MATURITIES = ("draft", "proposed", "in_review", "approved", "rejected", "superseded", "retired")
+# Read selectors include specialized states; generic transition schemas
+# deliberately retain MATURITIES and cannot write a Proposal Apply state.
+ALL_MATURITIES = (*MATURITIES, "applied")
 LANGUAGE_REQUIRED = frozenset({"requirement", "document", "term"})
+
+
+def artifact_maturities(kind):
+    """Common stored vocabulary; record coupling and authorization stay separate."""
+    return ALL_MATURITIES if kind == "proposal" else MATURITIES
+
 
 def _version(version):
     if type(version) is not str or version != SCHEMA_VERSION:
@@ -41,7 +50,8 @@ def _properties(kind):
         "schema_version": {"const": SCHEMA_VERSION}, "id": dict(text),
         "id_scheme": {"enum": ["random128-v1", "legacy-sequential-v1"]},
         "artifact_type": {"const": kind}, "title": dict(text),
-        "maturity": {"enum": list(MATURITIES)}, "revision": {"type": "integer", "minimum": 1},
+        # Only the Proposal Apply contract adds a type-specific terminal maturity.
+        "maturity": {"enum": list(artifact_maturities(kind))}, "revision": {"type": "integer", "minimum": 1},
         "created_at": {"$ref": "#/$defs/utc"}, "updated_at": {"$ref": "#/$defs/utc"},
         "created_by": dict(actor), "updated_by": dict(actor),
         "language": {"type": "string", "format": "bcp47"}, "text_direction": {"enum": ["ltr", "rtl", "auto"]},

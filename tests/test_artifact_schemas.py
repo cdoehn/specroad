@@ -59,6 +59,20 @@ class ArtifactSchemaWorkTests(unittest.TestCase):
                     value = common_artifact(kind, prefix); value.pop(name)
                     with self.assertRaises(ModelError): CommonArtifact(artifact_bytes(value))
 
+    def test_applied_maturity_is_readable_only_for_proposal_common_fields(self):
+        for kind, prefix in EXPECTED:
+            raw = artifact_bytes(common_artifact(kind, prefix, maturity="applied"))
+            with self.subTest(kind=kind):
+                if kind == "proposal":
+                    loaded = CommonArtifact(raw)
+                    self.assertEqual(loaded.source_bytes, raw)
+                    self.assertEqual(loaded.common_fields["maturity"], "applied")
+                    self.assertEqual(loaded.validation_scope, "common_fields_only")
+                else:
+                    with self.assertRaises(ModelError) as caught:
+                        CommonArtifact(raw)
+                    self.assertEqual(caught.exception.pointer, "/maturity")
+
     def test_unknown_types_are_not_silently_registered(self):
         for kind in ("unknown", "Goal", "", [], {}, True, None):
             with self.subTest(kind=str(kind)):

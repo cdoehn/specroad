@@ -132,11 +132,21 @@ class RecordWorkTests(unittest.TestCase):
             self.assertEqual(self.load(record_value(kind)).data[field], status)
 
     def test_every_recorded_proposal_status_remains_readable(self):
-        for status, maturity in {'draft': 'draft', 'validated': 'proposed', 'checked': 'proposed', 'in_review': 'in_review', 'approved': 'approved', 'applied': 'approved', 'rejected': 'rejected', 'stale': 'retired'}.items():
-            value = record_value('proposal', proposal_status=status, maturity=maturity)
-            self.assertEqual(self.load(value).data, value)
-            value['maturity'] = 'superseded'
-            with self.subTest(status=status), self.assertRaises(ModelError): self.load(value)
+        pairs = (('draft', 'draft'), ('validated', 'proposed'), ('checked', 'proposed'),
+                 ('in_review', 'in_review'), ('approved', 'approved'), ('applied', 'approved'),
+                 ('rejected', 'rejected'), ('stale', 'retired'), ('applied', 'applied'))
+        for status in dict(pairs):
+            for maturity in ('draft', 'proposed', 'in_review', 'approved', 'rejected',
+                             'superseded', 'retired', 'applied'):
+                value = record_value('proposal', proposal_status=status, maturity=maturity)
+                with self.subTest(status=status, maturity=maturity):
+                    if (status, maturity) in pairs:
+                        loaded = self.load(value)
+                        self.assertEqual(loaded.data, value)
+                        self.assertEqual(loaded.source_bytes, artifact_bytes(value))
+                        self.assertEqual(loaded.validation_scope, 'record_fields_only')
+                    else:
+                        with self.assertRaises(ModelError): self.load(value)
 
     def test_schemas_never_enable_generic_special_mutations(self):
         for kind in ('evidence', 'baseline', 'relation_review', 'proposal'):
@@ -347,7 +357,7 @@ class RecordRightTests(unittest.TestCase):
             self.assertEqual(self.load(value).data, value)
 
     def test_all_special_endstates_refuse_every_generic_route(self):
-        for status, maturity in (('applied', 'approved'), ('rejected', 'rejected'), ('stale', 'retired')):
+        for status, maturity in (('applied', 'approved'), ('applied', 'applied'), ('rejected', 'rejected'), ('stale', 'retired')):
             self.load(record_value('proposal', proposal_status=status, maturity=maturity))
             for operation in ('create', 'patch', 'lifecycle'):
                 with self.subTest(status=status, operation=operation), self.assertRaises(ModelError):

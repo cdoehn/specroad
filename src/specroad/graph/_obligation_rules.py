@@ -2,7 +2,7 @@
 from dataclasses import dataclass
 from ..model.errors import ModelError
 from ..model.artifact_types import artifact_types
-from ..model.artifact_schemas import MATURITIES
+from ..model.artifact_schemas import MATURITIES, ALL_MATURITIES
 from .relation_types import require_relation_type
 from .relations import SourceRelations
 
@@ -12,7 +12,6 @@ CORE_REQUIREMENT_MINIMA = (
 )
 
 _ALL_TYPES = frozenset(item.artifact_type for item in artifact_types())
-_MATURITIES = frozenset(MATURITIES)
 
 
 def _tokens(value, allowed, field, *, nonempty=True):
@@ -56,10 +55,12 @@ class MinimumRelationRule:
             raise ModelError("invalid_minimum_relation_types")
         for kind in relation_types:
             require_relation_type(kind)
+        kinds = _tokens(artifact_types, _ALL_TYPES, "artifact_types")
+        choices = ALL_MATURITIES if "proposal" in kinds else MATURITIES
         values = {
             "rule_id": rule_id, "minimum": minimum, "direction": direction, "severity": severity,
-            "artifact_types": _tokens(artifact_types, _ALL_TYPES, "artifact_types"),
-            "maturities": _tokens(maturities, _MATURITIES, "maturities", nonempty=False),
+            "artifact_types": kinds,
+            "maturities": _tokens(maturities, choices, "maturities", nonempty=False),
             "relation_types": _tokens(relation_types, frozenset(relation_types), "relation_types"),
             "endpoint_types": _tokens(endpoint_types, _ALL_TYPES, "endpoint_types", nonempty=False),
         }

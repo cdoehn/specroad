@@ -392,3 +392,15 @@
 - [Bundle 672 — negative Proposalentscheidungen und eigener Widerruf](bundle-672-proposal-negative.md)
 
 - [Bundle 673 — Testadapter und vollständiger 18.j-Rest](bundle-673-negative-test-correction.md)
+
+- [Bundle 674 — native atomare Proposal-Anwendung](bundle-674-proposal-apply.md)
+
+- [Bundle 675 — Laufprofil und vollständiger 18.k-Rest](bundle-675-host-profile-correction.md)
+
+- [Bundle 676 — Proposal-Schemata und Registrierungsabnahmen](bundle-676-proposal-schema-correction.md)
+
+- [Bundle 677 — Profilprüfung angewendeter Proposals](bundle-677-proposal-profile-correction.md)
+
+- [Bundle 678 — Ergebnisschema von Proposal Apply](bundle-678-proposal-result-schema.md)
+
+- [Bundle 679 — unabhängige Katalogerwartung](bundle-679-catalog-expectation.md)

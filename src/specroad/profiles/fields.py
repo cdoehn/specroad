@@ -2,7 +2,7 @@
 from .values import ProfileResource
 from .errors import ProfileError
 from ._contract import _fail, _pointer, KINDS
-from ..model.artifact_schemas import MATURITIES
+from ..model.artifact_schemas import artifact_maturities
 from ..model.canonical import canonical_json_bytes
 from ..storage.json_syntax import parse_json_object
 from ..srx.errors import SrxError
@@ -38,7 +38,7 @@ def observe_profile_fields(data, artifact):
     value = parse_json_object(canonical_json_bytes(artifact))
     if type(value.get("artifact_type")) is not str or value["artifact_type"] not in KINDS:
         _fail("profile_artifact_type_required", "/artifact_type")
-    if type(value.get("maturity")) is not str or value["maturity"] not in MATURITIES:
+    if type(value.get("maturity")) is not str or value["maturity"] not in artifact_maturities(value["artifact_type"]):
         _fail("profile_invalid_maturity", "/maturity")
     diagnostics, checked = [], 0
     for group in ("required_fields", "forbidden_fields", "allowed_values"):

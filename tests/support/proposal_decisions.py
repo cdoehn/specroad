@@ -17,14 +17,15 @@ from .model import put
 
 
 class ReviewCase:
-    def __init__(self, root, *, minimum=2, changed=True, start=True):
+    def __init__(self, root, *, minimum=2, changed=True, start=True, plan_factory=None):
         self.root = root
         model = project(root)
         configuration = model.configuration.data
         configuration['validation_policy']['minimum_human_proposal_approvals'] = minimum
         put(root, 'specroad.json', canonical_json_bytes(configuration))
         model = InspectionSnapshot(root, None).model
-        first = prepare_proposal_for_model(model, **(planned_change(model) if changed else fields(model))).original
+        supplied = plan_factory(model) if plan_factory is not None else (planned_change(model) if changed else fields(model))
+        first = prepare_proposal_for_model(model, **supplied).original
         put(root, first.path, first.source_bytes)
         self.originals, self.contexts = [first], [ProposalContext(first, InspectionSnapshot(root, None).model)]
         self.reviews, self.controls = [], []

@@ -4,7 +4,7 @@ from .errors import ProfileError
 from ..model.errors import ModelError
 from ..model.versions import SCHEMA_VERSION
 from ..model.artifact_types import artifact_types
-from ..model.artifact_schemas import MATURITIES
+from ..model.artifact_schemas import MATURITIES, ALL_MATURITIES
 from ..model.canonical import canonical_json_bytes
 from ..graph.relation_obligations import MinimumRelationRule
 from ..graph.relation_types import CORE_RELATION_TYPES
@@ -75,7 +75,8 @@ def _tokens(value, allowed, at, *, nonempty=False):
 
 def _selector(value, at):
     _tokens(value["artifact_types"], KINDS, at + "/artifact_types", nonempty=True)
-    _tokens(value["maturities"], MATURITIES, at + "/maturities")
+    choices = ALL_MATURITIES if "proposal" in value["artifact_types"] else MATURITIES
+    _tokens(value["maturities"], choices, at + "/maturities")
 
 
 def _pointer(value, at):
@@ -169,12 +170,12 @@ def _validate_review_policy(value):
         at = "/relation_review_policy/" + str(i)
         _shape(entry, {"relation_types", "maturities", "status", "severity"}, at)
         _tokens(entry["relation_types"], CORE_RELATION_TYPES, at + "/relation_types", nonempty=True)
-        _tokens(entry["maturities"], MATURITIES, at + "/maturities")
+        _tokens(entry["maturities"], ALL_MATURITIES, at + "/maturities")
         if type(entry["status"]) is not str or entry["status"] not in ("unreviewed", "suspect"):
             _fail("profile_invalid_review_status", at + "/status")
         _severity(entry["severity"], at + "/severity")
         for kind in entry["relation_types"]:
-            for maturity in entry["maturities"] or MATURITIES:
+            for maturity in entry["maturities"] or ALL_MATURITIES:
                 cell = (kind, maturity, entry["status"])
                 if cell in seen:
                     _fail("profile_duplicate_review_policy", at)

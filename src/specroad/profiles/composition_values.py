@@ -80,9 +80,9 @@ class EffectiveProfile:
 
     def relation_review_severity(self, relation_type, maturity, status):
         from ..graph.relation_types import CORE_RELATION_TYPES
-        from ..model.artifact_schemas import MATURITIES
+        from ..model.artifact_schemas import ALL_MATURITIES
         if (type(relation_type) is not str or relation_type not in CORE_RELATION_TYPES
-                or type(maturity) is not str or maturity not in MATURITIES
+                or type(maturity) is not str or maturity not in ALL_MATURITIES
                 or type(status) is not str or status not in ("current", "invalid", "unreviewed", "suspect")):
             _error("profile_review_selector_required")
         if status == "invalid":

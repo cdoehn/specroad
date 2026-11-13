@@ -29,7 +29,9 @@ eines einzelnen Workers: 2 bedeutet ungefähr doppelt so schnell wie 1.
 Der Wert ist eine erste Schätzung, kein Benchmark. Aktuelle Messungen pro
 Host/Test/Umgebung gehen vor; Beobachtungen während des Laufs passen nur die
 Verteilungsschätzung an. Der normative Laufzeitfilter benutzt weiter seine
-unveränderten Rohmesswerte. Beide Apply-Linien sollen denselben Hostnamen und
+unveränderten Rohmesswerte. Das Laufprofil enthält nur Prognosewerte für
+die ausgewählten Tests und beteiligten Hosts. Alle passenden Werte bleiben
+erhalten; die vollständige Messhistorie und die Auswahl bleiben unverändert. Beide Apply-Linien sollen denselben Hostnamen und
 dieselbe Slotgrenze für denselben Remote-Benutzer verwenden.
 
 ## Einrichtung und Kontrolle

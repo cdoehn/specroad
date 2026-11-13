@@ -164,6 +164,41 @@ class SchemaCatalogWorkTests(unittest.TestCase):
             self.assertEqual(self.catalog.get(schema['$id']).schema, schema)
             self.catalog.validate(schema['$id'], command.protocol.example.as_dict())
 
+    def test_declared_result_contracts_resolve_without_executing_commands(self):
+        from specroad.cli.result_schemas import result_json_schema
+        for command in builtin_registry().commands:
+            with self.subTest(command=command.command_id):
+                schema_id = command.protocol.result_schema
+                resource = self.catalog.get(schema_id)
+                self.assertEqual(resource.schema['$id'], schema_id)
+                self.assertEqual(resource.schema, result_json_schema(schema_id))
+
+    def test_proposal_apply_result_is_publicly_discoverable_without_a_project(self):
+        schema_id = 'proposal-apply-v1'
+        listed = dispatch_result(['schema', 'list', '--format=json'])
+        self.assertEqual(listed.exit_code, 0)
+        rows = [row for row in listed.as_dict()['result']['schemas'] if row['schema_id'] == schema_id]
+        resource = self.catalog.get(schema_id)
+        self.assertEqual(rows, [resource.metadata()])
+        self.assertEqual(resource.category, 'result')
+        self.assertEqual(resource.validation_scope, 'result_fields_only')
+        outcomes = (dispatch_result(['schema', 'show', schema_id, '--format=json']),
+                    execute_request({'command_id': 'schema.show',
+                                     'arguments': {'schema_id': schema_id}}).result)
+        for outcome in outcomes:
+            self.assertEqual(outcome.exit_code, 0)
+            self.assertIsNone(outcome.project)
+            self.assertEqual(outcome.as_dict()['result'], self.catalog.show(schema_id))
+        # Retrieval exposes a closed passive field contract, never write authority.
+        schema = resource.schema
+        self.assertFalse(schema['additionalProperties'])
+        self.assertEqual(schema['properties']['format_version'], {'const': schema_id})
+        for name in ('approval_granted', 'write_authorized'):
+            self.assertIn(name, schema['required'])
+            self.assertEqual(schema['properties'][name], {'const': False})
+        with self.assertRaises(SchemaLookupError):
+            self.catalog.get('proposal-apply-v2')
+
     def test_every_builtin_has_a_real_retrievable_result_contract(self):
         for command in builtin_registry().commands:
             with tempfile.TemporaryDirectory() as tmp:

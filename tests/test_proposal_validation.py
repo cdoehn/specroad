@@ -67,7 +67,7 @@ def test_public_argv_and_structured_requests_use_same_native_read_contract(tmp_p
     assert inventory(tmp_path) == before
 
 
-def test_registry_advertises_only_implemented_read_operation():
+def test_registry_advertises_implemented_proposal_operations():
     commands = {c.command_id: c for c in builtin_registry().commands}
     command = commands['proposal.validate']
     assert command.command_class is CommandClass.READ_ONLY
@@ -79,7 +79,11 @@ def test_registry_advertises_only_implemented_read_operation():
     assert review_start.effect_scope is EffectScope.NORMATIVE_TRANSACTION
     assert review_start.protocol.result_schema == 'proposal-review-start-v1'
     assert review_start.protocol.lock_kind == 'writer'
-    assert 'proposal.apply' not in commands
+    apply = commands['proposal.apply']
+    assert apply.command_class is CommandClass.NORMATIVE_WRITE
+    assert apply.effect_scope is EffectScope.NORMATIVE_TRANSACTION
+    assert apply.protocol.result_schema == 'proposal-apply-v1'
+    assert apply.protocol.lock_kind == 'writer'
 
 
 @pytest.mark.parametrize('invalid', ['json', 'content', 'basis', 'target', 'explanation'])

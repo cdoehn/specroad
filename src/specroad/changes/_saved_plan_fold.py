@@ -15,12 +15,13 @@ def fold_saved_plan(plan, model, *, observed_base_root, observed_scope):
     from .evidence import evidence_mode, prepare_evidence_candidates
     from .evidence_import import import_mode, prepare_import_candidates
     value = plan.data
-    normalize = normalization_mode(value['operations'])
-    baseline = baseline_mode(value['operations'])
-    evidence = evidence_mode(value['operations'])
-    imported = import_mode(value['operations'])
     from ..proposals._control_dispatch import control_mode as review_start_mode, prepare_candidates as prepare_control_candidates
-    if review_start_mode(value['operations']):
+    controlled = review_start_mode(value['operations'])
+    normalize = not controlled and normalization_mode(value['operations'])
+    baseline = not controlled and baseline_mode(value['operations'])
+    evidence = not controlled and evidence_mode(value['operations'])
+    imported = not controlled and import_mode(value['operations'])
+    if controlled:
         folded = prepare_control_candidates(model, value['operations'],
             metadata_policy_version=value['metadata_policy_version'], actor=value['actor'],
             planned_at=value['planned_at'], preconditions=value['preconditions'])
