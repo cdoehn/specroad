@@ -1,19 +1,19 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.83
+## Version 0.2.84
 
 | Feld | Wert |
 |---|---|
 | Dokument-ID | `SR-SPEC-0001` |
-| Dokumentversion | `0.2.83` |
+| Dokumentversion | `0.2.84` |
 | Zielrelease | `SpecRoad Single-Repository Workbench 0.2.0` |
 | Status | **Fachlich konsolidierte Arbeitsgrundlage; technische Reviewentscheidung gesondert dokumentiert, formale Baseline-Freigabe und Produktabnahme nicht durch dieses Dokument erklärt** |
-| Stand | 10. November 2026 |
+| Stand | 13. November 2026 |
 | Sprache | Deutsch; technische Feldnamen, Enum-Werte und CLI-Kommandos Englisch |
-| Fachliche Quelle | **Diese Repositoryfassung v0.2.83 ist die aktive fachliche Arbeitsgrundlage; eine entsprechende PDF wird hiermit nicht veröffentlicht.** |
+| Fachliche Quelle | **Diese Repositoryfassung v0.2.84 ist die aktive fachliche Arbeitsgrundlage; eine entsprechende PDF wird hiermit nicht veröffentlicht.** |
 | Bearbeitbare Satzquelle | Diese Datei; eine spätere PDF muss denselben versionierten Inhalt wiedergeben. |
-| Vorgängerversion | Repository-Spezifikation v0.2.82; historische Nachweise bleiben unverändert. |
-| Prüf- und Entscheidungsgrundlage | PROPOSAL-NEGATIVE-672, delegiert gemäß SPECROAD-DECISION-1; keine Produktfreigabe. |
-| Änderungsart | Additive negative Reviewentscheidungen und eigener Widerruf nach 10.3.5. |
+| Vorgängerversion | Repository-Spezifikation v0.2.83; historische Nachweise bleiben unverändert. |
+| Prüf- und Entscheidungsgrundlage | PROPOSAL-APPLY-674, delegiert gemäß SPECROAD-DECISION-1; keine Produktfreigabe. |
+| Änderungsart | Additiver öffentlicher Proposal-Apply-Vertrag und native Writeranbindung nach 10.3.6. |
 
 > **Verbindlicher Quellenwechsel:** Die ausdrückliche Nutzerentscheidung REFERENCE-SOURCE-551 wird als v0.2.50 umgesetzt. Der neue Quellvertrag ist Entwurfsarbeit vom 3. November 2026, kein Nachweis eines früher existierenden Formats. Bestehende 0.2-Verträge, Transport-, Sicherheits- und Reviewgrenzen bleiben erhalten.
 
@@ -2566,6 +2566,86 @@ einmal, in ursprünglicher Historienreihenfolge ausgewertet. Späteres Authoring
 entwertet frühere Bindungen ohne Historienlöschung. Stale Basis, fehlende
 Herkunft oder Freigabeentzug sperren aktuelle approved-Qualifikation auch bei
 unverändertem sichtbarem Status. Das ist keine vorgezogene 18.k-Publikation.
+
+### 10.3.6 Öffentliche atomare Anwendung — PROPOSAL-APPLY-674
+
+Delegiert gemäß SPECROAD-DECISION-1 / 2.4.3.1. Diese additive Festlegung
+konkretisiert 18.k und SR-REQ-0173–0175/0178. `proposal apply <proposal>`
+(`proposal.apply` strukturiert) löst wie der Reviewwriter ID oder Dateipfad
+auf das verwaltete Original auf. Pflichtoptionen sind `--expected-revision`,
+`--actor-type` und `--actor-id`; `--request-id`, `--dry-run`, `--project` und
+die üblichen Ausgabeoptionen folgen den bestehenden Writerverträgen. AI/CI
+benötigen beim echten Write eine Request-ID. Der ausführende Actor ist keine
+neue menschliche Zustimmung; aktuelle echte Reviews und Host-Schreibautorität
+bleiben getrennt erforderlich. Freie Pläne, fremde Proposaldateien und
+generisches `change apply` können diese Fachroute nicht freischalten.
+
+Vor jedem neuen Write muss das Original approved und vollständig qualifiziert
+sein: echte lückenlose Originalhistorie, unveränderte fünffache Inhaltsbindung,
+aktuelle specification-Basis, native vollständige Basis-/Zielprüfung und
+aktuell wirksames menschliches Quorum. Fehlender Status oder Quorum ist Code 3,
+fehlende Herkunft/Schreibautorität Code 7; abweichende Revision, Basis oder
+erwartete Hashes sind Konflikte (6). Sie ändern das gespeicherte Proposal nicht
+auf stale. Ungültige Argumente bleiben 2, I/O-Fehler 5. Alle Specialistgates,
+Projektgrenzen, Recoverybarrieren und externe Aktualitätsprüfungen bleiben.
+
+Der additive kanonische `proposal-apply-assessment-v1` besitzt exakt die
+Felder/Hashprojektion von `proposal-review-assessment-v2` aus 10.3.5, verlangt
+aber ausschließlich observed_status=approved und current_approval=true.
+Er dokumentiert die frische native Beobachtung, keine Publikationserlaubnis.
+Die letzte Operation des äußeren normalen Change Plans ist proposal_control
+mit dem zusätzlichen geschlossenen Feld `apply_check`:
+`{format_version: "proposal-apply-evidence-v1", assessment_bytes_base64: ...}`.
+Keine review_start-/review_decision-Mischung. Davor stehen exakt die inneren
+Operationen in ihrer Reihenfolge. Preconditions, Metadatenpolicy, Fachresultate,
+IDs und Fachmetadaten bleiben die des gespeicherten inneren Plans; sie werden
+nicht mit Uhrzeit oder Actor des Apply-Aufrufs neu berechnet. Der äußere Plan
+bindet dagegen den aktuellen vollständigen Projektroot, den Apply-Actor und
+den neuen Request. Sein Ziel ergänzt genau die neue Proposalrevision.
+Auch leere Fachpläne, native Evidence-/Relationsreviewpläne und bestehende
+Darstellungsnormalisierung behalten ihren bereits geprüften inneren Vertrag.
+Dies erweitert nicht die für Proposals zulässigen Operationen oder Scopes.
+
+Genau eine proposal-control-v1-Zeile nach bestehendem Feldvertrag wird mit
+approved → applied, reason=proposal_apply, Apply-Actor/-Zeit, beobachteter
+Revision und SHA/Base64 des neuen Berichts angehängt. Maturity wird applied;
+physische Revision steigt einmal, Inhaltsrevision/-hash und alle früheren
+Reviews/Kontrollzeilen bleiben unverändert. Native Reduktion muss diese
+Zieldatei exakt reproduzieren. Die gesamte Fachänderung, diese Kontrolländerung
+und Request-/Transaktionsabschluss verwenden den vorhandenen exklusiven Writer,
+Journal, Vorherbytes, Staging, Readback und Receipt. Kein Sonder-Transaktionsweg.
+
+Vor dem Abschluss darf die exakte noch nicht veröffentlichte applied-Zeile
+nur im lokalen, an Original und Ziel gebundenen Writercheck bewertet werden:
+frische Qualifikation des approved-Originals und vollständige native Prüfung
+des Fachziels sowie aller übrigen Kontrollobjekte, dazu exakte Kontrolle der
+einen neuen Zeile und ihrer Metadaten. Das erzeugt keinen historischen Receipt.
+Nach Veröffentlichung sind die wirklichen nativen Abschlussdateien gegen den
+lesenden 10.7.10-Publikationsprüfer zu binden. Gespeicherte applied-Originale
+bleiben nur mit echten Originalreceipts qualifizierbar; alte passive Formate
+werden dadurch nicht zu ausführbaren Journals. Bei Unterbrechung bleiben
+native Recoverybelege erhalten; keine automatische Wiederholung/Rücknahme.
+
+Dry-run führt dieselben Fachprüfungen schreibfrei aus und zeigt ausdrücklich
+den vorgesehenen applied-Zielstand. Ein bestätigter Retry derselben Request-ID,
+Proposal-ID, erwarteten Ausgangsrevision und desselben Actors liefert das
+ursprüngliche native Ergebnis ohne neuen Write, auch bei inzwischen anderer
+Basis. Abweichende Auftragsbindung ist Konflikt. Das ist ein historischer
+Abschlussnachweis, keine neue Freigabe oder erneute Anwendung.
+
+Das geschlossene Ergebnis `proposal-apply-v1` enthält proposal_id, revision
+(Zielrevision), content_revision, content_sha256, base_model_root_sha256,
+change_plan_sha256 (innerer Plan), proposal_status/maturity=applied,
+dry_run, replayed, project_writes_performed, approval_granted=false,
+write_authorized=false, completion (nativer Abschluss oder null bei Dry-run)
+und audit. audit enthält Proposal-ID, ursprüngliche Basis, Toolversion,
+Start-/Endzeit, outcome (dry_run/committed/replayed/failed), diagnostics und
+created_ids/changed_ids/removed_ids; es nennt genau die geprüften fachlichen
+Resultidentitäten, zusätzlich das Proposal als geändert. Fehlgeschlagene
+öffentliche Aufrufe liefern diese Auditfelder in den Fehlerdetails, soweit
+die Originaldaten bereits sicher aufgelöst wurden, ohne erfundene IDs.
+Keine Gitaktion, Projektausführung, automatische Fachfreigabe oder Work-
+Fortsetzungsfunktion entsteht. Die weiteren 18.l–18.r-Abnahmen bleiben offen.
 
 ### 10.4 Spezial-Lifecycle-Vertrag
 
