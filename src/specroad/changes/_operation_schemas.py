@@ -85,9 +85,12 @@ def proposal_control_schema():
     required = list(fields)
     fields['review_start'] = obj({'format_version': {'const': 'proposal-review-start-evidence-v1'},
         'validation_bytes_base64': text(), 'check_bytes_base64': text()})
-    fields['review_decision'] = obj({'format_version': {'const': 'proposal-review-decision-v1'},
-        'decision': {'enum': ['approved', 'rejected']}, 'comment': {'anyOf': [{'type': 'string'}, {'type': 'null'}]},
-        'assessment_bytes_base64': text()})
+    fields['review_decision'] = {'anyOf': [obj({
+        'format_version': {'const': version}, 'decision': {'enum': decisions},
+        'comment': {'anyOf': [{'type': 'string'}, {'type': 'null'}]},
+        'assessment_bytes_base64': text()}) for version, decisions in (
+            ('proposal-review-decision-v1', ['approved', 'rejected']),
+            ('proposal-review-decision-v2', ['rejected', 'withdrawn']))]}
     return obj(fields, required)
 
 

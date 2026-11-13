@@ -17,7 +17,7 @@ from .model import put
 
 
 class ReviewCase:
-    def __init__(self, root, *, minimum=2, changed=True):
+    def __init__(self, root, *, minimum=2, changed=True, start=True):
         self.root = root
         model = project(root)
         configuration = model.configuration.data
@@ -30,10 +30,11 @@ class ReviewCase:
         self.reviews, self.controls = [], []
         self.current_decisions = True
         self.authority = PublicationAuthority('synthetic-review-host', '1', lambda request: True)
-        review_start_project(root, first.data['id'], expected_revision=1,
-            actor={'actor_type': 'human', 'actor_id': 'synthetic-author'}, planned_at='2026-11-11T01:00:00Z',
-            change_plan_id='synthetic-start-plan', transaction_id='synthetic-start', authority=self.authority)
-        self.capture(start=True)
+        if start:
+            review_start_project(root, first.data['id'], expected_revision=1,
+                actor={'actor_type': 'human', 'actor_id': 'synthetic-author'}, planned_at='2026-11-11T01:00:00Z',
+                change_plan_id='synthetic-start-plan', transaction_id='synthetic-start', authority=self.authority)
+            self.capture(start=True)
 
     @property
     def original(self):

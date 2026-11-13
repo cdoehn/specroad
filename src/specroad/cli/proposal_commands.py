@@ -110,7 +110,7 @@ def _review_spec():
         configuration_schema_required=True, handler=_review,
         positionals=(PositionalSpec('proposal'),), options=(
             OptionSpec('--expected-revision', takes_value=True, required=True),
-            OptionSpec('--decision', takes_value=True, required=True, choices=('approved', 'rejected')),
+            OptionSpec('--decision', takes_value=True, required=True, choices=('approved', 'rejected', 'withdrawn')),
             OptionSpec('--comment', takes_value=True),
             OptionSpec('--actor-type', takes_value=True, required=True, choices=('human', 'ai', 'ci')),
             OptionSpec('--actor-id', takes_value=True, required=True),
@@ -134,7 +134,7 @@ def review_schema():
     fields['format_version'] = {'const': 'proposal-review-v1'}
     fields['proposal_status'] = fields['maturity'] = {'enum': ['in_review', 'approved', 'rejected']}
     fields['approval_granted'] = {'type': 'boolean'}
-    fields['decision'] = {'enum': ['approved', 'rejected']}
+    fields['decision'] = {'enum': ['approved', 'rejected', 'withdrawn']}
     fields['comment'] = _nullable({'type': 'string'})
     fields['review_validity'] = _object({'current_approval': {'type': 'boolean'},
         'effective_human_approvals': {'type': 'integer', 'minimum': 0},

@@ -388,3 +388,7 @@
 - [Bundle 670 — Exakten Commitumfang der Review-Korrektur herstellen](bundle-670-proposal-scope-correction.md)
 
 - [Bundle 671 — Review-Aufrufverzeichnis und Beispiel-Projektbindung](bundle-671-proposal-review-path-correction.md)
+
+- [Bundle 672 — negative Proposalentscheidungen und eigener Widerruf](bundle-672-proposal-negative.md)
+
+- [Bundle 673 — Testadapter und vollständiger 18.j-Rest](bundle-673-negative-test-correction.md)

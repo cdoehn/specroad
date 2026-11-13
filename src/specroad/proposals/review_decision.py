@@ -14,7 +14,7 @@ from ..recovery.services import native_services
 from ..storage.project import ProjectSource
 from ._check_report import _now
 from ._decision_checks import gates as _gates
-from ._decision_evidence import assessment, operation as _operation
+from ._decision_evidence import assessment, operation as _operation, decision_state, assessment_version
 from ._decision_control import COMMAND, GATE, prepare_review_candidates as prepare_control_candidates
 from ._decision_result import result as _result
 from ._review_transaction import _publish
@@ -40,8 +40,10 @@ def review_project(root, operand, *, expected_revision, decision, actor, planned
     require(type(dry_run) is bool, 'proposal_dry_run_boolean_required', exit_code=2)
     require(dry_run or type(authority) is PublicationAuthority,
             'proposal_host_publication_authority_required', exit_code=2)
-    require(decision in ('approved', 'rejected'), 'proposal_review_decision_invalid', exit_code=2)
+    require(decision in ('approved', 'rejected', 'withdrawn'), 'proposal_review_decision_invalid', exit_code=2)
     require(comment is None or type(comment) is str, 'proposal_review_comment_invalid', exit_code=2)
+    if decision == 'withdrawn':
+        require(type(comment) is str and bool(comment.strip()), 'proposal_withdrawal_reason_required', exit_code=2)
     UtcTimestamp(planned_at)
     _transaction(transaction_id)
     require(type(change_plan_id) is str and bool(change_plan_id.strip()),
@@ -65,16 +67,16 @@ def review_project(root, operand, *, expected_revision, decision, actor, planned
         if result is not None:
             return result
     require(initial.data['revision'] == expected_revision, 'proposal_revision_conflict', exit_code=6)
-    require(initial.data['proposal_status'] == 'in_review', 'proposal_review_requires_in_review')
+    decision_state(initial.data['proposal_status'], decision)
 
     def prepare():
         original = supplied.original()
         require(original.data['revision'] == expected_revision, 'proposal_revision_conflict', exit_code=6)
-        require(original.data['proposal_status'] == 'in_review', 'proposal_review_requires_in_review')
+        decision_state(original.data['proposal_status'], decision)
         snapshot = InspectionSnapshot(root, None, include_archive_objects=True)
         require(snapshot.raw.get(original.path) == original.source_bytes,
                 'proposal_input_changed', exit_code=6)
-        proof = assessment(snapshot, original, services)
+        proof = assessment(snapshot, original, services, version=assessment_version(original, decision))
         operation = _operation(original, proof, decision, comment, actor)
         folded = prepare_control_candidates(snapshot.model, [operation],
             metadata_policy_version='change-metadata-v1', actor=actor, planned_at=planned_at)

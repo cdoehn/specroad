@@ -57,7 +57,7 @@ def gates(snapshot, original, after, operation, actor, planned_at, services):
         require({d.path: d.content for d in context.documents} == expected,
                 'proposal_review_target_changed', exit_code=6)
         # Stored hashes alone cannot authenticate a past human or a fresh quorum.
-        require(assessment(snapshot, original, services) == raw,
+        require(assessment(snapshot, original, services, version=report['format_version']) == raw,
                 'proposal_review_authority_changed', exit_code=6)
         validate_project(files, services=qualified)
         return context.result()

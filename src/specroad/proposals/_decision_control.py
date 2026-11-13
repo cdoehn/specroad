@@ -14,7 +14,7 @@ from .context import ProposalContext
 from .revisions import ProposalRevision
 from .values import ProposalOriginal, require
 from ._review_control import ControlCandidates, CONTROL_VERSION
-from ._decision_evidence import operation_proof, outcome
+from ._decision_evidence import operation_proof, outcome, decision_state
 
 COMMAND = 'proposal.review'
 GATE = 'extension:proposal-review'
@@ -32,7 +32,9 @@ def review_mode(operations):
 def rows(original, operation, *, actor, planned_at, context):
     require(review_mode([operation]), 'proposal_review_decision_required')
     raw, report = operation_proof(operation)
-    require(original.data['proposal_status'] == 'in_review', 'proposal_review_requires_in_review')
+    decision_state(original.data['proposal_status'], operation['review_decision']['decision'])
+    require(report['history']['observed_status'] == original.data['proposal_status'],
+            'proposal_review_original_status_mismatch', exit_code=6)
     require(operation['target'] == original.binding.proposal_id
         and type(operation['expected_revision']) is int
         and operation['expected_revision'] == original.data['revision']
@@ -47,7 +49,8 @@ def rows(original, operation, *, actor, planned_at, context):
     require(operation['events'] == events, 'proposal_control_events_mismatch')
     shared = dict(binding=original.binding.data, observed_revision=original.data['revision'],
         result_sha256=sha256(raw).hexdigest(), result_bytes_base64=b64encode(raw).decode('ascii'))
-    review = dict(shared, format_version=ROW_VERSION, reviewer=actor, reviewed_at=planned_at,
+    version = ROW_VERSION if operation['review_decision']['format_version'] == 'proposal-review-decision-v1' else 'proposal-review-v2'
+    review = dict(shared, format_version=version, reviewer=actor, reviewed_at=planned_at,
         decision=operation['review_decision']['decision'], comment=operation['review_decision']['comment'])
     controls = [dict(shared, format_version=CONTROL_VERSION, actor=actor, occurred_at=planned_at,
                      **{k: v for k, v in event.items() if k != 'result_sha256'}) for event in events]
@@ -107,7 +110,7 @@ def read_review_observations(original, context):
     row = values[index]
     fields = {'format_version', 'binding', 'reviewer', 'reviewed_at', 'observed_revision', 'decision',
               'comment', 'result_sha256', 'result_bytes_base64'}
-    require(set(row) == fields and row['format_version'] == ROW_VERSION
+    require(set(row) == fields and row['format_version'] in (ROW_VERSION, 'proposal-review-v2')
         and type(row['reviewer']) is dict and set(row['reviewer']) == {'actor_type', 'actor_id'}
         and type(row['observed_revision']) is int, 'proposal_review_row_schema_invalid')
     from ._decision_evidence import decode
