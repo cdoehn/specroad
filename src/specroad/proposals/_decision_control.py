@@ -45,6 +45,8 @@ def rows(original, operation, *, actor, planned_at, context):
         and report['context_sha256'] == context.sha256
         and report['history']['minimum_human_approvals'] == context.minimum_approvals,
         'proposal_control_context_mismatch', exit_code=6)
+    require(len(report['history']['reviews']) == len(original.data.get('reviews', [])),
+            'proposal_review_assessment_history_incomplete')
     status, count, events = outcome(operation, actor)
     require(operation['events'] == events, 'proposal_control_events_mismatch')
     shared = dict(binding=original.binding.data, observed_revision=original.data['revision'],

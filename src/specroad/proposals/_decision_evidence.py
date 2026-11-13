@@ -120,6 +120,9 @@ def operation_proof(operation):
     expected = VERSION if proof['format_version'] == 'proposal-review-decision-v1' else NEGATIVE_VERSION
     require(report['format_version'] == expected, 'proposal_review_versions_mixed')
     decision_state(report['history']['observed_status'], proof['decision'])
+    if expected == NEGATIVE_VERSION:
+        require(proof['decision'] == 'withdrawn' or report['history']['observed_status'] != 'in_review',
+                'proposal_review_versions_mixed')
     if proof['decision'] == 'withdrawn':
         require(type(proof['comment']) is str and bool(proof['comment'].strip()),
                 'proposal_withdrawal_reason_required', exit_code=2)
