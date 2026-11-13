@@ -99,7 +99,9 @@ def execute(arguments: list[str] | tuple[str, ...] | CommandRequest, *, registry
         outcome = failed_result(command, FailureKind.INTERNAL, "An internal command contract failed.")
     if outcome.project is None and project is not None:
         outcome = replace(outcome, project=project)
-    if preflight is not None:
+    # A handler can perform a later check against changed live state.
+    # Keep that observation instead of replacing it with the entry check.
+    if preflight is not None and 'preflight' not in outcome.details:
         outcome = replace(outcome, details={**outcome.details, 'preflight': preflight})
     observation = outcome.details.get('preflight')
     if (isinstance(observation, Mapping) and observation.get('preflight_detail_required')

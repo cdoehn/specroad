@@ -92,3 +92,59 @@ def multiple_change(model):
         rationale='Ordered native change', requirement_or_issue_ids=[], sources=[], assumptions=[], confidence=None)
         for index, identity in enumerate((created['id'], goal['id']))]
     return supplied
+
+
+def normalization_change(model):
+    from specroad.changes.core import prepare_change_plan
+    from test_proposal_basis import fields
+    from .normalization import operation
+    supplied = fields(model)
+    from specroad.storage.json_syntax import parse_json_object
+    goal = next(d for d in model.documents if parse_json_object(d.content)['artifact_type'] == 'goal')
+    documents = (goal, ModelDocument('specroad.json', model.source_files['specroad.json']))
+    value = supplied['change_plan'].data
+    value.pop('change_plan_sha256')
+    value['operations'] = [operation(d) for d in documents]
+    supplied['change_plan'] = prepare_change_plan(value)
+    supplied['changes'] = [dict(change_id='CHG-' + str(i) * 26, targets=[d.path],
+        rationale='Preserve values while normalizing chosen JSON bytes', requirement_or_issue_ids=[],
+        sources=[], assumptions=[], confidence=None) for i, d in enumerate(documents)]
+    return supplied
+
+
+def restore_apply_host(root, retained):
+    """Rebuild host closures in a spawned process from actual retained bytes.
+
+    The parent performed review start and approval through the native writer.
+    This function neither rewrites the project nor manufactures a decision.
+    Every transported historical model and context hash must match exactly.
+    """
+    from specroad.changes._target_materialization import materialize_target
+    from specroad.proposals._review_control import read_review_start_observations
+    from specroad.proposals._decision_control import read_review_observations
+    case = ApplyCase.__new__(ApplyCase)
+    case.root = root
+    case.before = InspectionSnapshot(root, None).model
+    case.originals, case.contexts = [], []
+    case.reviews, case.controls = [], []
+    assert len(retained) == 3  # Created, review started, then human approved.
+    for path, raw, sources, context_sha256 in retained:
+        original = ProposalOriginal(raw, path=path)
+        model = materialize_target(case.before,
+            tuple(ModelDocument(p, b) for p, b in sources.items()))
+        assert dict(model.source_files) == sources
+        context = ProposalContext(original, model)
+        assert context.sha256 == context_sha256
+        assert model.source_files[path] == raw
+        case.originals.append(original); case.contexts.append(context)
+    assert dict(case.contexts[-1].basis.source_files) == dict(case.before.source_files)
+    case.controls.extend(read_review_start_observations(case.originals[1], 0, case.contexts[0]))
+    review, controls = read_review_observations(case.originals[2], case.contexts[1])
+    case.reviews.append(review); case.controls.extend(controls)
+    case.current_decisions = True
+    case.requests = []
+    def capture(request):
+        case.requests.append(request)
+        return True
+    case.authority = PublicationAuthority('synthetic-apply-host', '1', capture)
+    return case

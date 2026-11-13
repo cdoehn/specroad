@@ -4,6 +4,7 @@ from ..changes import (PublicationAuthority, TargetPolicy, prepare_change_target
     prepare_authoring_request, project_lock, read_transaction_completion, resolve_normative_request)
 from ..changes._journal_codec import _transaction
 from ..changes._lock_files import LockFiles
+from ..changes._publication_observation import _root
 from ..changes.receipt_read import _CompletionProof, _read_confirmed_request
 from ..changes.target_model import _default_scope
 from ..model.audit_values import UtcTimestamp
@@ -23,6 +24,18 @@ from .publication import ProposalPublication, verify_proposal_publication
 from .values import ProposalOriginal, SPECIFICATION_SCOPE, require
 
 POLICY = TargetPolicy(COMMAND, '1', (GATE,))
+
+
+def _failure_reason(error):
+    from collections.abc import Mapping
+    from ..cli.results import OperationFailure
+    reason = getattr(error, 'reason', None)
+    if reason is None and isinstance(error, OperationFailure):
+        reason = error.details.get('reason')
+        preflight = error.details.get('preflight')
+        if reason is None and isinstance(preflight, Mapping):
+            reason = preflight.get('reason')
+    return reason if type(reason) is str and reason else 'proposal_apply_failed'
 
 
 def _result(operations, completion, audit, *, dry_run=False, replayed=False):
@@ -81,7 +94,8 @@ def _replay(source, proposal_id, expected_revision, actor, request_id, audit):
         return _result(operations, completion, audit, replayed=True)
 
 
-def _verify_completion(source, transaction, plan, before, target, original, after):
+def _verify_completion(transaction, plan, before, target, original, after):
+    source = _root(target)
     with LockFiles(source.boundary.root) as files:
         proof = _CompletionProof(files, source, transaction)
         paths = [*proof.receipt_paths, proof.archive_path]
@@ -100,7 +114,7 @@ def apply_project(root, operand, *, expected_revision, actor, planned_at, change
             authority=authority, request_id=request_id, dry_run=dry_run, cwd=cwd, services=services, audit=audit)
     except Exception as error:
         audit.update(ended_at=_now(), outcome='failed',
-            diagnostics=[{'reason': getattr(error, 'reason', 'proposal_apply_failed')}])
+            diagnostics=[{'reason': _failure_reason(error)}])
         error.proposal_audit = audit
         raise
 
@@ -155,6 +169,9 @@ def _apply(root, operand, *, expected_revision, actor, planned_at, change_plan_i
         snapshot, original, operations, checked, gates, target, after = prepare()
         _preflight(source); snapshot.verify_current()
         return _result(operations, None, audit, dry_run=True)
+    initial_snapshot = InspectionSnapshot(root, None, include_archive_objects=True)
+    assessment(initial_snapshot, initial, services)
+    supplied.verify_current(); initial_snapshot.verify_current()
     with project_lock(source.boundary.root, kind='writer', command='change apply',
             project_id=source.configuration.project_id, request_id=request_id,
             transaction_id=transaction_id) as held:
@@ -164,7 +181,7 @@ def _apply(root, operand, *, expected_revision, actor, planned_at, change_plan_i
         snapshot, original, operations, checked, gates, target, after = prepare()
         completion = _publish(snapshot, checked, gates, policy=POLICY, held=held,
                               transaction_id=transaction_id, authority=authority)
-        _verify_completion(source, transaction_id, checked.plan, snapshot.model, target, original, after)
+        _verify_completion(transaction_id, checked.plan, snapshot.model, target, original, after)
         return _result(operations, completion, audit)
 
 
@@ -188,11 +205,13 @@ def apply_command(invocation):
             request_id=options.get('--request-id'), dry_run=options.get('--dry-run', False),
             cwd=invocation.resolved.working_directory, services=invocation.restore_services)
         return CommandResult(COMMAND, result=result)
-    except (ModelError, BundleError, SrxError, SafetyViolation, OSError) as error:
-        code = 7 if isinstance(error, SafetyViolation) else 5 if isinstance(error, OSError) else getattr(error, 'exit_code', 3)
-        reason = getattr(error, 'reason', 'proposal_apply_failed')
+    except (ModelError, BundleError, SrxError, SafetyViolation, OSError, OperationFailure) as error:
+        code = (int(error.kind) if isinstance(error, OperationFailure) else 7 if isinstance(error, SafetyViolation)
+                else 5 if isinstance(error, OSError) else getattr(error, 'exit_code', 3))
+        reason = _failure_reason(error)
         audit.update(ended_at=_now(), outcome='failed', diagnostics=[{'reason': reason}])
-        facts = {'reason': reason, 'audit': getattr(error, 'proposal_audit', audit)}
+        facts = {**(dict(error.details) if isinstance(error, OperationFailure) else {}),
+                 'reason': reason, 'audit': getattr(error, 'proposal_audit', audit)}
         if hasattr(error, 'write_state'):
             facts['write_state'] = error.write_state
         raise OperationFailure(FailureKind(code), reason, details=facts) from error

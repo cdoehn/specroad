@@ -48,6 +48,7 @@ def assessment(snapshot, original, services):
     from ._decision_evidence import assessment as observe
     from .validation import validate_proposal
     require(original.data['proposal_status'] == 'approved', 'proposal_apply_requires_approved')
+    require(services.proposal_inputs is not None, 'proposal_original_provenance_unverified', exit_code=7)
     validate_proposal(ProposalContext(original, snapshot.model))
     return observe(snapshot, original, services, version=VERSION)
 

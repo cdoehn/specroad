@@ -9,6 +9,8 @@ from ..changes import (prepare_publication_check, begin_building_journal,
     cleanup_completed_transaction, prepare_authoring_request,
     resolve_normative_request, read_transaction_completion)
 from ..changes._lock_files import LockFiles
+from ..changes._publication_observation import _root
+from ..changes._target_materialization import publication_target
 from ..changes.receipt_read import _read_confirmed_request, _CompletionProof
 from ..validation import ModelDocument
 from ._review_result import _result
@@ -57,7 +59,10 @@ def _publish(snapshot, checked, gates, *, policy, held, transaction_id, authorit
         authority=authority, gates=gates)
     publication = publish_prepared_journal(preflight, journal, held_lock=held,
         authority=authority, gates=gates)
-    committing = read_committing_journal(snapshot.source, transaction_id,
+    # Publication may normalize configuration bytes. Bind to the exact
+    # checked target, retaining root identity and configuration checks.
+    target_source = _root(publication_target(preflight))
+    committing = read_committing_journal(target_source, transaction_id,
         expected_sha256=publication.data['journal_sha256'], preflight=preflight)
     finalize_committing_journal(preflight, committing, held_lock=held, authority=authority, gates=gates)
     return cleanup_completed_transaction(preflight, transaction_id, held_lock=held, authority=authority)

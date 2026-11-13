@@ -404,3 +404,7 @@
 - [Bundle 678 — Ergebnisschema von Proposal Apply](bundle-678-proposal-result-schema.md)
 
 - [Bundle 679 — unabhängige Katalogerwartung](bundle-679-catalog-expectation.md)
+
+- [Bundle 680 — offene Proposal-Apply-R/C-Korrektur](bundle-680-proposal-apply-correction.md)
+
+- [Bundle 681 — Prozessabbruchtests ohne künstliche Zeitgrenze](bundle-681-process-crash-deadline.md)
