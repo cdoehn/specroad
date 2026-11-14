@@ -31,7 +31,7 @@ def await_value(probe, process, log, timeout=30):
 
 
 @contextmanager
-def pool(tmp_path, *, proxy=True, initial=None, source=None, state=None):
+def pool(tmp_path, *, proxy=True, initial=None, source=None, state=None, transform=None):
     ids = [f'tests/test_subject.py::test_{i}' for i in range(6)]
     body = source or '''from pathlib import Path
 import os, threading, time
@@ -65,6 +65,8 @@ def exercise(index):
         proxies=[proxy_gateway('srproxy0', 'popen', sys.executable, str(target))] if proxy else [],
         selected={n:n for n in ids}, estimates={}, baseline=dict.fromkeys(ids, 1.0),
         live=dict(repository=str(root), home=str(home), overrides={} if initial is None else {'test-host': initial}))
+    if transform is not None:
+        transform(profile)
     path = root / 'build/host-run.json'; path.write_text(json.dumps(profile))
     args = ['-o', 'addopts=', '--disable-plugin-autoload', '-p', 'xdist.plugin', '-p', 'no:cacheprovider',
         '-p', 'no:doctest', '-n', str(capacity), '--dist', 'worksteal', '--max-worker-restart=0',

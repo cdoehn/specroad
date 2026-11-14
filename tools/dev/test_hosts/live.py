@@ -41,6 +41,8 @@ class LivePool:
         options = profile['live']
         capacities = {r['host']: r['resources']['workers'] for r in self.rows.values()}
         self.owner = Owner(options['repository'], capacities, capacities, options['overrides'], home=options['home'])
+        self.owner.publish({}, source_sha256=profile['source_sha256'],
+                           history_run=self.config._specroad_verification.history_run)
         self.ds = self.config.pluginmanager.getplugin('dsession')
         if self.ds is None:
             raise ValueError('Live pools require the reviewed native xdist controller')
@@ -114,7 +116,8 @@ class LivePool:
     def permit(self, node, channel, message):
         name = node.gateway.id
         try:
-            if (type(message) is not dict or set(message) != {'sequence', 'index', 'slot'}
+            if (node not in self.ds._active_nodes or name not in self.rows
+                    or type(message) is not dict or set(message) != {'sequence', 'index', 'slot'}
                     or type(message['sequence']) is not int or message['sequence'] != self.sequences.get(name, 0)+1
                     or type(message['index']) is not int):
                 raise ValueError('Invalid live worker permission request')
@@ -140,7 +143,7 @@ class LivePool:
             self.publish()
         except (ValueError, OSError, KeyError, TypeError) as error:
             self.errors.append(str(error))
-            channel.send(dict(sequence=message.get('sequence'), allowed=False))
+            channel.send(dict(sequence=message.get('sequence') if type(message) is dict else None, allowed=False))
             self.ds.shouldstop = 'Live worker permission failed'
 
     def close(self):

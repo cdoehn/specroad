@@ -10,7 +10,42 @@ import tempfile
 import time
 import uuid
 
-from dev.test_hosts.config import NAME, private_directory, read_json
+from dev.test_hosts.config import NAME, private_directory, unique
+
+
+def inspect_directory(root):
+    for part in (root, *root.parents):
+        if not stat.S_ISDIR(part.lstat().st_mode):
+            raise ValueError('Linked or special control directory')
+    info = root.stat()
+    if info.st_uid != os.getuid() or info.st_mode & 0o077:
+        raise ValueError('Control directory must be private')
+
+
+def inspect_file(info):
+    if not stat.S_ISREG(info.st_mode) or info.st_nlink != 1 or info.st_uid != os.getuid() or info.st_mode & 0o077:
+        raise ValueError('Control files must be private single regular files')
+
+
+def read_json(path):
+    inspect_directory(path.parent)
+    fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW)
+    try:
+        before = os.fstat(fd)
+        inspect_file(before)
+        if before.st_size > 1_000_000:
+            raise ValueError('Oversized live control file')
+        with os.fdopen(os.dup(fd), 'rb') as stream:
+            data = stream.read(1_000_001)
+        # An atomic replacement may publish a newer valid command meanwhile.
+        # Read this complete descriptor generation; reject in-place mutation.
+        after = os.fstat(fd)
+        identity = lambda info: (info.st_dev, info.st_ino, info.st_size, info.st_mtime_ns)
+        if identity(before) != identity(after) or len(data) != before.st_size:
+            raise ValueError('Live control file changed while reading')
+        return json.loads(data, object_pairs_hook=unique)
+    finally:
+        os.close(fd)
 
 
 def count(value):
@@ -36,10 +71,11 @@ def lane(repository, home=None):
 
 def open_lock(path):
     fd = os.open(path, os.O_RDWR | os.O_CREAT | os.O_NOFOLLOW, 0o600)
-    info = os.fstat(fd)
-    if not stat.S_ISREG(info.st_mode) or info.st_nlink != 1 or info.st_uid != os.getuid() or info.st_mode & 0o077:
+    try:
+        inspect_file(os.fstat(fd))
+    except BaseException:
         os.close(fd)
-        raise ValueError('Unsafe control lock')
+        raise
     return fd
 
 
@@ -55,6 +91,9 @@ def guard(root):
 
 
 def write(path, value):
+    inspect_directory(path.parent)
+    if os.path.lexists(path):
+        inspect_file(path.lstat())
     fd, temporary = tempfile.mkstemp(prefix='.control-', dir=path.parent)
     try:
         with os.fdopen(fd, 'w') as stream:
@@ -75,10 +114,10 @@ def write(path, value):
 
 def settings(root):
     path = root / 'settings.json'
-    if not path.exists():
+    if not os.path.lexists(path):
         return {}
     value = read_json(path)
-    if type(value) is not dict or set(value) != {'version', 'workers'} or value['version'] != 1:
+    if type(value) is not dict or set(value) != {'version', 'workers'} or type(value['version']) is not int or value['version'] != 1:
         raise ValueError('Invalid test-control settings')
     return counts(value['workers'])
 
@@ -96,10 +135,12 @@ def configure(repository, updates=None, *, home=None):
 def live(root):
     """A held owner lock is necessary; a leftover status file proves nothing."""
     path = root / 'owner'
-    if not path.exists():
+    inspect_directory(root)
+    if not os.path.lexists(path):
         return False
     fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW)
     try:
+        inspect_file(os.fstat(fd))
         try:
             fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
         except BlockingIOError:
@@ -111,13 +152,17 @@ def live(root):
 
 def read_status(repository, *, home=None):
     root = lane(repository, home)
-    if not root.exists():
+    if not os.path.lexists(root):
         return None
-    value = read_json(root / 'status.json') if (root / 'status.json').exists() else None
+    inspect_directory(root)
+    value = read_json(root / 'status.json') if os.path.lexists(root / 'status.json') else None
     if value is not None:
         value = dict(value, active=live(root))
         if value['repository'] != str(Path(repository).resolve()):
             raise ValueError('Foreign test-control target')
+        latest = read_json(root / 'status.json')
+        if latest['run'] != value['run']:
+            raise ValueError('Live test generation changed while reading status')
     return value
 
 
@@ -169,8 +214,11 @@ class Owner:
                 raise
 
     def refresh(self):
+        held, current = os.fstat(self.fd), (self.root / 'owner').lstat()
+        if (held.st_dev, held.st_ino) != (current.st_dev, current.st_ino):
+            raise ValueError('Live controller owner lock was replaced')
         value = read_json(self.root / 'request.json')
-        if set(value) != {'version', 'run', 'workers'} or value['version'] != 1 or value['run'] != self.run:
+        if type(value) is not dict or set(value) != {'version', 'run', 'workers'} or type(value['version']) is not int or value['version'] != 1 or value['run'] != self.run:
             raise ValueError('Foreign or corrupt live worker request')
         desired = counts(value['workers'])
         if set(desired) != set(self.capacities) or any(v > self.capacities[k] for k, v in desired.items()):

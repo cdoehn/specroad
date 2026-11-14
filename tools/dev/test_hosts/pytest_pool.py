@@ -47,6 +47,9 @@ def configure(config, root):
     config._sr_pool_servers = []
     config._sr_pool_outputs = {}
     if profile['format_version'] == 2:
+        from importlib.metadata import version
+        if version('pytest-xdist') != '3.8.0' or version('execnet') != '2.1.2':
+            raise ValueError('Live control requires the reviewed xdist/execnet protocol')
         from .live import LivePool
         config._sr_live_pool = LivePool(config)
         config.pluginmanager.register(config._sr_live_pool, 'specroad-live-pool')

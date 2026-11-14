@@ -111,7 +111,7 @@ def verify_live_pool(observation, proof):
             or set(workers) != set(observation.get('workers', []))):
         raise ValueError('Incomplete live worker evidence')
     selected = actual.get('selected')
-    if type(selected) is not list or selected != observation.get('nodeids') or len(set(selected)) != len(selected):
+    if type(selected) is not list or not selected or any(type(n) is not str for n in selected) or selected != observation.get('nodeids') or len(set(selected)) != len(selected):
         raise ValueError('Live selection differs from collected tests')
     grants = actual.get('grants')
     if type(grants) is not dict or set(grants) - workers.keys():
@@ -121,6 +121,8 @@ def verify_live_pool(observation, proof):
         if not re.fullmatch(r'gw[0-9]+', name) or template not in proof['workers']:
             raise ValueError('Worker was not launched on a checked host')
         expected, row = proof['workers'][template], workers[name]
+        if type(row) is not dict or (name in proof['workers'] and proof['workers'][name] != expected):
+            raise ValueError('Live worker identity changed hosts')
         if (any(row.get(k) != expected[k] for k in ('host', 'hostname', 'account', 'environment_sha256'))
                 or any(row.get(k) != proof[k] for k in ('source_sha256', 'snapshot_sha256'))
                 or row.get('io_priority') != {'class': 2, 'priority': 7}):
@@ -136,7 +138,7 @@ def verify_live_pool(observation, proof):
                     or any(type(attempt[k]) is not int for k in ('slot', 'start', 'end'))
                     or not 0 <= attempt['slot'] < expected['budget'] or not 0 <= attempt['start'] <= attempt['end']
                     or type(permit) is not dict or set(permit) != {'index', 'slot'}
-                    or type(permit['index']) is not int or not 0 <= permit['index'] < len(selected)
+                    or type(permit['index']) is not int or type(permit['slot']) is not int or not 0 <= permit['index'] < len(selected)
                     or permit['slot'] != attempt['slot'] or selected[permit['index']] != attempt['nodeid']
                     or attempt['nodeid'] in covered):
                 raise ValueError('Invalid, duplicate or unpermitted live test attempt')

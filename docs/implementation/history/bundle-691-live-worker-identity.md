@@ -37,7 +37,7 @@ Die Korrekturen gelten für W, R und C. R behält seine vollständige Konkurrenz
 Mehr-Apply-, Dateisicherheits-, Umgebungs-, Ausfall- und Nachweisabnahme; C seine
 reine Modulaufteilung. correction_of bindet den exakten alten Rest an
 `9ce398e4e439a2e335478944ed0aef9f5a16bf5055c8e81054da96af1425481c`.
-Stage-Zielstand: **LIVE.W**; danach **LIVE.R**, jeweils erst nach eigenem
+Stage-Zielstand: **LIVE.R**; danach **LIVE.C**, jeweils erst nach eigenem
 erfolgreichem Apply-Gate und Commit. Keine neue Klärung oder Budgetänderung,
 keine Wiederholung erfolgreicher START-/CONFIG-Commits. Produktstand 762/918;
 MOVE bleibt die nächste vollständige geplante Gruppe vor 18.s.W.

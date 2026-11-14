@@ -113,6 +113,8 @@ def collect_status(repository, database=None, timeout=5):
         from dev.test_control.store import read_status
         try:
             control = read_status(repository)
+            if control and control.get('active') and run and (control.get('source_sha256') != run['source'] or control.get('history_run') != run['id']):
+                raise ValueError('Live-Steuerung gehoert zu einem anderen Testlauf.')
         except READ_ERRORS as error:
             control = {'error': str(error), 'active': False}
         return {'observed_at': observed(), 'report': view, 'tests': rows, 'run': run, 'test_control': control}
