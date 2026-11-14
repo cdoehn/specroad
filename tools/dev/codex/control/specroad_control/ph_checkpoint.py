@@ -11,7 +11,7 @@ def main(argv=None):
         repository, repo_id, exchange = sys.argv[1:] if argv is None else argv
         repository, exchange = Path(repository), Path(exchange)
         context = api.context(repository)
-        if str(context.repo_id) != repo_id or Path(context.repository_path).resolve() != repository.resolve():
+        if str(context.repo_id) != repo_id or context.repository_path.value.resolve() != repository.resolve():
             raise ValueError('wrong repository')
         result = api.bundle(repository, output_directory=exchange)
         if not result.report.primary_result.success or str(result.context.repo_id) != repo_id:

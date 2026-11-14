@@ -47,3 +47,11 @@ Rest wird nicht künstlich gekürzt, und jeder Zustand wird einzeln im Apply
 geprüft und committed. Statische Dev-Prüfung und reine Collection sind kein
 Verhaltenstestnachweis. Allgemeine Arbeitsregeln stehen in DEVELOPMENT.md
 und Apply_Commit_Plans.md; Laufprotokolle gehören nicht in diesen Plan.
+
+## Adapterkorrektur nach START.W
+
+[START.W-FIX1 / Bundle 686](../history/bundle-686-checkpoint-path-value.md) behebt den nach der
+erfolgreichen Apply-Abnahme gefundenen nativen Pfadtypfehler. Der bereits
+committete START.W wird nicht wiederholt. Seine ausführliche native
+Betriebsintegration und die übrigen START.R-Abnahmen bleiben offen;
+START.R bleibt der nächste geplante Schritt.

@@ -410,3 +410,5 @@
 - [Bundle 681 — Prozessabbruchtests ohne künstliche Zeitgrenze](bundle-681-process-crash-deadline.md)
 
 - [Bundle 684 — Reset-Abnahme und vollständiger R/C-Rest](bundle-684-budget-reset-receipt.md)
+
+- [Bundle 686 — native Checkpoint-Pfadwerte korrigieren](bundle-686-checkpoint-path-value.md)

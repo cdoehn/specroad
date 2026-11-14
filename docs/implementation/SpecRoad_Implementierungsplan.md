@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 183 · **Stand:** 14. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.87
+**Planrevision:** 184 · **Stand:** 14. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.87
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 306 Schritte und 918 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; die früher genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wurde nach der damaligen Spezifikation innerhalb von 15.l.R vorgezogen und bleibt als normaler Prüfkern erhalten. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -65,6 +65,8 @@ die zwölf bestätigten OFF-PLAN-W/R/C-Commits. Bundle 685 liefert nur START.W.
 Nach dessen erfolgreichem Apply folgt START.R; CONFIG, LIVE und MOVE schließen
 sich an. Erst danach wird die Produktfolge 18.s.W fortgesetzt. Produktzähler
 und fachliche Produktabnahmen bleiben unverändert.
+Die beauftragte Adapterkorrektur [START.W-FIX1 / Bundle 686](history/bundle-686-checkpoint-path-value.md)
+erhält START.W und lässt START.R als nächsten Planschritt offen.
 
 ## Danach: Produkt-Recovery zurückbauen
 
@@ -97,7 +99,7 @@ last_completed_plan_commit: 18.k.C
 next_plan_commit: 18.s.W
 priority_off_plan: START-CONFIG-LIVE-MOVE
 next_off_plan_commit: START.R
-last_completed_numbered_bundle: 685
+last_completed_numbered_bundle: 686
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null

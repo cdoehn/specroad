@@ -1,6 +1,6 @@
 """Operator restarts use actual checkpoints, never prior runtime provenance."""
 from contextlib import closing
-from dataclasses import replace
+from dataclasses import dataclass, replace
 import json
 from pathlib import Path
 from types import SimpleNamespace, ModuleType
@@ -213,10 +213,19 @@ def test_cli_start_current_is_explicit_and_only_available_on_start():
         cli.main(['status', '--from-current'])
 
 
-@pytest.mark.parametrize('foreign', [False, True])
-def test_native_checkpoint_checks_identity_and_uses_native_snapshot(monkeypatch, capsys, tmp_path, foreign):
-    # Native seam double: local repository effects and foreign-target rejection,
-    # not a simulated proof of a live installed PatchHarbor service.
+@dataclass(frozen=True)
+class RepositoryPathValue:
+    """API contract double: a value object, not an os.PathLike or a string."""
+    value: Path
+
+    def __str__(self):
+        return str(self.value)
+
+
+@pytest.fixture
+def checkpoint_api(monkeypatch):
+    # The adapter uses API contract doubles; installed-service integration is
+    # a separate acceptance. RepositoryPath intentionally has no __fspath__.
     modules = {name: ModuleType(name) for name in ('patchharbor', 'patchharbor.api', 'patchharbor.errors')}
     modules['patchharbor'].api = api = modules['patchharbor.api']
     class NativeError(Exception):
@@ -225,13 +234,22 @@ def test_native_checkpoint_checks_identity_and_uses_native_snapshot(monkeypatch,
     modules['patchharbor.errors'].FailureReason = SimpleNamespace(REPOSITORY_BUSY='busy')
     for name, module in modules.items():
         monkeypatch.setitem(__import__('sys').modules, name, module)
+    api.context = Mock()
+    api.bundle = Mock()
+    return api
+
+
+@pytest.mark.parametrize('foreign', [False, True])
+def test_native_checkpoint_checks_identity_and_uses_native_snapshot(checkpoint_api, capsys, tmp_path, foreign):
+    api = checkpoint_api
     repository, exchange = tmp_path / 'apply', tmp_path / 'exchange'
     repository.mkdir(); exchange.mkdir()
     work = repository / 'uncommitted.py'; work.write_bytes(b'original bytes\n')
-    context = SimpleNamespace(repo_id='foreign' if foreign else 'expected', repository_path=repository)
-    api.context = Mock(return_value=context)
-    api.bundle = Mock(return_value=SimpleNamespace(context=context, path=exchange / 'checkpoint.zip',
-        report=SimpleNamespace(primary_result=SimpleNamespace(success=True))))
+    context = SimpleNamespace(repo_id='foreign' if foreign else 'expected',
+                              repository_path=RepositoryPathValue(repository))
+    api.context.return_value = context
+    api.bundle.return_value = SimpleNamespace(context=context, path=exchange / 'checkpoint.zip',
+        report=SimpleNamespace(primary_result=SimpleNamespace(success=True)))
     assert ph_checkpoint.main([str(repository), 'expected', str(exchange)]) == int(foreign)
     reply = json.loads(capsys.readouterr().out)
     assert reply['ok'] is not foreign
@@ -240,3 +258,16 @@ def test_native_checkpoint_checks_identity_and_uses_native_snapshot(monkeypatch,
         api.bundle.assert_not_called()
     else:
         api.bundle.assert_called_once_with(repository, output_directory=exchange)
+        assert reply['path'] == str(exchange / 'checkpoint.zip')
+
+
+def test_native_checkpoint_rejects_foreign_path_value_before_capture(checkpoint_api, capsys, tmp_path):
+    repository, other = tmp_path / 'apply', tmp_path / 'other'
+    repository.mkdir(); other.mkdir()
+    marker = other / 'untouched.txt'; marker.write_bytes(b'foreign work\n')
+    checkpoint_api.context.return_value = SimpleNamespace(
+        repo_id='expected', repository_path=RepositoryPathValue(other))
+    assert ph_checkpoint.main([str(repository), 'expected', str(tmp_path / 'exchange')]) == 1
+    assert json.loads(capsys.readouterr().out) == {'ok': False, 'error': 'checkpoint_failed'}
+    checkpoint_api.bundle.assert_not_called()
+    assert marker.read_bytes() == b'foreign work\n'

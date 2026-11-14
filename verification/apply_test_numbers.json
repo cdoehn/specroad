@@ -27312,6 +27312,7 @@
     "tests/test_apply_lookahead.py::test_extensions_cannot_replace_rest_replay_commits_or_add_decisions[replay]",
     "tests/test_apply_lookahead.py::test_extensions_cannot_replace_rest_replay_commits_or_add_decisions[role]",
     "tests/test_apply_lookahead.py::test_pending_clarification_targets_cannot_change_with_lookahead",
-    "codex_control_tests.test_start_current.StartCurrentTests.test_next_tick_dispatches_once_from_the_new_checkpoint"
+    "codex_control_tests.test_start_current.StartCurrentTests.test_next_tick_dispatches_once_from_the_new_checkpoint",
+    "tests/codex_control_tests/test_start_current.py::test_native_checkpoint_rejects_foreign_path_value_before_capture"
   ]
 }
