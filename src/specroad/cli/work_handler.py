@@ -4,14 +4,12 @@ import json
 from pathlib import Path
 import os
 
-from ..recovery.values import RestoreError, guarded, persisted_contract, require
-from ..recovery._owned_checks import owned_checks
+from ..qualification.errors import RestoreError, guarded, persisted_contract, require
+from ..qualification.owned import owned_checks
 from ..security import ProjectBoundary
 from ..work.control import inspect_work_status
 from ..work.open_existing import open_restore_work, protected_paths
-from ..work.restore_execution import prepare_restore_work, _build
-from ..work.restore_planning import prepare_planning_work, resume_planning_work
-from ..work.restore_progress import advance_restore_work, resume_restore_work
+from ..work.build import _build
 from ..work.root import WorkDirectory
 from ..work.checkpoints import CheckpointStore
 from ..work._public_errors import work_errors
@@ -84,6 +82,9 @@ def restore_result(native):
 @persisted_contract
 @work_errors
 def start_restore_work(invocation, request):
+    from ..work.restore_execution import prepare_restore_work
+    from ..work.restore_planning import prepare_planning_work
+    from ..work.restore_progress import advance_restore_work
     options = request.options
     registry = invocation.registry
     planning = '--from' in options
@@ -104,6 +105,7 @@ def start_restore_work(invocation, request):
     with location.for_checkpoint(require_empty=True) as held:
         store._publish_held(held, initial, None)
     if planning:
+        from ..work.restore_planning import resume_planning_work
         current, document = resume_planning_work(store, services=invocation.restore_services)
     else:
         native = _native_options(invocation)
@@ -190,12 +192,14 @@ def _work(invocation):
             '--accept-remote-risk', '--expected-work-lock-sha256', '--work-recovery-reason')),
                 'restore_planning_takeover_not_supported', exit_code=2)
         before = inspect_work_status(store)['checkpoint_sha256']
+        from ..work.restore_planning import resume_planning_work
         current, document = resume_planning_work(store, services=invocation.restore_services)
         if document is None:
             return continuation('work.resume', store, current)
         observation = {'native_execution_checked': False,
                        'checkpoint_changed': current.as_dict()['checkpoint_sha256'] != before}
     else:
+        from ..work.restore_progress import resume_restore_work
         result = resume_restore_work(store, registry=invocation.registry, **_native_options(invocation))
         report = result.as_dict()
         document = restore_result(report['restore'])

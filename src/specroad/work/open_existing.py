@@ -7,14 +7,14 @@ native project gates. Neither root.json nor a checkpoint authenticates an actor.
 from pathlib import Path
 
 from ..model.canonical import canonical_json_bytes
-from ..recovery._inventory import boundary, read_source
-from ..recovery.values import RestorePlan, require, guarded, persisted_contract
+from ..qualification.inventory import boundary, read_source
+from ..qualification.errors import require, guarded, persisted_contract
 from ..storage.json_syntax import parse_json_object
 from ._data_contract import _object, _hash
 from ._root_lock import _HeldWorkRoot
 from .checkpoints import CheckpointStore, _reference
 from .packages import _capture, _decode
-from .restore_execution import _build
+from .build import _build
 from .root import WorkDirectory, _path
 from ._public_errors import work_errors
 
@@ -32,6 +32,7 @@ def protected_paths(initial):
     if '--from' in options:
         paths.update(options[key] for key in ('--source-root', '--output-root'))
     else:
+        from ..recovery.values import RestorePlan
         from .manifest import _bytes
         plan = RestorePlan(_bytes(value['plan_binding']['plan_source'], initial.objects))
         paths.update((plan.data['source']['root'], options['--plan-root']))

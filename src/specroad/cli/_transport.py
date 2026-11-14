@@ -64,7 +64,7 @@ def create_outbound_command(invocation):
     from ..model.errors import ModelError
     from ..security import SafetyViolation
     from ..storage.archive import ArchiveError
-    from ..recovery.values import RestoreError
+    from ..qualification.errors import RestoreError
     from ..query.read_work import complete_read_steps
     from .results import CommandResult, FailureKind
     from ..diagnostics import Diagnostic

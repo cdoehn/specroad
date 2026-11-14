@@ -92,8 +92,8 @@ def select_project(command, options, cwd, *, preflight=None):
     explicit = options.get("--project")
     profile = command.preflight_for(options)
     if command.command_id in ('migrate.plan','migrate.apply','migrate.verify'):
-        from ..recovery._inventory import boundary
-        from ..recovery.values import RestoreError
+        from ..qualification.inventory import boundary
+        from ..qualification.errors import RestoreError
         from .results import FailureKind, OperationFailure
         try:
             if explicit is None:
@@ -121,8 +121,8 @@ def select_project(command, options, cwd, *, preflight=None):
         # never loaded as a new valid project base.
         return None, None, {}
     if command.command_id == 'recover.restore' and profile is PreflightProfile.RECOVERY:
-        from ..recovery._inventory import boundary
-        from ..recovery.values import RestoreError
+        from ..qualification.inventory import boundary
+        from ..qualification.errors import RestoreError
         from .results import FailureKind, OperationFailure
         try:
             selected = boundary(explicit)

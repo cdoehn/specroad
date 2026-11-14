@@ -1,7 +1,7 @@
 """Preserve native Work error classes at the public Restore boundary."""
 from functools import wraps
 
-from ..recovery.values import RestoreError
+from ..qualification.errors import RestoreError
 from ..storage.archive import ArchiveError
 from .checkpoints import CheckpointStorageError
 from .resume import WorkResumeError

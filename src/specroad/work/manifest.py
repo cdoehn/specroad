@@ -409,7 +409,7 @@ def read_work_successor(raw, objects, *, previous, registry, expected_tool_build
     unchanged = all(canonical_json_bytes(before[name]) == canonical_json_bytes(after[name])
                     for name in _BINDING_FIELDS)
     if before['command_class'] == 'recovery_write':
-        from ..recovery.values import require
+        from ..qualification.errors import require
         require(unchanged, 'restore_work_original_binding_conflict', exit_code=6)
     else:
         _require(unchanged)

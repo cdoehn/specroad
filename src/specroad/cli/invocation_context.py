@@ -62,7 +62,7 @@ class InvocationContextBuilder:
         # Explicit host inputs still receive their native type validation.
         if (self.restore_services is not None
                 or current.command.preflight_for(current.options) is not PreflightProfile.BOOTSTRAP):
-            from ..recovery.services import native_services
+            from ..qualification.services import native_services
             services = native_services(self.restore_services)
         actor = None
         if self.recovery_actor is not None:

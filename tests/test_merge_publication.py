@@ -12,7 +12,7 @@ from specroad.changes.core import prepare_change_plan
 from specroad.changes.authoring import prepare_authoring_request
 from specroad.model.errors import ModelError
 from specroad.model.canonical import canonical_json_bytes as jcs
-from specroad.recovery.services import RestoreServices
+from specroad.qualification.services import RestoreServices
 from support.merge_target import replace
 from support.merge_publication import setup,apply,tree,normative,seed
 from support.transition_journal import assert_owned_plan

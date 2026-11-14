@@ -38,7 +38,7 @@ class RecordedSource:
         if not _immutable_key(binding, files):
             source_resource_rows(self)
             return
-        from ..recovery._owned_checks import checked_bytes
+        from ..qualification.owned import checked_bytes
 
         def check():
             source_resource_rows(RecordedSource(binding, files))

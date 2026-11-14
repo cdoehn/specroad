@@ -8,7 +8,7 @@ from specroad.merge._recorded_values import RecordedSource
 from specroad.merge.relation_inputs import _sources
 from specroad.model.canonical import canonical_json_bytes as jcs
 from specroad.model.errors import ModelError
-from specroad.recovery._owned_checks import owned_checks
+from specroad.qualification.owned import owned_checks
 from specroad.snapshots import SourceSnapshot
 from test_merge_reuse import sources_at, recorded, observe_inventory
 

@@ -16,7 +16,7 @@ from ..migration.plan_values import require
 from ..migration.planning import plan_migration
 from ..migration.builtin_path import require_path
 from ..migration._backup_source import _observe
-from ..recovery._inventory import boundary, read_source
+from ..qualification.inventory import boundary, read_source
 from .migration_commands import PLANNING
 from .migration_inputs import _required, _read, _read_plan, _backup, _already_current
 from .migration_result import document

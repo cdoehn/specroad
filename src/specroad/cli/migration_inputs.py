@@ -5,7 +5,7 @@ from ..storage.json_syntax import parse_json_object as parsed
 from ..changes.values import ChangePlan
 from ..migration.plan_values import require
 from ..migration._backup_source import _observe
-from ..recovery._inventory import boundary, read_source
+from ..qualification.inventory import boundary, read_source
 from .migration_commands import BOUND_PLAN
 
 def _required(options, *names):

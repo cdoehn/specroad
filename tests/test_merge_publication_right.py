@@ -16,7 +16,7 @@ from specroad.changes.recovery import (inspect_recovery,discard_unpublished_tran
 from specroad.model.errors import ModelError
 from specroad.security import SafetyViolation,ProjectBoundary
 from specroad.model.canonical import canonical_json_bytes as jcs,canonical_json_sha256 as digest
-from specroad.recovery.services import RestoreServices
+from specroad.qualification.services import RestoreServices
 from specroad.storage.operational_preflight import observe_operational_preflight
 from specroad.migration.plan_values import b64,unb64
 from support.merge_publication import setup,apply,tree,normative,seed

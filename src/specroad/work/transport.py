@@ -18,7 +18,7 @@ from ..transport.outbound import OutboundExport
 from ._request_binding import _command
 from .manifest import (_create_manifest, _bytes, _entries, partition_work_manifest,
                        complete_work_manifest)
-from .restore_execution import _build
+from .build import _build
 from ._public_errors import work_errors
 
 

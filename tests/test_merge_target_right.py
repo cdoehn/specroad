@@ -12,8 +12,8 @@ import pytest
 from specroad.merge import verify_merge_target, SourceSnapshot, SourceRequest, load_merge_sources
 from specroad.model.canonical import canonical_json_bytes as jcs
 from specroad.model.errors import ModelError
-from specroad.recovery import RestoreServices
-from specroad.recovery._validation import validate_project
+from specroad.qualification.services import RestoreServices
+from specroad.qualification.project import validate_project
 from specroad.security import ProjectBoundary, SafetyViolation
 from support.domain import domain_value
 from support.records import record_value, ref

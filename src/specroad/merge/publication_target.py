@@ -2,7 +2,7 @@
 from ..model.canonical import canonical_json_bytes as jcs, canonical_json_sha256 as digest
 from ..storage.json_syntax import parse_json_object as parsed
 from ..migration.plan_values import unb64, file_bindings, changes
-from ..recovery._owned_checks import checked_bytes
+from ..qualification.owned import checked_bytes
 from ._recorded import recorded_sources
 from .metadata import verify_merge_metadata
 from .target import verify_merge_target
@@ -65,10 +65,10 @@ def recheck_plan(plan, source):
 
 
 def validate_publication_target(plan, source, target, *, services=None):
-    from ..recovery._validation import project_validation_report
-    from ..recovery._specialists import review_checks
-    from ..recovery._evidence_history import evidence_assessments
-    from ..recovery.services import native_services
+    from ..qualification.project import project_validation_report
+    from ..qualification.specialists import review_checks
+    from ..qualification.evidence import evidence_assessments
+    from ..qualification.services import native_services
     from ..validation import assess_validation
     from ..verification.code_reference_state import assess_code_reference
     from ..storage.record_artifact import RecordArtifact

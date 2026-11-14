@@ -6,7 +6,7 @@ from specroad.merge._recorded_values import RecordedSource
 from specroad.merge import _recorded_values as values
 from specroad.merge.relation_inputs import _sources
 from specroad.model.canonical import canonical_json_bytes as jcs
-from specroad.recovery._owned_checks import owned_checks
+from specroad.qualification.owned import owned_checks
 from specroad.snapshots import inventory as observations
 from support.languages import small_restore_registry
 from support.read_only import inventory, no_write_attempts

@@ -27462,6 +27462,15 @@
     "tests/test_project_qualification.py::test_live_source_is_reobserved_even_when_original_model_bytes_are_reused",
     "tests/test_project_qualification.py::test_project_data_cannot_supply_a_native_service_or_success_gate[True]",
     "tests/test_project_qualification.py::test_project_data_cannot_supply_a_native_service_or_success_gate[invalid0]",
-    "tests/test_project_qualification.py::test_project_data_cannot_supply_a_native_service_or_success_gate[invalid1]"
+    "tests/test_project_qualification.py::test_project_data_cannot_supply_a_native_service_or_success_gate[invalid1]",
+    "tests/test_project_qualification_right.py::test_common_inventory_retains_no_follow_and_portable_name_guards[None]",
+    "tests/test_project_qualification_right.py::test_common_inventory_retains_no_follow_and_portable_name_guards[alias]",
+    "tests/test_project_qualification_right.py::test_common_inventory_retains_no_follow_and_portable_name_guards[hardlink]",
+    "tests/test_project_qualification_right.py::test_common_inventory_retains_no_follow_and_portable_name_guards[symlink]",
+    "tests/test_project_qualification_right.py::test_common_reader_rejects_replaced_root_before_reading_foreign_bytes",
+    "tests/test_project_qualification_right.py::test_normal_native_qualification_works_with_restore_adapters_unavailable",
+    "tests/test_project_qualification_right.py::test_unknown_declared_format_is_not_healed_by_a_preceding_valid_qualification[artifact]",
+    "tests/test_project_qualification_right.py::test_unknown_declared_format_is_not_healed_by_a_preceding_valid_qualification[profile]",
+    "tests/test_project_qualification_right.py::test_unknown_declared_format_is_not_healed_by_a_preceding_valid_qualification[specroad.json]"
   ]
 }

@@ -5,7 +5,7 @@ from ..model.canonical import canonical_json_bytes as jcs
 from ..model.errors import ModelError
 from ..storage.json_syntax import parse_json_object as parsed
 from ..validation import assess_validation
-from ..recovery._validation import project_validation_report
+from ..qualification.project import project_validation_report
 from .metadata import verify_merge_metadata
 from .conflict_schema import ROLES
 

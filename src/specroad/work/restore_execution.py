@@ -17,14 +17,9 @@ from ..storage.json_syntax import parse_json_object
 from .checkpoints import CheckpointStore
 from .manifest import _bytes
 from .restore import create_restore_work_manifest, read_restore_work_manifest
-from .resume import _runtime_build, WorkResumeError
+from .build import _build
 
 
-def _build():
-    try:
-        return _runtime_build()
-    except WorkResumeError as error:
-        raise RestoreError(error.reason, exit_code=error.exit_code) from error
 
 
 def _units(raw):

@@ -14,7 +14,7 @@ from ..changes.schema_transition_recovery import historical_request
 from ..migration.plan_values import b64, file_bindings, changes
 from ..migration._backup_source import _observe
 from ..storage.operational_preflight import observe_operational_preflight
-from ..recovery._owned_checks import owned_checks
+from ..qualification.owned import owned_checks
 from .sources import MergeSources
 from ._recorded import capture_sources
 from .target import verify_merge_target
