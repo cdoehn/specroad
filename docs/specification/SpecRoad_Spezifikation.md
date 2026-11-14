@@ -1,19 +1,19 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.88
+## Version 0.2.89
 
 | Feld | Wert |
 |---|---|
 | Dokument-ID | `SR-SPEC-0001` |
-| Dokumentversion | `0.2.88` |
+| Dokumentversion | `0.2.89` |
 | Zielrelease | `SpecRoad Single-Repository Workbench 0.2.0` |
 | Status | **Fachlich konsolidierte Arbeitsgrundlage; technische Reviewentscheidung gesondert dokumentiert, formale Baseline-Freigabe und Produktabnahme nicht durch dieses Dokument erklärt** |
 | Stand | 14. November 2026 |
 | Sprache | Deutsch; technische Feldnamen, Enum-Werte und CLI-Kommandos Englisch |
-| Fachliche Quelle | **Diese Repositoryfassung v0.2.88 ist die aktive fachliche Arbeitsgrundlage; eine entsprechende PDF wird hiermit nicht veröffentlicht.** |
+| Fachliche Quelle | **Diese Repositoryfassung v0.2.89 ist die aktive fachliche Arbeitsgrundlage; eine entsprechende PDF wird hiermit nicht veröffentlicht.** |
 | Bearbeitbare Satzquelle | Diese Datei; eine spätere PDF muss denselben versionierten Inhalt wiedergeben. |
 | Vorgängerversion | Repository-Spezifikation v0.2.87; historische Nachweise bleiben unverändert. |
 | Prüf- und Entscheidungsgrundlage | CONTROL-START-CURRENT / TEST-CONTROL-PLAN, ausdrücklicher Nutzerauftrag vom 14. November 2026; keine Produktfreigabe. |
-| Änderungsart | Umsetzung der bestätigten CONFIG-Folge: lokal konfigurierbare Budgets und Aufrufpriorität bei unveränderten bestehenden Verträgen. Produkt-Recovery-Rückbau, LIVE und MOVE bleiben nachgeordnet. |
+| Änderungsart | Ausdrücklich beauftragte spekulative Testkopien nach erfolgreichem MOVE: deterministische Verteilung, vollständige Gewinnerabschlüsse und getrennte Messnachweise. Produktanforderungen bleiben unverändert. |
 
 > **Verbindlicher Quellenwechsel:** Die ausdrückliche Nutzerentscheidung REFERENCE-SOURCE-551 wird als v0.2.50 umgesetzt. Der neue Quellvertrag ist Entwurfsarbeit vom 3. November 2026, kein Nachweis eines früher existierenden Formats. Bestehende 0.2-Verträge, Transport-, Sicherheits- und Reviewgrenzen bleiben erhalten.
 
@@ -961,6 +961,55 @@ werden nicht verdeckt. `test-monitor` zeigt Zustand und Hosts an. Die
 vollständigen Phasengates und offenen Integrationsabnahmen stehen im Plan;
 ihre Planung behauptet keine bereits nutzbare Live-Steuerung.
 
+### 2.4.3.8 Spekulative Testkopien — SPECULATE-697
+
+Ausdrücklicher Nutzerauftrag vom 14. November 2026 nach MOVE: Ein freier
+Worker beginnt stets zuerst einen noch nicht gestarteten ausgewählten Test.
+Erst wenn systemweit kein solcher Test mehr wartet, darf er eine zusätzliche
+Kopie eines noch laufenden Tests ausführen. Der zentrale Controller reserviert
+atomar; gestartete und bereits reservierte Kopien zählen zusammen. Unter den
+auf diesem Host ausführbaren Kandidaten gewinnt die geringste globale
+Kopienzahl, danach die stabile Testidentität. Weder Hostgeschwindigkeit noch
+Restlaufzeit bestimmen diese Auswahl. Solange ein geeigneter aktivierter Host
+noch keine Kopie eines Tests hat, wird auf einem bereits beteiligten Host
+keine weitere Kopie dieses Tests gestartet. Erst nach Belegung aller geeigneten
+Hosts sind weitere Kopien auf demselben Host erlaubt. Aktivierte Hosts sind
+die vor dem Lauf vollständig geprüften Hosts mit positiver Soll-Workerzahl.
+Bestehende Hostlimits und atomare Hostslots gelten über alle Applies hinweg.
+
+Jede Kopie erhält einen eigenen Workerprozess, frische Fixtures, eine eindeutige
+Versuchskennung und dauerhafte getrennte native Setup-/Call-/Teardown-Daten.
+Der Controller entscheidet einmalig nach Eingang des ersten vollständigen
+Protokollabschlusses einschließlich Teardown. Dieses Ergebnis bleibt kanonisch;
+weitere vollständige Ergebnisse werden als zusätzliche Versuche erhalten.
+Andere laufende Kopien werden gezielt samt Unterprozessen beendet. Ein Worker
+wird erst nach bestätigtem Prozessbaumende freigegeben; fehlende oder fremde
+Bestätigungen, Worker-/SSH-Verlust und Speicherfehler erlauben keinen Gate-Erfolg.
+Die bestätigte Beendigung eines überflüssigen Versuchs ist kein Testfehler.
+Ein tatsächlich beobachteter Fehler irgendeiner Kopie bleibt dagegen erhalten
+und macht das Gate rot, auch wenn eine andere Kopie bestanden hat. Kein Retry
+nach einem Fehler; bestehende Fail-fast-Regeln bleiben bestehen.
+
+Die ausgewählte Testmenge, Pflichtauswahl und N=3-Rotation bleiben unverändert.
+Jede Testidentität zählt einmal als abgeschlossen; Kopien werden separat mit
+Host, Worker und Versuch ausgewiesen. Unvollständig beendete Kopien sind keine
+gültigen Laufzeitmessungen. Für den aktuellen Lauf bilden ausdrücklich
+autorisierte Kopien eine Versuchsgruppe: nach vollständiger Auflösung zählt
+global die Messung des kanonischen vollständigen erfolgreichen Versuchs,
+pro Host dessen erster vollständig erfolgreicher Versuch innerhalb derselben
+Gruppe. Bei Fehlern oder ungelösten Versuchen bleibt die Gruppe ungültig;
+es gibt keinen Rückgriff auf ältere Läufe und keine Vermischung von Phasen.
+Alle Originalmessungen und Hostbindungen bleiben erhalten. Die Erweiterung
+benutzt ein ausdrücklich versioniertes Pool-/Historienformat; alte Nachweise
+werden weder umgedeutet noch nachträglich verändert.
+
+MOVE bleibt eine ausdrückliche Verlagerung ohne gleichzeitig gültigen Nachfolger.
+Während einer solchen Reservierung entstehen keine neuen spekulativen Kopien;
+eine MOVE-Anfrage für einen bereits vervielfachten Test wird abgewiesen, ohne
+laufende Versuche zu verändern. Lokale und SSH-Ausführung benutzen dieselbe
+Regel, geprüfte Umgebungen und niedrige CPU-/IO-Priorität. CI, Dienste,
+SSH-Anmeldedaten und Control-Budgets sind nicht Teil dieser Änderung.
+
 ### 2.5 Entwicklungsworkflow: aktuelle Laufzeitfilterung und vollständige Planschritte
 
 **Ausdrücklicher Nutzerauftrag vom 30. Oktober 2026 — RUNTIME-AUTO-521.**
@@ -983,7 +1032,11 @@ wird einmalig als gekennzeichnete Messherkunft importiert, niemals über neuere
 Versuche gelegt. Ein nicht lesbarer, beschädigter oder nicht beschreibbarer
 Messspeicher darf keinen erfolgreichen Test-Gate-Bericht erzeugen.
 
-**Nur der neueste Versuch zählt.** Der dauerhafte Start eines Einzeltests
+**Nur der neueste Versuch zählt.** Für ausdrücklich autorisierte parallele
+Kopien gilt die gemeinsame Versuchsgruppe nach 2.4.3.8; gewöhnliche Starts
+behalten die folgende Regel.
+
+ Der dauerhafte Start eines Einzeltests
 macht dessen aktuelle Messung sofort ungültig. Die Datenbank ordnet Starts
 atomar; ein später beendeter älterer Versuch verdrängt keinen neueren Start.
 Erst drei vollständige erfolgreiche Phasen desselben Versuchs und Workers
@@ -1517,7 +1570,9 @@ Host-/Umgebungsmessungen haben Vorrang vor konservativen Startschätzungen.
 Eine Anpassung der Prognose während des Laufs ist keine Messung und verändert
 weder Datenbankwerte noch den Auswahlfilter. Langsame Hosts dürfen zugunsten
 eines früheren erwarteten Endes frei bleiben. Laufende Tests werden nicht
-migriert, geteilt, spekulativ verdoppelt oder automatisch wiederholt.
+migriert oder geteilt. Die ausdrücklich beauftragten Ausnahmen sind MOVE
+nach 2.4.3.7 und spekulative Kopien nach 2.4.3.8; automatische Wiederholung
+fehlgeschlagener Tests bleibt ausgeschlossen.
 Die Hostmenge wird vor dem Lauf festgelegt; Verteilung noch nicht gestarteter
 Tests bleibt dynamisch. Ausfall und unvollständiger Nachweis sperren das Gate.
 

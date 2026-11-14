@@ -3,6 +3,7 @@ import sys
 from pathlib import Path
 
 sys.dont_write_bytecode = True
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 sys.path.insert(0, str(Path(__file__).resolve().parent / "dev/status"))
 from test_time import main
 

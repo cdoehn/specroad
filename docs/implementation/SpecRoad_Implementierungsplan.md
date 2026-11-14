@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 200 · **Stand:** 14. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.88
+**Planrevision:** 204 · **Stand:** 14. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.89
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 306 Schritte und 918 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; die früher genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wurde nach der damaligen Spezifikation innerhalb von 15.l.R vorgezogen und bleibt als normaler Prüfkern erhalten. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -58,18 +58,18 @@ Offene R/C-Korrektur nach erfolgreichem W: [Bundle 680](history/bundle-680-propo
 
 Korrektur der Prozessabbruchtests: [Bundle 681](history/bundle-681-process-crash-deadline.md).
 
-## Vorrangiger Auftrag: Control-Neustart und unabhängiges test-control
+## Vorrangiger Auftrag: spekulative Testkopien
 
-[START/CONFIG/LIVE/MOVE](decisions/control-start-test-control-685.md) enthält
-zwölf bestätigte OFF-PLAN-W/R/C-Commits. START, CONFIG und LIVE sind im
-gebundenen Result vollständig erfolgreich übernommen. MOVE.W ist in Bundle 693
-mit 8.811 und MOVE.R in Bundle 694 mit 8.892 bestandenen Tests committed.
-[Bundle 696](history/bundle-696-move-child-environment.md) korrigiert nach
-Bundle 695 die Kindprozessumgebung der nativen Langnamen-MOVE-Abnahme im offenen MOVE.C.
-MOVE.W/R werden nicht wiederholt.
-Der Zielstand dieser Stage reicht nach ihrem erfolgreichen Gate bis **MOVE.C**;
-danach ist diese OFF-PLAN-Folge vollständig. Der Produkt-Recovery-Rückbau
-beginnt anschließend mit 18.s.W; Produktzähler und vollständige Produktabnahmen bleiben unverändert.
+START/CONFIG/LIVE/MOVE ist im erfolgreichen Result von Bundle 696 vollständig
+übernommen; MOVE.C wurde mit 8.901 bestandenen Tests committed. Darauf baut
+der ausdrückliche Nutzerauftrag [SPECULATE-697](decisions/speculative-tests-697.md)
+mit drei echten W/R/C-Ständen auf. Dieser Zielstand gilt erst nach dem eigenen
+erfolgreichen Apply-Gate bis **SPECULATE.W**. Danach folgen SPECULATE.R/C,
+anschließend der unveränderte Produkt-Recovery-Rückbau. Produktzähler bleiben 762/918.
+
+Korrektur nach fehlgeschlagenem W: [Bundle 698](history/bundle-698-speculative-correction.md).
+Bundle 697 erzeugte keinen Commit; dieser Fortschrittsblock ist weiterhin
+der erst nach dem eigenen erfolgreichen Gate gültige Zielstand.
 
 ## Danach: Produkt-Recovery zurückbauen
 
@@ -95,14 +95,14 @@ Korrektur und vollständiger OFF-PLAN-Rest: [Bundle 684 — Reset-Abnahme](histo
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 200
+plan_revision: 204
 implementation_plan_commits_total: 918
 implementation_plan_commits_completed: 762
 last_completed_plan_commit: 18.k.C
 next_plan_commit: 18.s.W
-priority_off_plan: null
-next_off_plan_commit: null
-last_completed_numbered_bundle: 696
+priority_off_plan: SPECULATE-697
+next_off_plan_commit: SPECULATE.R
+last_completed_numbered_bundle: 698
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null

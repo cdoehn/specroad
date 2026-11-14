@@ -103,7 +103,7 @@ class Attempts:
                 continue
             self.receipts[row['id']] = {**row, 'state': 'checking'}
             found = next((r for r in self.current.values() if r['token'] == row['attempt'] and r['state'] == 'running'), None)
-            if (found is None or row['target'] not in self.pool.owner.capacities or self.pool.owner.desired.get(row['target'], 0) == 0
+            if (found is None or not self.can_move(found) or row['target'] not in self.pool.owner.capacities or self.pool.owner.desired.get(row['target'], 0) == 0
                     or self.pool.config._specroad_verification.ledger.worst.get(found['nodeid'], 'passed') != 'passed'):
                 self.reject(row, 'Attempt finished or target is no longer enabled')
                 continue
@@ -120,6 +120,9 @@ class Attempts:
                 idle.shutdown()
             self.advance()
             break
+
+    def can_move(self, attempt):
+        return True
 
     def reject(self, row, reason):
         self.receipts[row['id']] = {k: row[k] for k in ('id', 'attempt', 'target')} | dict(state='rejected', reason=reason)

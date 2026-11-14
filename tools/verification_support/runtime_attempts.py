@@ -3,7 +3,7 @@ import sqlite3
 
 
 def upgrade(db):
-    if db.execute('SELECT version FROM metadata WHERE id=1').fetchone() == (2,):
+    if db.execute('SELECT version FROM metadata WHERE id=1').fetchone() in ((2,), (3,)):
         return
     # All old ids, timestamps, hosts and phase rows survive byte-for-byte as
     # values. Older writers reject version 2 rather than silently joining two
@@ -37,13 +37,19 @@ def upgrade(db):
 
 
 def start_allowed(db, run, node, identity, worker):
+    from .runtime_copies import enabled, allowed
+    copies = enabled(db, run)
+    if copies:
+        allowed(db, run, node, worker)
     old = db.execute('SELECT id,test FROM attempts WHERE run=? AND node=? ORDER BY id DESC LIMIT 1', (run, node)).fetchone()
     if old is None:
         return None
-    if db.execute('SELECT version FROM metadata WHERE id=1').fetchone() == (2,):
+    if db.execute('SELECT version FROM metadata WHERE id=1').fetchone() in ((2,), (3,)):
         move = db.execute('SELECT target_worker,successor FROM attempt_moves WHERE attempt=?', (old[0],)).fetchone()
         if old[1] == identity and move == (worker, None):
             return old[0]
+    if copies and old[1] == identity:
+        return None
     raise sqlite3.IntegrityError('A second attempt needs a confirmed bound operator move')
 
 
@@ -51,14 +57,17 @@ def cancel(db, run, node, identity, worker, target_worker, token, confirmed):
     upgrade(db)
     with db:
         db.execute('BEGIN IMMEDIATE')
-        row = db.execute('SELECT id,test,worker,invalid FROM attempts WHERE run=? AND node=? ORDER BY id DESC LIMIT 1',
-                         (run, node)).fetchone()
+        row = db.execute('SELECT id,test,worker,invalid FROM attempts WHERE run=? AND node=? AND worker=? ORDER BY id DESC LIMIT 1',
+                         (run, node, worker)).fetchone()
         if row is None or row[1:3] != (identity, worker) or row[3]:
             raise ValueError('Failed, invalid or foreign attempt cannot be replaced')
         phases = dict(db.execute('SELECT phase,outcome FROM phases WHERE attempt=?', (row[0],)))
         if any(v != 'passed' for v in phases.values()):
             raise ValueError('A real test failure cannot be hidden by relocation')
         db.execute('INSERT INTO attempt_moves VALUES(?,?,?,?,NULL)', (row[0], token, target_worker, confirmed))
+        from .runtime_copies import enabled, cancelled
+        if enabled(db, run):
+            return cancelled(db, run, node, identity, worker, token, confirmed, moved=True)
         db.execute('UPDATE attempts SET invalid=1 WHERE id=?', (row[0],))
         return phases
 

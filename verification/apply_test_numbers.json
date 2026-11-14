@@ -27429,6 +27429,14 @@
     "tests/test_attempt_supervisor_protocol.py::test_invalid_wire_frame_cannot_supply_a_supervisor_receipt[oversized]",
     "tests/test_attempt_supervisor_protocol.py::test_invalid_wire_frame_cannot_supply_a_supervisor_receipt[truncated]",
     "tests/test_attempt_supervisor_protocol.py::test_large_identity_and_receipt_survive_encoded_wire_roundtrip",
-    "tests/test_attempt_supervisor_protocol.py::test_outgoing_limit_counts_encoded_bytes_and_complete_frame"
+    "tests/test_attempt_supervisor_protocol.py::test_outgoing_limit_counts_encoded_bytes_and_complete_frame",
+    "tests/test_speculative_tests.py::test_canonical_coverage_is_once_and_loser_failure_stays_red",
+    "tests/test_speculative_tests.py::test_first_complete_winner_survives_newer_cancelled_copy_without_phase_mixing",
+    "tests/test_speculative_tests.py::test_hosts_are_covered_before_same_host_second_copy",
+    "tests/test_speculative_tests.py::test_minimum_global_copies_then_identity_without_speed_forecasts",
+    "tests/test_speculative_tests.py::test_same_run_duplicates_need_independent_exact_reservations",
+    "tests/test_speculative_tests.py::test_unstarted_queue_has_absolute_priority",
+    "tests/test_speculative_tests_integration.py::test_native_copy_finishes_and_reaps_original_process_tree[False]",
+    "tests/test_speculative_tests_integration.py::test_native_copy_finishes_and_reaps_original_process_tree[True]"
   ]
 }

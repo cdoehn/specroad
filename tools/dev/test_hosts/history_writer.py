@@ -33,6 +33,15 @@ class HistoryWriter:
     def observe(self, *args, **kwargs):
         return self._call('observe', *args, **kwargs)
 
+    def authorize_copy(self, *args):
+        return self._call('authorize_copy', *args)
+
+    def complete_copy(self, *args):
+        return self._call('complete_copy', *args)
+
+    def cancel_copy(self, *args):
+        return self._call('cancel_copy', *args)
+
     def cancel(self, *args, **kwargs):
         return self._call('cancel', *args, **kwargs)
 

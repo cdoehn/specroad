@@ -85,9 +85,9 @@ class RuntimeHistory:
                     os.fsync(directory)
                 finally:
                     os.close(directory)
-            if self.db.execute('SELECT version FROM metadata WHERE id=1').fetchall() not in ([(1,)], [(2,)]):
+            if self.db.execute('SELECT version FROM metadata WHERE id=1').fetchall() not in ([(1,)], [(2,)], [(3,)]):
                 raise ValueError('Unknown runtime history version')
-            if self.db.execute('SELECT version FROM metadata WHERE id=1').fetchone() == (2,):
+            if self.db.execute('SELECT version FROM metadata WHERE id=1').fetchone() in ((2,), (3,)):
                 if not self.db.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='attempt_moves'").fetchone():
                     raise ValueError('Incomplete runtime attempt schema')
             # Additive extension: old attempts remain unlabelled, never relabelled.
@@ -130,6 +130,8 @@ class RuntimeHistory:
             predecessor = start_allowed(self.db, run, node, identity, worker)
             attempt = self.db.execute('INSERT INTO attempts(run,node,test,worker,started) VALUES(?,?,?,?,?)',
                             (run, node, identity, worker, now())).lastrowid
+            from .runtime_copies import started
+            started(self.db, run, node, worker, attempt)
             if predecessor is not None:
                 self.db.execute('UPDATE attempt_moves SET successor=? WHERE attempt=?', (attempt, predecessor))
             if host is not None:
@@ -172,6 +174,22 @@ class RuntimeHistory:
                 if dict(phases) == dict.fromkeys(PHASES, 'passed'):
                     self.db.execute('UPDATE attempts SET complete=1 WHERE id=?', (attempt,))
 
+    def enable_copies(self, run):
+        from .runtime_copies import enable
+        return enable(self.db, run)
+
+    def authorize_copy(self, run, node, worker, token):
+        from .runtime_copies import authorize
+        return authorize(self.db, run, node, worker, token)
+
+    def complete_copy(self, run, node, worker, token):
+        from .runtime_copies import complete
+        return complete(self.db, run, node, worker, token)
+
+    def cancel_copy(self, run, node, identity, worker, token, confirmation):
+        from .runtime_copies import cancelled
+        return cancelled(self.db, run, node, identity, worker, token, confirmation)
+
     def cancel(self, run, node, identity, worker, target_worker, token, confirmed):
         from .runtime_attempts import cancel
         return cancel(self.db, run, node, identity, worker, target_worker, token, confirmed)
@@ -190,6 +208,9 @@ class RuntimeHistory:
         if (current.st_nlink != 1 or not stat.S_ISREG(current.st_mode)
                 or (current.st_dev, current.st_ino) != self.file_identity):
             raise ValueError('Runtime history was replaced during execution')
+        from .runtime_copies import enabled, verify
+        if enabled(self.db, run):
+            return verify(self.db, run, pairs, outcomes)
         from .runtime_attempts import verify_moves
         verify_moves(self.db, run)
         rows = self.db.execute('SELECT node,test,invalid,complete FROM attempts WHERE id IN (SELECT MAX(id) FROM attempts WHERE run=? GROUP BY node)', (run,)).fetchall()
@@ -222,6 +243,16 @@ def latest_snapshot(db, identities):
         attempts = db.execute('''SELECT a.id,a.test,a.invalid,a.complete,SUM(p.duration)
             FROM attempts a LEFT JOIN phases p ON p.attempt=a.id
             WHERE a.id IN (SELECT MAX(id) FROM attempts GROUP BY test) GROUP BY a.id''').fetchall()
+        from .runtime_copies import enabled, group
+        resolved = []
+        for attempt, test, invalid, complete, duration in attempts:
+            run, node = db.execute('SELECT run,node FROM attempts WHERE id=?', (attempt,)).fetchone()
+            if enabled(db, run):
+                winner = group(db, run, node)
+                attempt, duration = (winner[0], winner[2]) if winner else (attempt, None)
+                invalid, complete = winner is None, winner is not None
+            resolved.append((attempt, test, invalid, complete, duration))
+        attempts = resolved
         seeds = db.execute('''SELECT test,duration,origin FROM seeds
             WHERE id IN (SELECT MAX(id) FROM seeds GROUP BY test)''').fetchall()
     finally:

@@ -46,7 +46,7 @@ def configure(config, root):
     config.pluginmanager.register(RemoteBootstrap(), "specroad-host-bootstrap")
     config._sr_pool_servers = []
     config._sr_pool_outputs = {}
-    if profile['format_version'] in (2, 3):
+    if profile['format_version'] in (2, 3, 4):
         from importlib.metadata import version
         if version('pytest-xdist') != '3.8.0' or version('execnet') != '2.1.2':
             raise ValueError('Live control requires the reviewed xdist/execnet protocol')
@@ -78,7 +78,7 @@ def setup_node(node, state):
     node.config._sr_pool_servers.append(server)
     node.workerinput['sr_history_channel'] = channel
     if live:
-        node.workerinput['sr_moves'] = profile['format_version'] == 3
+        node.workerinput['sr_moves'] = profile['format_version'] in (3, 4)
         live.connect(node)
 
 

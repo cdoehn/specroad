@@ -15,7 +15,8 @@ class LiveScheduling(HostScheduling):
 
     @property
     def tests_finished(self):
-        return self.collection is not None and not self.has_pending
+        return (self.collection is not None and not self.has_pending
+                and not getattr(self.control.moves, 'busy', False))
 
     def check_schedule(self):
         self.control.reconcile()
@@ -62,7 +63,8 @@ class LiveScheduling(HostScheduling):
 
     def remove_node(self, node):
         name = node.gateway.id
-        if self.control.moves is not None and name in self.control.moves.reserved:
+        if self.control.moves is not None and (name in self.control.moves.reserved
+                or name in getattr(self.control.moves, 'copies', {})):
             self.node2pending.pop(node, None)
             self.started.pop(node, None)
             return None

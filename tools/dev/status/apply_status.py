@@ -167,10 +167,16 @@ def runtime_counts(database, gate, stage_started, stage_ended=None, *, timeout=5
         if not runs:
             return {'total': len(nodes), 'run': None}
         run = dict(runs[0])
+        from verification_support.runtime_copies import latest_ids, enabled
         rows = [dict(row) for row in db.execute('''
             SELECT a.id,a.node,a.worker,a.started,a.invalid,a.complete,p.phase,p.outcome,p.recorded
             FROM attempts a LEFT JOIN phases p ON p.attempt=a.id
-            WHERE a.id IN (SELECT MAX(id) FROM attempts WHERE run=? GROUP BY node) ORDER BY a.id''', (run['id'],))]
+            WHERE a.id IN (''' + latest_ids(db, run=run['id']) + ') ORDER BY a.id')]
+        group_failed = set()
+        if enabled(db, run['id']):
+            group_failed = {r[0] for r in db.execute("""SELECT DISTINCT a.node FROM attempts a
+                LEFT JOIN phases p ON p.attempt=a.id LEFT JOIN speculative_attempts s ON s.attempt=a.id
+                WHERE a.run=? AND (p.outcome IN ('failed','error','unexpected_success') OR s.failed=1)""", (run['id'],))}
     attempts = {}
     for row in rows:
         node = row['node']
@@ -190,7 +196,7 @@ def runtime_counts(database, gate, stage_started, stage_ended=None, *, timeout=5
         activity.extend(stamp(p[1]) for p in phases.values())
         terminal = 'teardown' in phases
         ended += terminal
-        has_error = bool(outcomes & {'failed', 'error', 'unexpected_success'})
+        has_error = node in group_failed or bool(outcomes & {'failed', 'error', 'unexpected_success'})
         if has_error:
             failed += 1
             failures.append(node)

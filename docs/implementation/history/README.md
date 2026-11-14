@@ -432,3 +432,5 @@
 - [Bundle 695 — Vollständige Supervisor-Nachrichten](bundle-695-supervisor-message-size.md)
 
 - [Bundle 696 — Isolierte MOVE-Kindprozessumgebung](bundle-696-move-child-environment.md)
+
+- [Bundle 698 — vollständige SPECULATE.W/R/C-Korrektur](bundle-698-speculative-correction.md)

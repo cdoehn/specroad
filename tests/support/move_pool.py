@@ -73,12 +73,13 @@ def await_target_finished(p):
 
 
 @contextmanager
-def pool(tmp_path, *, proxy=False, source=SUBJECT, transform=None, controller_hook='', long_identity=False):
-    ids = [f'tests/test_subject.py::test_{i}' for i in range(6)]
+def pool(tmp_path, *, proxy=False, source=SUBJECT, transform=None, controller_hook='', long_identity=False, test_count=6):
+    assert test_count in (2, 6)
+    ids = [f'tests/test_subject.py::test_{i}' for i in range(test_count)]
     if long_identity:
         ids[0] += '[' + 'q'*280000 + ']'
         source += "\n@pytest.mark.parametrize('value', [0], ids=['q'*280000])\ndef test_0(value):\n    exercise(0)\n"
-    source += '\n'.join(f'def test_{i}():\n    exercise({i})\n' for i in range(int(long_identity), 6))
+    source += '\n'.join(f'def test_{i}():\n    exercise({i})\n' for i in range(int(long_identity), test_count))
     root = make_catalog_project(tmp_path / 'source', ids=ids, source=source)
     with (root/'conftest.py').open('a') as stream:
         stream.write('\n' + TARGET_COMPLETION + '\n' + controller_hook)
@@ -111,8 +112,8 @@ def pool(tmp_path, *, proxy=False, source=SUBJECT, transform=None, controller_ho
     env.update(SPECROAD_NESTED_TEST_RUN='0', XDG_STATE_HOME=str(tmp_path/'state'), SPECROAD_TEST_CONTROL_HOME=str(home))
     args = ['-o', 'addopts=', '--disable-plugin-autoload', '-p', 'xdist.plugin', '-p', 'no:cacheprovider', '-p', 'no:doctest',
         '-n', '2', '--dist', 'worksteal', '--max-worker-restart=0', '--worker-limit', '2', '--sr-host-run', str(config),
-        '--sr-expected-tests', '6', '--sr-observations', str(root/'build/observations.json'),
-        # Select the same six items without putting a 280-KB id in exec argv.
+        '--sr-expected-tests', str(test_count), '--sr-observations', str(root/'build/observations.json'),
+        # Select the exact items without putting a 280-KB id in exec argv.
         *(['tests/test_subject.py'] if long_identity else ids)]
     with log.open('w') as stream:
         process = subprocess.Popen([sys.executable, '-I', '-B', str(root/'tools/pytest_entry.py'), *args],

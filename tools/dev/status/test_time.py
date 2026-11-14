@@ -53,21 +53,23 @@ def ranking(database, identities=None, count=20, *, min_seconds=0, match=''):
         db.row_factory = sqlite3.Row
         db.execute('PRAGMA query_only=ON')
         db.execute('BEGIN')
-        if [tuple(row) for row in db.execute('SELECT id,version FROM metadata')] not in ([(1, 1)], [(1, 2)]):
+        if [tuple(row) for row in db.execute('SELECT id,version FROM metadata')] not in ([(1, 1)], [(1, 2)], [(1, 3)]):
             raise ValueError('Unbekanntes Format der Laufzeitdatenbank')
-        if db.execute('SELECT version FROM metadata WHERE id=1').fetchone()[0] == 2:
+        if db.execute('SELECT version FROM metadata WHERE id=1').fetchone()[0] in (2, 3):
             if not db.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='attempt_moves'").fetchone():
                 raise ValueError('Unvollständiges Format der Versuchshistorie')
+        from verification_support.runtime_copies import latest_ids, enabled, group
         attempts = [dict(row) for row in db.execute('''
-            WITH latest AS (SELECT MAX(id) AS id FROM attempts GROUP BY test)
-            SELECT a.test,a.invalid,a.complete,SUM(p.duration) AS duration_ns,
+            SELECT a.run,a.node,a.test,a.invalid,a.complete,SUM(p.duration) AS duration_ns,
                    COUNT(DISTINCT p.phase) AS phase_count,
                    MIN(CASE WHEN p.phase IN ('setup','call','teardown')
                             AND p.outcome='passed' AND typeof(p.duration)='integer'
                             AND p.duration>=0 THEN 1 ELSE 0 END) AS phases_valid
-            FROM latest l JOIN attempts a ON a.id=l.id
-            LEFT JOIN phases p ON p.attempt=a.id GROUP BY a.id
-        ''')]
+            FROM attempts a LEFT JOIN phases p ON p.attempt=a.id
+            WHERE a.id IN (''' + latest_ids(db) + ') GROUP BY a.id')]
+        for row in attempts:
+            if enabled(db, row['run']) and group(db, row['run'], row['node']) is None:
+                row['invalid'] = 1
         seeds = [dict(row) for row in db.execute('''
             SELECT test,duration FROM seeds
             WHERE id IN (SELECT MAX(id) FROM seeds GROUP BY test)

@@ -128,9 +128,12 @@ def collect_status(repository, database=None, timeout=5):
 def history(database, identities=None, timeout=5):
     """Latest started attempts suppress all older success, even when unfinished."""
     with connection(database, timeout) as db:
-        rows = bounded_rows(db.execute(phase_query(db) + '''
-            WHERE a.id IN (SELECT MAX(id) FROM attempts GROUP BY test) ORDER BY a.id'''))
+        from verification_support.runtime_copies import latest_ids, enabled, group
+        rows = bounded_rows(db.execute(phase_query(db) + ' WHERE a.id IN (' + latest_ids(db) + ') ORDER BY a.id'))
         result = phase_rows(rows, None, time.time())
+        for row in result:
+            if enabled(db, row['run_id']) and group(db, row['run_id'], row['nodeid']) is None:
+                row.update(valid_measurement=False, status='invalid')
         attempted = {row['test_name'] for row in result}
         seeds = bounded_rows(db.execute('SELECT test,duration FROM seeds WHERE id IN (SELECT MAX(id) FROM seeds GROUP BY test)'))
         for row in seeds:

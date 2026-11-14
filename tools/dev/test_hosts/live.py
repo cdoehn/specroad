@@ -35,7 +35,10 @@ class LivePool:
         self.thread = None
         self.errors = []
         self.moves = None
-        if config._sr_host_profile['format_version'] == 3:
+        if config._sr_host_profile['format_version'] == 4:
+            from .speculative_control import CopyAttempts
+            self.moves = CopyAttempts(self)
+        elif config._sr_host_profile['format_version'] == 3:
             from .attempt_control import Attempts
             self.moves = Attempts(self)
 
@@ -95,7 +98,11 @@ class LivePool:
                 self.retiring.add(node.gateway.id)
                 node.shutdown()  # permits current teardown, denies next attempt
             missing = wanted - len(nodes)
-            if sched.has_pending:
+            # A test reserved behind a running item is not assignable to a
+            # new worker. Do not repeatedly respawn idle processes while the
+            # copy gate correctly waits for that original to start.
+            if sched.has_pending and (not getattr(self.moves, 'speculative', False)
+                    or self.moves.waiting() and bool(sched.pending)):
                 for _ in range(max(0, missing)):
                     template = next(r for r in self.rows.values() if r['host'] == host)
                     spec = execnet.XSpec(template['spec'])

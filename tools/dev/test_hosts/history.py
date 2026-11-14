@@ -9,15 +9,22 @@ from verification_support.runtime_history import RuntimeHistory
 def estimates(root, environment):
     """Latest attempt per host/test/environment; never fall back behind a failure."""
     with RuntimeHistory(root) as history:
-        rows = history.db.execute('''SELECT a.test,h.host,a.invalid,a.complete,SUM(p.duration)
+        rows = history.db.execute('''SELECT a.test,h.host,a.invalid,a.complete,SUM(p.duration),a.run,a.node
             FROM attempts a JOIN attempt_hosts h ON h.attempt=a.id
             LEFT JOIN phases p ON p.attempt=a.id
             WHERE h.environment=? AND a.id IN
               (SELECT MAX(a2.id) FROM attempts a2 JOIN attempt_hosts h2 ON h2.attempt=a2.id
                WHERE h2.environment=? GROUP BY a2.test,h2.host)
             GROUP BY a.id''', (environment, environment)).fetchall()
-        return {test + '\n' + host: duration / 1e9
-                for test, host, invalid, complete, duration in rows if not invalid and complete and duration is not None}
+        from verification_support.runtime_copies import enabled, group
+        result = {}
+        for test, host, invalid, complete, duration, run, node in rows:
+            if enabled(history.db, run):
+                winner = group(history.db, run, node, host=host)
+                invalid, complete, duration = winner is None, winner is not None, winner[2] if winner else None
+            if not invalid and complete and duration is not None:
+                result[test + '\n' + host] = duration / 1e9
+        return result
 
 
 class HistoryClient:

@@ -112,7 +112,7 @@ print(json.dumps(True))
                    estimates=measured, baseline=baseline)
     if live:
         from dev.test_control.model import directory, counts
-        profile.update(format_version=3, live=dict(repository=str(root.resolve()), home=str(directory()),
+        profile.update(format_version=4, live=dict(repository=str(root.resolve()), home=str(directory()),
                                                    overrides=counts(host_workers or {})))
     if source_identity(root) != source or inventory(root) != manifest:
         raise ValueError('Source changed during remote preparation')

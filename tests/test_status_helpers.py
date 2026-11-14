@@ -42,7 +42,8 @@ def lane(workspace, suffix, seconds):
     dev = workspace / f'specroad-dev{suffix}'
     apply = workspace / f'specroad-apply{suffix}'
     exchange = workspace / f'exchange{suffix}'
-    names = ['tools/apply_status.py', 'tools/test_time.py']
+    names = ['tools/apply_status.py', 'tools/test_time.py',
+             'tools/verification_support/runtime_copies.py']
     names += [path.relative_to(ROOT).as_posix() for path in (ROOT / 'tools/dev/status').glob('*.py')]
     for name in names:
         target = dev / name
@@ -83,6 +84,7 @@ def invoke(dev, name, workspace, *arguments):
         cwd=workspace, env={**os.environ, 'XDG_STATE_HOME': str(workspace / 'state'),
                            'XDG_CONFIG_HOME': str(workspace / 'config')},
         stdin=subprocess.DEVNULL, capture_output=True, text=True, check=False)
+    assert result.stdout.strip(), result.stderr
     return result.returncode, json.loads(result.stdout)
 
 

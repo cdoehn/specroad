@@ -57,6 +57,9 @@ class VerificationSession:
         self.worker = hasattr(config, "workerinput")
         self.worker_id = config.workerinput["workerid"] if self.worker else "main"
         self.ledger = RunLedger()
+        if not self.worker and getattr(config, '_sr_host_profile', {}).get('format_version') == 4:
+            from dev.test_hosts.speculative_ledger import CopyLedger
+            self.ledger = CopyLedger()
         self.gate = config.getoption("sr_gate") or config.getoption("sr_evidence") is not None
         self.expected = config.getoption("sr_expected_tests")
         self.evidence = config.getoption("sr_evidence")
@@ -168,6 +171,8 @@ class VerificationSession:
             self.history.seed(self.history_root)
             self.history_run = self.history.begin(self.history_source,
                 config.getoption('numprocesses', default=0) or 0)
+            if getattr(config, '_sr_host_profile', {}).get('format_version') == 4:
+                self.history.enable_copies(self.history_run)
 
     def collection(self, items):
         pairs = [(item.nodeid, test_identity(item)) for item in items]

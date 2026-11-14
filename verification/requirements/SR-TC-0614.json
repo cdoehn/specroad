@@ -31,7 +31,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "bfb212795336ebc255b07a2939a3b9c9529a376cfadc0c5fd0606ded4fc0cf39",
+  "specification_sha256": "367bad36c070076ce83bfa63147c737111f5c682f9f05f9ce29a421680c01096",
   "steps": [
     "Drive the conservative outcome adapter to full diagnostic/prepared-path completion with tiny soft targets and unknown capacity, without empty successful windows.",
     "Observe actual minimum-advance failures and assert machine-readable cause, attempted smaller batching, preserved observed cursor and files, nonresumable volatile input, explicit remedy and no automatic replay.",

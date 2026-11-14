@@ -9,9 +9,9 @@ from .environment import digest
 
 def validate_profile(profile):
     fields = {'format_version', 'source_sha256', 'snapshot_sha256', 'environment', 'workers', 'proxies', 'selected', 'estimates', 'baseline'}
-    if isinstance(profile, dict) and profile.get('format_version') in (2, 3):
+    if isinstance(profile, dict) and profile.get('format_version') in (2, 3, 4):
         fields.add('live')
-    if not isinstance(profile, dict) or set(profile) != fields or type(profile['format_version']) is not int or profile['format_version'] not in (1, 2, 3):
+    if not isinstance(profile, dict) or set(profile) != fields or type(profile['format_version']) is not int or profile['format_version'] not in (1, 2, 3, 4):
         raise ValueError('Invalid host run format')
     for key in ('source_sha256', 'snapshot_sha256'):
         if not isinstance(profile[key], str) or not re.fullmatch('[0-9a-f]{64}', profile[key]):
@@ -53,7 +53,7 @@ def validate_profile(profile):
         if not isinstance(values, dict) or any(not isinstance(k, str) or type(v) not in (int, float)
                 or not math.isfinite(v) or not 0 <= v <= 259200 for k, v in values.items()):
             raise ValueError('Invalid scheduling estimate')
-    if profile['format_version'] in (2, 3):
+    if profile['format_version'] in (2, 3, 4):
         from dev.test_control.model import counts
         live = profile['live']
         if type(live) is not dict or set(live) != {'repository', 'home', 'overrides'}:
@@ -75,6 +75,9 @@ def public_proof(profile):
                         for key, row in profile['workers'].items()}}
 
 def verify_pool(observation, proof):
+    if isinstance(proof, dict) and proof.get('format_version') == 4:
+        from .speculative_contract import verify_copies
+        return verify_copies(observation, proof)
     if isinstance(proof, dict) and proof.get('format_version') == 3:
         from .attempt_contract import verify_moves
         return verify_moves(observation, proof)

@@ -47,7 +47,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "bfb212795336ebc255b07a2939a3b9c9529a376cfadc0c5fd0606ded4fc0cf39",
+  "specification_sha256": "367bad36c070076ce83bfa63147c737111f5c682f9f05f9ce29a421680c01096",
   "steps": [
     "Resolve native owned model records and actual stored relation identities into per-requirement origin, implementation, verification, evidence and release categories; preserve empty categories and terminate cyclic origin paths.",
     "Bind each trace edge to its actual source array pointer, raw file hash and canonical record hash; preserve evidence subjects as original fields instead of fabricated relations.",

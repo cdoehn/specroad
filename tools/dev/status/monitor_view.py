@@ -258,7 +258,7 @@ def run_tui(paths, args):
                     offset = position - capacity + 1
                 state.offsets[key] = offset
                 for i, row in enumerate(rows[offset:offset + capacity]):
-                    text = times(row, state.time_view) + f'  {row.get("host") or "—":<14.14} {row.get("worker") or "—":<4} {row["status"]:<10} ' + row['test_name']
+                    text = times(row, state.time_view) + f'  {row.get("host") or "—":<14.14} {row.get("worker") or "—":<4} {row["status"]:<10} ' + (('[' + row['copy_role'] + '] ') if row.get('copy_role') else '') + row['test_name']
                     color = 4 if row['status'] == 'failed' else 3 if (row.get('total_seconds') or row.get('elapsed_seconds') or 0) >= 600 else 0
                     put(list_start + i, 1, text, color, selected=offset + i == position and state.focus == 'tests')
                 if not rows:
