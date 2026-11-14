@@ -36,7 +36,7 @@ def validate_request(paths, config, doc):
 def startup(paths):
     from .start_current import pending
     if pending(paths) is not None:
-        return load(paths), None
+        return load(paths, allow_deferred=True), None
     doc = request_read(paths)
     config = load(paths, allow_deferred=doc is not None)
     if doc:

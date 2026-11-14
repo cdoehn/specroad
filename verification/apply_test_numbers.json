@@ -27313,6 +27313,18 @@
     "tests/test_apply_lookahead.py::test_extensions_cannot_replace_rest_replay_commits_or_add_decisions[role]",
     "tests/test_apply_lookahead.py::test_pending_clarification_targets_cannot_change_with_lookahead",
     "codex_control_tests.test_start_current.StartCurrentTests.test_next_tick_dispatches_once_from_the_new_checkpoint",
-    "tests/codex_control_tests/test_start_current.py::test_native_checkpoint_rejects_foreign_path_value_before_capture"
+    "tests/codex_control_tests/test_start_current.py::test_native_checkpoint_rejects_foreign_path_value_before_capture",
+    "codex_control_tests.test_start_current_right.StartRightTests.test_explicit_start_supersedes_deferred_handover_without_loading_its_history",
+    "codex_control_tests.test_start_current_right.StartRightTests.test_failed_finalization_preserves_original_handover_bytes_and_never_refills",
+    "codex_control_tests.test_start_current_right.StartRightTests.test_late_foreign_result_recaptures_actual_tree_before_activation",
+    "codex_control_tests.test_start_current_right.StartRightTests.test_line_change_does_not_dispatch_from_another_scope",
+    "codex_control_tests.test_start_current_right.StartRightTests.test_operation_lock_refuses_concurrent_operator_start_without_second_request",
+    "codex_control_tests.test_start_current_right.StartRightTests.test_pause_after_capture_reuses_the_native_source_and_preserves_old_ledger",
+    "codex_control_tests.test_start_current_right.StartRightTests.test_queued_foreign_package_waits_without_dispatching_another_developer",
+    "codex_control_tests.test_start_current_right.StartRightTests.test_status_remains_available_with_explicit_start_and_damaged_old_pointer",
+    "tests/codex_control_tests/test_start_current_native.py::test_installed_checkpoint_adapter_uses_native_identity_snapshot_and_lock[clean]",
+    "tests/codex_control_tests/test_start_current_native.py::test_installed_checkpoint_adapter_uses_native_identity_snapshot_and_lock[dirty]",
+    "tests/codex_control_tests/test_start_current_native.py::test_installed_checkpoint_adapter_uses_native_identity_snapshot_and_lock[foreign]",
+    "tests/codex_control_tests/test_start_current_native.py::test_installed_checkpoint_adapter_uses_native_identity_snapshot_and_lock[locked]"
   ]
 }

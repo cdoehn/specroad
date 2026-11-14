@@ -81,7 +81,7 @@ def start(paths: Paths, *, from_current: bool = False) -> dict:
         from .handover_queue import startup
         if from_current:
             from .commands import ready
-            ready(load(paths))
+            ready(load(paths, allow_deferred=True))
         else:
             startup(paths)
         properties = verify_owned(paths)
@@ -91,7 +91,7 @@ def start(paths: Paths, *, from_current: bool = False) -> dict:
             raise ControlError("unit_conflict", "Installed service and current paths do not match.")
         if from_current:
             from .start_current import enqueue
-            enqueue(paths, load(paths))
+            enqueue(paths, load(paths, allow_deferred=True))
         checked(["start", paths.unit.name])
     if from_current:
         from .ipc import request

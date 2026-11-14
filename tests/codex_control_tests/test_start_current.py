@@ -21,23 +21,26 @@ from specroad_control.mixed_contract import CAPABILITY
 from specroad_control.start_current import ACTIVE, REQUEST, active_cycle, enqueue, pending
 
 
+def configure_start_case(self):
+    AutomationCase.setUp(self)
+    self.config = replace(self.config, clarification_allowed=True, correction_limit=20)
+    write_private(self.paths.config, render(self.config).encode())
+    self.fresh = self.result('current.zip', dirty=True,
+        binding={**self.binding, 'state_fingerprint': 'c' * 16},
+        development_contract={**CAPABILITY, 'clarification_limit': 20})
+    self.core = FakeCore()
+    self.core.checkpoint = Mock(return_value=self.fresh)
+    self.core.call = Mock(side_effect=lambda _operation, _path: {
+        'sha256': self.fresh['sha256'], 'binding': self.fresh['binding'],
+        'repository_path': self.fresh['repository_path'], 'dirty': self.fresh['dirty']})
+    self.codex = FakeCodex(self, 'no_work')
+    self.codex.activity = Mock(return_value='idle')
+    self.engine = Engine(self.config, self.paths, Gate(), core=self.core, codex=self.codex)
+    self.addCleanup(self.engine.close)
+
+
 class StartCurrentTests(AutomationCase):
-    def setUp(self):
-        super().setUp()
-        self.config = replace(self.config, clarification_allowed=True, correction_limit=20)
-        write_private(self.paths.config, render(self.config).encode())
-        self.fresh = self.result('current.zip', dirty=True,
-            binding={**self.binding, 'state_fingerprint': 'c' * 16},
-            development_contract={**CAPABILITY, 'clarification_limit': 20})
-        self.core = FakeCore()
-        self.core.checkpoint = Mock(return_value=self.fresh)
-        self.core.call = Mock(side_effect=lambda _operation, _path: {
-            'sha256': self.fresh['sha256'], 'binding': self.fresh['binding'],
-            'repository_path': self.fresh['repository_path'], 'dirty': self.fresh['dirty']})
-        self.codex = FakeCodex(self, 'no_work')
-        self.codex.activity = Mock(return_value='idle')
-        self.engine = Engine(self.config, self.paths, Gate(), core=self.core, codex=self.codex)
-        self.addCleanup(self.engine.close)
+    setUp = configure_start_case
 
     def request(self):
         return enqueue(self.paths, self.config)

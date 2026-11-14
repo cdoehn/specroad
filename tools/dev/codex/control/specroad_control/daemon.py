@@ -65,7 +65,13 @@ def _locked_run(paths: Paths, config: Config | None = None, *, queued=None) -> i
     disk_due = due
 
     def snapshot():
+        from .start_current import public_status
+        try:
+            cycle_status = public_status(paths)
+        except ControlError as exc:
+            cycle_status = {'error': exc.code}
         return {"instance": paths.instance,
+                "current_cycle": cycle_status,
                 "bindings": {"repository": str(config.repository), "apply_repository": str(config.apply_directory),
                              "exchange": str(config.exchange), "repo_id": config.repo_id,
                              "thread_id": config.session_id, "config": str(paths.config), "unit": paths.unit.name},

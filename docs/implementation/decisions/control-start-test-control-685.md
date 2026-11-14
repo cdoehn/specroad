@@ -29,10 +29,11 @@ Jede Tabellenzeile enthält Code, passende Verhaltenstests und Integration.
 
 ## Aktueller Übergang
 
-Bundle 685 enthält absichtlich **nur START.W**, wie beauftragt. Sein Erfolg
-ist erst durch das native Apply-Result und den echten Commit belegt. Im dann
-committeten Stand ist START.R der nächste offene Schritt. START.R bis MOVE.C
-sind vollständig geplant und offen, keine vorweggenommenen Erfolge.
+START.W und die Adapterkorrektur START.W-FIX1 sind bereits übernommen.
+[Bundle 687](../history/bundle-687-start-config.md) bereitet START.R/C und
+CONFIG.W/R/C vor. Dieser Stage-Zielstand reicht nach seinem eigenen Gate bis
+**START.R**; danach ist **START.C** offen. Kein Erfolg späterer Stages wird
+vorweggenommen; die sechs LIVE-/MOVE-Commits bleiben vollständig geplant.
 
 Nach erfolgreichem Apply und expliziter Installation der getesteten Control-
 Releasekopie kann der Betreiber mit `control start --from-current` sofort die
@@ -54,4 +55,4 @@ und Apply_Commit_Plans.md; Laufprotokolle gehören nicht in diesen Plan.
 erfolgreichen Apply-Abnahme gefundenen nativen Pfadtypfehler. Der bereits
 committete START.W wird nicht wiederholt. Seine ausführliche native
 Betriebsintegration und die übrigen START.R-Abnahmen bleiben offen;
-START.R bleibt der nächste geplante Schritt.
+Der aktuelle Übergang oben führt diese Abnahmen stageweise fort.

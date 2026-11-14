@@ -8,7 +8,7 @@ from .correction_budget import bind
 from .errors import ControlError
 from .job_contract import fresh_contract, scope
 from .ledger import Ledger
-from .local import json_read, json_write, lock, read_private
+from .local import json_read, json_write, lock, read_private, write_private
 
 REQUEST = 'start-current.json'
 ACTIVE = 'current-cycle.json'
@@ -66,13 +66,74 @@ def _finish(paths):
     # An explicit new cycle supersedes old deferred operator requests. This
     # runs only between worker jobs; no running handover or Dev turn is killed.
     from .handover_request import REQUEST as HANDOVER, STATUS as HANDOVER_STATUS
+    request = pending(paths)
+    if request is None:
+        return
+    archive = paths.state / 'start-requests' / request['id'] / 'superseded'
     for name in (HANDOVER, HANDOVER_STATUS, REQUEST):
         target = paths.state / name
         try:
-            read_private(target)
+            raw = read_private(target)
         except FileNotFoundError:
             continue
+        saved = archive / name
+        try:
+            prior = read_private(saved)
+        except FileNotFoundError:
+            write_private(saved, raw, exclusive=True)
+        else:
+            if prior != raw:
+                raise ControlError('start_archive_conflict', 'Superseded evidence changed; preserve both states.')
         target.unlink()
+
+
+def _checkpoint(engine, request):
+    """Reuse a captured checkpoint after interruption; revalidate its live tree."""
+    from .handoff_rebase import require_current
+    target = engine.paths.state / 'start-requests' / request['id'] / 'checkpoint.json'
+    saved = json_read(target)
+    if saved is not None:
+        try:
+            source = engine.exchange.source(saved)
+            require_current(engine, source, {source['run_id']})
+            return source
+        except ControlError as exc:
+            if exc.code not in ('source_superseded', 'current_repository_mismatch'):
+                raise
+            # This is still the explicit operator request for the actual tree.
+            # Keep the obsolete capture as evidence, not as dispatch authority.
+            retained = target.parent / (saved['sha256'] + '.json')
+            if json_read(retained) is None:
+                json_write(retained, saved)
+    source = engine.core.checkpoint()
+    json_write(target, source)
+    return source
+
+
+def _pending_patch(engine, source):
+    """A foreign unpublished result may still own this tree; never race Apply."""
+    binding = source['binding']
+    for package in engine.exchange.candidates('patch',
+            lambda manifest: all(manifest.get(k) == v for k, v in binding.items())):
+        engine.core.validate(Path(package['path']), source)
+        completed = engine.exchange.following(source, package['sha256'])
+        if not any(r.get('entrypoint_started') and not r.get('dry_run') for r in completed):
+            return True
+    return False
+
+
+def public_status(paths):
+    request = pending(paths)
+    try:
+        cycle = active_cycle(paths)
+    except ControlError as exc:
+        if request is None:
+            raise
+        return {'pending': True, 'request_id': request['id'], 'cycle_id': None,
+                'source_sha256': None, 'previous_error': exc.code}
+    return {'pending': request is not None, 'request_id': request['id'] if request else None,
+            'cycle_id': cycle['id'] if cycle else None,
+            'source_sha256': cycle['source_sha256'] if cycle else None}
 
 
 def _waiting(engine, reason):
@@ -88,7 +149,7 @@ def advance(engine):
         return None
     if not engine.gate.allowed:
         return {'halted': False, 'again': False}
-    if request['scope'] != scope(engine.config) or load(paths) != engine.config:
+    if request['scope'] != scope(engine.config) or load(paths, allow_deferred=True) != engine.config:
         raise ControlError('start_configuration_changed', 'Start again for the current configuration.')
     activity = engine.codex.activity()
     if activity == 'active':
@@ -109,13 +170,15 @@ def advance(engine):
             _finish(paths)
             return {'halted': False, 'again': True}
         try:
-            source = engine.core.checkpoint()
+            source = _checkpoint(engine, request)
             if (source['binding']['repo_id'] != engine.config.repo_id
                     or Path(source['repository_path']).resolve() != engine.config.apply_directory.resolve()
                     or source['operation'] != 'bundle' or source['dry_run'] or not source['success']):
                 raise ControlError('wrong_checkpoint', 'A current native Apply snapshot is required.')
             from .handoff_rebase import require_current
             require_current(engine, source, {source['run_id']})
+            if _pending_patch(engine, source):
+                return _waiting(engine, 'pending_patch')
         except ControlError as exc:
             if exc.code == 'repository_busy':
                 return _waiting(engine, exc.code)
@@ -127,13 +190,15 @@ def advance(engine):
             ledger.bind_contract(fresh_contract(source, allowed=engine.config.clarification_allowed))
             bind(ledger, source, engine.config.correction_limit)
         def publish():
-            if pending(paths) != request or load(paths) != engine.config:
+            if pending(paths) != request or load(paths, allow_deferred=True) != engine.config:
                 raise ControlError('start_configuration_changed', 'Start request changed before publication.')
             json_write(paths.state / ACTIVE, {'version': 1, 'id': request['id'],
                        'ledger': name, 'source_sha256': source['sha256']})
             _finish(paths)
         try:
             require_current(engine, source, {source['run_id']})
+            if _pending_patch(engine, source):
+                return _waiting(engine, 'pending_patch')
             if engine.codex.activity() not in ('idle', 'notLoaded'):
                 raise ControlError('dev_turn_active', 'Dev became active before publication.')
             # Slow native/SSH observations must not hold Gate's IPC mutex.

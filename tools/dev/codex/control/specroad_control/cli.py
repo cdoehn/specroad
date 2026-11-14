@@ -153,6 +153,11 @@ def main(argv=None) -> int:
                 if exc.code != "not_running":
                     raise
                 result = {"worker_reachable": False, "state": None, "last_state": read_state(paths)}
+            from .start_current import public_status as cycle_status
+            try:
+                result['current_cycle'] = cycle_status(paths)
+            except ControlError as exc:
+                result['current_cycle'] = {'error': exc.code}
             try:
                 result["systemd"] = service.inspect(paths)
             except ControlError as exc:
