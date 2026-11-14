@@ -69,8 +69,8 @@ def configure(paths: Paths, *, thread_id: str, result: str | None = None, codex:
         old, legacy = setup_config(paths)
         if clarification is not None and type(clarification) is not bool:
             raise ControlError('invalid_config', 'Clarification must be Boolean.')
-        if correction_limit is not None and (type(correction_limit) is not int or not 1 <= correction_limit <= 5):
-            raise ControlError('invalid_config', 'Correction limit must be an integer from one to five.')
+        if correction_limit is not None and (type(correction_limit) is not int or not 1 <= correction_limit <= 20):
+            raise ControlError('invalid_config', f'Correction limit must be an integer from one to {20}.')
         if access_mode is not None and access_mode not in ('workspace-write', 'full-access'):
             raise ControlError('invalid_access_mode', 'Select workspace-write or full-access explicitly.')
         try:

@@ -45,7 +45,7 @@ class Host:
     name: str
     ssh: str | None
     directory: str
-    workers: int = 10
+    workers: int = 12
     speed: float = 1.0
     persist: int = 1800
 

@@ -37,6 +37,10 @@ def test_host_cpu_count_limit_and_nested_budget(tmp_path, monkeypatch, cpus,limi
     assert count == wanted and proof['workers'] == wanted
     assert proof['available_cpus'] == cpus and proof['worker_limit'] == limit
     assert host.validate_resources(proof) == proof
+    default_count, default_proof = host.select_workers(root, requested,
+        environment={host.NESTED:'1' if nested else '0'})
+    assert default_count == min(cpus, 12, requested or cpus, 1 if nested else cpus)
+    assert default_proof['worker_limit'] == 12
 
 
 @pytest.mark.parametrize('limit', [0,-1,True,1.5,'10',None])
@@ -137,6 +141,9 @@ def test_manual_cli_limit_reaches_the_child_process(tmp_path,monkeypatch):
     def launch(command,**kwargs):
         calls.append(command);return SimpleNamespace(returncode=0)
     monkeypatch.setattr(run_tests.subprocess,'run',launch)
-    assert run_tests.main(['--worker-limit','6'])==0
-    assert calls[0][calls[0].index('-n')+1]=='6'
-    assert calls[0][calls[0].index('--worker-limit')+1]=='6'
+    for arguments, expected in (([], '12'), (['--worker-limit', '6'], '6'),
+                                (['--worker-limit', '24'], '24')):
+        assert run_tests.main(arguments)==0
+        command = calls[-1]
+        assert command[command.index('-n')+1]==expected
+        assert command[command.index('--worker-limit')+1]==expected

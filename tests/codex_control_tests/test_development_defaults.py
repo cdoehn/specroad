@@ -19,6 +19,9 @@ class DevelopmentDefaultsTests(MixedCase):
         marker.start()
         self.addCleanup(marker.stop)
         super().setUp()
+        # Retain the old five-slot repair sequence as a compatibility case.
+        self.config = replace(self.config, correction_limit=5)
+        self.engine.config = self.config
 
     def test_new_supported_request_has_five_slots_and_allows_clarification(self):
         self.assertFalse(self.dispatch(True)['halted'])
@@ -42,7 +45,7 @@ class DevelopmentDefaultsTests(MixedCase):
         document['automation'].pop('correction_limit')
         selected = parse(document, self.paths)
         self.assertTrue(selected.clarification_allowed)
-        self.assertEqual(selected.correction_limit, 5)
+        self.assertEqual(selected.correction_limit, 20)
         disabled = replace(selected, clarification_allowed=False, correction_limit=2)
         reread = parse(tomllib.loads(render(disabled)), self.paths)
         self.assertFalse(reread.clarification_allowed)

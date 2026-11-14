@@ -44,10 +44,12 @@ alte Belege werden weder migriert noch als neue Befugnis ausgelegt.
 
 # SpecRoad Control – Spezifikation
 
-Für neue Aufträge ersetzt CONTROL-DEFAULTS-666 nach SpecRoad 2.4.3.6 die
-unten historisch dokumentierten Standardwerte: optionale Klärung standardmäßig
-aktiv, fünf Klärungsplätze und ein getrenntes Apply-Korrekturbudget von fünf.
-Alte gebundene Drei-Plätze-Verträge und Promptbytes bleiben unverändert.
+Für neue Aufträge ersetzt CONTROL-BUDGET-20 nach SpecRoad 2.4.3.6 die
+unten historisch dokumentierten Standardwerte: optionale Klärung bei
+positivem Restbudget, zwanzig Klärungsplätze und ein getrenntes
+Apply-Korrekturbudget von standardmäßig zwanzig. Alte gebundene Drei-/Fünfer-
+Verträge und Promptbytes bleiben unverändert. Ausdrückliche Abschaltung und
+unveränderte offene Präfixfortsetzung bleiben verbindlich.
 
 ## OFF-PLAN MIXED-BUNDLE-025: Vertrag 4 mit optionaler Klaerung
 
@@ -1220,3 +1222,19 @@ Nur native vollständige erfolgreiche saubere Apply-Evidence erneuert die Folge.
 W liefert den vollständigen normalen Ablauf; R ergänzt Konfigurations-/Beleg-
 Grenzen und explizite negative Übernahmeauswahl; C zentralisiert die reine
 Budgetfortschreibung. Alle früheren Sicherheits-/Quellen-/Gatepflichten bleiben.
+
+## CONTROL-BUDGET-20 — ausdrücklicher Nutzerauftrag vom 14. November 2026
+
+Maßgeblich ist die ergänzte SpecRoad-Spezifikation 2.4.3.6. Neue vollständige
+Klärungsbudgets und der Standard für neue Korrekturfolgen betragen zwanzig.
+Der neue geprüfte Projektmarker mit Maximum zwanzig erlaubt bei verifizierten
+V4-Folgeaufträgen neue optionale Klärung auch nach Fehlern, sofern ein positiver
+Rest und keine ausdrückliche Abschaltung vorliegen. Ein belegter offener
+Klärungspräfix erlaubt ausschließlich die unveränderte Fortsetzung; native
+Korrektur-IDs/Rollen bleiben unverändert. Historische Marker, Aufträge und
+Restzähler werden nicht umgeschrieben. Unbekannte Übergaben erteilen keine
+Befugnis. Fehler, Teilcommit, Pause und Neustart füllen kein Budget auf.
+`correction_limit` erlaubt eins bis zwanzig; bestehende explizite Werte bleiben.
+Neue Standards gelten nach Apply-Abnahme und Installation, nicht durch die
+bloße Vorbereitung. Kein Dienststart, Deploy oder Betreiberreset als
+Nebenwirkung. Abnahmen stehen im gemeinsamen Plan unter CONTROL-BUDGET-20.

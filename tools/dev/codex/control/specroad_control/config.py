@@ -31,7 +31,7 @@ class Config:
     access_mode: str = "workspace-write"
     apply_repository: Path | None = None
     clarification_allowed: bool = True
-    correction_limit: int = 5
+    correction_limit: int = 20
 
     @property
     def apply_directory(self):
@@ -142,8 +142,8 @@ def parse(doc: dict, paths: Paths) -> Config:
             or retry_delays != sorted(retry_delays)):
         raise ValueError
     clarification = auto.get("clarification_allowed", True)
-    correction_limit = auto.get("correction_limit", 5)
-    if type(clarification) is not bool or type(correction_limit) is not int or not 1 <= correction_limit <= 5:
+    correction_limit = auto.get("correction_limit", 20)
+    if type(clarification) is not bool or type(correction_limit) is not int or not 1 <= correction_limit <= 20:
         raise ValueError
     transport = text(dev.get("transport", "exec"))
     if transport not in ("exec", "app-server-proxy"):

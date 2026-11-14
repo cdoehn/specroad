@@ -1,1 +1,40 @@
-{"evidence_kind":"specroad-dev-pytest-v1","expected_diagnostics":[],"expected_exit_codes":[],"fixture_ids":[],"implementation_status":"open","json_pointers":[],"method":"pending","open_items":["RECOVERY-REMOVAL-006: changed requirement contract; the old implementation/tests are retained until their assigned W/R/C replacement. Previous recovery/restore evidence does not establish this new behavior.","Apply of this specification/planning bundle is not implementation, release, or user authorization to use SpecRoad."],"oracle":{"kind":"pending","requirement_contract":"Normative Writes MÜSSEN den exklusiven Projektwriter-Lock verwenden; eine Abbruchsperre DARF NICHT durch eine andere Schreibklasse umgangen werden.","scope":"New interruption guard and manual Git restart contract; no active automated pass claim until implementation."},"preconditions":["Implementation and actual Apply evidence for specification 0.2.85 are required; this document bundle runs no new product behavior."],"primary_verification_id":"SR-VER-0019","required_environment":{"declared_minimum_python":"3.10","implementation":"cpython","measured_scope":"current-run-only"},"requirement_id":"SR-REQ-0205","resources":{"harness_suite_timeout":null,"harness_test_timeout":null,"owned_temporary_files":true},"specification_sha256":"645ce7c6d5d913d33b97eb8d3ca6883160411336a208273c5ccf91a562b4651e","steps":["Implement the complete new contract in 18.t and bind real behavioral tests and evidence before declaring acceptance."],"test_case_format_version":1,"test_case_id":"SR-TC-0205","test_ids":[]}
+{
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [],
+  "fixture_ids": [],
+  "implementation_status": "open",
+  "json_pointers": [],
+  "method": "pending",
+  "open_items": [
+    "RECOVERY-REMOVAL-006: changed requirement contract; the old implementation/tests are retained until their assigned W/R/C replacement. Previous recovery/restore evidence does not establish this new behavior.",
+    "Apply of this specification/planning bundle is not implementation, release, or user authorization to use SpecRoad."
+  ],
+  "oracle": {
+    "kind": "pending",
+    "requirement_contract": "Normative Writes MÜSSEN den exklusiven Projektwriter-Lock verwenden; eine Abbruchsperre DARF NICHT durch eine andere Schreibklasse umgangen werden.",
+    "scope": "New interruption guard and manual Git restart contract; no active automated pass claim until implementation."
+  },
+  "preconditions": [
+    "Implementation and actual Apply evidence for specification 0.2.85 are required; this document bundle runs no new product behavior."
+  ],
+  "primary_verification_id": "SR-VER-0019",
+  "required_environment": {
+    "declared_minimum_python": "3.10",
+    "implementation": "cpython",
+    "measured_scope": "current-run-only"
+  },
+  "requirement_id": "SR-REQ-0205",
+  "resources": {
+    "harness_suite_timeout": null,
+    "harness_test_timeout": null,
+    "owned_temporary_files": true
+  },
+  "specification_sha256": "28d3c6792f62ba9225449ce78b2d352d0cae72db801a4441fea2c76da4ed4463",
+  "steps": [
+    "Implement the complete new contract in 18.t and bind real behavioral tests and evidence before declaring acceptance."
+  ],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0205",
+  "test_ids": []
+}

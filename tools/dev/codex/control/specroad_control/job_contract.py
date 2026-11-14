@@ -32,7 +32,7 @@ def contract(value=None):
         if (set(value) != ({'version', 'clarification_allowed', 'clarification_limit', 'clarifications_remaining'} | ({'clarification_continuation'} if value['version'] == 4 else set()))
                 or type(value.get('clarification_allowed')) is not bool
                 or type(value.get('clarification_limit')) is not int
-                or value['clarification_limit'] not in ((3, 5) if value['version'] == 4 else (3,))
+                or value['clarification_limit'] not in ((3, 5, 20) if value['version'] == 4 else (3,))
                 or type(value.get('clarifications_remaining')) is not int
                 or not 0 <= value['clarifications_remaining'] <= value['clarification_limit']
                 or (value['clarification_allowed'] and value['clarifications_remaining'] == 0)):

@@ -7,7 +7,7 @@ from pathlib import Path
 from .cpu_capacity import available_cpus
 
 POLICY = 'verification/test_execution_policy.json'
-DEFAULT_WORKER_LIMIT = 10
+DEFAULT_WORKER_LIMIT = 12
 NICE_MINIMUM = 10
 NESTED = 'SPECROAD_NESTED_TEST_RUN'
 POLICY_VALUE = {'format_version': 1, 'worker_limit': DEFAULT_WORKER_LIMIT, 'nice_minimum': NICE_MINIMUM}
@@ -26,7 +26,7 @@ def positive_limit(value):
 def add_worker_limit(parser, *, default=DEFAULT_WORKER_LIMIT):
     """One CLI contract for all explicit test runners and CI package commands."""
     return parser.add_argument('--worker-limit', type=positive_limit, default=default,
-        help='Maximum worker processes; use available host CPUs up to this positive limit (default: 10)')
+        help='Maximum worker processes; use available host CPUs up to this positive limit (default: %(default)s)')
 
 
 def enabled(root):

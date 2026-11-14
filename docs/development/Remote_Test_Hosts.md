@@ -24,7 +24,10 @@ Die folgenden Werte sind ausschließlich erfundene Beispiele:
 ```
 
 `ssh` bezeichnet einen vorhandenen Alias aus der OpenSSH-Konfiguration.
-`workers` begrenzt die Hostbelegung, `speed` schätzt die relative Leistung
+`workers` begrenzt die Hostbelegung; ohne Angabe gilt der gemeinsame Standard 12.
+Explizite vorhandene Hostgrenzen werden nicht verändert. CPU-Kapazität und
+die laufweite `--worker-limit`-Grenze begrenzen jeden Host zusätzlich.
+`speed` schätzt die relative Leistung
 eines einzelnen Workers: 2 bedeutet ungefähr doppelt so schnell wie 1.
 Der Wert ist eine erste Schätzung, kein Benchmark. Aktuelle Messungen pro
 Host/Test/Umgebung gehen vor; Beobachtungen während des Laufs passen nur die

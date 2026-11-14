@@ -144,7 +144,8 @@ fehlende Messphasen erlauben keinen Commit.
 ## Worker und CPU-Priorität — HOST-WORKERS-537
 
 Jeder Rechner und jeder CI-Job nutzt seine eigenen verfügbaren logischen CPUs:
-`Worker = min(CPU-Kapazität, --worker-limit)`, Standardgrenze **10**.
+`Worker = min(CPU-Kapazität, --worker-limit)`, Standardgrenze **12**
+gemäß ausdrücklichem Nutzerauftrag vom 13. November 2026.
 CPU-Affinität und Linux-cgroup-Quoten werden berücksichtigt. Ein CPU-Anteil
 unter eins ergibt einen xdist-Worker. Es gibt keinen zusätzlichen seriellen
 Durchlauf. Eine vorhandene `--workers`-Angabe ist eine weitere Obergrenze;
@@ -173,8 +174,8 @@ keine Null als Sonderwert. Beispiele (Ausführung nur nach geltender Freigabe):
 .venv/bin/python -I -B tools/run_tests.py --worker-limit 24
 ```
 
-Der Bundle-Entrypoint nutzt ohne Zusatzkonfiguration die Standardgrenze 10.
-Die manuelle CI bietet das Eingabefeld `worker_limit`, ebenfalls Standard 10.
+Der Bundle-Entrypoint nutzt ohne Zusatzkonfiguration die Standardgrenze 12.
+Die manuelle CI behält ihre separat explizit übergebene Grenze 10 im Eingabefeld `worker_limit`.
 Der Planer schätzt mit seinen Ressourcen; jeder Testjob ermittelt seine eigene
 Zahl und weist eine entsprechend angepasste Paketschätzung aus. Jobs dürfen
 mehr oder weniger CPUs als der Planer haben. Der Aggregator prüft ihre

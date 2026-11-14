@@ -30,6 +30,6 @@ def require_reset_marker(raw):
     marker = decode_object(raw)
     if (len(raw) > 4096 or set(marker) != set(RESET_CAPABILITY)
             or any(type(marker[k]) is not type(v) or
-                (marker[k] not in (3, 5) if k == 'clarification_limit' else marker[k] != v)
+                (marker[k] not in (3, 5, 20) if k == 'clarification_limit' else marker[k] != v)
                 for k, v in RESET_CAPABILITY.items())):
         raise ControlError('current_acceptance_rejected', 'The tested current Result must opt into an explicit operator budget reset.')

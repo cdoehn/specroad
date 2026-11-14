@@ -1,19 +1,19 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.85
+## Version 0.2.86
 
 | Feld | Wert |
 |---|---|
 | Dokument-ID | `SR-SPEC-0001` |
-| Dokumentversion | `0.2.85` |
+| Dokumentversion | `0.2.86` |
 | Zielrelease | `SpecRoad Single-Repository Workbench 0.2.0` |
 | Status | **Fachlich konsolidierte Arbeitsgrundlage; technische Reviewentscheidung gesondert dokumentiert, formale Baseline-Freigabe und Produktabnahme nicht durch dieses Dokument erklärt** |
 | Stand | 14. November 2026 |
 | Sprache | Deutsch; technische Feldnamen, Enum-Werte und CLI-Kommandos Englisch |
-| Fachliche Quelle | **Diese Repositoryfassung v0.2.85 ist die aktive fachliche Arbeitsgrundlage; eine entsprechende PDF wird hiermit nicht veröffentlicht.** |
+| Fachliche Quelle | **Diese Repositoryfassung v0.2.86 ist die aktive fachliche Arbeitsgrundlage; eine entsprechende PDF wird hiermit nicht veröffentlicht.** |
 | Bearbeitbare Satzquelle | Diese Datei; eine spätere PDF muss denselben versionierten Inhalt wiedergeben. |
-| Vorgängerversion | Repository-Spezifikation v0.2.84; historische Nachweise bleiben unverändert. |
-| Prüf- und Entscheidungsgrundlage | RECOVERY-REMOVAL-006, ausdrücklicher Nutzerauftrag; keine Produktfreigabe. |
-| Änderungsart | Produkt-Recovery durch Abbrucherkennung, dauerhafte Projektsperre und manuellen Git-Wiederanlauf ersetzen; Umsetzung nach 18.k vor 18.l. |
+| Vorgängerversion | Repository-Spezifikation v0.2.85; historische Nachweise bleiben unverändert. |
+| Prüf- und Entscheidungsgrundlage | WORKER-LIMIT-12 / CONTROL-BUDGET-20, ausdrückliche Nutzeraufträge; RECOVERY-REMOVAL-006 bleibt erhalten; keine Produktfreigabe. |
+| Änderungsart | Gemeinsamer Workerstandard zwölf; neue volle Control-Budgets zwanzig mit budgetabhängiger Klärungsfreigabe. Der vorherige Recovery-Rückbauvertrag und seine Planreihenfolge bleiben unverändert. |
 
 > **Verbindlicher Quellenwechsel:** Die ausdrückliche Nutzerentscheidung REFERENCE-SOURCE-551 wird als v0.2.50 umgesetzt. Der neue Quellvertrag ist Entwurfsarbeit vom 3. November 2026, kein Nachweis eines früher existierenden Formats. Bestehende 0.2-Verträge, Transport-, Sicherheits- und Reviewgrenzen bleiben erhalten.
 
@@ -817,23 +817,42 @@ Wahl diese Einstellung; sein gleichnamiges Optionspaar überschreibt nur die
 konkrete Übernahme. Eine gespeicherte ausdrückliche Wahl bleibt bei späterem
 configure ohne diese Option erhalten.
 
-Das neue Standardmaximum des V4-Klärungsbudgets beträgt fünf. Historische
-V4-Aufträge mit Maximum drei und Altverträge 1–3 bleiben unverändert lesbar.
+Ergänzender ausdrücklicher Nutzerauftrag CONTROL-BUDGET-20 vom 14. November
+2026: Das neue Standardmaximum des V4-Klärungsbudgets beträgt zwanzig.
+Historische V4-Aufträge mit Maximum drei oder fünf und Altverträge 1–3
+bleiben unverändert lesbar.
 Neue volle Budgets entstehen nur bei einem neu initialisierten Auftrag,
 einem vollständig belegten sauberen erfolgreichen Apply aller angekündigten
 Stages oder einem ausdrücklich beauftragten Betreiberreset. Installation,
 Neustart, Fehler, Teilcommit und Configänderung erhöhen keinen bestehenden
 Restzähler. Budgeterhaltende Übernahmen behalten auch das bisherige Maximum.
-Der erfolgreiche normale Folgepfad verwendet die konfigurierte Freigabe.
+Für neue, nativ verifizierte V4-Folgeaufträge mit dem neuen geprüften
+Projektmarker `clarification_limit=20` gilt auch nach Apply-Fehlern:
+`clarification_allowed=true`, solange das erhaltene Restbudget positiv ist
+und die Freigabe nicht ausdrücklich abgeschaltet wurde. Das ist eine neue
+Auftragsentscheidung, keine nachträgliche Änderung des Vorvertrags und kein
+Budgetreset. Ein früheres Maximum drei oder fünf bleibt bis zur regulären
+Erneuerung erhalten. Ungeprüfte oder unbekannte Übergaben erteilen weiterhin
+keine neue Befugnis. Bei Rest null ist neue Klärung gesperrt.
+
+Ein belegter noch offener Klärungspräfix hat Vorrang: ausschließlich
+`clarification_continuation=true`, keine neue Klärung, bytegleiche Zieldateien
+und alle offenen IDs/Rollen erhalten, auch bei Rest null. Nach committedem
+Präfix bleibt der vorhandene Implementierungsrest eine normale Korrektur;
+ein positiver Freigabewert erlaubt weder dessen Austausch noch das Einfügen
+eines zweiten Präfixes in diese offene Folge. Der erfolgreiche normale
+Folgepfad verwendet ebenfalls die konfigurierte Freigabe. Historische
+Projektmarker drei/fünf behalten ihre bisherige Folge- und Promptsemantik.
 Ein neuer Klärungspräfix verbraucht weiterhin genau einen Platz; derselbe
 belegte offene Präfix verbraucht keinen zweiten. Die numerischen Aussagen
 zu drei in älteren Abschnitten gelten weiterhin für deren historische
-Aufträge; für neue volle V4-Budgets gilt dieser Abschnitt mit fünf.
+Aufträge; für neue volle V4-Budgets gilt dieser Abschnitt mit zwanzig.
 
 Ein getrenntes Korrekturbudget begrenzt neue Reparaturbundles nach Apply-
-Fehlern standardmäßig auf fünf. Technische Modell-/Transportwiederholungen
+Fehlern standardmäßig auf zwanzig. Technische Modell-/Transportwiederholungen
 bleiben davon getrennt. Die externe Einstellung `correction_limit` ist eine
-Ganzzahl von eins bis fünf, Standard fünf. Ein erstmals beobachteter Apply-
+Ganzzahl von eins bis zwanzig, Standard zwanzig. Explizit konfigurierte
+kleinere Grenzen bleiben erhalten. Ein erstmals beobachteter Apply-
 Fehler eröffnet die Reparaturfolge; jede tatsächlich übergebene Reparatur
 verbraucht genau einen Platz bei der Übernahme ihres gebundenen Folge-Results.
 Erst der vollständig belegte saubere Erfolg beendet die Fehlerfolge und
@@ -1052,8 +1071,13 @@ und ihre Python-Matrix bleiben unverändert.
 Ausdrücklicher Nutzerauftrag vom 1. November 2026. Jeder ausführende Host
 ermittelt seine nutzbaren logischen CPUs selbst. Standardmäßig laufen
 `min(verfügbare CPUs, worker_limit)` xdist-Worker mit `worksteal`.
-`--worker-limit` ist eine positive optionale Ganzzahl, Standard 10;
-größere ausdrücklich gewählte Grenzen erlauben mehr als zehn Worker.
+`--worker-limit` ist eine positive optionale Ganzzahl, Standard 12 gemäß
+ausdrücklichem Nutzerauftrag WORKER-LIMIT-12 vom 13. November 2026;
+größere ausdrücklich gewählte Grenzen erlauben mehr als zwölf Worker.
+Diesen gemeinsamen Standard verwenden auch Hosteinträge ohne `workers`
+und der Profiling-Aufruf ohne `--worker-limit`. Ausdrücklich konfigurierte
+Host-/CLI-Grenzen bleiben erhalten; laufende Gates ändern ihre gebundenen
+Ressourcen nicht. Die manuelle CI behält ihre explizite Workflow-Grenze 10.
 Eine vorhandene explizite `--workers`-Angabe begrenzt zusätzlich. Null,
 negative Werte und ungültige Angaben werden vor Testbeginn abgelehnt.
 CPU-Affinität und erkennbare Linux-cgroup-CPU-Quoten begrenzen die

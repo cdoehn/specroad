@@ -116,9 +116,10 @@ für den reparierten Code wiederverwendet.
 ## Ressourcen des ausführenden Hosts
 
 Ab HOST-WORKERS-537 verwendet der gemeinsame Apply-Runner automatisch
-`min(verfügbare CPUs, 10)` Worker, Worksteal und mindestens Nice +10.
+`min(verfügbare CPUs, 12)` Worker, Worksteal und mindestens Nice +10
+(Standardgrenze nach Nutzerauftrag vom 13. November 2026).
 `run_apply_tests.py --worker-limit N` erlaubt eine positive andere Grenze;
-der Standard-Entrypoint verwendet 10. Jeder Commit erhält weiterhin genau
+der Standard-Entrypoint verwendet 12. Jeder Commit erhält weiterhin genau
 ein Gate. Auswahlbindung v5 und Beobachtungen binden die tatsächlichen
 Ressourcen. Details: [Testing.md](Testing.md).
 

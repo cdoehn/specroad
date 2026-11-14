@@ -38,6 +38,8 @@ def test_custom_file_directory_nodeid_union_and_filters_are_preserved(tmp_path):
         '-k', 'one or two', '-m', 'not slow'])
     assert selectors(root, args) == ['tests/test_one.py::test_one[one]', 'tests/test_one.py', 'tests/sub']
     assert (args.keyword, args.marker) == ('one or two', 'not slow')
+    assert args.worker_limit == 12
+    assert parser(root).parse_args(['run', '--all', '--worker-limit', '6']).worker_limit == 6
     assert relative_selector(root, str(root / 'tests/test_one.py')) == 'tests/test_one.py'
 
 

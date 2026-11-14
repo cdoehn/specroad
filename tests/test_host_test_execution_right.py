@@ -77,7 +77,7 @@ def test_policy_corruption_is_rejected_before_test_execution(tmp_path,fault):
         else:path.hardlink_to(original)
     elif fault=='parent-link':
         original=root/'verification';target=root/'real';original.rename(target);original.symlink_to(target)
-    elif fault=='duplicate':path.write_text('{"format_version":1,"format_version":1,"worker_limit":10,"nice_minimum":10}')
+    elif fault=='duplicate':path.write_text('{"format_version":1,"format_version":1,"worker_limit":12,"nice_minimum":10}')
     elif fault=='unknown':path.write_text('{}')
     else:path.write_text(' '*5000)
     with pytest.raises(ValueError):host.select_workers(root)

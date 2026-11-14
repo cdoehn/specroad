@@ -32,7 +32,7 @@ def _row(ledger, source_sha):
         if (set(value) != {'version', 'source_sha256', 'previous_sha256', 'maximum', 'remaining', 'active', 'reason'}
                 or value['version'] != 1 or type(value['version']) is not int
                 or value['source_sha256'] != source_sha
-                or type(value['maximum']) is not int or not 1 <= value['maximum'] <= 5
+                or type(value['maximum']) is not int or not 1 <= value['maximum'] <= 20
                 or type(value['remaining']) is not int or not 0 <= value['remaining'] <= value['maximum']
                 or type(value['active']) is not bool
                 or value['reason'] not in ('initial_checkpoint', 'verified_clean_apply', 'repair_result', 'preserved')
@@ -98,7 +98,7 @@ def _complete(source):
 
 
 def _initial(source, limit):
-    if type(limit) is not int or not 1 <= limit <= 5:
+    if type(limit) is not int or not 1 <= limit <= 20:
         _fail()
     # A successful initial bundle capture is not a failed Apply.
     return dict(version=1, source_sha256=source['sha256'], previous_sha256=None,
@@ -147,7 +147,7 @@ def _successor(old, previous, source, limit, *, verified):
 def require_available(value):
     if value['active'] and value['remaining'] == 0:
         raise ControlError('correction_budget_exhausted',
-                           'Five or the configured number of Apply repairs are exhausted; operator action is required.')
+                           'The configured number of Apply repairs is exhausted; operator action is required.')
 
 
 def preserve(ledger, previous_sha, source):

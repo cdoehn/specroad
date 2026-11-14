@@ -1,6 +1,6 @@
 """Pure successor authority; persistence stays inside the ledger transaction."""
 from .job_contract import contract, new_contract, fresh_contract
-from .mixed_contract import MIXED, supports_v4
+from .mixed_contract import MIXED, supports_v4, budget_driven_clarification
 
 
 def successor_contract(previous, handoff, source, *, verified=False, pending_clarification=False, clarification_allowed=True):
@@ -13,7 +13,12 @@ def successor_contract(previous, handoff, source, *, verified=False, pending_cla
         if verified and committed and handoff in ('patch_ready', MIXED) and supports_v4(source):
             return fresh_contract(source, allowed=clarification_allowed)
         continuing = bool(verified and handoff == MIXED and not committed and pending_clarification)
-        return new_contract(remaining, allowed=False, version=4, continuation=continuing,
+        # Permission and replenishment are separate. A proven open prefix has
+        # exclusive continuation authority, even if its last place was spent.
+        allowed = bool(verified and handoff in ('patch_ready', MIXED)
+                       and not pending_clarification and remaining > 0
+                       and clarification_allowed and budget_driven_clarification(source))
+        return new_contract(remaining, allowed=allowed, version=4, continuation=continuing,
                             limit=previous['clarification_limit'])
     # Only a proven normal handoff opens a fresh v3 budget on a new source.
     # Already bound attempts and legacy clarification chains stay unchanged.

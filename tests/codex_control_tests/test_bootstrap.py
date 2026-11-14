@@ -63,6 +63,35 @@ class BootstrapTests(AutomationCase):
         self.assertFalse(reply['bootstrap_created'])
         self.assertEqual(self.row(), before)
 
+    def test_configure_twenty_repairs_preserves_state_and_later_omitted_choice(self):
+        before = self.row()
+        reply = configure(self.paths, thread_id=self.thread, codex=str(self.binary),
+                          core_python=str(self.python), correction_limit=20)
+        self.assertEqual(load(self.paths).correction_limit, 20)
+        self.assertEqual(self.row(), before)
+        self.assertFalse(reply['service_started'])
+        self.assertFalse(reply['model_called'])
+        self.setup_source()
+        self.assertEqual(load(self.paths).correction_limit, 20)
+        self.assertEqual(self.row(), before)
+
+    def test_cli_twenty_limit_reaches_native_configuration_and_rejects_twenty_one(self):
+        from contextlib import redirect_stdout, redirect_stderr
+        import io
+        from specroad_control.cli import main
+        before = self.row()
+        args = ['configure', '--thread-id', self.thread, '--codex', str(self.binary),
+                '--core-python', str(self.python), '--correction-limit', '20']
+        with patch('specroad_control.cli.Paths.discover', return_value=self.paths), redirect_stdout(io.StringIO()):
+            self.assertEqual(main(args), 0)
+        self.assertEqual(load(self.paths).correction_limit, 20)
+        raw = self.paths.config.read_bytes()
+        with redirect_stderr(io.StringIO()), self.assertRaises(SystemExit) as caught:
+            main(args[:-1] + ['21'])
+        self.assertEqual(caught.exception.code, 2)
+        self.assertEqual(self.paths.config.read_bytes(), raw)
+        self.assertEqual(self.row(), before)
+
     def test_missing_state_requires_explicit_initial_result(self):
         self.fresh()
         before = self.paths.config.read_bytes()

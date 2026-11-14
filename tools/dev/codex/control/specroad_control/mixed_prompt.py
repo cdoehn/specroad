@@ -64,6 +64,18 @@ def mixed_prompt(source, selected):
         'in Exchange uebergeben und sofort beenden. Keine eigene Apply-, '
         'Warte-, Modell- oder Wiederholungsschleife; Watcher und Control uebernehmen.')
 
-    # Original three-slot prompts remain byte-identical for history/dispatch proof.
-    return result.replace('erneuert das im neuen Vertrag gebundene Maximum.',
-        'erneuert ' + ('drei' if selected['clarification_limit'] == 3 else 'fuenf') + ' Plaetze.')
+    # Original three-/five-slot source prompts remain byte-identical.
+    result = result.replace('erneuert das im neuen Vertrag gebundene Maximum.',
+        'erneuert ' + {3: 'drei', 5: 'fuenf', 20: 'zwanzig'}[selected['clarification_limit']] + ' Plaetze.')
+    # Request reconstruction intentionally carries only the four original
+    # source fields. Select additive prompt bytes by the persisted contract.
+    if selected['clarification_limit'] == 20:
+        result += ('\nBudgetabhaengige Freigabe nach 2.4.3.6: Control erlaubt neue '
+                   'optionale Klaerung bei positivem Restbudget auch nach belegtem '
+                   'Apply-Fehler, sofern sie nicht ausdruecklich abgeschaltet ist. '
+                   'Keine Auffuellung, keine Aenderung des hier gebundenen Vertrags. '
+                   'Ein offener Klaerungspraefix hat Vorrang und erlaubt nur seine '
+                   'bytegleiche Fortsetzung. Die Korrektur muss alle offenen IDs und '
+                   'Rollen erhalten; positive Freigabe erlaubt keinen zusaetzlichen '
+                   'Praefix in einer bereits offenen Folge.')
+    return result

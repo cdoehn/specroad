@@ -27249,6 +27249,26 @@
     "tests/test_proposal_apply_right.py::test_real_process_loss_requires_native_recovery_then_exactly_one_apply[prepared]",
     "tests/test_proposal_apply_right.py::test_real_process_loss_requires_native_recovery_then_exactly_one_apply[published]",
     "tests/test_proposal_apply_right.py::test_normalization_rejects_foreign_configuration_after_publication[completion]",
-    "tests/test_proposal_apply_right.py::test_normalization_rejects_foreign_configuration_after_publication[journal]"
+    "tests/test_proposal_apply_right.py::test_normalization_rejects_foreign_configuration_after_publication[journal]",
+    "codex_control_tests.test_bootstrap.BootstrapTests.test_cli_twenty_limit_reaches_native_configuration_and_rejects_twenty_one",
+    "codex_control_tests.test_bootstrap.BootstrapTests.test_configure_twenty_repairs_preserves_state_and_later_omitted_choice",
+    "codex_control_tests.test_budget_twenty.TwentyBudgetTests.test_config_accepts_the_full_range_and_preserves_an_explicit_old_limit",
+    "codex_control_tests.test_budget_twenty.TwentyBudgetTests.test_explicit_opt_out_remains_disabled_after_failure_and_success",
+    "codex_control_tests.test_budget_twenty.TwentyBudgetTests.test_failed_normal_apply_preserves_permission_without_replenishment",
+    "codex_control_tests.test_budget_twenty.TwentyBudgetTests.test_new_request_and_both_default_budgets_have_twenty_places",
+    "codex_control_tests.test_budget_twenty.TwentyBudgetTests.test_pending_prefix_continues_once_then_normal_rest_keeps_permission",
+    "tests/codex_control_tests/test_budget_twenty.py::test_fresh_contract_uses_only_the_declared_project_maximum[20]",
+    "tests/codex_control_tests/test_budget_twenty.py::test_fresh_contract_uses_only_the_declared_project_maximum[3]",
+    "tests/codex_control_tests/test_budget_twenty.py::test_fresh_contract_uses_only_the_declared_project_maximum[5]",
+    "tests/codex_control_tests/test_budget_twenty.py::test_last_clarification_place_allows_only_unchanged_pending_prefix",
+    "tests/codex_control_tests/test_budget_twenty.py::test_old_project_markers_keep_failed_successor_policy[3]",
+    "tests/codex_control_tests/test_budget_twenty.py::test_old_project_markers_keep_failed_successor_policy[5]",
+    "tests/codex_control_tests/test_budget_twenty.py::test_positive_legacy_balance_is_preserved_under_new_source_policy[20]",
+    "tests/codex_control_tests/test_budget_twenty.py::test_positive_legacy_balance_is_preserved_under_new_source_policy[3]",
+    "tests/codex_control_tests/test_budget_twenty.py::test_positive_legacy_balance_is_preserved_under_new_source_policy[5]",
+    "tests/codex_control_tests/test_budget_twenty.py::test_unknown_handoff_with_verified_source_does_not_grant_or_refill",
+    "tests/codex_control_tests/test_budget_twenty.py::test_unverified_successor_never_grants_clarification[None]",
+    "tests/codex_control_tests/test_budget_twenty.py::test_unverified_successor_never_grants_clarification[patch_ready]",
+    "tests/codex_control_tests/test_budget_twenty.py::test_unverified_successor_never_grants_clarification[patch_ready_with_clarification]"
   ]
 }

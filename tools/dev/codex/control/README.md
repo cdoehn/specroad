@@ -238,8 +238,8 @@ control accept-current --result /ABSOLUTES/AKTUELLES/Result.zip \
 ```
 
 Der Dienst muss gestoppt sein. Der neue Betreiberbeleg bewahrt den Vorvertrag,
-erneuert das volle Budget des geprüften Projektmarkers (aktuell fünf, bei
-historischen Markern drei) und schaltet die begrenzte Detailklärung frei.
+erneuert das volle Budget des geprüften Projektmarkers (aktuell zwanzig, bei
+historischen Markern drei oder fünf) und schaltet die begrenzte Detailklärung frei.
 Auch ein gültiger Rest von null ist möglich. Ohne Flag bleibt das alte Budget
 erhalten; Restart, Recovery und bloße Installation ändern es nicht. Alte
 Übernahmen werden nicht ersetzt: für ein bereits akzeptiertes Result ist ein
@@ -251,16 +251,25 @@ verzögert die Übernahme. Details: Spezifikation 2.4.3.5.
 
 ## Standardfreigabe und getrennte Budgets (CONTROL-DEFAULTS-666)
 
-Die neue geprüfte Projektversion verwendet standardmäßig optionale Klärung
-und fünf Klärungsplätze. Die externe Konfiguration enthält unter `[automation]`
-`clarification_allowed = true` und `correction_limit = 5`. Explizites `false`
-bleibt erhalten. Bestehende gebundene Dreierverträge werden nicht umgerechnet.
+Die neue Projektversion verwendet nach erfolgreicher Abnahme und Installation
+standardmäßig optionale Klärung und zwanzig Klärungsplätze. Die externe
+Konfiguration enthält unter `[automation]` `clarification_allowed = true`
+und `correction_limit = 20`. Explizites `false` und kleinere konfigurierte
+Korrekturgrenzen bleiben erhalten. Bestehende gebundene Drei-/Fünferverträge
+werden nicht umgerechnet.
 Neue volle V4-Budgets folgen dem geprüften `development_contract.json`; alte
-Projektmarker mit drei bleiben lesbar. Ein Configwechsel ist kein Budgetreset.
+Projektmarker mit drei oder fünf bleiben lesbar. Ein Configwechsel ist kein Budgetreset.
+
+Mit dem neuen Projektmarker erlaubt Control in neuen nativ verifizierten
+Folgeaufträgen optionale Klärung bei positivem Rest auch nach Apply-Fehlern.
+Das füllt keinen Zähler auf und ändert keinen alten Auftrag. Ein noch offener
+Klärungspräfix erlaubt ausschließlich seine unveränderte Fortsetzung, auch
+bei Rest null. Eine positive Freigabe hebt die Bindung an alle offenen
+Commit-IDs/Rollen nicht auf; kein zusätzlicher Präfix in der offenen Folge.
 
 `configure --clarification` beziehungsweise `--no-clarification` speichert die
 Wahl zusammen mit den bestehenden erforderlichen Setupangaben. Ohne Option
-bleibt eine vorhandene Wahl erhalten. `--correction-limit 1..5` konfiguriert
+bleibt eine vorhandene Wahl erhalten. `--correction-limit 1..20` konfiguriert
 neue Reparaturfolgen. `accept-current` verwendet ohne Wahl die konfigurierte
 Klärungsbefugnis; das Optionspaar überschreibt nur diesen Übernahmeauftrag.
 

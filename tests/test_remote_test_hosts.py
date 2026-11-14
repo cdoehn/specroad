@@ -23,8 +23,9 @@ def configured(**values):
 
 def test_local_config_preserves_alias_limits_and_has_no_credentials(tmp_path):
     path = tmp_path / 'hosts.json'
-    path.write_text(json.dumps({'format_version': 1, 'hosts': [configured().value(), configured(name='local', ssh=None).value()]}))
+    path.write_text(json.dumps({'format_version': 1, 'hosts': [configured().value(), configured(name='local', ssh=None, workers=4).value()]}))
     assert [h.ssh for h in load(path)] == ['test-server', None]
+    assert [h.workers for h in load(path)] == [12, 4]
     with pytest.raises(ValueError):
         configured(password='not-a-real-password')
 

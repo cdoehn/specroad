@@ -22,6 +22,8 @@ class DevelopmentDefaultsRightTests(MixedCase):
                        {**CAPABILITY, 'clarification_limit': 5})
         marker.start(); self.addCleanup(marker.stop)
         super().setUp()
+        self.config = replace(self.config, correction_limit=5)
+        self.engine.config = self.config
 
     def test_restart_and_changed_default_preserve_consumed_budget(self):
         self.dispatch(); self.outcome(completed=0); self.engine.tick()
@@ -53,7 +55,7 @@ class DevelopmentDefaultsRightTests(MixedCase):
         self.assertFalse(self.ledger().attempt_directory(self.paths, stopped['sha'], 0).exists())
 
     def test_invalid_config_limits_fail_instead_of_becoming_truthy(self):
-        for value in (True, False, 0, 6, -1, 2.5, '5'):
+        for value in (True, False, 0, 21, -1, 2.5, '5'):
             document = tomllib.loads(render(self.config))
             document['automation']['correction_limit'] = value
             with self.subTest(value=value), self.assertRaises(ValueError):
