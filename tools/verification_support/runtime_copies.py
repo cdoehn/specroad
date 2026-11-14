@@ -1,5 +1,6 @@
 """Explicit authorized attempt groups; old attempts and phase rows are retained."""
 import json
+import re
 
 
 def upgrade(db):
@@ -41,6 +42,12 @@ def authorize(db, run, node, worker, token):
     if not enabled(db, run):
         raise ValueError('Speculation was not enabled for this run')
     with db:
+        db.execute('BEGIN IMMEDIATE')
+        if (db.execute('SELECT finished FROM runs WHERE id=?', (run,)).fetchone() != (None,)
+                or type(token) is not str or not re.fullmatch('[0-9a-f]{32}', token)
+                or type(worker) is not str or not re.fullmatch('gw[0-9]+', worker)
+                or type(node) is not str or not node):
+            raise ValueError('Invalid or closed speculative reservation')
         if db.execute('SELECT 1 FROM speculative_winners WHERE run=? AND node=?', (run, node)).fetchone():
             raise ValueError('Completed test cannot receive another attempt')
         db.execute('INSERT INTO speculative_attempts VALUES(?,?,?,?,NULL,?,NULL,0)',
@@ -104,6 +111,13 @@ def group(db, run, node, *, host=None):
             or db.execute('''SELECT 1 FROM phases p JOIN speculative_attempts s ON s.attempt=p.attempt
                              WHERE s.run=? AND s.node=? AND p.outcome!='passed' LIMIT 1''', (run, node)).fetchone()):
         return None
+    for r in rows:
+        if r[4] == 'moved':
+            successor = db.execute('''SELECT s.id FROM attempt_moves m JOIN attempts s ON s.id=m.successor
+                WHERE m.attempt=? AND s.run=? AND s.node=? AND s.test=? AND s.worker=m.target_worker''',
+                (r[0],run,node,r[1])).fetchone()
+            if successor is None:
+                return None
     candidates = [r for r in rows if r[4] == 'complete' and (r[5] == host if host is not None else r[6] == winner[0])]
     if not candidates:
         return None

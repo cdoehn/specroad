@@ -27437,6 +27437,23 @@
     "tests/test_speculative_tests.py::test_same_run_duplicates_need_independent_exact_reservations",
     "tests/test_speculative_tests.py::test_unstarted_queue_has_absolute_priority",
     "tests/test_speculative_tests_integration.py::test_native_copy_finishes_and_reaps_original_process_tree[False]",
-    "tests/test_speculative_tests_integration.py::test_native_copy_finishes_and_reaps_original_process_tree[True]"
+    "tests/test_speculative_tests_integration.py::test_native_copy_finishes_and_reaps_original_process_tree[True]",
+    "tests/test_speculative_reservation_integration.py::test_winner_before_copy_collection_denies_execution_without_losing_coverage",
+    "tests/test_speculative_tests_right.py::test_balanced_rounds_reserve_before_next_worker_and_use_stable_identity",
+    "tests/test_speculative_tests_right.py::test_first_completed_not_newest_started_supplies_measurement_and_monitor",
+    "tests/test_speculative_tests_right.py::test_latest_new_run_hides_older_copy_group_even_if_older_finishes_late",
+    "tests/test_speculative_tests_right.py::test_live_status_retains_full_identifiers_for_multiple_copies",
+    "tests/test_speculative_tests_right.py::test_manual_move_in_copy_enabled_run_retains_successor_proof",
+    "tests/test_speculative_tests_right.py::test_migration_retains_original_values_and_does_not_allow_unbound_duplicates",
+    "tests/test_speculative_tests_right.py::test_passing_winner_cannot_validate_failed_or_unknown_copy[duplicate]",
+    "tests/test_speculative_tests_right.py::test_passing_winner_cannot_validate_failed_or_unknown_copy[failed]",
+    "tests/test_speculative_tests_right.py::test_passing_winner_cannot_validate_failed_or_unknown_copy[subtest]",
+    "tests/test_speculative_tests_right.py::test_passing_winner_cannot_validate_failed_or_unknown_copy[unresolved]",
+    "tests/test_speculative_tests_right_integration.py::test_copy_in_each_phase_is_separate_and_proof_rejects_tampering[call]",
+    "tests/test_speculative_tests_right_integration.py::test_copy_in_each_phase_is_separate_and_proof_rejects_tampering[setup]",
+    "tests/test_speculative_tests_right_integration.py::test_copy_in_each_phase_is_separate_and_proof_rejects_tampering[teardown]",
+    "tests/test_speculative_tests_right_integration.py::test_missing_termination_ack_keeps_gate_failed_even_with_passing_winner",
+    "tests/test_speculative_tests_right_integration.py::test_naturally_completed_loser_is_retained_when_cancel_endpoint_closes",
+    "tests/test_speculative_tests_right_integration.py::test_real_failed_copy_is_canonical_failure_and_never_a_measurement"
   ]
 }

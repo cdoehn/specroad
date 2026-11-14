@@ -55,7 +55,7 @@ def test_native_copy_finishes_and_reaps_original_process_tree(tmp_path, proxy):
 
     # Two originals give each native worker one final item: both are started
     # before the target becomes idle, satisfying the actual copy precondition.
-    with pool(tmp_path/'copy', proxy=proxy, test_count=2, transform=lambda p:p.update(format_version=4)) as p:
+    with pool(tmp_path/'copy', proxy=proxy, test_count=2, long_identity=True, transform=lambda p:p.update(format_version=4)) as p:
         await_value(lambda: (p['root']/'build/original').exists(), p['process'], p['log'])
         if p['cpus'] < 2:
             (p['root']/'build/release').touch()

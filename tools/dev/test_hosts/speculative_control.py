@@ -39,7 +39,8 @@ class CopyAttempts(Attempts):
     def can_move(self, attempt):
         index = attempt['index']
         return (sum(r['index'] == index for r in self.current.values()) == 1
-                and not any(r['index'] == index and not r['granted'] for r in self.copies.values()))
+                and not any(r['index'] == index and not r['granted'] and r['node'] in self.ds._active_nodes
+                            for r in self.copies.values()))
 
     def granted(self, name, index, slot):
         token = super().granted(name, index, slot)
@@ -91,7 +92,7 @@ class CopyAttempts(Attempts):
                 rows += [r for r in self.copies.values() if not r['granted'] and r['index'] not in self.winners
                          and r['node'] in self.ds._active_nodes
                          and self.state.ledger.worst.get(r['nodeid'], 'not_run') in ('not_run', 'passed')]
-                nodeid = choose(host, eligible, rows)
+                nodeid = choose(host, eligible, rows, identities=self.pool.config._sr_host_profile['selected'])
                 if nodeid is None:
                     break
                 index = self.ds.sched.collection.index(nodeid)
@@ -131,6 +132,7 @@ class CopyAttempts(Attempts):
                 or message['index'] != row['index'] or node not in self.ds._active_nodes):
             raise ValueError('Invalid copy reservation permission')
         self.pool.sequences[name] = message['sequence']
+        self.pool.reconcile()  # latest desired counts also govern a held reservation
         slot = message['slot']
         if slot is not None and (type(slot) is not int or not 0 <= slot < self.pool.rows[name]['budget']):
             raise ValueError('Invalid copy host lease')
@@ -163,7 +165,25 @@ class CopyAttempts(Attempts):
             raise ValueError('Copy cancellation confirmation timed out')
         if not job['future'].done():
             return
-        receipt = job['future'].result()
+        try:
+            receipt = job['future'].result()
+        except Exception:
+            # A normally completed worker can close its endpoint before the
+            # cancel RPC arrives. Only its actual matching native output can
+            # settle that race; absence of a process is never an acknowledgement.
+            record = self.state.ledger.attempts.get((source['nodeid'], name), {})
+            if record.get('state') != 'complete' or name in self.deferred:
+                raise
+            output = self.pool.config._sr_pool_outputs.get(name)
+            if output is None:
+                return
+            if (any(output.get(k) != self.ready[name]['proof'][k]
+                    for k in ('source_sha256','snapshot_sha256','environment_sha256','account','host'))
+                    or not any(all(a.get(k) == source[k] for k in ('token','nodeid','slot','start'))
+                               for a in output.get('leases', []))):
+                raise ValueError('Natural loser completion lacks its bound worker proof')
+            del self.killing[name]
+            return
         if not receipt.get('cancelled'):
             # A completed protocol can beat the cancel request. It still has
             # to supply normal worker output; no termination is invented.

@@ -20,16 +20,16 @@ def inspect_file(info):
         raise ValueError('Control files must be private single regular files')
 
 
-def read_json(path):
+def read_json(path, *, max_bytes=1_000_000):
     inspect_directory(path.parent)
     fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW)
     try:
         before = os.fstat(fd)
         inspect_file(before)
-        if before.st_size > 1_000_000:
+        if before.st_size > max_bytes:
             raise ValueError('Oversized live control file')
         with os.fdopen(os.dup(fd), 'rb') as stream:
-            data = stream.read(1_000_001)
+            data = stream.read(max_bytes + 1)
         # An atomic replacement may publish a newer valid command meanwhile.
         # Read this complete descriptor generation; reject in-place mutation.
         after = os.fstat(fd)

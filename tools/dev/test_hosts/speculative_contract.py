@@ -18,10 +18,11 @@ def verify_copies(observation, proof):
     winners = observation.get('copy_winners')
     if type(evidence) is not list or type(completions) is not list or type(winners) is not dict:
         raise ValueError('Missing copy outcome evidence')
-    records = {}
+    records, owners = {}, set()
     for row in evidence:
         if (type(row) is not dict or set(row) != {'nodeid','worker','token','state','phases','worst'}
                 or row['token'] in records or row['nodeid'] not in selected_set
+                or (row['nodeid'], row['worker']) in owners
                 or row['state'] not in ('complete','cancelled')
                 or row['worst'] not in ('not_run', 'passed') or type(row['phases']) is not dict
                 or set(row['phases']) - {'setup','call','teardown'}
@@ -29,6 +30,7 @@ def verify_copies(observation, proof):
                 or row['state'] == 'complete' and row['phases'] != dict.fromkeys(('setup','call','teardown'), 'passed')):
             raise ValueError('Failed or unresolved copy outcome')
         records[row['token']] = row
+        owners.add((row['nodeid'], row['worker']))
     first, complete_tokens = {}, set()
     for entry in completions:
         if type(entry) is not dict or set(entry) != {'nodeid','worker','token'}:
@@ -93,8 +95,14 @@ def verify_copies(observation, proof):
                 if cancellation.get('reason') == 'copy':
                     if winners.get(lease['nodeid']) != target:
                         raise ValueError('Loser cancellation names no canonical winner')
-                elif not any(r['worker'] == target and r['nodeid'] == lease['nodeid'] for r in records.values()):
+                elif cancellation.get('reason') is not None or not any(
+                        r['worker'] == target and r['nodeid'] == lease['nodeid'] for r in records.values()):
                     raise ValueError('Move cancellation lacks its successor')
+                prior = actual['workers'][name]['leases'][:-1]
+                completed = receipt.get('completed')
+                if (type(completed) is not list or len(completed) != len(prior)
+                        or any(any(a.get(k) != v for k,v in b.items()) for a,b in zip(completed, prior))):
+                    raise ValueError('Termination receipt lost prior completed attempts')
             seen.add(token)
             permit.clear()
             permit.update(index=len(identities), slot=lease['slot'])

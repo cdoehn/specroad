@@ -30,12 +30,12 @@ def read_status(repository, *, home=None):
     if not os.path.lexists(root):
         return None
     inspect_directory(root)
-    value = read_json(root / 'status.json') if os.path.lexists(root / 'status.json') else None
+    value = read_json(root / 'status.json', max_bytes=16 * 1024 * 1024) if os.path.lexists(root / 'status.json') else None
     if value is not None:
         value = dict(value, active=live(root))
         if value['repository'] != str(Path(repository).resolve()):
             raise ValueError('Foreign test-control target')
-        latest = read_json(root / 'status.json')
+        latest = read_json(root / 'status.json', max_bytes=16 * 1024 * 1024)
         if latest['run'] != value['run']:
             raise ValueError('Live test generation changed while reading status')
     return value
