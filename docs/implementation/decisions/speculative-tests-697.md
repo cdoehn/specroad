@@ -20,8 +20,8 @@ Isolation und den vorhandenen bestätigten Abbruchpfad. Keine Produktzähler än
 W, R und C sind getrennte Zielstände mit eigenem Apply-Gate und anschließendem
 Commit. Vorbereitet ist kein Testnachweis; Dev führt nur Collection, Syntax
 und native Paketvalidierung aus. Keine Dienststarts, Installationen oder CI.
-Nach dem erfolgreichen R-Gate reicht der Zielstand dieser Stage bis R; C
-bleibt offen. Danach gilt wieder die priorisierte Produktposition 18.s.W.
+Nach dem erfolgreichen C-Gate ist die gesamte SPECULATE.W/R/C-Folge
+vollständig. Danach gilt wieder die priorisierte Produktposition 18.s.W.
 
 Fehler- und Fortsetzungsbeleg: [Bundle 698](../history/bundle-698-speculative-correction.md).
 Die vollständige Folge bleibt bis zu ihren jeweiligen erfolgreichen Gates offen.

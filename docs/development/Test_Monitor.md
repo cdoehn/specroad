@@ -37,6 +37,15 @@ wird angezeigt. [Belegungsregeln und Pfadbindung](Status_Helpers.md) gelten weit
 Oben stehen Apply-Belegung, Bundle, Phase und Testfortschritt aller Ziele.
 Darunter folgen die Details des ausgewählten Ziels und eine Testliste.
 
+Bei spekulativen Testkopien enthält die Testliste getrennte Zeilen pro Versuch
+mit Host, Worker und Kennzeichnung `winner` beziehungsweise `copy`. JSON liefert
+zusätzlich `copy_role`, `copy_state` und `attempt_token`; die Phasen und Dauern
+bleiben versuchsbezogen. Die Übersicht zählt jede ausgewählte Testidentität
+einmal. Vollständiger Testfortschritt kann noch die Bestätigung laufender
+Kopienabbrüche erfordern. Die Historienansicht verwendet nur die gültige
+kanonische Messung der neuesten aufgelösten Versuchsgruppe; abgebrochene Kopien
+werden nicht als schnelle vollständige Tests eingestuft.
+
 Bei laufenden Tests reicht der Hintergrund jeder Apply-Zeile über die gesamte
 Terminalbreite, einschließlich der Leerfläche rechts vom Text: Der Anteil
 abgeschlossener Tests ist grün, der Rest gelb. Grundlage ist der vorhandene

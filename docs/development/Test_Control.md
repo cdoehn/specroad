@@ -106,3 +106,35 @@ steuernde Versuchszustandsfolge liegen in getrennten Modulen. Der Monitor
 liest ausschließlich die bestehende Historie und markiert deren Abbruchkonten;
 er öffnet keine Steuerverbindung und startet keine Migration. Alle W/R-Abnahmen
 bleiben für C verpflichtend.
+
+## Freie Worker am Laufende: parallele Kopien
+
+Neue live gesteuerte Apply-Hostpools verwenden Profilformat 4 und die
+[Regel SPECULATE-697](../specification/SpecRoad_Spezifikation.md#2438-spekulative-testkopien--speculate-697).
+Noch nicht gestartete Tests haben Vorrang. Erst ohne Warteschlange reserviert
+der Controller freie Slots für zusätzliche Kopien: geringste globale
+Kopienzahl, zunächst verschiedene aktivierte Hosts, bei Gleichstand stabile
+Testidentität. Hostgeschwindigkeit und geschätzte Restdauer gehen nicht ein.
+
+Jede Kopie erhält einen frischen Workerprozess. Der erste vollständige
+Protokollabschluss einschließlich Teardown entscheidet. Übrige laufende
+Kopien werden über ihre bestehende Prozessaufsicht samt Unterprozessen
+beendet; ein fehlender Endnachweis lässt das Gate scheitern. Ein gleichzeitig
+regulär fertig gewordener Verlierer bleibt mit seinem echten Ergebnis erhalten.
+Tatsächliche Fehler irgendeiner Kopie bleiben Fehler. Ein ausgefallener Worker
+wird dadurch weder als Erfolg gewertet noch automatisch wiederholt.
+
+Die Laufzeitdatenbank wird beim Start eines Format-4-Laufs atomar auf Version 3
+erweitert. Alle vorhandenen Werte und Hostbindungen bleiben erhalten; alte
+Schreiber lehnen das neue Format ab. Eigene Reservierungen, Versuchskonten und
+der kanonische Gewinner trennen vollständige Messungen von abgebrochenen
+Kopien. Für die nächste Laufzeitauswahl zählt die aktuelle aufgelöste Gruppe;
+Fehler oder offene Versuche erlauben keinen Rückgriff auf ältere Erfolge.
+
+`test-monitor` und `--once --json` zeigen die Versuchskonten mit Host/Worker,
+`copy_role`, `copy_state` und `attempt_token`. Die Übersicht zählt jeden Test
+einmal; eine volle Fortschrittsanzeige ersetzt nicht die Bestätigung der
+verbleibenden Abbrüche. Hostzahlen lassen sich weiterhin mit `workers` ändern.
+Eine manuelle MOVE-Anfrage für einen bereits vervielfachten Test wird abgewiesen;
+während einer angenommenen MOVE-Reservierung beginnen keine weiteren Kopien.
+Alte Profilformate 1–3 und ihre Nachweise behalten ihre bisherigen Verträge.

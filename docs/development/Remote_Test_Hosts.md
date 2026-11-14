@@ -96,8 +96,12 @@ gezielter Scheduler verteilt längste bekannte Tests zuerst nach geschätzter
 Fertigstellungszeit je Host, untersucht unbekannte Tests früh auf schnellen
 Slots und behält kurze Tests zum Auffüllen. Kleine Warteschlangen berücksichtigen
 pytest-`nextitem`. Ein langsamer Host darf ungenutzt bleiben. Laufende Tests werden
-nicht verschoben oder spekulativ doppelt gestartet; ein ausgefallener Worker
-erzeugt einen fehlerhaften Gate-Ausgang. Es gibt keine Laufzeitzusage.
+nach dem gewöhnlichen Verteilungsalgorithmus nicht verschoben. Neue live
+gesteuerte Pools nutzen zusätzlich die [ausdrücklich beauftragten Kopien am
+Laufende](Test_Control.md#freie-worker-am-laufende-parallele-kopien), sobald
+keine ungestarteten Tests mehr warten. Für diese Kopien zählen weder
+Hostgeschwindigkeit noch Restzeitschätzung. Ein ausgefallener Worker erzeugt
+weiterhin einen fehlerhaften Gate-Ausgang. Es gibt keine Laufzeitzusage.
 
 Ein fehlender kurzfristig optimaler Folgetest beendet einen langsameren Worker
 nicht automatisch. Für einen bekannten kurzen Folgetest berücksichtigt der
