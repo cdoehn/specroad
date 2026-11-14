@@ -408,3 +408,5 @@
 - [Bundle 680 — offene Proposal-Apply-R/C-Korrektur](bundle-680-proposal-apply-correction.md)
 
 - [Bundle 681 — Prozessabbruchtests ohne künstliche Zeitgrenze](bundle-681-process-crash-deadline.md)
+
+- [Bundle 684 — Reset-Abnahme und vollständiger R/C-Rest](bundle-684-budget-reset-receipt.md)

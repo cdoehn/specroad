@@ -27269,6 +27269,20 @@
     "tests/codex_control_tests/test_budget_twenty.py::test_unknown_handoff_with_verified_source_does_not_grant_or_refill",
     "tests/codex_control_tests/test_budget_twenty.py::test_unverified_successor_never_grants_clarification[None]",
     "tests/codex_control_tests/test_budget_twenty.py::test_unverified_successor_never_grants_clarification[patch_ready]",
-    "tests/codex_control_tests/test_budget_twenty.py::test_unverified_successor_never_grants_clarification[patch_ready_with_clarification]"
+    "tests/codex_control_tests/test_budget_twenty.py::test_unverified_successor_never_grants_clarification[patch_ready_with_clarification]",
+    "codex_control_tests.test_budget_twenty.TwentyBudgetTests.test_new_default_does_not_refill_old_repair_budget_until_clean_success",
+    "codex_control_tests.test_budget_twenty.TwentyBudgetTests.test_positive_permission_cannot_replace_the_open_implementation_rest",
+    "codex_control_tests.test_budget_twenty.TwentyBudgetTests.test_twenty_failed_repairs_exhaust_before_twenty_first_dispatch",
+    "codex_control_tests.test_budget_twenty.TwentyResetAcceptanceTests.test_explicit_reset_uses_twenty_marker_and_preserves_original_contract",
+    "codex_control_tests.test_budget_twenty.TwentyResetAcceptanceTests.test_new_marker_does_not_reset_a_preserving_acceptance",
+    "tests/codex_control_tests/test_budget_twenty.py::test_twentieth_new_clarification_exhausts_the_unchanged_counter",
+    "tests/codex_control_tests/test_budget_twenty.py::test_unsupported_clarification_contracts_and_markers_are_rejected[0]",
+    "tests/codex_control_tests/test_budget_twenty.py::test_unsupported_clarification_contracts_and_markers_are_rejected[19]",
+    "tests/codex_control_tests/test_budget_twenty.py::test_unsupported_clarification_contracts_and_markers_are_rejected[20.0]",
+    "tests/codex_control_tests/test_budget_twenty.py::test_unsupported_clarification_contracts_and_markers_are_rejected[20]",
+    "tests/codex_control_tests/test_budget_twenty.py::test_unsupported_clarification_contracts_and_markers_are_rejected[21]",
+    "tests/codex_control_tests/test_budget_twenty.py::test_unsupported_clarification_contracts_and_markers_are_rejected[4]",
+    "tests/codex_control_tests/test_budget_twenty.py::test_unsupported_clarification_contracts_and_markers_are_rejected[False]",
+    "tests/codex_control_tests/test_budget_twenty.py::test_unsupported_clarification_contracts_and_markers_are_rejected[True]"
   ]
 }

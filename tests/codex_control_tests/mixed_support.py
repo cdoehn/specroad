@@ -179,7 +179,7 @@ class MixedCase(unittest.TestCase):
                      'state_fingerprint': format(self.number, '016x') if work != base else 'b' * 16},
             success=not failed, dirty=work != base, completed_commit=None if failed else head,
             primary_kind='entrypoint_exit' if failed else 'success',
-            captured_at='2026-01-01T0' + str(self.number) + ':00:00Z')
+            captured_at=f'2026-01-01T{self.number:02d}:00:00Z')
         self.engine.gate.set(False)
         return self.following
 

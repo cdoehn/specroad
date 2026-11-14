@@ -37,7 +37,7 @@ künstlicher delegierter Klärungspräfix und keine zusätzliche Produktposition
   in den vorhandenen gemeinsamen Helfern konsolidieren; sämtliche W/R-Tests
   und Ergebnisse bleiben unverändert.
 
-Umsetzungsstand dieses Commitziels: **W**. Erst das erfolgreiche eigene
+Umsetzungsstand dieses Commitziels: **R**. Erst das erfolgreiche eigene
 Apply-Gate und der tatsächliche Commit bestätigen diesen Zustand. Dev führt
 keine Verhaltenstests aus. Jede Stage prüft N=3 plus vollständige Pflichtauswahl.
 
@@ -49,3 +49,7 @@ Die private Originalvorbereitung bleibt unverändert. Keine Dienstinstallation,
 Betriebskonfiguration, Control-Fortsetzung oder Betreiberreset als Nebenwirkung.
 Bestehende explizite kleinere Konfigurationswerte benötigen später eine
 ausdrücklich gewählte Betriebsumstellung; dieses Bundle überschreibt sie nicht.
+
+Der erfolgreiche W-Commit und die korrigierte R-Abnahme sind im
+[Ausführungsnachweis zu Bundle 684](../history/bundle-684-budget-reset-receipt.md)
+belegt. R und C bleiben bis zu ihren jeweiligen erfolgreichen Gates offen.

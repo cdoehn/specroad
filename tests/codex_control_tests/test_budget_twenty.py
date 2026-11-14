@@ -9,7 +9,7 @@ import pytest
 
 from specroad_control.config import parse, render
 from specroad_control.correction_budget import bind, read
-from specroad_control.current_acceptance_history import validate_history
+from specroad_control.current_acceptance_history import active, validate_history
 from specroad_control.current_acceptance_policy import RESET_CAPABILITY
 from specroad_control.decision_policy import successor_contract
 from specroad_control.errors import ControlError
@@ -68,8 +68,45 @@ class TwentyBudgetTests(MixedCase):
         self.assertEqual(self.ledger().request_contract(), new_contract(20, version=4, limit=20))
         self.assertEqual(self.ledger().request_contract(self.seed['sha256']), original)
 
+    def test_twenty_failed_repairs_exhaust_before_twenty_first_dispatch(self):
+        self.dispatch(); self.outcome(completed=0); self.engine.tick()
+        self.assertEqual(read(self.ledger(), self.following['sha256'])['remaining'], 20)
+        for remaining in range(19, -1, -1):
+            self.assertFalse(self.dispatch(data=self.correction())['halted'])
+            self.outcome(completed=0); self.engine.tick()
+            self.assertEqual(read(self.ledger(), self.following['sha256'])['remaining'], remaining)
+        calls = self.codex.calls
+        self.assertTrue(self.dispatch(data=self.correction())['halted'])
+        self.assertEqual(self.codex.calls, calls)
+        self.assertEqual(self.ledger().current()['error'], 'correction_budget_exhausted')
+        self.assertTrue(self.ledger().request_contract()['clarification_allowed'])
+        self.assertEqual(self.ledger().request_contract()['clarifications_remaining'], 20)
 
+    def test_positive_permission_cannot_replace_the_open_implementation_rest(self):
+        self.dispatch(mixed=True)
+        prefix = deepcopy(self.latest_data['stages'][0])
+        self.outcome(completed=1); self.engine.tick()
+        self.assertTrue(self.ledger().request_contract()['clarification_allowed'])
+        rest = self.correction()
+        rest['stages'].insert(0, prefix)
+        rest['handoff_kind'] = MIXED
+        self.assertTrue(self.dispatch(mixed=True, data=rest)['halted'])
+        self.assertIsNone(self.ledger().current()['patch_sha'])
 
+    def test_new_default_does_not_refill_old_repair_budget_until_clean_success(self):
+        self.engine.config = replace(self.config, correction_limit=5)
+        self.dispatch(); self.outcome(completed=0); self.engine.tick()
+        self.dispatch(data=self.correction()); self.outcome(completed=1); self.engine.tick()
+        source = self.ledger().current()['source']
+        before = read(self.ledger(), source['sha256'])
+        self.assertEqual((before['maximum'], before['remaining']), (5, 4))
+        self.engine.config = self.config
+        self.assertEqual(bind(self.ledger(), source, 20), before)
+        self.assertFalse(self.dispatch(data=self.correction())['halted'])
+        self.outcome(); self.engine.tick()
+        after = read(self.ledger(), self.following['sha256'])
+        self.assertEqual((after['maximum'], after['remaining'], after['active']), (20, 20, False))
+        self.assertEqual(read(self.ledger(), source['sha256']), before)
 
     def test_explicit_opt_out_remains_disabled_after_failure_and_success(self):
         self.engine.config = replace(self.config, clarification_allowed=False)
@@ -135,3 +172,45 @@ def test_last_clarification_place_allows_only_unchanged_pending_prefix():
     rest = successor_contract(again, MIXED, failed_source(), verified=True, pending_clarification=False)
     assert rest == new_contract(0, allowed=False, version=4, limit=20)
     assert MIXED not in schema_for(rest)['properties']['status']['enum']
+
+
+def test_twentieth_new_clarification_exhausts_the_unchanged_counter():
+    previous = new_contract(20, version=4, limit=20)
+    for remaining in range(19, -1, -1):
+        previous = successor_contract(previous, MIXED, failed_source(), verified=True)
+        assert previous == new_contract(remaining, allowed=remaining > 0, version=4, limit=20)
+    assert MIXED not in schema_for(previous)['properties']['status']['enum']
+
+
+@pytest.mark.parametrize('limit', [True, False, 0, 4, 19, 21, 20.0, '20'])
+def test_unsupported_clarification_contracts_and_markers_are_rejected(limit):
+    with pytest.raises(ValueError):
+        capability({**TWENTY, 'clarification_limit': limit})
+    with pytest.raises(ControlError):
+        contract({**new_contract(0, allowed=False, version=4, limit=20), 'clarification_limit': limit})
+
+
+class TwentyResetAcceptanceTests(AcceptanceCase):
+    def setUp(self):
+        marker = patch('codex_control_tests.mixed_support.CAPABILITY', TWENTY)
+        marker.start(); self.addCleanup(marker.stop)
+        super().setUp()
+
+    def test_explicit_reset_uses_twenty_marker_and_preserves_original_contract(self):
+        self.manual(0, reset_capability={**RESET_CAPABILITY, 'clarification_limit': 20})
+        self.accept_current(reset_budget=True)
+        pending = validate_history(self.ledger())
+        self.assertEqual(pending['version'], 2)
+        self.assertIs(pending['reset_budget'], True)
+        self.adopt(reset_budget=True)
+        ledger = self.ledger()
+        self.assertEqual(ledger.request_contract(), new_contract(20, version=4, limit=20))
+        self.assertEqual(ledger.recorded_contract(self.seed['sha256']), new_contract(0, allowed=False, version=4))
+        self.assertIsNone(validate_history(ledger))
+        self.assertEqual(active(ledger, self.following['sha256']), pending)
+        self.assertEqual(self.codex.calls, 0)
+
+    def test_new_marker_does_not_reset_a_preserving_acceptance(self):
+        self.manual(2, reset_capability={**RESET_CAPABILITY, 'clarification_limit': 20})
+        self.adopt()
+        self.assertEqual(self.ledger().request_contract(), new_contract(2, version=4))
