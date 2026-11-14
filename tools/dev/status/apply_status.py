@@ -170,7 +170,7 @@ def runtime_counts(database, gate, stage_started, stage_ended=None, *, timeout=5
         rows = [dict(row) for row in db.execute('''
             SELECT a.id,a.node,a.worker,a.started,a.invalid,a.complete,p.phase,p.outcome,p.recorded
             FROM attempts a LEFT JOIN phases p ON p.attempt=a.id
-            WHERE a.run=? ORDER BY a.id''', (run['id'],))]
+            WHERE a.id IN (SELECT MAX(id) FROM attempts WHERE run=? GROUP BY node) ORDER BY a.id''', (run['id'],))]
     attempts = {}
     for row in rows:
         node = row['node']

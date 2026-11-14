@@ -85,7 +85,7 @@ class RuntimeHistory:
                     os.fsync(directory)
                 finally:
                     os.close(directory)
-            if self.db.execute('SELECT version FROM metadata WHERE id=1').fetchall() != [(1,)]:
+            if self.db.execute('SELECT version FROM metadata WHERE id=1').fetchall() not in ([(1,)], [(2,)]):
                 raise ValueError('Unknown runtime history version')
             # Additive extension: old attempts remain unlabelled, never relabelled.
             self.db.execute('CREATE TABLE IF NOT EXISTS attempt_hosts (attempt INTEGER PRIMARY KEY, host TEXT NOT NULL, environment TEXT NOT NULL, FOREIGN KEY(attempt) REFERENCES attempts(id))')
@@ -123,8 +123,12 @@ class RuntimeHistory:
             state = self.db.execute('SELECT finished FROM runs WHERE id=?', (run,)).fetchone()
             if state != (None,):
                 raise ValueError('A live runtime attempt requires an unfinished run')
+            from .runtime_attempts import start_allowed
+            predecessor = start_allowed(self.db, run, node, identity, worker)
             attempt = self.db.execute('INSERT INTO attempts(run,node,test,worker,started) VALUES(?,?,?,?,?)',
                             (run, node, identity, worker, now())).lastrowid
+            if predecessor is not None:
+                self.db.execute('UPDATE attempt_moves SET successor=? WHERE attempt=?', (attempt, predecessor))
             if host is not None:
                 if not isinstance(host, str) or not host or not isinstance(environment, str) or len(environment) != 64:
                     raise ValueError('Host measurement requires its exact environment')
@@ -132,8 +136,8 @@ class RuntimeHistory:
 
     def observe(self, run, node, identity, worker, phase, duration, outcome, *, subtest=False):
         with self.db:
-            row = self.db.execute('SELECT id,test,worker FROM attempts WHERE run=? AND node=?',
-                                  (run, node)).fetchone()
+            row = self.db.execute('SELECT id,test,worker FROM attempts WHERE run=? AND node=? ORDER BY (worker=?) DESC,id DESC LIMIT 1',
+                                  (run, node, worker)).fetchone()
             if row is None:
                 raise ValueError('Runtime phase does not match the started test')
             attempt = row[0]
@@ -165,6 +169,10 @@ class RuntimeHistory:
                 if dict(phases) == dict.fromkeys(PHASES, 'passed'):
                     self.db.execute('UPDATE attempts SET complete=1 WHERE id=?', (attempt,))
 
+    def cancel(self, run, node, identity, worker, target_worker, token, confirmed):
+        from .runtime_attempts import cancel
+        return cancel(self.db, run, node, identity, worker, target_worker, token, confirmed)
+
     def finish(self, run, code, *, invalid=False):
         with self.db:
             if invalid:
@@ -179,7 +187,9 @@ class RuntimeHistory:
         if (current.st_nlink != 1 or not stat.S_ISREG(current.st_mode)
                 or (current.st_dev, current.st_ino) != self.file_identity):
             raise ValueError('Runtime history was replaced during execution')
-        rows = self.db.execute('SELECT node,test,invalid,complete FROM attempts WHERE run=?', (run,)).fetchall()
+        from .runtime_attempts import verify_moves
+        verify_moves(self.db, run)
+        rows = self.db.execute('SELECT node,test,invalid,complete FROM attempts WHERE id IN (SELECT MAX(id) FROM attempts WHERE run=? GROUP BY node)', (run,)).fetchall()
         observed = {node: identity for node, identity, _, _ in rows}
         if observed != pairs or any((outcomes.get(identity) == 'passed') != (not invalid and bool(complete))
                                     for _, identity, invalid, complete in rows):

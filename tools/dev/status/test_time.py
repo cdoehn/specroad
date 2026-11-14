@@ -53,7 +53,7 @@ def ranking(database, identities=None, count=20, *, min_seconds=0, match=''):
         db.row_factory = sqlite3.Row
         db.execute('PRAGMA query_only=ON')
         db.execute('BEGIN')
-        if [tuple(row) for row in db.execute('SELECT id,version FROM metadata')] != [(1, 1)]:
+        if [tuple(row) for row in db.execute('SELECT id,version FROM metadata')] not in ([(1, 1)], [(1, 2)]):
             raise ValueError('Unbekanntes Format der Laufzeitdatenbank')
         attempts = [dict(row) for row in db.execute('''
             WITH latest AS (SELECT MAX(id) AS id FROM attempts GROUP BY test)

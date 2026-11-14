@@ -123,6 +123,7 @@ class Owner:
                     raise ValueError('Requested workers exceed the checked host pool')
                 self.run = uuid.uuid4().hex
                 write(self.root / 'request.json', dict(version=1, run=self.run, workers=self.desired))
+                write(self.root / 'moves.json', dict(version=1, run=self.run, requests=[]))
                 self.publish({}, saved=saved, overrides=overrides or {})
             except BaseException:
                 self.close()

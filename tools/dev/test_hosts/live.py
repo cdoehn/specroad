@@ -29,10 +29,15 @@ class LivePool:
         self.rows = dict(config._sr_host_profile['workers'])
         self.retiring, self.active = set(), {}
         self.sequences, self.grants, self.channels = {}, {}, []
+        self.control_channels = {}
         self.stopped = threading.Event()
         self.owner = None
         self.thread = None
         self.errors = []
+        self.moves = None
+        if config._sr_host_profile['format_version'] == 3:
+            from .attempt_control import Attempts
+            self.moves = Attempts(self)
 
     @pytest.hookimpl(tryfirst=True)
     def pytest_sessionstart(self, session):
@@ -46,6 +51,12 @@ class LivePool:
         if self.ds is None:
             raise ValueError('Live pools require the reviewed native xdist controller')
         self.ds.loop_once = types.MethodType(loop_once, self.ds)
+        self.native_errordown = self.ds.worker_errordown
+        if self.moves is not None:
+            def errordown(node, error):
+                if not self.moves.errordown(node, error):
+                    self.native_errordown(node, error)
+            self.ds.worker_errordown = errordown
         self.ds.worker_sr_live_tick = self.tick
         self.ds.worker_sr_live_permit = self.permit
         self.thread = threading.Thread(target=self.clock, name='specroad-live-control', daemon=True)
@@ -64,9 +75,11 @@ class LivePool:
         node.workerinput['sr_live_channel'] = channel
         node.workerinput['sr_live'] = True
         self.channels.append(channel)
+        self.control_channels[node.gateway.id] = channel
 
     def eligible(self, node):
-        return node.gateway.id not in self.retiring and not node.shutting_down
+        return (node.gateway.id not in self.retiring and not node.shutting_down
+                and (self.moves is None or node.gateway.id not in self.moves.reserved))
 
     def reconcile(self):
         sched = self.ds.sched
@@ -74,6 +87,8 @@ class LivePool:
             return
         self.owner.refresh()
         for host, wanted in self.owner.desired.items():
+            if self.moves is not None and self.moves.holds(host):
+                continue
             nodes = sorted((n for n in self.ds._active_nodes if self.rows[n.gateway.id]['host'] == host
                             and n.gateway.id not in self.retiring), key=lambda n: int(n.gateway.id[2:]))
             for node in nodes[wanted:]:
@@ -100,10 +115,12 @@ class LivePool:
             nodes = [n for n in self.ds._active_nodes if self.rows[n.gateway.id]['host'] == host]
             hosts[host] = dict(processes=len(nodes), running=sum(n.gateway.id in self.active for n in nodes),
                                draining=sum(n.gateway.id in self.retiring for n in nodes))
-        self.owner.publish(hosts)
+        self.owner.publish(hosts, **(dict(attempts=self.moves.public(), moves=self.moves.receipts) if self.moves is not None else {}))
 
     def tick(self):
         try:
+            if self.moves is not None and self.ds.sched.collection is not None:
+                self.moves.refresh()
             self.reconcile()
             if self.ds.sched.collection is not None:
                 self.ds.sched.check_schedule()
@@ -115,6 +132,12 @@ class LivePool:
     def permit(self, node, channel, message):
         name = node.gateway.id
         try:
+            if self.moves is not None:
+                if isinstance(message, dict) and 'kind' in message:
+                    self.moves.signal(node, channel, message)
+                    return
+                if self.moves.permit(node, channel, message):
+                    return
             if (node not in self.ds._active_nodes or name not in self.rows
                     or type(message) is not dict or set(message) != {'sequence', 'index', 'slot'}
                     or type(message['sequence']) is not int or message['sequence'] != self.sequences.get(name, 0)+1
@@ -137,8 +160,14 @@ class LivePool:
                 self.retiring.add(name)
             if allowed and slot is not None:
                 self.active[name] = message['index']
-                self.grants.setdefault(name, []).append(dict(index=message['index'], slot=slot))
-            channel.send(dict(sequence=message['sequence'], allowed=allowed))
+                grant = dict(index=message['index'], slot=slot)
+                if self.moves is not None:
+                    grant['token'] = self.moves.granted(name, message['index'], slot)
+                self.grants.setdefault(name, []).append(grant)
+            reply = dict(sequence=message['sequence'], allowed=allowed)
+            if self.moves is not None:
+                reply['token'] = self.moves.current[name]['token'] if allowed and slot is not None else None
+            channel.send(reply)
             self.publish()
         except (ValueError, OSError, KeyError, TypeError) as error:
             self.errors.append(str(error))
@@ -149,6 +178,8 @@ class LivePool:
         self.stopped.set()
         if self.thread is not None:
             self.thread.join(timeout=2)
+        if self.moves is not None:
+            self.moves.close()
         if self.owner is not None:
             self.owner.close()
 

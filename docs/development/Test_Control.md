@@ -60,5 +60,35 @@ Diese Dateien und Hostinventare gehören weder ins Repository noch in Bundles.
 Nach einem Controllerabbruch wird ein alter Request nicht an einen neuen Lauf
 übertragen; nur persistente Vorgaben bleiben erhalten.
 
-Das gezielte Beenden und Neustarten eines einzelnen Tests gehört zur weiterhin
-offenen MOVE.W/R/C-Folge und wird durch Zahlenänderungen nicht ausgelöst.
+Einzelne Tests gezielt verlagern:
+
+```sh
+python3 tools/test-control --json status
+python3 tools/test-control --json move --run RUN_AUS_STATUS --attempt VERSUCH_AUS_STATUS --target-host HOST
+```
+
+`attempts` zeigt die aktuell laufenden Versuchsschlüssel, Worker, Hosts und
+Testnamen. Der Auftrag gilt genau diesem Versuch und Lauf. Die erste Antwort
+bestätigt nur die Speicherung; `moves` im Status meldet `restarted` oder die
+konkrete Ablehnung. Wiederholung desselben Auftrags legt keinen zweiten an.
+Der Zielhost muss bereits geprüft, eingeschaltet und frei sein. Der Runner
+reserviert dort einen gemeinsamen Hostslot, beendet den Quellworker samt
+Unterprozessen und bestätigt dessen Ende. Erst dann startet derselbe vollständige
+Test mit frischen Fixtures in einem neuen Worker. Es wird kein Python-Stack
+übertragen. Andere Tests und ihre vollständige Auswahl bleiben erhalten.
+
+Die abgeschlossenen Phasen des alten Versuchs bleiben als ungültige Messung
+sichtbar; sie ersetzen keine Phase des neuen Versuchs. Der Monitor zeigt beide
+Versuchskonten, kennzeichnet den alten als `cancelled` und zählt für den
+Testfortschritt den neuesten Versuch. Echte Testfehler bleiben Gate-Fehler.
+Bei belegtem Ziel, zwischenzeitlich beendetem Versuch oder verlorenem
+Endnachweis wird nicht parallel oder automatisch auf einem Ausweichziel getestet.
+Eine Zahlenänderung mit `workers` löst keine Verlagerung aus.
+
+Die Prozessaufsicht benötigt Linux mit pidfd-Unterstützung und überwacht nur
+Nachkommen des gestarteten Workers. Das Hostprofil Version 3 bindet seine
+Abbruchnachweise; alte Profile bleiben ohne MOVE lesbar. Die Laufzeitdatenbank
+wird erst bei bestätigtem Abbruch atomar auf Version 2 erweitert. Vorhandene
+Messwerte bleiben erhalten; nur der vollständig neue Versuch kann eine gültige
+Dauer liefern. Ältere Schreiber akzeptieren Version 2 nicht. Steuerdateien und
+Prozess-Sockets bleiben private Laufzeitdaten außerhalb des Quellbestands.

@@ -29,15 +29,13 @@ Jede Tabellenzeile enthält Code, passende Verhaltenstests und Integration.
 
 ## Aktueller Übergang
 
-START.W, START.W-FIX1, START.R/C und CONFIG.W/R/C sind erfolgreich übernommen.
-[Bundle 691](../history/bundle-691-live-worker-identity.md) repariert den
-vollständigen offenen LIVE.W/R/C-Rest nach fehlgeschlagenem W-Gate.
-Der Zielstand dieser Stage reicht nach ihrem eigenen Gate bis **LIVE.C**;
-danach ist **MOVE.W** offen. MOVE.W/R/C bleibt als nächste vollständige Gruppe
-geplant. Die Live-Zuteilung wird zuerst mit echten lokalen und Proxyworkern
-abgenommen; die separate gezielte Abbruch-/Neustartfunktion behauptet dieses
-Bundle nicht. Alle zwölf IDs und ihre unveränderten vollständigen Abnahmen
-bleiben erhalten.
+START.W, START.W-FIX1, START.R/C, CONFIG.W/R/C und LIVE.W/R/C sind im
+gebundenen Quell-Result erfolgreich übernommen. [Bundle 693](../history/bundle-693-supervisor-socket-path.md)
+korrigiert nach dem fehlgeschlagenen Workerstart von Bundle 692 den vollständigen
+MOVE.W/R/C-Rest. Kein MOVE-Commit wurde bereits erzeugt; eigene Gates bleiben Pflicht.
+Der Zielstand dieser Stage reicht nach ihrem erfolgreichen Gate bis **MOVE.W**;
+danach ist **MOVE.R** offen. Alle zwölf IDs und ihre vollständigen Abnahmen
+bleiben erhalten. Anschließend folgt 18.s.W; Produktzähler bleiben unverändert.
 
 Nach erfolgreichem Apply und expliziter Installation der getesteten Control-
 Releasekopie kann der Betreiber mit `control start --from-current` sofort die

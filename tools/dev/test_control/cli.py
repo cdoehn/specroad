@@ -21,6 +21,10 @@ def main(argv=None):
     workers.add_argument('--run', required=True)
     workers.add_argument('--host', required=True)
     workers.add_argument('--workers', required=True, type=int)
+    relocation = commands.add_parser('move', help='Genau einen Versuch beenden und mit frischen Fixtures verlagern')
+    relocation.add_argument('--run', required=True)
+    relocation.add_argument('--attempt', required=True)
+    relocation.add_argument('--target-host', required=True)
     args = parser.parse_args(argv)
     repository = args.apply_dir or Target.from_repository(Path(__file__).resolve().parents[3]).repository
     try:
@@ -30,6 +34,9 @@ def main(argv=None):
             if (args.host is None) != (args.workers is None):
                 parser.error('--host und --workers gemeinsam angeben')
             value = configure(repository, None if args.host is None else {args.host: args.workers})
+        elif args.command == 'move':
+            from .moves import move
+            value = move(repository, args.run, args.attempt, args.target_host)
         else:
             value = change(repository, args.run, {args.host: args.workers})
         if args.json:
@@ -42,6 +49,10 @@ def main(argv=None):
                 for host, desired in value['desired'].items():
                     actual = value['hosts'].get(host, {})
                     print(f'{host}: Soll {desired}, laufend {actual.get("running", 0)}, Prozesse {actual.get("processes", 0)}')
+                for token, attempt in value.get('attempts', {}).items():
+                    print(f"{token} · {attempt['host']} · {attempt['state']} · {attempt['nodeid']}")
+                for receipt in value.get('moves', {}).values():
+                    print(f"MOVE {receipt['id']}: {receipt['state']} · {receipt.get('reason', '')}")
         else:
             print(json.dumps(value, ensure_ascii=False, indent=2))
         return 0

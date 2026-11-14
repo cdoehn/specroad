@@ -320,6 +320,9 @@ class ReportObserver:
 
     def pytest_runtest_logstart(self, nodeid, location):
         state = self.state
+        if getattr(state.config, '_sr_prestarted_attempt', None) == nodeid:
+            del state.config._sr_prestarted_attempt
+            return
         # Persist before test setup in the worker; a killed worker cannot leave
         # a previous successful duration eligible for exclusion.
         if state.history is not None and (state.worker or not state.config.getoption('numprocesses', default=0)):

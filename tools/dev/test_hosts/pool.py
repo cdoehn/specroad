@@ -99,13 +99,20 @@ print(json.dumps(True))
             workers[worker] = dict(host=host.name, hostname=observed['hostname'], account=observed['account'], root=work,
                 environment_sha256=digest(expected), resources=resources, speed=host.speed,
                 spec=spec, budget=min(cpus, host.workers), remote=host.ssh is not None)
+    if live:
+        for row in workers.values():
+            interpreter = sys.executable if not row['remote'] else next(
+                python_path(h, expected) for h in hosts if h.name == row['host'])
+            wrapped = shlex.join([interpreter, str(Path(row['root']) / 'tools/dev/test_hosts/attempt_supervisor.py')])
+            transport_spec = row['spec'].split('//python=', 1)[0]
+            row['spec'] = transport_spec + '//python=' + wrapped
     measured, baseline = run_forecasts(selected, workers, estimates(root, digest(expected)), snapshot)
     profile = dict(format_version=1, source_sha256=source, snapshot_sha256=fingerprint(manifest),
                    environment=expected, workers=workers, proxies=proxies, selected=selected,
                    estimates=measured, baseline=baseline)
     if live:
         from dev.test_control.model import directory, counts
-        profile.update(format_version=2, live=dict(repository=str(root.resolve()), home=str(directory()),
+        profile.update(format_version=3, live=dict(repository=str(root.resolve()), home=str(directory()),
                                                    overrides=counts(host_workers or {})))
     if source_identity(root) != source or inventory(root) != manifest:
         raise ValueError('Source changed during remote preparation')

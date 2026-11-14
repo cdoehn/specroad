@@ -45,6 +45,7 @@ class RunLedger:
         self.errors = []
         self.workers = set()
         self.exit_code = 0
+        self.cancelled = {}
 
     def error(self, code):
         if code not in self.errors:
@@ -72,11 +73,26 @@ class RunLedger:
                     self.error("inconsistent_test_identity")
                 self.aliases[nodeid] = alias
 
+    def cancel(self, nodeid, worker, token, phases):
+        if nodeid not in self.nodeids or self.owners.get(nodeid, worker) != worker:
+            raise ValueError('Cannot cancel a foreign test attempt')
+        if self.worst.get(nodeid, 'passed') != 'passed' or any(v != 'passed' for v in phases.values()):
+            raise ValueError('Cannot replace a failed test attempt')
+        self.cancelled[(nodeid, worker)] = dict(token=token, phases=dict(phases))
+        self.phases.pop(nodeid, None)
+        self.worst.pop(nodeid, None)
+        self.owners.pop(nodeid, None)
+
     def observe(self, nodeid, worker, phase, state, *, subtest=False):
         if phase not in ("setup", "call", "teardown") or state not in RANK:
             self.error("invalid_test_report")
             return
         self.workers.add(worker)
+        if (nodeid, worker) in self.cancelled:
+            self.cancelled[(nodeid, worker)]['phases'][phase] = state
+            if state != 'passed':
+                self.error('cancelled_attempt_failed')
+            return
         if nodeid in self.owners and self.owners[nodeid] != worker:
             self.error("test_executed_by_multiple_workers")
         self.owners[nodeid] = worker
@@ -131,4 +147,5 @@ class RunLedger:
             "worker_test_counts": {worker: sum(owner == worker for owner in self.owners.values())
                                    for worker in sorted(self.workers)},
             "errors": list(result.errors),
+            **({"cancelled_attempts": [dict(nodeid=n, worker=w, **v) for (n, w), v in self.cancelled.items()]} if self.cancelled else {}),
         }

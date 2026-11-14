@@ -33,6 +33,9 @@ class HistoryWriter:
     def observe(self, *args, **kwargs):
         return self._call('observe', *args, **kwargs)
 
+    def cancel(self, *args, **kwargs):
+        return self._call('cancel', *args, **kwargs)
+
     def close(self):
         with self._lock:
             if self._closed:

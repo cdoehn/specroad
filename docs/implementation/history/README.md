@@ -422,3 +422,7 @@
 - [Bundle 690 — unabhängige Live-Teststeuerung](bundle-690-live-test-control.md)
 
 - [Bundle 691 — Worker-Identität und Monitor-Testumgebung](bundle-691-live-worker-identity.md)
+
+- [Bundle 692 — gezielte Testverlagerung](bundle-692-test-move.md)
+
+- [Bundle 693 — Supervisor-Socket bei langem TMPDIR](bundle-693-supervisor-socket-path.md)

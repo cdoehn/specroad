@@ -21,7 +21,7 @@ def connection(path, timeout=5):
         db.execute('PRAGMA query_only=ON')
         db.set_progress_handler(lambda: int(time.monotonic() >= deadline), 1000)
         db.execute('BEGIN')
-        if [tuple(row) for row in db.execute('SELECT id,version FROM metadata')] != [(1, 1)]:
+        if [tuple(row) for row in db.execute('SELECT id,version FROM metadata')] not in ([(1, 1)], [(1, 2)]):
             raise ValueError('Unbekanntes Format der Laufzeitdatenbank')
         yield db
         after = path.stat()
