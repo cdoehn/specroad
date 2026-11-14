@@ -65,8 +65,8 @@ zwölf bestätigte OFF-PLAN-W/R/C-Commits. START und CONFIG sind im gebundenen
 Result vollständig erfolgreich übernommen. [Bundle 691](history/bundle-691-live-worker-identity.md) repariert die
 Worker-Identität beim Wiederanlaufen und die isolierte Monitor-Testumgebung.
 Der vollständige LIVE.W/R/C-Rest behält seine IDs, Rollen und separaten Gates.
-Der Zielstand dieser Stage reicht nach ihrem erfolgreichen Gate bis **LIVE.R**;
-danach ist **LIVE.C** offen. MOVE.W/R/C und danach 18.s.W bleiben vollständig
+Der Zielstand dieser Stage reicht nach ihrem erfolgreichen Gate bis **LIVE.C**;
+danach ist **MOVE.W** offen. MOVE.W/R/C und danach 18.s.W bleiben vollständig
 geplant; Produktzähler und Produktabnahmen unverändert.
 
 ## Danach: Produkt-Recovery zurückbauen
@@ -99,7 +99,7 @@ implementation_plan_commits_completed: 762
 last_completed_plan_commit: 18.k.C
 next_plan_commit: 18.s.W
 priority_off_plan: START-CONFIG-LIVE-MOVE
-next_off_plan_commit: LIVE.C
+next_off_plan_commit: MOVE.W
 last_completed_numbered_bundle: 691
 implementation_state: in_progress
 audit_followup_status: closed

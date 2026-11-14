@@ -110,7 +110,7 @@ def collect_status(repository, database=None, timeout=5):
                 raise ValueError('Messphasen passen nicht zur gebundenen Apply-Testauswahl.')
             if apply_status.progress_at(bundle)[1] != checkpoint:
                 raise ValueError('Apply wechselte während der Phasenabfrage die Stage.')
-        from dev.test_control.store import read_status
+        from dev.test_control.view import read_status
         try:
             control = read_status(repository)
             if control and control.get('active') and run and (control.get('source_sha256') != run['source'] or control.get('history_run') != run['id']):

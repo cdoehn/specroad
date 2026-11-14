@@ -54,7 +54,7 @@ def validate_profile(profile):
                 or not math.isfinite(v) or not 0 <= v <= 259200 for k, v in values.items()):
             raise ValueError('Invalid scheduling estimate')
     if profile['format_version'] == 2:
-        from dev.test_control.store import counts
+        from dev.test_control.model import counts
         live = profile['live']
         if type(live) is not dict or set(live) != {'repository', 'home', 'overrides'}:
             raise ValueError('Invalid live host control binding')

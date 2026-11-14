@@ -39,7 +39,7 @@ def main(argv=None):
                 options['hosts'] = path
                 options['live_hosts'] = True
         if args.host_workers:
-            from dev.test_control.store import counts
+            from dev.test_control.model import counts
             overrides = {}
             for entry in args.host_workers:
                 name, number = entry.split('=', 1)

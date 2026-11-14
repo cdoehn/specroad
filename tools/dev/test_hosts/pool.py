@@ -104,7 +104,7 @@ print(json.dumps(True))
                    environment=expected, workers=workers, proxies=proxies, selected=selected,
                    estimates=measured, baseline=baseline)
     if live:
-        from dev.test_control.store import directory, counts
+        from dev.test_control.model import directory, counts
         profile.update(format_version=2, live=dict(repository=str(root.resolve()), home=str(directory()),
                                                    overrides=counts(host_workers or {})))
     if source_identity(root) != source or inventory(root) != manifest:

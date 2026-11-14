@@ -1,72 +1,20 @@
 """Private, generation-bound control files; never a test or service launcher."""
 from contextlib import contextmanager
 import fcntl
-from hashlib import sha256
 import json
 import os
 from pathlib import Path
-import stat
 import tempfile
 import time
 import uuid
 
-from dev.test_hosts.config import NAME, private_directory, unique
+from dev.test_hosts.config import private_directory
+from .files import inspect_directory, inspect_file, read_json
+from .model import count, counts, directory, lane
+# Preserve the established Python imports; the monitor uses only the reader.
+from .view import live, read_status
 
 
-def inspect_directory(root):
-    for part in (root, *root.parents):
-        if not stat.S_ISDIR(part.lstat().st_mode):
-            raise ValueError('Linked or special control directory')
-    info = root.stat()
-    if info.st_uid != os.getuid() or info.st_mode & 0o077:
-        raise ValueError('Control directory must be private')
-
-
-def inspect_file(info):
-    if not stat.S_ISREG(info.st_mode) or info.st_nlink != 1 or info.st_uid != os.getuid() or info.st_mode & 0o077:
-        raise ValueError('Control files must be private single regular files')
-
-
-def read_json(path):
-    inspect_directory(path.parent)
-    fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW)
-    try:
-        before = os.fstat(fd)
-        inspect_file(before)
-        if before.st_size > 1_000_000:
-            raise ValueError('Oversized live control file')
-        with os.fdopen(os.dup(fd), 'rb') as stream:
-            data = stream.read(1_000_001)
-        # An atomic replacement may publish a newer valid command meanwhile.
-        # Read this complete descriptor generation; reject in-place mutation.
-        after = os.fstat(fd)
-        identity = lambda info: (info.st_dev, info.st_ino, info.st_size, info.st_mtime_ns)
-        if identity(before) != identity(after) or len(data) != before.st_size:
-            raise ValueError('Live control file changed while reading')
-        return json.loads(data, object_pairs_hook=unique)
-    finally:
-        os.close(fd)
-
-
-def count(value):
-    if type(value) is not int or not 0 <= value <= 256:
-        raise ValueError('Worker count must be an integer in 0..256')
-    return value
-
-
-def counts(value):
-    if type(value) is not dict or any(type(k) is not str or not NAME.fullmatch(k) for k in value):
-        raise ValueError('Expected host names and worker counts')
-    return {k: count(v) for k, v in value.items()}
-
-
-def directory(home=None):
-    return Path(home or os.environ.get('SPECROAD_TEST_CONTROL_HOME') or
-                Path(os.environ.get('XDG_STATE_HOME', Path.home() / '.local/state')) / 'specroad/test-control').expanduser().absolute()
-
-
-def lane(repository, home=None):
-    return directory(home) / sha256(str(Path(repository).resolve()).encode()).hexdigest()
 
 
 def open_lock(path):
@@ -131,39 +79,6 @@ def configure(repository, updates=None, *, home=None):
             write(root / 'settings.json', dict(version=1, workers=value))
         return value
 
-
-def live(root):
-    """A held owner lock is necessary; a leftover status file proves nothing."""
-    path = root / 'owner'
-    inspect_directory(root)
-    if not os.path.lexists(path):
-        return False
-    fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW)
-    try:
-        inspect_file(os.fstat(fd))
-        try:
-            fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
-        except BlockingIOError:
-            return True
-        return False
-    finally:
-        os.close(fd)
-
-
-def read_status(repository, *, home=None):
-    root = lane(repository, home)
-    if not os.path.lexists(root):
-        return None
-    inspect_directory(root)
-    value = read_json(root / 'status.json') if os.path.lexists(root / 'status.json') else None
-    if value is not None:
-        value = dict(value, active=live(root))
-        if value['repository'] != str(Path(repository).resolve()):
-            raise ValueError('Foreign test-control target')
-        latest = read_json(root / 'status.json')
-        if latest['run'] != value['run']:
-            raise ValueError('Live test generation changed while reading status')
-    return value
 
 
 def change(repository, run, updates, *, home=None):

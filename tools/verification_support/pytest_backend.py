@@ -252,7 +252,7 @@ def pytest_configure_node(node):
 def pytest_xdist_make_scheduler(config, log):
     if getattr(config, '_sr_host_profile', None) is not None:
         if getattr(config, '_sr_live_pool', None) is not None:
-            from dev.test_hosts.live import LiveScheduling
+            from dev.test_hosts.live_scheduler import LiveScheduling
             return LiveScheduling(config, log)
         from dev.test_hosts.scheduler import HostScheduling
         return HostScheduling(config, log)
