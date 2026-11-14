@@ -1,5 +1,6 @@
 """Move evidence adds cancelled attempts; final coverage stays exact and strict."""
 from copy import deepcopy
+import re
 
 from .contract import verify_live_pool
 
@@ -24,9 +25,16 @@ def verify_moves(observation, proof):
             is_cancelled = attempt.get('cancelled') is True
             expected = {'nodeid', 'slot', 'start', 'end', 'token'} | ({'cancelled'} if is_cancelled else set())
             if (set(attempt) != expected or set(permit) != {'index', 'slot', 'token'}
-                    or not isinstance(attempt['token'], str) or len(attempt['token']) != 32
+                    or type(attempt['token']) is not str or not re.fullmatch('[0-9a-f]{32}', attempt['token'])
                     or attempt['token'] != permit['token'] or attempt['token'] in tokens):
                 raise ValueError('Invalid or reused attempt identity')
+            expected_host = proof['workers'][pool['launched'][name]]
+            if (any(type(attempt[k]) is not int for k in ('slot', 'start', 'end'))
+                    or not 0 <= attempt['start'] <= attempt['end'] or not 0 <= attempt['slot'] < expected_host['budget']
+                    or type(permit['index']) is not int or not 0 <= permit['index'] < len(pool['selected'])
+                    or type(permit['slot']) is not int or permit['slot'] != attempt['slot']
+                    or pool['selected'][permit['index']] != attempt['nodeid']):
+                raise ValueError('Invalid cancelled or current attempt accounting')
             tokens.add(attempt['token'])
             intervals.setdefault((row['account'], attempt['slot']), []).append((attempt['start'], attempt['end']))
             if is_cancelled:
@@ -42,8 +50,8 @@ def verify_moves(observation, proof):
                 if receipt.get('index') != permit['index'] or attempt['slot'] != permit['slot']:
                     raise ValueError('Cancelled permission mismatch')
                 cancelled[(attempt['nodeid'], name)] = attempt['token']
-                target = pool['workers'][record['target']]['leases']
-                if not any(a['nodeid'] == attempt['nodeid'] for a in target):
+                target = actual['workers'][record['target']]['leases']
+                if sum(a['nodeid'] == attempt['nodeid'] for a in target) != 1:
                     raise ValueError('Cancelled test lacks a fresh target attempt')
             else:
                 kept.append({k: v for k, v in attempt.items() if k != 'token'})
@@ -51,10 +59,12 @@ def verify_moves(observation, proof):
         row['leases'] = kept
         pool['grants'][name] = grants
     archive = observation.get('cancelled_attempts', [])
-    if len(archive) != len(cancelled):
+    if (len(archive) != len(cancelled) or set(cancellations) != {w for _, w in cancelled}
+            or {(a['nodeid'], a['worker']): a['token'] for a in archive} != cancelled):
         raise ValueError('Cancelled outcomes are missing')
     for row in archive:
         if (cancelled.get((row['nodeid'], row['worker'])) != row['token']
+                or set(row['phases']) - {'setup', 'call', 'teardown'}
                 or any(v != 'passed' for v in row['phases'].values())):
             raise ValueError('A real failure or foreign attempt was replaced')
     for entries in intervals.values():

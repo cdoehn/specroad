@@ -72,5 +72,6 @@ def verify_moves(db, run):
           (SELECT MAX(id) FROM attempts WHERE run=? GROUP BY node)''', (run, run)).fetchall()
     for old, node, identity, invalid, worker, successor, newer_run, newer_node, newer_id, newer_worker in rows:
         if (not invalid or successor is None or successor <= old
-                or (newer_run, newer_node, newer_id, newer_worker) != (run, node, identity, worker)):
+                or (newer_run, newer_node, newer_id, newer_worker) != (run, node, identity, worker)
+                or db.execute("SELECT 1 FROM phases WHERE attempt=? AND outcome!='passed'", (old,)).fetchone()):
             raise ValueError('Incomplete or foreign runtime attempt lineage')

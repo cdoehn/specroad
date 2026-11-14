@@ -30,11 +30,12 @@ Jede Tabellenzeile enthält Code, passende Verhaltenstests und Integration.
 ## Aktueller Übergang
 
 START.W, START.W-FIX1, START.R/C, CONFIG.W/R/C und LIVE.W/R/C sind im
-gebundenen Quell-Result erfolgreich übernommen. [Bundle 693](../history/bundle-693-supervisor-socket-path.md)
-korrigiert nach dem fehlgeschlagenen Workerstart von Bundle 692 den vollständigen
-MOVE.W/R/C-Rest. Kein MOVE-Commit wurde bereits erzeugt; eigene Gates bleiben Pflicht.
-Der Zielstand dieser Stage reicht nach ihrem erfolgreichen Gate bis **MOVE.W**;
-danach ist **MOVE.R** offen. Alle zwölf IDs und ihre vollständigen Abnahmen
+gebundenen Quell-Result erfolgreich übernommen. MOVE.W ist mit Bundle 693 ebenfalls erfolgreich committed.
+[Bundle 694](../history/bundle-694-move-test-checkpoints.md) setzt nach zwei
+fehlgeschlagenen Rennfalltests ausschließlich MOVE.R/C mit eigenen Gates fort.
+Der bestätigte W-Commit bleibt erhalten.
+Der Zielstand dieser Stage reicht nach ihrem erfolgreichen Gate bis **MOVE.R**;
+danach ist **MOVE.C** offen. Alle zwölf IDs und ihre vollständigen Abnahmen
 bleiben erhalten. Anschließend folgt 18.s.W; Produktzähler bleiben unverändert.
 
 Nach erfolgreichem Apply und expliziter Installation der getesteten Control-

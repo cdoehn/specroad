@@ -9,7 +9,7 @@ from dev.test_control.moves import move
 from dev.test_control.store import read_status
 from dev.test_hosts.contract import public_proof, verify_pool
 from support.live_pool import await_value
-from support.move_pool import pool
+from support.move_pool import await_target_finished, pool
 from verification_support.runtime_history import RuntimeHistory
 
 
@@ -28,7 +28,7 @@ def test_native_operator_move_reaps_source_and_runs_fresh_target(tmp_path, proxy
         else:
             # Short target tests finish before the explicit request. Their
             # completed measurements must survive replacement of the worker.
-            await_value(lambda: status()['hosts']['target']['running'] == 0, p['process'], p['log'])
+            await_target_finished(p)
             reply = move(p['root'], view['run'], token, 'target', home=p['home'])
             await_value(lambda: (p['target']/'build/replacement').exists(), p['process'], p['log'], timeout=60)
             assert not Path('/proc', (p['root']/'build/original-child').read_text()).exists()

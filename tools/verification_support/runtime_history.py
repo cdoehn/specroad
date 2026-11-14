@@ -87,6 +87,9 @@ class RuntimeHistory:
                     os.close(directory)
             if self.db.execute('SELECT version FROM metadata WHERE id=1').fetchall() not in ([(1,)], [(2,)]):
                 raise ValueError('Unknown runtime history version')
+            if self.db.execute('SELECT version FROM metadata WHERE id=1').fetchone() == (2,):
+                if not self.db.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='attempt_moves'").fetchone():
+                    raise ValueError('Incomplete runtime attempt schema')
             # Additive extension: old attempts remain unlabelled, never relabelled.
             self.db.execute('CREATE TABLE IF NOT EXISTS attempt_hosts (attempt INTEGER PRIMARY KEY, host TEXT NOT NULL, environment TEXT NOT NULL, FOREIGN KEY(attempt) REFERENCES attempts(id))')
             self.db.commit()

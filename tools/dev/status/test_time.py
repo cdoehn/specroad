@@ -55,6 +55,9 @@ def ranking(database, identities=None, count=20, *, min_seconds=0, match=''):
         db.execute('BEGIN')
         if [tuple(row) for row in db.execute('SELECT id,version FROM metadata')] not in ([(1, 1)], [(1, 2)]):
             raise ValueError('Unbekanntes Format der Laufzeitdatenbank')
+        if db.execute('SELECT version FROM metadata WHERE id=1').fetchone()[0] == 2:
+            if not db.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='attempt_moves'").fetchone():
+                raise ValueError('Unvollständiges Format der Versuchshistorie')
         attempts = [dict(row) for row in db.execute('''
             WITH latest AS (SELECT MAX(id) AS id FROM attempts GROUP BY test)
             SELECT a.test,a.invalid,a.complete,SUM(p.duration) AS duration_ns,

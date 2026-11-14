@@ -426,3 +426,5 @@
 - [Bundle 692 — gezielte Testverlagerung](bundle-692-test-move.md)
 
 - [Bundle 693 — Supervisor-Socket bei langem TMPDIR](bundle-693-supervisor-socket-path.md)
+
+- [Bundle 694 — Verlässliche MOVE-Testvorbereitung](bundle-694-move-test-checkpoints.md)

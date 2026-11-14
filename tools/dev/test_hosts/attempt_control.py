@@ -1,6 +1,7 @@
 """Explicit move lifecycle on xdist's controller thread, never automatic retries."""
 from concurrent.futures import ThreadPoolExecutor
 import json
+import re
 import time
 import uuid
 
@@ -30,6 +31,8 @@ class Attempts:
                 for r in self.current.values() if r['state'] == 'running'}
 
     def granted(self, name, index, slot):
+        if name not in self.ready or name in self.current:
+            raise ValueError('Attempt needs its current supervised worker binding')
         token = uuid.uuid4().hex
         self.current[name] = dict(token=token, index=index, slot=slot, worker=name,
             nodeid=self.ds.sched.collection[index], host=self.pool.rows[name]['host'], state='starting')
@@ -37,7 +40,8 @@ class Attempts:
 
     def signal(self, node, channel, message):
         name = node.gateway.id
-        if (type(message) is not dict or set(message) != {'sequence', 'kind', 'value'}
+        if (node not in self.ds._active_nodes or name not in self.pool.rows
+                or type(message) is not dict or set(message) != {'sequence', 'kind', 'value'}
                 or type(message['sequence']) is not int
                 or message['sequence'] != self.pool.sequences.get(name, 0) + 1):
             raise ValueError('Invalid attempt event sequence')
@@ -46,10 +50,26 @@ class Attempts:
         if kind == 'ready':
             if name in self.ready or type(value) is not dict or set(value) != {'endpoint', 'secret', 'proof'}:
                 raise ValueError('Invalid worker supervisor binding')
+            from verification_support.host_execution import verify_resources
+            expected = self.pool.rows[name]
+            profile = self.pool.config._sr_host_profile
+            proof = value['proof']
+            if (type(proof) is not dict or proof.get('leases') != []
+                    or any(proof.get(k) != expected[k] for k in ('host', 'hostname', 'account', 'environment_sha256'))
+                    or any(proof.get(k) != profile[k] for k in ('source_sha256', 'snapshot_sha256'))
+                    or proof.get('io_priority') != {'class': 2, 'priority': 7}
+                    or type(value['endpoint']) is not str or type(value['secret']) is not str
+                    or not re.fullmatch('[0-9a-f]{32}', value['secret'])):
+                raise ValueError('Supervisor does not belong to the approved worker')
+            verify_resources({'host_resources': proof.get('resources'), 'workers': list(range(expected['resources']['workers']))}, expected['resources'])
             self.ready[name] = value
         elif kind in ('started', 'complete'):
             active = self.current.get(name)
-            if active is None or value.get('token') != active['token']:
+            field = 'start' if kind == 'started' else 'end'
+            if (type(value) is not dict or set(value) != {'token', field} or active is None
+                    or value.get('token') != active['token'] or type(value[field]) is not int or value[field] < 0
+                    or active['state'] != ('starting' if kind == 'started' else 'running')
+                    or kind == 'complete' and value['end'] < active['start']):
                 raise ValueError('Attempt checkpoint does not match permission')
             if kind == 'started':
                 active.update(start=value['start'], state='running')
@@ -67,6 +87,15 @@ class Attempts:
         del self.current[name]
 
     def refresh(self):
+        self.pool.owner.refresh()
+        if self.ds.shuttingdown or self.ds.shouldstop:
+            if self.pending is not None and self.pending['state'] == 'cancelling':
+                self.advance()
+            elif self.pending is not None:
+                self.reject(self.pending, 'Gate is stopping')
+                self.deny_target(self.pending)
+                self.pending = None
+            return
         if self.pending is not None:
             self.advance()
             return
@@ -75,7 +104,8 @@ class Attempts:
                 continue
             self.receipts[row['id']] = {**row, 'state': 'checking'}
             found = next((r for r in self.current.values() if r['token'] == row['attempt'] and r['state'] == 'running'), None)
-            if found is None or row['target'] not in self.pool.owner.capacities or self.pool.owner.desired.get(row['target'], 0) == 0:
+            if (found is None or row['target'] not in self.pool.owner.capacities or self.pool.owner.desired.get(row['target'], 0) == 0
+                    or self.pool.config._specroad_verification.ledger.worst.get(found['nodeid'], 'passed') != 'passed'):
                 self.reject(row, 'Attempt finished or target is no longer enabled')
                 continue
             nodes = [n for n in self.ds._active_nodes if self.pool.rows[n.gateway.id]['host'] == row['target']]
@@ -137,7 +167,16 @@ class Attempts:
             if self.pending is not pending:
                 channel.send(dict(sequence=message['sequence'], allowed=False, token=None))
             else:
+                source = self.current.get(pending['source']['worker'])
+                if (source is None or source['token'] != pending['attempt'] or source['state'] != 'running'
+                        or self.pool.owner.desired[pending['target']] == 0):
+                    self.reject(pending, 'Source finished or target disabled before reservation')
+                    self.pending = None
+                    self.pool.retiring.add(name)
+                    channel.send(dict(sequence=message['sequence'], allowed=False, token=None))
+                    return True
                 pending.update(state='cancelling', channel=channel, sequence=message['sequence'], slot=message['slot'])
+                pending['deadline'] = time.monotonic() + 30
                 pending['future'] = self.executor.submit(self.cancel_remote, pending['source'])
         return True
 
@@ -184,7 +223,12 @@ channel.send(reply)
         if p is None:
             return
         if time.monotonic() > p['deadline']:
-            self.fail('Move confirmation timed out')
+            if p['state'] == 'cancelling':
+                self.fail('Move confirmation timed out')
+            else:
+                self.reject(p, 'Target reservation timed out; source continues')
+                self.deny_target(p)
+                self.pending = None
             return
         if p['state'] == 'draining_target':
             if p['old_target'] is None or p['old_target'] not in self.ds._active_nodes:
@@ -197,6 +241,8 @@ channel.send(reply)
                     self.deny_target(p)
                     self.pending = None
                     return
+                if self.ds.shuttingdown or self.ds.shouldstop or self.pool.owner.desired[p['target']] == 0:
+                    raise ValueError('Gate stopped or target disabled during cancellation')
                 source = p['source']
                 name = source['worker']
                 server = next(s for s in self.pool.config._sr_pool_servers if s.worker == name)
@@ -229,11 +275,20 @@ channel.send(reply)
                 del self.reserved[p['worker']]
                 self.pending = None
             except Exception as error:
-                self.fail(str(error))
+                source = self.current.get(p['source']['worker'])
+                if (p['source']['worker'] not in self.deferred and (source is None or source['token'] != p['attempt'])):
+                    self.reject(p, 'Source completed while the operator request was in transit')
+                    self.deny_target(p)
+                    self.pending = None
+                else:
+                    self.fail(str(error))
 
     def deny_target(self, pending):
         if 'channel' in pending:
-            pending['channel'].send(dict(sequence=pending['sequence'], allowed=False, token=None))
+            try:
+                pending['channel'].send(dict(sequence=pending['sequence'], allowed=False, token=None))
+            except OSError:
+                self.pool.errors.append('Move target acknowledgement channel lost')
         if 'worker' in pending:
             self.pool.retiring.add(pending['worker'])
 

@@ -92,3 +92,11 @@ wird erst bei bestätigtem Abbruch atomar auf Version 2 erweitert. Vorhandene
 Messwerte bleiben erhalten; nur der vollständig neue Versuch kann eine gültige
 Dauer liefern. Ältere Schreiber akzeptieren Version 2 nicht. Steuerdateien und
 Prozess-Sockets bleiben private Laufzeitdaten außerhalb des Quellbestands.
+
+Abbruchaufträge prüfen den Versuch erneut bei der Zielreservierung. Ein inzwischen
+beendeter Test bleibt abgeschlossen; ein bereits gemeldeter Fehler wird nicht
+verlagert. Ist nur die Zielreservierung zu langsam, wird der Auftrag abgelehnt
+und der Ursprung läuft weiter. Ein fehlender Endnachweis nach begonnenem Abbruch
+sperrt dagegen das Gate. Ein gleichzeitig gestopptes Gate oder ausgeschaltetes
+Ziel erlaubt keinen Neustart. Dieselbe Anfrage wird pro Generation nur einmal
+verarbeitet; fremde Apply-Pfade und ersetzte Generationen werden abgewiesen.

@@ -23,6 +23,9 @@ def connection(path, timeout=5):
         db.execute('BEGIN')
         if [tuple(row) for row in db.execute('SELECT id,version FROM metadata')] not in ([(1, 1)], [(1, 2)]):
             raise ValueError('Unbekanntes Format der Laufzeitdatenbank')
+        if db.execute('SELECT version FROM metadata WHERE id=1').fetchone()[0] == 2:
+            if not db.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='attempt_moves'").fetchone():
+                raise ValueError('Unvollständiges Format der Versuchshistorie')
         yield db
         after = path.stat()
         if (before.st_dev, before.st_ino) != (after.st_dev, after.st_ino):

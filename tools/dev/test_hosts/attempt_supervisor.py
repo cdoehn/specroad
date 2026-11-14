@@ -9,8 +9,11 @@ import ctypes
 import json
 import os
 from pathlib import Path
+import re
 import signal
 import socket
+import stat
+import struct
 import subprocess
 import sys
 import tempfile
@@ -94,19 +97,31 @@ def terminate_tree(timeout=10):
                 time.sleep(0.01)
     finally:
         for fd in held.values():
+            # An incomplete acknowledgement is still a gate failure. Do not
+            # strand frozen owned processes on that error path.
+            try:
+                signal.pidfd_send_signal(fd, signal.SIGKILL)
+            except ProcessLookupError:
+                pass
             os.close(fd)
 
 
 def request(endpoint, secret, command, **values):
     path = Path(endpoint)
-    if not path.is_absolute() or path.name != 'control.sock' or path.parent.is_symlink():
+    if (not path.is_absolute() or '..' in path.parts or path.name != 'control.sock'
+            or any(p.is_symlink() for p in (path, *path.parents))):
         raise ValueError('Invalid supervisor endpoint')
     info = path.parent.stat()
     if info.st_uid != os.getuid() or info.st_mode & 0o077:
         raise ValueError('Supervisor directory is not private')
+    if not stat.S_ISSOCK(path.lstat().st_mode) or not re.fullmatch('[0-9a-f]{32}', secret):
+        raise ValueError('Invalid supervisor endpoint identity')
     with socket.socket(socket.AF_UNIX) as channel:
         channel.settimeout(15)
         channel.connect(str(path))
+        _, uid, _ = struct.unpack('3i', channel.getsockopt(socket.SOL_SOCKET, socket.SO_PEERCRED, 12))
+        if uid != os.getuid():
+            raise ValueError('Foreign supervisor peer')
         channel.sendall(json.dumps(dict(secret=secret, command=command, **values)).encode() + b'\n')
         value = channel.makefile('rb').readline(65537)
     if len(value) > 65536 or not value.endswith(b'\n'):
@@ -152,22 +167,34 @@ def main(args):
             with connection:
                 try:
                     connection.settimeout(1)
+                    _, uid, _ = struct.unpack('3i', connection.getsockopt(socket.SOL_SOCKET, socket.SO_PEERCRED, 12))
+                    if uid != os.getuid():
+                        raise ValueError('Foreign supervisor client')
                     data = connection.makefile('rb').readline(65537)
                     if len(data) > 65536 or not data.endswith(b'\n'):
                         raise ValueError('Invalid supervisor request')
                     value = json.loads(data)
+                    if type(value) is not dict:
+                        raise ValueError('Invalid supervisor request shape')
                     if value.pop('secret', None) != secret:
                         raise ValueError('Foreign supervisor request')
                     command = value.pop('command', None)
+                    if command in ('arm', 'complete', 'cancel') and (type(value.get('token')) is not str or not re.fullmatch('[0-9a-f]{32}', value['token'])):
+                        raise ValueError('Invalid attempt identity')
                     with lock:
                         if command == 'arm' and set(value) == {'token', 'index', 'slot', 'nodeid', 'start'}:
+                            if (any(type(value[k]) is not int or value[k] < 0 for k in ('index', 'slot', 'start'))
+                                    or type(value['nodeid']) is not str or not value['nodeid'].startswith('tests/')
+                                    or any(a['token'] == value['token'] for a in state['completed'])):
+                                raise ValueError('Invalid attempt reservation')
                             if state['active'] is not None or state['stopped'] is not None:
                                 raise ValueError('Worker already owns an attempt')
                             state['active'] = value
                             reply = dict(armed=value['token'])
                         elif command == 'complete' and set(value) == {'token', 'end'}:
                             active = state['active']
-                            if active is None or active['token'] != value['token']:
+                            if (active is None or active['token'] != value['token'] or type(value['end']) is not int
+                                    or value['end'] < active['start']):
                                 raise ValueError('Completed attempt is not current')
                             state['completed'].append({**active, 'end': value['end']})
                             state['active'] = None

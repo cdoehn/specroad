@@ -9,6 +9,7 @@ import subprocess
 import sys
 
 from support.catalog_project import make_catalog_project
+from support.live_pool import await_value
 from dev.test_hosts.environment import environment, digest, account
 from dev.test_hosts.pool import proxy_gateway
 from dev.test_hosts.snapshot import copy_snapshot, fingerprint
@@ -50,11 +51,29 @@ def exercise(index):
 '''
 
 
+TARGET_COMPLETION = '''from pathlib import Path
+def pytest_testnodedown(node, error):
+    if (node.gateway.id == 'gw1' and error is None
+            and node.workeroutput.get('exitstatus') == 0):
+        (Path(node.config.rootpath)/'build/initial-target-finished').touch()
+'''
+
+
+def await_target_finished(p):
+    # A zero running count can occur between two permission requests while
+    # target still owns queued tests. Its normal native completion is stable;
+    # MOVE requests are handled after that controller event returns.
+    await_value(lambda: (p['root']/'build/initial-target-finished').exists(),
+                p['process'], p['log'])
+
+
 @contextmanager
-def pool(tmp_path, *, proxy=False, source=SUBJECT, transform=None):
+def pool(tmp_path, *, proxy=False, source=SUBJECT, transform=None, controller_hook=''):
     ids = [f'tests/test_subject.py::test_{i}' for i in range(6)]
     source += '\n'.join(f'def test_{i}():\n    exercise({i})\n' for i in range(6))
     root = make_catalog_project(tmp_path / 'source', ids=ids, source=source)
+    with (root/'conftest.py').open('a') as stream:
+        stream.write('\n' + TARGET_COMPLETION + '\n' + controller_hook)
     (root / POLICY).write_text(json.dumps(POLICY_VALUE))
     remote = tmp_path / 'remote'
     manifest = copy_snapshot(root, remote)
