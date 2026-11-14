@@ -5,6 +5,7 @@ import math
 import os
 from pathlib import Path
 import re
+from verification_support.host_execution import DEFAULT_WORKER_LIMIT
 
 NAME = re.compile(r'[A-Za-z0-9][A-Za-z0-9_.-]{0,63}\Z')
 
@@ -45,7 +46,7 @@ class Host:
     name: str
     ssh: str | None
     directory: str
-    workers: int = 12
+    workers: int = DEFAULT_WORKER_LIMIT
     speed: float = 1.0
     persist: int = 1800
 

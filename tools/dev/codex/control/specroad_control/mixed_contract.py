@@ -1,5 +1,6 @@
 """Installed project opt-in and the additive, typed optional-clarification ABI."""
 import re
+from .budget_limits import CLARIFICATION_LIMITS
 
 MIXED = 'patch_ready_with_clarification'
 IMPLEMENTATIONS = ('patch_ready', MIXED)
@@ -13,7 +14,7 @@ CAPABILITY = {'format_version': 1, 'decision_rule': 'SPECROAD-DECISION-1',
 def capability(value):
     if (type(value) is not dict or set(value) != set(CAPABILITY)
             or any(type(value[k]) is not type(v) or
-                (value[k] not in (3, 5, 20) if k == 'clarification_limit' else value[k] != v)
+                (value[k] not in CLARIFICATION_LIMITS if k == 'clarification_limit' else value[k] != v)
                 for k, v in CAPABILITY.items())):
         raise ValueError('Unsupported installed development contract')
     return value

@@ -5,7 +5,7 @@ from pathlib import Path
 import sqlite3
 import sys
 
-from verification_support.host_execution import positive_limit
+from verification_support.host_execution import add_worker_limit, positive_limit
 from .common import output_path, relative_selector
 
 
@@ -20,7 +20,7 @@ def parser(root):
     launch.add_argument('-k', dest='keyword', default='', help='pytest name expression')
     launch.add_argument('-m', dest='marker', default='', help='pytest marker expression')
     launch.add_argument('--history', type=Path, help='Read-only ranking history; default: this repository lane')
-    launch.add_argument('--worker-limit', type=positive_limit, default=12)
+    add_worker_limit(launch)
     status = commands.add_parser('status', help='Read saved run states without collecting or executing tests')
     status.add_argument('--run', help='Show this run, including selected test states and artifact IDs')
     export = commands.add_parser('export', help='Export one lossless raw artifact from SQLite')

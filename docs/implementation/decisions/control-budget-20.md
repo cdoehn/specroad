@@ -37,7 +37,7 @@ künstlicher delegierter Klärungspräfix und keine zusätzliche Produktposition
   in den vorhandenen gemeinsamen Helfern konsolidieren; sämtliche W/R-Tests
   und Ergebnisse bleiben unverändert.
 
-Umsetzungsstand dieses Commitziels: **R**. Erst das erfolgreiche eigene
+Umsetzungsstand dieses Commitziels: **C**. Erst das erfolgreiche eigene
 Apply-Gate und der tatsächliche Commit bestätigen diesen Zustand. Dev führt
 keine Verhaltenstests aus. Jede Stage prüft N=3 plus vollständige Pflichtauswahl.
 

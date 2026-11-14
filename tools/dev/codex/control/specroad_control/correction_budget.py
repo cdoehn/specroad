@@ -8,6 +8,7 @@ import sqlite3
 from hashlib import sha256
 
 from .errors import ControlError
+from .budget_limits import MAX_CORRECTION_LIMIT
 
 
 TABLE = 'apply_correction_budgets'
@@ -32,7 +33,7 @@ def _row(ledger, source_sha):
         if (set(value) != {'version', 'source_sha256', 'previous_sha256', 'maximum', 'remaining', 'active', 'reason'}
                 or value['version'] != 1 or type(value['version']) is not int
                 or value['source_sha256'] != source_sha
-                or type(value['maximum']) is not int or not 1 <= value['maximum'] <= 20
+                or type(value['maximum']) is not int or not 1 <= value['maximum'] <= MAX_CORRECTION_LIMIT
                 or type(value['remaining']) is not int or not 0 <= value['remaining'] <= value['maximum']
                 or type(value['active']) is not bool
                 or value['reason'] not in ('initial_checkpoint', 'verified_clean_apply', 'repair_result', 'preserved')
@@ -98,7 +99,7 @@ def _complete(source):
 
 
 def _initial(source, limit):
-    if type(limit) is not int or not 1 <= limit <= 20:
+    if type(limit) is not int or not 1 <= limit <= MAX_CORRECTION_LIMIT:
         _fail()
     # A successful initial bundle capture is not a failed Apply.
     return dict(version=1, source_sha256=source['sha256'], previous_sha256=None,

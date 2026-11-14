@@ -6,6 +6,7 @@ from .daemon import run
 from .ipc import request
 from .state import read_state
 from .errors import ControlError
+from .budget_limits import DEFAULT_CORRECTION_LIMIT, MAX_CORRECTION_LIMIT
 from .local import Paths
 
 
@@ -37,8 +38,8 @@ def main(argv=None) -> int:
     parser.add_argument('--retry-blocked', action='store_true', help='Authorize one new attempt after a patchless blocked V4 completion')
     parser.add_argument('--clarification', action=argparse.BooleanOptionalAction, default=None,
                         help='Allow/disable optional detail clarification; configure or accept-current')
-    parser.add_argument('--correction-limit', type=int, choices=range(1, 20 + 1),
-                        help=f'Maximum consecutive Apply repair bundles (default: {20}); configure only')
+    parser.add_argument('--correction-limit', type=int, choices=range(1, MAX_CORRECTION_LIMIT + 1),
+                        help=f'Maximum consecutive Apply repair bundles (default: {DEFAULT_CORRECTION_LIMIT}); configure only')
     parser.add_argument('--reset-budget', action='store_true',
                         help='Explicitly renew the tested project clarification maximum; accept-current only')
     args = parser.parse_args(argv)

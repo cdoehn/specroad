@@ -7,6 +7,7 @@ from pathlib import Path
 from specroad_control.toml_compat import tomllib
 from uuid import UUID
 from .errors import ControlError
+from .budget_limits import DEFAULT_CORRECTION_LIMIT, MAX_CORRECTION_LIMIT
 from .execution_scope import execution_directory, writable_roots
 from .local import Paths, REPO, outside, read_private, write_private
 
@@ -31,7 +32,7 @@ class Config:
     access_mode: str = "workspace-write"
     apply_repository: Path | None = None
     clarification_allowed: bool = True
-    correction_limit: int = 20
+    correction_limit: int = DEFAULT_CORRECTION_LIMIT
 
     @property
     def apply_directory(self):
@@ -142,8 +143,8 @@ def parse(doc: dict, paths: Paths) -> Config:
             or retry_delays != sorted(retry_delays)):
         raise ValueError
     clarification = auto.get("clarification_allowed", True)
-    correction_limit = auto.get("correction_limit", 20)
-    if type(clarification) is not bool or type(correction_limit) is not int or not 1 <= correction_limit <= 20:
+    correction_limit = auto.get("correction_limit", DEFAULT_CORRECTION_LIMIT)
+    if type(clarification) is not bool or type(correction_limit) is not int or not 1 <= correction_limit <= MAX_CORRECTION_LIMIT:
         raise ValueError
     transport = text(dev.get("transport", "exec"))
     if transport not in ("exec", "app-server-proxy"):
