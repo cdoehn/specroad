@@ -1,19 +1,19 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.84
+## Version 0.2.85
 
 | Feld | Wert |
 |---|---|
 | Dokument-ID | `SR-SPEC-0001` |
-| Dokumentversion | `0.2.84` |
+| Dokumentversion | `0.2.85` |
 | Zielrelease | `SpecRoad Single-Repository Workbench 0.2.0` |
 | Status | **Fachlich konsolidierte Arbeitsgrundlage; technische Reviewentscheidung gesondert dokumentiert, formale Baseline-Freigabe und Produktabnahme nicht durch dieses Dokument erklärt** |
-| Stand | 13. November 2026 |
+| Stand | 14. November 2026 |
 | Sprache | Deutsch; technische Feldnamen, Enum-Werte und CLI-Kommandos Englisch |
-| Fachliche Quelle | **Diese Repositoryfassung v0.2.84 ist die aktive fachliche Arbeitsgrundlage; eine entsprechende PDF wird hiermit nicht veröffentlicht.** |
+| Fachliche Quelle | **Diese Repositoryfassung v0.2.85 ist die aktive fachliche Arbeitsgrundlage; eine entsprechende PDF wird hiermit nicht veröffentlicht.** |
 | Bearbeitbare Satzquelle | Diese Datei; eine spätere PDF muss denselben versionierten Inhalt wiedergeben. |
-| Vorgängerversion | Repository-Spezifikation v0.2.83; historische Nachweise bleiben unverändert. |
-| Prüf- und Entscheidungsgrundlage | PROPOSAL-APPLY-674, delegiert gemäß SPECROAD-DECISION-1; keine Produktfreigabe. |
-| Änderungsart | Additiver öffentlicher Proposal-Apply-Vertrag und native Writeranbindung nach 10.3.6. |
+| Vorgängerversion | Repository-Spezifikation v0.2.84; historische Nachweise bleiben unverändert. |
+| Prüf- und Entscheidungsgrundlage | RECOVERY-REMOVAL-006, ausdrücklicher Nutzerauftrag; keine Produktfreigabe. |
+| Änderungsart | Produkt-Recovery durch Abbrucherkennung, dauerhafte Projektsperre und manuellen Git-Wiederanlauf ersetzen; Umsetzung nach 18.k vor 18.l. |
 
 > **Verbindlicher Quellenwechsel:** Die ausdrückliche Nutzerentscheidung REFERENCE-SOURCE-551 wird als v0.2.50 umgesetzt. Der neue Quellvertrag ist Entwurfsarbeit vom 3. November 2026, kein Nachweis eines früher existierenden Formats. Bestehende 0.2-Verträge, Transport-, Sicherheits- und Reviewgrenzen bleiben erhalten.
 
@@ -42,7 +42,7 @@ Zum System SpecRoad 0.2 gehören:
 - ein portables Paket aus SpecRoad-Distribution, vollständigem Projekt und unverändertem PatchHarbor-Result sowie der gebundene Rückweg nach Anhang W;
 - das kanonische JSON-Modell mit versionierten Schemas;
 - vollständiges CLI-Authoring für Artefakte, Beziehungen, Lifecycle, Dokumente und Evidence;
-- ein einheitliches Change-Plan-, Transaktions-, Recovery- und Idempotenzmodell;
+- ein einheitliches Change-Plan-, Schreibschutz- und Idempotenzmodell;
 - deterministische Validation, Linting und die deklarative Regelsprache SRX 1.0;
 - Trace-, Query-, Why-, Impact-, Diff-, Coverage- und Readiness-Funktionen;
 - Dokumente, Abschnitte, Inhaltsblöcke, deklarative Views und Diagrammquellen;
@@ -86,6 +86,18 @@ SpecRoad 0.2 ist ausdrücklich nicht:
 
 ---
 
+### 1.4 Entwicklung ohne produktive Nutzung
+
+Bis zur ausdrücklichen Benutzungsfreigabe des Nutzers ist SpecRoad nicht in
+Benutzung. Entwicklung und Testdaten sind keine produktiven Installationen.
+Der Umbau darf interne Entwicklungsformate und nicht freigegebene
+CLI-Verträge ohne Live-Migration ändern. Es besteht keine Pflicht zu einem
+Parallelbetrieb alter und neuer Recovery oder zu einem Upgrade laufender
+Projekte. Das ist keine Erlaubnis, fremde Dateien, Git-Historie oder bestehende
+Test-/Apply-Nachweise zu löschen. Produktfreigabe, Baseline-Freigabe und
+bestandene Teiltests sind unterschiedliche Entscheidungen; dieses Bundle
+erteilt keine Benutzungsfreigabe.
+
 ## 2. Normative Sprache, Widersprüche und Referenzen
 
 Für die redaktionellen Vertragssätze **dieses Spezifikationsdokuments** sind die vollständig großgeschriebenen Schlüsselwörter `MUSS`, `MÜSSEN`, `DARF NICHT`, `DÜRFEN NICHT`, `SOLLTE`, `SOLLTEN`, `DARF` und `DÜRFEN` normativ. `SOLLTE` beziehungsweise `SOLLTEN` ist nur zulässig, wenn Abweichungsbedingungen und Abweichungsautorität explizit angegeben sind. Nicht großgeschriebene Formulierungen sind erläuternd.
@@ -101,7 +113,7 @@ Bei einem Widerspruch innerhalb dieser Dokumentversion gilt:
 3. `SR-DEC-*` hat Vorrang vor erläuterndem Text, Diagrammen und Beispielen.
 4. Beispiele sind niemals normativ, sofern sie nicht ausdrücklich als Testvektor bezeichnet sind.
 5. Zwei widersprüchliche `SR-REQ-*`-Anforderungen besitzen **keine implizite Rangfolge** nach Nummer, Position oder Spezifität. Ein solcher Fund ist ein Spezifikationsfehler, muss als Issue gelöst werden und verhindert die Freigabe.
-6. Diese Dokumentversion 0.2.50 ersetzt die frühere fachliche Arbeitsgrundlage vollständig. Bis zur gesonderten PDF-Veröffentlichung ist diese versionierte Repositorydatei maßgeblich. Eine spätere PDF muss inhaltsgleich sein; frühere PDFs werden nicht als Nachweis der neuen Verträge ausgegeben. Inhalte verschiedener Fassungen dürfen nicht zu einer Mischspezifikation kombiniert werden.
+6. Diese Dokumentversion 0.2.85 ersetzt die frühere fachliche Arbeitsgrundlage vollständig. Bis zur gesonderten PDF-Veröffentlichung ist diese versionierte Repositorydatei maßgeblich. Eine spätere PDF muss inhaltsgleich sein; frühere PDFs werden nicht als Nachweis der neuen Verträge ausgegeben. Inhalte verschiedener Fassungen dürfen nicht zu einer Mischspezifikation kombiniert werden.
 7. Eine nachträgliche Änderung dieser veröffentlichten Datei erfordert mindestens eine neue Patch-Dokumentversion; stille Korrekturen unter derselben Dokumentversion sind unzulässig.
 8. Eine normative Tabelle, auf die eine `SR-REQ-*`-Anforderung ausdrücklich als Algorithmus oder Matrix verweist, ist Bestandteil des Passkriteriums dieser Anforderung.
 
@@ -119,7 +131,7 @@ Bei einem Widerspruch innerhalb dieser Dokumentversion gilt:
 | Relationsreview | Ein unveränderbarer Nachweis, dass eine Relation für konkrete Quell- und Zielkontext-Hashes bestätigt oder verworfen wurde. |
 | Arbeitsstand | Das aktuell im Projektroot geladene kanonische Modell außerhalb einer Baseline. |
 | Change Plan | Eine geordnete, versionierte Beschreibung von Operationen mit erwarteter Basis, gebundenen Metadaten, Vorbedingungen, Akteur und exaktem Ergebnis. |
-| Transaktion | Die journalbasierte Ausführung eines validierten Change Plans mit Staging, Before Images, Veröffentlichung und Recovery. |
+| Transaktion | Die geschützte Ausführung eines validierten Change Plans mit Zielstaging, dauerhaftem Schreibmarker und geprüftem Abschluss nach Anhang C. |
 | Scope Descriptor | Eine versionierte, kanonische Beschreibung von Scope-Art, Seed-Auswahl, Closure-Profil, Konfiguration und Grenzpolicy. |
 | Seed-Menge | Die durch die Scope-Art unmittelbar ausgewählten Ressourcen vor Anwendung der Closure. |
 | Scope-Closure | Der deterministische kleinste Fixpunkt, der aus einer Seed-Menge nach dem festgelegten Closure-Profil entsteht. |
@@ -146,14 +158,14 @@ Bei einem Widerspruch innerhalb dieser Dokumentversion gilt:
 | Analysekennung | Die nach Anhang T.3 vergebene Korrelation eines Analyseauftrags, im Analyzer-Request als `request_id` gespeichert; kein normativer Schreibrequest und keine Freigabe. |
 | Normativer Schreibbefehl | Ein Befehl, der kanonische Modellressourcen oder deren formatierbare normative Bytes verändert. |
 | Generierter Ausgabebefehl | Ein Befehl, der ausschließlich abgeleitete Dateien außerhalb des kanonischen Modells erzeugt. |
-| Lokaler Betriebsbefehl | Ein Befehl, der ausschließlich `.specroad/`-Betriebsdaten oder Recovery-Auditdaten verändert. |
+| Lokaler Betriebsbefehl | Ein Befehl, der ausschließlich `.specroad/`-Betriebsdaten oder lokale Diagnosedaten verändert. |
 | Root-Erzeugungsbefehl | `init` oder `bundle extract`; der Befehl erfüllt die jeweilige Zielvorbedingung aus Kapitel 11.7 und veröffentlicht die neue Root-Struktur atomar. |
 | Plan-Ausgabebefehl | Ein Befehl, der einen versionierten Import-, Migrations- oder Merge-Plan erzeugt oder explizit fortschreibt, ohne normative Projektressourcen zu verändern. |
-| Recovery-Schreibbefehl | Ein ausschließlich zur Wiederherstellung zugelassener Befehl, der nach dem gebundenen Recovery-Vertrag normative Dateien auf einen verifizierbaren Basis-, Ziel- oder Restore-Zustand bringt. |
+| Abbruchsperre | Dauerhafte Sperre einer nicht sicher abgeschlossenen Projektpublikation; kein Schreibbefehl zur Wiederherstellung. |
 | Aufrufkontext | Die für einen einzelnen Prozesslauf aus aktuellen Eingaben und Dateien bestimmte Runtime-, Root-, Policy- und Betriebszustandsauswahl. |
 | Preflight | Begrenzte Prüfung der unmittelbar für den konkreten Befehl benötigten Startvoraussetzungen; keine allgemeine Projektvalidierung. |
 | Portabler Fortsetzungsstand | Entweder ein abgeschlossenes Projektvollbundle oder ein ausdrücklich als unvollständig gekennzeichnetes Arbeitspaket nach Anhang P mit gebundenem Eingangssnapshot, Cursor und Zwischenergebnissen; kein flüchtiger Prozesszustand. |
-| Wiederherstellungskritische Betriebsdaten | Journal, Staging, Before Images und zugehörige Metadaten einer nicht abschließend belegten Transaktion; nicht als Cache löschbar. |
+| Schutzkritische Betriebsdaten | Schreib-/Bootstrapmarker und Belege einer nicht sicher abgeschlossenen Publikation; nicht als Cache löschbar. |
 | Ressourcenprofil | Nicht normative betriebliche Auswahl weicher Arbeitsziele `constrained` oder `standard`; unabhängig von fachlichen Profilen und Produktkonfigurationen. |
 | Weiches Arbeitsbudget | Optimierungs- und Teilungsziel; seine Überschreitung allein ist weder Fehler noch Berechtigung zum Auslassen von Arbeit. |
 | Harte Grenze | Nachgewiesene Host-/Dateisystemgrenze oder explizite Sicherheits-/Formatpolicy; keine automatisch übergehbare Optimierungsvorgabe. |
@@ -1466,7 +1478,7 @@ Produktposition.
 | SR-GOAL-0006 | Verifikation und Evidenz als Modellbestandteil | Prüfverträge und importierte oder erfasste Nachweise sind versions- und hashgebunden und machen Coverage sowie Veraltung sichtbar. |
 | SR-GOAL-0007 | Erklärbare Planung und Dokumentation | Releases, Roadmaps, Spezifikationsdokumente, Ansichten und Berichte werden aus dem Modell abgeleitet und bleiben fachlich erklärbar. |
 | SR-GOAL-0008 | Offene, portable und langfristig wartbare Grundlage | Der Core ist offline, dependency-frei, migrationsfähig und über offene Formate austauschbar. |
-| SR-GOAL-0009 | Sichere Änderung langlebiger Projekte | Alle Schreibwege verwenden einen gemeinsamen Change Plan, crashsichere Recovery, Migration und nachvollziehbare Auditbelege. |
+| SR-GOAL-0009 | Sichere Änderung langlebiger Projekte | Gemeinsamer Change Plan, dauerhafte Abbruchsperre, kontrollierter Git-Wiederanlauf, Migration und nachvollziehbare Abschlussbelege. |
 | SR-GOAL-0010 | Praxistaugliche Single-User-Workbench | Ein einzelner Benutzer oder Agent kann in genau einem Repository vollständig über die CLI authoren, vergleichen, mergen, dokumentieren und austauschen. |
 
 ---
@@ -1487,7 +1499,7 @@ Produktposition.
 | SR-NEED-0010 | Projektleitung | Projektleitung benötigt eine erklärbare, nicht separat gepflegte Roadmap und einen belastbaren Release-Umfang. | SR-GOAL-0003, SR-GOAL-0007 |
 | SR-NEED-0011 | Datenschutz und lokale Sicherheit | Teams benötigen Kernfunktionen ohne Netzwerk, Telemetrie, Fremdcode, Cloudkonto oder Zugriff außerhalb des Projektroots. | SR-GOAL-0004, SR-GOAL-0005, SR-GOAL-0008 |
 | SR-NEED-0012 | Maintainer und Integrator | Maintainer benötigen klar versionierte Modelle, Regeln, Schemas, Formate und kompatible, dependency-freie Distributionen. | SR-GOAL-0004, SR-GOAL-0008, SR-GOAL-0009 |
-| SR-NEED-0013 | Authoring- und Transaktionsnutzer | Schreibende Nutzer benötigen einheitliche Dry-Runs, atomare Veröffentlichung, Recovery, Audit und wiederholbare Operationen. | SR-GOAL-0009, SR-GOAL-0010 |
+| SR-NEED-0013 | Authoring- und Transaktionsnutzer | Einheitliche Dry-Runs, geschützte Veröffentlichung, zuverlässige Unterbrechungserkennung, Audit und idempotente abgeschlossene Operationen. | SR-GOAL-0009, SR-GOAL-0010 |
 | SR-NEED-0014 | Bestands- und Austauschdaten | Nutzer langlebiger Projekte benötigen Schema-Migration, Bundles und verlustbewussten Austausch über ReqIF, CSV und NDJSON. | SR-GOAL-0008, SR-GOAL-0009, SR-GOAL-0010 |
 | SR-NEED-0015 | Dokument- und Berichtsnutzer | Leser und Autoren benötigen komponierte Dokumente, deklarative Ansichten, HTML/Markdown/CSV und deterministische Diagrammquellen. | SR-GOAL-0001, SR-GOAL-0007, SR-GOAL-0010 |
 | SR-NEED-0016 | Parallel- und Integrationsnutzer | Ein einzelner Nutzer benötigt kollisionsresistente Identitäten, semantischen Branch-Merge, Code-Traceability und aktuelle Relationsreviews. | SR-GOAL-0003, SR-GOAL-0004, SR-GOAL-0009 |
@@ -1531,8 +1543,8 @@ Produktposition.
 | SR-SCN-0026 | Produktkonfiguration ableiten | Ein Nutzer wählt eine benannte Konfiguration; SpecRoad berechnet den gültigen Modellumfang, prüft Abhängigkeiten und erzeugt konfigurationsgebundene Dokumente, Coverage und Baselines. |
 | SR-SCN-0027 | Unabhängige Aufrufe und Pfadwechsel | Zwei Aufrufe verwenden neue Prozesse und geänderte Arbeitsverzeichnisse; die explizite Root-Auswahl führt ohne Sitzungszustand zum identischen fachlichen Ergebnis. |
 | SR-SCN-0028 | Sandbox aus Sicherungsstand ersetzen | Distribution und verifiziertes Vollbundle werden in eine frische kompatible Sandbox übertragen; Modellwurzel und idempotente Requests bleiben erhalten, ungesicherte Verluste werden nicht erfunden. |
-| SR-SCN-0029 | Preflight bei Recoverybedarf | Ein lesender Aufruf meldet die unterbrochene Transaktion schreibfrei; zulässige Recovery stellt einen belegten Zustand her, bevor die Fachoperation erneut angefordert wird. |
-| SR-SCN-0030 | Weiches Budget überschritten | Der Gesamtauftrag läuft mit kleineren Chargen weiter oder liefert einen gesicherten Fortsetzungspunkt; bei tatsächlichem Hostabbruch bleibt Recovery wirksam. |
+| SR-SCN-0029 | Preflight bei Abbruchsperre | Lesende Diagnose meldet corrupted ohne Änderung; Nutzer stellt einen vollständigen gültigen Git-Stand in frischem Checkout her. Der alte Root bleibt gesperrt. |
+| SR-SCN-0030 | Weiches Budget überschritten | Kleinere Chargen oder gesicherte Vorbereitung erlauben vollständige Weiterarbeit; echter Abbruch während Projektpublikation führt zur Sperre statt Reparatur. |
 | SR-SCN-0031 | Cache fehlt oder ist veraltet | Fehlender, gelöschter, manipulierter und aus einer anderen Runtime übernommener Cache führen zu denselben vollständigen Ergebnissen wie ein cachefreier Lauf. |
 | SR-SCN-0032 | Umgebung und tatsächlicher Verbrauch | Ein Agent liest die begrenzte Umgebungsdiagnose und fordert explizite Messwerte an; unbekannte Hostquoten bleiben unbekannt, Startkosten und Ressourcenverbrauch werden im Referenztest gemessen. |
 | SR-SCN-0033 | Vollständig trotz weichem Budget | Ein endlicher großer Auftrag überschreitet Arbeitsziele, wird sparsam aufgeteilt und erreicht ohne ausgelassene Pflichtarbeit dasselbe Ergebnis wie ein Einzellauf. |
@@ -1576,7 +1588,7 @@ Produktposition.
 | SR-DEC-0018 | Zwei portable Distributionen | Jedes Release liefert eine entpackbare Modul-Distribution und eine funktional äquivalente Python-Zipapp. |
 | SR-DEC-0019 | Single-User und Single-Repository | Version 0.2 verwaltet pro Projekt genau einen Root und eine Projekt-ID und setzt weder Server noch Benutzerverwaltung oder Multi-Repository-Graph voraus. |
 | SR-DEC-0020 | Einheitlicher Change Plan | Direkte CLI-Änderungen, Proposals, Importe, Migrationen und Merges werden auf dasselbe versionierte Operationsmodell abgebildet. |
-| SR-DEC-0021 | Journalbasierte Recovery | Mehrdateiänderungen werden über Write-ahead-Journal, Staging, Before Images und deterministische Recovery veröffentlicht. |
+| SR-DEC-0021 | Abbruchsperre und manueller Git-Wiederanlauf | Dauerhafter Schreibmarker vor Dateiwirkung; bei Unterbrechung corrupted und gesperrt; keine Produkt-Recovery, Nutzer stellt einen gültigen Git-Stand in frischem Root her. |
 | SR-DEC-0022 | Explizite Schema-Evolution | Projektformate werden nur über versionierte, geplante und verifizierbare Migrationen verändert. |
 | SR-DEC-0023 | Suspect Relations | Relationsreviews binden sich an den Relationsinhalt und reviewrelevante Kontextprojektionen beider Endpunkte; relevante Änderungen machen frühere Reviews automatisch suspect. |
 | SR-DEC-0024 | SRX statt Skriptregeln | Profile und Views verwenden die begrenzte JSON-AST-Sprache SRX 1.0 ohne Regex, I/O oder Fremdcode. |
@@ -1635,7 +1647,7 @@ Die Entscheidungen begrenzen den Implementierungsspielraum, ersetzen aber keine 
                                  ▼
 ┌─────────────────────────────────────────────────────────────────────┐
 │ Transaction Engine                                                  │
-│ Writer Lock · Journal · Staging · Before Images · Commit · Recovery │
+│ Writer Lock · Staging · Schreibmarker · Publikation · Receipts     │
 └────────────────────────────────┬────────────────────────────────────┘
                                  ▼
 ┌──────────────────────────────┐    ┌─────────────────────────────────┐
@@ -1663,24 +1675,20 @@ CLI-Eingabe oder Proposal/Import/Migration/Merge
         ↓
 normalisieren und Akteur/Request-ID binden
         ↓
-Change Plan erzeugen
+Change Plan, Basis und isolierten vollständigen Zielstand prüfen
         ↓
-Vorbedingungen und Basis prüfen
+Dry-Run zurückgeben ODER Writer-Lock erwerben und Eingänge erneut prüfen
         ↓
-isolierten Zielstand berechnen
+Zielstaging prüfen; Schreibmarker dauerhaft anlegen
         ↓
-vollständig validieren, linten, diffen, Impact bestimmen
+Ziele veröffentlichen, synchronisieren und vollständig zurückprüfen
         ↓
-Dry-Run zurückgeben ODER Writer-Lock erwerben
+Audit- und Request-Receipt dauerhaft schreiben und prüfen
         ↓
-Journal + Staging + Before Images erzeugen
-        ↓
-prepared → committing → committed
-        ↓
-Audit- und Request-Receipt schreiben
+Marker dauerhaft entfernen; Lock lösen; Erfolg melden
 ```
 
-Vor dieser Folge gelten der aufrufbezogene Preflight aus Anhang N und die Betriebsbudgets aus Anhang O. Ein gefundener Recoverybedarf wird nicht durch einen zusätzlichen normalen Schreiblauf verdeckt.
+Vor dieser Folge gelten der aufrufbezogene Preflight aus Anhang N und die Betriebsbudgets aus Anhang O. Eine gefundene Abbruchsperre wird nicht durch einen zusätzlichen normalen Schreiblauf verdeckt.
 
 Direkte JSON-Bearbeitung durch externe Editoren ist technisch nicht verhindert. Sie gilt jedoch nicht als SpecRoad-Authoring-Operation, besitzt keinen Audit- oder Transaktionsnachweis und muss vor jeder weiteren kontrollierten Änderung vollständig validiert werden. KI-Agenten dürfen normative Managed-Path-Dateien nach dem Produktvertrag nicht direkt verändern.
 
@@ -1724,11 +1732,11 @@ Der Core darf nicht:
 
 ### 7.4 Aufrufbezogene Runtime- und Ressourcensteuerung
 
-Der Einstiegspunkt durchläuft den Bootstrap mit Budgetinitialisierung und anschließend den befehlsspezifischen Preflight, bevor die benötigten Fachmodule geladen werden. Der Preflight benutzt nicht selbst die gesamte Validation-/Rendering-/Index-Pipeline. Er bleibt auch für Diagnose und Hilfe nutzbar, wenn das Projekt nicht bearbeitbar ist. Die genauen Profile und Recovery-Ausnahmen stehen in Anhang N.
+Der Einstiegspunkt durchläuft den Bootstrap mit Budgetinitialisierung und anschließend den befehlsspezifischen Preflight, bevor die benötigten Fachmodule geladen werden. Der Preflight benutzt nicht selbst die gesamte Validation-/Rendering-/Index-Pipeline. Er bleibt auch für Diagnose und Hilfe nutzbar, wenn das Projekt nicht bearbeitbar ist. Die genauen Profile und Sperrdiagnosen stehen in Anhang N.
 
-Betriebliche Budgets sind weiche Arbeitsziele über die gesamte Verarbeitung einschließlich Zielvalidierung und Ausgabe. Sie sind keine fachlichen Filter. Bei Überschreitung werden Puffer, Chargen und optionale Beschleuniger reduziert; ein großer Auftrag bleibt über Checkpoints vollständig fortsetzbar. Tatsächliche Host-/Sicherheitsfehler folgen dem Recoveryvertrag. CPU-/Speicherbeobachtung benötigt keine zusätzlichen Programme, Dienste oder Pakete.
+Betriebliche Budgets sind weiche Arbeitsziele über die gesamte Verarbeitung einschließlich Zielvalidierung und Ausgabe. Sie sind keine fachlichen Filter. Bei Überschreitung werden Puffer, Chargen und optionale Beschleuniger reduziert; ein großer Auftrag bleibt über Checkpoints vollständig fortsetzbar. Tatsächliche Host-/Sicherheitsfehler folgen dem Sperrvertrag. CPU-/Speicherbeobachtung benötigt keine zusätzlichen Programme, Dienste oder Pakete.
 
-Ein persistenter Cache ist lediglich eine optionale Beschleunigung; Transaktionsdaten und Receipts gehören nicht zum Cache. Ein read-only Aufruf erzeugt weder einen Cache noch ein Recovery-Write. Vorhandene fachlich notwendige Arbeit wird nicht ausgelassen, nur weil ein Befehl klein aussieht: beispielsweise benötigen eingehende Relationen einen nachweislich vollständigen Index oder die entsprechenden aktuellen Quelldaten.
+Ein persistenter Cache ist lediglich eine optionale Beschleunigung; Transaktionsdaten und Receipts gehören nicht zum Cache. Ein read-only Aufruf erzeugt weder einen Cache noch eine verdeckte Reparatur. Vorhandene fachlich notwendige Arbeit wird nicht ausgelassen, nur weil ein Befehl klein aussieht: beispielsweise benötigen eingehende Relationen einen nachweislich vollständigen Index oder die entsprechenden aktuellen Quelldaten.
 
 ---
 
@@ -1783,10 +1791,17 @@ specroad-project/
     │   └── receipts/
     ├── requests/
     ├── merge/
-    └── recovery/
+    └── write-state/
 ```
 
-`specroad.json`, JSON-Dateien unter `spec/`, `profiles/`, `rules/` und `mappings/` sowie referenzierte Payloads unter `attachments/` bilden den aktuellen normativen Projektstand. `archive/objects/` enthält unveränderbare content-addressierte Snapshotobjekte. `generated/` enthält abgeleitete Sichten. `.specroad/` enthält nicht fachlich normative Betriebsdaten. Cache und reine Arbeitsreste sind entbehrlich; aktive Journale, Staging und Before Images sind dagegen wiederherstellungskritisch und bis zum belegten Abschluss zu erhalten. Abgeschlossene Transaktions- und Request-Receipts sind audit- und idempotenzrelevant und werden im Vollbundle nach Kapitel 10.16 transportiert. Die pauschale Löschung von `.specroad/` ist kein zulässiger Cache-Reset.
+`specroad.json`, normative Ressourcen, referenzierte Anhänge und benötigte
+`archive/objects/` bilden den vollständigen Projektbestand. `generated/` enthält
+abgeleitete Sichten. `.specroad/` enthält betriebliche Daten: Cache ist entbehrlich;
+Schreib-/Bootstrapmarker und unbestätigte Schreibreste sind bis zur manuellen
+Entscheidung zu erhalten und dürfen nicht durch Cachebereinigung verschwinden.
+Abgeschlossene Transaktions-/Request-Receipts bleiben audit- und idempotenzrelevant
+und werden im Vollbundle transportiert. Die pauschale Löschung von `.specroad/`
+ist weder Cache-Reset noch zulässige Projektentsperrung.
 
 ### 8.2 Beispielkonfiguration
 
@@ -1811,7 +1826,6 @@ specroad-project/
   ],
   "generated_path": "generated",
   "transaction_policy": {
-    "auto_recover": true,
     "retain_receipts": true
   },
   "resource_limits": {
@@ -1892,7 +1906,7 @@ Die Beispielkonfiguration zeigt Fachpolicies; konkrete Hashbindungen des vom Rel
 | Archivobjekte | unveränderbar | `archive/objects/<hh>/<sha256>` | Nur über Baseline-/Bundle-Verträge |
 | Generierte Ausgaben | nein | `generated/**` | Keine Rückübernahme in das Modell |
 | Entbehrlicher Cache | nein | `.specroad/cache/**` | optional, inhaltsgeprüft, jederzeit löschbar; keine Recoveryfunktion |
-| Wiederherstellungsdaten | betrieblich verbindlich | `.specroad/transactions/**`, `.specroad/recovery/**` | aktive Journale und Payloads bis zum belegten Abschluss schützen |
+| Schreibschutzdaten | betrieblich verbindlich | `.specroad/write-state/**`, Bootstrapmarker und aktive Alttransaktionsbereiche | offene Marker sperren den Root; keine Cachebereinigung oder Reparatur |
 | Abgeschlossene Receipts | betrieblich verbindlich | `.specroad/requests/**`, `.specroad/transactions/receipts/**` | auditrelevant; im Vollbundle standardmäßig transportiert |
 | Weitere Betriebsdaten | nein | übrige `.specroad/**` | Locks, kurzlebige Pläne und zulässige Arbeitsdaten nach ihrem jeweiligen Vertrag |
 
@@ -2290,7 +2304,7 @@ Der reine Erzeuger nimmt eine bereits über die vorhandene Identitätsfunktion
 zugeteilte random128-v1-Proposal-ID und einen vollständigen nativen Plan entgegen.
 Er liest weder Projektdateien noch Uhr, Netzwerk, Modell oder Nutzersitzung und
 verleiht keine Schreib- oder Reviewbefugnis. Historische Originalobjekte des
-lesenden Restore-Kerns ohne diese zusätzlichen Authoringfelder werden weiterhin
+gemeinsamen lesenden Prüfkerns ohne diese zusätzlichen Authoringfelder werden weiterhin
 bytegetreu gelesen; sie sind kein vollständiger neuer Authoringentwurf. Bei
 vorhandenen zusätzlichen Feldern gilt deren vollständiger Vertrag auch beim
 Lesen. Eine unsichtbare Migration oder erfundene Herkunft ist unzulässig.
@@ -2367,7 +2381,7 @@ Autorisierungsbooleans sind immer false. Es wird kein Kontrollstatus persistiert
 ### 10.3.3 Persistierte Review-start-Belege — REVIEW-START-662
 
 Delegiert gemäß SPECROAD-DECISION-1 und 2.4.3.1. Dies präzisiert 18.h und
-ändert weder menschliche Freigaben noch die Originalkontextpflicht aus 10.7.10.
+ändert weder menschliche Freigaben noch die Originalkontextpflicht aus 10.7.3.
 Die vollständig unterstützte Folge bleibt ausschließlich
 `draft → validated → checked → in_review`. Der Writer MUSS alle drei Ereignisse
 in genau einem Write mit genau einer neuen Artefaktrevision und `maturity=in_review`
@@ -2393,8 +2407,8 @@ und `eligible_transition` werden NICHT umgeschrieben, um Zwischenfassungen
 vorzutäuschen. Nur ein vollständiger erfolgreicher Check mit aufgeräumtem
 Prüfbereich ist zulässig. Gründe sind die Literale `native_validation`,
 `native_check` und `review_start`. Keine Zeile erteilt menschliche Freigabe.
-Originale und Originalkontexte für spätere Historien-/Restoreprüfung bleiben
-separate native Eingaben nach 10.7.10; ein Hash oder diese Zeile ersetzt weder
+Originale und Originalkontexte für spätere Historien-/Abschlussprüfung bleiben
+separate native Eingaben nach 10.7.3; ein Hash oder diese Zeile ersetzt weder
 fehlende Originalquellen noch den expliziten Herkunftsverifier. Historische
 Zeilen ohne diesen Marker behalten ihren bisherigen Leser und ihre Bytes.
 
@@ -2408,7 +2422,7 @@ müssen exakt zu Eingangsproposal, Plan und explizitem Akteur passen.
 Die reguläre generische Änderungsroute darf solche Operationen nicht schreiben.
 Nur die fest eingebaute Review-start-Route mit eigenen frischen nativen Gates
 und ausdrücklicher PublicationAuthority verwendet den bestehenden
-Writer-/Journal-/Receiptpfad. Auch KI/CI dürfen damit ausschließlich diesen
+Writer-/Schreibmarker-/Receiptpfad. Auch KI/CI dürfen damit ausschließlich diesen
 Kontrollwrite ausführen; ihre stabile Request-ID bleibt erforderlich.
 
 Der öffentliche Aufruf aus 11.10 verwendet `--actor-type human|ai|ci` und
@@ -2416,18 +2430,18 @@ Der öffentliche Aufruf aus 11.10 verwendet `--actor-type human|ai|ci` und
 wird vor Publikation abgewiesen. Das Einbettungs-API nimmt explizite native
 Akteur-, Zeit-, Plan- und Transaktionswerte entgegen; die CLI erzeugt nur Zeit
 und technische Plan-/Transaktionskennungen. Dry-run führt die vollständigen
-Prüfungen aus, erzeugt aber weder Journal/Receipt noch normative Dateien.
+Prüfungen aus, erzeugt aber weder Schreibmarker/Receipt noch normative Dateien.
 Ein belegter Retry derselben Request-ID, Actor-, Proposal- und
 expected-revision-Bindung liefert das ursprünglich bestätigte Ergebnis,
 ohne neue Prüfereignisse oder Revision; abweichende Eingaben ergeben Konflikt.
 Fehler vor Publikation lassen das Proposal unverändert; spätere I/O-Abbrüche
-erhalten die echten nativen Recoverybelege, niemals einen erfundenen Rollback.
+erhalten die echten nativen Abbruchbelege, niemals einen erfundenen Rollback.
 
 ### 10.3.4 Neue menschliche Reviewentscheidungen — PROPOSAL-REVIEW-666
 
 Delegiert gemäß SPECROAD-DECISION-1 / 2.4.3.1, nach ausdrücklicher Freigabe
 vom 11. November 2026. Dies präzisiert 18.i. Die lesende Grundlage aus
-10.7.10 bleibt zwingend; es werden keine historischen Quellen aus aktuellen
+10.7.3.1 bleibt zwingend; es werden keine historischen Quellen aus aktuellen
 Dateien oder Testcallbacks erfunden.
 
 Eine neue Entscheidung erhält eine geschlossene Zeile in `reviews` mit
@@ -2474,7 +2488,7 @@ Inhaltsrevision/-hash, Basis und Plan bleiben unverändert; jede neue echte
 Entscheidung erhöht die physische Revision genau einmal und erhält alle
 vorherigen Review-/Kontrollzeilen. Metadaten folgen der bestehenden nativen
 Policy. Erforderliche Originale, Kontexte und Herkunftsverifier kommen aus
-dem installierten Host nach 10.7.10; fehlende Belege sperren vor dem Write.
+dem installierten Host nach 10.7.3; fehlende Belege sperren vor dem Write.
 Ein neues Array oder ein sichtbares `approved` ersetzt diese Herkunft nicht.
 
 `proposal review <PROP> --expected-revision <N> --decision approved|rejected`
@@ -2482,14 +2496,14 @@ verwendet die bestehenden Actor-/Projekt-/Ausgabeoptionen, optional
 `--comment <TEXT>`, `--request-id` und `--dry-run`. Die CLI erzeugt nur Zeit
 und technische Plan-/Transaktionskennungen. Der Einbettungsaufruf verlangt
 explizite native Werte und PublicationAuthority. Beide verwenden denselben
-Reducer, Quorumkern und Writer-/Journal-/Receiptpfad. Generische Change-
+Reducer, Quorumkern und Writer-/Schreibmarker-/Receiptpfad. Generische Change-
 Operationen können diese Fachbefugnis nicht erteilen. Dry-run prüft den
-vollständigen Zielstand ohne normative Publikation, Journal oder Receipt.
+vollständigen Zielstand ohne normative Publikation, Schreibmarker oder Receipt.
 Ein bestätigter Retry derselben Request-ID, Actor-, Proposal-, Revisions-,
 Entscheidungs- und Kommentarbindung liefert das damalige Ergebnis ohne neue
 Revision; abweichende Eingaben ergeben Konflikt. Fehlende Rechte, stale
 Revision/Basis, manipulierte Berichte oder fehlende Originale führen zu
-keinem Write. Ein später I/O-Abbruch erhält native Recoverybelege.
+keinem Write. Ein später I/O-Abbruch erhält native Abbruchbelege.
 
 Der geschlossene Schreibbericht `proposal-review-v1` enthält die Felder aus
 11.10, die Entscheidung und den Kommentar sowie Dry-run-/Replay-/Writezustand
@@ -2501,7 +2515,7 @@ verleiht keine wiederverwendbare Schreibbefugnis.
 
 Delegiert gemäß SPECROAD-DECISION-1 / 2.4.3.1. Dies vervollständigt die
 negativen Entscheidungen in 18.j; 18.k behält die öffentliche Apply-Transaktion.
-Die Kontrollmatrix aus 10.3 und die Original-/Herkunftspflichten aus 10.7.10
+Die Kontrollmatrix aus 10.3 und die Original-/Herkunftspflichten aus 10.7.3
 bleiben unverändert. Ein gespeicherter Status ist keine aktuelle Freigabe.
 
 `proposal review` akzeptiert zusätzlich `--decision withdrawn`. Nur ein
@@ -2553,11 +2567,11 @@ keine Freigabe; die vorhandene Resultdarstellung proposal-review-v1 ergänzt
 nur den Entscheidungswert withdrawn.
 
 Der bestehende native Writer mit exklusivem Lock, aktueller PublicationAuthority,
-Journal und Receipt wird wiederverwendet. Dry-run prüft ohne Publikation;
+Schreibmarker und Receipt wird wiederverwendet. Dry-run prüft ohne Publikation;
 Retry derselben Request-ID und vollständigen Entscheidungsbindung liefert
 das bestätigte historische Ergebnis ohne zweite Zeile. Abweichung ist Konflikt.
-Fehler vor Publikation erhalten die Originaldateien; spätere I/O-Fehler behalten
-ihre nativen Recoverybelege. Generisches change apply darf diese Fachroute
+Fehler vor Publikation erhalten die Originaldateien; spätere I/O-Fehler erhalten
+den tatsächlichen Bestand und seine Abbruchsperre. Generisches change apply darf diese Fachroute
 nicht freischalten. Keine Git-Aktion oder Ausführung von Projektcode entsteht.
 
 Für die heutige Qualifikation zählen ausschließlich aktuell wirksame
@@ -2587,7 +2601,7 @@ aktuell wirksames menschliches Quorum. Fehlender Status oder Quorum ist Code 3,
 fehlende Herkunft/Schreibautorität Code 7; abweichende Revision, Basis oder
 erwartete Hashes sind Konflikte (6). Sie ändern das gespeicherte Proposal nicht
 auf stale. Ungültige Argumente bleiben 2, I/O-Fehler 5. Alle Specialistgates,
-Projektgrenzen, Recoverybarrieren und externe Aktualitätsprüfungen bleiben.
+Projektgrenzen, Abbruchsperren und externe Aktualitätsprüfungen bleiben.
 
 Der additive kanonische `proposal-apply-assessment-v1` besitzt exakt die
 Felder/Hashprojektion von `proposal-review-assessment-v2` aus 10.3.5, verlangt
@@ -2613,18 +2627,16 @@ physische Revision steigt einmal, Inhaltsrevision/-hash und alle früheren
 Reviews/Kontrollzeilen bleiben unverändert. Native Reduktion muss diese
 Zieldatei exakt reproduzieren. Die gesamte Fachänderung, diese Kontrolländerung
 und Request-/Transaktionsabschluss verwenden den vorhandenen exklusiven Writer,
-Journal, Vorherbytes, Staging, Readback und Receipt. Kein Sonder-Transaktionsweg.
+Schreibmarker, Zielstaging, Readback und Receipt. Kein Sonder-Transaktionsweg.
 
-Vor dem Abschluss darf die exakte noch nicht veröffentlichte applied-Zeile
-nur im lokalen, an Original und Ziel gebundenen Writercheck bewertet werden:
-frische Qualifikation des approved-Originals und vollständige native Prüfung
-des Fachziels sowie aller übrigen Kontrollobjekte, dazu exakte Kontrolle der
-einen neuen Zeile und ihrer Metadaten. Das erzeugt keinen historischen Receipt.
-Nach Veröffentlichung sind die wirklichen nativen Abschlussdateien gegen den
-lesenden 10.7.10-Publikationsprüfer zu binden. Gespeicherte applied-Originale
-bleiben nur mit echten Originalreceipts qualifizierbar; alte passive Formate
-werden dadurch nicht zu ausführbaren Journals. Bei Unterbrechung bleiben
-native Recoverybelege erhalten; keine automatische Wiederholung/Rücknahme.
+Vor dem Abschluss darf die noch unveröffentlichte applied-Zeile nur im
+lokalen, an Original und Ziel gebundenen Writercheck bewertet werden. Frische
+Qualifikation des approved-Originals, vollständige native Prüfung des Fachziels
+und aller übrigen Kontrollobjekte sowie genaue Kontrolle der neuen Zeile
+bleiben erforderlich. Nach Veröffentlichung bindet die lesende
+Publikationsprüfung aus 10.7.3 die echten Abschlussreceipts. Eine Unterbrechung
+folgt ausschließlich der Sperrregel; alte passive Formate werden nicht zu
+ausführbaren Schreibplänen und fehlende Receipts nicht rekonstruiert.
 
 Dry-run führt dieselben Fachprüfungen schreibfrei aus und zeigt ausdrücklich
 den vorgesehenen applied-Zielstand. Ein bestätigter Retry derselben Request-ID,
@@ -3011,1060 +3023,195 @@ Bis dahin bleiben die fachlichen Lücken maschinenlesbar `incomplete` und
 `ready=false`. Bereits versiegelte Baselines und historische Resultate bleiben
 an ihre damaligen unveränderten Bytes gebunden.
 
-### 10.6 Transaktionszustände
+### 10.6 Schreibzustände und Abbruchsperre
 
-| Zustand | Bedeutung | Zulässiger nächster Zustand |
+Der Vertrag `write-guard-v1` ersetzt das frühere wiederherstellende
+Transaktionsprotokoll. Die logischen Zustände sind:
+
+| Zustand | Bedeutung | Zulässige Folge |
 |---|---|---|
-| `building` | Journal und Payload werden aufgebaut | `prepared`, `rolled_back`, `corrupt` |
-| `prepared` | Endstand vollständig validiert, befehlsspezifische Gates bestanden und dauerhaft gestaged; noch kein Zieleintrag veröffentlicht | `committing`, `rolled_back`, `corrupt` |
-| `committing` | mindestens eine Zieldatei darf veröffentlicht sein | `committed`, `rolling_back`, `corrupt` |
-| `committed` | vollständiger Zielstand und Receipt vorhanden | Endzustand |
-| `rolling_back` | Before Images werden restauriert | `rolled_back`, `corrupt` |
-| `rolled_back` | vollständiger Basisstand wiederhergestellt | Endzustand |
-| `corrupt` | automatische Entscheidung nicht sicher möglich | nur verifizierte manuelle Restore-Transaktion |
+| `clean` | Kein offener Schreibmarker; die fachlichen Eingangsgates bleiben erforderlich. | Nach exklusivem Writer-Lock und Vorprüfung `writing`. |
+| `writing` | Der dauerhafte Marker wurde vor der ersten normativen Dateiwirkung angelegt; der nachweislich aktive Writer besitzt den Lock. | Nur dieser ununterbrochene Lauf darf nach vollständigem Abschluss `clean` erreichen. |
+| `corrupted` | Offener oder unlesbarer Marker ohne nachgewiesenen aktiven Writer; Abschluss nicht sicher bestätigt. | Keine programmgesteuerte Entsperrung; manueller Wiederanlauf nach 10.7.2. |
+| `unknown` | Betriebszustand oder Eigentümer nicht sicher prüfbar. | Nutzung blockieren und Ursache diagnostizieren; niemals als `clean` annehmen. |
 
-Normale Projektbefehle dürfen ein Modell erst laden, wenn keine unvollständige oder korrupte Transaktion besteht. Betriebsdiagnosen dürfen die dafür notwendigen Metadaten nach Anhang N.3 schreibfrei untersuchen. Eine automatische Recovery ist ausschließlich für tatsächlich schreibberechtigte Aufrufe zulässig und führt in diesem Lauf noch keine neue Fachoperation aus.
+`corrupted` bezeichnet einen nicht sicher benutzbaren Arbeitsstand. Es ist
+kein Beweis, dass jede Datei beschädigt ist. Ein Absturz nach vollständigen
+Zieldateien, aber vor dauerhaftem Entfernen des Markers, darf konservativ
+dieselbe Sperre auslösen. Ein aktiver Writer ist kein abgestürzter Writer.
+PID oder Hostname allein beweisen weder Lebendigkeit noch sicheren Tod.
 
-### 10.7 Recovery-Entscheidung
+Normale Projektoperationen einschließlich Modelllesen, Planung, Dry-run und
+Projektbundle-Export MÜSSEN den gesperrten Stand abweisen. Begrenzte Diagnose
+nach Anhang N bleibt erlaubt und verändert keine Projekt- oder Betriebsdatei.
+Ein abgebrochener ausschließlich lesender Aufruf erzeugt keinen Schreibmarker
+und macht ein zuvor konsistentes Projekt nicht allein dadurch `corrupted`.
 
-`recover discard` ist nur für `building` oder `prepared` zulässig, wenn das Journal null veröffentlichte Zieleinträge nachweist und die aktuelle Projektwurzel der Basiswurzel entspricht. `committing` und `rolling_back` werden ausschließlich auf die vollständige Basis- oder Zielwurzel recovered. `corrupt` blockiert normale Projektbefehle. `recover restore --from <project-bundle|baseline>` verwendet ausschließlich den nach 10.7.1 vollständig qualifizierten und vor Write gebundenen Restore-Plan. Ein intern gültiger Teil-Snapshot ist keine hinreichende Restore-Quelle. Jede tatsächlich ausgeführte Recovery-Aktion erzeugt einen unveränderbaren lokalen Auditdatensatz; eine abgewiesene Vorprüfung liefert ihren Bericht schreibfrei.
+### 10.7 Abbrucherkennung und manueller Git-Wiederanlauf
 
-#### 10.7.1 Vollständige Quelle und erhaltende Restore-Policy `restore-preserve-v1`
+**RECOVERY-REMOVAL-006, ausdrückliche Nutzerentscheidung vom 14. November 2026.**
+SpecRoad bietet keine automatische oder manuelle Reparatur einer unterbrochenen
+Projektpublikation an. Rollback, Vervollständigung einer alten Publikation,
+Rekonstruktion fehlender Receipts und Restore aus Baseline/Vollbundle in den
+beschädigten Root entfallen. `recover run`, `recover discard` und
+`recover restore` sind keine unterstützten Produktbefehle. Die Befehlsgruppe
+`recover`, ihre Schreibklasse, Optionen und ausführbaren Protokolle entfallen.
+Die Recovery der Entwicklungssteuerung Control nach Kapitel 2 bleibt davon
+unberührt; ebenso das Einlesen gesicherter Vorbereitungs-Workpakete nach P.7.
 
-**Unterstützter Schemaumfang:** Für den vollständigen Abschluss von 15.l.R gilt
-10.7.11: sämtliche hier festgelegten Restore-Abnahmen für das definierte
-Schema 0.2.0, einschließlich seiner unveränderbaren Historien, bleiben Pflicht.
-Die spätere positive Einbindung von 0.1-Legacy-Ressourcen setzt Q.0 voraus.
-Bis dahin gelten die Schutz- und Abweisungsregeln aus 10.7.11; ein fehlender
-0.1-Leser ist keine Erlaubnis, solche Bestandsdateien zu verwerfen.
+#### 10.7.1 Dauerhafte Erkennung statt Reparatur
 
-Ein Restore wird in zwei expliziten Aufrufen vorbereitet und ausgeführt: `recover restore --from <SOURCE> --dry-run --output <EXTERNAL-PLAN>` erstellt ohne Projekt-/Betriebswrite einen gebundenen Restore-Plan; `recover restore --plan <EXTERNAL-PLAN> --expected-target-root <SHA256>` führt genau diesen Plan aus. Die getrennte ausdrückliche Auswahl alter aktiver Journale für Ausführung und Fortsetzung folgt 10.7.4. Quelle und Plan dürfen nicht gleichzeitig angegeben werden. Ein Aufruf ohne Dry-Run und ohne geprüften Plan wird mit Code 2 abgewiesen. Der Plan ist ein Recovery-Fachformat, kein regulärer Change Plan eines vermeintlich konsistenten Arbeitsstands. Er enthält `policy_version=restore-preserve-v1`, `project_id`, Quellart, Quellbytehash, Quell-Snapshotwurzel, Quell-Descriptor, gebundene Bestandsinventur, zusätzliche Erhaltungsobjekte, erwartete vollständige Zielwurzel, Zielpfade/-bytes/-hashes und die separat gehashte Sicherungsinventur.
+Vor jeder normativen Dateiwirkung MUSS ein exklusiv erzeugter, synchronisierter
+Marker nach Anhang C vorhanden sein. Er ist selbst die dauerhafte Sperrmarke;
+der nächste Prozess muss ihn nicht erst beschreiben, um `corrupted` zu melden.
+Der Marker bleibt bei I/O-Fehler, Signal, Prozessabbruch oder fehlendem
+Abschlussbeweis erhalten. Scheitert seine dauerhafte Anlage, beginnt keine
+normative Dateiwirkung. Nach Markeranlage gibt es auch bei null bisherigen
+Dateiwirkungen keinen automatischen Discard- oder Entsperrpfad.
 
-**Quellenqualifikation:** Zulässig sind ausschließlich (a) ein vollständig verifiziertes `project`-Bundle mit `read_only=false` oder (b) eine unveränderte `sealed` Baseline mit exakt `scope_kind=project`, Selector `{}`, `configuration_id=null`, `boundary_policy=closed`, vollständiger rekursiver Objektclosure und gültigem Manifest. Eine Baseline mit specification-, release-, document-, query-, explicit- oder konfiguriertem Scope ist auch bei gültigem Hash unzulässig. Der Baseline-Typ `working` oder `release` ersetzt diese Scopeprüfung nicht. Quellprojekt-ID und Zielprojekt-ID müssen gleich sein; bei beschädigter Konfiguration ist die ID aus unabhängig hashgebundenen Receipts, einer erhaltenen Baseline oder dem vorliegenden Recovery-Inventar zu bestätigen. Widersprüchliche oder nicht nachweisbare Identität wird nicht geraten.
+Nur nach vollständig zurückgelesenen und geprüften Zieldaten, dauerhaftem
+normalem Transaktions-/Request-Receipt sowie synchronisierten Dateien und
+Verzeichnissen darf der laufende Writer den Marker dauerhaft entfernen.
+Vorher gibt es keinen Erfolg. Eine spätere verlorene Konsolenausgabe ändert
+den bereits bestätigten Abschluss nicht. Ein Receipt allein hebt einen noch
+vorhandenen Marker nicht auf. Normale Idempotenz bleibt für nachweislich
+abgeschlossene Requests erhalten; unterbrochene Requests werden nicht erneut
+ausgeführt, vervollständigt oder als erfolgreich rekonstruiert.
 
-Die Quelle muss alle fachlichen Dateien, semantische Konfiguration, aktiven Profile/Regeln/Mappings, notwendigen Anhänge, historischen Originalbytes, referenzierten Archive und Reservierungsinformationen des vollständigen Quellsnapshots liefern. Insbesondere muss das exakt eine Primärspezifikationsdokument rekonstruierbar sein. Nicht in der Quelle enthaltene mutable Projektdateien werden nicht stillschweigend als Füllmaterial aus dem beschädigten Arbeitsstand verwendet. Fehlende Bytes, Hashfehler oder Boundary References verhindern die Quellenqualifikation. Vorhandene gleichhashige Dateien dürfen ausschließlich als bytegeprüfte Speicheroptimierung dienen, nie als zusätzliche semantische Auswahl.
+Erkennungsgrenze ist ein erhaltenes lokales Dateisystem mit dem in 14.3
+definierten Synchronisationsvertrag. Beliebige Manipulation, vollständiger
+Verlust der Betriebsdaten oder ein Dateisystem, das bestätigte Synchronisation
+nicht einhält, sind keine garantierte Absturzerkennung. Fehlende, beschädigte,
+unbekannte oder widersprüchliche vorgefundene Schutzdaten werden gesperrt,
+nicht durch neue leere Betriebsdaten geheilt.
 
-**Vollständiges Ziel und Historienerhaltung:** Ausgang des Zielplans ist der vollständig rekonstruierte Quellsnapshot. Bei einer Baselinequelle werden die Baseline-Datei selbst und ihre vollständigen Snapshotobjekte als explizite Erhaltungsobjekte hinzugefügt, soweit sie vor der Baseline-Erzeugung noch nicht in ihrem eigenen Snapshot vorhanden waren. Dies ist keine rekursive Erweiterung des gespeicherten Baseline-Manifests; dessen Originalbytes und Quellwurzel bleiben unverändert.
+#### 10.7.2 Wiederanlauf durch den Nutzer
 
-Zusätzlich bleiben alle noch bytegültig verfügbaren unveränderbaren Evidence-, Baseline-, Relationsreview-, abgeschlossenen Proposal-Ressourcen des unterstützten 0.2-Formats sowie später nach Q.0 unterstützten Legacy-Ressourcen samt ihren referenzierten Original-/Archivbytes erhalten. Identische Identität/Bytes werden dedupliziert; gleiche Identität mit abweichenden unveränderbaren Bytes ist ein Konflikt, keine Überschreibungsentscheidung. Für eine erhaltene historische Ressource werden keine fehlenden aktuellen Fachartefakte erfunden. Fehlt eine zur strukturellen Gültigkeit notwendige Ressource auch in der vollständigen Quelle, wird der Restore abgewiesen. Ein historisch stale Nachweis ist dagegen nicht automatisch strukturell ungültig.
+Der Nutzer wählt einen bekannten gültigen, vollständig in Git gesicherten
+Projektstand und stellt ihn in einem **frischen, separaten Checkout** wieder
+her. Der beschädigte Root bleibt getrennt erhalten; SpecRoad führt weder
+Git-Reset/-Checkout/-Clean noch dessen Löschung aus. Ein bloßer Checkout im
+bisherigen Root genügt nicht: ignorierte `.specroad`-Dateien, neue untracked
+Dateien oder teilweise veröffentlichte Ziele könnten dort verbleiben.
 
-Aus aktuell lesbaren Artefakten, verifizierten vorhandenen Baselines und abgeschlossenen Receipts bekannte jemals freigegebene Standardartefakte dürfen nicht aus dem normativen Ziel verschwinden. Der Quellsnapshot muss ihre Identität weiter enthalten; eine nachweislich erfolgreich veröffentlichte höhere Revision darf nicht als normale Historienänderung durch eine niedrigere ersetzt werden. Wo die vorhandenen Belege keine sichere Unterscheidung zwischen veröffentlichtem Stand und unterbrochenem Zwischenstand erlauben, wird eine passendere vollständige Quelle verlangt statt Historie zu erraten. Das ist ein Integritäts-/Datenblocker, kein Budgetabbruch. Diese erhaltende Policy führt keinen automatischen semantischen Merge durch. Ein bloßer Wunsch, auf einen älteren fachlichen Stand zurückzukehren, wird als gesonderter autorisierter Change Plan im wiederhergestellten Projekt behandelt.
+Der Git-Stand muss Konfiguration, alle normativen Ressourcen, Anhänge,
+referenzierte Archivobjekte und gegebenenfalls notwendige Legacy-Originale
+vollständig enthalten. Nur eine Commitkennung ohne vollständige Dateien ist
+kein gültiger Wiederanlauf. Die normale strikte Projektvalidierung prüft den
+frischen Bestand vor weiterer Nutzung; ihre fehlende Fähigkeit oder ein
+fehlender Originalnachweis blockiert die jeweilige Operation. SpecRoad
+erfindet keine Reviews, Freigaben, Abschlussbelege oder historischen Dateien.
 
-Der Plan weist `source_snapshot_root` und `expected_target_root` getrennt aus. Die Zielwurzel wird **nach** sämtlichen ausdrücklich gelisteten Historienergänzungen über den vollständigen project-Scope berechnet; sie muss nicht der Quell-Snapshotwurzel gleichen. Bereits konsistente, außerhalb der Zielinventur liegende Repositorydateien einschließlich `.git` und Quellcode werden nicht verändert. Abgeschlossene lokale Receipts werden nicht stillschweigend gelöscht; ihre erneute Verwendung unterliegt weiterhin Projekt-, Request- und Hashbindung. Eine alte Erfolgsquittung ist kein Nachweis, dass jede ihrer Wirkungen noch zum gewählten Zielstand gehört.
+Aktive Marker, Locks, Staging, alte unterbrochene Workaufträge und sonstige
+unbestätigte Betriebsdaten werden nicht aus dem beschädigten Root übernommen.
+Benötigte abgeschlossene Receipts müssen aus demselben gesicherten Stand
+stammen und regulär validierbar sein. Sie dürfen zur vollständigen Sicherung
+gezielt versioniert werden; aktive Betriebsdaten dürfen nicht als gültiger
+Git-Ausgangspunkt dienen. Fehlen Pflichtreceipts etwa für ein applied
+Proposal, ist ein anderer vollständiger Git-Stand zu wählen. Fehlt nur eine
+historische optionale Requestgeschichte, beginnt eine neue lokale Geschichte;
+alte Requests werden nicht erneut eingereicht. Es gibt keine globale
+Exactly-once-Garantie über absichtlich zurückgesetzte Git-Historien hinweg.
 
-**Vor Veröffentlichung:** Der gesamte rekonstruierte Zielstand besteht Schema-, Identitäts-, Referenz-, Lifecycle-, Archiv- und Scope-Integritätsprüfungen sowie bei nach Q.0 unterstütztem Legacy-Bestand dessen vollständige Legacy-Prüfung. Nicht unterstützter deklarierter Legacy-Bestand wird nach 10.7.11 vor Änderungen abgewiesen. Der Zielstand ist ein vollständiges Projekt, keine scheinbar reparierte Teilmenge. Fachlich negative, korrekt gespeicherte Reviews oder Testergebnisse dürfen erhalten bleiben; sie werden im Restore-Bericht als verbleibende fachliche Befunde gezeigt und nicht in bestandene Readiness umgedeutet. Vorhandene `approved`-Invarianten dürfen nicht verletzt bleiben; andernfalls ist eine passende Quelle notwendig. Es wird keine stillschweigende fachliche Statuskorrektur beim Restore erfunden.
+Änderungen seit dem gewählten gesicherten Stand dürfen verloren gehen. Der
+Nutzer trägt Auswahl und Sicherung des Stands; automatische Backups oder
+Wiederherstellung uncommitteter Arbeit sind kein Produktversprechen. Für
+unterbrochenes `init`/`bundle extract` ohne gültigen Git-Ausgangspunkt gilt:
+unvollständigen Root getrennt erhalten und die ursprüngliche Erzeugung in
+einem anderen zulässigen leeren Ziel neu beginnen. Keine Wiederholung im
+gesperrten Root, kein Löschen möglicherweise fremder Dateien.
 
-**Sicherung und Commit:** Alle durch den Restore zu ersetzenden oder zu entfernenden bisherigen Bytes einschließlich beschädigter Dateien, sämtlicher betroffener Journale und historischer Zusatzinformationen werden vor Veröffentlichung unverändert in einer content-addressierten lokalen Sicherungssektion unter `.specroad/recovery/archive/` dauerhaft gesichert. Nicht lesbare notwendige Bestandsbytes, eine unvollständige Sicherung oder unzureichender echter Speicher verhindern den Commit; es gibt kein stilles Data-Loss-Flag. Die Sicherung ist ausdrücklich betrieblich und nicht Bestandteil der neuen fachlichen Modellwurzel. Sie ersetzt nicht die oben verlangte Erhaltung normativer unveränderbarer Ressourcen.
+#### 10.7.3 Erhaltene Funktionen und Daten
 
-Der spezialisierte Recovery-Lock, vollständig synchronisiertes Staging, Before Images und ein separates Restore-Journal binden den Plan. Vor Write werden Quellen-, Inventur- und erwarteter Zielhash nochmals verglichen. Ein veränderter Input ergibt Code 6 ohne Veröffentlichung. Nach echtem Hostabbruch bleibt das Projekt gesperrt, bis das Restore-Journal entweder vollständig auf das geprüfte Ziel abgeschlossen oder auf die bytegetreue gesperrte Ausgangslage zurückgerollt ist. Erst wenn sämtliche Zielbytes und die vollständige Zielwurzel stimmen und das Audit dauerhaft vorliegt, werden normale Projektbefehle freigegeben. Das alte korrupte Journal bleibt archiviert.
+Gemeinsame fachliche Validierer, Hash-/Pfadprüfungen, isolierte
+Proposalqualifikation, menschliche Freigaben, native Publikationsprüfungen,
+exklusive Writerlocks, stagingbasierte Zielvalidierung und abgeschlossene
+Receipts bleiben bestehen. Ihre bisherige Ablage unter `recovery/` begründet
+keine Entfernung. Die lesende Prüfung eines abgeschlossenen applied Proposals
+bindet weiterhin die echten Originalreceipts und den geprüften Fachplan.
+Diese Prüffunktion wird aus der bisherigen Restore-Bibliothek herausgelöst.
 
-Eine unvollständige/unzulässige Quelle ergibt Code 3 mit präzisem Quellen-/Vollständigkeitsbefund; eine widersprüchliche Projektidentität oder eine kollidierende geschützte Historie Code 6; Sicherheitsverletzung Code 7; tatsächliches I/O-/Sicherungsproblem Code 5. Weiche Arbeitsbudgets folgen unverändert Anhang O/P und erlauben sichere Vorbereitung in mehreren Schritten. Vor Abschluss der Quellenqualifikation und Stagingprüfung beginnt keine Veröffentlichung.
+Vorbereitende Work-Checkpoints, Migration-Verify, Import-/Mergeplanung,
+`work export` und `work restore` bleiben nach Anhang P erhalten. Sie reparieren
+keinen Projektroot. Alte Workpakete mit innerem Befehl `recover.restore`
+werden als nicht mehr unterstützt abgewiesen und nicht ausgeführt.
 
-#### 10.7.2 Gebundener Restore-Plan `restore-plan-v1`
+Unveränderbare fachliche Historie und abgeschlossene, nativ prüfbare Belege
+bleiben Daten; alte Journale werden nicht als neue ausführbare Schreibpläne
+interpretiert. Aktive Altjournale und unbekannte Betriebszustände blockieren.
+Keine produktive Bestandsmigration wird allein für diesen Entwicklungsumbau
+geschuldet; die Nichtbenutzungsregel aus 1.4 gilt. Historische Evidence bleibt
+an ihre frühere Spezifikation gebunden und belegt nicht den neuen Vertrag.
 
-**Entscheidung RESTORE-PLAN-CONTRACT, delegiert gemäß SPECROAD-DECISION-1.**
-Dieser additive Vertrag konkretisiert ausschließlich das bereits in 10.7.1
-verlangte Recovery-Fachformat. Quellenqualifikation, Erhaltung geschützter
-Geschichte, vollständige Zielvalidierung, Sicherung, Autorisierung und
-Crashabsicherung aus 10.7.1 bleiben Voraussetzung. Ein Plan ist eine passive,
-erneut zu prüfende Beschreibung und weder ein regulärer Change Plan noch
-ein Erfolgs-, Freigabe- oder Authentizitätsnachweis.
+##### 10.7.3.1 Erhaltene native Proposalqualifikation
 
-**Geschlossene Hülle.** Der externe Plan besteht aus genau einem kanonischen
-UTF-8-JSON-Objekt nach dem vorhandenen RFC-8785-Vertrag, ohne BOM, doppelte
-Schlüssel oder nachgestellte Daten. Seine Pflichtfelder sind exakt:
+Der bisher gemeinsam genutzte lesende Prüfkern bleibt ohne Abschwächung
+seiner Fach-/Original-/Herkunftspflichten erhalten. Folgender Vertrag ist
+Produktvalidierung unabhängig von der entfernten Restore-Funktion.
 
-| Feld | Vertrag |
+**Native Eingaben und Belegbindung.** Der Prüfkern MUSS die folgenden
+fachlich getrennten Eingaben als geschlossene, typgeprüfte native Werte
+verlangen, soweit sie für den gespeicherten Zustand benötigt werden:
+
+| Eingabe | Verbindlicher Inhalt und Prüfung |
 |---|---|
-| `format_version` | exakt `restore-plan-v1` |
-| `policy_version` | exakt `restore-preserve-v1` |
-| `project_id` | nach 10.7.1 unabhängig bestätigte, für Quelle und Ziel gleiche Projekt-ID |
-| `project_root` | expliziter kanonischer absoluter Pfad des zu reparierenden Projektroots; ausschließlich lokale Ausführungsbindung, kein Bestandteil der semantischen Modellwurzel |
-| `source` | Quellbindung nach dem folgenden Absatz |
-| `source_snapshot_root` | unveränderte, aus den vollständigen Quellbytes rekonstruierte native Quellmodellwurzel |
-| `source_descriptor` | exakt der qualifizierte unkonfigurierte geschlossene project-Scope nach 10.7.1 |
-| `inventory` | vollständige gebundene Beobachtung des relevanten Zielbestands nach untenstehendem Inventurvertrag |
-| `preserved` | nach Pfad sortierte zusätzliche Erhaltungsobjekte einschließlich Herkunftsgrund |
-| `target` | vollständige Zieldateiinventur `{entries, sha256}` |
-| `expected_target_root` | native vollständige project-Modellwurzel nach allen Erhaltungsobjekten, unabhängig vom Byteinventurhash |
-| `backup` | separat gebundene Sicherungsdateiinventur `{entries, sha256}` |
-| `objects` | deduplizierte Tabelle der tatsächlich benötigten Original- und Zielbytes |
-| `restore_plan_sha256` | SHA-256 der kanonischen Hülle unter Ausschluss allein dieses Felds |
-
-Alle hier definierten Objekte sind geschlossen; zusätzliche Felder sind kein
-Erweiterungsmechanismus. SHA-256-Werte bestehen aus genau 64 kleingeschriebenen
-Hexzeichen. Größen sind nichtnegative JSON-Ganzzahlen, keine booleschen Werte.
-Es gibt keine optionalen Erfolgsflags und keine impliziten Null-Defaults.
-`source_descriptor` ist vollständig ausgeschrieben: `scope_version=scope-v1`,
-`scope_kind=project`, `selector={}`, `configuration_id=null`,
-`closure_profile=core-closure-v1`, `boundary_policy=closed`.
-
-**Quellbytes und Herkunft.** `source` hat exakt die Felder `kind`, `root`,
-`path`, `size`, `sha256` und `dependencies`. `kind` ist `project_bundle`
-oder `baseline`. `root` bezeichnet den expliziten kanonischen absoluten
-Quellroot, `path` einen sicheren relativen Pfad darunter. Diese Herkunft
-ist eine erneut zu prüfende lokale Bytebindung, keine Vertrauensaussage.
-Beim Bundle binden `size` und `sha256` das gesamte unveränderte ZIP;
-`dependencies` ist leer. Bei der Baseline binden sie die vollständige
-unveränderte Baseline-Quelldatei, nicht nur ihr Manifest oder ihren
-kanonischen semantischen Hash. `dependencies` enthält genau die vollständig
-rekursiv benötigten Snapshotobjektdateien am nativen Objektpfad unter
-demselben Quellroot. Jede Datei wird einmal als `{path, size, sha256}`
-aufgeführt, nach UTF-8-Pfadbytes sortiert. Referenzzyklen, fehlende Bytes
-und widersprüchliche Objektbindungen werden nicht durch Hashlisten ersetzt.
-
-Der Plan enthält die gebundenen Quelldateibytes und sämtliche benötigten
-Abhängigkeitsbytes in `objects`. Aus ihnen MUSS der Leser Quelle, Descriptor,
-Closure und Quellwurzel unabhängig rekonstruieren. Ein gespeicherter
-`bundle-verify-v1`- oder Baseline-Prüfbericht ersetzt weder diese Prüfung
-noch die vollständigen Qualifikations- und Zielgates aus 10.7.1. Insbesondere
-ist ein bloßer Container-/Closure-Erfolg ohne die erforderliche vollständige
-Projektprüfung keine Restorequalifikation. Ein `release`-Baseline-Typ ist
-nur bei dem unabhängig qualifizierten vollständigen project-Scope zulässig;
-ein release-Scope wird dadurch niemals zugelassen.
-
-Bei Baselines fehlen operative Konfigurationswerte gegebenenfalls bewusst
-in der semantischen Snapshotprojektion. Zur Herstellung der vollständigen
-Zieldatei `specroad.json` MÜSSEN diese Werte explizit für die Planung geliefert
-und in den exakten Zielbytes gebunden werden. Sie DÜRFEN NICHT aus einem
-beschädigten Arbeitsstand geraten oder zum Ergänzen semantischer Quellwerte
-benutzt werden. Ihre vorhandene Klassifikation als operativ bleibt erhalten;
-die semantische Konfiguration muss exakt zur Quelle passen. Bei einer
-Bundlequelle bleiben deren bereits vorhandene Konfigurationsbytes erhalten.
-
-**Bestandsinventur.** `inventory` enthält exakt `roots`, `entries`, `sha256`.
-`roots` ist die sortierte, redundanzfreie Liste sicherer relativer Datei-
-oder Teilbaumwurzeln im `project_root`. Sie umfasst `specroad.json`, die
-Vereinigung der für Quelle und nachweisbaren bisherigen Projektbestand
-geltenden `managed_paths` sowie die Recovery-/Receipt-Namensräume
-`.specroad/transactions`, `.specroad/requests` und `.specroad/recovery`.
-Überdeckte Unterwurzeln werden entfernt. Bei beschädigter Konfiguration
-MÜSSEN die bisherigen Deklarationen aus unabhängig gebundenen erhaltenen
-Projektbelegen ermittelt werden; eine frei gewählte Teilinventur ist kein
-Ersatz. Ist die relevante Bestandsabdeckung nicht sicher bestimmbar, wird
-kein vollständiger Plan ausgestellt. Quell- und Zielprojektidentität
-werden weiterhin nach 10.7.1 geprüft, nicht allein aus einem Pfad oder
-einer vom Aufrufer behaupteten ID übernommen.
-
-Unter jeder Inventurwurzel werden sämtliche vorhandenen regulären Dateien
-und Verzeichnisse einschließlich der Wurzel beobachtet. Ein vorhandener
-Dateieintrag ist exakt `{path, kind: "file", size, sha256}`, ein Verzeichnis
-exakt `{path, kind: "directory"}`. Eine fehlende Inventurwurzel wird als
-`{path, kind: "missing"}` gebunden; sonstige fehlende Nachfahren folgen aus
-der vollständigen Aufzählung und erhalten keine erfundenen Einträge.
-Die Einträge sind eindeutig und nach UTF-8-Pfadbytes sortiert. Links,
-Sonderdateien, Pfad-/Großkleinschreibungskollisionen und Durchqueren fremder
-Roots behalten die vorhandenen Sicherheitsablehnungen. Beschädigte, aber
-lesbare reguläre Bestandsdateien werden mit ihren tatsächlichen Rohbytes
-erfasst und nicht durch eine erfolgreiche JSON-Interpretation ersetzt.
-`inventory.sha256` ist SHA-256 der kanonischen Projektion `{roots, entries}`.
-Auch hinzugefügte oder entfernte Bestandsdateien sind dadurch Eingabeänderungen.
-
-Diese Inventur liest keine Git-Inhalte und erklärt unbekannte Dateien
-nicht automatisch zu normativen Ressourcen oder zulässigen Löschzielen.
-Ein in `managed_paths` enthaltener bisher nicht unterstützter Inhalt darf
-nicht still ausgelassen werden. Nicht betroffene Repositorydateien bleiben
-nach 10.7.1 erhalten. Lockdateien, Caches und generierte Ausgaben außerhalb
-der gebundenen relevanten Namensräume gehören nicht zur Fachinventur;
-ihre vorhandenen Host-/Sicherheitsprüfungen entfallen dadurch nicht.
-Der bestehende native Root-/Pfadschutz muss während der Beobachtung und
-erneut unter dem Recovery-Lock die tatsächliche Rootidentität prüfen.
-Ein übereinstimmender Pfadstring allein genügt nicht.
-
-**Ziel, Erhaltung und Sicherung.** `target.entries` und `backup.entries`
-verwenden jeweils exakt `{path, size, sha256}` pro Datei, eindeutig und
-nach UTF-8-Pfadbytes sortiert. Ihr jeweiliges `sha256` ist SHA-256 der
-kanonischen `entries`-Liste. `target` enthält sämtliche tatsächlich geplanten
-Zieldateien einschließlich des vollständigen normativen Projekts, seiner
-Konfiguration und der rekursiv nötigen Archiv-/Originalbytes. Etwaige nach
-den bestehenden Bundle-/Receiptverträgen zulässige transportierte Receipts
-werden ausschließlich an ihren getrennten operativen Pfaden gebunden und
-geprüft, niemals als Modellressourcen in die semantische Zielwurzel gehasht.
-Der Plan erlaubt weder zusätzliche Receiptarten noch das Überschreiben
-kollidierender vorhandener Receipts. Die Pflicht zur bytegetreuen Erhaltung
-abgeschlossener lokaler Receipts bleibt auch außerhalb der Zieldateiliste.
-
-`preserved` enthält genau die nach 10.7.1 gegenüber dem rekonstruierten
-Quellsnapshot zusätzlich normativ zu erhaltenden Dateien als
-`{path, size, sha256, reasons}`. Operative Receipts sind keine solchen
-normativen Erhaltungsobjekte. `reasons` ist
-eine nichtleere, sortierte, duplikatfreie Liste aus `source_baseline`,
-`source_archive`, `protected_history`, `protected_dependency`. Die ersten
-beiden Gründe bezeichnen die Quellbaseline selbst und ihre zusätzlich
-erforderlichen Snapshotobjekte; die letzten beiden bezeichnen die nach
-10.7.1 erhaltenen unveränderbaren historischen Ressourcen und deren nötige
-Original-/Archivclosure. Mehrere belegte Gründe teilen sich genau einen
-Eintrag. Für jeden Eintrag müssen `path`, `size` und `sha256` identisch
-in `target.entries` enthalten sein; `reasons` gehört nur zu `preserved`.
-Eine bereits im Quellsnapshot vorhandene Datei wird nicht zusätzlich
-aufgeführt. Identitätskonflikte werden vor der Deduplizierung nach 10.7.1
-erkannt; gleichnamige oder gleichhashige Pfade sind kein semantischer Merge.
-
-`expected_target_root` wird mit der bestehenden Modellmanifest- und
-project-Closure-Projektion aus allen Zielbytes neu berechnet. Weder der
-Quellroot noch `target.sha256` darf dafür eingesetzt werden. Das gilt auch,
-wenn die zusätzliche Quellbaseline oder jüngere geschützte Geschichte die
-Zielwurzel verändert. Keine ursprüngliche Baseline, Evidence oder Review-
-Hashbindung wird dafür umgeschrieben. Strukturell gültige negative fachliche
-Befunde bleiben erhalten und werden im separaten Restorebericht ausgewiesen;
-sie werden nicht als bestandene Readiness oder Freigabe interpretiert.
-
-`backup` bindet die tatsächlichen bisherigen Bytes aller zu ersetzenden
-oder zu entfernenden Dateien und sämtlicher nach 10.7.1 betroffenen Journale,
-Vorher-/Stagingbilder und historischen Zusatzinformationen. Es ist aus der
-vollständigen Bestandsbeobachtung und dem geprüften Ziel abzuleiten, keine
-frei reduzierbare Auswahl. Die aufgeführten Dateiwerte müssen mit den
-Bestandseinträgen übereinstimmen. Die abgeleiteten Lösch-/Ersetzungswirkungen
-dürfen keine außerhalb des erlaubten Restoreumfangs liegende Datei betreffen.
-Die spätere betriebliche Sicherung unter `.specroad/recovery/archive/`
-bleibt zusätzlich zwingend: Planbytes allein sind weder ein dauerhaft
-gesichertes lokales Backup noch eine Commitfreigabe.
-
-**Byteobjekte und Hashdomänen.** Jeder Eintrag in `objects` hat exakt
-`sha256`, `size`, `data_base64`. Die Tabelle ist nach Hash sortiert und
-enthält jeden verschiedenen Byteinhalt genau einmal. `data_base64` ist
-die RFC-4648-Standarddarstellung mit notwendigem Padding und ohne
-Whitespace; Rückkodierung muss exakt denselben String ergeben. Dekodierte
-Länge und Byte-SHA-256 müssen zu `size` und `sha256` passen. Gleiche Hashes
-mit verschiedenen Bytes sind ein Fehler, keine Überschreibungsentscheidung.
-Die Tabelle enthält exakt die Vereinigung aller durch `source` samt
-`dependencies`, `target` und `backup` referenzierten Inhalte; keine
-unreferenzierten Zusatzobjekte. Ein Bestandsfile, das weder Quelle noch
-Ziel noch Sicherungsinhalt ist, benötigt nur seine Inventurbindung.
-
-Damit binden die Inventurhashes die jeweiligen geordneten Metadaten,
-die Objekthashes die wirklichen Bytes und `restore_plan_sha256` die gesamte
-Hülle einschließlich Herkunft, operativem Zielroot und aller Byteobjekte.
-Es gibt keine Selbstreferenz auf den eigenen Hash oder eine eigene
-Plan-Ausgabedatei. Die bestehenden semantischen Hashprojektionen werden
-nicht verändert. Hashkonsistenz authentifiziert keinen Ersteller.
-Streaming, privates Spooling und checkpointbasierte Vorbereitung nach O/P
-bleiben zulässig und nötig; das Format schreibt keine vollständige
-In-Memory-Verarbeitung vor. Ein weiches Budget darf weder Objekte entfernen
-noch einen Teilplan als vollständigen Plan veröffentlichen.
-
-**Vorbereitung und erneute Prüfung.** Ein auslieferbarer vollständiger Plan
-setzt alle Qualifikations-, Identitäts-, Erhaltungs- und Zielprüfungen aus
-10.7.1 voraus. Unfertige Work-Zwischenstände sind kein `restore-plan-v1`-
-Erfolgsartefakt. Die Vorbereitung verändert weder normative Projektdateien
-noch Journale, Locks oder andere Betriebsdateien. Nur nach erfolgreicher
-Vorprüfung darf sie den ausdrücklich benannten externen Plan gemäß den
-bestehenden sicheren Generated-Output-Regeln veröffentlichen.
-
-Vor jeder Restoreveröffentlichung werden der Plan selbst, seine Original-
-Byteobjekte, die tatsächliche Quelle am gebundenen Herkunftsort samt
-Abhängigkeiten, die vollständige Bestandsinventur, die geschützte Geschichte
-und die vollständige Zielwurzel erneut geprüft. Eingebettete Planbytes
-erlauben kein stilles Ignorieren inzwischen geänderter oder verschwundener
-Herkunftsdateien. Eine Verlagerung von Quelle oder Ziel erfordert eine neue
-explizite Planung; es gibt keinen Pfadfallback oder automatisch umgebundenen
-Plan. Der vom Aufrufer separat bestätigte `--expected-target-root` muss
-exakt mit der neu berechneten Zielwurzel übereinstimmen. Prüfung und Hash
-verleihen keine Autorisierung; aktueller Recovery-Auftrag, sicherer Lock,
-Sicherungsdurabilität, Journal und Audit bleiben getrennte Pflichtgates.
-
-Ungültiges Format, unvollständige Quelle/Objekttabelle oder innere
-Hash-/Inventurwidersprüche ergeben Code 3; fehlende explizite Pflichtangaben
-im Aufruf Code 2. Eine seit der Planung geänderte Quelle, Inventur oder
-Zielbindung sowie widersprüchliche Identität oder geschützte Historie ergibt
-Code 6; unsichere Pfade/Dateitypen Code 7, tatsächliche I/O-Fehler Code 5.
-Für erwartete, inzwischen fehlende Herkunftsdateien gilt die stale-Bindung
-Code 6. Ablehnungen der schreibfreien Planung und Vorprüfung dürfen keine
-Projekt- oder Betriebswrites erzeugen. Für Fehler nach ausdrücklich
-begonnenem Restore gelten unverändert die
-erhaltenden Journal-/Sicherungsregeln aus 10.7.1; kein globaler Rollback durch
-Löschen von Nachweisen. Bestehende Change-Plan-, Bundle-, Baseline- und
-Workformate bleiben unverändert und werden nicht implizit als Restoreplan
-akzeptiert. Implementierung und Verhaltensevidence folgen in 15.j–15.l.
-
-
-#### 10.7.3 Gebundene Restore-Ausführung und Fortsetzung `restore-execution-v1`
-
-Diese Regel konkretisiert den bereits verlangten getrennten Restore-Journal-
-und Sicherungsablauf aus 10.7.1. `restore-plan-v1`, seine geschlossene Hülle,
-Quell-/Zielhashes und Bestandsinventur bleiben unverändert. Ein Restore ist
-kein Change Plan eines vermeintlich gültigen Ausgangsmodells; für beschädigte
-Ausgangsbytes DARF keine erfundene semantische Basiswurzel eingesetzt werden.
-Die folgende Bindung ist eine betriebliche Ausführungsbindung, keine neue
-normative Modellressource und keine Freigabe durch einen Planhash.
-
-**Anfangsbindung und Autorisierung.** Vor dem ersten Restore-Betriebswrite
-MÜSSEN der vollständige Plan, der separat bestätigte Zielroot, die aktuelle
-Herkunft samt Abhängigkeiten, Projektidentität und gesamte Bestandsinventur
-nach 10.7.1–10.7.2 geprüft sein. Ein eigens für diesen Restore gehaltener
-nativer Recovery-Lock bindet den tatsächlichen Projektroot; derselbe Mutex
-schließt normale Writer und andere Recovery-Aufrufe aus. Unter diesem Lock
-MÜSSEN die Bindungen unmittelbar vor Beginn erneut stimmen. Ein bestehender
-Owner wird niemals durch das Lesen eines Plans oder wegen einer fehlenden
-PID entfernt; Übernahme, Risikozustimmung und Nachweise folgen unverändert
-dem bestehenden Lockvertrag. Ein korrupter alter Transaktionsinhalt darf als
-zu sichernde Originalbytefolge inventarisiert werden; er darf weder als
-konsistentes Modell noch als Beweis einer freien Sperre dienen.
-
-Jeder beginnende oder fortsetzende Write braucht einen aktuellen Recovery-
-Auftrag und die bestehende gesonderte Autorisierungsprüfung. Der Auftrag
-bindet mindestens Aktion, Projekt-/Rootidentität, Originalplanhash,
-Originalquellhash, Inventurhash, Zielroot, Ziel- und Sicherungsinventurhash,
-Akteur und die nach den bestehenden Regeln vorhandene Request-ID. Deren
-bestehende Pflicht-/Optionalitätsregeln bleiben unverändert. Actorlabels,
-Planfelder, Journalbytes oder ein gespeichertes `authorized=true` ersetzen
-keine aktuelle Berechtigung. Ursprünglicher Akteur/Request und späterer
-Recovery-Akteur werden getrennt auditiert; ein Resume schreibt die ursprüngliche
-Auftragsidentität nicht um. Eine abweichend wiederverwendete Requestbindung
-bleibt Code 6; es wird kein gewöhnliches Change-Plan-Erfolgsreceipt erfunden.
-
-**Eigene Betriebswrites und dauerhafte Erhaltung.** Der Restore erhält eine
-lokal eindeutige Ausführungskennung. Sein getrenntes Journal bindet diese
-Kennung, die Regelversion, den unveränderten vollständigen Originalplan,
-die geprüfte Auftragsbindung und die genaue eigene Dateiinventur. Es bleibt
-für normale Projektbefehle als ungelöster Recoveryzustand sichtbar. Die
-Implementierung MUSS die bestehende sichere, descriptorgebundene Lock-,
-Datei-, Staging- und Sync-Infrastruktur wiederverwenden; eine allgemeine
-Umgehung der Journal- oder Rootprüfung ist unzulässig.
-
-Vor `committing` MÜSSEN alle zu ersetzenden/entfernenden Bestandsbytes,
-betroffenen alten Journale, Before-/Stagingbilder und Zusatzinformationen
-vollständig nach 10.7.1 in `.specroad/recovery/archive/` gesichert sein.
-Eine content-addressierte Objektkopie MUSS Länge und Hash sowie die
-bytegleiche Wiederlesung bestehen. Ein dazugehöriges dauerhaftes Manifest
-ordnet jedes Original seinem Pfad und Byteobjekt zu; auch beschädigte,
-leere und nicht als JSON lesbare Originale bleiben unverändert erhalten.
-Der unveränderte Plan und alle geplanten Zielbytes werden ebenfalls
-vollständig gestaged und wiedergeprüft. Neue Dateien und erforderliche
-Verzeichnisse samt ihren Eltern werden nach dem bestehenden Durabilitäts-
-vertrag synchronisiert. Eine erst begonnene oder nur im Plan enthaltene
-Sicherung ist keine bestandene Sicherung. Reale I/O-/Speicherfehler bleiben
-Code 5; Pflichtbytes oder Prüfungen werden nicht aus Budgetgründen entfernt.
-
-Die ursprüngliche `inventory` DARF NICHT wegen eigener Writes neu
-gehasht oder auf den aktuellen Mischstand umgebunden werden. Bei einer
-laufenden Ausführung darf ausschließlich die genaue, separat journalgebundene
-Menge ihrer eigenen neu erzeugten Betriebsdateien und benötigten Verzeichnisse
-von der Originalinventur unterschieden werden. Keine pauschale Ausnahme für
-`.specroad/`, `recovery/`, `archive/` oder einen ganzen Ausführungsordner:
-zusätzliche, fremde, unlesbare oder abweichende Einträge sind kein eigener
-Fortschritt. Bereits vor Beginn vorhandene Dateien bleiben durch die
-Originalinventur gebunden. Eine angebliche Ausführungskennung oder ein frei
-neu gehashtes Manifest allein authentifiziert keine eigenen Writes.
-
-**Publikation und Sperre.** Erst nach dauerhafter Sicherung, vollständiger
-Zielvalidierung und frischer Prüfung der unveränderten Herkunft und noch
-unveröffentlichten Bestandsbindungen wird `committing` dauerhaft gesetzt.
-Die exakt aus Plan und Bestand abgeleiteten Ersetzungen, Erzeugungen und
-Entfernungen erfolgen in kanonischer UTF-8-Pfadreihenfolge über die vorhandenen
-sicheren Primitiven; Verzeichniskollisionen oder fremde Einträge erlauben
-kein rekursives Löschen. Der dauerhafte Fortschritt bindet für jeden Pfad
-seine ursprünglichen Bytes beziehungsweise Abwesenheit und seine geplanten
-Zielbytes beziehungsweise Abwesenheit. Eine Unterbrechung zwischen atomarem
-Dateieffekt und Fortschrittswrite MUSS anhand dieser exakten Bindungen
-auflösbar sein; ein Cursor allein beweist keinen Dateieffekt.
-
-Alte aktive Journale dürfen erst nach bytegetreu überprüfter Archivierung,
-vollständigem tatsächlichem Ziel und dauerhaftem Restore-Abschlussaudit aus
-ihrem aktiven Namensraum überführt werden. Vorher und während dieses
-Abschlusses hält mindestens ein nachweislich ungelöster Restorezustand normale
-Befehle gesperrt. Alte abgeschlossene Receipts und Audits außerhalb der
-explizit betroffenen aktiven Journalmenge bleiben an ihren vorhandenen Pfaden
-unverändert; die Sicherung ersetzt ihre Erhaltung nicht. Nur die genaue,
-geprüfte abgeschlossene Menge darf als passiv gelten. Fremde oder weitere
-ungelöste Journale blockieren weiterhin. Ein Terminalmarker ohne passende
-Ziel-, Sicherungs- und Auditnachweise hebt die Sperre nicht auf.
-
-**Erneuter Aufruf nach tatsächlicher Unterbrechung.** Ein erneuter
-`recover restore --plan <EXTERNAL-PLAN> --expected-target-root <SHA256>`
-verwendet für dieselbe Ausführung unveränderte Originalplanbytes und
-Auftragsbindungen. Nach aktueller Autorisierung und sicherem Recovery-Lock
-wird zuerst genau die gebundene laufende Ausführung untersucht. Ein fehlender
-oder geänderter Plan, mehrdeutige aktive Bindungen oder nicht erklärte
-Bestandsänderungen beginnen keine neue Transaktion. Die ursprüngliche
-Inventur wird mit den journalbelegten eigenen Betriebs- und Dateieffekten
-verglichen, nicht durch die Annahme ersetzt, der Mischstand sei konsistent.
-
-| Nachgewiesener Ausführungsstand | Zulässiger Abschluss desselben Aufrufs |
-|---|---|
-| `building`/`prepared`, keine Zielpublikation | Ausgangsbytes beibehalten, eigene Teilvorbereitung und Originalnachweise erhalten, als zurückgerollte Ausführung auditieren. Keine neue Fachoperation im selben Aufruf. |
-| `committing`, sämtliche Zielbytes und geplanten Abwesenheiten bereits erreicht, vollständige Zielwurzel gültig, ursprüngliche Quellenqualifikation journalgebunden belegt, Sicherung und Auftragsbindung gültig | Fehlende Abschluss-/Auditnachweise dauerhaft ergänzen und die geprüften Journalmengen abschließen; keine erneute normative Publikation. |
-| `committing` mit nur teilweise erreichtem Ziel; `rolling_back` | Ausschließlich anhand vollständiger überprüfter Before Images auf die bytegetreue ursprüngliche, weiterhin gesperrte Ausgangslage zurückrollen. Kein Vorwärts-Resume eines Teilziels. |
-| Beschädigte/fehlende notwendige Journale oder Before Images, nicht erklärter Mischstand, fremde Änderung oder unsichere Pfade | Keine geratenen Writes; Zustand und Nachweise erhalten, Sperre beibehalten und konkreten Integritäts-, Konflikt-, I/O- oder Sicherheitsbefund melden. |
-
-Für ein bereits vollständig veröffentlichtes, genau journalgebundenes Ziel
-gilt **SR-REQ-0258**: Nachträgliche Änderung oder Verlust der externen Quelle
-rechtfertigt weder das Zurückrollen dieses Ziels noch eine zweite
-Publikation. Die fehlenden Abschlussnachweise werden aus den überprüften
-ursprünglichen Journal-/Plan-/Sicherungsbytes ergänzt; eine inzwischen stale
-Herkunft wird als gesonderte Beobachtung ausgewiesen, nicht als frisch
-bestandene Quellenprüfung. Es werden dabei keine normativen Zielbytes mehr
-geschrieben. Ein nur teilweise veröffentlichtes Ziel folgt **SR-REQ-0511**.
-
-Ein Rollback aus eigenen dauerhaft gesicherten Originalbytes ist keine
-Publikation eines Restore-Ziels aus einer inzwischen geänderten Quelle.
-Vor jeder neuen Vorwärtspublikation bleiben sämtliche Herkunftsprüfungen aus
-10.7.2 zwingend. Beim Rückrollen darf nur ein durch eigene protokollierte
-Effekte erklärbarer Vorher-/Zielzustand verändert werden; fremde Bytes werden
-nicht überschrieben. Ursprünglich fehlende Dateien werden nur entfernt,
-wenn ihr jetziger Inhalt genau der eigenen veröffentlichten Datei entspricht.
-Eine zurückgerollte Ausführung erhält alle alten Sperren sowie ihren
-nachvollziehbaren Abschluss; sie ist kein erfolgreich wiederhergestelltes
-Projekt. Für einen weiteren Restore ist eine neue ausdrückliche Planung der
-nun tatsächlich vorhandenen Inventur erforderlich, keine automatische
-Neubindung oder Ausführung im Recovery-Aufruf.
-
-**Abschluss und Berichte.** Ein erfolgreicher Abschluss belegt die wirklichen
-Zielbytes, Zielwurzel, Sicherungsobjekte, Erhaltungsinventur, Originalquell- und
-Planbindung sowie den dauerhaften lokalen Audit. Der Audit trennt ursprünglichen
-Auftrag, beobachtete Dateieffekte, Autorisierungs-/Lockübernahmebelege und
-gegebenenfalls Rückroll-/Abschlussaktion. Historische negative fachliche
-Befunde bleiben ausgewiesen. Er enthält weder erfundene menschliche Reviews
-noch eine Releasefreigabe. Ein erneut vorgelegter bereits abgeschlossener
-Auftrag wird nur anhand seines passenden unveränderbaren Abschlussbelegs
-behandelt; er führt keine zweite normative Ausführung aus. Eine inzwischen
-abweichende Zielinventur erlaubt keinen erneuten Restore unter der alten
-Erfolgsbindung und wird als Konflikt Code 6 ausgewiesen.
-
-Bei zurückgerolltem oder ungelöstem Restore wird kein Restore-Erfolg gemeldet;
-`recovery_required=true` bleibt sichtbar. Fehlende Pflichtangaben ergeben 2,
-ungültige/unvollständige Belege 3, tatsächliche I/O-Probleme oder notwendige
-weitere Recovery 5, Bindungs-/Bestandskonflikte 6 und Sicherheits- oder
-Berechtigungsverletzungen 7. Diese Präzisierung schafft weder eine
-Read-only-Autorecovery noch eine neue Lock-Risikoausnahme. Workfortsetzung,
-weiche Budgets und der Verzicht auf freiwillige Pausen während `committing`
-folgen weiterhin Anhang N/O/P.
-
-#### 10.7.4 Explizite Auswahl alter aktiver Journale `restore-journal-selection-v1`
-
-**Entscheidung RESTORE-JOURNAL-SELECTION, ausdrücklich vom Nutzer am
-26. Oktober 2026 beauftragt.** Die in 10.7.3 genannte „explizit betroffene
-aktive Journalmenge“ MUSS durch eine gesonderte, aktuell autorisierte
-Pfad-/Hashliste bestimmt werden. Weder das Vorhandensein in der vollständigen
-Bestandsinventur noch eine Sicherung, ein Terminalmarker, ein Dateiname oder
-ein gleicher Akteur/Request wählt ein altes Journal automatisch aus.
-
-**Geschlossene Auswahl und CLI-Übergabe.** Der Ausführungs- und Wiederanlaufaufruf
-aus 10.7.1/10.7.3 erhält die Auswahl über
-`--affected-journals <EXTERNAL-SELECTION>`. Die externe Datei MUSS genau ein
-kanonisches UTF-8-JSON-Objekt nach dem vorhandenen RFC-8785-Vertrag enthalten,
-ohne BOM, doppelte Schlüssel oder nachgestellte Daten. Seine Felder sind exakt:
-
-| Feld | Vertrag |
-|---|---|
-| `format_version` | exakt `restore-journal-selection-v1` |
-| `restore_plan_sha256` | exakt der überprüfte gleichnamige innere Hash des unveränderten Originalplans nach 10.7.2 |
-| `entries` | nach UTF-8-Pfadbytes sortierte, duplikatfreie Liste geschlossener Objekte `{path, sha256}` nach untenstehender Projektion |
-
-Ohne die Option wird ausschließlich eine leere Liste normalisiert, mit der
-gleichen Regelversion und dem geprüften Originalplanhash. Das bedeutet
-„kein altes Journal ausgewählt“, niemals „alle gefundenen Journale“.
-Eine ausdrücklich gelieferte leere Liste ist semantisch gleich. Die Option
-gehört zur getrennten Ausführung, nicht zur schreibfreien Quellplanung;
-sie darf weder den Plan noch dessen geschlossene Hülle erweitern.
-Der nichtinteraktive Aufrufer MUSS eine nichtleere Auswahl ausdrücklich
-liefern. Ein gespeichertes Journal darf sie nicht als neue Zustimmung
-ergänzen. Ihre sichere Lektüre ist keine Erlaubnis zum Ausführen ihrer Inhalte.
-
-**Einheit und Pfad-/Hashprojektion.** `path` MUSS einen vorhandenen, vom
-bestehenden Metadatenpreflight als aktiv oder ungeklärt geführten unmittelbaren
-Eintrag unter `.specroad/transactions/` oder `.specroad/recovery/` bezeichnen.
-Die ganze Transaktions-/Recoverywurzel, Locks, Requests, passive Receipt-/
-Audit-/Archivbereiche, gemeinsame Betriebscontainer und beliebige fachliche
-Dateien sind keine auswählbaren Journale. Ein Verzeichnisname allein ist kein
-Nachweis eines passiven Bereichs; die vorhandenen Typ-/Pfad- und Belegprüfungen
-bleiben zwingend. Abgeschlossene Receipts und Audits DÜRFEN NICHT durch die
-Auswahl zu löschbaren aktiven Journalen umgewidmet werden. Ungeklärte Einträge
-außerhalb dieser auswählbaren Menge bleiben Sperrgründe.
-
-Für einen zulässigen Pfad `p` ist `E_p` exakt die bereits kanonisch geordnete
-Teilliste von `inventory.entries` des Originalplans mit `path == p` oder
-`path` beginnend mit `p + "/"`. Sie MUSS den Eintrag `p` selbst enthalten,
-mit `kind=file` oder `kind=directory`, niemals `missing`. Der Auswahlwert
-`sha256` ist SHA-256 der RFC-8785-Bytes der vollständigen Liste `E_p`.
-Er ist ausdrücklich ein Inventurhash, nicht der Rohbytehash allein von
-`journal.json`. Die Pfade bleiben dabei vollständige projektrelative Pfade.
-Damit sind sämtliche Dateinamen, Typen, Größen, Rohbytehashes und auch leere
-Verzeichnisse dieses ursprünglichen Eintrags gebunden. Die Hashdarstellung
-folgt 10.7.2; zusätzliche Felder und eigene Hashalgorithmen sind unzulässig.
-
-Diese Projektion erlaubt eine eindeutige Auswahl auch bei beschädigten,
-leeren oder nicht als JSON lesbaren Journalbytes, ohne deren Inhalt als
-gültigen Transaktionsnachweis zu behandeln. Es gibt keine Glob-, Präfix-,
-Zeitstempel- oder automatische Nachbarjournal-Auswahl. Die vollständige
-Originalinventur bestimmt die Teilbaumgrenze; eine vom Aufrufer verkürzte
-Dateiliste ist kein vollständiges `E_p`. Sichere Pfade, Rootidentität,
-Links-/Sonderdateiverbote und Kollisionsprüfung gelten unverändert.
-
-**Aktuelle Autorisierung und Sicherung.** Der Recovery-Auftrag nach 10.7.3
-MUSS die gesamte normalisierte Auswahl und SHA-256 ihrer kanonischen Hülle
-zusätzlich zu seinen bisherigen Projekt-, Originalplan-, Quell-, Inventur-,
-Ziel-, Sicherungs-, Akteur- und Requestbindungen enthalten. Die bestehende
-aktuelle Autorisierungsprüfung MUSS genau diese Auswahl prüfen; eine bloße
-Hashübereinstimmung verleiht keine Befugnis. Die Auswahl wird unverändert im
-getrennten Ausführungsjournal und Abschlussaudit gebunden. Aktiver Root-Mutex,
-Ownerübernahme und notwendige menschliche Freigaben bleiben eigene Gates.
-
-Vor dem ersten Restore-Betriebswrite und unmittelbar unter dem sicheren
-Recovery-Lock MÜSSEN jede Auswahlprojektion und die gesamte Originalinventur
-stimmen. Für jede Datei in jedem gewählten `E_p` MÜSSEN `backup` und `objects`
-des Originalplans bereits die exakten Originalbytes nach 10.7.2 binden.
-Fehlende Sicherungsabdeckung darf nicht erst während der Ausführung ergänzt
-werden; dafür ist eine neue explizite Planung nötig. Eine darüber hinaus
-gebundene Sicherung wählt keine weiteren Journale aus. Vor `committing`
-MÜSSEN alle gewählten Dateien samt Before-/Stagingbildern und Zusatzbelegen
-dauerhaft gesichert und bytegleich wiedergelesen sein; das Sicherungsmanifest
-erhält auch die gebundene Verzeichnisinventur. Eine leere gewählte
-Journalstruktur ist kein Anlass, ihre Typ-/Pfadbindung auszulassen.
-
-**Nicht gewählte Journale und Abschluss.** Nicht gewählte aktive oder
-ungeklärte Einträge bleiben unverändert und sperren weiterhin. Vor Beginn
-einer neuen Restore-Ausführung verhindert ein solcher übriger Sperrgrund
-jeden Restore-Betriebs- und Zielwrite; er wird mit Code 5 und
-`recovery_required=true` ausgewiesen. Der Aufrufer muss ihn separat nach
-dem bestehenden Recoveryvertrag behandeln oder eine neue ausdrückliche,
-passend gebundene Auswahl autorisieren. Es gibt keine stille Erweiterung.
-
-Nur die gewählte ursprüngliche Menge darf nach den vollständigen Sicherungs-,
-Ziel- und Auditnachweisen aus 10.7.3 ihren aktiven Namensraum verlassen.
-Jeder tatsächliche Überführungsschritt bindet Originalpfad/-inventur,
-geprüfte Archivbytes und seinen eigenen Dateieffekt. Bis zum nachgewiesenen
-Abschluss hält der eigene Restorezustand die Sperre aufrecht. Ein anderer
-Eintrag unter demselben Elternpfad oder ein erst später hinzugefügter Pfad
-wird dadurch nicht passiv. Eine nachweislich abgeschlossene Auswahl allein
-erlaubt keine Freigabe, solange weitere Sperrgründe bestehen.
-
-Bei Fortsetzung MUSS die normalisierte Auswahl exakt zum ursprünglichen
-Auftrag passen; Weglassen einer zuvor nichtleeren Auswahl, Hinzufügen,
-Austauschen oder Neu-Hashen verändert diese Bindung. Bereits belegte eigene
-Archivierungseffekte werden ausschließlich nach 10.7.3 gegen die ursprüngliche
-Auswahl geprüft; aus dem veränderten Arbeitsstand wird keine neue Auswahl
-abgeleitet. Fremde Änderungen bleiben Konflikte. Die bestehenden Regeln
-für vollständigen Zielabschluss nach SR-REQ-0258 und Teilziel-Rollback nach
-SR-REQ-0511 gelten unverändert; ein Rollback erhält beziehungsweise restauriert
-die ausgewählten Originale bytegetreu und hebt fremde Sperren nicht auf.
-
-Fehlender Optionswert ergibt Code 2; ungültige Hülle, Sortierung, Dubletten,
-Hashdarstellung oder unvollständige erforderliche Sicherung Code 3;
-abweichender Originalplan, Auswahlhash, Bestand oder Wiederanlaufauftrag
-Code 6; unzulässiger Auswahlbereich, unsicherer Pfad oder fehlende aktuelle
-Berechtigung Code 7; echte I/O-Fehler Code 5. Vorprüfungsablehnungen bleiben
-schreibfrei. Normale Read-only-Aufrufe erhalten keine neue Recoverykompetenz
-und keine tiefe Archivinventur. Einzellauf und Workfortsetzung verwenden
-dieselbe Auswahlbindung und dieselben weichen Budgets nach N/O/P.
-
-Diese Auswahlregel ändert weder `restore-plan-v1` noch Modell-/Quell-/
-Zielhashes, vorhandene erfolgreiche Receipts oder historische Belege.
-Implementierung und Verhaltensabnahme bleiben in 15.l.W/R/C offen.
-
-
-#### 10.7.5 Explizite Ownerübergabe für Restore `restore-owner-handoff-v1`
-
-**Entscheidung RESTORE-OWNER-HANDOFF, delegiert gemäß SPECROAD-DECISION-1.**
-Diese Regel konkretisiert die Ownerbindung aus 10.7.3 für 15.l.R. Ein
-neu beginnender Restore hat einen eigenen Auftrag; er ist keine Fortsetzung
-der beschädigten gewöhnlichen Transaktion. Die Wiederaufnahme eines bereits
-begonnenen Restore behält dagegen dessen ursprüngliche Ausführungsbindung.
-Die beiden Fälle DÜRFEN NICHT still ineinander umgedeutet werden. Ein
-Planhash, eine Journalauswahl oder ein verwaister Owner allein erteilt
-weder eine Übernahmebefugnis noch die Berechtigung zur Restore-Publikation.
-
-**Ausdrücklicher Aufruf.** Ein Ausführungs-/Wiederanlaufaufruf nach
-10.7.1/10.7.3/10.7.4 darf einen vorhandenen Owner nur mit zusätzlich
-`--force --expected-lock-sha256 <SHA256> --reason <TEXT>` übernehmen.
-`--accept-remote-risk` bleibt die bestehende gesonderte ausdrückliche
-Risikozustimmung. Ohne diese Zustimmung gilt `false`, auch für eine lokale
-KI oder einen früher bereits autorisierten Aufruf. `reason` ist ein
-nichtleerer Grund nach dem bestehenden Recovery-Textvertrag; der erwartete
-Hash bindet die vollständigen unveränderten Rohbytes des aktuell beobachteten
-Lockrecords. Dies sind zusätzliche Bindungen des Recovery-Aufrufs, keine
-Felder des geschlossenen `restore-plan-v1` oder der Journalauswahl.
-
-Ohne Übernahmeoptionen bleiben ownerfreie Ausführung und Wiederaufnahme
-unter dem aktuellen Recovery-Lock zulässig. Ein vorhandener Owner bleibt
-ohne ausdrücklichen Übernahmeauftrag mit Code 5 gesperrt. Unvollständige
-Optionskombinationen und Übernahmeoptionen beim schreibfreien `--from`-
-Planungsaufruf ergeben Code 2. Ein erwarteter Owner, der fehlt oder inzwischen
-andere Bytes hat, ist Code 6; die Erwartung wird nicht aus alten Audits neu
-abgeleitet. Ein gültiger Übernahmeauftrag ist noch kein erfolgreicher
-Lock- oder Restoreabschluss.
-
-**Zwei getrennte Bindungsfälle.** Vor dem ersten Übernahmewrite MUSS der
-Owner gültig lesbar und an dieselbe unabhängig bestätigte Projektidentität
-und den tatsächlichen Root gebunden sein. Die folgende Zuordnung ist
-zusätzlich zwingend:
-
-| Fall | Erforderlicher Zusammenhang |
-|---|---|
-| Beginn eines neuen Restore; Owner einer gewöhnlichen alten Transaktion | Der Owner hat `kind=writer` oder `kind=recovery`, bezeichnet keinen `recover restore` und bindet eine sichere Transaktionskennung. Genau der kanonische unmittelbare Pfad `.specroad/transactions/<transaction_id>` dieser Kennung ist ein ausdrücklich ausgewählter Originaleintrag nach 10.7.4. Sein vollständiges `E_p` und dessen Auswahlhash stimmen mit der Originalinventur. Alter Owner einschließlich seiner Request-ID und neuer Restore-Auftrag werden getrennt gebunden; sie müssen nicht dieselbe Transaktions-/Requestidentität haben. |
-| Fortsetzung eines begonnenen Restore | Der Owner hat `kind=recovery`, `command=recover restore` und bindet genau die nach 10.7.3 nachgewiesene ursprüngliche Restore-Ausführung sowie deren ursprüngliche Request-ID. Originalplanbytes, Originalauftrag, Auswahl und eigene bisherige Effekte passen. Die aktuelle Recovery-Person beziehungsweise der aktuelle Recovery-Akteur wird zusätzlich auditiert; ursprünglicher Akteur und ursprüngliche Request-ID werden nicht umgeschrieben. |
-
-Im ersten Fall ist der ausgewählte Originaleintrag ausdrücklich auch als
-beschädigte reguläre Bytefolge oder als leeres Verzeichnis zulässig, wie
-bereits in 10.7.4 festgelegt. Seine Bytes werden gesichert, nicht als gültiges
-gewöhnliches Transaktionsjournal interpretiert. Der Zusammenhang wird durch
-den **gültigen Ownerrecord**, den kanonisch abgeleiteten Transaktionspfad
-und die vollständig gebundene explizite Auswahl bewiesen. Ein ähnlich
-benannter Eintrag, ein Requestlabel oder frei behauptete Journalfelder
-genügen nicht. Andere ausgewählte Journale bleiben unter ihren bisherigen
-Auswahl-/Sicherungsbedingungen; daraus entsteht keine zweite Ownerübernahme.
-
-Ein Restore-Owner darf nicht als gewöhnlicher Altowner behandelt werden,
-um einen anderen Restore-Auftrag zu beginnen. Unbekannte, unlesbare oder
-widersprüchliche Ownerbindung, fehlende notwendige Ausführungsbelege oder
-eine nicht herstellbare Zuordnung bleiben Blocker. Sie werden nicht durch
-eine größere Auswahl, einen neuen Planhash oder `--force` geheilt. Gibt es
-keinen zugehörigen aktiven Vorgang, bleibt ausschließlich der dafür bereits
-zulässige separate Lock-Recovery-Weg maßgeblich; diese Regel ersetzt ihn nicht.
-
-**Unveränderte Host- und Autoritätsgates.** Die Übernahme MUSS denselben
-echten nativen Root-Mutex wie Writer und Recovery exklusiv halten. Ein
-besetzter Mutex wird niemals umgangen. Der vorhandene native Ownerprüfer
-und seine Host-/Prozessstartbindung bleiben maßgeblich: ein lebender Owner
-wird auch mit `--accept-remote-risk` abgewiesen; fremde, unprüfbare oder
-PID-wiederverwendete Owner benötigen weiterhin die ausdrückliche
-Risikozustimmung. Eine fehlende PID allein beweist keine Übernahmereife.
-
-Die aktuelle Host-Autorisierung MUSS die Übernahme als eigene Aktion
-`takeover` mit `command=recover restore` prüfen. Sie bindet beide Seiten:
-alten vollständigen Ownerrecord samt Rohbytehash, beobachteten Ownerzustand,
-Grund, Force-/Risikoangaben, Projekt-/Rootidentität und vollständigen
-Restore-Auftrag einschließlich Originalplan-, Quell-, Inventur-, Ziel-,
-Sicherungs- und Auswahlbindung. Im ersten Fall kommt die oben bestimmte
-alte Pfad-/Inventurbindung hinzu; im Fortsetzungsfall die überprüfte
-ursprüngliche Ausführungsbindung. Aktueller Recovery-Akteur und ursprüngliche
-Auftragsakteure bleiben unterscheidbar. Ein gespeichertes positives Ergebnis
-oder Actorlabel ersetzt diese aktuelle Prüfung nicht. Die gesonderte
-aktuelle Berechtigung für Beginn, Rückrollen oder Abschluss des Restore
-nach 10.7.3 bleibt zusätzlich erforderlich; Übernahme erlaubt keinen
-beliebigen normativen Write. Die Request-ID-Regeln und das Verbot
-abweichender Wiederverwendung bleiben unverändert.
-
-**Erhaltende Übergabe und Unterbrechung.** Die vorhandenen sicheren
-descriptorgebundenen Owner-, Evidence-, Staging-, Rename- und Sync-Primitiven
-sind wiederzuverwenden. Vor dem atomaren Ownerwechsel werden unveränderliche
-Originalownerbytes und ein Übernahmeintent mit Regelversion
-`restore-owner-handoff-v1`, beiden Ownerbindungen, den oben geprüften
-Auftrags-/Ausführungsbindungen, aktueller Autoritätszuordnung und
-Risikoentscheidung dauerhaft angelegt und bytegleich wiedergeprüft.
-Der vollständig vorbereitete neue Owner ist ein Recovery-Owner für exakt
-den neuen beziehungsweise fortgesetzten Restore. Unmittelbar vor seinem
-atomaren Einsetzen werden alter Owner einschließlich Dateiidentität,
-Root, Ownerbeobachtung, aktive Journalmenge und alle betroffenen Bindungen
-erneut geprüft. Es gibt keine Lücke durch vorheriges Löschen des Owners.
-Ein eigener dauerhafter Abschlussbeleg bestätigt den tatsächlichen Wechsel.
-
-Diese zusätzlichen Betriebsbytes und benötigten Verzeichnisse werden vor
-ihrem ersten Write genau im Übernahmeintent gebunden und mit der
-unveränderten Originalausführung verknüpft. Bei einem neuen Restore bindet
-der Intent auch die vollständigen Originalplanbytes und den autorisierten
-neuen Auftrag, bevor der neue Owner eingesetzt wird. Bei Fortsetzung ist
-der unveränderliche frühere Ausführungsbeleg zusätzlich gebunden. So sind
-auch Abbrüche vor Anlage des eigentlichen Restore-Journals anhand einer
-vollständigen Übernahmebindung unterscheidbar. Die Originalinventur wird
-dafür nicht neu gehasht. Eine allgemeine Ausnahme für einen Recovery- oder
-Auditordner und eine nachträglich frei ergänzte Liste eigener Dateien sind
-unzulässig. Kurze, fremde oder abweichende Belege werden nicht überschrieben.
-
-Die Übernahme verändert keine normativen Modellbytes und entfernt oder
-archiviert kein ausgewähltes altes Journal. Alle bisherigen Sperren bleiben
-bis zum nachgewiesenen Restoreabschluss aus 10.7.3/10.7.4 erhalten. Nach einem
-Abbruch bleiben tatsächlicher Owner und sämtliche bereits geschriebenen
-Belege bestehen. Ein erneuter ausdrücklich autorisierter Aufruf bindet den
-dann tatsächlich beobachteten Owner; er prüft den alten oder neuen Stand
-gegen den unveränderten Übernahmeintent und vollendet nur belegbare Schritte.
-Ein vollständiger Intent allein behauptet weder ausgeführten Ownerwechsel
-noch veröffentlichte Zielbytes. Kann bei einem belegten neuen Owner vor dem
-Restore-Journal nachgewiesen werden, dass keine Zielpublikation begann, gilt
-der `building`-Abschluss aus 10.7.3: erhaltener, auditierter Rückrollzustand,
-keine neue Fachoperation im selben Aufruf. Andernfalls gelten dessen
-Vollziel-/Teilziel-/Integritätsregeln unverändert. Ein Folgeprozess erbt
-keine aktuelle Risikozustimmung oder Schreibberechtigung aus dem Intent.
-
-Der allgemeine Befehl `lock recover --force` behält sein Journalveto.
-Die bestehende gewöhnliche Transaktionsübernahme behält ihre exakte
-Transaktions-/Request-/Journalbindung. Der hier zusätzlich gebundene
-Restorefall ist keine globale Aufweichung dieser Wege. Der Lock wird nur
-freigegeben, solange er noch der eigene unveränderte Owner ist.
-
-Fehlende Pflichtangaben ergeben Code 2, ungültige oder unvollständige
-notwendige Belege 3, echte I/O-Fehler oder ungelöster Recoverybedarf 5,
-abweichende Bindungen 6 sowie unsichere Pfade, lebende Owner oder fehlende
-Berechtigung/Risikozustimmung 7. Abgewiesene Vorprüfungen bleiben schreibfrei;
-nach möglichem Write werden tatsächlicher Zustand und Recoverybedarf
-ausgewiesen. Einzellauf und Workfortsetzung benutzen dieselben Bindungen
-und Gates. Diese Präzisierung enthält keine menschliche Freigabe, keine
-reale Risikoakzeptanz und keinen Implementierungs-/Abnahmenachweis.
-
-
-#### 10.7.6 Explizite Restore-Aufrufbindung `restore-cli-binding-v1`
-
-**Entscheidung RESTORE-CLI-BINDING, delegiert gemäß SPECROAD-DECISION-1.**
-Diese Regel präzisiert die bisher nur schematischen Aufrufe aus 10.7.1.
-Sie bildet deren Eingaben auf die expliziten Root-, Quell- und Dateibindungen
-aus 10.7.2 ab. Die geschlossenen Plan-, Auswahl- und Ausführungsformate aus
-10.7.2–10.7.5 sowie ihre Autorisierungs-, Erhaltungs- und Crashgates bleiben
-unverändert. Ein Pfad, Actorlabel oder erfolgreicher Preflight erteilt keine
-Recovery-Berechtigung.
-
-**Zwei getrennte Modi.** Die nachstehend genannten Optionen sind jeweils
-einmalig und werden nicht aus Projektprofilen, Umgebungsvariablen oder einem
-vorherigen Aufruf ergänzt. Die vorhandenen allgemeinen Ausgabe- und weichen
-Ressourcenoptionen behalten ihre gesonderten Regeln; sie ersetzen keine
-dieser fachlichen Pflichtangaben.
-
-| Modus | Pflichtangaben | Zusätzliche fachliche Angaben |
-|---|---|---|
-| Planung | `--project <ROOT> --from <PATH> --source-root <ROOT> --source-kind project_bundle\|baseline --dry-run --output-root <ROOT> --output <PATH>` | Bei `baseline` genau die expliziten operativen Werte `--default-locale <LOCALE>` und `--generated-path <PATH>` nach 10.7.2; bei `project_bundle` sind beide unzulässig. |
-| Ausführung oder Wiederanlauf | `--project <ROOT> --plan-root <ROOT> --plan <PATH> --expected-target-root <SHA256> --actor-type <TYPE> --actor-id <ID>` | `--request-id <ID>` nach den unveränderten Pflicht-/Optionalitätsregeln aus 10.7.3; paarweise `--selection-root <ROOT> --affected-journals <PATH>` nach 10.7.4; Ownerübernahmeoptionen ausschließlich nach 10.7.5. |
-
-Fehlende Pflichtoptionen, Wiederholungen, unbekannte Quellarten oder eine
-Mischung der Modi sind Code 2. Insbesondere sind Plan-/Zielbestätigung,
-Akteur/Request, Journalauswahl und Ownerübernahme in der Planung unzulässig;
-Quell-, operative Baseline-, Dry-Run- und Planausgabeoptionen sind bei der
-Ausführung unzulässig. Der Wiederanlauf verwendet denselben Ausführungsmodus,
-keinen neuen Quellenaufruf. `--as-proposal` ist kein Restoremodus.
-
-`--source-kind` wählt ausschließlich `project_bundle` oder `baseline`.
-Dateiendung, ZIP-/JSON-Erkennung und Inhalt dürfen die ausdrücklich gewählte
-Art nicht ändern oder eine zweite Art als Fallback ausprobieren. Ein syntaktisch
-zulässiger Aufruf mit Bytes der falschen Art oder unvollständiger Quelle
-scheitert an der Quellenqualifikation mit Code 3. Beide Baselinewerte werden
-nach ihrem bestehenden Konfigurationsvertrag geprüft und nur in den operativen
-Zielwerten verwendet. Es gibt keinen Default aus der beschädigten Konfiguration,
-keine semantische Ergänzung und keinen Override von Bundle-Konfigurationsbytes.
-
-**Root und relative Datei.** Die Rootoptionen bezeichnen ausdrücklich
-vorhandene kanonische absolute Verzeichniswurzeln. Sie werden über den
-vorhandenen nativen Rootschutz geprüft; eine lexikalische Normalisierung,
-Symlinkauflösung oder ein gleicher Pfadstring ersetzt keine Rootidentität.
-`--from`, `--plan`, `--affected-journals` und `--output` bezeichnen jeweils
-einen sicheren relativen Dateipfad unter ihrer zugehörigen Rootoption.
-Absolute Dateiwerte, Traversal, Links, Sonderdateien, unsichere Aliase und
-fremde Rootdurchquerungen behalten die vorhandene Sicherheitsablehnung
-Code 7. `--generated-path` ist dagegen ein operativer projektbezogener
-Konfigurationswert und unterliegt dessen bestehendem Pfadvertrag.
-
-Bei Baselines bezeichnet `--source-root` auch die Wurzel aller rekursiv
-referenzierten nativen Snapshotobjektpfade. Ein Parent der Quelldatei wird
-nicht als Objektroot geraten. Eine Quelle darf nach den bestehenden
-Quellen-/Inventurregeln im ausgewählten Projekt liegen; das erteilt keine
-Schreibbefugnis. Plan- und Auswahldatei werden als passive explizite Eingaben
-gelesen. Ihr Speicherort authentifiziert weder Inhalt noch Auftrag. Ein
-anderer Ort der externen Originalplandatei bindet weder `project_root` noch
-`source.root/path` im Plan um; für deren Verlagerung gilt weiterhin 10.7.2.
-Ohne beide Auswahloptionen gilt nur die leere Auswahl nach 10.7.4. Ein allein
-angegebener Auswahlroot oder Auswahlpfad ist Code 2.
-
-Der Ausgaberoot und sein Ziel bleiben außerhalb des ausgewählten Projekts
-und anderer Projektroots gemäß den sicheren Generated-Output-Regeln. Nur
-eine noch fehlende Zieldatei wird atomar veröffentlicht; auch identische
-vorhandene Bytes werden nicht überschrieben. Ein bestehendes Ziel ergibt
-Code 6. Erforderliche Eltern unter dem geprüften Ausgaberoot dürfen mit den
-vorhandenen sicheren Primitiven angelegt werden; der Root selbst wird nicht
-aus dem Aufruf heraus erzeugt. Reale I/O-/Durabilitätsfehler bleiben Code 5.
-Der ausgegebene Plan und die erneut geprüften Quelldateien bleiben bytegebunden;
-keine Ausgabedatei oder temporäre Datei wird als Autorisierung verwendet.
-
-**Spezialisierter Preflight.** `recover restore` bleibt in beiden Modi die
-Command-ID `recover.restore`, Klasse `recovery_write`, Preflight `recovery`.
-Nur die tatsächliche Ausführung besitzt die deklarierten Recoverywrites;
-die Planung schreibt weder ins Projekt noch in `.specroad/` und nimmt keinen
-Projekt-Writer-/Recovery-Lock. Ihr einziger fachlicher Dateieffekt ist der
-explizite externe Plan; offengelegte externe Workdaten folgen unverändert O/P.
-Diese befehlsspezifische Dry-Run-/Actor-Unterstützung klassifiziert Restore
-nicht als gewöhnlichen normativen Writer und erlaubt keine globale Erweiterung
-der Optionen anderer Befehlsklassen.
-
-Die explizite Projektauswahl prüft den wirklichen Root, aber setzt weder eine
-lesbare/gültige `specroad.json` noch ein konsistentes Modell voraus. Sie
-verwendet kein beschädigtes Modell als gültige Options-/Profilquelle und
-ersetzt keinen Root durch einen früher ausgewählten Root. Erst die spezialisierte
-Restoreprüfung ermittelt vollständige Bestandsabdeckung und Projektidentität
-aus den unabhängig gebundenen Belegen nach 10.7.1–10.7.2. Unbestimmbare
-Identität oder Abdeckung bleibt ein Befund, keine erlaubte Teilinventur.
-Der Sonderweg gilt nur diesem expliziten Recoveryaufruf; normale Reader,
-Dry-Runs anderer Befehle und Writer behalten ihre Recoverybarrieren.
-
-Bei der Ausführung MUSS der ausdrücklich ausgewählte Projektroot exakt dem
-gebundenen `project_root` entsprechen; ein abweichender sonst zulässiger Root
-ist Code 6 ohne Projektwrite. Plan- und Auswahllektüre prüft zunächst die
-Originalformate und deren Paarbindung. Sie erzwingt vor der Untersuchung einer
-nachgewiesenen laufenden Ausführung keine frische ursprüngliche Bestandswurzel
-oder inzwischen verschwundene Herkunft. Die native Ausführung unterscheidet
-erst danach Neupublikation, Vollzielabschluss und Teilziel-Rollback gemäß
-10.7.3. Das ist keine Ausnahme von den Frischeprüfungen vor Neupublikation.
-
-**Autorisierung und gemeinsamer Adapter.** CLI und strukturierter Aufruf
-verwenden dieselben gebundenen Fachparameter, native Datei-/Restoreadapter,
-aktuelle gesonderte Autorisierungsprüfung und Owner-/Risikogates. Akteur und
-Request werden nach den vorhandenen Regeln validiert; insbesondere bleibt
-die Request-ID für `ai` und `ci` Pflicht. Kein Argument lädt ausführbaren
-Projektcode oder registriert eine Berechtigungsfunktion aus einer Datei.
-Fehlende, ablehnende, fehlerhafte oder nur gespeicherte Autorisierung bleibt
-eine Ablehnung nach dem bestehenden Vertrag. Diese Präzisierung erfindet
-weder eine reale Hostfreigabe noch eine neue Authentifizierungs-/Pluginarchitektur;
-die verwendbare vertrauenswürdige CLI-Anbindung ist weiterhin nachzuweisen.
-
-Selbstbeschreibung und maschinenlesbare Ergebnisse folgen 11.7: beide Modi,
-Pflicht-/Ausschlussbeziehungen, Source-/Rootbindung, tatsächlich mögliche
-Seiteneffekte und Fehlerklassen sind offenzulegen. Nur ein vollständig
-veröffentlichter Plan gilt als Planungserfolg; ein zurückgerollter oder
-gesperrter Wiederanlauf ist kein erfolgreich wiederhergestelltes Projekt.
-Einzellauf und Workfortsetzung dürfen weder Optionen neu erraten noch alte
-Berechtigung als aktuelle Zustimmung wiederverwenden. Alle übrigen Grenzen
-aus N/O/P sowie 10.7.1–10.7.5 bleiben Pflichtabnahmen von 15.l.R.
-
-
-#### 10.7.7 Restore in Workfortsetzungen `work-restore-binding-v1`
-
-**Entscheidung RESTORE-WORK-BINDING, delegiert gemäß SPECROAD-DECISION-1.**
-Diese Regel konkretisiert die zugesagte Einzellauf-/Workparität aus 10.7.3,
-10.7.6 und Anhang N/O/P. Sie verwendet den externen `work-v1`-Checkpoint und
-die vorhandene native Restoreausführung. Ein Restore wird weder zu einem
-gewöhnlichen Change Plan noch zu einer frei ausführbaren Work-Unteroperation.
-`work resume` bleibt `work_operational`; der gebundene innere Befehl ist
-`recover.restore`, Klasse `recovery_write`, mit seinem speziellen Preflight.
-Andere Workbefehle oder gespeicherte Command-IDs erhalten keine Recoverybefugnis.
-
-**Passive Eingangsbindung.** Ein Workauftrag bleibt in genau dem ursprünglich
-gewählten Planungs- oder Ausführungsmodus nach 10.7.6. Die vollständigen
-Fachargumente, Quellart, operativen Baselinewerte und ausdrücklichen Ziele
-bleiben gebunden; eine Fortsetzung wechselt nicht von Dry-Run zu Ausführung.
-Für die Planung gelten Snapshotaufbau, vollständige Aufgabenmanifeste und
-externe Planausgabe aus P.4/P.5 und 10.7.2. Noch nicht vollständig qualifizierte
-Planbytes sind kein erfolgreicher Restoreplan und keine spätere Writefreigabe.
-`actor`, `request_id`, `operations_sha256` und `plan_binding` sind dabei
-`null`; ein fertig erzeugter Plan gehört zu den gehashten Ergebnisbytes.
-
-Für einen Ausführungsauftrag gelten im vorhandenen Workmanifest zusätzlich
-die folgenden eindeutigen Feldbedeutungen. Die Originalpläne und die Auswahl
-behalten ihre geschlossenen Formate aus 10.7.2/10.7.4; sie werden nicht um
-Workfelder erweitert.
-
-| Workfeld | Verbindliche Restorebindung |
-|---|---|
-| `source_bindings` | Exakt `{project_id, scope, model_root_sha256}` mit der unabhängig geprüften Projekt-ID, `scope=["project"]` und `model_root_sha256=null`. Der beschädigte Ausgangsbestand wird durch die Originalinventur im Plan gebunden, nicht durch eine erfundene semantische Basiswurzel. |
-| `actor`, `request_id` | Unveränderter ursprünglicher Ausführungsakteur und dessen Request-ID nach 10.7.3; die dortige Pflicht-/Optionalitätsregel bleibt erhalten. Ein Work-ID-/Generationswert ersetzt keine Request-ID. |
-| `operations_sha256` | `null`: Restore besitzt keine gewöhnliche Change-Plan-Operationsfolge. Weder Inventur-, Plan- noch Zielhash werden als solcher Operationshash ausgegeben. |
-| `plan_binding` | Geschlossenes Objekt mit exakt `format_version`, `restore_plan_sha256`, `plan_source`, `journal_selection` gemäß nachfolgendem Vertrag. |
-
-`plan_binding.format_version` ist exakt `work-restore-binding-v1`.
-`restore_plan_sha256` ist der geprüfte innere Hash des Originalplans.
-`plan_source` und `journal_selection` sind jeweils exakt `{sha256, size}`:
-SHA-256 der vollständigen referenzierten Bytes und deren nichtnegative
-ganzzahlige Byte-Länge. `plan_source` referenziert die unveränderten
-Originalplanbytes, `journal_selection` die kanonischen Auswahlbytes nach
-10.7.4. Bei ursprünglich weggelassener Auswahl werden ausschließlich die
-dort festgelegten kanonischen Bytes der leeren Auswahl gebunden. Eine
-nichtleere Auswahl wird niemals aus gefundenen Journaldaten ergänzt.
-Beide Bytefolgen MÜSSEN im content-addressierten Work-Objektbestand erhalten
-und vollständig über das Eingangsmanifest gebunden sein. Ihr bloßer Pfad
-oder Hash ersetzt keine fehlenden Bytes. Der innere Planhash und sein
-äußerer Rohbytehash bleiben ausdrücklich verschiedene Hashdomänen.
-
-Jede Wiederaufnahme prüft die geschlossene Bindung, Originalbytes, Auswahl,
-Projektidentität, Actor-/Requestwerte und ihre Übereinstimmung mit den
-normalisierten Fachargumenten. Die vorhandene Checkpointprojektion bindet
-auch diese Variante; sie erhält keinen zweiten, widersprüchlichen Aufgaben-
-oder Operationshash. Für bereits begonnene Ausführungen muss zusätzlich
-genau die ursprüngliche Auftragsbindung des überprüften Restorejournals
-passen. Ein neuer Workcontainer darf keinen anderen ursprünglichen Akteur,
-Plan, Request oder Auswahl an eine bestehende Ausführung anhängen.
-Ein unbekannter Bindungstyp wird vor Fortsetzung abgewiesen, niemals als
-`work-change-plan-v1` oder ungebundener schreibfreier Auftrag interpretiert.
-Bestehende Work-/Change-Plan-Checkpoints bleiben unverändert lesbar; ihre
-Felder werden nicht nachträglich in Restorefelder umgedeutet.
-
-Die allgemeine Rootlokalisierung aus P.3/P.7 darf externe Work- und
-Plantransportorte neu zuordnen, aber keinen im Originalplan gebundenen
-`project_root` oder `source.root/path` umschreiben. Für deren Verlagerung
-bleibt die neue ausdrückliche Planung nach 10.7.2 erforderlich. Ein Workpaket
-ist keine verifizierte Kopie einer laufenden Projekttransaktion und ersetzt
-keine dort nötigen Journale, Before Images oder Root-/Ownernachweise.
-Eingebettete Plan-/Quellbytes erlauben vor einer neuen Vorwärtspublikation
-keine Ausnahme von den frischen Herkunfts- und Bestandsprüfungen.
-
-**Aktuelle Berechtigung statt gespeicherter Freigabe.** Die Workbindung ist
-passiver Auftragsnachweis, keine Berechtigung. Jeder tatsächliche Restorewrite
-braucht dieselbe aktuelle, vertrauenswürdig angebundene Recoveryautorisierung,
-den nativen Recovery-Lock und die Owner-/Risikogates wie der direkte Aufruf.
-Die ursprünglichen Workfelder bleiben erhalten. Bei einer Recoveryaktion
-wird der aktuelle Recoveryakteur nach 10.7.3 getrennt geprüft und auditiert;
-dies erweitert oder ersetzt den ursprünglichen Actor nicht. Ein gespeicherter
-Authorityname, früherer positiver Entscheid, Ownerbeleg oder Risikowert ist
-keine neue Zustimmung. Eine benötigte aktuelle Übernahme muss erneut genau
-nach 10.7.5 beauftragt und geprüft werden. Workdaten registrieren keine
-Callbacks, laden keinen Code und erzeugen keinen Hostgrant. Fehlende echte
-Autorisierung bleibt eine konkrete Sperre; der verwendbare positive CLI- und
-strukturierte Pfad ist weiterhin nachzuweisen.
-
-**Checkpoint und Journal.** Vor dem ersten Restore-Betriebswrite darf die
-Vorbereitung an vollständigen, belegten Fortschrittsgrenzen pausieren, ohne
-einen Projektwriter-/Recovery-Lock über den Aufruf hinweg zu halten. Beim
-späteren Beginn werden Herkunft, Bestand, Ziel, Autorisierung und Auswahl
-unter dem nativen Lock erneut geprüft. Bestätigte Vorbereitungsarbeit wird
-nicht aus einem Textcursor oder einer erneut geladenen aktuellen Modellwurzel
-erraten; weiche Budgets verkürzen weder Eingangs- noch Zielprüfung.
-
-Ab dem ersten Restore-Betriebswrite ist das getrennte Restorejournal die
-maßgebliche Ausführungswahrheit. Ein echter Abbruch wird als
-`recovery_required` behandelt, auch wenn der letzte externe Workcheckpoint
-noch einen früheren Vorbereitungsstand zeigt. `work resume` MUSS vor einem
-neuen Write die genau gebundene vorhandene Ausführung prüfen und darf nur
-deren native Recovery nach 10.7.3 ausführen. Es gibt keine zweite Publikation,
-kein Vorwärts-Resume eines Teilziels und keinen normalen Promptcheckpoint
-mit freiwillig freigegebenem Mischstand. Fehlen notwendige echte Belege oder
-aktuelle Berechtigung, bleiben Zustand, Workdaten und Recoverybarrieren erhalten.
-
-Ein vollständiges, journalgebundenes Ziel wird samt fehlendem Audit abgeschlossen,
-auch wenn die externe Herkunft inzwischen fehlt; eine Teilpublikation wird
-ausschließlich aus geprüften Before Images zurückgerollt. Work darf diese
-beiden Fälle nicht durch eine vorgezogene frische Originalinventur-/Quellprüfung
-oder durch allgemeines Laden eines gültigen Ausgangsmodells verdecken.
-Der Rollback ist kein Restoreerfolg, hebt alte Sperren nicht auf und beginnt
-im selben Aufruf weder Neuplanung noch neue Restoreausführung. `work cancel`
-oder `work export` darf eine laufende Restoretransaktion nicht entsperren,
-verwerfen oder als portabel gesichert erklären; P.6/P.7 bleiben verbindlich.
-
-**Abschluss und Parität.** Ein verlorener äußerer Workabschluss nach bereits
-dauerhaftem Restoreabschluss wird aus dem genau passenden nativen Abschluss-
-beleg und den gemäß 10.7.3 erforderlichen aktuellen Prüfungen rekonstruiert,
-ohne erneut Zielbytes zu veröffentlichen. Erst vollständige Ergebnislieferung
-erlaubt `completed`; ein Workstatus allein beweist keinen Restoreerfolg.
-Ein bereits vollständig abgeschlossener Workauftrag liefert nach 11.12
-sein gespeichertes, an diesen Abschluss gebundenes Ergebnis. Er behauptet
-damit keine neue Prüfung eines inzwischen geänderten Projekts; ein neuer
-ausdrücklicher Restoreaufruf behält dessen aktuelle Konfliktprüfung.
-
-Einzellauf, strukturierter Aufruf und Workfortsetzung müssen für denselben
-gebundenen Auftrag dieselben Zielbytes, Erhaltungs-/Sicherungsbindungen,
-fachlichen Ergebnisse, Fehlerklassen und zulässigen Dateieffekte erreichen.
-Workgenerationen und Laufzeitverbrauch sind getrennte Betriebsdaten. Ungültige
-oder fehlende gespeicherte Bindungsbytes ergeben 3, echte I/O-/Recoveryblocker
-5, abweichende Auftrags-/Bestandsbindungen 6, Sicherheits-/Berechtigungsverstöße
-7; fehlende explizite Aufrufangaben bleiben 2. Work wird weder zu einem neuen
-Erfolgsreceipt noch zu einer Ausnahme von historischen Schutz-, Review-,
-Lifecycle- oder Fachproviderprüfungen. Implementierung und vollständige
-Verhaltensevidence dieser Bindung bleiben Bestandteil von 15.l.R.
-
-
-### 10.7.8 Verwaister äußerer Work-Owner einer Restorefortsetzung
-
-Die äußere Checkpointveröffentlichung eines nach 10.7.7 gebundenen
-Restoreauftrags verwendet den nativen Work-Lock aus P.2. Ein echter
-Prozessabbruch kann dessen Ownerdatei erhalten, obwohl kein Prozess mehr
-den zugehörigen Kernelmutex hält. Die folgende Regel konkretisiert nur
-die Wiederaufnahme dieses vorhandenen Restore-Workauftrags. Sie ersetzt
-weder den Projektwriter-/Recovery-Lock noch dessen Übernahme nach 10.7.5.
-
-**Expliziter Auftrag und begrenzte Zulässigkeit.** Für den inneren Befehl
-`recover.restore` akzeptiert `work resume` das zusammengehörige Optionspaar
-`--expected-work-lock-sha256 <SHA256>` und `--work-recovery-reason <TEXT>`.
-Der Hash bezeichnet die vollständigen tatsächlich vorgefundenen Bytes von
-`work-lock.json`, nicht PID, Nonce oder Checkpointhash; der Grund ist nach
-Trimmen nicht leer. Beide Angaben stammen ausdrücklich aus dem aktuellen
-Aufruf. Ein einzelner Parameter, ein ungültiger Hash/Grund oder ihre Verwendung
-für einen anderen inneren Befehl ist Eingabefehler 2. Ohne dieses Paar wird
-ein erhaltener Work-Owner niemals entfernt oder ersetzt. Die Angaben ändern
-weder Originalauftrag, Actor, Request, Plan, Auswahl noch Aufgabenidentität
-und werden nicht als spätere Wiederholungszustimmung gespeichert.
-
-Die Übernahme ist ausschließlich zulässig, wenn unter dem durchgehend
-gehaltenen nativen exklusiven Mutex desselben Work-Root-Inodes alle folgenden
-Voraussetzungen erneut belegt sind:
-
-1. Private reguläre Dateien, sichere disjunkte Pfade, Root-/Inodebindung,
-   unabhängige ursprüngliche Workbindung, unterstützter Build und die gesamte
-   veröffentlichte Checkpoint-/Objektkette sind gültig. Die ursprüngliche
-   Restorebindung wird ausschließlich aus ihren gespeicherten vollständigen
-   Bytes geprüft; eine neue Ausgangsmodell- oder Herkunftsprüfung darf dabei
-   keine bereits notwendige native Recovery verdecken.
-2. Die alte Ownerdatei ist vollständig und an genau diesen Workauftrag
-   gebunden; Bytes, Dateityp, Inode und erwarteter Bytehash stimmen überein.
-   Die Datei fehlt bei erwartetem Owner nicht und ist kein fremder Lock.
-3. Ein vertrauenswürdiger nativer Kerneladapter bestätigt denselben bekannten
-   Host einschließlich Boot- und PID-Namespace-Identität. Der alte PID und
-   dessen gespeicherte Prozessstartkennung sind bekannt. Der ursprüngliche
-   Owner ist nachweislich beendet: derselbe Prozess ist terminal, seine
-   Nichtexistenz ist belastbar bestätigt oder der PID gehört nachweislich
-   einem anderen Prozessstart. PID-Wiederverwendung erlaubt keinen Zugriff
-   auf den neuen Prozess. PID oder Hostname allein, Lockalter, Timeout,
-   gespeicherte Beobachtungen und ein lediglich freier Mutex genügen nicht.
-4. Die gerade beobachteten Ownerbytes und die native Eigentümerprüfung
-   bleiben bis unmittelbar vor dem atomaren Austausch gültig. Der neue
-   aktuelle Prozessowner ist ebenfalls vollständig nativ identifiziert.
-
-Lebende, fremde oder nicht eindeutig prüfbare Owner bleiben gesperrt.
-Insbesondere sind fehlende Kernelinformationen, unlesbare Prozessdaten,
-abweichender Boot-/PID-Namespace und unbekannte Prozessstartkennung keine
-Todesnachweise. Dieser äußere Workpfad besitzt keinen Force- oder
-Remote-Risiko-Override; Restoreoptionen wie `--force` oder
-`--accept-remote-risk` erteilen dafür keine Erlaubnis. Eine tatsächlich
-fehlende sichere Fortsetzung wird mit konkretem Blocker und Abhilfe gemeldet,
-nicht durch Löschen eines Owners, Fortschritt oder Erfolg ersetzt.
-
-**Dauerhafte Übergabe und Wiederanlauf.** Vor dem Ownerwechsel werden die
-exakten alten Ownerbytes und die beabsichtigten neuen Ownerbytes zusammen
-mit Work-ID, unabhängiger Anfangsbindung, Rootidentität, aktuellem
-Checkpoint-/Generationshash, nativer Ownerbeobachtung und aktuellem Grund
-als unveränderbarer betrieblicher Übergabebeleg gesichert. Er liegt unter
-`checkpoints/restore-owner-handoffs/`, getrennt von fachlichen Ergebnissen,
-und ist durch Größe und SHA-256 an seine tatsächlichen Bytes gebunden.
-Er enthält keine ausführbaren Daten, Produktfreigabe oder gespeicherte
-Recoveryberechtigung. Die Ownerdatei wird unter demselben Mutex atomar von
-den nochmals geprüften alten zu den vorab gebundenen neuen Bytes ersetzt;
-ein ungesicherter Zustand ohne Ownerdatei zwischen beiden ist unzulässig.
-Ein dauerhafter Abschlussbeleg bindet anschließend exakt diese Übergabe und
-die neuen Ownerbytes. Erst danach darf dieser Aufruf Workfortschritt oder
-native Restorearbeit beginnen.
-
-Ein Abbruch vor dem Austausch lässt den alten Owner maßgeblich. Ein Abbruch
-danach lässt den tatsächlich installierten neuen Owner maßgeblich, auch wenn
-der Übergabeabschluss noch fehlt. Die nur vorbereitete Absicht allein
-berechtigt weder zum Austausch noch zur erneuten Ausführung. Der Wiederanlauf
-muss genau den tatsächlichen Übergabestand prüfen und gegebenenfalls den
-fehlenden betrieblichen Abschluss aus passenden Bytes vervollständigen;
-jeder weitere Ownerwechsel verlangt erneut das aktuelle Optionspaar und
-alle obigen nativen Prüfungen. Mehrdeutige, unvollständige oder widersprüchliche
-Belege werden nicht erraten. Alte Belege werden weder überschrieben noch
-zurückgerollt; die normalen Freigaberegeln dürfen ausschließlich den exakt
-eigenen nachgewiesenen Owner entfernen.
-
-Nach der Work-Ownerübernahme bleiben letzte vollständige Checkpointgeneration,
-bestätigte Einheiten und alle noch offenen Aufgaben zunächst unverändert.
-Ein gespeicherter Fortschritts- oder Übergabebeleg erzeugt keinen Restoreerfolg.
-Die tatsächliche Projekttransaktion entscheidet weiterhin ausschließlich
-nach 10.7.3/10.7.7: aktuelle Recoveryautorisierung und gegebenenfalls gesonderte
-Projektownerübernahme, Vollzielabschluss oder Teilzielrollback, keine zweite
-Publikation und keine umgedeutete Herkunftsprüfung. Erst vollständig belegte
-Ergebnislieferung erlaubt den äußeren Workabschluss. Eine unterbrochene
-Ownerübergabe wird auch durch `work cancel`, `work export` oder Cachebereinigung
-weder entsperrt noch als portabel abgeschlossene Recovery ausgegeben.
-
-**Fehler und Kompatibilität.** Fehlende oder ungültige gespeicherte
-Bindungs-/Übergabebytes ergeben 3, tatsächliche I/O- oder nicht auflösbare
-Ownerblocker 5, abweichende Ownerhash-/Work-/Root-/Checkpointbindungen 6
-und unsichere Pfade, Dateitypen oder Zugriffsgrenzen 7. Erhaltene Bytes und
-tatsächlich bereits geschehene Writes bleiben bei Fehlern erhalten und
-werden als solche ausgewiesen. `work status` darf den tatsächlich gelesenen
-Ownerhash, seine aktuelle native Einstufung beziehungsweise `unknown` und
-die notwendige explizite Aktion melden; diese Beobachtung ist keine
-Übernahmefreigabe und führt keinen Ownerwechsel aus.
-
-Bestehende Workmanifest-, Plan-, Auswahl- und Checkpointbytes bleiben
-unverändert. Die zusätzliche betriebliche Übergabe erzeugt weder eine neue
-fachliche Work-ID noch eine kompatible Buildbehauptung. Bestehende
-Read-only-/Change-Plan-Workverträge werden nicht erweitert. Für portablen
-Worktransport gelten weiterhin P.7 und sämtliche Grenzen aus 10.7.7;
-Transport ersetzt keine lokale aktive Transaktion. Implementierung,
-verwendbarer CLI-/strukturierter Pfad, echte Prozessabbrüche sowie positive
-und negative Verhaltensnachweise dieser Regel bleiben Abnahmen von 15.l.R.
-
-
-#### 10.7.9 Aktuelle Restore-Qualifikation und historische Ergebnisprüfung
-
-**RESTORE-HISTORICAL-VALIDATION**, ausdrücklich bestätigte manuelle Klärung
-vom 29. Oktober 2026. Diese Regel konkretisiert 10.7.1–10.7.3, 10.7.7 und
-11.12. Sie gewährt weder eine fachliche Freigabe noch eine neue Recovery-
-oder Schreibberechtigung. Alle Erhaltungs-, Review-, Lifecycle-, Spezialisten-
-und Sicherheitsgates bleiben Pflicht. Insbesondere ist die Gültigkeit von
-Originalbytes von der gegenwärtigen fachlichen Qualifikation zu trennen.
+| Proposaloriginal | Unveränderte vollständige Originalbytes, Pfad/Identität, Größe und Bytehash; daraus nativ gelesene Artefaktrevision, Inhaltsrevision, Inhaltshash, Status, Reifegrad, Basis, vollständiger Change Plan, Reviews und Kontrollhistorie. |
+| Originalkontexte | Die tatsächlich referenzierten Originalobjekte und Manifeste für Basis, frühere Inhaltsfassungen, Prüfergebnisse und gegebenenfalls Veröffentlichung; jede Referenz wird nach ihrem nativen Vertrag auf konkrete Bytes, Identitäten und vollständige Hashes aufgelöst. Aktuelle Zielkontexte werden getrennt übergeben. |
+| Reviewbeobachtungen | Jede Beobachtung ist eindeutig an ihren unveränderten ursprünglichen Reviewbeleg und dessen Stelle in der Proposalhistorie gebunden. Sie umfasst den tatsächlichen Akteur, Entscheidung, UTC-Zeit, beobachtete Artefaktrevision und das vollständige Freigabetupel aus 10.3. Wirksamkeitsänderungen brauchen die jeweils zugehörigen Originalbelege; Wiederholung ist kein zusätzlicher Reviewer. |
+| Kontrollbeobachtungen | Die geordnete native Ereignisfolge samt vorherigem/nachfolgendem Status, unveränderter Inhaltsbindung, Akteur, UTC-Zeit, Grund und ursprünglicher Prüfergebnisbindung nach 10.3/11.10. Für `applied` gehören die passend gebundenen ursprünglichen Transaktions-/Ergebnisbelege dazu. |
+| Policykontexte | Die aus den tatsächlichen gebundenen Projekt-/Profil-/Konfigurationsbytes bestimmte Policy des jeweiligen ursprünglichen Entscheids und getrennt die für eine aktuelle Qualifikation geltende Policy. `validation_policy.minimum_human_proposal_approvals` wird nach dem bestehenden Konfigurationsvertrag ausgewertet, nicht aus einer Zahl im Reviewbericht übernommen. |
+| Vertrauenswürdiger Verifier | Expliziter, vom installierten Hostcode gebundener nativer Prüfweg für die tatsächliche Herkunft und Entscheidung der Originalbelege; er erhält die vollständige Beleg- und Kontextbindung. Projekt-, Plan-, Work- oder ZIP-Daten können ihn weder auswählen noch registrieren. |
+
+Dies definiert einen nativen Laufzeiteingang, **kein neues persistiertes
+Review-, Plan-, Work- oder Archivformat**. Bestehende gespeicherte Belege
+werden ausschließlich nach ihrem jeweiligen ursprünglichen Vertrag gelesen.
+Beobachtungen DÜRFEN NICHT aus bloßen Statuswerten, heutigen Ersatzdateien,
+Containerhashes, Testresultaten oder dieser Entwicklungsfreigabe erzeugt
+werden. Ein Hostadapter MUSS seine typisierten Beobachtungen auf die
+wirklichen Originalbelege zurückführen; er darf keinen unbelegten
+Erfolgscallback liefern. Nach 11.10 bleibt die Single-User-Akteursdeklaration
+eine Deklaration und wird nicht als kryptografische Authentifizierung
+ausgegeben. Ein tatsächlicher menschlicher Entscheid wird weder erfunden
+noch durch einen automatischen Check ersetzt. Fehlende zwingende
+Originalkontexte oder nicht prüfbare Herkunft sperren den betroffenen Fall
+mit konkretem Befund gemäß den fachlichen Fehlerverträgen und 10.7.3.
+
+**Deterministische lesende Prüfung.** Der Kern MUSS insbesondere:
+
+1. `content_sha256` exakt nach der Top-Level-Ausschlussliste aus 10.3
+   berechnen; gleichnamige Unterfelder und Extensions bleiben enthalten.
+   Inhaltsrevision und Artefaktrevision werden getrennt geprüft. Reine
+   Kontrolländerungen dürfen die fachliche Inhaltsbindung nicht ändern.
+2. Basisdescriptor und Modellwurzel nach 10.8.1 sowie den vollständigen
+   Change Plan einschließlich Reihenfolge, Metadaten, Vorbedingungen und
+   Ergebnisbindung mit den nativen Verträgen prüfen. Eine historische
+   Basisabweichung gegenüber dem heutigen Ziel wird gesondert bewertet;
+   sie ist weder eine stille Basisumschreibung noch allein ein beschädigtes
+   historisches Original. Der lesende Kern führt keine Proposaltransaktion
+   und keinen Projektcode aus.
+3. Die vollständige Kontrollfolge nach 10.3/10.4/11.10 prüfen, einschließlich
+   Status-/Reifegradzuordnung, atomarer Review-start-Folge und Endzuständen.
+   Ein Prüfergebnis-Hash ist nur eine Bindung: Der zugehörige ursprüngliche
+   Nachweis und seine tatsächlichen nativen Eingänge müssen geprüft werden.
+   Es wird kein fehlendes Ereignis ergänzt oder ein Status korrigiert.
+4. Reviews gegen Proposal-ID, `content_revision`, `content_sha256`,
+   `base_model_root_sha256` und `change_plan_sha256` prüfen. Nur wirksame,
+   nicht widerrufene menschliche Zustimmungen verschiedener `actor_id`
+   zählen zum verlangten Quorum. Beobachtete Artefaktrevisionen bleiben
+   Auditinformation; eine reine Kontrollrevision entwertet die unveränderte
+   Inhaltsfreigabe nicht. Inhaltsänderung, wirksamer Widerruf oder stale
+   Basis dürfen dagegen nicht durch ein gespeichertes `approved` verdeckt
+   werden. Unzureichende Quoren erzeugen keine Freigabe.
+5. Historische Gültigkeit und aktuelle Freigabewirkung getrennt ausweisen.
+   Korrekt gebundene `rejected`-, `stale`- und `applied`-Originale bleiben
+   erhaltbare Endzustände. Ein `applied`-Nachweis wird gegen seinen damaligen
+   Entscheid und passenden damaligen Abschluss geprüft; er autorisiert
+   keinen erneuten Apply. Negative oder inzwischen unwirksame Reviews
+   bleiben Originalhistorie und werden als solche berichtet. Aktuelle
+   `approved`-Invarianten des aktuellen Zielstands bleiben
+   vollständig erforderlich; unzulässige Zustände werden nicht repariert.
+
+##### 10.7.3.2 Gemeinsame Dienste und historische Ergebnisse
 
 **Aktuelle vollständige Qualifikation.** Planung und jeder neue Versuch einer
 Vorwärtspublikation MÜSSEN die jeweils vorgeschriebenen vollständigen nativen
@@ -4101,7 +3248,7 @@ alle dort geforderten tatsächlichen Originalbytes, Identitäten, Revisionen,
 vollständigen Modell-/Profil-/Konfigurationskontexte und fachlichen
 Projektionen umfassen; bei gespeicherten Zuständen gilt der native
 Prüfmodus für diesen Zustand, nicht eine neue Lifecycletransition. Fehlende
-Herkunft DARF NICHT aus heutigen Dateien des beschädigten Projekts ergänzt
+Herkunft DARF NICHT aus heutigen Ersatzdateien ergänzt
 werden. Fehlende, unlesbare, stale, fremd gebundene, gefälschte, abgelehnte
 oder nichtmenschliche Pflichtbelege erlauben keinen positiven Fachentscheid.
 Der Befund MUSS das betroffene Objekt und die fehlende beziehungsweise
@@ -4109,245 +3256,31 @@ verletzte Pflicht nennen, ohne einen Review oder eine Risikoakzeptanz zu
 erfinden. Ein nicht verfügbarer Pflichtdienst bleibt sperrend. Sein bloßes
 Sperren erfüllt jedoch nicht die positive R-Abnahme des unterstützten Falls.
 
-**Passive Originalbindung.** Das Lesen eines gespeicherten Restore-Plans
-MUSS dessen geschlossene Formatversion, vollständige Originalobjekte,
-Größen-/Hashbindungen, Identitäten, Projekt-/Actor-/Request-/Auswahlbindung
-und innere Konsistenz gemäß 10.7.2 prüfen, ohne fehlende Bytes durch heutige
-Projektdateien zu ersetzen. Diese reine Prüfung DARF intern separat von
-der aktuellen fachlichen Qualifikation erfolgen. Ihr Ergebnis DARF NICHT
-als aktuell qualifizierter Plan oder als Berechtigung an einen Schreibpfad
-weitergereicht werden. Jeder aktive Pfad MUSS die zusätzlich für seinen
-Zustand erforderlichen nativen Gates selbst verlangen. Eine solche Trennung
-ändert weder den geschlossenen Plan noch seine Hashprojektion.
+CLI, strukturierter Aufruf und normale Workpfade MÜSSEN dieselben nativen
+Prüfeingänge erreichen. Vollständig abgeschlossene normale Workaufträge dürfen
+nur mit unabhängiger Anfangsbindung, vollständiger Checkpoint-/Objektkette,
+nativen Abschluss-/Lieferbelegen und unveränderten Ergebnisbytes passiv
+zurückgegeben werden. Ein Statuswort allein genügt nicht. Diese historische
+Rückgabe bleibt auch nach Verlust des früheren Roots möglich, wenn sämtliche
+gebundenen Workbytes erhalten sind; sie erzeugt keine aktuelle Projektprüfung,
+Freigabe oder Publikation. Unvollständige Aufträge erhalten diese Ausnahme
+nicht. Ein unterbrochener Projektwrite bleibt nach 10.7.1 gesperrt.
 
-**Vollständig abgeschlossene Workaufträge.** Nur ein tatsächlich vollständig
-abgeschlossener Auftrag mit unabhängig gebundener Anfangsbasis, vollständiger
-Checkpoint-/Objektkette, passenden nativen Abschluss- und Lieferbelegen und
-unveränderten Ergebnisbytes darf seinen gespeicherten Ergebnisdatensatz
-passiv zurückgeben. Die erforderlichen Belege stammen ausschließlich aus
-den bereits gespeicherten Originalobjekten, Checkpoints und Abschlussdaten
-dieses Auftrags; ein Statuswort allein genügt nicht. Alle vorhandenen
-Typ-, Versions-, Build-, Pfad-, Sicherheits- und Bindungsprüfungen bleiben
-verbindlich. Manipulation, fehlende Pflichtbytes oder widersprüchliche
-Abschlussketten sperren die Rückgabe.
+Nur reine Prüfungen identischer unveränderlicher Bytes dürfen innerhalb eines
+Aufrufs wiederverwendet werden. Aktuelle Autorität, Eigentümer-/Rootbeobachtung
+und veränderliche externe Verifierbefunde dürfen nicht als Byteprüfung gecacht
+oder als Grant persistiert werden. Fehlende zwingende Originaldaten sperren,
+aber pauschales Ablehnen aller positiven Fälle erfüllt keine Fachabnahme.
 
-Diese Rückgabe MUSS auch nach Änderung oder Verlust des damaligen
-Projekt-/Quellroots möglich sein, sofern sämtliche für diese passive Prüfung
-gebundenen Workbytes erhalten und gültig sind. Sie führt keine neue
-Projektqualifikation, externe Reviewbeobachtung, Recoveryaktion oder
-Publikation aus. Der gespeicherte Ergebnisdatensatz bleibt unverändert;
-seine historische Erfolgsangabe darf nicht als heutiger Projekterfolg
-umgedeutet werden. Die maschinenlesbare Restore-Work-Antwort behält die
-bestehende Unterscheidung: Bei rein historischer Rückgabe sind
-`native_execution_checked=false` und `checkpoint_changed=false`. Diese
-Felder bezeichnen die Arbeit des aktuellen Aufrufs und verleihen weder
-Review-, Release- noch Schreibbefugnis. Die fachlichen Ergebnisbytes dürfen
-nicht allein zur Kennzeichnung der Wiederholung umgeschrieben werden.
+#### 10.7.4 Übergang zur Implementierung
 
-Unvollständige Aufträge und ein verlorener äußerer Abschlusscheckpoint
-bekommen diese Ausnahme ausdrücklich nicht. Dort bleiben native
-Journalwahrheit, zulässige Abschlussrekonstruktion beziehungsweise Rollback
-und die jeweils erforderlichen aktuellen Prüfungen aus 10.7.3/10.7.7
-maßgeblich. Eine vorgezogene frische Herkunfts- oder Vollmodellprüfung darf
-notwendige native Recovery nicht verdecken. Jeder tatsächliche Write braucht
-weiterhin aktuelle Autorisierung; gespeicherte Prüf- oder Abschlussdaten
-ersetzen sie nicht. Eine nötige Ownerübernahme bleibt ein gesonderter
-expliziter Vorgang nach 10.7.5/10.7.8.
-
-**Persistenz, Wiederverwendung und Fehler.** Diese Klärung führt keine neuen
-persistierten Belegfelder oder Reviewcontainer ein. Bestehende Pläne,
-Workdaten, Journale, Ergebnisse und historische Nachweise bleiben in ihren
-jeweiligen geschlossenen Versionen und ursprünglichen Bytes gültig; es gibt
-keine stille Ergänzung, Umdeutung oder Migration. Sollte eine weitere
-Produktänderung zusätzliche persistierte Belege benötigen, MUSS deren
-vollständiger geschlossener, versionierter Lese-/Herkunfts- und Hashvertrag
-zuerst ausdrücklich spezifiziert werden; die vorliegende Regel erteilt dafür
-keine implizite Formatbefugnis.
-
-Nur reine Prüfungen unveränderlicher identischer Eingaben dürfen innerhalb
-eines Aufrufs wiederverwendet werden. Aktuelle Autorisierung, Owner-/Root-
-Beobachtungen und veränderliche externe Verifierergebnisse DÜRFEN NICHT als
-Byteprüfung gecacht oder als wiederverwendbarer Grant persistiert werden.
-Fehlende oder ungültige gespeicherte Belegbytes ergeben 3, tatsächliche
-I/O-/Recoveryblocker 5, abweichende Bindungen 6 und Sicherheits-/Berechtigungs-
-verstöße 7 gemäß den bestehenden Restore-/Workverträgen; fehlende explizite
-Aufrufangaben bleiben 2. Ein Fehler wird nicht zu einem historischen Erfolg
-herabgestuft. Die vollständigen positiven, negativen, Integrations- und
-Crash-/I/O-Abnahmen dieser Unterscheidung bleiben Teil von 15.l.R.
-
-
-#### 10.7.10 Vorgezogene lesende Proposal-Prüfgrundlage für Restore
-
-**RESTORE-PROPOSAL-PREREQUISITE**, ausdrückliche Nutzerentscheidung vom
-29. Oktober 2026: Die für den vollständigen Abschluss von 15.l.R benötigte
-Proposal-Prüfgrundlage wird vorgezogen und die Planabhängigkeit korrigiert.
-Diese eng begrenzte Vorziehung ist unmittelbar vom Nutzer autorisiert;
-sie wird nicht aus der Delegation in 2.4.1 abgeleitet. Alle fachlichen
-Pflichten aus 10.3, 10.4, 10.7.1–10.7.9, 10.8.1 und 11.10 bleiben erhalten.
-
-**Umfang und Abhängigkeit.** Vor Abschluss von 15.l.R MUSS ein gemeinsamer,
-rein lesender nativer Prüfkern für gespeicherte Proposals verfügbar und in
-die vollständige Restore-Qualifikation eingebunden sein. Vorgezogen werden
-nur die dafür erforderliche Inhalts-/Basis-/Change-Plan-Prüfung,
-Kontrollhistorienprüfung und Prüfung der tatsächlichen Reviewwirksamkeit
-aus den fachlichen Verträgen von M18. Die öffentlichen Proposalbefehle,
-Authoring, Erteilung neuer Reviews, Review-start-Kontrollwrites, Proposal-
-Apply und deren vollständige W/R/C-Abnahmen bleiben M18 zugeordnet.
-M18 MUSS den gemeinsamen Kern wiederverwenden; ein eigener schwächerer
-Restore-Validator ist unzulässig. Die Umsetzung der lesenden Grundlage
-gehört zum vollständigen 15.l.R-Abschluss, nicht zu einer neuen
-Produktposition oder einem vorab als erledigt markierten M18-Schritt.
-
-**Native Eingaben und Belegbindung.** Der Prüfkern MUSS die folgenden
-fachlich getrennten Eingaben als geschlossene, typgeprüfte native Werte
-verlangen, soweit sie für den gespeicherten Zustand benötigt werden:
-
-| Eingabe | Verbindlicher Inhalt und Prüfung |
-|---|---|
-| Proposaloriginal | Unveränderte vollständige Originalbytes, Pfad/Identität, Größe und Bytehash; daraus nativ gelesene Artefaktrevision, Inhaltsrevision, Inhaltshash, Status, Reifegrad, Basis, vollständiger Change Plan, Reviews und Kontrollhistorie. |
-| Originalkontexte | Die tatsächlich referenzierten Originalobjekte und Manifeste für Basis, frühere Inhaltsfassungen, Prüfergebnisse und gegebenenfalls Veröffentlichung; jede Referenz wird nach ihrem nativen Vertrag auf konkrete Bytes, Identitäten und vollständige Hashes aufgelöst. Aktuelle Zielkontexte werden getrennt übergeben. |
-| Reviewbeobachtungen | Jede Beobachtung ist eindeutig an ihren unveränderten ursprünglichen Reviewbeleg und dessen Stelle in der Proposalhistorie gebunden. Sie umfasst den tatsächlichen Akteur, Entscheidung, UTC-Zeit, beobachtete Artefaktrevision und das vollständige Freigabetupel aus 10.3. Wirksamkeitsänderungen brauchen die jeweils zugehörigen Originalbelege; Wiederholung ist kein zusätzlicher Reviewer. |
-| Kontrollbeobachtungen | Die geordnete native Ereignisfolge samt vorherigem/nachfolgendem Status, unveränderter Inhaltsbindung, Akteur, UTC-Zeit, Grund und ursprünglicher Prüfergebnisbindung nach 10.3/11.10. Für `applied` gehören die passend gebundenen ursprünglichen Transaktions-/Ergebnisbelege dazu. |
-| Policykontexte | Die aus den tatsächlichen gebundenen Projekt-/Profil-/Konfigurationsbytes bestimmte Policy des jeweiligen ursprünglichen Entscheids und getrennt die für eine aktuelle Qualifikation geltende Policy. `validation_policy.minimum_human_proposal_approvals` wird nach dem bestehenden Konfigurationsvertrag ausgewertet, nicht aus einer Zahl im Reviewbericht übernommen. |
-| Vertrauenswürdiger Verifier | Expliziter, vom installierten Hostcode gebundener nativer Prüfweg für die tatsächliche Herkunft und Entscheidung der Originalbelege; er erhält die vollständige Beleg- und Kontextbindung. Projekt-, Plan-, Work- oder ZIP-Daten können ihn weder auswählen noch registrieren. |
-
-Dies definiert einen nativen Laufzeiteingang, **kein neues persistiertes
-Review-, Plan-, Work- oder Archivformat**. Bestehende gespeicherte Belege
-werden ausschließlich nach ihrem jeweiligen ursprünglichen Vertrag gelesen.
-Beobachtungen DÜRFEN NICHT aus bloßen Statuswerten, heutigen Ersatzdateien,
-Containerhashes, Testresultaten oder dieser Entwicklungsfreigabe erzeugt
-werden. Ein Hostadapter MUSS seine typisierten Beobachtungen auf die
-wirklichen Originalbelege zurückführen; er darf keinen unbelegten
-Erfolgscallback liefern. Nach 11.10 bleibt die Single-User-Akteursdeklaration
-eine Deklaration und wird nicht als kryptografische Authentifizierung
-ausgegeben. Ein tatsächlicher menschlicher Entscheid wird weder erfunden
-noch durch einen automatischen Check ersetzt. Fehlende zwingende
-Originalkontexte oder nicht prüfbare Herkunft sperren den betroffenen Fall
-mit konkretem Befund gemäß 10.7.1/10.7.9.
-
-**Deterministische lesende Prüfung.** Der Kern MUSS insbesondere:
-
-1. `content_sha256` exakt nach der Top-Level-Ausschlussliste aus 10.3
-   berechnen; gleichnamige Unterfelder und Extensions bleiben enthalten.
-   Inhaltsrevision und Artefaktrevision werden getrennt geprüft. Reine
-   Kontrolländerungen dürfen die fachliche Inhaltsbindung nicht ändern.
-2. Basisdescriptor und Modellwurzel nach 10.8.1 sowie den vollständigen
-   Change Plan einschließlich Reihenfolge, Metadaten, Vorbedingungen und
-   Ergebnisbindung mit den nativen Verträgen prüfen. Eine historische
-   Basisabweichung gegenüber dem heutigen Ziel wird gesondert bewertet;
-   sie ist weder eine stille Basisumschreibung noch allein ein beschädigtes
-   historisches Original. Der lesende Kern führt keine Proposaltransaktion
-   und keinen Projektcode aus.
-3. Die vollständige Kontrollfolge nach 10.3/10.4/11.10 prüfen, einschließlich
-   Status-/Reifegradzuordnung, atomarer Review-start-Folge und Endzuständen.
-   Ein Prüfergebnis-Hash ist nur eine Bindung: Der zugehörige ursprüngliche
-   Nachweis und seine tatsächlichen nativen Eingänge müssen geprüft werden.
-   Es wird kein fehlendes Ereignis ergänzt oder ein Status korrigiert.
-4. Reviews gegen Proposal-ID, `content_revision`, `content_sha256`,
-   `base_model_root_sha256` und `change_plan_sha256` prüfen. Nur wirksame,
-   nicht widerrufene menschliche Zustimmungen verschiedener `actor_id`
-   zählen zum verlangten Quorum. Beobachtete Artefaktrevisionen bleiben
-   Auditinformation; eine reine Kontrollrevision entwertet die unveränderte
-   Inhaltsfreigabe nicht. Inhaltsänderung, wirksamer Widerruf oder stale
-   Basis dürfen dagegen nicht durch ein gespeichertes `approved` verdeckt
-   werden. Unzureichende Quoren erzeugen keine Freigabe.
-5. Historische Gültigkeit und aktuelle Freigabewirkung getrennt ausweisen.
-   Korrekt gebundene `rejected`-, `stale`- und `applied`-Originale bleiben
-   erhaltbare Endzustände. Ein `applied`-Nachweis wird gegen seinen damaligen
-   Entscheid und passenden damaligen Abschluss geprüft; er autorisiert
-   keinen erneuten Apply. Negative oder inzwischen unwirksame Reviews
-   bleiben Originalhistorie und werden als solche berichtet. Aktuelle
-   `approved`-Invarianten des wiederhergestellten Zielstands bleiben
-   vollständig erforderlich; unzulässige Zustände werden nicht repariert.
-
-**Integration und Abnahmegrenze.** CLI, strukturierter Aufruf, Planungsmodus
-und Work MÜSSEN dieselben nativen Eingänge und Prüfungen erreichen. Planung
-und neue Vorwärtspublikation prüfen erforderliche aktuelle Beobachtungen
-frisch. Die rein historische Rückgabe vollständig abgeschlossener Work-
-Ergebnisse folgt unverändert 10.7.9 und erteilt keine neue Schreibbefugnis.
-Fehlercodes und Schutz-/Erhaltungsregeln aus 10.7.1 bleiben unverändert.
-Ein bloßes `unsupported` bei jedem abgeschlossenen Proposal erfüllt die
-positive R-Abnahme nicht. Ebenso wenig ersetzt ein grüner Schema- oder
-Hashcheck die geforderte fachliche Prüfung. Die folgenden Planabnahmen
-müssen vor R-Abschluss tatsächlich erfüllt sein; diese Dokumentänderung
-behauptet weder Implementierung noch erfolgreiche Produktabnahme.
-
-#### 10.7.11 Unterstützter Restore-Schemaumfang und Legacy-Voraussetzung
-
-**RESTORE-SCHEMA-SCOPE**, ausdrückliche Nutzerentscheidung vom 29. Oktober
-2026. Der Nutzer genehmigt die Korrektur der bisherigen unbedingten
-0.1-Kompatibilitätszusage und der daraus abgeleiteten R-Voraussetzung.
-Diese Entscheidung wird nicht aus SPECROAD-DECISION-1 abgeleitet. Sie
-ersetzt insoweit die vorherige Freigabe, einen lesenden Legacy-Kern aus
-16.b/16.g/16.j in 15.l.R vorzuziehen. Die genehmigte lesende Proposal-
-Voraussetzung aus 10.7.10 bleibt uneingeschränkt bestehen.
-
-**Aktueller positiver Abnahmeumfang.** 15.l.R MUSS Restore für das verbindlich
-definierte Schema **0.2.0** vollständig erfüllen. Sämtliche übrigen Pflichten
-aus 10.7.1–10.7.10 bleiben bestehen: vollständige Quelle und Zielqualifikation,
-Evidence-/Baseline-/Relationsreview-/Proposal-Historien und Originalclosure,
-Revisionen, Receipts und Audits, aktuelle Freigaben, öffentliche Commands/CLI,
-strukturierte Aufrufe, Planung, Work-Parität und die gesamte Crash-/I/O-Matrix.
-Hierdurch wird weder R als abgeschlossen markiert noch 15.l.C vorgezogen.
-Bestehende reguläre 0.2-Daten mit zulässigen übernommenen Identitäten sowie
-bereits definierte Legacy-Verträge innerhalb von 0.2 werden nicht allein
-wegen ihrer Bezeichnung aus dem unterstützten Umfang ausgeschlossen.
-„Definiert“ meint die geltenden beziehungsweise ausdrücklich unterstützten
-Schema- und Fachverträge, nicht beliebige frühere Entwurfssnapshots allein
-wegen desselben Versionslabels. Bestehende Original-, Journal- und Work-
-Kompatibilität bleibt erhalten; die separate Entwurfsmigration nach S.4
-und ihre Herkunftsbindung bleiben M16-Aufgaben. Passive Anzeigeadapter
-und bereits festgelegte CLI-Aliase werden durch diese Formatgrenze nicht
-entfernt oder als vollständige Legacy-Qualifikation umgedeutet.
-
-**Sichere Grenze.** Solange der 0.1-Quellvertrag aus Q.0 nicht verbindlich
-vorliegt und der zugehörige native Leser nicht geprüft implementiert ist,
-ist 0.1 kein positiv unterstütztes Restore-Quell- oder Bestandsformat.
-Eine als normative Ressource erkennbare Datei mit deklarierter 0.1- oder
-anderer nicht unterstützter Schema-Version sowie eine nicht unterstützte
-Legacy-Manifestregistrierung MUSS vor einer Änderung am Projekt, an
-projektinternen Betriebsdaten oder an vorhandenen Originaldaten mit präzisem
-Versions-/Quellvertragsbefund und Code 3 abgewiesen werden.
-Das gilt auch für entsprechende Ressourcen in der erforderlichen Archiv-
-oder Anhangclosure. Sie dürfen nicht als entbehrliche beschädigte Dateien
-übersprungen, überschrieben, umgedeutet oder still migriert werden.
-Vorhandene Originale bleiben unverändert. Bereits ausdrücklich zulässige
-externe Work-Checkpoints zur sicheren Vorbereitung folgen weiterhin O/P
-und 10.7.7; sie erteilen keine Projektwritebefugnis und müssen tatsächlichen
-Teilfortschritt ohne vollständige Qualifikations-/Erfolgsbehauptung ausweisen.
-Allgemeine Regeln für tatsächlich
-beschädigte Bestandsbytes, Sicherung und Recovery bleiben erhalten; diese
-Grenze ist kein pauschales Verbot der Wiederherstellung beschädigter Projekte.
-Bereits festgestellte Identitätskonflikte, Sicherheits- und I/O-Fehler behalten
-ihre bisherigen Fehlerklassen. CLI, strukturierter Aufruf, Planung und Work
-MÜSSEN dieselbe Formatgrenze anwenden. Die passive Rückgabe eines bereits
-vollständig abgeschlossenen Work-Ergebnisses folgt unverändert 10.7.9 und
-erteilt keine neue Schreibbefugnis.
-
-**Legacy bleibt geplante Arbeit.** Definition, Prüfung und Implementierung
-eines tatsächlich festgelegten Altformats sowie dessen Migration bleiben
-M16 zugeordnet. Q.0 bestimmt die Voraussetzung. Weder die Existenz noch die
-Nichtexistenz eines extern verwendeten 0.1-Formats wird aus fehlenden Dateien
-im geprüften Repository abgeleitet. Eine Dokumentversion 0.1 ist allein
-kein Nachweis eines implementierten oder veröffentlichten Datenformats.
-Es werden keine historischen Schemas, Hashformeln, Produktivdaten oder
-Kompatibilitätsnachweise erfunden. Für einen verbindlich definierten
-Quellvertrag sind ausdrücklich als synthetisch gekennzeichnete positive,
-negative und Grenzfall-Fixtures zulässig; echte Produktivdaten sind keine
-pauschale Entwicklungs- oder Testvoraussetzung. Solche Fixtures beweisen
-nur den angegebenen Vertrag, keine unbelegte historische Verbreitung.
-
-**Abnahmegrenze.** Für R sind vollständige positive 0.2-Erhaltung samt allen
-übrigen Pflichten sowie negative Fälle für nicht unterstützte deklarierte
-Versionen und Legacy-Registrierungen nachzuweisen, einschließlich CLI/Work-
-Parität und unveränderten Originalbytes bei Abweisung. Positive 0.1-
-Kompatibilitätsabnahmen werden erst mit der M16-Integration unter Q.0 fällig;
-sie dürfen weder als bestanden noch als dauerhaft ersatzlos entfallen gelten.
-
-**Fortschreibung REFERENCE-SOURCE-551:** Q.0.1 definiert auf ausdrückliche
-Nutzerentscheidung nun genau einen neuen Referenzquellvertrag. Diese
-Definition erfüllt keine der weiterhin notwendigen nativen Reader-,
-Migrations- oder Restore-Abnahmen und ändert die sichere aktuelle Grenze nicht.
+Diese Spezifikation beschreibt das Ziel. Das Spezifikations-/Planungsbundle
+entfernt noch keinen Produktcode und nimmt keine neuen Sperrmechanismen ab.
+Die sechs vorgeschalteten W/R/C-Schritte 18.s bis 18.x setzen den Vertrag vor
+18.l um. Bis zu ihrem tatsächlichen Abschluss bleiben abweichende alte
+Implementierungen als offene Arbeit ausgewiesen, ohne Benutzungsfreigabe.
+Die bisherigen Wiederherstellungsverträge 10.7.1–10.7.11 aus v0.2.84 sind
+hiermit abgelöst; ihre historische Fassung bleibt über Git nachvollziehbar.
 
 ### 10.8 Scope Descriptor und Scope-Closure
 
@@ -4619,7 +3552,7 @@ verboten. Zusätzliche ausführungsbezogene Steuerfelder werden durch die
 geschlossene Grammatik abgewiesen. Beliebiger Text in passiven Daten wird
 nicht ausgeführt und nicht anhand von Schlüsselwörtern umgeschrieben.
 Ein abgebildeter Lifecyclewert oder ein Hash ist keine Schreib-/Freigabeautorität;
-native Authoring-, Review-, Scope-, Transaktions- und Recovery-Gates bleiben
+native Authoring-, Review-, Scope-, Schreibschutz- und Abschlussgates bleiben
 erforderlich. Ein passives Teilergebnis darf kein erfolgreiches Import-Apply
 oder verlustfreies Gesamtformat behaupten.
 
@@ -4731,7 +3664,7 @@ Historie oder Betriebsdaten und erzeugt keine ID, Revision, Uhrzeit oder
 Freigabe. Erst die nachfolgenden Schritte 14.d/14.e binden den vollständigen
 Change Plan und wenden ihn über den gemeinsamen Writer an. Dabei gelten
 K.2, 9.6.3, unveränderbare Nachweistypen, Scope-, Review-, Verlustzustimmungs-,
-Transaktions- und Recovery-Gates unverändert. Eine Strategieauswahl oder
+Schreibschutz- und Abschlussgates unverändert. Eine Strategieauswahl oder
 ein Kandidat ersetzt weder die erforderliche menschliche Entscheidung noch
 eine Verlustakzeptanz; die Klärung verspricht keine zusätzliche Archivierung
 jeder historischen Revision. Bestandsdaten und historische Evidence werden
@@ -5563,7 +4496,7 @@ CLI-/Work-/Transaktionsintegration aus 17.k–17.l bleibt erforderlich.
 
 **MERGE-PUBLICATION-619, delegiert gemäß SPECROAD-DECISION-1 und 2.4.3.1,
 Vertrag 4.** 17.k konkretisiert den Übergang von 10.15.7 zum vorhandenen
-Change-Plan-, Lock-, Journal-, Receipt- und Recovery-Vertrag. Merge ist ein
+Change-Plan-, Lock-, Schreibmarker- und Receipt-Vertrag. Merge ist ein
 spezialisierter Planproduzent; es gibt keinen zweiten Dateischreiber.
 
 Der gemeinsame Change Plan 1.2.0 erhält den ausschließlich spezialisierten
@@ -5604,17 +4537,15 @@ Das durch den Writer erwartungsgemäß veränderte lokale Ours wird während der
 Publikation anhand der vollständig gebundenen Vorherbilder und des bewiesenen
 Effektpräfixes geprüft; es wird nicht still auf eine neue Basis umgeplant.
 
-Eine vorher separat außerhalb des Projekts veröffentlichte, bytegenau erneut
-geprüfte Sicherung `merge-source-backup-v1` enthält sämtliche gebundenen
-Vorherdateien. Der gemeinsame native Snapshot-Transaktionsschreiber verwendet
-sie zusammen mit Staging, Vorherbildern, fsync, aktivem Journal, Datei-
-Präfixprüfung und dauerhaften Request-/Transaktionsreceipts. Das spezialisierte
-Journal heißt `merge-transition-journal-v1`; aktive und passive Namensräume
-bleiben die bestehenden gemeinsamen Namensräume. Die vollständige native
-Zielprüfung aus 10.15.7 läuft erneut vor und nach den Dateieffekten. Aktive oder
-unbekannte Transaktionszustände sperren den normalen Projektzugriff. Atomar
-bedeutet diesen vorhandenen kooperativen Transaktionsvertrag, keine erfundene
-atomare Mehrdateioperation gegenüber beliebigen fremden Dateischreibern.
+Die externe, bytegenau geprüfte Sicherung `merge-source-backup-v1` bleibt
+an sämtliche Vorherdateien gebunden. Der gemeinsame Writer verwendet
+Zielstaging, dauerhaften Schreibmarker, sichere Einzelfile-Publikation und
+normale Request-/Transaktionsreceipts nach Anhang C. Die vollständige native
+Zielprüfung aus 10.15.7 läuft vor und nach den Dateieffekten. Der alte
+wiederherstellende `merge-transition-journal-v1`-Zweig entfällt. Kooperative
+Leser erhalten ausschließlich einen bestätigten vollständigen Zustand oder
+die Sperre; kein atomarer Mehrdateiwrite gegenüber beliebigen Fremdschreibern
+und keine Reparatur nach Abbruch werden versprochen.
 
 Die gebundene Validierung `merge-publication-validation-v1` enthält den nativen
 vollständigen Modellbericht, seine unveränderte Policybewertung und die neu
@@ -5626,17 +4557,13 @@ Erforderliche aktuelle menschliche Reviews und Host-Provider bleiben Gates.
 Eine gespeicherte Validierung oder erfolgreiche Publikation ist keine neue
 menschliche Freigabe und keine zeitlich unbegrenzte Aktualitätszusage.
 
-`merge-transaction-v1` bindet Abschluss, Plan, Journal, erwartete Zielwurzel,
-Dateieffekte, Sicherung, Receipts und diese Validierung. Ein identischer
-Request wird erst nach vollständiger nativer Receiptprüfung historisch
-beantwortet; er führt keine Dateieffekte erneut aus und behauptet keine aktuelle
-Nachweisprüfung. Abweichende Operationen bei derselben Request-ID sind Konflikt.
-Ein Fehler erhält den realen Zustand; kein automatischer Retry/Rollback.
-Die vorhandene explizite Recovery darf nach vollständigem Bytepräfixbeweis
-einen fertigen Zielstand abschließen oder sonst die exakte Basis wiederherstellen.
-Sie erneuert keine fachlichen Reviews oder externen Aktualitätsbefunde.
-Die öffentliche CLI-/Work-Gesamtintegration und ihr vollständiger Endnachweis
-bleiben Aufgabe von 17.l; 17.k erklärt weder M17 noch die Produktabnahme fertig.
+Der neue geschlossene Mergeabschluss bindet Plan, Basis, Zielwurzel,
+Dateieffekte, Sicherung, Receipts und native Validierung. Identische vollständig
+abgeschlossene Requests liefern nach Receiptprüfung ihr historisches Ergebnis
+ohne weitere Dateiwirkung; abweichende Requests sind Konflikt. Unterbrechung
+nach Markeranlage sperrt den Root nach 10.7. Es gibt weder automatischen Retry
+noch explizites Rollback oder Fertigstellen. Fachliche Reviews und externe
+Aktualitätsbefunde werden nicht durch den Abschluss erneuert.
 
 ### 10.15.9 Passive Merge-Vorbereitung und Work — MERGE-WORK-627
 
@@ -5758,8 +4685,8 @@ oder ablehnender Hostentscheid DARF keine Projektänderung freigeben. Das
 externe Before-Backup MUSS nativ erzeugt und geprüft werden; ein vorhandenes
 Ziel darf nur nach Beweis identischer vollständiger Backupbytes wiederverwendet,
 niemals überschrieben werden. Der gemeinsame native Writer, aktuelle
-Quellenprüfungen, vollständige Zielvalidierung, Freigaben und explizite Recovery
-nach 10.15.8 bleiben unverändert. Keine zusätzliche Merge-Transaktion,
+Quellenprüfungen, vollständige Zielvalidierung, Freigaben und Abbruchsperre
+nach 10.15.8 bleiben verbindlich. Keine zusätzliche Merge-Transaktion,
 automatische Wiederholung oder automatische Rollback-Strategie entsteht.
 
 Bei bereits belegtem Abschluss derselben Request-ID MUSS der native
@@ -5783,7 +4710,7 @@ Bei Fehlern bleiben die nativen Fehlerklassen und gegebenenfalls
 
 Ein Bundle verwendet ausschließlich die kanonischen Werte `bundle_kind=project|partial` nach Anhang E.3; `document` und `release` sind Scope-Arten, keine Werte dieses Felds. Ein `project`-Bundle enthält einen geschlossenen, nicht konfigurationsgefilterten Projektscope und bildet nach Extraktion ein normales schreibbares SpecRoad-Projekt. Es enthält standardmäßig abgeschlossene Request- und Transaktionsreceipts in einer getrennten Betriebssektion, deren Hash im Bundlemanifest gebunden ist, aber nicht in die fachliche Modellwurzel eingeht.
 
-Ein über `--scope document` oder `--scope release` gewähltes Bundle trägt `bundle_kind=partial`, `read_only=true`, Ursprungmodellwurzel, partiellen Scope Descriptor, partielle Modellwurzel und alle Boundary References. Nach Extraktion sind nur `validate --partial`, `show`, `query`, `trace`, `why`, `impact`, `diff`, `render`, `view render`, `diagram`, `bundle verify` und `project inspect` zulässig; zusätzlich sind die schreibfreien Metadatendiagnosen `environment check`, `recover status` und `lock status` sowie projektlose Bootstrapbefehle erlaubt. Normative Writes, Baselines, Migration, Merge, Import, vollständige Release Readiness und Re-Export als Vollprojekt sind bis zu einer expliziten Rehydrierung mit dem Ursprungsprojekt verweigert.
+Ein über `--scope document` oder `--scope release` gewähltes Bundle trägt `bundle_kind=partial`, `read_only=true`, Ursprungmodellwurzel, partiellen Scope Descriptor, partielle Modellwurzel und alle Boundary References. Nach Extraktion sind nur `validate --partial`, `show`, `query`, `trace`, `why`, `impact`, `diff`, `render`, `view render`, `diagram`, `bundle verify` und `project inspect` zulässig; zusätzlich sind die schreibfreien Metadatendiagnosen `environment check` und `lock status` sowie projektlose Bootstrapbefehle erlaubt. Normative Writes, Baselines, Migration, Merge, Import, vollständige Release Readiness und Re-Export als Vollprojekt sind bis zu einer expliziten Rehydrierung mit dem Ursprungsprojekt verweigert.
 
 Das kanonische ZIP-Profil für Projektbundle und ReqIFZ lautet:
 
@@ -5798,7 +4725,7 @@ Das kanonische ZIP-Profil für Projektbundle und ReqIFZ lautet:
 - externe Attribute sind exakt `0o100644 << 16`, interne Attribute exakt `0`;
 - Dateinamen und Payloads sind vor Aufnahme vollständig gehasht; doppelte Zielpfade sind unzulässig.
 
-`bundle create --scope project --configuration <ID>` wird als widersprüchlicher Vollprojektauftrag mit Code 2 abgewiesen. Dokument-/Release-Teilbundles unterstützen die Konfigurationsauswahl gemäß SR-REQ-0400; sie bleiben partial. Ein Vollbundle wird nur aus einem abgeschlossenen, regulär lesbaren Projektstand erzeugt. Aktive Journale, Locks, Staging und Caches sind kein portabler Erfolgsstand und werden nicht als Ersatz für abgeschlossene Receipts gebündelt. Bei ungelöster Transaktion bricht `bundle create` schreibfrei mit Exit Code 5 ab; nach Recovery kann der Aufruf wiederholt werden. Ein Bundle in derselben verlorenen Sandbox ist keine externe Sicherung.
+`bundle create --scope project --configuration <ID>` wird als widersprüchlicher Vollprojektauftrag mit Code 2 abgewiesen. Dokument-/Release-Teilbundles unterstützen die Konfigurationsauswahl gemäß SR-REQ-0400; sie bleiben partial. Ein Vollbundle wird nur aus einem abgeschlossenen, regulär lesbaren Projektstand erzeugt. Aktive Journale, Locks, Staging und Caches sind kein portabler Erfolgsstand und werden nicht als Ersatz für abgeschlossene Receipts gebündelt. Bei ungelöster Transaktion bricht `bundle create` schreibfrei mit Exit Code 5 ab; im frischen gültigen Git-Checkout ist ein neuer Auftrag möglich. Ein Bundle in derselben verlorenen Sandbox ist keine externe Sicherung.
 
 ### 10.17 Formatierungsumfang
 
@@ -5875,7 +4802,6 @@ specroad bundle create --profile ai-runtime --direction outbound --output <ZIP>
 specroad bundle create --profile ai-runtime --direction return --reference <HINPAKET> --proposal <PROP-ID> --output <PATCH-ZIP>
 specroad bundle verify --profile ai-runtime <ZIP> [--reference <HINPAKET>]
 specroad bundle extract --profile ai-runtime <HINPAKET> --target <VERZEICHNIS>
-specroad recover status|run|discard|restore ...
 specroad lock status|recover ...
 specroad capabilities
 specroad schema list|show ...
@@ -5998,7 +4924,11 @@ Kein Befehl liest oder wartet auf stdin ohne ausdrücklichen Marker wie `--input
 
 `active_profiles` ist eine nach der effektiven Profilreihenfolge geordnete Liste `{profile_id,version}`; `artifact_counts` ist ein nach Artefakttyp geordnetes Objekt; `primary_documents` ist eine nach ID geordnete Liste `{id,title}`. `diagnostic_summary` zählt ausschließlich fachliche `error`, `warning` und `info` und verwendet projektrelative Fundstellen. `migration_needed` ist bei eindeutig geladenem Schema ein Boolean; noch nicht sicher bestimmte Werte einschließlich Modellwurzel und Artefaktzahlen sind `null`, nicht erfunden. `open_transaction` und `writer_lock` sind entweder die nach bestehenden Verträgen ermittelten Metadatenobjekte oder `null`; nicht prüfbare Informationen werden ausdrücklich als unbekannt gekennzeichnet, nicht als „kein Lock“ ausgegeben.
 
-`consistency_state` ist `consistent`, `recovery_required`, `writer_active` oder `unknown`. Nur aus einem konsistenten lesbaren Snapshot wird eine abgeschlossene semantische Projektselbstbeschreibung behauptet. Bei Recoverybedarf oder aktivem Writer gelten die bisherigen Lese-/Recoveryregeln; nicht belastbare semantische Felder bleiben `null` und der Aufruf liefert den vorgesehenen Konflikt-/Recoverystatus. `project inspect` repariert oder sperrt dafür nicht heimlich das Projekt.
+`consistency_state` ist `consistent`, `corrupted`, `writer_active` oder
+`unknown`. Nur ein konsistenter lesbarer Snapshot erlaubt eine abgeschlossene
+semantische Projektselbstbeschreibung. Bei Sperre bleiben nicht belastbare
+semantische Felder `null`; der Aufruf liefert die Betriebsdiagnose nach N.3.
+`project inspect` repariert oder verändert dafür weder Projekt noch Marker.
 
 Die Determinismusgarantie gilt für die RFC-8785-Bytes von `{format_version,semantic}` bei identischem konsistentem Modell, identischen fachlichen Optionen, Profilen und Toolversion. Für `runtime`, den betrieblichen Teil des Envelope-`project`-Objekts, äußere Pfade, Status-/Diagnoseangaben zur Laufzeit und Messwerte wird keine Gleichheit allein aus der Modellsemantik versprochen. Vollständige JSON-Gleichheit setzt zusätzlich identische betriebliche Eingaben und identischen Lieferweg voraus. Hashes, Golden Tests und Vergleiche müssen genau diese Projektion benutzen; keine Implementierung darf dafür Projektroot, offenen Write oder Lock verschweigen.
 
@@ -6043,22 +4973,25 @@ Jeder in Kapitel 11.2 aufgeführte Befehl gehört exakt einer der folgenden Klas
 
 | Klasse | Exakt zugeordnete Befehle | Schreib-/Sicherheitsvertrag |
 |---|---|---|
-| `normative_write` | `change apply`; `format` ohne `--check`; `artifact create`, `artifact update`; `relation add`, `relation remove`, `relation review`; `lifecycle transition`; `document create`; `section add`, `section move`, `section remove`; `block add`, `block update`, `block remove`; `view create`; `evidence record`, `evidence import`; `baseline create`; `proposal create`, `proposal change`, `proposal review start`, `proposal review`, `proposal apply`; `import apply`; `migrate apply`; `merge apply` | Change Plan, exklusiver Projektwriter-Lock, Journal und Request-Receipt; `--dry-run`; Request-ID für AI/CI Pflicht und für Human/Tool optional |
+| `normative_write` | `change apply`; `format` ohne `--check`; `artifact create`, `artifact update`; `relation add`, `relation remove`, `relation review`; `lifecycle transition`; `document create`; `section add`, `section move`, `section remove`; `block add`, `block update`, `block remove`; `view create`; `evidence record`, `evidence import`; `baseline create`; `proposal create`, `proposal change`, `proposal review start`, `proposal review`, `proposal apply`; `import apply`; `migrate apply`; `merge apply` | Change Plan, exklusiver Projektwriter-Lock, Schreibmarker und Request-Receipt; `--dry-run`; Request-ID für AI/CI Pflicht und für Human/Tool optional |
 | `plan_output` | `import plan`; `migrate plan`; `merge plan`; `merge resolve` | verändert keine normative Projektressource; schreibt ein ausdrücklich angegebenes Plan-Ziel atomar oder gibt den Plan auf stdout aus; kein Projektwriter-Lock und kein Request-Receipt |
 | `generated_output` | `analyzer request`, `analyzer run`, `analyzer import`; `document render`; `view render`; `diagram trace`, `diagram architecture`, `diagram release`; `render`; `export reqif`, `export reqifz`, `export csv`, `export ndjson`; `bundle create` außer der unten benannten Hinexportvariante | erzeugt ausschließlich atomare Ausgaben außerhalb des kanonischen Modells oder unter `generated/`; kein Change Plan, Projektwriter-Lock, Request-Receipt oder `.specroad/`-Seiteneffekt |
-| `read_only` | `language list`, `language show`, `analyzer list`, `analyzer describe`, `analyzer show`, `analyzer evaluate`; `config show`; `profile explain`; `format --check`; `artifact show`; `relation status`; `document show`; `view show`; `validate`; `lint`; `query`; `trace`; `why`; `impact`; `diff`; `coverage`; `roadmap explain`; `release readiness`; `baseline show`, `baseline verify`, `baseline compare`; `proposal show`, `proposal validate`, `proposal check`; `merge conflicts`; `migrate verify`; `configuration evaluate`; `bundle verify`; `recover status`; `lock status`; `capabilities`; `schema list`, `schema show`; `command describe`; `project inspect`; `environment check`; `version`; `work status`; `work prompt` | verändert weder Projektdateien noch `.specroad/`; funktioniert ohne Schreibberechtigung, sofern keine ausdrücklich externe Ausgabedatei angefordert wird |
-| `local_operational` | `lock recover`; explizite Cache- oder Receipt-Inspektions-/Bereinigungsbefehle | verändert ausschließlich `.specroad/`-Betriebsdaten oder Recovery-Auditdaten unter einem Betriebslock und niemals normative Projektressourcen |
-| `recovery_write` | `recover run`, `recover discard`, `recover restore` | verwendet den spezialisierten Recovery-Lock und den Zustandsvertrag aus 10.6–10.7; darf ausschließlich den im Journal gebundenen Basis- oder Zielzustand beziehungsweise den vollständig qualifizierten Restore-Zielstand nach 10.7.1 veröffentlichen; erzeugt immer Recovery-Audit |
-| `root_creation` | `init`; `bundle extract` | verwendet ein Bootstrap-Journal im Ziel und veröffentlicht die geplante Root-Struktur vollständig oder gar nicht; ist kein Change Plan eines vorhandenen SpecRoad-Projekts |
+| `read_only` | `language list`, `language show`, `analyzer list`, `analyzer describe`, `analyzer show`, `analyzer evaluate`; `config show`; `profile explain`; `format --check`; `artifact show`; `relation status`; `document show`; `view show`; `validate`; `lint`; `query`; `trace`; `why`; `impact`; `diff`; `coverage`; `roadmap explain`; `release readiness`; `baseline show`, `baseline verify`, `baseline compare`; `proposal show`, `proposal validate`, `proposal check`; `merge conflicts`; `migrate verify`; `configuration evaluate`; `bundle verify`; `lock status`; `capabilities`; `schema list`, `schema show`; `command describe`; `project inspect`; `environment check`; `version`; `work status`; `work prompt` | verändert weder Projektdateien noch `.specroad/`; funktioniert ohne Schreibberechtigung, sofern keine ausdrücklich externe Ausgabedatei angefordert wird |
+| `local_operational` | `lock recover`; explizite Cache- oder Receipt-Inspektions-/Bereinigungsbefehle | verändert ausschließlich `.specroad/`-Betriebsdaten oder lokale Diagnosedaten unter einem Betriebslock und niemals normative Projektressourcen |
+| `root_creation` | `init`; `bundle extract` | verwendet einen dauerhaften Bootstrapmarker; bestätigt nur vollständige Ziele und sperrt bei Abbruch den unvollständigen Root; ist kein Change Plan eines vorhandenen SpecRoad-Projekts |
 | `transport_operational` | `bundle create --profile ai-runtime --direction outbound` | ausschließlich die nachfolgend benannten PatchHarbor-Betriebswirkungen und externe Ausgabe; keine normative Projektmutation, kein SpecRoad-Receipt und keine Git-Historienänderung |
 
-Die Work-Steuerbefehle werden ergänzend exakt so klassifiziert: `work export` ist `generated_output`; `work restore` ist `work_operational`; `work cancel` ist `work_operational`; `work resume` ist `work_operational` mit der im gespeicherten Auftrag ausdrücklich gebundenen inneren Befehlsklasse. Die Klasse `work_operational` verändert ausschließlich den angegebenen externen Work-Root; eine normative Wirkung ist nur durch den gesondert autorisierten inneren `normative_write` oder `recovery_write` zulässig. Verschachtelte oder unbekannte Command-IDs werden nicht ausgeführt.
+Die Work-Steuerbefehle werden ergänzend exakt so klassifiziert: `work export` ist `generated_output`; `work restore` ist `work_operational`; `work cancel` ist `work_operational`; `work resume` ist `work_operational` mit der im gespeicherten Auftrag ausdrücklich gebundenen inneren Befehlsklasse. Die Klasse `work_operational` verändert ausschließlich den angegebenen externen Work-Root; eine normative Wirkung ist nur durch den gesondert autorisierten inneren `normative_write` zulässig. Verschachtelte oder unbekannte Command-IDs werden nicht ausgeführt.
 
 Die Laufzeitsteuerung darf für einen aufteilbaren Befehl einen externen Work-Root nach Anhang P erzeugen. Dies ändert niemals die Schreibrechte seiner Fachklasse: `read_only`, `plan_output`, `generated_output` und Dry-Runs verändern weiterhin weder kanonische Projektdateien noch `.specroad/`. Externe Snapshot-/Checkpointdateien sind offengelegte betriebliche Ausgaben, keine stillen Projektwrites. Bootstrap- und reine Metadatendiagnosen erzeugen keine Work-Daten. `command describe` nennt diese externen Laufzeitwirkungen ausdrücklich.
 
 Für `init` darf das Ziel fehlen oder ein vorhandenes Repositoryverzeichnis sein. Vor dem ersten Write muss der Befehl für jeden geplanten Zielpfad nachweisen, dass keine Datei, kein Symlink und kein nichtleeres zu ersetzendes Verzeichnis existiert; bereits vorhandene, nicht von SpecRoad beanspruchte Repositorydateien bleiben unangetastet. `init` erzeugt insbesondere `specroad.json` und genau ein Primärspezifikationsdokument. Bei Fehler werden ausschließlich die durch denselben Bootstrap-Lauf neu erzeugten Pfade entfernt.
 
-Für `bundle extract` muss das Ziel fehlen oder leer sein. Es wird erst nach vollständiger Bundle-Verifikation geschrieben; vorhandene Zielinhalte werden niemals überschrieben. Ein unterbrochener Root-Erzeugungslauf wird vor einer Wiederholung anhand seines Bootstrap-Journals zurückgerollt oder vollständig abgeschlossen.
+Für `bundle extract` muss das Ziel fehlen oder leer sein. Es wird erst
+nach vollständiger Bundle-Verifikation beschrieben; vorhandene Zielinhalte
+werden nicht überschrieben. Ein unterbrochener Root-Erzeugungslauf sperrt das
+Ziel durch seinen Bootstrapmarker. Ein erneuter Auftrag benötigt ein anderes
+zulässiges Ziel nach 10.7.2; keine Vervollständigung oder Rücknahme im alten Root.
 
 Für `ai-runtime` ist `bundle create --direction return` wie das gewöhnliche
 `bundle create` ein `generated_output`; `bundle verify` bleibt `read_only` und
@@ -6089,7 +5022,7 @@ Rückpaket darf darüber nicht als Projekt entpackt oder angewendet werden.
 | 2 | Nutzung/Konfiguration | ungültige CLI-Nutzung, Profilkonflikt oder Konfiguration |
 | 3 | Ungültiges Eingabemodell | JSON-, Schema- oder grundlegender Modellfehler |
 | 4 | Interner Fehler | unerwarteter SpecRoad-Fehler |
-| 5 | I/O/Umgebung/Recovery | Tatsächlicher Dateisystem-, Git-, Hostressourcen- oder Recoveryblocker; bloße weiche Budgetüberschreitung ist kein Fehler |
+| 5 | I/O/Umgebung/Projektsperre | Tatsächlicher Dateisystem-, Git-, Hostressourcen- oder Schutzblocker; bloße weiche Budgetüberschreitung ist kein Fehler |
 | 6 | Konflikt | stale Basis, Merge-, Import-, Request-ID-, External-Identity- oder Scope-Konflikt |
 | 7 | Sicherheitsverweigerung | Pfad-, Fremdcode-, Netzwerk-, Actor-, Partial-Bundle-Write- oder harte Sicherheits-/Formatpolicy-Verletzung |
 | 8 | Fortsetzung erforderlich | Gültiger Checkpoint vorhanden; Gesamtauftrag noch nicht vollständig; nächster Aufruf nach Anhang P |
@@ -6175,9 +5108,9 @@ Die ursprünglichen Fachbefehle bleiben der Einstieg. Der erste große Aufruf ze
 | `work prompt <DIR> [--max-prompt-chars <N>]` | Geprüften Fortsetzungstext oder JSON nach P.8 ausgeben; keine Nachricht senden und keine neue Arbeit starten. |
 | `work export <DIR> --output <FILE>` | Selbstenthaltenes Arbeitspaket nach P.7 erstellen; optional nötige geordnete Teilarchive werden vollständig im Ausgabemanifest aufgeführt. Kein Projektvollbundle vortäuschen. |
 | `work restore <FILE> --output <DIR>` | Paket und alle nötigen Teile prüfen, ausschließlich in fehlendes/leeres externes Work-Ziel extrahieren. Keine normativen Projektdateien überschreiben. |
-| `work cancel <DIR> --reason <TEXT>` | Ohne aktive normative Transaktion explizit beenden; Kontrollbeleg erhalten. Kein Verwerfen notwendiger Recoverydaten. |
+| `work cancel <DIR> --reason <TEXT>` | Ohne aktive normative Transaktion explizit beenden; Kontrollbeleg erhalten. Kein Verwerfen notwendiger Schutzdaten. |
 
-`work resume` akzeptiert die Ressourcenoptionen von Kapitel 11.3; sie verändern den fachlichen Operationshash nicht. Die übrigen Befehle nennen anwendbare Ausgabe-/Ressourcenoptionen in `command describe`. CLI- oder Profileingaben, die den Fachauftrag, Actor, Plan oder Freigabewirkung verändern würden, sind kein Resume, sondern ein neuer ausdrücklich zu bindender Auftrag. `work resume` kann keine andere Command-ID oder Shellzeichenkette ausführen. Für den inneren Befehl `recover.restore` konkretisiert 10.7.7 die passive Originalbindung und die getrennte aktuelle Recoveryautorisierung; dessen gebundene Herkunfts-/Projektroots dürfen durch `--project` nicht umgeschrieben werden. Nur für diesen inneren Befehl konkretisiert 10.7.8 zusätzlich das ausdrücklich aktuelle Paar `--expected-work-lock-sha256 <SHA256>` und `--work-recovery-reason <TEXT>` für einen verwaisten äußeren Work-Owner. Es ist von einer nötigen Projektownerübernahme vollständig getrennt und erweitert keine fachliche oder menschliche Freigabe.
+`work resume` akzeptiert die Ressourcenoptionen von Kapitel 11.3; sie verändern den fachlichen Operationshash nicht. Die übrigen Befehle nennen anwendbare Ausgabe-/Ressourcenoptionen in `command describe`. CLI- oder Profileingaben, die den Fachauftrag, Actor, Plan oder Freigabewirkung verändern würden, sind kein Resume, sondern ein neuer ausdrücklich zu bindender Auftrag. `work resume` kann keine andere Command-ID oder Shellzeichenkette ausführen. Alte innere Restoreaufträge werden gemäß 10.7.3 als nicht mehr unterstützt abgewiesen.
 
 ```bash
 python3 specroad.pyz validate --project ./projekt \
@@ -6188,7 +5121,12 @@ python3 specroad.pyz work prompt ./arbeit --format pretty
 python3 specroad.pyz work export ./arbeit --output ./arbeit.specroad-work.zip
 ```
 
-Die Beispiele beschreiben mögliche aufeinanderfolgende Aufrufe, keinen automatisch laufenden Prozess. `work prompt`/`export` sind nur notwendig, solange noch Arbeit offen ist. Ein bereits abgeschlossenes `work resume` liefert ohne erneutes Rechnen das vollständige gespeicherte Resultat. Ein normaler Promptwechsel verändert weder Daten noch Request-ID. Für Restore konkretisiert 10.7.9 die passive Prüfung des vollständig gebundenen historischen Abschlusses und ihre maschinenlesbare Abgrenzung von aktueller Qualifikation; unvollständige Aufträge behalten sämtliche vorgeschriebenen aktuellen Gates.
+Die Beispiele sind mögliche aufeinanderfolgende Aufrufe, kein automatisch
+laufender Prozess. `work prompt`/`export` dienen offener Vorbereitungsarbeit.
+Ein abgeschlossenes Work liefert sein geprüftes gespeichertes Resultat ohne
+erneute Berechnung; es erteilt keine aktuelle Schreibberechtigung. Normale
+Promptwechsel verändern weder Projekt noch Request-ID. Die Fortsetzung eines
+unterbrochenen Projektwrites ist ausgeschlossen.
 
 
 ---
@@ -6213,7 +5151,11 @@ Diese eng begrenzte Ergebnisausnahme gilt nur für den typisierten Review-Aufnah
 
 **Autorität, Proposal und Idempotenz:** Nur der menschliche Review-Fachbefehl darf die Spezialoperation `relation_review_record` planen. Deren Payload bindet Reviewer, Entscheidung, Grund, Relation, Kontexthashes und die vollständige Rücknahmemenge. Ein generisches `artifact create` oder ein freier JSON-Patch darf sie nicht ersetzen. Mit `--as-proposal` wird nur der vollständige, bereits menschlich begründete Plan vorgeschlagen; keine Ablehnung oder Herabstufung wird vor Apply veröffentlicht. Eine KI kann keinen menschlichen Relationsreview erzeugen. Sie darf einen bereits entsprechend freigegebenen und unverändert gebundenen Plan im bestehenden Proposal-Apply-Vertrag ausführen. Planprüfung, gespeicherte Freigabe und Apply verwenden denselben gekoppelten Endstand. Ein Writer, der unvollständige oder zusätzliche Operationen erkennt, weist den Plan zurück statt sie stillschweigend nachzutragen.
 
-Review, Rücknahmen und Receipt bilden eine Transaktion. Bei gleichem Request und identischer Basisbindung wird nach verlorener Ausgabe dasselbe Receipt mit derselben Review-ID und denselben Artefaktrevisionen zurückgegeben, kein zweiter Nachweis. Crash-Recovery stellt entweder den gesamten Vorzustand oder den gesamten neuen Review-/Freigabezustand her. Aufteilung über Prompts betrifft nur die Vorbereitung, nicht die atomare Veröffentlichung.
+Review, Rücknahmen und Receipt bilden einen geschützten Fachvorgang.
+Ein identischer abgeschlossener Request liefert dasselbe bestätigte Receipt
+ohne zweite Review-ID oder Revision. Bei Abbruch vor dauerhaftem Abschluss
+bleibt das Projekt nach 10.7 gesperrt; Basis oder Ziel werden nicht automatisch
+wiederhergestellt. Promptteilung betrifft ausschließlich die Vorbereitung.
 
 **Normativer CLI-Sollablauf:** Ein Requirement R steht mit gültig bestätigter Pflichtrelation L auf `approved`, Revision 4. `relation review R --relation-id L --decision rejected --reason ...` plant die neue Review-ID und R Revision 5/`proposed`. Nach Commit: Code 0, Review unveränderbar, L=`invalid`, SRV027/error sichtbar; `validate` danach Code 1. Eine spätere aktuelle Bestätigung erzeugt eine andere Review-ID, L=`current`; R bleibt Revision 5/`proposed`. Erst explizites `lifecycle transition R --to in_review` und danach ein erfolgreiches `--to approved` führen zu Revision 6 und 7. Bei Ausgang R=`draft`/Revision 4 speichert dieselbe Ablehnung nur das Review; R bleibt `draft`/Revision 4. Die IDs R/L dienen hier nur als symbolische Bezeichnungen, nicht als gültige Eingabesyntax.
 
@@ -6493,7 +5435,7 @@ Die CLI ist die verbindliche Mensch-, Agenten- und Automatisierungsschnittstelle
 
 | ID | Normative Anforderung | Quelle | Verifikation | Testfall |
 |---|---|---|---|---|
-| SR-REQ-0179 | Version 0.2 MUSS mindestens die Befehlsgruppen `init`, `config`, `format`, `change`, `artifact`, `relation`, `lifecycle`, `document`, `view`, `diagram`, `show`, `validate`, `lint`, `render`, `query`, `trace`, `why`, `impact`, `diff`, `coverage`, `roadmap`, `release`, `evidence`, `baseline`, `proposal`, `import`, `export`, `migrate`, `merge`, `bundle`, `recover`, `lock`, `capabilities`, `schema`, `command`, `project` und `version` bereitstellen. | SR-NEED-0001, SR-NEED-0007, SR-NEED-0008, SR-NEED-0013 | SR-VER-0013 | SR-TC-0179 |
+| SR-REQ-0179 | Version 0.2 MUSS mindestens die Befehlsgruppen `init`, `config`, `format`, `change`, `artifact`, `relation`, `lifecycle`, `document`, `view`, `diagram`, `show`, `validate`, `lint`, `render`, `query`, `trace`, `why`, `impact`, `diff`, `coverage`, `roadmap`, `release`, `evidence`, `baseline`, `proposal`, `import`, `export`, `migrate`, `merge`, `bundle`, `lock`, `capabilities`, `schema`, `command`, `project` und `version` bereitstellen. | SR-NEED-0001, SR-NEED-0007, SR-NEED-0008, SR-NEED-0013 | SR-VER-0013 | SR-TC-0179 |
 | SR-REQ-0180 | Jeder Befehl MUSS ausschließlich die für seine Befehlsklasse in Kapitel 11.7 und seinem Command Contract zugelassenen globalen Optionen unterstützen. | SR-NEED-0007, SR-NEED-0008, SR-NEED-0013 | SR-VER-0013 | SR-TC-0180 |
 | SR-REQ-0181 | Jeder Befehl und Unterbefehl MUSS mit `--help` eine vollständige Nutzung, Optionen, Exit Codes und mindestens ein Beispiel ausgeben. | SR-NEED-0001, SR-NEED-0007 | SR-VER-0013 | SR-TC-0181 |
 | SR-REQ-0182 | Ergebnisdaten MÜSSEN auf stdout und betriebliche Fehlermeldungen, die nicht Teil eines strukturierten Ergebnisdokuments sind, auf stderr ausgegeben werden. | SR-NEED-0007, SR-NEED-0008 | SR-VER-0013 | SR-TC-0182 |
@@ -6502,8 +5444,8 @@ Die CLI ist die verbindliche Mensch-, Agenten- und Automatisierungsschnittstelle
 | SR-REQ-0185 | SpecRoad MUSS die Exit Codes aus Kapitel 11.8 einschließlich Code 8 für einen gesicherten, noch unvollständigen Fortsetzungsstand verwenden. | SR-NEED-0007, SR-NEED-0008 | SR-VER-0013 | SR-TC-0185 |
 | SR-REQ-0186 | SpecRoad MUSS Farbausgabe deaktivieren, wenn stdout kein TTY ist, `NO_COLOR` gesetzt ist oder `--no-color` verwendet wird. | SR-NEED-0007, SR-NEED-0001 | SR-VER-0013 | SR-TC-0186 |
 | SR-REQ-0187 | Informationen DÜRFEN NICHT ausschließlich durch Farbe codiert werden. | SR-NEED-0001, SR-NEED-0007 | SR-VER-0013 | SR-TC-0187 |
-| SR-REQ-0188 | Read-only-Befehle MÜSSEN ohne Schreibzugriff auf den Projektroot und ohne vorausgesetzte Cache-Dateien funktionieren, sofern keine unvollständige Transaktion Recovery erfordert und keine explizite Ausgabedatei innerhalb des Projektroots angefordert wird. | SR-NEED-0007, SR-NEED-0011 | SR-VER-0013 | SR-TC-0188 |
-| SR-REQ-0189 | Jeder tatsächlich ausgeführte `normative_write` MUSS seine normativen Zieldateien ausschließlich über Staging, Synchronisation und die Journal-/Commit-Sequenz aus Anhang C veröffentlichen. | SR-NEED-0007, SR-NEED-0011, SR-NEED-0013 | SR-VER-0019 | SR-TC-0189 |
+| SR-REQ-0188 | Read-only-Befehle MÜSSEN ohne Schreibzugriff und Cache funktionieren; bei aktivem Writer, unklarem Zustand oder Abbruchsperre gilt die schreibfreie Diagnose aus Anhang N statt regulärer Modellnutzung. | SR-NEED-0007, SR-NEED-0011 | SR-VER-0013 | SR-TC-0188 |
+| SR-REQ-0189 | Jeder normative Write MUSS Zielstaging, sichere Einzelfile-Publikation, Synchronisation, dauerhaften Schreibmarker und vollständige Abschlussprüfung nach Anhang C verwenden. | SR-NEED-0007, SR-NEED-0011, SR-NEED-0013 | SR-VER-0019 | SR-TC-0189 |
 | SR-REQ-0190 | Git-unabhängige Befehle MÜSSEN in einem SpecRoad-Projekt ohne `.git`-Verzeichnis funktionieren. | SR-NEED-0001, SR-NEED-0011 | SR-VER-0013 | SR-TC-0190 |
 | SR-REQ-0191 | Ein Vergleich oder Merge gegen einen Git-Ref MUSS dessen SpecRoad-Dateien über feste, shellfreie Git-Plumbing-Aufrufe lesen, ohne Hooks, Pager, externe Diff-/Filterprozesse, Checkout, Branch-, Index- oder Arbeitsbaumänderung. | SR-NEED-0003, SR-NEED-0007, SR-NEED-0011 | SR-VER-0013 | SR-TC-0191 |
 | SR-REQ-0192 | Ein schreibender Proposal-Befehl MUSS bei nicht zur erwarteten Basis passenden Änderungen innerhalb der `managed_paths` mit Exit Code 6 abbrechen. | SR-NEED-0003, SR-NEED-0008 | SR-VER-0013 | SR-TC-0192 |
@@ -6526,8 +5468,8 @@ Diese Anforderungen definieren messbare Eigenschaften und Sicherheitsgrenzen auf
 | SR-REQ-0202 | SpecRoad MUSS alle Größen- und Komplexitätsgrenzen nach der abschließenden Klassifikation in Anhang O.1 als weiches Arbeitsziel, expliziten Fachscope oder harte Sicherheits-/Formatgrenze behandeln. | SR-NEED-0011, SR-NEED-0007, SR-NEED-0012 | SR-VER-0014 | SR-TC-0202 |
 | SR-REQ-0203 | Bei einer Überschreitung eines weichen Arbeitsbudgets MUSS SpecRoad die adaptive Fortsetzungsentscheidung aus Anhang O.4 statt eines budgetbedingten Fehlerabbruchs anwenden. | SR-NEED-0011, SR-NEED-0007 | SR-VER-0014 | SR-TC-0203 |
 | SR-REQ-0204 | Ein Prozessabbruch oder interner Fehler während eines normativen Schreibbefehls DARF NICHT einen unvollständigen Zustand als regulär ladbaren Projektstand hinterlassen. | SR-NEED-0011, SR-NEED-0009, SR-NEED-0013 | SR-VER-0019 | SR-TC-0204 |
-| SR-REQ-0205 | Normative Writes und Recovery-Writes MÜSSEN die ihrer Befehlsklasse zugeordnete exklusive Projektlockart nach Kapitel 11.7 verwenden. | SR-NEED-0007, SR-NEED-0011, SR-NEED-0013 | SR-VER-0019 | SR-TC-0205 |
-| SR-REQ-0206 | Ein Lock MUSS mindestens Lock-ID, Prozesskennung, Prozessstartkennung, Hostkennung, Erstellungszeit, Befehl, Request-ID und Transaktions-ID enthalten und ausschließlich durch den in Kapitel 11.2 und Anhang C definierten Recovery-Vertrag entfernbar sein. | SR-NEED-0011, SR-NEED-0009, SR-NEED-0013 | SR-VER-0019 | SR-TC-0206 |
+| SR-REQ-0205 | Normative Writes MÜSSEN den exklusiven Projektwriter-Lock verwenden; eine Abbruchsperre DARF NICHT durch eine andere Schreibklasse umgangen werden. | SR-NEED-0007, SR-NEED-0011, SR-NEED-0013 | SR-VER-0019 | SR-TC-0205 |
+| SR-REQ-0206 | Ein Writer-Lock MUSS Lock-ID, Prozesskennung, Prozessstartkennung, Hostkennung, Zeit, Befehl, Request-ID und Transaktions-ID binden; Freigabe und Eigentümerübernahme MÜSSEN 11.7 und Anhang C erfüllen, ohne einen Schreibmarker zu löschen. | SR-NEED-0011, SR-NEED-0009, SR-NEED-0013 | SR-VER-0019 | SR-TC-0206 |
 | SR-REQ-0207 | Bei identischem normativem Modell, identischen expliziten Fachinputs, identischer semantischer Konfiguration, Toolversion und Profilen MÜSSEN abgeschlossene Fachoperationen dieselbe fachliche Ergebnisprojektion liefern; Live-Analyzer binden zusätzlich den Enginefingerprint nach Anhang T.9. | SR-NEED-0007, SR-NEED-0009 | SR-VER-0015 | SR-TC-0207 |
 | SR-REQ-0208 | Normative Verarbeitung und generierte Ausgaben MÜSSEN unabhängig von System-Locale und lokaler Zeitzone sein. | SR-NEED-0007, SR-NEED-0009 | SR-VER-0015 | SR-TC-0208 |
 | SR-REQ-0209 | Version 0.2 MUSS auf Linux x86-64 in einer nicht privilegierten Benutzerumgebung sowohl aus der entpackten Modul-Distribution als auch aus der Python-Zipapp ohne systemweite Installation ausführbar sein. | SR-NEED-0001, SR-NEED-0012, SR-NEED-0013 | SR-VER-0027 | SR-TC-0209 |
@@ -6540,7 +5482,7 @@ Diese Anforderungen definieren messbare Eigenschaften und Sicherheitsgrenzen auf
 
 ### 12.15 Ergänzende CLI-Operationsverträge
 
-Diese Anforderungen schließen konkrete Authoring-, Review- und Recovery-Verträge mit stabilen IDs ab.
+Diese Anforderungen schließen konkrete Authoring-, Review- und Schutzverträge mit stabilen IDs ab.
 
 | ID | Normative Anforderung | Quelle | Verifikation | Testfall |
 |---|---|---|---|---|
@@ -6602,23 +5544,23 @@ Identitäten dürfen bei paralleler Arbeit in Branches, Worktrees und Chatbot-Sa
 | SR-REQ-0250 | SpecRoad MUSS beim Import und semantischen Merge unterscheiden, ob eine gleiche ID dieselbe Historie, eine zulässige identische Kopie oder eine fachlich kollidierende unabhängige Erzeugung bezeichnet. | SR-NEED-0003, SR-NEED-0009, SR-NEED-0016 | SR-VER-0026 | SR-TC-0250 |
 | SR-REQ-0251 | Ein Artefakt DARF ein optionales, nicht identitätsstiftendes `display_id` besitzen. | SR-NEED-0001, SR-NEED-0003, SR-NEED-0016 | SR-VER-0018 | SR-TC-0251 |
 
-### 12.19 Transaktionsjournal und Recovery
+### 12.19 Schreibschutz und Abbruchsperre
 
 Mehrdateiänderungen sind nach erfolgreicher Rückkehr vollständig und nach abnormalem Abbruch deterministisch wiederherstellbar.
 
 | ID | Normative Anforderung | Quelle | Verifikation | Testfall |
 |---|---|---|---|---|
-| SR-REQ-0252 | Jeder tatsächlich ausgeführte `normative_write` MUSS vor der ersten normativen Veröffentlichung ein Journal nach Anhang C unter `.specroad/transactions/<TRANSACTION-ID>/journal.json` anlegen. | SR-NEED-0007, SR-NEED-0011, SR-NEED-0013 | SR-VER-0019 | SR-TC-0252 |
-| SR-REQ-0253 | Das Transaktionsjournal MUSS für jede betroffene Datei logischen Pfad, Existenz vor der Operation, Vorher-Hash, Nachher-Hash, Staging-Pfad, optionalen Before-Image-Pfad und Veröffentlichungsstatus enthalten. | SR-NEED-0009, SR-NEED-0011, SR-NEED-0013 | SR-VER-0019 | SR-TC-0253 |
-| SR-REQ-0254 | Vor dem Wechsel in `prepared` MUSS SpecRoad alle neuen Dateien und erforderlichen Before Images vollständig schreiben, hashen, gegen den Change Plan prüfen und auf der Referenzplattform mittels `fsync` dauerhaft synchronisieren. | SR-NEED-0007, SR-NEED-0011, SR-NEED-0013 | SR-VER-0019 | SR-TC-0254 |
-| SR-REQ-0255 | Nach `prepared` MUSS SpecRoad den Journalzustand `committing` dauerhaft speichern und jede atomare Dateiveröffentlichung einzeln im Journal quittieren, bevor die nächste Datei veröffentlicht wird. | SR-NEED-0007, SR-NEED-0011, SR-NEED-0013 | SR-VER-0019 | SR-TC-0255 |
-| SR-REQ-0256 | Ein normaler Projektbefehl MUSS vor dem Laden des kanonischen Modells den begrenzten Transaktions-Preflight einschließlich der befehlsklassenabhängigen Recovery- oder Diagnoseentscheidung aus Anhang N.2–N.3 durchführen. | SR-NEED-0007, SR-NEED-0011, SR-NEED-0013 | SR-VER-0019 | SR-TC-0256 |
-| SR-REQ-0257 | Eine Transaktion in `building` oder `prepared` MUSS ohne Veröffentlichung verworfen werden können. | SR-NEED-0009, SR-NEED-0011, SR-NEED-0013 | SR-VER-0019 | SR-TC-0257 |
-| SR-REQ-0258 | Wenn alle Nachher-Hashes einer unterbrochenen Transaktion vorhanden sind und dem Journal entsprechen, MUSS Recovery fehlende Audit- und Request-Receipts aus dem Journal rekonstruieren und die Transaktion anschließend als `committed` abschließen, statt den vollständig veröffentlichten Zustand zurückzurollen. | SR-NEED-0009, SR-NEED-0011, SR-NEED-0013 | SR-VER-0019 | SR-TC-0258 |
-| SR-REQ-0259 | Eine erfolgreich abgeschlossene oder zurückgerollte Transaktion MUSS einen unveränderbaren Abschlussbeleg unter `.specroad/transactions/receipts/` hinterlassen und danach das Entfernen temporärer Payloads erlauben. | SR-NEED-0009, SR-NEED-0013 | SR-VER-0019 | SR-TC-0259 |
-| SR-REQ-0260 | Fehlende, manipulierte oder widersprüchliche notwendige Journal-, Before-Image- oder Staging-Daten MÜSSEN als `corrupt` diagnostiziert und nach dem Schreibberechtigungs- und Sperrvertrag aus Anhang N.3 behandelt werden. | SR-NEED-0011, SR-NEED-0009, SR-NEED-0013 | SR-VER-0019 | SR-TC-0260 |
-| SR-REQ-0261 | Die Referenztests MÜSSEN einen kontrollierten Prozessabbruch nach jeder dauerhaften Journal- und Dateisystemgrenze injizieren und nach Recovery jeweils exakt die Basis- oder die vollständige Zielmodellwurzel nachweisen. | SR-NEED-0007, SR-NEED-0011, SR-NEED-0013 | SR-VER-0019 | SR-TC-0261 |
-| SR-REQ-0262 | `specroad recover status` MUSS Zustand, Journalhash, Basiswurzel, erwartete Zielwurzel, veröffentlichte Einträge und zulässige Recovery-Aktionen jeder unvollständigen Transaktion ausgeben. | SR-NEED-0007, SR-NEED-0009, SR-NEED-0013 | SR-VER-0019 | SR-TC-0262 |
+| SR-REQ-0252 | Jeder tatsächlich ausgeführte normative Write MUSS vor der ersten normativen Dateiwirkung den exklusiven dauerhaften Schreibmarker nach Anhang C anlegen. | SR-NEED-0007, SR-NEED-0011, SR-NEED-0013 | SR-VER-0019 | SR-TC-0252 |
+| SR-REQ-0253 | Der Schreibmarker MUSS die geschlossene Projekt-, Request-, Plan-, Basis-, Ziel- und Eigentümerbindung aus C.1 enthalten; fremde oder beschädigte Marker DÜRFEN NICHT überschrieben werden. | SR-NEED-0009, SR-NEED-0011, SR-NEED-0013 | SR-VER-0019 | SR-TC-0253 |
+| SR-REQ-0254 | Alle Zielbytes MÜSSEN vor Veröffentlichung vollständig gestagt, gegen den Change Plan und den vollständigen fachlichen Zielzustand geprüft werden; Before Images zur Wiederherstellung sind nicht erforderlich. | SR-NEED-0007, SR-NEED-0011, SR-NEED-0013 | SR-VER-0019 | SR-TC-0254 |
+| SR-REQ-0255 | Normative Ziele und Abschlussreceipts MÜSSEN dauerhaft synchronisiert und zurückgeprüft sein, bevor der laufende Writer seinen Marker dauerhaft entfernt und Erfolg meldet. | SR-NEED-0007, SR-NEED-0011, SR-NEED-0013 | SR-VER-0019 | SR-TC-0255 |
+| SR-REQ-0256 | Jeder normale Projektaufruf MUSS vor Modellnutzung den begrenzten Lock-/Schreibmarker-Preflight und die Sperrentscheidung nach Anhang N ausführen. | SR-NEED-0007, SR-NEED-0011, SR-NEED-0013 | SR-VER-0019 | SR-TC-0256 |
+| SR-REQ-0257 | Nach dauerhaftem Schutzbeginn MUSS eine unterbrochene oder fehlgeschlagene Publikation gesperrt bleiben, auch bei null Dateiwirkungen; automatisches Verwerfen oder Entsperren ist unzulässig. | SR-NEED-0009, SR-NEED-0011, SR-NEED-0013 | SR-VER-0019 | SR-TC-0257 |
+| SR-REQ-0258 | Auch ein vollständiger Zielbestand bei offenem Marker MUSS gesperrt bleiben; fehlende Receipts DÜRFEN NICHT rekonstruiert und alte Publikationen DÜRFEN NICHT fertiggestellt werden. | SR-NEED-0009, SR-NEED-0011, SR-NEED-0013 | SR-VER-0019 | SR-TC-0258 |
+| SR-REQ-0259 | Ein erfolgreich abgeschlossener Write MUSS unveränderbare normale Transaktions- und bei Request-ID Request-Receipts erhalten; ihre Prüfung DARF NICHT einen offenen Marker aufheben. | SR-NEED-0009, SR-NEED-0013 | SR-VER-0019 | SR-TC-0259 |
+| SR-REQ-0260 | Ein verwaister, beschädigter oder widersprüchlicher Schreibmarker MUSS als corrupted diagnostiziert werden; ein nicht prüfbarer Zustand MUSS gesperrt bleiben. Lesende Diagnose DARF NICHT selbst Betriebsdaten verändern. | SR-NEED-0011, SR-NEED-0009, SR-NEED-0013 | SR-VER-0019 | SR-TC-0260 |
+| SR-REQ-0261 | Referenztests MÜSSEN echte Prozessabbrüche und Dateisystemfehler an allen Schutz-/Publikations-/Abschlussgrenzen nach Anhang C injizieren und Sperre ohne Reparatur sowie getrennten manuellen Git-Wiederanlauf nachweisen. | SR-NEED-0007, SR-NEED-0011, SR-NEED-0013 | SR-VER-0019 | SR-TC-0261 |
+| SR-REQ-0262 | `environment check`, `project inspect` und `lock status` MÜSSEN begrenzte lesende Sperrdiagnose nach N.3 anbieten; reguläre Fachoperation und manuelle Wiederanlaufpflicht MÜSSEN eindeutig unterschieden werden. | SR-NEED-0007, SR-NEED-0009, SR-NEED-0013 | SR-VER-0019 | SR-TC-0262 |
 
 ### 12.20 Schema- und Datenmigration
 
@@ -6630,7 +5572,7 @@ Langlebige Projekte werden über geplante, verlustbewusste, gesicherte und verif
 | SR-REQ-0264 | `specroad migrate apply --to <SCHEMA-VERSION> [--plan <FILE>]` MUSS ausschließlich einen vollständig unterstützten, zusammenhängenden Pfad aus versionierten Migrationsschritten ausführen und ein übergebenes Planfile exakt an die aktuelle Basis und Zielversion binden. | SR-NEED-0002, SR-NEED-0012, SR-NEED-0014 | SR-VER-0020 | SR-TC-0264 |
 | SR-REQ-0265 | Jeder Migrationsschritt MUSS eindeutige Quell- und Zielversion, Vorbedingungen, Transformation, Nachbedingungen, Reversibilitätsangabe und eigene Testvektoren besitzen. | SR-NEED-0009, SR-NEED-0012, SR-NEED-0014 | SR-VER-0020 | SR-TC-0265 |
 | SR-REQ-0266 | Vor einer Migration MUSS SpecRoad ein verifiziertes, deterministisches Projektbundle des vollständigen Ausgangszustands erzeugen und dessen Pfad und Hash im Migrationsbericht speichern. | SR-NEED-0009, SR-NEED-0011, SR-NEED-0014 | SR-VER-0020 | SR-TC-0266 |
-| SR-REQ-0267 | Eine Migration MUSS den gemeinsamen Change-Plan-, Lock-, Validierungs-, Journal- und Recovery-Vertrag verwenden, ohne einen teilweisen Schema-Mischzustand als regulären Projektstand zu veröffentlichen. | SR-NEED-0007, SR-NEED-0011, SR-NEED-0014 | SR-VER-0020 | SR-TC-0267 |
+| SR-REQ-0267 | Migration MUSS gemeinsame Plan-, Lock-, Validierungs-, Schreibmarker- und Abschlussverträge verwenden; ein unterbrochener Schema-Mischstand MUSS gesperrt bleiben und DARF NICHT automatisch repariert werden. | SR-NEED-0007, SR-NEED-0011, SR-NEED-0014 | SR-VER-0020 | SR-TC-0267 |
 | SR-REQ-0268 | Eine als verlustfrei deklarierte Migration MUSS alle normativen Informationen, unbekannten schema-gültigen Erweiterungen, IDs, Provenienz, Anhänge und Auditbezüge semantisch erhalten. | SR-NEED-0009, SR-NEED-0012, SR-NEED-0014 | SR-VER-0020 | SR-TC-0268 |
 | SR-REQ-0269 | Ein Migrationsschritt mit möglichem Informationsverlust MUSS ohne vollständige Angabe aller betroffenen `--accept-loss <LOSS-ID>` standardmäßig abbrechen. | SR-NEED-0003, SR-NEED-0009, SR-NEED-0014 | SR-VER-0020 | SR-TC-0269 |
 | SR-REQ-0270 | Eine wiederholte Migration auf dieselbe bereits erreichte Zielversion MUSS ohne semantische Änderung erfolgreich und idempotent enden oder eindeutig als nicht erforderlich gemeldet werden. | SR-NEED-0007, SR-NEED-0014 | SR-VER-0020 | SR-TC-0270 |
@@ -6743,7 +5685,7 @@ und als unabhängiges Oracle ausgegeben werden.
 
 Die tatsächliche produktive 0.1-Unterstützung bleibt bis zum vollständigen
 Quellvertrag und zur geprüften nativen Implementierung nach Q.0 unregistriert.
-16.b, die übrigen M16-Schritte, Restore-Integration, aktuelle Reviews und
+16.b, die übrigen M16-Schritte, Bundle-/Legacy-Integration, aktuelle Reviews und
 Meilensteinfreigaben bleiben offen. Synthetische Graphverträge ersetzen weder
 den historischen Quellvertrag noch die spätere vollständige Migration.
 
@@ -6760,8 +5702,8 @@ von verwalteten Requirements, Proposals oder Releases.
 
 **Planungsgrenze.** 16.c liefert den vollständigen schreibfreien nativen
 Planer für den Quellvertrag aus Q.0.2. Die folgenden M16-Schritte behalten
-Backup, öffentliche Registrierung, Writer, Recovery, Verification und
-CLI-/Restore-Integration samt ihren eigenen Abnahmen. Ein maschinenlesbarer
+Backup, öffentliche Registrierung, Writer, Abbruchsperre, Verification und
+CLI-/Bundle-/Legacy-Integration samt ihren eigenen Abnahmen. Ein maschinenlesbarer
 Change Plan ist ein Plan, kein Schreibrecht, Backupbeleg, Review oder
 Nachweis einer bereits unterstützten öffentlichen Apply-Schnittstelle.
 Der Planer muss mit vollständigen expliziten Eingaben positive echte
@@ -6941,7 +5883,7 @@ neu. Nur byte-/wertgleiche Planergebnisse bestehen. Geänderte Quelle,
 zusätzliche/fehlende Datei, neu gehashte manipulierte Ergebnisbytes, andere
 Zielversion, andere Mappings oder andere Metadaten scheitern vor Mutation.
 Ein Planhash allein ist kein Autorisierungsbeleg. Backup-, Review-, Lock-,
-Journal-/Recovery- und öffentliche M16-Gates bleiben zusätzlich erforderlich.
+Schreibschutz- und öffentliche M16-Gates bleiben zusätzlich erforderlich.
 
 
 #### 12.20.3 Verlustinventur und Einzelzustimmung — MIGRATION-LOSS-574
@@ -7058,18 +6000,13 @@ durch diesen Detailvertrag behauptet oder autorisiert.
 
 #### 12.20.4 Migration im gemeinsamen Transaktionssystem — MIGRATION-TRANSACTION-575
 
-Diese Detailentscheidung nach SPECROAD-DECISION-1 und 2.4.3.1 konkretisiert
-SR-REQ-0267/0270 und 16.i. Der gemeinsame bisherige Writer nimmt eine
-0.2-Konfiguration an und kennt nur neue/ersetzte Zielbilder. Eine Migration
-wechselt dagegen Konfiguration und Schema und entfernt das archivierte alte
-Profil. Ein vorgezogener Konfigurationswrite oder ein zweiter Lock-/Journal-
-Namensraum würde die gemeinsame Transaktion umgehen. Eine stillschweigende
-Neudeutung alter Journal-v1-Nachweise wäre ebenfalls unzulässig. Gewählt ist
-ein ausdrücklich versionierter schema-transition-Zweig des gemeinsamen
-Writers unter denselben Lock-, Transaktions-, Receipt- und Recoverypfaden.
-Bestehende v1-Nachweise, gewöhnliches Authoring und Restore bleiben gültig
-und werden nicht umgedeutet. Dies registriert keinen öffentlichen 0.1-Pfad;
-die übrigen M16-Abnahmen bleiben erforderlich.
+Der native Schemawechsel verwendet den gemeinsamen Writer mit
+exklusivem Lock, vollständiger Source-/Targetprüfung, Schreibmarker und
+normalen Abschlussreceipts nach Anhang C. Konfiguration und Schema wechseln
+gemeinsam; keine Vorabpublikation oder zweiter Locknamensraum ist erlaubt.
+Historische Journal-/Receiptbytes werden nicht umgeschrieben. Die bisherigen
+Wiederherstellungszweige werden gemäß 10.7 abgelöst. Q.0 und alle fachlichen
+Migrationsabnahmen einschließlich Originalerhaltung bleiben verbindlich.
 
 **Eingang und Prüfung.** Ausschließlich der eingebaute schema_migrate-Adapter
 kann diesen Zweig aus dem vollständigen Plan nach 12.20.2 vorbereiten. Quelle,
@@ -7080,7 +6017,7 @@ wirkliche externe Quellsicherung mit kanonischem Pfad, Ausgaberoot, Größe,
 ZIP-Hash und vollständigem Source-Dateilistenhash. Die Sicherung wird erneut
 geöffnet und nativ gegen ihre vollständigen Originale geprüft. Alle realen
 Quelldateien müssen unter dem gemeinsamen Writerlock exakt übereinstimmen.
-Nur die eigenen neu erzeugten Lock-/Journal-/Receipt-Dateien werden aus
+Nur die eigenen neu erzeugten Lock-/Marker-/Receipt-Dateien werden aus
 diesem Vergleich ausgeschlossen; bestehende passive Betriebsdaten bleiben
 gebundene Originale. Fremde aktive oder unbekannte Betriebszustände blockieren.
 Die Source-/Target-Dateilisten nach 12.20.2 dürfen hierfür ausschließlich
@@ -7095,7 +6032,7 @@ Die gemeinsame Akteur-/Request-/Proposalpolicy bleibt erhalten, ebenso die
 explizite Registrierung echter Host-Autorität. Ein KI-Akteur erhält keinen
 direkten Write durch das Migrationslabel. Plan und Projektdateien dürfen
 keinen ausführbaren Validator oder Autorisierungsprovider registrieren.
-Vor Journalanlage, nach Staging und vor Veröffentlichung werden vollständige
+Vor Markeranlage, nach Staging und vor Veröffentlichung werden vollständige
 Zielvalidierung und Autorität frisch geprüft. Fehlende semantische Dienste,
 ungültige oder unvollständige Ergebnisse bleiben Fehler. Ein lokaler
 Schemaerfolg, ein Backup oder eine boolesche readiness-Angabe genügt nicht.
@@ -7117,120 +6054,37 @@ aktuelle Prüfungen bleiben sichtbar offen. Die detaillierten historischen
 Vergleichs-/Verifikationsausgaben nach 16.j und migrate verify nach 16.k
 bleiben eigene Planarbeit, keine hier behauptete Produktabnahme.
 
-**Gebundene Dateitransaktion.** Der neue Zweig verwendet
-`schema-transition-journal-v1` im vorhandenen aktiven Verzeichnis
-`.specroad/transactions/<transaction_id>/`. Sein geschlossenes Journal
-bindet exakte Planbytes und -hash, Projekt-/Rootidentität, Sicherungsdescriptor,
-Zielversion und die vollständigen Quell-/Zieldateilisten aus dem Plan.
-Zustände sind building, prepared, committing, committed, rolling_back und
-rolled_back. Ein bestätigter Präfixzähler beschreibt nur bereits quittierte
-Dateieffekte, nie einen vermuteten Write-Erfolg. Vor prepared werden die
-vollständigen Source-Bilder und alle geänderten Zielbilder dauerhaft
-abgelegt, zurückgelesen und unabhängig gegen Plan und Sicherung geprüft.
-Die Bilder bleiben für historische Ergebnisprüfung und Recovery erhalten.
+**Gebundene Dateitransaktion.** Migration verwendet denselben Writer,
+Schreibmarker und Abschlussvertrag aus 10.6/10.7 und Anhang C. Der vollständige
+Plan bindet Source-/Targetinventar, Zielversion, explizite Verluste und die
+externe Quellsicherung. Staging und unabhängige vollständige Zielvalidierung
+bleiben erforderlich. Es gibt keinen eigenen wiederherstellenden
+`schema-transition-journal-v1`-Zweig, keine Before-Image-Rekonstruktion, keinen
+Präfix-Rollback und keine Recovery-Intentdateien mehr.
 
-Das Journal ist kanonisches UTF-8-JCS mit genau den Feldern format_version,
-state, transaction_id, project_id, root_identity (Gerät/Inode), request_id,
-plan_bytes_base64, plan_sha256, backup, source_modes, published_count,
-images_prepared und validation. backup enthält genau path, output_root,
-size, sha256 und source_files_sha256. source_modes bindet den POSIX-Dateimodus
-jedes Sourcepfades. images_prepared ist bei building false, ab prepared true;
-bei einem Abbruch vor prepared bleibt es auch in rolling_back/rolled_back
-false und published_count muss `0` sein. Es erlaubt nur das erhaltende
-Verwerfen nach vollständig belegter Sourceprüfung, keine Targetpublikation.
-validation ist der vollständige native model-validation-v1-Befund mit allen
-Zieldokumentbindungen. Plan und vollständige Source-ZIP begründen unabhängig
-alle erwarteten before-/staging-Bilder. Partielle eigene temporäre Bilder
-dürfen nur bei exakt belegtem erwarteten Bytepräfix vervollständigt werden;
-fremde Bytes, unbekannte Namen oder ein unlesbares Primärjournal blockieren.
-Nach jedem Effekt wird der tatsächliche vollständige Dateienpräfix geprüft;
-ein verlorener Effekt darf höchstens einen Schritt vor/hinter seiner
-Quittierung liegen. Neu angelegte Normativdateien verwenden atomare
-No-Replace-Publikation ohne zeitweiligen zweiten Hardlink.
+Dateityp-, Root-, Geräte-, Modus-, Create-only- und Archivschutz bleiben bei
+jeder Veröffentlichung wirksam. Der Schemawechsel einschließlich Entfernung
+des geplanten Altprofils und neuer Konfiguration erfolgt unter einem Lock
+und einem Marker. Leser dürfen keinen Mischstand laden. Ein Fehler nach
+Schutzbeginn erhält den gesperrten tatsächlichen Bestand; manueller
+Git-Wiederanlauf ersetzt jede automatische Fertigstellung.
 
-Veröffentlichung verwendet die vorhandenen descriptorgebundenen Pfad-,
-Dateityp-, Geräte-, Modus-, create-only- und atomaren Bildregeln. Jeder
-Replace beziehungsweise die explizit geplante Entfernung des alten Profils
-wird samt Elternverzeichnis synchronisiert, bevor das Journal fortschreitet.
-Archive werden niemals überschrieben. Bestehende unbekannte Bytes, zusätzliche
-Dateien, Links, fremde Verzeichnisidentität, Rechte-/Platz-/I/O-Fehler oder
-Callbackänderungen stoppen den Lauf unter Erhalt des wirklichen Zustands.
-Die Konfiguration wird nicht vorab separat installiert. Solange ein aktives
-Journal besteht, darf kein gewöhnlicher Leser einen Mischstand laden.
+**Abschluss und Retry.** Der reguläre Migrationsabschluss bindet Plan,
+Sicherung, vollständige Datei- und Modellwurzelbindungen, echte Fachvalidierung
+und Request-ID in seiner neuen geschlossenen Receiptversion. Die nativ lesende
+Prüfung historischer Abschlussbelege bleibt getrennt von aktueller
+Zielqualifikation. Derselbe vollständig abgeschlossene Request liefert nur
+das bestätigte historische Ergebnis; ein geänderter Request ist Konflikt.
+Fehlende Receipts werden nicht aus unterbrochenen Writes rekonstruiert.
+Alte Receiptbytes bleiben unverändert und werden nicht ausführbar gemacht.
 
-Erst vollständige Zielbytes, Zielwurzel und vollständige Validierung erlauben
-committed. Ein abgeschlossenes Journal samt Bildern wird atomar unter die
-bestehende passive Receiptwurzel verschoben; Originalhistorie wird niemals
-überschrieben oder gelöscht. Die Request-ID wird nach der gemeinsamen
-normative_write-Namensraumregel dauerhaft gebunden. Identische Wiederholung
-liefert die geprüften historischen Ergebnisdaten ohne neue Revisionen; eine
-andere Operation mit derselben ID ist ein Konflikt. Eine historische Antwort
-behauptet keine heutige Zielgültigkeit. Ein gleiches bereits erreichtes Ziel
-mit neuem Auftrag kann explizit als nicht erforderlich enden, ohne einen
-neuen Write oder eine künstliche Revision zu erzeugen.
-Das passive transaction.json verwendet schema-transition-receipt-v1 mit
-genau format_version, journal_sha256, transaction_id, plan_sha256,
-source_files_sha256, target_files_sha256, target_model_root_sha256 und
-validation_sha256. Der gemeinsame Reader erhält den zusätzlich geschlossenen Zweig
-schema-transition-request-receipt-v1 mit derselben Feldmenge und demselben
-normative_write-Namensraum wie request-receipt-v1. Nur dieser neue Zweig darf
-zusätzlich die native Registry-Textressource unter profiles/language-data/
-in published_paths führen. Die tatsächliche Registrybindung muss aus dem
-vollständig geprüften Transaktionsjournal hervorgehen. Alte Request-v1-Bytes
-und deren bisherige Pfadregeln bleiben unverändert. Die Transaktions-
-verknüpfung muss gegen dieses Journal, echte archivierte Bilder und den
-tatsächlichen Receipt geprüft werden. Eine Konfliktdiagnose
-mit receipt_verified darf erst nach dieser vollständigen Prüfung erfolgen.
-Abschlussdaten sind historische Konsistenznachweise, keine Signatur oder
-heutige Modellabnahme. Ein already-target-No-op behauptet keine semantische
-Zielgültigkeit. Eine neue Transaktion darf weder abgeschlossene noch
-zurückgeführte Transaktions-IDs oder vorhandene Auditziele wiederverwenden.
-
-**Recovery.** Die gemeinsamen Recovery-Einstiegspunkte wählen den nativen
-Journalzweig anhand der geschlossenen Versionskennung, nicht anhand frei
-registrierbaren Projektcodes. Erforderlich bleiben erwarteter voller
-Journalhash, derselbe Root, tatsächlich gehaltener gemeinsamer Recoverylock
-und registrierte RecoveryAuthority. Ziel-/Source-Bilder und Sicherungsbindung
-werden unabhängig neu geprüft. Ein nach tatsächlichen Bytes vollständig
-veröffentlichtes Ziel darf ohne erneute Targetwrites abgeschlossen werden;
-ein unvollständiger Zielpräfix wird vollständig auf die gesicherte Basis
-zurückgeführt. Ein verlorener Rename-/Unlink-/Journal-Antwortwert wird aus
-vorhandenen Bytes bestimmt, nicht durch Blindretry oder dem Zähler allein.
-Drittwerte, fehlende Beweise oder ein nicht belegbarer Präfix bleiben blockiert.
-Auch Recovery unterbricht bei Fehlern und erhält ihre Belege; keine automatische
-Rückabwicklung im normalen Writer. Weder Fehler noch Wiederholung ändern
-menschliche Freigaben, externe Risikoentscheidungen oder die Source-Verträge.
-Die 0.1-Quelle enthält keine automatische Recoveryfreigabe. Eine teilweise
-publizierte 0.2-Policy darf deshalb keine Sourcewrites legitimieren; dieser
-Zweig verlangt die ausdrücklich gebundene Recoveryaktion. Gemeinsame
-Ownerübernahme nach tatsächlich totem Writer bleibt unter ihren bisherigen
-Host-/Risiko-/Mutexregeln möglich. Native Übernahmebelege bleiben vollständig
-erhalten und werden einzeln geprüft, kein Auditunterbaum pauschal ignoriert.
-Vor mutierender Recovery wird ein kanonischer, unveränderbarer
-schema-transition-recovery-intent-v1 im eigenen Workverzeichnis bewahrt:
-format_version, request, journal_before_base64, authority_id und
-authority_version. request bindet action (discard/rollback/complete),
-transaction_id, project_id, journal_sha256, plan_sha256, backup,
-root_identity sowie actor/reason (beim vorhandenen Discard-Aufruf erforderlich,
-sonst null). Der Dateiname recovery-<SHA-256>.json bindet die exakten Bytes.
-Ein Intent behauptet keinen Erfolg. Erst der geprüfte tatsächliche Endzustand
-mit terminalem Journal erlaubt die atomare Überführung des gesamten Work
-unter die vorhandene passive Receipt- bzw. Recovery-Auditwurzel; Belege
-werden nicht gelöscht. Wiederaufnahme prüft auch diese ursprünglichen
-Intents und dieselbe reale externe Sicherung. Historischer Receipt-Replay
-benötigt dagegen nur die dauerhaft archivierten Originale und Bindungen.
-
-
-**Abnahmen.** Positive vollständige Writerfälle prüfen tatsächliche Dateien,
-Root-/Planhashes, Originalarchive, genau einmal erhöhte mutable Revisionen,
-Revision 1 neuer Begleitdaten und unveränderte Legacy-Originale. Fehlerfälle
-umfassen Sicherungs-/Plan-/Input-/Ziel-/Rootwechsel, Rechte und Pfade, fehlende
-Gates, verweigerte Autorität, Requestkonflikte und Callbackmutation. Die
-Crashmatrix unterbricht alle dauerhaften Zustandsgrenzen und Dateieffekte,
-prüft die gewöhnliche Lesesperre und weist vollständigen Abschluss oder
-vollständige Rückführung anhand echter Bytes nach. Kein gespeicherter
-Erfolgsbericht und kein fremdes Gate ersetzt diese Nachweise. W/R/C erhalten
-getrennte Apply-Gates; in Dev laufen keine Verhaltenstests.
+**Abnahme.** Positive vollständige Migration einschließlich fachlicher
+Originalerhaltung, Sicherungsprüfung, Zielschema und Idempotenz bleibt Pflicht.
+Fehlende Autorität, Quellen-/Zieltausch und fremde Dateien scheitern sicher.
+Echte Prozessabbrüche und I/O-Fehler an den dauerhaften Grenzen prüfen
+Projektsperre statt Rückkehr zu Source oder Target. Ein frischer vollständiger
+Git-Stand muss nach normaler Prüfung einen neuen Auftrag ermöglichen.
+Die unterbrochene Kopie bleibt dabei unverändert gesperrt.
 
 ### 12.21 Suspect Relations und fachliche Relationsreviews
 
@@ -7299,7 +6153,7 @@ Offene Formate ermöglichen kontrollierten, verlustbewussten Datenaustausch ohne
 |---|---|---|---|---|
 | SR-REQ-0313 | SpecRoad MUSS in Version 0.2 Import und Export für ReqIF 1.2 einschließlich ReqIFZ, CSV nach RFC 4180 und Newline-Delimited JSON bereitstellen. | SR-NEED-0001, SR-NEED-0014, SR-NEED-0015 | SR-VER-0024 | SR-TC-0313 |
 | SR-REQ-0314 | `specroad import plan <FORMAT> <INPUT>` MUSS Eingabeformat, Mapping, neue und aktualisierte Artefakte, Konflikte, Informationsverluste, Anhänge, Diagnosen, einen ausführbaren Change Plan und die erwartete Zielmodellwurzel ausgeben, ohne den Projektstand zu verändern. | SR-NEED-0003, SR-NEED-0007, SR-NEED-0014 | SR-VER-0024 | SR-TC-0314 |
-| SR-REQ-0315 | `specroad import apply <FORMAT> <INPUT> [--plan <FILE>]` MUSS einen zuvor ausgegebenen oder im selben Aufruf erzeugten gültigen Importplan über den gemeinsamen Change-Plan-, Transaktions- und Recovery-Vertrag anwenden und ein übergebenes Planfile exakt an Eingabe und aktuelle Basis binden. | SR-NEED-0007, SR-NEED-0011, SR-NEED-0014 | SR-VER-0024 | SR-TC-0315 |
+| SR-REQ-0315 | `import apply` MUSS den vollständig an Eingang und aktuelle Basis gebundenen Importplan über den gemeinsamen Change-Plan- und Schreibschutzvertrag anwenden. | SR-NEED-0007, SR-NEED-0011, SR-NEED-0014 | SR-VER-0024 | SR-TC-0315 |
 | SR-REQ-0316 | Jeder Import MUSS eine versionierte Mapping-Datei oder ein eindeutig benanntes eingebautes Mappingprofil verwenden, das externe Typen, Attribute, Statuswerte, Beziehungen und Einheiten auf das SpecRoad-Modell abbildet. | SR-NEED-0002, SR-NEED-0012, SR-NEED-0014 | SR-VER-0024 | SR-TC-0316 |
 | SR-REQ-0317 | Ein importiertes Objekt MUSS seine externe Identität als Kombination aus `source_system`, `source_document`, `external_id` und optionaler `external_revision` verlustfrei speichern. | SR-NEED-0003, SR-NEED-0009, SR-NEED-0014 | SR-VER-0024 | SR-TC-0317 |
 | SR-REQ-0318 | Die Import-Policy MUSS für bereits bekannte externe Identitäten die Strategien `error`, `skip`, `update_if_unchanged` und `create_new_revision` unterstützen; stilles Überschreiben ist unzulässig. | SR-NEED-0003, SR-NEED-0009, SR-NEED-0014 | SR-VER-0024 | SR-TC-0318 |
@@ -7495,7 +6349,7 @@ Produktvarianten innerhalb eines Repositorys werden ohne Kopien durch benannte K
 | SR-REQ-0451 | Konfigurationsgebundene Evidence MUSS exakt denselben Konfigurationshash wie der ausgewertete Scope binden, sofern der Contract sie nicht als unabhängig erklärt. | SR-NEED-0005, SR-NEED-0006, SR-NEED-0015 | SR-VER-0030 | SR-TC-0451 |
 | SR-REQ-0452 | `verification_context_hash-v1` DARF NICHT Workflowstatus, berechnete Ergebnisse oder reine Auditfelder enthalten. | SR-NEED-0005, SR-NEED-0009 | SR-VER-0030 | SR-TC-0452 |
 
-### 12.34 External Identities, Importvergleich, Recovery und Formatierung
+### 12.34 External Identities, Importvergleich, Abbruchsperre und Formatierung
 
 | ID | Normative Anforderung | Quelle | Verifikation | Testfall |
 |---|---|---|---|---|
@@ -7504,11 +6358,11 @@ Produktvarianten innerhalb eines Repositorys werden ohne Kopien durch benannte K
 | SR-REQ-0455 | Ein Mapping MUSS externe Typ-, Hierarchie- und Relationsidentitäten ohne eigenes SpecRoad-Artefakt in einem Registry erhalten können. | SR-NEED-0009, SR-NEED-0014 | SR-VER-0031 | SR-TC-0455 |
 | SR-REQ-0456 | `update_if_unchanged` MUSS den Dreifachvergleich aus Kapitel 10.12 verwenden. | SR-NEED-0003, SR-NEED-0009, SR-NEED-0014 | SR-VER-0031 | SR-TC-0456 |
 | SR-REQ-0457 | Divergente lokale und externe Änderungen an derselben Mappingprojektion MÜSSEN als Importkonflikt ohne stille Auflösung enden. | SR-NEED-0003, SR-NEED-0009, SR-NEED-0014 | SR-VER-0031 | SR-TC-0457 |
-| SR-REQ-0458 | `recover discard` DARF nur für `building` oder `prepared` ohne veröffentlichte Ziele und bei unveränderter Basiswurzel ausgeführt werden. | SR-NEED-0009, SR-NEED-0011, SR-NEED-0013 | SR-VER-0031 | SR-TC-0458 |
-| SR-REQ-0459 | Recovery aus `committing` oder `rolling_back` MUSS exakt die vollständige Basis- oder Zielwurzel herstellen. | SR-NEED-0007, SR-NEED-0009, SR-NEED-0013 | SR-VER-0031 | SR-TC-0459 |
-| SR-REQ-0460 | Eine Transaktion im Zustand `corrupt` MUSS jeden normalen Projektzugriff blockieren. | SR-NEED-0009, SR-NEED-0011 | SR-VER-0031 | SR-TC-0460 |
-| SR-REQ-0461 | `recover restore` MUSS ausschließlich einen vollständig qualifizierten, zielhashgebundenen Restore-Plan nach Kapitel 10.7.1 aus einer unveränderten Vollprojekt-Baseline oder einem Vollprojektbundle ausführen. | SR-NEED-0009, SR-NEED-0011, SR-NEED-0013 | SR-VER-0031 | SR-TC-0461 |
-| SR-REQ-0462 | Jede ausgeführte Recovery-Aktion MUSS einen unveränderbaren lokalen Auditdatensatz einschließlich der für Restore nach Kapitel 10.7.1 gebundenen Quellen-, Erhaltungs- und Zielinventur erzeugen. | SR-NEED-0009, SR-NEED-0013 | SR-VER-0031 | SR-TC-0462 |
+| SR-REQ-0458 | Ein gesperrter Root DARF NICHT durch Discard, Cachebereinigung, Lockübernahme oder Entfernung einzelner Schutzdateien wieder freigegeben werden. | SR-NEED-0009, SR-NEED-0011, SR-NEED-0013 | SR-VER-0031 | SR-TC-0458 |
+| SR-REQ-0459 | Nach unterbrochener Mehrdateipublikation MUSS der tatsächliche Bestand gesperrt erhalten bleiben; Basisrücknahme und Zielvervollständigung sind keine zulässigen Produktaktionen. | SR-NEED-0007, SR-NEED-0009, SR-NEED-0013 | SR-VER-0031 | SR-TC-0459 |
+| SR-REQ-0460 | Ein corrupted-Projekt MUSS normale Modellnutzung und weitere Publikation blockieren; nur begrenzte schreibfreie Betriebsdiagnose bleibt zulässig. | SR-NEED-0009, SR-NEED-0011 | SR-VER-0031 | SR-TC-0460 |
+| SR-REQ-0461 | Wiederanlauf nach Abbruch MUSS durch den Nutzer aus einem bekannten gültigen vollständigen Git-Stand in einem frischen separaten Checkout nach 10.7.2 erfolgen; SpecRoad DARF NICHT den beschädigten Root reparieren. | SR-NEED-0009, SR-NEED-0011, SR-NEED-0013 | SR-VER-0031 | SR-TC-0461 |
+| SR-REQ-0462 | Der neue Checkout MUSS alle fachlich erforderlichen Originale und Abschlussnachweise enthalten und die normale Validierung bestehen; SpecRoad DARF NICHT fehlende Historie oder Receipts erfinden. | SR-NEED-0009, SR-NEED-0013 | SR-VER-0031 | SR-TC-0462 |
 | SR-REQ-0463 | `specroad format` MUSS seinen Dateiumfang exakt nach Kapitel 10.17 bestimmen. | SR-NEED-0001, SR-NEED-0007, SR-NEED-0013 | SR-VER-0031 | SR-TC-0463 |
 | SR-REQ-0464 | Eine tatsächliche Formatierung MUSS jede geänderte Datei durch `representation_normalize` mit erwartetem und resultierendem Byte-Hash planen. | SR-NEED-0007, SR-NEED-0009, SR-NEED-0013 | SR-VER-0031 | SR-TC-0464 |
 | SR-REQ-0465 | `specroad format --check` DARF NICHT Projekt- oder Betriebsdateien verändern. | SR-NEED-0007, SR-NEED-0011 | SR-VER-0031 | SR-TC-0465 |
@@ -7529,7 +6383,7 @@ Produktvarianten innerhalb eines Repositorys werden ohne Kopien durch benannte K
 | SR-REQ-0475 | Ein Query-Ergebnis MUSS `items`, `total`, `offset`, `limit`, `returned` und `truncated` enthalten. | SR-NEED-0003, SR-NEED-0007 | SR-VER-0032 | SR-TC-0475 |
 | SR-REQ-0476 | Jede JSON-CLI-Ausgabe MUSS den Envelope aus Kapitel 11.5 erfüllen. | SR-NEED-0007, SR-NEED-0008, SR-NEED-0012 | SR-VER-0032 | SR-TC-0476 |
 | SR-REQ-0477 | Jeder CLI-Befehl MUSS genau einer Befehlsklasse aus Kapitel 11.7 zugeordnet sein. | SR-NEED-0007, SR-NEED-0008, SR-NEED-0012 | SR-VER-0032 | SR-TC-0477 |
-| SR-REQ-0478 | Ein normativer Schreibbefehl MUSS Change Plan, Writer-Lock, Journal und Request-Receipt gemäß seiner Befehlsklasse verwenden. | SR-NEED-0007, SR-NEED-0009, SR-NEED-0013 | SR-VER-0032 | SR-TC-0478 |
+| SR-REQ-0478 | Ein normativer Schreibbefehl MUSS Change Plan, exklusiven Writer-Lock, dauerhaften Schreibmarker und normale Abschlussreceipts nach Anhang C verwenden. | SR-NEED-0007, SR-NEED-0009, SR-NEED-0013 | SR-VER-0032 | SR-TC-0478 |
 | SR-REQ-0479 | Ein generierter Ausgabebefehl DARF NICHT das kanonische Modell oder `.specroad/` verändern. | SR-NEED-0007, SR-NEED-0011, SR-NEED-0015 | SR-VER-0032 | SR-TC-0479 |
 | SR-REQ-0480 | Ein Root-Erzeugungsbefehl MUSS die für ihn in Kapitel 11.7 festgelegte Zielvorbedingung prüfen und die geplante Root-Struktur vollständig oder gar nicht veröffentlichen. | SR-NEED-0007, SR-NEED-0011, SR-NEED-0013 | SR-VER-0032 | SR-TC-0480 |
 
@@ -7572,12 +6426,12 @@ Produktvarianten innerhalb eines Repositorys werden ohne Kopien durch benannte K
 | SR-REQ-0503 | Jeder andere Operationstyp MUSS den für ihn in Kapitel 10 definierten typisierten Operationsvertrag verwenden. | SR-NEED-0008, SR-NEED-0012, SR-NEED-0013 | SR-VER-0012 | SR-TC-0503 |
 | SR-REQ-0504 | Für ein neu erzeugtes Artefakt DARF NICHT die nächste sequentielle Nummer als Identität verwendet werden. | SR-NEED-0001, SR-NEED-0009, SR-NEED-0016 | SR-VER-0018 | SR-TC-0504 |
 | SR-REQ-0505 | Falls `specroad retire` bereitgestellt wird, MUSS der Befehl als kompatibler Alias exakt denselben Change Plan wie der entsprechende Lifecycle-Übergang erzeugen. | SR-NEED-0002, SR-NEED-0009, SR-NEED-0013 | SR-VER-0018 | SR-TC-0505 |
-| SR-REQ-0506 | Ein Lock-Recovery-Befehl DARF NICHT ein vorhandenes Transaktionsjournal umgehen. | SR-NEED-0011, SR-NEED-0007, SR-NEED-0013 | SR-VER-0019 | SR-TC-0506 |
+| SR-REQ-0506 | Lockübernahme DARF NICHT einen Schreib-/Bootstrapmarker oder aktiven Alttransaktionszustand umgehen oder die Projektsperre aufheben. | SR-NEED-0011, SR-NEED-0007, SR-NEED-0013 | SR-VER-0019 | SR-TC-0506 |
 | SR-REQ-0507 | Eine fehlgeschlagene Change-Plan-Operation MUSS die Auswertung aller nachfolgenden Operationen verhindern. | SR-NEED-0003, SR-NEED-0011, SR-NEED-0013 | SR-VER-0018 | SR-TC-0507 |
 | SR-REQ-0508 | Das erste Zeichen eines `random128-v1`-Tokens MUSS im Bereich `0` bis `7` liegen und dadurch genau 128 Zufallsbits ohne ungenutzte Mehrdeutigkeit repräsentieren. | SR-NEED-0002, SR-NEED-0012, SR-NEED-0016 | SR-VER-0018 | SR-TC-0508 |
 | SR-REQ-0509 | Eine regulär neu erzeugte `relation_id` DARF NICHT aus Quelle, Ziel oder Position abgeleitet werden; ausschließlich die Bestandsmigration nach SR-REQ-0273 verwendet `derived128-v1`. | SR-NEED-0003, SR-NEED-0016 | SR-VER-0018 | SR-TC-0509 |
 | SR-REQ-0510 | Eine gleiche ID aus fachlich unabhängiger Erzeugung MUSS als Identitätskonflikt abgewiesen werden. | SR-NEED-0003, SR-NEED-0009, SR-NEED-0016 | SR-VER-0026 | SR-TC-0510 |
-| SR-REQ-0511 | Eine Transaktion in `committing` MUSS anhand der Hashes deterministisch vollständig zurückgerollt werden, sofern der vollständige Zielstand nicht nachweisbar veröffentlicht ist. | SR-NEED-0009, SR-NEED-0011, SR-NEED-0013 | SR-VER-0019 | SR-TC-0511 |
+| SR-REQ-0511 | Ein teilweise veröffentlichter Write MUSS bis zum manuellen Git-Wiederanlauf gesperrt bleiben; automatische Rücknahme auf die Basis und automatisches Fertigstellen sind unzulässig. | SR-NEED-0009, SR-NEED-0011, SR-NEED-0013 | SR-VER-0019 | SR-TC-0511 |
 | SR-REQ-0512 | Jeder ausdrücklich akzeptierte Migrationsverlust MUSS einzeln im Abschlussbericht ausgewiesen werden. | SR-NEED-0003, SR-NEED-0009, SR-NEED-0014 | SR-VER-0020 | SR-TC-0512 |
 | SR-REQ-0513 | Fehlt ein verlustfreier Downgrade-Pfad, MUSS SpecRoad auf das vor der Migration erzeugte Projektbundle als Wiederherstellungsweg verweisen. | SR-NEED-0009, SR-NEED-0011, SR-NEED-0014 | SR-VER-0020 | SR-TC-0513 |
 | SR-REQ-0514 | Eine reine Lifecycle-, Audit-, Status- oder Relationslistenänderung außerhalb der geprüften Relation DARF NICHT allein einen `suspect`-Status auslösen. | SR-NEED-0003, SR-NEED-0009, SR-NEED-0016 | SR-VER-0021 | SR-TC-0514 |
@@ -7620,7 +6474,7 @@ Produktvarianten innerhalb eines Repositorys werden ohne Kopien durch benannte K
 
 ### 12.39 Ephemeral Runtime Safety
 
-Diese Anforderungen konkretisieren SR-DEC-0039. Die verbindlichen Ablauf-, Diagnose- und Recoveryverträge stehen in Anhang N.
+Diese Anforderungen konkretisieren SR-DEC-0039. Die verbindlichen Ablauf-, Diagnose- und Sperrverträge stehen in Anhang N.
 
 | ID | Normative Anforderung | Quelle | Verifikation | Testfall |
 |---|---|---|---|---|
@@ -7632,20 +6486,20 @@ Diese Anforderungen konkretisieren SR-DEC-0039. Die verbindlichen Ablauf-, Diagn
 | SR-REQ-0554 | Ein fehlender oder unzulässiger ausgewählter Projektroot MUSS ohne automatische Neuinitialisierung diagnostiziert werden. | SR-NEED-0017, SR-NEED-0008, SR-NEED-0013 | SR-VER-0035 | SR-TC-0554 |
 | SR-REQ-0555 | Ein Preflight DARF NICHT allein zur Startprüfung die vollständige Modellvalidierung, einen Indexneuaufbau oder einen rekursiven Repository-/Archivscan auslösen. | SR-NEED-0017, SR-NEED-0008, SR-NEED-0013 | SR-VER-0035 | SR-TC-0555 |
 | SR-REQ-0556 | Nicht Git-spezifische Preflights DÜRFEN NICHT einen externen Prozess zur Ermittlung der Umgebungsvoraussetzungen starten. | SR-NEED-0017, SR-NEED-0008, SR-NEED-0013 | SR-VER-0035 | SR-TC-0556 |
-| SR-REQ-0557 | Ein normativer Write MUSS die aktuell gültigen Root-, Lock-, Recovery- und Change-Plan-Vorbedingungen unmittelbar vor Veröffentlichung unter dem Writer-Lock erneut prüfen. | SR-NEED-0017, SR-NEED-0008, SR-NEED-0013 | SR-VER-0035 | SR-TC-0557 |
-| SR-REQ-0558 | Schreibfreie Aufrufe MÜSSEN einen gefundenen Recoverybedarf nach Anhang N.3 ohne Veränderung von Projektdateien oder deren Betriebsdaten melden; offengelegte externe Fortsetzungsdaten richten sich nach Anhang P. | SR-NEED-0017, SR-NEED-0008, SR-NEED-0013 | SR-VER-0035 | SR-TC-0558 |
-| SR-REQ-0559 | Eine automatische Recovery im Vorlauf eines schreibenden Aufrufs MUSS den getrennten Abschluss- und Wiederaufrufvertrag aus Anhang N.3 erfüllen. | SR-NEED-0017, SR-NEED-0008, SR-NEED-0013 | SR-VER-0035 | SR-TC-0559 |
+| SR-REQ-0557 | Ein Write MUSS Root-, Lock-, Schutzstatus-, Autoritäts- und Change-Plan-Vorbedingungen unmittelbar vor Veröffentlichung unter dem Writer-Lock vollständig erneut prüfen. | SR-NEED-0017, SR-NEED-0008, SR-NEED-0013 | SR-VER-0035 | SR-TC-0557 |
+| SR-REQ-0558 | Schreibfreie Aufrufe MÜSSEN eine Abbruchsperre ohne Änderung von Projekt- oder Betriebsdaten melden; externe Vorbereitungs-Workdaten folgen Anhang P. | SR-NEED-0017, SR-NEED-0008, SR-NEED-0013 | SR-VER-0035 | SR-TC-0558 |
+| SR-REQ-0559 | Ein Schreibaufruf bei gesperrtem Projekt MUSS vor jeder Fachwirkung abbrechen; er DARF NICHT automatische Recovery oder einen zweiten fachlichen Versuch auslösen. | SR-NEED-0017, SR-NEED-0008, SR-NEED-0013 | SR-VER-0035 | SR-TC-0559 |
 | SR-REQ-0560 | Die Betriebsdiagnosen aus Anhang N.3 MÜSSEN notwendige verfügbare Metadaten eines blockierten Projekts ohne reguläres Laden seines Modells untersuchen können. | SR-NEED-0017, SR-NEED-0008 | SR-VER-0036 | SR-TC-0560 |
-| SR-REQ-0561 | Journal, Staging und Before Images einer nicht abschließend belegten Transaktion MÜSSEN unabhängig von jeder Cachebereinigung erhalten bleiben. | SR-NEED-0017, SR-NEED-0008, SR-NEED-0013 | SR-VER-0035 | SR-TC-0561 |
+| SR-REQ-0561 | Aktive Schreib-/Bootstrapmarker und unbestätigte Schreibreste MÜSSEN gegen Cachebereinigung und unbegründete Entfernung geschützt bleiben. | SR-NEED-0017, SR-NEED-0008, SR-NEED-0013 | SR-VER-0035 | SR-TC-0561 |
 | SR-REQ-0562 | Ein Wechsel des absoluten Projektpfads oder der kompatiblen Runtime DARF NICHT allein normative Inhalte, fachliche Hashes oder die gebundene Idempotenz abgeschlossener Requests verändern. | SR-NEED-0017, SR-NEED-0008, SR-NEED-0013 | SR-VER-0035 | SR-TC-0562 |
 | SR-REQ-0563 | Die Wiederaufnahme nach vollständigem Sandboxverlust MUSS auf extern erhaltene, verifizierbare Projektvollbundles beziehungsweise Arbeitspakete nach Anhang P begrenzt sein. | SR-NEED-0017, SR-NEED-0008, SR-NEED-0013 | SR-VER-0035 | SR-TC-0563 |
 | SR-REQ-0564 | Ein erfolgreicher Preflight DARF NICHT als Beweis für die Fortexistenz von Dateien, Berechtigungen oder Ressourcen während eines späteren Verarbeitungsschritts gelten. | SR-NEED-0017, SR-NEED-0008, SR-NEED-0013 | SR-VER-0035 | SR-TC-0564 |
 | SR-REQ-0565 | SpecRoad MUSS `environment check` vollständig nach dem Operations- und Ergebnisvertrag aus Anhang N.4 bereitstellen. | SR-NEED-0017, SR-NEED-0008 | SR-VER-0036 | SR-TC-0565 |
 | SR-REQ-0566 | Nicht nachweisbare Ressourcenquoten oder Runtimevoraussetzungen MÜSSEN in der Umgebungsdiagnose ausdrücklich als unbekannt statt als garantiert verfügbar ausgewiesen werden. | SR-NEED-0017, SR-NEED-0008 | SR-VER-0036 | SR-TC-0566 |
 | SR-REQ-0567 | `environment check` DARF NICHT Probe-Writes, Benchmarks, Netzwerkzugriffe oder eine fachliche Vollvalidierung ausführen. | SR-NEED-0017, SR-NEED-0008 | SR-VER-0036 | SR-TC-0567 |
-| SR-REQ-0568 | `bundle create` MUSS ungelöste Transaktionen als Projektvollbundle abweisen; ein separat gekennzeichnetes Arbeitspaket folgt dem Export- und Recoveryvertrag aus Anhang P. | SR-NEED-0017, SR-NEED-0008, SR-NEED-0013 | SR-VER-0035 | SR-TC-0568 |
+| SR-REQ-0568 | Projektbundle-Export MUSS einen gesperrten oder unklaren Projektstand abweisen; ein Workpaket DARF NICHT als wiederhergestelltes Projekt ausgegeben werden. | SR-NEED-0017, SR-NEED-0008, SR-NEED-0013 | SR-VER-0035 | SR-TC-0568 |
 | SR-REQ-0569 | Ein neuer Hostname oder eine erneut vergebene Prozessnummer DARF NICHT allein die Übernahme eines unbekannten Lock-Eigentümers rechtfertigen. | SR-NEED-0017, SR-NEED-0008, SR-NEED-0013 | SR-VER-0035 | SR-TC-0569 |
-| SR-REQ-0570 | Der automatische Preflight MUSS die Metadaten- und Journalgrenzen aus Anhang N.2 ohne Scannen der abgeschlossenen Receipt-Historie einhalten. | SR-NEED-0017, SR-NEED-0008, SR-NEED-0012 | SR-VER-0038 | SR-TC-0570 |
+| SR-REQ-0570 | Der automatische Preflight MUSS die begrenzte Metadaten-/Schutzbereichsprüfung nach N.2 einhalten, ohne abgeschlossene Receipts oder das vollständige Modell als Startprüfung zu scannen. | SR-NEED-0017, SR-NEED-0008, SR-NEED-0012 | SR-VER-0038 | SR-TC-0570 |
 | SR-REQ-0571 | Der dokumentierte Agentenvertrag MUSS einen verhinderten Prozessstart, eine unvollständige Ausgabe oder ein unbestätigtes Prozessende als unbestätigte Ausführung behandeln. | SR-NEED-0017, SR-NEED-0008 | SR-VER-0036 | SR-TC-0571 |
 | SR-REQ-0572 | Ein read-only Aufruf DARF NICHT zur Wiederherstellung seiner Startfähigkeit notwendige oder vermeintlich veraltete Betriebsdaten automatisch löschen. | SR-NEED-0017, SR-NEED-0008, SR-NEED-0013 | SR-VER-0035 | SR-TC-0572 |
 
@@ -7712,7 +6566,7 @@ Diese Anforderungen ergänzen die bestehenden Runtime-, Sicherheits- und Änderu
 | SR-REQ-0618 | Ein noch nicht fachlich abgeschlossener Auftrag DARF NICHT ein semantisches Erfolgsreceipt erzeugen. | SR-NEED-0009, SR-NEED-0013, SR-NEED-0019 | SR-VER-0040 | SR-TC-0618 |
 | SR-REQ-0619 | Eine planmäßige Promptpause vor fachlicher Veröffentlichung MUSS den Projektstand regulär lesbar und ohne gehaltenen Projektwriter-Lock hinterlassen. | SR-NEED-0011, SR-NEED-0017, SR-NEED-0019 | SR-VER-0039 | SR-TC-0619 |
 | SR-REQ-0620 | Ein atomarer Change Plan DARF NICHT allein wegen kleiner Schrittfenster in unabhängige fachliche Teilcommits zerlegt werden. | SR-NEED-0009, SR-NEED-0013, SR-NEED-0019 | SR-VER-0041 | SR-TC-0620 |
-| SR-REQ-0621 | Ein echter Prozessabbruch während Veröffentlichung MUSS ausschließlich über den vorhandenen Transaktions-/Recoveryvertrag behandelt werden. | SR-NEED-0009, SR-NEED-0011, SR-NEED-0013 | SR-VER-0041 | SR-TC-0621 |
+| SR-REQ-0621 | Ein echter Prozessabbruch nach Beginn normativer Veröffentlichung MUSS zur Projektsperre nach Anhang C führen; normale Workfortsetzung DARF NICHT den unterbrochenen Write wieder aufnehmen. | SR-NEED-0009, SR-NEED-0011, SR-NEED-0013 | SR-VER-0041 | SR-TC-0621 |
 | SR-REQ-0622 | Die Abschlussprüfung eines aufgeteilten Auftrags MUSS sämtliche erforderlichen globalen Regeln und vollständig zusammengeführten Pflichtdiagnosen einbeziehen. | SR-NEED-0005, SR-NEED-0007, SR-NEED-0019 | SR-VER-0039 | SR-TC-0622 |
 | SR-REQ-0623 | Eine zu große Inlineausgabe MUSS vollständig über den Ergebnisdatei-/Manifestvertrag nach Kapitel 11.5 geliefert werden. | SR-NEED-0007, SR-NEED-0015, SR-NEED-0019 | SR-VER-0039 | SR-TC-0623 |
 | SR-REQ-0624 | `work prompt` MUSS einen aus dem geprüften Arbeitsmanifest abgeleiteten konkreten Fortsetzungstext nach Anhang P.8 ausgeben. | SR-NEED-0008, SR-NEED-0019 | SR-VER-0040 | SR-TC-0624 |
@@ -7894,7 +6748,7 @@ Die folgenden Codes sind der verbindliche Mindestkatalog. Weitere Codes dürfen 
 | SRV031 | error | Approved-Artefakt besitzt keine hinreichende Herkunft. |
 | SRV032 | error | Approved Requirement besitzt keine gültige Verifikation. |
 | SRV033 | error | Offener Platzhalter in approved Artefakt. |
-| SRV034 | error | Projekt ist durch Writer-Lock oder Recovery-Zustand gesperrt. |
+| SRV034 | error | Projekt ist durch Writer-Lock oder Schutzstatus gesperrt. |
 | SRV040 | error | Berechnetes `verification_result=passed` ohne gültige aktuelle Evidence. |
 | SRV041 | warning | Evidence ist stale. |
 | SRV042 | error | Recorded Evidence wurde verändert. |
@@ -7913,7 +6767,7 @@ Die folgenden Codes sind der verbindliche Mindestkatalog. Weitere Codes dürfen 
 | SRV073 | error | Request-ID wurde mit abweichender Operation wiederverwendet. |
 | SRV080 | error | Pfad oder Symlink verlässt den erlaubten Root. |
 | SRV081 | error | Explizite harte Struktur-, Sicherheits- oder Formatgrenze überschritten; kein weiches Arbeitsziel. |
-| SRV082 | error | Transaktionsjournal ist unvollständig oder corrupt. |
+| SRV082 | error | Schreib-/Bootstrapmarker oder aktiver Alttransaktionszustand ist beschädigt oder unvollständig; Projekt gesperrt. |
 | SRV083 | error | Unsichere XML-, ZIP- oder Archivstruktur. |
 | SRV090 | error | Importmapping oder externe Identität ist ungültig. |
 | SRV091 | warning | Import- oder Exportobjekt wird übersprungen oder verlustbehaftet abgebildet. |
@@ -7933,7 +6787,7 @@ Die folgenden Codes sind der verbindliche Mindestkatalog. Weitere Codes dürfen 
 | SRV146 | error | Gebundene Change-Plan-Metadaten oder Ergebnisressourcen stimmen nicht. |
 | SRV147 | error | External Identity ist doppelt oder inkonsistent gebunden. |
 | SRV148 | error | Lokale und externe Importprojektion wurden divergent geändert. |
-| SRV149 | error | Recovery-Discard ist im aktuellen Transaktionszustand unsicher. |
+| SRV149 | error | Versuch, eine Abbruchsperre durch Discard, Löschen oder Betriebsbereinigung zu umgehen; keine Entsperrung. |
 | SRV150 | error | Schreibversuch auf einem partiellen Read-only-Bundle. |
 | SRV151 | error | Boundary Reference fehlt oder stimmt nicht mit der Relation überein. |
 | SRV152 | error | Query-Grammatik, Projektion, Sortierung oder Ergebnisgrenze ist ungültig. |
@@ -7952,7 +6806,7 @@ Die folgenden Codes sind der verbindliche Mindestkatalog. Weitere Codes dürfen 
 | SRV165 | info | Eine angeforderte Umgebungsvoraussetzung oder Ressourcenbeobachtung ist nicht nachweisbar. |
 | SRV166 | info | Weiches Arbeitsziel überschritten; sparsame Weiterarbeit oder gesicherte Fortsetzung, kein fachlicher Gate-Fehler. |
 | SRV167 | info | Der kurze Preflight benötigt eine weitere begrenzte Metadatenphase; bis zur Klärung wird kein regulärer Projektzugriff freigegeben. |
-| SRV168 | error | Fachoperation wegen Recoverybedarf nicht begonnen; Recoveryergebnis und notwendiger Wiederaufruf werden ausgewiesen. |
+| SRV168 | error | Fachoperation wegen Abbruchsperre nicht begonnen; manueller Git-Wiederanlauf erforderlich. |
 | SRV169 | info | Gesicherter Arbeitsstand erfordert einen weiteren Aufruf; noch keine vollständige fachliche Erfolgsaussage. |
 | SRV170 | error | Notwendiger Checkpoint-/Work-Paketteil fehlt, ist manipuliert oder inkompatibel. |
 | SRV171 | error | Ein tatsächlicher Ressourcen-/Dateisystemblocker verhindert auch den dokumentierten sparsamen Mindestschritt. |
@@ -8002,15 +6856,15 @@ Jede konkrete Diagnose muss die in `SR-REQ-0089` festgelegten Felder bereitstell
 | SR-VER-0009 | Release, Milestone, Task und Roadmap | End-to-End-Fixtures mit mehreren Releases, Milestones, Abhängigkeiten, Risiken und Tasks. | Roadmap und Readiness werden ausschließlich aus dem Modell abgeleitet und vollständig erklärt. |
 | SR-VER-0010 | Verification, Tests, Evidence und Coverage | Fixtures mit bestandener, fehlgeschlagener, veralteter und gewavter Evidence. | Status und Coverage entsprechen exakt Subjects, Revisionen, Contracts und Nachweisen. |
 | SR-VER-0011 | Baselines | Erzeugen, Verifizieren, Manipulieren, Materialisieren und Vergleichen von Baselines. | Unveränderte Baselines bestehen; jede Manipulation wird erkannt; Vergleiche sind vollständig. |
-| SR-VER-0012 | KI-Proposals und isolierter Check | Integrationstests für alle Change-Plan-Operationen, stale Bases, Reviews und Fehler während Apply. | Check verändert Arbeitsstand nicht; Apply benötigt gültige menschliche Freigabe und ist recoverbar. |
+| SR-VER-0012 | KI-Proposals und isolierter Check | Fachoperationen, stale Bases, menschliche Reviews, erfolgreiche Receipts und echte Applyabbrüche. | Check bleibt isoliert; gültige Freigabe ist Pflicht; abgeschlossene Requests sind idempotent, unterbrochene Writes sperren den Root. |
 | SR-VER-0013 | CLI, Git, CI und Agentenbedienung | Black-box-Tests aller Befehle, Optionen, TTY-Modi, Exit Codes und Git-Ref-Fälle. | stdout, stderr, JSON, SARIF, Hilfen, Farben und Exit Codes erfüllen die Verträge. |
 | SR-VER-0014 | Sicherheit und Robustheit | Tests mit Traversal, Symlinks, XML-/ZIP-Angriffen, übergroßen Eingaben, Fremdcode und konkurrierenden Schreibern. | Kein Zugriff außerhalb erlaubter Roots, kein Netzwerk/Fremdcode und kein stiller Ressourcenüberlauf. |
 | SR-VER-0015 | Determinismus und Performance | Wiederholungen unter verschiedenen Locale-/Timezone-Einstellungen und Benchmarks. | Hashes und Ausgaben sind identisch; Zeit- und Speichergrenzen werden eingehalten. |
 | SR-VER-0016 | Endabnahme | Durchführung aller leitenden Szenarien in einem Referenzprojekt. | Alle Szenarien bestehen; keine offenen Fehlerdiagnosen; vollständige Requirement-Traceability. |
 | SR-VER-0017 | Python-, Abhängigkeits- und Sandbox-Portabilität | Black-box- und Importtests der portablen Distributionen in netzwerkisolierten Python-Sandboxen. | Der bisherige Core-Roundtrip funktioniert ohne Drittanbieterpaket, Root, TTY, Paketmanager, Compiler oder Dienst. |
 | SR-VER-0018 | CLI-Authoring und kollisionsresistente Identitäten | Black-box-Tests aller direkten Schreibbefehle, Dry-Runs, AI-Verweigerung und massenhafte parallele ID-Erzeugung. Gekoppelte Review-Pläne einschließlich Dry-Run, verweigerter Feldkombinationen und eindeutiger Schreib-/Bewertungsergebnisse aus 11.13 prüfen. | Alle Authoring-Pfade erzeugen korrekte Change Plans; keine Kollision oder zentrale Sequenz; Dry-Run ist schreibfrei. |
-| SR-VER-0019 | Transaktionen und Recovery | Crash-Injection nach jeder dauerhaften Grenze, Journalmanipulation und Lock-/Recovery-Tests. Crashgrenzen der atomaren Review-/Freigabeänderung und der vollständigen Restore-Transaktion aus 10.7.1 prüfen. | Nach Recovery entspricht die Modellwurzel exakt Basis oder vollständigem Ziel; inkonsistente Journale werden sicher verweigert. |
-| SR-VER-0020 | Schema- und Datenmigration | Plan-, Apply-, Verify-, Idempotenz-, Verlust- und Restore-Tests einschließlich 0.1→0.2. | Migration ist gesichert, transaktional, nachvollziehbar und erhält alle nicht akzeptierten Informationen. |
+| SR-VER-0019 | Schreibschutz und Abbruchsperre | Echte Crash-Injection an jeder Schutz-/Abschlussgrenze; Marker-, I/O-, Eigentümer- und Lockfehler; Git-Wiederanlauf. | Kein regulär benutzbarer Mischstand; keine Reparatur; gesperrter Altroot und separat gültiger neuer Checkout. |
+| SR-VER-0020 | Schema- und Datenmigration | Plan-, Apply-, Verify-, Idempotenz-, Verlust-, Legacy- und Abbruchsperrtests einschließlich 0.1→0.2. | Vollständige fachliche Migration und Originalerhaltung; Abbruch sperrt den Schema-Mischstand. |
 | SR-VER-0021 | Relationsreviews und Suspect-Propagation | Fixtures mit Endpunktänderungen, Reviews, Import, Merge und Readiness. Den vollständigen negativen und später positiven Review-CLI-Verlauf aus 11.13 mit Revisionen, Diagnose und Approval-Rücknahme nachweisen. | current, unreviewed, suspect und invalid werden korrekt berechnet und in Gates berücksichtigt. |
 | SR-VER-0022 | SRX 1.0 | Normative Operator-Testvektoren, Typ-, Missing-, Grenzwert-, Ressourcen- und Sicherheitsfälle. | Jeder Operator und Fehlerfall erfüllt exakt die versionierte Semantik; kein I/O oder nicht deterministisches Verhalten. |
 | SR-VER-0023 | Dokumente, Views und Diagrammquellen | Kompositions-, Zyklus-, Rendering-, View- und Golden-File-Tests. | Dokumente und Sichten sind korrekt, sicher, byte-deterministisch und duplizieren keine normativen Inhalte. |
@@ -8021,13 +6875,13 @@ Jede konkrete Diagnose muss die in `SR-REQ-0089` festgelegten Felder bereitstell
 | SR-VER-0028 | Konfigurationen und Wiederverwendung | Varianten-, Vererbungs-, Applicability-, Dependency-, Baseline-, Diff- und Merge-Tests. | Konfigurationsumfänge sind deterministisch und konsistent; Wiederverwendung erzeugt keine normativen Kopien. |
 | SR-VER-0029 | Scope-Closure, Relationsmatrix und Profilkomposition | Testvektoren für jede Scope-Art, jeden Relationstyp und alle Profil-Mergefälle. | Seed-Mengen, Fixpunkte, Boundary References, Quell-/Zielakzeptanz, Konflikte und Profilhash entsprechen exakt den normativen Tabellen. |
 | SR-VER-0030 | Proposal-Authoring, Change-Metadaten, Spezial-Lifecycle und Verification Result | Black-box-, Schema-, Golden-Plan- und Zustandsmatrix-Tests. | Proposal-Befehle sind vollständig; gespeicherte Pläne ergeben unabhängig vom Apply-Zeitpunkt denselben Zielhash; Spezialzustände und Verification Results sind korrekt. |
-| SR-VER-0031 | External Identities, Import-Dreifachvergleich, Recovery und Formatierung | ReqIF-Relationsroundtrips, Dreiwege-Importfixtures, Crash-/Corrupt-Recovery und Byte-Normalisierungstests. Vollständige und unvollständige Restore-Quellen sowie unveränderte historische Zusatzressourcen nach 10.7.1 prüfen. | Externe Identitäten bleiben erhalten; Konflikte werden erkannt; Recovery endet nur in Basis/Ziel; Formatierung verändert keine Semantik. |
+| SR-VER-0031 | External Identities, Importvergleich, Sperre und Formatierung | Relationsroundtrips, Dreiwege-Import, Markerblockade, vollständiger Git-Wiederanlauf und Byte-Normalisierung. | Externe Identitäten bleiben erhalten; Konflikte werden erkannt; unterbrochene Writes bleiben gesperrt; Formatierung verändert keine Semantik. |
 | SR-VER-0032 | Dokumentpayloads, Query, JSON und Befehlsklassen | Schema-, CommonMark-, Include-, Query-, Envelope- und Seiteneffekt-Golden-Tests. | Jede Blockart, Query, JSON-Ausgabe und Befehlsklasse erfüllt den vollständigen Vertrag. |
 | SR-VER-0033 | Partielle Bundles, ZIP und portable Idempotenz | Bytevergleich über CPython-Versionen, Boundary-/Read-only-Tests und Receipt-Roundtrips. | Archive sind byteidentisch und sicher; partielle Bundles erlauben nur den festgelegten Umfang; Retries bleiben nach Projektbundle-Transfer idempotent. |
 | SR-VER-0034 | Requirement-Testfälle, Szenarioketten, Codezustand und Performance | Vollständigkeitsprüfung aller `SR-TC-*`, End-to-End-Matrix, Code-Anker-Testvektoren und reproduzierbare Benchmarks. | Alle Requirements dieser Dokumentversion besitzen einen bestandenen Testfall; alle Szenarioketten bestehen; Codezustände und Performance-Evidence entsprechen den normativen Verträgen. |
-| SR-VER-0035 | Unabhängige Runtimeaufrufe und sichere Fortsetzung | Prozess-/Pfad-/Sandboxwechsel, gelöschter Cache, verifizierter Vollbundle-Transfer, stale Locks und unterbrochene Journale. | Kein vorheriger Sessionzustand erforderlich; gleiche fachliche Hashes und Receiptwirkung bei erhaltenem Stand; keine Read-only-Recoverywrites oder erfundene Wiederherstellung verlorener Daten. |
+| SR-VER-0035 | Unabhängige Runtimeaufrufe und sichere Fortsetzung | Prozess-/Pfad-/Sandboxwechsel, fehlender Cache, Vollbundle-Transfer, stale Locks, Schreibmarker und frischer Git-Checkout. | Kein Sessionzustand erforderlich; gleiche Hashes/Receiptwirkung im erhaltenen gültigen Stand; Diagnose ist schreibfrei, unterbrochene Writes werden nicht wiederaufgenommen. |
 | SR-VER-0036 | Umgebungsdiagnose und Betriebsbeobachtung | Black-box-Schema- und Seiteneffekttests mit fehlendem Projekt, unlesbaren Pfaden, unbekannten Quoten und simuliertem Prozessstartfehler. | Diagnosevertrag, null-/unknown-Werte, Exit Codes und Messwerttrennung stimmen; keine Probe-Writes, externen Healthchecks oder fachlichen Gültigkeitsbehauptungen. |
-| SR-VER-0037 | Weiche Arbeitsbudgets und sichere Fortsetzung | Grenzwert-/Zählertests, weiche Budgetüberschreitung, große Payloads, viele Pfade, Arbeitsschrittwechsel und echte Crash-Injection. | Vollständiger Restauftrag bleibt erhalten; weiche Überschreitung allein erzeugt keinen Fehler; bei echten Abbrüchen Basis-/Zielzustand oder gesperrter erhaltener Recoveryzustand nach O.4. |
+| SR-VER-0037 | Weiche Arbeitsbudgets und sichere Fortsetzung | Grenzwert-/Zählertests, weiche Budgetüberschreitung, große Payloads, viele Pfade, Arbeitsschrittwechsel und echte Crash-Injection. | Vollständiger Restauftrag bleibt erhalten; weiche Überschreitung allein erzeugt keinen Fehler; bei echten Abbrüchen bestätigter Zielzustand oder gesperrter tatsächlicher Bestand nach O.4. |
 | SR-VER-0038 | Effizienter Start und Cache-/Profilparität | Benchmarks nach 14.6; identische vollständige Aufträge mit beiden Ressourcenprofilen sowie fehlenden, gültigen und manipulierten Caches. | Gemessene Start-/CPU-/RSS-Grenzen eingehalten; Preflight scannt keine Fachdaten/Historien; erfolgreiche Fachresultate sind identisch. |
 | SR-VER-0039 | Vollständige adaptive Arbeit | Mehrschritttests mit sehr kleinen Arbeitszielen, globalen Graphfehlern, großen vollständigen Ausgaben und Fortschrittsinstrumentierung. | Einzellauf-/Mehrschrittparität, kein ausgelassener Restauftrag, keine rein budgetbedingte Fehlerblockade und kein endloser leerer Retry. |
 | SR-VER-0040 | Portable Work-Steuerung und Agentenvertrag | Paket-Roundtrip, neuer Prozess/Host, falsche Checkpoints, verlorene Ausgaben, manipulierte Prompts und Actor-/Request-Tests. | Nur geprüfte Daten fortgesetzt; gleiche Aufgabenidentität; keine autonomen Nachrichten oder erweiterten Rechte; fehlende echte Voraussetzungen ehrlich ausgewiesen. |
@@ -8076,7 +6930,13 @@ Der Test muss den Roundtrip Initialisierung beziehungsweise Bundle-Extraktion, S
 
 ### 14.3 Referenzdateisystem für Transaktionen
 
-`SR-VER-0019` wird auf einem lokalen Linux-Dateisystem ausgeführt, das atomare Umbenennungen innerhalb eines Verzeichnisses und `fsync` auf Dateien und Verzeichnissen unterstützt. Die Tests injizieren einen harten Prozessabbruch nach jeder dauerhaft sichtbaren Grenze. Zusätzlich werden fehlende und manipulierte Journalbestandteile simuliert.
+`SR-VER-0019` verwendet ein lokales Linux-Dateisystem mit atomarer
+Einzelfile-Umbenennung und Datei-/Verzeichnis-`fsync`. Echte Prozessabbrüche
+werden an jeder dauerhaften Schutz- und Abschlussgrenze injiziert. Fehlende,
+manipulierte oder teilgeschriebene Marker, fehlgeschlagene Synchronisation,
+aktive und unklare Eigentümer werden zusätzlich geprüft. Abnahme ist die
+Sperre ohne Reparatur sowie der getrennte Git-Wiederanlauf nach Anhang C,
+nicht die automatische Rückkehr zu Basis oder Ziel.
 
 ### 14.4 Austausch-Testkorpus
 
@@ -8121,12 +6981,12 @@ Ein Low-Resource-Funktionstest verwendet eine durch den Testhost begrenzte CPU-A
 - vollständiger Cacheverlust, manipulierte Cachebytes, gleichbleibende Dateigröße und `mtime` bei verändertem Fachinhalt sowie unveränderte Inhalte mit geänderten Pfaden;
 - knapp unter, genau an und über jeder Grenze liegende Budgetfixtures; `0` und negative Budgets als Nutzungsfehler;
 - mehrschichtige Graphen mit vielen kürzesten Pfaden, große Payloads und exakte Query-Gesamtzahlen bei kleiner Pagination;
-- weiche CPU-/Zeit-/Scratchüberschreitung sowie echte Hostabbrüche vor und an jeder dauerhaften Transaktionsgrenze; erneute Recovery mit erhaltener Verbrauchsbilanz und sicherem Journalabschluss;
-- harten Prozessabbruch mit erhaltenem Journal und anschließende korrekte Recovery; vollständigen Dateiverlust nur durch Rückkehr zum externen Sicherungsstand;
+- weiche CPU-/Zeit-/Scratchüberschreitung sowie echte Hostabbrüche vor und an jeder dauerhaften Transaktionsgrenze; Sperre ohne Reparatur und separat geprüfter Git-Wiederanlauf;
+- harten Prozessabbruch mit erhaltenem Marker und anschließende schreibfreie Sperrdiagnose; vollständigen Dateiverlust nur durch Rückkehr zum externen Sicherungsstand;
 - keine verbleibenden von SpecRoad gestarteten Hilfsprozesse nach normalem beziehungsweise behandeltem Ende;
 - fachliche Byte-/Hashparität vollständig erfolgreicher Läufe mit `constrained`, `standard`, `--cache off` und verwendbarem Cache; Messwerte werden separat verglichen.
 
-Testmanifest und Evidence binden neben den bisherigen Hashes `runtime-budget-v2`, gewähltes Profil, tatsächliche Budgetwerte, Messart und Fixturezustand. Ein bloß vorhandener Testfall oder eine formale Requirement-Zuordnung ist kein bestandener Performance- oder Recoverytest.
+Testmanifest und Evidence binden neben den bisherigen Hashes `runtime-budget-v2`, gewähltes Profil, tatsächliche Budgetwerte, Messart und Fixturezustand. Ein bloß vorhandener Testfall oder eine formale Requirement-Zuordnung ist kein bestandener Performance- oder Abbruchsperrtest.
 
 ---
 
@@ -8134,7 +6994,7 @@ Testmanifest und Evidence binden neben den bisherigen Hashes `runtime-budget-v2`
 
 Die bisherigen Performanceziele bleiben verbindlich. Ergänzend prüft die Releaseabnahme alle Fälle in Anhang R und insbesondere endliche Aufträge mit deutlich kleineren Schrittfenstern als ihrer vollständigen Laufzeit. Der Testhost ruft `work resume` so oft auf, bis der Auftrag abgeschlossen ist oder ein konkreter echter Blocker vorliegt. Er bricht nicht wegen einer bloßen Anzahl überschrittener Softbudgets ab.
 
-Der Testkorpus enthält mindestens Vollvalidierung samt globaler Graphregeln, exakte Query-Gesamtzahl, vollständige `why`-Pfade, Diff, Merge-Plan, Import-/Migrationsplanung, Baseline-/Bundle-Prüfung, Rendering und Proposal-Zielvalidierung. Jede Phase wird an sämtlichen implementierten Checkpointgrenzen unterbrochen und in einem neuen Prozess wieder aufgenommen. Der abschließende normative Write wird zusätzlich an allen dauerhaften Journalgrenzen tatsächlich abgebrochen und recovered.
+Der Testkorpus enthält mindestens Vollvalidierung samt globaler Graphregeln, exakte Query-Gesamtzahl, vollständige `why`-Pfade, Diff, Merge-Plan, Import-/Migrationsplanung, Baseline-/Bundle-Prüfung, Rendering und Proposal-Zielvalidierung. Jede Phase wird an sämtlichen implementierten Checkpointgrenzen unterbrochen und in einem neuen Prozess wieder aufgenommen. Der abschließende normative Write wird zusätzlich an allen dauerhaften Journalgrenzen tatsächlich abgebrochen; der Bestand muss gesperrt bleiben.
 
 Als Oracle gelten identischer fachlicher Endpayload und identische gebundene Zielmodellwurzel gegenüber dem nicht unterbrochenen Lauf, keine verlorene/doppelte Ergebniseinheit, vollständig erhaltene Pflichtdiagnosen sowie genau ein semantisches Receipt pro Request. Unbekannte Gesamtarbeit wird bis zu ihrer Ermittlung als unbekannt ausgewiesen. Ein Checkpoint nach reiner wiederholter Startprüfung zählt nicht als dauerhafter fachlicher Fortschritt.
 
@@ -8145,7 +7005,7 @@ Mess-Evidence enthält Verbrauch je Schritt und kumuliert, maximalen Arbeitsspei
 
 ### 14.9 Korrekturregression v0.2.4
 
-Die Fälle R-23 bis R-32 sind verbindliche Teilfälle bestehender Verifikationsverträge und kommen zu R-01 bis R-22 hinzu. SR-VER-0029 und SR-VER-0012 prüfen R-23/R-24 einschließlich indirekter Kanten und Fehlerfreiheit vor jedem Write. SR-VER-0010, SR-VER-0025 und SR-VER-0030 prüfen R-25 bis R-28 mit neuen und gleichen Produktständen, mehreren Pflichtslots, neuen verspäteten Fehlernachweisen und allen Importpermutationen eines kleinen vollständigen Testkorpus. SR-VER-0027 prüft R-29 auf zwei frischen Projektroots sowie die Verweigerung eines scheinbar vollständigen Snapshots bei Writer/Recovery. SR-VER-0008 und SR-VER-0032 prüfen die Wahrheitstabelle R-30. SR-VER-0037, SR-VER-0041 und SR-VER-0011 prüfen R-31/R-32 für Fortsetzung und Baselines.
+Die Fälle R-23 bis R-32 sind verbindliche Teilfälle bestehender Verifikationsverträge und kommen zu R-01 bis R-22 hinzu. SR-VER-0029 und SR-VER-0012 prüfen R-23/R-24 einschließlich indirekter Kanten und Fehlerfreiheit vor jedem Write. SR-VER-0010, SR-VER-0025 und SR-VER-0030 prüfen R-25 bis R-28 mit neuen und gleichen Produktständen, mehreren Pflichtslots, neuen verspäteten Fehlernachweisen und allen Importpermutationen eines kleinen vollständigen Testkorpus. SR-VER-0027 prüft R-29 auf zwei frischen Projektroots sowie die Verweigerung eines scheinbar vollständigen Snapshots bei Writer/Abbruchsperre. SR-VER-0008 und SR-VER-0032 prüfen die Wahrheitstabelle R-30. SR-VER-0037, SR-VER-0041 und SR-VER-0011 prüfen R-31/R-32 für Fortsetzung und Baselines.
 
 Die Orakel verwenden die präzisierten Requirement-Texte mit ihren unveränderten IDs. Geplante Testfallmanifeste müssen den neuen Spezifikationshash binden; frühere Testergebnisse werden nicht allein wegen gleicher IDs als Nachweis dieser Korrektur übernommen. Diese Ergänzung ist kein Bericht über ausgeführte Produkttests.
 
@@ -8159,7 +7019,7 @@ Die frühere Korrektur v0.2.5 ergänzte die weiterhin verbindliche Soll-Abnahme 
 | B03 negativer Relationsreview | R-35 bis R-39 | SR-REQ-0238, SR-REQ-0278, SR-REQ-0283, SR-REQ-0514, SR-REQ-0515; SR-VER-0018, SR-VER-0019, SR-VER-0021 |
 | B02 Bundle-Kennzeichnung | R-40, R-41 | SR-REQ-0386, SR-REQ-0389, SR-REQ-0390; SR-VER-0027 |
 | H01 nichtrekursiver Manifestbereich | R-42, R-43 | SR-REQ-0387, SR-REQ-0388, SR-REQ-0389; SR-VER-0027 |
-| H02 vollständige Restore-Quelle | R-44 bis R-47 | SR-REQ-0461, SR-REQ-0462, SR-REQ-0254, SR-REQ-0261; SR-VER-0019, SR-VER-0031 |
+| H02 vollständiger Git-Wiederanlauf | R-44 bis R-47 | SR-REQ-0461, SR-REQ-0462, SR-REQ-0254, SR-REQ-0261; SR-VER-0019, SR-VER-0031 |
 
 Ein begrenztes ausführbares Vertragsmodell darf diese Entscheidungstabellen verifizieren, ersetzt aber keine tatsächlichen CLI-, Dateisystem-, Crash- oder Ressourcentests. Vor technischer Gesamtfreigabe werden zusätzlich die bisherigen Proposal-, Evidence-, Merge-, Migrations-, Scope- und Mehrschrittregressionen gegen die konsolidierten Verträge geprüft.
 
@@ -8309,7 +7169,7 @@ PatchHarbor-Testlauf belegt die Erweiterung nicht durch bloße Hashaktualisierun
 | 12.16 Python-, Laufzeit- und Sandbox-Portabilität | 8 | `SR-REQ-0223`–`SR-REQ-0230` |
 | 12.17 Vollständiges CLI-Authoring und gemeinsamer Change Plan | 13 | `SR-REQ-0231`–`SR-REQ-0243` |
 | 12.18 Kollisionsresistente IDs und parallele Arbeitsstände | 8 | `SR-REQ-0244`–`SR-REQ-0251` |
-| 12.19 Transaktionsjournal und Recovery | 11 | `SR-REQ-0252`–`SR-REQ-0262` |
+| 12.19 Schreibschutz und Abbruchsperre | 11 | `SR-REQ-0252`–`SR-REQ-0262` |
 | 12.20 Schema- und Datenmigration | 12 | `SR-REQ-0263`–`SR-REQ-0274` |
 | 12.21 Suspect Relations und fachliche Relationsreviews | 11 | `SR-REQ-0275`–`SR-REQ-0285` |
 | 12.22 Deklarative Regelsprache SRX 1.0 | 13 | `SR-REQ-0286`–`SR-REQ-0298` |
@@ -8324,7 +7184,7 @@ PatchHarbor-Testlauf belegt die Erweiterung nicht durch bloße Hashaktualisierun
 | 12.31 Relationsmatrix und Profilkomposition | 11 | `SR-REQ-0415`–`SR-REQ-0425` |
 | 12.32 Proposal-Authoring, Change-Plan-Metadaten und Spezial-Lifecycles | 18 | `SR-REQ-0426`–`SR-REQ-0443` |
 | 12.33 Verifikationsplanung und berechnete Ergebnisse | 9 | `SR-REQ-0444`–`SR-REQ-0452` |
-| 12.34 External Identities, Importvergleich, Recovery und Formatierung | 14 | `SR-REQ-0453`–`SR-REQ-0466` |
+| 12.34 External Identities, Importvergleich, Abbruchsperre und Formatierung | 14 | `SR-REQ-0453`–`SR-REQ-0466` |
 | 12.35 Dokumentpayloads, Query, JSON und Befehlsklassen | 14 | `SR-REQ-0467`–`SR-REQ-0480` |
 | 12.36 Partielle Bundles, kanonisches ZIP und portable Idempotenz | 10 | `SR-REQ-0481`–`SR-REQ-0490` |
 | 12.37 Testfall-Traceability, Codezustand und reproduzierbare Performance | 10 | `SR-REQ-0491`–`SR-REQ-0500` |
@@ -8450,8 +7310,8 @@ Das Zielrelease `SpecRoad Single-Repository Workbench 0.2.0` gilt als abnahmefä
 4. `specroad validate --strict --format json` liefert für Vollprojekt, Referenzkonfigurationen und zulässige partielle Fixtures Exit Code 0.
 5. Scope Descriptor, Closure, Relationsmatrix und Profilkomposition bestehen alle normativen Testvektoren.
 6. Zwei identische Render-, View-, Diagramm-, Export- und Bundle-Läufe erzeugen byte-identische Ausgaben.
-7. Crash-Injection an jeder dauerhaften Transaktionsgrenze stellt nach Recovery exakt die Basis- oder vollständige Zielmodellwurzel her.
-8. Eine korrupte Transaktion blockiert normale Nutzung und kann ausschließlich aus verifizierter Quelle auditiert restored werden.
+7. Crash-Injection an allen Schutz-/Publikations-/Abschlussgrenzen erfüllt Anhang C: unbestätigte Writes bleiben gesperrt; bestätigte Abschlüsse bleiben idempotent.
+8. Ein corrupted-Projekt blockiert normale Nutzung. Ein frischer vollständiger Git-Checkout besteht die normale Validierung; die beschädigte Kopie wird weder repariert noch entsperrt.
 9. Ein reales 0.1-Referenzprojekt kann nach Sicherungsbundle verlustfrei auf 0.2 migriert und anschließend verifiziert werden.
 10. Ein stale Proposal, ein AI-Direktschreibversuch, ein Proposal ohne menschliche Freigabe und ein fehlerhaftes Proposal werden ohne normative Änderung abgewiesen.
 11. Proposal-Authoring und gespeicherte Change Plans erzeugen unabhängig vom Apply-Zeitpunkt dieselbe erwartete Zielwurzel.
@@ -8469,7 +7329,7 @@ Das Zielrelease `SpecRoad Single-Repository Workbench 0.2.0` gilt als abnahmefä
 23. Es existieren keine offenen Fehlerdiagnosen, ungültigen Referenzen, Profilkonflikte, unaufgelösten Merge-/Importkonflikte, korrupten Transaktionen, doppelten IDs oder offenen normativen Platzhalter in der Release-Baseline.
 24. Traceability Requirements → Need, Requirements → Verification und Requirements → Testfall beträgt jeweils 100 Prozent.
 25. Die unabhängigen Aufruf-, Pfad- und Sandboxwechsel nach Anhang N bestehen ohne erforderlichen Sessionzustand; vollständiger Datenverlust wird nur bis zum extern erhaltenen Sicherungsstand behandelt.
-26. Read-only-/Dry-Run-Aufrufe verändern auch bei Recoverybedarf, Checkpoints und fehlendem Cache weder Projektdateien noch `.specroad/`; externe Work-Dateien sind nach Anhang P ausdrücklich ausgewiesen.
+26. Read-only-/Dry-Run-Aufrufe verändern auch bei Abbruchsperre, Checkpoints und fehlendem Cache weder Projektdateien noch `.specroad/`; externe Work-Dateien sind nach Anhang P ausdrücklich ausgewiesen.
 27. Die neuen Bootstrap-, Preflight-, CPU- und RSS-Grenzen nach 14.6 bestehen für beide Distributionen und die unterstützte Python-Matrix.
 28. Jedes Ressourcenprofil liefert bei vollständigem Abschluss dieselben fachlichen Ergebnisse; weiche Budgetüberschreitungen führen nach Anhang O.4 zu sparsamer Fortsetzung ohne falsches Pass und ohne freigegebenen Mischzustand.
 29. `environment check` und ausdrücklich angeforderte Messwerte erfüllen ihre Unknown-, Datenschutz-, Seiteneffekt- und Nicht-Determinismusverträge.
@@ -8494,14 +7354,14 @@ Das Zielrelease `SpecRoad Single-Repository Workbench 0.2.0` gilt als abnahmefä
 | ID | Annahme | Festlegung |
 |---|---|---|
 | SR-ASM-0001 | Dateisystem | Der Referenzbetrieb hält Projektroot, alle Managed Paths und `.specroad/` auf demselben lokalen Dateisystem, das atomare Umbenennung innerhalb eines Verzeichnisses und dauerhaftes `fsync` unterstützt. |
-| SR-ASM-0002 | Git | Git ist nur für Git-spezifische Vergleiche und Merge-Eingaben erforderlich; alle anderen Core-Funktionen arbeiten ohne `.git`. |
+| SR-ASM-0002 | Git und Sicherung | Nicht Git-spezifische Core-Aufrufe brauchen keinen Git-Prozess; der Nutzer hält für den Wiederanlauf einen vollständigen gültigen Git-Stand vor. Ohne diesen gibt es keine Wiederherstellungsgarantie. |
 | SR-ASM-0003 | Zeit | Normative Zeitstempel werden in UTC bereitgestellt; lokale Zeitzone beeinflusst keine Semantik. |
 | SR-ASM-0004 | Projektgröße | 10.000 Artefakte, 50.000 Beziehungen und 100 MiB normative Daten bilden den verbindlichen Benchmarkbereich, keine automatische Ablehnungsgrenze; größere zulässige Aufträge werden sparsam und fortsetzbar versucht. |
 | SR-ASM-0005 | Single-User | Es gibt keinen koordinierten Mehrbenutzerschreibzugriff auf denselben Projektroot; parallele Branches und Kopien werden später semantisch gemerged. |
 | SR-ASM-0006 | Bedrohungsmodell | Eingabedateien, Archive und XML können bösartig sein; ein lokaler Administrator mit Schreibzugriff auf Prozess und Projekt liegt außerhalb der Schutzgrenze. |
 | SR-ASM-0007 | Zufallsquelle | Das Betriebssystem stellt der Python-Standardbibliothek eine kryptografisch geeignete Entropiequelle bereit. |
 | SR-ASM-0008 | Akteursdeklaration | Single-User-SpecRoad authentifiziert Akteurtypen nicht kryptografisch; `actor_type` ist Audit- und Policyinformation des aufrufenden Workflows. |
-| SR-ASM-0009 | Erhaltung kritischer Dateien | Crash-Recovery setzt erhaltene, integre Transaktionsdaten voraus; vollständiger Dateiverlust kann nur durch extern erhaltene Projektstände überbrückt werden. |
+| SR-ASM-0009 | Erhaltung kritischer Dateien | Abbruchsperre setzt erhaltene Schutzdaten und ein vertragsgemäß synchronisierendes Dateisystem voraus; vollständiger Verlust oder externe Entfernung kann nur durch einen unabhängig gesicherten Stand überbrückt werden. |
 | SR-ASM-0010 | Beobachtbarkeit von Ressourcen | Hostquoten, RSS und freie Ressourcen sind nicht überall verlässlich ermittelbar; der Core kennzeichnet Unbekanntes und arbeitet ohne solche APIs mit begrenzter eigener Verarbeitung. |
 
 ---
@@ -8519,7 +7379,7 @@ Für einen vollständigen Abschluss über mehrere Aufrufe sind ein endlicher zul
 | SR-RISK-0003 | Doppelte Source of Truth | Gerenderte Dokumente könnten manuell gepflegt werden. | Generierungsbanner, getrennter Ausgabeordner und keine Rückübernahme. |
 | SR-RISK-0004 | KI-Halluzinationen | Plausible, aber unbelegte Inhalte könnten vorgeschlagen werden. | Proposal-Basis, Quellenpflicht, Check, menschliche Freigabe und Evidence-Gates. |
 | SR-RISK-0005 | Veraltete Beziehungen und Nachweise | Änderungen können bisher gültige Traces oder Evidence entwerten. | Endpunkthashes, suspect Relations, stale Evidence und Readiness-Gates. |
-| SR-RISK-0006 | Transaktionskorruption | Stromausfall oder manuelle Eingriffe können Journaldaten beschädigen. | Before Images, Hashes, fsync, Crash-Injection und sichere Verweigerung bei `corrupt`. |
+| SR-RISK-0006 | Unterbrochene Publikation | Stromausfall, Signal oder I/O-Fehler hinterlassen möglicherweise Teilbytes. | Dauerhafter Marker vor Dateiwirkung, Synchronisation, Prozess-/Fehlerinjektion und Projektsperre; manueller Git-Wiederanlauf. |
 | SR-RISK-0007 | Migrationsverlust | Schemawechsel können unbekannte oder nicht abbildbare Informationen verlieren. | Pre-Bundle, Plan, Verlust-IDs, explizites `--accept-loss` und Verify. |
 | SR-RISK-0008 | Austauschformatverlust | ReqIF oder CSV können nicht alle SpecRoad-Inhalte darstellen. | Schnittmengenprofil, External Identity, namespaced Extensions und Verlustbericht. |
 | SR-RISK-0009 | Bösartige XML-/ZIP-Eingaben | Archive oder XML können Ressourcen erschöpfen oder Pfadgrenzen verletzen. | DTD-/Entity-Verbot, Ressourcenlimits, ZIP_STORED-Prüfung und Traversal-Schutz. |
@@ -8529,7 +7389,7 @@ Für einen vollständigen Abschluss über mehrere Aufrufe sind ein endlicher zul
 | SR-RISK-0013 | Dependency-freie Implementierungslast | JSON Schema, ReqIF, XML-Härtung und SARIF ohne externe Runtimepakete erhöhen Wartungsaufwand. | Begrenzte Profile, normative Testkorpora, kleine interne Module und klare Formatgrenzen. |
 | SR-RISK-0014 | Variantenexplosion | Viele Konfigurationen können Coverage und Readiness unübersichtlich machen. | Benannte Dimensionen, SRX-Limits, explizite Konfigurationsbindung und keine Artefaktkopien. |
 | SR-RISK-0015 | Vollständiger Sandboxverlust | Änderungen seit der letzten extern erhaltenen Sicherung können verloren gehen. | Verifizierte Vollbundles nach abgeschlossenen Arbeitsschritten extern sichern; kein automatisches Backupversprechen. |
-| SR-RISK-0016 | Versteckte Quoten oder harter Abbruch | Der Host kann den Prozess vor einer kontrollierten Diagnose beenden. | Konservative Budgets, begrenzte Arbeit, Journal vor Veröffentlichung und Behandlung unbestätigter Ergebnisse durch den Agenten. |
+| SR-RISK-0016 | Versteckte Quoten oder harter Abbruch | Der Host kann vor kontrollierter Diagnose beenden. | Begrenzte Vorbereitung, dauerhafter Marker vor Publikation und konservative Sperre unbestätigter Writes. |
 | SR-RISK-0017 | Zu teurer Preflight | Ein Startcheck kann mehr kosten als der eigentliche kleine Befehl. | Befehlsspezifische Metadatenprüfung, kein Vollscan und eigene Start-/Preflight-Benchmarks. |
 | SR-RISK-0018 | Falsche Cachegültigkeit | Zeitstempel- oder Pfadannahmen könnten veraltete Ergebnisse liefern. | Inhaltshash-/Abhängigkeitsnachweis, entbehrliche Caches und Paritätstests ohne Cache. |
 
@@ -8913,8 +7773,8 @@ kein Produkt-, Vollsuite- oder Release-Erfolgsnachweis durch die Definition.
 | SR-ISSUE-0001 | Implementierungssprache | **Geschlossen:** Python, Mindestlaufzeit CPython 3.10. |
 | SR-ISSUE-0002 | Vollständiges CLI-Authoring | **Geschlossen:** gemeinsamer Change Plan und direkte Authoring-Befehle. |
 | SR-ISSUE-0003 | Branchfähige IDs | **Geschlossen:** `random128-v1` für neue Artefakte und Relationen. |
-| SR-ISSUE-0004 | Mehrdatei-Atomarität | **Geschlossen:** Journal, Staging, Before Images und Recovery. |
-| SR-ISSUE-0005 | Schema-Migration | **Quellvertrag definiert, Umsetzung offen:** Q.0.1 bindet das neu festgelegte Referenzformat; vollständige native Plan-/Apply-/Verify-Migration, Restore-Integration und Kompatibilitätsnachweise bleiben offen. |
+| SR-ISSUE-0004 | Mehrdatei-Schreibschutz | **Entschieden, Umsetzung offen:** Abbruchsperre und manueller Git-Wiederanlauf nach 10.6/10.7; sechs neue Schritte 18.s–18.x. |
+| SR-ISSUE-0005 | Schema-Migration | **Quellvertrag definiert:** Q.0.1 bindet das Referenzformat. Fachliche Migrationsnachweise bleiben an ihren tatsächlichen Stand gebunden; die Umstellung des Writers und der Legacy-/Bundleintegration erfolgt in 18.v/18.x, ohne Restore in beschädigte Roots. |
 | SR-ISSUE-0006 | Plugin-Prozessmodell | Offen für eine spätere Version; ausführbare Plugins sind kein Bestandteil des 0.2-Core. |
 | SR-ISSUE-0007 | MCP-Server | Offen für eine spätere Version; die maschinenlesbare CLI-Selbstbeschreibung ist die 0.2-Agentenschnittstelle. |
 | SR-ISSUE-0008 | Web- und IDE-Oberfläche | Außerhalb des Single-User-CLI-Zielrelease. |
@@ -8945,6 +7805,16 @@ Die folgende Roadmap ist informativ und erzeugt keine Anforderungen an 0.2:
 ---
 
 ## 23. Änderungsverlauf
+
+**0.2.85 — 14. November 2026, RECOVERY-REMOVAL-006:** Ausdrückliche
+Nutzerentscheidung zur Abbruchsperre statt Produkt-Recovery/Restore.
+10.6/10.7, die betroffenen Requirements, CLI, Migration/Merge, Work,
+Abnahmeregeln und Anhänge C/N/P werden gemeinsam umgestellt. Kapitel 20 und
+ältere Verlaufseinträge dokumentieren ihre damalige Fassung; sie sind keine
+erneute Forderung nach den hier entfernten Funktionen. Bestehende historische
+Evidence wird nicht als Nachweis der neuen Sollverträge ausgegeben.
+Die Umsetzung folgt im bestehenden Plan als 18.s–18.x nach 18.k.C.
+
 
 | Version | Datum | Status | Änderung |
 |---|---|---|---|
@@ -9116,39 +7986,83 @@ Die Semantik dieses Anhangs gehört zu `SRX 1.0`. Neue rückwärtskompatible Ope
 
 ---
 
-# Anhang C — Normativer Transaktions- und Recovery-Algorithmus
+# Anhang C — Normativer Schreibschutz- und Abschlussalgorithmus
 
-## C.1 Vorbereitung
+## C.1 Vorbereitung und Markerformat
 
-1. Writer-Lock erwerben und Recovery-Vorprüfung durchführen.
-2. Change-Plan-Hash, Basiswurzel, Request-ID und gebundene Ergebnisressourcen prüfen.
-3. Journal im Zustand `building` mit null veröffentlichten Einträgen erzeugen und `fsync` ausführen.
-4. Before Images und gestagte Zielbytes mit Pfad, Länge und Hash sichern.
-5. Den vollständigen Endstand aus den gestagten Bytes materialisieren, validieren und gegen die erwartete Zielwurzel prüfen.
-6. Journal mit vollständigem Pfadmanifest auf `prepared` setzen und Datei sowie Elternverzeichnis synchronisieren.
+1. Eingaben, Change Plan, Akteur, fachliche Freigaben und Zielzustand vollständig
+   prüfen. Zielbytes dürfen isoliert gestagt werden; es gibt keine normativen
+   Teilwrites. Die Zielvalidierung bleibt vollständig.
+2. Exklusiven Writer-Lock erwerben. Projekt-/Rootidentität, Betriebsstatus,
+   Basis, Zielbindungen und echte Host-Autorität erneut prüfen. Vorhandene
+   Marker oder aktive Altjournale blockieren; keine automatische Reparatur.
+3. Unter `.specroad/write-state/pending.json` exklusiv `write-guard-v1` anlegen,
+   Datei und Elternverzeichnisse dauerhaft synchronisieren und die gebundenen
+   Bytes zurücklesen. Erst danach ist die erste normative Dateiwirkung zulässig.
 
-## C.2 Veröffentlichung
+Der geschlossene kanonische JSON-Marker enthält exakt `format_version`
+(`write-guard-v1`), `project_id`, `transaction_id`, `request_id` (String oder
+null), `command_id`, `plan_sha256`, `base_model_root_sha256`,
+`target_model_root_sha256`, `owner` und `state` (`writing`). `owner` bindet
+Lock-ID, Hostkennung, PID und Prozessstartkennung nach dem Writerlockvertrag.
+Der Marker enthält keine ausführbaren Callbacks, keine Recoveryaktionen,
+keine Before Images und keinen pro Datei fortgeschriebenen Quittungszähler.
+Sein Inhalt und seine Dateiidentität bleiben bis zum Abschluss unverändert.
+Unbekannte Felder, doppelte Schlüssel, Links, fremde Dateien oder beschädigte
+Bytes gelten nicht als leerer Zustand. Weder ein Zeitablauf noch ein passender
+Zielhash berechtigt zur Entfernung.
 
-1. Journal auf `committing` setzen und synchronisieren.
-2. Ziele in kanonischer Pfadreihenfolge durch atomare Umbenennung veröffentlichen.
-3. Nach jedem Ziel den veröffentlichten Index und Zielhash im Journal synchronisieren.
-4. Zielwurzel erneut berechnen.
-5. Request- und Transaktionsreceipt dauerhaft schreiben.
-6. Journal auf `committed` setzen und synchronisieren.
+## C.2 Veröffentlichung und erfolgreicher Abschluss
 
-## C.3 Recovery
+1. Nur der ursprüngliche aktive Writer veröffentlicht die gebundenen Ziele
+   mit den vorhandenen sicheren descriptorrelativen Pfad-/Dateitypprüfungen,
+   atomaren Einzelfile-Ersetzungen beziehungsweise No-Replace-Regeln.
+   Geplante Löschungen bleiben an Basis, Pfad und Autorität gebunden.
+2. Jede tatsächliche Datei-/Verzeichnisänderung synchronisieren. Unter dem
+   Lock den vollständigen tatsächlichen Zielbestand zurücklesen und prüfen.
+   Kein fremder Pfad und kein unveränderbares Archivobjekt wird überschrieben.
+3. Normale Audit-, Transaktions- und Request-Receipts vollständig und dauerhaft
+   erzeugen und zurückprüfen. Ihre nächste geschlossene Formatversion bindet
+   Plan, Basis, Ziel, tatsächlich veröffentlichte Ressourcen und Fachbefunde
+   ohne Pflicht zu rückspielbaren Before Images oder ausführbarem Altjournal.
+   Ein erfolgreicher Request bleibt im erhaltenen Bestand idempotent.
+4. Erst danach den eigenen unveränderten Marker entfernen und das
+   Elternverzeichnis synchronisieren. Writer-Lock geordnet lösen. Erst jetzt
+   fachlichen Erfolg melden. Bei Fehlern bleibt der reale Zustand erhalten.
 
-| Zustand | Automatische Aktion | Manuell zulässige Aktion |
-|---|---|---|
-| `building` | bei nachweislich null Veröffentlichungen Basis beibehalten und `rolled_back` setzen | `discard` nur unter derselben Bedingung |
-| `prepared` | bei null Veröffentlichungen und nachweisbarer Basis auf `rolled_back` abschließen; keine neue Fachoperation beginnen | `discard` nur bei null Veröffentlichungen und passender Basiswurzel |
-| `committing` | bei bereits vollständigem Ziel nach SR-REQ-0258 Receipts ergänzen; andernfalls nach SR-REQ-0511 vollständig auf Basis zurückrollen | kein Discard |
-| `rolling_back` | Basisrestauration vervollständigen | kein Discard |
-| `corrupt` | keine automatische Änderung | ausschließlich vorgeprüfter `recover restore --plan` nach 10.7.1; Hashintegrität allein qualifiziert keine Quelle |
+Mehrdatei-Atomarität bedeutet hier, dass kooperative SpecRoad-Leser keinen
+Mischstand als gültiges Projekt benutzen. Sie bedeutet keine automatische
+Rückkehr zur Basis oder Fertigstellung des Ziels nach Abbruch. Fehler nach
+Markeranlage hinterlassen eine gesperrte Arbeitskopie, auch wenn noch kein
+normativer Write erfolgte. Ausgabeprobleme nach bestätigtem Abschluss lösen
+keinen zweiten Write aus.
 
-Ist weder Basis noch Ziel mit vorhandenen, hashgültigen Bytes sicher herstellbar, wird `corrupt` im zulässigen Recovery-Write gesetzt; schreibfreie Befehle diagnostizieren denselben beobachteten Zustand ohne Journaländerung. Für den Aufruf einer Recovery, ihre Budgetreserve und die Trennung von einer neuen Fachoperation gelten Anhang N.3 und O.4. Bis zum erfolgreichen Restore sind normale Projektbefehle gesperrt. Das korrupte Journal wird niemals gelöscht, sondern nach Restore content-addressiert in `.specroad/recovery/archive/` gesichert.
+## C.3 Unterbrechung, Diagnose und Root-Erzeugung
 
----
+Ein späterer Prozess prüft zuerst Lock und Marker. Nachweislich aktiver
+Writer: `writer_active`, Konflikt, keine Übernahme. Unklarer Eigentümer:
+`unknown`, gesperrt. Verwaister, unlesbarer oder widersprüchlicher Marker:
+`project_corrupted=true`, Exit Code 5, `normal_operation_started=false` und
+`manual_git_restore_required=true`. Die Beobachtung ist schreibfrei; die
+vorher dauerhaft angelegte Marke bewirkt bereits die persistente Sperre.
+Weder vollständige Zielhashes noch Receipts lösen eine Reparatur aus.
+
+`init` und `bundle extract` verwenden vor der ersten Zielwirkung einen eigenen
+exklusiven Bootstrapmarker mit Formatversion, vollständiger Eingabe-/Zielbindung
+und Eigentümeridentität. Sein aktiver Namensraum wird auch bei fehlender oder
+teilgeschriebener `specroad.json` vor regulärer Rootbehandlung geprüft. Nach
+vollständiger Zielprüfung und dauerhaftem Abschluss wird er im selben Lauf
+entfernt. Unterbrechung sperrt genau dieses Ziel; Wiederanlauf erfolgt nach
+10.7.2 in einem anderen zulässigen Ziel, ohne Bootstrap-Recovery.
+
+Crash-Injection prüft echte Prozesse an Markeranlage/-synchronisation, jeder
+Dateiveröffentlichung, Zielsynchronisation, Receiptanlage sowie Markerentfernung
+und deren Verzeichnissynchronisation. Vor der ersten möglichen Dateiwirkung
+bleiben Originale erhalten; ab Schutzbeginn bleibt ein nicht sicher bestätigter
+Stand gesperrt. Nach dauerhaftem Abschluss ist ein Retry ohne Doppelwirkung
+möglich. Prozesskill-Tests ersetzen keinen Stromausfallnachweis; zusätzlich
+werden fehlgeschlagene Synchronisation, Teilwrites und beschädigte Schutzdaten
+injiziert. Der Git-Wiederanlauf wird separat in einem frischen Root geprüft.
 
 # Anhang D — Normative Austauschprofile
 
@@ -10229,7 +9143,7 @@ Ein extrahiertes Manifest wird beim erneuten Bündeln nicht als normale Projektp
 
 `bundle verify` vergleicht die ZIP-Eintragsmenge mit `entries` plus genau diesem einen Manifest und prüft für jede Payload die tatsächliche Bytelänge und SHA-256. Danach werden semantische Projektwurzel, Scope Descriptor, Typkombination und Closure unabhängig aus den Payloadbytes rekonstruiert. Der exakt abgeleitete Prüfkontext nach E.3.2 gehört zur Transportprüfung, nicht zu Seeds oder fachlichen Modellressourcen. Ein selbstreferenzierender `entries`-Eintrag für das Manifest, fehlende/zusätzliche Payload, Dubletten oder inkonsistente Metadaten sind Fehler. Der manifestlose oder mehrfach manifeste Container ist ungültig.
 
-Das optionale `--expected-sha256 <HASH>` bei `bundle verify`, `bundle extract` und einer Bundle-Restore-Quelle vergleicht zusätzlich vor Extraktion beziehungsweise Veröffentlichung den Voll-ZIP-Hash mit einem außerhalb der Datei erhaltenen erwarteten Wert. Eine Manifeständerung kann durch interne Widersprüche auffallen; eine konsistente Neubeschreibung samt passenden Nutzdaten ist ohne externe Erwartungsbindung **nicht** als Manipulation einer bestimmten früheren Datei erkennbar. Selbstkonsistenz ist kein Authentizitätsnachweis. Bereits an Auftrag, Work-Manifest oder Restore-Plan gebundene Bundle-Hashes sind verpflichtend, nicht optional. Unpassende erwartete Bytes werden als Integritätsfehler Code 3/SRV060 abgewiesen.
+Das optionale `--expected-sha256 <HASH>` bei `bundle verify`, `bundle extract` vergleicht zusätzlich vor Extraktion beziehungsweise Veröffentlichung den Voll-ZIP-Hash mit einem außerhalb der Datei erhaltenen erwarteten Wert. Eine Manifeständerung kann durch interne Widersprüche auffallen; eine konsistente Neubeschreibung samt passenden Nutzdaten ist ohne externe Erwartungsbindung **nicht** als Manipulation einer bestimmten früheren Datei erkennbar. Selbstkonsistenz ist kein Authentizitätsnachweis. Bereits an Auftrag, Work-Manifest gebundene Bundle-Hashes sind verpflichtend, nicht optional. Unpassende erwartete Bytes werden als Integritätsfehler Code 3/SRV060 abgewiesen.
 
 ### E.1.1 Geschlossener Manifestvertrag v1
 
@@ -11042,7 +9956,11 @@ zu `passed`; ein Waiver bleibt eine Ausnahme und erfüllt das Readiness-Gate
 
 Jeder CLI-Aufruf ist ein unabhängiger Prozesslauf. Eingaben sind die aktuell auffindbare Distribution, die expliziten Aufrufparameter und der aktuell vorhandene Projekt- beziehungsweise Bundleinhalt. Der laufende Prozess darf interne Objekte halten; kein späterer Aufruf benötigt diese Objekte. Die automatische Projektsuche nach Kapitel 12.1 verwendet ausschließlich das aktuelle Arbeitsverzeichnis dieses Aufrufs. Ein in einem früheren Aufruf gewählter Root ist keine implizite Eingabe.
 
-Ein Prozessneustart bei erhaltenen Dateien, ein Wechsel des absoluten Projektpfads und eine neue kompatible Sandbox sind getrennte Testfälle. Für einen abgeschlossenen Stand sind normative Ressourcen, referenzierte Anhänge, benötigte Archivobjekte und die nach dem Bundlevertrag transportierten abgeschlossenen Receipts ausreichend. Eine laufende Transaktion benötigt zusätzlich ihr vollständiges Journal, Staging und Before Images. Diese Wiederherstellungsdaten sind keine entbehrlichen temporären Dateien.
+Prozessneustart, Pfadwechsel und neue Sandbox sind getrennte Fälle.
+Ein abgeschlossener Bestand benötigt sämtliche normativen Ressourcen,
+Anhänge, Archivobjekte und vorgeschriebenen Originalreceipts. Ein
+unterbrochener Write macht den Root gesperrt; seine Betriebsdaten werden
+nicht zur Wiederherstellung abgespielt. Wiederanlauf folgt 10.7.2.
 
 Wird die gesamte Sandbox einschließlich aller ungesicherten Dateien verworfen, kann SpecRoad dort weder starten noch Daten wiederherstellen. Der externe Nutzer beziehungsweise Agent stellt in einer neuen Umgebung die Distribution und das zuletzt außerhalb der verlorenen Umgebung gesicherte, verifizierbare Vollbundle bereit. Danach gelten `bundle verify`, `bundle extract`, Preflight und die normale Projektvalidierung. Änderungen nach diesem Sicherungsstand sind ohne erhaltene Dateien nicht rekonstruierbar. Diese Produktgrenze ist keine automatische Backup-, Upload- oder Cloudfunktion.
 
@@ -11058,33 +9976,46 @@ Jeder Command Contract enthält zusätzlich `preflight_profile`, `requires_proje
 | `input_read` | `bundle verify <FILE>` ohne Projektauswahl | Runtime, unterstützte Eingabeart und lesbarer expliziter Eingabepfad innerhalb seiner Pfadpolicy | bestehender Projektroot; die vollständige Bundleprüfung ist erst die Fachoperation |
 | `project_metadata` | `config show`, `profile explain`, `environment check --project` | aktuelle Root-Auswahl, begrenztes Lesen der benötigten Konfiguration, aktuelle Pfadgrenzen, Betriebsstatus soweit angefordert | vollständiges Artefaktmodell, Anhänge, Quellcode, Baseline-Archiv und Receipt-Historie |
 | `project_read` | modelllesende Befehle einschließlich Read-only-Prüfung, Planerzeugung und generierter Ausgabe | Runtime, aktuelle Root-/Schema-Auswahl, ungelöste Transaktion oder Writer-Konflikt, benötigte Eingabe- und ausdrücklich gewählte Ausgabepfade | zusätzliche Vollvalidierung, vollständiges Hashen aller Ressourcen oder Cache-Neuaufbau allein für den Startcheck |
-| `project_write` | tatsächliche normative Writes; kein Dry-Run | `project_read`; Schreibvoraussetzungen der konkreten Ziele; Wiederprüfung von Root, Basis, Lock und Recovery-Zustand unmittelbar vor Veröffentlichung | automatisches Reparieren fachlicher Fehler oder Freigeben von Proposals |
-| `root_creation` | `init`, `bundle extract` | Runtime und Zielsicherheit nach 11.7; vorhandenes Bootstrap-Journal; benötigte Eingaben; Speicherbedarf der geplanten Erzeugung | bestehendes Projekt als Voraussetzung; eigenmächtiges Überschreiben |
-| `recovery` | `recover status/run/discard/restore`, `lock status/recover` | die zur jeweiligen Diagnose oder Recovery erforderlichen Betriebsdateien, Eigentümernachweise und zulässigen Ziele | reguläres Laden eines inkonsistenten Modells als gültiger Arbeitsstand |
+| `project_write` | tatsächliche normative Writes; kein Dry-Run | `project_read`; Schreibvoraussetzungen der konkreten Ziele; Wiederprüfung von Root, Basis, Lock und Schutzstatus unmittelbar vor Veröffentlichung | automatisches Reparieren fachlicher Fehler oder Freigeben von Proposals |
+| `root_creation` | `init`, `bundle extract` | Runtime und Zielsicherheit nach 11.7; vorhandener Bootstrapmarker; benötigte Eingaben; Speicherbedarf der geplanten Erzeugung | bestehendes Projekt als Voraussetzung; eigenmächtiges Überschreiben |
+| `operational_diagnosis` | `environment check`, `project inspect`, `lock status` | begrenzte lesende Schutz-/Eigentümerdiagnose nach N.3 | Reparatur, reguläre Modellnutzung eines gesperrten Roots |
 
 `environment check` ohne `--project` benutzt `bootstrap` und sucht keinen Root. `--for-command` ergänzt die angeforderten Voraussetzungen nach N.4. Git-unabhängige Befehle prüfen Git weder durch Prozessstart noch durch Repositoryscan. Der Dry-Run eines normativen Befehls erbt dessen fachliche Planung, benutzt aber den schreibfreien Preflight.
 
-Der normale Startcheck enumeriert keine Artefakte, Quellcodedateien, Anhänge, Archivobjekte oder historischen Receipts. Er liest nur die unmittelbar benötigten Metadaten und prüft den aktiven Transaktionsbereich. Abgeschlossene Journale werden nach dauerhaftem Abschlussbeleg aus dem aktiven Bereich entfernt beziehungsweise in den beleggebundenen Archivbereich überführt; der Receiptvertrag bleibt erhalten. Ein während dieser Bereinigung unterbrochener Lauf wird konservativ als noch zu untersuchender Betriebszustand behandelt.
+Der normale Startcheck enumeriert weder Artefakte noch Quellcode,
+Anhänge, Archivobjekte oder historische Receipts. Er prüft die unmittelbar
+benötigten Metadaten, Writer-/Bootstrapmarker und vorhandene aktive
+Alttransaktionsbereiche. Abgeschlossene Receipts bleiben passiv. Ein
+unklarer Zustand wird nicht durch Bereinigung freigegeben.
 
-Der kurze automatische Preflight untersucht höchstens 1 MiB Metadaten und 16 aktive Journale beziehungsweise unklare Journaleinträge. Diese Grenzen begrenzen allein die unmittelbare Startphase, nicht den Gesamtauftrag. Ist dadurch noch keine sichere Entscheidung möglich, liefert er `preflight_detail_required` mit SRV167 und wechselt in eine ausdrücklich ausgewiesene, nach Anhang P fortsetzbare Metadatenphase. Ein Aufruf kann diese Phase gleich beginnen oder mit gesichertem Cursor und Exit Code 8 übergeben. Jede weitere Phase untersucht einen neuen begrenzten Bereich; ein stets neu gestarteter identischer Präfix ist unzulässig. Das reguläre Modell bleibt bis zur Klärung gesperrt. Es gibt allein wegen dieser Startschwelle keinen Code 5.
+Der kurze automatische Preflight untersucht höchstens 1 MiB Metadaten und 16 Einträge im aktiven Schutz-/Alttransaktionsbereich. Diese Grenzen begrenzen allein die unmittelbare Startphase, nicht den Gesamtauftrag. Ist dadurch noch keine sichere Entscheidung möglich, liefert er `preflight_detail_required` mit SRV167 und wechselt in eine ausdrücklich ausgewiesene, nach Anhang P fortsetzbare Metadatenphase. Ein Aufruf kann diese Phase gleich beginnen oder mit gesichertem Cursor und Exit Code 8 übergeben. Jede weitere Phase untersucht einen neuen begrenzten Bereich; ein stets neu gestarteter identischer Präfix ist unzulässig. Das reguläre Modell bleibt bis zur Klärung gesperrt. Es gibt allein wegen dieser Startschwelle keinen Code 5.
 
-Ein größeres Journal muss nicht vollständig gelesen werden, um tatsächlichen Recoverybedarf festzustellen. Ein eindeutig erkannter Recoverybedarf folgt sofort N.3; die Detailphase führt keine implizite Recovery durch. Ein konkreter beschädigter Deskriptor, tatsächlicher I/O-Mangel oder nachgewiesener Konflikt erhält die jeweilige Fehlerklasse statt endloser Detailphasen. Auch der explizite Recovery-Befehl verwendet sparsame Verarbeitung; weiche Arbeitsziele gelten nach O.4. Weder kurzer Preflight noch Detailphase dürfen eine fachliche Vollvalidierung oder einen rekursiven Repository-/Archivscan als bloße Startprüfung auslösen.
+Ein einzelner offener oder defekter Marker genügt zur Sperre nach N.3;
+seine Diagnose verlangt keinen vollständigen Modellscan. Fortsetzbare
+Metadatenprüfung darf keine implizite Reparatur, Payload-Rekonstruktion oder
+Journalwiedergabe ausführen. Konkrete I/O-/Sicherheitsfehler behalten ihre
+Fehlerklasse. Kein Vollscan wird allein als Startprüfung eingeführt.
 
 Ein erfolgreicher Preflight ist eine Momentaufnahme, keine Garantie für später fortbestehende Dateien, Berechtigungen oder freie Ressourcen. Beim tatsächlichen Öffnen, Schreiben, Sperren und Veröffentlichen bleiben die entsprechenden Fehlerprüfungen verbindlich. Vor einer normativen Veröffentlichung werden die im Change Plan gebundenen Vorbedingungen unter dem Writer-Lock erneut geprüft. Zeitstempel, Pfadgleichheit oder ein früherer Preflight ersetzen diese Prüfung nicht.
 
-## N.3 Recovery ohne Read-only-Verletzung
+## N.3 Abbruchsperre ohne Read-only-Verletzung
 
 | Aufruf und vorgefundener Zustand | Verbindliches Verhalten |
 |---|---|
-| Normaler Aufruf; kein Konflikt und keine unvollständige Transaktion | Nach bestandenem Preflight Fachoperation ausführen. |
-| Read-only-, Plan-, generierter Ausgabe- oder Dry-Run-Aufruf; ungelöste Transaktion | Exit Code 5, `recovery_required=true`, keine Fachoperation und keine Veränderung von Projekt oder Betriebsdaten. |
-| Normativer Write ohne Dry-Run; ungelöste Transaktion; `transaction_policy.auto_recover=false` | Derselbe diagnostische Abbruch; explizite Recovery erforderlich. |
-| Normativer Write ohne Dry-Run; ungelöste, nachweislich nicht mehr aktive und automatisch lösbare Transaktion; `auto_recover=true` | Ausschließlich Recovery nach Anhang C ausführen. Danach Exit Code 5 mit `normal_operation_started=false`, tatsächlich erreichtem Recovery-Ergebnis und Hinweis auf erneuten Aufruf. Die ursprünglich angeforderte Änderung wird in diesem Lauf nicht begonnen. |
-| Fremder, aktiver oder nicht sicher beurteilbarer Lock-Eigentümer | Keine automatische Übernahme; Eigentümer-/Risikonachweis nach dem bestehenden Lockvertrag verlangen. Ein neuer Hostname oder eine wiederverwendete PID beweist keinen verwaisten Lock. |
-| Korrupte oder fehlende notwendige Recovery-Daten | Normale Nutzung blockieren; Diagnose im Read-only-Aufruf, dauerhafte Statusänderung nur durch zulässigen Recovery-Write. Restore nur aus verifizierter Quelle. |
-| `environment check`, `recover status` oder `lock status` bei blockiertem Projekt | Begrenzte Diagnose der verfügbaren Metadaten erlauben, ohne das Modell als gültig zu laden oder ein Journal zu ändern. |
+| Kein Marker, kein Konflikt, reguläre Eingangsgates bestanden | Fachoperation ausführen. |
+| Nachweislich aktiver Writer | `writer_active`, Konflikt; keine Übernahme oder Korruptionsbehauptung allein wegen laufender Arbeit. |
+| Eigentümer oder Betriebszustand nicht prüfbar | `unknown`, blockieren und konkrete Diagnose liefern. |
+| Offener/verwaister oder beschädigter Marker, aktive Alttransaktion | `corrupted`, Code 5, `project_corrupted=true`, `manual_git_restore_required=true`, `normal_operation_started=false`; keine Fachoperation. |
+| `environment check`, `project inspect` oder `lock status` bei gesperrtem Projekt | Begrenzte lesende Betriebsdiagnose; keine Freigabe und kein Laden des Mischstands als gültiges Modell. |
+| `lock recover` | Nur Eigentümerprüfung des Lockvertrags; niemals einen Marker entfernen, Altjournal umgehen oder ein Projekt entsperren. |
+| Frischer vollständiger Git-Checkout | Normale Prüfung nach 10.7.2; keine Rekonstruktion oder Übernahme des unterbrochenen Requests. |
 
-Eine automatische Recovery verbraucht weder die Request-ID noch ein Erfolgsreceipt der noch nicht begonnenen Fachoperation. Für die wiederhergestellte frühere Transaktion gelten deren bestehende Request-ID und Receipts. Bereits vollständig veröffentlichte Transaktionen werden entsprechend `SR-REQ-0258` abgeschlossen; ein nur teilweise veröffentlichter `committing`-Stand wird entsprechend `SR-REQ-0511` auf die Basis zurückgerollt. Fehlende Erhaltung der Recovery-Daten darf nicht durch Neuinitialisierung oder stillschweigende Annahme eines gültigen Mischstands übergangen werden.
+Für Read-only, Dry-run und echte Writes gilt dieselbe Sperre. Die Option
+`transaction_policy.auto_recover` entfällt aus dem aktiven Schema und wird
+nicht still ignoriert. Alte Konfigurationen müssen außerhalb des beschädigten
+Roots bewusst auf den neuen Entwicklungsstand gebracht werden; es gibt
+keinen Auto-Migrations- oder Entsperrschalter. Die Abweisung verbraucht weder
+Request-ID noch Erfolgsreceipt des noch nicht begonnenen Aufrufs.
 
 ## N.4 `environment check`
 
@@ -11109,12 +10040,12 @@ Das JSON verwendet den Envelope aus 11.5. `result.environment_format_version` is
 | `python` | Objekt mit Version, Implementierung und Supportstatus der laufenden Runtime. |
 | `distribution` | Distributionsart und Buildkennung; kein rekursives erneutes Hashen der gesamten Distribution. |
 | `checks` | nach `check_id` sortierte Objekte mit `check_id`, `required`, `state=passed\|failed\|unknown\|not_applicable` und begründender Diagnose. |
-| `recovery_required` | Boolean oder `null`, falls kein Projekt ausgewählt beziehungsweise keine sichere Feststellung möglich ist. |
+| `project_corrupted` | Boolean oder `null`, falls kein Projekt ausgewählt beziehungsweise keine sichere Feststellung möglich ist. |
 | `resource_policy` | Policy-Version, gewähltes Ressourcenprofil, effektive Budgets und jeweilige Herkunft nach Anhang O. |
 | `observations` | Werte für CPU-Kapazität, Memory-Limit und Speicherbeobachtung jeweils mit `value`, `unit`, `source`, `state=observed\|unknown`; nicht ermittelbare Werte sind `null`. |
 | `semantic_validation_performed` | immer `false`. |
 
-Ohne festgestellten Fehler ist ein vollständig erstellter Diagnosebericht Exit Code 0, auch wenn einzelne Voraussetzungen ungeklärt sind; `compatible=null` ist ausdrücklich keine Kompatibilitätsbestätigung. Ein festgestellter Runtime-, Zugriffs- oder Recoveryblocker ergibt Exit Code 5; Nutzungs-, Modellformat- und Sicherheitsfehler behalten die Codes 2, 3 und 7. Das jeweilige Ergebnis bleibt maschinenlesbar. Optionale, nicht verfügbare Ressourcenbeobachtungen erzeugen keinen Kompatibilitätsfehler.
+Ohne festgestellten Fehler ist ein vollständig erstellter Diagnosebericht Exit Code 0, auch wenn einzelne Voraussetzungen ungeklärt sind; `compatible=null` ist ausdrücklich keine Kompatibilitätsbestätigung. Ein festgestellter Runtime-, Zugriffs- oder Schutzblocker ergibt Exit Code 5; Nutzungs-, Modellformat- und Sicherheitsfehler behalten die Codes 2, 3 und 7. Das jeweilige Ergebnis bleibt maschinenlesbar. Optionale, nicht verfügbare Ressourcenbeobachtungen erzeugen keinen Kompatibilitätsfehler.
 
 Gesamtspeicher oder CPU-Anzahl eines Hosts werden nicht als garantierte Sandbox-Zuteilung bezeichnet. Nicht vorhandene oder nicht vertrauenswürdig zuordenbare Quoten bleiben unbekannt. Messwerte und Pfade enthalten keine vollständige Umgebung, Benutzergeheimnisse oder fremde Dateiinhalte. Betriebssystembeobachtung ist auf notwendige, verfügbare Runtime-APIs beziehungsweise eng begrenzte Prozess-/Quotenmetadaten beschränkt; sie ist keine neue Laufzeitabhängigkeit.
 
@@ -11171,7 +10102,7 @@ Vor einer großen Allokation oder erneuten Ausführung prüft SpecRoad die güns
 
 Ein deklarierter Arbeitszielwert ist keine Erlaubnis zur unbegrenzten RAM-Allokation. Bekannte kleinere Hostgrenzen sind maßgeblich. Bei unbekannter Quota werden konservative Blöcke verwendet; unbekannt bedeutet weder garantiert verfügbar noch erwiesenermaßen unmöglich. Ein nicht mehr passender Datensatz wird nach Möglichkeit token-/blockweise geparst und verarbeitet. Für nicht weiter teilbare Kernel dokumentiert `command describe` minimale Eingaben und einen Fortsetzungs-/Blockerpfad. Ein tatsächlich nicht ausführbarer Mindestschritt erfordert einen belegten Blocker, nicht eine Endlosschleife.
 
-Before Images, aktive Journale, bestätigte Checkpoints und für deren Fortsetzung benötigte Snapshots sind keine entbehrlichen Caches. Sie werden nicht gelöscht, um einen neuen Auftrag zu beginnen. Die eigentlichen fertigen Ergebnisse benötigen realen Speicherplatz; Aufteilung erschafft keinen zusätzlichen Datenträgerplatz. Erkennt die Runtime einen echten Mangel, bleiben gesicherter Fortschritt und eine konkrete Abhilfe erhalten.
+Aktive Schreibmarker, bestätigte Checkpoints und für deren Fortsetzung benötigte Snapshots sind keine entbehrlichen Caches. Sie werden nicht gelöscht, um einen neuen Auftrag zu beginnen. Die eigentlichen fertigen Ergebnisse benötigen realen Speicherplatz; Aufteilung erschafft keinen zusätzlichen Datenträgerplatz. Erkennt die Runtime einen echten Mangel, bleiben gesicherter Fortschritt und eine konkrete Abhilfe erhalten.
 
 `--cache read` nutzt ausschließlich vorhandene, durch Inhaltshash, Tool-/Schema-/Policy-/Abhängigkeitsbindung bestätigte Einträge. `--cache off` ignoriert sie. `mtime`, Dateigröße, Pfad oder Hostname allein beweisen keine Gültigkeit. Fehlende, ungültige oder zu teure Caches werden ignoriert. Read-only-Fachbefehle schreiben keine Projektcaches. Externe Work-Zwischenergebnisse nach Anhang P sind ausdrücklich gebundene Arbeitsdaten, nicht implizite Caches.
 
@@ -11185,13 +10116,17 @@ Before Images, aktive Journale, bestätigte Checkpoints und für deren Fortsetzu
 | Winziges Ziel verhindert jeden Fortschritt | Mindestens eine sicher ausführbare kleinste Einheit auch oberhalb des weichen Ziels erledigen; andernfalls konkreten Mindestressourcenblocker belegen. |
 | Bereits bestätigter Checkpoint | Fortsetzen statt wieder von vorne zu rechnen; nur unbestätigte letzte Einheit erneut ausführen. |
 | Geplante Pause vor normativer Veröffentlichung | Fachlicher Ausgangsstand bleibt regulär lesbar; externe Work-Daten erhalten, keinen Projektwriter-Lock über die Pause halten. |
-| Weiches Ziel während `committing` überschritten | Keine freiwillige Promptpause; sicheren Commit oder Recoveryabschluss bevorzugt über das weiche Ziel hinaus fortführen. |
-| Echter Host-/I/O-Abbruch während Commit | Bestehendes Journal, Staging und Before Images erhalten; kein regulär ladbarer Mischstand. Weiterer Aufruf folgt ausschließlich Recoveryvertrag. |
+| Weiches Ziel während `writing` überschritten | Keine freiwillige Promptpause; sicheren normalen Writeabschluss bevorzugt über das weiche Ziel hinaus fortführen. |
+| Echter Host-/I/O-Abbruch während Commit | Schreibmarker und tatsächlichen Bestand erhalten; kein regulär ladbarer Mischstand. Weiterer Aufruf bleibt bis zum manuellen Git-Wiederanlauf gesperrt. |
 | Vollständiges Ziel und Receipt bereits dauerhaft | Commit gilt als erfolgt; Output-/Cachefehler erzeugen kein erneutes fachliches Apply. |
 | Sicherheitspolicy verletzt | Code 7 und konkrete Diagnose; keine automatische Aufweichung. |
 | Reale Ressourcen verhindern auch sparsame kleinste Einheit | Code 5 mit `blocked_reason`, bereits versuchten Alternativen, gesichertem Arbeitsstand und genau benannter nötiger Voraussetzung. |
 
-Die bisherigen 10000 ms CPU und 30000 ms Wall-Clock für einen sicheren Abschluss sind nun bevorzugte Abschlussreserven, keine Ursache für das Abbrechen einer noch sicher ausführbaren Recovery. Vor neuen großen Allokationen werden 4 MiB eigener Metadatenspeicher und 16 MiB Scratch als bevorzugte Kontrollreserve berücksichtigt; auch diese Zahlen garantieren nichts bei hartem OOM-Kill oder Dateiverlust. SpecRoad hält zwischen regulären Promptschritten keine laufende Transaktion offen. Eine infolge echten Abbruchs ungelöste Transaktion ist eine ausdrücklich ausgewiesene Recoveryausnahme, kein normaler Checkpoint.
+Die bisherigen CPU-/Wall-Clock-Abschlussreserven bleiben bevorzugte
+Arbeitsziele für einen bereits begonnenen Write, keine Garantie bei OOM,
+Signal oder Dateiverlust. Zwischen regulären Promptschritten bleibt keine
+normative Publikation offen. Ein echter Abbruch nach Markeranlage ist ein
+gesperrtes Projekt und kein fortsetzbarer normativer Checkpoint.
 
 Ein Resultat ist erst vollständig, wenn jede Pflichtarbeit des gebundenen Scopes geprüft, jede erforderliche globale Konsistenzregel ausgewertet und jedes Pflichtartefakt vollständig veröffentlicht beziehungsweise geliefert ist. Ein kleineres Budget erlaubt weder weniger Prüfung noch automatische Zustimmung noch `passed` für nicht erledigte Arbeit.
 
@@ -11218,10 +10153,10 @@ Ein Arbeitsauftrag trägt eine zufällige 128-Bit-ID `WORK-<TOKEN>` und einen di
 
 | Zustand | Bedeutung | Zulässige Folge |
 |---|---|---|
-| `running` | aktiver Prozess verarbeitet eine sicher abgegrenzte Einheit | `ready_to_resume`, `completed`, `blocked`, `recovery_required`, `cancelled` |
+| `running` | aktiver Prozess verarbeitet eine sicher abgegrenzte Einheit | `ready_to_resume`, `completed`, `blocked`, `project_corrupted`, `cancelled` |
 | `ready_to_resume` | konsistenter Checkpoint; offene Arbeit vollständig beschrieben | `running`, `cancelled` |
 | `blocked` | tatsächlich fehlende Voraussetzung oder belegter Konflikt | nach behebender externer Änderung `running` oder neu gebundener Auftrag; sonst `cancelled` |
-| `recovery_required` | unterbrochene normative Transaktion | ausschließlich Recovery; danach Receipt prüfen und Auftrag abschließen oder verbliebene Vorbereitung fortsetzen |
+| `project_corrupted` | unterbrochene normative Transaktion | keine normative Fortsetzung; manueller Git-Wiederanlauf und neu gebundener Auftrag |
 | `completed` | alle Arbeit und Ergebnislieferung abgeschlossen; fachlicher Ausgang separat gespeichert | Endzustand; Retry liefert dasselbe Resultat |
 | `cancelled` | Nutzer hat den noch unveröffentlichten Auftrag ausdrücklich beendet | Endzustand; kein fingierter Erfolg |
 
@@ -11235,7 +10170,11 @@ Der Work-Root liegt außerhalb des normativen Projekts und seiner `.specroad/`-B
 
 Snapshots, Checkpoints und externe fachliche Ausgaben sind ausdrücklich ausgewiesene Seiteneffekte. Sie erlauben Read-only-/Dry-Run-Befehlen keine Änderung des Projekts. Ist kein externer Arbeits-/Ausgabepfad schreibbar, versucht der Befehl eine sichere kleinere In-Memory-Variante; ist auch diese tatsächlich nicht ausführbar, nennt er den fehlenden Schreibplatz als realen Blocker statt Erfolg zu behaupten.
 
-Ein planmäßiger Schrittwechsel löst den Work-Lock und hält keinen Projektwriter-Lock. Der nächste Aufruf prüft Work-Identität und Lock-Eigentümer neu. PID oder Hostname allein berechtigen nicht zur Lockübernahme. Nach echtem Prozessabbruch wird nur der letzte vollständig veröffentlichte Checkpoint anerkannt. Für die explizite Übernahme eines erhaltenen äußeren Owners von Restore-Work gilt ausschließlich 10.7.8; dessen native Belege, aktueller Auftrag und dauerhafte Übergabe sind zusätzlich erforderlich. Diese Präzisierung überträgt keine Projektlockberechtigung und erweitert keine anderen inneren Workbefehle.
+Ein planmäßiger Schrittwechsel löst den Work-Lock und hält keinen
+Projektwriter-Lock. Der nächste Aufruf prüft Identität und Eigentümer erneut;
+PID oder Hostname allein rechtfertigen keine Übernahme. Nach Abbruch reiner
+Vorbereitung zählt nur der letzte vollständig veröffentlichte Checkpoint.
+Diese Fortsetzung entfernt keinen Projektmarker und erteilt keine Autorität.
 
 ## P.3 Datenvertrag `work-v1`
 
@@ -11259,9 +10198,14 @@ Der Work-Root enthält mindestens `work.json`, `checkpoints/`, `objects/` und `r
 
 Große Listen werden als versionierte gehashte Manifestsegmente abgelegt, nicht als unbegrenzt großes Kontroll-JSON. Jedes Segment hat ID, Größe, Hash und Eintragszahl. Fehlende Segmente, Hashabweichungen, doppelt anerkannte Einheiten und unbekannte notwendige Felder verhindern ein unbemerktes Resume. Der alte vollständige Checkpoint bleibt gültig, bis die neue Generation mit allen referenzierten Teilen dauerhaft und atomar veröffentlicht ist.
 
-Für `recover.restore` gilt die geschlossene Workbindung aus 10.7.7. Sie ergänzt ausschließlich diesen inneren Recoverybefehl: keine erfundene Ausgangsmodellwurzel, keine Change-Plan-Operationsfolge und keine gespeicherte Autorität. Die dort ausdrücklich gebundenen Originalplanfelder werden durch die folgende allgemeine Lokalisierungsregel nicht umgeschrieben.
+Der innere Workbefehl `recover.restore` ist nicht mehr unterstützt.
+Ein altes Paket mit dieser Kennung wird diagnostiziert und nicht ausgeführt;
+es erhält weder einen neuen Auftrag noch Schreibautorität.
 
-Absolute Laufzeitpfade sind Lokalisierungsdaten und nicht Teil der semantischen Aufgabenidentität. Bei Restore werden sie durch überprüfte Rootzuordnung ersetzt. Daten- und Inhaltshashes, Actor, Operationen und Freigabebindungen ändern sich dabei nicht.
+Absolute Laufzeitpfade bleiben Lokalisierungsdaten. Beim Einlesen
+eines Vorbereitungs-Workpakets wird der aktuelle Projektroot ausdrücklich neu
+zugeordnet und geprüft. Inhaltshashes, Actor und Freigabebindungen ändern sich
+dadurch nicht; ein altes Paket entsperrt kein beschädigtes Projekt.
 
 ## P.4 Bindung der Eingaben und Snapshotaufbau
 
@@ -11285,17 +10229,24 @@ Jeder erfolgreiche Fortsetzungsschritt bestätigt mindestens eine neue fachliche
 
 Ein sehr kleiner weicher Budgetwert führt nicht zu unendlich vielen leeren Checkpoints. Kann ein kleinster Schritt sicher ausgeführt werden, wird er oberhalb des weichen Wertes versucht. Eine weiter teilbare Einheit wird zuvor zerlegt. Existiert tatsächlich keine ausführbare sichere Minimaleinheit, bleibt der Auftrag `blocked` mit belastbarer Begründung. Ein endlicher Auftrag unter unveränderten Eingaben und ausreichender realer Mindestausstattung muss bei wiederholtem Resume schließlich enden; die Releasefixtures weisen dies konstruktiv nach.
 
-## P.6 Normative Writes, Dry-Run, Idempotenz und Recovery
+## P.6 Normative Writes, Dry-Run, Idempotenz und Abbruchsperre
 
 Vorbereitung, Change-Plan-Aufbau und vollständige Zielprüfung dürfen über beliebig viele Arbeitsschritte erfolgen. Ihre Zwischenstände verändern das normative Projekt nicht. Ein einzelner fachlich atomarer Change Plan wird niemals stillschweigend in mehrere unabhängige Teilcommits aufgeteilt. Erst der vollständige, gültige und autorisierte Plan wird dem bestehenden Writer übergeben.
 
-Vor Veröffentlichung erfolgt eine aktuelle vollständige Basis-/Precondition-Prüfung unter dem Writer-Lock. Sie ist keine weglassbare Performanceoptimierung. Bei großen Projekten darf die interne Arbeit granular sein; falls ein echter Prozessabbruch während dieser geschützten Phase eintritt, gilt ausschließlich das Journal-/Recoveryverfahren, nicht ein gewöhnlicher freigegebener Promptcheckpoint. Ein kooperativer Leser erhält keinen Mischstand. Eine bloße weiche Überschreitung rechtfertigt keine freiwillige Pause mitten in `committing`.
+Vor Veröffentlichung werden Basis, sämtliche Preconditions und
+Autorität unter dem Writer-Lock erneut vollständig geprüft. Große Vorarbeiten
+dürfen granular sein. Nach Beginn der geschützten Publikation gibt es keine
+freiwillige Promptpause; ein echter Abbruch folgt ausschließlich 10.7.
+Kooperative Leser erhalten keinen als gültig freigegebenen Mischstand.
 
 Die Request-ID gehört zum gesamten normativen Auftrag. Teilschritte besitzen eigene betriebliche Schrittkennungen, aber keine neuen fachlichen Request-IDs. Solange der fachliche Commit fehlt, gibt es kein semantisches Erfolgsreceipt. Nach bereits erfolgreichem Commit wird bei Wiederholung zuerst dessen vorhandenes Receipt geprüft und das gespeicherte Ergebnis geliefert. Ein Outputverlust erzeugt keine zweite Änderung.
 
 Eine `work resume`-Operation darf den gebundenen Actor nicht erweitern. Ein KI-Proposal wird nicht durch die Wiederaufnahme zum menschlich freigegebenen Direktwrite. Fehlende menschliche Freigabe bleibt eine tatsächliche Voraussetzung; der Prompt benennt sie und erfindet kein `approved`. Dry-Runs dürfen ihren vollständigen Plan über Work-Dateien liefern, aber weder Fachdateien noch Projektbetriebsdaten verändern.
 
-`work cancel` ist nur ohne laufende normative Transaktion zulässig. Es beendet den offenen Auftrag, erhält einen Kontrollbeleg und berechtigt nicht zur Löschung von Recoverydaten. Nach Prozessabbruch in `committing` muss zunächst Recovery erfolgen; ein Arbeitspaket kann ein beschädigtes Projekt nicht durch bloße Statusänderung entsperren.
+`work cancel` beendet nur den offenen Workauftrag und erhält seinen
+Kontrollbeleg. Es darf keine aktiven Projektwrites abbrechen, Marker löschen
+oder einen gesperrten Root entsperren. Ein Workstatuswechsel ersetzt keinen
+manuellen Git-Wiederanlauf.
 
 ## P.7 Portabler Export und Wiederherstellung
 
@@ -11303,7 +10254,12 @@ Eine `work resume`-Operation darf den gebundenen Actor nicht erweitern. Ein KI-P
 
 Archivpfade, Hashprüfung, keine Symlinks und die kanonische Byteordnung folgen Anhang E. Fehlen notwendige Bytes, gibt es keinen scheinbar selbstenthaltenen Export. Ein sehr großer Paketaufbau ist selbst fortsetzbare Ausgabe mit stabilem Manifestcursor. Ein Work-Paket darf nicht rekursiv unbegrenzt sich selbst oder weitere Work-Pakete einbetten. Ein über die unterstützte Archivformatgrenze hinausgehender Export verwendet eine explizit im Paketmanifest angegebene geordnete Folge kanonischer Teilarchive; jedes Teilarchiv enthält Manifest-ID und Teilnummer. Ein separates kanonisches Indexmanifest listet Teilnummer, Dateiname, Byte-Länge und SHA-256 der vollständigen Teilarchivbytes. Der Index wird nicht in diese Teile eingebettet; dadurch entstehen keine rekursiven Hashbindungen. Vollständigkeit wird erst nach Prüfung aller Teile bestätigt.
 
-Bei `recovery_required` wird kein Arbeitspaket als Ersatz für eine sichere Kopie der aktiven Projekttransaktion ausgegeben. Zuerst wird das erhaltene Projekt recovered; vollständiger Verlust mitten im Commit kann nur aus tatsächlich extern erhaltenen Transaktionsdaten oder einer älteren Sicherung behandelt werden. Der normale Exportpfad liegt deshalb an sauberen Checkpointgrenzen vor fachlicher Veröffentlichung beziehungsweise nach gesichertem Abschluss.
+Bei `project_corrupted` wird kein Arbeitspaket als reparierter
+Projektzustand ausgegeben. Vorbereitende Workdaten dürfen nur getrennt und
+ausdrücklich unvollständig erhalten bleiben. Ein neuer Auftrag nach
+Git-Wiederanlauf benötigt aktuelle vollständige Bindungen und Autorität;
+der unterbrochene Write wird nicht fortgesetzt. Regulärer Workexport findet
+an sicheren Vorbereitungsgrenzen oder nach bestätigtem Abschluss statt.
 
 `work restore` prüft vor Extraktion Paketart, alle Teilarchive, Hashes, Checkpointschema, Tool-/Algorithmuskompatibilität und Pfadregeln. Ziel muss fehlen oder leer sein. Normative Projektdateien werden nicht überschrieben. Für einen späteren Write muss der Nutzer den aktuellen Projektroot ausdrücklich zuordnen; dessen ID und Modellbindung werden erneut geprüft. Ein Snapshotkopiepfad ist nicht automatisch das autorisierte Originalziel.
 
@@ -11328,9 +10284,9 @@ Erst nach bestätigt vollständigem Ergebnis oder ausdrücklicher Nutzerstornier
 
 ## Q.0 Verbindlicher Quellvertrag vor positiver Legacy-Unterstützung
 
-RESTORE-SCHEMA-SCOPE nach 10.7.11 korrigiert auf ausdrückliche Nutzerfreigabe
+RESTORE-SCHEMA-SCOPE nach 10.7.3 korrigiert auf ausdrückliche Nutzerfreigabe
 die frühere unbedingte Zusage eines bereits bestimmten 0.1-Altformats.
-Alle positiven 0.1-Schema-, Migrations- und Restore-Qualifikationsaussagen
+Alle positiven 0.1-Schema-, Migrations- und Extraktions-Qualifikationsaussagen
 in diesem Anhang, den Migration-Requirements, Szenarien, Verifikationsverträgen
 und M16 gelten erst unter der folgenden Voraussetzung; sie behaupten keinen
 heute vorhandenen Leser. Bereits festgelegte CLI-Kurzaliase nach Anhang F
@@ -11358,8 +10314,8 @@ geprüft ist, wird der Pfad nicht als unterstützt veröffentlicht. M16 bleibt
 offen; die fehlende positive 0.1-Abnahme blockiert nicht den ausdrücklich
 auf 0.2 bezogenen R-Abschluss, wohl aber eine behauptete 0.1-Unterstützung.
 Schutz, Originalerhaltung, aktuelle Reviewpflichten und die sichere Abweisung
-aus 10.7.11 gelten weiter. Ein später eingeführter Leser MUSS zusätzlich in
-Restore und dessen CLI-/Work-Abnahmen integriert werden, bevor die
+aus 10.7.3 gelten weiter. Ein später eingeführter Leser MUSS zusätzlich in
+reguläre Extraktion und deren CLI-/Work-Abnahmen integriert werden, bevor die
 entsprechende positive Kompatibilität zugesagt wird. Die folgenden Regeln
 Q.1–Q.5 bestimmen dann unverändert die verlusterhaltende Umsetzung.
 
@@ -11393,10 +10349,10 @@ als rekonstruierte historische 0.1-Semantik ausgegeben werden.
 
 Q.0s Definitionserfordernis ist für **genau diesen** Vertrag konkret erfüllt,
 sobald diese normative Änderung über Apply übernommen ist. Die zusätzliche
-Forderung nach geprüftem nativem Leser, vollständiger Migration und Restore-
+Forderung nach geprüftem nativem Leser, vollständiger Migration und Bundle-Extraktion-
 Integration bleibt bestehen. 16.b.W bleibt offen; dieses Dokument schaltet
 keinen produktiven Provider frei und erweitert weder den aktuellen Loader
-noch den Writer oder die Restore-Unterstützung. Andere 0.1-Verträge bleiben
+noch den Writer oder die Extraktionsunterstützung. Andere 0.1-Verträge bleiben
 unbekannt, bis sie gesondert definiert und implementiert sind.
 
 Alle positiven M16-/Q.-Abnahmen für 0.1 beziehen sich zunächst auf diesen
@@ -11497,7 +10453,7 @@ Planung identifiziert unveränderbare Ressourcen und alle Referenzpayloads, erze
 16.d verlangt unveränderte 0.1-Originale; E.1.1 erlaubt im regulären
 Projektmanifest nur Schema 0.2.0. Eine Vorabtransformation, eine falsche
 0.2-Kennzeichnung oder ein ungeprüftes generisches ZIP würde diese Verträge
-verletzen. Eine Erweiterung aller regulären Bundle-/Restore-Leser wäre ein
+verletzen. Eine Erweiterung aller regulären Bundle-/Legacy-Leser wäre ein
 unnötiger Eingriff in deren Scope. Gewählt wird deshalb eine eng begrenzte,
 ausdrücklich versionierte Migrationsquellsicherung mit dem unveränderten
 M15-Archivcodec und eigenem Quellleser. Die normalen E.1.1-/E.3-Bundles und
@@ -11552,9 +10508,9 @@ leere Verzeichnisse und Git-Historie sind kein Inhalt dieses Dateibyteformats.
 Vorhandene passive `.specroad`-Originaldateien bleiben ebenfalls bytegleich
 enthalten, getrennt von der semantischen Modellwurzel. Nur die bereits
 zentral definierten passiven Betriebsverzeichnisse sind zulässig; ein aktiver
-oder ungeklärter Lock-/Journal-/Recovery-Zustand blockiert die Sicherung.
+oder ungeklärter Lock-/Journal-/Schutzstatus blockiert die Sicherung.
 Die Rohdatenkopie erklärt weder Receipts für gültig noch portable Idempotenz,
-Restore-Zulässigkeit oder Schreibberechtigung. Kein Betriebszustand wird
+Extraktionszulässigkeit oder Schreibberechtigung. Kein Betriebszustand wird
 aktiviert, ausgeführt oder beim Lesen repariert.
 
 **Veröffentlichung und Bindung.** Die Sicherung wird vor jeder späteren
@@ -11577,7 +10533,7 @@ veröffentlichten Datei erzeugt. Die spätere Migration muss diese konkreten
 Bytes sowie die erneut beobachtete Quelle unter ihrem eigenen Writer-/Plan-
 Gate binden. Ein gespeicherter Bericht oder ein angeblich verifiziertes
 Pythonobjekt allein genügt nicht. 16.i und die öffentliche Migrations-/
-Restore-Integration behalten ihre vollständigen Abnahmen und bleiben offen.
+Bundle-/Legacy-Integration behalten ihre vollständigen Abnahmen und bleiben offen.
 
 # Anhang R — Kontraktübergreifende Abnahmefälle
 
@@ -11603,7 +10559,7 @@ Diese Fälle sind Solltests für die spätere Implementierung. Die bloße Aufnah
 | R-16 Veränderte Zielbasis | Vorbereitung abgeschlossen, aktuelles Projekt vor Apply verändert. | Code 6 ohne normative Teiländerung; kein stilles Rebase und keine neue Freigabe. |
 | R-17 Beschädigter Checkpoint | Fehlendes Segment, veränderte Bytes oder falscher Algorithmus. | Kein Anerkennen falschen Fortschritts; vorherige gültige Generation verwenden oder konkreten Fehler melden. |
 | R-18 Retry nach Ausgabeabbruch | Commit/Receipt vorhanden, Abschlussausgabe verloren; Resume mit gleicher Request-ID. | Bestehendes Receipt und dieselben IDs; kein zweiter Commit. |
-| R-19 Echter Commitabbruch | Host beendet Prozess nach beliebiger Dateiveröffentlichung. | Journalvertrag blockiert Mischstand; Recovery stellt vollständige Basis oder Ziel her. Ein weiches Ziel allein löst diesen Pfad nicht aus. |
+| R-19 Echter Commitabbruch | Host beendet Prozess an einer dauerhaften Publikationsgrenze. | Ein offener Marker sperrt den tatsächlichen Bestand; keine Reparatur. Nur ein bestätigter Abschluss darf nachfolgend idempotent gelesen werden. Weiches Budget allein löst keine Unterbrechung aus. |
 | R-20 Prompt-/Actorgrenze | Fortsetzungsprompt wird verändert oder fordert direkte KI-Freigabe. | Runner prüft Manifest/Command/Actor erneut; kein Erzeugen oder Überspringen menschlicher Freigabe. |
 | R-21 Kein Platz / harte Policy | Echter Datenträgermangel beziehungsweise unzulässige Archivstruktur. | Sparsame sichere Alternative oder konkreter Blocker; keine stillen Verluste, keine Sicherheitsumgehung. |
 | R-22 Unbekannte Quota | Host meldet kein verlässliches Memorylimit. | Wert bleibt unbekannt; konservativer realer Arbeitsversuch statt pauschaler Ablehnung oder fingierter Garantie. |
@@ -11613,7 +10569,7 @@ Diese Fälle sind Solltests für die spätere Implementierung. Die bloße Aufnah
 | R-26 Retest desselben Stands | Derselbe Stand hat failed in Lauf 1 und passed in Lauf 2. | Ohne Ablösung failed. Mit vollständig gebundener menschlicher Ablösung von Lauf 1 durch aktuellen vollständigen Lauf 2 passed; kein Umschreiben des historischen Fehlschlags. |
 | R-27 Pflichtmenge und widersprechende Läufe | Zwei Pflichtslots; einer fehlt oder schlägt fehl. Mehrere Nachweise eines maßgeblichen Laufs widersprechen sich. | Fehlende Pflicht incomplete; aktueller maßgeblicher Fehlschlag failed, auch bei anderem fehlendem Slot. Keine Auswahl des neuesten Erfolgs; gleiche Auswahl bei beliebiger Importreihenfolge. |
 | R-28 Ungültige Ablösung | Zyklische Entscheidung, KI als Freigabeautor, fehlender Ersatzlauf oder später hinzugekommene Evidence des abgelösten Laufs. | Struktur-/Akteursverletzung Code 3/7; fehlende oder veränderte Bindung incomplete; kein passed durch versteckte Zusatznachweise. |
-| R-29 Selfdescription-Projektion | Identische konsistente Kopien unter verschiedenen absoluten Pfaden. | Kanonische semantic-Projektion identisch; runtime.project_root verschieden und korrekt. Bei aktivem Writer/Recovery kein erfundener vollständiger Snapshot. |
+| R-29 Selfdescription-Projektion | Identische konsistente Kopien unter verschiedenen absoluten Pfaden. | Kanonische semantic-Projektion identisch; runtime.project_root verschieden und korrekt. Bei aktivem Writer/Abbruchsperre kein erfundener vollständiger Snapshot. |
 | R-30 Query-Wahrheitstabelle | Titel A und B; wiederholte Wertfilter; zwei disjunkte SRX-Ausdrücke; gemischte Filtergruppen. | Wertfilter innerhalb einer Art ODER, verschiedene Arten UND, SRX-Ausdrücke immer UND. Leere Filtergruppe true; Evaluation ist gebundener Input, kein ODER-Filter. |
 | R-31 Bewertung und Fortsetzung | Bewerteter Auftrag wird checkpointiert, später mit anderem Descriptor oder neuer Inputdatei fortgesetzt. | Hashabweichung führt zu stale/Konflikt, kein stiller Bewertungswechsel. Identische gebundene Inputs ergeben gleiche fachliche Auswahl und Aggregation. |
 | R-32 Bewertung und Release-Baseline | Read-only mit ungespeicherter Auswahl; Baselineversuch; danach Auswahl im Release genehmigt speichern. | Vorläufiger Bericht möglich; Baseline erst mit gespeicherter gültiger Auswahl. Sealed Manifest bindet genau diese Auswahl, historische Baselinebytes bleiben unverändert. |
@@ -11622,16 +10578,16 @@ Diese Fälle sind Solltests für die spätere Implementierung. Die bloße Aufnah
 | R-35 Pflichtrelation ablehnen | R approved/4; aktuelle bestätigte Pflichtrelation; neuer menschlicher rejected-Review. | Review recorded/approved/1; Relation invalid; R proposed/5; Code 0 mit assessment_status failed und SRV027/error; separates validate Code 1. |
 | R-36 Erneut bestätigen | Stand R-35; neue aktuelle confirmed-Entscheidung; anschließend explizite Reifegradfolge. | Neue Review-ID; Relation current; R bleibt proposed/5. Explizit in_review/6 und approved/7 erst nach erfülltem Gate. |
 | R-37 Draft, optionale Relation und Authority | Rejected bei draft/4 oder nicht gatepflichtiger Relation; alternativ AI-Reviewer oder fehlendes Ziel. | Keine unbegründete Quellrevision/Herabstufung; fachlicher Befund bleibt sichtbar. AI Code 7, struktureller Fehler Code 3, jeweils kein Write. |
-| R-38 Review-Transaktion und Retry | Hostabbruch zwischen Review- und Quellwrite; verlorene Erfolgsantwort; gleicher Request. | Ausschließlich vollständiger alter/neuer Zustand nach Recovery; ein Review und einmalige Rücknahme; identisches Receipt bei Retry. |
+| R-38 Review-Transaktion und Retry | Hostabbruch zwischen Review- und Quellwrite; gesondert verlorene Ausgabe nach bestätigtem Abschluss. | Im ersten Fall dauerhafte Sperre ohne Rücknahme; im zweiten genau ein Review, einmalige Rücknahme und identisches Receipt ohne neuen Write. |
 | R-39 Review-Kontextstabilität | Quelle wird allein durch gekoppelten Freigabeentzug herabgestuft; Relations-/Fachinhalt bleibt gleich. | Kontext-/Relationshash unverändert; negative Entscheidung bleibt aktuell und wird nicht durch den eigenen Write suspect. |
 | R-40 Bundle-Arten | Project-, Dokument- und Releasebundle erzeugen, verifizieren, extrahieren. | project/false/project/closed oder partial/true/document bzw. release/partial exakt nach E.3; passende Read-only-Nutzung möglich. |
 | R-41 Nichtkanonisches Teilbundle | bundle_kind document/release, unknown oder partial mit read_only=false; Write auf verifiziertem Teilbundle. | Formatfehler Code 3 vor Extraktion; echter Partial-Write Code 7. Keine Aliasannahme und kein stiller Vollprojektstatus. |
 | R-42 Manifest-Hashdomäne | Bundle mit Manifest, Konfiguration, Fachpayload und Receipt; zusätzliche/unaufgeführte Datei oder Manifest in entries. | entries exakt Payload ohne Manifest; Byte-/Mengendifferenz fällt auf. Modellwurzel unabhängig von Betriebssektion und Container. |
 | R-43 Manipulationsabgrenzung | Payloadbit ändern; Manifest allein inkonsistent ändern; anschließend konsistent neu erzeugtes Archiv mit altem externem Hash prüfen. | Interne Hash-/Scopeprüfung weist erste Fälle ab. Externe Voll-ZIP-Bindung weist konsistente Ersatzdatei ab; ohne externe Bindung kein Authentizitätsversprechen. |
-| R-44 Vollständiger Baseline-Restore | Projekt-Baseline geschlossen/unfiltriert und alle Bytes gültig; Restore dry-run, gebundener Plan und bestätigter Zielroot. | Quellsnapshot rekonstruiert; Quellbaseline samt Objektclosure erhalten; volle Zielwurzel nach Historienergänzungen geprüft; Audit dauerhaft. |
-| R-45 Unvollständige Restore-Quelle | Hashgültige release-/specification-Baseline, gefiltertes Vollbundle oder fehlendes Objekt/Primärdokument. | Code 3 ohne normative oder betriebliche Vorprüfungsänderung; kein Auffüllen aus zufälligen aktuellen Dateien. |
-| R-46 Geschützte Geschichte | Jüngere gültige unveränderbare Evidence/Baseline vorhanden; gleicher ID-Inhalt konfliktbehaftet oder notwendige Referenz nicht verfügbar. | Bytegleiche Historienobjekte explizit im Ziel erhalten; Konflikt Code 6 bzw. fehlende Zielbytes Code 3; kein stilles Löschen oder erfundene Fachressource. |
-| R-47 Restore-Atomarität | Quellenwechsel nach Planung, echter Speicherfehler bei Sicherung oder Crash beim Restore. | Stale Quelle Code 6; Sicherung nicht fertig: kein Commit. Nach Crash gesperrter Originalstand oder gesamtes geprüftes Ziel; korruptes Journal bleibt archiviert. |
+| R-44 Vollständiger Git-Wiederanlauf | Nach Abbruch separaten Checkout eines bekannten vollständigen gültigen Git-Stands herstellen. | Konfiguration, normative Ressourcen, Anhänge, Archiv/Legacy und Pflichtreceipts validieren; neuer Auftrag möglich; alter Root bleibt unverändert gesperrt. |
+| R-45 Unvollständiger Git-Stand | Checkout ohne erforderliche Anhänge, Archivobjekte, Originalreceipts oder Primärdokument. | Normale Validierung verweigert Nutzung; kein Auffüllen aus der beschädigten Kopie, keine erfundenen Nachweise. |
+| R-46 Alte Betriebsdaten und Checkpoints | Checkout im alten Root, nur Marker löschen oder unterbrochenes Workpaket in neuen Root kopieren. | Keine unterstützte Entsperrung; ignorierte/untracked Dateien und alte Schreibbindung dürfen nicht als gültiger Neubeginn gelten. Frischer Root und neuer Auftrag erforderlich. |
+| R-47 Abbruch an Abschlussgrenzen | Prozesskill bei Zielwrite, Receiptanlage, Markerentfernung und Synchronisation; aktive/unklare Eigentümer sowie defekter Marker. | Unbestätigter Bestand bleibt gesperrt; aktive Writer werden nicht als Crash übernommen; bestätigter Abschluss ist idempotent. Diagnose verändert keine Dateien. |
 
 Die zugehörigen Testfixtures liegen versioniert im Implementierungsrepository. Jeder Nachweis bindet Spezifikationshash, Tool-Build, Fixturehash, verwendete Policy-/Algorithmusversionen und komplette Ergebnis-/Receiptmanifeste. Der Vergleich der Einzellauf- und Mehrschrittergebnisse verwendet den fachlichen Payload ohne operative Pfade, Laufzeiten und Checkpointkennungen. Die Zahl von Prompts ist keine Eigenschaft des fachlichen Ergebnisses.
 
@@ -11666,7 +10622,7 @@ tatsächliche gemeinsame Validierungsergebnis. Er erteilt weder Schreib- noch
 Reviewfreigabe, behauptet keinen externen Testlauf, keine aktuelle Evidence-
 Gültigkeit und keine Release-Readiness. Eine stabile doppelte Dateibeobachtung
 ist kein atomarer Snapshot. Beim lebenden Ziel sind genau die eigenen nativ
-verifizierten Transaktions-/Request-/Recoverybelege separat ausgewiesen;
+verifizierten Transaktions-/Request-/Abbruchbelege separat ausgewiesen;
 vorhandene passive Source-Betriebsdateien bleiben unverändert im Inventar.
 Unbekannte oder aktive Betriebszustände, unsichere Pfade und Änderungen
 während der Beobachtung blockieren. Historische Receipts allein beweisen
@@ -11703,7 +10659,7 @@ Der gemeinsame Writer prüft die tatsächlichen Sourcebytes unter dem nativen
 Writerlock, validiert das gesamte Ziel frisch und veröffentlicht weiterhin
 genau eine Schema-Transaktion. Es gibt weder Zwischenpublikation pro Work-
 Phase noch automatische Recovery. Nach Unterbrechung gelten ausschließlich
-die bestehenden Journal-/Recoveryregeln. Wiederholung desselben Requests
+die bestehenden Schreibschutzregeln. Wiederholung desselben Requests
 liefert nur das nativ bewiesene historische Ergebnis; keine neue Revision.
 Ein fehlender oder veränderter aktueller Nachweis wird nicht als Erfolg
 oder als neue Freigabe umgedeutet.
@@ -11714,8 +10670,8 @@ fehlende Fachdienste werden geprüft. Work-Abnahmen vergleichen Einzellauf
 und jede gespeicherte Phasengrenze einschließlich externem Paket und neuer
 Sandbox, unvollständige/gefälschte Befunde, fremde Builds und echte I/O-
 Unterbrechungen. Die abschließende native Transaktion, Request-Replay,
-veränderte Livequelle und aktive Recovery bleiben integriert erforderlich.
-Die öffentlichen CLI-/Pfad- und Restore-Abnahmen sowie die volle verfügbare
+veränderte Livequelle und aktive Abbruchsperre bleiben integriert erforderlich.
+Die öffentlichen CLI-/Pfad- und Legacy-Abnahmen sowie die volle verfügbare
 Suite bleiben eigene offene M16-Abschlussgates, solange sie nicht tatsächlich
 nachgewiesen sind; ein nicht existierender Planschritt 16.l wird nicht als
 Nachweis oder stillschweigende Auslagerung verwendet.
@@ -11760,15 +10716,15 @@ Zielschema verwenden ausschließlich den nativen Request-/No-op-Vertrag.
 Der verlustfreie Referenzpfad nimmt keine fingierte Verlustakzeptanz an.
 
 Die Schreibautorität und zusätzliche erforderliche native Fachdienste stammen
-wie bei der vorhandenen Restore-Integration aus dem vertrauenswürdigen Host-
+wie bei der vorhandenen Bundle-/Legacy-Integration aus dem vertrauenswürdigen Host-
 Kontext, niemals aus Optionen, Plan-, Projekt- oder Work-Daten. Ein fehlender
 Dienst oder eine fehlende Autorität bleibt ein konkreter Fehler. Externe
 Eingabe-/Ausgabegrenzen benutzen die vorhandenen sicheren Dateioperationen;
 Planung und Verify ändern keine Projektbytes. Verify liest Quellbundle und
 ursprünglichen Bericht mit expliziten Hashes und prüft das lebende Ziel samt
-nativem Abschlussjournal neu. Es meldet keine aktuelle Evidence- oder
-Releasefreigabe. Teilweise publizierte Schemaübergänge verlangen weiterhin
-ausdrückliche native Recovery; die CLI startet keine eigene Recovery-Schleife.
+nativen Abschlussreceipts neu. Es meldet keine aktuelle Evidence- oder
+Releasefreigabe. Teilweise publizierte Schemaübergänge bleiben gesperrt;
+manueller Git-Wiederanlauf ersetzt jede native Reparatur.
 
 Plan-/Verify-Work verwenden die vorhandenen festen nativen Phasen, die komplette
 Eingabebindung und exportierbare Checkpoints. Öffentliche Fortsetzung führt
@@ -11776,21 +10732,16 @@ nur passive Arbeit fort. Das Prüfergebnis unterscheidet bereitgestellte Bytes
 von einer frisch erneut beobachteten Projektwurzel. Gespeicherte Erfolgsmeldungen
 oder fremde Work-Pakete ersetzen keine aktuelle Schreibautorität.
 
-**Restore-Integration.** Ein vollständig migriertes 0.2-Projekt darf als
-vollständiges Projektbundle wiederhergestellt werden. Sein natives Legacy-
-Manifest muss sämtliche Originalbytes und den tatsächlichen Referenzvertrag
-vollständig qualifizieren. Nur diese gebundenen Originale dürfen die reguläre
-0.2-Schemaprüfung durch ihren bereits implementierten ursprünglichen Leser
-ersetzen. Ungebundene, manipulierte oder unbekannte Altressourcen bleiben
-Fehler. Historische Evidence und Reviews bleiben historische Originale,
-niemals aktuelle positive Nachweise. Aktuelle veränderbare Zielartefakte
-unterliegen weiterhin sämtlichen regulären Validierungs- und Reviewgates.
-Historische Source-Baselines werden vollständig über ihren eigenen Vertrag
-geprüft und unverändert aufbewahrt; sie werden nicht als aktueller Restore-
-Quellstand umgedeutet. Der aktuelle vollständige Projektbundle ist der
-positive Restore-Einstieg. Migration ist niemals eine heimliche Restore-Aktion.
-Native Abschlussreceipts werden verlustfrei und vollständig gebunden
-transportiert; lokale Locks, aktive Journale und Schreibautoritäten nicht.
+**Bundle-/Legacy-Integration.** Ein vollständig migriertes Projekt
+darf als reguläres Vollbundle in einen neuen leeren Root extrahiert werden.
+Sein Legacy-Manifest qualifiziert vollständige Originalbytes und den echten
+Referenzvertrag. Gebundene Originale werden mit ihrem nativen ursprünglichen
+Leser geprüft; unbekannte oder manipulierte Altressourcen bleiben Fehler.
+Historische Evidence, Reviews und Source-Baselines bleiben unveränderte
+historische Daten. Aktuelle Zielartefakte behalten sämtliche Validierungs-
+und Freigabegates. Normale Abschlussreceipts werden vollständig transportiert,
+aktive Marker, Locks und Schreibautoritäten nicht. Dies ist kein Restore
+in einen beschädigten Root und ersetzt nicht den Git-Wiederanlaufvertrag.
 
 **Abschlussabnahme.** Ausschließlich synthetische Projekte dienen dem
 positiven Ablauf: öffentliche Planung, wirkliche native Migration mit
@@ -12841,16 +11792,14 @@ Hostpfade vorauszusetzen. Runtimeausführung erfolgt weiterhin ausdrücklich
 Historische Receipts behalten ihre Bytes und die Anhang-E-Wirkung, insbesondere
 keine Übernahme alter Root-/Inodewerte als aktuelle lokale Schreibberechtigung.
 
-Die Veröffentlichung verwendet die vorhandenen deskriptorgebundenen
-Root-Erzeugungs-, Journal- und No-Replace-Primitiven. Ihr eigener Bootstrap-
-Nachweis bindet mindestens die äußere Paket-SHA, die vollständige geplante
-Pfad-/Byteinventur und die tatsächlichen Besitz-/Dateiidentitäten. Er ersetzt
-keine Eingangsprüfung. Fremde oder geänderte Ziele werden nie überschrieben.
-Nach Abbruch darf nur der gleiche, erneut vollständig geprüfte Paketauftrag
-die belegten eigenen Bootstrapdaten abschließen oder zurückrollen; unbekannte
-oder geänderte Daten sperren die Wiederherstellung. Vollständig veröffentlichte
-Sandboxes sind belegte Ziele, kein stiller Wiederholungsauftrag. Die getrennten
-Anhang-E-Nachweise des Projektbereichs bleiben gültig und unabhängig prüfbar.
+Die Veröffentlichung verwendet sichere descriptorrelative
+Root-Erzeugungs- und No-Replace-Primitiven mit dauerhaftem Bootstrapmarker.
+Dieser bindet Paket-SHA, vollständige Pfad-/Byteinventur und Eigentümer nach
+Anhang C. Fremde oder geänderte Ziele werden nie überschrieben. Ein Abbruch
+sperrt das Ziel; ein neuer, vollständig geprüfter Auftrag benötigt einen
+anderen zulässigen leeren Root. Es gibt keine Bootstrap-Rücknahme oder
+Vervollständigung. Bestätigte Sandboxes sind keine Wiederholungsaufträge;
+ihre Projektbundle-Nachweise bleiben unabhängig prüfbar.
 
 Prüfbereiche sind ausschließlich dem jeweiligen Aufruf zugeordnet. Sie bleiben
 nach dem Aufruf als tatsächlich ausgewiesene private Betriebsdaten erhalten;
@@ -12861,8 +11810,8 @@ während desselben Prozesses und unter den vollständigen W.1.1-Nachprüfungen
 verwendet werden. Eine spätere Bereinigung braucht einen eigenen Auftrag und
 darf keine fremden Inhalte entfernen. Fehlender Platz oder fehlende Rechte
 werden als Fehler ausgewiesen, nicht durch einen unbenannten Temp-/Projektpfad
-umgangen. Das Sandboxziel wird nach Fehlern gemäß seinem eigenen Bootstrap-
-Journal erhalten oder zurückgerollt; der Prüfbereich erweitert diese Befugnis nicht.
+umgangen. Das Sandboxziel bleibt nach unterbrochener Publikation durch seinen
+Bootstrapmarker gesperrt erhalten; der Prüfbereich erteilt keine Reparaturbefugnis.
 
 **Maschinenlesbare Ergebnisse.** Das bestehende Command-Envelope bleibt
 unverändert. Die Varianten verwenden separate geschlossene Ergebnisschemas
@@ -12886,14 +11835,14 @@ Nur Extract enthält zusätzlich genau `sandbox_root` und `project_root` als
 tatsächliche absolute Zielpfade, `bootstrap_state` mit Wert `complete`,
 `files` als nach relativem Pfad sortierte Liste der veröffentlichten Nutzdateien
 mit exakt `path`, `size`, `sha256`, sowie `directories` als sortierte Liste ihrer
-relativen Verzeichnisse. Betriebsjournale werden separat als Betriebsdaten
+relativen Verzeichnisse. Betriebsmarker werden separat als Betriebsdaten
 ausgewiesen und nicht als ursprüngliche Paketnutzlast ausgegeben. Ein Extract-
 Erfolg bedeutet vollständige Root-Erzeugung, weder Proposalempfang noch Apply.
 Falsche Typen, zusätzliche Felder und verkürzte Hashes sind unzulässig.
 
 Fehler bleiben im bestehenden Command-Fehlerenvelope mit konkretem `reason`
 und, soweit vorhanden, ursprünglichen öffentlichen PH-Fehlerfakten. Exitcodes
-folgen 11.8/W.6: Optionen/Fähigkeiten 2, ungültige Daten 3, I/O/Host/Recovery 5,
+folgen 11.8/W.6: Optionen/Fähigkeiten 2, ungültige Daten 3, I/O/Host/Projektsperre 5,
 Hash-/Quellwechsel/Zielkonflikte 6, Sicherheitsverweigerung 7. Es gibt keinen
 erfolgreichen Teilstatus im Erfolgsschema. Tatsächlich erzeugte Prüf-/Bootstrap-
 Pfadbelege und ein möglicher Teilzustand werden im Fehlerbefund ausgewiesen.
@@ -12962,7 +11911,7 @@ Request-Receipts bleiben getrennte, gemeinsam zu prüfende Nachweise.
 
 Abbruch vor Veröffentlichung eines Exports hinterlässt keine als fertig
 ausgewiesene ZIP. Bei Abbruch während Übernahme oder Proposal-Apply bleiben
-der tatsächliche Zustand und notwendige Diagnose-/Recoverydaten erhalten;
+der tatsächliche Zustand und notwendige Diagnose-/Schutzdaten erhalten;
 bereits erfolgreiche Arbeit wird nicht blind zurückgesetzt. Bereinigung darf
 nur nachweislich eigene temporäre Pfade betreffen. Eine fehlgeschlagene Result-
 Veröffentlichung nach erfolgreicher Fachänderung wird als genau dieser
@@ -12972,7 +11921,7 @@ Maschinenlesbare Resultate unterscheiden Paketprüfung, Transportempfang,
 Proposalprüfung, menschliche Freigabe, Fachanwendung und Result-Veröffentlichung.
 Sie binden jeweils die tatsächlich verwendeten Paket-, Projekt-, Runtime- und
 Zustandswerte. SpecRoad-Exitcodes folgen 11.8: inkompatible API/Optionen 2,
-ungültige Daten 3, I/O/Host/Recovery 5, stale-/Replay-/Zielkonflikt 6 und
+ungültige Daten 3, I/O/Host/Projektsperre 5, stale-/Replay-/Zielkonflikt 6 und
 Sicherheitsverweigerung 7. PatchHarbor-Statuswerte werden zusätzlich erhalten,
 nicht numerisch als SpecRoad-Exitcode umgedeutet. Ein Erfolg eines Teilgates
 beweist keines der übrigen Gates.
@@ -13018,7 +11967,7 @@ Results bleiben native schreibfreie Eingaben mit unveränderten Originalfakten.
 6. Ein unverändertes Projekt kann ohne Fachdelta zurückgegeben werden; die
    strukturierte Meldung `no_changes` erzeugt keinen leeren Änderungs-Apply.
    Normale Projekt-/Teilbundles, Core ohne Transportnutzung und bestehende
-   Idempotenz-/Recoveryverträge bleiben durch echte Regression nachgewiesen.
+   Idempotenz-/Sperrverträge bleiben durch echte Regression nachgewiesen.
 7. Jedes zusätzlich angebotene `python-bundled`-Profil wird auf der exakt
    deklarierten Plattform ohne vorhandenes Python geprüft; fehlende Profile
    bleiben als nicht verfügbar erkennbar und werden nicht als bestanden gezählt.

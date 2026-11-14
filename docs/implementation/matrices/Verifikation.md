@@ -1,6 +1,6 @@
 # Anhang B – Verifikationsregister
 
-Unveränderte fachliche Zuordnung; [Zentraler Fortschritt](../SpecRoad_Implementierungsplan.md). Zeitbezogene Übergabeangaben ersetzen den dortigen aktuellen Stand nicht.
+Aktualisierte Soll-Zuordnung; [Zentraler Fortschritt](../SpecRoad_Implementierungsplan.md). Zeitbezogene Übergabeangaben ersetzen den dortigen aktuellen Stand nicht.
 
 ## Anhang B – Verifikationsregister
 
@@ -59,3 +59,7 @@ Alle 50 ursprünglichen SR-VER-Verträge bleiben referenziert. SR-VER-0051 ergä
 | `SR-VER-0049` | 4 | M14, M16, M19, M20 |
 | `SR-VER-0050` | 4 | M4, M20 |
 | `SR-VER-0051` | 12 | M15, M18, M20 |
+
+## Erneute Abnahme des geänderten Schreibvertrags
+
+SR-VER-0012/0019/0020/0031/0035/0040/0041/0051 werden für die betroffenen Teilverträge in 18.s–18.x neu gebunden. Die exakten heutigen Oracles stehen in der Spezifikation; alte Recovery-/Restore-Erfolge sind historische Nachweise. Die vollständige Plattform-/Releaseabnahme bleibt in M20.

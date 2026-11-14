@@ -1,6 +1,6 @@
 # Anhang D – gekoppelte Regressionen R-01 bis R-75
 
-Unveränderte fachliche Zuordnung; [Zentraler Fortschritt](../SpecRoad_Implementierungsplan.md). Zeitbezogene Übergabeangaben ersetzen den dortigen aktuellen Stand nicht.
+Aktualisierte Soll-Zuordnung für Abbruchsperre und Git-Wiederanlauf; [Zentraler Fortschritt](../SpecRoad_Implementierungsplan.md). Zeitbezogene Übergabeangaben ersetzen den dortigen aktuellen Stand nicht.
 
 ## Anhang D – gekoppelte Regressionen R-01 bis R-75
 
@@ -26,7 +26,7 @@ Die genaue Vorbedingung und das vollständige Oracle stehen im versionierten Anh
 | `R-16` | Veränderte Zielbasis | 5, 6 | 20.c |
 | `R-17` | Beschädigter Checkpoint | 6 | 20.c |
 | `R-18` | Retry nach Ausgabeabbruch | 5, 6 | 20.c |
-| `R-19` | Echter Commitabbruch | 5 | 20.c |
+| `R-19` | Echter Commitabbruch | 5, 18 (18.t–18.x) | 20.c |
 | `R-20` | Prompt-/Actorgrenze | 6, 18 | 20.c |
 | `R-21` | Kein Platz / harte Policy | 6 | 20.c |
 | `R-22` | Unbekannte Quota | 6 | 20.c |
@@ -45,16 +45,16 @@ Die genaue Vorbedingung und das vollständige Oracle stehen im versionierten Anh
 | `R-35` | Pflichtrelation ablehnen | 7 | 20.c |
 | `R-36` | Erneut bestätigen | 7 | 20.c |
 | `R-37` | Draft, optionale Relation und Authority | 7 | 20.c |
-| `R-38` | Review-Transaktion und Retry | 5, 7 | 20.c |
+| `R-38` | Review-Transaktion und Retry | 5, 7, 18 (18.u/18.x) | 20.c |
 | `R-39` | Review-Kontextstabilität | 7 | 20.c |
 | `R-40` | Bundle-Arten | 15 | 20.c |
 | `R-41` | Nichtkanonisches Teilbundle | 15 | 20.c |
 | `R-42` | Manifest-Hashdomäne | 15 | 20.c |
 | `R-43` | Manipulationsabgrenzung | 15 | 20.c |
-| `R-44` | Vollständiger Baseline-Restore | 15 | 20.c |
-| `R-45` | Unvollständige Restore-Quelle | 15 | 20.c |
-| `R-46` | Geschützte Geschichte | 15 | 20.c |
-| `R-47` | Restore-Atomarität | 5, 15 | 20.c |
+| `R-44` | Vollständiger Git-Wiederanlauf | 18 (18.x) | 20.c, 20.e |
+| `R-45` | Unvollständiger Git-Stand | 18 (18.x) | 20.c, 20.e |
+| `R-46` | Alte Betriebsdaten und Checkpoints | 18 (18.x) | 20.c, 20.e |
+| `R-47` | Abbruch an Abschlussgrenzen | 18 (18.x) | 20.c, 20.e |
 | `R-48` | Force ohne Keyword | 2, 7, 11 | 20.d |
 | `R-49` | Verbot | 2, 4 | 20.d |
 | `R-50` | Tag-Policy | 2, 4 | 20.d |

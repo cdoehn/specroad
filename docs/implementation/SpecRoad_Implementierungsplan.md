@@ -1,9 +1,9 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 177 · **Stand:** 13. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.84
+**Planrevision:** 178 · **Stand:** 14. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.85
 
-Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 300 Schritte und 900 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; die ausdrücklich genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wird nach 10.7.10 innerhalb von 15.l.R vorgezogen. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
+Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 306 Schritte und 918 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; die früher genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wurde nach der damaligen Spezifikation innerhalb von 15.l.R vorgezogen und bleibt als normaler Prüfkern erhalten. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
 Die Aufteilung vom 6. November 2026 ist ein reiner OFF-PLAN-Dokumentationsschritt. Die fachliche Planrevision, Produktpositionen und ihre Abnahmen werden dadurch nicht geändert. Zähler werden nur anhand erfolgreicher Apply-Commits fortgeschrieben.
 
@@ -58,14 +58,31 @@ Offene R/C-Korrektur nach erfolgreichem W: [Bundle 680](history/bundle-680-propo
 
 Korrektur der Prozessabbruchtests: [Bundle 681](history/bundle-681-process-crash-deadline.md).
 
+## Nächster Auftrag: Produkt-Recovery zurückbauen
+
+[RECOVERY-REMOVAL-006](decisions/recovery-removal-006.md) setzt die ausdrückliche
+Nutzerentscheidung in Spezifikation 0.2.85 um. [18.s bis 18.x](milestones/M18.md#vorgezogener-umbau-nach-18k--recovery-removal-006)
+werden unmittelbar nach abgeschlossenem 18.k.C und vor 18.l.W ausgeführt:
+gemeinsame Prüfdienste, Schreibmarker/Receipts, normale Writer/Proposals,
+Migration/Merge/Rooterzeugung, Recovery-/Restore-Workentfernung und abschließende
+Format-/Git-/Integrationsabnahme. Das sind 18 neue Produktcommits.
+SpecRoad bleibt bis zur ausdrücklichen Nutzerfreigabe unbenutzt.
+
+Das aktuelle Spezifikations-/Planungsbundle ist genau ein OFF-PLAN-Commit
+`RECOVERY-REMOVAL-PLAN-006` mit Nachricht
+`docs(spec): Abbruchsperre und Recovery-Rueckbau vor 18.l planen`.
+Es entfernt noch keinen Produktcode und schließt keine neue Produktposition.
+Die historische Hauptlinien-Bundlekennung 681 bleibt im Fortschrittsblock;
+die unabhängige Apply2-Übergabe heißt 006. Vorbereitet ist kein Apply-Erfolg.
+
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 177
-implementation_plan_commits_total: 900
+plan_revision: 178
+implementation_plan_commits_total: 918
 implementation_plan_commits_completed: 762
 last_completed_plan_commit: 18.k.C
-next_plan_commit: 18.l.W
+next_plan_commit: 18.s.W
 last_completed_numbered_bundle: 681
 implementation_state: in_progress
 audit_followup_status: closed
@@ -96,10 +113,10 @@ plan_setup_message: "docs(plan): add detailed SpecRoad WRC implementation plan"
 | 15 | [Projektbundles und portabler Austausch](milestones/M15.md#m15) | 15 | 45 | 616–660 |
 | 16 | [Schema- und Datenmigration](milestones/M16.md#m16) | 11 | 33 | 661–693 |
 | 17 | [Semantischer Dreiwege-Merge](milestones/M17.md#m17) | 12 | 36 | 694–729 |
-| 18 | [Proposals und kontrollierte KI-Bearbeitung](milestones/M18.md#m18) | 18 | 54 | 730–783 |
-| 19 | [Analyzer-Schnittstelle und echte Spracherkennung](milestones/M19.md#m19) | 25 | 75 | 784–858 |
-| 20 | [Gesamtabnahme und Release](milestones/M20.md#m20) | 14 | 42 | 859–900 |
-| **Gesamt** | **20 Meilensteine** | **300** | **900** | **1–900** |
+| 18 | [Proposals, Schreibschutz und kontrollierte KI-Bearbeitung](milestones/M18.md#m18) | 24 | 72 | 730–801 |
+| 19 | [Analyzer-Schnittstelle und echte Spracherkennung](milestones/M19.md#m19) | 25 | 75 | 802–876 |
+| 20 | [Gesamtabnahme und Release](milestones/M20.md#m20) | 14 | 42 | 877–918 |
+| **Gesamt** | **20 Meilensteine** | **306** | **918** | **1–918** |
 
 ## In Apply2 abgenommene Control-Erweiterung
 

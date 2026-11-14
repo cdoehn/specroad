@@ -54,3 +54,7 @@ Die Bezeichnungen und Identitäten stammen aus der Spezifikation. Alle Szenarien
 | `SR-SCN-0044` / `SR-E2E-0044` | Core ohne Zusatzpakete | 1, 19, 20 |
 | `SR-SCN-0045` / `SR-E2E-0045` | Analyzerarbeit fortsetzen | 6, 19 |
 | `SR-SCN-0046` / `SR-E2E-0046` | Entwurfsmetadaten migrieren | 4, 14, 16, 19 |
+
+## RECOVERY-REMOVAL-006
+
+SR-SCN-0029 und der echte Abbruchanteil von SR-SCN-0030 gelten mit den neuen Oracles aus Spezifikation 0.2.85: schreibfreie Abbruchsperre und frischer Git-Wiederanlauf. Vorbereitungsfortsetzung bleibt erhalten. Umsetzung und frühe Integration in 18.t–18.x, vollständige E2E-Abnahme in M20. Alte Evidence wird nicht umgedeutet.

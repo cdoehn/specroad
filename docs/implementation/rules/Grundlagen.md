@@ -1,5 +1,7 @@
 # Grundlagen und Rangfolge
 
+Aktuelle ausdrückliche Nutzerentscheidung: [RECOVERY-REMOVAL-006](../decisions/recovery-removal-006.md). Sie erweitert den vorhandenen Plan auf 918 Produktpositionen und ersetzt die alten Produkt-Recoveryabnahmen; historische Erfolge und die ursprünglichen Entstehungsbelege bleiben erhalten. Keine Live-Nutzung vor ausdrücklicher Nutzerfreigabe.
+
 Übernommene fachliche Planbasis. Frühere Verträge und historische Ausgangszustände behalten ihre damalige Bedeutung; die aktuelle optionale Klärung folgt SPECROAD-DECISION-1, Vertrag 4 und verification/development_contract.json.
 
 [Zentraler Fortschritt](../SpecRoad_Implementierungsplan.md)

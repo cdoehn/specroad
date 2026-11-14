@@ -1,6 +1,6 @@
 # Anhang A – vollständige Requirement-zu-Schritt-Matrix
 
-Unveränderte fachliche Zuordnung; [Zentraler Fortschritt](../SpecRoad_Implementierungsplan.md). Zeitbezogene Übergabeangaben ersetzen den dortigen aktuellen Stand nicht.
+Aktualisierte Soll-Zuordnung einschließlich RECOVERY-REMOVAL-006; [Zentraler Fortschritt](../SpecRoad_Implementierungsplan.md). Zeitbezogene Übergabeangaben ersetzen den dortigen aktuellen Stand nicht.
 
 ## Anhang A – vollständige Requirement-zu-Schritt-Matrix
 
@@ -180,13 +180,13 @@ Jede der 742 Requirement-IDs (730 bestehende und zwölf neue) ist mindestens ein
 | `SR-REQ-0170` | [18.g](../milestones/M18.md#step-18-g) | [18.p](../milestones/M18.md#step-18-p) | `SR-TC-0170` | SR-VER-0012 |
 | `SR-REQ-0171` | [18.i](../milestones/M18.md#step-18-i) | [18.j](../milestones/M18.md#step-18-j), [18.p](../milestones/M18.md#step-18-p) | `SR-TC-0171` | SR-VER-0012 |
 | `SR-REQ-0172` | [18.i](../milestones/M18.md#step-18-i) | [18.p](../milestones/M18.md#step-18-p) | `SR-TC-0172` | SR-VER-0012 |
-| `SR-REQ-0173` | [18.i](../milestones/M18.md#step-18-i) | [18.j](../milestones/M18.md#step-18-j), [18.k](../milestones/M18.md#step-18-k), [18.p](../milestones/M18.md#step-18-p) | `SR-TC-0173` | SR-VER-0012 |
-| `SR-REQ-0174` | [18.k](../milestones/M18.md#step-18-k) | [18.p](../milestones/M18.md#step-18-p) | `SR-TC-0174` | SR-VER-0012 |
-| `SR-REQ-0175` | [18.k](../milestones/M18.md#step-18-k) | [5.m](../milestones/M05.md#step-5-m), [18.p](../milestones/M18.md#step-18-p) | `SR-TC-0175` | SR-VER-0019 |
-| `SR-REQ-0176` | [18.n](../milestones/M18.md#step-18-n) | [18.p](../milestones/M18.md#step-18-p) | `SR-TC-0176` | SR-VER-0012 |
-| `SR-REQ-0177` | [18.l](../milestones/M18.md#step-18-l) | [18.n](../milestones/M18.md#step-18-n), [18.p](../milestones/M18.md#step-18-p) | `SR-TC-0177` | SR-VER-0012 |
-| `SR-REQ-0178` | [18.g](../milestones/M18.md#step-18-g) | [18.k](../milestones/M18.md#step-18-k), [18.p](../milestones/M18.md#step-18-p) | `SR-TC-0178` | SR-VER-0012 |
-| `SR-REQ-0179` | [18.m](../milestones/M18.md#step-18-m) | — | `SR-TC-0179` | SR-VER-0013 |
+| `SR-REQ-0173` | [18.u](../milestones/M18.md#step-18-u) | Bisherige Beiträge: [18.i](../milestones/M18.md#step-18-i) ; [18.j](../milestones/M18.md#step-18-j), [18.k](../milestones/M18.md#step-18-k), [18.p](../milestones/M18.md#step-18-p) | `SR-TC-0173` | SR-VER-0012 |
+| `SR-REQ-0174` | [18.u](../milestones/M18.md#step-18-u) | Bisherige Beiträge: [18.k](../milestones/M18.md#step-18-k) ; [18.p](../milestones/M18.md#step-18-p) | `SR-TC-0174` | SR-VER-0012 |
+| `SR-REQ-0175` | [18.u](../milestones/M18.md#step-18-u) | Bisherige Beiträge: [18.k](../milestones/M18.md#step-18-k) ; [5.m](../milestones/M05.md#step-5-m), [18.p](../milestones/M18.md#step-18-p) | `SR-TC-0175` | SR-VER-0019 |
+| `SR-REQ-0176` | [18.u](../milestones/M18.md#step-18-u) | Bisherige Beiträge: [18.n](../milestones/M18.md#step-18-n) ; [18.p](../milestones/M18.md#step-18-p) | `SR-TC-0176` | SR-VER-0012 |
+| `SR-REQ-0177` | [18.u](../milestones/M18.md#step-18-u) | Bisherige Beiträge: [18.l](../milestones/M18.md#step-18-l) ; [18.n](../milestones/M18.md#step-18-n), [18.p](../milestones/M18.md#step-18-p) | `SR-TC-0177` | SR-VER-0012 |
+| `SR-REQ-0178` | [18.u](../milestones/M18.md#step-18-u) | Bisherige Beiträge: [18.g](../milestones/M18.md#step-18-g) ; [18.k](../milestones/M18.md#step-18-k), [18.p](../milestones/M18.md#step-18-p) | `SR-TC-0178` | SR-VER-0012 |
+| `SR-REQ-0179` | [18.w](../milestones/M18.md#step-18-w) | Bisherige Beiträge: [18.m](../milestones/M18.md#step-18-m) | `SR-TC-0179` | SR-VER-0013 |
 | `SR-REQ-0180` | [1.c](../milestones/M01.md#step-1-c) | [18.m](../milestones/M18.md#step-18-m) | `SR-TC-0180` | SR-VER-0013 |
 | `SR-REQ-0181` | [1.f](../milestones/M01.md#step-1-f) | [20.l](../milestones/M20.md#step-20-l) | `SR-TC-0181` | SR-VER-0013 |
 | `SR-REQ-0182` | [1.e](../milestones/M01.md#step-1-e) | — | `SR-TC-0182` | SR-VER-0013 |
@@ -195,8 +195,8 @@ Jede der 742 Requirement-IDs (730 bestehende und zwölf neue) ist mindestens ein
 | `SR-REQ-0185` | [1.e](../milestones/M01.md#step-1-e) | — | `SR-TC-0185` | SR-VER-0013 |
 | `SR-REQ-0186` | [1.f](../milestones/M01.md#step-1-f) | [20.l](../milestones/M20.md#step-20-l) | `SR-TC-0186` | SR-VER-0013 |
 | `SR-REQ-0187` | [1.f](../milestones/M01.md#step-1-f) | [20.l](../milestones/M20.md#step-20-l) | `SR-TC-0187` | SR-VER-0013 |
-| `SR-REQ-0188` | [4.r](../milestones/M04.md#step-4-r) | — | `SR-TC-0188` | SR-VER-0013 |
-| `SR-REQ-0189` | [5.m](../milestones/M05.md#step-5-m) | — | `SR-TC-0189` | SR-VER-0019 |
+| `SR-REQ-0188` | [18.u](../milestones/M18.md#step-18-u) | Bisherige Beiträge: [4.r](../milestones/M04.md#step-4-r) | `SR-TC-0188` | SR-VER-0013 |
+| `SR-REQ-0189` | [18.t](../milestones/M18.md#step-18-t) | Bisherige Beiträge: [5.m](../milestones/M05.md#step-5-m) | `SR-TC-0189` | SR-VER-0019 |
 | `SR-REQ-0190` | [1.l](../milestones/M01.md#step-1-l) | — | `SR-TC-0190` | SR-VER-0013 |
 | `SR-REQ-0191` | [8.i](../milestones/M08.md#step-8-i) | [20.l](../milestones/M20.md#step-20-l) | `SR-TC-0191` | SR-VER-0013 |
 | `SR-REQ-0192` | [5.j](../milestones/M05.md#step-5-j) | [20.l](../milestones/M20.md#step-20-l) | `SR-TC-0192` | SR-VER-0013 |
@@ -212,8 +212,8 @@ Jede der 742 Requirement-IDs (730 bestehende und zwölf neue) ist mindestens ein
 | `SR-REQ-0202` | [6.c](../milestones/M06.md#step-6-c) | — | `SR-TC-0202` | SR-VER-0014 |
 | `SR-REQ-0203` | [6.c](../milestones/M06.md#step-6-c) | — | `SR-TC-0203` | SR-VER-0014 |
 | `SR-REQ-0204` | [5.m](../milestones/M05.md#step-5-m) | [20.b](../milestones/M20.md#step-20-b) | `SR-TC-0204` | SR-VER-0019 |
-| `SR-REQ-0205` | [5.i](../milestones/M05.md#step-5-i) | — | `SR-TC-0205` | SR-VER-0019 |
-| `SR-REQ-0206` | [5.i](../milestones/M05.md#step-5-i) | — | `SR-TC-0206` | SR-VER-0019 |
+| `SR-REQ-0205` | [18.t](../milestones/M18.md#step-18-t) | Bisherige Beiträge: [5.i](../milestones/M05.md#step-5-i) | `SR-TC-0205` | SR-VER-0019 |
+| `SR-REQ-0206` | [18.t](../milestones/M18.md#step-18-t) | Bisherige Beiträge: [5.i](../milestones/M05.md#step-5-i) | `SR-TC-0206` | SR-VER-0019 |
 | `SR-REQ-0207` | [2.j](../milestones/M02.md#step-2-j) | — | `SR-TC-0207` | SR-VER-0015 |
 | `SR-REQ-0208` | [2.j](../milestones/M02.md#step-2-j) | — | `SR-TC-0208` | SR-VER-0015 |
 | `SR-REQ-0209` | [1.b](../milestones/M01.md#step-1-b) | — | `SR-TC-0209` | SR-VER-0027 |
@@ -259,22 +259,22 @@ Jede der 742 Requirement-IDs (730 bestehende und zwölf neue) ist mindestens ein
 | `SR-REQ-0249` | [2.g](../milestones/M02.md#step-2-g) | — | `SR-TC-0249` | SR-VER-0018 |
 | `SR-REQ-0250` | [2.h](../milestones/M02.md#step-2-h) | — | `SR-TC-0250` | SR-VER-0026 |
 | `SR-REQ-0251` | [2.f](../milestones/M02.md#step-2-f) | — | `SR-TC-0251` | SR-VER-0018 |
-| `SR-REQ-0252` | [5.k](../milestones/M05.md#step-5-k) | [20.e](../milestones/M20.md#step-20-e) | `SR-TC-0252` | SR-VER-0019 |
-| `SR-REQ-0253` | [5.k](../milestones/M05.md#step-5-k) | [20.e](../milestones/M20.md#step-20-e) | `SR-TC-0253` | SR-VER-0019 |
-| `SR-REQ-0254` | [5.l](../milestones/M05.md#step-5-l) | [20.e](../milestones/M20.md#step-20-e) | `SR-TC-0254` | SR-VER-0019 |
-| `SR-REQ-0255` | [5.m](../milestones/M05.md#step-5-m) | [20.e](../milestones/M20.md#step-20-e) | `SR-TC-0255` | SR-VER-0019 |
-| `SR-REQ-0256` | [5.t](../milestones/M05.md#step-5-t) | [20.e](../milestones/M20.md#step-20-e) | `SR-TC-0256` | SR-VER-0019 |
-| `SR-REQ-0257` | [5.p](../milestones/M05.md#step-5-p) | [20.e](../milestones/M20.md#step-20-e) | `SR-TC-0257` | SR-VER-0019 |
-| `SR-REQ-0258` | [5.q](../milestones/M05.md#step-5-q) | [20.e](../milestones/M20.md#step-20-e) | `SR-TC-0258` | SR-VER-0019 |
-| `SR-REQ-0259` | [5.n](../milestones/M05.md#step-5-n) | [20.e](../milestones/M20.md#step-20-e) | `SR-TC-0259` | SR-VER-0019 |
-| `SR-REQ-0260` | [5.s](../milestones/M05.md#step-5-s) | [20.e](../milestones/M20.md#step-20-e) | `SR-TC-0260` | SR-VER-0019 |
-| `SR-REQ-0261` | [5.v](../milestones/M05.md#step-5-v) | [20.e](../milestones/M20.md#step-20-e) | `SR-TC-0261` | SR-VER-0019 |
-| `SR-REQ-0262` | [5.p](../milestones/M05.md#step-5-p) | [20.e](../milestones/M20.md#step-20-e) | `SR-TC-0262` | SR-VER-0019 |
+| `SR-REQ-0252` | [18.t](../milestones/M18.md#step-18-t) | Bisherige Beiträge: [5.k](../milestones/M05.md#step-5-k) ; [20.e](../milestones/M20.md#step-20-e) | `SR-TC-0252` | SR-VER-0019 |
+| `SR-REQ-0253` | [18.t](../milestones/M18.md#step-18-t) | Bisherige Beiträge: [5.k](../milestones/M05.md#step-5-k) ; [20.e](../milestones/M20.md#step-20-e) | `SR-TC-0253` | SR-VER-0019 |
+| `SR-REQ-0254` | [18.t](../milestones/M18.md#step-18-t) | Bisherige Beiträge: [5.l](../milestones/M05.md#step-5-l) ; [20.e](../milestones/M20.md#step-20-e) | `SR-TC-0254` | SR-VER-0019 |
+| `SR-REQ-0255` | [18.t](../milestones/M18.md#step-18-t) | Bisherige Beiträge: [5.m](../milestones/M05.md#step-5-m) ; [20.e](../milestones/M20.md#step-20-e) | `SR-TC-0255` | SR-VER-0019 |
+| `SR-REQ-0256` | [18.t](../milestones/M18.md#step-18-t) | Bisherige Beiträge: [5.t](../milestones/M05.md#step-5-t) ; [20.e](../milestones/M20.md#step-20-e) | `SR-TC-0256` | SR-VER-0019 |
+| `SR-REQ-0257` | [18.t](../milestones/M18.md#step-18-t) | Bisherige Beiträge: [5.p](../milestones/M05.md#step-5-p) ; [20.e](../milestones/M20.md#step-20-e) | `SR-TC-0257` | SR-VER-0019 |
+| `SR-REQ-0258` | [18.t](../milestones/M18.md#step-18-t) | Bisherige Beiträge: [5.q](../milestones/M05.md#step-5-q) ; [20.e](../milestones/M20.md#step-20-e) | `SR-TC-0258` | SR-VER-0019 |
+| `SR-REQ-0259` | [18.t](../milestones/M18.md#step-18-t) | Bisherige Beiträge: [5.n](../milestones/M05.md#step-5-n) ; [20.e](../milestones/M20.md#step-20-e) | `SR-TC-0259` | SR-VER-0019 |
+| `SR-REQ-0260` | [18.t](../milestones/M18.md#step-18-t) | Bisherige Beiträge: [5.s](../milestones/M05.md#step-5-s) ; [20.e](../milestones/M20.md#step-20-e) | `SR-TC-0260` | SR-VER-0019 |
+| `SR-REQ-0261` | [18.t](../milestones/M18.md#step-18-t) | Bisherige Beiträge: [5.v](../milestones/M05.md#step-5-v) ; [20.e](../milestones/M20.md#step-20-e) | `SR-TC-0261` | SR-VER-0019 |
+| `SR-REQ-0262` | [18.t](../milestones/M18.md#step-18-t) | Bisherige Beiträge: [5.p](../milestones/M05.md#step-5-p) ; [20.e](../milestones/M20.md#step-20-e) | `SR-TC-0262` | SR-VER-0019 |
 | `SR-REQ-0263` | [16.a](../milestones/M16.md#step-16-a) | [16.c](../milestones/M16.md#step-16-c) | `SR-TC-0263` | SR-VER-0020 |
 | `SR-REQ-0264` | [16.a](../milestones/M16.md#step-16-a) | [16.c](../milestones/M16.md#step-16-c) | `SR-TC-0264` | SR-VER-0020 |
 | `SR-REQ-0265` | [16.a](../milestones/M16.md#step-16-a) | — | `SR-TC-0265` | SR-VER-0020 |
 | `SR-REQ-0266` | [16.d](../milestones/M16.md#step-16-d) | — | `SR-TC-0266` | SR-VER-0020 |
-| `SR-REQ-0267` | [16.i](../milestones/M16.md#step-16-i) | — | `SR-TC-0267` | SR-VER-0020 |
+| `SR-REQ-0267` | [18.v](../milestones/M18.md#step-18-v) | Bisherige Beiträge: [16.i](../milestones/M16.md#step-16-i) | `SR-TC-0267` | SR-VER-0020 |
 | `SR-REQ-0268` | [16.h](../milestones/M16.md#step-16-h) | — | `SR-TC-0268` | SR-VER-0020 |
 | `SR-REQ-0269` | [16.h](../milestones/M16.md#step-16-h) | — | `SR-TC-0269` | SR-VER-0020 |
 | `SR-REQ-0270` | [16.i](../milestones/M16.md#step-16-i) | — | `SR-TC-0270` | SR-VER-0020 |
@@ -322,7 +322,7 @@ Jede der 742 Requirement-IDs (730 bestehende und zwölf neue) ist mindestens ein
 | `SR-REQ-0312` | [11.a](../milestones/M11.md#step-11-a) | — | `SR-TC-0312` | SR-VER-0023 |
 | `SR-REQ-0313` | [14.a](../milestones/M14.md#step-14-a) | — | `SR-TC-0313` | SR-VER-0024 |
 | `SR-REQ-0314` | [14.d](../milestones/M14.md#step-14-d) | — | `SR-TC-0314` | SR-VER-0024 |
-| `SR-REQ-0315` | [14.e](../milestones/M14.md#step-14-e) | — | `SR-TC-0315` | SR-VER-0024 |
+| `SR-REQ-0315` | [18.u](../milestones/M18.md#step-18-u) | Bisherige Beiträge: [14.e](../milestones/M14.md#step-14-e) | `SR-TC-0315` | SR-VER-0024 |
 | `SR-REQ-0316` | [14.a](../milestones/M14.md#step-14-a) | — | `SR-TC-0316` | SR-VER-0024 |
 | `SR-REQ-0317` | [14.b](../milestones/M14.md#step-14-b) | — | `SR-TC-0317` | SR-VER-0024 |
 | `SR-REQ-0318` | [14.c](../milestones/M14.md#step-14-c) | — | `SR-TC-0318` | SR-VER-0024 |
@@ -465,11 +465,11 @@ Jede der 742 Requirement-IDs (730 bestehende und zwölf neue) ist mindestens ein
 | `SR-REQ-0455` | [14.a](../milestones/M14.md#step-14-a) | — | `SR-TC-0455` | SR-VER-0031 |
 | `SR-REQ-0456` | [14.c](../milestones/M14.md#step-14-c) | — | `SR-TC-0456` | SR-VER-0031 |
 | `SR-REQ-0457` | [14.c](../milestones/M14.md#step-14-c) | — | `SR-TC-0457` | SR-VER-0031 |
-| `SR-REQ-0458` | [5.p](../milestones/M05.md#step-5-p) | — | `SR-TC-0458` | SR-VER-0031 |
-| `SR-REQ-0459` | [5.r](../milestones/M05.md#step-5-r) | — | `SR-TC-0459` | SR-VER-0031 |
-| `SR-REQ-0460` | [5.s](../milestones/M05.md#step-5-s) | — | `SR-TC-0460` | SR-VER-0031 |
-| `SR-REQ-0461` | [15.j](../milestones/M15.md#step-15-j) | [15.k](../milestones/M15.md#step-15-k), [15.l](../milestones/M15.md#step-15-l) | `SR-TC-0461` | SR-VER-0031 |
-| `SR-REQ-0462` | [5.s](../milestones/M05.md#step-5-s) | [15.k](../milestones/M15.md#step-15-k), [15.l](../milestones/M15.md#step-15-l), [20.e](../milestones/M20.md#step-20-e) | `SR-TC-0462` | SR-VER-0031 |
+| `SR-REQ-0458` | [18.t](../milestones/M18.md#step-18-t) | Bisherige Beiträge: [5.p](../milestones/M05.md#step-5-p) | `SR-TC-0458` | SR-VER-0031 |
+| `SR-REQ-0459` | [18.t](../milestones/M18.md#step-18-t) | Bisherige Beiträge: [5.r](../milestones/M05.md#step-5-r) | `SR-TC-0459` | SR-VER-0031 |
+| `SR-REQ-0460` | [18.t](../milestones/M18.md#step-18-t) | Bisherige Beiträge: [5.s](../milestones/M05.md#step-5-s) | `SR-TC-0460` | SR-VER-0031 |
+| `SR-REQ-0461` | [18.x](../milestones/M18.md#step-18-x) | Bisherige Beiträge: [15.j](../milestones/M15.md#step-15-j) ; [15.k](../milestones/M15.md#step-15-k), [15.l](../milestones/M15.md#step-15-l) | `SR-TC-0461` | SR-VER-0031 |
+| `SR-REQ-0462` | [18.x](../milestones/M18.md#step-18-x) | Bisherige Beiträge: [5.s](../milestones/M05.md#step-5-s) ; [15.k](../milestones/M15.md#step-15-k), [15.l](../milestones/M15.md#step-15-l), [20.e](../milestones/M20.md#step-20-e) | `SR-TC-0462` | SR-VER-0031 |
 | `SR-REQ-0463` | [5.u](../milestones/M05.md#step-5-u) | — | `SR-TC-0463` | SR-VER-0031 |
 | `SR-REQ-0464` | [5.u](../milestones/M05.md#step-5-u) | — | `SR-TC-0464` | SR-VER-0031 |
 | `SR-REQ-0465` | [5.u](../milestones/M05.md#step-5-u) | — | `SR-TC-0465` | SR-VER-0031 |
@@ -485,7 +485,7 @@ Jede der 742 Requirement-IDs (730 bestehende und zwölf neue) ist mindestens ein
 | `SR-REQ-0475` | [8.d](../milestones/M08.md#step-8-d) | — | `SR-TC-0475` | SR-VER-0032 |
 | `SR-REQ-0476` | [1.e](../milestones/M01.md#step-1-e) | — | `SR-TC-0476` | SR-VER-0032 |
 | `SR-REQ-0477` | [1.c](../milestones/M01.md#step-1-c) | — | `SR-TC-0477` | SR-VER-0032 |
-| `SR-REQ-0478` | [5.m](../milestones/M05.md#step-5-m) | — | `SR-TC-0478` | SR-VER-0032 |
+| `SR-REQ-0478` | [18.u](../milestones/M18.md#step-18-u) | Bisherige Beiträge: [5.m](../milestones/M05.md#step-5-m) | `SR-TC-0478` | SR-VER-0032 |
 | `SR-REQ-0479` | [11.n](../milestones/M11.md#step-11-n) | — | `SR-TC-0479` | SR-VER-0032 |
 | `SR-REQ-0480` | [7.a](../milestones/M07.md#step-7-a) | [15.e](../milestones/M15.md#step-15-e) | `SR-TC-0480` | SR-VER-0032 |
 | `SR-REQ-0481` | [15.b](../milestones/M15.md#step-15-b) | — | `SR-TC-0481` | SR-VER-0033 |
@@ -513,12 +513,12 @@ Jede der 742 Requirement-IDs (730 bestehende und zwölf neue) ist mindestens ein
 | `SR-REQ-0503` | [5.a](../milestones/M05.md#step-5-a) | — | `SR-TC-0503` | SR-VER-0012 |
 | `SR-REQ-0504` | [2.g](../milestones/M02.md#step-2-g) | — | `SR-TC-0504` | SR-VER-0018 |
 | `SR-REQ-0505` | [1.l](../milestones/M01.md#step-1-l) | — | `SR-TC-0505` | SR-VER-0018 |
-| `SR-REQ-0506` | [5.i](../milestones/M05.md#step-5-i) | — | `SR-TC-0506` | SR-VER-0019 |
+| `SR-REQ-0506` | [18.t](../milestones/M18.md#step-18-t) | Bisherige Beiträge: [5.i](../milestones/M05.md#step-5-i) | `SR-TC-0506` | SR-VER-0019 |
 | `SR-REQ-0507` | [5.c](../milestones/M05.md#step-5-c) | — | `SR-TC-0507` | SR-VER-0018 |
 | `SR-REQ-0508` | [2.g](../milestones/M02.md#step-2-g) | — | `SR-TC-0508` | SR-VER-0018 |
 | `SR-REQ-0509` | [2.h](../milestones/M02.md#step-2-h) | [16.f](../milestones/M16.md#step-16-f) | `SR-TC-0509` | SR-VER-0018 |
 | `SR-REQ-0510` | [2.h](../milestones/M02.md#step-2-h) | — | `SR-TC-0510` | SR-VER-0026 |
-| `SR-REQ-0511` | [5.r](../milestones/M05.md#step-5-r) | — | `SR-TC-0511` | SR-VER-0019 |
+| `SR-REQ-0511` | [18.t](../milestones/M18.md#step-18-t) | Bisherige Beiträge: [5.r](../milestones/M05.md#step-5-r) | `SR-TC-0511` | SR-VER-0019 |
 | `SR-REQ-0512` | [16.f](../milestones/M16.md#step-16-f) | [16.h](../milestones/M16.md#step-16-h), [16.k](../milestones/M16.md#step-16-k) | `SR-TC-0512` | SR-VER-0020 |
 | `SR-REQ-0513` | [16.f](../milestones/M16.md#step-16-f) | [16.d](../milestones/M16.md#step-16-d), [16.k](../milestones/M16.md#step-16-k) | `SR-TC-0513` | SR-VER-0020 |
 | `SR-REQ-0514` | [3.k](../milestones/M03.md#step-3-k) | — | `SR-TC-0514` | SR-VER-0021 |
@@ -564,20 +564,20 @@ Jede der 742 Requirement-IDs (730 bestehende und zwölf neue) ist mindestens ein
 | `SR-REQ-0554` | [1.k](../milestones/M01.md#step-1-k) | — | `SR-TC-0554` | SR-VER-0035 |
 | `SR-REQ-0555` | [1.k](../milestones/M01.md#step-1-k) | [6.a](../milestones/M06.md#step-6-a) | `SR-TC-0555` | SR-VER-0035 |
 | `SR-REQ-0556` | [1.k](../milestones/M01.md#step-1-k) | — | `SR-TC-0556` | SR-VER-0035 |
-| `SR-REQ-0557` | [5.j](../milestones/M05.md#step-5-j) | [20.f](../milestones/M20.md#step-20-f) | `SR-TC-0557` | SR-VER-0035 |
-| `SR-REQ-0558` | [5.t](../milestones/M05.md#step-5-t) | [20.f](../milestones/M20.md#step-20-f) | `SR-TC-0558` | SR-VER-0035 |
-| `SR-REQ-0559` | [5.t](../milestones/M05.md#step-5-t) | [20.f](../milestones/M20.md#step-20-f) | `SR-TC-0559` | SR-VER-0035 |
+| `SR-REQ-0557` | [18.u](../milestones/M18.md#step-18-u) | Bisherige Beiträge: [5.j](../milestones/M05.md#step-5-j) ; [20.f](../milestones/M20.md#step-20-f) | `SR-TC-0557` | SR-VER-0035 |
+| `SR-REQ-0558` | [18.u](../milestones/M18.md#step-18-u) | Bisherige Beiträge: [5.t](../milestones/M05.md#step-5-t) ; [20.f](../milestones/M20.md#step-20-f) | `SR-TC-0558` | SR-VER-0035 |
+| `SR-REQ-0559` | [18.u](../milestones/M18.md#step-18-u) | Bisherige Beiträge: [5.t](../milestones/M05.md#step-5-t) ; [20.f](../milestones/M20.md#step-20-f) | `SR-TC-0559` | SR-VER-0035 |
 | `SR-REQ-0560` | [5.t](../milestones/M05.md#step-5-t) | [20.f](../milestones/M20.md#step-20-f) | `SR-TC-0560` | SR-VER-0036 |
-| `SR-REQ-0561` | [5.s](../milestones/M05.md#step-5-s) | [20.f](../milestones/M20.md#step-20-f) | `SR-TC-0561` | SR-VER-0035 |
+| `SR-REQ-0561` | [18.u](../milestones/M18.md#step-18-u) | Bisherige Beiträge: [5.s](../milestones/M05.md#step-5-s) ; [20.f](../milestones/M20.md#step-20-f) | `SR-TC-0561` | SR-VER-0035 |
 | `SR-REQ-0562` | [2.p](../milestones/M02.md#step-2-p) | [20.f](../milestones/M20.md#step-20-f) | `SR-TC-0562` | SR-VER-0035 |
 | `SR-REQ-0563` | [6.s](../milestones/M06.md#step-6-s) | [20.f](../milestones/M20.md#step-20-f) | `SR-TC-0563` | SR-VER-0035 |
 | `SR-REQ-0564` | [5.j](../milestones/M05.md#step-5-j) | [20.f](../milestones/M20.md#step-20-f) | `SR-TC-0564` | SR-VER-0035 |
 | `SR-REQ-0565` | [6.b](../milestones/M06.md#step-6-b) | [20.f](../milestones/M20.md#step-20-f) | `SR-TC-0565` | SR-VER-0036 |
 | `SR-REQ-0566` | [6.b](../milestones/M06.md#step-6-b) | [20.f](../milestones/M20.md#step-20-f) | `SR-TC-0566` | SR-VER-0036 |
 | `SR-REQ-0567` | [6.b](../milestones/M06.md#step-6-b) | [20.f](../milestones/M20.md#step-20-f) | `SR-TC-0567` | SR-VER-0036 |
-| `SR-REQ-0568` | [15.i](../milestones/M15.md#step-15-i) | [20.f](../milestones/M20.md#step-20-f) | `SR-TC-0568` | SR-VER-0035 |
+| `SR-REQ-0568` | [18.x](../milestones/M18.md#step-18-x) | Bisherige Beiträge: [15.i](../milestones/M15.md#step-15-i) ; [20.f](../milestones/M20.md#step-20-f) | `SR-TC-0568` | SR-VER-0035 |
 | `SR-REQ-0569` | [5.i](../milestones/M05.md#step-5-i) | [20.f](../milestones/M20.md#step-20-f) | `SR-TC-0569` | SR-VER-0035 |
-| `SR-REQ-0570` | [6.a](../milestones/M06.md#step-6-a) | [20.e](../milestones/M20.md#step-20-e), [20.f](../milestones/M20.md#step-20-f) | `SR-TC-0570` | SR-VER-0038 |
+| `SR-REQ-0570` | [18.x](../milestones/M18.md#step-18-x) | Bisherige Beiträge: [6.a](../milestones/M06.md#step-6-a) ; [20.e](../milestones/M20.md#step-20-e), [20.f](../milestones/M20.md#step-20-f) | `SR-TC-0570` | SR-VER-0038 |
 | `SR-REQ-0571` | [6.r](../milestones/M06.md#step-6-r) | [20.f](../milestones/M20.md#step-20-f) | `SR-TC-0571` | SR-VER-0036 |
 | `SR-REQ-0572` | [5.s](../milestones/M05.md#step-5-s) | [20.f](../milestones/M20.md#step-20-f) | `SR-TC-0572` | SR-VER-0035 |
 | `SR-REQ-0573` | [6.c](../milestones/M06.md#step-6-c) | [20.f](../milestones/M20.md#step-20-f) | `SR-TC-0573` | SR-VER-0037 |
@@ -628,14 +628,14 @@ Jede der 742 Requirement-IDs (730 bestehende und zwölf neue) ist mindestens ein
 | `SR-REQ-0618` | [6.o](../milestones/M06.md#step-6-o) | — | `SR-TC-0618` | SR-VER-0040 |
 | `SR-REQ-0619` | [6.j](../milestones/M06.md#step-6-j) | — | `SR-TC-0619` | SR-VER-0039 |
 | `SR-REQ-0620` | [6.p](../milestones/M06.md#step-6-p) | — | `SR-TC-0620` | SR-VER-0041 |
-| `SR-REQ-0621` | [6.p](../milestones/M06.md#step-6-p) | — | `SR-TC-0621` | SR-VER-0041 |
+| `SR-REQ-0621` | [18.w](../milestones/M18.md#step-18-w) | Bisherige Beiträge: [6.p](../milestones/M06.md#step-6-p) | `SR-TC-0621` | SR-VER-0041 |
 | `SR-REQ-0622` | [6.o](../milestones/M06.md#step-6-o) | — | `SR-TC-0622` | SR-VER-0039 |
 | `SR-REQ-0623` | [6.q](../milestones/M06.md#step-6-q) | [11.r](../milestones/M11.md#step-11-r) | `SR-TC-0623` | SR-VER-0039 |
 | `SR-REQ-0624` | [6.r](../milestones/M06.md#step-6-r) | — | `SR-TC-0624` | SR-VER-0040 |
 | `SR-REQ-0625` | [6.r](../milestones/M06.md#step-6-r) | — | `SR-TC-0625` | SR-VER-0040 |
 | `SR-REQ-0626` | [6.r](../milestones/M06.md#step-6-r) | — | `SR-TC-0626` | SR-VER-0040 |
 | `SR-REQ-0627` | [6.j](../milestones/M06.md#step-6-j) | [6.r](../milestones/M06.md#step-6-r) | `SR-TC-0627` | SR-VER-0040 |
-| `SR-REQ-0628` | [6.s](../milestones/M06.md#step-6-s) | — | `SR-TC-0628` | SR-VER-0040 |
+| `SR-REQ-0628` | [18.w](../milestones/M18.md#step-18-w) | Bisherige Beiträge: [6.s](../milestones/M06.md#step-6-s) | `SR-TC-0628` | SR-VER-0040 |
 | `SR-REQ-0629` | [6.l](../milestones/M06.md#step-6-l) | — | `SR-TC-0629` | SR-VER-0040 |
 | `SR-REQ-0630` | [6.k](../milestones/M06.md#step-6-k) | — | `SR-TC-0630` | SR-VER-0040 |
 | `SR-REQ-0631` | [6.n](../milestones/M06.md#step-6-n) | — | `SR-TC-0631` | SR-VER-0039 |
