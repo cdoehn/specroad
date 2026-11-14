@@ -13,7 +13,7 @@ from .bootstrap import inspect_history, select_source, require_initial
 from .blocked_recovery import recover_blocked
 from .config import Config, load, parse, render, identity, setup_config
 from .errors import ControlError
-from .budget_limits import MAX_CORRECTION_LIMIT
+from .budget_limits import MAX_CORRECTION_LIMIT, valid_limit
 from .ledger import Ledger
 from .telemetry import record
 from .local import Paths, lock, private_dir, json_read, json_write, write_private
@@ -70,7 +70,7 @@ def configure(paths: Paths, *, thread_id: str, result: str | None = None, codex:
         old, legacy = setup_config(paths)
         if clarification is not None and type(clarification) is not bool:
             raise ControlError('invalid_config', 'Clarification must be Boolean.')
-        if correction_limit is not None and (type(correction_limit) is not int or not 1 <= correction_limit <= MAX_CORRECTION_LIMIT):
+        if correction_limit is not None and (not valid_limit(correction_limit)):
             raise ControlError('invalid_config', f'Correction limit must be an integer from one to {MAX_CORRECTION_LIMIT}.')
         if access_mode is not None and access_mode not in ('workspace-write', 'full-access'):
             raise ControlError('invalid_access_mode', 'Select workspace-write or full-access explicitly.')

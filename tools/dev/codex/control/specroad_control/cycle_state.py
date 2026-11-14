@@ -22,7 +22,7 @@ def pending(paths):
             or not _identity(value['id']) or type(value['scope']) is not str):
         raise ControlError('invalid_start_request', 'The explicit start request is invalid.')
     if value is not None and 'overrides' in value:
-        from .budget_config import validate_values
+        from .budget_policy import validate_values
         validate_values(value['overrides'])
     return value
 
@@ -38,14 +38,14 @@ def active_cycle(paths):
             or any(c not in '0123456789abcdef' for c in value['source_sha256'])):
         raise ControlError('invalid_current_cycle', 'The current runtime pointer is invalid.')
     if value is not None and 'overrides' in value:
-        from .budget_config import validate_values
+        from .budget_policy import validate_values
         validate_values(value['overrides'])
     return value
 
 
 def enqueue(paths, config, *, overrides=None):
     """Caller holds operation.lock. Repeated pending requests are idempotent."""
-    from .budget_config import validate_values
+    from .budget_policy import validate_values
     overrides = validate_values({} if overrides is None else overrides)
     try:
         value = pending(paths)

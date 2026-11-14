@@ -7,7 +7,7 @@ from pathlib import Path
 from specroad_control.toml_compat import tomllib
 from uuid import UUID
 from .errors import ControlError
-from .budget_limits import DEFAULT_CORRECTION_LIMIT, MAX_CORRECTION_LIMIT, DEFAULT_CLARIFICATION_LIMIT
+from .budget_limits import valid_limit, DEFAULT_CORRECTION_LIMIT, MAX_CORRECTION_LIMIT, DEFAULT_CLARIFICATION_LIMIT
 from .execution_scope import execution_directory, writable_roots
 from .local import Paths, REPO, outside, read_private, write_private
 
@@ -147,10 +147,10 @@ def parse(doc: dict, paths: Paths) -> Config:
         raise ValueError
     clarification = auto.get("clarification_allowed", True)
     correction_limit = auto.get("correction_limit", DEFAULT_CORRECTION_LIMIT)
-    if type(clarification) is not bool or type(correction_limit) is not int or not 1 <= correction_limit <= MAX_CORRECTION_LIMIT:
+    if type(clarification) is not bool or not valid_limit(correction_limit):
         raise ValueError
     clarification_limit = auto.get('clarification_limit', DEFAULT_CLARIFICATION_LIMIT)
-    if type(clarification_limit) is not int or not 1 <= clarification_limit <= MAX_CORRECTION_LIMIT:
+    if not valid_limit(clarification_limit):
         raise ValueError
     transport = text(dev.get("transport", "exec"))
     if transport not in ("exec", "app-server-proxy"):

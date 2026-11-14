@@ -67,7 +67,7 @@ def advance(engine):
         return None
     if not engine.gate.allowed:
         return {'halted': False, 'again': False}
-    from .budget_config import configured, values
+    from .budget_policy import configured, values
     file_config = load(paths, allow_deferred=True)
     if request['scope'] != scope(engine.config) or replace(engine.config, **values(file_config)) != file_config:
         raise ControlError('start_configuration_changed', 'Start again for the current configuration.')

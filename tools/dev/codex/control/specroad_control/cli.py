@@ -10,6 +10,15 @@ from .budget_limits import DEFAULT_CORRECTION_LIMIT, MAX_CORRECTION_LIMIT
 from .local import Paths
 
 
+def policy_arguments(args):
+    """Only explicit arguments override the persistent policy."""
+    return {key: value for key, value in {
+        'clarification_allowed': args.clarification,
+        'clarification_limit': args.clarification_limit,
+        'correction_limit': args.correction_limit,
+    }.items() if value is not None}
+
+
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description="SpecRoad Control: manually operated, event-driven Dev automation.")
     parser.add_argument("--instance", help="Named Control instance; default preserves the existing installation")
@@ -111,7 +120,7 @@ def main(argv=None) -> int:
             return run(paths)
         elif args.command == 'config':
             from .budget_config import configure
-            result = configure(paths, clarification_allowed=args.clarification, correction_limit=args.correction_limit, clarification_limit=args.clarification_limit)
+            result = configure(paths, **policy_arguments(args))
         elif args.command == 'disk-space':
             from .disk_space import set_limit, status as disk_status
             result = set_limit(paths, args.min_free_gb) if args.min_free_gb is not None else disk_status(paths)
@@ -149,7 +158,7 @@ def main(argv=None) -> int:
         elif args.command in ("check", "probe", "recover"):
             result = getattr(commands, args.command)(paths)
         elif args.command in ("install", "start", "stop"):
-            policy = {k: v for k, v in dict(clarification_allowed=args.clarification, correction_limit=args.correction_limit, clarification_limit=args.clarification_limit).items() if v is not None}
+            policy = policy_arguments(args)
             options = {'overrides': policy} if policy else {}
             result = (service.start(paths, from_current=True, **options) if args.from_current
                       else getattr(service, args.command)(paths))
