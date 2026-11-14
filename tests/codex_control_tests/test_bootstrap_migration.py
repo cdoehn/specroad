@@ -41,16 +41,17 @@ class BootstrapMigrationTests(AutomationCase):
 
     def assert_clean_config(self):
         doc = tomllib.loads(self.paths.config.read_text())
-        self.assertEqual(set(doc['automation']), {'enabled', 'settle_seconds', 'retry_delays_seconds', 'start_delay_seconds', 'clarification_allowed', 'correction_limit'})
+        self.assertEqual(set(doc['automation']), {'enabled', 'settle_seconds', 'retry_delays_seconds', 'start_delay_seconds', 'clarification_allowed', 'correction_limit', 'clarification_limit'})
         self.assertEqual(load(self.paths).start_delay_seconds, self.config.start_delay_seconds)
         self.assertEqual(load(self.paths).clarification_allowed, self.config.clarification_allowed)
         self.assertEqual(load(self.paths).correction_limit, self.config.correction_limit)
+        self.assertEqual(load(self.paths).clarification_limit, self.config.clarification_limit)
         self.assertTrue(doc['automation']['enabled'])
         self.assertFalse((self.codex_home / 'calls.jsonl').exists())
 
     def test_explicit_migration_preserves_ready_job(self):
         self.config = replace(self.config, start_delay_seconds=12.5,
-                              clarification_allowed=False, correction_limit=2)
+                              clarification_allowed=False, correction_limit=2, clarification_limit=31)
         self.legacy()
         before = self.row()
         reply = self.setup_source()

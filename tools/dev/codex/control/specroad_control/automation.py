@@ -14,7 +14,7 @@ from .core import Core
 from .errors import ControlError
 from .exchange import Exchange
 from .ledger import Ledger
-from .local import Paths, lock, private_dir, json_write, json_read
+from .local import Paths, lock, private_dir, json_write, json_read, read_private
 from .ownership import targets
 
 from .job_contract import SCHEMA, scope, prompt_for, contract, schema_for, new_contract, fresh_contract
@@ -45,6 +45,12 @@ class Gate:
 class Engine(OverloadWaiting):
     def __init__(self, config: Config, paths: Paths, gate: Gate, *, core=None, codex=None, clock=time.time):
         self.config, self.paths, self.gate = config, paths, gate
+        self._policy_base = config
+        try:
+            self._policy_raw = read_private(paths.config)
+        except FileNotFoundError:
+            self._policy_raw = None  # Ownership-only construction is still possible; tick fails closed.
+        self._policy_overrides = {}
         self.clock = clock
         self.core = core or Core(config)
         self.excluded = set()
@@ -73,6 +79,8 @@ class Engine(OverloadWaiting):
         self.update(**{k: v for k, v in values.items() if k in ("turn_id", "turn_status", "thread_status", "codex_error", "codex_will_retry")})
 
     def tick(self):
+        from .budget_config import refresh
+        refresh(self)
         from .start_current import advance
         starting = advance(self)
         if starting is not None:
@@ -146,7 +154,8 @@ class Engine(OverloadWaiting):
                     if waiting:
                         return waiting
                 ledger.enqueue(next_results[0], decision_evidence={**(evidence or {}),
-                    'clarification_allowed': self.config.clarification_allowed},
+                    'clarification_allowed': self.config.clarification_allowed,
+                    'clarification_limit': self.config.clarification_limit},
                     correction_limit=self.config.correction_limit)
                 source = next_results[0]
                 row = ledger.current()
@@ -239,7 +248,7 @@ class Engine(OverloadWaiting):
                 if origin is None:
                     origin = {}  # Legacy read-only recovery must stay legacy.
             selected = (contract(origin.get('request_contract')) if origin is not None else
-                        ledger.request_contract() or (fresh_contract(source, allowed=self.config.clarification_allowed) if supports_v4(source) and source['success'] and not source['dirty'] else new_contract(allowed=self.config.clarification_allowed)))
+                        ledger.request_contract() or (fresh_contract(source, allowed=self.config.clarification_allowed, limit=self.config.clarification_limit) if supports_v4(source) and source['success'] and not source['dirty'] else new_contract(allowed=self.config.clarification_allowed)))
             ledger.bind_contract(selected)
             self.update(request_contract=dict(selected))
             if previous is not None and any(previous.get(k) != v for k, v in attempt.items()):

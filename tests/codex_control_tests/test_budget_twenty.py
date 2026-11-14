@@ -186,8 +186,12 @@ def test_twentieth_new_clarification_exhausts_the_unchanged_counter():
 def test_unsupported_clarification_contracts_and_markers_are_rejected(limit):
     with pytest.raises(ValueError):
         capability({**TWENTY, 'clarification_limit': limit})
-    with pytest.raises(ControlError):
-        contract({**new_contract(0, allowed=False, version=4, limit=20), 'clarification_limit': limit})
+    value = {**new_contract(0, allowed=False, version=4, limit=20), 'clarification_limit': limit}
+    if type(limit) is int and limit > 0:
+        assert contract(value) == value  # CONFIG: operator limits are independent of marker versions.
+    else:
+        with pytest.raises(ControlError):
+            contract(value)
 
 
 class TwentyResetAcceptanceTests(AcceptanceCase):

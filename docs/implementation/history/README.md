@@ -414,3 +414,7 @@
 - [Bundle 686 — native Checkpoint-Pfadwerte korrigieren](bundle-686-checkpoint-path-value.md)
 
 - [Bundle 687 — START.R/C und CONFIG.W/R/C](bundle-687-start-config.md)
+
+- [Bundle 688 — CONFIG-Testvorbereitungen und vollständiger Rest](bundle-688-config-test-adapters.md)
+
+- [Bundle 689 — Neustart der Proxy-Testvorbereitung](bundle-689-proxy-test-restart.md)

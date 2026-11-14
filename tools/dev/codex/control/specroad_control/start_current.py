@@ -1,5 +1,6 @@
 """Explicit fresh runtime cycles; repository bytes are never reset or restored."""
 from contextlib import closing
+from dataclasses import replace
 from pathlib import Path
 from uuid import uuid4
 
@@ -66,7 +67,9 @@ def advance(engine):
         return None
     if not engine.gate.allowed:
         return {'halted': False, 'again': False}
-    if request['scope'] != scope(engine.config) or load(paths, allow_deferred=True) != engine.config:
+    from .budget_config import configured, values
+    file_config = load(paths, allow_deferred=True)
+    if request['scope'] != scope(engine.config) or replace(engine.config, **values(file_config)) != file_config:
         raise ControlError('start_configuration_changed', 'Start again for the current configuration.')
     activity = engine.codex.activity()
     if activity == 'active':
@@ -102,15 +105,17 @@ def advance(engine):
             raise
         # Each publication has its own database inode: concurrent readers retain
         # their snapshot and can never attach old SQLite sidecars to the new cycle.
+        selected_config = configured(file_config, request.get('overrides', {}))
         name = str(uuid4()) + '.sqlite3'
         with closing(Ledger(paths.state / 'cycles' / name, scope(engine.config), initial=source)) as ledger:
-            ledger.bind_contract(fresh_contract(source, allowed=engine.config.clarification_allowed))
-            bind(ledger, source, engine.config.correction_limit)
+            ledger.bind_contract(fresh_contract(source, allowed=selected_config.clarification_allowed, limit=selected_config.clarification_limit))
+            bind(ledger, source, selected_config.correction_limit)
         def publish():
-            if pending(paths) != request or load(paths, allow_deferred=True) != engine.config:
+            if pending(paths) != request or load(paths, allow_deferred=True) != file_config:
                 raise ControlError('start_configuration_changed', 'Start request changed before publication.')
             json_write(paths.state / ACTIVE, {'version': 1, 'id': request['id'],
-                       'ledger': name, 'source_sha256': source['sha256']})
+                       'ledger': name, 'source_sha256': source['sha256'],
+                       'overrides': request.get('overrides', {})})
             _finish(paths)
         try:
             require_current(engine, source, {source['run_id']})

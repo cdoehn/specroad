@@ -17,16 +17,19 @@ def _identity(value):
 
 def pending(paths):
     value = json_read(paths.state / REQUEST)
-    if value is not None and (set(value) != {'version', 'id', 'scope'}
+    if value is not None and (set(value) not in ({'version', 'id', 'scope'}, {'version', 'id', 'scope', 'overrides'})
             or type(value['version']) is not int or value['version'] != 1
             or not _identity(value['id']) or type(value['scope']) is not str):
         raise ControlError('invalid_start_request', 'The explicit start request is invalid.')
+    if value is not None and 'overrides' in value:
+        from .budget_config import validate_values
+        validate_values(value['overrides'])
     return value
 
 
 def active_cycle(paths):
     value = json_read(paths.state / ACTIVE)
-    if value is not None and (set(value) != {'version', 'id', 'ledger', 'source_sha256'}
+    if value is not None and (set(value) not in ({'version', 'id', 'ledger', 'source_sha256'}, {'version', 'id', 'ledger', 'source_sha256', 'overrides'})
             or type(value['version']) is not int or value['version'] != 1
             or not _identity(value['id']) or type(value['ledger']) is not str
             or not value['ledger'].endswith('.sqlite3')
@@ -34,19 +37,28 @@ def active_cycle(paths):
             or type(value['source_sha256']) is not str or len(value['source_sha256']) != 64
             or any(c not in '0123456789abcdef' for c in value['source_sha256'])):
         raise ControlError('invalid_current_cycle', 'The current runtime pointer is invalid.')
+    if value is not None and 'overrides' in value:
+        from .budget_config import validate_values
+        validate_values(value['overrides'])
     return value
 
 
-def enqueue(paths, config):
+def enqueue(paths, config, *, overrides=None):
     """Caller holds operation.lock. Repeated pending requests are idempotent."""
+    from .budget_config import validate_values
+    overrides = validate_values({} if overrides is None else overrides)
     try:
         value = pending(paths)
     except ControlError as exc:
         if exc.code not in ('invalid_start_request', 'invalid_state'):
             raise
         value = None  # Explicit operator replacement, never an automatic repair.
+    if value is not None and value.get('overrides', {}) != overrides:
+        raise ControlError('start_request_conflict', 'A different start policy is already queued.')
     if value is None or value['scope'] != scope(config):
         value = {'version': 1, 'id': str(uuid4()), 'scope': scope(config)}
+        if overrides:
+            value['overrides'] = overrides
         json_write(paths.state / REQUEST, value)
     return value
 

@@ -269,7 +269,7 @@ Commit-IDs/Rollen nicht auf; kein zusätzlicher Präfix in der offenen Folge.
 
 `configure --clarification` beziehungsweise `--no-clarification` speichert die
 Wahl zusammen mit den bestehenden erforderlichen Setupangaben. Ohne Option
-bleibt eine vorhandene Wahl erhalten. `--correction-limit 1..20` konfiguriert
+bleibt eine vorhandene Wahl erhalten. `--correction-limit N` (positive Ganzzahl, Standard 20) konfiguriert
 neue Reparaturfolgen. `accept-current` verwendet ohne Wahl die konfigurierte
 Klärungsbefugnis; das Optionspaar überschreibt nur diesen Übernahmeauftrag.
 
@@ -306,3 +306,12 @@ frühere Dateien bleiben unbenutzt erhalten, ohne beim neuen Start geprüft zu
 werden. Kein Repository-Payload enthält Betriebsdaten. Die geplanten weiteren
 CONFIG/LIVE/MOVE-Funktionen stehen im gemeinsamen Implementierungsplan und
 sind durch START.W noch nicht implementiert.
+
+## Laufende lokale Policy
+
+`control config` liest Budgets und Klärungswahl.
+`control config --clarification-limit 30 --correction-limit 40` speichert
+Vorgaben ohne Dienstdeployment. `control start --from-current
+--correction-limit 35` setzt ein Override für den ausdrücklich neuen Zyklus.
+Priorität, bestehende Verträge und Betriebsgrenzen beschreibt
+[Control_Current_Cycle](../../../../docs/development/Control_Current_Cycle.md).

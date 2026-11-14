@@ -274,9 +274,12 @@ def _locked_run(paths: Paths, config: Config | None = None, *, queued=None) -> i
                             if set(document) != {"command", "scope"} or document["scope"] != scope(paths):
                                 raise ControlError("wrong_scope", "The request must address this configured controller.")
                             command = document["command"]
-                            if not isinstance(command, str) or command not in ("status", "pause", "resume", "stop"):
+                            if not isinstance(command, str) or command not in ("status", "pause", "resume", "stop", "policy-changed"):
                                 raise ValueError
-                            if command != "status":
+                            if command == 'policy-changed':
+                                # Wake the next safe tick; never mutate an in-flight request.
+                                pending_scan, due = config.enabled, time.monotonic()
+                            elif command != "status":
                                 if command == "resume" and runtime_error and pending(paths) is not None:
                                     runtime_error = None  # Explicit fresh start; real guards run again.
                                 if command == "resume" and runtime_error:

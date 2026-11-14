@@ -17,7 +17,7 @@ def main(argv=None) -> int:
     parser.add_argument("--apply-repository", help="Explicit Apply directory; only with configure")
     parser.add_argument("--exchange", help="Explicit Exchange directory; only with configure")
     parser.add_argument("--config", help="Absolute path to the external config.toml")
-    parser.add_argument("command", choices=("install", "start", "stop", "pause", "resume", "status", "run", "configure", "check", "probe", "recover", "handover", "reconcile-apply", "reconcile-blocked", "disk-space", "migrate", "deploy", "authorize-clarification", "accept-current"))
+    parser.add_argument("command", choices=("install", "start", "stop", "pause", "resume", "status", "run", "configure", "check", "probe", "recover", "handover", "reconcile-apply", "reconcile-blocked", "disk-space", "migrate", "deploy", "authorize-clarification", "accept-current", "config"))
     parser.add_argument('--min-free-gb', type=float, help='Minimum free decimal GB; only with disk-space')
     parser.add_argument("--thread-id", help="Explicit existing Dev thread UUID")
     parser.add_argument("--thread-cwd", help="Explicit existing metadata cwd of the new Dev thread")
@@ -37,9 +37,10 @@ def main(argv=None) -> int:
     parser.add_argument('--reason', help='Explicit operator reason; with authorize-clarification or accept-current')
     parser.add_argument('--retry-blocked', action='store_true', help='Authorize one new attempt after a patchless blocked V4 completion')
     parser.add_argument('--clarification', action=argparse.BooleanOptionalAction, default=None,
-                        help='Allow/disable optional detail clarification; configure or accept-current')
-    parser.add_argument('--correction-limit', type=int, choices=range(1, MAX_CORRECTION_LIMIT + 1),
-                        help=f'Maximum consecutive Apply repair bundles (default: {DEFAULT_CORRECTION_LIMIT}); configure only')
+                        help='Allow/disable optional detail clarification; configure, config, start --from-current or accept-current')
+    parser.add_argument('--correction-limit', type=int,
+                        help=f'Maximum consecutive Apply repair bundles (default: {DEFAULT_CORRECTION_LIMIT}); configure, config or start --from-current')
+    parser.add_argument('--clarification-limit', type=int, help='New full clarification budget; config or start --from-current')
     parser.add_argument('--reset-budget', action='store_true',
                         help='Explicitly renew the tested project clarification maximum; accept-current only')
     parser.add_argument('--from-current', action='store_true',
@@ -49,10 +50,14 @@ def main(argv=None) -> int:
         parser.error('--from-current requires start')
     if args.reset_budget and (args.command != 'accept-current' or args.clarification is False):
         parser.error('--reset-budget requires accept-current --clarification')
-    if args.clarification is not None and args.command not in ('configure', 'accept-current'):
-        parser.error('--clarification/--no-clarification requires configure or accept-current')
-    if args.correction_limit is not None and args.command != 'configure':
-        parser.error('--correction-limit requires configure')
+    if args.clarification is not None and args.command not in ('configure', 'accept-current', 'config', 'start'):
+        parser.error('--clarification/--no-clarification requires configure, config, start --from-current or accept-current')
+    if args.correction_limit is not None and args.command not in ('configure', 'config', 'start'):
+        parser.error('--correction-limit requires configure, config or start --from-current')
+    if args.clarification_limit is not None and args.command not in ('config', 'start'):
+        parser.error('--clarification-limit requires config or start --from-current')
+    if args.command == 'start' and not args.from_current and any(v is not None for v in (args.clarification, args.correction_limit, args.clarification_limit)):
+        parser.error('start policy overrides require --from-current')
     if args.command == 'accept-current' and not (args.result and args.reason):
         parser.error('accept-current requires --result and --reason')
     if args.retry_blocked and args.command != 'authorize-clarification':
@@ -104,6 +109,9 @@ def main(argv=None) -> int:
             if active_entrypoint(paths).parent != REPO:
                 raise ControlError('uninstalled_runtime', 'Run the installed, verified Control release.')
             return run(paths)
+        elif args.command == 'config':
+            from .budget_config import configure
+            result = configure(paths, clarification_allowed=args.clarification, correction_limit=args.correction_limit, clarification_limit=args.clarification_limit)
         elif args.command == 'disk-space':
             from .disk_space import set_limit, status as disk_status
             result = set_limit(paths, args.min_free_gb) if args.min_free_gb is not None else disk_status(paths)
@@ -141,11 +149,14 @@ def main(argv=None) -> int:
         elif args.command in ("check", "probe", "recover"):
             result = getattr(commands, args.command)(paths)
         elif args.command in ("install", "start", "stop"):
-            result = (service.start(paths, from_current=True) if args.from_current
+            policy = {k: v for k, v in dict(clarification_allowed=args.clarification, correction_limit=args.correction_limit, clarification_limit=args.clarification_limit).items() if v is not None}
+            options = {'overrides': policy} if policy else {}
+            result = (service.start(paths, from_current=True, **options) if args.from_current
                       else getattr(service, args.command)(paths))
         elif args.command in ("pause", "resume"):
             result = request(paths, args.command)
         else:
+            from .budget_config import status as policy_status
             from .handover_queue import public_status
             try:
                 result = {"worker_reachable": True, **request(paths, "status")}
@@ -153,6 +164,10 @@ def main(argv=None) -> int:
                 if exc.code != "not_running":
                     raise
                 result = {"worker_reachable": False, "state": None, "last_state": read_state(paths)}
+            try:
+                result['budget_policy'] = policy_status(paths)
+            except ControlError as exc:
+                result['budget_policy'] = {'error': exc.code}
             from .start_current import public_status as cycle_status
             try:
                 result['current_cycle'] = cycle_status(paths)

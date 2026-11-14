@@ -78,9 +78,10 @@ class StartRightTests(AutomationCase):
     def test_line_change_does_not_dispatch_from_another_scope(self):
         self.request()
         self.engine.config = replace(self.config, repo_id='00000000-0000-4000-8000-000000000001')
+        write_private(self.paths.config, render(self.engine.config).encode())
         with self.assertRaises(ControlError) as raised:
             self.engine.tick()
-        self.assertEqual(raised.exception.code, 'start_configuration_changed')
+        self.assertEqual(raised.exception.code, 'runtime_configuration_changed')
         self.assertEqual(self.codex.calls, 0)
         self.core.checkpoint.assert_not_called()
 

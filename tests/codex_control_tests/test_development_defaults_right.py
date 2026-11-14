@@ -55,7 +55,7 @@ class DevelopmentDefaultsRightTests(MixedCase):
         self.assertFalse(self.ledger().attempt_directory(self.paths, stopped['sha'], 0).exists())
 
     def test_invalid_config_limits_fail_instead_of_becoming_truthy(self):
-        for value in (True, False, 0, 21, -1, 2.5, '5'):
+        for value in (True, False, 0, 1 << 63, -1, 2.5, '5'):
             document = tomllib.loads(render(self.config))
             document['automation']['correction_limit'] = value
             with self.subTest(value=value), self.assertRaises(ValueError):

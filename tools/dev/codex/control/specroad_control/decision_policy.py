@@ -3,7 +3,7 @@ from .job_contract import contract, new_contract, fresh_contract
 from .mixed_contract import MIXED, supports_v4, budget_driven_clarification
 
 
-def successor_contract(previous, handoff, source, *, verified=False, pending_clarification=False, clarification_allowed=True):
+def successor_contract(previous, handoff, source, *, verified=False, pending_clarification=False, clarification_allowed=True, clarification_limit=None):
     committed = (source['success'] and not source['dirty'] and source.get('completed_commit')
                  and source['completed_commit'] == source['binding']['base_commit'])
     if previous and previous['version'] == 4:
@@ -11,7 +11,7 @@ def successor_contract(previous, handoff, source, *, verified=False, pending_cla
         if handoff == MIXED and not previous['clarification_continuation']:
             remaining -= 1
         if verified and committed and handoff in ('patch_ready', MIXED) and supports_v4(source):
-            return fresh_contract(source, allowed=clarification_allowed)
+            return fresh_contract(source, allowed=clarification_allowed, limit=clarification_limit)
         continuing = bool(verified and handoff == MIXED and not committed and pending_clarification)
         # Permission and replenishment are separate. A proven open prefix has
         # exclusive continuation authority, even if its last place was spent.
@@ -23,7 +23,7 @@ def successor_contract(previous, handoff, source, *, verified=False, pending_cla
     # Only a proven normal handoff opens a fresh v3 budget on a new source.
     # Already bound attempts and legacy clarification chains stay unchanged.
     if handoff == 'patch_ready' and committed:
-        return (fresh_contract(source, allowed=clarification_allowed) if supports_v4(source)
+        return (fresh_contract(source, allowed=clarification_allowed, limit=clarification_limit) if supports_v4(source)
                 else new_contract(allowed=clarification_allowed))
     if previous and previous['version'] == 3:
         remaining = previous['clarifications_remaining']

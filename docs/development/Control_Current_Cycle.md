@@ -24,3 +24,29 @@ Quellhash; der lesende Status ist kein Auftrag und kein Apply-Erfolgsbeleg.
 Ein Pfad-/Linienwechsel braucht eine passende lokale Konfiguration und einen
 eigenen expliziten Start. Alte Aufträge werden nicht auf ein anderes Ziel
 umgebunden. Installation, Entwicklung und Status starten keine Automatik.
+
+## Lokale Budgeteinstellungen
+
+`control config` liest nur die konfigurierten und effektiven Werte.
+`control config --clarification-limit 30 --correction-limit 40` speichert
+lokale Vorgaben; `--no-clarification` schaltet neue optionale Klärung ab,
+`--clarification` wieder an. Standard beider Budgets ist zwanzig. Positive
+Ganzzahlen bis zur technischen SQLite-Grenze 9223372036854775807 sind gültig;
+zwanzig ist keine fachliche Höchstgrenze. Es erfolgt kein Budgetreset.
+
+`control start --from-current --clarification-limit 35` überschreibt nur
+für den ausdrücklich neuen Zyklus die Dateivorgabe. Weitere explizite
+Overrides sind `--correction-limit` und `--[no-]clarification`. Sie werden
+atomar mit dem Zykluszeiger gespeichert und bleiben bei gewöhnlichem
+Start/Resume erhalten. Der nächste ausdrücklich neue Zyklus ohne Overrides
+verwendet wieder die Datei. Priorität: Aufruf vor Datei vor Standard.
+
+Die CLI benachrichtigt einen bereits laufenden Worker, startet oder resumed
+aber keinen Dienst. Der Worker übernimmt lokale Policy zwischen Aufgaben.
+Bereits gebundene Verträge, laufende Turns und vorhandene Restzähler werden
+nicht verändert. Neue Folgeaufträge erhalten die neue Klärungswahl;
+volle konfigurierte Budgets entstehen erst am regulären belegten
+Erneuerungspunkt oder durch den ausdrücklich neuen Zyklus. Ein erschöpfter
+Rest bleibt erschöpft. Alte Projektmarker mit drei/fünf Plätzen behalten
+ihre historischen Grenzen. Workerzahlen gehören zur geplanten separaten
+`test-control`-Bedienung und sind kein Control-Budget.

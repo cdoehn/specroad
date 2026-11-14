@@ -7,7 +7,8 @@ from unittest.mock import patch
 from specroad_control.apply_reconcile_proof import canonical, hashed
 from specroad_control.blocked_authorization import verify, require_release
 from specroad_control.blocked_authorization_history import complete, validate_history, history_hash
-from specroad_control.config import render
+from specroad_control.automation import Engine, Gate
+from specroad_control.config import load, render
 from specroad_control.errors import ControlError
 from specroad_control.job_contract import new_contract
 from specroad_control.local import json_read, json_write, read_private, write_private
@@ -138,9 +139,24 @@ class BlockedClarificationRightTests(BlockedAuthorizationCase):
         self.assertEqual(caught.exception.code, 'clarification_authorization_pending')
 
     def test_proxy_original_turn_and_prompt_are_both_required(self):
-        self.config = replace(self.config, transport='app-server-proxy')
-        self.engine.config = self.config
-        write_private(self.paths.config, render(self.config).encode())
+        configured = replace(self.config, transport='app-server-proxy')
+        original_engine = self.engine
+        ledger_before = self.paths.ledger.read_bytes()
+        write_private(self.paths.config, render(configured).encode())
+        # A transport change needs a new Engine, not a policy-only refresh.
+        with self.assertRaises(ControlError) as caught:
+            original_engine.tick()
+        self.assertEqual(caught.exception.code, 'runtime_configuration_changed')
+        self.assertEqual(original_engine.config, self.config)
+        self.assertEqual(self.paths.ledger.read_bytes(), ledger_before)
+        self.assertEqual(self.codex.calls, 0)
+        original_engine.close()
+        self.config = load(self.paths)
+        self.engine = Engine(self.config, self.paths, Gate(),
+                             core=original_engine.core, codex=self.codex)
+        self.addCleanup(self.engine.close)
+        self.assertEqual(self.config.transport, 'app-server-proxy')
+        self.assertEqual(self.paths.ledger.read_bytes(), ledger_before)
         self.blocked()
         p = self.paths.state / 'jobs' / self.seed['sha256'] / 'dispatch.json'
         old = read_private(p)

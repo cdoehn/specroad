@@ -15,8 +15,8 @@ from specroad_control.automation import Engine, Gate
 from specroad_control.apply_reconcile_proof import canonical, hashed, public_plan
 from specroad_control.job_contract import scope
 from specroad_control.ledger import Ledger
-from specroad_control.config import Config
-from specroad_control.local import Paths, private_dir
+from specroad_control.config import Config, render
+from specroad_control.local import Paths, private_dir, write_private
 from specroad_control.mixed_contract import CAPABILITY, CAPABILITY_PATH, MIXED
 from codex_control_tests.automation_support import AutomationCase, read_package
 from codex_control_tests.apply_reconcile_support import patch_package, ReconcileCore
@@ -114,6 +114,12 @@ class MixedCase(unittest.TestCase):
         self.seed = self.result('seed.zip')
         self.config = Config(self.dev, self.exchange, self.thread, True, self.repo_id,
             self.home/'unused-core', self.home/'unused-codex', self.codex_home, settle_seconds=.05)
+        # Policy refresh and operator commands read the real isolated config.
+        # Transport calls still use injected doubles; accidental subprocesses fail.
+        for executable in (self.config.core_python, self.config.codex_executable):
+            executable.write_bytes(b'#!/bin/sh\nexit 97\n')
+            executable.chmod(0o700)
+        write_private(self.paths.config, render(self.config).encode())
         private_dir(self.paths.state)
         ledger = Ledger(self.paths.state/'automation.sqlite3', scope(self.config), initial=self.seed)
         ledger.close()

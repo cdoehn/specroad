@@ -76,7 +76,9 @@ def install(paths: Paths) -> dict:
         return {"installed": True, "started": False, "autostart": False, "config": str(paths.config)}
 
 
-def start(paths: Paths, *, from_current: bool = False) -> dict:
+def start(paths: Paths, *, from_current: bool = False, overrides=None) -> dict:
+    if overrides and not from_current:
+        raise ControlError('invalid_config', 'Invocation policy requires an explicit new cycle.')
     with lock(paths.state / "operation.lock"):
         from .handover_queue import startup
         if from_current:
@@ -91,7 +93,7 @@ def start(paths: Paths, *, from_current: bool = False) -> dict:
             raise ControlError("unit_conflict", "Installed service and current paths do not match.")
         if from_current:
             from .start_current import enqueue
-            enqueue(paths, load(paths, allow_deferred=True))
+            enqueue(paths, load(paths, allow_deferred=True), overrides=overrides)
         checked(["start", paths.unit.name])
     if from_current:
         from .ipc import request

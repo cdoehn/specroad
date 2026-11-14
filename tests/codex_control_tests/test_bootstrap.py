@@ -44,10 +44,11 @@ class BootstrapTests(AutomationCase):
         self.fresh()
         reply = self.setup_source(self.seed['path'])
         doc = tomllib.loads(self.paths.config.read_text())
-        self.assertEqual(set(doc['automation']), {'enabled', 'settle_seconds', 'retry_delays_seconds', 'start_delay_seconds', 'clarification_allowed', 'correction_limit'})
+        self.assertEqual(set(doc['automation']), {'enabled', 'settle_seconds', 'retry_delays_seconds', 'start_delay_seconds', 'clarification_allowed', 'correction_limit', 'clarification_limit'})
         self.assertEqual(load(self.paths).start_delay_seconds, self.config.start_delay_seconds)
         self.assertEqual(load(self.paths).clarification_allowed, self.config.clarification_allowed)
         self.assertEqual(load(self.paths).correction_limit, self.config.correction_limit)
+        self.assertEqual(load(self.paths).clarification_limit, self.config.clarification_limit)
         self.assertNotIn(self.seed['path'], self.paths.config.read_text())
         self.assertNotIn(self.seed['sha256'], self.paths.config.read_text())
         self.assertEqual(self.row()['source']['sha256'], self.seed['sha256'])
@@ -79,18 +80,35 @@ class BootstrapTests(AutomationCase):
         from contextlib import redirect_stdout, redirect_stderr
         import io
         from specroad_control.cli import main
+        # Keep the historical test ID; CONFIG deliberately removes the old cap.
         before = self.row()
         args = ['configure', '--thread-id', self.thread, '--codex', str(self.binary),
-                '--core-python', str(self.python), '--correction-limit', '20']
-        with patch('specroad_control.cli.Paths.discover', return_value=self.paths), redirect_stdout(io.StringIO()):
-            self.assertEqual(main(args), 0)
-        self.assertEqual(load(self.paths).correction_limit, 20)
-        raw = self.paths.config.read_bytes()
-        with redirect_stderr(io.StringIO()), self.assertRaises(SystemExit) as caught:
-            main(args[:-1] + ['21'])
-        self.assertEqual(caught.exception.code, 2)
-        self.assertEqual(self.paths.config.read_bytes(), raw)
-        self.assertEqual(self.row(), before)
+                '--core-python', str(self.python), '--correction-limit']
+        with patch('specroad_control.cli.Paths.discover', return_value=self.paths):
+            for limit in (20, 21, 37):
+                output = io.StringIO()
+                with self.subTest(limit=limit), redirect_stdout(output):
+                    self.assertEqual(main(args + [str(limit)]), 0)
+                reply = json.loads(output.getvalue())
+                self.assertTrue(reply['ok'])
+                self.assertFalse(reply['service_started'])
+                self.assertFalse(reply['model_called'])
+                self.assertEqual(load(self.paths).correction_limit, limit)
+                self.assertEqual(self.row(), before)
+            raw = self.paths.config.read_bytes()
+            for value in ('0', '-1', str(1 << 63)):
+                output = io.StringIO()
+                with self.subTest(value=value), redirect_stdout(output):
+                    self.assertEqual(main(args + [value]), 1)
+                self.assertEqual(json.loads(output.getvalue())['error'], 'invalid_config')
+                self.assertEqual(self.paths.config.read_bytes(), raw)
+                self.assertEqual(self.row(), before)
+            for value in ('1.5', 'true'):
+                with self.subTest(value=value), redirect_stderr(io.StringIO()), self.assertRaises(SystemExit) as caught:
+                    main(args + [value])
+                self.assertEqual(caught.exception.code, 2)
+                self.assertEqual(self.paths.config.read_bytes(), raw)
+                self.assertEqual(self.row(), before)
 
     def test_missing_state_requires_explicit_initial_result(self):
         self.fresh()
@@ -203,10 +221,11 @@ class BootstrapTests(AutomationCase):
         write_private(self.paths.config, data.encode())
         self.assertTrue(load(self.paths).enabled)
         self.setup_source()
-        self.assertEqual(set(tomllib.loads(self.paths.config.read_text())['automation']), {'enabled', 'settle_seconds', 'retry_delays_seconds', 'start_delay_seconds', 'clarification_allowed', 'correction_limit'})
+        self.assertEqual(set(tomllib.loads(self.paths.config.read_text())['automation']), {'enabled', 'settle_seconds', 'retry_delays_seconds', 'start_delay_seconds', 'clarification_allowed', 'correction_limit', 'clarification_limit'})
         self.assertEqual(load(self.paths).start_delay_seconds, self.config.start_delay_seconds)
         self.assertEqual(load(self.paths).clarification_allowed, self.config.clarification_allowed)
         self.assertEqual(load(self.paths).correction_limit, self.config.correction_limit)
+        self.assertEqual(load(self.paths).clarification_limit, self.config.clarification_limit)
 
     def test_nonempty_legacy_seed_requires_explicit_migration(self):
         data = self.paths.config.read_text() + '\nseed_result = ' + json.dumps(self.seed['path']) + '\nseed_sha256 = ' + json.dumps(self.seed['sha256']) + '\n'

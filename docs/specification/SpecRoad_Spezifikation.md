@@ -1,19 +1,19 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.87
+## Version 0.2.88
 
 | Feld | Wert |
 |---|---|
 | Dokument-ID | `SR-SPEC-0001` |
-| Dokumentversion | `0.2.87` |
+| Dokumentversion | `0.2.88` |
 | Zielrelease | `SpecRoad Single-Repository Workbench 0.2.0` |
 | Status | **Fachlich konsolidierte Arbeitsgrundlage; technische Reviewentscheidung gesondert dokumentiert, formale Baseline-Freigabe und Produktabnahme nicht durch dieses Dokument erklärt** |
 | Stand | 14. November 2026 |
 | Sprache | Deutsch; technische Feldnamen, Enum-Werte und CLI-Kommandos Englisch |
-| Fachliche Quelle | **Diese Repositoryfassung v0.2.87 ist die aktive fachliche Arbeitsgrundlage; eine entsprechende PDF wird hiermit nicht veröffentlicht.** |
+| Fachliche Quelle | **Diese Repositoryfassung v0.2.88 ist die aktive fachliche Arbeitsgrundlage; eine entsprechende PDF wird hiermit nicht veröffentlicht.** |
 | Bearbeitbare Satzquelle | Diese Datei; eine spätere PDF muss denselben versionierten Inhalt wiedergeben. |
-| Vorgängerversion | Repository-Spezifikation v0.2.86; historische Nachweise bleiben unverändert. |
+| Vorgängerversion | Repository-Spezifikation v0.2.87; historische Nachweise bleiben unverändert. |
 | Prüf- und Entscheidungsgrundlage | CONTROL-START-CURRENT / TEST-CONTROL-PLAN, ausdrücklicher Nutzerauftrag vom 14. November 2026; keine Produktfreigabe. |
-| Änderungsart | Expliziter Neustart aus aktuellem Repositoryzustand, priorisierte START/CONFIG/LIVE/MOVE-Folge und vorausschauende Bundleplanung. Der Produkt-Recovery-Rückbau folgt danach unverändert. |
+| Änderungsart | Umsetzung der bestätigten CONFIG-Folge: lokal konfigurierbare Budgets und Aufrufpriorität bei unveränderten bestehenden Verträgen. Produkt-Recovery-Rückbau, LIVE und MOVE bleiben nachgeordnet. |
 
 > **Verbindlicher Quellenwechsel:** Die ausdrückliche Nutzerentscheidung REFERENCE-SOURCE-551 wird als v0.2.50 umgesetzt. Der neue Quellvertrag ist Entwurfsarbeit vom 3. November 2026, kein Nachweis eines früher existierenden Formats. Bestehende 0.2-Verträge, Transport-, Sicherheits- und Reviewgrenzen bleiben erhalten.
 
@@ -846,13 +846,14 @@ Projektmarker drei/fünf behalten ihre bisherige Folge- und Promptsemantik.
 Ein neuer Klärungspräfix verbraucht weiterhin genau einen Platz; derselbe
 belegte offene Präfix verbraucht keinen zweiten. Die numerischen Aussagen
 zu drei in älteren Abschnitten gelten weiterhin für deren historische
-Aufträge; für neue volle V4-Budgets gilt dieser Abschnitt mit zwanzig.
+Aufträge; für neue volle V4-Budgets gilt dieser Abschnitt mit Standard zwanzig
+und den ausdrücklich bestätigten lokalen CONFIG-Vorgaben nach 2.4.3.7.
 
 Ein getrenntes Korrekturbudget begrenzt neue Reparaturbundles nach Apply-
 Fehlern standardmäßig auf zwanzig. Technische Modell-/Transportwiederholungen
 bleiben davon getrennt. Die externe Einstellung `correction_limit` ist eine
-Ganzzahl von eins bis zwanzig, Standard zwanzig. Explizit konfigurierte
-kleinere Grenzen bleiben erhalten. Ein erstmals beobachteter Apply-
+positive Ganzzahl, Standard zwanzig. Ausdrücklich konfigurierte
+kleinere oder größere Grenzen bleiben erhalten; maßgeblich ist CONFIG in 2.4.3.7. Ein erstmals beobachteter Apply-
 Fehler eröffnet die Reparaturfolge; jede tatsächlich übergebene Reparatur
 verbraucht genau einen Platz bei der Übernahme ihres gebundenen Folge-Results.
 Erst der vollständig belegte saubere Erfolg beendet die Fehlerfolge und
@@ -902,6 +903,30 @@ eröffnen keinen zweiten Zyklus. Ein bereits veröffentlichter Zyklus wird nach
 einem Abbruch zwischen Veröffentlichung und Bestätigung nicht erneut aufgefüllt.
 Der Dienst läuft weiterhin aus einer erfolgreich getesteten installierten
 Releasekopie. Installation oder Entwicklung dieses Features starten ihn nicht.
+
+**Lokale CONFIG-Bedienung.** `control config` liest die lokalen Budgetwerte;
+`--clarification-limit`, `--correction-limit` und `--[no-]clarification` ändern
+sie ohne Deployment oder Bundle. Standard beider Budgets ist zwanzig,
+zwanzig ist keine feste fachliche Obergrenze. Budgets sind positive Ganzzahlen
+innerhalb des verwendeten SQLite-Ganzzahlbereichs. Bei `start --from-current`
+haben ausdrücklich angegebene gleichnamige Optionen Vorrang vor der Datei,
+diese vor dem Standard. Aufruf-Overrides gehören atomar zum neuen Zyklus und
+bleiben bei gewöhnlichem Start/Resume erhalten. Ein weiterer ausdrücklich
+neuer Zyklus ohne Overrides verwendet wieder die Datei. Projektmarker mit
+drei/fünf Plätzen bleiben historische Verträge; der geprüfte neue Marker mit
+zwanzig bezeichnet den Standard der konfigurierbaren V4-Aufträge.
+
+Konfigurationsänderungen werden zwischen Aufgaben und vor neuen Bindungen
+übernommen. Bereits gebundene Verträge, versandte Turns und verbrauchte
+Restzähler bleiben unverändert. Neue Folgeaufträge verwenden die wirksame
+Klärungswahl, volle konfigurierte Budgets nur am regulären Erneuerungspunkt
+oder bei ausdrücklichem neuem Zyklus. Eine höhere Einstellung entsperrt
+keinen erschöpften Rest. Status trennt gespeicherte Vorgaben, Aufruf-Overrides,
+effektive Werte und den bestehenden Auftragsvertrag. Speicherung ist atomar;
+konkurrierende Bedienung oder erkennbar geänderte Eingaben dürfen keine
+fremden Werte überschreiben. Ungültige/fehlende Konfiguration wird nicht als
+stille Freigabe interpretiert. Speichern startet oder resumed keinen Dienst;
+Workerzahlen gehören ausschließlich zur separaten test-control-Planfolge.
 
 **Vorausschauende Bundleplanung.** Im bestätigten Scope möglichst etwa zwei
 vollständige zusammenhängende W/R/C-Gruppen vorbereiten; dies ist ein Richtwert,

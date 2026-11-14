@@ -66,10 +66,10 @@ def mixed_prompt(source, selected):
 
     # Original three-/five-slot source prompts remain byte-identical.
     result = result.replace('erneuert das im neuen Vertrag gebundene Maximum.',
-        'erneuert ' + {3: 'drei', 5: 'fuenf', 20: 'zwanzig'}[selected['clarification_limit']] + ' Plaetze.')
+        'erneuert ' + {3: 'drei', 5: 'fuenf', 20: 'zwanzig'}.get(selected['clarification_limit'], str(selected['clarification_limit'])) + ' Plaetze.')
     # Request reconstruction intentionally carries only the four original
     # source fields. Select additive prompt bytes by the persisted contract.
-    if selected['clarification_limit'] == 20:
+    if selected['clarification_limit'] not in (3, 5):
         result += ('\nBudgetabhaengige Freigabe nach 2.4.3.6: Control erlaubt neue '
                    'optionale Klaerung bei positivem Restbudget auch nach belegtem '
                    'Apply-Fehler, sofern sie nicht ausdruecklich abgeschaltet ist. '

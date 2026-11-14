@@ -27325,6 +27325,18 @@
     "tests/codex_control_tests/test_start_current_native.py::test_installed_checkpoint_adapter_uses_native_identity_snapshot_and_lock[clean]",
     "tests/codex_control_tests/test_start_current_native.py::test_installed_checkpoint_adapter_uses_native_identity_snapshot_and_lock[dirty]",
     "tests/codex_control_tests/test_start_current_native.py::test_installed_checkpoint_adapter_uses_native_identity_snapshot_and_lock[foreign]",
-    "tests/codex_control_tests/test_start_current_native.py::test_installed_checkpoint_adapter_uses_native_identity_snapshot_and_lock[locked]"
+    "tests/codex_control_tests/test_start_current_native.py::test_installed_checkpoint_adapter_uses_native_identity_snapshot_and_lock[locked]",
+    "codex_control_tests.test_budget_config.BudgetConfigTests.test_bound_request_is_not_reinterpreted_by_changed_policy",
+    "codex_control_tests.test_budget_config.BudgetConfigTests.test_cli_sets_policy_without_deploy_or_start",
+    "codex_control_tests.test_budget_config.BudgetConfigTests.test_invocation_overrides_win_over_file_and_survive_worker_restart",
+    "codex_control_tests.test_budget_config.BudgetConfigTests.test_legacy_project_marker_does_not_gain_configurable_authority",
+    "codex_control_tests.test_budget_config.BudgetConfigTests.test_local_read_is_readonly_and_defaults_are_twenty",
+    "codex_control_tests.test_budget_config.BudgetConfigTests.test_saved_policy_above_twenty_applies_to_a_new_explicit_cycle",
+    "codex_control_tests.test_budget_config.BudgetConfigTests.test_start_cli_passes_only_explicit_overrides",
+    "codex_control_tests.test_budget_config.BudgetConfigTests.test_successful_followup_uses_new_full_limits_but_failure_keeps_old_remainder",
+    "tests/codex_control_tests/test_budget_config.py::test_policy_options_cannot_silently_change_unrelated_commands[args0]",
+    "tests/codex_control_tests/test_budget_config.py::test_policy_options_cannot_silently_change_unrelated_commands[args1]",
+    "tests/codex_control_tests/test_budget_config.py::test_policy_options_cannot_silently_change_unrelated_commands[args2]",
+    "tests/codex_control_tests/test_budget_config.py::test_policy_options_cannot_silently_change_unrelated_commands[args3]"
   ]
 }
