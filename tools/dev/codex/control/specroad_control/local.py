@@ -37,6 +37,13 @@ class Paths:
     root: Path | None = None
 
     @property
+    def ledger(self):
+        from .start_current import active_cycle
+        cycle = active_cycle(self)
+        return (self.state / 'cycles' / cycle['ledger'] if cycle
+                else self.state / 'automation.sqlite3')
+
+    @property
     def home(self):
         return self.state.parent
 

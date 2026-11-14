@@ -86,7 +86,7 @@ def enqueue(paths, result, *, source_sha256, reason):
             fail('An absolute successor Result path is required.')
         with configured_offline(paths, allow_apply_reconciliation=True) as (config, engine):
             require_installed(paths)
-            ledger = Ledger(paths.state / 'automation.sqlite3', scope(config))
+            ledger = Ledger(paths.ledger, scope(config))
             try:
                 from .current_acceptance_history import require_no_pending as no_current_acceptance
                 no_current_acceptance(ledger)
@@ -173,7 +173,7 @@ def public_status(paths):
     config = load(paths)
     if not config.enabled:
         return None
-    ledger = Ledger(paths.state / 'automation.sqlite3', scope(config))
+    ledger = Ledger(paths.ledger, scope(config))
     try:
         doc = validate_history(ledger)
         return reply(doc) if doc else None

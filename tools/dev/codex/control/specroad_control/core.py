@@ -37,6 +37,10 @@ class Core:
         except (KeyError, ValueError, TypeError, UnicodeError, RecursionError):
             raise ControlError("core_protocol_error", "Unexpected Core bridge response.") from None
 
+    def checkpoint(self) -> dict:
+        from .checkpoint import capture
+        return self.result(capture(self.config))
+
     def result(self, path: Path) -> dict:
         return self.call("result", path)
 

@@ -52,7 +52,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "28d3c6792f62ba9225449ce78b2d352d0cae72db801a4441fea2c76da4ed4463",
+  "specification_sha256": "1e38ac6a16816e9f8e9ef6fd0fdaca9741a55bd46480544e4a908d5155996465",
   "steps": [
     "Run the shared pipeline and compare structure, dependency coverage, unavailability and actual gate outcomes.",
     "Supply actual configuration, bound offline registry and shipped software profiles; execute production language/SRX/formal-approval checks through model, project and target adapters without successful substitute gates.",

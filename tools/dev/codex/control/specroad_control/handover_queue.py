@@ -25,7 +25,7 @@ def validate_request(paths, config, doc):
             or scope(config) != doc['old_scope'] or config.session_id != doc['old_thread_id']
             or scope(candidate) != doc['new_scope']):
         raise ControlError('handover_request_changed', 'Configuration differs from the deferred handover authority.')
-    with closing(Ledger(paths.state/'automation.sqlite3', scope(config))) as history:
+    with closing(Ledger(paths.ledger, scope(config))) as history:
         row = check_boundary(history, paths)
         if (row['sha'] != doc['source_sha256'] or row['run_id'] != doc['current_run_id']
                 or history_digest(history.db) != doc['history_sha256']):
@@ -34,6 +34,9 @@ def validate_request(paths, config, doc):
 
 
 def startup(paths):
+    from .start_current import pending
+    if pending(paths) is not None:
+        return load(paths), None
     doc = request_read(paths)
     config = load(paths, allow_deferred=doc is not None)
     if doc:
@@ -66,7 +69,7 @@ def enqueue(paths, *, thread_id, thread_cwd, from_cwd=None, resume_after=False):
             startup(paths)
             return {'queued': True, 'already_queued': True, 'model_called': False, 'service_started': False}
         lifecycle_digest(paths)
-        with closing(Ledger(paths.state/'automation.sqlite3', scope(config))) as history:
+        with closing(Ledger(paths.ledger, scope(config))) as history:
             row = check_boundary(history, paths)
             doc = {'version': 1, 'id': str(uuid4()), 'created_at': time.time(),
                 'old_config_sha256': sha256(read_private(paths.config)).hexdigest(),

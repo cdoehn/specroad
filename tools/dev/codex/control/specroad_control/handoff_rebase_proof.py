@@ -93,7 +93,7 @@ def original(engine, result):
 
 def require_remaining_scope(previous, stages):
     """A rejected package retains every stage, intended path and required gate."""
-    if len(previous) != len(stages):
+    if len(previous) > len(stages):
         fail('The complete rejected sequence must remain present.')
     for old, new in zip(previous, stages):
         if (any(new[key] != old[key] for key in ('commit_id', 'role', 'message'))

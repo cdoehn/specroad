@@ -81,8 +81,12 @@ def validate_roles(data):
 def remaining_roles(plan, progress, data):
     """Only an authenticated failed source and its exact open prefix qualify."""
     rest = plan['stages'][len(progress['committed']):]
-    if ([s['commit_id'] for s in data['stages']] != [s['commit_id'] for s in rest]
-            or [s['role'] for s in data['stages']] != [s['role'] for s in rest]):
+    prefix = data['stages'][:len(rest)]
+    appended = data['stages'][len(rest):]
+    previous_ids = {s['commit_id'] for s in plan['stages']}
+    if (not rest or [s['commit_id'] for s in prefix] != [s['commit_id'] for s in rest]
+            or [s['role'] for s in prefix] != [s['role'] for s in rest]
+            or any(s['role'] != 'implementation' or s['commit_id'] in previous_ids for s in appended)):
         raise ValueError('Correction must retain all unfinished commit IDs and roles')
     for old, new in zip(rest, data['stages']):
         if old['role'] == 'clarification' and old['after'] != new['after']:

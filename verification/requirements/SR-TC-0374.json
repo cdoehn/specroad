@@ -35,7 +35,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "28d3c6792f62ba9225449ce78b2d352d0cae72db801a4441fea2c76da4ed4463",
+  "specification_sha256": "1e38ac6a16816e9f8e9ef6fd0fdaca9741a55bd46480544e4a908d5155996465",
   "steps": [
     "Publish independently prepared target bytes through the shared writer; compare exact file inventory, native root, full validation and matching transaction/request receipts.",
     "Change relation/Evidence context and inspect fresh native classifications without rewriting their historical records. Check actual external code bytes without executing code.",

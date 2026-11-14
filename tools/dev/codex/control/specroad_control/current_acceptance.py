@@ -45,7 +45,7 @@ def enqueue(paths, result, *, clarification=None, reason, reset_budget=False):
         with configured_offline(paths, allow_apply_reconciliation=True) as (config, engine):
             require_release(paths)
             clarification = _choice(config, clarification, reset_budget)
-            ledger = Ledger(paths.state / 'automation.sqlite3', scope(config))
+            ledger = Ledger(paths.ledger, scope(config))
             try:
                 requested = engine.exchange.source(engine.core.result(Path(result)))
                 for row in records(ledger):
@@ -144,7 +144,7 @@ def public_status(paths):
     config = load(paths)
     if not config.enabled:
         return None
-    ledger = Ledger(paths.state / 'automation.sqlite3', scope(config))
+    ledger = Ledger(paths.ledger, scope(config))
     try:
         doc = validate_history(ledger)
         return reply(doc) if doc else None

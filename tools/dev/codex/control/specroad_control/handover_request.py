@@ -82,7 +82,7 @@ def finish_request(paths, doc):
     config = load(paths, allow_deferred=True)
     if scope(config) != doc['new_scope']:
         raise ControlError('handover_request_changed', 'The completed request does not match the live configuration.')
-    with closing(Ledger(paths.state/'automation.sqlite3', scope(config))) as history:
+    with closing(Ledger(paths.ledger, scope(config))) as history:
         raw = last_receipt(history.db)
         proof = receipt(decode_object(raw)) if raw else None
         if (proof is None or proof.get('request_sha256') != request_hash(doc)

@@ -42,7 +42,11 @@ def main(argv=None) -> int:
                         help=f'Maximum consecutive Apply repair bundles (default: {DEFAULT_CORRECTION_LIMIT}); configure only')
     parser.add_argument('--reset-budget', action='store_true',
                         help='Explicitly renew the tested project clarification maximum; accept-current only')
+    parser.add_argument('--from-current', action='store_true',
+                        help='Start a fresh cycle from current Apply HEAD and working tree; start only')
     args = parser.parse_args(argv)
+    if args.from_current and args.command != 'start':
+        parser.error('--from-current requires start')
     if args.reset_budget and (args.command != 'accept-current' or args.clarification is False):
         parser.error('--reset-budget requires accept-current --clarification')
     if args.clarification is not None and args.command not in ('configure', 'accept-current'):
@@ -137,7 +141,8 @@ def main(argv=None) -> int:
         elif args.command in ("check", "probe", "recover"):
             result = getattr(commands, args.command)(paths)
         elif args.command in ("install", "start", "stop"):
-            result = getattr(service, args.command)(paths)
+            result = (service.start(paths, from_current=True) if args.from_current
+                      else getattr(service, args.command)(paths))
         elif args.command in ("pause", "resume"):
             result = request(paths, args.command)
         else:

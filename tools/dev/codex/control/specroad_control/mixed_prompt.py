@@ -78,4 +78,14 @@ def mixed_prompt(source, selected):
                    'bytegleiche Fortsetzung. Die Korrektur muss alle offenen IDs und '
                    'Rollen erhalten; positive Freigabe erlaubt keinen zusaetzlichen '
                    'Praefix in einer bereits offenen Folge.')
-    return result
+    return result + (
+        '\nVORAUSSCHAUENDE PLANARBEIT: Lies die aktuelle priorisierte Planfolge. '
+        'Bereite nach Moeglichkeit etwa zwei vollstaendige zusammenhaengende W/R/C-Gruppen '
+        'vor, als Arbeitsrichtwert und ohne kuenstliche Commitzahl oder Scopeerweiterung. '
+        'Bei Reparaturen zuerst den vollstaendigen offenen Rest mit allen IDs/Rollen '
+        'fortfuehren und alle abhaengigen Folgezustaende korrigieren. Danach duerfen '
+        'bereits geplante neue implementation-Stages angehaengt werden; correction_of '
+        'bindet weiterhin nur den belegten alten Rest als exakten Praefix. '
+        'Keine neue Klaerung im Anhang, keine Wiederholung erfolgreicher Commits. '
+        'Jede Stage behaelt ihr eigenes Gate vor dem Commit. Ein ausdruecklich '
+        'begrenzter Bootstrapauftrag wie START.W geht diesem Richtwert vor.')

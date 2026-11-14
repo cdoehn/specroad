@@ -76,17 +76,32 @@ def install(paths: Paths) -> dict:
         return {"installed": True, "started": False, "autostart": False, "config": str(paths.config)}
 
 
-def start(paths: Paths) -> dict:
+def start(paths: Paths, *, from_current: bool = False) -> dict:
     with lock(paths.state / "operation.lock"):
         from .handover_queue import startup
-        startup(paths)
+        if from_current:
+            from .commands import ready
+            ready(load(paths))
+        else:
+            startup(paths)
         properties = verify_owned(paths)
         if properties.get("ActiveState") == "deactivating":
             raise ControlError("stopping", "Wait until the pending graceful stop has completed.")
         if read_private(paths.unit) != unit_text(paths).encode():
             raise ControlError("unit_conflict", "Installed service and current paths do not match.")
+        if from_current:
+            from .start_current import enqueue
+            enqueue(paths, load(paths))
         checked(["start", paths.unit.name])
-        return {"start_requested": True}  # Not a claim of a ready worker or active development.
+    if from_current:
+        from .ipc import request
+        try:
+            request(paths, 'resume')
+        except ControlError as exc:
+            if exc.code != 'not_running':
+                raise
+        return {"start_requested": True, "from_current": True, "queued": True}
+    return {"start_requested": True}  # Not a claim of a ready worker or active development.
 
 
 def stop(paths: Paths) -> dict:

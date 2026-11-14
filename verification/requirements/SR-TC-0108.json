@@ -46,7 +46,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "28d3c6792f62ba9225449ce78b2d352d0cae72db801a4441fea2c76da4ed4463",
+  "specification_sha256": "1e38ac6a16816e9f8e9ef6fd0fdaca9741a55bd46480544e4a908d5155996465",
   "steps": [
     "Invoke artifact show and its show alias through CLI, structured request and Python on actual project files.",
     "Compare complete artifact data, incoming/outgoing projections, stored relation identities, current project coverage and absence of writes.",

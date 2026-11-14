@@ -139,14 +139,14 @@ def _handover_locked(paths, *, thread_id, thread_cwd, from_cwd=None, request_sha
     if old.session_id == new.session_id:
         if old != new:
             fail('A changed cwd alone is not a different Dev thread.')
-        with closing(Ledger(paths.state / 'automation.sqlite3', scope(old))) as history:
+        with closing(Ledger(paths.ledger, scope(old))) as history:
             check_boundary(history, paths)
         return {'handed_over': False, 'already_configured': True,
                 'model_called': False, 'service_started': False}
     with Engine(old, paths, Gate()) as engine, ExitStack() as stack:
         for target in targets(new, paths, thread_only=True):
             stack.enter_context(lock(target))
-        history = open_history(paths.state / 'automation.sqlite3', old, new, intent)
+        history = open_history(paths.ledger, old, new, intent)
         stack.callback(history.close)
         row = check_boundary(history, paths)
         check_from(old, from_cwd)

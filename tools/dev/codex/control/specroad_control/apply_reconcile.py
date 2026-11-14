@@ -79,7 +79,7 @@ def enqueue(paths, result, *, blocked=False, extended_chain=False):
         fail('Extended-chain recovery requires the explicit blocked-recovery command.')
     from .commands import configured_offline
     with configured_offline(paths, allow_apply_reconciliation=True) as (config, engine):
-        ledger = Ledger(paths.state / 'automation.sqlite3', scope(config))
+        ledger = Ledger(paths.ledger, scope(config))
         try:
             from .clarification_authorization_history import require_no_pending as require_no_authorization
             require_no_authorization(ledger)
@@ -170,7 +170,7 @@ def public_status(paths):
     config = load(paths)
     if not config.enabled:
         return None
-    ledger = Ledger(paths.state / 'automation.sqlite3', scope(config))
+    ledger = Ledger(paths.ledger, scope(config))
     try:
         doc = validate_history(ledger)
         return reply(doc) if doc else None

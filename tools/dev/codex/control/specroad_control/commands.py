@@ -95,7 +95,7 @@ def configure(paths: Paths, *, thread_id: str, result: str | None = None, codex:
         candidate = replace(candidate, repository=Path(repository) if repository else old.repository,
                             apply_repository=Path(apply_repository) if apply_repository else old.apply_repository,
                             exchange=Path(exchange) if exchange else old.exchange)
-        history_path = paths.state / "automation.sqlite3"
+        history_path = paths.ledger
         exists, empty_history = inspect_history(candidate, history_path, legacy)
         source = select_source(candidate, result, legacy, needs_initial=not exists or empty_history)
         if source is not None:
@@ -131,9 +131,9 @@ def configured_offline(paths: Paths, *, allow_apply_reconciliation=False):
     with offline(paths):
         config = load(paths)
         ready(config)
-        if not allow_apply_reconciliation and (paths.state / 'automation.sqlite3').exists():
+        if not allow_apply_reconciliation and (paths.ledger).exists():
             from .apply_reconcile_history import require_no_pending
-            history = Ledger(paths.state / 'automation.sqlite3', scope(config))
+            history = Ledger(paths.ledger, scope(config))
             try:
                 require_no_pending(history)
             finally:
@@ -170,9 +170,9 @@ def probe(paths: Paths) -> dict:
 def recover(paths: Paths) -> dict:
     """Offline, evidence-only recovery; NEVER dispatch a replacement model call."""
     with configured_offline(paths) as (config, engine):
-        if not (paths.state / "automation.sqlite3").exists():
+        if not (paths.ledger).exists():
             return {"recovered": False, "reason": "no_history", "model_called": False}
-        ledger = Ledger(paths.state / "automation.sqlite3", scope(config))
+        ledger = Ledger(paths.ledger, scope(config))
         try:
             row = ledger.current()
             if row is None or row["stage"] not in ("running", "uncertain"):

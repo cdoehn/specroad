@@ -1,19 +1,19 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.86
+## Version 0.2.87
 
 | Feld | Wert |
 |---|---|
 | Dokument-ID | `SR-SPEC-0001` |
-| Dokumentversion | `0.2.86` |
+| Dokumentversion | `0.2.87` |
 | Zielrelease | `SpecRoad Single-Repository Workbench 0.2.0` |
 | Status | **Fachlich konsolidierte Arbeitsgrundlage; technische Reviewentscheidung gesondert dokumentiert, formale Baseline-Freigabe und Produktabnahme nicht durch dieses Dokument erklärt** |
 | Stand | 14. November 2026 |
 | Sprache | Deutsch; technische Feldnamen, Enum-Werte und CLI-Kommandos Englisch |
-| Fachliche Quelle | **Diese Repositoryfassung v0.2.86 ist die aktive fachliche Arbeitsgrundlage; eine entsprechende PDF wird hiermit nicht veröffentlicht.** |
+| Fachliche Quelle | **Diese Repositoryfassung v0.2.87 ist die aktive fachliche Arbeitsgrundlage; eine entsprechende PDF wird hiermit nicht veröffentlicht.** |
 | Bearbeitbare Satzquelle | Diese Datei; eine spätere PDF muss denselben versionierten Inhalt wiedergeben. |
-| Vorgängerversion | Repository-Spezifikation v0.2.85; historische Nachweise bleiben unverändert. |
-| Prüf- und Entscheidungsgrundlage | WORKER-LIMIT-12 / CONTROL-BUDGET-20, ausdrückliche Nutzeraufträge; RECOVERY-REMOVAL-006 bleibt erhalten; keine Produktfreigabe. |
-| Änderungsart | Gemeinsamer Workerstandard zwölf; neue volle Control-Budgets zwanzig mit budgetabhängiger Klärungsfreigabe. Der vorherige Recovery-Rückbauvertrag und seine Planreihenfolge bleiben unverändert. |
+| Vorgängerversion | Repository-Spezifikation v0.2.86; historische Nachweise bleiben unverändert. |
+| Prüf- und Entscheidungsgrundlage | CONTROL-START-CURRENT / TEST-CONTROL-PLAN, ausdrücklicher Nutzerauftrag vom 14. November 2026; keine Produktfreigabe. |
+| Änderungsart | Expliziter Neustart aus aktuellem Repositoryzustand, priorisierte START/CONFIG/LIVE/MOVE-Folge und vorausschauende Bundleplanung. Der Produkt-Recovery-Rückbau folgt danach unverändert. |
 
 > **Verbindlicher Quellenwechsel:** Die ausdrückliche Nutzerentscheidung REFERENCE-SOURCE-551 wird als v0.2.50 umgesetzt. Der neue Quellvertrag ist Entwurfsarbeit vom 3. November 2026, kein Nachweis eines früher existierenden Formats. Bestehende 0.2-Verträge, Transport-, Sicherheits- und Reviewgrenzen bleiben erhalten.
 
@@ -868,6 +868,73 @@ Budgetfolgen; ein bestehender Rest bleibt erhalten.
 Die allgemeine Freigabe ersetzt keine menschliche Fachentscheidung,
 Originalbelege, Sicherheitsgrenzen, W/R/C-Gates oder die eine kanonische ZIP
 pro Result. Sie erlaubt keine Umschreibung eines schon erteilten Auftrags.
+
+### 2.4.3.7 Aktueller Ausgangsstand und vorausschauende Entwicklung — START-CURRENT-685
+
+Ausdrücklicher Nutzerauftrag vom 14. November 2026: Der Bediener kann mit
+`control start --from-current` einen neuen Automatikzyklus aus dem tatsächlichen
+HEAD und dem vorhandenen Arbeitsbaum der konfigurierten Apply-Kopie beginnen.
+Der aktuelle Zustand ist die fachliche Ausgangsbasis. Dafür sind weder eine
+Rekonstruktion früherer Control-Ketten noch ein vorgeschobenes Reparaturbundle
+oder eine Codeänderung erforderlich. Git trägt die Änderungshistorie; Control
+ist kein zusätzliches Herkunftsjournal. Seine lokalen ignorierten beziehungsweise
+außerhalb des Repositorys gespeicherten Daten dienen der aktuellen Ausführung.
+
+Dieser ausdrückliche Start ist ein neuer Auftrag mit neuen vollen Budgets nach
+der aktuell konfigurierten Policy und dem geprüften Projektmarker; START.W
+verwendet die vorhandenen Standards zwanzig und die gespeicherte Klärungswahl.
+Die frühere Kette wird dafür weder gelesen noch umgerechnet. Fehlende,
+erschöpfte oder beschädigte alte Laufzeitdaten sperren diesen Bedienweg nicht.
+Ein gewöhnlicher Dienstneustart, Pause/Resume oder automatischer Retry behält
+dagegen den laufenden Auftrag und dessen Zähler. Dieser Absatz ersetzt für den
+ausdrücklichen neuen Bedienweg die historischen Ketten-/Resetvoraussetzungen
+aus 2.4.3.2 bis 2.4.3.6; er erteilt Dev keinen selbstständigen Budgetreset.
+
+Ein nativer manueller Result-Snapshot bindet den neuen Ausgangsstand mit allen
+vier Werten und seinem vollständigen SHA-256. Uncommittete Änderungen werden
+erhalten, nicht zurückgesetzt, heimlich committed oder als geprüft bezeichnet.
+Die erste Stage muss sie gemäß bestehendem Apply-Vertrag vollständig behandeln.
+Aktive Apply-Sperren und tatsächlich aktive Dev-Turns werden abgewartet;
+laufende Tests werden nicht beendet. Die lokale Betriebsaktion aktiviert einen
+frischen Laufzeitstand atomar erst nach aktueller Prüfung von Zielidentität,
+Threadbelegung und Konfiguration. Wiederholte noch vorgemerkte Startbefehle
+eröffnen keinen zweiten Zyklus. Ein bereits veröffentlichter Zyklus wird nach
+einem Abbruch zwischen Veröffentlichung und Bestätigung nicht erneut aufgefüllt.
+Der Dienst läuft weiterhin aus einer erfolgreich getesteten installierten
+Releasekopie. Installation oder Entwicklung dieses Features starten ihn nicht.
+
+**Vorausschauende Bundleplanung.** Im bestätigten Scope möglichst etwa zwei
+vollständige zusammenhängende W/R/C-Gruppen vorbereiten; dies ist ein Richtwert,
+keine starre Commitzahl oder neue Scopebefugnis. Ein ausdrücklicher kurzer
+Bootstrapauftrag hat Vorrang. Bei Fehlern den vollständigen offenen Rest zuerst
+reparieren, einschließlich aller davon abhängigen Folgezustände. Bereits
+erfolgreiche Commits werden nicht wiederholt. Danach dürfen weitere bereits
+geplante Implementierungsstages folgen. Apply-Commitplan v2 bleibt bestehen:
+`correction_of.remaining_commit_ids` bindet ausschließlich den belegten alten
+Rest als exakten Präfix; neue eindeutige IDs folgen mit `role=implementation`.
+Keine Wiederverwendung schon abgeschlossener IDs, keine zusätzliche Klärung im
+Anhang. Rollen und Reihenfolge des alten Rests, bytegleiche offene
+Klärungsziele und vollständige neue Vorherbytes bleiben Pflicht. Die neue
+Gesamtfolge wird vollständig angekündigt. Fehler im Anhang lassen genau dessen
+noch offenen Rest übrig. Jede Stage behält ihr eigenes Apply-Gate und ihren
+Commit, und nur der erfolgreiche saubere Abschluss aller angekündigten Stages
+erneuert automatisch Budgets. V1 behält seinen bisherigen exakten Restvertrag.
+
+**Bestätigte anschließende Entwicklung.** Der verlinkte START/CONFIG/LIVE/MOVE-
+Plan hat Vorrang vor der nächsten Produktposition 18.s.W. CONFIG führt lokale
+Konfiguration und CLI-Änderungen für Budgets und Klärungswahl ohne Bundle ein.
+LIVE und MOVE gehören zum unabhängigen `test-control`, nicht zur
+Entwicklungsautomatik `control`. LIVE regelt gewünschte Workerzahlen je lokalem
+und SSH-Host während laufender Tests: erhöhen startet weitere Tests, verringern
+lässt vorhandene Tests auslaufen, null pausiert neue Zuteilung. Gemeinsame
+Hostgrenzen über mehrere Applies, niedrige CPU-/IO-Priorität, native
+Umgebungsprüfung und Messung bleiben erhalten. MOVE bricht nur den ausdrücklich
+ausgewählten Testversuch samt Unterprozessen ab und startet ihn auf dem
+ausgewählten verfügbaren Worker mit frischen Fixtures erneut. Kein Fortsetzen
+eines Python-Stacks und kein doppelter gültiger Versuch; echte vorherige Fehler
+werden nicht verdeckt. `test-monitor` zeigt Zustand und Hosts an. Die
+vollständigen Phasengates und offenen Integrationsabnahmen stehen im Plan;
+ihre Planung behauptet keine bereits nutzbare Live-Steuerung.
 
 ### 2.5 Entwicklungsworkflow: aktuelle Laufzeitfilterung und vollständige Planschritte
 

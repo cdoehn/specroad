@@ -13,7 +13,7 @@ RECEIPTS = ('current_acceptances', 'apply_reconciliations',
 
 
 def history(paths, config):
-    path = paths.state/'automation.sqlite3'
+    path = paths.ledger
     outside(path)
     def quiet():
         if any(os.path.lexists(str(path)+suffix) for suffix in ('-journal', '-wal', '-shm')):

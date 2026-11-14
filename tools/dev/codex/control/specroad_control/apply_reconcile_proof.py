@@ -147,7 +147,11 @@ def plan(fact, *, data_limit=PLAN_LIMIT):
         correction = data['correction_of']
         if correction is not None:
             if (type(correction) is not dict or set(correction) != {'plan_sha256', 'remaining_commit_ids'}
-                    or correction['remaining_commit_ids'] != ids):
+                    or type(correction['remaining_commit_ids']) is not list
+                    or not correction['remaining_commit_ids']
+                    or correction['remaining_commit_ids'] != ids[:len(correction['remaining_commit_ids'])]
+                    or any(s['role'] != 'implementation'
+                           for s in data['stages'][len(correction['remaining_commit_ids']):])):
                 fail('Correction must bind the complete remaining sequence.')
             digest(correction['plan_sha256'])
         from .mixed_contract import validate_roles

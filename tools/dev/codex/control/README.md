@@ -281,3 +281,28 @@ Teilcommits, Pause, Neustart und unbekannte/manuelle Übergaben tun das nicht.
 Nach Erschöpfung folgt `correction_budget_exhausted` ohne neuen Modellaufruf.
 Historien und Quellen bleiben erhalten. Die Installation startet keine Dienste
 und ändert keinen laufenden Auftrag. Normativ gilt Spec 2.4.3.6.
+
+## Neuer Zyklus vom aktuellen Stand
+
+Nach erfolgreichem Apply und Installation dieser Releasekopie:
+
+```sh
+control start --from-current
+control status
+```
+
+Der erste Befehl merkt einen neuen Zyklus vor, startet bei Bedarf den eigenen
+Control-Dienst und nimmt die Automatik wieder auf. Aktive Dev-Turns oder Apply-
+Sperren werden abgewartet; vorhandene Dateien und Tests bleiben erhalten.
+Eine native Momentaufnahme bindet HEAD und Arbeitsbaum. Alte Control-Historie
+und ausgeschöpfte alte Budgets sind keine Voraussetzung für den neuen Start.
+Verwendet werden die gespeicherten Korrekturgrenzen und Klärungswahl sowie das
+Projektmaximum. `start` ohne Option und `resume` behalten den laufenden Zyklus.
+Die Antwort `queued` bestätigt die Vormerkung, nicht bereits einen Modellturn.
+Ein bestehender gleicher vorgemerkter Auftrag wird nicht mehrfach angelegt.
+
+Der aktive SQLite-Stand wird lokal über `state/current-cycle.json` gewählt;
+frühere Dateien bleiben unbenutzt erhalten, ohne beim neuen Start geprüft zu
+werden. Kein Repository-Payload enthält Betriebsdaten. Die geplanten weiteren
+CONFIG/LIVE/MOVE-Funktionen stehen im gemeinsamen Implementierungsplan und
+sind durch START.W noch nicht implementiert.

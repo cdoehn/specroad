@@ -73,7 +73,11 @@ class Engine(OverloadWaiting):
         self.update(**{k: v for k, v in values.items() if k in ("turn_id", "turn_status", "thread_status", "codex_error", "codex_will_retry")})
 
     def tick(self):
-        ledger = Ledger(self.paths.state / "automation.sqlite3", scope(self.config))
+        from .start_current import advance
+        starting = advance(self)
+        if starting is not None:
+            return starting
+        ledger = Ledger(self.paths.ledger, scope(self.config))
         try:
             row = ledger.current()
             self.update(job={key: row.get(key) for key in ("run_id", "sha", "stage", "patch_sha")},
@@ -198,7 +202,8 @@ class Engine(OverloadWaiting):
                 return {"halted": False, "again": False}
             self.exchange.assert_current(source, ledger.known_runs())
             from .handoff_rebase import candidate, wait_if_busy
-            if (ledger.request_contract() or {}).get('version') == 4 and candidate(source):
+            from .start_current import is_checkpoint
+            if (ledger.request_contract() or {}).get('version') == 4 and (candidate(source) or is_checkpoint(self.paths, source)):
                 waiting = wait_if_busy(self, source, ledger.known_runs())
                 if waiting:
                     return waiting
@@ -266,7 +271,7 @@ class Engine(OverloadWaiting):
                 self.accept(ledger, source, answer)
             except ControlError as exc:
                 from .handoff_rebase import candidate
-                if (exc.code == 'repository_busy' and candidate(source)
+                if (exc.code == 'repository_busy' and (candidate(source) or is_checkpoint(self.paths, source))
                         and (ledger.request_contract() or {}).get('version') == 4
                         and ledger.current()['stage'] == 'ready'):
                     self.update(apply_wait_reason='repository_busy', stage='ready', error=None)
@@ -355,7 +360,7 @@ class Engine(OverloadWaiting):
 
     def check_retry(self, source, retry, *, ledger=None):
         if ledger is None:
-            opened = Ledger(self.paths.state / "automation.sqlite3", scope(self.config))
+            opened = Ledger(self.paths.ledger, scope(self.config))
             try:
                 return self.check_retry(source, retry, ledger=opened)
             finally:
@@ -396,7 +401,7 @@ class Engine(OverloadWaiting):
         return True
 
     def source_for_check(self):
-        ledger = Ledger(self.paths.state / "automation.sqlite3", scope(self.config))
+        ledger = Ledger(self.paths.ledger, scope(self.config))
         try:
             return self.exchange.source(ledger.current()["source"])
         finally:
@@ -428,7 +433,8 @@ class Engine(OverloadWaiting):
             self.check_retry(source, retry, ledger=ledger)
         self.exchange.assert_current(source, ledger.known_runs())
         from .handoff_rebase import candidate, require_current
-        if (ledger.request_contract() or {}).get('version') == 4 and candidate(source):
+        from .start_current import is_checkpoint, pending
+        if (ledger.request_contract() or {}).get('version') == 4 and (candidate(source) or is_checkpoint(self.paths, source)):
             require_current(self, source, ledger.known_runs())
         from .blocked_authorization import guard_dispatch
         guard_dispatch(self, ledger, source)
@@ -437,6 +443,8 @@ class Engine(OverloadWaiting):
         if thread_preflight is not None:
             thread_preflight()
         def claim():
+            if pending(self.paths) is not None:
+                raise ControlError('dispatch_paused', 'A fresh operator start takes priority before dispatch.')
             if request_guard is not None:
                 request_guard()
             ledger.change('running')

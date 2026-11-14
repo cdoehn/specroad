@@ -37,7 +37,8 @@ def run(paths: Paths) -> int:
 
 def _locked_run(paths: Paths, config: Config | None = None, *, queued=None) -> int:
     config = config or load(paths)
-    previous = read_state(paths)
+    from .start_current import pending
+    previous = None if pending(paths) is not None else read_state(paths)
     if previous and previous["active_job"] and not config.enabled:
         raise ControlError("unresolved_job", "Unresolved prior work must be reviewed before starting; no replay is attempted.")
     desired = previous.get("desired", "running") if previous else "running"
@@ -54,6 +55,7 @@ def _locked_run(paths: Paths, config: Config | None = None, *, queued=None) -> i
     gate.set(desired == "running" and delay.ready())
     engine = watcher = None
     future = None
+    submitted_start_id = None
     run_id = str(uuid.uuid4())
     started = time.time()
     runtime_error = None
@@ -205,18 +207,34 @@ def _locked_run(paths: Paths, config: Config | None = None, *, queued=None) -> i
                         runtime_error = "automation_internal_error"
                         if not lifecycle.stopping:
                             lifecycle.request("pause")
+                    fresh_request = pending(paths)
+                    if (fresh_request is not None and fresh_request['id'] != submitted_start_id
+                            and not lifecycle.stopping):
+                        # A manual fresh start queued during an old job survives
+                        # that job's eventual failure or budget stop.
+                        runtime_error = None
+                        lifecycle.request('resume')
+                        pending_scan, due = True, time.monotonic()
                     future = None
                     lifecycle.finish_job()
                     save()
                     if lifecycle.phase == "stopped":
                         break
                 if engine and pending_scan and future is None and lifecycle.phase == "idle" and runtime_error is None and time.monotonic() >= delay.due(due):
+                    if pending(paths) is not None and hasattr(engine, 'request_id'):
+                        engine.close()
+                        if watcher is None:
+                            watcher = Notifications(config.exchange)
+                            selector.register(watcher, selectors.EVENT_READ)
+                        engine = Engine(config, paths, gate)
                     check_storage()
                     if lifecycle.stopping:
                         break
                     gate.set(True)
                     lifecycle.begin_job()
                     save()  # Preserve the begun work before handing it to the task.
+                    fresh_request = pending(paths)
+                    submitted_start_id = fresh_request['id'] if fresh_request else None
                     future = pool.submit(engine.tick)
                     future.add_done_callback(wake)
                     pending_scan = False
@@ -253,6 +271,8 @@ def _locked_run(paths: Paths, config: Config | None = None, *, queued=None) -> i
                             if not isinstance(command, str) or command not in ("status", "pause", "resume", "stop"):
                                 raise ValueError
                             if command != "status":
+                                if command == "resume" and runtime_error and pending(paths) is not None:
+                                    runtime_error = None  # Explicit fresh start; real guards run again.
                                 if command == "resume" and runtime_error:
                                     raise ControlError("needs_review", "A runtime error requires review and a controlled restart.")
                                 lifecycle.request(command)

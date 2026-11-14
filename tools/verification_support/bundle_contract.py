@@ -69,7 +69,12 @@ def validate_bundle(data):
         proof = data['correction_of']
         if (set(proof) != {'plan_sha256', 'remaining_commit_ids'}
                 or not re.fullmatch(r'[0-9a-f]{64}', proof['plan_sha256'])
-                or proof['remaining_commit_ids'] != ids):
+                or type(proof['remaining_commit_ids']) is not list
+                or not proof['remaining_commit_ids']
+                or proof['remaining_commit_ids'] != ids[:len(proof['remaining_commit_ids'])]
+                or version == 1 and proof['remaining_commit_ids'] != ids
+                or version == 2 and any(s['role'] != 'implementation'
+                    for s in data['stages'][len(proof['remaining_commit_ids']):])):
             raise ValueError('Correction must retain the exact remaining commit sequence')
     if version == 2:
         _validate_roles(data)
@@ -120,10 +125,12 @@ def validate_continuation(previous, progress, data):
     expected = {'plan_sha256': sha256(canonical(previous)).hexdigest(),
                 'remaining_commit_ids': [s['commit_id'] for s in rest]}
     if (data['format_version'] != previous['format_version'] or data['correction_of'] != expected
-            or [s['commit_id'] for s in data['stages']] != expected['remaining_commit_ids']):
+            or [s['commit_id'] for s in data['stages'][:len(rest)]] != expected['remaining_commit_ids']
+            or any(s['commit_id'] in {old['commit_id'] for old in previous['stages']}
+                   for s in data['stages'][len(rest):])):
         raise ValueError('Correction differs from the bound remaining sequence')
     if data['format_version'] == 2:
-        if [s['role'] for s in data['stages']] != [s['role'] for s in rest]:
+        if [s['role'] for s in data['stages'][:len(rest)]] != [s['role'] for s in rest]:
             raise ValueError('Correction cannot relabel remaining stage roles')
         for old, new in zip(rest, data['stages']):
             if old['role'] == 'clarification' and old['after'] != new['after']:

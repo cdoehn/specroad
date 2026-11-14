@@ -1,3 +1,16 @@
+# Aktuelle Ergänzung START-CURRENT-685
+
+Für `start --from-current` gilt die übergeordnete SpecRoad-Spezifikation
+0.2.87, Abschnitt 2.4.3.7. Dieser ausdrückliche Bedienweg ersetzt die unten
+historisch beschriebenen Kettenvoraussetzungen für einen neuen Zyklus.
+Er verwendet einen nativen aktuellen Snapshot einschließlich uncommitteter
+Dateien und einen atomar gewählten neuen lokalen Laufzeitstand. Frühere
+SQLite-/Resultketten sind keine Voraussetzung; normale Wiederaufnahme eines
+laufenden Zyklus behält dessen Budgets. START/CONFIG/LIVE/MOVE im gemeinsamen
+Implementierungsplan ist vor weiterer Produktentwicklung abzuarbeiten.
+`test-control` ist als eigenständiges Werkzeug geplant; START.W liefert nur
+den neuen Wiederanlauf und die vollständige Planung samt Korrekturanhängen.
+
 ## Entwicklungsaufträge ausschließlich über Control
 
 Nutzerauftrag vom 5. November 2026, OFF-PLAN TEST-SPEED-CONTROL-599:

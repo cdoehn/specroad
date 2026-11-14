@@ -193,3 +193,29 @@ Konfiguration, Schlüssel, SSH-Sockets, Messdatenbanken und Host-Arbeitsverzeich
 bleiben lokal. Keine Einrichtung oder Dienstaktion als Nebenwirkung eines Bundles.
 Testabdeckung und Prioritäten nach den [Testregeln](docs/development/Testing.md)
 erhalten; echte W/R/C-Zustände bleiben getrennt.
+
+## Vorausschauende Umsetzung und expliziter Wiederanlauf
+
+Nutzerauftrag START-CURRENT-685 vom 14. November 2026: Den aktuell priorisierten
+Plan einschließlich seiner verlinkten OFF-PLAN-Folge vor jeder Änderung lesen.
+Nach Möglichkeit etwa zwei vollständige zusammenhängende W/R/C-Gruppen
+vorbereiten. Das ist ein Arbeitsrichtwert; explizite Liefergrenzen wie das erste
+einzelne START.W haben Vorrang. Keine künstliche Klärung, neue Scopeerweiterung
+oder vorab installierter Endzustand. Jede Stage hat ihr eigenes Apply-Testgate.
+
+Bei Fehlern zuerst den gesamten belegten offenen Rest reparieren und abhängige
+Folgezustände anpassen. Erfolgreiche Commits bleiben erhalten. Danach dürfen
+bereits geplante neue implementation-Stages angehängt werden. In Format v2
+bindet correction_of nur den alten Rest als exakten Präfix; neue IDs müssen
+eindeutig sein und dürfen keine abgeschlossenen IDs wiederverwenden. Kein
+neuer Klärungspräfix im Anhang; offene Klärungsziele bleiben bytegleich.
+Vor Übergabe die neue Gesamtfolge und sämtliche Vorherbytes nativ prüfen.
+
+Der neue Bedienweg `control start --from-current` beginnt auf ausdrücklichen
+Betreiberauftrag einen frischen Zyklus vom aktuellen HEAD plus Arbeitsbaum
+mit konfigurierten neuen Budgets. Er braucht keine alte Control-Kettenprüfung.
+Dev führt diesen Befehl nicht eigenmächtig aus. Der laufende Auftrag behält
+seine Grenzen; CI, Watcher, Verhaltenstests und Git-Commits werden nicht in Dev
+gestartet. Native Tests und Git bleiben Nachweise, lokale Runtime-Dateien
+gehören weder in Git noch in Produkt-Payloads. Aktive CURRENT_WORK-Notizen und
+deren lokale Zeitstempel-Historie werden weiterhin zur Dev-Abstimmung gepflegt.
