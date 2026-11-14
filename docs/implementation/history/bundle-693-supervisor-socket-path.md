@@ -41,7 +41,7 @@ vollständigen alten Rest an
 Die erste Stage behandelt alle erhaltenen Änderungen des Fehler-Results mit
 vollständigen Vorherbytes. Keine erfolgreichen START-/CONFIG-/LIVE-Commits
 werden wiederholt; keine Rücksetzung und keine Budgetänderung.
-Zielstand dieser Stage: **MOVE.R**; danach **MOVE.C**, jeweils erst nach
+Zielstand dieser Stage: **MOVE.C**; danach **18.s.W**, jeweils erst nach
 eigenem erfolgreichem Apply-Gate und Commit. Die komplette zusammenhängende
 MOVE-Gruppe beendet den vorrangigen Teststeuerungsauftrag; der fachlich getrennte
 Produkt-Recovery-Rückbau ab 18.s.W wird nicht in diese Infrastrukturkorrektur

@@ -15,7 +15,7 @@ from verification_support.runtime_history import RuntimeHistory
 
 @pytest.mark.parametrize('proxy', [False, True])
 def test_native_operator_move_reaps_source_and_runs_fresh_target(tmp_path, proxy):
-    with pool(tmp_path, proxy=proxy) as p:
+    with pool(tmp_path, proxy=proxy, long_identity=True) as p:
         def status():
             return read_status(p['root'], home=p['home'])
         await_value(lambda: (p['root']/'build/original').exists(), p['process'], p['log'])
@@ -33,7 +33,8 @@ def test_native_operator_move_reaps_source_and_runs_fresh_target(tmp_path, proxy
             await_value(lambda: (p['target']/'build/replacement').exists(), p['process'], p['log'], timeout=60)
             assert not Path('/proc', (p['root']/'build/original-child').read_text()).exists()
             with RuntimeHistory(p['root']) as history:
-                rows = history.db.execute("SELECT worker,invalid FROM attempts WHERE node LIKE '%::test_0' ORDER BY id").fetchall()
+                nodeid = next(iter(p['profile']['selected']))
+                rows = history.db.execute('SELECT worker,invalid FROM attempts WHERE node=? ORDER BY id', (nodeid,)).fetchall()
                 assert len(rows) == 2 and rows[0] == ('gw0', 1) and rows[1][0] != 'gw0'
             old_fixture = (p['root']/'build/fixture-gw0').read_text()
             new_worker = (p['target']/'build/replacement').read_text()

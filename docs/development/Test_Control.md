@@ -100,3 +100,9 @@ und der Ursprung läuft weiter. Ein fehlender Endnachweis nach begonnenem Abbruc
 sperrt dagegen das Gate. Ein gleichzeitig gestopptes Gate oder ausgeschaltetes
 Ziel erlaubt keinen Neustart. Dieselbe Anfrage wird pro Generation nur einmal
 verarbeitet; fremde Apply-Pfade und ersetzte Generationen werden abgewiesen.
+
+Die Linux-Prozessaufsicht, ihr RPC über den bestehenden Hostgateway und die
+steuernde Versuchszustandsfolge liegen in getrennten Modulen. Der Monitor
+liest ausschließlich die bestehende Historie und markiert deren Abbruchkonten;
+er öffnet keine Steuerverbindung und startet keine Migration. Alle W/R-Abnahmen
+bleiben für C verpflichtend.

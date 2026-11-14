@@ -30,12 +30,13 @@ Jede Tabellenzeile enthält Code, passende Verhaltenstests und Integration.
 ## Aktueller Übergang
 
 START.W, START.W-FIX1, START.R/C, CONFIG.W/R/C und LIVE.W/R/C sind im
-gebundenen Quell-Result erfolgreich übernommen. MOVE.W ist mit Bundle 693 ebenfalls erfolgreich committed.
-[Bundle 694](../history/bundle-694-move-test-checkpoints.md) setzt nach zwei
-fehlgeschlagenen Rennfalltests ausschließlich MOVE.R/C mit eigenen Gates fort.
-Der bestätigte W-Commit bleibt erhalten.
-Der Zielstand dieser Stage reicht nach ihrem erfolgreichen Gate bis **MOVE.R**;
-danach ist **MOVE.C** offen. Alle zwölf IDs und ihre vollständigen Abnahmen
+gebundenen Quell-Result erfolgreich übernommen. MOVE.W ist mit Bundle 693 und
+MOVE.R mit Bundle 694 erfolgreich committed (8.811 beziehungsweise 8.892 Tests).
+[Bundle 696](../history/bundle-696-move-child-environment.md) korrigiert nach
+zwei Fehlern der Langnamen-Testvorbereitung in Bundle 695 ausschließlich MOVE.C
+mit eigenem Gate. Beide bestätigten MOVE-Commits bleiben erhalten.
+Der Zielstand dieser Stage reicht nach ihrem erfolgreichen Gate bis **MOVE.C**;
+danach ist diese Folge vollständig. Alle zwölf IDs und ihre vollständigen Abnahmen
 bleiben erhalten. Anschließend folgt 18.s.W; Produktzähler bleiben unverändert.
 
 Nach erfolgreichem Apply und expliziter Installation der getesteten Control-

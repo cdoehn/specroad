@@ -10,7 +10,6 @@ import json
 import os
 from pathlib import Path
 import re
-import signal
 import socket
 import stat
 import struct
@@ -22,91 +21,38 @@ import time
 import uuid
 
 
-def children(pid):
-    result = set()
-    for task in Path('/proc', str(pid), 'task').glob('*'):
-        try:
-            result.update(map(int, (task / 'children').read_text().split()))
-        except FileNotFoundError:
-            pass
-    return result
+if __package__:
+    from .attempt_processes import terminate_tree
+else:
+    from attempt_processes import terminate_tree
 
 
-def stamp(pid):
-    try:
-        value = Path('/proc', str(pid), 'stat').read_text().rsplit(')', 1)[1].split()
-        return value[19], value[0]
-    except FileNotFoundError:
-        return None
+# Full parametrized nodeids and the completed-attempt receipt exceed 64 KiB.
+# Bound encoded frames in both directions without shortening test identities.
+MAX_MESSAGE_BYTES = 16 * 1024 * 1024
 
 
-def terminate_tree(timeout=10):
-    """Freeze the owned tree before killing; pidfds rule out PID reuse kills."""
-    deadline = time.monotonic() + timeout
-    held = {}
-    try:
-        while True:
-            pending = list(children(os.getpid()))
-            seen = set()
-            while pending:
-                pid = pending.pop()
-                if pid in seen:
-                    continue
-                seen.add(pid)
-                before = stamp(pid)
-                if before is None:
-                    continue
-                if pid not in held:
-                    try:
-                        fd = os.pidfd_open(pid)
-                    except ProcessLookupError:
-                        continue
-                    after = stamp(pid)
-                    if after is None or after[0] != before[0]:
-                        os.close(fd)
-                        raise ValueError('Owned process changed identity')
-                    held[pid] = fd
-                    try:
-                        signal.pidfd_send_signal(fd, signal.SIGSTOP)
-                    except ProcessLookupError:
-                        pass
-                pending.extend(children(pid))
-            states = [stamp(pid) for pid in seen]
-            if all(s is None or s[1] in ('T', 't', 'Z', 'X') for s in states):
-                # Once every parent/thread is frozen, no new descendants can
-                # escape discovery. Detached double forks belong to us because
-                # this process is the dedicated subreaper for this worker.
-                if children(os.getpid()) <= seen:
-                    break
-            if time.monotonic() >= deadline:
-                raise TimeoutError('Owned process tree did not stop')
-            time.sleep(0.01)
-        for fd in held.values():
-            try:
-                signal.pidfd_send_signal(fd, signal.SIGKILL)
-            except ProcessLookupError:
-                pass
-        while True:
-            try:
-                pid, _ = os.waitpid(-1, os.WNOHANG)
-            except ChildProcessError:
-                return time.monotonic_ns()
-            if not pid:
-                if time.monotonic() >= deadline:
-                    raise TimeoutError('Owned process tree did not exit')
-                time.sleep(0.01)
-    finally:
-        for fd in held.values():
-            # An incomplete acknowledgement is still a gate failure. Do not
-            # strand frozen owned processes on that error path.
-            try:
-                signal.pidfd_send_signal(fd, signal.SIGKILL)
-            except ProcessLookupError:
-                pass
-            os.close(fd)
+def _encode_message(value):
+    if type(value) is not dict:
+        raise ValueError('Invalid supervisor message shape')
+    data = json.dumps(value).encode() + b'\n'
+    if len(data) > MAX_MESSAGE_BYTES:
+        raise ValueError('Oversized supervisor message')
+    return data
+
+
+def _read_message(stream):
+    data = stream.readline(MAX_MESSAGE_BYTES + 1)
+    if len(data) > MAX_MESSAGE_BYTES or not data.endswith(b'\n'):
+        raise ValueError('Invalid supervisor message frame')
+    value = json.loads(data)
+    if type(value) is not dict:
+        raise ValueError('Invalid supervisor message shape')
+    return value
 
 
 def request(endpoint, secret, command, **values):
+    data = _encode_message(dict(secret=secret, command=command, **values))
     path = Path(endpoint)
     if (not path.is_absolute() or '..' in path.parts or path.name != 'control.sock'
             or any(p.is_symlink() for p in (path, *path.parents))):
@@ -122,11 +68,9 @@ def request(endpoint, secret, command, **values):
         _, uid, _ = struct.unpack('3i', channel.getsockopt(socket.SOL_SOCKET, socket.SO_PEERCRED, 12))
         if uid != os.getuid():
             raise ValueError('Foreign supervisor peer')
-        channel.sendall(json.dumps(dict(secret=secret, command=command, **values)).encode() + b'\n')
-        value = channel.makefile('rb').readline(65537)
-    if len(value) > 65536 or not value.endswith(b'\n'):
-        raise ValueError('Invalid supervisor response')
-    result = json.loads(value)
+        channel.sendall(data)
+        with channel.makefile('rb') as stream:
+            result = _read_message(stream)
     if result.get('error'):
         raise ValueError(result['error'])
     return result
@@ -170,12 +114,8 @@ def main(args):
                     _, uid, _ = struct.unpack('3i', connection.getsockopt(socket.SOL_SOCKET, socket.SO_PEERCRED, 12))
                     if uid != os.getuid():
                         raise ValueError('Foreign supervisor client')
-                    data = connection.makefile('rb').readline(65537)
-                    if len(data) > 65536 or not data.endswith(b'\n'):
-                        raise ValueError('Invalid supervisor request')
-                    value = json.loads(data)
-                    if type(value) is not dict:
-                        raise ValueError('Invalid supervisor request shape')
+                    with connection.makefile('rb') as stream:
+                        value = _read_message(stream)
                     if value.pop('secret', None) != secret:
                         raise ValueError('Foreign supervisor request')
                     command = value.pop('command', None)
@@ -212,10 +152,10 @@ def main(args):
                             reply = dict(active=state['active'], completed=state['completed'])
                         else:
                             raise ValueError('Invalid supervisor command')
-                    connection.sendall(json.dumps(reply).encode() + b'\n')
+                    connection.sendall(_encode_message(reply))
                 except (ValueError, TypeError, KeyError, OSError, TimeoutError) as error:
                     try:
-                        connection.sendall(json.dumps(dict(error=str(error))).encode() + b'\n')
+                        connection.sendall(_encode_message(dict(error=str(error))))
                     except OSError:
                         pass
 

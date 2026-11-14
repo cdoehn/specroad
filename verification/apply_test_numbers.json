@@ -27422,6 +27422,13 @@
     "tests/test_test_control_move_right_integration.py::test_native_move_in_each_pytest_phase_keeps_both_attempts[True-call]",
     "tests/test_test_control_move_right_integration.py::test_native_move_in_each_pytest_phase_keeps_both_attempts[True-setup]",
     "tests/test_test_control_move_right_integration.py::test_native_move_in_each_pytest_phase_keeps_both_attempts[True-teardown]",
-    "tests/test_test_control_move_right_integration.py::test_real_call_failure_in_teardown_cannot_be_hidden_by_operator_move"
+    "tests/test_test_control_move_right_integration.py::test_real_call_failure_in_teardown_cannot_be_hidden_by_operator_move",
+    "tests/test_attempt_supervisor_protocol.py::test_complete_frame_at_byte_limit_remains_accepted",
+    "tests/test_attempt_supervisor_protocol.py::test_invalid_wire_frame_cannot_supply_a_supervisor_receipt[array]",
+    "tests/test_attempt_supervisor_protocol.py::test_invalid_wire_frame_cannot_supply_a_supervisor_receipt[malformed]",
+    "tests/test_attempt_supervisor_protocol.py::test_invalid_wire_frame_cannot_supply_a_supervisor_receipt[oversized]",
+    "tests/test_attempt_supervisor_protocol.py::test_invalid_wire_frame_cannot_supply_a_supervisor_receipt[truncated]",
+    "tests/test_attempt_supervisor_protocol.py::test_large_identity_and_receipt_survive_encoded_wire_roundtrip",
+    "tests/test_attempt_supervisor_protocol.py::test_outgoing_limit_counts_encoded_bytes_and_complete_frame"
   ]
 }

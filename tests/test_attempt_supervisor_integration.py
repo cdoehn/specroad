@@ -35,12 +35,27 @@ time.sleep(60)
         try:
             await_value(lambda: (tmp_path/'ready').exists() and (tmp_path/'child').exists(), worker, log)
             endpoint, secret = json.loads((tmp_path/'ready').read_text())
+            # Real parametrized identities can be much larger than a socket's
+            # buffer. Preserve them in requests and accumulated cancel receipts.
+            completed = dict(token='c'*32, index=0, slot=0,
+                nodeid='tests/test_native.py::test_completed[' + '\0' * 70000 + ']',
+                start=time.monotonic_ns())
+            request(endpoint, secret, 'arm', **completed)
+            completed['end'] = time.monotonic_ns()
+            request(endpoint, secret, 'complete', token=completed['token'], end=completed['end'])
             token = 'a'*32
-            request(endpoint, secret, 'arm', token=token, index=0, slot=0, nodeid='tests/test_native.py::test_one', start=time.monotonic_ns())
+            active = dict(token=token, index=1, slot=0,
+                nodeid='tests/test_native.py::test_one[' + 'q'*280000 + ']',
+                start=time.monotonic_ns())
+            request(endpoint, secret, 'arm', **active)
+            assert request(endpoint, secret, 'status') == dict(active=active, completed=[completed])
             assert request(endpoint, secret, 'cancel', token='b'*32)['cancelled'] is False
             assert worker.poll() is None and foreign.poll() is None
             reply = request(endpoint, secret, 'cancel', token=token)
             assert reply['cancelled'] and reply['children_remaining'] == 0
+            assert reply['completed'] == [completed]
+            assert {key: reply['attempt'][key] for key in active} == active
+            assert reply['attempt']['end'] >= active['start']
             assert worker.wait(timeout=10) == 137
             assert not Path(endpoint).parent.exists()
             assert not Path('/proc', (tmp_path/'child').read_text()).exists()

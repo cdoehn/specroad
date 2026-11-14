@@ -428,3 +428,7 @@
 - [Bundle 693 — Supervisor-Socket bei langem TMPDIR](bundle-693-supervisor-socket-path.md)
 
 - [Bundle 694 — Verlässliche MOVE-Testvorbereitung](bundle-694-move-test-checkpoints.md)
+
+- [Bundle 695 — Vollständige Supervisor-Nachrichten](bundle-695-supervisor-message-size.md)
+
+- [Bundle 696 — Isolierte MOVE-Kindprozessumgebung](bundle-696-move-child-environment.md)

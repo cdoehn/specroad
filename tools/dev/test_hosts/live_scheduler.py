@@ -67,21 +67,7 @@ class LiveScheduling(HostScheduling):
             self.started.pop(node, None)
             return None
         if name in self.control.retiring and name not in self.control.active and getattr(node, 'workeroutput', {}).get('exitstatus') == 0:
-            reserved = self.node2pending.pop(node)
-            self.started.pop(node, None)
-            for index in reserved:
-                if index in self.pending:
-                    raise ValueError('Duplicate returned live reservation')
-                self.pending.append(index)
-                self.remaining.add(index)
-                self.remaining_work += self.work_weights[index]
-                if self.identity(index) not in self.profile['baseline']:
-                    self.unknown.append(index)
-                else:
-                    import heapq
-                    weight = self.profile['baseline'][self.identity(index)]
-                    heapq.heappush(self.long, (-weight, index))
-                    heapq.heappush(self.short, (weight, index))
+            self._return_unstarted(node)
             self.check_schedule()
             return None
         return super().remove_node(node)

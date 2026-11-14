@@ -40,7 +40,7 @@ keine Testwiederholung, keine Abschwächung des belegten Fehlerfalls.
 `8770a59862ab8f33d8f5625b170705bbbe133fba22e051837aa8b03d6d013c0c` exakt an MOVE.R, MOVE.C;
 beide behalten ID, Rolle und Nachricht. Alle erhaltenen R-Dateien werden mit
 vollständigen aktuellen Vorherbytes übernommen. Die Korrektur gilt in R und C.
-Zielstand dieser Stage: **MOVE.R**; danach **MOVE.C**, jeweils erst nach
+Zielstand dieser Stage: **MOVE.C**; danach **18.s.W**, jeweils erst nach
 eigenem erfolgreichem Apply-Gate und Commit. C enthält weiterhin seine echte
 Strukturbereinigung. Der separate Produkt-Recovery-Rückbau wird nicht vorgezogen;
 der Produktstand bleibt 762/918. Keine neue Klärung oder Budgetänderung.

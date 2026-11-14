@@ -8,7 +8,6 @@ import uuid
 import execnet
 
 from dev.test_control.moves import requests
-from .attempt_supervisor import request
 
 
 class Attempts:
@@ -181,35 +180,9 @@ class Attempts:
         return True
 
     def cancel_remote(self, active):
-        binding = self.ready[active['worker']]
-        row = self.pool.rows[active['worker']]
-        spec = execnet.XSpec(row['spec'])
-        if spec.via:
-            gateway = self.ds.nodemanager.group[spec.via]
-            channel = gateway.remote_exec("""import sys
-root,endpoint,secret,token=channel.receive()
-sys.path.insert(0,root+'/tools')
-from dev.test_hosts.attempt_supervisor import request
-from dev.test_hosts.environment import environment,digest
-from dev.test_hosts.snapshot import inventory,fingerprint
-from verification_support.identity import source_identity
-reply=request(endpoint,secret,'cancel',token=token)
-reply['binding']={'source_sha256':source_identity(root),'snapshot_sha256':fingerprint(inventory(root)),'environment_sha256':digest(environment())}
-channel.send(reply)
-""")
-            channel.send((row['root'], binding['endpoint'], binding['secret'], active['token']))
-            reply = channel.receive(timeout=20)
-        else:
-            from .environment import environment, digest
-            from .snapshot import inventory, fingerprint
-            from verification_support.identity import source_identity
-            reply = request(binding['endpoint'], binding['secret'], 'cancel', token=active['token'])
-            reply['binding'] = dict(source_sha256=source_identity(row['root']),
-                snapshot_sha256=fingerprint(inventory(row['root'])), environment_sha256=digest(environment()))
-        profile = self.pool.config._sr_host_profile
-        if reply['binding'] != dict(source_sha256=profile['source_sha256'], snapshot_sha256=profile['snapshot_sha256'], environment_sha256=row['environment_sha256']):
-            raise ValueError('Source or environment changed before cancellation confirmation')
-        return reply
+        from .attempt_transport import cancel_remote
+        return cancel_remote(active, self.ready, self.pool.rows,
+                             self.pool.config._sr_host_profile, self.ds.nodemanager.group)
 
     def errordown(self, node, error):
         pending = self.pending
