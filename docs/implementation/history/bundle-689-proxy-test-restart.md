@@ -32,7 +32,7 @@ und erschöpfte Budgets aus; CONFIG.C bereinigt ausschließlich die Struktur.
 correction_of bindet den exakten alten Rest an Plan-SHA-256
 `cd348dc25fc8374011cb326c363c0c9a093beddf3cd98fd91e43c98e81ec3660`.
 
-Stage-Zielstand: **CONFIG.W**; danach **CONFIG.R**. Diese Fortschreibung gilt
+Stage-Zielstand: **CONFIG.R**; danach **CONFIG.C**. Diese Fortschreibung gilt
 erst nach erfolgreichem eigenem Apply-Gate und Commit. Keine neue Klärung,
 kein Budgetreset, kein wiederholter Erfolgscommit. Produktstand bleibt 762/918;
 LIVE/MOVE bleiben die vollständigen nächsten geplanten Gruppen.

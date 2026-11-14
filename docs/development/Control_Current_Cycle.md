@@ -50,3 +50,14 @@ Erneuerungspunkt oder durch den ausdrücklich neuen Zyklus. Ein erschöpfter
 Rest bleibt erschöpft. Alte Projektmarker mit drei/fünf Plätzen behalten
 ihre historischen Grenzen. Workerzahlen gehören zur geplanten separaten
 `test-control`-Bedienung und sind kein Control-Budget.
+
+Konkurrierende CLI-Schreibzugriffe verwenden den gemeinsamen Bedienlock;
+ein belegter Lock führt zur klaren Ablehnung, ohne Einstellungen zu verlieren.
+Erkennbare externe Dateirennen werden mit `configuration_changed` abgewiesen.
+Die Speicherung erfolgt atomar. Fehlende, beschädigte oder unsichere lokale
+Dateien werden nicht durch geratenen Standard ersetzt. Ihre Reparatur benötigt
+die tatsächliche Betreiberkonfiguration. Ein abgeschalteter Worker verhindert
+nicht das Speichern; die Antwort trennt `saved` und `worker_notification`.
+Der Status nennt zusätzlich den SHA-256 der gelesenen Konfigurationsbytes.
+Ein laufender Auftrag behält seinen Vertrag auch dann, wenn diese Anzeige
+bereits die für künftige Arbeit wirksamen Einstellungen zeigt.

@@ -153,6 +153,7 @@ class Engine(OverloadWaiting):
                     waiting = wait_if_busy(self, next_results[0], ledger.known_runs() | busy_runs)
                     if waiting:
                         return waiting
+                refresh(self)
                 ledger.enqueue(next_results[0], decision_evidence={**(evidence or {}),
                     'clarification_allowed': self.config.clarification_allowed,
                     'clarification_limit': self.config.clarification_limit},
@@ -217,6 +218,7 @@ class Engine(OverloadWaiting):
                 if waiting:
                     return waiting
             from .correction_budget import bind, require_available
+            refresh(self)  # Capture policy after potentially slow native preflight.
             budget = bind(ledger, source, self.config.correction_limit)
             self.update(correction_budget=budget)
             try:

@@ -32,8 +32,8 @@ Jede Tabellenzeile enthält Code, passende Verhaltenstests und Integration.
 START.W, START.W-FIX1, START.R und START.C sind erfolgreich übernommen.
 [Bundle 689](../history/bundle-689-proxy-test-restart.md) korrigiert CONFIG.W
 und führt CONFIG.R/C mit den ursprünglichen IDs, Rollen und Abnahmen fort.
-Dieser Stage-Zielstand reicht nach seinem eigenen Gate bis **CONFIG.W**;
-danach ist **CONFIG.R** offen. Kein Erfolg späterer Stages wird vorweggenommen;
+Dieser Stage-Zielstand reicht nach seinem eigenen Gate bis **CONFIG.R**;
+danach ist **CONFIG.C** offen. Kein Erfolg späterer Stages wird vorweggenommen;
 die sechs LIVE-/MOVE-Commits bleiben vollständig geplant.
 
 Nach erfolgreichem Apply und expliziter Installation der getesteten Control-

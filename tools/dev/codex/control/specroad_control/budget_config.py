@@ -1,5 +1,6 @@
 """Local operator policy; existing request contracts and counters are immutable."""
 from dataclasses import replace
+from hashlib import sha256
 
 from .budget_limits import valid_limit
 from .config import load, parse, render
@@ -34,10 +35,22 @@ def cycle_overrides(paths):
     return validate_values(cycle.get('overrides', {}))
 
 
+def snapshot(paths, *, allow_deferred=True):
+    """One coherent policy snapshot; concurrent external edits are not guessed."""
+    try:
+        raw = read_private(paths.config)
+        config = load(paths, allow_deferred=allow_deferred)
+        if read_private(paths.config) != raw:
+            raise ControlError('configuration_changed', 'Configuration changed while reading; retry the command.')
+    except FileNotFoundError:
+        raise ControlError('config_missing', 'Configuration is missing; no default identity is inferred.') from None
+    return config, raw
+
+
 def status(paths):
-    config = load(paths, allow_deferred=True)
+    config, raw = snapshot(paths)
     overrides = cycle_overrides(paths)
-    return {'configured': values(config), 'overrides': overrides,
+    return {'configured': values(config), 'configured_sha256': sha256(raw).hexdigest(), 'overrides': overrides,
             'effective': values(configured(config, overrides)),
             'applies_to': 'new_requests_and_new_budget_sequences', 'existing_counters_preserved': True}
 
@@ -47,10 +60,12 @@ def configure(paths, **changes):
     if not changes:
         return status(paths)
     with lock(paths.state / 'operation.lock'):
-        old = load(paths)
+        old, original = snapshot(paths, allow_deferred=False)
         new = configured(old, changes)
         candidate = render(new).encode()
         parse(tomllib.loads(candidate.decode()), paths)
+        if read_private(paths.config) != original:
+            raise ControlError('configuration_changed', 'Configuration changed before saving; existing bytes are preserved.')
         write_private(paths.config, candidate)
     # A notification wakes an idle worker; it neither starts one nor resumes pause.
     from .ipc import request
@@ -72,7 +87,7 @@ def refresh(engine):
         raise ControlError('config_missing', 'The running configuration is missing; preserve existing requests.') from None
     base = engine._policy_base
     if raw != engine._policy_raw:
-        current = load(engine.paths, allow_deferred=True)
+        current, raw = snapshot(engine.paths)
         if replace(base, **values(current)) != current:
             raise ControlError('runtime_configuration_changed', 'Identity or transport changes require a controlled restart.')
         base = current

@@ -27337,6 +27337,17 @@
     "tests/codex_control_tests/test_budget_config.py::test_policy_options_cannot_silently_change_unrelated_commands[args0]",
     "tests/codex_control_tests/test_budget_config.py::test_policy_options_cannot_silently_change_unrelated_commands[args1]",
     "tests/codex_control_tests/test_budget_config.py::test_policy_options_cannot_silently_change_unrelated_commands[args2]",
-    "tests/codex_control_tests/test_budget_config.py::test_policy_options_cannot_silently_change_unrelated_commands[args3]"
+    "tests/codex_control_tests/test_budget_config.py::test_policy_options_cannot_silently_change_unrelated_commands[args3]",
+    "codex_control_tests.test_budget_config_right.BudgetConfigRightTests.test_change_during_dev_turn_does_not_rewrite_attempt_or_prompt",
+    "codex_control_tests.test_budget_config_right.BudgetConfigRightTests.test_conflicting_start_override_cannot_replace_an_already_pending_request",
+    "codex_control_tests.test_budget_config_right.BudgetConfigRightTests.test_damaged_cycle_override_does_not_silently_lose_invocation_priority",
+    "codex_control_tests.test_budget_config_right.BudgetConfigRightTests.test_detected_external_edit_is_preserved_instead_of_overwritten",
+    "codex_control_tests.test_budget_config_right.BudgetConfigRightTests.test_existing_operation_lock_rejects_competitor_without_lost_update",
+    "codex_control_tests.test_budget_config_right.BudgetConfigRightTests.test_interruption_before_atomic_replace_keeps_previous_file_and_ledger",
+    "codex_control_tests.test_budget_config_right.BudgetConfigRightTests.test_invalid_values_never_change_file_or_issue_ipc",
+    "codex_control_tests.test_budget_config_right.BudgetConfigRightTests.test_missing_file_and_corrupt_file_never_fall_back_to_unbound_defaults",
+    "codex_control_tests.test_budget_config_right.BudgetConfigRightTests.test_persisted_policy_is_not_reported_as_rolled_back_when_worker_is_offline",
+    "codex_control_tests.test_budget_config_right.BudgetConfigRightTests.test_policy_change_during_native_preflight_is_visible_before_dispatch",
+    "codex_control_tests.test_budget_config_right.BudgetConfigRightTests.test_raising_limit_preserves_proven_exhausted_correction_sequence"
   ]
 }
