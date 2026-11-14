@@ -436,3 +436,5 @@
 - [Bundle 698 — vollständige SPECULATE.W/R/C-Korrektur](bundle-698-speculative-correction.md)
 
 - [Bundle 699 — SPECULATE.R/C: Abbruchfehler synchron abnehmen](bundle-699-speculative-ack-handshake.md).
+
+- [Bundle 700 — gemeinsame native Qualifikation 18.s.W/R/C](bundle-700-common-qualification.md)

@@ -122,7 +122,7 @@ def test_invalid_proposal_or_plan_never_changes_project(tmp_path, invalid):
 
 def test_structure_validation_does_not_run_full_check_or_any_project_program(tmp_path, monkeypatch):
     from specroad.proposals import history
-    from specroad.recovery import _validation
+    from specroad.qualification import project as _validation
     _, original = validation_project(tmp_path, changed=True)
     def forbidden(*args, **kwargs):
         raise AssertionError('Full qualification is a distinct command')

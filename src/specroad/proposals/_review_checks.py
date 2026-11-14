@@ -99,7 +99,7 @@ def _extended_services(snapshot, original, after, operation, actor, planned_at, 
 
 
 def _gates(snapshot, original, after, operation, actor, planned_at, services):
-    from ..recovery._validation import validate_project
+    from ..qualification.project import validate_project
     qualified_services = _extended_services(snapshot, original, after, operation,
                                             actor, planned_at, services)
     files = {**snapshot.raw, after.path: after.source_bytes}

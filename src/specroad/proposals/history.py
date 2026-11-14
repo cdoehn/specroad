@@ -38,7 +38,7 @@ def native_check(context, *, services=None):
     Their histories are independently checked by the enclosing project reader.
     This does not run an analyzer, transaction, command or project code.
     """
-    from ..recovery._validation import validate_project
+    from ..qualification.project import validate_project
     from ..storage.json_syntax import parse_json_object
     target = reconstruct_proposal_target(context)
     for model in (context.basis, target):

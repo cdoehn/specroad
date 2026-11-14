@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 208 · **Stand:** 14. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.89
+**Planrevision:** 209 · **Stand:** 14. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.89
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 306 Schritte und 918 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; die früher genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wurde nach der damaligen Spezifikation innerhalb von 15.l.R vorgezogen und bleibt als normaler Prüfkern erhalten. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -58,7 +58,7 @@ Offene R/C-Korrektur nach erfolgreichem W: [Bundle 680](history/bundle-680-propo
 
 Korrektur der Prozessabbruchtests: [Bundle 681](history/bundle-681-process-crash-deadline.md).
 
-## Vorrangiger Auftrag: spekulative Testkopien
+## Abgeschlossene OFF-PLAN-Folge: spekulative Testkopien
 
 START/CONFIG/LIVE/MOVE ist im erfolgreichen Result von Bundle 696 vollständig
 übernommen; MOVE.C wurde mit 8.901 bestandenen Tests committed. Darauf baut
@@ -76,7 +76,7 @@ Fortsetzung nach bestätigtem W und fehlgeschlagenem R:
 W bleibt committed; ausschließlich der offene R/C-Rest wird korrigiert.
 Die Zielwerte dieser Stage gelten weiterhin erst nach ihrem eigenen Gate.
 
-## Danach: Produkt-Recovery zurückbauen
+## Aktuelle Produktfolge: Recovery zurückbauen
 
 [RECOVERY-REMOVAL-006](decisions/recovery-removal-006.md) setzt die ausdrückliche
 Nutzerentscheidung in Spezifikation 0.2.85 um. [18.s bis 18.x](milestones/M18.md#vorgezogener-umbau-nach-18k--recovery-removal-006)
@@ -97,14 +97,16 @@ OFF-PLAN-Nutzerauftrag: [Workerstandard12 und Control-Budgets20 — Bundle683](d
 
 Korrektur und vollständiger OFF-PLAN-Rest: [Bundle 684 — Reset-Abnahme](history/bundle-684-budget-reset-receipt.md).
 
+Aktuelle vollständige Gruppe: [18.s — gemeinsame native Qualifikation, Bundle 700](history/bundle-700-common-qualification.md). Die folgenden Zielwerte gelten erst nach dem erfolgreichen Gate dieser Stage; der Schreibmarker-/Abschlusswechsel folgt vollständig in 18.t.
+
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 208
+plan_revision: 209
 implementation_plan_commits_total: 918
-implementation_plan_commits_completed: 762
-last_completed_plan_commit: 18.k.C
-next_plan_commit: 18.s.W
+implementation_plan_commits_completed: 763
+last_completed_plan_commit: 18.s.W
+next_plan_commit: 18.s.R
 priority_off_plan: null
 next_off_plan_commit: null
 last_completed_numbered_bundle: 699

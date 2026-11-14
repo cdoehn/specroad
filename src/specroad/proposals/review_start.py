@@ -10,7 +10,7 @@ from ..changes._journal_codec import _transaction
 from ..changes.target_model import _default_scope
 from ..model.audit_values import UtcTimestamp
 from ..model.canonical import canonical_json_bytes
-from ..recovery.services import native_services
+from ..qualification.services import native_services
 from ..storage.project import ProjectSource
 from ._check_report import _now
 from ._review_checks import _fresh_reports, _gates

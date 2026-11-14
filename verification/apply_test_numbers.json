@@ -27454,6 +27454,14 @@
     "tests/test_speculative_tests_right_integration.py::test_copy_in_each_phase_is_separate_and_proof_rejects_tampering[teardown]",
     "tests/test_speculative_tests_right_integration.py::test_missing_termination_ack_keeps_gate_failed_even_with_passing_winner",
     "tests/test_speculative_tests_right_integration.py::test_naturally_completed_loser_is_retained_when_cancel_endpoint_closes",
-    "tests/test_speculative_tests_right_integration.py::test_real_failed_copy_is_canonical_failure_and_never_a_measurement"
+    "tests/test_speculative_tests_right_integration.py::test_real_failed_copy_is_canonical_failure_and_never_a_measurement",
+    "tests/test_project_qualification.py::test_applied_proposal_needs_original_publication_proof_for_read_qualification[False]",
+    "tests/test_project_qualification.py::test_applied_proposal_needs_original_publication_proof_for_read_qualification[True]",
+    "tests/test_project_qualification.py::test_complete_native_project_reports_validity_without_authority_or_writes[False]",
+    "tests/test_project_qualification.py::test_complete_native_project_reports_validity_without_authority_or_writes[True]",
+    "tests/test_project_qualification.py::test_live_source_is_reobserved_even_when_original_model_bytes_are_reused",
+    "tests/test_project_qualification.py::test_project_data_cannot_supply_a_native_service_or_success_gate[True]",
+    "tests/test_project_qualification.py::test_project_data_cannot_supply_a_native_service_or_success_gate[invalid0]",
+    "tests/test_project_qualification.py::test_project_data_cannot_supply_a_native_service_or_success_gate[invalid1]"
   ]
 }

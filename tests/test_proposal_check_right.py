@@ -248,7 +248,7 @@ def test_check_rejects_execution_write_and_unimplemented_variant_options(tmp_pat
 def test_existing_trusted_native_source_provider_is_rechecked_for_basis_and_target(tmp_path, supplied):
     from specroad.cli.invocation_context import InvocationContextBuilder
     from specroad.proposals import prepare_proposal_for_model
-    from specroad.recovery.services import RestoreServices
+    from specroad.qualification.services import RestoreServices
     from support.records import record_value
     from support.domain import domain_value
     from support.model import put

@@ -1,6 +1,11 @@
 {
   "evidence_kind": "specroad-dev-pytest-v1",
-  "expected_diagnostics": [],
+  "expected_diagnostics": [
+    "restore_native_services_required",
+    "restore_source_content_provider_required",
+    "restore_source_content_changed",
+    "proposal_original_completion_required"
+  ],
   "expected_exit_codes": [
     0,
     2,
@@ -10,21 +15,24 @@
     7,
     8
   ],
-  "fixture_ids": [],
-  "implementation_status": "open",
+  "fixture_ids": [
+    "SR-FIX-PROPOSAL-APPLY-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [],
-  "method": "pending",
+  "method": "automated_behavior",
   "open_items": [
-    "RECOVERY-REMOVAL-006: changed requirement contract; the old implementation/tests are retained until their assigned W/R/C replacement. Previous recovery/restore evidence does not establish this new behavior.",
-    "Apply of this specification/planning bundle is not implementation, release, or user authorization to use SpecRoad."
+    "18.t–18.x: new interruption marker and completion formats, manual fresh Git checkout and complete end-to-end restart acceptance remain open.",
+    "Current references cover only the common read-only qualification portion. Actual Apply evidence is required; no release or user authorization is inferred."
   ],
   "oracle": {
-    "kind": "pending",
+    "expected": "Valid complete inputs qualify without writes. Missing required original evidence, unsupported services and changed current sources are rejected, including after a successful original-byte check.",
+    "kind": "behavior",
     "requirement_contract": "Der neue Checkout MUSS alle fachlich erforderlichen Originale und Abschlussnachweise enthalten und die normale Validierung bestehen; SpecRoad DARF NICHT fehlende Historie oder Receipts erfinden.",
-    "scope": "New interruption guard and manual Git restart contract; no active automated pass claim until implementation."
+    "scope": "18.s common native read-only project qualification and original receipt requirements; not complete Git restart or new writer acceptance."
   },
   "preconditions": [
-    "Implementation and actual Apply evidence for specification 0.2.85 are required; this document bundle runs no new product behavior."
+    "Owned complete native project bytes and actual Proposal review/publication originals; explicit synthetic host providers, no production authority."
   ],
   "primary_verification_id": "SR-VER-0031",
   "required_environment": {
@@ -40,9 +48,19 @@
   },
   "specification_sha256": "367bad36c070076ce83bfa63147c737111f5c682f9f05f9ce29a421680c01096",
   "steps": [
-    "Implement the complete new contract in 18.x and bind real behavioral tests and evidence before declaring acceptance."
+    "Qualify the complete supplied project through the common native reader without writes or implicit authority.",
+    "Reject missing original publication proof, unknown services and changed external source bytes; never promote a failed observation through cached original bytes."
   ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0462",
-  "test_ids": []
+  "test_ids": [
+    "tests/test_project_qualification.py::test_applied_proposal_needs_original_publication_proof_for_read_qualification[False]",
+    "tests/test_project_qualification.py::test_applied_proposal_needs_original_publication_proof_for_read_qualification[True]",
+    "tests/test_project_qualification.py::test_complete_native_project_reports_validity_without_authority_or_writes[False]",
+    "tests/test_project_qualification.py::test_complete_native_project_reports_validity_without_authority_or_writes[True]",
+    "tests/test_project_qualification.py::test_live_source_is_reobserved_even_when_original_model_bytes_are_reused",
+    "tests/test_project_qualification.py::test_project_data_cannot_supply_a_native_service_or_success_gate[True]",
+    "tests/test_project_qualification.py::test_project_data_cannot_supply_a_native_service_or_success_gate[invalid0]",
+    "tests/test_project_qualification.py::test_project_data_cannot_supply_a_native_service_or_success_gate[invalid1]"
+  ]
 }

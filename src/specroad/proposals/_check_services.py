@@ -15,7 +15,7 @@ def _specification_files(model, files):
 
 
 def _qualify(files, checks, side, services):
-    from ..recovery._validation import project_validation_report
+    from ..qualification.project import project_validation_report
     model, _, report = project_validation_report(files, services=services)
     checks.setdefault('validation', {})[side] = report.data
     for stage in report.data['stages']:

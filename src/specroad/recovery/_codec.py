@@ -2,13 +2,11 @@
 from base64 import b64decode, b64encode
 from binascii import Error as Base64Error
 from hashlib import sha256
-from pathlib import PurePosixPath
 import re
-import unicodedata
 
 from ..changes.target_model import _default_scope
 from ..model.canonical import canonical_json_bytes, canonical_json_sha256
-from ..model.paths import project_path
+from ..qualification.paths import safe_path, root_path, namespace, file_row
 from ..storage.json_syntax import parse_json_object
 from .values import RestoreError, require
 
@@ -32,22 +30,8 @@ def size(value):
     require(type(value) is int and value >= 0, 'restore_size_invalid')
 
 
-def safe_path(value):
-    try:
-        return project_path(value)
-    except Exception as error:
-        from ..model.errors import ModelError
-        if not isinstance(error, ModelError):
-            raise
-        raise RestoreError('restore_unsafe_path', exit_code=7) from error
 
 
-def root_path(value):
-    require(type(value) is str and value.startswith('/') and str(PurePosixPath(value)) == value
-            and not value.startswith('//'), 'restore_canonical_root_required', exit_code=7)
-    if value != '/':
-        safe_path(value[1:])
-    return value
 
 
 def ordered(values, key):
@@ -56,21 +40,8 @@ def ordered(values, key):
     require(keys == sorted(set(keys)), 'restore_order_or_duplicate_invalid')
 
 
-def namespace(paths):
-    """Files and directories share the same portable, case-insensitive space."""
-    aliases = {}
-    for path in paths:
-        safe_path(path)
-        for i in range(1, len(path.split('/')) + 1):
-            prefix = '/'.join(path.split('/')[:i])
-            alias = unicodedata.normalize('NFC', prefix).casefold()
-            require(alias not in aliases or aliases[alias] == prefix,
-                    'restore_path_collision', exit_code=7)
-            aliases[alias] = prefix
 
 
-def file_row(path, raw):
-    return {'path': path, 'size': len(raw), 'sha256': sha256(raw).hexdigest()}
 
 
 def file_table(files):

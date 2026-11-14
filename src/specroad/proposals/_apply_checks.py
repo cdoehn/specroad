@@ -7,7 +7,7 @@ from .values import require
 
 
 def gates(snapshot, original, target, after, operation, services):
-    from ..recovery._validation import validate_project
+    from ..qualification.project import validate_project
     raw, _ = operation_proof(operation)
     # Prove exact physical/control reduction without pretending a transaction
     # has already happened. Persisted applied readers still need real receipts.

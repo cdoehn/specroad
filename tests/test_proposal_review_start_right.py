@@ -16,7 +16,7 @@ from specroad.proposals.history import ProposalInputs
 from specroad.proposals.observations import ProposalVerifier
 from specroad.proposals._review_control import prepare_control_candidates, read_review_start_observations
 from specroad.proposals.review_start import review_start_project, _fresh_reports, _operation
-from specroad.recovery.services import RestoreServices
+from specroad.qualification.services import RestoreServices
 from support.proposal_validation import validation_project
 from support.read_only import inventory
 from test_proposal_review_start import options

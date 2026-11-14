@@ -11,7 +11,7 @@ from specroad.proposals._review_control import read_review_start_observations
 from specroad.proposals._decision_control import read_review_observations
 from specroad.proposals.review_start import review_start_project
 from specroad.proposals.review_decision import review_project
-from specroad.recovery.services import RestoreServices
+from specroad.qualification.services import RestoreServices
 from test_proposal_basis import project, fields, planned_change
 from .model import put
 

@@ -52,7 +52,7 @@ def check_proposal_project(root, operand, *, cwd=None, keep_workspace=False, ser
     report = _initial()
     details = read_details()
     try:
-        from ..recovery.services import native_services
+        from ..qualification.services import native_services
         services = native_services(services)
         source = ProjectSource(root)
         project = dict(project_root=str(source.boundary.root), project_id=source.configuration.project_id)

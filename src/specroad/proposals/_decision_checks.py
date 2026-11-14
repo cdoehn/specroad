@@ -15,7 +15,7 @@ from .values import require
 
 
 def gates(snapshot, original, after, operation, actor, planned_at, services):
-    from ..recovery._validation import validate_project
+    from ..qualification.project import validate_project
     old = _initial_inputs(snapshot.model, original, services)
     require(type(old) is ProposalInputs, 'proposal_native_inputs_required')
     context = ProposalContext(original, snapshot.model)
