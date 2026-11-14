@@ -9,7 +9,9 @@ from .environment import digest
 
 def validate_profile(profile):
     fields = {'format_version', 'source_sha256', 'snapshot_sha256', 'environment', 'workers', 'proxies', 'selected', 'estimates', 'baseline'}
-    if not isinstance(profile, dict) or set(profile) != fields or type(profile['format_version']) is not int or profile['format_version'] != 1:
+    if isinstance(profile, dict) and profile.get('format_version') == 2:
+        fields.add('live')
+    if not isinstance(profile, dict) or set(profile) != fields or type(profile['format_version']) is not int or profile['format_version'] not in (1, 2):
         raise ValueError('Invalid host run format')
     for key in ('source_sha256', 'snapshot_sha256'):
         if not isinstance(profile[key], str) or not re.fullmatch('[0-9a-f]{64}', profile[key]):
@@ -51,17 +53,30 @@ def validate_profile(profile):
         if not isinstance(values, dict) or any(not isinstance(k, str) or type(v) not in (int, float)
                 or not math.isfinite(v) or not 0 <= v <= 259200 for k, v in values.items()):
             raise ValueError('Invalid scheduling estimate')
+    if profile['format_version'] == 2:
+        from dev.test_control.store import counts
+        live = profile['live']
+        if type(live) is not dict or set(live) != {'repository', 'home', 'overrides'}:
+            raise ValueError('Invalid live host control binding')
+        for key in ('repository', 'home'):
+            if type(live[key]) is not str or not Path(live[key]).is_absolute() or '..' in Path(live[key]).parts:
+                raise ValueError('Invalid live control location')
+        overrides = counts(live['overrides'])
+        if set(overrides) - groups.keys() or any(v > groups[k][0]['resources']['workers'] for k, v in overrides.items()):
+            raise ValueError('Live override exceeds checked host capacity')
     return profile
 
 def public_proof(profile):
     validate_profile(profile)
-    return {'format_version': 1, 'source_sha256': profile['source_sha256'],
+    return {'format_version': profile['format_version'], 'source_sha256': profile['source_sha256'],
             'snapshot_sha256': profile['snapshot_sha256'],
             'environment_sha256': digest(profile['environment']),
             'workers': {key: {k: row[k] for k in ('host', 'hostname', 'account', 'environment_sha256', 'resources', 'speed', 'budget', 'remote')}
                         for key, row in profile['workers'].items()}}
 
 def verify_pool(observation, proof):
+    if isinstance(proof, dict) and proof.get('format_version') == 2:
+        return verify_live_pool(observation, proof)
     if not isinstance(proof, dict) or proof.get('format_version') != 1 or not proof.get('workers'):
         raise ValueError('Missing host pool proof')
     actual = observation.get('host_pool')
@@ -83,3 +98,53 @@ def verify_pool(observation, proof):
     slots = [(row['account'], row['slot']) for row in actual['workers'].values()]
     if len(slots) != len(set(slots)):
         raise ValueError('Workers claim the same host slot')
+
+
+def verify_live_pool(observation, proof):
+    """Each actual attempt has one permission and one nonoverlapping host lease."""
+    actual = observation.get('host_pool')
+    if type(actual) is not dict or actual.get('binding') != proof or actual.get('errors'):
+        raise ValueError('Live pool differs from the bound run')
+    launched, workers = actual.get('launched'), actual.get('workers')
+    if (type(launched) is not dict or type(workers) is not dict or not launched
+            or not set(proof['workers']) <= set(launched) or set(launched) != set(workers)
+            or set(workers) != set(observation.get('workers', []))):
+        raise ValueError('Incomplete live worker evidence')
+    selected = actual.get('selected')
+    if type(selected) is not list or selected != observation.get('nodeids') or len(set(selected)) != len(selected):
+        raise ValueError('Live selection differs from collected tests')
+    grants = actual.get('grants')
+    if type(grants) is not dict or set(grants) - workers.keys():
+        raise ValueError('Unbound live permissions')
+    leases, covered = {}, set()
+    for name, template in launched.items():
+        if not re.fullmatch(r'gw[0-9]+', name) or template not in proof['workers']:
+            raise ValueError('Worker was not launched on a checked host')
+        expected, row = proof['workers'][template], workers[name]
+        if (any(row.get(k) != expected[k] for k in ('host', 'hostname', 'account', 'environment_sha256'))
+                or any(row.get(k) != proof[k] for k in ('source_sha256', 'snapshot_sha256'))
+                or row.get('io_priority') != {'class': 2, 'priority': 7}):
+            raise ValueError('Unbound live worker environment or priority')
+        verify_resources({'host_resources': row.get('resources'),
+                          'workers': list(range(expected['resources']['workers']))}, expected['resources'])
+        attempts = row.get('leases')
+        if (type(attempts) is not list or len(attempts) != observation['worker_test_counts'].get(name)
+                or len(attempts) != len(grants.get(name, []))):
+            raise ValueError('Missing per-attempt live leases')
+        for attempt, permit in zip(attempts, grants.get(name, [])):
+            if (type(attempt) is not dict or set(attempt) != {'nodeid', 'slot', 'start', 'end'}
+                    or any(type(attempt[k]) is not int for k in ('slot', 'start', 'end'))
+                    or not 0 <= attempt['slot'] < expected['budget'] or not 0 <= attempt['start'] <= attempt['end']
+                    or type(permit) is not dict or set(permit) != {'index', 'slot'}
+                    or type(permit['index']) is not int or not 0 <= permit['index'] < len(selected)
+                    or permit['slot'] != attempt['slot'] or selected[permit['index']] != attempt['nodeid']
+                    or attempt['nodeid'] in covered):
+                raise ValueError('Invalid, duplicate or unpermitted live test attempt')
+            covered.add(attempt['nodeid'])
+            leases.setdefault((row['account'], attempt['slot']), []).append((attempt['start'], attempt['end']))
+    if covered != set(selected):
+        raise ValueError('Live attempts do not cover the fixed selection')
+    for intervals in leases.values():
+        ordered = sorted(intervals)
+        if any(a[1] > b[0] for a, b in zip(ordered, ordered[1:])):
+            raise ValueError('Live workers overlap on an atomic host slot')

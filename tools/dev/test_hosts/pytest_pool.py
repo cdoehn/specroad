@@ -33,18 +33,23 @@ def configure(config, root):
         from verification_support.cpu_capacity import available_cpus
         if available_cpus() != worker['resources']['available_cpus']:
             raise ValueError('Host CPU capacity changed after preparation')
-        config._sr_pool_lease = Lease(worker['budget'])
+        if not config.workerinput.get('sr_live'):
+            config._sr_pool_lease = Lease(worker['budget'])
         config._sr_pool_io = io_priority()
         return
     if os.environ.get('SPECROAD_NESTED_TEST_RUN') == '1':
         raise ValueError('Nested test runners cannot open a host pool')
     profile = validate_profile(read_json(path))
-    if profile['format_version'] != 1 or profile['source_sha256'] != source_identity(root) or not profile['workers']:
+    if profile['source_sha256'] != source_identity(root) or not profile['workers']:
         raise ValueError('Stale or invalid host run')
     config._sr_host_profile = profile
     config.pluginmanager.register(RemoteBootstrap(), "specroad-host-bootstrap")
     config._sr_pool_servers = []
     config._sr_pool_outputs = {}
+    if profile['format_version'] == 2:
+        from .live import LivePool
+        config._sr_live_pool = LivePool(config)
+        config.pluginmanager.register(config._sr_live_pool, 'specroad-live-pool')
     config.option.numprocesses = len(profile['workers'])
     config.option.tx = [profile['workers'][name]['spec'] for name in sorted(profile['workers'], key=lambda n: int(n[2:]))]
     config.option.px = profile['proxies']
@@ -57,7 +62,8 @@ def setup_node(node, state):
         return
     if getattr(node.config, '_sr_pool_history', None) is None:
         node.config._sr_pool_history = HistoryWriter(state.history_root)
-    row = profile['workers'][node.gateway.id]
+    live = getattr(node.config, '_sr_live_pool', None)
+    row = (live.rows if live else profile['workers'])[node.gateway.id]
     node.workerinput['sr_host_resources'] = row['resources']
     node.workerinput['sr_pool_worker'] = {**row, 'source_sha256': profile['source_sha256'],
         'snapshot_sha256': profile['snapshot_sha256'], 'selected': list(profile['selected'])}
@@ -68,6 +74,8 @@ def setup_node(node, state):
     channel.setcallback(server.receive, endmarker=None)
     node.config._sr_pool_servers.append(server)
     node.workerinput['sr_history_channel'] = channel
+    if live:
+        live.connect(node)
 
 
 def worker_proof(config, resources):
@@ -78,18 +86,31 @@ def worker_proof(config, resources):
             or fingerprint(inventory(row['root'])) != row['snapshot_sha256']
             or digest(environment()) != row['environment_sha256']):
         raise ValueError('Worker source or environment changed during tests')
-    return {k: row[k] for k in ('host', 'environment_sha256', 'source_sha256', 'snapshot_sha256')} | {
+    result = {k: row[k] for k in ('host', 'environment_sha256', 'source_sha256', 'snapshot_sha256')} | {
         'hostname': platform.node(),
         'account': account(),
-        'resources': resources, 'io_priority': config._sr_pool_io, 'slot': config._sr_pool_lease.slot}
+        'resources': resources, 'io_priority': config._sr_pool_io}
+    if config.workerinput.get('sr_live'):
+        result['leases'] = config._sr_live_leases
+    else:
+        result['slot'] = config._sr_pool_lease.slot
+    return result
 
 
 def observation(config):
     profile = getattr(config, '_sr_host_profile', None)
     if profile is None:
         return None
-    return {'binding': public_proof(profile), 'workers': config._sr_pool_outputs,
+    result = {'binding': public_proof(profile), 'workers': config._sr_pool_outputs,
             'errors': [e for server in config._sr_pool_servers for e in server.errors]}
+    live = getattr(config, '_sr_live_pool', None)
+    if live:
+        result['launched'] = {name: next(k for k, r in profile['workers'].items() if r == row)
+                              for name, row in live.rows.items()}
+        result['grants'] = live.grants
+        result['selected'] = list(profile['selected'])
+        result['errors'].extend(live.errors)
+    return result
 
 
 def close_history(config):

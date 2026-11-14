@@ -43,6 +43,11 @@ def detail_lines(target):
                      f'{tests.get("ended", "?")}/{tests.get("total", "?")} beendet · '
                      f'{tests.get("passed", 0)} bestanden · {tests.get("failed", 0)} Fehler · '
                      f'{tests.get("open", "?")} offen')
+    control = source(target, 'status').get('test_control') or {}
+    if control.get('active'):
+        for host, desired in control.get('desired', {}).items():
+            actual = control.get('hosts', {}).get(host, {})
+            lines.append(f'{host}: Soll {desired} · laufend {actual.get("running", 0)} · Prozesse {actual.get("processes", 0)} · auslaufend {actual.get("draining", 0)}')
     lines.append('Commits: ' + (' | '.join(f'{s["commit_id"]}: {s["status"]}' for s in view.get('stages', [])) or '—'))
     return lines
 

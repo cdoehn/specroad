@@ -186,3 +186,6 @@ den Unterschied zwischen Messung und verstrichener Zeit sowie eindeutige
 Fehler-/Veraltungszustände erhalten. Regressionen prüfen die Datenverträge,
 Laufbindung und Dateierhaltung; Terminalfarben, Layout und Dokumentation
 werden gemäß den gemeinsamen Entwicklungsregeln nicht als Verhalten getestet.
+
+Die [Live-Teststeuerung](Test_Control.md) ergänzt lesend Soll/Ist je Host;
+Bedienung erfolgt ausschließlich mit dem getrennten `test-control`.

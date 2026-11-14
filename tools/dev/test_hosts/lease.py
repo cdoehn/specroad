@@ -10,6 +10,10 @@ import tempfile
 from .config import private_directory
 
 
+class LeaseBusy(ValueError):
+    """The checked host quota is occupied; no process acquired an extra slot."""
+
+
 class Lease:
     def __init__(self, limit, *, directory=None):
         if type(limit) is not int or not 1 <= limit <= 256:
@@ -58,7 +62,7 @@ class Lease:
                     self.fd, self.slot = fd, i
                     break
             if self.fd is None:
-                raise ValueError('All host slots are occupied; no oversubscribed test worker started')
+                raise LeaseBusy('All host slots are occupied; no oversubscribed test worker started')
         finally:
             for fd in held:
                 os.close(fd)

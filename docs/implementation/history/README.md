@@ -418,3 +418,7 @@
 - [Bundle 688 — CONFIG-Testvorbereitungen und vollständiger Rest](bundle-688-config-test-adapters.md)
 
 - [Bundle 689 — Neustart der Proxy-Testvorbereitung](bundle-689-proxy-test-restart.md)
+
+- [Bundle 690 — unabhängige Live-Teststeuerung](bundle-690-live-test-control.md)
+
+- [Bundle 691 — Worker-Identität und Monitor-Testumgebung](bundle-691-live-worker-identity.md)

@@ -24,6 +24,8 @@ def main(argv=None):
     targets.add_argument('--hosts', type=Path, help='Local host pool configuration (Apply only)')
     targets.add_argument('--local', action='store_true', help='Use the existing local runner without a host pool')
     add_worker_limit(parser)
+    parser.add_argument('--host-workers', action='append', default=[], metavar='HOST=COUNT',
+                        help='Live-pool invocation override; zero pauses new tests on this host')
     args = parser.parse_args(argv)
     outdir = args.outdir or Path(tempfile.mkdtemp(prefix="specroad-apply-tests-")) / "gate"
     try:
@@ -35,6 +37,18 @@ def main(argv=None):
             path = Path(args.hosts or os.environ.get('SPECROAD_TEST_HOSTS') or Path.home() / '.config/specroad/test-hosts.json').expanduser()
             if args.hosts is not None or path.exists():
                 options['hosts'] = path
+                options['live_hosts'] = True
+        if args.host_workers:
+            from dev.test_control.store import counts
+            overrides = {}
+            for entry in args.host_workers:
+                name, number = entry.split('=', 1)
+                if name in overrides or str(int(number)) != number:
+                    raise ValueError('Duplicate or invalid host override')
+                overrides[name] = int(number)
+            if 'hosts' not in options:
+                raise ValueError('Host worker overrides require a checked host pool')
+            options['host_workers'] = counts(overrides)
         result = run_apply_partition(ROOT, outdir, **options)
         print(json.dumps({**{k: v for k, v in result.items() if k not in (
                               "nodeid_to_test_id", "selection_binding", "runtime_filter", "required_tests")},

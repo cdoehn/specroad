@@ -37,5 +37,9 @@ if __name__ == '__channelexec__':
     setup_config(config, None)
     config.workerinput = workerinput
     config.workeroutput = {}
-    interactor = WorkerInteractor(config, channel)
+    if workerinput.get('sr_live'):
+        from dev.test_hosts.live_worker import LiveWorker
+        interactor = LiveWorker(config, channel)
+    else:
+        interactor = WorkerInteractor(config, channel)
     config.hook.pytest_cmdline_main(config=config)

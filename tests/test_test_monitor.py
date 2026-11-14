@@ -16,13 +16,24 @@ def monitor_lane(workspace, suffix='', seconds=10):
     result = lane(workspace, suffix, seconds)
     dev = result[0]
     (dev / 'tools/test-monitor').write_bytes((ROOT / 'tools/test-monitor').read_bytes())
+    # Install the real reader's dependency closure in this isolated CLI copy;
+    # importing the working checkout would hide missing packaged dependencies.
+    names = ['tools/dev/test_hosts/config.py',
+             'tools/verification_support/host_execution.py',
+             'tools/verification_support/cpu_capacity.py']
+    names += [p.relative_to(ROOT).as_posix() for p in (ROOT/'tools/dev/test_control').glob('*.py')]
+    for name in names:
+        target = dev/name
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_bytes((ROOT/name).read_bytes())
     return result
 
 
 def invoke_monitor(dev, workspace, *args):
     result = subprocess.run([sys.executable, '-I', '-B', str(dev / 'tools/test-monitor'), '--once', '--json', *args],
         cwd=workspace, env={**os.environ, 'XDG_STATE_HOME': str(workspace / 'state'),
-                           'XDG_CONFIG_HOME': str(workspace / 'config')},
+                           'XDG_CONFIG_HOME': str(workspace / 'config'),
+                           'SPECROAD_TEST_CONTROL_HOME': str(workspace / 'state/specroad/test-control')},
         stdin=subprocess.DEVNULL, capture_output=True, text=True, timeout=30, check=False)
     return result.returncode, json.loads(result.stdout)
 
@@ -41,7 +52,9 @@ def test_monitor_once_observes_each_lane_and_its_native_phase_durations(tmp_path
         assert [row[p + '_seconds'] for p in ('setup', 'call', 'teardown')] == [seconds] * 3
         assert row['total_seconds'] == 3 * seconds and row['elapsed_seconds'] is None
         assert target['status']['data']['run']['source'] == 'a' * 64
+        assert target['status']['data']['test_control'] is None
     assert [digest(p) for p in (one, two, lock, lock2)] == before
+    assert not (tmp_path / 'state/specroad/test-control').exists()
 
 
 def test_monitor_default_is_repository_lane_and_explicit_targets_are_deduplicated(tmp_path):

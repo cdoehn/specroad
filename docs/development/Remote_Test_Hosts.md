@@ -184,3 +184,6 @@ muss sein Poolname dem Rechnernamen entsprechen; eine bloße Namensgleichheit
 ist kein Beleg für physisch identische Rechner. Vorhandene historische Namen
 bleiben unverändert. `test-monitor` zeigt auch diese neuen lokalen Zuordnungen
 in seiner bestehenden Hostspalte und in `host`/`environment_sha256` der JSON-Ausgabe.
+
+Für laufende Sollzahlen, Drain und Pause siehe [test-control](Test_Control.md).
+Die geprüften Hostmaxima und Umgebungen bleiben die Grenze des aktuellen Gates.

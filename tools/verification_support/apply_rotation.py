@@ -80,7 +80,7 @@ def parallel_command(root, outdir, expected, workers, worker_limit=DEFAULT_WORKE
             "@" + str(outdir / "nodeids.txt")]
 
 
-def run_apply_partition(root, outdir, *, workers=None, worker_limit=DEFAULT_WORKER_LIMIT, runner=None, test_plan=None, commit_id=None, hosts=None):
+def run_apply_partition(root, outdir, *, workers=None, worker_limit=DEFAULT_WORKER_LIMIT, runner=None, test_plan=None, commit_id=None, hosts=None, live_hosts=False, host_workers=None):
     root = Path(root).resolve()
     required_policy = plan_required(root)
     if (test_plan is None) != (commit_id is None) or (required_policy and test_plan is None):
@@ -131,7 +131,8 @@ def run_apply_partition(root, outdir, *, workers=None, worker_limit=DEFAULT_WORK
         if required_tests is None or resources is None or resources['nested']:
             raise ValueError('Host pools require an outer Apply gate with required tests')
         from dev.test_hosts.pool import prepare_pool, public_proof
-        profile, pool_path = prepare_pool(root, outdir, hosts, selected, snapshot, worker_limit)
+        options = {'live': True, 'host_workers': host_workers} if live_hosts else {}
+        profile, pool_path = prepare_pool(root, outdir, hosts, selected, snapshot, worker_limit, **options)
         pool = public_proof(profile)
         workers = len(pool['workers'])
     receipt = {}

@@ -70,6 +70,9 @@ class HostScheduling(WorkStealingScheduling):
                 return index
         return None
 
+    def scheduling_nodes(self):
+        return self.nodes
+
     def check_schedule(self):
         if self.collection is None:
             return
@@ -89,7 +92,7 @@ class HostScheduling(WorkStealingScheduling):
                                  for i in self.pending}
             self.remaining_work = math.fsum(self.work_weights.values())
             self.ready = True
-        live = [n for n in self.nodes if not n.shutting_down]
+        live = [n for n in self.scheduling_nodes() if not n.shutting_down]
         if not live:
             return
         live.sort(key=lambda n: (-self.speed(n), n.gateway.id))

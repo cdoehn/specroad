@@ -27348,6 +27348,19 @@
     "codex_control_tests.test_budget_config_right.BudgetConfigRightTests.test_missing_file_and_corrupt_file_never_fall_back_to_unbound_defaults",
     "codex_control_tests.test_budget_config_right.BudgetConfigRightTests.test_persisted_policy_is_not_reported_as_rolled_back_when_worker_is_offline",
     "codex_control_tests.test_budget_config_right.BudgetConfigRightTests.test_policy_change_during_native_preflight_is_visible_before_dispatch",
-    "codex_control_tests.test_budget_config_right.BudgetConfigRightTests.test_raising_limit_preserves_proven_exhausted_correction_sequence"
+    "codex_control_tests.test_budget_config_right.BudgetConfigRightTests.test_raising_limit_preserves_proven_exhausted_correction_sequence",
+    "tests/test_test_control_live.py::test_defaults_overrides_and_live_changes_remain_separate",
+    "tests/test_test_control_live.py::test_invalid_worker_counts_do_not_replace_live_request[-1]",
+    "tests/test_test_control_live.py::test_invalid_worker_counts_do_not_replace_live_request[1.5]",
+    "tests/test_test_control_live.py::test_invalid_worker_counts_do_not_replace_live_request[257]",
+    "tests/test_test_control_live.py::test_invalid_worker_counts_do_not_replace_live_request[2]",
+    "tests/test_test_control_live.py::test_invalid_worker_counts_do_not_replace_live_request[None]",
+    "tests/test_test_control_live.py::test_invalid_worker_counts_do_not_replace_live_request[True]",
+    "tests/test_test_control_live.py::test_machine_cli_changes_only_named_live_run",
+    "tests/test_test_control_live.py::test_two_lines_have_independent_requests_but_share_atomic_host_slots",
+    "tests/test_test_control_live.py::test_unknown_host_and_capacity_violation_do_not_start_anything",
+    "tests/test_test_control_live_integration.py::test_native_pool_accepts_zero_invocation_override_and_resumes_after_collection",
+    "tests/test_test_control_live_integration.py::test_native_pool_drains_all_then_starts_new_workers_without_duplicate_tests[False]",
+    "tests/test_test_control_live_integration.py::test_native_pool_drains_all_then_starts_new_workers_without_duplicate_tests[True]"
   ]
 }

@@ -1,0 +1,6 @@
+#!/usr/bin/env python3
+"""Control an existing Apply test pool; never starts Apply or Control."""
+from dev.test_control.cli import main
+
+if __name__ == '__main__':
+    raise SystemExit(main())

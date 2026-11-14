@@ -29,12 +29,15 @@ Jede Tabellenzeile enthält Code, passende Verhaltenstests und Integration.
 
 ## Aktueller Übergang
 
-START.W, START.W-FIX1, START.R und START.C sind erfolgreich übernommen.
-[Bundle 689](../history/bundle-689-proxy-test-restart.md) korrigiert CONFIG.W
-und führt CONFIG.R/C mit den ursprünglichen IDs, Rollen und Abnahmen fort.
-Dieser Stage-Zielstand reicht nach seinem eigenen Gate bis **CONFIG.C**;
-danach ist **LIVE.W** offen. Kein Erfolg späterer Stages wird vorweggenommen;
-die sechs LIVE-/MOVE-Commits bleiben vollständig geplant.
+START.W, START.W-FIX1, START.R/C und CONFIG.W/R/C sind erfolgreich übernommen.
+[Bundle 691](../history/bundle-691-live-worker-identity.md) repariert den
+vollständigen offenen LIVE.W/R/C-Rest nach fehlgeschlagenem W-Gate.
+Der Zielstand dieser Stage reicht nach ihrem eigenen Gate bis **LIVE.W**;
+danach ist **LIVE.R** offen. MOVE.W/R/C bleibt als nächste vollständige Gruppe
+geplant. Die Live-Zuteilung wird zuerst mit echten lokalen und Proxyworkern
+abgenommen; die separate gezielte Abbruch-/Neustartfunktion behauptet dieses
+Bundle nicht. Alle zwölf IDs und ihre unveränderten vollständigen Abnahmen
+bleiben erhalten.
 
 Nach erfolgreichem Apply und expliziter Installation der getesteten Control-
 Releasekopie kann der Betreiber mit `control start --from-current` sofort die

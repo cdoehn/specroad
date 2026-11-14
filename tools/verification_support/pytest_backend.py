@@ -251,6 +251,9 @@ def pytest_configure_node(node):
 @pytest.hookimpl(optionalhook=True)
 def pytest_xdist_make_scheduler(config, log):
     if getattr(config, '_sr_host_profile', None) is not None:
+        if getattr(config, '_sr_live_pool', None) is not None:
+            from dev.test_hosts.live import LiveScheduling
+            return LiveScheduling(config, log)
         from dev.test_hosts.scheduler import HostScheduling
         return HostScheduling(config, log)
 
@@ -277,7 +280,8 @@ def pytest_testnodedown(node, error):
     if state.host_resources is not None:
         expected = {k:v for k,v in state.host_resources.items() if k != 'nice_actual'}
         if pool is not None:
-            expected = pool['workers'][node.gateway.id]['resources']
+            live = getattr(node.config, '_sr_live_pool', None)
+            expected = (live.rows if live else pool['workers'])[node.gateway.id]['resources']
         try:
             verify_resources({'host_resources': output.get('sr_host_resources'),
                               'workers': ['gw'+str(i) for i in range(expected['workers'])]}, expected)

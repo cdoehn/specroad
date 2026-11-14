@@ -40,7 +40,7 @@ def run_forecasts(selected, workers, measured, snapshot):
     return current, baseline
 
 
-def prepare_pool(root, outdir, config, selected, snapshot, worker_limit):
+def prepare_pool(root, outdir, config, selected, snapshot, worker_limit, *, live=False, host_workers=None):
     hosts = load(config)
     if any(h.ssh is not None for h in hosts) and not shutil.which('rsync'):
         raise ValueError('Coordinator needs rsync; run test-hosts prepare for the local host first')
@@ -103,6 +103,10 @@ print(json.dumps(True))
     profile = dict(format_version=1, source_sha256=source, snapshot_sha256=fingerprint(manifest),
                    environment=expected, workers=workers, proxies=proxies, selected=selected,
                    estimates=measured, baseline=baseline)
+    if live:
+        from dev.test_control.store import directory, counts
+        profile.update(format_version=2, live=dict(repository=str(root.resolve()), home=str(directory()),
+                                                   overrides=counts(host_workers or {})))
     if source_identity(root) != source or inventory(root) != manifest:
         raise ValueError('Source changed during remote preparation')
     path = outdir / 'host-run.json'
