@@ -23,7 +23,7 @@ seine lokale Bedienung ersetzt keine fachliche Freigabe oder Budgetbindung.
 5. CONFIG.C: gemeinsame Policyvalidierung und CLI-Zugriffe konsolidieren,
    gleiche Ergebnisse und alle vorherigen Verhaltensabnahmen erhalten.
 
-Commitzielstand dieses Dokuments: **START.R**; danach **START.C**.
+Commitzielstand dieses Dokuments: **START.C**; danach **CONFIG.W**.
 Dies ist eine Vorbereitung mit eigenen Apply-Gates, kein vorweggenommener
 Erfolgsbericht. Jede Stage wird erst nach bestandenem Gate committed; erst
 danach wird der nächste Zustand installiert. Alle Rollen sind implementation,
