@@ -10,7 +10,7 @@ from ._lock_process import LinuxOwnerProbe
 from ._lock_owner_policy import observe_owner
 from .write_guard_values import (MARKER_PATH, marker_value, validate_transaction,
     receipt_group, completion, require, WriteGuardError)
-from .guarded_write import _read_path
+from ._guarded_io import _read_path
 from .receipt_values import transaction_receipt_path, request_receipt_path
 from ._journal_io import _read
 from ..security import paths as guards
