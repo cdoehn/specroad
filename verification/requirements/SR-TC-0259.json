@@ -1,6 +1,10 @@
 {
   "evidence_kind": "specroad-dev-pytest-v1",
-  "expected_diagnostics": [],
+  "expected_diagnostics": [
+    "write_state_blocked",
+    "write_receipt_binding",
+    "write_request_conflict"
+  ],
   "expected_exit_codes": [
     0,
     2,
@@ -9,18 +13,21 @@
     6,
     7
   ],
-  "fixture_ids": [],
-  "implementation_status": "open",
+  "fixture_ids": [
+    "SR-FIX-WRITE-GUARD-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [],
-  "method": "pending",
+  "method": "automated_behavior",
   "open_items": [
-    "RECOVERY-REMOVAL-006: changed requirement contract; the old implementation/tests are retained until their assigned W/R/C replacement. Previous recovery/restore evidence does not establish this new behavior.",
-    "Apply of this specification/planning bundle is not implementation, release, or user authorization to use SpecRoad."
+    "18.u/18.v: switch all existing command/preflight and specialist/bootstrap callers; the shared writer is implemented here.",
+    "18.w/18.x: remove legacy recovery and finish the manual Git restart and complete format acceptance. Actual Apply evidence remains required."
   ],
   "oracle": {
-    "kind": "pending",
+    "expected": "Exact native Create/Replace/Delete effects and matching completed receipts, or a preserved blocked root. No replay, receipt reconstruction or release by complete target bytes.",
+    "kind": "behavior",
     "requirement_contract": "Ein erfolgreich abgeschlossener Write MUSS unveränderbare normale Transaktions- und bei Request-ID Request-Receipts erhalten; ihre Prüfung DARF NICHT einen offenen Marker aufheben.",
-    "scope": "New interruption guard and manual Git restart contract; no active automated pass claim until implementation."
+    "scope": "18.t common native guarded writer and read-only normal completion, not full command migration."
   },
   "preconditions": [
     "Implementation and actual Apply evidence for the C.1/C.2.1 contract (WRITE-RECEIPTS-703) are required; specification preparation is not behavior evidence."
@@ -39,9 +46,28 @@
   },
   "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
   "steps": [
-    "Implement and verify the complete 18.t common guard and normal receipt contract; all command integration and end-to-end acceptance remain separately planned."
+    "Run complete guarded writes and same-intent read-only completion; reject changed requests and incomplete original receipts.",
+    "Interrupt actual processes before/after the marker and between multiple file publications; inspect without writes and retain the blocker."
   ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0259",
-  "test_ids": []
+  "test_ids": [
+    "tests/test_write_guard.py::test_complete_write_and_read_only_retry_preserve_exact_effect",
+    "tests/test_write_guard.py::test_existing_marker_and_old_transaction_never_authorize_new_write",
+    "tests/test_write_guard.py::test_full_create_and_replace_share_the_native_writer",
+    "tests/test_write_guard.py::test_incomplete_receipt_blocks_success",
+    "tests/test_write_guard.py::test_native_snapshot_create_replace_delete_uses_same_guard",
+    "tests/test_write_guard.py::test_process_loss_never_replays_or_unlocks_partial_write[before_marker]",
+    "tests/test_write_guard.py::test_process_loss_never_replays_or_unlocks_partial_write[before_marker_unlink]",
+    "tests/test_write_guard.py::test_process_loss_never_replays_or_unlocks_partial_write[effect_replaced:0]",
+    "tests/test_write_guard.py::test_process_loss_never_replays_or_unlocks_partial_write[effect_replaced:1]",
+    "tests/test_write_guard.py::test_process_loss_never_replays_or_unlocks_partial_write[effect_synced:0]",
+    "tests/test_write_guard.py::test_process_loss_never_replays_or_unlocks_partial_write[effect_synced:1]",
+    "tests/test_write_guard.py::test_process_loss_never_replays_or_unlocks_partial_write[marker_synced]",
+    "tests/test_write_guard.py::test_process_loss_never_replays_or_unlocks_partial_write[marker_unlinked]",
+    "tests/test_write_guard.py::test_process_loss_never_replays_or_unlocks_partial_write[receipt:transaction.json]",
+    "tests/test_write_guard.py::test_process_loss_never_replays_or_unlocks_partial_write[receipts_synced]",
+    "tests/test_write_guard.py::test_process_loss_never_replays_or_unlocks_partial_write[staged:0]",
+    "tests/test_write_guard.py::test_request_retry_returns_original_and_rejects_changed_intent"
+  ]
 }

@@ -172,7 +172,8 @@ def project_lock(root, *, kind, command, project_id, transaction_id=None, reques
             if os.getpid() == guard._pid:
                 try:
                     guard.check()
-                    files.remove_record(record, inode)
+                    if getattr(guard, '_write_release_allowed', True):
+                        files.remove_record(record, inode)
                 finally:
                     guard._active = False
 

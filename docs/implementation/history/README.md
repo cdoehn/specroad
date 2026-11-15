@@ -442,3 +442,7 @@
 - [Korrektur 701 — Remote-Tempbereich und Monitor-Kopf, offener Rest 18.s.C](bundle-701-remote-temp-monitor.md)
 
 - [Bundle 702 — ungestartete Scheduler-Folgetests](bundle-702-scheduler-tail.md)
+
+- [Bundle 703 — dauerhafter Schreibmarker und normaler Abschluss 18.t.W/R/C](bundle-703-guarded-writer.md)
+
+- [Bundle 704 — Create-Testdaten und Testlauf-Overhead](bundle-704-writer-fixtures-test-overhead.md)

@@ -1,0 +1,162 @@
+"""Closed write-guard and normal receipt data; no replayable write journal."""
+from dataclasses import dataclass
+from hashlib import sha256
+from uuid import UUID
+from ..model.canonical import canonical_json_bytes as jcs, canonical_json_sha256 as digest
+from ..storage.json_syntax import parse_json_object as parsed
+from ..model.audit_fields import _valid_utc
+from ..model.paths import project_path
+from .execution_values import ChangeExecutionError
+from .lock_values import OwnerIdentity, text
+from ._journal_codec import _hash, _transaction
+from .receipt_values import (transaction_receipt_path, request_receipt_path,
+                            completion_marker_path, _created_ids)
+from .request_ids import normalize_request_id
+from .authoring import normalize_authoring_actor
+
+MARKER_PATH = '.specroad/write-state/pending.json'
+MARKER_FIELDS = {'format_version','project_id','transaction_id','request_id','command_id',
+                 'plan_sha256','base_model_root_sha256','target_model_root_sha256','owner','state'}
+
+
+class WriteGuardError(ChangeExecutionError):
+    def __init__(self, reason, *, exit_code=5):
+        super().__init__(reason, exit_code=exit_code, write_state='unknown')
+
+
+def require(condition, reason, *, exit_code=5):
+    if not condition:
+        raise WriteGuardError(reason, exit_code=exit_code)
+
+
+def marker_value(value):
+    require(type(value) is dict and set(value) == MARKER_FIELDS
+        and value['format_version'] == 'write-guard-v1' and value['state'] == 'writing',
+        'invalid_write_marker')
+    for key in ('project_id','command_id'): text(value[key])
+    _transaction(value['transaction_id']); normalize_request_id(value['request_id'])
+    require(all(_hash(value[k]) for k in ('plan_sha256','base_model_root_sha256','target_model_root_sha256')),
+            'invalid_write_marker_hash')
+    owner = value['owner']
+    require(type(owner) is dict and set(owner)=={'lock_id','host_id','process_id','process_start_id'},
+            'invalid_write_marker_owner')
+    try:
+        uid=UUID(owner['lock_id'])
+        require(uid.version==4 and str(uid)==owner['lock_id'], 'invalid_write_marker_owner')
+        OwnerIdentity(owner['host_id'], owner['process_id'], owner['process_start_id'])
+    except (ValueError,TypeError,AttributeError) as error:
+        raise WriteGuardError('invalid_write_marker_owner') from error
+    return value
+
+
+def metadata(raw):
+    return None if raw is None else {'size':len(raw),'sha256':sha256(raw).hexdigest()}
+
+
+def inventory(files):
+    return [dict(path=p, **metadata(raw)) for p,raw in sorted(files.items())]
+
+
+def _binding(value):
+    require(type(value) is dict and set(value)=={'size','sha256'}
+        and type(value['size']) is int and value['size']>=0 and _hash(value['sha256']),
+        'invalid_write_file_binding')
+
+
+def _path(path):
+    project_path(path)
+    require(not path.startswith('.') and '/.' not in path and path!='specroad.json/'
+        and (path=='specroad.json' or path.split('/')[0] in
+             ('spec','profiles','rules','mappings','attachments','archive')),
+        'invalid_write_resource_path', exit_code=7)
+
+
+def _result(write):
+    marker=write['marker']
+    return dict(exit_code=0,status='success',write_state='committed',
+        transaction_id=marker['transaction_id'],request_id=marker['request_id'],
+        target_model_root_sha256=marker['target_model_root_sha256'],
+        published_paths=[r['path'] for r in write['files']],created_ids=_created_ids(write['operations']))
+
+
+def transaction_document(write):
+    return dict(format_version='transaction-receipt-v2',outcome='committed',
+                write=write,write_sha256=digest(write),result_object=_result(write))
+
+
+def receipt_group(write):
+    transaction=transaction_document(write); marker=write['marker']
+    path=transaction_receipt_path(marker['transaction_id']); raw=jcs(transaction)
+    refs={'transaction':{'path':path,'sha256':sha256(raw).hexdigest()},'request':None}
+    files={path:raw}
+    if marker['request_id'] is not None:
+        path=request_receipt_path(marker['request_id'])
+        request=dict(format_version='request-receipt-v2',namespace='normative_write',
+            request_id=marker['request_id'],project_id=marker['project_id'],transaction_id=marker['transaction_id'],
+            actor=write['actor'],operations_sha256=write['operations_sha256'],
+            base_model_root_sha256=marker['base_model_root_sha256'],target_model_root_sha256=marker['target_model_root_sha256'],
+            result='committed',created_ids=transaction['result_object']['created_ids'],
+            result_object=transaction['result_object'],transaction_receipt=refs['transaction'])
+        raw=jcs(request);files[path]=raw;refs['request']={'path':path,'sha256':sha256(raw).hexdigest()}
+    completion=dict(format_version='write-completion-v1',project_id=marker['project_id'],
+        transaction_id=marker['transaction_id'],write_sha256=transaction['write_sha256'],
+        target_model_root_sha256=marker['target_model_root_sha256'],receipts=refs)
+    files[completion_marker_path(marker['transaction_id'])]=jcs(completion)
+    return files
+
+
+def validate_transaction(raw):
+    value=parsed(raw)
+    require(set(value)=={'format_version','outcome','write','write_sha256','result_object'}
+        and value['format_version']=='transaction-receipt-v2' and value['outcome']=='committed',
+        'invalid_write_receipt')
+    write=value['write']
+    require(type(write) is dict and set(write)=={'marker','actor','planned_at','change_plan_id',
+        'operations','operations_sha256','files','target_inventory','validation'}, 'invalid_write_record')
+    marker_value(write['marker']);normalize_authoring_actor(write['actor']);text(write['change_plan_id'])
+    require(_valid_utc(write['planned_at']), 'invalid_write_audit_time')
+    from .values import ChangeOperation
+    require(type(write['operations']) is list, 'invalid_write_operations')
+    operations=[ChangeOperation(op).data for op in write['operations']]
+    require(write['operations_sha256']==digest(operations), 'write_operations_binding')
+    targets={}
+    require(type(write['target_inventory']) is list and type(write['files']) is list, 'invalid_write_inventory')
+    for row in write['target_inventory']:
+        require(type(row) is dict and set(row)=={'path','size','sha256'},'invalid_write_inventory')
+        _path(row['path']);_binding({k:row[k] for k in ('size','sha256')})
+        require(row['path'] not in targets,'duplicate_write_resource');targets[row['path']]={k:row[k] for k in ('size','sha256')}
+    paths=[]
+    for row in write['files']:
+        require(type(row) is dict and set(row)=={'path','before','after'},'invalid_write_effect')
+        _path(row['path']);paths.append(row['path'])
+        for field in ('before','after'):
+            if row[field] is not None:_binding(row[field])
+        require(row['before']!=row['after'] and targets.get(row['path'])==row['after'],'write_effect_binding')
+    require(paths==sorted(set(paths)) and list(targets)==sorted(targets),'write_inventory_order')
+    validation=write['validation']
+    native=validation.get('native',validation) if type(validation) is dict else {}
+    require(native.get('format_version')=='model-validation-v1'
+        and native.get('model_valid') is True and native.get('checks_complete') is True,
+        'write_validation_incomplete')
+    require(raw==jcs(transaction_document(write)),'write_receipt_binding')
+    return write
+
+
+@dataclass(frozen=True)
+class WriteCompletion:
+    """Verified normal result data, never permission to remove a marker."""
+    _raw: bytes
+    @property
+    def data(self):return parsed(self._raw)
+    def __bool__(self):raise TypeError('Inspect the verified completion fields')
+
+
+def completion(write, *, current):
+    marker=write['marker'];group=receipt_group(write)
+    proof=parsed(group[completion_marker_path(marker['transaction_id'])])
+    return WriteCompletion(jcs(dict(format_version='transaction-completion-v2',state='committed',
+        transaction_id=marker['transaction_id'],request_id=marker['request_id'],project_id=marker['project_id'],
+        receipts=proof['receipts'],target_model_root_sha256=marker['target_model_root_sha256'],
+        result_object=_result(write),commit_completed=True,receipt_verified=True,
+        current_target_verified=current,cleanup_completed=True,cleanup_required=False,
+        replayed=not current,write_authorized=False,atomic_snapshot=False)))

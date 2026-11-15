@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 212 · **Stand:** 15. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.90
+**Planrevision:** 213 · **Stand:** 15. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.90
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 306 Schritte und 918 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; die früher genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wurde nach der damaligen Spezifikation innerhalb von 15.l.R vorgezogen und bleibt als normaler Prüfkern erhalten. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -105,14 +105,18 @@ OFF-PLAN-Korrektur ohne zusätzlichen Produktfortschritt: [Bundle 702 — ungest
 
 Detailpräzisierung für 18.t: [WRITE-RECEIPTS-703](decisions/write-receipts-703.md). Die neue Belegstruktur ersetzt keine Produktfreigabe oder vorweggenommene Abnahme.
 
+Aktuelle vollständige Gruppe: [18.t — Schreibmarker und normaler Abschluss, Bundle 703](history/bundle-703-guarded-writer.md). Die unten stehenden Zielwerte gelten erst nach erfolgreichem Apply-Gate der jeweiligen Stage. Die folgenden vollständigen Integrationsgruppen bleiben offen.
+
+Korrektur des vollständigen 18.t-Rests und ausdrückliche OFF-PLAN-Optimierungen: [Bundle 704](history/bundle-704-writer-fixtures-test-overhead.md). Kein zusätzlicher Produktfortschritt; jeder Zielstand benötigt sein eigenes erfolgreiches Apply-Gate.
+
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 212
+plan_revision: 213
 implementation_plan_commits_total: 918
-implementation_plan_commits_completed: 765
-last_completed_plan_commit: 18.s.C
-next_plan_commit: 18.t.W
+implementation_plan_commits_completed: 766
+last_completed_plan_commit: 18.t.W
+next_plan_commit: 18.t.R
 priority_off_plan: null
 next_off_plan_commit: null
 last_completed_numbered_bundle: 702

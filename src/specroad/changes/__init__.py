@@ -116,3 +116,7 @@ __all__ += ['TransactionPreflight', 'transaction_preflight']
 
 from .formatting import prepare_format_target
 __all__ += ['prepare_format_target']
+
+from .guarded_write import publish_guarded_change
+from .write_guard_read import inspect_write_state, read_guarded_completion, resolve_guarded_request
+from .write_guard_values import WriteGuardError, WriteCompletion
