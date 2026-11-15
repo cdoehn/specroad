@@ -101,6 +101,8 @@ Aktuelle vollständige Gruppe: [18.s — gemeinsame native Qualifikation, Bundle
 
 [Korrektur 701](history/bundle-701-remote-temp-monitor.md) setzt ausschließlich den offenen C-Rest fort; W/R sind durch das Result bestätigt. Die Zielwerte unten werden erst mit dem erfolgreichen C-Gate und Commit bestätigt.
 
+OFF-PLAN-Korrektur ohne zusätzlichen Produktfortschritt: [Bundle 702 — ungestartete Scheduler-Folgetests](history/bundle-702-scheduler-tail.md). Das erfolgreiche Result von Bundle 701 bestätigt 18.s.C; die nächste Produktposition bleibt 18.t.W.
+
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
@@ -111,7 +113,7 @@ last_completed_plan_commit: 18.s.C
 next_plan_commit: 18.t.W
 priority_off_plan: null
 next_off_plan_commit: null
-last_completed_numbered_bundle: 701
+last_completed_numbered_bundle: 702
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null

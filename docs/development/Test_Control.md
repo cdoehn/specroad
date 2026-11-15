@@ -116,6 +116,24 @@ der Controller freie Slots für zusätzliche Kopien: geringste globale
 Kopienzahl, zunächst verschiedene aktivierte Hosts, bei Gleichstand stabile
 Testidentität. Hostgeschwindigkeit und geschätzte Restdauer gehen nicht ein.
 
+Auch ein für pytest-`nextitem` vorgemerkter Folgetest zählt als ungestartet.
+Ist der globale Vorrat leer und auf einem aktivierten Host ein Worker frei,
+gibt der Controller eine solche Reservierung hinter einem noch laufenden
+Original frei. Zuerst entzieht er dem bisherigen Worker die Startberechtigung
+für diesen Folgetest, dann stellt er ihn wieder in die normale Warteschlange.
+Der aktuelle Test läuft mit seinen Fixtures weiter; sein Worker führt den
+entzogenen Folgetest nicht mehr aus und läuft danach aus. Er zählt bis dahin
+weiter als belegter Prozess seines Hosts. So landet der Folgetest nicht nur
+in einem neuen Prozess hinter demselben belegten Hostslot.
+
+Diese Übergabe beginnt keinen zweiten Versuch: Der Folgetest wurde noch nie
+gestartet. Seine erste Ausführung hat weiterhin Vorrang vor allen Kopien.
+Erst wenn auch er tatsächlich gestartet wurde, darf die bestehende Kopienwahl
+greifen. Bei Pause, fehlender freier Kapazität, laufender MOVE-Übergabe oder
+angefordertem Abbruch wird keine Reservierung freigegeben. Profilformate 1–3
+behalten ihre bisherigen Abläufe. Die Laufzeitdatenbank benötigt dafür keine
+Migration; nicht gestartete Reservierungen werden nicht als Messung ausgegeben.
+
 Jede Kopie erhält einen frischen Workerprozess. Der erste vollständige
 Protokollabschluss einschließlich Teardown entscheidet. Übrige laufende
 Kopien werden über ihre bestehende Prozessaufsicht samt Unterprozessen

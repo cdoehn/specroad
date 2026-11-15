@@ -97,10 +97,12 @@ class LivePool:
             for node in nodes[wanted:]:
                 self.retiring.add(node.gateway.id)
                 node.shutdown()  # permits current teardown, denies next attempt
-            missing = wanted - len(nodes)
-            # A test reserved behind a running item is not assignable to a
-            # new worker. Do not repeatedly respawn idle processes while the
-            # copy gate correctly waits for that original to start.
+            draining_tails = sum(n.gateway.id in sched.reclaimed
+                                 for n in self.ds._active_nodes if self.rows[n.gateway.id]['host'] == host)
+            missing = wanted - len(nodes) - draining_tails
+            # Only globally assignable originals justify replenishing workers.
+            # A donor whose unstarted tail was returned still occupies its host
+            # until its current attempt ends; another host can take the tail.
             if sched.has_pending and (not getattr(self.moves, 'speculative', False)
                     or self.moves.waiting() and bool(sched.pending)):
                 for _ in range(max(0, missing)):
@@ -152,16 +154,18 @@ class LivePool:
                 raise ValueError('Invalid live worker permission request')
             self.sequences[name] = message['sequence']
             self.reconcile()
-            pending = self.ds.sched.node2pending[node]
-            if not pending or pending[0] != message['index'] or name in self.active:
+            sched = self.ds.sched
+            pending = sched.node2pending[node]
+            reclaimed = sched.denies_reclaimed(node, message['index'])
+            if not reclaimed and (not pending or pending[0] != message['index'] or name in self.active):
                 raise ValueError('Worker permission differs from the fixed selection')
             slot = message['slot']
             if slot is not None and (type(slot) is not int or not 0 <= slot < self.rows[name]['budget']):
                 raise ValueError('Invalid atomic host slot')
-            allowed = self.eligible(node) and not self.ds.shuttingdown
+            allowed = not reclaimed and self.eligible(node) and not self.ds.shuttingdown
             # A normal tail shutdown only supplies xdist's nextitem sentinel;
             # it does not cancel the final queued item.
-            if name not in self.retiring and not self.ds.shuttingdown:
+            if not reclaimed and name not in self.retiring and not self.ds.shuttingdown:
                 allowed = True
             if self.ds.shuttingdown:
                 self.retiring.add(name)
