@@ -10,6 +10,7 @@ import sys
 
 from support.catalog_project import make_catalog_project
 from support.live_pool import await_value
+from dev.test_control.store import read_status
 from dev.test_hosts.environment import environment, digest, account
 from dev.test_hosts.pool import proxy_gateway
 from dev.test_hosts.snapshot import copy_snapshot, fingerprint
@@ -70,6 +71,23 @@ def await_target_finished(p):
     # MOVE requests are handled after that controller event returns.
     await_value(lambda: (p['root']/'build/initial-target-finished').exists(),
                 p['process'], p['log'])
+
+
+def await_source_attempt(p):
+    # The fixture's phase marker proves execution, not publication of the
+    # independently paced status. Read the run and exact attempt together.
+    nodeid=next(iter(p['profile']['selected']))
+    host=p['profile']['workers']['gw0']['host']
+    def observed():
+        current=read_status(p['root'],home=p['home'])
+        if current is None or not current['active']:
+            return None
+        tokens=[token for token,row in current.get('attempts',{}).items()
+                if row['worker']=='gw0' and row['host']==host
+                and row['nodeid']==nodeid and row['state']=='running']
+        assert len(tokens)<=1, 'source worker has multiple published attempts'
+        return (current,tokens[0]) if tokens else None
+    return await_value(observed,p['process'],p['log'])
 
 
 @contextmanager

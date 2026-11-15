@@ -27,8 +27,9 @@ class Lease:
             config = root / 'budget.json'
             if config.is_symlink():
                 raise ValueError('Linked host budget')
-            old = json.loads(config.read_text()) if config.exists() else limit
-            if config.exists() and (not stat.S_ISREG(config.stat().st_mode) or config.stat().st_nlink != 1):
+            exists = config.exists()
+            old = json.loads(config.read_text()) if exists else limit
+            if exists and (not stat.S_ISREG(config.stat().st_mode) or config.stat().st_nlink != 1):
                 raise ValueError('Unsafe host budget file')
             if type(old) is not int or not 1 <= old <= 256:
                 raise ValueError('Invalid stored host budget')
@@ -41,14 +42,17 @@ class Lease:
                         fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
                     except BlockingIOError:
                         raise ValueError('Host budget change requires all slots to be idle') from None
-            fd, temporary = tempfile.mkstemp(prefix='.budget-', dir=root)
-            try:
-                with os.fdopen(fd, 'w') as stream:
-                    stream.write(json.dumps(limit)); stream.flush(); os.fsync(stream.fileno())
-                os.replace(temporary, config)
-            finally:
-                if os.path.exists(temporary):
-                    os.unlink(temporary)
+            # The guard still protects every read and slot acquisition. An
+            # unchanged, validated limit has no new state to make durable.
+            if not exists or old != limit:
+                fd, temporary = tempfile.mkstemp(prefix='.budget-', dir=root)
+                try:
+                    with os.fdopen(fd, 'w') as stream:
+                        stream.write(json.dumps(limit)); stream.flush(); os.fsync(stream.fileno())
+                    os.replace(temporary, config)
+                finally:
+                    if os.path.exists(temporary):
+                        os.unlink(temporary)
             for fd in held:
                 os.close(fd)
             held.clear()

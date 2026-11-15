@@ -448,3 +448,5 @@
 - [Bundle 704 — Create-Testdaten und Testlauf-Overhead](bundle-704-writer-fixtures-test-overhead.md)
 
 - [Bundle 705 — nativer Validierungsbefund im Schreibbeleg](bundle-705-native-validation-receipt.md)
+
+- [Bundle 706 — MOVE-Abnahme an veröffentlichten Versuch binden](bundle-706-move-status-handshake.md)

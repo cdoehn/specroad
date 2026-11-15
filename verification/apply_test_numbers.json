@@ -27616,6 +27616,17 @@
     "tests/test_write_guard_right.py::test_receipt_rejects_incomplete_or_contradictory_native_validation[source_count]",
     "tests/test_write_guard_right.py::test_receipt_rejects_incomplete_or_contradictory_native_validation[stage_ids]",
     "tests/test_write_guard_right.py::test_receipt_rejects_incomplete_or_contradictory_native_validation[unavailable_stage]",
-    "tests/test_write_guard_right.py::test_receipt_rejects_incomplete_or_contradictory_native_validation[unknown_field]"
+    "tests/test_write_guard_right.py::test_receipt_rejects_incomplete_or_contradictory_native_validation[unknown_field]",
+    "tests/test_host_budget_reuse.py::test_changed_limit_requires_idle_slots_then_persists_new_limit[1]",
+    "tests/test_host_budget_reuse.py::test_changed_limit_requires_idle_slots_then_persists_new_limit[3]",
+    "tests/test_host_budget_reuse.py::test_reused_limit_preserves_budget_file_while_slots_remain_exclusive",
+    "tests/test_live_status_pacing.py::test_close_flushes_final_snapshot_and_releases_owner",
+    "tests/test_live_status_pacing.py::test_pause_denies_next_permission_before_next_status_publication",
+    "tests/test_live_status_pacing.py::test_status_coalesces_events_and_publishes_latest_snapshot",
+    "tests/test_scheduler_decision.py::test_queue_change_is_visible_during_the_same_dispatch",
+    "tests/test_scheduler_decision.py::test_reuse_preserves_complete_dispatch_order_and_host_assignments[speeds0]",
+    "tests/test_scheduler_decision.py::test_reuse_preserves_complete_dispatch_order_and_host_assignments[speeds1]",
+    "tests/test_scheduler_decision.py::test_reuse_preserves_complete_dispatch_order_and_host_assignments[speeds2]",
+    "tests/test_scheduler_decision.py::test_reuse_preserves_complete_dispatch_order_and_host_assignments[speeds3]"
   ]
 }

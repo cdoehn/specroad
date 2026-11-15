@@ -111,6 +111,8 @@ Korrektur des vollständigen 18.t-Rests und ausdrückliche OFF-PLAN-Optimierunge
 
 Nach erfolgreichem 18.t.W: [Korrektur 705](history/bundle-705-native-validation-receipt.md) setzt den vollständigen offenen R/C- und TEST-OVERHEAD-Rest fort. Die Zielwerte gelten erst nach ihrem eigenen Apply-Gate.
 
+18.t.R/C sind bestätigt. [Korrektur 706](history/bundle-706-move-status-handshake.md) setzt ausschließlich den offenen TEST-OVERHEAD.W/R/C-Rest fort; kein zusätzlicher Produktfortschritt.
+
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml

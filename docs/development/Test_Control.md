@@ -52,6 +52,27 @@ Workerprozesse und auslaufende Worker je Host. `--once --json` enthält diese
 Daten unter `test_control`; der Monitor schreibt keine Steuerdateien. Eine
 fehlende Steuerquelle ist keine Meldung über freie Apply-Sperren.
 
+Der Controller veröffentlicht normale Statusereignisse höchstens alle 500 ms
+als atomaren Snapshot. Die erste Veröffentlichung und der Abschluss werden
+unmittelbar geschrieben. Der nächste Snapshot enthält den dann aktuellen
+Gesamtstand, nicht eine Warteschlange alter Zwischenstände. `updated_at` bleibt
+der tatsächliche Veröffentlichungszeitpunkt. Ein blockierter Controller kann
+auch diese Aktualisierung verzögern; die Anzeige ist keine Echtzeitgarantie.
+
+Diese Begrenzung betrifft ausschließlich die externe Statusprojektion.
+Steueraufträge und Besitzer-Sperren werden weiterhin vor der Freigabe geprüft;
+eine Pause wirkt auch zwischen zwei Statusveröffentlichungen. Jeder Versuch
+und jede Messphase behalten ihre bisherigen dauerhaften Bestätigungen.
+Schreibfehler bleiben Gate-Fehler. Beim Abschluss wird die Besitzersperre
+auch dann freigegeben, wenn der abschließende Status nicht geschrieben werden
+kann. Ein übrig gebliebener Snapshot beweist keinen aktiven Testlauf.
+
+Beim Belegen eines Hostslots wird das bestehende Budget unter derselben
+Sperre frisch gelesen und geprüft. Ein unverändertes gültiges Budget wird
+nicht erneut gespeichert. Ein neues Budget oder eine zulässige Änderung
+wird weiterhin atomar und mit der bisherigen Speichersicherung geschrieben;
+eine Änderung bei belegten alten Slots bleibt verboten.
+
 Die privaten Daten liegen je kanonischem Apply-Pfad unter
 `$XDG_STATE_HOME/specroad/test-control` (sonst `~/.local/state/...`). Für eine
 isolierte Betriebsumgebung gibt es `SPECROAD_TEST_CONTROL_HOME`. Dateiwechsel

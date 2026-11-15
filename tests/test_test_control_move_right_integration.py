@@ -7,7 +7,7 @@ from dev.test_control.moves import move
 from dev.test_control.store import read_status
 from dev.test_hosts.contract import public_proof, verify_pool
 from support.live_pool import await_value
-from support.move_pool import await_target_finished, pool, SUBJECT
+from support.move_pool import await_source_attempt, await_target_finished, pool, SUBJECT
 from verification_support.runtime_history import RuntimeHistory
 
 
@@ -44,8 +44,7 @@ def test_native_move_in_each_pytest_phase_keeps_both_attempts(tmp_path, phase, p
         await_value(lambda: (p['root']/'build/phase').exists(), p['process'], p['log'])
         if p['cpus'] >= 2:
             await_target_finished(p)
-            current = status()
-            token = next(k for k,r in current['attempts'].items() if r['worker']=='gw0')
+            current,token=await_source_attempt(p)
             move(p['root'], current['run'], token, 'target', home=p['home'])
             await_value(lambda: (p['target']/'build/replacement').exists(), p['process'], p['log'], timeout=60)
         else:
@@ -82,7 +81,7 @@ def pytest_sessionstart(session):
             assert p['process'].wait(timeout=40) == 0, p['log'].read_text()
             return
         await_target_finished(p)
-        current=status(); token=next(k for k,r in current['attempts'].items() if r['worker']=='gw0')
+        current,token=await_source_attempt(p)
         requested=move(p['root'], current['run'], token, 'target', home=p['home'])['request']['id']
         await_value(lambda: status()['moves'].get(requested,{}).get('state')=='rejected', p['process'], p['log'])
         assert (p['root']/'build/cancel-entered').read_text() == token
@@ -105,7 +104,7 @@ def test_busy_target_rejection_preserves_original_test_and_gate(tmp_path):
         await_value(lambda: (p['root']/'build/original').exists(), p['process'], p['log'])
         if p['cpus'] >= 2:
             await_value(lambda: status()['hosts']['target']['running']==1, p['process'], p['log'])
-            current=status(); token=next(k for k,r in current['attempts'].items() if r['worker']=='gw0')
+            current,token=await_source_attempt(p)
             key=move(p['root'], current['run'], token, 'target', home=p['home'])['request']['id']
             await_value(lambda: status()['moves'].get(key,{}).get('state')=='rejected', p['process'], p['log'])
         for root in (p['root'],p['target']):
@@ -140,7 +139,7 @@ def pytest_sessionstart(session):
         await_value(lambda: (p['root']/'build/original').exists(), p['process'], p['log'])
         if p['cpus'] >= 2:
             await_target_finished(p)
-            current=status(); token=next(k for k,r in current['attempts'].items() if r['worker']=='gw0')
+            current,token=await_source_attempt(p)
             move(p['root'], current['run'], token, 'target', home=p['home'])
         else:
             (p['root']/'build/release').touch()
@@ -163,7 +162,7 @@ def test_real_call_failure_in_teardown_cannot_be_hidden_by_operator_move(tmp_pat
             return read_status(p['root'], home=p['home'])
         await_value(lambda: (p['root']/'build/phase').exists(), p['process'], p['log'])
         if p['cpus'] >= 2:
-            current=status(); token=next(k for k,r in current['attempts'].items() if r['worker']=='gw0')
+            current,token=await_source_attempt(p)
             key=move(p['root'], current['run'], token, 'target', home=p['home'])['request']['id']
             await_value(lambda: status()['moves'].get(key,{}).get('state')=='rejected', p['process'], p['log'])
         (p['root']/'build/release').touch()

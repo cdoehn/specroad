@@ -159,6 +159,17 @@ Die Prüfung wird nicht übersprungen; ein Initialisierungsfehler verhindert den
 Start. Ein einzelnes Kanalende beendet nicht die Verbindung anderer Worker.
 Sessionabschluss und Unconfigure geben den Schreiber kontrolliert frei.
 
+Der Scheduler verwendet innerhalb genau einer Zuteilungsentscheidung bereits
+ermittelte Workerwartezeiten, Hostgeschwindigkeiten und Testprognosen wieder.
+Eine neue Reservierung verwirft sofort die betroffene Workerwartezeit. Beim
+nächsten Controllerereignis werden alle Werte neu bestimmt; Laufzeitlernen,
+Pause, neue Worker und zurückgegebene Folgetests treffen keinen alten Cache.
+Die Prognose bleibt eine Schätzung, keine Ausführungsfreigabe. Auswahl,
+höchstens zwei Reservierungen je Worker, lange Tests zuerst, Exploration
+unbekannter Tests und Vorrang aller ungestarteten Originale bleiben erhalten.
+Die [Statuspublikation](Test_Control.md) begrenzt nur externe Snapshots;
+Messphasen und Datenbanktransaktionen werden unverändert bestätigt.
+
 `test-monitor` zeigt für neue Pool-Messungen Host, Worker und alle drei Phasen;
 die Suche umfasst auch den Hostnamen. `--once --json` enthält `host` und
 `environment_sha256`. Historische Datensätze ohne Hostbeleg bleiben `null`/`—`.

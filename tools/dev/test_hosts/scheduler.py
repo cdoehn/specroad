@@ -6,6 +6,35 @@ import time
 from xdist.scheduler.worksteal import WorkStealingScheduling
 
 
+class _SchedulingDecision:
+    """Reuse estimates only during one controller-thread dispatch decision."""
+
+    def __init__(self, scheduler):
+        self.scheduler = scheduler
+        self.delays, self.durations, self.speeds = {}, {}, {}
+
+    def available(self, node):
+        if node not in self.delays:
+            self.delays[node] = self.scheduler.available(node)
+        return self.delays[node]
+
+    def duration(self, node, index):
+        key = (node, index)
+        if key not in self.durations:
+            self.durations[key] = self.scheduler.duration(node, index)
+        return self.durations[key]
+
+    def speed(self, node):
+        if node not in self.speeds:
+            self.speeds[node] = self.scheduler.speed(node)
+        return self.speeds[node]
+
+    def assigned(self, node):
+        # A new reservation changes this worker's delay immediately. Host
+        # scales and measured durations cannot change within this decision.
+        self.delays.pop(node, None)
+
+
 class HostScheduling(WorkStealingScheduling):
     def __init__(self, config, log=None):
         super().__init__(config, log)
@@ -51,22 +80,24 @@ class HostScheduling(WorkStealingScheduling):
             heapq.heappush(heap, item)
         return result
 
-    def pool_horizon(self, live):
+    def pool_horizon(self, live, decision=None):
         """Estimate the whole remaining run, not the fastest next free slot."""
-        loads = [(self.available(node), self.speed(node)) for node in live
+        estimates = self if decision is None else decision
+        loads = [(estimates.available(node), estimates.speed(node)) for node in live
                  if not node.shutting_down]
         capacity = math.fsum(speed for _, speed in loads)
         work = self.remaining_work + math.fsum(delay * speed for delay, speed in loads)
         return max(max(delay for delay, _ in loads), work / capacity)
 
-    def short_successor(self, node, live):
+    def short_successor(self, node, live, decision=None):
         # A real nextitem lets xdist execute the current item. A faster host's
         # existence does not justify retiring this worker for the entire run.
         # Unknowns are never used as speculative filler on a weaker host.
-        horizon = self.pool_horizon(live)
-        delay = self.available(node)
+        estimates = self if decision is None else decision
+        horizon = self.pool_horizon(live, decision)
+        delay = estimates.available(node)
         for index in self.candidates(self.short, 12):
-            if delay + self.duration(node, index) <= horizon + 0.001:
+            if delay + estimates.duration(node, index) <= horizon + 0.001:
                 return index
         return None
 
@@ -95,9 +126,10 @@ class HostScheduling(WorkStealingScheduling):
         live = [n for n in self.scheduling_nodes() if not n.shutting_down]
         if not live:
             return
-        live.sort(key=lambda n: (-self.speed(n), n.gateway.id))
-        fastest = self.speed(live[0])
-        exploration = max(1, math.ceil(sum(self.speed(n) == fastest for n in live) / 4))
+        decision = _SchedulingDecision(self)
+        live.sort(key=lambda n: (-decision.speed(n), n.gateway.id))
+        fastest = decision.speed(live[0])
+        exploration = max(1, math.ceil(sum(decision.speed(n) == fastest for n in live) / 4))
         # Each worker needs a nextitem to execute its current item. Assign in
         # two rounds, so the fastest worker does not reserve all long tests.
         for depth in (0, 1):
@@ -110,19 +142,19 @@ class HostScheduling(WorkStealingScheduling):
                 candidates = self.candidates(self.long)
                 # Limited fast slots explore unknowns early. A known long test
                 # can still occupy the second position and other fast slots.
-                if self.unknown and ((position < exploration and depth == 0) or (not candidates and self.speed(node) == fastest)):
+                if self.unknown and ((position < exploration and depth == 0) or (not candidates and decision.speed(node) == fastest)):
                     candidates.insert(0, self.unknown[-1])
                 candidates += self.candidates(self.short, 12)
                 chosen = None
                 for index in dict.fromkeys(candidates):
-                    finish = self.available(node) + self.duration(node, index)
-                    earliest = min(self.available(other) + self.duration(other, index) for other in live if not other.shutting_down)
+                    finish = decision.available(node) + decision.duration(node, index)
+                    earliest = min(decision.available(other) + decision.duration(other, index) for other in live if not other.shutting_down)
                     if finish <= earliest * 1.05 + 0.001:
                         chosen = index
                         break
                 if chosen is None and len(queue) == 1:
-                    faster = any(not other.shutting_down and self.speed(other) > self.speed(node) for other in live)
-                    chosen = self.short_successor(node, live)
+                    faster = any(not other.shutting_down and decision.speed(other) > decision.speed(node) for other in live)
+                    chosen = self.short_successor(node, live, decision)
                     if chosen is None and not faster:
                         # At least one fastest worker must keep making
                         # progress even when the estimates cannot fit a pair.
@@ -141,6 +173,7 @@ class HostScheduling(WorkStealingScheduling):
                     if not queue:
                         self.started[node] = time.monotonic()
                     queue.append(chosen)
+                    decision.assigned(node)
                     node.send_runtest_some([chosen])
         if not self.pending:
             for node in live:

@@ -6,21 +6,17 @@ from pathlib import Path
 import pytest
 
 from dev.test_control.moves import move
-from dev.test_control.store import read_status
 from dev.test_hosts.contract import public_proof, verify_pool
 from support.live_pool import await_value
-from support.move_pool import await_target_finished, pool
+from support.move_pool import await_source_attempt, await_target_finished, pool
 from verification_support.runtime_history import RuntimeHistory
 
 
 @pytest.mark.parametrize('proxy', [False, True])
 def test_native_operator_move_reaps_source_and_runs_fresh_target(tmp_path, proxy):
     with pool(tmp_path, proxy=proxy, long_identity=True) as p:
-        def status():
-            return read_status(p['root'], home=p['home'])
         await_value(lambda: (p['root']/'build/original').exists(), p['process'], p['log'])
-        view = await_value(lambda: status() if status() and status().get('attempts') else None, p['process'], p['log'])
-        token = next(k for k,v in view['attempts'].items() if v['worker'] == 'gw0')
+        view,token=await_source_attempt(p)
         if p['cpus'] < 2:
             # A single shared CPU slot cannot be reserved while source owns it.
             # Do not manufacture capacity or skip a test in a green gate.

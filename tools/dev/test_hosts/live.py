@@ -1,6 +1,7 @@
 """Reviewed xdist 3.8 main-loop adapter for live host counts, never test retries."""
 from queue import Empty
 import threading
+import time
 import types
 
 import execnet
@@ -34,6 +35,7 @@ class LivePool:
         self.owner = None
         self.thread = None
         self.errors = []
+        self._last_publish = None
         self.moves = None
         if config._sr_host_profile['format_version'] == 4:
             from .speculative_control import CopyAttempts
@@ -118,13 +120,19 @@ class LivePool:
                     node = self.ds.nodemanager.setup_node(spec, self.ds.queue.put)
                     self.ds._active_nodes.add(node)
 
-    def publish(self):
+    def publish(self, *, force=False):
+        # Only the external status projection is coalesced. Permission,
+        # operator-request reads and durable attempt/phase ACKs stay immediate.
+        now = time.monotonic()
+        if not force and self._last_publish is not None and now - self._last_publish < 0.5:
+            return
         hosts = {}
         for host in self.owner.capacities:
             nodes = [n for n in self.ds._active_nodes if self.rows[n.gateway.id]['host'] == host]
             hosts[host] = dict(processes=len(nodes), running=sum(n.gateway.id in self.active for n in nodes),
                                draining=sum(n.gateway.id in self.retiring for n in nodes))
         self.owner.publish(hosts, **(dict(attempts=self.moves.public(), moves=self.moves.receipts) if self.moves is not None else {}))
+        self._last_publish = time.monotonic()
 
     def tick(self):
         try:
@@ -191,8 +199,13 @@ class LivePool:
             self.thread.join(timeout=2)
         if self.moves is not None:
             self.moves.close()
-        if self.owner is not None:
-            self.owner.close()
+        if self.owner is not None and self.owner.fd is not None:
+            try:
+                if hasattr(self, 'ds'):
+                    self.owner.refresh()  # final write still needs the same live owner
+                    self.publish(force=True)
+            finally:
+                self.owner.close()
 
     def pytest_unconfigure(self, config):
         self.close()
