@@ -25,7 +25,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Ein importiertes Objekt MUSS seine externe Identität als Kombination aus `source_system`, `source_document`, `external_id` und optionaler `external_revision` verlustfrei speichern.",
+    "requirement_contract": "Ein importiertes Objekt MUSS seine externe Identit\u00e4t als Kombination aus `source_system`, `source_document`, `external_id` und optionaler `external_revision` verlustfrei speichern.",
     "scope": "14.b.W: owned native identities preserve the existing relation field contract for artifacts and relations. Explicit imported/source mapping projections receive separate canonical SHA-256 values; original payload bytes and supplied UTC time are retained distinctly. A passive index resolves the exact class/system/document/id key to an existing native artifact or relation independent of external revision. Original source bytes, legacy unbound data and namespaced extensions remain intact; construction or history generation grants no write, conflict or completeness authority. 14.b.R additionally retains unknown extensions at identity, artifact and relation level through complete data roundtrips. Literal source namespaces remain distinct across case, whitespace, Unicode spelling and document order. Native paths and byte values are checked before use; reader positions and serializable diagnostics survive rejected input, and failed construction leaves previous observations intact."
   },
   "preconditions": [
@@ -43,7 +43,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "367bad36c070076ce83bfa63147c737111f5c682f9f05f9ce29a421680c01096",
+  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
   "steps": [
     "Record canonical projection hashes and original payload hash while retaining external identity and extension values.",
     "Read artifact/relation candidates and resolve repeated external identities to existing native owners; reject ambiguous or malformed inventories.",

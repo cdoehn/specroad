@@ -14,7 +14,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Ein Merge gegen Git-Refs MUSS deren Dateien lesen, ohne Branch, Index oder Arbeitsbaum auszuchecken oder zu verändern.",
+    "requirement_contract": "Ein Merge gegen Git-Refs MUSS deren Dateien lesen, ohne Branch, Index oder Arbeitsbaum auszuchecken oder zu ver\u00e4ndern.",
     "scope": "17.a.W implements complete immutable Base/Ours/Theirs source observations through native local, Git, Baseline and verified full-bundle readers. Complete original resource bytes, project/schema identity, default closed project scope, native model roots and source provenance are retained. No versioned merge plan, conflict resolution, CLI/Work integration or write authority is implemented by this slice. 17.a.R rejects partial/selected sources and mixed project/schema inputs without migration, preserves historical effective profile selection and qualified legacy bytes, checks pinned Git extraction proofs, and reobserves all three source acquisitions before returning. Observations remain non-atomic. 17.a.C moves the full-source registry into snapshots while preserving the public merge facade, native adapters, all W/R behavior tests and errors."
   },
   "preconditions": [
@@ -32,7 +32,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "367bad36c070076ce83bfa63147c737111f5c682f9f05f9ce29a421680c01096",
+  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
   "steps": [
     "Acquire three complete sources, compare exact bytes and native scope/model-root bindings, check immutable detached output and original source provenance, and verify no writes or Git checkout occur.",
     "Reject partial markers/bundles and retained proof removal, foreign identities, old/new unsupported schemas, selected Baselines, unsafe or missing dependencies and late input changes; retain historic profiles and registered original bytes without changing them.",

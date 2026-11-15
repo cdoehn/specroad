@@ -10,11 +10,11 @@
   "method": "automated_behavior",
   "open_items": [
     "Initial read-only host APIs and whole-byte ZIP32 processing only. Full Work CLI, general executable workflows, normative work export with current transaction/receipt proof and explicit write-target mapping, incremental large export and multipart archives remain open. No native Recovery substitute, executable code loading, authenticity from internal self-consistency, semantic success from generic data, or release approval is claimed.",
-    "RECOVERY-REMOVAL-006: existing test references cover only their still-valid implemented scope. Changed interruption/receipt/preflight/work oracles require fresh implementation and evidence in 18.s–18.x; old repair/crash recovery results are not acceptance of the new contract."
+    "RECOVERY-REMOVAL-006: existing test references cover only their still-valid implemented scope. Changed interruption/receipt/preflight/work oracles require fresh implementation and evidence in 18.s\u201318.x; old repair/crash recovery results are not acceptance of the new contract."
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Die Wiederaufnahme nach vollständigem Sandboxverlust MUSS auf extern erhaltene, verifizierbare Projektvollbundles beziehungsweise Arbeitspakete nach Anhang P begrenzt sein.",
+    "requirement_contract": "Die Wiederaufnahme nach vollst\u00e4ndigem Sandboxverlust MUSS auf extern erhaltene, verifizierbare Projektvollbundles beziehungsweise Arbeitspakete nach Anhang P begrenzt sein.",
     "scope": "An externally retained, full-SHA-bound work package is sufficient to reconstruct the complete original read-only checkpoint chain and all referenced object bytes in a new private root, including a new process with the explicitly compatible runtime. Sealed captured inputs survive loss of original source bytes. Actual closed handlers resume or reuse their recorded output without changing original Work identity or inventing success; a generic task manifest remains inert data. Initial read-only host APIs and whole-byte ZIP32 processing only. Full Work CLI, general executable workflows, normative work export with current transaction/receipt proof and explicit write-target mapping, incremental large export and multipart archives remain open. No native Recovery substitute, executable code loading, authenticity from internal self-consistency, semantic success from generic data, or release approval is claimed. R additionally checks file/ancestor collisions, native inventory reproducibility before allocation, current runtime after complete validation and fresh destination inventories across every generation. Real lost bytes, locks, replaced roots and foreign arrivals are exercised. Preserved pointer bytes are not a claim that externally changed payloads remain usable."
   },
   "preconditions": [
@@ -32,7 +32,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "367bad36c070076ce83bfa63147c737111f5c682f9f05f9ce29a421680c01096",
+  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
   "steps": [
     "Export the independently bound complete published read-only chain without writes, retain its exact archive bytes and external hash, and remove owned original Work/source data.",
     "Verify canonical ZIP bytes, exact nonrecursive inventory and every original Work generation before allocating a missing or private empty external destination.",

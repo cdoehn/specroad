@@ -14,7 +14,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Ein `relation_review`-Artefakt MUSS die geprüfte `relation_id`, den kanonischen Relationsinhaltshash, Quell- und Ziel-ID, deren Revision und vollständigen Artefakthash, deren `relation_context_hash-v1`, Reviewer, Entscheidung, Zeitstempel und optionalen Kommentar enthalten.",
+    "requirement_contract": "Ein `relation_review`-Artefakt MUSS die gepr\u00fcfte `relation_id`, den kanonischen Relationsinhaltshash, Quell- und Ziel-ID, deren Revision und vollst\u00e4ndigen Artefakthash, deren `relation_context_hash-v1`, Reviewer, Entscheidung, Zeitstempel und optionalen Kommentar enthalten.",
     "scope": "Native first confirmed human review: new random128 identity, exact relation/source/target IDs, revisions, full and context hashes, reviewer/time/reason/comment, recorded/approved creation through complete target checks and native journal/publication/receipt/cleanup, unchanged original files, historical request replay and immutable generic routes. The bound gates cover only the new review; general history/currentness, negative outcomes/withdrawals and CLI remain open. R: early graph/guard checks, known historical allocation exclusions, self-hashed record and mixed-plan rejection, live tag-only endpoint mutations, host-gate ownership, timestamp context discrimination and real before/after-rename recovery evidence. General history selection and negative reviews remain closed."
   },
   "preconditions": [
@@ -32,7 +32,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "367bad36c070076ce83bfa63147c737111f5c682f9f05f9ce29a421680c01096",
+  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
   "steps": [
     "Record a confirmed relation review under the real writer lock; inspect complete endpoint/context bindings, immutable revision-1 output and native receipts; replay the same request and reject changed intent, nonhuman actors, stale guards and tampered saved plans.",
     "Reject invalid supplied graphs, stale source guards and incomplete known historical exclusions before lock/allocation; verify saved-plan isolation and exact immutable audit bindings, live endpoint byte conflicts and native interrupted publication evidence."

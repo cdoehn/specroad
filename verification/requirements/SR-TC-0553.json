@@ -25,11 +25,11 @@
   "method": "automated_behavior",
   "open_items": [
     "Profile selection is consolidated in the registered CommandSpec by 6.a.C; all existing W/R behavior tests remain unchanged. Cross-invocation detail continuation with persisted Work manifests/checkpoints remains assigned to 6.i-6.l; full resource budgets, actual write/recovery/root-creation prerequisites and further project command families remain open. No runtime/platform-matrix approval.",
-    "RECOVERY-REMOVAL-006: existing test references cover only their still-valid implemented scope. Changed interruption/receipt/preflight/work oracles require fresh implementation and evidence in 18.s–18.x; old repair/crash recovery results are not acceptance of the new contract."
+    "RECOVERY-REMOVAL-006: existing test references cover only their still-valid implemented scope. Changed interruption/receipt/preflight/work oracles require fresh implementation and evidence in 18.s\u201318.x; old repair/crash recovery results are not acceptance of the new contract."
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Der automatische Preflight MUSS ausschließlich den für den angeforderten Befehl definierten Prüfumfang aus Anhang N.2 ausführen.",
+    "requirement_contract": "Der automatische Preflight MUSS ausschlie\u00dflich den f\u00fcr den angeforderten Befehl definierten Pr\u00fcfumfang aus Anhang N.2 ausf\u00fchren.",
     "scope": "Current configuration schema and shallow operational state gate project_read and project_write dry-runs before the handler. Bootstrap performs no project access; metadata-only diagnosis remains available. Current root/configuration and operational rechecks reject stale preparation. No model validation, journal body/history scan, process, network or project mutation is used for startup. Shared metadata accounting covers configuration capture, shallow names and verification; same-invocation detail phases disclose SRV167 without a size-only error or invented persistent continuation. Large history does not change native startup accesses."
   },
   "preconditions": [
@@ -47,7 +47,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "367bad36c070076ce83bfa63147c737111f5c682f9f05f9ce29a421680c01096",
+  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
   "steps": [
     "Invoke project_read through CLI spelling, alias and structured request; observe the current configuration, active transaction gate and whether the real handler runs.",
     "Record native opens and directory enumeration while denying project writes, processes and network; retain all unrelated and pending bytes.",

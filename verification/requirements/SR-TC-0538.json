@@ -15,7 +15,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Eine View DARF NICHT ausführbare Templates, Skripte oder dynamisch geladene Funktionen enthalten.",
+    "requirement_contract": "Eine View DARF NICHT ausf\u00fchrbare Templates, Skripte oder dynamisch geladene Funktionen enthalten.",
     "scope": "11.k.W: closed unconfigured project view; native SRX filter/sort; artifact-field and bounded distinct-related-ID/count columns; stable scalar grouping and exact snapshot bindings. Read-only data, no rendering or full project validation. R adds closed format names and adversarial declaration/source/graph tests, no-I/O guards and isolated package parity. 11.l.R adds explicit missing preservation and bounded nested record data in the same configured snapshot."
   },
   "preconditions": [
@@ -33,7 +33,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "367bad36c070076ce83bfa63147c737111f5c682f9f05f9ce29a421680c01096",
+  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
   "steps": [
     "Resolve the stored view through native Query/SRX and relation services, compare typed rows/groups and snapshot bindings, and reject unsupported declarations before producing data.",
     "11.k.R: reject unknown/duplicate formats and foreign executable declarations; verify empty-filter validation, static projection paths, graph/type/source boundaries, unchanged original bytes and actual absence of external I/O; compare isolated Core/PYZ data.",

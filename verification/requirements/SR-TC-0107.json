@@ -28,7 +28,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Die Traceability-Ansicht MUSS für jedes Requirement mindestens Herkunft, Umsetzung, Verifikation, Evidence und Release-Zuordnung darstellen.",
+    "requirement_contract": "Die Traceability-Ansicht MUSS f\u00fcr jedes Requirement mindestens Herkunft, Umsetzung, Verifikation, Evidence und Release-Zuordnung darstellen.",
     "scope": "11.q.W/R/C: source-bound traceability from supplied native records only. All five categories refer to actual identities, relations or explicitly bound evidence subject fields. Missing M12/M13 calculations remain unavailable/null even for empty input or stored success strings. No approval, full-suite claim, full-project discovery or calculated verification/release readiness. The common private projection boundary reuses the existing calculations and result construction; no new report provider or semantic approval is introduced. 13.h.W now integrates the available native Roadmap provider and optional bound native Readiness, plus Verification/Traceability selection parity. Unavailable calculations are not fabricated; rendering is never a pass oracle. 13.h.R additionally checks semantic Work-input resumption, exact data parity, no inherited gate pass, and unchanged pending native Work manifests. It does not claim a completed scheduler, public CLI or granular within-provider execution. 13.h.C only consolidates the existing native provider and input-binding implementation; no new semantic result, approval, completed Work unit or CLI contract."
   },
   "preconditions": [
@@ -47,7 +47,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "367bad36c070076ce83bfa63147c737111f5c682f9f05f9ce29a421680c01096",
+  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
   "steps": [
     "Resolve native owned model records and actual stored relation identities into per-requirement origin, implementation, verification, evidence and release categories; preserve empty categories and terminate cyclic origin paths.",
     "Bind each trace edge to its actual source array pointer, raw file hash and canonical record hash; preserve evidence subjects as original fields instead of fabricated relations.",

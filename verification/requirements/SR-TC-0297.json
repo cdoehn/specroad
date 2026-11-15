@@ -16,12 +16,12 @@
   ],
   "method": "automated_behavior",
   "open_items": [
-    "Fresh full CI evidence across CPython 3.10–3.14 is required; local selected gates do not prove the runtime matrix.",
+    "Fresh full CI evidence across CPython 3.10\u20133.14 is required; local selected gates do not prove the runtime matrix.",
     "Integrated project/profile validation and CLI/lifecycle diagnosis follow their scheduled steps."
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Ein SRX-Typ-, Versions-, Operator- oder Auswertungsfehler MUSS Regel-ID, JSON Pointer des Ausdrucksknotens, erwartete und tatsächliche Typen sowie eine Reparaturempfehlung ausgeben.",
+    "requirement_contract": "Ein SRX-Typ-, Versions-, Operator- oder Auswertungsfehler MUSS Regel-ID, JSON Pointer des Ausdrucksknotens, erwartete und tats\u00e4chliche Typen sowie eine Reparaturempfehlung ausgeben.",
     "scope": "Executable SRX 1.0 conformance corpus for 29 operators and all nine concrete Annex U.3 arithmetic decisions; diagnostics preserve rule ID, pointers and types with passive repair hints. Full project/profile/CLI integration and the runtime matrix require separate evidence."
   },
   "preconditions": [
@@ -39,7 +39,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "367bad36c070076ce83bfa63147c737111f5c682f9f05f9ce29a421680c01096",
+  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
   "steps": [
     "Capture own immutable data; evaluate literal or reject invalid declarations without side effects.",
     "Evaluate any/all/none in array order using lexical item binding, strict Boolean predicates and empty-array identities.",

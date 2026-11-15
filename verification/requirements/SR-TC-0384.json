@@ -22,11 +22,11 @@
   "method": "automated_behavior",
   "open_items": [
     "Public normative CLI and specialist command wiring remain in their assigned later plan steps.",
-    "RECOVERY-REMOVAL-006: existing test references cover only their still-valid implemented scope. Changed interruption/receipt/preflight/work oracles require fresh implementation and evidence in 18.s–18.x; old repair/crash recovery results are not acceptance of the new contract."
+    "RECOVERY-REMOVAL-006: existing test references cover only their still-valid implemented scope. Changed interruption/receipt/preflight/work oracles require fresh implementation and evidence in 18.s\u201318.x; old repair/crash recovery results are not acceptance of the new contract."
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Die Wiederholung derselben Request-ID eines normativen Schreibauftrags mit demselben normalisierten Operationshash MUSS ohne erneute normative Änderung dasselbe semantische Ergebnis und dieselben erzeugten IDs zurückgeben.",
+    "requirement_contract": "Die Wiederholung derselben Request-ID eines normativen Schreibauftrags mit demselben normalisierten Operationshash MUSS ohne erneute normative \u00c4nderung dasselbe semantische Ergebnis und dieselben erzeugten IDs zur\u00fcckgeben.",
     "scope": "A confirmed native receipt returns the exact stored result and IDs without locks, planning or writes. The locked native gate refuses a second publication for a completed ID."
   },
   "preconditions": [
@@ -44,7 +44,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "367bad36c070076ce83bfa63147c737111f5c682f9f05f9ce29a421680c01096",
+  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
   "steps": [
     "Commit a native transaction and store its linked receipts.",
     "Repeat the normative request and compare the stored result, identities and unchanged files."

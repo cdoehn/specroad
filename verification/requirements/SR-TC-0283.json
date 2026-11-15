@@ -14,7 +14,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Ein Requirement DARF den Reifegrad `approved` nur bei durchgehend `current` bewerteten profilabhängigen Pflichtrelationen behalten; die atomare Rücknahme bei negativem Relationsreview folgt Kapitel 11.13.",
+    "requirement_contract": "Ein Requirement DARF den Reifegrad `approved` nur bei durchgehend `current` bewerteten profilabh\u00e4ngigen Pflichtrelationen behalten; die atomare R\u00fccknahme bei negativem Relationsreview folgt Kapitel 11.13.",
     "scope": "Native coupled human review API with computed Requirement withdrawals, later reconfirmation without reapproval, unchanged supported standard states, exact composed relation obligations, separate review assessment and actual process-loss recovery. The existing first-confirmation API and native publication/receipt/recovery protocols retain their scope. This is not complete CLI, authentic host history or final approval integration."
   },
   "preconditions": [
@@ -32,7 +32,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "367bad36c070076ce83bfa63147c737111f5c682f9f05f9ce29a421680c01096",
+  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
   "steps": [
     "Plan and publish one negative review with its exact Requirement withdrawal; inspect canonical source/review bytes, revision, context hashes, audit operation and durable receipt.",
     "Reject stale guards, nonhuman actors, altered withdrawal payloads, missing required gate, unrelated error and denied authority; verify stable request replay without additional writes.",

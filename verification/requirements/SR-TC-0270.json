@@ -18,11 +18,11 @@
   "json_pointers": [],
   "method": "automated_behavior",
   "open_items": [
-    "RECOVERY-REMOVAL-006: existing test references cover only their still-valid implemented scope. Changed interruption/receipt/preflight/work oracles require fresh implementation and evidence in 18.s–18.x; old repair/crash recovery results are not acceptance of the new contract."
+    "RECOVERY-REMOVAL-006: existing test references cover only their still-valid implemented scope. Changed interruption/receipt/preflight/work oracles require fresh implementation and evidence in 18.s\u201318.x; old repair/crash recovery results are not acceptance of the new contract."
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Eine wiederholte Migration auf dieselbe bereits erreichte Zielversion MUSS ohne semantische Änderung erfolgreich und idempotent enden oder eindeutig als nicht erforderlich gemeldet werden.",
+    "requirement_contract": "Eine wiederholte Migration auf dieselbe bereits erreichte Zielversion MUSS ohne semantische \u00c4nderung erfolgreich und idempotent enden oder eindeutig als nicht erforderlich gemeldet werden.",
     "scope": "M16-INTEGRATION-588.R: public CLI and Restore integration, actual native byte/history/backup/transaction/work contracts. Implementation state is not execution evidence; Apply must execute its own bound mandatory gate before committing. C requires the entire available suite. Synthetic fixtures grant no human review or release authority."
   },
   "preconditions": [
@@ -43,7 +43,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "367bad36c070076ce83bfa63147c737111f5c682f9f05f9ce29a421680c01096",
+  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
   "steps": [
     "Execute the complete native source/backup/plan/target/authority gates and inspect actual published files, original archives, revision changes and unchanged historical bytes.",
     "Reject stale bindings, unproven resources, missing gates/authority, unsafe paths, foreign locks and altered source images before accepting any success.",

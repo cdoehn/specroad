@@ -1,19 +1,19 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.89
+## Version 0.2.90
 
 | Feld | Wert |
 |---|---|
 | Dokument-ID | `SR-SPEC-0001` |
-| Dokumentversion | `0.2.89` |
+| Dokumentversion | `0.2.90` |
 | Zielrelease | `SpecRoad Single-Repository Workbench 0.2.0` |
 | Status | **Fachlich konsolidierte Arbeitsgrundlage; technische Reviewentscheidung gesondert dokumentiert, formale Baseline-Freigabe und Produktabnahme nicht durch dieses Dokument erklärt** |
-| Stand | 14. November 2026 |
+| Stand | 15. November 2026 |
 | Sprache | Deutsch; technische Feldnamen, Enum-Werte und CLI-Kommandos Englisch |
-| Fachliche Quelle | **Diese Repositoryfassung v0.2.89 ist die aktive fachliche Arbeitsgrundlage; eine entsprechende PDF wird hiermit nicht veröffentlicht.** |
+| Fachliche Quelle | **Diese Repositoryfassung v0.2.90 ist die aktive fachliche Arbeitsgrundlage; eine entsprechende PDF wird hiermit nicht veröffentlicht.** |
 | Bearbeitbare Satzquelle | Diese Datei; eine spätere PDF muss denselben versionierten Inhalt wiedergeben. |
-| Vorgängerversion | Repository-Spezifikation v0.2.87; historische Nachweise bleiben unverändert. |
-| Prüf- und Entscheidungsgrundlage | CONTROL-START-CURRENT / TEST-CONTROL-PLAN, ausdrücklicher Nutzerauftrag vom 14. November 2026; keine Produktfreigabe. |
-| Änderungsart | Ausdrücklich beauftragte spekulative Testkopien nach erfolgreichem MOVE: deterministische Verteilung, vollständige Gewinnerabschlüsse und getrennte Messnachweise. Produktanforderungen bleiben unverändert. |
+| Vorgängerversion | Repository-Spezifikation v0.2.89; historische Nachweise bleiben unverändert. |
+| Prüf- und Entscheidungsgrundlage | WRITE-RECEIPTS-703, delegiert gemäß SPECROAD-DECISION-1 für den bestätigten Recovery-Rückbau; keine Produktfreigabe. |
+| Änderungsart | Geschlossene nächste normale Receiptformate für 18.t ohne Wiederherstellungsbilder; Autorität, Fachgates und Abbruchsperre bleiben unverändert. |
 
 > **Verbindlicher Quellenwechsel:** Die ausdrückliche Nutzerentscheidung REFERENCE-SOURCE-551 wird als v0.2.50 umgesetzt. Der neue Quellvertrag ist Entwurfsarbeit vom 3. November 2026, kein Nachweis eines früher existierenden Formats. Bestehende 0.2-Verträge, Transport-, Sicherheits- und Reviewgrenzen bleiben erhalten.
 
@@ -8207,6 +8207,61 @@ Rückkehr zur Basis oder Fertigstellung des Ziels nach Abbruch. Fehler nach
 Markeranlage hinterlassen eine gesperrte Arbeitskopie, auch wenn noch kein
 normativer Write erfolgte. Ausgabeprobleme nach bestätigtem Abschluss lösen
 keinen zweiten Write aus.
+
+### C.2.1 Geschlossene normale Abschlussbelege — WRITE-RECEIPTS-703
+
+Delegiert gemäß SPECROAD-DECISION-1 für 18.t. Die neuen normalen Belege sind
+kanonisches JSON. Sie ersetzen keine Autorisierung und enthalten keine
+zusätzlichen Wiederherstellungsbilder oder ausführbare Wiederaufnahmebeschreibung.
+
+`transaction-receipt-v2` besitzt genau `format_version`, `outcome` (`committed`),
+`write`, `write_sha256` und `result_object`. `write` besitzt genau `marker`
+(der vollständige C.1-Marker), `actor`, `planned_at`, `change_plan_id`,
+`operations`, `operations_sha256`, `files`, `target_inventory` und `validation`.
+`operations` ist die originale geordnete Change-Plan-Operationsfolge; ihre
+kanonischen Bytes sind an `operations_sha256` gebunden. Sie ist Auditdaten,
+kein ausführbarer Retryauftrag. `write_sha256` bindet die kanonischen Bytes von
+`write`. Zeit, Akteur und Planidentität stammen unverändert aus dem geprüften
+Plan; der Marker bindet dessen vollständigen Hash.
+
+`files` ist nach Pfad sortiert, eindeutig und vollständig für tatsächlich
+geänderte Ressourcen. Jeder Eintrag besitzt genau `path`, `before`, `after`.
+`before`/`after` sind null bei Abwesenheit, sonst genau `size` (nichtnegativer
+Integer) und `sha256`. Beide dürfen nicht zugleich null oder gleich sein.
+`target_inventory` enthält den vollständigen geprüften Zielbestand als nach
+Pfad sortierte eindeutige Einträge mit genau `path`, `size`, `sha256`.
+Gelöschte Ressourcen fehlen dort; jedes nichtleere `after` stimmt damit überein.
+`validation` enthält den vollständigen maschinenlesbaren Befund des tatsächlich
+zurückgelesenen Ziels; unvollständige oder fehlgeschlagene Fachprüfung erzeugt
+keinen Abschluss. Auch Spezialadapter müssen ihre nativen Fachprüfungen liefern.
+
+`result_object` behält die bisherige geschlossene normale Ergebnisform mit
+`exit_code=0`, `status=success`, `write_state=committed`, `transaction_id`,
+`request_id`, `target_model_root_sha256`, `published_paths` und `created_ids`.
+IDs und veröffentlichte Pfade werden aus den wirklichen Operations-/Dateimengen
+abgeleitet. `request-receipt-v2` behält exakt die Felder des normalen
+`request-receipt-v1`, verweist aber ausschließlich auf den v2-Transaktionsbeleg.
+Ohne Request-ID entsteht kein Request-Receipt.
+
+Am bisherigen Pfad des Abschlussbelegs steht `write-completion-v1` mit genau
+`format_version`, `project_id`, `transaction_id`, `write_sha256`,
+`target_model_root_sha256` und `receipts`. Letzteres enthält genau
+`transaction` und `request`, jeweils den bisherigen geschlossenen Pfad-/SHA-256-
+Verweis beziehungsweise null für einen fehlenden Request. Alle Identitäten,
+Hashes und Ergebnisfelder der Beleggruppe müssen exakt übereinstimmen.
+Die bestehenden aus Transaktions-/Request-ID abgeleiteten Belegpfade bleiben.
+Ein vollständiger Beleg bei noch offenem Marker ist **kein** erfolgreicher
+Retry. Weder Belegleser noch Alt-Recovery entfernen oder vervollständigen einen
+Marker. Historische v1-Belege bleiben historische Daten, kein neuer Writerweg.
+
+Der Marker-Owner besitzt genau `lock_id`, `host_id`, `process_id` und
+`process_start_id` mit denselben Typen wie der Projektwriter-Lock. Nach
+fehlgeschlagener Markerentfernung/-synchronisation bleibt der ursprüngliche
+Lock als Sperrbeleg erhalten; seine Freigabe darf einen unbestätigten Abschluss
+nicht als sauberen Root erscheinen lassen. Ein unbekannter Owner ist keine
+Erlaubnis zur Übernahme. Eine erfolgreiche lesende Wiederholungsantwort setzt
+sowohl die vollständige passende Beleggruppe als auch einen freien Schutzstatus
+voraus. Historische Zielbelege werden nicht als aktuelle Zielvalidierung ausgegeben.
 
 ## C.3 Unterbrechung, Diagnose und Root-Erzeugung
 

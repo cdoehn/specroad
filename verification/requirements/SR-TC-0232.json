@@ -34,7 +34,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "`specroad artifact update <ID>` MUSS RFC-6902-Patches sowie die Komfortoptionen `--set <JSON-POINTER>=<JSON-VALUE>` und `--unset <JSON-POINTER>` unterstützen und eine erwartete Revision oder einen erwarteten Hash verlangen.",
+    "requirement_contract": "`specroad artifact update <ID>` MUSS RFC-6902-Patches sowie die Komfortoptionen `--set <JSON-POINTER>=<JSON-VALUE>` und `--unset <JSON-POINTER>` unterst\u00fctzen und eine erwartete Revision oder einen erwarteten Hash verlangen.",
     "scope": "Pure RFC-6902 and guarded value previews plus actual embedding-service updates on a complete local Goal/Requirement model: explicit revision/hash, all six patch operations, ordered set/unset, one revision, live host authorization, no-op and native historical replay. No registered CLI, general production model loading, dry-run/stdout or platform completion claim. R extends native behavior evidence to original-target input ownership, approved-to-proposed revision, byte-preserving draft/proposed no-op, stale/controlled input refusal and partial-publication recovery preservation. The automatic native lifecycle gate is limited to this updated proposed subject; it is not an approval/history certificate or a general replacement for other required services."
   },
   "preconditions": [
@@ -53,7 +53,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "367bad36c070076ce83bfa63147c737111f5c682f9f05f9ce29a421680c01096",
+  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
   "steps": [
     "Apply real RFC-6902 operations in order on an isolated value snapshot.",
     "Compile ordered set/unset inputs without implicit parent creation or type conversion.",

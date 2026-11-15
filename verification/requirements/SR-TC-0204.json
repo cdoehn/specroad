@@ -19,11 +19,11 @@
   "open_items": [
     "Durable transaction/request receipts and committed finalization (5.n), full crash recovery and integration of all normative writer commands remain in later plan steps.",
     "Local native cooperative Linux semantics; actual cross-version CI and underlying hardware determine observed support, not the existence of these tests.",
-    "RECOVERY-REMOVAL-006: existing test references cover only their still-valid implemented scope. Changed interruption/receipt/preflight/work oracles require fresh implementation and evidence in 18.s–18.x; old repair/crash recovery results are not acceptance of the new contract."
+    "RECOVERY-REMOVAL-006: existing test references cover only their still-valid implemented scope. Changed interruption/receipt/preflight/work oracles require fresh implementation and evidence in 18.s\u201318.x; old repair/crash recovery results are not acceptance of the new contract."
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Ein Prozessabbruch oder interner Fehler während eines normativen Schreibbefehls DARF NICHT einen unvollständigen Zustand als regulär ladbaren Projektstand hinterlassen.",
+    "requirement_contract": "Ein Prozessabbruch oder interner Fehler w\u00e4hrend eines normativen Schreibbefehls DARF NICHT einen unvollst\u00e4ndigen Zustand als regul\u00e4r ladbaren Projektstand hinterlassen.",
     "scope": "Native C.2 publication steps 1-4 for supported artifact targets: exact final bytes/root or a blocked recovery state, never a successful mixed model. Full receipt finalization, specialized operations and universal command integration remain open."
   },
   "preconditions": [
@@ -41,7 +41,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "367bad36c070076ce83bfa63147c737111f5c682f9f05f9ce29a421680c01096",
+  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
   "steps": [
     "Durably set committing; atomically replace targets in canonical path order and sync each acknowledgement before the next target; recompute the full live target root.",
     "Inject errors at journal and target boundaries; preserve before images and active recovery blocker; never claim receipts, committed state or automatic rollback."

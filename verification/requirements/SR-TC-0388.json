@@ -26,11 +26,11 @@
   "method": "automated_behavior",
   "open_items": [
     "Full project closure/root verification, operational receipt validity/transfer, CLI create/verify/extract and whole-project completeness remain in subsequent M15 steps; a pure container is not a project verification result.",
-    "RECOVERY-REMOVAL-006: existing test references cover only their still-valid implemented scope. Changed interruption/receipt/preflight/work oracles require fresh implementation and evidence in 18.s–18.x; old repair/crash recovery results are not acceptance of the new contract."
+    "RECOVERY-REMOVAL-006: existing test references cover only their still-valid implemented scope. Changed interruption/receipt/preflight/work oracles require fresh implementation and evidence in 18.s\u201318.x; old repair/crash recovery results are not acceptance of the new contract."
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Ein Projektbundle MUSS das kanonische ZIP-Profil aus Kapitel 10.16 erfüllen.",
+    "requirement_contract": "Ein Projektbundle MUSS das kanonische ZIP-Profil aus Kapitel 10.16 erf\u00fcllen.",
     "scope": "15.a.W/R/C exact container/manifest/payload byte contract. Frozen independent stdlib bytes and literal expected errors; exact field and native scope/boundary contracts; no filesystem effects or semantic-project/write authority."
   },
   "preconditions": [
@@ -48,7 +48,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "367bad36c070076ce83bfa63147c737111f5c682f9f05f9ce29a421680c01096",
+  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
   "steps": [
     "Encode and independently inspect actual canonical ZIP members and exact nonrecursive manifest inventory.",
     "Read the exact bytes with optional external SHA-256; check scope/type/version/identity, payload and exclusion bindings and reject unsafe paths before payload access.",

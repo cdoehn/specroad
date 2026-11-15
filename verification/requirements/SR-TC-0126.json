@@ -24,7 +24,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Die Readiness-Prüfung MUSS direkte `depends_on`-Abhängigkeiten des Release-Scopes einbeziehen und außerhalb des Releases liegende Pflichtabhängigkeiten melden.",
+    "requirement_contract": "Die Readiness-Pr\u00fcfung MUSS direkte `depends_on`-Abh\u00e4ngigkeiten des Release-Scopes einbeziehen und au\u00dferhalb des Releases liegende Pflichtabh\u00e4ngigkeiten melden.",
     "scope": "13.e.W: bound native Release seeds and closure; all stored direct depends_on edges of closure members, with external defined as target outside Release seed membership. Source provenance, inactive dependencies and explicit provider limitations are preserved. No independent closure algorithm, inferred edges, readiness decision or write authority. 13.e.R additionally covers the complete indirect graph, all 15 strong edge types, resource and review paths, exact SRV141 variant diagnostics, native schemas of reached non-planning members and unresolved unconfigured applicability. Isolated Core/PYZ and no-write boundaries remain enforced. 13.e.C preserves these outputs, hashes, diagnostics and side-effect limits through the shared bound-model scope provider; no new release behavior is introduced. 13.f.R: Keep independently resolved Release scope fixed; foreign decisions cannot add subjects, wrong scopes or effective parent manifests invalidate old acceptance. Supplied-input targeted checks do not certify production human authority, Release baseline or full-suite success."
   },
   "preconditions": [
@@ -43,7 +43,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "367bad36c070076ce83bfa63147c737111f5c682f9f05f9ce29a421680c01096",
+  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
   "steps": [
     "Resolve Release seeds with native incoming planning membership and expand the existing closed core closure.",
     "Compare stored direct depends_on edges from every closure artifact and classify targets outside Release seed membership as external.",

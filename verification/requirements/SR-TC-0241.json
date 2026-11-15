@@ -22,7 +22,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Jeder tatsächlich ausgeführte oder abgewiesene `normative_write` MUSS den Auditbericht seiner Befehlsklasse nach Kapitel 11.7 ausgeben; ein noch offener Arbeitsschritt weist statt eines Erfolgsreceipts den Fortsetzungsstand aus.",
+    "requirement_contract": "Jeder tats\u00e4chlich ausgef\u00fchrte oder abgewiesene `normative_write` MUSS den Auditbericht seiner Befehlsklasse nach Kapitel 11.7 ausgeben; ein noch offener Arbeitsschritt weist statt eines Erfolgsreceipts den Fortsetzungsstand aus.",
     "scope": "Native complete-target finalization and read-only receipt contracts. No whole CLI, rollback recovery or normative retry-dispatch claim. 7.k.W: all six native command families share plan construction. Explicit prepared operations yield a write-free full preview; saved plans execute through real locks, authorization, journals, receipts and cleanup. Native target and plan equality, historical audit and replay are measured in owned fixtures; CLI/raw-intent preview allocation and complete command error/continuation audit are not claimed. 7.k.R: native saved-plan failure reports preserve actual write/recovery state, distinguish planned identities and roots from publication, and reject conflicting or damaged retry proofs. A real create/update/link/review/retire chain uses freshly loaded models and verified historical replays without new IDs or revisions. The final retirement uses explicit fixture host gates bound to the unchanged review and independently expected complete target; it does not prove authentic history acquisition or generic approval authority. 7.k.C relocates the unchanged W/R domain scenarios, execution helpers and behavior oracles into shared test support. Test bodies, parameterizations, helper logic, fixture authority boundaries and all test identities remain unchanged; product source bytes are unchanged."
   },
   "preconditions": [
@@ -40,7 +40,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "367bad36c070076ce83bfa63147c737111f5c682f9f05f9ce29a421680c01096",
+  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
   "steps": [
     "Publish verified target files using the existing transaction phases.",
     "Create bound receipts, synchronize them and only then persist committed.",

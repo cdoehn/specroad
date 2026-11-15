@@ -13,7 +13,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Die Metadatenprüfung MUSS die vier Verpflichtungsarten nach Anhang S.2 einschließlich ihrer Nichtgleichheit mit Prioritäten auswerten.",
+    "requirement_contract": "Die Metadatenpr\u00fcfung MUSS die vier Verpflichtungsarten nach Anhang S.2 einschlie\u00dflich ihrer Nichtgleichheit mit Priorit\u00e4ten auswerten.",
     "scope": "Existing read-only field checks plus pure new requirement construction and explicit metadata. No natural-language interpretation, BCP-47 registry validation, profile, Change Plan, CLI/import or write authorization."
   },
   "preconditions": [
@@ -31,7 +31,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "367bad36c070076ce83bfa63147c737111f5c682f9f05f9ce29a421680c01096",
+  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
   "steps": [
     "Prepare a new requirement from explicit inputs and inspect stored values; reject incomplete or conflicting inputs."
   ],

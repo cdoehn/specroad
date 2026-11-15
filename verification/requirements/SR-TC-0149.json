@@ -17,7 +17,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "`specroad baseline create <NAME>` MUSS vor dem Schreiben die vollständige Projektvalidierung erfolgreich ausführen.",
+    "requirement_contract": "`specroad baseline create <NAME>` MUSS vor dem Schreiben die vollst\u00e4ndige Projektvalidierung erfolgreich ausf\u00fchren.",
     "scope": "Native embedding API for unconfigured whole-project working Baselines: fresh complete target validation, all bound snapshot objects staged and published before one sealed/approved immutable record, exact precreation root, actual receipt replay and unchanged source bytes. Existing semantic subjects require trusted complete providers; no CLI or release readiness claim. 10.i.R verifies actual older Baseline and shared-object retention through the existing Work/native writer. Five real process cuts preserve the durable preparation checkpoint and require native Recovery; only committed original receipts replay. Missing Work inputs never fall back to current files. Receipt replay precedes current configuration resolution, while fresh writes retain their gates. Process-loss observations do not prove power-loss durability or full requirement acceptance."
   },
   "preconditions": [
@@ -35,7 +35,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "367bad36c070076ce83bfa63147c737111f5c682f9f05f9ce29a421680c01096",
+  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
   "steps": [
     "Prepare and save a working-Baseline plan, then execute its exact bytes through the actual native transaction protocol; reject invalid model, changed sources, missing/changed objects, absent gates and denied authority.",
     "Inject late source/staging/archive corruption, native link/sync/unlink failures, lost publication acknowledgement and receipt/cleanup failures; inspect actual retained bytes and journal/completion state.",

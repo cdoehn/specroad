@@ -19,7 +19,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Die Migration DARF NICHT unveränderbare historische Nachweise zur Ergänzung neuer Sprach- oder Verbindlichkeitsfelder überschreiben.",
+    "requirement_contract": "Die Migration DARF NICHT unver\u00e4nderbare historische Nachweise zur Erg\u00e4nzung neuer Sprach- oder Verbindlichkeitsfelder \u00fcberschreiben.",
     "scope": "16.e R: explicit author mapping on the native reference migration planner, with exact language/force/text, default expansion, original-byte preservation and no inherited approval. No public migration execution, current review, CLI/Restore, full-suite or release proof. 16.j R: complete historical source-integrity reports and original baseline verification; current readiness is separate. R adds explicit stale context and native write-refusal boundaries. Collection is not a behavior pass; public CLI/migration registration/Restore remain in following M16 steps. Correction 583 fixes only invalid synthetic configuration declarations; original test bodies, pass criteria and production validation remain unchanged. Correction 584 retains full product gates and actual migration, compares native host observations, and adds an R refusal case without the required host."
   },
   "preconditions": [
@@ -39,7 +39,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "367bad36c070076ce83bfa63147c737111f5c682f9f05f9ce29a421680c01096",
+  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
   "steps": [
     "Verify the real historical source closure and compare original Baseline hashes, Evidence bindings/results and byte hashes before and after an actual native migration.",
     "Check stored fixed baseline vectors, nested snapshots, unchanged negative results and exact noncanonical original bytes without current approval.",

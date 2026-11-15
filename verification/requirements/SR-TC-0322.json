@@ -19,7 +19,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "ReqIF-Inhalte außerhalb des unterstützten Abbildungsprofils MÜSSEN entweder verlustfrei unter namespaced `extensions` erhalten oder als einzeln identifizierter Informationsverlust im Import- beziehungsweise Exportplan ausgewiesen werden.",
+    "requirement_contract": "ReqIF-Inhalte au\u00dferhalb des unterst\u00fctzten Abbildungsprofils M\u00dcSSEN entweder verlustfrei unter namespaced `extensions` erhalten oder als einzeln identifizierter Informationsverlust im Import- beziehungsweise Exportplan ausgewiesen werden.",
     "scope": "14.j.W passive original-source carrier and verified original-byte recovery plus source-derived inventory of codec-reported uninterpreted XML. Actual JSON/XML targets determine preserved versus lost, with deterministic bound item identities. Full assessment, loss_free and native_projection_complete remain false because native mapping/projection and attachment transport are outside this W assessment. General native extensions stay passive. Existing import gates and artifact metadata are unchanged. 14.j.R adds complete bound-input inventories for original-source transport, whole XML mapped-record assessment with all remainders, and one entire native JSON record candidate compared with actual XML. Native projection, assessment completeness and loss freedom are separate. Every source information unit without a proved mapping is retained only by the two actual-target v1 forms or explicitly lost. Actual attachment payloads are checked separately. The pure export boundary returns no bytes on blocked loss/incomplete assessment; it performs no writes. Existing W partial reports and import authorization gates retain their contracts."
   },
   "preconditions": [
@@ -37,7 +37,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "367bad36c070076ce83bfa63147c737111f5c682f9f05f9ce29a421680c01096",
+  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
   "steps": [
     "Merge complete source bytes into the closed namespaced carrier; verify byte-exact recovery from actual native JSON target bytes, preserved foreign extensions, deterministic source ordering and idempotent merge.",
     "Reject incompatible existing carriers, duplicate keys, tampered size/hash/Base64, noncanonical encodings, changed source/extensions/target bindings and invalid locations without overwriting inputs.",

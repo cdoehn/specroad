@@ -38,7 +38,7 @@
     "Proposal planning must include both revision and hash; this authoring input API accepts either and checks both when supplied.",
     "Full supported Python matrix is evaluated by CI; local selected tests are not complete suite evidence.",
     "18.e prepares native authoring values; built-in public CLI, authenticated control decisions, live locked preimages, request receipts and transactional publication retain their later M18 gates.",
-    "RECOVERY-REMOVAL-006: existing test references cover only their still-valid implemented scope. Changed interruption/receipt/preflight/work oracles require fresh implementation and evidence in 18.s–18.x; old repair/crash recovery results are not acceptance of the new contract."
+    "RECOVERY-REMOVAL-006: existing test references cover only their still-valid implemented scope. Changed interruption/receipt/preflight/work oracles require fresh implementation and evidence in 18.s\u201318.x; old repair/crash recovery results are not acceptance of the new contract."
   ],
   "oracle": {
     "expected": "Ordered complete plan retained; content edits advance both revisions once and reset draft while preserving ineffective historical reviews. Canonical no-op preserves original bytes and current review effect; terminal versions require a separate new Proposal identity.",
@@ -62,7 +62,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "367bad36c070076ce83bfa63147c737111f5c682f9f05f9ce29a421680c01096",
+  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
   "steps": [
     "Apply real RFC-6902 operations in order on an isolated value snapshot.",
     "Compile ordered set/unset inputs without implicit parent creation or type conversion.",

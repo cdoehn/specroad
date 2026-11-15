@@ -20,7 +20,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "ReqIFZ-Exporte MÜSSEN dasselbe kanonische ZIP-Profil wie Projektbundles verwenden.",
+    "requirement_contract": "ReqIFZ-Exporte M\u00dcSSEN dasselbe kanonische ZIP-Profil wie Projektbundles verwenden.",
     "scope": "14.k.W implements the pure reqifz-container-v1 codec over the shared canonical stored ZIP kernel. Explicit selected documents and real document-relative member bindings, byte-identical roundtrip and a nonrecursive external transport manifest are covered. Existing manifest-bound work archive APIs retain their behavior. This is a partial transport proof, not a complete project export/import, loss approval, full-suite or release result. 14.k.R adds the complete hostile metadata/extent, URI and per-document/aggregate-boundary matrix; invalid original ZIP path spelling is rejected before normalization. W behavior and legacy archive errors are retained."
   },
   "preconditions": [
@@ -38,7 +38,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "367bad36c070076ce83bfa63147c737111f5c682f9f05f9ce29a421680c01096",
+  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
   "steps": [
     "Compare actual generated ZIP bytes with an independently built canonical container, retaining exact XML, attachment, manifest-like and unused member bytes; derive the complete external transport manifest.",
     "Resolve each original URI reference relative to its selected XML member, preserve document identity separation and require exact actual bytes without basename/case fallback or a private mandatory ZIP manifest.",

@@ -16,7 +16,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Vollständig abgeschlossene Läufe mit verschiedenen Ressourcenprofilen und Cachezuständen MÜSSEN dieselben fachlichen Ergebnisse nach Anhang O.5 erzeugen.",
+    "requirement_contract": "Vollst\u00e4ndig abgeschlossene L\u00e4ufe mit verschiedenen Ressourcenprofilen und Cachezust\u00e4nden M\u00dcSSEN dieselben fachlichen Ergebnisse nach Anhang O.5 erzeugen.",
     "scope": "Direct and fully completed stepped outcomes agree for the implemented validation and SRX jobs, including missing versus false and complete policy failures. Changed operational windows, resource profiles and irrelevant project cache state do not alter the result projection. Closed trusted host API for finite explicitly saved model/profile inputs and complete native evaluation units. Whole evaluations and the input set are currently memory-resident; general CLI/Code-8 integration, evaluation Work-package export/restore, bounded within-evaluation durable cursors, later commands and full platform/sandbox/release coverage remain open. Rename cases preserve inode identities and use identical built bytes. Hash consistency does not authenticate foreign Work data; results do not claim current project-file verification. R additionally checks the complete retained native phase/scope/diagnostic contract and reports concrete lost snapshot resources, without rerunning confirmed native evaluations. Current-host EMFILE from a real reduced descriptor limit and late build changes retain the actual checkpoint; compatible later calls reuse only confirmed units. These are consistency and current-host behavior checks, not authentication, bounded-memory completion or full release portability approval."
   },
   "preconditions": [
@@ -35,7 +35,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "367bad36c070076ce83bfa63147c737111f5c682f9f05f9ce29a421680c01096",
+  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
   "steps": [
     "Compare actual direct native validation/graph/SRX outcomes with durable windows of one, two and many units under constrained and standard resource profiles.",
     "Delete the original captured source files and use absent, empty or corrupt project caches; confirm saved inputs and previously completed units are reused.",

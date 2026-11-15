@@ -22,11 +22,11 @@
   "method": "automated_behavior",
   "open_items": [
     "Public normative CLI and specialist command wiring remain in their assigned later plan steps.",
-    "RECOVERY-REMOVAL-006: existing test references cover only their still-valid implemented scope. Changed interruption/receipt/preflight/work oracles require fresh implementation and evidence in 18.s–18.x; old repair/crash recovery results are not acceptance of the new contract."
+    "RECOVERY-REMOVAL-006: existing test references cover only their still-valid implemented scope. Changed interruption/receipt/preflight/work oracles require fresh implementation and evidence in 18.s\u201318.x; old repair/crash recovery results are not acceptance of the new contract."
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "SpecRoad MUSS für jede abgeschlossene Request-ID eines normativen Schreibauftrags einen unveränderbaren Receipt mit normalisiertem Operationshash, Akteur, Basiswurzel, Ergebnis, Zielwurzel, erzeugten IDs, Transaktions-ID und Ergebnisobjekt unter `.specroad/requests/` speichern.",
+    "requirement_contract": "SpecRoad MUSS f\u00fcr jede abgeschlossene Request-ID eines normativen Schreibauftrags einen unver\u00e4nderbaren Receipt mit normalisiertem Operationshash, Akteur, Basiswurzel, Ergebnis, Zielwurzel, erzeugten IDs, Transaktions-ID und Ergebnisobjekt unter `.specroad/requests/` speichern.",
     "scope": "Native committed request receipt storage and confirmed local replay; actor/base/target, operation hash, transaction and result stay bound to the original write."
   },
   "preconditions": [
@@ -44,7 +44,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "367bad36c070076ce83bfa63147c737111f5c682f9f05f9ce29a421680c01096",
+  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
   "steps": [
     "Commit a native transaction and store its linked receipts.",
     "Repeat the normative request and compare the stored result, identities and unchanged files."

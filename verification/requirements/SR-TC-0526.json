@@ -30,7 +30,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Die Dateisystemreihenfolge DARF NICHT die Reihenfolge von Abschnitten oder Inhaltsblöcken beeinflussen.",
+    "requirement_contract": "Die Dateisystemreihenfolge DARF NICHT die Reihenfolge von Abschnitten oder Inhaltsbl\u00f6cken beeinflussen.",
     "scope": "11.b.W: supplied-model section ownership and deterministic contains composition. Every section needs exactly one incoming contains edge; duplicate edges from one parent count separately. Roots come only from document contains edges, equal positions use target/relation ID ties, and content-block occurrences retain relation identity. Input/source/record hashes bind the actual data. Native field/reference/hierarchy checks precede composition. No file-discovery, primary-role, include, payload-semantic, complete model validation, rendering or write-authority claim. 11.b.R adds actual incoming-relations provenance for cardinality failures and explicit full-project scope admission. Native negative/Boolean/missing positions and decimal-spelled document-field positions fail without rewriting bytes. Equal integer positions retain the full target/relation tie-breaker; retired records are not omitted. No fallback, partial inventory promotion, complete semantic provider or write approval is supplied."
   },
   "preconditions": [
@@ -48,7 +48,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "367bad36c070076ce83bfa63147c737111f5c682f9f05f9ce29a421680c01096",
+  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
   "steps": [
     "Resolve source-owned relations using existing native checks, require one incoming contains per section and derive roots/children/preorder using position, target ID and relation ID. Compare nested permutations, stored relations and original bytes; reject cardinality, missing targets, cycles and missing fields; check immutable reports and isolated Core/PYZ parity.",
     "Bind every conflicting incoming edge to its original source bytes and pointer; distinguish missing/multiple owners, preserve native position/identity/type failures, require an explicitly closed unconfigured project scope, and compare separate/deep trees and unchanged owned observations across Core/PYZ."

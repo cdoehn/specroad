@@ -33,7 +33,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Nicht nachweisbare Ressourcenquoten oder Runtimevoraussetzungen MÜSSEN in der Umgebungsdiagnose ausdrücklich als unbekannt statt als garantiert verfügbar ausgewiesen werden.",
+    "requirement_contract": "Nicht nachweisbare Ressourcenquoten oder Runtimevoraussetzungen M\u00dcSSEN in der Umgebungsdiagnose ausdr\u00fccklich als unbekannt statt als garantiert verf\u00fcgbar ausgewiesen werden.",
     "scope": "A real registered environment.check emits environment-v1 using only current runtime/distribution and optional explicit project metadata. No-project calls never discover a root; malformed model/history is uninspected. Active state blocks without recovery. Target aliases resolve to their registered contract without handler execution; missing required prerequisites remain unknown with code 0 and compatible=null. Optional unavailable quotas remain unknown; an observed RLIMIT_AS is qualified only as a process address-space ceiling. Native access recording and effect traps prove the current tested scope is free from probe writes, subprocesses, network and semantic model validation. R preserves W cases and distinguishes proven pending journals from unclassified operational entries: the latter block with code 5 but keep recovery_required=null. Readonly roots, optional invalid/unavailable native limits, unknown CPU/storage quotas, permission failures, unsafe symlinks, regular configuration aliases and concurrent metadata changes retain their actual failure classes without repair. The public environment schema requires runtime/build identity fields and null values for unknown observations; no project secrets or extra environment fields are accepted. C separates optional resource observation from required prerequisites by an AST-preserving extraction; existing machine results and all W/R behavior oracles remain unchanged."
   },
   "preconditions": [
@@ -51,7 +51,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "367bad36c070076ce83bfa63147c737111f5c682f9f05f9ce29a421680c01096",
+  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
   "steps": [
     "Invoke environment.check through CLI, structured request and registry entry; inspect actual machine report and exit status.",
     "Record native startup accesses and reject write/process/network attempts beside broken unselected projects, invalid model contents and pending transactions.",

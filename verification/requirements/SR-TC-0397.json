@@ -20,7 +20,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Ohne ausgewählte Konfiguration MUSS ein Artefakt ohne `applicability` als anwendbar und ein Artefakt mit `applicability` als potenziell anwendbar behandelt werden.",
+    "requirement_contract": "Ohne ausgew\u00e4hlte Konfiguration MUSS ein Artefakt ohne `applicability` als anwendbar und ein Artefakt mit `applicability` als potenziell anwendbar behandelt werden.",
     "scope": "Supplied artifact applicability only with explicit applicable/excluded/potentially_applicable states. An exact Boolean require_configuration option rejects absent required selection; classifications cannot be used as implicit Boolean gate decisions. All executable branches obey the static metadata/configuration boundary and selected configuration shares the artifact project prefix."
   },
   "preconditions": [
@@ -38,7 +38,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "367bad36c070076ce83bfa63147c737111f5c682f9f05f9ce29a421680c01096",
+  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
   "steps": [
     "Classify unconditional and conditional stored artifacts with and without an explicitly resolved configuration.",
     "Evaluate allowed SRX expressions against effective values and constant common artifact metadata; require a Boolean result and reject project, relation, graph and nonmetadata access.",

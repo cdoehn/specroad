@@ -20,7 +20,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "`specroad evidence import sarif <FILE>` MUSS SARIF 2.1.0 einlesen und nur ausdrücklich gemappte Results, Rules, Artifacts und Invocations als Evidence oder Evidence-Anhang übernehmen.",
+    "requirement_contract": "`specroad evidence import sarif <FILE>` MUSS SARIF 2.1.0 einlesen und nur ausdr\u00fccklich gemappte Results, Rules, Artifacts und Invocations als Evidence oder Evidence-Anhang \u00fcbernehmen.",
     "scope": "12.h.W inline SARIF 2.1.0 candidate API only. Exact source hash and explicit index mapping select results and optional driver rules, invocations and artifacts, binding declared producer/run/subjects and outcomes to native supplied targets. No inference from severity, tool success, opaque metadata or unmapped entries. This is not full SARIF-schema/CLI or Evidence-publication support. R additionally validates selected SARIF metadata and source references even for omitted related imports; refuses ambiguous descriptors, replaced/failed linked invocations, baseline-only measurements and suppressed pass claims. Unselected foreign data never creates candidates. Schema or late mapping failures preserve actual project bytes/modes; Core/PYZ diagnostics agree. 12.i.R additionally binds exact Generic/SARIF originals and applies explicit abort/skip to record-local required-field, binding and mapping failures. Every source occurrence is accepted, rejected with diagnostics or withheld by abort; conflicting or ambiguous observations cannot select a favorable result. Global envelope/source/target/resource errors remain fatal; no persistence or external authority is granted."
   },
   "preconditions": [
@@ -38,7 +38,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "367bad36c070076ce83bfa63147c737111f5c682f9f05f9ce29a421680c01096",
+  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
   "steps": [
     "Parse the versioned input and preserve original-byte/canonical hashes.",
     "Bind each measurement and referenced subject/target exactly, preserving separate occurrences and explicit result semantics.",

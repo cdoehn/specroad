@@ -20,7 +20,7 @@
   "open_items": [
     "14.c.C cleans this W/R comparison kernel with unchanged behavior and diagnostics.",
     "Import plan and guarded writer integration, complete native target validation, revision/metadata updates and loss/review gates remain in 14.d/14.e. No complete format import, human approval or release success is claimed.",
-    "RECOVERY-REMOVAL-006: existing test references cover only their still-valid implemented scope. Changed interruption/receipt/preflight/work oracles require fresh implementation and evidence in 18.s–18.x; old repair/crash recovery results are not acceptance of the new contract."
+    "RECOVERY-REMOVAL-006: existing test references cover only their still-valid implemented scope. Changed interruption/receipt/preflight/work oracles require fresh implementation and evidence in 18.s\u201318.x; old repair/crash recovery results are not acceptance of the new contract."
   ],
   "oracle": {
     "kind": "behavior",
@@ -42,7 +42,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "367bad36c070076ce83bfa63147c737111f5c682f9f05f9ce29a421680c01096",
+  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
   "steps": [
     "Evaluate the five specified historical/local/source cases under explicit strategies and observe classification, target candidate, retained identity and diagnostics.",
     "Reject malformed input and unsafe adoption while preserving legacy values, independent historical hashes and detached observations.",

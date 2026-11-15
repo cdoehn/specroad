@@ -15,11 +15,11 @@
   "open_items": [
     "Complete the remaining normative behavior and its requirement-specific oracle; obtain current evidence on required platforms.",
     "Complete transport profiles and explicit host-only Git prerequisites in 15.n-15.o and M20. The lazy pinned 1.6.0 adapter and public snapshot path are exercised locally; Python 3.10-3.14 compatibility remains pending in manual CI, whose development-blocking effect is explicitly suspended until user reinstatement. Current tests do not prove the complete transport roundtrip.",
-    "RECOVERY-REMOVAL-006: existing test references cover only their still-valid implemented scope. Changed interruption/receipt/preflight/work oracles require fresh implementation and evidence in 18.s–18.x; old repair/crash recovery results are not acceptance of the new contract."
+    "RECOVERY-REMOVAL-006: existing test references cover only their still-valid implemented scope. Changed interruption/receipt/preflight/work oracles require fresh implementation and evidence in 18.s\u201318.x; old repair/crash recovery results are not acceptance of the new contract."
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Die entpackte Core-Distribution und die Core-Zipapp DÜRFEN NICHT für eine nicht Git-spezifische Core-Funktion extern zu installierende Laufzeitpakete voraussetzen; die PatchHarbor-Runtime für das Transportprofil MUSS offline mitgeliefert und ausschließlich bei dessen Nutzung geladen werden, während Analyzer-Zusatzvoraussetzungen getrennt Anhang T.6 folgen.",
+    "requirement_contract": "Die entpackte Core-Distribution und die Core-Zipapp D\u00dcRFEN NICHT f\u00fcr eine nicht Git-spezifische Core-Funktion extern zu installierende Laufzeitpakete voraussetzen; die PatchHarbor-Runtime f\u00fcr das Transportprofil MUSS offline mitgeliefert und ausschlie\u00dflich bei dessen Nutzung geladen werden, w\u00e4hrend Analyzer-Zusatzvoraussetzungen getrennt Anhang T.6 folgen.",
     "scope": "Existing bootstrap/test-infrastructure behavior only; not complete requirement acceptance. The lazy transport adapter is additionally exercised with module and PYZ Core commands without any PatchHarbor installation or load."
   },
   "preconditions": [
@@ -37,7 +37,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "367bad36c070076ce83bfa63147c737111f5c682f9f05f9ce29a421680c01096",
+  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
   "steps": [
     "Execute the listed behavior tests in the current prescribed parallel gate; record the actual selected scope without asserting a full suite.",
     "Observe the declared file effects, returned data and exit statuses without matching human text."

@@ -15,7 +15,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Ein als `recorded` gespeichertes Evidence-Artefakt MUSS einschließlich seiner ID unveränderbar sein, jede neue Messung unter einer neuen Evidence-ID speichern und identische Wiederholungen nach dem Idempotenzvertrag auf denselben Nachweis abbilden.",
+    "requirement_contract": "Ein als `recorded` gespeichertes Evidence-Artefakt MUSS einschlie\u00dflich seiner ID unver\u00e4nderbar sein, jede neue Messung unter einer neuen Evidence-ID speichern und identische Wiederholungen nach dem Idempotenzvertrag auf denselben Nachweis abbilden.",
     "scope": "Passive record-field contracts and lexical reference constraints only. No graph closure, payload hash verification, document rendering, successful verification or write authorization. Step 12.d.W adds complete immutable recorded/approved value construction with explicit origin, producer, run metadata and computed subject/contract/test bindings. New measurements use fresh native identity allocations. Deterministic reconstruction is not a durable request-replay proof. Step 12.d.R preserves unknown run provenance as null with explicit reason, refuses inference and inconsistent check/test inputs, and demonstrates immutable update/format/identity boundaries and no approval from AI metadata. Step 12.d.C separates construction-input validation, immutable record assembly and shared subject-hash projection from context freshness assessment; all existing W/R contracts and test identities remain unchanged."
   },
   "preconditions": [
@@ -33,7 +33,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "367bad36c070076ce83bfa63147c737111f5c682f9f05f9ce29a421680c01096",
+  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
   "steps": [
     "Load supported stored records, reject malformed local fields and compare original bytes without executing referenced operations.",
     "Construct immutable Evidence from a fresh identity reservation and complete explicit measurement inputs; compare actual subject, contract, optional test and configuration bindings without publishing files.",

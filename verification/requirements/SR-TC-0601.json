@@ -20,7 +20,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Eine Überschreitung eines weichen Arbeitsbudgets DARF NICHT allein einen fachlich ausführbaren Gesamtauftrag mit Fehler beenden.",
+    "requirement_contract": "Eine \u00dcberschreitung eines weichen Arbeitsbudgets DARF NICHT allein einen fachlich ausf\u00fchrbaren Gesamtauftrag mit Fehler beenden.",
     "scope": "An actual complete SRX evaluation succeeds beyond its explicit soft operation target in both profiles, retaining the complete Boolean result and counters. Its hard structural overflow still raises the original structured error. The explicit count fixture also observes profile-specific soft meter thresholds without claiming a timed benchmark or persisted continuation. R executes complete supplied-target assessment, 1025 actual SRX iterations and multi-step graph work beyond explicit positive unit targets, retaining complete outputs. The independent hard AST check still blocks before operator execution even with large soft targets. C retains these same behavioral oracles and public machine contracts while separating the internal option and semantic-constraint types."
   },
   "preconditions": [
@@ -38,7 +38,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "367bad36c070076ce83bfa63147c737111f5c682f9f05f9ce29a421680c01096",
+  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
   "steps": [
     "Resolve declared profiles and explicit operational targets through current command/library consumers.",
     "Inspect complete machine outputs, actual SRX results/errors and bound semantic identities; compare immutable inputs before and after selection.",

@@ -36,7 +36,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Das Verschieben oder Neuordnen eines Abschnitts DARF NICHT die IDs oder Revisionen der darin referenzierten fachlichen Artefakte ändern; neue Revisionen entstehen ausschließlich für tatsächlich geänderte Dokumentartefakte.",
+    "requirement_contract": "Das Verschieben oder Neuordnen eines Abschnitts DARF NICHT die IDs oder Revisionen der darin referenzierten fachlichen Artefakte \u00e4ndern; neue Revisionen entstehen ausschlie\u00dflich f\u00fcr tats\u00e4chlich ge\u00e4nderte Dokumentartefakte.",
     "scope": "Actual native writer publishes only changed document relation owners. Referenced content IDs, revision values, records and original bytes remain exact, including original noncanonical formatting. Shared reference targets remain one stored artifact; native composition/reference readback sees unchanged revisions. No render/UI/documentation oracle or permissive semantic-service success stub. Stored approval is preserved as data, not authenticated by this guard. Native candidate byte preservation and unavailable-service write refusal are separate from successful actual publication. Owner content and unrelated relation edges cannot be smuggled into a move."
   },
   "preconditions": [
@@ -54,7 +54,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "367bad36c070076ce83bfa63147c737111f5c682f9f05f9ce29a421680c01096",
+  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
   "steps": [
     "11.j.W: move, nest, promote and reorder actual sections containing shared artifact_ref blocks. Save and publish the same native plan, read back exact files, receipts and composed/reference data. Only changed document/section relation owners gain revisions. Preserve all other original bytes and require actual block semantics.",
     "11.j.R: compare original and candidate hashes for requirement/test/code_ref records in draft and stored approved states; only real supported targets publish. Missing lifecycle, review, evidence and external-resource services block publication. Guard owner fields and all nonrequested relations, detach operation bindings, reject forged saved-plan result artifacts, verify sequential moves/replay and preserve actual interrupted owner publication.",

@@ -12,7 +12,7 @@
   ],
   "oracle": {
     "kind": "manual_presentation",
-    "requirement_contract": "Die menschenlesbare JSON-Normalform MUSS zwei Leerzeichen Einrückung, eine abschließende Newline und eine stabile, dokumentierte Schlüsselreihenfolge verwenden.",
+    "requirement_contract": "Die menschenlesbare JSON-Normalform MUSS zwei Leerzeichen Einr\u00fcckung, eine abschlie\u00dfende Newline und eine stabile, dokumentierte Schl\u00fcsselreihenfolge verwenden.",
     "scope": "Manual visual inspection only; value preservation is tested separately under SR-TC-0010 and SR-TC-0441."
   },
   "policy_excluded_scope": [
@@ -31,7 +31,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "367bad36c070076ce83bfa63147c737111f5c682f9f05f9ce29a421680c01096",
+  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
   "steps": [],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0021",

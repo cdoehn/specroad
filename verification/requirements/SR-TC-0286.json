@@ -19,7 +19,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Profil- und Lintbedingungen MÜSSEN in der versionierten, rein deklarativen JSON-AST-Sprache `SRX 1.0` gespeichert werden.",
+    "requirement_contract": "Profil- und Lintbedingungen M\u00dcSSEN in der versionierten, rein deklarativen JSON-AST-Sprache `SRX 1.0` gespeichert werden.",
     "scope": "Literal/context foundation only. Other operators, effective profile resolution, budget policy and CLI integration remain pending."
   },
   "preconditions": [
@@ -37,7 +37,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "367bad36c070076ce83bfa63147c737111f5c682f9f05f9ce29a421680c01096",
+  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
   "steps": [
     "Capture own immutable data; evaluate literal or reject invalid declarations without side effects."
   ],

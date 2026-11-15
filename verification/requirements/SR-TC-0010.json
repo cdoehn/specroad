@@ -15,7 +15,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "`specroad format` MUSS ausschließlich die nach Kapitel 10.17 formatierbaren aktuellen JSON-Ressourcen in die definierte menschenlesbare Normalform überführen.",
+    "requirement_contract": "`specroad format` MUSS ausschlie\u00dflich die nach Kapitel 10.17 formatierbaren aktuellen JSON-Ressourcen in die definierte menschenlesbare Normalform \u00fcberf\u00fchren.",
     "scope": "Read-only normalization proposals and generated-role/source rejection only. Human indentation, headers and layout are not test oracles (TD-001). Source freshness and complete explicit-set checks do not replace the future transaction lock or an atomic project snapshot."
   },
   "preconditions": [
@@ -33,7 +33,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "367bad36c070076ce83bfa63147c737111f5c682f9f05f9ce29a421680c01096",
+  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
   "steps": [
     "Prepare normal-form candidates or non-normative views; observe value/byte bindings, exclusions and real absence of writes."
   ],

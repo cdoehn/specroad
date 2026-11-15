@@ -26,7 +26,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Requirements, Verification Contracts, Tests, Code-Referenzen und Inhaltsblöcke MÜSSEN über dieselbe stabile ID in beliebig vielen Dokumenten, Releases und Konfigurationen wiederverwendbar sein, ohne normative Kopien anzulegen.",
+    "requirement_contract": "Requirements, Verification Contracts, Tests, Code-Referenzen und Inhaltsbl\u00f6cke M\u00dcSSEN \u00fcber dieselbe stabile ID in beliebig vielen Dokumenten, Releases und Konfigurationen wiederverwendbar sein, ohne normative Kopien anzulegen.",
     "scope": "The configured validation entrypoint requires an explicit selected configuration and preserves the same original model documents. Selection is part of the gate resource binding, while the complete model input binds source bytes. Consistency uses current applicability and full shortest stored-required-relation paths. Passing this gate does not replace structural checks, unavailable services or human approval; other semantic services retain their own scopes. Source documents are owned copies. Duplicate logical source labels are refused; selected configuration manifests are rechecked at the gate boundary. A changed selected or inherited revision/value cannot reuse the earlier binding. JSON formatting alone does not change semantic configuration identity. The gate context retains only detached configuration identity and digests; original artifact records are not used as mutable gate state."
   },
   "preconditions": [
@@ -44,7 +44,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "367bad36c070076ce83bfa63147c737111f5c682f9f05f9ce29a421680c01096",
+  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
   "steps": [
     "Refuse an absent or unknown selected configuration before a configuration gate can become not applicable.",
     "Validate the same documents under two explicitly selected variants; compare original identities, revisions and source bindings.",

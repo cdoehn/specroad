@@ -25,7 +25,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Ein Wechsel eines Artefakts auf `superseded` MUSS durch mindestens eine gespeicherte `supersedes`-Beziehung eines Nachfolgeartefakts gleichen Typs auf dieses Artefakt begründet sein.",
+    "requirement_contract": "Ein Wechsel eines Artefakts auf `superseded` MUSS durch mindestens eine gespeicherte `supersedes`-Beziehung eines Nachfolgeartefakts gleichen Typs auf dieses Artefakt begr\u00fcndet sein.",
     "scope": "Standard lifecycle candidate planning under 9.6.1/9.6.3; changes precede audit stamping/hashing. No write or legitimate approval proof. Saved plans recompute final lifecycle/audit values and verify declared hashes. Explicit history reservations are not a full history or authentication proof."
   },
   "preconditions": [
@@ -43,7 +43,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "367bad36c070076ce83bfa63147c737111f5c682f9f05f9ce29a421680c01096",
+  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
   "steps": [
     "Prepare lifecycle candidates without I/O; compare final status, metadata, content hashes and operation audit."
   ],

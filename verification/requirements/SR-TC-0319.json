@@ -20,7 +20,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Ein Export MUSS Formatversion, Mappingversion, Modellwurzel, einen aus den enthaltenen normativen Zeitstempeln deterministisch abgeleiteten Snapshot-Zeitpunkt, Toolversion, enthaltene IDs, ausgeschlossene Inhalte und erkannte Informationsverluste in einem maschinenlesbaren Manifest dokumentieren; die tatsächliche Ausführungszeit gehört nur in den nicht exportierten Auditbericht.",
+    "requirement_contract": "Ein Export MUSS Formatversion, Mappingversion, Modellwurzel, einen aus den enthaltenen normativen Zeitstempeln deterministisch abgeleiteten Snapshot-Zeitpunkt, Toolversion, enthaltene IDs, ausgeschlossene Inhalte und erkannte Informationsverluste in einem maschinenlesbaren Manifest dokumentieren; die tats\u00e4chliche Ausf\u00fchrungszeit geh\u00f6rt nur in den nicht exportierten Auditbericht.",
     "scope": "14.l.W provides real project export for all four formats through the CLI and pure preparation API. Native scope/model-root and exact deterministic time are distinct from format bytes and their SHA-256. The separate exchange-export-v1 manifest reports actual representation and attachment/format losses; generated publication rechecks source bytes and never writes normative files. ReqIF uses existing closed typed/carrier/loss contracts. The requirement remains partial; no release or interoperability approval is asserted. 14.l.R adds native prose attachment closure, strict format-option admission, conflict classification and final source rechecks after published-byte verification. The R adversarial matrix is bound to explicit test identities. 14.l.C separates native inventory, dependency resolution, query selection and canonical manifest projection, exact UTC comparison/formatting, and attachment/XML/archive binding. The same W/R behavioral expectations and the stated interoperability/approval limits are retained."
   },
   "preconditions": [
@@ -38,7 +38,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "367bad36c070076ce83bfa63147c737111f5c682f9f05f9ce29a421680c01096",
+  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
   "steps": [
     "Resolve project/document/query/release scopes with native configuration, paginated query seeds, strong closure, historical baseline objects and weak boundaries; compare actual native model roots before format projection.",
     "Encode actual NDJSON/CSV/ReqIF/ReqIFZ bytes using existing codecs. Derive the separate closed manifest, exact maximum/epoch UTC timestamp, represented identities, individual losses and full attachment descriptors from actual sources and output.",

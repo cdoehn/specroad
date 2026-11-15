@@ -16,7 +16,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Nicht ausdrücklich Git-spezifische Kernbefehle DÜRFEN NICHT Bash, GNU-Utilities, eine aktivierte virtuelle Umgebung, einen Paketmanager, einen Compiler oder einen dauerhaft laufenden SpecRoad-Dienst voraussetzen.",
+    "requirement_contract": "Nicht ausdr\u00fccklich Git-spezifische Kernbefehle D\u00dcRFEN NICHT Bash, GNU-Utilities, eine aktivierte virtuelle Umgebung, einen Paketmanager, einen Compiler oder einen dauerhaft laufenden SpecRoad-Dienst voraussetzen.",
     "scope": "Existing bootstrap/test-infrastructure behavior only; not complete requirement acceptance."
   },
   "preconditions": [
@@ -34,7 +34,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "367bad36c070076ce83bfa63147c737111f5c682f9f05f9ce29a421680c01096",
+  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
   "steps": [
     "Execute each listed unittest once in the current full suite.",
     "Observe the declared file effects, returned data and exit statuses without matching human text."

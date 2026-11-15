@@ -24,7 +24,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Impact, Traceability, Diff und Release Readiness MÜSSEN fehlende oder stale Code-Referenzen getrennt ausweisen.",
+    "requirement_contract": "Impact, Traceability, Diff und Release Readiness M\u00dcSSEN fehlende oder stale Code-Referenzen getrennt ausweisen.",
     "scope": "12.t.W/R supply opt-in native currentness across validation, impact, trace, diff, coverage and built-in views. Versioned inert Work inputs bind the complete Evaluation, time, scope, project configuration, every original record (including historical/unselected Evidence), and every native code observation. Resume recomputes and refuses changed or missing bindings; separate native Waiver trust is rechecked. Scoped model views retain the full inventory without widening their evaluation. Whole-inventory consumers refuse partial scopes. Incremental query work retains all verification/currentness inputs beyond pagination. Fresh Core/PYZ processes restore all necessary bytes from a trusted native CheckpointStore at a new location; no original source locator is needed. No Subject writes, external execution or Release Readiness claim. QueryWork remains a process-local cursor, not a serialized executable continuation."
   },
   "preconditions": [
@@ -42,7 +42,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "367bad36c070076ce83bfa63147c737111f5c682f9f05f9ce29a421680c01096",
+  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
   "steps": [
     "Compare one immutable computed observation across validation, impact, trace, diff, coverage and built-in verification/traceability views; refuse foreign, incomplete or untyped inputs without subject writes.",
     "Recompute saved complete currentness inputs from a bound native Work snapshot; compare single and resumed coverage/code/verification data and reject changed model, product, scope, time, trust or code bindings before producing a result."

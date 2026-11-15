@@ -11,11 +11,11 @@
   "method": "automated_behavior",
   "open_items": [
     "Other format writers, external attachment ingestion and CLI integration remain follow-up work. This Generic Core/PYZ evidence is partial requirement evidence, not release approval.",
-    "RECOVERY-REMOVAL-006: existing test references cover only their still-valid implemented scope. Changed interruption/receipt/preflight/work oracles require fresh implementation and evidence in 18.s–18.x; old repair/crash recovery results are not acceptance of the new contract."
+    "RECOVERY-REMOVAL-006: existing test references cover only their still-valid implemented scope. Changed interruption/receipt/preflight/work oracles require fresh implementation and evidence in 18.s\u201318.x; old repair/crash recovery results are not acceptance of the new contract."
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Evidence-Import DARF NICHT Revision, `verification_plan_status` oder fachlichen Inhalt eines Subjects verändern.",
+    "requirement_contract": "Evidence-Import DARF NICHT Revision, `verification_plan_status` oder fachlichen Inhalt eines Subjects ver\u00e4ndern.",
     "scope": "12.j.W/R: Existing-attachment Generic full-set transaction. Verified input replay preserves historical IDs/audit without allocation or a current TargetModel; changed bound input is conflict 6. Versioned exact measurement identity diagnoses historical duplicates without dropping repeated new occurrences. Partial I/O and abrupt process exits retain native recovery evidence; explicit rollback or complete-target finalization preserves subjects and prevents duplicate/half-set success. No format-wide writer, external attachment import or CLI/release claim."
   },
   "preconditions": [
@@ -33,7 +33,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "367bad36c070076ce83bfa63147c737111f5c682f9f05f9ce29a421680c01096",
+  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
   "steps": [
     "Publish a complete saved Generic set, resolve exact original inputs before planning, reject changed bound requests with code 6, diagnose all semantic duplicate occurrences, and exercise target replacement failures and abrupt process exits through native rollback/completion/cleanup. Compare subjects, sources, created IDs and durable replay."
   ],

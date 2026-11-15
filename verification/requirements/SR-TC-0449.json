@@ -36,7 +36,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Query MUSS getrennte Filter für `verification_plan_status` und das berechnete `verification_result` anbieten.",
+    "requirement_contract": "Query MUSS getrennte Filter f\u00fcr `verification_plan_status` und das berechnete `verification_result` anbieten.",
     "scope": "W kernel only: complete passive normalized grammar; OR within known value groups, AND across groups and SRX predicates; full supplied adjacency and detached field projection. No CLI, public page, live project coverage, evaluation currency or computed verification result is claimed. Current provider gaps fail explicitly, including for empty input. The four requirements remain partial. R rejects unknown or non-normalized envelope fields, incorrect SRX content hashes, unsupported operators and invalid alternatives in known filter vocabularies. Invalid known stored status fields anywhere in the supplied inventory block selection. Computed verification projection requires its actual provider even with no matches; passive nested extension values remain data. No current verification aggregation is claimed. C extracts normalization and stored-field projection into private pure helpers at the original call sites. Public classes and module identities, existing W/R cases, errors, bindings and provider boundaries remain unchanged. 12.p.W implements deterministic requirement, kind and declared-dimension coverage over the same bound native aggregation. Original results, freshness and required-key observations remain independent; no implicit selection or successful Evidence is invented. The synchronous query accepts exact bound evaluation input for separate stored plan/computed result filters, projections and sort keys. Query provenance stays outside its six-field data; the verification view shares the same coverage. Unbound sources or contexts reject, and missing providers retain their errors. 12.p.R provides separate overlapping gap sets without fabricated runs, excludes inapplicable requirements from gaps and retains native raw evidence dispositions. Release coverage uses native source-bound closure and stored selection precedence; conflicts yield code 6, unstored external selection is provisional only. Native Work storage preserves inert full descriptor/time/scope/hash, and resume recomputes from original model and input bytes with independently supplied trust. QueryWork computed selection/sort/page preserves provenance, without claiming a durable sorting cursor."
   },
   "preconditions": [
@@ -56,7 +56,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "367bad36c070076ce83bfa63147c737111f5c682f9f05f9ce29a421680c01096",
+  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
   "steps": [
     "Normalize content-bound query data; execute value/SRX filtering against the entire supplied graph and project exact pointer values.",
     "Compare independently expected identities and values, distinguish missing/null and Boolean SRX results, and require explicit errors for unavailable providers.",

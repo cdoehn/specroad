@@ -16,7 +16,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "`specroad evidence record <VERIFICATION-ID>` MUSS einen manuellen oder werkzeuggestützten Nachweis einschließlich des Laufkontexts nach Kapitel 10.5 über den gemeinsamen Change Plan als neues unveränderbares Evidence-Artefakt erfassen.",
+    "requirement_contract": "`specroad evidence record <VERIFICATION-ID>` MUSS einen manuellen oder werkzeuggest\u00fctzten Nachweis einschlie\u00dflich des Laufkontexts nach Kapitel 10.5 \u00fcber den gemeinsamen Change Plan als neues unver\u00e4nderbares Evidence-Artefakt erfassen.",
     "scope": "12.e.W publishes exactly one prepared immutable Evidence through the existing saved-plan writer. Actual model bytes determine subject/contract/test/configuration hashes; existing attachment bytes and explicit run metadata are retained. Native receipts report the created identity and bind durable request replay. Conflicts, drift, missing services and unauthorized actors fail closed. Preview and explicit run input remain read-only. Existing records and subjects are not rewritten. The global CLI is not yet registered; this remains a partial requirement proof. Step 12.e.R makes whole-context omission with explicit reason equivalent to null without inventing provenance, validates operand identities before source reads, and demonstrates unchanged Subject revision/planning through storage and replay. Partial run objects, missing measurement/audit fields, contrary run files, changed context bindings and unsafe inputs remain failures; later Subject changes are not rewritten by historical replay. 12.e.C separates input decoding, subject reconstruction and attachment binding into internal helpers while retaining the shared reader and transactional writer; the W/R tests and expected values remain unchanged."
   },
   "preconditions": [
@@ -34,7 +34,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "367bad36c070076ce83bfa63147c737111f5c682f9f05f9ce29a421680c01096",
+  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
   "steps": [
     "Preview the isolated evidence.record operation, then publish the exact saved plan through native authorization, writer lock, journaling, receipts and cleanup.",
     "Compare actual stored bytes, subject revisions/hashes, configuration and attachment resources; replay the same request without a second record or lock.",

@@ -14,7 +14,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Die Anerkennung einer Requirement-Verbindlichkeit DARF NICHT das Vorkommen eines normativen Schlüsselworts im natürlichen `statement` voraussetzen.",
+    "requirement_contract": "Die Anerkennung einer Requirement-Verbindlichkeit DARF NICHT das Vorkommen eines normativen Schl\u00fcsselworts im nat\u00fcrlichen `statement` voraussetzen.",
     "scope": "Existing read-only field checks plus pure new requirement construction and explicit metadata. No natural-language interpretation, BCP-47 registry validation, profile, Change Plan, CLI/import or write authorization."
   },
   "preconditions": [
@@ -33,7 +33,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "367bad36c070076ce83bfa63147c737111f5c682f9f05f9ce29a421680c01096",
+  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
   "steps": [
     "Load valid per-type drafts, reject invalid field values, and compare original data and relevant status axes."
   ],

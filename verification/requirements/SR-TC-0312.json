@@ -29,7 +29,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Die eingebaute Spezifikationsansicht MUSS in einem vollständigen Projekt aus dem Dokument mit `document_role=primary_specification` erzeugt werden.",
+    "requirement_contract": "Die eingebaute Spezifikationsansicht MUSS in einem vollst\u00e4ndigen Projekt aus dem Dokument mit `document_role=primary_specification` erzeugt werden.",
     "scope": "11.a.W: full supplied-project document field and primary-role assessment using existing schemas. Exactly one non-retired primary produces its owned record, identity, revision, path and hashes. Missing or multiple candidates and invalid fields yield no selection; missing language is refused earlier by the common model schema. All other non-retired maturities count without lifecycle approval. This is source selection for a later specification view, not rendering, complete document-model validation, a live file inventory, a partial/legacy fallback or write authority. 11.a.R adds explicit closed/unconfigured project scope admission and a requested document_role_scope=full_project stage in shared validation. Cardinality inspects all supplied records after native schema/identity/reference/graph checks; empty inventories and outside-selection primaries cannot bypass it. Input hashes bind the contract; missing document_model providers remain unavailable. Actual partial/legacy fallback remains 11.q."
   },
   "preconditions": [
@@ -47,7 +47,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "367bad36c070076ce83bfa63147c737111f5c682f9f05f9ce29a421680c01096",
+  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
   "steps": [
     "Check native document fields and exactly one non-retired primary specification; bind and return its exact stored data. Refuse missing or ambiguous primaries, preserve field diagnostics and compare order-independent observations and isolated Core/PYZ results without writes.",
     "Refuse nonfull/configured declared scopes, malformed active or retired roles and invalid local fields. Request the bound full-project role stage in the actual shared validation pipeline; verify empty/missing/multiple primaries, unconnected selections, earlier schema/identity refusal, unchanged loaded-model defaults and absence of invented document services."

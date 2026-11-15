@@ -18,7 +18,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Die zwingenden Umgebungsvoraussetzungen nicht Git-spezifischer Core-Funktionen DÜRFEN über eine unterstützte Python-Laufzeit, Leserechte für Distribution und Projekteingaben sowie die jeweils erforderlichen Schreibrechte für Projekt-, Ausgabe- und Temporärpfade nicht hinausgehen; die ausdrücklich Git-spezifische lokale Transportseite nach Anhang W MUSS ihre zusätzlichen Voraussetzungen getrennt ausweisen.",
+    "requirement_contract": "Die zwingenden Umgebungsvoraussetzungen nicht Git-spezifischer Core-Funktionen D\u00dcRFEN \u00fcber eine unterst\u00fctzte Python-Laufzeit, Leserechte f\u00fcr Distribution und Projekteingaben sowie die jeweils erforderlichen Schreibrechte f\u00fcr Projekt-, Ausgabe- und Tempor\u00e4rpfade nicht hinausgehen; die ausdr\u00fccklich Git-spezifische lokale Transportseite nach Anhang W MUSS ihre zus\u00e4tzlichen Voraussetzungen getrennt ausweisen.",
     "scope": "Existing bootstrap/test-infrastructure behavior only; not complete requirement acceptance. The lazy transport adapter is additionally exercised with module and PYZ Core commands without any PatchHarbor installation or load."
   },
   "preconditions": [
@@ -36,7 +36,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "367bad36c070076ce83bfa63147c737111f5c682f9f05f9ce29a421680c01096",
+  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
   "steps": [
     "Execute the listed behavior tests in the current prescribed parallel gate; record the actual selected scope without asserting a full suite.",
     "Observe the declared file effects, returned data and exit statuses without matching human text."

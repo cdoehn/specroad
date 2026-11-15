@@ -32,7 +32,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "`specroad lifecycle transition <ID> --to retired --reason <TEXT>` MUSS die atomare Stilllegung mit genau einer Revisionsänderung, dem Endzustand `retired`, unveränderter Fachprojektion und dem gebundenen Grund-/Akteursnachweis nach Kapitel 9.6.3 ausführen.",
+    "requirement_contract": "`specroad lifecycle transition <ID> --to retired --reason <TEXT>` MUSS die atomare Stilllegung mit genau einer Revisions\u00e4nderung, dem Endzustand `retired`, unver\u00e4nderter Fachprojektion und dem gebundenen Grund-/Akteursnachweis nach Kapitel 9.6.3 ausf\u00fchren.",
     "scope": "Actual local single-operation lifecycle publication: native standard/specialist restrictions, exact source state or explicit retire guards, unchanged fach projection, one revision and original reason/actor audit. A fresh guarded retired no-op preserves all files without new receipts; confirmed retries return historical results even with a different eligible retry actor. Other non-draft subjects need actual semantic services; explicit host denial remains effective. Dedicated approval, registered CLI/dry-run/stdout, complete production/history loading, supported-platform completion remain open. R adds original host-gate ownership, closed lifecycle boundary and successor rules, pure approved-source final states, exact request conflicts, fresh no-op authority and real interrupted publication. Recovery evidence and foreign state remain intact; structural approved fixtures do not attest historical approval."
   },
   "preconditions": [
@@ -52,7 +52,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "367bad36c070076ce83bfa63147c737111f5c682f9f05f9ce29a421680c01096",
+  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
   "steps": [
     "Execute native transition/retire through complete target validation, real writer lock, live checks, publication and completion.",
     "Compare complete old/new artifacts and their fach projections, exactly one revision, unrelated files/modes, native operation and bound actor/time in the actual transaction receipt.",

@@ -13,7 +13,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Sprach-Tag-Syntax und Registerzustand MÜSSEN gemäß Anhang S.3 getrennt bestimmt werden.",
+    "requirement_contract": "Sprach-Tag-Syntax und Registerzustand M\u00dcSSEN gem\u00e4\u00df Anhang S.3 getrennt bestimmt werden.",
     "scope": "Tag grammar and snapshot-relative registration are distinct. Frozen historical snapshot transport is checked independently from language permission, detection, and release approval."
   },
   "preconditions": [
@@ -31,7 +31,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "367bad36c070076ce83bfa63147c737111f5c682f9f05f9ce29a421680c01096",
+  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
   "steps": [
     "Run the referenced behavior cases with owned inputs and actual offline snapshot bytes."
   ],

@@ -13,7 +13,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Evidence-Anhänge DÜRFEN NICHT außerhalb des Projektroots liegen oder über Symlinks außerhalb des Projektroots aufgelöst werden.",
+    "requirement_contract": "Evidence-Anh\u00e4nge D\u00dcRFEN NICHT au\u00dferhalb des Projektroots liegen oder \u00fcber Symlinks au\u00dferhalb des Projektroots aufgel\u00f6st werden.",
     "scope": "Not implemented. No automated pass oracle is claimed. Read-only inventory and streamed byte verification of declared attachment sizes and hashes; not an atomic snapshot or authoring authorization."
   },
   "preconditions": [
@@ -31,7 +31,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "367bad36c070076ce83bfa63147c737111f5c682f9f05f9ce29a421680c01096",
+  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
   "steps": [
     "Inventory current resource files and verify actual attachment bytes, including safe failure cases without project mutation."
   ],

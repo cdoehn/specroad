@@ -13,7 +13,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Ein Vergleich oder Merge gegen einen Git-Ref MUSS dessen SpecRoad-Dateien über feste, shellfreie Git-Plumbing-Aufrufe lesen, ohne Hooks, Pager, externe Diff-/Filterprozesse, Checkout, Branch-, Index- oder Arbeitsbaumänderung.",
+    "requirement_contract": "Ein Vergleich oder Merge gegen einen Git-Ref MUSS dessen SpecRoad-Dateien \u00fcber feste, shellfreie Git-Plumbing-Aufrufe lesen, ohne Hooks, Pager, externe Diff-/Filterprozesse, Checkout, Branch-, Index- oder Arbeitsbaum\u00e4nderung.",
     "scope": "8.i.W adds an explicitly constructed GitObjectSource using fixed shell-free rev-parse, ls-tree and cat-file operations. The adapter pins one commit, checks commit/tree/blob object hashes and binds tree-listing paths to raw verified tree bytes. It returns raw regular blobs without working-tree fallback, filters, hooks, pager, lazy fetch, replacement objects or writes. Git environment redirection/tracing and global/system configuration are excluded. Ordinary local .git stores are required; linked/indirect/special storage, symlink/gitlink resources and nested project reads are rejected. Independent actual-object fixtures preserve arbitrary index bytes, HEAD/refs, dirty/untracked/foreign files and verify exact raw bytes. Shared project-source resolution, CLI/Work integration, linked-worktree/alternate support, scalable resource handling and supported-platform acceptance remain open. No model validation, release approval or write authority is claimed. R explicitly binds --work-tree to the selected root and normalizes executable-start OS errors while retaining errno. New independent behavior cases cover invalid/ambiguous refs, missing Git without affecting non-Git queries, hostile worktree/alias/pager/hooks and promisor configuration, ignored config/alternate/trace environment, invalid configuration, corrupt trees, indirect/linked/special/replaced stores and read-only repositories. All 280 old test files and 9341 IDs remain unchanged; W evidence is retained. Common-source/CLI/Work integration, broader Git layouts, supported platforms and scalable resources remain open. C extracts environment/storage policy and unchanged Git execution/object verification into a private reader base. Reference selection, commit/tree binding, public construction and read_bytes retain identical source and AST except the private-base/import structure. The existing subprocess fault-injection boundary retains module identity. All 281 old test files and 9377 IDs remain unchanged; all W/R behavior is rerun. No new semantics, errors, side effects or implicit Git dependency are introduced."
   },
   "preconditions": [
@@ -31,7 +31,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "367bad36c070076ce83bfa63147c737111f5c682f9f05f9ce29a421680c01096",
+  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
   "steps": [
     "Read commit-bound raw files through real temporary Git objects; compare exact bytes and identities while preserving branch, index, working tree and foreign files.",
     "Exercise inert hooks/pager/filters, ignored inherited Git redirection, fixed refs, raw binary/Unicode, missing and corrupted objects, nested projects and unsafe paths.",

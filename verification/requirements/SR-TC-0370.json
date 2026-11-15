@@ -10,11 +10,11 @@
   "method": "automated_behavior",
   "open_items": [
     "Current successful Apply evidence required for every prepared stage; zero behavior tests were executed in Dev.",
-    "Subsequent 17.f–17.o lifecycle/original bytes, metadata, profile/invariant validation, origin-provider/CLI and immutable resolution/publication integration remain required."
+    "Subsequent 17.f\u201317.o lifecycle/original bytes, metadata, profile/invariant validation, origin-provider/CLI and immutable resolution/publication integration remain required."
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Gleiche IDs mit voneinander unabhängiger Provenienz oder unterschiedlichem `id_scheme` MÜSSEN als Identitätskollision diagnostiziert und ohne automatische Umbenennung abgewiesen werden.",
+    "requirement_contract": "Gleiche IDs mit voneinander unabh\u00e4ngiger Provenienz oder unterschiedlichem `id_scheme` M\u00dcSSEN als Identit\u00e4tskollision diagnostiziert und ohne automatische Umbenennung abgewiesen werden.",
     "scope": "17.e read-only relation candidates under 10.15.3. Full native sources and explicit origin observations are bound before all equality shortcuts. Independent relation IDs survive; common IDs require the same scheme and known common creation origin. Artifacts and normative versioned resources share the origin check. Missing origin stays unresolved; a known collision reports SRV101. Recursive content candidates preserve original observations and never authorize a writer or authenticate a creation event. 17.e.R adds explicit removal versus unchanged/edit, owner and creation-metadata protection, typed JSON equality, immutable navigation and tamper/source-change guards. Final M17 metadata, lifecycle/history, model invariants, origin-provider/CLI integration and publication remain open; this is not a requirement-wide success claim."
   },
   "preconditions": [
@@ -34,7 +34,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "367bad36c070076ce83bfa63147c737111f5c682f9f05f9ce29a421680c01096",
+  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
   "steps": [
     "Compare independent new relation IDs and shared-origin field changes against exact expected relations.",
     "Reject collisions across schemes, known origins and resource kinds before identical-value shortcuts; unknown origins remain unresolved.",

@@ -21,7 +21,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Diagnosen MÜSSEN bei identischen Eingaben in einer stabilen Reihenfolge nach Schwere, Datei, Artefakt-ID, Pfad und Code ausgegeben werden.",
+    "requirement_contract": "Diagnosen M\u00dcSSEN bei identischen Eingaben in einer stabilen Reihenfolge nach Schwere, Datei, Artefakt-ID, Pfad und Code ausgegeben werden.",
     "scope": "Shared diagnostic values, stable semantic ordering and explicit threshold assessment over supplied, source-bound observations. These tests do not authenticate diagnostic producers, execute optional lint automatically or establish full CLI conformance. Direct and read-only project reference findings retain deterministic machine order under reversed source order, repeated targets and full or partial selections."
   },
   "preconditions": [
@@ -39,7 +39,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "367bad36c070076ce83bfa63147c737111f5c682f9f05f9ce29a421680c01096",
+  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
   "steps": [
     "Construct and validate findings; preserve all observed machine locations and identities.",
     "Apply an explicit threshold without rerunning rules and inspect structured counts and failure class.",

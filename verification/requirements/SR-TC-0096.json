@@ -33,7 +33,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Die eingebauten Lint-Regeln MÜSSEN fehlende Begründung, fehlende Verifikation, explizit konfigurierte literale Glossar-/Platzhalterverletzungen und fehlende Mindestbeziehungen diagnostizieren; semantische Modalitäts- oder Mehrdeutigkeitserkennung ist kein Core-Passkriterium.",
+    "requirement_contract": "Die eingebauten Lint-Regeln M\u00dcSSEN fehlende Begr\u00fcndung, fehlende Verifikation, explizit konfigurierte literale Glossar-/Platzhalterverletzungen und fehlende Mindestbeziehungen diagnostizieren; semantische Modalit\u00e4ts- oder Mehrdeutigkeitserkennung ist kein Core-Passkriterium.",
     "scope": "Selected schema-defined rationale fields and Core/profile relation minima plus literal lint over supplied or observed project sources. Explicit profile composition, diagnostic bindings, threshold semantics and read freshness are covered. Missing literal prerequisites retain known Core findings while remaining incomplete; invalid structural/reference prerequisites stop evaluation. No complete model/schema/profile, review, language understanding or approval proof."
   },
   "preconditions": [
@@ -52,7 +52,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "367bad36c070076ce83bfa63147c737111f5c682f9f05f9ce29a421680c01096",
+  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
   "steps": [
     "Capture and validate owned records and exact selections.",
     "Run literal checks on unchanged selected text and inspect structured findings and coverage.",

@@ -31,12 +31,12 @@
   ],
   "method": "automated_behavior",
   "open_items": [
-    "RECOVERY-REMOVAL-006: existing test references cover only their still-valid implemented scope. Changed interruption/receipt/preflight/work oracles require fresh implementation and evidence in 18.s–18.x; old repair/crash recovery results are not acceptance of the new contract."
+    "RECOVERY-REMOVAL-006: existing test references cover only their still-valid implemented scope. Changed interruption/receipt/preflight/work oracles require fresh implementation and evidence in 18.s\u201318.x; old repair/crash recovery results are not acceptance of the new contract."
   ],
   "oracle": {
     "expected": "Each explicit review creates exactly one physical revision with identical content revision/hash, basis and plan. Before quorum status remains in_review with no artificial self-transition; distinct effective human actors reach approved. Repetition cannot add a human, AI/CI are refused, current provenance is reobserved, and pre-publication failures leave the Proposal unchanged. Human input alone supplies the decision, never a technical detector.",
     "kind": "behavior",
-    "requirement_contract": "Eine Review-Entscheidung eines Akteurs vom Typ `ai` DARF NICHT als menschliche Freigabe zählen.",
+    "requirement_contract": "Eine Review-Entscheidung eines Akteurs vom Typ `ai` DARF NICHT als menschliche Freigabe z\u00e4hlen.",
     "scope": "18.i human decision and distinct current-human quorum through the native public review writer, exact five-part binding, full historical/native checks and durable transaction evidence. Trusted host observations in tests are synthetic; no Proposal apply, release approval or inferred human semantic judgment is claimed."
   },
   "preconditions": [
@@ -54,7 +54,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "367bad36c070076ce83bfa63147c737111f5c682f9f05f9ce29a421680c01096",
+  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
   "steps": [
     "Invoke the native proposal review writer with an explicit human decision and optional comment, retaining content binding and every prior history row.",
     "Observe distinct human actor_ids reaching the configured quorum, an insufficient count remaining in_review, original canonical assessment bytes and actual writer completion.",

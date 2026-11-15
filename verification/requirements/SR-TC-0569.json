@@ -12,11 +12,11 @@
   "open_items": [
     "Complete native transaction/backend and CLI integrations in their later steps; validate the full runtime/target filesystem matrix in actual CI and target runs.",
     "Native Linux local-filesystem scope is not a distributed/NFS lock or authenticated host identity.",
-    "RECOVERY-REMOVAL-006: existing test references cover only their still-valid implemented scope. Changed interruption/receipt/preflight/work oracles require fresh implementation and evidence in 18.s–18.x; old repair/crash recovery results are not acceptance of the new contract."
+    "RECOVERY-REMOVAL-006: existing test references cover only their still-valid implemented scope. Changed interruption/receipt/preflight/work oracles require fresh implementation and evidence in 18.s\u201318.x; old repair/crash recovery results are not acceptance of the new contract."
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Ein neuer Hostname oder eine erneut vergebene Prozessnummer DARF NICHT allein die Übernahme eines unbekannten Lock-Eigentümers rechtfertigen.",
+    "requirement_contract": "Ein neuer Hostname oder eine erneut vergebene Prozessnummer DARF NICHT allein die \u00dcbernahme eines unbekannten Lock-Eigent\u00fcmers rechtfertigen.",
     "scope": "Native owner observations and audited transaction-bound takeover retain explicit risk consent for foreign, unverifiable and reused-PID observations. Live owners and occupied native mutexes remain forbidden; a changed owner at the final transfer boundary is preserved. Full CLI integration and authenticated host identity are not claimed."
   },
   "preconditions": [
@@ -35,7 +35,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "367bad36c070076ce83bfa63147c737111f5c682f9f05f9ce29a421680c01096",
+  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
   "steps": [
     "Acquire shared native exclusion for writer/recovery kinds; recheck exact ownership and journal barriers before audited orphan removal.",
     "Apply existing risk-consent gates to transaction-bound takeover and reject live owners even with risk consent.",

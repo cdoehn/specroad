@@ -20,11 +20,11 @@
   "method": "automated_behavior",
   "open_items": [
     "Measured scope remains explicit in-process windows and the controlled SRX/loaded-graph, payload-hash and native prepared-publication drivers. Pure control signals are not durable checkpoints. Whole-command bootstrap/final delivery, all-phase subtotals, all remaining consumers, child processes, persistent Work identity/resume, other RSS platform adapters and full runtime/platform performance acceptance remain open. Graph input completeness and native publication authority remain independent existing contracts; PublishedFiles still requires receipt finalization.",
-    "RECOVERY-REMOVAL-006: existing test references cover only their still-valid implemented scope. Changed interruption/receipt/preflight/work oracles require fresh implementation and evidence in 18.s–18.x; old repair/crash recovery results are not acceptance of the new contract."
+    "RECOVERY-REMOVAL-006: existing test references cover only their still-valid implemented scope. Changed interruption/receipt/preflight/work oracles require fresh implementation and evidence in 18.s\u201318.x; old repair/crash recovery results are not acceptance of the new contract."
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Die Verbrauchsbilanz eines Arbeitsauftrags MUSS sämtliche Teilschritte und Verarbeitungsphasen kumuliert ausweisen, ohne diese Summe als automatische Abbruchgrenze zu verwenden.",
+    "requirement_contract": "Die Verbrauchsbilanz eines Arbeitsauftrags MUSS s\u00e4mtliche Teilschritte und Verarbeitungsphasen kumuliert ausweisen, ohne diese Summe als automatische Abbruchgrenze zu verwenden.",
     "scope": "An explicit in-process ledger sums completed invocation CPU and wall intervals, retains registered outstanding bytes, aggregates peaks rather than summing them, and permits another actual environment command after soft-target excess or profile change. Duplicate or overlapping completion cannot double count. In 6.d.R, actual controlled kernels add aggregate control counts across calls without blocking later work; observed soft events survive later missing samples and unrepresentable accumulated counters remain unknown. 6.d.C centralizes operational metric projection and the CLI summary adapter only; the same unchanged W/R behavior cases bind measurements, semantic parity, unknown handling and native authority boundaries."
   },
   "preconditions": [
@@ -43,7 +43,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "367bad36c070076ce83bfa63147c737111f5c682f9f05f9ce29a421680c01096",
+  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
   "steps": [
     "Run real environment commands with and without --metrics, including explicit selected-project error outcomes.",
     "Reuse one owned ledger across completed windows and compare independent CPU/wall sums, RSS peaks and registered byte peaks.",
