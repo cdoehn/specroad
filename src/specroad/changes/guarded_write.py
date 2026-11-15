@@ -60,8 +60,14 @@ class _Session:
         held.check();self.held=held;self.files=held._files;self.inputs=inputs
         self.before=dict(inputs.before);self.target=dict(inputs.target);self.expected=dict(self.before)
         self.paths=sorted(p for p in self.before.keys()|self.target.keys() if self.before.get(p)!=self.target.get(p))
+        from .write_guard_values import _path
+        from ..storage.archive import validate_portable_archive_paths
+        validate_portable_archive_paths(list(self.before.keys()|self.target.keys()))
+        for p in self.paths:
+            _path(p)
+            require(not p.startswith('archive/objects/') or p not in self.before,'immutable_write_target',exit_code=7)
         require(bool(self.paths),'empty_write_program',exit_code=2)
-        self.parents={};self.identities={};self.modes={};self.images={};self.records={}
+        self.parents={};self.identities={};self.modes={};self.owners={};self.images={};self.records={}
         self.marker=None;self.marker_id=None;self.active=False;self.stage_created=False
         owner=held.record.data;plan=inputs.plan.data
         require(owner['kind']=='writer' and owner['project_id']==inputs.project_id
@@ -82,6 +88,7 @@ class _Session:
                 require(info.st_dev==os.fstat(self.files.root_fd).st_dev and info.st_nlink==1
                     and not info.st_mode&0o7000,'unsafe_write_source',exit_code=7)
                 self.identities[p]=guards._identity(info);self.modes[p]=info.st_mode&0o777
+                self.owners[p]=(info.st_uid,info.st_gid)
         self.guard()
 
     def _parents(self,paths,*,capture=False):
@@ -106,7 +113,8 @@ class _Session:
                 require(fd is not None,'write_parent_changed',exit_code=6)
                 _image(fd,p.rsplit('/',1)[-1],len(raw),sha256(raw).hexdigest(),identity=self.identities[p])
                 info=os.stat(p.rsplit('/',1)[-1],dir_fd=fd,follow_symlinks=False)
-                require(info.st_mode&0o777==self.modes[p] and not info.st_mode&0o7000,'write_mode_changed',exit_code=6)
+                require(info.st_mode&0o777==self.modes[p] and not info.st_mode&0o7000
+                    and (info.st_uid,info.st_gid)==self.owners[p],'write_mode_changed',exit_code=6)
         for p in self.paths:
             if p not in self.expected:require(_read_path(self.files,p,optional=True) is None,'write_absent_target_changed',exit_code=6)
         if self.marker is not None:
@@ -122,6 +130,12 @@ class _Session:
             with self.files.directory(tuple(path.split('/')[:-1])) as fd:
                 require(fd is not None,'write_receipt_missing')
                 _image(fd,path.rsplit('/',1)[-1],len(raw),sha256(raw).hexdigest(),identity=ident)
+        receipt_parent=transaction_receipt_path(self.marker_value['transaction_id']).rsplit('/',1)[0]
+        known={p.rsplit('/',1)[-1] for p in self.records if p.startswith(receipt_parent+'/')}
+        with self.files.directory(tuple(receipt_parent.split('/'))) as fd:
+            require((fd is None and not known) or (fd is not None and set(os.listdir(fd))==known),
+                'write_receipt_namespace_changed')
+        self.inputs.inventory_check(self.expected)
         self.held.check()
 
     def qualify(self):
@@ -180,13 +194,13 @@ class _Session:
             if after is None:
                 require(before is not None,'write_delete_without_source')
                 self.guard();os.unlink(name,dir_fd=fd)
-                self.expected.pop(path);self.identities.pop(path);self.modes.pop(path)
+                self.expected.pop(path);self.identities.pop(path);self.modes.pop(path);self.owners.pop(path)
                 _checkpoint('effect_unlinked:'+str(index));os.fsync(fd)
             else:
                 staged=str(index)+'.bin';raw,ident=self.images[staged]
                 def moved(info):
                     self.expected[path]=after;self.identities[path]=guards._identity(info)
-                    self.modes[path]=info.st_mode&0o777;self.images.pop(staged)
+                    self.modes[path]=info.st_mode&0o777;self.owners[path]=(info.st_uid,info.st_gid);self.images.pop(staged)
                     _checkpoint('effect_replaced:'+str(index))
                 with self.files.directory(('.specroad','write-state','staging')) as stage:
                     replace_bound_image(stage,staged,fd,name,size=len(raw),digest=sha256(raw).hexdigest(),identity=ident,

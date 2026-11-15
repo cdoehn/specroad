@@ -17,42 +17,48 @@ from ..security import paths as guards
 
 
 def inspect_write_state(root, *, expected_project_id=None):
-    """No configuration/model load, mkdir, ownership takeover or cleanup."""
-    state='unknown';marker=None;owner=None
+    """Bounded marker/owner diagnosis; a PID alone never proves a live writer."""
+    state='unknown';marker=None;owner=None;guard_present=False
     try:
         with LockFiles(root) as files:
-            record,ident=files.read_record();active=files.journal_entries()
             with files.directory(('.specroad','write-state')) as fd:
                 names=[] if fd is None else sorted(os.listdir(fd))
-                if 'pending.json' in names:
-                    try:
-                        raw=files._read(fd,'pending.json')[0]
-                        marker=marker_value(parsed(raw))
-                        require(jcs(marker)==raw,'noncanonical_write_marker')
-                        if expected_project_id is not None:require(marker['project_id']==expected_project_id,'write_marker_project_mismatch')
-                    except (ModelError,SafetyViolation,OSError,ValueError,TypeError):
-                        state='corrupted'
+                guard_present=bool(names)
+                raw=None if 'pending.json' not in names else files._read(fd,'pending.json')[0]
+                if raw is not None:
+                    marker=marker_value(parsed(raw))
+                    require(jcs(marker)==raw,'noncanonical_write_marker')
+                    if expected_project_id is not None:require(marker['project_id']==expected_project_id,'write_marker_project_mismatch')
+            record,ident=files.read_record();active=files.journal_entries()
+            guard_present |= bool(active)
+            mutex_busy=False
+            from .lock_values import ProjectLockError
+            try:files.acquire()
+            except ProjectLockError as error:
+                if error.reason!='project_lock_busy':raise
+                mutex_busy=True
             if record is not None:
                 owner=observe_owner(record,LinuxOwnerProbe())
                 if expected_project_id is not None:require(record.data['project_id']==expected_project_id,'write_owner_project_mismatch')
-                if owner=='alive' and state!='corrupted':
-                    if marker is not None:
-                        require(marker['owner']=={k:record.data[k] for k in ('lock_id','host_id','process_id','process_start_id')}
-                            and marker['transaction_id']==record.data['transaction_id']
-                            and marker['request_id']==record.data['request_id']
-                            and marker['project_id']==record.data['project_id'],'write_marker_owner_mismatch')
-                    state='writer_active'
-                elif owner in ('foreign','unverifiable') and state!='corrupted':state='unknown'
+                if marker is not None:
+                    require(marker['owner']=={k:record.data[k] for k in ('lock_id','host_id','process_id','process_start_id')}
+                        and marker['transaction_id']==record.data['transaction_id']
+                        and marker['request_id']==record.data['request_id']
+                        and marker['project_id']==record.data['project_id'],'write_marker_owner_mismatch')
+                if owner=='alive' and mutex_busy:state='writer_active'
+                elif owner in ('foreign','unverifiable'):state='unknown'
                 else:state='corrupted'
-            elif names or active:state='corrupted'
+            elif mutex_busy:state='unknown'
+            elif guard_present:state='corrupted'
             else:state='clean'
             latest,latest_id=files.read_record()
             require((None if latest is None else latest.source_bytes)==(None if record is None else record.source_bytes)
                 and latest_id==ident and files.journal_entries()==active,'write_state_changed')
-            if marker is not None:require(_read_path(files,MARKER_PATH)==jcs(marker),'write_marker_changed')
+            with files.directory(('.specroad','write-state')) as fd:
+                require(([] if fd is None else sorted(os.listdir(fd)))==names,'write_state_changed')
+            if raw is not None:require(_read_path(files,MARKER_PATH)==raw,'write_marker_changed')
     except (ModelError,SafetyViolation,OSError,ValueError,TypeError):
-        # Never infer clean from an unavailable/unsafe operational observation.
-        state='corrupted' if marker is not None else 'unknown'
+        state='corrupted' if guard_present else 'unknown'
     return dict(format_version='write-state-v1',state=state,owner_state=owner,
         project_corrupted=state=='corrupted',manual_git_restore_required=state=='corrupted',
         normal_operation_started=False,write_authorized=False,observation_only=True,
@@ -68,6 +74,9 @@ def read_guarded_completion(root, transaction_id, *, expected_project_id):
         require(marker['project_id']==expected_project_id and marker['transaction_id']==transaction_id,
                 'write_completion_binding',exit_code=6)
         group=receipt_group(write)
+        prefix=transaction_receipt_path(transaction_id).rsplit('/',1)[0]
+        with files.directory(tuple(prefix.split('/'))) as fd:
+            require(fd is not None and set(os.listdir(fd))=={'transaction.json','committed.json'},'write_completion_namespace_changed')
         identities={}
         for path,expected in group.items():
             with files.directory(tuple(path.split('/')[:-1])) as fd:
@@ -99,7 +108,10 @@ def resolve_guarded_request(root,request,*,expected_project_id):
         path=request_receipt_path(identity.request_id);raw=_read_path(files,path,optional=True)
         if raw is None:return None
         value=parsed(raw)
-        require(value.get('format_version')=='request-receipt-v2','unsupported_write_request_receipt')
+        require(value.get('format_version')=='request-receipt-v2' and set(value)=={
+            'format_version','namespace','request_id','project_id','transaction_id','actor',
+            'operations_sha256','base_model_root_sha256','target_model_root_sha256','result',
+            'created_ids','result_object','transaction_receipt'},'unsupported_write_request_receipt')
         result=read_guarded_completion(root,value['transaction_id'],expected_project_id=expected_project_id)
         require(value['request_id']==identity.request_id and value['operations_sha256']==identity.operations_sha256,
                 'write_request_conflict',exit_code=6)

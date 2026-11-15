@@ -2,6 +2,7 @@
 from dataclasses import dataclass
 from hashlib import sha256
 from uuid import UUID
+import unicodedata
 from ..model.canonical import canonical_json_bytes as jcs, canonical_json_sha256 as digest
 from ..storage.json_syntax import parse_json_object as parsed
 from ..model.audit_fields import _valid_utc
@@ -105,6 +106,53 @@ def receipt_group(write):
     return files
 
 
+def _validate_native_report(native, targets):
+    """Check the recorded pipeline report, not its separate CLI assessment."""
+    from ..validation.values import HOOK_NAMES, _diagnostics
+    fields={'format_version','input_sha256','validation_scope','source_count','structural_scope',
+        'source_bindings','identified_ids','identified_sources','requested_ids','checked_ids','stages',
+        'checks_complete','model_valid','approval_granted','write_authorized','project_files_verified','atomic_snapshot'}
+    optional={'currentness','legacy_manifest_sha256','legacy_original_ids','legacy_current_evidence',
+              'document_role_scope','selected_configuration'}
+    require(type(native) is dict and fields<=set(native)<=fields|optional,'invalid_write_validation_report')
+    require(native['format_version']=='model-validation-v1' and _hash(native['input_sha256'])
+        and native['model_valid'] is True and native['checks_complete'] is True
+        and native['validation_scope']=='loaded_model' and native['requested_ids'] is None
+        and all(native[k] is False for k in ('approval_granted','write_authorized',
+                                           'project_files_verified','atomic_snapshot')),
+        'write_validation_incomplete')
+    expected=[{'path':p,'sha256':row['sha256']} for p,row in targets.items()
+              if p.startswith('spec/') and p.endswith('.json')]
+    require(native['structural_scope']=='all_supplied_documents'
+        and native['source_bindings']==expected and type(native['source_count']) is int
+        and native['source_count']==len(expected),'write_validation_binding')
+    ids=native['identified_ids']
+    require(type(ids) is list and all(type(i) is str and i for i in ids)
+        and ids==sorted(set(ids)) and native['checked_ids']==ids,'invalid_write_validation_ids')
+    sources=native['identified_sources']
+    require(type(sources) is list and all(type(s) is dict and set(s)=={'path','artifact_id'}
+        and type(s['artifact_id']) is str for s in sources)
+        and [s['path'] for s in sources]==[s['path'] for s in expected]
+        and sorted(s['artifact_id'] for s in sources)==ids,'write_validation_binding')
+    stages=native['stages'];names=[]
+    require(type(stages) is list and bool(stages),'write_validation_incomplete')
+    for stage in stages:
+        require(type(stage) is dict and set(stage)=={'stage','status','checked_ids','diagnostics'}
+            and type(stage['stage']) is str and bool(stage['stage'])
+            and stage['status'] in ('passed','not_applicable')
+            and type(stage['checked_ids']) is list and all(type(i) is str for i in stage['checked_ids'])
+            and len(set(stage['checked_ids']))==len(stage['checked_ids'])
+            and set(stage['checked_ids'])<=set(ids) and type(stage['diagnostics']) is list,
+            'write_validation_incomplete')
+        _diagnostics(stage['diagnostics'])
+        require(all(d.get('severity','error')!='error' for d in stage['diagnostics']),
+                'write_validation_incomplete')
+        names.append(stage['stage'])
+    mandatory={'parsing','schema_types_identity_fields','identities_references','graph','scope',
+               'profiles','minimum_relations','stored_lifecycle_fields',*HOOK_NAMES}
+    require(len(set(names))==len(names) and mandatory<=set(names),'write_validation_incomplete')
+
+
 def validate_transaction(raw):
     value=parsed(raw)
     require(set(value)=={'format_version','outcome','write','write_sha256','result_object'}
@@ -125,6 +173,7 @@ def validate_transaction(raw):
         require(type(row) is dict and set(row)=={'path','size','sha256'},'invalid_write_inventory')
         _path(row['path']);_binding({k:row[k] for k in ('size','sha256')})
         require(row['path'] not in targets,'duplicate_write_resource');targets[row['path']]={k:row[k] for k in ('size','sha256')}
+    require(len({unicodedata.normalize('NFC',p).casefold() for p in targets})==len(targets),'write_inventory_alias')
     paths=[]
     for row in write['files']:
         require(type(row) is dict and set(row)=={'path','before','after'},'invalid_write_effect')
@@ -132,12 +181,11 @@ def validate_transaction(raw):
         for field in ('before','after'):
             if row[field] is not None:_binding(row[field])
         require(row['before']!=row['after'] and targets.get(row['path'])==row['after'],'write_effect_binding')
-    require(paths==sorted(set(paths)) and list(targets)==sorted(targets),'write_inventory_order')
+    require(paths==sorted(set(paths)) and list(targets)==sorted(targets)
+        and len({unicodedata.normalize('NFC',p).casefold() for p in paths})==len(paths),'write_inventory_order')
     validation=write['validation']
     native=validation.get('native',validation) if type(validation) is dict else {}
-    require(native.get('format_version')=='model-validation-v1'
-        and native.get('model_valid') is True and native.get('checks_complete') is True,
-        'write_validation_incomplete')
+    _validate_native_report(native,targets)
     require(raw==jcs(transaction_document(write)),'write_receipt_binding')
     return write
 

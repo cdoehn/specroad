@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 213 · **Stand:** 15. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.90
+**Planrevision:** 214 · **Stand:** 15. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.90
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 306 Schritte und 918 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; die früher genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wurde nach der damaligen Spezifikation innerhalb von 15.l.R vorgezogen und bleibt als normaler Prüfkern erhalten. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -109,14 +109,16 @@ Aktuelle vollständige Gruppe: [18.t — Schreibmarker und normaler Abschluss, B
 
 Korrektur des vollständigen 18.t-Rests und ausdrückliche OFF-PLAN-Optimierungen: [Bundle 704](history/bundle-704-writer-fixtures-test-overhead.md). Kein zusätzlicher Produktfortschritt; jeder Zielstand benötigt sein eigenes erfolgreiches Apply-Gate.
 
+Nach erfolgreichem 18.t.W: [Korrektur 705](history/bundle-705-native-validation-receipt.md) setzt den vollständigen offenen R/C- und TEST-OVERHEAD-Rest fort. Die Zielwerte gelten erst nach ihrem eigenen Apply-Gate.
+
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 213
+plan_revision: 214
 implementation_plan_commits_total: 918
-implementation_plan_commits_completed: 766
-last_completed_plan_commit: 18.t.W
-next_plan_commit: 18.t.R
+implementation_plan_commits_completed: 767
+last_completed_plan_commit: 18.t.R
+next_plan_commit: 18.t.C
 priority_off_plan: null
 next_off_plan_commit: null
 last_completed_numbered_bundle: 702
