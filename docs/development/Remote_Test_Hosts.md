@@ -91,6 +91,18 @@ die Snapshot-Auswahl aufgenommen werden. Der Quellstand wird vor und nach dem
 Lauf geprüft. Remote-Arbeitskopien bleiben zur Diagnose erhalten; sie sind keine
 Git-Branches und kein neuer Apply-Result-Ersatz.
 
+Jeder Remote-Lauf erhält daneben ein privates `tmp/` mit Modus 0700 im
+konfigurierten Host-Arbeitsbereich. Der SSH-Proxy setzt `TMPDIR`, `TMP`, `TEMP`
+und `PYTEST_DEBUG_TEMPROOT` vor dem Start seiner Worker. Dadurch verwenden
+auch Supervisor-Kinder, spätere Live-Worker und pytest-Fixtures diesen
+laufbezogenen Bereich statt des möglicherweise kleinen oder quotierten
+System-`/tmp`. Der konfigurierte Host-Arbeitsbereich sollte auf einer
+Platte mit ausreichend freiem Speicher liegen. Die bestehenden lokalen
+Apply-Tempvorgaben bleiben erhalten; Hostmontierungen und Quoten ändern
+sich nicht. Kleine Supervisor-Steuersockets behalten ihren bestehenden
+kurzen privaten Pfad. Verbliebene Tempdaten gehören zum Diagnoseverzeichnis
+des Remote-Laufs und werden nicht in den Quellsnapshot aufgenommen.
+
 pytest-xdist bleibt für Worker, Collection und Testprotokoll zuständig. Ein
 gezielter Scheduler verteilt längste bekannte Tests zuerst nach geschätzter
 Fertigstellungszeit je Host, untersucht unbekannte Tests früh auf schnellen

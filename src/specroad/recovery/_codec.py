@@ -30,18 +30,10 @@ def size(value):
     require(type(value) is int and value >= 0, 'restore_size_invalid')
 
 
-
-
-
-
 def ordered(values, key):
     require(type(values) is list, 'restore_array_required')
     keys = [key(value) for value in values]
     require(keys == sorted(set(keys)), 'restore_order_or_duplicate_invalid')
-
-
-
-
 
 
 def file_table(files):

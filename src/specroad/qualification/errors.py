@@ -4,7 +4,7 @@ from ..model.errors import ModelError
 from ..security import SafetyViolation
 
 
-class RestoreError(ModelError):
+class QualificationError(ModelError):
     def __init__(self, reason, *, path=None, exit_code=3, mutation_possible=False,
                  recovery_required=False):
         super().__init__(reason, path=path)
@@ -20,7 +20,7 @@ class RestoreError(ModelError):
 
 def require(condition, reason, *, path=None, exit_code=3):
     if not condition:
-        raise RestoreError(reason, path=path, exit_code=exit_code)
+        raise QualificationError(reason, path=path, exit_code=exit_code)
 
 
 def guarded(function):
@@ -29,21 +29,21 @@ def guarded(function):
         from ..bundles.errors import BundleError
         try:
             return function(*args, **kwargs)
-        except RestoreError:
+        except QualificationError:
             raise
         except SafetyViolation as error:
-            raise RestoreError('restore_unsafe_input', exit_code=7) from error
+            raise QualificationError('restore_unsafe_input', exit_code=7) from error
         except (ModelError, BundleError) as error:
             unsafe = error.reason in ('unsafe_path', 'reserved_path', 'unsafe_project_declaration')
-            raise RestoreError(error.reason, path=getattr(error, 'path', None),
+            raise QualificationError(error.reason, path=getattr(error, 'path', None),
                 exit_code=7 if unsafe else getattr(error, 'exit_code', 3),
                 mutation_possible=getattr(error, 'mutation_possible', False)) from error
         except FileNotFoundError as error:
-            raise RestoreError('restore_required_source_missing') from error
+            raise QualificationError('restore_required_source_missing') from error
         except OSError as error:
-            raise RestoreError('restore_io', exit_code=5) from error
+            raise QualificationError('restore_io', exit_code=5) from error
         except RecursionError as error:
-            raise RestoreError('restore_recursive_input_invalid') from error
+            raise QualificationError('restore_recursive_input_invalid') from error
     return call
 
 
@@ -58,5 +58,10 @@ def persisted_contract(function):
             # their own diagnostic and must not collapse into shape errors.
             raise
         except (ValueError, KeyError, TypeError, AttributeError) as error:
-            raise RestoreError('restore_persisted_proof_invalid') from error
+            raise QualificationError('restore_persisted_proof_invalid') from error
     return call
+
+
+
+# Legacy Restore adapters retain the exact shared exception type.
+RestoreError = QualificationError

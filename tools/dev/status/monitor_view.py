@@ -43,12 +43,12 @@ def detail_lines(target):
                      f'{tests.get("ended", "?")}/{tests.get("total", "?")} beendet · '
                      f'{tests.get("passed", 0)} bestanden · {tests.get("failed", 0)} Fehler · '
                      f'{tests.get("open", "?")} offen')
+    lines.append('Commits: ' + (' | '.join(f'{s["commit_id"]}: {s["status"]}' for s in view.get('stages', [])) or '—'))
     control = source(target, 'status').get('test_control') or {}
     if control.get('active'):
         for host, desired in control.get('desired', {}).items():
             actual = control.get('hosts', {}).get(host, {})
             lines.append(f'{host}: Soll {desired} · laufend {actual.get("running", 0)} · Prozesse {actual.get("processes", 0)} · auslaufend {actual.get("draining", 0)}')
-    lines.append('Commits: ' + (' | '.join(f'{s["commit_id"]}: {s["status"]}' for s in view.get('stages', [])) or '—'))
     return lines
 
 
@@ -244,9 +244,17 @@ def run_tui(paths, args):
                 line = 4 + visible_targets
                 put(line, 1, '   '.join(('[' if view == state.tab else '') + f'{i + 1} {title}'
                     + (']' if view == state.tab else '') for i, (view, title) in enumerate(zip(VIEWS, TITLES))), 1)
-                for extra, text in enumerate(detail_lines(target)[:4], 1):
+                details = detail_lines(target)
+                # Leave search, column labels, one test row and the footer visible.
+                # Commit progress precedes hosts, so a short terminal keeps it.
+                detail_limit = height - line - 8
+                if len(details) > detail_limit:
+                    hidden_hosts = len(details) - detail_limit + 1
+                    details = details[:detail_limit - 1] + [
+                        f'… {hidden_hosts} weitere Hosts; Terminalhöhe vergrößern.']
+                for extra, text in enumerate(details, 1):
                     put(line + extra, 1, text, 3 if 'VERALTET' in text else 0)
-                line += 5
+                line += len(details) + 1
                 put(line, 1, f'Suche: {state.match or "—"} · {matches} Treffer / {len(rows)} angezeigt · '
                     f'{LABELS[state.sort]} {"↓" if state.descending else "↑"} · Zeiten: {state.time_view}', 1)
                 put(line + 1, 1, time_header(state.time_view) + '  Host / Worker / Status / Test', 1)

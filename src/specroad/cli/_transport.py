@@ -64,7 +64,7 @@ def create_outbound_command(invocation):
     from ..model.errors import ModelError
     from ..security import SafetyViolation
     from ..storage.archive import ArchiveError
-    from ..qualification.errors import RestoreError
+    from ..qualification.errors import QualificationError
     from ..query.read_work import complete_read_steps
     from .results import CommandResult, FailureKind
     from ..diagnostics import Diagnostic
@@ -91,7 +91,7 @@ def create_outbound_command(invocation):
             return CommandResult('bundle.create', result=result,
                 details={'command_class': 'transport_operational', 'transport': dict(export.effects)})
         except (TransportUnavailable, TransportFailure, BundleError, ModelError, ArchiveError,
-                SafetyViolation, OSError, RestoreError) as error:
+                SafetyViolation, OSError, QualificationError) as error:
             code = (7 if isinstance(error, SafetyViolation) else 5 if isinstance(error, OSError)
                     else getattr(error, 'exit_code', 3))
             reason = getattr(error, 'reason', 'transport_io_or_boundary_failure')

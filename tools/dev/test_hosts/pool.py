@@ -19,11 +19,18 @@ from .ssh import Transport
 from .contract import validate_profile, public_proof, verify_pool
 
 
-def proxy_gateway(identifier, transport, executable, work):
+def proxy_gateway(identifier, transport, executable, work, *, temporary=None):
     # The proxy serves concurrent forwarding channels, not pytest test bodies.
     # xdist keeps each separate worker on its main_thread_only execution model.
-    return ('id=' + identifier + '//' + transport + '//python=' + executable
+    spec = ('id=' + identifier + '//' + transport + '//python=' + executable
             + '//chdir=' + work + '//execmodel=thread')
+    if temporary is not None:
+        # Set this on the proxy before it launches any worker/supervisor. The
+        # separate interpreters and their children then inherit the run's own
+        # scratch space rather than a remote /tmp quota or coordinator paths.
+        spec += ''.join('//env:' + name + '=' + str(temporary)
+                        for name in ('TMPDIR', 'TMP', 'TEMP', 'PYTEST_DEBUG_TEMPROOT'))
+    return spec
 
 
 def run_forecasts(selected, workers, measured, snapshot):
@@ -78,6 +85,7 @@ runs.mkdir(mode=0o700,exist_ok=True)
 run=runs/%r
 run.mkdir(mode=0o700)
 (run/'source').mkdir(mode=0o700)
+(run/'tmp').mkdir(mode=0o700)
 print(json.dumps(True))
 ''' % (host.directory, key))
             transport.copy(str(outdir / 'host-snapshot') + '/', work + '/')
@@ -88,7 +96,8 @@ print(json.dumps(True))
             cpus = transport.python(capacity_script, executable=executable)
             proxy = 'srproxy' + str(len(proxies))
             ssh = shlex.join([*transport.options(), host.ssh])
-            proxies.append(proxy_gateway(proxy, 'ssh=' + ssh, executable, work))
+            proxies.append(proxy_gateway(proxy, 'ssh=' + ssh, executable, work,
+                                         temporary=Path(work).parent / 'tmp'))
             spec = 'popen//via=' + proxy + '//python=' + executable
         count = min(cpus, host.workers, worker_limit)
         resources = dict(format_version=1, available_cpus=cpus, workers=count,

@@ -438,3 +438,5 @@
 - [Bundle 699 — SPECULATE.R/C: Abbruchfehler synchron abnehmen](bundle-699-speculative-ack-handshake.md).
 
 - [Bundle 700 — gemeinsame native Qualifikation 18.s.W/R/C](bundle-700-common-qualification.md)
+
+- [Korrektur 701 — Remote-Tempbereich und Monitor-Kopf, offener Rest 18.s.C](bundle-701-remote-temp-monitor.md)

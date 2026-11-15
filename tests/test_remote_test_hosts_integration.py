@@ -33,6 +33,8 @@ def run_isolated_pool(tmp_path, *, source=None, crash=False, workers=1, duration
     # A proxy popen gateway exercises the same execnet via transport as SSH.
     # No credentials, external hosts or prepared live installations are needed.
     expected = environment()
+    temporary = tmp_path / 'remote-tmp'
+    temporary.mkdir(mode=0o700)
     workers = min(workers, available_cpus())
     resources = dict(format_version=1, available_cpus=available_cpus(), workers=workers,
                      worker_limit=workers, nested=False, nice_minimum=10)
@@ -49,7 +51,7 @@ def run_isolated_pool(tmp_path, *, source=None, crash=False, workers=1, duration
                        resources={**resources, 'workers': 1, 'worker_limit': 1})
     profile = dict(format_version=1, source_sha256=source_identity(root), snapshot_sha256=fingerprint(manifest),
                    environment=expected, workers=worker_profiles,
-                   proxies=[proxy_gateway('srproxy0', 'popen', sys.executable, str(target))],
+                   proxies=[proxy_gateway('srproxy0', 'popen', sys.executable, str(target), temporary=temporary)],
                    selected={n: n for n in ids}, estimates={},
                    baseline=dict(zip(ids, [1.0] * count if durations is None else durations)))
     path = root / 'build/host-run.json'; path.write_text(json.dumps(profile))
@@ -110,7 +112,24 @@ def exercise():
 
 
 def test_real_proxy_workers_use_snapshot_and_ack_every_phase_to_coordinator(tmp_path):
-    root, remote, profile, result = run_isolated_pool(tmp_path, workers=2)
+    source = '''import os
+import tempfile
+import threading
+from pathlib import Path
+
+def exercise(fixture):
+    assert threading.current_thread() is threading.main_thread()
+    expected = Path(__file__).resolve().parents[2] / 'remote-tmp'
+    assert all(os.environ[key] == str(expected)
+               for key in ('TMPDIR', 'TMP', 'TEMP', 'PYTEST_DEBUG_TEMPROOT'))
+    assert Path(tempfile.gettempdir()) == expected
+    assert fixture.is_relative_to(expected)
+    with tempfile.TemporaryDirectory() as scratch:
+        assert Path(scratch).parent == expected
+        (Path(scratch) / 'build-bytes').write_bytes(b'isolated')
+'''
+    source += '\n'.join(f'def test_{i}(tmp_path):\n    exercise(tmp_path)\n' for i in range(6))
+    root, remote, profile, result = run_isolated_pool(tmp_path, source=source, workers=2)
     assert result.returncode == 0, (result.stdout + result.stderr).decode()
     observation = json.loads((root / 'build/observations.json').read_bytes())
     verify_pool(observation, public_proof(profile))

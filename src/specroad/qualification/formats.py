@@ -1,13 +1,8 @@
-"""Reject unsupported declared normative formats without interpreting old data.
-
-This is a format boundary, not a Legacy reader or a general attachment parser.
-Broken current bytes remain eligible for the existing backup/recovery rules.
-Opaque payloads and already defined operational formats keep their contracts.
-"""
+"""Closed normative format boundary, separate from Legacy reading and Restore."""
 from ..model.errors import ModelError
 from ..model.versions import SCHEMA_VERSION
 from ..storage.json_syntax import parse_json_object
-from .errors import RestoreError
+from .errors import QualificationError
 
 
 def _normative_path(path):
@@ -23,7 +18,7 @@ def declared_resource(raw, path, *, normative=False):
     inspected; a third-party JSON attachment's schema label is not our format.
     """
     if path == 'mappings/legacy-manifest.json':
-        raise RestoreError('restore_legacy_source_contract_required', path=path)
+        raise QualificationError('restore_legacy_source_contract_required', path=path)
     try:
         value = parse_json_object(raw, path=path)
     except ModelError:
@@ -32,7 +27,7 @@ def declared_resource(raw, path, *, normative=False):
               'legacy_manifest_version' in value and (normative or _normative_path(path) or
                                                         'mapping_id' in value))
     if legacy:
-        error = RestoreError('restore_legacy_source_contract_required', path=path)
+        error = QualificationError('restore_legacy_source_contract_required', path=path)
         error.pointer = '/legacy_manifest_version'
         raise error
     # Missing other mandatory fields must not turn an identifiable unsupported
@@ -42,7 +37,7 @@ def declared_resource(raw, path, *, normative=False):
         any(key in value for key in ('managed_paths', 'id_prefix', 'project_name', 'validation_policy')) or
         any(key in value for key in ('profile_id', 'rule_id', 'mapping_id')))
     if recognizable and 'schema_version' in value and value['schema_version'] != SCHEMA_VERSION:
-        error = RestoreError('restore_unsupported_source_schema_version', path=path)
+        error = QualificationError('restore_unsupported_source_schema_version', path=path)
         error.pointer = '/schema_version'
         error.highest_supported = SCHEMA_VERSION
         raise error
@@ -58,7 +53,7 @@ def declared_files(files, *, include_payloads=True):
             project_id = parse_json_object(files['specroad.json'])['project_id']
             legacy = qualified(files, project_id)
         except (ModelError, KeyError) as error:
-            raise RestoreError('restore_legacy_source_contract_required',
+            raise QualificationError('restore_legacy_source_contract_required',
                                path='mappings/legacy-manifest.json') from error
     protected = () if legacy is None else legacy.protected_paths
     for path, raw in sorted(files.items()):

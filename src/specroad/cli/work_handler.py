@@ -4,7 +4,7 @@ import json
 from pathlib import Path
 import os
 
-from ..qualification.errors import RestoreError, guarded, persisted_contract, require
+from ..qualification.errors import QualificationError, guarded, persisted_contract, require
 from ..qualification.owned import owned_checks
 from ..security import ProjectBoundary
 from ..work.control import inspect_work_status
@@ -127,7 +127,7 @@ def _prompt(store, options):
     try:
         limit = int(options.get('--max-prompt-chars', '6000'))
     except ValueError as error:
-        raise RestoreError('invalid_max_prompt_chars', exit_code=2) from error
+        raise QualificationError('invalid_max_prompt_chars', exit_code=2) from error
     _limit(limit)
     status = inspect_work_status(store)
     require(status['state'] == 'running', 'work_has_no_continuation', exit_code=6)
@@ -213,7 +213,7 @@ def _work(invocation):
 def work_command(invocation):
     try:
         return _work(invocation)
-    except RestoreError as error:
+    except QualificationError as error:
         raise OperationFailure(FailureKind(error.exit_code), error.reason, details=error.diagnostic()) from error
 
 

@@ -93,18 +93,18 @@ def select_project(command, options, cwd, *, preflight=None):
     profile = command.preflight_for(options)
     if command.command_id in ('migrate.plan','migrate.apply','migrate.verify'):
         from ..qualification.inventory import boundary
-        from ..qualification.errors import RestoreError
+        from ..qualification.errors import QualificationError
         from .results import FailureKind, OperationFailure
         try:
             if explicit is None:
-                raise RestoreError('migration_explicit_project_required', exit_code=2)
+                raise QualificationError('migration_explicit_project_required', exit_code=2)
             selected = boundary(explicit)
             raw = selected.read_bytes('specroad.json')
             from ..storage.json_syntax import parse_json_object
             data = parse_json_object(raw)
             from ..security import check_project_declarations
             check_project_declarations(data)
-        except RestoreError as error:
+        except QualificationError as error:
             raise OperationFailure(FailureKind(error.exit_code),error.reason) from error
         except SafetyViolation as error:
             raise OperationFailure(FailureKind.SECURITY,'migration_unsafe_project') from error
@@ -122,12 +122,12 @@ def select_project(command, options, cwd, *, preflight=None):
         return None, None, {}
     if command.command_id == 'recover.restore' and profile is PreflightProfile.RECOVERY:
         from ..qualification.inventory import boundary
-        from ..qualification.errors import RestoreError
+        from ..qualification.errors import QualificationError
         from .results import FailureKind, OperationFailure
         try:
             selected = boundary(explicit)
             selected._check_root()
-        except RestoreError as error:
+        except QualificationError as error:
             raise OperationFailure(FailureKind(error.exit_code), error.reason,
                                    details=error.diagnostic()) from error
         except SafetyViolation as error:

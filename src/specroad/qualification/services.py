@@ -1,9 +1,5 @@
-"""Explicit host inputs for the existing native Restore qualification kernels.
-
-These Python values are not a registry, persisted proof format or authority.
-Neither project nor plan/Work data can select a provider. Providers return
-the actual typed native inputs; the recovery adapter performs the checks.
-"""
+"""Explicit native host inputs for project qualification. Providers supply
+typed original inputs, never success gates, persisted authority or a registry."""
 from dataclasses import dataclass, field
 from typing import Callable
 
@@ -30,7 +26,7 @@ class RequirementReviewInputs:
 
 
 @dataclass(frozen=True)
-class RestoreServices:
+class QualificationServices:
     """Current invocation's trusted native input providers, never success gates.
 
     requirement_review(model, id) returns RequirementReviewInputs, task_done
@@ -52,6 +48,10 @@ class RestoreServices:
 
 
 def native_services(value):
-    if value is not None and type(value) is not RestoreServices:
+    if value is not None and type(value) is not QualificationServices:
         raise ModelError('restore_native_services_required')
-    return RestoreServices() if value is None else value
+    return QualificationServices() if value is None else value
+
+
+# Compatibility for callers awaiting their separately planned removal.
+RestoreServices = QualificationServices

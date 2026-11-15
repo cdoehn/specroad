@@ -27471,6 +27471,8 @@
     "tests/test_project_qualification_right.py::test_normal_native_qualification_works_with_restore_adapters_unavailable",
     "tests/test_project_qualification_right.py::test_unknown_declared_format_is_not_healed_by_a_preceding_valid_qualification[artifact]",
     "tests/test_project_qualification_right.py::test_unknown_declared_format_is_not_healed_by_a_preceding_valid_qualification[profile]",
-    "tests/test_project_qualification_right.py::test_unknown_declared_format_is_not_healed_by_a_preceding_valid_qualification[specroad.json]"
+    "tests/test_project_qualification_right.py::test_unknown_declared_format_is_not_healed_by_a_preceding_valid_qualification[specroad.json]",
+    "tests/test_remote_test_temporary.py::test_proxy_scratch_is_inherited_before_supervisor_worker_and_child_start",
+    "tests/test_remote_test_temporary.py::test_remote_preparation_creates_private_separate_scratch_for_each_run"
   ]
 }

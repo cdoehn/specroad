@@ -16,8 +16,6 @@ from ._schema_boundary import declared_files, declared_resource
 from .values import require
 
 
-
-
 def reconstruct(kind, raw, read_dependency, *, operational=None):
     """Return source files, explicit source additions and the declared root.
 

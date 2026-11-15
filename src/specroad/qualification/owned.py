@@ -7,7 +7,7 @@ complete bytes: an equal hash alone cannot skip a different input's checks.
 from contextvars import ContextVar
 from functools import wraps
 
-_ACTIVE = ContextVar('specroad_restore_owned_checks', default=None)
+_ACTIVE = ContextVar('specroad_qualification_owned_checks', default=None)
 
 
 def owned_checks(function):

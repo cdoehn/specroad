@@ -3,7 +3,7 @@ from hashlib import sha256
 from pathlib import PurePosixPath
 import unicodedata
 from ..model.paths import project_path
-from .errors import RestoreError, require
+from .errors import QualificationError, require
 
 
 def safe_path(value):
@@ -13,7 +13,7 @@ def safe_path(value):
         from ..model.errors import ModelError
         if not isinstance(error, ModelError):
             raise
-        raise RestoreError('restore_unsafe_path', exit_code=7) from error
+        raise QualificationError('restore_unsafe_path', exit_code=7) from error
 
 
 def root_path(value):

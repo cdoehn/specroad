@@ -1,4 +1,4 @@
-"""Existing native specialist checks over the exact owned Restore model."""
+"""Native specialist checks over the exact owned project model."""
 from ..graph.relations import SourceRelations
 from ..graph.review_status import RelationReviewStatuses
 from ..graph.relation_obligations import RelationObligations

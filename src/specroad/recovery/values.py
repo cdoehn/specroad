@@ -6,14 +6,6 @@ from ..qualification.errors import RestoreError, require, guarded, persisted_con
 from ..storage.json_syntax import parse_json_object
 
 
-
-
-
-
-
-
-
-
 @dataclass(frozen=True, init=False)
 class RestorePlan:
     """Independently reconstructed passive plan, with detached value access.
