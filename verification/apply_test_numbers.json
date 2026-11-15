@@ -27627,6 +27627,26 @@
     "tests/test_scheduler_decision.py::test_reuse_preserves_complete_dispatch_order_and_host_assignments[speeds0]",
     "tests/test_scheduler_decision.py::test_reuse_preserves_complete_dispatch_order_and_host_assignments[speeds1]",
     "tests/test_scheduler_decision.py::test_reuse_preserves_complete_dispatch_order_and_host_assignments[speeds2]",
-    "tests/test_scheduler_decision.py::test_reuse_preserves_complete_dispatch_order_and_host_assignments[speeds3]"
+    "tests/test_scheduler_decision.py::test_reuse_preserves_complete_dispatch_order_and_host_assignments[speeds3]",
+    "tests/test_host_budget_reuse.py::test_each_reuse_rechecks_budget_safety_instead_of_trusting_a_cache[boolean]",
+    "tests/test_host_budget_reuse.py::test_each_reuse_rechecks_budget_safety_instead_of_trusting_a_cache[corrupt]",
+    "tests/test_host_budget_reuse.py::test_each_reuse_rechecks_budget_safety_instead_of_trusting_a_cache[dangling]",
+    "tests/test_host_budget_reuse.py::test_each_reuse_rechecks_budget_safety_instead_of_trusting_a_cache[hardlink]",
+    "tests/test_host_budget_reuse.py::test_each_reuse_rechecks_budget_safety_instead_of_trusting_a_cache[symlink]",
+    "tests/test_host_budget_reuse.py::test_failed_changed_budget_write_keeps_old_limit_and_releases_locks",
+    "tests/test_host_budget_reuse.py::test_reuse_retains_existing_file_mode_and_bytes",
+    "tests/test_live_status_pacing.py::test_failed_publication_can_be_retried_without_a_new_interval",
+    "tests/test_live_status_pacing.py::test_fast_native_pool_keeps_complete_history_and_final_status[False]",
+    "tests/test_live_status_pacing.py::test_fast_native_pool_keeps_complete_history_and_final_status[True]",
+    "tests/test_live_status_pacing.py::test_final_snapshot_cannot_overwrite_a_replaced_owner_generation",
+    "tests/test_live_status_pacing.py::test_final_status_failure_does_not_keep_owner_lock",
+    "tests/test_live_status_pacing.py::test_throttled_publication_does_not_hide_invalid_permissions[index]",
+    "tests/test_live_status_pacing.py::test_throttled_publication_does_not_hide_invalid_permissions[request]",
+    "tests/test_live_status_pacing.py::test_throttled_publication_does_not_hide_invalid_permissions[sequence]",
+    "tests/test_scheduler_decision.py::test_new_dispatch_observes_current_inputs_after_a_previous_decision[clock]",
+    "tests/test_scheduler_decision.py::test_new_dispatch_observes_current_inputs_after_a_previous_decision[host_measurement]",
+    "tests/test_scheduler_decision.py::test_new_dispatch_observes_current_inputs_after_a_previous_decision[host_scale]",
+    "tests/test_scheduler_decision.py::test_new_worker_gets_fresh_estimates_in_next_dispatch",
+    "tests/test_scheduler_decision.py::test_same_dispatch_reuses_estimates_without_losing_queue_updates"
   ]
 }

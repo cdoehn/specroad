@@ -66,6 +66,10 @@ und jede Messphase behalten ihre bisherigen dauerhaften Bestätigungen.
 Schreibfehler bleiben Gate-Fehler. Beim Abschluss wird die Besitzersperre
 auch dann freigegeben, wenn der abschließende Status nicht geschrieben werden
 kann. Ein übrig gebliebener Snapshot beweist keinen aktiven Testlauf.
+Auch die abschließende Veröffentlichung prüft noch einmal den vorhandenen
+Besitzer und die Laufgeneration. Ein ersetzter Besitzer erlaubt kein letztes
+Überschreiben des Status eines anderen Laufs. Veraltete Versuchsschlüssel
+aus einer Anzeige bleiben bei MOVE gegen den aktuellen Versuch zu prüfen.
 
 Beim Belegen eines Hostslots wird das bestehende Budget unter derselben
 Sperre frisch gelesen und geprüft. Ein unverändertes gültiges Budget wird
