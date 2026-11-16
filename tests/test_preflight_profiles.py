@@ -45,10 +45,10 @@ def startup_access(root):
     """Record actual opens/enumeration, including descriptor-relative paths.
 
     Opening code/distribution files outside this owned project remains possible.
-    No model, historical or active journal body may be opened during this gate.
+    Only bounded lock/write-marker metadata may be read; no model or journal bodies.
     """
     events, forbidden = [], []
-    directories = {'.', '.specroad', '.specroad/locks', '.specroad/transactions', '.specroad/recovery'}
+    directories = {'.', '.specroad', '.specroad/locks', '.specroad/transactions', '.specroad/recovery', '.specroad/write-state'}
 
     def observe(event, name, directory=None):
         if isinstance(name, int):
@@ -60,7 +60,7 @@ def startup_access(root):
             return
         logical = path.relative_to(root).as_posix()
         events.append((event, logical))
-        allowed = directories | {'specroad.json'} if event == 'open' else directories - {'.'}
+        allowed = directories | {'specroad.json', '.specroad/locks/project.json', '.specroad/write-state/pending.json'} if event == 'open' else directories - {'.'}
         if logical not in allowed:
             forbidden.append((event, logical))
             raise AssertionError('Preflight accessed data outside its current metadata scope')
@@ -110,7 +110,7 @@ def test_project_read_opens_only_current_metadata_before_handler(tmp_path, kind)
     assert calls[0].project_root == tmp_path
     assert ('scandir', '.specroad/transactions') in accesses
     assert {p for event, p in accesses if event == 'open'} <= {
-        '.', 'specroad.json', '.specroad', '.specroad/transactions', '.specroad/recovery'}
+        '.', 'specroad.json', '.specroad', '.specroad/transactions', '.specroad/recovery', '.specroad/write-state'}
     assert inventory(tmp_path) == before
 
 
@@ -133,7 +133,7 @@ def test_project_read_blocks_all_entry_routes_without_loading_or_mutating_pendin
     for result in results:
         assert result.exit_code == 5
         data = result.details['preflight']
-        assert data['profile'] == 'project_read' and data['reason'] == 'recovery_required'
+        assert data['profile'] == 'project_read' and data['reason'] == ('project_unknown' if state == 'lock' else 'project_corrupted')
         assert not data['normal_operation_started'] and not data['model_loaded']
         assert not data['write_authorized'] and not data['recovery_performed']
     assert calls == [] and inventory(tmp_path) == before

@@ -1,5 +1,6 @@
 """A real prefetched original can change hosts while its predecessor finishes."""
 import json
+from pathlib import Path
 
 import pytest
 
@@ -42,6 +43,19 @@ def exercise(index):
 HOLD_RETURNED_WORKER = '''import os,time,pytest
 from pathlib import Path
 @pytest.hookimpl(trylast=True)
+def pytest_sessionstart(session):
+    if hasattr(session.config, 'workerinput'):
+        folder=Path(session.config.rootpath)/'build'; folder.mkdir(exist_ok=True)
+        (folder/('worker-pid-'+os.environ['PYTEST_XDIST_WORKER'])).write_text(str(os.getpid()))
+def pytest_unconfigure(config):
+    if hasattr(config, 'workerinput') and os.environ['PYTEST_XDIST_WORKER']=='gw1':
+        folder=Path(config.rootpath)/'build'
+        (folder/'target-unconfiguring').touch()
+        deadline=time.monotonic()+40
+        while not (folder/'allow-target-cleanup').exists() and time.monotonic()<deadline: time.sleep(.01)
+        assert (folder/'allow-target-cleanup').exists()
+        (folder/'target-cleaned').touch()
+@pytest.hookimpl(trylast=True)
 def pytest_collection_finish(session):
     name=os.environ.get('PYTEST_XDIST_WORKER','')
     if name.startswith('gw') and int(name[2:])>=2:
@@ -68,6 +82,20 @@ def test_donor_finishes_during_tail_collection_without_executing_revoked_item(tm
         try:
             if p['cpus'] >= 2:
                 await_value(lambda: (p['target']/'build/tail-collecting').exists(), p['process'], p['log'], timeout=60)
+                await_value(lambda: (p['target']/'build/target-unconfiguring').exists(), p['process'], p['log'])
+                # Completion is already reported, but unconfigure still owns
+                # the interpreter. Its gateway must not kill this finalizer.
+                target_pid = int((p['target']/'build/worker-pid-gw1').read_text())
+                assert Path('/proc', str(target_pid)).exists()
+                assert not (p['target']/'build/target-cleaned').exists()
+                (p['target']/'build/allow-target-cleanup').touch()
+                await_value(lambda: not Path('/proc', str(target_pid)).exists(), p['process'], p['log'])
+                assert (p['target']/'build/target-cleaned').exists()
+                # The supervised local/proxy worker is reaped before the gate
+                # ends, while the original and the returned worker still live.
+                original_pid = int((p['root']/'build/worker-pid-gw0').read_text())
+                assert Path('/proc', str(original_pid)).exists()
+                assert p['process'].poll() is None
             # Keep the now-draining source disabled after it completes. Only
             # the target owns a live slot, so no valid speculative copy can
             # obscure this exact single-owner/normal-exit regression.
@@ -85,6 +113,7 @@ def test_donor_finishes_during_tail_collection_without_executing_revoked_item(tm
                 assert (p['root']/'build/session-closed-gw0').exists()
         finally:
             for root in (p['root'], p['target']):
+                (root/'build/allow-target-cleanup').touch()
                 (root/'build/allow-tail').touch()
         code = p['process'].wait(timeout=40)
         assert (code == 0) if outcome == 'passed' else (code != 0), p['log'].read_text()

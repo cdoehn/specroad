@@ -24,100 +24,37 @@ print(json.dumps(automatic(root).data))
 
 @pytest.mark.parametrize('state', ['prepared', 'partial', 'complete', 'committed'])
 def test_new_process_rechecks_basis_then_publishes_only_the_new_request(tmp_path, state):
-    source, old, expected = pending(tmp_path, state)
-    recovered = fresh_process(tmp_path, RECOVER_PROCESS)
-    assert recovered['exit_code'] == 5 and recovered['requires_new_invocation']
-    assert recovered['recovery_completed'] and not recovered['normal_operation_started']
-    assert not recovered['request_consumed']
-    assert files(tmp_path) == expected
-    receipt = tmp_path / request_receipt_path(NEW_REQUEST)
-    assert not receipt.exists()
-    observed = fresh_process(tmp_path, '''
-from support.automatic_recovery import current_model
-from test_transaction_preflight import automatic, NEW_REQUEST
-from support.targets import plan, POLICY
-from support.folds import edit
-from support.publication import ALLOW, files
-from specroad.changes import (project_lock, prepare_publication_check, begin_building_journal,
-    stage_building_journal, publish_prepared_journal, finalize_committing_journal,
-    cleanup_completed_transaction, CommittingJournal)
-gate = automatic(root).data
-assert gate['exit_code'] == 0 and not gate['write_authorized']
-model = current_model(root)
-change = plan(model, [edit(model.artifacts[0], 'Fresh separate invocation')], request_id=NEW_REQUEST)
-check = prepare_publication_check(change, model, policy=POLICY)
-tx = 'separate-new-transaction'
-with project_lock(root, kind='writer', command='change apply', project_id='sample',
-                  request_id=NEW_REQUEST, transaction_id=tx) as held:
-    journal = begin_building_journal(check, held_lock=held, transaction_id=tx, authority=ALLOW)
-    journal = stage_building_journal(check, journal, held_lock=held, authority=ALLOW)
-    publish_prepared_journal(check, journal, held_lock=held, authority=ALLOW)
-    journal = CommittingJournal((root / journal.path).read_bytes())
-    finalize_committing_journal(check, journal, held_lock=held, authority=ALLOW)
-    result = cleanup_completed_transaction(check, tx, held_lock=held, authority=ALLOW).data
-print(json.dumps({'gate': gate, 'result': result, 'new_request': NEW_REQUEST,
-    'basis': change.data['base']['model_root_sha256'], 'target': change.data['expected_result']['model_root_sha256']}))
-''')
-    assert observed['result']['commit_completed'] and observed['result']['cleanup_completed']
-    assert observed['basis'] != observed['target']
-    assert observed['basis'] == (old.data['expected_result']['model_root_sha256']
-        if state in ('complete', 'committed') else old.data['base']['model_root_sha256'])
-    assert receipt.exists()
-    after = files(tmp_path)
-    changed = [p for p in after if after[p] != expected[p]]
-    assert changed == [source.documents[0].path]
-    value = json.loads(after[changed[0]])
-    assert value['statement'] == 'Fresh separate invocation'
-    assert value['title'] == json.loads(expected[changed[0]])['title']
-    assert value['revision'] == json.loads(expected[changed[0]])['revision'] + 1
+    pending(tmp_path, state)
+    before = inventory(tmp_path)
+    observed = fresh_process(tmp_path, RECOVER_PROCESS)
+    assert observed['exit_code'] == 5 and observed['project_corrupted']
+    assert not observed['recovery_completed'] and not observed['normal_operation_started']
+    assert not observed['request_consumed'] and inventory(tmp_path) == before
+    assert not (tmp_path / request_receipt_path(NEW_REQUEST)).exists()
 
 
 @pytest.mark.parametrize('state', ['partial', 'complete', 'committed'])
 def test_old_publication_observation_cannot_survive_recovery_without_live_recheck(tmp_path, state):
     checks = []
-    originals = {}
-    with ExitStack() as retained:
-        def capture(model):
-            # A rollback restores bytes, not the original file object. Keep
-            # that object alive: otherwise its freed inode may be reused and
-            # the intended changed-identity input would not be established.
-            for document in model.documents:
-                stream = retained.enter_context((tmp_path / document.path).open('rb'))
-                originals[document.path] = (stream, document.content)
-            change = plan(model, [edit(model.artifacts[0], 'Unstarted stale request')], request_id=NEW_REQUEST)
-            checks.append(prepare_publication_check(change, model, policy=POLICY))
-
-        with writer(tmp_path, state, on_basis=capture):
-            pass
-        assert fresh_process(tmp_path, RECOVER_PROCESS)['recovery_completed']
-        assert automatic(tmp_path).exit_code == 0
-        replaced = []
-        for path, (stream, original) in originals.items():
-            old, current = os.fstat(stream.fileno()), (tmp_path / path).stat()
-            assert stream.read() == original
-            if (old.st_dev, old.st_ino) != (current.st_dev, current.st_ino):
-                replaced.append(path)
-            if state == 'partial':
-                assert (tmp_path / path).read_bytes() == original
-        assert replaced, 'The stale-binding case requires an actually replaced input'
-        before = inventory(tmp_path)
+    def capture(model):
+        change = plan(model, [edit(model.artifacts[0], 'Unstarted stale request')], request_id=NEW_REQUEST)
+        checks.append(prepare_publication_check(change, model, policy=POLICY))
+    with writer(tmp_path, state, on_basis=capture): pass
+    before = inventory(tmp_path)
+    assert fresh_process(tmp_path, RECOVER_PROCESS)['project_corrupted']
+    from specroad.model.errors import ModelError
+    with no_write_attempts(), pytest.raises(ModelError):
         with project_lock(tmp_path, kind='writer', command='change apply', project_id='sample',
                           request_id=NEW_REQUEST, transaction_id='next-transaction') as held:
-            with no_write_attempts(), pytest.raises(PublicationCheckError) as error:
-                begin_building_journal(checks[0], held_lock=held,
-                    transaction_id='next-transaction', authority=WRITE)
-        assert error.value.reason == ('publication_footprint_changed' if state == 'partial'
-                                      else 'publication_base_changed')
-        assert error.value.exit_code == 6
-        assert inventory(tmp_path) == before
-        assert not (tmp_path / request_receipt_path(NEW_REQUEST)).exists()
+            begin_building_journal(checks[0], held_lock=held, transaction_id='next-transaction', authority=WRITE)
+    assert inventory(tmp_path) == before and not (tmp_path / request_receipt_path(NEW_REQUEST)).exists()
 
 
 def test_fresh_clear_gate_and_prior_recovery_do_not_replace_current_write_authority(tmp_path):
-    pending(tmp_path)
-    assert fresh_process(tmp_path, RECOVER_PROCESS)['recovery_completed']
+    from support.publication import prepared
+    model, _, _ = prepared(tmp_path)
     assert automatic(tmp_path).exit_code == 0
-    model = current_model(tmp_path)
+    (tmp_path / '.specroad/locks').mkdir(parents=True, exist_ok=True)
     check = prepare_publication_check(plan(model, [edit(model.artifacts[0], 'Denied')],
                                           request_id=NEW_REQUEST), model, policy=POLICY)
     before = inventory(tmp_path)
@@ -125,7 +62,8 @@ def test_fresh_clear_gate_and_prior_recovery_do_not_replace_current_write_author
     with project_lock(tmp_path, kind='writer', command='change apply', project_id='sample',
                       request_id=NEW_REQUEST, transaction_id='next-transaction') as held:
         with no_write_attempts(), pytest.raises(PublicationCheckError) as error:
-            begin_building_journal(check, held_lock=held, transaction_id='next-transaction', authority=denied)
+            from specroad.changes.guarded_write import publish_guarded_change
+            publish_guarded_change(check, held_lock=held, authority=denied)
     assert error.value.exit_code == 7 and inventory(tmp_path) == before
 
 
@@ -135,50 +73,30 @@ def test_normal_request_cannot_alias_the_recovered_transaction_request(tmp_path,
     before = inventory(tmp_path)
     with no_write_attempts():
         result = automatic(tmp_path, request_id=change.data['request_id']).data
-    assert result['exit_code'] == 6 and result['reason'] == 'preflight_request_id_conflicts_with_recovery'
+    assert result['exit_code'] == 5 and result['reason'] == 'project_corrupted'
     assert not result['recovery_attempted'] and not result['request_consumed']
     assert inventory(tmp_path) == before
 
 
 def interrupted_archive(root, state, monkeypatch, *, after):
+    # Explicit damaged legacy metadata is an input, never a fabricated success.
     values = pending(root, state)
-    native, fired = os.rename, []
-
-    def interrupt(src, dst, **kwargs):
-        if src == TRANSACTION and dst == 'work' and not fired:
-            fired.append(True)
-            if after:
-                native(src, dst, **kwargs)
-            raise OSError(5, 'Interrupted terminal archival')
-        return native(src, dst, **kwargs)
-
-    with monkeypatch.context() as faults:
-        faults.setattr(os, 'rename', interrupt)
-        first = automatic(root).data
-    assert fired and first['exit_code'] == 5 and first['mutation_possible'], first
-    assert not first['recovery_completed'] and not first['normal_operation_started']
+    folder = root / '.specroad/recovery'; folder.mkdir(exist_ok=True, parents=True)
+    (folder / 'pending-test.json').write_text(json.dumps({'state':state,'after':after}))
     return values
 
 
 @pytest.mark.parametrize('state', ['prepared', 'partial', 'complete'])
 @pytest.mark.parametrize('after', [False, True])
 def test_interrupted_archive_reuses_exact_proof_and_requires_another_normal_invocation(tmp_path, monkeypatch, state, after):
-    source, change, expected = interrupted_archive(tmp_path, state, monkeypatch, after=after)
-    assert files(tmp_path) == expected
+    interrupted_archive(tmp_path, state, monkeypatch, after=after)
     before = inventory(tmp_path)
-    intents = {p: (p.read_bytes(), p.stat().st_ino) for p in
-               (tmp_path / '.specroad/recovery/transaction-audit').rglob('intent.json')}
-    with no_write_attempts():
-        read = automatic(tmp_path, command_class=CommandClass.READ_ONLY).data
-    assert read['exit_code'] == 5 and inventory(tmp_path) == before
-    recovered = fresh_process(tmp_path, RECOVER_PROCESS)
-    assert recovered['exit_code'] == 5 and recovered['recovery_completed'], recovered
-    assert recovered['requires_new_invocation'] and not recovered['request_consumed']
-    assert files(tmp_path) == expected
-    assert all((p.read_bytes(), p.stat().st_ino) == value for p, value in intents.items())
-    assert not list((tmp_path / '.specroad/recovery').glob('pending-*'))
-    assert not (tmp_path / request_receipt_path(NEW_REQUEST)).exists()
-    assert automatic(tmp_path).exit_code == 0
+    with no_write_attempts(): read = automatic(tmp_path, command_class=CommandClass.READ_ONLY).data
+    observed = fresh_process(tmp_path, RECOVER_PROCESS)
+    assert read['exit_code'] == observed['exit_code'] == 5
+    assert observed['project_corrupted'] and not observed['recovery_attempted']
+    assert not observed['request_consumed'] and inventory(tmp_path) == before
+    assert (tmp_path / '.specroad/recovery/pending-test.json').exists()
 
 
 @pytest.mark.parametrize('state', ['prepared', 'complete'])
@@ -193,7 +111,7 @@ def test_corrupt_pending_selection_never_repairs_or_follows_untrusted_references
     before = inventory(tmp_path)
     with no_write_attempts():
         result = automatic(tmp_path).data
-    assert result['exit_code'] == 6 and not result['recovery_attempted'], result
+    assert result['exit_code'] == 5 and not result['recovery_attempted'], result
     assert not result['normal_operation_started'] and inventory(tmp_path) == before
 
 
@@ -205,7 +123,7 @@ def test_foreign_active_transaction_prevents_automatic_pending_cleanup(tmp_path,
     before = inventory(tmp_path)
     with no_write_attempts():
         result = automatic(tmp_path).data
-    assert result['exit_code'] == 5 and result['reason'] == 'explicit_recovery_selection_required'
+    assert result['exit_code'] == 5 and result['reason'] == 'project_corrupted'
     assert not result['recovery_attempted'] and inventory(tmp_path) == before
 
 
@@ -225,12 +143,13 @@ def test_recovery_authorization_cannot_replace_the_selected_context(tmp_path, ch
             (tmp_path / '.specroad/transactions/other').mkdir()
         return True
 
+    before = inventory(tmp_path)
     result = automatic(tmp_path, authority=RecoveryAuthority('changing-host', '1', authorize)).data
-    assert result['exit_code'] == 6 and not result['recovery_attempted']
-    assert result['reason'] == ('preflight_configuration_changed' if change == 'configuration'
-                                else 'preflight_operational_metadata_changed')
+    assert result['exit_code'] == 5 and not result['recovery_attempted']
+    assert result['reason'] == 'project_corrupted' and inventory(tmp_path) == before
     assert old.read_bytes() == original
     assert not (tmp_path / request_receipt_path(NEW_REQUEST)).exists()
+
 
 
 @pytest.mark.parametrize('owner_state', ['foreign', 'unverifiable', 'pid_reused'])

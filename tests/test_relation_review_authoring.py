@@ -104,8 +104,8 @@ def test_record_binds_exact_review_and_publishes_one_new_immutable_artifact(tmp_
     assert result['completion']['current_target_verified'] and result['write_state'] == 'committed'
     assert not result['replayed']
     proof = receipt(root, result)
-    assert proof['created_ids'] == [REVIEW_ID]
-    operation = proof['operations'][0]
+    assert proof['result_object']['created_ids'] == [REVIEW_ID]
+    operation = proof['write']['operations'][0]
     assert operation['op'] == 'relation_review_record' and operation['record'] == record
     assert {k: operation[k] for k in guards} == guards and operation['approval_withdrawals'] == []
     after = {row[0]: row[1:] for row in file_inventory(root)}
@@ -128,7 +128,7 @@ def test_confirmed_retry_reuses_proof_before_lock_allocation_or_context_replanni
     assert replay['replayed'] and replay['review_id'] == first['review_id']
     assert replay['completion']['transaction_id'] == 'txn-review'
     assert not replay['completion']['current_target_verified']
-    assert receipt(root, replay)['journal']['actor'] == ACTOR
+    assert receipt(root, replay)['write']['actor'] == ACTOR
     assert file_inventory(root) == before
 
 

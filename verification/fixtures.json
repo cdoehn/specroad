@@ -476,6 +476,10 @@
       "kind": "Synthetic mixed native envelopes with Unicode, escapes, numeric tokens, duplicates and prehashed regular plans. Malformed physical lines, split transfer blocks, explicit EOF, large lines, retained source/cursor bytes and independent cursor hashes exercise passive source-bound resume. Temporary host persistence and isolated Core/PYZ probes are not portable Work integration, real approvals or full import/export success.",
       "provider": "tests/test_ndjson_codec_right.py:rows,wire,blocks,restored,BAD_LINES;tests/support/ndjson_codec.py:envelope,plan_value"
     },
+    "SR-FIX-NORMAL-ADAPTERS-v1": {
+      "kind": "Owned temporary normal projects and real authoring, lifecycle, relation-review, baseline, evidence, import, format and proposal adapters with explicit synthetic host authority. Actual file effects, marker and receipt bytes, denial and interrupted-root cases. No supplied successful validation, human approval or test execution in Dev. Borrowed actual root mutex, foreign/released capability refusal, and actual process loss before versus after writer lock release.",
+      "provider": "tests/test_normal_write_adapters.py:adapter;tests/support/authoring_execution.py:scenario;tests/support/proposal_apply.py:ApplyCase;tests/support/proposal_decisions.py:ReviewCase;tests/test_normal_access_mutex.py;tests/support/work_publication_process.py:child"
+    },
     "SR-FIX-NORMALIZATION-SCOPE-v1": {
       "kind": "Complete owned native Linux JSON scope with explicit configuration/profile/rule/mapping/artifact sources, value-preserving normalization and explicit test-host resource gates. Companion crash fixture terminates a real writer process at building/prepared/partial/configuration-move/committed boundaries. No public CLI or production semantic-service approval.",
       "provider": "tests/support/normalization_scope.py:prepared"
@@ -1079,6 +1083,7 @@
     "SR-FIX-NATIVE-IMPORT-IDENTITIES-v1",
     "SR-FIX-NDJSON-NATIVE-CODEC-v1",
     "SR-FIX-NDJSON-STREAM-RESUME-v1",
+    "SR-FIX-NORMAL-ADAPTERS-v1",
     "SR-FIX-NORMALIZATION-SCOPE-v1",
     "SR-FIX-NORMALIZATION-TRANSACTION-v1",
     "SR-FIX-ORDERED-FOLD-v1",

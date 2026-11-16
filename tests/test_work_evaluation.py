@@ -201,13 +201,8 @@ def test_native_single_transaction_matches_work_preparation_and_receipt_replay(r
     transaction = 'txn-work-parity'
     with publication.project_lock(model.binding.source_root, kind='writer', command='change apply',
             project_id=model.binding.project_id, request_id=plan.data['request_id'], transaction_id=transaction) as held:
-        building = publication.begin_building_journal(preflight, held_lock=held, transaction_id=transaction, authority=ALLOW)
-        staged = publication.stage_building_journal(preflight, building, held_lock=held, authority=ALLOW)
-        published = publication.publish_prepared_journal(preflight, staged, held_lock=held, authority=ALLOW)
-        journal = publication.read_committing_journal(ProjectSource(model.binding.source_root), transaction,
-            expected_sha256=published.data['journal_sha256'], preflight=preflight)
-        publication.finalize_committing_journal(preflight, journal, held_lock=held, authority=ALLOW)
-        publication.cleanup_completed_transaction(preflight, transaction, held_lock=held, authority=ALLOW)
+        from specroad.changes.guarded_write import publish_guarded_change
+        publish_guarded_change(preflight, held_lock=held, authority=ALLOW)
     expected = resolve_normative_request(ProjectSource(model.binding.source_root), bind_plan_authoring(plan)).data
     model2, plan2, _, reg, _, _, store = right
     ready(store, reg, model2, plan2)

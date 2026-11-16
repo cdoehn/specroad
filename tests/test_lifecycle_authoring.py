@@ -68,8 +68,8 @@ def assert_publication(root, model, old, prepared, actor, result, before, maturi
     assert result['write_state'] == 'committed' and result['completion']['commit_completed']
     assert result['completion']['cleanup_completed'] and result['completion']['current_target_verified']
     proof = receipt(root, result)
-    assert proof['operations'] == [prepared.data] and proof['created_ids'] == []
-    assert proof['journal']['actor'] == actor and proof['journal']['planned_at'] == TIME
+    assert proof['write']['operations'] == [prepared.data] and proof['result_object']['created_ids'] == []
+    assert proof['write']['actor'] == actor and proof['write']['planned_at'] == TIME
     assert next(a for a in model.artifacts if a['id'] == old['id']) == old
     assert_preserved(root, before, path)
 
@@ -131,7 +131,7 @@ def test_confirmed_retry_precedes_planning_and_lock_and_preserves_original_actor
     assert not repeated['completion']['current_target_verified']
     for key in ('transaction_id', 'request_id', 'target_model_root_sha256', 'receipts'):
         assert repeated['completion'][key] == first['completion'][key]
-    assert receipt(root, repeated)['journal']['actor'] == ACTOR
+    assert receipt(root, repeated)['write']['actor'] == ACTOR
     assert file_inventory(root) == before
 
 

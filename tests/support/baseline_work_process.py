@@ -38,32 +38,18 @@ def writer(folder, cut):
         print(json.dumps({'pid': os.getpid(), 'cut': cut}), flush=True)
         os._exit(CRASH_EXIT)
 
-    if cut in ('first_object', 'baseline_record'):
-        native = publication.publish_prepared_journal
-        replace = committing.replace_bound_image
-
-        def replace_then_stop(*args, **kwargs):
-            result = replace(*args, **kwargs)
-            name = args[3]
-            if ((cut == 'first_object' and len(name) == 64) or
-                    (cut == 'baseline_record' and name.startswith('SR-BASE-'))):
-                stop()
-            return result
-
-        def interrupt(*args, **kwargs):
-            with patch.object(committing, 'replace_bound_image', replace_then_stop):
-                return native(*args, **kwargs)
-        name = 'publish_prepared_journal'
-    else:
-        name = {'prepared': 'stage_building_journal', 'committed': 'finalize_committing_journal',
-                'cleanup': 'cleanup_completed_transaction'}[cut]
-        native = getattr(publication, name)
-
-        def interrupt(*args, **kwargs):
-            native(*args, **kwargs)
-            stop()
-
-    with patch.object(publication, name, interrupt):
+    from specroad.changes import guarded_write, _guarded_effects
+    native = _guarded_effects.replace_bound_image
+    def replace_then_stop(*args, **kwargs):
+        result = native(*args, **kwargs)
+        if cut == 'baseline_record' and args[3].startswith('SR-BASE-'): stop()
+        return result
+    events = {'prepared': 'staged:0', 'first_object': 'effect_replaced:0',
+              'committed': 'receipts_synced', 'cleanup': 'marker_removed'}
+    def checkpoint(event):
+        if event == events.get(cut): stop()
+    with patch.object(guarded_write, '_checkpoint', checkpoint), \
+            patch.object(_guarded_effects, 'replace_bound_image', replace_then_stop):
         publish(store, arguments)
     raise AssertionError('Selected native Baseline phase was not reached')
 

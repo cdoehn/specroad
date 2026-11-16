@@ -53,16 +53,5 @@ def _publish(snapshot, checked, gates, *, policy, held, transaction_id, authorit
                           if p not in snapshot.model.source_files)
     preflight = prepare_publication_check(checked.plan, snapshot.model, policy=policy,
         gates=gates, package_files=package_files)
-    journal = begin_building_journal(preflight, held_lock=held,
-        transaction_id=transaction_id, authority=authority, gates=gates)
-    journal = changes.stage_building_journal(preflight, journal, held_lock=held,
-        authority=authority, gates=gates)
-    publication = publish_prepared_journal(preflight, journal, held_lock=held,
-        authority=authority, gates=gates)
-    # Publication may normalize configuration bytes. Bind to the exact
-    # checked target, retaining root identity and configuration checks.
-    target_source = _root(publication_target(preflight))
-    committing = read_committing_journal(target_source, transaction_id,
-        expected_sha256=publication.data['journal_sha256'], preflight=preflight)
-    finalize_committing_journal(preflight, committing, held_lock=held, authority=authority, gates=gates)
-    return cleanup_completed_transaction(preflight, transaction_id, held_lock=held, authority=authority)
+    from ..changes.guarded_write import publish_guarded_change
+    return publish_guarded_change(preflight, held_lock=held, authority=authority, gates=gates)

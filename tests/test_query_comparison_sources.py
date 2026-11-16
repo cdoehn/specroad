@@ -146,7 +146,7 @@ def test_local_recovery_state_blocks_normal_source_acquisition(tmp_path):
     original = inventory(tmp_path)
     with pytest.raises(OperationFailure) as caught:
         capture(location)
-    assert caught.value.details['preflight']['reason'] == 'recovery_required'
+    assert caught.value.details['preflight']['reason'] == 'project_corrupted'
     assert inventory(tmp_path) == original
 
 

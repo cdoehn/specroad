@@ -1,3 +1,5 @@
+from specroad.changes.write_guard_values import WriteGuardError
+from specroad.changes.normal_access import NormalAccessError
 """Lifecycle boundary, original gate selection and interrupted real writes."""
 import json
 import os
@@ -230,26 +232,25 @@ def test_failed_real_replace_keeps_actual_lifecycle_bytes_and_recovery_evidence(
             if moved: native_replace(src, dst, **kwargs)
             raise OSError('injected lifecycle replace failure')
         return native_replace(src, dst, **kwargs)
-    with patch.object(os, 'replace', side_effect=replace), pytest.raises(CommitPublicationError) as error:
+    with patch.object(os, 'replace', side_effect=replace), pytest.raises(WriteGuardError) as error:
         call(model, operation(source, kind), arguments(root, kind))
     assert attempts == [source['id'] + '.json']
     assert error.value.reason == 'publication_io_failure' and error.value.exit_code == 5
-    assert error.value.write_state == 'unknown' and error.value.mutation_possible and error.value.publication_possible
-    assert error.value.published_count == 0
+    assert error.value.write_state == 'unknown'
     if moved:
         value = json.loads((root / path).read_bytes())
         assert value == {**source, 'maturity': 'retired', 'revision': 8,
                         'updated_by': ACTOR, 'updated_at': TIME}
     else: assert (root / path).read_bytes() == raw
-    journal = json.loads((root / '.specroad/transactions/txn-lifecycle/journal.json').read_bytes())
-    assert journal['state'] == 'committing' and journal['published_count'] == 0
+    journal = json.loads((root / '.specroad/write-state/pending.json').read_bytes())
+    assert journal['format_version'] == 'write-guard-v1' and journal['state'] == 'writing'
     after = {p: rest for p, *rest in file_inventory(root)}
     for p, *rest in before:
         if p != path: assert after[p] == rest
     retained = file_inventory(root)
-    with pytest.raises(ProjectLockError) as retry:
+    with pytest.raises(NormalAccessError) as retry:
         call(model, operation(source, kind), arguments(root, kind))
-    assert retry.value.reason == 'transaction_journal_blocks_lock' and retry.value.exit_code == 5
+    assert retry.value.reason == 'project_corrupted' and retry.value.exit_code == 5
     assert file_inventory(root) == retained
 
 

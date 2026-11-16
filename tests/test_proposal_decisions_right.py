@@ -96,20 +96,20 @@ def test_invalid_inputs_or_authority_never_publish_decision(tmp_path, fault):
 
 
 def test_real_staging_failure_preserves_original_and_recovery_journal(tmp_path, monkeypatch):
-    from specroad import changes
+    from specroad.changes import guarded_write
+    from specroad.model.errors import ModelError
     case = ReviewCase(tmp_path / 'project')
     before = case.original.source_bytes
-    stage = changes.stage_building_journal
-    def interrupt(*args, **kwargs):
-        stage(*args, **kwargs)
-        raise OSError('synthetic-interrupted-review-staging')
-    monkeypatch.setattr(changes, 'stage_building_journal', interrupt)
+    def interrupt(event):
+        if event == 'staged:0': raise OSError('synthetic interrupted staging')
+    monkeypatch.setattr(guarded_write, '_checkpoint', interrupt)
     options = case.options(request_id='interrupted-review')
-    with pytest.raises(OSError, match='synthetic-interrupted-review-staging'):
+    with pytest.raises(ModelError) as error:
         review_project(case.root, case.original.data['id'], **options)
+    assert error.value.reason == 'publication_io_failure'
     assert (case.root / case.original.path).read_bytes() == before
-    journal = case.root / '.specroad/transactions' / options['transaction_id'] / 'journal.json'
-    assert json.loads(journal.read_bytes())['state'] == 'prepared'
+    marker = case.root / '.specroad/write-state/pending.json'
+    assert json.loads(marker.read_bytes())['state'] == 'writing'
     observed = inventory(case.root)
     with pytest.raises(Exception):
         review_project(case.root, case.original.data['id'], **options)

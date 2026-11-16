@@ -48,7 +48,7 @@ def test_same_request_replays_confirmed_completion_and_actor_or_revision_conflic
     second = review_start_project(root, original.data['id'], **retry)
     assert second['replayed'] and not second['project_writes_performed']
     assert first['completion']['current_target_verified'] is True
-    assert second['completion'] == {**first['completion'], 'current_target_verified': False}
+    assert second['completion'] == {**first['completion'], 'current_target_verified': False, 'replayed': True}
     assert second['revision'] == first['revision'] == 2
     assert inventory(root) == before
     for conflict in ({'expected_revision': 2}, {'actor': {'actor_type': 'human', 'actor_id': 'other'}}):
@@ -78,23 +78,19 @@ def test_denied_host_authority_and_stale_basis_leave_proposal_bytes_unchanged(tm
 
 
 def test_prepared_journal_failure_preserves_draft_and_native_recovery_evidence(tmp_path, monkeypatch):
-    from specroad import changes
-    root = tmp_path / 'project'
-    _, original = validation_project(root)
-    stage = changes.stage_building_journal
-    def interrupt(*args, **kwargs):
-        stage(*args, **kwargs)
-        raise OSError('synthetic-interruption-after-durable-staging')
-    monkeypatch.setattr(changes, 'stage_building_journal', interrupt)
-    with pytest.raises(OSError, match='synthetic-interruption-after-durable-staging'):
+    from specroad.changes import guarded_write
+    root = tmp_path / 'project'; _, original = validation_project(root)
+    def interrupt(event):
+        if event == 'staged:0': raise OSError('synthetic interruption after durable staging')
+    monkeypatch.setattr(guarded_write, '_checkpoint', interrupt)
+    with pytest.raises(Exception) as failure:
         review_start_project(root, original.data['id'], **options(request_id='interrupted'))
+    assert failure.value.reason == 'publication_io_failure'
     assert (root / original.path).read_bytes() == original.source_bytes
-    journals = list((root / '.specroad').glob('transactions/*/journal.json'))
-    assert len(journals) == 1 and json.loads(journals[0].read_bytes())['state'] == 'prepared'
+    assert json.loads((root / '.specroad/write-state/pending.json').read_bytes())['state'] == 'writing'
     assert not list((root / '.specroad').glob('requests/*.json'))
     before = inventory(root)
-    with pytest.raises(Exception):
-        review_start_project(root, original.data['id'], **options(request_id='interrupted'))
+    with pytest.raises(Exception): review_start_project(root, original.data['id'], **options(request_id='interrupted'))
     assert inventory(root) == before
 
 

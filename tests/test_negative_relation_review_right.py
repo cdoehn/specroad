@@ -112,7 +112,7 @@ def test_new_judgment_after_withdrawal_never_revises_or_reapproves_requirement(t
     assert status['status'] == second['relation_status'] == expected
     assert status['selected_review_id'] == second['review_id']
     proof = receipt(root, second)
-    assert proof['created_ids'] == [second['review_id']]
+    assert proof['result_object']['created_ids'] == [second['review_id']]
     assert proof['result_object']['published_paths'] == [second['path']]
     before_retry = file_inventory(root)
     with no_write_attempts(), patch.object(service, 'project_lock', side_effect=AssertionError), \
@@ -293,20 +293,12 @@ root=Path(sys.argv[2]); cut=sys.argv[3]
 model, source, _, gates=negative_project(root)
 print(json.dumps({'files':{p:b.hex() for p,b in model.source_files.items()},
     'source':source, 'modes':{p:(root/p).stat().st_mode & 0o777 for p in model.source_files}}),flush=True)
-native=os.replace; published=[]
-def replace(src,dst,**kwargs):
-    result=native(src,dst,**kwargs)
-    if isinstance(dst,str) and dst.startswith(('SR-REQ-', 'SR-RREV-')):
-        published.append(dst)
-        if (cut=='first_target' and len(published)==1) or (cut=='last_target' and len(published)==2):
-            os._exit(23)
-    return result
-def lost_output(*args,**kwargs): os._exit(23)
-with patch('os.replace',side_effect=replace):
-    if cut=='receipt':
-        with patch.object(service,'cleanup_completed_transaction',side_effect=lost_output):
-            call(model,source,options(model,gates))
-    else: call(model,source,options(model,gates))
+from specroad.changes import guarded_write
+events={'first_target':'effect_replaced:0','last_target':'effect_replaced:1','receipt':'receipts_synced'}
+def checkpoint(event):
+    if event==events[cut]: os._exit(23)
+with patch.object(guarded_write, '_checkpoint', checkpoint):
+    call(model,source,options(model,gates))
 raise AssertionError('Native cut point was not reached')
 '''
     child = subprocess.run([sys.executable, '-I', '-B', '-c', code, str(repo), str(root), cut],
@@ -315,39 +307,18 @@ raise AssertionError('Native cut point was not reached')
     fixture = json.loads(child.stdout); model = _original_model(root, fixture['files'])
     source = fixture['source']; transaction = 'txn-negative'
     assert inspect_project_lock(root).data['owner_state'] == 'dead'
-    lock = LockRecord((root / '.specroad/locks/project.json').read_bytes())
-    journal_path = root / '.specroad/transactions' / transaction / 'journal.json'
-    raw = journal_path.read_bytes()
-    journal = (CommittedJournal if cut == 'receipt' else CommittingJournal)(raw)
-    authority = RecoveryAuthority('owned-coupled-recovery', '1', lambda request: True)
-    with transaction_recovery_lock(root, transaction, project_id=model.configuration.project_id,
-            request_id='negative-1', expected_lock_sha256=lock.sha256, expected_journal_sha256=journal.sha256,
-            authority=authority, actor=ACTOR, reason='Recover the stopped owned reviewer.', force=True) as held:
-        if cut == 'first_target':
-            rollback_interrupted_transaction(transaction, held_lock=held, authority=authority,
-                                            expected_journal_sha256=journal.sha256)
-        elif cut == 'last_target':
-            complete_published_transaction(transaction, held_lock=held, authority=authority,
-                                           expected_journal_sha256=journal.sha256)
-        cleaned = cleanup_recovered_transaction(transaction, held_lock=held, authority=authority,
-            expected_journal_sha256=sha256(journal_path.read_bytes()).hexdigest()).data
-    assert cleaned['cleanup_completed']
-    path = artifact_path('requirement', source['id'], 'SR')
-    if cut == 'first_target':
-        assert {p: (root / p).read_bytes() for p in model.source_files} == model.source_files
-        assert len(list((root / 'spec/relation-reviews').glob('*.json'))) == 2
-    else:
+    marker = json.loads((root / '.specroad/write-state/pending.json').read_bytes())
+    assert marker['transaction_id'] == transaction and marker['state'] == 'writing'
+    before = file_inventory(root)
+    from specroad.changes.normal_access import NormalAccessError
+    with no_write_attempts(), pytest.raises(NormalAccessError) as error:
+        call(model, source, options(model))
+    assert error.value.reason == 'project_corrupted' and error.value.exit_code == 5
+    assert file_inventory(root) == before
+    if cut != 'first_target':
+        path = artifact_path('requirement', source['id'], 'SR')
         actual = json.loads((root / path).read_bytes())
         assert actual['maturity'] == 'proposed' and actual['revision'] == 5
-        before_retry = file_inventory(root)
-        with no_write_attempts(), patch.object(service, 'project_lock', side_effect=AssertionError), \
-                patch('secrets.token_bytes', side_effect=AssertionError):
-            replay = call(model, source, options(model))
-            again = call(model, source, options(model))
-        assert replay['replayed'] and replay['completion']['receipts'] == again['completion']['receipts']
-        assert replay['review_id'] == again['review_id']
-        assert replay['approval_withdrawals'][0]['target_revision'] == 5
         assert len(list((root / 'spec/relation-reviews').glob('*.json'))) == 3
-        assert file_inventory(root) == before_retry
     for p, mode in fixture['modes'].items(): assert (root / p).stat().st_mode & 0o777 == mode
     assert (root / 'foreign.bin').read_bytes() == b'untouched\0\xff'

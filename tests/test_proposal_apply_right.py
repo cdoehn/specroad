@@ -31,7 +31,7 @@ def test_confirmed_request_replays_after_basis_moves_without_a_second_write(tmp_
         retry = case.apply(planned_at='2026-11-13T01:00:00Z', change_plan_id='retry-plan', transaction_id='retry')
     assert retry['replayed'] and not retry['project_writes_performed']
     assert retry['revision'] == first['revision']
-    assert retry['completion'] == {**first['completion'], 'current_target_verified': False}
+    assert retry['completion'] == {**first['completion'], 'current_target_verified': False, 'replayed': True}
     assert retry['audit']['outcome'] == 'replayed'
     assert inventory(case.root) == before
     for differences in ({'expected_revision': first['revision']},
@@ -154,48 +154,14 @@ def test_live_gate_rejects_fully_rehashed_foreign_assessment(tmp_path):
 
 def _crash(root, phase, retained):
     from support.proposal_apply import restore_apply_host
+    from specroad.changes import guarded_write
     case = restore_apply_host(root, retained)
-    from specroad.proposals import _review_transaction as writer
-    real = writer.changes.stage_building_journal if phase == 'prepared' else writer.publish_prepared_journal
-    def stop(*args, **kwargs):
-        real(*args, **kwargs)
-        os._exit(91)  # Real process loss: no context-manager cleanup or finalizers.
-    owner, name = (writer.changes, 'stage_building_journal') if phase == 'prepared' else (writer, 'publish_prepared_journal')
-    with patch.object(owner, name, stop):
-        case.apply()
+    def stop(event):
+        if event == ('staged:0' if phase == 'prepared' else 'receipts_synced'): os._exit(91)
+    with patch.object(guarded_write, '_checkpoint', stop): case.apply()
     os._exit(92)
 
 
-def _recover(case, phase):
-    from specroad.changes import (PreparedJournal, CommittingJournal, LockRecord, transaction_recovery_lock,
-        prepare_discard_recovery, discard_unpublished_transaction, complete_published_transaction,
-        cleanup_recovered_transaction)
-    from specroad.changes._recovery_terminal import read_terminal_journal
-    from support.recovery import RECOVER
-    transaction = 'synthetic-apply'
-    raw = (case.root / '.specroad/transactions' / transaction / 'journal.json').read_bytes()
-    journal = (PreparedJournal if phase == 'prepared' else CommittingJournal)(raw)
-    project_id = case.before.configuration.project_id
-    proof = prepare_discard_recovery(case.root, transaction, expected_project_id=project_id,
-        expected_journal_sha256=journal.sha256) if phase == 'prepared' else None
-    lock = LockRecord((case.root / '.specroad/locks/project.json').read_bytes())
-    with transaction_recovery_lock(case.root, transaction, project_id=project_id,
-        request_id=journal.data['request_id'], command='recover discard' if phase == 'prepared' else 'recover run',
-        expected_lock_sha256=lock.sha256, expected_journal_sha256=journal.sha256, authority=RECOVER,
-        actor=case.apply_options()['actor'], reason='Explicit synthetic Proposal recovery', force=True) as held:
-        if phase == 'prepared':
-            done = discard_unpublished_transaction(proof, transaction, held_lock=held, authority=RECOVER,
-                actor=case.apply_options()['actor'], reason='Explicit synthetic discard',
-                expected_journal_sha256=journal.sha256)
-            assert done.data['discard_completed']
-        else:
-            done = complete_published_transaction(transaction, held_lock=held, authority=RECOVER,
-                expected_journal_sha256=journal.sha256)
-            assert done.data['commit_completed']
-            terminal = read_terminal_journal(held._files, transaction)
-            done = cleanup_recovered_transaction(transaction, held_lock=held, authority=RECOVER,
-                expected_journal_sha256=terminal.sha256)
-            assert done.data['cleanup_completed']
 
 
 @pytest.mark.parametrize('phase', ['prepared', 'published'])
@@ -221,19 +187,18 @@ def test_real_process_loss_requires_native_recovery_then_exactly_one_apply(tmp_p
         case.apply()
     assert int(blocked.value.kind) == 5
     assert inventory(case.root) == before
-    _recover(case, phase)
-    if phase == 'prepared':
-        assert all((case.root / path).read_bytes() == raw for path, raw in case.before.source_files.items())
-        # Discard receipts retain the old transaction ID; a fresh explicit retry
-        # uses a new transaction/request and never overwrites that evidence.
-        result = case.apply(transaction_id='after-recovery', request_id='after-recovery')
-        assert not result['replayed'] and result['project_writes_performed']
-    else:
-        before = inventory(case.root)
-        with no_write_attempts():
-            result = case.apply(transaction_id='after-recovery')
-        assert result['replayed'] and not result['project_writes_performed']
-        assert inventory(case.root) == before
+    from specroad.changes import inspect_write_state
+    assert inspect_write_state(case.root)['state'] == 'corrupted'
+    assert (case.root / '.specroad/write-state/pending.json').exists()
+    # A new independently prepared root is usable; the interrupted root stays unchanged.
+    old = case.root
+    case = ApplyCase(tmp_path / 'fresh-project')
+    result = case.apply()
+    assert not result['replayed'] and result['project_writes_performed']
+    saved_inventory = inventory(case.root)
+    retry = case.apply(transaction_id='confirmed-retry')
+    assert retry['replayed'] and not retry['project_writes_performed']
+    assert inventory(case.root) == saved_inventory and inventory(old) == before
     saved = json.loads((case.root / case.original.path).read_bytes())
     assert saved['revision'] == case.original.data['revision'] + 1
     assert len(saved['control_history']) == len(case.original.data['control_history']) + 1
@@ -268,36 +233,28 @@ def test_normalization_keeps_inner_byte_targets_and_semantic_metadata(tmp_path):
 
 @pytest.mark.parametrize('boundary', ['journal', 'completion'])
 def test_normalization_rejects_foreign_configuration_after_publication(tmp_path, monkeypatch, boundary):
-    from specroad.proposals import _review_transaction as writer
+    from specroad.changes import guarded_write
     from support.proposal_apply import normalization_change
-    case = ApplyCase(tmp_path / 'project', plan_factory=normalization_change)
-    name = 'publish_prepared_journal' if boundary == 'journal' else 'cleanup_completed_transaction'
-    real = getattr(writer, name)
-    foreign = []
-    def change(*args, **kwargs):
-        result = real(*args, **kwargs)
-        path = case.root / 'specroad.json'
-        raw = path.read_bytes() + b'\n'
-        path.write_bytes(raw); foreign.append(raw)
-        return result
-    monkeypatch.setattr(writer, name, change)
-    with pytest.raises(ModelError) as rejected:
-        case.apply()
-    assert rejected.value.reason == 'publication_configuration_changed'
-    assert foreign and (case.root / 'specroad.json').read_bytes() == foreign[0]
+    case = ApplyCase(tmp_path / 'project', plan_factory=normalization_change); foreign = []
+    def change(event):
+        if event == ('effect_synced:0' if boundary == 'journal' else 'receipts_synced'):
+            path = case.root / 'specroad.json'; raw = path.read_bytes() + b'\n'
+            path.write_bytes(raw); foreign.append(raw)
+    monkeypatch.setattr(guarded_write, '_checkpoint', change)
+    with pytest.raises(ModelError): case.apply()
+    assert len(foreign) == 1 and (case.root / 'specroad.json').read_bytes() == foreign[0]
+    assert (case.root / '.specroad/write-state/pending.json').exists()
 
 
 def test_native_pending_preflight_keeps_failure_kind_and_audit_at_public_boundary(tmp_path, monkeypatch):
-    from specroad import changes
+    from specroad.changes import guarded_write
     from specroad.cli.application import dispatch_result
     from specroad.cli.invocation_context import InvocationContextBuilder
     case = ApplyCase(tmp_path / 'project')
-    real = changes.stage_building_journal
-    def interrupted(*args, **kwargs):
-        real(*args, **kwargs)
-        raise OSError('synthetic durable staging failure')
-    monkeypatch.setattr(changes, 'stage_building_journal', interrupted)
-    with pytest.raises(OSError): case.apply()
+    def interrupted(event):
+        if event == 'staged:0': raise OSError('synthetic durable staging failure')
+    monkeypatch.setattr(guarded_write, '_checkpoint', interrupted)
+    with pytest.raises(ModelError): case.apply()
     before = inventory(case.root)
     result = dispatch_result(['proposal', 'apply', case.original.data['id'], '--expected-revision',
         str(case.original.data['revision']), '--actor-type', 'human', '--actor-id', 'synthetic-applier'],
@@ -306,11 +263,9 @@ def test_native_pending_preflight_keeps_failure_kind_and_audit_at_public_boundar
     assert result.exit_code == 5, result.as_dict()
     assert inventory(case.root) == before
     facts = result.as_dict()['summary']
-    assert facts['reason'] == 'recovery_required'
-    assert facts['preflight']['reason'] == 'recovery_required'
+    assert facts['preflight']['reason'] == 'project_corrupted'
     assert facts['preflight']['normal_operation_started'] is False
-    assert facts['audit']['outcome'] == 'failed'
-    assert facts['audit']['diagnostics'] == [{'reason': 'recovery_required'}]
+    assert facts['preflight']['project_corrupted'] and facts['preflight']['manual_git_restore_required']
     assert (case.root / case.original.path).read_bytes() == case.original.source_bytes
 
 

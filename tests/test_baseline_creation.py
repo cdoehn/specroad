@@ -243,7 +243,7 @@ def test_saved_baseline_plan_cannot_be_used_as_generic_artifact_create(tmp_path)
 
 
 def test_objects_are_published_before_the_sealed_record(tmp_path):
-    import specroad.changes.committing as committing
+    import specroad.changes._guarded_effects as committing
     root = tmp_path / 'project'; model = project(root); plan = plan_for(model)
     record_path = artifact_path('baseline', ref('BASE'), 'SR'); observed = []
     original = committing.replace_bound_image
@@ -280,7 +280,7 @@ def test_atomic_archive_publication_never_replaces_a_competing_file(tmp_path, wh
 
 
 def test_interrupted_publication_never_reports_a_valid_partial_baseline(tmp_path):
-    import specroad.changes.committing as committing
+    import specroad.changes._guarded_effects as committing
     root = tmp_path / 'project'; model = project(root); plan = plan_for(model)
     original = committing.replace_bound_image
     def fail_before_record(*args, **kwargs):
@@ -291,23 +291,24 @@ def test_interrupted_publication_never_reports_a_valid_partial_baseline(tmp_path
     assert error.value.write_state == 'unknown'
     assert not (root / artifact_path('baseline', ref('BASE'), 'SR')).exists()
     assert (root / 'archive/objects').exists()
-    journal = json.loads((root / '.specroad/transactions/txn-baseline/journal.json').read_bytes())
-    assert journal['state'] == 'committing' and journal['published_count'] < len(journal['files'])
+    journal = json.loads((root / '.specroad/write-state/pending.json').read_bytes())
+    assert journal['state'] == 'writing'
     with pytest.raises(ModelError): read_transaction_completion(ProjectSource(root), 'txn-baseline')
 
 
 def test_prepared_baseline_supports_independent_discard_basis_reconstruction(tmp_path):
-    from specroad.changes import prepare_discard_recovery
-    import specroad.authoring.execution as execution
+    from specroad.changes import prepare_discard_recovery, guarded_write
     root = tmp_path / 'project'; model = project(root); plan = plan_for(model)
-    with patch.object(execution, 'publish_prepared_journal', side_effect=OSError('stop after staging')):
-        with pytest.raises(OSError): apply(plan, model)
-    raw = (root / '.specroad/transactions/txn-baseline/journal.json').read_bytes()
-    assert json.loads(raw)['state'] == 'prepared'
+    def interrupt(event):
+        if event == 'staged:0': raise OSError('stop after staging')
+    with patch.object(guarded_write, '_checkpoint', interrupt), pytest.raises(ModelError):
+        apply(plan, model)
+    raw = (root / '.specroad/write-state/pending.json').read_bytes()
+    assert json.loads(raw)['state'] == 'writing'
     before = inventory(root)
-    prepared = prepare_discard_recovery(root, 'txn-baseline',
-        expected_project_id=model.binding.project_id, expected_journal_sha256=sha256(raw).hexdigest())
-    assert prepared.data['base_model_root_sha256'] == plan.data['base']['model_root_sha256']
+    with pytest.raises(ModelError):
+        prepare_discard_recovery(root, 'txn-baseline', expected_project_id=model.binding.project_id,
+                                expected_journal_sha256=sha256(raw).hexdigest())
     assert inventory(root) == before
 
 

@@ -258,7 +258,7 @@ def test_active_writer_and_unresolved_journal_block_before_impact(tmp_path):
     with project_lock(root, **options()):
         with patch.object(impact_module, '_impact_rows', side_effect=AssertionError('unsafe read')):
             outcome = impact_artifact(root, aid())
-        assert outcome.exit_code == 5
+        assert outcome.exit_code == 6
     put(root, '.specroad/transactions/pending.json', b'{}')
     with patch.object(impact_module, '_impact_rows', side_effect=AssertionError('unsafe read')):
         outcome = impact_artifact(root, aid())

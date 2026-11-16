@@ -45,6 +45,16 @@ def read_proposal_receipts(files, project_id):
                     if path.endswith('/transaction.json')]
     require(len(transactions) == 1, 'proposal_original_completion_required')
     path, receipt = transactions[0]
+    if receipt.get('format_version') == 'transaction-receipt-v2':
+        from ..changes.normal_completion import read_normal_group, audit
+        write = read_normal_group(files, project_id)
+        operations = write['operations']
+        require(write['marker']['command_id'] == 'proposal apply' and operations
+            and operations[-1]['op'] == 'proposal_control'
+            and operations[-1]['events'][0]['from'] == 'approved'
+            and operations[-1]['events'][-1]['to'] == 'applied',
+            'proposal_completion_control_mismatch')
+        return audit(write)
     require(set(receipt) == {'format_version', 'outcome', 'journal', 'journal_sha256',
             'command_id', 'operations', 'operations_sha256', 'created_ids', 'result_object'}
             and receipt['format_version'] == 'transaction-receipt-v1'

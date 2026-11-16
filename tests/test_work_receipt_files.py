@@ -25,7 +25,6 @@ from support.automatic_recovery import current_model
 from support.publication import TRANSACTION
 from support.read_only import inventory, no_write_attempts
 from support.work_publication_process import child
-from support.writer_boundaries import child as recovery_child
 from test_work_publication import setup, ready, publish, arguments
 from test_work_publication_right import restore
 from test_work_resume import recorded
@@ -36,9 +35,10 @@ def forbidden(*args, **kwargs):
 
 
 def no_publication(monkeypatch):
-    for name in ('publish_normative_work', 'publish_prepared_journal', 'project_lock',
-                 'begin_building_journal', 'stage_building_journal'):
+    from specroad.changes import guarded_write
+    for name in ('publish_normative_work', 'project_lock'):
         monkeypatch.setattr(publication, name, forbidden)
+    monkeypatch.setattr(guarded_write, 'publish_guarded_change', forbidden)
     monkeypatch.setattr('specroad.work.resume.execute_request', forbidden)
 
 
@@ -105,14 +105,24 @@ def test_complete_original_receipt_is_delivered_without_another_apply(recorded, 
         NormativeWorkResultDelivery()
 
 
-@pytest.mark.parametrize('cut', ['committed', 'cleanup'])
+@pytest.mark.parametrize('cut', ['committed', 'cleanup', 'released'])
 def test_lost_process_output_is_delivered_from_original_commit_before_and_after_cleanup(recorded, tmp_path, monkeypatch, cut):
     packet, stopped = child(tmp_path, cut)
     assert stopped['pid'] == packet['pid'] != os.getpid()
     reg, plan, store = restore(tmp_path, packet)
     project = tmp_path / 'project'; model = current_model(project)
     before = inventory(project); checkpoint = store.read()
+    work_before = inventory(store._location.path)
     no_publication(monkeypatch)
+    if cut != 'released':
+        # Complete receipt bytes or marker removal do not release an orphan owner.
+        with no_write_attempts(), pytest.raises(ReceiptError) as caught:
+            deliver(store, reg, model, plan)
+        assert caught.value.exit_code == 5 and caught.value.reason == 'project_corrupted'
+        assert inventory(project) == before and store.read().raw == checkpoint.raw
+        # Work preparation already creates results; refusal must preserve it.
+        assert inventory(store._location.path) == work_before
+        return
     delivery = deliver(store, reg, model, plan); value = delivery.as_dict()
     raw = Path(value['result_ref']['path']).read_bytes(); saved = json.loads(raw)
     assert saved['result_object']['transaction_id'] == TRANSACTION
@@ -120,10 +130,10 @@ def test_lost_process_output_is_delivered_from_original_commit_before_and_after_
     assert inventory(project) == before and store.read().raw == checkpoint.raw
     assert checkpoint.as_dict()['state'] == 'running'
     assert not value['work_completion_recorded']
-    # Explicit native Recovery may remove its orphan owner/cleanup journal.
-    # Delivery itself never dispatches that action or changes its historical result.
-    recovered, = recovery_child(project, 'recover')
-    assert recovered['outcome'] == 'target' and recovered['files'] == packet['after']
+    # Output loss after normal lock release is a historical replay, never repair.
+    assert not (project / '.specroad/locks/project.json').exists()
+    assert not (project / '.specroad/write-state/pending.json').exists()
+    assert {p: raw.hex() for p, raw in model.source_files.items()} == packet['after']
     after = inventory(tmp_path)
     with no_write_attempts():
         assert delivery.as_dict() == value

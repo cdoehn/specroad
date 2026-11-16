@@ -42,7 +42,7 @@ def test_saved_preview_matches_native_files_receipt_and_replay(tmp_path, kind):
     assert result['completion']['current_target_verified'] and result['completion']['cleanup_completed']
     ref = result['completion']['receipts']['transaction']
     receipt = TransactionReceipt((root / ref['path']).read_bytes()).data
-    assert receipt['journal']['plan_sha256'] == plan.sha256 and receipt['operations'] == [op.data]
+    assert receipt['write']['marker']['plan_sha256'] == plan.sha256 and receipt['write']['operations'] == [op.data]
     assert_effects(root, before, report, kind)
     before_retry = file_inventory(root)
     with no_write_attempts(), patch.object(execution, 'assess_change_target', side_effect=AssertionError('no replan')), \

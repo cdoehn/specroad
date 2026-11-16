@@ -135,12 +135,12 @@ def test_negative_review_and_single_revision_withdrawal_share_native_receipt(tmp
         'relation_id': source['relations'][0]['relation_id'], 'review_id': REVIEW_ID,
         'reason': 'mandatory_relation_not_current'}]
     proof = receipt(root, result)
-    assert proof['created_ids'] == [REVIEW_ID]
+    assert proof['result_object']['created_ids'] == [REVIEW_ID]
     assert proof['result_object']['exit_code'] == 0 and proof['result_object']['status'] == 'success'
     assert set(proof['result_object']['published_paths']) == {path, result['path']}
-    assert proof['journal']['plan_sha256'] == result['plan_sha256']
-    assert proof['journal']['target_model_root_sha256'] == result['target_model_root_sha256']
-    assert proof['operations'][0]['approval_withdrawals'] == [{'target': source['id'],
+    assert proof['write']['marker']['plan_sha256'] == result['plan_sha256']
+    assert proof['write']['marker']['target_model_root_sha256'] == result['target_model_root_sha256']
+    assert proof['write']['operations'][0]['approval_withdrawals'] == [{'target': source['id'],
         'reason': 'mandatory_relation_not_current', 'expected_revision': 4,
         'expected_sha256': canonical_json_sha256(source)}]
     after = {row[0]: row[1:] for row in file_inventory(root)}

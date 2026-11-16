@@ -235,7 +235,7 @@ def test_active_writer_and_unresolved_journal_block_before_graph_loading(tmp_pat
     with project_lock(root, **options()), patch.object(why_module, 'build_project_relation_index',
                                                        side_effect=AssertionError('graph load')):
         before = inventory(root); result = why_artifact(root, aid())
-        assert result.exit_code == 5 and result.result is None and inventory(root) == before
+        assert result.exit_code == 6 and result.result is None and inventory(root) == before
     put(root, '.specroad/transactions/pending.json', b'incomplete')
     before = inventory(root)
     with patch.object(why_module, 'build_project_relation_index', side_effect=AssertionError('graph load')):

@@ -1,11 +1,12 @@
 """Real supervised local/proxy copies, fresh fixtures and complete loser cleanup."""
+from copy import deepcopy
 import json
 from pathlib import Path
 
 import pytest
 
 from dev.test_hosts.contract import public_proof, verify_pool
-from support.live_pool import await_value
+from support.live_pool import await_value, REORDER_COLLECTION
 from support.move_pool import pool
 from verification_support.runtime_history import RuntimeHistory
 
@@ -40,7 +41,7 @@ def pytest_sessionstart(session):
 def test_native_copy_finishes_and_reaps_original_process_tree(tmp_path, proxy):
     # A reserved successor is returned to a free host before any copy starts.
     # The long original remains running until the first complete copy wins.
-    with pool(tmp_path/'waiting', proxy=proxy, controller_hook=WAITING_SNAPSHOT,
+    with pool(tmp_path/'waiting', proxy=proxy, controller_hook=REORDER_COLLECTION + WAITING_SNAPSHOT,
               transform=lambda p:p.update(format_version=4)) as p:
         await_value(lambda: (p['root']/'build/original').exists(), p['process'], p['log'])
         if p['cpus'] >= 2:
@@ -49,7 +50,14 @@ def test_native_copy_finishes_and_reaps_original_process_tree(tmp_path, proxy):
             (p['root']/'build/release').touch()
         assert p['process'].wait(timeout=40) == 0, p['log'].read_text()
         result = json.loads((p['root']/'build/observations.json').read_text())
+        assert result['nodeids'] == list(reversed(p['profile']['selected']))
+        assert result['host_pool']['selected'] == result['nodeids']
+        assert result['nodeid_to_test_id'] == p['profile']['selected']
         verify_pool(result, public_proof(p['profile']))
+        bad = deepcopy(result)
+        bad['host_pool']['selected'] = list(p['profile']['selected'])
+        with pytest.raises(ValueError):
+            verify_pool(bad, public_proof(p['profile']))
         assert result['suite_passed'] and result['tests_run'] == 6
         assert len(result['copy_winners']) == 6
         original = next(iter(p['profile']['selected']))
@@ -62,14 +70,15 @@ def test_native_copy_finishes_and_reaps_original_process_tree(tmp_path, proxy):
             assert len(attempts) == 2 and result['copy_winners'][original] != 'gw0'
             assert result['host_pool']['cancellations']['gw0']['reason'] == 'copy'
             assert not Path('/proc', (p['root']/'build/original-child').read_text()).exists()
-            tail = list(p['profile']['selected'])[started['reclaimed']['gw0'][0]]
+            tail = result['nodeids'][started['reclaimed']['gw0'][0]]
             assert [r['worker'] for r in result['copy_attempts'] if r['nodeid'] == tail] == ['gw2']
         else:
             assert [r['worker'] for r in attempts] == ['gw0']
 
     # Two originals give each native worker one final item: both are started
     # before the target becomes idle, satisfying the actual copy precondition.
-    with pool(tmp_path/'copy', proxy=proxy, test_count=2, long_identity=True, transform=lambda p:p.update(format_version=4)) as p:
+    with pool(tmp_path/'copy', proxy=proxy, test_count=2, long_identity=True,
+              controller_hook=REORDER_COLLECTION, transform=lambda p:p.update(format_version=4)) as p:
         await_value(lambda: (p['root']/'build/original').exists(), p['process'], p['log'])
         if p['cpus'] < 2:
             (p['root']/'build/release').touch()
@@ -78,6 +87,9 @@ def test_native_copy_finishes_and_reaps_original_process_tree(tmp_path, proxy):
         assert p['process'].wait(timeout=40) == 0, p['log'].read_text()
         result = json.loads((p['root']/'build/observations.json').read_text())
         assert result['suite_passed'] and result['tests_run'] == 2
+        assert result['nodeids'] == list(reversed(p['profile']['selected']))
+        assert result['host_pool']['selected'] == result['nodeids']
+        assert result['nodeid_to_test_id'] == p['profile']['selected']
         assert len(result['copy_winners']) == 2
         verify_pool(result, public_proof(p['profile']))
         if p['cpus'] >= 2:

@@ -1,3 +1,5 @@
+from specroad.changes.write_guard_values import WriteGuardError
+from specroad.changes.normal_access import NormalAccessError
 """Owned identity exclusions, exact refusals and interrupted real relation writes."""
 import json
 import os
@@ -43,7 +45,7 @@ def test_initial_identity_exclusions_survive_caller_mutation(tmp_path, field, du
     assert draws == [90, 91] and result['relation_id'] == rid(91)
     actual = json.loads((root / artifact_path('requirement', source['id'], 'SR')).read_bytes())
     assert [e['relation_id'] for e in actual['relations']] == [rid(91)]
-    assert actual['revision'] == 8 and receipt(root, result)['created_ids'] == [rid(91)]
+    assert actual['revision'] == 8 and receipt(root, result)['result_object']['created_ids'] == [rid(91)]
 
 
 @pytest.mark.parametrize('field,value', [('archived_ids', None), ('reserved_ids', ['bad']),
@@ -168,7 +170,7 @@ def test_same_operation_retry_with_another_actor_retains_historical_actor(tmp_pa
     assert result['replayed'] and result['relation_id'] == original['relation_id']
     assert result['completion']['receipts'] == original['completion']['receipts']
     assert not result['completion']['current_target_verified']
-    assert receipt(root, result)['journal']['actor'] == ACTOR
+    assert receipt(root, result)['write']['actor'] == ACTOR
     actual = json.loads((root / artifact_path('requirement', source['id'], 'SR')).read_bytes())
     assert actual['updated_by'] == ACTOR and actual['revision'] == 8
     if action == 'add': assert actual['relations'][0]['created_by'] == ACTOR
@@ -238,12 +240,11 @@ def test_failed_real_replace_retains_actual_relation_bytes_and_recovery_evidence
             raise OSError('injected relation replace failure')
         return native_replace(src, dst, **kwargs)
     with patch.object(os, 'replace', side_effect=replace), \
-            patch('secrets.token_bytes', return_value=ENTROPY), pytest.raises(CommitPublicationError) as error:
+            patch('secrets.token_bytes', return_value=ENTROPY), pytest.raises(WriteGuardError) as error:
         call(model, source, goals, action, arguments(root, action))
     assert attempts == [source['id'] + '.json']
     assert error.value.reason == 'publication_io_failure' and error.value.exit_code == 5
-    assert error.value.write_state == 'unknown' and error.value.mutation_possible and error.value.publication_possible
-    assert error.value.published_count == 0
+    assert error.value.write_state == 'unknown'
     if moved:
         value = json.loads((root / path).read_bytes())
         assert value['revision'] == 8 and value['updated_by'] == ACTOR and value['updated_at'] == TIME
@@ -252,15 +253,15 @@ def test_failed_real_replace_retains_actual_relation_bytes_and_recovery_evidence
             assert len(value['relations']) == 1
             assert value['relations'][0]['type'] == 'addresses' and value['relations'][0]['target'] == goals[0]['id']
     else: assert (root / path).read_bytes() == raw
-    journal = json.loads((root / '.specroad/transactions/txn-relation/journal.json').read_bytes())
-    assert journal['state'] == 'committing' and journal['published_count'] == 0
+    journal = json.loads((root / '.specroad/write-state/pending.json').read_bytes())
+    assert journal['state'] == 'writing' and journal['format_version'] == 'write-guard-v1'
     after = {p: rest for p, *rest in file_inventory(root)}
     for p, *rest in before:
         if p != path: assert after[p] == rest
     retained = file_inventory(root)
-    with pytest.raises(ProjectLockError) as retry:
+    with pytest.raises(NormalAccessError) as retry:
         call(model, source, goals, action, arguments(root, action))
-    assert retry.value.reason == 'transaction_journal_blocks_lock' and retry.value.exit_code == 5
+    assert retry.value.reason == 'project_corrupted' and retry.value.exit_code == 5
     assert file_inventory(root) == retained
 
 
@@ -271,5 +272,5 @@ def test_ci_with_explicit_request_keeps_actor_in_source_and_audit(tmp_path, acti
     result = call(model, source, goals, action, arguments(root, action, actor=actor, request_id='ci-rel-1'))
     actual = json.loads((root / artifact_path('requirement', source['id'], 'SR')).read_bytes())
     assert actual['revision'] == 8 and actual['updated_by'] == actor
-    assert receipt(root, result)['journal']['actor'] == actor
+    assert receipt(root, result)['write']['actor'] == actor
     assert result['completion']['request_id'] == 'ci-rel-1'

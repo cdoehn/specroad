@@ -30,42 +30,15 @@ def automatic(root, **overrides):
 
 @pytest.mark.parametrize('state', ['building', 'prepared', 'partial', 'complete', 'committed'])
 def test_automatic_recovery_finishes_old_work_and_requires_new_invocation(tmp_path, state):
-    source, change, expected = pending(tmp_path, state)
-    journal_path = tmp_path / '.specroad/transactions' / TRANSACTION / 'journal.json'
-    original_journal = journal_path.read_bytes()
-    original_work = {p.relative_to(journal_path.parent).as_posix(): p.read_bytes()
-                     for p in journal_path.parent.rglob('*') if p.is_file() and p != journal_path}
-    result = automatic(tmp_path).data
-    assert result['exit_code'] == 5 and result['reason'] == 'recovery_completed_reinvoke', result
-    assert result['recovery_attempted'] and result['recovery_completed']
-    assert result['requires_new_invocation'] and not result['transaction_preflight_passed']
-    assert not result['normal_operation_started'] and not result['model_loaded']
-    assert result['request_id'] == NEW_REQUEST and not result['request_consumed']
-    assert not result['write_authorized'] and not result['recovery_required']
-    assert result['mutation_possible']
-    assert files(tmp_path) == expected
-    assert not journal_path.exists()
-    assert not (tmp_path / request_receipt_path(NEW_REQUEST)).exists()
-    receipt = json.loads((tmp_path / transaction_receipt_path(TRANSACTION)).read_bytes())
-    assert receipt['outcome'] == ('committed' if state in ('complete', 'committed') else 'rolled_back')
-    archived = {p.relative_to(tmp_path).as_posix(): p.read_bytes() for p in
-                (tmp_path / '.specroad/recovery/transaction-audit').rglob('*') if p.is_file()}
-    for suffix, raw in original_work.items():
-        assert any(path.endswith('/' + suffix) and content == raw for path, content in archived.items())
-    if state in ('building', 'prepared', 'committed'):
-        assert original_journal in archived.values()
+    pending(tmp_path, state)
     before = inventory(tmp_path)
-    with no_write_attempts():
-        again = automatic(tmp_path).data
-        profile, = profile_resources()
-        reader = validate_project_read_only(tmp_path, profile_resources=[profile], core_key=profile.key)
-    assert inventory(tmp_path) == before
-    assert again['exit_code'] == 0 and again['transaction_preflight_passed']
-    assert not again['normal_operation_started'] and not again['recovery_attempted']
-    assert reader.exit_code == 0 and reader.data['model_loaded']
-    with project_lock(tmp_path, kind='writer', command='change apply', project_id='sample',
-                      request_id=NEW_REQUEST, transaction_id='next-transaction'):
-        pass
+    with no_write_attempts(): result = automatic(tmp_path).data
+    assert result['exit_code'] == 5 and result['reason'] == 'project_corrupted'
+    assert result['project_corrupted'] and result['manual_git_restore_required']
+    assert not result['recovery_attempted'] and not result['recovery_completed']
+    assert not result['requires_new_invocation'] and not result['request_consumed']
+    assert not result['normal_operation_started'] and inventory(tmp_path) == before
+    assert not (tmp_path / request_receipt_path(NEW_REQUEST)).exists()
 
 
 READ_CALLS = [(CommandClass.READ_ONLY, False), (CommandClass.PLAN_OUTPUT, False),
@@ -83,7 +56,7 @@ def test_read_plan_generated_and_dry_run_remain_write_free(tmp_path, state, comm
         result = transaction_preflight(tmp_path, command_class=command_class, dry_run=dry_run,
             request_id=NEW_REQUEST, authority=authority, actor=ACTOR).data
     assert inventory(tmp_path) == before and calls == []
-    assert result['exit_code'] == 5 and result['recovery_required']
+    assert result['exit_code'] == 5 and result['project_corrupted']
     assert not result['normal_operation_started'] and not result['model_loaded']
     assert not result['mutation_possible'] and not result['recovery_attempted']
     assert result['operational']['journal_contents_loaded'] is False
@@ -95,7 +68,7 @@ def test_missing_or_disabled_auto_policy_has_no_operational_effect(tmp_path, pol
     before = inventory(tmp_path)
     with no_write_attempts():
         result = automatic(tmp_path).data
-    assert result['exit_code'] == 5 and result['reason'] == 'automatic_recovery_disabled'
+    assert result['exit_code'] == 5 and result['reason'] == 'project_corrupted'
     assert inventory(tmp_path) == before and not result['mutation_possible']
 
 
@@ -106,7 +79,7 @@ def test_denied_or_nonboolean_authority_never_acquires_a_recovery_lock(tmp_path,
     authority = RecoveryAuthority('denied', '1', lambda request: decision)
     with no_write_attempts():
         result = automatic(tmp_path, authority=authority).data
-    assert result['exit_code'] == 7
+    assert result['exit_code'] == 5 and result['project_corrupted']
     assert inventory(tmp_path) == before and not result['recovery_attempted']
 
 
@@ -115,7 +88,7 @@ def test_live_writer_is_not_automatically_taken_over(tmp_path):
         before = inventory(tmp_path)
         with no_write_attempts():
             result = automatic(tmp_path).data
-        assert result['exit_code'] == 5 and result['owner_state'] == 'alive'
+        assert result['exit_code'] == 6 and result['state'] == 'writer_active' and result['owner_state'] == 'alive'
         assert inventory(tmp_path) == before and not result['recovery_attempted']
 
 
@@ -141,11 +114,10 @@ def test_short_metadata_budget_precedes_authorized_owner_diagnosis(tmp_path, mon
         monkeypatch.setattr(os, 'read', observed)
         with no_write_attempts():
             result = automatic(tmp_path, authority=RecoveryAuthority('budget-host', '1', authorize)).data
-        assert len(authorized) == 1
-        assert len(raw) <= authorized[0][0] <= 1024 * 1024
-        assert all(path == str(config) for path, size in authorized[0][1])
+        assert authorized == []  # No recovery authority or model/config scan is invoked.
+        assert not any(path == str(config) for path, size in reads)
         assert result['metadata_bytes_read'] <= 1024 * 1024
-        assert result['exit_code'] == 5 and result['owner_state'] == 'alive'
+        assert result['exit_code'] == 6 and result['state'] == 'writer_active' and result['owner_state'] == 'alive'
         assert not result['recovery_attempted'] and inventory(tmp_path) == before
 
 
@@ -165,12 +137,13 @@ with writer(Path(sys.argv[2]), sys.argv[3]) as (model, plan, expected):
                            capture_output=True, text=True, check=False)
     assert child.returncode == 23, child.stderr
     expected = json.loads(child.stdout)
-    result = automatic(tmp_path).data
-    assert result['exit_code'] == 5 and result['recovery_completed'], result
-    assert {p: sha256(b).hexdigest() for p, b in files(tmp_path).items()} == expected
+    before = inventory(tmp_path)
+    with no_write_attempts(): result = automatic(tmp_path).data
+    assert result['exit_code'] == 5 and result['project_corrupted']
+    assert result['owner_state'] == 'dead' and not result['recovery_attempted']
+    assert inventory(tmp_path) == before
     assert not (tmp_path / request_receipt_path(NEW_REQUEST)).exists()
-    intent, = (tmp_path / '.specroad/recovery/transaction-audit').glob('*/takeover-*/intent.json')
-    assert json.loads(intent.read_bytes())['observed_owner_state'] == 'dead'
+
 
 
 def test_more_than_sixteen_active_entries_block_without_full_scan_or_journal_read(tmp_path, monkeypatch):
@@ -191,7 +164,7 @@ def test_more_than_sixteen_active_entries_block_without_full_scan_or_journal_rea
     monkeypatch.setattr(os, 'stat', observed)
     with no_write_attempts():
         result = transaction_preflight(tmp_path, command_class=CommandClass.READ_ONLY).data
-    assert result['exit_code'] == 5 and result['recovery_required']
+    assert result['exit_code'] == 5 and result['project_corrupted']
     assert len(result['operational']['unresolved_paths']) == 16
     assert not result['operational']['inspection_complete']
     assert len(scanned) == 32  # Two independent bounded observations, sixteen each.
@@ -210,7 +183,7 @@ def test_broken_model_and_configuration_do_not_prevent_metadata_diagnosis(tmp_pa
         profile, = profile_resources()
         reader = validate_project_read_only(tmp_path, profile_resources=[profile], core_key=profile.key)
     assert result['exit_code'] == reader.exit_code == 5
-    assert result['recovery_required'] and not result['model_loaded']
+    assert result['project_corrupted'] and not result['model_loaded']
     assert diagnostic['exit_code'] == 0 and not diagnostic['model_loaded']
     assert inventory(tmp_path) == before
 
@@ -244,8 +217,10 @@ def test_authorization_cannot_change_policy_then_recover_under_the_old_setting(t
         (tmp_path / 'specroad.json').write_text(json.dumps(config))
         return True
 
+    before = inventory(tmp_path)
     result = automatic(tmp_path, authority=RecoveryAuthority('changed', '1', changed)).data
-    assert result['exit_code'] == 6 and result['reason'] == 'preflight_configuration_changed'
+    assert inventory(tmp_path) == before
+    assert result['exit_code'] == 5 and result['reason'] == 'project_corrupted'
     assert not result['recovery_attempted'] and journal.read_bytes() == original
 
 

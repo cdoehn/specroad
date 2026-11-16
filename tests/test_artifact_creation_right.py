@@ -1,3 +1,5 @@
+from specroad.changes.write_guard_values import WriteGuardError
+from specroad.changes.normal_access import NormalAccessError
 """Collision, refusal and interrupted native creation preserve actual state."""
 import json
 import os
@@ -162,34 +164,35 @@ def test_changed_physical_base_is_not_overwritten_or_accepted_from_cached_model(
 @pytest.mark.parametrize('moved', [False, True])
 def test_failed_target_move_preserves_recovery_evidence_and_blocks_blind_retry(tmp_path, moved):
     root = tmp_path / 'project'; model, ids = project(root); before = file_inventory(root)
-    native_replace = os.replace; attempts = []
-    def replace(src, dst, **kwargs):
+    from specroad.authoring import _bootstrap_io as native
+    native_replace = native._rename_native; attempts = []
+    def replace(function, src_fd, src, dst_fd, dst):
+        kwargs = {}
         if str(dst).startswith('SR-GOAL-'):
             attempts.append(str(dst))
-            if moved: native_replace(src, dst, **kwargs)
+            if moved: native_replace(function, src_fd, src, dst_fd, dst)
             raise OSError('injected target move failure')
-        return native_replace(src, dst, **kwargs)
+        return native_replace(function, src_fd, src, dst_fd, dst)
     prepared = normalize_artifact_create_input('goal', fields('goal'))
     with patch('secrets.token_bytes', return_value=(7).to_bytes(16, 'big')) as entropy, \
-            patch.object(os, 'replace', side_effect=replace):
-        with pytest.raises(CommitPublicationError) as error:
+            patch.object(native, '_rename_native', side_effect=replace):
+        with pytest.raises(WriteGuardError) as error:
             create_artifact(model, prepared, **arguments(model, ids))
     assert error.value.exit_code == 5 and error.value.reason == 'publication_io_failure'
-    assert error.value.write_state == 'unknown' and error.value.publication_possible
-    assert error.value.mutation_possible and error.value.published_count == 0
+    assert error.value.write_state == 'unknown'
     assert entropy.call_count == 1 and attempts == [goal(7) + '.json']
     target = root / ('spec/goals/' + goal(7) + '.json')
     assert target.exists() is moved
     if moved:
         value = json.loads(target.read_bytes())
         assert value['id'] == goal(7) and value['revision'] == 1
-    journal = root / '.specroad/transactions/txn-create/journal.json'
+    journal = root / '.specroad/write-state/pending.json'
     record = json.loads(journal.read_bytes())
-    assert record['state'] == 'committing' and record['published_count'] == 0
+    assert record['state'] == 'writing'
     unchanged(before, root)
     retained = file_inventory(root)
     with patch('secrets.token_bytes', side_effect=AssertionError('no retry allocation')):
-        with pytest.raises(ProjectLockError) as retry:
+        with pytest.raises(NormalAccessError) as retry:
             create_artifact(model, prepared, **arguments(model, ids))
-    assert retry.value.reason == 'transaction_journal_blocks_lock' and retry.value.exit_code == 5
+    assert retry.value.reason == 'project_corrupted' and retry.value.exit_code == 5
     assert file_inventory(root) == retained

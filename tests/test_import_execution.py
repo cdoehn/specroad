@@ -66,8 +66,8 @@ def test_one_native_transaction_publishes_existing_and_new_artifacts(tmp_path, s
     completion = actual['completion']
     assert completion['current_target_verified'] and completion['cleanup_completed']
     receipt = TransactionReceipt((root / completion['receipts']['transaction']['path']).read_bytes()).data
-    assert receipt['journal']['plan_sha256'] == actual['plan_sha256']
-    assert receipt['operations'] == report['operations']
+    assert receipt['write']['marker']['plan_sha256'] == actual['plan_sha256']
+    assert receipt['write']['operations'] == report['operations']
     artifacts = {v['artifact']['id']: v['artifact'] for v in report['change_plan']['result_artifacts']}
     old = next(a for a in m.artifacts if a['external_identities'])
     assert artifacts[old['id']]['revision'] == old['revision'] + 1
@@ -115,7 +115,7 @@ def test_reused_request_with_other_operations_preserves_the_original_receipt(tmp
         apply(m, [candidate('Different incoming value.')], resource)
     assert caught.value.exit_code == 6 and inventory(root) == before
     receipt = first['execution']['completion']['receipts']['transaction']['path']
-    assert TransactionReceipt((root / receipt).read_bytes()).data['operations'] == first['execution']['audit']['operations']
+    assert TransactionReceipt((root / receipt).read_bytes()).data['write']['operations'] == first['execution']['audit']['operations']
 
 
 @pytest.mark.parametrize('saved', [False, True], ids=['fresh', 'saved'])
@@ -247,14 +247,19 @@ def test_trusted_gate_is_rechecked_on_the_complete_target_before_publication(tmp
 
 def test_failure_after_staging_retains_native_recovery_and_never_fakes_completion(tmp_path):
     root = tmp_path / 'project'; m, resource = project(root)
-    with patch.object(writer, 'publish_prepared_journal', side_effect=OSError('synthetic interruption')) as publish:
-        with pytest.raises(OSError): apply(m, candidates(), resource)
-    assert publish.call_count == 1
+    from specroad.changes import guarded_write
+    calls = []
+    def stop(event):
+        if event == 'staged:0':
+            calls.append(event)
+            raise OSError('synthetic interruption')
+    with patch.object(guarded_write, '_checkpoint', stop), pytest.raises(ModelError):
+        apply(m, candidates(), resource)
+    assert calls == ['staged:0']
     for path, raw in m.source_files.items(): assert (root / path).read_bytes() == raw
     assert not (root / artifact_path('goal', goal(1)['id'], 'SR')).exists()
-    journal = root / '.specroad/transactions/txn-import/journal.json'
-    # Prepared payloads remain native recovery inputs; no automatic retry or rollback.
-    assert json.loads(journal.read_bytes())['state'] == 'prepared'
+    marker = root / '.specroad/write-state/pending.json'
+    assert json.loads(marker.read_bytes())['state'] == 'writing'
     assert not (root / transaction_receipt_path('txn-import')).exists()
     assert not (root / request_receipt_path('import-execution-request')).exists()
 

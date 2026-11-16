@@ -1,9 +1,4 @@
-"""Transaction gate for normal calls; automatic recovery ends this invocation.
-
-Trusted hosts supply the real command class and authenticate RecoveryAuthority.
-This library neither installs project CLI handlers nor executes a normal change.
-The returned observation is not a write capability or a reusable project lease.
-"""
+"""Read-only transaction gate for all normal calls; interruption always blocks."""
 from dataclasses import dataclass
 
 from ..cli.contracts import CommandClass
@@ -17,8 +12,6 @@ from .authoring import normalize_request_id
 from .execution_values import ChangeExecutionError
 from .recovery_values import RecoveryError
 from ._journal_codec import _text
-from ._preflight_decision import prepare_automatic_recovery
-from ._automatic_recovery import recover_selected_transaction
 
 
 @dataclass(frozen=True, init=False)
@@ -48,13 +41,10 @@ class TransactionPreflight:
 
 def transaction_preflight(root, *, command_class, dry_run=False, request_id=None,
                           expected_project_id=None, authority=None, actor=None):
-    """Observe first; recover at most one safely selected former transaction.
+    """Observe current metadata without activation, recovery, or consuming a request.
 
-    Read-only/plan/generated/dry-run calls never read journal bodies or activate
-    recovery. A write also needs explicit auto_recover=true and host authority.
-    Successful automatic recovery returns code 5 and requires a new invocation;
-    the original request is neither executed nor consumed. A clear transaction
-    gate still requires the caller's ordinary configuration, model and write checks.
+    Authority and actor remain accepted call arguments for compatibility; they
+    cannot activate repair. A clear result is no authorization to write.
     """
     supported = (CommandClass.READ_ONLY, CommandClass.PLAN_OUTPUT,
                  CommandClass.GENERATED_OUTPUT, CommandClass.NORMATIVE_WRITE)
@@ -75,7 +65,8 @@ def transaction_preflight(root, *, command_class, dry_run=False, request_id=None
 
     def result():
         data.update(metadata.summary())
-        data['diagnostic_codes'] = ['SRV167'] if data['preflight_detail_required'] else []
+        data['diagnostic_codes'] = (['SRV167'] if data['preflight_detail_required'] else
+                                    ['SRV168'] if data.get('project_corrupted') else [])
         return TransactionPreflight._create(data)
 
     try:
@@ -88,12 +79,12 @@ def transaction_preflight(root, *, command_class, dry_run=False, request_id=None
             data.update(exit_code=0, reason='transaction_gate_clear',
                         recovery_required=False, transaction_preflight_passed=True)
             return result()
-        if command_class is not CommandClass.NORMATIVE_WRITE or dry_run:
-            return result()
-        decision = prepare_automatic_recovery(boundary, observed, data, metadata,
-            expected_project_id=expected_project_id, request_id=request_id, authority=authority, actor=actor)
-        if decision is not None:
-            recover_selected_transaction(decision, data)
+        from .normal_access import observe_normal_state
+        state = observe_normal_state(root, observed, expected_project_id=expected_project_id)
+        data.update({k:v for k,v in state.items() if k != 'format_version'})
+        data.update(reason='project_' + state['state'],
+                    exit_code=6 if state['state'] == 'writer_active' else 5,
+                    recovery_required=False, recovery_attempted=False, recovery_completed=False)
         return result()
     except (ChangeExecutionError, ModelError, SafetyViolation, OSError) as error:
         data.update(exit_code=getattr(error, 'exit_code', 5),

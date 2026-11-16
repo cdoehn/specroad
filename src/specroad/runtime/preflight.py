@@ -38,7 +38,11 @@ def require_project_read_preflight(boundary, configuration_bytes, metadata):
             fail(FailureKind.CONFLICT, 'preflight_configuration_changed')
         boundary._check_root()
         if first['consistency_state'] != 'consistent':
-            fail(FailureKind.ENVIRONMENT, 'recovery_required')
+            from ..changes.normal_access import observe_normal_state
+            state = observe_normal_state(boundary.root, first)
+            data.update(state)
+            fail(FailureKind.CONFLICT if state['state'] == 'writer_active' else FailureKind.ENVIRONMENT,
+                 'project_' + state['state'])
     except ModelError as error:
         data['model_error'] = error.diagnostic()
         fail(FailureKind.MODEL, error.reason)

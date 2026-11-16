@@ -78,16 +78,17 @@ def load_srx_graph(sources, call, *, rule_id):
 
 
 def publish_prepared(preflight, journal, call, *, held_lock, authority, gates=()):
-    """Measure the existing native publication with its unchanged authorities.
+    """Measure one complete guarded publication without pausing inside it.
 
-    Soft events never request a pause inside publication. A successful return is
-    still PublishedFiles in committing, requiring the existing receipt/finalizer.
-    No retry, recovery or cleanup is inferred from an observation failure.
+    The obsolete journal slot must be None: a prepared legacy journal is an
+    interruption blocker, never an authorization for the normal writer.
     """
-    from ..changes.committing import publish_prepared_journal
+    from ..changes.guarded_write import publish_guarded_change
+    from ..changes.write_guard_values import require
     _invocation(call)
+    require(journal is None, 'normal_writer_has_no_recovery_journal', exit_code=5)
     call.control(PhaseBoundary('publication', 'start'))
-    result = publish_prepared_journal(preflight, journal, held_lock=held_lock,
-                                     authority=authority, gates=gates)
+    result = publish_guarded_change(preflight, held_lock=held_lock,
+                                   authority=authority, gates=gates)
     call.control(PhaseBoundary('publication', 'end'))
     return result

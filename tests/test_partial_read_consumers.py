@@ -161,7 +161,7 @@ def test_operational_diagnoses_remain_available_with_open_journal(tmp_path, fami
     if family == 'environment':
         checks = {c['check_id']: c for c in result.as_dict()['result']['checks']}
         assert checks['project.operational']['state'] == 'failed'
-        assert checks['project.operational']['reason'] == 'recovery_required'
+        assert checks['project.operational']['reason'] == 'project_corrupted'
         assert result.as_dict()['result']['recovery_required'] is True
     else:
         assert result.status.value == 'success'

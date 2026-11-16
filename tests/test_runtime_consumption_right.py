@@ -287,32 +287,36 @@ def test_real_graph_loading_has_observed_phase_edges_and_identical_loaded_record
 
 def test_measured_native_publication_retains_exact_targets_and_incomplete_receipt_state(tmp_path):
     from specroad.runtime.controlled import publish_prepared
-    from support.committing import staged
+    from support.publication import prepared, options
+    from specroad.changes import project_lock
     from support.publication import ALLOW, files
-    with staged(tmp_path) as (model, plan, preflight, held, journal):
+    model, plan, preflight = prepared(tmp_path)
+    with project_lock(tmp_path, **options(preflight)) as held:
         original = files(tmp_path)
         call = WorkConsumption(sampler=sequence((0, 0, 1), (2000000, 2000000, 2),
                                                 (4000000, 4000000, 3), (5000000, 5000000, 4))).begin(
             {'--cpu-budget-ms': 1, '--wall-budget-ms': 1})
-        result = publish_prepared(preflight, journal, call, held_lock=held, authority=ALLOW)
+        result = publish_prepared(preflight, None, call, held_lock=held, authority=ALLOW)
         report = call.finish()
         assert files(tmp_path) == {**original, **{d.path:d.content for d in preflight.request.documents}}
         assert result.data['target_model_root_sha256'] == preflight.request.data['target_root_sha256']
-        assert result.data['state'] == 'committing' and result.data['finalization_required']
-        assert not result.data['commit_completed'] and not result.data['receipt_written']
+        assert result.data['commit_completed'] and result.data['cleanup_completed']
+        assert result.data['receipt_verified'] and result.data['current_target_verified']
         assert report['soft_budget_exceeded'] and held.check()
         assert report['invocation']['controls']['phases']['publication'] == {'start': 1, 'end': 1}
 
 
 def test_measured_publication_keeps_native_authority_refusal_and_all_existing_bytes(tmp_path):
-    from specroad.changes import PublicationAuthority, CommitPublicationError
+    from specroad.changes import PublicationAuthority, PublicationCheckError
     from specroad.runtime.controlled import publish_prepared
-    from support.committing import staged
-    with staged(tmp_path) as (model, plan, preflight, held, journal):
+    from support.publication import prepared, options
+    from specroad.changes import project_lock
+    model, plan, preflight = prepared(tmp_path)
+    with project_lock(tmp_path, **options(preflight)) as held:
         before = inventory(tmp_path); call = WorkConsumption().begin()
         deny = PublicationAuthority('test-deny', '1', lambda request: False)
-        with pytest.raises(CommitPublicationError) as error:
-            publish_prepared(preflight, journal, call, held_lock=held, authority=deny)
+        with pytest.raises(PublicationCheckError) as error:
+            publish_prepared(preflight, None, call, held_lock=held, authority=deny)
         report = call.finish()
         assert error.value.exit_code == 7 and inventory(tmp_path) == before and held.check()
         assert report['invocation']['controls']['phases']['publication'] == {'start': 1, 'end': 0}

@@ -164,6 +164,8 @@ def record_coupled_relation_review(model, source_id, relation_id, *, reason, dec
             inventory.archived_ids, inventory.reserved_ids)
     except ModelError as error:
         raise AuthoringError(error.reason, pointer=error.pointer, exit_code=3) from error
+    from ..changes.normal_access import require_normal_access
+    require_normal_access(model.binding.source_root, expected_project_id=model.binding.project_id)
     source = ProjectSource(model.binding.source_root, expected_project_id=model.binding.project_id)
     if source.boundary._root_identity != model.binding.root_identity:
         raise AuthoringError('review_project_changed', exit_code=6)
@@ -205,18 +207,9 @@ def record_coupled_relation_review(model, source_id, relation_id, *, reason, dec
         checked.require_valid()
         preflight = prepare_publication_check(checked.plan, model, policy=_POLICY,
             gates=gates, strict=strict, package_files=package_files)
-        journal = begin_building_journal(preflight, held_lock=held,
-            transaction_id=transaction_id, authority=authority, gates=gates)
-        journal = stage_building_journal(preflight, journal, held_lock=held,
-            authority=authority, gates=gates)
-        publication = publish_prepared_journal(preflight, journal, held_lock=held,
-            authority=authority, gates=gates)
-        committing = read_committing_journal(current, transaction_id,
-            expected_sha256=publication.data['journal_sha256'], preflight=preflight)
-        finalize_committing_journal(preflight, committing, held_lock=held,
-            authority=authority, gates=gates)
-        completion = cleanup_completed_transaction(preflight, transaction_id,
-            held_lock=held, authority=authority)
+        from ..changes.guarded_write import publish_guarded_change
+        completion = publish_guarded_change(preflight, held_lock=held,
+                                            authority=authority, gates=gates)
         return _result(operation, completion, plan_sha256=checked.plan.sha256,
             target_root=checked.data['binding']['target_model_root'])
 

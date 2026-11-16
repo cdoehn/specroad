@@ -12,7 +12,7 @@ from specroad.changes import (RequestIdConflict, ReceiptError, RequestReceipt,
     project_lock, PublicationAuthority, PublicationCheckError)
 from specroad.model.canonical import canonical_json_sha256
 from specroad.storage.project import ProjectSource
-from support.receipts import published, finish
+from support.closed_receipts import published, finish
 from support.publication import prepared, files, ALLOW
 from support.targets import ACTOR, POLICY
 from support.folds import goal, edit

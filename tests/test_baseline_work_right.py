@@ -250,7 +250,7 @@ def test_real_process_loss_preserves_history_and_never_promotes_partial_completi
     assert retained_hashes(root, model) == packet['retained']
     gate = transaction_preflight(root, command_class=CommandClass.READ_ONLY).data
     assert (root / '.specroad/locks/project.json').is_file()
-    assert gate['exit_code'] == 5 and gate['recovery_required']
+    assert gate['exit_code'] == 5 and gate['project_corrupted']
     record = plan.data['operations'][0]['record']
     path = root / artifact_path('baseline', record['id'], 'SR')
     assert path.exists() == (cut in ('baseline_record', 'committed', 'cleanup'))
@@ -261,16 +261,10 @@ def test_real_process_loss_preserves_history_and_never_promotes_partial_completi
     with no_write_attempts(), pytest.raises(WorkResumeError) as error:
         advance_baseline_work(store, **arguments)
     assert error.value.as_dict() == {'reason': 'normative_transaction_requires_recovery', 'exit_code': 5}
-    if cut in ('committed', 'cleanup'):
-        with no_write_attempts(): replay = publish(store, arguments)
-        assert not replay['publication_performed']
-        assert replay['result_object']['transaction_id'] == 'txn-baseline-work'
-        assert replay['transaction']['cleanup_required'] == (cut == 'committed')
-    else:
-        with no_write_attempts(), pytest.raises(WorkResumeError) as error:
-            publish(store, arguments)
-        assert error.value.exit_code == 5
-        with no_write_attempts(), pytest.raises(ModelError):
-            read_transaction_completion(ProjectSource(root), 'txn-baseline-work')
+    with no_write_attempts(), pytest.raises(WorkResumeError) as publication:
+        publish(store, arguments)
+    assert publication.value.as_dict() == error.value.as_dict()
+    with no_write_attempts(), pytest.raises(ModelError):
+        read_transaction_completion(ProjectSource(root), 'txn-baseline-work')
     assert inventory(tmp_path) == before and store.read().raw == point.raw
     assert retained_hashes(root, model) == packet['retained']

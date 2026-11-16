@@ -289,7 +289,8 @@ def test_operational_blockers_do_not_load_or_publish_or_recover(tmp_path, stage,
         with no_write_attempts(), patch.object(live, 'InspectionSnapshot', side_effect=AssertionError('load')):
             with pytest.raises(StopIteration) as completed: next(steps)
         result = completed.value.value
-        assert result.exit_code == 5 and result.result is None and not result.complete
+        assert result.exit_code == (6 if blocked == 'writer' else 5)
+        assert result.result is None and not result.complete
         assert inventory(root) == before
 
 
@@ -331,7 +332,7 @@ def test_read_only_project_requires_no_state_directory_lock_entropy_or_process(t
         before = inventory(root)
         with no_write_attempts(), patch('builtins.input', side_effect=AssertionError('stdin')), \
                 patch('secrets.token_bytes', side_effect=AssertionError('entropy')), \
-                patch('specroad.changes.locking.LockFiles.acquire', side_effect=AssertionError('lock')):
+                patch('specroad.changes.locking.LockFiles.create_record', side_effect=AssertionError('owner record')):
             direct = explain_project_roadmap(root, aid('task', 1))
             cli = dispatch_result(['roadmap', 'explain', aid('task', 1), '--project', str(root)])
         assert direct.exit_code == cli.exit_code == 0

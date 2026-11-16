@@ -124,16 +124,26 @@ def crash(root, state):
 @pytest.mark.parametrize('state', ['building', 'prepared', 'partial', 'configuration_move', 'committed'])
 def test_fresh_process_recovery_reaches_exact_base_or_target_and_requires_new_request(tmp_path, state):
     expected = crash(tmp_path, state)
+    retained = inventory(tmp_path)
+    actual = files(tmp_path)
     result = transaction_preflight(tmp_path, command_class=CommandClass.NORMATIVE_WRITE,
         request_id='next-format', expected_project_id='sample', actor=ACTOR, authority=RECOVER).data
-    assert result['exit_code'] == 5 and result['recovery_completed'] and result['requires_new_invocation']
-    assert not result['request_consumed'] and not result['normal_operation_started']
-    target = state in ('configuration_move', 'committed')
-    assert files(tmp_path) == expected['after' if target else 'before']
+    assert result['exit_code'] == 5 and result['project_corrupted']
+    assert result['manual_git_restore_required'] and not result['recovery_completed']
+    assert not result['recovery_attempted'] and not result['request_consumed']
+    assert not result['normal_operation_started'] and inventory(tmp_path) == retained
+    if state in ('building', 'prepared'):
+        assert actual == expected['before']
+    elif state in ('configuration_move', 'committed'):
+        assert actual == expected['after']
+    else:
+        assert actual != expected['before'] and actual != expected['after']
+        assert all(raw in (expected['before'][p], expected['after'][p]) for p, raw in actual.items())
     assert not (tmp_path / request_receipt_path('next-format')).exists()
-    assert (tmp_path / request_receipt_path(FIELDS['request_id'])).exists() is target
+    assert (tmp_path / request_receipt_path(FIELDS['request_id'])).exists() is (state == 'committed')
     again = transaction_preflight(tmp_path, command_class=CommandClass.READ_ONLY).data
-    assert again['exit_code'] == 0 and not again['recovery_required']
+    assert again['exit_code'] == 5 and again['project_corrupted']
+    assert inventory(tmp_path) == retained
 
 
 @pytest.mark.parametrize('change', ['third_representation', 'policy_value'])

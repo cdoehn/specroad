@@ -87,6 +87,11 @@ class TransactionReceipt:
 
     def __init__(self, raw):
         value = _object(raw)
+        if value.get('format_version') == 'transaction-receipt-v2':
+            from .write_guard_values import validate_transaction
+            validate_transaction(raw)
+            object.__setattr__(self, '_raw', raw)
+            return
         fields = {'format_version', 'outcome', 'journal', 'journal_sha256', 'command_id',
                   'operations', 'operations_sha256', 'created_ids', 'result_object'}
         if set(value) != fields or value['format_version'] != 'transaction-receipt-v1' or value['outcome'] != 'committed':
@@ -117,7 +122,10 @@ class TransactionReceipt:
     @property
     def sha256(self): return sha256(self._raw).hexdigest()
     @property
-    def path(self): return transaction_receipt_path(self.data['journal']['transaction_id'])
+    def path(self):
+        value = self.data
+        return transaction_receipt_path(value['write']['marker']['transaction_id']
+            if value['format_version'] == 'transaction-receipt-v2' else value['journal']['transaction_id'])
     def __bool__(self): raise TypeError('Receipt data is not a verified live completion')
 
 
@@ -132,7 +140,7 @@ class RequestReceipt:
                   'target_model_root_sha256', 'result', 'created_ids', 'result_object',
                   'transaction_receipt'}
         if (set(value) != fields or value['format_version'] not in
-                ('request-receipt-v1','schema-transition-request-receipt-v1','merge-transition-request-receipt-v1')
+                ('request-receipt-v1','request-receipt-v2','schema-transition-request-receipt-v1','merge-transition-request-receipt-v1')
                 or value['namespace'] != 'normative_write' or value['result'] != 'committed'):
             raise ReceiptError('invalid_request_receipt_schema')
         from .authoring import normalize_authoring_actor

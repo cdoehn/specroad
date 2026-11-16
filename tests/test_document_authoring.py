@@ -130,7 +130,7 @@ def test_saved_document_plan_publishes_only_expected_files_and_replays(tmp_path,
     assert actual_artifact_paths == {artifact_path(v['artifact_type'], v['id'], 'SR') for v in expected.values()}
     receipt_path = result['completion']['receipts']['transaction']['path']
     receipt = TransactionReceipt((root / receipt_path).read_bytes()).data
-    assert receipt['journal']['plan_sha256'] == report['plan_sha256'] and receipt['operations'] == operations
+    assert receipt['write']['marker']['plan_sha256'] == report['plan_sha256'] and receipt['write']['operations'] == operations
     assert set(result['audit']['created_ids']) == created | {
         op['relation']['relation_id'] for op in operations if op['op'] == 'relation_add'}
     before_retry = inventory(root)

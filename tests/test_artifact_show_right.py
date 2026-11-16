@@ -215,7 +215,8 @@ def test_late_real_operational_blocker_prevents_payload_delivery(tmp_path, block
             injected.append(inventory(tmp_path)); return observed
         with patch.object(show_module, 'read_project_relation_views', reading):
             result = show_artifact(tmp_path, b['id'])
-        assert len(injected) == 1 and result.exit_code == 5 and not result.complete and result.result is None
+        assert len(injected) == 1 and result.exit_code == (6 if blocker == 'writer' else 5)
+        assert not result.complete and result.result is None
         assert inventory(tmp_path) == injected[0]
 
 

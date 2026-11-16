@@ -71,7 +71,7 @@ def test_inspection_has_no_write_process_stdin_entropy_or_lock_acquisition(tmp_p
     root = tmp_path / 'project'; inspection_project(root); before = inventory(root)
     with no_write_attempts(), patch('builtins.input', side_effect=AssertionError('stdin')), \
             patch('secrets.token_bytes', side_effect=AssertionError('entropy')), \
-            patch('specroad.changes.locking.LockFiles.acquire', side_effect=AssertionError('lock')):
+            patch('specroad.changes.locking.LockFiles.create_record', side_effect=AssertionError('owner record')):
         result = inspect_project(root)
     assert result.exit_code == 0 and inventory(root) == before
 
@@ -134,7 +134,7 @@ def test_actual_active_writer_blocks_before_model_loading(tmp_path, route):
         assert inventory(root) == before
 
 
-@pytest.mark.parametrize('path,state', [('.specroad/transactions/unresolved.json', 'recovery_required'),
+@pytest.mark.parametrize('path,state', [pytest.param('.specroad/transactions/unresolved.json', 'corrupted', id='.specroad/transactions/unresolved.json-recovery_required'),
                                       ('.specroad/unclassified.json', 'unknown')])
 def test_unresolved_operational_entries_block_without_repair_or_model_read(tmp_path, path, state):
     root = tmp_path / 'project'; inspection_project(root); put(root, path, b'not a readable journal')
@@ -144,7 +144,7 @@ def test_unresolved_operational_entries_block_without_repair_or_model_read(tmp_p
     assert result.exit_code == 5 and not result.complete
     payload = result.as_dict()['result']
     assert payload['runtime']['consistency_state'] == state and set(payload['semantic'].values()) == {None}
-    if state == 'recovery_required':
+    if state == 'corrupted':
         assert path in payload['runtime']['open_transaction']['unresolved_paths']
     assert inventory(root) == before
 

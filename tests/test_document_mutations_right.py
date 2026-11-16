@@ -184,7 +184,7 @@ def test_interrupted_cascade_preserves_actual_published_records_and_recovery(tmp
     with patch.object(os, 'replace', side_effect=replace): result = execute(model, report, authority=authority)
     assert_failed(result, report)
     assert result['exit_code'] == 5 and result['write_state'] == 'unknown' and result['recovery_required']
-    assert calls == [second] and result['diagnostics'][0]['published_count_acknowledged'] == 1
+    assert calls == [second] and result['diagnostics'][0]['reason'] == 'publication_io_failure'
     candidate = {v['artifact']['id']: v['artifact'] for v in report['plan']['result_artifacts']}
     first_path = artifact_path('content_block', ref('BLOCK'), 'SR')
     second_path = artifact_path('section', ref('SEC'), 'SR')
@@ -192,11 +192,15 @@ def test_interrupted_cascade_preserves_actual_published_records_and_recovery(tmp
     assert (root / second_path).read_bytes() == (canonical_json_bytes(candidate[ref('SEC')]) if moved else original[second_path])
     for path, raw in original.items():
         if path not in (first_path, second_path): assert (root / path).read_bytes() == raw
-    journal = json.loads((root / '.specroad/transactions/txn-mutation-right/journal.json').read_bytes())
-    assert journal['state'] == 'committing' and journal['published_count'] == 1
+    marker = json.loads((root / '.specroad/write-state/pending.json').read_bytes())
+    assert marker['state'] == 'writing' and marker['transaction_id'] == 'txn-mutation-right'
+    assert not (root / '.specroad/transactions/txn-mutation-right/journal.json').exists()
+    from specroad.changes.write_guard_read import inspect_write_state
+    state = inspect_write_state(root)
+    assert state['state'] == 'corrupted' and state['manual_git_restore_required']
     retained = inventory(root); retry = execute(model, report, transaction='txn-retry', authority=authority)
     assert_failed(retry, report)
-    assert retry['diagnostics'][0]['reason'] == 'transaction_journal_blocks_lock' and inventory(root) == retained
+    assert retry['diagnostics'][0]['reason'] == 'project_corrupted' and inventory(root) == retained
 
 
 def test_conflicting_saved_retry_preserves_retirement_receipt_and_all_source_bytes(tmp_path):

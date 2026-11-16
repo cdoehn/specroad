@@ -5,7 +5,7 @@ import pytest
 from specroad.changes import (bind_plan_authoring, prepare_authoring_request,
     resolve_normative_request, RequestIdConflict)
 from specroad.storage.project import ProjectSource
-from support.receipts import published, finish
+from support.closed_receipts import published, finish
 from support.publication import prepared
 from support.targets import ACTOR
 from test_normative_idempotency import inventory

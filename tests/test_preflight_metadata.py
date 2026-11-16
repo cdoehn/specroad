@@ -188,7 +188,7 @@ def test_active_entry_bound_stops_classification_without_opening_any_journal(tmp
             result = execute_request(request(tmp_path), registry=registry(calls)).result
     assert result.exit_code == 5 and calls == []
     data = result.as_dict()['summary']['preflight']
-    assert data['reason'] == 'recovery_required'
+    assert data['reason'] == 'project_corrupted'
     assert len(data['operational']['unresolved_paths']) == 16
     assert not data['operational']['inspection_complete']
     assert len(inspected) == 32 and len(set(inspected)) == 16
@@ -266,19 +266,18 @@ def test_large_recovery_policy_reaches_real_authority_and_owner_decision(tmp_pat
         before = inventory(tmp_path)
         calls = []
         authority = RecoveryAuthority('bounded-policy-host', '1', lambda value: calls.append(value) or authorized)
-        with no_write_attempts():
+        with no_write_attempts(), configuration_reads(tmp_path) as reads:
             result = transaction_preflight(tmp_path, command_class=CommandClass.NORMATIVE_WRITE,
                 request_id='not-started', authority=authority, actor=ACTOR).data
-        assert result['exit_code'] == expected and not result['recovery_attempted']
-        assert len(calls) == (1 if policy else 0)
-        if policy and authorized:
-            assert result['owner_state'] == 'alive'
-        elif not policy:
-            assert result['reason'] == 'automatic_recovery_disabled'
-        else:
-            assert result['reason'] == 'automatic_recovery_not_authorized'
-        assert result['preflight_detail_required'] and result['diagnostic_codes'] == ['SRV167']
+        # Old configuration/authority variants retain their identities, but
+        # none may activate automatic recovery or replace the live-owner check.
+        assert result['exit_code'] == 6 and not result['recovery_attempted']
+        assert calls == [] and result['owner_state'] == 'alive'
+        assert result['reason'] == 'project_writer_active'
+        # A blocked owner check must not read the obsolete recovery policy.
+        assert reads == []
+        assert not result['preflight_detail_required'] and result['diagnostic_codes'] == []
         assert_phases(result, result['metadata_bytes_read'])
-        assert result['metadata_bytes_read'] > LIMIT
+        assert 0 < result['metadata_bytes_read'] <= LIMIT
         assert not result['request_consumed'] and not result['normal_operation_started']
         assert inventory(tmp_path) == before

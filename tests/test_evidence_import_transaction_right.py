@@ -224,74 +224,38 @@ def test_equal_occurrences_in_one_new_source_remain_two_records(tmp_path):
                 for v in values}) == 2
 
 
-def recover(root, journal, *, complete, crashed=False):
-    options = dict(project_id=journal.data['project_id'], request_id='import-1')
-    if crashed:
-        lock = LockRecord((root / '.specroad/locks/project.json').read_bytes())
-        context = transaction_recovery_lock(root, 'txn-import', **options,
-            expected_lock_sha256=lock.sha256, expected_journal_sha256=journal.sha256,
-            authority=RECOVER, actor=ACTOR, reason='Explicit stopped import recovery', force=True)
-    else:
-        context = project_lock(root, kind='recovery', command='recover run',
-            transaction_id='txn-import', **options)
-    with context as held:
-        action = complete_published_transaction if complete else rollback_interrupted_transaction
-        result = action('txn-import', held_lock=held, authority=RECOVER,
-            expected_journal_sha256=journal.sha256)
-        raw = (root / journal.path).read_bytes()
-        terminal = (CommittedJournal if complete else RolledBackJournal)(raw)
-        cleanup_recovered_transaction('txn-import', held_lock=held,
-            authority=RECOVER, expected_journal_sha256=terminal.sha256)
-    return result.data
-
-
-def assert_recovered_set(root, model, plan, *, complete):
-    for path, raw in model.source_files.items():
-        assert (root / path).read_bytes() == raw
-    if complete:
-        result = retry(root, model.source_files[SOURCE])
-        assert result['replayed']
-    else:
-        assert not list((root / 'spec').rglob('*EVD*.json'))
-        assert retry(root, model.source_files[SOURCE]) is None
-        result = apply(plan, model, transaction_id='txn-after-rollback')
-        assert not result['replayed']
-    assert result['audit']['created_ids'] == [ref('EVD', '1'), ref('EVD', '2')]
-    for op in plan.data['operations']:
-        value = op['evidence']; path = artifact_path('evidence', value['id'], 'SR')
-        assert (root / path).read_bytes() == canonical_json_bytes(value)
-    before = inventory(root)
-    assert retry(root, model.source_files[SOURCE])['replayed']
-    assert inventory(root) == before
-
-
 @pytest.mark.parametrize('target_number,after_replace', [(1, False), (1, True), (2, False), (2, True)])
 def test_partial_publication_remains_pending_until_native_recovery(tmp_path, target_number, after_replace):
     root = tmp_path / 'project'; model = import_project(root); plan = saved(model)
-    native = os.replace; targets = {op['evidence']['id'] + '.json' for op in plan.data['operations']}
+    from specroad.changes import _guarded_effects
+    native = _guarded_effects.replace_bound_image; targets = {op['evidence']['id'] + '.json' for op in plan.data['operations']}
     attempted = []
-    def replace(src, dst, **kwargs):
+    def replace(*args, **kwargs):
+        dst = args[3]
         if dst in targets:
             attempted.append(dst)
             if len(attempted) == target_number:
-                if after_replace: native(src, dst, **kwargs)
+                if after_replace: native(*args, **kwargs)
                 raise OSError(5, 'fixture interruption')
-        return native(src, dst, **kwargs)
-    with patch.object(os, 'replace', side_effect=replace):
+        return native(*args, **kwargs)
+    with patch.object(_guarded_effects, 'replace_bound_image', replace):
         result = execute_authoring_plan(plan, model, command_id='evidence.import',
             transaction_id='txn-import', authority=ALLOW)
     assert result['status'] == 'failed' and result['exit_code'] == 5
     assert result['write_state'] == 'unknown' and result['recovery_required']
     assert not result['retry_safe'] and result['completion'] is None
-    journal = CommittingJournal((root / '.specroad/transactions/txn-import/journal.json').read_bytes())
+    marker = json.loads((root / '.specroad/write-state/pending.json').read_bytes())
+    assert marker['state'] == 'writing'
+    written = target_number if after_replace else target_number - 1
+    paths = sorted(artifact_path('evidence', op['evidence']['id'], 'SR') for op in plan.data['operations'])
+    assert sum((root / p).exists() for p in paths) == written
+    for path, raw in model.source_files.items(): assert (root / path).read_bytes() == raw
     before = inventory(root)
-    with pytest.raises(ModelError):
+    with no_write_attempts(), pytest.raises(ModelError):
         apply(plan, model, transaction_id='forbidden-retry')
+    with no_write_attempts(), pytest.raises(ModelError):
+        retry(root, model.source_files[SOURCE])
     assert inventory(root) == before
-    complete = target_number == 2 and after_replace
-    recovered = recover(root, journal, complete=complete)
-    if complete: assert recovered['normative_writes'] == 0
-    assert_recovered_set(root, model, plan, complete=complete)
 
 
 def child_model(model, plan):
@@ -325,29 +289,34 @@ plan=ChangePlan(''' + repr(plan.source_bytes) + ''')
 def test_real_process_exit_retains_partial_set_and_native_recovery_proof(tmp_path, target_number):
     root = tmp_path / 'project'; model = import_project(root); plan = saved(model)
     body = child_model(model, plan) + '''
-native=os.replace
+from specroad.changes import _guarded_effects
+native=_guarded_effects.replace_bound_image
 targets={op['evidence']['id']+'.json' for op in plan.data['operations']}
 written=[]
-def replace(src,dst,**kwargs):
-    result=native(src,dst,**kwargs)
+def replace(*args,**kwargs):
+    dst=args[3]
+    result=native(*args,**kwargs)
     if dst in targets:
         written.append(dst)
         if len(written)==''' + str(target_number) + ''': os._exit(39)
     return result
-os.replace=replace
+_guarded_effects.replace_bound_image=replace
 import_evidence(plan,model,transaction_id='txn-import',
     authority=PublicationAuthority('child','1',lambda request: True))
 '''
     child = run_core(body, tmp_path, capture=True)
     assert child.returncode == 39, child.stderr
-    journal = CommittingJournal((root / '.specroad/transactions/txn-import/journal.json').read_bytes())
-    assert journal.data['published_count'] == target_number - 1
+    marker = json.loads((root / '.specroad/write-state/pending.json').read_bytes())
+    assert marker['state'] == 'writing' and marker['transaction_id'] == 'txn-import'
+    paths = [artifact_path('evidence', op['evidence']['id'], 'SR') for op in plan.data['operations']]
+    assert sum((root / p).exists() for p in paths) == target_number
+    for path, raw in model.source_files.items(): assert (root / path).read_bytes() == raw
     before = inventory(root)
-    with pytest.raises(ModelError):
+    with no_write_attempts(), pytest.raises(ModelError):
         apply(plan, model, transaction_id='forbidden-after-crash')
+    with no_write_attempts(), pytest.raises(ModelError):
+        retry(root, model.source_files[SOURCE])
     assert inventory(root) == before
-    recover(root, journal, complete=target_number == 2, crashed=True)
-    assert_recovered_set(root, model, plan, complete=target_number == 2)
 
 
 @pytest.mark.parametrize('mode', ['core', 'pyz'])

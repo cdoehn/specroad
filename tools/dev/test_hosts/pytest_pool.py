@@ -112,7 +112,15 @@ def observation(config):
         result['launched'] = {name: next(k for k, r in profile['workers'].items() if r == row)
                               for name, row in live.rows.items()}
         result['grants'] = live.grants
-        result['selected'] = list(profile['selected'])
+        # Permissions carry xdist collection indices. Pytest can regroup
+        # scoped parameters after reading the selected command-line items;
+        # the input mapping's order is not the executed index namespace.
+        scheduler = getattr(getattr(live, 'ds', None), 'sched', None)
+        result['selected'] = list(getattr(scheduler, 'collection', None) or ())
+        if (len(result['selected']) != len(profile['selected'])
+                or set(result['selected']) != set(profile['selected'])
+                or config._specroad_verification.ledger.aliases != profile['selected']):
+            result['errors'].append('host_pool_selection_mismatch')
         result['errors'].extend(live.errors)
         if live.moves is not None:
             result['cancellations'] = live.moves.cancelled

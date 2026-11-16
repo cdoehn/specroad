@@ -222,96 +222,77 @@ def test_tampered_completion_is_not_replayed_as_success(tmp_path):
 @pytest.mark.parametrize('fail_at,moved', [(1, False), (1, True), (2, False), (2, True)])
 def test_interrupted_import_is_quarantined_then_recovers_exact_basis_or_full_target(tmp_path, saved, fail_at, moved):
     root = tmp_path / 'project'; m, resource = project(root); values = candidates()
-    report = prepare_import_plan(m, values, **inputs(resource)); native_replace = os.replace; calls = []
+    from specroad.changes import _guarded_effects
+    report = prepare_import_plan(m, values, **inputs(resource))
+    native_replace = _guarded_effects.replace_bound_image; calls = []
     targets = {a['artifact']['id'] + '.json' for a in report.data['change_plan']['result_artifacts']}
     assert len(targets) == 2
-    def replace(src, dst, **kwargs):
+    def replace(*args, **kwargs):
+        dst = args[3]
         if str(dst) in targets:
             calls.append(str(dst))
             if len(calls) == fail_at:
-                if moved: native_replace(src, dst, **kwargs)
+                if moved: native_replace(*args, **kwargs)
                 raise OSError('synthetic interrupted import')
-        return native_replace(src, dst, **kwargs)
-    with patch.object(os, 'replace', side_effect=replace): result = execute(m, values, resource, saved=saved)
+        return native_replace(*args, **kwargs)
+    with patch.object(_guarded_effects, 'replace_bound_image', replace):
+        result = execute(m, values, resource, saved=saved)
     failed(result, 5, phase='native_execution', state='unknown')
     assert len(calls) == fail_at and result['recovery_required']
     assert result['diagnostics'][0]['reason'] == 'publication_io_failure'
-    path = '.specroad/transactions/txn-import/journal.json'
-    journal = CommittingJournal((root / path).read_bytes())
-    assert journal.data['published_count'] == fail_at - 1
+    marker = json.loads((root / '.specroad/write-state/pending.json').read_bytes())
+    assert marker['state'] == 'writing' and marker['transaction_id'] == 'txn-import'
+    changed = set(calls[:fail_at if moved else fail_at - 1])
+    expected = {artifact_path(a['artifact']['artifact_type'], a['artifact']['id'], 'SR'):
+        canonical_json_bytes(a['artifact']) for a in report.data['change_plan']['result_artifacts']}
+    for name, raw in expected.items():
+        if name.rsplit('/', 1)[-1] in changed: assert (root / name).read_bytes() == raw
+        elif name in m.source_files: assert (root / name).read_bytes() == m.source_files[name]
+        else: assert not (root / name).exists()
+    for name, raw in m.source_files.items():
+        if name not in expected: assert (root / name).read_bytes() == raw
     assert not (root / transaction_receipt_path('txn-import')).exists()
     assert not (root / request_receipt_path('import-execution-request')).exists()
     before = inventory(root)
     with no_write_attempts():
         read = validate_project_read_only(root, profile_resources=m.profile_resources, core_key=m.profile_resources[0].key)
+        retry = execute(m, values, resource, transaction_id='txn-retry')
     assert not read.passed and read.exit_code == 5 and not read.data['model_loaded']
-    assert read.data['operational']['recovery_required'] and inventory(root) == before
-    retry = execute(m, values, resource, transaction_id='txn-retry')
-    assert retry['status'] == 'failed' and retry['diagnostics'][0]['reason'] == 'transaction_journal_blocks_lock'
+    assert retry['status'] == 'failed' and retry['diagnostics'][0]['reason'] == 'project_corrupted'
     assert inventory(root) == before
-    data = journal.data
-    options = dict(kind='recovery', command='recover run', project_id=data['project_id'],
-        request_id=data['request_id'], transaction_id=data['transaction_id'])
-    authority = RecoveryAuthority('synthetic-explicit-recovery', '1', lambda r: True)
-    full = fail_at == 2 and moved
-    with project_lock(root, **options) as held:
-        if full:
-            with pytest.raises(RecoveryError) as caught:
-                rollback_interrupted_transaction('txn-import', held_lock=held, authority=authority,
-                    expected_journal_sha256=journal.sha256)
-            assert caught.value.reason == 'recovery_full_target_requires_completion'
-            recovered = complete_published_transaction('txn-import', held_lock=held, authority=authority,
-                expected_journal_sha256=journal.sha256)
-        else:
-            recovered = rollback_interrupted_transaction('txn-import', held_lock=held, authority=authority,
-                expected_journal_sha256=journal.sha256)
-    if full:
-        assert recovered.data['commit_completed'] and recovered.data['current_target_verified']
-        assert recovered.data['normative_writes'] == 0
-        assert_native_files(root, m, report.data)
-        ref = recovered.data['receipts']['transaction']
-        receipt = TransactionReceipt((root / ref['path']).read_bytes())
-        assert receipt.sha256 == ref['sha256'] and receipt.data['operations'] == report.data['operations']
-        with no_write_attempts(): repeated = execute(m, values, resource, saved=saved)
-        assert repeated['status'] == 'success' and repeated['execution']['replayed']
-        assert repeated['execution']['completion']['receipts'] == recovered.data['receipts']
-    else:
-        assert recovered.data['rollback_completed'] and recovered.data['state'] == 'rolled_back'
-        for name, raw in m.source_files.items(): assert (root / name).read_bytes() == raw
-        assert not (root / artifact_path('goal', values[1]['new_artifact']['id'], 'SR')).exists()
-        ref = recovered.data['receipt']; raw = (root / ref['path']).read_bytes()
-        receipt = json.loads(raw)
-        assert ref['path'] == transaction_receipt_path('txn-import')
-        assert sha256(raw).hexdigest() == ref['sha256']
-        assert receipt['format_version'] == 'recovery-transaction-receipt-v1'
-        assert receipt['action'] == 'rollback' and receipt['outcome'] == 'rolled_back'
-        assert receipt['result_model_root_sha256'] == journal.data['base_model_root_sha256']
-        assert receipt['journal'] == json.loads((root / path).read_bytes())
-        assert receipt['journal_sha256'] == sha256((root / path).read_bytes()).hexdigest()
-        audit = receipt['recovery_audit']; audit_raw = (root / audit['path']).read_bytes()
-        assert sha256(audit_raw).hexdigest() == audit['sha256']
-        assert json.loads(audit_raw)['authority_id'] == authority.authority_id
-        assert not (root / request_receipt_path('import-execution-request')).exists()
     assert (root / 'foreign.bin').read_bytes() == b'Unmanaged bytes stay unchanged.\x00'
 
 
 @pytest.mark.parametrize('stage', ['publish_prepared_journal', 'finalize_committing_journal', 'cleanup_completed_transaction'])
 def test_late_failure_retains_real_journal_and_receipts_without_automatic_action(tmp_path, stage):
     root = tmp_path / 'project'; m, resource = project(root); values = candidates()
-    with patch.object(writer, stage, side_effect=OSError('private interruption')) as call:
+    from specroad.changes import guarded_write
+    event = {'publish_prepared_journal': 'staged:0',
+        'finalize_committing_journal': 'receipt:transaction.json',
+        'cleanup_completed_transaction': 'receipts_synced'}[stage]
+    reached = []
+    def stop(point):
+        if point == event:
+            reached.append(point)
+            raise OSError('private interruption')
+    with patch.object(guarded_write, '_checkpoint', stop):
         result = execute(m, values, resource)
     failed(result, 5, phase='native_execution', state='unknown')
-    assert call.call_count == 1 and result['recovery_required']
-    state = json.loads((root / '.specroad/transactions/txn-import/journal.json').read_bytes())['state']
-    expected = {'publish_prepared_journal': 'prepared', 'finalize_committing_journal': 'committing',
-        'cleanup_completed_transaction': 'committed'}[stage]
-    assert state == expected
-    if state == 'prepared':
+    assert reached == [event] and result['recovery_required']
+    assert json.loads((root / '.specroad/write-state/pending.json').read_bytes())['state'] == 'writing'
+    if event == 'staged:0':
         for name, raw in m.source_files.items(): assert (root / name).read_bytes() == raw
         assert not (root / artifact_path('goal', values[1]['new_artifact']['id'], 'SR')).exists()
     else: assert_native_files(root, m, result['submitted_import_plan'])
-    assert (root / transaction_receipt_path('txn-import')).exists() == (state == 'committed')
-    assert (root / request_receipt_path('import-execution-request')).exists() == (state == 'committed')
+    assert (root / transaction_receipt_path('txn-import')).exists() == (event != 'staged:0')
+    assert (root / request_receipt_path('import-execution-request')).exists() == (event == 'receipts_synced')
+    from specroad.changes import read_transaction_completion
+    from specroad.storage.project import ProjectSource
+    from specroad.model.errors import ModelError
+    before = inventory(root)
+    with no_write_attempts(), pytest.raises(ModelError):
+        read_transaction_completion(ProjectSource(root), 'txn-import')
+    assert inventory(root) == before
 
 
 @pytest.mark.parametrize('mode', ['core', 'pyz'])

@@ -39,38 +39,21 @@ def writer(root, cut):
         'target_root': plan.data['expected_result']['model_root_sha256']}), flush=True)
     if cut in ('pause_one', 'pause_two'):
         return
-    assert cut in CUTS
+    assert cut in (*CUTS, 'released')
 
     def stop():
         print(json.dumps({'pid': os.getpid(), 'cut': cut}), flush=True)
         os._exit(CRASH_EXIT)
 
-    if cut == 'first_target':
-        native = publication.publish_prepared_journal
-        native_replace = os.replace
-
-        def replace(src, dst, **kwargs):
-            result = native_replace(src, dst, **kwargs)
-            if dst != 'journal.json':
-                stop()
-            return result
-
-        def interrupt(*args, **kwargs):
-            with patch.object(os, 'replace', replace):
-                return native(*args, **kwargs)
-        name = 'publish_prepared_journal'
-    else:
-        name = {'building': 'begin_building_journal', 'prepared': 'stage_building_journal',
-            'all_targets': 'publish_prepared_journal', 'committed': 'finalize_committing_journal',
-            'cleanup': 'cleanup_completed_transaction'}[cut]
-        native = getattr(publication, name)
-
-        def interrupt(*args, **kwargs):
-            native(*args, **kwargs)
-            stop()
-
-    with patch.object(publication, name, interrupt):
+    from specroad.changes import guarded_write
+    event = {'building':'marker_synced', 'prepared':'staged:0', 'first_target':'effect_replaced:0',
+             'all_targets':'receipt:transaction.json', 'committed':'receipts_synced',
+             'cleanup':'marker_removed'}.get(cut)
+    def interrupt(current):
+        if current == event: stop()
+    with patch.object(guarded_write, '_checkpoint', interrupt):
         publish(store, reg, model, plan, transaction_id=TRANSACTION)
+    if cut == 'released': stop()  # The public writer returned and released its actual lock.
     raise AssertionError('Selected native phase was not reached')
 
 

@@ -76,10 +76,12 @@ def environment_report(invocation):
                 # An unclassified entry or uninspected writer is a blocker,
                 # but does not establish that a recoverable journal exists.
                 recovery_required = True if observed['recovery_required'] else None if blocked else False
-                reason = ('recovery_required' if recovery_required else
-                          'operational_state_unknown' if blocked else 'no_active_conflict_observed')
+                from ..changes.normal_access import observe_normal_state
+                state = observe_normal_state(boundary.root, observed)
+                reason = 'no_active_conflict_observed' if state['state'] == 'clean' else 'project_' + state['state']
                 check('project.operational', 'failed' if blocked else 'passed', reason,
-                      code=5 if blocked else 0)
+                      code=(6 if state['state'] == 'writer_active' else 5) if blocked else 0)
+
         except ModelError as error:
             check('project.metadata', 'failed', error.reason, code=3)
         except ResourcePolicyError:

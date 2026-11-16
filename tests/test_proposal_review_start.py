@@ -24,14 +24,14 @@ def options(**changes):
 
 @pytest.mark.parametrize('changed,bundled', [(False, False), (True, True)])
 def test_native_review_start_writes_only_one_physical_revision_and_complete_evidence(tmp_path, monkeypatch, changed, bundled):
-    from specroad import changes
+    from specroad.changes import guarded_write
     prepared = []
-    native_stage = changes.stage_building_journal
+    native_stage = guarded_write.publish_guarded_change
     def observe_preflight(preflight, *args, **kwargs):
         journal = native_stage(preflight, *args, **kwargs)
         prepared.append(preflight)
         return journal
-    monkeypatch.setattr(changes, 'stage_building_journal', observe_preflight)
+    monkeypatch.setattr(guarded_write, 'publish_guarded_change', observe_preflight)
     root = tmp_path / 'project'
     _, original = validation_project(root, changed=changed, bundled=bundled)
     before = inventory(root)
@@ -69,7 +69,7 @@ def test_native_review_start_writes_only_one_physical_revision_and_complete_evid
     completion = read_transaction_completion(ProjectSource(root), options()['transaction_id'],
                                            preflight=prepared[0])
     assert completion.data['current_target_verified'] is True
-    assert completion.data == {**historical.data, 'current_target_verified': True}
+    assert completion.data == {**historical.data, 'current_target_verified': True, 'replayed': False}
     assert result['completion'] == completion.data
     assert result['changed_change_ids'] == [] and result['project_writes_performed']
     assert result['review_validity'] == dict(current_approval=False, human_decision_required=True)

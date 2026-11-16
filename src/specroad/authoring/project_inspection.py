@@ -35,14 +35,9 @@ def _runtime(boundary, project_id=None):
     if operational != again or lock != repeated_lock:
         raise InspectionChanged('inspection_runtime_observation_changed')
     record = lock['record']
-    state = operational['consistency_state']
-    if record is not None:
-        if record['kind'] == 'writer' and lock['owner_state'] == 'alive':
-            state = 'writer_active'
-        elif lock['owner_state'] in ('dead', 'pid_reused') or record['kind'] == 'recovery':
-            state = 'recovery_required'
-        else:
-            state = 'unknown'
+    from ..changes.normal_access import observe_normal_state
+    normal = observe_normal_state(boundary.root, operational, expected_project_id=project_id)
+    state = 'consistent' if normal['state'] == 'clean' else normal['state']
     unknown_locks = [p for p in operational['unknown_paths'] if p.startswith('.specroad/locks/')]
     transaction = (operational if operational['unresolved_paths'] else
                    _unknown() if lock['journal_paths'] else None)
@@ -68,7 +63,8 @@ def _result(payload, *, code=0, diagnostics=(), **details):
 def _blocked_result(payload):
     state = payload['runtime']['consistency_state']
     code = 6 if state == 'writer_active' else 5
-    return _result(payload, code=code, diagnostics=(Diagnostic(
+    return _result(payload, code=code, project_corrupted=state == 'corrupted',
+        manual_git_restore_required=state == 'corrupted', normal_operation_started=False, diagnostics=(Diagnostic(
         'CORE_CONFLICT' if code == 6 else 'CORE_ENVIRONMENT', 'error', 'runtime',
         'Project inspection is blocked by operational state.', rationale=state),))
 

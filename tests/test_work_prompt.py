@@ -98,7 +98,7 @@ def test_native_next_step_requires_original_inputs_and_fresh_authority(recorded,
         prepare(store, reg, model, plan)
     current = store.read(); before = inventory(tmp_path)
     with monkeypatch.context() as patcher:
-        patcher.setattr(publication, 'publish_prepared_journal', forbidden)
+        patcher.setattr('specroad.changes.guarded_write.publish_guarded_change', forbidden)
         with no_write_attempts():
             value = native_prompt(store, reg, model, plan)
     data = checked_contract(value, current, location); action = data['next_action']
@@ -264,13 +264,13 @@ def test_checkpoint_changed_during_projection_refuses_stale_continuation(recorde
     assert (location.path / 'work.json').read_bytes() == pointer and inventory(roots[0].root) == project
 
 
-@pytest.mark.parametrize('cut', ['prepared', 'first_target', 'committed', 'cleanup'])
+@pytest.mark.parametrize('cut', ['prepared', 'first_target', 'committed', 'cleanup', 'released'])
 def test_real_process_loss_never_becomes_a_new_write_authorization(recorded, tmp_path, cut):
     packet, stopped = child(tmp_path, cut)
     reg, plan, store = restore(tmp_path, packet)
     model = current_model(tmp_path / 'project'); before = inventory(tmp_path)
     with no_write_attempts():
-        if cut in ('prepared', 'first_target'):
+        if cut != 'released':
             with pytest.raises(WorkResumeError) as caught:
                 native_prompt(store, reg, model, plan)
             assert caught.value.reason == 'normative_transaction_requires_recovery'
@@ -291,7 +291,7 @@ def test_native_proof_lost_during_projection_refuses_receipt_delivery_instructio
     def vanished(value, limit):
         result = original(value, limit); marker.unlink(); return result
     monkeypatch.setattr(prompt, '_render', vanished)
-    monkeypatch.setattr(publication, 'publish_prepared_journal', forbidden)
+    monkeypatch.setattr('specroad.changes.guarded_write.publish_guarded_change', forbidden)
     with pytest.raises(ReceiptError):
         native_prompt(store, reg, model, plan)
     assert not marker.exists() and inventory(location.path) == work_before

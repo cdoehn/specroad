@@ -113,17 +113,27 @@ Nach erfolgreichem 18.t.W: [Korrektur 705](history/bundle-705-native-validation-
 
 18.t.R/C sind bestätigt. [Korrektur 706](history/bundle-706-move-status-handshake.md) setzt ausschließlich den offenen TEST-OVERHEAD.W/R/C-Rest fort; kein zusätzlicher Produktfortschritt.
 
+Ursprüngliche vollständige Gruppe: [18.u — normale Schreibadapter und Abbruchsperre, Bundle 707](history/bundle-707-normal-write-adapters.md). Die Zielwerte dieser Stage gelten erst nach ihrem eigenen erfolgreichen Apply-Gate und Commit.
+
+Aktuelle Korrektur des vollständigen offenen Restes: [Bundle 708](history/bundle-708-normal-write-correction.md). Kein Commit aus Bundle 707 war erfolgreich.
+
+Aktuelle Korrektur des vollständigen offenen Restes: [Bundle 709](history/bundle-709-normal-write-worker-correction.md). Kein Commit aus Bundle 708 war erfolgreich.
+
+Aktuelle Korrektur des vollständigen offenen Restes: [Bundle 710](history/bundle-710-worker-proxy-join.md). Bundle 709 scheiterte beim Gatewayabschluss; kein Commit entstand.
+
+Aktuelle Korrektur des vollständigen offenen Restes: [Bundle 711](history/bundle-711-native-collection-order.md). Bundle 710 scheiterte an der Host-Nachweisbindung; kein Commit entstand.
+
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
 plan_revision: 215
 implementation_plan_commits_total: 918
-implementation_plan_commits_completed: 768
-last_completed_plan_commit: 18.t.C
-next_plan_commit: 18.u.W
+implementation_plan_commits_completed: 769
+last_completed_plan_commit: 18.u.W
+next_plan_commit: 18.u.R
 priority_off_plan: null
 next_off_plan_commit: null
-last_completed_numbered_bundle: 703
+last_completed_numbered_bundle: 706
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null

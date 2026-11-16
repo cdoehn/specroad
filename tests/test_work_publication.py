@@ -1,3 +1,5 @@
+from specroad.changes import guarded_write
+from specroad.changes.write_guard_values import WriteGuardError
 """Real temporary native transactions after separately persisted preparations.
 
 Registry and human authority are explicit test-host registrations. The actual
@@ -114,7 +116,7 @@ def test_all_original_operations_publish_in_one_native_transaction_and_replay(re
     model, plan, preflight, reg, initial, location, store = setup(tmp_path, multi=multi)
     checkpoint = ready(store, reg, model, plan)
     expected = {**model.source_files, **{d.path: d.content for d in preflight.request.documents}}
-    native = publication.publish_prepared_journal; calls = []; authorizations = []
+    native = guarded_write.publish_guarded_change; calls = []; authorizations = []
 
     def observe(*args, **kwargs):
         calls.append(args[0].request.plan.source_bytes)
@@ -127,7 +129,7 @@ def test_all_original_operations_publish_in_one_native_transaction_and_replay(re
         assert request.plan.data['request_id'] == plan.data['request_id']
         return True
 
-    monkeypatch.setattr(publication, 'publish_prepared_journal', observe)
+    monkeypatch.setattr(guarded_write, 'publish_guarded_change', observe)
     authority = PublicationAuthority('explicit-test-human', '1', allow)
     result = publish(store, reg, model, plan, authority=authority)
     value = result.as_dict(); project = Path(model.binding.source_root)
@@ -320,13 +322,13 @@ def test_preparation_publication_failure_keeps_actual_work_without_project_write
 def test_lost_output_after_native_commit_replays_receipt_without_second_write(recorded, tmp_path, monkeypatch):
     model, plan, _, reg, _, _, store = setup(tmp_path, multi=True)
     checkpoint = ready(store, reg, model, plan)
-    native = publication.cleanup_completed_transaction
+    native = guarded_write.publish_guarded_change
     with monkeypatch.context() as patch:
         def lose_output(*args, **kwargs):
             result = native(*args, **kwargs)
             assert result.data['commit_completed'] and result.data['cleanup_completed']
             raise OSError(errno.EIO, 'Owned output loss after actual commit')
-        patch.setattr(publication, 'cleanup_completed_transaction', lose_output)
+        patch.setattr(guarded_write, 'publish_guarded_change', lose_output)
         with pytest.raises(OSError):
             publish(store, reg, model, plan)
     proof = read_transaction_completion(ProjectSource(model.binding.source_root), 'txn-work-native')
@@ -350,13 +352,16 @@ def test_interrupted_native_publication_requires_recovery_not_work_resume(record
                 raise OSError(errno.EIO, 'Owned error after first actual target replacement')
             return result
         patch.setattr(os, 'replace', interrupt_after_target)
-        with pytest.raises(CommitPublicationError) as caught:
+        with pytest.raises(WriteGuardError) as caught:
             publish(store, reg, model, plan)
-    assert len(moved) == 1 and caught.value.publication_possible
+    assert len(moved) == 1 and caught.value.write_state == 'unknown'
     assert store.read().raw == checkpoint.raw
-    journal = json.loads((project / '.specroad/transactions/txn-work-native/journal.json').read_bytes())
-    assert journal['state'] == 'committing'
-    assert transaction_preflight(project, command_class=CommandClass.READ_ONLY).data['recovery_required']
+    marker = json.loads((project / '.specroad/write-state/pending.json').read_bytes())
+    assert marker['state'] == 'writing' and marker['transaction_id'] == 'txn-work-native'
+    assert not (project / '.specroad/transactions/txn-work-native/journal.json').exists()
+    gate = transaction_preflight(project, command_class=CommandClass.READ_ONLY).data
+    assert gate['project_corrupted'] and gate['manual_git_restore_required']
+    assert not gate['recovery_attempted'] and not gate['recovery_completed']
     before = inventory(tmp_path)
     for action in (prepare, publish):
         with no_write_attempts(), pytest.raises(WorkResumeError) as blocked:

@@ -21,6 +21,8 @@ class InspectionChanged(ModelError):
 class InspectionSnapshot:
     """An observation with a final reread, not an atomic snapshot or write grant."""
     def __init__(self, root, profiles, *, include_archive_objects=False):
+        from ..changes.normal_access import require_normal_access
+        require_normal_access(root)
         self.source = source = ProjectSource(root)
         self.paths = current_json_paths(source)
         self.raw = {p: source.read_normative(p) for p in self.paths}

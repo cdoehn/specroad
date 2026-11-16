@@ -115,9 +115,9 @@ def test_add_allocates_under_real_lock_and_publishes_one_source_revision(tmp_pat
     assert result['completion']['commit_completed'] and result['completion']['cleanup_completed']
     assert result['completion']['current_target_verified']
     proof = receipt(root, result)
-    assert proof['operations'] == [{'op': 'relation_add', 'source': source['id'], 'relation': relation}]
-    assert proof['created_ids'] == [relation['relation_id']]
-    assert proof['journal']['actor'] == actor and proof['journal']['planned_at'] == TIME
+    assert proof['write']['operations'] == [{'op': 'relation_add', 'source': source['id'], 'relation': relation}]
+    assert proof['result_object']['created_ids'] == [relation['relation_id']]
+    assert proof['write']['actor'] == actor and proof['write']['planned_at'] == TIME
     assert next(a for a in model.artifacts if a['id'] == source['id']) == source
     assert_preserved(root, before, path)
 
@@ -137,11 +137,11 @@ def test_remove_targets_exact_relation_and_retains_reason_actor_and_other_edge(t
     assert result['command_id'] == 'relation.remove' and result['source_id'] == source['id']
     assert result['relation_id'] == selected['relation_id']
     proof = receipt(root, result)
-    assert proof['operations'] == [{'op': 'relation_remove', 'source': source['id'],
+    assert proof['write']['operations'] == [{'op': 'relation_remove', 'source': source['id'],
         'relation_id': selected['relation_id'], 'expected_sha256': canonical_json_sha256(selected),
         'reason': 'Replaced by another link.'}]
-    assert proof['created_ids'] == [] and proof['journal']['actor'] == actor
-    assert proof['journal']['planned_at'] == TIME
+    assert proof['result_object']['created_ids'] == [] and proof['write']['actor'] == actor
+    assert proof['write']['planned_at'] == TIME
     assert result['completion']['commit_completed'] and result['completion']['cleanup_completed']
     assert next(a for a in model.artifacts if a['id'] == source['id']) == source
     assert_preserved(root, before, path)

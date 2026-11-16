@@ -279,17 +279,18 @@ def test_generic_target_policy_cannot_omit_the_evidence_command_gate(tmp_path):
 
 def test_record_becomes_visible_only_as_complete_valid_json(tmp_path, monkeypatch):
     root = tmp_path / 'project'; model = project(root); record = measurement(model); plan = plan_for(model, record)
-    native = os.replace; seen = []
-    def replace(source, target, **options):
+    from specroad.authoring import _bootstrap_io
+    native = _bootstrap_io._rename_native; seen = []
+    def replace(function, source_fd, source, target_fd, target):
         if str(target).startswith('SR-EVD-'):
             assert inspect_project_lock(root).data['record']['kind'] == 'writer'
-            result = native(source, target, **options)
+            result = native(function, source_fd, source, target_fd, target)
             actual = (root / artifact_path('evidence', record.id, 'SR')).read_bytes()
             assert RecordArtifact(actual, expected_type='evidence').data == record.data
             seen.append(actual)
             return result
-        return native(source, target, **options)
-    monkeypatch.setattr(os, 'replace', replace)
+        return native(function, source_fd, source, target_fd, target)
+    monkeypatch.setattr(_bootstrap_io, '_rename_native', replace)
     apply(plan, model)
     assert seen == [record.source_bytes]
 

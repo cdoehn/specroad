@@ -1,3 +1,5 @@
+from specroad.changes.write_guard_values import WriteGuardError
+from specroad.changes.normal_access import NormalAccessError
 """Native failures retain evidence; one real authoring chain survives retries."""
 import json
 import os
@@ -140,13 +142,13 @@ def test_failed_replace_preserves_real_bytes_and_unacknowledged_recovery(tmp_pat
     assert_failed(result, plan, 5, state='unknown')
     assert calls == [identity + '.json'] and result['recovery_required']
     assert result['diagnostics'][0]['reason'] == 'publication_io_failure'
-    assert result['diagnostics'][0]['published_count_acknowledged'] == 0
+    assert result['diagnostics'][0]['write_state'] == 'unknown'
     expected = canonical_json_bytes(report['plan']['result_artifacts'][0]['artifact']) if moved else original
     assert path.read_bytes() == expected
-    journal = json.loads((root / '.specroad/transactions/txn-execution/journal.json').read_bytes())
-    assert journal['state'] == 'committing' and journal['published_count'] == 0
+    journal = json.loads((root / '.specroad/write-state/pending.json').read_bytes())
+    assert journal['state'] == 'writing' and journal['format_version'] == 'write-guard-v1'
     retained = file_inventory(root); retry = execute(plan, model, command, transaction_id='txn-retry')
-    assert retry['status'] == 'failed' and retry['diagnostics'][0]['reason'] == 'transaction_journal_blocks_lock'
+    assert retry['status'] == 'failed' and retry['diagnostics'][0]['reason'] == 'project_corrupted'
     assert file_inventory(root) == retained
 
 

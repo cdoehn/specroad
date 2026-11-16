@@ -84,13 +84,14 @@ def verify_proposal_publication(proof, approved, applied, context):
     from .receipts import read_proposal_receipts
     journal = read_proposal_receipts({d.path: d.content for d in proof.receipts},
                                     proof.before.configuration.project_id).data
+    normal = journal.get('format_version') == 'normal-write-audit-v1'
     require(journal['authoring_binding']['command_id'] == 'proposal apply'
             and journal['plan_sha256'] == proof.plan.sha256
-            and journal['plan_bytes_sha256'] == sha256(proof.plan.source_bytes).hexdigest()
+            and (normal or journal['plan_bytes_sha256'] == sha256(proof.plan.source_bytes).hexdigest())
             and journal['request_id'] == plan['request_id'] and journal['actor'] == plan['actor']
             and journal['change_plan_id'] == plan['change_plan_id']
             and journal['planned_at'] == plan['planned_at']
-            and journal['authoring_binding']['scope_descriptor'] == plan['base']['scope_descriptor']
+            and (normal or journal['authoring_binding']['scope_descriptor'] == plan['base']['scope_descriptor'])
             and journal['base_model_root_sha256'] == plan['base']['model_root_sha256']
             and journal['target_model_root_sha256'] == plan['expected_result']['model_root_sha256'],
             'proposal_completion_binding_mismatch')
@@ -107,6 +108,12 @@ def verify_proposal_publication(proof, approved, applied, context):
     require({r['path'] for r in journal['target_inventory']} == set(proof.after.source_files),
             'proposal_completion_target_inventory_incomplete')
     for entry in journal['files']:
+        if normal:
+            entry = dict(path=entry['path'], existed_before=entry['before'] is not None,
+                before_size=None if entry['before'] is None else entry['before']['size'],
+                before_sha256=None if entry['before'] is None else entry['before']['sha256'],
+                after_size=None if entry['after'] is None else entry['after']['size'],
+                after_sha256=None if entry['after'] is None else entry['after']['sha256'])
         old = proof.before.source_files.get(entry['path'])
         new = proof.after.source_files.get(entry['path'])
         require(new is not None and (len(new), sha256(new).hexdigest()) ==

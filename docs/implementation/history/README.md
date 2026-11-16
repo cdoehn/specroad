@@ -450,3 +450,13 @@
 - [Bundle 705 — nativer Validierungsbefund im Schreibbeleg](bundle-705-native-validation-receipt.md)
 
 - [Bundle 706 — MOVE-Abnahme an veröffentlichten Versuch binden](bundle-706-move-status-handshake.md)
+
+- [Bundle 707 — normale Schreibadapter und Abbruchsperre 18.u.W/R/C](bundle-707-normal-write-adapters.md)
+
+- [Bundle 708 — vollständige Korrektur 18.u.W/R/C](bundle-708-normal-write-correction.md)
+
+- [Bundle 709 — Korrektur 18.u.W/R/C und Workerfreigabe](bundle-709-normal-write-worker-correction.md)
+
+- [Bundle 710 — Worker vor ihrem Proxy abschließen](bundle-710-worker-proxy-join.md)
+
+- [Bundle 711 — Hostberechtigungen an native Collection binden](bundle-711-native-collection-order.md)

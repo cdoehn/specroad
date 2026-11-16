@@ -1,3 +1,5 @@
+from specroad.changes.write_guard_values import WriteGuardError
+from specroad.changes.normal_access import NormalAccessError
 """Native lifecycle, ownership, refusal and interrupted update contracts."""
 from io import BytesIO
 import json
@@ -197,26 +199,25 @@ def test_failed_actual_replace_retains_old_or_new_bytes_and_blocks_retry(tmp_pat
             raise OSError('injected target replace failure')
         return native_replace(src, dst, **kwargs)
     operation = edit(old, expected_revision=1)
-    with patch.object(os, 'replace', side_effect=replace), pytest.raises(CommitPublicationError) as error:
+    with patch.object(os, 'replace', side_effect=replace), pytest.raises(WriteGuardError) as error:
         update_artifact(model, operation, **arguments(root))
     assert attempts == [old['id'] + '.json']
     assert error.value.reason == 'publication_io_failure' and error.value.exit_code == 5
-    assert error.value.write_state == 'unknown' and error.value.mutation_possible and error.value.publication_possible
-    assert error.value.published_count == 0
+    assert error.value.write_state == 'unknown'
     if moved:
         actual = json.loads((root / path).read_bytes())
         assert actual == {**old, 'statement': 'Updated content.', 'revision': 2,
                           'updated_by': ACTOR, 'updated_at': TIME}
     else: assert (root / path).read_bytes() == raw
-    journal = json.loads((root / '.specroad/transactions/txn-update/journal.json').read_bytes())
-    assert journal['state'] == 'committing' and journal['published_count'] == 0
+    journal = json.loads((root / '.specroad/write-state/pending.json').read_bytes())
+    assert journal['state'] == 'writing' and journal['format_version'] == 'write-guard-v1'
     after = {p: rest for p, *rest in file_inventory(root)}
     for p, *rest in before:
         if p != path: assert after[p] == rest
     retained = file_inventory(root)
-    with pytest.raises(ProjectLockError) as retry:
+    with pytest.raises(NormalAccessError) as retry:
         update_artifact(model, operation, **arguments(root))
-    assert retry.value.reason == 'transaction_journal_blocks_lock' and retry.value.exit_code == 5
+    assert retry.value.reason == 'project_corrupted' and retry.value.exit_code == 5
     assert file_inventory(root) == retained
 
 

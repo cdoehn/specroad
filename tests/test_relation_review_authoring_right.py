@@ -1,3 +1,5 @@
+from specroad.changes.write_guard_values import WriteGuardError
+from specroad.changes.normal_access import NormalAccessError
 """Early structural rejection, exact saved bindings and real recovery evidence."""
 import json
 import os
@@ -123,7 +125,7 @@ def test_allocation_skips_known_archived_and_reserved_review_ids_under_the_lock(
     with patch('secrets.token_bytes', side_effect=entropy): result = call(model, source, args)
     assert draws == [ENTROPY, second, fresh]
     assert result['review_id'] == 'SR-RREV-' + encode128(fresh)
-    assert receipt(root, result)['created_ids'] == [result['review_id']]
+    assert receipt(root, result)['result_object']['created_ids'] == [result['review_id']]
     assert not (root / artifact_path('relation_review', REVIEW_ID, 'SR')).exists()
     assert not (root / artifact_path('relation_review', reserved, 'SR')).exists()
 
@@ -220,30 +222,32 @@ def test_mutable_host_gate_list_cannot_remove_a_bound_denial(tmp_path):
 def test_failed_native_record_replace_retains_actual_bytes_and_blocks_blind_retry(tmp_path, moved):
     root = tmp_path / 'project'; model, source, _ = stored_project(root, with_edges=True)
     path = root / artifact_path('relation_review', REVIEW_ID, 'SR')
-    before = file_inventory(root); native_replace = os.replace; attempts = []
-    def replace(src, dst, **kwargs):
+    from specroad.changes import _guarded_effects
+    before = file_inventory(root); native_replace = _guarded_effects.replace_bound_image; attempts = []
+    def replace(*args, **kwargs):
+        dst = args[3]
         if str(dst) == REVIEW_ID + '.json':
             attempts.append(str(dst))
-            if moved: native_replace(src, dst, **kwargs)
+            if moved: native_replace(*args, **kwargs)
             raise OSError('injected review publication failure')
-        return native_replace(src, dst, **kwargs)
-    with patch('secrets.token_bytes', return_value=ENTROPY), patch.object(os, 'replace', side_effect=replace), \
-            pytest.raises(CommitPublicationError) as error:
+        return native_replace(*args, **kwargs)
+    with patch('secrets.token_bytes', return_value=ENTROPY), patch.object(_guarded_effects, 'replace_bound_image', replace), \
+            pytest.raises(WriteGuardError) as error:
         call(model, source, options(model))
     assert attempts == [REVIEW_ID + '.json'] and error.value.reason == 'publication_io_failure'
     assert error.value.exit_code == 5 and error.value.write_state == 'unknown'
-    assert error.value.mutation_possible and error.value.publication_possible and error.value.published_count == 0
+    assert error.value.write_state == 'unknown'
     if moved:
         record = json.loads(path.read_bytes())
         assert record['id'] == REVIEW_ID and record['review_state'] == 'recorded'
         assert record['maturity'] == 'approved' and record['revision'] == 1
         assert record['source_artifact_sha256'] == canonical_json_sha256(source)
     else: assert not path.exists()
-    journal = json.loads((root / '.specroad/transactions/txn-review/journal.json').read_bytes())
-    assert journal['state'] == 'committing' and journal['published_count'] == 0
+    journal = json.loads((root / '.specroad/write-state/pending.json').read_bytes())
+    assert journal['state'] == 'writing' and journal['format_version'] == 'write-guard-v1'
     after = {p: rest for p, *rest in file_inventory(root)}
     for p, *rest in before: assert after[p] == rest
     retained = file_inventory(root)
-    with pytest.raises(ProjectLockError) as retry: call(model, source, options(model))
-    assert retry.value.reason == 'transaction_journal_blocks_lock' and retry.value.exit_code == 5
+    with pytest.raises(NormalAccessError) as retry: call(model, source, options(model))
+    assert retry.value.reason == 'project_corrupted' and retry.value.exit_code == 5
     assert file_inventory(root) == retained

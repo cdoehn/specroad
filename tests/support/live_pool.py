@@ -18,6 +18,11 @@ from verification_support.identity import source_identity
 from verification_support.process_environment import test_environment as isolated_environment
 
 
+REORDER_COLLECTION = '''def pytest_collection_modifyitems(items):
+    items.reverse()
+'''
+
+
 def await_value(probe, process, log, timeout=30):
     deadline = time.monotonic() + timeout
     while time.monotonic() < deadline:
@@ -31,7 +36,7 @@ def await_value(probe, process, log, timeout=30):
 
 
 @contextmanager
-def pool(tmp_path, *, proxy=True, initial=None, source=None, state=None, transform=None):
+def pool(tmp_path, *, proxy=True, initial=None, source=None, state=None, transform=None, controller_hook=''):
     ids = [f'tests/test_subject.py::test_{i}' for i in range(6)]
     body = source or '''from pathlib import Path
 import os, threading, time
@@ -47,6 +52,8 @@ def exercise(index):
 '''
     body += '\n'.join(f'def test_{i}():\n    exercise({i})\n' for i in range(6))
     root = make_catalog_project(tmp_path / 'controller', ids=ids, source=body)
+    with (root/'conftest.py').open('a') as stream:
+        stream.write('\n' + controller_hook)
     (root / POLICY).write_text(json.dumps(POLICY_VALUE))
     target = tmp_path / 'remote-source' if proxy else root
     manifest = copy_snapshot(root, target) if proxy else copy_snapshot(root, tmp_path / 'snapshot')

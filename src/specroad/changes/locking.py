@@ -166,7 +166,12 @@ def project_lock(root, *, kind, command, project_id, transaction_id=None, reques
                 source.check_current()
             if selected is not LockKind.RECOVERY and files.journal_entries():
                 raise ProjectLockError('transaction_journal_blocks_lock')
-            yield guard
+            from .normal_access import _writer
+            token = _writer.set(guard)
+            try:
+                yield guard
+            finally:
+                _writer.reset(token)
         finally:
             # Child cleanup must never remove/unlock its parent's ownership.
             if os.getpid() == guard._pid:

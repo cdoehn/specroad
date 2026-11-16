@@ -56,4 +56,8 @@ def publish_guarded_change(preflight, *, held_lock, authority, gates=()):
         require(type(allowed) is bool and allowed,'write_authority_denied',exit_code=7)
         return report.data
     inputs=_Inputs(plan,model.binding.project_id,request.data['authoring_binding']['command_id'],before,target,inventory_check,qualify)
-    return _run(inputs,held_lock)
+    try:
+        return _run(inputs,held_lock)
+    except OSError as error:
+        from .write_guard_values import WriteGuardError
+        raise WriteGuardError('publication_io_failure', exit_code=5) from error

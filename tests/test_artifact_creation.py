@@ -167,18 +167,19 @@ def test_completed_request_is_checked_before_new_entropy_plan_or_lock(tmp_path, 
 
 
 def test_actual_target_becomes_visible_only_as_complete_json(tmp_path, monkeypatch):
-    root = tmp_path / 'project'; model, ids = project(root); native = os.replace; seen = []
-    def replace(src, dst, **kw):
+    from specroad.authoring import _bootstrap_io
+    root = tmp_path / 'project'; model, ids = project(root); native = _bootstrap_io._rename_native; seen = []
+    def replace(function, src_fd, src, dst_fd, dst):
         if str(dst).startswith('SR-GOAL-'):
-            parent = Path(os.readlink('/proc/self/fd/' + str(kw['dst_dir_fd'])))
+            parent = Path(os.readlink('/proc/self/fd/' + str(dst_fd)))
             target = parent / dst
             assert not target.exists()
-            result = native(src, dst, **kw)
+            result = native(function, src_fd, src, dst_fd, dst)
             content = json.loads(target.read_bytes())
             assert content['statement'] == fields('goal')['statement'] and content['revision'] == 1
             seen.append(content['id'])
             return result
-        return native(src, dst, **kw)
-    monkeypatch.setattr(os, 'replace', replace)
+        return native(function, src_fd, src, dst_fd, dst)
+    monkeypatch.setattr(_bootstrap_io, '_rename_native', replace)
     result = create_artifact(model, normalize_artifact_create_input('goal', fields('goal')), **arguments(model, ids))
     assert seen == [result['artifact_id']]

@@ -77,6 +77,7 @@ def _native_state(current, model, plan):
     # Original request receipts take precedence over stale preparation metadata.
     # No success or fresh publication is inferred merely from a Work checkpoint.
     _require(plan.data['request_id'] is not None, 'normative_prompt_requires_request_id')
+    _transaction_clear(model)
     source = _source(model)
     resolution = resolve_normative_request(source, bind_plan_authoring(plan)).data
     if resolution['action'] == 'replay':

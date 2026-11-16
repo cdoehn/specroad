@@ -7,7 +7,7 @@ from specroad.changes import (resolve_normative_request, bind_plan_authoring,
     cleanup_completed_transaction, prepare_completion_receipts,
     begin_building_journal, project_lock, prepare_publication_check, PublicationCheckError)
 from specroad.storage.project import ProjectSource
-from support.receipts import published, finish
+from support.closed_receipts import published, finish
 from support.publication import ALLOW, TRANSACTION, files, prepared, NativeGuardStorage
 from support.targets import ACTOR, TIME, POLICY, plan
 from support.folds import goal, create, edit

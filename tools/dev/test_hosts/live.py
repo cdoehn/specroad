@@ -1,5 +1,6 @@
 """Reviewed xdist 3.8 main-loop adapter for live host counts, never test retries."""
 from queue import Empty
+from functools import partial
 import threading
 import time
 import types
@@ -8,6 +9,32 @@ import execnet
 import pytest
 
 from dev.test_control.store import Owner
+
+
+def join_retired_before_proxies(group):
+    # execnet 2.1.2 derives proxy dependencies only from registered gateways.
+    # exit() unregisters a worker but leaves its IO (including ProxyIO.wait)
+    # in the join list. Reap those workers before native teardown may exit a
+    # now-unused proxy. Keep native join/timeout/kill and error propagation.
+    from execnet.multi import safe_terminate
+    native_terminate = group.terminate
+
+    def terminate(timeout=None):
+        pending = tuple(group._gateways_to_join)
+
+        def join_wait(gateway):
+            gateway.join()
+            gateway._io.wait()
+
+        safe_terminate(group.execmodel, timeout,
+                       [(partial(join_wait, gateway), gateway._io.kill) for gateway in pending])
+        # Only remove the completed native batch; an exception leaves the
+        # outstanding joins and their proxies available to native cleanup.
+        for gateway in pending:
+            group._gateways_to_join.remove(gateway)
+        return native_terminate(timeout)
+
+    group.terminate = terminate
 
 
 def loop_once(session):
@@ -36,6 +63,7 @@ class LivePool:
         self.thread = None
         self.errors = []
         self._last_publish = None
+        self._gateway_cleanup_installed = False
         self.moves = None
         if config._sr_host_profile['format_version'] == 4:
             from .speculative_control import CopyAttempts
@@ -64,6 +92,7 @@ class LivePool:
             self.ds.worker_errordown = errordown
         self.ds.worker_sr_live_tick = self.tick
         self.ds.worker_sr_live_permit = self.permit
+        self.ds.worker_sr_live_closed = self.worker_closed
         self.thread = threading.Thread(target=self.clock, name='specroad-live-control', daemon=True)
         self.thread.start()
 
@@ -72,6 +101,15 @@ class LivePool:
             self.ds.queue.put(('sr_live_tick', {}))
 
     def connect(self, node):
+        from xdist.workermanage import Marker
+        native_receive = node.process_from_remote
+        def receive_event(event):
+            # Keep xdist's proof/error event first. END follows the complete
+            # remote call, including pytest_unconfigure, not just sessionfinish.
+            native_receive(event)
+            if event is Marker.END:
+                self.ds.queue.put(('sr_live_closed', dict(node=node)))
+        node.process_from_remote = receive_event
         channel = node.gateway.newchannel()
         def receive(message):
             if message is not None:
@@ -81,6 +119,15 @@ class LivePool:
         node.workerinput['sr_live'] = True
         self.channels.append(channel)
         self.control_channels[node.gateway.id] = channel
+
+    def worker_closed(self, node):
+        # xdist removes the node from scheduling but execnet retains its idle
+        # interpreter. End that owned gateway now, not only at whole-gate exit.
+        # Native group teardown still joins it, before its proxy can exit.
+        if not self._gateway_cleanup_installed:
+            join_retired_before_proxies(node.gateway._group)
+            self._gateway_cleanup_installed = True
+        node.gateway.exit()
 
     def eligible(self, node):
         return (node.gateway.id not in self.retiring and not node.shutting_down

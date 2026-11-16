@@ -291,7 +291,7 @@ def _fields(schema_id):
                 'primary_documents': _nullable(_array(_object({'id': nonempty, 'title': nonempty})))}),
             'runtime': _object({'project_root': _nullable(nonempty), 'open_transaction': _nullable(obj),
                 'writer_lock': _nullable(obj), 'consistency_state': {'enum':
-                    ['consistent', 'recovery_required', 'writer_active', 'unknown']}})})
+                    ['consistent', 'recovery_required', 'corrupted', 'writer_active', 'unknown']}})})
     if schema_id == 'artifact-show-v1':
         def relation_view(inverse):
             return _object({'relation_id': nonempty, 'type': nonempty, 'source': nonempty,

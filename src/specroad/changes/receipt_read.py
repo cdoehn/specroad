@@ -28,7 +28,7 @@ def _expected_target(preflight):
             **{d.path: d.content for d in preflight._package_files}}
 
 
-class _CompletionProof:
+class _LegacyCompletionProof:
     def __init__(self, files, source, transaction_id, *, preflight=None):
         self.files, self.source = files, source
         self.records, self.parents = {}, {}
@@ -128,6 +128,16 @@ class _CompletionProof:
             return directory is not None
 
 
+def _CompletionProof(files, source, transaction_id, *, preflight=None):
+    from ._guarded_io import _read_path
+    from ..storage.json_syntax import parse_json_object
+    raw = _read_path(files, completion_marker_path(transaction_id), optional=True)
+    if raw is not None and parse_json_object(raw).get('format_version') == 'write-completion-v1':
+        from .normal_completion import NormalCompletionProof
+        return NormalCompletionProof(files, source, transaction_id, preflight=preflight)
+    return _LegacyCompletionProof(files, source, transaction_id, preflight=preflight)
+
+
 def read_transaction_completion(source, transaction_id, *, preflight=None):
     """Observe committed + linked receipts. No writes, locks or retry dispatch.
 
@@ -155,6 +165,9 @@ def read_transaction_completion(source, transaction_id, *, preflight=None):
                 return RecoveryObservation._create({**completion_data(journal), 'cleanup_completed': True,
                     'commit_completed': True, 'receipt_verified': True, 'current_target_verified': False})
             proof = _CompletionProof(files, source, transaction_id, preflight=preflight)
+            from .normal_completion import NormalCompletionProof
+            if isinstance(proof, NormalCompletionProof):
+                return proof.result()
             work = proof.work_present()
             proof.check()
             return TransactionCompletion._create(proof.journal, live=preflight is not None,
@@ -182,6 +195,8 @@ def _request_bytes(files, path):
 
 
 def _read_confirmed_request(source, identity):
+    from .normal_access import require_normal_access
+    require_normal_access(source.boundary.root, expected_project_id=source.configuration.project_id)
     path = request_receipt_path(identity)
     source.check_current()
     with LockFiles(source.boundary.root) as files:

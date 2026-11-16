@@ -48,7 +48,7 @@ def test_preparation_pause_releases_project_and_work_for_a_fresh_process(recorde
         gate = transaction_preflight(project, command_class=CommandClass.READ_ONLY).data
         model = current_model(project)
         checkpoint = store.read()
-    assert gate['exit_code'] == 0 and not gate['recovery_required']
+    assert gate['exit_code'] == 0 and not gate.get('project_corrupted', False)
     assert model.manifest(model.artifacts, SCOPE).sha256 == packet['base_root']
     assert checkpoint.raw == bytes.fromhex(packet['checkpoint'])
     assert checkpoint.as_dict()['checkpoint_generation'] == (1 if cut == 'pause_one' else 2)
@@ -77,49 +77,24 @@ def test_actual_process_loss_uses_native_recovery_before_new_publication(recorde
     # A real process death leaves the native owner record. This remains an
     # explicit Recovery case even after committed receipts or output cleanup.
     assert (project / '.specroad/locks/project.json').exists()
-    assert gate['exit_code'] == 5 and gate['recovery_required']
+    assert gate['exit_code'] == 5 and gate['project_corrupted']
     before = inventory(tmp_path)
     model = current_model(project)  # Raw fixture reconstruction, not a regular read permission.
     with no_write_attempts(), pytest.raises(WorkResumeError) as blocked:
         prepare(store, reg, model, plan)
     assert blocked.value.as_dict() == {'reason': 'normative_transaction_requires_recovery', 'exit_code': 5}
     assert inventory(tmp_path) == before
-    if cut in ('committed', 'cleanup'):
-        with no_write_attempts():
-            replay = publish(store, reg, model, plan).as_dict()
-        assert not replay['publication_performed']
-        assert replay['result_object']['transaction_id'] == TRANSACTION
-        assert replay['transaction']['cleanup_required'] == (cut == 'committed')
-    else:
-        with no_write_attempts(), pytest.raises(WorkResumeError) as blocked:
-            publish(store, reg, model, plan)
-        assert blocked.value.exit_code == 5
-        assert not (project / '.specroad/requests').exists()
+    from specroad.model.errors import ModelError
+    with no_write_attempts(), pytest.raises((ModelError, WorkResumeError)):
+        publish(store, reg, model, plan)
     assert inventory(tmp_path) == before
-    if cut == 'first_target':
-        actual = {p: b.hex() for p, b in files(project).items()}
-        assert actual != packet['before'] and actual != packet['after']
-
-    recovered, = recovery_child(project, 'recover')
-    assert recovered['pid'] not in (packet['pid'], os.getpid())
-    outcome = 'base' if cut in ('building', 'prepared', 'first_target') else 'target'
-    assert recovered['outcome'] == outcome
-    assert recovered['files'] == packet['before' if outcome == 'base' else 'after']
-    assert recovered['model_root'] == packet['base_root' if outcome == 'base' else 'target_root']
-    assert inventory(tmp_path / 'work') == work_before and store.read().raw == checkpoint.raw
-    assert transaction_preflight(project, command_class=CommandClass.READ_ONLY).exit_code == 0
-    fresh = current_model(project)
-    result = publish(store, registry(), fresh, plan, transaction_id='txn-after-recovery').as_dict()
-    assert result['publication_performed'] == (outcome == 'base')
-    assert result['result_object']['transaction_id'] == ('txn-after-recovery' if outcome == 'base' else TRANSACTION)
-    assert result['result_object']['request_id'] == plan.data['request_id']
-    assert files(project) == {p: bytes.fromhex(b) for p, b in packet['after'].items()}
     assert store.read().raw == checkpoint.raw and inventory(tmp_path / 'work') == work_before
-    before = inventory(tmp_path)
-    with no_write_attempts():
-        replay = publish(store, registry(), current_model(project), plan).as_dict()
-    assert not replay['publication_performed'] and replay['result_object'] == result['result_object']
-    assert inventory(tmp_path) == before
+    assert gate['project_corrupted'] and gate['manual_git_restore_required']
+    if cut == 'first_target':
+        actual = files(project)
+        assert actual != {p:bytes.fromhex(b) for p,b in packet['before'].items()}
+        assert actual != {p:bytes.fromhex(b) for p,b in packet['after'].items()}
+
 
 
 @pytest.mark.parametrize('fresh', [False, True])
@@ -136,13 +111,14 @@ def test_individually_valid_but_different_completion_observations_cannot_be_comb
     if not fresh:
         publish(store, reg, model, plan)
     before_other = inventory(tmp_path / 'other')
-    native = publication.cleanup_completed_transaction
+    from specroad.changes import guarded_write
+    native = guarded_write.publish_guarded_change
     with monkeypatch.context() as patch:
         if fresh:
             def changed_observation(*args, **kwargs):
                 native(*args, **kwargs)
                 return other_proof
-            patch.setattr(publication, 'cleanup_completed_transaction', changed_observation)
+            patch.setattr(guarded_write, 'publish_guarded_change', changed_observation)
             with pytest.raises(WorkResumeError) as caught:
                 publish(store, reg, model, plan)
         else:

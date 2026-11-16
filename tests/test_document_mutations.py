@@ -114,8 +114,8 @@ def confirm_and_replay(root, model, report):
     result = apply(root, model, report)
     assert result['write_state'] == 'committed' and result['completion']['current_target_verified']
     receipt = TransactionReceipt((root / result['completion']['receipts']['transaction']['path']).read_bytes()).data
-    assert receipt['operations'] == report['plan']['operations']
-    assert receipt['journal']['plan_sha256'] == report['plan_sha256']
+    assert receipt['write']['operations'] == report['plan']['operations']
+    assert receipt['write']['marker']['plan_sha256'] == report['plan_sha256']
     before = inventory(root)
     with no_write_attempts(): repeated = apply(root, model, report, transaction='txn-repeat')
     assert repeated['replayed'] and not repeated['completion']['current_target_verified']

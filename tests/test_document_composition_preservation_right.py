@@ -215,7 +215,7 @@ def test_interrupted_owner_publication_never_rewrites_referenced_content(tmp_pat
         result = execute(model, report, transaction='txn-owner-interrupted', authority=authority)
     assert_failed(result, report)
     assert calls == [second] and result['exit_code'] == 5 and result['write_state'] == 'unknown'
-    assert result['recovery_required'] and result['diagnostics'][0]['published_count_acknowledged'] == 1
+    assert result['recovery_required'] and result['diagnostics'][0]['reason'] == 'publication_io_failure'
     candidates = {entry['artifact']['id']: entry['artifact'] for entry in report['plan']['result_artifacts']}
     for token in ('0', '1'):
         path = artifact_path('document', ref('DOC', token), 'SR')
@@ -224,12 +224,16 @@ def test_interrupted_owner_publication_never_rewrites_referenced_content(tmp_pat
     owners = {artifact_path('document', ref('DOC', token), 'SR') for token in ('0', '1')}
     for path, raw in original.items():
         if path not in owners: assert (root / path).read_bytes() == raw
-    journal = json.loads((root / '.specroad/transactions/txn-owner-interrupted/journal.json').read_bytes())
-    assert journal['state'] == 'committing' and journal['published_count'] == 1
+    marker = json.loads((root / '.specroad/write-state/pending.json').read_bytes())
+    assert marker['state'] == 'writing' and marker['transaction_id'] == 'txn-owner-interrupted'
+    assert not (root / '.specroad/transactions/txn-owner-interrupted/journal.json').exists()
+    from specroad.changes.write_guard_read import inspect_write_state
+    state = inspect_write_state(root)
+    assert state['state'] == 'corrupted' and state['manual_git_restore_required']
     before = inventory(root)
     retry = execute(model, report, transaction='txn-owner-retry', authority=authority)
     assert_failed(retry, report)
-    assert retry['diagnostics'][0]['reason'] == 'transaction_journal_blocks_lock' and inventory(root) == before
+    assert retry['diagnostics'][0]['reason'] == 'project_corrupted' and inventory(root) == before
 
 
 @pytest.mark.parametrize('field,value', [('revision', 8), ('maturity', 'approved')])

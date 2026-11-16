@@ -1,4 +1,5 @@
 """Read-only write-state and normal receipt observations, never recovery."""
+from contextlib import nullcontext
 from hashlib import sha256
 import os
 from ..model.errors import ModelError
@@ -16,11 +17,19 @@ from ._journal_io import _read
 from ..security import paths as guards
 
 
-def inspect_write_state(root, *, expected_project_id=None):
+def inspect_write_state(root, *, expected_project_id=None, _held_files=None):
     """Bounded marker/owner diagnosis; a PID alone never proves a live writer."""
     state='unknown';marker=None;owner=None;guard_present=False
     try:
-        with LockFiles(root) as files:
+        if _held_files is not None:
+            from ..security import ProjectBoundary
+            boundary = ProjectBoundary(root)
+            require(type(_held_files) is LockFiles, 'native_read_mutex_required')
+            _held_files.require_held()
+            require(_held_files.boundary.root == boundary.root
+                and _held_files.boundary._root_identity == boundary._root_identity,
+                'read_mutex_root_changed', exit_code=6)
+        with (LockFiles(root) if _held_files is None else nullcontext(_held_files)) as files:
             with files.directory(('.specroad','write-state')) as fd:
                 names=[] if fd is None else sorted(os.listdir(fd))
                 guard_present=bool(names)
@@ -30,10 +39,15 @@ def inspect_write_state(root, *, expected_project_id=None):
                     require(jcs(marker)==raw,'noncanonical_write_marker')
                     if expected_project_id is not None:require(marker['project_id']==expected_project_id,'write_marker_project_mismatch')
             record,ident=files.read_record();active=files.journal_entries()
-            guard_present |= bool(active)
+            # Unclassified operational entries block but do not prove an
+            # interrupted transaction. Only actual journal/marker namespaces do.
+            guard_present |= any(p.startswith(('.specroad/transactions/',
+                                                  '.specroad/recovery/')) for p in active)
             mutex_busy=False
             from .lock_values import ProjectLockError
-            try:files.acquire()
+            try:
+                if _held_files is None:files.acquire()
+                else:files.require_held()
             except ProjectLockError as error:
                 if error.reason!='project_lock_busy':raise
                 mutex_busy=True
@@ -50,6 +64,7 @@ def inspect_write_state(root, *, expected_project_id=None):
                 else:state='corrupted'
             elif mutex_busy:state='unknown'
             elif guard_present:state='corrupted'
+            elif active:state='unknown'
             else:state='clean'
             latest,latest_id=files.read_record()
             require((None if latest is None else latest.source_bytes)==(None if record is None else record.source_bytes)

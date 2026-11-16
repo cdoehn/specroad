@@ -78,7 +78,7 @@ def test_new_writer_during_inspection_remains_visible_and_invalidates_semantics(
         assert inventory(root) == states[0][1]
 
 
-@pytest.mark.parametrize('path,state', [('.specroad/transactions/new/journal.json', 'recovery_required'),
+@pytest.mark.parametrize('path,state', [pytest.param('.specroad/transactions/new/journal.json', 'corrupted', id='.specroad/transactions/new/journal.json-recovery_required'),
                                       ('.specroad/unclassified.json', 'unknown')])
 def test_new_stable_operational_blocker_is_reported_after_model_read(tmp_path, path, state):
     root = tmp_path / 'project'; inspection_project(root); states = []
@@ -91,7 +91,7 @@ def test_new_stable_operational_blocker_is_reported_after_model_read(tmp_path, p
     payload = result.as_dict()['result']
     assert set(payload['semantic'].values()) == {None}
     assert payload['runtime']['consistency_state'] == state and inventory(root) == states[0]
-    if state == 'recovery_required':
+    if state == 'corrupted':
         assert payload['runtime']['open_transaction']['unresolved_paths'] == ['.specroad/transactions/new']
         assert not payload['runtime']['open_transaction']['journal_contents_loaded']
 
@@ -156,7 +156,7 @@ def test_previously_successful_description_does_not_hide_a_later_open_transactio
     assert second.exit_code == 5 and not second.complete
     payload = second.as_dict()['result']
     assert set(payload['semantic'].values()) == {None}
-    assert payload['runtime']['consistency_state'] == 'recovery_required'
+    assert payload['runtime']['consistency_state'] == 'corrupted'
     assert payload['runtime']['open_transaction']['unresolved_paths'] == ['.specroad/transactions/pending.json']
     assert inventory(root) == before and first.as_dict()['result']['semantic']['model_root_sha256'] is not None
 
@@ -167,7 +167,7 @@ def test_native_orphan_writer_is_observed_without_lock_recovery(tmp_path):
         result = inspect_project(root)
     assert result.exit_code == 5 and not result.complete
     runtime = result.as_dict()['result']['runtime']
-    assert runtime['consistency_state'] == 'recovery_required'
+    assert runtime['consistency_state'] == 'corrupted'
     assert runtime['writer_lock']['record'] == record and runtime['writer_lock']['owner_state'] == 'dead'
     assert runtime['open_transaction'] is None and inventory(root) == before
     assert set(result.as_dict()['result']['semantic'].values()) == {None}

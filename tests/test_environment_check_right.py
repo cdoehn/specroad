@@ -73,7 +73,7 @@ def test_readonly_root_reports_only_proven_prerequisites_without_effects(tmp_pat
     assert value['semantic_validation_performed'] is False
     assert checks(value)['project.metadata']['state'] == 'passed'
     if state == 'unknown_lock':
-        assert checks(value)['project.operational']['reason'] == 'operational_state_unknown'
+        assert checks(value)['project.operational']['reason'] == 'project_unknown'
     if target == 'fixture.writer':
         assert checks(value)['command.write_paths']['state'] == 'unknown'
 
@@ -94,7 +94,7 @@ def test_unclassified_operational_entries_do_not_invent_recovery_certainty(tmp_p
     assert result.result['compatible'] is False and result.result['operation_readiness'] == 'blocked'
     assert result.result['recovery_required'] is (True if state == 'mixed' else None)
     assert checks(result.result)['project.operational']['reason'] == (
-        'recovery_required' if state == 'mixed' else 'operational_state_unknown')
+        'project_corrupted' if state == 'mixed' else 'project_unknown')
     assert inventory(tmp_path) == before
 
 

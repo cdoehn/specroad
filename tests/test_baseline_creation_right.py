@@ -27,81 +27,72 @@ def baseline_path(root):
 
 
 def pending(root):
-    return json.loads((root / '.specroad/transactions/txn-baseline/journal.json').read_bytes())
+    return json.loads((root / '.specroad/write-state/pending.json').read_bytes())
 
 
 @pytest.mark.parametrize('damage', ['truncated', 'missing', 'same_length_changed'])
 def test_actual_staged_object_bytes_are_rechecked_before_any_publication(tmp_path, damage):
-    import specroad.authoring.execution as execution
-    root = tmp_path / 'project'; model = project(root); plan = plan_for(model)
-    original = execution.publish_prepared_journal; observed = []
-    def damaged(preflight, journal, **options):
-        entry = next(e for e in journal.data['files'] if e['path'].startswith('archive/objects/'))
-        path = root / entry['staging_path']; raw = path.read_bytes(); observed.append(path)
+    from specroad.changes import guarded_write
+    root = tmp_path / 'project'; model = project(root); plan = plan_for(model); observed = []
+    def damaged(event):
+        if event != 'staged:0': return
+        path = root / '.specroad/write-state/staging/0.bin'
+        raw = path.read_bytes(); observed.append(path)
         if damage == 'missing': path.unlink()
         elif damage == 'truncated': path.write_bytes(raw[:-1])
         else: path.write_bytes(bytes([raw[0] ^ 1]) + raw[1:])
-        return original(preflight, journal, **options)
-    with patch.object(execution, 'publish_prepared_journal', side_effect=damaged):
-        with pytest.raises(ModelError): apply(plan, model)
-    assert len(observed) == 1 and pending(root)['state'] == 'prepared'
+    with patch.object(guarded_write, '_checkpoint', damaged), pytest.raises(ModelError):
+        apply(plan, model)
+    assert len(observed) == 1 and pending(root)['state'] == 'writing'
     assert not baseline_path(root).exists() and not (root / 'archive').exists()
     no_completion(root)
 
 
 def test_source_change_after_journal_creation_cannot_enter_the_snapshot(tmp_path):
-    import specroad.authoring.execution as execution
+    from specroad.changes import guarded_write
     root = tmp_path / 'project'; model = project(root); plan = plan_for(model)
-    original = execution.stage_building_journal
     source = root / model.documents[0].path
-    def changed(*args, **kwargs):
-        source.write_bytes(source.read_bytes() + b' ')
-        return original(*args, **kwargs)
-    with patch.object(execution, 'stage_building_journal', side_effect=changed):
-        with pytest.raises(ModelError): apply(plan, model)
+    def changed(event):
+        if event == 'marker_synced': source.write_bytes(source.read_bytes() + b' ')
+    with patch.object(guarded_write, '_checkpoint', changed), pytest.raises(ModelError):
+        apply(plan, model)
     assert source.read_bytes() == model.documents[0].content + b' '
-    assert pending(root)['state'] == 'building' and not baseline_path(root).exists()
+    assert pending(root)['state'] == 'writing' and not baseline_path(root).exists()
     no_completion(root)
 
 
 @pytest.mark.parametrize('fault', ['link', 'directory_sync', 'unlink'])
 def test_failed_object_move_preserves_actual_names_without_advancing_the_record(tmp_path, fault):
+    from specroad.changes import guarded_write
+    from specroad.changes import _guarded_effects as effects
     root = tmp_path / 'project'; model = project(root); plan = plan_for(model)
-    original_link, original_sync, original_unlink = os.link, os.fsync, os.unlink
-    touched = []
-    def link(source, target, **kwargs):
-        if len(str(target)) == 64 and 'dst_dir_fd' in kwargs:
-            touched.append('link')
-            if fault == 'link': raise OSError('injected object link failure')
-        return original_link(source, target, **kwargs)
-    def sync(fd):
-        path = os.readlink('/proc/self/fd/' + str(fd))
-        if '/archive/objects/' in path and fault == 'directory_sync' and touched:
-            raise OSError('injected directory sync failure')
-        return original_sync(fd)
-    def unlink(name, **kwargs):
-        fd = kwargs.get('dir_fd')
-        if (fault == 'unlink' and fd is not None and str(name).endswith('.bin')
-                and os.readlink('/proc/self/fd/' + str(fd)).endswith('/staging')):
-            raise OSError('injected staged-name unlink failure')
-        return original_unlink(name, **kwargs)
-    with patch.object(os, 'link', side_effect=link), patch.object(os, 'fsync', side_effect=sync), \
-            patch.object(os, 'unlink', side_effect=unlink):
+    original = effects.replace_bound_image; touched = []
+    def move(*args, **kwargs):
+        if len(str(args[3])) == 64:
+            touched.append(args[3])
+            if fault == 'link': raise OSError('before atomic no-replace publication')
+        return original(*args, **kwargs)
+    def stop(event):
+        if event == ('effect_replaced:0' if fault == 'directory_sync' else 'effect_synced:0'):
+            raise OSError('lost synchronization or publication acknowledgement')
+    with patch.object(effects, 'replace_bound_image', move), patch.object(guarded_write, '_checkpoint', stop):
         with pytest.raises(ModelError) as error: apply(plan, model)
     assert touched and error.value.write_state == 'unknown' and not baseline_path(root).exists()
-    journal = pending(root); assert journal['state'] == 'committing' and journal['published_count'] == 0
-    first = journal['files'][0]; staged = root / first['staging_path']; target = root / first['path']
-    assert staged.is_file() and sha256(staged.read_bytes()).hexdigest() == first['after_sha256']
-    if fault == 'link': assert not target.exists()
+    assert pending(root)['state'] == 'writing'
+    first = sorted(plan.data['operations'][0]['record']['manifest'], key=lambda r: r['object_path'])[0]
+    staged = root / '.specroad/write-state/staging/0.bin'; target = root / first['object_path']
+    if fault == 'link':
+        assert staged.is_file() and not target.exists()
+        assert sha256(staged.read_bytes()).hexdigest() == first['sha256']
     else:
-        assert target.read_bytes() == staged.read_bytes()
-        assert target.stat().st_ino == staged.stat().st_ino and target.stat().st_nlink == 2
+        assert not staged.exists() and target.stat().st_nlink == 1
+        assert sha256(target.read_bytes()).hexdigest() == first['sha256']
     no_completion(root)
 
 
 @pytest.mark.parametrize('damage', ['missing', 'changed'])
 def test_lost_published_object_blocks_the_sealed_record(tmp_path, damage):
-    import specroad.changes.committing as committing
+    import specroad.changes._guarded_effects as committing
     root = tmp_path / 'project'; model = project(root); plan = plan_for(model)
     original = committing.replace_bound_image; altered = []
     def changed(source, source_name, target, target_name, **kwargs):
@@ -114,12 +105,12 @@ def test_lost_published_object_blocks_the_sealed_record(tmp_path, damage):
         return result
     with patch.object(committing, 'replace_bound_image', side_effect=changed):
         with pytest.raises(ModelError): apply(plan, model)
-    assert altered and not baseline_path(root).exists() and pending(root)['state'] == 'committing'
+    assert altered and not baseline_path(root).exists() and pending(root)['state'] == 'writing'
     no_completion(root)
 
 
 def test_error_after_record_publication_is_not_a_completed_baseline(tmp_path):
-    import specroad.changes.committing as committing
+    import specroad.changes._guarded_effects as committing
     root = tmp_path / 'project'; model = project(root); plan = plan_for(model)
     original = committing.replace_bound_image
     def failed(*args, **kwargs):
@@ -130,24 +121,25 @@ def test_error_after_record_publication_is_not_a_completed_baseline(tmp_path):
         with pytest.raises(ModelError) as error: apply(plan, model)
     assert error.value.write_state == 'unknown' and baseline_path(root).exists()
     assert json.loads(baseline_path(root).read_bytes())['baseline_state'] == 'sealed'
-    assert pending(root)['state'] == 'committing'
+    assert pending(root)['state'] == 'writing'
     no_completion(root)
 
 
 @pytest.mark.parametrize('boundary', ['receipt', 'cleanup'])
 def test_late_finalization_error_never_returns_a_false_success_or_retries(tmp_path, boundary):
-    import specroad.authoring.execution as execution
-    root = tmp_path / 'project'; model = project(root); plan = plan_for(model)
-    name = 'finalize_committing_journal' if boundary == 'receipt' else 'cleanup_completed_transaction'
-    with patch.object(execution, name, side_effect=OSError('injected finalization failure')) as failed:
-        with pytest.raises(OSError): apply(plan, model)
-    assert failed.call_count == 1 and baseline_path(root).exists()
+    from specroad.changes import guarded_write
+    root = tmp_path / 'project'; model = project(root); plan = plan_for(model); failed = []
+    def stop(event):
+        if event == ('receipt:transaction.json'
+                     if boundary == 'receipt' else 'receipts_synced'):
+            failed.append(event); raise OSError('injected finalization failure')
+    with patch.object(guarded_write, '_checkpoint', stop), pytest.raises(ModelError):
+        apply(plan, model)
+    assert len(failed) == 1 and baseline_path(root).exists()
     for row in plan.data['operations'][0]['record']['manifest']:
         assert sha256((root / row['object_path']).read_bytes()).hexdigest() == row['sha256']
-    if boundary == 'receipt': no_completion(root)
-    else:
-        completion = read_transaction_completion(ProjectSource(root), 'txn-baseline').data
-        assert completion['commit_completed'] and not completion['cleanup_completed']
+    assert pending(root)['state'] == 'writing'
+    no_completion(root)
 
 
 @pytest.mark.parametrize('field', ['model_root_sha256', 'configuration_hash', 'manifest_role', 'source_path', 'created_by'])

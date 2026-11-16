@@ -5,7 +5,7 @@ import json
 
 import pytest
 
-from specroad.cli.results import OperationFailure
+from specroad.cli.results import FailureKind, OperationFailure
 from specroad.model.errors import ModelError
 from specroad.query import ComparisonSourceSnapshot, compare_sources
 from specroad.security import SafetyViolation
@@ -72,7 +72,11 @@ def test_recovery_appearing_during_final_byte_recheck_blocks_publication(tmp_pat
     with pytest.raises(OperationFailure) as caught:
         capture(location)
     assert calls == 2
-    assert caught.value.details['preflight']['reason'] == 'recovery_required'
+    preflight = caught.value.details['preflight']
+    assert preflight['reason'] == 'project_corrupted'
+    assert caught.value.kind is FailureKind.ENVIRONMENT
+    assert preflight['project_corrupted'] and not preflight['normal_operation_started']
+    assert preflight['manual_git_restore_required'] and not preflight['recovery_performed']
     assert (location[0] / '.specroad/transactions/pending/journal.json').read_bytes() == b'owned pending transaction'
 
 

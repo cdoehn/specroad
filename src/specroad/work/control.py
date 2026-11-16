@@ -153,8 +153,10 @@ def cancel_normative_preparation(store, *, registry, model, policy, actor, reque
                 source.check_current()
                 files.require_held()
 
-            ensure()
-            yield
-            ensure()
+            from ..changes.normal_access import normal_read_mutex
+            with normal_read_mutex(files):
+                ensure()
+                yield
+                ensure()
 
     return _cancel(store, reason, build, check, unpublished)

@@ -137,7 +137,7 @@ def select_project(command, options, cwd, *, preflight=None):
                 model_loaded=False, write_authorized=False, recovery_performed=False,
                 inspection_scope='explicit_root_identity')
         return selected.root, 'cli', {}
-    project_read = profile is PreflightProfile.PROJECT_READ
+    project_read = profile in (PreflightProfile.PROJECT_READ, PreflightProfile.PROJECT_WRITE)
     if profile is PreflightProfile.BOOTSTRAP:
         if explicit is not None:
             raise OptionResolutionError("Bootstrap does not select a project")

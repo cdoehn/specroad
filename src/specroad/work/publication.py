@@ -230,6 +230,7 @@ def _publish_normative_work(store, *, registry, model, policy, actor, request_id
             _require(store._pointer(work) == pointer, 'checkpoint_pointer_changed')
             work.check()
 
+        _transaction_clear(model)
         source = _source(model)
         resolution = resolve_normative_request(source, bind_plan_authoring(plan))
         if resolution.data['action'] == 'replay':
@@ -259,18 +260,9 @@ def _publish_normative_work(store, *, registry, model, policy, actor, request_id
                 project_id=model.binding.project_id, request_id=plan.data['request_id'],
                 transaction_id=transaction_id) as held:
             ensure_work()
-            building = begin_building_journal(preflight, held_lock=held,
-                transaction_id=transaction_id, authority=guarded, gates=gates)
-            prepared = stage_building_journal(preflight, building, held_lock=held,
-                                              authority=guarded, gates=gates)
-            published = publish_prepared_journal(preflight, prepared, held_lock=held,
-                                                 authority=guarded, gates=gates)
-            journal = read_committing_journal(_source(model), transaction_id,
-                expected_sha256=published.data['journal_sha256'], preflight=preflight)
-            finalize_committing_journal(preflight, journal, held_lock=held,
-                                        authority=guarded, gates=gates)
-            completion = cleanup_completed_transaction(preflight, transaction_id,
-                                                       held_lock=held, authority=guarded)
+            from ..changes.guarded_write import publish_guarded_change
+            completion = publish_guarded_change(preflight, held_lock=held,
+                                                authority=guarded, gates=gates)
             ensure_work()
             resolution = resolve_normative_request(_source(model), bind_plan_authoring(plan))
         ensure_work()
