@@ -2,9 +2,9 @@
 from hashlib import sha256
 from ..model.canonical import canonical_json_bytes as jcs, canonical_json_sha256 as digest
 from ..storage.json_syntax import parse_json_object as parsed
-from ._journal_codec import _transaction, _hash, journal_path
+from ._journal_codec import _transaction, journal_path
 from ._schema_transition_io import read, external_backup, project_files
-from .schema_transition_values import (FORMAT, FORMATS, TransitionJournal, SchemaTransitionError,
+from .schema_transition_values import (FORMATS, TransitionJournal,
     require, request_receipt, transaction_receipt, result_object)
 from ._schema_transition_proof import _backup, _verify_images, _prefix
 from ._snapshot_dispatch import is_merge

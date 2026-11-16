@@ -12,7 +12,7 @@ from ._bootstrap_io import (BootstrapError, BootstrapTree, STAGING, directory,
                             info_at, metadata, rename_function)
 from ._bootstrap_root import BootstrapRoot, root_destination
 from ._initial_content import ROOT_DIRECTORIES, initial_content
-from ._bootstrap_recovery import recover_bootstrap
+from .bootstrap_completion import read_completed_bootstrap
 
 
 def _portable_names(held):
@@ -69,7 +69,7 @@ def initialize_project(path='.', *, cwd=None):
             if info_at(held.root_fd, STAGING) is not None:
                 raise BootstrapError('project_corrupted', exit_code=5, path=STAGING)
             # Only an already passive complete record may answer a repeat.
-            recovered = None if destination.created else recover_bootstrap(held, function, target.name)
+            recovered = None if destination.created else read_completed_bootstrap(held, function, target.name)
             if recovered is not None:
                 content, directories, configuration, document_id = recovered
             else:

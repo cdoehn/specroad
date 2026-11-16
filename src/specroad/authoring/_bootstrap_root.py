@@ -1,6 +1,6 @@
-"""Shared destination identity and owned-root rollback for bootstrap commands.
+"""Shared destination identity and guarded lifecycle for bootstrap commands.
 
-Command-specific content, target policy and journal recovery remain with the
+Command-specific content, target policy and passive completion remain with the
 caller. These primitives only manage the same root lifecycle used by init.
 """
 import os
@@ -8,10 +8,8 @@ from pathlib import Path
 import sys
 
 from ..changes._lock_files import LockFiles
-from ..changes.lock_values import ProjectLockError
-from ..security import SafetyViolation
 from ..security import paths as guards
-from ._bootstrap_io import BootstrapError, STAGING, directory, identity, info_at
+from ._bootstrap_io import BootstrapError, identity, info_at
 
 
 def root_destination(path, *, cwd=None, invalid_reason):
@@ -77,26 +75,3 @@ class BootstrapRoot:
         if identity(os.fstat(held.root_fd)) != expected:
             raise BootstrapError('bootstrap_root_changed')
         return held
-
-    def rollback(self, tree, original):
-        """Remove only a proven owned, empty root after successful tree rollback."""
-        raise BootstrapError("project_corrupted",exit_code=5,mutation_possible=True)
-        rollback_complete = False
-        if tree is not None and tree.fd is not None:
-            try:
-                tree.cleanup()
-                rollback_complete = not tree.committed
-            except (BootstrapError, ProjectLockError, SafetyViolation, OSError):
-                raise BootstrapError('bootstrap_recovery_required', path=STAGING,
-                                     mutation_possible=True) from original
-        elif tree is None:
-            rollback_complete = True
-        if self.created and rollback_complete:
-            self.parent_held.require_held()
-            now = info_at(self.parent_held.root_fd, self.target.name)
-            if now is not None and identity(now) == self.created_identity:
-                with directory(self.parent_held.root_fd, (self.target.name,)) as fd:
-                    if os.listdir(fd):
-                        raise BootstrapError('bootstrap_root_not_empty', mutation_possible=True) from original
-                os.rmdir(self.target.name, dir_fd=self.parent_held.root_fd)
-                os.fsync(self.parent_held.root_fd)

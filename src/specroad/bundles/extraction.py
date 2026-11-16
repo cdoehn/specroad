@@ -5,7 +5,7 @@ import os
 
 from ..authoring._bootstrap_io import (BootstrapError, BootstrapTree, STAGING,
     directory, identity, info_at, rename_function)
-from ..authoring._bootstrap_recovery import _read
+from ..authoring.bootstrap_completion import _read
 from ..authoring._bootstrap_root import BootstrapRoot, root_destination
 from ..changes._lock_files import LockFiles
 from ..cli.result_schemas import validate_result_document
@@ -28,19 +28,16 @@ def _directories(content):
     return result
 
 
-def _recover(held, function, content, directories, guard):
+def _read_completed(held, function, content, directories, guard):
     staged = info_at(held.root_fd, STAGING) is not None
     if staged:
         raise BootstrapError("project_corrupted", exit_code=5, path=STAGING)
     with held.directory(COMPLETED[:-1]) as parent:
         receipt = parent is not None and info_at(parent, COMPLETED[-1]) is not None
-    if not staged and not receipt:
+    if not receipt:
         return False
-    if staged and receipt:
-        raise BootstrapError('bootstrap_multiple_records')
     tree = BootstrapTree(held, function, {}, completed=COMPLETED)
-    tree.stage_parts = COMPLETED if receipt else (STAGING,)
-    publishing = False
+    tree.stage_parts = COMPLETED
     try:
         with directory(held.root_fd, tree.stage_parts) as fd:
             tree.fd = os.dup(fd)
@@ -54,7 +51,7 @@ def _recover(held, function, content, directories, guard):
             raise BootstrapError('bundle_bootstrap_journal_invalid')
         tree.inventory['journal.json'] = journal
         guard(tree)
-        if receipt and not all(tree.checked_locations().values()):
+        if not all(tree.checked_locations().values()):
             raise BootstrapError('bootstrap_publication_incomplete')
         if not all(tree.checked_locations().values()):
             raise BootstrapError("project_corrupted", exit_code=5)
@@ -63,16 +60,16 @@ def _recover(held, function, content, directories, guard):
     except (SafetyViolation, BundleError):
         raise
     except BootstrapError as error:
-        error.mutation_possible = error.mutation_possible or publishing
+        error.mutation_possible = False
         raise
     except (ModelError, ValueError, TypeError, KeyError, RecursionError) as error:
         raise BootstrapError('bundle_bootstrap_journal_invalid') from error
     except FileNotFoundError as error:
         raise BootstrapError('bootstrap_inventory_changed', path=STAGING,
-                             mutation_possible=publishing) from error
+                             mutation_possible=False) from error
     except OSError as error:
         raise BootstrapError('bootstrap_recovery_io', exit_code=5, path=STAGING,
-                             mutation_possible=publishing) from error
+                             mutation_possible=False) from error
     finally:
         tree.close()
 
@@ -109,7 +106,7 @@ def _publish(container, target, *, cwd=None, recheck_input=lambda: None):
                 recheck_input()
             if info_at(held.root_fd, STAGING) is not None:
                 raise BootstrapError('project_corrupted', exit_code=5, path=STAGING)
-            recovered = False if destination.created else _recover(held, function, content, directories, guard)
+            recovered = False if destination.created else _read_completed(held, function, content, directories, guard)
             if not recovered:
                 if os.listdir(held.root_fd):
                     raise BootstrapError('bundle_extraction_target_not_empty')

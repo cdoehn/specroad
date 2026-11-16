@@ -2,7 +2,7 @@
 
 The root-inode mutex is advisory, as for existing project transactions. This
 module never interprets stored journal data as authority to execute or delete.
-Recovery validates the closed journal and all actual owned bytes before use.
+Passive completion readers validate the original inventory without mutating it.
 """
 from contextlib import contextmanager
 from hashlib import sha256
@@ -269,7 +269,7 @@ class BootstrapTree:
     def checked_locations(self):
         self.check()
         locations = self.unit_locations()
-        # An actual publication/rollback always has a complete ordered prefix.
+        # An actual publication always has a complete ordered prefix.
         values = list(locations.values())
         if values != sorted(values, reverse=True):
             raise BootstrapError('bootstrap_publication_order_conflict')
@@ -322,36 +322,11 @@ class BootstrapTree:
         self.checked_locations()
 
     def cleanup(self):
+        """Retain completed proof; an incomplete tree is never cleaned."""
         if not self.committed:
-            raise BootstrapError("project_corrupted",exit_code=5,mutation_possible=True)
+            raise BootstrapError('project_corrupted',exit_code=5,mutation_possible=True)
         self.check()
-        moved = self.checked_locations() if self.units else {}
-        if self.committed:
-            self.retain_completed()
-            return
-        if not self.committed:
-            for path, published in reversed(tuple(moved.items())):
-                if published:
-                    parts = path.split('/')
-                    with directory(self.fd, parts[:-1]) as staged, directory(self.held.root_fd, parts[:-1]) as target:
-                        self.check()
-                        verify_unit(target, parts[-1], self.inventory, path)
-                        rename_new(self.function, target, parts[-1], staged, parts[-1])
-            moved = {}
-        remaining = {p: v for p, v in self.inventory.items()
-                     if not any(yes and (p == unit or p.startswith(unit + '/')) for unit, yes in moved.items())}
-        verify_tree(self.fd, remaining)
-        for path in sorted(remaining, key=lambda p: (p.count('/'), p), reverse=True):
-            parts = path.split('/')
-            with directory(self.fd, parts[:-1]) as parent:
-                self.check()
-                expected = remaining[path]; check_entry(parent, parts[-1], expected)
-                if expected['kind'] == 'directory': os.rmdir(parts[-1], dir_fd=parent)
-                else: os.unlink(parts[-1], dir_fd=parent)
-                os.fsync(parent)
-        self.check()
-        os.rmdir(STAGING, dir_fd=self.held.root_fd)
-        os.fsync(self.held.root_fd)
+        self.retain_completed()
 
     def close(self):
         if self.fd is not None:

@@ -13,10 +13,9 @@ from ..authoring._bootstrap_root import BootstrapRoot, root_destination
 from ..bundles.extraction import extract_bundle, _check_names, _directories
 from ..changes._lock_files import LockFiles
 from ..model.canonical import canonical_json_bytes
-from ..model.errors import ModelError
 
 from ._sandbox_inventory import (COMPLETED, FORMAT, _require, _project_content,
-    _project_inventory, _restore)
+    _project_inventory)
 
 
 class SandboxTree(BootstrapTree):
@@ -64,7 +63,6 @@ def publish_sandbox(opening):
         'reference/outbound.zip': opening.source.raw, 'reference/result.zip': opening.reference.raw}
     function = rename_function()
     tree = None
-    recovering = False
     with ExitStack() as stack:
         parent_held = stack.enter_context(LockFiles(parent)); parent_held.acquire()
         _require(parent_held.boundary._root_identity == opening.output_parent._root_identity)

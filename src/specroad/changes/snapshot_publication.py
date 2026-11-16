@@ -8,7 +8,6 @@ from .receipt_values import transaction_receipt_path, request_receipt_path
 from ._guarded_publication import _Inputs, _run
 from ._guarded_io import _read_path
 from .snapshot_write_values import validation, effect_path, result
-from ..model.canonical import canonical_json_bytes as jcs
 
 
 def publish_snapshot(plan, *, held_lock, backup_descriptor, authority, gates=(),

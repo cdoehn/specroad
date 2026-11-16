@@ -30,8 +30,8 @@ Die konkrete Nutzerentscheidung und normative Präzisierung stehen in
    Writer- und passive Abschlussprimitiven bleiben erhalten. Alle Testdateien
    und stabilen Testnummern sind gegenüber R bytegleich.
 
-Dieser Snapshot beschreibt `18.v.R`. Ziel nach dessen Gate: 773/918;
-nächster Plancommit `18.v.C`.
+Dieser Snapshot beschreibt `18.v.C`. Ziel nach dessen Gate: 774/918;
+nächster Plancommit `18.w.W`.
 18.v wird vollständig geliefert. Die nächste eigenständige Gruppe 18.w
 (öffentliche Recovery-/Restore-Work-Entfernung) bleibt unverändert offen;
 es wird kein vorsorglich verkürzter Teil dieser Gruppe angekündigt.

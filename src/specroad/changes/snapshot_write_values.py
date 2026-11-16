@@ -1,6 +1,6 @@
 """Closed passive snapshot audit binding for the normal guarded writer."""
 from ..migration.plan_values import b64, unb64, source_path, safe_path
-from ..model.canonical import canonical_json_bytes as jcs, canonical_json_sha256 as digest
+from ..model.canonical import canonical_json_sha256 as digest
 from ..model.configuration import ProjectConfiguration
 from ..storage.json_syntax import parse_json_object as parsed
 from .values import ChangePlan

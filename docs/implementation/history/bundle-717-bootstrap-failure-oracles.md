@@ -51,8 +51,8 @@ bisherige Pflichtauswahl bleiben vor beiden Commits verpflichtend.
 Jede Stage hat genau ihr eigenes Gate aus fälliger gefilterter N=3-Gruppe
 plus ungefilterter Pflichtauswahl; erst danach Commit und nächster Zustand.
 
-Dieser Snapshot ist `18.v.R`; sein prospektiver Zielwert ist
-773/918, nächster Plancommit `18.v.C`.
+Dieser Snapshot ist `18.v.C`; sein prospektiver Zielwert ist
+774/918, nächster Plancommit `18.w.W`.
 Diese Zielwerte gelten erst nach dem eigenen erfolgreichen Apply-Gate und Commit.
 In Dev erfolgen ausschließlich Syntaxprüfung, statische Prüfung, reine
 Collection und native Paketvalidierung, keine Testkörper oder Fixtures.
