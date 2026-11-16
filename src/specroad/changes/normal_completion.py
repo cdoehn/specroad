@@ -1,6 +1,5 @@
 """Verified normal v2 audit records, without a recovery journal or capability."""
 from dataclasses import dataclass
-from hashlib import sha256
 from itertools import islice
 import os
 
@@ -9,7 +8,7 @@ from ..storage.json_syntax import parse_json_object as parsed
 from .receipt_values import transaction_receipt_path, completion_marker_path, ReceiptError
 from .write_guard_values import validate_transaction, receipt_group, completion, require
 from .normal_access import require_normal_access
-from .receipt_read import _LegacyCompletionProof
+from ._completion_records import CompletionRecords
 
 
 @dataclass(frozen=True)
@@ -47,10 +46,9 @@ def read_normal_group(files, project_id):
     return write
 
 
-class NormalCompletionProof(_LegacyCompletionProof):
+class NormalCompletionProof(CompletionRecords):
     def __init__(self, files, source, transaction_id, *, preflight=None):
-        self.files, self.source = files, source
-        self.records, self.parents = {}, {}
+        super().__init__(files, source)
         self.archive_path = completion_marker_path(transaction_id)
         self.active_raw = None
         self.expected = self.live_snapshot = None

@@ -5,12 +5,7 @@ This embedding service does not register a CLI or discover a production model.
 Retain the original normalized operation for retries; recompiling field options
 against a later artifact is a different request, not historical intent.
 """
-from ..changes import (AuthoringError, ChangeOperation, ChangePlanError, TargetModel,
-    TargetPolicy, PublicationAuthority, prepare_authoring_request,
-    prepare_publication_check, recheck_publication,
-    project_lock, begin_building_journal, stage_building_journal,
-    publish_prepared_journal, read_committing_journal, finalize_committing_journal,
-    cleanup_completed_transaction, read_transaction_completion, resolve_normative_request)
+from ..changes import (AuthoringError, ChangeOperation, ChangePlanError, TargetModel, TargetPolicy, PublicationAuthority, prepare_authoring_request, prepare_publication_check, recheck_publication, project_lock, read_transaction_completion, resolve_normative_request)
 from .plans import prepare_authoring_target as prepare_change_target
 from ..changes._journal_codec import _transaction
 from ..changes._publication_observation import _root

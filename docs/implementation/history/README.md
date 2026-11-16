@@ -464,3 +464,5 @@
 - [Bundle 712 — lesende Mutex-Prüfung und vollständiger Rest 18.u.R/C](bundle-712-normal-read-mutex.md)
 
 - [Bundle 713 — Trace-Sperrvertrag und vollständiger Rest 18.u.R/C](bundle-713-trace-writer-contract.md)
+
+- [Bundle 714 — gebundener Receipt-Reader und vollständiger Rest 18.u.C](bundle-714-completion-reader.md)

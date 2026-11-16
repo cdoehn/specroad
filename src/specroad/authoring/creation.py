@@ -3,13 +3,9 @@
 This embedding service is not a registered CLI or a historical-ID discovery
 service. The host supplies a complete model/inventory and publication authority.
 Actual artifact allocation happens under the native writer lock. The common
-target gates, journal, receipt and cleanup primitives own the write protocol.
+target gates and guarded writer own the publication and receipt protocol.
 """
-from ..changes import (AuthoringError, TargetModel, TargetPolicy, PublicationAuthority,
-    prepare_authoring_request, prepare_publication_check,
-    project_lock, begin_building_journal, stage_building_journal,
-    publish_prepared_journal, finalize_committing_journal, cleanup_completed_transaction,
-    read_transaction_completion, read_committing_journal, resolve_normative_request)
+from ..changes import (AuthoringError, TargetModel, TargetPolicy, PublicationAuthority, prepare_authoring_request, prepare_publication_check, project_lock, read_transaction_completion, resolve_normative_request)
 from .plans import prepare_authoring_target as prepare_change_target
 from ..changes._journal_codec import _transaction
 from ..changes._lock_files import LockFiles
@@ -96,7 +92,7 @@ def create_artifact(model, prepared, *, inventory, actor, planned_at, change_pla
     The embedding host must supply the complete current model and historical
     identity inventory. Matching values do not attest historical completeness or
     authenticate an actor. Missing full-target gates fail closed. Failures retain
-    existing native recovery evidence; this adapter never retries publication.
+    the interruption marker and actual files; this adapter never retries publication.
     Explicit plan/transaction IDs and time come from the trusted host. Only the
     artifact ID is allocated here, while the real exclusive writer lock is held.
     """

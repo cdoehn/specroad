@@ -65,4 +65,4 @@ Fortsetzungsvalidierung; es führt keine Testkörper, Fixtures oder Testprozesse
 Ein vorbereiteter Zustand ist keine Verhaltensabnahme. Keine neue Klärung,
 Budgetänderung, lokale Konfiguration oder Sessiondaten gelangen in die Payload.
 
-Vorbereiteter Zustand **18.u.R**: Ziel nach eigenem Gate **770/918**, danach **18.u.C**.
+Vorbereiteter Zustand **18.u.C**: Ziel nach eigenem Gate **771/918**, danach **18.v.W**.

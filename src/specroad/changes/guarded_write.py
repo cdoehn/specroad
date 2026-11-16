@@ -1,6 +1,7 @@
 """Native qualification adapter for the common guarded writer.
 
-Default command dispatch is switched in the subsequent 18.u/18.v stages.
+Normal ChangePlan adapters share this writer. Snapshot/bootstrap integration
+is a separate adapter; qualification and file effects remain common.
 There is no recovery or resume branch in this path.
 """
 from types import SimpleNamespace

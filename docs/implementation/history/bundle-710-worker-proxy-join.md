@@ -64,4 +64,4 @@ Keine Testkörper, Fixtures oder Test-Unterprozesse laufen hier. Die eigentliche
 Verhaltensabnahme bleibt offen für Apply. Lokale Betriebs- und Hostdaten werden
 nicht in die Produkt-Payload übernommen.
 
-Vorbereiteter Zustand **18.u.R**: Ziel nach eigenem Gate **770/918**, danach **18.u.C**.
+Vorbereiteter Zustand **18.u.C**: Ziel nach eigenem Gate **771/918**, danach **18.v.W**.

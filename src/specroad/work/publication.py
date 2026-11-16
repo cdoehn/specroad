@@ -8,18 +8,12 @@ does not install a CLI command or mark normative Work delivery completed.
 from pathlib import Path
 
 from ..changes.authoring import bind_plan_authoring, normalize_authoring_actor
-from ..changes.committing import publish_prepared_journal
-from ..changes.committing_read import read_committing_journal
 from ..changes.idempotency import resolve_normative_request
-from ..changes.journal import begin_building_journal
 from ..changes.locking import project_lock
 from ..changes.publication_check import prepare_publication_check
 from ..changes.publication_values import PublicationAuthority, PublicationCheckError
-from ..changes.receipt_cleanup import cleanup_completed_transaction
-from ..changes.receipt_finalization import finalize_committing_journal
 from ..changes.receipt_read import read_transaction_completion
 from ..changes.request_ids import normalize_request_id
-from ..changes.staging import stage_building_journal
 from ..changes.target import assess_change_target
 from ..changes.target_model import TargetModel
 from ..changes.target_values import TargetError, TargetPolicy
@@ -213,7 +207,7 @@ def _publish_normative_work(store, *, registry, model, policy, actor, request_id
     """Run one unbroken native transaction, or replay its already proven receipt.
 
     No Work generation is published during this call. Native failures retain
-    their journals, receipts and actual file state for existing recovery; this
+    their marker, receipts and actual file state as an interruption blocker; this
     function never resumes a transaction, retries, rebases or rolls back.
     """
     build = _arguments(store, registry, model, policy, actor, request_id)

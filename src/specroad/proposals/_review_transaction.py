@@ -1,13 +1,10 @@
 """Native completion replay and publication of an already checked decision.
 
-Only the existing journal/staging/receipt primitives perform writes. An error
-retains their recovery evidence; this adapter never retries or rolls back.
+Only the common guarded writer performs writes. An error retains the
+interruption state; this adapter never retries or rolls back.
 """
 from .. import changes
-from ..changes import (prepare_publication_check, begin_building_journal,
-    publish_prepared_journal, read_committing_journal, finalize_committing_journal,
-    cleanup_completed_transaction, prepare_authoring_request,
-    resolve_normative_request, read_transaction_completion)
+from ..changes import (prepare_publication_check, prepare_authoring_request, resolve_normative_request, read_transaction_completion)
 from ..changes._lock_files import LockFiles
 from ..changes._publication_observation import _root
 from ..changes._target_materialization import publication_target

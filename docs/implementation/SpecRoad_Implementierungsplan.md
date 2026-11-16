@@ -125,19 +125,21 @@ Historische Korrektur: [Bundle 711](history/bundle-711-native-collection-order.m
 
 Historische Korrektur: [Bundle 712](history/bundle-712-normal-read-mutex.md). Result 711 bestätigt 18.u.W und damit 769/918.
 
-Aktuelle Korrektur des vollständigen offenen Restes: [Bundle 713](history/bundle-713-trace-writer-contract.md). Result 712 meldet einen Trace-Testfehler in 18.u.R und keinen neuen Commit; 18.u.C bleibt offen. Die folgenden Zielwerte gelten erst nach dem eigenen erfolgreichen Apply-Gate.
+Historische Korrektur: [Bundle 713](history/bundle-713-trace-writer-contract.md).
+
+Aktuelle Korrektur des vollständigen offenen Restes: [Bundle 714 — 18.u.C](history/bundle-714-completion-reader.md). Result 713 bestätigt 18.u.R mit 15.432 bestandenen Tests und damit 770/918; C scheiterte an der Anbindung einer Receipt-Fehler-Injektion. Die folgenden C-Zielwerte gelten erst nach dem eigenen erfolgreichen Apply-Gate.
 
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
 plan_revision: 215
 implementation_plan_commits_total: 918
-implementation_plan_commits_completed: 770
-last_completed_plan_commit: 18.u.R
-next_plan_commit: 18.u.C
+implementation_plan_commits_completed: 771
+last_completed_plan_commit: 18.u.C
+next_plan_commit: 18.v.W
 priority_off_plan: null
 next_off_plan_commit: null
-last_completed_numbered_bundle: 706
+last_completed_numbered_bundle: 709
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null

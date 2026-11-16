@@ -96,4 +96,4 @@ Fortsetzungsvalidierung. Keine Testkörper, Fixtures oder Test-Unterprozesse
 laufen hier. Verhaltensabnahme bleibt Apply vorbehalten. Lokale Konfigurationen,
 Zugangsdaten und Sessiondaten gehören nicht zur Produkt-Payload.
 
-Vorbereiteter Zustand **18.u.R**: Ziel nach eigenem Gate **770/918**, danach **18.u.C**.
+Vorbereiteter Zustand **18.u.C**: Ziel nach eigenem Gate **771/918**, danach **18.v.W**.

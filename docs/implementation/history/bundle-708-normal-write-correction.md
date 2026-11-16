@@ -58,4 +58,4 @@ Schritt nach erfolgreichem Abschluss der gesamten Folge. Die Planwerte in
 jedem Zwischenstand sind weiterhin an dessen eigenes erfolgreiches Gate und
 Commit gebunden. Historie von Bundle 707 bleibt unverändert erhalten.
 
-Vorbereiteter Zustand **18.u.R**: Ziel nach eigenem Gate **770/918**, danach **18.u.C**.
+Vorbereiteter Zustand **18.u.C**: Ziel nach eigenem Gate **771/918**, danach **18.v.W**.
