@@ -101,7 +101,11 @@ def render_entrypoint(data, *, core_python):
     import_line = 'from .bundle_contract import canonical, validate_bundle, public_plan, remaining_commits, DELETION_CAPABILITY_PATH, DELETION_CAPABILITY\n'
     if driver.count(import_line) != 1:
         raise ValueError('Unexpected Apply driver imports')
-    driver = contract + '\n' + driver.replace(import_line, '', 1)
+    delete_import = 'from .bundle_delete import delete_bound_file\n'
+    if driver.count(delete_import) != 1:
+        raise ValueError('Unexpected deletion helper import')
+    deletion = Path(__file__).with_name('bundle_delete.py').read_text()
+    driver = contract + '\n' + deletion + '\n' + driver.replace(import_line, '', 1).replace(delete_import, '', 1)
     packed = base64.b64encode(zlib.compress(canonical(data), 9)).decode()
     program = (driver + '\nimport zlib\nDATA = json.loads(zlib.decompress(base64.b64decode('
                + repr(packed) + ')))\n'

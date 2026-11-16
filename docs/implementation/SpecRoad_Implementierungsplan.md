@@ -149,9 +149,9 @@ implementation_plan_commits_total: 918
 implementation_plan_commits_completed: 774
 last_completed_plan_commit: 18.v.C
 next_plan_commit: 18.w.W
-priority_off_plan: DELETE-CONTRACT
-next_off_plan_commit: DELETE-CONTRACT.C
-last_completed_numbered_bundle: 717
+priority_off_plan: null
+next_off_plan_commit: null
+last_completed_numbered_bundle: 719
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
