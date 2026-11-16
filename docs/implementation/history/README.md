@@ -470,3 +470,7 @@
 - [Bundle 716 — Snapshotbelege und vollständiger Rest 18.v.W/R/C](bundle-716-snapshot-readers.md)
 
 - [Bundle 717 — Init-Abbruchoracles und vollständiger Rest 18.v.R/C](bundle-717-bootstrap-failure-oracles.md)
+
+- [Bundle 718 — gebundene Dateilöschungen in Apply und Control](bundle-718-apply-deletion-contract.md)
+
+- [Bundle 719 — Dateirechte der Löschfixtures und vollständiger Rest DELETE-CONTRACT.W/R/C](bundle-719-deletion-fixture-modes.md)

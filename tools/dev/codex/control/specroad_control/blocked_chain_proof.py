@@ -29,6 +29,9 @@ def test_selection(stage):
             fail('Invalid or duplicate required-test selector.')
     for name in selection['test_files']:
         safe_path(name)
+    if (set(stage.get('deletions', {})) & set(selection['test_files'])
+            or not selection['test_files'] and not selection['test_ids']):
+        fail('Required tests must survive deletion and cannot be empty.')
     changed_tests = {name for name in stage['after'] if name.startswith('tests/') and Path(name).name.startswith('test_') and name.endswith('.py')}
     if not changed_tests <= set(selection['test_files']):
         fail('Every changed test file must remain fully mandatory.')
@@ -109,6 +112,8 @@ def compare(original, resumed, source, checkpoint, result):
         tests = test_selection(new)
         if (old['commit_id'] != new['commit_id'] or old['message'] != new['message']
                 or not set(old['after']) <= set(new['after'])
+                or any(new.get('deletions', {}).get(name) != digest
+                       for name, digest in old.get('deletions', {}).items())
                 or any(not set(old['test_plan'][key]) <= set(tests[key]) for key in ('test_files', 'test_ids'))):
             fail('Correction omitted scope, commit identity or mandatory test selection.')
     for line in member(result, 'logs/execution.log').decode('utf-8').splitlines():
@@ -122,7 +127,7 @@ def compare(original, resumed, source, checkpoint, result):
     if work != prefix or apply_stage(work, remainder[0]) != dirty:
         fail('Failed Apply snapshot does not match the completed prefix and failed stage.')
     modified = {name for name in set(prefix) | set(dirty) if prefix.get(name) != dirty.get(name)}
-    if not modified <= set(right['stages'][0]['after']):
+    if not modified <= (set(right['stages'][0]['after']) | set(right['stages'][0].get('deletions', {}))):
         fail('Correction does not account for every retained dirty file.')
     for stage in right['stages']:
         dirty = apply_stage(dirty, stage)

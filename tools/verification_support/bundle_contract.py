@@ -7,6 +7,9 @@ import re
 import uuid
 
 
+DELETION_CAPABILITY_PATH = 'verification/apply_deletion_contract.json'
+DELETION_CAPABILITY = {'format_version': 1, 'bundle_plan_format_version': 2, 'operation': 'bound_regular_file_deletion', 'full_preimage_required': True, 'correction_requires_original_intent': True}
+
 def canonical(value):
     return json.dumps(value, sort_keys=True, ensure_ascii=True, allow_nan=False,
                       separators=(',', ':')).encode()
@@ -36,20 +39,24 @@ def validate_bundle(data):
             or binding['fingerprint_algorithm'] != 'patchharbor-state-v1'):
         raise ValueError('Invalid native Result binding')
     ids = []
-    for stage in data['stages']:
+    for index, stage in enumerate(data['stages']):
         stage_fields = {'commit_id', 'message', 'before', 'after', 'payloads', 'source_sha256', 'test_plan'}
         if version == 2:
             stage_fields.add('role')
+        if type(stage) is dict and ('deletions' in stage or 'delete_preimages' in stage):
+            stage_fields |= {'deletions', 'delete_preimages'}
         if (type(stage) is not dict or set(stage) != stage_fields
                 or not re.fullmatch(r'[A-Za-z0-9_.-]{1,128}', stage['commit_id'])
                 or not stage['message'] or '\n' in stage['message'] or '\0' in stage['message']
-                or not stage['after'] or set(stage['payloads']) != set(stage['after'])
-                or not set(stage['before']) <= set(stage['after'])
+                or not (stage['after'] or stage.get('deletions')) or set(stage['payloads']) != set(stage['after'])
+                or not set(stage['before']) <= set(stage['after']) | set(stage.get('deletions', {}))
                 or stage['test_plan']['commit_id'] != stage['commit_id']
                 or not re.fullmatch(r'[0-9a-f]{64}', stage['source_sha256'])):
             raise ValueError('Invalid commit stage')
+        validate_deletions(stage, version, allow_absent=(index == 0 and data['initial_dirty']
+                           and data['correction_of'] is not None))
         ids.append(stage['commit_id'])
-        for name, digest in {**stage['before'], **stage['after']}.items():
+        for name, digest in {**stage['before'], **stage['after'], **stage.get('deletions', {})}.items():
             path = PurePosixPath(name)
             if (path.is_absolute() or str(path) != name or '\\' in name
                     or any(p.lower() in ('.', '..', '.git', '.patchharbor') for p in path.parts)
@@ -83,7 +90,7 @@ def validate_bundle(data):
 
 def public_plan(data):
     return {**{k: v for k, v in data.items() if k not in ('stages', 'apply_repository')},
-            'stages': [{k: v for k, v in s.items() if k != 'payloads'} for s in data['stages']]}
+            'stages': [{k: v for k, v in s.items() if k not in ('payloads', 'delete_preimages')} for s in data['stages']]}
 
 
 def remaining_commits(plan, progress, *, result_head):
@@ -133,6 +140,9 @@ def validate_continuation(previous, progress, data):
         if [s['role'] for s in data['stages'][:len(rest)]] != [s['role'] for s in rest]:
             raise ValueError('Correction cannot relabel remaining stage roles')
         for old, new in zip(rest, data['stages']):
+            if any(new.get('deletions', {}).get(name) != digest
+                   for name, digest in old.get('deletions', {}).items()):
+                raise ValueError('Correction cannot drop or replace a bound deletion')
             if old['role'] == 'clarification' and old['after'] != new['after']:
                 raise ValueError('Pending clarification cannot become a new decision')
     return data
@@ -174,7 +184,30 @@ def _validate_roles(data):
             raise ValueError('Clarification cannot be an unchanged document marker')
         if not any(stage['role'] == 'implementation' and any(
                 not name.startswith(('docs/', 'verification/')) and stage['before'].get(name) != digest
-                for name, digest in stage['after'].items()) for stage in data['stages'][1:]):
+                for name, digest in stage['after'].items()) or stage['role'] == 'implementation' and any(
+                not name.startswith(('docs/', 'verification/')) for name in stage.get('deletions', {}))
+                for stage in data['stages'][1:]):
             raise ValueError('Mixed handoff requires an actual implementation change')
     else:
         raise ValueError('Unknown handoff classification')
+
+
+def validate_deletions(stage, version, *, allow_absent=False):
+    """Optional v2 tombstones bind complete original bytes, including after failure."""
+    if not ({'deletions', 'delete_preimages'} & set(stage)):
+        return
+    removed, originals = stage.get('deletions'), stage.get('delete_preimages')
+    if (version != 2 or stage.get('role') not in ('implementation', 'correction')
+            or type(removed) is not dict or not removed or type(originals) is not dict
+            or set(originals) != set(removed) or set(removed) & set(stage['after'])):
+        raise ValueError('Invalid explicit deletion contract')
+    for name, digest in removed.items():
+        raw = base64.b64decode(originals[name], validate=True)
+        if (sha256(raw).hexdigest() != digest
+                or name in stage['before'] and stage['before'][name] != digest
+                or name not in stage['before'] and not allow_absent):
+            raise ValueError('Deletion preimage is missing or changed')
+    if set(removed) & set(stage['test_plan']['test_files']):
+        raise ValueError('Deleted tests cannot be selected; require surviving regressions')
+    if not stage['test_plan']['test_files'] and not stage['test_plan']['test_ids']:
+        raise ValueError('Deletion requires a nonempty surviving test selection')

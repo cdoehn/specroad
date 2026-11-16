@@ -5,6 +5,7 @@ import io
 from pathlib import Path
 import re
 import zipfile
+import zlib
 
 from .apply_reconcile_proof import LIMIT, archive_bytes, hashed, fail
 from .local import decode_object
@@ -46,10 +47,19 @@ def modified_files(base, diff):
         if header is None:
             fail('Unsupported diff header; no rename, binary or mode fallback.')
         name = safe_path(header[1].decode())
-        if name not in base or name in changed:
-            fail('Diff path is not one unique tracked file.')
-        mode, original = base[name]
+        if name in changed:
+            fail('Diff repeats a path.')
         index += 1
+        end = index
+        while end < len(lines) and not lines[end].startswith(b'diff --git '):
+            end += 1
+        if lines[index:index + 1] in ([b'deleted file mode 100644\n'], [b'new file mode 100644\n']):
+            changed[name] = created_or_deleted(base, name, lines[index:end])
+            index = end
+            continue
+        if name not in base:
+            fail('Diff path is not a tracked file.')
+        mode, original = base[name]
         old_new = re.fullmatch(rb'index ([0-9a-f]{40}|[0-9a-f]{64})\.\.([0-9a-f]{40}|[0-9a-f]{64}) (100644|100755)\n', lines[index])
         if (old_new is None or old_new[3].decode() != mode
                 or old_new[1].decode() != blob(original, len(old_new[1]))):
@@ -94,7 +104,96 @@ def modified_files(base, diff):
         if not hunks or blob(result, len(old_new[2])) != old_new[2].decode():
             fail('Diff postimage is not the promised Git blob.')
         changed[name] = (mode, result)
-    return {**base, **changed}
+    return {name: value for name, value in {**base, **changed}.items() if value is not None}
+
+
+def created_or_deleted(base, name, lines):
+    """Exact full-file addition/deletion only; modes, blob IDs and all bytes bound."""
+    removed = lines[0] == b'deleted file mode 100644\n'
+    if (name in base) != removed or removed and base[name][0] != '100644':
+        fail('Addition/deletion inventory or mode differs.')
+    identity = re.fullmatch(rb'index ([0-9a-f]{40}|[0-9a-f]{64})\.\.([0-9a-f]{40}|[0-9a-f]{64})\n',
+                            lines[1] if len(lines) > 1 else b'')
+    if identity is None or len(identity[1]) != len(identity[2]):
+        fail('Addition/deletion lacks full Git identities.')
+    old, new = identity[1].decode(), identity[2].decode()
+    if (new if removed else old) != '0' * len(old):
+        fail('Addition/deletion has a nonzero absent identity.')
+    body = lines[2:]
+    if removed:
+        raw = base[name][1]
+        if blob(raw, len(old)) != old:
+            fail('Deleted file preimage differs from the native base.')
+        expected = []
+        if raw:
+            content = lf_lines(raw)
+            count = b'' if len(content) == 1 else b',' + str(len(content)).encode()
+            expected = [b'--- a/' + name.encode() + b'\n', b'+++ /dev/null\n',
+                        b'@@ -1' + count + b' +0,0 @@\n']
+            for line in content:
+                expected.append(b'-' + line + (b'' if line.endswith(b'\n') else b'\n'))
+                if not line.endswith(b'\n'):
+                    expected.append(b'\\ No newline at end of file\n')
+        binary = [b'Binary files a/' + name.encode() + b' and /dev/null differ\n']
+        if body[:1] == [b'GIT binary patch\n']:
+            binary_deletion(body[1:], raw)
+            return None
+        if body != expected and not (b'\0' in raw and body == binary):
+            fail('Deleted file diff does not account for every original byte.')
+        return None
+    if not body:
+        raw = b''
+    else:
+        if body[:2] != [b'--- /dev/null\n', b'+++ b/' + name.encode() + b'\n'] or len(body) < 4:
+            fail('Only complete text additions are reconstructible.')
+        hunk = re.fullmatch(rb'@@ -0,0 \+1(?:,(\d+))? @@\n', body[2])
+        if hunk is None:
+            fail('New file must be one complete hunk.')
+        content = []
+        for line in body[3:]:
+            if line == b'\\ No newline at end of file\n':
+                if not content or not content[-1].endswith(b'\n') or line != body[-1]:
+                    fail('Invalid new-file newline marker.')
+                content[-1] = content[-1][:-1]
+            elif line.startswith(b'+') and line.endswith(b'\n'):
+                content.append(line[1:])
+            else:
+                fail('Invalid new-file content.')
+        if len(content) != int(hunk[1] or b'1'):
+            fail('New-file line count differs.')
+        raw = b''.join(content)
+    if blob(raw, len(new)) != new:
+        fail('New file bytes differ from the native Git identity.')
+    return ('100644', raw)
+
+
+def binary_deletion(lines, original):
+    """Git --binary deletion: exact zero-byte forward and full literal inverse."""
+    position = 0
+    for expected in (b'', original):
+        if position >= len(lines) or lines[position] != ('literal ' + str(len(expected)) + '\n').encode():
+            fail('Binary deletion needs exact bounded literal images.')
+        position += 1
+        encoded = bytearray()
+        while position < len(lines) and lines[position] != b'\n':
+            line = lines[position]; position += 1
+            prefix = line[0] if line else 0
+            count = prefix - 64 if 65 <= prefix <= 90 else prefix - 70 if 97 <= prefix <= 122 else 0
+            if not count or not line.endswith(b'\n') or len(line) != 2 + ((count + 3) // 4) * 5:
+                fail('Invalid binary deletion line.')
+            decoded = base64.b85decode(line[1:-1])
+            if any(decoded[count:]) or len(encoded) + count > LIMIT:
+                fail('Binary deletion padding or size differs.')
+            encoded.extend(decoded[:count])
+        if position >= len(lines):
+            fail('Unterminated binary deletion.')
+        position += 1
+        decoder = zlib.decompressobj()
+        raw = decoder.decompress(encoded, len(expected) + 1)
+        if raw != expected or not decoder.eof or decoder.unused_data or decoder.unconsumed_tail:
+            fail('Binary deletion literal differs from the complete native bytes.')
+    if position != len(lines):
+        fail('Trailing binary deletion data.')
 
 def snapshot(fact):
     raw = archive_bytes(fact)
@@ -122,9 +221,11 @@ def snapshot(fact):
                     or len(raw) != entry['size'] or blob(raw, len(entry['object_id'])) != entry['object_id']):
                 fail('Native base inventory and bytes disagree.')
             base[name] = (mode, raw); expected.add('base/' + name)
-        if read('changes/staged.patch'):
-            fail('Staged changes require a separately reviewed recovery contract.')
-        work = modified_files(base, read('changes/unstaged.patch'))
+        indexed = modified_files(base, read('changes/staged.patch'))
+        work = modified_files(indexed, read('changes/unstaged.patch'))
+        staged = {n for n in set(base) | set(indexed) if base.get(n) != indexed.get(n)}
+        if any(work.get(n) != indexed.get(n) for n in staged):
+            fail('Divergent index/worktree changes require separate recovery evidence.')
         for entry in untracked:
             name = safe_path(entry['path']); raw = read('untracked/' + name)
             if (name in work or entry['mode'] != '100644' or type(entry['size']) is not int
@@ -142,7 +243,7 @@ def inventory_hash(files):
     return hashed({name: [mode, sha256(raw).hexdigest()] for name, (mode, raw) in files.items()})
 
 def apply_stage(files, stage):
-    scope = set(stage['payloads'])
+    scope = set(stage['payloads']) | set(stage.get('deletions', {}))
     if set(stage['before']) != scope.intersection(files):
         fail('Stage preimage inventory is incomplete.')
     for name, expected in stage['before'].items():
@@ -150,10 +251,17 @@ def apply_stage(files, stage):
         if mode != '100644' or sha256(raw).hexdigest() != expected:
             fail('Stage preimage bytes or mode differ from the proven snapshot.')
     result = dict(files)
+    for name, digest in stage.get('deletions', {}).items():
+        raw = base64.b64decode(stage['delete_preimages'][name], validate=True)
+        if len(raw) > LIMIT or sha256(raw).hexdigest() != digest:
+            fail('Deletion full preimage differs from its promise.')
+        if name in files and (files[name] != ('100644', raw) or stage['before'].get(name) != digest):
+            fail('Deletion differs from the complete native preimage.')
+        result.pop(name, None)
     for name, encoded in stage['payloads'].items():
         raw = base64.b64decode(encoded, validate=True)
-        if len(raw) > LIMIT:
-            fail('Stage file exceeds the passive proof limit.')
+        if len(raw) > LIMIT or sha256(raw).hexdigest() != stage['after'][name]:
+            fail('Stage file exceeds the passive proof limit or differs from its hash.')
         result[name] = ('100644', raw)
     no_collisions(result)
     if sum(len(raw) for mode, raw in result.values()) > SNAPSHOT_LIMIT:

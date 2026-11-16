@@ -10,7 +10,7 @@ import sys
 import tempfile
 
 
-from .bundle_contract import canonical, validate_bundle, public_plan, remaining_commits
+from .bundle_contract import canonical, validate_bundle, public_plan, remaining_commits, DELETION_CAPABILITY_PATH, DELETION_CAPABILITY
 
 
 def run_bundle(data, backend):
@@ -91,6 +91,8 @@ class NativeApply:
         if ({k: str(getattr(context, k)) for k in data['binding']} != data['binding']
                 or context.dirty is not data['initial_dirty']):
             raise ValueError('Apply does not match the exact authoritative Result state')
+        if any(stage.get('deletions') for stage in data['stages']):
+            self.bytes_match({DELETION_CAPABILITY_PATH: sha256(canonical(DELETION_CAPABILITY) + b'\n').hexdigest()})
         if not (self.root / '.venv/bin/python').is_file():
             raise ValueError('The existing project test interpreter is required')
         self.report_dir = self.workspace()
@@ -147,31 +149,54 @@ class NativeApply:
 
     def before(self, stage, head):
         self.location()
-        if self.head() != head or not self.changed() <= set(stage['after']):
+        scope = set(stage['after']) | set(stage.get('deletions', {}))
+        if self.head() != head or not self.changed() <= scope:
             raise ValueError('Foreign changes or HEAD movement before stage')
         self.bytes_match(stage['before'])
-        for name in set(stage['after']) - set(stage['before']):
+        for name in scope - set(stage['before']):
             if os.path.lexists(self.root / name):
                 raise ValueError('New stage path already exists: ' + name)
+        for name in stage.get('deletions', {}):
+            delete_bound_file(self.root, name, stage['deletions'][name],
+                              absent=name not in stage['before'], remove=False)
 
     def install(self, stage):
-        from patchharbor.models import BundlePayload
-        from patchharbor.payload_files import write_bundle_payloads
-        payloads = [BundlePayload(relative_path=name, content=base64.b64decode(raw, validate=True), unix_mode=0o644)
-                    for name, raw in stage['payloads'].items()]
-        write_bundle_payloads(payloads, cwd=self.root)
+        if stage['payloads']:
+            from patchharbor.models import BundlePayload
+            from patchharbor.payload_files import write_bundle_payloads
+            payloads = [BundlePayload(relative_path=name, content=base64.b64decode(raw, validate=True), unix_mode=0o644)
+                        for name, raw in stage['payloads'].items()]
+            write_bundle_payloads(payloads, cwd=self.root)
+        for name, digest in stage.get('deletions', {}).items():
+            delete_bound_file(self.root, name, digest, absent=name not in stage['before'])
         self.bytes_match(stage['after'])
+        self.absent(stage)
+
+    def absent(self, stage):
+        for name, digest in stage.get('deletions', {}).items():
+            delete_bound_file(self.root, name, digest, absent=True, remove=False)
 
     def pending(self, stage, head):
         self.location()
-        if self.head() != head or self.changed() != set(stage['after']):
+        scope = set(stage['after']) | set(stage.get('deletions', {}))
+        if self.head() != head or self.changed() != scope:
             raise ValueError('Stage scope differs from the intended commit')
         self.bytes_match(stage['after'])
-        if self.git('diff', '--summary') or self.git('diff', '--cached', '--summary'):
-            # New regular files are checked after staging; deletions/type/mode
-            # changes are deliberately not a supported payload in contract v1.
-            if self.git('diff', '--summary'):
-                raise ValueError('Unexpected mode, type or deletion change')
+        self.absent(stage)
+        for cached in ((), ('--cached',)):
+            records = self.git('diff', *cached, '--raw', '--no-abbrev', '--no-renames', '-z').split(b'\0')
+            if records[-1] != b'' or (len(records) - 1) % 2:
+                raise ValueError('Malformed staged change inventory')
+            for index in range(0, len(records) - 1, 2):
+                old, new, _, _, kind = records[index].split()
+                name = records[index + 1].decode()
+                if kind == b'D':
+                    valid = name in stage.get('deletions', {}) and old == b':100644' and new == b'000000'
+                else:
+                    valid = (name in stage['after'] and kind in (b'A', b'M')
+                             and old == (b':000000' if kind == b'A' else b':100644') and new == b'100644')
+                if not valid:
+                    raise ValueError('Unplanned deletion, type, mode or rename change')
 
     def test(self, stage, head):
         directory = self.report_dir / stage['commit_id']
@@ -198,20 +223,29 @@ class NativeApply:
         return json.loads(result.stdout)
 
     def commit(self, stage, head, evidence):
-        paths = sorted(stage['after'])
-        self.git('add', '--', *paths)
+        paths = sorted(set(stage['after']) | set(stage.get('deletions', {})))
+        # A failed commit may have already removed a path from the index.
+        # Its cached deletion is still checked below, without an unmatched add.
+        index_paths = self.names('ls-files', '-z', '--', *paths)
+        to_add = sorted(set(stage['after']) | (set(stage.get('deletions', {})) & index_paths))
+        if to_add:
+            self.git('add', '-A', '--', *to_add)
         self.pending(stage, head)
         if (self.names('diff', '--cached', '--no-renames', '--name-only', '-z') != set(paths)
                 or self.names('diff', '--no-renames', '--name-only', '-z')
                 or self.names('ls-files', '--others', '--exclude-standard', '-z')):
             raise ValueError('Index has unexpected commit contents')
         self.git('diff', '--cached', '--check')
+        indexed = set()
         for record in self.git('ls-files', '--stage', '-z', '--', *paths).split(b'\0'):
             if record:
-                metadata, _ = record.split(b'\t', 1)
+                metadata, name = record.split(b'\t', 1)
+                indexed.add(name.decode())
                 mode, _, index_stage = metadata.split()
                 if mode != b'100644' or index_stage != b'0':
                     raise ValueError('Index mode or merge stage differs from regular payloads')
+        if indexed != set(stage['after']):
+            raise ValueError('Index contains a deleted file or omits a tested file')
         for name, digest in stage['after'].items():
             if sha256(self.git('show', ':' + name)).hexdigest() != digest:
                 raise ValueError('Index bytes differ from the tested stage')
@@ -229,9 +263,73 @@ class NativeApply:
         for name, digest in stage['after'].items():
             if sha256(self.git('show', completed + ':' + name)).hexdigest() != digest:
                 raise ValueError('Committed bytes differ from the tested stage')
+        if self.names('ls-tree', '-r', '--name-only', '-z', completed, '--', *paths) != set(stage['after']):
+            raise ValueError('Committed tree contains a deleted file')
+        self.absent(stage)
         return completed
 
     def clean(self, head):
         self.location()
         if self.head() != head or self.git('status', '--porcelain=v1', '--untracked-files=all', '-z'):
             raise ValueError('The completed commit is not clean')
+
+
+def delete_bound_file(root, name, digest, *, absent=False, remove=True):
+    """Unlink one bound regular inode through held no-follow directory descriptors.
+
+    Runs under the native Apply ownership lock. Never removes directories and
+    never treats an unexpected missing file as permission for deletion.
+    """
+    parts = Path(name).parts
+    if (not parts or str(Path(name)) != name or Path(name).is_absolute()
+            or any(p.lower() in ('.', '..', '.git', '.patchharbor') for p in parts)):
+        raise ValueError('Unsafe deletion path')
+    directories = []
+    descriptor = None
+    try:
+        directories.append(os.open(root, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW))
+        for part in parts[:-1]:
+            directories.append(os.open(part, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW,
+                                       dir_fd=directories[-1]))
+        parent = directories[-1]
+        try:
+            info = os.stat(parts[-1], dir_fd=parent, follow_symlinks=False)
+        except FileNotFoundError:
+            if absent:
+                return
+            raise ValueError('Bound deletion preimage is missing: ' + name) from None
+        if absent:
+            raise ValueError('Deleted file reappeared: ' + name)
+        if (not stat.S_ISREG(info.st_mode) or stat.S_IMODE(info.st_mode) != 0o644
+                or info.st_nlink != 1):
+            raise ValueError('Deletion requires a single-link regular 0644 file: ' + name)
+        descriptor = os.open(parts[-1], os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK, dir_fd=parent)
+        attributes = ('st_dev', 'st_ino', 'st_mode', 'st_nlink', 'st_size', 'st_mtime_ns', 'st_ctime_ns')
+        signature = tuple(getattr(info, field) for field in attributes)
+        if tuple(getattr(os.fstat(descriptor), field) for field in attributes) != signature:
+            raise ValueError('Deletion preimage replaced during open: ' + name)
+        hashed = sha256()
+        while True:
+            block = os.read(descriptor, 1024 * 1024)
+            if not block:
+                break
+            hashed.update(block)
+        current = os.stat(parts[-1], dir_fd=parent, follow_symlinks=False)
+        if (hashed.hexdigest() != digest
+                or tuple(getattr(current, field) for field in attributes) != signature
+                or tuple(getattr(os.fstat(descriptor), field) for field in attributes) != signature):
+            raise ValueError('Deletion preimage changed during read: ' + name)
+        # Ensure held parents still name this root/path before unlinking.
+        for length, directory in enumerate(directories):
+            current = (Path(root).joinpath(*parts[:length])).lstat()
+            held = os.fstat(directory)
+            if (current.st_dev, current.st_ino) != (held.st_dev, held.st_ino):
+                raise ValueError('Deletion parent changed: ' + name)
+        if remove:
+            os.unlink(parts[-1], dir_fd=parent)
+            os.fsync(parent)
+    finally:
+        if descriptor is not None:
+            os.close(descriptor)
+        for directory in reversed(directories):
+            os.close(directory)

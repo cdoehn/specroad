@@ -69,6 +69,8 @@ Symlinks und Moduswechsel dürfen nicht still in ein solches Paket übersetzt
 werden; sie brauchen einen ausdrücklich passenden sicheren Payloadvertrag.
 Dies ist keine Erlaubnis, geplante fachliche Arbeit wegzulassen.
 
+Für v2 beschreibt [Gebundene Dateilöschungen](Apply_Commit_Deletions.md) die explizite Erweiterung samt Vorherbytes, Fehlerfortsetzung und passiver Control-Prüfung. Diese Unterstützung muss vor einem Löschbundle bereits im Quellstand eingerichtet sein.
+
 ## Ausführung und Nachweis
 
 Der Entrypoint prüft zuerst die native Resultbindung und den Zielbranch.

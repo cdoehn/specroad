@@ -27,7 +27,9 @@ def prove(engine, ledger, source, requested):
     data = verify_handoff(engine, source, package, new_contract(version=4), 'patch_ready')
     if not any(stage['role'] in ('implementation', 'correction') and any(
             not name.startswith(('docs/', 'verification/')) and stage['before'].get(name) != value
-            for name, value in stage['after'].items()) for stage in data['stages']):
+            for name, value in stage['after'].items()) or stage['role'] in ('implementation', 'correction') and any(
+            not name.startswith(('docs/', 'verification/')) for name in stage.get('deletions', {}))
+            for stage in data['stages']):
         fail('A real implementation or correction is required, not an authority-only document commit.')
     verify_followup(engine, source, package['sha256'], result, 'patch_ready')
     stamps = [timestamp(item.get('captured_at')) for item in (source, result)]

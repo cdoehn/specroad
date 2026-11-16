@@ -61,6 +61,8 @@ def validate_roles(data):
         first = data['stages'][0]
         required = {'docs/specification/SpecRoad_Spezifikation.md',
                     'docs/implementation/SpecRoad_Implementierungsplan.md'}
+        if first.get('deletions'):
+            raise ValueError('Clarification cannot delete files')
         paths = set(first['after'])
         if not required <= paths or any(not (name in required or _plan_document(name) or name == 'verification/catalog.json'
                 or re.fullmatch(r'verification/requirements/SR-TC-[0-9]{4}\.json', name)) for name in paths):
@@ -72,7 +74,9 @@ def validate_roles(data):
                 and not (data['initial_dirty'] and data['correction_of'] is not None)):
             raise ValueError('Clarification requires actual specification and plan changes')
         if not any(s['role'] == 'implementation' and any(not name.startswith(('docs/', 'verification/'))
-                and s['before'].get(name) != digest for name, digest in s['after'].items()) for s in data['stages'][1:]):
+                and s['before'].get(name) != digest for name, digest in s['after'].items())
+                or s['role'] == 'implementation' and any(not name.startswith(('docs/', 'verification/'))
+                    for name in s.get('deletions', {})) for s in data['stages'][1:]):
             raise ValueError('An alibi implementation cannot renew authority')
     else:
         raise ValueError('Unknown handoff classification')
@@ -89,6 +93,9 @@ def remaining_roles(plan, progress, data):
             or any(s['role'] != 'implementation' or s['commit_id'] in previous_ids for s in appended)):
         raise ValueError('Correction must retain all unfinished commit IDs and roles')
     for old, new in zip(rest, data['stages']):
+        if any(new.get('deletions', {}).get(name) != digest
+               for name, digest in old.get('deletions', {}).items()):
+            raise ValueError('Correction cannot drop or replace a bound deletion')
         if old['role'] == 'clarification' and old['after'] != new['after']:
             raise ValueError('Pending clarification is not new decision authority')
     return rest

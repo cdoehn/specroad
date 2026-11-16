@@ -1,7 +1,8 @@
 """Passive v4 plan, prefix and real snapshot proof. No patch code is executed."""
 import zipfile
 import zlib
-from .apply_reconcile_proof import plan, public_plan, hashed, unique, completion
+from .apply_reconcile_proof import (plan, public_plan, hashed, unique, completion, canonical,
+                                    DELETION_CAPABILITY_PATH, DELETION_CAPABILITY)
 from .apply_snapshot import snapshot, apply_stage
 from .mixed_contract import MIXED, supports_v4, remaining_roles
 from .errors import ControlError
@@ -29,14 +30,21 @@ def handoff(engine, source, patch, selected, status):
         from .handoff_rebase import candidate, require_remaining_scope
         if candidate(source):
             require_remaining_scope(rest, data['stages'])
+        for old, new in zip(rest, data['stages']):
+            for name in set(new.get('deletions', {})) - set(new['before']):
+                if old.get('deletions', {}).get(name) != new['deletions'][name]:
+                    fail('An absent deletion needs its exact original intent.')
         pending = bool(rest and rest[0]['role'] == 'clarification')
         if selected['clarification_continuation'] != pending or (pending and status != MIXED):
             fail('Continuation authority does not match the actual unfinished prefix.')
     if status == MIXED and not (selected['clarification_allowed'] or selected['clarification_continuation']):
         fail('No clarification authority.')
     base, files = snapshot(source)
+    if any(stage.get('deletions') for stage in data['stages']):
+        if base.get(DELETION_CAPABILITY_PATH) != ('100644', canonical(DELETION_CAPABILITY) + b'\n'):
+            fail('Deletion support must already be committed in the source Result.')
     dirty = {p for p in set(base) | set(files) if base.get(p) != files.get(p)}
-    if not dirty <= set(data['stages'][0]['payloads']):
+    if not dirty <= (set(data['stages'][0]['payloads']) | set(data['stages'][0].get('deletions', {}))):
         fail('The first stage omits retained uncommitted work.')
     for stage in data['stages']:
         test_selection(stage)

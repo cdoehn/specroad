@@ -17,6 +17,9 @@ from .config import digest
 from .errors import ControlError
 from .local import decode_object
 
+DELETION_CAPABILITY_PATH = 'verification/apply_deletion_contract.json'
+DELETION_CAPABILITY = {'format_version': 1, 'bundle_plan_format_version': 2, 'operation': 'bound_regular_file_deletion', 'full_preimage_required': True, 'correction_requires_original_intent': True}
+
 LIMIT = 32 * 1024 * 1024
 PLAN_LIMIT = 64 * 1024 * 1024
 MARKER = "SPECROAD_APPLY_COMMIT_PLAN"
@@ -65,7 +68,7 @@ def member(fact, name, *, inventory=False):
 
 def public_plan(data):
     return {**{k: v for k, v in data.items() if k not in ('stages', 'apply_repository')},
-            'stages': [{k: v for k, v in stage.items() if k != 'payloads'} for stage in data['stages']]}
+            'stages': [{k: v for k, v in stage.items() if k not in ('payloads', 'delete_preimages')} for stage in data['stages']]}
 
 
 def plan(fact, *, data_limit=PLAN_LIMIT):
@@ -119,20 +122,24 @@ def plan(fact, *, data_limit=PLAN_LIMIT):
     binding(data['binding'])
     digest(data['source_result_sha256'])
     ids = []
-    for stage in data['stages']:
+    for index, stage in enumerate(data['stages']):
         stage_fields = {'commit_id', 'message', 'before', 'after', 'payloads', 'source_sha256', 'test_plan'} | ({'role'} if version == 2 else set())
+        if type(stage) is dict and ('deletions' in stage or 'delete_preimages' in stage):
+            stage_fields |= {'deletions', 'delete_preimages'}
         if (not isinstance(stage, dict) or set(stage) != stage_fields
                 or not re.fullmatch('[A-Za-z0-9_.-]{1,128}', stage['commit_id'])
                 or not isinstance(stage['message'], str) or not stage['message']
                 or '\n' in stage['message'] or '\0' in stage['message']
                 or not all(isinstance(stage[key], dict) for key in ('before', 'after', 'payloads', 'test_plan'))
-                or not stage['after'] or set(stage['payloads']) != set(stage['after'])
-                or not set(stage['before']) <= set(stage['after'])
+                or not (stage['after'] or stage.get('deletions')) or set(stage['payloads']) != set(stage['after'])
+                or not set(stage['before']) <= set(stage['after']) | set(stage.get('deletions', {}))
                 or stage['test_plan']['commit_id'] != stage['commit_id']):
             fail('Invalid commit stage.')
+        validate_deletions(stage, version, allow_absent=(index == 0 and data['initial_dirty']
+                           and data['correction_of'] is not None))
         ids.append(stage['commit_id'])
         digest(stage['source_sha256'])
-        for name, value in {**stage['before'], **stage['after']}.items():
+        for name, value in {**stage['before'], **stage['after'], **stage.get('deletions', {})}.items():
             digest(value)
             if (not re.fullmatch('[A-Za-z0-9_./-]+', name) or str(Path(name)) != name
                     or Path(name).is_absolute() or any(part.lower() in ('.', '..', '.git', '.patchharbor')
@@ -289,3 +296,24 @@ def prove(engine, source, original_sha, requested, *, check_current=True):
     except (OSError, ValueError, TypeError, KeyError, IndexError, SyntaxError, RecursionError,
             zipfile.BadZipFile, zlib.error, RuntimeError, NotImplementedError, OverflowError):
         fail('Malformed or unavailable Apply continuation evidence.')
+
+
+def validate_deletions(stage, version, *, allow_absent=False):
+    """Optional v2 tombstones bind complete original bytes, including after failure."""
+    if not ({'deletions', 'delete_preimages'} & set(stage)):
+        return
+    removed, originals = stage.get('deletions'), stage.get('delete_preimages')
+    if (version != 2 or stage.get('role') not in ('implementation', 'correction')
+            or type(removed) is not dict or not removed or type(originals) is not dict
+            or set(originals) != set(removed) or set(removed) & set(stage['after'])):
+        raise ValueError('Invalid explicit deletion contract')
+    for name, digest in removed.items():
+        raw = base64.b64decode(originals[name], validate=True)
+        if (sha256(raw).hexdigest() != digest
+                or name in stage['before'] and stage['before'][name] != digest
+                or name not in stage['before'] and not allow_absent):
+            raise ValueError('Deletion preimage is missing or changed')
+    if set(removed) & set(stage['test_plan']['test_files']):
+        raise ValueError('Deleted tests cannot be selected; require surviving regressions')
+    if not stage['test_plan']['test_files'] and not stage['test_plan']['test_ids']:
+        raise ValueError('Deletion requires a nonempty surviving test selection')

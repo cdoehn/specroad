@@ -1,6 +1,7 @@
 """Prepare real file states and a private entrypoint; never run tests or Git."""
 import base64
 from hashlib import sha256
+import os
 from pathlib import Path, PurePosixPath
 import re
 import stat
@@ -12,15 +13,21 @@ from .commit_tests import validate_plan
 from .identity import source_identity
 
 
-def prepare_stage(before, after, paths, *, commit_id, message, test_plan, role=None):
+def prepare_stage(before, after, paths, *, commit_id, message, test_plan, role=None,
+                  deletion_preimages=None):
     before, after = Path(before), Path(after)
     paths = sorted(set(paths))
     plan = dict(test_plan, commit_id=commit_id)
+    # Already absent targets require original bytes from the authenticated failed
+    # plan. Bundle/Control validation also requires its exact correction prefix.
+    deletion_preimages = {} if deletion_preimages is None else dict(deletion_preimages)
+    if not set(deletion_preimages) <= set(paths):
+        raise ValueError('Deletion preimage outside the prepared scope')
     changed_tests = {p for p in paths if p.startswith('tests/') and Path(p).name.startswith('test_')
-                     and p.endswith('.py')}
+                     and p.endswith('.py') and os.path.lexists(after/p)}
     plan['test_files'] = sorted(set(plan['test_files']) | changed_tests)
     validate_plan(plan, commit_id)
-    prior, payloads, final = {}, {}, {}
+    prior, payloads, final, deletions, originals = {}, {}, {}, {}, {}
     for name in paths:
         relative = PurePosixPath(name)
         if (relative.is_absolute() or str(relative) != name
@@ -32,24 +39,50 @@ def prepare_stage(before, after, paths, *, commit_id, message, test_plan, role=N
                 if parent.exists() or parent.is_symlink():
                     if not stat.S_ISDIR(parent.lstat().st_mode):
                         raise ValueError('Linked stage preparation parent')
-        path = after / name
-        if not path.is_file() or path.is_symlink():
-            raise ValueError('Stage v1 requires a regular final file: ' + name)
-        raw = path.read_bytes()
-        payloads[name] = base64.b64encode(raw).decode()
-        final[name] = sha256(raw).hexdigest()
         old = before / name
-        if old.exists():
-            if not old.is_file() or old.is_symlink():
-                raise ValueError('Stage v1 requires a regular preimage: ' + name)
-            prior[name] = sha256(old.read_bytes()).hexdigest()
+        old_raw = None
+        if os.path.lexists(old):
+            old_raw = regular_bytes(old, deletion=not os.path.lexists(after/name))
+            prior[name] = sha256(old_raw).hexdigest()
+        path = after / name
+        if os.path.lexists(path):
+            if name in deletion_preimages:
+                raise ValueError('Deletion target still exists: ' + name)
+            raw = regular_bytes(path)
+            payloads[name] = base64.b64encode(raw).decode()
+            final[name] = sha256(raw).hexdigest()
+        else:
+            if role not in ('implementation', 'correction'):
+                raise ValueError('Deletion requires an explicit v2 implementation/correction role')
+            raw = deletion_preimages.get(name, old_raw)
+            if type(raw) is not bytes or old_raw is not None and raw != old_raw:
+                raise ValueError('Deletion requires exact full preimage bytes: ' + name)
+            deletions[name] = sha256(raw).hexdigest()
+            originals[name] = base64.b64encode(raw).decode()
+    if set(deletions) & set(plan['test_files']):
+        raise ValueError('Removed tests cannot be selected; choose surviving regression tests')
     result = {'commit_id': commit_id, 'message': message, 'before': prior, 'after': final,
               'payloads': payloads, 'source_sha256': source_identity(after), 'test_plan': plan}
     if role is not None:
         if role not in ('clarification', 'implementation', 'correction'):
             raise ValueError('Unknown stage role')
         result['role'] = role
+    if deletions:
+        result.update(deletions=deletions, delete_preimages=originals)
     return result
+
+
+def regular_bytes(path, *, deletion=False):
+    info = path.lstat()
+    if (not stat.S_ISREG(info.st_mode) or (stat.S_IMODE(info.st_mode) != 0o644 if deletion else bool(info.st_mode & 0o7111))
+            or info.st_nlink != 1):
+        raise ValueError('Stage requires a single-link regular 0644 file: ' + str(path))
+    raw = path.read_bytes()
+    after = path.lstat()
+    if any(getattr(after, key) != getattr(info, key) for key in
+           ('st_dev', 'st_ino', 'st_mode', 'st_nlink', 'st_size', 'st_mtime_ns', 'st_ctime_ns')):
+        raise ValueError('Stage file changed during preparation: ' + str(path))
+    return raw
 
 
 def render_entrypoint(data, *, core_python):
@@ -60,7 +93,7 @@ def render_entrypoint(data, *, core_python):
         raise ValueError('An explicit installed PatchHarbor interpreter is required')
     driver = Path(__file__).with_name('bundle_apply.py').read_text()
     contract = Path(__file__).with_name('bundle_contract.py').read_text()
-    import_line = 'from .bundle_contract import canonical, validate_bundle, public_plan, remaining_commits\n'
+    import_line = 'from .bundle_contract import canonical, validate_bundle, public_plan, remaining_commits, DELETION_CAPABILITY_PATH, DELETION_CAPABILITY\n'
     if driver.count(import_line) != 1:
         raise ValueError('Unexpected Apply driver imports')
     driver = contract + '\n' + driver.replace(import_line, '', 1)

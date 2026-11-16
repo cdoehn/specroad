@@ -59,7 +59,7 @@ def rejection(engine, source, patch, result):
         fail('The original plan is not bound to the actual preimage Result.')
     base, files = snapshot(source)
     dirty = {p for p in set(base) | set(files) if base.get(p) != files.get(p)}
-    if not dirty <= set(data['stages'][0]['payloads']):
+    if not dirty <= (set(data['stages'][0]['payloads']) | set(data['stages'][0].get('deletions', {}))):
         fail('The original first stage omits retained work.')
     for stage in data['stages']:
         test_selection(stage)
@@ -98,6 +98,8 @@ def require_remaining_scope(previous, stages):
     for old, new in zip(previous, stages):
         if (any(new[key] != old[key] for key in ('commit_id', 'role', 'message'))
                 or not set(old['after']) <= set(new['after'])
+                or any(new.get('deletions', {}).get(name) != digest
+                       for name, digest in old.get('deletions', {}).items())
                 or any(not set(old['test_plan'][key]) <= set(new['test_plan'][key])
                        for key in ('test_files', 'test_ids'))):
             fail('Rebinding must preserve IDs, roles, messages, path scope and required gates.')

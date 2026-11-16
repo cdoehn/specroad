@@ -135,7 +135,11 @@ Ursprüngliche vollständige W/R/C-Gruppe: [Bundle 715](history/bundle-715-snaps
 
 Historische Korrektur: [Bundle 716 — vollständiger Rest 18.v.W/R/C](history/bundle-716-snapshot-readers.md). Result 716 bestätigt 18.v.W, Commit `e0eebf6d4aa948ec6c59824416d07fc62df5c8fd`, und damit 772/918. R scheiterte anschließend mit drei Fehlern und 13.051 bestandenen Tests; C wurde nicht ausgebracht.
 
-Aktuelle Korrektur: [Bundle 717 — Init-Abbruchoracles und vollständiger Rest 18.v.R/C](history/bundle-717-bootstrap-failure-oracles.md). Der erfolgreiche W-Commit bleibt erhalten. R und C erhalten jeweils ihr eigenes Apply-Gate; die folgenden Zielwerte gelten erst nach dem betreffenden erfolgreichen Gate und Commit.
+Abgeschlossene Korrektur: [Bundle 717 — Init-Abbruchoracles und vollständiger Rest 18.v.R/C](history/bundle-717-bootstrap-failure-oracles.md). Das erfolgreiche Result mit SHA-256 `8597e7388a5ef318d44c5ae43772f07b1e3e5cae88318fec157ec2c73c8e2d32` bestätigt beide Commits und den sauberen Endstand; 774/918, zuletzt 18.v.C.
+
+Ursprüngliche Infrastrukturfolge: [Bundle 718 — gebundene Dateilöschungen](history/bundle-718-apply-deletion-contract.md). DELETE-CONTRACT.W/R/C erhalten getrennte Apply-Gates; der Produktzähler und die offene Position 18.w.W bleiben unverändert. Die unten angegebenen OFF-PLAN-Zielwerte gelten erst nach dem erfolgreichen Gate und Commit dieser Stage.
+
+Aktuelle Korrektur: [Bundle 719 — Dateirechte der Löschfixtures](history/bundle-719-deletion-fixture-modes.md). Result 718 bestätigt sieben Fehler im W-Gate und keinen Commit. Der vollständige Rest DELETE-CONTRACT.W/R/C bleibt mit getrennten Gates erhalten; die Zielwerte gelten erst nach dem jeweiligen erfolgreichen Commit.
 
 ## Fortschritt – einzige maßgebliche Planstelle
 
@@ -145,8 +149,8 @@ implementation_plan_commits_total: 918
 implementation_plan_commits_completed: 774
 last_completed_plan_commit: 18.v.C
 next_plan_commit: 18.w.W
-priority_off_plan: null
-next_off_plan_commit: null
+priority_off_plan: DELETE-CONTRACT
+next_off_plan_commit: DELETE-CONTRACT.R
 last_completed_numbered_bundle: 717
 implementation_state: in_progress
 audit_followup_status: closed

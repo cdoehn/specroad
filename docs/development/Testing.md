@@ -100,6 +100,8 @@ geänderte Testdateien müssen vollständig enthalten sein; der Stage-Builder
 ergänzt sie automatisch. Für Änderungen an Helfern und Produktcode ergänzt
 Dev eine begründete Auswahl aller notwendigen betroffenen Prüfungen.
 
+Bei expliziten Dateilöschungen gilt zusätzlich der [gebundene Löschvertrag](Apply_Commit_Deletions.md). Entfernte Testdateien werden durch begründete noch vorhandene Pflichtregressionen abgedeckt; ihre historischen Testnummern bleiben erhalten.
+
 Die tatsächliche Testanzahl wird im Apply aus der vollständigen Collection
 ermittelt. Kein im Dev geschätzter Zähler ersetzt den exakten Mengennachweis.
 

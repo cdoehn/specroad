@@ -103,6 +103,8 @@ def correction(previous_data, data, count, program, previous_program):
         tests = test_selection(new)
         if (any(old.get(key) != new.get(key) for key in ('commit_id', 'message', 'role'))
                 or not set(old['after']) <= set(new['after'])
+                or any(new.get('deletions', {}).get(name) != digest
+                       for name, digest in old.get('deletions', {}).items())
                 or any(not set(old['test_plan'][key]) <= set(tests[key]) for key in ('test_ids', 'test_files'))
                 or (old.get('role') == 'clarification' and old['after'] != new['after'])):
             fail('Correction changed commit identity, clarification bytes, scope or mandatory tests.')
@@ -139,7 +141,7 @@ def verify_links(links, source):
                 old, count, old_program = pending
                 correction(old, data, count, program, old_program)
                 dirty = {name for name in set(base) | set(work) if base.get(name) != work.get(name)}
-                if not dirty <= set(data['stages'][0]['after']):
+                if not dirty <= (set(data['stages'][0]['after']) | set(data['stages'][0].get('deletions', {}))):
                     fail('Correction does not account for every retained dirty file.')
             if result['success']:
                 if (result['primary_kind'] != 'success' or result['dirty']
