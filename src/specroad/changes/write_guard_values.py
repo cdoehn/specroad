@@ -167,25 +167,33 @@ def validate_transaction(raw):
     require(type(write['operations']) is list, 'invalid_write_operations')
     operations=[ChangeOperation(op).data for op in write['operations']]
     require(write['operations_sha256']==digest(operations), 'write_operations_binding')
+    validation=write['validation']
+    snapshot=type(validation) is dict and validation.get('format_version')=='snapshot-write-validation-v1'
+    if snapshot:
+        from .snapshot_write_values import checked_plan, effect_path, check_write
+        from ..migration.plan_values import source_path
+        snapshot_plan=checked_plan(validation)
     targets={}
     require(type(write['target_inventory']) is list and type(write['files']) is list, 'invalid_write_inventory')
     for row in write['target_inventory']:
         require(type(row) is dict and set(row)=={'path','size','sha256'},'invalid_write_inventory')
-        _path(row['path']);_binding({k:row[k] for k in ('size','sha256')})
+        (source_path if snapshot else _path)(row['path']);_binding({k:row[k] for k in ('size','sha256')})
         require(row['path'] not in targets,'duplicate_write_resource');targets[row['path']]={k:row[k] for k in ('size','sha256')}
     require(len({unicodedata.normalize('NFC',p).casefold() for p in targets})==len(targets),'write_inventory_alias')
     paths=[]
     for row in write['files']:
         require(type(row) is dict and set(row)=={'path','before','after'},'invalid_write_effect')
-        _path(row['path']);paths.append(row['path'])
+        if snapshot:effect_path(snapshot_plan,row['path'])
+        else:_path(row['path'])
+        paths.append(row['path'])
         for field in ('before','after'):
             if row[field] is not None:_binding(row[field])
         require(row['before']!=row['after'] and targets.get(row['path'])==row['after'],'write_effect_binding')
     require(paths==sorted(set(paths)) and list(targets)==sorted(targets)
         and len({unicodedata.normalize('NFC',p).casefold() for p in paths})==len(paths),'write_inventory_order')
-    validation=write['validation']
     native=validation.get('native',validation) if type(validation) is dict else {}
     _validate_native_report(native,targets)
+    if snapshot:check_write(write)
     require(raw==jcs(transaction_document(write)),'write_receipt_binding')
     return write
 

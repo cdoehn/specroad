@@ -141,13 +141,13 @@ def test_nonempty_or_reserved_namespace_remains_untouched(tmp_path, name):
     folder = root / name; folder.mkdir(); (folder / 'foreign').write_bytes(b'not ours')
     before = inventory(tmp_path)
     with no_write_attempts(): result = dispatch_result(['init', str(root)])
-    assert result.exit_code == 6
+    assert result.exit_code == (5 if name == '.specroad-bootstrap' else 6)
     assert inventory(tmp_path) == before
 
 
 @pytest.mark.parametrize('after', [False, True])
 @pytest.mark.parametrize('existing', [False, True])
-def test_ordinary_publication_failure_rolls_back_only_owned_paths(tmp_path, monkeypatch, after, existing):
+def test_ordinary_publication_failure_preserves_guarded_prefix(tmp_path, monkeypatch, after, existing):
     target = tmp_path / 'project'
     if existing:
         target.mkdir(); (target / 'foreign').write_bytes(b'keep exactly')
@@ -162,11 +162,16 @@ def test_ordinary_publication_failure_rolls_back_only_owned_paths(tmp_path, monk
     monkeypatch.setattr(bootstrap, 'rename_new', fail_once)
     result = dispatch_result(['init', str(target)])
     assert failed and result.exit_code == 5
-    assert inventory(tmp_path) == before
+    from specroad.authoring.bootstrap_guard import names
+    assert all((target.parent/n).exists() for n in names(target))
+    after_failure=inventory(tmp_path)
+    with no_write_attempts(): again=dispatch_result(['init',str(target)])
+    assert again.exit_code==5 and inventory(tmp_path)==after_failure
+    if existing: assert (target/'foreign').read_bytes()==b'keep exactly'
 
 
 @pytest.mark.parametrize('after', [False, True])
-def test_preparation_failure_leaves_no_partial_project(tmp_path, monkeypatch, after):
+def test_preparation_failure_keeps_protected_partial_project(tmp_path, monkeypatch, after):
     target = tmp_path / 'project'; before = inventory(tmp_path); original = bootstrap.BootstrapTree.write
     def fail_once(self, path, raw):
         if path == 'specroad.json':
@@ -175,7 +180,11 @@ def test_preparation_failure_leaves_no_partial_project(tmp_path, monkeypatch, af
         return original(self, path, raw)
     monkeypatch.setattr(bootstrap.BootstrapTree, 'write', fail_once)
     assert dispatch_result(['init', str(target)]).exit_code == 5
-    assert inventory(tmp_path) == before
+    from specroad.authoring.bootstrap_guard import names
+    assert all((target.parent/n).exists() for n in names(target))
+    failed=inventory(tmp_path)
+    with no_write_attempts(): assert dispatch_result(['init',str(target)]).exit_code==5
+    assert inventory(tmp_path)==failed
 
 
 def test_configuration_is_last_and_every_move_has_a_durable_journal(tmp_path, monkeypatch):

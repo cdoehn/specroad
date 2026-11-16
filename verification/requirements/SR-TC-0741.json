@@ -25,15 +25,17 @@
     "Correction bundle 547 retains 15.o.C after four R fixture-construction failures (7523 passed); W committed as a2929c3eaceefbd3376099c3324d43fd4c805edc after 7414 passing tests. This phase still requires its own successful Apply gate and actual commit; no Dev behavior tests ran.",
     "Full native CPython 3.10–3.14/platform evidence and the M15 full-suite/integration gate remain pending explicit manual execution.",
     "Return transport/receive, end-to-end round trip and platform acceptance remain open in 18.q/18.r/20.f/20.h/20.m.",
-    "RECOVERY-REMOVAL-006: existing test references cover only their still-valid implemented scope. Changed interruption/receipt/preflight/work oracles require fresh implementation and evidence in 18.s–18.x; old repair/crash recovery results are not acceptance of the new contract."
+    "RECOVERY-REMOVAL-006: existing test references cover only their still-valid implemented scope. Changed interruption/receipt/preflight/work oracles require fresh implementation and evidence in 18.s–18.x; old repair/crash recovery results are not acceptance of the new contract.",
+    "18.v: fresh stage-specific Apply evidence is required. Dev only prepared the implementation, behavioral oracles and pure collection; no behavior tests ran in Dev."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Wiederholung, geänderte Basis, Paketfehler und Abbruch MÜSSEN nach W.6 ohne doppelte Fachänderung, stilles Rebase, Verlust fremder Dateien oder fingierten Erfolg behandelt werden.",
-    "scope": "Prepared offline inbound verification/extraction contribution only: exact native reference/project bytes, trusted standalone code, original receipts and guarded root publication. No return-path, release or completed execution evidence is claimed."
+    "scope": "Prepared offline inbound verification/extraction contribution only: exact native reference/project bytes, trusted standalone code, original receipts and guarded root publication. No return-path, release or completed execution evidence is claimed. 18.v binds the replacement interruption/normal-completion oracles; old automatic-repair evidence is historical only. Further plan scopes and release acceptance remain separate."
   },
   "preconditions": [
-    "Linux x86-64 CPython, explicit trusted standalone PatchHarbor 1.8.0 PYZ and external hash, actual closed outbound package and fresh private workspace."
+    "Linux x86-64 CPython, explicit trusted standalone PatchHarbor 1.8.0 PYZ and external hash, actual closed outbound package and fresh private workspace.",
+    "Use only owned native test roots with actual backup/original evidence. No historical success record authorizes replay or restoration of a protected partial publication."
   ],
   "primary_verification_id": "SR-VER-0051",
   "required_environment": {
@@ -54,7 +56,8 @@
     "Refuse invalid options without writes; run the prepared security and bootstrap fault cases in Apply.",
     "Validate the public command-description schema for opening and outbound variants, including nullable budget metadata; refuse unknown fields, missing mandatory fields and false types.",
     "Verify metadata preserves runtime-budget-v2 for bundle.verify and null for bundle.extract in normal and transport contracts; retain all closed-schema rejection checks.",
-    "Preserve real PYZ directory members when constructing altered Core and build-record inputs; require their specific passive security rejection before runtime loading or workspace creation."
+    "Preserve real PYZ directory members when constructing altered Core and build-record inputs; require their specific passive security rejection before runtime loading or workspace creation.",
+    "Interrupt actual sandbox publication; preserve the parent-bound outer guard and all actual payload/workspace bytes. Opening again, including through an already extracted inner project, never completes an interrupted sandbox."
   ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0741",
@@ -142,8 +145,8 @@
     "tests/test_transport_opening_right.py::test_inputs_and_private_bytes_are_rechecked_before_target_writes[subproject-workspace-mode]",
     "tests/test_transport_opening_right.py::test_interrupted_inner_extraction_without_outer_proof_is_retained[repository-root]",
     "tests/test_transport_opening_right.py::test_interrupted_inner_extraction_without_outer_proof_is_retained[subproject]",
-    "tests/test_transport_opening_right.py::test_io_failure_rolls_back_only_owned_sandbox_and_retains_private_workspace[repository-root]",
-    "tests/test_transport_opening_right.py::test_io_failure_rolls_back_only_owned_sandbox_and_retains_private_workspace[subproject]",
+    "tests/test_transport_opening_right.py::test_io_failure_retains_sandbox_and_private_workspace[repository-root]",
+    "tests/test_transport_opening_right.py::test_io_failure_retains_sandbox_and_private_workspace[subproject]",
     "tests/test_transport_opening_right.py::test_nonportable_or_partial_project_is_not_promoted[repository-root-local_only]",
     "tests/test_transport_opening_right.py::test_nonportable_or_partial_project_is_not_promoted[repository-root-partial]",
     "tests/test_transport_opening_right.py::test_nonportable_or_partial_project_is_not_promoted[subproject-local_only]",
@@ -160,6 +163,8 @@
     "tests/test_transport_opening_right.py::test_passive_rejections_precede_workspace_and_code[repository-root-duplicate]",
     "tests/test_transport_opening_right.py::test_passive_rejections_precede_workspace_and_code[repository-root-extra]",
     "tests/test_transport_opening_right.py::test_passive_rejections_precede_workspace_and_code[repository-root-foreign-core]",
+    "tests/test_transport_opening_right.py::test_passive_rejections_precede_workspace_and_code[repository-root-foreign-reference-contract]",
+    "tests/test_transport_opening_right.py::test_passive_rejections_precede_workspace_and_code[repository-root-foreign-reference-registry]",
     "tests/test_transport_opening_right.py::test_passive_rejections_precede_workspace_and_code[repository-root-forged-build]",
     "tests/test_transport_opening_right.py::test_passive_rejections_precede_workspace_and_code[repository-root-link]",
     "tests/test_transport_opening_right.py::test_passive_rejections_precede_workspace_and_code[repository-root-noncanonical]",
@@ -172,6 +177,8 @@
     "tests/test_transport_opening_right.py::test_passive_rejections_precede_workspace_and_code[subproject-duplicate]",
     "tests/test_transport_opening_right.py::test_passive_rejections_precede_workspace_and_code[subproject-extra]",
     "tests/test_transport_opening_right.py::test_passive_rejections_precede_workspace_and_code[subproject-foreign-core]",
+    "tests/test_transport_opening_right.py::test_passive_rejections_precede_workspace_and_code[subproject-foreign-reference-contract]",
+    "tests/test_transport_opening_right.py::test_passive_rejections_precede_workspace_and_code[subproject-foreign-reference-registry]",
     "tests/test_transport_opening_right.py::test_passive_rejections_precede_workspace_and_code[subproject-forged-build]",
     "tests/test_transport_opening_right.py::test_passive_rejections_precede_workspace_and_code[subproject-link]",
     "tests/test_transport_opening_right.py::test_passive_rejections_precede_workspace_and_code[subproject-noncanonical]",
@@ -181,14 +188,14 @@
     "tests/test_transport_opening_right.py::test_passive_rejections_precede_workspace_and_code[subproject-wrong-hash]",
     "tests/test_transport_opening_right.py::test_passive_rejections_precede_workspace_and_code[subproject-wrong-runtime]",
     "tests/test_transport_opening_right.py::test_portable_receipt_tampering_fails_before_root_creation",
-    "tests/test_transport_opening_right.py::test_process_death_recovers_only_original_owned_inventory[repository-root-.specroad]",
-    "tests/test_transport_opening_right.py::test_process_death_recovers_only_original_owned_inventory[repository-root-project]",
-    "tests/test_transport_opening_right.py::test_process_death_recovers_only_original_owned_inventory[repository-root-reference]",
-    "tests/test_transport_opening_right.py::test_process_death_recovers_only_original_owned_inventory[repository-root-runtime]",
-    "tests/test_transport_opening_right.py::test_process_death_recovers_only_original_owned_inventory[subproject-.specroad]",
-    "tests/test_transport_opening_right.py::test_process_death_recovers_only_original_owned_inventory[subproject-project]",
-    "tests/test_transport_opening_right.py::test_process_death_recovers_only_original_owned_inventory[subproject-reference]",
-    "tests/test_transport_opening_right.py::test_process_death_recovers_only_original_owned_inventory[subproject-runtime]",
+    "tests/test_transport_opening_right.py::test_process_death_blocks_the_original_owned_inventory[repository-root-.specroad]",
+    "tests/test_transport_opening_right.py::test_process_death_blocks_the_original_owned_inventory[repository-root-project]",
+    "tests/test_transport_opening_right.py::test_process_death_blocks_the_original_owned_inventory[repository-root-reference]",
+    "tests/test_transport_opening_right.py::test_process_death_blocks_the_original_owned_inventory[repository-root-runtime]",
+    "tests/test_transport_opening_right.py::test_process_death_blocks_the_original_owned_inventory[subproject-.specroad]",
+    "tests/test_transport_opening_right.py::test_process_death_blocks_the_original_owned_inventory[subproject-project]",
+    "tests/test_transport_opening_right.py::test_process_death_blocks_the_original_owned_inventory[subproject-reference]",
+    "tests/test_transport_opening_right.py::test_process_death_blocks_the_original_owned_inventory[subproject-runtime]",
     "tests/test_transport_opening_right.py::test_rehashed_outer_cannot_hide_invalid_native_result[repository-root]",
     "tests/test_transport_opening_right.py::test_rehashed_outer_cannot_hide_invalid_native_result[subproject]",
     "tests/test_transport_opening_right.py::test_target_identity_is_not_rebound_between_verification_and_publication[repository-root-appeared]",

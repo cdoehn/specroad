@@ -20,6 +20,11 @@ def identity(info):
     return {'device': str(info.st_dev), 'inode': str(info.st_ino)}
 
 
+def require_native_lock():
+    if not sys.platform.startswith('linux') or not guards._HAS_SAFE_OPEN:
+        raise ProjectLockError('native_lock_unavailable')
+
+
 class LockFiles:
     def __init__(self, root):
         self.boundary = ProjectBoundary(root)
@@ -30,8 +35,7 @@ class LockFiles:
         self._fcntl = None
 
     def __enter__(self):
-        if not sys.platform.startswith('linux') or not guards._HAS_SAFE_OPEN:
-            raise ProjectLockError('native_lock_unavailable')
+        require_native_lock()
         self.boundary._check_root()
         self.root_fd = os.open(self.boundary.root, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | getattr(os, 'O_CLOEXEC', 0))
         try:

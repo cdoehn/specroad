@@ -12,7 +12,7 @@ from ..changes.publication_values import PublicationAuthority
 from ..changes.schema_transition_values import authoring
 from ..changes._journal_codec import _transaction
 from ..changes._lock_files import LockFiles
-from ..changes.schema_transition_recovery import historical_request
+from ..changes.snapshot_completion import historical_request
 from ..storage.operational_preflight import observe_operational_preflight
 from ..merge.publication import apply_merge_publication
 from .merge_publication_inputs import (required, require, root_option, live_sources,

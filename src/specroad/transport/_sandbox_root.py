@@ -5,6 +5,7 @@ its genuine inodes when the complete project directory is published last.
 """
 from contextlib import ExitStack
 import os
+from hashlib import sha256
 
 from ..authoring._bootstrap_io import (BootstrapError, BootstrapTree, STAGING,
     directory, identity, info_at, metadata, rename_function, verify_tree)
@@ -71,50 +72,51 @@ def publish_sandbox(opening):
         _require((destination.current is None) == (opening.output_boundary is None))
         opening.verify_current()
         try:
+            planned = {**content, **{'project/'+p:b for p,b in
+                       _project_content(opening.container.project).items()}}
+            planned_directories = _directories(planned)
+            binding = {'outbound_sha256':opening.source.sha256,
+                       'reference_sha256':sha256(opening.reference.raw).hexdigest(),
+                       'files':[{'path':p,'sha256':sha256(raw).hexdigest()}
+                                for p,raw in sorted(planned.items())]}
             if destination.current is None:
+                destination.protect('transport open', planned, planned_directories, input_binding=binding)
                 destination.create()
             held = destination.acquire(stack)
+            if info_at(held.root_fd, STAGING) is not None:
+                raise BootstrapError('project_corrupted', exit_code=5, path=STAGING)
+            if os.listdir(held.root_fd):
+                raise BootstrapError('sandbox_target_not_empty')
+            if not destination.created:
+                destination.protect('transport open', planned, planned_directories, input_binding=binding)
             opening.effects.update(sandbox_root=str(target), bootstrap_state='publishing')
             def guard():
                 parent_held.require_held()
+                destination.protection.check()
                 _check_names(held, tree)
                 opening.verify_current()
-            if info_at(held.root_fd, STAGING) is not None:
-                recovering = True
-                tree = SandboxTree(held, function, opening)
-                try:
-                    _restore(tree, content)
-                except (ModelError, ValueError, TypeError, KeyError, RecursionError) as error:
-                    raise BootstrapError('sandbox_bootstrap_inventory_invalid') from error
-            else:
-                if os.listdir(held.root_fd):
-                    raise BootstrapError('sandbox_target_not_empty')
-                tree = SandboxTree(held, function, opening)
-                tree.create()
-                tree.prepare_sandbox(content, destination.created)
+            tree = SandboxTree(held, function, opening)
+            tree.create()
+            tree.prepare_sandbox(content, destination.created)
             guard()
             tree.publish(guard=guard)
             tree.cleanup()
             guard()
-        except BaseException as original:
-            # Recovery must never use a partially decoded journal for cleanup.
-            if recovering:
-                opening.effects['bootstrap_state'] = 'recovery_required'
-                raise
-            try:
-                if tree is not None or destination.created:
-                    destination.rollback(tree, original)
-            except BaseException:
-                opening.effects['bootstrap_state'] = 'recovery_required'
-                raise
-            opening.effects['bootstrap_state'] = ('complete' if tree is not None and tree.committed
-                else 'rolled_back' if tree is not None else 'not_started')
-            if not os.path.lexists(target):
-                opening.effects['sandbox_root'] = None
+            def verified():
+                guard()
+                if not all(tree.checked_locations().values()):
+                    raise BootstrapError('bootstrap_publication_incomplete', exit_code=5)
+                os.fsync(held.root_fd)
+            destination.complete(verified)
+        except BaseException:
+            opening.effects['bootstrap_state'] = ('complete' if destination.protection is not None
+                and destination.protection.completed else 'blocked' if destination.protection is not None
+                and destination.protection.started else 'not_started')
+            if not os.path.lexists(target): opening.effects['sandbox_root'] = None
             raise
         finally:
-            if tree is not None:
-                tree.close()
+            if tree is not None: tree.close()
+            destination.close()
     payload = {**content, **{'project/' + p: b for p, b in _project_content(opening.container.project).items()}}
     opening.effects['bootstrap_state'] = 'complete'
     directories = {p.rsplit('/', 1)[0] for p in payload if '/' in p}

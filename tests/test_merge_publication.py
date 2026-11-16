@@ -26,7 +26,7 @@ def test_exact_k3_bytes_use_shared_transaction_and_bound_native_report(tmp_path,
     root,plan,args,target=setup(tmp_path,variants=[files,ours,theirs])
     before=normative(root)
     result=apply(root,plan,args)
-    assert result['format_version']=='merge-transaction-v1' and result['write_state']=='committed'
+    assert result['format_version']=='merge-transaction-v2' and result['write_state']=='committed'
     assert result['current_target_verified'] and result['evidence_currently_rechecked'] and not result['approval_granted']
     assert normative(root)==target.files
     goal_path=next(p for p in ours if p.startswith('spec/goals/'))
@@ -41,10 +41,12 @@ def test_exact_k3_bytes_use_shared_transaction_and_bound_native_report(tmp_path,
     assert report['assessment']==target.data['validation']
     assert report['relation_reviews']==report['evidence']==report['code_references']==[]
     tx=root/transaction_receipt_path(args['transaction_id'])
-    journal=TransitionJournal(tx.with_name('journal.json').read_bytes())
-    assert journal.data['format_version']=='merge-transition-journal-v1'
-    assert journal.plan.source_bytes==plan.source_bytes and journal.data['validation']==report
-    assert_owned_plan(journal,plan.source_bytes)
+    from specroad.changes.write_guard_values import validate_transaction
+    from specroad.changes.snapshot_write_values import check_write
+    write=validate_transaction(tx.read_bytes())
+    assert check_write(write).source_bytes==plan.source_bytes
+    assert write['validation']['qualification']==report
+    assert not tx.with_name('journal.json').exists()
     assert sha256(tx.read_bytes()).hexdigest()==result['receipts']['transaction']['sha256']
     assert (root/request_receipt_path(plan.data['request_id'])).is_file()
     assert not (root/'.specroad/transactions'/args['transaction_id']).exists()

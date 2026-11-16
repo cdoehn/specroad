@@ -79,7 +79,7 @@ def test_public_request_replay_uses_native_completed_journal(tmp_path):
     first=success(invoke('migrate.apply',options));before=inventory(data[0])
     again=success(invoke('migrate.apply',options))
     assert again['execution']['replayed'] and not again['execution']['current_target_verified']
-    assert again['execution']['journal_sha256']==first['execution']['journal_sha256']
+    assert again['execution']['write_sha256']==first['execution']['write_sha256']
     assert inventory(data[0])==before
 
 

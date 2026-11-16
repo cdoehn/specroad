@@ -63,7 +63,7 @@ def _backup(root, options, plan):
 
 def _already_current(root, plan, target_version):
     from ..changes._lock_files import LockFiles
-    from ..changes.schema_transition_recovery import historical_request
+    from ..changes.snapshot_completion import historical_request
     from ..storage.operational_preflight import observe_operational_preflight
     from ..storage.project import ProjectSource
     with LockFiles(root) as access:

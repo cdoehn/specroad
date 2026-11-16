@@ -11,6 +11,7 @@ from ..bundles.errors import BundleError
 from ..changes.values import ChangePlan
 from ..changes.publication_values import PublicationAuthority
 from ..changes.schema_transition_values import SchemaTransitionError
+from ..changes.execution_values import ChangeExecutionError
 from ..migration.contracts import MigrationError
 from ..migration.plan_values import require
 from ..migration.planning import plan_migration
@@ -150,7 +151,7 @@ def migration_command(invocation):
         if type(result) is CommandResult: return result
         validate_result_document('migration-command-v1', result)
         return CommandResult(invocation.command.command_id, result=result)
-    except (ModelError, BundleError, MigrationError, SchemaTransitionError, SafetyViolation, OSError) as error:
+    except (ModelError, BundleError, MigrationError, SchemaTransitionError, ChangeExecutionError, SafetyViolation, OSError) as error:
         code = 7 if isinstance(error, SafetyViolation) else 5 if isinstance(error, OSError) else getattr(error,'exit_code',3)
         reason = getattr(error,'reason','migration_io_failure')
         facts = {'reason': reason}

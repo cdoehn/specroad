@@ -18,6 +18,8 @@ from ..security import ProjectBoundary, SafetyViolation
 
 class ProjectSource:
     def __init__(self, root, *, expected_project_id=None):
+        from ..authoring.bootstrap_guard import require_bootstrap_complete
+        require_bootstrap_complete(root)
         self.boundary = ProjectBoundary(root)
         from ..bundles._extracted_root import require_complete_root
         self._bundle_origin = require_complete_root(self.boundary)

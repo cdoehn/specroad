@@ -161,7 +161,7 @@ def test_bad_inputs_fail_before_target_creation(tmp_path, kind):
 
 @pytest.mark.parametrize('point', ['prepare', 'publish'])
 @pytest.mark.parametrize('existing', [False, True])
-def test_native_failures_restore_original_missing_or_empty_target(tmp_path, point, existing, monkeypatch):
+def test_native_failures_retain_blocked_missing_or_empty_target(tmp_path, point, existing, monkeypatch):
     original = bundle(tmp_path / 'origin'); target = tmp_path / 'output'
     if existing: target.mkdir()
     source = tmp_path / 'input.zip'; source.write_bytes(original.source_bytes)
@@ -180,10 +180,15 @@ def test_native_failures_restore_original_missing_or_empty_target(tmp_path, poin
         monkeypatch.setattr(bootstrap, 'rename_new', fail)
     result = dispatch_result(['bundle', 'extract', str(source), '--output', str(target)])
     assert result.exit_code == 5, result.as_dict()
-    assert inventory(tmp_path) == before
+    from specroad.authoring.bootstrap_guard import names
+    assert all((target.parent/n).exists() for n in names(target))
+    failed=inventory(tmp_path)
+    with no_write_attempts():
+        again=dispatch_result(['bundle','extract',str(source),'--output',str(target)])
+    assert again.exit_code==5 and inventory(tmp_path)==failed
 
 
-def test_same_verified_input_resumes_proven_publication_prefix(tmp_path, monkeypatch):
+def test_same_verified_input_cannot_resume_publication_prefix(tmp_path, monkeypatch):
     original = bundle(tmp_path / 'origin'); target = tmp_path / 'target'; target.mkdir()
     native_rename = bootstrap.rename_new
     calls = []
@@ -195,9 +200,12 @@ def test_same_verified_input_resumes_proven_publication_prefix(tmp_path, monkeyp
         active.setattr(bootstrap.BootstrapTree, 'cleanup', lambda tree: (_ for _ in ()).throw(OSError('crashed cleanup')))
         with pytest.raises(bootstrap.BootstrapError): extract_bundle(original.source_bytes, target)
     assert (target / bootstrap.STAGING / 'journal.json').exists()
-    value = extract_bundle(original.source_bytes, target)
-    check_files(target, original, value)
-    assert ProjectSource(target).configuration.project_id == original.manifest['project_id']
+    failed=inventory(tmp_path)
+    with no_write_attempts(),pytest.raises(bootstrap.BootstrapError):
+        extract_bundle(original.source_bytes,target)
+    assert inventory(tmp_path)==failed
+    fresh=tmp_path/'different-target'
+    check_files(fresh,original,extract_bundle(original.source_bytes,fresh))
 
 
 def test_completed_bootstrap_is_rechecked_without_reinstalling_files(tmp_path):

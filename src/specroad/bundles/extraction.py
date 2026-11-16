@@ -30,6 +30,8 @@ def _directories(content):
 
 def _recover(held, function, content, directories, guard):
     staged = info_at(held.root_fd, STAGING) is not None
+    if staged:
+        raise BootstrapError("project_corrupted", exit_code=5, path=STAGING)
     with held.directory(COMPLETED[:-1]) as parent:
         receipt = parent is not None and info_at(parent, COMPLETED[-1]) is not None
     if not staged and not receipt:
@@ -54,9 +56,8 @@ def _recover(held, function, content, directories, guard):
         guard(tree)
         if receipt and not all(tree.checked_locations().values()):
             raise BootstrapError('bootstrap_publication_incomplete')
-        publishing = True
-        tree.publish(guard=lambda: guard(tree))
-        tree.retain_completed()
+        if not all(tree.checked_locations().values()):
+            raise BootstrapError("project_corrupted", exit_code=5)
         guard(tree)
         return True
     except (SafetyViolation, BundleError):
@@ -97,16 +98,24 @@ def _publish(container, target, *, cwd=None, recheck_input=lambda: None):
         recheck_input()
         try:
             if destination.current is None:
+                destination.protect('bundle extract', content, directories,
+                    input_binding={'bundle_sha256':sha256(container.source_bytes).hexdigest()})
                 destination.create()
             held = destination.acquire(stack)
             def guard(tree):
                 parent_held.require_held()
+                if destination.protection is not None: destination.protection.check()
                 _check_names(held, tree)
                 recheck_input()
+            if info_at(held.root_fd, STAGING) is not None:
+                raise BootstrapError('project_corrupted', exit_code=5, path=STAGING)
             recovered = False if destination.created else _recover(held, function, content, directories, guard)
             if not recovered:
                 if os.listdir(held.root_fd):
                     raise BootstrapError('bundle_extraction_target_not_empty')
+                if not destination.created:
+                    destination.protect('bundle extract', content, directories,
+                        input_binding={'bundle_sha256':sha256(container.source_bytes).hexdigest()})
                 tree = BootstrapTree(held, function, {}, completed=COMPLETED)
                 tree.create()
                 tree.prepare(content, directories, destination.created, journal_format=FORMAT)
@@ -114,11 +123,18 @@ def _publish(container, target, *, cwd=None, recheck_input=lambda: None):
                 tree.publish(guard=lambda: guard(tree))
                 tree.cleanup()
                 guard(tree)
-        except BaseException as original:
-            destination.rollback(tree, original)
-            raise
+                def verified():
+                    guard(tree)
+                    if not all(tree.checked_locations().values()):
+                        raise BootstrapError('bootstrap_publication_incomplete', exit_code=5)
+                    os.fsync(held.root_fd)
+                destination.complete(verified)
+        except OSError as error:
+            raise BootstrapError("bootstrap_publication_interrupted", exit_code=5,
+                mutation_possible=bool(destination.protection and destination.protection.started)) from error
         finally:
             if tree is not None: tree.close()
+            destination.close()
     return target, content, directories
 
 

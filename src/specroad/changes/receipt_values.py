@@ -175,7 +175,12 @@ class RequestReceipt:
         from ._journal_codec import _target_path
         try:
             for path in result['published_paths']:
-                if (value['format_version']=='schema-transition-request-receipt-v1'
+                if value['format_version'] == 'request-receipt-v2':
+                    # Syntax uses the same resource namespace as the v2 writer.
+                    # Exact paths/registry binding still require the full receipt group.
+                    from .write_guard_values import _path
+                    _path(path)
+                elif (value['format_version']=='schema-transition-request-receipt-v1'
                         and path.startswith('profiles/language-data/') and path.endswith('.txt')):
                     # The new closed branch may publish the actual bound registry
                     # text. Completion still requires its native transition

@@ -27,6 +27,7 @@ class _Inputs:
     target: dict
     inventory_check: object
     qualify: object
+    effect_path: object = None
 
 
 class _Session:
@@ -40,9 +41,10 @@ class _Session:
         from ..storage.archive import validate_portable_archive_paths
         validate_portable_archive_paths(list(self.before.keys()|self.target.keys()))
         for p in self.paths:
-            _path(p)
+            (_path if inputs.effect_path is None else inputs.effect_path)(p)
             require(not p.startswith('archive/objects/') or p not in self.before,'immutable_write_target',exit_code=7)
-        require(bool(self.paths),'empty_write_program',exit_code=2)
+        require(bool(self.paths) or inputs.command_id == 'merge apply',
+                'empty_write_program',exit_code=2)
         self.parents={};self.identities={};self.modes={};self.owners={};self.images={};self.records={}
         self.marker=None;self.marker_id=None;self.active=False;self.stage_created=False
         owner=held.record.data;plan=inputs.plan.data

@@ -78,7 +78,8 @@ def verify_migration_project(root, backup_raw, plan_raw, report_raw, *, transact
     from ..changes._lock_files import LockFiles
     from ..changes._schema_transition_io import project_files
     from ..changes.schema_transition import _exclude
-    from ..changes.schema_transition_recovery import completion_proof, takeover_evidence
+    from ..changes.snapshot_completion import completion_proof, SnapshotCompletion
+    from ..changes.schema_transition_recovery import takeover_evidence
     from ._backup_source import _observe
     all_files, observed, check_current = _observe(root)
     with LockFiles(root) as files:
@@ -90,7 +91,7 @@ def verify_migration_project(root, backup_raw, plan_raw, report_raw, *, transact
         require(descriptor['sha256'] == options['expected_backup_sha256']
                 and descriptor['source_files_sha256'] == options['expected_source_files_sha256'],
                 'migration_verification_backup_changed', exit_code=6)
-        extra = takeover_evidence(files, journal)
+        extra = {} if type(journal) is SnapshotCompletion else takeover_evidence(files, journal)
         excluded = (*_exclude(journal, journal.receipt_root), *extra)
         target, _, _ = project_files(files, exclude=excluded)
         result = verify_migration(backup_raw, plan_raw, report_raw, target, **options)
@@ -100,6 +101,6 @@ def verify_migration_project(root, backup_raw, plan_raw, report_raw, *, transact
     value = result.data
     value['observation'] = 'stable_live_target'
     value['operational_evidence'] = {'transaction_id': transaction_id,
-        'journal_sha256': journal.sha256,
+        ('transaction_receipt_sha256' if type(journal) is SnapshotCompletion else 'journal_sha256'): journal.sha256,
         'files': file_bindings({p: raw for p, raw in all_files.items() if p not in target})}
     return _result(value)

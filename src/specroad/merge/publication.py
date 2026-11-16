@@ -10,7 +10,7 @@ from ..changes.publication_values import PublicationAuthority
 from ..changes._journal_codec import _transaction
 from ..changes.schema_transition_values import authoring, SchemaTransitionError
 from ..changes.schema_transition import publish_schema_transition
-from ..changes.schema_transition_recovery import historical_request
+from ..changes.snapshot_completion import historical_request
 from ..migration.plan_values import b64, file_bindings, changes
 from ..migration._backup_source import _observe
 from ..storage.operational_preflight import observe_operational_preflight

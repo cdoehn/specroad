@@ -133,14 +133,16 @@ def test_public_writer_interruption_retains_native_recovery_and_no_automatic_ret
     _, filename, options, _ = publication(tmp_path, data)
     hit = []
     def interrupt(point):
-        if point == 'journal:committing:0':
+        if point == 'effect_synced:0':
             hit.append(point)
             raise OSError('Synthetic CLI writer durability interruption')
     with monkeypatch.context() as patch:
         patch.setattr(writer, '_checkpoint', interrupt)
         result = invoke('merge.apply', options, arguments={'merge_plan': str(filename)})
-    assert hit == ['journal:committing:0'] and result.exit_code == 6
+    assert hit == ['effect_synced:0'] and result.exit_code == 5
     assert result.details['write_state'] == 'unknown'
+    assert (data[0]/'.specroad/write-state/pending.json').is_file()
+    assert (data[0]/'.specroad/locks/project.json').is_file()
     before = inventory(tmp_path)
     retry = invoke('merge.apply', options, arguments={'merge_plan': str(filename)})
     assert retry.exit_code in (3, 5, 6) and inventory(tmp_path) == before

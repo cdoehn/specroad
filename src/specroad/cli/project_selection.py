@@ -88,6 +88,16 @@ def _read_configuration(path: Path, *, project_read=False, schema_required=False
     return data
 
 
+def _bootstrap_preflight(root):
+    from ..authoring.bootstrap_guard import observe_bootstrap
+    state = observe_bootstrap(root)
+    if state['state'] != 'clean':
+        from .results import FailureKind, OperationFailure
+        raise OperationFailure(FailureKind.ENVIRONMENT,
+            'project_corrupted' if state['project_corrupted'] else 'bootstrap_' + state['state'],
+            details={'bootstrap': state})
+
+
 def select_project(command, options, cwd, *, preflight=None):
     explicit = options.get("--project")
     profile = command.preflight_for(options)
@@ -98,6 +108,7 @@ def select_project(command, options, cwd, *, preflight=None):
         try:
             if explicit is None:
                 raise QualificationError('migration_explicit_project_required', exit_code=2)
+            _bootstrap_preflight(explicit)
             selected = boundary(explicit)
             raw = selected.read_bytes('specroad.json')
             from ..storage.json_syntax import parse_json_object
@@ -149,6 +160,7 @@ def select_project(command, options, cwd, *, preflight=None):
             requested = Path(_text(explicit, "project path"))
             if not requested.is_absolute():
                 requested = (Path.cwd() if cwd is None else Path(cwd)) / requested
+            _bootstrap_preflight(requested)
             root = requested.resolve(strict=True)
             if not root.is_dir():
                 raise OptionResolutionError("Explicit project path is not a directory")
@@ -161,6 +173,7 @@ def select_project(command, options, cwd, *, preflight=None):
         if not start.is_dir():
             raise OptionResolutionError("Search origin is not a directory")
         for root in (start, *start.parents):
+            _bootstrap_preflight(root)
             config = root / "specroad.json"
             try:
                 config.lstat()

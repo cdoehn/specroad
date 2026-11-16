@@ -34,13 +34,36 @@ class BootstrapRoot:
     def __init__(self, parent_held, target):
         self.parent_held = parent_held
         self.target = target
+        from .bootstrap_guard import names
+        for name in names(target):
+            if info_at(parent_held.root_fd, name) is not None:
+                raise BootstrapError('project_corrupted', exit_code=5, path=name)
+        self.protection = None
         self.current = info_at(parent_held.root_fd, target.name)
         if self.current is not None:
             guards._regular(self.current, directory=True)
         self.created = False
         self.created_identity = None
 
+    def protect(self, command, content, directories, *, input_binding):
+        from .bootstrap_guard import BootstrapGuard
+        self.protection = BootstrapGuard(self.parent_held, self.target, command,
+            content, directories, input_binding=input_binding)
+        self.protection.start()
+
+    def complete(self, verify):
+        if self.protection is None:
+            raise BootstrapError('bootstrap_protection_required', exit_code=7)
+        self.protection.finish(verify)
+
+    def close(self):
+        if self.protection is not None:
+            self.protection.close()
+
     def create(self):
+        if self.protection is None or not self.protection.started:
+            raise BootstrapError('bootstrap_protection_required', exit_code=7)
+        self.protection.check()
         os.mkdir(self.target.name, mode=0o755, dir_fd=self.parent_held.root_fd)
         self.created = True
         self.created_identity = identity(os.stat(

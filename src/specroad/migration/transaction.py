@@ -36,7 +36,7 @@ def apply_migration_plan(root, raw, *, expected_plan_sha256, expected_inputs_sha
     descriptor = {'path': backup_path, 'output_root': backup_root, 'sha256': backup_sha256,
         'size': backup_size, 'source_files_sha256': backup_source_files_sha256}
     from ..changes._lock_files import LockFiles
-    from ..changes.schema_transition_recovery import historical_request
+    from ..changes.snapshot_completion import historical_request
     from ..storage.operational_preflight import observe_operational_preflight
     with LockFiles(root) as files:
         require(observe_operational_preflight(files.boundary)['consistency_state'] == 'consistent',

@@ -113,7 +113,7 @@ def test_passive_rejections_precede_workspace_and_code(tmp_path, distribution, h
         request['options']['--patchharbor-pyz-sha256'] = sha256(package['runtime'].read_bytes()).hexdigest()
     before = tree(tmp_path)
     result = offline(tmp_path, distribution[1], request)
-    assert result['code'] in (3, 6, 7), result
+    assert result['code'] in (3, 5, 6, 7), result
     if damage in ('foreign-core', 'forged-build', 'foreign-reference-contract', 'foreign-reference-registry'):
         assert result['code'] == 7, result
         assert result['outcome']['summary']['transport_failure']['reason'] == {
@@ -280,20 +280,20 @@ _bootstrap_io.rename_new = intercepted
 
 
 @pytest.mark.parametrize('stop', ('.specroad', 'reference', 'runtime', 'project'))
-def test_process_death_recovers_only_original_owned_inventory(tmp_path, distribution, handoff, stop):
+def test_process_death_blocks_the_original_owned_inventory(tmp_path, distribution, handoff, stop):
     request = opening_request(tmp_path, handoff, extract=True)
     hook = rename_hook(tmp_path / 'sandbox', "if name == " + repr(stop) + ": os._exit(37)")
     offline(tmp_path, distribution[1], request, before=hook, expected_process_code=37)
     assert (tmp_path / 'sandbox/.specroad-bootstrap/journal.json').is_file()
     request['options']['--runtime-workspace'] = str(tmp_path / 'new-verification')
     result = offline(tmp_path, distribution[0], request)
-    assert result['code'] == 0, result
-    assert (tmp_path / 'sandbox/reference/outbound.zip').read_bytes() == handoff['source'].read_bytes()
-    assert not (tmp_path / 'sandbox/.specroad-bootstrap').exists()
-    before = tree(tmp_path / 'sandbox')
-    request['options']['--runtime-workspace'] = str(tmp_path / 'third-verification')
-    collision = offline(tmp_path, distribution[1], request)
-    assert collision['code'] == 6 and tree(tmp_path / 'sandbox') == before
+    assert result['code']==5 and result['outcome']['result'] is None
+    assert (tmp_path/'sandbox/.specroad-bootstrap/journal.json').is_file()
+    before=tree(tmp_path/'sandbox')
+    request['options']['--runtime-workspace']=str(tmp_path/'third-verification')
+    collision=offline(tmp_path,distribution[1],request)
+    assert collision['code']==5 and tree(tmp_path/'sandbox')==before
+
 
 
 @pytest.mark.parametrize('damage', ('foreign', 'changed-bytes', 'journal', 'identity', 'different-source'))
@@ -317,17 +317,17 @@ def test_unowned_or_changed_recovery_never_deletes_foreign_data(tmp_path, distri
     before = tree(tmp_path / 'sandbox')
     request['options']['--runtime-workspace'] = str(tmp_path / 'new-verification')
     result = offline(tmp_path, distribution[1], request)
-    assert result['code'] in (3, 6, 7), result
+    assert result['code'] in (3, 5, 6, 7), result
     assert result['outcome']['result'] is None and tree(tmp_path / 'sandbox') == before
 
 
-def test_io_failure_rolls_back_only_owned_sandbox_and_retains_private_workspace(tmp_path, distribution, handoff):
+def test_io_failure_retains_sandbox_and_private_workspace(tmp_path, distribution, handoff):
     hook = rename_hook(tmp_path / 'sandbox', "_bootstrap_io.rename_new = native\nraise OSError(28, 'No space')")
     result = offline(tmp_path, distribution[1], opening_request(tmp_path, handoff, extract=True), before=hook)
     assert result['code'] == 5, result
-    assert not (tmp_path / 'sandbox').exists() and (tmp_path / 'verification/result.zip').is_file()
+    assert (tmp_path / 'sandbox').is_dir() and (tmp_path / 'verification/result.zip').is_file()
     effects = result['outcome']['summary']['transport']
-    assert effects['sandbox_root'] is None and effects['bootstrap_state'] == 'rolled_back'
+    assert effects['sandbox_root']==str(tmp_path/'sandbox') and effects['bootstrap_state']=='blocked'
 
 
 def test_interrupted_inner_extraction_without_outer_proof_is_retained(tmp_path, distribution, handoff):
@@ -346,7 +346,7 @@ _sandbox_root.extract_bundle = interrupted
     result = offline(tmp_path, distribution[1], request)
     assert result['code'] in (5, 6), result
     assert tree(tmp_path / 'sandbox') == before
-    assert result['outcome']['summary']['transport']['bootstrap_state'] == 'recovery_required'
+    assert result['outcome']['summary']['transport']['bootstrap_state'] in ('blocked','not_started')
 
 
 @pytest.mark.parametrize('damage', ('extra', 'false-gate', 'authority', 'manifest-extra', 'reference-hash', 'runtime-type'))

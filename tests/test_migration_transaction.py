@@ -32,8 +32,12 @@ def test_native_complete_target_and_exact_revisions(tmp_path):
     assert not journal_path(root,args).exists()
     assert result['backup']['sha256'] == args['backup_sha256']
     assert not result['approval_granted']
-    archived = (root/transaction_receipt_path(args['transaction_id'])).with_name('journal.json')
-    assert_owned_plan(TransitionJournal(archived.read_bytes()), plan.source_bytes)
+    from specroad.changes.write_guard_values import validate_transaction
+    from specroad.changes.snapshot_write_values import check_write
+    receipt = root/transaction_receipt_path(args['transaction_id'])
+    assert check_write(validate_transaction(receipt.read_bytes())).source_bytes == plan.source_bytes
+    assert not receipt.with_name('journal.json').exists()
+    assert not (root/'.specroad/write-state/pending.json').exists()
 
 
 def test_every_source_original_archived_exactly(tmp_path):
@@ -49,7 +53,7 @@ def test_staging_never_installs_final_state_early(tmp_path, monkeypatch):
     root, source, plan, args = setup(tmp_path)
     observations=[]
     def checkpoint(event):
-        if event in ('journal:building:0','journal:prepared:0','journal:committing:0'):
+        if event in ('before_marker','marker_synced','staged:0'):
             observations.append((event,normative(root)))
     monkeypatch.setattr(writer,'_checkpoint',checkpoint)
     apply(root,plan,args)

@@ -81,6 +81,8 @@ def recover_bootstrap(held, function, name):
     """
     held.require_held()
     staged = info_at(held.root_fd, STAGING) is not None
+    if staged:
+        raise BootstrapError("project_corrupted", exit_code=5, path=STAGING)
     receipt = _receipt_present(held)
     if not staged and not receipt: return None
     if staged and receipt: raise BootstrapError('bootstrap_multiple_records')
@@ -104,11 +106,10 @@ def recover_bootstrap(held, function, name):
         content = _content(tree, locations, resources)
         configuration, document_id = _validated_values(content, document, name, registry, packages)
         tree.checked_locations()
-        publishing = True
-        tree.publish()
-        tree.retain_completed()
+        if not all(locations.values()): _invalid()
+        tree.checked_locations()
         return content, initial_directories(), configuration, document_id
-    except SafetyViolation:
+    except (SafetyViolation, BootstrapError):
         raise
     except (ModelError, ValueError, TypeError, KeyError, RecursionError) as error:
         raise BootstrapError('bootstrap_journal_invalid', path=STAGING) from error

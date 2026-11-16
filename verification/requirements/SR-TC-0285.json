@@ -5,7 +5,8 @@
     0,
     3,
     5,
-    6
+    6,
+    7
   ],
   "fixture_ids": [
     "SR-FIX-FORMAT-ROUNDTRIPS-v1",
@@ -22,17 +23,19 @@
     "Synthetic test-host gates and publication authority authenticate no real human. Actual migration/merge, foreign-tool interoperability, whole-project bundle and cross-platform release evidence require their own bound executions.",
     "Prepared 16.k behavior requires its own actual Apply gates. Static checks and collection are not behavior evidence.",
     "The M16 public CLI/path/Restore integration gate and full available suite remain explicitly unproved; nonexistent 16.l is not a substitute.",
-    "17.l.R/C target states are prepared in bundle 633; actual stage-specific Apply evidence, the M17 complete available suite and any platform/human release gates must be established separately. No successful execution is claimed by this manifest."
+    "17.l.R/C target states are prepared in bundle 633; actual stage-specific Apply evidence, the M17 complete available suite and any platform/human release gates must be established separately. No successful execution is claimed by this manifest.",
+    "18.v: fresh stage-specific Apply evidence is required. Dev only prepared the implementation, behavioral oracles and pure collection; no behavior tests ran in Dev."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Import, Migration und Merge MÜSSEN erhaltene Relationsreviews nur dann als `current` übernehmen, wenn Relation sowie Quell- und Ziel-Kontextprojektion nach der Operation exakt den im Review gebundenen Hashes entsprechen; andernfalls erscheinen sie als `suspect` oder `unreviewed`.",
-    "scope": "16.k.R native complete verification of owned/live targets, all byte inventories and source-native historical algorithms. R adds native Work planning/verification, portable checkpoint replay and actual final writer/recovery integration. No Dev behavior test was executed; no public CLI/Restore or M16 release success is claimed. 17.l.W/10.15.9 adds complete passive merge preparation for local, Git, Baseline and complete bundle sources, public merge.plan and native Work. Direct and partitioned results retain original plan bytes, source/history/build bindings, exact metadata, native target validation and full target bytes. All global phases survive real checkpoints; final delivery independently recomputes from sealed originals. Source-path changes never silently rebind a passive snapshot. Negative targets remain negative and cannot authorize writes. Public CLI binding, Code 8 progress, Code 1 fail-on-change, cancellation, source overlap rejection and rehashed intermediate-result rejection receive real behavior tests. No behavior test was run in Dev; stage-specific Apply evidence is required. 17.l.R supplies the public merge plan --for-apply / merge apply bridge over the existing complete native ChangePlan, receipt, backup and writer. Small complete native four-source variants cover equivalent actual merged target bytes, argv/structured calls, direct/resumed/portable preparation, native dry-run with no writes, historical request replay after later changes, missing/negative current host authority and refused stale or tampered input. Public portable Work covers every global boundary without old source paths, exact noncanonical resolution/audit originals, rehashed phase rejection and incomplete/foreign runtime/input closure. C centralizes the matrix with unchanged oracles. No new writer or authority bypass; native recovery/current Evidence/review/code-source cases remain required. Dev performs only static checks and collection. Successful stage gates and M17 full-suite/platform evidence must be read from their actual Apply results."
+    "scope": "16.k.R native complete verification of owned/live targets, all byte inventories and source-native historical algorithms. R adds native Work planning/verification, portable checkpoint replay and actual final writer/recovery integration. No Dev behavior test was executed; no public CLI/Restore or M16 release success is claimed. 17.l.W/10.15.9 adds complete passive merge preparation for local, Git, Baseline and complete bundle sources, public merge.plan and native Work. Direct and partitioned results retain original plan bytes, source/history/build bindings, exact metadata, native target validation and full target bytes. All global phases survive real checkpoints; final delivery independently recomputes from sealed originals. Source-path changes never silently rebind a passive snapshot. Negative targets remain negative and cannot authorize writes. Public CLI binding, Code 8 progress, Code 1 fail-on-change, cancellation, source overlap rejection and rehashed intermediate-result rejection receive real behavior tests. No behavior test was run in Dev; stage-specific Apply evidence is required. 17.l.R supplies the public merge plan --for-apply / merge apply bridge over the existing complete native ChangePlan, receipt, backup and writer. Small complete native four-source variants cover equivalent actual merged target bytes, argv/structured calls, direct/resumed/portable preparation, native dry-run with no writes, historical request replay after later changes, missing/negative current host authority and refused stale or tampered input. Public portable Work covers every global boundary without old source paths, exact noncanonical resolution/audit originals, rehashed phase rejection and incomplete/foreign runtime/input closure. C centralizes the matrix with unchanged oracles. No new writer or authority bypass; native recovery/current Evidence/review/code-source cases remain required. Dev performs only static checks and collection. Successful stage gates and M17 full-suite/platform evidence must be read from their actual Apply results. 18.v binds the replacement interruption/normal-completion oracles; old automatic-repair evidence is historical only. Further plan scopes and release acceptance remain separate."
   },
   "preconditions": [
     "Owned nine-artifact corpus with ordered document occurrences, external identities, two bound attachment payloads, a configuration artifact and synthetic hash-bound relation review; no real approval is claimed.",
     "Owned explicit parsed artifact candidates from real CSV, NDJSON, ReqIF and ReqIFZ codecs; supplied mappings and complete creation envelopes; retained synthetic relation review with native status checks; explicit trusted test-host gates and publication authority. No authentic human approval is claimed.",
-    "Complete actual source backup, explicit original native plan/report and external bindings; full target bytes, genuine host semantic services and no invented authority."
+    "Complete actual source backup, explicit original native plan/report and external bindings; full target bytes, genuine host semantic services and no invented authority.",
+    "Use only owned native test roots with actual backup/original evidence. No historical success record authorizes replay or restoration of a protected partial publication."
   ],
   "primary_verification_id": "SR-VER-0021",
   "required_environment": {
@@ -61,7 +64,11 @@
     "Observe a real completed native migration with verified receipts; reject stale or incomplete targets, extra files, unsafe paths, active recovery and tampered bindings/reports without writes.",
     "Resume every native source/plan/verification phase through actual Work checkpoints and hash-bound external packages into a new sandbox and process; compare full results with direct execution.",
     "Reject forged phases/completion, changed runtime, missing source/backup/authority and interrupted checkpoints; preserve the confirmed prefix or return a concrete blocker.",
-    "Publish one final actual native migration transaction with fresh live checks, then prove historical request replay and explicit recovery after interruption."
+    "Publish one final actual native migration transaction with fresh live checks, then prove historical request replay and explicit recovery after interruption.",
+    "Execute native migration and merge against complete qualified source, target and external backup bytes; preserve every passive original/archive and verify full model/evidence gates and explicit fresh host authority.",
+    "Validate the normal v2 transaction/request/completion receipt group, exact snapshot plan, complete source/target inventories, real backup and native qualification. Read-only repeat proves history, never current target validity or new authority.",
+    "Interrupt real file effects and durable marker/receipt boundaries, including native process death. Preserve the actual mixed prefix and owner evidence; normal retry and explicit legacy special recovery must not repair or complete it.",
+    "Reject changed source/backup/foreign files, altered owners/markers and rehashed incompatible completion records. Normal verification remains read-only and requires the actual originals; Work reentry cannot bypass a protected publication."
   ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0285",
@@ -292,9 +299,63 @@
     "tests/test_migration_work.py::test_rehashed_fabricated_completed_phase_is_not_execution_proof[0]",
     "tests/test_migration_work.py::test_rehashed_fabricated_completed_phase_is_not_execution_proof[1]",
     "tests/test_migration_work.py::test_rehashed_fabricated_completed_phase_is_not_execution_proof[2]",
-    "tests/test_migration_work.py::test_writer_interruption_requires_native_recovery_not_work_replay[archived]",
-    "tests/test_migration_work.py::test_writer_interruption_requires_native_recovery_not_work_replay[committed]",
-    "tests/test_migration_work.py::test_writer_interruption_requires_native_recovery_not_work_replay[journal:prepared:0]",
-    "tests/test_migration_work.py::test_writer_interruption_requires_native_recovery_not_work_replay[receipts]"
+    "tests/test_migration_work.py::test_writer_interruption_cannot_be_repaired_by_work_replay[effect_synced:0]",
+    "tests/test_migration_work.py::test_writer_interruption_cannot_be_repaired_by_work_replay[marker_synced]",
+    "tests/test_migration_work.py::test_writer_interruption_cannot_be_repaired_by_work_replay[receipts_synced]",
+    "tests/test_snapshot_guard.py::test_complete_publication_has_only_normal_proof_and_read_only_repeat[merge]",
+    "tests/test_snapshot_guard.py::test_complete_publication_has_only_normal_proof_and_read_only_repeat[migration]",
+    "tests/test_snapshot_guard.py::test_completed_proof_damage_is_rejected_without_repair[completion-merge]",
+    "tests/test_snapshot_guard.py::test_completed_proof_damage_is_rejected_without_repair[completion-migration]",
+    "tests/test_snapshot_guard.py::test_completed_proof_damage_is_rejected_without_repair[extra-merge]",
+    "tests/test_snapshot_guard.py::test_completed_proof_damage_is_rejected_without_repair[extra-migration]",
+    "tests/test_snapshot_guard.py::test_completed_proof_damage_is_rejected_without_repair[request-merge]",
+    "tests/test_snapshot_guard.py::test_completed_proof_damage_is_rejected_without_repair[request-migration]",
+    "tests/test_snapshot_guard.py::test_completed_proof_damage_is_rejected_without_repair[transaction-merge]",
+    "tests/test_snapshot_guard.py::test_completed_proof_damage_is_rejected_without_repair[transaction-migration]",
+    "tests/test_snapshot_guard.py::test_every_migration_file_effect_keeps_the_actual_mixed_prefix[effect-0]",
+    "tests/test_snapshot_guard.py::test_every_migration_file_effect_keeps_the_actual_mixed_prefix[effect-10]",
+    "tests/test_snapshot_guard.py::test_every_migration_file_effect_keeps_the_actual_mixed_prefix[effect-11]",
+    "tests/test_snapshot_guard.py::test_every_migration_file_effect_keeps_the_actual_mixed_prefix[effect-12]",
+    "tests/test_snapshot_guard.py::test_every_migration_file_effect_keeps_the_actual_mixed_prefix[effect-1]",
+    "tests/test_snapshot_guard.py::test_every_migration_file_effect_keeps_the_actual_mixed_prefix[effect-2]",
+    "tests/test_snapshot_guard.py::test_every_migration_file_effect_keeps_the_actual_mixed_prefix[effect-3]",
+    "tests/test_snapshot_guard.py::test_every_migration_file_effect_keeps_the_actual_mixed_prefix[effect-4]",
+    "tests/test_snapshot_guard.py::test_every_migration_file_effect_keeps_the_actual_mixed_prefix[effect-5]",
+    "tests/test_snapshot_guard.py::test_every_migration_file_effect_keeps_the_actual_mixed_prefix[effect-6]",
+    "tests/test_snapshot_guard.py::test_every_migration_file_effect_keeps_the_actual_mixed_prefix[effect-7]",
+    "tests/test_snapshot_guard.py::test_every_migration_file_effect_keeps_the_actual_mixed_prefix[effect-8]",
+    "tests/test_snapshot_guard.py::test_every_migration_file_effect_keeps_the_actual_mixed_prefix[effect-9]",
+    "tests/test_snapshot_guard.py::test_every_migration_file_effect_keeps_the_actual_mixed_prefix[sync-0]",
+    "tests/test_snapshot_guard.py::test_every_migration_file_effect_keeps_the_actual_mixed_prefix[sync-10]",
+    "tests/test_snapshot_guard.py::test_every_migration_file_effect_keeps_the_actual_mixed_prefix[sync-11]",
+    "tests/test_snapshot_guard.py::test_every_migration_file_effect_keeps_the_actual_mixed_prefix[sync-12]",
+    "tests/test_snapshot_guard.py::test_every_migration_file_effect_keeps_the_actual_mixed_prefix[sync-1]",
+    "tests/test_snapshot_guard.py::test_every_migration_file_effect_keeps_the_actual_mixed_prefix[sync-2]",
+    "tests/test_snapshot_guard.py::test_every_migration_file_effect_keeps_the_actual_mixed_prefix[sync-3]",
+    "tests/test_snapshot_guard.py::test_every_migration_file_effect_keeps_the_actual_mixed_prefix[sync-4]",
+    "tests/test_snapshot_guard.py::test_every_migration_file_effect_keeps_the_actual_mixed_prefix[sync-5]",
+    "tests/test_snapshot_guard.py::test_every_migration_file_effect_keeps_the_actual_mixed_prefix[sync-6]",
+    "tests/test_snapshot_guard.py::test_every_migration_file_effect_keeps_the_actual_mixed_prefix[sync-7]",
+    "tests/test_snapshot_guard.py::test_every_migration_file_effect_keeps_the_actual_mixed_prefix[sync-8]",
+    "tests/test_snapshot_guard.py::test_every_migration_file_effect_keeps_the_actual_mixed_prefix[sync-9]",
+    "tests/test_snapshot_guard.py::test_failed_protected_publication_never_replays_or_rolls_back[before_marker_unlink-merge]",
+    "tests/test_snapshot_guard.py::test_failed_protected_publication_never_replays_or_rolls_back[before_marker_unlink-migration]",
+    "tests/test_snapshot_guard.py::test_failed_protected_publication_never_replays_or_rolls_back[effect_synced:0-merge]",
+    "tests/test_snapshot_guard.py::test_failed_protected_publication_never_replays_or_rolls_back[effect_synced:0-migration]",
+    "tests/test_snapshot_guard.py::test_failed_protected_publication_never_replays_or_rolls_back[marker_removed-merge]",
+    "tests/test_snapshot_guard.py::test_failed_protected_publication_never_replays_or_rolls_back[marker_removed-migration]",
+    "tests/test_snapshot_guard.py::test_failed_protected_publication_never_replays_or_rolls_back[marker_synced-merge]",
+    "tests/test_snapshot_guard.py::test_failed_protected_publication_never_replays_or_rolls_back[marker_synced-migration]",
+    "tests/test_snapshot_guard.py::test_failed_protected_publication_never_replays_or_rolls_back[marker_unlinked-merge]",
+    "tests/test_snapshot_guard.py::test_failed_protected_publication_never_replays_or_rolls_back[marker_unlinked-migration]",
+    "tests/test_snapshot_guard.py::test_failed_protected_publication_never_replays_or_rolls_back[receipt:committed.json-merge]",
+    "tests/test_snapshot_guard.py::test_failed_protected_publication_never_replays_or_rolls_back[receipt:committed.json-migration]",
+    "tests/test_snapshot_guard.py::test_failed_protected_publication_never_replays_or_rolls_back[receipt:transaction.json-merge]",
+    "tests/test_snapshot_guard.py::test_failed_protected_publication_never_replays_or_rolls_back[receipt:transaction.json-migration]",
+    "tests/test_snapshot_guard.py::test_failed_protected_publication_never_replays_or_rolls_back[receipts_synced-merge]",
+    "tests/test_snapshot_guard.py::test_failed_protected_publication_never_replays_or_rolls_back[receipts_synced-migration]",
+    "tests/test_snapshot_guard.py::test_failed_protected_publication_never_replays_or_rolls_back[staged:0-merge]",
+    "tests/test_snapshot_guard.py::test_failed_protected_publication_never_replays_or_rolls_back[staged:0-migration]",
+    "tests/test_snapshot_guard.py::test_real_migration_process_death_cannot_supply_completion_authority"
   ]
 }

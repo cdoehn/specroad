@@ -20,7 +20,16 @@ def check_receipt_targets(journals, target):
     # Follow only exact before/after byte bindings of complete native writes.
     # Timestamps and transaction-name order never establish publication order.
     from ..migration.receipts import HistoricalMigrationJournal
+    from ..changes.normal_completion import NormalAudit
     def effects(journal):
+        if type(journal) is NormalAudit:
+            # v2 stores explicit optional before/after bindings, including deletions.
+            return [dict(path=row['path'], existed_before=row['before'] is not None,
+                before_size=(row['before'] or {}).get('size'),
+                before_sha256=(row['before'] or {}).get('sha256'),
+                after_size=(row['after'] or {}).get('size'),
+                after_sha256=(row['after'] or {}).get('sha256'))
+                for row in journal.data['files']]
         if type(journal) is HistoricalMigrationJournal:
             op = journal.plan.data['operations'][0]
             before = {r['path']: r['size'] for r in op['source_files']}
@@ -40,11 +49,22 @@ def check_receipt_targets(journals, target):
                     result.append({'op': 'migration', 'target': value['id'],
                                    'expected_revision': value['revision'] - 1})
             return result
-        return journal.data['authoring_binding']['operations']
+        native = journal.data['authoring_binding']['operations']
+        if (type(journal) is NormalAudit and len(native) == 1 and native[0]['op'] in
+                ('schema_migrate', 'merge_publish')):
+            from ..migration.plan_values import unb64
+            result = []
+            for row in native[0]['changes']:
+                if row['path'].startswith('spec/') and row['after_bytes_base64'] is not None:
+                    value = parse_json_object(unb64(row['after_bytes_base64']))
+                    result.append({'op': 'snapshot', 'target': value['id'],
+                                   'expected_revision': value['revision'] - 1})
+            return result
+        return native
     edges = {}
     for journal in journals:
         for item in effects(journal):
-            if item['existed_before']:
+            if item['existed_before'] or type(journal) is NormalAudit:
                 edges.setdefault(item['path'], {}).setdefault(
                     (item['before_size'], item['before_sha256']), set()).add(
                     (item['after_size'], item['after_sha256']))
@@ -58,8 +78,7 @@ def check_receipt_targets(journals, target):
                    'sha256': entry['after_sha256']}
             path = row['path']
             raw = target.get(path)
-            require(raw is not None, 'restore_published_identity_missing', path=path, exit_code=6)
-            wanted = (len(raw), sha256(raw).hexdigest())
+            wanted = (None, None) if raw is None else (len(raw), sha256(raw).hexdigest())
             pending = [(row['size'], row['sha256'])]; visited = set()
             while pending:
                 state = pending.pop()
@@ -70,6 +89,7 @@ def check_receipt_targets(journals, target):
                 visited.add(state)
                 pending.extend(edges.get(path, {}).get(state, ()))
             else:
+                require(raw is not None, 'restore_published_identity_missing', path=path, exit_code=6)
                 # A later fully qualified source may legitimately contain a
                 # newer mutable revision without retaining all old effects.
                 # Use explicit native operation guards, never timestamps or

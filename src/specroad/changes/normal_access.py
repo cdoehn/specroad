@@ -43,6 +43,8 @@ class NormalAccessError(WriteGuardError):
 
 
 def require_normal_access(root, *, expected_project_id=None):
+    from ..authoring.bootstrap_guard import require_bootstrap_complete
+    require_bootstrap_complete(root)
     from .locking import HeldProjectLock
     from ..security import ProjectBoundary
     held = _writer.get()

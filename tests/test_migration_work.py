@@ -158,35 +158,22 @@ def test_changed_runtime_cannot_resume_or_publish(recorded, tmp_path, monkeypatc
     assert normative(data[0]) == data[1]
 
 
-@pytest.mark.parametrize('event', ['journal:prepared:0','committed','receipts','archived'])
-def test_writer_interruption_requires_native_recovery_not_work_replay(recorded, tmp_path, monkeypatch, event):
-    data = case(tmp_path); store = create(data, tmp_path/'work'); finish(store)
+
+@pytest.mark.parametrize('event',['marker_synced','effect_synced:0','receipts_synced'])
+def test_writer_interruption_cannot_be_repaired_by_work_replay(recorded,tmp_path,monkeypatch,event):
+    data=case(tmp_path);store=create(data,tmp_path/'work');finish(store)
     from specroad.changes import schema_transition
-    from test_migration_transaction_right import recover
-    total = len(data[2].data['operations'][0]['changes'])
-    checkpoint = 'journal:committed:' + str(total) if event == 'committed' else event
-    observed = []
+    from support.read_only import inventory,no_write_attempts
+    seen=[]
     def stop(point):
-        if point == checkpoint:
-            observed.append(point)
-            raise OSError('Synthetic migration publication interruption')
+        if point==event:seen.append(point);raise OSError('interrupted native migration')
     with monkeypatch.context() as patch:
-        patch.setattr(schema_transition, '_checkpoint', stop)
-        with pytest.raises(SchemaTransitionError) as caught:
-            apply_migration_work(store, data[0], **publication(data))
-    assert observed == [checkpoint] and caught.value.write_state == 'unknown'
-    if event != 'archived':
-        with pytest.raises(SchemaTransitionError):
-            apply_migration_work(store, data[0], **publication(data))
-        recover(data[0], data[3])
-    if event == 'journal:prepared:0':
-        assert normative(data[0]) == data[1]
-        # Retained recovery audit is real state: no automatic restart or replan.
-        with pytest.raises(SchemaTransitionError):
-            apply_migration_work(store, data[0], **publication(data))
-    else:
-        result = apply_migration_work(store, data[0], **publication(data))
-        assert result['write_state'] == 'committed' and normative(data[0]) == data[6]
+        patch.setattr(schema_transition,'_checkpoint',stop)
+        with pytest.raises(SchemaTransitionError):apply_migration_work(store,data[0],**publication(data))
+    assert seen==[event]
+    before=inventory(data[0])
+    with pytest.raises(SchemaTransitionError):apply_migration_work(store,data[0],**publication(data))
+    assert inventory(data[0])==before
 
 
 def test_actual_partial_work_object_write_keeps_confirmed_prefix(recorded, tmp_path, monkeypatch):

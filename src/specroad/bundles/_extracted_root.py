@@ -51,6 +51,8 @@ def require_complete_root(boundary):
     # Even configuration-last publication has a window before completion of
     # the durable bootstrap record. No reader may promote that unfinished root.
     boundary._check_root()
+    from ..authoring.bootstrap_guard import require_bootstrap_complete
+    require_bootstrap_complete(boundary.root)
     if os.path.lexists(boundary.root / STAGING):
         raise SafetyViolation('Unfinished bootstrap requires recovery')
     proof = _optional(boundary, '/'.join((*COMPLETED, 'journal.json')))

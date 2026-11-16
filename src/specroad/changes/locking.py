@@ -127,6 +127,9 @@ def project_lock(root, *, kind, command, project_id, transaction_id=None, reques
     Unknown host/start metadata stays null and later requires explicit recovery.
     """
     selected = _request(kind, command, project_id, request_id, transaction_id)
+    # Preserve the native lock failure before bootstrap observation/model loading.
+    from ._lock_files import require_native_lock
+    require_native_lock()
     if selected is LockKind.WRITER and command == 'migrate apply':
         from ..migration.transaction_source import MigrationLockSource
         source = MigrationLockSource(root, expected_project_id=project_id)

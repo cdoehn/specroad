@@ -15,5 +15,5 @@ def apply_schema():
     return _object({'format_version': {'const': 'merge-apply-command-v1'},
         'mode': {'enum': ['dry_run', 'apply']}, 'change_plan_sha256': SHA,
         'execution': _nullable({'type': 'object', 'properties': {
-            'format_version': {'const': 'merge-transaction-v1'}}, 'required': ['format_version']}),
+            'format_version': {'enum': ['merge-transaction-v1','merge-transaction-v2']}}, 'required': ['format_version']}),
         'project_writes_performed': {'type': 'boolean'}, **PASSIVE})

@@ -466,3 +466,5 @@
 - [Bundle 713 — Trace-Sperrvertrag und vollständiger Rest 18.u.R/C](bundle-713-trace-writer-contract.md)
 
 - [Bundle 714 — gebundener Receipt-Reader und vollständiger Rest 18.u.C](bundle-714-completion-reader.md)
+
+- [Bundle 716 — Snapshotbelege und vollständiger Rest 18.v.W/R/C](bundle-716-snapshot-readers.md)

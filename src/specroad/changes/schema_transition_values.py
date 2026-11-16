@@ -170,6 +170,17 @@ def request_receipt(journal):
 class TransitionRequest:
     _raw: bytes
     @classmethod
+    def from_snapshot(cls, plan, backup, root_identity, project_id, transaction_id, validation):
+        result = object.__new__(cls)
+        from ._snapshot_dispatch import command_for
+        data = {'command_id':command_for(plan),'plan':plan.data,'plan_sha256':plan.sha256,
+            'backup':backup,'root_identity':root_identity,'project_id':project_id,
+            'transaction_id':transaction_id,'validation':validation,
+            'write_authorized':False,'approval_granted':False}
+        object.__setattr__(result, '_raw', jcs(data))
+        return result
+
+    @classmethod
     def from_journal(cls, journal):
         result = object.__new__(cls)
         from ._snapshot_dispatch import command_for

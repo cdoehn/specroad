@@ -14,18 +14,24 @@ import stat
 from ..model.canonical import canonical_json_bytes
 from ..security import SafetyViolation
 from ..security import paths as guards
+from ..model.errors import ModelError
 
 STAGING = '.specroad-bootstrap'
 COMPLETED = ('.specroad', 'recovery', 'init-bootstrap')
 
 
-class BootstrapError(Exception):
+class BootstrapError(ModelError):
+    code = 'SRV082'
     def __init__(self, reason, *, exit_code=6, path=None, mutation_possible=False):
-        super().__init__(reason)
+        super().__init__(reason, path=path)
         self.reason = reason
         self.exit_code = exit_code
         self.path = path
         self.mutation_possible = mutation_possible
+
+    def diagnostic(self):
+        return {**super().diagnostic(), **getattr(self,'observation',{}),
+                'exit_code':self.exit_code,'mutation_possible':self.mutation_possible}
 
 
 def rename_function():
