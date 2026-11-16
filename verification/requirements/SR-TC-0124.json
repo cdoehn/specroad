@@ -27,7 +27,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "`specroad roadmap explain <ID>` MUSS Ziele, enthaltene Requirements, Abh\u00e4ngigkeiten, Risiken, Annahmen und den Ursprung der Zuordnung erkl\u00e4ren.",
+    "requirement_contract": "`specroad roadmap explain <ID>` MUSS Ziele, enthaltene Requirements, Abhängigkeiten, Risiken, Annahmen und den Ursprung der Zuordnung erklären.",
     "scope": "13.d.W/R/C: all shortest stored membership/implementation/origin paths within explicit trace_depth, with direct assignment/dependency/risk observations and exact source provenance. Missing schedule and Task subject references remain explicit for context artifacts. Public roadmap explain reads the configured inventory using native preflight and final byte/membership checks. No guessed origins, inferred scheduling, scope closure, applicability, atomic snapshot, readiness or write/approval authority."
   },
   "preconditions": [
@@ -46,7 +46,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Invoke explain_roadmap for actual Tasks, Releases and Milestones on owned supplied inputs.",
     "Compare exact shortest origin paths, original/inverse edge directions, assignment source pointers, direct dependencies and risk/assumption paths.",

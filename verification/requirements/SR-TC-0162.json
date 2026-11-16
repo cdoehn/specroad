@@ -16,12 +16,12 @@
   "method": "automated_behavior",
   "open_items": [
     "Remaining M18 public CLI, lifecycle, writer and release integration are not claimed by the pure 18.a data object.",
-    "RECOVERY-REMOVAL-006: existing test references cover only their still-valid implemented scope. Changed interruption/receipt/preflight/work oracles require fresh implementation and evidence in 18.s\u201318.x; old repair/crash recovery results are not acceptance of the new contract."
+    "RECOVERY-REMOVAL-006: existing test references cover only their still-valid implemented scope. Changed interruption/receipt/preflight/work oracles require fresh implementation and evidence in 18.s–18.x; old repair/crash recovery results are not acceptance of the new contract."
   ],
   "oracle": {
     "expected": "Bound native plan, identity, actor/time, exact operation explanations, immutable original/content hash. Strict AI provenance with one reason per unknown field.",
     "kind": "behavior",
-    "requirement_contract": "Ein Proposal MUSS eine Gesamtbegr\u00fcndung sowie f\u00fcr jede \u00c4nderung Ziel, Begr\u00fcndung und betroffene Anforderungs- oder Issue-IDs enthalten.",
+    "requirement_contract": "Ein Proposal MUSS eine Gesamtbegründung sowie für jede Änderung Ziel, Begründung und betroffene Anforderungs- oder Issue-IDs enthalten.",
     "scope": "Complete pure 18.a data objects and existing passive originals; no CLI publication or human approval. Separate Apply execution required."
   },
   "preconditions": [
@@ -39,7 +39,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Prepare a complete native Proposal from an allocated identity and full bound plan.",
     "Round-trip owned original bytes and reject inconsistent explanation/source/content values.",

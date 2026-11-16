@@ -24,7 +24,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Der XML-Import MUSS DTDs, externe Entit\u00e4ten, externe Schemas und Netzwerkaufl\u00f6sung ablehnen sowie dokumentierte Grenzen f\u00fcr Tiefe, Elementanzahl, Textl\u00e4nge und Gesamtbytes durchsetzen.",
+    "requirement_contract": "Der XML-Import MUSS DTDs, externe Entitäten, externe Schemas und Netzwerkauflösung ablehnen sowie dokumentierte Grenzen für Tiefe, Elementanzahl, Textlänge und Gesamtbytes durchsetzen.",
     "scope": "12.f.W/R/C provides the bounded byte-only JUnit core reader. The common internal XML event reader owns input validation, parser protection, limits and error translation; the JUnit adapter owns only its documented profile and value assembly. Unmodified W/R tests preserve original bytes, reported content, errors and passive behavior, including ignored subtrees and Core/PYZ distributions. This remains a partial proof, not a complete import CLI, mapping, Evidence publication or ReqIF reader proof. 14.n.W adds cross-adapter entity rejection in isolated Core/PYZ, without filesystem reads/writes or network/process attempts. This additional corpus is limited to the actual entity scenarios; it does not claim complete ReqIF/project import or exhaustive XML security. 14.n.R adds 112 cross-adapter XML attack/bound/positive-boundary cases with audited zero external effects and unchanged owned project inventories. The same CPython/runtime and partial-verification limits apply. 14.n.C consolidates the reusable input corpus and reader construction without changing product code, attack bytes, expected outcomes, effect guards or test identities. The previously stated partial-proof boundaries remain."
   },
   "preconditions": [
@@ -42,7 +42,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Read complete suites and testcases with the documented children and attributes, retaining original bytes/hash and reported strings without evaluating outcomes.",
     "Reject DTD/entity declarations, external schema/include requests, processing instructions, malformed XML and violated limits without file/network/process access.",

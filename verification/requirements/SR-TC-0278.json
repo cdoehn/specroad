@@ -14,7 +14,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "`specroad relation review <SOURCE-ID> --relation-id <RELATION-ID> --decision confirmed\\|rejected` MUSS den vollst\u00e4ndig gebundenen menschlichen Review-Vorgang einschlie\u00dflich atomarer Freigabefolgen, Diagnosen und Exit-Ergebnis nach Kapitel 11.13 ausf\u00fchren.",
+    "requirement_contract": "`specroad relation review <SOURCE-ID> --relation-id <RELATION-ID> --decision confirmed\\|rejected` MUSS den vollständig gebundenen menschlichen Review-Vorgang einschließlich atomarer Freigabefolgen, Diagnosen und Exit-Ergebnis nach Kapitel 11.13 ausführen.",
     "scope": "Native coupled human review API with computed Requirement withdrawals, later reconfirmation without reapproval, unchanged supported standard states, exact composed relation obligations, separate review assessment and actual process-loss recovery. The existing first-confirmation API and native publication/receipt/recovery protocols retain their scope. This is not complete CLI, authentic host history or final approval integration."
   },
   "preconditions": [
@@ -32,7 +32,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Plan and publish one negative review with its exact Requirement withdrawal; inspect canonical source/review bytes, revision, context hashes, audit operation and durable receipt.",
     "Reject stale guards, nonhuman actors, altered withdrawal payloads, missing required gate, unrelated error and denied authority; verify stable request replay without additional writes.",

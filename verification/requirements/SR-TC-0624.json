@@ -10,11 +10,11 @@
   "method": "automated_behavior",
   "open_items": [
     "Closed host-adapter continuation only. Full Work CLI and the exact executable CLI action required by P.8, general workflows, portable work-package discovery and the complete production agent contract remain open. No Code 8, global semantic success, process completion authentication or release approval is claimed. Every actual operation independently repeats its current checks; prompt data grants no write authority.",
-    "RECOVERY-REMOVAL-006: existing test references cover only their still-valid implemented scope. Changed interruption/receipt/preflight/work oracles require fresh implementation and evidence in 18.s\u201318.x; old repair/crash recovery results are not acceptance of the new contract."
+    "RECOVERY-REMOVAL-006: existing test references cover only their still-valid implemented scope. Changed interruption/receipt/preflight/work oracles require fresh implementation and evidence in 18.s–18.x; old repair/crash recovery results are not acceptance of the new contract."
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "`work prompt` MUSS einen aus dem gepr\u00fcften Arbeitsmanifest abgeleiteten konkreten Fortsetzungstext nach Anhang P.8 ausgeben.",
+    "requirement_contract": "`work prompt` MUSS einen aus dem geprüften Arbeitsmanifest abgeleiteten konkreten Fortsetzungstext nach Anhang P.8 ausgeben.",
     "scope": "Fresh bound Work data selects an actual existing closed host entrypoint and its original required inputs. Stored progress and the full remaining manifest are retained, and required data is never truncated to fit a character limit. Runtime, terminal state, checkpoint and native proof are checked before return. Native receipts take precedence over preparation; unresolved transactions refuse ordinary continuation. 6.r.C isolates the identical human renderer while retaining every machine-contract function, call order, final freshness check and original test expectation. The renderer and the six remaining coordinator functions retain identical ASTs."
   },
   "preconditions": [
@@ -32,7 +32,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Create and independently publish real supported Work; inspect continuation under write/process/network traps and compare complete retained byte inventories.",
     "Execute the selected known host operation separately with its real explicit inputs, then inspect the next persisted state.",

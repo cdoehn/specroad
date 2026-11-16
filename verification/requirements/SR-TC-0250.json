@@ -13,7 +13,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "SpecRoad MUSS beim Import und semantischen Merge unterscheiden, ob eine gleiche ID dieselbe Historie, eine zul\u00e4ssige identische Kopie oder eine fachlich kollidierende unabh\u00e4ngige Erzeugung bezeichnet.",
+    "requirement_contract": "SpecRoad MUSS beim Import und semantischen Merge unterscheiden, ob eine gleiche ID dieselbe Historie, eine zulässige identische Kopie oder eine fachlich kollidierende unabhängige Erzeugung bezeichnet.",
     "scope": "Exact supplied bytes bind identity observations; absent origin stays unresolved and is rejected by the necessary history precondition."
   },
   "preconditions": [
@@ -31,7 +31,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Exercise the real model contracts and invalid input; preserve exact input values and resource bytes."
   ],

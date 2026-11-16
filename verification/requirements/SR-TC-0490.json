@@ -35,7 +35,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Die Idempotenzentscheidung nach dem Transfer eines vollst\u00e4ndigen Projektbundles MUSS dieselben Regeln wie `SR-REQ-0384` und `SR-REQ-0385` anwenden.",
+    "requirement_contract": "Die Idempotenzentscheidung nach dem Transfer eines vollständigen Projektbundles MUSS dieselben Regeln wie `SR-REQ-0384` und `SR-REQ-0385` anwenden.",
     "scope": "Completed native receipt sets retain project, request, operation and completion hash links separately from the unchanged normative model. Only the local inode-bound proof of verified project extraction admits historical foreign-root receipts; copied files, absent transported requests and changed bindings cannot trigger a replay or duplicate new request. Explicit exclusions and partials are local_only; replay performs no normative mutation and grants no live publication authority. Known imported receipt groups may not disappear on re-export; exclusion reasons must match native operational file paths. Receipt content/exclusion never changes the normative root. After transfer the native idempotency conflict, absence and non-authorizing replay contracts remain unchanged; unsafe files retain Code 7."
   },
   "preconditions": [
@@ -53,7 +53,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Complete a native create transaction, retain its exact request/transaction/committed bytes, and create/verify/extract a closed project bundle.",
     "Compare unchanged stored results and IDs on retry; reject missing/corrupt completion links, copied proof and changed operations without writes.",

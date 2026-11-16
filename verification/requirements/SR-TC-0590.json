@@ -14,7 +14,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Ung\u00fcltige, inkompatible, unlesbare oder \u00fcbergro\u00dfe Cacheeintr\u00e4ge M\u00dcSSEN nach Anhang O.3 als entbehrliche Beschleuniger ignoriert werden.",
+    "requirement_contract": "Ungültige, inkompatible, unlesbare oder übergroße Cacheeinträge MÜSSEN nach Anhang O.3 als entbehrliche Beschleuniger ignoriert werden.",
     "scope": "The W reader ignores missing, stale, malformed, incompatible, content-hash-invalid, symlinked and byte-budget-exceeding cache entries without repair. Source errors are outside the optional-cache fallback. Wider native error/resource and concurrent-mutation cases remain R work. R adds bounded streaming structure preflight and bytearray accumulation without retained per-read fragments. Native access/descriptor refusal, labelled allocation failures and observed cache changes fall back completely; original-source changes and programming/interruption failures retain their own errors. The selected one-byte-read Python allocation window stays below 1 MiB for 160 KiB input; this is not RSS or a host capacity promise. 6.g.C moves unchanged cache binding/encoding/shape helpers into _relation_cache_values. Native reads, descriptor guards, strict decoding, fallback exceptions and the authoritative reader retain their existing behavior. W/R test identities and open scope limits are unchanged."
   },
   "preconditions": [
@@ -33,7 +33,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Compare complete incoming, outgoing and combined relation views for every artifact against the independent fresh scan, including isolated sources.",
     "Exercise missing/deleted/stale/malformed entries, binding substitutions and rehashed invalid adjacency; compare exact results and unchanged project file bytes.",

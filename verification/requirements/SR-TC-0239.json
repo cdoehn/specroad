@@ -13,7 +13,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Operationen eines Change Plans M\u00dcSSEN in deklarierter Reihenfolge gegen den jeweils vorherigen Zwischenstand ausgewertet werden.",
+    "requirement_contract": "Operationen eines Change Plans MÜSSEN in deklarierter Reihenfolge gegen den jeweils vorherigen Zwischenstand ausgewertet werden.",
     "scope": "Ordered in-memory field candidates and fail-stop execution only. No metadata advancement, live file checks, specialized lifecycle/evidence/control planners, final target-model validation, declared final-root verification or publication."
   },
   "preconditions": [
@@ -31,7 +31,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Evaluate create/update/relation-add/relation-remove operations in their array order on intermediate private states; inspect folded candidates and instrument that no later operation executes after failure."
   ],

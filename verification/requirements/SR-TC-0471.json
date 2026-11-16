@@ -27,7 +27,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "`section remove` MUSS f\u00fcr einen nichtleeren Abschnitt genau eine Strategie aus `--cascade` oder `--move-children-to` verlangen.",
+    "requirement_contract": "`section remove` MUSS für einen nichtleeren Abschnitt genau eine Strategie aus `--cascade` oder `--move-children-to` verlangen.",
     "scope": "Real saved plans and publications preserve all original IDs and files. Every stored section retains one owner; cascade retires the complete subtree, move strategy preserves child content/revisions while replacing only the original contains edges. No orphan or partial mutation is accepted on refused input. Internal repeated block occurrences produce one guarded retirement per identity; all original contains relations remain stored. Rejected input preserves the complete file inventory. Interrupted publication honestly retains acknowledged and possibly renamed files plus committing journal; it does not claim rollback or safe automatic retry. C only consolidates the existing operation generators; no test oracle, operation contract or publication behavior changes."
   },
   "preconditions": [
@@ -45,7 +45,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "11.i.W: retire an empty section, cascade through its complete native contains subtree, or move every child to one explicit section before publication; reject missing/conflicting strategies and incomplete/extra retirement sets without writes.",
     "11.i.R: reject missing/conflicting strategy options, invalid destinations, each stale retirement/relation guard, ID reuse and saved operation smuggling. Retire internally shared blocks exactly once with all historical ownership edges retained; reject outside-owned children. Check actual changed live source/profile bytes, authority boundaries, conflicting replay and real interrupted cascade publication with retained recovery journal.",

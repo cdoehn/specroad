@@ -13,7 +13,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Die adaptive Ausf\u00fchrung MUSS vor einer ressourcenbedingten Zur\u00fcckstellung die sicheren sparsamen Alternativen nach Anhang O.3 pr\u00fcfen.",
+    "requirement_contract": "Die adaptive Ausführung MUSS vor einer ressourcenbedingten Zurückstellung die sicheren sparsamen Alternativen nach Anhang O.3 prüfen.",
     "scope": "Before yielding at measured soft pressure, the driver attempts an actual existing streaming/merge unit and reduces future encoded batching to 64 KiB, or one record for an accounted-memory event. Existing buffered/pending records remain owned until flushed. This is a concrete live-spool alternative, not a complete adaptive engine or claimed native capacity proof. R additionally chooses one-record future batches before each actual minimum advance, using the existing external-run and pairwise-merge strategy. Already buffered work is retained until its existing flush, not claimed freed. Reported alternatives describe the actual attempted path, not an exhaustive host-capacity proof. C isolates the same pure batch-target choice, errno mapping and blocker values from the task/measurement adapter. Existing W/R behavior, test bindings, exception boundaries and side-effect contracts remain unchanged."
   },
   "preconditions": [
@@ -31,7 +31,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Drive finite diagnostic/prepared-path inputs through tiny measured windows and compare complete results/record bytes with the existing reference.",
     "Check monotone actual units, one source traversal, retained buffered/pending records and live merge cursors, unknown measurements and detached operational reports.",

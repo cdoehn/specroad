@@ -26,7 +26,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "`specroad trace <ID>` MUSS gerichtete Traversierung mit `--direction in\\|out\\|both` und einer begrenzten `--depth` unterst\u00fctzen.",
+    "requirement_contract": "`specroad trace <ID>` MUSS gerichtete Traversierung mit `--direction in\\|out\\|both` und einer begrenzten `--depth` unterstützen.",
     "scope": "8.e.W implements actual read-only trace through Python, CLI, structured requests and the portable zipapp. Explicit in/out/both and nonnegative depth determine exact visited nodes with minimum distances and traversed relation views. The existing identity frontier and complete current-project relation index preserve stored identities, named inverses, original relation data and final currentness checks. Unknown starts, invalid arguments, active writers, unresolved journals, invalid unreachable sources and changed source bytes cannot become a successful partial answer. Coverage is relation-reference/canonical-storage validation, not full semantic or atomic-snapshot approval. R adds genuine process-local TraceTraversal over a supplied resolved RelationIndex: one node removal or directed edge check per work unit, retaining the frontier and unfinished adjacency across calls. Independent cycle/diamond/multiple-relation oracles, a 513-edge node and a 1301-node chain prove unchanged scope under small or varying targets. Incomplete/failed/closed work cannot publish a result; invalid targets consume no work, and result/state copies own their data. Public trace uses this engine with the existing current-project guards. Inventory/graph/output remain materialized; durable Work, adaptive runtime admission, external delivery and supported-platform/performance acceptance remain open. C moves the unchanged frontier implementation into a private graph module while preserving the public TraceTraversal class name, defining module and docstring through inheritance. The project adapter, all W/R behavior oracles and other product sources remain unchanged."
   },
   "preconditions": [
@@ -44,7 +44,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Invoke the same trace scope through Python, CLI, structured request and portable distribution.",
     "Compare independently expected node distances, edge directions, depth boundaries, original relation values and complete inventory bindings.",

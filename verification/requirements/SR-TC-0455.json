@@ -22,11 +22,11 @@
   "open_items": [
     "14.a.C cleans this completed W/R resource and pure projection slice without changing behavior.",
     "Format parsers, explicit import/export profiles, history, loss decisions, native target validation and guarded project publication remain in their separate plan steps.",
-    "RECOVERY-REMOVAL-006: existing test references cover only their still-valid implemented scope. Changed interruption/receipt/preflight/work oracles require fresh implementation and evidence in 18.s\u201318.x; old repair/crash recovery results are not acceptance of the new contract."
+    "RECOVERY-REMOVAL-006: existing test references cover only their still-valid implemented scope. Changed interruption/receipt/preflight/work oracles require fresh implementation and evidence in 18.s–18.x; old repair/crash recovery results are not acceptance of the new contract."
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Ein Mapping MUSS externe Typ-, Hierarchie- und Relationsidentit\u00e4ten ohne eigenes SpecRoad-Artefakt in einem Registry erhalten k\u00f6nnen.",
+    "requirement_contract": "Ein Mapping MUSS externe Typ-, Hierarchie- und Relationsidentitäten ohne eigenes SpecRoad-Artefakt in einem Registry erhalten können.",
     "scope": "14.a.W: exact passive exchange-mapping-v1 selection and pure typed projection, with separate external-identity-registry-v1 resources bound to actual mapping bytes. All four table families, null/empty distinction, canonical typed keys, structured rest data, duplicate rejection and source/hash ownership are executable. Registry entries remain non-artifacts in distinct class/system/document namespaces; revisions do not disambiguate identity. No parser, complete format roundtrip, import history, native artifact approval or completed import is claimed. 14.a.R additionally covers closed declarations, strict JSON/Unicode/numeric boundaries, exact content-version selection, typed structured value keys, joint registry collisions, detached selection observations, legacy resource preservation and isolated failure paths. Selection keeps its original binding even when returned resource observations are reinitialized."
   },
   "preconditions": [
@@ -44,7 +44,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Select exact supplied rule and registry resources; reject duplicate keys, wrong hashes and unsupported grammar.",
     "Evaluate literal field/value mappings and declared relation/hierarchy directions without input or filesystem mutation.",

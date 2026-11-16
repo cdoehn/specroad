@@ -22,7 +22,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Jeder Evidence-Import MUSS Originaldatei, unver\u00e4nderten SHA-256-Hash, Importformat, Mappinghash, Parserprofil und Toolversion als Provenienz oder unver\u00e4nderbaren Anhang binden.",
+    "requirement_contract": "Jeder Evidence-Import MUSS Originaldatei, unveränderten SHA-256-Hash, Importformat, Mappinghash, Parserprofil und Toolversion als Provenienz oder unveränderbaren Anhang binden.",
     "scope": "12.i.W first passive JUnit preparation: exact original files, raw/canonical provenance, caller-declared tool/version and actual importer version; explicit abort or diagnosed subset with complete occurrence accounting. Neither policy converts failed measurements into passed Evidence. Malformed global inputs remain fatal, and no file/network/process/clock or host configuration is used. Persistence and complete import authority remain open. 12.i.R additionally binds exact Generic/SARIF originals and applies explicit abort/skip to record-local required-field, binding and mapping failures. Every source occurrence is accepted, rejected with diagnostics or withheld by abort; conflicting or ambiguous observations cannot select a favorable result. Global envelope/source/target/resource errors remain fatal; no persistence or external authority is granted."
   },
   "preconditions": [
@@ -40,7 +40,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Bind unchanged source/mapping/selected sidecar bytes, separate raw and canonical hashes, format, parser profile, explicit reporter and actual SpecRoad importer version in an immutable preparation.",
     "Apply abort_import to withhold all otherwise valid candidates when diagnostics exist, or skip_invalid_with_diagnostic to retain only independently valid occurrences with all diagnostics; failed test outcomes remain valid observations.",

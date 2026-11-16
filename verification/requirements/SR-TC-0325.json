@@ -19,7 +19,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Der CSV-Import und -Export MUSS RFC-4180-konforme Felder, Anf\u00fchrungszeichen, eingebettete Zeilenumbr\u00fcche, CRLF-Dateizeilen und UTF-8 unterst\u00fctzen sowie ein optionales BOM ausschlie\u00dflich beim Import akzeptieren.",
+    "requirement_contract": "Der CSV-Import und -Export MUSS RFC-4180-konforme Felder, Anführungszeichen, eingebettete Zeilenumbrüche, CRLF-Dateizeilen und UTF-8 unterstützen sowie ein optionales BOM ausschließlich beim Import akzeptieren.",
     "scope": "14.f.W/R/C pure bound dataset codec. W contracts and tests remain unchanged. R covers exact BOM/header/width and null/absence boundaries; strict types, finite JSON numbers, safe SRV090/3 bindings and logical record/column coordinates without raw cell leakage; complete-or-rejected observations and exports; foreign hooks, cycles, strict-reader nesting, large fields, unchanged global limits, owned resources/records, real read-only projects and isolated Core/PYZ. The additive external_fields operation inverses only the exact mapped native field projection, requiring one canonical target match and a representable external cell; it does not construct a whole-model export, identity, plan or publication authority. Canonical JSON export retains the W rejection of forbidden raw DEL. No complete CLI import/export, arbitrary model roundtrip, full runtime-budget integration, full-suite or release pass is claimed. C shares only byte framing/quoting/UTF-8 serialization. The View envelope, typed cells, generated metadata, exact bytes and existing errors remain unchanged. Dataset character and first-header U+FEFF admission stays with the bound profile adapter."
   },
   "preconditions": [
@@ -37,7 +37,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Select exact resources, decode literal UTF-8 RFC-4180 datasets and roundtrip explicit records without changing identity, types, values, order or field presence.",
     "Reject ambiguous/unsupported declarations, wrong resource bindings and nonrepresentable values before returning a result; preserve passive inputs and no-write boundaries.",

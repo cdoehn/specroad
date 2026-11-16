@@ -10,11 +10,11 @@
   "method": "automated_behavior",
   "open_items": [
     "Partial data contract only: the caller must supply a trusted prior work value; accepting that value from the same untrusted package is not authentication. Complete command-specific plan coverage and actual completion evidence, consistent snapshots, guarded work storage/locks, atomic publication, true resume, bounded whole-store memory and global finalization remain open. No Code 8, write authority, release approval or complete requirement satisfaction is claimed.",
-    "RECOVERY-REMOVAL-006: existing test references cover only their still-valid implemented scope. Changed interruption/receipt/preflight/work oracles require fresh implementation and evidence in 18.s\u201318.x; old repair/crash recovery results are not acceptance of the new contract."
+    "RECOVERY-REMOVAL-006: existing test references cover only their still-valid implemented scope. Changed interruption/receipt/preflight/work oracles require fresh implementation and evidence in 18.s–18.x; old repair/crash recovery results are not acceptance of the new contract."
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Work-Daten D\u00dcRFEN NICHT ausf\u00fchrbaren Code, Pickle-Objekte oder zur Fortsetzung zu ladende fremde Pythonobjekte enthalten.",
+    "requirement_contract": "Work-Daten DÜRFEN NICHT ausführbaren Code, Pickle-Objekte oder zur Fortsetzung zu ladende fremde Pythonobjekte enthalten.",
     "scope": "The first closed data codec accepts strict JSON metadata and hashed raw bytes, binds only current registered read-only requests without options, and never calls a handler, deserializer or external process. Labelled handler/foreign-object traps and write guards verify these boundaries. Broader hostile-shape hardening, externally expected task identity and all eventual resume/publication integration remain open; internally consistent hashes alone confer no execution authority. R rejects foreign mappings, mapping proxies, dict/byte subclasses, custom keys and nested foreign values before their hooks run. Invalid structured commands have a typed refusal; script-like JSON text is inert. A successor is checked against externally supplied trusted prior work, so newly hashed command/class/argument replacements gain no authority. The standalone data reader remains non-authenticating and invokes no handler. Exact JSON-type admission uses identity comparisons before the shared encoder, including nested values, so foreign metaclass equality is never invoked. C relocates identical closed data and request-binding definitions and shares the same pure phase expressions between reader and writer. Existing W/R behavior, test identities, typed refusals, partial status and open boundaries are unchanged."
   },
   "preconditions": [
@@ -32,7 +32,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Replace registered handlers with traps and inspect candidate binding without invoking them or changing public continuation declarations.",
     "Refuse a registered normative writer, unknown or shell-like command IDs and operational options.",

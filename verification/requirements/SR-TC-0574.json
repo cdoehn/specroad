@@ -17,11 +17,11 @@
   "method": "automated_behavior",
   "open_items": [
     "Partial 6.c.W/R behavior evidence with unchanged C regression coverage. Adaptive work scheduling, measured aggregate consumption, persistent Work/checkpoints, future command consumers and the complete runtime/platform matrix remain open. Historical hash-policy migration is a later migration-plan responsibility; no existing baseline is rewritten. Supplied-model and query-page tests do not prove filesystem completeness or a complete query engine.",
-    "RECOVERY-REMOVAL-006: existing test references cover only their still-valid implemented scope. Changed interruption/receipt/preflight/work oracles require fresh implementation and evidence in 18.s\u201318.x; old repair/crash recovery results are not acceptance of the new contract."
+    "RECOVERY-REMOVAL-006: existing test references cover only their still-valid implemented scope. Changed interruption/receipt/preflight/work oracles require fresh implementation and evidence in 18.s–18.x; old repair/crash recovery results are not acceptance of the new contract."
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Ein Ressourcenprofil DARF NICHT den angeforderten fachlichen Scope, die Pr\u00fcfstrenge oder erforderliche Nachweise stillschweigend ver\u00e4ndern.",
+    "requirement_contract": "Ein Ressourcenprofil DARF NICHT den angeforderten fachlichen Scope, die Prüfstrenge oder erforderliche Nachweise stillschweigend verändern.",
     "scope": "Profile changes preserve a real ChangePlan, authoring request, operations hash and bound scope. Actual SRX reachability preserves semantic depth and AST strictness. Bound supplied query pages retain their complete total and selected pagination; no query engine or Work checkpoint is claimed. R validates all 32 supplied target artifacts despite unit work targets, retains all five requested query-page items despite a unit batch target, and completes actual 1025-iteration SRX and graph work. Hard structure and profile composition remain strict. C retains these same behavioral oracles and public machine contracts while separating the internal option and semantic-constraint types."
   },
   "preconditions": [
@@ -39,7 +39,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Resolve declared profiles and explicit operational targets through current command/library consumers.",
     "Inspect complete machine outputs, actual SRX results/errors and bound semantic identities; compare immutable inputs before and after selection.",

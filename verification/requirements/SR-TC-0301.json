@@ -32,7 +32,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Ein `content_block`-Artefakt MUSS genau eine Art aus `prose`, `artifact_ref`, `query`, `table`, `admonition`, `page_break` oder `include_document` besitzen und die daf\u00fcr definierten Pflichtfelder erf\u00fcllen.",
+    "requirement_contract": "Ein `content_block`-Artefakt MUSS genau eine Art aus `prose`, `artifact_ref`, `query`, `table`, `admonition`, `page_break` oder `include_document` besitzen und die dafür definierten Pflichtfelder erfüllen.",
     "scope": "11.c.W/R/C: exact outer payload schemas and immutable source-bound ContentBlock records. Complete local relation fields and unique relation IDs are mandatory in addition to native common, payload and reference cardinality/type checks. Valid source/binding values remain unchanged. Errors preserve the original path and relation-array pointer. No target lookup, prose/query/table/include evaluation, rendering or approval. The C consolidation preserves schema identities/values, source bindings, errors and side effects; no test expectation is rewritten."
   },
   "preconditions": [
@@ -51,7 +51,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Load supported stored records, reject malformed local fields and compare original bytes without executing referenced operations.",
     "Load all seven kinds through ContentBlock and validate the same payloads with their detached standalone schemas. Check alternative source/mode branches, reject foreign outer fields, preserve original bytes and immutable detached values, bind source/record/payload/schema hashes, and compare actual isolated Core/PYZ results without filesystem effects.",

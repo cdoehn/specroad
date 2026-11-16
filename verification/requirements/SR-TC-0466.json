@@ -12,11 +12,11 @@
   "method": "automated_behavior",
   "open_items": [
     "Register public format/check CLI with complete live inventory and real trusted semantic services for profiles/rules/mappings and special-record currentness. Mixed semantic/representation operation sequences remain unsupported; no CLI, matrix or release approval is claimed.",
-    "RECOVERY-REMOVAL-006: existing test references cover only their still-valid implemented scope. Changed interruption/receipt/preflight/work oracles require fresh implementation and evidence in 18.s\u201318.x; old repair/crash recovery results are not acceptance of the new contract."
+    "RECOVERY-REMOVAL-006: existing test references cover only their still-valid implemented scope. Changed interruption/receipt/preflight/work oracles require fresh implementation and evidence in 18.s–18.x; old repair/crash recovery results are not acceptance of the new contract."
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Recorded Evidence, sealed Baselines, recorded Relationsreviews und unver\u00e4nderbare Proposal-Endst\u00e4nde D\u00dcRFEN NICHT formatiert werden.",
+    "requirement_contract": "Recorded Evidence, sealed Baselines, recorded Relationsreviews und unveränderbare Proposal-Endstände DÜRFEN NICHT formatiert werden.",
     "scope": "Library-level complete current JSON format selection and normalization-only transactions. Exact full values, source/target bytes, semantic roots and native journal/receipt/recovery effects are checked; human layout is excluded. Protected records are omitted by scope selection and rejected explicitly. Public format/check CLI and real host services remain later integration."
   },
   "preconditions": [
@@ -34,7 +34,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Prepare the full eligible JSON scope or explicit byte-bound operations; observe complete values, metadata, protected originals, actual write-free checks and native publication/recovery effects."
   ],

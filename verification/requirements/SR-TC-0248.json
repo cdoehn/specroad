@@ -13,7 +13,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Eine regul\u00e4r neu erzeugte Beziehung MUSS eine unabh\u00e4ngig zuf\u00e4llig erzeugte `relation_id` nach `random128-v1` besitzen; migrierte Bestandsrelationen folgen ausschlie\u00dflich SR-REQ-0273 und Anhang Q.",
+    "requirement_contract": "Eine regulär neu erzeugte Beziehung MUSS eine unabhängig zufällig erzeugte `relation_id` nach `random128-v1` besitzen; migrierte Bestandsrelationen folgen ausschließlich SR-REQ-0273 und Anhang Q.",
     "scope": "Collision-aware pure allocation and ID-field assertions; current/history/reservation inputs stay unchanged."
   },
   "preconditions": [
@@ -31,7 +31,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Exercise the real model contracts and invalid input; preserve exact input values and resource bytes."
   ],

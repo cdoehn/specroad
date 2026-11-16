@@ -26,7 +26,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Ein `project`-Bundle MUSS nach Extraktion ein vollst\u00e4ndiges schreibbares Projekt mit geschlossener Scope-Closure bilden.",
+    "requirement_contract": "Ein `project`-Bundle MUSS nach Extraktion ein vollständiges schreibbares Projekt mit geschlossener Scope-Closure bilden.",
     "scope": "15.b.W/R full-project preparation and generated-output publication for completely checked empty receipt histories. Exact native closure, source payloads, external ZIP hash, currentness rechecks, no-overwrite publication and fail-closed inventory/transaction/I/O behavior. No arbitrary-bundle semantic verifier, production extraction, nonempty portable receipt transfer or write/approval authority is claimed."
   },
   "preconditions": [
@@ -44,7 +44,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Prepare canonical project bytes from guarded native inventory and closure; compare unchanged artifact/resource and referenced object bytes, native roots, exclusions and independently reopened payloads. Refuse unsafe, changed, incomplete or unresolved sources without writing.",
     "Publish the retained native bundle through CLI, structured request and library entry points; verify unchanged source inventory, exact ZIP bytes/hash and no overwrite. Reject missing payloads, incomplete histories, unsafe destinations and changes before atomic publication; preserve actual images on failure."

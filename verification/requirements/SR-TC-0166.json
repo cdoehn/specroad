@@ -25,12 +25,12 @@
   ],
   "method": "automated_behavior",
   "open_items": [
-    "RECOVERY-REMOVAL-006: existing test references cover only their still-valid implemented scope. Changed interruption/receipt/preflight/work oracles require fresh implementation and evidence in 18.s\u201318.x; old repair/crash recovery results are not acceptance of the new contract."
+    "RECOVERY-REMOVAL-006: existing test references cover only their still-valid implemented scope. Changed interruption/receipt/preflight/work oracles require fresh implementation and evidence in 18.s–18.x; old repair/crash recovery results are not acceptance of the new contract."
   ],
   "oracle": {
     "expected": "All results bind actual native target bytes. Unreached gates are not success; originals/status remain unchanged. Temporary copies are removed on success/failure unless explicitly retained, and cleanup errors fail closed.",
     "kind": "behavior",
-    "requirement_contract": "`specroad proposal check <FILE>` MUSS die deklarierte Basis in einem isolierten tempor\u00e4ren Workspace materialisieren und das Proposal ausschlie\u00dflich dort anwenden.",
+    "requirement_contract": "`specroad proposal check <FILE>` MUSS die deklarierte Basis in einem isolierten temporären Workspace materialisieren und das Proposal ausschließlich dort anwenden.",
     "scope": "Isolated native specification-basis/target check; no caller success callbacks, reviewer grants or project execution."
   },
   "preconditions": [
@@ -48,7 +48,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Run actual isolated full qualification and native target lint/query/render/diff/impact; compare original inventory and exact byte/hash bindings.",
     "Observe actual cleanup or explicit retention, diagnostics and machine audit; no control write or review grant.",

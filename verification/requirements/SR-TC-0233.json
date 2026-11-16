@@ -29,7 +29,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "`specroad relation add <SOURCE-ID> --type <TYPE> --target <TARGET-ID>` MUSS eine typg\u00fcltige Beziehung mit eigener `relation_id` \u00fcber den gemeinsamen Change Plan anlegen.",
+    "requirement_contract": "`specroad relation add <SOURCE-ID> --type <TYPE> --target <TARGET-ID>` MUSS eine typgültige Beziehung mit eigener `relation_id` über den gemeinsamen Change Plan anlegen.",
     "scope": "Actual local draft Need/Capability/Requirement relation addition through the common planner: fresh native ID allocated under writer lock, one source revision, original relation/audit receipts and safe historical retry. Missing real semantic services fail closed. No registered CLI, general production/history loading, dry-run/stdout or platform completion claim. R extends evidence to exact endpoint/type/hash conflicts, unchanged rejected trees, original request binding, CI audit, active writer/live-base conflicts and actual interrupted publication with retained recovery state. Caller mutations cannot remove originally declared identity exclusions; malformed inventory fields are rejected before external reads. Retry actor is not an additional idempotency key: identical operation hashes retain the original historical actor and result without new writes."
   },
   "preconditions": [
@@ -48,7 +48,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Run the actual native relation authoring adapter through full target validation, writer lock, live check, journal, publication and completion.",
     "Inspect source artifact bytes/revision, unchanged unrelated files and modes, original native operation, actor and receipt.",

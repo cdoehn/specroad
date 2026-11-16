@@ -13,7 +13,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Jedes Artefakt MUSS seine fachliche Herkunft \u00fcber `provenance` oder typisierte Beziehungen zu Goal, Need oder Source nachvollziehbar machen k\u00f6nnen.",
+    "requirement_contract": "Jedes Artefakt MUSS seine fachliche Herkunft über `provenance` oder typisierte Beziehungen zu Goal, Need oder Source nachvollziehbar machen können.",
     "scope": "Local provenance source/locator, UTC capture and excerpt/hash shape; no source resolution or authenticity decision."
   },
   "preconditions": [
@@ -31,7 +31,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Exercise the actual data contracts; compare complete values and rejected invalid input."
   ],

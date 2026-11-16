@@ -16,11 +16,11 @@
   "method": "automated_behavior",
   "open_items": [
     "Partial 6.c.W/R behavior evidence with unchanged C regression coverage. Adaptive work scheduling, measured aggregate consumption, persistent Work/checkpoints, future command consumers and the complete runtime/platform matrix remain open. Historical hash-policy migration is a later migration-plan responsibility; no existing baseline is rewritten. Supplied-model and query-page tests do not prove filesystem completeness or a complete query engine.",
-    "RECOVERY-REMOVAL-006: existing test references cover only their still-valid implemented scope. Changed interruption/receipt/preflight/work oracles require fresh implementation and evidence in 18.s\u201318.x; old repair/crash recovery results are not acceptance of the new contract."
+    "RECOVERY-REMOVAL-006: existing test references cover only their still-valid implemented scope. Changed interruption/receipt/preflight/work oracles require fresh implementation and evidence in 18.s–18.x; old repair/crash recovery results are not acceptance of the new contract."
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Betriebliche Ressourcenoptionen M\u00dcSSEN unabh\u00e4ngig von fachlicher Konfiguration, Aufgabenidentit\u00e4t und Operationshash nach Anhang O.1 aufgel\u00f6st werden.",
+    "requirement_contract": "Betriebliche Ressourcenoptionen MÜSSEN unabhängig von fachlicher Konfiguration, Aufgabenidentität und Operationshash nach Anhang O.1 aufgelöst werden.",
     "scope": "Operational values are resolved separately from a real bound ChangePlan/request, scope descriptor and semantic configuration hash. SRX resource_options remain outside its four field-visible roots. Returned maps own their data and do not write options back into semantic inputs. R checks all nine historical soft quantity names outside the current semantic configuration hash and all eight hard/semantic names inside it. A real model manifest is unchanged by soft-only differences; previously owned manifests/configuration/plan bytes remain intact. No historical hash migration is performed. C retains these same behavioral oracles and public machine contracts while separating the internal option and semantic-constraint types."
   },
   "preconditions": [
@@ -38,7 +38,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Resolve declared profiles and explicit operational targets through current command/library consumers.",
     "Inspect complete machine outputs, actual SRX results/errors and bound semantic identities; compare immutable inputs before and after selection.",

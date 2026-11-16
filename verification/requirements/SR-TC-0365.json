@@ -16,7 +16,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Unabh\u00e4ngige \u00c4nderungen an unterschiedlichen Objektfeldern desselben Artefakts oder derselben JSON-Ressource M\u00dcSSEN rekursiv automatisch zusammengef\u00fchrt werden, sofern keine Profil- oder Invarianzregel einen semantischen Konflikt feststellt; Anh\u00e4nge werden ausschlie\u00dflich anhand Pfad und Byte-Hash zusammengef\u00fchrt.",
+    "requirement_contract": "Unabhängige Änderungen an unterschiedlichen Objektfeldern desselben Artefakts oder derselben JSON-Ressource MÜSSEN rekursiv automatisch zusammengeführt werden, sofern keine Profil- oder Invarianzregel einen semantischen Konflikt feststellt; Anhänge werden ausschließlich anhand Pfad und Byte-Hash zusammengeführt.",
     "scope": "Existing 17.c/17.d field, keyed collection and binary attachment behavior remains required. The qualified 17.a-17.i pipeline supplies explicit history, resolved fields/relations, immutable originals and exact K.3 metadata. 17.j/10.15.7 reconstructs all target files from the original metadata and plan bytes, then invokes the full existing native project validation pipeline with its profile/SRX, scope, reference, graph, document, configuration, lifecycle, historical-integrity and required specialist checks. The native target root must match the metadata root. All unchanged artifacts/resources are checked; target validation is complete only with complete native checks, model validity and an assessment passing the target project fail_on policy. A warning stays visible. Unresolved metadata, unavailable native providers and semantic conflicts expose no usable target files. R independently rebuilds every saved observation, rejects rehashed forged fields/reports, and reobserves all three sources after checks including negative outcomes and provider errors. Native tests combine individually valid branches into forbidden cycles, profile violations, duplicate primary documents and excluded configuration dependencies. Real external bytes, actual Baseline originals and synthetic typed native review verifiers exercise missing/stale/invalid inputs without inventing acceptance. ready/write_authorized/approval_granted remain false and publication remains pending. This is the full virtual validation prerequisite, not the later transaction or merge apply CLI. C only relocates passive values; R function/class ASTs and behavior test bytes remain unchanged. Each prepared state requires a successful Apply gate; no requirement-wide or M17 completion is claimed."
   },
   "preconditions": [
@@ -36,7 +36,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Independently recompute the exact virtual target bytes/root and compare the complete native full-project validation report.",
     "Retain warnings and enforce the target validation policy; reject unresolved fields, invalid unchanged artifacts and missing primary documents without writes.",

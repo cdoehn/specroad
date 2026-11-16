@@ -12,7 +12,7 @@
   ],
   "oracle": {
     "kind": "manual_presentation",
-    "requirement_contract": "Die Rendersemantik f\u00fcr `admonition` und `page_break` MUSS f\u00fcr jedes unterst\u00fctzte Ausgabeformat als Golden File versioniert sein.",
+    "requirement_contract": "Die Rendersemantik für `admonition` und `page_break` MUSS für jedes unterstützte Ausgabeformat als Golden File versioniert sein.",
     "scope": "Human rendering golden files are not automated under TD-001. Manual visual review is not an automated passed result."
   },
   "policy_excluded_scope": [
@@ -31,7 +31,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0472",

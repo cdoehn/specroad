@@ -22,7 +22,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Ein schreibender Proposal-Befehl MUSS bei nicht zur erwarteten Basis passenden \u00c4nderungen innerhalb der `managed_paths` mit Exit Code 6 abbrechen.",
+    "requirement_contract": "Ein schreibender Proposal-Befehl MUSS bei nicht zur erwarteten Basis passenden Änderungen innerhalb der `managed_paths` mit Exit Code 6 abbrechen.",
     "scope": "Live final publication guard on supplied bound inputs; no native journal, atomic multi-file publication or CLI authorization yet."
   },
   "preconditions": [
@@ -40,7 +40,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Recheck original bytes, normative JSON membership, destination ancestry/permissions and lock/recovery state immediately before invoking the trusted publisher."
   ],

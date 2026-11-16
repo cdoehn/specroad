@@ -15,7 +15,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Ein Task-Artefakt MUSS mindestens Beschreibung, Owner, Umsetzungsstatus, Done-Kriterien und Beziehungen zu den erf\u00fcllten Anforderungen oder Entscheidungen enthalten.",
+    "requirement_contract": "Ein Task-Artefakt MUSS mindestens Beschreibung, Owner, Umsetzungsstatus, Done-Kriterien und Beziehungen zu den erfüllten Anforderungen oder Entscheidungen enthalten.",
     "scope": "Stored planning fields, exactly one resolved Release per Milestone, original Task owners/criteria and explicit incoming implementation links; native scheduling of Capability/Requirement/Task to Release/Milestone. No Done evidence, complete lifecycle, roadmap or release-readiness proof. R additionally covers adversarial matrix/cardinality/missing-target cases and mandatory approved-Task links at shared validation and real publication boundaries; failed writes preserve the original project."
   },
   "preconditions": [
@@ -35,7 +35,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Load valid per-type drafts, reject invalid field values, and compare original data and relevant status axes.",
     "Check stored non-draft field gates and malformed statuses without inferring approval or evidence outcomes.",

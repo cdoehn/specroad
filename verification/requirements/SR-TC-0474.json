@@ -20,7 +20,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Volltextsuche MUSS Unicode-NFC und Unicode-Casefold locale-unabh\u00e4ngig anwenden.",
+    "requirement_contract": "Volltextsuche MUSS Unicode-NFC und Unicode-Casefold locale-unabhängig anwenden.",
     "scope": "8.c.W integrates literal fulltext into actual Query selection. NFC/NFD equivalents, sharp-s casefold, sigma and dotted-I mappings have exact ID oracles. Declared text fields and own prose/admonition strings are searched without NFKC, accent stripping, locale collation, metadata stringification or execution. OR/AND composition, owned projection and original byte/hash preservation are observed. This is an unpaged supplied-inventory kernel, not full project validation, CLI delivery or approval. 8.c.R binds every search observation to an exact SourceRelations record, retaining original bytes and raw SHA-256 separately from immutable normalized copies. Repeated queries rebuild current copies even for the same ID; canonically equivalent sources and alternative JSON encodings retain distinct source bindings. Actual available locale switches occur only in an isolated child process, with exact hit, projection and byte oracles; C is mandatory, additional installed locales are covered without a cross-platform completeness claim. All prior W expectations remain unchanged. 8.c.C moves the identical field-selection/normalization function into a private pure working-copy module. SearchText and literal matching retain their module identity and source ownership behavior. All W/R tests and IDs remain unchanged; an AST proof binds the moved function and remaining source module to the authoritative R Result."
   },
   "preconditions": [
@@ -38,7 +38,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Search declared text fields with NFC-plus-casefold working copies and compare exact matching IDs.",
     "Combine repeated fulltext alternatives with other groups and SRX; retain original source bytes, hashes and projected text.",

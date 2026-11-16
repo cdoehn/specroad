@@ -26,7 +26,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Ver\u00e4nderbare migrierte Artefakte M\u00dcSSEN `id_scheme=legacy-sequential-v1` in ihren 0.2-Daten tragen; bei unver\u00e4nderbaren Legacy-Ressourcen wird diese Kennzeichnung ausschlie\u00dflich im Manifest nach Anhang Q gef\u00fchrt.",
+    "requirement_contract": "Veränderbare migrierte Artefakte MÜSSEN `id_scheme=legacy-sequential-v1` in ihren 0.2-Daten tragen; bei unveränderbaren Legacy-Ressourcen wird diese Kennzeichnung ausschließlich im Manifest nach Anhang Q geführt.",
     "scope": "16.b source reader/inventory only: version-bound local/global fields, complete source originals and transitive manifest/payload integrity, immutable classification, detached observations and safe file access. No target write, migration registration, current approval/readiness, external historical compatibility, full suite or release proof."
   },
   "preconditions": [
@@ -45,7 +45,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Read complete source schemas and original closures without the current artifact loader or writer.",
     "Compare literal hash vectors, full current/historical inventory, identity/reference/state bindings and protected original bytes.",

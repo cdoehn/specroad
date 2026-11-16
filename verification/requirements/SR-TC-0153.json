@@ -16,7 +16,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Eine Baseline MUSS aufgrund ihrer Snapshotobjekte ohne Git-Commit verifizierbar, materialisierbar und vergleichbar bleiben; ein zugeh\u00f6riger Git-Commit ist ausschlie\u00dflich optionale Provenienz.",
+    "requirement_contract": "Eine Baseline MUSS aufgrund ihrer Snapshotobjekte ohne Git-Commit verifizierbar, materialisierbar und vergleichbar bleiben; ein zugehöriger Git-Commit ist ausschließlich optionale Provenienz.",
     "scope": "Fresh stored-manifest integrity view and independent materialization of the already supported unconfigured whole-project snapshot; all semantic and binary bytes come from verified archived objects. Capture completion rechecks the selected native record and actual archived objects. Missing records and missing objects have distinct path-bound diagnostics; host access denial and safety violations remain errors. Legacy schema migration/readers are not inferred from current data."
   },
   "preconditions": [
@@ -34,7 +34,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Read stored Baseline data with freshly recomputed integrity, without writes or cached success.",
     "Restore the verified whole-project snapshot without Git or current files, preserving exact resource bytes and semantic configuration hashes; reconstruct the root again from actual output bytes.",

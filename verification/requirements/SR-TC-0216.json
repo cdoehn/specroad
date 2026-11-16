@@ -21,7 +21,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "`specroad artifact create <TYPE> [options]` MUSS unter exklusivem Lock eine kryptografisch zuf\u00e4llige, noch nicht vergebene ID nach `random128-v1` ausw\u00e4hlen.",
+    "requirement_contract": "`specroad artifact create <TYPE> [options]` MUSS unter exklusivem Lock eine kryptografisch zufällige, noch nicht vergebene ID nach `random128-v1` auswählen.",
     "scope": "Native embedding service: real random128 allocation under the writer lock, complete supplied-target validation and existing durable journal/staging/publication/receipt/cleanup sequence. Fifteen draft types publish through all three input routes; nine types with missing semantic services fail closed. Historical retries retain original IDs and prove native completion. Partial requirement evidence; actual CLI and general project/history binding are still open. R also proves operational entropy errors, collision/retry exclusion and native partial-publication recovery preservation. Existing W examples remain unchanged."
   },
   "preconditions": [
@@ -39,7 +39,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Normalize field mapping/file/stdin through the shared input adapter, then invoke the actual native creation service.",
     "Observe real writer-lock metadata during random128 allocation; verify exact canonical artifact bytes, path, draft revision1, actor/time, untouched prior files and confirmed cleanup/receipts.",

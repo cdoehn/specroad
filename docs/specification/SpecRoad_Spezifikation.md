@@ -1,19 +1,19 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.90
+## Version 0.2.91
 
 | Feld | Wert |
 |---|---|
 | Dokument-ID | `SR-SPEC-0001` |
-| Dokumentversion | `0.2.90` |
+| Dokumentversion | `0.2.91` |
 | Zielrelease | `SpecRoad Single-Repository Workbench 0.2.0` |
 | Status | **Fachlich konsolidierte Arbeitsgrundlage; technische Reviewentscheidung gesondert dokumentiert, formale Baseline-Freigabe und Produktabnahme nicht durch dieses Dokument erklärt** |
-| Stand | 15. November 2026 |
+| Stand | 16. November 2026 |
 | Sprache | Deutsch; technische Feldnamen, Enum-Werte und CLI-Kommandos Englisch |
-| Fachliche Quelle | **Diese Repositoryfassung v0.2.90 ist die aktive fachliche Arbeitsgrundlage; eine entsprechende PDF wird hiermit nicht veröffentlicht.** |
+| Fachliche Quelle | **Diese Repositoryfassung v0.2.91 ist die aktive fachliche Arbeitsgrundlage; eine entsprechende PDF wird hiermit nicht veröffentlicht.** |
 | Bearbeitbare Satzquelle | Diese Datei; eine spätere PDF muss denselben versionierten Inhalt wiedergeben. |
-| Vorgängerversion | Repository-Spezifikation v0.2.89; historische Nachweise bleiben unverändert. |
-| Prüf- und Entscheidungsgrundlage | WRITE-RECEIPTS-703, delegiert gemäß SPECROAD-DECISION-1 für den bestätigten Recovery-Rückbau; keine Produktfreigabe. |
-| Änderungsart | Geschlossene nächste normale Receiptformate für 18.t ohne Wiederherstellungsbilder; Autorität, Fachgates und Abbruchsperre bleiben unverändert. |
+| Vorgängerversion | Repository-Spezifikation v0.2.90; historische Nachweise bleiben unverändert. |
+| Prüf- und Entscheidungsgrundlage | BOOTSTRAP-SNAPSHOT-715: ausdrücklich bestätigte SR-REQ-0003-Korrektur und delegierte Feldbindungen für 18.v; keine Produktfreigabe. |
+| Änderungsart | Fehlergarantie vor/nach Schutzbeginn, geschlossener Bootstrapmarker und gemeinsame Migration-/Merge-Abschlussbelege. |
 
 > **Verbindlicher Quellenwechsel:** Die ausdrückliche Nutzerentscheidung REFERENCE-SOURCE-551 wird als v0.2.50 umgesetzt. Der neue Quellvertrag ist Entwurfsarbeit vom 3. November 2026, kein Nachweis eines früher existierenden Formats. Bestehende 0.2-Verträge, Transport-, Sicherheits- und Reviewgrenzen bleiben erhalten.
 
@@ -113,7 +113,7 @@ Bei einem Widerspruch innerhalb dieser Dokumentversion gilt:
 3. `SR-DEC-*` hat Vorrang vor erläuterndem Text, Diagrammen und Beispielen.
 4. Beispiele sind niemals normativ, sofern sie nicht ausdrücklich als Testvektor bezeichnet sind.
 5. Zwei widersprüchliche `SR-REQ-*`-Anforderungen besitzen **keine implizite Rangfolge** nach Nummer, Position oder Spezifität. Ein solcher Fund ist ein Spezifikationsfehler, muss als Issue gelöst werden und verhindert die Freigabe.
-6. Diese Dokumentversion 0.2.85 ersetzt die frühere fachliche Arbeitsgrundlage vollständig. Bis zur gesonderten PDF-Veröffentlichung ist diese versionierte Repositorydatei maßgeblich. Eine spätere PDF muss inhaltsgleich sein; frühere PDFs werden nicht als Nachweis der neuen Verträge ausgegeben. Inhalte verschiedener Fassungen dürfen nicht zu einer Mischspezifikation kombiniert werden.
+6. Diese Dokumentversion 0.2.91 ersetzt die frühere fachliche Arbeitsgrundlage vollständig. Bis zur gesonderten PDF-Veröffentlichung ist diese versionierte Repositorydatei maßgeblich. Eine spätere PDF muss inhaltsgleich sein; frühere PDFs werden nicht als Nachweis der neuen Verträge ausgegeben. Inhalte verschiedener Fassungen dürfen nicht zu einer Mischspezifikation kombiniert werden.
 7. Eine nachträgliche Änderung dieser veröffentlichten Datei erfordert mindestens eine neue Patch-Dokumentversion; stille Korrekturen unter derselben Dokumentversion sind unzulässig.
 8. Eine normative Tabelle, auf die eine `SR-REQ-*`-Anforderung ausdrücklich als Algorithmus oder Matrix verweist, ist Bestandteil des Passkriteriums dieser Anforderung.
 
@@ -159,7 +159,7 @@ Bei einem Widerspruch innerhalb dieser Dokumentversion gilt:
 | Normativer Schreibbefehl | Ein Befehl, der kanonische Modellressourcen oder deren formatierbare normative Bytes verändert. |
 | Generierter Ausgabebefehl | Ein Befehl, der ausschließlich abgeleitete Dateien außerhalb des kanonischen Modells erzeugt. |
 | Lokaler Betriebsbefehl | Ein Befehl, der ausschließlich `.specroad/`-Betriebsdaten oder lokale Diagnosedaten verändert. |
-| Root-Erzeugungsbefehl | `init` oder `bundle extract`; der Befehl erfüllt die jeweilige Zielvorbedingung aus Kapitel 11.7 und veröffentlicht die neue Root-Struktur atomar. |
+| Root-Erzeugungsbefehl | `init` oder `bundle extract`; der Befehl erfüllt die jeweilige Zielvorbedingung aus Kapitel 11.7; nur der vollständige dauerhaft abgeschlossene Root wird freigegeben, ein Abbruchbestand bleibt nach C.2.2 gesperrt. |
 | Plan-Ausgabebefehl | Ein Befehl, der einen versionierten Import-, Migrations- oder Merge-Plan erzeugt oder explizit fortschreibt, ohne normative Projektressourcen zu verändern. |
 | Abbruchsperre | Dauerhafte Sperre einer nicht sicher abgeschlossenen Projektpublikation; kein Schreibbefehl zur Wiederherstellung. |
 | Aufrufkontext | Die für einen einzelnen Prozesslauf aus aktuellen Eingaben und Dateien bestimmte Runtime-, Root-, Policy- und Betriebszustandsauswahl. |
@@ -5156,7 +5156,7 @@ Die Work-Steuerbefehle werden ergänzend exakt so klassifiziert: `work export` i
 
 Die Laufzeitsteuerung darf für einen aufteilbaren Befehl einen externen Work-Root nach Anhang P erzeugen. Dies ändert niemals die Schreibrechte seiner Fachklasse: `read_only`, `plan_output`, `generated_output` und Dry-Runs verändern weiterhin weder kanonische Projektdateien noch `.specroad/`. Externe Snapshot-/Checkpointdateien sind offengelegte betriebliche Ausgaben, keine stillen Projektwrites. Bootstrap- und reine Metadatendiagnosen erzeugen keine Work-Daten. `command describe` nennt diese externen Laufzeitwirkungen ausdrücklich.
 
-Für `init` darf das Ziel fehlen oder ein vorhandenes Repositoryverzeichnis sein. Vor dem ersten Write muss der Befehl für jeden geplanten Zielpfad nachweisen, dass keine Datei, kein Symlink und kein nichtleeres zu ersetzendes Verzeichnis existiert; bereits vorhandene, nicht von SpecRoad beanspruchte Repositorydateien bleiben unangetastet. `init` erzeugt insbesondere `specroad.json` und genau ein Primärspezifikationsdokument. Bei Fehler werden ausschließlich die durch denselben Bootstrap-Lauf neu erzeugten Pfade entfernt.
+Für `init` darf das Ziel fehlen oder ein vorhandenes Repositoryverzeichnis sein. Vor dem ersten Write muss der Befehl für jeden geplanten Zielpfad nachweisen, dass keine Datei, kein Symlink und kein nichtleeres zu ersetzendes Verzeichnis existiert; bereits vorhandene, nicht von SpecRoad beanspruchte Repositorydateien bleiben unangetastet. `init` erzeugt insbesondere `specroad.json` und genau ein Primärspezifikationsdokument. Vor Schutzbeginn bleibt der Ausgangsbestand bei Fehlern unverändert. Ab Schutzbeginn bleiben die tatsächlich erzeugten Pfade mit ihrer Sperre erhalten; keine Rücknahme oder Vervollständigung, auch nicht durch erneutes init am selben Ziel.
 
 Für `bundle extract` muss das Ziel fehlen oder leer sein. Es wird erst
 nach vollständiger Bundle-Verifikation beschrieben; vorhandene Zielinhalte
@@ -5346,7 +5346,7 @@ Diese Anforderungen definieren Projektroot, Grundstruktur und effektive Konfigur
 |---|---|---|---|---|
 | SR-REQ-0001 | Der Befehl `specroad init [PATH]` MUSS in `PATH` oder im aktuellen Verzeichnis ein neues SpecRoad-Projekt mit der in dieser Spezifikation definierten Mindeststruktur einschließlich genau eines Primärspezifikationsdokuments erzeugen. | SR-NEED-0001, SR-NEED-0007 | SR-VER-0001 | SR-TC-0001 |
 | SR-REQ-0002 | `specroad init` DARF NICHT eine bereits vorhandene normative Datei überschreiben. | SR-NEED-0001, SR-NEED-0011 | SR-VER-0001 | SR-TC-0002 |
-| SR-REQ-0003 | `specroad init` MUSS bei einem Fehler entweder die vollständige gültige Grundstruktur oder den unveränderten Ausgangszustand hinterlassen. | SR-NEED-0001, SR-NEED-0011 | SR-VER-0001 | SR-TC-0003 |
+| SR-REQ-0003 | `specroad init` MUSS vor dauerhaftem Schutzbeginn bei Fehlern den unveränderten Ausgangszustand erhalten; ab Schutzbeginn MUSS ein fehlgeschlagener oder unterbrochener Bootstrap seinen tatsächlichen Bestand gesperrt erhalten, ohne Rücknahme oder Vervollständigung. Erfolg setzt die vollständig geprüfte und dauerhaft abgeschlossene Grundstruktur voraus; ein neuer Bootstrap nach Abbruch benötigt ein anderes zulässiges Ziel nach 10.7.2. | SR-NEED-0001, SR-NEED-0011 | SR-VER-0001 | SR-TC-0003 |
 | SR-REQ-0004 | Jedes SpecRoad-Projekt MUSS im Projektroot genau eine Konfigurationsdatei `specroad.json` besitzen. | SR-NEED-0001, SR-NEED-0012 | SR-VER-0001 | SR-TC-0004 |
 | SR-REQ-0005 | SpecRoad MUSS ohne explizite Projektangabe vom aktuellen Verzeichnis aufwärts die nächstgelegene `specroad.json` als Projektroot verwenden. | SR-NEED-0001, SR-NEED-0007 | SR-VER-0001 | SR-TC-0005 |
 | SR-REQ-0006 | Die globale Option `--project <PATH>` MUSS die automatische Projekterkennung überschreiben. | SR-NEED-0001, SR-NEED-0007 | SR-VER-0001 | SR-TC-0006 |
@@ -6556,7 +6556,7 @@ Produktvarianten innerhalb eines Repositorys werden ohne Kopien durch benannte K
 | SR-REQ-0477 | Jeder CLI-Befehl MUSS genau einer Befehlsklasse aus Kapitel 11.7 zugeordnet sein. | SR-NEED-0007, SR-NEED-0008, SR-NEED-0012 | SR-VER-0032 | SR-TC-0477 |
 | SR-REQ-0478 | Ein normativer Schreibbefehl MUSS Change Plan, exklusiven Writer-Lock, dauerhaften Schreibmarker und normale Abschlussreceipts nach Anhang C verwenden. | SR-NEED-0007, SR-NEED-0009, SR-NEED-0013 | SR-VER-0032 | SR-TC-0478 |
 | SR-REQ-0479 | Ein generierter Ausgabebefehl DARF NICHT das kanonische Modell oder `.specroad/` verändern. | SR-NEED-0007, SR-NEED-0011, SR-NEED-0015 | SR-VER-0032 | SR-TC-0479 |
-| SR-REQ-0480 | Ein Root-Erzeugungsbefehl MUSS die für ihn in Kapitel 11.7 festgelegte Zielvorbedingung prüfen und die geplante Root-Struktur vollständig oder gar nicht veröffentlichen. | SR-NEED-0007, SR-NEED-0011, SR-NEED-0013 | SR-VER-0032 | SR-TC-0480 |
+| SR-REQ-0480 | Ein Root-Erzeugungsbefehl MUSS die Zielvorbedingung nach 11.7 prüfen und darf nur die vollständig geprüfte und dauerhaft abgeschlossene Root-Struktur als veröffentlicht bestätigen; ab Schutzbeginn bleibt ein Fehler-/Abbruchbestand nach C.2.2 gesperrt erhalten, ohne Rücknahme oder Vervollständigung. | SR-NEED-0007, SR-NEED-0011, SR-NEED-0013 | SR-VER-0032 | SR-TC-0480 |
 
 ### 12.36 Partielle Bundles, kanonisches ZIP und portable Idempotenz
 
@@ -8262,6 +8262,82 @@ nicht als sauberen Root erscheinen lassen. Ein unbekannter Owner ist keine
 Erlaubnis zur Übernahme. Eine erfolgreiche lesende Wiederholungsantwort setzt
 sowohl die vollständige passende Beleggruppe als auch einen freien Schutzstatus
 voraus. Historische Zielbelege werden nicht als aktuelle Zielvalidierung ausgegeben.
+
+### C.2.2 Spezialabschluss und Bootstrapbindung — BOOTSTRAP-SNAPSHOT-715
+
+**Autorität.** Am 16. November 2026 bestätigt der Nutzer ausdrücklich die
+Empfehlung, SR-REQ-0003 an die bereits beauftragte Abbruchsperre anzugleichen:
+vor Schutzbeginn unverändert, danach den tatsächlichen Teilbestand gesperrt
+erhalten. Das ist die konkrete Nutzerentscheidung zur Fehlergarantie, keine
+aus Control abgeleitete Befugnis. Die folgenden geschlossenen Feldbindungen
+sind Detailpräzisierungen für 18.v gemäß SPECROAD-DECISION-1.
+
+Migration und Merge benutzen ausschließlich den gemeinsamen C.1/C.2.1-Writer.
+Ihre `validation` ist `snapshot-write-validation-v1` mit genau
+`format_version`, `plan_bytes_base64`, `backup`, `qualification` und `native`.
+`plan_bytes_base64` bindet die originalen kanonischen Change-Plan-Bytes;
+Plan-Hash, Identitäten, Akteur, Zeit, Operationen und vollständige Quell-/Ziel-
+Dateibindungen stimmen mit dem normalen Write-Record überein. Es sind passive
+Auditdaten, keine Wiederaufnahmebefugnis. `backup` behält genau `path`,
+`output_root`, `size`, `sha256`, `source_files_sha256` des wirklich erzeugten,
+externen vollständigen Backups. `qualification` ist der vollständige native
+Migrations- beziehungsweise Merge-Befund, `native` dessen vollständiger
+Model-Validation-Befund. Externe Quellen, Sicherung, Autorität und Fachgates
+werden vor Wirkung und vor Abschluss tatsächlich zurückgeprüft.
+Unveränderte passive Original-/Archiv-/Receiptdateien gehören zum vollständigen
+Inventar, dürfen dadurch aber nicht als veränderbare Ziele zugelassen werden.
+Die zugelassene konfigurierte Sprachregistry bleibt vollständig plan-/hashgebunden.
+
+Der öffentliche Spezialabschluss verwendet `migration-transaction-v2` oder
+`merge-transaction-v2`: die bisherigen gemeinsamen fachlichen Erfolgsfelder,
+`backup`, `plan_sha256`, `write_sha256`, `replayed`, `current_target_verified`,
+`approval_granted=false` und `receipts`. Merge ergänzt `validation` und
+`evidence_currently_rechecked`. `write_sha256` bindet die echten v2-Auditbytes;
+es wird kein historisches Journal oder dessen Hash erfunden. Reine Wiederholung
+bestätigt nur historische Receipts, keine aktuelle Ziel-/Freigabeprüfung.
+Migration-Verify behält die vollständige Prüfung von Backup, Originalplan,
+Bericht, Legacy-Originalen und tatsächlichem Ziel. Historische v1-Abschlüsse
+bleiben als solche lesbar; kein aktiver Spezialjournal-/Rollbackpfad entsteht.
+
+Ein Bootstrap schützt genau einen Zielnamen unter seinem bereits existierenden
+Elternverzeichnis. Vor der ersten Zielwirkung, einschließlich Erzeugung des
+Zielverzeichnisses, hält der native Erzeuger den exklusiven Elternmutex und
+legt zwei exklusive Dateien im Elternverzeichnis an:
+`.specroad-bootstrap-<SHA256-des-Zielnamen-Bytes>.owner.json` und
+`.specroad-bootstrap-<SHA256-des-Zielnamen-Bytes>.pending.json`.
+Die Namen werden ausschließlich aus dem gewählten Zielnamen berechnet, nie aus
+gespeicherten Pfadanweisungen. Es werden keine anderen Ziele durchsucht.
+Beide Dateien enthalten dieselben kanonischen `bootstrap-guard-v1`-Bytes mit
+genau `format_version`, `command_id` (`init`, `bundle extract`, `transport open`),
+`target_name`, `parent_identity` (Device/Inode als zwei nichtnegative Integer),
+`root_before` (Device/Inode oder null), `input_sha256`,
+`target_inventory_sha256`, `owner` (C.2.1-Ownerfelder), `state=writing`.
+Eingabebindung und Zielinventar sind kanonische Hashes der tatsächlich geprüften
+nativen Eingaben sowie der vollständigen geplanten Dateien/Verzeichnisse.
+Zielinventar besitzt `files` (nach Pfad sortierte `path,size,sha256`-Einträge)
+und `directories` (sortierte eindeutige relative Verzeichnisnamen).
+Init bindet seine konkrete vollständige generierte Grundstruktur; Extraktion
+bindet die originale Bundle-SHA-256, Sandbox zusätzlich ihre geprüften
+Transport-/Runtime-/Referenzbindungen. Keine Namen-/PID-only-Autorisierung.
+
+Der Owner wird zuerst dauerhaft angelegt, dann der Marker; vor dieser
+Synchronisation gibt es keine Zielwirkung. Fehlende Hälfte, Teilbytes, fremde
+Identitäten, unbekannte Owner oder konkurrierende Änderungen sperren.
+Das gilt auch ohne Zielverzeichnis oder vollständige specroad.json. Aktiver
+Eigentümer, unbekannter Zustand und verwaister/beschädigter Bestand werden
+schreibfrei unterschieden. Rooterzeuger verwenden keine Bootstrap-Recovery.
+„Vollständig oder gar nicht veröffentlichen“ bezeichnet diese Freigabegrenze,
+nicht die physische Abwesenheit bereits geschriebener, gesperrter Teilpfade.
+SR-REQ-0480 und die Begriffsdefinition folgen damit derselben bereits in
+11.7 beauftragten Sperre; sie verlangen keine Rücknahme nach Schutzbeginn.
+Nach vollständiger native Ziel- und Abschlussprüfung entfernt ausschließlich
+derselbe laufende Erzeuger zuerst den Marker dauerhaft. Der Owner bleibt bei
+fehlgeschlagener Markerentfernung/-synchronisation als Sperrbeleg erhalten.
+Er wird erst nach dauerhaftem Publikationsabschluss als Lockabschluss entfernt.
+Fremde Dateien, bestehende Verzeichnisidentitäten und passive Abschlussbelege
+werden weder zurückgespielt noch gelöscht. Alle normalen Fach-/Pfad-/Backup-
+und Originalnachweisgates bleiben erhalten; vollständige Ziele allein erlauben
+keine spätere Entsperrung. Die neue Ausgabe ist keine Benutzungsfreigabe.
 
 ## C.3 Unterbrechung, Diagnose und Root-Erzeugung
 

@@ -13,7 +13,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "SpecRoad MUSS das aktuelle normative semantische Modell ausschlie\u00dflich aus `specroad.json`, den daf\u00fcr vorgesehenen JSON-Dateien unter `spec/`, `profiles/`, `rules/` und `mappings/` sowie den von diesen Ressourcen referenzierten Payloads unter `attachments/` und `archive/objects/` laden.",
+    "requirement_contract": "SpecRoad MUSS das aktuelle normative semantische Modell ausschließlich aus `specroad.json`, den dafür vorgesehenen JSON-Dateien unter `spec/`, `profiles/`, `rules/` und `mappings/` sowie den von diesen Ressourcen referenzierten Payloads unter `attachments/` und `archive/objects/` laden.",
     "scope": "2.a: closed configuration, deterministic artifact paths, current root binding and input-only path classes."
   },
   "preconditions": [
@@ -31,7 +31,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Read or validate the declared project resources and observe data, rejection and file effects."
   ],

@@ -21,7 +21,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Nicht gemappte, mehrdeutig gemappte oder widerspr\u00fcchliche Testergebnisse M\u00dcSSEN als getrennte Diagnosen erscheinen.",
+    "requirement_contract": "Nicht gemappte, mehrdeutig gemappte oder widersprüchliche Testergebnisse MÜSSEN als getrennte Diagnosen erscheinen.",
     "scope": "12.g.R provides complete separate unmapped, ambiguous and contradictory JUnit mapping observations, grouped by exact selected identity and full Class/Name/File/External-ID context, with every rejected occurrence accounted for. Diagnostic groups are linear rather than pairwise. The passive diagnostics do not publish Evidence or authorize an external run. 12.i.R additionally binds exact Generic/SARIF originals and applies explicit abort/skip to record-local required-field, binding and mapping failures. Every source occurrence is accepted, rejected with diagnostics or withheld by abort; conflicting or ambiguous observations cannot select a favorable result. Global envelope/source/target/resource errors remain fatal; no persistence or external authority is granted."
   },
   "preconditions": [
@@ -39,7 +39,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Resolve configurable combinations of classname/name/file/external_id; keep same names with different selected Class/File contexts distinct, never infer an identifier from unknown XML or target metadata.",
     "Account for every testcase occurrence and return separate unmapped, ambiguous and contradictory diagnostics with grouped occurrence/mapping indices; retain only independently unambiguous candidates without choosing an import policy.",

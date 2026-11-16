@@ -26,11 +26,11 @@
     "Required specialist model services (including document model) are not all available; diagnostic_summary remains null and incomplete operations fail.",
     "Older/unknown schema migration and pre-handler CLI failure payloads remain open.",
     "Collect the complete supported CPython/platform matrix and product acceptance before release; no atomic snapshot claim is made against noncooperating external writers.",
-    "RECOVERY-REMOVAL-006: existing test references cover only their still-valid implemented scope. Changed interruption/receipt/preflight/work oracles require fresh implementation and evidence in 18.s\u201318.x; old repair/crash recovery results are not acceptance of the new contract."
+    "RECOVERY-REMOVAL-006: existing test references cover only their still-valid implemented scope. Changed interruption/receipt/preflight/work oracles require fresh implementation and evidence in 18.s–18.x; old repair/crash recovery results are not acceptance of the new contract."
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Die fachlichen Selbstbeschreibungen M\u00dcSSEN bei identischen fachlichen Eingaben und identischer Toolversion in der exakt definierten Projektion nach Kapitel 11.5.1 identische JSON-Bytes liefern; Projektroot, Lock, Transaktion und sonstiger Laufzeitkontext sind keine Bestandteile dieser Gleichheitsgarantie.",
+    "requirement_contract": "Die fachlichen Selbstbeschreibungen MÜSSEN bei identischen fachlichen Eingaben und identischer Toolversion in der exakt definierten Projektion nach Kapitel 11.5.1 identische JSON-Bytes liefern; Projektroot, Lock, Transaktion und sonstiger Laufzeitkontext sind keine Bestandteile dieser Gleichheitsgarantie.",
     "scope": "Deterministic semantic projection across current-directory, registry-order, presentation and runtime-limit changes; build changes remain semantic. Future schema/project self-descriptions and full platform matrix remain open. Real project inspection now proves exact RFC8785 semantic equality after relocation and detached output ownership; runtime remains separately observed. R adds coherent repeated operational/lock observations, visible late blockers, final source rereads, orphan writers, complete journal inventory and exact semantic error/warning/info counts across relocation with passive runtime differences. Explicit host title predicates are test fixtures, not substitute production specialist services. C extracts the existing semantic projection unchanged from inspection orchestration. Existing W/R behavior tests and their expected results remain unchanged; this adds no behavior or release approval."
   },
   "preconditions": [
@@ -48,7 +48,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Invoke the real CLI, structured request and read-only Python inspection on the actual files.",
     "Compare canonical semantic data, native runtime observations, actual side effects and explicit incomplete outcomes."

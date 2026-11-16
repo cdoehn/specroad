@@ -26,7 +26,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Jeder tats\u00e4chlich ausgef\u00fchrte `normative_write` MUSS den vollst\u00e4ndigen geplanten Endstand einschlie\u00dflich aller abh\u00e4ngigen Regeln vor `prepared` gegen seine befehlsspezifischen Gates validieren; die eng begrenzte Review-Ergebnisausnahme ist ausschlie\u00dflich in Kapitel 11.13 definiert.",
+    "requirement_contract": "Jeder tatsächlich ausgeführte `normative_write` MUSS den vollständigen geplanten Endstand einschließlich aller abhängigen Regeln vor `prepared` gegen seine befehlsspezifischen Gates validieren; die eng begrenzte Review-Ergebnisausnahme ist ausschließlich in Kapitel 11.13 definiert.",
     "scope": "Complete isolated target evaluation over a supplied closed project; missing core/command gates and dependent errors fail closed. Real plan/resource/base/result hashes are checked. No physical prepared transaction or write permission is issued. Direct preparation uses the same checked saved-plan path; whole-target command/resource gates also cover empty targets. Explicit historical reservations remain bound. Whole-target and dry-run field-reference checks additionally retain every available location and the project assessment decision; invalid stored relations retain the strict pre-plan boundary."
   },
   "preconditions": [
@@ -44,7 +44,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Recompute ordered lifecycle candidates and their metadata, verify saved plan/base/target hashes, validate every supplied target artifact and inspect diff and direct impact."
   ],

@@ -39,7 +39,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Validate descriptor, select exact seeds and verify bound page membership and order.",
     "Resolve Release, Milestones, directly scheduled artifacts and Tasks with part_of Release/Milestone as seeds; retain seed membership separately from the native closure.",

@@ -24,11 +24,11 @@
   "method": "automated_behavior",
   "open_items": [
     "The current profile selection and bounded startup are covered by unchanged W/R tests after 6.a.C consolidation. Cross-invocation detail continuation with persisted Work manifests/checkpoints remains assigned to 6.i-6.l; full resource budgets, actual write/recovery/root-creation prerequisites and further project command families remain open. No runtime/platform-matrix approval.",
-    "RECOVERY-REMOVAL-006: existing test references cover only their still-valid implemented scope. Changed interruption/receipt/preflight/work oracles require fresh implementation and evidence in 18.s\u201318.x; old repair/crash recovery results are not acceptance of the new contract."
+    "RECOVERY-REMOVAL-006: existing test references cover only their still-valid implemented scope. Changed interruption/receipt/preflight/work oracles require fresh implementation and evidence in 18.s–18.x; old repair/crash recovery results are not acceptance of the new contract."
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Ein Preflight DARF NICHT allein zur Startpr\u00fcfung die vollst\u00e4ndige Modellvalidierung, einen Indexneuaufbau oder einen rekursiven Repository-/Archivscan ausl\u00f6sen.",
+    "requirement_contract": "Ein Preflight DARF NICHT allein zur Startprüfung die vollständige Modellvalidierung, einen Indexneuaufbau oder einen rekursiven Repository-/Archivscan auslösen.",
     "scope": "Native access recording and side-effect traps cover bootstrap, current metadata diagnosis and project_read/startup gates through the actual invocation pipeline. Invalid unrelated model/archive/history contents remain uninterpreted; unresolved active state blocks without model or journal-body loading. Broader metadata budgets and later command families remain open. Shared metadata accounting covers configuration capture, shallow names and verification; same-invocation detail phases disclose SRV167 without a size-only error or invented persistent continuation. Large history does not change native startup accesses."
   },
   "preconditions": [
@@ -46,7 +46,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Execute the named behavior tests in the current complete suite.",
     "Observe returned data, file effects, module loads and exit status; never human-readable output.",

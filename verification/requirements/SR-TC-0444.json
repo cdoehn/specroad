@@ -15,7 +15,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Capabilities, Requirements und Tasks M\u00dcSSEN ausschlie\u00dflich `verification_plan_status` als gespeicherten Verifikationsworkflowzustand verwenden.",
+    "requirement_contract": "Capabilities, Requirements und Tasks MÜSSEN ausschließlich `verification_plan_status` als gespeicherten Verifikationsworkflowzustand verwenden.",
     "scope": "12.b.W: versioned content projection and waiver-only assessment with exact UTC deadline, scope/configuration and human-review bindings; legacy data remain readable but ineffective. Only workflow fields are prepared for the common writer. No complete verification_result, release readiness, write authority or production authentication claimed. 12.b.R: detect mutated verifier inputs and malformed confirmations, reject replayed/revoked observations, exercise exact parent-chain and nanosecond bindings, explicit legacy reissuance and actual native writer guards; calculated results cannot be persisted as subject fields."
   },
   "preconditions": [
@@ -33,7 +33,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Prepare guarded native workflow updates and evaluate actual waiver bindings, deadlines, human decisions and changed subject/configuration/scope without I/O.",
     "Exercise mutating host review callbacks and revocation; publish guarded workflow updates through the real common writer and verify refusal of stale, denied or calculated-result writes."

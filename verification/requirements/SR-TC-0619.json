@@ -13,7 +13,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Eine planm\u00e4\u00dfige Promptpause vor fachlicher Ver\u00f6ffentlichung MUSS den Projektstand regul\u00e4r lesbar und ohne gehaltenen Projektwriter-Lock hinterlassen.",
+    "requirement_contract": "Eine planmäßige Promptpause vor fachlicher Veröffentlichung MUSS den Projektstand regulär lesbar und ohne gehaltenen Projektwriter-Lock hinterlassen.",
     "scope": "A lazy WorkDirectory writes only to explicitly guarded external storage, uses private Linux descriptor-bound directories and a separate root-inode mutex, checks concrete process ownership and releases only its own unchanged record. Small actual metadata commands create no work files. Existing project and operational bytes remain unchanged, and the project mutex remains available while the work mutex is held. Native child termination preserves an orphan record; there is no automatic takeover or cleanup. These are storage lifetime observations, not a complete production pause/resume contract. R pins an allocated root identity against silent recreation and checks retained container entry types and private ownership through an iterative descriptor walk. Altered live records are preserved on exit while the native mutex is released. A real fork cannot release its parent lease; repeated rejected walks preserve both bytes and the native descriptor count. Payload inspection is not snapshot authentication or production resume approval. C separates lazy location selection from the identical private work lease/file implementation. Both classes, both helper functions and all format constants retain identical ASTs; existing W/R test bindings, refusal behavior, side effects and open integration boundaries remain unchanged."
   },
   "preconditions": [
@@ -31,7 +31,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Declare storage without requesting a checkpoint and run small CLI metadata commands; require no work-file creation.",
     "Acquire an explicit or automatic external root, inspect private permissions and work binding, and prove native exclusion in another process while the project mutex remains available.",

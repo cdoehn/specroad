@@ -14,7 +14,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Ein Task DARF den Umsetzungsstatus `implemented` nur besitzen, wenn seine Done-Kriterien erf\u00fcllt und durch Review oder Evidence nachgewiesen sind.",
+    "requirement_contract": "Ein Task DARF den Umsetzungsstatus `implemented` nur besitzen, wenn seine Done-Kriterien erfüllt und durch Review oder Evidence nachgewiesen sind.",
     "scope": "13.b.W/R: explicit human-reviewed Task implementation plus mandatory task_done semantic service for every implemented Task. Full original Task/model/ordered-criteria/unconfigured-project bindings and trusted current human verification remain required. Shared validation blocks generic create/update/saved-plan/no-op routes with unproven target status, including unrelated implemented Tasks. Native single-Task review cannot certify a neighbour. Explicit trusted host service registration is not supplied by JSON or AI prose. Existing proof and native publication/replay contracts remain; no Task Evidence projection is invented. 13.f.R: Retain native Task Done criteria as mandatory even when their rejection is a provider warning; a valid Task Verification Waiver does not grant Release readiness. Supplied-input targeted checks do not certify production human authority, Release baseline or full-suite success."
   },
   "preconditions": [
@@ -34,7 +34,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Bind the complete original Task, ordered Done criteria, model sources and exact scope to an explicit status-update intention.",
     "Require human confirmation of every criterion and a typed current host verification bound to context and full review hashes.",

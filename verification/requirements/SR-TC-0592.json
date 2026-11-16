@@ -10,11 +10,11 @@
   "method": "automated_behavior",
   "open_items": [
     "Partial live diagnostic/prepared-path spool integration only. Persistent Work identity/checkpoints, portable restart and reuse of retained files follow from 6.i onward. Full command/CLI integration, other algorithms, complete resource accounting, indivisible large-record kernels, hard OOM/kill recovery and cross-platform acceptance remain open. No host-capacity or minimum-memory amount is inferred from declared budgets, injected errors or fixture allocation sizes.",
-    "RECOVERY-REMOVAL-006: existing test references cover only their still-valid implemented scope. Changed interruption/receipt/preflight/work oracles require fresh implementation and evidence in 18.s\u201318.x; old repair/crash recovery results are not acceptance of the new contract."
+    "RECOVERY-REMOVAL-006: existing test references cover only their still-valid implemented scope. Changed interruption/receipt/preflight/work oracles require fresh implementation and evidence in 18.s–18.x; old repair/crash recovery results are not acceptance of the new contract."
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Bei Erreichen eines weichen Arbeitsziels MUSS SpecRoad phasenabh\u00e4ngig sparsam weiterarbeiten oder einen sicheren Fortsetzungspunkt nach Anhang O.4 ver\u00f6ffentlichen.",
+    "requirement_contract": "Bei Erreichen eines weichen Arbeitsziels MUSS SpecRoad phasenabhängig sparsam weiterarbeiten oder einen sicheren Fortsetzungspunkt nach Anhang O.4 veröffentlichen.",
     "scope": "Explicit in-process diagnostic/prepared-path spool driver only. Measured soft targets stop after actual bounded progress, never before a first minimum attempt; unknown measurements allow bounded work. Complete outputs and sorted record bytes match the reference. Active reports retain the same live task without claiming persistent checkpoints or Code 8. R additionally drives complete conservative one-record future batches through positive finite windows. Active outcomes have no exit code; only complete spools return code 0. Observed native failures are distinct from soft-target pauses. C isolates the same pure batch-target choice, errno mapping and blocker values from the task/measurement adapter. Existing W/R behavior, test bindings, exception boundaries and side-effect contracts remain unchanged."
   },
   "preconditions": [
@@ -32,7 +32,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Drive finite diagnostic/prepared-path inputs through tiny measured windows and compare complete results/record bytes with the existing reference.",
     "Check monotone actual units, one source traversal, retained buffered/pending records and live merge cursors, unknown measurements and detached operational reports.",

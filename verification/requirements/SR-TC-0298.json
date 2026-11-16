@@ -14,12 +14,12 @@
   ],
   "method": "automated_behavior",
   "open_items": [
-    "Fresh full CI evidence across CPython 3.10\u20133.14 is required; local selected gates do not prove the runtime matrix.",
+    "Fresh full CI evidence across CPython 3.10–3.14 is required; local selected gates do not prove the runtime matrix.",
     "Integrated project/profile validation and CLI/lifecycle diagnosis follow their scheduled steps."
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Die Referenzimplementierung MUSS die versionierten Positiv-, Negativ-, Grenzwert- und Fehlervektoren s\u00e4mtlicher SRX-Operatoren einschlie\u00dflich der expliziten Zahlenpolicy aus Anhang U nachweisen; freigegebene inkompatible Semantik\u00e4nderungen verlangen eine neue SRX-Major-Version.",
+    "requirement_contract": "Die Referenzimplementierung MUSS die versionierten Positiv-, Negativ-, Grenzwert- und Fehlervektoren sämtlicher SRX-Operatoren einschließlich der expliziten Zahlenpolicy aus Anhang U nachweisen; freigegebene inkompatible Semantikänderungen verlangen eine neue SRX-Major-Version.",
     "scope": "Executable SRX 1.0 conformance corpus for 29 operators and all nine concrete Annex U.3 arithmetic decisions; diagnostics preserve rule ID, pointers and types with passive repair hints. Full project/profile/CLI integration and the runtime matrix require separate evidence."
   },
   "preconditions": [
@@ -37,7 +37,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Evaluate any/all/none in array order using lexical item binding, strict Boolean predicates and empty-array identities.",
     "Execute versioned positive, negative, boundary and diagnostic vectors against real SRX APIs; compare typed values and exact error pointers, never presentation strings.",

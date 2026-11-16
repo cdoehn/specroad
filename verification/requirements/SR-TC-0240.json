@@ -19,7 +19,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Schreibende Authoring-Befehle M\u00dcSSEN strukturierte Eingaben sowohl \u00fcber `--input <FILE>` als auch \u00fcber `--input -` von stdin akzeptieren und bei `--format json` ausschlie\u00dflich ein versioniertes Ergebnisobjekt auf stdout ausgeben.",
+    "requirement_contract": "Schreibende Authoring-Befehle MÜSSEN strukturierte Eingaben sowohl über `--input <FILE>` als auch über `--input -` von stdin akzeptieren und bei `--format json` ausschließlich ein versioniertes Ergebnisobjekt auf stdout ausgeben.",
     "scope": "Shared artifact-create field inputs normalize options, files and explicit binary stdin into canonical intent for24regular types without input-layer writes or allocation. The native7.c.W embedding service now connects those inputs to locked identity allocation, complete supplied-target validation and real transaction publication for applicable types, with required unavailable semantic gates failing closed. Registered CLI/stdout, complete production project/history loading, other authoring commands, platform and release scope remain partial."
   },
   "preconditions": [
@@ -37,7 +37,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Normalize the same declared draft fields through owned mappings, real JSON files, explicit binary stdin and actual field option token binding; compare canonical intent bytes and hashes.",
     "Verify all 24 regular draft field types, exact textual semantics, language canonicalization, detached values and preservation of input files; reject generated fields, specialized records, malformed JSON, conflicts and unsafe input paths.",

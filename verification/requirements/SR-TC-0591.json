@@ -14,7 +14,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Cachelesen, Memoisierung und zul\u00e4ssige Cachepflege M\u00dcSSEN innerhalb der f\u00fcr den Aufruf geltenden Ressourcen- und Befehlsklassenvertr\u00e4ge bleiben.",
+    "requirement_contract": "Cachelesen, Memoisierung und zulässige Cachepflege MÜSSEN innerhalb der für den Aufruf geltenden Ressourcen- und Befehlsklassenverträge bleiben.",
     "scope": "Read-only relation queries do not create, repair, delete or write cache, normative, recovery or Work data. Off, scan, zero byte allowance and unrecorded builds perform no cache open. The explicit nonnegative allowance caps optional native bytes only; full source/result coverage is preserved. No total RSS or full adaptive work integration is claimed. R adds bounded streaming structure preflight and bytearray accumulation without retained per-read fragments. Native access/descriptor refusal, labelled allocation failures and observed cache changes fall back completely; original-source changes and programming/interruption failures retain their own errors. The selected one-byte-read Python allocation window stays below 1 MiB for 160 KiB input; this is not RSS or a host capacity promise. 6.g.C moves unchanged cache binding/encoding/shape helpers into _relation_cache_values. Native reads, descriptor guards, strict decoding, fallback exceptions and the authoritative reader retain their existing behavior. W/R test identities and open scope limits are unchanged."
   },
   "preconditions": [
@@ -33,7 +33,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Compare complete incoming, outgoing and combined relation views for every artifact against the independent fresh scan, including isolated sources.",
     "Exercise missing/deleted/stale/malformed entries, binding substitutions and rehashed invalid adjacency; compare exact results and unchanged project file bytes.",

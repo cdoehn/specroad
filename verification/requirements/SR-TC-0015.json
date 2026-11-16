@@ -15,7 +15,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Jede normative JSON-Datei MUSS eine unterst\u00fctzte `schema_version` enthalten, wobei unver\u00e4nderbare Legacy-Ressourcen ausdr\u00fccklich \u00fcber das versionierte Manifest und die eingebauten Leser aus Anhang Q unterst\u00fctzt werden.",
+    "requirement_contract": "Jede normative JSON-Datei MUSS eine unterstützte `schema_version` enthalten, wobei unveränderbare Legacy-Ressourcen ausdrücklich über das versionierte Manifest und die eingebauten Leser aus Anhang Q unterstützt werden.",
     "scope": "Strict UTF-8 JSON resource reads, closed trusted descriptors, owned data and all-or-nothing explicit sets; exact decimal roundtrip rejection."
   },
   "preconditions": [
@@ -33,7 +33,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Read or validate the declared project resources and observe data, rejection and file effects."
   ],

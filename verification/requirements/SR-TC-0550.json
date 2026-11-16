@@ -14,11 +14,11 @@
   "method": "automated_behavior",
   "open_items": [
     "Complete downstream command families and the full transaction/resource preflight; obtain evidence on the required runtime matrix.",
-    "RECOVERY-REMOVAL-006: existing test references cover only their still-valid implemented scope. Changed interruption/receipt/preflight/work oracles require fresh implementation and evidence in 18.s\u201318.x; old repair/crash recovery results are not acceptance of the new contract."
+    "RECOVERY-REMOVAL-006: existing test references cover only their still-valid implemented scope. Changed interruption/receipt/preflight/work oracles require fresh implementation and evidence in 18.s–18.x; old repair/crash recovery results are not acceptance of the new contract."
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Ein sp\u00e4terer CLI-Aufruf DARF NICHT f\u00fcr korrekte Ergebnisse den Prozess-, Session-, Umgebungsvariablen- oder Arbeitsverzeichniszustand eines fr\u00fcheren Aufrufs voraussetzen.",
+    "requirement_contract": "Ein späterer CLI-Aufruf DARF NICHT für korrekte Ergebnisse den Prozess-, Session-, Umgebungsvariablen- oder Arbeitsverzeichniszustand eines früheren Aufrufs voraussetzen.",
     "scope": "Explicit project relocation and reused embedding calls without saved session authority."
   },
   "preconditions": [
@@ -36,7 +36,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Execute the named behavior tests in the current complete suite.",
     "Observe returned data, file effects, module loads and exit status; never human-readable output."

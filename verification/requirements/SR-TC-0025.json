@@ -15,7 +15,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "SpecRoad DARF NICHT \u00c4nderungen an generierten Ansichten als \u00c4nderung des kanonischen Modells zur\u00fcckimportieren.",
+    "requirement_contract": "SpecRoad DARF NICHT Änderungen an generierten Ansichten als Änderung des kanonischen Modells zurückimportieren.",
     "scope": "Read-only normalization proposals and generated-role/source rejection only. Human indentation, headers and layout are not test oracles (TD-001). Source freshness and complete explicit-set checks do not replace the future transaction lock or an atomic project snapshot."
   },
   "preconditions": [
@@ -33,7 +33,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Prepare normal-form candidates or non-normative views; observe value/byte bindings, exclusions and real absence of writes."
   ],

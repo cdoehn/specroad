@@ -21,7 +21,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Das JUnit-Mapping MUSS Testcase-Identit\u00e4ten aus einer konfigurierbaren Kombination aus `classname`, `name`, `file` und externem Identifier auf SpecRoad-Test- oder Verification-IDs abbilden.",
+    "requirement_contract": "Das JUnit-Mapping MUSS Testcase-Identitäten aus einer konfigurierbaren Kombination aus `classname`, `name`, `file` und externem Identifier auf SpecRoad-Test- oder Verification-IDs abbilden.",
     "scope": "12.g.W/R maps explicit nonempty combinations of classname/name/file/external_id to actual supplied native Test/Verification IDs. Source-bound sidecar values never expand the XML profile; repeated names or keys are not merged, and malformed/foreign bindings remain invalid. Analysis exposes all unmapped/ambiguous/contradictory occurrences without deciding import policy. The global import command/project inventory binding and publication remain outside this partial API proof."
   },
   "preconditions": [
@@ -40,7 +40,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Resolve configured nonempty combinations of classname/name/file by exact decoded values to actual supplied target IDs, preserving testcase order and target revision/raw/canonical hashes.",
     "Classify no core outcome marker as passed, failure/error as failed and skipped as skipped; retain separate occurrences and ignore suite totals and passive output strings.",

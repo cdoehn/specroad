@@ -22,7 +22,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Jedes Pr\u00fcfkommando MUSS eine Zusammenfassung mit Anzahl gepr\u00fcfter Artefakte und Anzahl Diagnosen je Schwere ausgeben.",
+    "requirement_contract": "Jedes Prüfkommando MUSS eine Zusammenfassung mit Anzahl geprüfter Artefakte und Anzahl Diagnosen je Schwere ausgeben.",
     "scope": "Shared diagnostic values, stable semantic ordering and explicit threshold assessment over supplied, source-bound observations. These tests do not authenticate diagnostic producers, execute optional lint automatically or establish full CLI conformance. Direct and read-only project reference assessments retain the complete observed artifact and diagnostic counts for full and partial selections, without a full CLI claim. Whole-target and dry-run field-reference checks additionally retain every available location and the project assessment decision; invalid stored relations retain the strict pre-plan boundary."
   },
   "preconditions": [
@@ -40,7 +40,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Construct and validate findings; preserve all observed machine locations and identities.",
     "Apply an explicit threshold without rerunning rules and inspect structured counts and failure class.",

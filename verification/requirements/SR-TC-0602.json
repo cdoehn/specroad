@@ -13,7 +13,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Der vollst\u00e4ndige gebundene Auftrag MUSS bei jeder Aufteilung unver\u00e4ndert als offene beziehungsweise nachgewiesen erledigte Arbeit erhalten bleiben.",
+    "requirement_contract": "Der vollständige gebundene Auftrag MUSS bei jeder Aufteilung unverändert als offene beziehungsweise nachgewiesen erledigte Arbeit erhalten bleiben.",
     "scope": "Initial data-only codec preserves the complete finite plan declared by a trusted caller across candidate partitions: stable Work-ID, task/input binding, exact disjoint completed/remaining membership and retained immutable original bytes. Completion evidence is declared JSON fixture data, not proof that a production handler actually executed. No persisted checkpoint, actual resume or final execution success is claimed. R adds an immediate-successor reader anchored in a caller-trusted prior manifest. It requires unchanged work/command/source/tool/task binding, exactly the next generation, additional declared completion, unchanged earlier evidence and all prior object bytes. Self-consistent replacement packages, replay, skipped generations, lost completions and JSON boolean substitutions are rejected. C relocates identical closed data and request-binding definitions and shares the same pure phase expressions between reader and writer. Existing W/R behavior, test identities, typed refusals, partial status and open boundaries are unchanged."
   },
   "preconditions": [
@@ -31,7 +31,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Create a candidate from real owned input bytes and a complete declared finite unit plan.",
     "Partition units in a different order and verify stable identity, exact remaining work and all prior bytes after each roundtrip.",

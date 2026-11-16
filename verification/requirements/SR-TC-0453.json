@@ -11,11 +11,11 @@
   "method": "automated_behavior",
   "open_items": [
     "Integrate with complete graph, authoring/import and transaction gates; computed inverses and full project-level constraints follow later.",
-    "RECOVERY-REMOVAL-006: existing test references cover only their still-valid implemented scope. Changed interruption/receipt/preflight/work oracles require fresh implementation and evidence in 18.s\u201318.x; old repair/crash recovery results are not acceptance of the new contract."
+    "RECOVERY-REMOVAL-006: existing test references cover only their still-valid implemented scope. Changed interruption/receipt/preflight/work oracles require fresh implementation and evidence in 18.s–18.x; old repair/crash recovery results are not acceptance of the new contract."
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Eine Relation MUSS External Identities und namespaced Extensions verlustfrei speichern k\u00f6nnen.",
+    "requirement_contract": "Eine Relation MUSS External Identities und namespaced Extensions verlustfrei speichern können.",
     "scope": "Relation fields and original source-byte preservation; no complete model approval or file publication. 14.b.W adds history/hash preservation through native model inputs and exact relation-class lookup alongside artifact identities. 14.b.R covers bound/unbound full native data roundtrips, unknown extensions at every level and exact relation keys without collapsing external revision or import history."
   },
   "preconditions": [
@@ -33,7 +33,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Load complete relation fields and inspect exact preserved data, identity and read-only effects.",
     "14.b.W reads explicit import history on native relation candidates and resolves the exact source-bound relation owner without a writer.",

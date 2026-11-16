@@ -17,7 +17,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Die \u00dcbernahme alter Entwurfsanforderungen MUSS ein autorisiertes explizites Mapping von Sprache, Verbindlichkeit und Zielaussage nach Anhang S.7 verlangen.",
+    "requirement_contract": "Die Übernahme alter Entwurfsanforderungen MUSS ein autorisiertes explizites Mapping von Sprache, Verbindlichkeit und Zielaussage nach Anhang S.7 verlangen.",
     "scope": "16.e R: explicit author mapping on the native reference migration planner, with exact language/force/text, default expansion, original-byte preservation and no inherited approval. No public migration execution, current review, CLI/Restore, full-suite or release proof."
   },
   "preconditions": [
@@ -35,7 +35,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Materialize only an explicitly supplied language default; require each source-bound force and full target text; compare independent target bytes/fields and hashes.",
     "Reject missing, invalid, duplicate, foreign or stale decisions; preserve original identity, metadata, Unicode and opaque fields.",

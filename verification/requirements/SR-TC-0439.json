@@ -13,7 +13,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Der resultierende `updated_at`-Wert MUSS nach der im Change Plan ausgew\u00e4hlten Metadatenpolicy aus Anhang K berechnet werden.",
+    "requirement_contract": "Der resultierende `updated_at`-Wert MUSS nach der im Change Plan ausgewählten Metadatenpolicy aus Anhang K berechnet werden.",
     "scope": "Regular K.2 metadata candidates for create/update/relation_add/relation_remove; unchanged/reverted values retain audit data. No lifecycle completion, live state authentication, merge/migration implementation or publication."
   },
   "preconditions": [
@@ -31,7 +31,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Fold operations on private intermediate values, assign one final metadata set per changed identity, and compare returned data and canonical hashes."
   ],

@@ -10,11 +10,11 @@
   "method": "automated_behavior",
   "open_items": [
     "Partial live diagnostic/prepared-path spool integration only. Persistent Work identity/checkpoints, portable restart and reuse of retained files follow from 6.i onward. Full command/CLI integration, other algorithms, complete resource accounting, indivisible large-record kernels, hard OOM/kill recovery and cross-platform acceptance remain open. No host-capacity or minimum-memory amount is inferred from declared budgets, injected errors or fixture allocation sizes.",
-    "RECOVERY-REMOVAL-006: existing test references cover only their still-valid implemented scope. Changed interruption/receipt/preflight/work oracles require fresh implementation and evidence in 18.s\u201318.x; old repair/crash recovery results are not acceptance of the new contract."
+    "RECOVERY-REMOVAL-006: existing test references cover only their still-valid implemented scope. Changed interruption/receipt/preflight/work oracles require fresh implementation and evidence in 18.s–18.x; old repair/crash recovery results are not acceptance of the new contract."
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Eine Ressourcenbegrenzung DARF NICHT die Erhaltung bereits ben\u00f6tigter Wiederherstellungsdaten zugunsten neuer fachlicher Arbeit umgehen.",
+    "requirement_contract": "Eine Ressourcenbegrenzung DARF NICHT die Erhaltung bereits benötigter Wiederherstellungsdaten zugunsten neuer fachlicher Arbeit umgehen.",
     "scope": "The bounded live spool driver and its existing guarded task preserve protected project journal/before-image/checkpoint fixtures and already written external runs when a labelled memory/storage failure interrupts one minimum unit. No automatic retry or cleanup occurs; failed units are not counted complete. Full recovery/capacity integration remains open. R additionally preserves actual partial-write bytes and protected before-image/journal/checkpoint/snapshot fixtures across classified minimum-advance failures. Reports do not claim failed generators or buffered input remain resumable; no cleanup or retry is attempted. C isolates the same pure batch-target choice, errno mapping and blocker values from the task/measurement adapter. Existing W/R behavior, test bindings, exception boundaries and side-effect contracts remain unchanged."
   },
   "preconditions": [
@@ -32,7 +32,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Drive finite diagnostic/prepared-path inputs through tiny measured windows and compare complete results/record bytes with the existing reference.",
     "Check monotone actual units, one source traversal, retained buffered/pending records and live merge cursors, unknown measurements and detached operational reports.",

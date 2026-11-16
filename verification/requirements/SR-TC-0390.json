@@ -18,11 +18,11 @@
   "open_items": [
     "15.e.C structural cleanup. A preparation interrupted before a complete durable journal remains an untouched conflict; it cannot establish ownership for automatic cleanup. Advisory mutexes do not sandbox noncooperating host writers.",
     "15.f allowed partial reader integration and complete command authorization; current complete-project readers reject partials. Nonempty portable receipt histories remain 15.g; ai-runtime extraction remains its assigned later step.",
-    "RECOVERY-REMOVAL-006: existing test references cover only their still-valid implemented scope. Changed interruption/receipt/preflight/work oracles require fresh implementation and evidence in 18.s\u201318.x; old repair/crash recovery results are not acceptance of the new contract."
+    "RECOVERY-REMOVAL-006: existing test references cover only their still-valid implemented scope. Changed interruption/receipt/preflight/work oracles require fresh implementation and evidence in 18.s–18.x; old repair/crash recovery results are not acceptance of the new contract."
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "`specroad bundle extract <FILE> --output <DIR>` MUSS ausschlie\u00dflich verifizierte Bundles unter den Pfad-, Ziel- und harten Sicherheitsregeln aus Kapitel 10.16, 11.7 und Anhang E extrahieren; weiche Arbeitsbudgets folgen Anhang O.",
+    "requirement_contract": "`specroad bundle extract <FILE> --output <DIR>` MUSS ausschließlich verifizierte Bundles unter den Pfad-, Ziel- und harten Sicherheitsregeln aus Kapitel 10.16, 11.7 und Anhang E extrahieren; weiche Arbeitsbudgets folgen Anhang O.",
     "scope": "15.e.W/R native Linux journaled extraction of currently verifiable project and partial bundles. Existing BootstrapTree owns no-replace publication, configuration-last ordering, rollback and retained proof. Complete projects reopen and remain subject to normal write gates. Partials are conservatively excluded from the complete-project reader until 15.f; no context promotion or implicit rehydration. No cross-platform, unimplemented portable receipts, authenticity, full semantic validation or release claim. R guards the original input and exact root namespace at every publication boundary and after receipt retention. Interrupted replay retains its proven prefix and never reports success after a fault; fresh ordinary failures restore the owned original state or retain the complete published root. Unverifiable/foreign remnants are retained as conflicts."
   },
   "preconditions": [
@@ -40,7 +40,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Extract verified owned bytes through direct, CLI, structured-request and registry routes into missing or empty targets; compare original payload and manifest bytes, reopen complete projects and reproduce their bundle.",
     "Preserve partial configuration and review proof files separately; reject complete-project loading and full export, including after root-manifest removal while the retained bootstrap proof remains.",

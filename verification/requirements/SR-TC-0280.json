@@ -14,7 +14,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Eine Relation MUSS `invalid` sein, wenn ihr Ziel fehlt, ihre Quell-Ziel-Typkombination unzul\u00e4ssig ist, ihre kanonische Speicherung verletzt ist oder das j\u00fcngste aktuelle Review die Entscheidung `rejected` tr\u00e4gt.",
+    "requirement_contract": "Eine Relation MUSS `invalid` sein, wenn ihr Ziel fehlt, ihre Quell-Ziel-Typkombination unzulässig ist, ihre kanonische Speicherung verletzt ist oder das jüngste aktuelle Review die Entscheidung `rejected` trägt.",
     "scope": "Missing target or forbidden endpoint type pair gives structural invalid; the latest matching rejected decision yields invalid/current_review_rejected. Equal instants use highest review ID; exact UTC fraction comparison avoids truncation. General validator and diagnostic integration remain open. R: typed diagnostics retain protected error severity and distinguish review_outcome from structural invalid; supplied-snapshot query preserves exact source pointers and original severity under strict/fail-on policies. Additional precedence, lifecycle/audit and input-ambiguity regressions retain all W expectations."
   },
   "preconditions": [
@@ -32,7 +32,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Observe deterministic status from current relation/context hashes and supplied review history; inspect machine-readable selections and reasons; verify immutable inputs, detached outputs and no write attempts.",
     "Inspect typed SRV025/SRV026/SRV027 findings, exact stored pointers and failure policy; verify structural and newest-current rejection precedence, lifecycle/audit exclusions, semantic changes and retained read-only boundaries."

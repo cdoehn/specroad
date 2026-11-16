@@ -10,11 +10,11 @@
   "method": "automated_behavior",
   "open_items": [
     "Successful execution evidence belongs to the stage-specific Apply run; zero behavior tests ran in Dev.",
-    "17.i\u201317.l must still integrate merge metadata, full semantic target validation, publication and final report; no merge write is authorized by this resolution plan."
+    "17.i–17.l must still integrate merge metadata, full semantic target validation, publication and final report; no merge write is authorized by this resolution plan."
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "`specroad merge resolve <MERGE-PLAN> --conflict <ID> --take ours\\|theirs\\|base` sowie `--value <JSON>` MUSS eine explizite, auditierte Aufl\u00f6sung binden und den restlichen Plan unver\u00e4ndert erhalten.",
+    "requirement_contract": "`specroad merge resolve <MERGE-PLAN> --conflict <ID> --take ours\\|theirs\\|base` sowie `--value <JSON>` MUSS eine explizite, auditierte Auflösung binden und den restlichen Plan unverändert erhalten.",
     "scope": "17.g/10.15.4 original source-bound conflict catalogue remains intact. 17.h/10.15.5 adds merge-resolutions-v1 and a real merge.resolve CLI/structured request. Exactly one unresolved conflict receives an explicitly selected take or canonical JSON candidate, actor, UTC and chained hash. The original catalogue and all preceding events/targets remain canonical-byte-identical; derived targets address only that conflict. The expected whole input hash, rebuilt original catalogue and current native sources are required before acceptance. Explicit source descriptors never turn stored paths or actor data into authorization. All target/metadata/publication gates stay pending. merge.conflicts accepts either stored form but still reports not_revalidated. R rejects forged events/projections/rest lists, canonical JSON errors, unknown/repeated decisions, changed sources and unsafe inputs, and checks local decision errors before source acquisition. Real local/Git/baseline/bundle CLI sources and late actual disk changes retain all native validators. C separates passive resolution values from source verification with identical function/class ASTs and unchanged W/R test bytes. No full-suite, final M17 or successful pre-Apply execution is claimed."
   },
   "preconditions": [
@@ -34,7 +34,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Resolve one bound conflict using each permitted take or explicit canonical JSON including null; compare exact values and unchanged catalogue/other decisions.",
     "Verify audit predecessor/event/list hashes, stable conflict identity and sorted declarative target/rest projections without write authority.",

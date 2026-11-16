@@ -20,7 +20,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "SRX MUSS ausschlie\u00dflich auf einem expliziten Auswertungskontext aus aktuellem Artefakt, effektiver Konfiguration, aktiven Profilen, berechneten Relationssichten und unver\u00e4nderlichen Projektstatistiken arbeiten.",
+    "requirement_contract": "SRX MUSS ausschließlich auf einem expliziten Auswertungskontext aus aktuellem Artefakt, effektiver Konfiguration, aktiven Profilen, berechneten Relationssichten und unveränderlichen Projektstatistiken arbeiten.",
     "scope": "Literal/context foundation only. Other operators, effective profile resolution, budget policy and CLI integration remain pending."
   },
   "preconditions": [
@@ -38,7 +38,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Capture own immutable data; evaluate literal or reject invalid declarations without side effects.",
     "Evaluate any/all/none in array order using lexical item binding, strict Boolean predicates and empty-array identities."

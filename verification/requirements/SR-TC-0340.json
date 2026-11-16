@@ -14,7 +14,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Der erneute Import derselben Ergebnisdatei mit demselben Mapping, identischem normalisiertem Laufkontext und derselben Request-ID MUSS idempotent denselben Evidence-Satz zur\u00fcckgeben; eine ver\u00e4nderte gebundene Eingabe unter derselben Request-ID ist der bestehende Konfliktfall mit Code 6.",
+    "requirement_contract": "Der erneute Import derselben Ergebnisdatei mit demselben Mapping, identischem normalisiertem Laufkontext und derselben Request-ID MUSS idempotent denselben Evidence-Satz zurückgeben; eine veränderte gebundene Eingabe unter derselben Request-ID ist der bestehende Konfliktfall mit Code 6.",
     "scope": "12.j.W/R: Existing-attachment Generic full-set transaction. Verified input replay preserves historical IDs/audit without allocation or a current TargetModel; changed bound input is conflict 6. Versioned exact measurement identity diagnoses historical duplicates without dropping repeated new occurrences. Partial I/O and abrupt process exits retain native recovery evidence; explicit rollback or complete-target finalization preserves subjects and prevents duplicate/half-set success. No format-wide writer, external attachment import or CLI/release claim."
   },
   "preconditions": [
@@ -32,7 +32,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Publish a complete saved Generic set, resolve exact original inputs before planning, reject changed bound requests with code 6, diagnose all semantic duplicate occurrences, and exercise target replacement failures and abrupt process exits through native rollback/completion/cleanup. Compare subjects, sources, created IDs and durable replay."
   ],

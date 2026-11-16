@@ -16,7 +16,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Die Releaseabnahme MUSS die Endergebnisparit\u00e4t von Einzellauf und vollst\u00e4ndigem Mehrschrittlauf nach Kapitel 14.8 nachweisen.",
+    "requirement_contract": "Die Releaseabnahme MUSS die Endergebnisparität von Einzellauf und vollständigem Mehrschrittlauf nach Kapitel 14.8 nachweisen.",
     "scope": "Completed implemented evaluation jobs preserve direct native scientific results and complete diagnostics. A real native write transaction agrees with durable Work preparation followed by the same full transaction and request-receipt reuse. This bounded integration evidence is not release approval for all commands or environments. Closed trusted host API for finite explicitly saved model/profile inputs and complete native evaluation units. Whole evaluations and the input set are currently memory-resident; general CLI/Code-8 integration, evaluation Work-package export/restore, bounded within-evaluation durable cursors, later commands and full platform/sandbox/release coverage remain open. Rename cases preserve inode identities and use identical built bytes. Hash consistency does not authenticate foreign Work data; results do not claim current project-file verification. R additionally checks the complete retained native phase/scope/diagnostic contract and reports concrete lost snapshot resources, without rerunning confirmed native evaluations. Current-host EMFILE from a real reduced descriptor limit and late build changes retain the actual checkpoint; compatible later calls reuse only confirmed units. These are consistency and current-host behavior checks, not authentication, bounded-memory completion or full release portability approval."
   },
   "preconditions": [
@@ -35,7 +35,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Compare complete actual direct validation/graph/SRX observations with fully finalized multi-step outcomes including failed policy findings.",
     "Repeat the comparison through newly built distributions, new independent processes and relocated paths.",

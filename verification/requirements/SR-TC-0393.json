@@ -20,7 +20,7 @@
   "method": "automated_behavior",
   "open_items": [
     "Integrate complete scope closure, actual effective-profile resolver, historical archive closures and locked transaction publication in their planned steps. Other requirement aspects and platform/release evidence remain open.",
-    "RECOVERY-REMOVAL-006: existing test references cover only their still-valid implemented scope. Changed interruption/receipt/preflight/work oracles require fresh implementation and evidence in 18.s\u201318.x; old repair/crash recovery results are not acceptance of the new contract."
+    "RECOVERY-REMOVAL-006: existing test references cover only their still-valid implemented scope. Changed interruption/receipt/preflight/work oracles require fresh implementation and evidence in 18.s–18.x; old repair/crash recovery results are not acceptance of the new contract."
   ],
   "oracle": {
     "kind": "behavior",
@@ -43,7 +43,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Exercise the single-root read boundary and reject prohibited execution before any handler.",
     "Capture selected bytes, assemble a semantic manifest and compare hashes or observe rejection of mismatched project provenance."

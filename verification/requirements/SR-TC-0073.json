@@ -14,7 +14,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Ein Requirement MUSS eine Priorit\u00e4t aus `mandatory`, `high`, `medium` oder `low` besitzen.",
+    "requirement_contract": "Ein Requirement MUSS eine Priorität aus `mandatory`, `high`, `medium` oder `low` besitzen.",
     "scope": "Existing read-only field checks plus pure new requirement construction and explicit metadata. No natural-language interpretation, BCP-47 registry validation, profile, Change Plan, CLI/import or write authorization."
   },
   "preconditions": [
@@ -33,7 +33,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Load valid per-type drafts, reject invalid field values, and compare original data and relevant status axes."
   ],

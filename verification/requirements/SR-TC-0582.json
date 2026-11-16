@@ -16,7 +16,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Selektives Laden MUSS alle f\u00fcr das zugesagte Ergebnis erforderlichen Abh\u00e4ngigkeiten und inversen Beziehungen nachweislich ber\u00fccksichtigen.",
+    "requirement_contract": "Selektives Laden MUSS alle für das zugesagte Ergebnis erforderlichen Abhängigkeiten und inversen Beziehungen nachweislich berücksichtigen.",
     "scope": "Complete observed stored/inverse relations for current configured artifact sources. No atomic snapshot or full dependency closure is claimed."
   },
   "preconditions": [
@@ -34,7 +34,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Build both adjacency directions from all current artifact records, select one artifact and inspect returned edge identities and byte bindings.",
     "Compare an index-independent scan with fresh and stale hints; inject late sources, deletion, byte replacement, invalid sources and missing cache entries."

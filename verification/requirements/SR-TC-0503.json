@@ -22,11 +22,11 @@
     "Integrate with isolated RFC-6902 execution, ordered operation folding, actual precondition validation, metadata/lifecycle policies and the transaction writer in the scheduled later steps.",
     "Dedicated evidence/review/proposal services must authenticate authority and compute coupled effects; the parsed workflow name grants no rights.",
     "Full-runtime CI evidence is required separately; selected local tests are not a complete regression run.",
-    "RECOVERY-REMOVAL-006: existing test references cover only their still-valid implemented scope. Changed interruption/receipt/preflight/work oracles require fresh implementation and evidence in 18.s\u201318.x; old repair/crash recovery results are not acceptance of the new contract."
+    "RECOVERY-REMOVAL-006: existing test references cover only their still-valid implemented scope. Changed interruption/receipt/preflight/work oracles require fresh implementation and evidence in 18.s–18.x; old repair/crash recovery results are not acceptance of the new contract."
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Jeder andere Operationstyp MUSS den f\u00fcr ihn in Kapitel 10 definierten typisierten Operationsvertrag verwenden.",
+    "requirement_contract": "Jeder andere Operationstyp MUSS den für ihn in Kapitel 10 definierten typisierten Operationsvertrag verwenden.",
     "scope": "Pure schema, typed-operation and canonical-hash validation only. No patch execution, live preconditions, metadata computation, transaction publication, signature or approval proof."
   },
   "preconditions": [
@@ -44,7 +44,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Construct and parse the actual 1.2.0 plan; preserve ordered operations and bound values.",
     "Exercise real operation field contracts and generic-specialized routing; compare original inputs and structured rejections.",

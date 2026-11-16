@@ -10,7 +10,7 @@
   "method": "automated_behavior",
   "open_items": [
     "Closed host-adapter continuation only. Full Work CLI and the exact executable CLI action required by P.8, general workflows, portable work-package discovery and the complete production agent contract remain open. No Code 8, global semantic success, process completion authentication or release approval is claimed. Every actual operation independently repeats its current checks; prompt data grants no write authority.",
-    "RECOVERY-REMOVAL-006: existing test references cover only their still-valid implemented scope. Changed interruption/receipt/preflight/work oracles require fresh implementation and evidence in 18.s\u201318.x; old repair/crash recovery results are not acceptance of the new contract."
+    "RECOVERY-REMOVAL-006: existing test references cover only their still-valid implemented scope. Changed interruption/receipt/preflight/work oracles require fresh implementation and evidence in 18.s–18.x; old repair/crash recovery results are not acceptance of the new contract."
   ],
   "oracle": {
     "kind": "behavior",
@@ -32,7 +32,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Create and independently publish real supported Work; inspect continuation under write/process/network traps and compare complete retained byte inventories.",
     "Execute the selected known host operation separately with its real explicit inputs, then inspect the next persisted state.",

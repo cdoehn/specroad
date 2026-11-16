@@ -10,7 +10,7 @@
   "method": "automated_behavior",
   "open_items": [
     "The live adapter covers only the closed six-command bootstrap plan. Arbitrary planner data remains inert, not execution proof. General multi-unit graph/closure execution, normative success receipts, CLI/Code-8 continuation and large external output delivery remain open. No release or full requirement approval is claimed.",
-    "RECOVERY-REMOVAL-006: existing test references cover only their still-valid implemented scope. Changed interruption/receipt/preflight/work oracles require fresh implementation and evidence in 18.s\u201318.x; old repair/crash recovery results are not acceptance of the new contract."
+    "RECOVERY-REMOVAL-006: existing test references cover only their still-valid implemented scope. Changed interruption/receipt/preflight/work oracles require fresh implementation and evidence in 18.s–18.x; old repair/crash recovery results are not acceptance of the new contract."
   ],
   "oracle": {
     "kind": "behavior",
@@ -32,7 +32,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Execute each supported real handler and finalize its fully stored result under the Work lease; replay the same terminal bytes without handler execution or extra generations.",
     "Keep declared global work open until confirmed; retain complete failed outcome data and every provided diagnostic in labelled planner fixtures.",

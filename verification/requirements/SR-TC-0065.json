@@ -19,7 +19,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "SpecRoad MUSS profilabh\u00e4ngig fehlende erwartete Beziehungen als Diagnosen ausgeben.",
+    "requirement_contract": "SpecRoad MUSS profilabhängig fehlende erwartete Beziehungen als Diagnosen ausgeben.",
     "scope": "Pure minima and hash inputs only. Lifecycle enforcement, effective profile composition and review selection remain later integration work."
   },
   "preconditions": [
@@ -37,7 +37,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Evaluate relation minima and/or compute Appendix J projections from unchanged input bytes."
   ],

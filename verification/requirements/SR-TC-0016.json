@@ -14,7 +14,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "SpecRoad MUSS eine nicht unterst\u00fctzte `schema_version` ablehnen und die h\u00f6chste unterst\u00fctzte Version in der Diagnose nennen.",
+    "requirement_contract": "SpecRoad MUSS eine nicht unterstützte `schema_version` ablehnen und die höchste unterstützte Version in der Diagnose nennen.",
     "scope": "Strict UTF-8 JSON resource reads, closed trusted descriptors, owned data and all-or-nothing explicit sets; exact decimal roundtrip rejection."
   },
   "preconditions": [
@@ -32,7 +32,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Read or validate the declared project resources and observe data, rejection and file effects."
   ],

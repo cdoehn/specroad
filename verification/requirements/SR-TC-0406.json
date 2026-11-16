@@ -24,7 +24,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Der Scope `specification` MUSS die Seed-Menge und den permanenten Ausschluss von Proposal- und Baseline-Artefakten einschlie\u00dflich der Fehlerbehandlung aus Kapitel 10.8 und 10.8.1 anwenden.",
+    "requirement_contract": "Der Scope `specification` MUSS die Seed-Menge und den permanenten Ausschluss von Proposal- und Baseline-Artefakten einschließlich der Fehlerbehandlung aus Kapitel 10.8 und 10.8.1 anwenden.",
     "scope": "Permanent control exclusions over explicitly supplied closure bindings, including evidence subjects and closed weak relations. Not a complete live inventory, configured applicability evaluator, proposal approval or write."
   },
   "preconditions": [
@@ -42,7 +42,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Validate descriptor, select exact seeds and verify bound page membership and order.",
     "Resolve specification closure with permanent control admission guards; compare non-control members and assert SRV140/code 3 with endpoints and relation ID or field pointer.",

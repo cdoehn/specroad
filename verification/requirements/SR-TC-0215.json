@@ -17,7 +17,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Die Referenztests des Projekts M\u00dcSSEN mindestens Unit-, Schema-, Property-, Golden-File-, CLI-Integration-, Sicherheits- und End-to-End-Tests enthalten.",
+    "requirement_contract": "Die Referenztests des Projekts MÜSSEN mindestens Unit-, Schema-, Property-, Golden-File-, CLI-Integration-, Sicherheits- und End-to-End-Tests enthalten.",
     "scope": "Existing bootstrap/test-infrastructure behavior only; not complete requirement acceptance."
   },
   "policy_excluded_scope": [
@@ -38,7 +38,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Execute each listed unittest once in the current full suite.",
     "Observe the declared file effects, returned data and exit statuses without matching human text."

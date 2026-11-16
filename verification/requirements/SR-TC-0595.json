@@ -23,7 +23,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Explizite Verbrauchsmesswerte M\u00dcSSEN ausschlie\u00dflich \u00fcber die betriebliche Ausgabe nach Anhang O.5 bereitgestellt werden.",
+    "requirement_contract": "Explizite Verbrauchsmesswerte MÜSSEN ausschließlich über die betriebliche Ausgabe nach Anhang O.5 bereitgestellt werden.",
     "scope": "Only an explicitly requested environment --metrics option adds summary.runtime. The complete environment payload, original error class, diagnostics, project bytes and pure SRX results stay unchanged. Explicit embedding reuses a separately owned operational ledger. R compares complete original SRX results/usage, real payload hashes and authorized native target bytes. Control observations remain outside semantic results; native authority refusal and incomplete receipt state are retained. 6.d.C centralizes operational metric projection and the CLI summary adapter only; the same unchanged W/R behavior cases bind measurements, semantic parity, unknown handling and native authority boundaries."
   },
   "preconditions": [
@@ -42,7 +42,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Run real environment commands with and without --metrics, including explicit selected-project error outcomes.",
     "Reuse one owned ledger across completed windows and compare independent CPU/wall sums, RSS peaks and registered byte peaks.",

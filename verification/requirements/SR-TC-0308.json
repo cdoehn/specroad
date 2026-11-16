@@ -51,7 +51,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Die Befehle `document create`, `section add`, `section move`, `section remove` und `block add`, `block update`, `block remove` M\u00dcSSEN vollst\u00e4ndiges nichtinteraktives Dokument-Authoring \u00fcber den gemeinsamen Change Plan erm\u00f6glichen.",
+    "requirement_contract": "Die Befehle `document create`, `section add`, `section move`, `section remove` und `block add`, `block update`, `block remove` MÜSSEN vollständiges nichtinteraktives Dokument-Authoring über den gemeinsamen Change Plan ermöglichen.",
     "scope": "Native document/section saved-plan authoring over complete supplied project inputs. Creation is an empty draft, addition creates and attaches a section atomically, and movement removes the hash-bound old contains edge and adds a fresh relation in one plan. Only affected relation owners change revision; original section/descendant and unrelated file bytes remain. Required native role/ownership/include checks cannot be replaced by a host gate. No presentation, documentation or fake semantic-service oracle. R retains the native invariant guards and closes the shared failure-adapter command registry for all three document commands. No complete-target approval or rollback is inferred from a failed write. C changes only module structure and delegation: operation sequence, plan/audit bindings, diagnostic/refusal contracts, native writer effects and recovery behavior retain their W/R contracts. 11.i.W adds block/removal prepared plans. Retirement preserves stored IDs/files and section ownership; cascade retires the complete subtree, moving children replaces each original guarded edge with a fresh edge at explicit positions. Native block semantics and exact complete lifecycle folds remain mandatory. Internal repeated block occurrences produce one guarded retirement per identity; all original contains relations remain stored. Rejected input preserves the complete file inventory. Interrupted publication honestly retains acknowledged and possibly renamed files plus committing journal; it does not claim rollback or safe automatic retry. C only consolidates the existing operation generators; no test oracle, operation contract or publication behavior changes."
   },
   "preconditions": [
@@ -69,7 +69,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "11.h.W: prepare document.create, section.add and section.move as closed ordinary typed operation sequences; save and execute through the shared native writer. Verify exact affected artifacts, unchanged file inventories, native revisions and audit, receipts and idempotent replay, actor/host denial, primary-role validity, specialist closure and isolated Core/PYZ publication.",
     "11.h.R: reject invalid parents, self/descendant/include cycles, stale relation hashes and actual on-disk bytes, identity reuse, forged operation shapes, missing lifecycle and host gate overrides. Preserve command/plan identity in structured failure audits. Verify unchanged full inventories on refusal and honest partial publication/recovery after an injected second-owner replace failure; conflicting retry preserves original receipt.",

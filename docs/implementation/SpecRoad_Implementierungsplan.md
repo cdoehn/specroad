@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 215 · **Stand:** 15. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.90
+**Planrevision:** 216 · **Stand:** 16. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.91
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 306 Schritte und 918 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; die früher genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wurde nach der damaligen Spezifikation innerhalb von 15.l.R vorgezogen und bleibt als normaler Prüfkern erhalten. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -127,19 +127,21 @@ Historische Korrektur: [Bundle 712](history/bundle-712-normal-read-mutex.md). Re
 
 Historische Korrektur: [Bundle 713](history/bundle-713-trace-writer-contract.md).
 
-Aktuelle Korrektur des vollständigen offenen Restes: [Bundle 714 — 18.u.C](history/bundle-714-completion-reader.md). Result 713 bestätigt 18.u.R mit 15.432 bestandenen Tests und damit 770/918; C scheiterte an der Anbindung einer Receipt-Fehler-Injektion. Die folgenden C-Zielwerte gelten erst nach dem eigenen erfolgreichen Apply-Gate.
+Abgeschlossene Korrektur: [Bundle 714 — 18.u.C](history/bundle-714-completion-reader.md). Result 714 bestätigt 18.u.C mit 15.532 bestandenen Tests und Commit `6d11762a3df0b6a8435178eff2d26af270c286f8`; der technische Ausgangsstand ist sauber, 771/918.
+
+Ausdrücklich bestätigte Fehlergarantie und ergänzende Feldbindungen für 18.v: [BOOTSTRAP-SNAPSHOT-715](decisions/bootstrap-snapshot-715.md). Result 714 bestätigt 18.u.C; dieser Präfix verändert keinen Produktzähler.
 
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 215
+plan_revision: 216
 implementation_plan_commits_total: 918
 implementation_plan_commits_completed: 771
 last_completed_plan_commit: 18.u.C
 next_plan_commit: 18.v.W
 priority_off_plan: null
 next_off_plan_commit: null
-last_completed_numbered_bundle: 709
+last_completed_numbered_bundle: 714
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null

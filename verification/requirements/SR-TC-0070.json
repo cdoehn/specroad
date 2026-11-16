@@ -13,7 +13,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Die fachliche Freigabe eines Requirements MUSS die eindeutige Einheit aus genau einer Verpflichtungsart und einem eigenst\u00e4ndig pr\u00fcfbaren Sachverhalt nach Anhang S.2 best\u00e4tigen; eine bestandene Core-Strukturpr\u00fcfung ersetzt diese menschliche Beurteilung nicht.",
+    "requirement_contract": "Die fachliche Freigabe eines Requirements MUSS die eindeutige Einheit aus genau einer Verpflichtungsart und einem eigenständig prüfbaren Sachverhalt nach Anhang S.2 bestätigen; eine bestandene Core-Strukturprüfung ersetzt diese menschliche Beurteilung nicht.",
     "scope": "Requirement approval prerequisites over supplied bindings; no authentication implementation, lifecycle write, CLI or complete live-project approval is claimed."
   },
   "preconditions": [
@@ -31,7 +31,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Assess a detached in_review requirement under an explicit effective profile and service observations.",
     "Require a current separately verified human review; compare structured findings, input bindings and unchanged original data."

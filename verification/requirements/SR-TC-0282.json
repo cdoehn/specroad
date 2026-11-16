@@ -14,7 +14,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Aktive Profile M\u00dcSSEN je Relationstyp und Artefaktreifegrad festlegen k\u00f6nnen, ob `unreviewed` oder `suspect` als `info`, `warning` oder `error` gilt.",
+    "requirement_contract": "Aktive Profile MÜSSEN je Relationstyp und Artefaktreifegrad festlegen können, ob `unreviewed` oder `suspect` als `info`, `warning` oder `error` gilt.",
     "scope": "Closed optional relation_review_policy selects unreviewed/suspect severity by stored relation type and source maturity. Actual profile resources and deterministic later-profile composition bind the decision into EffectiveProfile; later global overrides and same-profile scoped precedence are explicit. Invalid stays error and current creates no finding. Scope is the supplied byte-bound model API, not all product command integrations. R: the existing relation_review_diagnostics API also uses the byte-bound active profile without changing its response scope. Invalid remains error under permissive scopes and strict thresholds; global downgrades and malformed containers fail closed. Inactive resources do not affect active composition; native confirmation/retry grants no approval."
   },
   "preconditions": [
@@ -32,7 +32,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Observe independently expected machine-readable policy/status/repair values from actual profile composition and supplied model bytes; verify invalid policy rejection, immutable input and no write attempts.",
     "Compare legacy and enriched policy diagnostics; exercise structural/negative error floors and owned input boundaries; inspect actual native confirmation, unchanged proposed Requirement bytes and receipt replay.",

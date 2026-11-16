@@ -17,11 +17,11 @@
   "method": "automated_behavior",
   "open_items": [
     "Measured scope remains explicit in-process windows and the controlled SRX/loaded-graph, payload-hash and native prepared-publication drivers. Pure control signals are not durable checkpoints. Whole-command bootstrap/final delivery, all-phase subtotals, all remaining consumers, child processes, persistent Work identity/resume, other RSS platform adapters and full runtime/platform performance acceptance remain open. Graph input completeness and native publication authority remain independent existing contracts; PublishedFiles still requires receipt finalization.",
-    "RECOVERY-REMOVAL-006: existing test references cover only their still-valid implemented scope. Changed interruption/receipt/preflight/work oracles require fresh implementation and evidence in 18.s\u201318.x; old repair/crash recovery results are not acceptance of the new contract."
+    "RECOVERY-REMOVAL-006: existing test references cover only their still-valid implemented scope. Changed interruption/receipt/preflight/work oracles require fresh implementation and evidence in 18.s–18.x; old repair/crash recovery results are not acceptance of the new contract."
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "SpecRoad MUSS verbrauchte CPU-Zeit und verstrichene Zeit als getrennte betriebliche Gr\u00f6\u00dfen nach Anhang O.2 behandeln.",
+    "requirement_contract": "SpecRoad MUSS verbrauchte CPU-Zeit und verstrichene Zeit als getrennte betriebliche Größen nach Anhang O.2 behandeln.",
     "scope": "Real CLI, structured and registry consumers expose separate process CPU and monotonic wall intervals. Explicit arithmetic fixtures check their distinct cumulative totals and omit gaps between invocation windows. Native sources are read without an external monitor. R keeps unavailable, regressing or source-changing intermediate counters unknown through completion and preserves unrelated measurements. Pure SRX generators themselves never read clocks. 6.d.C centralizes operational metric projection and the CLI summary adapter only; the same unchanged W/R behavior cases bind measurements, semantic parity, unknown handling and native authority boundaries."
   },
   "preconditions": [
@@ -40,7 +40,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Run real environment commands with and without --metrics, including explicit selected-project error outcomes.",
     "Reuse one owned ledger across completed windows and compare independent CPU/wall sums, RSS peaks and registered byte peaks.",

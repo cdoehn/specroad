@@ -18,7 +18,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Der Operator `field` MUSS Werte ausschlie\u00dflich \u00fcber RFC-6901-JSON-Pointer in einem benannten Kontextobjekt lesen.",
+    "requirement_contract": "Der Operator `field` MUSS Werte ausschließlich über RFC-6901-JSON-Pointer in einem benannten Kontextobjekt lesen.",
     "scope": "Static field/exists/value-kind foundation; complete SRX operator and validation integration remain pending."
   },
   "preconditions": [
@@ -36,7 +36,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Evaluate static fields and exists; classify value types; reject malformed operands without coercion or side effects.",
     "Evaluate any/all/none in array order using lexical item binding, strict Boolean predicates and empty-array identities."

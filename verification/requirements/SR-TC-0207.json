@@ -14,7 +14,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Bei identischem normativem Modell, identischen expliziten Fachinputs, identischer semantischer Konfiguration, Toolversion und Profilen M\u00dcSSEN abgeschlossene Fachoperationen dieselbe fachliche Ergebnisprojektion liefern; Live-Analyzer binden zus\u00e4tzlich den Enginefingerprint nach Anhang T.9.",
+    "requirement_contract": "Bei identischem normativem Modell, identischen expliziten Fachinputs, identischer semantischer Konfiguration, Toolversion und Profilen MÜSSEN abgeschlossene Fachoperationen dieselbe fachliche Ergebnisprojektion liefern; Live-Analyzer binden zusätzlich den Enginefingerprint nach Anhang T.9.",
     "scope": "Full-value RFC-8785/SHA-256 primitive; stable Unicode and exact decimal-token policy. Application-specific projections and complete command integration remain later work."
   },
   "preconditions": [
@@ -32,7 +32,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Canonicalize valid values and hash the resulting UTF-8 bytes; reject invalid and lossy data without altering inputs."
   ],

@@ -31,7 +31,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "In einem partiellen Bundle oder einem vor der Migration geladenen Legacy-Projekt ohne Prim\u00e4rspezifikationsdokument MUSS die deterministische typbasierte Fallback-Ansicht verf\u00fcgbar bleiben.",
+    "requirement_contract": "In einem partiellen Bundle oder einem vor der Migration geladenen Legacy-Projekt ohne Primärspezifikationsdokument MUSS die deterministische typbasierte Fallback-Ansicht verfügbar bleiben.",
     "scope": "11.q.W/R/C: read-only type/ID fallback over explicitly supplied partial records or legacy identity/title/revision envelopes. Native partial boundary semantics and canonical symmetric storage are checked; original record fields, identity schemes, source bytes and paths stay unchanged. No fabricated primary, missing target record, origin/hash proof, full validation, migration or calculated success. The common private projection boundary reuses the existing calculations and result construction; no new report provider or semantic approval is introduced."
   },
   "preconditions": [
@@ -49,7 +49,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Use original supplied partial current-schema or legacy 0.1.0 record bytes without an active primary and project deterministically by type and identity; preserve absent legacy fields and passive relations without migration.",
     "Require the actual partial scope root, native typed fields, all strong targets and exact weak-boundary declarations. Reject reversed or duplicate symmetric storage for both present and omitted targets.",

@@ -10,12 +10,12 @@
   "method": "automated_behavior",
   "open_items": [
     "Current successful Apply evidence for this stage is required; Dev ran zero behavior tests.",
-    "17.g\u201317.l conflict/resolution, full merge metadata, target invariants, current qualification, public CLI and writer integration remain required.",
+    "17.g–17.l conflict/resolution, full merge metadata, target invariants, current qualification, public CLI and writer integration remain required.",
     "SR-REQ-0637/0638 remain partial until the complete merge-metadata-v1 Planner/Writer and adoption contract is integrated and proven."
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Konkurrierende Lifecycle-\u00dcberg\u00e4nge, Retirement gegen semantische \u00c4nderung, unterschiedliche Supersession-Ziele und \u00c4nderungen an recorded Evidence M\u00dcSSEN als nicht automatisch l\u00f6sbare Konflikte gelten.",
+    "requirement_contract": "Konkurrierende Lifecycle-Übergänge, Retirement gegen semantische Änderung, unterschiedliche Supersession-Ziele und Änderungen an recorded Evidence MÜSSEN als nicht automatisch lösbare Konflikte gelten.",
     "scope": "17.f native read-only lifecycle/history guards under 9.6.2, 9.6.3, 10.15.3 and K.3. The existing source-bound origin check precedes all content shortcuts. Concurrent lifecycle states and different inverse successors conflict; protected source originals remain byte-identical. R includes retirement versus normative content, direct supersedes targets, absent Base, retired reactivation, missing successors, all six protected record states, representation/revision rewrites, qualified legacy originals and late source mutation. Only a protected byte subset is returned, never a complete target or an approval. The result names merge-metadata-v1 but does not implement its later mutable-resource revision/timestamp calculation, Planner/Writer target equality or CLI/publication integration. These remain open; no requirement-wide pass is claimed."
   },
   "preconditions": [
@@ -35,7 +35,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Check conflicting lifecycle states and distinct successor identities against exact independent expected conflicts.",
     "Check byte-identical protected original adoption and exact original-byte observations; every conflict blocks original extraction.",

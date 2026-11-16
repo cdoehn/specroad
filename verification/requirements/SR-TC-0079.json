@@ -21,7 +21,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Ein Profil MUSS als versioniertes deklaratives JSON-Dokument Pflichtfelder, zul\u00e4ssige Werte, Relation Rules, Lint-Regeln und Schweregrad\u00fcberschreibungen definieren k\u00f6nnen.",
+    "requirement_contract": "Ein Profil MUSS als versioniertes deklaratives JSON-Dokument Pflichtfelder, zulässige Werte, Relation Rules, Lint-Regeln und Schweregradüberschreibungen definieren können.",
     "scope": "Single resource and field rules only, explicit definitions for later composition and lint consumers."
   },
   "preconditions": [
@@ -39,7 +39,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Parse exact versioned declarations and verify resource hashes.",
     "Check scoped field effects, passive rule definitions, and unchanged mixed-language contents.",

@@ -14,7 +14,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Ein verwendeter persistenter Cacheeintrag MUSS den vollst\u00e4ndigen Inhaltshash- und Abh\u00e4ngigkeitsnachweis aus Anhang O.3 erf\u00fcllen.",
+    "requirement_contract": "Ein verwendeter persistenter Cacheeintrag MUSS den vollständigen Inhaltshash- und Abhängigkeitsnachweis aus Anhang O.3 erfüllen.",
     "scope": "Each usable adjacency entry binds recorded tool build/algorithm/version, runtime, schema, relation policy, complete current configuration bytes and all current artifact paths/content hashes. Its payload hash is checked, then every ID, endpoint, direction, coverage and order is independently checked against fresh resolved edges. Self-consistent rehashing cannot omit, duplicate, reorder or invent a relation. Real generated module and ZIP distributions share a valid cache after relocation. R adds bounded streaming structure preflight and bytearray accumulation without retained per-read fragments. Native access/descriptor refusal, labelled allocation failures and observed cache changes fall back completely; original-source changes and programming/interruption failures retain their own errors. The selected one-byte-read Python allocation window stays below 1 MiB for 160 KiB input; this is not RSS or a host capacity promise. 6.g.C moves unchanged cache binding/encoding/shape helpers into _relation_cache_values. Native reads, descriptor guards, strict decoding, fallback exceptions and the authoritative reader retain their existing behavior. W/R test identities and open scope limits are unchanged."
   },
   "preconditions": [
@@ -33,7 +33,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Compare complete incoming, outgoing and combined relation views for every artifact against the independent fresh scan, including isolated sources.",
     "Exercise missing/deleted/stale/malformed entries, binding substitutions and rehashed invalid adjacency; compare exact results and unchanged project file bytes.",

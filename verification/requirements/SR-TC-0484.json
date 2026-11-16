@@ -37,7 +37,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "SpecRoad MUSS auf einem partiellen Bundle ausschlie\u00dflich die in Kapitel 10.16 zugelassenen Befehle ausf\u00fchren.",
+    "requirement_contract": "SpecRoad MUSS auf einem partiellen Bundle ausschließlich die in Kapitel 10.16 zugelassenen Befehle ausführen.",
     "scope": "Verified closure members are the only artifact population. Exact weak boundary identities count in direct relation observations but never become graph traversal or SRX predicate objects. Successful graph reads bind partial scope, boundaries and native partial root; origin completeness is never inferred. Metadata, native validation and inspection retain their schemas. Normative writes fail with code 7; missing strong targets/forged boundaries fail with code 3, operational blockers with 5 and changed inputs with 6. Full-project and provider requirements remain required."
   },
   "preconditions": [
@@ -55,7 +55,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Extract verified native partial bytes, read actual closure members through Python/CLI/alias/structured Show, and compare the original artifact and bounded incoming/outgoing edges.",
     "Reject context-only targets, forged boundaries, altered payloads, unsafe paths, missing markers and concurrent changes; observe no writes and no implicit rehydration.",

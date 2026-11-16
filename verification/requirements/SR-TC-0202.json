@@ -22,7 +22,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "SpecRoad MUSS alle Gr\u00f6\u00dfen- und Komplexit\u00e4tsgrenzen nach der abschlie\u00dfenden Klassifikation in Anhang O.1 als weiches Arbeitsziel, expliziten Fachscope oder harte Sicherheits-/Formatgrenze behandeln.",
+    "requirement_contract": "SpecRoad MUSS alle Größen- und Komplexitätsgrenzen nach der abschließenden Klassifikation in Anhang O.1 als weiches Arbeitsziel, expliziten Fachscope oder harte Sicherheits-/Formatgrenze behandeln.",
     "scope": "Declared quantities are classified independently as soft work targets, semantic scopes or hard structure/format limits. Runtime options cannot select safety overrides or workers. Current SRX evaluation uses the selected graph target while retaining current hard AST guards. R observes declared legacy targets through the real selected-project environment path without reading model objects. Actual complete supplied-target assessment and SRX execution proceed beyond tiny work quantities. Hard AST checks and minimum profile composition remain enforced. C retains these same behavioral oracles and public machine contracts while separating the internal option and semantic-constraint types."
   },
   "preconditions": [
@@ -40,7 +40,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Resolve declared profiles and explicit operational targets through current command/library consumers.",
     "Inspect complete machine outputs, actual SRX results/errors and bound semantic identities; compare immutable inputs before and after selection.",

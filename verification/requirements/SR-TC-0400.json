@@ -32,7 +32,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "`validate`, `render`, `view`, `coverage`, `release readiness`, `baseline create`, `export` und `bundle create` M\u00dcSSEN `--configuration <ID>` unterst\u00fctzen.",
+    "requirement_contract": "`validate`, `render`, `view`, `coverage`, `release readiness`, `baseline create`, `export` und `bundle create` MÜSSEN `--configuration <ID>` unterstützen.",
     "scope": "Existing adapters resolve the same selected ID, revision and effective configuration digest from original source bytes. Query applicability precedes sort/page and graph traversal excludes filtered nodes without rewriting stored records. Native scope Query pages use the same actual Query kernel. Productive validation and registered gates receive owned effective configuration data; unavailable services and structural checks remain effective. Final freshness checks bind complete observed inputs. The unconfigured behavior and six-field Query page remain unchanged. This is partial command integration, not certification of future adapters or resource-complete scope roots. R adds the same semantic configuration contribution across native adapters and an explicit contract for future adapters. Original-byte ownership also covers configured page sorting and external sort. Configuration digests alone are not scope roots, complete inventories or authority to reuse evidence. Real scope-root equivalence is checked with explicit complete fixture dependency observations. C shares configured-source ownership, the closed SRX projection and semantic configuration-scope hashing while preserving the same tested behavior and error contracts. 11.l.W adds same-snapshot ViewData configuration selection, inherited parent/hash binding, exact original inputs, deterministic NFC/ID sorting and bounded graph traversal through applicable nodes only. No CLI/rendering completion or full-suite/release claim. 11.l.R adds explicit missing preservation and bounded nested record data in the same configured snapshot. 15.c.R adds generated partial ZIP bytes and configuration context without additional scope members, parent/content/formatting hash domains, excluded-anchor/strong-dependency rejection and native publication boundaries. Independent verification of arbitrary bundles, extraction and extracted read-only admission remain open."
   },
   "preconditions": [
@@ -52,7 +52,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Resolve an explicitly selected configuration from current original sources and filter applicable Query candidates before exact sorting and pagination.",
     "Use the same effective configuration in native Query API, CLI, request, external Query Work, artifact-scope query seeds and productive validation gates.",

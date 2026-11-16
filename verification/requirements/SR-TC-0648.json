@@ -36,7 +36,7 @@
     "kind": "behavior",
     "negative_review_expected": "Only explicit human negative decisions change control history with one physical revision and stable content binding. Unproven/foreign/old decisions cannot authorize withdrawal. Withdrawn, outdated or externally ineffective reviews never become a new approval; native write failures retain real evidence.",
     "negative_review_scope": "18.j negative decisions and own withdrawal through the existing native writer, retained history and read-only qualification; no public 18.k Apply or release gate is claimed.",
-    "requirement_contract": "Eine \u00c4nderung des Proposal-Fachinhalts MUSS s\u00e4mtliche Freigaben \u00e4lterer Inhaltsbindungen unwirksam machen.",
+    "requirement_contract": "Eine Änderung des Proposal-Fachinhalts MUSS sämtliche Freigaben älterer Inhaltsbindungen unwirksam machen.",
     "scope": "Native 18.e authoring and read-only target/history integration; no public writer or full workflow claim."
   },
   "preconditions": [
@@ -55,7 +55,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Prepare the four ordered authoring actions and reset changed open Proposals to draft with one physical/content revision.",
     "Recompute the native target and requalify preserved synthetic review history; old approvals lose effect on actual content change.",

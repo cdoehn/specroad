@@ -13,7 +13,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Eine gleiche ID aus fachlich unabh\u00e4ngiger Erzeugung MUSS als Identit\u00e4tskonflikt abgewiesen werden.",
+    "requirement_contract": "Eine gleiche ID aus fachlich unabhängiger Erzeugung MUSS als Identitätskonflikt abgewiesen werden.",
     "scope": "Independent creation origins are classified and rejected; origin labels must first be established by trusted callers."
   },
   "preconditions": [
@@ -31,7 +31,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Exercise the real model contracts and invalid input; preserve exact input values and resource bytes."
   ],

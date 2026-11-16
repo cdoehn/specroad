@@ -17,7 +17,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Der Befehl `specroad init [PATH]` MUSS in `PATH` oder im aktuellen Verzeichnis ein neues SpecRoad-Projekt mit der in dieser Spezifikation definierten Mindeststruktur einschlie\u00dflich genau eines Prim\u00e4rspezifikationsdokuments erzeugen.",
+    "requirement_contract": "Der Befehl `specroad init [PATH]` MUSS in `PATH` oder im aktuellen Verzeichnis ein neues SpecRoad-Projekt mit der in dieser Spezifikation definierten Mindeststruktur einschließlich genau eines Primärspezifikationsdokuments erzeugen.",
     "scope": "Real root creation and validated prepared-journal replay on native Linux/local filesystems. Replay verifies the entire closed inventory, root/stage/reused identities, publication prefix, native configuration/document fields and exact distribution bytes before publication; no new project/document IDs or timestamps. A durable passive completion receipt preserves evidence through the final rename. Foreign files and unverifiable states are preserved. Existing W oracles remain unchanged. This is not full semantic validation, authentication of deliberately reconstructed foreign evidence, arbitrary pre-journal recovery, cross-platform or release approval."
   },
   "preconditions": [
@@ -35,7 +35,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Execute the real init CLI, structured-request and registry routes on missing, empty and collision-free existing targets; independently inspect the required directories, exactly one native valid draft primary document, configuration and pinned distribution resources.",
     "Verify existing bytes/inodes/modes survive collisions and ordinary preparation/publication failures, including an error after the real native rename; inspect the durable journal before each publication and configuration-last order.",

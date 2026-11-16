@@ -15,7 +15,7 @@
   "method": "automated_behavior",
   "open_items": [
     "Explicit guarded payload hashing and its operational outcome adapter only; no new CLI command or persistent resume engine. Known-limit integration, staging capacity/reserves, all archive/import/snapshot consumers and full runtime/platform acceptance remain open. Tests distinguish injected errors, native permission/descriptor refusals and the labelled injected indivisible initializer with a real refused allocation. No actual SHA-256 minimum memory benchmark, total RSS, host quota guarantee or recovery from an uncatchable process kill is claimed.",
-    "RECOVERY-REMOVAL-006: existing test references cover only their still-valid implemented scope. Changed interruption/receipt/preflight/work oracles require fresh implementation and evidence in 18.s\u201318.x; old repair/crash recovery results are not acceptance of the new contract."
+    "RECOVERY-REMOVAL-006: existing test references cover only their still-valid implemented scope. Changed interruption/receipt/preflight/work oracles require fresh implementation and evidence in 18.s–18.x; old repair/crash recovery results are not acceptance of the new contract."
   ],
   "oracle": {
     "kind": "behavior",
@@ -38,7 +38,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Hash a real 32 MiB attachment with 64 KiB and 4 KiB reusable buffers; bind the complete byte count and independent incremental SHA-256.",
     "Exercise smaller pre-read buffer allocation alternatives, short reads, exact control positions, guarded descriptor lifetime and unchanged critical fixture bytes on failure.",

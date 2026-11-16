@@ -23,12 +23,12 @@
   "method": "automated_behavior",
   "open_items": [
     "Correction bundle 547 retains 15.o.C after four R fixture-construction failures (7523 passed); W committed as a2929c3eaceefbd3376099c3324d43fd4c805edc after 7414 passing tests. This phase still requires its own successful Apply gate and actual commit; no Dev behavior tests ran.",
-    "Full native CPython 3.10\u20133.14/platform evidence and the M15 full-suite/integration gate remain pending explicit manual execution.",
-    "RECOVERY-REMOVAL-006: existing test references cover only their still-valid implemented scope. Changed interruption/receipt/preflight/work oracles require fresh implementation and evidence in 18.s\u201318.x; old repair/crash recovery results are not acceptance of the new contract."
+    "Full native CPython 3.10–3.14/platform evidence and the M15 full-suite/integration gate remain pending explicit manual execution.",
+    "RECOVERY-REMOVAL-006: existing test references cover only their still-valid implemented scope. Changed interruption/receipt/preflight/work oracles require fresh implementation and evidence in 18.s–18.x; old repair/crash recovery results are not acceptance of the new contract."
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Die Materialisierung in der Sandbox MUSS ohne Git, Shell, Netzwerk oder Paketinstallation einen neuen, vollst\u00e4ndig gepr\u00fcften Projektroot nach W.4 erzeugen und vorhandene Ziele sowie Partial-Bundle-Schreibgrenzen erhalten.",
+    "requirement_contract": "Die Materialisierung in der Sandbox MUSS ohne Git, Shell, Netzwerk oder Paketinstallation einen neuen, vollständig geprüften Projektroot nach W.4 erzeugen und vorhandene Ziele sowie Partial-Bundle-Schreibgrenzen erhalten.",
     "scope": "Prepared offline inbound verification/extraction contribution only: exact native reference/project bytes, trusted standalone code, original receipts and guarded root publication. No return-path, release or completed execution evidence is claimed."
   },
   "preconditions": [
@@ -46,7 +46,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Open actual repository-root and subproject packages via module/PYZ and argv/structured requests in a Python-only audited subprocess.",
     "Compare independent project manifest, every original reference/runtime byte, model root and portable receipt replay; relocate the sandbox and revalidate in a fresh process.",

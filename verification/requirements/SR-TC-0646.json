@@ -32,9 +32,9 @@
   "method": "automated_behavior",
   "open_items": [],
   "oracle": {
-    "expected": "One transaction produces draft\u2192validated\u2192checked\u2192in_review with maturity=in_review and physical revision +1. Content revision/hash, existing histories and unrelated normative bytes are preserved; exact report bytes bind the original context. Dry-run or pre-publication failure does not change the Proposal. Durable receipt identity is unchanged on replay; a read with the actual PublicationPreflight independently verifies the current target, whereas historical and replay reads do not claim renewed current-target verification; injected staging failure retains native recovery evidence and cannot imply success.",
+    "expected": "One transaction produces draft→validated→checked→in_review with maturity=in_review and physical revision +1. Content revision/hash, existing histories and unrelated normative bytes are preserved; exact report bytes bind the original context. Dry-run or pre-publication failure does not change the Proposal. Durable receipt identity is unchanged on replay; a read with the actual PublicationPreflight independently verifies the current target, whereas historical and replay reads do not claim renewed current-target verification; injected staging failure retains native recovery evidence and cannot imply success.",
     "kind": "behavior",
-    "requirement_contract": "`proposal review start` MUSS die vollst\u00e4ndig gepr\u00fcfte Kontrollfolge nach Kapitel 10.3 atomar bis `in_review` ver\u00f6ffentlichen.",
+    "requirement_contract": "`proposal review start` MUSS die vollständig geprüfte Kontrollfolge nach Kapitel 10.3 atomar bis `in_review` veröffentlichen.",
     "scope": "18.h native atomic review-start writer, real full native basis/target checks, strict original-report binding and public argv/structured invocation. No human decision, Proposal apply or release approval is claimed."
   },
   "preconditions": [
@@ -52,7 +52,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Run review start through current native Validate, isolated Check and the actual locked journal/staging/receipt pipeline.",
     "Read the resulting Proposal and durable completion; verify one physical revision, stable content and exactly three bound original reports, with no human approval.",

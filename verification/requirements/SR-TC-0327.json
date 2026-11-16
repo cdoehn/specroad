@@ -22,7 +22,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "NDJSON-Import und -Export M\u00dcSSEN pro Zeile genau ein versioniertes SpecRoad-Artefakt oder Change-Plan-Objekt verarbeiten, leere Zeilen ignorieren und Kommentare ablehnen.",
+    "requirement_contract": "NDJSON-Import und -Export MÜSSEN pro Zeile genau ein versioniertes SpecRoad-Artefakt oder Change-Plan-Objekt verarbeiten, leere Zeilen ignorieren und Kommentare ablehnen.",
     "scope": "14.g.W/R/C passive native NDJSON v1 codec: all 28 native artifact kinds and regular plans retain values, versions, self-hashes, order, duplicates and original-byte provenance. Incremental feeds recognize only LF or explicit EOF, retain split UTF-8/escape/number bytes, report physical lines and hull-relative pointers, and never infer completion from pauses. Source-bound inert cursors revalidate consumed prefixes without re-emission; changed input/checkpoint bindings are conflict Code 6, malformed records/cursors Code 3, and resource/security exceptions retain their classes. No aggregate count/byte cutoff, write permission, file publication or implicit execution. Durable Work/CLI integration and higher import/export/model/manifest/authorization gates remain outside this codec proof."
   },
   "preconditions": [
@@ -41,7 +41,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Decode multiple mixed native envelopes, re-encode their exact semantic values, compare canonical LF records and retain original source bytes/hash separately.",
     "Reject missing/extra/wrong transport fields, wrong payload kinds, incomplete native records, invalid local consistency, operations, result hashes and plan self-hashes without repair.",

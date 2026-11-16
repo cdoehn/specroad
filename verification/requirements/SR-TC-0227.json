@@ -14,11 +14,11 @@
   "method": "automated_behavior",
   "open_items": [
     "Complete downstream command families and the full transaction/resource preflight; obtain evidence on the required runtime matrix.",
-    "RECOVERY-REMOVAL-006: existing test references cover only their still-valid implemented scope. Changed interruption/receipt/preflight/work oracles require fresh implementation and evidence in 18.s\u201318.x; old repair/crash recovery results are not acceptance of the new contract."
+    "RECOVERY-REMOVAL-006: existing test references cover only their still-valid implemented scope. Changed interruption/receipt/preflight/work oracles require fresh implementation and evidence in 18.s–18.x; old repair/crash recovery results are not acceptance of the new contract."
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "S\u00e4mtliche in Kapitel 11.2 aufgef\u00fchrten Kernfunktionen M\u00dcSSEN vollst\u00e4ndig \u00fcber nichtinteraktive CLI-Aufrufe ausf\u00fchrbar sein und bei fehlenden Eingaben eine strukturierte Nutzungsdiagnose statt einer R\u00fcckfrage erzeugen.",
+    "requirement_contract": "Sämtliche in Kapitel 11.2 aufgeführten Kernfunktionen MÜSSEN vollständig über nichtinteraktive CLI-Aufrufe ausführbar sein und bei fehlenden Eingaben eine strukturierte Nutzungsdiagnose statt einer Rückfrage erzeugen.",
     "scope": "Current structured/CLI invocation rejects bad inputs without prompts or preflight bypass; later command families and Authoring remain open."
   },
   "preconditions": [
@@ -36,7 +36,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Execute the named behavior tests in the current complete suite.",
     "Observe returned data, file effects, module loads and exit status; never human-readable output."

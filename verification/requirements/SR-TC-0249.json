@@ -13,7 +13,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Die Erzeugung neuer Identit\u00e4ten DARF NICHT einen zentralen Z\u00e4hler, Server, Netzwerkdienst, Git-Branch oder exklusiven projekt\u00fcbergreifenden Namensraum voraussetzen.",
+    "requirement_contract": "Die Erzeugung neuer Identitäten DARF NICHT einen zentralen Zähler, Server, Netzwerkdienst, Git-Branch oder exklusiven projektübergreifenden Namensraum voraussetzen.",
     "scope": "Pure identity guards and explicit inventory-bound generation. All collisions and invalid reservations fail without external effects. Durable history and atomic publication remain future work."
   },
   "preconditions": [
@@ -31,7 +31,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Exercise the actual data contracts; compare complete values and rejected invalid input."
   ],

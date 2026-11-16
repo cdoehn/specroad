@@ -14,7 +14,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "`specroad baseline verify <ID>` MUSS die Bytes aller referenzierten Snapshotobjekte gegen ihre Artefakt-, Profil-, Regel-, Mapping-, Konfigurations- und Anhangshashes sowie das rekonstruierte Manifest gegen den Modellwurzelhash pr\u00fcfen, ohne den Arbeitsstand zu ver\u00e4ndern.",
+    "requirement_contract": "`specroad baseline verify <ID>` MUSS die Bytes aller referenzierten Snapshotobjekte gegen ihre Artefakt-, Profil-, Regel-, Mapping-, Konfigurations- und Anhangshashes sowie das rekonstruierte Manifest gegen den Modellwurzelhash prüfen, ohne den Arbeitsstand zu verändern.",
     "scope": "Read-only independent reconstruction of actual archived unconfigured whole-project snapshot resources, effective profile, semantic configuration, full manifest and precreation model root; reject any missing/mismatched binding without fallback to current files."
   },
   "preconditions": [
@@ -32,7 +32,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Verify unconfigured whole-project snapshots without original source files or Git, including a genuinely published native Baseline and moved archive.",
     "Reject missing or altered objects, forged declared roots/manifests, changed semantic configuration/profile, incomplete metadata, unsupported scopes and unsafe archive links.",

@@ -22,12 +22,12 @@
   "method": "automated_behavior",
   "open_items": [
     "Remaining M18 built-in Proposal CLI, lifecycle, writer, provenance and release integration are not claimed by the fixed basis API.",
-    "RECOVERY-REMOVAL-006: existing test references cover only their still-valid implemented scope. Changed interruption/receipt/preflight/work oracles require fresh implementation and evidence in 18.s\u201318.x; old repair/crash recovery results are not acceptance of the new contract."
+    "RECOVERY-REMOVAL-006: existing test references cover only their still-valid implemented scope. Changed interruption/receipt/preflight/work oracles require fresh implementation and evidence in 18.s–18.x; old repair/crash recovery results are not acceptance of the new contract."
   ],
   "oracle": {
     "expected": "Exact specification/closed/unconfigured descriptor and real canonical root, no control self-reference, actual native basis/target fold. Every actual control dependency fails with native source/target/relation-or-pointer context; free text is not an edge.",
     "kind": "behavior",
-    "requirement_contract": "Ein Proposal MUSS seine erwartete Basis durch den ausschlie\u00dflich zul\u00e4ssigen Scope Descriptor aus Kapitel 10.8.1 und dessen Modellwurzelhash sowie optional durch zus\u00e4tzliche Baseline- oder Git-Provenienz festlegen.",
+    "requirement_contract": "Ein Proposal MUSS seine erwartete Basis durch den ausschließlich zulässigen Scope Descriptor aus Kapitel 10.8.1 und dessen Modellwurzelhash sowie optional durch zusätzliche Baseline- oder Git-Provenienz festlegen.",
     "scope": "18.b basis API and source-bound preparation only. No publication, completed Proposal command group or human approval. Apply gates remain required."
   },
   "preconditions": [
@@ -45,7 +45,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Construct the fixed native specification closure and canonical basis from actual source bytes.",
     "Bind complete native plans to actual basis and reconstructed target; preserve unrelated project/control data.",

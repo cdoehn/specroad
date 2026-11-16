@@ -20,7 +20,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Die globale Option `--fail-on error\\|warning` MUSS bestimmen, ab welcher Schwere ein Pr\u00fcfkommando fehlschl\u00e4gt.",
+    "requirement_contract": "Die globale Option `--fail-on error\\|warning` MUSS bestimmen, ab welcher Schwere ein Prüfkommando fehlschlägt.",
     "scope": "Shared finding model, semantic ordering and explicit fail assessment; no full CLI command, unknown producer authentication or automatic optional lint."
   },
   "preconditions": [
@@ -38,7 +38,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Construct and validate findings; preserve all observed machine locations and identities.",
     "Apply an explicit threshold without rerunning rules and inspect structured counts and failure class."

@@ -15,7 +15,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Die gespeicherten Beziehungen `refines`, `part_of` und `supersedes` D\u00dcRFEN NICHT in ihrer jeweiligen Hierarchie einen gerichteten Zyklus bilden.",
+    "requirement_contract": "Die gespeicherten Beziehungen `refines`, `part_of` und `supersedes` DÜRFEN NICHT in ihrer jeweiligen Hierarchie einen gerichteten Zyklus bilden.",
     "scope": "Protected per-type hierarchies, deterministic blocking cycle witnesses and normative contains ordering over supplied records."
   },
   "preconditions": [
@@ -33,7 +33,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Validate supplied source records, compute the specific graph operation, inspect identities and errors without writes."
   ],

@@ -30,7 +30,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Read-only-Pr\u00fcfkommandos D\u00dcRFEN NICHT normative oder generierte Projektdateien ver\u00e4ndern.",
+    "requirement_contract": "Read-only-Prüfkommandos DÜRFEN NICHT normative oder generierte Projektdateien verändern.",
     "scope": "Library-level current artifact validation, explicitly selected literal lint and shallow model-independent operational metadata diagnostics; real non-write observations, not full CLI conformance. The validation reader also executes actual language/SRX/formal-approval kernels with explicit resources and rechecks the observed registry. Optional explicit profile paths are byte-rechecked; resource provenance scope remains explicit. No bound resource or model read authorizes a write. Complete safe reference sets and invalid-inventory barriers are observed through the real read-only project adapter with direct-model parity and unchanged project bytes. Whole-target and dry-run field-reference checks additionally retain every available location and the project assessment decision; invalid stored relations retain the strict pre-plan boundary."
   },
   "preconditions": [
@@ -48,7 +48,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Capture file names, original bytes and permissions; run read-only library APIs while trapping write attempts.",
     "Check structured model/lint outcomes or metadata-only diagnostics; compare original files and generated/operational state.",

@@ -31,7 +31,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "SpecRoad MUSS Mehrfachreferenzen aus Dokumenten als Ansichten derselben normativen Artefaktidentit\u00e4t behandeln.",
+    "requirement_contract": "SpecRoad MUSS Mehrfachreferenzen aus Dokumenten als Ansichten derselben normativen Artefaktidentität behandeln.",
     "scope": "11.d.W/R/C: one source-owned references edge resolves actual target bytes. Native schema, inventory and graph guards already reject target copies and duplicate identities; the R phase adds focused behavioral evidence without changing those production guards. A new model snapshot exposes a changed target consistently in all projections while reference block bytes, revisions and edges remain unchanged. Byte-only target changes alter source/input bindings without inventing semantic revisions; previous resolutions retain their old owned bytes. No rendering, ownership decision, write or approval. The internal source helper preserves the existing validation order, public error class, values, bindings and side effects."
   },
   "preconditions": [
@@ -49,7 +49,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Resolve exactly one source-owned references relation from the selected artifact_ref block using the native snapshot and relation identity/matrix checks. Validate the selected target through its native type-specific field reader.",
     "Use separate blocks in two document compositions to resolve the same original target bytes, identity, revision and hashes; retain render_mode as data only, preserve source inventories and compare isolated Core/PYZ data.",

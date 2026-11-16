@@ -28,7 +28,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "`specroad show <ID>` MUSS das vollst\u00e4ndige Artefakt sowie berechnete eingehende und ausgehende Beziehungen anzeigen.",
+    "requirement_contract": "`specroad show <ID>` MUSS das vollständige Artefakt sowie berechnete eingehende und ausgehende Beziehungen anzeigen.",
     "scope": "Real project-bound Show returns full stored artifact data, every incoming/outgoing relation and original edge identity, including computed superseded_by. CLI alias, canonical command, structured request, Python and relocated distributions use the same reader. Existing read preflight and full artifact-source observation are enforced; no project writes, cache creation or approval are claimed. R adds complete results despite partial/stale/foreign hints, legacy IDs, retired sources and query pagination defaults. Current-byte changes, late writers/journals, disappeared bound sources, unsafe paths, missing endpoints and invalid canonical storage prevent a complete success payload. A vanished already-bound source is conflict 6; actual read permission failures remain I/O 5. C extracts the existing Show data projection unchanged from query orchestration. The same W/R behavior cases and expected results remain unchanged; this introduces no new behavior or release approval."
   },
   "preconditions": [
@@ -46,7 +46,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Invoke artifact show and its show alias through CLI, structured request and Python on actual project files.",
     "Compare complete artifact data, incoming/outgoing projections, stored relation identities, current project coverage and absence of writes.",

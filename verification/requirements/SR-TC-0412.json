@@ -21,7 +21,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Die Scope-Closure MUSS den kleinsten zul\u00e4ssigen Fixpunkt aus starken Relationen und Ressourcenbindungen unter Beachtung der permanenten Ausschl\u00fcsse und der Fehlerregeln aus Kapitel 10.8 berechnen.",
+    "requirement_contract": "Die Scope-Closure MUSS den kleinsten zulässigen Fixpunkt aus starken Relationen und Ressourcenbindungen unter Beachtung der permanenten Ausschlüsse und der Fehlerregeln aus Kapitel 10.8 berechnen.",
     "scope": "Least closure over supplied bound inventories and resource/review observations, including closed/partial weak-edge policy, permanent control exclusions and semantic Scope-Hash projection. Missing providers fail closed; complete live inventory, actual configuration applicability, atomic snapshots and approval are not established by these pure kernel fixtures."
   },
   "preconditions": [
@@ -39,7 +39,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Compute the strong reachable fixed point, resolving typed relations and known schema dependency fields; reject missing or stale observations.",
     "Compare the fixed point with an independent exhaustive reachability oracle, revalidate observations, and run the same pure operation in moved portable distributions.",

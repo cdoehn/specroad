@@ -20,7 +20,7 @@
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Eine \u00c4nderung von language oder normative_force MUSS als Fachinhalts\u00e4nderung nach dem bestehenden Lifecycle- und Kontextbindungsvertrag behandelt werden.",
+    "requirement_contract": "Eine Änderung von language oder normative_force MUSS als Fachinhaltsänderung nach dem bestehenden Lifecycle- und Kontextbindungsvertrag behandelt werden.",
     "scope": "Actual native draft and structurally stored approved Requirement updates. Language/force/text changes receive common content/revision handling; approved changes become proposed, including removal of an approved-only field. These fixtures do not attest historic approval legitimacy or downstream review/evidence currentness; public CLI and release claims remain open."
   },
   "preconditions": [
@@ -38,7 +38,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Change requirement language, normative_force or statement through ordered field options, a saved RFC-6902 array or explicit binary stdin.",
     "Publish through the common full planner, lifecycle/metadata and real native transaction.",

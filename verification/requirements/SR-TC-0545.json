@@ -16,11 +16,11 @@
   "method": "automated_behavior",
   "open_items": [
     "Apply this boundary to future model readers, transactional writes and explicitly authorized Git/analyzer adapters; complete cross-feature verification in later milestones.",
-    "RECOVERY-REMOVAL-006: existing test references cover only their still-valid implemented scope. Changed interruption/receipt/preflight/work oracles require fresh implementation and evidence in 18.s\u201318.x; old repair/crash recovery results are not acceptance of the new contract."
+    "RECOVERY-REMOVAL-006: existing test references cover only their still-valid implemented scope. Changed interruption/receipt/preflight/work oracles require fresh implementation and evidence in 18.s–18.x; old repair/crash recovery results are not acceptance of the new contract."
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "SpecRoad DARF NICHT Benutzerkonten, Serverbetrieb, Echtzeit-Kollaboration oder einen Multi-Repository-Graphen als Voraussetzung f\u00fcr Kernfunktionen verlangen.",
+    "requirement_contract": "SpecRoad DARF NICHT Benutzerkonten, Serverbetrieb, Echtzeit-Kollaboration oder einen Multi-Repository-Graphen als Voraussetzung für Kernfunktionen verlangen.",
     "scope": "Current read and execution boundary only; no full-model, writer or future-analyzer safety approval."
   },
   "preconditions": [
@@ -38,7 +38,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Exercise the single-root read boundary and reject prohibited execution before any handler."
   ],

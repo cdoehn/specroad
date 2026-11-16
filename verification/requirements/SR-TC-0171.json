@@ -31,14 +31,14 @@
   ],
   "method": "automated_behavior",
   "open_items": [
-    "RECOVERY-REMOVAL-006: existing test references cover only their still-valid implemented scope. Changed interruption/receipt/preflight/work oracles require fresh implementation and evidence in 18.s\u201318.x; old repair/crash recovery results are not acceptance of the new contract."
+    "RECOVERY-REMOVAL-006: existing test references cover only their still-valid implemented scope. Changed interruption/receipt/preflight/work oracles require fresh implementation and evidence in 18.s–18.x; old repair/crash recovery results are not acceptance of the new contract."
   ],
   "oracle": {
     "expected": "Each explicit review creates exactly one physical revision with identical content revision/hash, basis and plan. Before quorum status remains in_review with no artificial self-transition; distinct effective human actors reach approved. Repetition cannot add a human, AI/CI are refused, current provenance is reobserved, and pre-publication failures leave the Proposal unchanged. Human input alone supplies the decision, never a technical detector.",
     "kind": "behavior",
     "negative_review_expected": "Only explicit human negative decisions change control history with one physical revision and stable content binding. Unproven/foreign/old decisions cannot authorize withdrawal. Withdrawn, outdated or externally ineffective reviews never become a new approval; native write failures retain real evidence.",
     "negative_review_scope": "18.j negative decisions and own withdrawal through the existing native writer, retained history and read-only qualification; no public 18.k Apply or release gate is claimed.",
-    "requirement_contract": "Ein Proposal MUSS eine Review-Historie mit Akteurtyp, Reviewer-ID, Entscheidung, Zeitstempel und optionalem Kommentar unterst\u00fctzen.",
+    "requirement_contract": "Ein Proposal MUSS eine Review-Historie mit Akteurtyp, Reviewer-ID, Entscheidung, Zeitstempel und optionalem Kommentar unterstützen.",
     "scope": "18.i human decision and distinct current-human quorum through the native public review writer, exact five-part binding, full historical/native checks and durable transaction evidence. Trusted host observations in tests are synthetic; no Proposal apply, release approval or inferred human semantic judgment is claimed."
   },
   "preconditions": [
@@ -57,7 +57,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d4415f6e4eeeb34f6116ec686044861550c66e19795eb5a89380459d41b4a2f7",
+  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
     "Invoke the native proposal review writer with an explicit human decision and optional comment, retaining content binding and every prior history row.",
     "Observe distinct human actor_ids reaching the configured quorum, an insufficient count remaining in_review, original canonical assessment bytes and actual writer completion.",
