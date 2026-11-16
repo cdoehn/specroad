@@ -307,10 +307,28 @@ def validate_deletions(stage, version, *, allow_absent=False):
             or type(removed) is not dict or not removed or type(originals) is not dict
             or set(originals) != set(removed) or set(removed) & set(stage['after'])):
         raise ValueError('Invalid explicit deletion contract')
-    for name, digest in removed.items():
-        raw = base64.b64decode(originals[name], validate=True)
-        if (sha256(raw).hexdigest() != digest
-                or name in stage['before'] and stage['before'][name] != digest
+    scope = set(stage['after']) | set(removed)
+    if len(scope) > 100000 or any(str(parent) in scope for name in scope
+            for parent in Path(name).parents if str(parent) != '.'):
+        raise ValueError('Stage file/directory scope collision or size overflow')
+    selection = stage['test_plan']
+    if (set(selection) != {'format_version', 'commit_id', 'test_ids', 'test_files', 'reason'}
+            or type(selection['format_version']) is not int or selection['format_version'] != 1
+            or type(selection['reason']) is not str or not selection['reason'].strip()
+            or len(selection['reason']) > 4000
+            or any(type(selection[k]) is not list or any(type(x) is not str or not x
+                or '\0' in x or '\n' in x or '\r' in x for x in selection[k])
+                or len(selection[k]) != len(set(selection[k])) for k in ('test_files', 'test_ids'))):
+        raise ValueError('Deletion requires a complete unambiguous test selection')
+    for name, expected_hash in removed.items():
+        encoded = originals[name]
+        if type(encoded) is not str or len(encoded) > ((32 * 1024 * 1024 + 2) // 3) * 4:
+            raise ValueError('Deletion preimage exceeds the passive proof bound')
+        raw = base64.b64decode(encoded, validate=True)
+        if len(raw) > 32 * 1024 * 1024 or base64.b64encode(raw).decode() != encoded:
+            raise ValueError('Deletion preimage must be bounded canonical base64')
+        if (sha256(raw).hexdigest() != expected_hash
+                or name in stage['before'] and stage['before'][name] != expected_hash
                 or name not in stage['before'] and not allow_absent):
             raise ValueError('Deletion preimage is missing or changed')
     if set(removed) & set(stage['test_plan']['test_files']):

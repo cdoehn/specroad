@@ -73,16 +73,21 @@ def prepare_stage(before, after, paths, *, commit_id, message, test_plan, role=N
 
 
 def regular_bytes(path, *, deletion=False):
-    info = path.lstat()
-    if (not stat.S_ISREG(info.st_mode) or (stat.S_IMODE(info.st_mode) != 0o644 if deletion else bool(info.st_mode & 0o7111))
-            or info.st_nlink != 1):
-        raise ValueError('Stage requires a single-link regular 0644 file: ' + str(path))
-    raw = path.read_bytes()
-    after = path.lstat()
-    if any(getattr(after, key) != getattr(info, key) for key in
-           ('st_dev', 'st_ino', 'st_mode', 'st_nlink', 'st_size', 'st_mtime_ns', 'st_ctime_ns')):
-        raise ValueError('Stage file changed during preparation: ' + str(path))
-    return raw
+    descriptor = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
+    try:
+        info = os.fstat(descriptor)
+        if (not stat.S_ISREG(info.st_mode) or (stat.S_IMODE(info.st_mode) != 0o644 if deletion else bool(info.st_mode & 0o7111))
+                or info.st_nlink != 1 or info.st_size > 32 * 1024 * 1024):
+            raise ValueError('Stage requires a bounded single-link regular 0644 file: ' + str(path))
+        with os.fdopen(descriptor, 'rb', closefd=False) as stream:
+            raw = stream.read(32 * 1024 * 1024 + 1)
+        fields = ('st_dev', 'st_ino', 'st_mode', 'st_nlink', 'st_size', 'st_mtime_ns', 'st_ctime_ns')
+        if (len(raw) != info.st_size or any(getattr(info, key) != getattr(actual, key)
+                for actual in (os.fstat(descriptor), path.lstat()) for key in fields)):
+            raise ValueError('Stage file changed during preparation: ' + str(path))
+        return raw
+    finally:
+        os.close(descriptor)
 
 
 def render_entrypoint(data, *, core_python):

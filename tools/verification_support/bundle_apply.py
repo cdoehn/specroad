@@ -92,10 +92,16 @@ class NativeApply:
                 or context.dirty is not data['initial_dirty']):
             raise ValueError('Apply does not match the exact authoritative Result state')
         if any(stage.get('deletions') for stage in data['stages']):
-            self.bytes_match({DELETION_CAPABILITY_PATH: sha256(canonical(DELETION_CAPABILITY) + b'\n').hexdigest()})
+            self.require_deletion_support()
         if not (self.root / '.venv/bin/python').is_file():
             raise ValueError('The existing project test interpreter is required')
         self.report_dir = self.workspace()
+
+    def require_deletion_support(self):
+        expected = canonical(DELETION_CAPABILITY) + b'\n'
+        self.bytes_match({DELETION_CAPABILITY_PATH: sha256(expected).hexdigest()})
+        if self.git('show', self.data['binding']['base_commit'] + ':' + DELETION_CAPABILITY_PATH) != expected:
+            raise ValueError('Deletion support is not committed in the bound source')
 
     def workspace(self):
         parent = self.root / 'build'
@@ -296,12 +302,17 @@ def delete_bound_file(root, name, digest, *, absent=False, remove=True):
             info = os.stat(parts[-1], dir_fd=parent, follow_symlinks=False)
         except FileNotFoundError:
             if absent:
+                for length, directory in enumerate(directories):
+                    current = Path(root).joinpath(*parts[:length]).lstat()
+                    held = os.fstat(directory)
+                    if (current.st_dev, current.st_ino) != (held.st_dev, held.st_ino):
+                        raise ValueError('Deleted path parent changed: ' + name)
                 return
             raise ValueError('Bound deletion preimage is missing: ' + name) from None
         if absent:
             raise ValueError('Deleted file reappeared: ' + name)
         if (not stat.S_ISREG(info.st_mode) or stat.S_IMODE(info.st_mode) != 0o644
-                or info.st_nlink != 1):
+                or info.st_nlink != 1 or info.st_size > 32 * 1024 * 1024):
             raise ValueError('Deletion requires a single-link regular 0644 file: ' + name)
         descriptor = os.open(parts[-1], os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK, dir_fd=parent)
         attributes = ('st_dev', 'st_ino', 'st_mode', 'st_nlink', 'st_size', 'st_mtime_ns', 'st_ctime_ns')
@@ -309,10 +320,14 @@ def delete_bound_file(root, name, digest, *, absent=False, remove=True):
         if tuple(getattr(os.fstat(descriptor), field) for field in attributes) != signature:
             raise ValueError('Deletion preimage replaced during open: ' + name)
         hashed = sha256()
+        read_size = 0
         while True:
             block = os.read(descriptor, 1024 * 1024)
             if not block:
                 break
+            read_size += len(block)
+            if read_size > info.st_size:
+                raise ValueError('Deletion preimage grew during read: ' + name)
             hashed.update(block)
         current = os.stat(parts[-1], dir_fd=parent, follow_symlinks=False)
         if (hashed.hexdigest() != digest

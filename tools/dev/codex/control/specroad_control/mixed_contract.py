@@ -96,6 +96,9 @@ def remaining_roles(plan, progress, data):
         if any(new.get('deletions', {}).get(name) != digest
                for name, digest in old.get('deletions', {}).items()):
             raise ValueError('Correction cannot drop or replace a bound deletion')
+        if any(old.get('deletions', {}).get(name) != new['deletions'][name]
+               for name in set(new.get('deletions', {})) - set(new['before'])):
+            raise ValueError('Missing deletion preimage has no original intent')
         if old['role'] == 'clarification' and old['after'] != new['after']:
             raise ValueError('Pending clarification is not new decision authority')
     return rest

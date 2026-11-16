@@ -150,9 +150,9 @@ def created_or_deleted(base, name, lines):
         if hunk is None:
             fail('New file must be one complete hunk.')
         content = []
-        for line in body[3:]:
+        for offset, line in enumerate(body[3:], 3):
             if line == b'\\ No newline at end of file\n':
-                if not content or not content[-1].endswith(b'\n') or line != body[-1]:
+                if not content or not content[-1].endswith(b'\n') or offset != len(body) - 1:
                     fail('Invalid new-file newline marker.')
                 content[-1] = content[-1][:-1]
             elif line.startswith(b'+') and line.endswith(b'\n'):
