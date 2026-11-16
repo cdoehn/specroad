@@ -16,8 +16,39 @@ from support.read_only import inventory, no_write_attempts
 def test_borrowed_mutex_checks_do_not_release_it_or_create_owner_records(tmp_path):
     configuration_file(tmp_path)
     before = inventory(tmp_path)
+    # Real shared observations coexist but neither grant writer authority nor
+    # admit an exclusive contender. They leave no persistent project effect.
+    with LockFiles(tmp_path) as observer, no_write_attempts():
+        with observer.observe_mutex() as busy:
+            assert not busy and not observer.held
+            require_normal_access(tmp_path)
+            with LockFiles(tmp_path) as other, other.observe_mutex() as other_busy:
+                assert not other_busy
+            with pytest.raises(ProjectLockError):
+                observer.require_held()
+            with pytest.raises(ProjectLockError):
+                observer.acquire()
+            with pytest.raises(ProjectLockError):
+                with observer.observe_mutex():
+                    pytest.fail('A nested observation can release its outer guard')
+            with LockFiles(tmp_path) as contender, pytest.raises(ProjectLockError) as blocked:
+                contender.acquire()
+            assert blocked.value.reason == 'project_lock_busy'
+        with LockFiles(tmp_path) as contender:
+            contender.acquire()  # No shared guard survived normal completion.
+        with pytest.raises(RuntimeError, match='interrupted observation'):
+            with observer.observe_mutex():
+                raise RuntimeError('interrupted observation')
+        with LockFiles(tmp_path) as contender:
+            contender.acquire()  # Failed observations release their own guard too.
+        observer.acquire()
+        observer.require_held()
+    assert inventory(tmp_path) == before
     with LockFiles(tmp_path) as held:
         held.acquire()
+        with pytest.raises(ProjectLockError):
+            with held.observe_mutex():
+                pytest.fail('Observation downgraded a borrowed writer mutex')
         with no_write_attempts(), normal_read_mutex(held):
             require_normal_access(tmp_path)
             with LockFiles(tmp_path) as contender, pytest.raises(ProjectLockError) as blocked:

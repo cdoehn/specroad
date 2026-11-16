@@ -189,7 +189,12 @@ def test_actual_writer_blocks_public_api_and_cli_before_relation_loading(tmp_pat
         with patch.object(show_module, 'read_project_relation_views', side_effect=AssertionError('model read')), no_write_attempts():
             direct = show_artifact(root, value['id'])
             cli = dispatch_result(['show', value['id'], '--project', str(root)])
-        assert direct.exit_code == cli.exit_code == 5
+        assert direct.exit_code == cli.exit_code == 6
+        for result in (direct, cli):
+            facts = result.details['preflight']
+            assert facts['reason'] == 'project_writer_active'
+            assert not facts['project_corrupted'] and not facts['manual_git_restore_required']
+            assert not facts['normal_operation_started']
         assert direct.result is cli.result is None and not direct.complete and not cli.complete
         assert inventory(root) == before
 

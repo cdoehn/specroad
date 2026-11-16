@@ -14,7 +14,11 @@ _reader = ContextVar('specroad_native_read_mutex', default=None)
 
 @contextmanager
 def normal_read_mutex(files):
-    """Reuse an actual held root mutex for read-only Work cancellation checks."""
+    """Reuse a held root mutex for Work or generated-output source checks.
+
+    This lends no writer authority and does not bypass interruption metadata.
+    Each observation must still verify the exact root and live capability.
+    """
     from ._lock_files import LockFiles
     if type(files) is not LockFiles:
         raise TypeError('An actual native root mutex is required')

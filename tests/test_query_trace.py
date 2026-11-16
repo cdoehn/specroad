@@ -158,16 +158,32 @@ def test_public_trace_does_not_attempt_writes_processes_entropy_stdin_or_lock_ac
 
 def test_writer_and_unresolved_journal_block_before_model_loading(tmp_path):
     root = chain(tmp_path / 'project'); (root / '.specroad/locks').mkdir(parents=True)
-    with project_lock(root, **options()), patch.object(trace_module, 'build_project_relation_index',
-                                                      side_effect=AssertionError('model read')):
+    args = ['trace', aid(), '--direction', 'out', '--depth', '2', '--project', str(root)]
+    request = {'command_id': 'trace', 'arguments': {'id': aid()},
+               'options': {'--project': str(root), '--direction': 'out', '--depth': '2'}}
+
+    def blocked(code, state):
+        with patch.object(trace_module, 'build_project_relation_index',
+                          side_effect=AssertionError('model read')), no_write_attempts():
+            results = (trace_artifact(root, aid(), direction='out', depth=2),
+                       dispatch_result(args), execute_request(request).result)
+        for result in results:
+            assert result.exit_code == code and not result.complete and result.result is None
+            facts = result.details['preflight']
+            assert facts['state'] == state and facts['reason'] == 'project_' + state
+            assert facts['project_corrupted'] is (state == 'corrupted')
+            assert facts['manual_git_restore_required'] is (state == 'corrupted')
+            assert not facts['normal_operation_started'] and not facts['write_authorized']
+            assert not facts['recovery_performed']
+
+    with project_lock(root, **options()) as held:
         before = inventory(root)
-        result = trace_artifact(root, aid(), direction='out', depth=2)
-        assert result.exit_code == 5 and result.result is None and inventory(root) == before
+        blocked(6, 'writer_active')
+        assert held.check() and inventory(root) == before
     put(root, '.specroad/transactions/pending.json', b'not a complete journal')
     before = inventory(root)
-    with patch.object(trace_module, 'build_project_relation_index', side_effect=AssertionError('model read')):
-        result = trace_artifact(root, aid(), direction='out', depth=2)
-    assert result.exit_code == 5 and result.result is None and inventory(root) == before
+    blocked(5, 'corrupted')
+    assert inventory(root) == before
 
 
 def test_invalid_unreached_source_prevents_a_false_complete_trace(tmp_path):

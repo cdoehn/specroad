@@ -78,6 +78,7 @@ def environment_report(invocation):
                 recovery_required = True if observed['recovery_required'] else None if blocked else False
                 from ..changes.normal_access import observe_normal_state
                 state = observe_normal_state(boundary.root, observed)
+                blocked = state['state'] != 'clean'
                 reason = 'no_active_conflict_observed' if state['state'] == 'clean' else 'project_' + state['state']
                 check('project.operational', 'failed' if blocked else 'passed', reason,
                       code=(6 if state['state'] == 'writer_active' else 5) if blocked else 0)

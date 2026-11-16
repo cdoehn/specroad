@@ -75,13 +75,13 @@ def transaction_preflight(root, *, command_class, dry_run=False, request_id=None
         data['operational'] = observed
         if observe_operational_preflight(boundary, metadata=metadata) != observed:
             raise RecoveryError('preflight_operational_metadata_changed', exit_code=6)
-        if observed['consistency_state'] == 'consistent':
-            data.update(exit_code=0, reason='transaction_gate_clear',
-                        recovery_required=False, transaction_preflight_passed=True)
-            return result()
         from .normal_access import observe_normal_state
         state = observe_normal_state(root, observed, expected_project_id=expected_project_id)
         data.update({k:v for k,v in state.items() if k != 'format_version'})
+        if state['state'] == 'clean':
+            data.update(exit_code=0, reason='transaction_gate_clear',
+                        recovery_required=False, transaction_preflight_passed=True)
+            return result()
         data.update(reason='project_' + state['state'],
                     exit_code=6 if state['state'] == 'writer_active' else 5,
                     recovery_required=False, recovery_attempted=False, recovery_completed=False)

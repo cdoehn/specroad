@@ -1,4 +1,5 @@
 """Live export and checked generated-file publication, without normative writes."""
+from contextlib import ExitStack
 from hashlib import sha256
 from pathlib import Path
 import os
@@ -6,6 +7,7 @@ import secrets
 
 from ..authoring._inspection_snapshot import InspectionSnapshot
 from ..changes._lock_files import LockFiles
+from ..changes.normal_access import normal_read_mutex
 from ..changes._publication_io import replace_bound_image
 from ..changes._staging_files import _write_new
 from ..cli.command_errors import CommandUsageError
@@ -55,10 +57,13 @@ def _publish(snapshot, prepared, path, output_root, input_bindings=()):
     publications = []
     # The shared directory-inode mutex and native atomic image writer need no
     # lock file, operational journal, receipt or normative transaction.
-    with LockFiles(boundary.root) as files:
+    with ExitStack() as stack:
+        files = stack.enter_context(LockFiles(boundary.root))
         if files.boundary._root_identity != boundary._root_identity:
             raise ExportError('export_directory_changed', exit_code=6)
         files.acquire()
+        if boundary.root == source.boundary.root:
+            stack.enter_context(normal_read_mutex(files))
         for p, parts, _ in targets:
             with files.directory(parts[:-1]) as parent:
                 if parent is not None:

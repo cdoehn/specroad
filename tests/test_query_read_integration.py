@@ -130,6 +130,13 @@ def test_new_tiny_windows_retain_all_three_phases_and_full_scope(tmp_path, comma
 
 @pytest.mark.parametrize('command', COMMANDS)
 def test_every_public_reader_works_in_a_read_only_project_without_attempted_writes(tmp_path, command):
+    import fcntl
+    native_flock = fcntl.flock
+    operations = []
+    def observe_flock(descriptor, operation):
+        operations.append(operation)
+        assert not operation & fcntl.LOCK_EX, 'Read-only preflight requested an exclusive lock'
+        return native_flock(descriptor, operation)
     root, before, _ = project_pair(tmp_path)
     protected_paths = [*root.rglob('*'), root, *before.rglob('*'), before]
     modes = {p: p.stat().st_mode & 0o777 for p in protected_paths}
@@ -139,11 +146,13 @@ def test_every_public_reader_works_in_a_read_only_project_without_attempted_writ
         protected = inventory(tmp_path)
         with no_write_attempts(), patch('builtins.input', side_effect=AssertionError('stdin')), \
                 patch('secrets.token_bytes', side_effect=AssertionError('entropy')), \
-                patch('specroad.changes.locking.LockFiles.acquire', side_effect=AssertionError('lock')):
+                patch('specroad.changes.locking.LockFiles.acquire', side_effect=AssertionError('lock')), \
+                patch('fcntl.flock', observe_flock):
             expected = direct(command, root, before)
             actual = execute_request(request(command, root, before), cwd=tmp_path).result
         assert expected.exit_code == actual.exit_code == 0 and actual.complete
         assert actual.as_dict()['result'] == expected.as_dict()['result']
+        assert (fcntl.LOCK_SH | fcntl.LOCK_NB) in operations
         assert inventory(tmp_path) == protected
     finally:
         for path in sorted(modes, key=lambda p: len(p.parts)):

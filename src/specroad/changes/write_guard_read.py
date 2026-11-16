@@ -1,5 +1,5 @@
 """Read-only write-state and normal receipt observations, never recovery."""
-from contextlib import nullcontext
+from contextlib import ExitStack, nullcontext
 from hashlib import sha256
 import os
 from ..model.errors import ModelError
@@ -29,7 +29,7 @@ def inspect_write_state(root, *, expected_project_id=None, _held_files=None):
             require(_held_files.boundary.root == boundary.root
                 and _held_files.boundary._root_identity == boundary._root_identity,
                 'read_mutex_root_changed', exit_code=6)
-        with (LockFiles(root) if _held_files is None else nullcontext(_held_files)) as files:
+        with (LockFiles(root) if _held_files is None else nullcontext(_held_files)) as files, ExitStack() as observation:
             with files.directory(('.specroad','write-state')) as fd:
                 names=[] if fd is None else sorted(os.listdir(fd))
                 guard_present=bool(names)
@@ -43,14 +43,11 @@ def inspect_write_state(root, *, expected_project_id=None, _held_files=None):
             # interrupted transaction. Only actual journal/marker namespaces do.
             guard_present |= any(p.startswith(('.specroad/transactions/',
                                                   '.specroad/recovery/')) for p in active)
-            mutex_busy=False
-            from .lock_values import ProjectLockError
-            try:
-                if _held_files is None:files.acquire()
-                else:files.require_held()
-            except ProjectLockError as error:
-                if error.reason!='project_lock_busy':raise
-                mutex_busy=True
+            if _held_files is None:
+                mutex_busy=observation.enter_context(files.observe_mutex())
+            else:
+                files.require_held()
+                mutex_busy=False
             if record is not None:
                 owner=observe_owner(record,LinuxOwnerProbe())
                 if expected_project_id is not None:require(record.data['project_id']==expected_project_id,'write_owner_project_mismatch')

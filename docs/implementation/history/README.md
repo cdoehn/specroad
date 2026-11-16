@@ -460,3 +460,7 @@
 - [Bundle 710 — Worker vor ihrem Proxy abschließen](bundle-710-worker-proxy-join.md)
 
 - [Bundle 711 — Hostberechtigungen an native Collection binden](bundle-711-native-collection-order.md)
+
+- [Bundle 712 — lesende Mutex-Prüfung und vollständiger Rest 18.u.R/C](bundle-712-normal-read-mutex.md)
+
+- [Bundle 713 — Trace-Sperrvertrag und vollständiger Rest 18.u.R/C](bundle-713-trace-writer-contract.md)

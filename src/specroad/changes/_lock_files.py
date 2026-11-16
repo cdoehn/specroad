@@ -25,6 +25,7 @@ class LockFiles:
         self.boundary = ProjectBoundary(root)
         self.root_fd = None
         self.held = False
+        self._observing = False
         self.creator_pid = os.getpid()
         self._fcntl = None
 
@@ -46,6 +47,8 @@ class LockFiles:
             raise ProjectLockError('lock_root_changed', exit_code=6)
 
     def acquire(self):
+        if self._observing:
+            raise ProjectLockError('read_observation_cannot_acquire_writer', exit_code=7)
         if self.creator_pid != os.getpid():
             raise ProjectLockError('inherited_lock_handle', exit_code=7)
         import fcntl
@@ -58,6 +61,37 @@ class LockFiles:
             raise ProjectLockError('native_lock_unavailable') from error
         self.held = True
         self.check_root()
+
+    @contextmanager
+    def observe_mutex(self):
+        """Observe contention under a shared guard, without writer authority.
+
+        Concurrent observers may coexist. A successful probe excludes a new
+        writer only until this scope ends; it is not a reusable admission.
+        Never downgrade or unlock a caller's exclusive or inherited handle.
+        """
+        if self.creator_pid != os.getpid() or self.held or self._observing:
+            raise ProjectLockError('mutex_observation_requires_unheld_handle', exit_code=7)
+        self.check_root()
+        import fcntl
+        busy = False
+        try:
+            fcntl.flock(self.root_fd, fcntl.LOCK_SH | fcntl.LOCK_NB)
+        except OSError as error:
+            if error.errno not in (errno.EAGAIN, errno.EACCES):
+                raise ProjectLockError('native_lock_unavailable') from error
+            busy = True
+        self._observing = True
+        try:
+            self.check_root()
+            yield busy
+            self.check_root()
+        finally:
+            try:
+                if not busy and self.creator_pid == os.getpid():
+                    fcntl.flock(self.root_fd, fcntl.LOCK_UN)
+            finally:
+                self._observing = False
 
     def __exit__(self, *args):
         if self.root_fd is not None:

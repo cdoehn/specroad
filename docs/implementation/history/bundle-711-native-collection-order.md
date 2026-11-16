@@ -69,4 +69,4 @@ Paket-/Fortsetzungsvalidierung durch. Keine Testkörper, Fixtures oder Test-
 Unterprozesse werden hier ausgeführt. Verhaltensabnahme bleibt Apply vorbehalten.
 Lokale Konfigurationen und Betriebsdaten bleiben außerhalb der Produkt-Payload.
 
-Vorbereiteter Zustand **18.u.W**: Ziel nach eigenem Gate **769/918**, danach **18.u.R**.
+Vorbereiteter Zustand **18.u.R**: Ziel nach eigenem Gate **770/918**, danach **18.u.C**.

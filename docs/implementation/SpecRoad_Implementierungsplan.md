@@ -121,16 +121,20 @@ Aktuelle Korrektur des vollständigen offenen Restes: [Bundle 709](history/bundl
 
 Aktuelle Korrektur des vollständigen offenen Restes: [Bundle 710](history/bundle-710-worker-proxy-join.md). Bundle 709 scheiterte beim Gatewayabschluss; kein Commit entstand.
 
-Aktuelle Korrektur des vollständigen offenen Restes: [Bundle 711](history/bundle-711-native-collection-order.md). Bundle 710 scheiterte an der Host-Nachweisbindung; kein Commit entstand.
+Historische Korrektur: [Bundle 711](history/bundle-711-native-collection-order.md). Bundle 710 scheiterte an der Host-Nachweisbindung; damals entstand kein Commit.
+
+Historische Korrektur: [Bundle 712](history/bundle-712-normal-read-mutex.md). Result 711 bestätigt 18.u.W und damit 769/918.
+
+Aktuelle Korrektur des vollständigen offenen Restes: [Bundle 713](history/bundle-713-trace-writer-contract.md). Result 712 meldet einen Trace-Testfehler in 18.u.R und keinen neuen Commit; 18.u.C bleibt offen. Die folgenden Zielwerte gelten erst nach dem eigenen erfolgreichen Apply-Gate.
 
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
 plan_revision: 215
 implementation_plan_commits_total: 918
-implementation_plan_commits_completed: 769
-last_completed_plan_commit: 18.u.W
-next_plan_commit: 18.u.R
+implementation_plan_commits_completed: 770
+last_completed_plan_commit: 18.u.R
+next_plan_commit: 18.u.C
 priority_off_plan: null
 next_off_plan_commit: null
 last_completed_numbered_bundle: 706

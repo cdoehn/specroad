@@ -37,10 +37,10 @@ def require_project_read_preflight(boundary, configuration_bytes, metadata):
         if metadata.read_bytes(boundary, 'specroad.json') != configuration_bytes:
             fail(FailureKind.CONFLICT, 'preflight_configuration_changed')
         boundary._check_root()
-        if first['consistency_state'] != 'consistent':
-            from ..changes.normal_access import observe_normal_state
-            state = observe_normal_state(boundary.root, first)
-            data.update(state)
+        from ..changes.normal_access import observe_normal_state
+        state = observe_normal_state(boundary.root, first)
+        data.update(state)
+        if state['state'] != 'clean':
             fail(FailureKind.CONFLICT if state['state'] == 'writer_active' else FailureKind.ENVIRONMENT,
                  'project_' + state['state'])
     except ModelError as error:

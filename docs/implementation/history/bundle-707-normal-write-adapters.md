@@ -38,4 +38,4 @@ normale Adaptergruppe wird hier vollständig geliefert; zusätzliche Spezialwrit
 werden nicht als unvollständiger Anhang vorgezogen. Keine Dienste, Konfigurationen,
 Git-Schreibaktionen oder direkte Änderungen an Apply.
 
-Vorbereiteter Zwischenstand: **18.u.W**; nach eigenem erfolgreichen Gate Zielposition **769/918**, danach **18.u.R**.
+Vorbereiteter Zwischenstand: **18.u.R**; nach eigenem erfolgreichen Gate Zielposition **770/918**, danach **18.u.C**.

@@ -1,8 +1,10 @@
 """Publish a generated project or partial ZIP from a retained native observation."""
+from contextlib import ExitStack
 import os
 import secrets
 
 from ..changes._lock_files import LockFiles
+from ..changes.normal_access import normal_read_mutex
 from ..changes._publication_io import replace_bound_image
 from ..changes._staging_files import _write_new
 from ..cli.command_errors import CommandUsageError
@@ -47,10 +49,13 @@ def _publish(container, source, verify_current, output, output_root):
     check_location()
     # The directory-inode mutex and native image writer create no SpecRoad
     # writer lock, journal or receipt. Noncooperating writers are not sandboxed.
-    with LockFiles(boundary.root) as files:
+    with ExitStack() as stack:
+        files = stack.enter_context(LockFiles(boundary.root))
         if files.boundary._root_identity != boundary._root_identity:
             raise BundleError('bundle_output_root_changed', code=None, exit_code=6)
         files.acquire()
+        if boundary.root == source.boundary.root:
+            stack.enter_context(normal_read_mutex(files))
 
         def check_namespace():
             for index, name in enumerate(parts):
