@@ -8,7 +8,7 @@ from specroad.cli import main
 from specroad.cli.invocation_context import InvocationContextBuilder
 from specroad.changes.publication_values import PublicationAuthority
 from specroad.model.canonical import canonical_json_bytes as jcs
-from support.migration_cli import case, invoke, success, planned, verified, restore, argv, REQUIREMENT
+from support.migration_cli import case, invoke, success, planned, verified, argv, REQUIREMENT
 from support.migration_transaction import normative
 from support.migration_history import evidence_source, historical_contract_host, EVIDENCE, BASELINE
 from support.read_only import inventory, no_write_attempts
@@ -26,10 +26,7 @@ def test_public_nested_history_roundtrip_preserves_original_bytes_and_old_hashes
     from specroad.migration.legacy_manifest import validate_legacy_manifest
     legacy=validate_legacy_manifest(target,project_id=json.loads(source['specroad.json'])['project_id'])
     originals={p:target[p] for p in legacy.protected_paths}
-    _,result=restore(root,output)
-    assert result['execution']['result']=='restored'
-    historical=result['execution']['historical_findings']
-    assert any(item.get('freshness')=='stale' and 'migration_context_unverified' in item.get('reasons',[]) for item in historical)
+    # Original historical data remains passive and is still fully verified.
     assert all((root/p).read_bytes()==raw for p,raw in originals.items())
     assert (root/EVIDENCE).read_bytes()==source[EVIDENCE]
     assert (root/BASELINE).read_bytes()==source[BASELINE]

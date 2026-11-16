@@ -3,8 +3,7 @@
   "expected_diagnostics": [],
   "expected_exit_codes": [],
   "fixture_ids": [
-    "SR-FIX-OWNED-TEMP-v1",
-    "SR-FIX-BUNDLE-WORK-LOSS-R-v1"
+    "SR-FIX-RECOVERY-REMOVAL-W-v1"
   ],
   "implementation_status": "partial",
   "json_pointers": [],
@@ -16,11 +15,10 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Work-Export und -Restore MÜSSEN die selbstenthaltene sichere Paketsemantik nach Anhang P.7 erfüllen.",
-    "scope": "A canonical ZIP_STORED codec admits safe regular entries with exact inventory and external byte identity. The package_kind=work transport retains every reachable generation, inventory segment, manifest and semantic object. All container, build, schema, original and successor bindings are checked before target publication. The target must be missing or private and empty under the native Work mutex; existing stores, symlinks and protected overlaps are refused. Restore republishes original generations through the durable native store, creates a fresh root-inode binding and preserves actual successful prefixes on I/O failure. Native write work is explicitly unsupported rather than exported with unknown Recovery state. Initial read-only host APIs and whole-byte ZIP32 processing only. Full Work CLI, general executable workflows, normative work export with current transaction/receipt proof and explicit write-target mapping, incremental large export and multipart archives remain open. No native Recovery substitute, executable code loading, authenticity from internal self-consistency, semantic success from generic data, or release approval is claimed. R additionally checks file/ancestor collisions, native inventory reproducibility before allocation, current runtime after complete validation and fresh destination inventories across every generation. Real lost bytes, locks, replaced roots and foreign arrivals are exercised. Preserved pointer bytes are not a claim that externally changed payloads remain usable. 15.i.R adds a required-hash file restore adapter, actual loss/path relocation and fresh-process recovery at exactly the retained generation. Complete byte validation precedes allocation; source parent identity and exact bytes are rechecked during restoration. No automatic backup discovery or prompt-based reconstruction occurs."
+    "scope": "Normal external Work export/restore keeps native input and root bindings; retired Restore packages cannot become live Work. Fresh Apply evidence required; historical recovery results are not acceptance. Unimplemented scopes and target-platform/release proofs remain open."
   },
   "preconditions": [
-    "Owned private Work/project/input/restore roots and externally retained package bytes/hash. Explicit recorded-build fixture and trusted host registry; actual closed handlers, sealed source capture, native checkpoint publication and isolated fresh process.",
-    "File restore requires the actual retained ZIP and its complete external hash, explicit current protected boundaries and a disjoint missing/private-empty Work target; no old sandbox or chat description supplies payload bytes."
+    "Owned synthetic roots and real native APIs; faults only at actual operating-system or writer boundaries."
   ],
   "primary_verification_id": "SR-VER-0040",
   "required_environment": {
@@ -36,14 +34,9 @@
   },
   "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
-    "Export the independently bound complete published read-only chain without writes, retain its exact archive bytes and external hash, and remove owned original Work/source data.",
-    "Verify canonical ZIP bytes, exact nonrecursive inventory and every original Work generation before allocating a missing or private empty external destination.",
-    "Restore through the real durable checkpoint publisher and compare original manifests, objects, semantic bindings and progress. Execute supported handlers separately or reject generic inert plans as execution authority.",
-    "Reject malformed paths, special entries, missing/changed/additional bytes, wrong external identity/build and unsafe targets before destination writes. Preserve actual prefix generations after injected native I/O failures.",
-    "Rehash foreign containers coherently and verify that unknown Work contracts, missing referenced input/history/result bytes and nonreproducible checkpoint inventories fail before target writes.",
-    "Exercise actual file/ancestor collisions, altered ZIP headers, a live native target mutex and source/runtime changes after validation; preserve original bindings and all actually retained bytes.",
-    "Introduce foreign or unsafe destination entries after the first and last real generation and replace the destination inode. Refuse further publication or false completion while preserving the actual pointer, foreign files and any owner that cannot safely be released.",
-    "15.i.R: restore from an explicitly selected canonical file and mandatory external SHA-256 after actual Work/source loss or backup relocation. Recheck the retained file across every generation. Reject missing/mutated payloads and prompt/report substitutes before allocation; preserve the real published prefix on later source loss. A newer prompt does not advance an older backup."
+    "Exercise the bound native requests and retained positive Work paths.",
+    "Assert exact results and byte preservation for every rejected repair/ownership path.",
+    "Run only in the stage Apply gate; no Dev execution is an acceptance result."
   ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0628",
@@ -95,6 +88,28 @@
     "tests/test_bundle_work_backup_right.py::test_source_paths_are_explicit_canonical_regular_files[relative]",
     "tests/test_bundle_work_backup_right.py::test_source_paths_are_explicit_canonical_regular_files[symlink]",
     "tests/test_bundle_work_backup_right.py::test_source_paths_are_explicit_canonical_regular_files[traversal]",
+    "tests/test_recovery_removal.py::test_public_command_contract_has_no_repair_writer_or_repair_profile",
+    "tests/test_recovery_removal.py::test_removed_public_repair_never_starts_or_writes[argv-lock.recover]",
+    "tests/test_recovery_removal.py::test_removed_public_repair_never_starts_or_writes[argv-recover.cleanup]",
+    "tests/test_recovery_removal.py::test_removed_public_repair_never_starts_or_writes[argv-recover.discard]",
+    "tests/test_recovery_removal.py::test_removed_public_repair_never_starts_or_writes[argv-recover.restore]",
+    "tests/test_recovery_removal.py::test_removed_public_repair_never_starts_or_writes[argv-recover.run]",
+    "tests/test_recovery_removal.py::test_removed_public_repair_never_starts_or_writes[argv-recover.status]",
+    "tests/test_recovery_removal.py::test_removed_public_repair_never_starts_or_writes[request-lock.recover]",
+    "tests/test_recovery_removal.py::test_removed_public_repair_never_starts_or_writes[request-recover.cleanup]",
+    "tests/test_recovery_removal.py::test_removed_public_repair_never_starts_or_writes[request-recover.discard]",
+    "tests/test_recovery_removal.py::test_removed_public_repair_never_starts_or_writes[request-recover.restore]",
+    "tests/test_recovery_removal.py::test_removed_public_repair_never_starts_or_writes[request-recover.run]",
+    "tests/test_recovery_removal.py::test_removed_public_repair_never_starts_or_writes[request-recover.status]",
+    "tests/test_recovery_removal.py::test_retained_restore_identity_is_not_a_native_work_request[both]",
+    "tests/test_recovery_removal.py::test_retained_restore_identity_is_not_a_native_work_request[class]",
+    "tests/test_recovery_removal.py::test_retained_restore_identity_is_not_a_native_work_request[command]",
+    "tests/test_recovery_removal.py::test_work_resume_cannot_accept_old_owner_takeover_options[--accept-remote-risk]",
+    "tests/test_recovery_removal.py::test_work_resume_cannot_accept_old_owner_takeover_options[--expected-lock-sha256]",
+    "tests/test_recovery_removal.py::test_work_resume_cannot_accept_old_owner_takeover_options[--expected-work-lock-sha256]",
+    "tests/test_recovery_removal.py::test_work_resume_cannot_accept_old_owner_takeover_options[--force]",
+    "tests/test_recovery_removal.py::test_work_resume_cannot_accept_old_owner_takeover_options[--reason]",
+    "tests/test_recovery_removal.py::test_work_resume_cannot_accept_old_owner_takeover_options[--work-recovery-reason]",
     "tests/test_work_archive.py::test_an_external_hash_is_required_and_a_manifest_cannot_include_itself",
     "tests/test_work_archive.py::test_canonical_container_retains_all_bytes_and_has_nonrecursive_inventory",
     "tests/test_work_archive.py::test_inventory_must_bind_exactly_every_actual_payload[additional]",

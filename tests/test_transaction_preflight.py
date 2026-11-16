@@ -224,7 +224,7 @@ def test_authorization_cannot_change_policy_then_recover_under_the_old_setting(t
     assert not result['recovery_attempted'] and journal.read_bytes() == original
 
 
-@pytest.mark.parametrize('command_class', ['normative_write', None, CommandClass.RECOVERY_WRITE,
+@pytest.mark.parametrize('command_class', ['normative_write', None, 'recovery_write',
                                          CommandClass.ROOT_CREATION])
 def test_unknown_or_nonnormal_class_is_rejected_before_project_io(tmp_path, command_class):
     with no_write_attempts(), pytest.raises(RecoveryError) as error:

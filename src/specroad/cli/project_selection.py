@@ -131,23 +131,6 @@ def select_project(command, options, cwd, *, preflight=None):
         # A resume root is compared with the original by the installed adapter,
         # never loaded as a new valid project base.
         return None, None, {}
-    if command.command_id == 'recover.restore' and profile is PreflightProfile.RECOVERY:
-        from ..qualification.inventory import boundary
-        from ..qualification.errors import QualificationError
-        from .results import FailureKind, OperationFailure
-        try:
-            selected = boundary(explicit)
-            selected._check_root()
-        except QualificationError as error:
-            raise OperationFailure(FailureKind(error.exit_code), error.reason,
-                                   details=error.diagnostic()) from error
-        except SafetyViolation as error:
-            raise OperationFailure(FailureKind.SECURITY, 'restore_unsafe_input') from error
-        if preflight is not None:
-            preflight.update(profile='recovery', normal_operation_started=False,
-                model_loaded=False, write_authorized=False, recovery_performed=False,
-                inspection_scope='explicit_root_identity')
-        return selected.root, 'cli', {}
     project_read = profile in (PreflightProfile.PROJECT_READ, PreflightProfile.PROJECT_WRITE)
     if profile is PreflightProfile.BOOTSTRAP:
         if explicit is not None:

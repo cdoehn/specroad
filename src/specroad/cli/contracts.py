@@ -33,7 +33,6 @@ class CommandClass(str, Enum):
     GENERATED_OUTPUT = "generated_output"
     READ_ONLY = "read_only"
     LOCAL_OPERATIONAL = "local_operational"
-    RECOVERY_WRITE = "recovery_write"
     ROOT_CREATION = "root_creation"
     WORK_OPERATIONAL = "work_operational"
     TRANSPORT_OPERATIONAL = "transport_operational"
@@ -46,7 +45,6 @@ class PreflightProfile(str, Enum):
     PROJECT_READ = "project_read"
     PROJECT_WRITE = "project_write"
     ROOT_CREATION = "root_creation"
-    RECOVERY = "recovery"
 
 
 class EffectScope(str, Enum):
@@ -54,7 +52,6 @@ class EffectScope(str, Enum):
     EXTERNAL_OUTPUT = "external_output"
     NORMATIVE_TRANSACTION = "normative_transaction"
     LOCAL_OPERATIONAL = "local_operational"
-    RECOVERY_TRANSACTION = "recovery_transaction"
     NEW_ROOT = "new_root"
     EXTERNAL_WORK = "external_work"
     TRANSPORT_OUTPUT = "transport_output"
@@ -115,7 +112,7 @@ class CommandProtocol:
 
     def __post_init__(self):
         from .requests import CommandRequest
-        if self.lock_kind not in ('none', 'bootstrap', 'recovery', 'writer') or not isinstance(self.work, WorkContract):
+        if self.lock_kind not in ('none', 'bootstrap', 'writer') or not isinstance(self.work, WorkContract):
             raise CommandUsageError("Unsupported lock or work protocol")
         if not isinstance(self.result_schema, str) or not re.fullmatch(r"[a-z][a-z0-9._-]*", self.result_schema):
             raise CommandUsageError("Invalid result schema identity")
@@ -203,10 +200,6 @@ class CommandSpec:
             if any(other not in flags or other == option.flag for other in option.excludes):
                 raise CommandUsageError("Exclusion refers to an unknown option or itself")
         normative_flags = {"--actor-type", "--actor-id", "--request-id", "--dry-run", "--as-proposal"}
-        restore = (self.command_id == 'recover.restore' and self.words == ('recover', 'restore')
-                   and self.command_class is CommandClass.RECOVERY_WRITE
-                   and self.preflight_profile is PreflightProfile.RECOVERY
-                   and self.effect_scope is EffectScope.RECOVERY_TRANSACTION)
         migration = (self.command_id in ('migrate.plan', 'migrate.verify')
             and self.words == tuple(self.command_id.split('.'))
             and self.preflight_profile is PreflightProfile.INPUT_READ
@@ -228,14 +221,8 @@ class CommandSpec:
             normative_flags = {'--request-id', '--dry-run', '--as-proposal'}
         if self.protocol is not None and self.protocol.lock_kind == 'writer' and self.command_class is not CommandClass.NORMATIVE_WRITE:
             raise CommandUsageError('Writer locking requires a normative command')
-        if restore:
-            # Restore has its own actor and planning contract, never a proposal
-            # or ordinary normative-write preflight. Metadata grants no authority.
-            normative_flags = {'--as-proposal'}
-        if self.protocol is not None and self.protocol.lock_kind == 'recovery' and not restore:
-            raise CommandUsageError('Recovery locking requires the native Restore command')
         if (self.protocol is not None and self.protocol.work.continuation_supported
-                and not (restore or migration or merge_planning or (self.command_id == 'work.resume'
+                and not (migration or merge_planning or (self.command_id == 'work.resume'
                     and self.command_class is CommandClass.WORK_OPERATIONAL)
                     or (self.command_id == 'bundle.create'
                         and self.words == ('bundle', 'create')
@@ -255,7 +242,6 @@ class CommandSpec:
             CommandClass.GENERATED_OUTPUT: {EffectScope.EXTERNAL_OUTPUT},
             CommandClass.NORMATIVE_WRITE: {EffectScope.NORMATIVE_TRANSACTION},
             CommandClass.LOCAL_OPERATIONAL: {EffectScope.LOCAL_OPERATIONAL},
-            CommandClass.RECOVERY_WRITE: {EffectScope.RECOVERY_TRANSACTION},
             CommandClass.ROOT_CREATION: {EffectScope.NEW_ROOT},
             CommandClass.WORK_OPERATIONAL: {EffectScope.EXTERNAL_WORK},
             CommandClass.TRANSPORT_OPERATIONAL: {EffectScope.TRANSPORT_OUTPUT},
@@ -300,8 +286,6 @@ class Invocation:
     arguments: Mapping[str, str] = field(default_factory=dict)
     registry: object = field(default=None, repr=False, compare=False)
     consumption_call: object = field(default=None, repr=False, compare=False)
-    recovery_authority: object = field(default=None, repr=False, compare=False)
-    recovery_actor: object = field(default=None, repr=False, compare=False)
     restore_services: object = field(default=None, repr=False, compare=False)
     publication_authority: object = field(default=None, repr=False, compare=False)
     migration_gates: tuple = field(default=(), repr=False, compare=False)

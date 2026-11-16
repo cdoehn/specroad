@@ -154,8 +154,14 @@ def test_forged_native_boundary_is_never_a_command_success(tmp_path, command):
 def test_operational_diagnoses_remain_available_with_open_journal(tmp_path, family):
     root, _, _, _, _ = extracted(tmp_path)
     (root / '.specroad/transactions/unknown').mkdir(parents=True)
+    before = inventory(root)
     with no_write_attempts(): result = dispatch_result([family, 'check' if family == 'environment' else 'status',
                                                        '--project', str(root)])
+    assert inventory(root) == before
+    # Keep the legacy case's stable identity while proving command retirement.
+    if family == 'recover':
+        assert result.exit_code == 2 and result.as_dict()['result'] is None, result.as_dict()
+        return
     assert result.exit_code == (5 if family == 'environment' else 0), result.as_dict()
     assert 'partial_scope' not in result.as_dict()['summary']
     if family == 'environment':
@@ -339,16 +345,27 @@ def test_metadata_adapter_cannot_publish_a_stale_project_identity(tmp_path, monk
     module = locking if family == 'lock' else recovery_read
     name = 'inspect_project_lock' if family == 'lock' else 'inspect_recovery'
     native = getattr(module, name)
+    calls = []
 
     def changing(*args, **kwargs):
+        calls.append(family)
         observation = native(*args, **kwargs)
         file = root / 'specroad.json'
         file.write_bytes(file.read_bytes() + b' ')
         return observation
 
     monkeypatch.setattr(module, name, changing)
-    result = dispatch_result([family, 'status', '--project', str(root)])
-    assert result.exit_code == 6 and result.as_dict()['result'] is None, result.as_dict()
+    if family == 'recover':
+        before = inventory(root)
+        with no_write_attempts():
+            result = dispatch_result([family, 'status', '--project', str(root)])
+        assert result.exit_code == 2 and result.as_dict()['result'] is None, result.as_dict()
+        assert calls == [], 'A retired command must not reach its former backend'
+        assert inventory(root) == before
+    else:
+        result = dispatch_result([family, 'status', '--project', str(root)])
+        assert calls == [family], 'The stale-identity injection must actually run'
+        assert result.exit_code == 6 and result.as_dict()['result'] is None, result.as_dict()
 
 
 @pytest.mark.parametrize('command', [

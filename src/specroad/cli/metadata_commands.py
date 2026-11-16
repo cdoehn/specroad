@@ -9,7 +9,6 @@ def metadata_command(invocation):
     from ..security import ProjectBoundary, SafetyViolation
     from ..storage.json_syntax import parse_json_object
     from ..changes.locking import inspect_project_lock
-    from ..changes.recovery_read import inspect_recovery
     from ..query._read_errors import read_failure, read_details
     command = invocation.command.command_id
     try:
@@ -17,8 +16,7 @@ def metadata_command(invocation):
         configuration = boundary.read_bytes('specroad.json')
         project_id = parse_json_object(configuration).get('project_id')
         project_id = project_id if type(project_id) is str and project_id else None
-        reader = inspect_project_lock if command == 'lock.status' else inspect_recovery
-        result = reader(boundary.root, expected_project_id=project_id).data
+        result = inspect_project_lock(boundary.root, expected_project_id=project_id).data
         if boundary.read_bytes('specroad.json') != configuration:
             raise OperationFailure(FailureKind.CONFLICT, 'Project metadata changed during observation.')
         boundary._check_root()
@@ -41,4 +39,4 @@ def metadata_commands():
             handler_exit_codes=(0, 2, 3, 4, 5, 6, 7),
             diagnostic_codes=('CORE_ENVIRONMENT', 'CORE_SECURITY', 'CORE_CONFLICT', 'CORE_MODEL'),
             work=WorkContract('operational_metadata', ('runtime_metadata',))))
-        for family, schema in (('lock', 'project-lock-v1'), ('recover', 'recovery-status-v1')))
+        for family, schema in (('lock', 'project-lock-v1'),))

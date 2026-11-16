@@ -123,14 +123,14 @@ def command_example_inputs(root, command):
     if command.command_id.startswith('migrate.'):
         yield _migration_example_inputs(root, command)
         return
-    if command.command_id == 'recover.restore' or command.command_id.startswith('work.'):
+    if command.command_id.startswith('work.'):
         from unittest.mock import patch
         from specroad import _build
         # Development modules are deliberately unrecorded; a native Work
         # container requires an explicit compatible build identity.
         with patch.object(_build, 'BUILD_METADATA', {'format_version': 1,
                 'hash_algorithm': 'specroad-dev-payload-v1', 'build_sha256': '4' * 64}):
-            yield _restore_example_inputs(root, command)
+            yield _work_example_inputs(root, command)
         return
     if command.requires_project:
         command_example_project(root, command.command_id)
@@ -160,49 +160,14 @@ def _merge_conflicts_example_inputs(root, command):
     return request
 
 
-def _restore_example_inputs(root, command):
-    from specroad.cli.commands import builtin_registry
-    from specroad.cli.requests import CommandRequest
-    from specroad.work.checkpoints import CheckpointStore
-    from specroad.work.open_existing import protected_paths
-    from specroad.work.restore_planning import prepare_planning_work
-    from specroad.work.root import WorkDirectory
-    from .languages import small_restore_registry
-    from .restore import restore_case, plan_for
-
-    options, _, _ = restore_case(root, language_registry=small_restore_registry())
-    output = root / 'output'; output.mkdir()
-    planning = {'--project': str(options['project_root']), '--source-root': str(options['source_root']),
-        '--from': options['source_path'], '--source-kind': 'project_bundle', '--dry-run': True,
-        '--output-root': str(output), '--output': 'restore.json'}
+def _work_example_inputs(root, command):
+    from .migration_verification import case
+    from .migration_work import create, finish
+    data = case(root)
+    store = create(data, root / 'work')
     request = command.protocol.example.as_dict()
-    if command.command_id == 'recover.restore':
-        request['options'] = {**request['options'], **planning}
-        return request
-
-    registry = builtin_registry()
     if command.command_id == 'work.resume':
-        from specroad.changes.recovery_values import RecoveryAuthority
-        from specroad.work.restore_execution import prepare_restore_work
-        from specroad.work.restore_progress import resume_restore_work
-        plan = plan_for(options)
-        actor = {'actor_type': 'human', 'actor_id': 'synthetic-example-host'}
-        original = CommandRequest('recover.restore', {'--project': str(options['project_root']),
-            '--plan-root': str(output), '--plan': 'restore.json',
-            '--expected-target-root': plan.data['expected_target_root'],
-            '--actor-type': actor['actor_type'], '--actor-id': actor['actor_id']})
-        put(output, 'restore.json', plan.source_bytes)
-        initial = prepare_restore_work(registry, original, plan=plan)
-    else:
-        initial = prepare_planning_work(registry, CommandRequest('recover.restore', planning))
-    location = WorkDirectory(initial, protected_roots=(), protected_paths=protected_paths(initial),
-                             directory=root / 'work')
-    store = CheckpointStore(location, initial); store.publish(initial)
-    if command.command_id == 'work.resume':
-        # A finished native operation is the minimal successful no-authority
-        # resume example; active execution still requires a fresh host grant.
-        resume_restore_work(store, registry=registry, actor=actor,
-            authority=RecoveryAuthority('synthetic-example-host', '1', lambda request: True))
+        finish(store)
     if command.command_id == 'work.restore':
         from specroad.work.package_publication import publish_work_package
         transport = root / 'transport'; transport.mkdir()
@@ -210,7 +175,7 @@ def _restore_example_inputs(root, command):
         request['arguments']['file'] = str(transport / 'work.zip')
         request['options']['--output'] = str(root / 'relocated')
     else:
-        request['arguments']['work_dir'] = str(location.path)
+        request['arguments']['work_dir'] = str(store._location.path)
         if command.command_id == 'work.export':
             transport = root / 'transport'; transport.mkdir()
             request['options']['--output'] = str(transport / 'work.zip')

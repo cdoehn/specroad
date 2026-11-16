@@ -955,6 +955,10 @@
     "verification-context-subjects": {
       "kind": "Owned requirement, verification and test subjects with immutable recorded Evidence bindings. Audit/workflow and semantic changes, exact effective product configurations, passive metadata, native rejection boundaries and isolated Core/PYZ parity. No authoritative run selection or verification success.",
       "provider": "tests/test_verification_context.py:subject"
+    },
+    "SR-FIX-RECOVERY-REMOVAL-W-v1": {
+      "provider": "tests/test_recovery_removal.py;tests/test_work_packages.py;tests/test_migration_work.py",
+      "kind": "Synthetic closed old requests and coherently sealed old Work identities; actual native preparation/package APIs; rejected repair has no file effects."
     }
   },
   "fixture_format_version": 1,
@@ -1125,6 +1129,7 @@
     "SR-FIX-READ-ONLY-PROJECT-v1",
     "SR-FIX-READINESS-MIGRATION-v1",
     "SR-FIX-RECORD-FIELDS-v1",
+    "SR-FIX-RECOVERY-REMOVAL-W-v1",
     "SR-FIX-REFERENCE-FINDINGS-v1",
     "SR-FIX-REFERENCE01-SOURCE-v1_0_1",
     "SR-FIX-RELATION-OBLIGATIONS-v1",

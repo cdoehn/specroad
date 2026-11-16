@@ -18,14 +18,6 @@ def _result(value, objects, document, exit_code, registry):
         from .transport import final_outcome
         final_outcome(value, objects, document, exit_code)
         return 'outbound-work-finalization-v1', []
-    if value['command_class'] == 'recovery_write':
-        if '--from' in value['normalized_arguments']['options']:
-            from .restore_planning import final_outcome
-            final_outcome(value, objects, document, exit_code)
-            return 'restore-planning-finalization-v1', document['history_assessments']
-        from ._restore_completion import final_outcome
-        final_outcome(value, objects, document, exit_code)
-        return 'restore-work-finalization-v1', document['historical_findings']
     _outcome(value, document, exit_code, registry)
     return 'work-finalization-v1', document['diagnostics']
 

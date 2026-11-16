@@ -4,8 +4,8 @@ from .contracts import (CommandClass, CommandProtocol, CommandSpec, EffectScope,
 from .parameters import OptionSpec
 
 
-def restore_work_contract():
-    return WorkContract('native_restore_phase', ('original_work_bindings',), True,
+def continuation_work_contract():
+    return WorkContract('native_preparation_phase', ('original_work_bindings',), True,
                         ('external_work_directory',), ('work-manifest-segments-v1',))
 
 
@@ -33,10 +33,6 @@ def work_commands():
             options = (OptionSpec('--max-prompt-chars', takes_value=True),)
         elif operation == 'resume':
             options = (OptionSpec('--project', takes_value=True),
-                OptionSpec('--expected-work-lock-sha256', takes_value=True),
-                OptionSpec('--work-recovery-reason', takes_value=True),
-                OptionSpec('--force'), OptionSpec('--expected-lock-sha256', takes_value=True),
-                OptionSpec('--reason', takes_value=True), OptionSpec('--accept-remote-risk'),
                 *_read_runtime_options())
         result.append(CommandSpec(command_id='work.' + operation, words=('work', operation),
             command_class=CommandClass.WORK_OPERATIONAL, preflight_profile=PreflightProfile.INPUT_READ,
@@ -46,5 +42,5 @@ def work_commands():
             protocol=CommandProtocol('work-command-v1', {'command_id': 'work.' + operation,
                 'arguments': {position: '/external/work'}, 'options': example},
                 handler_exit_codes=(0, 2, 3, 4, 5, 6, 7, 8) if operation == 'resume' else (0, 2, 3, 4, 5, 6, 7),
-                work=restore_work_contract() if operation == 'resume' else WorkContract('work_' + operation))))
+                work=continuation_work_contract() if operation == 'resume' else WorkContract('work_' + operation))))
     return tuple(result)

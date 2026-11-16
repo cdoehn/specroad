@@ -43,7 +43,7 @@ class DescriptionWorkTests(unittest.TestCase):
                                 context_builder=command_example_context(command)).result
                     self.assertEqual(result.exit_code, 0)
                     self.assertEqual(result.command, command.command_id)
-                    input_only = command.command_id in ('recover.restore', 'migrate.plan', 'migrate.apply', 'migrate.verify', 'merge.apply')
+                    input_only = command.command_id in ('migrate.plan', 'migrate.apply', 'migrate.verify', 'merge.apply')
                     if command.command_id in ('proposal.review.start', 'proposal.review', 'proposal.apply'):
                         # Like other writers, the handler returns its operation
                         # result; the outer envelope only binds the selected root.
@@ -217,7 +217,7 @@ class DescriptionRobustnessTests(unittest.TestCase):
         for command in registry.commands:
             document = describe_command(registry, command.command_id)
             work = document['work']
-            continuation = command.command_id in ('recover.restore', 'work.resume', 'migrate.plan', 'migrate.verify', 'merge.plan')
+            continuation = command.command_id in ('work.resume', 'migrate.plan', 'migrate.verify', 'merge.plan')
             self.assertEqual(work['continuation_supported'], continuation)
             self.assertEqual(document['stdout']['continuation']['supported'], continuation)
             self.assertEqual(work['external_side_effects'], ['external_work_directory'] if continuation else [])
@@ -225,14 +225,13 @@ class DescriptionRobustnessTests(unittest.TestCase):
             self.assertEqual(document['write_effects']['external_work'], work['external_side_effects'])
             self.assertEqual(document['lock_kind'],
                              'bootstrap' if command.command_id in ('init', 'bundle.extract') else
-                             'recovery' if command.command_id == 'recover.restore' else
                              'writer' if command.command_id in ('migrate.apply', 'merge.apply', 'proposal.review.start', 'proposal.review', 'proposal.apply') else 'none')
             self.assertEqual(8 in document['exit_codes'], continuation)
             self.assertEqual(document['budget_policy_version'],
                              'runtime-budget-v2' if command.command_id in (
                                  'environment.check', 'artifact.show', 'query', 'trace', 'why', 'impact', 'diff',
                                  'configuration.evaluate', 'roadmap.explain', 'export', 'bundle.verify',
-                                 'render', 'view.render', 'diagram', 'recover.restore', 'work.resume',
+                                 'render', 'view.render', 'diagram', 'work.resume',
                                  'migrate.plan', 'migrate.apply', 'migrate.verify', 'merge.plan') else None)
             self.assertIsNone(document['stdout']['continuation']['sarif_fallback'])
 
@@ -263,12 +262,10 @@ class DescriptionRobustnessTests(unittest.TestCase):
                 self.assertIn('--project', accepted)
             else:
                 rejected += ('--project',)
-            # Native Restore is the integrated writer. bundle.create declares
+            # bundle.create declares
             # Work only for its explicit outbound variant; ordinary project
             # bundles still reject that option before any effect.
-            if command.command_id == 'recover.restore':
-                rejected = ('--resume', '--as-proposal')
-            elif command.command_id in ('migrate.plan', 'migrate.apply'):
+            if command.command_id in ('migrate.plan', 'migrate.apply'):
                 self.assertTrue({'--work-dir', '--request-id', '--actor-id'} <= accepted)
                 rejected = ('--resume', '--dry-run', '--as-proposal')
             elif command.command_id == 'migrate.verify':

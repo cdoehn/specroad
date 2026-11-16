@@ -5,7 +5,6 @@ from specroad.cli.application import execute, execute_request
 from specroad.cli.invocation_context import InvocationContextBuilder
 from specroad.cli.results import thaw
 from specroad.changes.publication_values import PublicationAuthority
-from specroad.changes.recovery_values import RecoveryAuthority
 from .migration_plans import vector_source
 from .migration_transaction import execution_inputs
 from .reference01 import encoded
@@ -36,8 +35,7 @@ def argv(command, options):
 
 def invoke(command, options, representation='argv', *, authorize=True, gates=(), authority=None, arguments=None):
     host = authority if authority is not None else PublicationAuthority('synthetic-cli-host','1',lambda request:True) if authorize else None
-    builder=InvocationContextBuilder(publication_authority=host,migration_gates=gates,
-        recovery_authority=RecoveryAuthority('synthetic-cli-recovery','1',lambda request:True) if authorize else None)
+    builder=InvocationContextBuilder(publication_authority=host,migration_gates=gates)
     words=argv(command,options) + list((arguments or {}).values())
     response=(execute(words,context_builder=builder) if representation=='argv'
         else execute_request({'command_id':command,'options':options,'arguments':arguments or {}},context_builder=builder))
@@ -64,18 +62,3 @@ def planned(data, representation='argv'):
 def verified(apply_options, outcome, representation='argv', *, gates=()):
     options={**apply_options,'--expected-backup-sha256':outcome['backup']['file']['sha256']}
     return success(invoke('migrate.verify',options,representation,gates=gates))
-
-
-def restore(root, output, *, representation='argv'):
-    bundled=success(invoke('bundle.create',{'--project':str(root),'--scope':'project','--output-root':str(output),'--output':'current.zip'},representation))
-    raw=(root/REQUIREMENT).read_bytes();(root/REQUIREMENT).write_bytes(b'broken synthetic mutable artifact')
-    planning={'--project':str(root),'--source-root':str(output),'--from':'current.zip',
-        '--source-kind':'project_bundle','--dry-run':True,'--output-root':str(output),'--output':'restore.json'}
-    result=success(invoke('recover.restore',planning,representation))
-    options={'--project':str(root),'--plan-root':str(output),'--plan':'restore.json',
-        '--expected-target-root':result['restore_plan']['expected_target_root'],
-        '--actor-type':'tool','--actor-id':'synthetic-cli-restorer','--request-id':'synthetic:restore'}
-    restored=success(invoke('recover.restore',options,representation))
-    assert restored['execution']['result']=='restored'
-    assert (root/REQUIREMENT).read_bytes()==raw
-    return bundled, restored

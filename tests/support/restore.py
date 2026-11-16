@@ -3,7 +3,6 @@ from specroad.archive.project_snapshot import build_project_baseline_manifest
 from specroad.bundles import prepare_project_bundle
 from specroad.model.canonical import canonical_json_bytes
 from specroad.model.paths import artifact_path
-from specroad.recovery import prepare_restore_plan
 from .domain import domain_value
 from .inspection import inspection_project
 from .model import put
@@ -37,7 +36,3 @@ def restore_case(tmp_path, kind='project_bundle', *, baseline_kind='working', va
     options = {'project_root': current, 'source_root': origin, 'source_path': path,
                'source_kind': kind, **extra}
     return options, files, raw
-
-
-def plan_for(options):
-    return prepare_restore_plan(**options)

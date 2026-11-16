@@ -201,11 +201,8 @@ def create_normative_work_manifest(registry, request, *, plan, tool_build,
 
 
 def _task_binding(command, source_bindings, input_hash, authoring):
-    if command['command_class'] == 'recovery_write':
-        from ._restore_binding import semantic_command
-        command = semantic_command(command)
     value = {**command, 'source_bindings': source_bindings, 'input_manifest_sha256': input_hash}
-    if command['command_class'] in ('normative_write', 'recovery_write'):
+    if command['command_class'] == 'normative_write':
         value.update(authoring)
     return sha256(canonical_json_bytes(value)).hexdigest()
 
@@ -302,6 +299,8 @@ def read_work_manifest(raw, objects, *, registry, expected_tool_build):
     """
     value = _parse(raw)
     _object(value, _FIELDS)
+    if value['command_class'] == 'recovery_write' or (type(value['command_id']) is str and value['command_id'].startswith('recover.')):
+        raise WorkManifestError('Product Recovery Work is no longer supported')
     _require(value['work_format_version'] == '1.0.0')
     _text(value['work_id']); _require(value['work_id'].startswith('WORK-'))
     try:
@@ -319,7 +318,6 @@ def read_work_manifest(raw, objects, *, registry, expected_tool_build):
     except CommandUsageError as error:
         raise WorkManifestError('Invalid structured work request') from error
     command = _command(registry, request, normative=value['command_class'] == 'normative_write',
-                       recovery=value['command_class'] == 'recovery_write',
                        transport=value['command_class'] == 'transport_operational',
                        planning=value['command_class'] == 'plan_output')
     _require(all(value[name] == item for name, item in command.items()))
@@ -329,7 +327,7 @@ def read_work_manifest(raw, objects, *, registry, expected_tool_build):
     if command['command_class'] == 'normative_write':
         from ._normative_binding import read_plan
         read_plan(value, objects)
-    elif command['command_class'] != 'recovery_write':
+    else:
         _require(all(item is None for item in authoring.values()))
     _object(value['manifests'], _KINDS)
     rows = {kind: _entries(kind, value['manifests'][kind], objects) for kind in _KINDS}
@@ -344,9 +342,6 @@ def read_work_manifest(raw, objects, *, registry, expected_tool_build):
         _require(key not in seen); seen.add(key)
         _bytes({k: item[k] for k in ('size', 'sha256')}, objects)
     _require(rows['inputs'] == sorted(rows['inputs'], key=lambda item: (item['root_id'], item['path'])))
-    if command['command_class'] == 'recovery_write':
-        from ._restore_binding import read_plan
-        read_plan(value, objects, rows['inputs'])
     binding = _task_binding(command, value['source_bindings'], value['input_manifest_sha256'], authoring)
     tasks, keys = {}, set()
     for task in rows['tasks']:
@@ -408,11 +403,7 @@ def read_work_successor(raw, objects, *, previous, registry, expected_tool_build
     before, after = previous.as_dict(), current.as_dict()
     unchanged = all(canonical_json_bytes(before[name]) == canonical_json_bytes(after[name])
                     for name in _BINDING_FIELDS)
-    if before['command_class'] == 'recovery_write':
-        from ..qualification.errors import require
-        require(unchanged, 'restore_work_original_binding_conflict', exit_code=6)
-    else:
-        _require(unchanged)
+    _require(unchanged)
     _require(after['checkpoint_generation'] == before['checkpoint_generation'] + 1)
     old_done = {item['unit_id']: item for item in previous.entries('completed')}
     new_done = {item['unit_id']: item for item in current.entries('completed')}

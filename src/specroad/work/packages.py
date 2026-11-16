@@ -30,10 +30,9 @@ _FIELDS = ('format_version', 'package_kind', 'work_id', 'checkpoint_generation',
 
 def _supported(manifest):
     value = manifest.as_dict()
-    restore = value['command_class'] == 'recovery_write' and value['command_id'] == 'recover.restore'
     transport = value['command_class'] == 'transport_operational' and value['command_id'] == 'bundle.create'
     migration_plan = value['command_class'] == 'plan_output' and value['command_id'] in ('migrate.plan', 'merge.plan')
-    if value['command_class'] != 'read_only' and not restore and not transport and not migration_plan:
+    if value['command_class'] != 'read_only' and not transport and not migration_plan:
         raise ArchiveError('normative_work_package_requires_native_binding', exit_code=6)
 
 
@@ -182,10 +181,10 @@ def export_work_package(store):
 def _export_held(store, held, build):
     """Retain the original checkpoint observation for an external publisher."""
     pointer, current = _read(store, held, build); _supported(current)
-    from .restore_control import passive_guard, delivered_files
+    from .package_guard import passive_guard
     from .result_files import _verify_files
     with passive_guard(current):
-        _verify_files(held, delivered_files(current))
+        _verify_files(held, ())
         return _export_checked(store, held, build, pointer, current)
 
 
@@ -237,13 +236,12 @@ def restore_work_package(raw, *, expected_sha256, registry, protected_roots, dir
     _require(_runtime_build() == build, 'work_package_runtime_changed')
     _recheck_input()
     from .open_existing import protected_paths
-    from .restore_control import delivered_files
     from .result_files import _publish_file, _verify_files
     reserved = (protected_paths(chain[0])
-                if chain[0].as_dict()['command_id'] in ('recover.restore', 'bundle.create') else ())
+                if chain[0].as_dict()['command_id'] == 'bundle.create' else ())
     location = WorkDirectory(chain[0], protected_roots=protected_roots,
                              protected_paths=reserved, directory=directory)
-    results = delivered_files(chain[-1])
+    results = ()
     expected_payloads = {**payloads, **{'results/' + name: data for name, data in results}}
     store = CheckpointStore(location, chain[0])
     with location.for_checkpoint(require_empty=True) as held:

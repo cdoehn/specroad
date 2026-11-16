@@ -22,8 +22,6 @@ class InvocationContextBuilder:
     """
     runtime_check: Callable | None = None
     option_resolver: Callable | None = None
-    recovery_authority: object = None
-    recovery_actor: object = None
     restore_services: object = None
     publication_authority: object = None
     migration_gates: tuple = ()
@@ -32,7 +30,7 @@ class InvocationContextBuilder:
         if not isinstance(invocation, Invocation):
             raise CommandUsageError("A parsed invocation is required")
         # An old context is not a reusable preflight certificate.
-        current = replace(invocation, resolved=None, recovery_authority=None, recovery_actor=None, restore_services=None, publication_authority=None, migration_gates=())
+        current = replace(invocation, resolved=None, restore_services=None, publication_authority=None, migration_gates=())
         check = runtime.check_runtime if self.runtime_check is None else self.runtime_check
         resolve = resolve_options if self.option_resolver is None else self.option_resolver
         try:
@@ -43,10 +41,6 @@ class InvocationContextBuilder:
                 and current.command.words[0] == 'proposal'):
             from .proposal_basis import check_proposal_basis_options
             check_proposal_basis_options(current, cwd=cwd)
-        if self.recovery_authority is not None:
-            from ..changes.recovery_values import RecoveryAuthority
-            if type(self.recovery_authority) is not RecoveryAuthority:
-                raise CommandUsageError('A trusted RecoveryAuthority is required')
         if self.publication_authority is not None:
             from ..changes.publication_values import PublicationAuthority
             if type(self.publication_authority) is not PublicationAuthority:
@@ -64,11 +58,7 @@ class InvocationContextBuilder:
                 or current.command.preflight_for(current.options) is not PreflightProfile.BOOTSTRAP):
             from ..qualification.services import native_services
             services = native_services(self.restore_services)
-        actor = None
-        if self.recovery_actor is not None:
-            from ..changes.authoring import normalize_authoring_actor
-            actor = normalize_authoring_actor(self.recovery_actor).as_fields()
-        return replace(current, publication_authority=self.publication_authority, migration_gates=self.migration_gates, recovery_authority=self.recovery_authority, recovery_actor=actor, restore_services=services, resolved=resolve(
+        return replace(current, publication_authority=self.publication_authority, migration_gates=self.migration_gates, restore_services=services, resolved=resolve(
             current, cwd=cwd, profile_layers=profile_layers,
             configuration_layer=configuration_layer))
 

@@ -1,4 +1,4 @@
-"""Public Restore Work coordinator over native checkpoint and journal APIs."""
+"""Public preparation Work coordinator over native checkpoints and adapters."""
 from hashlib import sha256
 import json
 from pathlib import Path
@@ -8,10 +8,8 @@ from ..qualification.errors import QualificationError, guarded, persisted_contra
 from ..qualification.owned import owned_checks
 from ..security import ProjectBoundary
 from ..work.control import inspect_work_status
-from ..work.open_existing import open_restore_work, protected_paths
+from ..work.open_existing import open_restore_work
 from ..work.build import _build
-from ..work.root import WorkDirectory
-from ..work.checkpoints import CheckpointStore
 from ..work._public_errors import work_errors
 from .results import (CommandResult, ResultStatus, FailureKind, OperationFailure,
                       ContinuationClaim, CheckpointValidation, confirm_continuation)
@@ -22,14 +20,6 @@ def absolute(value):
     return Path(os.path.abspath(value))
 
 
-def _native_options(invocation):
-    options = invocation.options
-    return dict(authority=invocation.recovery_authority, actor=invocation.recovery_actor,
-        services=invocation.restore_services,
-        force=options.get('--force', False), expected_lock_sha256=options.get('--expected-lock-sha256'),
-        reason=options.get('--reason'), accept_remote_risk=options.get('--accept-remote-risk', False),
-        expected_work_lock_sha256=options.get('--expected-work-lock-sha256'),
-        work_recovery_reason=options.get('--work-recovery-reason'))
 
 
 def continuation(command, store, expected, *, migration_gates=()):
@@ -58,12 +48,8 @@ def continuation(command, store, expected, *, migration_gates=()):
             elif value['command_class'] == 'transport_operational':
                 from ..work.transport import checked
                 checked(current)
-            elif '--from' in value['normalized_arguments']['options']:
-                from ..work.restore_planning import checked
-                checked(current)
             else:
-                from ..work.restore_delivery import checked_progress
-                checked_progress(current, store._initial, store._registry, _build())
+                require(False, 'work_command_adapter_unavailable', exit_code=2)
             require(store._pointer(held) == pointer, 'work_checkpoint_changed', exit_code=6)
             held.check()
             return CheckpointValidation(actual, len(pointer[0]), sha256(pointer[0]).hexdigest())
@@ -71,50 +57,8 @@ def continuation(command, store, expected, *, migration_gates=()):
                          complete=False, continuation=confirm_continuation(claim, verify))
 
 
-def restore_result(native):
-    require(native['result'] == 'restored' and native['recovery_required'] is False,
-            'restore_work_recovery_required', exit_code=5)
-    return {'format_version': 'restore-command-v1', 'mode': 'execute', 'restore_plan': None,
-            'execution': native, 'plan_file': None, 'history_assessments': native['historical_findings']}
 
 
-@guarded
-@persisted_contract
-@work_errors
-def start_restore_work(invocation, request):
-    from ..work.restore_execution import prepare_restore_work
-    from ..work.restore_planning import prepare_planning_work
-    from ..work.restore_progress import advance_restore_work
-    options = request.options
-    registry = invocation.registry
-    planning = '--from' in options
-    if planning:
-        initial = prepare_planning_work(registry, request)
-    else:
-        from ..changes.recovery_values import RecoveryAuthority
-        from ..recovery.files import read_restore_inputs
-        require(type(invocation.recovery_authority) is RecoveryAuthority,
-                'restore_authority_required', exit_code=2)
-        plan, selection = read_restore_inputs(options['--plan-root'], options['--plan'],
-            selection_root=options.get('--selection-root'), selection_path=options.get('--affected-journals'))
-        initial = prepare_restore_work(registry, request, plan=plan, affected_journals=selection)
-    location = WorkDirectory(initial, protected_roots=(), protected_paths=protected_paths(initial),
-        directory=absolute(invocation.options['--work-dir']) if '--work-dir' in invocation.options else None)
-    store = CheckpointStore(location, initial)
-    # An initial call never reuses an existing container, even with equal data.
-    with location.for_checkpoint(require_empty=True) as held:
-        store._publish_held(held, initial, None)
-    if planning:
-        from ..work.restore_planning import resume_planning_work
-        current, document = resume_planning_work(store, services=invocation.restore_services)
-    else:
-        native = _native_options(invocation)
-        native['actor'] = {'actor_type': options['--actor-type'], 'actor_id': options['--actor-id']}
-        progress = advance_restore_work(store, registry=registry, **native)
-        current, document = progress.manifest, None
-    if document is not None:
-        return CommandResult('recover.restore', result=document)
-    return continuation('recover.restore', store, current)
 
 
 def _payload(operation, value):
@@ -176,37 +120,7 @@ def _work(invocation):
         return migration_work_command(invocation, store, operation)
     if store._initial.as_dict()['command_class'] == 'transport_operational':
         return _transport_work(invocation, store, operation)
-    if operation == 'cancel':
-        from ..work.restore_control import cancel_restore_work
-        return _payload(operation, cancel_restore_work(store, reason=options['--reason']))
-    if operation == 'export':
-        from ..work.package_publication import publish_work_package
-        output = absolute(options['--output'])
-        return _payload(operation, publish_work_package(store, output_root=output.parent, output=output.name))
-    original = store._initial.as_dict()['normalized_arguments']['options']
-    if '--project' in options:
-        require(str(absolute(options['--project'])) == original['--project'],
-                'restore_project_binding_conflict', exit_code=6)
-    if '--from' in original:
-        require(not any(key in options for key in ('--force', '--expected-lock-sha256', '--reason',
-            '--accept-remote-risk', '--expected-work-lock-sha256', '--work-recovery-reason')),
-                'restore_planning_takeover_not_supported', exit_code=2)
-        before = inspect_work_status(store)['checkpoint_sha256']
-        from ..work.restore_planning import resume_planning_work
-        current, document = resume_planning_work(store, services=invocation.restore_services)
-        if document is None:
-            return continuation('work.resume', store, current)
-        observation = {'native_execution_checked': False,
-                       'checkpoint_changed': current.as_dict()['checkpoint_sha256'] != before}
-    else:
-        from ..work.restore_progress import resume_restore_work
-        result = resume_restore_work(store, registry=invocation.registry, **_native_options(invocation))
-        report = result.as_dict()
-        document = restore_result(report['restore'])
-        observation = {key: report[key] for key in ('native_execution_checked', 'checkpoint_changed')}
-    # Invocation observations belong to this Work response. The original
-    # native outcome and its persisted result bytes stay unchanged.
-    return _payload(operation, {**document, **observation})
+    require(False, 'work_command_adapter_unavailable', exit_code=2)
 
 
 @owned_checks

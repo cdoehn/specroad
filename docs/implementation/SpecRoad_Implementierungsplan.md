@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 224 · **Stand:** 16. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.91
+**Planrevision:** 225 · **Stand:** 16. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.91
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 306 Schritte und 918 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; die früher genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wurde nach der damaligen Spezifikation innerhalb von 15.l.R vorgezogen und bleibt als normaler Prüfkern erhalten. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -141,17 +141,21 @@ Ursprüngliche Infrastrukturfolge: [Bundle 718 — gebundene Dateilöschungen](h
 
 Aktuelle Korrektur: [Bundle 719 — Dateirechte der Löschfixtures](history/bundle-719-deletion-fixture-modes.md). Result 718 bestätigt sieben Fehler im W-Gate und keinen Commit. Der vollständige Rest DELETE-CONTRACT.W/R/C bleibt mit getrennten Gates erhalten; die Zielwerte gelten erst nach dem jeweiligen erfolgreichen Commit.
 
+Aktuelle Folge: [Bundle 720 — Recovery-Rückbau und Git-Wiederanlauf](history/bundle-720-recovery-removal-git.md). Die folgenden Zielwerte gelten ausschließlich nach dem eigenen erfolgreichen Apply-Gate dieser Stage; alle späteren Stages bleiben bis dahin offen.
+
+Aktuelle Korrektur: [Bundle 721 — veraltete Recovery-CLI-Erwartungen](history/bundle-721-partial-read-expectations.md). Das Fehler-Result bestätigt keinen Commit; alle sechs Stages behalten ihre eigenen Gates.
+
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 224
+plan_revision: 225
 implementation_plan_commits_total: 918
-implementation_plan_commits_completed: 774
-last_completed_plan_commit: 18.v.C
-next_plan_commit: 18.w.W
+implementation_plan_commits_completed: 775
+last_completed_plan_commit: 18.w.W
+next_plan_commit: 18.w.R
 priority_off_plan: null
 next_off_plan_commit: null
-last_completed_numbered_bundle: 719
+last_completed_numbered_bundle: 721
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null

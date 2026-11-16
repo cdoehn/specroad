@@ -474,3 +474,7 @@
 - [Bundle 718 — gebundene Dateilöschungen in Apply und Control](bundle-718-apply-deletion-contract.md)
 
 - [Bundle 719 — Dateirechte der Löschfixtures und vollständiger Rest DELETE-CONTRACT.W/R/C](bundle-719-deletion-fixture-modes.md)
+
+- [Bundle 720 — Recovery-Rückbau und Git-Wiederanlauf](bundle-720-recovery-removal-git.md)
+
+- [Bundle 721 — veraltete Recovery-CLI-Erwartungen und vollständiger Rest 18.w/18.x](bundle-721-partial-read-expectations.md)

@@ -91,7 +91,7 @@ def test_code_reference_requires_actual_current_host_bytes_without_code_executio
 @pytest.mark.parametrize('fault',[None,'no-provider','rejected','nonhuman','foreign','criteria',
                                  'unauthenticated','stale','prerequisite'])
 def test_approved_requirement_uses_native_review_inputs_for_actual_target(tmp_path,fault):
-    from test_restore_qualification import approved_project, services
+    from support.qualification import approved_project, services
     options = approved_project(tmp_path)
     files = SourceSnapshot(SourceRequest(options['project_root'])).files
     values = inputs(tmp_path/'inputs',[files]*3)
@@ -113,7 +113,7 @@ def test_approved_requirement_uses_native_review_inputs_for_actual_target(tmp_pa
 
 
 def test_saved_positive_report_does_not_preserve_a_now_stale_review(tmp_path):
-    from test_restore_qualification import approved_project, services
+    from support.qualification import approved_project, services
     options = approved_project(tmp_path)
     values = inputs(tmp_path/'inputs',[SourceSnapshot(SourceRequest(options['project_root'])).files]*3)
     result = target(values,services=services())

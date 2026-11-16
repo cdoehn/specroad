@@ -100,7 +100,7 @@ def environment_report(invocation):
         target_options = {} if root is None else {'--project': str(root)}
         profile = target.preflight_for(target_options)
         needs_project = target.requires_project or profile in (
-            PreflightProfile.PROJECT_READ, PreflightProfile.PROJECT_WRITE, PreflightProfile.RECOVERY)
+            PreflightProfile.PROJECT_READ, PreflightProfile.PROJECT_WRITE)
         check('command.project', 'unknown' if needs_project and root is None else
               'passed' if needs_project else 'not_applicable',
               'explicit_project_missing' if needs_project and root is None else
@@ -112,7 +112,7 @@ def environment_report(invocation):
         check('command.git', 'unknown' if target.requires_git else 'not_applicable',
               'git_not_probed' if target.requires_git else 'git_not_required', required=target.requires_git)
         write = bool(target.effect_scope is not EffectScope.NONE or target.requires_write_paths or profile in (
-            PreflightProfile.PROJECT_WRITE, PreflightProfile.ROOT_CREATION, PreflightProfile.RECOVERY))
+            PreflightProfile.PROJECT_WRITE, PreflightProfile.ROOT_CREATION))
         check('command.write_paths', 'unknown' if write else 'not_applicable',
               'write_capability_not_probed' if write else 'write_paths_not_required', required=write)
 

@@ -2,21 +2,23 @@
   "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [],
   "expected_exit_codes": [],
-  "fixture_ids": [],
-  "implementation_status": "open",
+  "fixture_ids": [
+    "SR-FIX-RECOVERY-REMOVAL-W-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [],
-  "method": "pending",
+  "method": "automated_behavior",
   "open_items": [
     "RECOVERY-REMOVAL-006: changed requirement contract; the old implementation/tests are retained until their assigned W/R/C replacement. Previous recovery/restore evidence does not establish this new behavior.",
     "Apply of this specification/planning bundle is not implementation, release, or user authorization to use SpecRoad."
   ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Version 0.2 MUSS mindestens die Befehlsgruppen `init`, `config`, `format`, `change`, `artifact`, `relation`, `lifecycle`, `document`, `view`, `diagram`, `show`, `validate`, `lint`, `render`, `query`, `trace`, `why`, `impact`, `diff`, `coverage`, `roadmap`, `release`, `evidence`, `baseline`, `proposal`, `import`, `export`, `migrate`, `merge`, `bundle`, `lock`, `capabilities`, `schema`, `command`, `project` und `version` bereitstellen.",
-    "scope": "New interruption guard and manual Git restart contract; no active automated pass claim until implementation."
+    "scope": "Public argv and structured requests reject retired repair commands; this is not evidence for all future command groups. Fresh Apply evidence required; historical recovery results are not acceptance. Unimplemented scopes and target-platform/release proofs remain open."
   },
   "preconditions": [
-    "Implementation and actual Apply evidence for specification 0.2.85 are required; this document bundle runs no new product behavior."
+    "Owned synthetic roots and real native APIs; faults only at actual operating-system or writer boundaries."
   ],
   "primary_verification_id": "SR-VER-0013",
   "required_environment": {
@@ -32,9 +34,34 @@
   },
   "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
-    "Implement the complete new contract in 18.w and bind real behavioral tests and evidence before declaring acceptance."
+    "Exercise the bound native requests and retained positive Work paths.",
+    "Assert exact results and byte preservation for every rejected repair/ownership path.",
+    "Run only in the stage Apply gate; no Dev execution is an acceptance result."
   ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0179",
-  "test_ids": []
+  "test_ids": [
+    "tests/test_recovery_removal.py::test_public_command_contract_has_no_repair_writer_or_repair_profile",
+    "tests/test_recovery_removal.py::test_removed_public_repair_never_starts_or_writes[argv-lock.recover]",
+    "tests/test_recovery_removal.py::test_removed_public_repair_never_starts_or_writes[argv-recover.cleanup]",
+    "tests/test_recovery_removal.py::test_removed_public_repair_never_starts_or_writes[argv-recover.discard]",
+    "tests/test_recovery_removal.py::test_removed_public_repair_never_starts_or_writes[argv-recover.restore]",
+    "tests/test_recovery_removal.py::test_removed_public_repair_never_starts_or_writes[argv-recover.run]",
+    "tests/test_recovery_removal.py::test_removed_public_repair_never_starts_or_writes[argv-recover.status]",
+    "tests/test_recovery_removal.py::test_removed_public_repair_never_starts_or_writes[request-lock.recover]",
+    "tests/test_recovery_removal.py::test_removed_public_repair_never_starts_or_writes[request-recover.cleanup]",
+    "tests/test_recovery_removal.py::test_removed_public_repair_never_starts_or_writes[request-recover.discard]",
+    "tests/test_recovery_removal.py::test_removed_public_repair_never_starts_or_writes[request-recover.restore]",
+    "tests/test_recovery_removal.py::test_removed_public_repair_never_starts_or_writes[request-recover.run]",
+    "tests/test_recovery_removal.py::test_removed_public_repair_never_starts_or_writes[request-recover.status]",
+    "tests/test_recovery_removal.py::test_retained_restore_identity_is_not_a_native_work_request[both]",
+    "tests/test_recovery_removal.py::test_retained_restore_identity_is_not_a_native_work_request[class]",
+    "tests/test_recovery_removal.py::test_retained_restore_identity_is_not_a_native_work_request[command]",
+    "tests/test_recovery_removal.py::test_work_resume_cannot_accept_old_owner_takeover_options[--accept-remote-risk]",
+    "tests/test_recovery_removal.py::test_work_resume_cannot_accept_old_owner_takeover_options[--expected-lock-sha256]",
+    "tests/test_recovery_removal.py::test_work_resume_cannot_accept_old_owner_takeover_options[--expected-work-lock-sha256]",
+    "tests/test_recovery_removal.py::test_work_resume_cannot_accept_old_owner_takeover_options[--force]",
+    "tests/test_recovery_removal.py::test_work_resume_cannot_accept_old_owner_takeover_options[--reason]",
+    "tests/test_recovery_removal.py::test_work_resume_cannot_accept_old_owner_takeover_options[--work-recovery-reason]"
+  ]
 }

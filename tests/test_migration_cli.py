@@ -5,7 +5,7 @@ import pytest
 from specroad.cli.results import thaw
 from specroad.cli.result_schemas import validate_result_document
 from specroad.bundles.migration_source import verify_source_backup
-from support.migration_cli import case, invoke, success, planned, verified, restore, REQUIREMENT
+from support.migration_cli import case, invoke, success, planned, verified, REQUIREMENT
 from support.migration_transaction import normative
 from support.read_only import inventory, no_write_attempts
 
@@ -36,7 +36,8 @@ def test_public_migration_plan_apply_verify_and_restore_roundtrip(tmp_path,repre
     assert checked['verification']['observation']=='stable_live_target'
     assert not checked['verification']['current_readiness_verified']
     target=normative(root)
-    bundle,restored=restore(root,output,representation=representation)
+    bundle=success(invoke('bundle.create', {'--project': str(root), '--scope': 'project',
+        '--output-root': str(output), '--output': 'current.zip'}, representation))
     assert normative(root)==target
     assert bundle['manifest']['bundle_model_root_sha256']==checked['verification']['binding']['target_model_root_sha256']
     for path,raw in source.items():

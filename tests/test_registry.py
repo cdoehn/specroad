@@ -66,7 +66,7 @@ class RegistryWorkTests(unittest.TestCase):
             replace(command, handler=None)
         with self.assertRaises(CommandUsageError):
             builtin_registry().resolve("init.unavailable")
-        self.assertEqual({c.command_id for c in builtin_registry().commands}, {"help", "version", "command.describe", "capabilities", "schema.list", "schema.show", "environment.check", "init", "project.inspect", "artifact.show", "trace", "why", "impact", "query", "diff", "configuration.evaluate", "roadmap.explain", "export", "bundle.create", "bundle.verify", "bundle.extract", "render", "view.render", "diagram", "validate", "lock.status", "recover.status", "recover.restore", "migrate.plan", "migrate.apply", "migrate.verify", "work.status", "work.resume", "work.prompt", "work.export", "work.restore", "work.cancel", "merge.conflicts", "merge.resolve", "merge.plan", "merge.apply", "proposal.validate", "proposal.check", "proposal.review.start", "proposal.review", "proposal.apply"})
+        self.assertEqual({c.command_id for c in builtin_registry().commands}, {"help", "version", "command.describe", "capabilities", "schema.list", "schema.show", "environment.check", "init", "project.inspect", "artifact.show", "trace", "why", "impact", "query", "diff", "configuration.evaluate", "roadmap.explain", "export", "bundle.create", "bundle.verify", "bundle.extract", "render", "view.render", "diagram", "validate", "lock.status", "migrate.plan", "migrate.apply", "migrate.verify", "work.status", "work.resume", "work.prompt", "work.export", "work.restore", "work.cancel", "merge.conflicts", "merge.resolve", "merge.plan", "merge.apply", "proposal.validate", "proposal.check", "proposal.review.start", "proposal.review", "proposal.apply"})
 
     def test_side_effect_limits_cannot_contradict_read_only_or_bootstrap(self):
         command = read_command(lambda invocation: 0)
@@ -146,7 +146,6 @@ class RegistryRobustnessTests(unittest.TestCase):
             CommandClass.GENERATED_OUTPUT: EffectScope.EXTERNAL_OUTPUT,
             CommandClass.READ_ONLY: EffectScope.NONE,
             CommandClass.LOCAL_OPERATIONAL: EffectScope.LOCAL_OPERATIONAL,
-            CommandClass.RECOVERY_WRITE: EffectScope.RECOVERY_TRANSACTION,
             CommandClass.ROOT_CREATION: EffectScope.NEW_ROOT,
             CommandClass.WORK_OPERATIONAL: EffectScope.EXTERNAL_WORK,
             CommandClass.TRANSPORT_OPERATIONAL: EffectScope.TRANSPORT_OUTPUT,

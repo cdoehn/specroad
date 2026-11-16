@@ -26,19 +26,7 @@ def protected_paths(initial):
         return transport_paths(initial)
     if value['command_id'] in ('migrate.plan', 'migrate.verify', 'merge.plan'):
         return ()  # Complete owned passive bytes, no saved live-root authority.
-    require(value['command_id'] == 'recover.restore', 'work_command_adapter_unavailable', exit_code=2)
-    options = value['normalized_arguments']['options']
-    paths = {options['--project']}
-    if '--from' in options:
-        paths.update(options[key] for key in ('--source-root', '--output-root'))
-    else:
-        from ..recovery.values import RestorePlan
-        from .manifest import _bytes
-        plan = RestorePlan(_bytes(value['plan_binding']['plan_source'], initial.objects))
-        paths.update((plan.data['source']['root'], options['--plan-root']))
-        if '--selection-root' in options:
-            paths.add(options['--selection-root'])
-    return tuple(sorted(paths))
+    require(False, 'work_command_adapter_unavailable', exit_code=2)
 
 
 @guarded
@@ -82,7 +70,7 @@ def open_restore_work(path, *, registry):
             'initial_checkpoint_sha256': root['initial_checkpoint_sha256'], 'tool_build': build}
         chain = _decode(metadata, payloads, registry, build)
         initial = chain[0]
-        require(initial.as_dict()['command_id'] in ('recover.restore','migrate.plan','migrate.verify','merge.plan') or (
+        require(initial.as_dict()['command_id'] in ('migrate.plan','migrate.verify','merge.plan') or (
             initial.as_dict()['command_id'] == 'bundle.create'
             and initial.as_dict()['command_class'] == 'transport_operational'),
                 'work_command_adapter_unavailable', exit_code=2)
