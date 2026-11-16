@@ -50,8 +50,8 @@ neue Nummern werden erst hinter dem bestehenden R-Register angehängt.
 C bleibt die ursprüngliche strukturelle Bereinigung mit fortgeführten
 Korrekturen. Tests, Tools und Verifikation bleiben gegenüber R bytegleich.
 
-Dieser Snapshot ist `18.v.W`; sein prospektiver Zielwert ist 772/918,
-nächster Plancommit `18.v.R`. Diese Werte gelten
+Dieser Snapshot ist `18.v.R`; sein prospektiver Zielwert ist 773/918,
+nächster Plancommit `18.v.C`. Diese Werte gelten
 erst nach dem eigenen erfolgreichen Apply-Gate und Commit.
 18.w bleibt unverändert offen.
 

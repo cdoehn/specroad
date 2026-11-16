@@ -76,7 +76,7 @@ def verify_owned_images(originals, journal, backup, *, partial=False):
             require(any(name == 'moves/' + sha256((p + ':' + sha256(b).hexdigest()).encode()).hexdigest() + '.bin'
                         and b.startswith(raw) for p, b in possible), 'transition_pending_image_changed')
         elif name.startswith('recovery-') and name.endswith('.json'):
-            from .schema_transition_recovery import check_recovery_intent
+            from .transition_history import check_recovery_intent
             check_recovery_intent(name,raw,journal)
         elif name == 'transaction.json' and data['state'] == 'committed':
             require(transaction_receipt(journal).startswith(raw), 'transition_receipt_changed')

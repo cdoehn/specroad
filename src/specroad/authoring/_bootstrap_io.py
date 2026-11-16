@@ -322,6 +322,8 @@ class BootstrapTree:
         self.checked_locations()
 
     def cleanup(self):
+        if not self.committed:
+            raise BootstrapError("project_corrupted",exit_code=5,mutation_possible=True)
         self.check()
         moved = self.checked_locations() if self.units else {}
         if self.committed:

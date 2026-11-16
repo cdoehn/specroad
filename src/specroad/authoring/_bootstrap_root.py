@@ -80,6 +80,7 @@ class BootstrapRoot:
 
     def rollback(self, tree, original):
         """Remove only a proven owned, empty root after successful tree rollback."""
+        raise BootstrapError("project_corrupted",exit_code=5,mutation_possible=True)
         rollback_complete = False
         if tree is not None and tree.fd is not None:
             try:

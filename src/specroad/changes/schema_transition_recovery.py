@@ -273,6 +273,8 @@ def check_recovery_intent(name,raw,journal):
 
 def recover_transition(transaction_id, **options):
     """Preserve uncertainty from interrupted recovery, including lower I/O errors."""
+    from .recovery_values import RecoveryError
+    raise RecoveryError('project_corrupted_manual_restore_required',exit_code=5,mutation_possible=False)
     try:
         return _recover_transition(transaction_id,**options)
     except Exception as error:

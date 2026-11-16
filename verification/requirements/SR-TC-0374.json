@@ -194,6 +194,26 @@
     "tests/test_snapshot_guard.py::test_failed_protected_publication_never_replays_or_rolls_back[receipts_synced-migration]",
     "tests/test_snapshot_guard.py::test_failed_protected_publication_never_replays_or_rolls_back[staged:0-merge]",
     "tests/test_snapshot_guard.py::test_failed_protected_publication_never_replays_or_rolls_back[staged:0-migration]",
-    "tests/test_snapshot_guard.py::test_real_migration_process_death_cannot_supply_completion_authority"
+    "tests/test_snapshot_guard.py::test_real_migration_process_death_cannot_supply_completion_authority",
+    "tests/test_snapshot_guard_right.py::test_changed_live_inputs_cannot_finish_a_protected_snapshot[backup-merge]",
+    "tests/test_snapshot_guard_right.py::test_changed_live_inputs_cannot_finish_a_protected_snapshot[backup-migration]",
+    "tests/test_snapshot_guard_right.py::test_changed_live_inputs_cannot_finish_a_protected_snapshot[foreign-merge]",
+    "tests/test_snapshot_guard_right.py::test_changed_live_inputs_cannot_finish_a_protected_snapshot[foreign-migration]",
+    "tests/test_snapshot_guard_right.py::test_changed_live_inputs_cannot_finish_a_protected_snapshot[marker-merge]",
+    "tests/test_snapshot_guard_right.py::test_changed_live_inputs_cannot_finish_a_protected_snapshot[marker-migration]",
+    "tests/test_snapshot_guard_right.py::test_changed_live_inputs_cannot_finish_a_protected_snapshot[owner-merge]",
+    "tests/test_snapshot_guard_right.py::test_changed_live_inputs_cannot_finish_a_protected_snapshot[owner-migration]",
+    "tests/test_snapshot_guard_right.py::test_changed_live_inputs_cannot_finish_a_protected_snapshot[source-merge]",
+    "tests/test_snapshot_guard_right.py::test_changed_live_inputs_cannot_finish_a_protected_snapshot[source-migration]",
+    "tests/test_snapshot_guard_right.py::test_legacy_special_recovery_entrypoint_has_no_write_capability[complete]",
+    "tests/test_snapshot_guard_right.py::test_legacy_special_recovery_entrypoint_has_no_write_capability[discard]",
+    "tests/test_snapshot_guard_right.py::test_legacy_special_recovery_entrypoint_has_no_write_capability[rollback]",
+    "tests/test_snapshot_guard_right.py::test_rehashed_receipt_does_not_replace_full_native_plan_binding[backup]",
+    "tests/test_snapshot_guard_right.py::test_rehashed_receipt_does_not_replace_full_native_plan_binding[command]",
+    "tests/test_snapshot_guard_right.py::test_rehashed_receipt_does_not_replace_full_native_plan_binding[native]",
+    "tests/test_snapshot_guard_right.py::test_rehashed_receipt_does_not_replace_full_native_plan_binding[operations]",
+    "tests/test_snapshot_guard_right.py::test_rehashed_receipt_does_not_replace_full_native_plan_binding[plan]",
+    "tests/test_snapshot_guard_right.py::test_rehashed_receipt_does_not_replace_full_native_plan_binding[project]",
+    "tests/test_snapshot_guard_right.py::test_rehashed_receipt_does_not_replace_full_native_plan_binding[target]"
   ]
 }

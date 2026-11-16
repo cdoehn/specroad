@@ -30,7 +30,8 @@
   "method": "automated_behavior",
   "open_items": [
     "Apply of this specification/planning bundle is not implementation, release, or user authorization to use SpecRoad.",
-    "18.v: fresh stage-specific Apply evidence is required. Dev only prepared the implementation, behavioral oracles and pure collection; no behavior tests ran in Dev."
+    "18.v: fresh stage-specific Apply evidence is required. Dev only prepared the implementation, behavioral oracles and pure collection; no behavior tests ran in Dev.",
+    "Correction 716: actual v2 snapshot history, deletion/missing-file/registry contradictions and forged request paths require their own successful Apply gate; pure Dev collection is not behavioral evidence."
   ],
   "oracle": {
     "kind": "behavior",
@@ -268,6 +269,36 @@
     "tests/test_snapshot_guard.py::test_failed_protected_publication_never_replays_or_rolls_back[receipts_synced-migration]",
     "tests/test_snapshot_guard.py::test_failed_protected_publication_never_replays_or_rolls_back[staged:0-merge]",
     "tests/test_snapshot_guard.py::test_failed_protected_publication_never_replays_or_rolls_back[staged:0-migration]",
-    "tests/test_snapshot_guard.py::test_real_migration_process_death_cannot_supply_completion_authority"
+    "tests/test_snapshot_guard.py::test_real_migration_process_death_cannot_supply_completion_authority",
+    "tests/test_snapshot_guard_right.py::test_changed_live_inputs_cannot_finish_a_protected_snapshot[backup-merge]",
+    "tests/test_snapshot_guard_right.py::test_changed_live_inputs_cannot_finish_a_protected_snapshot[backup-migration]",
+    "tests/test_snapshot_guard_right.py::test_changed_live_inputs_cannot_finish_a_protected_snapshot[foreign-merge]",
+    "tests/test_snapshot_guard_right.py::test_changed_live_inputs_cannot_finish_a_protected_snapshot[foreign-migration]",
+    "tests/test_snapshot_guard_right.py::test_changed_live_inputs_cannot_finish_a_protected_snapshot[marker-merge]",
+    "tests/test_snapshot_guard_right.py::test_changed_live_inputs_cannot_finish_a_protected_snapshot[marker-migration]",
+    "tests/test_snapshot_guard_right.py::test_changed_live_inputs_cannot_finish_a_protected_snapshot[owner-merge]",
+    "tests/test_snapshot_guard_right.py::test_changed_live_inputs_cannot_finish_a_protected_snapshot[owner-migration]",
+    "tests/test_snapshot_guard_right.py::test_changed_live_inputs_cannot_finish_a_protected_snapshot[source-merge]",
+    "tests/test_snapshot_guard_right.py::test_changed_live_inputs_cannot_finish_a_protected_snapshot[source-migration]",
+    "tests/test_snapshot_guard_right.py::test_legacy_special_recovery_entrypoint_has_no_write_capability[complete]",
+    "tests/test_snapshot_guard_right.py::test_legacy_special_recovery_entrypoint_has_no_write_capability[discard]",
+    "tests/test_snapshot_guard_right.py::test_legacy_special_recovery_entrypoint_has_no_write_capability[rollback]",
+    "tests/test_snapshot_guard_right.py::test_rehashed_receipt_does_not_replace_full_native_plan_binding[backup]",
+    "tests/test_snapshot_guard_right.py::test_rehashed_receipt_does_not_replace_full_native_plan_binding[command]",
+    "tests/test_snapshot_guard_right.py::test_rehashed_receipt_does_not_replace_full_native_plan_binding[native]",
+    "tests/test_snapshot_guard_right.py::test_rehashed_receipt_does_not_replace_full_native_plan_binding[operations]",
+    "tests/test_snapshot_guard_right.py::test_rehashed_receipt_does_not_replace_full_native_plan_binding[plan]",
+    "tests/test_snapshot_guard_right.py::test_rehashed_receipt_does_not_replace_full_native_plan_binding[project]",
+    "tests/test_snapshot_guard_right.py::test_rehashed_receipt_does_not_replace_full_native_plan_binding[target]",
+    "tests/test_snapshot_receipts.py::test_current_snapshot_with_real_v2_receipts_is_natively_qualified[merge]",
+    "tests/test_snapshot_receipts.py::test_current_snapshot_with_real_v2_receipts_is_natively_qualified[migration]",
+    "tests/test_snapshot_receipts.py::test_native_receipt_lineage_rejects_unproven_target_images[remove_written]",
+    "tests/test_snapshot_receipts.py::test_native_receipt_lineage_rejects_unproven_target_images[replace_registry]",
+    "tests/test_snapshot_receipts.py::test_native_receipt_lineage_rejects_unproven_target_images[resurrect_deleted]",
+    "tests/test_snapshot_receipts.py::test_request_path_claim_cannot_replace_native_snapshot_proof[../escape.json]",
+    "tests/test_snapshot_receipts.py::test_request_path_claim_cannot_replace_native_snapshot_proof[.specroad/write-state/pending.json]",
+    "tests/test_snapshot_receipts.py::test_request_path_claim_cannot_replace_native_snapshot_proof[/absolute.json]",
+    "tests/test_snapshot_receipts.py::test_request_path_claim_cannot_replace_native_snapshot_proof[profiles/language-data/unbound.txt]",
+    "tests/test_snapshot_receipts.py::test_request_path_claim_cannot_replace_native_snapshot_proof[unmanaged/foreign.json]"
   ]
 }

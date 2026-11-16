@@ -81,7 +81,8 @@ def observe_bootstrap(root):
                     continue
                 present = True
                 guards._regular(info)
-                if info.st_nlink != 1 or info.st_size > 65536:
+                if (info.st_nlink != 1 or info.st_size > 65536 or info.st_mode & 0o7777 != 0o600
+                        or info.st_uid != os.getuid() or info.st_dev != os.fstat(parent.root_fd).st_dev):
                     raise BootstrapError('bootstrap_marker_invalid', exit_code=5)
                 raw = _read(parent.root_fd, name, expected_identity=guards._identity(info))
                 records.append((raw, guards._identity(info)))
@@ -105,7 +106,7 @@ def observe_bootstrap(root):
             parent.check_root()
     except FileNotFoundError:
         state = 'corrupted' if present else 'clean'
-    except (OSError, ValueError, TypeError, KeyError, ProjectLockError,
+    except (OSError, ValueError, TypeError, KeyError, AttributeError, ProjectLockError,
             ModelError, BootstrapError, guards.SafetyViolation):
         state = 'corrupted' if present else 'unknown'
     return dict(format_version='bootstrap-state-v1', state=state, owner_state=owner_state,
@@ -119,7 +120,10 @@ def require_bootstrap_complete(root):
     if type(current) is BootstrapGuard and current.target == Path(os.path.abspath(root)):
         current.check()
         return
-    state = observe_bootstrap(root)
+    target=Path(os.path.abspath(root))
+    state = observe_bootstrap(target)
+    if state['state']=='clean' and target.name=='project':
+        state=observe_bootstrap(target.parent)
     if state['state'] != 'clean':
         error = BootstrapError('project_corrupted' if state['project_corrupted'] else
                                'bootstrap_' + state['state'], exit_code=5)
@@ -136,6 +140,7 @@ class BootstrapGuard:
         self.parent, self.target = parent, Path(target)
         self.pending, self.owner_path = names(target)
         self.records = {}
+        self.removed = set()
         self.token = None
         self.completed = False
         self.started = False
@@ -183,12 +188,18 @@ class BootstrapGuard:
 
     def check(self):
         self.parent.require_held()
+        for name in self.removed:
+            if info_at(self.parent.root_fd,name) is not None:
+                raise BootstrapError("bootstrap_marker_reappeared",exit_code=5)
         for name, ident in self.records.items():
             try:
                 _image(self.parent.root_fd, name, len(self.raw), sha256(self.raw).hexdigest(), identity=ident)
             except StagingError as error:
                 raise BootstrapError('bootstrap_marker_changed', exit_code=5,
                                      path=name, mutation_possible=True) from error
+            info=info_at(self.parent.root_fd,name)
+            if info.st_mode & 0o7777 != 0o600 or info.st_uid != os.getuid():
+                raise BootstrapError('bootstrap_marker_metadata_changed',exit_code=5)
 
     def finish(self, verify):
         self.check()
@@ -201,6 +212,7 @@ class BootstrapGuard:
         self.check()
         os.unlink(self.pending, dir_fd=self.parent.root_fd)
         self.records.pop(self.pending)
+        self.removed.add(self.pending)
         _checkpoint('marker_unlinked')
         os.fsync(self.parent.root_fd)
         _checkpoint('marker_removed')
@@ -211,8 +223,11 @@ class BootstrapGuard:
         self.completed = True
         os.unlink(self.owner_path, dir_fd=self.parent.root_fd)
         self.records.pop(self.owner_path)
+        self.removed.add(self.owner_path)
         os.fsync(self.parent.root_fd)
         _checkpoint('owner_removed')
+        self.check()
+        verify()
 
     def close(self):
         if self.token is not None:

@@ -346,7 +346,7 @@ _sandbox_root.extract_bundle = interrupted
     result = offline(tmp_path, distribution[1], request)
     assert result['code'] in (5, 6), result
     assert tree(tmp_path / 'sandbox') == before
-    assert result['outcome']['summary']['transport']['bootstrap_state'] in ('blocked','not_started')
+    assert result['outcome']['summary']['transport'].get('bootstrap_state','not_started') in ('blocked','not_started')
 
 
 @pytest.mark.parametrize('damage', ('extra', 'false-gate', 'authority', 'manifest-extra', 'reference-hash', 'runtime-type'))

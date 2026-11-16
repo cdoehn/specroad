@@ -110,8 +110,8 @@ def read_transaction_completion(source, transaction_id, *, preflight=None):
     try:
         _transaction(transaction_id)
         with LockFiles(source.boundary.root) as files:
-            from .schema_transition_recovery import find_journal, completion_proof
-            from .schema_transition import completion_data
+            from .transition_history import find_journal, completion_proof
+            from .transition_history import completion_data
             selected = find_journal(files, transaction_id)
             if selected is not None:
                 if preflight is not None:

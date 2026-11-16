@@ -77,9 +77,9 @@ def verify_migration_project(root, backup_raw, plan_raw, report_raw, *, transact
     """
     from ..changes._lock_files import LockFiles
     from ..changes._schema_transition_io import project_files
-    from ..changes.schema_transition import _exclude
+    from ..changes.transition_history import _exclude
     from ..changes.snapshot_completion import completion_proof, SnapshotCompletion
-    from ..changes.schema_transition_recovery import takeover_evidence
+    from ..changes.transition_history import takeover_evidence
     from ._backup_source import _observe
     all_files, observed, check_current = _observe(root)
     with LockFiles(root) as files:

@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 220 · **Stand:** 16. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.91
+**Planrevision:** 223 · **Stand:** 16. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.91
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 306 Schritte und 918 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; die früher genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wurde nach der damaligen Spezifikation innerhalb von 15.l.R vorgezogen und bleibt als normaler Prüfkern erhalten. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -131,18 +131,20 @@ Abgeschlossene Korrektur: [Bundle 714 — 18.u.C](history/bundle-714-completion-
 
 Ausdrücklich bestätigte Fehlergarantie und ergänzende Feldbindungen für 18.v: [BOOTSTRAP-SNAPSHOT-715](decisions/bootstrap-snapshot-715.md). Result 714 bestätigt 18.u.C; der Klärungspräfix verändert keinen Produktzähler.
 
-Ursprüngliche vollständige W/R/C-Gruppe: [Bundle 715](history/bundle-715-snapshot-bootstrap.md). Die folgenden Zielwerte dieser Stage 18.v.W gelten erst nach ihrem eigenen erfolgreichen Apply-Gate und Commit; kein Dev-Test- oder Vollsuiteerfolg wird vorweggenommen.
+Ursprüngliche vollständige W/R/C-Gruppe: [Bundle 715](history/bundle-715-snapshot-bootstrap.md). Die folgenden Zielwerte dieser Stage 18.v.R gelten erst nach ihrem eigenen erfolgreichen Apply-Gate und Commit; kein Dev-Test- oder Vollsuiteerfolg wird vorweggenommen.
 
-Aktuelle Korrektur: [Bundle 716 — vollständiger Rest 18.v.W/R/C](history/bundle-716-snapshot-readers.md). Result 715 bestätigt nur den Klärungscommit; W scheiterte mit 18 Fehlern und 11.889 bestandenen Tests. Alle drei Produktstufen bleiben getrennt und benötigen ihr eigenes Apply-Gate.
+Historische Korrektur: [Bundle 716 — vollständiger Rest 18.v.W/R/C](history/bundle-716-snapshot-readers.md). Result 716 bestätigt 18.v.W, Commit `e0eebf6d4aa948ec6c59824416d07fc62df5c8fd`, und damit 772/918. R scheiterte anschließend mit drei Fehlern und 13.051 bestandenen Tests; C wurde nicht ausgebracht.
+
+Aktuelle Korrektur: [Bundle 717 — Init-Abbruchoracles und vollständiger Rest 18.v.R/C](history/bundle-717-bootstrap-failure-oracles.md). Der erfolgreiche W-Commit bleibt erhalten. R und C erhalten jeweils ihr eigenes Apply-Gate; die folgenden Zielwerte gelten erst nach dem betreffenden erfolgreichen Gate und Commit.
 
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 220
+plan_revision: 223
 implementation_plan_commits_total: 918
-implementation_plan_commits_completed: 772
-last_completed_plan_commit: 18.v.W
-next_plan_commit: 18.v.R
+implementation_plan_commits_completed: 773
+last_completed_plan_commit: 18.v.R
+next_plan_commit: 18.v.C
 priority_off_plan: null
 next_off_plan_commit: null
 last_completed_numbered_bundle: 714

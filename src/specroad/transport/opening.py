@@ -41,6 +41,9 @@ class SandboxOpening:
         self.parent = _external(self.workspace)
         self.output = None if output is None else absolute(output)
         self.output_parent = None if self.output is None else _external(self.output)
+        if self.output is not None:
+            from ..authoring.bootstrap_guard import require_bootstrap_complete
+            require_bootstrap_complete(self.output)
         self.output_boundary = (directory(self.output, owned=True)
             if self.output is not None and os.path.lexists(self.output) else None)
         for path in (self.source.path, self.pyz.path):

@@ -190,3 +190,161 @@ def test_native_io_error_retains_guard_and_actual_evidence(tmp_path,monkeypatch,
     before=preserved(tmp_path)
     with no_bootstrap_writes():again=invoke(source,target)
     assert again.exit_code==5 and preserved(tmp_path)==before
+
+@pytest.mark.parametrize('damage', ['unknown-field', 'version', 'state', 'root-inode',
+    'stage-inode', 'boolean-inode', 'duplicate-inode', 'unknown-path', 'missing-path',
+    'traversal', 'wrong-units', 'duplicate-unit', 'reused', 'executable', 'oversized-payload',
+    'boolean-size', 'entries-type', 'noncanonical', 'duplicate-key', 'oversized-journal', 'invalid-json'])
+def test_invalid_record_cannot_authorize_any_extraction_write(tmp_path, damage):
+    original, source, target = inputs(tmp_path)
+    record, value = interrupt(source, target)
+    entries = value['entries']; config = entries['specroad.json']
+    if damage == 'unknown-field': value['execute'] = 'not executable'
+    elif damage == 'version': value['format'] = 'specroad-bundle-bootstrap-v2'
+    elif damage == 'state': value['state'] = 'complete'
+    elif damage == 'root-inode': value['root_identity'][1] += 1
+    elif damage == 'stage-inode': value['stage_identity'][1] += 1
+    elif damage == 'boolean-inode': config['identity'][0] = True
+    elif damage == 'duplicate-inode': config['identity'] = entries['profiles/core.json']['identity']
+    elif damage == 'unknown-path': entries['foreign'] = dict(config)
+    elif damage == 'missing-path': entries.pop('spec')
+    elif damage == 'traversal': entries['../foreign'] = dict(config)
+    elif damage == 'wrong-units': value['units'].reverse()
+    elif damage == 'duplicate-unit': value['units'].append('specroad.json')
+    elif damage == 'reused': value['reused_directories']['spec'] = entries['spec']
+    elif damage == 'executable': config['mode'] = 0o755
+    elif damage == 'oversized-payload': config['size'] = 1000000000
+    elif damage == 'boolean-size': config['size'] = True
+    elif damage == 'entries-type': value['entries'] = []
+    raw = canonical_json_bytes(value)
+    if damage == 'noncanonical': raw += b'\n'
+    elif damage == 'duplicate-key': raw = b'{"state":"prepared",' + raw[1:]
+    elif damage == 'oversized-journal': raw = b' ' * 1000000
+    elif damage == 'invalid-json': raw = b'{broken'
+    record.write_bytes(raw)
+    before = preserved(tmp_path)
+    with no_bootstrap_writes(): result = invoke(source, target)
+    assert result.exit_code == 5 and result.as_dict()['result'] is None
+    assert preserved(tmp_path) == before
+
+@pytest.mark.parametrize('damage', ['bytes', 'inode', 'mode', 'hardlink', 'symlink',
+    'extra-stage', 'extra-published', 'extra-root', 'missing', 'both-locations', 'order',
+    'journal-hardlink', 'journal-symlink', 'receipt-conflict'])
+def test_changed_or_ambiguous_actual_inventory_is_preserved(tmp_path, damage):
+    original, source, target = inputs(tmp_path)
+    record, value = interrupt(source, target, '.specroad')
+    stage = target/io.STAGING; payload = stage/'profiles/core.json'
+    if damage == 'bytes': payload.write_bytes(payload.read_bytes()+b'\n')
+    elif damage == 'inode':
+        replacement = payload.with_name('replacement'); replacement.write_bytes(payload.read_bytes()); replacement.replace(payload)
+    elif damage == 'mode': payload.chmod(0o600)
+    elif damage == 'hardlink': os.link(payload, tmp_path/'foreign-link')
+    elif damage == 'symlink':
+        foreign = tmp_path/'foreign'; payload.rename(foreign); payload.symlink_to(foreign)
+    elif damage == 'extra-stage': (stage/'unlisted').write_bytes(b'foreign')
+    elif damage == 'extra-published': (target/'.specroad/foreign').write_bytes(b'foreign')
+    elif damage == 'extra-root': (target/'foreign').write_bytes(b'foreign')
+    elif damage == 'missing': payload.unlink()
+    elif damage == 'both-locations': (target/'profiles').mkdir()
+    elif damage == 'order': (stage/'spec').rename(target/'spec')
+    elif damage == 'journal-hardlink': os.link(record,tmp_path/'foreign-journal')
+    elif damage == 'journal-symlink':
+        foreign = tmp_path/'foreign-journal'; record.rename(foreign); record.symlink_to(foreign)
+    elif damage == 'receipt-conflict': target.joinpath(*COMPLETED).mkdir()
+    before = preserved(tmp_path)
+    with no_bootstrap_writes(): result = invoke(source, target)
+    assert result.exit_code == 5, result.as_dict()
+    assert result.as_dict()['result'] is None and preserved(tmp_path) == before
+
+@pytest.mark.parametrize('path', ['specroad.json','bundle-manifest.json','profiles/core.json'])
+def test_rehashed_journal_cannot_replace_the_caller_bound_bundle(tmp_path, path):
+    original, source, target = inputs(tmp_path)
+    record, value = interrupt(source,target)
+    payload = target/io.STAGING/path
+    raw = payload.read_bytes()+b'\n'; payload.write_bytes(raw)
+    value['entries'][path].update(size=len(raw),sha256=sha256(raw).hexdigest())
+    record.write_bytes(canonical_json_bytes(value))
+    before = preserved(tmp_path)
+    with no_bootstrap_writes(): result=invoke(source,target,original.sha256)
+    assert result.exit_code == 5 and preserved(tmp_path) == before
+
+@pytest.mark.parametrize('where',['next-unit','root-alias','stage','published'])
+def test_foreign_concurrent_writes_are_preserved_and_block_completion(tmp_path,monkeypatch,where):
+    original,source,target=inputs(tmp_path)
+    native=io.rename_new; foreign=None
+    def interfere(function,source_fd,name,target_fd,destination):
+        nonlocal foreign
+        if destination=='profiles' and foreign is None:
+            if where=='next-unit':
+                (target/'profiles').mkdir();foreign=target/'profiles/foreign'
+            elif where=='root-alias':foreign=target/'SPEC'
+            elif where=='stage':foreign=target/io.STAGING/'foreign'
+            else:foreign=target/'.specroad/foreign'
+            foreign.write_bytes(b'not owned by extraction')
+            if where=='next-unit':return native(function,source_fd,name,target_fd,destination)
+        return native(function,source_fd,name,target_fd,destination)
+    with monkeypatch.context() as active:
+        active.setattr(io,'rename_new',interfere)
+        result=invoke(source,target)
+    assert foreign is not None and result.exit_code in (5,6) and result.as_dict()['result'] is None
+    assert foreign.read_bytes()==b'not owned by extraction'
+    assert not (target/'specroad.json').exists()
+    before=preserved(tmp_path)
+    with no_bootstrap_writes():again=invoke(source,target)
+    assert again.exit_code==5 and preserved(tmp_path)==before
+
+@pytest.mark.parametrize('point',['validation','publication','completion'])
+def test_changed_input_is_rechecked_during_both_fresh_and_replayed_publication(tmp_path,monkeypatch,point):
+    original,source,target=inputs(tmp_path)
+    changed=False
+    def change():
+        nonlocal changed
+        if not changed:source.write_bytes(b'changed input');changed=True
+    native_prepare,native_restore=io.BootstrapTree.prepare,extraction.restore_inventory
+    native_move,native_finish=io.rename_new,io.BootstrapTree.retain_completed
+    def prepared(tree,*args,**kwargs):
+        native_prepare(tree,*args,**kwargs)
+        if point=='validation':change()
+    def restored(*args,**kwargs):
+        native_restore(*args,**kwargs)
+        if point=='validation':change()
+    def moved(*args):
+        native_move(*args)
+        if point=='publication':change()
+    def finished(tree):
+        native_finish(tree)
+        if point=='completion':change()
+    with monkeypatch.context() as active:
+        active.setattr(io.BootstrapTree,'prepare',prepared)
+        active.setattr(extraction,'restore_inventory',restored)
+        active.setattr(io,'rename_new',moved)
+        active.setattr(io.BootstrapTree,'retain_completed',finished)
+        result=invoke(source,target)
+    assert changed and result.exit_code==6 and result.as_dict()['result'] is None,result.as_dict()
+    assert target.exists()
+    source.write_bytes(original.source_bytes)
+    result=invoke(source,target,original.sha256)
+    assert result.exit_code==5,result.as_dict()
+    fresh=tmp_path/'new-target'
+    fresh_result=invoke(source,fresh,original.sha256)
+    assert fresh_result.exit_code==0
+    check_files(fresh,original,fresh_result.as_dict()['result'])
+
+def test_foreign_name_after_receipt_retention_cannot_be_reported_as_success(tmp_path,monkeypatch):
+    original,source,target=inputs(tmp_path)
+    native=io.BootstrapTree.retain_completed;changed=False
+    def finish(tree):
+        nonlocal changed
+        native(tree)
+        if not changed:
+            (target/'foreign').write_bytes(b'preserve concurrent data');changed=True
+    with monkeypatch.context() as active:
+        active.setattr(io.BootstrapTree,'retain_completed',finish)
+        result=invoke(source,target)
+    assert changed and result.exit_code==6 and result.as_dict()['result'] is None
+    assert (target/'foreign').read_bytes()==b'preserve concurrent data'
+    assert all((target/p).read_bytes()==raw for p,raw in original.files.items())
+    assert (target.joinpath(*COMPLETED)/'journal.json').is_file()
+    before=preserved(tmp_path)
+    with no_bootstrap_writes():again=invoke(source,target)
+    assert again.exit_code==5 and preserved(tmp_path)==before

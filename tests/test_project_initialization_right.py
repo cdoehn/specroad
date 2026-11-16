@@ -130,3 +130,118 @@ def test_process_loss_preserves_prefix_and_refuses_all_reentry(tmp_path, cut, ki
     fresh=tmp_path/'fresh'
     check_project(fresh,dispatch_result(['init',str(fresh)]))
     assert preserved(root)==old
+
+@pytest.mark.parametrize('damage', ['unknown-field', 'version', 'state', 'root-inode',
+    'stage-inode', 'boolean-inode', 'duplicate-inode', 'unknown-path', 'missing-path',
+    'traversal', 'wrong-units', 'duplicate-unit', 'unknown-reused', 'executable',
+    'oversized-payload', 'noncanonical', 'duplicate-key', 'oversized-journal', 'invalid-json'])
+def test_invalid_journal_never_authorizes_writes(tmp_path, damage):
+    root = tmp_path / 'project'; record, value = interrupt(root)
+    entries = value['entries']; config = entries['specroad.json']
+    if damage == 'unknown-field': value['execute'] = 'must never execute'
+    elif damage == 'version': value['format'] = 'specroad-bootstrap-v2'
+    elif damage == 'state': value['state'] = 'complete'
+    elif damage == 'root-inode': value['root_identity'][1] += 1
+    elif damage == 'stage-inode': value['stage_identity'][1] += 1
+    elif damage == 'boolean-inode': config['identity'][0] = True
+    elif damage == 'duplicate-inode': config['identity'] = entries['profiles/core.json']['identity']
+    elif damage == 'unknown-path': entries['foreign'] = dict(config)
+    elif damage == 'missing-path': entries.pop('rules')
+    elif damage == 'traversal': entries['../foreign'] = dict(config)
+    elif damage == 'wrong-units': value['units'].reverse()
+    elif damage == 'duplicate-unit': value['units'].append('specroad.json')
+    elif damage == 'unknown-reused': value['reused_directories']['foreign'] = dict(entries['rules'])
+    elif damage == 'executable': config['mode'] = 0o755
+    elif damage == 'oversized-payload': config['size'] = 1000000000
+    raw = canonical_json_bytes(value)
+    if damage == 'noncanonical': raw += b'\n'
+    elif damage == 'duplicate-key': raw = b'{"state":"prepared",' + raw[1:]
+    elif damage == 'oversized-journal': raw = b' ' * 262145
+    elif damage == 'invalid-json': raw = b'{broken'
+    record.write_bytes(raw)
+    before = preserved(tmp_path)
+    with no_bootstrap_writes(): result = dispatch_result(['init', str(root)])
+    assert result.exit_code == 5
+    assert preserved(tmp_path) == before
+
+@pytest.mark.parametrize('damage', ['bytes', 'inode', 'mode', 'hardlink', 'symlink',
+    'extra-stage', 'extra-published', 'missing', 'both-locations', 'order', 'alias',
+    'journal-symlink', 'journal-hardlink', 'receipt-conflict'])
+def test_actual_ambiguous_or_foreign_state_is_preserved(tmp_path, damage):
+    root = tmp_path / 'project'; record, value = interrupt(root, '.specroad')
+    staged = root / bootstrap.STAGING
+    target = staged / 'profiles/core.json'
+    if damage == 'bytes': target.write_bytes(target.read_bytes() + b'\n')
+    elif damage == 'inode':
+        replacement = target.with_name('replacement'); replacement.write_bytes(target.read_bytes()); replacement.replace(target)
+    elif damage == 'mode': target.chmod(0o600)
+    elif damage == 'hardlink': os.link(target, tmp_path / 'foreign-link')
+    elif damage == 'symlink':
+        raw = target.read_bytes(); target.unlink(); (tmp_path / 'foreign').write_bytes(raw); target.symlink_to(tmp_path / 'foreign')
+    elif damage == 'extra-stage': (staged / 'unlisted').write_bytes(b'foreign staged data')
+    elif damage == 'extra-published': (root / '.specroad/foreign').write_bytes(b'foreign published data')
+    elif damage == 'missing': target.unlink()
+    elif damage == 'both-locations': (root / 'profiles').mkdir()
+    elif damage == 'order': (staged / 'spec').rename(root / 'spec')
+    elif damage == 'alias': (root / 'SPEC').mkdir()
+    elif damage == 'journal-symlink':
+        other = tmp_path / 'foreign-journal'; record.rename(other); record.symlink_to(other)
+    elif damage == 'journal-hardlink': os.link(record, tmp_path / 'foreign-journal')
+    elif damage == 'receipt-conflict': root.joinpath(*bootstrap.COMPLETED).mkdir()
+    before = preserved(tmp_path)
+    with no_bootstrap_writes(): result = dispatch_result(['init', str(root)])
+    assert result.exit_code == 5
+    assert preserved(tmp_path) == before
+
+@pytest.mark.parametrize('kind', ['configuration', 'document', 'resource'])
+def test_rehashed_payload_still_must_match_native_bootstrap_contract(tmp_path, kind):
+    root = tmp_path / 'project'; record, journal = interrupt(root)
+    if kind == 'configuration': path = 'specroad.json'
+    elif kind == 'document': path = next(p for p in journal['entries'] if p.startswith('spec/documents/') and p.endswith('.json'))
+    else: path = 'profiles/core.json'
+    payload = root / bootstrap.STAGING / path
+    value = json.loads(payload.read_bytes())
+    if kind == 'configuration': value['project_name'] = 'different project'
+    elif kind == 'document': value['document_role'] = 'supporting'
+    else: value['title'] = 'unbound resource'
+    raw = canonical_json_bytes(value); payload.write_bytes(raw)
+    journal['entries'][path].update(size=len(raw), sha256=sha256(raw).hexdigest())
+    record.write_bytes(canonical_json_bytes(journal))
+    before = preserved(tmp_path)
+    with no_bootstrap_writes(): result = dispatch_result(['init', str(root)])
+    assert result.exit_code == 5 and preserved(tmp_path) == before
+
+@pytest.mark.parametrize('where', ['staged', 'published', 'reused'])
+def test_rollback_does_not_remove_foreign_bytes_added_during_failure(tmp_path, monkeypatch, where):
+    root = tmp_path / 'project'; root.mkdir(); (root / 'README').write_bytes(b'original foreign')
+    if where == 'reused': (root / 'rules').mkdir()
+    original = bootstrap.rename_new; foreign = None
+    def fail(function, source_fd, source, target_fd, destination):
+        nonlocal foreign
+        if destination == 'profiles' and foreign is None:
+            if where == 'staged': foreign = root / bootstrap.STAGING / 'foreign'
+            elif where == 'published': foreign = root / '.specroad/foreign'
+            else: foreign = root / 'rules/foreign'
+            foreign.write_bytes(b'not bootstrap-owned')
+            raise OSError('owned failure with foreign mutation')
+        return original(function, source_fd, source, target_fd, destination)
+    monkeypatch.setattr(bootstrap, 'rename_new', fail)
+    result = dispatch_result(['init', str(root)])
+    assert foreign is not None, 'publication fault boundary was not reached'
+    assert result.exit_code == 5
+    assert result.details['bootstrap']['reason'] == 'bootstrap_publication_interrupted'
+    assert result.details['bootstrap']['mutation_possible'] is True
+    assert foreign.read_bytes() == b'not bootstrap-owned'
+    assert (root / 'README').read_bytes() == b'original foreign'
+    assert (root / bootstrap.STAGING / 'journal.json').exists()
+    assert not (root / 'specroad.json').exists()
+    # C.2.2 preserves the protected partial state; no later call may repair it.
+    from specroad.authoring.bootstrap_guard import observe_bootstrap
+    before = preserved(tmp_path)
+    with no_bootstrap_writes():
+        state = observe_bootstrap(root)
+        retry = dispatch_result(['init', str(root)])
+        read = dispatch_result(['validate', '--project', str(root)])
+    assert state['state'] == 'corrupted' and state['manual_git_restore_required']
+    assert retry.exit_code == 5 and read.exit_code == 5
+    assert preserved(tmp_path) == before

@@ -468,3 +468,5 @@
 - [Bundle 714 — gebundener Receipt-Reader und vollständiger Rest 18.u.C](bundle-714-completion-reader.md)
 
 - [Bundle 716 — Snapshotbelege und vollständiger Rest 18.v.W/R/C](bundle-716-snapshot-readers.md)
+
+- [Bundle 717 — Init-Abbruchoracles und vollständiger Rest 18.v.R/C](bundle-717-bootstrap-failure-oracles.md)

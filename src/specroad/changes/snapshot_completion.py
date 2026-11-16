@@ -41,7 +41,7 @@ def completion_proof(files, transaction_id):
     require(parsed(raw).get('format_version') in
         ('schema-transition-receipt-v1', 'merge-transition-receipt-v1'),
         'invalid_write_receipt')
-    from .schema_transition_recovery import completion_proof as legacy
+    from .transition_history import completion_proof as legacy
     return legacy(files,transaction_id)
 
 
@@ -52,7 +52,7 @@ def historical_request(files, plan, project_id):
     if raw is None:return None
     receipt=RequestReceipt(raw)
     if receipt.data['format_version']!='request-receipt-v2':
-        from .schema_transition_recovery import historical_request as legacy
+        from .transition_history import historical_request as legacy
         return legacy(files,plan,project_id)
     source=ProjectSource(files.boundary.root,expected_project_id=project_id)
     proof=NormalCompletionProof(files,source,receipt.data['transaction_id'])
