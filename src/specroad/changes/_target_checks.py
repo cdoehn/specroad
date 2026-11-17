@@ -24,7 +24,7 @@ def _gates(gates, policy, plan, model):
             'command':policy.data(), 'gate_resources':g.resources_sha256})) for g in gates)
     required = set(policy.required_gate_ids)
     operations = plan.data['operations']
-    if any(op['op'] == 'proposal_control' for op in operations):
+    if any(op['op'] in ('proposal_control', 'proposal_create') for op in operations):
         from ..proposals._control_dispatch import adapter
         command, gate, _, _ = adapter(operations)
         if policy.command_id != command:

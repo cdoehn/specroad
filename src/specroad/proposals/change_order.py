@@ -78,7 +78,7 @@ class ProposalChanges:
                 'proposal_change_order_mismatch', pointer='/change_plan/operations')
         require(plan.data['base'] == self.change_plan.data['base'],
                 'proposal_change_basis_mismatch', pointer='/change_plan/base', exit_code=6)
-        require(not any(op.op in ('proposal_control', 'baseline_create') for op in plan.operations)
+        require(not any(op.op in ('proposal_control', 'proposal_create', 'baseline_create') for op in plan.operations)
                 and not any(row['artifact']['artifact_type'] in ('proposal', 'baseline')
                             for row in plan.data['result_artifacts']),
                 'proposal_control_operation_forbidden')

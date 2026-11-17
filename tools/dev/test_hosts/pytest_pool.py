@@ -5,12 +5,12 @@ import platform
 import pytest
 
 from verification_support.identity import source_identity
-from .config import read_json
+from .profile_io import read_profile
 from .environment import digest
 from .history import HistoryServer
 from .history_writer import HistoryWriter
 from .lease import Lease, io_priority
-from .contract import public_proof, validate_profile
+from .contract import public_proof
 
 
 class RemoteBootstrap:
@@ -39,7 +39,7 @@ def configure(config, root):
         return
     if os.environ.get('SPECROAD_NESTED_TEST_RUN') == '1':
         raise ValueError('Nested test runners cannot open a host pool')
-    profile = validate_profile(read_json(path))
+    profile = read_profile(path)
     if profile['source_sha256'] != source_identity(root) or not profile['workers']:
         raise ValueError('Stale or invalid host run')
     config._sr_host_profile = profile

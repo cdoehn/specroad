@@ -8,6 +8,7 @@ import re
 from verification_support.host_execution import DEFAULT_WORKER_LIMIT
 
 NAME = re.compile(r'[A-Za-z0-9][A-Za-z0-9_.-]{0,63}\Z')
+MAX_HOST_INPUT_BYTES = 16_000_000
 
 
 def unique(pairs):
@@ -19,11 +20,17 @@ def unique(pairs):
     return result
 
 
-def read_json(path):
+def read_json(path, *, strict=False):
     path = Path(path)
-    if path.is_symlink() or not path.is_file() or path.stat().st_size > 16_000_000:
+    if path.is_symlink() or not path.is_file() or path.stat().st_size > MAX_HOST_INPUT_BYTES:
         raise ValueError('Unsafe or oversized host input')
-    return json.loads(path.read_bytes(), object_pairs_hook=unique)
+    raw = path.read_bytes()
+    if strict:
+        def invalid_number(value):
+            raise ValueError('Non-finite host input')
+        return json.loads(raw.decode('utf-8'), object_pairs_hook=unique,
+                          parse_constant=invalid_number)
+    return json.loads(raw, object_pairs_hook=unique)
 
 
 def private_directory(path):

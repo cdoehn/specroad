@@ -168,8 +168,9 @@ def run_apply_partition(root, outdir, *, workers=None, worker_limit=DEFAULT_WORK
             verify_resources(observation, resources)
         else:
             from dev.test_hosts.pool import verify_pool, public_proof
+            from dev.test_hosts.profile_io import read_profile
             verify_pool(observation, pool)
-            if public_proof(_load_report(pool_path)) != pool:
+            if public_proof(read_profile(pool_path)) != pool:
                 raise ValueError('Host profile changed during tests')
         if (observation["nodeid_to_test_id"] != selected
                 or any(not name.startswith("gw") for name in observation["worker_test_counts"])

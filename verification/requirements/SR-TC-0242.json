@@ -1,20 +1,31 @@
 {
   "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "fixture_ids": [],
-  "implementation_status": "open",
+  "expected_exit_codes": [
+    0,
+    2,
+    3,
+    6,
+    7
+  ],
+  "fixture_ids": [
+    "SR-FIX-OWNED-TEMP-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [],
-  "method": "pending",
+  "method": "automated_behavior",
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Complete public raw-input CLI family wiring and final end-to-end acceptance in 18.p remain separate; current native API and tests do not claim those commands are registered.",
+    "Fresh behavior evidence is produced only by the corresponding Apply stage."
   ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Jeder direkte Authoring-Befehl MUSS mit `--as-proposal` anstelle der sofortigen Ausführung ein semantisch gleichwertiges Proposal im Status `draft` erzeugen können.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "The actual shared prepared-authoring route preserves complete normal plans and defaults; isolated draft publication uses the native guarded writer, full qualification, authority and receipts. Scope and human review remain mandatory."
   },
-  "preconditions": [],
+  "preconditions": [
+    "Owned complete native fixtures; declared test actors and trusted test host services. Native publications and receipts execute only in Apply; no fabricated human approvals."
+  ],
   "primary_verification_id": "SR-VER-0018",
   "required_environment": {
     "declared_minimum_python": "3.10",
@@ -28,8 +39,21 @@
     "owned_temporary_files": true
   },
   "specification_sha256": "ec1464357d139becd7b5a15e5764e2320e6a588260c6f14b5490253e2110d1fa",
-  "steps": [],
+  "steps": [
+    "Build complete native inputs and actual bound requests.",
+    "Observe exact result bytes, refusal codes, original file effects and native receipt evidence."
+  ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0242",
-  "test_ids": []
+  "test_ids": [
+    "tests/test_authoring_proposals.py::test_native_writer_changes_only_the_draft_and_replays_exact_receipt",
+    "tests/test_authoring_proposals.py::test_same_complete_authoring_plan_and_defaults_are_embedded[add]",
+    "tests/test_authoring_proposals.py::test_same_complete_authoring_plan_and_defaults_are_embedded[confirmed]",
+    "tests/test_authoring_proposals.py::test_same_complete_authoring_plan_and_defaults_are_embedded[create]",
+    "tests/test_authoring_proposals.py::test_same_complete_authoring_plan_and_defaults_are_embedded[rejected]",
+    "tests/test_authoring_proposals.py::test_same_complete_authoring_plan_and_defaults_are_embedded[remove]",
+    "tests/test_authoring_proposals.py::test_same_complete_authoring_plan_and_defaults_are_embedded[retire]",
+    "tests/test_authoring_proposals.py::test_same_complete_authoring_plan_and_defaults_are_embedded[transition]",
+    "tests/test_authoring_proposals.py::test_same_complete_authoring_plan_and_defaults_are_embedded[update]"
+  ]
 }

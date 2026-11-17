@@ -154,6 +154,7 @@ class SchemaCatalogChangePlanTests(unittest.TestCase):
                    result(record_value('baseline')),
                    result(record_value('proposal', proposal_status='validated',
                        maturity='proposed', content_sha256='b' * 64))]
+        results.append(result(operation('proposal_create')['record']))
         plan = prepare_change_plan(document(operations, results))
         self.catalog.validate(CHANGE_PLAN_ID, plan.data)
         self.assertEqual(ChangePlan(plan.canonical_bytes).data, plan.data)

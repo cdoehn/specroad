@@ -38,7 +38,8 @@ def verify_commit_gate(root, directory, *, source, head, test_plan):
     pool = report.get('host_pool')
     if pool is not None:
         from dev.test_hosts.contract import public_proof
-        profile = _load_report(directory / 'host-run.json')
+        from dev.test_hosts.profile_io import read_profile
+        profile = read_profile(directory / 'host-run.json')
         if public_proof(profile) != pool or profile['source_sha256'] != source or profile['selected'] != selected:
             raise ValueError('Host run does not bind the current Apply selection')
     receipt = selection_receipt(registry, raw, selected, head, sequence, runtime, required, resources, pool)

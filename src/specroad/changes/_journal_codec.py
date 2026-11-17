@@ -100,6 +100,11 @@ def validate_building_document(value, *, historical_proposal=False):
         # BuildingJournal and every active transaction path keep the default
         # command restriction; a historical object is not an executable journal.
         command, route = ('proposal apply', 'approved_proposal_apply') if historical_proposal else ('change apply', 'direct')
+        if not historical_proposal and authoring.get('command_id') == 'proposal create':
+            from ..proposals._create_control import creation_mode
+            if not creation_mode(authoring['operations']):
+                raise JournalError('proposal_create_operation_required')
+            command, route = 'proposal create', 'proposal_management'
         if not historical_proposal and authoring.get('command_id') == 'proposal review start':
             # Rebuilding above checks the closed isolated native control evidence.
             command, route = 'proposal review start', 'proposal_management'

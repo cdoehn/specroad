@@ -3,6 +3,9 @@ from .values import require
 
 
 def control_mode(operations):
+    from ._create_control import creation_mode
+    if creation_mode(operations):
+        return True
     selected = any(op['op'] == 'proposal_control' for op in operations)
     if selected:
         from ._apply_control import apply_mode
@@ -16,6 +19,10 @@ def control_mode(operations):
 
 def adapter(operations):
     require(control_mode(operations), 'proposal_control_operation_required')
+    from . import _create_control
+    if _create_control.creation_mode(operations):
+        return (_create_control.COMMAND, _create_control.GATE,
+                _create_control.prepare_create_candidates, _create_control.bind_create_authoring)
     from . import _apply_control
     if _apply_control.apply_mode(operations):
         return (_apply_control.COMMAND, _apply_control.GATE,

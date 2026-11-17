@@ -94,6 +94,11 @@ def validate_relation_review_record(value, pointer):
         seen.add(identity.id)
         _text(withdrawal['reason'], at + '/reason')
 
+def validate_proposal_create(value, pointer):
+    from ..proposals._create_control import creation_record
+    _at(pointer, creation_record, value)
+
+
 def validate_proposal_control(value, pointer):
     if ('review_start' in value and 'review_decision' in value
             or not value['events'] and 'review_decision' not in value):

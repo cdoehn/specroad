@@ -41,6 +41,11 @@ def prepare_authoring_request(*, command_id, actor, operations, request_id=None,
     if type(operations) not in (list, tuple):
         raise AuthoringError('explicit_operation_sequence_required', pointer='/operations')
     owned = [ChangeOperation(op).data for op in operations]
+    if any(op['op'] == 'proposal_create' for op in owned):
+        from ..proposals._create_control import creation_mode
+        if command_id != 'proposal create':
+            raise AuthoringError('proposal_create_specialist_required', exit_code=7)
+        creation_mode(owned)
     if any(op['op'] == 'proposal_control' for op in owned):
         if command_id not in ('proposal review start', 'proposal review', 'proposal apply'):
             raise AuthoringError('proposal_control_specialist_required', exit_code=7)

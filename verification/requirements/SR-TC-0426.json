@@ -17,6 +17,7 @@
     7
   ],
   "fixture_ids": [
+    "SR-FIX-OWNED-TEMP-v1",
     "SR-FIX-PROPOSAL-AUTHORING-v1",
     "SR-FIX-PROPOSAL-BASIS-v1",
     "SR-FIX-PROPOSAL-REVIEW-START-v1",
@@ -51,18 +52,20 @@
   ],
   "method": "automated_behavior",
   "open_items": [
-    "Remaining M18 public authoring, human decision/quorum, Proposal apply, Work continuation and full workflow integration retain their own plan gates."
+    "Complete public raw-input CLI family wiring and final end-to-end acceptance in 18.p remain separate; current native API and tests do not claim those commands are registered.",
+    "Fresh behavior evidence is produced only by the corresponding Apply stage."
   ],
   "oracle": {
     "expected": "Exact specification/closed/unconfigured descriptor and real canonical root, no control self-reference, actual native basis/target fold. Every actual control dependency fails with native source/target/relation-or-pointer context; free text is not an edge. Ordered complete plan retained; content edits advance both revisions once and reset draft while preserving ineffective historical reviews. Canonical no-op preserves original bytes and current review effect; terminal versions require a separate new Proposal identity. Original files/status/revisions remain unchanged; result binds source bytes/context and observes status without promoting it. Invalid or stale inputs cannot become eligible transitions. One transaction produces draft→validated→checked→in_review with maturity=in_review and physical revision +1. Content revision/hash, existing histories and unrelated normative bytes are preserved; exact report bytes bind the original context. Dry-run or pre-publication failure does not change the Proposal. Durable receipt identity is unchanged on replay; a read with the actual PublicationPreflight independently verifies the current target, whereas historical and replay reads do not claim renewed current-target verification; injected staging failure retains native recovery evidence and cannot imply success.",
     "kind": "behavior",
     "requirement_contract": "Die Proposal-Authoring-Befehlsgruppe MUSS den vollständigen Aufruf-, Eingabe-, Ausgabe-, Revisions-, Seiteneffekt- und Fehlervertrag aus Kapitel 11.10 erfüllen.",
-    "scope": "18.h native atomic review-start writer, real full native basis/target checks, strict original-report binding and public argv/structured invocation. No human decision, Proposal apply or release approval is claimed. Existing fixed-basis, ordered authoring/revision and read-only validation cases retain their original assertions."
+    "scope": "The actual shared prepared-authoring route preserves complete normal plans and defaults; isolated draft publication uses the native guarded writer, full qualification, authority and receipts. Scope and human review remain mandatory."
   },
   "preconditions": [
-    "Owned synthetic native sources and actual full TargetModel; no real approvals or publication authority.",
     "Complete native Proposal with changes, full replacement ChangePlan, explicit expected physical revision, actor/time and common request policy; small native model for target/history integration.",
     "Complete native project and owned Proposal/ChangePlan; explicit ID or file, no external credentials or process execution.",
+    "Owned complete native fixtures; declared test actors and trusted test host services. Native publications and receipts execute only in Apply; no fabricated human approvals.",
+    "Owned synthetic native sources and actual full TargetModel; no real approvals or publication authority.",
     "Small complete native project, exact Proposal originals and explicit actor/revision; real native checks and writer, synthetic trusted host authority only in tests."
   ],
   "primary_verification_id": "SR-VER-0030",
@@ -79,25 +82,21 @@
   },
   "specification_sha256": "ec1464357d139becd7b5a15e5764e2320e6a588260c6f14b5490253e2110d1fa",
   "steps": [
-    "Construct the fixed native specification closure and canonical basis from actual source bytes.",
-    "Bind complete native plans to actual basis and reconstructed target; preserve unrelated project/control data.",
-    "Reject disallowed selection before project/handler access; distinguish CLI usage 2, stored-data 3, native SRV140, IO 5, changed input 6 and unsafe input 7.",
-    "Prepare the four ordered authoring actions and reset changed open Proposals to draft with one physical/content revision.",
-    "Recompute the native target and requalify preserved synthetic review history; old approvals lose effect on actual content change.",
-    "Retain all bytes and review effect for no-op; reject terminal/intermediate states, stale revision, untyped audit and malformed action arguments before allocation.",
-    "Run public read-only validation through argv and CommandRequest against native schema, references and basis/target fold.",
-    "Compare complete before/after inventories and original status/revisions; assert exact hash bindings and no authority.",
-    "Retain actual observed status on valid/invalid inputs; reject unsafe paths, stale sources and unsupported write/variant options; preserve concurrent changes.",
-    "Resolve external and managed relative Proposal files from the actual invocation directory, independently of --project; preserve source hash/binding, complete inventory and process cwd in argv and structured calls.",
-    "Run review start through current native Validate, isolated Check and the actual locked journal/staging/receipt pipeline.",
-    "Read the resulting Proposal and durable completion; verify one physical revision, stable content and exactly three bound original reports, with no human approval.",
-    "Exercise managed-path selection and complete dry-run without normative files or receipts.",
-    "Reject tampered report bytes/contexts, request actor/revision conflicts, stale basis and denied authority; preserve real prepared-journal recovery evidence.",
-    "Use complete original contexts for an authored second revision and independently prove retry does not append another revision."
+    "Build complete native inputs and actual bound requests.",
+    "Observe exact result bytes, refusal codes, original file effects and native receipt evidence."
   ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0426",
   "test_ids": [
+    "tests/test_authoring_proposals.py::test_native_writer_changes_only_the_draft_and_replays_exact_receipt",
+    "tests/test_authoring_proposals.py::test_same_complete_authoring_plan_and_defaults_are_embedded[add]",
+    "tests/test_authoring_proposals.py::test_same_complete_authoring_plan_and_defaults_are_embedded[confirmed]",
+    "tests/test_authoring_proposals.py::test_same_complete_authoring_plan_and_defaults_are_embedded[create]",
+    "tests/test_authoring_proposals.py::test_same_complete_authoring_plan_and_defaults_are_embedded[rejected]",
+    "tests/test_authoring_proposals.py::test_same_complete_authoring_plan_and_defaults_are_embedded[remove]",
+    "tests/test_authoring_proposals.py::test_same_complete_authoring_plan_and_defaults_are_embedded[retire]",
+    "tests/test_authoring_proposals.py::test_same_complete_authoring_plan_and_defaults_are_embedded[transition]",
+    "tests/test_authoring_proposals.py::test_same_complete_authoring_plan_and_defaults_are_embedded[update]",
     "tests/test_proposal_basis_right.py::test_cli_changed_scope_input_is_conflict_before_handler",
     "tests/test_proposal_basis_right.py::test_cli_configuration_stdin_and_missing_file_have_distinct_failures[options0-2]",
     "tests/test_proposal_basis_right.py::test_cli_configuration_stdin_and_missing_file_have_distinct_failures[options1-2]",

@@ -486,3 +486,7 @@
 - [Bundle 724 — Work-Prüfimport und veraltete Publikations-Lock-Annahme](bundle-724-work-import-publication-oracle.md)
 
 - [Bundle 725 — Native Qualifikation der Git-Neubeginn-Testdaten](bundle-725-git-restart-qualification.md)
+
+- [Bundle 726 — Authoring und Agentenverträge](bundle-726-authoring-agents.md)
+
+- [Bundle 727 — Hostprofilgrenze und vollständiger offener Rest](bundle-727-host-profile-storage.md)

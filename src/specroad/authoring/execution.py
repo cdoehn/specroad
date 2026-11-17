@@ -50,13 +50,24 @@ def _replay(source, request, command_id):
 
 
 def apply_authoring_plan(plan, model, *, command_id, transaction_id, authority,
-        gates=(), strict=False, package_files=()):
+        gates=(), strict=False, package_files=(), as_proposal=False,
+        proposal_fields=None, services=None):
     """Recheck and publish exactly the saved plan under the native writer lock.
 
     A confirmed retry is resolved before current-target evaluation. A no-op
     still requires fresh native authorization but creates no receipt or journal.
     Failures retain the existing protocol's real recovery state and exceptions.
     """
+    if type(as_proposal) is not bool:
+        raise AuthoringError('explicit_boolean_options_required')
+    if as_proposal:
+        from .proposals import publish_authoring_proposal
+        return publish_authoring_proposal(plan, model, command_id=command_id,
+            transaction_id=transaction_id, authority=authority, gates=gates,
+            strict=strict, package_files=package_files, proposal_fields=proposal_fields,
+            services=services)
+    if proposal_fields is not None:
+        raise AuthoringError('proposal_option_requires_redirect', exit_code=2)
     return _apply_saved_plan(plan, model, command_id=command_id,
         transaction_id=transaction_id, authority=authority, gates=gates,
         strict=strict, package_files=package_files)

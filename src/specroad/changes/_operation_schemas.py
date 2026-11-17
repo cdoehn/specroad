@@ -76,6 +76,10 @@ def relation_review_record_schema():
         'approval_withdrawals': arr(withdrawal), 'expected_revision': revision(),
         'expected_sha256': digest()}, ['op', 'record', 'source', 'target', 'approval_withdrawals'])
 
+def proposal_create_schema():
+    return obj({'op': {'const': 'proposal_create'}, 'record': {'type': 'object'}})
+
+
 def proposal_control_schema():
     base = {"op": {"const": 'proposal_control'}}
     ref = text()

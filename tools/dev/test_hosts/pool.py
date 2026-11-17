@@ -1,5 +1,4 @@
 """Prepare an exact host run before pytest; never install or retry during a gate."""
-import json
 from pathlib import Path
 import shlex
 import shutil
@@ -15,8 +14,12 @@ from .history import estimates
 from .provision import check, python_path
 from .snapshot import copy_snapshot, fingerprint, remote_verify, inventory
 from .ssh import Transport
+from .profile_io import write_profile
 # Re-export the established helper imports; implementation lives in one contract.
-from .contract import validate_profile, public_proof, verify_pool
+from . import contract
+from .contract import public_proof, verify_pool
+
+validate_profile = contract.validate_profile
 
 
 def proxy_gateway(identifier, transport, executable, work, *, temporary=None):
@@ -126,7 +129,5 @@ print(json.dumps(True))
     if source_identity(root) != source or inventory(root) != manifest:
         raise ValueError('Source changed during remote preparation')
     path = outdir / 'host-run.json'
-    validate_profile(profile)
-    path.write_text(json.dumps(profile, sort_keys=True))
-    path.chmod(0o600)
+    write_profile(path, profile)
     return profile, path

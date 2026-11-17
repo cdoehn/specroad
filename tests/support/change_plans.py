@@ -11,6 +11,8 @@ def scope():
 
 
 def operation(kind='create'):
+    if kind == 'proposal_create':
+        return {'op': kind, 'record': proposal_draft()}
     goal = domain_value()
     options = {
         'create': {'artifact': goal, 'result_id': goal['id']},
@@ -47,3 +49,16 @@ def document(operations=None, results=None):
         'preconditions': [], 'result_artifacts': deepcopy([result(domain_value())] if results is None else results),
         'expected_result': {'model_root_sha256': 'b'*64},
     }
+
+
+def proposal_draft():
+    from specroad.changes import prepare_change_plan
+    from specroad.model.identity_values import ArtifactIdentity
+    from specroad.proposals.authoring import prepare_proposal
+    from specroad.proposals.values import SPECIFICATION_SCOPE
+    value = document([], [])
+    value['base']['scope_descriptor'] = SPECIFICATION_SCOPE
+    value['expected_result']['model_root_sha256'] = value['base']['model_root_sha256']
+    return prepare_proposal(identity=ArtifactIdentity(ref('PROP', '2'), 'random128-v1', 'proposal', 'SR'),
+        title='Synthetic initial draft', rationale='Shape validation only',
+        change_plan=prepare_change_plan(value), changes=[]).data

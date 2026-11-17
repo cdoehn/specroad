@@ -18,7 +18,7 @@ from verification_support.process_environment import test_environment as isolate
 
 
 def run_isolated_pool(tmp_path, *, source=None, crash=False, workers=1, durations=None,
-                      heterogeneous=False):
+                      heterogeneous=False, compact=False):
     count = 6 if durations is None else len(durations)
     ids = [f'tests/test_subject.py::test_{i}' for i in range(count)]
     source = source or 'import threading\n' + '\n'.join(
@@ -54,7 +54,9 @@ def run_isolated_pool(tmp_path, *, source=None, crash=False, workers=1, duration
                    proxies=[proxy_gateway('srproxy0', 'popen', sys.executable, str(target), temporary=temporary)],
                    selected={n: n for n in ids}, estimates={},
                    baseline=dict(zip(ids, [1.0] * count if durations is None else durations)))
-    path = root / 'build/host-run.json'; path.write_text(json.dumps(profile))
+    stored = dict(profile, storage_encoding='selected-key-alias-v1',
+                  selected={node: None for node in ids}) if compact else profile
+    path = root / 'build/host-run.json'; path.write_text(json.dumps(stored))
     args = ['-o', 'addopts=', '--disable-plugin-autoload', '-p', 'xdist.plugin',
         '-p', 'no:cacheprovider', '-p', 'no:doctest', '-n', str(workers), '--dist', 'worksteal', '--max-worker-restart=0',
         '--worker-limit', str(workers), '--sr-host-run', str(path), '--sr-expected-tests', str(count),
@@ -65,6 +67,15 @@ def run_isolated_pool(tmp_path, *, source=None, crash=False, workers=1, duration
         cwd=root, env=env, stdin=subprocess.DEVNULL, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
         check=False, timeout=90)
     return root, target, profile, result
+
+
+def test_compact_profile_runs_real_proxy_workers_with_exact_native_evidence(tmp_path):
+    root, _, profile, result = run_isolated_pool(tmp_path, compact=True)
+    assert result.returncode == 0, (result.stdout + result.stderr).decode()
+    observation = json.loads((root / 'build/observations.json').read_bytes())
+    verify_pool(observation, public_proof(profile))
+    assert observation['suite_passed'] and observation['tests_run'] == len(profile['selected'])
+    assert observation['nodeid_to_test_id'] == profile['selected']
 
 
 def test_real_slower_proxy_keeps_processing_successors_with_complete_native_phases(tmp_path):
@@ -191,6 +202,13 @@ def test_real_apply_pool_gate_preserves_rotation_union_and_rechecks_host_binding
     assert receipt['tests'] == 3
     assert git('rev-parse', 'HEAD') == head
     profile_path = gate / 'host-run.json'; original = profile_path.read_bytes()
+    compact = json.loads(original)
+    compact.update(storage_encoding='selected-key-alias-v1',
+                   selected={node: None if node == identity else identity
+                             for node, identity in compact['selected'].items()})
+    profile_path.write_text(json.dumps(compact))
+    assert apply_gate.verify_commit_gate(root, gate, source=source, head=head, test_plan=plan) == receipt
+    profile_path.write_bytes(original)
     workers = tuple(json.loads(original)['workers'])
     import pytest
     try:
