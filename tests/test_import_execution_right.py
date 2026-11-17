@@ -7,9 +7,7 @@ from unittest.mock import patch
 import pytest
 
 from specroad.authoring import execution as writer
-from specroad.changes import (CommittingJournal, PublicationAuthority, RecoveryAuthority,
-    RecoveryError, TargetPolicy, TransactionReceipt, project_lock,
-    complete_published_transaction, rollback_interrupted_transaction)
+from specroad.changes import CommittingJournal, PublicationAuthority, RecoveryAuthority, RecoveryError, TargetPolicy, TransactionReceipt, project_lock
 from specroad.changes.receipt_values import transaction_receipt_path, request_receipt_path
 from specroad.exchange import execute_import_plan, prepare_import_plan
 from specroad.exchange import execution

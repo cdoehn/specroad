@@ -7,10 +7,7 @@ import pytest
 
 from specroad.authoring.evidence_import import resolve_generic_import_request
 from specroad.authoring.execution import execute_authoring_plan
-from specroad.changes import (CommittingJournal, CommittedJournal, RolledBackJournal,
-    LockRecord, RecoveryAuthority, project_lock, transaction_recovery_lock,
-    complete_published_transaction, rollback_interrupted_transaction,
-    cleanup_recovered_transaction, TargetModel)
+from specroad.changes import CommittingJournal, CommittedJournal, RolledBackJournal, LockRecord, RecoveryAuthority, project_lock, TargetModel
 from specroad.changes.evidence_import import (
     diagnose_generic_import_duplicates, EvidenceImportDuplicate)
 from specroad.model.canonical import canonical_json_bytes

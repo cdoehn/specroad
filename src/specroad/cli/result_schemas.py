@@ -167,15 +167,7 @@ def _fields(schema_id):
         return _object({'format_version': {'const': 'work-command-v1'},
             'operation': {'enum': ['status', 'resume', 'prompt', 'export', 'restore', 'cancel']},
             'data': obj})
-    if schema_id == 'restore-command-v1':
-        common = {'format_version': {'const': 'restore-command-v1'},
-                  'history_assessments': _array(obj)}
-        return {'anyOf': [
-            _object({**common, 'mode': {'const': 'plan'}, 'restore_plan': obj,
-                'execution': {'type': 'null'},
-                'plan_file': _object({'root': nonempty, 'path': nonempty, 'size': count, 'sha256': sha})}),
-            _object({**common, 'mode': {'const': 'execute'}, 'restore_plan': {'type': 'null'},
-                'execution': obj, 'plan_file': {'type': 'null'}})]}
+
     if schema_id in ('ai-runtime-verify-v1', 'ai-runtime-extract-v1'):
         fields = {'format_version': {'const': schema_id}, 'manifest': _opening_manifest_schema(),
             'file': _object({'size': count, 'sha256': sha}),
@@ -216,11 +208,6 @@ def _fields(schema_id):
             'record_sha256': _nullable(sha), 'owner_state': text, 'journal_paths': strings,
             'recovery_required': boolean, 'observation_only': {'const': True},
             **{k: {'const': False} for k in ('exclusive_access_proven', 'write_authorized', 'atomic_snapshot')}})
-    if schema_id == 'recovery-status-v1':
-        return _object({'format_version': {'const': 'recovery-status-v1'}, 'transactions': _array(obj),
-            'active_paths': strings, 'recovery_required': boolean, 'normal_access_blocked': boolean,
-            'corrupt_detected': boolean, 'observation_only': {'const': True},
-            **{k: {'const': False} for k in ('model_loaded', 'write_authorized', 'exclusive_access_proven', 'atomic_snapshot')}})
     if schema_id == 'bundle-verify-v1':
         return _object({'format_version': {'const': 'bundle-verify-v1'}, 'manifest': obj,
             'file': _object({'size': count, 'sha256': sha}),
@@ -444,7 +431,7 @@ def _fields(schema_id):
             "supported_output_format_versions": {"type": "object", "additionalProperties": strings}})
     if schema_id == "command-description-v1":
         schema = _object({"format_version": {"const": "1.0.0"}, **surface, "budget_policy_version": _nullable(text),
-            "lock_kind": {"enum": ['none', 'bootstrap', 'recovery', 'writer']}, "work": work,
+            "lock_kind": {"enum": ['none', 'bootstrap', 'writer']}, "work": work,
             "parameters": _array(_object({"name": text, "kind": {"const": "positional"},
                 "datatype": text, "required": boolean, "choices": strings})),
             "options": _array(_object({"flag": text, "datatype": text, "repeatable": boolean,

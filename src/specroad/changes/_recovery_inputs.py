@@ -60,9 +60,6 @@ def _parse(raw, transaction_id, files, expected_project_id=None):
 
 def _unchanged_base(preflight, journal, files):
     """Independent inventory plus every live source byte, never journal hashes alone."""
-    from .discard_preflight import DiscardPreflight
-    if type(preflight) is DiscardPreflight:
-        return preflight._check(files, journal)
     if type(preflight) is not PublicationPreflight:
         raise RecoveryError('recovery_base_preflight_required', exit_code=2)
     data = journal.data
@@ -116,12 +113,8 @@ def _work(files, journal, *, raw=None, prefix=None, preflight=None, pending=None
         if 'journal.next' in names:
             from ._writer_pending import writer_next_in
             result['journal.next'] = writer_next_in(directory, journal)
-    from .discard_preflight import DiscardPreflight
-    if building and type(preflight) is DiscardPreflight:
-        _, original, target = preflight._check(files, journal, include_images=True)
-    else:
-        target = {} if not building or preflight is None else {d.path: d.content for d in preflight.request.documents}
-        original = {} if not building or preflight is None else preflight._model.source_files
+    target = {} if not building or preflight is None else {d.path: d.content for d in preflight.request.documents}
+    original = {} if not building or preflight is None else preflight._model.source_files
     for folder, path_key, size_key, hash_key in (
             ('staging', 'staging_path', 'after_size', 'after_sha256'),
             ('before', 'before_image_path', 'before_size', 'before_sha256')):

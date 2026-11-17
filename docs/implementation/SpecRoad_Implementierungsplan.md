@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 225 · **Stand:** 16. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.91
+**Planrevision:** 226 · **Stand:** 17. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.91
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 306 Schritte und 918 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; die früher genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wurde nach der damaligen Spezifikation innerhalb von 15.l.R vorgezogen und bleibt als normaler Prüfkern erhalten. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -143,19 +143,23 @@ Aktuelle Korrektur: [Bundle 719 — Dateirechte der Löschfixtures](history/bund
 
 Aktuelle Folge: [Bundle 720 — Recovery-Rückbau und Git-Wiederanlauf](history/bundle-720-recovery-removal-git.md). Die folgenden Zielwerte gelten ausschließlich nach dem eigenen erfolgreichen Apply-Gate dieser Stage; alle späteren Stages bleiben bis dahin offen.
 
-Aktuelle Korrektur: [Bundle 721 — veraltete Recovery-CLI-Erwartungen](history/bundle-721-partial-read-expectations.md). Das Fehler-Result bestätigt keinen Commit; alle sechs Stages behalten ihre eigenen Gates.
+Historische Korrektur: [Bundle 721 — veraltete Recovery-CLI-Erwartungen](history/bundle-721-partial-read-expectations.md). Sein Ausgangs-Result bestätigte keinen Commit.
+
+Aktueller vollständiger Rest: [Bundle 722 — Recovery-Rückbau fortsetzen](history/bundle-722-recovery-rest.md). Das Result von 721 bestätigt 18.w.W; 18.w.R/C und 18.x.W/R/C behalten ihre getrennten offenen Apply-Gates. Die folgenden Zielwerte gelten erst nach dem eigenen erfolgreichen Gate dieser Stage.
+
+Aktuelle Korrektur: [Bundle 723 — Transportschemas und Lock-Regressionen](history/bundle-723-transport-schema-lock-oracles.md). Bundle 722 scheiterte in 18.w.R ohne weiteren Commit; alle fünf offenen Stages werden mit getrennten Gates fortgeführt.
 
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 225
+plan_revision: 226
 implementation_plan_commits_total: 918
-implementation_plan_commits_completed: 775
-last_completed_plan_commit: 18.w.W
-next_plan_commit: 18.w.R
+implementation_plan_commits_completed: 776
+last_completed_plan_commit: 18.w.R
+next_plan_commit: 18.w.C
 priority_off_plan: null
 next_off_plan_commit: null
-last_completed_numbered_bundle: 721
+last_completed_numbered_bundle: 723
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null

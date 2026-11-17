@@ -478,3 +478,7 @@
 - [Bundle 720 — Recovery-Rückbau und Git-Wiederanlauf](bundle-720-recovery-removal-git.md)
 
 - [Bundle 721 — veraltete Recovery-CLI-Erwartungen und vollständiger Rest 18.w/18.x](bundle-721-partial-read-expectations.md)
+
+- [Bundle 722 — bestätigtes 18.w.W und vollständiger Rest 18.w.R/C und 18.x.W/R/C](bundle-722-recovery-rest.md)
+
+- [Bundle 723 — erhaltene Transportschemas und Snapshot-Lock-Regressionen](bundle-723-transport-schema-lock-oracles.md)

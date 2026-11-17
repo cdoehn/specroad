@@ -557,7 +557,7 @@
       "provider": "tests/test_project_bundle.py:project,baseline_project;tests/support/inspection.py:inspection_project"
     },
     "SR-FIX-PROJECT-LOCK-v1": {
-      "kind": "owned native Linux project roots with explicit cross-process lock protocols",
+      "kind": "Real native mutex and exact owner observations. Dead/foreign/unknown owners are retained. Historic test identities now assert refusal without audit writes; no unlock authority or automated recovery.",
       "provider": "tests/support/project_locks.py"
     },
     "SR-FIX-PROPOSAL-APPLY-v1": {
@@ -959,6 +959,10 @@
     "SR-FIX-RECOVERY-REMOVAL-W-v1": {
       "provider": "tests/test_recovery_removal.py;tests/test_work_packages.py;tests/test_migration_work.py",
       "kind": "Synthetic closed old requests and coherently sealed old Work identities; actual native preparation/package APIs; rejected repair has no file effects."
+    },
+    "SR-FIX-RECOVERY-REMOVAL-R-v1": {
+      "provider": "tests/test_recovery_removal_right.py;tests/test_project_locks_right.py;tests/support/legacy_publication.py",
+      "kind": "Actual native legacy publication interruption and lock observations; no owner removal, repair mutation or successful-repair oracle. Old packages are rehashed literal fixtures, never live authority."
     }
   },
   "fixture_format_version": 1,
@@ -1129,6 +1133,7 @@
     "SR-FIX-READ-ONLY-PROJECT-v1",
     "SR-FIX-READINESS-MIGRATION-v1",
     "SR-FIX-RECORD-FIELDS-v1",
+    "SR-FIX-RECOVERY-REMOVAL-R-v1",
     "SR-FIX-RECOVERY-REMOVAL-W-v1",
     "SR-FIX-REFERENCE-FINDINGS-v1",
     "SR-FIX-REFERENCE01-SOURCE-v1_0_1",

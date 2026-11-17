@@ -52,9 +52,7 @@ def inspect_recovery(root, *, transaction_id=None, expected_project_id=None, pre
                     if observed_state in ('building', 'prepared', 'committing', 'committed',
                                           'rolling_back', 'rolled_back', 'corrupt'):
                         row['state'] = observed_state
-                        row['state_actions'] = ({'building': ['discard'], 'prepared': ['discard'],
-                            'committing': ['recover'], 'rolling_back': ['recover'],
-                            'corrupt': ['restore_with_verified_plan']}.get(observed_state, []))
+                        row['state_actions'] = []
                         for key in ('base_model_root_sha256', 'target_model_root_sha256'):
                             if _hash(observed.get(key)): row[key] = observed[key]
                     entries = observed.get('files')
@@ -92,7 +90,7 @@ def inspect_recovery(root, *, transaction_id=None, expected_project_id=None, pre
                                integrity_scope=integrity['scope'],
                                complete_target_verified=integrity['complete_target_verified'])
                     if row['blockers']:
-                        row.update(state='corrupt', state_actions=['restore_with_verified_plan'],
+                        row.update(state='corrupt', state_actions=[],
                                    diagnostic=row['blockers'][0]['reason'])
                     phase = 'base_preflight'
                     if not row['blockers'] and d['state'] in ('building', 'prepared'):
@@ -103,7 +101,7 @@ def inspect_recovery(root, *, transaction_id=None, expected_project_id=None, pre
                             _work(files, journal, preflight=preflight)
                             if _unchanged_base(preflight, journal, files) != before:
                                 raise RecoveryError('recovery_base_changed', exit_code=6)
-                            row.update(base_verified=True, permitted_actions=['discard'])
+                            row.update(base_verified=True, permitted_actions=[])
                 except (ChangeExecutionError, SafetyViolation, ModelError, OSError, ValueError) as error:
                     row['diagnostic'] = getattr(error, 'reason', 'recovery_input_unreadable')
                     # A caller's wrong expected project is not proof of corrupt bytes.
@@ -111,7 +109,7 @@ def inspect_recovery(root, *, transaction_id=None, expected_project_id=None, pre
                                and row['diagnostic'] != 'recovery_journal_binding_mismatch'
                                and path in active)
                     if invalid:
-                        row.update(state='corrupt', state_actions=['restore_with_verified_plan'],
+                        row.update(state='corrupt', state_actions=[],
                                    permitted_actions=[], critical_inputs_verified=False)
                         row['blockers'] = [{'path': row['path'], 'role': 'journal',
                                             'reason': row['diagnostic']}]

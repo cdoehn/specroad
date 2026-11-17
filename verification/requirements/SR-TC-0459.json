@@ -7,8 +7,10 @@
     6,
     7
   ],
-  "fixture_ids": [],
-  "implementation_status": "open",
+  "fixture_ids": [
+    "SR-FIX-PROJECT-LOCK-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [
     "/complete_target_verified",
     "/critical_inputs_verified",
@@ -16,18 +18,18 @@
     "/base_model_root_sha256",
     "/target_model_root_sha256"
   ],
-  "method": "pending",
+  "method": "automated_behavior",
   "open_items": [
     "RECOVERY-REMOVAL-006: changed requirement contract; the old implementation/tests are retained until their assigned W/R/C replacement. Previous recovery/restore evidence does not establish this new behavior.",
     "Apply of this specification/planning bundle is not implementation, release, or user authorization to use SpecRoad."
   ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Nach unterbrochener Mehrdateipublikation MUSS der tatsächliche Bestand gesperrt erhalten bleiben; Basisrücknahme und Zielvervollständigung sind keine zulässigen Produktaktionen.",
-    "scope": "New interruption guard and manual Git restart contract; no active automated pass claim until implementation."
+    "scope": "Interrupted publication remains unchanged and blocked, including legacy transaction prefixes; no old recovery lock or repair API is available. Fresh Apply evidence required; historical recovery results are not acceptance. Unimplemented scopes and target-platform/release proofs remain open."
   },
   "preconditions": [
-    "Implementation and actual Apply evidence for specification 0.2.85 are required; this document bundle runs no new product behavior."
+    "Owned synthetic roots and real native APIs; faults only at actual operating-system or writer boundaries."
   ],
   "primary_verification_id": "SR-VER-0031",
   "required_environment": {
@@ -43,9 +45,44 @@
   },
   "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
-    "Implement the complete new contract in 18.t and bind real behavioral tests and evidence before declaring acceptance."
+    "Exercise the bound native requests and retained positive Work paths.",
+    "Assert exact results and byte preservation for every rejected repair/ownership path.",
+    "Run only in the stage Apply gate; no Dev execution is an acceptance result."
   ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0459",
-  "test_ids": []
+  "test_ids": [
+    "tests/test_normalization_transactions.py::test_changed_staging_bytes_cannot_be_published_even_with_equal_semantic_values",
+    "tests/test_normalization_transactions.py::test_denied_authority_does_not_publish_or_create_a_journal",
+    "tests/test_normalization_transactions.py::test_native_writer_normalizes_only_selected_artifact_and_finalizes_real_receipts",
+    "tests/test_normalization_transactions.py::test_partial_normalization_rolls_back_to_exact_original_bytes",
+    "tests/test_normalization_transactions.py::test_recovery_completes_exact_normalized_target_despite_equal_model_roots",
+    "tests/test_normalization_transactions.py::test_stale_selected_or_untouched_bytes_refuse_before_journal_creation[0]",
+    "tests/test_normalization_transactions.py::test_stale_selected_or_untouched_bytes_refuse_before_journal_creation[1]",
+    "tests/test_recovery_removal_right.py::test_old_lock_class_cannot_take_over_or_repair_native_state[interrupted-recover discard]",
+    "tests/test_recovery_removal_right.py::test_old_lock_class_cannot_take_over_or_repair_native_state[interrupted-recover restore]",
+    "tests/test_recovery_removal_right.py::test_old_lock_class_cannot_take_over_or_repair_native_state[interrupted-recover run]",
+    "tests/test_recovery_removal_right.py::test_old_lock_class_cannot_take_over_or_repair_native_state[stale-owner-recover discard]",
+    "tests/test_recovery_removal_right.py::test_old_lock_class_cannot_take_over_or_repair_native_state[stale-owner-recover restore]",
+    "tests/test_recovery_removal_right.py::test_old_lock_class_cannot_take_over_or_repair_native_state[stale-owner-recover run]",
+    "tests/test_recovery_removal_right.py::test_old_lock_class_cannot_take_over_or_repair_native_state[unknown-owner-recover discard]",
+    "tests/test_recovery_removal_right.py::test_old_lock_class_cannot_take_over_or_repair_native_state[unknown-owner-recover restore]",
+    "tests/test_recovery_removal_right.py::test_old_lock_class_cannot_take_over_or_repair_native_state[unknown-owner-recover run]",
+    "tests/test_recovery_removal_right.py::test_old_restore_package_is_rejected_before_target_allocation[both]",
+    "tests/test_recovery_removal_right.py::test_old_restore_package_is_rejected_before_target_allocation[class]",
+    "tests/test_recovery_removal_right.py::test_old_restore_package_is_rejected_before_target_allocation[command]",
+    "tests/test_recovery_removal_right.py::test_retired_execution_module_cannot_be_imported[specroad.changes._automatic_recovery]",
+    "tests/test_recovery_removal_right.py::test_retired_execution_module_cannot_be_imported[specroad.changes.recovery]",
+    "tests/test_recovery_removal_right.py::test_retired_execution_module_cannot_be_imported[specroad.changes.recovery_cleanup]",
+    "tests/test_recovery_removal_right.py::test_retired_execution_module_cannot_be_imported[specroad.changes.recovery_lock]",
+    "tests/test_recovery_removal_right.py::test_retired_execution_module_cannot_be_imported[specroad.cli.restore_handler]",
+    "tests/test_recovery_removal_right.py::test_retired_execution_module_cannot_be_imported[specroad.recovery]",
+    "tests/test_recovery_removal_right.py::test_retired_execution_module_cannot_be_imported[specroad.work.restore]",
+    "tests/test_recovery_removal_right.py::test_retired_mutator_is_not_an_exported_host_api[cleanup_recovered_transaction]",
+    "tests/test_recovery_removal_right.py::test_retired_mutator_is_not_an_exported_host_api[complete_published_transaction]",
+    "tests/test_recovery_removal_right.py::test_retired_mutator_is_not_an_exported_host_api[discard_unpublished_transaction]",
+    "tests/test_recovery_removal_right.py::test_retired_mutator_is_not_an_exported_host_api[prepare_discard_recovery]",
+    "tests/test_recovery_removal_right.py::test_retired_mutator_is_not_an_exported_host_api[rollback_interrupted_transaction]",
+    "tests/test_recovery_removal_right.py::test_retired_mutator_is_not_an_exported_host_api[transaction_recovery_lock]"
+  ]
 }

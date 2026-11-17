@@ -297,7 +297,7 @@ def test_interrupted_publication_never_reports_a_valid_partial_baseline(tmp_path
 
 
 def test_prepared_baseline_supports_independent_discard_basis_reconstruction(tmp_path):
-    from specroad.changes import prepare_discard_recovery, guarded_write
+    from specroad.changes import guarded_write
     root = tmp_path / 'project'; model = project(root); plan = plan_for(model)
     def interrupt(event):
         if event == 'staged:0': raise OSError('stop after staging')
@@ -306,9 +306,10 @@ def test_prepared_baseline_supports_independent_discard_basis_reconstruction(tmp
     raw = (root / '.specroad/write-state/pending.json').read_bytes()
     assert json.loads(raw)['state'] == 'writing'
     before = inventory(root)
-    with pytest.raises(ModelError):
-        prepare_discard_recovery(root, 'txn-baseline', expected_project_id=model.binding.project_id,
-                                expected_journal_sha256=sha256(raw).hexdigest())
+    from specroad.changes.normal_access import require_normal_access
+    from specroad.cli.contracts import CommandClass
+    with pytest.raises(ModelError, match='project_corrupted'):
+        require_normal_access(root)
     assert inventory(root) == before
 
 

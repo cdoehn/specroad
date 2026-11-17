@@ -58,8 +58,7 @@ __all__ += ['AuthoringError', 'NormativeRequestId', 'AuthoringRequest',
     'normalize_request_id', 'normalize_authoring_actor', 'prepare_authoring_request',
     'bind_plan_authoring']
 
-from .locking import (project_lock, inspect_project_lock, recover_project_lock, HeldProjectLock,
-                      ProjectLockError, LockKind, LockRecord, OwnerIdentity)
+from .locking import project_lock, inspect_project_lock, recover_project_lock, HeldProjectLock, ProjectLockError, LockKind, LockRecord, OwnerIdentity
 __all__ += ['project_lock', 'inspect_project_lock', 'recover_project_lock', 'HeldProjectLock',
             'ProjectLockError', 'LockKind', 'LockRecord', 'OwnerIdentity']
 
@@ -96,20 +95,11 @@ __all__ += ["RequestIdConflict", "RequestResolution", "resolve_normative_request
 from .recovery_values import (RecoveryError, RecoveryAuthority, RecoveryObservation,
     DiscardedJournal, RollingBackJournal, RolledBackJournal)
 from .recovery_read import inspect_recovery
-from .recovery import (discard_unpublished_transaction, complete_published_transaction,
-    rollback_interrupted_transaction)
-from .recovery_cleanup import cleanup_recovered_transaction
-from .recovery_lock import transaction_recovery_lock
 __all__ += ['RecoveryError', 'RecoveryAuthority', 'RecoveryObservation', 'DiscardedJournal',
-            'inspect_recovery', 'discard_unpublished_transaction', 'complete_published_transaction',
-            'RollingBackJournal', 'RolledBackJournal', 'rollback_interrupted_transaction',
-            'cleanup_recovered_transaction', 'transaction_recovery_lock']
+            'inspect_recovery', 'RollingBackJournal', 'RolledBackJournal']
 
 from .recovery_protection import inspect_recovery_protection, check_cache_removal
 __all__ += ['inspect_recovery_protection', 'check_cache_removal']
-
-from .discard_preflight import DiscardPreflight, prepare_discard_recovery
-__all__ += ['DiscardPreflight', 'prepare_discard_recovery']
 
 from .transaction_preflight import TransactionPreflight, transaction_preflight
 __all__ += ['TransactionPreflight', 'transaction_preflight']

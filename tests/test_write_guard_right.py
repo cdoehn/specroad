@@ -260,12 +260,10 @@ def test_real_process_loss_on_file_sync_never_uses_complete_bytes_as_release(tmp
     if child.is_alive():child.kill();child.join();pytest.fail('sync crash boundary not reached')
     assert child.exitcode==91 and inspect_write_state(tmp_path)['state']=='corrupted'
     before={p.relative_to(tmp_path).as_posix():p.read_bytes() for p in tmp_path.rglob('*') if p.is_file()}
-    from specroad.changes import recover_project_lock
-    from hashlib import sha256
-    raw=(tmp_path/'.specroad/locks/project.json').read_bytes()
-    with pytest.raises(FAILURES,match='transaction_journal_blocks_lock'):
-        recover_project_lock(tmp_path,project_id='sample',expected_lock_sha256=sha256(raw).hexdigest(),
-            actor={'actor_type':'human','actor_id':'synthetic-operator'},reason='guard must stay',force=True,accept_remote_risk=True)
+    from specroad.changes.normal_access import require_normal_access
+    from specroad.cli.contracts import CommandClass
+    with pytest.raises(FAILURES, match='project_corrupted'):
+        require_normal_access(tmp_path)
     with pytest.raises(FAILURES):read_guarded_completion(tmp_path,TRANSACTION,expected_project_id='sample')
     assert {p.relative_to(tmp_path).as_posix():p.read_bytes() for p in tmp_path.rglob('*') if p.is_file()}==before
 

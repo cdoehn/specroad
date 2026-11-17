@@ -15,8 +15,6 @@ from ..security import paths as guards
 from .execution_values import ChangeExecutionError
 from ._journal_codec import _text
 from ._journal_io import _read
-from ._recovery_mutation import RecoveryMutation, recovery_failure
-from ._recovery_receipts import ensure_recovery_record, existing_recovery_record, recheck_recovery_record
 from ._staging_files import _write_new
 from .receipt_values import transaction_receipt_path
 from .recovery_values import AUDIT_ROOT, RecoveryError
@@ -54,44 +52,8 @@ def read_evidence(files, path):
                               expected_identity=guards._identity(info)))
 
 
-def sync_evidence(files, record, token):
-    """Retry an unconfirmed fsync without replacing any already exact bytes."""
-    files.require_held()
-    parts = tuple(record.path.split('/'))
-    recheck_recovery_record(files, record, token)
-    with files.directory(parts[:-1]) as directory:
-        if directory is None:
-            raise RecoveryError('recovery_receipt_changed', path=record.path, exit_code=6)
-        fd = os.open(parts[-1], os.O_RDONLY | os.O_NOFOLLOW | getattr(os, 'O_NONBLOCK', 0),
-                     dir_fd=directory)
-        try:
-            if guards._identity(os.fstat(fd)) != token[1]:
-                raise RecoveryError('recovery_receipt_changed', path=record.path, exit_code=6)
-            os.fsync(fd)
-        finally:
-            os.close(fd)
-    for count in range(len(parts) - 1, -1, -1):
-        with files.directory(parts[:count]) as directory:
-            if directory is None:
-                raise RecoveryError('recovery_receipt_changed', path=record.path, exit_code=6)
-            os.fsync(directory)
-    recheck_recovery_record(files, record, token)
-    return token
 
 
-def persist_evidence(files, record, *, write_new=_write_new, before_create=None,
-                      before_publish=None):
-    # Refuse a conflicting pre-existing record before entering the write path.
-    token = existing_recovery_record(files, record)
-    mutation = RecoveryMutation(before_create)
-    try:
-        if token is None:
-            token = ensure_recovery_record(files, record, write_new=write_new,
-                before_create=mutation.start, before_publish=before_publish)[0]
-        return sync_evidence(files, record, token)
-    except (OSError, SafetyViolation, ModelError, ChangeExecutionError) as error:
-        raise recovery_failure(error, reason='recovery_evidence_write_failed', path=record.path,
-            mutation_possible=mutation.possible or getattr(error, 'mutation_possible', False)) from error
 
 
 def _action_fields(journal, action):
@@ -106,33 +68,6 @@ def _action_fields(journal, action):
                 'target_model_root_sha256' if action == 'complete' else 'base_model_root_sha256']}
 
 
-def recovery_action(files, journal, action, *, authority=None, write_new=_write_new,
-                    before_create=None, before_publish=None):
-    """Verify an existing action or, when authorized, persist its terminal result.
-
-    A repeat caller does not replace the original authority attribution. This
-    record attests the completed result; it is not an in-progress write counter.
-    """
-    fields = _action_fields(journal, action)
-    path = evidence_root(journal.data['transaction_id']) + '/' + action + '.json'
-    record = read_evidence(files, path)
-    if record is not None:
-        data = parse_json_object(record.source_bytes)
-        if (set(data) != set(fields) | {'authority_id', 'authority_version'}
-                or any(data.get(key) != value for key, value in fields.items())
-                or not _text(data.get('authority_id')) or not _text(data.get('authority_version'))):
-            raise RecoveryError('recovery_action_conflict', path=path, exit_code=6)
-        if authority is not None:
-            persist_evidence(files, record, write_new=write_new, before_create=before_create,
-                             before_publish=before_publish)
-        return record
-    if authority is None:
-        raise RecoveryError('recovery_action_missing', path=path, exit_code=6)
-    record = EvidenceRecord(path, canonical_json_bytes({**fields,
-        'authority_id': authority.authority_id, 'authority_version': authority.version}))
-    persist_evidence(files, record, write_new=write_new, before_create=before_create,
-                     before_publish=before_publish)
-    return record
 
 
 def rollback_receipt(journal, action_record, *, action='rollback'):
@@ -142,29 +77,3 @@ def rollback_receipt(journal, action_record, *, action='rollback'):
             'outcome': 'rolled_back', 'action': action, 'journal': journal.data,
             'journal_sha256': journal.sha256, 'recovery_audit': action_record.reference,
             'result_model_root_sha256': journal.data['base_model_root_sha256']}))
-
-
-def rollback_evidence(files, journal, *, authority=None, write_new=_write_new,
-                       before_publish=None):
-    previous = read_evidence(files, evidence_root(journal.data['transaction_id']) + '/rollback.json')
-    action = recovery_action(files, journal, 'rollback', authority=authority,
-                             write_new=write_new, before_publish=before_publish)
-    receipt = rollback_receipt(journal, action)
-    if authority is None:
-        if existing_recovery_record(files, receipt) is None:
-            raise RecoveryError('recovery_receipt_missing', path=receipt.path, exit_code=6)
-    else:
-        try:
-            action_token = existing_recovery_record(files, action)
-            if action_token is None:
-                raise RecoveryError('recovery_action_missing', path=action.path, exit_code=6)
-            def check():
-                before_publish()
-                recheck_recovery_record(files, action, action_token)
-            persist_evidence(files, receipt, write_new=write_new,
-                             before_publish=check if before_publish is not None else None)
-            recheck_recovery_record(files, action, action_token)
-        except RecoveryError as error:
-            error.mutation_possible |= previous is None
-            raise
-    return action, receipt

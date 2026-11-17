@@ -1,5 +1,6 @@
 """Actual source closure, native writer exclusion and retained partial bytes."""
 
+from contextlib import ExitStack
 import copy
 import errno
 import json
@@ -17,6 +18,7 @@ from specroad.work.snapshot import InputSnapshotTask, SnapshotCaptureError
 from support.project_locks import attempt, child_program, options, orphan
 from support.read_only import inventory, make_project, no_write_attempts
 from test_input_snapshot import finish, inputs
+from test_project_locks_right import stale
 
 
 def captured(task):
@@ -150,14 +152,32 @@ def test_final_closure_catches_a_change_after_an_earlier_validation_unit(tmp_pat
 @pytest.mark.parametrize('kind', ['writer', 'recovery', 'operational'])
 def test_existing_native_project_guard_blocks_capture_before_source_bytes(tmp_path, kind):
     root, roots, entries = project(tmp_path)
-    with project_lock(root, **options(kind)) as held:
+    with ExitStack() as stack:
+        if kind == 'recovery':
+            before = inventory(root)
+            with no_write_attempts(), pytest.raises(ProjectLockError) as caught:
+                with project_lock(root, **options(kind)):
+                    pytest.fail('Retired Recovery must not obtain a new lock')
+            assert caught.value.reason == 'product_recovery_removed' and caught.value.exit_code == 2
+            assert inventory(root) == before
+            # A retained legacy owner still protects the root. Create explicit
+            # inert historical data, then hold the real root-inode mutex.
+            record = stale(root, kind='recovery', command='recover run')
+            held = stack.enter_context(LockFiles(root))
+            held.acquire()
+            check = held.require_held
+            assert (root / '.specroad/locks/project.json').read_bytes() == record.source_bytes
+        else:
+            held = stack.enter_context(project_lock(root, **options(kind)))
+            check = held.check
         before = inventory(root)
         with no_write_attempts(), InputSnapshotTask(roots, entries) as task:
             error = failure(task, 'source_writer_busy')
             assert error.root_id == 'project'
             assert task.state['captured_bytes'] == 0
             assert task.objects == {}
-        assert held.check() and inventory(root) == before
+        check()
+        assert inventory(root) == before
 
 
 def test_native_mutex_blocks_even_without_a_lock_record(tmp_path):
@@ -177,13 +197,19 @@ def test_live_capture_excludes_real_child_writers_and_releases_at_seal(tmp_path,
     with InputSnapshotTask(roots, entries, block_bytes=2) as task:
         with no_write_attempts():
             task.advance(3)
-        assert attempt(root, kind) == {'acquired': False, 'reason': 'project_lock_busy'}
+        reason = 'product_recovery_removed' if kind == 'recovery' else 'project_lock_busy'
+        assert attempt(root, kind) == {'acquired': False, 'reason': reason}
         assert inventory(root) == before
         with no_write_attempts():
             finish(task)
         assert inventory(root) == before
         manifest = task.manifest_bytes
-        assert attempt(root, kind)['acquired']
+        after_seal = attempt(root, kind)
+        if kind == 'recovery':
+            assert after_seal == {'acquired': False, 'reason': 'product_recovery_removed'}
+            assert inventory(root) == before
+        else:
+            assert after_seal['acquired']
         assert task.manifest_bytes == manifest
 
 

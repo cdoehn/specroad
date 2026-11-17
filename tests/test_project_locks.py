@@ -30,17 +30,29 @@ def test_real_writer_lock_and_release(tmp_path):
 @pytest.mark.parametrize('second', ['writer', 'recovery', 'operational'])
 def test_all_lock_kinds_share_one_real_mutex(tmp_path, first, second):
     make_project(tmp_path)
+    if first == 'recovery':
+        before = inventory(tmp_path)
+        with no_write_attempts(), pytest.raises(ProjectLockError) as caught:
+            with project_lock(tmp_path, **options(first)):
+                pytest.fail('retired lock class was acquired')
+        assert caught.value.reason == 'product_recovery_removed'
+        assert inventory(tmp_path) == before
+        return
     with project_lock(tmp_path, **options(first)) as lock:
-        assert attempt(tmp_path, second) == {'acquired': False, 'reason': 'project_lock_busy'}
+        expected = 'product_recovery_removed' if second == 'recovery' else 'project_lock_busy'
+        assert attempt(tmp_path, second) == {'acquired': False, 'reason': expected}
         assert lock.check()
-    assert attempt(tmp_path, second)['acquired']
+    if second == 'recovery':
+        assert attempt(tmp_path, second) == {'acquired': False, 'reason': 'product_recovery_removed'}
+    else:
+        assert attempt(tmp_path, second)['acquired']
 
 
 def test_same_process_second_open_cannot_bypass_mutex(tmp_path):
     make_project(tmp_path)
     with project_lock(tmp_path, **options()):
         with pytest.raises(ProjectLockError) as caught:
-            with project_lock(tmp_path, **options('recovery')):
+            with project_lock(tmp_path, **options('operational')):
                 pytest.fail('must not enter')
         assert caught.value.reason == 'project_lock_busy'
 
@@ -144,12 +156,12 @@ def test_writer_never_ignores_unresolved_operational_entries(tmp_path, name):
 
 
 def test_recovery_uses_same_mutex_without_normal_model_loading(tmp_path):
-    put(tmp_path, 'specroad.json', b'broken'); journal=put(tmp_path, '.specroad/transactions/pending.json')
-    with project_lock(tmp_path, **options('recovery')) as held:
-        assert held.check()
-        assert attempt(tmp_path, 'recovery')['reason']=='project_lock_busy'
-        assert journal.read_bytes()==b'{}'
-    assert journal.read_bytes()==b'{}'
+    put(tmp_path, 'specroad.json', b'broken'); put(tmp_path, '.specroad/transactions/pending.json')
+    before = inventory(tmp_path)
+    with no_write_attempts(), pytest.raises(ProjectLockError) as caught:
+        with project_lock(tmp_path, **options('recovery')):
+            pytest.fail('retired Recovery lock must not be acquired')
+    assert caught.value.reason == 'product_recovery_removed' and inventory(tmp_path) == before
 
 
 def test_completed_receipt_namespace_does_not_act_as_pending_journal(tmp_path):

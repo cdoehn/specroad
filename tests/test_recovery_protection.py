@@ -5,11 +5,11 @@ from unittest.mock import patch
 import pytest
 from specroad.changes import (inspect_recovery, inspect_recovery_protection,
     check_cache_removal, RecoveryError)
-from support.recovery import pending, tree, discard, recovery_options
+from support.recovery import pending, tree
 from support.receipts import published, finish
 from specroad.changes import project_lock
-from test_transaction_recovery_rollback import partial_commit
-from test_transaction_recovery_completion import crash_after_last_target
+from support.legacy_publication import partial_commit
+from support.legacy_publication import crash_after_last_target
 
 
 def first(root):
@@ -180,14 +180,16 @@ def test_unknown_transaction_bytes_survive_inventory_with_broken_journal(tmp_pat
 
 
 def test_recovery_audit_is_protected_after_discard(tmp_path):
-    _, _, preflight, journal = pending(tmp_path, 'prepared')
-    with project_lock(tmp_path, **recovery_options(preflight)) as held:
-        result = discard(preflight, journal, held).data
+    pending(tmp_path, 'prepared')
+    audit = '.specroad/recovery/transaction-audit/retained-legacy'
+    from support.model import put
+    for name in ('intent.json', 'journal.before.json', 'completed.json'):
+        put(tmp_path, audit + '/' + name, b'original retained historical bytes')
     before = tree(tmp_path)
     value = inspect_recovery_protection(tmp_path).data
     found = {i['path']: i for i in value['resources']}
     for name in ('intent.json', 'journal.before.json', 'completed.json'):
-        path = result['audit_path'] + '/' + name
+        path = audit + '/' + name
         assert found[path]['role'] == 'recovery_audit' and not found[path]['cache_removal_allowed']
     assert tree(tmp_path) == before
 

@@ -2,21 +2,23 @@
   "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [],
   "expected_exit_codes": [],
-  "fixture_ids": [],
-  "implementation_status": "open",
+  "fixture_ids": [
+    "SR-FIX-PROJECT-LOCK-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [],
-  "method": "pending",
+  "method": "automated_behavior",
   "open_items": [
     "RECOVERY-REMOVAL-006: changed requirement contract; the old implementation/tests are retained until their assigned W/R/C replacement. Previous recovery/restore evidence does not establish this new behavior.",
     "Apply of this specification/planning bundle is not implementation, release, or user authorization to use SpecRoad."
   ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Ein corrupted-Projekt MUSS normale Modellnutzung und weitere Publikation blockieren; nur begrenzte schreibfreie Betriebsdiagnose bleibt zulässig.",
-    "scope": "New interruption guard and manual Git restart contract; no active automated pass claim until implementation."
+    "scope": "Native preflight blocks interrupted/unknown projects without model writes or repair; ordinary completed Work stays usable. Fresh Apply evidence required; historical recovery results are not acceptance. Unimplemented scopes and target-platform/release proofs remain open."
   },
   "preconditions": [
-    "Implementation and actual Apply evidence for specification 0.2.85 are required; this document bundle runs no new product behavior."
+    "Owned synthetic roots and real native APIs; faults only at actual operating-system or writer boundaries."
   ],
   "primary_verification_id": "SR-VER-0031",
   "required_environment": {
@@ -32,9 +34,72 @@
   },
   "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
-    "Implement the complete new contract in 18.t and bind real behavioral tests and evidence before declaring acceptance."
+    "Exercise the bound native requests and retained positive Work paths.",
+    "Assert exact results and byte preservation for every rejected repair/ownership path.",
+    "Run only in the stage Apply gate; no Dev execution is an acceptance result."
   ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0460",
-  "test_ids": []
+  "test_ids": [
+    "tests/test_recovery_removal_right.py::test_old_lock_class_cannot_take_over_or_repair_native_state[interrupted-recover discard]",
+    "tests/test_recovery_removal_right.py::test_old_lock_class_cannot_take_over_or_repair_native_state[interrupted-recover restore]",
+    "tests/test_recovery_removal_right.py::test_old_lock_class_cannot_take_over_or_repair_native_state[interrupted-recover run]",
+    "tests/test_recovery_removal_right.py::test_old_lock_class_cannot_take_over_or_repair_native_state[stale-owner-recover discard]",
+    "tests/test_recovery_removal_right.py::test_old_lock_class_cannot_take_over_or_repair_native_state[stale-owner-recover restore]",
+    "tests/test_recovery_removal_right.py::test_old_lock_class_cannot_take_over_or_repair_native_state[stale-owner-recover run]",
+    "tests/test_recovery_removal_right.py::test_old_lock_class_cannot_take_over_or_repair_native_state[unknown-owner-recover discard]",
+    "tests/test_recovery_removal_right.py::test_old_lock_class_cannot_take_over_or_repair_native_state[unknown-owner-recover restore]",
+    "tests/test_recovery_removal_right.py::test_old_lock_class_cannot_take_over_or_repair_native_state[unknown-owner-recover run]",
+    "tests/test_recovery_removal_right.py::test_old_restore_package_is_rejected_before_target_allocation[both]",
+    "tests/test_recovery_removal_right.py::test_old_restore_package_is_rejected_before_target_allocation[class]",
+    "tests/test_recovery_removal_right.py::test_old_restore_package_is_rejected_before_target_allocation[command]",
+    "tests/test_recovery_removal_right.py::test_retired_execution_module_cannot_be_imported[specroad.changes._automatic_recovery]",
+    "tests/test_recovery_removal_right.py::test_retired_execution_module_cannot_be_imported[specroad.changes.recovery]",
+    "tests/test_recovery_removal_right.py::test_retired_execution_module_cannot_be_imported[specroad.changes.recovery_cleanup]",
+    "tests/test_recovery_removal_right.py::test_retired_execution_module_cannot_be_imported[specroad.changes.recovery_lock]",
+    "tests/test_recovery_removal_right.py::test_retired_execution_module_cannot_be_imported[specroad.cli.restore_handler]",
+    "tests/test_recovery_removal_right.py::test_retired_execution_module_cannot_be_imported[specroad.recovery]",
+    "tests/test_recovery_removal_right.py::test_retired_execution_module_cannot_be_imported[specroad.work.restore]",
+    "tests/test_recovery_removal_right.py::test_retired_mutator_is_not_an_exported_host_api[cleanup_recovered_transaction]",
+    "tests/test_recovery_removal_right.py::test_retired_mutator_is_not_an_exported_host_api[complete_published_transaction]",
+    "tests/test_recovery_removal_right.py::test_retired_mutator_is_not_an_exported_host_api[discard_unpublished_transaction]",
+    "tests/test_recovery_removal_right.py::test_retired_mutator_is_not_an_exported_host_api[prepare_discard_recovery]",
+    "tests/test_recovery_removal_right.py::test_retired_mutator_is_not_an_exported_host_api[rollback_interrupted_transaction]",
+    "tests/test_recovery_removal_right.py::test_retired_mutator_is_not_an_exported_host_api[transaction_recovery_lock]",
+    "tests/test_transaction_preflight.py::test_authorization_cannot_change_policy_then_recover_under_the_old_setting",
+    "tests/test_transaction_preflight.py::test_automatic_recovery_finishes_old_work_and_requires_new_invocation[building]",
+    "tests/test_transaction_preflight.py::test_automatic_recovery_finishes_old_work_and_requires_new_invocation[committed]",
+    "tests/test_transaction_preflight.py::test_automatic_recovery_finishes_old_work_and_requires_new_invocation[complete]",
+    "tests/test_transaction_preflight.py::test_automatic_recovery_finishes_old_work_and_requires_new_invocation[partial]",
+    "tests/test_transaction_preflight.py::test_automatic_recovery_finishes_old_work_and_requires_new_invocation[prepared]",
+    "tests/test_transaction_preflight.py::test_broken_model_and_configuration_do_not_prevent_metadata_diagnosis",
+    "tests/test_transaction_preflight.py::test_clean_gate_does_not_read_artifact_or_receipt_history",
+    "tests/test_transaction_preflight.py::test_denied_or_nonboolean_authority_never_acquires_a_recovery_lock[1]",
+    "tests/test_transaction_preflight.py::test_denied_or_nonboolean_authority_never_acquires_a_recovery_lock[False]",
+    "tests/test_transaction_preflight.py::test_denied_or_nonboolean_authority_never_acquires_a_recovery_lock[None]",
+    "tests/test_transaction_preflight.py::test_live_writer_is_not_automatically_taken_over",
+    "tests/test_transaction_preflight.py::test_missing_or_disabled_auto_policy_has_no_operational_effect[False]",
+    "tests/test_transaction_preflight.py::test_missing_or_disabled_auto_policy_has_no_operational_effect[None]",
+    "tests/test_transaction_preflight.py::test_more_than_sixteen_active_entries_block_without_full_scan_or_journal_read",
+    "tests/test_transaction_preflight.py::test_read_plan_generated_and_dry_run_remain_write_free[complete-generated_output-False]",
+    "tests/test_transaction_preflight.py::test_read_plan_generated_and_dry_run_remain_write_free[complete-normative_write-True]",
+    "tests/test_transaction_preflight.py::test_read_plan_generated_and_dry_run_remain_write_free[complete-plan_output-False]",
+    "tests/test_transaction_preflight.py::test_read_plan_generated_and_dry_run_remain_write_free[complete-read_only-False]",
+    "tests/test_transaction_preflight.py::test_read_plan_generated_and_dry_run_remain_write_free[partial-generated_output-False]",
+    "tests/test_transaction_preflight.py::test_read_plan_generated_and_dry_run_remain_write_free[partial-normative_write-True]",
+    "tests/test_transaction_preflight.py::test_read_plan_generated_and_dry_run_remain_write_free[partial-plan_output-False]",
+    "tests/test_transaction_preflight.py::test_read_plan_generated_and_dry_run_remain_write_free[partial-read_only-False]",
+    "tests/test_transaction_preflight.py::test_read_plan_generated_and_dry_run_remain_write_free[prepared-generated_output-False]",
+    "tests/test_transaction_preflight.py::test_read_plan_generated_and_dry_run_remain_write_free[prepared-normative_write-True]",
+    "tests/test_transaction_preflight.py::test_read_plan_generated_and_dry_run_remain_write_free[prepared-plan_output-False]",
+    "tests/test_transaction_preflight.py::test_read_plan_generated_and_dry_run_remain_write_free[prepared-read_only-False]",
+    "tests/test_transaction_preflight.py::test_real_dead_writer_uses_audited_takeover_without_new_request[complete]",
+    "tests/test_transaction_preflight.py::test_real_dead_writer_uses_audited_takeover_without_new_request[partial]",
+    "tests/test_transaction_preflight.py::test_real_dead_writer_uses_audited_takeover_without_new_request[prepared]",
+    "tests/test_transaction_preflight.py::test_short_metadata_budget_precedes_authorized_owner_diagnosis",
+    "tests/test_transaction_preflight.py::test_unknown_or_nonnormal_class_is_rejected_before_project_io[None]",
+    "tests/test_transaction_preflight.py::test_unknown_or_nonnormal_class_is_rejected_before_project_io[normative_write]",
+    "tests/test_transaction_preflight.py::test_unknown_or_nonnormal_class_is_rejected_before_project_io[recovery_write]",
+    "tests/test_transaction_preflight.py::test_unknown_or_nonnormal_class_is_rejected_before_project_io[root_creation]"
+  ]
 }

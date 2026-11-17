@@ -10,8 +10,7 @@ from tests.support.migration_plans import ACTOR, planned_files
 from specroad.changes.schema_transition_values import SchemaTransitionError, TransitionJournal
 from specroad.changes.locking import project_lock
 from specroad.changes.recovery_values import RecoveryAuthority
-from specroad.changes.recovery import (discard_unpublished_transaction,
-    rollback_interrupted_transaction, complete_published_transaction, inspect_recovery)
+from specroad.changes.recovery_read import inspect_recovery
 from specroad.changes.receipt_values import transaction_receipt_path, request_receipt_path
 from specroad.storage.operational_preflight import observe_operational_preflight
 from specroad.security import ProjectBoundary

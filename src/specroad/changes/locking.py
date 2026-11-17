@@ -1,4 +1,4 @@
-"""Cooperating native Linux writer/recovery locks, not a transaction engine.
+"""Cooperating native Linux writer/operational locks, not a transaction engine.
 
 All lock kinds use one kernel mutex. Metadata alone never grants exclusivity;
 orphan records are not stolen automatically, even after their PID disappears.
@@ -27,7 +27,7 @@ def _bound(record, files, project_id):
 
 
 def inspect_project_lock(root, *, expected_project_id=None, owner_probe=None):
-    """Read-only metadata observation, including broken-config recovery cases.
+    """Read-only metadata observation, including broken configurations.
 
     Does not acquire a writer lock, create files, repair records or load models.
     An absent record is not a reusable proof that no writer can start later.
@@ -122,11 +122,13 @@ def project_lock(root, *, kind, command, project_id, transaction_id=None, reques
     """Acquire a nonblocking exclusive guard; release only this exact owner record.
 
     Writer: configuration identity and absence of unresolved journals required.
-    Recovery: no normal model loading; journals remain for the recovery engine.
+    Legacy Recovery lock requests are rejected before any filesystem access.
     Operational: same mutual exclusion, not permission to edit model data.
-    Unknown host/start metadata stays null and later requires explicit recovery.
+    Unknown host/start metadata stays null; records cannot authorize takeover.
     """
     selected = _request(kind, command, project_id, request_id, transaction_id)
+    if selected is LockKind.RECOVERY:
+        raise ProjectLockError('product_recovery_removed', exit_code=2)
     # Preserve the native lock failure before bootstrap observation/model loading.
     from ._lock_files import require_native_lock
     require_native_lock()
@@ -167,7 +169,7 @@ def project_lock(root, *, kind, command, project_id, transaction_id=None, reques
             guard.check()
             if source is not None:
                 source.check_current()
-            if selected is not LockKind.RECOVERY and files.journal_entries():
+            if files.journal_entries():
                 raise ProjectLockError('transaction_journal_blocks_lock')
             from .normal_access import _writer
             token = _writer.set(guard)
@@ -187,14 +189,14 @@ def project_lock(root, *, kind, command, project_id, transaction_id=None, reques
 
 
 
+
 def recover_project_lock(root, *, project_id, expected_lock_sha256, actor, reason,
                          force=False, accept_remote_risk=False, owner_probe=None):
-    """Explicit audited orphan removal, never a transaction recovery or takeover.
+    """Check the retained owner contract without removing records or unlocking.
 
-    A held native mutex, active same-host owner, unexpected root/owner bytes or
-    pending journal always blocks removal. Consent only resolves owner-identity
-    uncertainty; it never overrides these other checks. Host/PID observations
-    are fresh kernel observations, not authenticated distributed ownership.
+    N.3 retains owner/risk checks, but forbids freeing an interrupted root.
+    Even an acknowledged dead owner is not permission to remove protection.
+    The historical API now always refuses removal, without an audit write.
     """
     from .authoring import normalize_authoring_actor
     text(project_id); text(reason)
@@ -203,11 +205,8 @@ def recover_project_lock(root, *, project_id, expected_lock_sha256, actor, reaso
     if (type(expected_lock_sha256) is not str or len(expected_lock_sha256) != 64
             or any(c not in '0123456789abcdef' for c in expected_lock_sha256)):
         raise ProjectLockError('expected_lock_sha256_required', exit_code=2)
-    actor = normalize_authoring_actor(actor)
-    # The explicit trusted adapter exists for embedded applications and tests;
-    # the ordinary path only reads the local native kernel, never project code.
+    normalize_authoring_actor(actor)
     probe = owner_probe if owner_probe is not None else LinuxOwnerProbe()
-    attempted = False
     try:
         with LockFiles(root) as files:
             files.acquire()
@@ -219,24 +218,7 @@ def recover_project_lock(root, *, project_id, expected_lock_sha256, actor, reaso
                 raise ProjectLockError('lock_owner_changed', exit_code=6)
             if files.journal_entries():
                 raise ProjectLockError('transaction_journal_blocks_lock')
-            state = _recovery_permitted(record, probe, accept_remote_risk)
-            event_id = str(uuid4())
-            base = {'format_version': LOCK_VERSION, 'event_id': event_id,
-                'command': 'lock recover', 'actor': actor.as_fields(), 'reason': reason,
-                'force': True, 'accept_remote_risk': accept_remote_risk,
-                'old_record': record.data, 'old_record_sha256': record.sha256,
-                'observed_owner_state': state,
-                'recoverer': LinuxOwnerProbe().current().as_dict(),
-                'actor_authenticated': False, 'journal_recovery_performed': False,
-                'write_authorized': False}
-            def audit(phase):
-                data = {**base, 'phase': phase,
-                    'record_removed': phase == 'completed',
-                    'observed_at': datetime.now(timezone.utc).isoformat(timespec='microseconds').replace('+00:00', 'Z')}
-                return files.append_audit(event_id, phase, canonical_json_bytes(data))
-            # Persist intention first. It explicitly does not claim completion.
-            attempted = True
-            intent_path = audit('intent')
+            _recovery_permitted(record, probe, accept_remote_risk)
             current, current_inode = files.read_record()
             if current is None or current.source_bytes != record.source_bytes or current_inode != inode:
                 raise ProjectLockError('lock_owner_changed', exit_code=6)
@@ -244,14 +226,6 @@ def recover_project_lock(root, *, project_id, expected_lock_sha256, actor, reaso
             _recovery_permitted(current, probe, accept_remote_risk)
             if files.journal_entries():
                 raise ProjectLockError('transaction_journal_blocks_lock')
-            files.remove_record(record, inode)
-            completion_path = audit('completed')
-            return LockStatus.create({**base, 'record_removed': True,
-                'intent_path': intent_path, 'completion_path': completion_path,
-                'new_lock_acquired': False, 'atomic_snapshot': False})
-    except ProjectLockError as error:
-        if attempted:
-            error.mutation_possible = True
-        raise
+            raise ProjectLockError('lock_owner_record_retained', exit_code=5)
     except (OSError, SafetyViolation) as error:
-        raise ProjectLockError('lock_recovery_io_failure', mutation_possible=attempted) from error
+        raise ProjectLockError('lock_owner_inspection_failed') from error

@@ -43,28 +43,24 @@ def recover(root, record, **kw):
 
 
 def test_dead_owner_recovery_audited_and_new_writer_can_enter(tmp_path):
-    record=stale(tmp_path); before_config=(tmp_path/'specroad.json').read_bytes()
-    result=recover(tmp_path,record).data
-    assert result['record_removed'] and not result['new_lock_acquired']
-    assert not result['write_authorized'] and not result['actor_authenticated']
-    events=[json.loads((tmp_path/result[k]).read_bytes()) for k in ('intent_path','completion_path')]
-    assert [e['phase'] for e in events]==['intent','completed']
-    assert [e['record_removed'] for e in events]==[False,True]
-    assert all(e['old_record']==record.data and e['old_record_sha256']==record.sha256 for e in events)
-    assert all(e['actor']=={'actor_type':'human','actor_id':'test-owner'} for e in events)
-    assert all((tmp_path/result[k]).stat().st_mode & 0o777 == 0o600 for k in ('intent_path','completion_path'))
-    audit_before={p:p.read_bytes() for p in (tmp_path/'.specroad/recovery/lock-audit').iterdir()}
-    assert attempt(tmp_path)['acquired']
-    assert (tmp_path/'specroad.json').read_bytes()==before_config
-    assert audit_before=={p:p.read_bytes() for p in audit_before}
+    # Stable identity retained; N.3 replaces the old removal oracle.
+    record=stale(tmp_path); before=inventory(tmp_path)
+    with no_write_attempts(), pytest.raises(ProjectLockError) as caught:
+        recover(tmp_path,record)
+    assert caught.value.reason=='lock_owner_record_retained'
+    assert not caught.value.mutation_possible
+    assert attempt(tmp_path)['reason']=='lock_recovery_required'
+    assert inventory(tmp_path)==before
 
 
 def test_native_abrupt_exit_requires_explicit_recovery_then_reacquires(tmp_path):
     make_project(tmp_path); orphan(tmp_path)
     record=LockRecord((tmp_path/'.specroad/locks/project.json').read_bytes())
-    assert attempt(tmp_path)['reason']=='lock_recovery_required'
-    result=recover(tmp_path,record,owner_probe=LinuxOwnerProbe(),accept_remote_risk=True).data
-    assert result['record_removed'] and attempt(tmp_path)['acquired']
+    before=inventory(tmp_path)
+    with no_write_attempts(), pytest.raises(ProjectLockError) as caught:
+        recover(tmp_path,record,owner_probe=LinuxOwnerProbe(),accept_remote_risk=True)
+    assert caught.value.reason=='lock_owner_record_retained'
+    assert attempt(tmp_path)['reason']=='lock_recovery_required' and inventory(tmp_path)==before
 
 
 @pytest.mark.parametrize('risk', [False,True])
@@ -89,8 +85,9 @@ def test_unknown_foreign_or_reused_identity_needs_explicit_risk(tmp_path,probe,c
     assert observe_owner(record,probe)==expected
     with pytest.raises(ProjectLockError) as e:recover(tmp_path,record,owner_probe=probe)
     assert e.value.reason=='accept_remote_risk_required' and inventory(tmp_path)==before
-    result=recover(tmp_path,record,owner_probe=probe,accept_remote_risk=True).data
-    assert result['record_removed'] and result['observed_owner_state']==expected
+    with no_write_attempts(), pytest.raises(ProjectLockError) as caught:
+        recover(tmp_path,record,owner_probe=probe,accept_remote_risk=True)
+    assert caught.value.reason=='lock_owner_record_retained' and inventory(tmp_path)==before
 
 
 def test_native_mutex_blocks_even_forged_dead_owner_and_force(tmp_path):
@@ -111,18 +108,6 @@ def test_force_never_bypasses_any_transaction_journal(tmp_path,journal):
     assert e.value.reason=='transaction_journal_blocks_lock' and inventory(tmp_path)==before
 
 
-def test_recovery_rechecks_journals_after_persisting_intent(tmp_path):
-    record=stale(tmp_path); original=LockFiles.append_audit
-    def write(files,event,phase,raw):
-        result=original(files,event,phase,raw)
-        if phase=='intent':put(tmp_path,'.specroad/transactions/late.json')
-        return result
-    with patch.object(LockFiles,'append_audit',write):
-        with pytest.raises(ProjectLockError) as e:recover(tmp_path,record)
-    assert e.value.reason=='transaction_journal_blocks_lock' and e.value.mutation_possible
-    assert (tmp_path/'.specroad/locks/project.json').read_bytes()==record.source_bytes
-    events=[json.loads(p.read_bytes()) for p in (tmp_path/'.specroad/recovery/lock-audit').iterdir()]
-    assert len(events)==1 and not events[0]['record_removed']
 
 
 def test_owner_becoming_live_on_final_observation_prevents_removal(tmp_path):
@@ -137,35 +122,10 @@ def test_owner_becoming_live_on_final_observation_prevents_removal(tmp_path):
     assert (tmp_path/'.specroad/locks/project.json').read_bytes()==record.source_bytes
 
 
-def test_replacement_record_after_audit_is_preserved(tmp_path):
-    record=stale(tmp_path); original=LockFiles.append_audit; new={**record.data,'transaction_id':'other'}
-    def change(files,event,phase,raw):
-        result=original(files,event,phase,raw)
-        put(tmp_path,'.specroad/locks/project.json',canonical_json_bytes(new))
-        return result
-    with patch.object(LockFiles,'append_audit',change):
-        with pytest.raises(ProjectLockError) as e:recover(tmp_path,record)
-    assert e.value.reason=='lock_owner_changed'
-    assert json.loads((tmp_path/'.specroad/locks/project.json').read_bytes())==new
 
 
-def test_audit_write_failure_retains_orphan_and_reports_uncertainty(tmp_path):
-    record=stale(tmp_path)
-    with patch.object(LockFiles,'append_audit',side_effect=OSError(errno.ENOSPC,'full')):
-        with pytest.raises(ProjectLockError) as e:recover(tmp_path,record)
-    assert e.value.mutation_possible and (tmp_path/'.specroad/locks/project.json').read_bytes()==record.source_bytes
 
 
-def test_lost_completion_does_not_claim_recovery_did_nothing(tmp_path):
-    record=stale(tmp_path); original=LockFiles.append_audit
-    def write(files,event,phase,raw):
-        if phase=='completed':raise OSError(errno.ENOSPC,'full')
-        return original(files,event,phase,raw)
-    with patch.object(LockFiles,'append_audit',write):
-        with pytest.raises(ProjectLockError) as e:recover(tmp_path,record)
-    assert e.value.mutation_possible and not (tmp_path/'.specroad/locks/project.json').exists()
-    events=list((tmp_path/'.specroad/recovery/lock-audit').iterdir())
-    assert len(events)==1 and not json.loads(events[0].read_bytes())['record_removed']
 
 
 def test_recovery_requires_exact_bytes_and_root_not_only_owner_pid(tmp_path):
@@ -188,12 +148,13 @@ def test_invalid_recovery_requests_do_not_create_files(tmp_path,kw):
 
 
 def test_recovery_does_not_delete_or_rewrite_existing_audit_history(tmp_path):
-    record=stale(tmp_path); result=recover(tmp_path,record).data
-    first={p:p.read_bytes() for p in (tmp_path/'.specroad/recovery/lock-audit').iterdir()}
-    # A later independent crash has a new lock identity and a separate audit pair.
-    record=stale(tmp_path); recover(tmp_path,record)
-    assert all(p.read_bytes()==raw for p,raw in first.items())
-    assert len(list((tmp_path/'.specroad/recovery/lock-audit').iterdir()))==4
+    record=stale(tmp_path)
+    # Explicit retained historical bytes; no claim of a new recovery completion.
+    put(tmp_path,'.specroad/recovery/lock-audit/retained.json',b'{"historical":true}')
+    before=inventory(tmp_path)
+    with no_write_attempts(), pytest.raises(ProjectLockError):
+        recover(tmp_path,record)
+    assert inventory(tmp_path)==before
 
 
 @pytest.mark.parametrize('part',['.specroad','.specroad/locks','.specroad/locks/project.json'])
@@ -328,8 +289,9 @@ def test_unknown_host_observation_stays_unknown_not_hostname_fallback():
 
 
 def test_completed_lock_audit_does_not_block_existing_read_only_validation(tmp_path):
-    record=stale(tmp_path);recover(tmp_path,record)
     make_project(tmp_path,artifact())
+    # Passive historical audit data does not grant a write or represent active work.
+    put(tmp_path,'.specroad/recovery/lock-audit/retained.json',b'{"historical":true}')
     before=inventory(tmp_path)
     with no_write_attempts():
         r=validate_project_read_only(tmp_path,profile_resources=profile_resources(),core_key='core@0.2.0')
@@ -426,6 +388,8 @@ def test_status_rejects_changed_owner_during_observation(tmp_path):
 
 
 def test_removed_record_is_not_inferred_recovered_on_second_call(tmp_path):
-    record=stale(tmp_path);recover(tmp_path,record);before=inventory(tmp_path)
-    with pytest.raises(ProjectLockError) as error:recover(tmp_path,record)
+    record=stale(tmp_path)
+    (tmp_path/'.specroad/locks/project.json').unlink()
+    before=inventory(tmp_path)
+    with no_write_attempts(), pytest.raises(ProjectLockError) as error:recover(tmp_path,record)
     assert error.value.reason=='lock_record_missing' and inventory(tmp_path)==before

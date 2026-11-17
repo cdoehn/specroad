@@ -10,7 +10,7 @@ from ..model.paths import project_path
 from ..model.errors import ModelError
 from ..security import SafetyViolation
 from ._lock_files import LockFiles
-from ._recovery_rollback import _fingerprint
+from ._recovery_bytes import fingerprint_recovery_file as _fingerprint
 from .execution_values import ChangeExecutionError
 from .recovery_values import RecoveryError, RecoveryObservation
 from .recovery_read import inspect_recovery

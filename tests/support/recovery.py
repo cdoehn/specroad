@@ -1,7 +1,6 @@
 """Native pending journals in owned temporary project roots."""
 from pathlib import Path
-from specroad.changes import (RecoveryAuthority, project_lock, begin_building_journal,
-                              stage_building_journal, discard_unpublished_transaction)
+from specroad.changes import RecoveryAuthority, project_lock, begin_building_journal, stage_building_journal
 from .publication import prepared, options, ALLOW, TRANSACTION
 from .targets import ACTOR
 
@@ -17,15 +16,8 @@ def pending(root, state='building', **kwargs):
     return m, p, c, j
 
 
-def recovery_options(c, **overrides):
-    return {**options(c), 'kind': 'recovery', 'command': 'recover discard', **overrides}
 
 
-def discard(c, j, held, **kwargs):
-    return discard_unpublished_transaction(c, TRANSACTION, held_lock=held,
-        authority=kwargs.pop('authority', RECOVER), actor=kwargs.pop('actor', ACTOR),
-        reason=kwargs.pop('reason', 'Explicit unpublished preparation discard'),
-        expected_journal_sha256=kwargs.pop('expected_journal_sha256', j.sha256), **kwargs)
 
 
 def tree(root):

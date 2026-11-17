@@ -3,10 +3,7 @@ from hashlib import sha256
 import os
 from unittest.mock import patch
 import pytest
-from specroad.changes import (CommittingJournal, PublicationAuthority, PublicationCheckError,
-    CommitPublicationError, begin_building_journal, publish_prepared_journal,
-    finalize_committing_journal, cleanup_completed_transaction, project_lock,
-    TransactionReceipt, complete_published_transaction, rollback_interrupted_transaction)
+from specroad.changes import CommittingJournal, PublicationAuthority, PublicationCheckError, CommitPublicationError, begin_building_journal, publish_prepared_journal, finalize_committing_journal, cleanup_completed_transaction, project_lock, TransactionReceipt
 from support.normalization import prepared, staged
 from support.folds import goal
 from support.publication import options, files, ALLOW, TRANSACTION
@@ -83,13 +80,14 @@ def test_recovery_completes_exact_normalized_target_despite_equal_model_roots(tm
         journal = CommittingJournal((tmp_path / ready.path).read_bytes())
         target = files(tmp_path)
     assert target != m.source_files
-    with project_lock(tmp_path, **recovery_options(journal)) as held:
-        done = complete_published_transaction(TRANSACTION, held_lock=held, authority=RECOVER,
-            expected_journal_sha256=journal.sha256)
-        assert done.data['commit_completed'] and done.data['normative_writes'] == 0
-    assert files(tmp_path) == target
-    receipt = TransactionReceipt((tmp_path / done.data['receipts']['transaction']['path']).read_bytes())
-    assert receipt.data['operations'] == p.data['operations']
+    from specroad.changes import transaction_preflight
+    from specroad.cli.contracts import CommandClass
+    from support.read_only import inventory, no_write_attempts
+    before = inventory(tmp_path)
+    with no_write_attempts():
+        result = transaction_preflight(tmp_path, command_class=CommandClass.READ_ONLY)
+    assert result.exit_code == 5 and result.data['reason'] == 'project_corrupted'
+    assert inventory(tmp_path) == before and files(tmp_path) == target
 
 
 def test_partial_normalization_rolls_back_to_exact_original_bytes(tmp_path):
@@ -107,8 +105,11 @@ def test_partial_normalization_rolls_back_to_exact_original_bytes(tmp_path):
                 publish_prepared_journal(c, ready, held_lock=held, authority=ALLOW)
         journal = CommittingJournal((tmp_path / ready.path).read_bytes())
     assert journal.data['published_count'] == 1 and files(tmp_path) != m.source_files
-    with project_lock(tmp_path, **recovery_options(journal)) as held:
-        result = rollback_interrupted_transaction(TRANSACTION, held_lock=held, authority=RECOVER,
-            expected_journal_sha256=journal.sha256)
-        assert result.data['rollback_completed']
-    assert files(tmp_path) == m.source_files
+    from specroad.changes import transaction_preflight
+    from specroad.cli.contracts import CommandClass
+    from support.read_only import inventory, no_write_attempts
+    before = inventory(tmp_path)
+    with no_write_attempts():
+        result = transaction_preflight(tmp_path, command_class=CommandClass.NORMATIVE_WRITE)
+    assert result.exit_code == 5 and result.data['reason'] == 'project_corrupted'
+    assert inventory(tmp_path) == before
