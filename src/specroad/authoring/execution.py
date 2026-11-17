@@ -136,7 +136,8 @@ def _apply_saved_plan(plan, model, *, command_id, transaction_id, authority,
 
 
 def execute_authoring_plan(plan, model, *, command_id, transaction_id, authority,
-        gates=(), strict=False, package_files=()):
+        gates=(), strict=False, package_files=(), as_proposal=False,
+        proposal_fields=None, services=None):
     """Return a machine-readable success or native refusal without hiding state.
 
     The raising API remains available. Expected model/security/I/O failures get
@@ -150,7 +151,8 @@ def execute_authoring_plan(plan, model, *, command_id, transaction_id, authority
             owned = ChangePlan(plan.source_bytes)
         result = apply_authoring_plan(owned if owned is not None else plan, model,
             command_id=command_id, transaction_id=transaction_id, authority=authority,
-            gates=gates, strict=strict, package_files=package_files)
+            gates=gates, strict=strict, package_files=package_files,
+            as_proposal=as_proposal, proposal_fields=proposal_fields, services=services)
         return {**result, 'status': 'success'}
     except (ModelError, SafetyViolation, OSError) as error:
         if isinstance(error, ModelError):

@@ -1,21 +1,30 @@
 {
   "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "fixture_ids": [],
-  "implementation_status": "open",
+  "expected_exit_codes": [
+    0,
+    2,
+    3,
+    6,
+    7
+  ],
+  "fixture_ids": [
+    "SR-FIX-OWNED-TEMP-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [],
-  "method": "pending",
+  "method": "automated_behavior",
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence.",
-    "RECOVERY-REMOVAL-006: existing test references cover only their still-valid implemented scope. Changed interruption/receipt/preflight/work oracles require fresh implementation and evidence in 18.s–18.x; old repair/crash recovery results are not acceptance of the new contract."
+    "Remaining verification/readiness paths require their own complete source-bound acceptance; no aggregate approval is claimed."
   ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Eine KI-Aussage oder KI-Review DARF NICHT als Evidence oder menschliche Freigabe für ein berechnetes Verification Result oder eine Readiness-Bedingung gelten.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "AI draft publication is not a human decision or verification evidence. Native authority and original actor are retained."
   },
-  "preconditions": [],
+  "preconditions": [
+    "Owned complete native fixtures; declared test actors and trusted test host services. Native publications and receipts execute only in Apply; no fabricated human approvals."
+  ],
   "primary_verification_id": "SR-VER-0012",
   "required_environment": {
     "declared_minimum_python": "3.10",
@@ -29,8 +38,36 @@
     "owned_temporary_files": true
   },
   "specification_sha256": "ec1464357d139becd7b5a15e5764e2320e6a588260c6f14b5490253e2110d1fa",
-  "steps": [],
+  "steps": [
+    "Build complete native inputs and actual bound requests.",
+    "Observe exact result bytes, refusal codes, original file effects and native receipt evidence."
+  ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0177",
-  "test_ids": []
+  "test_ids": [
+    "tests/test_authoring_proposals_right.py::test_ai_direct_write_refused_but_actual_draft_write_keeps_ai_actor",
+    "tests/test_authoring_proposals_right.py::test_changed_request_binding_does_not_reuse_original_receipt",
+    "tests/test_authoring_proposals_right.py::test_complete_document_authoring_plans_keep_all_defaults_and_operations[first_document]",
+    "tests/test_authoring_proposals_right.py::test_complete_document_authoring_plans_keep_all_defaults_and_operations[move_document]",
+    "tests/test_authoring_proposals_right.py::test_complete_document_authoring_plans_keep_all_defaults_and_operations[move_section]",
+    "tests/test_authoring_proposals_right.py::test_complete_document_authoring_plans_keep_all_defaults_and_operations[nested_section]",
+    "tests/test_authoring_proposals_right.py::test_complete_document_authoring_plans_keep_all_defaults_and_operations[promote]",
+    "tests/test_authoring_proposals_right.py::test_complete_document_authoring_plans_keep_all_defaults_and_operations[reorder]",
+    "tests/test_authoring_proposals_right.py::test_complete_document_authoring_plans_keep_all_defaults_and_operations[root_section]",
+    "tests/test_authoring_proposals_right.py::test_complete_document_authoring_plans_keep_all_defaults_and_operations[supporting_document]",
+    "tests/test_authoring_proposals_right.py::test_composite_document_mutations_keep_the_entire_native_plan[block_remove]",
+    "tests/test_authoring_proposals_right.py::test_composite_document_mutations_keep_the_entire_native_plan[cascade]",
+    "tests/test_authoring_proposals_right.py::test_composite_document_mutations_keep_the_entire_native_plan[empty]",
+    "tests/test_authoring_proposals_right.py::test_composite_document_mutations_keep_the_entire_native_plan[move]",
+    "tests/test_authoring_proposals_right.py::test_composite_document_mutations_keep_the_entire_native_plan[update]",
+    "tests/test_authoring_proposals_right.py::test_create_operation_cannot_grant_generic_or_nested_control_writes",
+    "tests/test_authoring_proposals_right.py::test_evidence_redirect_preserves_all_measured_inputs_without_inventing_results[import]",
+    "tests/test_authoring_proposals_right.py::test_evidence_redirect_preserves_all_measured_inputs_without_inventing_results[record]",
+    "tests/test_authoring_proposals_right.py::test_missing_ai_request_id_refused_before_authority_or_publication",
+    "tests/test_authoring_proposals_right.py::test_native_refusals_cannot_be_bypassed_by_proposal_metadata[actor]",
+    "tests/test_authoring_proposals_right.py::test_native_refusals_cannot_be_bypassed_by_proposal_metadata[authority]",
+    "tests/test_authoring_proposals_right.py::test_native_refusals_cannot_be_bypassed_by_proposal_metadata[collision]",
+    "tests/test_authoring_proposals_right.py::test_native_refusals_cannot_be_bypassed_by_proposal_metadata[metadata]",
+    "tests/test_authoring_proposals_right.py::test_native_refusals_cannot_be_bypassed_by_proposal_metadata[scope]"
+  ]
 }

@@ -131,7 +131,8 @@ def _audit(plan, command_id, *, dry_run, write_state, replayed=False):
 
 
 def preview_authoring_request(model, command_id, operations, *, actor, planned_at,
-        change_plan_id, request_id=None, gates=(), strict=False, fail_on_change=False):
+        change_plan_id, request_id=None, gates=(), strict=False, fail_on_change=False,
+        as_proposal=False, proposal_fields=None):
     """Return a saveable full plan, target, diff, impact, diagnostics and audit.
 
     No lock, receipt, authority callback, filesystem write or new identity.
@@ -140,12 +141,15 @@ def preview_authoring_request(model, command_id, operations, *, actor, planned_a
     """
     if type(model) is not TargetModel:
         raise AuthoringError('typed_authoring_model_required')
-    if type(strict) is not bool or type(fail_on_change) is not bool:
+    if type(strict) is not bool or type(fail_on_change) is not bool or type(as_proposal) is not bool:
         raise AuthoringError('explicit_boolean_options_required')
+    if not as_proposal and proposal_fields is not None:
+        raise AuthoringError('proposal_option_requires_redirect', exit_code=2)
     model = model.snapshot()
     owned = _operations(command_id, operations)
     request = prepare_authoring_request(command_id=command_id.replace('.', ' '),
         operations=owned, actor=actor, request_id=request_id, dry_run=True).data
+    original_gates = gates
     owned, policy, gates = _execution_inputs(model, command_id, owned,
         request['actor'], planned_at, gates)
     checked = prepare_authoring_target(model, owned, policy=policy, gates=gates,
@@ -153,5 +157,11 @@ def preview_authoring_request(model, command_id, operations, *, actor, planned_a
         request_id=request['request_id'], scope_descriptor=_SCOPE,
         metadata_policy_version='change-metadata-v1', strict=strict)
     result = ChangeExecutionResult._create(checked, dry_run=True, fail_on_change=fail_on_change).data
+    if as_proposal:
+        from .proposals import prepare_authoring_proposal
+        proposal = prepare_authoring_proposal(checked.plan, model, command_id=command_id,
+            proposal_fields=proposal_fields, gates=original_gates, strict=strict)
+        result = {**result, 'proposal': proposal.data, 'publication_kind': 'proposal_draft',
+                  'human_decision_required': True}
     return {**result, 'command_id': command_id,
         'audit': _audit(checked.plan, command_id, dry_run=True, write_state='not_committed')}

@@ -36,7 +36,7 @@ def prepare_authoring_proposal(plan, model, *, command_id, proposal_fields,
     plan = ChangePlan(plan.source_bytes); model = model.snapshot(); value = plan.data
     _operations(command_id, value['operations'])
     prepare_authoring_request(command_id=command_id.replace('.', ' '), actor=value['actor'],
-        request_id=value['request_id'], operations=value['operations'], as_proposal=True)
+        request_id=value['request_id'], operations=value['operations'], as_proposal=True, dry_run=True)
     require(type(proposal_fields) is dict and set(proposal_fields) <= {
         'identity', 'title', 'rationale', 'changes', 'model_provenance'}
         and {'identity', 'title', 'rationale', 'changes'} <= set(proposal_fields),
@@ -88,6 +88,23 @@ def publish_authoring_proposal(plan, model, *, command_id, proposal_fields,
     from .execution import _apply_saved_plan
     from ..changes import PublicationAuthority
     require(type(authority) is PublicationAuthority, 'proposal_host_authority_required', exit_code=7)
+    require(type(plan) is ChangePlan and type(model) is TargetModel,
+            'typed_authoring_proposal_inputs_required')
+    from ..changes.request_ids import AuthoringError
+    from ..changes._journal_codec import _transaction
+    if type(strict) is not bool or type(gates) not in (list, tuple):
+        raise AuthoringError('explicit_authoring_execution_options_required')
+    gates = tuple(gates)
+    _transaction(transaction_id)
+    plan = ChangePlan(plan.source_bytes)
+    value = plan.data
+    _operations(command_id, value['operations'])
+    prepare_authoring_request(command_id=command_id.replace('.', ' '), actor=value['actor'],
+        operations=value['operations'], request_id=value['request_id'], as_proposal=True)
+    from ._proposal_replay import replay_proposal
+    replay = replay_proposal(plan, model, command_id=command_id, proposal_fields=proposal_fields)
+    if replay is not None:
+        return replay
     proposal = prepare_authoring_proposal(plan, model, command_id=command_id,
         proposal_fields=proposal_fields, gates=gates, strict=strict)
     selected = publication_gates(model, proposal, services=services)
