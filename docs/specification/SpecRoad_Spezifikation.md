@@ -1,19 +1,19 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.92
+## Version 0.2.93
 
 | Feld | Wert |
 |---|---|
 | Dokument-ID | `SR-SPEC-0001` |
-| Dokumentversion | `0.2.92` |
+| Dokumentversion | `0.2.93` |
 | Zielrelease | `SpecRoad Single-Repository Workbench 0.2.0` |
 | Status | **Fachlich konsolidierte Arbeitsgrundlage; technische Reviewentscheidung gesondert dokumentiert, formale Baseline-Freigabe und Produktabnahme nicht durch dieses Dokument erklärt** |
 | Stand | 17. November 2026 |
 | Sprache | Deutsch; technische Feldnamen, Enum-Werte und CLI-Kommandos Englisch |
-| Fachliche Quelle | **Diese Repositoryfassung v0.2.92 ist die aktive fachliche Arbeitsgrundlage; eine entsprechende PDF wird hiermit nicht veröffentlicht.** |
+| Fachliche Quelle | **Diese Repositoryfassung v0.2.93 ist die aktive fachliche Arbeitsgrundlage; eine entsprechende PDF wird hiermit nicht veröffentlicht.** |
 | Bearbeitbare Satzquelle | Diese Datei; eine spätere PDF muss denselben versionierten Inhalt wiedergeben. |
-| Vorgängerversion | Repository-Spezifikation v0.2.91; historische Nachweise bleiben unverändert. |
-| Prüf- und Entscheidungsgrundlage | AUTHORING-PROPOSAL-726 nach SPECROAD-DECISION-1: geschlossene Entwurfsveröffentlichung und deklarierte Agentenvoraussetzungen; keine Produktfreigabe. |
-| Änderungsart | Additiver nativer Proposal-Entwurfsvertrag und präzise maschinenlesbare Befehlsvoraussetzungen; bestehende Sicherheits- und Reviewgrenzen bleiben erhalten. |
+| Vorgängerversion | Repository-Spezifikation v0.2.92; historische Nachweise bleiben unverändert. |
+| Prüf- und Entscheidungsgrundlage | PROPOSAL-WORK-735 nach SPECROAD-DECISION-1: portable passive Proposalprüfung mit frischer Apply-Bindung; keine Produktfreigabe. |
+| Änderungsart | Additive portable Proposalprüfung und explizite Bindung an den bestehenden Apply; aktuelle menschliche Review- und Sicherheitsgrenzen bleiben erhalten. |
 
 > **Verbindlicher Quellenwechsel:** Die ausdrückliche Nutzerentscheidung REFERENCE-SOURCE-551 wird als v0.2.50 umgesetzt. Der neue Quellvertrag ist Entwurfsarbeit vom 3. November 2026, kein Nachweis eines früher existierenden Formats. Bestehende 0.2-Verträge, Transport-, Sicherheits- und Reviewgrenzen bleiben erhalten.
 
@@ -5298,6 +5298,49 @@ Hostautorität. Befehlsvarianten liefern ihren eigenen vollständigen
 `request_schema` und denselben Autorisierungsvertrag. Die verfügbare
 Proposal-Recordversion wird nur zusammen mit dem tatsächlich registrierten
 nativen Proposal-Leser gemeldet; eine Schemafundstelle allein genügt nicht.
+
+
+#### 11.10.2 Portable Proposalprüfung und erneute Apply-Bindung
+
+`proposal check` unterstützt die externe Work-Fortsetzung nach Anhang P.
+`--work-dir`, das Profil `constrained` oder explizite CPU-/Wall-Schrittbudgets
+wählen diesen Weg. Der geschlossene Adapter `proposal-check-work-v1` bindet
+vollständige native Basisbytes einschließlich benötigter Archive, das vollständige
+Proposaloriginal, seine kanonische Recordadresse, Projekt-ID, Spezifikationsbasis,
+Inhaltsrevision/-hash, inneren Planhash und die aufgezeichnete Engineidentität.
+Gespeichert werden ausschließlich Daten, keine Hostdienste, Freigaben oder
+Programmpfade. Ein gespeicherter alter Projektpfad ist keine Schreibautorität.
+
+Die endliche Aufgabenfolge prüft zunächst alle Eingabeblöcke von höchstens
+65536 Bytes in kanonischer Reihenfolge, dann die vollständige isolierte native
+Proposalprüfung und deren Abschluss. Die native Gesamtprüfung ist eine sichere
+atomare Einheit; ein Budget unterbricht sie nicht mitten im fachlichen Gate.
+Jeder Fortsetzungsschritt veröffentlicht ausschließlich einen vollständigen
+Präfix. Vor Abschluss und erneuter Lieferung werden die fachlichen Ergebnisse
+unabhängig aus den gebundenen Originalbytes und aktuellen nativen Diensten
+nachgerechnet. Die ursprünglichen Auditzeiten und deren Resultathash bleiben
+als Lieferergebnis erhalten; sie sind keine fachliche Freigabe.
+`work resume`, `status`, `prompt`, `export`, `restore` und `cancel` benutzen die
+vorhandenen nativen Workverträge. Restore braucht keine alte Sandbox.
+`--keep-workspace` wird im Workmodus als unvereinbar abgewiesen. Eine technische
+Workvollständigkeit setzt weder Proposalstatus noch Maturity noch Reviews.
+
+`proposal apply --checked-work <DIR>` bindet optional die abgeschlossene
+Prüfung zusätzlich an den explizit gewählten aktuellen Projektroot. Der Pfad
+ist kein Reviewbeleg. Der aktuelle Enginebuild, Projekt-ID, Spezifikationsbasis
+und die vollständige Proposal-Inhaltsbindung müssen übereinstimmen; die
+Prüfung muss fachlich bestanden sein. Reine nachgewiesene Lifecycle- und
+Reviewänderungen dürfen bei identischer Inhaltsbindung fortschreiten.
+Andere Inhalte, Inhaltsrevision, Basis oder Engine erfordern eine neue Prüfung;
+keine automatische Umbindung. Die Übergabe ersetzt keine der normalen
+Applyprüfungen: aktuelle echte menschliche Reviews, deren ursprüngliche
+Kontextbindung, Hostautorität und vollständige frische Zielqualifikation bleiben
+unter der nativen Schreibsperre verpflichtend. Ein anderer Sandboxpfad allein
+verleiht keine Rechte und widerspricht bei gleichen gebundenen Bytes nicht der
+Portabilität. Unvollständige, abgebrochene, manipulierte oder fremde Arbeit
+verhindert die Übergabe ohne normative Veröffentlichung. Nach bereits bewiesenem
+Apply gelten weiterhin die vorhandenen exakten Retry-/Receiptregeln.
+
 
 ### 11.11 Runtime- und Ressourcenverträge
 

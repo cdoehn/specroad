@@ -54,7 +54,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "ec1464357d139becd7b5a15e5764e2320e6a588260c6f14b5490253e2110d1fa",
+  "specification_sha256": "740fe5f0a917245beb0f01754e8490219f2c6e72bf0c40b94c9f0d567724e177",
   "steps": [
     "Invoke the native proposal review writer with an explicit human decision and optional comment, retaining content binding and every prior history row.",
     "Observe distinct human actor_ids reaching the configured quorum, an insufficient count remaining in_review, original canonical assessment bytes and actual writer completion.",

@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 240 · **Stand:** 17. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.92
+**Planrevision:** 240 · **Stand:** 17. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.93
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 306 Schritte und 918 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; die früher genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wurde nach der damaligen Spezifikation innerhalb von 15.l.R vorgezogen und bleibt als normaler Prüfkern erhalten. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -169,6 +169,8 @@ Korrektur des Git-Scopes bei erfüllter Löschung: [Bundle 733](history/bundle-7
 
 Native Laufzeit der Treiberregressionen: [Korrektur 734](history/bundle-734-driver-test-runtime.md). Bundle 733 scheiterte im C-Gate an zwölf fehlenden Runtime-Imports; kein neuer Commit, vollständiger C-Rest erhalten.
 
+Detailentscheidung für 18.o/18.p: [PROPOSAL-WORK-735](decisions/proposal-work-735.md).
+
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
@@ -179,7 +181,7 @@ last_completed_plan_commit: 18.n.C
 next_plan_commit: 18.o.W
 priority_off_plan: null
 next_off_plan_commit: null
-last_completed_numbered_bundle: 734
+last_completed_numbered_bundle: 735
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
