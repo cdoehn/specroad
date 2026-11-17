@@ -9,7 +9,7 @@ def _validate(invocation):
 
 
 def _check(invocation):
-    from ..proposals.check import check_command
+    from .proposal_work import check_command
     return check_command(invocation)
 
 
@@ -24,6 +24,7 @@ def _review(invocation):
 
 
 def proposal_commands():
+    from .commands import _read_runtime_options
     return (CommandSpec('proposal.validate', ('proposal', 'validate'), CommandClass.READ_ONLY,
         PreflightProfile.PROJECT_READ, EffectScope.NONE, requires_project=True,
         configuration_schema_required=True, handler=_validate,
@@ -41,13 +42,16 @@ def proposal_commands():
         configuration_schema_required=True, handler=_check,
         positionals=(PositionalSpec('proposal'),), options=(
             OptionSpec('--project', takes_value=True), OptionSpec('--keep-workspace'),
+            OptionSpec('--work-dir', takes_value=True), *_read_runtime_options(),
             OptionSpec('--format', takes_value=True, choices=('pretty', 'json')),
             OptionSpec('--quiet'), OptionSpec('--no-color')),
+        budget_policy_version='runtime-budget-v2',
         protocol=CommandProtocol('proposal-check-v1', {'command_id': 'proposal.check',
             'arguments': {'proposal': 'SR-PROP-' + '0' * 26}},
-            handler_exit_codes=(0, 1, 2, 3, 4, 5, 6, 7), diagnostic_codes=(
+            handler_exit_codes=tuple(range(9)), diagnostic_codes=(
                 'SRV001', 'SRV002', 'CORE_USAGE', 'CORE_MODEL', 'CORE_ENVIRONMENT', 'CORE_CONFLICT', 'CORE_SECURITY', 'SRV140'),
-            work=WorkContract('native_isolated_proposal_check', ('proposal_original', 'complete_native_basis')))),
+            work=WorkContract('native_isolated_proposal_check', ('proposal_original', 'complete_native_basis'),
+                True, ('external_work_directory',), ('work-manifest-segments-v1',)))),
         CommandSpec('proposal.review.start', ('proposal', 'review', 'start'), CommandClass.NORMATIVE_WRITE,
             PreflightProfile.PROJECT_WRITE, EffectScope.NORMATIVE_TRANSACTION, requires_project=True,
             configuration_schema_required=True, handler=_review_start,
@@ -157,7 +161,7 @@ def _apply_spec():
             OptionSpec('--actor-type', takes_value=True, required=True, choices=('human', 'ai', 'ci')),
             OptionSpec('--actor-id', takes_value=True, required=True),
             OptionSpec('--request-id', takes_value=True), OptionSpec('--dry-run'),
-            OptionSpec('--project', takes_value=True),
+            OptionSpec('--project', takes_value=True), OptionSpec('--checked-work', takes_value=True),
             OptionSpec('--format', takes_value=True, choices=('pretty', 'json')),
             OptionSpec('--quiet'), OptionSpec('--no-color')),
         protocol=CommandProtocol('proposal-apply-v1', {'command_id': 'proposal.apply',

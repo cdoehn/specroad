@@ -23,7 +23,7 @@ def protected_paths(initial):
     if value['command_class'] == 'transport_operational':
         from .transport import protected_paths as transport_paths
         return transport_paths(initial)
-    if value['command_id'] in ('migrate.plan', 'migrate.verify', 'merge.plan'):
+    if value['command_id'] in ('migrate.plan', 'migrate.verify', 'merge.plan', 'proposal.check'):
         return ()  # Complete owned passive bytes, no saved live-root authority.
     require(False, 'work_command_adapter_unavailable', exit_code=2)
 
@@ -69,7 +69,7 @@ def open_existing_work(path, *, registry):
             'initial_checkpoint_sha256': root['initial_checkpoint_sha256'], 'tool_build': build}
         chain = _decode(metadata, payloads, registry, build)
         initial = chain[0]
-        require(initial.as_dict()['command_id'] in ('migrate.plan','migrate.verify','merge.plan') or (
+        require(initial.as_dict()['command_id'] in ('migrate.plan','migrate.verify','merge.plan','proposal.check') or (
             initial.as_dict()['command_id'] == 'bundle.create'
             and initial.as_dict()['command_class'] == 'transport_operational'),
                 'work_command_adapter_unavailable', exit_code=2)

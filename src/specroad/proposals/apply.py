@@ -34,12 +34,12 @@ def _failure_reason(error):
 
 
 def apply_project(root, operand, *, expected_revision, actor, planned_at, change_plan_id,
-                  transaction_id, authority=None, request_id=None, dry_run=False, cwd=None, services=None):
+                  transaction_id, authority=None, request_id=None, dry_run=False, cwd=None, services=None, checked_work=None):
     audit = _initial()['audit']
     try:
         return _apply(root, operand, expected_revision=expected_revision, actor=actor,
             planned_at=planned_at, change_plan_id=change_plan_id, transaction_id=transaction_id,
-            authority=authority, request_id=request_id, dry_run=dry_run, cwd=cwd, services=services, audit=audit)
+            authority=authority, request_id=request_id, dry_run=dry_run, cwd=cwd, services=services, audit=audit, checked_work=checked_work)
     except Exception as error:
         audit.update(ended_at=_now(), outcome='failed',
             diagnostics=[{'reason': _failure_reason(error)}])
@@ -48,7 +48,7 @@ def apply_project(root, operand, *, expected_revision, actor, planned_at, change
 
 
 def _apply(root, operand, *, expected_revision, actor, planned_at, change_plan_id,
-           transaction_id, authority, request_id, dry_run, cwd, services, audit):
+           transaction_id, authority, request_id, dry_run, cwd, services, audit, checked_work):
     require(type(expected_revision) is int and expected_revision > 0,
             'proposal_expected_revision_required', exit_code=2)
     require(type(dry_run) is bool, 'proposal_dry_run_boolean_required', exit_code=2)
@@ -78,6 +78,9 @@ def _apply(root, operand, *, expected_revision, actor, planned_at, change_plan_i
         require(original.data['revision'] == expected_revision, 'proposal_revision_conflict', exit_code=6)
         snapshot = InspectionSnapshot(root, None, include_archive_objects=True)
         require(snapshot.raw.get(original.path) == original.source_bytes, 'proposal_input_changed', exit_code=6)
+        if checked_work is not None:
+            from ._work_handoff import check_work_handoff
+            check_work_handoff(checked_work, snapshot, original, services)
         evidence = assessment(snapshot, original, services)
         operations = [*original.data['change_plan']['operations'], operation(original, evidence)]
         preconditions = original.data['change_plan']['preconditions']
@@ -98,6 +101,9 @@ def _apply(root, operand, *, expected_revision, actor, planned_at, change_plan_i
         _preflight(source); snapshot.verify_current()
         return _result(operations, None, audit, dry_run=True)
     initial_snapshot = InspectionSnapshot(root, None, include_archive_objects=True)
+    if checked_work is not None:
+        from ._work_handoff import check_work_handoff
+        check_work_handoff(checked_work, initial_snapshot, initial, services)
     assessment(initial_snapshot, initial, services)
     supplied.verify_current(); initial_snapshot.verify_current()
     with project_lock(source.boundary.root, kind='writer', command='change apply',
@@ -131,7 +137,8 @@ def apply_command(invocation):
                 'actor_id': options['--actor-id']}, planned_at=_now(), change_plan_id='apply-' + uuid4().hex,
             transaction_id='apply-' + uuid4().hex, authority=invocation.publication_authority,
             request_id=options.get('--request-id'), dry_run=options.get('--dry-run', False),
-            cwd=invocation.resolved.working_directory, services=invocation.restore_services)
+            cwd=invocation.resolved.working_directory, services=invocation.restore_services,
+            checked_work=options.get('--checked-work'))
         return CommandResult(COMMAND, result=result)
     except (ModelError, BundleError, SrxError, SafetyViolation, OSError, OperationFailure) as error:
         code = (int(error.kind) if isinstance(error, OperationFailure) else 7 if isinstance(error, SafetyViolation)

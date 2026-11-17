@@ -6,6 +6,10 @@ from ._data_contract import _copy, _count, _hash, _object, _parse, _require
 
 
 def _result(value, objects, document, exit_code, registry):
+    if value['command_id'] == 'proposal.check':
+        from .proposal import check_outcome
+        check_outcome(value, document, exit_code)
+        return 'proposal-check-work-finalization-v1', []
     if value['command_id'] == 'merge.plan':
         from .merge import check_outcome
         check_outcome(value, document, exit_code)

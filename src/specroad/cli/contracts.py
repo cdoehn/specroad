@@ -222,7 +222,12 @@ class CommandSpec:
         if self.protocol is not None and self.protocol.lock_kind == 'writer' and self.command_class is not CommandClass.NORMATIVE_WRITE:
             raise CommandUsageError('Writer locking requires a normative command')
         if (self.protocol is not None and self.protocol.work.continuation_supported
-                and not (migration or merge_planning or (self.command_id == 'work.resume'
+                and not (migration or merge_planning or (self.command_id == 'proposal.check'
+                    and self.words == ('proposal', 'check') and self.requires_project
+                    and self.command_class is CommandClass.READ_ONLY
+                    and self.preflight_profile is PreflightProfile.PROJECT_READ
+                    and self.effect_scope is EffectScope.EXTERNAL_OUTPUT)
+                    or (self.command_id == 'work.resume'
                     and self.command_class is CommandClass.WORK_OPERATIONAL)
                     or (self.command_id == 'bundle.create'
                         and self.words == ('bundle', 'create')

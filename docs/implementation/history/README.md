@@ -503,3 +503,6 @@
 
 - [Bundle 733 — Dateiscope und tatsächlicher Git-Commitumfang](bundle-733-uncommitted-deletion-scope.md)
 - [Bundle 734 — native Laufzeit der Git-Treiberregressionen](bundle-734-driver-test-runtime.md)
+
+- [Bundle 735 — Portable Proposalprüfung und aktuelle Reviewpflicht](bundle-735-proposal-work.md)
+- [Bundle 736 — Proposal-Work-Capabilities und vollständiger Rest](bundle-736-proposal-work-capabilities.md)

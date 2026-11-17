@@ -141,8 +141,11 @@ def test_command_describes_resolved_policy_without_inventing_a_work_engine():
     merge_work_only = CommandRegistry(tuple(command for command in planning_work_only.commands
         if not command.command_id.startswith('migrate.')))
     assert dispatch_result(['capabilities'], registry=merge_work_only).as_dict()['result']['semantic']['work'] == capabilities
-    without_work = CommandRegistry(tuple(command for command in merge_work_only.commands
+    proposal_work_only = CommandRegistry(tuple(command for command in merge_work_only.commands
         if command.command_id != 'merge.plan'))
+    assert dispatch_result(['capabilities'], registry=proposal_work_only).as_dict()['result']['semantic']['work'] == capabilities
+    without_work = CommandRegistry(tuple(command for command in proposal_work_only.commands
+        if command.command_id != 'proposal.check'))
     unavailable = dispatch_result(['capabilities'], registry=without_work)
     assert unavailable.exit_code == 0
     assert unavailable.as_dict()['result']['semantic']['work'] == {

@@ -9,8 +9,9 @@ from .values import require
 
 class CheckWorkspace:
     """Fresh private directory, never a project-selected program or output path."""
-    def __init__(self, project_root, keep):
+    def __init__(self, project_root, keep, *, guard=None):
         require(type(keep) is bool, 'proposal_debug_boolean_required', exit_code=2)
+        self.guard = guard
         self.path = None
         self.identity = None
         self.keep = keep
@@ -27,6 +28,8 @@ class CheckWorkspace:
             parent = Path(os.fsdecode(candidate)).resolve()
             require(parent != self.project_root and self.project_root not in parent.parents,
                     'proposal_workspace_inside_project', exit_code=7)
+            if self.guard is not None:
+                self.guard(parent / "specroad-proposal-work-candidate")
             try:
                 self.path = Path(tempfile.mkdtemp(prefix='specroad-proposal-check-', dir=parent))
                 break

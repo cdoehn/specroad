@@ -1,20 +1,31 @@
 {
   "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "fixture_ids": [],
-  "implementation_status": "open",
+  "expected_exit_codes": [
+    0,
+    2,
+    3,
+    6,
+    7,
+    8
+  ],
+  "fixture_ids": [
+    "SR-FIX-OWNED-TEMP-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [],
-  "method": "pending",
+  "method": "automated_behavior",
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "R adds the complete negative, sandbox, forgery and authority-loss matrix; this W stage has its own Apply gate."
   ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Die Proposal-Fortsetzung MUSS dieselben echten menschlichen Freigabevoraussetzungen wie der nicht aufgeteilte Ablauf verlangen.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "18.o: direct and split checks bind the complete native inputs, Proposal content, specification basis and recorded engine. Native Work export/restore and result recomputation never supply human approval. The optional Apply handoff retains current actual human provenance and native writer/host gates, including after sandbox changes. Prepared code/tests require their own Apply gate; no Dev execution is claimed."
   },
-  "preconditions": [],
+  "preconditions": [
+    "Small complete owned native projects; explicit synthetic human actors and host services retain original native review writes. Every test owns mutable project and Work data."
+  ],
   "primary_verification_id": "SR-VER-0043",
   "required_environment": {
     "declared_minimum_python": "3.10",
@@ -28,8 +39,20 @@
     "owned_temporary_files": true
   },
   "specification_sha256": "740fe5f0a917245beb0f01754e8490219f2c6e72bf0c40b94c9f0d567724e177",
-  "steps": [],
+  "steps": [
+    "Compare direct native checks with split and portable Work through public requests and actual checkpoint stores.",
+    "Apply the same bound checked content only with current real test-host review originals and authority; observe exact target bytes and unchanged inputs on refusal.",
+    "R covers stale/revised bindings, changed engine, checkpoint/audit forgery, failed full validation, path limits, cancellation, loss of human authority under writer lock and historical replay."
+  ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0647",
-  "test_ids": []
+  "test_ids": [
+    "tests/test_proposal_work.py::test_actual_public_contract_separates_passive_work_and_reviewed_writer",
+    "tests/test_proposal_work.py::test_public_check_work_portable_after_source_disappears[argv]",
+    "tests/test_proposal_work.py::test_public_check_work_portable_after_source_disappears[mapping]",
+    "tests/test_proposal_work.py::test_split_native_check_has_same_complete_result_without_project_writes[100000]",
+    "tests/test_proposal_work.py::test_split_native_check_has_same_complete_result_without_project_writes[1]",
+    "tests/test_proposal_work.py::test_split_native_check_has_same_complete_result_without_project_writes[3]",
+    "tests/test_proposal_work.py::test_work_completion_does_not_replace_real_reviews_before_apply"
+  ]
 }

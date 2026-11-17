@@ -44,7 +44,11 @@ class WorkDirectory:
         if passive_merge:
             from .merge import checked
             checked(manifest)
-        passive_migration = passive_migration or passive_merge
+        passive_proposal = value['command_id'] == 'proposal.check'
+        if passive_proposal:
+            from .proposal import checked
+            checked(manifest)
+        passive_migration = passive_migration or passive_merge or passive_proposal
         if type(protected_paths) is not tuple:
             raise ValueError('Explicit protected paths are required')
         protected_paths = tuple(_path(path) for path in protected_paths)
