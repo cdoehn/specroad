@@ -85,7 +85,7 @@ def _policy_shapes(data):
     if "required_relation_review" in validation and validation["required_relation_review"] != "current":
         raise ModelError("invalid_policy_value", pointer="/validation_policy/required_relation_review")
     transaction = data.get("transaction_policy", {})
-    _closed_object(transaction, ("auto_recover", "retain_receipts"), "/transaction_policy")
+    _closed_object(transaction, ("retain_receipts",), "/transaction_policy")
     if any(type(value) is not bool for value in transaction.values()):
         raise ModelError("invalid_policy_value", pointer="/transaction_policy")
     # Retention has a normative audit role; a declaration cannot disable it.

@@ -184,7 +184,7 @@ class ConfigurationRightTests(unittest.TestCase):
 
     def test_policy_declarations_validate_without_resolving_or_executing(self):
         value=configuration_value(profiles=['core@0.2.0'],language_packages=['de@1.0.0'],
-                                  transaction_policy={'auto_recover':True,'retain_receipts':True},
+                                  transaction_policy={'retain_receipts':True},
                                   srx_policy={'numeric_policy_version':'srx-decimal-v1','decimal_precision':1000},
                                   resource_limits={'model_bytes':1})
         self.assertEqual(ProjectConfiguration(value).data,value)

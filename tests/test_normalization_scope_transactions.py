@@ -90,7 +90,7 @@ from support.publication import options, ALLOW, TRANSACTION
 from specroad.changes import (project_lock, begin_building_journal, stage_building_journal,
     publish_prepared_journal, finalize_committing_journal, CommittingJournal)
 state = sys.argv[3]
-m, p, c = prepared(root, config=configuration_value(transaction_policy={'auto_recover': True}))
+m, p, c = prepared(root, config=configuration_value(transaction_policy={'retain_receipts': True}))
 target = {**m.source_files, **{d.path:d.content for d in c.request.documents}}
 print(json.dumps({'before':{p:b.hex() for p,b in m.source_files.items()},
                   'after':{p:b.hex() for p,b in target.items()}}), flush=True)

@@ -9,8 +9,11 @@
     6,
     7
   ],
-  "fixture_ids": [],
-  "implementation_status": "open",
+  "fixture_ids": [
+    "SR-FIX-GIT-RESTART-W-v1",
+    "SR-FIX-WRITE-GUARD-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [
     "/state",
     "/journal_sha256",
@@ -18,18 +21,17 @@
     "/permitted_actions",
     "/discard_completed"
   ],
-  "method": "pending",
+  "method": "automated_behavior",
   "open_items": [
-    "RECOVERY-REMOVAL-006: changed requirement contract; the old implementation/tests are retained until their assigned W/R/C replacement. Previous recovery/restore evidence does not establish this new behavior.",
-    "Apply of this specification/planning bundle is not implementation, release, or user authorization to use SpecRoad."
+    "M20: explicit supported-platform and full-suite/release evidence remains required; no earlier recovery evidence is reused."
   ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "`environment check`, `project inspect` und `lock status` MÜSSEN begrenzte lesende Sperrdiagnose nach N.3 anbieten; reguläre Fachoperation und manuelle Wiederanlaufpflicht MÜSSEN eindeutig unterschieden werden.",
-    "scope": "New interruption guard and manual Git restart contract; no active automated pass claim until implementation."
+    "scope": "Implemented native interruption/normal-completion and separate user-controlled Git restart scope in 18.s–18.x. Full original files and required receipts are checked; no product repair or reconstructed evidence. Bound tests need this stage’s successful Apply gate. Platform/full-suite/release acceptance remains separate in M20."
   },
   "preconditions": [
-    "Implementation and actual Apply evidence for specification 0.2.85 are required; this document bundle runs no new product behavior."
+    "Owned native project roots, synthetic explicit authority and actual OS/file/Git operations inside Apply test directories."
   ],
   "primary_verification_id": "SR-VER-0019",
   "required_environment": {
@@ -45,9 +47,44 @@
   },
   "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
-    "Implement the complete new contract in 18.t and bind real behavioral tests and evidence before declaring acceptance."
+    "Exercise successful writes and real interruption boundaries through native APIs.",
+    "Retain damaged roots; qualify independent complete Git checkouts and reject missing original data.",
+    "Check exact original bytes and new request identity without repair or invented approvals."
   ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0262",
-  "test_ids": []
+  "test_ids": [
+    "tests/test_environment_check.py::test_bad_distribution_record_is_an_explicit_blocker_with_complete_report",
+    "tests/test_environment_check.py::test_environment_contract_is_described_retrievable_and_validates_actual_report",
+    "tests/test_environment_check.py::test_explicit_project_diagnoses_metadata_without_validating_or_repairing_model[broken_model]",
+    "tests/test_environment_check.py::test_explicit_project_diagnoses_metadata_without_validating_or_repairing_model[clean]",
+    "tests/test_environment_check.py::test_explicit_project_diagnoses_metadata_without_validating_or_repairing_model[history]",
+    "tests/test_environment_check.py::test_explicit_project_diagnoses_metadata_without_validating_or_repairing_model[pending]",
+    "tests/test_environment_check.py::test_for_command_resolves_registered_aliases_without_executing_target[fixture target]",
+    "tests/test_environment_check.py::test_for_command_resolves_registered_aliases_without_executing_target[fixture.target]",
+    "tests/test_environment_check.py::test_for_command_resolves_registered_aliases_without_executing_target[target-alias]",
+    "tests/test_environment_check.py::test_fresh_process_reports_environment_without_project_access_or_external_processes",
+    "tests/test_environment_check.py::test_invalid_configuration_keeps_model_and_safety_failure_classes[execution-7]",
+    "tests/test_environment_check.py::test_invalid_configuration_keeps_model_and_safety_failure_classes[schema-3]",
+    "tests/test_environment_check.py::test_invalid_configuration_keeps_model_and_safety_failure_classes[syntax-3]",
+    "tests/test_environment_check.py::test_invalid_environment_requests_are_usage_failures_without_side_effects[arguments0]",
+    "tests/test_environment_check.py::test_invalid_environment_requests_are_usage_failures_without_side_effects[arguments1]",
+    "tests/test_environment_check.py::test_invalid_environment_requests_are_usage_failures_without_side_effects[arguments2]",
+    "tests/test_environment_check.py::test_invalid_environment_requests_are_usage_failures_without_side_effects[arguments3]",
+    "tests/test_environment_check.py::test_invalid_environment_requests_are_usage_failures_without_side_effects[arguments4]",
+    "tests/test_environment_check.py::test_missing_target_project_and_arguments_remain_unknown[False]",
+    "tests/test_environment_check.py::test_missing_target_project_and_arguments_remain_unknown[True]",
+    "tests/test_environment_check.py::test_observed_address_space_limit_is_qualified_and_never_claims_available_memory",
+    "tests/test_environment_check.py::test_projectless_diagnosis_does_not_discover_broken_project[cli]",
+    "tests/test_environment_check.py::test_projectless_diagnosis_does_not_discover_broken_project[registry]",
+    "tests/test_environment_check.py::test_projectless_diagnosis_does_not_discover_broken_project[structured]",
+    "tests/test_environment_check.py::test_resource_profile_reports_declared_targets_with_origin_without_claiming_engine[None]",
+    "tests/test_environment_check.py::test_resource_profile_reports_declared_targets_with_origin_without_claiming_engine[constrained]",
+    "tests/test_environment_check.py::test_resource_profile_reports_declared_targets_with_origin_without_claiming_engine[standard]",
+    "tests/test_environment_check.py::test_runtime_failure_in_diagnostic_phase_retains_complete_machine_report",
+    "tests/test_environment_check.py::test_target_prerequisites_are_not_probed_or_assumed_available[git]",
+    "tests/test_environment_check.py::test_target_prerequisites_are_not_probed_or_assumed_available[root_creation]",
+    "tests/test_environment_check.py::test_target_prerequisites_are_not_probed_or_assumed_available[write]",
+    "tests/test_environment_check.py::test_unavailable_optional_resource_api_keeps_quotas_unknown_and_diagnosis_complete"
+  ]
 }

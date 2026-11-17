@@ -30,6 +30,7 @@ def _project_bytes(files):
     """Original model/manifest binding only, never current qualification."""
     from .receipts import receipt_history, check_receipt_targets
     from ..model.configuration import ProjectConfiguration
+    require('specroad.json' in files, 'restore_project_configuration_missing', path='specroad.json')
     declared_files(files)
     configuration = ProjectConfiguration(parse_json_object(files['specroad.json']))
     operational, journals = receipt_history(files, configuration.project_id)

@@ -484,3 +484,5 @@
 - [Bundle 723 — erhaltene Transportschemas und Snapshot-Lock-Regressionen](bundle-723-transport-schema-lock-oracles.md)
 
 - [Bundle 724 — Work-Prüfimport und veraltete Publikations-Lock-Annahme](bundle-724-work-import-publication-oracle.md)
+
+- [Bundle 725 — Native Qualifikation der Git-Neubeginn-Testdaten](bundle-725-git-restart-qualification.md)

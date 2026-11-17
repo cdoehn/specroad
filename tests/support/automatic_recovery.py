@@ -14,10 +14,10 @@ from .targets import POLICY, model, plan
 
 
 @contextmanager
-def writer(root, state='prepared', *, auto_recover=True, on_basis=None):
+def writer(root, state='prepared', *, auto_recover=None, on_basis=None):
     root.mkdir(parents=True, exist_ok=True)
     inode = root.stat()
-    policy = {} if auto_recover is None else {'auto_recover': auto_recover}
+    policy = {'retain_receipts': True}
     source = model([goal(1), goal(2)], config=configuration_value(transaction_policy=policy),
         binding=ProjectReadBinding('sample', str(root), (inode.st_dev, inode.st_ino)))
     for path, raw in source.source_files.items():
@@ -56,10 +56,15 @@ def writer(root, state='prepared', *, auto_recover=True, on_basis=None):
             journal = CommittingJournal((root / journal.path).read_bytes())
             if state == 'committed':
                 finalize_committing_journal(check, journal, held_lock=held, authority=ALLOW)
+        if auto_recover is not None:
+            import json
+            config = json.loads((root / 'specroad.json').read_bytes())
+            config['transaction_policy']['auto_recover'] = auto_recover
+            (root / 'specroad.json').write_text(json.dumps(config))
         yield source, change, expected
 
 
-def pending(root, state='prepared', *, auto_recover=True):
+def pending(root, state='prepared', *, auto_recover=None):
     with writer(root, state, auto_recover=auto_recover) as values:
         return values
 

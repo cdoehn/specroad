@@ -32,7 +32,7 @@ def fixture(root, variant='single'):
     root.mkdir(parents=True, exist_ok=True)
     inode = root.stat()
     source = model([goal(1), goal(2)] if variant == 'single' else [goal(1), goal(2), goal(3)],
-        config=configuration_value(transaction_policy={'auto_recover': True}),
+        config=configuration_value(transaction_policy={'retain_receipts': True}),
         binding=ProjectReadBinding('sample', str(root), (inode.st_dev, inode.st_ino)))
     for path, raw in source.source_files.items():
         put(root, path, raw)

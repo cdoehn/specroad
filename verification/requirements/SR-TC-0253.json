@@ -14,6 +14,7 @@
     7
   ],
   "fixture_ids": [
+    "SR-FIX-GIT-RESTART-W-v1",
     "SR-FIX-NORMAL-ADAPTERS-v1",
     "SR-FIX-WRITE-GUARD-v1"
   ],
@@ -21,17 +22,16 @@
   "json_pointers": [],
   "method": "automated_behavior",
   "open_items": [
-    "18.v/18.w/18.x: finish specialist/bootstrap integration, removal of legacy repair entrypoints and complete format/manual Git restart acceptance.",
-    "This stage is prepared in Dev; actual passing Apply evidence and explicit product release remain required."
+    "M20: explicit supported-platform and full-suite/release evidence remains required; no earlier recovery evidence is reused."
   ],
   "oracle": {
     "expected": "A fully checked normal effect and bound original completion, or a preserved refusal/interruption state. No automatic repair, duplicate revision or inferred current target from historical receipts.",
     "kind": "behavior",
     "requirement_contract": "Der Schreibmarker MUSS die geschlossene Projekt-, Request-, Plan-, Basis-, Ziel- und Eigentümerbindung aus C.1 enthalten; fremde oder beschädigte Marker DÜRFEN NICHT überschrieben werden.",
-    "scope": "18.u normal ChangePlan adapters, common preflight and completion readers. Specialist/root creation and recovery-command removal remain 18.v/18.w; final format/manual Git restart acceptance is 18.x."
+    "scope": "Implemented native interruption/normal-completion and separate user-controlled Git restart scope in 18.s–18.x. Full original files and required receipts are checked; no product repair or reconstructed evidence. Bound tests need this stage’s successful Apply gate. Platform/full-suite/release acceptance remains separate in M20."
   },
   "preconditions": [
-    "Actual Apply evidence for the guarded normal writer and current 18.u adapter integration is required. Fixture authorities are synthetic; no human approval or release is inferred."
+    "Owned native project roots, synthetic explicit authority and actual OS/file/Git operations inside Apply test directories."
   ],
   "primary_verification_id": "SR-VER-0019",
   "required_environment": {
@@ -47,9 +47,9 @@
   },
   "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
-    "Invoke real normal adapters and compare exact target, original and receipt bytes.",
-    "Refuse denied authority and interrupted or unknown roots without retry, repair or normal model work.",
-    "Verify confirmed request identity and read-only completion; unchanged W/R behavior remains the C gate."
+    "Exercise successful writes and real interruption boundaries through native APIs.",
+    "Retain damaged roots; qualify independent complete Git checkouts and reject missing original data.",
+    "Check exact original bytes and new request identity without repair or invented approvals."
   ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0253",
@@ -132,6 +132,26 @@
     "tests/test_normal_write_adapters_right.py::test_unknown_owner_blocks_normal_calls_without_repair_or_model_loading[foreign_owner]",
     "tests/test_normal_write_adapters_right.py::test_unknown_owner_blocks_normal_calls_without_repair_or_model_loading[mutex_without_record]",
     "tests/test_normal_write_adapters_right.py::test_unknown_owner_blocks_normal_calls_without_repair_or_model_loading[unverifiable_owner]",
+    "tests/test_snapshot_guard_right.py::test_changed_live_inputs_cannot_finish_a_protected_snapshot[backup-merge]",
+    "tests/test_snapshot_guard_right.py::test_changed_live_inputs_cannot_finish_a_protected_snapshot[backup-migration]",
+    "tests/test_snapshot_guard_right.py::test_changed_live_inputs_cannot_finish_a_protected_snapshot[foreign-merge]",
+    "tests/test_snapshot_guard_right.py::test_changed_live_inputs_cannot_finish_a_protected_snapshot[foreign-migration]",
+    "tests/test_snapshot_guard_right.py::test_changed_live_inputs_cannot_finish_a_protected_snapshot[marker-merge]",
+    "tests/test_snapshot_guard_right.py::test_changed_live_inputs_cannot_finish_a_protected_snapshot[marker-migration]",
+    "tests/test_snapshot_guard_right.py::test_changed_live_inputs_cannot_finish_a_protected_snapshot[owner-merge]",
+    "tests/test_snapshot_guard_right.py::test_changed_live_inputs_cannot_finish_a_protected_snapshot[owner-migration]",
+    "tests/test_snapshot_guard_right.py::test_changed_live_inputs_cannot_finish_a_protected_snapshot[source-merge]",
+    "tests/test_snapshot_guard_right.py::test_changed_live_inputs_cannot_finish_a_protected_snapshot[source-migration]",
+    "tests/test_snapshot_guard_right.py::test_legacy_special_recovery_entrypoint_has_no_write_capability[complete]",
+    "tests/test_snapshot_guard_right.py::test_legacy_special_recovery_entrypoint_has_no_write_capability[discard]",
+    "tests/test_snapshot_guard_right.py::test_legacy_special_recovery_entrypoint_has_no_write_capability[rollback]",
+    "tests/test_snapshot_guard_right.py::test_rehashed_receipt_does_not_replace_full_native_plan_binding[backup]",
+    "tests/test_snapshot_guard_right.py::test_rehashed_receipt_does_not_replace_full_native_plan_binding[command]",
+    "tests/test_snapshot_guard_right.py::test_rehashed_receipt_does_not_replace_full_native_plan_binding[native]",
+    "tests/test_snapshot_guard_right.py::test_rehashed_receipt_does_not_replace_full_native_plan_binding[operations]",
+    "tests/test_snapshot_guard_right.py::test_rehashed_receipt_does_not_replace_full_native_plan_binding[plan]",
+    "tests/test_snapshot_guard_right.py::test_rehashed_receipt_does_not_replace_full_native_plan_binding[project]",
+    "tests/test_snapshot_guard_right.py::test_rehashed_receipt_does_not_replace_full_native_plan_binding[target]",
     "tests/test_write_guard.py::test_complete_write_and_read_only_retry_preserve_exact_effect",
     "tests/test_write_guard.py::test_existing_marker_and_old_transaction_never_authorize_new_write",
     "tests/test_write_guard.py::test_full_create_and_replace_share_the_native_writer",

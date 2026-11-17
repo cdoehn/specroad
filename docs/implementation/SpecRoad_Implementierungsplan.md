@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 227 · **Stand:** 17. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.91
+**Planrevision:** 228 · **Stand:** 17. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.91
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 306 Schritte und 918 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; die früher genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wurde nach der damaligen Spezifikation innerhalb von 15.l.R vorgezogen und bleibt als normaler Prüfkern erhalten. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -151,17 +151,19 @@ Aktuelle Korrektur: [Bundle 723 — Transportschemas und Lock-Regressionen](hist
 
 Aktuelle Korrektur nach bestätigtem 18.w.R: [Bundle 724 — Work-Prüfimport und Publikationsabweisung](history/bundle-724-work-import-publication-oracle.md). 18.w.C und 18.x.W/R/C bleiben mit getrennten Gates offen; R wird nicht wiederholt.
 
+Aktuelle Korrektur nach bestätigtem 18.w.C: [Bundle 725 — Git-Neubeginn-Testdaten](history/bundle-725-git-restart-qualification.md). Der vollständige Rest 18.x.W/R/C erhält getrennte Gates; das erfolgreiche C wird nicht wiederholt.
+
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 227
+plan_revision: 228
 implementation_plan_commits_total: 918
-implementation_plan_commits_completed: 777
-last_completed_plan_commit: 18.w.C
-next_plan_commit: 18.x.W
+implementation_plan_commits_completed: 778
+last_completed_plan_commit: 18.x.W
+next_plan_commit: 18.x.R
 priority_off_plan: null
 next_off_plan_commit: null
-last_completed_numbered_bundle: 724
+last_completed_numbered_bundle: 725
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null

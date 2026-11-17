@@ -46,4 +46,4 @@ Dev prüft statisch, per reiner Collection und nativer Paketvalidierung;
 keine Testkörper, Fixtures oder Test-Unterprozesse und kein vorweggenommener
 Apply-, Vollsuite- oder Releaseerfolg.
 
-Commitzielstand dieser Stage: **18.w.C**, **777/918**, danach **18.x.W**.
+Commitzielstand dieser Stage: **18.x.W**, **778/918**, danach **18.x.R**.

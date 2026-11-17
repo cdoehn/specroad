@@ -10,8 +10,10 @@
     7
   ],
   "fixture_ids": [
+    "SR-FIX-GIT-RESTART-W-v1",
+    "SR-FIX-RECOVERY-REMOVAL-R-v1",
     "SR-FIX-RECOVERY-REMOVAL-W-v1",
-    "SR-FIX-RECOVERY-REMOVAL-R-v1"
+    "SR-FIX-WRITE-GUARD-v1"
   ],
   "implementation_status": "partial",
   "json_pointers": [
@@ -23,16 +25,15 @@
   ],
   "method": "automated_behavior",
   "open_items": [
-    "RECOVERY-REMOVAL-006: changed requirement contract; the old implementation/tests are retained until their assigned W/R/C replacement. Previous recovery/restore evidence does not establish this new behavior.",
-    "Apply of this specification/planning bundle is not implementation, release, or user authorization to use SpecRoad."
+    "M20: explicit supported-platform and full-suite/release evidence remains required; no earlier recovery evidence is reused."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Ein gesperrter Root DARF NICHT durch Discard, Cachebereinigung, Lockübernahme oder Entfernung einzelner Schutzdateien wieder freigegeben werden.",
-    "scope": "No removed product repair command can acquire authority or remove protection; normal Work remains separate. Fresh Apply evidence required; historical recovery results are not acceptance. Unimplemented scopes and target-platform/release proofs remain open."
+    "scope": "Implemented native interruption/normal-completion and separate user-controlled Git restart scope in 18.s–18.x. Full original files and required receipts are checked; no product repair or reconstructed evidence. Bound tests need this stage’s successful Apply gate. Platform/full-suite/release acceptance remains separate in M20."
   },
   "preconditions": [
-    "Owned synthetic roots and real native APIs; faults only at actual operating-system or writer boundaries."
+    "Owned native project roots, synthetic explicit authority and actual OS/file/Git operations inside Apply test directories."
   ],
   "primary_verification_id": "SR-VER-0031",
   "required_environment": {
@@ -48,13 +49,18 @@
   },
   "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
-    "Exercise the bound native requests and retained positive Work paths.",
-    "Assert exact results and byte preservation for every rejected repair/ownership path.",
-    "Run only in the stage Apply gate; no Dev execution is an acceptance result."
+    "Exercise successful writes and real interruption boundaries through native APIs.",
+    "Retain damaged roots; qualify independent complete Git checkouts and reject missing original data.",
+    "Check exact original bytes and new request identity without repair or invented approvals."
   ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0458",
   "test_ids": [
+    "tests/test_git_restart.py::test_complete_separate_checkout_accepts_new_intent_and_retains_old_root",
+    "tests/test_git_restart.py::test_incomplete_checkout_fails_native_qualification_without_reconstruction[profile]",
+    "tests/test_git_restart.py::test_incomplete_checkout_fails_native_qualification_without_reconstruction[request]",
+    "tests/test_git_restart.py::test_incomplete_checkout_fails_native_qualification_without_reconstruction[specroad.json]",
+    "tests/test_git_restart.py::test_incomplete_checkout_fails_native_qualification_without_reconstruction[transaction]",
     "tests/test_recovery_removal.py::test_public_command_contract_has_no_repair_writer_or_repair_profile",
     "tests/test_recovery_removal.py::test_removed_public_repair_never_starts_or_writes[argv-lock.recover]",
     "tests/test_recovery_removal.py::test_removed_public_repair_never_starts_or_writes[argv-recover.cleanup]",

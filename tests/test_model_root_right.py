@@ -120,7 +120,7 @@ class ModelRootRightTests(unittest.TestCase):
 
     def test_display_and_recovery_switch_leave_model_root_unchanged(self):
         before=self.build().sha256
-        configuration_file(self.root,default_locale='tr',generated_path='views',transaction_policy={'auto_recover':False,'retain_receipts':True})
+        configuration_file(self.root,default_locale='tr',generated_path='views',transaction_policy={'retain_receipts':True})
         self.assertEqual(before,self.build(source=ProjectSource(self.root)).sha256)
 
     def test_generated_cache_receipts_and_workpaths_are_not_loaded(self):

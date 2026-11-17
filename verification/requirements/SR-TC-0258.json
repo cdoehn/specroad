@@ -14,6 +14,7 @@
     7
   ],
   "fixture_ids": [
+    "SR-FIX-GIT-RESTART-W-v1",
     "SR-FIX-WRITE-GUARD-v1"
   ],
   "implementation_status": "partial",
@@ -26,17 +27,16 @@
   ],
   "method": "automated_behavior",
   "open_items": [
-    "18.u/18.v: switch all existing command/preflight and specialist/bootstrap callers; the shared writer is implemented here.",
-    "18.w/18.x: remove legacy recovery and finish the manual Git restart and complete format acceptance. Actual Apply evidence remains required."
+    "M20: explicit supported-platform and full-suite/release evidence remains required; no earlier recovery evidence is reused."
   ],
   "oracle": {
     "expected": "Exact native Create/Replace/Delete effects and matching completed receipts, or a preserved blocked root. No replay, receipt reconstruction or release by complete target bytes.",
     "kind": "behavior",
     "requirement_contract": "Auch ein vollständiger Zielbestand bei offenem Marker MUSS gesperrt bleiben; fehlende Receipts DÜRFEN NICHT rekonstruiert und alte Publikationen DÜRFEN NICHT fertiggestellt werden.",
-    "scope": "18.t common native guarded writer and read-only normal completion, not full command migration."
+    "scope": "Implemented native interruption/normal-completion and separate user-controlled Git restart scope in 18.s–18.x. Full original files and required receipts are checked; no product repair or reconstructed evidence. Bound tests need this stage’s successful Apply gate. Platform/full-suite/release acceptance remains separate in M20."
   },
   "preconditions": [
-    "Implementation and actual Apply evidence for the C.1/C.2.1 contract (WRITE-RECEIPTS-703) are required; specification preparation is not behavior evidence."
+    "Owned native project roots, synthetic explicit authority and actual OS/file/Git operations inside Apply test directories."
   ],
   "primary_verification_id": "SR-VER-0019",
   "required_environment": {
@@ -52,9 +52,9 @@
   },
   "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
-    "Run complete guarded writes and same-intent read-only completion; reject changed requests and incomplete original receipts.",
-    "Interrupt actual processes before/after the marker and between multiple file publications; inspect without writes and retain the blocker.",
-    "Inject native sync/replace/unlink/partial-write failures, owner ambiguity and file/parent substitutions; reject unbound original receipts and do not overwrite foreign bytes."
+    "Exercise successful writes and real interruption boundaries through native APIs.",
+    "Retain damaged roots; qualify independent complete Git checkouts and reject missing original data.",
+    "Check exact original bytes and new request identity without repair or invented approvals."
   ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0258",
@@ -160,6 +160,22 @@
     "tests/test_write_guard_right.py::test_receipt_group_is_closed_and_never_repairs_missing_originals[extra]",
     "tests/test_write_guard_right.py::test_receipt_group_is_closed_and_never_repairs_missing_originals[request]",
     "tests/test_write_guard_right.py::test_receipt_group_is_closed_and_never_repairs_missing_originals[transaction]",
+    "tests/test_write_guard_right.py::test_receipt_rejects_incomplete_or_contradictory_native_validation[blocked_stage]",
+    "tests/test_write_guard_right.py::test_receipt_rejects_incomplete_or_contradictory_native_validation[checked_ids]",
+    "tests/test_write_guard_right.py::test_receipt_rejects_incomplete_or_contradictory_native_validation[claimed_authority]",
+    "tests/test_write_guard_right.py::test_receipt_rejects_incomplete_or_contradictory_native_validation[duplicate_stage]",
+    "tests/test_write_guard_right.py::test_receipt_rejects_incomplete_or_contradictory_native_validation[error_diagnostic]",
+    "tests/test_write_guard_right.py::test_receipt_rejects_incomplete_or_contradictory_native_validation[failed_stage]",
+    "tests/test_write_guard_right.py::test_receipt_rejects_incomplete_or_contradictory_native_validation[identified_sources]",
+    "tests/test_write_guard_right.py::test_receipt_rejects_incomplete_or_contradictory_native_validation[input_hash]",
+    "tests/test_write_guard_right.py::test_receipt_rejects_incomplete_or_contradictory_native_validation[missing_field]",
+    "tests/test_write_guard_right.py::test_receipt_rejects_incomplete_or_contradictory_native_validation[missing_stage]",
+    "tests/test_write_guard_right.py::test_receipt_rejects_incomplete_or_contradictory_native_validation[no_stages]",
+    "tests/test_write_guard_right.py::test_receipt_rejects_incomplete_or_contradictory_native_validation[selected_scope]",
+    "tests/test_write_guard_right.py::test_receipt_rejects_incomplete_or_contradictory_native_validation[source_count]",
+    "tests/test_write_guard_right.py::test_receipt_rejects_incomplete_or_contradictory_native_validation[stage_ids]",
+    "tests/test_write_guard_right.py::test_receipt_rejects_incomplete_or_contradictory_native_validation[unavailable_stage]",
+    "tests/test_write_guard_right.py::test_receipt_rejects_incomplete_or_contradictory_native_validation[unknown_field]",
     "tests/test_write_guard_right.py::test_zero_write_preserves_blocker_without_normative_changes"
   ]
 }

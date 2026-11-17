@@ -85,7 +85,7 @@ print(json.dumps(result.as_dict()))
 
 @pytest.mark.parametrize('state', ['clean', 'broken_model', 'pending', 'history'])
 def test_explicit_project_diagnoses_metadata_without_validating_or_repairing_model(tmp_path, state):
-    configuration_file(tmp_path, transaction_policy={'auto_recover': True})
+    configuration_file(tmp_path, transaction_policy={'retain_receipts': True})
     if state == 'broken_model':
         put(tmp_path, 'spec/goals/invalid.json', b'Not JSON')
         put(tmp_path, 'profiles/core.json', b'Invalid unneeded profile')

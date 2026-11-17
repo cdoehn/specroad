@@ -31,7 +31,7 @@ def semantic_configuration(configuration):
     value.pop("default_locale", None)
     value.pop("generated_path", None)
     transaction = value.pop("transaction_policy", {})
-    # auto_recover is operational. Receipt retention is an audit policy.
+    # Receipt retention remains an audit policy; removed fields fail in the parser.
     value["transaction_policy"] = {"retain_receipts": transaction.get("retain_receipts", True)}
     limits = value.pop("resource_limits", {})
     unknown = limits.keys() - SOFT_LIMITS - SEMANTIC_LIMITS

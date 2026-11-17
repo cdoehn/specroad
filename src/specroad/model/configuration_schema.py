@@ -29,7 +29,7 @@ def configuration_json_schema():
         "validation_policy": obj({"fail_on": {"enum": ["info", "warning", "error"]},
             "minimum_human_proposal_approvals": {"type": "integer", "minimum": 1, "default": 1},
             "required_relation_review": {"const": "current"}}),
-        "transaction_policy": obj({"auto_recover": {"type": "boolean"}, "retain_receipts": {"const": True, "default": True}}),
+        "transaction_policy": obj({"retain_receipts": {"const": True, "default": True}}),
         "srx_policy": obj({"numeric_policy_version": {"const": "srx-decimal-v1", "default": "srx-decimal-v1"},
             "decimal_precision": {"type": "integer", "minimum": 1, "maximum": 1000, "default": 34}}),
         "resource_limits": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 0}},

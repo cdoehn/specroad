@@ -117,7 +117,7 @@ def test_project_read_opens_only_current_metadata_before_handler(tmp_path, kind)
 @pytest.mark.parametrize('kind', ['read', 'plan', 'generated', 'dryrun'])
 @pytest.mark.parametrize('state', ['journal', 'lock', 'recovery'])
 def test_project_read_blocks_all_entry_routes_without_loading_or_mutating_pending_data(tmp_path, kind, state):
-    configuration_file(tmp_path, transaction_policy={'auto_recover': True})
+    configuration_file(tmp_path, transaction_policy={'retain_receipts': True})
     paths = {'journal': '.specroad/transactions/pending/journal.json',
              'lock': '.specroad/locks/project.json',
              'recovery': '.specroad/recovery/pending/journal.json'}

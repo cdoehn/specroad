@@ -38,7 +38,7 @@ def readonly(root):
 @pytest.mark.parametrize('state', ['clean', 'unknown_lock', 'pending'])
 @pytest.mark.parametrize('target', [None, 'version', 'fixture.writer'])
 def test_readonly_root_reports_only_proven_prerequisites_without_effects(tmp_path, state, target):
-    configuration_file(tmp_path, transaction_policy={'auto_recover': True})
+    configuration_file(tmp_path, transaction_policy={'retain_receipts': True})
     put(tmp_path, 'spec/invalid.json', b'Invalid model is outside this diagnosis')
     if state == 'pending':
         put(tmp_path, '.specroad/transactions/pending/journal.json', b'Never read or repair')

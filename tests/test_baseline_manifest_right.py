@@ -79,7 +79,7 @@ def test_local_runtime_paths_and_inode_bindings_do_not_change_portable_bytes(roo
 
 @pytest.mark.parametrize('change', [
     {'default_locale': 'en-US'}, {'generated_path': 'output'},
-    {'transaction_policy': {'auto_recover': False}},
+    {'transaction_policy': {'retain_receipts': True}},
     {'resource_limits': {'model_bytes': 99999, 'relation_count': 33}},
 ])
 def test_display_and_operational_configuration_are_not_semantic_snapshot_inputs(change):

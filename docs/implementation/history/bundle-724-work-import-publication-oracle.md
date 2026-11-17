@@ -45,4 +45,4 @@ ausgebracht. Dev führt statische Prüfung, reine Collection und native
 Paketvalidierung aus, keine Testkörper, Fixtures oder Test-Unterprozesse.
 Vorbereitete Zielstände sind keine bestandenen Apply-/Vollsuite-/Releasegates.
 
-Commitzielstand dieser Stage: **18.w.C**, **777/918**, danach **18.x.W**.
+Commitzielstand dieser Stage: **18.x.W**, **778/918**, danach **18.x.R**.

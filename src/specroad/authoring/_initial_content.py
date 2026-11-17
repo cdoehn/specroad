@@ -51,7 +51,7 @@ def project_configuration(project_name, project_id, registry, packages):
         'profiles': ['core@0.2.0', 'software-de@0.2.0'], 'generated_path': 'generated',
         'validation_policy': {'fail_on': 'error', 'minimum_human_proposal_approvals': 1,
                               'required_relation_review': 'current'},
-        'transaction_policy': {'auto_recover': True, 'retain_receipts': True},
+        'transaction_policy': {'retain_receipts': True},
         'language_policy': resolve_language_policy({}),
         'language_registry': registry_binding(registry),
         'language_packages': [p.key for p in packages],

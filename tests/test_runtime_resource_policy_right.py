@@ -47,7 +47,7 @@ def environment(root, **options):
 @pytest.mark.parametrize('state', ['clean', 'pending', 'unknown_lock'])
 def test_selected_project_exposes_legacy_targets_without_model_reads_or_automatic_recovery(tmp_path, profile, state):
     declared = {**dict.fromkeys(SOFT, 1), 'json_depth': 4, 'query_default_limit': 0, 'trace_depth': 2}
-    configuration_file(tmp_path, resource_limits=declared, transaction_policy={'auto_recover': True})
+    configuration_file(tmp_path, resource_limits=declared, transaction_policy={'retain_receipts': True})
     put(tmp_path, 'spec/goals/broken.json', b'Model content must not be read')
     if state == 'pending':
         put(tmp_path, '.specroad/transactions/pending/journal.json', b'Never inspect or repair')

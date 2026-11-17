@@ -963,6 +963,10 @@
     "SR-FIX-RECOVERY-REMOVAL-R-v1": {
       "provider": "tests/test_recovery_removal_right.py;tests/test_project_locks_right.py;tests/support/legacy_publication.py",
       "kind": "Actual native legacy publication interruption and lock observations; no owner removal, repair mutation or successful-repair oracle. Old packages are rehashed literal fixtures, never live authority."
+    },
+    "SR-FIX-GIT-RESTART-W-v1": {
+      "provider": "tests/support/git_restart.py;tests/test_git_restart.py;tests/test_retired_formats.py",
+      "kind": "Owned complete projects with real normal writer receipts and real local Git commits/checkouts in temporary test directories. Genuine new business request after native qualification; old root unchanged. No product Git command, forged receipts or approval."
     }
   },
   "fixture_format_version": 1,
@@ -1047,6 +1051,7 @@
     "SR-FIX-EXCHANGE-MAPPINGS-v1",
     "SR-FIX-FORMAT-ROUNDTRIPS-v1",
     "SR-FIX-GIT-OBJECT-SOURCE-v1",
+    "SR-FIX-GIT-RESTART-W-v1",
     "SR-FIX-IMPORT-COMPARISON-v1",
     "SR-FIX-IMPORT-SECURITY-RIGHT-v1",
     "SR-FIX-IMPORT-SECURITY-v1",

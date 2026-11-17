@@ -11,8 +11,10 @@
     8
   ],
   "fixture_ids": [
+    "SR-FIX-GIT-RESTART-W-v1",
+    "SR-FIX-MIGRATION-TRANSACTION-v1",
     "SR-FIX-OWNED-TEMP-v1",
-    "SR-FIX-MIGRATION-TRANSACTION-v1"
+    "SR-FIX-WRITE-GUARD-v1"
   ],
   "implementation_status": "partial",
   "json_pointers": [
@@ -28,18 +30,15 @@
   ],
   "method": "automated_behavior",
   "open_items": [
-    "Apply of this specification/planning bundle is not implementation, release, or user authorization to use SpecRoad.",
-    "18.v: fresh stage-specific Apply evidence is required. Dev only prepared the implementation, behavioral oracles and pure collection; no behavior tests ran in Dev.",
-    "User-controlled complete Git restart and final whole-product coverage remain assigned to 18.x; this stage proves refusal of automatic special-writer repair.",
-    "Correction 716: actual v2 snapshot history, deletion/missing-file/registry contradictions and forged request paths require their own successful Apply gate; pure Dev collection is not behavioral evidence."
+    "M20: explicit supported-platform and full-suite/release evidence remains required; no earlier recovery evidence is reused."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Wiederanlauf nach Abbruch MUSS durch den Nutzer aus einem bekannten gültigen vollständigen Git-Stand in einem frischen separaten Checkout nach 10.7.2 erfolgen; SpecRoad DARF NICHT den beschädigten Root reparieren.",
-    "scope": "New interruption guard and manual Git restart contract; no active automated pass claim until implementation. 18.v binds the replacement interruption/normal-completion oracles; old automatic-repair evidence is historical only. Further plan scopes and release acceptance remain separate."
+    "scope": "Implemented native interruption/normal-completion and separate user-controlled Git restart scope in 18.s–18.x. Full original files and required receipts are checked; no product repair or reconstructed evidence. Bound tests need this stage’s successful Apply gate. Platform/full-suite/release acceptance remains separate in M20."
   },
   "preconditions": [
-    "Use only owned native test roots with actual backup/original evidence. No historical success record authorizes replay or restoration of a protected partial publication."
+    "Owned native project roots, synthetic explicit authority and actual OS/file/Git operations inside Apply test directories."
   ],
   "primary_verification_id": "SR-VER-0031",
   "required_environment": {
@@ -55,11 +54,9 @@
   },
   "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
   "steps": [
-    "Implement the complete new contract in 18.x and bind real behavioral tests and evidence before declaring acceptance.",
-    "Execute native migration and merge against complete qualified source, target and external backup bytes; preserve every passive original/archive and verify full model/evidence gates and explicit fresh host authority.",
-    "Validate the normal v2 transaction/request/completion receipt group, exact snapshot plan, complete source/target inventories, real backup and native qualification. Read-only repeat proves history, never current target validity or new authority.",
-    "Interrupt real file effects and durable marker/receipt boundaries, including native process death. Preserve the actual mixed prefix and owner evidence; normal retry and explicit legacy special recovery must not repair or complete it.",
-    "Reject changed source/backup/foreign files, altered owners/markers and rehashed incompatible completion records. Normal verification remains read-only and requires the actual originals; Work reentry cannot bypass a protected publication."
+    "Exercise successful writes and real interruption boundaries through native APIs.",
+    "Retain damaged roots; qualify independent complete Git checkouts and reject missing original data.",
+    "Check exact original bytes and new request identity without repair or invented approvals."
   ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0461",
@@ -95,6 +92,11 @@
     "tests/test_bootstrap_guard.py::test_pre_guard_failure_has_no_target_or_marker_effect[True]",
     "tests/test_bootstrap_guard.py::test_recreated_marker_after_unlink_cannot_escape_late_validation[marker]",
     "tests/test_bootstrap_guard.py::test_recreated_marker_after_unlink_cannot_escape_late_validation[owner]",
+    "tests/test_git_restart.py::test_complete_separate_checkout_accepts_new_intent_and_retains_old_root",
+    "tests/test_git_restart.py::test_incomplete_checkout_fails_native_qualification_without_reconstruction[profile]",
+    "tests/test_git_restart.py::test_incomplete_checkout_fails_native_qualification_without_reconstruction[request]",
+    "tests/test_git_restart.py::test_incomplete_checkout_fails_native_qualification_without_reconstruction[specroad.json]",
+    "tests/test_git_restart.py::test_incomplete_checkout_fails_native_qualification_without_reconstruction[transaction]",
     "tests/test_snapshot_guard.py::test_complete_publication_has_only_normal_proof_and_read_only_repeat[merge]",
     "tests/test_snapshot_guard.py::test_complete_publication_has_only_normal_proof_and_read_only_repeat[migration]",
     "tests/test_snapshot_guard.py::test_completed_proof_damage_is_rejected_without_repair[completion-merge]",
