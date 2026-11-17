@@ -4,6 +4,7 @@ from .contracts import CommandUsageError
 from .results import FORMAT_VERSION
 from .parameters import exclusive_pairs
 from .request_schema import request_schema
+from .agent_contract import authorization_contract
 
 DESCRIPTION_VERSION = "1.0.0"
 
@@ -28,16 +29,6 @@ def command_surface(command):
 
 def output_formats(command):
     return next((list(opt.choices) for opt in command.options if opt.flag == "--format"), ["pretty"])
-
-
-def authorization_contract(protocol):
-    """Prerequisites of the registered adapter, never a permission grant."""
-    inputs = protocol.work.required_inputs
-    return {'source': 'trusted_host_and_native_checks', 'declaration_is_permission': False,
-            'human_decision_required': 'human_decision' in inputs,
-            'current_human_reviews_required': 'current_human_reviews' in inputs,
-            'host_authority_required': 'host_authority' in inputs,
-            'autonomous_approval': False}
 
 
 def describe_command(registry, command_id):

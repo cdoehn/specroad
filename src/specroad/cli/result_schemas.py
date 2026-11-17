@@ -430,12 +430,10 @@ def _fields(schema_id):
             "build_identity_status": text, "runtime": runtime, "python_support": support, "supported_schema_versions": strings,
             "supported_output_format_versions": {"type": "object", "additionalProperties": strings}})
     if schema_id == "command-description-v1":
+        from .agent_contract import authorization_schema
         schema = _object({"format_version": {"const": "1.0.0"}, **surface, "budget_policy_version": _nullable(text),
             "lock_kind": {"enum": ['none', 'bootstrap', 'writer']}, "work": work,
-            "authorization": _object({'source': {'const': 'trusted_host_and_native_checks'},
-                'declaration_is_permission': {'const': False},
-                'human_decision_required': boolean, 'current_human_reviews_required': boolean,
-                'host_authority_required': boolean, 'autonomous_approval': {'const': False}}),
+            "authorization": authorization_schema(),
             "parameters": _array(_object({"name": text, "kind": {"const": "positional"},
                 "datatype": text, "required": boolean, "choices": strings})),
             "options": _array(_object({"flag": text, "datatype": text, "repeatable": boolean,
