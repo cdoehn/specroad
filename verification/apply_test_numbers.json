@@ -28138,6 +28138,11 @@
     "tests/test_authoring_proposals_right.py::test_native_refusals_cannot_be_bypassed_by_proposal_metadata[scope]",
     "tests/test_agent_contracts.py::test_all_current_descriptions_supply_valid_requests_and_actual_result_schemas",
     "tests/test_agent_contracts.py::test_human_review_and_approved_apply_have_distinct_machine_prerequisites",
-    "tests/test_agent_contracts.py::test_proposal_version_requires_an_actual_registered_native_reader"
+    "tests/test_agent_contracts.py::test_proposal_version_requires_an_actual_registered_native_reader",
+    "tests/test_agent_contracts_right.py::test_declared_human_only_review_really_refuses_nonhuman_requests[ai]",
+    "tests/test_agent_contracts_right.py::test_declared_human_only_review_really_refuses_nonhuman_requests[ci]",
+    "tests/test_agent_contracts_right.py::test_description_mutation_never_creates_permission_or_registers_a_command",
+    "tests/test_agent_contracts_right.py::test_each_variant_exposes_the_fields_accepted_by_its_actual_binding",
+    "tests/test_agent_contracts_right.py::test_unimplemented_writer_and_unbound_permission_fields_stay_usage_errors"
   ]
 }

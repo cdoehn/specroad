@@ -452,7 +452,8 @@ def _fields(schema_id):
         schema['properties']['variants'] = _array(_object({**surface, 'when': obj,
             'required_options': strings, 'effect_scope': text, 'requires_git': boolean,
             'budget_policy_version': _nullable(text), 'work': work, 'operating_effects': strings,
-            'result_schema': nonempty, 'required_write_paths': strings, 'example': obj}))
+            'result_schema': nonempty, 'required_write_paths': strings, 'example': obj,
+            'request_schema': obj, 'authorization': schema['properties']['authorization']}))
         return schema
     if schema_id == "capabilities-v1":
         semantic = _object({"program_version": text, "distribution": _object(distribution),

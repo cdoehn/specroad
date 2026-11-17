@@ -83,5 +83,6 @@ def describe_command(registry, command_id):
                     'standalone_runtime_private_copy', 'passive_reference_file']
                     + (['new_sandbox_root', 'native_project_extraction'] if v.command_id == 'bundle.extract' else []),
             'result_schema': v.protocol.result_schema, 'required_write_paths': list(v.requires_write_paths),
+            'request_schema': request_schema(v), 'authorization': authorization_contract(v.protocol),
             'example': v.protocol.example.as_dict()} for v in variants]
     return result
