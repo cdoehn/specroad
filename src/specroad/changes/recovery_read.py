@@ -1,4 +1,4 @@
-"""Read-only transaction state diagnosis, separate from mutating recovery."""
+"""Read-only legacy transaction diagnosis; every repair action is unavailable."""
 from hashlib import sha256
 from ..model.errors import ModelError
 from ..security import SafetyViolation
@@ -14,9 +14,9 @@ from ._recovery_integrity import inspect_critical_inputs
 def inspect_recovery(root, *, transaction_id=None, expected_project_id=None, preflight=None):
     """Observe all active journals without loading the canonical project model.
 
-    Only an independently proven base permits a reported discard candidate;
-    the mutating API checks again under the live native lock. Invalid journals
-    remain visible with no action permission. No directory or file is created.
+    Independently proven bases may be described, never discarded or replayed.
+    Invalid journals remain visible with no action permission. No directory or
+    file is created, and no observation grants write authority.
     """
     if transaction_id is not None: _transaction(transaction_id)
     if expected_project_id is not None and not _text(expected_project_id):

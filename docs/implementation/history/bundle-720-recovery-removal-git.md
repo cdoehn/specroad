@@ -13,10 +13,10 @@ normative Klärung. Maßgeblich bleibt RECOVERY-REMOVAL-006 mit 10.7/N/P.
 | 18.w.R | Legacy-Reparatur und Ownerübernahme gesperrt; native Checkpointleser, Transport und gemischte Regressionen erhalten. | vorheriges eigenes Gate erforderlich |
 | 18.w.C | Normale Worköffnung klar benannt, tote Zweige vereinfacht; alle R-Testbytes unverändert. | vorheriges eigenes Gate erforderlich |
 | 18.x.W | auto_recover aus aktuellen Konfigurationsverträgen entfernt; getrennten Git-Checkout mit Originalreceipts und neuem Fachauftrag integriert. | vorheriges eigenes Gate erforderlich |
-| 18.x.R | Letzten Snapshot-Reparaturadapter entfernt; fehlende Pflichtdaten, ungültige Git-Stände und positive Writer-/Work-/Transportmatrix gebunden. | Zielstand dieser Stage |
-| 18.x.C | Verbraucherfreie Reparaturhilfen und alten Servicealias entfernt; historische Prüfcodecs und alle R-Testbytes erhalten. | nachfolgende Stage, noch offen |
+| 18.x.R | Letzten Snapshot-Reparaturadapter entfernt; fehlende Pflichtdaten, ungültige Git-Stände und positive Writer-/Work-/Transportmatrix gebunden. | vorheriges eigenes Gate erforderlich |
+| 18.x.C | Verbraucherfreie Reparaturhilfen und alten Servicealias entfernt; historische Prüfcodecs und alle R-Testbytes erhalten. | Zielstand dieser Stage |
 
-Aktueller Commitzielstand: **18.x.R**, **779/918**, danach **18.x.C**.
+Aktueller Commitzielstand: **18.x.C**, **780/918**, danach **18.l.W**.
 Diese Angaben sind keine vorgezogene Testabnahme: Apply bringt jeden Zustand
 separat aus und führt vor seinem Commit das eigene N=3-plus-Pflichtauswahl-Gate
 nach [dem Apply-Verfahren](../../development/Apply_Commit_Plans.md) aus.

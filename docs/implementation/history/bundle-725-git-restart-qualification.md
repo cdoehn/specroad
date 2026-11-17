@@ -50,4 +50,4 @@ vorbehalten. Die vollständige Abschlussgruppe 18.x enthält weiterhin alle
 angekündigten Abnahmen; anschließend bleibt 18.l.W die nächste Planposition.
 Die vorbereiteten Zielwerte sind noch keine erfolgreiche Apply-Abnahme.
 
-Commitzielstand dieser Stage: **18.x.R**, **779/918**, danach **18.x.C**.
+Commitzielstand dieser Stage: **18.x.C**, **780/918**, danach **18.l.W**.

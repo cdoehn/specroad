@@ -51,7 +51,3 @@ def native_services(value):
     if value is not None and type(value) is not QualificationServices:
         raise ModelError('restore_native_services_required')
     return QualificationServices() if value is None else value
-
-
-# Compatibility for callers awaiting their separately planned removal.
-RestoreServices = QualificationServices
