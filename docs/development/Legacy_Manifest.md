@@ -22,7 +22,8 @@ bytehash und den JCS-Hash des Manifests. Aktuelle Artefakte behalten die bisheri
 Hashdomäne. Frische Prüfungen binden Manifest und physische Originale; die
 Lesebeobachtung ist kein atomarer Snapshot und kein Schreibrecht.
 
-Vollständige historische Verifikation und aktuelle Readiness sind spätere
-M16-Gates. Ebenso bleiben produktiver Migrationswriter, öffentliche CLI und
-Restore gesondert. Der vorhandene Restore-Formatblock bleibt aktiv. Tests
+Aktuelle Qualifikation und Readiness bleiben getrennte Prüfungen. Historische
+Originale und ihre Formatleser bleiben erhalten; ausführbare Produkt-Restore-
+und Reparaturpfade sind entfernt. Vollständige separate Git-Checkouts müssen
+dieselben Originalanforderungen erfüllen, siehe [Wiederanlauf](Interrupted_Writes.md). Tests
 sind für die einzelnen Apply-Gates vorbereitet und werden nicht in Dev ausgeführt.

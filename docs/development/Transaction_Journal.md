@@ -1,5 +1,7 @@
 # Building-Journal (5.k)
 
+> Historische Implementierungsbeschreibung vor RECOVERY-REMOVAL-006. Sie beschreibt den damaligen Aufbau und erteilt keine aktuelle Reparatur- oder Wiederaufnahmebefugnis. Maßgeblich ist jetzt [Unterbrochene Writes und separater Git-Wiederanlauf](Interrupted_Writes.md). Aktuelle Schutzmarker werden nach Abbruch weder entfernt noch durch Rollback, Wiederaufnahme oder nachgebaute Receipts aufgehoben. Erhaltene Original-/Historienleser sind keine ausführbaren Reparaturadapter.
+
 `prepare_building_journal` erzeugt eine reine, vollständige Dateiinventur aus dem
 vorhandenen geprüften PublicationPreflight. Pro tatsächlich veränderter
 Artefaktdatei stehen logischer Zielpfad, vorherige Existenz, Bytegröße und SHA-256

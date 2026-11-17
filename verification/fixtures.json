@@ -967,6 +967,10 @@
     "SR-FIX-GIT-RESTART-W-v1": {
       "provider": "tests/support/git_restart.py;tests/test_git_restart.py;tests/test_retired_formats.py",
       "kind": "Owned complete projects with real normal writer receipts and real local Git commits/checkouts in temporary test directories. Genuine new business request after native qualification; old root unchanged. No product Git command, forged receipts or approval."
+    },
+    "SR-FIX-GIT-RESTART-R-v1": {
+      "provider": "tests/test_git_restart_right.py;tests/support/proposal_apply.py",
+      "kind": "Real native Proposal application and receipts, missing originals, archive closure, optional history and copied active markers in separate local test checkouts. Synthetic explicit review providers; no release evidence."
     }
   },
   "fixture_format_version": 1,
@@ -1051,6 +1055,7 @@
     "SR-FIX-EXCHANGE-MAPPINGS-v1",
     "SR-FIX-FORMAT-ROUNDTRIPS-v1",
     "SR-FIX-GIT-OBJECT-SOURCE-v1",
+    "SR-FIX-GIT-RESTART-R-v1",
     "SR-FIX-GIT-RESTART-W-v1",
     "SR-FIX-IMPORT-COMPARISON-v1",
     "SR-FIX-IMPORT-SECURITY-RIGHT-v1",

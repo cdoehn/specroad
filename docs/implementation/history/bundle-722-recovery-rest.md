@@ -41,4 +41,4 @@ Die noch offenen Apply-Gates werden weder durch Collection noch Paketprüfung
 als bestanden ausgegeben; Plattform-, Vollsuite- und Releasebelege bleiben
 gesonderte Abnahmen.
 
-Commitzielstand dieser Stage: **18.x.W**, **778/918**, danach **18.x.R**.
+Commitzielstand dieser Stage: **18.x.R**, **779/918**, danach **18.x.C**.

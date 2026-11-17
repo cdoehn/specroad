@@ -3,8 +3,6 @@ from pathlib import Path
 import json
 import pytest
 from specroad.changes import schema_transition
-from specroad.changes.schema_transition_recovery import recover_transition
-from specroad.changes.recovery_values import RecoveryError,RecoveryAuthority
 from specroad.changes.write_guard_values import validate_transaction,transaction_document
 from specroad.changes.receipt_values import transaction_receipt_path
 from specroad.model.canonical import canonical_json_bytes as jcs
@@ -53,9 +51,8 @@ def test_rehashed_receipt_does_not_replace_full_native_plan_binding(tmp_path,fie
 @pytest.mark.parametrize('action',['complete','rollback','discard'])
 def test_legacy_special_recovery_entrypoint_has_no_write_capability(tmp_path,action):
     sentinel=tmp_path/'original';sentinel.write_bytes(b'unchanged');before=inventory(tmp_path)
-    authority=RecoveryAuthority('synthetic-host','1',lambda request:True)
-    with no_write_attempts(),pytest.raises(RecoveryError) as caught:
-        recover_transition('synthetic',held_lock=None,authority=authority,
-            expected_journal_sha256='0'*64,action=action)
-    assert caught.value.reason=='project_corrupted_manual_restore_required'
-    assert not caught.value.mutation_possible and inventory(tmp_path)==before
+    import importlib
+    with no_write_attempts(),pytest.raises(ModuleNotFoundError) as caught:
+        importlib.import_module('specroad.changes.schema_transition_recovery')
+    assert caught.value.name=='specroad.changes.schema_transition_recovery'
+    assert inventory(tmp_path)==before

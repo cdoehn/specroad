@@ -1,5 +1,7 @@
 # Audit und Abschlussreceipts (5.n)
 
+> Historische Implementierungsbeschreibung vor RECOVERY-REMOVAL-006. Sie beschreibt den damaligen Aufbau und erteilt keine aktuelle Reparatur- oder Wiederaufnahmebefugnis. Maßgeblich ist jetzt [Unterbrochene Writes und separater Git-Wiederanlauf](Interrupted_Writes.md). Aktuelle Schutzmarker werden nach Abbruch weder entfernt noch durch Rollback, Wiederaufnahme oder nachgebaute Receipts aufgehoben. Erhaltene Original-/Historienleser sind keine ausführbaren Reparaturadapter.
+
 `finalize_committing_journal(preflight, journal, held_lock=..., authority=...)`
 beendet C.2 für einen vollständig veröffentlichten `committing`-Bestand. Der
 weiterhin gehaltene native Writer-Lock, der unabhängige Auftrag, der komplette

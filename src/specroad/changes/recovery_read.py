@@ -70,7 +70,7 @@ def inspect_recovery(root, *, transaction_id=None, expected_project_id=None, pre
                     d = journal.data
                     from .schema_transition_values import TransitionJournal
                     if type(journal) is TransitionJournal:
-                        from .schema_transition_recovery import status_transition
+                        from .transition_history import status_transition
                         phase = 'schema_transition_inputs'
                         details = status_transition(files,journal,path)
                         row.update(details)

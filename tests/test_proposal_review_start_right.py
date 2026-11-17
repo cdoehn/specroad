@@ -16,7 +16,7 @@ from specroad.proposals.history import ProposalInputs
 from specroad.proposals.observations import ProposalVerifier
 from specroad.proposals._review_control import prepare_control_candidates, read_review_start_observations
 from specroad.proposals.review_start import review_start_project, _fresh_reports, _operation
-from specroad.qualification.services import RestoreServices
+from specroad.qualification.services import QualificationServices
 from support.proposal_validation import validation_project
 from support.read_only import inventory
 from test_proposal_review_start import options
@@ -111,7 +111,7 @@ def test_content_revision_two_needs_complete_explicit_original_contexts(tmp_path
     with pytest.raises(ModelError):
         review_start_project(root, first.data['id'], **supplied)
     assert (root / first.path).read_bytes() == second.source_bytes
-    services = RestoreServices(proposal_inputs=lambda model, original: inputs)
+    services = QualificationServices(proposal_inputs=lambda model, original: inputs)
     result = review_start_project(root, first.data['id'], **dict(supplied, services=services))
     after = json.loads((root / first.path).read_bytes())
     assert (result['revision'], result['content_revision'], after['proposal_status']) == (3, 2, 'in_review')
@@ -125,7 +125,7 @@ def control_originals(tmp_path_factory):
     root = tmp_path_factory.mktemp('review-control-originals') / 'project'
     _, original = validation_project(root)
     snapshot = InspectionSnapshot(root, None)
-    validation, check = _fresh_reports(snapshot, original, RestoreServices())
+    validation, check = _fresh_reports(snapshot, original, QualificationServices())
     operation = _operation(original, validation, check)
     supplied = options()
     folded = prepare_control_candidates(snapshot.model, [operation], metadata_policy_version='change-metadata-v1',

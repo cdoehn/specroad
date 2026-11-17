@@ -15,7 +15,7 @@ Projekts ohne Überschreiben. Fehlende Mappings bleiben konkrete Blocker.
 Planungseingaben oder ein abgeschlossenes --work-dir. --backup-root/--backup
 benennt die vor jedem ersten Schreiben nativ verifizierte vollständige
 Source-Sicherung; vorhandene andere Bytes werden nie überschrieben.
---transaction-id bindet die gemeinsame native Writer-/Journal-/Recoverykette.
+--transaction-id bindet die gemeinsame native Writer-/Marker-/Abschlusskette.
 Die vertraute Host-Anbindung liefert PublicationAuthority und erforderliche
 ModelGates in InvocationContextBuilder frisch. Projektdateien, CLI-Flags und
 Work speichern keine Autorität. Derselbe bereits bestätigte Request gibt nur
@@ -35,11 +35,11 @@ Transaktions- und Hostbindungen ausgeführt werden. Ein portables Verify-Ergebni
 ist eine Prüfung bereitgestellter Zielbytes, kein späterer Live-Snapshot.
 
 Vollständige aktuelle Projektbundles bewahren die nativ qualifizierten alten
-Originale und abgeschlossenen Migrationsreceipts. Restore liest diese mit den
+Originale und abgeschlossenen Migrationsreceipts. Native Qualifikation liest diese mit den
 passenden Quellalgorithmen und erhält ihre Bytes. Ein isolierter alter Baseline-
-Snapshot wird dadurch nicht zu einem aktuellen 0.2-Restore-Ausgang erklärt.
+Snapshot wird dadurch nicht zu einem vollständigen aktuellen 0.2-Projekt erklärt.
 
 Die Tests verwenden ausschließlich synthetische Projekte und tatsächliche
-Datei-, Backup-, Journal-, Work- und Restore-Pfade. Keine Verhaltensausführung
-in Dev. Jede Stage hat ein eigenes Apply-Gate; C verlangt die gesamte verfügbare
-Suite ungefiltert. M16 ist erst nach diesem tatsächlichen Abschluss abgenommen.
+Datei-, Backup-, Journal-, Work- und Paketpfade. Keine Verhaltensausführung
+in Dev. Jede Stage hat ihr eigenes Apply-Gate aus N=3 und ungefilterter Pflichtauswahl;
+C erhält die R-Verhaltenstests unverändert. M16 ist erst nach diesem tatsächlichen Abschluss abgenommen.

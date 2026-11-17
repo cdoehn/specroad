@@ -35,4 +35,4 @@ statische Prüfungen, reine Collection und native Paketvalidierung aus, keine
 Testkörper oder Fixtures. Eine vollständige Verhaltens- oder Releaseabnahme
 wird damit nicht behauptet.
 
-Commitzielstand dieser Stage: **18.x.W**, **778/918**, danach **18.x.R**.
+Commitzielstand dieser Stage: **18.x.R**, **779/918**, danach **18.x.C**.

@@ -12,7 +12,7 @@ from specroad.changes.core import prepare_change_plan
 from specroad.changes.authoring import prepare_authoring_request
 from specroad.model.errors import ModelError
 from specroad.model.canonical import canonical_json_bytes as jcs
-from specroad.qualification.services import RestoreServices
+from specroad.qualification.services import QualificationServices
 from support.merge_target import replace
 from support.merge_publication import setup,apply,tree,normative,seed
 from support.transition_journal import assert_owned_plan
@@ -107,7 +107,7 @@ def test_real_external_code_bytes_are_rechecked_for_completion(tmp_path):
     code=tmp_path/'code';code.mkdir();raw=b'original code\n';(code/'module.py').write_bytes(raw)
     record=record_value('code_ref',path='module.py',file_sha256=sha256(raw).hexdigest(),reference_kind='file')
     files=seed(tmp_path/'seed',values=[record_value('document'),record])
-    services=RestoreServices(code_source=lambda model,record:ProjectBoundary(code))
+    services=QualificationServices(code_source=lambda model,record:ProjectBoundary(code))
     root,plan,args,target=setup(tmp_path,variants=[files]*3,services=services)
     result=apply(root,plan,args)
     assert result['validation']['code_references'][0]['state']=='current'

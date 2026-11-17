@@ -12,7 +12,7 @@ import pytest
 from specroad.merge import verify_merge_target, SourceSnapshot, SourceRequest, load_merge_sources
 from specroad.model.canonical import canonical_json_bytes as jcs
 from specroad.model.errors import ModelError
-from specroad.qualification.services import RestoreServices
+from specroad.qualification.services import QualificationServices
 from specroad.qualification.project import validate_project
 from specroad.security import ProjectBoundary, SafetyViolation
 from support.domain import domain_value
@@ -78,7 +78,7 @@ def test_code_reference_requires_actual_current_host_bytes_without_code_executio
     values = inputs(tmp_path/'inputs',[files]*3)
     code = tmp_path/'external'; code.mkdir()
     if fault != 'missing': put(code,'source.py',b'changed' if fault == 'changed' else raw)
-    native = None if fault == 'no-provider' else RestoreServices(code_source=lambda model,record:ProjectBoundary(code))
+    native = None if fault == 'no-provider' else QualificationServices(code_source=lambda model,record:ProjectBoundary(code))
     before = inventory(tmp_path)
     with read_only_sources(): result = target(values,services=native)
     assert result.target_validated is (fault is None)
@@ -170,7 +170,7 @@ def test_real_source_change_during_native_checks_invalidates_every_outcome(tmp_p
         if outcome == 'io-error': raise OSError('synthetic provider I/O failure')
         return b'changed' if outcome == 'negative' else raw
     with pytest.raises((ModelError,SafetyViolation)):
-        target(values,services=RestoreServices(source_content=observe))
+        target(values,services=QualificationServices(source_content=observe))
 
 
 def test_external_io_failure_is_not_a_success_report(tmp_path):
@@ -181,7 +181,7 @@ def test_external_io_failure_is_not_a_success_report(tmp_path):
     def unavailable(model,record): raise OSError('synthetic provider unavailable')
     before = inventory(tmp_path)
     with read_only_sources(), pytest.raises(OSError):
-        target(values,services=RestoreServices(source_content=unavailable))
+        target(values,services=QualificationServices(source_content=unavailable))
     assert inventory(tmp_path) == before
 
 

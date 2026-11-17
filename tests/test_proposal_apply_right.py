@@ -54,7 +54,7 @@ def test_applied_without_matching_request_is_not_implicitly_replayed(tmp_path):
 
 @pytest.mark.parametrize('fault', ['missing', 'origin', 'actor', 'binding'])
 def test_missing_or_forged_host_original_provenance_never_authorizes_apply(tmp_path, fault):
-    from specroad.qualification.services import RestoreServices
+    from specroad.qualification.services import QualificationServices
     case = ApplyCase(tmp_path / 'project')
     def inputs(model, original):
         old = case.inputs(model, original)
@@ -64,7 +64,7 @@ def test_missing_or_forged_host_original_provenance_never_authorizes_apply(tmp_p
                        'binding': {'input_sha256': '0' * 64}}[fault]
             return replace(proof, **changes)
         return replace(old, verifier=ProposalVerifier('synthetic-rejected-origin', '1', verify))
-    services = RestoreServices() if fault == 'missing' else RestoreServices(proposal_inputs=inputs)
+    services = QualificationServices() if fault == 'missing' else QualificationServices(proposal_inputs=inputs)
     before = inventory(case.root)
     with no_write_attempts(), pytest.raises(ModelError) as error:
         case.apply(dry_run=True, services=services)

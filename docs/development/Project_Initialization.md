@@ -1,5 +1,7 @@
 # Projektinitialisierung
 
+> Historische Implementierungsbeschreibung vor RECOVERY-REMOVAL-006. Sie beschreibt den damaligen Aufbau und erteilt keine aktuelle Reparatur- oder Wiederaufnahmebefugnis. Maßgeblich ist jetzt [Unterbrochene Writes und separater Git-Wiederanlauf](Interrupted_Writes.md). Aktuelle Schutzmarker werden nach Abbruch weder entfernt noch durch Rollback, Wiederaufnahme oder nachgebaute Receipts aufgehoben. Erhaltene Original-/Historienleser sind keine ausführbaren Reparaturadapter.
+
 `specroad init [PATH]` erzeugt die Mindeststruktur aus §8.1. Ohne `PATH` gilt das
 aktuelle Aufrufverzeichnis. Die strukturierte Schnittstelle verwendet
 `command_id: init` und optional `arguments.path`; sie durchläuft denselben

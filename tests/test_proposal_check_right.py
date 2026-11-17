@@ -248,7 +248,7 @@ def test_check_rejects_execution_write_and_unimplemented_variant_options(tmp_pat
 def test_existing_trusted_native_source_provider_is_rechecked_for_basis_and_target(tmp_path, supplied):
     from specroad.cli.invocation_context import InvocationContextBuilder
     from specroad.proposals import prepare_proposal_for_model
-    from specroad.qualification.services import RestoreServices
+    from specroad.qualification.services import QualificationServices
     from support.records import record_value
     from support.domain import domain_value
     from support.model import put
@@ -263,7 +263,7 @@ def test_existing_trusted_native_source_provider_is_rechecked_for_basis_and_targ
     def provide(model, record):
         calls.append((model._sources_sha256, record.data['id']))
         return raw if supplied == 'matching' else b'Changed source'
-    context = InvocationContextBuilder(restore_services=RestoreServices(
+    context = InvocationContextBuilder(restore_services=QualificationServices(
         source_content=None if supplied == 'missing' else provide))
     before = inventory(tmp_path)
     result = dispatch_result(['proposal', 'check', original.data['id']], cwd=tmp_path, context_builder=context)

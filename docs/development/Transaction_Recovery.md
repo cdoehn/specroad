@@ -1,5 +1,7 @@
 # Recoverystatus und unveröffentlichter Discard
 
+> Historische Implementierungsbeschreibung vor RECOVERY-REMOVAL-006. Sie beschreibt den damaligen Aufbau und erteilt keine aktuelle Reparatur- oder Wiederaufnahmebefugnis. Maßgeblich ist jetzt [Unterbrochene Writes und separater Git-Wiederanlauf](Interrupted_Writes.md). Aktuelle Schutzmarker werden nach Abbruch weder entfernt noch durch Rollback, Wiederaufnahme oder nachgebaute Receipts aufgehoben. Erhaltene Original-/Historienleser sind keine ausführbaren Reparaturadapter.
+
 Planabschnitt 5.p, SR-REQ-0257 / 0262 / 0458, SR-VER-0019 / 0031.
 
 ## W: sicherer nutzbarer Kern

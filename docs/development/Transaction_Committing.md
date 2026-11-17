@@ -1,5 +1,7 @@
 # Committing und atomare Dateiveröffentlichung (5.m)
 
+> Historische Implementierungsbeschreibung vor RECOVERY-REMOVAL-006. Sie beschreibt den damaligen Aufbau und erteilt keine aktuelle Reparatur- oder Wiederaufnahmebefugnis. Maßgeblich ist jetzt [Unterbrochene Writes und separater Git-Wiederanlauf](Interrupted_Writes.md). Aktuelle Schutzmarker werden nach Abbruch weder entfernt noch durch Rollback, Wiederaufnahme oder nachgebaute Receipts aufgehoben. Erhaltene Original-/Historienleser sind keine ausführbaren Reparaturadapter.
+
 `publish_prepared_journal(preflight, prepared, held_lock=..., authority=...)`
 setzt den überprüften Prepared-Zustand unter dem weiterhin gehaltenen nativen
 Writer-Lock auf `committing`. Der exklusive Journalnachfolger wird vollständig

@@ -14,6 +14,7 @@
     7
   ],
   "fixture_ids": [
+    "SR-FIX-GIT-RESTART-R-v1",
     "SR-FIX-GIT-RESTART-W-v1",
     "SR-FIX-WRITE-GUARD-v1"
   ],
@@ -64,6 +65,16 @@
     "tests/test_git_restart.py::test_incomplete_checkout_fails_native_qualification_without_reconstruction[request]",
     "tests/test_git_restart.py::test_incomplete_checkout_fails_native_qualification_without_reconstruction[specroad.json]",
     "tests/test_git_restart.py::test_incomplete_checkout_fails_native_qualification_without_reconstruction[transaction]",
+    "tests/test_git_restart_right.py::test_a_git_copy_of_active_interruption_data_remains_blocked[dry-run]",
+    "tests/test_git_restart_right.py::test_a_git_copy_of_active_interruption_data_remains_blocked[plan]",
+    "tests/test_git_restart_right.py::test_a_git_copy_of_active_interruption_data_remains_blocked[read]",
+    "tests/test_git_restart_right.py::test_a_git_copy_of_active_interruption_data_remains_blocked[write]",
+    "tests/test_git_restart_right.py::test_absent_optional_request_history_starts_new_intent_without_replaying_old",
+    "tests/test_git_restart_right.py::test_applied_proposal_requires_original_native_receipts_in_the_new_root[None]",
+    "tests/test_git_restart_right.py::test_applied_proposal_requires_original_native_receipts_in_the_new_root[request]",
+    "tests/test_git_restart_right.py::test_applied_proposal_requires_original_native_receipts_in_the_new_root[transaction]",
+    "tests/test_git_restart_right.py::test_referenced_archive_object_is_required_in_a_separate_checkout[False]",
+    "tests/test_git_restart_right.py::test_referenced_archive_object_is_required_in_a_separate_checkout[True]",
     "tests/test_write_guard.py::test_complete_write_and_read_only_retry_preserve_exact_effect",
     "tests/test_write_guard.py::test_existing_marker_and_old_transaction_never_authorize_new_write",
     "tests/test_write_guard.py::test_full_create_and_replace_share_the_native_writer",

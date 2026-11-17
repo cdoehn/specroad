@@ -1,80 +1,36 @@
-# Native project locks (5.i)
+# Native project locks
 
-`specroad.changes.project_lock` is an explicit process-local context manager for
-cooperating native Linux clients. Writer, recovery and operational lock kinds
-share an exclusive, nonblocking `flock` on the **project root directory inode**.
-There is no removable guard pathname whose replacement could split two mutexes.
-Unsupported platforms/filesystems fail closed; this is not a network/distributed
-lease or a sandbox against noncooperating writers. Native Pixel/PRoot capability
-is established by its actual selected tests, not inferred from the host name.
+Current contract after RECOVERY-REMOVAL-006 and 18.w/18.x. See
+[Interrupted writes and separate Git restart](Interrupted_Writes.md).
 
-The operational owner record is `.specroad/locks/project.json`, mode 0600.
-It binds a v4 lock UUID, lock kind, logical project identity, local root device and
-inode, process ID, process-start token, boot/PID-namespace host observation,
-UTC creation time, command, request ID and transaction ID. Unknown host/start
-observations remain null, never invented proof. A mutable hostname is not an
-ownership identity. Different boots/namespaces are conservatively foreign.
+`specroad.changes.project_lock` is an explicit process-local context manager
+for cooperating native Linux writers and operational clients. They share the
+nonblocking `flock` on the project root directory inode. Unsupported native
+locking fails closed. This is not a distributed lease or a sandbox against
+independent writers. Legacy `kind="recovery"` requests are rejected before I/O.
 
-Writer acquisition verifies the existing project configuration and refuses
-unresolved transaction/recovery/unknown operational entries. Recovery acquires
-the same exclusive mutex without loading the ordinary model; it leaves journals
-for the later recovery engine. Old records are never automatically stolen,
-including after the owning process has exited. Only the exact owner bytes and
-file identity are removed on normal release. Foreign replacements are preserved.
-A child cannot release its parent's handle; handles cannot be copied/serialized.
+The mode-0600 owner record `.specroad/locks/project.json` binds the original
+lock identity, root inode, project, process/start/host observations, command,
+request and transaction. Unknown observations remain unknown. Writer admission
+checks configuration, original root and unresolved operational entries. Handles
+cannot be copied, serialized or released by a forked child.
 
-`inspect_project_lock` is read-only, including with broken project configuration.
-It does not create directories, take a writer lock, open journal contents or
-perform recovery. Status is a rechecked observation, not a reservation and not
-write authorization. Empty lock directories left after release do not block the
-existing read-only validation path; an actual record still blocks that shallow
-reader until its owner is resolved.
+A live writer removes only its exact owner record after its normal completion
+permits release. Interrupted publication retains the guard and owner. No stale
+record is stolen automatically, and a foreign replacement is never removed.
 
-No native transaction backend, CLI lock commands, journal parser, implicit
-repair, process termination or automatic request receipts are introduced here.
-All working data and temporary project roots in the tests are private to the
-test. The lock tests and the two related read-only-validation test files contain
-the behavioral evidence for this section. Test execution follows the local
-`AGENTS.md`; see [Testing.md](Testing.md) for the technical commands.
+`inspect_project_lock` observes and rechecks metadata without creating files,
+loading the model or authorizing a write. It remains usable with broken project
+configuration. A status observation is neither a reservation nor an unlock.
 
-## Explicit recovery (5.i.R)
+`recover_project_lock` retains explicit force, actor/reason, expected hash,
+native mutex and owner/risk checks for compatibility. It never removes an owner
+record, writes a recovery audit or grants a writer lock. Even a proved dead
+owner with explicit risk acknowledgement ends in refusal. It cannot bypass an
+active mutex, changed root/owner, journal or unknown safety condition.
 
-`recover_project_lock` requires the exact observed lock-byte SHA-256, project
-identity, explicit force, actor and reason. It first obtains the SAME root-inode
-mutex. A busy mutex can never be bypassed, including with risk acknowledgement.
-Alive same-host process/start observations always refuse removal. Foreign or
-unverifiable host/start observations and PID reuse additionally require explicit
-`accept_remote_risk=True`. A missing proc record alone does not prove death:
-hidepid/permission cases stay unknown unless a nonmutating process existence
-probe also proves absence. New hostnames are not an ownership proof.
-
-The library does not remove another machine's actual kernel lock or kill any
-process. Risk consent is only about uncertain *orphan metadata* on the local
-filesystem; it cannot override an active local kernel holder, bad path, changed
-root/owner, or a transaction journal. The probe parameter is a trusted embedded
-application adapter, never configured/imported from project files. Actor data is
-an audit declaration, not authentication.
-
-An immutable 0600 intent event is written under
-`.specroad/recovery/lock-audit/<event-id>.intent.json` **before** removing the
-orphan. Owner bytes/inode, start observation and journal presence are rechecked.
-Only afterwards is a separate completion event created. Intent never claims
-removal. Interrupted audit/removal/completion produces an error with
-`mutation_possible=true`; existing events and any remaining owner are preserved.
-No automatic retry/rollback rewrites audit history. Recovery does not itself
-acquire a new writer lock and does not modify or interpret journals.
-
-Descriptor-relative nofollow I/O rejects symlinks, hardlinked owner records,
-special files and nested roots. Root/directory/record changes are rechecked.
-This is protection for cooperating local clients with trusted kernel/filesystem
-semantics, not an OS compare-and-swap guarantee against a hostile concurrent
-filesystem actor. The lock kind is not a privilege or a completed native writer.
-The new three-way mutual exclusion and forced-orphan recovery are not yet wired
-into every later CLI command or the unimplemented durable transaction backend.
-
-Both lock test files and the related read-only-validation files remain part of
-the full suite, without a separate Apply selection. Real competing processes,
-abrupt exit, forked handles, active journals, reused PIDs, unknown hosts,
-changing records, I/O failures and portable
-distributions are tested. There is no artificial test/suite timeout and no test
-that compares human-readable output or documentation layout.
+The original receipt/journal codecs still validate immutable historical data.
+They do not supply repair authority. Behavior tests retain real competing
+processes, forked handles, stale/unknown owners, changed records and native
+path protections; old successful-unlock oracles now require preserved bytes
+and refusal. All execution belongs to the individual Apply gate.

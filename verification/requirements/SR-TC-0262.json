@@ -10,6 +10,7 @@
     7
   ],
   "fixture_ids": [
+    "SR-FIX-GIT-RESTART-R-v1",
     "SR-FIX-GIT-RESTART-W-v1",
     "SR-FIX-WRITE-GUARD-v1"
   ],

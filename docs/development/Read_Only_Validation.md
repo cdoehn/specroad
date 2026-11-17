@@ -29,7 +29,9 @@ normal validation and lint return code 5 before loading the model. Unknown
 operational entries are blocked as unknown; no PID/host heuristic declares a
 writer dead. Even a journal claiming completion is not trusted without the later
 transaction resolver. No journal, receipt, cache, lock or missing file is created,
-updated or deleted, including when `auto_recover` is enabled.
+updated or deleted. Current configurations reject the removed `auto_recover` field.
+See [the current interruption contract](Interrupted_Writes.md); old metadata
+never activates repair or unlocks normal model use.
 
 This is NOT the complete N.2 preflight, journal validator or lock engine. Metadata
 is shallow-enumerated, not a bounded/resumable journal detail scan. Future
