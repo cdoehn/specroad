@@ -22,7 +22,7 @@ class CapabilitiesWorkTests(unittest.TestCase):
         ids = {command.command_id for command in registry.commands}
         self.assertEqual({item['command_id'] for item in semantic['commands']}, ids)
         self.assertEqual(set(semantic['capability_ids']), {'cli.' + item for item in ids} |
-                         {'python.structured-request', 'python.srx.evaluate'})
+                         {'python.structured-request', 'python.srx.evaluate', 'python.authoring.proposal'})
         self.assertEqual(set(semantic['command_groups']), {item.split('.')[0] for item in ids})
         self.assertEqual(semantic['command_classes'], ['generated_output', 'normative_write', 'plan_output', 'read_only', 'root_creation', 'work_operational'])
         for item in semantic['commands']:
@@ -37,7 +37,7 @@ class CapabilitiesWorkTests(unittest.TestCase):
         self.assertEqual(semantic['exchange_formats'], ['csv', 'ndjson', 'reqif', 'reqifz'])
         self.assertEqual(semantic['supported_versions']['schema'], ['0.2.0'])
         self.assertEqual(semantic['supported_versions']['srx'], ['1.0'])
-        self.assertEqual(semantic['supported_versions']['proposal'], [])
+        self.assertEqual(semantic['supported_versions']['proposal'], ['0.2.0'])
         self.assertTrue(semantic['work']['engine_available'])
         self.assertEqual(semantic['work']['checkpoint_algorithms'], ['work-manifest-segments-v1'])
         self.assertEqual(semantic['work']['budget_policy_version'], 'runtime-budget-v2')

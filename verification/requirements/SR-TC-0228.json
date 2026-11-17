@@ -1,20 +1,30 @@
 {
   "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "fixture_ids": [],
-  "implementation_status": "open",
+  "expected_exit_codes": [
+    0,
+    2,
+    3,
+    6,
+    7
+  ],
+  "fixture_ids": [
+    "SR-FIX-OWNED-TEMP-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [],
-  "method": "pending",
+  "method": "automated_behavior",
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Final project-wide agent workflow acceptance and not-yet-registered authoring families remain in the confirmed subsequent plan."
   ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Der Mensch-KI-Roundtrip aus `SR-SCN-0013` MUSS KI-erzeugte normative Änderungen über die Folge `proposal create`, `proposal change`, `proposal validate`, `proposal check`, menschliches `proposal review` und `proposal apply` führen.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Actual registered commands, native schemas, bound structured examples, distinct human decisions and current reviews, and variant-specific side effects. Python capabilities do not fabricate CLI handlers."
   },
-  "preconditions": [],
+  "preconditions": [
+    "Owned complete native fixtures; declared test actors and trusted test host services. Native publications and receipts execute only in Apply; no fabricated human approvals."
+  ],
   "primary_verification_id": "SR-VER-0017",
   "required_environment": {
     "declared_minimum_python": "3.10",
@@ -28,8 +38,15 @@
     "owned_temporary_files": true
   },
   "specification_sha256": "ec1464357d139becd7b5a15e5764e2320e6a588260c6f14b5490253e2110d1fa",
-  "steps": [],
+  "steps": [
+    "Build complete native inputs and actual bound requests.",
+    "Observe exact result bytes, refusal codes, original file effects and native receipt evidence."
+  ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0228",
-  "test_ids": []
+  "test_ids": [
+    "tests/test_agent_contracts.py::test_all_current_descriptions_supply_valid_requests_and_actual_result_schemas",
+    "tests/test_agent_contracts.py::test_human_review_and_approved_apply_have_distinct_machine_prerequisites",
+    "tests/test_agent_contracts.py::test_proposal_version_requires_an_actual_registered_native_reader"
+  ]
 }

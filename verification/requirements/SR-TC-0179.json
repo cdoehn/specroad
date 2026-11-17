@@ -1,24 +1,31 @@
 {
   "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [],
-  "expected_exit_codes": [],
+  "expected_exit_codes": [
+    0,
+    2,
+    3,
+    6,
+    7
+  ],
   "fixture_ids": [
-    "SR-FIX-RECOVERY-REMOVAL-W-v1",
-    "SR-FIX-RECOVERY-REMOVAL-R-v1"
+    "SR-FIX-OWNED-TEMP-v1",
+    "SR-FIX-RECOVERY-REMOVAL-R-v1",
+    "SR-FIX-RECOVERY-REMOVAL-W-v1"
   ],
   "implementation_status": "partial",
   "json_pointers": [],
   "method": "automated_behavior",
   "open_items": [
-    "RECOVERY-REMOVAL-006: changed requirement contract; the old implementation/tests are retained until their assigned W/R/C replacement. Previous recovery/restore evidence does not establish this new behavior.",
-    "Apply of this specification/planning bundle is not implementation, release, or user authorization to use SpecRoad."
+    "Final project-wide agent workflow acceptance and not-yet-registered authoring families remain in the confirmed subsequent plan."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Version 0.2 MUSS mindestens die Befehlsgruppen `init`, `config`, `format`, `change`, `artifact`, `relation`, `lifecycle`, `document`, `view`, `diagram`, `show`, `validate`, `lint`, `render`, `query`, `trace`, `why`, `impact`, `diff`, `coverage`, `roadmap`, `release`, `evidence`, `baseline`, `proposal`, `import`, `export`, `migrate`, `merge`, `bundle`, `lock`, `capabilities`, `schema`, `command`, `project` und `version` bereitstellen.",
-    "scope": "Public argv and structured requests reject retired repair commands; this is not evidence for all future command groups. Fresh Apply evidence required; historical recovery results are not acceptance. Unimplemented scopes and target-platform/release proofs remain open."
+    "scope": "Actual registered commands, native schemas, bound structured examples, distinct human decisions and current reviews, and variant-specific side effects. Python capabilities do not fabricate CLI handlers."
   },
   "preconditions": [
+    "Owned complete native fixtures; declared test actors and trusted test host services. Native publications and receipts execute only in Apply; no fabricated human approvals.",
     "Owned synthetic roots and real native APIs; faults only at actual operating-system or writer boundaries."
   ],
   "primary_verification_id": "SR-VER-0013",
@@ -35,13 +42,15 @@
   },
   "specification_sha256": "ec1464357d139becd7b5a15e5764e2320e6a588260c6f14b5490253e2110d1fa",
   "steps": [
-    "Exercise the bound native requests and retained positive Work paths.",
-    "Assert exact results and byte preservation for every rejected repair/ownership path.",
-    "Run only in the stage Apply gate; no Dev execution is an acceptance result."
+    "Build complete native inputs and actual bound requests.",
+    "Observe exact result bytes, refusal codes, original file effects and native receipt evidence."
   ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0179",
   "test_ids": [
+    "tests/test_agent_contracts.py::test_all_current_descriptions_supply_valid_requests_and_actual_result_schemas",
+    "tests/test_agent_contracts.py::test_human_review_and_approved_apply_have_distinct_machine_prerequisites",
+    "tests/test_agent_contracts.py::test_proposal_version_requires_an_actual_registered_native_reader",
     "tests/test_recovery_removal.py::test_public_command_contract_has_no_repair_writer_or_repair_profile",
     "tests/test_recovery_removal.py::test_removed_public_repair_never_starts_or_writes[argv-lock.recover]",
     "tests/test_recovery_removal.py::test_removed_public_repair_never_starts_or_writes[argv-recover.cleanup]",

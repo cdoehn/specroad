@@ -7,7 +7,8 @@
     3,
     4,
     5,
-    6
+    6,
+    7
   ],
   "fixture_ids": [
     "SR-FIX-ISOLATED-CPYTHON-v1",
@@ -23,18 +24,16 @@
   ],
   "method": "automated_behavior",
   "open_items": [
-    "Required specialist model services (including document model) are not all available; diagnostic_summary remains null and incomplete operations fail.",
-    "Older/unknown schema migration and pre-handler CLI failure payloads remain open.",
-    "Collect the complete supported CPython/platform matrix and product acceptance before release; no atomic snapshot claim is made against noncooperating external writers.",
-    "RECOVERY-REMOVAL-006: existing test references cover only their still-valid implemented scope. Changed interruption/receipt/preflight/work oracles require fresh implementation and evidence in 18.s–18.x; old repair/crash recovery results are not acceptance of the new contract."
+    "Final project-wide agent workflow acceptance and not-yet-registered authoring families remain in the confirmed subsequent plan."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Die fachlichen Selbstbeschreibungen MÜSSEN bei identischen fachlichen Eingaben und identischer Toolversion in der exakt definierten Projektion nach Kapitel 11.5.1 identische JSON-Bytes liefern; Projektroot, Lock, Transaktion und sonstiger Laufzeitkontext sind keine Bestandteile dieser Gleichheitsgarantie.",
-    "scope": "Deterministic semantic projection across current-directory, registry-order, presentation and runtime-limit changes; build changes remain semantic. Future schema/project self-descriptions and full platform matrix remain open. Real project inspection now proves exact RFC8785 semantic equality after relocation and detached output ownership; runtime remains separately observed. R adds coherent repeated operational/lock observations, visible late blockers, final source rereads, orphan writers, complete journal inventory and exact semantic error/warning/info counts across relocation with passive runtime differences. Explicit host title predicates are test fixtures, not substitute production specialist services. C extracts the existing semantic projection unchanged from inspection orchestration. Existing W/R behavior tests and their expected results remain unchanged; this adds no behavior or release approval."
+    "scope": "Actual registered commands, native schemas, bound structured examples, distinct human decisions and current reviews, and variant-specific side effects. Python capabilities do not fabricate CLI handlers."
   },
   "preconditions": [
-    "Current Core on native Linux with owned temporary project files, actual bound profile/registry resources and isolated CLI processes."
+    "Current Core on native Linux with owned temporary project files, actual bound profile/registry resources and isolated CLI processes.",
+    "Owned complete native fixtures; declared test actors and trusted test host services. Native publications and receipts execute only in Apply; no fabricated human approvals."
   ],
   "primary_verification_id": "SR-VER-0027",
   "required_environment": {
@@ -50,19 +49,22 @@
   },
   "specification_sha256": "ec1464357d139becd7b5a15e5764e2320e6a588260c6f14b5490253e2110d1fa",
   "steps": [
-    "Invoke the real CLI, structured request and read-only Python inspection on the actual files.",
-    "Compare canonical semantic data, native runtime observations, actual side effects and explicit incomplete outcomes."
+    "Build complete native inputs and actual bound requests.",
+    "Observe exact result bytes, refusal codes, original file effects and native receipt evidence."
   ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0381",
   "test_ids": [
-    "test_capabilities.CapabilitiesWorkTests.test_actual_cli_json_and_python_entry_deliver_the_same_semantics",
-    "test_capabilities.CapabilitiesWorkTests.test_returned_data_cannot_mutate_next_capability_query",
-    "test_capabilities.CapabilitiesWorkTests.test_display_options_do_not_change_semantic_capabilities",
-    "test_capabilities.CapabilitiesWorkTests.test_unknown_host_limits_are_not_reported_as_zero_or_capacity",
-    "test_capabilities.CapabilitiesRobustnessTests.test_runtime_changes_do_not_change_semantic_projection",
-    "test_capabilities.CapabilitiesRobustnessTests.test_registry_order_and_working_directory_do_not_change_semantic_bytes",
     "test_capabilities.CapabilitiesRobustnessTests.test_distribution_identity_changes_the_semantic_input_binding",
+    "test_capabilities.CapabilitiesRobustnessTests.test_registry_order_and_working_directory_do_not_change_semantic_bytes",
+    "test_capabilities.CapabilitiesRobustnessTests.test_runtime_changes_do_not_change_semantic_projection",
+    "test_capabilities.CapabilitiesWorkTests.test_actual_cli_json_and_python_entry_deliver_the_same_semantics",
+    "test_capabilities.CapabilitiesWorkTests.test_display_options_do_not_change_semantic_capabilities",
+    "test_capabilities.CapabilitiesWorkTests.test_returned_data_cannot_mutate_next_capability_query",
+    "test_capabilities.CapabilitiesWorkTests.test_unknown_host_limits_are_not_reported_as_zero_or_capacity",
+    "tests/test_agent_contracts.py::test_all_current_descriptions_supply_valid_requests_and_actual_result_schemas",
+    "tests/test_agent_contracts.py::test_human_review_and_approved_apply_have_distinct_machine_prerequisites",
+    "tests/test_agent_contracts.py::test_proposal_version_requires_an_actual_registered_native_reader",
     "tests/test_project_inspection.py::test_identical_relocated_models_have_equal_canonical_semantics",
     "tests/test_project_inspection.py::test_real_cli_python_and_structured_request_describe_the_actual_project",
     "tests/test_project_inspection.py::test_returned_values_are_detached_and_unknown_result_versions_fail",

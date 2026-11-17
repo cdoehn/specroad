@@ -14,4 +14,4 @@ SRX_LANGUAGE_VERSION = "1.0"
 SUPPORTED_SCHEMA_VERSIONS = (MODEL_SCHEMA_VERSION,)
 # Public Core evaluator support; this does not register a CLI command.
 SUPPORTED_SRX_VERSIONS = (SRX_LANGUAGE_VERSION,)
-PYTHON_CAPABILITY_IDS = ("python.structured-request", "python.srx.evaluate")
+PYTHON_CAPABILITY_IDS = ("python.structured-request", "python.srx.evaluate", "python.authoring.proposal")

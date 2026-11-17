@@ -490,3 +490,5 @@
 - [Bundle 726 — Authoring und Agentenverträge](bundle-726-authoring-agents.md)
 
 - [Bundle 727 — Hostprofilgrenze und vollständiger offener Rest](bundle-727-host-profile-storage.md)
+
+- [Bundle 728 — Agentenaufträge korrekt binden](bundle-728-agent-request-binding.md)

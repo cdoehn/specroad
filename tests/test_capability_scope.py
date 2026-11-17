@@ -65,7 +65,7 @@ class CapabilityScopeTests(unittest.TestCase):
         self.assertEqual(semantic['commands'], [])
         self.assertEqual(semantic['command_groups'], [])
         self.assertEqual(semantic['output_formats'], [])
-        self.assertEqual(semantic['capability_ids'], ['python.srx.evaluate', 'python.structured-request'])
+        self.assertEqual(semantic['capability_ids'], ['python.authoring.proposal', 'python.srx.evaluate', 'python.structured-request'])
         self.assertEqual(semantic['supported_versions']['srx'], ['1.0'])
 
     def test_proposal_record_schema_is_not_an_executable_proposal_workflow(self):
@@ -75,7 +75,7 @@ class CapabilityScopeTests(unittest.TestCase):
         self.assertEqual(result['result']['schema']['$id'], schema_id)
         SchemaCatalog().validate(schema_id, record_value('proposal'))
         semantic = capabilities(builtin_registry())['semantic']
-        self.assertEqual(semantic['supported_versions']['proposal'], [])
+        self.assertEqual(semantic['supported_versions']['proposal'], ['0.2.0'])
         self.assertIn('proposal', semantic['command_groups'])
         proposals = [command for command in semantic['commands']
                      if command['command_id'].startswith('proposal.')]

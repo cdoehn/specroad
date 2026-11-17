@@ -7,7 +7,7 @@ support from executable registry commands. Model/SRX versions describe the
 existing Core validators/evaluator, not the presence of a command or a schema ID.
 """
 
-from .._metadata import PYTHON_CAPABILITY_IDS, SUPPORTED_SRX_VERSIONS
+from .._metadata import PYTHON_CAPABILITY_IDS, SUPPORTED_SRX_VERSIONS, MODEL_SCHEMA_VERSION
 from .results import FORMAT_VERSION
 from .self_description import (DESCRIPTION_VERSION, command_surface,
                                output_formats, published_contract)
@@ -22,8 +22,11 @@ def capabilities(registry):
     commands = []
     active_formats = set()
     exchange_formats = set()
+    proposal_versions = set()
     for command in sorted(registry.commands, key=lambda item: item.command_id):
         command, protocol = published_contract(registry, command.command_id)
+        if command.command_id == 'proposal.validate' and protocol.result_schema == 'proposal-validation-v1':
+            proposal_versions.add(MODEL_SCHEMA_VERSION)
         formats = output_formats(command)
         active_formats.update(formats)
         if command.command_id == 'export' and protocol.result_schema == 'exchange-export-v1':
@@ -45,7 +48,7 @@ def capabilities(registry):
         "output_formats": sorted(active_formats),
         "exchange_formats": sorted(exchange_formats),
         "supported_versions": {"schema": identity["supported_schema_versions"],
-            "srx": list(SUPPORTED_SRX_VERSIONS), "proposal": [],
+            "srx": list(SUPPORTED_SRX_VERSIONS), "proposal": sorted(proposal_versions),
             "json_envelope": [FORMAT_VERSION], "command_description": [DESCRIPTION_VERSION],
             "capabilities": [CAPABILITIES_VERSION]},
         "python_support": identity["python_support"],

@@ -28135,6 +28135,9 @@
     "tests/test_authoring_proposals_right.py::test_native_refusals_cannot_be_bypassed_by_proposal_metadata[authority]",
     "tests/test_authoring_proposals_right.py::test_native_refusals_cannot_be_bypassed_by_proposal_metadata[collision]",
     "tests/test_authoring_proposals_right.py::test_native_refusals_cannot_be_bypassed_by_proposal_metadata[metadata]",
-    "tests/test_authoring_proposals_right.py::test_native_refusals_cannot_be_bypassed_by_proposal_metadata[scope]"
+    "tests/test_authoring_proposals_right.py::test_native_refusals_cannot_be_bypassed_by_proposal_metadata[scope]",
+    "tests/test_agent_contracts.py::test_all_current_descriptions_supply_valid_requests_and_actual_result_schemas",
+    "tests/test_agent_contracts.py::test_human_review_and_approved_apply_have_distinct_machine_prerequisites",
+    "tests/test_agent_contracts.py::test_proposal_version_requires_an_actual_registered_native_reader"
   ]
 }

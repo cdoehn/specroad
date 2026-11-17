@@ -45,4 +45,4 @@ und native Paketverträge. Die vorbereiteten Fortschrittswerte werden erst
 nach dem jeweiligen erfolgreichen Apply-Gate übernommen, nicht als vorher
 bestandene Verhaltenstests ausgegeben. Es gibt keine eigene Apply-Schleife.
 
-Zielstand dieser Stage: **18.l.C**, **783/918**, danach **18.m.W**.
+Zielstand dieser Stage: **18.m.W**, **784/918**, danach **18.m.R**.

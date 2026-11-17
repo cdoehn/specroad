@@ -30,6 +30,16 @@ def output_formats(command):
     return next((list(opt.choices) for opt in command.options if opt.flag == "--format"), ["pretty"])
 
 
+def authorization_contract(protocol):
+    """Prerequisites of the registered adapter, never a permission grant."""
+    inputs = protocol.work.required_inputs
+    return {'source': 'trusted_host_and_native_checks', 'declaration_is_permission': False,
+            'human_decision_required': 'human_decision' in inputs,
+            'current_human_reviews_required': 'current_human_reviews' in inputs,
+            'host_authority_required': 'host_authority' in inputs,
+            'autonomous_approval': False}
+
+
 def describe_command(registry, command_id):
     command, protocol = published_contract(registry, command_id)
     formats = output_formats(command)
@@ -38,6 +48,7 @@ def describe_command(registry, command_id):
         **command_surface(command),
         "budget_policy_version": command.budget_policy_version,
         "lock_kind": protocol.lock_kind,
+        "authorization": authorization_contract(protocol),
         "work": protocol.work.as_dict(),
         "parameters": [{"name": arg.name, "kind": "positional", "datatype": "string",
                         "required": arg.required, "choices": list(arg.choices)} for arg in command.positionals],
