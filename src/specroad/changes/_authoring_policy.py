@@ -38,3 +38,28 @@ def select_route(command_id, actor, identity, dry_run, as_proposal):
     else:
         route = 'direct'
     return route
+
+
+def validate_proposal_operations(command_id, operations):
+    if any(op['op'] == 'proposal_create' for op in operations):
+        from ..proposals._create_control import creation_mode
+        if command_id != 'proposal create':
+            raise AuthoringError('proposal_create_specialist_required', exit_code=7)
+        creation_mode(operations)
+    if any(op['op'] == 'proposal_control' for op in operations):
+        if command_id not in ('proposal review start', 'proposal review', 'proposal apply'):
+            raise AuthoringError('proposal_control_specialist_required', exit_code=7)
+        if command_id == 'proposal review start':
+            from ..proposals._review_control import review_start_mode, reports
+            review_start_mode(operations)
+            reports(operations[0])
+        if command_id == 'proposal review':
+            from ..proposals._decision_control import review_mode
+            from ..proposals._decision_evidence import operation_proof
+            review_mode(operations)
+            operation_proof(operations[0])
+    if operations and command_id == 'proposal apply':
+        from ..proposals._apply_control import apply_mode, operation_proof
+        from ..proposals.values import require
+        require(apply_mode(operations), 'proposal_apply_evidence_required')
+        operation_proof(operations[-1])

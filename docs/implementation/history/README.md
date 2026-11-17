@@ -498,3 +498,8 @@
 - [Bundle 730 — historische Proposalbelege und aktuelle Apply-Policy](bundle-730-historical-proposal-policy.md)
 
 - [Bundle 731 — vollständige AI-Entwurfseingabe](bundle-731-proposal-confidence.md)
+
+- [Bundle 732 — reine Authoring-Policy ohne Aufrufimport](bundle-732-authoring-import.md)
+
+- [Bundle 733 — Dateiscope und tatsächlicher Git-Commitumfang](bundle-733-uncommitted-deletion-scope.md)
+- [Bundle 734 — native Laufzeit der Git-Treiberregressionen](bundle-734-driver-test-runtime.md)

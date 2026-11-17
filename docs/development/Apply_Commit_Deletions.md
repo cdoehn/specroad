@@ -48,6 +48,17 @@ die verbleibenden Zielbytes als auch die Abwesenheit gelöschter Dateien vor
 und nach dem Gate, im Index und im tatsächlichen Commitbaum. Ein Fehler hält
 an; vorherige Commits und der tatsächliche Arbeits-/Indexstand bleiben erhalten.
 
+Der gebundene Dateiscope ist vom tatsächlichen Git-Diff zu unterscheiden:
+Eine ausdrücklich gebundene, nie committete Datei bleibt ein Löschziel mit
+Vorherbytes und Abwesenheitsprüfung, erzeugt aber keinen Löschpfad im
+Commitvergleich mit dem Elterncommit. Ein bereits gestagter Zugang darf
+nur bei identischen gebundenen Indexbytes aufgehoben werden. Für im Elterncommit
+vorhandene Dateien bleibt der Git-Löschdiff verpflichtend. Zielpayloads,
+fremde Änderungen, Indexmodi und vollständige Commitbytes werden weiterhin
+exakt geprüft. Bloße Bereinigung ohne echten Git-Unterschied erzeugt keinen
+leeren Ersatzcommit. [Korrektur 733](../implementation/history/bundle-733-uncommitted-deletion-scope.md)
+belegt den Anlass und die zusätzlichen Apply-Regressionen.
+
 ## Fehler und Fortsetzung
 
 Nur die erste offene Stage einer an das native Fehler-Result gebundenen

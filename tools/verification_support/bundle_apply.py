@@ -183,10 +183,22 @@ class NativeApply:
         for name, digest in stage.get('deletions', {}).items():
             delete_bound_file(self.root, name, digest, absent=True, remove=False)
 
+    def commit_scope(self, stage, head):
+        """A bound uncommitted preimage is absent from the final tree, not a Git D."""
+        removed = set(stage.get('deletions', {}))
+        tracked = (self.names('ls-tree', '-r', '--name-only', '-z', head, '--', *sorted(removed))
+                   if removed else set())
+        return set(stage['after']) | (removed & tracked)
+
     def pending(self, stage, head):
         self.location()
-        scope = set(stage['after']) | set(stage.get('deletions', {}))
-        if self.head() != head or self.changed() != scope:
+        committed_scope = self.commit_scope(stage, head)
+        removed = set(stage.get('deletions', {}))
+        indexed = (self.names('ls-files', '-z', '--', *sorted(removed))
+                   if removed else set())
+        temporary_additions = (removed & indexed) - committed_scope
+        if (not committed_scope or self.head() != head
+                or self.changed() != (committed_scope | temporary_additions)):
             raise ValueError('Stage scope differs from the intended commit')
         self.bytes_match(stage['after'])
         self.absent(stage)
@@ -199,6 +211,11 @@ class NativeApply:
                 name = records[index + 1].decode()
                 if kind == b'D':
                     valid = name in stage.get('deletions', {}) and old == b':100644' and new == b'000000'
+                elif cached and kind == b'A' and name in temporary_additions:
+                    # Removing a staged addition cancels it. Its index bytes must
+                    # still be the exact bound preimage, never arbitrary data.
+                    valid = (old == b':000000' and new == b'100644'
+                             and sha256(self.git('show', ':' + name)).hexdigest() == stage['deletions'][name])
                 else:
                     valid = (name in stage['after'] and kind in (b'A', b'M')
                              and old == (b':000000' if kind == b'A' else b':100644') and new == b'100644')
@@ -231,6 +248,7 @@ class NativeApply:
 
     def commit(self, stage, head, evidence):
         paths = sorted(set(stage['after']) | set(stage.get('deletions', {})))
+        committed_scope = self.commit_scope(stage, head)
         # A failed commit may have already removed a path from the index.
         # Its cached deletion is still checked below, without an unmatched add.
         index_paths = self.names('ls-files', '-z', '--', *paths)
@@ -238,7 +256,7 @@ class NativeApply:
         if to_add:
             self.git('add', '-A', '--', *to_add)
         self.pending(stage, head)
-        if (self.names('diff', '--cached', '--no-renames', '--name-only', '-z') != set(paths)
+        if (self.names('diff', '--cached', '--no-renames', '--name-only', '-z') != committed_scope
                 or self.names('diff', '--no-renames', '--name-only', '-z')
                 or self.names('ls-files', '--others', '--exclude-standard', '-z')):
             raise ValueError('Index has unexpected commit contents')
@@ -265,7 +283,7 @@ class NativeApply:
         completed = self.head()
         if (self.git('rev-parse', 'HEAD^').decode().strip() != head
                 or self.git('log', '-1', '--format=%s').decode().strip() != stage['message']
-                or self.names('diff', '--no-renames', '--name-only', '-z', head, completed) != set(paths)):
+                or self.names('diff', '--no-renames', '--name-only', '-z', head, completed) != committed_scope):
             raise ValueError('Actual commit differs from the tested stage; retain and inspect')
         for name, digest in stage['after'].items():
             if sha256(self.git('show', completed + ':' + name)).hexdigest() != digest:

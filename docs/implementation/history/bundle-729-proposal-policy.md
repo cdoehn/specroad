@@ -49,4 +49,4 @@ Fortsetzung mit Inhalts-/Basis-/Enginebindung und frischer menschlicher
 Reviewprüfung. Seine Workadapter und geschlossenen Datenverträge sind hier
 nicht als bereits umgesetzt oder abgenommen ausgewiesen.
 
-Zielstand dieser Stage nach ihrem erfolgreichen Gate: **18.n.R**, **788/918**, danach **18.n.C**.
+Zielstand dieser Stage nach ihrem erfolgreichen Gate: **18.n.C**, **789/918**, danach **18.o.W**.
