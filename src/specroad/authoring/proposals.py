@@ -3,7 +3,6 @@
 The host supplies allocated identities and trusted live services. Proposal
 metadata never supplies authority, gates, a reviewer or executable adapters.
 """
-from dataclasses import replace
 from ..changes import ChangePlan, TargetModel, TargetPolicy, assess_change_target, prepare_authoring_request
 from ..changes.core import prepare_change_plan
 from ..changes._target_materialization import materialize_target
@@ -14,12 +13,10 @@ from ..proposals.basis import build_proposal_basis
 from ..proposals.context import ProposalContext
 from ..proposals.validation import validate_proposal
 from ..proposals._create_control import COMMAND, GATE
-from ..proposals._review_checks import _initial_inputs
 from ..proposals.values import require
-from ..qualification.services import native_services
-from ..validation import ModelGate
-from ..validation.values import HOOK_NAMES
 from .plans import _execution_inputs, _operations
+
+from ..proposals._draft_qualification import publication_gates
 
 POLICY = TargetPolicy(COMMAND, '1', (GATE,))
 
@@ -52,34 +49,6 @@ def prepare_authoring_proposal(plan, model, *, command_id, proposal_fields,
     proposal = prepare_proposal(change_plan=prepare_change_plan(inner), **proposal_fields)
     validate_proposal(ProposalContext(proposal.original, model))
     return proposal
-
-
-def publication_gates(model, proposal, *, services=None):
-    """Requalify the complete actual outer target on every native writer gate."""
-    from ..qualification.project import validate_project
-    services = native_services(services)
-    original = proposal.original
-    files = {**model.source_files, original.path: original.source_bytes}
-    expected = {d.path: d.content for d in model.documents}
-    expected[original.path] = original.source_bytes
-    def provider(target, value):
-        if value.binding.proposal_id == original.binding.proposal_id:
-            require(value.source_bytes == original.source_bytes,
-                    'proposal_create_record_changed', exit_code=6)
-            return _initial_inputs(target, value, replace(services, proposal_inputs=None))
-        return _initial_inputs(target, value, services)
-    actual_services = replace(services, proposal_inputs=provider)
-    def check(context):
-        require({d.path: d.content for d in context.documents} == expected,
-                'proposal_create_outer_target_changed', exit_code=6)
-        validate_project(files, services=actual_services)
-        return context.result()
-    def dependencies(context):
-        return context.dependency_result({key: list(context.all_ids) for key in context.subjects})
-    return tuple(ModelGate(name, 'native-proposal-create-v1', dependencies, check,
-        model._sources_sha256) for name in (
-            *(name for name in HOOK_NAMES if name not in ('profile_lint', 'language_policy')),
-            GATE, 'extension:target-resources'))
 
 
 def publish_authoring_proposal(plan, model, *, command_id, proposal_fields,
