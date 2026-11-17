@@ -109,7 +109,7 @@ def _checked_plan(manifest, registry, build):
 
 
 def _checked_outcome(document, invocation, exit_code):
-    from ._completion import check_completed_controls
+    from ._completion_outcome import check_completed_controls
     validate_result_document(ENVELOPE_ID, document)
     _require(document['command'] == invocation.command.command_id
              and document['summary']['complete'] is True

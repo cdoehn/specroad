@@ -1,8 +1,8 @@
 """Closed, inert work-v1 candidates with complete declared manifest partitions.
 
 These values are not durable checkpoints or execution approvals. The codec
-binds read-only requests, original normative ChangePlans or passive Restore
-execution inputs and authoring identity. A trusted planner supplies the full unit plan; this module
+binds read-only preparation requests, transport inputs and original normative
+ChangePlans with their authoring identity. A trusted planner supplies the full unit plan; this module
 proves its structural retention, not complete command coverage or authorization.
 """
 

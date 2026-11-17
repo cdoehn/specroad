@@ -19,7 +19,6 @@ from ._lock_owner_policy import observe_owner, _recovery_permitted
 from ._lock_files import LockFiles, identity
 
 
-
 def _bound(record, files, project_id):
     v = record.data
     if v['project_id'] != project_id or v['root_identity'] != identity(os.fstat(files.root_fd)):
@@ -150,7 +149,7 @@ def project_lock(root, *, kind, command, project_id, transaction_id=None, reques
             _bound(previous, files, project_id)
             raise ProjectLockError('lock_recovery_required')
         journals = files.journal_entries()
-        if selected is not LockKind.RECOVERY and journals:
+        if journals:
             raise ProjectLockError('transaction_journal_blocks_lock')
         if _before_record is not None:
             _before_record(files)
@@ -186,8 +185,6 @@ def project_lock(root, *, kind, command, project_id, transaction_id=None, reques
                         files.remove_record(record, inode)
                 finally:
                     guard._active = False
-
-
 
 
 def recover_project_lock(root, *, project_id, expected_lock_sha256, actor, reason,

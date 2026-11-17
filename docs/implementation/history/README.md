@@ -482,3 +482,5 @@
 - [Bundle 722 — bestätigtes 18.w.W und vollständiger Rest 18.w.R/C und 18.x.W/R/C](bundle-722-recovery-rest.md)
 
 - [Bundle 723 — erhaltene Transportschemas und Snapshot-Lock-Regressionen](bundle-723-transport-schema-lock-oracles.md)
+
+- [Bundle 724 — Work-Prüfimport und veraltete Publikations-Lock-Annahme](bundle-724-work-import-publication-oracle.md)

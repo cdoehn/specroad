@@ -8,7 +8,7 @@ from ..qualification.errors import QualificationError, guarded, persisted_contra
 from ..qualification.owned import owned_checks
 from ..security import ProjectBoundary
 from ..work.control import inspect_work_status
-from ..work.open_existing import open_restore_work
+from ..work.open_existing import open_existing_work
 from ..work.build import _build
 from ..work._public_errors import work_errors
 from .results import (CommandResult, ResultStatus, FailureKind, OperationFailure,
@@ -18,8 +18,6 @@ from .results import (CommandResult, ResultStatus, FailureKind, OperationFailure
 def absolute(value):
     require(type(value) is str and value and '\0' not in value, 'work_path_required', exit_code=2)
     return Path(os.path.abspath(value))
-
-
 
 
 def continuation(command, store, expected, *, migration_gates=()):
@@ -55,10 +53,6 @@ def continuation(command, store, expected, *, migration_gates=()):
             return CheckpointValidation(actual, len(pointer[0]), sha256(pointer[0]).hexdigest())
     return CommandResult(command, status=ResultStatus.CONTINUATION_REQUIRED,
                          complete=False, continuation=confirm_continuation(claim, verify))
-
-
-
-
 
 
 def _payload(operation, value):
@@ -107,7 +101,7 @@ def _work(invocation):
         store = restore_work_package_file(path, expected_sha256=sha256(raw).hexdigest(),
             registry=invocation.registry, protected_roots=(origin,), directory=absolute(options['--output']))
         return _payload(operation, inspect_work_status(store))
-    store = open_restore_work(absolute(invocation.arguments['work_dir']), registry=invocation.registry)
+    store = open_existing_work(absolute(invocation.arguments['work_dir']), registry=invocation.registry)
     if operation == 'status':
         return _payload(operation, inspect_work_status(store))
     if operation == 'prompt':

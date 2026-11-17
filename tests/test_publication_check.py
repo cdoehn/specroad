@@ -9,7 +9,9 @@ import pytest
 from specroad.changes import (prepare_publication_check, recheck_publication,
     publish_after_recheck, PublicationCheckError, PublicationAuthority,
     PublicationPreflight, PublicationRecheck, project_lock, apply_change_plan)
+from specroad.changes.lock_values import ProjectLockError
 from specroad.model.canonical import canonical_json_sha256
+from support.read_only import inventory, no_write_attempts
 from support.publication import prepared, options, invoke, files, ALLOW, TRANSACTION, NativeGuardStorage
 from support.targets import POLICY, plan, resign, gate
 from support.folds import goal, edit, create
@@ -124,9 +126,18 @@ def test_other_lock_request_never_authorizes_publication(tmp_path,changed):
     if changed.get('command')=='artifact update':
         from specroad.changes._lock_kinds import COMMANDS,LockKind
         opts['command']=next(x for x in COMMANDS[LockKind.WRITER] if x!='change apply')
+    seen=[]
+    if opts['kind']=='recovery':
+        before=inventory(tmp_path)
+        with no_write_attempts(),pytest.raises(ProjectLockError) as e:
+            with project_lock(tmp_path,**opts) as h:
+                invoke(c,h,lambda r:seen.append(r))
+        assert e.value.reason=='product_recovery_removed' and e.value.exit_code==2
+        assert seen==[] and inventory(tmp_path)==before
+        return
     with project_lock(tmp_path,**opts) as h:
-        with pytest.raises(PublicationCheckError) as e:invoke(c,h,lambda r:True)
-    assert e.value.exit_code==6
+        with pytest.raises(PublicationCheckError) as e:invoke(c,h,lambda r:seen.append(r))
+    assert e.value.exit_code==6 and seen==[]
 
 
 def test_recovery_entry_appears_after_lock_stops_writer(tmp_path):

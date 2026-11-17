@@ -4,7 +4,6 @@ The local root binding anchors the read under the existing native mutex. All
 continuations still enter an installed adapter with current host authority and
 native project gates. Neither root.json nor a checkpoint authenticates an actor.
 """
-from pathlib import Path
 
 from ..model.canonical import canonical_json_bytes
 from ..qualification.inventory import boundary, read_source
@@ -12,7 +11,7 @@ from ..qualification.errors import require, guarded, persisted_contract
 from ..storage.json_syntax import parse_json_object
 from ._data_contract import _object, _hash
 from ._root_lock import _HeldWorkRoot
-from .checkpoints import CheckpointStore, _reference
+from .checkpoints import CheckpointStore
 from .packages import _capture, _decode
 from .build import _build
 from .root import WorkDirectory, _path
@@ -32,7 +31,7 @@ def protected_paths(initial):
 @guarded
 @persisted_contract
 @work_errors
-def open_restore_work(path, *, registry):
+def open_existing_work(path, *, registry):
     """Bind the complete retained chain; no owner takeover or file creation."""
     path = _path(path)
     observed = boundary(path)

@@ -1,7 +1,7 @@
 """Inert, fully bound final result data; never execution or write authority."""
 
 from ..model.canonical import canonical_json_bytes
-from ._completion_outcome import _outcome, check_completed_controls
+from ._completion_outcome import _outcome
 from ._data_contract import _copy, _count, _hash, _object, _parse, _require
 
 

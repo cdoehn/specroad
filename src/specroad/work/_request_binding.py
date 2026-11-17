@@ -8,8 +8,8 @@ from ._data_contract import WorkManifestError, _require, _text, _copy, _object, 
 
 def _command(registry, request, *, normative=False, transport=False, planning=False):
     _require(type(registry) is CommandRegistry and type(request) is CommandRequest)
-    # Read-only requests still accept no guessed option projection. Restore
-    # uses its own closed parser and explicit transport projection separately.
+    # Read-only requests accept no guessed option projection. Transport
+    # uses its own closed parser and explicit option projection.
     _require(all(type(v) is bool for v in (normative, transport, planning))
              and sum((normative, transport, planning)) <= 1
              and (normative or transport or not request.options))

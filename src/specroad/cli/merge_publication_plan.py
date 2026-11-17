@@ -32,9 +32,9 @@ def publication_plan_command(invocation):
         if '--work-dir' in options:
             if {'--resolutions', '--expected-plan-sha256'}.intersection(options):
                 raise OperationFailure(FailureKind.USAGE, 'merge_publication_input_modes_conflict')
-            from ..work.open_existing import open_restore_work
+            from ..work.open_existing import open_existing_work
             from ..work.merge import checked, merge_work_result
-            store = open_restore_work(options['--work-dir'], registry=invocation.registry)
+            store = open_existing_work(options['--work-dir'], registry=invocation.registry)
             observed = store.read()
             inputs, _, _, _, _, _ = checked(observed)
             document, _ = merge_work_result(store, services=invocation.restore_services)

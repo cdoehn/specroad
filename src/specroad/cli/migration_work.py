@@ -59,10 +59,10 @@ def start_verification(invocation, root, options, backup, plan, report, observat
 
 @work_errors
 def completed_plan(invocation, options):
-    from ..work.open_existing import open_restore_work
+    from ..work.open_existing import open_existing_work
     from .migration_inputs import _required
     _required(options,'--expected-plan-sha256','--expected-inputs-sha256')
-    store = open_restore_work(options['--work-dir'], registry=invocation.registry)
+    store = open_existing_work(options['--work-dir'], registry=invocation.registry)
     result = migration_work_result(store, gates=invocation.migration_gates)
     require(result['command_id'] == 'migrate.plan', 'migration_work_planning_required', exit_code=6)
     report = result['planning']; plan = ChangePlan(jcs(report['change_plan']))
