@@ -44,7 +44,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
+  "specification_sha256": "ec1464357d139becd7b5a15e5764e2320e6a588260c6f14b5490253e2110d1fa",
   "steps": [
     "Commit a native transaction and store its linked receipts.",
     "Repeat the normative request and compare the stored result, identities and unchanged files."

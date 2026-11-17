@@ -41,7 +41,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "c9aef455af7700f891ce3b37e47e18a32e3bbf0ca96b3f32e3b42292b69d9f72",
+  "specification_sha256": "ec1464357d139becd7b5a15e5764e2320e6a588260c6f14b5490253e2110d1fa",
   "steps": [
     "Execute native init and bundle extraction on their allowed missing/existing targets; compare complete actual configuration, document, resources, bundle payload and retained foreign bytes.",
     "Before durable protection, refuse invalid input/collision without target changes. After protection, preserve the actual partial bytes and ownership markers; never roll back, finish or reuse the interrupted target.",

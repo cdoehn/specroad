@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 230 · **Stand:** 17. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.91
+**Planrevision:** 231 · **Stand:** 17. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.92
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 306 Schritte und 918 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; die früher genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wurde nach der damaligen Spezifikation innerhalb von 15.l.R vorgezogen und bleibt als normaler Prüfkern erhalten. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -153,17 +153,19 @@ Aktuelle Korrektur nach bestätigtem 18.w.R: [Bundle 724 — Work-Prüfimport un
 
 Aktuelle Korrektur nach bestätigtem 18.w.C: [Bundle 725 — Git-Neubeginn-Testdaten](history/bundle-725-git-restart-qualification.md). Der vollständige Rest 18.x.W/R/C erhält getrennte Gates; das erfolgreiche C wird nicht wiederholt.
 
+Detailentscheidung: [AUTHORING-PROPOSAL-726](decisions/authoring-proposal-726.md).
+
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 230
+plan_revision: 231
 implementation_plan_commits_total: 918
 implementation_plan_commits_completed: 780
 last_completed_plan_commit: 18.x.C
 next_plan_commit: 18.l.W
 priority_off_plan: null
 next_off_plan_commit: null
-last_completed_numbered_bundle: 725
+last_completed_numbered_bundle: 726
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null

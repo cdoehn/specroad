@@ -1,19 +1,19 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.91
+## Version 0.2.92
 
 | Feld | Wert |
 |---|---|
 | Dokument-ID | `SR-SPEC-0001` |
-| Dokumentversion | `0.2.91` |
+| Dokumentversion | `0.2.92` |
 | Zielrelease | `SpecRoad Single-Repository Workbench 0.2.0` |
 | Status | **Fachlich konsolidierte Arbeitsgrundlage; technische Reviewentscheidung gesondert dokumentiert, formale Baseline-Freigabe und Produktabnahme nicht durch dieses Dokument erklärt** |
-| Stand | 16. November 2026 |
+| Stand | 17. November 2026 |
 | Sprache | Deutsch; technische Feldnamen, Enum-Werte und CLI-Kommandos Englisch |
-| Fachliche Quelle | **Diese Repositoryfassung v0.2.91 ist die aktive fachliche Arbeitsgrundlage; eine entsprechende PDF wird hiermit nicht veröffentlicht.** |
+| Fachliche Quelle | **Diese Repositoryfassung v0.2.92 ist die aktive fachliche Arbeitsgrundlage; eine entsprechende PDF wird hiermit nicht veröffentlicht.** |
 | Bearbeitbare Satzquelle | Diese Datei; eine spätere PDF muss denselben versionierten Inhalt wiedergeben. |
-| Vorgängerversion | Repository-Spezifikation v0.2.90; historische Nachweise bleiben unverändert. |
-| Prüf- und Entscheidungsgrundlage | BOOTSTRAP-SNAPSHOT-715: ausdrücklich bestätigte SR-REQ-0003-Korrektur und delegierte Feldbindungen für 18.v; keine Produktfreigabe. |
-| Änderungsart | Fehlergarantie vor/nach Schutzbeginn, geschlossener Bootstrapmarker und gemeinsame Migration-/Merge-Abschlussbelege. |
+| Vorgängerversion | Repository-Spezifikation v0.2.91; historische Nachweise bleiben unverändert. |
+| Prüf- und Entscheidungsgrundlage | AUTHORING-PROPOSAL-726 nach SPECROAD-DECISION-1: geschlossene Entwurfsveröffentlichung und deklarierte Agentenvoraussetzungen; keine Produktfreigabe. |
+| Änderungsart | Additiver nativer Proposal-Entwurfsvertrag und präzise maschinenlesbare Befehlsvoraussetzungen; bestehende Sicherheits- und Reviewgrenzen bleiben erhalten. |
 
 > **Verbindlicher Quellenwechsel:** Die ausdrückliche Nutzerentscheidung REFERENCE-SOURCE-551 wird als v0.2.50 umgesetzt. Der neue Quellvertrag ist Entwurfsarbeit vom 3. November 2026, kein Nachweis eines früher existierenden Formats. Bestehende 0.2-Verträge, Transport-, Sicherheits- und Reviewgrenzen bleiben erhalten.
 
@@ -5249,6 +5249,55 @@ Die KI darf Proposals erzeugen und authoren, Checks ausführen, das Review start
 **Normativer Erfolgsvektor:** Create ergibt `(revision=1, content_revision=1, draft)`. Ein Change add ergibt `(2,2,draft)`. Validate und Check verändern diese Werte nicht. Review start ergibt `(3,2,in_review)`. Menschliches approved-Review ergibt `(4,2,approved)`. Apply ergibt `(5,2,applied)`, denselben freigegebenen Inhaltshash und genau ein fachliches Erfolgsreceipt. Eine Inhaltsänderung statt Apply ergibt `(5,3,draft)` und keine wirksame Freigabe. Ein Retry mit derselben Request-ID erzeugt keine weitere Revision.
 
 ---
+
+
+#### 11.10.1 Authoring-Umleitung und Entwurfsveröffentlichung
+
+Ein bereits vollständig vorbereiteter normaler Authoring-Plan wird bei der
+Proposal-Umleitung erneut durch denselben fachlichen Zielprüfer geprüft.
+Operationen, Reihenfolge, Vorbedingungen, Result-Artefakte, Defaults, Actor,
+Zeitpunkt und Request-ID bleiben unverändert. Ausschließlich Basis und
+Ergebnisroot werden aus den tatsächlichen Quell-/Zielbytes für den vollständigen
+unkonfigurierten Spezifikationsumfang nach 10.8.1 berechnet; der Plan erhält
+seinen entsprechenden neuen Selbsthash. Die Umleitung verleiht weder ein
+Review noch eine Berechtigung zur direkten Ausführung dieses Fachplans.
+
+Die äußere Entwurfsveröffentlichung verwendet eine einzelne geschlossene
+Change-Plan-Operation `proposal_create` mit genau `op` und `record`.
+`record` ist ein vollständiges neues Proposal mit Revision und Contentrevision 1,
+Status/Maturity `draft`, leeren Reviews und leerer Kontrollhistorie. Seine
+Erstellungs-/Änderungsmetadaten stimmen mit dem äußeren Plan überein. Das
+Ergebnis ist genau dieser neue Record, niemals die eingebetteten Fachänderungen.
+Die Operation ist ausschließlich im nativen `proposal create`-Spezialisten
+zulässig und darf nicht selbst Bestandteil eines Proposal-Fachplans sein.
+Generisches `create` bleibt für Proposal-Records gesperrt. Die vollständige
+Projektqualifikation, aktuelle Hostautorität, native Sperre, Transaktion,
+Request-Receipt und Wiederholungsprüfung bleiben erforderlich. Die bestehende
+Planversion 1.2.0 erhält diesen additiven kompilierten Operationstyp; ältere
+Leser müssen einen unbekannten Typ weiterhin ablehnen.
+
+Die gemeinsame API für fertig vorbereitete Authoring-Pläne akzeptiert explizite
+Proposal-Metadaten (bereits zugeteilte Identität, Titel, Begründung,
+Änderungserklärungen und gegebenenfalls Modellprovenienz). Sie erfindet keine
+fachlichen Defaults, Quellen, Modellversionen oder menschlichen Entscheidungen.
+Diese vorbereitete Identität ersetzt keine Vollständigkeits-/Kollisionsprüfung.
+Die Raw-Input-Adapter behalten ihre bestehenden nativen Identitätsverträge.
+Kontroll- und Baselineänderungen sowie unzulässige Scopeabhängigkeiten bleiben
+auch bei der Umleitung verboten. Die registrierte Agentenschnittstelle meldet
+nur tatsächlich ausführbare Befehle; Python-Authoring-Unterstützung darf nicht
+als bereits registrierter CLI-Befehl ausgegeben werden.
+
+
+Die Agentenbeschreibung veröffentlicht die bereits registrierten nativen
+Voraussetzungen zusätzlich als `authorization`: `human_decision_required`,
+`current_human_reviews_required` und `host_authority_required` sind getrennte
+Boolesche Aussagen über den jeweiligen Adapter. `declaration_is_permission`
+und `autonomous_approval` sind stets `false`; `source` lautet
+`trusted_host_and_native_checks`. Dies ersetzt weder Actorprüfung noch aktuelle
+Hostautorität. Befehlsvarianten liefern ihren eigenen vollständigen
+`request_schema` und denselben Autorisierungsvertrag. Die verfügbare
+Proposal-Recordversion wird nur zusammen mit dem tatsächlich registrierten
+nativen Proposal-Leser gemeldet; eine Schemafundstelle allein genügt nicht.
 
 ### 11.11 Runtime- und Ressourcenverträge
 
