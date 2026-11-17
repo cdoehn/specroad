@@ -38,6 +38,10 @@ def review_project(root, operand, *, expected_revision, decision, actor, planned
     require(type(expected_revision) is int and expected_revision > 0,
             'proposal_expected_revision_required', exit_code=2)
     require(type(dry_run) is bool, 'proposal_dry_run_boolean_required', exit_code=2)
+    from ..changes.authoring import normalize_authoring_actor
+    normalized_actor = normalize_authoring_actor(actor)
+    require(normalized_actor.actor_type == 'human',
+            'human_review_required', exit_code=7)
     require(dry_run or type(authority) is PublicationAuthority,
             'proposal_host_publication_authority_required', exit_code=2)
     require(decision in ('approved', 'rejected', 'withdrawn'), 'proposal_review_decision_invalid', exit_code=2)
@@ -49,10 +53,6 @@ def review_project(root, operand, *, expected_revision, decision, actor, planned
     require(type(change_plan_id) is str and bool(change_plan_id.strip()),
             'proposal_change_plan_identity_required', exit_code=2)
     services = native_services(services)
-    from ..changes.authoring import normalize_authoring_actor
-    normalized_actor = normalize_authoring_actor(actor)
-    require(normalized_actor.actor_type == 'human',
-            'human_review_required', exit_code=7)
     request = prepare_authoring_request(command_id='proposal review', actor=actor,
         operations=[], request_id=request_id, dry_run=dry_run)
     actor, request_id = request.data['actor'], request.data['request_id']

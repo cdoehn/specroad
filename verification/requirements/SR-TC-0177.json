@@ -20,10 +20,10 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Eine KI-Aussage oder KI-Review DARF NICHT als Evidence oder menschliche Freigabe für ein berechnetes Verification Result oder eine Readiness-Bedingung gelten.",
-    "scope": "AI draft publication is not a human decision or verification evidence. Native authority and original actor are retained."
+    "scope": "Nonhuman Proposal reviews are refused, including previews and calls without a host authority. Approved agent Apply preserves real human review evidence and distinct current host authorization; parsed control evidence is never write authority."
   },
   "preconditions": [
-    "Owned complete native fixtures; declared test actors and trusted test host services. Native publications and receipts execute only in Apply; no fabricated human approvals."
+    "Owned complete native projects; declared synthetic actors and trusted test hosts. Only actual native review writes supply test history; execution evidence comes from Apply gates."
   ],
   "primary_verification_id": "SR-VER-0012",
   "required_environment": {
@@ -39,8 +39,8 @@
   },
   "specification_sha256": "ec1464357d139becd7b5a15e5764e2320e6a588260c6f14b5490253e2110d1fa",
   "steps": [
-    "Build complete native inputs and actual bound requests.",
-    "Observe exact result bytes, refusal codes, original file effects and native receipt evidence."
+    "Invoke actual native requests and observe policy refusals, current review requirements, exact original file effects and durable receipts.",
+    "Compare owned external resources and Git bytes/modes where present; observe forbidden execution attempts."
   ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0177",
@@ -68,6 +68,31 @@
     "tests/test_authoring_proposals_right.py::test_native_refusals_cannot_be_bypassed_by_proposal_metadata[authority]",
     "tests/test_authoring_proposals_right.py::test_native_refusals_cannot_be_bypassed_by_proposal_metadata[collision]",
     "tests/test_authoring_proposals_right.py::test_native_refusals_cannot_be_bypassed_by_proposal_metadata[metadata]",
-    "tests/test_authoring_proposals_right.py::test_native_refusals_cannot_be_bypassed_by_proposal_metadata[scope]"
+    "tests/test_authoring_proposals_right.py::test_native_refusals_cannot_be_bypassed_by_proposal_metadata[scope]",
+    "tests/test_proposal_policy.py::test_approved_agent_apply_without_git_uses_native_authority_and_receipts[ai]",
+    "tests/test_proposal_policy.py::test_approved_agent_apply_without_git_uses_native_authority_and_receipts[ci]",
+    "tests/test_proposal_policy.py::test_human_review_and_agent_authoring_previews_remain_unprivileged",
+    "tests/test_proposal_policy.py::test_native_nonhuman_review_fails_before_project_or_host_access[False-ai]",
+    "tests/test_proposal_policy.py::test_native_nonhuman_review_fails_before_project_or_host_access[False-ci]",
+    "tests/test_proposal_policy.py::test_native_nonhuman_review_fails_before_project_or_host_access[False-tool]",
+    "tests/test_proposal_policy.py::test_native_nonhuman_review_fails_before_project_or_host_access[True-ai]",
+    "tests/test_proposal_policy.py::test_native_nonhuman_review_fails_before_project_or_host_access[True-ci]",
+    "tests/test_proposal_policy.py::test_native_nonhuman_review_fails_before_project_or_host_access[True-tool]",
+    "tests/test_proposal_policy.py::test_proposal_review_route_never_accepts_nonhuman_decisions[None-False-ai]",
+    "tests/test_proposal_policy.py::test_proposal_review_route_never_accepts_nonhuman_decisions[None-False-ci]",
+    "tests/test_proposal_policy.py::test_proposal_review_route_never_accepts_nonhuman_decisions[None-False-tool]",
+    "tests/test_proposal_policy.py::test_proposal_review_route_never_accepts_nonhuman_decisions[None-True-ai]",
+    "tests/test_proposal_policy.py::test_proposal_review_route_never_accepts_nonhuman_decisions[None-True-ci]",
+    "tests/test_proposal_policy.py::test_proposal_review_route_never_accepts_nonhuman_decisions[None-True-tool]",
+    "tests/test_proposal_policy.py::test_proposal_review_route_never_accepts_nonhuman_decisions[synthetic-review-request-False-ai]",
+    "tests/test_proposal_policy.py::test_proposal_review_route_never_accepts_nonhuman_decisions[synthetic-review-request-False-ci]",
+    "tests/test_proposal_policy.py::test_proposal_review_route_never_accepts_nonhuman_decisions[synthetic-review-request-False-tool]",
+    "tests/test_proposal_policy.py::test_proposal_review_route_never_accepts_nonhuman_decisions[synthetic-review-request-True-ai]",
+    "tests/test_proposal_policy.py::test_proposal_review_route_never_accepts_nonhuman_decisions[synthetic-review-request-True-ci]",
+    "tests/test_proposal_policy.py::test_proposal_review_route_never_accepts_nonhuman_decisions[synthetic-review-request-True-tool]",
+    "tests/test_proposal_policy.py::test_public_nonhuman_review_without_host_authority_is_a_policy_refusal[False-ai]",
+    "tests/test_proposal_policy.py::test_public_nonhuman_review_without_host_authority_is_a_policy_refusal[False-ci]",
+    "tests/test_proposal_policy.py::test_public_nonhuman_review_without_host_authority_is_a_policy_refusal[True-ai]",
+    "tests/test_proposal_policy.py::test_public_nonhuman_review_without_host_authority_is_a_policy_refusal[True-ci]"
   ]
 }

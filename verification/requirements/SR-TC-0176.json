@@ -1,21 +1,26 @@
 {
   "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "fixture_ids": [],
-  "implementation_status": "open",
+  "expected_exit_codes": [
+    0
+  ],
+  "fixture_ids": [
+    "SR-FIX-OWNED-TEMP-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [],
-  "method": "pending",
+  "method": "automated_behavior",
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence.",
-    "RECOVERY-REMOVAL-006: existing test references cover only their still-valid implemented scope. Changed interruption/receipt/preflight/work oracles require fresh implementation and evidence in 18.s–18.x; old repair/crash recovery results are not acceptance of the new contract."
+    "The R stage adds complete Git/external effect observations for the same Proposal workflow."
   ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "`specroad proposal apply` DARF NICHT einen Git-Commit, Branch, Tag oder Push erzeugen.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Native Proposal publication and approved agent Apply remain independent of Git; R additionally preserves the complete real Git repository and external resources across the Proposal lifecycle."
   },
-  "preconditions": [],
+  "preconditions": [
+    "Owned complete native projects; declared synthetic actors and trusted test hosts. Only actual native review writes supply test history; execution evidence comes from Apply gates."
+  ],
   "primary_verification_id": "SR-VER-0012",
   "required_environment": {
     "declared_minimum_python": "3.10",
@@ -29,8 +34,14 @@
     "owned_temporary_files": true
   },
   "specification_sha256": "ec1464357d139becd7b5a15e5764e2320e6a588260c6f14b5490253e2110d1fa",
-  "steps": [],
+  "steps": [
+    "Invoke actual native requests and observe policy refusals, current review requirements, exact original file effects and durable receipts.",
+    "Compare owned external resources and Git bytes/modes where present; observe forbidden execution attempts."
+  ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0176",
-  "test_ids": []
+  "test_ids": [
+    "tests/test_proposal_policy.py::test_approved_agent_apply_without_git_uses_native_authority_and_receipts[ai]",
+    "tests/test_proposal_policy.py::test_approved_agent_apply_without_git_uses_native_authority_and_receipts[ci]"
+  ]
 }

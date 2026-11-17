@@ -13,6 +13,9 @@ _COMMANDS = _DIRECT | _PROPOSAL | _HUMAN_REVIEW | {'proposal apply'}
 
 
 def select_route(command_id, actor, identity, dry_run, as_proposal):
+    # A Proposal preview cannot turn a nonhuman statement into a human review.
+    if command_id == 'proposal review' and actor.actor_type != 'human':
+        raise AuthoringError('human_review_required', pointer='/actor', exit_code=7)
     if not dry_run and actor.actor_type in ('ai', 'ci') and identity is None:
         raise AuthoringError('normative_request_id_required', pointer='/request_id')
     if not dry_run and command_id in _HUMAN_REVIEW and actor.actor_type != 'human':
