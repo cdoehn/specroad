@@ -58,6 +58,11 @@ def prepare_authoring_request(*, command_id, actor, operations, request_id=None,
             from ..proposals._decision_evidence import operation_proof
             review_mode(owned)
             operation_proof(owned[0])
+    if owned and command_id == 'proposal apply':
+        from ..proposals._apply_control import apply_mode, operation_proof
+        from ..proposals.values import require
+        require(apply_mode(owned), 'proposal_apply_evidence_required')
+        operation_proof(owned[-1])
     if any(op['op'] == 'merge_publish' for op in owned):
         raise AuthoringError('specialist_merge_workflow_required', exit_code=7)
     if any(op['op'] == 'schema_migrate' for op in owned):

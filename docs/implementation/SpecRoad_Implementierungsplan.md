@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 238 · **Stand:** 17. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.92
+**Planrevision:** 239 · **Stand:** 17. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.92
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 306 Schritte und 918 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; die früher genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wurde nach der damaligen Spezifikation innerhalb von 15.l.R vorgezogen und bleibt als normaler Prüfkern erhalten. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -159,17 +159,21 @@ Aktuelle Zielstände und bestätigte Quelle: [Bundle 726](history/bundle-726-aut
 
 Stagegebundene Policy- und Gitabnahmen: [Bundle 729](history/bundle-729-proposal-policy.md).
 
+Korrektur nach bestätigtem W: [Bundle 730](history/bundle-730-historical-proposal-policy.md). R/C bleiben bis zum jeweiligen erfolgreichen Gate offen; die folgenden Werte sind Stageziele.
+
+Vollständige AI-Testeingabe im offenen R/C-Rest: [Korrektur 731](history/bundle-731-proposal-confidence.md). Bundle 730 erzeugte keinen weiteren Commit; die Stageziele bleiben an ihre eigenen Gates gebunden.
+
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 238
+plan_revision: 239
 implementation_plan_commits_total: 918
-implementation_plan_commits_completed: 787
-last_completed_plan_commit: 18.n.W
-next_plan_commit: 18.n.R
+implementation_plan_commits_completed: 788
+last_completed_plan_commit: 18.n.R
+next_plan_commit: 18.n.C
 priority_off_plan: null
 next_off_plan_commit: null
-last_completed_numbered_bundle: 729
+last_completed_numbered_bundle: 731
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null

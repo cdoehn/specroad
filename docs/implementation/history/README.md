@@ -494,3 +494,7 @@
 - [Bundle 728 — Agentenaufträge korrekt binden](bundle-728-agent-request-binding.md)
 
 - [Bundle 729 — Proposalrechte und Gitgrenze](bundle-729-proposal-policy.md)
+
+- [Bundle 730 — historische Proposalbelege und aktuelle Apply-Policy](bundle-730-historical-proposal-policy.md)
+
+- [Bundle 731 — vollständige AI-Entwurfseingabe](bundle-731-proposal-confidence.md)

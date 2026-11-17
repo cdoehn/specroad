@@ -11,6 +11,7 @@ from specroad.changes.receipt_values import completion_marker_path, transaction_
 from specroad.changes.target_model import _default_scope
 from specroad.changes._target_materialization import materialize_target
 from specroad.model.audit_values import UtcTimestamp
+from specroad.model.errors import ModelError
 from specroad.model.canonical import canonical_json_bytes, canonical_json_sha256
 from specroad.proposals import ProposalContext, ProposalControlObservation, ProposalPublication, assess_proposal
 from specroad.proposals.history import native_check
@@ -79,9 +80,15 @@ def completed(tmp_path, *, changed=False, language_registry=None):
                      'model_root_sha256': before.manifest(before.artifacts, _default_scope()).sha256}
     outer['expected_result']['model_root_sha256'] = after.manifest(after.artifacts, _default_scope()).sha256
     plan = prepare_change_plan(outer)
-    author = prepare_authoring_request(command_id='proposal apply', actor=outer['actor'],
-                                      operations=outer['operations'], request_id=outer['request_id'])
-    authoring = {**author.data, 'plan_sha256': plan.sha256,
+    # Explicit original v1 data, not a request to publish it under today's policy.
+    author = {'format_version': 'authoring-policy-v1', 'namespace': 'normative_write',
+        'command_id': 'proposal apply', 'actor': outer['actor'], 'request_id': outer['request_id'],
+        'operations': deepcopy(outer['operations']),
+        'operation_sequence_sha256': canonical_json_sha256(outer['operations']),
+        'dry_run': False, 'as_proposal': False, 'route': 'approved_proposal_apply',
+        'request_id_required': False, 'actor_authenticated': False, 'write_authorized': False,
+        'specialist_required': True, 'receipt_checked': False, 'idempotency_guaranteed': False}
+    authoring = {**author, 'plan_sha256': plan.sha256,
                  'scope_descriptor': outer['base']['scope_descriptor'],
                  'base_model_root_sha256': outer['base']['model_root_sha256']}
     txn = 'synthetic-proposal-completion'
@@ -147,6 +154,16 @@ def test_original_applied_completion_is_checked_but_never_reapplied(tmp_path, ch
     with no_write_attempts():
         report = assess_proposal(inputs.originals[-1], inputs, model)
         journals = completed_receipts(files, model.configuration.project_id)
+        historical = read_proposal_receipts(files, model.configuration.project_id)
+        binding = historical.data['authoring_binding']
+        with pytest.raises(TypeError):
+            bool(historical)
+        with pytest.raises(ModelError) as refused:
+            prepare_authoring_request(command_id='proposal apply', actor=binding['actor'],
+                operations=binding['operations'], request_id=binding['request_id'])
+        assert refused.value.reason == 'proposal_apply_evidence_required'
+        assert refused.value.exit_code == 3
+        assert {d.path: d.content for d in inputs.publications[0].receipts} == files
     assert report['historical_valid'] and report['observed_status'] == 'applied'
     assert not report['current_approval'] and not report['write_authorized'] and not report['apply_performed']
     assert len(journals) == 1
@@ -159,7 +176,8 @@ def test_original_applied_completion_is_checked_but_never_reapplied(tmp_path, ch
         CommittedJournal(marker)
 
 
-@pytest.mark.parametrize('fault', ['missing_receipt', 'target', 'plan', 'request', 'original'])
+@pytest.mark.parametrize('fault', ['missing_receipt', 'target', 'plan', 'request', 'original',
+    'authoring_grant', 'authoring_route', 'authoring_controls', 'authoring_proof'])
 def test_completed_label_and_rehashed_foreign_receipts_do_not_prove_apply(tmp_path, fault):
     inputs, model = completed(tmp_path, language_registry=small_restore_registry())
     proof = inputs.publications[0]
@@ -174,11 +192,26 @@ def test_completed_label_and_rehashed_foreign_receipts_do_not_prove_apply(tmp_pa
         for source in proof.receipts:
             value = parse_json_object(source.content)
             if source.path.endswith('/transaction.json'):
-                value['journal']['plan_sha256' if fault == 'plan' else 'request_id'] = '0' * 64
-                value['journal_sha256'] = canonical_json_sha256(value['journal'])
+                journal = value['journal']
+                if fault.startswith('authoring_'):
+                    binding = journal['authoring_binding']
+                    if fault == 'authoring_grant': binding['write_authorized'] = True
+                    elif fault == 'authoring_route': binding['route'] = 'direct'
+                    elif fault == 'authoring_controls': binding['operations'].append(deepcopy(binding['operations'][-1]))
+                    else:
+                        binding['operations'][-1]['apply_check'] = {
+                            'format_version': 'proposal-apply-evidence-v1', 'assessment_bytes_base64': '!invalid!'}
+                    binding['operation_sequence_sha256'] = canonical_json_sha256(binding['operations'])
+                    journal['authoring_sha256'] = canonical_json_sha256(binding)
+                    value['operations'] = deepcopy(binding['operations'])
+                    value['operations_sha256'] = binding['operation_sequence_sha256']
+                else:
+                    journal['plan_sha256' if fault == 'plan' else 'request_id'] = '0' * 64
+                value['journal_sha256'] = canonical_json_sha256(journal)
             changed.append(ModelDocument(source.path, canonical_json_bytes(value)))
         proof = replace(proof, receipts=tuple(changed))
     inputs = replace(inputs, publications=(proof,))
-    from specroad.model.errors import ModelError
-    with no_write_attempts(), pytest.raises(ModelError):
+    with no_write_attempts(), pytest.raises(ModelError) as refused:
         assess_proposal(inputs.contexts[-1].original, inputs, model)
+    if fault.startswith('authoring_'):
+        assert refused.value.reason == 'invalid_journal_authoring_binding'

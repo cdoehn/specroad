@@ -20,10 +20,10 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "SpecRoad MUSS nicht aus der vertrauenswürdigen eingebauten Ausführungsliste stammende Plugin- oder Analyzer-Ausführungsdeklarationen vor dem Laden oder Starten zurückweisen; reine Resultatdateien folgen dem Importvertrag aus Anhang T.",
-    "scope": "Current read and execution boundary only; no full-model, writer or future-analyzer safety approval."
+    "scope": "Current native Proposal input selection rejects project execution declarations before handlers; future explicitly authorized analyzer adapters remain a separate scope."
   },
   "preconditions": [
-    "Bound local directory; untrusted data remains inert."
+    "Owned complete native projects; declared synthetic actors and trusted test hosts. Only actual native review writes supply test history; execution evidence comes from Apply gates."
   ],
   "primary_verification_id": "SR-VER-0014",
   "required_environment": {
@@ -39,12 +39,19 @@
   },
   "specification_sha256": "ec1464357d139becd7b5a15e5764e2320e6a588260c6f14b5490253e2110d1fa",
   "steps": [
-    "Exercise the single-root read boundary and reject prohibited execution before any handler."
+    "Invoke actual native requests and observe policy refusals, current review requirements, exact original file effects and durable receipts.",
+    "Compare owned external resources and Git bytes/modes where present; observe forbidden execution attempts."
   ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0201",
   "test_ids": [
+    "test_security.SafetyWorkTests.test_project_execution_declarations_fail_before_handler",
     "test_security.SafetyWorkTests.test_unimplemented_executor_is_never_loaded",
-    "test_security.SafetyWorkTests.test_project_execution_declarations_fail_before_handler"
+    "tests/test_proposal_policy_right.py::test_project_execution_declarations_fail_before_any_proposal_inspection[entrypoint]",
+    "tests/test_proposal_policy_right.py::test_project_execution_declarations_fail_before_any_proposal_inspection[execution]",
+    "tests/test_proposal_policy_right.py::test_project_execution_declarations_fail_before_any_proposal_inspection[executor]",
+    "tests/test_proposal_policy_right.py::test_project_execution_declarations_fail_before_any_proposal_inspection[hooks]",
+    "tests/test_proposal_policy_right.py::test_project_execution_declarations_fail_before_any_proposal_inspection[plugin]",
+    "tests/test_proposal_policy_right.py::test_project_execution_declarations_fail_before_any_proposal_inspection[plugins]"
   ]
 }

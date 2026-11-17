@@ -7,12 +7,10 @@
   "fixture_ids": [
     "SR-FIX-OWNED-TEMP-v1"
   ],
-  "implementation_status": "partial",
+  "implementation_status": "implemented",
   "json_pointers": [],
   "method": "automated_behavior",
-  "open_items": [
-    "The R stage adds complete Git/external effect observations for the same Proposal workflow."
-  ],
+  "open_items": [],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "`specroad proposal apply` DARF NICHT einen Git-Commit, Branch, Tag oder Push erzeugen.",
@@ -42,6 +40,8 @@
   "test_case_id": "SR-TC-0176",
   "test_ids": [
     "tests/test_proposal_policy.py::test_approved_agent_apply_without_git_uses_native_authority_and_receipts[ai]",
-    "tests/test_proposal_policy.py::test_approved_agent_apply_without_git_uses_native_authority_and_receipts[ci]"
+    "tests/test_proposal_policy.py::test_approved_agent_apply_without_git_uses_native_authority_and_receipts[ci]",
+    "tests/test_proposal_policy_right.py::test_agent_draft_publication_leaves_git_history_and_original_targets_unchanged",
+    "tests/test_proposal_policy_right.py::test_full_proposal_lifecycle_preserves_git_and_external_files"
   ]
 }

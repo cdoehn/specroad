@@ -20,10 +20,11 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Eine KI-Aussage oder KI-Review DARF NICHT als Evidence oder menschliche Freigabe für ein berechnetes Verification Result oder eine Readiness-Bedingung gelten.",
-    "scope": "Nonhuman Proposal reviews are refused, including previews and calls without a host authority. Approved agent Apply preserves real human review evidence and distinct current host authorization; parsed control evidence is never write authority."
+    "scope": "Nonhuman Proposal reviews are refused, including previews and calls without a host authority. Approved agent Apply preserves real human review evidence and distinct current host authorization; parsed control evidence is never write authority. Historical original Proposal receipts remain read-only under their original contract and cannot substitute for current Apply proof or grant writes."
   },
   "preconditions": [
-    "Owned complete native projects; declared synthetic actors and trusted test hosts. Only actual native review writes supply test history; execution evidence comes from Apply gates."
+    "Owned complete native projects; declared synthetic actors and trusted test hosts. Only actual native review writes supply test history; execution evidence comes from Apply gates.",
+    "Explicit synthetic v1 historical audit data remains separate from actual current native write fixtures; no live authority is inferred from a historical value."
   ],
   "primary_verification_id": "SR-VER-0012",
   "required_environment": {
@@ -40,7 +41,8 @@
   "specification_sha256": "ec1464357d139becd7b5a15e5764e2320e6a588260c6f14b5490253e2110d1fa",
   "steps": [
     "Invoke actual native requests and observe policy refusals, current review requirements, exact original file effects and durable receipts.",
-    "Compare owned external resources and Git bytes/modes where present; observe forbidden execution attempts."
+    "Compare owned external resources and Git bytes/modes where present; observe forbidden execution attempts.",
+    "Validate complete historical originals, reject forged routes, write grants, duplicate controls and malformed present evidence; reject their operation list as a new Apply request."
   ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0177",
@@ -69,6 +71,17 @@
     "tests/test_authoring_proposals_right.py::test_native_refusals_cannot_be_bypassed_by_proposal_metadata[collision]",
     "tests/test_authoring_proposals_right.py::test_native_refusals_cannot_be_bypassed_by_proposal_metadata[metadata]",
     "tests/test_authoring_proposals_right.py::test_native_refusals_cannot_be_bypassed_by_proposal_metadata[scope]",
+    "tests/test_proposal_completion.py::test_completed_label_and_rehashed_foreign_receipts_do_not_prove_apply[authoring_controls]",
+    "tests/test_proposal_completion.py::test_completed_label_and_rehashed_foreign_receipts_do_not_prove_apply[authoring_grant]",
+    "tests/test_proposal_completion.py::test_completed_label_and_rehashed_foreign_receipts_do_not_prove_apply[authoring_proof]",
+    "tests/test_proposal_completion.py::test_completed_label_and_rehashed_foreign_receipts_do_not_prove_apply[authoring_route]",
+    "tests/test_proposal_completion.py::test_completed_label_and_rehashed_foreign_receipts_do_not_prove_apply[missing_receipt]",
+    "tests/test_proposal_completion.py::test_completed_label_and_rehashed_foreign_receipts_do_not_prove_apply[original]",
+    "tests/test_proposal_completion.py::test_completed_label_and_rehashed_foreign_receipts_do_not_prove_apply[plan]",
+    "tests/test_proposal_completion.py::test_completed_label_and_rehashed_foreign_receipts_do_not_prove_apply[request]",
+    "tests/test_proposal_completion.py::test_completed_label_and_rehashed_foreign_receipts_do_not_prove_apply[target]",
+    "tests/test_proposal_completion.py::test_original_applied_completion_is_checked_but_never_reapplied[False]",
+    "tests/test_proposal_completion.py::test_original_applied_completion_is_checked_but_never_reapplied[True]",
     "tests/test_proposal_policy.py::test_approved_agent_apply_without_git_uses_native_authority_and_receipts[ai]",
     "tests/test_proposal_policy.py::test_approved_agent_apply_without_git_uses_native_authority_and_receipts[ci]",
     "tests/test_proposal_policy.py::test_human_review_and_agent_authoring_previews_remain_unprivileged",
@@ -93,6 +106,15 @@
     "tests/test_proposal_policy.py::test_public_nonhuman_review_without_host_authority_is_a_policy_refusal[False-ai]",
     "tests/test_proposal_policy.py::test_public_nonhuman_review_without_host_authority_is_a_policy_refusal[False-ci]",
     "tests/test_proposal_policy.py::test_public_nonhuman_review_without_host_authority_is_a_policy_refusal[True-ai]",
-    "tests/test_proposal_policy.py::test_public_nonhuman_review_without_host_authority_is_a_policy_refusal[True-ci]"
+    "tests/test_proposal_policy.py::test_public_nonhuman_review_without_host_authority_is_a_policy_refusal[True-ci]",
+    "tests/test_proposal_policy_right.py::test_apply_route_refuses_nonempty_unproved_or_misrouted_operations[bad_base64]",
+    "tests/test_proposal_policy_right.py::test_apply_route_refuses_nonempty_unproved_or_misrouted_operations[duplicate_control]",
+    "tests/test_proposal_policy_right.py::test_apply_route_refuses_nonempty_unproved_or_misrouted_operations[missing_control]",
+    "tests/test_proposal_policy_right.py::test_apply_route_refuses_nonempty_unproved_or_misrouted_operations[missing_proof]",
+    "tests/test_proposal_policy_right.py::test_apply_route_refuses_nonempty_unproved_or_misrouted_operations[nonfinal_control]",
+    "tests/test_proposal_policy_right.py::test_apply_route_refuses_nonempty_unproved_or_misrouted_operations[review_payload]",
+    "tests/test_proposal_policy_right.py::test_apply_route_refuses_nonempty_unproved_or_misrouted_operations[unapproved_report]",
+    "tests/test_proposal_policy_right.py::test_complete_bound_apply_request_is_owned_but_never_write_authority",
+    "tests/test_proposal_policy_right.py::test_validated_request_cannot_replace_host_authority_or_current_human_review"
   ]
 }

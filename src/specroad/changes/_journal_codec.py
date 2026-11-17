@@ -54,6 +54,35 @@ def _target_path(value):
     return value
 
 
+def _authoring_data(authoring, *, historical_proposal):
+    """Reconstruct a v1 audit value; historical data never becomes a request."""
+    options = dict(command_id=authoring.get('command_id'), actor=authoring.get('actor'),
+        request_id=authoring.get('request_id'), dry_run=authoring.get('dry_run'),
+        as_proposal=authoring.get('as_proposal'))
+    operations = authoring.get('operations')
+    if not historical_proposal:
+        return prepare_authoring_request(operations=operations, **options).data
+    from .values import ChangeOperation
+    if options['command_id'] != 'proposal apply' or type(operations) is not list:
+        raise JournalError('invalid_journal_authoring_binding')
+    owned = [ChangeOperation(op).data for op in operations]
+    controls = [op for op in owned if op['op'] == 'proposal_control']
+    if any('apply_check' in op for op in controls):
+        # A present proof must satisfy its own contract, never fall back to v1.
+        return prepare_authoring_request(operations=owned, **options).data
+    if (len(controls) != 1 or controls[0] != owned[-1]
+            or any(op['op'] in ('proposal_create', 'merge_publish', 'schema_migrate') for op in owned)
+            or any(key in controls[0] for key in ('review_start', 'review_decision'))
+            or controls[0]['events'][0]['from'] != 'approved'
+            or controls[0]['events'][-1]['to'] != 'applied'):
+        raise JournalError('invalid_journal_authoring_binding')
+    # Retain actor, Request-ID and option checks. Only the original value is
+    # reconstructed; no AuthoringRequest containing legacy operations escapes.
+    precheck = prepare_authoring_request(operations=[], **options).data
+    return {**precheck, 'operations': owned,
+            'operation_sequence_sha256': canonical_json_sha256(owned)}
+
+
 def validate_building_document(value, *, historical_proposal=False):
     fields = {'format_version', 'state', 'transaction_id', 'project_id', 'root_identity',
               'change_plan_id', 'request_id', 'actor', 'planned_at', 'plan_sha256',
@@ -89,11 +118,8 @@ def validate_building_document(value, *, historical_proposal=False):
     try:
         if type(authoring) is not dict:
             raise JournalError('invalid_journal_authoring_binding')
-        rebuilt = prepare_authoring_request(command_id=authoring.get('command_id'),
-            actor=authoring.get('actor'), operations=authoring.get('operations'),
-            request_id=authoring.get('request_id'), dry_run=authoring.get('dry_run'),
-            as_proposal=authoring.get('as_proposal'))
-        expected = {**rebuilt.data, 'plan_sha256': value['plan_sha256'],
+        rebuilt = _authoring_data(authoring, historical_proposal=historical_proposal)
+        expected = {**rebuilt, 'plan_sha256': value['plan_sha256'],
                     'base_model_root_sha256': value['base_model_root_sha256'],
                     'scope_descriptor': authoring.get('scope_descriptor')}
         # The historical reader may check an original Proposal completion.
