@@ -51,7 +51,7 @@ ihre Testbytes und Pflichtauswahl sind identisch zu R. Dev führt nur statische,
 Syntax-, reine Collection- und native Paketprüfungen aus. Die korrigierten
 Verhaltenstests sind erst nach dem jeweiligen Apply-Gate abgenommen.
 
-Dieser Dateistand gehört zu DIALOG-PERFORMANCE.R. Erst nach seinem erfolgreichen Gate
+Dieser Dateistand gehört zu DIALOG-PERFORMANCE.C. Erst nach seinem erfolgreichen Gate
 und Commit ist dessen Zielstand bestätigt. Danach bleibt
-DIALOG-PERFORMANCE.C offen.
+keine Stage dieses Korrekturbundles offen.
 Der eigene Abschluss von Bundle 741 setzt beide erfolgreichen Gates voraus.

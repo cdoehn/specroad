@@ -40,3 +40,5 @@ Automatik. Ihre echte Übernahme benötigt ein frisches maßgebliches Result.
 Gebundene Übernahme: [Bundle 740](../history/bundle-740-host-once-dialog-performance.md).
 
 Nach bestätigtem W: [Korrektur 741](../history/bundle-741-dialog-error-contract.md) erhält sämtliche R/C-Abnahmen und prüft die unveränderte native Fehlerklasse exakt.
+
+Nach bestätigtem R: [Korrektur 742](../history/bundle-742-dialog-clean-whitespace.md) entfernt ausschließlich die zusätzliche Leerzeile am Dateiende; C-Abnahmen und Testbytes bleiben erhalten.

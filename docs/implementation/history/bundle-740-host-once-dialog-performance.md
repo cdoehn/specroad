@@ -39,9 +39,9 @@ bleiben in C unverändert. Ein Nachher-Speedup ist noch nicht gemessen.
 
 ## Stagegebundener Zielstand
 
-Dieser Dateistand gehört zu `DIALOG-PERFORMANCE.R`. Seine Abnahme gilt erst mit dem
+Dieser Dateistand gehört zu `DIALOG-PERFORMANCE.C`. Seine Abnahme gilt erst mit dem
 tatsächlichen erfolgreichen Gate und Commit dieser Stage. Danach offen:
-`DIALOG-PERFORMANCE.C`.
+keine weitere Stage dieses Bundles.
 Produktfortschritt bleibt 795/918, nächste Produktposition 18.q.W.
 Die Automatik wird durch dieses Bundle nicht fortgesetzt; Dienste, lokale
 Hostkonfigurationen, Zugangsdaten und Betriebsbudgets sind keine Payloads.

@@ -514,3 +514,5 @@
 - [Bundle 740 — höchstens ein Versuch je Test/Host und Dialogoptimierung](bundle-740-host-once-dialog-performance.md)
 
 - [Bundle 741 — nativer Fehlervertrag und offener Dialog-R/C-Rest](bundle-741-dialog-error-contract.md).
+
+- [Bundle 742 — Formatkorrektur und vollständiger Dialog-C-Abschluss](bundle-742-dialog-clean-whitespace.md).

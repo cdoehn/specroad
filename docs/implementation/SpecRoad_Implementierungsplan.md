@@ -191,6 +191,8 @@ Explizite OFF-PLAN-Übernahme: [Bundle 740 — Hostgrenze und Dialoglaufzeit](hi
 
 Nach bestätigter Hostgrenze und Dialog-W: [Korrektur 741 — nativer Fehlervertrag](history/bundle-741-dialog-error-contract.md) führt den vollständigen offenen Dialog-R/C-Rest fort.
 
+Nach bestätigtem Dialog-R: [Korrektur 742 — sauberer C-Abschluss](history/bundle-742-dialog-clean-whitespace.md) entfernt den Formatfehler; der vollständige C-Rest behält sein eigenes Apply-Gate. Die Zielwerte gelten erst nach dessen erfolgreichem Commit.
+
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
@@ -199,9 +201,9 @@ implementation_plan_commits_total: 918
 implementation_plan_commits_completed: 795
 last_completed_plan_commit: 18.p.C
 next_plan_commit: 18.q.W
-priority_off_plan: DIALOG-PERFORMANCE
-next_off_plan_commit: DIALOG-PERFORMANCE.C
-last_completed_numbered_bundle: 739
+priority_off_plan: null
+next_off_plan_commit: null
+last_completed_numbered_bundle: 742
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null
