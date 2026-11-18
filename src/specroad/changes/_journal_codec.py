@@ -71,7 +71,7 @@ def _authoring_data(authoring, *, historical_proposal):
         # A present proof must satisfy its own contract, never fall back to v1.
         return prepare_authoring_request(operations=owned, **options).data
     if (len(controls) != 1 or controls[0] != owned[-1]
-            or any(op['op'] in ('proposal_create', 'merge_publish', 'schema_migrate') for op in owned)
+            or any(op['op'] in ('proposal_create', 'proposal_change', 'merge_publish', 'schema_migrate') for op in owned)
             or any(key in controls[0] for key in ('review_start', 'review_decision'))
             or controls[0]['events'][0]['from'] != 'approved'
             or controls[0]['events'][-1]['to'] != 'applied'):
@@ -126,6 +126,12 @@ def validate_building_document(value, *, historical_proposal=False):
         # BuildingJournal and every active transaction path keep the default
         # command restriction; a historical object is not an executable journal.
         command, route = ('proposal apply', 'approved_proposal_apply') if historical_proposal else ('change apply', 'direct')
+        if not historical_proposal and authoring.get('command_id') in (
+                'proposal change add', 'proposal change update', 'proposal change remove', 'proposal change move'):
+            from ..proposals._change_control import change_mode
+            if not change_mode(authoring['operations']):
+                raise JournalError('proposal_change_operation_required')
+            command, route = authoring['command_id'], 'proposal_management'
         if not historical_proposal and authoring.get('command_id') == 'proposal create':
             from ..proposals._create_control import creation_mode
             if not creation_mode(authoring['operations']):

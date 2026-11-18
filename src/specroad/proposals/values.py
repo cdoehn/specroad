@@ -70,7 +70,7 @@ class ProposalOriginal:
         validate_explanations(value, plan)
         require(plan.data['base'] == base, 'proposal_plan_base_mismatch', path=path)
         for operation in plan.operations:
-            require(operation.op not in ('proposal_control', 'proposal_create', 'baseline_create'),
+            require(operation.op not in ('proposal_control', 'proposal_create', 'proposal_change', 'baseline_create'),
                     'proposal_control_target_forbidden', path=path)
             from ..changes._common import _reference
             require(all(_reference(key, '').artifact_type not in ('proposal', 'baseline')

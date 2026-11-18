@@ -6,7 +6,8 @@
     2,
     3,
     5,
-    6
+    6,
+    7
   ],
   "fixture_ids": [
     "SR-FIX-PROPOSAL-CHANGE-ORDER-v1"
@@ -21,13 +22,14 @@
   ],
   "method": "automated_behavior",
   "open_items": [
-    "Remaining public M18 CLI, lifecycle/revision writes and whole-flow integration require their own plan gates; this sequence value does not publish."
+    "Public CLI adapters for Proposal content authoring retain their own implementation/verification obligation; native API publication and whole-flow integration do not claim these adapters complete.",
+    "R adds the complete refusal, provenance-loss, replay and interruption matrix."
   ],
   "oracle": {
     "expected": "Exact ordered operations and paired explanations, unique stable IDs, closed index bounds, no source mutation or implicit write authority.",
     "kind": "behavior",
     "requirement_contract": "Die Proposal-Positionsoperationen MÜSSEN die Indexgrenzen und Reihenfolgen aus Kapitel 11.10 exakt erfüllen.",
-    "scope": "18.c ordered planning value and native reconstruction. No completed public CLI or human approval is claimed."
+    "scope": "18.p public native draft/check/review/content revision/renewed approval/apply dialogue with actual original bytes, transactions and explicit synthetic host provenance. Content operations never apply their embedded specification plan. Each prepared stage still needs its own Apply gate."
   },
   "preconditions": [
     "Complete owned native Proposal and supplied rebound native ChangePlan; no writer authority."
@@ -48,7 +50,9 @@
   "steps": [
     "Append/insert at the specified zero-based position and retain old identities.",
     "Address get/update/remove/move by stable CHG identity; remove before insertion on move.",
-    "Check exact operation/explanation pairing, original preservation and native target reconstruction."
+    "Check exact operation/explanation pairing, original preservation and native target reconstruction.",
+    "Publish all four prepared content actions through the native writer; compare complete records, stable Change IDs and unchanged specification bytes.",
+    "Perform the complete native dialogue, preserve old reviews while invalidating their approval, renew explicit synthetic human approval and verify exact specification publication."
   ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0649",
@@ -163,6 +167,12 @@
     "tests/test_proposal_changes_right.py::test_move_rejects_old_list_end_and_noninteger_indices[ABC-3]",
     "tests/test_proposal_changes_right.py::test_repeated_moves_and_noops_never_allocate_or_lose_a_change",
     "tests/test_proposal_changes_right.py::test_representation_only_change_binds_managed_path_and_preserves_identity_on_move",
-    "tests/test_proposal_changes_right.py::test_same_position_cannot_smuggle_a_new_complete_plan"
+    "tests/test_proposal_changes_right.py::test_same_position_cannot_smuggle_a_new_complete_plan",
+    "tests/test_proposal_dialog.py::test_all_four_changes_publish_through_native_writer_without_applying_the_inner_plan[add]",
+    "tests/test_proposal_dialog.py::test_all_four_changes_publish_through_native_writer_without_applying_the_inner_plan[move]",
+    "tests/test_proposal_dialog.py::test_all_four_changes_publish_through_native_writer_without_applying_the_inner_plan[remove]",
+    "tests/test_proposal_dialog.py::test_all_four_changes_publish_through_native_writer_without_applying_the_inner_plan[update]",
+    "tests/test_proposal_dialog.py::test_dry_run_and_canonical_noop_preserve_bytes_and_create_no_completion",
+    "tests/test_proposal_dialog.py::test_public_dialog_requires_renewed_approval_and_publishes_the_exact_revised_target"
   ]
 }

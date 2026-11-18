@@ -41,6 +41,11 @@ def select_route(command_id, actor, identity, dry_run, as_proposal):
 
 
 def validate_proposal_operations(command_id, operations):
+    if any(op['op'] == 'proposal_change' for op in operations):
+        from ..proposals._change_control import change_mode
+        change_mode(operations)
+        if command_id != 'proposal change ' + operations[0]['action']:
+            raise AuthoringError('proposal_change_specialist_required', exit_code=7)
     if any(op['op'] == 'proposal_create' for op in operations):
         from ..proposals._create_control import creation_mode
         if command_id != 'proposal create':

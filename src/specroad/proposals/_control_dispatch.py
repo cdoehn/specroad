@@ -3,6 +3,9 @@ from .values import require
 
 
 def control_mode(operations):
+    from ._change_control import change_mode
+    if change_mode(operations):
+        return True
     from ._create_control import creation_mode
     if creation_mode(operations):
         return True
@@ -19,6 +22,10 @@ def control_mode(operations):
 
 def adapter(operations):
     require(control_mode(operations), 'proposal_control_operation_required')
+    from . import _change_control
+    if _change_control.change_mode(operations):
+        return ('proposal.change.' + operations[0]['action'], _change_control.GATE,
+                _change_control.prepare_change_candidates, _change_control.bind_change_authoring)
     from . import _create_control
     if _create_control.creation_mode(operations):
         return (_create_control.COMMAND, _create_control.GATE,

@@ -155,6 +155,7 @@ class SchemaCatalogChangePlanTests(unittest.TestCase):
                    result(record_value('proposal', proposal_status='validated',
                        maturity='proposed', content_sha256='b' * 64))]
         results.append(result(operation('proposal_create')['record']))
+        results.append(result(operation('proposal_change')['record']))
         plan = prepare_change_plan(document(operations, results))
         self.catalog.validate(CHANGE_PLAN_ID, plan.data)
         self.assertEqual(ChangePlan(plan.canonical_bytes).data, plan.data)
@@ -174,6 +175,31 @@ class SchemaCatalogChangePlanTests(unittest.TestCase):
                     with self.assertRaises(ChangePlanError):
                         ChangeOperation(invalid)
                     self.assertEqual(value, before)
+
+        # The public schema and native parser must agree on the bounded
+        # edit list, including canonical no-op and a single allocated Change ID.
+        index = next(i for i, op in enumerate(operations) if op['op'] == 'proposal_change')
+        first, second = 'CHG-' + '0' * 26, 'CHG-' + '1' * 26
+        for ids in ([], [first]):
+            with self.subTest(changed_change_ids=ids):
+                op = {**operations[index], 'changed_change_ids': ids}
+                value = plan.data
+                value['operations'][index] = op
+                before = copy.deepcopy(value)
+                self.catalog.validate(CHANGE_PLAN_ID, value)
+                self.assertEqual(ChangeOperation(op).data, op)
+                self.assertEqual(value, before)
+        for ids in ([first, second], [first, first], None, first, [0], ['']):
+            with self.subTest(invalid_changed_change_ids=ids):
+                op = {**operations[index], 'changed_change_ids': ids}
+                value = plan.data
+                value['operations'][index] = op
+                before = copy.deepcopy(value)
+                with self.assertRaises(ModelError):
+                    self.catalog.validate(CHANGE_PLAN_ID, value)
+                with self.assertRaises(ChangePlanError):
+                    ChangeOperation(op)
+                self.assertEqual(value, before)
 
     def test_change_plan_resource_rejects_metadata_and_reference_mismatches(self):
         resource = self.catalog.get(CHANGE_PLAN_ID)

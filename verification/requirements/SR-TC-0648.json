@@ -29,7 +29,8 @@
   ],
   "method": "automated_behavior",
   "open_items": [
-    "18.e prepares native authoring values; built-in public CLI, authenticated control decisions, live locked preimages, request receipts and transactional publication retain their later M18 gates."
+    "Public CLI adapters for Proposal content authoring retain their own implementation/verification obligation; native API publication and whole-flow integration do not claim these adapters complete.",
+    "R adds the complete refusal, provenance-loss, replay and interruption matrix."
   ],
   "oracle": {
     "expected": "Ordered complete plan retained; content edits advance both revisions once and reset draft while preserving ineffective historical reviews. Canonical no-op preserves original bytes and current review effect; terminal versions require a separate new Proposal identity.",
@@ -37,7 +38,7 @@
     "negative_review_expected": "Only explicit human negative decisions change control history with one physical revision and stable content binding. Unproven/foreign/old decisions cannot authorize withdrawal. Withdrawn, outdated or externally ineffective reviews never become a new approval; native write failures retain real evidence.",
     "negative_review_scope": "18.j negative decisions and own withdrawal through the existing native writer, retained history and read-only qualification; no public 18.k Apply or release gate is claimed.",
     "requirement_contract": "Eine Änderung des Proposal-Fachinhalts MUSS sämtliche Freigaben älterer Inhaltsbindungen unwirksam machen.",
-    "scope": "Native 18.e authoring and read-only target/history integration; no public writer or full workflow claim."
+    "scope": "18.p public native draft/check/review/content revision/renewed approval/apply dialogue with actual original bytes, transactions and explicit synthetic host provenance. Content operations never apply their embedded specification plan. Each prepared stage still needs its own Apply gate."
   },
   "preconditions": [
     "Complete native Proposal with changes, full replacement ChangePlan, explicit expected physical revision, actor/time and common request policy; small native model for target/history integration.",
@@ -64,11 +65,19 @@
     "Withdraw only the same human approval: in_review keeps status, approved becomes rejected; reject foreign/nonhuman/absent approvals and require an explicit withdrawal reason.",
     "Compare public argv and structured requests, including dry-run with unchanged project/journal/receipt inventory.",
     "Check real request replay/conflicts, original-row and v1/v2 tampering, current authority loss and retained interrupted-staging journal.",
-    "Requalify old visible approval after actual host revocation, native content revision or changed basis; historical rows remain but cannot grant current approval."
+    "Requalify old visible approval after actual host revocation, native content revision or changed basis; historical rows remain but cannot grant current approval.",
+    "Publish all four prepared content actions through the native writer; compare complete records, stable Change IDs and unchanged specification bytes.",
+    "Perform the complete native dialogue, preserve old reviews while invalidating their approval, renew explicit synthetic human approval and verify exact specification publication."
   ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0648",
   "test_ids": [
+    "tests/test_proposal_dialog.py::test_all_four_changes_publish_through_native_writer_without_applying_the_inner_plan[add]",
+    "tests/test_proposal_dialog.py::test_all_four_changes_publish_through_native_writer_without_applying_the_inner_plan[move]",
+    "tests/test_proposal_dialog.py::test_all_four_changes_publish_through_native_writer_without_applying_the_inner_plan[remove]",
+    "tests/test_proposal_dialog.py::test_all_four_changes_publish_through_native_writer_without_applying_the_inner_plan[update]",
+    "tests/test_proposal_dialog.py::test_dry_run_and_canonical_noop_preserve_bytes_and_create_no_completion",
+    "tests/test_proposal_dialog.py::test_public_dialog_requires_renewed_approval_and_publishes_the_exact_revised_target",
     "tests/test_proposal_editing.py::test_authoring_actions_reset_open_states_and_advance_exactly_once[add-ABC-approved]",
     "tests/test_proposal_editing.py::test_authoring_actions_reset_open_states_and_advance_exactly_once[add-ABC-draft]",
     "tests/test_proposal_editing.py::test_authoring_actions_reset_open_states_and_advance_exactly_once[add-ABC-in_review]",

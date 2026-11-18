@@ -80,6 +80,14 @@ def proposal_create_schema():
     return obj({'op': {'const': 'proposal_create'}, 'record': {'type': 'object'}})
 
 
+def proposal_change_schema():
+    return obj({'op': {'const': 'proposal_change'}, 'target': text(),
+        'expected_revision': revision(), 'expected_sha256': digest(),
+        'action': {'enum': ['add', 'update', 'remove', 'move']},
+        'changed_change_ids': {'type': 'array', 'items': text(), 'not': {'minItems': 2}},
+        'record': {'type': 'object'}})
+
+
 def proposal_control_schema():
     base = {"op": {"const": 'proposal_control'}}
     ref = text()
