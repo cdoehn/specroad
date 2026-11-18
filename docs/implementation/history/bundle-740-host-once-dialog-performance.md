@@ -39,9 +39,9 @@ bleiben in C unverändert. Ein Nachher-Speedup ist noch nicht gemessen.
 
 ## Stagegebundener Zielstand
 
-Dieser Dateistand gehört zu `TEST-HOST-ONCE.R`. Seine Abnahme gilt erst mit dem
+Dieser Dateistand gehört zu `TEST-HOST-ONCE.C`. Seine Abnahme gilt erst mit dem
 tatsächlichen erfolgreichen Gate und Commit dieser Stage. Danach offen:
-`TEST-HOST-ONCE.C`, `DIALOG-PERFORMANCE.W`, `DIALOG-PERFORMANCE.R`, `DIALOG-PERFORMANCE.C`.
+`DIALOG-PERFORMANCE.W`, `DIALOG-PERFORMANCE.R`, `DIALOG-PERFORMANCE.C`.
 Produktfortschritt bleibt 795/918, nächste Produktposition 18.q.W.
 Die Automatik wird durch dieses Bundle nicht fortgesetzt; Dienste, lokale
 Hostkonfigurationen, Zugangsdaten und Betriebsbudgets sind keine Payloads.

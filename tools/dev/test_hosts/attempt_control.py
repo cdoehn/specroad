@@ -8,6 +8,7 @@ import uuid
 import execnet
 
 from dev.test_control.moves import requests
+from .host_exclusivity import host_available
 
 
 class Attempts:
@@ -30,18 +31,8 @@ class Attempts:
                 for r in self.current.values() if r['state'] == 'running'}
 
     def host_available(self, host, index, *, exclude=None):
-        """Reservations and unfinished attempts own the host until acknowledged."""
-        for name, row in self.current.items():
-            if name != exclude and row['host'] == host and row['index'] == index:
-                return False
-        for name, row in self.reserved.items():
-            if name == exclude or ('node' in row and row['node'] not in self.ds._active_nodes):
-                continue
-            target = row.get('host', row.get('target'))
-            item = row.get('index', row.get('source', {}).get('index'))
-            if target == host and item == index:
-                return False
-        return True
+        return host_available(host, index, self.current, self.reserved,
+                              self.ds._active_nodes, exclude=exclude)
 
     def granted(self, name, index, slot):
         if name not in self.ready or name in self.current:

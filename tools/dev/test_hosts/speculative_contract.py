@@ -3,6 +3,7 @@ from copy import deepcopy
 import re
 
 from .contract import verify_live_pool
+from .host_exclusivity import verify_host_test_intervals
 
 
 def verify_copies(observation, proof):
@@ -122,7 +123,4 @@ def verify_copies(observation, proof):
     verify_live_pool(expanded, proof)
     # Validate the original test identity, before the expanded slot proof's
     # synthetic per-attempt identities can hide overlaps on different slots.
-    for intervals in host_tests.values():
-        ordered = sorted(intervals)
-        if any(a[1] > b[0] for a, b in zip(ordered, ordered[1:])):
-            raise ValueError('Same test overlaps on one host')
+    verify_host_test_intervals(host_tests)
