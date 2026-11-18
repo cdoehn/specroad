@@ -44,4 +44,4 @@ Gruppe 18.p bleibt vollständig offen: Ihr öffentlicher Änderungsdialog samt
 Überarbeitung und erneuter echter Freigabe wird nicht durch eine verkürzte
 Zusatzstage vorweggenommen.
 
-Ziel erst nach dem eigenen erfolgreichen Gate dieser Stage: **18.o.R**, **791/918**, danach **18.o.C**.
+Ziel erst nach dem eigenen erfolgreichen Gate dieser Stage: **18.o.C**, **792/918**, danach **18.p.W**.

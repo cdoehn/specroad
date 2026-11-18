@@ -37,4 +37,4 @@ Gruppe 18.p bleibt vollständig offen. Ihre erforderliche native Veröffentlichu
 überarbeiteter Inhalte und die vollständigen Dialogabnahmen werden nicht durch
 eine verkürzte oder nur nominelle Stage an diese Reparatur angehängt.
 
-Ziel erst nach dem eigenen erfolgreichen Gate dieser Stage: **18.o.R**, **791/918**, danach **18.o.C**.
+Ziel erst nach dem eigenen erfolgreichen Gate dieser Stage: **18.o.C**, **792/918**, danach **18.p.W**.
