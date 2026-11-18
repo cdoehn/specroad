@@ -1,21 +1,33 @@
 {
   "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "fixture_ids": [],
-  "implementation_status": "open",
+  "expected_exit_codes": [
+    0,
+    2,
+    3,
+    5
+  ],
+  "fixture_ids": [
+    "SR-FIX-ANALYZER-REQUEST-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [],
-  "method": "pending",
+  "method": "automated_behavior",
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence.",
-    "ANALYZER-CONTRACT-746: T.2.1/T.3.1 specify closed passive descriptor/request values. Each implementation stage needs its own actual Apply gate; no worker or project selector is claimed here."
+    "Target stage 19.b.W requires its own actual successful Apply gate and commit; tests are prepared, not executed in Dev.",
+    "Full available behavior suite and separate CPython 3.10–3.14/platform matrix remain mandatory before milestone/release acceptance.",
+    "Later M19 steps retain project subject selection, report/work/CLI integration, actual installed language worker and independent engine evidence.",
+    "The separately announced R/C states complete robustness and cleanup with their own unchanged gating obligations."
   ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Ein Analyzerrequest MUSS den vollständigen Identitäts- und Eingangsbindungsvertrag aus Anhang T.3 erfüllen.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Actual complete data-carrying requests with an independently calculated six-component snapshot projection, one-time random128 analysis identity and separate native write identity types. Prepared only; no Dev behavior execution or full milestone/platform acceptance is claimed."
   },
-  "preconditions": [],
+  "preconditions": [
+    "Explicit synthetic complete own input values with independent expected hashes; no project files, secrets or actual installed worker are assumed.",
+    "All behavior execution takes place in the separate Apply gate. Collection alone is not behavioral evidence."
+  ],
   "primary_verification_id": "SR-VER-0046",
   "required_environment": {
     "declared_minimum_python": "3.10",
@@ -29,8 +41,24 @@
     "owned_temporary_files": true
   },
   "specification_sha256": "4dca16070c6c118e0666973758b0cf737cf4088c8cd67b3338462848bf86b8ea",
-  "steps": [],
+  "steps": [
+    "Construct a complete request and independently hash exactly contract_version, analyzers, subjects, context, settings and extensions; compare all output values and source-format independent reads.",
+    "Compare allocated random128 identities, preserve previously assigned and explicit IDs through repeated reads; mutate each snapshot component and compare bindings."
+  ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0678",
-  "test_ids": []
+  "test_ids": [
+    "tests/test_analyzer_requests.py::test_automatic_id_is_random128_and_independent_of_snapshot",
+    "tests/test_analyzer_requests.py::test_each_snapshot_component_changes_the_binding[analyzers]",
+    "tests/test_analyzer_requests.py::test_each_snapshot_component_changes_the_binding[context]",
+    "tests/test_analyzer_requests.py::test_each_snapshot_component_changes_the_binding[extensions]",
+    "tests/test_analyzer_requests.py::test_each_snapshot_component_changes_the_binding[settings]",
+    "tests/test_analyzer_requests.py::test_each_snapshot_component_changes_the_binding[subjects]",
+    "tests/test_analyzer_requests.py::test_id_can_be_assigned_before_snapshot_and_is_preserved_by_every_read",
+    "tests/test_analyzer_requests.py::test_manual_analysis_id_is_unchanged_and_separate_from_write_namespace[AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA]",
+    "tests/test_analyzer_requests.py::test_manual_analysis_id_is_unchanged_and_separate_from_write_namespace[X]",
+    "tests/test_analyzer_requests.py::test_manual_analysis_id_is_unchanged_and_separate_from_write_namespace[same.write:id]",
+    "tests/test_analyzer_requests.py::test_request_contains_complete_data_and_exact_independent_snapshot_projection",
+    "tests/test_analyzer_requests.py::test_selected_capabilities_and_descriptor_are_fully_bound"
+  ]
 }

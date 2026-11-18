@@ -28461,6 +28461,18 @@
     "tests/test_analyzer_descriptors_right.py::test_selection_is_nonempty_sorted_declared_subset[capabilities1]",
     "tests/test_analyzer_descriptors_right.py::test_selection_is_nonempty_sorted_declared_subset[capabilities2]",
     "tests/test_analyzer_descriptors_right.py::test_selection_is_nonempty_sorted_declared_subset[capabilities3]",
-    "tests/test_analyzer_descriptors_right.py::test_spoofed_builtin_and_unknown_extensions_never_import_or_start_code"
+    "tests/test_analyzer_descriptors_right.py::test_spoofed_builtin_and_unknown_extensions_never_import_or_start_code",
+    "tests/test_analyzer_requests.py::test_automatic_id_is_random128_and_independent_of_snapshot",
+    "tests/test_analyzer_requests.py::test_each_snapshot_component_changes_the_binding[analyzers]",
+    "tests/test_analyzer_requests.py::test_each_snapshot_component_changes_the_binding[context]",
+    "tests/test_analyzer_requests.py::test_each_snapshot_component_changes_the_binding[extensions]",
+    "tests/test_analyzer_requests.py::test_each_snapshot_component_changes_the_binding[settings]",
+    "tests/test_analyzer_requests.py::test_each_snapshot_component_changes_the_binding[subjects]",
+    "tests/test_analyzer_requests.py::test_id_can_be_assigned_before_snapshot_and_is_preserved_by_every_read",
+    "tests/test_analyzer_requests.py::test_manual_analysis_id_is_unchanged_and_separate_from_write_namespace[AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA]",
+    "tests/test_analyzer_requests.py::test_manual_analysis_id_is_unchanged_and_separate_from_write_namespace[X]",
+    "tests/test_analyzer_requests.py::test_manual_analysis_id_is_unchanged_and_separate_from_write_namespace[same.write:id]",
+    "tests/test_analyzer_requests.py::test_request_contains_complete_data_and_exact_independent_snapshot_projection",
+    "tests/test_analyzer_requests.py::test_selected_capabilities_and_descriptor_are_fully_bound"
   ]
 }

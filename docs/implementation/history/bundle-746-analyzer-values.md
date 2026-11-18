@@ -11,8 +11,8 @@ geht den vollständigen Gruppen 19.a.W/R/C und 19.b.W/R/C voraus. Jede der
 sieben Stages installiert nur ihren eigenen Zustand, durchläuft N=3 plus
 ungefilterte begründete Pflichtauswahl und erhält erst danach ihren Commit.
 
-Diese Datei beschreibt den Zielstand **19.a.C** mit **804/918**
-nach dessen eigenem erfolgreichen Gate. Nächste Produktposition ist **19.b.W**.
+Diese Datei beschreibt den Zielstand **19.b.W** mit **805/918**
+nach dessen eigenem erfolgreichen Gate. Nächste Produktposition ist **19.b.R**.
 Die Vorbereitung enthält keine in Dev ausgeführten Verhaltenstests. Syntax,
 statische Analyse und reine Collection sind keine Verhaltensabnahme.
 
