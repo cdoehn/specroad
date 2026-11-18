@@ -1,19 +1,19 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.93
+## Version 0.2.94
 
 | Feld | Wert |
 |---|---|
 | Dokument-ID | `SR-SPEC-0001` |
-| Dokumentversion | `0.2.93` |
+| Dokumentversion | `0.2.94` |
 | Zielrelease | `SpecRoad Single-Repository Workbench 0.2.0` |
 | Status | **Fachlich konsolidierte Arbeitsgrundlage; technische Reviewentscheidung gesondert dokumentiert, formale Baseline-Freigabe und Produktabnahme nicht durch dieses Dokument erklärt** |
-| Stand | 17. November 2026 |
+| Stand | 18. November 2026 |
 | Sprache | Deutsch; technische Feldnamen, Enum-Werte und CLI-Kommandos Englisch |
-| Fachliche Quelle | **Diese Repositoryfassung v0.2.93 ist die aktive fachliche Arbeitsgrundlage; eine entsprechende PDF wird hiermit nicht veröffentlicht.** |
+| Fachliche Quelle | **Diese Repositoryfassung v0.2.94 ist die aktive fachliche Arbeitsgrundlage; eine entsprechende PDF wird hiermit nicht veröffentlicht.** |
 | Bearbeitbare Satzquelle | Diese Datei; eine spätere PDF muss denselben versionierten Inhalt wiedergeben. |
-| Vorgängerversion | Repository-Spezifikation v0.2.92; historische Nachweise bleiben unverändert. |
-| Prüf- und Entscheidungsgrundlage | PROPOSAL-WORK-735 nach SPECROAD-DECISION-1: portable passive Proposalprüfung mit frischer Apply-Bindung; keine Produktfreigabe. |
-| Änderungsart | Additive portable Proposalprüfung und explizite Bindung an den bestehenden Apply; aktuelle menschliche Review- und Sicherheitsgrenzen bleiben erhalten. |
+| Vorgängerversion | Repository-Spezifikation v0.2.93; historische Nachweise bleiben unverändert. |
+| Prüf- und Entscheidungsgrundlage | PROPOSAL-DIALOG-738 nach SPECROAD-DECISION-1: native Veröffentlichung gebundener Inhaltsrevisionen; keine Produktfreigabe. |
+| Änderungsart | Additive native Veröffentlichung vorbereiteter Proposal-Inhaltsrevisionen; aktuelle menschliche Review- und Sicherheitsgrenzen bleiben erhalten. |
 
 > **Verbindlicher Quellenwechsel:** Die ausdrückliche Nutzerentscheidung REFERENCE-SOURCE-551 wird als v0.2.50 umgesetzt. Der neue Quellvertrag ist Entwurfsarbeit vom 3. November 2026, kein Nachweis eines früher existierenden Formats. Bestehende 0.2-Verträge, Transport-, Sicherheits- und Reviewgrenzen bleiben erhalten.
 
@@ -5342,6 +5342,58 @@ verhindert die Übergabe ohne normative Veröffentlichung. Nach bereits bewiesen
 Apply gelten weiterhin die vorhandenen exakten Retry-/Receiptregeln.
 
 
+
+#### 11.10.3 Native Veröffentlichung vorbereiteter Inhaltsrevisionen
+
+Die öffentliche native Veröffentlichung einer `ProposalEdit`-Vorbereitung
+verwendet denselben gesperrten Writer, dieselben aktuellen Hostprüfungen und
+denselben Receipt-/Abbruchsperrvertrag wie die übrigen Proposalwrites.
+Die Vorbereitung allein erteilt keine Schreib- oder Reviewberechtigung.
+Der Host übergibt vollständige native Vorherbytes und Basis, den vorbereiteten
+Edit, Transaktionskennung und aktuelle native Dienste/Publikationsautorität.
+Die bisherigen CLI-Verträge aus 11.10 bleiben unverändert.
+
+Die einzelne äußere Operation `proposal_change` besitzt genau `op`, `target`,
+`expected_revision`, `expected_sha256`, `action`, `changed_change_ids` und `record`. `target` ist
+die vorhandene Proposal-ID, der erwartete Hash die kanonische Vorherprojektion,
+`action` eines von `add`, `update`, `remove`, `move`; `record` ist der vollständige
+gebundene Nachherrecord. `changed_change_ids` bindet genau den betroffenen
+Change-ID-Wert, bei kanonischem No-op eine leere Liste. Die native Reduktion berechnet dessen Revision,
+Contentrevision/-hash und Auditmetadaten erneut und beweist genau die genannte
+geordnete Änderung nach dem vorhandenen `ProposalChanges`-/`ProposalRevision`-
+Vertrag. Andere Inhaltsfelder, Basis, fremde Operationen, Kontrolleinträge und
+Reviews dürfen dabei nicht geändert werden. Ein beim Add bereits einmal
+vergebener neuer Change-ID-Wert bleibt in allen Wiederprüfungen bytegleich;
+kein erneutes Ziehen von Identitäten innerhalb eines Writer-Gates.
+
+Die Operation ist isoliert und ausschließlich über den passenden Spezialisten
+`proposal change <action>` zulässig; weder generisches Change-Apply noch ein
+innerer Proposal-Fachplan darf sie ausführen. Der Writer veröffentlicht genau
+den geprüften Proposalrecord und seine normalen Betriebsbelege, niemals die
+eingebetteten Fachänderungen. Die vollständige aktuelle Projektqualifikation
+prüft auch sämtliche historischen Originale und deren echte Hostprovenienz.
+Neue Inhaltsbindungen setzen den Status gemäß 10.3 auf `draft` zurück;
+alte Reviews bleiben unverändert sichtbar und sind für diese neue Bindung
+unwirksam. Erneute native Prüfung und ausdrückliche Menschenfreigabe bleiben
+vor Fach-Apply erforderlich.
+
+Kanonisch unveränderte Vorbereitung bleibt ein wirkungsloser, erneut geprüfter
+Aufruf ohne neue Revision und ohne Erfolgsreceipt. Dry-run schreibt nichts.
+Ein belegter identischer Request wird vor einer neuen Zielqualifikation aus
+dem echten Abschlussbeleg als historischer Replay geliefert; er behauptet
+keine aktuelle Zielverifikation. Abweichende Requestinhalte, geänderte
+Vorherbytes oder Basis ergeben Konflikt. Rejection, terminaler Zustand,
+Scope-/Kontrollangriff, fehlende Provenienz oder entzogene Hostautorität
+erlauben keine Veröffentlichung. Ein unterbrochener tatsächlicher Write
+behält die native Abbruchsperre; kein eigener Retry oder Rollback.
+
+18.p prüft den vollständigen öffentlichen nativen Dialog: tatsächlicher
+Draftwrite, Check, Reviewstart, menschliche Entscheidung, Inhaltsüberarbeitung,
+erneuter Check/Review und Fach-Apply. Testakteure sind ausdrücklich synthetisch.
+Alle fachlichen Zwischenwrites erfolgen durch die öffentlichen nativen APIs;
+direktes Schreiben vorbereiteter Proposalbytes ist kein Integrationsnachweis.
+
+
 ### 11.11 Runtime- und Ressourcenverträge
 
 `environment check` ist eine betriebliche Momentaufnahme nach Anhang N.4, keine zusätzliche Vollvalidierung. Jeder reguläre Befehl besitzt den dort definierten kleinen automatischen Preflight auch ohne vorherigen `environment check`.
@@ -8081,6 +8133,7 @@ Die Umsetzung folgt im bestehenden Plan als 18.s–18.x nach 18.k.C.
 
 | Version | Datum | Status | Änderung |
 |---|---|---|---|
+| 0.2.94 | 2026-11-18 | Delegierte Detailklärung nach SPECROAD-DECISION-1 | PROPOSAL-DIALOG-738: geschlossene native Veröffentlichung vorbereiteter Inhaltsrevisionen über den vorhandenen Writer; Reviews, Scope und CLI-Verträge bleiben erhalten. |
 | 0.2.79 | 2026-11-09 | Delegiert gemäß SPECROAD-DECISION-1, Vertrag 4 | PROPOSAL-CHECK-657: isolierter nativer Checkbericht und ausdrückliche Debug-Aufbewahrung; keine Statuspersistenz oder Freigabe. |
 | 0.2.72 | 2026-11-06 | Delegiert gemäß SPECROAD-DECISION-1, Vertrag 4 | MERGE-PUBLICATION-619: spezialisierter Merge-Plan, gemeinsame Transaktion, Nachweisbindung und erhaltene Recovery-/Reviewgrenzen. |
 | 0.2.71 | 2026-11-06 | Delegiert gemäß SPECROAD-DECISION-1, Vertrag 4 | MERGE-TARGET-616: Vollständiger virtueller Zielbefund, native Spezialisten, erneute Nachprüfung und keine implizite Schreibfreigabe. |
