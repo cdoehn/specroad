@@ -1,19 +1,19 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.95
+## Version 0.2.96
 
 | Feld | Wert |
 |---|---|
 | Dokument-ID | `SR-SPEC-0001` |
-| Dokumentversion | `0.2.95` |
+| Dokumentversion | `0.2.96` |
 | Zielrelease | `SpecRoad Single-Repository Workbench 0.2.0` |
 | Status | **Fachlich konsolidierte Arbeitsgrundlage; technische Reviewentscheidung gesondert dokumentiert, formale Baseline-Freigabe und Produktabnahme nicht durch dieses Dokument erklärt** |
 | Stand | 18. November 2026 |
 | Sprache | Deutsch; technische Feldnamen, Enum-Werte und CLI-Kommandos Englisch |
-| Fachliche Quelle | **Diese Repositoryfassung v0.2.95 ist die aktive fachliche Arbeitsgrundlage; eine entsprechende PDF wird hiermit nicht veröffentlicht.** |
+| Fachliche Quelle | **Diese Repositoryfassung v0.2.96 ist die aktive fachliche Arbeitsgrundlage; eine entsprechende PDF wird hiermit nicht veröffentlicht.** |
 | Bearbeitbare Satzquelle | Diese Datei; eine spätere PDF muss denselben versionierten Inhalt wiedergeben. |
-| Vorgängerversion | Repository-Spezifikation v0.2.94; historische Nachweise bleiben unverändert. |
-| Prüf- und Entscheidungsgrundlage | RETURN-TRANSPORT-743 nach SPECROAD-DECISION-1: geschlossener Proposal-Rücktransport und explizite lokale Übernahme; keine Produktfreigabe. |
-| Änderungsart | Additive Präzisierung von Rückinventar, Hostzulassung, lokalem Draft und gemeinsamem Replaynachweis; aktuelle menschliche Review- und Sicherheitsgrenzen bleiben erhalten. |
+| Vorgängerversion | Repository-Spezifikation v0.2.95; historische Nachweise bleiben unverändert. |
+| Prüf- und Entscheidungsgrundlage | ANALYZER-CONTRACT-746 nach SPECROAD-DECISION-1: geschlossene passive Descriptor- und Requestwerte; keine Produktfreigabe. |
+| Änderungsart | Additive Präzisierung der Descriptorabhängigkeiten, Requesteinträge und unveränderlichen Analysebindung; aktuelle menschliche Review- und Sicherheitsgrenzen bleiben erhalten. |
 
 > **Verbindlicher Quellenwechsel:** Die ausdrückliche Nutzerentscheidung REFERENCE-SOURCE-551 wird als v0.2.50 umgesetzt. Der neue Quellvertrag ist Entwurfsarbeit vom 3. November 2026, kein Nachweis eines früher existierenden Formats. Bestehende 0.2-Verträge, Transport-, Sicherheits- und Reviewgrenzen bleiben erhalten.
 
@@ -11422,6 +11422,36 @@ Ein Descriptor enthält genau `contract_version`, `analyzer_id`, `adapter_versio
 
 Für `specroad.py3langid` gelten `single_text`, Capability `language_detection` und `pinned_engine`. Ein Mehrfachauftrag ist die vollständige Menge einzelner Textsubjects; der Adapter setzt Texte unterschiedlicher Anforderungen nicht zu einem künstlichen Gesamttext zusammen.
 
+### T.2.1 Geschlossene passive Descriptorwerte — ANALYZER-CONTRACT-746
+
+Delegierte Detailklärung nach SPECROAD-DECISION-1 und 2.4.3.1 für 19.a/19.b.
+`contract_version` ist exakt `1.0.0`; andere Vertragsversionen werden als
+unbekannt abgewiesen. `adapter_version` und `result_schema_version` sind
+syntaktisch gültige SemVer-Werte, keine Freigabe unbekannter Resultformate.
+Der Descriptorhash ist SHA-256 über alle JCS-Descriptorwerte einschließlich
+der Erweiterungen. Ein anderer Originaldatei-Whitespace verändert ihn nicht.
+
+`dependency_requirements` ist ein nach `name` sortiertes Array ohne doppelte
+Namen; leer ist zulässig. Jeder Eintrag enthält genau `name` (dieselbe ASCII-
+Syntax wie `analyzer_id`) und `requirement` (nichtleerer String ohne äußeren
+Whitespace oder Steuerzeichen). Der String ist eine passive, unverändert
+erhaltene Anforderungsbeschreibung, kein Resolverauftrag und kein Kommando.
+Der bekannte Descriptor `specroad.py3langid` 1.0.0 deklariert in dieser
+Reihenfolge `numpy` mit `*`, `py3langid` mit `==0.4.0` und `python` mit
+`>=3.10`. Konkrete NumPy-/ABI-Pins bleiben im tatsächlichen Releaseinventar
+nach T.6; `*` behauptet keine Verfügbarkeit oder getestete Paketkombination.
+Seine Resultschemaversion ist `1.0.0`, sein Modus `builtin_worker`.
+
+`extensions` benutzt das vorhandene passive Namespaceformat (mindestens
+zwei punktgetrennte, nichtleere Komponenten ohne Whitespace/Steuerzeichen)
+mit beliebigen gültigen JSON-Werten. Weder Erweiterungen noch Abhängigkeiten
+werden als Python-Module, Shellcode, URLs oder Dateipfade aufgelöst.
+Die komplette bekannte Descriptoridentität samt Hash wird ausschließlich
+gegen die fest ausgelieferte Registry verglichen. Auch ein gleichlautender
+importierter Descriptor ist keine Ausführungsautorität. Ein noch nicht
+implementierter/installierter Worker wird nicht als ausführbar oder verfügbar
+behauptet. Die eigentliche Workerbereitstellung behält ihre eigenen Planabnahmen.
+
 ## T.3 Request und Eingangsbindung
 
 Ein Request enthält `contract_version`, `request_id`, `analyzers`, `subjects`, `context`, `settings`, `snapshot_sha256` und `extensions`. `request_id` ist ausschließlich eine **Analysekennung (`AnalysisRequestId`)**. Sie korreliert Request, Reports und Fortsetzung; sie ist keine Request-ID eines normativen Schreibbefehls. Nur die Zeichenketten-Syntax `[A-Za-z0-9][A-Za-z0-9._:-]{0,127}` wird wiederverwendet. Weder die Akteurspflicht noch Operationshash, Projekttransaktion, Write-Idempotenz oder Receipts werden dadurch übernommen. Die Regeln SR-REQ-0383 bis SR-REQ-0385 gelten ausschließlich im normativen Schreibnamensraum.
@@ -11447,6 +11477,43 @@ Bei beginnender Request-Erzeugung wird die einmal vergebene Kennung in `normaliz
 `context` enthält explizite weitere `{resource_id, sha256, value}`-Bindings und die vollständige ausgewählte Subjectmenge. Der Caller exportiert nur die angeforderten Felder, nicht automatisch das gesamte Repository. Kontext enthält niemals Secrets, freie Host-Umgebungsvariablen oder beliebige absolute Pfade. Der Request-Snapshothash ist SHA-256 über das JCS-Objekt mit genau `contract_version`, `analyzers`, `subjects`, `context`, `settings` und `extensions`. `request_id` und `snapshot_sha256` sind ausgeschlossen; Requests enthalten keine weiteren betrieblichen Top-Level-Felder. Auch die sortierte vollständige Menge der Analyzer/Capabilities, die Textauswahl, Kandidatenklasse, Vergleichspolicy und Vorverarbeitungsparameter werden gebunden. Eine neue Subjectmenge ist ein anderer Auftrag.
 
 Der py3langid-Default ist `/statement` für Requirements. Zusätzliche `--field`-Pointer erzeugen eigenständige Subjects in sortierter ID-/Pointer-Reihenfolge. Der gemeinsame Request ist ein vollständiger datentragender Snapshot; zukünftige externe Analyzer müssen nicht eigenständig Projektdateien öffnen. Ein Text kann wie eine Systemanweisung aussehen und bleibt trotzdem reiner Analyseinhalt.
+
+### T.3.1 Geschlossene Requestwerte — ANALYZER-CONTRACT-746
+
+Der Request besitzt genau die in T.3 genannten acht Felder. Ein `analyzers`-
+Eintrag besitzt genau `descriptor` (vollständiger T.2-Wert),
+`descriptor_sha256` (dessen JCS-Hash) und `capabilities` (nichtleere sortierte
+dublettenfreie Teilmenge der deklarierten Capabilities). Die nichtleere Liste
+ist nach `descriptor.analyzer_id` sortiert, jede Analyzer-ID kommt einmal vor.
+
+`context` besitzt genau `resources` und `subject_keys`. `resources` ist eine
+nach `resource_id` sortierte Liste ohne doppelte IDs, jeder Eintrag enthält
+genau `resource_id`, `sha256`, `value`. Die Resource-ID hat die passive Syntax
+`[A-Za-z0-9][A-Za-z0-9._:-]{0,127}`, ist kein Hostpfad; der Hash bindet den
+vollständigen JCS-Wert. `subject_keys` ist die sortierte vollständige Menge
+der Schlüssel aus `subjects`. Die Subjectliste behält ihre gegebene Reihenfolge;
+Schlüssel sind eindeutig. Artefakt-IDs und positive ganzzahlige Revisionen,
+Sprachtags und optionale Verbindlichkeit verwenden bestehende native Verträge.
+Alle Hashwerte sind vollständige 64-stellige kleine Hex-SHA-256. Kein Reader
+korrigiert Hashes, Reihenfolge, fehlende Pflichtwerte oder doppelte Einträge.
+
+`settings` ist ein Objekt mit genau den ausgewählten Analyzer-IDs als Schlüsseln
+und je einem JSON-Objekt als expliziter Parametermenge, gegebenenfalls leer.
+Seine Fachparameter bleiben durch die jeweilige Adapterpolicy bestimmt;
+unbekannte externe Parametermengen bleiben passive Daten. `extensions`
+folgt T.2.1. Kontext-/Subjectauswahl aus dem Projekt bleibt eine eigene native
+Auswahloperation; der Wertreader öffnet keine Projektdateien und inferiert
+weder Secrets noch zusätzliche Daten. Er prüft alle mitgelieferten Bindungen.
+
+Ein in-memory Request-Erzeuger kann eine vorher einmal zugeteilte typisierte
+`AnalysisRequestId` übernehmen. Ohne Kennung vergibt er sie genau einmal vor
+der Snapshotbildung; Reader erzeugen niemals Ersatzkennungen. Der bestehende
+normative Schreibtyp `NormativeRequestId` darf als `WriteRequestId` bezeichnet
+werden, bleibt aber ein anderer Typ/Namensraum; keine implizite Umwandlung.
+Die reine Bindungsprüfung unterscheidet abweichende Analyse-ID und abweichenden
+Snapshot mit Konfliktcode 6. Sie ist kein Ergebnis- oder Fortsetzungsnachweis.
+Ungültige explizite Kennungsoptionen haben Code 2, ungültige importierte Daten
+Code 3; Syntaxfehler und unbekannte Felder führen zu keiner Teilannahme.
 
 ## T.4 Resultate, Findings und Unabhängigkeit von Evidence
 

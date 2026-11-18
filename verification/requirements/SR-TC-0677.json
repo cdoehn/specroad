@@ -7,7 +7,8 @@
   "json_pointers": [],
   "method": "pending",
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence.",
+    "ANALYZER-CONTRACT-746: T.2.1/T.3.1 specify closed passive descriptor/request values. Each implementation stage needs its own actual Apply gate; no worker or project selector is claimed here."
   ],
   "oracle": {
     "kind": "pending",
@@ -27,7 +28,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "b9a4cca39d6a8a682213d4100c289a179de1d6c3a4831a98d032af18fa111072",
+  "specification_sha256": "4dca16070c6c118e0666973758b0cf737cf4088c8cd67b3338462848bf86b8ea",
   "steps": [],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0677",
