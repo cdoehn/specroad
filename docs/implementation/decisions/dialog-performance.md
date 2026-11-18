@@ -38,3 +38,5 @@ Diese private Vorbereitung führt keine Verhaltenstests aus und startet keine
 Automatik. Ihre echte Übernahme benötigt ein frisches maßgebliches Result.
 
 Gebundene Übernahme: [Bundle 740](../history/bundle-740-host-once-dialog-performance.md).
+
+Nach bestätigtem W: [Korrektur 741](../history/bundle-741-dialog-error-contract.md) erhält sämtliche R/C-Abnahmen und prüft die unveränderte native Fehlerklasse exakt.

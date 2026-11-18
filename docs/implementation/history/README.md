@@ -512,3 +512,5 @@
 - [Bundle 739 — Proposal-Dialog: unterstützter Schemavertrag](bundle-739-proposal-dialog-schema.md)
 
 - [Bundle 740 — höchstens ein Versuch je Test/Host und Dialogoptimierung](bundle-740-host-once-dialog-performance.md)
+
+- [Bundle 741 — nativer Fehlervertrag und offener Dialog-R/C-Rest](bundle-741-dialog-error-contract.md).

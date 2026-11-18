@@ -189,6 +189,8 @@ Nach bestätigtem Klärungspräfix: [Korrektur 739 — vollständiger W/R/C-Rest
 
 Explizite OFF-PLAN-Übernahme: [Bundle 740 — Hostgrenze und Dialoglaufzeit](history/bundle-740-host-once-dialog-performance.md).
 
+Nach bestätigter Hostgrenze und Dialog-W: [Korrektur 741 — nativer Fehlervertrag](history/bundle-741-dialog-error-contract.md) führt den vollständigen offenen Dialog-R/C-Rest fort.
+
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
@@ -198,7 +200,7 @@ implementation_plan_commits_completed: 795
 last_completed_plan_commit: 18.p.C
 next_plan_commit: 18.q.W
 priority_off_plan: DIALOG-PERFORMANCE
-next_off_plan_commit: DIALOG-PERFORMANCE.R
+next_off_plan_commit: DIALOG-PERFORMANCE.C
 last_completed_numbered_bundle: 739
 implementation_state: in_progress
 audit_followup_status: closed
