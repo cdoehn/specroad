@@ -1629,6 +1629,20 @@ an ihren bestehenden Grenzen geprüft werden. Ein Cachetreffer darf keinen
 fehlgeschlagenen Nachweis oder eine fremde Bindung übernehmen. Fachliche
 Testfälle, Fehlerpfade und Integrationsreferenzen bleiben erhalten.
 
+Für die Dialogoptimierung vom 18. November 2026 gilt zusätzlich: Der begrenzte
+Registercache behält ausschließlich vollständige Eingabebytes und private
+unveränderliche Parsewerte. Öffentliche Records werden bedarfsgerecht und je
+Register getrennt erzeugt; jede Konstruktion prüft Hash und Version erneut.
+Eine wiederverwendete Schema-Vokabularprüfung bindet die vollständige geordnete
+Definition einschließlich aller unbenutzten Zweige. Jede Instanz wird weiterhin
+validiert. Veränderliche oder nicht cachefähige Eingaben behalten den vollständigen
+Prüfpfad. Reine Projektmodelle dürfen nur innerhalb eines äußeren Aufrufs und
+an vollständige Dateibytes gebunden wiederverwendet werden; jede Verwendung
+erhält eine unabhängige Kopie. Gate-Erfolge, menschliche Entscheidungen,
+Hostprovider, aktuelle Quellen sowie aktuelle Receipt-, Journal- und Writerprüfungen werden
+nicht zwischengespeichert. Der vollständige Dialog-Integrationsfall einschließlich
+des ausgelieferten Sprachregisters bleibt unverändert.
+
 Das separat und ausdrücklich gestartete Entwicklungswerkzeug darf alle Tests,
 die langsamsten N nach gültigen aktuellen Messungen oder eine freie native
 Testauswahl profilieren. Auswahl und Quellsnapshot MÜSSEN eindeutig gebunden

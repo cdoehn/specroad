@@ -41,10 +41,11 @@ class LanguageRegistry:
         """Exact or reserved-range lookup. No aliases are followed."""
         record = self._records.get((kind, value.lower()))
         if record is not None: return record
-        for (record_kind, token), record in self._records.items():
-            if record_kind == kind and ".." in token:
+        for record_kind, token in self._records.range_keys():
+            if record_kind == kind:
                 start, end = token.split("..")
-                if len(value) == len(start) and start <= value.lower() <= end: return record
+                if len(value) == len(start) and start <= value.lower() <= end:
+                    return self._records[record_kind, token]
         return None
 
     def inspect(self, value):

@@ -46,7 +46,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d21c820525874cf370a7de1c30f6c53357b4c04427ab63c1819f33a249bad8d8",
+  "specification_sha256": "1ff2191b9efbec8b4b77a7e5811de26ad6cabdabec554c67be692cedc5861bc6",
   "steps": [
     "Resolve fixture scope, prepare the Baseline manifest, independently verify all retained bytes and the existing model-root projection, exercise refusal cases and round-trip through real external storage and isolated Core/PYZ processes.",
     "Bind a fresh planned Baseline identity outside its precreation model, reject self-inclusion and forged cached scope observations, and compare exact output bytes under semantic versus operational changes."

@@ -1,5 +1,6 @@
 """Deterministic review/control history over complete original revisions."""
 from dataclasses import dataclass
+from ..qualification.owned import owned_checks
 
 from ..model.canonical import canonical_json_bytes
 from .context import ProposalContext, reconstruct_proposal_target, specification_manifest
@@ -96,6 +97,7 @@ def _chain(originals):
         previous = value
 
 
+@owned_checks
 def assess_proposal(original, inputs, current_model, *, services=None):
     """Historical validity and current approval are separate, neither is a grant."""
     require(type(original) is ProposalOriginal and type(inputs) is ProposalInputs,

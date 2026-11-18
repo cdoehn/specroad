@@ -1,4 +1,5 @@
 """Isolated Proposal inspection, using native services and no command chaining."""
+from ..qualification.owned import owned_checks
 from dataclasses import replace
 
 from ..authoring._inspection_snapshot import InspectionSnapshot
@@ -45,6 +46,7 @@ def _isolated(snapshot, original, workspace, report, services):
     actual.verify_current()
 
 
+@owned_checks
 def check_proposal_project(root, operand, *, cwd=None, keep_workspace=False, services=None):
     """Return bound observations; no caller-supplied check result grants authority."""
     project = None

@@ -3,6 +3,7 @@
 The report/observation service, deterministic control reducer and native writer
 adapter have separate responsibilities. No technical check supplies the explicit human decision.
 """
+from ..qualification.owned import owned_checks
 from ..authoring._inspection_snapshot import InspectionSnapshot
 from ..changes import (PublicationAuthority, TargetPolicy, prepare_change_target,
                        project_lock, prepare_authoring_request)
@@ -27,6 +28,7 @@ from .values import ProposalOriginal, require
 POLICY = TargetPolicy(COMMAND, '1', (GATE,))
 
 
+@owned_checks
 def review_project(root, operand, *, expected_revision, decision, actor, planned_at,
                          change_plan_id, transaction_id, authority=None, request_id=None,
                          dry_run=False, comment=None, cwd=None, services=None):

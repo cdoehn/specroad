@@ -36,7 +36,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "d21c820525874cf370a7de1c30f6c53357b4c04427ab63c1819f33a249bad8d8",
+  "specification_sha256": "1ff2191b9efbec8b4b77a7e5811de26ad6cabdabec554c67be692cedc5861bc6",
   "steps": [
     "Compare direct native checks with split and portable Work through public requests and actual checkpoint stores.",
     "Apply the same bound checked content only with current real test-host review originals and authority; observe exact target bytes and unchanged inputs on refusal.",

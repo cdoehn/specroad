@@ -21,9 +21,17 @@ from .errors import require
 
 
 def project_bytes(files):
+    from copy import deepcopy
     from .owned import checked_bytes
+    # Own the input mapping once. Only exact immutable native values enter
+    # reuse; oversized inventories follow the complete uncached path.
+    files = dict(files.items())
+    if (len(files) > 65536 or any(type(p) is not str or type(raw) is not bytes
+                                for p, raw in files.items())
+            or sum(len(p) + len(raw) for p, raw in files.items()) > 16 * 1024 * 1024):
+        return _project_bytes(files)
     return checked_bytes('restore-project', tuple(sorted(files.items())),
-                         lambda: _project_bytes(files))
+                         lambda: _project_bytes(files), copy_result=deepcopy)
 
 
 def _project_bytes(files):

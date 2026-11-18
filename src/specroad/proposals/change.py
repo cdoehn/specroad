@@ -1,5 +1,6 @@
 """Publish an owned ProposalEdit through the existing native transaction."""
 
+from ..qualification.owned import owned_checks
 from ..changes import TargetModel, TargetPolicy, PublicationAuthority, prepare_authoring_request
 from ..changes._journal_codec import _transaction
 from ..changes.normal_access import require_normal_access
@@ -15,6 +16,7 @@ from .values import require
 
 
 
+@owned_checks
 def publish_proposal_change(edit, model, *, change_plan_id, planned_at,
                             transaction_id, authority=None, services=None):
     """Publish only the prepared content revision; no implicit decision or apply.

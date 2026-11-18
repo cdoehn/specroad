@@ -1,5 +1,7 @@
 """Strict parsing of the frozen RFC 5646 registry resource, without I/O."""
 
+from collections.abc import Mapping
+from copy import deepcopy
 from datetime import date
 from functools import lru_cache
 from types import MappingProxyType
@@ -32,16 +34,50 @@ def parse_registry_records(raw):
     remain in LanguageRegistry and run for every construction.
     """
     if type(raw) is not bytes or len(raw) > _MAX_CACHED_BYTES:
-        return _parse_registry_records(raw)
+        version, records = _parse_registry_records(raw)
+        return version, _fresh_records(_record_values(records))
     version, values = _cached_registry_values(raw)
     return version, _fresh_records(values)
 
 
+class _RegistryRecords(Mapping):
+    """Instance-owned public records over private immutable parser values."""
+    def __init__(self, values):
+        self._values = values
+        self._materialized = {}
+
+    def __getitem__(self, identity):
+        if identity not in self._materialized:
+            record = RegistryRecord(*self._values[0][identity])
+            self._materialized.setdefault(identity, record)
+        return self._materialized[identity]
+
+    def __iter__(self):
+        return iter(self._values[0])
+
+    def __len__(self):
+        return len(self._values[0])
+
+    def range_keys(self):
+        return self._values[1]
+
+    def __deepcopy__(self, memo):
+        # Only immutable private strings/tuples are shared. Even records that
+        # a caller mutated with object.__setattr__ stay local to their copy.
+        result = type(self)(self._values)
+        memo[id(self)] = result
+        result._materialized = deepcopy(self._materialized, memo)
+        return result
+
+
+def _record_values(records):
+    return (MappingProxyType({identity: (record.kind, record.value, record.fields)
+                              for identity, record in records.items()}),
+            tuple(identity for identity in records if '..' in identity[1]))
+
+
 def _fresh_records(values):
-    return MappingProxyType({
-        identity: RegistryRecord(kind, value, fields)
-        for identity, kind, value, fields in values
-    })
+    return _RegistryRecords(values)
 
 
 @lru_cache(maxsize=4)
@@ -49,8 +85,7 @@ def _cached_registry_values(raw):
     version, records = _parse_registry_records(raw)
     # Frozen dataclasses can still be modified with object.__setattr__.
     # Retain only private strings/tuples, never any exported Record object.
-    return version, tuple((identity, record.kind, record.value, record.fields)
-                          for identity, record in records.items())
+    return version, _record_values(records)
 
 
 def _parse_registry_records(raw):

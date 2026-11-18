@@ -14,6 +14,8 @@ Die zweite Ergänzung bindet ausschließlich die öffentliche Übergabe an den v
 
 OFF-PLAN-Auftrag: [Hostgrenze für identische Tests](decisions/test-host-once.md).
 
+OFF-PLAN-Auftrag: [Beschleunigung des vollständigen Proposal-Dialogs](decisions/dialog-performance.md).
+
 OFF-PLAN-Auftrag: [Remote-Testhosts und W/R/C-Abnahmen](decisions/remote-test-hosts-637.md).
 
 OFF-PLAN-Ergänzung: [Hostdaten für lokale Testläufe](decisions/local-test-history-640.md).
@@ -196,7 +198,7 @@ implementation_plan_commits_completed: 795
 last_completed_plan_commit: 18.p.C
 next_plan_commit: 18.q.W
 priority_off_plan: DIALOG-PERFORMANCE
-next_off_plan_commit: DIALOG-PERFORMANCE.W
+next_off_plan_commit: DIALOG-PERFORMANCE.R
 last_completed_numbered_bundle: 739
 implementation_state: in_progress
 audit_followup_status: closed

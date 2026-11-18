@@ -1,4 +1,5 @@
 """Public Proposal Apply: exact inner plan through the shared native writer."""
+from ..qualification.owned import owned_checks
 from ..authoring._inspection_snapshot import InspectionSnapshot
 from ..changes import (PublicationAuthority, TargetPolicy, prepare_change_target,
     prepare_authoring_request, project_lock)
@@ -33,6 +34,7 @@ def _failure_reason(error):
     return reason if type(reason) is str and reason else 'proposal_apply_failed'
 
 
+@owned_checks
 def apply_project(root, operand, *, expected_revision, actor, planned_at, change_plan_id,
                   transaction_id, authority=None, request_id=None, dry_run=False, cwd=None, services=None, checked_work=None):
     audit = _initial()['audit']

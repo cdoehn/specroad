@@ -23,7 +23,7 @@ def owned_checks(function):
     return call
 
 
-def checked_bytes(domain, key, check):
+def checked_bytes(domain, key, check, *, copy_result=None):
     cache = _ACTIVE.get()
     if cache is None:
         return check()
@@ -33,4 +33,5 @@ def checked_bytes(domain, key, check):
         if len(cache) >= 8:
             cache.pop(next(iter(cache)))
         cache[identity] = result
-    return cache[identity]
+    result = cache[identity]
+    return result if copy_result is None else copy_result(result)
