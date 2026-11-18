@@ -1,21 +1,31 @@
 {
   "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "fixture_ids": [],
-  "implementation_status": "open",
+  "expected_exit_codes": [
+    0,
+    3
+  ],
+  "fixture_ids": [
+    "SR-FIX-ANALYZER-DESCRIPTOR-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [],
-  "method": "pending",
+  "method": "automated_behavior",
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence.",
-    "ANALYZER-CONTRACT-746: T.2.1/T.3.1 specify closed passive descriptor/request values. Each implementation stage needs its own actual Apply gate; no worker or project selector is claimed here."
+    "Target stage 19.a.W requires its own actual successful Apply gate and commit; tests are prepared, not executed in Dev.",
+    "Full available behavior suite and separate CPython 3.10–3.14/platform matrix remain mandatory before milestone/release acceptance.",
+    "Later M19 steps retain project subject selection, report/work/CLI integration, actual installed language worker and independent engine evidence.",
+    "The separately announced R/C states complete robustness and cleanup with their own unchanged gating obligations."
   ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Analyzer-Descriptoren MÜSSEN das abschließende Feld-, Versions- und Identitätsschema aus Anhang T.2 erfüllen.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Actual closed immutable descriptors, independently checked JCS hashes, exact shipped builtin classification and passive external metadata. Prepared only; no Dev behavior execution or full milestone/platform acceptance is claimed."
   },
-  "preconditions": [],
+  "preconditions": [
+    "Explicit synthetic complete own input values with independent expected hashes; no project files, secrets or actual installed worker are assumed.",
+    "All behavior execution takes place in the separate Apply gate. Collection alone is not behavioral evidence."
+  ],
   "primary_verification_id": "SR-VER-0046",
   "required_environment": {
     "declared_minimum_python": "3.10",
@@ -29,8 +39,31 @@
     "owned_temporary_files": true
   },
   "specification_sha256": "4dca16070c6c118e0666973758b0cf737cf4088c8cd67b3338462848bf86b8ea",
-  "steps": [],
+  "steps": [
+    "Parse exact builtin and independent valid external descriptor data; compare canonical bytes and complete hashes, preserve extensions and return independent copies."
+  ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0676",
-  "test_ids": []
+  "test_ids": [
+    "tests/test_analyzer_descriptors.py::test_adapter_and_result_version_are_data_not_execution_rights[0.0.1]",
+    "tests/test_analyzer_descriptors.py::test_adapter_and_result_version_are_data_not_execution_rights[1.0.0]",
+    "tests/test_analyzer_descriptors.py::test_adapter_and_result_version_are_data_not_execution_rights[1.2.3-rc.1+build.007]",
+    "tests/test_analyzer_descriptors.py::test_builtin_and_external_are_distinct_without_claiming_installed_worker",
+    "tests/test_analyzer_descriptors.py::test_descriptor_hash_owns_all_values_and_ignores_source_formatting",
+    "tests/test_analyzer_descriptors.py::test_invalid_descriptor_refuses_whole_value[analyzer_id-Bad Name]",
+    "tests/test_analyzer_descriptors.py::test_invalid_descriptor_refuses_whole_value[capabilities-value3]",
+    "tests/test_analyzer_descriptors.py::test_invalid_descriptor_refuses_whole_value[contract_version-2.0.0]",
+    "tests/test_analyzer_descriptors.py::test_invalid_descriptor_refuses_whole_value[dependency_requirements-value5]",
+    "tests/test_analyzer_descriptors.py::test_invalid_descriptor_refuses_whole_value[execution_mode-shell]",
+    "tests/test_analyzer_descriptors.py::test_invalid_descriptor_refuses_whole_value[subject_modes-value2]",
+    "tests/test_analyzer_descriptors.py::test_valid_subject_and_execution_metadata_remains_passive[builtin_worker-multi_subject]",
+    "tests/test_analyzer_descriptors.py::test_valid_subject_and_execution_metadata_remains_passive[builtin_worker-single_text]",
+    "tests/test_analyzer_descriptors.py::test_valid_subject_and_execution_metadata_remains_passive[builtin_worker-structured]",
+    "tests/test_analyzer_descriptors.py::test_valid_subject_and_execution_metadata_remains_passive[external_result_only-multi_subject]",
+    "tests/test_analyzer_descriptors.py::test_valid_subject_and_execution_metadata_remains_passive[external_result_only-single_text]",
+    "tests/test_analyzer_descriptors.py::test_valid_subject_and_execution_metadata_remains_passive[external_result_only-structured]",
+    "tests/test_analyzer_descriptors.py::test_valid_subject_and_execution_metadata_remains_passive[future_unsupported-multi_subject]",
+    "tests/test_analyzer_descriptors.py::test_valid_subject_and_execution_metadata_remains_passive[future_unsupported-single_text]",
+    "tests/test_analyzer_descriptors.py::test_valid_subject_and_execution_metadata_remains_passive[future_unsupported-structured]"
+  ]
 }

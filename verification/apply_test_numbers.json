@@ -28388,6 +28388,26 @@
     "tests/test_transport_receive_right.py::test_replay_rejects_changed_historical_completion_without_rewriting_receipt[current_target_verified]",
     "tests/test_transport_receive_right.py::test_replay_rejects_changed_historical_completion_without_rewriting_receipt[replayed]",
     "tests/test_transport_receive_right.py::test_replay_rejects_changed_historical_completion_without_rewriting_receipt[target_model_root_sha256]",
-    "tests/test_transport_receive_right.py::test_replay_rejects_changed_historical_completion_without_rewriting_receipt[transaction_id]"
+    "tests/test_transport_receive_right.py::test_replay_rejects_changed_historical_completion_without_rewriting_receipt[transaction_id]",
+    "tests/test_analyzer_descriptors.py::test_adapter_and_result_version_are_data_not_execution_rights[0.0.1]",
+    "tests/test_analyzer_descriptors.py::test_adapter_and_result_version_are_data_not_execution_rights[1.0.0]",
+    "tests/test_analyzer_descriptors.py::test_adapter_and_result_version_are_data_not_execution_rights[1.2.3-rc.1+build.007]",
+    "tests/test_analyzer_descriptors.py::test_builtin_and_external_are_distinct_without_claiming_installed_worker",
+    "tests/test_analyzer_descriptors.py::test_descriptor_hash_owns_all_values_and_ignores_source_formatting",
+    "tests/test_analyzer_descriptors.py::test_invalid_descriptor_refuses_whole_value[analyzer_id-Bad Name]",
+    "tests/test_analyzer_descriptors.py::test_invalid_descriptor_refuses_whole_value[capabilities-value3]",
+    "tests/test_analyzer_descriptors.py::test_invalid_descriptor_refuses_whole_value[contract_version-2.0.0]",
+    "tests/test_analyzer_descriptors.py::test_invalid_descriptor_refuses_whole_value[dependency_requirements-value5]",
+    "tests/test_analyzer_descriptors.py::test_invalid_descriptor_refuses_whole_value[execution_mode-shell]",
+    "tests/test_analyzer_descriptors.py::test_invalid_descriptor_refuses_whole_value[subject_modes-value2]",
+    "tests/test_analyzer_descriptors.py::test_valid_subject_and_execution_metadata_remains_passive[builtin_worker-multi_subject]",
+    "tests/test_analyzer_descriptors.py::test_valid_subject_and_execution_metadata_remains_passive[builtin_worker-single_text]",
+    "tests/test_analyzer_descriptors.py::test_valid_subject_and_execution_metadata_remains_passive[builtin_worker-structured]",
+    "tests/test_analyzer_descriptors.py::test_valid_subject_and_execution_metadata_remains_passive[external_result_only-multi_subject]",
+    "tests/test_analyzer_descriptors.py::test_valid_subject_and_execution_metadata_remains_passive[external_result_only-single_text]",
+    "tests/test_analyzer_descriptors.py::test_valid_subject_and_execution_metadata_remains_passive[external_result_only-structured]",
+    "tests/test_analyzer_descriptors.py::test_valid_subject_and_execution_metadata_remains_passive[future_unsupported-multi_subject]",
+    "tests/test_analyzer_descriptors.py::test_valid_subject_and_execution_metadata_remains_passive[future_unsupported-single_text]",
+    "tests/test_analyzer_descriptors.py::test_valid_subject_and_execution_metadata_remains_passive[future_unsupported-structured]"
   ]
 }

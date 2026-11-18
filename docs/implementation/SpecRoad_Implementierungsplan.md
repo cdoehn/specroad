@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 271 · **Stand:** 18. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.96
+**Planrevision:** 272 · **Stand:** 18. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.96
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 306 Schritte und 918 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; die früher genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wurde nach der damaligen Spezifikation innerhalb von 15.l.R vorgezogen und bleibt als normaler Prüfkern erhalten. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -205,14 +205,16 @@ Die Vollsuite und die getrennte Python-/Plattformmatrix bleiben für die Meilens
 
 Detailentscheidung für 19.a/19.b: [ANALYZER-CONTRACT-746](decisions/analyzer-contract-746.md).
 
+Aktuelle Folge: [Bundle 746 — passive Analyzerwerte](history/bundle-746-analyzer-values.md). Die Zielwerte gelten erst nach dem eigenen erfolgreichen Apply-Gate und Commit.
+
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 271
+plan_revision: 272
 implementation_plan_commits_total: 918
-implementation_plan_commits_completed: 801
-last_completed_plan_commit: 18.r.C
-next_plan_commit: 19.a.W
+implementation_plan_commits_completed: 802
+last_completed_plan_commit: 19.a.W
+next_plan_commit: 19.a.R
 priority_off_plan: null
 next_off_plan_commit: null
 last_completed_numbered_bundle: 745

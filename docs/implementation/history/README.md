@@ -522,3 +522,5 @@
 - [Bundle 744 — nativer Rückpaketvertrag und vollständiger Rest](bundle-744-return-native-contract.md)
 
 - [Bundle 745 — native historische Rücktransportbelege](bundle-745-return-replay-proof.md)
+
+- [Bundle 746 — passive Analyzerwerte](bundle-746-analyzer-values.md)

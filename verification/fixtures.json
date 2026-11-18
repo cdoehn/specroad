@@ -1,5 +1,9 @@
 {
   "definitions": {
+    "SR-FIX-ANALYZER-DESCRIPTOR-v1": {
+      "kind": "Explicit synthetic passive external descriptor plus the actual shipped builtin metadata. Independent canonical-hash oracle, owned nested data, malformed bytes, dependency and extension inputs. No installed worker, execution authority or package availability is fabricated.",
+      "provider": "tests/test_analyzer_descriptors.py:external"
+    },
     "SR-FIX-ARTIFACT-COMMON-v1": {
       "kind": "common-field envelope only, not a complete per-type or approved artifact",
       "provider": "tests/support/artifacts.py:common_artifact"
@@ -983,6 +987,7 @@
   },
   "fixture_format_version": 1,
   "fixture_ids": [
+    "SR-FIX-ANALYZER-DESCRIPTOR-v1",
     "SR-FIX-ARTIFACT-COMMON-v1",
     "SR-FIX-ARTIFACT-IMPORT-EXECUTION-v1",
     "SR-FIX-ARTIFACT-IMPORT-PLAN-REUSE-v1",
