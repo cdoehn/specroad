@@ -1,10 +1,7 @@
 """Explicit local host admission and native draft receipt; never Proposal apply."""
-from hashlib import sha256
-from io import BytesIO
 import math
 import os
 import stat
-from zipfile import ZipFile
 
 from ..authoring._inspection_snapshot import InspectionSnapshot
 from ..bundles.extraction import extract_bundle
@@ -16,22 +13,12 @@ from ._export_boundary import binding, repository_root
 from ._handoff import MAX_BYTES
 from ._native_api import _api_call
 from ._return_data import ReturnData
+from ._return_package import _checked_contents
 from ._return_draft import draft, publish
 from ._return_channel import receiver_channel
 from ._return_receipt import staged, record, read_replay
 from .snapshots import TransportFailure
 from .opening import SandboxOpening
-
-
-def _checked_contents(raw, inspection):
-    """Read consumer bytes only after native inspection, matching its evidence."""
-    require(inspection.package_sha256 == sha256(raw).hexdigest(), 'return_package_changed', 6)
-    require(sum(e.size for e in inspection.entries) <= MAX_BYTES, 'return_package_limit')
-    with ZipFile(BytesIO(raw)) as archive:
-        result = {e.path: archive.read(e.path) for e in inspection.entries}
-    require(all(len(result[e.path]) == e.size and sha256(result[e.path]).hexdigest() == e.sha256
-                for e in inspection.entries), 'return_inspected_bytes_changed', 6)
-    return result
 
 
 class ReturnReceiver:
