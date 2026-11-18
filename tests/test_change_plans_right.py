@@ -291,3 +291,12 @@ def test_extra_from_members_of_nonmove_patches_remain_passive_bound_data():
         observed = ChangeOperation(op)
         assert observed.data["patch"] == [item]
         assert observed.executable is False
+
+
+def test_serialized_proposal_change_result_must_equal_the_complete_bound_record():
+    op = operation('proposal_change')
+    altered = deepcopy(op['record'])
+    altered['title'] = 'Unbound alternative result'
+    with pytest.raises(ChangePlanError) as refused:
+        prepare_change_plan(document([op], [result(altered)]))
+    assert refused.value.reason == 'proposal_change_result_mismatch'

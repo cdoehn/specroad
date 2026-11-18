@@ -33,6 +33,9 @@ def _result_bindings(value):
             if (kind != "create" or counts[artifact["id"]] == 1) and artifact["id"] in results:
                 if canonical_json_sha256(artifact) != results[artifact["id"]]["sha256"]:
                     raise ChangePlanError("immutable_record_result_mismatch" if kind != "create" else "creation_result_mismatch", pointer=at, code="SRV146")
+        if kind == "proposal_change" and operation["target"] in results:
+            if canonical_json_sha256(operation['record']) != results[operation['target']]['sha256']:
+                raise ChangePlanError('proposal_change_result_mismatch', pointer=at, code='SRV146')
         if kind == "proposal_control" and operation["target"] in results:
             final = results[operation["target"]]["artifact"]
             if (final["content_revision"] != operation["content_revision"]

@@ -49,4 +49,4 @@ statische Prüfung, reine Collection und native Paketvalidierung aus.
 Jede Stage benötigt ihr eigenes N=3-plus-Pflichtgate vor ihrem Commit.
 Vorbereitete Zähler und Katalogeinträge sind keine bestandenen Verhaltenstests.
 
-Zielstand erst nach eigenem erfolgreichen Apply-Gate: **18.p.W**, **793/918**, danach **18.p.R**.
+Zielstand erst nach eigenem erfolgreichen Apply-Gate: **18.p.R**, **794/918**, danach **18.p.C**.

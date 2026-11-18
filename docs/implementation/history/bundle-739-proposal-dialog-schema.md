@@ -43,4 +43,4 @@ Rückpaketexport 18.q bleibt der nächste vollständige Planschritt; die offene
 Writerintegration wird zuerst in allen drei angekündigten Zuständen korrigiert.
 Vorbereitung oder Collection sind kein bestandener Verhaltenstest.
 
-Ziel erst nach dem eigenen erfolgreichen Gate dieser Stage: **18.p.W**, **793/918**, danach **18.p.R**.
+Ziel erst nach dem eigenen erfolgreichen Gate dieser Stage: **18.p.R**, **794/918**, danach **18.p.C**.
