@@ -33,6 +33,10 @@ class CommandRegistry:
         if 'bundle.create' in by_id and any(o.flag == '--direction' for o in by_id['bundle.create'].options):
             from ._transport import outbound_contract
             self._outbound = outbound_contract(by_id['bundle.create'])
+        self._return = None
+        if self._outbound is not None:
+            from ._transport_return import return_contract
+            self._return = return_contract(by_id['bundle.create'])
         self._opening = {}
         from ._transport_opening import opening_contract
         for name in ('bundle.verify', 'bundle.extract'):
@@ -47,6 +51,10 @@ class CommandRegistry:
             from ._transport_opening import opening_options
             if opening_options(options):
                 return self._opening[command.command_id]
+        if self._return is not None and command.command_id == 'bundle.create':
+            from ._transport_return import return_options
+            if return_options(options):
+                return self._return
         if self._outbound is not None and command.command_id == 'bundle.create':
             from ._transport import outbound_options
             if outbound_options(options):
@@ -56,7 +64,7 @@ class CommandRegistry:
     def variants(self, command):
         if command.command_id in self._opening:
             return (self._opening[command.command_id],)
-        return (self._outbound,) if self._outbound is not None and command.command_id == 'bundle.create' else ()
+        return (self._outbound, self._return) if self._outbound is not None and command.command_id == 'bundle.create' else ()
 
     @property
     def commands(self) -> tuple[CommandSpec, ...]:

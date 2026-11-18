@@ -16,27 +16,27 @@
     7
   ],
   "fixture_ids": [
+    "SR-FIX-RETURN-180-v1",
     "SR-FIX-SANDBOX-OPEN-180-v1"
   ],
   "implementation_status": "partial",
   "json_pointers": [],
   "method": "automated_behavior",
   "open_items": [
-    "Correction bundle 547 retains 15.o.C after four R fixture-construction failures (7523 passed); W committed as a2929c3eaceefbd3376099c3324d43fd4c805edc after 7414 passing tests. This phase still requires its own successful Apply gate and actual commit; no Dev behavior tests ran.",
-    "Full native CPython 3.10–3.14/platform evidence and the M15 full-suite/integration gate remain pending explicit manual execution.",
-    "Return transport/receive, end-to-end round trip and platform acceptance remain open in 18.q/18.r/20.f/20.h/20.m.",
-    "RECOVERY-REMOVAL-006: existing test references cover only their still-valid implemented scope. Changed interruption/receipt/preflight/work oracles require fresh implementation and evidence in 18.s–18.x; old repair/crash recovery results are not acceptance of the new contract.",
-    "18.v: fresh stage-specific Apply evidence is required. Dev only prepared the implementation, behavioral oracles and pure collection; no behavior tests ran in Dev.",
-    "RETURN-TRANSPORT-743: the additive closed return/admission/replay contract W.5.1 is normative; each announced implementation stage still needs its own actual Apply gate. No Dev behavior success is claimed."
+    "The prepared stage 18.q.W requires its own successful Apply gate and commit; collection is not behavior acceptance.",
+    "The full available behavior suite and separate CPython 3.10–3.14/platform matrix remain required before milestone/release acceptance.",
+    "The remaining 18.q/18.r stages keep their separate robustness/cleanup and integration gates; no later-stage success is assumed."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Die Featureabnahme MUSS den vollständigen API-basierten Rundweg, die negativen Sicherheits-/Zustandsfälle und jedes angebotene Runtimeprofil nach W.7 mit realen Paketartefakten und gebundener Laufzeit-Evidence nachweisen.",
-    "scope": "Prepared offline inbound verification/extraction contribution only: exact native reference/project bytes, trusted standalone code, original receipts and guarded root publication. No return-path, release or completed execution evidence is claimed. 18.v binds the replacement interruption/normal-completion oracles; old automatic-repair evidence is historical only. Further plan scopes and release acceptance remain separate."
+    "scope": "Native outbound/opening coverage is retained. Prepared 18.q uses the actual pinned 1.8.0 API to export one exact reference-bound passive proposal patch from an offline Python-only sandbox; empty delta emits no patch. No Dev behavior tests have run. Each stage needs its actual Apply gate. Full-suite and independent CPython/platform release evidence remain open. Correction 744 preserves the complete remaining stage 18.q.W: the fixed native entrypoint marker and public native handoff roles are respected, while exact SpecRoad payload bytes and all native metadata validation remain mandatory. Only the clarification prefix passed Apply; corrected product stages still require their own gates."
   },
   "preconditions": [
     "Linux x86-64 CPython, explicit trusted standalone PatchHarbor 1.8.0 PYZ and external hash, actual closed outbound package and fresh private workspace.",
-    "Use only owned native test roots with actual backup/original evidence. No historical success record authorizes replay or restoration of a protected partial publication."
+    "Use only owned native test roots with actual backup/original evidence. No historical success record authorizes replay or restoration of a protected partial publication.",
+    "Original native outbound bundle with explicit full SHA-256, current complete project, explicit Proposal and pinned runtime; no implicit trust in package code.",
+    "Apply-only tests use synthetic authority/actors and actual native artifacts; no fixture grants productive approval."
   ],
   "primary_verification_id": "SR-VER-0051",
   "required_environment": {
@@ -58,7 +58,8 @@
     "Validate the public command-description schema for opening and outbound variants, including nullable budget metadata; refuse unknown fields, missing mandatory fields and false types.",
     "Verify metadata preserves runtime-budget-v2 for bundle.verify and null for bundle.extract in normal and transport contracts; retain all closed-schema rejection checks.",
     "Preserve real PYZ directory members when constructing altered Core and build-record inputs; require their specific passive security rejection before runtime loading or workspace creation.",
-    "Interrupt actual sandbox publication; preserve the parent-bound outer guard and all actual payload/workspace bytes. Opening again, including through an already extracted inner project, never completes an interrupted sandbox."
+    "Interrupt actual sandbox publication; preserve the parent-bound outer guard and all actual payload/workspace bytes. Opening again, including through an already extracted inner project, never completes an interrupted sandbox.",
+    "Create, validate and check the native Proposal in an isolated Python-only process, then export through public argv and structured commands; verify exact bytes, original four-value binding and no_changes."
   ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0742",
@@ -238,6 +239,17 @@
     "tests/test_transport_opening_right.py::test_unsafe_operating_paths_preserve_foreign_bytes[subproject-target-file]",
     "tests/test_transport_opening_right.py::test_unsafe_operating_paths_preserve_foreign_bytes[subproject-target-link]",
     "tests/test_transport_opening_right.py::test_unsafe_operating_paths_preserve_foreign_bytes[subproject-workspace-exists]",
-    "tests/test_transport_opening_right.py::test_unsafe_operating_paths_preserve_foreign_bytes[subproject-workspace-in-project]"
+    "tests/test_transport_opening_right.py::test_unsafe_operating_paths_preserve_foreign_bytes[subproject-workspace-in-project]",
+    "tests/test_transport_return.py::test_native_return_is_one_bound_passive_patch_without_input_writes[repository-root-False-module]",
+    "tests/test_transport_return.py::test_native_return_is_one_bound_passive_patch_without_input_writes[repository-root-False-pyz]",
+    "tests/test_transport_return.py::test_native_return_is_one_bound_passive_patch_without_input_writes[repository-root-True-module]",
+    "tests/test_transport_return.py::test_native_return_is_one_bound_passive_patch_without_input_writes[repository-root-True-pyz]",
+    "tests/test_transport_return.py::test_native_return_is_one_bound_passive_patch_without_input_writes[subproject-False-module]",
+    "tests/test_transport_return.py::test_native_return_is_one_bound_passive_patch_without_input_writes[subproject-False-pyz]",
+    "tests/test_transport_return.py::test_native_return_is_one_bound_passive_patch_without_input_writes[subproject-True-module]",
+    "tests/test_transport_return.py::test_native_return_is_one_bound_passive_patch_without_input_writes[subproject-True-pyz]",
+    "tests/test_transport_return.py::test_no_changes_returns_no_patch_file[repository-root]",
+    "tests/test_transport_return.py::test_no_changes_returns_no_patch_file[subproject]",
+    "tests/test_transport_return.py::test_return_metadata_binds_generated_output_without_git_or_host_authority"
   ]
 }

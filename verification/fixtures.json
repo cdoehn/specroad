@@ -312,6 +312,14 @@
       "kind": "Owned temporary local Git repositories built as raw fixture objects without Git write commands; real system Git reads pinned commits, trees and blobs. Independent exact-byte and no-mutation oracles cover HEAD/refs/index/working/foreign data, raw encodings, hooks/filters/pagers, inherited Git environment, missing/corrupt objects and resource boundaries. No complete model, release approval, network or source execution is claimed.",
       "provider": "tests/support/git_objects.py:GitFixture"
     },
+    "SR-FIX-GIT-RESTART-R-v1": {
+      "kind": "Real native Proposal application and receipts, missing originals, archive closure, optional history and copied active markers in separate local test checkouts. Synthetic explicit review providers; no release evidence.",
+      "provider": "tests/test_git_restart_right.py;tests/support/proposal_apply.py"
+    },
+    "SR-FIX-GIT-RESTART-W-v1": {
+      "kind": "Owned complete projects with real normal writer receipts and real local Git commits/checkouts in temporary test directories. Genuine new business request after native qualification; old root unchanged. No product Git command, forged receipts or approval.",
+      "provider": "tests/support/git_restart.py;tests/test_git_restart.py;tests/test_retired_formats.py"
+    },
     "SR-FIX-IMPORT-COMPARISON-v1": {
       "kind": "Synthetic explicit local/source JSON object projections and native import histories for all five comparison cases and four declared strategies. Separate historical hashes, unchanged raw-payload/revision provenance, legacy history, malformed input, real mapping selection with native artifact/relation lookup, detached observations and isolated Core/PYZ evaluation. Only passive decisions and target candidates; no format import, revision, identity allocation, clock, write or human approval is claimed. R adds asymmetric historical baselines, exact prerelease/build/case binding, every incomplete history field, malformed values, safe JSON pointers, numeric equivalence, cycles and shared inputs, foreign hook rejection, prior-observation preservation, actual file bytes/modes and isolated rejection contracts. Existing JSON reader limits remain unchanged.",
       "provider": "tests/support/import_comparison.py:compare,imported; tests/support/relations.py:artifact,edge,external"
@@ -620,6 +628,14 @@
       "kind": "owned passive document and evidence-field fixtures; no execution, authoring, real approvals or external hash verification",
       "provider": "tests/support/records.py:record_value"
     },
+    "SR-FIX-RECOVERY-REMOVAL-R-v1": {
+      "kind": "Actual native legacy publication interruption and lock observations; no owner removal, repair mutation or successful-repair oracle. Old packages are rehashed literal fixtures, never live authority.",
+      "provider": "tests/test_recovery_removal_right.py;tests/test_project_locks_right.py;tests/support/legacy_publication.py"
+    },
+    "SR-FIX-RECOVERY-REMOVAL-W-v1": {
+      "kind": "Synthetic closed old requests and coherently sealed old Work identities; actual native preparation/package APIs; rejected repair has no file effects.",
+      "provider": "tests/test_recovery_removal.py;tests/test_work_packages.py;tests/test_migration_work.py"
+    },
     "SR-FIX-REFERENCE-FINDINGS-v1": {
       "kind": "Owned source documents with independent expected missing-target, relation-matrix, field and review findings; the companion missing-reference cases use the same model helpers. Real model/read-only API comparisons preserve selection, deterministic findings and strict identity barriers; no invalid resolved graph or approval/write authority.",
       "provider": "tests/test_validation_reference_sets.py:reference_case"
@@ -779,6 +795,10 @@
     "SR-FIX-RESTORE-WORK-PROGRESS-v1": {
       "kind": "Synthetic registered Restore Work with independently retained initial bytes, actual native project execution and private CheckpointStore. One retained Work inode lease spans explicit orphan handoff, fresh project authorization and durable confirmation of the native execution unit. Real fresh subprocesses stop across partial/full project publication, native return, checkpoint objects/record and atomic pointer boundaries. Native rollback never confirms success; missing native completion cannot start another publication. Full result delivery, public command registration and release parity remain open.",
       "provider": "tests/test_work_restore_progress.py:advance,interrupt,child;tests/test_work_restore_execution.py:stored,takeover;tests/test_work_restore_owner.py:orphan;tests/support/restore.py:restore_case,plan_for"
+    },
+    "SR-FIX-RETURN-180-v1": {
+      "kind": "Small complete native project, actual registered Git/PH origin and pinned outbound/opening artifacts. Intent supplied by the fixture; native Proposal construction, validation, check and return export run in an isolated module/PYZ Python-only child with empty PATH, no site packages and audited subprocess/network denial. No native transport or project validators are replaced.",
+      "provider": "tests/support/transport_return.py:origin,sandbox,offline_export"
     },
     "SR-FIX-ROADMAP-EXPLANATION-RIGHT-v1": {
       "kind": "Owned live project with independently complete path/node sets, explicit missing planning references and configured depth. Public direct/CLI/structured/Core/PYZ results, closed result schema, read-only modes and write/process/entropy traps. Mid-read source/configuration/profile/inventory changes, operational blockers, malformed unreachable sources, path security and isolated runtimes. No atomicity, release readiness or View/Work claim.",
@@ -955,22 +975,6 @@
     "verification-context-subjects": {
       "kind": "Owned requirement, verification and test subjects with immutable recorded Evidence bindings. Audit/workflow and semantic changes, exact effective product configurations, passive metadata, native rejection boundaries and isolated Core/PYZ parity. No authoritative run selection or verification success.",
       "provider": "tests/test_verification_context.py:subject"
-    },
-    "SR-FIX-RECOVERY-REMOVAL-W-v1": {
-      "provider": "tests/test_recovery_removal.py;tests/test_work_packages.py;tests/test_migration_work.py",
-      "kind": "Synthetic closed old requests and coherently sealed old Work identities; actual native preparation/package APIs; rejected repair has no file effects."
-    },
-    "SR-FIX-RECOVERY-REMOVAL-R-v1": {
-      "provider": "tests/test_recovery_removal_right.py;tests/test_project_locks_right.py;tests/support/legacy_publication.py",
-      "kind": "Actual native legacy publication interruption and lock observations; no owner removal, repair mutation or successful-repair oracle. Old packages are rehashed literal fixtures, never live authority."
-    },
-    "SR-FIX-GIT-RESTART-W-v1": {
-      "provider": "tests/support/git_restart.py;tests/test_git_restart.py;tests/test_retired_formats.py",
-      "kind": "Owned complete projects with real normal writer receipts and real local Git commits/checkouts in temporary test directories. Genuine new business request after native qualification; old root unchanged. No product Git command, forged receipts or approval."
-    },
-    "SR-FIX-GIT-RESTART-R-v1": {
-      "provider": "tests/test_git_restart_right.py;tests/support/proposal_apply.py",
-      "kind": "Real native Proposal application and receipts, missing originals, archive closure, optional history and copied active markers in separate local test checkouts. Synthetic explicit review providers; no release evidence."
     }
   },
   "fixture_format_version": 1,
@@ -1187,6 +1191,7 @@
     "SR-FIX-RESTORE-WORK-EXECUTION-v1",
     "SR-FIX-RESTORE-WORK-OWNER-v1",
     "SR-FIX-RESTORE-WORK-PROGRESS-v1",
+    "SR-FIX-RETURN-180-v1",
     "SR-FIX-ROADMAP-EXPLANATION-RIGHT-v1",
     "SR-FIX-ROADMAP-EXPLANATION-v1",
     "SR-FIX-ROADMAP-PROJECTION-RIGHT-v1",

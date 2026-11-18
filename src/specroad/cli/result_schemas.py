@@ -216,6 +216,13 @@ def _fields(schema_id):
             'closure_verified': {'const': True}, 'external_hash_verified': boolean,
             'creator_authenticated': {'const': False}, 'full_semantic_validation': {'const': False},
             'approval_granted': {'const': False}, 'write_authorized': {'const': False}})
+    if schema_id == 'proposal-return-export-v1':
+        return _object({'format_version': {'const': 'proposal-return-export-v1'}, 'manifest': obj,
+            'status': {'enum': ['created', 'no_changes']}, 'generated': boolean,
+            'file': _nullable(_object({'path': nonempty, 'size': count, 'sha256': sha})),
+            'normative': {'const': False}, 'approval_granted': {'const': False},
+            'write_authorized': {'const': False}, 'full_semantic_validation': {'const': False},
+            'source_bytes_rechecked': {'const': True}})
     if schema_id == 'bundle-create-v1':
         schema = _object({'format_version': {'const': 'bundle-create-v1'}, 'manifest': obj,
             'file': _object({'path': nonempty, 'size': count, 'sha256': sha}),

@@ -148,6 +148,9 @@ def _export(invocation):
 
 
 def _bundle_create(invocation):
+    if invocation.options.get('--direction') == 'return':
+        from ._transport_return import create_return_command
+        return create_return_command(invocation)
     if invocation.command.command_class is CommandClass.TRANSPORT_OPERATIONAL:
         from ._transport import create_outbound_command
         return create_outbound_command(invocation)
@@ -219,7 +222,7 @@ def builtin_registry() -> CommandRegistry:
             *global_options('--profile'),
             *(OptionSpec(flag, takes_value=True) for flag in ('--direction', '--runtime-profile',
                 '--patchharbor-pyz', '--patchharbor-pyz-sha256', '--specroad-pyz', '--specroad-pyz-sha256',
-                '--reference', '--proposal', '--work-dir')),
+                '--reference', '--proposal', '--work-dir', '--expected-sha256')),
             *_read_runtime_options(),
             *(OptionSpec('--' + name, takes_value=True) for name in
               ('output', 'output-root', 'configuration', 'document', 'release', 'project')),

@@ -516,3 +516,7 @@
 - [Bundle 741 — nativer Fehlervertrag und offener Dialog-R/C-Rest](bundle-741-dialog-error-contract.md).
 
 - [Bundle 742 — Formatkorrektur und vollständiger Dialog-C-Abschluss](bundle-742-dialog-clean-whitespace.md).
+
+- [Bundle 743 — Rückexport und lokale Übernahme](bundle-743-return-transport.md)
+
+- [Bundle 744 — nativer Rückpaketvertrag und vollständiger Rest](bundle-744-return-native-contract.md)

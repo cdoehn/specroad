@@ -16,26 +16,27 @@
     8
   ],
   "fixture_ids": [
-    "SR-FIX-OUTBOUND-SAFE-180-v1"
+    "SR-FIX-OUTBOUND-SAFE-180-v1",
+    "SR-FIX-RETURN-180-v1"
   ],
   "implementation_status": "partial",
   "json_pointers": [],
   "method": "automated_behavior",
   "open_items": [
-    "Prepared 15.n.R/C still require their individual Apply gates and actual commits; no behavior tests were executed in Dev.",
-    "Full native CPython 3.10–3.14/platform evidence remains pending manual CI; targeted local gates are not release or full-suite evidence.",
-    "18.q return export and its original-reference binding remain unimplemented; this evidence covers only the outbound direction.",
-    "RECOVERY-REMOVAL-006: existing test references cover only their still-valid implemented scope. Changed interruption/receipt/preflight/work oracles require fresh implementation and evidence in 18.s–18.x; old repair/crash recovery results are not acceptance of the new contract.",
-    "RETURN-TRANSPORT-743: the additive closed return/admission/replay contract W.5.1 is normative; each announced implementation stage still needs its own actual Apply gate. No Dev behavior success is claimed."
+    "The prepared stage 18.q.W requires its own successful Apply gate and commit; collection is not behavior acceptance.",
+    "The full available behavior suite and separate CPython 3.10–3.14/platform matrix remain required before milestone/release acceptance.",
+    "The remaining 18.q/18.r stages keep their separate robustness/cleanup and integration gates; no later-stage success is assumed."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Hin- und Rückexport MÜSSEN denselben Befehl `bundle create --profile ai-runtime` mit expliziter Richtung verwenden; der Rückexport MUSS seine PatchHarbor-Bindungswerte unverändert aus dem ursprünglichen Result übernehmen.",
-    "scope": "Prepared 15.n.R/C completes native outbound runtime/workspace continuity and operating-boundary checks through final publication, using the pinned 1.8.0 API and native effective bytes. Behavior is not executed in Dev; Apply and the independent Python matrix remain required."
+    "scope": "Native outbound/opening coverage is retained. Prepared 18.q uses the actual pinned 1.8.0 API to export one exact reference-bound passive proposal patch from an offline Python-only sandbox; empty delta emits no patch. No Dev behavior tests have run. Each stage needs its actual Apply gate. Full-suite and independent CPython/platform release evidence remain open. Correction 744 preserves the complete remaining stage 18.q.W: the fixed native entrypoint marker and public native handoff roles are respected, while exact SpecRoad payload bytes and all native metadata validation remain mandatory. Only the clarification prefix passed Apply; corrected product stages still require their own gates."
   },
   "preconditions": [
     "An explicitly registered local repository with HEAD, complete native project and portable history.",
-    "Explicit --patchharbor-pyz/--patchharbor-pyz-sha256, canonical pinned 1.8.0, safe-reference contract 1 and a separate owned output area; no Runtime-Result bootstrap."
+    "Explicit --patchharbor-pyz/--patchharbor-pyz-sha256, canonical pinned 1.8.0, safe-reference contract 1 and a separate owned output area; no Runtime-Result bootstrap.",
+    "Original native outbound bundle with explicit full SHA-256, current complete project, explicit Proposal and pinned runtime; no implicit trust in package code.",
+    "Apply-only tests use synthetic authority/actors and actual native artifacts; no fixture grants productive approval."
   ],
   "primary_verification_id": "SR-VER-0051",
   "required_environment": {
@@ -55,7 +56,8 @@
     "Independently compare complete inner project/receipt bytes, native reference binding and exact embedded 1.8.0 PYZ member with outer manifest/member sizes and hashes.",
     "Observe unchanged source/index/history, explicit public PH operating effects, refusal contracts and retained actual output after faults.",
     "Resume native Work in fresh processes against the same source; verify source-change refusal, single capture, controls and terminal replay.",
-    "Change retained runtime/workspace identity or permissions, registry/output boundaries and input bytes between phases; require refusal with retained actual reference, foreign files and unchanged project; inject a short projection write without a complete outer ZIP."
+    "Change retained runtime/workspace identity or permissions, registry/output boundaries and input bytes between phases; require refusal with retained actual reference, foreign files and unchanged project; inject a short projection write without a complete outer ZIP.",
+    "Create, validate and check the native Proposal in an isolated Python-only process, then export through public argv and structured commands; verify exact bytes, original four-value binding and no_changes."
   ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0737",
@@ -175,6 +177,17 @@
     "tests/test_transport_outbound_right.py::test_runtime_is_still_bound_at_each_export_phase[foreign_module-publish]",
     "tests/test_transport_outbound_right.py::test_runtime_is_still_bound_at_each_export_phase[source_identity-assemble]",
     "tests/test_transport_outbound_right.py::test_runtime_is_still_bound_at_each_export_phase[source_identity-capture]",
-    "tests/test_transport_outbound_right.py::test_runtime_is_still_bound_at_each_export_phase[source_identity-publish]"
+    "tests/test_transport_outbound_right.py::test_runtime_is_still_bound_at_each_export_phase[source_identity-publish]",
+    "tests/test_transport_return.py::test_native_return_is_one_bound_passive_patch_without_input_writes[repository-root-False-module]",
+    "tests/test_transport_return.py::test_native_return_is_one_bound_passive_patch_without_input_writes[repository-root-False-pyz]",
+    "tests/test_transport_return.py::test_native_return_is_one_bound_passive_patch_without_input_writes[repository-root-True-module]",
+    "tests/test_transport_return.py::test_native_return_is_one_bound_passive_patch_without_input_writes[repository-root-True-pyz]",
+    "tests/test_transport_return.py::test_native_return_is_one_bound_passive_patch_without_input_writes[subproject-False-module]",
+    "tests/test_transport_return.py::test_native_return_is_one_bound_passive_patch_without_input_writes[subproject-False-pyz]",
+    "tests/test_transport_return.py::test_native_return_is_one_bound_passive_patch_without_input_writes[subproject-True-module]",
+    "tests/test_transport_return.py::test_native_return_is_one_bound_passive_patch_without_input_writes[subproject-True-pyz]",
+    "tests/test_transport_return.py::test_no_changes_returns_no_patch_file[repository-root]",
+    "tests/test_transport_return.py::test_no_changes_returns_no_patch_file[subproject]",
+    "tests/test_transport_return.py::test_return_metadata_binds_generated_output_without_git_or_host_authority"
   ]
 }
