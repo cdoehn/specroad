@@ -15,7 +15,7 @@
   "json_pointers": [],
   "method": "automated_behavior",
   "open_items": [
-    "Target stage 19.b.R requires its own actual successful Apply gate and commit; tests are prepared, not executed in Dev.",
+    "Target stage 19.b.C requires its own actual successful Apply gate and commit; tests are prepared, not executed in Dev.",
     "Full available behavior suite and separate CPython 3.10–3.14/platform matrix remain mandatory before milestone/release acceptance.",
     "Later M19 steps retain project subject selection, report/work/CLI integration, actual installed language worker and independent engine evidence."
   ],
