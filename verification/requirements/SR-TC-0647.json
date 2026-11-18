@@ -12,12 +12,10 @@
   "fixture_ids": [
     "SR-FIX-OWNED-TEMP-v1"
   ],
-  "implementation_status": "partial",
+  "implementation_status": "implemented",
   "json_pointers": [],
   "method": "automated_behavior",
-  "open_items": [
-    "R adds the complete negative, sandbox, forgery and authority-loss matrix; this W stage has its own Apply gate."
-  ],
+  "open_items": [],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Die Proposal-Fortsetzung MUSS dieselben echten menschlichen Freigabevoraussetzungen wie der nicht aufgeteilte Ablauf verlangen.",
@@ -53,6 +51,34 @@
     "tests/test_proposal_work.py::test_split_native_check_has_same_complete_result_without_project_writes[100000]",
     "tests/test_proposal_work.py::test_split_native_check_has_same_complete_result_without_project_writes[1]",
     "tests/test_proposal_work.py::test_split_native_check_has_same_complete_result_without_project_writes[3]",
-    "tests/test_proposal_work.py::test_work_completion_does_not_replace_real_reviews_before_apply"
+    "tests/test_proposal_work.py::test_work_completion_does_not_replace_real_reviews_before_apply",
+    "tests/test_proposal_work_right.py::test_completed_work_is_not_a_reviewer_or_a_publication_capability[missing-host-originals]",
+    "tests/test_proposal_work_right.py::test_completed_work_is_not_a_reviewer_or_a_publication_capability[no-publication-host]",
+    "tests/test_proposal_work_right.py::test_completed_work_is_not_a_reviewer_or_a_publication_capability[withdrawn-current-authority]",
+    "tests/test_proposal_work_right.py::test_confirmed_apply_retry_preserves_receipts_without_reopening_work",
+    "tests/test_proposal_work_right.py::test_delivery_rechecks_the_actual_checkpoint_after_fresh_check",
+    "tests/test_proposal_work_right.py::test_every_global_boundary_restores_from_complete_owned_bytes[check]",
+    "tests/test_proposal_work_right.py::test_every_global_boundary_restores_from_complete_owned_bytes[completed]",
+    "tests/test_proposal_work_right.py::test_every_global_boundary_restores_from_complete_owned_bytes[finalize]",
+    "tests/test_proposal_work_right.py::test_failed_full_validation_remains_a_failed_completed_result",
+    "tests/test_proposal_work_right.py::test_human_validity_is_checked_again_inside_real_writer_lock",
+    "tests/test_proposal_work_right.py::test_invalid_work_destination_has_no_project_effects[debug]",
+    "tests/test_proposal_work_right.py::test_invalid_work_destination_has_no_project_effects[inside]",
+    "tests/test_proposal_work_right.py::test_invalid_work_destination_has_no_project_effects[symlink]",
+    "tests/test_proposal_work_right.py::test_live_apply_refuses_changed_or_unfinished_work_before_any_write[basis]",
+    "tests/test_proposal_work_right.py::test_live_apply_refuses_changed_or_unfinished_work_before_any_write[build]",
+    "tests/test_proposal_work_right.py::test_live_apply_refuses_changed_or_unfinished_work_before_any_write[cancelled]",
+    "tests/test_proposal_work_right.py::test_live_apply_refuses_changed_or_unfinished_work_before_any_write[content]",
+    "tests/test_proposal_work_right.py::test_live_apply_refuses_changed_or_unfinished_work_before_any_write[incomplete]",
+    "tests/test_proposal_work_right.py::test_live_apply_refuses_changed_or_unfinished_work_before_any_write[revision]",
+    "tests/test_proposal_work_right.py::test_new_sandbox_requires_current_native_human_provenance",
+    "tests/test_proposal_work_right.py::test_project_data_is_not_executed_by_work",
+    "tests/test_proposal_work_right.py::test_rehashed_audit_cannot_disagree_with_its_check[identity]",
+    "tests/test_proposal_work_right.py::test_rehashed_audit_cannot_disagree_with_its_check[outcome]",
+    "tests/test_proposal_work_right.py::test_rehashed_audit_cannot_disagree_with_its_check[time]",
+    "tests/test_proposal_work_right.py::test_rehashed_claim_cannot_replace_actual_native_check[check]",
+    "tests/test_proposal_work_right.py::test_rehashed_claim_cannot_replace_actual_native_check[finalize]",
+    "tests/test_proposal_work_right.py::test_temp_parent_in_a_project_is_rejected_before_writing",
+    "tests/test_proposal_work_right.py::test_work_capture_rechecks_original_bytes_before_returning"
   ]
 }

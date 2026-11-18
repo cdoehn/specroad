@@ -63,11 +63,17 @@ def open_existing_work(path, *, registry):
                    if name.startswith('checkpoints/')]
         origins = [record for record in records if record['parent'] is None]
         require(len(origins) == 1, 'work_initial_checkpoint_missing')
+        # Validate the entire saved chain against its recorded build first.
+        # A valid foreign build is a conflict, not a malformed manifest; corrupt
+        # saved data must still fail its original integrity/contract checks.
+        saved_manifest = parse_json_object(payloads['objects/' + origins[0]['manifest']['sha256']])
+        saved_build = saved_manifest['tool_build']
         metadata = {'format_version': 'work-package-v1', 'package_kind': 'work',
             **{key: current[key] for key in ('work_id', 'checkpoint_generation', 'checkpoint_sha256')},
             'initial_manifest': origins[0]['manifest'],
-            'initial_checkpoint_sha256': root['initial_checkpoint_sha256'], 'tool_build': build}
-        chain = _decode(metadata, payloads, registry, build)
+            'initial_checkpoint_sha256': root['initial_checkpoint_sha256'], 'tool_build': saved_build}
+        chain = _decode(metadata, payloads, registry, saved_build)
+        require(saved_build == build, 'incompatible_runtime_build', exit_code=6)
         initial = chain[0]
         require(initial.as_dict()['command_id'] in ('migrate.plan','migrate.verify','merge.plan','proposal.check') or (
             initial.as_dict()['command_id'] == 'bundle.create'

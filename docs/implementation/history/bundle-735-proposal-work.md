@@ -43,4 +43,4 @@ Dialogabnahmen gehören in den folgenden eigenständigen Planschritt; 18.p
 bleibt hier vollständig offen. Dieser Durchlauf liefert eine vollständige
 zusammenhängende W/R/C-Gruppe, keinen gekürzten Teil von 18.p.
 
-Zielstand dieser Stage erst nach ihrem eigenen erfolgreichen Gate: **18.o.W**, **790/918**, danach **18.o.R**.
+Zielstand dieser Stage erst nach ihrem eigenen erfolgreichen Gate: **18.o.R**, **791/918**, danach **18.o.C**.

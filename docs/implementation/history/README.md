@@ -506,3 +506,4 @@
 
 - [Bundle 735 — Portable Proposalprüfung und aktuelle Reviewpflicht](bundle-735-proposal-work.md)
 - [Bundle 736 — Proposal-Work-Capabilities und vollständiger Rest](bundle-736-proposal-work-capabilities.md)
+- [Bundle 737 — Proposal-Work-Buildkonflikt und Fehlerresultat](bundle-737-proposal-work-build.md)

@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 244 · **Stand:** 17. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.93
+**Planrevision:** 247 · **Stand:** 18. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.93
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 306 Schritte und 918 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; die früher genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wurde nach der damaligen Spezifikation innerhalb von 15.l.R vorgezogen und bleibt als normaler Prüfkern erhalten. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -175,17 +175,19 @@ Stagegebundene Quelle und Abnahmen: [Bundle 735](history/bundle-735-proposal-wor
 
 Vollständiger offener Proposal-Workrest: [Korrektur 736](history/bundle-736-proposal-work-capabilities.md).
 
+Nach bestätigtem 18.o.W: [Korrektur 737 — vollständiger R/C-Rest](history/bundle-737-proposal-work-build.md).
+
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 244
+plan_revision: 247
 implementation_plan_commits_total: 918
-implementation_plan_commits_completed: 790
-last_completed_plan_commit: 18.o.W
-next_plan_commit: 18.o.R
+implementation_plan_commits_completed: 791
+last_completed_plan_commit: 18.o.R
+next_plan_commit: 18.o.C
 priority_off_plan: null
 next_off_plan_commit: null
-last_completed_numbered_bundle: 736
+last_completed_numbered_bundle: 737
 implementation_state: in_progress
 audit_followup_status: closed
 next_audit_step: null

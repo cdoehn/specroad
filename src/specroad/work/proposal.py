@@ -1,5 +1,7 @@
 """Passive Proposal checks over owned native bytes, never stored approval."""
 from hashlib import sha256
+from datetime import datetime
+from ..model.audit_values import UtcTimestamp
 
 from ..authoring._inspection_snapshot import InspectionSnapshot
 from ..cli.requests import CommandRequest
@@ -80,6 +82,19 @@ def _report(result):
     validate_result_document('proposal-check-v1', report)
     require(type(code) is int and 0 <= code <= 7 and report['passed'] == (code == 0),
             'proposal_work_outcome_invalid')
+    audit = report['audit']
+    UtcTimestamp(audit['started_at']); UtcTimestamp(audit['ended_at'])
+    require(datetime.fromisoformat(audit['ended_at'].replace('Z', '+00:00')) >=
+            datetime.fromisoformat(audit['started_at'].replace('Z', '+00:00')),
+            'proposal_work_audit_time_invalid')
+    require(audit['outcome'] == ('passed' if report['passed'] else 'failed')
+        and report['binding'] is not None and audit['proposal_id'] == report['binding']['proposal_id'],
+            'proposal_work_audit_binding_changed')
+    if code == 0:
+        require(report['context_sha256'] is not None and report['target_model_root_sha256'] is not None
+            and report['target_sources_sha256'] is not None
+            and set(report['checks']) == {'validation', 'lint', 'diff', 'impact', 'queries', 'renders'},
+                'proposal_work_complete_check_required')
     require(report['full_semantic_validation'] == report['passed']
         and report['workspace']['retained'] is False and report['workspace']['path'] is None
         and report['workspace']['cleanup'] in ('not_created', 'removed'), 'proposal_work_cleanup_required')
@@ -225,4 +240,5 @@ def proposal_work_result(store, *, services=None):
     descriptor, rows, _, _, results = checked(current)
     require(current.as_dict()['state'] == 'completed', 'proposal_work_incomplete')
     record = _completed(store, current, descriptor, rows, results, services)
+    require(store.read().raw == current.raw, 'proposal_work_delivery_changed')
     return record['outcome']['report'], record['exit_code']
