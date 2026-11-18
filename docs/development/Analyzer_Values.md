@@ -11,3 +11,7 @@ Werte werden als `AnalyzerError` abgewiesen. Namespaced Erweiterungen bleiben Da
 bekannten Bytes von externen Metadaten. Der Sprachworker ist an dieser
 Planposition noch nicht implementiert; `execution_supported` ist daher falsch.
 Descriptoren sind keine Pluginregistrierung und lösen keine Abhängigkeiten auf.
+
+`require_binding(analyzer_id=..., adapter_version=..., descriptor_sha256=...)`
+prüft alle drei unabhängigen Koordinaten. `select_capabilities(...)` verlangt
+eine nichtleere, sortierte und dublettenfreie Teilmenge der Deklaration.

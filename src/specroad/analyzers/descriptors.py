@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from hashlib import sha256
 
 from ..profiles._contract import SEMVER
-from ._values import decode, encoded, extensions, identifier, require, shape, tokens
+from ._values import decode, encoded, extensions, hash_value, identifier, require, shape, tokens
 
 DESCRIPTOR_FIELDS = frozenset({'contract_version', 'analyzer_id', 'adapter_version',
     'capabilities', 'subject_modes', 'result_schema_version', 'execution_mode',
@@ -49,6 +49,20 @@ class AnalyzerDescriptor:
         _validate(value)
         object.__setattr__(self, '_encoded', encoded(value))
 
+    def require_binding(self, *, analyzer_id, adapter_version, descriptor_sha256):
+        identifier(analyzer_id, '/analyzer_id')
+        require(type(adapter_version) is str and SEMVER.fullmatch(adapter_version) is not None,
+                'analyzer_invalid_version', '/adapter_version')
+        hash_value(descriptor_sha256, '/descriptor_sha256')
+        value = self.data
+        require(analyzer_id == value['analyzer_id'], 'analyzer_identity_mismatch', exit_code=6)
+        require(adapter_version == value['adapter_version'], 'analyzer_version_mismatch', exit_code=6)
+        require(descriptor_sha256 == self.sha256, 'analyzer_descriptor_mismatch', exit_code=6)
+
+    def select_capabilities(self, capabilities):
+        tokens(capabilities, '/capabilities', allowed=self.data['capabilities'])
+        return tuple(capabilities)
+
     @property
     def data(self):
         return decode(self._encoded)
@@ -79,6 +93,5 @@ def classify_descriptor(descriptor):
     # an exact descriptor copy, cannot authorize importing or starting one.
     return {'known_builtin': known, 'descriptor_sha256': descriptor.sha256,
             'execution_supported': False, 'availability': 'not_implemented' if known else 'external_result_only'}
-
 
 __all__ = ('AnalyzerDescriptor', 'builtin_descriptor', 'classify_descriptor')
