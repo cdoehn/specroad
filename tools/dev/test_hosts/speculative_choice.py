@@ -9,5 +9,5 @@ def choose(host, eligible, attempts, *, waiting=False, identities=None):
     for row in attempts:
         groups.setdefault(row['nodeid'], []).append(row['host'])
     candidates = [(len(hosts), (identities or {}).get(node, node), node) for node, hosts in groups.items()
-                  if host not in hosts or set(eligible) <= set(hosts)]
+                  if host not in hosts]
     return min(candidates)[2] if candidates else None

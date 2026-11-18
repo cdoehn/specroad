@@ -91,6 +91,8 @@ class CopyAttempts(CopyCleanup, Attempts):
                 self.spawn_copy(host, index, nodeid)
 
     def spawn_copy(self, host, index, nodeid):
+        if not self.host_available(host, index):
+            raise ValueError('Test already owns an attempt or reservation on this host')
         template = next(r for r in self.pool.rows.values() if r['host'] == host)
         spec = execnet.XSpec(template['spec'])
         spec.execmodel = 'main_thread_only'
@@ -128,7 +130,8 @@ class CopyAttempts(CopyCleanup, Attempts):
         slot = message['slot']
         if slot is not None and (type(slot) is not int or not 0 <= slot < self.pool.rows[name]['budget']):
             raise ValueError('Invalid copy host lease')
-        allowed = (row['index'] not in self.winners and not self.waiting() and self.pending is None
+        allowed = (self.host_available(row['host'], row['index'], exclude=name)
+                   and row['index'] not in self.winners and not self.waiting() and self.pending is None
                    and self.pool.owner.desired[row['host']] > 0 and name not in self.pool.retiring
                    and not self.ds.shuttingdown and not self.ds.shouldstop
                    and self.state.ledger.worst.get(row['nodeid'], 'not_run') in ('not_run', 'passed'))

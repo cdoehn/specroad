@@ -29,7 +29,8 @@ def test_hosts_are_covered_before_same_host_second_copy():
     assert choose('one', {'one','two'}, active) is None
     assert choose('two', {'one','two'}, active) == 'a'
     active += rows(('a','two'))
-    assert choose('one', {'one','two'}, active) == 'a'
+    assert choose('one', {'one','two'}, active) is None
+    assert choose('two', {'one','two'}, active) is None
     assert choose('disabled', {'one','two'}, active) is None
 
 

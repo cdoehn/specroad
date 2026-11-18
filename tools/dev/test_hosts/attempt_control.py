@@ -29,9 +29,25 @@ class Attempts:
         return {r['token']: {k: r[k] for k in ('nodeid', 'host', 'worker', 'state')}
                 for r in self.current.values() if r['state'] == 'running'}
 
+    def host_available(self, host, index, *, exclude=None):
+        """Reservations and unfinished attempts own the host until acknowledged."""
+        for name, row in self.current.items():
+            if name != exclude and row['host'] == host and row['index'] == index:
+                return False
+        for name, row in self.reserved.items():
+            if name == exclude or ('node' in row and row['node'] not in self.ds._active_nodes):
+                continue
+            target = row.get('host', row.get('target'))
+            item = row.get('index', row.get('source', {}).get('index'))
+            if target == host and item == index:
+                return False
+        return True
+
     def granted(self, name, index, slot):
         if name not in self.ready or name in self.current:
             raise ValueError('Attempt needs its current supervised worker binding')
+        if not self.host_available(self.pool.rows[name]['host'], index, exclude=name):
+            raise ValueError('Test already owns an attempt or reservation on this host')
         token = uuid.uuid4().hex
         self.current[name] = dict(token=token, index=index, slot=slot, worker=name,
             nodeid=self.ds.sched.collection[index], host=self.pool.rows[name]['host'], state='starting')
@@ -106,6 +122,9 @@ class Attempts:
             if (found is None or not self.can_move(found) or row['target'] not in self.pool.owner.capacities or self.pool.owner.desired.get(row['target'], 0) == 0
                     or self.pool.config._specroad_verification.ledger.worst.get(found['nodeid'], 'passed') != 'passed'):
                 self.reject(row, 'Attempt finished or target is no longer enabled')
+                continue
+            if not self.host_available(row['target'], found['index']):
+                self.reject(row, 'Test already owns the target host')
                 continue
             nodes = [n for n in self.ds._active_nodes if self.pool.rows[n.gateway.id]['host'] == row['target']]
             idle = next((n for n in nodes if n.gateway.id not in self.pool.active

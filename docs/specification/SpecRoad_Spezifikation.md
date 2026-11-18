@@ -971,9 +971,14 @@ atomar; gestartete und bereits reservierte Kopien zählen zusammen. Unter den
 auf diesem Host ausführbaren Kandidaten gewinnt die geringste globale
 Kopienzahl, danach die stabile Testidentität. Weder Hostgeschwindigkeit noch
 Restlaufzeit bestimmen diese Auswahl. Solange ein geeigneter aktivierter Host
-noch keine Kopie eines Tests hat, wird auf einem bereits beteiligten Host
-keine weitere Kopie dieses Tests gestartet. Erst nach Belegung aller geeigneten
-Hosts sind weitere Kopien auf demselben Host erlaubt. Aktivierte Hosts sind
+noch keine Kopie eines Tests hat, darf er eine Kopie erhalten. Auf jedem Host
+ist derselbe Test zu jedem Zeitpunkt höchstens einmal erlaubt, auch nachdem
+alle geeigneten Hosts beteiligt sind. Original, reservierter Start, laufender
+Versuch und noch nicht bestätigt beendeter Versuch zählen zusammen. Freie
+weitere Slots bleiben für andere Tests verfügbar. Ein späterer neuer Testlauf
+oder ein nativ bestätigt beendeter Verschiebeversuch ist dadurch nicht gesperrt.
+Startfreigabe und unabhängiger Abschlussnachweis sichern die Hostgrenze ab.
+Aktivierte Hosts sind
 die vor dem Lauf vollständig geprüften Hosts mit positiver Soll-Workerzahl.
 Bestehende Hostlimits und atomare Hostslots gelten über alle Applies hinweg.
 

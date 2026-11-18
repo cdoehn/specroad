@@ -12,6 +12,8 @@ Vor der Arbeit: [Projektregeln](../../DEVELOPMENT.md), [Grundlagen](rules/Grundl
 Detailentscheidungen für 17.l: [MERGE-WORK-627](decisions/merge-work-627.md) und [MERGE-CLI-633](decisions/merge-cli-633.md).
 Die zweite Ergänzung bindet ausschließlich die öffentliche Übergabe an den vorhandenen nativen Writer; Produktzähler und Freigabegates bleiben im Klärungsstand unverändert.
 
+OFF-PLAN-Auftrag: [Hostgrenze für identische Tests](decisions/test-host-once.md).
+
 OFF-PLAN-Auftrag: [Remote-Testhosts und W/R/C-Abnahmen](decisions/remote-test-hosts-637.md).
 
 OFF-PLAN-Ergänzung: [Hostdaten für lokale Testläufe](decisions/local-test-history-640.md).
@@ -183,6 +185,8 @@ Stagegebundene Quelle und Abnahmen: [Bundle 738](history/bundle-738-proposal-dia
 
 Nach bestätigtem Klärungspräfix: [Korrektur 739 — vollständiger W/R/C-Rest](history/bundle-739-proposal-dialog-schema.md).
 
+Explizite OFF-PLAN-Übernahme: [Bundle 740 — Hostgrenze und Dialoglaufzeit](history/bundle-740-host-once-dialog-performance.md).
+
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
@@ -191,8 +195,8 @@ implementation_plan_commits_total: 918
 implementation_plan_commits_completed: 795
 last_completed_plan_commit: 18.p.C
 next_plan_commit: 18.q.W
-priority_off_plan: null
-next_off_plan_commit: null
+priority_off_plan: TEST-HOST-ONCE
+next_off_plan_commit: TEST-HOST-ONCE.R
 last_completed_numbered_bundle: 739
 implementation_state: in_progress
 audit_followup_status: closed

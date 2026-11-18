@@ -15,12 +15,13 @@ from test_speculative_tests import rows, start, phases, confirmation
 def test_balanced_rounds_reserve_before_next_worker_and_use_stable_identity():
     active = rows(('z','one'), ('a','two'))
     identities = {'z':'first','a':'second'}
-    for host in ['three','one','two','three','one','two']:
+    for host in ['three','one','two','three']:
         node = choose(host, {'one','two','three'}, active, identities=identities)
         assert node is not None
         active.append(dict(nodeid=node,host=host))
         sizes = [sum(r['nodeid']==n for r in active) for n in identities]
         assert max(sizes)-min(sizes) <= 1
+    assert all(choose(host, {'one','two','three'}, active) is None for host in ('one','two','three'))
     assert choose('three', {'one','two','three'}, rows(('z','one'),('a','one')), identities=identities) == 'z'
 
 

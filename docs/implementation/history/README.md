@@ -510,3 +510,5 @@
 
 - [Bundle 738 — Nativer Proposal-Änderungsdialog](bundle-738-proposal-dialog.md)
 - [Bundle 739 — Proposal-Dialog: unterstützter Schemavertrag](bundle-739-proposal-dialog-schema.md)
+
+- [Bundle 740 — höchstens ein Versuch je Test/Host und Dialogoptimierung](bundle-740-host-once-dialog-performance.md)

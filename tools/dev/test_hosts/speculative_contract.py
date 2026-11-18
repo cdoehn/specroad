@@ -62,6 +62,7 @@ def verify_copies(observation, proof):
     expanded = deepcopy(observation)
     pool = expanded['host_pool']
     identities, counts, seen = [], {}, set()
+    host_tests = {}
     for name, row in pool['workers'].items():
         leases = row.get('leases')
         permits = pool['grants'].get(name, [])
@@ -103,6 +104,7 @@ def verify_copies(observation, proof):
                 if (type(completed) is not list or len(completed) != len(prior)
                         or any(any(a.get(k) != v for k,v in b.items()) for a,b in zip(completed, prior))):
                     raise ValueError('Termination receipt lost prior completed attempts')
+            host_tests.setdefault((row['host'], lease['nodeid']), []).append((lease['start'], lease['end']))
             seen.add(token)
             permit.clear()
             permit.update(index=len(identities), slot=lease['slot'])
@@ -118,3 +120,9 @@ def verify_copies(observation, proof):
     expanded['nodeids'] = identities
     expanded['worker_test_counts'] = counts
     verify_live_pool(expanded, proof)
+    # Validate the original test identity, before the expanded slot proof's
+    # synthetic per-attempt identities can hide overlaps on different slots.
+    for intervals in host_tests.values():
+        ordered = sorted(intervals)
+        if any(a[1] > b[0] for a, b in zip(ordered, ordered[1:])):
+            raise ValueError('Same test overlaps on one host')
