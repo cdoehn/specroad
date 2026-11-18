@@ -21,16 +21,8 @@ from ._files import PassiveFile, absolute, directory, overlap, require
 from ._handoff import OutboundContainer, reference_runtime_member
 from .runtime import PatchHarborRuntime, _check_api
 from ._snapshot_project import prepare_snapshot_project
-from .snapshots import TransportFailure, api_failure, read_snapshot
-
-
-def _api_call(api, call, *args, **kwargs):
-    try:
-        return call(*args, **kwargs)
-    except TransportFailure:
-        raise
-    except (api.PatchHarborError, OSError, TypeError, ValueError) as error:
-        raise api_failure(api, error) from error
+from .snapshots import read_snapshot
+from ._native_api import _api_call
 
 
 class OutboundExport:

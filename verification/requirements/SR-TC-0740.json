@@ -15,7 +15,7 @@
   "oracle": {
     "kind": "pending",
     "requirement_contract": "Die lokale Rückübernahme MUSS die normativen Fachänderungen bis zum gültigen menschlichen Review und transaktionalen Proposal-Apply unveröffentlicht lassen; Transporterfolg und importierter Proposal DÜRFEN NICHT als fachliche Freigabe oder angewendete Änderung gelten.",
-    "scope": "Not implemented. No automated pass oracle is claimed. Correction 744 preserves the complete remaining stage 18.q.R: the fixed native entrypoint marker and public native handoff roles are respected, while exact SpecRoad payload bytes and all native metadata validation remain mandatory. Only the clarification prefix passed Apply; corrected product stages still require their own gates."
+    "scope": "Not implemented. No automated pass oracle is claimed. Correction 744 preserves the complete remaining stage 18.q.C: the fixed native entrypoint marker and public native handoff roles are respected, while exact SpecRoad payload bytes and all native metadata validation remain mandatory. Only the clarification prefix passed Apply; corrected product stages still require their own gates."
   },
   "preconditions": [],
   "primary_verification_id": "SR-VER-0051",

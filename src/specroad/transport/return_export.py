@@ -12,7 +12,7 @@ from ._files import directory, overlap, require, PassiveFile
 from ._handoff import MAX_BYTES
 from ._return_data import ReturnData
 from .opening import SandboxOpening
-from .outbound import _api_call
+from ._native_api import _api_call
 
 
 def _write_contents(root, contents, entrypoint):

@@ -23,14 +23,14 @@
   "json_pointers": [],
   "method": "automated_behavior",
   "open_items": [
-    "The prepared stage 18.q.R requires its own successful Apply gate and commit; collection is not behavior acceptance.",
+    "The prepared stage 18.q.C requires its own successful Apply gate and commit; collection is not behavior acceptance.",
     "The full available behavior suite and separate CPython 3.10–3.14/platform matrix remain required before milestone/release acceptance.",
     "The remaining 18.q/18.r stages keep their separate robustness/cleanup and integration gates; no later-stage success is assumed."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Hin- und Rückexport MÜSSEN denselben Befehl `bundle create --profile ai-runtime` mit expliziter Richtung verwenden; der Rückexport MUSS seine PatchHarbor-Bindungswerte unverändert aus dem ursprünglichen Result übernehmen.",
-    "scope": "Native outbound/opening coverage is retained. Prepared 18.q uses the actual pinned 1.8.0 API to export one exact reference-bound passive proposal patch from an offline Python-only sandbox; empty delta emits no patch. No Dev behavior tests have run. Each stage needs its actual Apply gate. Full-suite and independent CPython/platform release evidence remain open. Correction 744 preserves the complete remaining stage 18.q.R: the fixed native entrypoint marker and public native handoff roles are respected, while exact SpecRoad payload bytes and all native metadata validation remain mandatory. Only the clarification prefix passed Apply; corrected product stages still require their own gates."
+    "scope": "Native outbound/opening coverage is retained. Prepared 18.q uses the actual pinned 1.8.0 API to export one exact reference-bound passive proposal patch from an offline Python-only sandbox; empty delta emits no patch. No Dev behavior tests have run. Each stage needs its actual Apply gate. Full-suite and independent CPython/platform release evidence remain open. Correction 744 preserves the complete remaining stage 18.q.C: the fixed native entrypoint marker and public native handoff roles are respected, while exact SpecRoad payload bytes and all native metadata validation remain mandatory. Only the clarification prefix passed Apply; corrected product stages still require their own gates."
   },
   "preconditions": [
     "An explicitly registered local repository with HEAD, complete native project and portable history.",
