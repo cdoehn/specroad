@@ -39,3 +39,16 @@ getrennten Teilzustände. Ein fehlgeschlagenes PH-Result ist kein sicherer Retry
 Für fachliche Änderungen folgen unabhängiges Validate, Check, menschliches
 Review und der normale transaktionale Proposal-Apply. Der Adapter benötigt einen
 Linux-Host mit Python und Bash; die Sandbox benötigt diese Hostwerkzeuge nicht.
+
+Ein nachweislich empfangenes Paket kann mit `prior_result` und
+`prior_result_sha256` schreibfrei erneut beobachtet werden. Das Originalresult,
+der aktuelle native Zustand, die erhaltenen Paket-/Draftbytes und der native
+SpecRoad-Abschluss müssen übereinstimmen. Es gibt dann keinen zweiten Apply.
+Bei fehlenden oder veränderten Belegen bleibt die Übernahme gesperrt.
+
+Der Transportbeleg enthält die nach dem Schreiben erneut nativ gelesene
+historische Abschlussbeobachtung. Die unmittelbare Schreibantwort darf
+`current_target_verified=true` und `replayed=false` melden; das spätere reine
+Lesen meldet entsprechend `false` und `true`. Diese Beobachtungen sind keine
+bytegleichen Antworten. Der gespeicherte historische Beleg wird beim Replay
+weiter vollständig und kanonisch verglichen, einschließlich dieser Flags.

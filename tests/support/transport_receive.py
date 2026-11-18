@@ -16,12 +16,14 @@ def returned(root, distribution, *, subproject=False):
     return handoff,Path(result['outcome']['result']['file']['path']),proposal
 
 
-def receive(handoff, package, distribution, *, name='receive', before='', after='', allow=True, transport_allow=True):
+def receive(handoff, package, distribution, *, name='receive', before='', after='', allow=True, transport_allow=True, prior_result=None):
     root=handoff['repository'].parent
     options=dict(expected_sha256=sha256(package.read_bytes()).hexdigest(),
         reference=str(handoff['source']),reference_sha256=sha256(handoff['source'].read_bytes()).hexdigest(),
         repository=str(handoff['repository']),workspace=str(root/name),patchharbor_pyz=str(handoff['runtime']),
         patchharbor_pyz_sha256=sha256(handoff['runtime'].read_bytes()).hexdigest(),timeout=120)
+    if prior_result is not None:
+        options.update(prior_result=str(prior_result),prior_result_sha256=sha256(Path(prior_result).read_bytes()).hexdigest())
     script='''
 from pathlib import Path
 import json

@@ -520,3 +520,5 @@
 - [Bundle 743 — Rückexport und lokale Übernahme](bundle-743-return-transport.md)
 
 - [Bundle 744 — nativer Rückpaketvertrag und vollständiger Rest](bundle-744-return-native-contract.md)
+
+- [Bundle 745 — native historische Rücktransportbelege](bundle-745-return-replay-proof.md)

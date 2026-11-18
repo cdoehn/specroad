@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 266 · **Stand:** 18. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.95
+**Planrevision:** 269 · **Stand:** 18. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.95
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 306 Schritte und 918 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; die früher genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wurde nach der damaligen Spezifikation innerhalb von 15.l.R vorgezogen und bleibt als normaler Prüfkern erhalten. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -198,17 +198,19 @@ Detailentscheidung für 18.q/18.r: [RETURN-TRANSPORT-743](decisions/return-trans
 Vorbereitete Folge: [Bundle 743 — Rückexport und lokale Übernahme](history/bundle-743-return-transport.md).
 
 Korrektur und vollständiger offener Rest: [Bundle 744](history/bundle-744-return-native-contract.md).
+
+Nach bestätigtem Rückexport und Empfangs-W: [Korrektur 745](history/bundle-745-return-replay-proof.md).
 Die folgenden Zielwerte gelten ausschließlich nach dem erfolgreichen Apply-Gate und Commit dieser Stage.
 Die Vollsuite und die getrennte Python-/Plattformmatrix bleiben für die Meilensteinfreigabe erforderlich.
 
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 260
+plan_revision: 269
 implementation_plan_commits_total: 918
-implementation_plan_commits_completed: 799
-last_completed_plan_commit: 18.r.W
-next_plan_commit: 18.r.R
+implementation_plan_commits_completed: 800
+last_completed_plan_commit: 18.r.R
+next_plan_commit: 18.r.C
 priority_off_plan: null
 next_off_plan_commit: null
 last_completed_numbered_bundle: 742

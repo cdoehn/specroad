@@ -3,6 +3,7 @@ from hashlib import sha256
 from io import BytesIO
 import math
 import os
+import stat
 from zipfile import ZipFile
 
 from ..authoring._inspection_snapshot import InspectionSnapshot
@@ -17,6 +18,8 @@ from ._native_api import _api_call
 from ._return_data import ReturnData
 from ._return_draft import draft, publish
 from ._return_channel import receiver_channel
+from ._return_receipt import staged, record, read_replay
+from .snapshots import TransportFailure
 from .opening import SandboxOpening
 
 
@@ -34,12 +37,15 @@ def _checked_contents(raw, inspection):
 class ReturnReceiver:
     def __init__(self, package, *, expected_sha256, reference, reference_sha256,
                  repository, workspace, patchharbor_pyz, patchharbor_pyz_sha256, authority, authorize_transport,
-                 timeout=10800):
+                 timeout=10800, prior_result=None, prior_result_sha256=None):
         require(type(authority) is PublicationAuthority, 'return_registered_host_authority_required', 2)
         require(callable(authorize_transport), 'return_transport_authority_required', 2)
         self.authorize_transport = authorize_transport
         require(type(timeout) in (int, float) and math.isfinite(timeout) and timeout > 0,
                 'return_timeout_invalid', 2)
+        require((prior_result is None) == (prior_result_sha256 is None), 'return_prior_result_hash_required', 2)
+        self.prior_result = None if prior_result is None else PassiveFile(prior_result,
+            expected_sha256=prior_result_sha256, limit=MAX_BYTES)
         self.authority, self.timeout = authority, timeout
         self.repository = directory(repository)
         self.source = PassiveFile(package, expected_sha256=expected_sha256, limit=MAX_BYTES)
@@ -92,6 +98,7 @@ class ReturnReceiver:
 
     def verify_current(self):
         self.repository._check_root(); self.parent._check_root(); self.private._check_root()
+        require(stat.S_IMODE(self.workspace.lstat().st_mode) == 0o700, 'return_host_workspace_mode')
         self.source.verify_current(); self.opening.verify_current()
         if self.project is not None:
             self.project._check_root(); self.basis.verify_current()
@@ -132,32 +139,44 @@ class ReturnReceiver:
         require(self.admitted, 'return_host_admission_missing')
         self.verify_current()
         self.snapshot.verify_current()
-        for name, raw in self.data.contents.items():
-            if name == self.data.entrypoint:
-                continue  # PatchHarbor executes its captured private script, not a payload copy.
-            require(PassiveFile(self.repository.root/name, limit=MAX_BYTES).raw == raw,
-                    'return_staged_bytes_changed', 6)
+        staged(self)
         self.completion = publish(self.snapshot.model, self.local_draft, authority=self.authority,
             transaction_id='return-' + self.data.manifest['return_id'])
         require(self.completion['write_state'] == 'committed' and not self.completion['no_change'],
                 'return_draft_not_committed', 6)
+        record(self)
         return self.completion
 
     def receive(self):
         require(not self.started, 'return_host_already_started', 6)
         self.started = True
         if self.data is None: self.prepare()
-        self.verify_current(); self._fresh_stage()
+        self.verify_current()
+        prior = read_replay(self)
+        if prior is not None:
+            self.completion = prior
+            return {'status':'proposal_received', 'proposal_id':self.local_draft.binding.proposal_id,
+                'package_sha256':self.source.sha256, 'draft_completion':prior, 'replayed':True,
+                'applied':False, 'approval_granted':False, 'receiver_failure':None,
+                'patchharbor':{'success':None,'result_status':'not_reapplied','result_path':None}}
+        self._fresh_stage()
         _api_call(self.api, self.api.validate_patch, self.source.path, repository=self.repository.root)
+        failure = None
         with receiver_channel(self._receive, self.timeout) as outcome:
-            report = _api_call(self.api, self.api.apply_guarded, self.source.path,
+            try:
+                report = _api_call(self.api, self.api.apply_guarded, self.source.path,
                 expected_sha256=self.source.sha256, expected_repository=self.repository.root,
-                admission=self._admit, output_directory=self.workspace, timeout=self.timeout)
+                    admission=self._admit, output_directory=self.workspace, timeout=self.timeout)
+            except TransportFailure as error:
+                if self.completion is None:
+                    raise
+                failure = error.as_dict()
+                report = None
         return {'status': 'proposal_received' if self.completion is not None else 'failed',
             'proposal_id': self.local_draft.binding.proposal_id, 'package_sha256': self.source.sha256,
             'draft_completion': self.completion, 'replayed': False, 'applied': False,
-            'approval_granted': False, 'patchharbor': {'success': report.success,
+            'approval_granted': False, 'patchharbor': (failure if report is None else {'success': report.success,
                 'process_exit_code': report.process_exit_code, 'primary_result': report.primary_result.kind.value,
                 'result_status': report.result_bundle.status.value,
-                'result_path': None if report.result_bundle.path is None else str(report.result_bundle.path)},
+                'result_path': None if report.result_bundle.path is None else str(report.result_bundle.path)}),
             'receiver_failure': None if outcome['error'] is None else getattr(outcome['error'], 'reason', 'return_host_failed')}
