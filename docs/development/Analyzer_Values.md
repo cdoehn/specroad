@@ -32,3 +32,7 @@ die Analyse-ID selbst ist eine unabhängige Bindung. Betriebsfelder gehören
 nicht in den Request. Fehler in importierten Daten haben Code 3, fehlerhafte
 explizite ID-Optionen Code 2, fehlende Entropie Code 5. Projektselektion,
 Dateiexport, Ergebnisprüfung und CLI erhalten eigene spätere Abnahmen.
+
+`request.require_binding(request_id=..., snapshot_sha256=...)` unterscheidet
+ID- und Snapshotkonflikt mit Code 6. Diese reine Wertprüfung ist weder ein
+Ergebnisnachweis noch ein Work-Resume und schreibt keine Receipts.

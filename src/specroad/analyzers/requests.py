@@ -51,6 +51,14 @@ class AnalyzerRequest:
                 'analyzer_snapshot_hash_mismatch', '/snapshot_sha256')
         object.__setattr__(self, '_encoded', encoded(value))
 
+    def require_binding(self, *, request_id, snapshot_sha256):
+        # Two independent coordinates, never a write-idempotency lookup.
+        supplied = request_id if type(request_id) is AnalysisRequestId else AnalysisRequestId(request_id)
+        hash_value(snapshot_sha256, '/snapshot_sha256')
+        expected = self.binding
+        require(supplied.value == expected['request_id'], 'analysis_id_mismatch', exit_code=6)
+        require(snapshot_sha256 == expected['snapshot_sha256'], 'analysis_snapshot_mismatch', exit_code=6)
+
     @property
     def data(self):
         return decode(self._encoded)
