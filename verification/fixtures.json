@@ -624,6 +624,10 @@
       "kind": "Owned temporary project with legacy Release/Risk/Issue and the real guarded Change Plan update writer; explicit selection, original revision/hash, lifecycle and publication barriers, preserved modes/audit and no implicit review or approval.",
       "provider": "tests/test_readiness_updates.py:stored"
     },
+    "SR-FIX-RECEIVE-180-v1": {
+      "kind": "Actual native return ZIP and registered source host; explicit synthetic transport callback and independent native PublicationAuthority. Real guarded PH Apply and native draft writer. Review/apply cases retain actual originals and native completion observations; synthetic actors are never productive approvals. Negative cases inject real byte/path/output/process faults at explicit boundaries without replacing successful validators.",
+      "provider": "tests/support/transport_receive.py:returned,receive"
+    },
     "SR-FIX-RECORD-FIELDS-v1": {
       "kind": "owned passive document and evidence-field fixtures; no execution, authoring, real approvals or external hash verification",
       "provider": "tests/support/records.py:record_value"
@@ -1146,6 +1150,7 @@
     "SR-FIX-READ-COMMANDS-v1",
     "SR-FIX-READ-ONLY-PROJECT-v1",
     "SR-FIX-READINESS-MIGRATION-v1",
+    "SR-FIX-RECEIVE-180-v1",
     "SR-FIX-RECORD-FIELDS-v1",
     "SR-FIX-RECOVERY-REMOVAL-R-v1",
     "SR-FIX-RECOVERY-REMOVAL-W-v1",

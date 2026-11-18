@@ -28347,6 +28347,13 @@
     "tests/test_transport_return_right.py::test_source_change_at_final_boundary_never_returns_created[repository-root-pack]",
     "tests/test_transport_return_right.py::test_source_change_at_final_boundary_never_returns_created[repository-root-prepare]",
     "tests/test_transport_return_right.py::test_source_change_at_final_boundary_never_returns_created[subproject-pack]",
-    "tests/test_transport_return_right.py::test_source_change_at_final_boundary_never_returns_created[subproject-prepare]"
+    "tests/test_transport_return_right.py::test_source_change_at_final_boundary_never_returns_created[subproject-prepare]",
+    "tests/test_transport_receive.py::test_explicit_transport_refusal_precedes_all_native_payload_writes",
+    "tests/test_transport_receive.py::test_native_roundtrip_then_separate_actual_fixture_review_and_apply",
+    "tests/test_transport_receive.py::test_receive_preserves_all_fachbytes_and_requires_later_local_review[False-module]",
+    "tests/test_transport_receive.py::test_receive_preserves_all_fachbytes_and_requires_later_local_review[False-pyz]",
+    "tests/test_transport_receive.py::test_receive_preserves_all_fachbytes_and_requires_later_local_review[True-module]",
+    "tests/test_transport_receive.py::test_receive_preserves_all_fachbytes_and_requires_later_local_review[True-pyz]",
+    "tests/test_transport_receive.py::test_receiver_never_supplies_missing_host_authority"
   ]
 }

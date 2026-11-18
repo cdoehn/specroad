@@ -1,23 +1,35 @@
 {
   "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "fixture_ids": [],
-  "implementation_status": "open",
+  "expected_exit_codes": [
+    0,
+    2,
+    3,
+    5,
+    6,
+    7
+  ],
+  "fixture_ids": [
+    "SR-FIX-RECEIVE-180-v1",
+    "SR-FIX-RETURN-180-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [],
-  "method": "pending",
+  "method": "automated_behavior",
   "open_items": [
-    "Implement planned step 18.r and its integration/acceptance contributions under SpecRoad 0.2.8 Annex W; define real fixtures and behavior tests before claiming implementation.",
-    "Public PatchHarbor API capabilities and concrete CPython-compatible distribution must be verified; no current feature or test evidence is claimed.",
-    "RECOVERY-REMOVAL-006: existing test references cover only their still-valid implemented scope. Changed interruption/receipt/preflight/work oracles require fresh implementation and evidence in 18.s–18.x; old repair/crash recovery results are not acceptance of the new contract.",
-    "RETURN-TRANSPORT-743: the additive closed return/admission/replay contract W.5.1 is normative; each announced implementation stage still needs its own actual Apply gate. No Dev behavior success is claimed."
+    "The prepared stage 18.r.W requires its own successful Apply gate and commit; collection is not behavior acceptance.",
+    "The full available behavior suite and separate CPython 3.10–3.14/platform matrix remain required before milestone/release acceptance.",
+    "The remaining 18.q/18.r stages keep their separate robustness/cleanup and integration gates; no later-stage success is assumed."
   ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Der lokale Integrationsadapter MUSS Paketintegrität, Referenzbindung, zulässigen Payload, Entrypoint und aktuelles Ziel vor dem ersten PatchHarbor-Payloadwrite prüfen und erst nach ausdrücklicher Übernahmeautorisierung die öffentliche Apply-API (mit `patchharbor.api.apply_guarded` nach W.5.1) aufrufen.",
-    "scope": "Not implemented. No automated pass oracle is claimed. Correction 744 preserves the complete remaining stage 18.q.C: the fixed native entrypoint marker and public native handoff roles are respected, while exact SpecRoad payload bytes and all native metadata validation remain mandatory. Only the clarification prefix passed Apply; corrected product stages still require their own gates."
+    "scope": "Native outbound/opening coverage is retained. Prepared 18.q uses the actual pinned 1.8.0 API to export one exact reference-bound passive proposal patch from an offline Python-only sandbox; empty delta emits no patch. Prepared 18.r performs guarded host admission before payload, independent native draft publication, then a separate actual local review/apply fixture. No Dev behavior tests have run. Each stage needs its actual Apply gate. Full-suite and independent CPython/platform release evidence remain open. Correction 744 preserves the complete remaining stage 18.r.W: the fixed native entrypoint marker and public native handoff roles are respected, while exact SpecRoad payload bytes and all native metadata validation remain mandatory. Only the clarification prefix passed Apply; corrected product stages still require their own gates."
   },
-  "preconditions": [],
+  "preconditions": [
+    "Original native outbound bundle with explicit full SHA-256, current complete project, explicit Proposal and pinned runtime; no implicit trust in package code.",
+    "Apply-only tests use synthetic authority/actors and actual native artifacts; no fixture grants productive approval."
+  ],
   "primary_verification_id": "SR-VER-0051",
   "required_environment": {
     "declared_minimum_python": "3.10",
@@ -31,8 +43,20 @@
     "owned_temporary_files": true
   },
   "specification_sha256": "b9a4cca39d6a8a682213d4100c289a179de1d6c3a4831a98d032af18fa111072",
-  "steps": [],
+  "steps": [
+    "Create, validate and check the native Proposal in an isolated Python-only process, then export through public argv and structured commands; verify exact bytes, original four-value binding and no_changes.",
+    "Inspect and validate the exact native patch, require explicit local transport authorization under apply_guarded before payload, then native PublicationAuthority for a draft only; compare unchanged Fachbytes.",
+    "Use separate actual local review and transactional apply to match the independently prepared expected model root."
+  ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0739",
-  "test_ids": []
+  "test_ids": [
+    "tests/test_transport_receive.py::test_explicit_transport_refusal_precedes_all_native_payload_writes",
+    "tests/test_transport_receive.py::test_native_roundtrip_then_separate_actual_fixture_review_and_apply",
+    "tests/test_transport_receive.py::test_receive_preserves_all_fachbytes_and_requires_later_local_review[False-module]",
+    "tests/test_transport_receive.py::test_receive_preserves_all_fachbytes_and_requires_later_local_review[False-pyz]",
+    "tests/test_transport_receive.py::test_receive_preserves_all_fachbytes_and_requires_later_local_review[True-module]",
+    "tests/test_transport_receive.py::test_receive_preserves_all_fachbytes_and_requires_later_local_review[True-pyz]",
+    "tests/test_transport_receive.py::test_receiver_never_supplies_missing_host_authority"
+  ]
 }

@@ -19,3 +19,23 @@ darf nur durch den gebundenen lokalen Empfangsadapter angenommen werden;
 der feste Entrypoint allein erteilt keine Hostautorität oder fachliche Freigabe.
 
 Normativer Vertrag: [Spezifikation W.5.1](../specification/SpecRoad_Spezifikation.md#w51-geschlossener-proposal-rückvertrag--return-transport-743).
+
+## Explizite lokale Hostintegration
+
+`specroad.transport.return_receive.ReturnReceiver` erhält `package`,
+`expected_sha256`, `reference`, `reference_sha256`, `repository`, `workspace`,
+`patchharbor_pyz`, `patchharbor_pyz_sha256`, `authorize_transport`, `authority`
+und optional `timeout`. Alle Pfade sind absolut; `workspace` ist ein frischer
+externer Pfad. Der registrierte Host liefert die Funktion `authorize_transport`
+und eine native `PublicationAuthority`; Paketdaten dürfen sie nicht erzeugen.
+Die Funktion erhält den Paket-SHA, Repository, ursprüngliche Referenz, Projekt-ID
+und Proposalbindung und muss exakt True liefern. Der Writer prüft seine eigene
+Authority anschließend unter der nativen Projektsperre erneut.
+
+`receive()` führt synchron genau einen zugelassenen nativen Apply aus.
+`proposal_received` bedeutet ausschließlich einen nachgewiesenen lokalen Draft.
+`draft_completion`, `patchharbor` und `receiver_failure` zeigen die tatsächlichen
+getrennten Teilzustände. Ein fehlgeschlagenes PH-Result ist kein sicherer Retry.
+Für fachliche Änderungen folgen unabhängiges Validate, Check, menschliches
+Review und der normale transaktionale Proposal-Apply. Der Adapter benötigt einen
+Linux-Host mit Python und Bash; die Sandbox benötigt diese Hostwerkzeuge nicht.

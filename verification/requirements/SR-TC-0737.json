@@ -17,20 +17,21 @@
   ],
   "fixture_ids": [
     "SR-FIX-OUTBOUND-SAFE-180-v1",
+    "SR-FIX-RECEIVE-180-v1",
     "SR-FIX-RETURN-180-v1"
   ],
   "implementation_status": "partial",
   "json_pointers": [],
   "method": "automated_behavior",
   "open_items": [
-    "The prepared stage 18.q.C requires its own successful Apply gate and commit; collection is not behavior acceptance.",
+    "The prepared stage 18.r.W requires its own successful Apply gate and commit; collection is not behavior acceptance.",
     "The full available behavior suite and separate CPython 3.10–3.14/platform matrix remain required before milestone/release acceptance.",
     "The remaining 18.q/18.r stages keep their separate robustness/cleanup and integration gates; no later-stage success is assumed."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Hin- und Rückexport MÜSSEN denselben Befehl `bundle create --profile ai-runtime` mit expliziter Richtung verwenden; der Rückexport MUSS seine PatchHarbor-Bindungswerte unverändert aus dem ursprünglichen Result übernehmen.",
-    "scope": "Native outbound/opening coverage is retained. Prepared 18.q uses the actual pinned 1.8.0 API to export one exact reference-bound passive proposal patch from an offline Python-only sandbox; empty delta emits no patch. No Dev behavior tests have run. Each stage needs its actual Apply gate. Full-suite and independent CPython/platform release evidence remain open. Correction 744 preserves the complete remaining stage 18.q.C: the fixed native entrypoint marker and public native handoff roles are respected, while exact SpecRoad payload bytes and all native metadata validation remain mandatory. Only the clarification prefix passed Apply; corrected product stages still require their own gates."
+    "scope": "Native outbound/opening coverage is retained. Prepared 18.q uses the actual pinned 1.8.0 API to export one exact reference-bound passive proposal patch from an offline Python-only sandbox; empty delta emits no patch. Prepared 18.r performs guarded host admission before payload, independent native draft publication, then a separate actual local review/apply fixture. No Dev behavior tests have run. Each stage needs its actual Apply gate. Full-suite and independent CPython/platform release evidence remain open. Correction 744 preserves the complete remaining stage 18.r.W: the fixed native entrypoint marker and public native handoff roles are respected, while exact SpecRoad payload bytes and all native metadata validation remain mandatory. Only the clarification prefix passed Apply; corrected product stages still require their own gates."
   },
   "preconditions": [
     "An explicitly registered local repository with HEAD, complete native project and portable history.",
@@ -57,7 +58,9 @@
     "Observe unchanged source/index/history, explicit public PH operating effects, refusal contracts and retained actual output after faults.",
     "Resume native Work in fresh processes against the same source; verify source-change refusal, single capture, controls and terminal replay.",
     "Change retained runtime/workspace identity or permissions, registry/output boundaries and input bytes between phases; require refusal with retained actual reference, foreign files and unchanged project; inject a short projection write without a complete outer ZIP.",
-    "Create, validate and check the native Proposal in an isolated Python-only process, then export through public argv and structured commands; verify exact bytes, original four-value binding and no_changes."
+    "Create, validate and check the native Proposal in an isolated Python-only process, then export through public argv and structured commands; verify exact bytes, original four-value binding and no_changes.",
+    "Inspect and validate the exact native patch, require explicit local transport authorization under apply_guarded before payload, then native PublicationAuthority for a draft only; compare unchanged Fachbytes.",
+    "Use separate actual local review and transactional apply to match the independently prepared expected model root."
   ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0737",
@@ -178,6 +181,13 @@
     "tests/test_transport_outbound_right.py::test_runtime_is_still_bound_at_each_export_phase[source_identity-assemble]",
     "tests/test_transport_outbound_right.py::test_runtime_is_still_bound_at_each_export_phase[source_identity-capture]",
     "tests/test_transport_outbound_right.py::test_runtime_is_still_bound_at_each_export_phase[source_identity-publish]",
+    "tests/test_transport_receive.py::test_explicit_transport_refusal_precedes_all_native_payload_writes",
+    "tests/test_transport_receive.py::test_native_roundtrip_then_separate_actual_fixture_review_and_apply",
+    "tests/test_transport_receive.py::test_receive_preserves_all_fachbytes_and_requires_later_local_review[False-module]",
+    "tests/test_transport_receive.py::test_receive_preserves_all_fachbytes_and_requires_later_local_review[False-pyz]",
+    "tests/test_transport_receive.py::test_receive_preserves_all_fachbytes_and_requires_later_local_review[True-module]",
+    "tests/test_transport_receive.py::test_receive_preserves_all_fachbytes_and_requires_later_local_review[True-pyz]",
+    "tests/test_transport_receive.py::test_receiver_never_supplies_missing_host_authority",
     "tests/test_transport_return.py::test_native_return_is_one_bound_passive_patch_without_input_writes[repository-root-False-module]",
     "tests/test_transport_return.py::test_native_return_is_one_bound_passive_patch_without_input_writes[repository-root-False-pyz]",
     "tests/test_transport_return.py::test_native_return_is_one_bound_passive_patch_without_input_writes[repository-root-True-module]",

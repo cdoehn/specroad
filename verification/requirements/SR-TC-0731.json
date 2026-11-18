@@ -12,6 +12,7 @@
   "fixture_ids": [
     "SR-FIX-PATCHHARBOR-160-SNAPSHOT-v1",
     "SR-FIX-PATCHHARBOR-180-RUNTIME-v1",
+    "SR-FIX-RECEIVE-180-v1",
     "SR-FIX-RETURN-180-v1"
   ],
   "implementation_status": "partial",
@@ -25,7 +26,7 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Die Transportintegration MUSS PatchHarbor ausschließlich über die dokumentierte öffentliche Python-API ansprechen und fehlende erforderliche API-Fähigkeiten ohne CLI-Fallback, private Core-Imports oder eigene Nachbildung des PatchHarbor-Formats als nicht verfügbar melden.",
-    "scope": "15.m foundation with OFF-PLAN TRANSPORT-PYZ-541: pinned standalone 1.8.0 public API, native immutable five-layer snapshots, offline module/PYZ use, independent error mapping and historical original facts. Runtime preparation is explicit and separate from read-only snapshots: input data cannot select or execute a runtime or materialize project files. No outbound, return, host-apply, full Python-matrix or release acceptance is asserted. RETURN-TRANSPORT-743 adds the actual return direction and guarded host boundary; tests are prepared only and require Apply. Correction 744 preserves the complete remaining stage 18.q.C: the fixed native entrypoint marker and public native handoff roles are respected, while exact SpecRoad payload bytes and all native metadata validation remain mandatory. Only the clarification prefix passed Apply; corrected product stages still require their own gates."
+    "scope": "15.m foundation with OFF-PLAN TRANSPORT-PYZ-541: pinned standalone 1.8.0 public API, native immutable five-layer snapshots, offline module/PYZ use, independent error mapping and historical original facts. Runtime preparation is explicit and separate from read-only snapshots: input data cannot select or execute a runtime or materialize project files. No outbound, return, host-apply, full Python-matrix or release acceptance is asserted. RETURN-TRANSPORT-743 adds the actual return direction and guarded host boundary; tests are prepared only and require Apply. Correction 744 preserves the complete remaining stage 18.r.W: the fixed native entrypoint marker and public native handoff roles are respected, while exact SpecRoad payload bytes and all native metadata validation remain mandatory. Only the clarification prefix passed Apply; corrected product stages still require their own gates."
   },
   "preconditions": [
     "Use the original canonical standalone PatchHarbor 1.8.0 PYZ from commit 2121d3abd2ca4b6c523d9e0698d997a86581d5bc with externally approved SHA-256 050cc2d1dc3ecbb1478f6a40c9a5123d1d34d350215d5cc0303025ea08dc4f1e. Preserve historical 1.4/1.6/1.7 fixtures unchanged.",
@@ -48,7 +49,9 @@
   "steps": [
     "Load the explicit hash-pinned standalone PYZ without a Result or host installation; use only its public API to inspect/read passive Results and to export byte-identical runtime artifacts.",
     "Compare all five layers with independent Git and filesystem oracles, reject incomplete layers, retain upstream failure facts, and check lazy Core, runtime trust and source preservation in isolated offline processes.",
-    "Create, validate and check the native Proposal in an isolated Python-only process, then export through public argv and structured commands; verify exact bytes, original four-value binding and no_changes."
+    "Create, validate and check the native Proposal in an isolated Python-only process, then export through public argv and structured commands; verify exact bytes, original four-value binding and no_changes.",
+    "Inspect and validate the exact native patch, require explicit local transport authorization under apply_guarded before payload, then native PublicationAuthority for a draft only; compare unchanged Fachbytes.",
+    "Use separate actual local review and transactional apply to match the independently prepared expected model root."
   ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0731",
@@ -90,6 +93,13 @@
     "tests/test_transport_pyz.py::test_standalone_runtime_rejects_unsafe_inputs_before_import[oversize]",
     "tests/test_transport_pyz.py::test_standalone_runtime_rejects_unsafe_inputs_before_import[parent_link]",
     "tests/test_transport_pyz.py::test_standalone_runtime_rejects_unsafe_inputs_before_import[symlink]",
+    "tests/test_transport_receive.py::test_explicit_transport_refusal_precedes_all_native_payload_writes",
+    "tests/test_transport_receive.py::test_native_roundtrip_then_separate_actual_fixture_review_and_apply",
+    "tests/test_transport_receive.py::test_receive_preserves_all_fachbytes_and_requires_later_local_review[False-module]",
+    "tests/test_transport_receive.py::test_receive_preserves_all_fachbytes_and_requires_later_local_review[False-pyz]",
+    "tests/test_transport_receive.py::test_receive_preserves_all_fachbytes_and_requires_later_local_review[True-module]",
+    "tests/test_transport_receive.py::test_receive_preserves_all_fachbytes_and_requires_later_local_review[True-pyz]",
+    "tests/test_transport_receive.py::test_receiver_never_supplies_missing_host_authority",
     "tests/test_transport_return.py::test_native_return_is_one_bound_passive_patch_without_input_writes[repository-root-False-module]",
     "tests/test_transport_return.py::test_native_return_is_one_bound_passive_patch_without_input_writes[repository-root-False-pyz]",
     "tests/test_transport_return.py::test_native_return_is_one_bound_passive_patch_without_input_writes[repository-root-True-module]",

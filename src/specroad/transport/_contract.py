@@ -14,7 +14,7 @@ MAX_ARTIFACT_BYTES = 16 * 1024 * 1024
 CONTENT_ID = 'f144df901034f6dd6b3211a2a6b5e613646fa1afb2f7ce19c75862a7a4c4bf21'
 SOURCE_COMMIT = '2121d3abd2ca4b6c523d9e0698d997a86581d5bc'
 SAFE_OPERATIONS = ('context', 'prepare_reference_export', 'repositories', 'configuration')
-OPERATIONS = ('bundle', 'inspect_patch', 'validate_patch', 'pack_patch', 'apply',
+OPERATIONS = ('bundle', 'inspect_patch', 'validate_patch', 'pack_patch', 'apply', 'apply_guarded',
               'integration_capabilities', 'read_result_snapshot', 'export_runtime')
 
 
