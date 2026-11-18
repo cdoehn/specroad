@@ -76,22 +76,7 @@ class AnalyzerDescriptor:
         return sha256(self._encoded).hexdigest()
 
 
-def builtin_descriptor():
-    """Declared shipped identity; worker installation is a separate capability."""
-    return AnalyzerDescriptor(encoded({'contract_version': '1.0.0', 'analyzer_id': 'specroad.py3langid',
-        'adapter_version': '1.0.0', 'capabilities': ['language_detection'], 'subject_modes': ['single_text'],
-        'result_schema_version': '1.0.0', 'execution_mode': 'builtin_worker', 'determinism': 'pinned_engine',
-        'dependency_requirements': [{'name': 'numpy', 'requirement': '*'},
-            {'name': 'py3langid', 'requirement': '==0.4.0'}, {'name': 'python', 'requirement': '>=3.10'}],
-        'extensions': {}}))
-
-
-def classify_descriptor(descriptor):
-    require(type(descriptor) is AnalyzerDescriptor, 'analyzer_descriptor_required', exit_code=2)
-    known = descriptor.canonical_bytes == builtin_descriptor().canonical_bytes
-    # No worker is implemented at this plan position. An imported flag, even
-    # an exact descriptor copy, cannot authorize importing or starting one.
-    return {'known_builtin': known, 'descriptor_sha256': descriptor.sha256,
-            'execution_supported': False, 'availability': 'not_implemented' if known else 'external_result_only'}
+# Preserve existing import names while keeping registry policy separate.
+from .registry import builtin_descriptor as builtin_descriptor, classify_descriptor as classify_descriptor
 
 __all__ = ('AnalyzerDescriptor', 'builtin_descriptor', 'classify_descriptor')
