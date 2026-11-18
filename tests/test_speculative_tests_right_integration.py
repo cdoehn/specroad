@@ -129,3 +129,15 @@ def pytest_sessionstart(session):
             attempts=[r for r in result['copy_attempts'] if r['nodeid']==node]
             assert len(attempts)==2 and all(r['state']=='complete' for r in attempts)
             assert result['copy_winners'][node]!='gw0'
+            # Slot evidence alone is insufficient: merge the two checked host
+            # labels in this synthetic negative proof while retaining real,
+            # overlapping leases on different native slots.
+            bad = deepcopy(result)
+            proof = deepcopy(public_proof(p['profile']))
+            for row in proof['workers'].values():
+                row['host'] = 'same-host'
+            bad['host_pool']['binding'] = deepcopy(proof)
+            for row in bad['host_pool']['workers'].values():
+                row['host'] = 'same-host'
+            with pytest.raises(ValueError, match='Same test overlaps'):
+                verify_pool(bad, proof)

@@ -196,7 +196,7 @@ implementation_plan_commits_completed: 795
 last_completed_plan_commit: 18.p.C
 next_plan_commit: 18.q.W
 priority_off_plan: TEST-HOST-ONCE
-next_off_plan_commit: TEST-HOST-ONCE.R
+next_off_plan_commit: TEST-HOST-ONCE.C
 last_completed_numbered_bundle: 739
 implementation_state: in_progress
 audit_followup_status: closed
