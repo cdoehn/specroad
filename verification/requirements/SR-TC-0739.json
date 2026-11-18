@@ -15,7 +15,7 @@
   "oracle": {
     "kind": "pending",
     "requirement_contract": "Der lokale Integrationsadapter MUSS Paketintegrität, Referenzbindung, zulässigen Payload, Entrypoint und aktuelles Ziel vor dem ersten PatchHarbor-Payloadwrite prüfen und erst nach ausdrücklicher Übernahmeautorisierung die öffentliche Apply-API (mit `patchharbor.api.apply_guarded` nach W.5.1) aufrufen.",
-    "scope": "Not implemented. No automated pass oracle is claimed. Correction 744 preserves the complete remaining stage 18.q.W: the fixed native entrypoint marker and public native handoff roles are respected, while exact SpecRoad payload bytes and all native metadata validation remain mandatory. Only the clarification prefix passed Apply; corrected product stages still require their own gates."
+    "scope": "Not implemented. No automated pass oracle is claimed. Correction 744 preserves the complete remaining stage 18.q.R: the fixed native entrypoint marker and public native handoff roles are respected, while exact SpecRoad payload bytes and all native metadata validation remain mandatory. Only the clarification prefix passed Apply; corrected product stages still require their own gates."
   },
   "preconditions": [],
   "primary_verification_id": "SR-VER-0051",

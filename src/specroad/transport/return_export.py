@@ -1,6 +1,7 @@
 """Python-only preparation of exactly one native reference-bound return ZIP."""
 from hashlib import sha256
 import os
+import stat
 from pathlib import Path
 import tempfile
 
@@ -46,6 +47,7 @@ class ReturnExport:
         self.supplied = ProposalInput(self.snapshot.source, proposal, self.project.root)
         self.original = self.supplied.original()
         self.workspace = Path(tempfile.mkdtemp(prefix='.specroad-return-', dir=self.output.root))
+        self.workspace_boundary = directory(self.workspace, owned=True)
         self.opening = SandboxOpening(source.path, expected_sha256=source.sha256,
             patchharbor_pyz=patchharbor_pyz, patchharbor_pyz_sha256=patchharbor_pyz_sha256,
             runtime_workspace=self.workspace / 'verification')
@@ -69,6 +71,8 @@ class ReturnExport:
 
     def verify_current(self):
         self.project._check_root(); self.output._check_root()
+        self.workspace_boundary._check_root()
+        require(stat.S_IMODE(self.workspace.lstat().st_mode) == 0o700, 'return_workspace_mode')
         self.opening.verify_current(); self.snapshot.verify_current(); self.supplied.verify_current()
         if hasattr(self, 'basis'):
             self.basis.verify_current()
@@ -85,6 +89,18 @@ class ReturnExport:
         _write_contents(content, data.contents, data.entrypoint)
         api = self.opening.runtime.load_api(required=('pack_patch', 'inspect_patch', 'validate_patch'))
         self.verify_current()
+        # Complete bytes/modes are checked again before the native packer sees them.
+        actual = {}
+        for path in content.rglob('*'):
+            if path.is_dir() and not path.is_symlink():
+                directory(path)
+                continue
+            captured = PassiveFile(path, limit=MAX_BYTES)
+            name = path.relative_to(content).as_posix()
+            require(stat.S_IMODE(path.lstat().st_mode) == (0o755 if name == data.entrypoint else 0o644),
+                    'return_prepared_mode_changed')
+            actual[name] = captured.raw
+        require(actual == dict(data.contents), 'return_prepared_inventory_changed')
         result = _api_call(api, api.pack_patch, content, reference_bundle=self.opening.reference.path,
             entrypoint=data.entrypoint, output=self.destination,
             modes={name: 0o755 if name == data.entrypoint else 0o644 for name in data.contents})

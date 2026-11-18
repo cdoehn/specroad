@@ -23,14 +23,14 @@
   "json_pointers": [],
   "method": "automated_behavior",
   "open_items": [
-    "The prepared stage 18.q.W requires its own successful Apply gate and commit; collection is not behavior acceptance.",
+    "The prepared stage 18.q.R requires its own successful Apply gate and commit; collection is not behavior acceptance.",
     "The full available behavior suite and separate CPython 3.10–3.14/platform matrix remain required before milestone/release acceptance.",
     "The remaining 18.q/18.r stages keep their separate robustness/cleanup and integration gates; no later-stage success is assumed."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Die Featureabnahme MUSS den vollständigen API-basierten Rundweg, die negativen Sicherheits-/Zustandsfälle und jedes angebotene Runtimeprofil nach W.7 mit realen Paketartefakten und gebundener Laufzeit-Evidence nachweisen.",
-    "scope": "Native outbound/opening coverage is retained. Prepared 18.q uses the actual pinned 1.8.0 API to export one exact reference-bound passive proposal patch from an offline Python-only sandbox; empty delta emits no patch. No Dev behavior tests have run. Each stage needs its actual Apply gate. Full-suite and independent CPython/platform release evidence remain open. Correction 744 preserves the complete remaining stage 18.q.W: the fixed native entrypoint marker and public native handoff roles are respected, while exact SpecRoad payload bytes and all native metadata validation remain mandatory. Only the clarification prefix passed Apply; corrected product stages still require their own gates."
+    "scope": "Native outbound/opening coverage is retained. Prepared 18.q uses the actual pinned 1.8.0 API to export one exact reference-bound passive proposal patch from an offline Python-only sandbox; empty delta emits no patch. No Dev behavior tests have run. Each stage needs its actual Apply gate. Full-suite and independent CPython/platform release evidence remain open. Correction 744 preserves the complete remaining stage 18.q.R: the fixed native entrypoint marker and public native handoff roles are respected, while exact SpecRoad payload bytes and all native metadata validation remain mandatory. Only the clarification prefix passed Apply; corrected product stages still require their own gates."
   },
   "preconditions": [
     "Linux x86-64 CPython, explicit trusted standalone PatchHarbor 1.8.0 PYZ and external hash, actual closed outbound package and fresh private workspace.",
@@ -250,6 +250,44 @@
     "tests/test_transport_return.py::test_native_return_is_one_bound_passive_patch_without_input_writes[subproject-True-pyz]",
     "tests/test_transport_return.py::test_no_changes_returns_no_patch_file[repository-root]",
     "tests/test_transport_return.py::test_no_changes_returns_no_patch_file[subproject]",
-    "tests/test_transport_return.py::test_return_metadata_binds_generated_output_without_git_or_host_authority"
+    "tests/test_transport_return.py::test_return_metadata_binds_generated_output_without_git_or_host_authority",
+    "tests/test_transport_return_right.py::test_invalid_return_refuses_package_and_preserves_inputs[repository-root-deleted-source-6]",
+    "tests/test_transport_return_right.py::test_invalid_return_refuses_package_and_preserves_inputs[repository-root-hash-6]",
+    "tests/test_transport_return_right.py::test_invalid_return_refuses_package_and_preserves_inputs[repository-root-no-request-2]",
+    "tests/test_transport_return_right.py::test_invalid_return_refuses_package_and_preserves_inputs[repository-root-project-delta-6]",
+    "tests/test_transport_return_right.py::test_invalid_return_refuses_package_and_preserves_inputs[repository-root-project-id-6]",
+    "tests/test_transport_return_right.py::test_invalid_return_refuses_package_and_preserves_inputs[repository-root-proposal-link-7]",
+    "tests/test_transport_return_right.py::test_invalid_return_refuses_package_and_preserves_inputs[repository-root-proposal-target-3]",
+    "tests/test_transport_return_right.py::test_invalid_return_refuses_package_and_preserves_inputs[repository-root-reference-runtime-7]",
+    "tests/test_transport_return_right.py::test_invalid_return_refuses_package_and_preserves_inputs[repository-root-rename-source-6]",
+    "tests/test_transport_return_right.py::test_invalid_return_refuses_package_and_preserves_inputs[subproject-deleted-source-6]",
+    "tests/test_transport_return_right.py::test_invalid_return_refuses_package_and_preserves_inputs[subproject-hash-6]",
+    "tests/test_transport_return_right.py::test_invalid_return_refuses_package_and_preserves_inputs[subproject-no-request-2]",
+    "tests/test_transport_return_right.py::test_invalid_return_refuses_package_and_preserves_inputs[subproject-project-delta-6]",
+    "tests/test_transport_return_right.py::test_invalid_return_refuses_package_and_preserves_inputs[subproject-project-id-6]",
+    "tests/test_transport_return_right.py::test_invalid_return_refuses_package_and_preserves_inputs[subproject-proposal-link-7]",
+    "tests/test_transport_return_right.py::test_invalid_return_refuses_package_and_preserves_inputs[subproject-proposal-target-3]",
+    "tests/test_transport_return_right.py::test_invalid_return_refuses_package_and_preserves_inputs[subproject-reference-runtime-7]",
+    "tests/test_transport_return_right.py::test_invalid_return_refuses_package_and_preserves_inputs[subproject-rename-source-6]",
+    "tests/test_transport_return_right.py::test_prepared_inventory_cannot_smuggle_extra_delete_rename_or_code[repository-root-delete]",
+    "tests/test_transport_return_right.py::test_prepared_inventory_cannot_smuggle_extra_delete_rename_or_code[repository-root-entrypoint]",
+    "tests/test_transport_return_right.py::test_prepared_inventory_cannot_smuggle_extra_delete_rename_or_code[repository-root-extra]",
+    "tests/test_transport_return_right.py::test_prepared_inventory_cannot_smuggle_extra_delete_rename_or_code[repository-root-link]",
+    "tests/test_transport_return_right.py::test_prepared_inventory_cannot_smuggle_extra_delete_rename_or_code[repository-root-missing]",
+    "tests/test_transport_return_right.py::test_prepared_inventory_cannot_smuggle_extra_delete_rename_or_code[repository-root-mode]",
+    "tests/test_transport_return_right.py::test_prepared_inventory_cannot_smuggle_extra_delete_rename_or_code[repository-root-rename]",
+    "tests/test_transport_return_right.py::test_prepared_inventory_cannot_smuggle_extra_delete_rename_or_code[subproject-delete]",
+    "tests/test_transport_return_right.py::test_prepared_inventory_cannot_smuggle_extra_delete_rename_or_code[subproject-entrypoint]",
+    "tests/test_transport_return_right.py::test_prepared_inventory_cannot_smuggle_extra_delete_rename_or_code[subproject-extra]",
+    "tests/test_transport_return_right.py::test_prepared_inventory_cannot_smuggle_extra_delete_rename_or_code[subproject-link]",
+    "tests/test_transport_return_right.py::test_prepared_inventory_cannot_smuggle_extra_delete_rename_or_code[subproject-missing]",
+    "tests/test_transport_return_right.py::test_prepared_inventory_cannot_smuggle_extra_delete_rename_or_code[subproject-mode]",
+    "tests/test_transport_return_right.py::test_prepared_inventory_cannot_smuggle_extra_delete_rename_or_code[subproject-rename]",
+    "tests/test_transport_return_right.py::test_return_manifest_is_owned_and_inputs_are_not_new_review_authority[repository-root]",
+    "tests/test_transport_return_right.py::test_return_manifest_is_owned_and_inputs_are_not_new_review_authority[subproject]",
+    "tests/test_transport_return_right.py::test_source_change_at_final_boundary_never_returns_created[repository-root-pack]",
+    "tests/test_transport_return_right.py::test_source_change_at_final_boundary_never_returns_created[repository-root-prepare]",
+    "tests/test_transport_return_right.py::test_source_change_at_final_boundary_never_returns_created[subproject-pack]",
+    "tests/test_transport_return_right.py::test_source_change_at_final_boundary_never_returns_created[subproject-prepare]"
   ]
 }

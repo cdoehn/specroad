@@ -1,5 +1,8 @@
 """Closed passive return inventory, reconstructed by the native Proposal fold."""
 from hashlib import sha256
+from types import MappingProxyType
+
+from ..storage.json_syntax import parse_json_object
 
 from ..model.canonical import canonical_json_bytes
 from ..proposals.context import ProposalContext, reconstruct_proposal_target, specification_manifest
@@ -62,14 +65,18 @@ class ReturnData:
             'target_model_root_sha256': specification_manifest(target).sha256,
             'entrypoint_sha256': sha256(ENTRYPOINT).hexdigest(), 'delta': delta}
         manifest['return_id'] = sha256(FORMAT.encode() + b'\0' + canonical_json_bytes(manifest)).hexdigest()
-        self.manifest = manifest
+        self._manifest_bytes = canonical_json_bytes(manifest)
         self.prefix = '.specroad-return/' + manifest['return_id']
-        self.contents = {self.prefix + '/' + p: b for p, b in {
+        self.contents = MappingProxyType({self.prefix + '/' + p: b for p, b in {
             'return.json': canonical_json_bytes(manifest), 'proposal.json': original.source_bytes,
-            'receive.sh': ENTRYPOINT, **objects}.items()}
+            'receive.sh': ENTRYPOINT, **objects}.items()})
         self.original, self.basis, self.target = original, basis, target
         self.entrypoint = self.prefix + '/receive.sh'
         self.no_changes = not delta
+
+    @property
+    def manifest(self):
+        return parse_json_object(self._manifest_bytes)
 
     def check_inspection(self, inspection):
         require(inspection.entrypoint == self.entrypoint, 'return_entrypoint_mismatch')

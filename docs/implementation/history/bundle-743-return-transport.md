@@ -12,9 +12,9 @@ ist genau RETURN-TRANSPORT-743, 18.q.W/R/C, 18.r.W/R/C. Jede Stage installiert
 nur ihren eigenen Zustand, erhält N=3 plus vollständige begründete Pflichtauswahl
 und wird erst danach committed. Kein vorab installierter Endstand.
 
-Diese Datei gehört zum Zielstand **18.q.W**. Produktziel nach dessen eigenem
-erfolgreichen Gate: **796/918**; nächste Produktposition
-**18.q.R**. Vorbereitung, Syntax und reine Collection
+Diese Datei gehört zum Zielstand **18.q.R**. Produktziel nach dessen eigenem
+erfolgreichen Gate: **797/918**; nächste Produktposition
+**18.q.C**. Vorbereitung, Syntax und reine Collection
 sind keine ausgeführten Verhaltenstests. Alle Abnahmen erfolgen ausschließlich
 in Apply; die sieben Stageergebnisse müssen getrennt belegt werden.
 
