@@ -35,7 +35,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "1ff2191b9efbec8b4b77a7e5811de26ad6cabdabec554c67be692cedc5861bc6",
+  "specification_sha256": "b9a4cca39d6a8a682213d4100c289a179de1d6c3a4831a98d032af18fa111072",
   "steps": [
     "Check conflicting lifecycle states and distinct successor identities against exact independent expected conflicts.",
     "Check byte-identical protected original adoption and exact original-byte observations; every conflict blocks original extraction.",

@@ -44,7 +44,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "1ff2191b9efbec8b4b77a7e5811de26ad6cabdabec554c67be692cedc5861bc6",
+  "specification_sha256": "b9a4cca39d6a8a682213d4100c289a179de1d6c3a4831a98d032af18fa111072",
   "steps": [
     "Prepare canonical project bytes from guarded native inventory and closure; compare unchanged artifact/resource and referenced object bytes, native roots, exclusions and independently reopened payloads. Refuse unsafe, changed, incomplete or unresolved sources without writing.",
     "Publish the retained native bundle through CLI, structured request and library entry points; verify unchanged source inventory, exact ZIP bytes/hash and no overwrite. Reject missing payloads, incomplete histories, unsafe destinations and changes before atomic publication; preserve actual images on failure."

@@ -26,7 +26,8 @@
     "Full native CPython 3.10–3.14/platform evidence and the M15 full-suite/integration gate remain pending explicit manual execution.",
     "Return transport/receive, end-to-end round trip and platform acceptance remain open in 18.q/18.r/20.f/20.h/20.m.",
     "RECOVERY-REMOVAL-006: existing test references cover only their still-valid implemented scope. Changed interruption/receipt/preflight/work oracles require fresh implementation and evidence in 18.s–18.x; old repair/crash recovery results are not acceptance of the new contract.",
-    "18.v: fresh stage-specific Apply evidence is required. Dev only prepared the implementation, behavioral oracles and pure collection; no behavior tests ran in Dev."
+    "18.v: fresh stage-specific Apply evidence is required. Dev only prepared the implementation, behavioral oracles and pure collection; no behavior tests ran in Dev.",
+    "RETURN-TRANSPORT-743: the additive closed return/admission/replay contract W.5.1 is normative; each announced implementation stage still needs its own actual Apply gate. No Dev behavior success is claimed."
   ],
   "oracle": {
     "kind": "behavior",
@@ -49,7 +50,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "1ff2191b9efbec8b4b77a7e5811de26ad6cabdabec554c67be692cedc5861bc6",
+  "specification_sha256": "b9a4cca39d6a8a682213d4100c289a179de1d6c3a4831a98d032af18fa111072",
   "steps": [
     "Open actual repository-root and subproject packages via module/PYZ and argv/structured requests in a Python-only audited subprocess.",
     "Compare independent project manifest, every original reference/runtime byte, model root and portable receipt replay; relocate the sandbox and revalidate in a fresh process.",

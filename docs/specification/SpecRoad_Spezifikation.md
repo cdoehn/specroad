@@ -1,19 +1,19 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.94
+## Version 0.2.95
 
 | Feld | Wert |
 |---|---|
 | Dokument-ID | `SR-SPEC-0001` |
-| Dokumentversion | `0.2.94` |
+| Dokumentversion | `0.2.95` |
 | Zielrelease | `SpecRoad Single-Repository Workbench 0.2.0` |
 | Status | **Fachlich konsolidierte Arbeitsgrundlage; technische Reviewentscheidung gesondert dokumentiert, formale Baseline-Freigabe und Produktabnahme nicht durch dieses Dokument erklärt** |
 | Stand | 18. November 2026 |
 | Sprache | Deutsch; technische Feldnamen, Enum-Werte und CLI-Kommandos Englisch |
-| Fachliche Quelle | **Diese Repositoryfassung v0.2.94 ist die aktive fachliche Arbeitsgrundlage; eine entsprechende PDF wird hiermit nicht veröffentlicht.** |
+| Fachliche Quelle | **Diese Repositoryfassung v0.2.95 ist die aktive fachliche Arbeitsgrundlage; eine entsprechende PDF wird hiermit nicht veröffentlicht.** |
 | Bearbeitbare Satzquelle | Diese Datei; eine spätere PDF muss denselben versionierten Inhalt wiedergeben. |
-| Vorgängerversion | Repository-Spezifikation v0.2.93; historische Nachweise bleiben unverändert. |
-| Prüf- und Entscheidungsgrundlage | PROPOSAL-DIALOG-738 nach SPECROAD-DECISION-1: native Veröffentlichung gebundener Inhaltsrevisionen; keine Produktfreigabe. |
-| Änderungsart | Additive native Veröffentlichung vorbereiteter Proposal-Inhaltsrevisionen; aktuelle menschliche Review- und Sicherheitsgrenzen bleiben erhalten. |
+| Vorgängerversion | Repository-Spezifikation v0.2.94; historische Nachweise bleiben unverändert. |
+| Prüf- und Entscheidungsgrundlage | RETURN-TRANSPORT-743 nach SPECROAD-DECISION-1: geschlossener Proposal-Rücktransport und explizite lokale Übernahme; keine Produktfreigabe. |
+| Änderungsart | Additive Präzisierung von Rückinventar, Hostzulassung, lokalem Draft und gemeinsamem Replaynachweis; aktuelle menschliche Review- und Sicherheitsgrenzen bleiben erhalten. |
 
 > **Verbindlicher Quellenwechsel:** Die ausdrückliche Nutzerentscheidung REFERENCE-SOURCE-551 wird als v0.2.50 umgesetzt. Der neue Quellvertrag ist Entwurfsarbeit vom 3. November 2026, kein Nachweis eines früher existierenden Formats. Bestehende 0.2-Verträge, Transport-, Sicherheits- und Reviewgrenzen bleiben erhalten.
 
@@ -7050,7 +7050,7 @@ benötigten öffentlichen API-Fähigkeiten. Diese Anforderungen sind noch offen.
 | SR-REQ-0736 | Die Materialisierung in der Sandbox MUSS ohne Git, Shell, Netzwerk oder Paketinstallation einen neuen, vollständig geprüften Projektroot nach W.4 erzeugen und vorhandene Ziele sowie Partial-Bundle-Schreibgrenzen erhalten. | SR-NEED-0008, SR-NEED-0011 | SR-VER-0051 | SR-TC-0736 |
 | SR-REQ-0737 | Hin- und Rückexport MÜSSEN denselben Befehl `bundle create --profile ai-runtime` mit expliziter Richtung verwenden; der Rückexport MUSS seine PatchHarbor-Bindungswerte unverändert aus dem ursprünglichen Result übernehmen. | SR-NEED-0001, SR-NEED-0008 | SR-VER-0051 | SR-TC-0737 |
 | SR-REQ-0738 | Der Rückexport MUSS nach W.5 ausschließlich einen vollständig ausgewiesenen Proposal samt benötigten passiven Daten und einem vertrauenswürdig vorgegebenen Entrypoint über `patchharbor.api.pack_patch` verpacken. | SR-NEED-0003, SR-NEED-0008 | SR-VER-0051 | SR-TC-0738 |
-| SR-REQ-0739 | Der lokale Integrationsadapter MUSS Paketintegrität, Referenzbindung, zulässigen Payload, Entrypoint und aktuelles Ziel vor dem ersten PatchHarbor-Payloadwrite prüfen und erst nach ausdrücklicher Übernahmeautorisierung die öffentliche `patchharbor.api.apply` aufrufen. | SR-NEED-0003, SR-NEED-0011 | SR-VER-0051 | SR-TC-0739 |
+| SR-REQ-0739 | Der lokale Integrationsadapter MUSS Paketintegrität, Referenzbindung, zulässigen Payload, Entrypoint und aktuelles Ziel vor dem ersten PatchHarbor-Payloadwrite prüfen und erst nach ausdrücklicher Übernahmeautorisierung die öffentliche Apply-API (mit `patchharbor.api.apply_guarded` nach W.5.1) aufrufen. | SR-NEED-0003, SR-NEED-0011 | SR-VER-0051 | SR-TC-0739 |
 | SR-REQ-0740 | Die lokale Rückübernahme MUSS die normativen Fachänderungen bis zum gültigen menschlichen Review und transaktionalen Proposal-Apply unveröffentlicht lassen; Transporterfolg und importierter Proposal DÜRFEN NICHT als fachliche Freigabe oder angewendete Änderung gelten. | SR-NEED-0003, SR-NEED-0008 | SR-VER-0051 | SR-TC-0740 |
 | SR-REQ-0741 | Wiederholung, geänderte Basis, Paketfehler und Abbruch MÜSSEN nach W.6 ohne doppelte Fachänderung, stilles Rebase, Verlust fremder Dateien oder fingierten Erfolg behandelt werden. | SR-NEED-0003, SR-NEED-0009, SR-NEED-0011 | SR-VER-0051 | SR-TC-0741 |
 | SR-REQ-0742 | Die Featureabnahme MUSS den vollständigen API-basierten Rundweg, die negativen Sicherheits-/Zustandsfälle und jedes angebotene Runtimeprofil nach W.7 mit realen Paketartefakten und gebundener Laufzeit-Evidence nachweisen. | SR-NEED-0005, SR-NEED-0008, SR-NEED-0012 | SR-VER-0051 | SR-TC-0742 |
@@ -12363,6 +12363,100 @@ Transportreferenz bleibt dennoch die historische Eingangsbindung und wird nicht
 für einen zweiten Transport-Apply umgeschrieben. Der Proposal-Kern führt keine
 Git-Commits, Branches oder Pushes aus. Externe Git-/Entwicklungsautomatisierung
 bleibt getrennt und erhält durch ein Paket keine zusätzliche Autorisierung.
+
+### W.5.1 Geschlossener Proposal-Rückvertrag — RETURN-TRANSPORT-743
+
+Delegierte Detailentscheidung nach SPECROAD-DECISION-1 und 2.4.3.1.
+Die ursprünglichen Anforderungen aus W.5/W.6, insbesondere echte lokale Reviews
+und die unabhängige Berechtigung des nativen Writers, bleiben unverändert.
+
+Der Export verlangt zusätzlich zum expliziten Proposal das unveränderte Hinpaket,
+dessen vollständige SHA-256, den lokalen Projektpfad, die extern gebundene
+PatchHarbor-PYZ sowie einen externen Ausgabeordner. Er ist `generated_output`,
+ohne Git, Shell oder Netzwerk. Er benutzt denselben vollständigen Hinpaketprüfer
+wie W.4.1. Eine private Projektion des ursprünglichen Projekts bildet die Basis.
+Im Arbeitsprojekt dürfen gegenüber dieser Projektion ausschließlich die Bytes
+des expliziten neuen Proposals abweichen. Bereits vorhandene Proposal-Identitäten,
+weitere Fachänderungen und geänderte alte Proposal-/Baseline-Originale sind keine
+zulässige Rückgabe. Fachliche Zielbytes werden ausschließlich mit dem nativen
+Proposal-Fold aus der ursprünglichen Basis rekonstruiert, nicht vom Arbeitsbaum
+abgeschrieben. Ein strukturell gültiger leerer oder wertgleicher Plan liefert
+`no_changes` ohne Patch-Datei. Semantische Prüfung und Freigabe folgen lokal.
+
+`specroad-proposal-return-v1` ist der geschlossene passive Inhalt innerhalb der
+nativen PatchHarbor-ZIP. Alle SpecRoad-Einträge liegen unter
+`.specroad-return/<return_id>/`: `return.json`, `proposal.json`, `receive.sh`
+und für jede erzeugte/geänderte Zieldatei `data/<sha256>`. `return_id` ist SHA-256
+über ASCII `specroad-proposal-return-v1`, ein Nullbyte und die kanonischen
+Manifestbytes ohne `return_id`. Das Manifest enthält exakt `format_version`,
+`outbound_sha256`, `outbound_package_id`, `reference` (die vier ursprünglichen
+Bindungswerte plus `sha256` des inneren Results), `project_id`, `project_path`,
+`proposal` (`path`, vollständiger Datei-Hash, native `binding`),
+`target_model_root_sha256`, `entrypoint_sha256`, `delta` und `return_id`.
+`delta` ist nach Projektpfad sortiert und enthält exakt `path`, `before_sha256`
+(bei Erzeugung null), `after_sha256` (bei Löschung null) und `size` (bei Löschung
+null). Es entspricht vollständig dem nativen Vorher-/Nachher-Fold. Soweit der native Proposalvertrag eine Löschung oder Umbenennung erlaubt,
+bleiben die explizite Operation und alle Dateiseiten im Delta erhalten;
+nicht unterstützte Operationen werden nicht als Dateikopie nachgebildet;
+keine Löschung wird aus fehlenden Arbeitsdateien geraten. Identische Zielbytes
+teilen ein inhaltsadressiertes Datenobjekt. Zusätzliche oder fehlende Einträge,
+abweichende Modi, Laufzeiten, fremde Entrypoints oder Hashes werden abgewiesen.
+Proposal-Originalbytes bleiben passiv erhalten; Fremdreviews sind keine Freigabe.
+
+Der feste distributionsgebundene Bash-Entrypoint führt ausschließlich einen
+isolierten Python-Standardbibliotheksclient aus. Er spricht einmal mit dem
+vorher explizit gestarteten lokalen Empfangsadapter über dessen privaten
+Linux-Abstract-Unix-Socket, geprüfter Peer-UID und einmaliger lokaler Capability. Diese lokalen Werte und der
+Python-Pfad kommen ausschließlich vom Host über dessen Prozessumgebung;
+sie stehen niemals im Paket. Ohne diesen Hostkanal endet der Entrypoint ohne
+Proposal-/Fachschreibzugriff. Paketdaten sind weder Code noch Modulpfade.
+
+Der lokale Python-Adapter `ReturnReceiver` erhält das Rückpaket mit erwartetem
+vollständigem Hash, das ursprüngliche Hinpaket samt Hash, ein explizites
+registriertes Repository, ein frisches externes privates Arbeitsverzeichnis,
+die gebundene PatchHarbor-PYZ eine explizite Hostfunktion `authorize_transport` und eine vom Host registrierte
+native `PublicationAuthority`. Die Transportfunktion muss nach vollständiger
+Prüfung unter der PH-Sperre exakt True für die gebundenen Paket-/Projekt-/
+Referenzdaten zurückgeben, bevor irgendeine Payloaddatei geschrieben wird.
+Ihre Entscheidung ersetzt nicht die spätere native Writerautorisierung. Weder Paket noch Akteurslabel dürfen diese Autorität
+herstellen. `inspect_patch`, `validate_patch` und `apply_guarded` werden über
+die öffentliche API benutzt. Der versionierte `guarded_apply_contract_version=1`
+prüft denselben vollständigen Paketinhalt unter der nativen Repositorysperre
+vor Payload-Ausbringung. Der Adapter prüft dabei erneut Originalbasis,
+Projektidentität, komplettes rekonstruiertes Inventar, feste Entrypointbytes
+und die frische unverlinkte `.specroad-return/<return_id>`-Stagingstelle.
+Ein bereits belegter Pfad ist kein Überschreibauftrag. Der Hostkanal bestätigt
+nur dieses zuvor zugelassene Paket; er nimmt keine Befehle oder Datenänderungen
+vom Kindprozess an. Er endet mit dem synchronen Apply-Aufruf.
+
+Der native SpecRoad-Writer legt ausschließlich einen neuen lokalen Draft an.
+Dessen ID, Fachinhalt und eingebetteter Plan entsprechen dem geprüften Original;
+Revision und Content-Revision beginnen lokal bei 1, Status und Maturity bei
+`draft`, Reviews und Control-History sind leer. So entstehen keine importierten
+wirksamen Reviews. Nichtleere Relations/Extensions des Proposal-Originals sind
+für diese initiale Draft-Erzeugung unzulässig. Der native Create-Vertrag,
+vollständige Qualifikation, Projektlock, PublicationAuthority, Schreibmarker
+und Receipts bleiben wirksam. Der Entwurf verwendet die explizite nichtleere
+Request-ID des eingebetteten Plans; eine fehlende ID wird nicht erfunden.
+Ein ID-/Request-Konflikt wird abgewiesen, keine Historie überschrieben.
+
+Ein separat lokal erzeugter `received.json`-Beleg im paketgebundenen Staging
+bindet den vollständigen Patch-Hash, das Rückmanifest und den nachgewiesenen
+nativen SpecRoad-Abschluss. Er ist keine Payload und keine PH-Erfolgsbehauptung.
+Ein erneuter Empfang derselben ZIP verlangt zusätzlich `prior_result` und
+`prior_result_sha256`: das tatsächlich erfolgreiche native PH-Apply-Result mit
+externem vollständigem Hash. Der öffentliche Snapshotreader prüft dessen
+Originalbytes, Paketstaging, Draft und lokale Receiptbytes. Sein Zustand muss
+mit der aktuellen nativen Repositorybindung übereinstimmen. Der Empfänger
+prüft außerdem den originalen nativen SpecRoad-Request-/Abschlussnachweis und
+schreibt keinen zweiten Draft. Ohne vollständige Belege wird der vorhandene
+Zustand unverändert als nicht erneut anwendbar abgewiesen.
+Fehlender/abweichender Beleg, veränderte Basis, Prozessverlust oder unbekannter
+Publikationsausgang wird nicht durch einen automatischen zweiten Apply geheilt.
+Der tatsächliche Draft-Abschluss wird getrennt vom nativen PatchHarbor-RunReport
+und dessen Result-Publikationsstatus ausgegeben. `proposal_received` attestiert
+nur den Draft; Fach-Apply bleibt ausschließlich dem späteren unabhängigen
+Validate/Check/Review/Apply-Pfad vorbehalten. Kein Commit, Push oder Teststart.
 
 ## W.6 Fehler, Wiederholung und Aussagen über Erfolg
 

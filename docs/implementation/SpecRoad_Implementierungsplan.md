@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 255 · **Stand:** 18. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.94
+**Planrevision:** 256 · **Stand:** 18. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.95
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 306 Schritte und 918 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; die früher genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wurde nach der damaligen Spezifikation innerhalb von 15.l.R vorgezogen und bleibt als normaler Prüfkern erhalten. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -193,10 +193,16 @@ Nach bestätigter Hostgrenze und Dialog-W: [Korrektur 741 — nativer Fehlervert
 
 Nach bestätigtem Dialog-R: [Korrektur 742 — sauberer C-Abschluss](history/bundle-742-dialog-clean-whitespace.md) entfernt den Formatfehler; der vollständige C-Rest behält sein eigenes Apply-Gate. Die Zielwerte gelten erst nach dessen erfolgreichem Commit.
 
+Detailentscheidung für 18.q/18.r: [RETURN-TRANSPORT-743](decisions/return-transport-743.md).
+
+Angekündigte vollständige Folge 743: [Rückexport und lokale Übernahme](decisions/return-transport-743.md).
+Die folgenden Zielwerte gelten ausschließlich nach dem erfolgreichen Apply-Gate und Commit dieser Stage.
+Die Vollsuite und die getrennte Python-/Plattformmatrix bleiben für die Meilensteinfreigabe erforderlich.
+
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 255
+plan_revision: 256
 implementation_plan_commits_total: 918
 implementation_plan_commits_completed: 795
 last_completed_plan_commit: 18.p.C
