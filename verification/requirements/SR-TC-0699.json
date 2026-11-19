@@ -1,20 +1,31 @@
 {
   "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "fixture_ids": [],
-  "implementation_status": "open",
+  "expected_exit_codes": [
+    0,
+    2,
+    5
+  ],
+  "fixture_ids": [
+    "SR-FIX-LANGUAGE-PACKAGING-WORKER-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [],
-  "method": "pending",
+  "method": "automated_behavior",
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Target 19.k.W requires its own successful Apply gate and commit.",
+    "Real per-ABI runtime evidence for CPython 3.10–3.13 is not available in this preparation. No all-ABI or ARM compatibility is asserted; missing proofs remain release blockers under M19 final gate, 19.y and 20.k.",
+    "Real classifier integration, model loading, scoring and resource evidence remain in 19.m–19.y; package import and worker transport are not language detection or approval."
   ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Der ausgelieferte Adapter MUSS py3langid 0.4.0 und das ausdrücklich gebundene mitgelieferte Modell als Referenzbackend nach Anhang T.6 verwenden.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Exact complete offline file inventory, pinned original wheels/model/licenses, optional dependency separation, unchanged Core module/zipapp identity and explicit incompatible/missing ABI errors."
   },
-  "preconditions": [],
+  "preconditions": [
+    "Exact original offline wheels and an explicit independently trusted Core build.",
+    "Stage behavior is executed only in its Apply gate; pure collection is not acceptance."
+  ],
   "primary_verification_id": "SR-VER-0047",
   "required_environment": {
     "declared_minimum_python": "3.10",
@@ -28,8 +39,22 @@
     "owned_temporary_files": true
   },
   "specification_sha256": "f9a7f2223399c8df870d232dca3c551c165c81244f25dae6a7fbe1b143f1311a",
-  "steps": [],
+  "steps": [
+    "Build a separate offline add-on with exact wheel, model and license hashes; reject unavailable or changed inputs."
+  ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0699",
-  "test_ids": []
+  "test_ids": [
+    "tests/test_language_packaging.py::test_existing_destination_preserves_original_bytes",
+    "tests/test_language_packaging.py::test_extra_is_optional_and_pins_the_reference_backend",
+    "tests/test_language_packaging.py::test_missing_exact_wheel_is_explicit_and_does_not_use_another_abi[3.10]",
+    "tests/test_language_packaging.py::test_missing_exact_wheel_is_explicit_and_does_not_use_another_abi[3.11]",
+    "tests/test_language_packaging.py::test_missing_exact_wheel_is_explicit_and_does_not_use_another_abi[3.12]",
+    "tests/test_language_packaging.py::test_missing_exact_wheel_is_explicit_and_does_not_use_another_abi[3.13]",
+    "tests/test_language_packaging.py::test_missing_exact_wheel_is_explicit_and_does_not_use_another_abi[3.14]",
+    "tests/test_language_packaging.py::test_original_wheels_bind_adapter_model_licenses_and_inventory",
+    "tests/test_language_packaging.py::test_unsupported_python_is_not_a_universal_numpy_fallback",
+    "tests/test_language_packaging.py::test_upstream_wheel_replacement_is_rejected_before_publication",
+    "tests/test_language_packaging.py::test_wheel_symlink_is_not_followed"
+  ]
 }

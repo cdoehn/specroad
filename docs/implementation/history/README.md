@@ -544,3 +544,5 @@
 - [Bundle 755 — Korrektur der Analyse-Fortsetzung](bundle-755-analyzer-continuation-correction.md).
 
 - [Bundle 756 — Schlüssel und Anzahlen der Analyseabdeckung](bundle-756-analyzer-coverage-oracles.md).
+
+- [Bundle 757 — Sprachdistribution und Workerstart](bundle-757-language-distribution-worker.md).

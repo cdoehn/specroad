@@ -392,6 +392,10 @@
       "kind": "owned passive package bytes and multilingual requirements; no translation or linguistic approval oracle",
       "provider": "tests/test_language_packages.py:package_data"
     },
+    "SR-FIX-LANGUAGE-PACKAGING-WORKER-v1": {
+      "kind": "Original SHA-256-bound PyPI py3langid 0.4.0 and NumPy 2.3.5 CPython 3.14 Linux x86-64 wheels; real Core/add-on builders and interpreter processes. Other ABI wheel rows are separately pinned declarations, not measured compatibility. Small native AnalyzerRequests, project/CWD/environment poison files and malformed process-output doubles for explicit negative boundaries.",
+      "provider": "tests/test_language_packaging.py:offline_package; tests/data/language_wheels"
+    },
     "SR-FIX-LANGUAGE-POLICY-v1": {
       "kind": "Owned language declarations, exact Basic Filtering cases and named literal-policy resources; no detection, automatic register update or project approval.",
       "provider": "tests/test_language_policy.py:package"
@@ -1122,6 +1126,7 @@
     "SR-FIX-JUNIT-XML-RIGHT-v1",
     "SR-FIX-JUNIT-XML-v1",
     "SR-FIX-LANGUAGE-PACKAGES-v1",
+    "SR-FIX-LANGUAGE-PACKAGING-WORKER-v1",
     "SR-FIX-LANGUAGE-POLICY-v1",
     "SR-FIX-LANGUAGE-REGISTRY-v1",
     "SR-FIX-LEGACY-MANIFEST-v1",

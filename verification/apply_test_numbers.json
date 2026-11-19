@@ -28934,6 +28934,17 @@
     "tests/test_analyzer_work_checkpoints_right.py::test_no_checkpoint_space_before_snapshot_is_real_five_not_eight",
     "tests/test_analyzer_work_checkpoints_right.py::test_storage_failure_after_seal_can_finish_small_request_in_memory",
     "tests/test_analyzer_work_checkpoints_right.py::test_wrong_resume_binding_is_conflict_and_keeps_all_persisted_bytes[expected0]",
-    "tests/test_analyzer_work_checkpoints_right.py::test_wrong_resume_binding_is_conflict_and_keeps_all_persisted_bytes[expected1]"
+    "tests/test_analyzer_work_checkpoints_right.py::test_wrong_resume_binding_is_conflict_and_keeps_all_persisted_bytes[expected1]",
+    "tests/test_language_packaging.py::test_existing_destination_preserves_original_bytes",
+    "tests/test_language_packaging.py::test_extra_is_optional_and_pins_the_reference_backend",
+    "tests/test_language_packaging.py::test_missing_exact_wheel_is_explicit_and_does_not_use_another_abi[3.10]",
+    "tests/test_language_packaging.py::test_missing_exact_wheel_is_explicit_and_does_not_use_another_abi[3.11]",
+    "tests/test_language_packaging.py::test_missing_exact_wheel_is_explicit_and_does_not_use_another_abi[3.12]",
+    "tests/test_language_packaging.py::test_missing_exact_wheel_is_explicit_and_does_not_use_another_abi[3.13]",
+    "tests/test_language_packaging.py::test_missing_exact_wheel_is_explicit_and_does_not_use_another_abi[3.14]",
+    "tests/test_language_packaging.py::test_original_wheels_bind_adapter_model_licenses_and_inventory",
+    "tests/test_language_packaging.py::test_unsupported_python_is_not_a_universal_numpy_fallback",
+    "tests/test_language_packaging.py::test_upstream_wheel_replacement_is_rejected_before_publication",
+    "tests/test_language_packaging.py::test_wheel_symlink_is_not_followed"
   ]
 }
