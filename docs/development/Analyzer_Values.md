@@ -50,3 +50,8 @@ ein String darin wird niemals als Pfad oder Anweisung aufgelöst. Der Aufruf
 publiziert keine Dateien und startet keinen Analyzer. Der Defaulttext-Pointer
 eignet sich für Requirements; andere Typen brauchen passende Pointer und
 die bereits vorgeschriebenen ursprünglichen Sprach-/Metadaten.
+
+Vor dem Lesen werden veränderliche Aufrufereingaben übernommen. Native
+Fehler bleiben unterschieden: Modell 3, Umgebung 5, Konflikt 6, Sicherheit 7;
+fehlerhafte Auswahloptionen 2. Die abschließende Prüfung ist eine native
+Quellbeobachtung, keine Transaktion gegen nichtkooperierende Schreiber.

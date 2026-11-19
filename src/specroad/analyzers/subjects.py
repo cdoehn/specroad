@@ -2,6 +2,10 @@
 from ..bundles._partial_read import partial_read_snapshot
 from ..changes._patch_pointer import _pointer
 from ..model.errors import ModelError
+from ..bundles.errors import BundleError
+from ..cli.results import OperationFailure
+from ..security import SafetyViolation
+from ..srx.errors import SrxError
 from ..query.selection import NormalizedQuery, select_query
 from ..query.show import _preflight, _verify_current
 from ..srx import MISSING
@@ -85,10 +89,26 @@ def request_from_project(root, *, analyzers, settings, subject_ids=None,
                 and all(type(i) is str for i in subject_ids), 'analyzer_invalid_selection', exit_code=2)
         require(len(set(subject_ids)) == len(subject_ids), 'analyzer_duplicate_selection', exit_code=2)
         subject_ids = tuple(subject_ids)
-    subjects = _read_subjects(root, subject_ids, pointers, configuration_id)
+    require(type(context) in (list, tuple), 'analyzer_context_array_required', exit_code=2)
     # Own caller data before hashing or returning any nested value.
     supplied = decode(encoded(dict(analyzers=analyzers, settings=settings,
         resources=list(context), extensions={} if extensions is None else extensions)))
+    try:
+        subjects = _read_subjects(root, subject_ids, pointers, configuration_id)
+    except AnalyzerError:
+        raise
+    except (ModelError, BundleError, SrxError) as error:
+        changed = {'configuration_changed', 'relation_source_changed', 'relation_index_project_mismatch',
+            'relation_index_membership_changed', 'relation_index_source_changed',
+            'show_source_changed', 'show_source_disappeared', 'bundle_partial_read_changed'}
+        code = 6 if error.reason in changed else getattr(error, 'exit_code', 3)
+        raise AnalyzerError(error.reason, pointer=getattr(error, 'pointer', ''), exit_code=code) from error
+    except OperationFailure as error:
+        raise AnalyzerError('analyzer_project_preflight_failed', exit_code=int(error.kind)) from error
+    except SafetyViolation as error:
+        raise AnalyzerError('analyzer_project_security_boundary', exit_code=7) from error
+    except OSError as error:
+        raise AnalyzerError('analyzer_project_environment', exit_code=5) from error
     return create_request(analyzers=supplied['analyzers'], subjects=subjects,
         context=dict(resources=supplied['resources'], subject_keys=sorted(s['subject_key'] for s in subjects)),
         settings=supplied['settings'], extensions=supplied['extensions'], analysis_id=identity)
