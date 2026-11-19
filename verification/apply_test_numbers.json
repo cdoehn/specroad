@@ -29016,6 +29016,20 @@
     "tests/test_analyzer_worker_right.py::test_worker_failures_are_concrete_and_never_successful_reports[extra_json]",
     "tests/test_analyzer_worker_right.py::test_worker_failures_are_concrete_and_never_successful_reports[launch]",
     "tests/test_analyzer_worker_right.py::test_worker_failures_are_concrete_and_never_successful_reports[malformed]",
-    "tests/test_analyzer_worker_right.py::test_worker_failures_are_concrete_and_never_successful_reports[wrong_request]"
+    "tests/test_analyzer_worker_right.py::test_worker_failures_are_concrete_and_never_successful_reports[wrong_request]",
+    "tests/test_analyzer_model_integration.py::test_model_fixture_contains_exact_upstream_bytes",
+    "tests/test_analyzer_model_integration.py::test_real_model_is_loaded_once_per_session_without_global_identifier",
+    "tests/test_analyzer_model_lifetime.py::test_explicit_worker_loads_once_and_preserves_every_analyzer",
+    "tests/test_analyzer_model_lifetime.py::test_external_only_worker_never_imports_an_optional_backend",
+    "tests/test_analyzer_model_lifetime.py::test_failed_initialization_is_not_retried_within_the_worker",
+    "tests/test_analyzer_model_lifetime.py::test_fresh_worker_and_session_imports_do_not_import_optional_dependencies",
+    "tests/test_analyzer_model_lifetime.py::test_loader_failure_keeps_the_full_request_open",
+    "tests/test_analyzer_model_lifetime.py::test_passive_commands_neither_import_dependencies_nor_initialize_model[help]",
+    "tests/test_analyzer_model_lifetime.py::test_passive_commands_neither_import_dependencies_nor_initialize_model[list]",
+    "tests/test_analyzer_model_lifetime.py::test_passive_commands_neither_import_dependencies_nor_initialize_model[show]",
+    "tests/test_analyzer_model_lifetime.py::test_passive_commands_neither_import_dependencies_nor_initialize_model[validate]",
+    "tests/test_analyzer_model_lifetime.py::test_passive_commands_neither_import_dependencies_nor_initialize_model[version]",
+    "tests/test_analyzer_model_lifetime.py::test_saved_report_show_never_initializes_a_model",
+    "tests/test_analyzer_model_lifetime.py::test_session_is_lazy_reuses_one_model_and_releases_it"
   ]
 }

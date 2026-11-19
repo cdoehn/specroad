@@ -552,3 +552,7 @@
 - [Bundle 759 — Worker-Pipes und vollständiger offener Rest](bundle-759-worker-pipe-write-guard.md).
 
 - [Bundle 760 — aktive Funktionsbindung der Schreibschutzregressionen](bundle-760-live-write-guard-binding.md).
+
+- [Bundle 761 — Modell-Lebensdauer und Offlinegrenze](bundle-761-analyzer-model-lifetime.md)
+
+- [Bundle 762 — vollständige Projektdaten für passive Validierung](bundle-762-passive-validation-project.md).

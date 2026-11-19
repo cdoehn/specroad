@@ -1,18 +1,35 @@
 """Distribution-owned stdin/JSON worker. No project-controlled executable paths.
 
-The transport is executable; the real reference engine is planned in 19.n.
-Until then every subject remains honestly open and the run unavailable.
+Model ownership is implemented here; ranking and language decisions follow in
+the separate adapter steps. Model loading alone never confirms a language.
 """
 import sys
 from .requests import AnalyzerRequest
 from ._execution import unavailable_package
 from ._values import AnalyzerError
+from .registry import builtin_descriptor
+from ._model_session import ModelSession
+
+
+def run_request(request):
+    """One serial invocation; external descriptors cannot acquire a model."""
+    known = builtin_descriptor().data
+    with ModelSession() as session:
+        for entry in request.data['analyzers']:
+            if entry['descriptor'] == known:
+                try:
+                    session.model()
+                except AnalyzerError as error:
+                    sys.stderr.write(error.reason + '\n')
+        # 19.n supplies the real ranking adapter. Preserve full open coverage
+        # for every selected analyzer until that separate step is implemented.
+        return unavailable_package(request)
 
 
 def main():
     try:
         request = AnalyzerRequest(sys.stdin.buffer.read())
-        package = unavailable_package(request)
+        package = run_request(request)
         sys.stdout.buffer.write(package.canonical_bytes + b'\n')
         sys.stdout.buffer.flush()
     except (AnalyzerError, OSError, ValueError):
