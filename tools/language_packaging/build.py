@@ -26,16 +26,20 @@ def regular_bytes(path):
     path = Path(path)
     if any(p.is_symlink() for p in (path, *path.parents)):
         raise ValueError('Linked package input')
-    with path.open('rb') as stream:
-        info = os.fstat(stream.fileno())
+    descriptor = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
+    try:
+        info = os.fstat(descriptor)
         if not stat.S_ISREG(info.st_mode) or info.st_size > 32 * 1024 * 1024:
             raise ValueError('Invalid package input')
-        raw = stream.read(32 * 1024 * 1024 + 1)
-        after = os.fstat(stream.fileno())
-    if (len(raw) != info.st_size or (info.st_dev, info.st_ino, info.st_mtime_ns, info.st_ctime_ns)
-            != (after.st_dev, after.st_ino, after.st_mtime_ns, after.st_ctime_ns)):
-        raise ValueError('Package input changed')
-    return raw
+        with os.fdopen(descriptor, 'rb', closefd=False) as stream:
+            raw = stream.read(32 * 1024 * 1024 + 1)
+        fields = ('st_dev','st_ino','st_size','st_mtime_ns','st_ctime_ns')
+        if len(raw) != info.st_size or any(getattr(info,k)!=getattr(after,k)
+                for after in (os.fstat(descriptor),path.lstat()) for k in fields):
+            raise ValueError('Package input changed')
+        return raw
+    finally:
+        os.close(descriptor)
 
 
 def wheel_files(raw, package, row):

@@ -13,7 +13,7 @@
   "json_pointers": [],
   "method": "automated_behavior",
   "open_items": [
-    "Target 19.k.W requires its own successful Apply gate and commit.",
+    "Target 19.k.R requires its own successful Apply gate and commit.",
     "Real per-ABI runtime evidence for CPython 3.10–3.13 is not available in this preparation. No all-ABI or ARM compatibility is asserted; missing proofs remain release blockers under M19 final gate, 19.y and 20.k.",
     "Real classifier integration, model loading, scoring and resource evidence remain in 19.m–19.y; package import and worker transport are not language detection or approval."
   ],
@@ -40,7 +40,8 @@
   },
   "specification_sha256": "f9a7f2223399c8df870d232dca3c551c165c81244f25dae6a7fbe1b143f1311a",
   "steps": [
-    "Build a separate offline add-on with exact wheel, model and license hashes; reject unavailable or changed inputs."
+    "Build and verify separate ABI-tagged offline artifacts and reject missing, changed or substituted package inputs.",
+    "Keep each runtime observation bound to its actual interpreter and archive hash; require all five distinct probes for a matrix result."
   ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0701",
@@ -55,6 +56,23 @@
     "tests/test_language_packaging.py::test_original_wheels_bind_adapter_model_licenses_and_inventory",
     "tests/test_language_packaging.py::test_unsupported_python_is_not_a_universal_numpy_fallback",
     "tests/test_language_packaging.py::test_upstream_wheel_replacement_is_rejected_before_publication",
-    "tests/test_language_packaging.py::test_wheel_symlink_is_not_followed"
+    "tests/test_language_packaging.py::test_wheel_symlink_is_not_followed",
+    "tests/test_language_packaging_right.py::test_core_module_and_zipapp_remain_independent_of_binary_addon",
+    "tests/test_language_packaging_right.py::test_each_missing_runtime_prevents_an_all_abi_claim[3.10]",
+    "tests/test_language_packaging_right.py::test_each_missing_runtime_prevents_an_all_abi_claim[3.11]",
+    "tests/test_language_packaging_right.py::test_each_missing_runtime_prevents_an_all_abi_claim[3.12]",
+    "tests/test_language_packaging_right.py::test_each_missing_runtime_prevents_an_all_abi_claim[3.13]",
+    "tests/test_language_packaging_right.py::test_each_missing_runtime_prevents_an_all_abi_claim[3.14]",
+    "tests/test_language_packaging_right.py::test_independent_core_identity_is_required_before_execution",
+    "tests/test_language_packaging_right.py::test_manifest_rehash_does_not_authorize_different_content[abi]",
+    "tests/test_language_packaging_right.py::test_manifest_rehash_does_not_authorize_different_content[approved]",
+    "tests/test_language_packaging_right.py::test_manifest_rehash_does_not_authorize_different_content[core]",
+    "tests/test_language_packaging_right.py::test_manifest_rehash_does_not_authorize_different_content[extra]",
+    "tests/test_language_packaging_right.py::test_manifest_rehash_does_not_authorize_different_content[license]",
+    "tests/test_language_packaging_right.py::test_manifest_rehash_does_not_authorize_different_content[model]",
+    "tests/test_language_packaging_right.py::test_manifest_rehash_does_not_authorize_different_content[wheel]",
+    "tests/test_language_packaging_right.py::test_original_package_runs_only_on_its_actual_abi",
+    "tests/test_language_packaging_right.py::test_reusing_cp314_as_cp310_is_not_a_matrix",
+    "tests/test_language_packaging_right.py::test_special_package_input_is_rejected_without_waiting_for_a_writer"
   ]
 }
