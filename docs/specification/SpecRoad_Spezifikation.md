@@ -1,19 +1,19 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.97
+## Version 0.2.98
 
 | Feld | Wert |
 |---|---|
 | Dokument-ID | `SR-SPEC-0001` |
-| Dokumentversion | `0.2.97` |
+| Dokumentversion | `0.2.98` |
 | Zielrelease | `SpecRoad Single-Repository Workbench 0.2.0` |
 | Status | **Fachlich konsolidierte Arbeitsgrundlage; technische Reviewentscheidung gesondert dokumentiert, formale Baseline-Freigabe und Produktabnahme nicht durch dieses Dokument erklärt** |
 | Stand | 19. November 2026 |
 | Sprache | Deutsch; technische Feldnamen, Enum-Werte und CLI-Kommandos Englisch |
-| Fachliche Quelle | **Diese Repositoryfassung v0.2.97 ist die aktive fachliche Arbeitsgrundlage; eine entsprechende PDF wird hiermit nicht veröffentlicht.** |
+| Fachliche Quelle | **Diese Repositoryfassung v0.2.98 ist die aktive fachliche Arbeitsgrundlage; eine entsprechende PDF wird hiermit nicht veröffentlicht.** |
 | Bearbeitbare Satzquelle | Diese Datei; eine spätere PDF muss denselben versionierten Inhalt wiedergeben. |
-| Vorgängerversion | Repository-Spezifikation v0.2.96; historische Nachweise bleiben unverändert. |
-| Prüf- und Entscheidungsgrundlage | ANALYZER-OBSERVATION-747 nach SPECROAD-DECISION-1: vollständige Subjectauswahl und geschlossene Ergebnisbeobachtungen; keine Produktfreigabe. |
-| Änderungsart | Additive Präzisierung nativer Subjectauswahl, Coverage, Findings und Enginefakten; aktuelle menschliche Review- und Sicherheitsgrenzen bleiben erhalten. |
+| Vorgängerversion | Repository-Spezifikation v0.2.97; historische Nachweise bleiben unverändert. |
+| Prüf- und Entscheidungsgrundlage | ANALYZER-EVALUATION-748 nach SPECROAD-DECISION-1: vollständige Packages und lesende Aktualitätsprüfung; keine Produktfreigabe. |
+| Änderungsart | Additive Präzisierung der Packageabdeckung, aktuellen Vergleichseingaben und sichtbaren Beobachtungsunterschiede; aktuelle menschliche Review- und Sicherheitsgrenzen bleiben erhalten. |
 
 > **Verbindlicher Quellenwechsel:** Die ausdrückliche Nutzerentscheidung REFERENCE-SOURCE-551 wird als v0.2.50 umgesetzt. Der neue Quellvertrag ist Entwurfsarbeit vom 3. November 2026, kein Nachweis eines früher existierenden Formats. Bestehende 0.2-Verträge, Transport-, Sicherheits- und Reviewgrenzen bleiben erhalten.
 
@@ -11645,6 +11645,34 @@ Work-Pakete enthalten den gebundenen Request beziehungsweise seinen fortsetzbare
 
 Die Commands unterstützen `--format pretty|json`, `--quiet`, `--no-color`, `--fail-on error|warning` sowie die Betriebs-/Work-Optionen aus N–P; `--strict` ändert nur den vorhandenen Fail-Schwellwert, nicht den Kandidatenraum. `--actor-*`, `--request-id`, `--as-proposal` und `--dry-run` sind auf ihnen unzulässig, weil sie keine Fachänderung planen. Die ausschließlich für Request-Erzeugung zugelassene Option `--analysis-id` folgt T.3 und ist kein Alias von `--request-id`. `--help` und `command describe` nennen sämtliche Ausnahmen. Nicht genannte CLI-Optionen sind Code 2.
 
+### T.5.1 Vollständiger Packageumschlag — ANALYZER-EVALUATION-748
+
+Das geschlossene Reportpackage enthält genau `package_version=1.0.0`,
+`request` und `reports`. Der vollständige eingebettete Request wird nach T.3
+validiert. Jeder Bericht wird mit denselben T.4-Prüfungen wie ein kontrolliertes
+Workerresultat geprüft; Analyse-ID und Snapshothash müssen beide passen.
+Ein zusätzlich ausdrücklich gewählter Request muss dem eingebetteten Request
+inhaltlich vollständig entsprechen. Kein fremder Bericht und kein einzelner
+Fehler darf durch Übernahme nur der übrigen Berichte verdeckt werden.
+
+`reports` ist ein nichtleeres Array mit mindestens einem Bericht für jeden
+im Request gewählten Analyzer. Mehrere unterschiedliche Läufe desselben
+Analyzers sind zulässig und bleiben in Eingabereihenfolge erhalten. `run_id`
+ist innerhalb eines Packages eindeutig. Ein fehlender Analyzer wird weder
+weggelassen noch mit einem erfundenen Erfolgs-/Unavailable-Bericht ergänzt.
+Ein einzelner Standalone-Bericht mit ausdrücklich übergebenem Request darf
+einen der darin gewählten Analyzer betreffen; er behauptet keine vollständige
+Packageabdeckung. Unterschiedliche ausgewählte Dateien bleiben einzeln sichtbar.
+
+Die äußeren ursprünglichen Transportbytes und ihr SHA-256 bleiben erhalten.
+Eingebettete JSON-Objekte sind inhaltlich unveränderte Werte, keine separaten
+Originaldateien; ihre abgeleiteten JCS-Bytes behaupten keinen ursprünglichen
+Whitespace. Standalone-Bytes bleiben unverändert. Ein Transporthash ist keine
+Authentizitäts- oder Freigabeaussage. Ein Workerresultat muss zusätzlich gegen
+den ausdrücklich erwarteten Analyzer und die erwartete Engine passen; der
+reine Protokollvalidator startet keinen Worker und entdeckt keine Plugins.
+
+
 ## T.6 Erster Adapter, Distribution und kontrollierte Ausführung
 
 Die spezifizierte Referenz ist `py3langid==0.4.0` mit dessen mitgeliefertem Modell. Die Upstream-Paketbeschreibung dokumentiert Python ab 3.10, eine normalisierte Rangliste und eine mögliche Nichtentscheidung; die Paketmetadaten nennen NumPy als Zusatzabhängigkeit [EXT-001, EXT-002]. Der Adapter stellt keine eigene Sprachverständnisfunktion bereit.
@@ -11706,6 +11734,52 @@ Eine gespeicherte Beobachtung ist `current`, wenn alle Subject-ID-/Revisions-/Vo
 `validate` und `lint` prüfen im Default die deklarierten Sprachen und die deterministischen Metadaten-/Strukturregeln; sie starten **keinen** Analyzer und behaupten auch nicht, die Textsprache geprüft zu haben. `--strict` aktiviert ebenfalls keine Zusatzabhängigkeit. Eine lokale CI kann zusätzlich `analyzer run` beziehungsweise `analyzer evaluate` ausdrücklich als Gate aufrufen. Das erste Release führt keine implizite Analyzerpflicht in den Artefakt-Approval-/Evidence-Gates ein. So bleibt ein Core-Projekt auch ohne NumPy vollständig bearbeitbar, während eine ausdrücklich angeforderte Detektion nicht durch stilles Überspringen erfolgreich erscheint.
 
 Bei mehreren ausgewählten Berichten werden sämtliche Findings mit Analyzerprovenienz erhalten. Unterschiedliche Aussagen über dasselbe Subject ergeben eine sichtbare `analyzer_disagreement`-Information; sie werden nicht zusammen als bestätigte Sprache ausgegeben. Die erste Version leitet aus mehreren statistischen Scores keine gemeinsame Wahrscheinlichkeit ab. Nicht ausgeführte Capabilities stehen in der Coverage, nicht in einer leeren Liste angeblich bestandener Findings.
+
+### T.8.1 Lesende Auswertung und unabhängige aktuelle Eingaben — ANALYZER-EVALUATION-748
+
+Die in T.8 genannten Zustände gelten je ausgewähltem Bericht. Schema- oder
+Integritätsfehler sind `invalid`, auch ohne Arbeitsstand. Ein Standalone-
+Bericht ohne Request darf intrinsisch geprüft und angezeigt werden; dies
+belegt weder die ursprüngliche vollständige Requestmenge noch den aktuellen
+Projektbezug und bleibt `unavailable`. Ein fehlerhaftes Package wird als
+Ganzes sichtbar abgewiesen. Andere gewählte Dateien werden nicht unterdrückt.
+
+Für `current` benötigt der Prüfkern neben einem gültig gebundenen Request
+eine frische native Projekt-/Partialbeobachtung und ausdrücklich unabhängig
+übergebene aktuelle Eingaben: genau `analyzers`, `settings`, `context` und
+`extensions`. `context` enthält die aktuellen expliziten Ressourcen nach T.3.
+Der gespeicherte Request wird nicht selbst als Beweis für unveränderten
+Kontext oder Settings wiederverwendet. Es werden keine Ressourcenpfade geraten
+oder Anweisungen aus JSON ausgeführt. Der spätere Bedienadapter liefert diese
+Werte aus seinen vorgesehenen aktuellen Quellen; fehlen sie, gilt `unavailable`.
+
+Die vorhandene native Konfigurations- und Partialauswahl begrenzt auch die
+Aktualitätsprüfung. Jedes ursprüngliche ID-/Pointerpaar wird einzeln geprüft,
+ohne nachträgliches Kreuzprodukt. Stabile Abweichungen und fehlende Subjects
+im sonst verfügbaren Scope ergeben `stale`. Eine abschließende native
+Quellprüfung bindet alle geprüften Berichte an dieselbe Beobachtung. Ein
+Quellenwechsel macht deren Aktualität `unavailable`; Modell-, Umgebungs-,
+Konflikt- und Sicherheitsgrenzen bleiben mit Code 3/5/6/7 unterscheidbar.
+Fehlerhafte aktuelle Vergleichseingaben machen gültige Originalberichte
+nicht nachträglich integritätswidrig. Keine Originaldatei wird umgeschrieben.
+
+Der generische Vergleich meldet `analyzer_disagreement` als Information,
+wenn Beobachtungen desselben `subject_key` mit gemeinsamer Capability
+strukturell verschieden sind. Die explizite Vergleichsart heißt
+`structural_subject_observation`: verglichen werden Status, unveränderte
+namespaced Payload und alle diesem Subject zugeordneten Findings, ohne lokale
+Finding-ID und unabhängig von deren Reihenfolge. Alle Varianten mit Analyzer-
+und Engineprovenienz bleiben erhalten. Unterschiedliche Run-IDs, Betriebsdaten
+oder Enginefakten allein sind kein fachlicher Widerspruch. Dies interpretiert
+keine unbekannten Adapter-Payloads als semantisch äquivalent oder bestätigt;
+es gibt weder Mehrheitswahl noch gemeinsame statistische Wahrscheinlichkeit.
+
+Eine Zusammenfassung `all_reports_current` bezeichnet ausschließlich die
+Aktualität sämtlicher ausgewählter gültig gebundener Berichte. Sie ist kein
+`gate_passed`, keine Qualitäts- oder Sprachbestätigung, kein Evidence- oder
+Reviewnachweis. Fachliche Sprachpolicy, CLI, Work und tatsächliche Ausführung
+behalten ihre eigenen vorgesehenen Abnahmen. Wiederholte Auswertung bewahrt
+die ursprünglichen Bytes und liefert einen neuen getrennten Auswertungswert.
 
 ## T.9 Ressourcen, Fortsetzung und Determinismus
 

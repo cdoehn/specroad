@@ -7,7 +7,8 @@
   "json_pointers": [],
   "method": "pending",
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence.",
+    "ANALYZER-EVALUATION-748: normative T.5.1/T.8.1 and M19 e/f acceptance, independently gated implementation remains pending."
   ],
   "oracle": {
     "kind": "pending",
@@ -27,7 +28,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "fed2825073cdd87b1a3e4e1c42ba9a022b588217d2c5c840889101581723743b",
+  "specification_sha256": "7b78b9445ca8edb22ca03f31d045875c2e3d6eb95323eaaed3730fa8ef74e177",
   "steps": [],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0691",
