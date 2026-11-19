@@ -10,7 +10,7 @@ from hashlib import sha256
 from ..analyzers._values import encoded, require
 from ..analyzers.identities import AnalysisRequestId
 from ..analyzers.requests import AnalyzerRequest
-from ..analyzers.file_adapter import unavailable_package
+from ._analyzer_results import engines, check_engines, observation, pair_units, final_result
 from ..analyzers.files import InputFile
 from ..analyzers.subjects import request_from_project
 from ..model.canonical import canonical_json_bytes
@@ -27,8 +27,9 @@ from ._analyzer_request import command_binding, prepare_analyzer_work
 
 
 def units(request, command_id):
+    subjects = pair_units(request) if request is not None and command_id=='analyzer.run' else []
     return [dict(key='snapshot', phase='snapshot', range={'complete_request': True}),
-            dict(key='finalize', phase='finalize', range={'command_id':command_id})]
+            *subjects, dict(key='finalize', phase='finalize', range={'command_id':command_id})]
 
 
 def _inputs(value, objects):
@@ -43,10 +44,11 @@ def request_of(value, objects):
     return None if raw is None else AnalyzerRequest(raw)
 
 
-def checked_value(value, objects, registry):
+def checked_value(value, objects, registry, *, validate_command=True):
     """Validate the closed analyzer plan and every retained completion."""
     from .manifest import _entries
-    command_binding(registry, value['command_id'], value['normalized_arguments'])
+    if validate_command:
+        command_binding(registry, value['command_id'], value['normalized_arguments'])
     control = value['normalized_arguments']['construction']
     inputs = _inputs(value, objects)
     _require(inputs.get(CONTROL) == encoded(control))
@@ -82,10 +84,18 @@ def checked_value(value, objects, registry):
         evidence = _parse(raw)
         _require(raw == canonical_json_bytes(evidence))
         if task['key'] == 'snapshot':
-            _require(request is not None and evidence == {'request_sha256':sha256(request.canonical_bytes).hexdigest()})
+            from ._data_contract import _object
+            _object(evidence, ('request_sha256','engines'))
+            _require(request is not None and evidence['request_sha256']==sha256(request.canonical_bytes).hexdigest())
+            check_engines(request,evidence['engines'])
+        elif task['phase'] == 'subjects':
+            _require(request is not None)
+            subject = next(s for s in request.data['subjects'] if s['subject_key']==task['range']['subject_key'])
+            _require(evidence == observation(subject))
         elif task['key'] == 'finalize':
             _require(request is not None and evidence == {'prepared':True})
         done[task['key']] = evidence
+    _require(list(done) == [task['key'] for task in tasks[:len(done)]])
     _require(('snapshot' in done) == (request is not None))
     return control, request, done
 
@@ -157,27 +167,25 @@ def advance(manifest):
         tasks = [dict(unit, unit_id='UNIT-'+sha256(encoded({'binding':binding,'unit':unit})).hexdigest())
                  for unit in units(request, value['command_id'])]
         value['manifests']['tasks'] = _tree('tasks', tasks, objects)
-        complete = [{'unit_id':tasks[0]['unit_id'], 'evidence':_put(encoded({'request_sha256':sha256(request.canonical_bytes).hexdigest()}),objects)}]
+        complete = [{'unit_id':tasks[0]['unit_id'], 'evidence':_put(encoded({'request_sha256':sha256(request.canonical_bytes).hexdigest(),'engines':engines(request)}),objects)}]
         value['checkpoint_generation'] += 1
         return _partition(value,tasks,complete,objects,manifest._registry,value['tool_build'])
     if manifest.entries('remaining'):
         task = manifest.entries('remaining')[0]
-        return partition_work_manifest(manifest, {task['unit_id']: encoded({'prepared':True})})
-    result = request if value['command_id'] == 'analyzer.request' else unavailable_package(request)
+        evidence = {'prepared':True}
+        if task['phase']=='subjects':
+            from ._analyzer_results import prepare_subject
+            evidence = prepare_subject(request,task)
+        return partition_work_manifest(manifest, {task['unit_id']: encoded(evidence)})
+    result = final_result(request, value['command_id'], done)
     return complete_work_manifest(manifest, result.data, exit_code=0 if value['command_id']=='analyzer.request' else 5)
 
 
 def check_outcome(value, objects, document, exit_code):
     request = request_of(value, objects)
     _require(request is not None)
-    if value['command_id'] == 'analyzer.request':
-        expected = request
-    else:
-        from ..analyzers.packages import ReportPackage
-        package = ReportPackage(encoded(document), request=request)
-        expected = unavailable_package(request, run_ids={
-            report.data['analyzer']['descriptor']['analyzer_id']:report.data['run_id']
-            for report in package.reports})
+    _, _, done = checked_value(value, objects, None, validate_command=False)
+    expected = final_result(request, value['command_id'], done, document=document)
     _require(encoded(document) == expected.canonical_bytes
         and type(exit_code) is int and exit_code == (0 if value['command_id']=='analyzer.request' else 5))
 

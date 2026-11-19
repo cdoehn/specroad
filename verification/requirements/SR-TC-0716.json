@@ -17,14 +17,14 @@
   "json_pointers": [],
   "method": "automated_behavior",
   "open_items": [
-    "Target 19.i.C requires its own successful Apply gate and commit.",
+    "Target 19.j.W requires its own successful Apply gate and commit.",
     "Later M19 worker/distribution stages must integrate real execution, pinned engine observations and actual resource blockers; no worker success is claimed.",
     "Release full-suite and supported platform/CPython evidence remain separate obligations."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Eine freiwillige Fortsetzung MUSS die identische Analysekennung, Request-Snapshot- und Enginebindung verwenden oder einen ausdrücklich neuen Analyseauftrag ausweisen.",
-    "scope": "Early analysis ID in normalized_arguments, null writer fields, exact owned construction/snapshot inputs, native durable journal and new-process resumption. R adds malformed/foreign identities, source changes, private path boundaries and unsealed/sealed export/restore. No test outcome is inferred from collection. Existing R-67 through R-73 request/file identity and pair-binding regressions are mandatory. The public resume action comes exclusively from the verified ContinuationClaim; analysis identity and checkpoint hash supplement the summary without shadowing protected result-control fields. Coverage uses the exact sorted request subject-key arrays and their separate integer counts according to T.4.1; unavailable execution retains every subject as open. The completed package preserves the canonical explicit or sealed request."
+    "scope": "Early analysis ID in normalized_arguments, null writer fields, exact owned construction/snapshot inputs, native durable journal and new-process resumption. R adds malformed/foreign identities, source changes, private path boundaries and unsealed/sealed export/restore. Per-subject technical results survive restart and export; final reports retain open/unavailable coverage with code 5 until worker implementation. Tiny complete jobs allocate no Work directory. No test outcome is inferred from collection. Existing R-67 through R-73 request/file identity and pair-binding regressions are mandatory. The public resume action comes exclusively from the verified ContinuationClaim; analysis identity and checkpoint hash supplement the summary without shadowing protected result-control fields. Coverage uses the exact sorted request subject-key arrays and their separate integer counts according to T.4.1; unavailable execution retains every subject as open. The completed package preserves the canonical explicit or sealed request."
   },
   "preconditions": [
     "Real native small project, explicit JSON request or verified partial; a recorded compatible distribution is required for durable Work.",
@@ -61,6 +61,11 @@
     "tests/test_analyzer_work.py::test_existing_work_is_not_overwritten_by_a_new_analysis",
     "tests/test_analyzer_work.py::test_explicit_projectless_request_keeps_its_existing_id",
     "tests/test_analyzer_work.py::test_real_distribution_keeps_early_id_across_independent_processes",
+    "tests/test_analyzer_work_checkpoints.py::test_completed_subject_units_are_reused_by_fresh_openers",
+    "tests/test_analyzer_work_checkpoints.py::test_sealed_work_is_self_contained_after_export_and_source_removal",
+    "tests/test_analyzer_work_checkpoints.py::test_small_finished_analysis_does_not_allocate_even_declared_work_dir[request]",
+    "tests/test_analyzer_work_checkpoints.py::test_small_finished_analysis_does_not_allocate_even_declared_work_dir[run]",
+    "tests/test_analyzer_work_checkpoints.py::test_snapshot_binds_all_selected_values_before_any_subject_result",
     "tests/test_analyzer_work_right.py::test_analysis_never_becomes_a_normative_work_request[actor-value0]",
     "tests/test_analyzer_work_right.py::test_analysis_never_becomes_a_normative_work_request[operations_sha256-0000000000000000000000000000000000000000000000000000000000000000]",
     "tests/test_analyzer_work_right.py::test_analysis_never_becomes_a_normative_work_request[plan_binding-value3]",

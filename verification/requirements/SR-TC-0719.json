@@ -1,20 +1,35 @@
 {
   "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "fixture_ids": [],
-  "implementation_status": "open",
+  "expected_exit_codes": [
+    0,
+    2,
+    3,
+    5,
+    6,
+    7,
+    8
+  ],
+  "fixture_ids": [
+    "SR-FIX-ANALYZER-WORK-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [],
-  "method": "pending",
+  "method": "automated_behavior",
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Target 19.j.W requires its own successful Apply gate and commit.",
+    "Later M19 worker/distribution stages must integrate real execution, pinned engine observations and actual resource blockers; no worker success is claimed.",
+    "Release full-suite and supported platform/CPython evidence remain separate obligations."
   ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Ein tatsächlicher Hostblocker MUSS gemäß Anhang T.9 ohne stille Textkürzung und ohne endlosen fortschrittslosen Retry berichtet werden.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Early analysis ID in normalized_arguments, null writer fields, exact owned construction/snapshot inputs, native durable journal and new-process resumption. R adds malformed/foreign identities, source changes, private path boundaries and unsealed/sealed export/restore. Per-subject technical results survive restart and export; final reports retain open/unavailable coverage with code 5 until worker implementation. Tiny complete jobs allocate no Work directory. No test outcome is inferred from collection. Existing R-67 through R-73 request/file identity and pair-binding regressions are mandatory. The public resume action comes exclusively from the verified ContinuationClaim; analysis identity and checkpoint hash supplement the summary without shadowing protected result-control fields. Coverage uses the exact sorted request subject-key arrays and their separate integer counts according to T.4.1; unavailable execution retains every subject as open. The completed package preserves the canonical explicit or sealed request."
   },
-  "preconditions": [],
+  "preconditions": [
+    "Real native small project, explicit JSON request or verified partial; a recorded compatible distribution is required for durable Work.",
+    "Individual Apply gate pending; Dev performs only syntax/static checks and pure collection."
+  ],
   "primary_verification_id": "SR-VER-0048",
   "required_environment": {
     "declared_minimum_python": "3.10",
@@ -28,8 +43,44 @@
     "owned_temporary_files": true
   },
   "specification_sha256": "f9a7f2223399c8df870d232dca3c551c165c81244f25dae6a7fbe1b143f1311a",
-  "steps": [],
+  "steps": [
+    "Pause before full request creation, reopen the native Work chain and compare immutable analysis identity and final subjects.",
+    "Exercise only the cases present in this stage; preserve every earlier W/R test and the required shared Work/CLI regressions."
+  ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0719",
-  "test_ids": []
+  "test_ids": [
+    "tests/test_analyzer_work.py::test_early_generation_survives_reopen_without_finished_snapshot[None-False-request]",
+    "tests/test_analyzer_work.py::test_early_generation_survives_reopen_without_finished_snapshot[None-False-run]",
+    "tests/test_analyzer_work.py::test_early_generation_survives_reopen_without_finished_snapshot[None-True-request]",
+    "tests/test_analyzer_work.py::test_early_generation_survives_reopen_without_finished_snapshot[None-True-run]",
+    "tests/test_analyzer_work.py::test_early_generation_survives_reopen_without_finished_snapshot[review-round-17-False-request]",
+    "tests/test_analyzer_work.py::test_early_generation_survives_reopen_without_finished_snapshot[review-round-17-False-run]",
+    "tests/test_analyzer_work.py::test_early_generation_survives_reopen_without_finished_snapshot[review-round-17-True-request]",
+    "tests/test_analyzer_work.py::test_early_generation_survives_reopen_without_finished_snapshot[review-round-17-True-run]",
+    "tests/test_analyzer_work.py::test_existing_work_is_not_overwritten_by_a_new_analysis",
+    "tests/test_analyzer_work.py::test_explicit_projectless_request_keeps_its_existing_id",
+    "tests/test_analyzer_work.py::test_real_distribution_keeps_early_id_across_independent_processes",
+    "tests/test_analyzer_work_checkpoints.py::test_completed_subject_units_are_reused_by_fresh_openers",
+    "tests/test_analyzer_work_checkpoints.py::test_sealed_work_is_self_contained_after_export_and_source_removal",
+    "tests/test_analyzer_work_checkpoints.py::test_small_finished_analysis_does_not_allocate_even_declared_work_dir[request]",
+    "tests/test_analyzer_work_checkpoints.py::test_small_finished_analysis_does_not_allocate_even_declared_work_dir[run]",
+    "tests/test_analyzer_work_checkpoints.py::test_snapshot_binds_all_selected_values_before_any_subject_result",
+    "tests/test_analyzer_work_right.py::test_analysis_never_becomes_a_normative_work_request[actor-value0]",
+    "tests/test_analyzer_work_right.py::test_analysis_never_becomes_a_normative_work_request[operations_sha256-0000000000000000000000000000000000000000000000000000000000000000]",
+    "tests/test_analyzer_work_right.py::test_analysis_never_becomes_a_normative_work_request[plan_binding-value3]",
+    "tests/test_analyzer_work_right.py::test_analysis_never_becomes_a_normative_work_request[request_id-same-id]",
+    "tests/test_analyzer_work_right.py::test_changed_construction_source_is_a_conflict_without_replacing_checkpoint[bytes]",
+    "tests/test_analyzer_work_right.py::test_changed_construction_source_is_a_conflict_without_replacing_checkpoint[replace_root]",
+    "tests/test_analyzer_work_right.py::test_normative_options_and_bad_identity_are_rejected_before_work[options0]",
+    "tests/test_analyzer_work_right.py::test_normative_options_and_bad_identity_are_rejected_before_work[options1]",
+    "tests/test_analyzer_work_right.py::test_normative_options_and_bad_identity_are_rejected_before_work[options2]",
+    "tests/test_analyzer_work_right.py::test_normative_options_and_bad_identity_are_rejected_before_work[options3]",
+    "tests/test_analyzer_work_right.py::test_normative_options_and_bad_identity_are_rejected_before_work[options4]",
+    "tests/test_analyzer_work_right.py::test_override_of_projectless_request_and_missing_id_keep_usage_data_split",
+    "tests/test_analyzer_work_right.py::test_renamed_analysis_cannot_be_a_successor_even_with_resealed_hash",
+    "tests/test_analyzer_work_right.py::test_unfinished_and_sealed_snapshots_export_restore_with_identity",
+    "tests/test_analyzer_work_right.py::test_work_root_cannot_alias_or_enter_project[inside]",
+    "tests/test_analyzer_work_right.py::test_work_root_cannot_alias_or_enter_project[symlink]"
+  ]
 }

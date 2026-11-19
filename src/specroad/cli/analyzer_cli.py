@@ -117,15 +117,17 @@ def analyzer_command(invocation):
                 schemas={name:schema('analyzer-'+name+'-v1') for name in ('descriptor','inputs','request','report','package')})
                 for d in rows])
         elif command in ('analyzer.request', 'analyzer.run'):
-            if '--work-dir' in options or any(flag in options for flag in
-                    ('--step-cpu-ms','--step-wall-ms','--cpu-budget-ms','--wall-budget-ms','--resource-profile')):
+            from ..runtime.identity import version_info
+            if (version_info()['build_identity_status']=='recorded' or '--work-dir' in options
+                    or invocation.consumption_call is not None):
                 from .analyzer_work import start
                 return start(invocation)
-            request = _request(invocation, read)
-            value = request if command == 'analyzer.request' else unavailable_package(request)
+            # An unsealed development checkout cannot make a portable Work
+            # compatibility claim. Its existing immediate file API remains usable.
+            request = _request(invocation,read)
+            value = request if command=='analyzer.request' else unavailable_package(request)
             payload, output = value.data, value.canonical_bytes
-            if command == 'analyzer.run':
-                code = 5
+            code = 0 if command=='analyzer.request' else 5
         else:
             payload, code, original = _inspection(invocation, read, files)
             if command == 'analyzer.import' and not code:

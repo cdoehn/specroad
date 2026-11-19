@@ -28922,6 +28922,11 @@
     "tests/test_analyzer_work_right.py::test_renamed_analysis_cannot_be_a_successor_even_with_resealed_hash",
     "tests/test_analyzer_work_right.py::test_unfinished_and_sealed_snapshots_export_restore_with_identity",
     "tests/test_analyzer_work_right.py::test_work_root_cannot_alias_or_enter_project[inside]",
-    "tests/test_analyzer_work_right.py::test_work_root_cannot_alias_or_enter_project[symlink]"
+    "tests/test_analyzer_work_right.py::test_work_root_cannot_alias_or_enter_project[symlink]",
+    "tests/test_analyzer_work_checkpoints.py::test_completed_subject_units_are_reused_by_fresh_openers",
+    "tests/test_analyzer_work_checkpoints.py::test_sealed_work_is_self_contained_after_export_and_source_removal",
+    "tests/test_analyzer_work_checkpoints.py::test_small_finished_analysis_does_not_allocate_even_declared_work_dir[request]",
+    "tests/test_analyzer_work_checkpoints.py::test_small_finished_analysis_does_not_allocate_even_declared_work_dir[run]",
+    "tests/test_analyzer_work_checkpoints.py::test_snapshot_binds_all_selected_values_before_any_subject_result"
   ]
 }

@@ -22,17 +22,44 @@ def _store(initial, options, cwd):
     return CheckpointStore(location, initial)
 
 
+def _pause(call, edge='end'):
+    from ..runtime.control_points import PhaseBoundary
+    return call.control(PhaseBoundary('work_unit',edge))['soft_budget_exceeded']
+
+
+def _publish_chain(store, chain):
+    with store._location.for_checkpoint(require_empty=True) as held:
+        for manifest in chain:
+            store._publish_held(held,manifest,store._pointer(held))
+
+
 def start(invocation):
+    from ..runtime.consumption import WorkConsumption
+    from ..work.analyzer import advance
+    from .work_handler import continuation
+    own_call = invocation.consumption_call is None
+    call = WorkConsumption().begin() if own_call else invocation.consumption_call
     try:
         initial = prepare_analyzer_work(invocation)
-        store = _store(initial, invocation.options, invocation.resolved.working_directory)
-        with store._location.for_checkpoint(require_empty=True) as held:
-            store._publish_held(held, initial, None)
-        from .work_handler import continuation
-        return continuation(invocation.command.command_id, store, initial)
+        store = _store(initial,invocation.options,invocation.resolved.working_directory)
+        current, chain = initial, [initial]
+        known = set(initial.objects)
+        call.account_bytes('memory',len(initial.raw)+sum(len(raw) for raw in initial.objects.values()))
+        pause = _pause(call,'start')
+        while current.as_dict()['state']!='completed':
+            if pause:
+                _publish_chain(store,chain)
+                return continuation(invocation.command.command_id,store,current)
+            current=advance(current);chain.append(current)
+            call.account_bytes('memory',len(current.raw)+sum(len(raw) for digest,raw in current.objects.items() if digest not in known))
+            known.update(current.objects)
+            pause=_pause(call)
+        return deliver(invocation,current)
     except (CheckpointStorageError, WorkManifestError, WorkResumeError) as error:
-        raise OperationFailure(FailureKind(getattr(error, 'exit_code', 6)),
-            getattr(error, 'reason', 'analyzer_work_invalid')) from error
+        raise OperationFailure(FailureKind(getattr(error,'exit_code',6)),
+            getattr(error,'reason','analyzer_work_invalid')) from error
+    finally:
+        if own_call: call.finish()
 
 
 def deliver(invocation, manifest):
@@ -66,8 +93,18 @@ def work_command(invocation, store, operation):
             from ..work.control import _cancel
             return _payload(operation,_cancel(store,options['--reason'],_runtime_build(),checked,lambda current:nullcontext()))
         require(operation == 'resume', 'analyzer_work_operation', exit_code=2)
-        current = resume_analyzer_work(store)
-        return deliver(invocation,current) if current.as_dict()['state']=='completed' else continuation('work.resume',store,current)
+        from ..runtime.consumption import WorkConsumption
+        own_call = invocation.consumption_call is None
+        call = WorkConsumption().begin() if own_call else invocation.consumption_call
+        try:
+            current = store.read()
+            while current.as_dict()['state'] != 'completed':
+                current = resume_analyzer_work(store)
+                if current.as_dict()['state'] != 'completed' and _pause(call):
+                    return continuation('work.resume',store,current)
+            return deliver(invocation,current)
+        finally:
+            if own_call: call.finish()
     try:
         return run()
     except (WorkManifestError, WorkResumeError) as error:
