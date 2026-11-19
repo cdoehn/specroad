@@ -17,7 +17,7 @@
   "json_pointers": [],
   "method": "automated_behavior",
   "open_items": [
-    "Target 19.i.R requires its own successful Apply gate and commit.",
+    "Target 19.i.C requires its own successful Apply gate and commit.",
     "Later M19 worker/distribution stages must integrate real execution, pinned engine observations and actual resource blockers; no worker success is claimed.",
     "Release full-suite and supported platform/CPython evidence remain separate obligations."
   ],

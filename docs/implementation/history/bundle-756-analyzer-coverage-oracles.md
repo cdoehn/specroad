@@ -35,8 +35,8 @@ bindet ausdrücklich alle erhaltenen uncommitteten Dateien einschließlich berei
 korrekter Bytes. Der Korrekturverweis bindet den nativen Plan 755 und exakt den
 vollständigen offenen Rest; keine erfolgreichen Commits werden wiederholt.
 
-Ziel dieser Stage: **19.i.R**, **827/918**, danach
-**19.i.C** — erst nach eigenem erfolgreichem
+Ziel dieser Stage: **19.i.C**, **828/918**, danach
+**19.j.W** — erst nach eigenem erfolgreichem
 Apply-Gate und Commit. In Dev erfolgen ausschließlich statische Prüfung,
 reine Collection und native Paketvalidierung. Verhaltenstests, Fixtures und
 Test-Unterprozesse werden hier nicht ausgeführt; die Apply-Abnahme steht aus.
