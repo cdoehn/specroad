@@ -34,8 +34,8 @@ Bindungen stammen aus dem neuen effektiven Snapshot. Erfolgreiche Commits
 werden nicht wiederholt; das Entscheidungsbudget wird nicht verändert.
 Historische Belege 749–751 bleiben bytegleich erhalten.
 
-Zielstand **19.h.W** zählt erst nach seinem eigenen Apply-Gate und Commit
-**823/918**; danach folgt **19.h.R**. Jedes Gate erhält alle bisherigen
+Zielstand **19.h.R** zählt erst nach seinem eigenen Apply-Gate und Commit
+**824/918**; danach folgt **19.h.C**. Jedes Gate erhält alle bisherigen
 ungefilterten Pflichtdateien einschließlich test_description.py zusätzlich
 zur fälligen gefilterten N=3-Gruppe. C erhält die W/R-Testbytes unverändert.
 Dev prüft ausschließlich Syntax, statische Verträge, reine Collection und

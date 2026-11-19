@@ -536,3 +536,5 @@
 - [Bundle 751 — vollständige Befehls- und Schemaoracles](bundle-751-analyzer-contract-oracles.md)
 
 - [Bundle 752 — gebundener Projektvariantenvertrag](bundle-752-analyzer-variant-oracle.md).
+
+- [Bundle 753 — vollständige native Validierungsdaten](bundle-753-native-validation-fixture.md).

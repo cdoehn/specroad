@@ -9,8 +9,8 @@ Kein offener Korrekturrest und keine Wiederholung erfolgreicher Commits.
 [ANALYZER-CLI-749](../decisions/analyzer-cli-749.md) präzisiert vorab in genau
 einem optionalen Klärungspräfix T.5.2 und die zugehörigen Planabnahmen.
 Danach folgen die vollständigen Gruppen 19.g.W/R/C und 19.h.W/R/C.
-Dieser vorbereitete Stand **19.h.W** zählt erst nach seinem eigenen
-Apply-Gate/Commit **823/918**; danach folgt **19.h.R**.
+Dieser vorbereitete Stand **19.h.R** zählt erst nach seinem eigenen
+Apply-Gate/Commit **824/918**; danach folgt **19.h.C**.
 
 19.g.W installiert list/describe/request/run/import/show/evaluate mit echten
 Registryverträgen, nativer Requestbildung, passiven Reportlesern und atomarer

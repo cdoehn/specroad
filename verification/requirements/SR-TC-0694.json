@@ -17,14 +17,14 @@
   "json_pointers": [],
   "method": "automated_behavior",
   "open_items": [
-    "Target 19.h.W needs its own successful Apply gate/commit; no Dev behavior execution.",
+    "Target 19.h.R needs its own successful Apply gate/commit; no Dev behavior execution.",
     "Subsequent M19 positions retain controlled workers, distribution, language policy and durable Work integration.",
     "Full suite and supported Python/platform matrix remain milestone/release obligations."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Core-Validierung und strict-Linting DÜRFEN NICHT implizit eine Analyzer-Ausführung oder einen Modellimport starten.",
-    "scope": "Explicit foreign descriptors and full independent settings/resources, native requests and actual report files are usable without executing workers. Registry-owned argv/structured project variants, full configuration preflight, explicit input origin and projectless passive file boundaries are also bound. Only Apply executes behavior; preparation is not a passed gate."
+    "scope": "Explicit foreign descriptors and full independent settings/resources, native requests and actual report files are usable without executing workers. R validates the full input contract and traps subprocess, network and implicit model imports for instruction-like descriptor/subject/extension data and strict native validation/lint. Registry-owned argv/structured project variants, full configuration preflight, explicit input origin and projectless passive file boundaries are also bound. Only Apply executes behavior; preparation is not a passed gate. Native validation uses complete Core/software profile and bound small language-registry inputs. An actual SRX warning for each instruction-like requirement proves profile_lint ran; complete validation, language-policy success and strict/non-strict exit codes are checked with all side-effect traps still active."
   },
   "preconditions": [
     "Small real native projects and exact passive synthetic report files with explicitly unknown engine facts.",
@@ -61,6 +61,28 @@
     "tests/test_analyzer_external_cli.py::test_real_foreign_file_roundtrip_uses_existing_validator_without_running_worker",
     "tests/test_analyzer_external_cli.py::test_request_does_not_silently_filter_or_replace_profile_selection[selected0]",
     "tests/test_analyzer_external_cli.py::test_request_does_not_silently_filter_or_replace_profile_selection[selected1]",
-    "tests/test_analyzer_external_cli.py::test_request_does_not_silently_filter_or_replace_profile_selection[selected2]"
+    "tests/test_analyzer_external_cli.py::test_request_does_not_silently_filter_or_replace_profile_selection[selected2]",
+    "tests/test_analyzer_external_cli_right.py::test_all_explicit_input_fields_are_validated_even_without_execution[list-analyzers]",
+    "tests/test_analyzer_external_cli_right.py::test_all_explicit_input_fields_are_validated_even_without_execution[list-context]",
+    "tests/test_analyzer_external_cli_right.py::test_all_explicit_input_fields_are_validated_even_without_execution[list-extensions]",
+    "tests/test_analyzer_external_cli_right.py::test_all_explicit_input_fields_are_validated_even_without_execution[list-extra]",
+    "tests/test_analyzer_external_cli_right.py::test_all_explicit_input_fields_are_validated_even_without_execution[list-settings]",
+    "tests/test_analyzer_external_cli_right.py::test_all_explicit_input_fields_are_validated_even_without_execution[request-analyzers]",
+    "tests/test_analyzer_external_cli_right.py::test_all_explicit_input_fields_are_validated_even_without_execution[request-context]",
+    "tests/test_analyzer_external_cli_right.py::test_all_explicit_input_fields_are_validated_even_without_execution[request-extensions]",
+    "tests/test_analyzer_external_cli_right.py::test_all_explicit_input_fields_are_validated_even_without_execution[request-extra]",
+    "tests/test_analyzer_external_cli_right.py::test_all_explicit_input_fields_are_validated_even_without_execution[request-settings]",
+    "tests/test_analyzer_external_cli_right.py::test_all_explicit_input_fields_are_validated_even_without_execution[show-analyzers]",
+    "tests/test_analyzer_external_cli_right.py::test_all_explicit_input_fields_are_validated_even_without_execution[show-context]",
+    "tests/test_analyzer_external_cli_right.py::test_all_explicit_input_fields_are_validated_even_without_execution[show-extensions]",
+    "tests/test_analyzer_external_cli_right.py::test_all_explicit_input_fields_are_validated_even_without_execution[show-extra]",
+    "tests/test_analyzer_external_cli_right.py::test_all_explicit_input_fields_are_validated_even_without_execution[show-settings]",
+    "tests/test_analyzer_external_cli_right.py::test_descriptor_mode_and_instructions_cannot_authorize_process_network_or_model_import[builtin_worker]",
+    "tests/test_analyzer_external_cli_right.py::test_descriptor_mode_and_instructions_cannot_authorize_process_network_or_model_import[external_result_only]",
+    "tests/test_analyzer_external_cli_right.py::test_descriptor_mode_and_instructions_cannot_authorize_process_network_or_model_import[future_unsupported]",
+    "tests/test_analyzer_external_cli_right.py::test_descriptor_top_level_command_is_rejected_without_executing_it",
+    "tests/test_analyzer_external_cli_right.py::test_import_does_not_execute_adversarial_operational_or_finding_data",
+    "tests/test_analyzer_external_cli_right.py::test_native_validate_and_its_lint_pipeline_do_not_initialize_analyzers[False]",
+    "tests/test_analyzer_external_cli_right.py::test_native_validate_and_its_lint_pipeline_do_not_initialize_analyzers[True]"
   ]
 }

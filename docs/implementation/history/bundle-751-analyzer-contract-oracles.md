@@ -33,8 +33,8 @@ die Vorherbindung stammt vollständig aus dem neuen effektiven Snapshot.
 Keine neue Klärung, keine Wiederholung erfolgreicher Commits, keine Budgetänderung.
 Die Berichte 749 und 750 bleiben unveränderte historische Vorbereitung/Evidenz.
 
-Zielstand **19.h.W** zählt erst nach seinem eigenen Apply-Gate und Commit
-**823/918**; danach folgt **19.h.R**. Alle bisherigen Pflichtdateien und
+Zielstand **19.h.R** zählt erst nach seinem eigenen Apply-Gate und Commit
+**824/918**; danach folgt **19.h.C**. Alle bisherigen Pflichtdateien und
 die vier korrigierten Testdateien bleiben ungefiltert in jedem Gate; die
 fällige gefilterte N=3-Gruppe kommt hinzu. C bewahrt die W/R-Testbytes und
 extrahierten Funktionsdefinitionen. Dev prüft nur statisch, per reiner

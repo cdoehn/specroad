@@ -1,11 +1,12 @@
 """Passive file values and unavailable execution; no plugin/model discovery."""
-from ._values import decode, encoded, require, shape
+from ._values import decode, encoded, require, shape, digest, extensions, hash_value
 from .descriptors import AnalyzerDescriptor
 from .registry import builtin_descriptor, classify_descriptor
 from .requests import analyzer_binding
 from .reports import create_report, subject_result
 from .packages import create_package
 from ._report_values import ENGINE_FACTS
+from ._request_values import RESOURCE_ID
 
 
 def default_inputs(configuration):
@@ -22,8 +23,7 @@ def default_inputs(configuration):
 
 def request_inputs(raw, selected):
     """Bind exactly the requested analyzer set, never silently filter a profile."""
-    value = decode(raw)
-    shape(value, ('analyzers', 'settings', 'context', 'extensions'))
+    value = validate_inputs(raw)
     require(type(value['analyzers']) is list and bool(value['analyzers']), 'analyzer_inputs_required')
     names = []
     for item in value['analyzers']:
@@ -43,8 +43,7 @@ def descriptors(raw=None):
     known = builtin_descriptor()
     found = {known.data['analyzer_id']: known}
     if raw is not None:
-        value = decode(raw)
-        shape(value, ('analyzers', 'settings', 'context', 'extensions'))
+        value = validate_inputs(raw)
         require(type(value['analyzers']) is list and bool(value['analyzers']), 'analyzer_inputs_required')
         for item in value['analyzers']:
             shape(item, ('descriptor','descriptor_sha256','capabilities'))
@@ -73,3 +72,31 @@ def unavailable_package(request):
             engine=engine, subjects=subjects, run_status='unavailable',
             operational={'execution_supported': False, 'reason': reason}))
     return create_package(request, reports)
+
+
+def validate_inputs(raw):
+    value = decode(raw)
+    shape(value, ('analyzers','settings','context','extensions'))
+    require(type(value['analyzers']) is list and bool(value['analyzers']), 'analyzer_inputs_required')
+    names = []
+    for item in value['analyzers']:
+        shape(item, ('descriptor','descriptor_sha256','capabilities'))
+        descriptor = AnalyzerDescriptor(encoded(item['descriptor']))
+        require(descriptor.sha256 == item['descriptor_sha256'], 'analyzer_descriptor_hash_mismatch')
+        descriptor.select_capabilities(item['capabilities'])
+        names.append(descriptor.data['analyzer_id'])
+    require(names == sorted(set(names)), 'analyzer_sorted_unique_required')
+    require(type(value['settings']) is dict and set(value['settings']) == set(names)
+            and all(type(v) is dict for v in value['settings'].values()), 'analyzer_settings_binding_mismatch')
+    require(type(value['context']) is list, 'analyzer_context_array_required')
+    resources = []
+    for item in value['context']:
+        shape(item, ('resource_id','sha256','value'))
+        require(type(item['resource_id']) is str and RESOURCE_ID.fullmatch(item['resource_id']) is not None,
+            'analyzer_invalid_resource_id')
+        hash_value(item['sha256'], '/context/sha256')
+        require(item['sha256'] == digest(item['value']), 'analyzer_context_hash_mismatch')
+        resources.append(item['resource_id'])
+    require(resources == sorted(set(resources)), 'analyzer_sorted_unique_required')
+    extensions(value['extensions'])
+    return value

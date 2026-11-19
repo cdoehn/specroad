@@ -2,7 +2,7 @@
 from hashlib import sha256
 
 from ..analyzers._values import AnalyzerError, decode, encoded, require
-from ..analyzers.file_adapter import default_inputs, request_inputs, descriptors, unavailable_package
+from ..analyzers.file_adapter import default_inputs, request_inputs, descriptors, unavailable_package, validate_inputs
 from ..analyzers.files import InputFile, publish
 from ..analyzers.registry import classify_descriptor
 from ..analyzers.requests import AnalyzerRequest
@@ -71,7 +71,7 @@ def _inspection(invocation, read, files):
             document = None
         sources.append(dict(path=path, size=len(raw), sha256=sha256(raw).hexdigest(), document=document))
     request = AnalyzerRequest(read(options['--request'])) if '--request' in options else None
-    supplied = decode(read(options['--inputs'])) if '--inputs' in options else None
+    supplied = validate_inputs(read(options['--inputs'])) if '--inputs' in options else None
     evaluation = evaluate_reports(raws, request=request, project=invocation.resolved.project_root,
         current_inputs=supplied, configuration_id=invocation.resolved.values.get('configuration')).data
     rows = evaluation['reports']
