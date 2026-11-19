@@ -43,3 +43,5 @@ def identity_metadata(schema_id):
     if family not in category_scopes:
         return None
     return (parts[3], *category_scopes[family])
+
+RESULT_IDS += ('analyzer-descriptor-v1', 'analyzer-inputs-v1', 'analyzer-request-v1', 'analyzer-report-v1', 'analyzer-package-v1', 'analyzer-directory-v1', 'analyzer-inspection-v1')

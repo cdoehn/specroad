@@ -85,6 +85,9 @@ def _with_currentness(schema, *, comparison=False):
 
 
 def _fields(schema_id):
+    if schema_id.startswith('analyzer-'):
+        from ..analyzers.schemas import schema
+        return schema(schema_id)
     if schema_id == 'proposal-apply-v1':
         from .proposal_apply_schema import apply_schema
         return apply_schema()
@@ -442,7 +445,8 @@ def _fields(schema_id):
             "lock_kind": {"enum": ['none', 'bootstrap', 'writer']}, "work": work,
             "authorization": authorization_schema(),
             "parameters": _array(_object({"name": text, "kind": {"const": "positional"},
-                "datatype": text, "required": boolean, "choices": strings})),
+                "datatype": text, "required": boolean, "choices": strings, "repeatable": boolean},
+                required=("name","kind","datatype","required","choices"))),
             "options": _array(_object({"flag": text, "datatype": text, "repeatable": boolean,
                 "required": boolean, "choices": strings, "excludes": strings})),
             "mutually_exclusive": _array(strings),

@@ -528,3 +528,11 @@
 - [Bundle 747 — Subjects und Beobachtungen](bundle-747-analyzer-observations.md)
 
 - [Bundle 748 — Reportpackages und lesende Auswertung](bundle-748-analyzer-evaluation.md)
+
+- [Bundle 749 — Analyzer-CLI und externe Dateien](bundle-749-analyzer-cli.md)
+
+- [Bundle 750 — vollständiger Analyzer-CLI-Rest](bundle-750-analyzer-cli-correction.md)
+
+- [Bundle 751 — vollständige Befehls- und Schemaoracles](bundle-751-analyzer-contract-oracles.md)
+
+- [Bundle 752 — gebundener Projektvariantenvertrag](bundle-752-analyzer-variant-oracle.md).

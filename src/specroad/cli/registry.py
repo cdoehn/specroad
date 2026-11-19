@@ -42,11 +42,29 @@ class CommandRegistry:
         for name in ('bundle.verify', 'bundle.extract'):
             if name in by_id and any(o.flag == '--runtime-workspace' for o in by_id[name].options):
                 self._opening[name] = opening_contract(by_id[name])
+        # Variants are registry-owned objects, just like transport contracts.
+        # A fresh replace() during binding would break the identity guard.
+        self._analyzer_project = {}
+        for name in ('analyzer.run', 'analyzer.import', 'analyzer.show', 'analyzer.evaluate'):
+            if name in by_id:
+                command = by_id[name]
+                example = command.protocol.example.as_dict()
+                example['options'] = {**example.get('options', {}), '--project': 'project'}
+                self._analyzer_project[name] = replace(command,
+                    requires_project=True, configuration_schema_required=True,
+                    preflight_profile=PreflightProfile.PROJECT_READ,
+                    protocol=replace(command.protocol, example=example))
         for command in self.commands:
             if command.protocol is not None:
                 self.bind_request(command.protocol.example)
 
     def _bound_variant(self, command, options):
+        if command.command_id == 'analyzer.run' and '--request' not in options:
+            if '--analyzer' not in options:
+                raise CommandUsageError('Analyzer selection or request required')
+            return self._analyzer_project[command.command_id]
+        if command.command_id in self._analyzer_project and '--project' in options:
+            return self._analyzer_project[command.command_id]
         if command.command_id in self._opening:
             from ._transport_opening import opening_options
             if opening_options(options):
@@ -62,6 +80,8 @@ class CommandRegistry:
         return command
 
     def variants(self, command):
+        if command.command_id in self._analyzer_project:
+            return (self._analyzer_project[command.command_id],)
         if command.command_id in self._opening:
             return (self._opening[command.command_id],)
         return (self._outbound, self._return) if self._outbound is not None and command.command_id == 'bundle.create' else ()

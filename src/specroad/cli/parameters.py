@@ -83,6 +83,7 @@ class PositionalSpec:
     name: str
     required: bool = True
     choices: tuple[str, ...] = ()
+    repeatable: bool = False
 
     @property
     def value_contract(self):
@@ -91,7 +92,7 @@ class PositionalSpec:
     def __post_init__(self):
         if not isinstance(self.name, str) or not re.fullmatch(r"[a-z][a-z0-9_]*", self.name):
             raise CommandUsageError("Invalid positional argument name")
-        if type(self.required) is not bool:
+        if type(self.required) is not bool or type(self.repeatable) is not bool:
             raise CommandUsageError("Argument requirement must be a boolean")
         values = _sequence(self.choices, "choices")
         if not all(isinstance(value, str) and value and "\0" not in value for value in values):
@@ -104,5 +105,3 @@ class PositionalSpec:
         except UnicodeError as error:
             raise CommandUsageError("Invalid argument choice Unicode") from error
         object.__setattr__(self, "choices", values)
-
-

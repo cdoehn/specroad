@@ -44,8 +44,15 @@ def bind_arguments(values, positionals):
         arg = specs.get(name)
         if arg is None:
             raise CommandUsageError("Unknown argument")
-        arg.value_contract.validate(value)
-        normalized[name] = value
+        if arg.repeatable:
+            if not isinstance(value, (list, tuple)) or not value:
+                raise CommandUsageError("A repeated argument needs a nonempty sequence")
+            for item in value:
+                arg.value_contract.validate(item)
+            normalized[name] = tuple(value)
+        else:
+            arg.value_contract.validate(value)
+            normalized[name] = value
     if any(arg.required and arg.name not in normalized for arg in positionals):
         raise CommandUsageError("Missing required argument")
     # Positional spelling has no holes. Structured inputs obey the same rule.
@@ -94,7 +101,10 @@ def bind_options(argv, route, options, positionals=()):
             value = True
         values[flag] = (*values.get(flag, ()), value) if option.repeatable else value
         index += 1
-    if tuple(words[:len(route)]) != route or len(words) > len(route) + len(positionals):
+    repeated = bool(positionals and positionals[-1].repeatable)
+    if tuple(words[:len(route)]) != route or (not repeated and len(words) > len(route) + len(positionals)):
         raise CommandUsageError("Unknown command or unexpected positional argument")
-    arguments = {arg.name: value for arg, value in zip(positionals, words[len(route):])}
+    remaining = words[len(route):]
+    arguments = {arg.name: (tuple(remaining[index:]) if arg.repeatable else remaining[index])
+                 for index, arg in enumerate(positionals) if index < len(remaining)}
     return bind_values(values, options), bind_arguments(arguments, positionals)

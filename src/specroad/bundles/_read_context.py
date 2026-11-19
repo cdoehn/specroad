@@ -9,7 +9,7 @@ from dataclasses import dataclass
 
 _READERS = frozenset(('artifact.show', 'query', 'trace', 'why', 'impact', 'diff',
     'render', 'document.render', 'view.render', 'diagram', 'bundle.verify', 'project.inspect',
-    'environment.check', 'recover.status', 'lock.status'))
+    'environment.check', 'recover.status', 'lock.status', 'analyzer.show', 'analyzer.evaluate'))
 
 
 @dataclass(frozen=True)
@@ -19,6 +19,10 @@ class PartialReadContext:
     @staticmethod
     def allows(command, options):
         from ..cli.registry import EffectScope
+        if command.command_id in ('analyzer.request','analyzer.run','analyzer.import'):
+            from ..cli.registry import CommandClass
+            return (command.command_class is CommandClass.GENERATED_OUTPUT
+                    and command.effect_scope is EffectScope.EXTERNAL_OUTPUT)
         return command.effect_scope is EffectScope.NONE and (
             command.command_id in _READERS or
             (command.command_id == 'validate' and options.get('--partial') is True))

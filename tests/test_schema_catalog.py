@@ -203,11 +203,12 @@ class SchemaCatalogWorkTests(unittest.TestCase):
         for command in builtin_registry().commands:
             with tempfile.TemporaryDirectory() as tmp:
                 from support.inspection import command_example_inputs, command_example_context
+                from support.analyzer_cli import assert_example_outcome
                 with command_example_inputs(Path(tmp), command) as request:
                     self.catalog.validate("urn:specroad:schema:1.0.0:request:" + command.command_id, request)
                     outcome = execute_request(request, cwd=Path(tmp),
                         context_builder=command_example_context(command)).result
-            self.assertEqual(outcome.exit_code, 0, (command.command_id, outcome.as_dict()))
+            assert_example_outcome(command, outcome)
             self.catalog.validate(command.protocol.result_schema, outcome.as_dict()['result'])
 
     def test_envelope_schema_accepts_success_and_failure(self):

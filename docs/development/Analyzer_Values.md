@@ -121,3 +121,30 @@ explizit strukturell verglichen; alle Varianten und Provenienzen bleiben erhalte
 erzeugt eine neue getrennte Sicht über exakt dieselben Originalbytes und den
 ursprünglich expliziten Request. Weder die erste Auswertung noch Projektdateien
 werden dadurch verändert. Die neue Sicht muss erneut native Aktualität prüfen.
+
+
+## Analyzer-CLI
+
+`analyzer list` und `analyzer describe ID` beschreiben den tatsächlich
+installierten Umfang ohne Modellinitialisierung. `analyzer request --analyzer
+specroad.py3langid` bildet den vollständigen nativen Request; ohne --output
+bleibt er im JSON-result. `--analysis-id` korreliert ausschließlich Analysen.
+`analyzer run` akzeptiert diese Auswahl oder einen datentragenden --request;
+noch nicht implementierte Worker liefern vollständige unavailable-Berichte
+mit Code 5, keinen fingierten Erfolg und keinen Checkpoint.
+
+`analyzer import FILE`, `show FILE` und `evaluate FILE...` verwenden dieselben
+Request-/Reportvalidatoren. Ein expliziter --request bindet Standalone-Reports.
+`--inputs FILE` liefert die unabhängigen aktuellen analyzers/settings/context/
+extensions-Werte nach T.5.2; ohne Arbeitsstand oder Inputs bleibt Aktualität
+unavailable. Evaluate prüft sämtliche Positionsdateien und kann daraus keinen
+aktuellen Erfolg behaupten. Import/show dürfen integre alte Beobachtungen
+anzeigen. Originale und lokale Auswertung bleiben getrennt.
+
+Ein relatives --output liegt unter generated_path/analysis im gewählten
+Projekt; Eltern müssen bereits vorhanden sein. Externe Ausgaben wählen
+--output-root DIR oder einen absoluten Dateipfad. Es entstehen weder
+Modellwrites noch Receipts. Die atomare Veröffentlichung überschreibt nichts;
+bytegleiche Ziele sind No-op, unterschiedliche Bytes Konflikt 6. Import
+behält die vollständigen Originalbytes. Keine Originaldatei wird zur lokalen
+Aktualitätsanzeige geändert. Die nachfolgenden Work-/Workerstufen bleiben offen.

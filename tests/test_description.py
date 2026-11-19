@@ -38,14 +38,15 @@ class DescriptionWorkTests(unittest.TestCase):
                 with self.subTest(command=command.command_id):
                     with tempfile.TemporaryDirectory() as tmp:
                         from support.inspection import command_example_inputs, command_example_context
+                        from support.analyzer_cli import assert_example_outcome
                         with command_example_inputs(Path(tmp), command) as bound_request:
                             result = execute_request(bound_request, registry=registry, cwd=Path(tmp),
                                 context_builder=command_example_context(command)).result
-                    self.assertEqual(result.exit_code, 0)
+                    assert_example_outcome(command, result)
                     self.assertEqual(result.command, command.command_id)
                     input_only = command.command_id in ('migrate.plan', 'migrate.apply', 'migrate.verify', 'merge.apply')
-                    if command.command_id in ('proposal.review.start', 'proposal.review', 'proposal.apply'):
-                        # Like other writers, the handler returns its operation
+                    if command.command_id in ('proposal.review.start', 'proposal.review', 'proposal.apply', 'analyzer.request'):
+                        # These handlers return their operation
                         # result; the outer envelope only binds the selected root.
                         self.assertEqual(dict(result.project), {
                             'project_root': str(Path(bound_request.get('options', {}).get('--project', tmp))),
@@ -260,6 +261,23 @@ class DescriptionRobustnessTests(unittest.TestCase):
             rejected = ('--work-dir', '--resume', '--request-id', '--dry-run', '--actor-id')
             if command.command_id in ('environment.check', 'work.resume') or command.requires_project:
                 self.assertIn('--project', accepted)
+            elif command.command_id in ('analyzer.run', 'analyzer.import', 'analyzer.show', 'analyzer.evaluate'):
+                # Fully carrying files are projectless; explicit roots bind the
+                # separately described read-only project-preflight variant.
+                self.assertIn('--project', accepted)
+                self.assertFalse(document['requires_project'])
+                self.assertEqual(document['preflight_profile'], 'input_read')
+                self.assertEqual(len(document['variants']), 1)
+                variant = document['variants'][0]
+                self.assertEqual(variant['preflight_profile'], 'project_read')
+                self.assertFalse(variant['work']['continuation_supported'])
+                self.assertEqual(variant['operating_effects'], [])
+                bound = registry.bind_request(CommandRequest.from_mapping(variant['example']))
+                self.assertIs(bound.command, registry.variants(command)[0])
+                # These are registry properties, not variant-description fields.
+                self.assertTrue(bound.command.requires_project)
+                self.assertEqual(bound.command.protocol.lock_kind, 'none')
+                rejected += ('--actor-type', '--as-proposal')
             else:
                 rejected += ('--project',)
             # bundle.create declares

@@ -49,11 +49,12 @@ class SchemaCatalogRobustnessTests(unittest.TestCase):
                 self.catalog.validate(schema['$id'], example)
                 with tempfile.TemporaryDirectory() as tmp:
                     from support.inspection import command_example_inputs, command_example_context
+                    from support.analyzer_cli import assert_example_outcome
                     with command_example_inputs(Path(tmp), command) as bound_example:
                         self.catalog.validate(schema["$id"], bound_example)
                         result = execute_request(bound_example, cwd=Path(tmp),
                             context_builder=command_example_context(command)).result
-                        self.assertEqual(result.exit_code, 0, (command.command_id, result.as_dict()))
+                        assert_example_outcome(command, result)
 
     def test_requirement_enum_and_examples_have_no_obligation_default(self):
         field = self.catalog.get(domain_schema('requirement')['$id']).schema['properties']['normative_force']

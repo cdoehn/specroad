@@ -20,7 +20,7 @@ def request_schema(command):
     if exclusions:
         options["allOf"] = [{"not": {"required": pair}} for pair in exclusions]
     arguments = {"type": "object", "additionalProperties": False,
-                 "properties": {arg.name: arg.value_contract.as_schema() for arg in command.positionals},
+                 "properties": {arg.name: _option_schema(arg) for arg in command.positionals},
                  "required": [arg.name for arg in command.positionals if arg.required]}
     if len(command.positionals) > 1:
         arguments["dependentRequired"] = {arg.name: [prev.name for prev in command.positionals[:index]]

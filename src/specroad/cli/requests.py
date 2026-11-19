@@ -29,7 +29,7 @@ def _value(value):
 class CommandRequest:
     command_id: str
     options: Mapping[str, object] = field(default_factory=dict)
-    arguments: Mapping[str, str] = field(default_factory=dict)
+    arguments: Mapping[str, object] = field(default_factory=dict)
 
     def __post_init__(self):
         if not isinstance(self.command_id, str) or not re.fullmatch(
@@ -52,16 +52,23 @@ class CommandRequest:
             raise CommandUsageError("Structured arguments must be a mapping")
         arguments = {}
         for name, value in self.arguments.items():
-            if not isinstance(name, str) or not re.fullmatch(r"[a-z][a-z0-9_]*", name) or not isinstance(value, str):
+            if not isinstance(name, str) or not re.fullmatch(r"[a-z][a-z0-9_]*", name):
                 raise CommandUsageError("Invalid structured argument")
-            arguments[name] = _value(value)
+            if isinstance(value, (list, tuple)):
+                if not value or not all(isinstance(item, str) for item in value):
+                    raise CommandUsageError("Invalid repeated argument")
+                arguments[name] = tuple(_value(item) for item in value)
+            elif isinstance(value, str):
+                arguments[name] = _value(value)
+            else:
+                raise CommandUsageError("Invalid scalar argument")
         object.__setattr__(self, 'arguments', MappingProxyType(arguments))
 
     def as_dict(self):
         return {"command_id": self.command_id,
                 "options": {key: list(value) if isinstance(value, tuple) else value
                             for key, value in self.options.items()},
-                "arguments": dict(self.arguments)}
+                "arguments": {key:list(value) if isinstance(value,tuple) else value for key,value in self.arguments.items()}}
 
     @classmethod
     def from_mapping(cls, value):

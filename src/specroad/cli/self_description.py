@@ -41,8 +41,9 @@ def describe_command(registry, command_id):
         "lock_kind": protocol.lock_kind,
         "authorization": authorization_contract(protocol),
         "work": protocol.work.as_dict(),
-        "parameters": [{"name": arg.name, "kind": "positional", "datatype": "string",
-                        "required": arg.required, "choices": list(arg.choices)} for arg in command.positionals],
+        "parameters": [{"name": arg.name, "kind": "positional", "datatype": "string_array" if arg.repeatable else "string",
+                        "required": arg.required, "choices": list(arg.choices),
+                        **({"repeatable":True} if arg.repeatable else {})} for arg in command.positionals],
         "options": [{"flag": opt.flag, "datatype": "string" if opt.takes_value else "boolean",
                      "repeatable": opt.repeatable, "required": opt.required,
                      "choices": list(opt.choices), "excludes": sorted(opt.excludes)}
@@ -62,7 +63,20 @@ def describe_command(registry, command_id):
         "examples": [protocol.example.as_dict()],
     }
     variants = registry.variants(command)
-    if variants:
+    if variants and command.command_id.startswith('analyzer.'):
+        variant = variants[0]
+        when = {'required': ['--project']}
+        if command.command_id == 'analyzer.run':
+            when = {'anyOf': [when, {'not': {'required': ['--request']}}]}
+        result['variants'] = [{**command_surface(variant), 'when': when,
+            'required_options': sorted(o.flag for o in variant.options if o.required),
+            'effect_scope': variant.effect_scope.value, 'requires_git': variant.requires_git,
+            'budget_policy_version': variant.budget_policy_version, 'work': variant.protocol.work.as_dict(),
+            'operating_effects': [], 'result_schema': variant.protocol.result_schema,
+            'required_write_paths': list(variant.requires_write_paths),
+            'request_schema': request_schema(variant), 'authorization': authorization_contract(variant.protocol),
+            'example': variant.protocol.example.as_dict()}]
+    elif variants:
         result['variants'] = [{**command_surface(v), 'when': ({'--profile': ['ai-runtime'], '--direction': v.protocol.example.options['--direction']}
                 if v.command_id == 'bundle.create' else {'--profile': ['ai-runtime']}),
             'required_options': sorted(o.flag for o in v.options if o.required),

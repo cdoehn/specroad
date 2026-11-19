@@ -181,6 +181,8 @@ class CommandSpec:
             raise CommandUsageError("Invalid positional contract")
         if len({arg.name for arg in positions}) != len(positions):
             raise CommandUsageError("Duplicate positional argument")
+        if any(arg.repeatable for arg in positions[:-1]):
+            raise CommandUsageError("Only the last argument may repeat")
         optional_seen = False
         for arg in positions:
             if optional_seen and arg.required:
@@ -288,7 +290,7 @@ class Invocation:
     command: CommandSpec
     options: Mapping[str, object]
     resolved: "ResolvedOptions | None" = None
-    arguments: Mapping[str, str] = field(default_factory=dict)
+    arguments: Mapping[str, object] = field(default_factory=dict)
     registry: object = field(default=None, repr=False, compare=False)
     consumption_call: object = field(default=None, repr=False, compare=False)
     restore_services: object = field(default=None, repr=False, compare=False)

@@ -59,6 +59,10 @@ class SchemaCatalogChangePlanTests(unittest.TestCase):
             'work-command-v1', 'merge-conflicts-command-v1', 'merge-resolve-command-v1', 'merge-preparation-v1', 'merge-plan-command-v1', 'merge-publication-plan-v1', 'merge-apply-command-v1', 'migration-command-v1', 'ai-runtime-verify-v1', 'ai-runtime-extract-v1',
             'environment-v1', 'document-work-v1', 'work-evaluation-v1', 'project-init-v1', 'project-inspect-v1', 'artifact-show-v1', 'artifact-trace-v1', 'artifact-why-v1', 'artifact-impact-v1', 'artifact-query-v1', 'artifact-diff-v1', 'configuration-evaluation-v1', 'roadmap-explain-v1',
         )]
+        schemas += [result_json_schema(name) for name in (
+            'analyzer-descriptor-v1', 'analyzer-inputs-v1', 'analyzer-request-v1',
+            'analyzer-report-v1', 'analyzer-package-v1', 'analyzer-directory-v1', 'analyzer-inspection-v1',
+        )]
         expected = {schema['$id']: schema for schema in schemas}
         self.assertEqual(len(expected), len(schemas))
         rows = self.catalog.list()['schemas']

@@ -92,6 +92,10 @@ def command_example_inputs(root, command):
     The Work fixture labels its synthetic build identity explicitly. No native
     model/recovery/checkpoint validator or command handler is replaced.
     """
+    if command.command_id.startswith('analyzer.'):
+        from .analyzer_cli import example_inputs
+        yield example_inputs(root, command)
+        return
     if command.command_id in ('proposal.review', 'proposal.apply'):
         from .proposal_decisions import ReviewCase
         from .proposal_apply import ApplyCase

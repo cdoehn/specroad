@@ -1,5 +1,9 @@
 {
   "definitions": {
+    "SR-FIX-ANALYZER-CLI-v1": {
+      "kind": "Actual small native projects and report files with complete independent input bindings; filesystem inventories, native faults and one verified partial. No output-layout or documentation oracle.",
+      "provider": "tests/test_analyzer_cli.py:observation_files,outputs"
+    },
     "SR-FIX-ANALYZER-DESCRIPTOR-v1": {
       "kind": "Explicit synthetic passive external descriptor plus the actual shipped builtin metadata. Independent canonical-hash oracle, owned nested data, malformed bytes, dependency and extension inputs. No installed worker, execution authority or package availability is fabricated.",
       "provider": "tests/test_analyzer_descriptors.py:external"
@@ -1007,6 +1011,7 @@
   },
   "fixture_format_version": 1,
   "fixture_ids": [
+    "SR-FIX-ANALYZER-CLI-v1",
     "SR-FIX-ANALYZER-DESCRIPTOR-v1",
     "SR-FIX-ANALYZER-EVALUATION-v1",
     "SR-FIX-ANALYZER-PACKAGE-v1",
