@@ -67,7 +67,7 @@ behalten ihren bisherigen strikten Standard. Alle betroffenen Helferregressionen
 gehören zur Pflichtauswahl. Modellladen, Lebensdauer-/Ressourcenintegration und
 reale Entscheidungen bleiben den folgenden bestätigten Positionen vorbehalten.
 
-Zielstand **19.k.R**, **833/918**, danach **19.k.C**:
+Zielstand **19.k.C**, **834/918**, danach **19.l.W**:
 erst nach seinem eigenen erfolgreichen Apply-Gate und Commit gültig. Dev führt
 keine Testkörper, Fixtures oder Testprozesse aus. Reine Collection, statische
 Analyse und native Paketvalidierung sind keine vorweggenommene Verhaltensabnahme.
