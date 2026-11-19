@@ -1,21 +1,31 @@
 {
   "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "fixture_ids": [],
-  "implementation_status": "open",
+  "expected_exit_codes": [
+    0,
+    2,
+    3
+  ],
+  "fixture_ids": [
+    "SR-FIX-ANALYZER-SUBJECT-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [],
-  "method": "pending",
+  "method": "automated_behavior",
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence.",
-    "ANALYZER-OBSERVATION-747: normative T.3.2/T.4.1 data shapes and M19 c/d acceptance; each implementation retains its own Apply gate."
+    "Target stage 19.c.W needs its own successful Apply gate and commit; no tests ran in Dev.",
+    "Full suite plus separate supported CPython/platform matrix remain required for milestone/release acceptance.",
+    "Later M19 stages retain reportpackage/CLI/Work integration, actual language worker, engine evidence and semantic evaluation."
   ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Ein Analyzer MUSS ausschließlich die explizit exportierten Daten und deklarierte Kontextressourcen erhalten.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Native complete project and verified partial subject selection with exact original artifact/value hashes, explicit context, no paging or implicit context. Prepared tests require their own Apply gate. No Dev behavior execution or actual language-engine claim."
   },
-  "preconditions": [],
+  "preconditions": [
+    "Small complete owned native inputs; synthetic external engine values are labeled and never execution evidence.",
+    "Behavior runs only in the separate Apply stage; pure collection is not a behavior pass."
+  ],
   "primary_verification_id": "SR-VER-0046",
   "required_environment": {
     "declared_minimum_python": "3.10",
@@ -29,8 +39,20 @@
     "owned_temporary_files": true
   },
   "specification_sha256": "fed2825073cdd87b1a3e4e1c42ba9a022b588217d2c5c840889101581723743b",
-  "steps": [],
+  "steps": [
+    "Compare separately selected complete values and original bindings against independent JCS expectations; retain full membership beyond a query page.",
+    "Verify explicit context and exclusion of unrelated data without writes or process/network operations."
+  ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0680",
-  "test_ids": []
+  "test_ids": [
+    "tests/test_analyzer_subjects.py::test_explicit_subset_and_multiple_pointers_have_independent_hashes",
+    "tests/test_analyzer_subjects.py::test_no_silent_selection_drop[duplicate]",
+    "tests/test_analyzer_subjects.py::test_no_silent_selection_drop[empty]",
+    "tests/test_analyzer_subjects.py::test_no_silent_selection_drop[missing]",
+    "tests/test_analyzer_subjects.py::test_only_explicit_context_values_are_exported",
+    "tests/test_analyzer_subjects.py::test_request_hash_ignores_file_whitespace_but_keeps_full_artifact_content",
+    "tests/test_analyzer_subjects.py::test_selection_does_not_apply_query_page_limit",
+    "tests/test_analyzer_subjects.py::test_two_statements_are_separate_full_original_bound_subjects"
+  ]
 }

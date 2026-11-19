@@ -28539,6 +28539,14 @@
     "tests/test_analyzer_requests_right.py::test_subject_input_contract_is_verified_even_with_matching_outer_hash[normative_force-approved]",
     "tests/test_analyzer_requests_right.py::test_subject_input_contract_is_verified_even_with_matching_outer_hash[subject_key-0000000000000000000000000000000000000000000000000000000000000000]",
     "tests/test_analyzer_requests_right.py::test_subject_input_contract_is_verified_even_with_matching_outer_hash[value_sha256-0000000000000000000000000000000000000000000000000000000000000000]",
-    "tests/test_analyzer_requests_right.py::test_write_and_analysis_ids_cannot_cross_either_typed_boundary"
+    "tests/test_analyzer_requests_right.py::test_write_and_analysis_ids_cannot_cross_either_typed_boundary",
+    "tests/test_analyzer_subjects.py::test_explicit_subset_and_multiple_pointers_have_independent_hashes",
+    "tests/test_analyzer_subjects.py::test_no_silent_selection_drop[duplicate]",
+    "tests/test_analyzer_subjects.py::test_no_silent_selection_drop[empty]",
+    "tests/test_analyzer_subjects.py::test_no_silent_selection_drop[missing]",
+    "tests/test_analyzer_subjects.py::test_only_explicit_context_values_are_exported",
+    "tests/test_analyzer_subjects.py::test_request_hash_ignores_file_whitespace_but_keeps_full_artifact_content",
+    "tests/test_analyzer_subjects.py::test_selection_does_not_apply_query_page_limit",
+    "tests/test_analyzer_subjects.py::test_two_statements_are_separate_full_original_bound_subjects"
   ]
 }

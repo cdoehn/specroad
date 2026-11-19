@@ -8,3 +8,6 @@ from .requests import (AnalysisRequestId, WriteRequestId, AnalyzerRequest, prepa
                        analyzer_binding, create_request)
 __all__ += ('AnalysisRequestId', 'WriteRequestId', 'AnalyzerRequest', 'prepare_analysis_id',
             'analyzer_binding', 'create_request')
+
+from .subjects import request_from_project
+__all__ += ('request_from_project',)

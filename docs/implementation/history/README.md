@@ -524,3 +524,5 @@
 - [Bundle 745 — native historische Rücktransportbelege](bundle-745-return-replay-proof.md)
 
 - [Bundle 746 — passive Analyzerwerte](bundle-746-analyzer-values.md)
+
+- [Bundle 747 — Subjects und Beobachtungen](bundle-747-analyzer-observations.md)

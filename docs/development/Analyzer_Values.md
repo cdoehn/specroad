@@ -36,3 +36,17 @@ Dateiexport, Ergebnisprüfung und CLI erhalten eigene spätere Abnahmen.
 `request.require_binding(request_id=..., snapshot_sha256=...)` unterscheidet
 ID- und Snapshotkonflikt mit Code 6. Diese reine Wertprüfung ist weder ein
 Ergebnisnachweis noch ein Work-Resume und schreibt keine Receipts.
+
+
+## Vollständige native Subjectauswahl
+
+`request_from_project(root, analyzers=..., settings=..., subject_ids=None,
+field_pointers=("/statement",), configuration_id=None, context=(),
+extensions=None, analysis_id=None)` erstellt den vollständigen Request nach
+T.3.2. Die Auswahl erfolgt ohne Pagination über den nativen aktuellen Scope.
+Explizite IDs und Pointer wählen separate Originalwerte. Context enthält nur
+bereits gelesene explizite Ressourcen mit resource_id, value und sha256;
+ein String darin wird niemals als Pfad oder Anweisung aufgelöst. Der Aufruf
+publiziert keine Dateien und startet keinen Analyzer. Der Defaulttext-Pointer
+eignet sich für Requirements; andere Typen brauchen passende Pointer und
+die bereits vorgeschriebenen ursprünglichen Sprach-/Metadaten.
