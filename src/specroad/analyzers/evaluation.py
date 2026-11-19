@@ -112,6 +112,11 @@ class AnalysisEvaluation:
         object.__setattr__(self, 'originals', tuple(originals))
         object.__setattr__(self, '_request', request)
 
+    def reevaluate(self, *, project=None, current_inputs=None, configuration_id=None):
+        """Return a fresh separate view over exactly the same original input bytes."""
+        return evaluate_reports(self.originals, request=self._request, project=project,
+            current_inputs=current_inputs, configuration_id=configuration_id)
+
     @property
     def data(self):
         return decode(self._encoded)

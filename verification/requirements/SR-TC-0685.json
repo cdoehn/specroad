@@ -16,14 +16,14 @@
   "json_pointers": [],
   "method": "automated_behavior",
   "open_items": [
-    "Target 19.f.W requires its own successful Apply gate and commit; no Dev behavior execution.",
+    "Target 19.f.R requires its own successful Apply gate and commit; no Dev behavior execution.",
     "Full suite and supported CPython/platform matrix remain required before milestone/release acceptance.",
     "Later M19 stages retain CLI/Work integration, actual worker execution and language-policy evaluation."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Der Core DARF NICHT durch einen Analyzerbericht automatisch normative Artefaktfelder, Reifegrade, Reviews oder Verification Results verändern.",
-    "scope": "Actual native original artifact, revision, pointer, value and independently supplied context/settings comparison distinguishes current, stale, unavailable and invalid without writes. All selected observations, provenance and structural differences are retained without voting, evidence or quality claims. Prepared tests require successful Apply; no behavior was executed in Dev."
+    "scope": "Actual native original artifact, revision, pointer, value and independently supplied context/settings comparison distinguishes current, stale, unavailable and invalid without writes. All selected observations, provenance and structural differences are retained without voting, evidence or quality claims. R adds immutable reevaluation, actual source races, missing project/subjects, configured membership and verified partial integration. Prepared tests require successful Apply; no behavior was executed in Dev."
   },
   "preconditions": [
     "Small complete native projects and explicit owned JSON input values; unknown synthetic external engine facts remain explicitly unknown.",
@@ -44,7 +44,9 @@
   "specification_sha256": "7b78b9445ca8edb22ca03f31d045875c2e3d6eb95323eaaed3730fa8ef74e177",
   "steps": [
     "Compare unchanged and changed native files and independently supplied current JSON resources; retain all four currentness states and each full selected report.",
-    "Use actual write/process/network traps and byte inventories; expose all structurally differing variants with analyzer/engine provenance and no synthetic evidence or combined probability."
+    "Use actual write/process/network traps and byte inventories; expose all structurally differing variants with analyzer/engine provenance and no synthetic evidence or combined probability.",
+    "Reevaluate the same original bytes under new project observations without changing the old result.",
+    "Exercise source changes, missing sources, security/I/O failures, configured scope and one verified partial without origin access."
   ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0685",
@@ -67,6 +69,26 @@
     "tests/test_analyzer_evaluation.py::test_missing_authority_is_unavailable_never_implicitly_current[current_inputs]",
     "tests/test_analyzer_evaluation.py::test_missing_authority_is_unavailable_never_implicitly_current[project]",
     "tests/test_analyzer_evaluation.py::test_missing_authority_is_unavailable_never_implicitly_current[request]",
-    "tests/test_analyzer_evaluation.py::test_same_observations_with_distinct_provenance_are_not_majority_voted"
+    "tests/test_analyzer_evaluation.py::test_same_observations_with_distinct_provenance_are_not_majority_voted",
+    "tests/test_analyzer_evaluation_right.py::test_absent_subject_in_available_project_is_distinct_from_absent_project",
+    "tests/test_analyzer_evaluation_right.py::test_complete_request_is_current_in_verified_partial_only_for_present_subjects",
+    "tests/test_analyzer_evaluation_right.py::test_explicit_current_values_are_owned_before_native_read",
+    "tests/test_analyzer_evaluation_right.py::test_final_native_observation_rejects_changes_and_security_failures[change]",
+    "tests/test_analyzer_evaluation_right.py::test_final_native_observation_rejects_changes_and_security_failures[io]",
+    "tests/test_analyzer_evaluation_right.py::test_final_native_observation_rejects_changes_and_security_failures[remove]",
+    "tests/test_analyzer_evaluation_right.py::test_final_native_observation_rejects_changes_and_security_failures[symlink]",
+    "tests/test_analyzer_evaluation_right.py::test_invalid_api_selection_never_reads_a_path[None]",
+    "tests/test_analyzer_evaluation_right.py::test_invalid_api_selection_never_reads_a_path[inputs0]",
+    "tests/test_analyzer_evaluation_right.py::test_invalid_api_selection_never_reads_a_path[inputs3]",
+    "tests/test_analyzer_evaluation_right.py::test_invalid_api_selection_never_reads_a_path[inputs4]",
+    "tests/test_analyzer_evaluation_right.py::test_invalid_api_selection_never_reads_a_path[report.json]",
+    "tests/test_analyzer_evaluation_right.py::test_invalid_current_inputs_do_not_impugn_valid_report_integrity[context_hash]",
+    "tests/test_analyzer_evaluation_right.py::test_invalid_current_inputs_do_not_impugn_valid_report_integrity[settings]",
+    "tests/test_analyzer_evaluation_right.py::test_invalid_current_inputs_do_not_impugn_valid_report_integrity[shape]",
+    "tests/test_analyzer_evaluation_right.py::test_native_configuration_scope_can_make_otherwise_unchanged_subjects_stale",
+    "tests/test_analyzer_evaluation_right.py::test_reevaluation_retains_original_bytes_and_never_edits_normative_state",
+    "tests/test_analyzer_evaluation_right.py::test_reformatting_and_unselected_private_file_do_not_change_original_json_binding",
+    "tests/test_analyzer_evaluation_right.py::test_reread_without_request_keeps_missing_authority",
+    "tests/test_analyzer_evaluation_right.py::test_unknown_namespaces_and_suggestions_cannot_change_evidence_or_execute"
   ]
 }

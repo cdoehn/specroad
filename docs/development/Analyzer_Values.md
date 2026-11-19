@@ -116,3 +116,8 @@ Fehlercode, vollständige Originalbeobachtung und geänderte Bindungen sichtbar.
 `all_reports_current` ist ausschließlich eine Aktualitätszusammenfassung,
 kein Sprach-, Qualitäts-, Gate- oder Evidence-Erfolg. Unterschiede werden
 explizit strukturell verglichen; alle Varianten und Provenienzen bleiben erhalten.
+
+`result.reevaluate(project=..., current_inputs=..., configuration_id=...)`
+erzeugt eine neue getrennte Sicht über exakt dieselben Originalbytes und den
+ursprünglich expliziten Request. Weder die erste Auswertung noch Projektdateien
+werden dadurch verändert. Die neue Sicht muss erneut native Aktualität prüfen.
