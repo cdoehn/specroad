@@ -1,21 +1,34 @@
 {
   "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "fixture_ids": [],
-  "implementation_status": "open",
+  "expected_exit_codes": [
+    0,
+    2,
+    3,
+    5,
+    6,
+    7
+  ],
+  "fixture_ids": [
+    "SR-FIX-ANALYZER-EVALUATION-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [],
-  "method": "pending",
+  "method": "automated_behavior",
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence.",
-    "ANALYZER-EVALUATION-748: normative T.5.1/T.8.1 and M19 e/f acceptance, independently gated implementation remains pending."
+    "Target 19.f.W requires its own successful Apply gate and commit; no Dev behavior execution.",
+    "Full suite and supported CPython/platform matrix remain required before milestone/release acceptance.",
+    "Later M19 stages retain CLI/Work integration, actual worker execution and language-policy evaluation."
   ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Die Auswertung mehrerer gewählter Berichte MUSS abweichende Ergebnisse und Provenienzen sichtbar erhalten, statt nur erfolgreiche Findings auszuwählen.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Actual native original artifact, revision, pointer, value and independently supplied context/settings comparison distinguishes current, stale, unavailable and invalid without writes. All selected observations, provenance and structural differences are retained without voting, evidence or quality claims. Prepared tests require successful Apply; no behavior was executed in Dev."
   },
-  "preconditions": [],
+  "preconditions": [
+    "Small complete native projects and explicit owned JSON input values; unknown synthetic external engine facts remain explicitly unknown.",
+    "Only Apply executes behavior; stable identities and unchanged regressions remain mandatory."
+  ],
   "primary_verification_id": "SR-VER-0046",
   "required_environment": {
     "declared_minimum_python": "3.10",
@@ -29,8 +42,31 @@
     "owned_temporary_files": true
   },
   "specification_sha256": "7b78b9445ca8edb22ca03f31d045875c2e3d6eb95323eaaed3730fa8ef74e177",
-  "steps": [],
+  "steps": [
+    "Compare unchanged and changed native files and independently supplied current JSON resources; retain all four currentness states and each full selected report.",
+    "Use actual write/process/network traps and byte inventories; expose all structurally differing variants with analyzer/engine provenance and no synthetic evidence or combined probability."
+  ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0693",
-  "test_ids": []
+  "test_ids": [
+    "tests/test_analyzer_evaluation.py::test_all_selected_inputs_remain_visible_including_invalid_and_duplicate_files",
+    "tests/test_analyzer_evaluation.py::test_any_original_binding_change_is_stale_without_rewriting_report[language-en]",
+    "tests/test_analyzer_evaluation.py::test_any_original_binding_change_is_stale_without_rewriting_report[normative_force-may]",
+    "tests/test_analyzer_evaluation.py::test_any_original_binding_change_is_stale_without_rewriting_report[revision-2]",
+    "tests/test_analyzer_evaluation.py::test_any_original_binding_change_is_stale_without_rewriting_report[statement-Changed full text.]",
+    "tests/test_analyzer_evaluation.py::test_any_original_binding_change_is_stale_without_rewriting_report[title-Changed unrelated title.]",
+    "tests/test_analyzer_evaluation.py::test_current_means_original_inputs_match_not_a_quality_or_evidence_pass",
+    "tests/test_analyzer_evaluation.py::test_evaluation_owns_outputs_and_retains_every_disagreement_variant",
+    "tests/test_analyzer_evaluation.py::test_independently_supplied_current_resources_are_not_replaced_by_old_request[analyzers]",
+    "tests/test_analyzer_evaluation.py::test_independently_supplied_current_resources_are_not_replaced_by_old_request[context]",
+    "tests/test_analyzer_evaluation.py::test_independently_supplied_current_resources_are_not_replaced_by_old_request[extensions]",
+    "tests/test_analyzer_evaluation.py::test_independently_supplied_current_resources_are_not_replaced_by_old_request[settings]",
+    "tests/test_analyzer_evaluation.py::test_individually_selected_pointers_are_not_expanded_to_cross_product",
+    "tests/test_analyzer_evaluation.py::test_integrity_failure_is_invalid_even_when_working_state_is_absent[False]",
+    "tests/test_analyzer_evaluation.py::test_integrity_failure_is_invalid_even_when_working_state_is_absent[True]",
+    "tests/test_analyzer_evaluation.py::test_missing_authority_is_unavailable_never_implicitly_current[current_inputs]",
+    "tests/test_analyzer_evaluation.py::test_missing_authority_is_unavailable_never_implicitly_current[project]",
+    "tests/test_analyzer_evaluation.py::test_missing_authority_is_unavailable_never_implicitly_current[request]",
+    "tests/test_analyzer_evaluation.py::test_same_observations_with_distinct_provenance_are_not_majority_voted"
+  ]
 }

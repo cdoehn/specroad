@@ -14,7 +14,7 @@
   "json_pointers": [],
   "method": "automated_behavior",
   "open_items": [
-    "Target 19.e.C requires its own successful Apply gate and commit; no Dev behavior execution.",
+    "Target 19.f.W requires its own successful Apply gate and commit; no Dev behavior execution.",
     "Full suite and supported CPython/platform matrix remain required before milestone/release acceptance.",
     "Later M19 stages retain CLI/Work integration, actual worker execution and language-policy evaluation."
   ],

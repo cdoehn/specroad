@@ -28716,6 +28716,25 @@
     "tests/test_analyzer_packages_right.py::test_unbound_integrity_is_checked_even_without_request[unknown]",
     "tests/test_analyzer_packages_right.py::test_unbound_integrity_is_checked_even_without_request[value]",
     "tests/test_analyzer_packages_right.py::test_unbound_integrity_is_checked_even_without_request[version]",
-    "tests/test_analyzer_packages_right.py::test_unbound_reader_preserves_observation_but_never_supplies_a_request"
+    "tests/test_analyzer_packages_right.py::test_unbound_reader_preserves_observation_but_never_supplies_a_request",
+    "tests/test_analyzer_evaluation.py::test_all_selected_inputs_remain_visible_including_invalid_and_duplicate_files",
+    "tests/test_analyzer_evaluation.py::test_any_original_binding_change_is_stale_without_rewriting_report[language-en]",
+    "tests/test_analyzer_evaluation.py::test_any_original_binding_change_is_stale_without_rewriting_report[normative_force-may]",
+    "tests/test_analyzer_evaluation.py::test_any_original_binding_change_is_stale_without_rewriting_report[revision-2]",
+    "tests/test_analyzer_evaluation.py::test_any_original_binding_change_is_stale_without_rewriting_report[statement-Changed full text.]",
+    "tests/test_analyzer_evaluation.py::test_any_original_binding_change_is_stale_without_rewriting_report[title-Changed unrelated title.]",
+    "tests/test_analyzer_evaluation.py::test_current_means_original_inputs_match_not_a_quality_or_evidence_pass",
+    "tests/test_analyzer_evaluation.py::test_evaluation_owns_outputs_and_retains_every_disagreement_variant",
+    "tests/test_analyzer_evaluation.py::test_independently_supplied_current_resources_are_not_replaced_by_old_request[analyzers]",
+    "tests/test_analyzer_evaluation.py::test_independently_supplied_current_resources_are_not_replaced_by_old_request[context]",
+    "tests/test_analyzer_evaluation.py::test_independently_supplied_current_resources_are_not_replaced_by_old_request[extensions]",
+    "tests/test_analyzer_evaluation.py::test_independently_supplied_current_resources_are_not_replaced_by_old_request[settings]",
+    "tests/test_analyzer_evaluation.py::test_individually_selected_pointers_are_not_expanded_to_cross_product",
+    "tests/test_analyzer_evaluation.py::test_integrity_failure_is_invalid_even_when_working_state_is_absent[False]",
+    "tests/test_analyzer_evaluation.py::test_integrity_failure_is_invalid_even_when_working_state_is_absent[True]",
+    "tests/test_analyzer_evaluation.py::test_missing_authority_is_unavailable_never_implicitly_current[current_inputs]",
+    "tests/test_analyzer_evaluation.py::test_missing_authority_is_unavailable_never_implicitly_current[project]",
+    "tests/test_analyzer_evaluation.py::test_missing_authority_is_unavailable_never_implicitly_current[request]",
+    "tests/test_analyzer_evaluation.py::test_same_observations_with_distinct_provenance_are_not_majority_voted"
   ]
 }

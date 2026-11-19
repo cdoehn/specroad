@@ -17,3 +17,6 @@ __all__ += ('AnalyzerReport', 'create_report', 'subject_result')
 
 from .packages import ReportPackage, create_package, verify_worker_result
 __all__ += ('ReportPackage', 'create_package', 'verify_worker_result')
+
+from .evaluation import AnalysisEvaluation, evaluate_reports
+__all__ += ('AnalysisEvaluation', 'evaluate_reports')

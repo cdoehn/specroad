@@ -99,3 +99,20 @@ Protokollvalidator, kein Workerstart oder Nachweis einer installierten Engine.
 Request vorhanden ist. Das Ergebnis ist keine Bestätigung der vollständigen
 Requestbindung oder Aktualität. Der Package-/Workerpfad braucht weiterhin
 seinen vollständigen Request.
+
+## Lesende Auswertung
+
+`evaluate_reports([raw_bytes, ...], request=None, project=None,
+current_inputs=None, configuration_id=None)` erhält jede ausgewählte Datei
+und jeden Bericht. `current_inputs` ist ein ausdrücklich unabhängig ermitteltes
+Objekt mit `analyzers`, `settings`, `context` (explizite Ressourcen) und
+`extensions`. Der Aufrufer darf dafür keine unbelegte Aktualität des alten
+Requests unterstellen. Fehlen Arbeitsstand oder aktuelle Eingaben, bleibt die
+Aktualität unavailable; intrinsische Berichtfehler bleiben invalid.
+
+Die Ausgabe `AnalysisEvaluation` enthält eigene `data`/`canonical_bytes` sowie
+unveränderte `originals`. Pro Bericht bleiben currentness, Grund, nativer
+Fehlercode, vollständige Originalbeobachtung und geänderte Bindungen sichtbar.
+`all_reports_current` ist ausschließlich eine Aktualitätszusammenfassung,
+kein Sprach-, Qualitäts-, Gate- oder Evidence-Erfolg. Unterschiede werden
+explizit strukturell verglichen; alle Varianten und Provenienzen bleiben erhalten.
