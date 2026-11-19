@@ -1,19 +1,19 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.98
+## Version 0.2.99
 
 | Feld | Wert |
 |---|---|
 | Dokument-ID | `SR-SPEC-0001` |
-| Dokumentversion | `0.2.98` |
+| Dokumentversion | `0.2.99` |
 | Zielrelease | `SpecRoad Single-Repository Workbench 0.2.0` |
 | Status | **Fachlich konsolidierte Arbeitsgrundlage; technische Reviewentscheidung gesondert dokumentiert, formale Baseline-Freigabe und Produktabnahme nicht durch dieses Dokument erklärt** |
 | Stand | 19. November 2026 |
 | Sprache | Deutsch; technische Feldnamen, Enum-Werte und CLI-Kommandos Englisch |
-| Fachliche Quelle | **Diese Repositoryfassung v0.2.98 ist die aktive fachliche Arbeitsgrundlage; eine entsprechende PDF wird hiermit nicht veröffentlicht.** |
+| Fachliche Quelle | **Diese Repositoryfassung v0.2.99 ist die aktive fachliche Arbeitsgrundlage; eine entsprechende PDF wird hiermit nicht veröffentlicht.** |
 | Bearbeitbare Satzquelle | Diese Datei; eine spätere PDF muss denselben versionierten Inhalt wiedergeben. |
-| Vorgängerversion | Repository-Spezifikation v0.2.97; historische Nachweise bleiben unverändert. |
-| Prüf- und Entscheidungsgrundlage | ANALYZER-EVALUATION-748 nach SPECROAD-DECISION-1: vollständige Packages und lesende Aktualitätsprüfung; keine Produktfreigabe. |
-| Änderungsart | Additive Präzisierung der Packageabdeckung, aktuellen Vergleichseingaben und sichtbaren Beobachtungsunterschiede; aktuelle menschliche Review- und Sicherheitsgrenzen bleiben erhalten. |
+| Vorgängerversion | Repository-Spezifikation v0.2.98; historische Nachweise bleiben unverändert. |
+| Prüf- und Entscheidungsgrundlage | ANALYZER-CLI-749 nach SPECROAD-DECISION-1: explizite CLI-Dateibindungen und passive externe Descriptoren; keine Produktfreigabe. |
+| Änderungsart | Additive Präzisierung der CLI-Eingabedatei, sicheren Ausgabe, Auswertungscodes und Positionsliste; aktuelle menschliche Review- und Sicherheitsgrenzen bleiben erhalten. |
 
 > **Verbindlicher Quellenwechsel:** Die ausdrückliche Nutzerentscheidung REFERENCE-SOURCE-551 wird als v0.2.50 umgesetzt. Der neue Quellvertrag ist Entwurfsarbeit vom 3. November 2026, kein Nachweis eines früher existierenden Formats. Bestehende 0.2-Verträge, Transport-, Sicherheits- und Reviewgrenzen bleiben erhalten.
 
@@ -11671,6 +11671,104 @@ Whitespace. Standalone-Bytes bleiben unverändert. Ein Transporthash ist keine
 Authentizitäts- oder Freigabeaussage. Ein Workerresultat muss zusätzlich gegen
 den ausdrücklich erwarteten Analyzer und die erwartete Engine passen; der
 reine Protokollvalidator startet keinen Worker und entdeckt keine Plugins.
+
+
+### T.5.2 Explizite CLI-Dateibindungen — ANALYZER-CLI-749
+
+Delegiert gemäß SPECROAD-DECISION-1 und 2.4.3.1, Vertrag 4, für 19.g/h.
+Die zusätzlichen optionalen Schalter `--inputs FILE` und `--output-root DIR`
+präzisieren die bestehenden Dateischnittstellen; sie erlauben keine Plugins,
+implizite Ressourcenauflösung oder Prozess-/Netzwerkaufrufe.
+
+`--inputs` ist bei request, ausgewähltem run, import, show, evaluate sowie
+list/describe zulässig. Die Datei enthält genau die unabhängig gewählten
+aktuellen Werte `analyzers`, `settings`, `context` und `extensions` nach T.8.1;
+`context` ist hier die explizite Ressourcenliste. Descriptoren, Bindungen und
+unbekannte Erweiterungen bleiben passive Daten. Für request/run muss die
+vollständige ID-Menge exakt der expliziten `--analyzer`-Auswahl entsprechen;
+keine stille Auswahl aus einem größeren Profil. Ohne diese Datei verwendet
+die Requestbildung nur den mitgelieferten py3langid-Descriptor, sämtliche
+deklarierten Capabilities, leeren Zusatzkontext und leere Erweiterungen.
+`settings["specroad.py3langid"].language_detection` materialisiert die
+T.8-Defaults, überlagert mit der ausdrücklich im aktuellen Projekt
+deklarierten gleichnamigen Policy. Noch unbekannte Modell-/Runtimefakten
+werden dadurch nicht behauptet. Ihre Ausführungsbindung bleibt T.6/T.7.
+Fremde Descriptoren brauchen die ausdrücklich gelieferte Eingabedatei.
+
+List/describe führen statische bekannte und ausdrücklich gelieferte
+Descriptoren zusammen; gleiche IDs mit verschiedenen Descriptorwerten sind
+Konflikt 6, identische Descriptoren werden einmal angezeigt. Die tatsächliche
+Verfügbarkeit stammt ausschließlich aus der mitgelieferten Implementierung.
+Beschriebene lokale JSON-Schemas haben den ausdrücklichen Umfang
+`structural_shapes_native_binding_validation_required`; Hash-, Versions-,
+Mengen- und Paarbindungen prüft zusätzlich immer der native Wertreader.
+Unbekannte Namespaces, Abhängigkeitsstrings, instructionartige Subjects und
+ein selbst behauptetes builtin_worker bleiben ohne Ausführungsrechte.
+
+Bei run --request sind --inputs und alle Selektions-/Kennungsoptionen
+unzulässige Overrides (2). Der datentragende Request braucht kein Projekt.
+Die ausgewählte Variante nutzt dagegen dieselbe Root-Erkennung wie request.
+Solange die nachfolgenden Worker-/Work-Stufen nicht implementiert sind,
+erhält jeder gewählte Analyzer einen gültigen unavailable-Bericht mit offenen
+Subjects und ausdrücklich unbekannten Enginefakten. Das vollständige Package
+wird geliefert, der Aufruf hat Code 5 und behauptet weder Ausführung noch
+Sprachbestätigung oder Gate-Erfolg. Dies ersetzt keine spätere Workerabnahme.
+Nicht implementierte Fortsetzungsoptionen werden nicht als verfügbar publiziert;
+es entsteht insbesondere kein erfundener Code-8-Checkpoint.
+
+Die CLI bindet alle ausdrücklich gelesenen Dateien vor und nach Verarbeitung
+über native sichere Reads. Relative Eingaben beziehen sich auf das gebundene
+Arbeitsverzeichnis. Ein relatives --output bezeichnet ohne --output-root einen
+Pfad unter dem konfigurierten generated_path/analysis des ausgewählten
+Projekts. Ein absoluter externer Dateipfad oder --output-root mit relativem
+Dateinamen wählt ausdrücklich ein vorhandenes externes Zielverzeichnis.
+Eltern müssen bereits vorhanden sein, ohne verlinkte Komponenten; fehlende
+Eltern sind Code 5. Es werden keine Modell-/Betriebsverzeichnisse angelegt.
+Externe Roots überlappen kein Projekt. Projektinterne Ziele bleiben vollständig
+unter der gewählten Generated-Grenze. .specroad, .git, .patchharbor,
+specroad.json, Links und spezielle Dateien sind keine Ausgabeziele.
+--output-root ohne --output ist Code 2. Ohne --output erfolgt kein Dateischreiben.
+
+Ausgaben entstehen erst nach vollständiger Eingangsprüfung, atomar ohne
+Überschreiben. Vorhandene reguläre Einzel-Hardlink-Dateien werden vollständig
+verglichen: bytegleich ist No-op ohne neue Datei, Modus-/Zeitänderung oder
+Schreibversuch; ungleich ist Konflikt 6. Input-/Quellenwechsel sind kein
+No-op-Nachweis. Import publiziert exakt die validierten Originalbytes,
+request/run ihren vollständig geprüften JCS-Wert. Die lokale Auswertung
+steht außerhalb der Originaldaten. Auch bei import ist ein Standalone-
+Bericht nur mit explizitem gültigem Request übernehmbar; show/evaluate dürfen
+seine intrinsisch geprüfte, aber ungebundene unavailable-Sicht zeigen.
+
+Die bestehenden CLI-Envelopes behalten ihre Form. request liefert seinen
+Request, run sein Package als result. List/describe liefern format_version
+und analyzers mit Descriptor, Verfügbarkeit und lokalen strukturellen Schemas.
+Import/show/evaluate liefern format_version, sources (Pfad, vollständiger
+Transporthash, Größe und unveränderter JSON-Wert), evaluation nach T.8.1,
+execution_complete, findings_failed, current_check_passed, gate_passed und
+approval_granted=false. Ungültige/unerreichbare gewählte Inputs bleiben
+sichtbar, ohne andere gewählte Inputs zu unterdrücken. Der gemeinsame
+Exitcode priorisiert Sicherheit 7, Konflikt 6, Umgebung 5, Modell 3,
+Bedienfehler 2, intern 4; einzelne Gründe bleiben erhalten.
+
+Show/import können eine integre unavailable/stale-Beobachtung erfolgreich
+anzeigen beziehungsweise unverändert übernehmen; ihr gate_passed bleibt
+false. Evaluate verlangt zusätzlich aktuelle Bindungen, vollständige
+Ausführung und keine Findings am bestehenden Fail-Schwellwert: fehlender
+Arbeitsstand oder nicht vollständige Ausführung 5, stabile Veraltung 6,
+Findings am Schwellwert 1, erst sonst 0. Strukturelle Unterschiede bleiben
+Informationen, ohne Mehrheitsentscheid oder zusätzliche Freigabe. Kein
+generisches Ergebnis behauptet die semantische Richtigkeit eines externen
+Findings oder eine geprüfte Sprache.
+
+Evaluate bindet sämtliche Positionsdateien in Reihenfolge. Der gemeinsame
+Command-Registry-Vertrag erlaubt dafür genau einen letzten wiederholbaren
+Positionsparameter; die strukturierte CommandRequest-Form benutzt ein
+nichtleeres Stringarray. Bisherige skalare Positionsparameter bleiben unverändert.
+Alle Schalter, Konflikte, Klassen und Fehlerschwellen sind maschinenlesbar
+beschrieben. Verifizierte Partials dürfen Analyzer-Lesebefehle und die expliziten
+generierten Analyzer-Dateibefehle im selben begrenzten Manifestscope nutzen;
+dies erweitert keine generische Partial-Schreibbefugnis. Generierte Daten sind
+weiterhin keine normativen Projektdaten, Reviews, Receipts oder Evidence.
 
 
 ## T.6 Erster Adapter, Distribution und kontrollierte Ausführung
