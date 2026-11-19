@@ -56,20 +56,31 @@ def _inspection(invocation, read, files):
     options = invocation.options
     paths = (invocation.arguments['files'] if invocation.command.command_id == 'analyzer.evaluate'
              else (invocation.arguments['file'],))
-    raws, sources = [], []
+    raws, sources, unreadable = [], [], []
     for path in paths:
-        raw = read(path)
+        try:
+            raw = read(path)
+        except (ModelError, SafetyViolation, OSError) as error:
+            failure = 7 if isinstance(error, SafetyViolation) else 5 if isinstance(error, OSError) else getattr(error, 'exit_code', 3)
+            unreadable.append((len(raws), failure, getattr(error, 'reason', 'analyzer_file_unavailable')))
+            raw = b''
         raws.append(raw)
         try:
             document = decode(raw)
         except AnalyzerError:
             document = None
-        sources.append(dict(path=str(files[-1].path), size=len(raw), sha256=sha256(raw).hexdigest(), document=document))
+        sources.append(dict(path=path, size=len(raw), sha256=sha256(raw).hexdigest(), document=document))
     request = AnalyzerRequest(read(options['--request'])) if '--request' in options else None
     supplied = decode(read(options['--inputs'])) if '--inputs' in options else None
     evaluation = evaluate_reports(raws, request=request, project=invocation.resolved.project_root,
         current_inputs=supplied, configuration_id=invocation.resolved.values.get('configuration')).data
     rows = evaluation['reports']
+    for index, failure, reason in unreadable:
+        for row in rows:
+            if row['input_index'] == index:
+                row.update(currentness='unavailable', failure_code=failure, reason=reason, source_sha256=None)
+        sources[index].update(size=None, sha256=None)
+    evaluation['all_reports_current'] = all(row['currentness'] == 'current' for row in rows)
     complete = all(row['report'] is not None and row['request_binding_verified']
                    and row['report']['run_status'] == 'complete' for row in rows)
     findings = [finding['severity'] for row in rows if row['report'] is not None
@@ -119,7 +130,8 @@ def analyzer_command(invocation):
                 output = original
         current()
         validate_result_document(invocation.command.protocol.result_schema, payload)
-        details = {}
+        details = ({'execution_complete':False, 'all_languages_confirmed':False, 'gate_passed':False}
+                   if command == 'analyzer.run' else {})
         if '--output' in options and output is not None:
             details['publication'] = publish(output, options['--output'], root=invocation.resolved.project_root,
                 output_root=options.get('--output-root'), cwd=invocation.resolved.working_directory, check_inputs=current)

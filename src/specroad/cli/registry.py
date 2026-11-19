@@ -59,6 +59,10 @@ class CommandRegistry:
                 self.bind_request(command.protocol.example)
 
     def _bound_variant(self, command, options):
+        if command.command_id in ('analyzer.request','analyzer.run') and '--analysis-id' in options:
+            import re
+            if re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9._:-]{0,127}', options['--analysis-id']) is None:
+                raise CommandUsageError('Invalid analysis identity')
         if command.command_id == 'analyzer.run' and '--request' not in options:
             if '--analyzer' not in options:
                 raise CommandUsageError('Analyzer selection or request required')

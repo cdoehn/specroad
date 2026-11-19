@@ -38,7 +38,7 @@ def schema(name):
         descriptor=descriptor, availability=availability, schemas={'type':'object','additionalProperties':obj},
         schema_scope={'const':'structural_shapes_native_binding_validation_required'})))))
     inspection = object_schema(dict(format_version={'const':'1.0.0'},
-        sources=array(object_schema(dict(path=text, size={'type':'integer','minimum':0}, sha256=sha,
+        sources=array(object_schema(dict(path=text, size={'anyOf':[{'type':'integer','minimum':0},{'type':'null'}]}, sha256={'anyOf':[sha,{'type':'null'}]},
             document={'anyOf':[obj, {'type':'null'}]}))), evaluation=obj,
         execution_complete=boolean, findings_failed=boolean, current_check_passed=boolean,
         gate_passed=boolean, approval_granted={'const':False}))

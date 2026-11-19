@@ -35,8 +35,8 @@ keine neue Klärung und keine Budgetänderung. Vollständige Vorherbytes binden
 den tatsächlich ausgegebenen schmutzigen Snapshot einschließlich unverändert
 übernommener, noch zu committender W-Dateien.
 
-Dieser vorbereitete Stand **19.g.W** zählt erst nach seinem eigenen erfolgreichen
-Apply-Gate/Commit **820/918**; danach folgt **19.g.R**. Die getrennten
+Dieser vorbereitete Stand **19.g.R** zählt erst nach seinem eigenen erfolgreichen
+Apply-Gate/Commit **821/918**; danach folgt **19.g.C**. Die getrennten
 W/R/C-Ziele und der ursprüngliche Umfang beider Gruppen bleiben vollständig.
 C erhält die W/R-Testbytes und die extrahierten Funktionsdefinitionen unverändert.
 Jede Stage installiert nur ihren eigenen Zustand und prüft die gefilterte
