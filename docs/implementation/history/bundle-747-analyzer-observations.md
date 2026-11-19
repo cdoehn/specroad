@@ -11,8 +11,8 @@ geht den vollständigen Gruppen 19.c.W/R/C und 19.d.W/R/C voraus. Jede Stage
 installiert ausschließlich ihre eigenen Bytes, durchläuft N=3 plus die
 ungefilterte Pflichtauswahl und erhält erst nach Erfolg ihren eigenen Commit.
 
-Dieser vorbereitete Zielstand **19.d.W** hat nach seinem eigenen erfolgreichen
-Gate **811/918** Positionen; nächste Position **19.d.R**. In Dev
+Dieser vorbereitete Zielstand **19.d.R** hat nach seinem eigenen erfolgreichen
+Gate **812/918** Positionen; nächste Position **19.d.C**. In Dev
 wurden keine Verhaltenstests, Fixtures oder Testprozesse ausgeführt. Syntax,
 statische Prüfung, reine Collection und native Paketvalidierung sind keine
 Verhaltensabnahme. Keine automatischen Dienst-, CI- oder Workerstarts.

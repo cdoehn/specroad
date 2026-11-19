@@ -70,3 +70,9 @@ Die genauen geschlossenen Datenformen stehen ausschließlich in T.4.1.
 `result_sha256` bindet die T.4-Fachprojektion, `full_file_sha256` hingegen die
 unveränderten ursprünglichen Bytes, `canonical_bytes` die JCS-Darstellung.
 Unbekannte externe Payloads bleiben Daten, keine Fachfreigabe oder Evidence.
+
+`require_provenance(analyzer=..., engine=...)` und
+`require_transport_hash(expected_sha256)` prüfen unabhängige erwartete
+Bindungen und melden Konflikte mit Code 6. Übereinstimmende Hashes beweisen
+keine Authentizität. Dateibasierter Packageimport und Work-/CLI-Verknüpfung
+sind an dieser Position noch keine implementierten Bedienwege.

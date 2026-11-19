@@ -53,6 +53,17 @@ class AnalyzerReport:
         object.__setattr__(self, '_encoded', encoded(value))
         object.__setattr__(self, '_original', bytes(raw))
 
+    def require_provenance(self, *, analyzer, engine):
+        # Expected data cannot mutate owned observations or select a winner.
+        expected = decode(encoded(dict(analyzer=analyzer, engine=engine)))
+        actual = self.provenance
+        require(encoded(expected['analyzer']) == encoded(actual['analyzer']), 'analyzer_provenance_mismatch', exit_code=6)
+        require(encoded(expected['engine']) == encoded(actual['engine']), 'analyzer_engine_mismatch', exit_code=6)
+
+    def require_transport_hash(self, expected):
+        hash_value(expected, '/full_file_sha256')
+        require(expected == self.full_file_sha256, 'analyzer_transport_hash_mismatch', exit_code=6)
+
     @property
     def data(self):
         return decode(self._encoded)
@@ -94,6 +105,7 @@ def subject_result(subject, *, status, payload, findings=None):
 def create_report(request, *, analyzer_id, engine, subjects, run_status, findings=(),
                   operational=None, extensions=None, run_id=None):
     require(type(request) is AnalyzerRequest, 'analyzer_request_required', exit_code=2)
+    require(type(findings) in (list, tuple), 'analyzer_findings_array_required', exit_code=2)
     matches = [a for a in request.data['analyzers'] if a['descriptor']['analyzer_id'] == analyzer_id]
     require(len(matches) == 1, 'analyzer_not_requested', exit_code=2)
     if run_id is None:
