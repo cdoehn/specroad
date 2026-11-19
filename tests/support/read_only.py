@@ -43,16 +43,25 @@ def inventory(root):
 
 
 @contextmanager
-def no_write_attempts():
+def no_write_attempts(*, allow_subprocess=False):
     """Fail on writes even if the test runner has permission to bypass chmod."""
     calls = []
     open_builtin, open_io, open_os = builtins.open, io.open, os.open
     def forbid(*args, **kwargs):
         calls.append((args, kwargs))
         raise AssertionError("Unexpected write or process/network operation")
+    def permitted_pipe(file):
+        # Popen wraps its stdin pipe with io.open(fd, 'wb'). This is IPC,
+        # not permission to open a filesystem path or write a regular file.
+        if not allow_subprocess or type(file) is not int:
+            return False
+        try:
+            return stat.S_ISFIFO(os.fstat(file).st_mode)
+        except (OSError, OverflowError, ValueError):
+            return False
     def checked(original):
         def opening(file, mode="r", *args, **kwargs):
-            if any(c in mode for c in "wax+"):
+            if any(c in mode for c in "wax+") and not permitted_pipe(file):
                 return forbid(file, mode)
             return original(file, mode, *args, **kwargs)
         return opening
@@ -67,7 +76,8 @@ def no_write_attempts():
         for name in ("mkdir", "makedirs", "unlink", "remove", "rename", "replace", "rmdir", "chmod", "truncate", "utime", "symlink", "link", "system"):
             stack.enter_context(patch.object(os, name, forbid))
         import subprocess, socket
-        stack.enter_context(patch.object(subprocess, "Popen", forbid))
+        if not allow_subprocess:
+            stack.enter_context(patch.object(subprocess, "Popen", forbid))
         stack.enter_context(patch.object(socket, "socket", forbid))
         yield calls
     if calls:

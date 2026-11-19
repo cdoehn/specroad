@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 339 · **Stand:** 19. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.99
+**Planrevision:** 349 · **Stand:** 19. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.99
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 306 Schritte und 918 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; die früher genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wurde nach der damaligen Spezifikation innerhalb von 15.l.R vorgezogen und bleibt als normaler Prüfkern erhalten. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -223,14 +223,20 @@ Aktuelle Korrektur: [Bundle 756 — Analyseabdeckung](history/bundle-756-analyze
 
 Aktuelle Vorbereitung: [Bundle 757 — Sprachdistribution und Workerstart](history/bundle-757-language-distribution-worker.md). Quelle bestätigt 831/918; nachfolgende Zielwerte gelten erst nach dem jeweiligen eigenen Apply-Gate. Offene plattformgebundene Freigaben bleiben ausdrücklich erhalten.
 
+Korrektur nach bestätigtem 19.k.W/R/C: [Bundle 758 — Hostprofilgröße und vollständiger Workerrest](history/bundle-758-host-forecast-storage.md). Bestätigt sind 834/918; 19.l.W wurde vor dem Teststart abgewiesen. Alle drei offenen IDs und Rollen bleiben erhalten. Die nachfolgenden Zielwerte gelten erst nach dem jeweiligen eigenen Apply-Gate und Commit.
+
+Aktuelle Korrektur: [Bundle 759 — Worker-Pipes und Schreibschutz](history/bundle-759-worker-pipe-write-guard.md). Das neue Result meldet fünf Fehler und 22081 bestandene Tests in 19.l.W, keinen neuen Commit. Bestätigt bleiben 834/918; alle drei offenen IDs und Rollen werden erhalten. Die folgenden Zielwerte gelten erst nach dem jeweiligen eigenen Apply-Gate und Commit.
+
+Aktuelle Korrektur: [Bundle 760 — aktive Schreibschutzregressionen](history/bundle-760-live-write-guard-binding.md). Das neue Result meldet vier fehlerhafte Regressionen und 22083 bestandene Tests in 19.l.W; kein neuer Commit. Bestätigt bleiben 834/918. Der vollständige Rest 19.l.W/R/C behält eigene Gates; Zielwerte gelten erst nach dem jeweiligen erfolgreichen Apply.
+
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 339
+plan_revision: 349
 implementation_plan_commits_total: 918
-implementation_plan_commits_completed: 834
-last_completed_plan_commit: 19.k.C
-next_plan_commit: 19.l.W
+implementation_plan_commits_completed: 835
+last_completed_plan_commit: 19.l.W
+next_plan_commit: 19.l.R
 priority_off_plan: null
 next_off_plan_commit: null
 last_completed_numbered_bundle: 756

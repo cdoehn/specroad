@@ -546,3 +546,9 @@
 - [Bundle 756 — Schlüssel und Anzahlen der Analyseabdeckung](bundle-756-analyzer-coverage-oracles.md).
 
 - [Bundle 757 — Sprachdistribution und Workerstart](bundle-757-language-distribution-worker.md).
+
+- [Bundle 758 — vollständiger Workerrest und Hostprofilgröße](bundle-758-host-forecast-storage.md).
+
+- [Bundle 759 — Worker-Pipes und vollständiger offener Rest](bundle-759-worker-pipe-write-guard.md).
+
+- [Bundle 760 — aktive Funktionsbindung der Schreibschutzregressionen](bundle-760-live-write-guard-binding.md).

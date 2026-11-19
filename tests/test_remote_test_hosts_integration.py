@@ -56,6 +56,11 @@ def run_isolated_pool(tmp_path, *, source=None, crash=False, workers=1, duration
                    baseline=dict(zip(ids, [1.0] * count if durations is None else durations)))
     stored = dict(profile, storage_encoding='selected-key-alias-v1',
                   selected={node: None for node in ids}) if compact else profile
+    if compact == 'forecasts':
+        profile['estimates'] = {node + '\n' + row['host']: 1.5
+            for node in ids for row in worker_profiles.values()}
+        stored.update(storage_encoding='selected-key-alias-and-forecasts-v1',
+            estimates={node: {row['host']: 1.5 for row in worker_profiles.values()} for node in ids})
     path = root / 'build/host-run.json'; path.write_text(json.dumps(stored))
     args = ['-o', 'addopts=', '--disable-plugin-autoload', '-p', 'xdist.plugin',
         '-p', 'no:cacheprovider', '-p', 'no:doctest', '-n', str(workers), '--dist', 'worksteal', '--max-worker-restart=0',
@@ -72,6 +77,17 @@ def run_isolated_pool(tmp_path, *, source=None, crash=False, workers=1, duration
 def test_compact_profile_runs_real_proxy_workers_with_exact_native_evidence(tmp_path):
     root, _, profile, result = run_isolated_pool(tmp_path, compact=True)
     assert result.returncode == 0, (result.stdout + result.stderr).decode()
+    observation = json.loads((root / 'build/observations.json').read_bytes())
+    verify_pool(observation, public_proof(profile))
+    assert observation['suite_passed'] and observation['tests_run'] == len(profile['selected'])
+    assert observation['nodeid_to_test_id'] == profile['selected']
+
+
+def test_grouped_forecasts_run_real_proxy_workers_without_changing_the_gate(tmp_path):
+    from dev.test_hosts.profile_io import read_profile
+    root, _, profile, result = run_isolated_pool(tmp_path, compact='forecasts')
+    assert result.returncode == 0, (result.stdout + result.stderr).decode()
+    assert read_profile(root / 'build/host-run.json') == profile
     observation = json.loads((root / 'build/observations.json').read_bytes())
     verify_pool(observation, public_proof(profile))
     assert observation['suite_passed'] and observation['tests_run'] == len(profile['selected'])

@@ -37,6 +37,16 @@ die ausgewählten Tests und beteiligten Hosts. Alle passenden Werte bleiben
 erhalten; die vollständige Messhistorie und die Auswahl bleiben unverändert. Beide Apply-Linien sollen denselben Hostnamen und
 dieselbe Slotgrenze für denselben Remote-Benutzer verwenden.
 
+
+Die interne Laufdatei behält ihre Grenze von 16000000 Byte. Für größere
+In-Memory-Profile spart zunächst `selected-key-alias-v1` gleiche Testschlüssel.
+Reicht dies nicht, gruppiert `selected-key-alias-and-forecasts-v1` die Prognosen
+verlustfrei je ausgewählter Test-ID und vorhandenem Workerhost. Der gemeinsame
+Leser rekonstruiert alle bisherigen Werte und prüft den vollständigen Vertrag;
+die expandierte JSON-Darstellung ist zusätzlich auf 32000000 Byte begrenzt.
+Historische Profile bleiben lesbar. Übergröße entfernt weder Tests noch
+Messwerte und erhöht keine Hostgrenze; sie bleibt ein konkreter Eingabefehler.
+
 ## Einrichtung und Kontrolle
 
 Alle Befehle mit dem Python der tatsächlichen Apply-Umgebung aufrufen:

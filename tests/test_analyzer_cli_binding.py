@@ -26,7 +26,7 @@ def test_selected_run_is_owned_by_registry_and_executes_through_public_api(tmp_p
     assert invocation.command is registry.bind_request(CommandRequest('analyzer.run', options)).command
     assert invocation.command.preflight_profile is PreflightProfile.PROJECT_READ
     before = inventory(tmp_path)
-    with no_write_attempts():
+    with no_write_attempts(allow_subprocess=True):
         result = registry.execute_result(invocation, cwd=tmp_path)
     assert result.exit_code == 5 and result.command == 'analyzer.run'
     assert result.result['request']['request_id'] == 'bound-run'

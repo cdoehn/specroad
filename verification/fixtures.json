@@ -394,7 +394,7 @@
     },
     "SR-FIX-LANGUAGE-PACKAGING-WORKER-v1": {
       "kind": "Original SHA-256-bound PyPI py3langid 0.4.0 and NumPy 2.3.5 CPython 3.14 Linux x86-64 wheels; real Core/add-on builders and interpreter processes. Other ABI wheel rows are separately pinned declarations, not measured compatibility. Small native AnalyzerRequests, project/CWD/environment poison files and malformed process-output doubles for explicit negative boundaries.",
-      "provider": "tests/test_language_packaging.py:offline_package; tests/data/language_wheels"
+      "provider": "tests/test_language_packaging.py:offline_package; tests/test_analyzer_worker.py:request_value; tests/data/language_wheels"
     },
     "SR-FIX-LANGUAGE-POLICY-v1": {
       "kind": "Owned language declarations, exact Basic Filtering cases and named literal-policy resources; no detection, automatic register update or project approval.",

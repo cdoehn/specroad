@@ -2,7 +2,8 @@
 from hashlib import sha256
 
 from ..analyzers._values import AnalyzerError, decode, encoded, require
-from ..analyzers.file_adapter import default_inputs, request_inputs, descriptors, unavailable_package, validate_inputs
+from ..analyzers.worker_transport import execute
+from ..analyzers.file_adapter import default_inputs, request_inputs, descriptors, validate_inputs
 from ..analyzers.files import InputFile, publish
 from ..analyzers.registry import classify_descriptor
 from ..analyzers.requests import AnalyzerRequest
@@ -125,7 +126,7 @@ def analyzer_command(invocation):
             # An unsealed development checkout cannot make a portable Work
             # compatibility claim. Its existing immediate file API remains usable.
             request = _request(invocation,read)
-            value = request if command=='analyzer.request' else unavailable_package(request)
+            value = request if command=='analyzer.request' else execute(request)
             payload, output = value.data, value.canonical_bytes
             code = 0 if command=='analyzer.request' else 5
         else:

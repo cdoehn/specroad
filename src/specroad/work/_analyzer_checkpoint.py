@@ -7,6 +7,7 @@ from ..analyzers.requests import AnalyzerRequest
 from ..analyzers.files import InputFile
 from ..analyzers.subjects import request_from_project
 from ._analyzer_results import final_result
+from ..analyzers.worker_transport import execute
 from .manifest import (_partition, _tree, _put, _task_binding,
     partition_work_manifest, complete_work_manifest)
 
@@ -64,5 +65,6 @@ def advance(manifest):
             from ._analyzer_results import prepare_subject
             evidence = prepare_subject(request,task)
         return partition_work_manifest(manifest, {task['unit_id']: encoded(evidence)})
-    result = final_result(request, value['command_id'], done)
+    result = (execute(request) if value['command_id']=='analyzer.run'
+              else final_result(request, value['command_id'], done))
     return complete_work_manifest(manifest, result.data, exit_code=0 if value['command_id']=='analyzer.request' else 5)

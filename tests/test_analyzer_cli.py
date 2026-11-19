@@ -108,7 +108,7 @@ def test_run_delivers_complete_unavailable_package_without_worker_or_false_succe
     json_file(tmp_path/'request.json',thaw(request.result))
     args = ['run','--request','request.json'] if from_file else ['run','--analyzer',BUILTIN]
     before = inventory(tmp_path)
-    with no_write_attempts(): result = call(args,tmp_path)
+    with no_write_attempts(allow_subprocess=True): result = call(args,tmp_path)
     assert result.exit_code == 5
     package = ReportPackage(json.dumps(thaw(result.result)).encode())
     assert len(package.reports) == 1

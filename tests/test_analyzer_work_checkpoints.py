@@ -17,7 +17,7 @@ from test_analyzer_work import early, store_at, finish
 @pytest.mark.parametrize('name',['request','run'])
 def test_small_finished_analysis_does_not_allocate_even_declared_work_dir(tmp_path,name):
     root=tmp_path/'project';project(root);before=inventory(root)
-    with no_write_attempts():
+    with no_write_attempts(allow_subprocess=(name=='run')):
         result=call([name,'--project',str(root),'--analyzer',BUILTIN,
             '--work-dir',str(tmp_path/'unused')],tmp_path)
     assert result.exit_code==(0 if name=='request' else 5) and result.complete
