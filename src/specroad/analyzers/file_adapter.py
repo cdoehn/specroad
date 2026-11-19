@@ -31,7 +31,6 @@ def request_inputs(raw, selected):
         descriptor = AnalyzerDescriptor(encoded(item['descriptor']))
         require(descriptor.sha256 == item['descriptor_sha256'], 'analyzer_descriptor_hash_mismatch')
         descriptor.select_capabilities(item['capabilities'])
-        require(classify_descriptor(descriptor)['known_builtin'], 'analyzer_external_inputs_not_installed', exit_code=5)
         names.append(descriptor.data['analyzer_id'])
     require(names == sorted(set(names)), 'analyzer_sorted_unique_required')
     require(len(selected) == len(set(selected)) and sorted(selected) == names,
@@ -41,8 +40,22 @@ def request_inputs(raw, selected):
 
 
 def descriptors(raw=None):
-    require(raw is None, 'analyzer_external_descriptors_not_installed', exit_code=5)
-    return (builtin_descriptor(),)
+    known = builtin_descriptor()
+    found = {known.data['analyzer_id']: known}
+    if raw is not None:
+        value = decode(raw)
+        shape(value, ('analyzers', 'settings', 'context', 'extensions'))
+        require(type(value['analyzers']) is list and bool(value['analyzers']), 'analyzer_inputs_required')
+        for item in value['analyzers']:
+            shape(item, ('descriptor','descriptor_sha256','capabilities'))
+            descriptor = AnalyzerDescriptor(encoded(item['descriptor']))
+            require(descriptor.sha256 == item['descriptor_sha256'], 'analyzer_descriptor_hash_mismatch')
+            descriptor.select_capabilities(item['capabilities'])
+            name = descriptor.data['analyzer_id']
+            require(name not in found or found[name].canonical_bytes == descriptor.canonical_bytes,
+                'analyzer_descriptor_identity_conflict', exit_code=6)
+            found[name] = descriptor
+    return tuple(found[name] for name in sorted(found))
 
 
 def unavailable_package(request):

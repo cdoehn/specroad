@@ -12,6 +12,10 @@
       "kind": "Small actual native projects and explicitly supplied current resources, passive conflicting observations, byte inventories and native freshness/security faults; one full verified partial integration.",
       "provider": "tests/test_analyzer_evaluation.py:current_inputs,observations,prepared"
     },
+    "SR-FIX-ANALYZER-EXTERNAL-CLI-v1": {
+      "kind": "Explicit foreign descriptor/settings input files, existing passive synthetic reports with unknown engine facts, malicious data and no-write/process/network/import traps.",
+      "provider": "tests/test_analyzer_external_cli.py:foreign_request"
+    },
     "SR-FIX-ANALYZER-PACKAGE-v1": {
       "kind": "Complete passive multi-analyzer request/report packages with independent hash oracles, unknown external engine facts, immutable transport bytes and malformed input variants.",
       "provider": "tests/test_analyzer_packages.py:package_values"
@@ -1014,6 +1018,7 @@
     "SR-FIX-ANALYZER-CLI-v1",
     "SR-FIX-ANALYZER-DESCRIPTOR-v1",
     "SR-FIX-ANALYZER-EVALUATION-v1",
+    "SR-FIX-ANALYZER-EXTERNAL-CLI-v1",
     "SR-FIX-ANALYZER-PACKAGE-v1",
     "SR-FIX-ANALYZER-REPORT-v1",
     "SR-FIX-ANALYZER-REQUEST-v1",

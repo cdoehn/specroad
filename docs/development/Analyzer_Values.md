@@ -148,3 +148,10 @@ Modellwrites noch Receipts. Die atomare Veröffentlichung überschreibt nichts;
 bytegleiche Ziele sind No-op, unterschiedliche Bytes Konflikt 6. Import
 behält die vollständigen Originalbytes. Keine Originaldatei wird zur lokalen
 Aktualitätsanzeige geändert. Die nachfolgenden Work-/Workerstufen bleiben offen.
+
+
+`--inputs FILE` bei list/describe und Requestbildung lässt gültige fremde
+Descriptoren bereits als Dateischnittstelle zu. Die Datei enthält genau die
+vier T.8.1-Koordinaten; die gewählte Analyzer-ID-Menge muss exakt passen.
+Unbekannte Erweiterungen bleiben Daten. Kein execution_mode, Dependency-
+String, Subjecttext oder Projektwert kann einen Worker registrieren.

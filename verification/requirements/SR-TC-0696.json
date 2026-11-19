@@ -1,21 +1,35 @@
 {
   "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "fixture_ids": [],
-  "implementation_status": "open",
+  "expected_exit_codes": [
+    0,
+    1,
+    2,
+    3,
+    5,
+    6,
+    7
+  ],
+  "fixture_ids": [
+    "SR-FIX-ANALYZER-EXTERNAL-CLI-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [],
-  "method": "pending",
+  "method": "automated_behavior",
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence.",
-    "ANALYZER-CLI-749: normative T.5.2 and M19 g/h acceptance; independently gated implementation pending."
+    "Target 19.h.W needs its own successful Apply gate/commit; no Dev behavior execution.",
+    "Subsequent M19 positions retain controlled workers, distribution, language policy and durable Work integration.",
+    "Full suite and supported Python/platform matrix remain milestone/release obligations."
   ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Für ein nicht ausführbares externes Analyzer-Backend MUSS der Datenaustausch bereits funktionieren, während execution_supported ausdrücklich false bleibt.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Explicit foreign descriptors and full independent settings/resources, native requests and actual report files are usable without executing workers. Registry-owned argv/structured project variants, full configuration preflight, explicit input origin and projectless passive file boundaries are also bound. Only Apply executes behavior; preparation is not a passed gate."
   },
-  "preconditions": [],
+  "preconditions": [
+    "Small real native projects and exact passive synthetic report files with explicitly unknown engine facts.",
+    "Every stage requires its own Apply test gate; C preserves W/R test bytes and behavior."
+  ],
   "primary_verification_id": "SR-VER-0046",
   "required_environment": {
     "declared_minimum_python": "3.10",
@@ -29,8 +43,24 @@
     "owned_temporary_files": true
   },
   "specification_sha256": "f9a7f2223399c8df870d232dca3c551c165c81244f25dae6a7fbe1b143f1311a",
-  "steps": [],
+  "steps": [
+    "Describe/request/import/show/evaluate explicit foreign analyzer data through native contracts with execution_supported false.",
+    "Use hostile passive instruction/extension/backend mode values and observe no execution, networking or model initialization.",
+    "Retain descriptor identity, complete selection, settings/context hashes and full report coverage."
+  ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0696",
-  "test_ids": []
+  "test_ids": [
+    "tests/test_analyzer_external_cli.py::test_external_multianalyzer_request_is_complete_and_exactly_bound",
+    "tests/test_analyzer_external_cli.py::test_foreign_descriptors_can_be_inspected_without_project_initialization[describe]",
+    "tests/test_analyzer_external_cli.py::test_foreign_descriptors_can_be_inspected_without_project_initialization[list]",
+    "tests/test_analyzer_external_cli.py::test_foreign_run_preserves_every_requested_analyzer_as_unavailable[data_only]",
+    "tests/test_analyzer_external_cli.py::test_foreign_run_preserves_every_requested_analyzer_as_unavailable[selected]",
+    "tests/test_analyzer_external_cli.py::test_imported_descriptor_cannot_replace_trusted_builtin_identity",
+    "tests/test_analyzer_external_cli.py::test_independent_external_settings_change_makes_old_answers_stale",
+    "tests/test_analyzer_external_cli.py::test_real_foreign_file_roundtrip_uses_existing_validator_without_running_worker",
+    "tests/test_analyzer_external_cli.py::test_request_does_not_silently_filter_or_replace_profile_selection[selected0]",
+    "tests/test_analyzer_external_cli.py::test_request_does_not_silently_filter_or_replace_profile_selection[selected1]",
+    "tests/test_analyzer_external_cli.py::test_request_does_not_silently_filter_or_replace_profile_selection[selected2]"
+  ]
 }

@@ -16,8 +16,8 @@ def analyzer_commands():
     common = (*global_options('--fail-on', '--strict', '--no-color', '--quiet'),
               OptionSpec('--format', takes_value=True, choices=('pretty','json')))
     rows = (
-        ('list', (), (), {}, 'analyzer-directory-v1'),
-        ('describe', (PositionalSpec('id'),), (), {'arguments':{'id':'specroad.py3langid'}}, 'analyzer-directory-v1'),
+        ('list', (), (inputs,), {}, 'analyzer-directory-v1'),
+        ('describe', (PositionalSpec('id'),), (inputs,), {'arguments':{'id':'specroad.py3langid'}}, 'analyzer-directory-v1'),
         ('request', (), (*selection, inputs, *output), {'options':{'--analyzer':['specroad.py3langid']}}, 'analyzer-request-v1'),
         ('run', (), (*selection, inputs, *output, OptionSpec('--request', takes_value=True,
             excludes=('--analyzer','--subject','--field','--analysis-id','--inputs','--configuration'))),

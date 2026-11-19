@@ -28862,6 +28862,17 @@
     "tests/test_analyzer_cli_right.py::test_variadic_array_contract_rejects_bad_structured_values[value3]",
     "tests/test_analyzer_cli_right.py::test_variadic_array_contract_rejects_bad_structured_values[value4]",
     "tests/test_analyzer_cli_right.py::test_variadic_array_contract_rejects_bad_structured_values[value5]",
-    "tests/test_analyzer_cli_right.py::test_variadic_binding_does_not_change_scalar_contract_or_allow_nonfinal_repeat"
+    "tests/test_analyzer_cli_right.py::test_variadic_binding_does_not_change_scalar_contract_or_allow_nonfinal_repeat",
+    "tests/test_analyzer_external_cli.py::test_external_multianalyzer_request_is_complete_and_exactly_bound",
+    "tests/test_analyzer_external_cli.py::test_foreign_descriptors_can_be_inspected_without_project_initialization[describe]",
+    "tests/test_analyzer_external_cli.py::test_foreign_descriptors_can_be_inspected_without_project_initialization[list]",
+    "tests/test_analyzer_external_cli.py::test_foreign_run_preserves_every_requested_analyzer_as_unavailable[data_only]",
+    "tests/test_analyzer_external_cli.py::test_foreign_run_preserves_every_requested_analyzer_as_unavailable[selected]",
+    "tests/test_analyzer_external_cli.py::test_imported_descriptor_cannot_replace_trusted_builtin_identity",
+    "tests/test_analyzer_external_cli.py::test_independent_external_settings_change_makes_old_answers_stale",
+    "tests/test_analyzer_external_cli.py::test_real_foreign_file_roundtrip_uses_existing_validator_without_running_worker",
+    "tests/test_analyzer_external_cli.py::test_request_does_not_silently_filter_or_replace_profile_selection[selected0]",
+    "tests/test_analyzer_external_cli.py::test_request_does_not_silently_filter_or_replace_profile_selection[selected1]",
+    "tests/test_analyzer_external_cli.py::test_request_does_not_silently_filter_or_replace_profile_selection[selected2]"
   ]
 }
