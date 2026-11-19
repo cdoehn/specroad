@@ -18,7 +18,7 @@
     },
     "SR-FIX-ANALYZER-MODEL-LIFETIME-v1": {
       "kind": "Owned model sessions, known original cp314 wheels, passive native projects and synchronized owned child processes. Only Apply executes; no external hosts, installation, network or invented other-ABI proof.",
-      "provider": "tests/test_analyzer_model_lifetime.py; tests/test_analyzer_model_integration.py"
+      "provider": "tests/test_analyzer_model_lifetime.py; tests/test_analyzer_model_integration.py; tests/test_analyzer_model_lifetime_right.py"
     },
     "SR-FIX-ANALYZER-PACKAGE-v1": {
       "kind": "Complete passive multi-analyzer request/report packages with independent hash oracles, unknown external engine facts, immutable transport bytes and malformed input variants.",

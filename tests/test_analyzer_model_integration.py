@@ -53,6 +53,10 @@ if sys.argv[2] == 'no':
 else:
     import py3langid.langid as library
     import py3langid.modelio as storage
+    import socket, subprocess
+    def forbidden(*args, **kwargs):
+        raise AssertionError('offline model load exposed an upstream mode')
+    socket.socket = subprocess.Popen = library.main = storage.save_model = forbidden
     count = []
     original = storage.load_model
     def observe(raw):

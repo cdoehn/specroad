@@ -40,7 +40,7 @@ def test_launch_has_explicit_interpreter_and_no_shell(monkeypatch):
         assert command[1:4]==['-I','-S','-B']
         assert Path(options['cwd']).is_dir()
         return subprocess.CompletedProcess(command,0,unavailable_package(request).canonical_bytes,b'')
-    monkeypatch.setattr('specroad.analyzers.worker_transport.subprocess.run',run)
+    monkeypatch.setattr('specroad.analyzers._worker_process.run_process',run)
     execute(request)
     assert Path(observed['options']['cwd']).is_absolute()
 

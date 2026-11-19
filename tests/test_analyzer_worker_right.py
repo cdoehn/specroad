@@ -55,7 +55,7 @@ def test_worker_failures_are_concrete_and_never_successful_reports(monkeypatch,f
             extra=unavailable_package(request).data['reports'][0]
             value['reports'].append(extra);raw=encoded(value)
         return subprocess.CompletedProcess(command,1 if fault=='exit' else 0,raw,b'diagnostic')
-    monkeypatch.setattr('specroad.analyzers.worker_transport.subprocess.run',run)
+    monkeypatch.setattr('specroad.analyzers._worker_process.run_process',run)
     with pytest.raises(AnalyzerError) as caught:execute(request)
     assert caught.value.exit_code==5
 
@@ -65,11 +65,12 @@ def test_public_run_forwards_exact_data_in_both_paths(tmp_path,monkeypatch,durab
     root=tmp_path/'project';project(root)
     request=call(['request','--analyzer',BUILTIN,'--analysis-id','explicit-worker'],root)
     raw=encoded(thaw(request.result));file=tmp_path/'request.json';file.write_bytes(raw)
-    original=subprocess.run;sent=[]
+    from specroad.analyzers._worker_process import run_process
+    original=run_process;sent=[]
     def observe(command,**kwargs):
         sent.append(kwargs['input'])
         return original(command,**kwargs)
-    monkeypatch.setattr('specroad.analyzers.worker_transport.subprocess.run',observe)
+    monkeypatch.setattr('specroad.analyzers._worker_process.run_process',observe)
     if durable:
         from specroad import _build
         monkeypatch.setattr(_build,'BUILD_METADATA',dict(format_version=1,

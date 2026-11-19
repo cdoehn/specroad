@@ -29030,6 +29030,25 @@
     "tests/test_analyzer_model_lifetime.py::test_passive_commands_neither_import_dependencies_nor_initialize_model[validate]",
     "tests/test_analyzer_model_lifetime.py::test_passive_commands_neither_import_dependencies_nor_initialize_model[version]",
     "tests/test_analyzer_model_lifetime.py::test_saved_report_show_never_initializes_a_model",
-    "tests/test_analyzer_model_lifetime.py::test_session_is_lazy_reuses_one_model_and_releases_it"
+    "tests/test_analyzer_model_lifetime.py::test_session_is_lazy_reuses_one_model_and_releases_it",
+    "tests/test_analyzer_model_lifetime_right.py::test_actual_worker_is_reaped_on_completion_error_and_handled_abort[exit]",
+    "tests/test_analyzer_model_lifetime_right.py::test_actual_worker_is_reaped_on_completion_error_and_handled_abort[interrupt]",
+    "tests/test_analyzer_model_lifetime_right.py::test_actual_worker_is_reaped_on_completion_error_and_handled_abort[io_error]",
+    "tests/test_analyzer_model_lifetime_right.py::test_actual_worker_is_reaped_on_completion_error_and_handled_abort[normal]",
+    "tests/test_analyzer_model_lifetime_right.py::test_actual_worker_is_reaped_on_completion_error_and_handled_abort[system_exit]",
+    "tests/test_analyzer_model_lifetime_right.py::test_actual_worker_is_reaped_on_completion_error_and_handled_abort[terminate]",
+    "tests/test_analyzer_model_lifetime_right.py::test_failed_spawn_restores_callers_signal_handlers",
+    "tests/test_analyzer_model_lifetime_right.py::test_model_owner_releases_on_every_handled_exception[KeyboardInterrupt]",
+    "tests/test_analyzer_model_lifetime_right.py::test_model_owner_releases_on_every_handled_exception[SystemExit]",
+    "tests/test_analyzer_model_lifetime_right.py::test_model_owner_releases_on_every_handled_exception[ValueError]",
+    "tests/test_analyzer_model_lifetime_right.py::test_project_options_never_select_upstream_modes_or_installers",
+    "tests/test_analyzer_model_lifetime_right.py::test_untrusted_or_unavailable_model_is_not_decoded[directory]",
+    "tests/test_analyzer_model_lifetime_right.py::test_untrusted_or_unavailable_model_is_not_decoded[fifo]",
+    "tests/test_analyzer_model_lifetime_right.py::test_untrusted_or_unavailable_model_is_not_decoded[hash]",
+    "tests/test_analyzer_model_lifetime_right.py::test_untrusted_or_unavailable_model_is_not_decoded[missing]",
+    "tests/test_analyzer_model_lifetime_right.py::test_untrusted_or_unavailable_model_is_not_decoded[symlink]",
+    "tests/test_analyzer_model_lifetime_right.py::test_untrusted_or_unavailable_model_is_not_decoded[version]",
+    "tests/test_analyzer_model_lifetime_right.py::test_worker_does_not_inherit_numeric_background_threads",
+    "tests/test_analyzer_model_lifetime_right.py::test_actual_worker_is_reaped_on_completion_error_and_handled_abort[terminate_during_spawn]"
   ]
 }

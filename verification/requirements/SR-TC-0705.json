@@ -12,14 +12,14 @@
   "json_pointers": [],
   "method": "automated_behavior",
   "open_items": [
-    "Target 19.m.W requires its own successful Apply gate and commit.",
+    "Target 19.m.R requires its own successful Apply gate and commit.",
     "Real ranking/decision integration and remaining M19/19.y release gates stay open; model initialization is not language detection.",
     "No CPython 3.10–3.13 add-on compatibility or hard-host-loss recovery evidence is asserted."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Ein normaler Core-Aufruf und analyzer list MÜSSEN ohne Initialisierung von NumPy oder Sprachmodell auskommen.",
-    "scope": "Lazy single model lifetime, original hashed model bytes, passive commands, full independent analyzer coverage."
+    "scope": "Lazy single model lifetime, original hashed model bytes, passive commands, full independent analyzer coverage, real process cleanup and non-exposed upstream modes."
   },
   "preconditions": [
     "Exact bound request and shipped offline model; no project-supplied code or model path.",
@@ -40,7 +40,7 @@
   "specification_sha256": "f9a7f2223399c8df870d232dca3c551c165c81244f25dae6a7fbe1b143f1311a",
   "steps": [
     "Check lazy one-model ownership, full analyzer coverage and passive Core commands.",
-    "Load the original cp314 model in an isolated compatible runtime; reject an incompatible runtime."
+    "Exercise real child exit/abort/reaping and offline/hash/regular-file boundaries."
   ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0705",
@@ -58,6 +58,25 @@
     "tests/test_analyzer_model_lifetime.py::test_passive_commands_neither_import_dependencies_nor_initialize_model[validate]",
     "tests/test_analyzer_model_lifetime.py::test_passive_commands_neither_import_dependencies_nor_initialize_model[version]",
     "tests/test_analyzer_model_lifetime.py::test_saved_report_show_never_initializes_a_model",
-    "tests/test_analyzer_model_lifetime.py::test_session_is_lazy_reuses_one_model_and_releases_it"
+    "tests/test_analyzer_model_lifetime.py::test_session_is_lazy_reuses_one_model_and_releases_it",
+    "tests/test_analyzer_model_lifetime_right.py::test_actual_worker_is_reaped_on_completion_error_and_handled_abort[exit]",
+    "tests/test_analyzer_model_lifetime_right.py::test_actual_worker_is_reaped_on_completion_error_and_handled_abort[interrupt]",
+    "tests/test_analyzer_model_lifetime_right.py::test_actual_worker_is_reaped_on_completion_error_and_handled_abort[io_error]",
+    "tests/test_analyzer_model_lifetime_right.py::test_actual_worker_is_reaped_on_completion_error_and_handled_abort[normal]",
+    "tests/test_analyzer_model_lifetime_right.py::test_actual_worker_is_reaped_on_completion_error_and_handled_abort[system_exit]",
+    "tests/test_analyzer_model_lifetime_right.py::test_actual_worker_is_reaped_on_completion_error_and_handled_abort[terminate]",
+    "tests/test_analyzer_model_lifetime_right.py::test_actual_worker_is_reaped_on_completion_error_and_handled_abort[terminate_during_spawn]",
+    "tests/test_analyzer_model_lifetime_right.py::test_failed_spawn_restores_callers_signal_handlers",
+    "tests/test_analyzer_model_lifetime_right.py::test_model_owner_releases_on_every_handled_exception[KeyboardInterrupt]",
+    "tests/test_analyzer_model_lifetime_right.py::test_model_owner_releases_on_every_handled_exception[SystemExit]",
+    "tests/test_analyzer_model_lifetime_right.py::test_model_owner_releases_on_every_handled_exception[ValueError]",
+    "tests/test_analyzer_model_lifetime_right.py::test_project_options_never_select_upstream_modes_or_installers",
+    "tests/test_analyzer_model_lifetime_right.py::test_untrusted_or_unavailable_model_is_not_decoded[directory]",
+    "tests/test_analyzer_model_lifetime_right.py::test_untrusted_or_unavailable_model_is_not_decoded[fifo]",
+    "tests/test_analyzer_model_lifetime_right.py::test_untrusted_or_unavailable_model_is_not_decoded[hash]",
+    "tests/test_analyzer_model_lifetime_right.py::test_untrusted_or_unavailable_model_is_not_decoded[missing]",
+    "tests/test_analyzer_model_lifetime_right.py::test_untrusted_or_unavailable_model_is_not_decoded[symlink]",
+    "tests/test_analyzer_model_lifetime_right.py::test_untrusted_or_unavailable_model_is_not_decoded[version]",
+    "tests/test_analyzer_model_lifetime_right.py::test_worker_does_not_inherit_numeric_background_threads"
   ]
 }
