@@ -1,11 +1,8 @@
 """Passive file values and unavailable execution; no plugin/model discovery."""
 from ._values import decode, encoded, require, shape, digest, extensions, hash_value
 from .descriptors import AnalyzerDescriptor
-from .registry import builtin_descriptor, classify_descriptor
+from .registry import builtin_descriptor
 from .requests import analyzer_binding
-from .reports import create_report, subject_result
-from .packages import create_package
-from ._report_values import ENGINE_FACTS
 from ._request_values import RESOURCE_ID
 
 
@@ -57,21 +54,6 @@ def descriptors(raw=None):
     return tuple(found[name] for name in sorted(found))
 
 
-def unavailable_package(request):
-    """Truthful full coverage until the separately planned worker is installed."""
-    reports = []
-    for entry in request.data['analyzers']:
-        descriptor = AnalyzerDescriptor(encoded(entry['descriptor']))
-        availability = classify_descriptor(descriptor)
-        reason = availability['availability']
-        engine = dict(adapter_version=descriptor.data['adapter_version'],
-            **{name: {'value': None, 'reason': reason} for name in ENGINE_FACTS})
-        subjects = sorted((subject_result(s, status='open', payload={})
-                           for s in request.data['subjects']), key=lambda s: s['subject_key'])
-        reports.append(create_report(request, analyzer_id=descriptor.data['analyzer_id'],
-            engine=engine, subjects=subjects, run_status='unavailable',
-            operational={'execution_supported': False, 'reason': reason}))
-    return create_package(request, reports)
 
 
 def validate_inputs(raw):
@@ -100,3 +82,6 @@ def validate_inputs(raw):
     require(resources == sorted(set(resources)), 'analyzer_sorted_unique_required')
     extensions(value['extensions'])
     return value
+
+from ._execution import unavailable_package
+__all__ = ('default_inputs','request_inputs','descriptors','validate_inputs','unavailable_package')

@@ -45,8 +45,8 @@ Diese Reparatur hängt keinen unvollständigen 19.i-Teilzustand an und führt
 keine neue Detailentscheidung in den belegten Korrekturrest ein. 19.i.W/R/C
 und nachfolgende Work-Abnahmen bleiben vollständig unverändert offen.
 
-Zielstand **19.h.R** zählt erst nach seinem eigenen Apply-Gate und Commit
-**824/918**; danach folgt **19.h.C**.
+Zielstand **19.h.C** zählt erst nach seinem eigenen Apply-Gate und Commit
+**825/918**; danach folgt **19.i.W**.
 Jedes Gate behält die bisherige ungefilterte Pflichtauswahl und alle
 früher korrigierten Oracles zusätzlich zur fälligen gefilterten N=3-Gruppe.
 Dev führt ausschließlich statische Prüfung, reine Collection und native
