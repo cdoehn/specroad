@@ -538,3 +538,9 @@
 - [Bundle 752 — gebundener Projektvariantenvertrag](bundle-752-analyzer-variant-oracle.md).
 
 - [Bundle 753 — vollständige native Validierungsdaten](bundle-753-native-validation-fixture.md).
+
+- [Bundle 754 — frühe Analysekennung und dauerhafte Fortsetzung](bundle-754-analyzer-work.md).
+
+- [Bundle 755 — Korrektur der Analyse-Fortsetzung](bundle-755-analyzer-continuation-correction.md).
+
+- [Bundle 756 — Schlüssel und Anzahlen der Analyseabdeckung](bundle-756-analyzer-coverage-oracles.md).

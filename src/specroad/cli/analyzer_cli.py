@@ -117,6 +117,10 @@ def analyzer_command(invocation):
                 schemas={name:schema('analyzer-'+name+'-v1') for name in ('descriptor','inputs','request','report','package')})
                 for d in rows])
         elif command in ('analyzer.request', 'analyzer.run'):
+            if '--work-dir' in options or any(flag in options for flag in
+                    ('--step-cpu-ms','--step-wall-ms','--cpu-budget-ms','--wall-budget-ms','--resource-profile')):
+                from .analyzer_work import start
+                return start(invocation)
             request = _request(invocation, read)
             value = request if command == 'analyzer.request' else unavailable_package(request)
             payload, output = value.data, value.canonical_bytes

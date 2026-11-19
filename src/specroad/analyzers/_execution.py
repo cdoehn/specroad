@@ -6,7 +6,7 @@ from .reports import create_report, subject_result
 from .packages import create_package
 from ._report_values import ENGINE_FACTS
 
-def unavailable_package(request):
+def unavailable_package(request, *, run_ids=None):
     """Truthful full coverage until the separately planned worker is installed."""
     reports = []
     for entry in request.data['analyzers']:
@@ -19,5 +19,6 @@ def unavailable_package(request):
                            for s in request.data['subjects']), key=lambda s: s['subject_key'])
         reports.append(create_report(request, analyzer_id=descriptor.data['analyzer_id'],
             engine=engine, subjects=subjects, run_status='unavailable',
-            operational={'execution_supported': False, 'reason': reason}))
+            operational={'execution_supported': False, 'reason': reason},
+            run_id=None if run_ids is None else run_ids[descriptor.data['analyzer_id']]))
     return create_package(request, reports)

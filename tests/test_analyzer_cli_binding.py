@@ -105,7 +105,7 @@ def test_project_variant_description_binds_actual_registered_contract_without_tr
     assert bound.requires_project and bound.configuration_schema_required
     assert bound.preflight_profile.value == variant['preflight_profile'] == 'project_read'
     assert variant['operating_effects'] == []
-    assert not variant['work']['continuation_supported']
+    assert variant['work']['continuation_supported'] is (name == 'run')
     validate_builtin(thaw(request.options), variant['when'])
     if name == 'run':
         validate_builtin({'--analyzer': [BUILTIN]}, variant['when'])

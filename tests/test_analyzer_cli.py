@@ -52,7 +52,7 @@ def test_all_commands_have_real_registry_classes_and_one_structured_contract(nam
     bound = registry.bind_request(example)
     assert bound.command.command_id == command.command_id
     assert command.protocol.lock_kind == 'none'
-    assert not command.protocol.work.continuation_supported
+    assert command.protocol.work.continuation_supported is (name in ('request','run'))
 
 
 @pytest.mark.parametrize('args', [['list'],['describe',BUILTIN]])

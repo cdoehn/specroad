@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 318 · **Stand:** 19. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.99
+**Planrevision:** 331 · **Stand:** 19. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.99
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 306 Schritte und 918 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; die früher genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wurde nach der damaligen Spezifikation innerhalb von 15.l.R vorgezogen und bleibt als normaler Prüfkern erhalten. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -219,14 +219,16 @@ Aktuelle Detailklärung: [ANALYZER-CLI-749](decisions/analyzer-cli-749.md) für 
 
 Aktuelle Korrektur: [Bundle 753 — vollständige native Validierungsdaten](history/bundle-753-native-validation-fixture.md). Bundle 752 bestätigte 19.g.W/R/C und 19.h.W; 19.h.R scheiterte an zwei unvollständigen Testaufbauten. Bestätigt sind 823/918; offen bleibt 19.h.R/C. Die folgenden Zielwerte gelten erst nach dem jeweiligen eigenen Apply-Gate und Commit.
 
+Aktuelle Korrektur: [Bundle 756 — Analyseabdeckung](history/bundle-756-analyzer-coverage-oracles.md). Bundle 755 scheiterte im Gate von 19.i.W an einer Listen-/Zähler-Erwartung; kein Commit entstand. Bestätigt bleiben 825/918. Der vollständige Rest 19.i.W/R/C und 19.j.W/R/C behält IDs, Rollen und eigene Gates. Die folgenden Zielwerte gelten jeweils erst nach erfolgreichem Gate und Commit.
+
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 318
+plan_revision: 331
 implementation_plan_commits_total: 918
-implementation_plan_commits_completed: 825
-last_completed_plan_commit: 19.h.C
-next_plan_commit: 19.i.W
+implementation_plan_commits_completed: 826
+last_completed_plan_commit: 19.i.W
+next_plan_commit: 19.i.R
 priority_off_plan: null
 next_off_plan_commit: null
 last_completed_numbered_bundle: 753

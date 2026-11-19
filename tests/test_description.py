@@ -218,7 +218,7 @@ class DescriptionRobustnessTests(unittest.TestCase):
         for command in registry.commands:
             document = describe_command(registry, command.command_id)
             work = document['work']
-            continuation = command.command_id in ('work.resume', 'migrate.plan', 'migrate.verify', 'merge.plan', 'proposal.check')
+            continuation = command.command_id in ('work.resume', 'migrate.plan', 'migrate.verify', 'merge.plan', 'proposal.check', 'analyzer.request', 'analyzer.run')
             self.assertEqual(work['continuation_supported'], continuation)
             self.assertEqual(document['stdout']['continuation']['supported'], continuation)
             self.assertEqual(work['external_side_effects'], ['external_work_directory'] if continuation else [])
@@ -233,7 +233,8 @@ class DescriptionRobustnessTests(unittest.TestCase):
                                  'environment.check', 'artifact.show', 'query', 'trace', 'why', 'impact', 'diff',
                                  'configuration.evaluate', 'roadmap.explain', 'export', 'bundle.verify',
                                  'render', 'view.render', 'diagram', 'work.resume',
-                                 'migrate.plan', 'migrate.apply', 'migrate.verify', 'merge.plan', 'proposal.check') else None)
+                                 'migrate.plan', 'migrate.apply', 'migrate.verify', 'merge.plan', 'proposal.check',
+                                 'analyzer.request', 'analyzer.run') else None)
             self.assertIsNone(document['stdout']['continuation']['sarif_fallback'])
 
     def test_minimum_step_limits_are_explicitly_unmeasured(self):
@@ -270,7 +271,7 @@ class DescriptionRobustnessTests(unittest.TestCase):
                 self.assertEqual(len(document['variants']), 1)
                 variant = document['variants'][0]
                 self.assertEqual(variant['preflight_profile'], 'project_read')
-                self.assertFalse(variant['work']['continuation_supported'])
+                self.assertEqual(variant['work']['continuation_supported'], command.command_id == 'analyzer.run')
                 self.assertEqual(variant['operating_effects'], [])
                 bound = registry.bind_request(CommandRequest.from_mapping(variant['example']))
                 self.assertIs(bound.command, registry.variants(command)[0])
@@ -303,6 +304,12 @@ class DescriptionRobustnessTests(unittest.TestCase):
                 self.assertEqual(document['command_class'], 'read_only')
                 self.assertEqual(document['lock_kind'], 'none')
                 rejected = ('--resume', '--request-id', '--dry-run', '--actor-id', '--as-proposal')
+            elif command.command_id in ('analyzer.request','analyzer.run'):
+                self.assertIn('--work-dir', accepted)
+                self.assertTrue(document['work']['continuation_supported'])
+                self.assertEqual(document['command_class'], 'generated_output')
+                self.assertEqual(document['lock_kind'], 'none')
+                rejected = ('--resume','--request-id','--dry-run','--actor-id','--actor-type','--as-proposal')
             elif command.command_id == 'merge.apply':
                 self.assertIn('--dry-run', accepted)
                 self.assertEqual(document['lock_kind'], 'writer')

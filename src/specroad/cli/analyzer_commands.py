@@ -8,6 +8,8 @@ def _analyzer_handler(invocation):
     return analyzer_command(invocation)
 
 def analyzer_commands():
+    from .commands import _read_runtime_options
+    from .work_commands import continuation_work_contract
     selection = tuple(OptionSpec('--'+name, takes_value=True, repeatable=True)
                       for name in ('analyzer','subject','field')) + (OptionSpec('--analysis-id', takes_value=True),)
     inputs = OptionSpec('--inputs', takes_value=True)
@@ -32,6 +34,8 @@ def analyzer_commands():
     for name, args, specific, example, result_schema in rows:
         static = name in ('list','describe')
         options = (*common, *specific)
+        if name in ('request','run'):
+            options += (*_read_runtime_options(), OptionSpec('--work-dir', takes_value=True))
         if not static:
             options += global_options('--project','--configuration')
         commands.append(CommandSpec(command_id='analyzer.'+name, words=('analyzer',name),
@@ -39,7 +43,8 @@ def analyzer_commands():
             effect_scope=EffectScope.EXTERNAL_OUTPUT if name in generated else EffectScope.NONE,
             preflight_profile=PreflightProfile.PROJECT_READ if name == 'request' else PreflightProfile.INPUT_READ,
             requires_project=name == 'request', configuration_schema_required=name == 'request', handler=_analyzer_handler, options=options, positionals=args,
+            budget_policy_version='runtime-budget-v2' if name in ('request','run') else None,
             protocol=CommandProtocol(result_schema, {'command_id':'analyzer.'+name, **example},
-                handler_exit_codes=(0,1,2,3,4,5,6,7), diagnostic_codes=('CORE_MODEL','CORE_SECURITY','CORE_ENVIRONMENT','CORE_CONFLICT'),
-                work=WorkContract('analyzer_files_and_snapshot', ('explicit_inputs',)))))
+                handler_exit_codes=(0,1,2,3,4,5,6,7,8) if name in ('request','run') else (0,1,2,3,4,5,6,7), diagnostic_codes=('CORE_MODEL','CORE_SECURITY','CORE_ENVIRONMENT','CORE_CONFLICT'),
+                work=continuation_work_contract() if name in ('request','run') else WorkContract('analyzer_files_and_snapshot', ('explicit_inputs',)))))
     return tuple(commands)

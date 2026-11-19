@@ -37,7 +37,10 @@ def continuation(command, store, expected, *, migration_gates=()):
             current = store._read_chain(held, pointer[0])
             require(current.raw == expected.raw and current.as_dict()['state'] == 'running'
                     and current.as_dict()['tool_build'] == _build(), 'work_continuation_changed', exit_code=6)
-            if value['command_id'] == 'proposal.check':
+            if value['command_id'] in ('analyzer.request','analyzer.run'):
+                from ..work.analyzer import checked
+                checked(current)
+            elif value['command_id'] == 'proposal.check':
                 from ..work.proposal import checked
                 checked(current)
             elif value['command_id'] == 'merge.plan':
@@ -55,7 +58,10 @@ def continuation(command, store, expected, *, migration_gates=()):
             held.check()
             return CheckpointValidation(actual, len(pointer[0]), sha256(pointer[0]).hexdigest())
     return CommandResult(command, status=ResultStatus.CONTINUATION_REQUIRED,
-                         complete=False, continuation=confirm_continuation(claim, verify))
+                         complete=False, continuation=confirm_continuation(claim, verify),
+                         details=({'analysis_id':value['normalized_arguments']['analysis_id'],
+                             'checkpoint_sha256':value['checkpoint_sha256']}
+                             if value['command_id'] in ('analyzer.request','analyzer.run') else {}))
 
 
 def _payload(operation, value):
@@ -109,6 +115,9 @@ def _work(invocation):
         return _payload(operation, inspect_work_status(store))
     if operation == 'prompt':
         return _payload(operation, _prompt(store, options))
+    if store._initial.as_dict()['command_id'] in ('analyzer.request','analyzer.run'):
+        from .analyzer_work import work_command as analyzer_work_command
+        return analyzer_work_command(invocation, store, operation)
     if store._initial.as_dict()['command_id'] == 'proposal.check':
         from .proposal_work import work_command as proposal_work_command
         return proposal_work_command(invocation, store, operation)

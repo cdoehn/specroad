@@ -20,6 +20,9 @@ from ._public_errors import work_errors
 
 def protected_paths(initial):
     value = initial.as_dict()
+    if value['command_id'] in ('analyzer.request','analyzer.run'):
+        from .analyzer import protected_paths as analyzer_paths
+        return analyzer_paths(initial)
     if value['command_class'] == 'transport_operational':
         from .transport import protected_paths as transport_paths
         return transport_paths(initial)
@@ -75,7 +78,7 @@ def open_existing_work(path, *, registry):
         chain = _decode(metadata, payloads, registry, saved_build)
         require(saved_build == build, 'incompatible_runtime_build', exit_code=6)
         initial = chain[0]
-        require(initial.as_dict()['command_id'] in ('migrate.plan','migrate.verify','merge.plan','proposal.check') or (
+        require(initial.as_dict()['command_id'] in ('migrate.plan','migrate.verify','merge.plan','proposal.check','analyzer.request','analyzer.run') or (
             initial.as_dict()['command_id'] == 'bundle.create'
             and initial.as_dict()['command_class'] == 'transport_operational'),
                 'work_command_adapter_unavailable', exit_code=2)

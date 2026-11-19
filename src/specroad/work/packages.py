@@ -32,7 +32,8 @@ def _supported(manifest):
     value = manifest.as_dict()
     transport = value['command_class'] == 'transport_operational' and value['command_id'] == 'bundle.create'
     migration_plan = value['command_class'] == 'plan_output' and value['command_id'] in ('migrate.plan', 'merge.plan')
-    if value['command_class'] != 'read_only' and not transport and not migration_plan:
+    analyzer = value['command_class'] == 'generated_output' and value['command_id'] in ('analyzer.request','analyzer.run')
+    if value['command_class'] != 'read_only' and not transport and not migration_plan and not analyzer:
         raise ArchiveError('normative_work_package_requires_native_binding', exit_code=6)
 
 
@@ -238,7 +239,7 @@ def restore_work_package(raw, *, expected_sha256, registry, protected_roots, dir
     from .open_existing import protected_paths
     from .result_files import _publish_file, _verify_files
     reserved = (protected_paths(chain[0])
-                if chain[0].as_dict()['command_id'] == 'bundle.create' else ())
+                if chain[0].as_dict()['command_id'] in ('bundle.create','analyzer.request','analyzer.run') else ())
     location = WorkDirectory(chain[0], protected_roots=protected_roots,
                              protected_paths=reserved, directory=directory)
     results = ()

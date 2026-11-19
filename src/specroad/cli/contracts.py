@@ -229,6 +229,11 @@ class CommandSpec:
                     and self.command_class is CommandClass.READ_ONLY
                     and self.preflight_profile is PreflightProfile.PROJECT_READ
                     and self.effect_scope is EffectScope.EXTERNAL_OUTPUT)
+                    or (self.command_id in ('analyzer.request','analyzer.run')
+                        and self.words == tuple(self.command_id.split('.'))
+                        and self.command_class is CommandClass.GENERATED_OUTPUT
+                        and self.effect_scope is EffectScope.EXTERNAL_OUTPUT
+                        and self.preflight_profile in (PreflightProfile.PROJECT_READ, PreflightProfile.INPUT_READ))
                     or (self.command_id == 'work.resume'
                     and self.command_class is CommandClass.WORK_OPERATIONAL)
                     or (self.command_id == 'bundle.create'

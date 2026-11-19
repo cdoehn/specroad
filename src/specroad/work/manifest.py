@@ -201,6 +201,8 @@ def create_normative_work_manifest(registry, request, *, plan, tool_build,
 
 
 def _task_binding(command, source_bindings, input_hash, authoring):
+    if command['command_id'] in ('analyzer.request','analyzer.run'):
+        return sha256(canonical_json_bytes(command)).hexdigest()
     value = {**command, 'source_bindings': source_bindings, 'input_manifest_sha256': input_hash}
     if command['command_class'] == 'normative_write':
         value.update(authoring)
@@ -312,14 +314,19 @@ def read_work_manifest(raw, objects, *, registry, expected_tool_build):
     _tool(expected_tool_build); _tool(value['tool_build'])
     _require(value['tool_build'] == expected_tool_build)
     _require(value['algorithm_versions'] == _VERSIONS and value['schema_versions'] == {'work': '1.0.0'})
-    _object(value['normalized_arguments'], ('options', 'arguments'))
-    try:
-        request = CommandRequest(value['command_id'], **value['normalized_arguments'])
-    except CommandUsageError as error:
-        raise WorkManifestError('Invalid structured work request') from error
-    command = _command(registry, request, normative=value['command_class'] == 'normative_write',
-                       transport=value['command_class'] == 'transport_operational',
-                       planning=value['command_class'] == 'plan_output')
+    analyzer = value['command_id'] in ('analyzer.request','analyzer.run')
+    if analyzer:
+        from .analyzer import command_binding
+        command = command_binding(registry, value['command_id'], value['normalized_arguments'])
+    else:
+        _object(value['normalized_arguments'], ('options', 'arguments'))
+        try:
+            request = CommandRequest(value['command_id'], **value['normalized_arguments'])
+        except CommandUsageError as error:
+            raise WorkManifestError('Invalid structured work request') from error
+        command = _command(registry, request, normative=value['command_class'] == 'normative_write',
+                           transport=value['command_class'] == 'transport_operational',
+                           planning=value['command_class'] == 'plan_output')
     _require(all(value[name] == item for name, item in command.items()))
     _require(value['blocked_reason'] is None)
     _sources(value['source_bindings'])
@@ -380,6 +387,9 @@ def read_work_manifest(raw, objects, *, registry, expected_tool_build):
         _require(value['phase'] == (_phase_name(remaining)))
         _require(value['frontier'] == (_phase_frontier(remaining)))
         _require(value['next_action'] == _next_action(remaining))
+    if analyzer:
+        from .analyzer import checked_value
+        checked_value(value, objects, registry)
     _hash(value['checkpoint_sha256'])
     sealed = _parse(_seal(value))
     _require(sealed['checkpoint_sha256'] == value['checkpoint_sha256'])
@@ -403,7 +413,13 @@ def read_work_successor(raw, objects, *, previous, registry, expected_tool_build
     before, after = previous.as_dict(), current.as_dict()
     unchanged = all(canonical_json_bytes(before[name]) == canonical_json_bytes(after[name])
                     for name in _BINDING_FIELDS)
-    _require(unchanged)
+    if not unchanged and before['command_id'] in ('analyzer.request','analyzer.run'):
+        from .analyzer import snapshot_successor
+        _require(all(before[key] == after[key] for key in _BINDING_FIELDS
+            if key not in ('source_bindings','input_manifest_sha256','task_manifest_sha256')))
+        snapshot_successor(previous, current)
+    else:
+        _require(unchanged)
     _require(after['checkpoint_generation'] == before['checkpoint_generation'] + 1)
     old_done = {item['unit_id']: item for item in previous.entries('completed')}
     new_done = {item['unit_id']: item for item in current.entries('completed')}

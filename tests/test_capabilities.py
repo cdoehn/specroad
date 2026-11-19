@@ -47,8 +47,12 @@ class CapabilitiesWorkTests(unittest.TestCase):
         proposal_only = CommandRegistry(tuple(command for command in builtin_registry().commands
             if command.command_id == 'proposal.check'))
         self.assertEqual(capabilities(proposal_only)['semantic']['work'], semantic['work'])
+        for name in ('analyzer.request', 'analyzer.run'):
+            analyzer_only = CommandRegistry(tuple(command for command in builtin_registry().commands
+                if command.command_id == name))
+            self.assertEqual(capabilities(analyzer_only)['semantic']['work'], semantic['work'])
         read_only = CommandRegistry(tuple(command for command in builtin_registry().commands
-            if command.command_id not in ('merge.plan', 'proposal.check')
+            if command.command_id not in ('merge.plan', 'proposal.check', 'analyzer.request', 'analyzer.run')
             and not command.command_id.startswith(('work.', 'migrate.'))))
         self.assertEqual(capabilities(read_only)['semantic']['work'],
             {'engine_available': False, 'checkpoint_algorithms': [], 'budget_policy_version': None})
