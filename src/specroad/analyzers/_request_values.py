@@ -1,17 +1,13 @@
 """Validate the entire supplied snapshot without reading a project or a path."""
 import re
 
-from ..model.domain_fields import NormativeForce
-from ..model.language_tags import parse_language_tag
-from ..model.paths import ARTIFACT_PATHS, artifact_path
-from ..changes._patch_pointer import _pointer as parse_pointer
-from ..model.errors import ModelError
 from .descriptors import AnalyzerDescriptor
-from ._values import (AnalyzerError, digest, encoded, extensions, hash_value,
+from ._values import (digest, encoded, extensions, hash_value,
                       require, shape)
 
 SNAPSHOT_FIELDS = ('contract_version', 'analyzers', 'subjects', 'context', 'settings', 'extensions')
-SUBJECT_BINDING = ('artifact_id', 'artifact_revision', 'artifact_sha256', 'field_pointer')
+from ._subject_binding import SUBJECT_BINDING, subject_header
+__all__ = ('SUBJECT_BINDING', 'validate_snapshot')
 REQUEST_FIELDS = frozenset((*SNAPSHOT_FIELDS, 'request_id', 'snapshot_sha256'))
 RESOURCE_ID = re.compile(r'[A-Za-z0-9][A-Za-z0-9._:-]{0,127}')
 
@@ -20,41 +16,13 @@ def _array(value, at, *, nonempty=False):
     require(type(value) is list and (bool(value) or not nonempty), 'analyzer_array_required', at)
 
 
-def _artifact_id(value, at):
-    require(type(value) is str, 'analyzer_invalid_artifact_id', at)
-    pieces = value.split('-', 2)
-    kinds = [kind for kind, (_, prefix) in ARTIFACT_PATHS.items() if len(pieces) == 3 and prefix == pieces[1]]
-    require(len(kinds) == 1, 'analyzer_invalid_artifact_id', at)
-    try:
-        artifact_path(kinds[0], value, pieces[0])
-    except ModelError as error:
-        raise AnalyzerError('analyzer_invalid_artifact_id', pointer=at) from error
 
 
 def _subject(value, at, *, text_only):
     shape(value, (*SUBJECT_BINDING, 'subject_key', 'value', 'value_sha256', 'declared_language'),
           at, optional=('normative_force',))
-    _artifact_id(value['artifact_id'], at + '/artifact_id')
-    require(type(value['artifact_revision']) is int and value['artifact_revision'] > 0,
-            'analyzer_invalid_revision', at + '/artifact_revision')
-    for field in ('artifact_sha256', 'subject_key', 'value_sha256'):
-        hash_value(value[field], at + '/' + field)
-    try:
-        parse_pointer(value['field_pointer'], at + '/field_pointer')
-    except ModelError as error:
-        raise AnalyzerError(error.reason, pointer=error.pointer) from error
-    try:
-        parse_language_tag(value['declared_language'])
-    except ModelError as error:
-        raise AnalyzerError(error.reason, pointer=at + '/declared_language') from error
-    if 'normative_force' in value:
-        try:
-            NormativeForce.from_value(value['normative_force'])
-        except ModelError as error:
-            raise AnalyzerError(error.reason, pointer=at + '/normative_force') from error
+    subject_header(value, at)
     require(not text_only or type(value['value']) is str, 'analyzer_text_subject_required', at + '/value')
-    require(value['subject_key'] == digest({k:value[k] for k in SUBJECT_BINDING}),
-            'analyzer_subject_key_mismatch', at + '/subject_key')
     require(value['value_sha256'] == digest(value['value']),
             'analyzer_value_hash_mismatch', at + '/value_sha256')
 

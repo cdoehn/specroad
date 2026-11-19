@@ -11,8 +11,8 @@ geht den vollständigen Gruppen 19.e.W/R/C und 19.f.W/R/C voraus. Jede Stage
 installiert nur ihren eigenen Zustand und durchläuft die fällige gefilterte
 N=3-Gruppe plus ungefilterte Pflichtauswahl vor ihrem eigenen Commit.
 
-Dieser vorbereitete Zielstand **19.e.W** zählt nach seinem eigenen erfolgreichen
-Gate **814/918** Positionen; danach **19.e.R**. Dev führt keine
+Dieser vorbereitete Zielstand **19.e.R** zählt nach seinem eigenen erfolgreichen
+Gate **815/918** Positionen; danach **19.e.C**. Dev führt keine
 Testkörper, Fixtures oder Test-Unterprozesse aus. Syntax, statische Analyse,
 reine Collection und native Paketprüfung ersetzen keine Verhaltensabnahme.
 

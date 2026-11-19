@@ -93,3 +93,9 @@ Objekte, keine angeblichen separaten Originaldateien. Es wird nichts publiziert.
 `verify_worker_result(raw, request, analyzer=..., engine=...)` validiert die
 explizit erwartete Antwort mit denselben Reportregeln. Es ist ein reiner
 Protokollvalidator, kein Workerstart oder Nachweis einer installierten Engine.
+
+`require_transport_hash(expected)` prüft zusätzlich die äußeren Originalbytes.
+`read_unbound_report(raw)` prüft intrinsische Struktur und Hashes, wenn kein
+Request vorhanden ist. Das Ergebnis ist keine Bestätigung der vollständigen
+Requestbindung oder Aktualität. Der Package-/Workerpfad braucht weiterhin
+seinen vollständigen Request.
