@@ -41,7 +41,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "4dca16070c6c118e0666973758b0cf737cf4088c8cd67b3338462848bf86b8ea",
+  "specification_sha256": "fed2825073cdd87b1a3e4e1c42ba9a022b588217d2c5c840889101581723743b",
   "steps": [
     "Drive real SRX/graph and bounded native payload work through pure interval signals; compare complete results and byte hashes with the unobserved execution.",
     "Check intermediate unknown/regression/source changes, actual native publication phase boundaries and unchanged authority/receipt contracts for the selected cases."

@@ -1,19 +1,19 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.96
+## Version 0.2.97
 
 | Feld | Wert |
 |---|---|
 | Dokument-ID | `SR-SPEC-0001` |
-| Dokumentversion | `0.2.96` |
+| Dokumentversion | `0.2.97` |
 | Zielrelease | `SpecRoad Single-Repository Workbench 0.2.0` |
 | Status | **Fachlich konsolidierte Arbeitsgrundlage; technische Reviewentscheidung gesondert dokumentiert, formale Baseline-Freigabe und Produktabnahme nicht durch dieses Dokument erklärt** |
-| Stand | 18. November 2026 |
+| Stand | 19. November 2026 |
 | Sprache | Deutsch; technische Feldnamen, Enum-Werte und CLI-Kommandos Englisch |
-| Fachliche Quelle | **Diese Repositoryfassung v0.2.96 ist die aktive fachliche Arbeitsgrundlage; eine entsprechende PDF wird hiermit nicht veröffentlicht.** |
+| Fachliche Quelle | **Diese Repositoryfassung v0.2.97 ist die aktive fachliche Arbeitsgrundlage; eine entsprechende PDF wird hiermit nicht veröffentlicht.** |
 | Bearbeitbare Satzquelle | Diese Datei; eine spätere PDF muss denselben versionierten Inhalt wiedergeben. |
-| Vorgängerversion | Repository-Spezifikation v0.2.95; historische Nachweise bleiben unverändert. |
-| Prüf- und Entscheidungsgrundlage | ANALYZER-CONTRACT-746 nach SPECROAD-DECISION-1: geschlossene passive Descriptor- und Requestwerte; keine Produktfreigabe. |
-| Änderungsart | Additive Präzisierung der Descriptorabhängigkeiten, Requesteinträge und unveränderlichen Analysebindung; aktuelle menschliche Review- und Sicherheitsgrenzen bleiben erhalten. |
+| Vorgängerversion | Repository-Spezifikation v0.2.96; historische Nachweise bleiben unverändert. |
+| Prüf- und Entscheidungsgrundlage | ANALYZER-OBSERVATION-747 nach SPECROAD-DECISION-1: vollständige Subjectauswahl und geschlossene Ergebnisbeobachtungen; keine Produktfreigabe. |
+| Änderungsart | Additive Präzisierung nativer Subjectauswahl, Coverage, Findings und Enginefakten; aktuelle menschliche Review- und Sicherheitsgrenzen bleiben erhalten. |
 
 > **Verbindlicher Quellenwechsel:** Die ausdrückliche Nutzerentscheidung REFERENCE-SOURCE-551 wird als v0.2.50 umgesetzt. Der neue Quellvertrag ist Entwurfsarbeit vom 3. November 2026, kein Nachweis eines früher existierenden Formats. Bestehende 0.2-Verträge, Transport-, Sicherheits- und Reviewgrenzen bleiben erhalten.
 
@@ -11515,6 +11515,36 @@ Snapshot mit Konfliktcode 6. Sie ist kein Ergebnis- oder Fortsetzungsnachweis.
 Ungültige explizite Kennungsoptionen haben Code 2, ungültige importierte Daten
 Code 3; Syntaxfehler und unbekannte Felder führen zu keiner Teilannahme.
 
+### T.3.2 Vollständige native Subjectauswahl — ANALYZER-OBSERVATION-747
+
+Der Projektleser verwendet die vorhandene sichere Quellbeobachtung,
+Konfigurationsanwendbarkeit und vollständige Queryselektion **vor** Pagination.
+Default sind alle Requirements der gewählten Konfiguration; eine explizite
+ID-Liste ersetzt diesen Typfilter, erweitert aber niemals den verfügbaren
+Konfigurations-/Partial-Scope. Leere, doppelte oder außerhalb liegende Auswahl
+wird nicht still verworfen. Verifizierte Partial-Bundles liefern nur ihre
+Manifestmitglieder, niemals Boundary-/Konfigurationskontext als zusätzliche
+Subjects und niemals eine Behauptung vollständiger Projektdeckung.
+
+Pointer werden generisch nach RFC 6901 auf gespeicherten JSON-Werten gelesen;
+das ist keine SRX-Auswertung und kein Dateipfad. Default ist `/statement`.
+Jede gewählte ID/Pointer-Kombination ergibt genau ein Subject, sortiert nach
+ID und Pointer. Fehlende Werte werden abgewiesen; für `language_detection`
+sind ausschließlich Strings zulässig, auch der vollständige leere String.
+Keine Zusammenfügung, Normalisierung, Trunkierung oder Stichprobe. Der
+Artefakthash bindet das vollständige gespeicherte JSON-Objekt über JCS, der
+Werthash den vollständigen ausgewählten JSON-Wert. Revision, Sprache und
+gegebenenfalls Verbindlichkeit stammen unverändert aus dem Original.
+
+Kontextressourcen werden ausschließlich als ausdrücklich übergebene,
+hashgebundene JSON-Werte übernommen. Der Reader löst darin weder Pfade noch
+Anweisungen auf. Aufruferwerte werden vor dem Projektlesen übernommen;
+abschließende native Byte-/Mitgliedschaftsprüfungen erhalten ihre Wirkung.
+Fehlerhafte Auswahloptionen ergeben Code 2, fehlende/fremde/nicht passende
+Werte Code 3, Quellenänderungen Code 6, Sicherheitsgrenzen Code 7 und
+Umgebungsfehler Code 5. Es entstehen weder Work-Verzeichnisse noch Reports,
+Receipts, Workerstarts oder Schreibrechte durch diese Auswahlfunktion.
+
 ## T.4 Resultate, Findings und Unabhängigkeit von Evidence
 
 Ein `analysis-report` enthält `contract_version`, `report_version`, `run_id`, `request_id`, `snapshot_sha256`, `analyzer`, `engine`, `subjects`, `coverage`, `run_status`, `findings`, `operational`, `result_sha256` und `extensions`. `run_id` ist `AR-` plus ein Token nach `random128-v1`. `analyzer` bindet die Descriptoridentität; `engine` bindet Adapter-/Libraryversionen, Modellhash, Kandidatenmenge, Vorverarbeitungsversion, verwendete Unicode-Datenversion und numerisch relevante Runtime-/NumPy-Fingerprints. Unbekannte technische Daten sind `null` mit Grund; ein unvollständig identifizierter Engine-Fingerprint darf keine reproduzierbare Qualitätszusage erhalten.
@@ -11526,6 +11556,67 @@ Ein Finding enthält `finding_id`, namespaced `code`, `severity=info|warning|err
 `result_sha256` ist SHA-256 über das JCS-Objekt mit genau `contract_version`, `report_version`, `snapshot_sha256`, `analyzer`, `engine`, `subjects`, `coverage`, `run_status`, `findings` und `extensions`. Alle Werte werden unverändert aus dem Bericht übernommen. Zufällige Run-ID, Erfassungszeit, PID, Hostpfad und Laufzeitmessungen unter `operational` sind ausgeschlossen. Ein Full-File-Hash bindet bei Transport zusätzlich die unveränderten Berichtsbytes. Ein Hash beweist keine Echtheit eines fremden Analyzers.
 
 Ein Analyzerbericht ist **kein neues kanonisches Artefakt und keine Evidence**. Er verändert keine Anforderung, keine Verbindlichkeit, keinen Reifegrad, keine Relationsfreigabe und kein `verification_result`. Fremde Resultate bleiben gekennzeichnete Beobachtungen; ein Import setzt sie nicht auf `passed`. Ein Mensch kann einen Bericht über bestehende Source-/Attachment-/Evidence-Verfahren ausdrücklich referenzieren, wobei sämtliche dafür geltenden Autorisierungs- und Verification-Verträge unverändert gelten. Automatische Textkorrekturen durch Detector oder Importer sind ausgeschlossen.
+
+### T.4.1 Geschlossener Beobachtungsumschlag — ANALYZER-OBSERVATION-747
+
+`contract_version` und der generische Umschlag `report_version` sind exakt
+`1.0.0`. Andere Umschlagversionen werden abgewiesen. Die im Descriptor
+gebundene `result_schema_version` bezeichnet den Adapter-Payloadvertrag;
+unbekannte externe Payloads bleiben passive namespaced Daten ohne erfundene
+Fachvalidierung. `analyzer` ist byteinhaltlich der vollständige ausgewählte
+Requesteintrag mit Descriptor, Descriptorhash und Capabilities. Request-ID
+und Snapshothash müssen unabhängig exakt zum übergebenen Request passen.
+
+`subjects` enthält jedes Requestsubject genau einmal, sortiert nach
+`subject_key`. Jeder Eintrag kopiert alle Originalfelder außer `value` und
+ergänzt genau `status` und `payload`, optional `findings`. Status ist
+`done|undetermined|failed|open`; Payload ist ein namespaced JSON-Objekt,
+auch leer zulässig. Findings am Subject sind sortierte eindeutige Verweise
+auf Finding-IDs des Berichts, deren `subject_keys` dieses Subject einschließt.
+Originalbindung, Sprache, Werthash und vorhandene Verbindlichkeit bleiben
+exakt erhalten. Kein fehlendes Subject wird automatisch als erledigt ergänzt.
+
+`coverage` enthält genau `expected`, `done`, `undetermined`, `failed`, `open`
+und `counts`. Die ersten fünf Felder sind sortierte eindeutige Schlüsselarrays;
+die vier Statusmengen bilden eine disjunkte vollständige Zerlegung von
+`expected`, das exakt der Requestmenge entspricht. `counts` enthält dieselben
+fünf Schlüssel mit ihren ganzzahligen Längen (keine Booleans).
+Bearbeitet sind `done`, `undetermined` und `failed`; `done` allein bestätigt
+keine Qualität. `complete` verlangt leere Failed-/Open-Mengen, `partial`
+mindestens ein offenes Subject, `failed` mindestens ein fehlgeschlagenes
+Subject und `unavailable` ausschließlich offene Subjects. Ein vor Beginn
+pausierter Lauf darf daher vollständig offen und `partial` sein. Ein Wechsel
+von Engine oder Analyzer wird nicht zu einem gemeinsamen Ergebnis vermischt.
+
+`engine` enthält genau `adapter_version` (exakt Descriptorversion) und
+`library_versions`, `model_sha256`, `candidates`, `candidates_sha256`,
+`preprocessing_version`, `unicode_version`, `runtime_fingerprint`,
+`numpy_fingerprint`. Jeder dieser acht Fakten enthält genau `value` und
+`reason`: unbekannt bedeutet null mit nichtleerem Grund, bekannt bedeutet
+Wert mit null-Grund. Libraryversionen sind ein nichtleeres Objekt aus
+nichtleeren Namen und Versionsstrings; Modell-/Runtime-/NumPy-Fingerprints
+sind vollständige SHA-256-Werte der jeweils deklarierten Daten/Inventare.
+Vorverarbeitungs- und Unicodeversion sind nichtleere Strings. Die Kandidaten
+sind ein geordnetes, nichtleeres, dublettenfreies Stringarray; der Kandidatenhash
+bindet genau dieses JCS-Array, beide sind gemeinsam bekannt oder unbekannt.
+Keine erfundenen Laufzeitdaten oder Reproduzierbarkeitszusage aus Nullwerten.
+
+Finding-ID, Message und Rationale sind nichtleere Strings; IDs sind eindeutig.
+Subjectschlüssel sind sortiert, eindeutig und Teil der Requestmenge; eine
+leere Menge bezeichnet eine laufweite Beobachtung. `details` ist namespaced;
+jeder Detailwert enthält `kind` und `value`. `kind=json` erlaubt beliebige
+JSON-Daten. `kind=score` verlangt zusätzlich den nichtleeren String
+`score_semantics` und einen endlichen Dezimalstring ohne Exponent nach
+`-?(0|[1-9][0-9]*)(\.[0-9]+)?`. Dies ist keine behauptete Kalibrierung;
+adapterspezifische Quantisierung nach T.7 bleibt zusätzlich verbindlich.
+`suggestion` bleibt beliebiger passiver JSON-Inhalt. Fremde Namespaces werden
+vollständig erhalten; sie erteilen keine Ausführungs- oder Freigaberechte.
+
+`operational` ist ein JSON-Objekt, getrennt von Provenienz (`analyzer`, `engine`)
+und der unveränderten exakten T.4-Fachprojektion. Reader erhalten zusätzlich
+den SHA-256 der ursprünglichen, nicht umformatierten Transportbytes. Prüfungen
+gegen erwartete Provenienz und Transporthash sind getrennte Bindungsprüfungen;
+Übereinstimmung ist keine Authentizitäts-, Evidence- oder menschliche Freigabe.
 
 ## T.5 Speicher- und CLI-Vertrag
 

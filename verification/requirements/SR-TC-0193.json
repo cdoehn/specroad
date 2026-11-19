@@ -32,7 +32,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "4dca16070c6c118e0666973758b0cf737cf4088c8cd67b3338462848bf86b8ea",
+  "specification_sha256": "fed2825073cdd87b1a3e4e1c42ba9a022b588217d2c5c840889101581723743b",
   "steps": [
     "Compare real Git/current artifact and configuration inputs to obtain changed seeds, then execute native validation closure and Core lint.",
     "Change a relation target, a declared dependency or actual SRX profile rule; retain failures outside the directly changed artifact and exact expanded IDs.",

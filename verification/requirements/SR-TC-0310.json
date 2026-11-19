@@ -49,7 +49,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "4dca16070c6c118e0666973758b0cf737cf4088c8cd67b3338462848bf86b8ea",
+  "specification_sha256": "fed2825073cdd87b1a3e4e1c42ba9a022b588217d2c5c840889101581723743b",
   "steps": [
     "Resolve exactly one source-owned references relation from the selected artifact_ref block using the native snapshot and relation identity/matrix checks. Validate the selected target through its native type-specific field reader.",
     "Use separate blocks in two document compositions to resolve the same original target bytes, identity, revision and hashes; retain render_mode as data only, preserve source inventories and compare isolated Core/PYZ data.",
