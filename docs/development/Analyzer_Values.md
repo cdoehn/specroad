@@ -74,5 +74,22 @@ Unbekannte externe Payloads bleiben Daten, keine Fachfreigabe oder Evidence.
 `require_provenance(analyzer=..., engine=...)` und
 `require_transport_hash(expected_sha256)` prüfen unabhängige erwartete
 Bindungen und melden Konflikte mit Code 6. Übereinstimmende Hashes beweisen
-keine Authentizität. Dateibasierter Packageimport und Work-/CLI-Verknüpfung
-sind an dieser Position noch keine implementierten Bedienwege.
+keine Authentizität. Dateioperationen und Work-/CLI-Verknüpfung bleiben den vorgesehenen
+Bedienadaptern vorbehalten; die folgende Package-API prüft bereits gelesene Bytes.
+
+
+## Reportpackages
+
+`ReportPackage(raw_bytes, request=None)` prüft den vollständigen eingebetteten
+Request und sämtliche Reports. Ein optionaler expliziter Request muss genau
+übereinstimmen. `create_package(request, reports)` übernimmt gebundene
+AnalyzerReport-Werte. Mehrere unterschiedliche Läufe bleiben erhalten;
+mindestens ein Bericht je gewähltem Analyzer und eindeutige Run-IDs sind Pflicht.
+`data`, `request` und `reports` liefern eigene bzw. unveränderliche Werte;
+`original_bytes` und `full_file_sha256` beziehen sich auf die ursprüngliche
+äußere Datei, `canonical_bytes` auf das JCS-Objekt. Eingebettete Reports sind
+Objekte, keine angeblichen separaten Originaldateien. Es wird nichts publiziert.
+
+`verify_worker_result(raw, request, analyzer=..., engine=...)` validiert die
+explizit erwartete Antwort mit denselben Reportregeln. Es ist ein reiner
+Protokollvalidator, kein Workerstart oder Nachweis einer installierten Engine.

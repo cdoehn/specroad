@@ -1,21 +1,32 @@
 {
   "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "fixture_ids": [],
-  "implementation_status": "open",
+  "expected_exit_codes": [
+    0,
+    2,
+    3,
+    6
+  ],
+  "fixture_ids": [
+    "SR-FIX-ANALYZER-PACKAGE-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [],
-  "method": "pending",
+  "method": "automated_behavior",
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence.",
-    "ANALYZER-EVALUATION-748: normative T.5.1/T.8.1 and M19 e/f acceptance, independently gated implementation remains pending."
+    "Target 19.e.W requires its own successful Apply gate and commit; no Dev behavior execution.",
+    "Full suite and supported CPython/platform matrix remain required before milestone/release acceptance.",
+    "Later M19 stages retain CLI/Work integration, actual worker execution and language-policy evaluation."
   ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Ein vollständiges Analyzer-Reportpackage MUSS seinen datentragenden Request und sämtliche ausgewählten Reports mit übereinstimmender Analysekennung und Snapshotbindung gemäß Anhang T.5 enthalten.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Complete owned multi-analyzer package/worker observations, separate analysis ID and snapshot binding, exact original transport and independently expected provenance. Prepared tests require successful Apply; no behavior was executed in Dev."
   },
-  "preconditions": [],
+  "preconditions": [
+    "Small complete native projects and explicit owned JSON input values; unknown synthetic external engine facts remain explicitly unknown.",
+    "Only Apply executes behavior; stable identities and unchanged regressions remain mandatory."
+  ],
   "primary_verification_id": "SR-VER-0046",
   "required_environment": {
     "declared_minimum_python": "3.10",
@@ -29,8 +40,19 @@
     "owned_temporary_files": true
   },
   "specification_sha256": "7b78b9445ca8edb22ca03f31d045875c2e3d6eb95323eaaed3730fa8ef74e177",
-  "steps": [],
+  "steps": [
+    "Read a full data-carrying request and all chosen reports without project access, preserving distinct runs and original transport bytes.",
+    "Check separate request identity/snapshot and independently expected worker provenance; compare observations and hash values against independent oracles."
+  ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0691",
-  "test_ids": []
+  "test_ids": [
+    "tests/test_analyzer_packages.py::test_both_request_coordinates_are_mandatory[id]",
+    "tests/test_analyzer_packages.py::test_both_request_coordinates_are_mandatory[snapshot]",
+    "tests/test_analyzer_packages.py::test_complete_multi_analyzer_package_is_owned_and_projectless",
+    "tests/test_analyzer_packages.py::test_multiple_runs_of_same_analyzer_keep_order_findings_and_provenance",
+    "tests/test_analyzer_packages.py::test_original_package_bytes_are_distinct_from_embedded_canonical_values",
+    "tests/test_analyzer_packages.py::test_worker_result_uses_same_binding_and_expected_provenance[analyzer]",
+    "tests/test_analyzer_packages.py::test_worker_result_uses_same_binding_and_expected_provenance[engine]"
+  ]
 }

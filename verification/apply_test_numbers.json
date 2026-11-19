@@ -28643,6 +28643,13 @@
     "tests/test_analyzer_reports_right.py::test_report_constructor_rejects_invalid_finding_options[None]",
     "tests/test_analyzer_reports_right.py::test_report_constructor_rejects_invalid_finding_options[command]",
     "tests/test_analyzer_reports_right.py::test_report_constructor_rejects_invalid_finding_options[findings2]",
-    "tests/test_analyzer_reports_right.py::test_unknown_namespaced_payloads_never_acquire_execution_or_approval"
+    "tests/test_analyzer_reports_right.py::test_unknown_namespaced_payloads_never_acquire_execution_or_approval",
+    "tests/test_analyzer_packages.py::test_both_request_coordinates_are_mandatory[id]",
+    "tests/test_analyzer_packages.py::test_both_request_coordinates_are_mandatory[snapshot]",
+    "tests/test_analyzer_packages.py::test_complete_multi_analyzer_package_is_owned_and_projectless",
+    "tests/test_analyzer_packages.py::test_multiple_runs_of_same_analyzer_keep_order_findings_and_provenance",
+    "tests/test_analyzer_packages.py::test_original_package_bytes_are_distinct_from_embedded_canonical_values",
+    "tests/test_analyzer_packages.py::test_worker_result_uses_same_binding_and_expected_provenance[analyzer]",
+    "tests/test_analyzer_packages.py::test_worker_result_uses_same_binding_and_expected_provenance[engine]"
   ]
 }

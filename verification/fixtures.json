@@ -4,6 +4,10 @@
       "kind": "Explicit synthetic passive external descriptor plus the actual shipped builtin metadata. Independent canonical-hash oracle, owned nested data, malformed bytes, dependency and extension inputs. No installed worker, execution authority or package availability is fabricated.",
       "provider": "tests/test_analyzer_descriptors.py:external"
     },
+    "SR-FIX-ANALYZER-PACKAGE-v1": {
+      "kind": "Complete passive multi-analyzer request/report packages with independent hash oracles, unknown external engine facts, immutable transport bytes and malformed input variants.",
+      "provider": "tests/test_analyzer_packages.py:package_values"
+    },
     "SR-FIX-ANALYZER-REPORT-v1": {
       "kind": "Complete synthetic external observations over actual request values. Unknown engine facts have explicit reasons; known fingerprints are explicitly synthetic, never a claimed installed engine. Independent coverage/projection and transport oracles.",
       "provider": "tests/test_analyzer_reports.py:request_value,unknown_engine,report_options,finding,report_hash"
@@ -1000,6 +1004,7 @@
   "fixture_format_version": 1,
   "fixture_ids": [
     "SR-FIX-ANALYZER-DESCRIPTOR-v1",
+    "SR-FIX-ANALYZER-PACKAGE-v1",
     "SR-FIX-ANALYZER-REPORT-v1",
     "SR-FIX-ANALYZER-REQUEST-v1",
     "SR-FIX-ANALYZER-SUBJECT-v1",

@@ -14,3 +14,6 @@ __all__ += ('request_from_project',)
 
 from .reports import AnalyzerReport, create_report, subject_result
 __all__ += ('AnalyzerReport', 'create_report', 'subject_result')
+
+from .packages import ReportPackage, create_package, verify_worker_result
+__all__ += ('ReportPackage', 'create_package', 'verify_worker_result')
