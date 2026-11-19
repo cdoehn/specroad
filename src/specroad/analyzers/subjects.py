@@ -1,50 +1,23 @@
 """Complete selected values, using native scope and fresh read observations."""
-from ..bundles._partial_read import partial_read_snapshot
 from ..changes._patch_pointer import _pointer
 from ..model.errors import ModelError
 from ..bundles.errors import BundleError
 from ..cli.results import OperationFailure
 from ..security import SafetyViolation
 from ..srx.errors import SrxError
-from ..query.selection import NormalizedQuery, select_query
-from ..query.show import _preflight, _verify_current
 from ..srx import MISSING
 from ..srx.pointers import resolve_tokens
-from ..storage.project import ProjectSource
-from ..storage._relation_snapshot import _capture_sources
 from ._request_values import SUBJECT_BINDING
 from ._values import AnalyzerError, decode, digest, encoded, require
 from .identities import prepare_analysis_id
 from .requests import create_request
+from ._subject_source import _observe, _finish, _selected
 
 
-def _observe(root):
-    partial = partial_read_snapshot(root)
-    if partial is not None:
-        return partial, partial, partial.records
-    source = ProjectSource(root)
-    _preflight(source)
-    snapshot = _capture_sources(source)
-    return source, snapshot, snapshot.records
 
 
-def _finish(source, snapshot):
-    if source is snapshot:
-        source.verify_current()
-    else:
-        _preflight(source)
-        _verify_current(source, snapshot.binding)
 
 
-def _selected(source, snapshot, records, subject_ids, configuration_id):
-    selected = select_query(records, NormalizedQuery(
-        filters={'type':['requirement']} if subject_ids is None else {}),
-        project=source.configuration.data, configuration_id=configuration_id,
-        partial=source if source is snapshot else None)
-    wanted = set(selected.artifact_ids) if subject_ids is None else set(subject_ids)
-    require(wanted <= set(selected.artifact_ids), 'analyzer_subject_outside_scope')
-    require(bool(wanted), 'analyzer_empty_selection')
-    return sorted((r for r in records if r.identity.id in wanted), key=lambda r:r.identity.id)
 
 
 def _read_subjects(root, subject_ids, pointers, configuration_id):
