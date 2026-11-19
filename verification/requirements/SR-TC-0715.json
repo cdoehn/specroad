@@ -17,14 +17,14 @@
   "json_pointers": [],
   "method": "automated_behavior",
   "open_items": [
-    "Target 19.j.W requires its own successful Apply gate and commit.",
+    "Target 19.j.R requires its own successful Apply gate and commit.",
     "Later M19 worker/distribution stages must integrate real execution, pinned engine observations and actual resource blockers; no worker success is claimed.",
     "Release full-suite and supported platform/CPython evidence remain separate obligations."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Analyzerarbeit MUSS den Checkpoint- und Fortsetzungsvertrag aus Anhang T.5 und T.9 mit oder ohne ausdrücklich angegebenes `--work-dir` erfüllen.",
-    "scope": "Early analysis ID in normalized_arguments, null writer fields, exact owned construction/snapshot inputs, native durable journal and new-process resumption. R adds malformed/foreign identities, source changes, private path boundaries and unsealed/sealed export/restore. Per-subject technical results survive restart and export; final reports retain open/unavailable coverage with code 5 until worker implementation. Tiny complete jobs allocate no Work directory. No test outcome is inferred from collection. Existing R-67 through R-73 request/file identity and pair-binding regressions are mandatory. The public resume action comes exclusively from the verified ContinuationClaim; analysis identity and checkpoint hash supplement the summary without shadowing protected result-control fields. Coverage uses the exact sorted request subject-key arrays and their separate integer counts according to T.4.1; unavailable execution retains every subject as open. The completed package preserves the canonical explicit or sealed request."
+    "scope": "Early analysis ID in normalized_arguments, null writer fields, exact owned construction/snapshot inputs, native durable journal and new-process resumption. R adds malformed/foreign identities, source changes, private path boundaries and unsealed/sealed export/restore. Per-subject technical results survive restart and export; final reports retain open/unavailable coverage with code 5 until worker implementation. Tiny complete jobs allocate no Work directory. Engine and explicit expected snapshot/identity changes conflict before publication; concrete ENOSPC retains the previous prefix and permits only a bounded safe completion fallback. No test outcome is inferred from collection. Existing R-67 through R-73 request/file identity and pair-binding regressions are mandatory. The public resume action comes exclusively from the verified ContinuationClaim; analysis identity and checkpoint hash supplement the summary without shadowing protected result-control fields. Coverage uses the exact sorted request subject-key arrays and their separate integer counts according to T.4.1; unavailable execution retains every subject as open. The completed package preserves the canonical explicit or sealed request."
   },
   "preconditions": [
     "Real native small project, explicit JSON request or verified partial; a recorded compatible distribution is required for durable Work.",
@@ -66,6 +66,13 @@
     "tests/test_analyzer_work_checkpoints.py::test_small_finished_analysis_does_not_allocate_even_declared_work_dir[request]",
     "tests/test_analyzer_work_checkpoints.py::test_small_finished_analysis_does_not_allocate_even_declared_work_dir[run]",
     "tests/test_analyzer_work_checkpoints.py::test_snapshot_binds_all_selected_values_before_any_subject_result",
+    "tests/test_analyzer_work_checkpoints_right.py::test_completed_work_keeps_report_bytes_after_engine_change",
+    "tests/test_analyzer_work_checkpoints_right.py::test_engine_change_cannot_mix_a_new_result_into_existing_subjects",
+    "tests/test_analyzer_work_checkpoints_right.py::test_failed_successor_keeps_completed_subjects_and_remains_resumable",
+    "tests/test_analyzer_work_checkpoints_right.py::test_no_checkpoint_space_before_snapshot_is_real_five_not_eight",
+    "tests/test_analyzer_work_checkpoints_right.py::test_storage_failure_after_seal_can_finish_small_request_in_memory",
+    "tests/test_analyzer_work_checkpoints_right.py::test_wrong_resume_binding_is_conflict_and_keeps_all_persisted_bytes[expected0]",
+    "tests/test_analyzer_work_checkpoints_right.py::test_wrong_resume_binding_is_conflict_and_keeps_all_persisted_bytes[expected1]",
     "tests/test_analyzer_work_right.py::test_analysis_never_becomes_a_normative_work_request[actor-value0]",
     "tests/test_analyzer_work_right.py::test_analysis_never_becomes_a_normative_work_request[operations_sha256-0000000000000000000000000000000000000000000000000000000000000000]",
     "tests/test_analyzer_work_right.py::test_analysis_never_becomes_a_normative_work_request[plan_binding-value3]",

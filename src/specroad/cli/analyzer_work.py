@@ -33,6 +33,16 @@ def _publish_chain(store, chain):
             store._publish_held(held,manifest,store._pointer(held))
 
 
+def _can_finish(current, call):
+    _, request, _ = checked(current)
+    if request is None: return False
+    # Account for the retained request, every analyzer's full report and journal
+    # candidates. This is a conservative soft-budget decision, not host capacity.
+    retained = sum(len(raw) for raw in current.objects.values()) + len(current.raw)
+    bound = retained + len(request.canonical_bytes)*(len(request.data['analyzers'])+4)*4
+    return bound <= call._policy['effective_budgets']['memory']['value']
+
+
 def start(invocation):
     from ..runtime.consumption import WorkConsumption
     from ..work.analyzer import advance
@@ -46,10 +56,18 @@ def start(invocation):
         known = set(initial.objects)
         call.account_bytes('memory',len(initial.raw)+sum(len(raw) for raw in initial.objects.values()))
         pause = _pause(call,'start')
+        storage_unavailable = False
         while current.as_dict()['state']!='completed':
-            if pause:
-                _publish_chain(store,chain)
-                return continuation(invocation.command.command_id,store,current)
+            if pause and not storage_unavailable:
+                try:
+                    _publish_chain(store,chain)
+                except OSError as error:
+                    if not _can_finish(current,call):
+                        raise OperationFailure(FailureKind.ENVIRONMENT,'analyzer_checkpoint_unavailable',
+                            details={'errno':error.errno,'safe_completion_available':False}) from error
+                    storage_unavailable=True
+                else:
+                    return continuation(invocation.command.command_id,store,current)
             current=advance(current);chain.append(current)
             call.account_bytes('memory',len(current.raw)+sum(len(raw) for digest,raw in current.objects.items() if digest not in known))
             known.update(current.objects)

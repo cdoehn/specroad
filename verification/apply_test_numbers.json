@@ -28927,6 +28927,13 @@
     "tests/test_analyzer_work_checkpoints.py::test_sealed_work_is_self_contained_after_export_and_source_removal",
     "tests/test_analyzer_work_checkpoints.py::test_small_finished_analysis_does_not_allocate_even_declared_work_dir[request]",
     "tests/test_analyzer_work_checkpoints.py::test_small_finished_analysis_does_not_allocate_even_declared_work_dir[run]",
-    "tests/test_analyzer_work_checkpoints.py::test_snapshot_binds_all_selected_values_before_any_subject_result"
+    "tests/test_analyzer_work_checkpoints.py::test_snapshot_binds_all_selected_values_before_any_subject_result",
+    "tests/test_analyzer_work_checkpoints_right.py::test_completed_work_keeps_report_bytes_after_engine_change",
+    "tests/test_analyzer_work_checkpoints_right.py::test_engine_change_cannot_mix_a_new_result_into_existing_subjects",
+    "tests/test_analyzer_work_checkpoints_right.py::test_failed_successor_keeps_completed_subjects_and_remains_resumable",
+    "tests/test_analyzer_work_checkpoints_right.py::test_no_checkpoint_space_before_snapshot_is_real_five_not_eight",
+    "tests/test_analyzer_work_checkpoints_right.py::test_storage_failure_after_seal_can_finish_small_request_in_memory",
+    "tests/test_analyzer_work_checkpoints_right.py::test_wrong_resume_binding_is_conflict_and_keeps_all_persisted_bytes[expected0]",
+    "tests/test_analyzer_work_checkpoints_right.py::test_wrong_resume_binding_is_conflict_and_keeps_all_persisted_bytes[expected1]"
   ]
 }

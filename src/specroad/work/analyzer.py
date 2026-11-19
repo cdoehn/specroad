@@ -111,6 +111,7 @@ def snapshot_successor(previous, current):
         and request_of(after, current.objects) is not None
         and before['state'] == after['state'] == 'running')
     _require(not previous.entries('completed') and len(current.entries('completed')) == 1)
+    _require(_inputs(before, previous.objects)[CONTROL] == _inputs(after, current.objects)[CONTROL])
     _require(before['normalized_arguments'] == after['normalized_arguments'])
 
 
@@ -170,6 +171,7 @@ def advance(manifest):
         complete = [{'unit_id':tasks[0]['unit_id'], 'evidence':_put(encoded({'request_sha256':sha256(request.canonical_bytes).hexdigest(),'engines':engines(request)}),objects)}]
         value['checkpoint_generation'] += 1
         return _partition(value,tasks,complete,objects,manifest._registry,value['tool_build'])
+    require(engines(request)==done['snapshot']['engines'], 'analyzer_work_engine_changed', exit_code=6)
     if manifest.entries('remaining'):
         task = manifest.entries('remaining')[0]
         evidence = {'prepared':True}
@@ -198,13 +200,20 @@ def outcome(manifest):
     return record['outcome'], record['exit_code']
 
 
-def resume_analyzer_work(store, *, max_units=1):
+def resume_analyzer_work(store, *, max_units=1, expected_analysis_id=None, expected_snapshot_sha256=None):
     from .control import _initial
     from .resume import _runtime_build
     require(type(max_units) is int and max_units > 0, 'analyzer_work_unit_count', exit_code=2)
     _initial(store, _runtime_build())
     current = store.read()
     require(current is not None, 'analyzer_work_checkpoint_missing', exit_code=5)
+    _, bound_request, _ = checked(current)
+    if expected_analysis_id is not None:
+        require(expected_analysis_id == current.as_dict()['normalized_arguments']['analysis_id'],
+            'analyzer_work_identity_changed', exit_code=6)
+    if expected_snapshot_sha256 is not None:
+        require(bound_request is not None and expected_snapshot_sha256 == bound_request.data['snapshot_sha256'],
+            'analyzer_work_snapshot_changed', exit_code=6)
     for _ in range(max_units):
         if current.as_dict()['state'] == 'completed': break
         current = store._update(advance)
