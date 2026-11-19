@@ -8,21 +8,15 @@ from ._values import AnalyzerError, decode, digest, encoded, extensions, hash_va
 from ._report_values import (check_findings, coverage_status, engine_values,
                              exact_coverage, report_subjects, run_identity)
 from .requests import AnalyzerRequest
-
-RESULT_FIELDS = ('contract_version', 'report_version', 'snapshot_sha256', 'analyzer',
-                 'engine', 'subjects', 'coverage', 'run_status', 'findings', 'extensions')
+from ._report_projection import RESULT_FIELDS, observation, provenance, operational
 
 
-def observation(value):
-    return {key:value[key] for key in RESULT_FIELDS}
 
 
-def provenance(value):
-    return {key:value[key] for key in ('analyzer', 'engine')}
 
 
-def operational(value):
-    return value['operational']
+
+
 
 
 @dataclass(frozen=True, init=False)

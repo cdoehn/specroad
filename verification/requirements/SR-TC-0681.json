@@ -16,7 +16,7 @@
   "json_pointers": [],
   "method": "automated_behavior",
   "open_items": [
-    "Target stage 19.d.R needs its own successful Apply gate and commit; no tests ran in Dev.",
+    "Target stage 19.d.C needs its own successful Apply gate and commit; no tests ran in Dev.",
     "Full suite plus separate supported CPython/platform matrix remain required for milestone/release acceptance.",
     "Later M19 stages retain reportpackage/CLI/Work integration, actual language worker, engine evidence and semantic evaluation."
   ],
