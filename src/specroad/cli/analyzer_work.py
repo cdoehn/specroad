@@ -31,7 +31,7 @@ def start(invocation):
         from .work_handler import continuation
         return continuation(invocation.command.command_id, store, initial)
     except (CheckpointStorageError, WorkManifestError, WorkResumeError) as error:
-        raise OperationFailure(FailureKind(getattr(error, 'exit_code', 5)),
+        raise OperationFailure(FailureKind(getattr(error, 'exit_code', 6)),
             getattr(error, 'reason', 'analyzer_work_invalid')) from error
 
 

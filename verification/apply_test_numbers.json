@@ -28906,6 +28906,22 @@
     "tests/test_analyzer_work.py::test_early_generation_survives_reopen_without_finished_snapshot[review-round-17-True-run]",
     "tests/test_analyzer_work.py::test_existing_work_is_not_overwritten_by_a_new_analysis",
     "tests/test_analyzer_work.py::test_explicit_projectless_request_keeps_its_existing_id",
-    "tests/test_analyzer_work.py::test_real_distribution_keeps_early_id_across_independent_processes"
+    "tests/test_analyzer_work.py::test_real_distribution_keeps_early_id_across_independent_processes",
+    "tests/test_analyzer_work_right.py::test_analysis_never_becomes_a_normative_work_request[actor-value0]",
+    "tests/test_analyzer_work_right.py::test_analysis_never_becomes_a_normative_work_request[operations_sha256-0000000000000000000000000000000000000000000000000000000000000000]",
+    "tests/test_analyzer_work_right.py::test_analysis_never_becomes_a_normative_work_request[plan_binding-value3]",
+    "tests/test_analyzer_work_right.py::test_analysis_never_becomes_a_normative_work_request[request_id-same-id]",
+    "tests/test_analyzer_work_right.py::test_changed_construction_source_is_a_conflict_without_replacing_checkpoint[bytes]",
+    "tests/test_analyzer_work_right.py::test_changed_construction_source_is_a_conflict_without_replacing_checkpoint[replace_root]",
+    "tests/test_analyzer_work_right.py::test_normative_options_and_bad_identity_are_rejected_before_work[options0]",
+    "tests/test_analyzer_work_right.py::test_normative_options_and_bad_identity_are_rejected_before_work[options1]",
+    "tests/test_analyzer_work_right.py::test_normative_options_and_bad_identity_are_rejected_before_work[options2]",
+    "tests/test_analyzer_work_right.py::test_normative_options_and_bad_identity_are_rejected_before_work[options3]",
+    "tests/test_analyzer_work_right.py::test_normative_options_and_bad_identity_are_rejected_before_work[options4]",
+    "tests/test_analyzer_work_right.py::test_override_of_projectless_request_and_missing_id_keep_usage_data_split",
+    "tests/test_analyzer_work_right.py::test_renamed_analysis_cannot_be_a_successor_even_with_resealed_hash",
+    "tests/test_analyzer_work_right.py::test_unfinished_and_sealed_snapshots_export_restore_with_identity",
+    "tests/test_analyzer_work_right.py::test_work_root_cannot_alias_or_enter_project[inside]",
+    "tests/test_analyzer_work_right.py::test_work_root_cannot_alias_or_enter_project[symlink]"
   ]
 }

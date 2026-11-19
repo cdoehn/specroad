@@ -5,6 +5,7 @@ inputs. A snapshot unit seals one complete native request; it never exposes a
 partial successful request. Saved data cannot install an executor or writer.
 """
 from pathlib import Path
+import os
 from hashlib import sha256
 
 from ..analyzers._values import encoded, decode, require
@@ -15,7 +16,7 @@ from ..analyzers.files import InputFile
 from ..analyzers.subjects import request_from_project
 from ..cli.contracts import CommandClass, EffectScope
 from ..model.canonical import canonical_json_bytes
-from ._data_contract import _require, _object, _parse
+from ._data_contract import _require, _object, _parse, WorkManifestError
 from .manifest import (_create_manifest, _partition, _tree, _put, _bytes,
     _task_binding, partition_work_manifest, complete_work_manifest)
 from .resume import _runtime_build
@@ -31,16 +32,37 @@ def command_binding(registry, command_id, arguments):
     AnalysisRequestId(arguments['analysis_id'])
     control = arguments['construction']
     _object(control, ('format_version','project','supplied','subject_ids','field_pointers',
-        'configuration_id','request','guards','output','output_root','cwd'))
+        'configuration_id','request','guards','output','output_root','cwd','project_identity'))
     _require(control['format_version'] == 'analyzer-work-request-v1')
     _require(type(control['guards']) is list)
     for guard in control['guards']:
-        _object(guard, ('path','document'))
+        _object(guard, ('path','document','raw_hex'))
+        _require(type(guard['raw_hex']) is str)
+        try:
+            original = bytes.fromhex(guard['raw_hex'])
+        except ValueError as error:
+            raise WorkManifestError('Invalid captured input bytes') from error
+        _require(original.hex() == guard['raw_hex'] and decode(original) == guard['document'])
         _require(type(guard['document']) is dict)
         _absolute(guard['path'])
     for key in ('project','output_root'):
         if control[key] is not None: _absolute(control[key])
     _absolute(control['cwd'])
+    identity = control['project_identity']
+    if control['project'] is None:
+        _require(identity is None)
+    else:
+        _require(type(identity) is list and len(identity)==2
+            and all(type(v) is int and v >= 0 for v in identity))
+    pointers = control['field_pointers']
+    _require(type(pointers) is list and bool(pointers) and all(type(p) is str for p in pointers)
+        and len(pointers)==len(set(pointers)))
+    from ..changes._patch_pointer import _pointer
+    for pointer in pointers: _pointer(pointer, '/field_pointers')
+    subjects = control['subject_ids']
+    _require(subjects is None or (type(subjects) is list and bool(subjects)
+        and all(type(v) is str and v for v in subjects) and len(subjects)==len(set(subjects))))
+    _require(control['configuration_id'] is None or type(control['configuration_id']) is str)
     _require(control['output'] is None or type(control['output']) is str)
     if control['request'] is not None:
         request = AnalyzerRequest(encoded(control['request']))
@@ -70,7 +92,7 @@ def prepare_analyzer_work(invocation):
     def read(path):
         source = InputFile(path, cwd)
         document = decode(source.raw)
-        guards.append(dict(path=str(source.path), document=document))
+        guards.append(dict(path=str(source.path), document=document, raw_hex=source.raw.hex()))
         source.current()
         return document
     # Allocate exactly once, before reading any project snapshot/construction input.
@@ -91,7 +113,8 @@ def prepare_analyzer_work(invocation):
         supplied=supplied, subject_ids=None if '--subject' not in options else list(options['--subject']),
         field_pointers=list(options.get('--field', ('/statement',))),
         configuration_id=resolved.values.get('configuration'), request=explicit, guards=guards,
-        output=output, output_root=options.get('--output-root'), cwd=str(cwd))
+        output=output, output_root=options.get('--output-root'), cwd=str(cwd),
+        project_identity=None if root is None else [os.stat(root).st_dev,os.stat(root).st_ino])
     from ..changes._patch_pointer import _pointer
     from ..model.errors import ModelError
     from ..analyzers._values import AnalyzerError
@@ -204,9 +227,14 @@ def protected_paths(initial):
 
 
 def _guards(control):
+    if control['project'] is not None:
+        root = Path(control['project'])
+        require(root.resolve(strict=True) == root, 'analyzer_work_project_changed', exit_code=6)
+        info = root.stat()
+        require([info.st_dev,info.st_ino] == control['project_identity'], 'analyzer_work_project_changed', exit_code=6)
     for item in control['guards']:
         current = InputFile(item['path'], control['cwd'])
-        require(decode(current.raw) == item['document'], 'analyzer_work_input_changed', exit_code=6)
+        require(current.raw.hex() == item['raw_hex'], 'analyzer_work_input_changed', exit_code=6)
         current.current()
 
 
