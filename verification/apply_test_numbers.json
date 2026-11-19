@@ -29004,6 +29004,18 @@
     "tests/test_read_only_process_guard.py::test_process_permission_does_not_enable_filesystem_or_network_operations[replace]",
     "tests/test_read_only_process_guard.py::test_process_permission_does_not_enable_filesystem_or_network_operations[socket]",
     "tests/test_read_only_process_guard.py::test_process_permission_does_not_enable_filesystem_or_network_operations[unlink]",
-    "tests/test_read_only_process_guard.py::test_write_swallowed_after_successful_worker_is_still_reported"
+    "tests/test_read_only_process_guard.py::test_write_swallowed_after_successful_worker_is_still_reported",
+    "tests/test_analyzer_worker_right.py::test_passive_commands_still_never_launch_worker",
+    "tests/test_analyzer_worker_right.py::test_portable_core_runs_its_own_worker_without_optional_install[module]",
+    "tests/test_analyzer_worker_right.py::test_portable_core_runs_its_own_worker_without_optional_install[zipapp]",
+    "tests/test_analyzer_worker_right.py::test_project_cwd_pythonpath_and_loader_environment_cannot_replace_worker",
+    "tests/test_analyzer_worker_right.py::test_public_run_forwards_exact_data_in_both_paths[False]",
+    "tests/test_analyzer_worker_right.py::test_public_run_forwards_exact_data_in_both_paths[True]",
+    "tests/test_analyzer_worker_right.py::test_worker_failures_are_concrete_and_never_successful_reports[duplicate]",
+    "tests/test_analyzer_worker_right.py::test_worker_failures_are_concrete_and_never_successful_reports[exit]",
+    "tests/test_analyzer_worker_right.py::test_worker_failures_are_concrete_and_never_successful_reports[extra_json]",
+    "tests/test_analyzer_worker_right.py::test_worker_failures_are_concrete_and_never_successful_reports[launch]",
+    "tests/test_analyzer_worker_right.py::test_worker_failures_are_concrete_and_never_successful_reports[malformed]",
+    "tests/test_analyzer_worker_right.py::test_worker_failures_are_concrete_and_never_successful_reports[wrong_request]"
   ]
 }

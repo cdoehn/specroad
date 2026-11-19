@@ -35,7 +35,14 @@ def invoke_worker(request):
             cwd=distribution if distribution.is_dir() else distribution.parent,
             env={'PATH':os.defpath, 'LANG':'C.UTF-8'}, shell=False, check=False)
         require(completed.returncode == 0, 'analyzer_worker_failed', exit_code=5)
-        return ReportPackage(completed.stdout, request=request)
+        try:
+            package = ReportPackage(completed.stdout, request=request)
+            names = [r.data['analyzer']['descriptor']['analyzer_id'] for r in package.reports]
+            require(len(names) == len(set(names)) == len(request.data['analyzers']),
+                    'analyzer_worker_duplicate_analyzer')
+        except AnalyzerError as error:
+            raise AnalyzerError('analyzer_worker_invalid_response', exit_code=5) from error
+        return package
     except OSError as error:
         raise AnalyzerError('analyzer_worker_unavailable', exit_code=5) from error
 

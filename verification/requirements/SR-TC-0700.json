@@ -13,7 +13,7 @@
   "json_pointers": [],
   "method": "automated_behavior",
   "open_items": [
-    "Target 19.l.W requires its own successful Apply gate and commit.",
+    "Target 19.l.R requires its own successful Apply gate and commit.",
     "Real per-ABI runtime evidence for CPython 3.10–3.13 is not available in this preparation. No all-ABI or ARM compatibility is asserted; missing proofs remain release blockers under M19 final gate, 19.y and 20.k.",
     "Real classifier integration, model loading, scoring and resource evidence remain in 19.m–19.y; package import and worker transport are not language detection or approval."
   ],

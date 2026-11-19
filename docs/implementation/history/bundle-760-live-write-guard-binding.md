@@ -59,4 +59,4 @@ bleiben offen. [Bundle 759](bundle-759-worker-pipe-write-guard.md) beschreibt
 die unveränderte Helferkorrektur; sein fehlgeschlagener Versuch wird durch
 dieses Result eingeordnet, nicht nachträglich als erfolgreich ausgegeben.
 
-Stageziel `19.l.W`: 835/918, erst nach eigenem Gate.
+Stageziel `19.l.R`: 836/918, erst nach eigenem Gate.
