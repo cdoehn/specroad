@@ -70,4 +70,4 @@ spätere Release-Abnahmen bleiben offen. Nächste Position nach dem gesamten
 erfolgreichen Rest ist 19.n.W. Die ursprüngliche Vorbereitung und ihre
 Nachweisgrenzen stehen unverändert in [Bundle 761](bundle-761-analyzer-model-lifetime.md).
 
-Stageziel `19.m.R`: 839/918, erst nach eigenem Gate.
+Stageziel `19.m.C`: 840/918, erst nach eigenem Gate.

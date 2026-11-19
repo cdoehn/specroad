@@ -14,7 +14,7 @@
   "json_pointers": [],
   "method": "automated_behavior",
   "open_items": [
-    "Target 19.m.R requires its own successful Apply gate and commit.",
+    "Target 19.m.C requires its own successful Apply gate and commit.",
     "Real ranking/decision integration and remaining M19/19.y release gates stay open; model initialization is not language detection.",
     "No CPython 3.10–3.13 add-on compatibility or hard-host-loss recovery evidence is asserted."
   ],
