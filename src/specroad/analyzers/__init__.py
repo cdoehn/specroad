@@ -11,3 +11,6 @@ __all__ += ('AnalysisRequestId', 'WriteRequestId', 'AnalyzerRequest', 'prepare_a
 
 from .subjects import request_from_project
 __all__ += ('request_from_project',)
+
+from .reports import AnalyzerReport, create_report, subject_result
+__all__ += ('AnalyzerReport', 'create_report', 'subject_result')

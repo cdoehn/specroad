@@ -55,3 +55,18 @@ Vor dem Lesen werden veränderliche Aufrufereingaben übernommen. Native
 Fehler bleiben unterschieden: Modell 3, Umgebung 5, Konflikt 6, Sicherheit 7;
 fehlerhafte Auswahloptionen 2. Die abschließende Prüfung ist eine native
 Quellbeobachtung, keine Transaktion gegen nichtkooperierende Schreiber.
+
+## Passive Ergebnisberichte
+
+`subject_result(subject, status=..., payload=..., findings=None)` übernimmt
+die vollständige Originalbindung. `create_report(request, analyzer_id=...,
+engine=..., subjects=..., run_status=..., findings=(), operational=None,
+extensions=None, run_id=None)` bindet alle Ergebnisse. Subjects sind nach
+subject_key sortiert; der Konstruktor repariert keine fehlenden Ergebnisse.
+Die genauen geschlossenen Datenformen stehen ausschließlich in T.4.1.
+
+`AnalyzerReport(raw_bytes, request)` validiert gespeicherte Beobachtungen.
+`data`, `observation`, `provenance` und `operational` liefern eigene Kopien.
+`result_sha256` bindet die T.4-Fachprojektion, `full_file_sha256` hingegen die
+unveränderten ursprünglichen Bytes, `canonical_bytes` die JCS-Darstellung.
+Unbekannte externe Payloads bleiben Daten, keine Fachfreigabe oder Evidence.

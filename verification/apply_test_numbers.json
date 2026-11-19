@@ -28570,6 +28570,17 @@
     "tests/test_analyzer_subjects_right.py::test_native_final_freshness_rejects_changes[missing]",
     "tests/test_analyzer_subjects_right.py::test_read_failure_does_not_expose_host_path_or_contents",
     "tests/test_analyzer_subjects_right.py::test_symlinked_subject_fails_security_without_export",
-    "tests/test_analyzer_subjects_right.py::test_verified_partial_never_exports_boundary_context_as_subjects"
+    "tests/test_analyzer_subjects_right.py::test_verified_partial_never_exports_boundary_context_as_subjects",
+    "tests/test_analyzer_reports.py::test_complete_means_processed_not_positive_quality[states0-complete]",
+    "tests/test_analyzer_reports.py::test_complete_means_processed_not_positive_quality[states1-complete]",
+    "tests/test_analyzer_reports.py::test_complete_means_processed_not_positive_quality[states2-failed]",
+    "tests/test_analyzer_reports.py::test_complete_means_processed_not_positive_quality[states3-partial]",
+    "tests/test_analyzer_reports.py::test_complete_means_processed_not_positive_quality[states4-unavailable]",
+    "tests/test_analyzer_reports.py::test_complete_means_processed_not_positive_quality[states5-failed]",
+    "tests/test_analyzer_reports.py::test_distinct_run_identity_time_and_pid_leave_observation_identical",
+    "tests/test_analyzer_reports.py::test_findings_and_unknown_namespaces_remain_passive_owned_data",
+    "tests/test_analyzer_reports.py::test_four_outcomes_cover_every_original_once_and_hash_exact_projection",
+    "tests/test_analyzer_reports.py::test_original_request_and_all_returned_projections_are_owned",
+    "tests/test_analyzer_reports.py::test_transport_hash_binds_original_bytes_independently_of_observation"
   ]
 }
