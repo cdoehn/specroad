@@ -49,7 +49,7 @@ vor Export ausdrücklich bestätigt sein. Keine Zugangsdaten oder Sessiondaten.
   Eingaben und Fehler ohne Überschreiben vorheriger Ergebnisse. Browserimport
   erkennt doppelte Schlüssel, lässt veraltete Punkte offen und erfordert eine
   erneute persönliche Bestätigung. Alle W-Tests bleiben Pflicht.
-- [ ] **REVIEWS.C** — `REVIEWS.C refactor(reviews): Datenvertraege und Auswertung trennen`.
+- [x] **REVIEWS.C** — `REVIEWS.C refactor(reviews): Datenvertraege und Auswertung trennen`.
   Nur Trennung der unveränderten Verträge, Bewertungsaggregation, Dateizugriffe
   und Darstellung hinter derselben API. Funktions-/Klassen-AST und Testbytes
   bleiben gleich; das eigene Gate prüft die vollständigen W/R-Orakel erneut.
