@@ -13,7 +13,7 @@ from ..analyzers.schemas import schema
 from ..model.errors import ModelError
 from ..security import SafetyViolation
 from ..storage.json_syntax import parse_json_object
-from .option_values import policy_exit_code
+from ..analyzers.language_policy import report_outcome, execution_outcome
 from .results import CommandResult, FailureKind, OperationFailure
 from .result_schemas import validate_result_document
 
@@ -82,11 +82,10 @@ def _inspection(invocation, read, files):
                 row.update(currentness='unavailable', failure_code=failure, reason=reason, source_sha256=None)
         sources[index].update(size=None, sha256=None)
     evaluation['all_reports_current'] = all(row['currentness'] == 'current' for row in rows)
-    complete = all(row['report'] is not None and row['request_binding_verified']
-                   and row['report']['run_status'] == 'complete' for row in rows)
-    findings = [finding['severity'] for row in rows if row['report'] is not None
-                for finding in row['report']['findings']]
-    failed = bool(policy_exit_code(findings, invocation.resolved))
+    success = report_outcome([row['report'] for row in rows if row['report'] is not None],
+        fail_on=invocation.resolved.values['fail_on'])
+    complete = success['execution_complete'] and all(row['request_binding_verified'] for row in rows)
+    failed = success['findings_failed']
     current = evaluation['all_reports_current']
     payload = dict(format_version='1.0.0', sources=sources, evaluation=evaluation,
         execution_complete=complete, findings_failed=failed, current_check_passed=current,
@@ -107,7 +106,7 @@ def analyzer_command(invocation):
         command = invocation.command.command_id
         require('--output-root' not in options or '--output' in options,
             'analyzer_output_option_required', exit_code=2)
-        code, output = 0, None
+        code, output, details = 0, None, {}
         if command in ('analyzer.list', 'analyzer.describe'):
             rows = descriptors(read(options['--inputs']) if '--inputs' in options else None)
             if command == 'analyzer.describe':
@@ -128,7 +127,9 @@ def analyzer_command(invocation):
             request = _request(invocation,read)
             value = request if command=='analyzer.request' else execute(request)
             payload, output = value.data, value.canonical_bytes
-            code = 0 if command=='analyzer.request' else 5
+            if command == 'analyzer.run':
+                details = execution_outcome(value.reports, fail_on=invocation.resolved.values['fail_on'])
+                code = details.pop('exit_code')
         else:
             payload, code, original = _inspection(invocation, read, files)
             if command == 'analyzer.import' and not code:
@@ -137,8 +138,6 @@ def analyzer_command(invocation):
                 output = original
         current()
         validate_result_document(invocation.command.protocol.result_schema, payload)
-        details = ({'execution_complete':False, 'all_languages_confirmed':False, 'gate_passed':False}
-                   if command == 'analyzer.run' else {})
         if '--output' in options and output is not None:
             details['publication'] = publish(output, options['--output'], root=invocation.resolved.project_root,
                 output_root=options.get('--output-root'), cwd=invocation.resolved.working_directory, check_inputs=current)

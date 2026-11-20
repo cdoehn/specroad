@@ -92,6 +92,16 @@ if mode != 'positive':
     short_result = decide_request(short_request)
     assert short_result.engine is None and len(short_result.subjects) == 4
     assert all(s.decision.reason == 'insufficient_text' for s in short_result.subjects)
+    from specroad.analyzers.worker import analyze_language
+    unavailable_report = analyze_language(unavailable_request)
+    assert unavailable_report.data['exit_code'] == 5
+    assert unavailable_report.data['execution_complete'] is False
+    assert unavailable_report.data['all_languages_confirmed'] is False
+    assert unavailable_report.report.data['coverage']['counts']['open'] == 4
+    short_report = analyze_language(short_request)
+    assert short_report.data['exit_code'] == 0 and short_report.data['execution_complete'] is True
+    assert short_report.data['all_languages_confirmed'] is False
+    assert short_report.report.data['coverage']['counts']['undetermined'] == 4
     print(json.dumps({'mode': mode, 'version': platform.python_version(), 'exit_code': 5}))
 else:
     import py3langid.langid as library
@@ -187,6 +197,20 @@ else:
         assert subject.value_sha256 == originals[subject.subject_key]['value_sha256']
     assert language_request.canonical_bytes == language_raw
     assert language_request.canonical_bytes == language_raw and request.canonical_bytes == raw
+    from specroad.analyzers.language_policy import assess_language
+    assessed = assess_language(language_request, decision_result, registry=registry)
+    report = assessed.report.data
+    assert report['run_status'] == 'complete' and report['coverage']['counts']['expected'] == 4
+    assert report['engine']['library_versions']['value'] == dict(engine.library_versions)
+    assert assessed.data['execution_complete'] is True
+    assert assessed.data['exit_code'] == 0 and assessed.data['gate_passed'] is True
+    assert assessed.data['all_languages_confirmed'] is False
+    assert {s['subject_key'] for s in report['subjects']} == set(originals)
+    assert all(f['severity'] in ('warning', 'info') for f in report['findings'])
+    from specroad.analyzers.worker import analyze_language
+    wire_ready = analyze_language(language_request)
+    assert wire_ready.report.result_sha256 == assessed.report.result_sha256
+    assert wire_ready.data == assessed.data
     # Negative request settings must fail before another model can be decoded.
     storage.load_model = forbidden
     for name in ('languages', 'candidates', 'model'):

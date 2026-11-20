@@ -39,4 +39,6 @@ def request_policy(request):
             and policy['adapter_version'] == known['adapter_version'],
             'analyzer_language_adapter_mismatch', exit_code=2)
     validate_minimum(policy['min_text_codepoints'])
+    from .language_policy import validate_policy
+    validate_policy(policy)
     return data, entries[0], policy

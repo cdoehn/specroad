@@ -10,12 +10,10 @@ from ._score_values import parse_threshold
 
 def default_inputs(configuration):
     descriptor = builtin_descriptor()
-    policy = dict(adapter='specroad.py3langid', adapter_version='1.0.0', mismatch='warning',
-        undetermined='info', compatible_coarse='info', unverifiable='info',
-        min_text_codepoints=20, min_score='0.900000000000', min_margin='0.100000000000')
+    from .language_policy import materialize_policy
     configured = configuration.get('analyzer_policy', {}).get('language_detection', {})
     require(type(configured) is dict, 'analyzer_policy_object_required')
-    policy.update(configured)
+    policy = materialize_policy(configured)
     validate_minimum(policy['min_text_codepoints'])
     parse_threshold(policy['min_score'], 'min_score')
     parse_threshold(policy['min_margin'], 'min_margin')

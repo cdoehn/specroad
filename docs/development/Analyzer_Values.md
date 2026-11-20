@@ -155,3 +155,20 @@ Descriptoren bereits als Dateischnittstelle zu. Die Datei enthält genau die
 vier T.8.1-Koordinaten; die gewählte Analyzer-ID-Menge muss exakt passen.
 Unbekannte Erweiterungen bleiben Daten. Kein execution_mode, Dependency-
 String, Subjecttext oder Projektwert kann einen Worker registrieren.
+
+## Sprachpolicy und beobachtete Engine
+
+`language_policy.materialize_policy` materialisiert die T.8-Aktionen und prüft
+sie vor dem Modellzugriff. `assess_language(request, decisions, registry=...)`
+bindet vorhandene Scoreentscheidungen an Originalsubjects und den ausdrücklichen
+Sprachregisterstand; `.report` ist der vollständige T.4-Bericht, `.data` die
+separate Policybewertung mit execution_complete, all_languages_confirmed,
+findings_failed, gate_passed und exit_code. `fail_on` ist error oder warning.
+Ignore löscht keine Beobachtung. Nichtentscheidungen und coarse sind keine
+volle Sprachbestätigung. Backendfehler bleiben Code 5 vor fachlichem Code 1.
+
+`worker.analyze_language(request, fail_on='error')` ruft den vollständigen
+Adapter ausdrücklich auf, mit einer seriell gehaltenen Modellinstanz. Er
+schreibt keine Projektdateien. Der bisherige generische Dispatcher und die
+dauerhaften Work-Subjectübergänge erhalten ihre gesonderte Integration und
+Abnahme in 19.w; ihre Verfügbarkeitsauskunft wird hier nicht vorweggenommen.

@@ -11,6 +11,20 @@ from .registry import builtin_descriptor
 from ._model_session import ModelSession
 
 
+def analyze_language(request, *, fail_on='error'):
+    """Explicit full adapter invocation; serial model ownership and no writes.
+
+    The durable dispatcher retains its existing availability contract until
+    the separately planned Work integration. This callable returns the final
+    language report and separate policy outcome for that integration.
+    """
+    from .language_policy import assess_language
+    from .language_scores import decide_request
+    from ..storage.language_registry import bundled_language_registry
+    return assess_language(request, decide_request(request),
+        registry=bundled_language_registry(), fail_on=fail_on)
+
+
 def run_request(request):
     """One serial invocation; external descriptors cannot acquire a model."""
     known = builtin_descriptor().data

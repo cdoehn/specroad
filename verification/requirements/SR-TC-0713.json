@@ -1,20 +1,34 @@
 {
   "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "fixture_ids": [],
-  "implementation_status": "open",
+  "expected_exit_codes": [
+    0,
+    1,
+    2,
+    3,
+    5,
+    6
+  ],
+  "fixture_ids": [
+    "SR-FIX-ANALYZER-LANGUAGE-POLICY-v1",
+    "SR-FIX-ANALYZER-REFERENCE-RUNTIME-MATRIX-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [],
-  "method": "pending",
+  "method": "automated_behavior",
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Target 19.r.W requires its own successful Apply gate and commit, including all five original-runtime matrix cases.",
+    "Human-reviewed corpus, full durable subject integration and interruption/host/resource/release acceptance retain their following plan positions."
   ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Die Analyzerpolicy MUSS die Defaults, Severityentscheidungen und getrennten Erfolgsbegriffe aus Anhang T.8 implementieren.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Prepared behavior oracles; acceptance requires the own native Apply gate. Materialized actions and truthful independent success values."
   },
-  "preconditions": [],
+  "preconditions": [
+    "Owned native request with complete original subject bindings and explicit materialized language policy.",
+    "All five supported hash-bound CPython interpreters and original offline wheels on the executing test host; Dev collection is not a behavior pass."
+  ],
   "primary_verification_id": "SR-VER-0047",
   "required_environment": {
     "declared_minimum_python": "3.10",
@@ -28,8 +42,38 @@
     "owned_temporary_files": true
   },
   "specification_sha256": "f9a7f2223399c8df870d232dca3c551c165c81244f25dae6a7fbe1b143f1311a",
-  "steps": [],
+  "steps": [
+    "Assess materialized language actions without altering original observations or coverage; separate execution, language confirmation, findings and exit code."
+  ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0713",
-  "test_ids": []
+  "test_ids": [
+    "tests/test_analyzer_policy.py::test_all_unknown_engine_facts_are_explicit_and_not_a_reproducibility_claim",
+    "tests/test_analyzer_policy.py::test_complete_info_nondecision_has_zero_exit_without_language_confirmation",
+    "tests/test_analyzer_policy.py::test_complete_report_copies_all_original_bindings_without_original_value",
+    "tests/test_analyzer_policy.py::test_defaults_are_complete_owned_and_not_model_confidence",
+    "tests/test_analyzer_policy.py::test_invalid_fail_threshold_never_creates_success",
+    "tests/test_analyzer_policy.py::test_materialized_action_space[error-compatible_coarse]",
+    "tests/test_analyzer_policy.py::test_materialized_action_space[error-mismatch]",
+    "tests/test_analyzer_policy.py::test_materialized_action_space[error-undetermined]",
+    "tests/test_analyzer_policy.py::test_materialized_action_space[error-unverifiable]",
+    "tests/test_analyzer_policy.py::test_materialized_action_space[ignore-compatible_coarse]",
+    "tests/test_analyzer_policy.py::test_materialized_action_space[ignore-mismatch]",
+    "tests/test_analyzer_policy.py::test_materialized_action_space[ignore-undetermined]",
+    "tests/test_analyzer_policy.py::test_materialized_action_space[ignore-unverifiable]",
+    "tests/test_analyzer_policy.py::test_materialized_action_space[info-compatible_coarse]",
+    "tests/test_analyzer_policy.py::test_materialized_action_space[info-mismatch]",
+    "tests/test_analyzer_policy.py::test_materialized_action_space[info-undetermined]",
+    "tests/test_analyzer_policy.py::test_materialized_action_space[info-unverifiable]",
+    "tests/test_analyzer_policy.py::test_materialized_action_space[warning-compatible_coarse]",
+    "tests/test_analyzer_policy.py::test_materialized_action_space[warning-mismatch]",
+    "tests/test_analyzer_policy.py::test_materialized_action_space[warning-undetermined]",
+    "tests/test_analyzer_policy.py::test_materialized_action_space[warning-unverifiable]",
+    "tests/test_analyzer_policy.py::test_only_compatible_subjects_are_all_confirmed_without_region_or_script_claims",
+    "tests/test_analyzer_reference_matrix.py::test_original_backend_and_failures_on_each_supported_runtime[3.10]",
+    "tests/test_analyzer_reference_matrix.py::test_original_backend_and_failures_on_each_supported_runtime[3.11]",
+    "tests/test_analyzer_reference_matrix.py::test_original_backend_and_failures_on_each_supported_runtime[3.12]",
+    "tests/test_analyzer_reference_matrix.py::test_original_backend_and_failures_on_each_supported_runtime[3.13]",
+    "tests/test_analyzer_reference_matrix.py::test_original_backend_and_failures_on_each_supported_runtime[3.14]"
+  ]
 }

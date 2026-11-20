@@ -564,3 +564,5 @@
 - [Bundle 765 — Text- und Scorepolicy](bundle-765-text-and-score-policy.md)
 
 - [Bundle 766 — Scorekorrektur und Sprachvergleich](bundle-766-score-roundoff-and-language-comparison.md)
+
+- [Bundle 767 — Sprachpolicy und Enginebindung](bundle-767-language-policy-and-engine.md)

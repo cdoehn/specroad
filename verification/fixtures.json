@@ -20,6 +20,10 @@
       "kind": "Explicit original language declarations and bound native registry snapshots; exact primary/coarse/mismatch/unverifiable oracles. Synthetic decisions are not detector or corpus evidence.",
       "provider": "tests/test_analyzer_comparison.py; tests/test_analyzer_comparison_right.py"
     },
+    "SR-FIX-ANALYZER-LANGUAGE-POLICY-v1": {
+      "kind": "Independent materialized action, success, coverage and failure-priority oracles on native requests and reports; no reviewed-language-quality claim.",
+      "provider": "tests/test_analyzer_policy.py"
+    },
     "SR-FIX-ANALYZER-MODEL-LIFETIME-v1": {
       "kind": "Owned model sessions, known original cp314 wheels, passive native projects and synchronized owned child processes. Only Apply executes; no external hosts, installation, network or invented other-ABI proof.",
       "provider": "tests/test_analyzer_model_lifetime.py; tests/test_analyzer_model_integration.py; tests/test_analyzer_model_lifetime_right.py"
@@ -1052,6 +1056,7 @@
     "SR-FIX-ANALYZER-EVALUATION-v1",
     "SR-FIX-ANALYZER-EXTERNAL-CLI-v1",
     "SR-FIX-ANALYZER-LANGUAGE-COMPARISON-v1",
+    "SR-FIX-ANALYZER-LANGUAGE-POLICY-v1",
     "SR-FIX-ANALYZER-MODEL-LIFETIME-v1",
     "SR-FIX-ANALYZER-PACKAGE-v1",
     "SR-FIX-ANALYZER-REFERENCE-RANKING-v1",
