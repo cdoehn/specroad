@@ -83,8 +83,15 @@ def start(invocation):
 def deliver(invocation, manifest):
     payload, code = outcome(manifest)
     control, _, _ = checked(manifest)
-    details = ({'execution_complete':False,'all_languages_confirmed':False,'gate_passed':False}
-               if manifest.as_dict()['command_id']=='analyzer.run' else {})
+    details = {}
+    if manifest.as_dict()['command_id'] == 'analyzer.run':
+        from ..analyzers.packages import ReportPackage
+        from ..analyzers.language_policy import execution_outcome
+        details = execution_outcome(ReportPackage(encoded(payload)).reports,
+                                    fail_on=invocation.resolved.values['fail_on'])
+        # The retained native Work completion remains authoritative. An outcome
+        # disagreement is a binding failure, never a regenerated completion.
+        require(code == details.pop('exit_code'), 'analyzer_work_outcome_mismatch', exit_code=6)
     if control['output'] is not None:
         details['publication'] = publish(encoded(payload), control['output'],
             root=None if control['project'] is None else Path(control['project']),

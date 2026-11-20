@@ -50,7 +50,17 @@ def report_outcome(values, *, fail_on='error'):
     def compatible(subject):
         payload = subject['payload'].get('specroad.language_detection')
         comparison = payload.get('comparison') if type(payload) is dict else None
+        decision = payload.get('decision') if type(payload) is dict else None
         return (subject['status'] == 'done' and type(comparison) is dict
+                and type(decision) is dict and decision.get('status') == 'detected'
+                and decision.get('reason') is None
+                and comparison.get('comparison_version') == 'language-comparison-v1'
+                and comparison.get('declared_language') == subject['declared_language']
+                and comparison.get('detected_language') == decision.get('language')
+                and type(decision.get('language')) is str
+                and comparison.get('language_resolution') == 'primary_language'
+                and comparison.get('region_checked') is False
+                and comparison.get('script_checked') is False
                 and comparison.get('status') == 'compatible')
     confirmed = complete and all(v['analyzer']['descriptor'] == known and bool(v['subjects'])
         and all(compatible(s) for s in v['subjects']) for v in values)
@@ -94,6 +104,8 @@ def assess_language(request, decisions, *, registry, fail_on='error', run_id=Non
     from ._text_policy import request_policy
     data, _, policy = request_policy(request)
     validate_policy(policy)
+    require(type(fail_on) is str and fail_on in ('warning', 'error'),
+            'analyzer_fail_threshold', exit_code=2)
     compared = compare_decisions(request, decisions, registry=registry)
     originals = {s['subject_key']: s for s in data['subjects']}
     subjects, findings = [], []

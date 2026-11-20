@@ -22,7 +22,7 @@
     },
     "SR-FIX-ANALYZER-LANGUAGE-POLICY-v1": {
       "kind": "Independent materialized action, success, coverage and failure-priority oracles on native requests and reports; no reviewed-language-quality claim.",
-      "provider": "tests/test_analyzer_policy.py"
+      "provider": "tests/test_analyzer_policy.py; tests/test_analyzer_policy_right.py"
     },
     "SR-FIX-ANALYZER-MODEL-LIFETIME-v1": {
       "kind": "Owned model sessions, known original cp314 wheels, passive native projects and synchronized owned child processes. Only Apply executes; no external hosts, installation, network or invented other-ABI proof.",

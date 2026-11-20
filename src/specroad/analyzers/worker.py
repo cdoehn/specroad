@@ -20,7 +20,10 @@ def analyze_language(request, *, fail_on='error'):
     """
     from .language_policy import assess_language
     from .language_scores import decide_request
+    from ._values import require
     from ..storage.language_registry import bundled_language_registry
+    require(type(fail_on) is str and fail_on in ('warning', 'error'),
+            'analyzer_fail_threshold', exit_code=2)
     return assess_language(request, decide_request(request),
         registry=bundled_language_registry(), fail_on=fail_on)
 
