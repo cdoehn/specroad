@@ -178,6 +178,14 @@ else:
             assert compared.language_resolution == 'primary_language'
             assert compared.data['region_checked'] is compared.data['script_checked'] is False
             assert compared.registry_sha256 == registry.sha256
+    from specroad.analyzers.language_comparison import compare_decisions
+    joined = compare_decisions(language_request, decision_result, registry=registry)
+    assert joined.decision is decision_result and len(joined.subjects) == 4
+    for subject in joined.subjects:
+        assert subject.declared_language == originals[subject.subject_key]['declared_language']
+        assert subject.normative_force == originals[subject.subject_key].get('normative_force')
+        assert subject.value_sha256 == originals[subject.subject_key]['value_sha256']
+    assert language_request.canonical_bytes == language_raw
     assert language_request.canonical_bytes == language_raw and request.canonical_bytes == raw
     # Negative request settings must fail before another model can be decoded.
     storage.load_model = forbidden

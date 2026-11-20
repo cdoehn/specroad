@@ -16,7 +16,7 @@
   "json_pointers": [],
   "method": "automated_behavior",
   "open_items": [
-    "Target 19.q.W needs its own successful Apply gate, including all five original runtime cases.",
+    "Target 19.q.R needs its own successful Apply gate, including all five original runtime cases.",
     "Final worker/report, policy/exit integration, full engine fingerprint, human corpus review and release acceptance remain open."
   ],
   "oracle": {
