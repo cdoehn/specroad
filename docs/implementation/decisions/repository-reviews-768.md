@@ -43,7 +43,7 @@ vor Export ausdrücklich bestätigt sein. Keine Zugangsdaten oder Sessiondaten.
   und persönliche Bestätigungen, Clone-/Beitragsablauf, README und Planänderung.
   Gate: echte JSON-/Dateiverhaltenstests einschließlich eigenständiger CLI ohne
   SpecRoad-Installation; Quellidentität und Remote-Snapshot umfassen reviews/.
-- [ ] **REVIEWS.R** — `REVIEWS.R feat(reviews): Reviewbindungen und Fortsetzungen absichern`.
+- [x] **REVIEWS.R** — `REVIEWS.R feat(reviews): Reviewbindungen und Fortsetzungen absichern`.
   Explizite eigene Ablösung je Prüfpunkt, erhaltene widersprechende Fremdreviews,
   alte/fehlende Bindungen, strikte Formen, Dateilinks/Sonderdateien, begrenzte
   Eingaben und Fehler ohne Überschreiben vorheriger Ergebnisse. Browserimport

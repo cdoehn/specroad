@@ -116,6 +116,29 @@ Module authors should separate real judgments from machine-checkable claims.
 The repository's Apply tests cover JSON contracts, evidence aggregation and
 file effects. They do not review language quality or test UI/Markdown layout.
 
+## Correcting your own earlier decision
+
+Import your own saved JSON in the form, recheck the relevant points, and export
+again with the same email. Keep both JSON files in the repository. The new
+record uses a fresh UUID and later UTC timestamp. Its optional `supersedes`
+array names the earlier record for that same item and exact item digest.
+The overview retains both records and marks superseded decisions. Only current
+unsuperseded decisions count. A new rejection may withdraw an earlier approval.
+
+Only the same email may supersede a decision. Missing targets, self-references,
+different item hashes, duplicate links and nonadvancing timestamps are errors.
+An objection from another reviewer remains open. Explicit supersession handles
+reassessment of unchanged content; changed content needs a fresh binding and
+makes the old decision stale. The form omits stale points on import and reports
+how many were omitted. It never deletes their stored original record. Keep each
+export that a later export refers to; otherwise validation rejects the missing
+predecessor. For manual JSON authors, `supersedes` is optional and defaults to an
+empty list (at most 100 canonical UUIDs).
+
+Total module/result input is limited to 64 MiB. These limits protect the local
+reader; they are not evidence that a review was performed. Work in a trusted
+clone and review contributions before running its Python code.
+
 The module records the provenance and limitations at initial preparation. Current
 review progress comes only from result files; do not edit a module title, source
 note or criteria merely to update progress, since these are bound review inputs.

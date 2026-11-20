@@ -11,6 +11,7 @@ import uuid
 
 MAX_BYTES = 2 * 1024 * 1024
 MAX_FILES = 10000
+MAX_TOTAL_BYTES = 64 * 1024 * 1024
 ID = r'[A-Za-z0-9][A-Za-z0-9._-]{0,79}'
 MODULE_ID = r'[a-z][a-z0-9-]{0,63}'
 HASH = r'[0-9a-f]{64}'
@@ -96,6 +97,7 @@ def validate_module(module):
     for item in module['items']:
         keys(item, 'id section title text criteria required_note metadata')
         token(item['id'])
+        token(item['section'])
         require(item['id'] not in seen and item['section'] in sections, 'Duplicate item or unknown section')
         seen.add(item['id'])
         text(item['title'], 160)
@@ -145,7 +147,8 @@ def validate_review(review):
     require(type(review['decisions']) is list and 1 <= len(review['decisions']) <= 5000, 'Empty or oversized review')
     seen = set()
     for decision in review['decisions']:
-        keys(decision, 'item_id item_sha256 verdict note proposed_text')
+        require(type(decision) is dict, 'Invalid decision')
+        keys(decision, 'item_id item_sha256 verdict note proposed_text' + (' supersedes' if 'supersedes' in decision else ''))
         token(decision['item_id'])
         token(decision['item_sha256'], HASH)
         require(decision['item_id'] not in seen, 'Duplicate decision')
@@ -154,6 +157,13 @@ def validate_review(review):
         text(decision['note'], empty=decision['verdict'] == 'accept')
         text(decision['proposed_text'], empty=True)
         require(decision['verdict'] == 'correct' or not decision['proposed_text'], 'Unexpected replacement text')
+        supersedes = decision.get('supersedes', [])
+        strings(supersedes, allow_empty=True)
+        for previous in supersedes:
+            try:
+                require(str(uuid.UUID(previous)) == previous and previous != review['id'], 'Invalid supersession ID')
+            except (ValueError, TypeError, AttributeError) as exc:
+                raise ReviewError('Invalid supersession ID') from exc
     require(len(canonical(review)) <= MAX_BYTES, 'Oversized review')
     return review
 
@@ -161,10 +171,25 @@ def validate_review(review):
 def assess(module, reviews):
     """Pure review aggregation. Accepted means reported review coverage, never release."""
     validate_module(module)
+    require(type(reviews) is list and len(reviews) <= MAX_FILES, 'Invalid review inventory')
+    for record in reviews:
+        validate_review(record)
     items = {item['id']: item for item in module['items']}
     rows = {key: [] for key in items}
     stale = []
     seen = set()
+    records = {record['id']: record for record in reviews}
+    superseded = set()
+    for record in reviews:
+        for decision in record['decisions']:
+            for old_id in decision.get('supersedes', []):
+                require(old_id in records, 'Superseded record is missing')
+                old = records[old_id]
+                require(old['reviewer']['email'].casefold() == record['reviewer']['email'].casefold(), 'Cannot supersede another reviewer')
+                require(old['created_at'] < record['created_at'], 'Supersession must advance time')
+                targets = [d for d in old['decisions'] if d['item_id'] == decision['item_id']]
+                require(len(targets) == 1 and targets[0]['item_sha256'] == decision['item_sha256'], 'Supersession has a different item binding')
+                superseded.add((old_id, decision['item_id']))
     for review in sorted(reviews, key=lambda r: r.get('id', '')):
         validate_review(review)
         require(review['id'] not in seen, 'Duplicate review ID')
@@ -177,12 +202,14 @@ def assess(module, reviews):
                 continue
             require(items[key]['section'] in review['attestations'], 'Missing section attestation')
             require(not items[key]['required_note'] or decision['note'].strip(), 'Missing required evidence note')
-            rows[key].append(dict(review_id=review['id'], reviewer=review['reviewer'], **decision))
+            rows[key].append(dict(review_id=review['id'], reviewer=review['reviewer'],
+                superseded=(review['id'], key) in superseded, **decision))
     results = []
     for key, item in items.items():
         decisions = rows[key]
-        approvals = {d['reviewer']['email'].casefold() for d in decisions if d['verdict'] == 'accept'}
-        conflict = any(d['verdict'] != 'accept' for d in decisions)
+        active = [d for d in decisions if not d['superseded']]
+        approvals = {d['reviewer']['email'].casefold() for d in active if d['verdict'] == 'accept'}
+        conflict = any(d['verdict'] != 'accept' for d in active)
         status = 'changes_requested' if conflict else ('accepted' if len(approvals) >= module['minimum_reviewers'] else 'pending')
         results.append(dict(id=key, section=item['section'], status=status, approvals=len(approvals), reviews=decisions))
     accepted = sum(row['status'] == 'accepted' for row in results)
@@ -202,10 +229,18 @@ def read_file(path):
     safe_directory(path.parent)
     before = path.lstat()
     require(stat.S_ISREG(before.st_mode) and before.st_nlink == 1 and before.st_size <= MAX_BYTES, 'Linked, special or oversized input')
-    with path.open('rb') as stream:
+    fd = os.open(path, os.O_RDONLY | getattr(os, 'O_NOFOLLOW', 0) | getattr(os, 'O_NONBLOCK', 0))
+    with os.fdopen(fd, 'rb') as stream:
         actual = os.fstat(stream.fileno())
-        require((before.st_dev, before.st_ino) == (actual.st_dev, actual.st_ino), 'Input changed while opening')
+        require(stat.S_ISREG(actual.st_mode) and actual.st_nlink == 1, 'Linked or special opened input')
+        require((before.st_dev, before.st_ino, before.st_size, before.st_mtime_ns) ==
+                (actual.st_dev, actual.st_ino, actual.st_size, actual.st_mtime_ns), 'Input changed while opening')
         raw = stream.read(MAX_BYTES + 1)
+        end = os.fstat(stream.fileno())
+        require((end.st_size, end.st_mtime_ns, end.st_ctime_ns, end.st_nlink) ==
+                (actual.st_size, actual.st_mtime_ns, actual.st_ctime_ns, actual.st_nlink), 'Input changed while reading')
+    safe_directory(path.parent)
+    require(path.lstat() == end, 'Input changed after reading')
     return decode(raw)
 
 
@@ -214,22 +249,34 @@ def load_repository(root):
     module_dir = safe_directory(root / 'modules')
     result_dir = safe_directory(root / 'results')
     modules, reviews = {}, {}
-    for path in sorted(module_dir.iterdir()):
+    total_bytes = 0
+    module_paths = list(module_dir.iterdir())
+    require(len(module_paths) <= 100, 'Too many modules')
+    for path in sorted(module_paths):
         require(path.suffix == '.json', 'Unexpected module entry')
         module = validate_module(read_file(path))
         require(path.name == module['id'] + '.json' and module['id'] not in modules, 'Module path mismatch')
         modules[module['id']], reviews[module['id']] = module, []
+        total_bytes += path.stat().st_size
+        require(total_bytes <= MAX_TOTAL_BYTES, 'Review repository too large')
     require(1 <= len(modules) <= 100, 'Invalid module count')
     count = 0
-    for folder in sorted(result_dir.iterdir()):
+    folders = list(result_dir.iterdir())
+    require(len(folders) <= 101, 'Too many result directories')
+    for folder in sorted(folders):
         if folder.name == '.gitkeep':
-            require(stat.S_ISREG(folder.lstat().st_mode) and folder.read_bytes() == b'', 'Invalid placeholder')
+            info = folder.lstat()
+            require(stat.S_ISREG(info.st_mode) and info.st_nlink == 1 and info.st_size == 0, 'Invalid placeholder')
             continue
         require(folder.name in modules, 'Unknown result module')
         safe_directory(folder)
-        for path in sorted(folder.iterdir()):
+        paths = list(folder.iterdir())
+        require(count + len(paths) <= MAX_FILES, 'Too many review files')
+        for path in sorted(paths):
             count += 1
             require(count <= MAX_FILES and path.suffix == '.json', 'Unexpected or excessive results')
+            total_bytes += path.lstat().st_size
+            require(total_bytes <= MAX_TOTAL_BYTES, 'Review repository too large')
             review = validate_review(read_file(path))
             require(review['module_id'] == folder.name and path.name == review['id'] + '.json', 'Review path mismatch')
             reviews[folder.name].append(review)
@@ -239,7 +286,7 @@ def load_repository(root):
 
 def markdown_text(value):
     # Numeric entities keep untrusted names, titles and emails inert in Markdown.
-    return ''.join(f'&#{ord(c)};' if c in '&<>|`*_[]()!\\#\n\r\t' else c for c in value)
+    return ''.join(f'&#{ord(c)};' if c in '&<>|`*_[]()!\\#\n\r\t' or 0x202A <= ord(c) <= 0x202E or 0x2066 <= ord(c) <= 0x2069 else c for c in value)
 
 
 def render_summary(modules, reports):
@@ -266,7 +313,7 @@ def render_summary(modules, reports):
                 person = decision['reviewer']
                 label = markdown_text(person['name'] + ' <' + person['email'] + '>')
                 link = f"results/{module['id']}/{decision['review_id']}.json"
-                people.append(f"[{label}]({link}): {decision['verdict']}")
+                people.append(f"[{label}]({link}): {decision['verdict']}" + (' (ersetzt)' if decision.get('superseded') else ''))
             lines.append(f"| {row['id']} | {row['status']} | {'; '.join(people)} |")
         if not any(r['reviews'] for r in report['items']):
             lines.append('| — | Noch keine Bewertungen | — |')
