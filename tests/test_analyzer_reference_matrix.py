@@ -163,6 +163,21 @@ else:
         assert chosen.decision.language == (top[0][0] if detected else None)
         assert chosen.decision.data['score_semantics'] == 'normalized_uncalibrated_model_scores'
     assert any(s.decision.status == 'detected' for s in decision_result.subjects)
+    from specroad.analyzers.language_comparison import compare_language
+    from specroad.storage.language_registry import bundled_language_registry
+    registry = bundled_language_registry()
+    for chosen in decision_result.subjects:
+        declared = originals[chosen.subject_key]['declared_language']
+        compared = compare_language(declared, chosen.decision, registry=registry)
+        if chosen.decision.status != 'detected':
+            assert compared is None
+        else:
+            assert compared.status == ('compatible' if chosen.decision.language == 'de' else 'mismatch')
+            assert compared.declared_language == declared
+            assert compared.detected_language == chosen.decision.language
+            assert compared.language_resolution == 'primary_language'
+            assert compared.data['region_checked'] is compared.data['script_checked'] is False
+            assert compared.registry_sha256 == registry.sha256
     assert language_request.canonical_bytes == language_raw and request.canonical_bytes == raw
     # Negative request settings must fail before another model can be decoded.
     storage.load_model = forbidden
