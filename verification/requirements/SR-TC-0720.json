@@ -7,7 +7,8 @@
   "json_pointers": [],
   "method": "pending",
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "REPOSITORY-REVIEWS-768: human language reviews and provenance/usage approval are pending in reviews/modules/language-corpus.json. Review-tool tests do not constitute adapter evidence.",
+    "19.t.W/R/C is explicitly deferred until after 19.x and before 19.y/release. Complete the reviewed corpus freeze and actual T.10 acceptance; no assumed pass."
   ],
   "oracle": {
     "kind": "pending",
@@ -27,7 +28,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "f9a7f2223399c8df870d232dca3c551c165c81244f25dae6a7fbe1b143f1311a",
+  "specification_sha256": "67d160df8232faf8208fc418314f824298de3064269e0518bb6db0c93fe18b57",
   "steps": [],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0720",

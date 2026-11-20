@@ -566,3 +566,5 @@
 - [Bundle 766 — Scorekorrektur und Sprachvergleich](bundle-766-score-roundoff-and-language-comparison.md)
 
 - [Bundle 767 — Sprachpolicy und Enginebindung](bundle-767-language-policy-and-engine.md)
+
+- [Bundle 768 — modulares Reviewverzeichnis](bundle-768-repository-reviews.md)

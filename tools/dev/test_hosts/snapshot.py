@@ -5,7 +5,7 @@ import os
 from pathlib import Path
 import stat
 
-ROOTS = ('src', 'tests', 'tools', 'verification', 'docs', '.github')
+ROOTS = ('src', 'tests', 'tools', 'verification', 'docs', '.github', 'reviews')
 FILES = ('pyproject.toml', 'conftest.py', 'DEVELOPMENT.md', 'README.md', 'LICENSE', '.python-versions', '.gitignore')
 EXCLUDE = {'.git', '.venv', '__pycache__', '.pytest_cache', '.mypy_cache', '.patchharbor',
            'CURRENT_WORK.txt', '.env', '.ssh'}

@@ -1,19 +1,19 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.99
+## Version 0.2.100
 
 | Feld | Wert |
 |---|---|
 | Dokument-ID | `SR-SPEC-0001` |
-| Dokumentversion | `0.2.99` |
+| Dokumentversion | `0.2.100` |
 | Zielrelease | `SpecRoad Single-Repository Workbench 0.2.0` |
 | Status | **Fachlich konsolidierte Arbeitsgrundlage; technische Reviewentscheidung gesondert dokumentiert, formale Baseline-Freigabe und Produktabnahme nicht durch dieses Dokument erklärt** |
-| Stand | 19. November 2026 |
+| Stand | 20. November 2026 |
 | Sprache | Deutsch; technische Feldnamen, Enum-Werte und CLI-Kommandos Englisch |
-| Fachliche Quelle | **Diese Repositoryfassung v0.2.99 ist die aktive fachliche Arbeitsgrundlage; eine entsprechende PDF wird hiermit nicht veröffentlicht.** |
+| Fachliche Quelle | **Diese Repositoryfassung v0.2.100 ist die aktive fachliche Arbeitsgrundlage; eine entsprechende PDF wird hiermit nicht veröffentlicht.** |
 | Bearbeitbare Satzquelle | Diese Datei; eine spätere PDF muss denselben versionierten Inhalt wiedergeben. |
-| Vorgängerversion | Repository-Spezifikation v0.2.98; historische Nachweise bleiben unverändert. |
-| Prüf- und Entscheidungsgrundlage | ANALYZER-CLI-749 nach SPECROAD-DECISION-1: explizite CLI-Dateibindungen und passive externe Descriptoren; keine Produktfreigabe. |
-| Änderungsart | Additive Präzisierung der CLI-Eingabedatei, sicheren Ausgabe, Auswertungscodes und Positionsliste; aktuelle menschliche Review- und Sicherheitsgrenzen bleiben erhalten. |
+| Vorgängerversion | Repository-Spezifikation v0.2.99; historische Nachweise bleiben unverändert. |
+| Prüf- und Entscheidungsgrundlage | REPOSITORY-REVIEWS-768: ausdrücklicher Nutzerauftrag für modulare Reviews und vorläufige Entwicklungsreihenfolge; keine menschliche Abnahme. |
+| Änderungsart | Gemeinsames Offline-Reviewverfahren und ausdrücklich zurückgestellte Korpusabnahme; echte Test- und Releasegates bleiben erforderlich. |
 
 > **Verbindlicher Quellenwechsel:** Die ausdrückliche Nutzerentscheidung REFERENCE-SOURCE-551 wird als v0.2.50 umgesetzt. Der neue Quellvertrag ist Entwurfsarbeit vom 3. November 2026, kein Nachweis eines früher existierenden Formats. Bestehende 0.2-Verträge, Transport-, Sicherheits- und Reviewgrenzen bleiben erhalten.
 
@@ -1655,6 +1655,54 @@ starten keine Tests. Bedienung und geordnete Abnahmen sind in
 [Testoptimierungen und Profiling](../development/Test_Optimization_Profiling.md)
 festgelegt. Dieser Auftrag startet keine Automatik oder CI und ändert keine
 Produktposition.
+
+#### 2.5.7 Modulare Repository-Reviews — REPOSITORY-REVIEWS-768
+
+Ausdrücklicher Nutzerauftrag vom 20. November 2026: `reviews/` MUSS eine kleine,
+offline nutzbare gemeinsame HTML-Oberfläche und passive austauschbare JSON-Module
+für menschliche Abnahmen enthalten. Der Sprachkorpus ist das erste Modul, kein
+Spezialfall im gemeinsamen Auswerter. Ein weiteres Modul MUSS ohne Änderung an
+Oberfläche/Auswerter durch Daten hinzukommen können. Die gemeinsam versionierte
+Formatbeschreibung in `reviews/GUIDE.md` konkretisiert Format 1. Das Werkzeug
+MUSS mit der Python-Standardbibliothek ab 3.10 aus einem Clone benutzbar sein.
+
+Ein Modul bindet stabile Modul-/Teil-/Prüfpunkt-IDs, Zweck, Herkunft, Kriterien,
+persönliche Fachbestätigung je Teil, Originaldaten und eine positive erforderliche
+Revieweranzahl. Ein Ergebnis MUSS Modulhash, exakten Prüfpunkt-/Kriterienhash,
+Reviewername, E-Mail, UTC-Zeit, UUID, persönliche Prüfung und ausdrückliche
+Zustimmung zur öffentlichen Speicherung tragen. Identitäten/Befugnisse bleiben
+selbst erklärte, im Beitragsreview zu prüfende Angaben. Der Browser lädt/ exportiert
+Dateien ausschließlich auf Nutzeraktion und sendet keine Daten. Ungeprüfte Punkte
+bleiben offen; keine automatische Massenfreigabe. Korrekturen sind Vorschläge,
+keine stillen Änderungen am Original. Herkunft/Nutzung braucht eigenen Nachweis.
+
+Pro Beitrag bleibt eine kleine JSON-Datei erhalten. Mehrere Beiträge und Reviewer
+sind zulässig. Gleiche E-Mail (ohne Groß-/Kleinschreibung) zählt für das Quorum nur
+einmal. Eine nicht ausdrücklich abgelöste Ablehnung/Korrektur hält den Punkt offen.
+Ein neuer Beitrag darf nur eigene frühere Entscheidungen mit gleicher E-Mail,
+gleichem Prüfpunkt und exakt gleicher Bindung ausdrücklich ablösen, mit späterem
+Zeitpunkt und vorhandenem Vorgänger; keine Zyklen, fremden Löschungen oder erfundene
+Historie. Veränderte Original-/Kriterienbindungen machen alte Entscheidungen
+veraltet. Unveränderte andere Punkte bleiben gültig; der Gesamtmodulhash bleibt
+Provenienz. Alte, ersetzte und widersprüchliche Beiträge bleiben sichtbar.
+
+Das stdlib-Werkzeug MUSS Module und Ergebnisse vor Ausgabe vollständig validieren,
+doppelte JSON-Schlüssel, unzulässige Felder/Typen, unsichere Pfade/Links/Sonderdateien
+und übergroße Eingaben ablehnen. Fehler dürfen keine alte Übersicht ersetzen.
+`reviews/README.md` wird deterministisch aus JSON erzeugt und atomar ersetzt; sie
+nennt offene/bestätigte Teile und einzelne Bewertungen samt Namen/E-Mail, auch
+mehrfach. Die Projekt-README MUSS auf offene menschliche Abnahmen verweisen.
+Die Daten werden durch normale Git-Beiträge übernommen; kein automatischer Push.
+
+Der Nutzer erlaubt die vorläufige Weiterimplementierung trotz offener persönlicher
+Korpusprüfung: nach der OFF-PLAN-Reviewgruppe werden 19.u–19.x vor 19.t ausgeführt.
+19.t.W/R/C bleibt offen; vor 19.y und jeder Releaseabnahme muss der vollständige
+19.t-/T.10-Nachweis nachgeholt sein. Vorläufige Arbeitsannahmen dürfen niemals als
+bestandene Sprach-, Adapter-, Sicherheits- oder Releaseabnahme erscheinen.
+Reviewabdeckung allein ist keine technische Abnahme und kein Korpusfreeze.
+Die W/R/C-Gates und echten Tests bleiben verpflichtend; GUI-/Markdown-Darstellung
+wird gemäß TD-001 nicht zum Produkttest. Quell-/Remote-Testbindungen erfassen die
+neuen ausführbaren Reviewwerkzeuge und ihre Daten.
 
 ## 3. Produktziele
 
@@ -11890,6 +11938,10 @@ Wiederaufnahme verwendet identischen Request und Enginefingerprint. Fehlt der ex
 Die globale deterministische Fachverarbeitung des Core bleibt unverändert. Live-Analyzerergebnisse haben zusätzliche explizite semantische Inputs: Modell-, Library-, Unicode-, numerischer Backend- und Vorverarbeitungsfingerprint. Bytegleichheit wird für dieselbe gebundene Engine, dieselben Eingaben und denselben Ergebnisprojektionsvertrag geprüft, nicht pauschal für beliebige NumPy-/CPU-Kombinationen. Unterschiede zwischen unterstützten Interpreterpaketen dürfen nicht versteckt werden. Das Release verlangt gesonderte Übereinstimmung von Labels und Entscheidungszuständen auf dem festen Akzeptanzkorpus; Scores werden dabei nicht ohne Nachweis als plattformübergreifend bitidentisch ausgegeben. Rendering bereits gespeicherter identischer Reports ist wieder vollständig deterministisch.
 
 ## T.10 Verbindliche Abnahme des ersten Adapters
+
+Die ausdrückliche vorläufige Entwicklungsreihenfolge und das modulare öffentliche
+Reviewverfahren stehen in 2.5.7. Sie stellen 19.t zeitweilig zurück, ändern aber
+keines der folgenden echten Abnahmeziele und erklären keinen Erfolg.
 
 Abnahme besteht aus getrennten Nachweisen: Protokoll-/Sicherheitstests ohne Detektor, echte Bibliotheksintegration, festes mehrsprachiges Korpus, Fehlkennzeichnungen, Unsicherheit, Core-ohne-Abhängigkeiten und Wiederaufnahme. Mocks allein erfüllen die Adapterabnahme nicht. Das Korpus wird vor dem Release versioniert, durch sprachkundige Reviewer geprüft und nach Datenherkunft/Lizenz dokumentiert. Je Hauptsprachlabel `de,en,hi,id,pt,es,ru,ja,zh` enthält es mindestens 20 eigenständig formulierte Requirement-Sachverhalte mit 80 bis 500 Codepoints; mindestens fünf zusätzliche kurze/technische Fälle je Label werden separat bewertet. Die englischen Regionalfälle und beiden chinesischen Deklarationsarten erhalten eigene Metadatentests.
 

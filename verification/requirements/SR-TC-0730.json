@@ -40,7 +40,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "f9a7f2223399c8df870d232dca3c551c165c81244f25dae6a7fbe1b143f1311a",
+  "specification_sha256": "67d160df8232faf8208fc418314f824298de3064269e0518bb6db0c93fe18b57",
   "steps": [
     "Evaluate actual numeric expressions and inspect values/structured errors.",
     "Execute versioned positive, negative, boundary and diagnostic vectors against real SRX APIs; compare typed values and exact error pointers, never presentation strings.",

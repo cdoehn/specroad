@@ -53,7 +53,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "f9a7f2223399c8df870d232dca3c551c165c81244f25dae6a7fbe1b143f1311a",
+  "specification_sha256": "67d160df8232faf8208fc418314f824298de3064269e0518bb6db0c93fe18b57",
   "steps": [
     "Implement the complete new contract in 18.v and bind real behavioral tests and evidence before declaring acceptance.",
     "Execute native migration and merge against complete qualified source, target and external backup bytes; preserve every passive original/archive and verify full model/evidence gates and explicit fresh host authority.",

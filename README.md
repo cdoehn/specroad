@@ -10,6 +10,22 @@ Die [Projektregeln für Entwicklung und Nachweise](DEVELOPMENT.md) beschreiben
 den Arbeitsablauf und die Pflege des aufgeteilten Plans. Der Planeinstieg führt
 zu den einzelnen Meilensteinen, gemeinsamen Regeln und erhaltenen Nachweisen.
 
+## Offene menschliche Reviews
+
+Die [Reviewübersicht](reviews/README.md) zeigt offene und bestätigte Prüfpunkte
+samt Reviewern. Das [modulare Offline-Formular](reviews/index.html) und die
+[Beitragsanleitung](reviews/GUIDE.md) liegen im Repository. Jede Abnahme ist ein
+eigenes Datenmodul; zuerst steht der Sprachkorpus mit 225 Kandidatentexten und
+offener Herkunfts-/Nutzungsfreigabe zur Prüfung. Bewertungen werden als kleine
+JSON-Dateien mit dem ausdrücklich veröffentlichten Namen und der E-Mail des
+Reviewers beigetragen. Mehrere unabhängige Bewertungen sind möglich.
+
+Die menschliche Korpusabnahme **bleibt offen**. Auf ausdrücklichen Nutzerauftrag
+geht die Implementierung vorläufig weiter; Review-, reale Adapter- und
+Releaseabnahmen werden dadurch nicht als bestanden ausgewiesen. Die Details
+und die Rückkehr zur offenen 19.t-Folge stehen im
+[Plan](docs/implementation/decisions/repository-reviews-768.md).
+
 ## Lokale Entwicklungsumgebung
 
 Voraussetzungen auf dem Laptop: Git, ein vorhandenes Python ab 3.10 und
