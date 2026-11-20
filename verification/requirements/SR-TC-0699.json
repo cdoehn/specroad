@@ -16,7 +16,7 @@
   "json_pointers": [],
   "method": "automated_behavior",
   "open_items": [
-    "Target 19.n.R requires its own successful Apply gate and commit, including all five real runtime cases.",
+    "Target 19.n.C requires its own successful Apply gate and commit, including all five real runtime cases.",
     "Generic final worker report integration, decision policy, release corpus review and 19.y release acceptance remain open."
   ],
   "oracle": {
