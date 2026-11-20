@@ -17,7 +17,7 @@
   "json_pointers": [],
   "method": "automated_behavior",
   "open_items": [
-    "Target 19.u.R requires its own successful Apply gate and commit.",
+    "Target 19.u.C requires its own successful Apply gate and commit.",
     "19.t human-reviewed corpus, 19.v reference-platform resources, 19.w durable Work integration and subsequent release acceptance remain open."
   ],
   "oracle": {
