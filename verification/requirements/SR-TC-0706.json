@@ -18,13 +18,13 @@
   "json_pointers": [],
   "method": "automated_behavior",
   "open_items": [
-    "Target 19.o.W requires its own successful Apply gate and commit, including all five real runtime cases.",
+    "Target 19.o.R requires its own successful Apply gate and commit, including all five real runtime cases.",
     "Final worker reports, language comparison, policy/exit integration, full engine fingerprint, human corpus review and release acceptance remain open."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Der erste Sprachadapter MUSS jeden ausgewählten vollständigen String nach dem Vorverarbeitungs- und Abstentionsvertrag aus Anhang T.7 verarbeiten.",
-    "scope": "Full original text and exact ASCII-edge minimum with materialized request and value bindings. Real original backend cases remain mandatory. No Dev behavior pass or final language/report/release claim."
+    "scope": "Full original text and exact ASCII-edge minimum with materialized request and value bindings. Explicit independent subject and unavailable/failed boundaries; Unicode and original hashes preserved. Real original backend cases remain mandatory. No Dev behavior pass or final language/report/release claim."
   },
   "preconditions": [
     "Owned immutable native request with materialized language policy and original subject/value hashes.",
@@ -46,7 +46,8 @@
   "specification_sha256": "f9a7f2223399c8df870d232dca3c551c165c81244f25dae6a7fbe1b143f1311a",
   "steps": [
     "Preserve complete independent original strings, declared tags and hashes; use ASCII edge stripping only to count codepoints.",
-    "Check minimum bounds and insufficient_text before optional loading, plus complete real-backend rankings on all five supported runtimes."
+    "Check minimum bounds and insufficient_text before optional loading, plus complete real-backend rankings on all five supported runtimes.",
+    "Preserve library/Unicode bindings and independent subjects across unavailable/invalid backends; never swallow process/resource failures."
   ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0706",
@@ -127,6 +128,19 @@
     "tests/test_analyzer_text.py::test_non_ascii_spaces_and_unicode_count_as_codepoints[\\u754c]",
     "tests/test_analyzer_text.py::test_non_ascii_spaces_and_unicode_count_as_codepoints[\\x1c]",
     "tests/test_analyzer_text.py::test_non_ascii_spaces_and_unicode_count_as_codepoints[\\x85]",
-    "tests/test_analyzer_text.py::test_non_ascii_spaces_and_unicode_count_as_codepoints[\\xa0]"
+    "tests/test_analyzer_text.py::test_non_ascii_spaces_and_unicode_count_as_codepoints[\\xa0]",
+    "tests/test_analyzer_text_right.py::test_ascii_inside_the_string_is_neither_removed_nor_segmented",
+    "tests/test_analyzer_text_right.py::test_backend_working_copy_never_replaces_original_unicode_hash_or_declared_language",
+    "tests/test_analyzer_text_right.py::test_invalid_subject_rank_does_not_hide_other_independent_subjects",
+    "tests/test_analyzer_text_right.py::test_process_and_resource_failures_are_not_disguised_as_abstention[KeyboardInterrupt]",
+    "tests/test_analyzer_text_right.py::test_process_and_resource_failures_are_not_disguised_as_abstention[MemoryError]",
+    "tests/test_analyzer_text_right.py::test_process_and_resource_failures_are_not_disguised_as_abstention[SystemExit]",
+    "tests/test_analyzer_text_right.py::test_unavailable_model_is_attempted_once_and_short_text_keeps_precedence[analyzer_library_version]",
+    "tests/test_analyzer_text_right.py::test_unavailable_model_is_attempted_once_and_short_text_keeps_precedence[analyzer_model_hash]",
+    "tests/test_analyzer_text_right.py::test_unavailable_model_is_attempted_once_and_short_text_keeps_precedence[analyzer_model_unavailable]",
+    "tests/test_analyzer_text_right.py::test_unbound_library_version_cannot_publish_a_ranked_subject",
+    "tests/test_analyzer_text_right.py::test_wrong_model_contract_is_unavailable_without_false_language_claim[change0]",
+    "tests/test_analyzer_text_right.py::test_wrong_model_contract_is_unavailable_without_false_language_claim[change1]",
+    "tests/test_analyzer_text_right.py::test_wrong_model_contract_is_unavailable_without_false_language_claim[change2]"
   ]
 }

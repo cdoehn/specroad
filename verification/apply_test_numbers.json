@@ -29179,6 +29179,19 @@
     "tests/test_analyzer_text.py::test_non_ascii_spaces_and_unicode_count_as_codepoints[\\u754c]",
     "tests/test_analyzer_text.py::test_non_ascii_spaces_and_unicode_count_as_codepoints[\\x1c]",
     "tests/test_analyzer_text.py::test_non_ascii_spaces_and_unicode_count_as_codepoints[\\x85]",
-    "tests/test_analyzer_text.py::test_non_ascii_spaces_and_unicode_count_as_codepoints[\\xa0]"
+    "tests/test_analyzer_text.py::test_non_ascii_spaces_and_unicode_count_as_codepoints[\\xa0]",
+    "tests/test_analyzer_text_right.py::test_ascii_inside_the_string_is_neither_removed_nor_segmented",
+    "tests/test_analyzer_text_right.py::test_backend_working_copy_never_replaces_original_unicode_hash_or_declared_language",
+    "tests/test_analyzer_text_right.py::test_invalid_subject_rank_does_not_hide_other_independent_subjects",
+    "tests/test_analyzer_text_right.py::test_process_and_resource_failures_are_not_disguised_as_abstention[KeyboardInterrupt]",
+    "tests/test_analyzer_text_right.py::test_process_and_resource_failures_are_not_disguised_as_abstention[MemoryError]",
+    "tests/test_analyzer_text_right.py::test_process_and_resource_failures_are_not_disguised_as_abstention[SystemExit]",
+    "tests/test_analyzer_text_right.py::test_unavailable_model_is_attempted_once_and_short_text_keeps_precedence[analyzer_library_version]",
+    "tests/test_analyzer_text_right.py::test_unavailable_model_is_attempted_once_and_short_text_keeps_precedence[analyzer_model_hash]",
+    "tests/test_analyzer_text_right.py::test_unavailable_model_is_attempted_once_and_short_text_keeps_precedence[analyzer_model_unavailable]",
+    "tests/test_analyzer_text_right.py::test_unbound_library_version_cannot_publish_a_ranked_subject",
+    "tests/test_analyzer_text_right.py::test_wrong_model_contract_is_unavailable_without_false_language_claim[change0]",
+    "tests/test_analyzer_text_right.py::test_wrong_model_contract_is_unavailable_without_false_language_claim[change1]",
+    "tests/test_analyzer_text_right.py::test_wrong_model_contract_is_unavailable_without_false_language_claim[change2]"
   ]
 }

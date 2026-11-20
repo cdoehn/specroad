@@ -46,7 +46,7 @@
     },
     "SR-FIX-ANALYZER-TEXT-POLICY-v1": {
       "kind": "Complete original synthetic strings, boundary codepoints and controlled backend failures; independent original hashes. The existing real-runtime fixture remains separately mandatory.",
-      "provider": "tests/test_analyzer_text.py"
+      "provider": "tests/test_analyzer_text.py; tests/test_analyzer_text_right.py"
     },
     "SR-FIX-ANALYZER-WORK-v1": {
       "kind": "Actual small native projects, private Work roots and complete JSON payloads. Explicit in-process build metadata is synthetic compatibility data; a separate real built zipapp resumes across independent processes. Deterministic native consumption samples and concrete I/O/engine faults, no fake analyzer success.",

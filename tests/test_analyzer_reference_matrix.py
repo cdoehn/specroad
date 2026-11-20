@@ -71,6 +71,16 @@ if mode != 'positive':
     else:
         raise AssertionError('unavailable backend returned successful rankings')
     assert request.canonical_bytes == raw
+    from specroad.analyzers.file_adapter import default_inputs
+    from specroad.analyzers.requests import create_request
+    from specroad.analyzers.language_text import prepare_request
+    unavailable_inputs = {k: request.data[k] for k in ('analyzers', 'subjects', 'context', 'settings', 'extensions')}
+    unavailable_inputs['settings'] = default_inputs({})['settings']
+    unavailable_request = create_request(**unavailable_inputs, analysis_id=request.data['request_id'])
+    unavailable = prepare_request(unavailable_request)
+    assert len(unavailable.subjects) == 4 and unavailable.engine is None
+    assert all(s.status == 'unavailable' and not s.scores for s in unavailable.subjects)
+    assert unavailable.snapshot_sha256 == unavailable_request.data['snapshot_sha256']
     print(json.dumps({'mode': mode, 'version': platform.python_version(), 'exit_code': 5}))
 else:
     import py3langid.langid as library

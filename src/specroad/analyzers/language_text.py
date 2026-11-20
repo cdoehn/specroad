@@ -7,7 +7,7 @@ from dataclasses import dataclass
 
 from ._model_session import ModelSession
 from ._reference_backend import ReferenceEngine, _engine, _scores
-from ._values import require
+from ._values import AnalyzerError, require
 from .registry import builtin_descriptor
 from .requests import AnalyzerRequest
 
@@ -75,17 +75,31 @@ def prepare_request(request):
     require(all(type(subject['value']) is str for subject in subjects),
             'analyzer_text_subject_required', exit_code=2)
     minimum = policy['min_text_codepoints']
-    prepared, engine = [], None
+    prepared, engine, unavailable = [], None, None
     with ModelSession() as session:
         for subject in subjects:
             if text_length(subject['value']) < minimum:
                 status, reason, scores = 'undetermined', 'insufficient_text', ()
             else:
-                model = session.model()
-                if engine is None:
-                    engine = _engine(entry['descriptor'])
-                scores = _scores(model, subject['value'])
-                status, reason = 'ranked', None
+                if engine is None and unavailable is None:
+                    try:
+                        session.model()
+                        engine = _engine(entry['descriptor'])
+                    except AnalyzerError as error:
+                        unavailable = error.reason
+                if unavailable is not None:
+                    status, reason, scores = 'unavailable', unavailable, ()
+                else:
+                    try:
+                        scores = _scores(session.model(), subject['value'])
+                        status, reason = 'ranked', None
+                    except AnalyzerError as error:
+                        scores = ()
+                        if error.reason == 'invalid_backend_output':
+                            status, reason = 'failed', 'invalid_backend_output'
+                        else:
+                            unavailable = error.reason
+                            status, reason = 'unavailable', unavailable
             prepared.append(PreparedSubject(subject['subject_key'], subject['value_sha256'],
                                             status, reason, scores))
     return PreparedLanguage(data['request_id'], data['snapshot_sha256'],
