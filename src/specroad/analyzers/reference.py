@@ -48,21 +48,31 @@ class ReferenceRanking:
 
 def _engine(descriptor):
     # Only reached after the explicitly requested, hash-checked model load.
-    import numpy
-    import py3langid
+    try:
+        import numpy
+        import py3langid
+        versions = (('numpy', numpy.__version__), ('py3langid', py3langid.__version__))
+    except (ImportError, AttributeError) as error:
+        raise AnalyzerError('analyzer_model_unavailable', exit_code=5) from error
+    require(all(type(version) is str and version for _, version in versions),
+            'analyzer_library_version', exit_code=5)
     require(py3langid.__version__ == '0.4.0', 'analyzer_library_version', exit_code=5)
     return ReferenceEngine(descriptor['adapter_version'],
-        (('numpy', numpy.__version__), ('py3langid', py3langid.__version__)),
+        versions,
         MODEL_SHA256, CANDIDATES, CANDIDATES_SHA256, sys.implementation.name,
         platform.python_version(), unicodedata.unidata_version)
 
 
 def _scores(model, text):
-    require(tuple(model.labels) == CANDIDATES and model._norm_probs is True
-            and model.min_confidence is None, 'analyzer_reference_model_state', exit_code=5)
+    try:
+        valid = (tuple(model.labels) == CANDIDATES and model._norm_probs is True
+                 and model.min_confidence is None)
+    except (AttributeError, TypeError) as error:
+        raise AnalyzerError('analyzer_reference_model_state', exit_code=5) from error
+    require(valid, 'analyzer_reference_model_state', exit_code=5)
     try:
         rows = model.rank(text)
-    except (ValueError, ArithmeticError) as error:
+    except (AttributeError, TypeError, ValueError, ArithmeticError) as error:
         raise AnalyzerError('invalid_backend_output', exit_code=5) from error
     require(type(rows) is list and len(rows) == len(CANDIDATES),
             'invalid_backend_output', exit_code=5)

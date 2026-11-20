@@ -28,6 +28,10 @@
       "kind": "Owned requests, complete synthetic texts, original hashed model and isolated original cp314 wheels. Real ranking only in Apply; no network or invented other-runtime evidence.",
       "provider": "tests/test_analyzer_reference.py; tests/test_analyzer_reference_integration.py"
     },
+    "SR-FIX-ANALYZER-REFERENCE-RUNTIME-MATRIX-v1": {
+      "kind": "Five explicit hash-bound standard CPython 3.10–3.14 runtimes and original NumPy/py3langid wheels. Each actual Apply test builds and loads its own current-source offline package; no skips, downloads or foreign-ABI success.",
+      "provider": "tests/test_analyzer_reference_matrix.py; tests/test_analyzer_reference_errors.py; tests/test_language_runtime_matrix.py; tests/test_prepare_language_tests.py"
+    },
     "SR-FIX-ANALYZER-REPORT-v1": {
       "kind": "Complete synthetic external observations over actual request values. Unknown engine facts have explicit reasons; known fingerprints are explicitly synthetic, never a claimed installed engine. Independent coverage/projection and transport oracles.",
       "provider": "tests/test_analyzer_reports.py:request_value,unknown_engine,report_options,finding,report_hash"
@@ -1038,6 +1042,7 @@
     "SR-FIX-ANALYZER-MODEL-LIFETIME-v1",
     "SR-FIX-ANALYZER-PACKAGE-v1",
     "SR-FIX-ANALYZER-REFERENCE-RANKING-v1",
+    "SR-FIX-ANALYZER-REFERENCE-RUNTIME-MATRIX-v1",
     "SR-FIX-ANALYZER-REPORT-v1",
     "SR-FIX-ANALYZER-REQUEST-v1",
     "SR-FIX-ANALYZER-SUBJECT-v1",

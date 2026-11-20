@@ -167,6 +167,21 @@ jobs:
           python -m pip install uv==0.12.7
           uv venv --python python --no-python-downloads .venv
           uv pip install --python .venv/bin/python --link-mode copy --group dev
+      - name: Prepare explicit offline language runtime dependencies
+        shell: bash
+        run: |
+          SR_LANGUAGE_ROOT="${SR_OUT}-language-runtimes"
+          mkdir -m 700 "$SR_LANGUAGE_ROOT"
+          mkdir -m 700 "$SR_LANGUAGE_ROOT/wheels"
+          uv --no-config python install --no-bin --install-dir "$SR_LANGUAGE_ROOT/python" 3.10 3.11 3.12 3.13 3.14
+          python -m pip download --only-binary=:all: --no-deps --dest "$SR_LANGUAGE_ROOT/wheels" py3langid==0.4.0
+          python -m pip download --only-binary=:all: --no-deps --dest "$SR_LANGUAGE_ROOT/wheels" --implementation cp --python-version 3.10 --abi cp310 --platform manylinux_2_17_x86_64 numpy==2.2.6
+          for SR_LANGUAGE_MINOR in 3.11 3.12 3.13 3.14; do
+            SR_LANGUAGE_ABI="cp${SR_LANGUAGE_MINOR/./}"
+            python -m pip download --only-binary=:all: --no-deps --dest "$SR_LANGUAGE_ROOT/wheels" --implementation cp --python-version "$SR_LANGUAGE_MINOR" --abi "$SR_LANGUAGE_ABI" --platform manylinux_2_27_x86_64 numpy==2.3.5
+          done
+          .venv/bin/python -I -B tools/prepare_language_tests.py --python-directory "$SR_LANGUAGE_ROOT/python" --wheelhouse "$SR_LANGUAGE_ROOT/wheels" --output "$SR_LANGUAGE_ROOT/runtimes.json"
+          printf '%s\n' "SPECROAD_LANGUAGE_TEST_RUNTIMES=$SR_LANGUAGE_ROOT/runtimes.json" >> "$GITHUB_ENV"
       - uses: actions/download-artifact@v8
         with:
           name: ci-plan-${{ github.run_id }}-${{ github.run_attempt }}-${{ matrix.python }}

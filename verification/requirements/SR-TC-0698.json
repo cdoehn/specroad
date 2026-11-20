@@ -7,24 +7,25 @@
     5
   ],
   "fixture_ids": [
-    "SR-FIX-ANALYZER-REFERENCE-RANKING-v1"
+    "SR-FIX-ANALYZER-REFERENCE-RANKING-v1",
+    "SR-FIX-ANALYZER-REFERENCE-RUNTIME-MATRIX-v1"
   ],
   "implementation_status": "partial",
   "json_pointers": [],
   "method": "automated_behavior",
   "open_items": [
-    "Target 19.n.W requires its own successful Apply gate and commit.",
-    "19.n.R requires real integration on all supported add-on runtimes; no CPython 3.10–3.13 evidence is asserted.",
-    "Generic worker report integration, decision policy, release corpus review and 19.y release acceptance remain open."
+    "Target 19.n.R requires its own successful Apply gate and commit, including all five real runtime cases.",
+    "Generic final worker report integration, decision policy, release corpus review and 19.y release acceptance remain open."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Das erste Zielrelease MUSS den realen, getesteten Adapter specroad.py3langid mit der Capability language_detection ausliefern.",
-    "scope": "Complete real normalized rankings and original model/candidate/request bindings; no final serialized detection or release approval."
+    "scope": "Complete real normalized rankings and failure boundaries on every explicitly bound supported runtime; no final serialized detection or release approval."
   },
   "preconditions": [
-    "Exact immutable request, original py3langid 0.4.0 model and the complete ordered candidate catalog.",
-    "The stage requires its own Apply gate. Static preparation and collection are not behavior evidence."
+    "Exact immutable request, original py3langid 0.4.0 model and complete ordered candidate catalog.",
+    "All five explicit hash-bound CPython 3.10–3.14 Linux x86_64 interpreters and original offline wheels must be preinstalled on each executing test host.",
+    "The stage requires its own Apply gate. Static preparation, collection and ABI rejection are not positive runtime evidence."
   ],
   "primary_verification_id": "SR-VER-0047",
   "required_environment": {
@@ -40,8 +41,9 @@
   },
   "specification_sha256": "f9a7f2223399c8df870d232dca3c551c165c81244f25dae6a7fbe1b143f1311a",
   "steps": [
-    "Rank full independent strings with one owned original model and verify request, subject, model and candidate bindings.",
-    "Compare all real rankings against the original library in the compatible cp314 offline package; reject a foreign ABI without claiming its integration."
+    "Preserve complete independent strings, model ownership and all request, subject, model, candidate and version bindings.",
+    "Actually rank representative full texts on each of five selected runtimes; compare every score against the original library.",
+    "Reject missing NumPy/py3langid, changed model hash, candidate filters, malformed rankings and incomplete backend bindings without successful replacement detection."
   ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0698",
@@ -66,7 +68,74 @@
     "tests/test_analyzer_reference.py::test_reference_settings_cannot_select_filter_or_foreign_model[settings1]",
     "tests/test_analyzer_reference.py::test_reference_settings_cannot_select_filter_or_foreign_model[settings2]",
     "tests/test_analyzer_reference.py::test_reference_settings_cannot_select_filter_or_foreign_model[settings3]",
+    "tests/test_analyzer_reference_errors.py::test_dependency_loss_after_model_load_cannot_produce_a_success[numpy]",
+    "tests/test_analyzer_reference_errors.py::test_dependency_loss_after_model_load_cannot_produce_a_success[py3langid]",
+    "tests/test_analyzer_reference_errors.py::test_later_subject_failure_does_not_return_partial_results[AttributeError]",
+    "tests/test_analyzer_reference_errors.py::test_later_subject_failure_does_not_return_partial_results[OverflowError]",
+    "tests/test_analyzer_reference_errors.py::test_later_subject_failure_does_not_return_partial_results[TypeError]",
+    "tests/test_analyzer_reference_errors.py::test_later_subject_failure_does_not_return_partial_results[ValueError]",
+    "tests/test_analyzer_reference_errors.py::test_later_subject_failure_does_not_return_partial_results[ZeroDivisionError]",
+    "tests/test_analyzer_reference_errors.py::test_malformed_backend_shapes_have_no_success_projection[0]",
+    "tests/test_analyzer_reference_errors.py::test_malformed_backend_shapes_have_no_success_projection[None]",
+    "tests/test_analyzer_reference_errors.py::test_malformed_backend_shapes_have_no_success_projection[rows1]",
+    "tests/test_analyzer_reference_errors.py::test_malformed_backend_shapes_have_no_success_projection[rows2]",
+    "tests/test_analyzer_reference_errors.py::test_malformed_backend_shapes_have_no_success_projection[rows4]",
+    "tests/test_analyzer_reference_errors.py::test_malformed_backend_shapes_have_no_success_projection[rows5]",
+    "tests/test_analyzer_reference_errors.py::test_malformed_backend_shapes_have_no_success_projection[rows6]",
+    "tests/test_analyzer_reference_errors.py::test_malformed_backend_shapes_have_no_success_projection[rows7]",
+    "tests/test_analyzer_reference_errors.py::test_missing_model_contract_is_an_explicit_failure[_norm_probs]",
+    "tests/test_analyzer_reference_errors.py::test_missing_model_contract_is_an_explicit_failure[labels]",
+    "tests/test_analyzer_reference_errors.py::test_missing_model_contract_is_an_explicit_failure[min_confidence]",
+    "tests/test_analyzer_reference_errors.py::test_missing_or_invalid_library_version_never_claims_a_binding[-numpy]",
+    "tests/test_analyzer_reference_errors.py::test_missing_or_invalid_library_version_never_claims_a_binding[-py3langid]",
+    "tests/test_analyzer_reference_errors.py::test_missing_or_invalid_library_version_never_claims_a_binding[4-numpy]",
+    "tests/test_analyzer_reference_errors.py::test_missing_or_invalid_library_version_never_claims_a_binding[4-py3langid]",
+    "tests/test_analyzer_reference_errors.py::test_missing_or_invalid_library_version_never_claims_a_binding[False-numpy]",
+    "tests/test_analyzer_reference_errors.py::test_missing_or_invalid_library_version_never_claims_a_binding[False-py3langid]",
+    "tests/test_analyzer_reference_errors.py::test_missing_or_invalid_library_version_never_claims_a_binding[None-numpy]",
+    "tests/test_analyzer_reference_errors.py::test_missing_or_invalid_library_version_never_claims_a_binding[None-py3langid]",
+    "tests/test_analyzer_reference_errors.py::test_missing_or_invalid_library_version_never_claims_a_binding[missing_attribute-numpy]",
+    "tests/test_analyzer_reference_errors.py::test_missing_or_invalid_library_version_never_claims_a_binding[missing_attribute-py3langid]",
+    "tests/test_analyzer_reference_errors.py::test_noniterable_model_candidates_fail_before_rank",
+    "tests/test_analyzer_reference_errors.py::test_process_control_and_resource_failures_are_not_disguised[KeyboardInterrupt]",
+    "tests/test_analyzer_reference_errors.py::test_process_control_and_resource_failures_are_not_disguised[MemoryError]",
+    "tests/test_analyzer_reference_errors.py::test_process_control_and_resource_failures_are_not_disguised[SystemExit]",
     "tests/test_analyzer_reference_integration.py::test_candidates_match_every_original_model_column_with_ordered_alias_deduplication",
-    "tests/test_analyzer_reference_integration.py::test_real_library_ranks_complete_texts_with_original_request_and_model_bindings"
+    "tests/test_analyzer_reference_integration.py::test_real_library_ranks_complete_texts_with_original_request_and_model_bindings",
+    "tests/test_analyzer_reference_matrix.py::test_original_backend_and_failures_on_each_supported_runtime[3.10]",
+    "tests/test_analyzer_reference_matrix.py::test_original_backend_and_failures_on_each_supported_runtime[3.11]",
+    "tests/test_analyzer_reference_matrix.py::test_original_backend_and_failures_on_each_supported_runtime[3.12]",
+    "tests/test_analyzer_reference_matrix.py::test_original_backend_and_failures_on_each_supported_runtime[3.13]",
+    "tests/test_analyzer_reference_matrix.py::test_original_backend_and_failures_on_each_supported_runtime[3.14]",
+    "tests/test_language_runtime_matrix.py::test_complete_prerequisites_load_without_execution_or_claiming_verification",
+    "tests/test_language_runtime_matrix.py::test_duplicate_json_fields_cannot_rebind_an_interpreter",
+    "tests/test_language_runtime_matrix.py::test_missing_manifest_never_skips_or_discovers_another_interpreter",
+    "tests/test_language_runtime_matrix.py::test_unbound_or_incomplete_matrix_is_rejected[duplicate_path]",
+    "tests/test_language_runtime_matrix.py::test_unbound_or_incomplete_matrix_is_rejected[extra_binding]",
+    "tests/test_language_runtime_matrix.py::test_unbound_or_incomplete_matrix_is_rejected[extra_field]",
+    "tests/test_language_runtime_matrix.py::test_unbound_or_incomplete_matrix_is_rejected[extra_minor]",
+    "tests/test_language_runtime_matrix.py::test_unbound_or_incomplete_matrix_is_rejected[foreign_kind]",
+    "tests/test_language_runtime_matrix.py::test_unbound_or_incomplete_matrix_is_rejected[format_bool]",
+    "tests/test_language_runtime_matrix.py::test_unbound_or_incomplete_matrix_is_rejected[linked_executable]",
+    "tests/test_language_runtime_matrix.py::test_unbound_or_incomplete_matrix_is_rejected[linked_manifest]",
+    "tests/test_language_runtime_matrix.py::test_unbound_or_incomplete_matrix_is_rejected[linked_parent]",
+    "tests/test_language_runtime_matrix.py::test_unbound_or_incomplete_matrix_is_rejected[linked_wheels]",
+    "tests/test_language_runtime_matrix.py::test_unbound_or_incomplete_matrix_is_rejected[missing_executable]",
+    "tests/test_language_runtime_matrix.py::test_unbound_or_incomplete_matrix_is_rejected[missing_minor]",
+    "tests/test_language_runtime_matrix.py::test_unbound_or_incomplete_matrix_is_rejected[missing_wheels]",
+    "tests/test_language_runtime_matrix.py::test_unbound_or_incomplete_matrix_is_rejected[not_executable]",
+    "tests/test_language_runtime_matrix.py::test_unbound_or_incomplete_matrix_is_rejected[parent_component]",
+    "tests/test_language_runtime_matrix.py::test_unbound_or_incomplete_matrix_is_rejected[relative_executable]",
+    "tests/test_language_runtime_matrix.py::test_unbound_or_incomplete_matrix_is_rejected[relative_wheels]",
+    "tests/test_language_runtime_matrix.py::test_unbound_or_incomplete_matrix_is_rejected[wrong_hash]",
+    "tests/test_language_runtime_matrix.py::test_unbound_or_incomplete_matrix_is_rejected[wrong_version]",
+    "tests/test_prepare_language_tests.py::test_ambiguous_minor_is_not_silently_chosen",
+    "tests/test_prepare_language_tests.py::test_existing_local_selection_is_preserved_without_processes",
+    "tests/test_prepare_language_tests.py::test_explicit_preparation_checks_all_five_selected_runtimes_and_wheel_sets",
+    "tests/test_prepare_language_tests.py::test_failed_preparation_publishes_no_runtime_manifest[changed_binary]",
+    "tests/test_prepare_language_tests.py::test_failed_preparation_publishes_no_runtime_manifest[free_threaded]",
+    "tests/test_prepare_language_tests.py::test_failed_preparation_publishes_no_runtime_manifest[platform]",
+    "tests/test_prepare_language_tests.py::test_failed_preparation_publishes_no_runtime_manifest[version]",
+    "tests/test_prepare_language_tests.py::test_failed_preparation_publishes_no_runtime_manifest[wheel]"
   ]
 }
