@@ -8,6 +8,10 @@
       "kind": "Explicit synthetic passive external descriptor plus the actual shipped builtin metadata. Independent canonical-hash oracle, owned nested data, malformed bytes, dependency and extension inputs. No installed worker, execution authority or package availability is fabricated.",
       "provider": "tests/test_analyzer_descriptors.py:external"
     },
+    "SR-FIX-ANALYZER-ENGINE-IDENTITY-v1": {
+      "kind": "Explicit synthetic inventory values and independent hashes, reproducible observation and request/engine continuation boundaries; actual engine evidence remains separately mandatory.",
+      "provider": "tests/test_analyzer_engine.py"
+    },
     "SR-FIX-ANALYZER-EVALUATION-v1": {
       "kind": "Small actual native projects and explicitly supplied current resources, passive conflicting observations, byte inventories and native freshness/security faults; one full verified partial integration.",
       "provider": "tests/test_analyzer_evaluation.py:current_inputs,observations,prepared"
@@ -1053,6 +1057,7 @@
   "fixture_ids": [
     "SR-FIX-ANALYZER-CLI-v1",
     "SR-FIX-ANALYZER-DESCRIPTOR-v1",
+    "SR-FIX-ANALYZER-ENGINE-IDENTITY-v1",
     "SR-FIX-ANALYZER-EVALUATION-v1",
     "SR-FIX-ANALYZER-EXTERNAL-CLI-v1",
     "SR-FIX-ANALYZER-LANGUAGE-COMPARISON-v1",

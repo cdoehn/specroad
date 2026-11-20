@@ -211,6 +211,20 @@ else:
     wire_ready = analyze_language(language_request)
     assert wire_ready.report.result_sha256 == assessed.report.result_sha256
     assert wire_ready.data == assessed.data
+    from specroad.analyzers.engine_identity import engine_identity
+    fingerprint = engine_identity(engine)
+    assert fingerprint.reproducible
+    assert fingerprint.inventory['runtime']['python_version'] == expected['version']
+    assert fingerprint.inventory['runtime']['executable_sha256'] == expected['sha256']
+    assert fingerprint.inventory['numpy']['version'] == expected['numpy']
+    for component in ('runtime', 'numpy'):
+        inventory_bytes = json.dumps(fingerprint.inventory[component], sort_keys=True, separators=(',', ':')).encode()
+        assert fingerprint.data[component + '_fingerprint']['value'] == hashlib.sha256(inventory_bytes).hexdigest()
+    assert report['engine'] == fingerprint.data
+    assert report['extensions']['specroad.engine_inventory'] == fingerprint.inventory
+    duplicate = assess_language(language_request, decision_result, registry=registry).report
+    assert duplicate.result_sha256 == assessed.report.result_sha256
+    assert duplicate.data['run_id'] != report['run_id']
     # Negative request settings must fail before another model can be decoded.
     storage.load_model = forbidden
     for name in ('languages', 'candidates', 'model'):

@@ -172,3 +172,12 @@ Adapter ausdrücklich auf, mit einer seriell gehaltenen Modellinstanz. Er
 schreibt keine Projektdateien. Der bisherige generische Dispatcher und die
 dauerhaften Work-Subjectübergänge erhalten ihre gesonderte Integration und
 Abnahme in 19.w; ihre Verfügbarkeitsauskunft wird hier nicht vorweggenommen.
+
+`engine_identity(engine)` liefert die geschlossene Engineprojektion und
+separat ihre tatsächlich beobachteten Runtime-/NumPy-Inventare. Unbekannte
+Fakten bleiben null mit Grund; `.reproducible` verlangt alle gebundenen Fakten.
+Inventare enthalten Hashes und numerische Eigenschaften, keine lokalen Pfade,
+Zugangsdaten oder Projektkonfigurationen. Der Bericht bindet die Inventare unter
+`extensions.specroad.engine_inventory` an seinen deterministischen Resulthash.
+Gleiche Engine und Eingaben ergeben gleiche Beobachtungsprojektion; Run-ID und
+Betriebsdaten bleiben davon getrennt. Dies ist keine Korpus-/Releaseabnahme.

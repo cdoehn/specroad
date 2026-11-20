@@ -2,8 +2,8 @@
 from dataclasses import dataclass
 
 from ._values import require
-from ._report_values import ENGINE_FACTS, exact_coverage
-from ._text_policy import TEXT_POLICY_VERSION
+from ._report_values import exact_coverage
+from .engine_identity import engine_identity
 from .language_comparison import compare_decisions
 from .reports import create_report, subject_result
 
@@ -17,19 +17,7 @@ from ._policy_values import (ACTION_FIELDS as ACTION_FIELDS,
 
 
 def report_engine(engine):
-    """Only measured facts; missing numeric inventory stays explicitly unknown."""
-    value = dict(adapter_version='1.0.0',
-        **{name: {'value': None, 'reason': 'engine_not_loaded'} for name in ENGINE_FACTS})
-    if engine is not None:
-        facts = dict(library_versions=dict(engine.library_versions), model_sha256=engine.model_sha256,
-            candidates=list(engine.candidates), candidates_sha256=engine.candidates_sha256,
-            preprocessing_version=TEXT_POLICY_VERSION, unicode_version=engine.unicode_version)
-        value['adapter_version'] = engine.adapter_version
-        for key, item in facts.items():
-            value[key] = dict(value=item, reason=None)
-        for key in ('runtime_fingerprint', 'numpy_fingerprint'):
-            value[key] = dict(value=None, reason='numeric_inventory_unavailable')
-    return value
+    return engine_identity(engine).data
 
 
 @dataclass(frozen=True)
@@ -75,6 +63,7 @@ def assess_language(request, decisions, *, registry, fail_on='error', run_id=Non
         'unavailable' if coverage['open'] and coverage['open'] == coverage['expected'] else
         'partial' if coverage['open'] else 'complete')
     report = create_report(request, analyzer_id='specroad.py3langid', engine=report_engine(decisions.engine),
-        subjects=subjects, findings=findings, run_status=run_status, run_id=run_id)
+        subjects=subjects, findings=findings, run_status=run_status, run_id=run_id,
+        extensions={'specroad.engine_inventory': engine_identity(decisions.engine).inventory})
     execution_outcome((report,), fail_on=fail_on)
     return LanguageAssessment(report, fail_on)

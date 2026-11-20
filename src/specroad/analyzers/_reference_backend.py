@@ -24,6 +24,8 @@ class ReferenceEngine:
     python_implementation: str
     python_version: str
     unicode_version: str
+    runtime_inventory: bytes | None = None
+    numpy_inventory: bytes | None = None
 
 
 def _engine(descriptor):
@@ -37,10 +39,12 @@ def _engine(descriptor):
     require(all(type(version) is str and version for _, version in versions),
             'analyzer_library_version', exit_code=5)
     require(py3langid.__version__ == '0.4.0', 'analyzer_library_version', exit_code=5)
+    from .engine_identity import numeric_inventory
+    runtime, numeric = numeric_inventory(numpy)
     return ReferenceEngine(descriptor['adapter_version'],
         versions,
         MODEL_SHA256, CANDIDATES, CANDIDATES_SHA256, sys.implementation.name,
-        platform.python_version(), unicodedata.unidata_version)
+        platform.python_version(), unicodedata.unidata_version, runtime, numeric)
 
 
 def _scores(model, text):

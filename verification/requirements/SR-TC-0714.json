@@ -10,6 +10,7 @@
     6
   ],
   "fixture_ids": [
+    "SR-FIX-ANALYZER-ENGINE-IDENTITY-v1",
     "SR-FIX-ANALYZER-LANGUAGE-POLICY-v1",
     "SR-FIX-ANALYZER-REFERENCE-RUNTIME-MATRIX-v1"
   ],
@@ -17,13 +18,13 @@
   "json_pointers": [],
   "method": "automated_behavior",
   "open_items": [
-    "Target 19.r.C requires its own successful Apply gate and commit, including all five original-runtime matrix cases.",
+    "Target 19.s.W requires its own successful Apply gate and commit, including all five original-runtime matrix cases.",
     "Human-reviewed corpus, full durable subject integration and interruption/host/resource/release acceptance retain their following plan positions."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Ein explizit angeforderter technisch nicht verfügbarer Analyzer MUSS einen vollständigen Verfügbarkeitsbericht und Exit Code 5 statt eines übersprungenen Erfolgs liefern.",
-    "scope": "Prepared behavior oracles; acceptance requires the own native Apply gate. Materialized actions and truthful independent success values."
+    "scope": "Prepared behavior oracles; acceptance requires the own native Apply gate. Materialized actions and truthful independent success values. Actual engine identities and bound deterministic report projection."
   },
   "preconditions": [
     "Owned native request with complete original subject bindings and explicit materialized language policy.",
@@ -43,11 +44,18 @@
   },
   "specification_sha256": "f9a7f2223399c8df870d232dca3c551c165c81244f25dae6a7fbe1b143f1311a",
   "steps": [
-    "Assess materialized language actions without altering original observations or coverage; separate execution, language confirmation, findings and exit code."
+    "Assess materialized language actions without altering original observations or coverage; separate execution, language confirmation, findings and exit code.",
+    "Bind measured numeric inventory and every model/runtime fact; compare deterministic reports only for equal input and engine bindings."
   ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0714",
   "test_ids": [
+    "tests/test_analyzer_engine.py::test_every_engine_fact_is_bound_to_owned_inventory",
+    "tests/test_analyzer_engine.py::test_inventory_and_engine_properties_are_detached_and_immutable",
+    "tests/test_analyzer_engine.py::test_no_loaded_engine_is_not_a_known_engine",
+    "tests/test_analyzer_engine.py::test_same_inputs_and_engine_have_same_observation_despite_distinct_runs",
+    "tests/test_analyzer_engine.py::test_unknown_numeric_facts_do_not_claim_reproducibility[numpy_inventory]",
+    "tests/test_analyzer_engine.py::test_unknown_numeric_facts_do_not_claim_reproducibility[runtime_inventory]",
     "tests/test_analyzer_policy.py::test_all_unknown_engine_facts_are_explicit_and_not_a_reproducibility_claim",
     "tests/test_analyzer_policy.py::test_complete_info_nondecision_has_zero_exit_without_language_confirmation",
     "tests/test_analyzer_policy.py::test_complete_report_copies_all_original_bindings_without_original_value",
