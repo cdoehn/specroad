@@ -5,7 +5,7 @@ from .registry import builtin_descriptor
 from .requests import analyzer_binding
 from ._request_values import RESOURCE_ID
 from ._text_policy import validate_minimum
-from .language_scores import parse_threshold
+from ._score_values import parse_threshold
 
 
 def default_inputs(configuration):
