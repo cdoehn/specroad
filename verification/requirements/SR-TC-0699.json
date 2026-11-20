@@ -8,24 +8,25 @@
   ],
   "fixture_ids": [
     "SR-FIX-ANALYZER-MODEL-LIFETIME-v1",
+    "SR-FIX-ANALYZER-REFERENCE-RANKING-v1",
     "SR-FIX-LANGUAGE-PACKAGING-WORKER-v1"
   ],
   "implementation_status": "partial",
   "json_pointers": [],
   "method": "automated_behavior",
   "open_items": [
-    "Target 19.m.C requires its own successful Apply gate and commit.",
-    "Real ranking/decision integration and remaining M19/19.y release gates stay open; model initialization is not language detection.",
-    "No CPython 3.10–3.13 add-on compatibility or hard-host-loss recovery evidence is asserted."
+    "Target 19.n.W requires its own successful Apply gate and commit.",
+    "19.n.R requires real integration on all supported add-on runtimes; no CPython 3.10–3.13 evidence is asserted.",
+    "Generic worker report integration, decision policy, release corpus review and 19.y release acceptance remain open."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Der ausgelieferte Adapter MUSS py3langid 0.4.0 und das ausdrücklich gebundene mitgelieferte Modell als Referenzbackend nach Anhang T.6 verwenden.",
-    "scope": "Lazy single model lifetime, original hashed model bytes, passive commands, full independent analyzer coverage, real process cleanup and non-exposed upstream modes."
+    "scope": "Complete real normalized rankings and original model/candidate/request bindings; no final serialized detection or release approval."
   },
   "preconditions": [
-    "Exact bound request and shipped offline model; no project-supplied code or model path.",
-    "The stage requires its own Apply gate. Pure collection and static preparation are not behavior evidence."
+    "Exact immutable request, original py3langid 0.4.0 model and the complete ordered candidate catalog.",
+    "The stage requires its own Apply gate. Static preparation and collection are not behavior evidence."
   ],
   "primary_verification_id": "SR-VER-0047",
   "required_environment": {
@@ -41,8 +42,8 @@
   },
   "specification_sha256": "f9a7f2223399c8df870d232dca3c551c165c81244f25dae6a7fbe1b143f1311a",
   "steps": [
-    "Check lazy one-model ownership, full analyzer coverage and passive Core commands.",
-    "Exercise real child exit/abort/reaping and offline/hash/regular-file boundaries."
+    "Rank full independent strings with one owned original model and verify request, subject, model and candidate bindings.",
+    "Compare all real rankings against the original library in the compatible cp314 offline package; reject a foreign ABI without claiming its integration."
   ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0699",
@@ -80,6 +81,28 @@
     "tests/test_analyzer_model_lifetime_right.py::test_untrusted_or_unavailable_model_is_not_decoded[symlink]",
     "tests/test_analyzer_model_lifetime_right.py::test_untrusted_or_unavailable_model_is_not_decoded[version]",
     "tests/test_analyzer_model_lifetime_right.py::test_worker_does_not_inherit_numeric_background_threads",
+    "tests/test_analyzer_reference.py::test_changed_input_changes_snapshot_and_original_value_binding",
+    "tests/test_analyzer_reference.py::test_external_descriptor_never_enters_reference_backend",
+    "tests/test_analyzer_reference.py::test_full_independent_strings_and_request_bindings_survive_ranking",
+    "tests/test_analyzer_reference.py::test_invalid_rankings_never_become_successful_backend_results[above_one]",
+    "tests/test_analyzer_reference.py::test_invalid_rankings_never_become_successful_backend_results[boolean]",
+    "tests/test_analyzer_reference.py::test_invalid_rankings_never_become_successful_backend_results[duplicate]",
+    "tests/test_analyzer_reference.py::test_invalid_rankings_never_become_successful_backend_results[foreign]",
+    "tests/test_analyzer_reference.py::test_invalid_rankings_never_become_successful_backend_results[infinite]",
+    "tests/test_analyzer_reference.py::test_invalid_rankings_never_become_successful_backend_results[missing]",
+    "tests/test_analyzer_reference.py::test_invalid_rankings_never_become_successful_backend_results[nan]",
+    "tests/test_analyzer_reference.py::test_invalid_rankings_never_become_successful_backend_results[negative]",
+    "tests/test_analyzer_reference.py::test_invalid_rankings_never_become_successful_backend_results[string]",
+    "tests/test_analyzer_reference.py::test_mutated_model_cannot_masquerade_as_full_reference[change0]",
+    "tests/test_analyzer_reference.py::test_mutated_model_cannot_masquerade_as_full_reference[change1]",
+    "tests/test_analyzer_reference.py::test_mutated_model_cannot_masquerade_as_full_reference[change2]",
+    "tests/test_analyzer_reference.py::test_reference_import_is_passive_in_a_fresh_core_process",
+    "tests/test_analyzer_reference.py::test_reference_settings_cannot_select_filter_or_foreign_model[settings0]",
+    "tests/test_analyzer_reference.py::test_reference_settings_cannot_select_filter_or_foreign_model[settings1]",
+    "tests/test_analyzer_reference.py::test_reference_settings_cannot_select_filter_or_foreign_model[settings2]",
+    "tests/test_analyzer_reference.py::test_reference_settings_cannot_select_filter_or_foreign_model[settings3]",
+    "tests/test_analyzer_reference_integration.py::test_candidates_match_every_original_model_column_with_ordered_alias_deduplication",
+    "tests/test_analyzer_reference_integration.py::test_real_library_ranks_complete_texts_with_original_request_and_model_bindings",
     "tests/test_language_packaging.py::test_existing_destination_preserves_original_bytes",
     "tests/test_language_packaging.py::test_extra_is_optional_and_pins_the_reference_backend",
     "tests/test_language_packaging.py::test_missing_exact_wheel_is_explicit_and_does_not_use_another_abi[3.10]",

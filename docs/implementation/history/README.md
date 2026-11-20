@@ -556,3 +556,5 @@
 - [Bundle 761 — Modell-Lebensdauer und Offlinegrenze](bundle-761-analyzer-model-lifetime.md)
 
 - [Bundle 762 — vollständige Projektdaten für passive Validierung](bundle-762-passive-validation-project.md).
+
+- [Bundle 763 — reale Referenzranglisten](bundle-763-reference-ranking.md)
