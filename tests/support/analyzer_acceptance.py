@@ -150,16 +150,34 @@ def audit(event, args):
         forbidden()
 sys.addaudithook(audit)
 socket.socket = subprocess.Popen = os.system = forbidden
-import py3langid.langid as library
-import py3langid.modelio as storage
-library.main = storage.save_model = library.LanguageIdentifier.set_languages = forbidden
+if MODE.startswith('missing_'):
+    missing = MODE[len('missing_'):]
+    class MissingDependency:
+        def find_spec(self, fullname, path=None, target=None):
+            if fullname.split('.')[0] == missing:
+                raise ModuleNotFoundError(fullname)
+    sys.meta_path.insert(0, MissingDependency())
+if MODE == 'model:hash':
+    from specroad.analyzers import _reference_model
+    read_model = _reference_model._model_bytes
+    def changed_model(path):
+        return read_model(path) + b'changed model bytes'
+    _reference_model._model_bytes = changed_model
 from specroad.analyzers import _model_session
 from specroad.analyzers._reference_candidates import CANDIDATES
 from specroad.analyzers.reports import create_report
 from specroad.analyzers.worker import analyze_language
 load = _model_session.load_reference_model
-loads, seen = [], []
+loads, seen, attempts = [], [], []
 def observed_load():
+    attempts.append(1)
+    try:
+        import py3langid.langid as library
+        import py3langid.modelio as storage
+    except ImportError:
+        # Let the real model loader produce its specified availability error.
+        return load()
+    library.main = storage.save_model = library.LanguageIdentifier.set_languages = forbidden
     model = load_with_scratch(storage)
     loads.append(1)
     rank = model.rank
@@ -175,6 +193,10 @@ def observed_load():
             rows[0] = (rows[0][0], {'nan': float('nan'), 'infinite': float('inf'),
                 'negative': -0.1, 'above_one': 1.1, 'boolean': True}[fault])
             return rows
+        if MODE.startswith('boundary:'):
+            label = MODE.split(':', 1)[1]
+            return [(code, (0.5 if code in ('en', 'fr') else 0.0) if label == 'tie'
+                     else (1.0 if code == label else 0.0)) for code in reversed(CANDIDATES)]
         return rank(text)
     class ObservedModel:
         # The original upstream object is slotted. Observe through read-only
@@ -197,12 +219,13 @@ try:
 finally:
     scratch.close()
 assert not loads or len(scratch_claims) == 1
-assert request.canonical_bytes == original and library.IDENTIFIER is None and not violations
+assert request.canonical_bytes == original and not violations
+assert getattr(sys.modules.get('py3langid.langid'), 'IDENTIFIER', None) is None
 report = assessment.report.data
 checked = create_report(request, analyzer_id='specroad.py3langid',
     engine=report['engine'], subjects=report['subjects'], findings=report['findings'],
     run_status=report['run_status'], run_id=report['run_id'], extensions=report['extensions'],
-    operational={'test_probe': {'model_loads': len(loads), 'ranked_value_hashes': seen}})
+    operational={'test_probe': {'model_loads': len(loads), 'model_load_attempts': len(attempts), 'ranked_value_hashes': seen}})
 sys.stdout.buffer.write(create_package(request, [checked]).canonical_bytes)
 '''
 

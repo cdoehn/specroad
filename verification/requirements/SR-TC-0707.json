@@ -8,6 +8,7 @@
   ],
   "fixture_ids": [
     "SR-FIX-ANALYZER-ATTACK-ACCEPTANCE-v1",
+    "SR-FIX-ANALYZER-EDGE-ACCEPTANCE-v1",
     "SR-FIX-ANALYZER-REFERENCE-RANKING-v1",
     "SR-FIX-ANALYZER-REFERENCE-RUNTIME-MATRIX-v1"
   ],
@@ -15,7 +16,7 @@
   "json_pointers": [],
   "method": "automated_behavior",
   "open_items": [
-    "Target 19.u.W requires its own successful Apply gate and commit.",
+    "Target 19.u.R requires its own successful Apply gate and commit.",
     "19.t human-reviewed corpus, 19.v reference-platform resources, 19.w durable Work integration and subsequent release acceptance remain open."
   ],
   "oracle": {

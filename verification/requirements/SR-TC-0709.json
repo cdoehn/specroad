@@ -9,6 +9,7 @@
   ],
   "fixture_ids": [
     "SR-FIX-ANALYZER-ATTACK-ACCEPTANCE-v1",
+    "SR-FIX-ANALYZER-EDGE-ACCEPTANCE-v1",
     "SR-FIX-ANALYZER-REFERENCE-RUNTIME-MATRIX-v1",
     "SR-FIX-ANALYZER-SCORE-POLICY-v1",
     "SR-FIX-ANALYZER-TEXT-POLICY-v1"
@@ -17,7 +18,7 @@
   "json_pointers": [],
   "method": "automated_behavior",
   "open_items": [
-    "Target 19.u.W requires its own successful Apply gate and commit.",
+    "Target 19.u.R requires its own successful Apply gate and commit.",
     "19.t human-reviewed corpus, 19.v reference-platform resources, 19.w durable Work integration and subsequent release acceptance remain open."
   ],
   "oracle": {
@@ -66,6 +67,14 @@
     "tests/test_analyzer_acceptance.py::test_bad_backend_score_retains_failed_subject_and_other_complete_results[negative]",
     "tests/test_analyzer_acceptance.py::test_bad_backend_score_retains_failed_subject_and_other_complete_results[shape]",
     "tests/test_analyzer_acceptance.py::test_bad_backend_score_retains_failed_subject_and_other_complete_results[sum]",
+    "tests/test_analyzer_acceptance_right.py::test_empty_transport_strings_need_no_optional_backend",
+    "tests/test_analyzer_acceptance_right.py::test_original_codepoints_and_long_tail_are_never_truncated",
+    "tests/test_analyzer_acceptance_right.py::test_ties_and_primary_labels_do_not_invent_language_region_or_script_proof[cmn-zh-compatible_coarse-macrolanguage_only]",
+    "tests/test_analyzer_acceptance_right.py::test_ties_and_primary_labels_do_not_invent_language_region_or_script_proof[en-GB-en-compatible-primary_language]",
+    "tests/test_analyzer_acceptance_right.py::test_ties_and_primary_labels_do_not_invent_language_region_or_script_proof[en-fr-mismatch-primary_language]",
+    "tests/test_analyzer_acceptance_right.py::test_ties_and_primary_labels_do_not_invent_language_region_or_script_proof[en-tie-None-None]",
+    "tests/test_analyzer_acceptance_right.py::test_ties_and_primary_labels_do_not_invent_language_region_or_script_proof[x-review-en-unverifiable-None]",
+    "tests/test_analyzer_acceptance_right.py::test_ties_and_primary_labels_do_not_invent_language_region_or_script_proof[zh-Hant-TW-zh-compatible-primary_language]",
     "tests/test_analyzer_reference_matrix.py::test_original_backend_and_failures_on_each_supported_runtime[3.10]",
     "tests/test_analyzer_reference_matrix.py::test_original_backend_and_failures_on_each_supported_runtime[3.11]",
     "tests/test_analyzer_reference_matrix.py::test_original_backend_and_failures_on_each_supported_runtime[3.12]",

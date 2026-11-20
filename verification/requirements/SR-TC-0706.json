@@ -11,6 +11,7 @@
   ],
   "fixture_ids": [
     "SR-FIX-ANALYZER-ATTACK-ACCEPTANCE-v1",
+    "SR-FIX-ANALYZER-EDGE-ACCEPTANCE-v1",
     "SR-FIX-ANALYZER-REFERENCE-RUNTIME-MATRIX-v1",
     "SR-FIX-ANALYZER-SUBJECT-v1",
     "SR-FIX-ANALYZER-TEXT-POLICY-v1"
@@ -19,7 +20,7 @@
   "json_pointers": [],
   "method": "automated_behavior",
   "open_items": [
-    "Target 19.u.W requires its own successful Apply gate and commit.",
+    "Target 19.u.R requires its own successful Apply gate and commit.",
     "19.t human-reviewed corpus, 19.v reference-platform resources, 19.w durable Work integration and subsequent release acceptance remain open."
   ],
   "oracle": {
@@ -63,6 +64,11 @@
     "tests/test_analyzer_acceptance.py::test_instruction_text_stays_a_bound_subject_through_real_adapter_and_file_evaluation[3.12]",
     "tests/test_analyzer_acceptance.py::test_instruction_text_stays_a_bound_subject_through_real_adapter_and_file_evaluation[3.13]",
     "tests/test_analyzer_acceptance.py::test_instruction_text_stays_a_bound_subject_through_real_adapter_and_file_evaluation[3.14]",
+    "tests/test_analyzer_acceptance_right.py::test_empty_transport_strings_need_no_optional_backend",
+    "tests/test_analyzer_acceptance_right.py::test_original_codepoints_and_long_tail_are_never_truncated",
+    "tests/test_analyzer_acceptance_right.py::test_unavailable_real_backend_keeps_all_short_and_long_subjects[missing_numpy]",
+    "tests/test_analyzer_acceptance_right.py::test_unavailable_real_backend_keeps_all_short_and_long_subjects[missing_py3langid]",
+    "tests/test_analyzer_acceptance_right.py::test_unavailable_real_backend_keeps_all_short_and_long_subjects[model:hash]",
     "tests/test_analyzer_reference_matrix.py::test_original_backend_and_failures_on_each_supported_runtime[3.10]",
     "tests/test_analyzer_reference_matrix.py::test_original_backend_and_failures_on_each_supported_runtime[3.11]",
     "tests/test_analyzer_reference_matrix.py::test_original_backend_and_failures_on_each_supported_runtime[3.12]",
