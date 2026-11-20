@@ -62,8 +62,9 @@ def assess_language(request, decisions, *, registry, fail_on='error', run_id=Non
     run_status = ('failed' if coverage['failed'] else
         'unavailable' if coverage['open'] and coverage['open'] == coverage['expected'] else
         'partial' if coverage['open'] else 'complete')
-    report = create_report(request, analyzer_id='specroad.py3langid', engine=report_engine(decisions.engine),
+    identity = engine_identity(decisions.engine)
+    report = create_report(request, analyzer_id='specroad.py3langid', engine=identity.data,
         subjects=subjects, findings=findings, run_status=run_status, run_id=run_id,
-        extensions={'specroad.engine_inventory': engine_identity(decisions.engine).inventory})
+        extensions={'specroad.engine_inventory': identity.inventory})
     execution_outcome((report,), fail_on=fail_on)
     return LanguageAssessment(report, fail_on)

@@ -181,3 +181,9 @@ Zugangsdaten oder Projektkonfigurationen. Der Bericht bindet die Inventare unter
 `extensions.specroad.engine_inventory` an seinen deterministischen Resulthash.
 Gleiche Engine und Eingaben ergeben gleiche Beobachtungsprojektion; Run-ID und
 Betriebsdaten bleiben davon getrennt. Dies ist keine Korpus-/Releaseabnahme.
+
+`bind_engine(request, engine).require_current(request, engine)` prüft die
+JSON-only Request-/Enginebindung für die spätere Fortsetzungsintegration.
+Eine unbekannte Identität ergibt 5, eine geänderte bekannte Bindung 6. Modelle
+werden niemals in diesem Wert serialisiert. Laufzeitübergreifende gleiche
+Labels und Entscheidungen sind keine Zusage bytegleicher Scores oder Reports.

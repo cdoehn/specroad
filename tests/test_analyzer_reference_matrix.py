@@ -217,6 +217,12 @@ else:
     assert fingerprint.inventory['runtime']['python_version'] == expected['version']
     assert fingerprint.inventory['runtime']['executable_sha256'] == expected['sha256']
     assert fingerprint.inventory['numpy']['version'] == expected['numpy']
+    assert fingerprint.inventory['runtime']['loaded_numeric_runtime']['libraries']
+    assert all(t['thread_count'] == 1 and t['core'] and t['configuration']
+               for t in fingerprint.inventory['runtime']['loaded_numeric_runtime']['blas_threads'])
+    from specroad.analyzers.engine_identity import bind_engine
+    binding = bind_engine(language_request, engine)
+    binding.require_current(language_request, prepared.engine)
     for component in ('runtime', 'numpy'):
         inventory_bytes = json.dumps(fingerprint.inventory[component], sort_keys=True, separators=(',', ':')).encode()
         assert fingerprint.data[component + '_fingerprint']['value'] == hashlib.sha256(inventory_bytes).hexdigest()

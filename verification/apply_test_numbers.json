@@ -29427,6 +29427,26 @@
     "tests/test_analyzer_engine.py::test_no_loaded_engine_is_not_a_known_engine",
     "tests/test_analyzer_engine.py::test_same_inputs_and_engine_have_same_observation_despite_distinct_runs",
     "tests/test_analyzer_engine.py::test_unknown_numeric_facts_do_not_claim_reproducibility[numpy_inventory]",
-    "tests/test_analyzer_engine.py::test_unknown_numeric_facts_do_not_claim_reproducibility[runtime_inventory]"
+    "tests/test_analyzer_engine.py::test_unknown_numeric_facts_do_not_claim_reproducibility[runtime_inventory]",
+    "tests/test_analyzer_engine_right.py::test_changed_component_prevents_continuation_of_old_engine[binary]",
+    "tests/test_analyzer_engine_right.py::test_changed_component_prevents_continuation_of_old_engine[blas_config]",
+    "tests/test_analyzer_engine_right.py::test_changed_component_prevents_continuation_of_old_engine[blas_core]",
+    "tests/test_analyzer_engine_right.py::test_changed_component_prevents_continuation_of_old_engine[candidates]",
+    "tests/test_analyzer_engine_right.py::test_changed_component_prevents_continuation_of_old_engine[cpu]",
+    "tests/test_analyzer_engine_right.py::test_changed_component_prevents_continuation_of_old_engine[executable]",
+    "tests/test_analyzer_engine_right.py::test_changed_component_prevents_continuation_of_old_engine[library]",
+    "tests/test_analyzer_engine_right.py::test_changed_component_prevents_continuation_of_old_engine[model]",
+    "tests/test_analyzer_engine_right.py::test_changed_component_prevents_continuation_of_old_engine[numpy]",
+    "tests/test_analyzer_engine_right.py::test_changed_component_prevents_continuation_of_old_engine[python]",
+    "tests/test_analyzer_engine_right.py::test_changed_component_prevents_continuation_of_old_engine[rounding]",
+    "tests/test_analyzer_engine_right.py::test_changed_component_prevents_continuation_of_old_engine[threads]",
+    "tests/test_analyzer_engine_right.py::test_changed_component_prevents_continuation_of_old_engine[unicode]",
+    "tests/test_analyzer_engine_right.py::test_changed_preprocessing_version_invalidates_engine_binding",
+    "tests/test_analyzer_engine_right.py::test_continuation_binding_is_json_only_and_request_specific",
+    "tests/test_analyzer_engine_right.py::test_missing_inventory_api_is_explicit_unknown_not_invented_measurement",
+    "tests/test_analyzer_engine_right.py::test_missing_numeric_identity_is_unavailable_not_compatible[numpy_inventory]",
+    "tests/test_analyzer_engine_right.py::test_missing_numeric_identity_is_unavailable_not_compatible[runtime_inventory]",
+    "tests/test_analyzer_engine_right.py::test_observed_version_must_agree_with_declared_engine",
+    "tests/test_analyzer_engine_right.py::test_same_decisions_across_runtimes_do_not_pretend_byte_equal_reports"
   ]
 }

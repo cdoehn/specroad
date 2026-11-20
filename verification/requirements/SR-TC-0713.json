@@ -18,7 +18,7 @@
   "json_pointers": [],
   "method": "automated_behavior",
   "open_items": [
-    "Target 19.s.W requires its own successful Apply gate and commit, including all five original-runtime matrix cases.",
+    "Target 19.s.R requires its own successful Apply gate and commit, including all five original-runtime matrix cases.",
     "Human-reviewed corpus, full durable subject integration and interruption/host/resource/release acceptance retain their following plan positions."
   ],
   "oracle": {
@@ -45,7 +45,8 @@
   "specification_sha256": "f9a7f2223399c8df870d232dca3c551c165c81244f25dae6a7fbe1b143f1311a",
   "steps": [
     "Assess materialized language actions without altering original observations or coverage; separate execution, language confirmation, findings and exit code.",
-    "Bind measured numeric inventory and every model/runtime fact; compare deterministic reports only for equal input and engine bindings."
+    "Bind measured numeric inventory and every model/runtime fact; compare deterministic reports only for equal input and engine bindings.",
+    "Reject changed request or relevant engine component for continuation; unknown numeric facts cannot support reproducibility."
   ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0713",
@@ -56,6 +57,26 @@
     "tests/test_analyzer_engine.py::test_same_inputs_and_engine_have_same_observation_despite_distinct_runs",
     "tests/test_analyzer_engine.py::test_unknown_numeric_facts_do_not_claim_reproducibility[numpy_inventory]",
     "tests/test_analyzer_engine.py::test_unknown_numeric_facts_do_not_claim_reproducibility[runtime_inventory]",
+    "tests/test_analyzer_engine_right.py::test_changed_component_prevents_continuation_of_old_engine[binary]",
+    "tests/test_analyzer_engine_right.py::test_changed_component_prevents_continuation_of_old_engine[blas_config]",
+    "tests/test_analyzer_engine_right.py::test_changed_component_prevents_continuation_of_old_engine[blas_core]",
+    "tests/test_analyzer_engine_right.py::test_changed_component_prevents_continuation_of_old_engine[candidates]",
+    "tests/test_analyzer_engine_right.py::test_changed_component_prevents_continuation_of_old_engine[cpu]",
+    "tests/test_analyzer_engine_right.py::test_changed_component_prevents_continuation_of_old_engine[executable]",
+    "tests/test_analyzer_engine_right.py::test_changed_component_prevents_continuation_of_old_engine[library]",
+    "tests/test_analyzer_engine_right.py::test_changed_component_prevents_continuation_of_old_engine[model]",
+    "tests/test_analyzer_engine_right.py::test_changed_component_prevents_continuation_of_old_engine[numpy]",
+    "tests/test_analyzer_engine_right.py::test_changed_component_prevents_continuation_of_old_engine[python]",
+    "tests/test_analyzer_engine_right.py::test_changed_component_prevents_continuation_of_old_engine[rounding]",
+    "tests/test_analyzer_engine_right.py::test_changed_component_prevents_continuation_of_old_engine[threads]",
+    "tests/test_analyzer_engine_right.py::test_changed_component_prevents_continuation_of_old_engine[unicode]",
+    "tests/test_analyzer_engine_right.py::test_changed_preprocessing_version_invalidates_engine_binding",
+    "tests/test_analyzer_engine_right.py::test_continuation_binding_is_json_only_and_request_specific",
+    "tests/test_analyzer_engine_right.py::test_missing_inventory_api_is_explicit_unknown_not_invented_measurement",
+    "tests/test_analyzer_engine_right.py::test_missing_numeric_identity_is_unavailable_not_compatible[numpy_inventory]",
+    "tests/test_analyzer_engine_right.py::test_missing_numeric_identity_is_unavailable_not_compatible[runtime_inventory]",
+    "tests/test_analyzer_engine_right.py::test_observed_version_must_agree_with_declared_engine",
+    "tests/test_analyzer_engine_right.py::test_same_decisions_across_runtimes_do_not_pretend_byte_equal_reports",
     "tests/test_analyzer_policy.py::test_all_unknown_engine_facts_are_explicit_and_not_a_reproducibility_claim",
     "tests/test_analyzer_policy.py::test_complete_info_nondecision_has_zero_exit_without_language_confirmation",
     "tests/test_analyzer_policy.py::test_complete_report_copies_all_original_bindings_without_original_value",

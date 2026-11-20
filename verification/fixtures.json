@@ -10,7 +10,7 @@
     },
     "SR-FIX-ANALYZER-ENGINE-IDENTITY-v1": {
       "kind": "Explicit synthetic inventory values and independent hashes, reproducible observation and request/engine continuation boundaries; actual engine evidence remains separately mandatory.",
-      "provider": "tests/test_analyzer_engine.py"
+      "provider": "tests/test_analyzer_engine.py; tests/test_analyzer_engine_right.py"
     },
     "SR-FIX-ANALYZER-EVALUATION-v1": {
       "kind": "Small actual native projects and explicitly supplied current resources, passive conflicting observations, byte inventories and native freshness/security faults; one full verified partial integration.",
