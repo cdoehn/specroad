@@ -5,6 +5,7 @@ from .registry import builtin_descriptor
 from .requests import analyzer_binding
 from ._request_values import RESOURCE_ID
 from ._text_policy import validate_minimum
+from .language_scores import parse_threshold
 
 
 def default_inputs(configuration):
@@ -16,6 +17,8 @@ def default_inputs(configuration):
     require(type(configured) is dict, 'analyzer_policy_object_required')
     policy.update(configured)
     validate_minimum(policy['min_text_codepoints'])
+    parse_threshold(policy['min_score'], 'min_score')
+    parse_threshold(policy['min_margin'], 'min_margin')
     return dict(analyzers=[analyzer_binding(descriptor, ['language_detection'])],
         settings={'specroad.py3langid': {'language_detection': policy}}, context=[], extensions={})
 

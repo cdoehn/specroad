@@ -81,6 +81,17 @@ if mode != 'positive':
     assert len(unavailable.subjects) == 4 and unavailable.engine is None
     assert all(s.status == 'unavailable' and not s.scores for s in unavailable.subjects)
     assert unavailable.snapshot_sha256 == unavailable_request.data['snapshot_sha256']
+    from specroad.analyzers.language_scores import decide_request
+    decisions = decide_request(unavailable_request)
+    assert all(s.decision.status == 'unavailable' and s.decision.language is None
+               for s in decisions.subjects)
+    from specroad.analyzers._values import digest
+    for subject in unavailable_inputs['subjects']:
+        subject['value'], subject['value_sha256'] = '', digest('')
+    short_request = create_request(**unavailable_inputs)
+    short_result = decide_request(short_request)
+    assert short_result.engine is None and len(short_result.subjects) == 4
+    assert all(s.decision.reason == 'insufficient_text' for s in short_result.subjects)
     print(json.dumps({'mode': mode, 'version': platform.python_version(), 'exit_code': 5}))
 else:
     import py3langid.langid as library
@@ -131,6 +142,27 @@ else:
     assert [(s.subject_key, s.value_sha256, s.scores) for s in prepared.subjects] == [
         (s.subject_key, s.value_sha256, s.scores) for s in result.subjects]
     assert all(s.status == 'ranked' and s.reason is None for s in prepared.subjects)
+    assert language_request.canonical_bytes == language_raw and request.canonical_bytes == raw
+    from decimal import Decimal, ROUND_HALF_EVEN, localcontext
+    from specroad.analyzers.language_scores import decide_request
+    decision_result = decide_request(language_request)
+    assert decision_result.engine == result.engine
+    assert decision_result.snapshot_sha256 == language_request.data['snapshot_sha256']
+    assert len(decision_result.subjects) == len(result.subjects) == 4
+    for chosen, raw_subject in zip(decision_result.subjects, result.subjects):
+        assert (chosen.subject_key, chosen.value_sha256) == (raw_subject.subject_key, raw_subject.value_sha256)
+        with localcontext() as context:
+            context.prec = 32
+            quantized = [(code, Decimal(str(score)).quantize(Decimal('0.000000000001'), rounding=ROUND_HALF_EVEN))
+                         for code, score in raw_subject.scores]
+            quantized.sort(key=lambda pair: (-pair[1], pair[0]))
+            top = quantized[:2]
+            detected = top[0][1] >= Decimal('0.9') and top[0][1] - top[1][1] >= Decimal('0.1')
+        assert chosen.decision.scores == tuple((code, format(score, '.12f')) for code, score in top)
+        assert chosen.decision.status == ('detected' if detected else 'undetermined')
+        assert chosen.decision.language == (top[0][0] if detected else None)
+        assert chosen.decision.data['score_semantics'] == 'normalized_uncalibrated_model_scores'
+    assert any(s.decision.status == 'detected' for s in decision_result.subjects)
     assert language_request.canonical_bytes == language_raw and request.canonical_bytes == raw
     # Negative request settings must fail before another model can be decoded.
     storage.load_model = forbidden

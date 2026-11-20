@@ -18,7 +18,7 @@
   "json_pointers": [],
   "method": "automated_behavior",
   "open_items": [
-    "Target 19.o.C requires its own successful Apply gate and commit, including all five real runtime cases.",
+    "Target 19.p.W requires its own successful Apply gate and commit, including all five real runtime cases.",
     "Final worker reports, language comparison, policy/exit integration, full engine fingerprint, human corpus review and release acceptance remain open."
   ],
   "oracle": {
@@ -47,7 +47,9 @@
   "steps": [
     "Preserve complete independent original strings, declared tags and hashes; use ASCII edge stripping only to count codepoints.",
     "Check minimum bounds and insufficient_text before optional loading, plus complete real-backend rankings on all five supported runtimes.",
-    "Preserve library/Unicode bindings and independent subjects across unavailable/invalid backends; never swallow process/resource failures."
+    "Preserve library/Unicode bindings and independent subjects across unavailable/invalid backends; never swallow process/resource failures.",
+    "Compare exact published half-even scores, inclusive materialized thresholds and integer-unit margin against independent expected values.",
+    "Retain original-model integration and request bindings; no final worker or release approval."
   ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0706",

@@ -40,6 +40,10 @@
       "kind": "Complete explicit synthetic analyzer entries, full subject values and binding, hashed context and selected settings. Independent JCS hash projection and separate analysis/write typed IDs; malformed nested values, entropy failures and an isolated actual process roundtrip. No project selector, native receipt, worker, report acceptance or Work resume is fabricated.",
       "provider": "tests/test_analyzer_requests.py:inputs,checksum"
     },
+    "SR-FIX-ANALYZER-SCORE-POLICY-v1": {
+      "kind": "Controlled complete normalized score rankings and exact independent twelve-place half-even and threshold oracles. No calibration or reviewed-corpus claim.",
+      "provider": "tests/test_analyzer_scores.py"
+    },
     "SR-FIX-ANALYZER-SUBJECT-v1": {
       "kind": "Small real native projects with original requirement bytes, explicit context, independent JCS hashes, full 103-member selection, Unicode, mutation/symlink faults and one actual verified partial integration. No fabricated success or engine execution.",
       "provider": "tests/test_analyzer_subjects.py:project,options; tests/test_analyzer_subjects_right.py"
@@ -1049,6 +1053,7 @@
     "SR-FIX-ANALYZER-REFERENCE-RUNTIME-MATRIX-v1",
     "SR-FIX-ANALYZER-REPORT-v1",
     "SR-FIX-ANALYZER-REQUEST-v1",
+    "SR-FIX-ANALYZER-SCORE-POLICY-v1",
     "SR-FIX-ANALYZER-SUBJECT-v1",
     "SR-FIX-ANALYZER-TEXT-POLICY-v1",
     "SR-FIX-ANALYZER-WORK-v1",

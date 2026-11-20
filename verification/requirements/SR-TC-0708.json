@@ -1,20 +1,33 @@
 {
   "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "fixture_ids": [],
-  "implementation_status": "open",
+  "expected_exit_codes": [
+    0,
+    2,
+    3,
+    5
+  ],
+  "fixture_ids": [
+    "SR-FIX-ANALYZER-REFERENCE-RUNTIME-MATRIX-v1",
+    "SR-FIX-ANALYZER-SCORE-POLICY-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [],
-  "method": "pending",
+  "method": "automated_behavior",
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "Target 19.p.W requires its own successful Apply gate and commit, including all five real runtime cases.",
+    "Final worker reports, language comparison, policy/exit integration, full engine fingerprint, human corpus review and release acceptance remain open."
   ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Publizierte Detektorscores MÜSSEN die normalisierte, quantisierte und ausdrücklich nicht kalibrierte Scoresemantik aus Anhang T.7 ausweisen.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Full original text and exact ASCII-edge minimum with materialized request and value bindings. Explicit independent subject and unavailable/failed boundaries; Unicode and original hashes preserved. Published half-even top-two uncalibrated normalized scores; inclusive thresholds and exact margin. Real original backend cases remain mandatory. No Dev behavior pass or final language/report/release claim."
   },
-  "preconditions": [],
+  "preconditions": [
+    "Owned immutable native request with materialized language policy and original subject/value hashes.",
+    "All five explicit supported hash-bound CPython runtimes and original offline wheels on each executing test host.",
+    "Synthetic unit data is not engine evidence. Pure collection is not a behavior pass; each target stage needs its own Apply gate."
+  ],
   "primary_verification_id": "SR-VER-0047",
   "required_environment": {
     "declared_minimum_python": "3.10",
@@ -28,8 +41,63 @@
     "owned_temporary_files": true
   },
   "specification_sha256": "f9a7f2223399c8df870d232dca3c551c165c81244f25dae6a7fbe1b143f1311a",
-  "steps": [],
+  "steps": [
+    "Preserve complete independent original strings, declared tags and hashes; use ASCII edge stripping only to count codepoints.",
+    "Check minimum bounds and insufficient_text before optional loading, plus complete real-backend rankings on all five supported runtimes.",
+    "Preserve library/Unicode bindings and independent subjects across unavailable/invalid backends; never swallow process/resource failures.",
+    "Compare exact published half-even scores, inclusive materialized thresholds and integer-unit margin against independent expected values.",
+    "Retain original-model integration and request bindings; no final worker or release approval."
+  ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0708",
-  "test_ids": []
+  "test_ids": [
+    "tests/test_analyzer_reference_matrix.py::test_original_backend_and_failures_on_each_supported_runtime[3.10]",
+    "tests/test_analyzer_reference_matrix.py::test_original_backend_and_failures_on_each_supported_runtime[3.11]",
+    "tests/test_analyzer_reference_matrix.py::test_original_backend_and_failures_on_each_supported_runtime[3.12]",
+    "tests/test_analyzer_reference_matrix.py::test_original_backend_and_failures_on_each_supported_runtime[3.13]",
+    "tests/test_analyzer_reference_matrix.py::test_original_backend_and_failures_on_each_supported_runtime[3.14]",
+    "tests/test_analyzer_scores.py::test_invalid_thresholds_fail_before_the_backend_even_for_short_text[ 0.9-min_margin]",
+    "tests/test_analyzer_scores.py::test_invalid_thresholds_fail_before_the_backend_even_for_short_text[ 0.9-min_score]",
+    "tests/test_analyzer_scores.py::test_invalid_thresholds_fail_before_the_backend_even_for_short_text[-0.1-min_margin]",
+    "tests/test_analyzer_scores.py::test_invalid_thresholds_fail_before_the_backend_even_for_short_text[-0.1-min_score]",
+    "tests/test_analyzer_scores.py::test_invalid_thresholds_fail_before_the_backend_even_for_short_text[-min_margin]",
+    "tests/test_analyzer_scores.py::test_invalid_thresholds_fail_before_the_backend_even_for_short_text[-min_score]",
+    "tests/test_analyzer_scores.py::test_invalid_thresholds_fail_before_the_backend_even_for_short_text[0.1234567890123-min_margin]",
+    "tests/test_analyzer_scores.py::test_invalid_thresholds_fail_before_the_backend_even_for_short_text[0.1234567890123-min_score]",
+    "tests/test_analyzer_scores.py::test_invalid_thresholds_fail_before_the_backend_even_for_short_text[0.9 -min_margin]",
+    "tests/test_analyzer_scores.py::test_invalid_thresholds_fail_before_the_backend_even_for_short_text[0.9 -min_score]",
+    "tests/test_analyzer_scores.py::test_invalid_thresholds_fail_before_the_backend_even_for_short_text[0.9-min_margin]",
+    "tests/test_analyzer_scores.py::test_invalid_thresholds_fail_before_the_backend_even_for_short_text[0.9-min_score]",
+    "tests/test_analyzer_scores.py::test_invalid_thresholds_fail_before_the_backend_even_for_short_text[1.1-min_margin]",
+    "tests/test_analyzer_scores.py::test_invalid_thresholds_fail_before_the_backend_even_for_short_text[1.1-min_score]",
+    "tests/test_analyzer_scores.py::test_invalid_thresholds_fail_before_the_backend_even_for_short_text[1e-1-min_margin]",
+    "tests/test_analyzer_scores.py::test_invalid_thresholds_fail_before_the_backend_even_for_short_text[1e-1-min_score]",
+    "tests/test_analyzer_scores.py::test_invalid_thresholds_fail_before_the_backend_even_for_short_text[Infinity-min_margin]",
+    "tests/test_analyzer_scores.py::test_invalid_thresholds_fail_before_the_backend_even_for_short_text[Infinity-min_score]",
+    "tests/test_analyzer_scores.py::test_invalid_thresholds_fail_before_the_backend_even_for_short_text[None-min_margin]",
+    "tests/test_analyzer_scores.py::test_invalid_thresholds_fail_before_the_backend_even_for_short_text[None-min_score]",
+    "tests/test_analyzer_scores.py::test_invalid_thresholds_fail_before_the_backend_even_for_short_text[True-min_margin]",
+    "tests/test_analyzer_scores.py::test_invalid_thresholds_fail_before_the_backend_even_for_short_text[True-min_score]",
+    "tests/test_analyzer_scores.py::test_invalid_thresholds_fail_before_the_backend_even_for_short_text[\\uff10.\\uff19-min_margin]",
+    "tests/test_analyzer_scores.py::test_invalid_thresholds_fail_before_the_backend_even_for_short_text[\\uff10.\\uff19-min_score]",
+    "tests/test_analyzer_scores.py::test_invalid_thresholds_fail_before_the_backend_even_for_short_text[nan-min_margin]",
+    "tests/test_analyzer_scores.py::test_invalid_thresholds_fail_before_the_backend_even_for_short_text[nan-min_score]",
+    "tests/test_analyzer_scores.py::test_margin_is_subtracted_exactly_after_quantization[0.5499999999994-0.100000000000-undetermined]",
+    "tests/test_analyzer_scores.py::test_margin_is_subtracted_exactly_after_quantization[0.5499999999996-0.100000000000-detected]",
+    "tests/test_analyzer_scores.py::test_margin_is_subtracted_exactly_after_quantization[0.55-0.100000000000-detected]",
+    "tests/test_analyzer_scores.py::test_margin_is_subtracted_exactly_after_quantization[0.55-0.100000000001-undetermined]",
+    "tests/test_analyzer_scores.py::test_minimum_uses_the_published_half_even_score_inclusively[0.8999999999994-0.899999999999-undetermined]",
+    "tests/test_analyzer_scores.py::test_minimum_uses_the_published_half_even_score_inclusively[0.8999999999996-0.900000000000-detected]",
+    "tests/test_analyzer_scores.py::test_minimum_uses_the_published_half_even_score_inclusively[0.9-0.900000000000-detected]",
+    "tests/test_analyzer_scores.py::test_minimum_uses_the_published_half_even_score_inclusively[0.9000000000005-0.900000000000-detected]",
+    "tests/test_analyzer_scores.py::test_minimum_uses_the_published_half_even_score_inclusively[0.9000000000015-0.900000000002-detected]",
+    "tests/test_analyzer_scores.py::test_only_normalized_uncalibrated_model_score_strings_are_serialized",
+    "tests/test_analyzer_scores.py::test_request_decision_retains_every_subject_and_original_binding",
+    "tests/test_analyzer_scores.py::test_score_threshold_changes_are_bound_to_distinct_requests",
+    "tests/test_analyzer_scores.py::test_threshold_range_endpoints_are_valid[0.000000000000]",
+    "tests/test_analyzer_scores.py::test_threshold_range_endpoints_are_valid[0]",
+    "tests/test_analyzer_scores.py::test_threshold_range_endpoints_are_valid[1.000000000000]",
+    "tests/test_analyzer_scores.py::test_threshold_range_endpoints_are_valid[1]",
+    "tests/test_analyzer_scores.py::test_top_two_ties_are_broken_by_code_using_the_published_values"
+  ]
 }
