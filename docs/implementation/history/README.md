@@ -560,3 +560,5 @@
 - [Bundle 763 — reale Referenzranglisten](bundle-763-reference-ranking.md)
 
 - [Bundle 764 — vollständige Referenz-Runtime-Matrix](bundle-764-reference-runtime-matrix.md)
+
+- [Bundle 765 — Text- und Scorepolicy](bundle-765-text-and-score-policy.md)

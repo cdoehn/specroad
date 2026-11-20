@@ -4,6 +4,7 @@ from .descriptors import AnalyzerDescriptor
 from .registry import builtin_descriptor
 from .requests import analyzer_binding
 from ._request_values import RESOURCE_ID
+from .language_text import validate_minimum
 
 
 def default_inputs(configuration):
@@ -14,6 +15,7 @@ def default_inputs(configuration):
     configured = configuration.get('analyzer_policy', {}).get('language_detection', {})
     require(type(configured) is dict, 'analyzer_policy_object_required')
     policy.update(configured)
+    validate_minimum(policy['min_text_codepoints'])
     return dict(analyzers=[analyzer_binding(descriptor, ['language_detection'])],
         settings={'specroad.py3langid': {'language_detection': policy}}, context=[], extensions={})
 

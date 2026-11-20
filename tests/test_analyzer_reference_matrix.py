@@ -106,6 +106,22 @@ else:
             assert abs(sum(v for k, v in subject.scores) - 1) < 0.00001
             assert subject.scores[0][0] == labels[subject.subject_key]
     assert library.IDENTIFIER is None
+    from specroad.analyzers.file_adapter import default_inputs
+    from specroad.analyzers.requests import create_request
+    from specroad.analyzers.language_text import prepare_request
+    materialized = {k: request.data[k] for k in ('analyzers', 'subjects', 'context', 'settings', 'extensions')}
+    materialized['settings'] = default_inputs({})['settings']
+    language_request = create_request(**materialized, analysis_id=request.data['request_id'])
+    language_raw = language_request.canonical_bytes
+    prepared = prepare_request(language_request)
+    assert prepared.engine == result.engine
+    assert prepared.preprocessing_version == 'ascii-edge-codepoints-v1'
+    assert prepared.min_text_codepoints == 20
+    assert prepared.snapshot_sha256 == language_request.data['snapshot_sha256']
+    assert [(s.subject_key, s.value_sha256, s.scores) for s in prepared.subjects] == [
+        (s.subject_key, s.value_sha256, s.scores) for s in result.subjects]
+    assert all(s.status == 'ranked' and s.reason is None for s in prepared.subjects)
+    assert language_request.canonical_bytes == language_raw and request.canonical_bytes == raw
     # Negative request settings must fail before another model can be decoded.
     storage.load_model = forbidden
     for name in ('languages', 'candidates', 'model'):

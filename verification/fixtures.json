@@ -44,6 +44,10 @@
       "kind": "Small real native projects with original requirement bytes, explicit context, independent JCS hashes, full 103-member selection, Unicode, mutation/symlink faults and one actual verified partial integration. No fabricated success or engine execution.",
       "provider": "tests/test_analyzer_subjects.py:project,options; tests/test_analyzer_subjects_right.py"
     },
+    "SR-FIX-ANALYZER-TEXT-POLICY-v1": {
+      "kind": "Complete original synthetic strings, boundary codepoints and controlled backend failures; independent original hashes. The existing real-runtime fixture remains separately mandatory.",
+      "provider": "tests/test_analyzer_text.py"
+    },
     "SR-FIX-ANALYZER-WORK-v1": {
       "kind": "Actual small native projects, private Work roots and complete JSON payloads. Explicit in-process build metadata is synthetic compatibility data; a separate real built zipapp resumes across independent processes. Deterministic native consumption samples and concrete I/O/engine faults, no fake analyzer success.",
       "provider": "tests/test_analyzer_work.py:recorded,early,store_at; tests/test_analyzer_subjects.py:project"
@@ -1046,6 +1050,7 @@
     "SR-FIX-ANALYZER-REPORT-v1",
     "SR-FIX-ANALYZER-REQUEST-v1",
     "SR-FIX-ANALYZER-SUBJECT-v1",
+    "SR-FIX-ANALYZER-TEXT-POLICY-v1",
     "SR-FIX-ANALYZER-WORK-v1",
     "SR-FIX-ARTIFACT-COMMON-v1",
     "SR-FIX-ARTIFACT-IMPORT-EXECUTION-v1",
