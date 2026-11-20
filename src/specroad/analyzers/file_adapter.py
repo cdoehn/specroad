@@ -4,7 +4,7 @@ from .descriptors import AnalyzerDescriptor
 from .registry import builtin_descriptor
 from .requests import analyzer_binding
 from ._request_values import RESOURCE_ID
-from .language_text import validate_minimum
+from ._text_policy import validate_minimum
 
 
 def default_inputs(configuration):
