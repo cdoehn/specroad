@@ -41,8 +41,8 @@
       "provider": "tests/test_analyzer_requests.py:inputs,checksum"
     },
     "SR-FIX-ANALYZER-SCORE-POLICY-v1": {
-      "kind": "Controlled complete normalized score rankings and exact independent twelve-place half-even and threshold oracles. No calibration or reviewed-corpus claim.",
-      "provider": "tests/test_analyzer_scores.py"
+      "kind": "Controlled normalized score rankings, exact binary32 residual cases, invalid totals and independent twelve-place half-even/threshold oracles; real runtime matrix separately required.",
+      "provider": "tests/test_analyzer_scores.py; tests/test_analyzer_scores_right.py"
     },
     "SR-FIX-ANALYZER-SUBJECT-v1": {
       "kind": "Small real native projects with original requirement bytes, explicit context, independent JCS hashes, full 103-member selection, Unicode, mutation/symlink faults and one actual verified partial integration. No fabricated success or engine execution.",

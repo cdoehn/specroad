@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 364 · **Stand:** 20. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.99
+**Planrevision:** 365 · **Stand:** 20. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.99
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 306 Schritte und 918 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; die früher genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wurde nach der damaligen Spezifikation innerhalb von 15.l.R vorgezogen und bleibt als normaler Prüfkern erhalten. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -237,14 +237,16 @@ Aktuelle Vorbereitung: [Bundle 764 — vollständige Referenz-Runtime-Matrix](hi
 
 Aktuelle Vorbereitung: [Bundle 765 — Text- und Scorepolicy](history/bundle-765-text-and-score-policy.md). Das Quell-Result bestätigt 843/918. Die sechs vollständigen Zielstände 19.o/p.W/R/C behalten je ein eigenes Apply-Gate und alle fünf realen Runtimefälle; anschließend 19.q.W.
 
+Aktuelle Korrektur und Folgegruppe: [Bundle 766 — Score-Rundung und Sprachvergleich](history/bundle-766-score-roundoff-and-language-comparison.md). Bestätigt sind 847/918; 19.p.R/C bleibt der vollständige offene Rest, anschließend 19.q.W/R/C. Jede Stage behält ihr eigenes Gate und alle fünf tatsächlichen Runtimefälle.
+
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 364
+plan_revision: 365
 implementation_plan_commits_total: 918
-implementation_plan_commits_completed: 847
-last_completed_plan_commit: 19.p.W
-next_plan_commit: 19.p.R
+implementation_plan_commits_completed: 848
+last_completed_plan_commit: 19.p.R
+next_plan_commit: 19.p.C
 priority_off_plan: null
 next_off_plan_commit: null
 last_completed_numbered_bundle: 764

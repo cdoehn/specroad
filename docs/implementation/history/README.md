@@ -562,3 +562,5 @@
 - [Bundle 764 — vollständige Referenz-Runtime-Matrix](bundle-764-reference-runtime-matrix.md)
 
 - [Bundle 765 — Text- und Scorepolicy](bundle-765-text-and-score-policy.md)
+
+- [Bundle 766 — Scorekorrektur und Sprachvergleich](bundle-766-score-roundoff-and-language-comparison.md)

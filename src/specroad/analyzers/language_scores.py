@@ -43,6 +43,22 @@ def parse_threshold(value, name):
     return int(format(decimal, '.12f').replace('.', ''))
 
 
+def normalized_total_is_valid(ranked):
+    """Check consistency with the pinned backend's binary32 normalization.
+
+    Its 142 columns include two disjoint alias pairs (sr and uz). Positive
+    reduction, division and at most one alias fold per output give a relative
+    bound gamma_143 = 143 / (2**24 - 143). Add half a decimal unit per row
+    and one unit covering binary32 subnormal rounding. This is an arithmetic
+    error bound, not a confidence tolerance; the published scores never change.
+    """
+    rounds = 143
+    denominator = (1 << 24) - rounds
+    error = abs(sum(score for _, score in ranked) - SCALE)
+    return 2 * error * denominator <= (
+        2 * SCALE * rounds + (len(ranked) + 2) * denominator)
+
+
 @dataclass(frozen=True)
 class ScoreDecision:
     status: str
@@ -66,14 +82,19 @@ def decide_scores(rows, *, min_score='0.900000000000', min_margin='0.10000000000
         for row in rows:
             require(type(row) in (list, tuple) and len(row) == 2, 'invalid_backend_output', exit_code=5)
             code, score = row
-            require(type(code) is str and code in CANDIDATES, 'invalid_backend_output', exit_code=5)
+            require(type(code) is str and code in (*CANDIDATES, 'und', 'zxx'),
+                    'invalid_backend_output', exit_code=5)
             ranked.append((code, score_units(score)))
         require(len({code for code, _ in ranked}) == len(ranked), 'invalid_backend_output', exit_code=5)
+        require(normalized_total_is_valid(ranked), 'invalid_backend_output', exit_code=5)
     except AnalyzerError:
         return ScoreDecision('failed', 'invalid_backend_output', None, ())
     ranked.sort(key=lambda row: (-row[1], row[0]))
     best, second = ranked[:2]
     published = tuple((code, format_units(score)) for code, score in (best, second))
+    if best[0] in ('und', 'zxx'):
+        reason = 'backend_abstention' if best[0] == 'und' else 'non_linguistic'
+        return ScoreDecision('undetermined', reason, None, published)
     if best[1] < minimum or best[1] - second[1] < margin:
         return ScoreDecision('undetermined', 'low_score_or_margin', None, published)
     return ScoreDecision('detected', None, best[0], published)
