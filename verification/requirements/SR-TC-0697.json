@@ -19,7 +19,7 @@
   "json_pointers": [],
   "method": "automated_behavior",
   "open_items": [
-    "Target 19.s.R requires its own successful Apply gate and commit, including all five original-runtime matrix cases.",
+    "Target 19.s.C requires its own successful Apply gate and commit, including all five original-runtime matrix cases.",
     "Human-reviewed corpus, full durable subject integration and interruption/host/resource/release acceptance retain their following plan positions."
   ],
   "oracle": {
