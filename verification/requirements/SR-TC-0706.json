@@ -10,6 +10,7 @@
     7
   ],
   "fixture_ids": [
+    "SR-FIX-ANALYZER-ATTACK-ACCEPTANCE-v1",
     "SR-FIX-ANALYZER-REFERENCE-RUNTIME-MATRIX-v1",
     "SR-FIX-ANALYZER-SUBJECT-v1",
     "SR-FIX-ANALYZER-TEXT-POLICY-v1"
@@ -18,18 +19,19 @@
   "json_pointers": [],
   "method": "automated_behavior",
   "open_items": [
-    "Target 19.q.C needs its own successful Apply gate, including all five original runtime cases.",
-    "Final worker/report, policy/exit integration, full engine fingerprint, human corpus review and release acceptance remain open."
+    "Target 19.u.W requires its own successful Apply gate and commit.",
+    "19.t human-reviewed corpus, 19.v reference-platform resources, 19.w durable Work integration and subsequent release acceptance remain open."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Der erste Sprachadapter MUSS jeden ausgewählten vollständigen String nach dem Vorverarbeitungs- und Abstentionsvertrag aus Anhang T.7 verarbeiten.",
-    "scope": "Full original text and exact ASCII-edge minimum with materialized request and value bindings. Explicit independent subject and unavailable/failed boundaries; Unicode and original hashes preserved. Real original backend cases remain mandatory. No Dev behavior pass or final language/report/release claim."
+    "scope": "Full original text and exact ASCII-edge minimum with materialized request and value bindings. Explicit independent subject and unavailable/failed boundaries; Unicode and original hashes preserved. Real original backend cases remain mandatory. No Dev behavior pass or final language/report/release claim. 19.u real process/adapter error and boundary acceptance; no language-corpus, human-review or resource pass is implied."
   },
   "preconditions": [
     "Owned immutable native request with materialized language policy and original subject/value hashes.",
     "All five explicit supported hash-bound CPython runtimes and original offline wheels on each executing test host.",
-    "Synthetic unit data is not engine evidence. Pure collection is not a behavior pass; each target stage needs its own Apply gate."
+    "Synthetic unit data is not engine evidence. Pure collection is not a behavior pass; each target stage needs its own Apply gate.",
+    "Original offline packages and hash-bound CPython matrix; test-selected fault injection never comes from subject data."
   ],
   "primary_verification_id": "SR-VER-0047",
   "required_environment": {
@@ -50,11 +52,17 @@
     "Preserve library/Unicode bindings and independent subjects across unavailable/invalid backends; never swallow process/resource failures.",
     "Compare exact published half-even scores, inclusive materialized thresholds and integer-unit margin against independent expected values.",
     "Retain original-model integration and request bindings; no final worker or release approval.",
-    "Check all rows and normalized total rounding bounds, backend abstention before thresholds, low margins and hostile global Decimal state."
+    "Check all rows and normalized total rounding bounds, backend abstention before thresholds, low margins and hostile global Decimal state.",
+    "Run selected original strings and hostile responses through actual isolated worker pipes and native validation; preserve request bindings and original project bytes."
   ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0706",
   "test_ids": [
+    "tests/test_analyzer_acceptance.py::test_instruction_text_stays_a_bound_subject_through_real_adapter_and_file_evaluation[3.10]",
+    "tests/test_analyzer_acceptance.py::test_instruction_text_stays_a_bound_subject_through_real_adapter_and_file_evaluation[3.11]",
+    "tests/test_analyzer_acceptance.py::test_instruction_text_stays_a_bound_subject_through_real_adapter_and_file_evaluation[3.12]",
+    "tests/test_analyzer_acceptance.py::test_instruction_text_stays_a_bound_subject_through_real_adapter_and_file_evaluation[3.13]",
+    "tests/test_analyzer_acceptance.py::test_instruction_text_stays_a_bound_subject_through_real_adapter_and_file_evaluation[3.14]",
     "tests/test_analyzer_reference_matrix.py::test_original_backend_and_failures_on_each_supported_runtime[3.10]",
     "tests/test_analyzer_reference_matrix.py::test_original_backend_and_failures_on_each_supported_runtime[3.11]",
     "tests/test_analyzer_reference_matrix.py::test_original_backend_and_failures_on_each_supported_runtime[3.12]",

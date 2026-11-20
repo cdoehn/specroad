@@ -8,6 +8,7 @@
     6
   ],
   "fixture_ids": [
+    "SR-FIX-ANALYZER-ATTACK-ACCEPTANCE-v1",
     "SR-FIX-ANALYZER-LANGUAGE-COMPARISON-v1",
     "SR-FIX-ANALYZER-REFERENCE-RUNTIME-MATRIX-v1"
   ],
@@ -15,17 +16,18 @@
   "json_pointers": [],
   "method": "automated_behavior",
   "open_items": [
-    "Target 19.q.C needs its own successful Apply gate and commit.",
-    "Final worker/report/CLI integration, human corpus review and release acceptance remain open."
+    "Target 19.u.W requires its own successful Apply gate and commit.",
+    "19.t human-reviewed corpus, 19.v reference-platform resources, 19.w durable Work integration and subsequent release acceptance remain open."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Eine Sprachdetektion DARF NICHT die deklarierte language oder normative_force eines Requirements automatisch korrigieren.",
-    "scope": "Exact language-comparison-v1 statuses and preserved originals; no region/script inference or automatic correction. Native registry knowledge remains separate from language permission. Actual original-backend decisions are also compared on all five supported runtimes. No Dev behavior pass claimed."
+    "scope": "Exact language-comparison-v1 statuses and preserved originals; no region/script inference or automatic correction. Native registry knowledge remains separate from language permission. Actual original-backend decisions are also compared on all five supported runtimes. No Dev behavior pass claimed. 19.u real process/adapter error and boundary acceptance; no language-corpus, human-review or resource pass is implied."
   },
   "preconditions": [
     "Explicit native hash-bound registry and an actual decided primary language; synthetic unit decisions are not detector evidence.",
-    "All five supported original offline CPython/backend combinations are mandatory in Apply."
+    "All five supported original offline CPython/backend combinations are mandatory in Apply.",
+    "Original offline packages and hash-bound CPython matrix; test-selected fault injection never comes from subject data."
   ],
   "primary_verification_id": "SR-VER-0047",
   "required_environment": {
@@ -43,11 +45,17 @@
   "steps": [
     "Check exact primary compatibility, the sole directional cmn/zh coarse exception, known mismatches and unknown/private/unspecified unverifiability.",
     "Preserve original declaration and registry binding; do not assert script, region, Mandarin or language permission.",
-    "Join the complete exact subject decisions to immutable request, value and policy bindings without modifying declarations or normative_force."
+    "Join the complete exact subject decisions to immutable request, value and policy bindings without modifying declarations or normative_force.",
+    "Run selected original strings and hostile responses through actual isolated worker pipes and native validation; preserve request bindings and original project bytes."
   ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0712",
   "test_ids": [
+    "tests/test_analyzer_acceptance.py::test_instruction_text_stays_a_bound_subject_through_real_adapter_and_file_evaluation[3.10]",
+    "tests/test_analyzer_acceptance.py::test_instruction_text_stays_a_bound_subject_through_real_adapter_and_file_evaluation[3.11]",
+    "tests/test_analyzer_acceptance.py::test_instruction_text_stays_a_bound_subject_through_real_adapter_and_file_evaluation[3.12]",
+    "tests/test_analyzer_acceptance.py::test_instruction_text_stays_a_bound_subject_through_real_adapter_and_file_evaluation[3.13]",
+    "tests/test_analyzer_acceptance.py::test_instruction_text_stays_a_bound_subject_through_real_adapter_and_file_evaluation[3.14]",
     "tests/test_analyzer_comparison.py::test_coarse_comparison_does_not_merge_language_permissions",
     "tests/test_analyzer_comparison.py::test_comparison_import_does_not_load_the_optional_backend",
     "tests/test_analyzer_comparison.py::test_comparison_is_an_immutable_value_with_detached_data",

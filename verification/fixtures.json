@@ -1055,6 +1055,7 @@
   },
   "fixture_format_version": 1,
   "fixture_ids": [
+    "SR-FIX-ANALYZER-ATTACK-ACCEPTANCE-v1",
     "SR-FIX-ANALYZER-CLI-v1",
     "SR-FIX-ANALYZER-DESCRIPTOR-v1",
     "SR-FIX-ANALYZER-ENGINE-IDENTITY-v1",

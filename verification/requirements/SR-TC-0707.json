@@ -7,6 +7,7 @@
     5
   ],
   "fixture_ids": [
+    "SR-FIX-ANALYZER-ATTACK-ACCEPTANCE-v1",
     "SR-FIX-ANALYZER-REFERENCE-RANKING-v1",
     "SR-FIX-ANALYZER-REFERENCE-RUNTIME-MATRIX-v1"
   ],
@@ -14,18 +15,19 @@
   "json_pointers": [],
   "method": "automated_behavior",
   "open_items": [
-    "Target 19.n.C requires its own successful Apply gate and commit, including all five real runtime cases.",
-    "Generic final worker report integration, decision policy, release corpus review and 19.y release acceptance remain open."
+    "Target 19.u.W requires its own successful Apply gate and commit.",
+    "19.t human-reviewed corpus, 19.v reference-platform resources, 19.w durable Work integration and subsequent release acceptance remain open."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Die Erkennung MUSS den vollständigen Kandidatenraum des gebundenen Modells statt einer auf erlaubte Projektsprachen beschränkten Kandidatenliste verwenden.",
-    "scope": "Complete real normalized rankings and failure boundaries on every explicitly bound supported runtime; no final serialized detection or release approval."
+    "scope": "Complete real normalized rankings and failure boundaries on every explicitly bound supported runtime; no final serialized detection or release approval. 19.u real process/adapter error and boundary acceptance; no language-corpus, human-review or resource pass is implied."
   },
   "preconditions": [
     "Exact immutable request, original py3langid 0.4.0 model and complete ordered candidate catalog.",
     "All five explicit hash-bound CPython 3.10–3.14 Linux x86_64 interpreters and original offline wheels must be preinstalled on each executing test host.",
-    "The stage requires its own Apply gate. Static preparation, collection and ABI rejection are not positive runtime evidence."
+    "The stage requires its own Apply gate. Static preparation, collection and ABI rejection are not positive runtime evidence.",
+    "Original offline packages and hash-bound CPython matrix; test-selected fault injection never comes from subject data."
   ],
   "primary_verification_id": "SR-VER-0047",
   "required_environment": {
@@ -43,11 +45,26 @@
   "steps": [
     "Preserve complete independent strings, model ownership and all request, subject, model, candidate and version bindings.",
     "Actually rank representative full texts on each of five selected runtimes; compare every score against the original library.",
-    "Reject missing NumPy/py3langid, changed model hash, candidate filters, malformed rankings and incomplete backend bindings without successful replacement detection."
+    "Reject missing NumPy/py3langid, changed model hash, candidate filters, malformed rankings and incomplete backend bindings without successful replacement detection.",
+    "Run selected original strings and hostile responses through actual isolated worker pipes and native validation; preserve request bindings and original project bytes."
   ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0707",
   "test_ids": [
+    "tests/test_analyzer_acceptance.py::test_bad_backend_score_retains_failed_subject_and_other_complete_results[above_one]",
+    "tests/test_analyzer_acceptance.py::test_bad_backend_score_retains_failed_subject_and_other_complete_results[boolean]",
+    "tests/test_analyzer_acceptance.py::test_bad_backend_score_retains_failed_subject_and_other_complete_results[duplicate]",
+    "tests/test_analyzer_acceptance.py::test_bad_backend_score_retains_failed_subject_and_other_complete_results[infinite]",
+    "tests/test_analyzer_acceptance.py::test_bad_backend_score_retains_failed_subject_and_other_complete_results[missing]",
+    "tests/test_analyzer_acceptance.py::test_bad_backend_score_retains_failed_subject_and_other_complete_results[nan]",
+    "tests/test_analyzer_acceptance.py::test_bad_backend_score_retains_failed_subject_and_other_complete_results[negative]",
+    "tests/test_analyzer_acceptance.py::test_bad_backend_score_retains_failed_subject_and_other_complete_results[shape]",
+    "tests/test_analyzer_acceptance.py::test_bad_backend_score_retains_failed_subject_and_other_complete_results[sum]",
+    "tests/test_analyzer_acceptance.py::test_instruction_text_stays_a_bound_subject_through_real_adapter_and_file_evaluation[3.10]",
+    "tests/test_analyzer_acceptance.py::test_instruction_text_stays_a_bound_subject_through_real_adapter_and_file_evaluation[3.11]",
+    "tests/test_analyzer_acceptance.py::test_instruction_text_stays_a_bound_subject_through_real_adapter_and_file_evaluation[3.12]",
+    "tests/test_analyzer_acceptance.py::test_instruction_text_stays_a_bound_subject_through_real_adapter_and_file_evaluation[3.13]",
+    "tests/test_analyzer_acceptance.py::test_instruction_text_stays_a_bound_subject_through_real_adapter_and_file_evaluation[3.14]",
     "tests/test_analyzer_reference.py::test_changed_input_changes_snapshot_and_original_value_binding",
     "tests/test_analyzer_reference.py::test_external_descriptor_never_enters_reference_backend",
     "tests/test_analyzer_reference.py::test_full_independent_strings_and_request_bindings_survive_ranking",

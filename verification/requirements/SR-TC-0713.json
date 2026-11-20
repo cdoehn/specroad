@@ -10,6 +10,7 @@
     6
   ],
   "fixture_ids": [
+    "SR-FIX-ANALYZER-ATTACK-ACCEPTANCE-v1",
     "SR-FIX-ANALYZER-ENGINE-IDENTITY-v1",
     "SR-FIX-ANALYZER-LANGUAGE-POLICY-v1",
     "SR-FIX-ANALYZER-REFERENCE-RUNTIME-MATRIX-v1"
@@ -18,17 +19,18 @@
   "json_pointers": [],
   "method": "automated_behavior",
   "open_items": [
-    "Target 19.s.C requires its own successful Apply gate and commit, including all five original-runtime matrix cases.",
-    "Human-reviewed corpus, full durable subject integration and interruption/host/resource/release acceptance retain their following plan positions."
+    "Target 19.u.W requires its own successful Apply gate and commit.",
+    "19.t human-reviewed corpus, 19.v reference-platform resources, 19.w durable Work integration and subsequent release acceptance remain open."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Die Analyzerpolicy MUSS die Defaults, Severityentscheidungen und getrennten Erfolgsbegriffe aus Anhang T.8 implementieren.",
-    "scope": "Prepared behavior oracles; acceptance requires the own native Apply gate. Materialized actions and truthful independent success values. Actual engine identities and bound deterministic report projection."
+    "scope": "Prepared behavior oracles; acceptance requires the own native Apply gate. Materialized actions and truthful independent success values. Actual engine identities and bound deterministic report projection. 19.u real process/adapter error and boundary acceptance; no language-corpus, human-review or resource pass is implied."
   },
   "preconditions": [
     "Owned native request with complete original subject bindings and explicit materialized language policy.",
-    "All five supported hash-bound CPython interpreters and original offline wheels on the executing test host; Dev collection is not a behavior pass."
+    "All five supported hash-bound CPython interpreters and original offline wheels on the executing test host; Dev collection is not a behavior pass.",
+    "Original offline packages and hash-bound CPython matrix; test-selected fault injection never comes from subject data."
   ],
   "primary_verification_id": "SR-VER-0047",
   "required_environment": {
@@ -46,11 +48,21 @@
   "steps": [
     "Assess materialized language actions without altering original observations or coverage; separate execution, language confirmation, findings and exit code.",
     "Bind measured numeric inventory and every model/runtime fact; compare deterministic reports only for equal input and engine bindings.",
-    "Reject changed request or relevant engine component for continuation; unknown numeric facts cannot support reproducibility."
+    "Reject changed request or relevant engine component for continuation; unknown numeric facts cannot support reproducibility.",
+    "Run selected original strings and hostile responses through actual isolated worker pipes and native validation; preserve request bindings and original project bytes."
   ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0713",
   "test_ids": [
+    "tests/test_analyzer_acceptance.py::test_bad_backend_score_retains_failed_subject_and_other_complete_results[above_one]",
+    "tests/test_analyzer_acceptance.py::test_bad_backend_score_retains_failed_subject_and_other_complete_results[boolean]",
+    "tests/test_analyzer_acceptance.py::test_bad_backend_score_retains_failed_subject_and_other_complete_results[duplicate]",
+    "tests/test_analyzer_acceptance.py::test_bad_backend_score_retains_failed_subject_and_other_complete_results[infinite]",
+    "tests/test_analyzer_acceptance.py::test_bad_backend_score_retains_failed_subject_and_other_complete_results[missing]",
+    "tests/test_analyzer_acceptance.py::test_bad_backend_score_retains_failed_subject_and_other_complete_results[nan]",
+    "tests/test_analyzer_acceptance.py::test_bad_backend_score_retains_failed_subject_and_other_complete_results[negative]",
+    "tests/test_analyzer_acceptance.py::test_bad_backend_score_retains_failed_subject_and_other_complete_results[shape]",
+    "tests/test_analyzer_acceptance.py::test_bad_backend_score_retains_failed_subject_and_other_complete_results[sum]",
     "tests/test_analyzer_engine.py::test_every_engine_fact_is_bound_to_owned_inventory",
     "tests/test_analyzer_engine.py::test_inventory_and_engine_properties_are_detached_and_immutable",
     "tests/test_analyzer_engine.py::test_no_loaded_engine_is_not_a_known_engine",

@@ -568,3 +568,9 @@
 - [Bundle 767 — Sprachpolicy und Enginebindung](bundle-767-language-policy-and-engine.md)
 
 - [Bundle 768 — modulares Reviewverzeichnis](bundle-768-repository-reviews.md)
+
+- [Bundle 769 — Fehl-, Grenz- und Angriffsabnahme](bundle-769-analyzer-acceptance.md)
+
+- [Bundle 770 — vollständige Korrektur der Adapterabnahme](bundle-770-analyzer-scratch-correction.md)
+
+- [Bundle 771 — unabhängige aktuelle CLI-Testeingaben](bundle-771-analyzer-cli-inputs.md)

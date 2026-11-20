@@ -11,24 +11,25 @@
     7
   ],
   "fixture_ids": [
+    "SR-FIX-ANALYZER-ATTACK-ACCEPTANCE-v1",
     "SR-FIX-ANALYZER-EXTERNAL-CLI-v1"
   ],
   "implementation_status": "partial",
   "json_pointers": [],
   "method": "automated_behavior",
   "open_items": [
-    "Target 19.h.C needs its own successful Apply gate/commit; no Dev behavior execution.",
-    "Subsequent M19 positions retain controlled workers, distribution, language policy and durable Work integration.",
-    "Full suite and supported Python/platform matrix remain milestone/release obligations."
+    "Target 19.u.W requires its own successful Apply gate and commit.",
+    "19.t human-reviewed corpus, 19.v reference-platform resources, 19.w durable Work integration and subsequent release acceptance remain open."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Ein syntaktisch wie eine Anweisung aussehender Subjecttext MUSS als Analyseinhalt ohne Ausführungs- oder Rechtewirkung behandelt werden.",
-    "scope": "Explicit foreign descriptors and full independent settings/resources, native requests and actual report files are usable without executing workers. R validates the full input contract and traps subprocess, network and implicit model imports for instruction-like descriptor/subject/extension data and strict native validation/lint. Registry-owned argv/structured project variants, full configuration preflight, explicit input origin and projectless passive file boundaries are also bound. Only Apply executes behavior; preparation is not a passed gate. Native validation uses complete Core/software profile and bound small language-registry inputs. An actual SRX warning for each instruction-like requirement proves profile_lint ran; complete validation, language-policy success and strict/non-strict exit codes are checked with all side-effect traps still active."
+    "scope": "Explicit foreign descriptors and full independent settings/resources, native requests and actual report files are usable without executing workers. R validates the full input contract and traps subprocess, network and implicit model imports for instruction-like descriptor/subject/extension data and strict native validation/lint. Registry-owned argv/structured project variants, full configuration preflight, explicit input origin and projectless passive file boundaries are also bound. Only Apply executes behavior; preparation is not a passed gate. Native validation uses complete Core/software profile and bound small language-registry inputs. An actual SRX warning for each instruction-like requirement proves profile_lint ran; complete validation, language-policy success and strict/non-strict exit codes are checked with all side-effect traps still active. 19.u real process/adapter error and boundary acceptance; no language-corpus, human-review or resource pass is implied."
   },
   "preconditions": [
     "Small real native projects and exact passive synthetic report files with explicitly unknown engine facts.",
-    "Every stage requires its own Apply test gate; C preserves W/R test bytes and behavior."
+    "Every stage requires its own Apply test gate; C preserves W/R test bytes and behavior.",
+    "Original offline packages and hash-bound CPython matrix; test-selected fault injection never comes from subject data."
   ],
   "primary_verification_id": "SR-VER-0046",
   "required_environment": {
@@ -46,11 +47,17 @@
   "steps": [
     "Describe/request/import/show/evaluate explicit foreign analyzer data through native contracts with execution_supported false.",
     "Use hostile passive instruction/extension/backend mode values and observe no execution, networking or model initialization.",
-    "Retain descriptor identity, complete selection, settings/context hashes and full report coverage."
+    "Retain descriptor identity, complete selection, settings/context hashes and full report coverage.",
+    "Run selected original strings and hostile responses through actual isolated worker pipes and native validation; preserve request bindings and original project bytes."
   ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0695",
   "test_ids": [
+    "tests/test_analyzer_acceptance.py::test_instruction_text_stays_a_bound_subject_through_real_adapter_and_file_evaluation[3.10]",
+    "tests/test_analyzer_acceptance.py::test_instruction_text_stays_a_bound_subject_through_real_adapter_and_file_evaluation[3.11]",
+    "tests/test_analyzer_acceptance.py::test_instruction_text_stays_a_bound_subject_through_real_adapter_and_file_evaluation[3.12]",
+    "tests/test_analyzer_acceptance.py::test_instruction_text_stays_a_bound_subject_through_real_adapter_and_file_evaluation[3.13]",
+    "tests/test_analyzer_acceptance.py::test_instruction_text_stays_a_bound_subject_through_real_adapter_and_file_evaluation[3.14]",
     "tests/test_analyzer_external_cli.py::test_external_multianalyzer_request_is_complete_and_exactly_bound",
     "tests/test_analyzer_external_cli.py::test_foreign_descriptors_can_be_inspected_without_project_initialization[describe]",
     "tests/test_analyzer_external_cli.py::test_foreign_descriptors_can_be_inspected_without_project_initialization[list]",
