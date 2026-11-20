@@ -15,7 +15,7 @@
   "json_pointers": [],
   "method": "automated_behavior",
   "open_items": [
-    "Target 19.q.R needs its own successful Apply gate and commit.",
+    "Target 19.q.C needs its own successful Apply gate and commit.",
     "Final worker/report/CLI integration, human corpus review and release acceptance remain open."
   ],
   "oracle": {

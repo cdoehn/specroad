@@ -1,5 +1,4 @@
 """Pure language-comparison-v1; no detector, permission policy or writes."""
-from dataclasses import dataclass
 import re
 
 from ..model.language_registry import LanguageRegistry
@@ -10,25 +9,11 @@ from ._score_values import format_units, parse_threshold
 from ._text_policy import TEXT_POLICY_VERSION, request_policy
 
 
-COMPARISON_VERSION = 'language-comparison-v1'
+from ._comparison_values import (COMPARISON_VERSION, LanguageComparison,
+                                 ComparedSubject, ComparedLanguage)
 
-
-@dataclass(frozen=True)
-class LanguageComparison:
-    declared_language: str
-    detected_language: str
-    status: str
-    language_resolution: str | None
-    registry_version: str
-    registry_sha256: str
-
-    @property
-    def data(self):
-        return dict(comparison_version=COMPARISON_VERSION,
-            declared_language=self.declared_language, detected_language=self.detected_language,
-            status=self.status, language_resolution=self.language_resolution,
-            region_checked=False, script_checked=False,
-            registry_version=self.registry_version, registry_sha256=self.registry_sha256)
+__all__ = ('COMPARISON_VERSION', 'LanguageComparison', 'ComparedSubject',
+           'ComparedLanguage', 'compare_language', 'compare_decisions')
 
 
 def compare_language(declared, decision, *, registry):
@@ -64,24 +49,6 @@ def compare_language(declared, decision, *, registry):
             status = 'mismatch'
     return LanguageComparison(declared, detected, status, resolution,
                               registry.version, registry.sha256)
-
-
-@dataclass(frozen=True)
-class ComparedSubject:
-    subject_key: str
-    value_sha256: str
-    declared_language: str
-    normative_force: str | None
-    decision: ScoreDecision
-    comparison: LanguageComparison | None
-
-
-@dataclass(frozen=True)
-class ComparedLanguage:
-    decision: LanguageDecision
-    registry_version: str
-    registry_sha256: str
-    subjects: tuple
 
 
 def compare_decisions(request, decisions, *, registry):
