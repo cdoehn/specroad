@@ -586,3 +586,5 @@
 - [Bundle 776 — hostunabhängige Resume-Abnahme](bundle-776-analyzer-resume-budget.md).
 
 - [Bundle 777 — Testuhr im Resume-Aufruf aktivieren](bundle-777-analyzer-resume-metrics.md).
+
+- [Bundle 778 — native Work-Datei unverändert zurücklegen](bundle-778-analyzer-work-file.md).

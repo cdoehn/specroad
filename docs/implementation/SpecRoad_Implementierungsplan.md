@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 393 · **Stand:** 21. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.101
+**Planrevision:** 394 · **Stand:** 21. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.101
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 306 Schritte und 918 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; die früher genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wurde nach der damaligen Spezifikation innerhalb von 15.l.R vorgezogen und bleibt als normaler Prüfkern erhalten. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -258,14 +258,14 @@ Aktuelle Detailentscheidung: [ANALYZER-WORK-774](decisions/analyzer-work-774.md)
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 393
+plan_revision: 394
 implementation_plan_commits_total: 918
-implementation_plan_commits_completed: 865
-last_completed_plan_commit: 19.w.W
-next_plan_commit: 19.w.R
+implementation_plan_commits_completed: 866
+last_completed_plan_commit: 19.w.R
+next_plan_commit: 19.w.C
 priority_off_plan: null
 next_off_plan_commit: null
-last_completed_numbered_bundle: 777
+last_completed_numbered_bundle: 778
 implementation_state: in_progress
 deferred_plan_commits: [19.t.W, 19.t.R, 19.t.C]
 deferred_review_module: language-corpus
@@ -998,3 +998,5 @@ mit realen buildgebundenen Folgemessungen fort; Zielwerte gelten erst nach dem j
 Aktuelle Korrektur: [Bundle 776](history/bundle-776-analyzer-resume-budget.md) erhält den vollständigen offenen 19.w/19.x-Rest nach dem Fehler-Result 775; jedes Ziel gilt erst nach seinem eigenen Apply-Gate und Commit.
 
 Aktuelle Korrektur: [Bundle 777](history/bundle-777-analyzer-resume-metrics.md) führt den vollständigen offenen 19.w/19.x-Rest aus Fehler-Result 776 fort; jedes Ziel gilt erst nach seinem eigenen Apply-Gate und Commit.
+
+Aktuelle Korrektur: [Bundle 778](history/bundle-778-analyzer-work-file.md) erhält den bestätigten 19.w.W-Commit und führt den vollständigen offenen 19.w.R/C- und 19.x.W/R/C-Rest fort.

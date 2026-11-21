@@ -29644,6 +29644,24 @@
     "tests/test_analyzer_resume.py::test_real_analysis_survives_every_checkpoint_in_a_fresh_process[3.11]",
     "tests/test_analyzer_resume.py::test_real_analysis_survives_every_checkpoint_in_a_fresh_process[3.12]",
     "tests/test_analyzer_resume.py::test_real_analysis_survives_every_checkpoint_in_a_fresh_process[3.13]",
-    "tests/test_analyzer_resume.py::test_real_analysis_survives_every_checkpoint_in_a_fresh_process[3.14]"
+    "tests/test_analyzer_resume.py::test_real_analysis_survives_every_checkpoint_in_a_fresh_process[3.14]",
+    "tests/test_analyzer_resume_right.py::test_actual_failed_resume_preserves_durable_subjects_without_code_eight[changed_engine]",
+    "tests/test_analyzer_resume_right.py::test_actual_failed_resume_preserves_durable_subjects_without_code_eight[crash]",
+    "tests/test_analyzer_resume_right.py::test_actual_failed_resume_preserves_durable_subjects_without_code_eight[full_scratch]",
+    "tests/test_analyzer_resume_right.py::test_actual_failed_resume_preserves_durable_subjects_without_code_eight[malformed]",
+    "tests/test_analyzer_resume_right.py::test_actual_failed_resume_preserves_durable_subjects_without_code_eight[missing_engine]",
+    "tests/test_analyzer_resume_right.py::test_actual_failed_resume_preserves_durable_subjects_without_code_eight[oom]",
+    "tests/test_analyzer_resume_right.py::test_actual_failed_resume_preserves_durable_subjects_without_code_eight[wrong_unit]",
+    "tests/test_analyzer_resume_right.py::test_missing_native_work_object_is_concrete_and_does_not_start_worker",
+    "tests/test_analyzer_resume_right.py::test_retained_unit_never_changes_request_policy_engine_or_original[binding]",
+    "tests/test_analyzer_resume_right.py::test_retained_unit_never_changes_request_policy_engine_or_original[comparison]",
+    "tests/test_analyzer_resume_right.py::test_retained_unit_never_changes_request_policy_engine_or_original[engine]",
+    "tests/test_analyzer_resume_right.py::test_retained_unit_never_changes_request_policy_engine_or_original[finding]",
+    "tests/test_analyzer_resume_right.py::test_retained_unit_never_changes_request_policy_engine_or_original[original]",
+    "tests/test_analyzer_resume_right.py::test_retained_unit_never_changes_request_policy_engine_or_original[pair]",
+    "tests/test_analyzer_resume_right.py::test_retained_unit_never_changes_request_policy_engine_or_original[score]",
+    "tests/test_analyzer_resume_right.py::test_retained_unit_never_changes_request_policy_engine_or_original[status]",
+    "tests/test_analyzer_resume_right.py::test_short_subjects_abstain_without_dependency_and_keep_complete_coverage",
+    "tests/test_analyzer_resume_right.py::test_v1_work_retains_its_original_unavailable_contract"
   ]
 }

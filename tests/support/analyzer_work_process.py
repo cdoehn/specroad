@@ -43,6 +43,23 @@ def loaded():
 _work_engine._scores=scored
 _model_session.load_reference_model=loaded
 """.replace('TRACE',repr(trace))
+fault = action.split(':',1)[1] if ':' in action else None
+if fault in ('crash','malformed','wrong_unit','oom'):
+    probe += "\ndef broken(self,pair):\n"
+    if fault=='crash': probe += " import os;os._exit(37)\n"
+    elif fault=='oom': probe += " raise MemoryError('injected host allocation failure')\n"
+    elif fault=='malformed': probe += " import os;os.write(1,b'{bad\\n');os._exit(0)\n"
+    else: probe += " return {'foreign':'unit'}\n"
+    probe += "_work_engine.WorkEngine.subject=broken\n"
+elif fault=='missing_engine':
+    probe += "\nfrom specroad.analyzers._values import AnalyzerError\ndef missing():raise AnalyzerError('missing_dependency',exit_code=5)\n_model_session.load_reference_model=missing\n"
+elif fault=='changed_engine':
+    probe += "\noriginal_enter=_work_engine.WorkEngine.__enter__\ndef changed(self):\n original_enter(self)\n self.rows[0]['engine']['model_sha256']['value']='f'*64\n return self\n_work_engine.WorkEngine.__enter__=changed\n"
+if fault=='full_scratch':
+    from specroad.work.checkpoints import CheckpointStore
+    import errno
+    def full(*args,**kwargs):raise OSError(errno.ENOSPC,'injected full scratch')
+    CheckpointStore._publish_held=full
 _work_worker.BOOTSTRAP=('import sys;sys.path.insert(0,sys.argv[1]);\n'+probe+
     '\nfrom specroad.analyzers._work_worker import main;raise SystemExit(main())')
 if action=='single':

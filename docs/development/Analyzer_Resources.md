@@ -129,6 +129,7 @@ Der ursprüngliche Nachweis und seine festen Regressionen bleiben erhalten.
 | Stufe | Corebuild-SHA-256 | CPU maximal | Laufzeit Median | RSS-Obergrenze |
 | --- | --- | ---: | ---: | ---: |
 | 19.w.W | `1393923b615fa15db89295f7f690b15ee527287b1d6e7086102477464991b2e2` | 6.79 s | 6.80 s | 363.16 MiB |
+| 19.w.R | `6e1e9eb8f528ed065ca7472418714cea5e47fd245e22ec65859fae9b38876daa` | 6.85 s | 6.82 s | 363.25 MiB |
 
 Jede Serie umfasst einen Warm-up und fünf neue Prozesspaare mit jeweils
 1.000 ungekürzten Texten von 166–440 Codepoints. Die CPU-Prüfung addiert
