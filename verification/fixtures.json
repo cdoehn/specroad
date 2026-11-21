@@ -1051,6 +1051,10 @@
     "verification-context-subjects": {
       "kind": "Owned requirement, verification and test subjects with immutable recorded Evidence bindings. Audit/workflow and semantic changes, exact effective product configurations, passive metadata, native rejection boundaries and isolated Core/PYZ parity. No authoritative run selection or verification success.",
       "provider": "tests/test_verification_context.py:subject"
+    },
+    "SR-FIX-ANALYZER-RESOURCES-v1": {
+      "kind": "Original historical reference observation plus exact-build genuine follow-up series; 1000 complete texts, warmup and five measured process pairs, unchanged scripts, full raw/export hash chains. Not a reviewed language corpus or release approval.",
+      "provider": "verification/fixtures/analyzer-resources-20261121;verification/fixtures/analyzer-resources-builds/<build_sha256>"
     }
   },
   "fixture_format_version": 1,

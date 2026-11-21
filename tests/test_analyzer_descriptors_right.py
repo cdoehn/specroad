@@ -87,7 +87,8 @@ def test_spoofed_builtin_and_unknown_extensions_never_import_or_start_code(monke
         assert not classification['known_builtin'] and not classification['execution_supported']
         copy=AnalyzerDescriptor(json.dumps(builtin_descriptor().data).encode())
         assert classify_descriptor(copy)['known_builtin']
-        assert not classify_descriptor(copy)['execution_supported']
+        assert classify_descriptor(copy)['execution_supported']
+        assert classify_descriptor(copy)['availability'] == 'not_checked'
     assert not ({'numpy','py3langid'} & (set(sys.modules)-imports))
 
 

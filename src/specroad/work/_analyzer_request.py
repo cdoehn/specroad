@@ -33,9 +33,15 @@ def command_binding(registry, command_id, arguments):
     _object(arguments, ('analysis_id', 'construction'))
     AnalysisRequestId(arguments['analysis_id'])
     control = arguments['construction']
+    _require(type(control) is dict)
     _object(control, ('format_version','project','supplied','subject_ids','field_pointers',
-        'configuration_id','request','guards','output','output_root','cwd','project_identity'))
-    _require(control['format_version'] == 'analyzer-work-request-v1')
+        'configuration_id','request','guards','output','output_root','cwd','project_identity',
+        *(('fail_on',) if control.get('format_version') == 'analyzer-work-request-v2' else ())))
+    _require(control['format_version'] in ('analyzer-work-request-v1','analyzer-work-request-v2'))
+    if control['format_version'] == 'analyzer-work-request-v1':
+        _require('fail_on' not in control)
+    else:
+        _require(control.get('fail_on') in ('warning','error'))
     _require(type(control['guards']) is list)
     for guard in control['guards']:
         _object(guard, ('path','document','raw_hex'))
@@ -112,7 +118,7 @@ def prepare_analyzer_work(invocation):
             else default_inputs(read(str(root/'specroad.json'))))
         supplied = request_inputs(encoded(raw), options['--analyzer'])
     output = options.get('--output')
-    control = dict(format_version='analyzer-work-request-v1', project=None if root is None else str(root),
+    control = dict(format_version='analyzer-work-request-v2', fail_on=resolved.values['fail_on'], project=None if root is None else str(root),
         supplied=supplied, subject_ids=None if '--subject' not in options else list(options['--subject']),
         field_pointers=list(options.get('--field', ('/statement',))),
         configuration_id=resolved.values.get('configuration'), request=explicit, guards=guards,

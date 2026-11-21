@@ -131,6 +131,9 @@ def test_project_options_never_select_upstream_modes_or_installers(monkeypatch):
     calls = []
     def load(): calls.append(1); return OwnedModel()
     monkeypatch.setattr(_model_session, 'load_reference_model', load)
+    def unavailable_engine(descriptor):
+        raise AnalyzerError('missing_dependency', exit_code=5)
+    monkeypatch.setattr('specroad.analyzers._work_engine._engine', unavailable_engine)
     with (patch('socket.socket', side_effect=AssertionError('network')),
           patch('subprocess.Popen', side_effect=AssertionError('subprocess mode'))):
         package = run_request(request)

@@ -13,7 +13,8 @@ from test_analyzer_requests import inputs
 def request_value():
     value=inputs()
     value['analyzers']=[analyzer_binding(builtin_descriptor(),['language_detection'])]
-    value['settings']={'specroad.py3langid':{}}
+    from specroad.analyzers.language_policy import materialize_policy
+    value['settings']={'specroad.py3langid':{'language_detection':materialize_policy()}}
     return create_request(**value,analysis_id='worker-request').data
 
 
@@ -25,7 +26,8 @@ def test_full_bound_request_reaches_real_worker():
     for report in package.reports:
         assert report.data['run_status'] == 'unavailable'
         assert report.data['coverage']['counts']['open'] == len(request.data['subjects'])
-        assert report.data['operational']['execution_supported'] is False
+        assert all(s['payload']['specroad.language_detection']['decision']['status'] == 'unavailable'
+                   for s in report.data['subjects'])
 
 
 def test_launch_has_explicit_interpreter_and_no_shell(monkeypatch):

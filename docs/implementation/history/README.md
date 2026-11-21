@@ -578,3 +578,11 @@
 - [Bundle 772 — gemessene Analyzer-Ressourcenabnahme](bundle-772-analyzer-resources.md)
 
 - [Bundle 773 — Prozessidentität der Ressourcenbelege korrigieren](bundle-773-analyzer-process-identity.md)
+
+- [Bundle 774 — Analyzer-Fortsetzung und mehrsprachiger Roundtrip](bundle-774-analyzer-work-roundtrip.md)
+
+- [Bundle 775 — Analyzer-Korrektur und reale Folgemessungen](bundle-775-analyzer-correction-measurements.md)
+
+- [Bundle 776 — hostunabhängige Resume-Abnahme](bundle-776-analyzer-resume-budget.md).
+
+- [Bundle 777 — Testuhr im Resume-Aufruf aktivieren](bundle-777-analyzer-resume-metrics.md).

@@ -29638,6 +29638,12 @@
     "tests/test_analyzer_resources_processes.py::test_final_label_reconciliation_requires_both_consistent_observed_processes[reversed-interval-invalid_rss_interval]",
     "tests/test_analyzer_resources_processes.py::test_final_label_reconciliation_requires_both_consistent_observed_processes[swapped-role-reused_or_mislabelled_pid]",
     "tests/test_analyzer_resources_processes.py::test_final_label_reconciliation_requires_both_consistent_observed_processes[unknown-pid-unknown_rss_process]",
-    "tests/test_analyzer_resources_processes.py::test_final_label_reconciliation_requires_both_consistent_observed_processes[wrong-sum-rss_sum_mismatch]"
+    "tests/test_analyzer_resources_processes.py::test_final_label_reconciliation_requires_both_consistent_observed_processes[wrong-sum-rss_sum_mismatch]",
+    "tests/test_analyzer_resume.py::test_one_resume_owns_one_model_and_reuses_all_retained_units",
+    "tests/test_analyzer_resume.py::test_real_analysis_survives_every_checkpoint_in_a_fresh_process[3.10]",
+    "tests/test_analyzer_resume.py::test_real_analysis_survives_every_checkpoint_in_a_fresh_process[3.11]",
+    "tests/test_analyzer_resume.py::test_real_analysis_survives_every_checkpoint_in_a_fresh_process[3.12]",
+    "tests/test_analyzer_resume.py::test_real_analysis_survives_every_checkpoint_in_a_fresh_process[3.13]",
+    "tests/test_analyzer_resume.py::test_real_analysis_survives_every_checkpoint_in_a_fresh_process[3.14]"
   ]
 }

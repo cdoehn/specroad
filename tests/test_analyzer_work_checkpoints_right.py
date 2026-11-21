@@ -30,14 +30,14 @@ def test_wrong_resume_binding_is_conflict_and_keeps_all_persisted_bytes(tmp_path
 
 
 def test_engine_change_cannot_mix_a_new_result_into_existing_subjects(tmp_path,monkeypatch):
-    from specroad.work import analyzer
+    from specroad.analyzers._work_worker import WorkWorker
     _,store=begun(tmp_path);resume_analyzer_work(store,max_units=2)
-    before=inventory(tmp_path/'work');original=analyzer.engines
-    def changed(request):
-        rows=original(request);rows[0]['reason']='different-worker';return rows
-    monkeypatch.setattr(analyzer,'engines',changed)
+    before=inventory(tmp_path/'work');original=WorkWorker.engines
+    def changed(self, request):
+        rows=original(self,request);rows[0]['reason']='different-worker';return rows
+    monkeypatch.setattr(WorkWorker,'engines',changed)
     result=dispatch_result(['work','resume',str(tmp_path/'work')],cwd=tmp_path)
-    assert result.exit_code==6 and result.continuation is None
+    assert result.exit_code==5 and result.continuation is None
     assert inventory(tmp_path/'work')==before
 
 
@@ -82,11 +82,11 @@ def test_failed_successor_keeps_completed_subjects_and_remains_resumable(tmp_pat
 
 
 def test_completed_work_keeps_report_bytes_after_engine_change(tmp_path,monkeypatch):
-    from specroad.work import analyzer
+    from specroad.analyzers._work_worker import WorkWorker
     _,store=begun(tmp_path)
     result=finish(tmp_path/'work',tmp_path);saved=store.read().raw
     def forbidden(*args):raise AssertionError('Completed output re-executed')
-    monkeypatch.setattr(analyzer,'engines',forbidden)
+    monkeypatch.setattr(WorkWorker,'engines',forbidden)
     repeated=dispatch_result(['work','resume',str(tmp_path/'work')],cwd=tmp_path)
     assert repeated.exit_code==result.exit_code==5 and repeated.result==result.result
     assert store.read().raw==saved and checked(store.read())[1] is not None

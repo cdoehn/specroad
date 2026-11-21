@@ -83,11 +83,20 @@ def checked_value(value, objects, registry, *, validate_command=True):
             from ._data_contract import _object
             _object(evidence, ('request_sha256','engines'))
             _require(request is not None and evidence['request_sha256']==sha256(request.canonical_bytes).hexdigest())
-            check_engines(request,evidence['engines'])
+            if control['format_version'] == 'analyzer-work-request-v2':
+                from ..analyzers._work_values import check_engines as check_real_engines
+                check_real_engines(request, evidence['engines'])
+            else:
+                check_engines(request,evidence['engines'])
         elif task['phase'] == 'subjects':
             _require(request is not None)
             subject = next(s for s in request.data['subjects'] if s['subject_key']==task['range']['subject_key'])
-            _require(evidence == observation(subject))
+            if control['format_version'] == 'analyzer-work-request-v2':
+                from ..analyzers._work_values import check_unit
+                _require('snapshot' in done)
+                check_unit(request, task['range'], done['snapshot']['engines'], evidence)
+            else:
+                _require(evidence == observation(subject))
         elif task['key'] == 'finalize':
             _require(request is not None and evidence == {'prepared':True})
         done[task['key']] = evidence
@@ -131,10 +140,20 @@ from ._analyzer_checkpoint import advance
 def check_outcome(value, objects, document, exit_code):
     request = request_of(value, objects)
     _require(request is not None)
-    _, _, done = checked_value(value, objects, None, validate_command=False)
-    expected = final_result(request, value['command_id'], done, document=document)
-    _require(encoded(document) == expected.canonical_bytes
-        and type(exit_code) is int and exit_code == (0 if value['command_id']=='analyzer.request' else 5))
+    control, _, done = checked_value(value, objects, None, validate_command=False)
+    expected, code = completed_result(request, value['command_id'], control, done, document=document)
+    _require(encoded(document) == expected.canonical_bytes and type(exit_code) is int and exit_code == code)
+
+
+def completed_result(request, command_id, control, done, *, document=None):
+    if command_id == 'analyzer.request':
+        return request, 0
+    if control['format_version'] == 'analyzer-work-request-v1':
+        return final_result(request, command_id, done, document=document), 5
+    from ..analyzers._work_values import package_from_units
+    from ..analyzers.language_policy import execution_outcome
+    result = package_from_units(request, done['snapshot']['engines'], done, document=document)
+    return result, execution_outcome(result.reports, fail_on=control['fail_on'])['exit_code']
 
 
 def outcome(manifest):
@@ -145,7 +164,7 @@ def outcome(manifest):
     return record['outcome'], record['exit_code']
 
 
-def resume_analyzer_work(store, *, max_units=1, expected_analysis_id=None, expected_snapshot_sha256=None):
+def resume_analyzer_work(store, *, max_units=1, expected_analysis_id=None, expected_snapshot_sha256=None, executor=None):
     from .control import _initial
     from .resume import _runtime_build
     require(type(max_units) is int and max_units > 0, 'analyzer_work_unit_count', exit_code=2)
@@ -159,9 +178,12 @@ def resume_analyzer_work(store, *, max_units=1, expected_analysis_id=None, expec
     if expected_snapshot_sha256 is not None:
         require(bound_request is not None and expected_snapshot_sha256 == bound_request.data['snapshot_sha256'],
             'analyzer_work_snapshot_changed', exit_code=6)
-    for _ in range(max_units):
-        if current.as_dict()['state'] == 'completed': break
-        current = store._update(advance)
+    from contextlib import nullcontext
+    from ..analyzers._work_worker import WorkWorker
+    with (WorkWorker() if executor is None else nullcontext(executor)) as worker:
+        for _ in range(max_units):
+            if current.as_dict()['state'] == 'completed': break
+            current = store._update(lambda previous: advance(previous, executor=worker))
     return current
 
 

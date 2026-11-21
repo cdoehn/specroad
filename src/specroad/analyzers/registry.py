@@ -16,7 +16,7 @@ def builtin_descriptor():
 def classify_descriptor(descriptor):
     require(type(descriptor) is AnalyzerDescriptor, 'analyzer_descriptor_required', exit_code=2)
     known = descriptor.canonical_bytes == builtin_descriptor().canonical_bytes
-    # No worker is implemented at this plan position. An imported flag, even
-    # an exact descriptor copy, cannot authorize importing or starting one.
+    # This is passive capability metadata, never dependency availability or
+    # authority to run. Only explicit execution enters the trusted worker.
     return {'known_builtin': known, 'descriptor_sha256': descriptor.sha256,
-            'execution_supported': False, 'availability': 'not_implemented' if known else 'external_result_only'}
+            'execution_supported': known, 'availability': 'not_checked' if known else 'external_result_only'}

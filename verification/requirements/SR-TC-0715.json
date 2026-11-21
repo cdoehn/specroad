@@ -17,14 +17,13 @@
   "json_pointers": [],
   "method": "automated_behavior",
   "open_items": [
-    "Target 19.j.C requires its own successful Apply gate and commit.",
-    "Later M19 worker/distribution stages must integrate real execution, pinned engine observations and actual resource blockers; no worker success is claimed.",
-    "Release full-suite and supported platform/CPython evidence remain separate obligations."
+    "Target 19.w.W requires its own native Apply gate and commit; no behavior test ran in Dev.",
+    "Human language-corpus reviews and 19.t remain required before 19.y; release and supported-platform full-suite gates remain separate."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Analyzerarbeit MUSS den Checkpoint- und Fortsetzungsvertrag aus Anhang T.5 und T.9 mit oder ohne ausdrücklich angegebenes `--work-dir` erfüllen.",
-    "scope": "Early analysis ID in normalized_arguments, null writer fields, exact owned construction/snapshot inputs, native durable journal and new-process resumption. R adds malformed/foreign identities, source changes, private path boundaries and unsealed/sealed export/restore. Per-subject technical results survive restart and export; final reports retain open/unavailable coverage with code 5 until worker implementation. Tiny complete jobs allocate no Work directory. Engine and explicit expected snapshot/identity changes conflict before publication; concrete ENOSPC retains the previous prefix and permits only a bounded safe completion fallback. No test outcome is inferred from collection. Existing R-67 through R-73 request/file identity and pair-binding regressions are mandatory. The public resume action comes exclusively from the verified ContinuationClaim; analysis identity and checkpoint hash supplement the summary without shadowing protected result-control fields. Coverage uses the exact sorted request subject-key arrays and their separate integer counts according to T.4.1; unavailable execution retains every subject as open. The completed package preserves the canonical explicit or sealed request."
+    "scope": "Full original subjects, actual isolated offline engines and native Work across every durable boundary; exact request/AN-ID, engine and policy bindings, retained units and identical final semantic report hashes. Concrete worker, engine and storage failures retain the last durable checkpoint without false Code 8. Legacy v1 remains explicitly unavailable. Prepared tests require the stage gate; no human or release approval is asserted."
   },
   "preconditions": [
     "Real native small project, explicit JSON request or verified partial; a recorded compatible distribution is required for durable Work.",
@@ -50,6 +49,12 @@
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0715",
   "test_ids": [
+    "tests/test_analyzer_resume.py::test_one_resume_owns_one_model_and_reuses_all_retained_units",
+    "tests/test_analyzer_resume.py::test_real_analysis_survives_every_checkpoint_in_a_fresh_process[3.10]",
+    "tests/test_analyzer_resume.py::test_real_analysis_survives_every_checkpoint_in_a_fresh_process[3.11]",
+    "tests/test_analyzer_resume.py::test_real_analysis_survives_every_checkpoint_in_a_fresh_process[3.12]",
+    "tests/test_analyzer_resume.py::test_real_analysis_survives_every_checkpoint_in_a_fresh_process[3.13]",
+    "tests/test_analyzer_resume.py::test_real_analysis_survives_every_checkpoint_in_a_fresh_process[3.14]",
     "tests/test_analyzer_work.py::test_early_generation_survives_reopen_without_finished_snapshot[None-False-request]",
     "tests/test_analyzer_work.py::test_early_generation_survives_reopen_without_finished_snapshot[None-False-run]",
     "tests/test_analyzer_work.py::test_early_generation_survives_reopen_without_finished_snapshot[None-True-request]",

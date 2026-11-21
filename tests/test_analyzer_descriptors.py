@@ -28,7 +28,8 @@ def test_builtin_and_external_are_distinct_without_claiming_installed_worker():
     foreign = AnalyzerDescriptor(json.dumps(external(), ensure_ascii=False).encode())
     assert foreign.data == external()
     assert not classify_descriptor(foreign)['known_builtin']
-    assert not classify_descriptor(builtin)['execution_supported']
+    assert classify_descriptor(builtin)['execution_supported']
+    assert classify_descriptor(builtin)['availability'] == 'not_checked'
     assert not classify_descriptor(foreign)['execution_supported']
 
 

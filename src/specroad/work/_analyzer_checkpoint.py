@@ -6,8 +6,6 @@ from ..analyzers.identities import AnalysisRequestId
 from ..analyzers.requests import AnalyzerRequest
 from ..analyzers.files import InputFile
 from ..analyzers.subjects import request_from_project
-from ._analyzer_results import final_result
-from ..analyzers.worker_transport import execute
 from .manifest import (_partition, _tree, _put, _task_binding,
     partition_work_manifest, complete_work_manifest)
 
@@ -36,13 +34,26 @@ def _capture(control, identity):
     return request
 
 
-def advance(manifest):
+def advance(manifest, *, executor=None):
     """One complete native unit; no output publication or journal mutation."""
-    from .analyzer import checked, units, engines
+    from .analyzer import checked
+    from ..analyzers._work_worker import WorkWorker
+    control, _, _ = checked(manifest)
+    if executor is None and control['format_version'] == 'analyzer-work-request-v2':
+        with WorkWorker() as worker:
+            return advance(manifest, executor=worker)
+    from .analyzer import units, engines, completed_result
     control, request, done = checked(manifest)
     value = manifest.as_dict()
     require(value['state'] in ('running','completed'), 'analyzer_work_not_running', exit_code=6)
     if value['state'] == 'completed': return manifest
+    real = control['format_version'] == 'analyzer-work-request-v2'
+    def current_engines(request):
+        if not real: return engines(request)
+        if value['command_id'] == 'analyzer.request':
+            from ..analyzers._work_values import static_engines
+            return static_engines(request)
+        return executor.engines(request)
     if request is None:
         request = _capture(control, value['normalized_arguments']['analysis_id'])
         objects = dict(manifest.objects)
@@ -54,17 +65,22 @@ def advance(manifest):
         tasks = [dict(unit, unit_id='UNIT-'+sha256(encoded({'binding':binding,'unit':unit})).hexdigest())
                  for unit in units(request, value['command_id'])]
         value['manifests']['tasks'] = _tree('tasks', tasks, objects)
-        complete = [{'unit_id':tasks[0]['unit_id'], 'evidence':_put(encoded({'request_sha256':sha256(request.canonical_bytes).hexdigest(),'engines':engines(request)}),objects)}]
+        complete = [{'unit_id':tasks[0]['unit_id'], 'evidence':_put(encoded({'request_sha256':sha256(request.canonical_bytes).hexdigest(),'engines':current_engines(request)}),objects)}]
         value['checkpoint_generation'] += 1
         return _partition(value,tasks,complete,objects,manifest._registry,value['tool_build'])
-    require(engines(request)==done['snapshot']['engines'], 'analyzer_work_engine_changed', exit_code=6)
+    # A fully computed report never needs a worker again. Only new subject
+    # computation must re-observe the bound engine in this invocation.
+    remaining = manifest.entries('remaining')
+    if not real or remaining and remaining[0]['phase'] == 'subjects':
+        require(current_engines(request) == done['snapshot']['engines'],
+                'analyzer_work_engine_changed', exit_code=5 if real else 6)
     if manifest.entries('remaining'):
         task = manifest.entries('remaining')[0]
         evidence = {'prepared':True}
         if task['phase']=='subjects':
             from ._analyzer_results import prepare_subject
-            evidence = prepare_subject(request,task)
+            evidence = (executor.subject(request, task['range']) if real
+                        else prepare_subject(request,task))
         return partition_work_manifest(manifest, {task['unit_id']: encoded(evidence)})
-    result = (execute(request) if value['command_id']=='analyzer.run'
-              else final_result(request, value['command_id'], done))
-    return complete_work_manifest(manifest, result.data, exit_code=0 if value['command_id']=='analyzer.request' else 5)
+    result, code = completed_result(request, value['command_id'], control, done)
+    return complete_work_manifest(manifest, result.data, exit_code=code)

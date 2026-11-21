@@ -9,13 +9,13 @@
   "json_pointers": [],
   "method": "automated_behavior",
   "open_items": [
-    "The target stage still needs its actual Apply gate and commit; completed measurement alone is not Apply evidence.",
+    "The stage-specific corrected source and measured evidence require this stage's native Apply gate and commit.",
     "Durable dispatcher integration, subsequent source builds, Core startup budgets, human corpus review and release/matrix acceptance need their separate bound evidence."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Die Analyzer-Performanceabnahme MUSS den getrennten Gesamtprozess-CPU-/RSS-Vertrag aus Anhang T.10 messen.",
-    "scope": "Real dated reference adapter observations, one warmup and five complete cold-process runs; <=120 CPU seconds including child accounting and <=512 MiB simultaneous RSS, with conservative lifetime bound. Pure data verification uses native full request/report parsers. Original scripts and numeric observations remain unchanged; export receipt describes private-field projection. R additionally rejects unknown/undersized hosts, mismatched identities, incomplete processes/texts, altered evidence, wrong units and unsupported counters; an uncertain RSS upper bound cannot pass. The v1 final parent label is reconciled with the independent parent/worker PIDs, start ticks, exact GNU-time wrapper ancestry and all actual RSS samples. Both measured processes remain required; original evidence and resource limits are unchanged. Adversarial cases reject missing/extra/duplicate/reused identities, wrong wrapper roles or ancestry, mismatched sample roles/PPIDs/start ticks, missing process observations and inconsistent sums or intervals."
+    "scope": "Real dated reference adapter observations, one warmup and five complete cold-process runs; <=120 CPU seconds including child accounting and <=512 MiB simultaneous RSS, with conservative lifetime bound. Pure data verification uses native full request/report parsers. Original scripts and numeric observations remain unchanged; export receipt describes private-field projection. R additionally rejects unknown/undersized hosts, mismatched identities, incomplete processes/texts, altered evidence, wrong units and unsupported counters; an uncertain RSS upper bound cannot pass. The v1 final parent label is reconciled with the independent parent/worker PIDs, start ticks, exact GNU-time wrapper ancestry and all actual RSS samples. Both measured processes remain required; original evidence and resource limits are unchanged. Adversarial cases reject missing/extra/duplicate/reused identities, wrong wrapper roles or ancestry, mismatched sample roles/PPIDs/start ticks, missing process observations and inconsistent sums or intervals. Historical original numbers and process-label regressions remain unchanged. Current Core builds additionally require their own genuine exported observations under analyzer-resources-builds/<exact-native-build-sha256>; no historical fallback."
   },
   "preconditions": [
     "Trusted complete real reference measurement, with unchanged native Core build and original engine/input hashes.",

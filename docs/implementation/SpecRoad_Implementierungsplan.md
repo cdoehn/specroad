@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 392 · **Stand:** 21. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.101
+**Planrevision:** 393 · **Stand:** 21. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.101
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 306 Schritte und 918 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; die früher genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wurde nach der damaligen Spezifikation innerhalb von 15.l.R vorgezogen und bleibt als normaler Prüfkern erhalten. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -251,21 +251,21 @@ Korpusabnahme bleiben offen. Die OFF-PLAN-Reviewgruppe zählt keine
 Produktposition; 19.u wird ausschließlich nach seinem jeweiligen Gate gezählt. Die Zielwerte gelten erst nach dem eigenen Gate der jeweiligen
 Stage. Allgemeine Tests, menschliche Befugnisse und Releasegates bleiben erhalten.
 
-Bestätigte Basis: Result 773 schließt 19.v.W/R/C mit sauberem Commit ab. [ANALYZER-WORK-774](decisions/analyzer-work-774.md) bindet die Vorbereitung von 19.w.W/R/C und 19.x.W/R/C mit getrennten Gates vor. Die Zielwerte gelten erst nach dem jeweiligen Gate und Commit; 19.t und menschliche Reviews bleiben vor 19.y erforderlich.
+Bestätigte Basis: Result 773 schließt 19.v.W/R/C mit sauberem Commit ab. [Bundle 774](history/bundle-774-analyzer-work-roundtrip.md) bereitet 19.w.W/R/C und 19.x.W/R/C mit getrennten Gates vor. Die Zielwerte gelten erst nach dem jeweiligen Gate und Commit; 19.t und menschliche Reviews bleiben vor 19.y erforderlich.
 
 Aktuelle Detailentscheidung: [ANALYZER-WORK-774](decisions/analyzer-work-774.md) konkretisiert T.9.1 für 19.w/x; keine zusätzliche Produktposition oder menschliche Abnahme. Result 773 bestätigt inzwischen 19.v.W/R/C und 864/918. Die folgenden Stages gelten erst nach ihrem eigenen Apply-Gate.
 
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 392
+plan_revision: 393
 implementation_plan_commits_total: 918
-implementation_plan_commits_completed: 864
-last_completed_plan_commit: 19.v.C
-next_plan_commit: 19.w.W
+implementation_plan_commits_completed: 865
+last_completed_plan_commit: 19.w.W
+next_plan_commit: 19.w.R
 priority_off_plan: null
 next_off_plan_commit: null
-last_completed_numbered_bundle: 773
+last_completed_numbered_bundle: 777
 implementation_state: in_progress
 deferred_plan_commits: [19.t.W, 19.t.R, 19.t.C]
 deferred_review_module: language-corpus
@@ -990,3 +990,11 @@ Aktive Präzisierung für 18.g: [PROPOSAL-CHECK-657](decisions/proposal-check-65
 Korrektur des Hostprofileingangs und vollständiger offener Rest: [Bundle 727](history/bundle-727-host-profile-storage.md).
 
 Korrektur der Agententest-Aufträge und vollständiger offener Rest: [Bundle 728](history/bundle-728-agent-request-binding.md).
+
+Aktuelle Korrektur: [Bundle 775](history/bundle-775-analyzer-correction-measurements.md)
+setzt nach dem bestätigten Klärungscommit den vollständigen offenen 19.w/19.x-Rest
+mit realen buildgebundenen Folgemessungen fort; Zielwerte gelten erst nach dem jeweiligen Apply-Gate.
+
+Aktuelle Korrektur: [Bundle 776](history/bundle-776-analyzer-resume-budget.md) erhält den vollständigen offenen 19.w/19.x-Rest nach dem Fehler-Result 775; jedes Ziel gilt erst nach seinem eigenen Apply-Gate und Commit.
+
+Aktuelle Korrektur: [Bundle 777](history/bundle-777-analyzer-resume-metrics.md) führt den vollständigen offenen 19.w/19.x-Rest aus Fehler-Result 776 fort; jedes Ziel gilt erst nach seinem eigenen Apply-Gate und Commit.

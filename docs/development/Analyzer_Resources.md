@@ -114,3 +114,24 @@ PPID bestätigen; beide Prozesse müssen beobachtet worden sein. Fremde,
 doppelte oder wiederverwendete PIDs, vertauschte Probenrollen und eine
 abweichende Prozesskette werden abgewiesen. Die Messdateien, Originalskripte,
 Hashketten, CPU-/Speicherwerte und Grenzwerte bleiben unverändert.
+
+
+## Buildgebundene Folgemessungen für Bundle 775
+
+Nach ausdrücklichem erneutem Messauftrag am 21. November 2026 wurde jeder
+geänderte 19.w-Corebuild mit derselben unveränderten v1-Messanordnung gemessen.
+Die neue Ablage `verification/fixtures/analyzer-resources-builds/<build_sha256>/`
+enthält je gemessenem Build die vollständige komprimierte Exporthashkette.
+Das Apply-Gate baut die aktuellen Corequellen und wählt ausschließlich deren
+exakten Hash; fehlende oder abweichende Daten bleiben ein Fehler.
+Der ursprüngliche Nachweis und seine festen Regressionen bleiben erhalten.
+
+| Stufe | Corebuild-SHA-256 | CPU maximal | Laufzeit Median | RSS-Obergrenze |
+| --- | --- | ---: | ---: | ---: |
+| 19.w.W | `1393923b615fa15db89295f7f690b15ee527287b1d6e7086102477464991b2e2` | 6.79 s | 6.80 s | 363.16 MiB |
+
+Jede Serie umfasst einen Warm-up und fünf neue Prozesspaare mit jeweils
+1.000 ungekürzten Texten von 166–440 Codepoints. Die CPU-Prüfung addiert
+0,02 Sekunden Rundungsreserve; die RSS-Obergrenze bleibt konservativ.
+Die tatsächlichen Messwerte sind Referenzbelege, keine Apply-, Sprachkorpus-
+oder Releasefreigabe. Ein später erneut geänderter Build braucht neue Messdaten.

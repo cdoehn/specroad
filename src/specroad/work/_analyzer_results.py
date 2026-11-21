@@ -12,7 +12,8 @@ def engines(request):
     result = []
     for item in request.data['analyzers']:
         descriptor = AnalyzerDescriptor(encoded(item['descriptor']))
-        reason = classify_descriptor(descriptor)['availability']
+        reason = ('not_implemented' if classify_descriptor(descriptor)['known_builtin']
+                  else 'external_result_only')
         result.append(dict(analyzer_id=descriptor.data['analyzer_id'],
             engine=dict(adapter_version=descriptor.data['adapter_version'],
                 **{name:{'value':None,'reason':reason} for name in ENGINE_FACTS}), reason=reason))

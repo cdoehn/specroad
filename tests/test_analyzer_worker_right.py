@@ -65,12 +65,18 @@ def test_public_run_forwards_exact_data_in_both_paths(tmp_path,monkeypatch,durab
     root=tmp_path/'project';project(root)
     request=call(['request','--analyzer',BUILTIN,'--analysis-id','explicit-worker'],root)
     raw=encoded(thaw(request.result));file=tmp_path/'request.json';file.write_bytes(raw)
-    from specroad.analyzers._worker_process import run_process
-    original=run_process;sent=[]
+    from specroad.analyzers import _work_worker, _worker_process
+    sent=[]
+    original=_worker_process.run_process
     def observe(command,**kwargs):
         sent.append(kwargs['input'])
         return original(command,**kwargs)
-    monkeypatch.setattr('specroad.analyzers._worker_process.run_process',observe)
+    monkeypatch.setattr(_worker_process,'run_process',observe)
+    original_write=_work_worker.WorkWorker._write
+    def observe_frame(self,value):
+        if 'request' in value: sent.append(encoded(value['request']))
+        return original_write(self,value)
+    monkeypatch.setattr(_work_worker.WorkWorker,'_write',observe_frame)
     if durable:
         from specroad import _build
         monkeypatch.setattr(_build,'BUILD_METADATA',dict(format_version=1,

@@ -41,23 +41,8 @@ def assess_language(request, decisions, *, registry, fail_on='error', run_id=Non
     originals = {s['subject_key']: s for s in data['subjects']}
     subjects, findings = [], []
     for selected in compared.subjects:
-        decision, comparison = selected.decision, selected.comparison
-        status = {'detected': 'done', 'undetermined': 'undetermined',
-                  'failed': 'failed', 'unavailable': 'open'}[decision.status]
-        action = comparison.status if comparison is not None else decision.status
-        severity = policy.get(action, 'ignore')
-        refs = []
-        if severity != 'ignore':
-            identity = 'language:' + selected.subject_key
-            refs.append(identity)
-            findings.append(dict(finding_id=identity, code='specroad.language.' + action,
-                severity=severity, subject_keys=[selected.subject_key],
-                message='Language observation: ' + action,
-                rationale='Materialized language policy; no region, script or approval claim.',
-                details={'specroad.language_observation': dict(kind='json', value=decision.data)}))
-        subjects.append(subject_result(originals[selected.subject_key], status=status,
-            payload={'specroad.language_detection': dict(decision=decision.data,
-                comparison=None if comparison is None else comparison.data)}, findings=refs))
+        subject, found = observe_subject(originals[selected.subject_key], selected.decision, policy, registry)
+        subjects.append(subject); findings.extend(found)
     coverage = exact_coverage(subjects)
     run_status = ('failed' if coverage['failed'] else
         'unavailable' if coverage['open'] and coverage['open'] == coverage['expected'] else
@@ -68,3 +53,25 @@ def assess_language(request, decisions, *, registry, fail_on='error', run_id=Non
         extensions={'specroad.engine_inventory': identity.inventory})
     execution_outcome((report,), fail_on=fail_on)
     return LanguageAssessment(report, fail_on)
+
+
+def observe_subject(original, decision, policy, registry):
+    """One original subject, exact comparison and materialized policy findings."""
+    from .language_comparison import compare_language
+    comparison = compare_language(original['declared_language'], decision, registry=registry)
+    status = {'detected':'done', 'undetermined':'undetermined',
+              'failed':'failed', 'unavailable':'open'}[decision.status]
+    action = comparison.status if comparison is not None else decision.status
+    severity = policy.get(action, 'ignore')
+    refs, findings = [], []
+    if severity != 'ignore':
+        identity = 'language:' + original['subject_key']
+        refs.append(identity)
+        findings.append(dict(finding_id=identity, code='specroad.language.' + action,
+            severity=severity, subject_keys=[original['subject_key']],
+            message='Language observation: ' + action,
+            rationale='Materialized language policy; no region, script or approval claim.',
+            details={'specroad.language_observation':dict(kind='json', value=decision.data)}))
+    return subject_result(original, status=status,
+        payload={'specroad.language_detection':dict(decision=decision.data,
+            comparison=None if comparison is None else comparison.data)}, findings=refs), findings

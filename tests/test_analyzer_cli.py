@@ -62,8 +62,8 @@ def test_static_descriptors_need_no_project_or_worker_and_do_not_write(tmp_path,
     assert result.exit_code == 0
     rows = thaw(result.result)['analyzers']; assert len(rows) == 1
     assert rows[0]['descriptor']['analyzer_id'] == BUILTIN
-    assert rows[0]['availability']['execution_supported'] is False
-    assert rows[0]['availability']['availability'] == 'not_implemented'
+    assert rows[0]['availability']['execution_supported'] is True
+    assert rows[0]['availability']['availability'] == 'not_checked'
     assert set(rows[0]['schemas']) == {'descriptor','inputs','request','report','package'}
     assert inventory(tmp_path) == before
 

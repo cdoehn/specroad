@@ -18,13 +18,13 @@
   "json_pointers": [],
   "method": "automated_behavior",
   "open_items": [
-    "Target 19.s.C requires its own successful Apply gate and commit, including all five original-runtime matrix cases.",
-    "Human-reviewed corpus, full durable subject integration and interruption/host/resource/release acceptance retain their following plan positions."
+    "Target 19.w.W requires its own native Apply gate and commit; no behavior test ran in Dev.",
+    "Human language-corpus reviews and 19.t remain required before 19.y; release and supported-platform full-suite gates remain separate."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Die Reproduzierbarkeitsprüfung MUSS Core-Determinismus, identische Engineprojektionen und sprachliche Cross-Runtime-Entscheidungstests nach Anhang T.9 unterscheiden.",
-    "scope": "Prepared behavior oracles; acceptance requires the own native Apply gate. Materialized actions and truthful independent success values. Actual engine identities and bound deterministic report projection."
+    "scope": "Full original subjects, actual isolated offline engines and native Work across every durable boundary; exact request/AN-ID, engine and policy bindings, retained units and identical final semantic report hashes. Concrete worker, engine and storage failures retain the last durable checkpoint without false Code 8. Legacy v1 remains explicitly unavailable. Prepared tests require the stage gate; no human or release approval is asserted."
   },
   "preconditions": [
     "Owned native request with complete original subject bindings and explicit materialized language policy.",
@@ -146,6 +146,12 @@
     "tests/test_analyzer_reference_matrix.py::test_original_backend_and_failures_on_each_supported_runtime[3.11]",
     "tests/test_analyzer_reference_matrix.py::test_original_backend_and_failures_on_each_supported_runtime[3.12]",
     "tests/test_analyzer_reference_matrix.py::test_original_backend_and_failures_on_each_supported_runtime[3.13]",
-    "tests/test_analyzer_reference_matrix.py::test_original_backend_and_failures_on_each_supported_runtime[3.14]"
+    "tests/test_analyzer_reference_matrix.py::test_original_backend_and_failures_on_each_supported_runtime[3.14]",
+    "tests/test_analyzer_resume.py::test_one_resume_owns_one_model_and_reuses_all_retained_units",
+    "tests/test_analyzer_resume.py::test_real_analysis_survives_every_checkpoint_in_a_fresh_process[3.10]",
+    "tests/test_analyzer_resume.py::test_real_analysis_survives_every_checkpoint_in_a_fresh_process[3.11]",
+    "tests/test_analyzer_resume.py::test_real_analysis_survives_every_checkpoint_in_a_fresh_process[3.12]",
+    "tests/test_analyzer_resume.py::test_real_analysis_survives_every_checkpoint_in_a_fresh_process[3.13]",
+    "tests/test_analyzer_resume.py::test_real_analysis_survives_every_checkpoint_in_a_fresh_process[3.14]"
   ]
 }

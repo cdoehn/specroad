@@ -33,7 +33,7 @@ def schema(name):
         extensions=obj, result_sha256=sha))
     package = object_schema(dict(package_version={'const':'1.0.0'}, request=request, reports=array(report)))
     availability = object_schema(dict(known_builtin=boolean, descriptor_sha256=sha,
-        execution_supported=boolean, availability={'enum':['not_implemented','external_result_only']}))
+        execution_supported=boolean, availability={'enum':['not_implemented','not_checked','external_result_only']}))
     listing = object_schema(dict(format_version={'const':'1.0.0'}, analyzers=array(object_schema(dict(
         descriptor=descriptor, availability=availability, schemas={'type':'object','additionalProperties':obj},
         schema_scope={'const':'structural_shapes_native_binding_validation_required'})))))

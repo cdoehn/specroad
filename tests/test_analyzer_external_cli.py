@@ -41,7 +41,10 @@ def test_foreign_descriptors_can_be_inspected_without_project_initialization(tmp
     rows=thaw(result.result)['analyzers']
     assert [r['descriptor']['analyzer_id'] for r in rows]==(['example.reviewer'] if name=='describe'
         else ['example.reviewer','example.second',BUILTIN])
-    assert all(r['availability']['execution_supported'] is False for r in rows)
+    for row in rows:
+        known = row['descriptor'] == builtin_descriptor().data
+        assert row['availability']['execution_supported'] is known
+        assert row['availability']['availability'] == ('not_checked' if known else 'external_result_only')
     assert inventory(tmp_path)==before
 
 

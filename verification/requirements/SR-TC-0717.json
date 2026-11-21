@@ -12,14 +12,13 @@
   "json_pointers": [],
   "method": "automated_behavior",
   "open_items": [
-    "Target 19.m.C requires its own successful Apply gate and commit.",
-    "Real ranking/decision integration and remaining M19/19.y release gates stay open; model initialization is not language detection.",
-    "No CPython 3.10–3.13 add-on compatibility or hard-host-loss recovery evidence is asserted."
+    "Target 19.w.W requires its own native Apply gate and commit; no behavior test ran in Dev.",
+    "Human language-corpus reviews and 19.t remain required before 19.y; release and supported-platform full-suite gates remain separate."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Nach Abschluss oder Abbruch eines Analyzeraufrufs DARF NICHT ein von ihm gestarteter Worker als Hintergrundprozess weiterlaufen.",
-    "scope": "Lazy single model lifetime, original hashed model bytes, passive commands, full independent analyzer coverage, real process cleanup and non-exposed upstream modes."
+    "scope": "Full original subjects, actual isolated offline engines and native Work across every durable boundary; exact request/AN-ID, engine and policy bindings, retained units and identical final semantic report hashes. Concrete worker, engine and storage failures retain the last durable checkpoint without false Code 8. Legacy v1 remains explicitly unavailable. Prepared tests require the stage gate; no human or release approval is asserted."
   },
   "preconditions": [
     "Exact bound request and shipped offline model; no project-supplied code or model path.",
@@ -77,6 +76,12 @@
     "tests/test_analyzer_model_lifetime_right.py::test_untrusted_or_unavailable_model_is_not_decoded[missing]",
     "tests/test_analyzer_model_lifetime_right.py::test_untrusted_or_unavailable_model_is_not_decoded[symlink]",
     "tests/test_analyzer_model_lifetime_right.py::test_untrusted_or_unavailable_model_is_not_decoded[version]",
-    "tests/test_analyzer_model_lifetime_right.py::test_worker_does_not_inherit_numeric_background_threads"
+    "tests/test_analyzer_model_lifetime_right.py::test_worker_does_not_inherit_numeric_background_threads",
+    "tests/test_analyzer_resume.py::test_one_resume_owns_one_model_and_reuses_all_retained_units",
+    "tests/test_analyzer_resume.py::test_real_analysis_survives_every_checkpoint_in_a_fresh_process[3.10]",
+    "tests/test_analyzer_resume.py::test_real_analysis_survives_every_checkpoint_in_a_fresh_process[3.11]",
+    "tests/test_analyzer_resume.py::test_real_analysis_survives_every_checkpoint_in_a_fresh_process[3.12]",
+    "tests/test_analyzer_resume.py::test_real_analysis_survives_every_checkpoint_in_a_fresh_process[3.13]",
+    "tests/test_analyzer_resume.py::test_real_analysis_survives_every_checkpoint_in_a_fresh_process[3.14]"
   ]
 }

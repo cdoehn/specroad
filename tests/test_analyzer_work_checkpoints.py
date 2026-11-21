@@ -25,15 +25,15 @@ def test_small_finished_analysis_does_not_allocate_even_declared_work_dir(tmp_pa
 
 
 def test_completed_subject_units_are_reused_by_fresh_openers(tmp_path,monkeypatch):
-    from specroad.work import _analyzer_results as execution
-    root=tmp_path/'project';project(root,texts=tuple(f'Complete subject {i}.' for i in range(7)))
+    from specroad.analyzers._work_worker import WorkWorker
+    root=tmp_path/'project';project(root,texts=tuple(f'Complete original subject number {i}.' for i in range(7)))
     result=early(['run','--project',str(root),'--analyzer',BUILTIN,'--work-dir',str(tmp_path/'work')],tmp_path)
     assert result.exit_code==8
     path=Path(result.continuation.claim.work_dir)
-    calls=[];original=execution.prepare_subject
-    def counted(request, task):
-        calls.append(task['key']);return original(request,task)
-    monkeypatch.setattr(execution,'prepare_subject',counted)
+    calls=[];original=WorkWorker.subject
+    def counted(self, request, pair):
+        calls.append((pair['descriptor_sha256'],pair['subject_key']));return original(self,request,pair)
+    monkeypatch.setattr(WorkWorker,'subject',counted)
     store=store_at(path);snapshot=resume_analyzer_work(store)
     assert len(snapshot.entries('remaining'))==8
     first=resume_analyzer_work(store)

@@ -1,22 +1,17 @@
 """Distribution-owned stdin/JSON worker. No project-controlled executable paths.
 
-Model ownership is implemented here; ranking and language decisions follow in
-the separate adapter steps. Model loading alone never confirms a language.
+The explicit invocation owns a real serial model and complete observations.
+Passive commands never enter this module's execution functions.
 """
 import sys
 from .requests import AnalyzerRequest
-from ._execution import unavailable_package
 from ._values import AnalyzerError
-from .registry import builtin_descriptor
-from ._model_session import ModelSession
 
 
 def analyze_language(request, *, fail_on='error'):
     """Explicit full adapter invocation; serial model ownership and no writes.
 
-    The durable dispatcher retains its existing availability contract until
-    the separately planned Work integration. This callable returns the final
-    language report and separate policy outcome for that integration.
+    This callable and the durable dispatcher share the same subject policy.
     """
     from .language_policy import assess_language
     from .language_scores import decide_request
@@ -29,18 +24,17 @@ def analyze_language(request, *, fail_on='error'):
 
 
 def run_request(request):
-    """One serial invocation; external descriptors cannot acquire a model."""
-    known = builtin_descriptor().data
-    with ModelSession() as session:
+    """One complete real invocation; external descriptors remain explicitly open."""
+    from ._work_engine import WorkEngine
+    from ._work_values import package_from_units
+    values = {}
+    with WorkEngine(request) as engine:
         for entry in request.data['analyzers']:
-            if entry['descriptor'] == known:
-                try:
-                    session.model()
-                except AnalyzerError as error:
-                    sys.stderr.write(error.reason + '\n')
-        # 19.n supplies the real ranking adapter. Preserve full open coverage
-        # for every selected analyzer until that separate step is implemented.
-        return unavailable_package(request)
+            for subject in request.data['subjects']:
+                pair = dict(analyzer_id=entry['descriptor']['analyzer_id'],
+                    descriptor_sha256=entry['descriptor_sha256'], subject_key=subject['subject_key'])
+                values['subject:' + pair['descriptor_sha256'] + ':' + pair['subject_key']] = engine.subject(pair)
+        return package_from_units(request, engine.rows, values)
 
 
 def main():

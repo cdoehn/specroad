@@ -49,6 +49,8 @@ def start(invocation):
     from .work_handler import continuation
     own_call = invocation.consumption_call is None
     call = WorkConsumption().begin() if own_call else invocation.consumption_call
+    from ..analyzers._work_worker import WorkWorker
+    worker = WorkWorker()
     try:
         initial = prepare_analyzer_work(invocation)
         store = _store(initial,invocation.options,invocation.resolved.working_directory)
@@ -68,7 +70,7 @@ def start(invocation):
                     storage_unavailable=True
                 else:
                     return continuation(invocation.command.command_id,store,current)
-            current=advance(current);chain.append(current)
+            current=advance(current, executor=worker);chain.append(current)
             call.account_bytes('memory',len(current.raw)+sum(len(raw) for digest,raw in current.objects.items() if digest not in known))
             known.update(current.objects)
             pause=_pause(call)
@@ -77,7 +79,9 @@ def start(invocation):
         raise OperationFailure(FailureKind(getattr(error,'exit_code',6)),
             getattr(error,'reason','analyzer_work_invalid')) from error
     finally:
-        if own_call: call.finish()
+        try: worker.__exit__(None, None, None)
+        finally:
+            if own_call: call.finish()
 
 
 def deliver(invocation, manifest):
@@ -88,7 +92,7 @@ def deliver(invocation, manifest):
         from ..analyzers.packages import ReportPackage
         from ..analyzers.language_policy import execution_outcome
         details = execution_outcome(ReportPackage(encoded(payload)).reports,
-                                    fail_on=invocation.resolved.values['fail_on'])
+                                    fail_on=control.get('fail_on', invocation.resolved.values['fail_on']))
         # The retained native Work completion remains authoritative. An outcome
         # disagreement is a binding failure, never a regenerated completion.
         require(code == details.pop('exit_code'), 'analyzer_work_outcome_mismatch', exit_code=6)
@@ -121,15 +125,22 @@ def work_command(invocation, store, operation):
         from ..runtime.consumption import WorkConsumption
         own_call = invocation.consumption_call is None
         call = WorkConsumption().begin() if own_call else invocation.consumption_call
+        from ..analyzers._work_worker import WorkWorker
+        worker = WorkWorker()
         try:
             current = store.read()
+            control, _, _ = checked(current)
+            require('--fail-on' not in options or options['--fail-on'] == control.get('fail_on', options['--fail-on']),
+                    'analyzer_work_threshold_changed', exit_code=6)
             while current.as_dict()['state'] != 'completed':
-                current = resume_analyzer_work(store)
+                current = resume_analyzer_work(store, executor=worker)
                 if current.as_dict()['state'] != 'completed' and _pause(call):
                     return continuation('work.resume',store,current)
             return deliver(invocation,current)
         finally:
-            if own_call: call.finish()
+            try: worker.__exit__(None, None, None)
+            finally:
+                if own_call: call.finish()
     try:
         return run()
     except (WorkManifestError, WorkResumeError) as error:

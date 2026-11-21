@@ -60,18 +60,23 @@ def test_explicit_worker_loads_once_and_preserves_every_analyzer(monkeypatch):
     value = inputs()
     value['analyzers'].append(analyzer_binding(builtin_descriptor(), ['language_detection']))
     value['analyzers'].sort(key=lambda row: row['descriptor']['analyzer_id'])
-    value['settings']['specroad.py3langid'] = {}
+    from specroad.analyzers.language_policy import materialize_policy
+    value['settings']['specroad.py3langid'] = {'language_detection':materialize_policy()}
     request = create_request(**value)
     living = []
     def load():
         model = OwnedModel(); living.append(weakref.ref(model)); return model
     monkeypatch.setattr('specroad.analyzers._model_session.load_reference_model', load)
+    def unavailable_engine(descriptor):
+        raise AnalyzerError('missing_dependency', exit_code=5)
+    monkeypatch.setattr('specroad.analyzers._work_engine._engine', unavailable_engine)
     package = run_request(request)
     gc.collect()
     assert len(living) == 1 and living[0]() is None
     assert package.request.canonical_bytes == request.canonical_bytes
     assert [r.data['analyzer'] for r in package.reports] == request.data['analyzers']
-    # Loading is not a completed ranking or a linguistic decision (19.n onward).
+    # The deliberately incomplete model has no verified numeric backend; its
+    # lifetime and the complete external coverage remain observable.
     assert all(r.data['coverage']['open'] == r.data['coverage']['expected'] for r in package.reports)
 
 
