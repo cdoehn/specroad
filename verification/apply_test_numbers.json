@@ -29662,6 +29662,7 @@
     "tests/test_analyzer_resume_right.py::test_retained_unit_never_changes_request_policy_engine_or_original[score]",
     "tests/test_analyzer_resume_right.py::test_retained_unit_never_changes_request_policy_engine_or_original[status]",
     "tests/test_analyzer_resume_right.py::test_short_subjects_abstain_without_dependency_and_keep_complete_coverage",
-    "tests/test_analyzer_resume_right.py::test_v1_work_retains_its_original_unavailable_contract"
+    "tests/test_analyzer_resume_right.py::test_v1_work_retains_its_original_unavailable_contract",
+    "tests/test_analyzer_roundtrip.py::test_complete_multilingual_roundtrip_uses_the_same_native_values"
   ]
 }

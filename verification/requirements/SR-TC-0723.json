@@ -19,12 +19,13 @@
   ],
   "method": "automated_behavior",
   "open_items": [
-    "The core CSV/ReqIF mapping transports the language/force/statement projection only. Other native fields, including should deviation metadata, remain explicit losses; NDJSON retains the complete artifact. No full native CSV/ReqIF roundtrip, foreign-tool interoperability, product approval, migration completion or release success is asserted."
+    "Target 19.x.W requires its own native Apply gate and commit; no behavior test ran in Dev.",
+    "Human language-corpus reviews and 19.t remain required before 19.y; release and supported-platform full-suite gates remain separate."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Der Austausch von Requirements MUSS language und normative_force über die expliziten CSV-/NDJSON-/ReqIF-Attribute aus Anhang S.7 erhalten oder einen vorhandenen Verlust ausweisen.",
-    "scope": "14.m.W/R/C provide explicit versioned content-tuple mappings and exact-bound ReqIF core definitions. Actual bytes preserve every S.4 tag plus stored mixed-case spelling, all four forces and complete original text. Missing requirement content mappings block import plans with unaccepted losses, no default/detector/keyword inference, no candidate operations and no history refresh. Strict mapper/native errors and export loss gates remain intact. CSV/ReqIF transport is the three-field projection, not a full native roundtrip. M2 new-draft construction and complete import projections share explicit language/force input construction. Missing mapping losses stay ahead of construction; authoring defaults and language canonicalization remain confined to new drafts. External interoperability and release approval are not asserted."
+    "scope": "One native authoring-to-presentation-data-to-lossless-NDJSON-to-verified-bundle-to-real-analyzer-file scenario for all eleven minimum language tags. Original language, force, complete statement and field/record hashes are independent oracles. Actual CSV/ReqIF/ReqIFz imports retain the mapped content with declared losses; external reports never rewrite originals or infer regions/scripts. Prepared tests require the stage gate; no human or release approval is asserted."
   },
   "preconditions": [
     "Explicit exact core mapping and CSV-profile keys/hashes; actual native requirements with declared language, force and complete statement. ReqIF/ReqIFZ use bounded local codecs. No imported carrier is required for the exact ReqIF core definition."
@@ -57,6 +58,7 @@
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0723",
   "test_ids": [
+    "tests/test_analyzer_roundtrip.py::test_complete_multilingual_roundtrip_uses_the_same_native_values",
     "tests/test_requirement_exchange.py::test_requirement_core_definitions_are_not_selected_by_name_alone",
     "tests/test_requirement_exchange.py::test_requirement_core_mapping_is_usable_through_live_export[csv]",
     "tests/test_requirement_exchange.py::test_requirement_core_mapping_is_usable_through_live_export[ndjson]",

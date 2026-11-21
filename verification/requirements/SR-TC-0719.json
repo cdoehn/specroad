@@ -18,7 +18,7 @@
   "json_pointers": [],
   "method": "automated_behavior",
   "open_items": [
-    "Target 19.w.C requires its own native Apply gate and commit; no behavior test ran in Dev.",
+    "Target 19.x.W requires its own native Apply gate and commit; no behavior test ran in Dev.",
     "Human language-corpus reviews and 19.t remain required before 19.y; release and supported-platform full-suite gates remain separate."
   ],
   "oracle": {
