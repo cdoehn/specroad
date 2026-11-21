@@ -11,6 +11,7 @@
     8
   ],
   "fixture_ids": [
+    "SR-FIX-ANALYZER-RESOURCES-v1",
     "SR-FIX-ANALYZER-WORK-v1"
   ],
   "implementation_status": "partial",
@@ -24,7 +25,7 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Ein tatsächlicher Hostblocker MUSS gemäß Anhang T.9 ohne stille Textkürzung und ohne endlosen fortschrittslosen Retry berichtet werden.",
-    "scope": "Early analysis ID in normalized_arguments, null writer fields, exact owned construction/snapshot inputs, native durable journal and new-process resumption. R adds malformed/foreign identities, source changes, private path boundaries and unsealed/sealed export/restore. Per-subject technical results survive restart and export; final reports retain open/unavailable coverage with code 5 until worker implementation. Tiny complete jobs allocate no Work directory. Engine and explicit expected snapshot/identity changes conflict before publication; concrete ENOSPC retains the previous prefix and permits only a bounded safe completion fallback. No test outcome is inferred from collection. Existing R-67 through R-73 request/file identity and pair-binding regressions are mandatory. The public resume action comes exclusively from the verified ContinuationClaim; analysis identity and checkpoint hash supplement the summary without shadowing protected result-control fields. Coverage uses the exact sorted request subject-key arrays and their separate integer counts according to T.4.1; unavailable execution retains every subject as open. The completed package preserves the canonical explicit or sealed request."
+    "scope": "Early analysis ID in normalized_arguments, null writer fields, exact owned construction/snapshot inputs, native durable journal and new-process resumption. R adds malformed/foreign identities, source changes, private path boundaries and unsealed/sealed export/restore. Per-subject technical results survive restart and export; final reports retain open/unavailable coverage with code 5 until worker implementation. Tiny complete jobs allocate no Work directory. Engine and explicit expected snapshot/identity changes conflict before publication; concrete ENOSPC retains the previous prefix and permits only a bounded safe completion fallback. No test outcome is inferred from collection. Existing R-67 through R-73 request/file identity and pair-binding regressions are mandatory. The public resume action comes exclusively from the verified ContinuationClaim; analysis identity and checkpoint hash supplement the summary without shadowing protected result-control fields. Coverage uses the exact sorted request subject-key arrays and their separate integer counts according to T.4.1; unavailable execution retains every subject as open. The completed package preserves the canonical explicit or sealed request. Resource evidence additionally preserves every full input, reports the complete parent/worker process set and rejects missing or unmeasurable resource evidence; no progress-free retry or text truncation is accepted. Durable host-failure integration remains assigned to 19.w. The v1 final parent label is reconciled with the independent parent/worker PIDs, start ticks, exact GNU-time wrapper ancestry and all actual RSS samples. Both measured processes remain required; original evidence and resource limits are unchanged."
   },
   "preconditions": [
     "Real native small project, explicit JSON request or verified partial; a recorded compatible distribution is required for durable Work.",
@@ -50,6 +51,8 @@
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0719",
   "test_ids": [
+    "tests/test_analyzer_resources.py::test_measured_full_adapter_stays_within_total_cpu_and_memory_limits",
+    "tests/test_analyzer_resources.py::test_measured_sources_and_all_original_hash_chains_are_preserved",
     "tests/test_analyzer_work.py::test_early_generation_survives_reopen_without_finished_snapshot[None-False-request]",
     "tests/test_analyzer_work.py::test_early_generation_survives_reopen_without_finished_snapshot[None-False-run]",
     "tests/test_analyzer_work.py::test_early_generation_survives_reopen_without_finished_snapshot[None-True-request]",

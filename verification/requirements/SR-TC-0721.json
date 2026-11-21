@@ -2,24 +2,31 @@
   "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [],
   "expected_exit_codes": [],
-  "fixture_ids": [],
-  "implementation_status": "open",
+  "fixture_ids": [
+    "SR-FIX-ANALYZER-RESOURCES-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [],
-  "method": "pending",
+  "method": "automated_behavior",
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence."
+    "The target stage still needs its actual Apply gate and commit; completed measurement alone is not Apply evidence.",
+    "Durable dispatcher integration, subsequent source builds, Core startup budgets, human corpus review and release/matrix acceptance need their separate bound evidence."
   ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Die Analyzer-Performanceabnahme MUSS den getrennten Gesamtprozess-CPU-/RSS-Vertrag aus Anhang T.10 messen.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Real dated reference adapter observations, one warmup and five complete cold-process runs; <=120 CPU seconds including child accounting and <=512 MiB simultaneous RSS, with conservative lifetime bound. Pure data verification uses native full request/report parsers. Original scripts and numeric observations remain unchanged; export receipt describes private-field projection. W implements the complete measured positive reference. The v1 final parent label is reconciled with the independent parent/worker PIDs, start ticks, exact GNU-time wrapper ancestry and all actual RSS samples. Both measured processes remain required; original evidence and resource limits are unchanged."
   },
-  "preconditions": [],
+  "preconditions": [
+    "Trusted complete real reference measurement, with unchanged native Core build and original engine/input hashes.",
+    "The current stage requires its own native Apply test gate. Dev collection does not execute behavior."
+  ],
   "primary_verification_id": "SR-VER-0048",
   "required_environment": {
     "declared_minimum_python": "3.10",
     "implementation": "cpython",
-    "measured_scope": "current-run-only"
+    "measured_scope": "historical_reference_adapter_measurement_bound_to_current_build",
+    "reference_python": "CPython 3.14.7; no five-runtime performance equivalence claimed"
   },
   "requirement_id": "SR-REQ-0721",
   "resources": {
@@ -28,8 +35,15 @@
     "owned_temporary_files": true
   },
   "specification_sha256": "67d160df8232faf8208fc418314f824298de3064269e0518bb6db0c93fe18b57",
-  "steps": [],
+  "steps": [
+    "Read and verify the original/exported hash chain, all 1000 complete texts and all six full native reports.",
+    "Build the current Core and bind its exact identity to the actual real adapter measurement.",
+    "Check whole-process CPU and simultaneous parent/worker RSS with a conservative lifetime upper bound."
+  ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0721",
-  "test_ids": []
+  "test_ids": [
+    "tests/test_analyzer_resources.py::test_measured_full_adapter_stays_within_total_cpu_and_memory_limits",
+    "tests/test_analyzer_resources.py::test_measured_sources_and_all_original_hash_chains_are_preserved"
+  ]
 }

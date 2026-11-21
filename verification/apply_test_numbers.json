@@ -29571,6 +29571,8 @@
     "tests/test_analyzer_acceptance_right.py::test_ties_and_primary_labels_do_not_invent_language_region_or_script_proof[zh-Hant-TW-zh-compatible-primary_language]",
     "tests/test_analyzer_acceptance_right.py::test_unavailable_real_backend_keeps_all_short_and_long_subjects[missing_numpy]",
     "tests/test_analyzer_acceptance_right.py::test_unavailable_real_backend_keeps_all_short_and_long_subjects[missing_py3langid]",
-    "tests/test_analyzer_acceptance_right.py::test_unavailable_real_backend_keeps_all_short_and_long_subjects[model:hash]"
+    "tests/test_analyzer_acceptance_right.py::test_unavailable_real_backend_keeps_all_short_and_long_subjects[model:hash]",
+    "tests/test_analyzer_resources.py::test_measured_full_adapter_stays_within_total_cpu_and_memory_limits",
+    "tests/test_analyzer_resources.py::test_measured_sources_and_all_original_hash_chains_are_preserved"
   ]
 }

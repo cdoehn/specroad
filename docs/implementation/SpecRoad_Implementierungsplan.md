@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 387 · **Stand:** 20. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.100
+**Planrevision:** 389 · **Stand:** 20. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.100
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 306 Schritte und 918 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; die früher genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wurde nach der damaligen Spezifikation innerhalb von 15.l.R vorgezogen und bleibt als normaler Prüfkern erhalten. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -251,16 +251,16 @@ Korpusabnahme bleiben offen. Die OFF-PLAN-Reviewgruppe zählt keine
 Produktposition; 19.u wird ausschließlich nach seinem jeweiligen Gate gezählt. Die Zielwerte gelten erst nach dem eigenen Gate der jeweiligen
 Stage. Allgemeine Tests, menschliche Befugnisse und Releasegates bleiben erhalten.
 
-Aktuelle Korrektur: [Bundle 771 — unabhängige aktuelle CLI-Testeingaben](history/bundle-771-analyzer-cli-inputs.md). Bundle 770 scheiterte vor dem ersten Commit; bestätigt bleiben 858/918. Der vollständige Rest 19.u.W/R/C behält IDs, Rollen und eigene Gates. Danach 19.v.W; menschliche Korpusprüfung und Ressourcenabnahme bleiben offen.
+Aktuelle Korrektur: [Bundle 773 — Prozessidentität der Ressourcenbelege](history/bundle-773-analyzer-process-identity.md). Bundle 772 scheiterte vor dem ersten Commit. Bestätigt bleiben 19.u.W/R/C und 861/918 aus Result 771. Der vollständige Rest 19.v.W/R/C behält seine Rollen, Messages und eigenen Gates; sämtliche Originalmessdaten bleiben unverändert. Die folgenden Zielwerte gelten erst nach dem jeweiligen Gate und Commit. Danach 19.w.W; 19.t und menschliche Korpusreviews bleiben vor 19.y erforderlich.
 
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 387
+plan_revision: 389
 implementation_plan_commits_total: 918
-implementation_plan_commits_completed: 861
-last_completed_plan_commit: 19.u.C
-next_plan_commit: 19.v.W
+implementation_plan_commits_completed: 862
+last_completed_plan_commit: 19.v.W
+next_plan_commit: 19.v.R
 priority_off_plan: null
 next_off_plan_commit: null
 last_completed_numbered_bundle: 771

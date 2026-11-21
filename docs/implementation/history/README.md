@@ -574,3 +574,7 @@
 - [Bundle 770 — vollständige Korrektur der Adapterabnahme](bundle-770-analyzer-scratch-correction.md)
 
 - [Bundle 771 — unabhängige aktuelle CLI-Testeingaben](bundle-771-analyzer-cli-inputs.md)
+
+- [Bundle 772 — gemessene Analyzer-Ressourcenabnahme](bundle-772-analyzer-resources.md)
+
+- [Bundle 773 — Prozessidentität der Ressourcenbelege korrigieren](bundle-773-analyzer-process-identity.md)
