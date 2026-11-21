@@ -266,14 +266,19 @@ Voraussetzungen und unveränderte Abnahmen stehen in M19/M20. Der
 erfolgreiche Basis 778. Produktstand 870/918 und sämtliche offenen Bewertungen
 bleiben unverändert. Die Planumstellung zählt keine Produktposition.
 
+Die [Vorbereitung von Bundle 780](history/bundle-780-acceptance-inventory.md)
+bindet 20.a an drei getrennte Apply-Gates; der belegte R-36-Rest von 20.c bleibt offen. Die folgenden Zielwerte
+gelten erst nach dem jeweiligen erfolgreichen Commit; offene menschliche
+Abnahmen und die noch ausstehende Releasefreigabe bleiben erhalten.
+
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 399
+plan_revision: 400
 implementation_plan_commits_total: 918
-implementation_plan_commits_completed: 870
-last_completed_plan_commit: 19.x.C
-next_plan_commit: 20.a.W
+implementation_plan_commits_completed: 871
+last_completed_plan_commit: 20.a.W
+next_plan_commit: 20.a.R
 priority_off_plan: null
 next_off_plan_commit: null
 last_completed_numbered_bundle: 779

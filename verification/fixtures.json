@@ -1055,6 +1055,10 @@
     "SR-FIX-ANALYZER-RESOURCES-v1": {
       "kind": "Original historical reference observation plus exact-build genuine follow-up series; 1000 complete texts, warmup and five measured process pairs, unchanged scripts, full raw/export hash chains. Not a reviewed language corpus or release approval.",
       "provider": "verification/fixtures/analyzer-resources-20261121;verification/fixtures/analyzer-resources-builds/<build_sha256>"
+    },
+    "SR-FIX-ACCEPTANCE-INVENTORY-v1": {
+      "provider": "tests/support/acceptance_catalog.py:seed,materialize",
+      "kind": "Small isolated actual native pytest/legacy run, immutable original bytes and fresh input variants; no production evidence is synthesized."
     }
   },
   "fixture_format_version": 1,
@@ -1342,6 +1346,7 @@
     "SR-FIX-WRITE-GUARD-v1",
     "SR-FIX-WRITER-BOUNDARIES-v1",
     "verification-context-independent",
-    "verification-context-subjects"
+    "verification-context-subjects",
+    "SR-FIX-ACCEPTANCE-INVENTORY-v1"
   ]
 }

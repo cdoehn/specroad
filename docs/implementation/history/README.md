@@ -590,3 +590,5 @@
 - [Bundle 778 — native Work-Datei unverändert zurücklegen](bundle-778-analyzer-work-file.md).
 
 - [Bundle 779 — menschliche Abnahmen zuletzt](bundle-779-human-acceptance-last.md).
+
+- [Bundle 780 – ehrliches Abnahmeinventar](bundle-780-acceptance-inventory.md)

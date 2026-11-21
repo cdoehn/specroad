@@ -1,25 +1,33 @@
 {
   "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [],
-  "expected_exit_codes": [],
-  "fixture_ids": [],
-  "implementation_status": "open",
+  "expected_exit_codes": [
+    0,
+    1,
+    4
+  ],
+  "fixture_ids": [
+    "SR-FIX-ACCEPTANCE-INVENTORY-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [],
-  "method": "pending",
+  "method": "automated_behavior",
   "not_automated_by_user_policy": "TD-001",
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence.",
-    "TD-001 excludes presentation/documentation checks from automated coverage; this exception must remain visible in any final acceptance statement."
+    "Current full release evidence and all remaining scenario, platform and human acceptances remain required. An inventory or passing technical test does not complete original-specification acceptance."
   ],
   "oracle": {
-    "kind": "pending",
-    "requirement_contract": "Der Release-Testbericht MUSS Dokumenthash, Testfallkataloghash, Requirement-zu-Testfall-Zuordnung und Evidence-IDs für sämtliche Anforderungen dieser Dokumentversion binden.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "kind": "behavior",
+    "assertions": [
+      "Exact current mapping; missing/stale/invalid reports never pass; partial implementation and TD-001 remain visible; original bytes unchanged; output exclusive; no release authorization."
+    ]
   },
   "policy_excluded_scope": [
     "Only human-output, rendering and documentation-test obligations. Machine data contracts and real behavioral obligations remain in scope."
   ],
-  "preconditions": [],
+  "preconditions": [
+    "Owned project with current catalog, specification and native collection; explicitly selected unchanged runner report when supplied."
+  ],
   "primary_verification_id": "SR-VER-0034",
   "required_environment": {
     "declared_minimum_python": "3.10",
@@ -33,8 +41,25 @@
     "owned_temporary_files": true
   },
   "specification_sha256": "6c2f797967ccfa777ef42662d9c91e3c75927d1eeaf0eb71dc0e85a1256e2e7c",
-  "steps": [],
+  "steps": [
+    "Assemble actual REQ/VER/test/fixture bindings from native collection; compare original selected run with all current input hashes."
+  ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0500",
-  "test_ids": []
+  "test_ids": [
+    "tests/test_acceptance_catalog.py::test_actual_native_and_legacy_results_bind_every_requirement",
+    "tests/test_acceptance_catalog.py::test_changed_test_fixture_or_specification_rejects_old_collection[docs/specification/SpecRoad_Spezifikation.md]",
+    "tests/test_acceptance_catalog.py::test_changed_test_fixture_or_specification_rejects_old_collection[tests/test_subject.py]",
+    "tests/test_acceptance_catalog.py::test_changed_test_fixture_or_specification_rejects_old_collection[verification/fixtures.json]",
+    "tests/test_acceptance_catalog.py::test_cli_only_reads_existing_inputs_and_publishes_once",
+    "tests/test_acceptance_catalog.py::test_complete_mapping_and_collection_do_not_claim_execution",
+    "tests/test_acceptance_catalog.py::test_old_or_different_run_binding_cannot_be_relabelled_current[catalog_sha256]",
+    "tests/test_acceptance_catalog.py::test_old_or_different_run_binding_cannot_be_relabelled_current[configuration_sha256]",
+    "tests/test_acceptance_catalog.py::test_old_or_different_run_binding_cannot_be_relabelled_current[platform_sha256]",
+    "tests/test_acceptance_catalog.py::test_old_or_different_run_binding_cannot_be_relabelled_current[run_id]",
+    "tests/test_acceptance_catalog.py::test_old_or_different_run_binding_cannot_be_relabelled_current[specification_sha256]",
+    "tests/test_acceptance_catalog.py::test_old_or_different_run_binding_cannot_be_relabelled_current[tool_build_sha256]",
+    "tests/test_acceptance_catalog.py::test_runtime_and_execution_hashes_bind_actual_original_data",
+    "tests/test_acceptance_catalog.py::test_wrong_or_missing_case_evidence_cannot_be_hidden_by_suite_passed"
+  ]
 }
