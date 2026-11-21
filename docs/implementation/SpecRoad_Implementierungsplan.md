@@ -272,22 +272,22 @@ gelten erst nach dem jeweiligen erfolgreichen Commit; offene menschliche
 Abnahmen und die noch ausstehende Releasefreigabe bleiben erhalten.
 
 Die [Korrektur in Bundle 781](history/bundle-781-negative-run-evidence.md)
-erhält das bestätigte 20.a.W und setzt den vollständigen offenen Rest
-20.a.R/C fort. Ein echter fehlgeschlagener Lauf bleibt als aktueller
-Fehlnachweis sichtbar; Infrastrukturfehler und widersprüchliche Evidence
-bleiben ungültig. Die Zielmarkierungen gelten erst nach dem eigenen Gate.
+ist für 20.a.R erfolgreich geprüft und committed. Die
+[Scope-Korrektur in Bundle 782](history/bundle-782-clean-stage-scope.md)
+setzt ausschließlich das vollständige offene 20.a.C fort; seine Zielmarkierung
+gilt erst nach dem eigenen erfolgreichen Gate und Commit.
 
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 401
+plan_revision: 402
 implementation_plan_commits_total: 918
-implementation_plan_commits_completed: 872
-last_completed_plan_commit: 20.a.R
-next_plan_commit: 20.a.C
+implementation_plan_commits_completed: 873
+last_completed_plan_commit: 20.a.C
+next_plan_commit: 20.c.W
 priority_off_plan: null
 next_off_plan_commit: null
-last_completed_numbered_bundle: 779
+last_completed_numbered_bundle: 782
 implementation_state: in_progress
 prioritized_group_order: [20.a, 20.c, 20.e, 20.f, 20.g, 20.h, 20.i, 20.j, 20.m, 19.t, 19.y, 20.b, 20.d, 20.k, 20.l, 20.n]
 deferred_return_after: 20.m.C

@@ -46,5 +46,5 @@ erfolgreichem C. Menschliche Reviews, Originalnachweise und Releasefreigabe
 bleiben offen. Dev führt nur statische Prüfungen, reine Collection und native
 Paketprüfung aus; Verhaltenstests laufen ausschließlich in Apply.
 
-Aktueller Commitzielstand: `20.a.R`. Erst das erfolgreiche eigene
+Aktueller Commitzielstand: `20.a.C`. Erst das erfolgreiche eigene
 Apply-Gate und der Commit bestätigen seine Planmarkierung.
