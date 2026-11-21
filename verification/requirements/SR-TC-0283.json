@@ -3,7 +3,8 @@
   "expected_diagnostics": [],
   "expected_exit_codes": [],
   "fixture_ids": [
-    "SR-FIX-OWNED-TEMP-v1"
+    "SR-FIX-OWNED-TEMP-v1",
+    "SR-FIX-CONTRACT-REGRESSIONS-v1"
   ],
   "implementation_status": "partial",
   "json_pointers": [],
@@ -38,7 +39,8 @@
     "Reject stale guards, nonhuman actors, altered withdrawal payloads, missing required gate, unrelated error and denied authority; verify stable request replay without additional writes.",
     "Record a later confirmed or rejected review without another source revision or automatic approval; preserve optional and nonapproved sources and check remaining mandatory obligations, including a composed both-direction rule.",
     "Compare a successful native receipt with a separate failed read-only review assessment; reject structural defects, nonhuman confirmation and mixed saved operations.",
-    "Stop an actual child writer after the first or last coupled target replacement or after receipt commit; recover the exact full basis or target and replay the same native receipt without additional writes."
+    "Stop an actual child writer after the first or last coupled target replacement or after receipt commit; recover the exact full basis or target and replay the same native receipt without additional writes.",
+    "Native isolated Requirement reapproval with exact context/review reference and current human/service/mandatory-relation gates; original reviews and receipts preserved. Synthetic test actors are not product acceptance."
   ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0283",
@@ -90,6 +92,8 @@
     "tests/test_negative_relation_review_right.py::test_structural_invalidity_is_not_a_review_outcome_exception[missing_target]",
     "tests/test_negative_relation_review_right.py::test_structural_invalidity_is_not_a_review_outcome_exception[self_reference]",
     "tests/test_negative_relation_review_right.py::test_successful_negative_write_still_fails_separate_read_only_review_assessment[False]",
-    "tests/test_negative_relation_review_right.py::test_successful_negative_write_still_fails_separate_read_only_review_assessment[True]"
+    "tests/test_negative_relation_review_right.py::test_successful_negative_write_still_fails_separate_read_only_review_assessment[True]",
+    "tests/test_requirement_reapproval.py::test_direct_and_saved_target_recompute_same_approval_and_cannot_publish_without_native_gate",
+    "tests/test_requirement_reapproval.py::test_r36_reconfirmation_and_two_explicit_transitions_preserve_native_history"
   ]
 }

@@ -1059,6 +1059,10 @@
     "SR-FIX-ACCEPTANCE-INVENTORY-v1": {
       "provider": "tests/support/acceptance_catalog.py:seed,materialize",
       "kind": "Small isolated actual native pytest/legacy run, immutable original bytes and fresh input variants; no production evidence is synthesized."
+    },
+    "SR-FIX-CONTRACT-REGRESSIONS-v1": {
+      "provider": "verification/regressions.json; tests/support/requirement_approval.py",
+      "kind": "Exact R-01..R-47 bindings; actual file/process/CLI paths with independent oracles. Review/services are synthetic; no human product approval."
     }
   },
   "fixture_format_version": 1,
@@ -1347,6 +1351,7 @@
     "SR-FIX-WRITER-BOUNDARIES-v1",
     "verification-context-independent",
     "verification-context-subjects",
-    "SR-FIX-ACCEPTANCE-INVENTORY-v1"
+    "SR-FIX-ACCEPTANCE-INVENTORY-v1",
+    "SR-FIX-CONTRACT-REGRESSIONS-v1"
   ]
 }

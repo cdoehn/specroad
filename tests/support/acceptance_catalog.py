@@ -28,7 +28,7 @@ class LegacyTests(unittest.TestCase):
 '''
 
 
-def seed(root, *, outcome='passed'):
+def seed(root, *, outcome='passed', regressions=False):
     snippets = {
         'passed': '',
         'failed': '    assert False, "owned intentional failure"\n',
@@ -54,6 +54,12 @@ def seed(root, *, outcome='passed'):
     index['test_case_ids'] = [c['test_case_id'] for c in (first, partial, manual)]
     index['required_test_case_ids'] = index['test_case_ids']
     (directory / 'catalog.json').write_bytes(json_bytes(index))
+    if regressions:
+        (directory / 'regressions.json').write_bytes(json_bytes({
+            'format_version': 1, 'specification_sha256': index['specification_sha256'],
+            'regressions': [{'regression_id': 'R-%02d' % i, 'requirement_id': 'SR-REQ-0650',
+                'verification_id': 'SR-VER-0041', 'contract': 'Toy binding validation only, not production R-case evidence.',
+                'test_ids': [NATIVE_IDS[0] if i % 2 else LEGACY_ID]} for i in range(1, 48)]}))
     code, collection = check(root)
     assert code == 0 and collection['tests_run'] == 0
     target = root / 'build/evidence.json'

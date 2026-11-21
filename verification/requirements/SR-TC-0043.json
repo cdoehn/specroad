@@ -9,7 +9,8 @@
     3
   ],
   "fixture_ids": [
-    "SR-FIX-CHANGE-LIFECYCLE-v1"
+    "SR-FIX-CHANGE-LIFECYCLE-v1",
+    "SR-FIX-CONTRACT-REGRESSIONS-v1"
   ],
   "implementation_status": "partial",
   "json_pointers": [
@@ -45,7 +46,8 @@
   },
   "specification_sha256": "2dad4bf789cbede2f05084d27bd62e3197c814f5b84e5ea30675890c35bd90f5",
   "steps": [
-    "Prepare lifecycle candidates without I/O; compare final status, metadata, content hashes and operation audit."
+    "Prepare lifecycle candidates without I/O; compare final status, metadata, content hashes and operation audit.",
+    "Native isolated Requirement reapproval with exact context/review reference and current human/service/mandatory-relation gates; original reviews and receipts preserved. Synthetic test actors are not product acceptance."
   ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0043",
@@ -54,6 +56,8 @@
     "tests/test_change_lifecycle.py::test_retired_cannot_transition_out",
     "tests/test_change_lifecycle.py::test_approval_not_granted_by_an_actor_label_or_transition_metadata",
     "tests/test_change_lifecycle_right.py::test_all_49_matrix_pairs_match_independent_contract_or_explicit_gate",
-    "tests/test_change_lifecycle_right.py::test_transition_from_is_checked_against_immediate_intermediate_state"
+    "tests/test_change_lifecycle_right.py::test_transition_from_is_checked_against_immediate_intermediate_state",
+    "tests/test_requirement_reapproval.py::test_direct_and_saved_target_recompute_same_approval_and_cannot_publish_without_native_gate",
+    "tests/test_requirement_reapproval.py::test_r36_reconfirmation_and_two_explicit_transitions_preserve_native_history"
   ]
 }

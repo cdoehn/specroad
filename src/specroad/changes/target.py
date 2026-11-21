@@ -41,6 +41,9 @@ def assess_change_target(plan, model, *, policy, gates=(), strict=False):
     base = model.manifest(model.artifacts, scope)
     if value['base']['model_root_sha256'] != base.sha256:
         raise TargetError('target_base_root_mismatch', pointer='/base/model_root_sha256')
+    from .requirement_approval import require_requirement_approval_gate
+    require_requirement_approval_gate(gates, value['operations'], model,
+        actor=value['actor'], planned_at=value['planned_at'])
     from ._saved_plan_fold import fold_saved_plan
     folded, normalize, baseline = fold_saved_plan(plan, model,
         observed_base_root=base.sha256, observed_scope=scope)
@@ -127,12 +130,21 @@ def prepare_change_target(model, operations, *, change_plan_id, request_id, acto
     operations = [ChangeOperation(v).data for v in _sequence(operations, 'target_operations_required')]
     preconditions = _snapshot(list(_sequence(preconditions, 'target_preconditions_required')), '/preconditions').data
     from ..proposals._control_dispatch import control_mode as review_start_mode, prepare_candidates as prepare_control_candidates
+    from .requirement_approval import (approval_mode, prepare_requirement_candidates,
+        require_requirement_approval_gate)
+    require_requirement_approval_gate(gates, operations, model, actor=actor, planned_at=planned_at)
+    approving = approval_mode(operations)
     controlled = review_start_mode(operations)
     normalize = not controlled and normalization_mode(operations)
     baseline = not controlled and baseline_mode(operations)
     evidence = not controlled and evidence_mode(operations)
     imported = not controlled and import_mode(operations)
-    if controlled:
+    if approving:
+        folded = prepare_requirement_candidates(model, operations,
+            metadata_policy_version=metadata_policy_version, actor=actor,
+            planned_at=planned_at, preconditions=preconditions)
+        target_model = model
+    elif controlled:
         folded = prepare_control_candidates(model, operations,
             metadata_policy_version=metadata_policy_version, actor=actor,
             planned_at=planned_at, preconditions=preconditions)

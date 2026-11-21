@@ -596,3 +596,5 @@
 - [Bundle 781 – aktuelle negative Laufnachweise](bundle-781-negative-run-evidence.md)
 
 - [Bundle 782 – korrigierter C-Commitumfang](bundle-782-clean-stage-scope.md)
+
+- [Bundle 783 – Kontraktregression und Schreibschutzgesamtmatrix](bundle-783-contract-regressions.md)

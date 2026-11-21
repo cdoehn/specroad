@@ -29725,6 +29725,23 @@
     "tests/test_acceptance_catalog_right.py::test_worker_failure_marker_cannot_hide_invalid_or_promoted_evidence[only_skipped]",
     "tests/test_acceptance_catalog_right.py::test_worker_failure_marker_cannot_hide_invalid_or_promoted_evidence[unknown_error]",
     "tests/test_acceptance_catalog_right.py::test_worker_failure_marker_cannot_hide_invalid_or_promoted_evidence[worker_crash]",
-    "tests/test_acceptance_catalog_right.py::test_worker_failure_marker_cannot_hide_invalid_or_promoted_evidence[zero_exit]"
+    "tests/test_acceptance_catalog_right.py::test_worker_failure_marker_cannot_hide_invalid_or_promoted_evidence[zero_exit]",
+    "tests/test_acceptance_merge_vectors.py::test_exact_three_seven_vector_reaches_disk_receipt_and_idempotent_retry[adopt-seven]",
+    "tests/test_acceptance_merge_vectors.py::test_exact_three_seven_vector_reaches_disk_receipt_and_idempotent_retry[combine-three-seven]",
+    "tests/test_acceptance_regressions.py::test_actual_run_retains_every_exact_regression_identity_and_outcome",
+    "tests/test_acceptance_regressions.py::test_all_bindings_remain_open_without_execution",
+    "tests/test_acceptance_regressions.py::test_edited_bindings_do_not_reuse_an_old_current_report",
+    "tests/test_acceptance_regressions.py::test_incomplete_or_ambiguous_bindings_cannot_stand_for_all_contracts[bad_version]",
+    "tests/test_acceptance_regressions.py::test_incomplete_or_ambiguous_bindings_cannot_stand_for_all_contracts[duplicate]",
+    "tests/test_acceptance_regressions.py::test_incomplete_or_ambiguous_bindings_cannot_stand_for_all_contracts[duplicate_test]",
+    "tests/test_acceptance_regressions.py::test_incomplete_or_ambiguous_bindings_cannot_stand_for_all_contracts[empty]",
+    "tests/test_acceptance_regressions.py::test_incomplete_or_ambiguous_bindings_cannot_stand_for_all_contracts[missing]",
+    "tests/test_acceptance_regressions.py::test_incomplete_or_ambiguous_bindings_cannot_stand_for_all_contracts[uncollected]",
+    "tests/test_acceptance_regressions.py::test_incomplete_or_ambiguous_bindings_cannot_stand_for_all_contracts[unknown_field]",
+    "tests/test_acceptance_regressions.py::test_incomplete_or_ambiguous_bindings_cannot_stand_for_all_contracts[wrong_requirement]",
+    "tests/test_acceptance_regressions.py::test_incomplete_or_ambiguous_bindings_cannot_stand_for_all_contracts[wrong_spec]",
+    "tests/test_acceptance_regressions.py::test_incomplete_or_ambiguous_bindings_cannot_stand_for_all_contracts[wrong_verification]",
+    "tests/test_requirement_reapproval.py::test_direct_and_saved_target_recompute_same_approval_and_cannot_publish_without_native_gate",
+    "tests/test_requirement_reapproval.py::test_r36_reconfirmation_and_two_explicit_transitions_preserve_native_history"
   ]
 }

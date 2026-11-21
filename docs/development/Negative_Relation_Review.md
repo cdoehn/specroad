@@ -72,8 +72,9 @@ Der Dienst unterstützt berechnete Requirement-Rücknahmen einschließlich
 profilabhängiger inverser Sichten und unveränderte Standardzustände. Andere
 notwendige Standardartefakt-Rücknahmen und nicht unterstützte Spezialartefakte
 oder Approval-Subjekte werden abgewiesen. CLI-/Envelope-Integration, vollständige
-Projekt-/Historienbeschaffung, allgemeine Approval-Dienste und die abschließende
-explizite Freigabefolge aus R-36 bleiben offen. Die nativen Teilnachweise aus
+Projekt-/Historienbeschaffung und allgemeine Approval-Dienste bleiben offen.
+Die isolierte explizite Requirement-Freigabefolge aus R-36 ist über den
+[gebundenen Freigabedienst](Requirement_Approval.md) angebunden. Die nativen Teilnachweise aus
 R-35 bis R-39 ersetzen keine vollständige CLI-/Produkt- oder Plattformabnahme.
 Die API authentifiziert keinen menschlichen Reviewer und entdeckt keine
 vollständige Projekthistorie. Es gibt keine generische Fehlerausnahme und keine

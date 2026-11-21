@@ -10,6 +10,7 @@ from .catalog import load_catalog
 from .catalog_contract import validate_preflight_report
 from .common import CatalogError, json_bytes, read_object, sha256
 from .acceptance_evidence import selected_run_status
+from .regressions import load_regressions, regression_report
 from .identity import source_identity
 
 
@@ -27,6 +28,7 @@ This report is a development inventory, never a release authorization.
     catalog = load_catalog(root / 'verification')
     index, _ = read_object(root / 'verification/catalog.json')
     _, fixture_hash = read_object(root / 'verification/fixtures.json')
+    regressions = load_regressions(root, collection)
     status, outcomes = selected_run_status(catalog, collection, source, binding, report)
     nodes = {v: k for k, v in collection['nodeid_to_test_id'].items()}
     rows = []
@@ -66,6 +68,7 @@ This report is a development inventory, never a release authorization.
         'requirement_counts': {s: sum(r['status'] == s for r in rows)
                                for s in ('open', 'partial', 'failed', 'passed', 'stale', 'invalid')},
         'automation_policy': index.get('automation_policy'),
+        'regressions': regression_report(regressions, status, report),
         'behavior_evidence_complete': catalog.complete and bool(rows) and all(r['status'] == 'passed' for r in rows),
         'original_specification_accepted': False, 'release_approved': False,
         'release_gate': 'not_evaluated',

@@ -17,7 +17,8 @@
   ],
   "fixture_ids": [
     "SR-FIX-PROPOSAL-HUMAN-REVIEW-v1",
-    "SR-FIX-REQUIREMENT-APPROVAL-v1"
+    "SR-FIX-REQUIREMENT-APPROVAL-v1",
+    "SR-FIX-CONTRACT-REGRESSIONS-v1"
   ],
   "implementation_status": "partial",
   "json_pointers": [
@@ -64,7 +65,8 @@
     "Observe distinct human actor_ids reaching the configured quorum, an insufficient count remaining in_review, original canonical assessment bytes and actual writer completion.",
     "Compare public argv and structured request under the same explicit host context; dry-run preserves normative files, journal and receipt inventory.",
     "Repeat a human decision and reject AI/CI review calls, including dry-run; stale or revoked host evidence does not fill the quorum.",
-    "Verify exact request replay and decision/comment conflicts, actual stored-row tampering, missing originals, stale basis, denied authority and retained real interrupted-staging journal."
+    "Verify exact request replay and decision/comment conflicts, actual stored-row tampering, missing originals, stale basis, denied authority and retained real interrupted-staging journal.",
+    "Native isolated Requirement reapproval with exact context/review reference and current human/service/mandatory-relation gates; original reviews and receipts preserved. Synthetic test actors are not product acceptance."
   ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0674",
@@ -99,6 +101,8 @@
     "tests/test_requirement_approval.py::test_ai_review_never_replaces_human_judgment",
     "tests/test_requirement_approval.py::test_explicit_force_not_inferred_from_statement_or_priority",
     "tests/test_requirement_approval_right.py::test_detector_scores_or_unknown_review_fields_are_rejected",
-    "tests/test_requirement_approval_right.py::test_verifier_must_bind_exact_context_and_review"
+    "tests/test_requirement_approval_right.py::test_verifier_must_bind_exact_context_and_review",
+    "tests/test_requirement_reapproval.py::test_direct_and_saved_target_recompute_same_approval_and_cannot_publish_without_native_gate",
+    "tests/test_requirement_reapproval.py::test_r36_reconfirmation_and_two_explicit_transitions_preserve_native_history"
   ]
 }

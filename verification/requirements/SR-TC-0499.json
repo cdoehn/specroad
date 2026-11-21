@@ -3,7 +3,8 @@
   "expected_diagnostics": [],
   "expected_exit_codes": [],
   "fixture_ids": [
-    "SR-FIX-REQUIREMENT-APPROVAL-v1"
+    "SR-FIX-REQUIREMENT-APPROVAL-v1",
+    "SR-FIX-CONTRACT-REGRESSIONS-v1"
   ],
   "implementation_status": "partial",
   "json_pointers": [],
@@ -34,13 +35,16 @@
   "specification_sha256": "2dad4bf789cbede2f05084d27bd62e3197c814f5b84e5ea30675890c35bd90f5",
   "steps": [
     "Assess a detached in_review requirement under an explicit effective profile and service observations.",
-    "Require a current separately verified human review; compare structured findings, input bindings and unchanged original data."
+    "Require a current separately verified human review; compare structured findings, input bindings and unchanged original data.",
+    "Native isolated Requirement reapproval with exact context/review reference and current human/service/mandatory-relation gates; original reviews and receipts preserved. Synthetic test actors are not product acceptance."
   ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0499",
   "test_ids": [
     "tests/test_requirement_approval.py::test_core_does_not_detect_compound_from_and_word",
     "tests/test_requirement_approval.py::test_human_confirmation_of_compound_is_error",
-    "tests/test_requirement_approval_right.py::test_unauthenticated_compound_is_not_claimed_as_human_confirmation"
+    "tests/test_requirement_approval_right.py::test_unauthenticated_compound_is_not_claimed_as_human_confirmation",
+    "tests/test_requirement_reapproval.py::test_direct_and_saved_target_recompute_same_approval_and_cannot_publish_without_native_gate",
+    "tests/test_requirement_reapproval.py::test_r36_reconfirmation_and_two_explicit_transitions_preserve_native_history"
   ]
 }

@@ -21,7 +21,11 @@ def fold_saved_plan(plan, model, *, observed_base_root, observed_scope):
     baseline = not controlled and baseline_mode(value['operations'])
     evidence = not controlled and evidence_mode(value['operations'])
     imported = not controlled and import_mode(value['operations'])
-    if controlled:
+    from .requirement_approval import approval_mode, prepare_plan_requirement
+    if approval_mode(value['operations']):
+        folded = prepare_plan_requirement(plan, model,
+            observed_base_root=observed_base_root, observed_scope=observed_scope)
+    elif controlled:
         folded = prepare_control_candidates(model, value['operations'],
             metadata_policy_version=value['metadata_policy_version'], actor=value['actor'],
             planned_at=value['planned_at'], preconditions=value['preconditions'])
