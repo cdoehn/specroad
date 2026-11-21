@@ -56,7 +56,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "67d160df8232faf8208fc418314f824298de3064269e0518bb6db0c93fe18b57",
+  "specification_sha256": "1e46f0fd27839a51ea3dac5c60d20b1d5497c298037f25e686a35374a2ca7b74",
   "steps": [
     "Check the complete stored window first; otherwise hash all complete windows of the declared line/byte extent, including overlapping positions. Accept only one other match as relocated; report none versus multiple separately, with no saved position changes. Exercise normalized text, original bytes, final-newline sensitivity, missing/truncated old ranges, missing/invalid encoding, unknown and conflicting anchor profiles, detached values, historical Git parity and guarded fresh Core/PYZ runtimes."
   ],

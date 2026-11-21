@@ -45,7 +45,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "67d160df8232faf8208fc418314f824298de3064269e0518bb6db0c93fe18b57",
+  "specification_sha256": "1e46f0fd27839a51ea3dac5c60d20b1d5497c298037f25e686a35374a2ca7b74",
   "steps": [
     "Validate descriptor, select exact seeds and verify bound page membership and order.",
     "Prepare canonical project bytes from guarded native inventory and closure; compare unchanged artifact/resource and referenced object bytes, native roots, exclusions and independently reopened payloads. Refuse unsafe, changed, incomplete or unresolved sources without writing.",

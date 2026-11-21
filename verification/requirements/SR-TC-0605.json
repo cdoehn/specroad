@@ -37,7 +37,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "67d160df8232faf8208fc418314f824298de3064269e0518bb6db0c93fe18b57",
+  "specification_sha256": "1e46f0fd27839a51ea3dac5c60d20b1d5497c298037f25e686a35374a2ca7b74",
   "steps": [
     "Compare the complete stable diagnostic sequence across tiny batches and pages, including duplicates, mandatory errors, large individual records, large integer coordinates and an empty source.",
     "Generate a real run larger than 4 MiB with a one-pass iterator and 32-KiB encoded batches; measure only the selected Python allocation window.",

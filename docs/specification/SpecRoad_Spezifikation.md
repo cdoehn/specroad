@@ -1,19 +1,19 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.100
+## Version 0.2.101
 
 | Feld | Wert |
 |---|---|
 | Dokument-ID | `SR-SPEC-0001` |
-| Dokumentversion | `0.2.100` |
+| Dokumentversion | `0.2.101` |
 | Zielrelease | `SpecRoad Single-Repository Workbench 0.2.0` |
 | Status | **Fachlich konsolidierte Arbeitsgrundlage; technische Reviewentscheidung gesondert dokumentiert, formale Baseline-Freigabe und Produktabnahme nicht durch dieses Dokument erklärt** |
-| Stand | 20. November 2026 |
+| Stand | 21. November 2026 |
 | Sprache | Deutsch; technische Feldnamen, Enum-Werte und CLI-Kommandos Englisch |
-| Fachliche Quelle | **Diese Repositoryfassung v0.2.100 ist die aktive fachliche Arbeitsgrundlage; eine entsprechende PDF wird hiermit nicht veröffentlicht.** |
+| Fachliche Quelle | **Diese Repositoryfassung v0.2.101 ist die aktive fachliche Arbeitsgrundlage; eine entsprechende PDF wird hiermit nicht veröffentlicht.** |
 | Bearbeitbare Satzquelle | Diese Datei; eine spätere PDF muss denselben versionierten Inhalt wiedergeben. |
-| Vorgängerversion | Repository-Spezifikation v0.2.99; historische Nachweise bleiben unverändert. |
-| Prüf- und Entscheidungsgrundlage | REPOSITORY-REVIEWS-768: ausdrücklicher Nutzerauftrag für modulare Reviews und vorläufige Entwicklungsreihenfolge; keine menschliche Abnahme. |
-| Änderungsart | Gemeinsames Offline-Reviewverfahren und ausdrücklich zurückgestellte Korpusabnahme; echte Test- und Releasegates bleiben erforderlich. |
+| Vorgängerversion | Repository-Spezifikation v0.2.100; historische Nachweise bleiben unverändert. |
+| Prüf- und Entscheidungsgrundlage | ANALYZER-WORK-774 nach SPECROAD-DECISION-1 / 2.4.3.1; bestehende menschliche Abnahmen bleiben offen. |
+| Änderungsart | Geschlossene interne Work-/Workerbindung für echte Subject-Checkpoints; öffentliche Request-/Reportformate bleiben erhalten. |
 
 > **Verbindlicher Quellenwechsel:** Die ausdrückliche Nutzerentscheidung REFERENCE-SOURCE-551 wird als v0.2.50 umgesetzt. Der neue Quellvertrag ist Entwurfsarbeit vom 3. November 2026, kein Nachweis eines früher existierenden Formats. Bestehende 0.2-Verträge, Transport-, Sicherheits- und Reviewgrenzen bleiben erhalten.
 
@@ -11936,6 +11936,55 @@ Default ist eine Workerinstanz und ein Modell gleichzeitig. Opaque native Rechen
 Wiederaufnahme verwendet identischen Request und Enginefingerprint. Fehlt der exakte Adapter/Modellstand in der neuen Runtime, wird die Einheit als `unavailable` gemeldet; ein Wechsel erzeugt eine neue gebundene Analyse und mischt nicht unbemerkt Scores verschiedener Modelle. Checkpoints enthalten keine pickled Pythonobjekte, keine ausführbaren Prompts und kein serialisiertes Fremdmodell, sondern ausschließlich geprüfte JSON-Daten und Hashbindungen. Der Detector wird bei einem neuen Worker aus dem vertrauenswürdigen Offlinepaket erneut geladen.
 
 Die globale deterministische Fachverarbeitung des Core bleibt unverändert. Live-Analyzerergebnisse haben zusätzliche explizite semantische Inputs: Modell-, Library-, Unicode-, numerischer Backend- und Vorverarbeitungsfingerprint. Bytegleichheit wird für dieselbe gebundene Engine, dieselben Eingaben und denselben Ergebnisprojektionsvertrag geprüft, nicht pauschal für beliebige NumPy-/CPU-Kombinationen. Unterschiede zwischen unterstützten Interpreterpaketen dürfen nicht versteckt werden. Das Release verlangt gesonderte Übereinstimmung von Labels und Entscheidungszuständen auf dem festen Akzeptanzkorpus; Scores werden dabei nicht ohne Nachweis als plattformübergreifend bitidentisch ausgegeben. Rendering bereits gespeicherter identischer Reports ist wieder vollständig deterministisch.
+
+### T.9.1 Dauerhafte Subject-Ergebnisse und interne Worker-Sitzung
+
+ANALYZER-WORK-774 konkretisiert die technische Fortsetzung nach T.6/T.9.
+Neue Analyzer-Work-Aufträge verwenden `analyzer-work-request-v2`. Sie binden
+zusätzlich die effektive Fehlerschwelle `fail_on` (`warning` oder `error`).
+Ein Resume verwendet diese gespeicherte Schwelle; eine ausdrücklich abweichende
+Schwelle wird als Bindungsfehler abgewiesen. Bestehende v1-Aufträge bleiben mit
+ihrem damaligen Nichtverfügbarkeitsvertrag lesbar und abschließbar; ihre offenen
+Beobachtungen werden nicht nachträglich als reale Detektion umgedeutet.
+
+Für v2 startet allein die vertrauenswürdige Distribution einen internen,
+seriellen Worker-Kanal `analyzer-work-channel-v1`. Seine erste JSON-Zeile enthält
+den vollständigen ursprünglichen Request; der Worker antwortet mit dessen
+vollständiger Identitätsbindung und den tatsächlich beobachteten Enginewerten
+samt numerischen Inventaren. Weitere geschlossene JSON-Zeilen wählen nur ein
+bereits darin enthaltenes Paar aus Analyzerfingerprint und Subjectschlüssel.
+Jede Antwort bindet dieses Paar, den ursprünglichen Request und die Enginewerte;
+sie enthält genau das vollständige Subject-Ergebnis mit seinen Findings.
+Projektwerte wählen weder ausführbare Pfade noch weitere Protokolloperationen.
+Das öffentliche Einmal-Workerprotokoll bleibt ein vollständiger Request und ein
+vollständiges ReportPackage. Die passive Deskriptorübersicht meldet für den
+exakt bekannten Adapter `execution_supported=true` und `availability=not_checked`;
+dies bezeichnet die implementierte Route, prüft keine Dependency und ist keine
+Ausführungsfreigabe. `not_implemented` bleibt für historische Daten zulässig;
+fremde Deskriptoren bleiben `external_result_only` ohne ausführbare Route. Der interne Kanal ist kein neuer Dateiaustausch.
+
+Der Parent besitzt das native Work-Journal; der Worker schreibt keine
+Checkpoints. Erst ein vollständig geprüftes Subject-Ergebnis wird als dessen
+eigene dauerhafte Einheit übernommen. Ein neuer Aufruf startet höchstens einen
+neuen Worker, prüft die Enginebindung vor neuer Subject-Arbeit und berechnet
+keine schon gespeicherte Einheit erneut. Die Modellinitialisierung erfolgt
+höchstens einmal in dieser Sitzung. Bei ausschließlich zu kurzen Strings wird
+keine optionale Dependency geladen. Ein nicht reproduzierbar beobachtbarer
+numerischer Enginefingerprint darf keine lange Detektion in einem v2-Work-Auftrag
+als reproduzierbar fortsetzbar ausgeben. Technische Nichtverfügbarkeit bleibt
+explizit; sie wird weder als sprachliche Übereinstimmung noch als Code 8 gemeldet.
+
+Gespeichert werden nur geschlossene JSON-Engine-/Subject-Daten, vollständige
+Hashbindungen und Findings. Der Endbericht wird ausschließlich aus diesen
+Einheiten zusammengesetzt. Ein Wiederaufruf eines abgeschlossenen Auftrags liest
+das identische gespeicherte Ergebnis ohne Workerstart. Fehlende/typwidrige
+Antwort, Workerabbruch, fehlende Workobjekte oder verweigerte Speicherung
+liefern den bestehenden konkreten Fehlervertrag und erhalten den letzten
+veröffentlichten Checkpoint. Geänderte beziehungsweise fehlende Enginewerte
+stoppen neue Einheiten als technische Nichtverfügbarkeit (Code 5); ein anderer
+Request/AN-ID oder eine andere explizite Fehlerschwelle bleibt Bindungsfehler
+(Code 6). Kein solcher Fehler erzeugt eine Fortsetzung ohne Fortschritt.
+Die allgemeinen Speicherfallbacks aus T.5/P.2 und Release-/Reviewgrenzen bleiben.
 
 ## T.10 Verbindliche Abnahme des ersten Adapters
 

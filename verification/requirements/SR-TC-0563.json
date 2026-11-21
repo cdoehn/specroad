@@ -32,7 +32,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "67d160df8232faf8208fc418314f824298de3064269e0518bb6db0c93fe18b57",
+  "specification_sha256": "1e46f0fd27839a51ea3dac5c60d20b1d5497c298037f25e686a35374a2ca7b74",
   "steps": [
     "Export the independently bound complete published read-only chain without writes, retain its exact archive bytes and external hash, and remove owned original Work/source data.",
     "Verify canonical ZIP bytes, exact nonrecursive inventory and every original Work generation before allocating a missing or private empty external destination.",
