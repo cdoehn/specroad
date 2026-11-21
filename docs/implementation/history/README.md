@@ -592,3 +592,5 @@
 - [Bundle 779 — menschliche Abnahmen zuletzt](bundle-779-human-acceptance-last.md).
 
 - [Bundle 780 – ehrliches Abnahmeinventar](bundle-780-acceptance-inventory.md)
+
+- [Bundle 781 – aktuelle negative Laufnachweise](bundle-781-negative-run-evidence.md)

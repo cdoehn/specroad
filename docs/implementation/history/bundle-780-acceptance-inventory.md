@@ -43,5 +43,5 @@ Inventare noch ein grünes technisches Gate erteilen eine Releasefreigabe.
 Bestehende Reviews, Messwerte, externe Belege und historische Testnummern werden
 nicht umgeschrieben.
 
-Aktueller Commitzielstand: `20.a.W`. Erst dessen erfolgreiches eigenes
+Aktueller Commitzielstand: `20.a.R`. Erst dessen erfolgreiches eigenes
 Apply-Gate bestätigt die entsprechende Planmarkierung.

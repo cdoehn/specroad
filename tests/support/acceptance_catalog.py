@@ -28,8 +28,15 @@ class LegacyTests(unittest.TestCase):
 '''
 
 
-def seed(root):
-    root = make_catalog_project(root, ids=NATIVE_IDS, source=SUBJECT)
+def seed(root, *, outcome='passed'):
+    snippets = {
+        'passed': '',
+        'failed': '    assert False, "owned intentional failure"\n',
+        'skipped': '    pytest.skip("owned absent runtime condition")\n',
+        'expected_failure': '    pytest.xfail("owned unmet behavior")\n',
+    }
+    source = SUBJECT.replace('def test_native():\n', 'def test_native():\n' + snippets[outcome])
+    root = make_catalog_project(root, ids=NATIVE_IDS, source=source)
     directory = root / 'verification'
     first = json.loads((directory / 'requirements/SR-TC-0001.json').read_bytes())
     first.update(implementation_status='implemented', open_items=[])
@@ -51,9 +58,10 @@ def seed(root):
     assert code == 0 and collection['tests_run'] == 0
     target = root / 'build/evidence.json'
     run = execute(root, 'run_tests.py', ['--workers', '2', '--evidence', str(target)])
-    assert run.returncode == 0, run.stderr.decode(errors='replace')
+    assert run.returncode == (0 if outcome == 'passed' else 1), run.stderr.decode(errors='replace')
     report = json.loads(target.read_bytes())
-    assert report['suite_passed'] and report['tests_run'] == 4
+    assert report['suite_passed'] is (outcome == 'passed') and report['tests_run'] == 4
+    assert report['test_outcomes'][NATIVE_IDS[0]] == outcome
     # Immutable bytes only; every caller gets fresh files and decoded values.
     files = tuple((p.relative_to(root).as_posix(), p.read_bytes()) for p in root.rglob('*')
                   if p.is_file() and p.relative_to(root).parts[0] != 'build'

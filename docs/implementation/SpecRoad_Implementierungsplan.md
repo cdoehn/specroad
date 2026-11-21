@@ -271,14 +271,20 @@ bindet 20.a an drei getrennte Apply-Gates; der belegte R-36-Rest von 20.c bleibt
 gelten erst nach dem jeweiligen erfolgreichen Commit; offene menschliche
 Abnahmen und die noch ausstehende Releasefreigabe bleiben erhalten.
 
+Die [Korrektur in Bundle 781](history/bundle-781-negative-run-evidence.md)
+erhält das bestätigte 20.a.W und setzt den vollständigen offenen Rest
+20.a.R/C fort. Ein echter fehlgeschlagener Lauf bleibt als aktueller
+Fehlnachweis sichtbar; Infrastrukturfehler und widersprüchliche Evidence
+bleiben ungültig. Die Zielmarkierungen gelten erst nach dem eigenen Gate.
+
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 400
+plan_revision: 401
 implementation_plan_commits_total: 918
-implementation_plan_commits_completed: 871
-last_completed_plan_commit: 20.a.W
-next_plan_commit: 20.a.R
+implementation_plan_commits_completed: 872
+last_completed_plan_commit: 20.a.R
+next_plan_commit: 20.a.C
 priority_off_plan: null
 next_off_plan_commit: null
 last_completed_numbered_bundle: 779

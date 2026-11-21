@@ -47,15 +47,36 @@ def _run_status(catalog, collection, source, binding, report):
                 or type(report['tests_run']) is not int or report['tests_run'] != len(pairs)
                 or type(observed['tests_run']) is not int or observed['tests_run'] != len(pairs)
                 or type(observed['pytest_exit_code']) is not int
-                or observed['pytest_exit_code'] not in (0, 1) or observed['errors'] != []
+                or observed['pytest_exit_code'] not in (0, 1)
                 or type(cases) is not list or len(cases) != len(catalog.cases)
                 or sha256(json_bytes(report['runtime'])) != binding['platform_sha256']
                 or sha256(json_bytes(report['execution'])) != binding['configuration_sha256']):
             return 'invalid', {}
         counts = observed['worker_test_counts']
+        workers = observed['workers']
         if (type(counts) is not dict or not counts
                 or any(type(k) is not str or not k or type(v) is not int or v < 0 for k, v in counts.items())
-                or sum(counts.values()) != len(pairs)):
+                or sum(counts.values()) != len(pairs)
+                or type(workers) is not list or workers != sorted(counts)
+                or type(report['requirement_counts']) is not dict
+                or any(type(v) is not int or v < 0 for v in report['requirement_counts'].values())):
+            return 'invalid', {}
+        runtime, execution = report['runtime'], report['execution']
+        if (type(runtime) is not dict or set(runtime) != {'implementation', 'python', 'system', 'machine'}
+                or any(type(v) is not str or not v for v in runtime.values())
+                or type(execution) is not dict or execution.get('engine') != 'pytest'
+                or type(execution.get('workers')) is not int or execution['workers'] < 1
+                or execution.get('distribution') != 'worksteal'
+                or execution.get('test_timeout', False) is not None
+                or execution.get('suite_timeout', False) is not None):
+            return 'invalid', {}
+        # The native xdist observer records exitstatus=1 as worker_nonzero_exit
+        # even for ordinary test failures. That is current negative evidence,
+        # not a broken observation, only with the matching exit and outcomes.
+        worker_test_failure = (observed['errors'] == ['worker_nonzero_exit']
+            and observed['pytest_exit_code'] == 1
+            and any(v in ('failed', 'error', 'unexpected_success') for v in outcomes.values()))
+        if observed['errors'] != [] and not worker_test_failure:
             return 'invalid', {}
         passed = all(v == 'passed' for v in outcomes.values()) and observed['pytest_exit_code'] == 0
         if report['suite_passed'] is not passed or observed['suite_passed'] is not passed:
@@ -114,6 +135,8 @@ This report is a development inventory, never a release authorization.
             'status': outcomes.get(data['test_case_id'], 'open' if status == 'not_supplied' else status),
             'evidence_id': (binding['run_id'] + '/' + data['test_case_id']) if status == 'current' and ids else None,
             'not_automated_by_user_policy': policy, 'policy_excluded_scope': excluded,
+            'excluded_scope_status': 'not_automated_by_user_policy' if policy or excluded else None,
+            'original_requirement_accepted': False,
             'open_items': data['open_items'],
         })
     if (source_identity(root) != source or load_catalog(root / 'verification') != catalog
