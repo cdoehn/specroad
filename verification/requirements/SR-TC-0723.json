@@ -19,7 +19,7 @@
   ],
   "method": "automated_behavior",
   "open_items": [
-    "Target 19.x.W requires its own native Apply gate and commit; no behavior test ran in Dev.",
+    "Target 19.x.R requires its own native Apply gate and commit; no behavior test ran in Dev.",
     "Human language-corpus reviews and 19.t remain required before 19.y; release and supported-platform full-suite gates remain separate."
   ],
   "oracle": {
@@ -59,6 +59,12 @@
   "test_case_id": "SR-TC-0723",
   "test_ids": [
     "tests/test_analyzer_roundtrip.py::test_complete_multilingual_roundtrip_uses_the_same_native_values",
+    "tests/test_analyzer_roundtrip_right.py::test_external_report_and_presentation_never_change_original_meaning_or_claim_region[force]",
+    "tests/test_analyzer_roundtrip_right.py::test_external_report_and_presentation_never_change_original_meaning_or_claim_region[language]",
+    "tests/test_analyzer_roundtrip_right.py::test_external_report_and_presentation_never_change_original_meaning_or_claim_region[tail]",
+    "tests/test_analyzer_roundtrip_right.py::test_real_decoded_projection_reaches_import_plan_then_analyzer_without_source_fallback[csv]",
+    "tests/test_analyzer_roundtrip_right.py::test_real_decoded_projection_reaches_import_plan_then_analyzer_without_source_fallback[reqif]",
+    "tests/test_analyzer_roundtrip_right.py::test_real_decoded_projection_reaches_import_plan_then_analyzer_without_source_fallback[reqifz]",
     "tests/test_requirement_exchange.py::test_requirement_core_definitions_are_not_selected_by_name_alone",
     "tests/test_requirement_exchange.py::test_requirement_core_mapping_is_usable_through_live_export[csv]",
     "tests/test_requirement_exchange.py::test_requirement_core_mapping_is_usable_through_live_export[ndjson]",

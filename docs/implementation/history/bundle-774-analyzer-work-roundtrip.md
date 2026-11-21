@@ -34,4 +34,4 @@ Modul `reviews/modules/language-corpus.json`; vor 19.y bleibt deren echte Abnahm
 Diese technischen Szenarien sind kein menschlich geprüfter Sprachkorpus, keine
 neue Performance-Messung und keine Produkt-/Releasefreigabe.
 
-Stage dieses Zielstands: `19.x.W`.
+Stage dieses Zielstands: `19.x.R`.

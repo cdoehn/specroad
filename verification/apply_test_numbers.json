@@ -29663,6 +29663,12 @@
     "tests/test_analyzer_resume_right.py::test_retained_unit_never_changes_request_policy_engine_or_original[status]",
     "tests/test_analyzer_resume_right.py::test_short_subjects_abstain_without_dependency_and_keep_complete_coverage",
     "tests/test_analyzer_resume_right.py::test_v1_work_retains_its_original_unavailable_contract",
-    "tests/test_analyzer_roundtrip.py::test_complete_multilingual_roundtrip_uses_the_same_native_values"
+    "tests/test_analyzer_roundtrip.py::test_complete_multilingual_roundtrip_uses_the_same_native_values",
+    "tests/test_analyzer_roundtrip_right.py::test_external_report_and_presentation_never_change_original_meaning_or_claim_region[force]",
+    "tests/test_analyzer_roundtrip_right.py::test_external_report_and_presentation_never_change_original_meaning_or_claim_region[language]",
+    "tests/test_analyzer_roundtrip_right.py::test_external_report_and_presentation_never_change_original_meaning_or_claim_region[tail]",
+    "tests/test_analyzer_roundtrip_right.py::test_real_decoded_projection_reaches_import_plan_then_analyzer_without_source_fallback[csv]",
+    "tests/test_analyzer_roundtrip_right.py::test_real_decoded_projection_reaches_import_plan_then_analyzer_without_source_fallback[reqif]",
+    "tests/test_analyzer_roundtrip_right.py::test_real_decoded_projection_reaches_import_plan_then_analyzer_without_source_fallback[reqifz]"
   ]
 }

@@ -14,7 +14,7 @@
   "json_pointers": [],
   "method": "automated_behavior",
   "open_items": [
-    "Target 19.x.W requires its own native Apply gate and commit; no behavior test ran in Dev.",
+    "Target 19.x.R requires its own native Apply gate and commit; no behavior test ran in Dev.",
     "Human language-corpus reviews and 19.t remain required before 19.y; release and supported-platform full-suite gates remain separate."
   ],
   "oracle": {
@@ -41,11 +41,19 @@
   "specification_sha256": "1e46f0fd27839a51ea3dac5c60d20b1d5497c298037f25e686a35374a2ca7b74",
   "steps": [
     "Create complete native requirements through the real authoring writer; compare source-field and record hashes through presentation data, actual NDJSON bytes and verified bundles.",
-    "Create an original full-data request from the recipient, run the real offline analyzer and import/show the separate original report bytes; assert no normative input changes."
+    "Create an original full-data request from the recipient, run the real offline analyzer and import/show the separate original report bytes; assert no normative input changes.",
+    "Feed actual CSV/ReqIF/ReqIFz decodings through native import planning and the real analyzer; retain explicit unmapped-field losses.",
+    "Change a complete-text tail, declared region or normative force: require stale external reports, retained original bytes and unchanged explicitly declared presentation inputs."
   ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0726",
   "test_ids": [
-    "tests/test_analyzer_roundtrip.py::test_complete_multilingual_roundtrip_uses_the_same_native_values"
+    "tests/test_analyzer_roundtrip.py::test_complete_multilingual_roundtrip_uses_the_same_native_values",
+    "tests/test_analyzer_roundtrip_right.py::test_external_report_and_presentation_never_change_original_meaning_or_claim_region[force]",
+    "tests/test_analyzer_roundtrip_right.py::test_external_report_and_presentation_never_change_original_meaning_or_claim_region[language]",
+    "tests/test_analyzer_roundtrip_right.py::test_external_report_and_presentation_never_change_original_meaning_or_claim_region[tail]",
+    "tests/test_analyzer_roundtrip_right.py::test_real_decoded_projection_reaches_import_plan_then_analyzer_without_source_fallback[csv]",
+    "tests/test_analyzer_roundtrip_right.py::test_real_decoded_projection_reaches_import_plan_then_analyzer_without_source_fallback[reqif]",
+    "tests/test_analyzer_roundtrip_right.py::test_real_decoded_projection_reaches_import_plan_then_analyzer_without_source_fallback[reqifz]"
   ]
 }
