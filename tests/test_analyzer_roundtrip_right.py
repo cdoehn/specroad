@@ -22,7 +22,7 @@ from support.read_only import make_project, inventory, no_write_attempts
 from support.reqif_objects import LIMITS
 from support.scopes import descriptor
 from support.targets import model
-from test_analyzer_roundtrip import authored as authored, install_owned_files, CONTENT
+from support.analyzer_roundtrip import authored as authored, install_owned_files, CONTENT
 from test_requirement_exchange import resources
 from test_requirement_exchange_right import candidate, import_arguments
 
