@@ -33,7 +33,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "6c2f797967ccfa777ef42662d9c91e3c75927d1eeaf0eb71dc0e85a1256e2e7c",
+  "specification_sha256": "2dad4bf789cbede2f05084d27bd62e3197c814f5b84e5ea30675890c35bd90f5",
   "steps": [
     "Capture real files in small work windows and bounded reads; compare every captured byte and hash, early complete-file reuse, stable manifests across block sizes and locations, concrete missing-input errors and unchanged source inventories.",
     "Capture and pause real files, change or remove already captured sources, require hash comparison for metadata changes, block active/orphan/transaction state, and verify retained bytes plus descriptor/mutex release."

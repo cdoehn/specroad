@@ -1,19 +1,19 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.102
+## Version 0.2.103
 
 | Feld | Wert |
 |---|---|
 | Dokument-ID | `SR-SPEC-0001` |
-| Dokumentversion | `0.2.102` |
+| Dokumentversion | `0.2.103` |
 | Zielrelease | `SpecRoad Single-Repository Workbench 0.2.0` |
 | Status | **Fachlich konsolidierte Arbeitsgrundlage; technische Reviewentscheidung gesondert dokumentiert, formale Baseline-Freigabe und Produktabnahme nicht durch dieses Dokument erklärt** |
 | Stand | 21. November 2026 |
 | Sprache | Deutsch; technische Feldnamen, Enum-Werte und CLI-Kommandos Englisch |
-| Fachliche Quelle | **Diese Repositoryfassung v0.2.102 ist die aktive fachliche Arbeitsgrundlage; eine entsprechende PDF wird hiermit nicht veröffentlicht.** |
+| Fachliche Quelle | **Diese Repositoryfassung v0.2.103 ist die aktive fachliche Arbeitsgrundlage; eine entsprechende PDF wird hiermit nicht veröffentlicht.** |
 | Bearbeitbare Satzquelle | Diese Datei; eine spätere PDF muss denselben versionierten Inhalt wiedergeben. |
 | Vorgängerversion | Repository-Spezifikation v0.2.101; historische Nachweise bleiben unverändert. |
-| Prüf- und Entscheidungsgrundlage | HUMAN-ACCEPTANCE-LAST-779: ausdrücklicher Nutzerauftrag zur Vorziehung unabhängiger technischer Gesamtabnahmen; menschliche Abnahmen bleiben offen. |
-| Änderungsart | Entwicklungsreihenfolge und Abschlussabhängigkeiten; Produktverhalten, Sicherheits-, Review- und Releasekriterien unverändert. |
+| Prüf- und Entscheidungsgrundlage | APPROVAL-BINDING-783, delegiert gemäß SPECROAD-DECISION-1; gebundene Wiederfreigabe aus R-36. |
+| Änderungsart | Detailbindung des vorhandenen menschlichen Approval-Gates an den isolierten nativen Lifecycle-Übergang. |
 
 > **Verbindlicher Quellenwechsel:** Die ausdrückliche Nutzerentscheidung REFERENCE-SOURCE-551 wird als v0.2.50 umgesetzt. Der neue Quellvertrag ist Entwurfsarbeit vom 3. November 2026, kein Nachweis eines früher existierenden Formats. Bestehende 0.2-Verträge, Transport-, Sicherheits- und Reviewgrenzen bleiben erhalten.
 
@@ -2383,6 +2383,43 @@ Ein reiner Lifecycle-Befehl verändert nur `maturity` und die von Anhang K abgel
 Ein allgemeiner Patch darf `maturity` nicht direkt setzen; der Writer verwendet die typisierte Transition oder die hier definierte abgeleitete Herabstufung. Gemischte Änderungen an **verschiedenen** Artefakten sind zulässig, etwa ein neues Nachfolgeartefakt und die reine Stilllegung des Vorgängers. Inhaltliche Änderung und erneute fachliche Freigabe desselben vormals freigegebenen Artefakts benötigen getrennte, jeweils gebundene Vorgänge. Für ein bereits `proposed` oder `in_review` vorliegendes Artefakt gelten Tabelle 9.6.1 und das vollständige Approval-Gate; ein freier Patch ersetzt kein Review.
 
 Der Writer berechnet diese Nachbedingungen vor Ergebnis-Hash, Dry-Run und Autorisierung. Er ergänzt bei Apply keine zuvor unsichtbaren Statusänderungen. Mehrere Teiloperationen erhöhen die Revision derselben Identität nur einmal gemäß Anhang K. Migration und Merge behalten ihre ausdrücklich abweichende Metadatenpolicy; neu kombinierter Fachinhalt erhält keine geerbte Freigabe. Eine bytegetreue Übernahme einer bestehenden Historienrevision ist keine neue reguläre Inhaltsänderung. Spezialartefakte folgen ausschließlich 9.6.2 und 10.4. Die zusätzliche Rücknahme einer Freigabe nach negativem Relationsreview ist abschließend in 11.13 festgelegt.
+
+#### 9.6.4 Gebundene Requirement-Wiederfreigabe — APPROVAL-BINDING-783
+
+Für die explizite Folge aus R-36 bleibt die erneute menschliche Fachprüfung
+nach SR-REQ-0070, 0499 und 0674 erforderlich. Die reine Bestätigung einer
+Relation ersetzt sie nicht. Der isolierte Übergang eines Requirements von
+`in_review` nach `approved` bindet in
+`transition.metadata.requirement_approval` exakt die Felder `version`
+(`requirement-approval-v1`), `input_sha256` und `review_sha256`. Die beiden
+SHA-256-Werte binden den vollständigen vorhandenen `ApprovalContext` im Modus
+`transition` und die beobachtete `HumanRequirementReview`. Diese Referenz
+ist weder ein neuer Artefakttyp noch ein Authentizitätsnachweis. Die tatsächliche
+Reviewquelle bleibt Aufgabe des ausdrücklich registrierten vertrauenswürdigen
+Hostdienstes. Der bestehende Actor-/Proposal-/Publikationsvertrag bleibt wirksam;
+der direkte Freigabeauftrag verlangt einen menschlichen Akteur.
+
+Das native Freigabegate MUSS den Kontext gegen alle ursprünglichen Modellbytes,
+Profil- und Konfigurationswerte sowie die expliziten Semantikprojektionen prüfen.
+Vor jeder tatsächlichen Publikationsfreigabe werden der registrierte
+Review-Verifier und die sieben vorhandenen Pflichtdienste erneut für genau
+jenen Kontext ausgewertet. Fehlende, veraltete, widersprüchliche, negative oder
+nicht authentifizierte Beobachtungen blockieren. Ein gleichnamiger beliebiger
+Callback, ein gespeichertes `passed` oder ein Akteursetikett reicht nicht aus.
+Core prüft zusätzlich die aktuellen profilabhängigen Pflichtrelationen selbst.
+Das vollständige Zielmodell und alle sonstigen Write-Gates bleiben Pflicht.
+
+Die Metadatenreferenz bindet ausschließlich diesen isolierten Übergang und
+seinen unveränderten Fachinhalt. Ein frei zusammengesetzter Inhalts-/Freigabeplan
+oder ein Spezialartefakt darf diesen Pfad nicht nutzen. Direkte Vorbereitung,
+gespeicherter Plan und Publikationswiederprüfung müssen identische Zielbytes
+mit genau einer Revision berechnen. Der rein lesende historische Planfold
+prüft nur seine deklarierte Transformation; er authentifiziert keinen damaligen
+Review und erteilt keine aktuelle Freigabe. Ein bestätigtes ursprüngliches
+Receipt bleibt historisch idempotent auch nach späterem Widerruf; ein neuer
+Request benötigt aktuelle Gates. Originalreviews und frühere Receipts bleiben
+erhalten. Diese technische Implementierung erteilt keine menschliche Abnahme
+von SpecRoad selbst.
 
 ### 9.7 Exakte Kernrelationsmatrix
 
@@ -8242,6 +8279,7 @@ Die Umsetzung folgt im bestehenden Plan als 18.s–18.x nach 18.k.C.
 
 | Version | Datum | Status | Änderung |
 |---|---|---|---|
+| 0.2.103 | 2026-11-21 | Delegierte Detailklärung | APPROVAL-BINDING-783: exakte Kontext-/Reviewreferenz und aktuelle native Gates für R-36; keine Aufhebung menschlicher Freigaben. |
 | 0.2.102 | 2026-11-21 | Ausdrücklicher Nutzerauftrag | HUMAN-ACCEPTANCE-LAST-779: unabhängige technische M20-Gruppen vorziehen; menschliche Abnahmen und abhängige Prüfungen zuletzt, ohne Änderung ihrer Erfolgskriterien. |
 | 0.2.94 | 2026-11-18 | Delegierte Detailklärung nach SPECROAD-DECISION-1 | PROPOSAL-DIALOG-738: geschlossene native Veröffentlichung vorbereiteter Inhaltsrevisionen über den vorhandenen Writer; Reviews, Scope und CLI-Verträge bleiben erhalten. |
 | 0.2.79 | 2026-11-09 | Delegiert gemäß SPECROAD-DECISION-1, Vertrag 4 | PROPOSAL-CHECK-657: isolierter nativer Checkbericht und ausdrückliche Debug-Aufbewahrung; keine Statuspersistenz oder Freigabe. |

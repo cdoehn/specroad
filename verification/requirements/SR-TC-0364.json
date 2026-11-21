@@ -34,7 +34,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "6c2f797967ccfa777ef42662d9c91e3c75927d1eeaf0eb71dc0e85a1256e2e7c",
+  "specification_sha256": "2dad4bf789cbede2f05084d27bd62e3197c814f5b84e5ea30675890c35bd90f5",
   "steps": [
     "Acquire three complete sources, compare exact bytes and native scope/model-root bindings, check immutable detached output and original source provenance, and verify no writes or Git checkout occur.",
     "Reject partial markers/bundles and retained proof removal, foreign identities, old/new unsupported schemas, selected Baselines, unsafe or missing dependencies and late input changes; retain historic profiles and registered original bytes without changing them.",

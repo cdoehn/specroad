@@ -49,7 +49,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "6c2f797967ccfa777ef42662d9c91e3c75927d1eeaf0eb71dc0e85a1256e2e7c",
+  "specification_sha256": "2dad4bf789cbede2f05084d27bd62e3197c814f5b84e5ea30675890c35bd90f5",
   "steps": [
     "Perform explicit negative human decisions through native proposal review; compare full original content binding, retained history, exact revision and actual completion.",
     "Withdraw only the same human approval: in_review keeps status, approved becomes rejected; reject foreign/nonhuman/absent approvals and require an explicit withdrawal reason.",

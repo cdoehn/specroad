@@ -51,7 +51,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "6c2f797967ccfa777ef42662d9c91e3c75927d1eeaf0eb71dc0e85a1256e2e7c",
+  "specification_sha256": "2dad4bf789cbede2f05084d27bd62e3197c814f5b84e5ea30675890c35bd90f5",
   "steps": [
     "Invoke environment.check through CLI, structured request and registry entry; inspect actual machine report and exit status.",
     "Record native startup accesses and reject write/process/network attempts beside broken unselected projects, invalid model contents and pending transactions.",
