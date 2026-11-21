@@ -48,8 +48,10 @@ def publish_guarded_change(preflight, *, held_lock, authority, gates=()):
         require(result.manifest(result.artifacts,plan.data['base']['scope_descriptor']).sha256==request.data['target_root_sha256'],
                 'write_target_root_changed',exit_code=6)
         registered,missing=_gates(gates,preflight._policy,plan,result)
+        from .requirement_approval import approval_target_contexts
         report=_empty_target_gates(validate_model(result.documents,profile=result.profile,gates=registered,
-                resources=validation_resources(result)),registered,result.profile)
+                resources=validation_resources(result),
+                approval_contexts=approval_target_contexts(gates,result.documents,result)),registered,result.profile)
         assessment=assess_validation(report,fail_on=result.configuration.data['validation_policy'].get('fail_on','error'),
                                     strict=preflight._strict,documents=result.documents)
         require(not missing and report.complete and assessment.passed,'write_target_invalid',exit_code=3)

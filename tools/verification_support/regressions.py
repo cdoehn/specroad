@@ -4,6 +4,10 @@ The inventory selects existing real tests; it neither calls test functions nor
 turns their collection into execution. Original run bytes remain authoritative.
 """
 from .common import CatalogError, read_object
+from .catalog_contract import validate_preflight_report
+from .commit_tests import validate_plan
+from .identity import source_identity
+from pathlib import Path
 
 REGRESSION_IDS = tuple('R-%02d' % i for i in range(1, 48))
 
@@ -52,3 +56,24 @@ def regression_report(loaded, run_status, report):
             'regressions': rows, 'all_passed': all(r['status'] == 'passed' for r in rows),
             'counts': {s: sum(r['status'] == s for r in rows) for s in ('open', 'failed', 'passed', 'stale', 'invalid')},
             'release_approved': False}
+
+
+def required_regression_plan(root, collection, commit_id):
+    """Select the union once, unfiltered, using the existing Apply plan contract."""
+    root = Path(root)
+    source = source_identity(root)
+    if not validate_preflight_report(root, collection, source):
+        raise CatalogError('Current complete collection required for regression selection')
+    loaded = load_regressions(root, collection)
+    if loaded is None:
+        raise CatalogError('No regression inventory; no complete regression gate')
+    value, digest = loaded
+    plan = {'format_version': 1, 'commit_id': commit_id,
+            'test_ids': sorted({t for row in value['regressions'] for t in row['test_ids']}),
+            'test_files': [],
+            'reason': 'Complete R-01..R-47 regression union from current catalog ' + digest
+                      + '; all exact variants mandatory, independent of runtime filter and rotation. '
+                      'Collection is not execution; no human or release acceptance is inferred.'}
+    if source_identity(root) != source:
+        raise CatalogError('Regression inputs changed during selection')
+    return validate_plan(plan, commit_id)

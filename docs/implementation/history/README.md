@@ -598,3 +598,5 @@
 - [Bundle 782 – korrigierter C-Commitumfang](bundle-782-clean-stage-scope.md)
 
 - [Bundle 783 – Kontraktregression und Schreibschutzgesamtmatrix](bundle-783-contract-regressions.md)
+
+- [Bundle 784 – Originalressourcen im Git-Wiederanlauftest](bundle-784-git-original-resources.md)

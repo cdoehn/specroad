@@ -50,8 +50,9 @@ def checkout(source, destination, commit):
 def _project_gates(model):
     """Qualify the actual candidate documents, not the unchanged source model.
 
-    These small projects deliberately include a primary document and a stored
-    configuration. Their mandatory services run the full native validator;
+    These small projects include primary documents, configuration and sometimes
+    original attachments with historical Evidence. Each applicable service runs
+    the full native validator against the candidate documents and original bytes;
     no test callback substitutes a guessed successful qualification.
     """
     artifact_paths = {document.path for document in model.documents}
@@ -66,9 +67,10 @@ def _project_gates(model):
         validate_project({**resources, **{d.path: d.content for d in context.documents}})
         return context.result()
 
-    return tuple(ModelGate(name, 'git-restart-native-target-v1', dependencies, check,
+    return tuple(ModelGate(name, 'git-restart-native-target-v2', dependencies, check,
                            model._sources_sha256)
-                 for name in ('document_model', 'configuration'))
+                 for name in ('document_model', 'configuration', 'lifecycle',
+                              'evidence_currentness', 'external_resources'))
 
 
 def new_write(root, request, transaction, statement):

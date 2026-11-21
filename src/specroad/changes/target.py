@@ -75,8 +75,10 @@ def assess_change_target(plan, model, *, policy, gates=(), strict=False):
         if target_model.manifest(target_model.artifacts, scope).sha256 != target.sha256:
             raise TargetError('normalization_semantic_root_changed')
     registered, missing = _gates(gates,policy,plan,target_model)
+    from .requirement_approval import approval_target_contexts
     report = validate_model(documents, profile=target_model.profile, gates=registered,
-                            resources=validation_resources(target_model))
+                            resources=validation_resources(target_model),
+                            approval_contexts=approval_target_contexts(gates, documents, target_model))
     report = _empty_target_gates(report, registered, target_model.profile)
     assessment = assess_validation(report, fail_on=target_model.configuration.data['validation_policy'].get('fail_on','error'),
                                    strict=strict, documents=documents)

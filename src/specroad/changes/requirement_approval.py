@@ -160,8 +160,13 @@ class _RequirementApprovalCheck:
                 or target.profile_data != model.profile.data):
             raise ModelError('approval_target_binding_mismatch')
         if self.gate_id == APPROVAL_GATE:
-            assessment = assess_requirement_approval(context, review=self.review,
-                verifier=self.verifier, prerequisites=self.provider.check(context))
+            try:
+                observations = self.provider.check(context)
+                assessment = assess_requirement_approval(context, review=self.review,
+                    verifier=self.verifier, prerequisites=observations)
+            except Exception:
+                return target.result([{'reason': 'approval_prerequisite_service_unavailable',
+                    'severity': 'error', 'artifact_id': context.requirement_id}])
             if not assessment.eligible_for_human_approval:
                 return target.result([{'reason': 'requirement_approval_not_eligible', 'severity': 'error',
                     'artifact_id': context.requirement_id, 'assessment': assessment.data}])
@@ -199,7 +204,9 @@ def requirement_approval_gates(model, operation, *, actor, planned_at, context,
         raise LifecycleError('approval_typed_inputs_required')
     owned = model.snapshot()
     metadata = bind_policy('change-metadata-v1', actor, planned_at)
-    _operation(owned, [operation.data], metadata['actor'])
+    # Keep registration passive: the writer must resolve a confirmed original
+    # receipt before checking the source maturity or current review services.
+    # A fresh plan still calls _operation and requires a human in_review source.
     if len({g.gate_id for g in gates}) != len(gates) or any(g.gate_id == APPROVAL_GATE for g in gates):
         raise LifecycleError('approval_reserved_or_duplicate_gate')
     binding = canonical_json_sha256({'model': owned._sources_sha256, 'operation': operation.data,
@@ -212,6 +219,20 @@ def requirement_approval_gates(model, operation, *, actor, planned_at, context,
     return (*gates, *(ModelGate(name, APPROVAL_BINDING, dependencies,
         _RequirementApprovalCheck(owned, canonical_json_bytes(operation.data), canonical_json_bytes(metadata),
             context, review, verifier, prerequisite_provider, name), binding) for name in sorted(names)))
+
+
+def approval_target_contexts(gates, documents, model):
+    """Carry explicit quality/interface projections into the actual target check.
+
+    The new stored-mode context grants nothing. The original transition context
+    remains the only input accepted by the human and semantic admission gate.
+    """
+    return tuple(ApprovalContext(g.check.context.requirement_id, documents,
+        profile=model.profile, configuration=model.configuration.data, mode='stored',
+        quality_fields=g.check.context.data['quality_fields'],
+        interface_fields=g.check.context.data['interface_fields'])
+        for g in gates if type(g) is ModelGate and g.gate_id == APPROVAL_GATE
+        and type(g.check) is _RequirementApprovalCheck)
 
 
 def require_requirement_approval_gate(gates, operations, model, *, actor, planned_at):
