@@ -20,11 +20,14 @@ offener Herkunfts-/Nutzungsfreigabe zur Prüfung. Bewertungen werden als kleine
 JSON-Dateien mit dem ausdrücklich veröffentlichten Namen und der E-Mail des
 Reviewers beigetragen. Mehrere unabhängige Bewertungen sind möglich.
 
-Die menschliche Korpusabnahme **bleibt offen**. Auf ausdrücklichen Nutzerauftrag
-geht die Implementierung vorläufig weiter; Review-, reale Adapter- und
-Releaseabnahmen werden dadurch nicht als bestanden ausgewiesen. Die Details
-und die Rückkehr zur offenen 19.t-Folge stehen im
-[Plan](docs/implementation/decisions/repository-reviews-768.md).
+Die menschlichen Abnahmen **bleiben offen**. Auf ausdrücklichen Nutzerauftrag
+folgen jetzt die unabhängig ausführbaren technischen Arbeiten aus Meilenstein
+20. Sprachkorpusreview, praktische Bedienungsdurchsicht und endgültige
+Freigabe liegen im Abschlussblock; notwendige Korpus-/Adapterprüfungen folgen
+erst dem tatsächlich geprüften Freeze. Technische Kandidatenartefakte sind
+keine Produktfreigabe. Die aktuelle Reihenfolge und ihre Abhängigkeiten stehen
+im [Plan](docs/implementation/SpecRoad_Implementierungsplan.md) und in der
+[Nutzerentscheidung](docs/implementation/decisions/human-acceptance-last-779.md).
 
 ## Lokale Entwicklungsumgebung
 

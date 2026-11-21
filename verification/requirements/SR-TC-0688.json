@@ -41,7 +41,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "1e46f0fd27839a51ea3dac5c60d20b1d5497c298037f25e686a35374a2ca7b74",
+  "specification_sha256": "6c2f797967ccfa777ef42662d9c91e3c75927d1eeaf0eb71dc0e85a1256e2e7c",
   "steps": [
     "Compare unchanged and changed native files and independently supplied current JSON resources; retain all four currentness states and each full selected report.",
     "Use actual write/process/network traps and byte inventories; expose all structurally differing variants with analyzer/engine provenance and no synthetic evidence or combined probability.",

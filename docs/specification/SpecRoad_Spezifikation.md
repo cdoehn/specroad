@@ -1,19 +1,19 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.101
+## Version 0.2.102
 
 | Feld | Wert |
 |---|---|
 | Dokument-ID | `SR-SPEC-0001` |
-| Dokumentversion | `0.2.101` |
+| Dokumentversion | `0.2.102` |
 | Zielrelease | `SpecRoad Single-Repository Workbench 0.2.0` |
 | Status | **Fachlich konsolidierte Arbeitsgrundlage; technische Reviewentscheidung gesondert dokumentiert, formale Baseline-Freigabe und Produktabnahme nicht durch dieses Dokument erklärt** |
 | Stand | 21. November 2026 |
 | Sprache | Deutsch; technische Feldnamen, Enum-Werte und CLI-Kommandos Englisch |
-| Fachliche Quelle | **Diese Repositoryfassung v0.2.101 ist die aktive fachliche Arbeitsgrundlage; eine entsprechende PDF wird hiermit nicht veröffentlicht.** |
+| Fachliche Quelle | **Diese Repositoryfassung v0.2.102 ist die aktive fachliche Arbeitsgrundlage; eine entsprechende PDF wird hiermit nicht veröffentlicht.** |
 | Bearbeitbare Satzquelle | Diese Datei; eine spätere PDF muss denselben versionierten Inhalt wiedergeben. |
-| Vorgängerversion | Repository-Spezifikation v0.2.100; historische Nachweise bleiben unverändert. |
-| Prüf- und Entscheidungsgrundlage | ANALYZER-WORK-774 nach SPECROAD-DECISION-1 / 2.4.3.1; bestehende menschliche Abnahmen bleiben offen. |
-| Änderungsart | Geschlossene interne Work-/Workerbindung für echte Subject-Checkpoints; öffentliche Request-/Reportformate bleiben erhalten. |
+| Vorgängerversion | Repository-Spezifikation v0.2.101; historische Nachweise bleiben unverändert. |
+| Prüf- und Entscheidungsgrundlage | HUMAN-ACCEPTANCE-LAST-779: ausdrücklicher Nutzerauftrag zur Vorziehung unabhängiger technischer Gesamtabnahmen; menschliche Abnahmen bleiben offen. |
+| Änderungsart | Entwicklungsreihenfolge und Abschlussabhängigkeiten; Produktverhalten, Sicherheits-, Review- und Releasekriterien unverändert. |
 
 > **Verbindlicher Quellenwechsel:** Die ausdrückliche Nutzerentscheidung REFERENCE-SOURCE-551 wird als v0.2.50 umgesetzt. Der neue Quellvertrag ist Entwurfsarbeit vom 3. November 2026, kein Nachweis eines früher existierenden Formats. Bestehende 0.2-Verträge, Transport-, Sicherheits- und Reviewgrenzen bleiben erhalten.
 
@@ -1694,15 +1694,57 @@ nennt offene/bestätigte Teile und einzelne Bewertungen samt Namen/E-Mail, auch
 mehrfach. Die Projekt-README MUSS auf offene menschliche Abnahmen verweisen.
 Die Daten werden durch normale Git-Beiträge übernommen; kein automatischer Push.
 
-Der Nutzer erlaubt die vorläufige Weiterimplementierung trotz offener persönlicher
-Korpusprüfung: nach der OFF-PLAN-Reviewgruppe werden 19.u–19.x vor 19.t ausgeführt.
-19.t.W/R/C bleibt offen; vor 19.y und jeder Releaseabnahme muss der vollständige
-19.t-/T.10-Nachweis nachgeholt sein. Vorläufige Arbeitsannahmen dürfen niemals als
-bestandene Sprach-, Adapter-, Sicherheits- oder Releaseabnahme erscheinen.
+Die ursprüngliche Reihenfolge REPOSITORY-REVIEWS-768 erlaubte 19.u–19.x vor
+19.t. Der ausdrückliche Folgeauftrag HUMAN-ACCEPTANCE-LAST-779 erweitert diese
+Reihenfolge nach 2.5.8 auf unabhängige technische Arbeiten aus Meilenstein 20.
+19.t.W/R/C bleibt bis zur echten Abnahme offen; vor 19.y und der abschließenden
+Produktfreigabe muss der vollständige 19.t-/T.10-Nachweis vorliegen. Vorläufige
+Arbeitsannahmen dürfen niemals als bestandene Sprach-, Adapter-, Sicherheits-
+oder Releaseabnahme erscheinen.
 Reviewabdeckung allein ist keine technische Abnahme und kein Korpusfreeze.
 Die W/R/C-Gates und echten Tests bleiben verpflichtend; GUI-/Markdown-Darstellung
 wird gemäß TD-001 nicht zum Produkttest. Quell-/Remote-Testbindungen erfassen die
 neuen ausführbaren Reviewwerkzeuge und ihre Daten.
+
+#### 2.5.8 Technische Gesamtabnahmen vor menschlichen Abnahmen — HUMAN-ACCEPTANCE-LAST-779
+
+Ausdrücklicher Nutzerauftrag vom 21. November 2026: Nach dem bestätigten
+19.x.C DÜRFEN fachlich unabhängige vollständige W/R/C-Gruppen aus Meilenstein
+20 vor den offenen menschlichen Abnahmen umgesetzt und technisch geprüft
+werden. Der aktuelle Fortschrittsblock und die ausdrücklichen Voraussetzungen
+im Implementierungsplan bestimmen die geänderte Reihenfolge. Diese ersetzt
+insoweit die bisherige unmittelbare Rückkehr zu 19.t aus 2.5.7 und rein lineare
+Meilensteinvoraussetzungen, nicht deren fachliche Abnahmen. Ursprüngliche
+Kennungen, Anforderungs-/Testzuordnungen, Commitnachrichten und Produktgesamtzahl
+bleiben erhalten. Jeder echte Zwischenstand benötigt sein eigenes Apply-Gate.
+
+Eine Gruppe DARF nur vorgezogen werden, wenn ihre vollständigen eigenen
+Abnahmen ohne erfundene menschliche oder abhängige technische Nachweise
+ausführbar sind. Offene Nachweise MÜSSEN als offen sichtbar bleiben. Die
+Korpusprüfung einschließlich Herkunft/Nutzung, ihr Freeze und T.10 sowie die
+davon abhängigen vollständigen Analyzer-, Gesamt- und Sprachabnahmen bleiben
+im abschließenden Arbeitsblock. Ein Teil ihrer Tests oder ein fremder bereits
+grüner Nachweis DARF NICHT als Abschluss der ganzen Gruppe zählen. Testakteure
+prüfen nur den Produktvertrag und erteilen keine tatsächliche menschliche
+Produktfreigabe. Freiwillig frühere gültige menschliche Reviews sind zulässig.
+
+Die technische Herstellung und Prüfung tatsächlicher Releasekandidaten DARF
+vor der praktischen Bedienungsdurchsicht und endgültigen Freigabe erfolgen.
+Sie ist keine Veröffentlichung, kein Tag und keine Nutzungs-/Releasefreigabe;
+der vollständige Liefervertrag einschließlich tatsächlichem Offline- und
+Rundwegverhalten bleibt Pflicht. Der Abschluss MUSS alle erforderlichen
+menschlichen Entscheidungen und technischen Ergebnisse gegen die endgültigen
+Source-/Spec-/Fixture-/Runtime- und Artefaktbindungen prüfen. Später geänderte
+Gegenstände benötigen die nach ihrem Vertrag erforderlichen neuen Prüfungen,
+Neubauten, Messungen und Reviews; alte Belege bleiben unveränderte Historie.
+
+Menschliche Abnahmen werden so spät wie möglich eingeordnet. Unverzichtbar
+nachgelagerte technische Korpus-/Adapterprüfungen folgen weiterhin erst dem
+geprüften Freeze. Die endgültige menschliche Freigabe bleibt am Schluss und
+DARF bei offenen Pflichtgates NICHT als erteilt gelten. Scope, Sicherheits-
+und Kompatibilitätsgrenzen, T.10-Ziele, TD-001, tatsächliche Plattformnachweise
+und bestehende Befugnisse bleiben unverändert. Dieser Auftrag ändert keine
+Control-Budgets, historischen Verträge oder Betriebszustände.
 
 ## 3. Produktziele
 
@@ -8200,6 +8242,7 @@ Die Umsetzung folgt im bestehenden Plan als 18.s–18.x nach 18.k.C.
 
 | Version | Datum | Status | Änderung |
 |---|---|---|---|
+| 0.2.102 | 2026-11-21 | Ausdrücklicher Nutzerauftrag | HUMAN-ACCEPTANCE-LAST-779: unabhängige technische M20-Gruppen vorziehen; menschliche Abnahmen und abhängige Prüfungen zuletzt, ohne Änderung ihrer Erfolgskriterien. |
 | 0.2.94 | 2026-11-18 | Delegierte Detailklärung nach SPECROAD-DECISION-1 | PROPOSAL-DIALOG-738: geschlossene native Veröffentlichung vorbereiteter Inhaltsrevisionen über den vorhandenen Writer; Reviews, Scope und CLI-Verträge bleiben erhalten. |
 | 0.2.79 | 2026-11-09 | Delegiert gemäß SPECROAD-DECISION-1, Vertrag 4 | PROPOSAL-CHECK-657: isolierter nativer Checkbericht und ausdrückliche Debug-Aufbewahrung; keine Statuspersistenz oder Freigabe. |
 | 0.2.72 | 2026-11-06 | Delegiert gemäß SPECROAD-DECISION-1, Vertrag 4 | MERGE-PUBLICATION-619: spezialisierter Merge-Plan, gemeinsame Transaktion, Nachweisbindung und erhaltene Recovery-/Reviewgrenzen. |
@@ -11989,7 +12032,7 @@ Die allgemeinen Speicherfallbacks aus T.5/P.2 und Release-/Reviewgrenzen bleiben
 ## T.10 Verbindliche Abnahme des ersten Adapters
 
 Die ausdrückliche vorläufige Entwicklungsreihenfolge und das modulare öffentliche
-Reviewverfahren stehen in 2.5.7. Sie stellen 19.t zeitweilig zurück, ändern aber
+Reviewverfahren stehen in 2.5.7 und 2.5.8. Sie stellen 19.t zeitweilig zurück, ändern aber
 keines der folgenden echten Abnahmeziele und erklären keinen Erfolg.
 
 Abnahme besteht aus getrennten Nachweisen: Protokoll-/Sicherheitstests ohne Detektor, echte Bibliotheksintegration, festes mehrsprachiges Korpus, Fehlkennzeichnungen, Unsicherheit, Core-ohne-Abhängigkeiten und Wiederaufnahme. Mocks allein erfüllen die Adapterabnahme nicht. Das Korpus wird vor dem Release versioniert, durch sprachkundige Reviewer geprüft und nach Datenherkunft/Lizenz dokumentiert. Je Hauptsprachlabel `de,en,hi,id,pt,es,ru,ja,zh` enthält es mindestens 20 eigenständig formulierte Requirement-Sachverhalte mit 80 bis 500 Codepoints; mindestens fünf zusätzliche kurze/technische Fälle je Label werden separat bewertet. Die englischen Regionalfälle und beiden chinesischen Deklarationsarten erhalten eigene Metadatentests.

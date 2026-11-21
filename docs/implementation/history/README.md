@@ -588,3 +588,5 @@
 - [Bundle 777 — Testuhr im Resume-Aufruf aktivieren](bundle-777-analyzer-resume-metrics.md).
 
 - [Bundle 778 — native Work-Datei unverändert zurücklegen](bundle-778-analyzer-work-file.md).
+
+- [Bundle 779 — menschliche Abnahmen zuletzt](bundle-779-human-acceptance-last.md).

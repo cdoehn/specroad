@@ -7,8 +7,8 @@
   "json_pointers": [],
   "method": "pending",
   "open_items": [
-    "REPOSITORY-REVIEWS-768: human language reviews and provenance/usage approval are pending in reviews/modules/language-corpus.json. Review-tool tests do not constitute adapter evidence.",
-    "19.t.W/R/C is explicitly deferred until after 19.x and before 19.y/release. Complete the reviewed corpus freeze and actual T.10 acceptance; no assumed pass."
+    "HUMAN-ACCEPTANCE-LAST-779: human language reviews and provenance/usage approval remain pending in reviews/modules/language-corpus.json. Review-tool tests and technical M20 progress do not constitute adapter evidence.",
+    "The complete 19.t.W/R/C group is deferred until after 20.m.C, before 19.y, the dependent 20.b/20.d/20.k gates and final release approval. Complete the reviewed corpus freeze and actual unchanged T.10 acceptance; no assumed pass."
   ],
   "oracle": {
     "kind": "pending",
@@ -28,7 +28,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "1e46f0fd27839a51ea3dac5c60d20b1d5497c298037f25e686a35374a2ca7b74",
+  "specification_sha256": "6c2f797967ccfa777ef42662d9c91e3c75927d1eeaf0eb71dc0e85a1256e2e7c",
   "steps": [],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0720",

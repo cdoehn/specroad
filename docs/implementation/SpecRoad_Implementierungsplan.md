@@ -1,9 +1,9 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 398 · **Stand:** 21. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.101
+**Planrevision:** 399 · **Stand:** 21. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.102
 
-Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 306 Schritte und 918 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die Meilensteinreihenfolge bleibt erhalten; die früher genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wurde nach der damaligen Spezifikation innerhalb von 15.l.R vorgezogen und bleibt als normaler Prüfkern erhalten. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
+Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 306 Schritte und 918 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die ursprünglichen Positionen bleiben erhalten; ausdrücklich geänderte Ausführungsfolgen stehen im Fortschrittsblock und in den betroffenen Voraussetzungen; die früher genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wurde nach der damaligen Spezifikation innerhalb von 15.l.R vorgezogen und bleibt als normaler Prüfkern erhalten. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
 Die Aufteilung vom 6. November 2026 ist ein reiner OFF-PLAN-Dokumentationsschritt. Die fachliche Planrevision, Produktpositionen und ihre Abnahmen werden dadurch nicht geändert. Zähler werden nur anhand erfolgreicher Apply-Commits fortgeschrieben.
 
@@ -241,7 +241,7 @@ Aktuelle Korrektur und Folgegruppe: [Bundle 766 — Score-Rundung und Sprachverg
 
 Aktuelle Vorbereitung: [Bundle 767 — Sprachpolicy und Enginebindung](history/bundle-767-language-policy-and-engine.md). Das Quell-Result bestätigt 852/918; sechs getrennte Zielstände 19.r/s.W/R/C mit eigenen Gates, danach 19.t.W.
 
-## Aktueller Nutzerauftrag: modulare Reviews und vorläufige Fortsetzung
+## Nutzerauftrag vom 20. November: modulare Reviews und vorläufige Fortsetzung
 
 [REPOSITORY-REVIEWS-768](decisions/repository-reviews-768.md) und
 [Bundle 768](history/bundle-768-repository-reviews.md) ersetzen die vorherige
@@ -255,19 +255,32 @@ Bestätigte Basis: Result 773 schließt 19.v.W/R/C mit sauberem Commit ab. [Bund
 
 Aktuelle Detailentscheidung: [ANALYZER-WORK-774](decisions/analyzer-work-774.md) konkretisiert T.9.1 für 19.w/x; keine zusätzliche Produktposition oder menschliche Abnahme. Result 773 bestätigt inzwischen 19.v.W/R/C und 864/918. Die folgenden Stages gelten erst nach ihrem eigenen Apply-Gate.
 
+## Aktueller Nutzerauftrag: technische M20-Arbeit vor menschlichen Abnahmen
+
+[HUMAN-ACCEPTANCE-LAST-779](decisions/human-acceptance-last-779.md) erweitert die
+bisherige Reihenfolgeentscheidung: zuerst die unabhängig vollständig abnehmbaren
+technischen Gruppen, danach menschliche Abnahmen samt abhängigen Prüfungen und
+abschließender Freigabe. Die verbindliche Folge steht im folgenden Block;
+Voraussetzungen und unveränderte Abnahmen stehen in M19/M20. Der
+[Nachweis zu Bundle 779](history/bundle-779-human-acceptance-last.md) bindet die
+erfolgreiche Basis 778. Produktstand 870/918 und sämtliche offenen Bewertungen
+bleiben unverändert. Die Planumstellung zählt keine Produktposition.
+
 ## Fortschritt – einzige maßgebliche Planstelle
 
 ```yaml
-plan_revision: 398
+plan_revision: 399
 implementation_plan_commits_total: 918
 implementation_plan_commits_completed: 870
 last_completed_plan_commit: 19.x.C
-next_plan_commit: 19.t.W
+next_plan_commit: 20.a.W
 priority_off_plan: null
 next_off_plan_commit: null
-last_completed_numbered_bundle: 778
+last_completed_numbered_bundle: 779
 implementation_state: in_progress
-deferred_plan_commits: [19.t.W, 19.t.R, 19.t.C]
+prioritized_group_order: [20.a, 20.c, 20.e, 20.f, 20.g, 20.h, 20.i, 20.j, 20.m, 19.t, 19.y, 20.b, 20.d, 20.k, 20.l, 20.n]
+deferred_return_after: 20.m.C
+deferred_plan_commits: [19.t.W, 19.t.R, 19.t.C, 19.y.W, 19.y.R, 19.y.C, 20.b.W, 20.b.R, 20.b.C, 20.d.W, 20.d.R, 20.d.C, 20.k.W, 20.k.R, 20.k.C, 20.l.W, 20.l.R, 20.l.C, 20.n.W, 20.n.R, 20.n.C]
 deferred_review_module: language-corpus
 deferred_acceptance_required_before: 19.y.W
 audit_followup_status: closed
