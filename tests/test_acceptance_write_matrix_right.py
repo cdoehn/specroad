@@ -7,7 +7,7 @@ from specroad.changes.receipt_values import transaction_receipt_path, request_re
 from specroad.changes.write_guard_values import validate_transaction, MARKER_PATH
 from specroad.changes.normal_access import require_normal_access
 from support.read_only import inventory, no_write_attempts
-from test_acceptance_write_matrix import client, points, CLIENTS
+from support.write_faults import client, points, CLIENTS
 from test_snapshot_guard import FAILURES
 
 
