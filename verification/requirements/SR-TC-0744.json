@@ -1,21 +1,39 @@
 {
   "evidence_kind": "specroad-dev-pytest-v1",
-  "expected_diagnostics": [],
+  "expected_diagnostics": [
+    "SRV200",
+    "SRV201",
+    "SRV206"
+  ],
   "expected_exit_codes": [],
-  "fixture_ids": [],
-  "implementation_status": "open",
-  "json_pointers": [],
-  "method": "pending",
+  "fixture_ids": [
+    "SR-FIX-PLAN-SOURCE-v1"
+  ],
+  "implementation_status": "partial",
+  "json_pointers": [
+    "/children",
+    "/description",
+    "/display_id",
+    "/id",
+    "/parent_id",
+    "/plan_id",
+    "/revision",
+    "/title"
+  ],
+  "method": "automated_behavior",
   "open_items": [
-    "Implement complete 21.b.W/R/C and its X-contract; define real independent fixtures and behavior oracles before claiming implementation.",
-    "Actual Apply tests and current integration evidence in 21.w/x; genuine human acceptance remains at the final M19/M20 block. This specification/planning commit is not implementation or release approval."
+    "Correction 796 preserves the failed metadata oracle and all previous tests unchanged; carrier-type validation precedes derived parent schemas. The full 21.b.W/R/C remainder still requires its separate native Apply gates.",
+    "The complete 21.b source/parser slice and independent oracles are prepared; its own Apply gate remains mandatory. Dev executed no behavior tests.",
+    "Native transactional Authoring (21.c), common graph/scope integration (21.h) and current cross-component/platform acceptance (21.w/x) retain their full planned scope. Human reviews and release approval remain open in the final M19/M20 block."
   ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Jeder vollständige Implementierungsplan MUSS genau eine direkt editierbare Markdown-Datei nach X.2/X.3 als alleinigen normativen Planbestand besitzen; Graphprojektionen und Caches DÜRFEN NICHT zu einer zweiten Quelle werden.",
-    "scope": "Normative target only. No executable implementation or current pass evidence claimed."
+    "scope": "Complete plan-markdown-v1 source/parser slice: typed fields and structural ownership, code/quote/comment exclusions, localized malformed input, byte-preserving no-op and affected spans, current manual changes, separate file/artifact/context bindings and explicit revision comparison. Existing writer, graph and final integration groups remain required."
   },
-  "preconditions": [],
+  "preconditions": [
+    "21.b 21.b.W: real independently authored UTF-8/LF plan files and current native field schemas; no cache or approval authority."
+  ],
   "primary_verification_id": "SR-VER-0052",
   "required_environment": {
     "declared_minimum_python": "3.10",
@@ -29,8 +47,36 @@
     "owned_temporary_files": true
   },
   "specification_sha256": "b9914d91dd85b67714d334326c7dcec61b76b81b8da9f35a4e64e39d6c48a9fd",
-  "steps": [],
+  "steps": [
+    "Run the bound parser/source/edit behavior oracles in the separate native Apply gate; compare exact bytes, structures, hashes, diagnostics and absence of writes."
+  ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0744",
-  "test_ids": []
+  "test_ids": [
+    "tests/test_plan_markdown.py::test_bad_metadata_is_localized_and_never_yields_a_partial_plan[[]-object_required]",
+    "tests/test_plan_markdown.py::test_bad_metadata_is_localized_and_never_yields_a_partial_plan[{\"extra\":true}-artifact_type_mismatch]",
+    "tests/test_plan_markdown.py::test_bad_metadata_is_localized_and_never_yields_a_partial_plan[{\"x\":1,\"x\":2}-duplicate_key]",
+    "tests/test_plan_markdown.py::test_bad_metadata_is_localized_and_never_yields_a_partial_plan[{\"x\":NaN}-nonfinite_number]",
+    "tests/test_plan_markdown.py::test_bad_metadata_is_localized_and_never_yields_a_partial_plan[{} {}-invalid_json]",
+    "tests/test_plan_markdown.py::test_code_quote_and_comment_examples_do_not_create_objects[comment]",
+    "tests/test_plan_markdown.py::test_code_quote_and_comment_examples_do_not_create_objects[fence]",
+    "tests/test_plan_markdown.py::test_code_quote_and_comment_examples_do_not_create_objects[indent]",
+    "tests/test_plan_markdown.py::test_code_quote_and_comment_examples_do_not_create_objects[quote]",
+    "tests/test_plan_markdown.py::test_code_quote_and_comment_examples_do_not_create_objects[tilde]",
+    "tests/test_plan_markdown.py::test_context_hash_excludes_checkbox_revision_audit_and_maturity_but_not_content",
+    "tests/test_plan_markdown.py::test_derived_duplicates_must_match_real_structure_and_unknown_fields_fail",
+    "tests/test_plan_markdown.py::test_field_changes_preserve_all_unrequested_source_spans_and_identity",
+    "tests/test_plan_markdown.py::test_full_fields_remain_typed_and_optional_missing_values_stay_missing",
+    "tests/test_plan_markdown.py::test_heading_gaps_and_unbounded_list_depth_use_only_real_parents",
+    "tests/test_plan_markdown.py::test_malformed_structures_are_visible[bom-plan_bom_forbidden]",
+    "tests/test_plan_markdown.py::test_malformed_structures_are_visible[crlf-plan_lf_required]",
+    "tests/test_plan_markdown.py::test_malformed_structures_are_visible[duplicate-duplicate_plan_heading]",
+    "tests/test_plan_markdown.py::test_malformed_structures_are_visible[orphan-plan_orphan_metadata]",
+    "tests/test_plan_markdown.py::test_malformed_structures_are_visible[status-plan_invalid_header]",
+    "tests/test_plan_markdown.py::test_malformed_structures_are_visible[unclosed-plan_unclosed_metadata]",
+    "tests/test_plan_markdown.py::test_malformed_structures_are_visible[utf8-invalid_utf8]",
+    "tests/test_plan_markdown.py::test_manual_edits_are_next_read_truth_without_mutating_old_observation",
+    "tests/test_plan_markdown.py::test_spans_require_exact_bytes_binding_ownership_and_nonoverlap",
+    "tests/test_plan_markdown.py::test_two_real_carriers_have_one_owned_manifest_each_and_no_shadow_files"
+  ]
 }

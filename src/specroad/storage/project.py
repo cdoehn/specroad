@@ -92,6 +92,40 @@ class ProjectSource:
         self._fresh_configuration()
         return MappingProxyType(loaded)
 
+    def read_plan_bytes(self, path):
+        """Current original bytes, also available for explicit malformed-input diagnosis."""
+        from ..model.paths import PathClass
+        self._fresh_configuration()
+        path = project_path(path)
+        if self.classify(path) is not PathClass.PLAN:
+            raise ModelError('plan_carrier_path_required', path=path)
+        raw = self.boundary.read_bytes(path)
+        self._fresh_configuration()
+        return raw
+
+    def read_plan(self, path):
+        """Read the current single Markdown carrier through the native boundary.
+
+        This explicit parser API does not claim full-project graph validation.
+        No stored cache, index, shadow JSON or previous observation is used.
+        """
+        from .plan_markdown import parse_plan
+        path = project_path(path)
+        raw = self.read_plan_bytes(path)
+        result = parse_plan(raw, path=path, id_prefix=self.configuration.id_prefix)
+        self._fresh_configuration()
+        return result
+
+    def check_plan_current(self, document):
+        from .plan_markdown import PlanSource
+        from ..model.paths import PathClass
+        if type(document) is not PlanSource or document.path is None:
+            raise ModelError('plan_source_required')
+        self._fresh_configuration()
+        if self.classify(document.path) is not PathClass.PLAN or self.boundary.read_bytes(document.path) != document.source_bytes:
+            raise ModelError('plan_source_changed', path=document.path)
+        self._fresh_configuration()
+
     def require_write_target(self, path):
         """Preliminary authorization only; a future writer must recheck at Write.
 

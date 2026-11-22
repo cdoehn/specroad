@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 429 · **Stand:** 22. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.104
+**Planrevision:** 433 · **Stand:** 23. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.104
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **21 Meilensteine in 332 Schritte und 996 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die ursprünglichen Positionen bleiben erhalten; ausdrücklich geänderte Ausführungsfolgen stehen im Fortschrittsblock und in den betroffenen Voraussetzungen; die früher genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wurde nach der damaligen Spezifikation innerhalb von 15.l.R vorgezogen und bleibt als normaler Prüfkern erhalten. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -14,11 +14,14 @@ Vor der Arbeit: [Projektregeln](../../DEVELOPMENT.md), [Grundlagen](rules/Grundl
 [IMPLEMENTATION-PLANS-791](decisions/implementation-plans-791.md) erweitert die
 Spezifikation und den vollständigen Rest. [M21](milestones/M21.md) umfasst
 78 neue technische Commits; sämtliche 30 bisher offenen Commits bleiben.
-Bundle 793 bestätigt 21.a.W mit 25.062 bestandenen Tests. Die Basis
-der vollständigen R/C-Korrektur 794 umfasst damit 889/996 Positionen.
-Ziel dieser Stage **21.a.C**, erst nach ihrem eigenen Apply-Gate: **891/996**,
-105 offen. Davon gehen 84 technische Commits dem menschlich abhängigen
-21-Commit-Abschlussblock voraus. [Korrektur und Nachweisgrenzen](history/bundle-794-registry-correction.md). Diese Zählung ist kein Zeit- oder Requirement-Erfüllungsgrad.
+Bundle 795 scheiterte im Gate von 21.b.W mit einem Fehler und 9.400
+bestandenen Tests; kein Commit entstand. Bestätigt bleiben **891/996**.
+Der vollständige offene Rest 21.b.W/R/C wird korrigiert. Ziel dieser Stage
+**21.b.W**, erst nach ihrem eigenen Apply-Gate und Commit: **892/996**,
+104 offen. Davon gehen 83 technische Commits dem menschlich
+abhängigen 21-Commit-Abschlussblock voraus.
+[Korrektur und Nachweisgrenzen](history/bundle-796-parser-metadata-correction.md).
+Diese Zählung ist kein Zeit- oder Requirement-Erfüllungsgrad.
 
 Die [Einzelzuordnung aller alten Katalogreste](matrices/Uebergabe.md#restinventar-791)
 ist verbindlicher Teil des Restplans. Sprach-/Herkunfts-/Bedienreviews und
@@ -321,11 +324,11 @@ Korrektur der nativen Validierungsfälle und vollständiger Matrixrest: [Bundle 
 Prozess-/Journalreparatur des offenen C-Rests: [Bundle 790](history/bundle-790-process-journal.md). W/R sind bestätigt; C benötigt sein eigenes Apply-Gate.
 
 ```yaml
-plan_revision: 429
+plan_revision: 433
 implementation_plan_commits_total: 996
-implementation_plan_commits_completed: 891
-last_completed_plan_commit: 21.a.C
-next_plan_commit: 21.b.W
+implementation_plan_commits_completed: 892
+last_completed_plan_commit: 21.b.W
+next_plan_commit: 21.b.R
 priority_off_plan: null
 next_off_plan_commit: null
 last_completed_numbered_bundle: 794

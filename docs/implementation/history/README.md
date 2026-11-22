@@ -1,5 +1,9 @@
 # Entscheidungen und Ausführungsnachweise
 
+- [Bundle 796 — Metadatenfehler an ihrer Quelle](bundle-796-parser-metadata-correction.md)
+
+- [Bundle 795 — Markdown-Planquellen](bundle-795-plan-sources.md)
+
 - [Bundle 794 — Registry-Erwartung und vollständiger 21.a-Rest](bundle-794-registry-correction.md)
 
 - [Bundle 793 — vollständige Korrektur von 21.a.W/R/C](bundle-793-plan-model-correction.md)

@@ -1083,6 +1083,10 @@
     "SR-FIX-PLAN-MODEL-v1": {
       "provider": "tests/support/plan_models.py; tests/test_plan_model.py; tests/test_config_show.py; tests/test_plan_model_right.py; tests/test_plan_migration_originals.py",
       "kind": "Independently specified synthetic plan fields and identity pools; real public init/migration writer/backup/verification, configuration CLI and native source-byte inventories. No saved success labels, human approval or docs/layout assertions. Right stage adds legacy Baseline/Evidence originals and two actual distributions. Native init original, byte-exact preservation, closed journal grammar and unknown/active operational rejection; no authority inferred from old inode metadata."
+    },
+    "SR-FIX-PLAN-SOURCE-v1": {
+      "provider": "tests/support/plan_sources.py; tests/test_plan_markdown.py",
+      "kind": "Independent authored UTF-8 plan carriers, exact expected projections and physical bytes; real native ProjectSource reads, no-op and minimal span candidates, current-file changes and native safety failures. Synthetic metadata only, no persisted approval or renderer oracle."
     }
   },
   "fixture_format_version": 1,
@@ -1252,6 +1256,7 @@
     "SR-FIX-PATCHHARBOR-160-SNAPSHOT-v1",
     "SR-FIX-PATCHHARBOR-180-RUNTIME-v1",
     "SR-FIX-PLAN-MODEL-v1",
+    "SR-FIX-PLAN-SOURCE-v1",
     "SR-FIX-PLANNING-BOUNDARIES-v1",
     "SR-FIX-PLANNING-BUILTIN-VIEWS-v1",
     "SR-FIX-PLANNING-BUILTIN-WORK-v1",
