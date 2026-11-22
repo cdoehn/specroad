@@ -40,7 +40,8 @@
     "Exercise missing/deleted/stale/malformed entries, binding substitutions and rehashed invalid adjacency; compare exact results and unchanged project file bytes.",
     "Verify original-source failures still propagate and actual module/ZIP builds reuse a validated cache without normal adjacency reconstruction.",
     "R: reject excessive cache depth/structure before strict decoding; check native short-read accounting and the selected 160 KiB adapter allocation window, faults, observed file races, descriptor cleanup, no write attempts and unchanged critical input inventory.",
-    "20.f: real new module/PYZ processes retain exact complete six-reader results; separately exercise actual optional content-bound relation cache hits/off and independent fresh scans; operational metrics stay separate."
+    "20.f: real new module/PYZ processes retain exact complete six-reader results; separately exercise actual optional content-bound relation cache hits/off and independent fresh scans; operational metrics stay separate.",
+    "20.f.R: cache poisoning/loss and same-size same-mtime original changes must use independently current native results in fresh processes."
   ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0589",
@@ -125,6 +126,24 @@
     "tests/test_acceptance_work_processes.py::test_all_readers_have_complete_payload_diagnostics_and_cache_parity_in_fresh_processes[standard-read-trace-module]",
     "tests/test_acceptance_work_processes.py::test_all_readers_have_complete_payload_diagnostics_and_cache_parity_in_fresh_processes[standard-read-trace-specroad.pyz]",
     "tests/test_acceptance_work_processes.py::test_all_readers_have_complete_payload_diagnostics_and_cache_parity_in_fresh_processes[standard-read-why-module]",
-    "tests/test_acceptance_work_processes.py::test_all_readers_have_complete_payload_diagnostics_and_cache_parity_in_fresh_processes[standard-read-why-specroad.pyz]"
+    "tests/test_acceptance_work_processes.py::test_all_readers_have_complete_payload_diagnostics_and_cache_parity_in_fresh_processes[standard-read-why-specroad.pyz]",
+    "tests/test_acceptance_work_matrix_right.py::test_changed_original_bytes_and_poisoned_cache_never_substitute_for_current_reading[diff-deleted-module]",
+    "tests/test_acceptance_work_matrix_right.py::test_changed_original_bytes_and_poisoned_cache_never_substitute_for_current_reading[diff-deleted-specroad.pyz]",
+    "tests/test_acceptance_work_matrix_right.py::test_changed_original_bytes_and_poisoned_cache_never_substitute_for_current_reading[diff-poison-module]",
+    "tests/test_acceptance_work_matrix_right.py::test_changed_original_bytes_and_poisoned_cache_never_substitute_for_current_reading[diff-poison-specroad.pyz]",
+    "tests/test_acceptance_work_matrix_right.py::test_changed_original_bytes_and_poisoned_cache_never_substitute_for_current_reading[diff-source-module]",
+    "tests/test_acceptance_work_matrix_right.py::test_changed_original_bytes_and_poisoned_cache_never_substitute_for_current_reading[diff-source-specroad.pyz]",
+    "tests/test_acceptance_work_matrix_right.py::test_changed_original_bytes_and_poisoned_cache_never_substitute_for_current_reading[query-deleted-module]",
+    "tests/test_acceptance_work_matrix_right.py::test_changed_original_bytes_and_poisoned_cache_never_substitute_for_current_reading[query-deleted-specroad.pyz]",
+    "tests/test_acceptance_work_matrix_right.py::test_changed_original_bytes_and_poisoned_cache_never_substitute_for_current_reading[query-poison-module]",
+    "tests/test_acceptance_work_matrix_right.py::test_changed_original_bytes_and_poisoned_cache_never_substitute_for_current_reading[query-poison-specroad.pyz]",
+    "tests/test_acceptance_work_matrix_right.py::test_changed_original_bytes_and_poisoned_cache_never_substitute_for_current_reading[query-source-module]",
+    "tests/test_acceptance_work_matrix_right.py::test_changed_original_bytes_and_poisoned_cache_never_substitute_for_current_reading[query-source-specroad.pyz]",
+    "tests/test_acceptance_work_matrix_right.py::test_changed_original_bytes_and_poisoned_cache_never_substitute_for_current_reading[why-deleted-module]",
+    "tests/test_acceptance_work_matrix_right.py::test_changed_original_bytes_and_poisoned_cache_never_substitute_for_current_reading[why-deleted-specroad.pyz]",
+    "tests/test_acceptance_work_matrix_right.py::test_changed_original_bytes_and_poisoned_cache_never_substitute_for_current_reading[why-poison-module]",
+    "tests/test_acceptance_work_matrix_right.py::test_changed_original_bytes_and_poisoned_cache_never_substitute_for_current_reading[why-poison-specroad.pyz]",
+    "tests/test_acceptance_work_matrix_right.py::test_changed_original_bytes_and_poisoned_cache_never_substitute_for_current_reading[why-source-module]",
+    "tests/test_acceptance_work_matrix_right.py::test_changed_original_bytes_and_poisoned_cache_never_substitute_for_current_reading[why-source-specroad.pyz]"
   ]
 }

@@ -51,7 +51,8 @@
     "Capture and pause real files, change or remove already captured sources, require hash comparison for metadata changes, block active/orphan/transaction state, and verify retained bytes plus descriptor/mutex release.",
     "11.r.W: compare complete native document/block data over durable windows, source loss, changed cache state and relocated module/PYZ processes; verify missing units cannot finish and complete external result bytes retain every selected table row plus size/hash/schema bindings without project writes.",
     "11.r.R: reject dropped repeated include subtrees, source/edge/record mismatches, truncated literal rows, altered query pagination, row bytes and retained output omissions before advance, completion or delivery writes. Preserve all data and hashes over large complete projections and explicit delivery retries after early/late I/O failures; confirm completed native evaluators are not repeated.",
-    "20.f: compare whole native results and mandatory findings against large-window and independent direct kernels; each measured window confirms unique bound work, finalization and replay preserve exact bytes."
+    "20.f: compare whole native results and mandatory findings against large-window and independent direct kernels; each measured window confirms unique bound work, finalization and replay preserve exact bytes.",
+    "20.f.R: export and restore every actual completed prefix, compare all manifest/object bytes, remove the old Work root and require unique advancing generations without an arbitrary retry ceiling."
   ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0605",
@@ -365,6 +366,18 @@
     "tests/test_acceptance_work_matrix.py::test_complete_native_data_and_diagnostics_survive_every_profile_window[standard-evaluation]",
     "tests/test_acceptance_work_matrix.py::test_complete_native_data_and_diagnostics_survive_every_profile_window[standard-ndjson]",
     "tests/test_acceptance_work_matrix.py::test_complete_native_data_and_diagnostics_survive_every_profile_window[standard-reqif]",
-    "tests/test_acceptance_work_matrix.py::test_complete_native_data_and_diagnostics_survive_every_profile_window[standard-reqifz]"
+    "tests/test_acceptance_work_matrix.py::test_complete_native_data_and_diagnostics_survive_every_profile_window[standard-reqifz]",
+    "tests/test_acceptance_work_matrix_right.py::test_each_confirmed_prefix_restores_exactly_and_cannot_be_repeated_as_progress[constrained-csv]",
+    "tests/test_acceptance_work_matrix_right.py::test_each_confirmed_prefix_restores_exactly_and_cannot_be_repeated_as_progress[constrained-document]",
+    "tests/test_acceptance_work_matrix_right.py::test_each_confirmed_prefix_restores_exactly_and_cannot_be_repeated_as_progress[constrained-evaluation]",
+    "tests/test_acceptance_work_matrix_right.py::test_each_confirmed_prefix_restores_exactly_and_cannot_be_repeated_as_progress[constrained-ndjson]",
+    "tests/test_acceptance_work_matrix_right.py::test_each_confirmed_prefix_restores_exactly_and_cannot_be_repeated_as_progress[constrained-reqif]",
+    "tests/test_acceptance_work_matrix_right.py::test_each_confirmed_prefix_restores_exactly_and_cannot_be_repeated_as_progress[constrained-reqifz]",
+    "tests/test_acceptance_work_matrix_right.py::test_each_confirmed_prefix_restores_exactly_and_cannot_be_repeated_as_progress[standard-csv]",
+    "tests/test_acceptance_work_matrix_right.py::test_each_confirmed_prefix_restores_exactly_and_cannot_be_repeated_as_progress[standard-document]",
+    "tests/test_acceptance_work_matrix_right.py::test_each_confirmed_prefix_restores_exactly_and_cannot_be_repeated_as_progress[standard-evaluation]",
+    "tests/test_acceptance_work_matrix_right.py::test_each_confirmed_prefix_restores_exactly_and_cannot_be_repeated_as_progress[standard-ndjson]",
+    "tests/test_acceptance_work_matrix_right.py::test_each_confirmed_prefix_restores_exactly_and_cannot_be_repeated_as_progress[standard-reqif]",
+    "tests/test_acceptance_work_matrix_right.py::test_each_confirmed_prefix_restores_exactly_and_cannot_be_repeated_as_progress[standard-reqifz]"
   ]
 }

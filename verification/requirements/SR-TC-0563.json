@@ -3,7 +3,8 @@
   "expected_diagnostics": [],
   "expected_exit_codes": [],
   "fixture_ids": [
-    "SR-FIX-OWNED-TEMP-v1"
+    "SR-FIX-OWNED-TEMP-v1",
+    "SR-FIX-ACCEPTANCE-WORK-v1"
   ],
   "implementation_status": "partial",
   "json_pointers": [],
@@ -39,7 +40,8 @@
     "Restore through the real durable checkpoint publisher and compare original manifests, objects, semantic bindings and progress. Execute supported handlers separately or reject generic inert plans as execution authority.",
     "Reject malformed paths, special entries, missing/changed/additional bytes, wrong external identity/build and unsafe targets before destination writes. Preserve actual prefix generations after injected native I/O failures.",
     "Remove retained input, manifest, inventory, ancestor or result bytes from a coherently rebuilt archive after owned original data is lost; refuse target allocation instead of reconstructing bytes from hashes.",
-    "Verify current runtime/source and destination bindings at live restore boundaries and preserve the actual published prefix when foreign changes prevent completion."
+    "Verify current runtime/source and destination bindings at live restore boundaries and preserve the actual published prefix when foreign changes prevent completion.",
+    "20.f.R: export and restore every actual completed prefix, compare all manifest/object bytes, remove the old Work root and require unique advancing generations without an arbitrary retry ceiling."
   ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0563",
@@ -106,6 +108,18 @@
     "tests/test_work_packages_right.py::test_replaced_destination_inode_does_not_redirect_remaining_publication",
     "tests/test_work_packages_right.py::test_runtime_change_during_actual_package_validation_prevents_target_allocation",
     "tests/test_work_packages_right.py::test_unsafe_restore_ancestors_are_rejected_without_probe_writes[protected_ancestor]",
-    "tests/test_work_packages_right.py::test_unsafe_restore_ancestors_are_rejected_without_probe_writes[symlink_ancestor]"
+    "tests/test_work_packages_right.py::test_unsafe_restore_ancestors_are_rejected_without_probe_writes[symlink_ancestor]",
+    "tests/test_acceptance_work_matrix_right.py::test_each_confirmed_prefix_restores_exactly_and_cannot_be_repeated_as_progress[constrained-csv]",
+    "tests/test_acceptance_work_matrix_right.py::test_each_confirmed_prefix_restores_exactly_and_cannot_be_repeated_as_progress[constrained-document]",
+    "tests/test_acceptance_work_matrix_right.py::test_each_confirmed_prefix_restores_exactly_and_cannot_be_repeated_as_progress[constrained-evaluation]",
+    "tests/test_acceptance_work_matrix_right.py::test_each_confirmed_prefix_restores_exactly_and_cannot_be_repeated_as_progress[constrained-ndjson]",
+    "tests/test_acceptance_work_matrix_right.py::test_each_confirmed_prefix_restores_exactly_and_cannot_be_repeated_as_progress[constrained-reqif]",
+    "tests/test_acceptance_work_matrix_right.py::test_each_confirmed_prefix_restores_exactly_and_cannot_be_repeated_as_progress[constrained-reqifz]",
+    "tests/test_acceptance_work_matrix_right.py::test_each_confirmed_prefix_restores_exactly_and_cannot_be_repeated_as_progress[standard-csv]",
+    "tests/test_acceptance_work_matrix_right.py::test_each_confirmed_prefix_restores_exactly_and_cannot_be_repeated_as_progress[standard-document]",
+    "tests/test_acceptance_work_matrix_right.py::test_each_confirmed_prefix_restores_exactly_and_cannot_be_repeated_as_progress[standard-evaluation]",
+    "tests/test_acceptance_work_matrix_right.py::test_each_confirmed_prefix_restores_exactly_and_cannot_be_repeated_as_progress[standard-ndjson]",
+    "tests/test_acceptance_work_matrix_right.py::test_each_confirmed_prefix_restores_exactly_and_cannot_be_repeated_as_progress[standard-reqif]",
+    "tests/test_acceptance_work_matrix_right.py::test_each_confirmed_prefix_restores_exactly_and_cannot_be_repeated_as_progress[standard-reqifz]"
   ]
 }

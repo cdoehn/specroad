@@ -38,7 +38,8 @@
     "Partition units in a different order and verify stable identity, exact remaining work and all prior bytes after each roundtrip.",
     "Reject duplicate declarations or completion records; exercise segmented plans through 4097 units and detached values.",
     "Exercise the R successor and hostile-data cases with independently rehashed packages, explicit planner fixtures and handler/foreign-object traps; require unchanged prior data and no execution or writes.",
-    "20.f: compare whole native results and mandatory findings against large-window and independent direct kernels; each measured window confirms unique bound work, finalization and replay preserve exact bytes."
+    "20.f: compare whole native results and mandatory findings against large-window and independent direct kernels; each measured window confirms unique bound work, finalization and replay preserve exact bytes.",
+    "20.f.R: export and restore every actual completed prefix, compare all manifest/object bytes, remove the old Work root and require unique advancing generations without an arbitrary retry ceiling."
   ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0602",
@@ -81,6 +82,18 @@
     "tests/test_acceptance_work_matrix.py::test_complete_native_data_and_diagnostics_survive_every_profile_window[standard-evaluation]",
     "tests/test_acceptance_work_matrix.py::test_complete_native_data_and_diagnostics_survive_every_profile_window[standard-ndjson]",
     "tests/test_acceptance_work_matrix.py::test_complete_native_data_and_diagnostics_survive_every_profile_window[standard-reqif]",
-    "tests/test_acceptance_work_matrix.py::test_complete_native_data_and_diagnostics_survive_every_profile_window[standard-reqifz]"
+    "tests/test_acceptance_work_matrix.py::test_complete_native_data_and_diagnostics_survive_every_profile_window[standard-reqifz]",
+    "tests/test_acceptance_work_matrix_right.py::test_each_confirmed_prefix_restores_exactly_and_cannot_be_repeated_as_progress[constrained-csv]",
+    "tests/test_acceptance_work_matrix_right.py::test_each_confirmed_prefix_restores_exactly_and_cannot_be_repeated_as_progress[constrained-document]",
+    "tests/test_acceptance_work_matrix_right.py::test_each_confirmed_prefix_restores_exactly_and_cannot_be_repeated_as_progress[constrained-evaluation]",
+    "tests/test_acceptance_work_matrix_right.py::test_each_confirmed_prefix_restores_exactly_and_cannot_be_repeated_as_progress[constrained-ndjson]",
+    "tests/test_acceptance_work_matrix_right.py::test_each_confirmed_prefix_restores_exactly_and_cannot_be_repeated_as_progress[constrained-reqif]",
+    "tests/test_acceptance_work_matrix_right.py::test_each_confirmed_prefix_restores_exactly_and_cannot_be_repeated_as_progress[constrained-reqifz]",
+    "tests/test_acceptance_work_matrix_right.py::test_each_confirmed_prefix_restores_exactly_and_cannot_be_repeated_as_progress[standard-csv]",
+    "tests/test_acceptance_work_matrix_right.py::test_each_confirmed_prefix_restores_exactly_and_cannot_be_repeated_as_progress[standard-document]",
+    "tests/test_acceptance_work_matrix_right.py::test_each_confirmed_prefix_restores_exactly_and_cannot_be_repeated_as_progress[standard-evaluation]",
+    "tests/test_acceptance_work_matrix_right.py::test_each_confirmed_prefix_restores_exactly_and_cannot_be_repeated_as_progress[standard-ndjson]",
+    "tests/test_acceptance_work_matrix_right.py::test_each_confirmed_prefix_restores_exactly_and_cannot_be_repeated_as_progress[standard-reqif]",
+    "tests/test_acceptance_work_matrix_right.py::test_each_confirmed_prefix_restores_exactly_and_cannot_be_repeated_as_progress[standard-reqifz]"
   ]
 }

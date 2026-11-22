@@ -3,7 +3,8 @@
   "expected_diagnostics": [],
   "expected_exit_codes": [],
   "fixture_ids": [
-    "SR-FIX-MODEL-MANIFEST-v1"
+    "SR-FIX-MODEL-MANIFEST-v1",
+    "SR-FIX-ACCEPTANCE-WORK-v1"
   ],
   "implementation_status": "partial",
   "json_pointers": [
@@ -38,7 +39,8 @@
   },
   "specification_sha256": "2dad4bf789cbede2f05084d27bd62e3197c814f5b84e5ea30675890c35bd90f5",
   "steps": [
-    "Capture selected bytes, assemble a semantic manifest and compare hashes or observe rejection of mismatched project provenance."
+    "Capture selected bytes, assemble a semantic manifest and compare hashes or observe rejection of mismatched project provenance.",
+    "20.f.R: export and restore every actual completed prefix, compare all manifest/object bytes, remove the old Work root and require unique advancing generations without an arbitrary retry ceiling."
   ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0562",
@@ -49,6 +51,18 @@
     "test_model_root_right.ModelRootRightTests.test_locale_timezone_and_work_environment_do_not_change_model",
     "test_model_root_right.ModelRootRightTests.test_manifest_services_work_in_moved_portable_distributions",
     "test_model_root_right.ModelRootRightTests.test_display_and_recovery_switch_leave_model_root_unchanged",
-    "test_model_root_right.ModelRootRightTests.test_generated_cache_receipts_and_workpaths_are_not_loaded"
+    "test_model_root_right.ModelRootRightTests.test_generated_cache_receipts_and_workpaths_are_not_loaded",
+    "tests/test_acceptance_work_matrix_right.py::test_each_confirmed_prefix_restores_exactly_and_cannot_be_repeated_as_progress[constrained-csv]",
+    "tests/test_acceptance_work_matrix_right.py::test_each_confirmed_prefix_restores_exactly_and_cannot_be_repeated_as_progress[constrained-document]",
+    "tests/test_acceptance_work_matrix_right.py::test_each_confirmed_prefix_restores_exactly_and_cannot_be_repeated_as_progress[constrained-evaluation]",
+    "tests/test_acceptance_work_matrix_right.py::test_each_confirmed_prefix_restores_exactly_and_cannot_be_repeated_as_progress[constrained-ndjson]",
+    "tests/test_acceptance_work_matrix_right.py::test_each_confirmed_prefix_restores_exactly_and_cannot_be_repeated_as_progress[constrained-reqif]",
+    "tests/test_acceptance_work_matrix_right.py::test_each_confirmed_prefix_restores_exactly_and_cannot_be_repeated_as_progress[constrained-reqifz]",
+    "tests/test_acceptance_work_matrix_right.py::test_each_confirmed_prefix_restores_exactly_and_cannot_be_repeated_as_progress[standard-csv]",
+    "tests/test_acceptance_work_matrix_right.py::test_each_confirmed_prefix_restores_exactly_and_cannot_be_repeated_as_progress[standard-document]",
+    "tests/test_acceptance_work_matrix_right.py::test_each_confirmed_prefix_restores_exactly_and_cannot_be_repeated_as_progress[standard-evaluation]",
+    "tests/test_acceptance_work_matrix_right.py::test_each_confirmed_prefix_restores_exactly_and_cannot_be_repeated_as_progress[standard-ndjson]",
+    "tests/test_acceptance_work_matrix_right.py::test_each_confirmed_prefix_restores_exactly_and_cannot_be_repeated_as_progress[standard-reqif]",
+    "tests/test_acceptance_work_matrix_right.py::test_each_confirmed_prefix_restores_exactly_and_cannot_be_repeated_as_progress[standard-reqifz]"
   ]
 }

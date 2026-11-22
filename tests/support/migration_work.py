@@ -39,11 +39,13 @@ def create(data, directory, *, mode='plan'):
 
 def finish(store, *, gates=()):
     from specroad.work.migration import resume_migration_work
-    # The fixed phase list has three real phases and one durable completion.
-    for _ in range(4):
-        if store.read().as_dict()['state'] == 'completed': break
+    while store.read().as_dict()['state'] != 'completed':
+        previous = store.read()
         resume_migration_work(store, gates=gates)
-    assert store.read().as_dict()['state'] == 'completed'
+        current = store.read()
+        assert current.as_dict()['checkpoint_generation'] == previous.as_dict()['checkpoint_generation'] + 1
+        assert (len(current.entries('remaining')) < len(previous.entries('remaining'))
+                or current.as_dict()['state'] == 'completed')
 
 
 def publication(data):
