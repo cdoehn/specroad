@@ -46,10 +46,15 @@ class ArtifactIdentityTests(unittest.TestCase):
             for definition in artifact_types():
                 value = allocate_artifact_identity(definition.artifact_type, inventory()).identity
                 self.assertEqual(value.id, "SR-" + definition.prefix + "-" + "0" * 26)
-                self.assertEqual(value.path, "spec/" + definition.directory + "/" + value.id + ".json")
+                if definition.artifact_type == "plan_entry":
+                    with self.assertRaisesRegex(ModelError, "plan_carrier_required"):
+                        value.path
+                else:
+                    suffix = ".md" if definition.artifact_type == "implementation_plan" else ".json"
+                    self.assertEqual(value.path, "spec/" + definition.directory + "/" + value.id + suffix)
                 self.assertEqual(value.id_scheme, "random128-v1")
                 self.assertEqual(len(value.id.rsplit("-", 1)[1]), 26)
-            self.assertEqual(entropy.call_count, 28)
+            self.assertEqual(entropy.call_count, 30)
             entropy.assert_called_with(16)
 
     def test_secure_standard_library_random_source_is_used(self):

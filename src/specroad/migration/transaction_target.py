@@ -27,12 +27,15 @@ def materialized_files(plan, source):
 def validate_transaction_target(plan, source, target, *, gates=()):
     require(type(plan) is ChangePlan, 'migration_plan_required')
     op = plan.data['operations'][0]
-    recheck_migration_plan(plan.source_bytes, source, expected_target_version='0.2.0',
+    recheck_migration_plan(plan.source_bytes, source, expected_target_version=op['target_contract']['schema_version'],
         expected_inputs_sha256=op['inputs_sha256'], expected_plan_sha256=plan.sha256)
     require(file_bindings(target) == op['target_files'], 'migration_target_files_changed', exit_code=6)
     require(type(gates) in (tuple, list) and all(type(g) is ModelGate for g in gates),
             'migration_registered_gates_required')
     gates = tuple(gates)
+    if op['target_contract']['schema_version'] == '0.3.0':
+        from .additive import validate_target
+        return validate_target(plan, source, target, gates=gates)
     from ..storage.json_syntax import parse_json_object
     actual = parse_json_object(target['specroad.json'])
     legacy = validate_legacy_manifest(target, project_id=actual['project_id'])

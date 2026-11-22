@@ -1,6 +1,6 @@
 """Closed normative format boundary, separate from Legacy reading and Restore."""
 from ..model.errors import ModelError
-from ..model.versions import SCHEMA_VERSION
+from ..model.versions import SCHEMA_VERSION, PROJECT_SCHEMA_VERSIONS, PLAN_TYPES, PLAN_SCHEMA_VERSION
 from ..storage.json_syntax import parse_json_object
 from .errors import QualificationError
 
@@ -36,10 +36,12 @@ def declared_resource(raw, path, *, normative=False):
         'artifact_type' in value or 'project_id' in value and
         any(key in value for key in ('managed_paths', 'id_prefix', 'project_name', 'validation_policy')) or
         any(key in value for key in ('profile_id', 'rule_id', 'mapping_id')))
-    if recognizable and 'schema_version' in value and value['schema_version'] != SCHEMA_VERSION:
+    supported = (PROJECT_SCHEMA_VERSIONS if path == 'specroad.json' else
+                 (PLAN_SCHEMA_VERSION,) if value.get('artifact_type') in PLAN_TYPES else (SCHEMA_VERSION,))
+    if recognizable and 'schema_version' in value and value['schema_version'] not in supported:
         error = QualificationError('restore_unsupported_source_schema_version', path=path)
         error.pointer = '/schema_version'
-        error.highest_supported = SCHEMA_VERSION
+        error.highest_supported = supported[-1]
         raise error
 
 

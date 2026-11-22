@@ -1,4 +1,4 @@
-"""Versioned common-field JSON Schema resources for the 28 Core artifact types.
+"""Versioned common-field JSON Schema resources for the registered Core artifact types.
 
 These are explicitly COMMON-FIELD schemas, not complete artifact validation.
 Type-specific fields, profile/graph rules and lifecycle authorization are later
@@ -9,7 +9,7 @@ ship the exact same schemas without optional data-file installation steps.
 
 from ._schema import validate_builtin
 from .configuration import _json_values
-from .versions import SCHEMA_VERSION
+from .versions import SCHEMA_VERSION, PLAN_TYPES
 from .errors import ModelError
 from .relation_fields import relation_identity_fields
 from .audit_fields import audit_definitions
@@ -26,7 +26,7 @@ MATURITIES = ("draft", "proposed", "in_review", "approved", "rejected", "superse
 # Read selectors include specialized states; generic transition schemas
 # deliberately retain MATURITIES and cannot write a Proposal Apply state.
 ALL_MATURITIES = (*MATURITIES, "applied")
-LANGUAGE_REQUIRED = frozenset({"requirement", "document", "term"})
+LANGUAGE_REQUIRED = frozenset({"requirement", "document", "term"}) | PLAN_TYPES
 
 
 def artifact_maturities(kind):
@@ -34,10 +34,10 @@ def artifact_maturities(kind):
     return ALL_MATURITIES if kind == "proposal" else MATURITIES
 
 
-def _version(version):
-    if type(version) is not str or version != SCHEMA_VERSION:
+def _version(version, supported=SCHEMA_VERSION):
+    if type(version) is not str or version != supported:
         raise ModelError("unsupported_schema_version", pointer="/schema_version",
-                         highest_supported=SCHEMA_VERSION)
+                         highest_supported=supported)
 
 
 def _definitions():
@@ -47,7 +47,7 @@ def _properties(kind):
     text = {"$ref": "#/$defs/text"}
     actor = {"$ref": "#/$defs/actor"}
     return {
-        "schema_version": {"const": SCHEMA_VERSION}, "id": dict(text),
+        "schema_version": {"const": artifact_type(kind).schema_version}, "id": dict(text),
         "id_scheme": {"enum": ["random128-v1", "legacy-sequential-v1"]},
         "artifact_type": {"const": kind}, "title": dict(text),
         # Only the Proposal Apply contract adds a type-specific terminal maturity.
@@ -68,10 +68,10 @@ def _properties(kind):
     }
 
 
-def artifact_common_schema(kind, version=SCHEMA_VERSION):
+def artifact_common_schema(kind, version=...):
     """Return an independent, JSON-serializable Draft 2020-12 schema resource."""
-    _version(version)
     item = artifact_type(kind)
+    _version(item.schema_version if version is ... else version, item.schema_version)
     required = list(COMMON_REQUIRED)
     if kind in LANGUAGE_REQUIRED:
         required.append("language")
@@ -80,6 +80,8 @@ def artifact_common_schema(kind, version=SCHEMA_VERSION):
     branches = []
     for scheme, token in (("random128-v1", r"[0-7][0-9A-HJKMNP-TV-Z]{25}"),
                           ("legacy-sequential-v1", r"[0-9]{4}")):
+        if kind in PLAN_TYPES and scheme == "legacy-sequential-v1":
+            continue
         branches.append({"properties": {"id_scheme": {"const": scheme, "deprecated": scheme == "legacy-sequential-v1",
                                "description": "Legacy identities remain readable; new identities require random128-v1."},
                            "id": {"type": "string", "pattern": "^(?:" + base + token + r")(?![\s\S])"}}})
@@ -99,8 +101,8 @@ def validate_common_fields(value, *, expected_type=None):
         _json_values(value)
     except RecursionError as error:
         raise ModelError("unsupported_json_nesting") from error
-    _version(value.get("schema_version"))
     item = artifact_type(value.get("artifact_type"))
+    _version(value.get("schema_version"), item.schema_version)
     if expected_type is not None and item != artifact_type(expected_type):
         raise ModelError("artifact_type_mismatch", pointer="/artifact_type")
     try:

@@ -489,6 +489,8 @@ def builtin_registry() -> CommandRegistry:
     from .proposal_commands import proposal_commands
     commands += proposal_commands()
     commands += metadata_commands()
+    from .config_show import commands as config_commands
+    commands += config_commands()
     commands += work_commands()
     from .migration_commands import migration_commands
     commands += migration_commands()

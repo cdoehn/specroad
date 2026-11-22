@@ -434,6 +434,12 @@ def _fields(schema_id):
             'validation_scope': {'const': 'supplied_artifact_fields_and_declared_semantics_only'},
             'full_semantic_validation': {'const': False}, 'approval_granted': {'const': False},
             'write_authorized': {'const': False}}), comparison=True)
+    if schema_id == 'config-show-v1':
+        return _object({'format_version': {'const': '1.0.0'}, 'source_sha256': sha,
+            'effective_configuration': obj, 'origins': obj, 'resolved_options': obj, 'option_origins': obj,
+            'scope': {'const': 'project_configuration_and_resolved_options'},
+            **{name: {'const': False} for name in ('profile_composition_verified', 'model_loaded',
+                'full_validation_passed', 'write_authorized', 'approval_granted')}})
     if schema_id == "version-info-v1":
         return _object({"version_info_format_version": {"const": "1.0.0"}, "program_version": text,
             **distribution, "build_hash_algorithm": _nullable(text), "release_approved": boolean,

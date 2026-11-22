@@ -4,7 +4,7 @@ from dataclasses import dataclass
 
 from .artifact_types import artifact_types
 from .errors import ModelError
-from .paths import artifact_path
+from .paths import validate_artifact_address
 from .identity_values import ArtifactIdentity, RANDOM_SCHEME, _prefix
 
 def _inventory_ids(values, prefix, *, reject_duplicates=False):
@@ -21,7 +21,7 @@ def _inventory_ids(values, prefix, *, reject_duplicates=False):
         parts = identity.split("-")
         if len(parts) != 3 or parts[1] not in kinds:
             raise ModelError("invalid_inventory_identity")
-        artifact_path(kinds[parts[1]], identity, prefix)
+        validate_artifact_address(kinds[parts[1]], identity, prefix)
     if reject_duplicates and len(set(values)) != len(values):
         raise ModelError("duplicate_artifact_id")
     return frozenset(values)

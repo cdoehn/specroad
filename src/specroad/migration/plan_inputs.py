@@ -54,7 +54,7 @@ def target_contract():
     from ..changes.schema import change_plan_schema
     schemas = {kind: domain_schema(kind) for kind in DOMAIN_TYPES}
     schemas.update({kind: record_schema(kind) for kind in RECORD_TYPES})
-    schemas.update(project=configuration_json_schema(), profile=_builtin_core().data, change_plan=change_plan_schema())
+    schemas.update(project=configuration_json_schema(), profile=_builtin_core().data, change_plan=change_plan_schema(additive_migration=False))
     return {'schema_version': '0.2.0', 'contract_sha256': digest({
         'contract_version': 'migration-target-v1', 'schemas': schemas})}
 

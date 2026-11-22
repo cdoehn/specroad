@@ -15,8 +15,13 @@ def precondition_schema():
         obj({"kind": {"const": "absent"}, "path": text()}),
     ]}
 
-def change_plan_schema():
+def change_plan_schema(*, additive_migration=True):
     """Return a detached schema; no global cache, file access or external refs."""
+    def schema_for(kind):
+        if kind == "schema_migrate":
+            from ..migration.plan_contract import migration_operation_schema
+            return migration_operation_schema(additive=additive_migration)
+        return operation_schema(kind)
     defs = audit_definitions()
     fields = {
         "format_version": {"const": FORMAT_VERSION},
@@ -24,7 +29,7 @@ def change_plan_schema():
         "change_plan_id": text(), "request_id": request_id_schema(),
         "planned_at": defs["utc"], "actor": defs["actor"],
         "base": obj({"scope_descriptor": {"type": "object"}, "model_root_sha256": digest()}),
-        "operations": arr({"anyOf": [operation_schema(kind) for kind in (*OPERATION_TYPES, "schema_migrate", "merge_publish")]}),
+        "operations": arr({"anyOf": [schema_for(kind) for kind in (*OPERATION_TYPES, "schema_migrate", "merge_publish")]}),
         "preconditions": arr(precondition_schema()),
         "result_artifacts": arr(obj({"artifact": {"type": "object"}, "sha256": digest()})),
         "expected_result": obj({"model_root_sha256": digest()}),
@@ -36,7 +41,7 @@ def change_plan_schema():
             "operations": {"items": {"not": {"properties": {"op": {"enum": ["schema_migrate", "merge_publish"]}}, "required": ["op"]}}}}},
         {"properties": {"metadata_policy_version": {"const": "migration-metadata-v1"},
             "operations": {"minItems": 1, "not": {"minItems": 2},
-                "items": operation_schema("schema_migrate")}}},
+                "items": schema_for("schema_migrate")}}},
         {"properties": {"metadata_policy_version": {"const": "merge-metadata-v1"},
             "operations": {"minItems": 1, "not": {"minItems": 2},
                 "items": operation_schema("merge_publish")}}},

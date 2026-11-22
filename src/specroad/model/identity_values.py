@@ -4,7 +4,7 @@ from dataclasses import dataclass
 import re
 
 from .errors import ModelError
-from .paths import artifact_path
+from .paths import artifact_path, validate_artifact_address
 from .identity_tokens import decode128
 
 RANDOM_SCHEME = "random128-v1"
@@ -25,7 +25,7 @@ class ArtifactIdentity:
 
     def __post_init__(self):
         _prefix(self.id_prefix)
-        artifact_path(self.artifact_type, self.id, self.id_prefix)
+        validate_artifact_address(self.artifact_type, self.id, self.id_prefix)
         token = self.id.rsplit("-", 1)[-1]
         if self.id_scheme == RANDOM_SCHEME:
             decode128(token)

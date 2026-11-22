@@ -36,7 +36,7 @@ class ConfigurationWorkTests(unittest.TestCase):
     def test_unsupported_version_reports_highest_reader(self):
         with self.assertRaises(ModelError) as caught:
             ProjectConfiguration(configuration_value(schema_version='99.0.0'))
-        self.assertEqual(caught.exception.highest_supported, '0.2.0')
+        self.assertEqual(caught.exception.highest_supported, '0.3.0')
 
     def test_configuration_is_required_at_the_selected_root(self):
         with tempfile.TemporaryDirectory() as temp:

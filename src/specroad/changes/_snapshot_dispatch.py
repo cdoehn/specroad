@@ -30,7 +30,7 @@ def recheck_source(plan,source):
         recheck_plan(plan,source)
     else:
         from ..migration.plan_recheck import recheck_migration_plan
-        recheck_migration_plan(plan.source_bytes,source,expected_target_version='0.2.0',
+        recheck_migration_plan(plan.source_bytes,source,expected_target_version=plan.data['operations'][0]['target_contract']['schema_version'],
             expected_inputs_sha256=plan.data['operations'][0]['inputs_sha256'],expected_plan_sha256=plan.sha256)
 
 

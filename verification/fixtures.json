@@ -1079,10 +1079,18 @@
     "SR-FIX-ACCEPTANCE-PYTHON-MATRIX-v1": {
       "provider": "tests/test_acceptance_python_matrix.py; tests/test_acceptance_python_matrix_right.py; tests/support/network_isolation.py; tests/support/transport_return.py; tests/support/transport_receive.py; tests/support/python_matrix.py",
       "kind": "Actual hash-selected CPython 3.10–3.14, built module/PYZ, non-root Linux x86-64 no-site offline children, native transport return and separately authorized synthetic host review/dry-run/apply. Local configuration and human/release approval are not supplied. Each row retains complete native goal-only validation and exact incomplete/refused document_model/configuration validation of the unchanged roundtrip input; no missing service is a pass."
+    },
+    "SR-FIX-PLAN-MODEL-v1": {
+      "provider": "tests/support/plan_models.py; tests/test_plan_model.py; tests/test_config_show.py",
+      "kind": "Independently specified synthetic plan fields and identity pools; real public init/migration writer/backup/verification, configuration CLI and native source-byte inventories. No saved success labels, human approval or docs/layout assertions. Right stage adds legacy Baseline/Evidence originals and two actual distributions."
     }
   },
   "fixture_format_version": 1,
   "fixture_ids": [
+    "SR-FIX-ACCEPTANCE-INVENTORY-v1",
+    "SR-FIX-ACCEPTANCE-OFFLINE-SECURITY-v1",
+    "SR-FIX-ACCEPTANCE-PYTHON-MATRIX-v1",
+    "SR-FIX-ACCEPTANCE-WORK-v1",
     "SR-FIX-ANALYZER-ATTACK-ACCEPTANCE-v1",
     "SR-FIX-ANALYZER-CLI-v1",
     "SR-FIX-ANALYZER-DESCRIPTOR-v1",
@@ -1146,6 +1154,7 @@
     "SR-FIX-CONTAINER-LANGUAGES-v1",
     "SR-FIX-CONTENT-BLOCKS-RIGHT-v1",
     "SR-FIX-CONTENT-BLOCKS-v1",
+    "SR-FIX-CONTRACT-REGRESSIONS-v1",
     "SR-FIX-CORE-LINT-v1",
     "SR-FIX-CSV-CODEC-RIGHT-v1",
     "SR-FIX-CSV-CODEC-v1",
@@ -1242,6 +1251,7 @@
     "SR-FIX-PATCHHARBOR-140-RUNTIME-v1",
     "SR-FIX-PATCHHARBOR-160-SNAPSHOT-v1",
     "SR-FIX-PATCHHARBOR-180-RUNTIME-v1",
+    "SR-FIX-PLAN-MODEL-v1",
     "SR-FIX-PLANNING-BOUNDARIES-v1",
     "SR-FIX-PLANNING-BUILTIN-VIEWS-v1",
     "SR-FIX-PLANNING-BUILTIN-WORK-v1",
@@ -1363,15 +1373,10 @@
     "SR-FIX-VERIFICATION-WAIVER-R-v1",
     "SR-FIX-VERIFICATION-WAIVER-v1",
     "SR-FIX-WEAK-BOUNDARY-v1",
+    "SR-FIX-WRITE-FAULT-MATRIX-v1",
     "SR-FIX-WRITE-GUARD-v1",
     "SR-FIX-WRITER-BOUNDARIES-v1",
     "verification-context-independent",
-    "verification-context-subjects",
-    "SR-FIX-ACCEPTANCE-INVENTORY-v1",
-    "SR-FIX-CONTRACT-REGRESSIONS-v1",
-    "SR-FIX-WRITE-FAULT-MATRIX-v1",
-    "SR-FIX-ACCEPTANCE-WORK-v1",
-    "SR-FIX-ACCEPTANCE-OFFLINE-SECURITY-v1",
-    "SR-FIX-ACCEPTANCE-PYTHON-MATRIX-v1"
+    "verification-context-subjects"
   ]
 }

@@ -2,20 +2,26 @@
   "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [],
   "expected_exit_codes": [],
-  "fixture_ids": [],
-  "implementation_status": "open",
+  "fixture_ids": [
+    "SR-FIX-PLAN-MODEL-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [],
-  "method": "pending",
+  "method": "automated_behavior",
   "open_items": [
-    "Implement complete 21.a.W/R/C and its X-contract; define real independent fixtures and behavior oracles before claiming implementation.",
-    "Actual Apply tests and current integration evidence in 21.w/x; genuine human acceptance remains at the final M19/M20 block. This specification/planning commit is not implementation or release approval."
+    "21.a implementation and independent oracles are prepared; actual stage-specific Apply acceptance is pending. Dev executes no behavior tests.",
+    "Original contracts/evidence are retained. Remaining planned Markdown/graph/authoring integration and the independent platform, full-suite, release and human evidence remain required in the existing M21/M19/M20 sequence.",
+    "Bundle 792 created no commit (51 failures); the complete 21.a.W/R/C correction remains subject to its own sequential Apply gates."
   ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "SpecRoad MUSS mehrere eigenständige Implementierungspläne für frei gewählte Requirement-Umfänge nach X.1/X.2 verwalten, ohne Requirements zu duplizieren oder einen zusätzlichen Featuretyp vorauszusetzen.",
-    "scope": "Normative target only. No executable implementation or current pass evidence claimed."
+    "scope": "Existing normal-mode oracles retained, extended by 21.a typed plan fields, explicit additive schema capability and read-only effective configuration. Legacy originals are not current approvals; complete Markdown loading/authoring and final integration remain separately planned."
   },
-  "preconditions": [],
+  "preconditions": [
+    "Bundle 792 21.a.W: native compiled Core and independent synthetic input bytes; no production or human approval assumed.",
+    "Bundle 793 21.a.W: correction of the failed 792 gate; original identities, oracles and native live admission retained, no completed Apply acceptance assumed."
+  ],
   "primary_verification_id": "SR-VER-0052",
   "required_environment": {
     "declared_minimum_python": "3.10",
@@ -29,8 +35,33 @@
     "owned_temporary_files": true
   },
   "specification_sha256": "b9914d91dd85b67714d334326c7dcec61b76b81b8da9f35a4e64e39d6c48a9fd",
-  "steps": [],
+  "steps": [
+    "Execute the exact bound tests in this stage-specific Apply gate; compare owned bytes, typed identities, native diagnostics and side effects.",
+    "Run the bound original regressions and native init-to-migration integration in this commit gate; verify original bytes, rejection diagnostics and unchanged write/approval boundaries."
+  ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0743",
-  "test_ids": []
+  "test_ids": [
+    "tests/test_plan_model.py::test_additive_migration_does_not_accept_other_edits_or_implicit_target",
+    "tests/test_plan_model.py::test_additive_migration_runs_native_public_writer_backup_and_verification",
+    "tests/test_plan_model.py::test_entry_field_errors_are_rejected_without_inventing_metadata[display_id-[x]]",
+    "tests/test_plan_model.py::test_entry_field_errors_are_rejected_without_inventing_metadata[display_id-broken\\nlabel]",
+    "tests/test_plan_model.py::test_entry_field_errors_are_rejected_without_inventing_metadata[display_id-e\\u0301]",
+    "tests/test_plan_model.py::test_entry_field_errors_are_rejected_without_inventing_metadata[entry_kind-group]",
+    "tests/test_plan_model.py::test_entry_field_errors_are_rejected_without_inventing_metadata[extra-True]",
+    "tests/test_plan_model.py::test_entry_field_errors_are_rejected_without_inventing_metadata[id-SR-PENTRY-0001]",
+    "tests/test_plan_model.py::test_entry_field_errors_are_rejected_without_inventing_metadata[implemented-yes]",
+    "tests/test_plan_model.py::test_entry_field_errors_are_rejected_without_inventing_metadata[language-None]",
+    "tests/test_plan_model.py::test_entry_field_errors_are_rejected_without_inventing_metadata[parent_id-XX-IPLAN-00000000000000000000000000]",
+    "tests/test_plan_model.py::test_entry_field_errors_are_rejected_without_inventing_metadata[revision-0]",
+    "tests/test_plan_model.py::test_entry_field_errors_are_rejected_without_inventing_metadata[schema_version-0.2.0]",
+    "tests/test_plan_model.py::test_entry_field_errors_are_rejected_without_inventing_metadata[work_kind-review]",
+    "tests/test_plan_model.py::test_native_unique_items_preserves_json_boolean_number_and_object_equality",
+    "tests/test_plan_model.py::test_no_optional_proof_or_id_is_synthesized",
+    "tests/test_plan_model.py::test_plan_catalog_rejects_duplicate_structural_references[children]",
+    "tests/test_plan_model.py::test_plan_catalog_rejects_duplicate_structural_references[contributors]",
+    "tests/test_plan_model.py::test_plan_projections_use_current_native_catalog_and_one_carrier[implementation_plan]",
+    "tests/test_plan_model.py::test_plan_projections_use_current_native_catalog_and_one_carrier[plan_entry]",
+    "tests/test_plan_model.py::test_projects_require_explicit_capability_and_reject_shadow_files"
+  ]
 }

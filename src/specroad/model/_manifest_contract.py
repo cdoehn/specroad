@@ -74,7 +74,7 @@ def _boundaries(values, descriptor, artifacts, configuration):
     included = {item["id"] for item in artifacts}
     result, seen = [], set()
     required = {"source_id", "relation_type", "target_id", "target_type", "reason", "origin_target_sha256"}
-    from .paths import artifact_path
+    from .paths import validate_artifact_address
     from .relation_values import _relation_id
     for item in values:
         if type(item) is not dict or not required <= item.keys() or item.keys() - required - {"relation_id"}:
@@ -87,7 +87,7 @@ def _boundaries(values, descriptor, artifacts, configuration):
         if "relation_id" in item:
             _relation_id(relation)
         _hash(item["origin_target_sha256"])
-        artifact_path(item["target_type"], item["target_id"], configuration.id_prefix)
+        validate_artifact_address(item["target_type"], item["target_id"], configuration.id_prefix)
         if item["source_id"] not in included or item["target_id"] in included:
             raise ModelError("boundary_membership_mismatch")
         key = (item["source_id"], relation or "", item["target_id"])

@@ -43,8 +43,12 @@ def verify_migration(backup_raw, plan_raw, report_raw, target_files, *,
             'migration_report_recomputation_mismatch', exit_code=6)
     target = owned_files(target_files, passive=True)
     validation = validate_transaction_target(plan, source, target, gates=gates)
-    before = verify_source_history(source).data
-    after = verify_migrated_history(target, project_id=backup.manifest['project_id']).data
+    if expected_target_version == '0.3.0':
+        from .current_source import preservation_history
+        before, after = preservation_history(source), preservation_history(target)
+    else:
+        before = verify_source_history(source).data
+        after = verify_migrated_history(target, project_id=backup.manifest['project_id']).data
     require(before['historical'] == after['historical'], 'migration_history_changed', exit_code=6)
     require(all(target.get(path) == source[path] for path in op['protected_paths']),
             'migration_original_changed', exit_code=6)

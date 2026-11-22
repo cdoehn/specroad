@@ -36,7 +36,8 @@ def distribution_content():
 
 def initial_directories():
     directories = set(ROOT_DIRECTORIES)
-    directories.update('spec/' + item.directory for item in artifact_types())
+    directories.update('spec/' + item.directory for item in artifact_types()
+                       if item.schema_version == '0.2.0')
     directories.update(('archive/objects', 'profiles/language-data', 'profiles/language-data/packages',
         '.specroad/cache', '.specroad/locks', '.specroad/tmp', '.specroad/transactions',
         '.specroad/transactions/receipts', '.specroad/requests', '.specroad/merge', '.specroad/recovery'))

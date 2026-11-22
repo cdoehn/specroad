@@ -65,9 +65,14 @@ def registered_step():
 def require_path(target_version):
     from .registry import builtin_registry
     graph = builtin_registry()
-    source = DataContract(**SOURCE_CONTRACT)
-    target = DataContract(target_version, target_contract()['contract_sha256'])
+    if target_version == '0.3.0':
+        from .additive import source_contract, target_contract as plan_contract, STEP as PLAN_STEP
+        source, target, expected_step = DataContract(**source_contract()), DataContract(**plan_contract()), PLAN_STEP
+    else:
+        source = DataContract(**SOURCE_CONTRACT)
+        target = DataContract(target_version, target_contract()['contract_sha256'])
+        expected_step = STEP
     edges = graph.resolve(source, target)
-    require(len(edges) == 1 and edges[0].step.step_id == STEP and not edges[0].reverse,
+    require(len(edges) == 1 and edges[0].step.step_id == expected_step and not edges[0].reverse,
             'migration_supported_path_required')
     return edges

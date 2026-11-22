@@ -1,7 +1,7 @@
 """Original subject headers shared by requests and intrinsically checked reports."""
 from ..model.domain_fields import NormativeForce
 from ..model.language_tags import parse_language_tag
-from ..model.paths import ARTIFACT_PATHS, artifact_path
+from ..model.paths import ARTIFACT_PATHS, validate_artifact_address
 from ..changes._patch_pointer import _pointer as parse_pointer
 from ..model.errors import ModelError
 from ._values import AnalyzerError, digest, hash_value, require
@@ -14,7 +14,7 @@ def _artifact_id(value, at):
     kinds = [kind for kind, (_, prefix) in ARTIFACT_PATHS.items() if len(pieces) == 3 and prefix == pieces[1]]
     require(len(kinds) == 1, 'analyzer_invalid_artifact_id', at)
     try:
-        artifact_path(kinds[0], value, pieces[0])
+        validate_artifact_address(kinds[0], value, pieces[0])
     except ModelError as error:
         raise AnalyzerError('analyzer_invalid_artifact_id', pointer=at) from error
 

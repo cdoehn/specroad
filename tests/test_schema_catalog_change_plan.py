@@ -49,7 +49,9 @@ class SchemaCatalogChangePlanTests(unittest.TestCase):
         schemas = [artifact_common_schema(item.artifact_type) for item in artifact_types()]
         schemas += [domain_schema(kind) for kind in DOMAIN_TYPES]
         schemas += [record_schema(kind) for kind in RECORD_TYPES]
-        schemas += [configuration_json_schema(), change_plan_schema()]
+        from specroad.model.plan_schemas import plan_schema
+        schemas += [plan_schema("implementation_plan"), plan_schema("plan_entry")]
+        schemas += [configuration_json_schema(), configuration_json_schema("0.3.0"), change_plan_schema()]
         schemas += [request_schema(command) for command in builtin_registry().commands]
         schemas += [result_json_schema(name) for name in (
             'json-envelope-v2', 'help-v1', 'version-info-v1', 'command-description-v1',
@@ -57,7 +59,7 @@ class SchemaCatalogChangePlanTests(unittest.TestCase):
             'document-read-v1', 'model-validation-v1', 'proposal-validation-v1', 'proposal-check-v1', 'proposal-review-start-v1', 'proposal-review-v1', 'proposal-apply-v1', 'project-lock-v1',
             'exchange-export-v1', 'bundle-create-v1', 'proposal-return-export-v1', 'bundle-verify-v1', 'bundle-extract-v1', 'import-plan-work-v1',
             'work-command-v1', 'merge-conflicts-command-v1', 'merge-resolve-command-v1', 'merge-preparation-v1', 'merge-plan-command-v1', 'merge-publication-plan-v1', 'merge-apply-command-v1', 'migration-command-v1', 'ai-runtime-verify-v1', 'ai-runtime-extract-v1',
-            'environment-v1', 'document-work-v1', 'work-evaluation-v1', 'project-init-v1', 'project-inspect-v1', 'artifact-show-v1', 'artifact-trace-v1', 'artifact-why-v1', 'artifact-impact-v1', 'artifact-query-v1', 'artifact-diff-v1', 'configuration-evaluation-v1', 'roadmap-explain-v1',
+            'config-show-v1', 'environment-v1', 'document-work-v1', 'work-evaluation-v1', 'project-init-v1', 'project-inspect-v1', 'artifact-show-v1', 'artifact-trace-v1', 'artifact-why-v1', 'artifact-impact-v1', 'artifact-query-v1', 'artifact-diff-v1', 'configuration-evaluation-v1', 'roadmap-explain-v1',
         )]
         schemas += [result_json_schema(name) for name in (
             'analyzer-descriptor-v1', 'analyzer-inputs-v1', 'analyzer-request-v1',

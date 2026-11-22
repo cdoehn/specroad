@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 421 · **Stand:** 22. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.104
+**Planrevision:** 425 · **Stand:** 22. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.104
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **21 Meilensteine in 332 Schritte und 996 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die ursprünglichen Positionen bleiben erhalten; ausdrücklich geänderte Ausführungsfolgen stehen im Fortschrittsblock und in den betroffenen Voraussetzungen; die früher genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wurde nach der damaligen Spezifikation innerhalb von 15.l.R vorgezogen und bleibt als normaler Prüfkern erhalten. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -14,9 +14,11 @@ Vor der Arbeit: [Projektregeln](../../DEVELOPMENT.md), [Grundlagen](rules/Grundl
 [IMPLEMENTATION-PLANS-791](decisions/implementation-plans-791.md) erweitert die
 Spezifikation und den vollständigen Rest. [M21](milestones/M21.md) umfasst
 78 neue technische Commits; sämtliche 30 bisher offenen Commits bleiben.
-Nach diesem reinen Dokumentationscommit sind **888/996 bestätigt, 108 offen**.
-87 technische Commits gehen dem menschlich abhängigen 21-Commit-Abschlussblock
-voraus. Diese Zählung ist kein Zeit- oder Requirement-Erfüllungsgrad.
+Bundle 792 erzeugte keinen Commit; die bestätigte Basis der Korrektur 793
+umfasst weiterhin 888/996 Positionen.
+Ziel dieser Stage **21.a.W**, erst nach ihrem eigenen Apply-Gate: **889/996**,
+107 offen. Davon gehen 86 technische Commits dem menschlich abhängigen
+21-Commit-Abschlussblock voraus. [Korrektur und Nachweisgrenzen](history/bundle-793-plan-model-correction.md). Diese Zählung ist kein Zeit- oder Requirement-Erfüllungsgrad.
 
 Die [Einzelzuordnung aller alten Katalogreste](matrices/Uebergabe.md#restinventar-791)
 ist verbindlicher Teil des Restplans. Sprach-/Herkunfts-/Bedienreviews und
@@ -319,11 +321,11 @@ Korrektur der nativen Validierungsfälle und vollständiger Matrixrest: [Bundle 
 Prozess-/Journalreparatur des offenen C-Rests: [Bundle 790](history/bundle-790-process-journal.md). W/R sind bestätigt; C benötigt sein eigenes Apply-Gate.
 
 ```yaml
-plan_revision: 421
+plan_revision: 425
 implementation_plan_commits_total: 996
-implementation_plan_commits_completed: 888
-last_completed_plan_commit: 20.h.C
-next_plan_commit: 21.a.W
+implementation_plan_commits_completed: 889
+last_completed_plan_commit: 21.a.W
+next_plan_commit: 21.a.R
 priority_off_plan: null
 next_off_plan_commit: null
 last_completed_numbered_bundle: 791

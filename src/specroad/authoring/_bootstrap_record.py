@@ -45,7 +45,8 @@ def _metadata(value, kind):
     return token
 
 
-def _record(tree, raw, resources):
+def record_values(raw, resources):
+    """Validate original journal values only; no live/completion authority."""
     value = parse_json_object(raw)
     fields = {'format', 'state', 'root_identity', 'root_created', 'stage_identity',
               'units', 'reused_directories', 'entries'}
@@ -55,9 +56,7 @@ def _record(tree, raw, resources):
         _invalid()
     if type(value['root_created']) is not bool: _invalid()
     tokens = {_identity(value['root_identity']), _identity(value['stage_identity'])}
-    if len(tokens) != 2 or value['root_identity'] != identity(os.fstat(tree.held.root_fd)):
-        _invalid()
-    if value['stage_identity'] != tree.stage_identity: _invalid()
+    if len(tokens) != 2: _invalid()
     reused = value['reused_directories']
     if type(reused) is not dict or set(reused) - set(ROOT_DIRECTORIES): _invalid()
     if value['root_created'] and reused: _invalid()
@@ -83,9 +82,17 @@ def _record(tree, raw, resources):
     for path in files:
         limit = len(resources[path]) if path in resources else PROJECT_FILE_LIMIT
         if entries[path]['size'] > limit: _invalid()
-    tree.inventory = entries
-    tree.reused = reused
-    tree.units = units
+    return value, document
+
+
+def _record(tree, raw, resources):
+    value, document = record_values(raw, resources)
+    if value['root_identity'] != identity(os.fstat(tree.held.root_fd)):
+        _invalid()
+    if value['stage_identity'] != tree.stage_identity: _invalid()
+    tree.inventory = value['entries']
+    tree.reused = value['reused_directories']
+    tree.units = value['units']
     return document
 
 

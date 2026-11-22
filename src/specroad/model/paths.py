@@ -8,6 +8,7 @@ from ..security import SafetyViolation
 from ..security.paths import _parts
 from .errors import ModelError
 from .artifact_types import artifact_types
+from .versions import PLAN_TYPES, PLAN_SCHEMA_VERSION
 from .operational_paths import recovery_resource_role, CACHE_ROOT
 
 # Compatibility view derived from the same registry used by artifact schemas.
@@ -19,6 +20,7 @@ ARTIFACT_PATHS = MappingProxyType({
 class PathClass(str, Enum):
     CONFIGURATION = "configuration"
     ARTIFACT = "artifact"
+    PLAN = "implementation_plan"
     PROFILE = "profile"
     RULE = "rule"
     MAPPING = "mapping"
@@ -57,17 +59,34 @@ def _under(path, directory):
     return path == directory or path.startswith(directory + "/")
 
 
-def artifact_path(artifact_type, artifact_id, id_prefix):
+def validate_artifact_address(artifact_type, artifact_id, id_prefix):
     if not isinstance(artifact_type, str) or artifact_type not in ARTIFACT_PATHS:
         raise ModelError("unknown_artifact_type")
     if not isinstance(id_prefix, str) or not re.fullmatch(r"[A-Z][A-Z0-9]{1,7}", id_prefix):
         raise ModelError("invalid_id_prefix", pointer="/id_prefix")
     directory, type_prefix = ARTIFACT_PATHS[artifact_type]
     # Legacy IDs are only a read/address capability, not permission to mint them.
-    token = r"(?:[0-7][0-9A-HJKMNP-TV-Z]{25}|[0-9]{4})"
+    token = (r"[0-7][0-9A-HJKMNP-TV-Z]{25}" if artifact_type in PLAN_TYPES
+             else r"(?:[0-7][0-9A-HJKMNP-TV-Z]{25}|[0-9]{4})")
     if not isinstance(artifact_id, str) or not re.fullmatch(re.escape(id_prefix + "-" + type_prefix + "-") + token, artifact_id):
         raise ModelError("artifact_identity_mismatch")
-    return "spec/" + directory + "/" + artifact_id + ".json"
+
+
+def artifact_path(artifact_type, artifact_id, id_prefix, *, plan_id=None):
+    validate_artifact_address(artifact_type, artifact_id, id_prefix)
+    if artifact_type == "plan_entry":
+        if plan_id is None:
+            raise ModelError("plan_carrier_required")
+        return artifact_path("implementation_plan", plan_id, id_prefix)
+    suffix = ".md" if artifact_type == "implementation_plan" else ".json"
+    return "spec/" + ARTIFACT_PATHS[artifact_type][0] + "/" + artifact_id + suffix
+
+
+def require_plan_capability(configuration, path=None):
+    if configuration.data["schema_version"] != PLAN_SCHEMA_VERSION:
+        raise ModelError("plan_project_migration_required", path=path,
+                         highest_supported=PLAN_SCHEMA_VERSION)
+
 
 
 def classify_path(path, configuration):
@@ -88,9 +107,18 @@ def classify_path(path, configuration):
     if not any(_under(path, parent) for parent in configuration.managed_paths):
         return PathClass.UNMANAGED
     pieces = path.split("/")
+    if path.startswith("spec/implementation-plans/"):
+        require_plan_capability(configuration, path)
+        if len(pieces) != 3 or not path.endswith(".md"):
+            raise ModelError("plan_carrier_path_required", path=path)
+        if artifact_path("implementation_plan", pieces[-1][:-3], configuration.id_prefix) != path:
+            raise ModelError("plan_carrier_path_required", path=path)
+        return PathClass.PLAN
+    if path.startswith("spec/plan-entries/"):
+        raise ModelError("plan_json_shadow_forbidden", path=path)
     if len(pieces) == 3 and pieces[0] == "spec" and pieces[-1].endswith(".json"):
         for kind, (directory, prefix) in ARTIFACT_PATHS.items():
-            if directory == pieces[1]:
+            if directory == pieces[1] and kind not in PLAN_TYPES:
                 artifact_path(kind, pieces[2][:-5], configuration.id_prefix)
                 return PathClass.ARTIFACT
     for directory, kind in (("profiles", PathClass.PROFILE), ("rules", PathClass.RULE),

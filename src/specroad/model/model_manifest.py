@@ -158,7 +158,7 @@ def assemble_model_manifest(configuration, binding, resources, *, scope_descript
     except TypeError as error:
         raise ModelError("manifest_resource_sequence_required") from error
     records = []
-    from .paths import artifact_path
+    from .paths import validate_artifact_address
     for resource in resources:
         if not isinstance(resource, ManifestResource):
             raise ModelError("manifest_resource_required")
@@ -166,7 +166,7 @@ def assemble_model_manifest(configuration, binding, resources, *, scope_descript
             raise ModelError("manifest_project_mismatch")
         record = resource.data
         if record["kind"] == "artifact":
-            artifact_path(record["artifact_type"], record["id"], configuration.id_prefix)
+            validate_artifact_address(record["artifact_type"], record["id"], configuration.id_prefix)
         records.append(record)
     identities = [(r["kind"], r.get("id", r.get("path")), r.get("version")) for r in records]
     if len(identities) != len(set(identities)):

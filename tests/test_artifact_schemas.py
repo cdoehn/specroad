@@ -30,11 +30,13 @@ EXPECTED = (
 class ArtifactSchemaWorkTests(unittest.TestCase):
     def test_all_28_types_have_distinct_versioned_schema_and_prefix(self):
         entries = artifact_types()
-        self.assertEqual(tuple((entry.artifact_type, entry.prefix) for entry in entries), EXPECTED)
-        self.assertEqual(len({entry.schema_id for entry in entries}), 28)
-        self.assertEqual(len({entry.prefix for entry in entries}), 28)
+        self.assertEqual(tuple((entry.artifact_type, entry.prefix) for entry in entries),
+            EXPECTED + (("implementation_plan", "IPLAN"), ("plan_entry", "PENTRY")))
+        self.assertEqual(len({entry.schema_id for entry in entries}), 30)
+        self.assertEqual(len({entry.prefix for entry in entries}), 30)
         for entry in entries:
-            self.assertEqual(entry.schema_version, "0.2.0")
+            self.assertEqual(entry.schema_version, "0.3.0" if entry.artifact_type in
+                ("implementation_plan", "plan_entry") else "0.2.0")
             schema = artifact_common_schema(entry.artifact_type)
             self.assertEqual(schema["$id"], entry.schema_id)
             self.assertEqual(schema["$schema"], "https://json-schema.org/draft/2020-12/schema")
@@ -310,7 +312,7 @@ class ArtifactSchemaRightTests(unittest.TestCase):
                         "from specroad.model.artifact_schemas import artifact_types,artifact_common_schema;"
                         "from specroad.storage.artifact_common import CommonArtifact;"
                         "r=CommonArtifact(sys.argv[2].encode());"
-                        "assert len(artifact_types())==28;assert r.validation_scope=='common_fields_only';"
+                        "assert len(artifact_types())==30;assert r.validation_scope=='common_fields_only';"
                         "assert artifact_common_schema('goal')['properties']['revision']['minimum']==1")
                 result = subprocess.run([sys.executable, "-I", "-S", "-B", "-c", code, str(location),
                                          artifact_bytes(common_artifact()).decode()], cwd=root,

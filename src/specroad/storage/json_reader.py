@@ -12,6 +12,7 @@ from ..model.errors import ModelError
 from ..model.configuration import (ProjectConfiguration, REQUIRED_FIELDS, OPTIONAL_FIELDS,
                                    SCHEMA_VERSION)
 from ..model.paths import PathClass
+from ..model.versions import PROJECT_SCHEMA_VERSIONS
 from .json_syntax import parse_json_object, _pointer
 
 
@@ -85,7 +86,7 @@ class JsonResource:
 def configuration_schema():
     return ResourceSchema("project_configuration", PathClass.CONFIGURATION,
                           REQUIRED_FIELDS | OPTIONAL_FIELDS, REQUIRED_FIELDS,
-                          validator=ProjectConfiguration)
+                          supported_versions=PROJECT_SCHEMA_VERSIONS, validator=ProjectConfiguration)
 
 
 def read_resource(source, path, schema):

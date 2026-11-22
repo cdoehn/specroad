@@ -106,7 +106,7 @@ class CapabilityScopeTests(unittest.TestCase):
 
     def test_schema_and_output_format_versions_do_not_enable_other_model_versions(self):
         identity = version_info()
-        self.assertEqual(identity['supported_schema_versions'], ['0.2.0'])
+        self.assertEqual(identity['supported_schema_versions'], ['0.2.0', '0.3.0'])
         for version in ('0.1.0', '0.2.1', '1.0', '1.0.0', '1.2.0', '2.0.0'):
             with self.subTest(version=version):
                 self.assertNotIn(version, identity['supported_schema_versions'])

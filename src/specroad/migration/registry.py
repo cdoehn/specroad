@@ -83,4 +83,6 @@ def builtin_registry():
     """Only the newly defined, frozen reference contract is registered."""
     from .builtin_path import registered_step
     step = registered_step()
-    return MigrationRegistry((step.source, step.target), (step,))
+    from .additive_path import registered_step as plan_step
+    added = plan_step()
+    return MigrationRegistry((step.source, step.target, added.target), (step, added))

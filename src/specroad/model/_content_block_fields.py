@@ -34,7 +34,7 @@ def _block_reference(value):
     kind, payload = value["block_kind"], value["payload"]
     prefixes = None
     if kind == "artifact_ref":
-        prefixes = tuple(t.prefix for t in artifact_types())
+        prefixes = tuple(t.prefix for t in artifact_types() if t.schema_version == "0.2.0")
     elif kind in ("query", "table") and payload.get("source") == "view":
         prefixes = ("VIEW",)
     elif kind == "include_document":

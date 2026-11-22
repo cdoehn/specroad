@@ -28,7 +28,8 @@ def apply_migration_plan(root, raw, *, expected_plan_sha256, expected_inputs_sha
     gates = tuple(gates)
     plan = ChangePlan(raw); authoring(plan)
     op = plan.data['operations'][0]
-    require(expected_target_version == '0.2.0' and expected_plan_sha256 == plan.sha256
+    require(expected_target_version in ('0.2.0', '0.3.0')
+        and expected_target_version == op['target_contract']['schema_version'] and expected_plan_sha256 == plan.sha256
         and expected_inputs_sha256 == op['inputs_sha256']
         and backup_source_files_sha256 == digest(op['source_files']), 'migration_execution_binding_changed')
     _transaction(transaction_id)

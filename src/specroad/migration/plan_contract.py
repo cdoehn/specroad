@@ -26,13 +26,13 @@ def inputs_schema():
         'requirement_mappings': arr(requirement), 'proposal_mappings': arr(proposal)})
 
 
-def migration_operation_schema():
+def migration_operation_schema(*, additive=True):
     contract = obj({'schema_version': text(), 'contract_sha256': hash_schema()})
     files = arr(obj({'path': text(), 'size': {'type': 'integer', 'minimum': 0},
                      'sha256': hash_schema()}))
     return obj({'op': {'const': 'schema_migrate'}, 'format_version': {'const': 'schema-migrate-v1'},
         'source_contract': contract, 'target_contract': contract,
-        'steps': arr(obj({'step_id': {'const': STEP}, 'source_contract': contract,
+        'steps': arr(obj({'step_id': ({'enum': [STEP, 'project02-to-plan03.v1']} if additive else {'const': STEP}), 'source_contract': contract,
             'target_contract': contract, 'direction': {'const': 'forward'}, 'reversible': {'const': False}})),
         'inputs': inputs_schema(), 'inputs_sha256': hash_schema(),
         'source_files': files, 'target_files': files,
@@ -72,9 +72,19 @@ def validate_migration_operation(value, pointer=''):
         validate_builtin(value, migration_operation_schema())
         validate_inputs(value['inputs'])
         _check(digest(value['inputs']) == value['inputs_sha256'], 'migration_inputs_hash_mismatch')
-        _check(value['source_contract'] == SOURCE_CONTRACT, 'migration_source_contract_mismatch')
-        _check(value['target_contract']['schema_version'] == '0.2.0', 'migration_target_version_mismatch')
-        expected = {'step_id': STEP, 'source_contract': SOURCE_CONTRACT,
+        source, step = SOURCE_CONTRACT, STEP
+        if value['target_contract']['schema_version'] == '0.3.0':
+            from .additive import source_contract, target_contract, STEP as PLAN_STEP
+            source, step = source_contract(), PLAN_STEP
+            _check(value['target_contract'] == target_contract(), 'migration_target_contract_changed')
+            _check(not value['result_ids'] and not value['new_required_fields']
+                and [r['path'] for r in value['changes']] == ['specroad.json'], 'additive_migration_change_set')
+            _check(value['protected_paths'] == sorted(r['path'] for r in value['source_files']
+                if r['path'] != 'specroad.json'), 'additive_migration_protected_paths')
+        else:
+            _check(value['target_contract']['schema_version'] == '0.2.0', 'migration_target_version_mismatch')
+        _check(value['source_contract'] == source, 'migration_source_contract_mismatch')
+        expected = {'step_id': step, 'source_contract': source,
             'target_contract': value['target_contract'], 'direction': 'forward', 'reversible': False}
         _check(value['steps'] == [expected], 'migration_path_mismatch')
         _check(not value['losses'], 'migration_loss_path_unsupported')

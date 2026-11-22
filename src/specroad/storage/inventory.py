@@ -12,7 +12,7 @@ from ..model.attachments import AttachmentDescriptor
 from ..model.errors import ModelError
 from ..model.hashes import canonical_json_sha256
 from ..model.paths import PathClass, artifact_path
-from ..model.versions import SCHEMA_VERSION
+from ..model.versions import SCHEMA_VERSION, PROJECT_SCHEMA_VERSIONS
 from .attachments import fingerprint_file, verify_attachments
 from .json_syntax import parse_json_object
 from .project import ProjectSource
@@ -28,9 +28,10 @@ def _read_json_entry(source, path):
     if kind is PathClass.ARTIFACT:
         from .legacy import legacy_artifact
         legacy = legacy_artifact(source, path, raw)
-    if legacy is None and value.get("schema_version") != SCHEMA_VERSION:
+    supported = PROJECT_SCHEMA_VERSIONS if kind is PathClass.CONFIGURATION else (SCHEMA_VERSION,)
+    if legacy is None and value.get("schema_version") not in supported:
         raise ModelError("unsupported_schema_version", path=path, pointer="/schema_version",
-                         highest_supported=SCHEMA_VERSION)
+                         highest_supported=supported[-1])
     kind = source.classify(path)
     if kind is PathClass.ARTIFACT:
         if legacy is None:

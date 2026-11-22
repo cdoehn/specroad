@@ -116,7 +116,7 @@ def test_synthetic_registry_cannot_register_an_unknown_product_source_contract()
     registry, _ = chain()
     verify_vectors(registry)
     product = builtin_registry()
-    assert len(product.steps) == 1 and product.steps[0].step_id == 'reference01-to-current.v1'
+    assert [s.step_id for s in product.steps] == ['reference01-to-current.v1', 'project02-to-plan03.v1']
     with pytest.raises(MigrationError) as caught:
         product.resolve(contract('0.1.0'), contract('0.2.0'))
     assert caught.value.reason == 'unknown_source'

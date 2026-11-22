@@ -9,7 +9,7 @@ from dataclasses import dataclass
 
 from ..model.artifact_schemas import validate_common_fields
 from ..model.errors import ModelError
-from ..model.paths import artifact_path
+from ..model.paths import validate_artifact_address
 from ..model.metadata_fields import METADATA_FIELDS
 from .artifact_common import CommonArtifact
 from .json_syntax import parse_json_object
@@ -69,7 +69,7 @@ def resolve_artifact_reference(reference, artifacts, *, id_prefix):
     for artifact in artifacts:
         raw = serialize_common_artifact(artifact)
         # This binds both actual type and configured project prefix.
-        artifact_path(artifact["artifact_type"], artifact["id"], id_prefix)
+        validate_artifact_address(artifact["artifact_type"], artifact["id"], id_prefix)
         identity = artifact["id"]
         if identity in seen:
             raise ModelError("duplicate_artifact_id")

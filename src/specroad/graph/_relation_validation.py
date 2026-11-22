@@ -6,7 +6,7 @@ from ..model.audit_values import Actor, UtcTimestamp
 from ..model.configuration import _json_values
 from ..model.errors import ModelError
 from ..model.metadata import validate_extensions
-from ..model.paths import artifact_path
+from ..model.paths import validate_artifact_address
 from ..model.relation_identity import relation_identity
 from .relation_types import require_relation_type
 
@@ -40,7 +40,7 @@ def _reference(value):
     if kind is None:
         raise ModelError("invalid_artifact_reference", pointer="/target")
     try:
-        artifact_path(kind, value, pieces[0])
+        validate_artifact_address(kind, value, pieces[0])
     except ModelError as error:
         raise ModelError("invalid_artifact_reference", pointer="/target") from error
 

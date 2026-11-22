@@ -3,13 +3,17 @@
 Filesystem classification, overlaps, execution policy and binding checks remain
 in validate_configuration. Exporting this schema does not grant write access.
 """
-from .versions import SCHEMA_VERSION
+from .versions import SCHEMA_VERSION, PROJECT_SCHEMA_VERSIONS
+from .errors import ModelError
 from .metadata_fields import extensions_schema
 
 SCHEMA_ID = "urn:specroad:schema:" + SCHEMA_VERSION + ":project-configuration"
 
 
-def configuration_json_schema():
+def configuration_json_schema(version=SCHEMA_VERSION):
+    if version not in PROJECT_SCHEMA_VERSIONS:
+        raise ModelError("unsupported_schema_version", pointer="/schema_version",
+                         highest_supported=PROJECT_SCHEMA_VERSIONS[-1])
     from .configuration import REQUIRED_FIELDS, OPTIONAL_FIELDS
     from .language_policy import language_policy_schema
     text = {"type": "string", "minLength": 1, "pattern": r"^(?=[\s\S]*\S)(?![\s\S]*\x00)"}
@@ -18,7 +22,7 @@ def configuration_json_schema():
         return {"type": "object", "properties": fields, "additionalProperties": False}
     fields = {name: {"type": "object"} for name in OPTIONAL_FIELDS}
     fields.update({
-        "schema_version": {"const": SCHEMA_VERSION},
+        "schema_version": {"const": version},
         "project_id": dict(text), "project_name": dict(text), "default_locale": dict(text),
         "id_prefix": {"type": "string", "pattern": r"^[A-Z][A-Z0-9]{1,7}(?![\s\S])"},
         "managed_paths": {"type": "array", "items": dict(text)},
@@ -40,7 +44,7 @@ def configuration_json_schema():
             "required": ["registry_id", "registry_version", "path", "sha256"]},
     })
     assert set(fields) == REQUIRED_FIELDS | OPTIONAL_FIELDS
-    return {"$schema": "https://json-schema.org/draft/2020-12/schema", "$id": SCHEMA_ID,
+    return {"$schema": "https://json-schema.org/draft/2020-12/schema", "$id": "urn:specroad:schema:" + version + ":project-configuration",
         "description": "Project configuration field contract; paths, duplicate bindings and safety policy require the Core validator.",
         "x-specroad-validation-scope": "configuration_fields_only",
         "type": "object", "required": sorted(REQUIRED_FIELDS), "properties": fields,

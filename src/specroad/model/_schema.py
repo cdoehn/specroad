@@ -20,7 +20,7 @@ _KEYWORDS = frozenset({
     "x-specroad-validation-scope", "x-specroad-merge", "type", "const", "enum", "required",
     "properties", "propertyNames", "additionalProperties", "items", "minLength", "minItems",
     "minimum", "maximum", "pattern", "anyOf", "allOf", "not", "format",
-    "default", "examples", "deprecated", "readOnly", "writeOnly", "dependentRequired",
+    "default", "examples", "deprecated", "readOnly", "writeOnly", "dependentRequired", "uniqueItems",
 })
 
 
@@ -101,6 +101,8 @@ def _check_vocabulary_uncached(schema):
                 raise ValueError("Invalid boolean schema annotation")
         if "examples" in node and type(node["examples"]) is not list:
             raise ValueError("Schema examples must be an array")
+        if "uniqueItems" in node and type(node["uniqueItems"]) is not bool:
+            raise ValueError("Unique-items assertion must be boolean")
         if "dependentRequired" in node:
             dependencies = node["dependentRequired"]
             if (type(dependencies) is not dict or
@@ -216,6 +218,8 @@ def validate_builtin(instance, schema):
             if len(value) < node.get("minItems", 0):
                 raise ModelError("schema_min_items", pointer=pointer)
             for index, item in enumerate(value):
+                if node.get("uniqueItems", False) and any(_json_equal(item, prior) for prior in value[:index]):
+                    raise ModelError("schema_unique_items", pointer=_pointer(pointer, index))
                 visit(item, node.get("items", True), _pointer(pointer, index), references)
         if type(value) is dict:
             for field in node.get("required", ()):

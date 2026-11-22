@@ -5,7 +5,7 @@ an interrupted enumeration. No graph closure, cache or output publication.
 """
 
 from ..model.errors import ModelError
-from ..model.paths import CURRENT_JSON_CLASSES, project_path
+from ..model.paths import CURRENT_JSON_CLASSES, PathClass, project_path
 from ..security.resource_access import directory_entries, resource_is_directory
 
 
@@ -42,6 +42,9 @@ def current_json_paths(source):
             child = project_path(path + "/" + name)
             if is_directory:
                 pending.append((child, False))
+            elif child.startswith("spec/implementation-plans/"):
+                source.classify(child)
+                raise ModelError("plan_markdown_reader_required", path=child)
             elif child.endswith(".json"):
                 if source.classify(child) not in CURRENT_JSON_CLASSES:
                     raise ModelError("unclassified_normative_json", path=child)

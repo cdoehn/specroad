@@ -35,7 +35,7 @@ def _nullable(schema):
 def _definitions():
     text = {"$ref": "#/$defs/text"}
     hash_value = {"type": "string", "pattern": r"^[0-9a-f]{64}(?![\s\S])"}
-    artifact = {"anyOf": [reference_schema(t.prefix) for t in artifact_types()]}
+    artifact = {"anyOf": [reference_schema(t.prefix) for t in artifact_types() if t.schema_version == "0.2.0"]}
     test = _nullable(reference_schema("TEST"))
     check = {"type": "string", "pattern": r"^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}(?![\s\S])"}
     scalar = {"anyOf": [{"type": t} for t in ("string", "number", "boolean", "null")]}

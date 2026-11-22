@@ -40,8 +40,8 @@ def budget_driven_clarification(source):
 def _plan_document(name):
     """Closed normative plan locations; never instructions, history or code."""
     return re.fullmatch(r'docs/implementation/(?:'
-        r'milestones/M(?:0[1-9]|1[0-9]|20)|'
-        r'supplements/(?:[1-9]|1[0-9]|20)-[a-z]|'
+        r'milestones/M(?:0[1-9]|1[0-9]|2[01])|'
+        r'supplements/(?:[1-9]|1[0-9]|2[01])-[a-z]|'
         r'decisions/[a-z0-9][a-z0-9-]*|'
         r'matrices/(?:Requirements|Verifikation|Szenarien|Regressionen|Uebergabe)|'
         r'rules/(?:Grundlagen|C_Abnahme)|audit/Audit_Nacharbeiten)\.md', name) is not None

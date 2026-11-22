@@ -35,7 +35,7 @@ class CapabilitiesWorkTests(unittest.TestCase):
         self.assertEqual(semantic['output_formats'], ['json', 'pretty'])
         self.assertNotIn('sarif', semantic['output_formats'])
         self.assertEqual(semantic['exchange_formats'], ['csv', 'ndjson', 'reqif', 'reqifz'])
-        self.assertEqual(semantic['supported_versions']['schema'], ['0.2.0'])
+        self.assertEqual(semantic['supported_versions']['schema'], ['0.2.0', '0.3.0'])
         self.assertEqual(semantic['supported_versions']['srx'], ['1.0'])
         self.assertEqual(semantic['supported_versions']['proposal'], ['0.2.0'])
         self.assertTrue(semantic['work']['engine_available'])
@@ -65,7 +65,7 @@ class CapabilitiesWorkTests(unittest.TestCase):
             self.assertEqual(outcome.exit_code, 0)
         identity, available, catalog = [outcome.as_dict()['result'] for outcome in outcomes]
         versions = available['semantic']['supported_versions']['schema']
-        self.assertEqual(versions, ['0.2.0'])
+        self.assertEqual(versions, ['0.2.0', '0.3.0'])
         self.assertEqual(identity['supported_schema_versions'], versions)
         model_rows = [row for row in catalog['schemas']
                       if row['category'] in ('artifact', 'configuration')]
@@ -287,7 +287,7 @@ class CapabilitiesRobustnessTests(unittest.TestCase):
                 result = run_python(['-I', '-S', '-B', str(target), 'capabilities', '--format=json'], project, capture=True)
                 self.assertEqual(result.returncode, 0, result.stderr)
                 semantic = json.loads(result.stdout)['result']['semantic']
-                self.assertEqual(semantic['supported_versions']['schema'], ['0.2.0'])
+                self.assertEqual(semantic['supported_versions']['schema'], ['0.2.0', '0.3.0'])
                 self.assertEqual(semantic['supported_versions']['srx'], ['1.0'])
                 self.assertIn('python.srx.evaluate', semantic['capability_ids'])
                 semantics.append(semantic)

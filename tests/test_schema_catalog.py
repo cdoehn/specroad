@@ -68,8 +68,8 @@ class SchemaCatalogWorkTests(unittest.TestCase):
     def test_category_counts_cover_every_entry(self):
         data = self.catalog.list()
         self.assertEqual(sum(data['categories'].values()), len(data['schemas']))
-        self.assertEqual(data['categories']['artifact'], 56)
-        self.assertEqual(data['categories']['configuration'], 1)
+        self.assertEqual(data['categories']['artifact'], 60)
+        self.assertEqual(data['categories']['configuration'], 2)
         self.assertEqual(data['categories']['exchange'], 2)
 
     def test_change_plan_resource_is_the_existing_structural_contract(self):

@@ -2,20 +2,26 @@
   "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [],
   "expected_exit_codes": [],
-  "fixture_ids": [],
-  "implementation_status": "open",
+  "fixture_ids": [
+    "SR-FIX-PLAN-MODEL-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [],
-  "method": "pending",
+  "method": "automated_behavior",
   "open_items": [
-    "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence.",
-    "IMPLEMENTATION-PLANS-791: current remaining owner 21.a; consolidate the exact existing technical gaps/original evidence in 21.v, integration in 21.w/x, final current release proof in 20.n. Existing normal-mode test references and original evidence are retained; new plan/Force/JSON behavior is not accepted by this documentation commit."
+    "21.a implementation and independent oracles are prepared; actual stage-specific Apply acceptance is pending. Dev executes no behavior tests.",
+    "Original contracts/evidence are retained. Remaining planned Markdown/graph/authoring integration and the independent platform, full-suite, release and human evidence remain required in the existing M21/M19/M20 sequence.",
+    "Bundle 792 created no commit (51 failures); the complete 21.a.W/R/C correction remains subject to its own sequential Apply gates."
   ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "`specroad config show` MUSS die effektive Konfiguration einschließlich Defaultwerten und der Herkunft jedes überschriebenen Wertes ausgeben.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "Native public config.show materializes the effective project configuration and known defaults, exposes every stored/default/CLI origin, checks source stability and performs no model load, write or profile-composition approval."
   },
-  "preconditions": [],
+  "preconditions": [
+    "Bundle 792 21.a.W: native compiled Core and independent synthetic input bytes; no production or human approval assumed.",
+    "Bundle 793 21.a.W: correction of the failed 792 gate; original identities, oracles and native live admission retained, no completed Apply acceptance assumed."
+  ],
   "primary_verification_id": "SR-VER-0001",
   "required_environment": {
     "declared_minimum_python": "3.10",
@@ -29,8 +35,16 @@
     "owned_temporary_files": true
   },
   "specification_sha256": "b9914d91dd85b67714d334326c7dcec61b76b81b8da9f35a4e64e39d6c48a9fd",
-  "steps": [],
+  "steps": [
+    "Execute the exact bound tests in this stage-specific Apply gate; compare owned bytes, typed identities, native diagnostics and side effects.",
+    "Run the bound original regressions and native init-to-migration integration in this commit gate; verify original bytes, rejection diagnostics and unchanged write/approval boundaries."
+  ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0009",
-  "test_ids": []
+  "test_ids": [
+    "tests/test_config_show.py::test_config_show_materializes_defaults_and_override_origins_without_model[argv-0.2.0]",
+    "tests/test_config_show.py::test_config_show_materializes_defaults_and_override_origins_without_model[argv-0.3.0]",
+    "tests/test_config_show.py::test_config_show_materializes_defaults_and_override_origins_without_model[mapping-0.2.0]",
+    "tests/test_config_show.py::test_config_show_materializes_defaults_and_override_origins_without_model[mapping-0.3.0]"
+  ]
 }

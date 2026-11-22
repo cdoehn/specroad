@@ -53,11 +53,13 @@ def recheck_migration_plan(raw, files, *, expected_target_version,
         require(value['metadata_policy_version'] == POLICY, 'migration_plan_required')
         op = value['operations'][0]
         require(plan.sha256 == expected_plan_sha256, 'migration_plan_request_changed', exit_code=6)
-        require(type(expected_target_version) is str and expected_target_version == '0.2.0'
+        require(type(expected_target_version) is str and expected_target_version in ('0.2.0', '0.3.0')
                 and op['target_contract']['schema_version'] == expected_target_version,
                 'migration_target_version_mismatch', exit_code=6)
         require(op['inputs_sha256'] == expected_inputs_sha256, 'migration_mapping_request_changed', exit_code=6)
-        require(op['target_contract'] == target_contract(), 'migration_target_contract_changed', exit_code=6)
+        from .additive import target_contract as plan_contract
+        contract = plan_contract() if expected_target_version == '0.3.0' else target_contract()
+        require(op['target_contract'] == contract, 'migration_target_contract_changed', exit_code=6)
         sources = owned_files(files, passive=True); binding = file_bindings(sources)
         require(binding == op['source_files'], 'migration_source_files_changed', exit_code=6)
         rebuilt = plan_migration(sources, inputs=op['inputs'], actor=value['actor'],

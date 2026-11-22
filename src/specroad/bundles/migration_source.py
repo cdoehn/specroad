@@ -50,7 +50,12 @@ def _source(files):
               'migration_backup_nested_project')
     # Retained passive operational bytes are not normative source resources,
     # portable receipts or authority. The source reader verifies all closure.
-    source = inventory_bytes({p: b for p, b in files.items() if not p.startswith('.specroad/')})
+    version = parse_json_object(files.get('specroad.json', b''), path='specroad.json').get('schema_version')
+    if version == '0.2.0':
+        from ..migration.current_source import inventory_bytes as current_inventory
+        source = current_inventory(files)
+    else:
+        source = inventory_bytes({p: b for p, b in files.items() if not p.startswith('.specroad/')})
     return files, source
 
 
@@ -59,7 +64,8 @@ def _metadata(files, source, tool_version):
             'migration_backup_tool_version')
     return {'backup_format_version': FORMAT, 'bundle_kind': 'migration_source',
         'read_only': True, 'project_id': source.data['project_id'], 'tool_version': tool_version,
-        'source_contract': {'contract_id': CONTRACT_ID, 'contract_version': CONTRACT_VERSION, **SOURCE_CONTRACT},
+        'source_contract': (source.source_contract if hasattr(source, 'source_contract') else
+            {'contract_id': CONTRACT_ID, 'contract_version': CONTRACT_VERSION, **SOURCE_CONTRACT}),
         'scope_descriptor': SCOPE, 'source_model_root_sha256': source.model_root_sha256,
         'source_files_sha256': digest(file_bindings(files))}
 

@@ -11,7 +11,7 @@ MODEL_SCHEMA_VERSION = "0.2.0"
 SRX_LANGUAGE_VERSION = "1.0"
 
 # Implemented Core model versions; result/request formats are separate.
-SUPPORTED_SCHEMA_VERSIONS = (MODEL_SCHEMA_VERSION,)
+SUPPORTED_SCHEMA_VERSIONS = (MODEL_SCHEMA_VERSION, "0.3.0")
 # Public Core evaluator support; this does not register a CLI command.
 SUPPORTED_SRX_VERSIONS = (SRX_LANGUAGE_VERSION,)
 PYTHON_CAPABILITY_IDS = ("python.structured-request", "python.srx.evaluate", "python.authoring.proposal")

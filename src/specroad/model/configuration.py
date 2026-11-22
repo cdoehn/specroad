@@ -16,7 +16,7 @@ from .numbers import number_from_token
 from .metadata import validate_extensions
 from .paths import PathClass, artifact_path, classify_path, project_path, _under
 
-from .versions import SCHEMA_VERSION
+from .versions import SCHEMA_VERSION, PROJECT_SCHEMA_VERSIONS
 REQUIRED_FIELDS = frozenset({
     "schema_version", "project_id", "project_name", "id_prefix", "default_locale",
     "managed_paths", "profiles", "generated_path", "validation_policy",
@@ -126,8 +126,8 @@ def validate_configuration(data):
     unknown = data.keys() - REQUIRED_FIELDS - OPTIONAL_FIELDS
     if unknown:
         raise ModelError("unknown_field", pointer="/" + sorted(unknown)[0])
-    if data["schema_version"] != SCHEMA_VERSION:
-        raise ModelError("unsupported_schema_version", pointer="/schema_version", highest_supported=SCHEMA_VERSION)
+    if data["schema_version"] not in PROJECT_SCHEMA_VERSIONS:
+        raise ModelError("unsupported_schema_version", pointer="/schema_version", highest_supported=PROJECT_SCHEMA_VERSIONS[-1])
     for field in ("project_id", "project_name", "default_locale"):
         _text(data[field], "/" + field)
     if not isinstance(data["id_prefix"], str) or not re.fullmatch(r"[A-Z][A-Z0-9]{1,7}", data["id_prefix"]):
@@ -182,7 +182,7 @@ def validate_configuration(data):
         raise ModelError("unsafe_project_declaration") from error
     from .configuration_schema import configuration_json_schema
     from ._schema import validate_builtin
-    validate_builtin(data, configuration_json_schema())
+    validate_builtin(data, configuration_json_schema(data["schema_version"]))
 
 
 @dataclass(frozen=True, init=False)

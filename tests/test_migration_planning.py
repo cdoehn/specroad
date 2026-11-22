@@ -224,7 +224,7 @@ def test_source_plan_uses_only_the_explicit_builtin_reference_path():
     files=vector_source(); result=plan_migration(files,inputs=target_inputs(files),**FIELDS)
     assert result.ready
     graph = builtin_registry()
-    assert len(graph.steps) == 1 and graph.steps[0].step_id == 'reference01-to-current.v1'
+    assert [s.step_id for s in graph.steps] == ['reference01-to-current.v1', 'project02-to-plan03.v1']
     assert graph.steps[0].source.contract_sha256 == result.data['source_contract']['contract_sha256']
 
 

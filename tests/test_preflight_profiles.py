@@ -174,7 +174,7 @@ def test_project_read_rejects_invalid_configuration_before_handler(tmp_path, cha
     assert result.exit_code == 3 and calls == []
     assert result.details['preflight']['normal_operation_started'] is False
     if change == 'version':
-        assert result.details['preflight']['model_error']['highest_supported'] == '0.2.0'
+        assert result.details['preflight']['model_error']['highest_supported'] == '0.3.0'
     assert inventory(tmp_path) == before
 
 

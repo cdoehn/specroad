@@ -35,6 +35,7 @@ def identity_metadata(schema_id):
         return None
     category_scopes = {"artifact-common": ("artifact", "common_fields_only"),
         "artifact-domain": ("artifact", "domain_fields_only"),
+        "artifact-plan": ("artifact", "plan_projection_fields_only"),
         "artifact-record": ("artifact", "record_fields_only"),
         "project-configuration": ("configuration", "configuration_fields_only"),
         CHANGE_PLAN_FAMILY: ("exchange", CHANGE_PLAN_SCOPE),
@@ -45,3 +46,5 @@ def identity_metadata(schema_id):
     return (parts[3], *category_scopes[family])
 
 RESULT_IDS += ('analyzer-descriptor-v1', 'analyzer-inputs-v1', 'analyzer-request-v1', 'analyzer-report-v1', 'analyzer-package-v1', 'analyzer-directory-v1', 'analyzer-inspection-v1')
+
+RESULT_IDS += ('config-show-v1',)

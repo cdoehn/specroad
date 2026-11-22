@@ -37,6 +37,10 @@ def _mapping_index(rows, originals, kind):
 
 
 def _plan(files, *, inputs, actor, planned_at, change_plan_id, request_id, target_version):
+    if target_version == '0.3.0':
+        from .additive import plan
+        return plan(files, inputs=inputs, actor=actor, planned_at=planned_at,
+            change_plan_id=change_plan_id, request_id=request_id, target_version=target_version)
     source = owned_files(files, passive=True)
     inputs = parsed(jcs(inputs)); validate_inputs(inputs)
     require(target_version == '0.2.0', 'migration_target_version_mismatch')
