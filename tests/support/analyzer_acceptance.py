@@ -17,7 +17,7 @@ from support.read_only import make_project
 from support.relations import aid
 from . import analyzer_runtimes
 from ._analyzer_worker_fixture import WORKER
-from test_acceptance_security import READ_GUARD
+from support.security_boundary import READ_GUARD
 
 runtime_factory = analyzer_runtimes.runtime_factory
 

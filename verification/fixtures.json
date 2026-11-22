@@ -1073,7 +1073,7 @@
       "kind": "Complete native kernel oracles, exact saved Work tasks and byte outcomes; fresh built module/PYZ, real optional relation-cache hit, profile/soft-window parity and kernel-isolated offline children. Synthetic host inputs grant no product approval."
     },
     "SR-FIX-ACCEPTANCE-OFFLINE-SECURITY-v1": {
-      "provider": "tests/support/network_isolation.py; tests/support/import_security.py; tests/support/_analyzer_worker_fixture.py; tests/test_acceptance_security.py; tests/test_acceptance_security_right.py",
+      "provider": "tests/support/network_isolation.py; tests/support/security_boundary.py; tests/support/import_security.py; tests/support/_analyzer_worker_fixture.py; tests/test_acceptance_security.py; tests/test_acceptance_security_right.py",
       "kind": "Real non-root Linux x86-64 kernel network filtering plus independent Python I/O attempt tripwires; native hostile input parsers, known offline analyzer packages and synthetic protected canaries/Git object state. No human/release approval or host configuration."
     }
   },

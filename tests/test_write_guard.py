@@ -1,6 +1,6 @@
 """Native complete writes and real crash boundaries; synthetic test authority."""
 import json
-import multiprocessing
+from support.write_guard_process import crash_process
 import os
 from pathlib import Path
 import pytest
@@ -75,10 +75,8 @@ def _crash(root,event):
 @pytest.mark.parametrize('event',['before_marker','marker_synced','staged:0','effect_replaced:0',
     'effect_synced:0','effect_replaced:1','effect_synced:1','receipt:transaction.json','receipts_synced','before_marker_unlink','marker_unlinked'])
 def test_process_loss_never_replays_or_unlocks_partial_write(tmp_path,event):
-    ctx=multiprocessing.get_context('fork')
-    child=ctx.Process(target=_crash,args=(str(tmp_path),event));child.start();child.join(20)
-    if child.is_alive():child.kill();child.join();pytest.fail('native crash test did not reach its boundary')
-    assert child.exitcode==91
+    child=crash_process('_crash',tmp_path,event)
+    assert child.returncode==91, child.stderr
     observed=inspect_write_state(tmp_path,expected_project_id='sample')
     assert observed['state']=='corrupted' and observed['manual_git_restore_required']
     before={p.relative_to(tmp_path).as_posix():p.read_bytes() for p in tmp_path.rglob('*') if p.is_file()}

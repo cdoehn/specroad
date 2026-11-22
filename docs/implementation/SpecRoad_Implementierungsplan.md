@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 415 · **Stand:** 21. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.103
+**Planrevision:** 416 · **Stand:** 22. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.103
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 306 Schritte und 918 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die ursprünglichen Positionen bleiben erhalten; ausdrücklich geänderte Ausführungsfolgen stehen im Fortschrittsblock und in den betroffenen Voraussetzungen; die früher genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wurde nach der damaligen Spezifikation innerhalb von 15.l.R vorgezogen und bleibt als normaler Prüfkern erhalten. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -288,12 +288,16 @@ fort. Die folgenden Zielwerte gelten erst nach dem jeweiligen Apply-Gate.
 
 Korrektur der offenen Folge 20.f/20.g: [Bundle 786](history/bundle-786-distribution-fixture.md). Zielwerte gelten erst nach dem jeweiligen erfolgreichen Apply-Gate.
 
+Korrektur 20.g.C und nachfolgende Python-/Distributionsmatrix: [Bundle 787](history/bundle-787-python-matrix.md). Zielwerte gelten erst nach dem jeweiligen erfolgreichen Apply-Gate.
+
+Korrektur des vollständigen offenen Rests und der fehlenden Fixture-Diagnose: [Bundle 788](history/bundle-788-nested-run-diagnostics.md). Apply-Abnahme bleibt erforderlich.
+
 ```yaml
-plan_revision: 415
+plan_revision: 416
 implementation_plan_commits_total: 918
-implementation_plan_commits_completed: 884
-last_completed_plan_commit: 20.g.R
-next_plan_commit: 20.g.C
+implementation_plan_commits_completed: 885
+last_completed_plan_commit: 20.g.C
+next_plan_commit: 20.h.W
 priority_off_plan: null
 next_off_plan_commit: null
 last_completed_numbered_bundle: 784

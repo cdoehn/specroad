@@ -604,3 +604,7 @@
 - [Bundle 785 – Work-/Cache-/Sandboxparität und Offline-Sicherheit](bundle-785-work-security.md)
 
 - [Bundle 786 — frisches Distributionsziel für 20.f und 20.g](bundle-786-distribution-fixture.md).
+
+- [Bundle 787 — Prozessabbruch-Harness und Python-/Distributionsmatrix](bundle-787-python-matrix.md).
+
+- [Bundle 788 — erhaltene Fehlerdiagnose und vollständiger offener Rest](bundle-788-nested-run-diagnostics.md).

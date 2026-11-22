@@ -5,6 +5,7 @@ import json
 import os
 from pathlib import Path
 import pytest
+from support.write_guard_process import crash_process
 from test_write_guard import setup,publish,FAILURES
 from support.publication import files,TRANSACTION,options,ALLOW
 from specroad.changes import (project_lock,publish_guarded_change,inspect_write_state,
@@ -237,7 +238,6 @@ def test_foreign_receipt_name_cannot_be_acknowledged(tmp_path,monkeypatch):
 
 
 def _sync_crash(root,part,when):
-    import multiprocessing
     from test_write_guard import setup,publish
     path=Path(root);_,_,check=setup(path);native=os.fsync
     def sync(fd):
@@ -254,11 +254,9 @@ def _sync_crash(root,part,when):
 @pytest.mark.parametrize('part',['pending.json','/staging/0.bin','transaction.json','committed.json'])
 @pytest.mark.parametrize('when',['before','after'])
 def test_real_process_loss_on_file_sync_never_uses_complete_bytes_as_release(tmp_path,part,when):
-    import multiprocessing
-    child=multiprocessing.get_context('fork').Process(target=_sync_crash,args=(str(tmp_path),part,when))
-    child.start();child.join(30)
-    if child.is_alive():child.kill();child.join();pytest.fail('sync crash boundary not reached')
-    assert child.exitcode==91 and inspect_write_state(tmp_path)['state']=='corrupted'
+    child=crash_process('_sync_crash',tmp_path,part,when)
+    assert child.returncode==91, child.stderr
+    assert inspect_write_state(tmp_path)['state']=='corrupted'
     before={p.relative_to(tmp_path).as_posix():p.read_bytes() for p in tmp_path.rglob('*') if p.is_file()}
     from specroad.changes.normal_access import require_normal_access
     from specroad.cli.contracts import CommandClass
@@ -290,11 +288,8 @@ def _snapshot_crash(directory,boundary):
 
 @pytest.mark.parametrize('boundary',['effect_unlinked','effect_synced'])
 def test_real_deletion_crash_preserves_backup_and_never_restores(tmp_path,boundary):
-    import multiprocessing
-    child=multiprocessing.get_context('fork').Process(target=_snapshot_crash,args=(str(tmp_path),boundary))
-    child.start();child.join(30)
-    if child.is_alive():child.kill();child.join();pytest.fail('delete crash boundary not reached')
-    assert child.exitcode==91
+    child=crash_process('_snapshot_crash',tmp_path,boundary)
+    assert child.returncode==91, child.stderr
     root=tmp_path/'project'
     assert inspect_write_state(root)['state']=='corrupted'
     before={p.relative_to(tmp_path).as_posix():p.read_bytes() for p in tmp_path.rglob('*') if p.is_file()}
@@ -343,11 +338,8 @@ def _directory_crash(root,part,when):
     'spec/goals','.specroad/requests','receipt_directory','marker_removal'])
 @pytest.mark.parametrize('when',['before','after'])
 def test_real_process_loss_on_directory_sync_preserves_quarantine(tmp_path,part,when):
-    import multiprocessing
-    child=multiprocessing.get_context('fork').Process(target=_directory_crash,args=(str(tmp_path),part,when))
-    child.start();child.join(30)
-    if child.is_alive():child.kill();child.join();pytest.fail('directory sync crash boundary not reached')
-    assert child.exitcode==91
+    child=crash_process('_directory_crash',tmp_path,part,when)
+    assert child.returncode==91, child.stderr
     before={p.relative_to(tmp_path).as_posix():p.read_bytes() for p in tmp_path.rglob('*') if p.is_file()}
     assert inspect_write_state(tmp_path)['state']=='corrupted'
     with pytest.raises(FAILURES):read_guarded_completion(tmp_path,TRANSACTION,expected_project_id='sample')

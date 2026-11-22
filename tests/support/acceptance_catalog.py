@@ -64,7 +64,13 @@ def seed(root, *, outcome='passed', regressions=False):
     assert code == 0 and collection['tests_run'] == 0
     target = root / 'build/evidence.json'
     run = execute(root, 'run_tests.py', ['--workers', '2', '--evidence', str(target)])
-    assert run.returncode == (0 if outcome == 'passed' else 1), run.stderr.decode(errors='replace')
+    assert run.returncode == (0 if outcome == 'passed' else 1), {
+        'returncode': run.returncode,
+        'stdout': run.stdout.decode(errors='replace'),
+        'stderr': run.stderr.decode(errors='replace'),
+        'evidence': (target.read_bytes().decode(errors='replace')
+                     if target.is_file() else None),
+    }
     report = json.loads(target.read_bytes())
     assert report['suite_passed'] is (outcome == 'passed') and report['tests_run'] == 4
     assert report['test_outcomes'][NATIVE_IDS[0]] == outcome
