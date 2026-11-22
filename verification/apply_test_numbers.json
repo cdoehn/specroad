@@ -30222,6 +30222,9 @@
     "tests/test_acceptance_python_matrix_right.py::test_unactivated_no_pip_environment_runs_the_same_distribution[pyz-3.11]",
     "tests/test_acceptance_python_matrix_right.py::test_unactivated_no_pip_environment_runs_the_same_distribution[pyz-3.12]",
     "tests/test_acceptance_python_matrix_right.py::test_unactivated_no_pip_environment_runs_the_same_distribution[pyz-3.13]",
-    "tests/test_acceptance_python_matrix_right.py::test_unactivated_no_pip_environment_runs_the_same_distribution[pyz-3.14]"
+    "tests/test_acceptance_python_matrix_right.py::test_unactivated_no_pip_environment_runs_the_same_distribution[pyz-3.14]",
+    "tests/test_runtime_history_contention.py::test_competing_finish_cannot_overtake_the_live_check_of_a_new_attempt",
+    "tests/test_runtime_history_contention.py::test_phase_validation_and_persistence_exclude_a_competing_writer",
+    "tests/test_runtime_history_contention.py::test_rejected_attempt_releases_its_transaction_without_creating_evidence"
   ]
 }

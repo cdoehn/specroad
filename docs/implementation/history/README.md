@@ -1,5 +1,7 @@
 # Entscheidungen und Ausführungsnachweise
 
+- [Bundle 790 — Prozess-/Journalreparatur und vollständiger C-Rest](bundle-790-process-journal.md)
+
 [Aktiver Fortschritt](../SpecRoad_Implementierungsplan.md). Die Reihenfolge der übernommenen Einträge bleibt erhalten. Fachliche Ergänzungen sind Bestandteil des Plans; historische Ausführungs- und Statusangaben begründen keinen aktuellen Erfolg und ändern keine heutige Test- oder Betriebsregel. Neue Berichte erhalten eine eigene kurze Datei und einen Link im betroffenen Schritt. Vorhandene Originalbelege werden nicht nachträglich umgeschrieben.
 
 - [Korrektur 618 — gebundene Fortsetzung von 17.j.R/C](001-korrektur-618-gebundene-fortsetzung-von-17-j-r-c.md)

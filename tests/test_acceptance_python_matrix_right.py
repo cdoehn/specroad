@@ -14,20 +14,8 @@ from support.transport_outbound import request, tree
 from support.transport_return import offline_export
 from test_proposal_basis import project
 from test_query_read_integration import COMMANDS, project_pair, request as read_request, arguments
-from test_acceptance_python_matrix import (MINORS, matrix_runtimes, matrix_distribution,
-    runtime_prefix, fresh_cli, runtime_evidence)
-
-
-def fresh_request(row, minor, source, cwd, value):
-    program = (NETWORK_ISOLATION + runtime_prefix(row, minor) + CORE_GUARD
-        + 'import json\nsys.path.insert(0,' + repr(str(source)) + ')\n'
-        + 'from specroad.cli.application import execute_request\n'
-        + 'result=execute_request(' + repr(value) + ').result\n'
-        + 'print(json.dumps(result.as_dict()))\n')
-    child = run_python(['-I', '-S', '-B', '-c', program], cwd,
-                       python=row['executable'], capture=True)
-    assert child.returncode == 0, child.stderr
-    return json.loads(child.stdout)
+from test_acceptance_python_matrix import matrix_runtimes, matrix_distribution
+from support.python_matrix import MINORS, runtime_prefix, fresh_cli, runtime_evidence, fresh_request
 
 
 @pytest.mark.parametrize('minor', MINORS)

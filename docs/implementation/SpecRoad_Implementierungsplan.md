@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 418 · **Stand:** 22. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.103
+**Planrevision:** 419 · **Stand:** 22. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.103
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 306 Schritte und 918 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die ursprünglichen Positionen bleiben erhalten; ausdrücklich geänderte Ausführungsfolgen stehen im Fortschrittsblock und in den betroffenen Voraussetzungen; die früher genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wurde nach der damaligen Spezifikation innerhalb von 15.l.R vorgezogen und bleibt als normaler Prüfkern erhalten. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -294,15 +294,17 @@ Korrektur des vollständigen offenen Rests und der fehlenden Fixture-Diagnose: [
 
 Korrektur der nativen Validierungsfälle und vollständiger Matrixrest: [Bundle 789](history/bundle-789-validation-matrix.md). Die Zielzähler benötigen eigene Apply-Gates.
 
+Prozess-/Journalreparatur des offenen C-Rests: [Bundle 790](history/bundle-790-process-journal.md). W/R sind bestätigt; C benötigt sein eigenes Apply-Gate.
+
 ```yaml
-plan_revision: 418
+plan_revision: 420
 implementation_plan_commits_total: 918
-implementation_plan_commits_completed: 887
-last_completed_plan_commit: 20.h.R
-next_plan_commit: 20.h.C
+implementation_plan_commits_completed: 888
+last_completed_plan_commit: 20.h.C
+next_plan_commit: 20.i.W
 priority_off_plan: null
 next_off_plan_commit: null
-last_completed_numbered_bundle: 784
+last_completed_numbered_bundle: 790
 implementation_state: in_progress
 prioritized_group_order: [20.a, 20.c, 20.e, 20.f, 20.g, 20.h, 20.i, 20.j, 20.m, 19.t, 19.y, 20.b, 20.d, 20.k, 20.l, 20.n]
 deferred_return_after: 20.m.C

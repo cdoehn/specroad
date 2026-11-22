@@ -5,7 +5,6 @@ for byte. This module never runs clients during import or collection.
 """
 import errno
 import json
-import multiprocessing
 import os
 from pathlib import Path
 import signal
@@ -18,6 +17,7 @@ from specroad.changes.receipt_values import request_receipt_path, transaction_re
 from specroad.cli.contracts import CommandClass
 from support.read_only import inventory, no_write_attempts
 from test_snapshot_guard import scenario, FAILURES
+from support.write_fault_process import native_call, fault_process
 
 CLIENTS = ('change', 'migration', 'merge')
 BOUNDARIES = ('before_lock', 'before_marker', 'marker_synced', 'staged', 'effect',
@@ -31,7 +31,8 @@ def client(directory, kind):
     if kind != 'change':
         root, before, plan, args, target, apply = scenario(directory, kind)
         project_id = json.loads(before['specroad.json'])['project_id']
-        return root, before, target, plan.data['request_id'], args['transaction_id'], project_id, lambda: apply(root, plan, args)
+        run = native_call(directory, kind, root, plan, args, lambda: apply(root, plan, args))
+        return root, before, target, plan.data['request_id'], args['transaction_id'], project_id, run
     from test_write_guard import setup, publish
     from support.folds import create, edit, goal
     from support.targets import plan as make_plan, ACTOR, TIME, POLICY
@@ -43,7 +44,8 @@ def client(directory, kind):
     check = prepare_publication_check(plan, model, policy=POLICY)
     before = dict(model.source_files)
     target = {**before, **{d.path: d.content for d in check.request.documents}}
-    return root, before, target, plan.data['request_id'], TRANSACTION, 'sample', lambda: publish(root, check).data
+    run = native_call(directory, kind, root, plan, {}, lambda: publish(root, check).data, before=before)
+    return root, before, target, plan.data['request_id'], TRANSACTION, 'sample', run
 
 
 def points(boundary, before, target, request):
@@ -92,11 +94,12 @@ def execute(run, point, fault):
 
 
 def child(run, point, fault):
-    process = multiprocessing.get_context('fork').Process(target=execute, args=(run, point, fault))
-    process.start(); process.join(60)
-    if process.is_alive():
-        process.kill(); process.join(); pytest.fail('Native client did not reach its selected boundary')
-    assert process.exitcode == (-signal.SIGKILL if fault == 'kill' else 83)
+    process = fault_process(run, point, fault)
+    assert process.returncode == (-signal.SIGKILL if fault == 'kill' else 83), {
+        'point': point, 'fault': fault, 'returncode': process.returncode,
+        'stdout': process.stdout.decode(errors='replace'),
+        'stderr': process.stderr.decode(errors='replace'),
+    }
 
 
 def assert_preserved(root, before, target, point, fault, request, transaction, project):

@@ -123,6 +123,10 @@ class RuntimeHistory:
         if not all(type(v) is str and v for v in (node, identity, worker)):
             raise ValueError('A native test identity is required before execution')
         with self.db:
+            # Reserve the short write transaction before reading its bound
+            # run/attempt state. Another writer cannot finish or move that
+            # state between validation and persistence.
+            self.db.execute('BEGIN IMMEDIATE')
             state = self.db.execute('SELECT finished FROM runs WHERE id=?', (run,)).fetchone()
             if state != (None,):
                 raise ValueError('A live runtime attempt requires an unfinished run')
@@ -141,6 +145,7 @@ class RuntimeHistory:
 
     def observe(self, run, node, identity, worker, phase, duration, outcome, *, subtest=False):
         with self.db:
+            self.db.execute('BEGIN IMMEDIATE')
             row = self.db.execute('SELECT id,test,worker FROM attempts WHERE run=? AND node=? ORDER BY (worker=?) DESC,id DESC LIMIT 1',
                                   (run, node, worker)).fetchone()
             if row is None:

@@ -21,6 +21,7 @@ from test_snapshot_guard import scenario, FAILURES
 
 from support.write_faults import (CLIENTS, BOUNDARIES, FAULTS, client, points,
     expected_prefix, execute, child, assert_preserved)
+from support.write_fault_process import restart_call
 
 
 @pytest.mark.parametrize('kind', CLIENTS)
@@ -50,7 +51,7 @@ def test_real_kill_then_full_fresh_git_checkout_never_unlocks_original(tmp_path,
     from test_git_restart import saved_project
     from support.git_restart import project_files, checkout, new_write
     root = tmp_path / 'original'; commit, saved = saved_project(root)
-    child(lambda: new_write(root, 'interrupted', 'interrupted', 'Unconfirmed write'), point, 'kill')
+    child(restart_call(root, 'interrupted', 'interrupted', 'Unconfirmed write'), point, 'kill')
     retained = inventory(root)
     fresh = checkout(root, tmp_path / 'fresh', commit)
     assert project_files(fresh) == saved
