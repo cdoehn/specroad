@@ -1,0 +1,3013 @@
+{
+  "criteria": [
+    "Read the original text and its intended language; check natural grammar, clear meaning and correct language label.",
+    "For a long case, confirm that it is an independently phrased, understandable requirement (80–500 Unicode codepoints). Short technical cases are assessed separately.",
+    "Record ambiguity, incorrect labels, source or usage concerns as a correction or rejection with a concrete note. A replacement suggestion does not change the original.",
+    "Do not accept a text solely because a detector classifies it conveniently. This review is independent of model scores."
+  ],
+  "format_version": 1,
+  "id": "language-corpus",
+  "items": [
+    {
+      "criteria": [],
+      "id": "de-L01",
+      "metadata": {
+        "intended_language": "de",
+        "partition": "long",
+        "text_sha256": "6e0140fe0597d103fec658c54fe79b7b707eb79129e25fcd93592af22e8a1843"
+      },
+      "required_note": false,
+      "section": "de",
+      "text": "Wenn eine gespeicherte Suche erneut geöffnet wird, muss die Anwendung alle zuvor gewählten Filter wiederherstellen und die Ergebnisse anhand des aktuellen Datenbestands neu berechnen.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "de-L02",
+      "metadata": {
+        "intended_language": "de",
+        "partition": "long",
+        "text_sha256": "b3b3844963bc6705e13c184911573dd060c983fc0c65d73627b444ebe3df1951"
+      },
+      "required_note": false,
+      "section": "de",
+      "text": "Der Dokumentendienst muss beim Hochladen einer Datei deren vollständigen Inhalt prüfen und einen fehlgeschlagenen Upload so melden, dass kein unvollständiges Dokument als verfügbar erscheint.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "de-L03",
+      "metadata": {
+        "intended_language": "de",
+        "partition": "long",
+        "text_sha256": "30c7f95b51850119a39cbce35829889a052a3ad6579f8a2c70de342ae10e9b2e"
+      },
+      "required_note": false,
+      "section": "de",
+      "text": "Nach dem Widerruf einer Leseberechtigung muss das System den nächsten Zugriff auf das betroffene Dokument ablehnen, auch wenn der Benutzer die Dokumentübersicht bereits geöffnet hat.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "de-L04",
+      "metadata": {
+        "intended_language": "de",
+        "partition": "long",
+        "text_sha256": "8faed75e1a6be9bf6165792a39f96da9b8376f52e0fb9fe7fecef5f6b3f42f20"
+      },
+      "required_note": false,
+      "section": "de",
+      "text": "Die Exportfunktion muss sämtliche ausgewählten Datensätze in ihrer festgelegten Reihenfolge ausgeben und für jeden Datensatz dessen unveränderte fachliche Kennung erhalten.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "de-L05",
+      "metadata": {
+        "intended_language": "de",
+        "partition": "long",
+        "text_sha256": "8e9d9ba70f533219846605856bb0388a55838e40437d01b698796077bd97c516"
+      },
+      "required_note": false,
+      "section": "de",
+      "text": "Wird eine Verbindung während der Übertragung unterbrochen, muss die Anwendung bereits bestätigte Daten erhalten und vor dem Fortsetzen den letzten bestätigten Übertragungsstand ermitteln.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "de-L06",
+      "metadata": {
+        "intended_language": "de",
+        "partition": "long",
+        "text_sha256": "6666873951aba43d97f4471e7c65974a183a56f42c68bb015e20db6b770058fd"
+      },
+      "required_note": false,
+      "section": "de",
+      "text": "Wenn seit dem Öffnen eines Eintrags eine andere Änderung bestätigt wurde, darf das System die neue Bearbeitung nicht als aktuellen Stand übernehmen. Es muss den inzwischen bestätigten Stand und die zurückgewiesene Bearbeitung getrennt erhalten.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "de-L07",
+      "metadata": {
+        "intended_language": "de",
+        "partition": "long",
+        "text_sha256": "cb6e713463d166ce6862007dce8e6422a7b85a3982252c2cc788779070858cb1"
+      },
+      "required_note": false,
+      "section": "de",
+      "text": "Die Kalenderansicht muss Termine in der vom Benutzer gewählten Zeitzone anzeigen und beim Wechsel der Zeitzone den tatsächlichen Zeitpunkt jedes gespeicherten Termins unverändert lassen.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "de-L08",
+      "metadata": {
+        "intended_language": "de",
+        "partition": "long",
+        "text_sha256": "53edbd1d2d94074aa87294a700ded4464d08dea119d60fded648a95da3c964dc"
+      },
+      "required_note": false,
+      "section": "de",
+      "text": "Bei der Wiederherstellung einer Sicherung muss der Dienst vor dem Ersetzen vorhandener Daten prüfen, ob die Sicherung vollständig ist und zu der ausgewählten Projektkennung gehört.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "de-L09",
+      "metadata": {
+        "intended_language": "de",
+        "partition": "long",
+        "text_sha256": "de2cc245d685a4186b9d3c75377421ec85f97ace58817cff769ab3c878845d9f"
+      },
+      "required_note": false,
+      "section": "de",
+      "text": "Die Suchfunktion muss auch Dokumente finden, deren Titel diakritische Zeichen enthält, und im Suchergebnis den ursprünglichen Titel ohne Vereinfachung oder Ersetzung der Zeichen ausgeben.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "de-L10",
+      "metadata": {
+        "intended_language": "de",
+        "partition": "long",
+        "text_sha256": "88c495185a88332a14e4da314615b965365ab4c841c07f9cb6a31bd56593a57b"
+      },
+      "required_note": false,
+      "section": "de",
+      "text": "Ein abgebrochener Druckauftrag muss in der Auftragsliste als abgebrochen erhalten bleiben und darf nach einem Neustart des Druckdienstes nicht ohne erneute Beauftragung ausgeführt werden.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "de-L11",
+      "metadata": {
+        "intended_language": "de",
+        "partition": "long",
+        "text_sha256": "f967dcc2ef109085e76dcb0de90b32df3605e91e9c8cd3144eadf4271e84c7a8"
+      },
+      "required_note": false,
+      "section": "de",
+      "text": "Der Benachrichtigungsdienst muss für jede Nachricht festhalten, ob sie erfolgreich an den vereinbarten Zustelldienst übergeben wurde, ohne eine solche Übergabe als Lesebestätigung auszugeben.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "de-L12",
+      "metadata": {
+        "intended_language": "de",
+        "partition": "long",
+        "text_sha256": "250eca1d952246108c6fd69cd20730545cab86d9e1d9a3b35047c9bf83f732db"
+      },
+      "required_note": false,
+      "section": "de",
+      "text": "Die Anwendung muss eine ungültige Datumsangabe vor dem Speichern zurückweisen und die übrigen Eingaben im Formular erhalten, damit der Benutzer ausschließlich die fehlerhafte Angabe korrigieren kann.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "de-L13",
+      "metadata": {
+        "intended_language": "de",
+        "partition": "long",
+        "text_sha256": "7ab072efa83a3becf48f837a1286c7dff8846a39689c40431090e232d605e1f5"
+      },
+      "required_note": false,
+      "section": "de",
+      "text": "Beim Entfernen eines Mitglieds aus einer Arbeitsgruppe muss das System dessen ausschließlich aus dieser Gruppe abgeleitete Zugriffsrechte entziehen und unabhängig vergebene Rechte erhalten.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "de-L14",
+      "metadata": {
+        "intended_language": "de",
+        "partition": "long",
+        "text_sha256": "bf0818f364dd08f210488394ff419aafd01c6f2eba22e30e2c9bd33731e83a61"
+      },
+      "required_note": false,
+      "section": "de",
+      "text": "Der Dateivergleich muss leere Dateien von fehlenden Dateien unterscheiden und beide Zustände im maschinenlesbaren Vergleichsergebnis mit eindeutigen unterschiedlichen Werten darstellen.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "de-L15",
+      "metadata": {
+        "intended_language": "de",
+        "partition": "long",
+        "text_sha256": "1d453d4495db990a18f790208c2595c15d34357b33741b4540d919dcaa4801bf"
+      },
+      "required_note": false,
+      "section": "de",
+      "text": "Wenn ein Hintergrundauftrag sein Speicherlimit erreicht, muss der Dienst den noch offenen Arbeitsumfang melden und darf die ausgelassenen Datensätze nicht als erfolgreich verarbeitet zählen.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "de-L16",
+      "metadata": {
+        "intended_language": "de",
+        "partition": "long",
+        "text_sha256": "f24951cdf1597adc581c2d4e5dbca486654a49cb4558089cab78f10d227abfb6"
+      },
+      "required_note": false,
+      "section": "de",
+      "text": "Die Änderungsübersicht muss für jede bestätigte Bearbeitung die betroffene Objektkennung, die Vorgängerversion und die entstandene Version enthalten, damit die Reihenfolge nachvollziehbar bleibt.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "de-L17",
+      "metadata": {
+        "intended_language": "de",
+        "partition": "long",
+        "text_sha256": "2f879605a6cd19a1d00e96b289860b5a96932dd7a4e284d90f94468c46a743c8"
+      },
+      "required_note": false,
+      "section": "de",
+      "text": "Ein Benutzer muss einen gespeicherten Entwurf unter einer neuen Kennung kopieren können, wobei die ursprüngliche Fassung und ihre bisherige Änderungshistorie unverändert erhalten bleiben.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "de-L18",
+      "metadata": {
+        "intended_language": "de",
+        "partition": "long",
+        "text_sha256": "29572b175f13682b9ff08bea25a2ef4b9e76c8814df54c36e906477379a6245c"
+      },
+      "required_note": false,
+      "section": "de",
+      "text": "Der Importdienst muss doppelte Kennungen innerhalb derselben Eingabedatei vor der Übernahme erkennen und die betroffenen Zeilen melden, ohne eine der beiden Zeilen stillschweigend zu bevorzugen.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "de-L19",
+      "metadata": {
+        "intended_language": "de",
+        "partition": "long",
+        "text_sha256": "8e00af37dfe082e01f5105853e018141f9e04431bbdaef32d2bd7aab23aa0ec1"
+      },
+      "required_note": false,
+      "section": "de",
+      "text": "Die Anwendung muss den Umfang einer geplanten Massenänderung vor ihrer Bestätigung berechnen und darf bei der Ausführung keine zusätzlichen, zuvor nicht ausgewählten Objekte verändern.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "de-L20",
+      "metadata": {
+        "intended_language": "de",
+        "partition": "long",
+        "text_sha256": "41fed0d9f6c11c84aaa043cea0ab0aa446cc1c492a2391e942ac46ae80e900e1"
+      },
+      "required_note": false,
+      "section": "de",
+      "text": "Nach einer erfolgreichen Abmeldung muss der Dienst weitere Anfragen mit der beendeten Sitzung zurückweisen und dabei noch nicht bestätigte Änderungen eindeutig von gespeicherten Änderungen unterscheiden.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "de-S01",
+      "metadata": {
+        "intended_language": "de",
+        "partition": "short_technical",
+        "text_sha256": "ead42095f04e06828ae981923b705ede374ec3651766ebcbd19464f6b531e031"
+      },
+      "required_note": false,
+      "section": "de",
+      "text": "Die Antwort muss die Kennung unverändert enthalten.",
+      "title": "Short / technical case"
+    },
+    {
+      "criteria": [],
+      "id": "de-S02",
+      "metadata": {
+        "intended_language": "de",
+        "partition": "short_technical",
+        "text_sha256": "fe3c6bcd15f2dd8929e5222e9cc8771a9345d3a3556c4da350cb707baf76bece"
+      },
+      "required_note": false,
+      "section": "de",
+      "text": "Bei leerer Eingabe muss der Dienst einen Fehler melden.",
+      "title": "Short / technical case"
+    },
+    {
+      "criteria": [],
+      "id": "de-S03",
+      "metadata": {
+        "intended_language": "de",
+        "partition": "short_technical",
+        "text_sha256": "2acfc4b2737e6a9e98a02f4f9495abfe56b1c2c5acdbd9203280ea2d0dca2ce1"
+      },
+      "required_note": false,
+      "section": "de",
+      "text": "Der Port muss zwischen 1024 und 65535 liegen.",
+      "title": "Short / technical case"
+    },
+    {
+      "criteria": [],
+      "id": "de-S04",
+      "metadata": {
+        "intended_language": "de",
+        "partition": "short_technical",
+        "text_sha256": "7ea7cc2712fbdce6e4121ef94ffa5974ad921b7c78d9df63376a27edc04e0889"
+      },
+      "required_note": false,
+      "section": "de",
+      "text": "UTF-8 bleibt das vorgeschriebene Austauschformat.",
+      "title": "Short / technical case"
+    },
+    {
+      "criteria": [],
+      "id": "de-S05",
+      "metadata": {
+        "intended_language": "de",
+        "partition": "short_technical",
+        "text_sha256": "9d6595056ff7b7072b0dbb1bf9aeb4a323c1e0e08561b5c2d39380ac3073b5af"
+      },
+      "required_note": false,
+      "section": "de",
+      "text": "Ein Timeout darf keinen Erfolg erzeugen.",
+      "title": "Short / technical case"
+    },
+    {
+      "criteria": [],
+      "id": "en-L01",
+      "metadata": {
+        "intended_language": "en",
+        "partition": "long",
+        "text_sha256": "481e5b0ebb703749fb14b75b665c80038b364bc1f8d4b35541d3336b797abbd8"
+      },
+      "required_note": false,
+      "section": "en",
+      "text": "When a reservation is cancelled, the booking service must release the reserved equipment only after the cancellation has been stored successfully, so that a failed update cannot create overlapping reservations.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "en-L02",
+      "metadata": {
+        "intended_language": "en",
+        "partition": "long",
+        "text_sha256": "dc7e3a86d4156fe702f7233b65e94f8c7163247ab34da4ffc7cc78e12dd94569"
+      },
+      "required_note": false,
+      "section": "en",
+      "text": "The map viewer must retain the selected layer and its visibility setting when the user changes the zoom level, without replacing the selected layer with the default layer.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "en-L03",
+      "metadata": {
+        "intended_language": "en",
+        "partition": "long",
+        "text_sha256": "1c95e2e6326006f1941a9406b55237703a0fa25830d6d319438f38b197a0162f"
+      },
+      "required_note": false,
+      "section": "en",
+      "text": "If a sensor stops reporting measurements, the dashboard must show the time of the last received sample and distinguish missing measurements from measurements whose recorded value is zero.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "en-L04",
+      "metadata": {
+        "intended_language": "en",
+        "partition": "long",
+        "text_sha256": "fb017c3c207afb5f62f0e555579c1c42d3b4fb4709a2e7bef76837b17c9b4cdf"
+      },
+      "required_note": false,
+      "section": "en",
+      "text": "The queue processor must acknowledge a submitted job only after its input has been stored durably, allowing the caller to distinguish accepted work from a request that was never accepted.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "en-L05",
+      "metadata": {
+        "intended_language": "en",
+        "partition": "long",
+        "text_sha256": "a86bbdb2a75a0187e42388e6856cd2ba8c83873e8e06d74e210b33a0d2649957"
+      },
+      "required_note": false,
+      "section": "en",
+      "text": "The media catalogue must preserve the original spelling of every contributor name during export and import, including punctuation, spaces and characters outside the basic Latin alphabet.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "en-L06",
+      "metadata": {
+        "intended_language": "en",
+        "partition": "long",
+        "text_sha256": "d35a3532783629a3ef3b5077af1f90d308686afc5dede98c8b9ff40ead87d4c9"
+      },
+      "required_note": false,
+      "section": "en",
+      "text": "When the user restores a deleted folder, the application must report any conflicting destination names before moving files and must leave the existing destination files unchanged.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "en-L07",
+      "metadata": {
+        "intended_language": "en",
+        "partition": "long",
+        "text_sha256": "ffb04365a98db288f1478b572d26de40e80e1d2ccb5446d388bfd7bc903fa1b7"
+      },
+      "required_note": false,
+      "section": "en",
+      "text": "The inventory service must reject an item transfer when the requested quantity exceeds the available quantity and must preserve both location balances when the transfer is rejected.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "en-L08",
+      "metadata": {
+        "intended_language": "en",
+        "partition": "long",
+        "text_sha256": "96aafffa66ef9992316c8b98b6597c1a2202243d6eae5831a7648269be4190ea"
+      },
+      "required_note": false,
+      "section": "en",
+      "text": "The annotation editor must associate each saved comment with the document version that was displayed when the comment was created, rather than silently attaching it to a later version.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "en-L09",
+      "metadata": {
+        "intended_language": "en",
+        "partition": "long",
+        "text_sha256": "4c27ee346d9f498918b1aa75c4eba7122b71ca6ef05b8e0fd5b6eb06fc389481"
+      },
+      "required_note": false,
+      "section": "en",
+      "text": "After a device changes its display language, the settings service must retain the device identifier and previously stored configuration values without translating identifiers used for communication.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "en-L10",
+      "metadata": {
+        "intended_language": "en",
+        "partition": "long",
+        "text_sha256": "8c3b8a73adb214d32bf39be60d35dea438afafbb3f871dfefb615c86d3af3f82"
+      },
+      "required_note": false,
+      "section": "en",
+      "text": "The build dashboard must distinguish a job that completed successfully from a job that was cancelled before execution, even when neither job produced diagnostic messages.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "en-L11",
+      "metadata": {
+        "intended_language": "en",
+        "partition": "long",
+        "text_sha256": "49fc0ae39586f45bc5d1ee8ca43a671fae812be8526e6568b6f8220ce4f51ae3"
+      },
+      "required_note": false,
+      "section": "en",
+      "text": "The image processing service must preserve the original input file when processing fails and must identify any incomplete output as unavailable for subsequent processing steps.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "en-L12",
+      "metadata": {
+        "intended_language": "en",
+        "partition": "long",
+        "text_sha256": "d2071b16b10fc75c0bd66b8900f8407815984ba1cc013c79f82f031d718fc33a"
+      },
+      "required_note": false,
+      "section": "en",
+      "text": "When a report contains no matching records, the report generator must produce an explicit empty result with the applied filters, rather than reuse rows from the previous report.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "en-L13",
+      "metadata": {
+        "intended_language": "en",
+        "partition": "long",
+        "text_sha256": "d8c6198a7fde5771323e818125cef6c22533deed4ffce5ffb13aaff02d68815c"
+      },
+      "required_note": false,
+      "section": "en",
+      "text": "The equipment register must record the effective date of each location change and allow a reader to determine the recorded location at a requested date without modifying the change history.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "en-L14",
+      "metadata": {
+        "intended_language": "en",
+        "partition": "long",
+        "text_sha256": "bfc1d04368ef0920fe4a945b6e2d5d172a7ee5e718cdc4536260da0df543a521"
+      },
+      "required_note": false,
+      "section": "en",
+      "text": "The application must allow a user to copy a table cell containing line breaks and must preserve those line breaks when the copied value is pasted into a compatible plain text editor.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "en-L15",
+      "metadata": {
+        "intended_language": "en",
+        "partition": "long",
+        "text_sha256": "989150a6f33a32aa5022b0483c1e32d7dc49a382a19e214c287b9a303f4159ff"
+      },
+      "required_note": false,
+      "section": "en",
+      "text": "If a configuration file contains an unknown required option, the service must reject that configuration before accepting jobs and identify the unsupported option in its structured diagnostic result.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "en-L16",
+      "metadata": {
+        "intended_language": "en",
+        "partition": "long",
+        "text_sha256": "a972c9b290d6727da9237b3c37e47664b3d02dc09085fbc148eb7e53ef211551"
+      },
+      "required_note": false,
+      "section": "en",
+      "text": "The synchronisation service must verify the complete content hash of a received file before replacing the local version, and a failed verification must leave the local version intact.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "en-L17",
+      "metadata": {
+        "intended_language": "en",
+        "partition": "long",
+        "text_sha256": "bc843177a5df3bf6e00c4c31e1fa306361d684629d521658b144a259f05aad3f"
+      },
+      "required_note": false,
+      "section": "en",
+      "text": "The test scheduler must retain the outcome of each completed attempt under its own attempt identifier, so that a later retry cannot overwrite the recorded outcome of an earlier attempt.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "en-L18",
+      "metadata": {
+        "intended_language": "en",
+        "partition": "long",
+        "text_sha256": "786c8b2d34bdcc9d1eff78a7292382840af99eb13e1ff7a9d4d5bca5173eeeb4"
+      },
+      "required_note": false,
+      "section": "en",
+      "text": "When a user changes the order of dashboard panels, the application must save the new order for that user while preserving the panel order stored for all other users.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "en-L19",
+      "metadata": {
+        "intended_language": "en",
+        "partition": "long",
+        "text_sha256": "1b99c079d3bcd4bfb64be86c77bccf6092e86fcfb153e71a236937e0e80702e8"
+      },
+      "required_note": false,
+      "section": "en",
+      "text": "The translation workspace must show which source revision each translated entry refers to and must mark the entry as requiring review when the source revision changes.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "en-L20",
+      "metadata": {
+        "intended_language": "en",
+        "partition": "long",
+        "text_sha256": "521c4ba7091cee705270c90b8867aa8bede5bf603b6ad9a06f262a56de900ea1"
+      },
+      "required_note": false,
+      "section": "en",
+      "text": "The attachment service must reject a request containing two different files with the same attachment identifier and return the conflicting identifier without storing either file.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "en-S01",
+      "metadata": {
+        "intended_language": "en",
+        "partition": "short_technical",
+        "text_sha256": "e3d8148108c610dd8c594447727840efbd9081bd3984d4fccf9ab3779f8d107d"
+      },
+      "required_note": false,
+      "section": "en",
+      "text": "The service must reject an empty identifier.",
+      "title": "Short / technical case"
+    },
+    {
+      "criteria": [],
+      "id": "en-S02",
+      "metadata": {
+        "intended_language": "en",
+        "partition": "short_technical",
+        "text_sha256": "dd78301d2c0479da7c218dcdbf98e7c85e89df920a8794778d5c4b00ffd768b4"
+      },
+      "required_note": false,
+      "section": "en",
+      "text": "Retain the original SHA-256 value.",
+      "title": "Short / technical case"
+    },
+    {
+      "criteria": [],
+      "id": "en-S03",
+      "metadata": {
+        "intended_language": "en",
+        "partition": "short_technical",
+        "text_sha256": "bf592c3ad100b09d966c9245f5201010a47e6c69f3648220ecf8a6f6d0835ca9"
+      },
+      "required_note": false,
+      "section": "en",
+      "text": "The retry count must not exceed three.",
+      "title": "Short / technical case"
+    },
+    {
+      "criteria": [],
+      "id": "en-S04",
+      "metadata": {
+        "intended_language": "en",
+        "partition": "short_technical",
+        "text_sha256": "b27c421127940fd0727993c0b5b4509c14035ae196d3ec69b2b6862cc0e1b620"
+      },
+      "required_note": false,
+      "section": "en",
+      "text": "Return JSON with a Boolean success field.",
+      "title": "Short / technical case"
+    },
+    {
+      "criteria": [],
+      "id": "en-S05",
+      "metadata": {
+        "intended_language": "en",
+        "partition": "short_technical",
+        "text_sha256": "e6ddf5519de392755166981d0077244ad57b9d76563917bccbe937d5d86d674e"
+      },
+      "required_note": false,
+      "section": "en",
+      "text": "An HTTP timeout must leave the job pending.",
+      "title": "Short / technical case"
+    },
+    {
+      "criteria": [],
+      "id": "hi-L01",
+      "metadata": {
+        "intended_language": "hi",
+        "partition": "long",
+        "text_sha256": "9320d61813454c8ee532013e9c8d35d603be0bc7ef2d10447e15f9f539aedaea"
+      },
+      "required_note": false,
+      "section": "hi",
+      "text": "जब उपयोगकर्ता किसी सूची में नया कार्य जोड़ता है, तब अनुप्रयोग को उस कार्य की पहचान और निर्धारित समय सुरक्षित करना होगा, ताकि पृष्ठ दोबारा खोलने पर वही कार्य बिना किसी दोहराव के दिखाई दे।",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "hi-L02",
+      "metadata": {
+        "intended_language": "hi",
+        "partition": "long",
+        "text_sha256": "094a60adacb98fb89cebc2139e97fcaaf839f5b6e02a9a53d6c73e9595e69dee"
+      },
+      "required_note": false,
+      "section": "hi",
+      "text": "यदि दस्तावेज़ भेजते समय नेटवर्क का संपर्क टूट जाता है, तो प्रणाली को अंतिम सफल चरण का विवरण सुरक्षित रखना होगा और अधूरे दस्तावेज़ को पूरा प्राप्त हुआ नहीं दिखाना होगा।",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "hi-L03",
+      "metadata": {
+        "intended_language": "hi",
+        "partition": "long",
+        "text_sha256": "1cb0def9421a0d815ff0de7b2aab6a456b708782f8c65a3eb180f8b6dbdae2c2"
+      },
+      "required_note": false,
+      "section": "hi",
+      "text": "खोज सेवा को उपयोगकर्ता द्वारा चुने गए सभी फ़िल्टर परिणाम के साथ लौटाने होंगे, ताकि बाद में यह स्पष्ट रहे कि सूची तैयार करते समय किन शर्तों का उपयोग किया गया था।",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "hi-L04",
+      "metadata": {
+        "intended_language": "hi",
+        "partition": "long",
+        "text_sha256": "2812128093efd6dc0aede491491f26a131c72f059c8605859496fe1e5af487b6"
+      },
+      "required_note": false,
+      "section": "hi",
+      "text": "किसी साझा फ़ाइल में परिवर्तन सुरक्षित करने से पहले अनुप्रयोग को जाँचना होगा कि फ़ाइल का वर्तमान संस्करण वही है जिसे संपादक ने खोला था; अंतर होने पर परिवर्तन रोका जाना चाहिए।",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "hi-L05",
+      "metadata": {
+        "intended_language": "hi",
+        "partition": "long",
+        "text_sha256": "926f2af41cf9ae89161c8c56fda2f5e746fc0f3d5cfac4489fc095bab5b11797"
+      },
+      "required_note": false,
+      "section": "hi",
+      "text": "उपयोगकर्ता की अनुमति हटाए जाने के बाद सेवा को उस अनुमति पर निर्भर अगला अनुरोध अस्वीकार करना होगा, भले ही संबंधित पृष्ठ अनुमति हटने से पहले खोला गया हो।",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "hi-L06",
+      "metadata": {
+        "intended_language": "hi",
+        "partition": "long",
+        "text_sha256": "6fd5f4cd6c5046d9cc93c40d96522359f5d15323edb7daad061e11ce98a011fd"
+      },
+      "required_note": false,
+      "section": "hi",
+      "text": "प्रणाली को खाली सूची और सूची प्राप्त करने में हुई त्रुटि के लिए अलग परिणाम देने होंगे, ताकि उपयोगकर्ता अनुपलब्ध जानकारी को वास्तव में खाली सूची न समझे।",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "hi-L07",
+      "metadata": {
+        "intended_language": "hi",
+        "partition": "long",
+        "text_sha256": "d5e239befb89c5f8ba9e660a7262dda358541ffcd0d1381e43ffa944b8589cd9"
+      },
+      "required_note": false,
+      "section": "hi",
+      "text": "जब उपकरण से कोई नया माप प्राप्त नहीं होता, तब निगरानी पृष्ठ को अंतिम माप का समय दिखाना होगा और पुराने माप को वर्तमान समय का माप बताकर प्रस्तुत नहीं करना होगा।",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "hi-L08",
+      "metadata": {
+        "intended_language": "hi",
+        "partition": "long",
+        "text_sha256": "c867d133ec3d1981fe2f7a8f7d2f9911ea6809795e5c0c277e2d8fb0b1d8958e"
+      },
+      "required_note": false,
+      "section": "hi",
+      "text": "डेटा निर्यात करते समय सेवा को प्रत्येक चुने हुए रिकॉर्ड की मूल पहचान बनाए रखनी होगी, ताकि निर्यात की गई फ़ाइल को स्रोत रिकॉर्ड से स्पष्ट रूप से जोड़ा जा सके।",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "hi-L09",
+      "metadata": {
+        "intended_language": "hi",
+        "partition": "long",
+        "text_sha256": "155a3dd0de5a57a85450a497bd7a20d0f205b00d53772164102b16156db8a187"
+      },
+      "required_note": false,
+      "section": "hi",
+      "text": "अनुप्रयोग को अमान्य दिनांक सुरक्षित करने से पहले अस्वीकार करनी होगी और प्रपत्र के अन्य भरे हुए भागों को यथावत रखना होगा, ताकि केवल गलत दिनांक सुधारनी पड़े।",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "hi-L10",
+      "metadata": {
+        "intended_language": "hi",
+        "partition": "long",
+        "text_sha256": "b193613052c45373735d6fd37999c0a0ad84a5053579ee68d1c222bcd3681370"
+      },
+      "required_note": false,
+      "section": "hi",
+      "text": "यदि किसी कार्य को शुरू होने से पहले रद्द किया जाता है, तो कार्य सूची में उसकी स्थिति रद्द के रूप में सुरक्षित रहनी चाहिए और सेवा दोबारा शुरू होने पर उसे स्वयं नहीं चलाना चाहिए।",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "hi-L11",
+      "metadata": {
+        "intended_language": "hi",
+        "partition": "long",
+        "text_sha256": "8db9ba0ccb60cc4e1c627047aff084189b968d276d37c5530a8facedf5bd4d87"
+      },
+      "required_note": false,
+      "section": "hi",
+      "text": "प्रणाली को संदेश भेजने की सफल प्रक्रिया और प्राप्तकर्ता द्वारा संदेश पढ़े जाने की पुष्टि में अंतर रखना होगा; केवल भेजे जाने से पढ़े जाने की पुष्टि नहीं बननी चाहिए।",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "hi-L12",
+      "metadata": {
+        "intended_language": "hi",
+        "partition": "long",
+        "text_sha256": "36fbd42168ba0c4c209d2a9fdb5c8aa2d9c90ec1313378e5da660b80b7884287"
+      },
+      "required_note": false,
+      "section": "hi",
+      "text": "फ़ाइल आयात करते समय एक ही पहचान वाले दो रिकॉर्ड मिलने पर सेवा को दोनों रिकॉर्ड की स्थिति बतानी होगी और किसी एक रिकॉर्ड को बिना सूचना चुने हुए रिकॉर्ड के रूप में नहीं रखना होगा।",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "hi-L13",
+      "metadata": {
+        "intended_language": "hi",
+        "partition": "long",
+        "text_sha256": "b68dcb36108b404a8bb5c4892bebcca941b09a8883a7a5fec7afb4ca61054118"
+      },
+      "required_note": false,
+      "section": "hi",
+      "text": "कार्य का समय बदलने पर अनुप्रयोग को पुराने और नए समय का संबंध सुरक्षित रखना होगा, ताकि परिवर्तन का इतिहास पढ़कर यह पता चल सके कि नियोजन कब और कैसे बदला था।",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "hi-L14",
+      "metadata": {
+        "intended_language": "hi",
+        "partition": "long",
+        "text_sha256": "c88523b0572ee6bba906c57552c6166bb6ad96552a473a01d3d9097e61954e60"
+      },
+      "required_note": false,
+      "section": "hi",
+      "text": "अनुप्रयोग को उपयोगकर्ता द्वारा दर्ज किए गए नामों में मात्रा, विराम चिह्न और रिक्त स्थान बनाए रखने होंगे, ताकि सुरक्षित किया गया नाम मूल प्रविष्टि से अलग न हो।",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "hi-L15",
+      "metadata": {
+        "intended_language": "hi",
+        "partition": "long",
+        "text_sha256": "cfd0b690179cf6e4dad1d2288c22793038d8c4313cc1eb44402b8d339e3a1064"
+      },
+      "required_note": false,
+      "section": "hi",
+      "text": "सुरक्षित प्रतिलिपि से डेटा वापस लाने से पहले सेवा को प्रतिलिपि की पूर्णता और परियोजना की पहचान जाँचनी होगी; जाँच असफल होने पर वर्तमान डेटा को बदलना नहीं चाहिए।",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "hi-L16",
+      "metadata": {
+        "intended_language": "hi",
+        "partition": "long",
+        "text_sha256": "b1ab45a5da609f6d4f5da9a1e462ad8f7952434766099b8171ee55b84166c7e0"
+      },
+      "required_note": false,
+      "section": "hi",
+      "text": "यदि पृष्ठभूमि में चल रहा कार्य निर्धारित स्मृति सीमा तक पहुँचता है, तो प्रणाली को पूरा हो चुका और बाकी बचा काम अलग बताना होगा, न कि पूरे कार्य को सफल घोषित करना होगा।",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "hi-L17",
+      "metadata": {
+        "intended_language": "hi",
+        "partition": "long",
+        "text_sha256": "5b10257d4b139d82783ad3223addfa956fb294154bcafd1bd90764d8270ee01c"
+      },
+      "required_note": false,
+      "section": "hi",
+      "text": "किसी समूह से सदस्य हटाए जाने पर केवल उस समूह से मिली अनुमतियाँ हटनी चाहिए; सदस्य को स्वतंत्र रूप से दी गई अनुमतियों का रिकॉर्ड बिना अलग आदेश के नहीं बदलना चाहिए।",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "hi-L18",
+      "metadata": {
+        "intended_language": "hi",
+        "partition": "long",
+        "text_sha256": "2c577f331196d39d1b02b7d582438808f88a781adad8c536fcee5951158e557d"
+      },
+      "required_note": false,
+      "section": "hi",
+      "text": "प्रणाली को किसी सूची का क्रम बदलने के बाद नया क्रम सुरक्षित रखना होगा और सूची दोबारा खोलने पर वही क्रम दिखाना होगा, जबकि सूची में दर्ज वस्तुओं की पहचान अपरिवर्तित रहे।",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "hi-L19",
+      "metadata": {
+        "intended_language": "hi",
+        "partition": "long",
+        "text_sha256": "64af2be36a0b2892023672da6ecaa6d0141c7587ec6d30e93eb3b16c7d25c887"
+      },
+      "required_note": false,
+      "section": "hi",
+      "text": "एक साथ कई रिकॉर्ड बदलने से पहले अनुप्रयोग को चुने गए रिकॉर्डों की पूरी सूची दिखानी होगी और पुष्टि के बाद केवल उसी सूची के रिकॉर्डों में परिवर्तन करना होगा।",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "hi-L20",
+      "metadata": {
+        "intended_language": "hi",
+        "partition": "long",
+        "text_sha256": "2eead62e16ef3381e65c8ae2ca6932a3c212be3c689a8560df3c4aad92d5d474"
+      },
+      "required_note": false,
+      "section": "hi",
+      "text": "उपयोगकर्ता के बाहर निकलने के बाद सेवा को समाप्त सत्र से आने वाले अनुरोध अस्वीकार करने होंगे और असुरक्षित परिवर्तनों को पहले से सुरक्षित जानकारी से स्पष्ट रूप से अलग रखना होगा।",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "hi-S01",
+      "metadata": {
+        "intended_language": "hi",
+        "partition": "short_technical",
+        "text_sha256": "4e706d0613d8e722936677dbbd1c321f9217d3efc9a115e48557a6c7e3b388a8"
+      },
+      "required_note": false,
+      "section": "hi",
+      "text": "खाली पहचान स्वीकार नहीं की जानी चाहिए।",
+      "title": "Short / technical case"
+    },
+    {
+      "criteria": [],
+      "id": "hi-S02",
+      "metadata": {
+        "intended_language": "hi",
+        "partition": "short_technical",
+        "text_sha256": "8b4fdfa6ae2487523560f613fff32f3ecf158d32135dce51d9849f1e6b0742f8"
+      },
+      "required_note": false,
+      "section": "hi",
+      "text": "फ़ाइल का मूल नाम बनाए रखना होगा।",
+      "title": "Short / technical case"
+    },
+    {
+      "criteria": [],
+      "id": "hi-S03",
+      "metadata": {
+        "intended_language": "hi",
+        "partition": "short_technical",
+        "text_sha256": "4c12c1cc48fb7190e2e1c4fb51f31a1bed4b08ae4e9e45f05f53b0d026380963"
+      },
+      "required_note": false,
+      "section": "hi",
+      "text": "UTF-8 में ही डेटा भेजना होगा।",
+      "title": "Short / technical case"
+    },
+    {
+      "criteria": [],
+      "id": "hi-S04",
+      "metadata": {
+        "intended_language": "hi",
+        "partition": "short_technical",
+        "text_sha256": "a23bac7f0f9408a8572c933ed99902a25a657c96e051b1365d90fa9e6d204022"
+      },
+      "required_note": false,
+      "section": "hi",
+      "text": "त्रुटि होने पर स्थिति नहीं बदलनी चाहिए।",
+      "title": "Short / technical case"
+    },
+    {
+      "criteria": [],
+      "id": "hi-S05",
+      "metadata": {
+        "intended_language": "hi",
+        "partition": "short_technical",
+        "text_sha256": "6ae5f4ba4a1226aed60a9f04b515a87b27df0daedf510407d25c31ca2384a60f"
+      },
+      "required_note": false,
+      "section": "hi",
+      "text": "समय सीमा पूरी होने पर सफलता न दिखाएँ।",
+      "title": "Short / technical case"
+    },
+    {
+      "criteria": [],
+      "id": "id-L01",
+      "metadata": {
+        "intended_language": "id",
+        "partition": "long",
+        "text_sha256": "40cc88cf73e2f63c593982d441ddc8ddbd4591d5c40a05a31a9350b518eef59a"
+      },
+      "required_note": false,
+      "section": "id",
+      "text": "Ketika pengguna menyimpan pencarian, aplikasi harus menyimpan seluruh filter yang dipilih agar pencarian dapat dijalankan kembali dengan syarat yang sama pada data terbaru.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "id-L02",
+      "metadata": {
+        "intended_language": "id",
+        "partition": "long",
+        "text_sha256": "d34eeb5b3b640a81f0f763dbf40dca9334a39d6d411fa0e04789dba1d10a15e8"
+      },
+      "required_note": false,
+      "section": "id",
+      "text": "Layanan unggahan harus memeriksa isi berkas secara lengkap sebelum menyatakan unggahan selesai, sehingga berkas yang hanya diterima sebagian tidak ditampilkan sebagai berkas yang tersedia.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "id-L03",
+      "metadata": {
+        "intended_language": "id",
+        "partition": "long",
+        "text_sha256": "0ac1dbe79332e14b9d23a819c4403ae83b343494ad1ce5c1e2e5f3d7872bfb4a"
+      },
+      "required_note": false,
+      "section": "id",
+      "text": "Jika hak akses seorang anggota dicabut, sistem harus menolak permintaan berikutnya yang memerlukan hak tersebut, meskipun anggota sudah membuka halaman sebelum pencabutan dilakukan.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "id-L04",
+      "metadata": {
+        "intended_language": "id",
+        "partition": "long",
+        "text_sha256": "f610b357277f2ce2c4d9dd4338e1f1112ca4c3264e02f73f68313781d7dc06ab"
+      },
+      "required_note": false,
+      "section": "id",
+      "text": "Fungsi ekspor harus mempertahankan pengenal asli setiap catatan yang dipilih dan urutan catatannya agar hasil ekspor dapat dicocokkan dengan sumbernya tanpa menebak hubungan antarcatatan.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "id-L05",
+      "metadata": {
+        "intended_language": "id",
+        "partition": "long",
+        "text_sha256": "af7fbed214e828cf18cc3482f3aca36ecb9cadc42daf129d688de73dc72ea418"
+      },
+      "required_note": false,
+      "section": "id",
+      "text": "Saat sambungan terputus di tengah pengiriman, aplikasi harus mempertahankan bagian yang telah dikonfirmasi dan menentukan posisi terakhir yang sah sebelum melanjutkan pengiriman.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "id-L06",
+      "metadata": {
+        "intended_language": "id",
+        "partition": "long",
+        "text_sha256": "60f8a1d1af9041faba5ccaf9cf1fbc1c45acc0aaf6aca171e997f0dd80cef95c"
+      },
+      "required_note": false,
+      "section": "id",
+      "text": "Sebelum menyimpan perubahan pada dokumen bersama, sistem harus memeriksa versi sumbernya dan menolak penyimpanan jika versi tersebut sudah digantikan oleh perubahan pengguna lain.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "id-L07",
+      "metadata": {
+        "intended_language": "id",
+        "partition": "long",
+        "text_sha256": "678b02a0b8859e03ed8e45cb95d4fca20d18bf21e745855def88032aef452a48"
+      },
+      "required_note": false,
+      "section": "id",
+      "text": "Tampilan jadwal harus menggunakan zona waktu yang dipilih pengguna tanpa mengubah waktu kejadian yang tersimpan, sehingga pergantian tampilan tidak menggeser jadwal sebenarnya.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "id-L08",
+      "metadata": {
+        "intended_language": "id",
+        "partition": "long",
+        "text_sha256": "18459b0e3597ea4d1545a234460b7a23812f8ecc4fb5416b88c24c3d182e15aa"
+      },
+      "required_note": false,
+      "section": "id",
+      "text": "Layanan pemulihan harus memeriksa kelengkapan cadangan serta identitas proyek sebelum mengganti data yang ada dan membiarkan data lama tetap utuh apabila pemeriksaan gagal.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "id-L09",
+      "metadata": {
+        "intended_language": "id",
+        "partition": "long",
+        "text_sha256": "71c648f55e10612bb1639b4f5344ea475b793209f725dee4beb783719cd8a867"
+      },
+      "required_note": false,
+      "section": "id",
+      "text": "Pencarian nama harus mendukung huruf beraksen dan menampilkan kembali ejaan asli nama dalam hasil pencarian tanpa menghapus tanda baca atau mengganti karakter yang tersimpan.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "id-L10",
+      "metadata": {
+        "intended_language": "id",
+        "partition": "long",
+        "text_sha256": "632da553c27c9c0c00eacabeb15cda8b6f637b349fa5faff85a7ea10ba040cf6"
+      },
+      "required_note": false,
+      "section": "id",
+      "text": "Pekerjaan cetak yang dibatalkan harus tetap tercatat dengan status dibatalkan dan tidak boleh dijalankan kembali secara otomatis ketika layanan pencetakan dimulai ulang.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "id-L11",
+      "metadata": {
+        "intended_language": "id",
+        "partition": "long",
+        "text_sha256": "996065f26094011b6493ac2ca0f553cf7fc5bab8de9c4ef8e58f9d957ab293ff"
+      },
+      "required_note": false,
+      "section": "id",
+      "text": "Sistem pemberitahuan harus membedakan pesan yang berhasil diserahkan kepada layanan pengiriman dari pesan yang sudah dibaca penerima, karena kedua kejadian itu memiliki arti berbeda.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "id-L12",
+      "metadata": {
+        "intended_language": "id",
+        "partition": "long",
+        "text_sha256": "a172b6ca2b95b39a321b917ec848323ae9488a373ecb73628ccd0910cf8df87e"
+      },
+      "required_note": false,
+      "section": "id",
+      "text": "Aplikasi harus menolak tanggal yang tidak sah sebelum formulir disimpan dan mempertahankan isian lainnya agar pengguna dapat memperbaiki tanggal tanpa mengulang seluruh pengisian.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "id-L13",
+      "metadata": {
+        "intended_language": "id",
+        "partition": "long",
+        "text_sha256": "c3efc79ad9873126ab1c991c716a1301a28fc2eeb23d39000350359642dee1c5"
+      },
+      "required_note": false,
+      "section": "id",
+      "text": "Ketika seorang anggota dikeluarkan dari kelompok, sistem hanya boleh mencabut hak yang berasal dari kelompok itu dan harus mempertahankan hak yang diberikan secara terpisah.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "id-L14",
+      "metadata": {
+        "intended_language": "id",
+        "partition": "long",
+        "text_sha256": "7a55e084082da71560c47ef1c298cc3b984ac7c612dc415397a8f7070566bc50"
+      },
+      "required_note": false,
+      "section": "id",
+      "text": "Layanan perbandingan berkas harus membedakan berkas kosong dari berkas yang tidak ditemukan dan mencatat kedua keadaan tersebut dengan nilai status yang berbeda dalam hasil terstruktur.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "id-L15",
+      "metadata": {
+        "intended_language": "id",
+        "partition": "long",
+        "text_sha256": "17650b69f244ccaf7b3f39af167edd084f782eea8bb9f385a98523c15bdc4f99"
+      },
+      "required_note": false,
+      "section": "id",
+      "text": "Jika tugas latar belakang mencapai batas memori, layanan harus melaporkan pekerjaan yang masih tersisa dan tidak boleh menghitung catatan yang belum diproses sebagai hasil yang berhasil.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "id-L16",
+      "metadata": {
+        "intended_language": "id",
+        "partition": "long",
+        "text_sha256": "541216b56a34b58185ab3c908c01995c2ba78aa61f9b07b732b6840985890160"
+      },
+      "required_note": false,
+      "section": "id",
+      "text": "Riwayat perubahan harus menyimpan pengenal objek, versi sebelumnya, dan versi sesudah perubahan untuk setiap penyimpanan yang dikonfirmasi agar urutan perubahan dapat ditelusuri.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "id-L17",
+      "metadata": {
+        "intended_language": "id",
+        "partition": "long",
+        "text_sha256": "52f01d5bd4d9978404752a5af16e9ef9e749572f91ffde809c3d3329ae629c21"
+      },
+      "required_note": false,
+      "section": "id",
+      "text": "Pengguna harus dapat menyalin rancangan dengan pengenal baru tanpa mengubah isi rancangan asal atau riwayat perubahan yang sudah melekat pada rancangan asal tersebut.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "id-L18",
+      "metadata": {
+        "intended_language": "id",
+        "partition": "long",
+        "text_sha256": "7efdc01add797780f24480f67f3814bdeff2c7c58a529cf65614b4a6a6fa681f"
+      },
+      "required_note": false,
+      "section": "id",
+      "text": "Apabila berkas impor memuat pengenal yang sama lebih dari sekali, layanan harus melaporkan semua catatan yang bertentangan dan tidak memilih salah satunya secara diam-diam.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "id-L19",
+      "metadata": {
+        "intended_language": "id",
+        "partition": "long",
+        "text_sha256": "8a50b76b2d7db3464bbe1711f557e039115e315cfd7d731cfbb89d32bdfef722"
+      },
+      "required_note": false,
+      "section": "id",
+      "text": "Sebelum menjalankan perubahan massal, aplikasi harus menetapkan daftar objek yang akan diubah dan memastikan pelaksanaan hanya menyentuh objek yang ada dalam daftar yang telah disetujui.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "id-L20",
+      "metadata": {
+        "intended_language": "id",
+        "partition": "long",
+        "text_sha256": "f5afacc391610daf071c81024c0374ff2945f117fffd25ba42789ed4a4a5f50a"
+      },
+      "required_note": false,
+      "section": "id",
+      "text": "Setelah pengguna keluar, layanan harus menolak permintaan yang menggunakan sesi yang telah diakhiri dan membedakan perubahan yang belum tersimpan dari perubahan yang sudah dikonfirmasi.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "id-S01",
+      "metadata": {
+        "intended_language": "id",
+        "partition": "short_technical",
+        "text_sha256": "bcc52380caeab34bfb36105afef1d4ee5f18df83ff5cf6bac24dabd8a31c03cd"
+      },
+      "required_note": false,
+      "section": "id",
+      "text": "Pengenal kosong harus ditolak.",
+      "title": "Short / technical case"
+    },
+    {
+      "criteria": [],
+      "id": "id-S02",
+      "metadata": {
+        "intended_language": "id",
+        "partition": "short_technical",
+        "text_sha256": "34f5c919a84975c46d1a2bab97ff6fe45520a6c4d48d713e1f66743b73f6d249"
+      },
+      "required_note": false,
+      "section": "id",
+      "text": "Nama berkas asli harus dipertahankan.",
+      "title": "Short / technical case"
+    },
+    {
+      "criteria": [],
+      "id": "id-S03",
+      "metadata": {
+        "intended_language": "id",
+        "partition": "short_technical",
+        "text_sha256": "2cd169315ba359ecd14634f421fc0f50b815ebf9f6e0d5af21aa1d4cacd6788d"
+      },
+      "required_note": false,
+      "section": "id",
+      "text": "Gunakan UTF-8 untuk pertukaran data.",
+      "title": "Short / technical case"
+    },
+    {
+      "criteria": [],
+      "id": "id-S04",
+      "metadata": {
+        "intended_language": "id",
+        "partition": "short_technical",
+        "text_sha256": "75d4e58b66c4bf1f5e26ee3956f59132076f7e2a6460134bed1d6c320dcd9b18"
+      },
+      "required_note": false,
+      "section": "id",
+      "text": "Percobaan ulang dibatasi tiga kali.",
+      "title": "Short / technical case"
+    },
+    {
+      "criteria": [],
+      "id": "id-S05",
+      "metadata": {
+        "intended_language": "id",
+        "partition": "short_technical",
+        "text_sha256": "60f219acc4c3f2a0a89caca25f655bf05d4586873a0ffe36ccc9c07c8f85c6f1"
+      },
+      "required_note": false,
+      "section": "id",
+      "text": "Timeout tidak boleh dianggap berhasil.",
+      "title": "Short / technical case"
+    },
+    {
+      "criteria": [],
+      "id": "pt-L01",
+      "metadata": {
+        "intended_language": "pt",
+        "partition": "long",
+        "text_sha256": "5f3d9090447e7a234d0ba36a27e9f084c93a3a9ca7ad3265fa4f9f1a106e47a7"
+      },
+      "required_note": false,
+      "section": "pt",
+      "text": "Quando uma reserva de equipamento for cancelada, o serviço deverá liberar o período reservado somente após registrar o cancelamento, para impedir reservas simultâneas causadas por uma falha de gravação.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "pt-L02",
+      "metadata": {
+        "intended_language": "pt",
+        "partition": "long",
+        "text_sha256": "6b036eee9f70a4ef8e076669bc3a22fec6fc7eede91fd26e739ae23b09d4896a"
+      },
+      "required_note": false,
+      "section": "pt",
+      "text": "O visualizador de mapas deverá manter a camada selecionada e sua configuração de visibilidade quando o usuário alterar o nível de ampliação, sem substituir a camada pela opção padrão.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "pt-L03",
+      "metadata": {
+        "intended_language": "pt",
+        "partition": "long",
+        "text_sha256": "9117bfa6f62b439236edfdd57634523b5622b305e1b00ec20c6571b0a65033ac"
+      },
+      "required_note": false,
+      "section": "pt",
+      "text": "Se um sensor deixar de enviar medições, o painel deverá informar o horário da última amostra recebida e distinguir a ausência de dados de uma medição cujo valor registrado seja zero.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "pt-L04",
+      "metadata": {
+        "intended_language": "pt",
+        "partition": "long",
+        "text_sha256": "1bb6eed36cc076d4274df224ebbc31a915e56f5974c118c0eaa3e06d40121662"
+      },
+      "required_note": false,
+      "section": "pt",
+      "text": "O processador de tarefas deverá confirmar a aceitação de uma solicitação somente depois de armazenar seus dados de entrada de forma persistente, permitindo identificar solicitações que não foram aceitas.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "pt-L05",
+      "metadata": {
+        "intended_language": "pt",
+        "partition": "long",
+        "text_sha256": "e9f581810ac79b1a2758dda9d851b2cea55c7d1b0b9a0a8920664646f3134452"
+      },
+      "required_note": false,
+      "section": "pt",
+      "text": "O catálogo de mídia deverá preservar a grafia original do nome de cada colaborador durante a exportação e a importação, incluindo espaços, sinais de pontuação e caracteres acentuados.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "pt-L06",
+      "metadata": {
+        "intended_language": "pt",
+        "partition": "long",
+        "text_sha256": "61a2c0a7ae8c84d7918d2d288169be96ee27e7d78bcc7565424d5aea1b31bdca"
+      },
+      "required_note": false,
+      "section": "pt",
+      "text": "Ao restaurar uma pasta excluída, a aplicação deverá informar conflitos de nomes no destino antes de mover os arquivos e manter inalterados os arquivos que já existam nesse destino.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "pt-L07",
+      "metadata": {
+        "intended_language": "pt",
+        "partition": "long",
+        "text_sha256": "542666713ef3a41a2347ea213ad90b05258caa680f6e9e2926ed256861744078"
+      },
+      "required_note": false,
+      "section": "pt",
+      "text": "O serviço de estoque deverá rejeitar uma transferência cuja quantidade solicitada seja maior que a quantidade disponível e preservar os saldos dos dois locais quando a operação for rejeitada.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "pt-L08",
+      "metadata": {
+        "intended_language": "pt",
+        "partition": "long",
+        "text_sha256": "8d19ec77ab235c07ae0b5b39d64e6a76a75635da01731dfaf0f2419c1d839f15"
+      },
+      "required_note": false,
+      "section": "pt",
+      "text": "O editor de anotações deverá vincular cada comentário à versão do documento exibida no momento de sua criação, sem transferir silenciosamente o comentário para uma versão posterior.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "pt-L09",
+      "metadata": {
+        "intended_language": "pt",
+        "partition": "long",
+        "text_sha256": "2a1b59d55861b694523e3618924d3cc7bb775f42d3006c32dc8ece431bfe8605"
+      },
+      "required_note": false,
+      "section": "pt",
+      "text": "Quando o usuário mudar o idioma da interface, a aplicação deverá manter os identificadores dos dispositivos e os valores de configuração armazenados, sem traduzir identificadores usados na comunicação.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "pt-L10",
+      "metadata": {
+        "intended_language": "pt",
+        "partition": "long",
+        "text_sha256": "f5bcc60699d7ad6a4953291b87819496c145095e8a0f414c113b8ee052b30e14"
+      },
+      "required_note": false,
+      "section": "pt",
+      "text": "O painel de processamento deverá distinguir uma tarefa concluída com sucesso de uma tarefa cancelada antes de começar, mesmo quando nenhuma das duas tiver produzido mensagens de diagnóstico.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "pt-L11",
+      "metadata": {
+        "intended_language": "pt",
+        "partition": "long",
+        "text_sha256": "c1fc7677cf68f9970d697921b9a572a5a3c251902cc5d9726599651eff698acc"
+      },
+      "required_note": false,
+      "section": "pt",
+      "text": "Se o processamento de uma imagem falhar, o serviço deverá preservar o arquivo original e marcar qualquer arquivo de saída incompleto como indisponível para as próximas etapas.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "pt-L12",
+      "metadata": {
+        "intended_language": "pt",
+        "partition": "long",
+        "text_sha256": "60b8b87d4b96bc9b7899f13560f5efba7273ebd062ba1995c39bbf735933ddb4"
+      },
+      "required_note": false,
+      "section": "pt",
+      "text": "Quando nenhum registro atender aos filtros de um relatório, o gerador deverá produzir um resultado vazio com os filtros utilizados, sem reutilizar linhas de um relatório anterior.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "pt-L13",
+      "metadata": {
+        "intended_language": "pt",
+        "partition": "long",
+        "text_sha256": "72d545bc74c4174e3499359693489915cc91956abdd272635548f168f9d66828"
+      },
+      "required_note": false,
+      "section": "pt",
+      "text": "O cadastro de equipamentos deverá registrar a data efetiva de cada mudança de local e permitir consultar o local registrado em uma data escolhida sem modificar o histórico existente.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "pt-L14",
+      "metadata": {
+        "intended_language": "pt",
+        "partition": "long",
+        "text_sha256": "73071101b6e68ff7dfece110b38b30ea7d16aa2a01b4d5e5120bf4b665fbdcb9"
+      },
+      "required_note": false,
+      "section": "pt",
+      "text": "A aplicação deverá preservar as quebras de linha ao copiar o conteúdo de uma célula de tabela para um editor de texto simples compatível, sem substituir essas quebras por espaços.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "pt-L15",
+      "metadata": {
+        "intended_language": "pt",
+        "partition": "long",
+        "text_sha256": "32dc197d7225b0ddd169680af3a94cd582ec6ae324ed26b90508ed787b2b31c3"
+      },
+      "required_note": false,
+      "section": "pt",
+      "text": "Se um arquivo de configuração contiver uma opção obrigatória desconhecida, o serviço deverá rejeitar a configuração antes de aceitar tarefas e identificar a opção no resultado estruturado da verificação.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "pt-L16",
+      "metadata": {
+        "intended_language": "pt",
+        "partition": "long",
+        "text_sha256": "7499f5ed7dc4516ab229e5f74cbaa74b6a8185a9c00b97db64e9fe4e4c821a50"
+      },
+      "required_note": false,
+      "section": "pt",
+      "text": "O serviço de sincronização deverá verificar o resumo criptográfico de todo o arquivo recebido antes de substituir a versão local e deverá preservar a versão local se a verificação falhar.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "pt-L17",
+      "metadata": {
+        "intended_language": "pt",
+        "partition": "long",
+        "text_sha256": "df233e68ffe9160b23e0d77ca54499933da128941a56e9d2497ef9597e2e0ef9"
+      },
+      "required_note": false,
+      "section": "pt",
+      "text": "O agendador de testes deverá conservar o resultado de cada tentativa sob um identificador próprio, de modo que uma nova tentativa não sobrescreva o resultado de uma tentativa anterior.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "pt-L18",
+      "metadata": {
+        "intended_language": "pt",
+        "partition": "long",
+        "text_sha256": "eaa833afd58b90d79c5120d7cf33f5994e20c920570efc35e18f3e9275c56d4d"
+      },
+      "required_note": false,
+      "section": "pt",
+      "text": "Quando um usuário reorganizar os painéis da sua página inicial, a aplicação deverá salvar a nova ordem apenas para esse usuário e preservar a ordem registrada para os demais usuários.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "pt-L19",
+      "metadata": {
+        "intended_language": "pt",
+        "partition": "long",
+        "text_sha256": "7b9862951240dd91b8ed544faa806ab6f7773ad44d792b79afcefddd4f0be26b"
+      },
+      "required_note": false,
+      "section": "pt",
+      "text": "O espaço de tradução deverá indicar a revisão de origem associada a cada tradução e marcar a tradução como pendente de revisão quando o texto de origem sofrer uma alteração.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "pt-L20",
+      "metadata": {
+        "intended_language": "pt",
+        "partition": "long",
+        "text_sha256": "e86904a82b66a19d24c4a5bd241bab5d9d2179bb443e64ef137f8a5aa818e400"
+      },
+      "required_note": false,
+      "section": "pt",
+      "text": "O serviço de anexos deverá rejeitar uma solicitação com arquivos diferentes que usem o mesmo identificador de anexo e informar o conflito sem armazenar nenhum dos arquivos envolvidos.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "pt-S01",
+      "metadata": {
+        "intended_language": "pt",
+        "partition": "short_technical",
+        "text_sha256": "5db3a8672673561a321f887b5be3eda005a6dbca8948894f3a569473a81ea2e9"
+      },
+      "required_note": false,
+      "section": "pt",
+      "text": "O sistema deve rejeitar um identificador vazio.",
+      "title": "Short / technical case"
+    },
+    {
+      "criteria": [],
+      "id": "pt-S02",
+      "metadata": {
+        "intended_language": "pt",
+        "partition": "short_technical",
+        "text_sha256": "35aefc0035ef61b44c62b20473393df87ccd84bba200e67756db948151bf573d"
+      },
+      "required_note": false,
+      "section": "pt",
+      "text": "Preserve o valor SHA-256 original.",
+      "title": "Short / technical case"
+    },
+    {
+      "criteria": [],
+      "id": "pt-S03",
+      "metadata": {
+        "intended_language": "pt",
+        "partition": "short_technical",
+        "text_sha256": "27dc17a643edafbf939b2a13915317e2964ce9287742f49c05ba2225e1ee7247"
+      },
+      "required_note": false,
+      "section": "pt",
+      "text": "O limite de tentativas deve ser três.",
+      "title": "Short / technical case"
+    },
+    {
+      "criteria": [],
+      "id": "pt-S04",
+      "metadata": {
+        "intended_language": "pt",
+        "partition": "short_technical",
+        "text_sha256": "348dda5b96e39eeb10c8b73db38baec86cab3de8209eb423657337e27466880f"
+      },
+      "required_note": false,
+      "section": "pt",
+      "text": "A resposta deve usar JSON válido.",
+      "title": "Short / technical case"
+    },
+    {
+      "criteria": [],
+      "id": "pt-S05",
+      "metadata": {
+        "intended_language": "pt",
+        "partition": "short_technical",
+        "text_sha256": "eb12a370429145aa5c8a0afac8a29600ab5ba0f300710b1fd861b18b37f05cbe"
+      },
+      "required_note": false,
+      "section": "pt",
+      "text": "Um timeout não deve confirmar a tarefa.",
+      "title": "Short / technical case"
+    },
+    {
+      "criteria": [],
+      "id": "es-L01",
+      "metadata": {
+        "intended_language": "es",
+        "partition": "long",
+        "text_sha256": "b2afc30c799cb6568c68089ebf0d21cffe4bdd1d841b935827f06e9e65064fc1"
+      },
+      "required_note": false,
+      "section": "es",
+      "text": "Al guardar una búsqueda, la aplicación deberá conservar todos los filtros seleccionados para que el usuario pueda repetirla con las mismas condiciones sobre los datos disponibles en ese momento.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "es-L02",
+      "metadata": {
+        "intended_language": "es",
+        "partition": "long",
+        "text_sha256": "4bddc53130e275717752d1a577ee0e30283cce4e72675674f76d518446887b9e"
+      },
+      "required_note": false,
+      "section": "es",
+      "text": "El servicio de carga deberá comprobar el contenido completo de cada archivo antes de marcarlo como disponible, de modo que una transferencia incompleta no aparezca como una carga terminada.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "es-L03",
+      "metadata": {
+        "intended_language": "es",
+        "partition": "long",
+        "text_sha256": "4ca839e4cddd77d695ee9d19792e44a2fedab9ada57d4bd0c0e9aed6b69002f4"
+      },
+      "required_note": false,
+      "section": "es",
+      "text": "Después de retirar un permiso de lectura, el sistema deberá rechazar la siguiente solicitud que dependa de ese permiso, aunque el usuario haya abierto la lista de documentos con anterioridad.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "es-L04",
+      "metadata": {
+        "intended_language": "es",
+        "partition": "long",
+        "text_sha256": "9308449f3c444c94168cf0709ab635593f121818d1b710554326d10066969652"
+      },
+      "required_note": false,
+      "section": "es",
+      "text": "La función de exportación deberá conservar el identificador original de cada registro seleccionado y su orden, para permitir la comparación del archivo exportado con los registros de origen.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "es-L05",
+      "metadata": {
+        "intended_language": "es",
+        "partition": "long",
+        "text_sha256": "8d536cc28f015859162f94c5b6946e36c787910a767ec0d970045c6ea335b18f"
+      },
+      "required_note": false,
+      "section": "es",
+      "text": "Si la conexión se interrumpe durante una transferencia, la aplicación deberá conservar las partes confirmadas y determinar el último punto válido antes de reanudar el envío de datos.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "es-L06",
+      "metadata": {
+        "intended_language": "es",
+        "partition": "long",
+        "text_sha256": "70988b99cc31a401f7290f62ffac54d7560da6aad14a756554f3698309f24636"
+      },
+      "required_note": false,
+      "section": "es",
+      "text": "Antes de guardar cambios en un documento compartido, el sistema deberá comprobar su versión y rechazar la operación si otro usuario ya ha confirmado una versión posterior del mismo documento.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "es-L07",
+      "metadata": {
+        "intended_language": "es",
+        "partition": "long",
+        "text_sha256": "de76d7286fac1b70a97a1850c21397f06b0180b0d5cc03c6e8b51def69cf551b"
+      },
+      "required_note": false,
+      "section": "es",
+      "text": "La vista del calendario deberá mostrar los eventos en la zona horaria elegida por el usuario sin modificar el instante almacenado de cada evento al cambiar esa preferencia de visualización.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "es-L08",
+      "metadata": {
+        "intended_language": "es",
+        "partition": "long",
+        "text_sha256": "9e52542f6df4cf554ad0ebe1335427e4feb916a92c5e47505d0e96bedd8ca043"
+      },
+      "required_note": false,
+      "section": "es",
+      "text": "Antes de restaurar una copia de seguridad, el servicio deberá comprobar su integridad y la identidad del proyecto al que pertenece, y conservar los datos actuales si alguna comprobación falla.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "es-L09",
+      "metadata": {
+        "intended_language": "es",
+        "partition": "long",
+        "text_sha256": "de12a92f9576a04e6971db6bb05a98698496338127e585478dca736bb4d75645"
+      },
+      "required_note": false,
+      "section": "es",
+      "text": "El buscador deberá admitir nombres con caracteres acentuados y mostrar la escritura original en los resultados, sin eliminar signos de puntuación ni sustituir los caracteres guardados.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "es-L10",
+      "metadata": {
+        "intended_language": "es",
+        "partition": "long",
+        "text_sha256": "3a1b561c05d086ef812b2b743b4dced056f6534836e30e00cababdad0a3f894b"
+      },
+      "required_note": false,
+      "section": "es",
+      "text": "Un trabajo de impresión cancelado deberá permanecer registrado con ese estado y no podrá ejecutarse de nuevo automáticamente cuando se reinicie el servicio de impresión.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "es-L11",
+      "metadata": {
+        "intended_language": "es",
+        "partition": "long",
+        "text_sha256": "c669833bf15fca4da9250b23a4ed26391f3477a49cacc80daecfbe3ae23054a6"
+      },
+      "required_note": false,
+      "section": "es",
+      "text": "El servicio de notificaciones deberá diferenciar la entrega de un mensaje al proveedor de transporte de la confirmación de lectura del destinatario, sin considerar ambos sucesos equivalentes.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "es-L12",
+      "metadata": {
+        "intended_language": "es",
+        "partition": "long",
+        "text_sha256": "71b19d6753692b77792d271600cd5161b20ca6bd0de96767e533ee3f5259e39a"
+      },
+      "required_note": false,
+      "section": "es",
+      "text": "La aplicación deberá rechazar una fecha inexistente antes de guardar el formulario y conservar los demás campos introducidos para que el usuario solo tenga que corregir la fecha incorrecta.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "es-L13",
+      "metadata": {
+        "intended_language": "es",
+        "partition": "long",
+        "text_sha256": "cca576349a2b6ed855ce77a36dc7b4fc7686be58a8da48a5aac1c1a669019c51"
+      },
+      "required_note": false,
+      "section": "es",
+      "text": "Cuando se retire a una persona de un grupo, el sistema deberá eliminar únicamente los permisos derivados de ese grupo y mantener los permisos que se hayan concedido por separado.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "es-L14",
+      "metadata": {
+        "intended_language": "es",
+        "partition": "long",
+        "text_sha256": "c0ce20d6d3f05a901f8a622b39f5ef43efc6665a0e019f7350b2e487a6a2898d"
+      },
+      "required_note": false,
+      "section": "es",
+      "text": "El comparador deberá distinguir un archivo vacío de un archivo inexistente y representar cada situación mediante un valor de estado diferente en el resultado destinado al procesamiento automático.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "es-L15",
+      "metadata": {
+        "intended_language": "es",
+        "partition": "long",
+        "text_sha256": "c9bb5ae857e34569d82107434358a587912344356a8c8dea42745a9ed052465e"
+      },
+      "required_note": false,
+      "section": "es",
+      "text": "Si una tarea en segundo plano alcanza su límite de memoria, el servicio deberá informar del trabajo pendiente y evitar que los registros todavía sin procesar se cuenten como resultados correctos.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "es-L16",
+      "metadata": {
+        "intended_language": "es",
+        "partition": "long",
+        "text_sha256": "069805e0b05c0b69e736aa73e681841cab5fe17e7bb5e58e26582dbed6e39a2c"
+      },
+      "required_note": false,
+      "section": "es",
+      "text": "El historial deberá guardar el identificador del objeto, la versión anterior y la versión resultante de cada modificación confirmada, de manera que pueda reconstruirse el orden de los cambios.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "es-L17",
+      "metadata": {
+        "intended_language": "es",
+        "partition": "long",
+        "text_sha256": "951f61003893e0c725cf569b5daaa7bb6e636e2bcf15f26224495f127d120332"
+      },
+      "required_note": false,
+      "section": "es",
+      "text": "El usuario deberá poder copiar un borrador con un identificador nuevo sin alterar el contenido del borrador original ni el historial de cambios que ya estaba asociado a ese borrador.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "es-L18",
+      "metadata": {
+        "intended_language": "es",
+        "partition": "long",
+        "text_sha256": "52449299f9553b0afee8132c0f7300912144f2e04e5e3cbc61073c2c4ffe798f"
+      },
+      "required_note": false,
+      "section": "es",
+      "text": "Si un archivo de importación contiene identificadores repetidos, el servicio deberá indicar todos los registros afectados y no podrá elegir uno de ellos sin informar del conflicto.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "es-L19",
+      "metadata": {
+        "intended_language": "es",
+        "partition": "long",
+        "text_sha256": "b03899c47aedaa0340793ae5e4ca6bd07b9a8f77578a2b310ab865dfbcc95d12"
+      },
+      "required_note": false,
+      "section": "es",
+      "text": "Antes de aplicar una modificación masiva, la aplicación deberá fijar la lista completa de objetos seleccionados y limitar la ejecución a los objetos que figuren en esa lista confirmada.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "es-L20",
+      "metadata": {
+        "intended_language": "es",
+        "partition": "long",
+        "text_sha256": "cb09d0c27dd2a870cd44b345ce35253f7e7654a46339412e87e0df5e06a726e7"
+      },
+      "required_note": false,
+      "section": "es",
+      "text": "Después del cierre de sesión, el servicio deberá rechazar las solicitudes que usen la sesión finalizada y distinguir los cambios pendientes de los cambios que ya se hayan guardado correctamente.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "es-S01",
+      "metadata": {
+        "intended_language": "es",
+        "partition": "short_technical",
+        "text_sha256": "143c83dc39cf218e222dcba2155d360e83190804ede14a953625d0563f5f1265"
+      },
+      "required_note": false,
+      "section": "es",
+      "text": "El sistema debe rechazar un identificador vacío.",
+      "title": "Short / technical case"
+    },
+    {
+      "criteria": [],
+      "id": "es-S02",
+      "metadata": {
+        "intended_language": "es",
+        "partition": "short_technical",
+        "text_sha256": "d6367552dcbefcfedb3b4ab04227044e826506f683508897aee66da835e9d1e0"
+      },
+      "required_note": false,
+      "section": "es",
+      "text": "Conserve el nombre original del archivo.",
+      "title": "Short / technical case"
+    },
+    {
+      "criteria": [],
+      "id": "es-S03",
+      "metadata": {
+        "intended_language": "es",
+        "partition": "short_technical",
+        "text_sha256": "ea3373ed8844c212a0a93bb6a6d92119078599b289a74a33b8feff7e70d7fba2"
+      },
+      "required_note": false,
+      "section": "es",
+      "text": "La respuesta debe usar UTF-8.",
+      "title": "Short / technical case"
+    },
+    {
+      "criteria": [],
+      "id": "es-S04",
+      "metadata": {
+        "intended_language": "es",
+        "partition": "short_technical",
+        "text_sha256": "f0f6f991631532037e0f7a4f44550a9e971e67c5d04bae7f874a03e9e5f123ae"
+      },
+      "required_note": false,
+      "section": "es",
+      "text": "No se permiten más de tres reintentos.",
+      "title": "Short / technical case"
+    },
+    {
+      "criteria": [],
+      "id": "es-S05",
+      "metadata": {
+        "intended_language": "es",
+        "partition": "short_technical",
+        "text_sha256": "3cc17877c0d7fa6ab217ccfb5603685dd5ce8339d7308203e34f1cdc90258e16"
+      },
+      "required_note": false,
+      "section": "es",
+      "text": "Un timeout no debe indicar éxito.",
+      "title": "Short / technical case"
+    },
+    {
+      "criteria": [],
+      "id": "ru-L01",
+      "metadata": {
+        "intended_language": "ru",
+        "partition": "long",
+        "text_sha256": "99a88c2d98e65230da1943492fb9acdbbe493b7e328bae10258dda14914cc752"
+      },
+      "required_note": false,
+      "section": "ru",
+      "text": "При сохранении поискового запроса приложение должно сохранять все выбранные фильтры, чтобы пользователь мог повторить поиск с теми же условиями по актуальному набору данных.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "ru-L02",
+      "metadata": {
+        "intended_language": "ru",
+        "partition": "long",
+        "text_sha256": "5dc1a7e6bed10c723324b6bd94641896ce92d025d1a3cd22180c0f91aa662bc2"
+      },
+      "required_note": false,
+      "section": "ru",
+      "text": "Служба загрузки должна проверять полное содержимое файла до присвоения ему состояния готовности, чтобы частично полученный файл не отображался как доступный для дальнейшей обработки.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "ru-L03",
+      "metadata": {
+        "intended_language": "ru",
+        "partition": "long",
+        "text_sha256": "d88de25301e5dac217970e5a82fcd4aea0e4bc713f25257c54bcd4c97f741f66"
+      },
+      "required_note": false,
+      "section": "ru",
+      "text": "После отзыва разрешения на чтение система должна отклонять следующий запрос, который требует этого разрешения, даже если пользователь открыл список документов до отзыва доступа.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "ru-L04",
+      "metadata": {
+        "intended_language": "ru",
+        "partition": "long",
+        "text_sha256": "2a65c269461bd7024a0ad9a3ed0c2a613155d999e76b8f52232d6b1609b0631f"
+      },
+      "required_note": false,
+      "section": "ru",
+      "text": "При экспорте система должна сохранять исходный идентификатор и установленный порядок каждой выбранной записи, чтобы результат можно было однозначно сопоставить с исходными данными.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "ru-L05",
+      "metadata": {
+        "intended_language": "ru",
+        "partition": "long",
+        "text_sha256": "aec0972d9e8c96f76e90fb81db23afe59949b358bcdcec90721d644df9ac86f2"
+      },
+      "required_note": false,
+      "section": "ru",
+      "text": "Если соединение прерывается во время передачи, приложение должно сохранять подтверждённые части данных и определять последнюю подтверждённую позицию перед продолжением передачи.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "ru-L06",
+      "metadata": {
+        "intended_language": "ru",
+        "partition": "long",
+        "text_sha256": "f7e27409e6cf05a79eefadbcc275a5357c618afbb9a17807e60c0c4977fbafec"
+      },
+      "required_note": false,
+      "section": "ru",
+      "text": "Перед сохранением изменений в общем документе система должна проверять его версию и отклонять запись, если другой пользователь уже сохранил более новую версию этого документа.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "ru-L07",
+      "metadata": {
+        "intended_language": "ru",
+        "partition": "long",
+        "text_sha256": "08f69e294259ec280cc2ce6793d793cc7da90746517b46c1fd90a73b40e7ac64"
+      },
+      "required_note": false,
+      "section": "ru",
+      "text": "Календарь должен отображать события в выбранном пользователем часовом поясе, не изменяя сохранённый момент события при изменении настройки часового пояса в интерфейсе.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "ru-L08",
+      "metadata": {
+        "intended_language": "ru",
+        "partition": "long",
+        "text_sha256": "6621427d3a39bf77a4a414ea1eeb6495a1ff12c6e6e43ebf587f44705804ce46"
+      },
+      "required_note": false,
+      "section": "ru",
+      "text": "Перед восстановлением резервной копии служба должна проверять её целостность и принадлежность выбранному проекту, а при неудачной проверке оставлять текущие данные без изменений.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "ru-L09",
+      "metadata": {
+        "intended_language": "ru",
+        "partition": "long",
+        "text_sha256": "7d1fdb621f6d54cf21e04d55119d95b6d46973081ff2dfe81167125d464a3913"
+      },
+      "required_note": false,
+      "section": "ru",
+      "text": "Поиск должен поддерживать имена с диакритическими знаками и выводить в результатах исходное написание имени без удаления знаков препинания или замены сохранённых символов.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "ru-L10",
+      "metadata": {
+        "intended_language": "ru",
+        "partition": "long",
+        "text_sha256": "a13921554dcc5018c243d74cb93acd6d3a23df68a5fa20e6a414cd53b601cd50"
+      },
+      "required_note": false,
+      "section": "ru",
+      "text": "Отменённое задание печати должно оставаться в списке со статусом отмены и не должно автоматически выполняться после перезапуска службы без нового явного запроса пользователя.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "ru-L11",
+      "metadata": {
+        "intended_language": "ru",
+        "partition": "long",
+        "text_sha256": "0875ad521f667735a1a60688e6f24602a5cad36e235348057901403e3b5c27cd"
+      },
+      "required_note": false,
+      "section": "ru",
+      "text": "Служба уведомлений должна различать передачу сообщения службе доставки и подтверждение его прочтения получателем, поскольку успешная передача сама по себе не подтверждает прочтение.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "ru-L12",
+      "metadata": {
+        "intended_language": "ru",
+        "partition": "long",
+        "text_sha256": "d6b75daac99c8013a4316eb1e26b00e5f4b1f5d001c1d44509941c9e66dad55d"
+      },
+      "required_note": false,
+      "section": "ru",
+      "text": "Приложение должно отклонять несуществующую дату до сохранения формы и сохранять содержимое остальных полей, чтобы пользователь мог исправить только ошибочное значение даты.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "ru-L13",
+      "metadata": {
+        "intended_language": "ru",
+        "partition": "long",
+        "text_sha256": "3c63bab77dc473c8c9190e0e3d559e66b508a285de0e9e5a97591ec87b5d1952"
+      },
+      "required_note": false,
+      "section": "ru",
+      "text": "При удалении участника из группы система должна отзывать только разрешения, полученные через эту группу, и сохранять разрешения, которые были предоставлены участнику независимо от неё.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "ru-L14",
+      "metadata": {
+        "intended_language": "ru",
+        "partition": "long",
+        "text_sha256": "c4117215c6be4626ad2a8e85e070fd12fd5ccfad77a0e14cfb952818ec1f0d5b"
+      },
+      "required_note": false,
+      "section": "ru",
+      "text": "Служба сравнения файлов должна различать пустой файл и отсутствующий файл и представлять эти состояния разными значениями в результате, предназначенном для машинной обработки.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "ru-L15",
+      "metadata": {
+        "intended_language": "ru",
+        "partition": "long",
+        "text_sha256": "8c7cf38ee4e059843af8dfcf3bb004d85fd1087bb4babf0f246872e4626a0c83"
+      },
+      "required_note": false,
+      "section": "ru",
+      "text": "При достижении предела памяти фоновая задача должна сообщать объём оставшейся работы и не должна учитывать ещё не обработанные записи как успешно завершённые результаты.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "ru-L16",
+      "metadata": {
+        "intended_language": "ru",
+        "partition": "long",
+        "text_sha256": "420473056f00635067f29cd4f60c9f12b21b3a748ecf3020b8954a88d481092e"
+      },
+      "required_note": false,
+      "section": "ru",
+      "text": "История изменений должна содержать идентификатор объекта, предыдущую версию и полученную версию для каждой подтверждённой операции, чтобы сохранялась возможность определить порядок изменений.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "ru-L17",
+      "metadata": {
+        "intended_language": "ru",
+        "partition": "long",
+        "text_sha256": "2e797efeb5e1772e2feb98b4990192b1bedf1f5bd52f715a0f80436e47ca1e1c"
+      },
+      "required_note": false,
+      "section": "ru",
+      "text": "Пользователь должен иметь возможность скопировать черновик с новым идентификатором, не изменяя содержимое исходного черновика и уже накопленную историю его изменений.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "ru-L18",
+      "metadata": {
+        "intended_language": "ru",
+        "partition": "long",
+        "text_sha256": "be7d8203508cee56f049445b9ea49a8ae54d60b82fff4aa262111b065af58c5f"
+      },
+      "required_note": false,
+      "section": "ru",
+      "text": "Если импортируемый файл содержит повторяющиеся идентификаторы, служба должна сообщать обо всех затронутых записях и не должна молча выбирать одну из конфликтующих записей.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "ru-L19",
+      "metadata": {
+        "intended_language": "ru",
+        "partition": "long",
+        "text_sha256": "be259afb51b794be8f4012b814053cf1dc9d4905f4aa765f12e5bbff5bc3c557"
+      },
+      "required_note": false,
+      "section": "ru",
+      "text": "Перед массовым изменением приложение должно зафиксировать полный список выбранных объектов и при выполнении операции изменять только объекты из подтверждённого списка.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "ru-L20",
+      "metadata": {
+        "intended_language": "ru",
+        "partition": "long",
+        "text_sha256": "277c1bd9fdbf4f36aee510414a528512a7412a6af520c8f252db4adda415c1b7"
+      },
+      "required_note": false,
+      "section": "ru",
+      "text": "После завершения сеанса служба должна отклонять запросы с идентификатором завершённого сеанса и явно различать несохранённые изменения и изменения, которые уже были подтверждены.",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "ru-S01",
+      "metadata": {
+        "intended_language": "ru",
+        "partition": "short_technical",
+        "text_sha256": "1671ab177b1ab5b4bd664a2274d0b6ee54cc85eaa4e0d01c6c7069cec8455c1c"
+      },
+      "required_note": false,
+      "section": "ru",
+      "text": "Пустой идентификатор должен быть отклонён.",
+      "title": "Short / technical case"
+    },
+    {
+      "criteria": [],
+      "id": "ru-S02",
+      "metadata": {
+        "intended_language": "ru",
+        "partition": "short_technical",
+        "text_sha256": "f310efbbe0d8f9a5cacc1c049e3c2455562a5d8ba9b4fcad9b4efe8709057eed"
+      },
+      "required_note": false,
+      "section": "ru",
+      "text": "Исходное имя файла должно сохраняться.",
+      "title": "Short / technical case"
+    },
+    {
+      "criteria": [],
+      "id": "ru-S03",
+      "metadata": {
+        "intended_language": "ru",
+        "partition": "short_technical",
+        "text_sha256": "8cab00ded26ec6692a5bc2961a479a0079656c89973fb9b39adc0653d922ff7f"
+      },
+      "required_note": false,
+      "section": "ru",
+      "text": "Для обмена следует использовать UTF-8.",
+      "title": "Short / technical case"
+    },
+    {
+      "criteria": [],
+      "id": "ru-S04",
+      "metadata": {
+        "intended_language": "ru",
+        "partition": "short_technical",
+        "text_sha256": "1311e9a4ea513e36c4c4868d735c2f7cd1cf10f7414c550957af588099cb1f10"
+      },
+      "required_note": false,
+      "section": "ru",
+      "text": "Допускается не более трёх повторных попыток.",
+      "title": "Short / technical case"
+    },
+    {
+      "criteria": [],
+      "id": "ru-S05",
+      "metadata": {
+        "intended_language": "ru",
+        "partition": "short_technical",
+        "text_sha256": "20fae8044115fe235e3236d4ca92e3d87f87d86f98daa033aa670cf3511af775"
+      },
+      "required_note": false,
+      "section": "ru",
+      "text": "Тайм-аут не должен означать успех.",
+      "title": "Short / technical case"
+    },
+    {
+      "criteria": [],
+      "id": "ja-L01",
+      "metadata": {
+        "intended_language": "ja",
+        "partition": "long",
+        "text_sha256": "00f12ad74fc739ce22af9ef711dcd047695b65ac52a66134978b1d298cc910a7"
+      },
+      "required_note": false,
+      "section": "ja",
+      "text": "利用者が検索条件を保存したとき、アプリケーションは選択されたすべての絞り込み条件を保持しなければならない。保存した検索を再度実行する場合も同じ条件を使用し、最新のデータに基づいて結果を計算すること。",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "ja-L02",
+      "metadata": {
+        "intended_language": "ja",
+        "partition": "long",
+        "text_sha256": "3c908455a149915ed38d99987ff120f37aae063c4a93cd62a42cff16106c215f"
+      },
+      "required_note": false,
+      "section": "ja",
+      "text": "ファイルをアップロードするサービスは、内容を最後まで受信して確認する前に、そのファイルを利用可能として扱ってはならない。途中で通信が切れた場合は、受信が完了していないことを結果に明示すること。",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "ja-L03",
+      "metadata": {
+        "intended_language": "ja",
+        "partition": "long",
+        "text_sha256": "aea8201b5197633cfa29207d4af81e5e3de4ca1bb0d25adffb3574de623b20bd"
+      },
+      "required_note": false,
+      "section": "ja",
+      "text": "文書の閲覧権限が取り消された場合、サービスはその権限を必要とする次の要求を拒否しなければならない。利用者が取り消し前から文書一覧を開いていても、古い表示を理由に閲覧を許可してはならない。",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "ja-L04",
+      "metadata": {
+        "intended_language": "ja",
+        "partition": "long",
+        "text_sha256": "6706c0bfac7bb9cfe47eae63508b68d16394e4dbb58722ed52ac7d0d3c01018b"
+      },
+      "required_note": false,
+      "section": "ja",
+      "text": "書き出し機能は、選択した各レコードの識別子と指定された順序を維持しなければならない。出力されたレコードを元のデータと照合できるようにし、書き出しのために新しい識別子へ置き換えてはならない。",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "ja-L05",
+      "metadata": {
+        "intended_language": "ja",
+        "partition": "long",
+        "text_sha256": "cb0daa848fe26d0aad0e2bdaa6414dfd9d8d637830b0e67b2fc665f7c08184bb"
+      },
+      "required_note": false,
+      "section": "ja",
+      "text": "データ転送中に接続が切れた場合、アプリケーションは受信が確認された部分を保持しなければならない。転送を再開する前に最後に確認された位置を確定し、未確認の部分を転送済みとして数えてはならない。",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "ja-L06",
+      "metadata": {
+        "intended_language": "ja",
+        "partition": "long",
+        "text_sha256": "f495a5c6b72eddaf32e6158334c4988c751c55c0f44b9b383f816bb0a5204a8e"
+      },
+      "required_note": false,
+      "section": "ja",
+      "text": "共同編集する文書への変更を保存する前に、システムは編集開始時の版と現在の版を比較しなければならない。別の利用者が新しい版を保存していた場合は上書きを拒否し、両方の内容を確認できるようにすること。",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "ja-L07",
+      "metadata": {
+        "intended_language": "ja",
+        "partition": "long",
+        "text_sha256": "939a184a12fa9ca9a976c56dbf2df49bf77c637f54daaee83ee775bb0a1dcef0"
+      },
+      "required_note": false,
+      "section": "ja",
+      "text": "予定表は、利用者が選択した時間帯に合わせて予定の日時を表示しなければならない。表示用の時間帯を変更しても、保存されている実際の時点を変更せず、同じ予定が別の時点へ移動したように扱わないこと。",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "ja-L08",
+      "metadata": {
+        "intended_language": "ja",
+        "partition": "long",
+        "text_sha256": "a19a61ec8cefd88a1f590be7035ad69e4f97744e6781739d896e4fdcc0010ec1"
+      },
+      "required_note": false,
+      "section": "ja",
+      "text": "バックアップから復元するサービスは、現在のデータを置き換える前に、バックアップの完全性と対象プロジェクトの識別子を確認しなければならない。確認に失敗した場合は、現在のデータをそのまま保持すること。",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "ja-L09",
+      "metadata": {
+        "intended_language": "ja",
+        "partition": "long",
+        "text_sha256": "c2469812606746d0adf8e4dff6db41713ebc8ef625a080228f5cf2183723202e"
+      },
+      "required_note": false,
+      "section": "ja",
+      "text": "検索機能は、アクセント記号などを含む名前も検索対象として扱わなければならない。検索結果では保存された元の表記を表示し、記号や空白を削除した名前によって元の名前を置き換えてはならない。",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "ja-L10",
+      "metadata": {
+        "intended_language": "ja",
+        "partition": "long",
+        "text_sha256": "00e0d880af54a9a0d08656e065a4b78d5b1257ea5239b0cd7fa4aa2f45e36ac5"
+      },
+      "required_note": false,
+      "section": "ja",
+      "text": "取り消された印刷要求は、取り消し済みの状態で要求一覧に残さなければならない。印刷サービスが再起動した場合でも、利用者による新しい要求なしに、その取り消された印刷を自動的に実行してはならない。",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "ja-L11",
+      "metadata": {
+        "intended_language": "ja",
+        "partition": "long",
+        "text_sha256": "2416e64fb7a205f92bada3dd8123092dc8f484bc2031afe64561256295bc73b2"
+      },
+      "required_note": false,
+      "section": "ja",
+      "text": "通知サービスは、配送先のサービスにメッセージを渡したことと、受信者がその内容を読んだことを区別しなければならない。配送処理が成功しただけで、受信者による既読の確認を作成してはならない。",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "ja-L12",
+      "metadata": {
+        "intended_language": "ja",
+        "partition": "long",
+        "text_sha256": "4515cb2acb558823a677b4f312565084e7e65c71752831837e3cc8971bea41a5"
+      },
+      "required_note": false,
+      "section": "ja",
+      "text": "入力された日付が存在しない場合、アプリケーションは保存前にその値を拒否しなければならない。利用者が日付だけを修正できるよう、同じ入力画面に記入した他の項目の値は変更せずに保持すること。",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "ja-L13",
+      "metadata": {
+        "intended_language": "ja",
+        "partition": "long",
+        "text_sha256": "35d050bac862b097f21d684392b82fc381b38fe0866a1ea06d1e13426d425304"
+      },
+      "required_note": false,
+      "section": "ja",
+      "text": "利用者をグループから削除した場合、システムはそのグループを通じて与えられた権限だけを取り消さなければならない。別の手段で個別に与えられた権限については、追加の指示がない限り変更しないこと。",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "ja-L14",
+      "metadata": {
+        "intended_language": "ja",
+        "partition": "long",
+        "text_sha256": "e97dd801d4f7453a056af19a64e9421dad81185a3bc36e35ac1781dbe5e8ed40"
+      },
+      "required_note": false,
+      "section": "ja",
+      "text": "ファイル比較サービスは、内容が空のファイルと、ファイル自体が存在しない状態を区別しなければならない。後続の処理が違いを判断できるよう、機械処理用の結果には異なる状態値を記録すること。",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "ja-L15",
+      "metadata": {
+        "intended_language": "ja",
+        "partition": "long",
+        "text_sha256": "88d85c844fab5a4e6f12286335f42e79907629ae196a2712cceb5daf169f6866"
+      },
+      "required_note": false,
+      "section": "ja",
+      "text": "バックグラウンド処理がメモリの上限に達した場合、サービスは完了した作業と残っている作業を分けて報告しなければならない。まだ処理していないレコードを、正常に処理済みの件数へ含めてはならない。",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "ja-L16",
+      "metadata": {
+        "intended_language": "ja",
+        "partition": "long",
+        "text_sha256": "2a68f9c342db3f04487b0d8a12899b821d65279768ccf7d2ff20196671ff1c88"
+      },
+      "required_note": false,
+      "section": "ja",
+      "text": "変更履歴には、確定した各変更について対象の識別子、変更前の版、変更後の版を記録しなければならない。後から変更の順序を追跡できるよう、過去の履歴を新しい変更の情報で上書きしないこと。",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "ja-L17",
+      "metadata": {
+        "intended_language": "ja",
+        "partition": "long",
+        "text_sha256": "a9ba579c152c9f652b94ca7bd6772e08a30598ee6b36d677e67f244b6e8146cb"
+      },
+      "required_note": false,
+      "section": "ja",
+      "text": "利用者が下書きを複製するとき、アプリケーションは複製先に新しい識別子を割り当てなければならない。元の下書きの内容と、その下書きに既に関連付けられている変更履歴は、複製によって変更しないこと。",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "ja-L18",
+      "metadata": {
+        "intended_language": "ja",
+        "partition": "long",
+        "text_sha256": "aa8ce26d4245d864caa906299f5746bef7bd9d47fbbce583c66a1dea8aaa7185"
+      },
+      "required_note": false,
+      "section": "ja",
+      "text": "取り込み用ファイルに同じ識別子を持つ複数のレコードがある場合、サービスは該当するすべてのレコードを報告しなければならない。競合を利用者に知らせずに、その中の一件だけを選択して取り込んではならない。",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "ja-L19",
+      "metadata": {
+        "intended_language": "ja",
+        "partition": "long",
+        "text_sha256": "8af108d14bf1be6f99c12a721d7a723dd30c3cf418eb4b381679f34c66e0e215"
+      },
+      "required_note": false,
+      "section": "ja",
+      "text": "一括変更を実行する前に、アプリケーションは対象となるすべてのオブジェクトを確定しなければならない。利用者が確認した後の実行では、その確定した一覧に含まれない別のオブジェクトを追加で変更してはならない。",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "ja-L20",
+      "metadata": {
+        "intended_language": "ja",
+        "partition": "long",
+        "text_sha256": "d00299032bed9e0a64df1cb47aba3e2a07ab00b3d1bb0d7201dd2d22f59f1f1b"
+      },
+      "required_note": false,
+      "section": "ja",
+      "text": "利用者がログアウトした後、サービスは終了したセッションを使用する新しい要求を拒否しなければならない。保存が確定した変更と未保存の変更を区別し、未保存の内容を保存済みとして表示してはならない。",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "ja-S01",
+      "metadata": {
+        "intended_language": "ja",
+        "partition": "short_technical",
+        "text_sha256": "19eb8c19a959901bbb42678cd6adfd6439d2bf3c2d200cea6d9bf0567894d95b"
+      },
+      "required_note": false,
+      "section": "ja",
+      "text": "空の識別子は受け付けないこと。",
+      "title": "Short / technical case"
+    },
+    {
+      "criteria": [],
+      "id": "ja-S02",
+      "metadata": {
+        "intended_language": "ja",
+        "partition": "short_technical",
+        "text_sha256": "3d3919397fbd0579a9d3685af4e5a27076fc9895b824bdac13f1772868daeb39"
+      },
+      "required_note": false,
+      "section": "ja",
+      "text": "元のファイル名を保持すること。",
+      "title": "Short / technical case"
+    },
+    {
+      "criteria": [],
+      "id": "ja-S03",
+      "metadata": {
+        "intended_language": "ja",
+        "partition": "short_technical",
+        "text_sha256": "ecaf2c4f00787599b0747777d7ee4863e0ad3d360267174684e4b05fc2344b0c"
+      },
+      "required_note": false,
+      "section": "ja",
+      "text": "交換データにはUTF-8を使用すること。",
+      "title": "Short / technical case"
+    },
+    {
+      "criteria": [],
+      "id": "ja-S04",
+      "metadata": {
+        "intended_language": "ja",
+        "partition": "short_technical",
+        "text_sha256": "36b2743d407c8c4781c8235522352e0fd1652872c556b8a9dee40f2da98ba066"
+      },
+      "required_note": false,
+      "section": "ja",
+      "text": "再試行は三回までとすること。",
+      "title": "Short / technical case"
+    },
+    {
+      "criteria": [],
+      "id": "ja-S05",
+      "metadata": {
+        "intended_language": "ja",
+        "partition": "short_technical",
+        "text_sha256": "6ea32fd61d9fe5503889a9e98ce14c1b20c010520d361f048dd4839500fc63ba"
+      },
+      "required_note": false,
+      "section": "ja",
+      "text": "時間切れを成功として扱わないこと。",
+      "title": "Short / technical case"
+    },
+    {
+      "criteria": [],
+      "id": "zh-L01",
+      "metadata": {
+        "intended_language": "zh",
+        "partition": "long",
+        "text_sha256": "d35767a87f344e4fada123efc899d5d0f25802d3a46999b88a9a173b414c1d18"
+      },
+      "required_note": false,
+      "section": "zh",
+      "text": "当用户保存一组查询条件时，应用程序必须保留已经选择的全部筛选条件。用户再次打开并执行该查询时，系统应当使用同一组条件检查当前的数据，不得自行恢复默认条件，也不得把以前缓存的结果当作本次查询得到的新结果。",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "zh-L02",
+      "metadata": {
+        "intended_language": "zh",
+        "partition": "long",
+        "text_sha256": "6eb62df804670e10f8b87076f0087d705b57838ca994ff7007129fc48d812e26"
+      },
+      "required_note": false,
+      "section": "zh",
+      "text": "文件上传服务必须在接收并检查完整内容之后，才能把文件标记为可用。如果传输过程中发生中断，服务应当明确说明文件尚未接收完成，不得让后续处理把已经收到的部分内容当作完整文件使用，也不得覆盖原有的有效文件。",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "zh-L03",
+      "metadata": {
+        "intended_language": "zh",
+        "partition": "long",
+        "text_sha256": "2e892f33cd601bc143b5eac07d0b7b4a39be8d66971939e26d4e601b0e4e4cc7"
+      },
+      "required_note": false,
+      "section": "zh",
+      "text": "当某个用户的文档阅读权限被撤销后，系统必须拒绝该用户下一次依赖这项权限的访问请求。即使用户在权限被撤销之前已经打开文档列表，系统也不得依据旧页面中显示的信息继续允许访问，而应当重新检查当前有效的权限。",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "zh-L04",
+      "metadata": {
+        "intended_language": "zh",
+        "partition": "long",
+        "text_sha256": "42553d4bdb362d39ce5b8fd76d01ccef2124d5f9eca74696f62a7149c1f0326d"
+      },
+      "required_note": false,
+      "section": "zh",
+      "text": "导出功能必须保留每条选中记录的原始标识符以及用户指定的排列顺序，使导出的记录能够与来源中的对应记录逐一核对。系统不得仅仅为了生成导出文件而重新编号，也不得在没有说明的情况下改变已经确认的记录顺序。",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "zh-L05",
+      "metadata": {
+        "intended_language": "zh",
+        "partition": "long",
+        "text_sha256": "77a278281f6e287e83bca26dea1b0222fe9da2132112896f8281ecd6a5c4420e"
+      },
+      "required_note": false,
+      "section": "zh",
+      "text": "当数据传输因连接中断而停止时，应用程序必须保留已经确认收到的数据部分。恢复传输之前，系统应当确定最后一个得到确认的位置，并从尚未确认的部分继续处理，不得把未经确认的数据计入已经完成的传输范围。",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "zh-L06",
+      "metadata": {
+        "intended_language": "zh",
+        "partition": "long",
+        "text_sha256": "fb0967e5ad48fdcc264c2ef03dceaf0990fe480316b6efa6cf817eb199ababaa"
+      },
+      "required_note": false,
+      "section": "zh",
+      "text": "在保存共同编辑的文档之前，系统必须比较当前版本与编辑者开始编辑时使用的版本。如果另一名用户已经保存了新的版本，系统应当拒绝直接覆盖，并保留双方的内容供用户检查，不得在没有提示的情况下丢弃其中一方的修改。",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "zh-L07",
+      "metadata": {
+        "intended_language": "zh",
+        "partition": "long",
+        "text_sha256": "2772ad4716ceac3ed8e45ce9569a0271ea32302a99a63b3cacb781f859378327"
+      },
+      "required_note": false,
+      "section": "zh",
+      "text": "日历视图必须根据用户选择的时区显示事件时间，但不得因为显示时区发生变化而改变已经保存的实际时间点。同一事件在不同的时区中可以显示不同的本地时间，系统仍应当把这些显示结果关联到同一个事件和同一个实际时间点。",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "zh-L08",
+      "metadata": {
+        "intended_language": "zh",
+        "partition": "long",
+        "text_sha256": "0853b63c57fec5cc6970ae954bf61f72b41f2082f3d026944c98db28f5c4b3c3"
+      },
+      "required_note": false,
+      "section": "zh",
+      "text": "备份恢复服务必须在替换现有数据之前，检查备份内容是否完整以及备份是否属于选定的项目。如果任何一项检查失败，服务应当保留当前数据并报告失败原因，不得先删除现有记录，再尝试从未经确认的备份中恢复这些记录。",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "zh-L09",
+      "metadata": {
+        "intended_language": "zh",
+        "partition": "long",
+        "text_sha256": "f850a9451776b1e78487d2f35c451fe6930c31c6c7b56a3d350992124dac2f76"
+      },
+      "required_note": false,
+      "section": "zh",
+      "text": "搜索功能必须支持包含附加符号的名称，并且在结果中保留名称原来存储的写法。系统可以采用规定的匹配方式寻找对应记录，但不得把用于匹配的简化字符串写回原始名称，也不得在显示时擅自删除空格或标点符号。",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "zh-L10",
+      "metadata": {
+        "intended_language": "zh",
+        "partition": "long",
+        "text_sha256": "c7762d1807be732e9bdb56b30fabfaca86db6d9dbeb262a5728bf6a0a89afe99"
+      },
+      "required_note": false,
+      "section": "zh",
+      "text": "已经取消的打印任务必须以取消状态保留在任务列表中，供用户了解此前发生的操作。打印服务重新启动后，不得自动执行这些任务，也不得把服务重启当作用户重新提交打印请求；只有新的明确请求才能建立新的打印任务。",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "zh-L11",
+      "metadata": {
+        "intended_language": "zh",
+        "partition": "long",
+        "text_sha256": "1873376e44cef8a67712222a91e132a83fc5072e2af6c50497155f99a15137be"
+      },
+      "required_note": false,
+      "section": "zh",
+      "text": "通知服务必须区分消息已经交给传输服务与收件人已经阅读消息这两种不同情况。成功提交消息只能作为传输阶段的记录，不能自动生成阅读确认，也不能让后续界面把尚未得到阅读确认的消息显示为已经被收件人阅读。",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "zh-L12",
+      "metadata": {
+        "intended_language": "zh",
+        "partition": "long",
+        "text_sha256": "cab8799096d36511c91e3133bac7a58a8710451bc2f156aba52c71024f4d5802"
+      },
+      "required_note": false,
+      "section": "zh",
+      "text": "当用户输入不存在的日期时，应用程序必须在保存表单之前拒绝该日期，并明确指出需要更正的字段。为了让用户只修正出错的日期，系统应当保留同一表单内其他已经填写的值，不得因为一次日期校验失败而清空整份表单。",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "zh-L13",
+      "metadata": {
+        "intended_language": "zh",
+        "partition": "long",
+        "text_sha256": "53b8eb01a529ef6e5bb61274a78e40716c6cef610c6240850503d5cc27595c56"
+      },
+      "required_note": false,
+      "section": "zh",
+      "text": "将一名成员从工作组移除时，系统必须撤销仅由该工作组授予的权限，同时保留通过其他独立方式授予的权限。系统不得把退出工作组等同于删除该成员的全部访问资格，并应当能够说明哪些权限因这次操作而发生了变化。",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "zh-L14",
+      "metadata": {
+        "intended_language": "zh",
+        "partition": "long",
+        "text_sha256": "cff817b9fe3c7b41b474c780f77f60fc1ab7c93443d7243d944d631aca4ba02d"
+      },
+      "required_note": false,
+      "section": "zh",
+      "text": "文件比较服务必须把空文件与不存在的文件作为不同状态处理，并在机器可读的结果中使用不同的状态值。后续处理应当能够仅依据这些结果判断文件是否实际存在，而不必从文件大小为零这一信息推测文件是否已经被删除。",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "zh-L15",
+      "metadata": {
+        "intended_language": "zh",
+        "partition": "long",
+        "text_sha256": "0fca65b78d224c27fe5d104899f188d58268b5073e7a84a24df8e1eb8c4cef72"
+      },
+      "required_note": false,
+      "section": "zh",
+      "text": "当后台任务达到规定的内存上限时，服务必须分别报告已经完成的工作和仍然等待处理的工作。尚未处理的记录不得计入成功数量，任务也不得仅因停止了继续分配内存就被标记为全部完成；剩余范围必须能够被明确识别。",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "zh-L16",
+      "metadata": {
+        "intended_language": "zh",
+        "partition": "long",
+        "text_sha256": "0ded4eb2b25292257d115de4a7dbd214ee3a15a0037bb29b1b307c9287b5167c"
+      },
+      "required_note": false,
+      "section": "zh",
+      "text": "对于每一次已经确认的修改，变更历史必须记录目标对象的标识符、修改前的版本以及修改后的版本，使后续检查能够确定修改的先后关系。新增历史记录不得覆盖此前已经保存的记录，也不得把不同对象的版本关系混在一起。",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "zh-L17",
+      "metadata": {
+        "intended_language": "zh",
+        "partition": "long",
+        "text_sha256": "b5155e3b8e7a952cb4ad6e8569fa0f0351c7a46f3fa9157def44f532187f450f"
+      },
+      "required_note": false,
+      "section": "zh",
+      "text": "用户复制一份草稿时，应用程序必须为副本分配新的标识符，同时保留原草稿的内容和已有变更历史。复制操作不得改变原草稿的版本，也不得把副本之后发生的编辑自动加入原草稿的历史；两份草稿应当能够分别继续编辑。",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "zh-L18",
+      "metadata": {
+        "intended_language": "zh",
+        "partition": "long",
+        "text_sha256": "dbdfbcbd440bf85355a90adf5343e3ff90a8dc09373be778891e882a5adcfbae"
+      },
+      "required_note": false,
+      "section": "zh",
+      "text": "如果导入文件包含使用同一标识符的多条记录，导入服务必须报告所有涉及冲突的记录，并在冲突处理完成之前阻止这些记录被直接写入。系统不得因为记录出现的位置不同而静默选择第一条或最后一条，也不得隐藏其余冲突内容。",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "zh-L19",
+      "metadata": {
+        "intended_language": "zh",
+        "partition": "long",
+        "text_sha256": "4430ff21e21184b0b0636908ace6be5df9b428863892cb4ee94c40b0ee610a98"
+      },
+      "required_note": false,
+      "section": "zh",
+      "text": "执行批量修改之前，应用程序必须确定完整的目标对象列表，并让用户确认本次操作涉及的范围。实际执行时只能修改这份已确认列表中的对象，不得因为后台数据发生变化就自行加入其他对象；新增对象必须经过单独的确认。",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "zh-L20",
+      "metadata": {
+        "intended_language": "zh",
+        "partition": "long",
+        "text_sha256": "b33735586ddea4a508335299a5d20a797dde873287f07704640bcfbb86d3ab56"
+      },
+      "required_note": false,
+      "section": "zh",
+      "text": "用户退出登录之后，服务必须拒绝继续使用已经结束的会话发送的新请求，并明确区分已保存的修改与尚未确认的修改。系统不得把退出操作当作对所有未保存内容的确认，也不得让旧会话在退出后继续提交新的数据变更。",
+      "title": "Requirement"
+    },
+    {
+      "criteria": [],
+      "id": "zh-S01",
+      "metadata": {
+        "intended_language": "zh",
+        "partition": "short_technical",
+        "text_sha256": "d97c32065ac7f6d1e0270d15f6725c3961fb5020d378d5094e327b5cd55b24dc"
+      },
+      "required_note": false,
+      "section": "zh",
+      "text": "系统必须拒绝空的标识符。",
+      "title": "Short / technical case"
+    },
+    {
+      "criteria": [],
+      "id": "zh-S02",
+      "metadata": {
+        "intended_language": "zh",
+        "partition": "short_technical",
+        "text_sha256": "f51fa2845cb0c5f4efb889829d410042d97bcb4740f0e4a086347e9a734ed8ea"
+      },
+      "required_note": false,
+      "section": "zh",
+      "text": "必须保留原始文件名。",
+      "title": "Short / technical case"
+    },
+    {
+      "criteria": [],
+      "id": "zh-S03",
+      "metadata": {
+        "intended_language": "zh",
+        "partition": "short_technical",
+        "text_sha256": "2d64c533c288a3a6d7d6b299f4fae0ba7e1a7e387a59c361241279ee97ba838a"
+      },
+      "required_note": false,
+      "section": "zh",
+      "text": "交换数据必须使用UTF-8。",
+      "title": "Short / technical case"
+    },
+    {
+      "criteria": [],
+      "id": "zh-S04",
+      "metadata": {
+        "intended_language": "zh",
+        "partition": "short_technical",
+        "text_sha256": "28e52377f149f2e44214858c697f27c089f7e8fd20ca576c833f2f912e5c6fc4"
+      },
+      "required_note": false,
+      "section": "zh",
+      "text": "重试次数不得超过三次。",
+      "title": "Short / technical case"
+    },
+    {
+      "criteria": [],
+      "id": "zh-S05",
+      "metadata": {
+        "intended_language": "zh",
+        "partition": "short_technical",
+        "text_sha256": "c2e4075969052bfbd05d9102f9bf9557d0289f465025a99072a700c9c0d1d5b7"
+      },
+      "required_note": false,
+      "section": "zh",
+      "text": "超时不得被记录为成功。",
+      "title": "Short / technical case"
+    },
+    {
+      "criteria": [
+        "Describe the provenance assessment and any unresolved concerns.",
+        "State the authorized usage/publication terms or license, the scope of your authority and the evidence for that decision. Do not infer permission from a passing automated test.",
+        "The common linguistic criteria apply to language cases; this point assesses provenance and permission only."
+      ],
+      "id": "provenance-approval",
+      "metadata": {
+        "initial_status": "pending_project_owner",
+        "scope": "all 225 language candidate texts"
+      },
+      "required_note": true,
+      "section": "provenance",
+      "text": "The 225 language texts were prepared as AI-authored drafts. The source reference binds the original candidate; all original text hashes are retained. At preparation, human language review, source assessment and project-authorized usage/license approval were pending. Assess and document the actual provenance and permission evidence.",
+      "title": "Source review and usage terms"
+    }
+  ],
+  "minimum_reviewers": 1,
+  "purpose": "Review the language, meaning and provenance of the proposed T.10 corpus. The initial preparation of these AI-authored drafts did not invoke a detector. Current human review coverage comes from result files; it is neither frozen corpus acceptance nor a passing adapter test.",
+  "sections": [
+    {
+      "attestation": "I am competent to review Deutsch and personally checked the points I submit.",
+      "id": "de",
+      "title": "Deutsch"
+    },
+    {
+      "attestation": "I am competent to review English and personally checked the points I submit.",
+      "id": "en",
+      "title": "English"
+    },
+    {
+      "attestation": "I am competent to review हिन्दी and personally checked the points I submit.",
+      "id": "hi",
+      "title": "हिन्दी"
+    },
+    {
+      "attestation": "I am competent to review Bahasa Indonesia and personally checked the points I submit.",
+      "id": "id",
+      "title": "Bahasa Indonesia"
+    },
+    {
+      "attestation": "I am competent to review Português and personally checked the points I submit.",
+      "id": "pt",
+      "title": "Português"
+    },
+    {
+      "attestation": "I am competent to review Español and personally checked the points I submit.",
+      "id": "es",
+      "title": "Español"
+    },
+    {
+      "attestation": "I am competent to review Русский and personally checked the points I submit.",
+      "id": "ru",
+      "title": "Русский"
+    },
+    {
+      "attestation": "I am competent to review 日本語 and personally checked the points I submit.",
+      "id": "ja",
+      "title": "日本語"
+    },
+    {
+      "attestation": "I am competent to review 中文 and personally checked the points I submit.",
+      "id": "zh",
+      "title": "中文"
+    },
+    {
+      "attestation": "I am authorized to decide and document the project's corpus usage and publication terms.",
+      "id": "provenance",
+      "title": "Provenance and permission"
+    }
+  ],
+  "source": {
+    "kind": "ai_authored_candidate",
+    "note": "Codex drafted these 225 texts on 2026-11-20, without intentionally copying an external source. Related scenarios occur across languages. Labels, language quality, source review and usage/license approval were unverified at preparation. Current review status is derived only from result files. No detector-driven selection.",
+    "reference": "sha256:9033ac4a99903e99a3c98dcfccf1eac41070673a61223867814d1e34601bb7ed"
+  },
+  "title": "Language corpus"
+}

@@ -1,0 +1,25 @@
+{
+  "attestations": [
+    "de"
+  ],
+  "created_at": "2026-11-22T21:36:52Z",
+  "decisions": [
+    {
+      "item_id": "de-L06",
+      "item_sha256": "855b21474904d386abf1a74fa5aacf6dcd6e65ebd54f0f8a3e387af62a3016fa",
+      "note": "Präzisierte Fassung nach persönlicher erneuter Prüfung bestätigt.",
+      "proposed_text": "",
+      "verdict": "accept"
+    }
+  ],
+  "format_version": 1,
+  "id": "21835e62-7e8a-4d67-8074-90581ce7ba75",
+  "module_id": "language-corpus",
+  "module_sha256": "d321c8b4b49f150e308f3c4723e821a51b12c6dc2610e30a06f70fc65e1fadbf",
+  "personal_review": true,
+  "publication_consent": true,
+  "reviewer": {
+    "email": "christian.doehn@gmail.com",
+    "name": "Christian Döhn"
+  }
+}
