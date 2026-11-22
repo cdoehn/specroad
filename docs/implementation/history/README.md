@@ -608,3 +608,5 @@
 - [Bundle 787 — Prozessabbruch-Harness und Python-/Distributionsmatrix](bundle-787-python-matrix.md).
 
 - [Bundle 788 — erhaltene Fehlerdiagnose und vollständiger offener Rest](bundle-788-nested-run-diagnostics.md).
+
+- [Bundle 789 — native Validierungsfälle der Pythonmatrix](bundle-789-validation-matrix.md).

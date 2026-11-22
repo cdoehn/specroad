@@ -15,21 +15,22 @@ from support.transport_opening import opening_request, offline
 from test_proposal_basis import project, planned_change, fields
 
 
-def origin(root, distribution, *, subproject=False):
+def origin(root, distribution, *, subproject=False, python=None):
     repository = root / 'repository'; repository.mkdir()
     model = repository / 'model' if subproject else repository
     project(model, bundled=True)
-    registered = register(root, repository)
+    registered = register(root, repository, python=python)
     value = request(root, model, distribution[1])
-    response = run_request(root, value, source=distribution[0])
+    response = run_request(root, value, source=distribution[0], python=python)
     assert response['code'] == 0, response
     return {'source': root / 'output/handoff.zip', 'runtime': Path(value['options']['--patchharbor-pyz']),
             'origin': model, 'repository': repository, 'registered': registered}
 
 
-def sandbox(root, distribution, handoff, *, empty=False):
+def sandbox(root, distribution, handoff, *, empty=False, source=None, python=None):
+    source = distribution[1] if source is None else source
     value = opening_request(root, handoff, extract=True)
-    result = offline(root, distribution[1], value)
+    result = offline(root, source, value, python=python)
     assert result['code'] == 0, result
     model = InspectionSnapshot(root / 'sandbox/project', None).model
     supplied = root / 'proposal.json'
@@ -58,7 +59,7 @@ checked=check_proposal_project(root,str(target))
 assert checked.exit_code==0,checked.as_dict()
 print(json.dumps({'proposal':proposal.data,'path':proposal.original.path}))
 """
-    prepared = offline_program(root, distribution[1], program)
+    prepared = offline_program(root, source, program, python=python)
     proposal = Proposal(supplied.read_bytes(), path=prepared['path'])
     output = root / 'output'; output.mkdir()
     return {'command_id': 'bundle.create', 'options': {
@@ -70,7 +71,7 @@ print(json.dumps({'proposal':proposal.data,'path':proposal.original.path}))
         '--output-root': str(output), '--output': 'return.zip', '--format': 'json'}}, proposal
 
 
-def offline_program(root, distribution, program):
+def offline_program(root, distribution, program, *, python=None):
     environment = {k: os.environ[k] for k in ('LD_LIBRARY_PATH', 'SystemRoot', 'WINDIR') if k in os.environ}
     environment.update(PATH=str(root / 'no-executables'), HOME=str(root / 'home'), LANG='C.UTF-8', LC_ALL='C.UTF-8')
     body = """import sys,json
@@ -80,13 +81,13 @@ def audit(event,args):
         raise AssertionError('Return attempted external execution: '+event)
 sys.addaudithook(audit)
 sys.path.insert(0, """ + repr(str(distribution)) + ');\n' + program
-    process = subprocess.run([sys.executable,'-I','-S','-B','-c',NETWORK_ISOLATION + body], cwd=root, env=environment,
+    process = subprocess.run([str(python or sys.executable),'-I','-S','-B','-c',NETWORK_ISOLATION + body], cwd=root, env=environment,
         stdin=subprocess.DEVNULL,capture_output=True)
     assert process.returncode == 0, process.stderr.decode(errors='replace')
     return json.loads(process.stdout)
 
 
-def offline_export(root, distribution, request, *, before='', after='', argv=False):
+def offline_export(root, distribution, request, *, before='', after='', argv=False, python=None):
     arguments = ['bundle', 'create']
     for flag, value in request['options'].items():
         for item in value if isinstance(value, list) else [value]:
@@ -97,4 +98,4 @@ from specroad.cli.application import execute_request,dispatch_result
 result = """ + call + """
 value={'code':result.exit_code,'outcome':result.as_dict()}
 """ + after + '\nprint(json.dumps(value))'
-    return offline_program(root, distribution, body)
+    return offline_program(root, distribution, body, python=python)

@@ -42,7 +42,7 @@ def opening_request(root, package, *, extract=False, expected=True):
         'arguments': {'file': str(package['source'])}, 'options': options}
 
 
-def offline(root, source, request, *, before='', after='', expected_process_code=0, argv=False):
+def offline(root, source, request, *, before='', after='', expected_process_code=0, argv=False, python=None):
     # No inherited site packages or PATH, and real audit denials for shell,
     # Git/other subprocesses and network. This child itself is started by the
     # test harness; the product cannot spawn anything inside this boundary.
@@ -69,7 +69,7 @@ value = {'code': result.exit_code, 'outcome': result.as_dict()}
 ''' + after + '''
 print(json.dumps(value))
 '''
-    process = subprocess.run([sys.executable, '-I', '-S', '-B', '-c', NETWORK_ISOLATION + body], cwd=root,
+    process = subprocess.run([str(python or sys.executable), '-I', '-S', '-B', '-c', NETWORK_ISOLATION + body], cwd=root,
         env=environment, stdin=subprocess.DEVNULL, capture_output=True)
     assert process.returncode == expected_process_code, process.stderr.decode(errors='replace')
     if expected_process_code:

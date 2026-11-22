@@ -14,19 +14,19 @@ ROOT = Path(__file__).resolve().parents[2]
 FIXTURE = ROOT / 'tests/fixtures/patchharbor180'
 
 
-def child(root, body, *, source=None):
+def child(root, body, *, source=None, python=None):
     environment = {k: os.environ[k] for k in ('LD_LIBRARY_PATH', 'SystemRoot', 'WINDIR') if k in os.environ}
     environment.update(HOME=str(root/'home'), XDG_CONFIG_HOME=str(root/'config'),
         XDG_STATE_HOME=str(root/'state'), GIT_CONFIG_NOSYSTEM='1', GIT_CONFIG_GLOBAL=os.devnull,
         PATH=str(Path(shutil.which('git')).parent), LANG='C.UTF-8', LC_ALL='C.UTF-8')
     prefix = 'import sys; sys.path.insert(0, ' + repr(str(source or ROOT/'src')) + ');\n'
-    result = subprocess.run([sys.executable, '-I', '-S', '-B', '-c', prefix + body],
+    result = subprocess.run([str(python or sys.executable), '-I', '-S', '-B', '-c', prefix + body],
         cwd=root, env=environment, stdin=subprocess.DEVNULL, capture_output=True)
     assert result.returncode == 0, result.stderr.decode(errors='replace')
     return json.loads(result.stdout)
 
 
-def register(root, repository):
+def register(root, repository, *, python=None):
     (root/'home').mkdir(); (root/'exchange').mkdir()
     return child(root, '''
 import json, subprocess
@@ -42,7 +42,7 @@ git('add', '--all'); git('commit', '-qm', 'Independent input fixture')
 context=api.register(repo)
 api.configure_exchange_directory(Path.cwd()/'exchange', repository=repo)
 print(json.dumps({'repo_id':str(context.repo_id),'base_commit':str(context.base_commit)}))
-''')
+''', python=python)
 
 
 def request(root, project, artifact):
@@ -55,10 +55,10 @@ def request(root, project, artifact):
         '--output-root':str(output), '--output':'handoff.zip', '--format':'json'}}
 
 
-def run_request(root, value, *, source=None, before=''):
+def run_request(root, value, *, source=None, before='', python=None):
     return child(root, before + '\nfrom specroad.cli.application import execute_request\nimport json\n'
         + 'result=execute_request(' + repr(value) + ').result\n'
-        + 'print(json.dumps({"code":result.exit_code,"outcome":result.as_dict()}))', source=source)
+        + 'print(json.dumps({"code":result.exit_code,"outcome":result.as_dict()}))', source=source, python=python)
 
 
 def tree(root):

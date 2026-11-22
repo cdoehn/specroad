@@ -2,20 +2,24 @@
   "evidence_kind": "specroad-dev-pytest-v1",
   "expected_diagnostics": [],
   "expected_exit_codes": [],
-  "fixture_ids": [],
-  "implementation_status": "open",
+  "fixture_ids": [
+    "SR-FIX-ACCEPTANCE-PYTHON-MATRIX-v1"
+  ],
+  "implementation_status": "partial",
   "json_pointers": [],
-  "method": "pending",
+  "method": "automated_behavior",
   "open_items": [
     "Implement the assigned plan steps, define real fixtures and executable behavior tests, then collect current bound evidence.",
     "RECOVERY-REMOVAL-006: existing test references cover only their still-valid implemented scope. Changed interruption/receipt/preflight/work oracles require fresh implementation and evidence in 18.s–18.x; old repair/crash recovery results are not acceptance of the new contract."
   ],
   "oracle": {
-    "kind": "pending",
+    "kind": "behavior",
     "requirement_contract": "Jedes Release MUSS funktional äquivalente selbstenthaltene Modul- und Zipapp-Core-Distributionen bereitstellen, die ohne Installation zusätzlicher Pakete starten; die zusätzliche Language-Detection-Distribution folgt Anhang T.6.",
-    "scope": "Not implemented. No automated pass oracle is claimed."
+    "scope": "20.h: actual CPython 3.10–3.14 module/PYZ entrypoints and native offline PH roundtrip, separate real host receive/synthetic review/dry-run/apply and independent target hash."
   },
-  "preconditions": [],
+  "preconditions": [
+    "Explicit hash-verified CPython 3.10–3.14 test runtimes, Linux x86-64 nonprivileged seccomp-capable host, built native Core and PH 1.8.0 artifact; Git/entrypoint only on host transport side."
+  ],
   "primary_verification_id": "SR-VER-0027",
   "required_environment": {
     "declared_minimum_python": "3.10",
@@ -29,8 +33,32 @@
     "owned_temporary_files": true
   },
   "specification_sha256": "2dad4bf789cbede2f05084d27bd62e3197c814f5b84e5ea30675890c35bd90f5",
-  "steps": [],
+  "steps": [
+    "20.h: actual CPython 3.10–3.14 module/PYZ entrypoints and native offline PH roundtrip, separate real host receive/synthetic review/dry-run/apply and independent target hash.",
+    "20.h correction: each real Python/module-or-PYZ row validates a native goal-only input completely; the unchanged document/configuration roundtrip input must refuse completeness with exactly its unavailable semantic gates. All transport, synthetic review, dry-run/apply and independent target-hash checks remain required."
+  ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0226",
-  "test_ids": []
+  "test_ids": [
+    "tests/test_acceptance_python_matrix.py::test_real_minor_completes_native_offline_roundtrip_and_separate_host_review[module-3.10]",
+    "tests/test_acceptance_python_matrix.py::test_real_minor_completes_native_offline_roundtrip_and_separate_host_review[module-3.11]",
+    "tests/test_acceptance_python_matrix.py::test_real_minor_completes_native_offline_roundtrip_and_separate_host_review[module-3.12]",
+    "tests/test_acceptance_python_matrix.py::test_real_minor_completes_native_offline_roundtrip_and_separate_host_review[module-3.13]",
+    "tests/test_acceptance_python_matrix.py::test_real_minor_completes_native_offline_roundtrip_and_separate_host_review[module-3.14]",
+    "tests/test_acceptance_python_matrix.py::test_real_minor_completes_native_offline_roundtrip_and_separate_host_review[pyz-3.10]",
+    "tests/test_acceptance_python_matrix.py::test_real_minor_completes_native_offline_roundtrip_and_separate_host_review[pyz-3.11]",
+    "tests/test_acceptance_python_matrix.py::test_real_minor_completes_native_offline_roundtrip_and_separate_host_review[pyz-3.12]",
+    "tests/test_acceptance_python_matrix.py::test_real_minor_completes_native_offline_roundtrip_and_separate_host_review[pyz-3.13]",
+    "tests/test_acceptance_python_matrix.py::test_real_minor_completes_native_offline_roundtrip_and_separate_host_review[pyz-3.14]",
+    "tests/test_acceptance_python_matrix.py::test_real_minor_runs_built_entrypoints_without_installation[module-3.10]",
+    "tests/test_acceptance_python_matrix.py::test_real_minor_runs_built_entrypoints_without_installation[module-3.11]",
+    "tests/test_acceptance_python_matrix.py::test_real_minor_runs_built_entrypoints_without_installation[module-3.12]",
+    "tests/test_acceptance_python_matrix.py::test_real_minor_runs_built_entrypoints_without_installation[module-3.13]",
+    "tests/test_acceptance_python_matrix.py::test_real_minor_runs_built_entrypoints_without_installation[module-3.14]",
+    "tests/test_acceptance_python_matrix.py::test_real_minor_runs_built_entrypoints_without_installation[pyz-3.10]",
+    "tests/test_acceptance_python_matrix.py::test_real_minor_runs_built_entrypoints_without_installation[pyz-3.11]",
+    "tests/test_acceptance_python_matrix.py::test_real_minor_runs_built_entrypoints_without_installation[pyz-3.12]",
+    "tests/test_acceptance_python_matrix.py::test_real_minor_runs_built_entrypoints_without_installation[pyz-3.13]",
+    "tests/test_acceptance_python_matrix.py::test_real_minor_runs_built_entrypoints_without_installation[pyz-3.14]"
+  ]
 }

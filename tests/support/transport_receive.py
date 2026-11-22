@@ -16,7 +16,7 @@ def returned(root, distribution, *, subproject=False):
     return handoff,Path(result['outcome']['result']['file']['path']),proposal
 
 
-def receive(handoff, package, distribution, *, name='receive', before='', after='', allow=True, transport_allow=True, prior_result=None):
+def receive(handoff, package, distribution, *, name='receive', before='', after='', allow=True, transport_allow=True, prior_result=None, python=None):
     root=handoff['repository'].parent
     options=dict(expected_sha256=sha256(package.read_bytes()).hexdigest(),
         reference=str(handoff['source']),reference_sha256=sha256(handoff['source'].read_bytes()).hexdigest(),
@@ -45,4 +45,4 @@ except (TransportFailure,ModelError,SafetyViolation,OSError) as error:
 '''+after+'''
 print(json.dumps(result))
 '''
-    return child(root,script,source=distribution)
+    return child(root,script,source=distribution,python=python)

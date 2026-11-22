@@ -30152,6 +30152,26 @@
     "tests/test_acceptance_security_right.py::test_instruction_subject_cannot_read_secrets_git_or_foreign_files_or_inherit_environment[3.11]",
     "tests/test_acceptance_security_right.py::test_instruction_subject_cannot_read_secrets_git_or_foreign_files_or_inherit_environment[3.12]",
     "tests/test_acceptance_security_right.py::test_instruction_subject_cannot_read_secrets_git_or_foreign_files_or_inherit_environment[3.13]",
-    "tests/test_acceptance_security_right.py::test_instruction_subject_cannot_read_secrets_git_or_foreign_files_or_inherit_environment[3.14]"
+    "tests/test_acceptance_security_right.py::test_instruction_subject_cannot_read_secrets_git_or_foreign_files_or_inherit_environment[3.14]",
+    "tests/test_acceptance_python_matrix.py::test_real_minor_completes_native_offline_roundtrip_and_separate_host_review[module-3.10]",
+    "tests/test_acceptance_python_matrix.py::test_real_minor_completes_native_offline_roundtrip_and_separate_host_review[module-3.11]",
+    "tests/test_acceptance_python_matrix.py::test_real_minor_completes_native_offline_roundtrip_and_separate_host_review[module-3.12]",
+    "tests/test_acceptance_python_matrix.py::test_real_minor_completes_native_offline_roundtrip_and_separate_host_review[module-3.13]",
+    "tests/test_acceptance_python_matrix.py::test_real_minor_completes_native_offline_roundtrip_and_separate_host_review[module-3.14]",
+    "tests/test_acceptance_python_matrix.py::test_real_minor_completes_native_offline_roundtrip_and_separate_host_review[pyz-3.10]",
+    "tests/test_acceptance_python_matrix.py::test_real_minor_completes_native_offline_roundtrip_and_separate_host_review[pyz-3.11]",
+    "tests/test_acceptance_python_matrix.py::test_real_minor_completes_native_offline_roundtrip_and_separate_host_review[pyz-3.12]",
+    "tests/test_acceptance_python_matrix.py::test_real_minor_completes_native_offline_roundtrip_and_separate_host_review[pyz-3.13]",
+    "tests/test_acceptance_python_matrix.py::test_real_minor_completes_native_offline_roundtrip_and_separate_host_review[pyz-3.14]",
+    "tests/test_acceptance_python_matrix.py::test_real_minor_runs_built_entrypoints_without_installation[module-3.10]",
+    "tests/test_acceptance_python_matrix.py::test_real_minor_runs_built_entrypoints_without_installation[module-3.11]",
+    "tests/test_acceptance_python_matrix.py::test_real_minor_runs_built_entrypoints_without_installation[module-3.12]",
+    "tests/test_acceptance_python_matrix.py::test_real_minor_runs_built_entrypoints_without_installation[module-3.13]",
+    "tests/test_acceptance_python_matrix.py::test_real_minor_runs_built_entrypoints_without_installation[module-3.14]",
+    "tests/test_acceptance_python_matrix.py::test_real_minor_runs_built_entrypoints_without_installation[pyz-3.10]",
+    "tests/test_acceptance_python_matrix.py::test_real_minor_runs_built_entrypoints_without_installation[pyz-3.11]",
+    "tests/test_acceptance_python_matrix.py::test_real_minor_runs_built_entrypoints_without_installation[pyz-3.12]",
+    "tests/test_acceptance_python_matrix.py::test_real_minor_runs_built_entrypoints_without_installation[pyz-3.13]",
+    "tests/test_acceptance_python_matrix.py::test_real_minor_runs_built_entrypoints_without_installation[pyz-3.14]"
   ]
 }

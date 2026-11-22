@@ -1075,6 +1075,10 @@
     "SR-FIX-ACCEPTANCE-OFFLINE-SECURITY-v1": {
       "provider": "tests/support/network_isolation.py; tests/support/security_boundary.py; tests/support/import_security.py; tests/support/_analyzer_worker_fixture.py; tests/test_acceptance_security.py; tests/test_acceptance_security_right.py",
       "kind": "Real non-root Linux x86-64 kernel network filtering plus independent Python I/O attempt tripwires; native hostile input parsers, known offline analyzer packages and synthetic protected canaries/Git object state. No human/release approval or host configuration."
+    },
+    "SR-FIX-ACCEPTANCE-PYTHON-MATRIX-v1": {
+      "provider": "tests/test_acceptance_python_matrix.py; tests/support/network_isolation.py; tests/support/transport_return.py; tests/support/transport_receive.py",
+      "kind": "Actual hash-selected CPython 3.10–3.14, built module/PYZ, non-root Linux x86-64 no-site offline children, native transport return and separately authorized synthetic host review/dry-run/apply. Local configuration and human/release approval are not supplied. Each row retains complete native goal-only validation and exact incomplete/refused document_model/configuration validation of the unchanged roundtrip input; no missing service is a pass."
     }
   },
   "fixture_format_version": 1,
@@ -1367,6 +1371,7 @@
     "SR-FIX-CONTRACT-REGRESSIONS-v1",
     "SR-FIX-WRITE-FAULT-MATRIX-v1",
     "SR-FIX-ACCEPTANCE-WORK-v1",
-    "SR-FIX-ACCEPTANCE-OFFLINE-SECURITY-v1"
+    "SR-FIX-ACCEPTANCE-OFFLINE-SECURITY-v1",
+    "SR-FIX-ACCEPTANCE-PYTHON-MATRIX-v1"
   ]
 }
