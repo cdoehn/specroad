@@ -1065,7 +1065,7 @@
       "kind": "Exact R-01..R-47 bindings; actual file/process/CLI paths with independent oracles. Review/services are synthetic; no human product approval."
     },
     "SR-FIX-WRITE-FAULT-MATRIX-v1": {
-      "provider": "tests/test_acceptance_write_matrix.py",
+      "provider": "tests/test_acceptance_write_matrix.py; tests/test_acceptance_write_matrix_right.py",
       "kind": "Owned real change/migration/merge clients, exact actual file-effect indices, SIGKILL and EIO/ENOSPC/EDQUOT boundaries; no repair or fabricated release."
     }
   },

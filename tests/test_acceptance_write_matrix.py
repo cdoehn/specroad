@@ -23,7 +23,7 @@ CLIENTS = ('change', 'migration', 'merge')
 BOUNDARIES = ('before_lock', 'before_marker', 'marker_synced', 'staged', 'effect',
     'effect_synced', 'transaction_receipt', 'request_receipt', 'completion_receipt',
     'receipts_synced', 'before_marker_unlink', 'marker_unlinked', 'marker_removed', 'after_return')
-FAULTS = ('kill', 'io')
+FAULTS = ('kill', 'io', 'space', 'quota')
 
 
 def client(directory, kind):

@@ -27,5 +27,5 @@ mit tests_run=0 aus. Erst das erfolgreiche jeweilige Gate bestätigt seinen
 Zielstand. Originalbelege, menschliche Korpus-/Produktabnahmen, TD-001 und
 Releasefreigabe bleiben unverändert; technische Tests erteilen keine Freigabe.
 
-Aktueller Commitzielstand: `20.e.W`. Kein zukünftiger Testausgang wird
+Aktueller Commitzielstand: `20.e.R`. Kein zukünftiger Testausgang wird
 behauptet; die Folgestage darf erst nach erfolgreichem Commit ausgebracht werden.
