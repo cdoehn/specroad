@@ -3,10 +3,12 @@
 The guard denies audited network/process operations, including during Core
 imports. Byte parsers additionally run without filesystem opens or writes.
 Only the explicitly authorized native transaction may write its owned project.
-This is a runtime boundary probe, not an OS sandbox or a release certificate.
+The fresh child additionally installs the native Linux network filter.
+Filesystem/process tripwires remain independent; no release certificate is inferred.
 """
 from pathlib import Path
 
+from support.network_isolation import NETWORK_ISOLATION
 from support.portable import build_distribution
 from support.processes import SOURCE, run_python
 
@@ -64,7 +66,7 @@ def run_isolated(body, cwd, *, mode='core'):
     else:
         assert mode == 'core'
     prefix = 'import sys;sys.path.insert(0,' + repr(str(source)) + ')\n'
-    return run_python(['-I', '-S', '-B', '-c', prefix + GUARD + body], cwd, capture=True)
+    return run_python(['-I', '-S', '-B', '-c', NETWORK_ISOLATION + prefix + GUARD + body], cwd, capture=True)
 
 
 IMPORTS = '''

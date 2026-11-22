@@ -30133,6 +30133,20 @@
     "tests/test_acceptance_work_matrix_right.py::test_each_confirmed_prefix_restores_exactly_and_cannot_be_repeated_as_progress[standard-evaluation]",
     "tests/test_acceptance_work_matrix_right.py::test_each_confirmed_prefix_restores_exactly_and_cannot_be_repeated_as_progress[standard-ndjson]",
     "tests/test_acceptance_work_matrix_right.py::test_each_confirmed_prefix_restores_exactly_and_cannot_be_repeated_as_progress[standard-reqif]",
-    "tests/test_acceptance_work_matrix_right.py::test_each_confirmed_prefix_restores_exactly_and_cannot_be_repeated_as_progress[standard-reqifz]"
+    "tests/test_acceptance_work_matrix_right.py::test_each_confirmed_prefix_restores_exactly_and_cannot_be_repeated_as_progress[standard-reqifz]",
+    "tests/test_acceptance_security.py::test_allowed_native_work_ignores_project_python_and_secret_environment[module]",
+    "tests/test_acceptance_security.py::test_allowed_native_work_ignores_project_python_and_secret_environment[specroad.pyz]",
+    "tests/test_acceptance_security.py::test_native_path_boundary_refuses_hostile_names_without_reading_a_secret[../private.txt-module]",
+    "tests/test_acceptance_security.py::test_native_path_boundary_refuses_hostile_names_without_reading_a_secret[../private.txt-specroad.pyz]",
+    "tests/test_acceptance_security.py::test_native_path_boundary_refuses_hostile_names_without_reading_a_secret[/outside/secret-module]",
+    "tests/test_acceptance_security.py::test_native_path_boundary_refuses_hostile_names_without_reading_a_secret[/outside/secret-specroad.pyz]",
+    "tests/test_acceptance_security.py::test_native_path_boundary_refuses_hostile_names_without_reading_a_secret[C:/secret-module]",
+    "tests/test_acceptance_security.py::test_native_path_boundary_refuses_hostile_names_without_reading_a_secret[C:/secret-specroad.pyz]",
+    "tests/test_acceptance_security.py::test_native_path_boundary_refuses_hostile_names_without_reading_a_secret[a/../../private.txt-module]",
+    "tests/test_acceptance_security.py::test_native_path_boundary_refuses_hostile_names_without_reading_a_secret[a/../../private.txt-specroad.pyz]",
+    "tests/test_acceptance_security.py::test_native_path_boundary_refuses_hostile_names_without_reading_a_secret[a\\\\secret-module]",
+    "tests/test_acceptance_security.py::test_native_path_boundary_refuses_hostile_names_without_reading_a_secret[a\\\\secret-specroad.pyz]",
+    "tests/test_acceptance_security.py::test_native_path_boundary_refuses_hostile_names_without_reading_a_secret[escape-module]",
+    "tests/test_acceptance_security.py::test_native_path_boundary_refuses_hostile_names_without_reading_a_secret[escape-specroad.pyz]"
   ]
 }

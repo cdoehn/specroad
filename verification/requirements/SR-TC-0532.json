@@ -8,7 +8,8 @@
   ],
   "fixture_ids": [
     "SR-FIX-IMPORT-SECURITY-RIGHT-v1",
-    "SR-FIX-IMPORT-SECURITY-v1"
+    "SR-FIX-IMPORT-SECURITY-v1",
+    "SR-FIX-ACCEPTANCE-OFFLINE-SECURITY-v1"
   ],
   "implementation_status": "partial",
   "json_pointers": [],
@@ -50,7 +51,8 @@
     "Enforce byte/depth/element/text limits and reject active or unsafe references in original and opaque ReqIF content without external access or changes to the complete owned project.",
     "Reject unused archive paths, aliases, special/executable modes and NUL names before member reads; reject aggregate overflow, late CRC errors and a late hostile selected XML document without publishing a prefix.",
     "Refuse converter fields in mapping, field/value-map, CSV profile/column/codec and identity-registry entry grammars. Confirm code-like passive values, registry data, literal XML lookalikes, exact byte boundaries and selected document-relative archive links remain usable without resolution or execution.",
-    "14.n.C: rerun the unchanged W/R behavior cases through shared owned source fixtures and fixed adapter call constructors. Preserve every test identity, expectation, per-adapter limit and isolated runtime effect trap."
+    "14.n.C: rerun the unchanged W/R behavior cases through shared owned source fixtures and fixed adapter call constructors. Preserve every test identity, expectation, per-adapter limit and isolated runtime effect trap.",
+    "20.g: the existing complete native hostile XML/archive/input corpus now additionally requires a real Linux kernel network boundary before product imports; retain exact refusals and original file effects."
   ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0532",

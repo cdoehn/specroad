@@ -1,6 +1,8 @@
 """Test-owned worker executable; never selected by request or subject content."""
 
-WORKER = r'''
+from support.network_isolation import NETWORK_ISOLATION
+
+WORKER = NETWORK_ISOLATION + r'''
 import os, socket, subprocess, sys
 sys.path.insert(0, sys.argv[1])
 from specroad.analyzers._values import encoded, digest

@@ -9,7 +9,8 @@
   ],
   "fixture_ids": [
     "SR-FIX-ISOLATED-CPYTHON-v1",
-    "SR-FIX-OWNED-TEMP-v1"
+    "SR-FIX-OWNED-TEMP-v1",
+    "SR-FIX-ACCEPTANCE-OFFLINE-SECURITY-v1"
   ],
   "implementation_status": "partial",
   "json_pointers": [
@@ -41,12 +42,27 @@
   },
   "specification_sha256": "2dad4bf789cbede2f05084d27bd62e3197c814f5b84e5ea30675890c35bd90f5",
   "steps": [
-    "Exercise the single-root read boundary and reject prohibited execution before any handler."
+    "Exercise the single-root read boundary and reject prohibited execution before any handler.",
+    "20.g: run actual Core/PYZ under unprivileged kernel network denial, retaining positive native access and structured path refusal; secret reads/process/network attempts and project code execution are separately forbidden."
   ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0196",
   "test_ids": [
     "test_security.SafetyWorkTests.test_project_metadata_path_runs_without_git_network_or_processes",
-    "test_security.SafetyRobustnessTests.test_audited_core_invocations_do_not_spawn_connect_or_write"
+    "test_security.SafetyRobustnessTests.test_audited_core_invocations_do_not_spawn_connect_or_write",
+    "tests/test_acceptance_security.py::test_allowed_native_work_ignores_project_python_and_secret_environment[module]",
+    "tests/test_acceptance_security.py::test_allowed_native_work_ignores_project_python_and_secret_environment[specroad.pyz]",
+    "tests/test_acceptance_security.py::test_native_path_boundary_refuses_hostile_names_without_reading_a_secret[../private.txt-module]",
+    "tests/test_acceptance_security.py::test_native_path_boundary_refuses_hostile_names_without_reading_a_secret[../private.txt-specroad.pyz]",
+    "tests/test_acceptance_security.py::test_native_path_boundary_refuses_hostile_names_without_reading_a_secret[/outside/secret-module]",
+    "tests/test_acceptance_security.py::test_native_path_boundary_refuses_hostile_names_without_reading_a_secret[/outside/secret-specroad.pyz]",
+    "tests/test_acceptance_security.py::test_native_path_boundary_refuses_hostile_names_without_reading_a_secret[C:/secret-module]",
+    "tests/test_acceptance_security.py::test_native_path_boundary_refuses_hostile_names_without_reading_a_secret[C:/secret-specroad.pyz]",
+    "tests/test_acceptance_security.py::test_native_path_boundary_refuses_hostile_names_without_reading_a_secret[a/../../private.txt-module]",
+    "tests/test_acceptance_security.py::test_native_path_boundary_refuses_hostile_names_without_reading_a_secret[a/../../private.txt-specroad.pyz]",
+    "tests/test_acceptance_security.py::test_native_path_boundary_refuses_hostile_names_without_reading_a_secret[a\\\\secret-module]",
+    "tests/test_acceptance_security.py::test_native_path_boundary_refuses_hostile_names_without_reading_a_secret[a\\\\secret-specroad.pyz]",
+    "tests/test_acceptance_security.py::test_native_path_boundary_refuses_hostile_names_without_reading_a_secret[escape-module]",
+    "tests/test_acceptance_security.py::test_native_path_boundary_refuses_hostile_names_without_reading_a_secret[escape-specroad.pyz]"
   ]
 }
