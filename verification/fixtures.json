@@ -1069,7 +1069,7 @@
       "kind": "Owned real change/migration/merge clients, exact actual file-effect indices, SIGKILL and EIO/ENOSPC/EDQUOT boundaries; no repair or fabricated release."
     },
     "SR-FIX-ACCEPTANCE-WORK-v1": {
-      "provider": "tests/test_acceptance_work_matrix.py; tests/test_acceptance_work_processes.py; tests/test_acceptance_work_matrix_right.py; tests/support/network_isolation.py",
+      "provider": "tests/test_acceptance_work_matrix.py; tests/test_acceptance_work_processes.py; tests/test_acceptance_work_matrix_right.py; tests/support/acceptance_work.py; tests/support/network_isolation.py",
       "kind": "Complete native kernel oracles, exact saved Work tasks and byte outcomes; fresh built module/PYZ, real optional relation-cache hit, profile/soft-window parity and kernel-isolated offline children. Synthetic host inputs grant no product approval."
     }
   },

@@ -50,5 +50,5 @@ TD-001 und Releasefreigabe bleiben unverändert offen. Insbesondere werden
 Netzisolationsproben nicht als Leistungsbenchmark oder menschliches Review
 umgedeutet. Nach dem vollständigen Bundle folgt die geplante 20.h-Gruppe.
 
-Aktueller Commitzielstand: `20.f.R`; kein zukünftiger Testausgang wird
+Aktueller Commitzielstand: `20.f.C`; kein zukünftiger Testausgang wird
 behauptet und kein späterer Zustand vor seinem eigenen Gate ausgebracht.

@@ -8,7 +8,7 @@ from specroad.cli.application import execute_request
 from specroad.storage import _relation_cache
 from support.command_parity import build_core, process_environment, run_python
 from support.read_only import inventory
-from test_acceptance_work_matrix import business_projection
+from support.acceptance_work import business_projection
 from test_query_read_integration import COMMANDS, project_pair, request
 from support.relations import aid
 

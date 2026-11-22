@@ -8,7 +8,7 @@ import pytest
 from specroad.cli.application import execute_request
 from specroad.work.packages import export_work_package, restore_work_package
 from support.read_only import inventory
-from test_acceptance_work_matrix import CASES, subject_case, complete_windows, business_projection
+from support.acceptance_work import CASES, subject_case, complete_windows, business_projection
 from test_acceptance_work_processes import distribution, run_reader
 from test_query_read_integration import project_pair, request
 from test_work_resume import recorded
