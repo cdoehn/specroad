@@ -43,7 +43,8 @@
   "specification_sha256": "2dad4bf789cbede2f05084d27bd62e3197c814f5b84e5ea30675890c35bd90f5",
   "steps": [
     "Exercise the single-root read boundary and reject prohibited execution before any handler.",
-    "20.g: run actual Core/PYZ under unprivileged kernel network denial, retaining positive native access and structured path refusal; secret reads/process/network attempts and project code execution are separately forbidden."
+    "20.g: run actual Core/PYZ under unprivileged kernel network denial, retaining positive native access and structured path refusal; secret reads/process/network attempts and project code execution are separately forbidden.",
+    "20.g.R: real known workers for each CPython 3.10..3.14 must preserve complete bound subjects without accessing synthetic secrets, foreign Git/files, parent secret environment or instruction-selected execution; exact originals stay unchanged."
   ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0196",
@@ -63,6 +64,11 @@
     "tests/test_acceptance_security.py::test_native_path_boundary_refuses_hostile_names_without_reading_a_secret[a\\\\secret-module]",
     "tests/test_acceptance_security.py::test_native_path_boundary_refuses_hostile_names_without_reading_a_secret[a\\\\secret-specroad.pyz]",
     "tests/test_acceptance_security.py::test_native_path_boundary_refuses_hostile_names_without_reading_a_secret[escape-module]",
-    "tests/test_acceptance_security.py::test_native_path_boundary_refuses_hostile_names_without_reading_a_secret[escape-specroad.pyz]"
+    "tests/test_acceptance_security.py::test_native_path_boundary_refuses_hostile_names_without_reading_a_secret[escape-specroad.pyz]",
+    "tests/test_acceptance_security_right.py::test_instruction_subject_cannot_read_secrets_git_or_foreign_files_or_inherit_environment[3.10]",
+    "tests/test_acceptance_security_right.py::test_instruction_subject_cannot_read_secrets_git_or_foreign_files_or_inherit_environment[3.11]",
+    "tests/test_acceptance_security_right.py::test_instruction_subject_cannot_read_secrets_git_or_foreign_files_or_inherit_environment[3.12]",
+    "tests/test_acceptance_security_right.py::test_instruction_subject_cannot_read_secrets_git_or_foreign_files_or_inherit_environment[3.13]",
+    "tests/test_acceptance_security_right.py::test_instruction_subject_cannot_read_secrets_git_or_foreign_files_or_inherit_environment[3.14]"
   ]
 }

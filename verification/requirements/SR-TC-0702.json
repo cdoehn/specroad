@@ -7,7 +7,8 @@
     5
   ],
   "fixture_ids": [
-    "SR-FIX-LANGUAGE-PACKAGING-WORKER-v1"
+    "SR-FIX-LANGUAGE-PACKAGING-WORKER-v1",
+    "SR-FIX-ACCEPTANCE-OFFLINE-SECURITY-v1"
   ],
   "implementation_status": "partial",
   "json_pointers": [],
@@ -42,7 +43,8 @@
   "steps": [
     "Build and verify separate ABI-tagged offline artifacts and reject missing, changed or substituted package inputs.",
     "Keep each runtime observation bound to its actual interpreter and archive hash; require all five distinct probes for a matrix result.",
-    "Launch only the known distribution worker using the complete native request on stdin; retain all requested analyzers and open/unavailable coverage until real engine implementation."
+    "Launch only the known distribution worker using the complete native request on stdin; retain all requested analyzers and open/unavailable coverage until real engine implementation.",
+    "20.g.R: real known workers for each CPython 3.10..3.14 must preserve complete bound subjects without accessing synthetic secrets, foreign Git/files, parent secret environment or instruction-selected execution; exact originals stay unchanged."
   ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0702",
@@ -89,6 +91,11 @@
     "tests/test_language_packaging_right.py::test_manifest_rehash_does_not_authorize_different_content[wheel]",
     "tests/test_language_packaging_right.py::test_original_package_runs_only_on_its_actual_abi",
     "tests/test_language_packaging_right.py::test_reusing_cp314_as_cp310_is_not_a_matrix",
-    "tests/test_language_packaging_right.py::test_special_package_input_is_rejected_without_waiting_for_a_writer"
+    "tests/test_language_packaging_right.py::test_special_package_input_is_rejected_without_waiting_for_a_writer",
+    "tests/test_acceptance_security_right.py::test_instruction_subject_cannot_read_secrets_git_or_foreign_files_or_inherit_environment[3.10]",
+    "tests/test_acceptance_security_right.py::test_instruction_subject_cannot_read_secrets_git_or_foreign_files_or_inherit_environment[3.11]",
+    "tests/test_acceptance_security_right.py::test_instruction_subject_cannot_read_secrets_git_or_foreign_files_or_inherit_environment[3.12]",
+    "tests/test_acceptance_security_right.py::test_instruction_subject_cannot_read_secrets_git_or_foreign_files_or_inherit_environment[3.13]",
+    "tests/test_acceptance_security_right.py::test_instruction_subject_cannot_read_secrets_git_or_foreign_files_or_inherit_environment[3.14]"
   ]
 }

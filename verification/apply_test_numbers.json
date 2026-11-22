@@ -30147,6 +30147,11 @@
     "tests/test_acceptance_security.py::test_native_path_boundary_refuses_hostile_names_without_reading_a_secret[a\\\\secret-module]",
     "tests/test_acceptance_security.py::test_native_path_boundary_refuses_hostile_names_without_reading_a_secret[a\\\\secret-specroad.pyz]",
     "tests/test_acceptance_security.py::test_native_path_boundary_refuses_hostile_names_without_reading_a_secret[escape-module]",
-    "tests/test_acceptance_security.py::test_native_path_boundary_refuses_hostile_names_without_reading_a_secret[escape-specroad.pyz]"
+    "tests/test_acceptance_security.py::test_native_path_boundary_refuses_hostile_names_without_reading_a_secret[escape-specroad.pyz]",
+    "tests/test_acceptance_security_right.py::test_instruction_subject_cannot_read_secrets_git_or_foreign_files_or_inherit_environment[3.10]",
+    "tests/test_acceptance_security_right.py::test_instruction_subject_cannot_read_secrets_git_or_foreign_files_or_inherit_environment[3.11]",
+    "tests/test_acceptance_security_right.py::test_instruction_subject_cannot_read_secrets_git_or_foreign_files_or_inherit_environment[3.12]",
+    "tests/test_acceptance_security_right.py::test_instruction_subject_cannot_read_secrets_git_or_foreign_files_or_inherit_environment[3.13]",
+    "tests/test_acceptance_security_right.py::test_instruction_subject_cannot_read_secrets_git_or_foreign_files_or_inherit_environment[3.14]"
   ]
 }

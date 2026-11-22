@@ -17,6 +17,7 @@ from support.read_only import make_project
 from support.relations import aid
 from . import analyzer_runtimes
 from ._analyzer_worker_fixture import WORKER
+from test_acceptance_security import READ_GUARD
 
 runtime_factory = analyzer_runtimes.runtime_factory
 
@@ -31,7 +32,7 @@ def native_request(root, cases):
     return request_from_project(root, **default_inputs({}), analysis_id='acceptance:original')
 
 
-def invoke_case(monkeypatch, runtime, request, mode='positive'):
+def invoke_case(monkeypatch, runtime, request, mode='positive', *, protected_paths=()):
     """Use real pipes/process cleanup and the production response validator."""
     from specroad.analyzers import _worker_process
     site, interpreter, _ = runtime
@@ -49,5 +50,8 @@ def invoke_case(monkeypatch, runtime, request, mode='positive'):
         context.setattr(sys, 'executable', interpreter['executable'])
         context.setattr(_worker_process, 'distribution_path', lambda: site)
         context.setattr(_worker_process, 'run_process', observed_process)
-        context.setattr(_worker_process, 'BOOTSTRAP', 'MODE = ' + repr(mode) + '\n' + WORKER)
+        guard = '_protected_paths=' + repr(tuple(str(p) for p in protected_paths)) + '\n' + READ_GUARD
+        guard += "assert 'SPECROAD_ACCEPTANCE_SECRET' not in os.environ\n"
+        context.setattr(_worker_process, 'BOOTSTRAP', guard + 'MODE = ' + repr(mode) + '\n' + WORKER
+                        + '\nassert not _protected_read_attempts\n')
         return execute(request)
