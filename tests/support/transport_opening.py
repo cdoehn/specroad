@@ -6,6 +6,8 @@ from pathlib import Path
 import subprocess
 import sys
 
+from support.network_isolation import NETWORK_ISOLATION
+
 from specroad.bundles import prepare_project_bundle
 from support.transport_outbound import register, request, run_request
 from test_bundle_receipts import completed
@@ -67,7 +69,7 @@ value = {'code': result.exit_code, 'outcome': result.as_dict()}
 ''' + after + '''
 print(json.dumps(value))
 '''
-    process = subprocess.run([sys.executable, '-I', '-S', '-B', '-c', body], cwd=root,
+    process = subprocess.run([sys.executable, '-I', '-S', '-B', '-c', NETWORK_ISOLATION + body], cwd=root,
         env=environment, stdin=subprocess.DEVNULL, capture_output=True)
     assert process.returncode == expected_process_code, process.stderr.decode(errors='replace')
     if expected_process_code:

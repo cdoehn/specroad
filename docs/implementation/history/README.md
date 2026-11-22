@@ -600,3 +600,7 @@
 - [Bundle 783 – Kontraktregression und Schreibschutzgesamtmatrix](bundle-783-contract-regressions.md)
 
 - [Bundle 784 – Originalressourcen im Git-Wiederanlauftest](bundle-784-git-original-resources.md)
+
+- [Bundle 785 – Work-/Cache-/Sandboxparität und Offline-Sicherheit](bundle-785-work-security.md)
+
+- [Bundle 786 — frisches Distributionsziel für 20.f und 20.g](bundle-786-distribution-fixture.md).

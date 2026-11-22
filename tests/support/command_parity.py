@@ -8,6 +8,8 @@ import os
 import subprocess
 import sys
 
+from support.network_isolation import NETWORK_ISOLATION
+
 
 def build_core(root, output):
     return subprocess.run([sys.executable, '-I', '-B', str(root / 'tools/build_core.py'), '--output', str(output)], capture_output=True)
@@ -20,5 +22,5 @@ def process_environment():
 
 
 def run_python(body, arguments, *, cwd, environment):
-    return subprocess.run([sys.executable, '-I', '-S', '-B', '-c', body, *arguments],
+    return subprocess.run([sys.executable, '-I', '-S', '-B', '-c', NETWORK_ISOLATION + body, *arguments],
         cwd=cwd, env=environment, stdin=subprocess.DEVNULL, capture_output=True)

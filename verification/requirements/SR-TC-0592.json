@@ -3,7 +3,8 @@
   "expected_diagnostics": [],
   "expected_exit_codes": [],
   "fixture_ids": [
-    "SR-FIX-OWNED-TEMP-v1"
+    "SR-FIX-OWNED-TEMP-v1",
+    "SR-FIX-ACCEPTANCE-WORK-v1"
   ],
   "implementation_status": "partial",
   "json_pointers": [],
@@ -39,7 +40,8 @@
     "Inject a failed minimum write after real progress and verify unchanged protected critical data, retained external run bytes, no retry and no successful failed-unit accounting.",
     "Drive the conservative outcome adapter to full diagnostic/prepared-path completion with tiny soft targets and unknown capacity, without empty successful windows.",
     "Observe actual minimum-advance failures and assert machine-readable cause, attempted smaller batching, preserved observed cursor and files, nonresumable volatile input, explicit remedy and no automatic replay.",
-    "Verify native descriptor/file-size refusal and a labelled native failed allocation in isolated children, plus a real short write before injected ENOSPC. Preserve critical recovery fixtures and propagate safety/observer/unexpected failures."
+    "Verify native descriptor/file-size refusal and a labelled native failed allocation in isolated children, plus a real short write before injected ENOSPC. Preserve critical recovery fixtures and propagate safety/observer/unexpected failures.",
+    "20.f: compare whole native results and mandatory findings against large-window and independent direct kernels; each measured window confirms unique bound work, finalization and replay preserve exact bytes."
   ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0592",
@@ -118,6 +120,18 @@
     "tests/test_adaptive_spooling_work.py::test_tiny_windows_and_large_window_produce_identical_complete_record_bytes",
     "tests/test_adaptive_spooling_work.py::test_unknown_measurements_allow_bounded_progress_without_invented_exhaustion[1000]",
     "tests/test_adaptive_spooling_work.py::test_unknown_measurements_allow_bounded_progress_without_invented_exhaustion[1]",
-    "tests/test_adaptive_spooling_work.py::test_unknown_measurements_allow_bounded_progress_without_invented_exhaustion[7]"
+    "tests/test_adaptive_spooling_work.py::test_unknown_measurements_allow_bounded_progress_without_invented_exhaustion[7]",
+    "tests/test_acceptance_work_matrix.py::test_complete_native_data_and_diagnostics_survive_every_profile_window[constrained-csv]",
+    "tests/test_acceptance_work_matrix.py::test_complete_native_data_and_diagnostics_survive_every_profile_window[constrained-document]",
+    "tests/test_acceptance_work_matrix.py::test_complete_native_data_and_diagnostics_survive_every_profile_window[constrained-evaluation]",
+    "tests/test_acceptance_work_matrix.py::test_complete_native_data_and_diagnostics_survive_every_profile_window[constrained-ndjson]",
+    "tests/test_acceptance_work_matrix.py::test_complete_native_data_and_diagnostics_survive_every_profile_window[constrained-reqif]",
+    "tests/test_acceptance_work_matrix.py::test_complete_native_data_and_diagnostics_survive_every_profile_window[constrained-reqifz]",
+    "tests/test_acceptance_work_matrix.py::test_complete_native_data_and_diagnostics_survive_every_profile_window[standard-csv]",
+    "tests/test_acceptance_work_matrix.py::test_complete_native_data_and_diagnostics_survive_every_profile_window[standard-document]",
+    "tests/test_acceptance_work_matrix.py::test_complete_native_data_and_diagnostics_survive_every_profile_window[standard-evaluation]",
+    "tests/test_acceptance_work_matrix.py::test_complete_native_data_and_diagnostics_survive_every_profile_window[standard-ndjson]",
+    "tests/test_acceptance_work_matrix.py::test_complete_native_data_and_diagnostics_survive_every_profile_window[standard-reqif]",
+    "tests/test_acceptance_work_matrix.py::test_complete_native_data_and_diagnostics_survive_every_profile_window[standard-reqifz]"
   ]
 }

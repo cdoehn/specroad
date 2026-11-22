@@ -3,7 +3,8 @@
   "expected_diagnostics": [],
   "expected_exit_codes": [],
   "fixture_ids": [
-    "SR-FIX-OWNED-TEMP-v1"
+    "SR-FIX-OWNED-TEMP-v1",
+    "SR-FIX-ACCEPTANCE-WORK-v1"
   ],
   "implementation_status": "partial",
   "json_pointers": [],
@@ -49,7 +50,8 @@
     "Capture real files in small work windows and bounded reads; compare every captured byte and hash, early complete-file reuse, stable manifests across block sizes and locations, concrete missing-input errors and unchanged source inventories.",
     "Capture and pause real files, change or remove already captured sources, require hash comparison for metadata changes, block active/orphan/transaction state, and verify retained bytes plus descriptor/mutex release.",
     "11.r.W: compare complete native document/block data over durable windows, source loss, changed cache state and relocated module/PYZ processes; verify missing units cannot finish and complete external result bytes retain every selected table row plus size/hash/schema bindings without project writes.",
-    "11.r.R: reject dropped repeated include subtrees, source/edge/record mismatches, truncated literal rows, altered query pagination, row bytes and retained output omissions before advance, completion or delivery writes. Preserve all data and hashes over large complete projections and explicit delivery retries after early/late I/O failures; confirm completed native evaluators are not repeated."
+    "11.r.R: reject dropped repeated include subtrees, source/edge/record mismatches, truncated literal rows, altered query pagination, row bytes and retained output omissions before advance, completion or delivery writes. Preserve all data and hashes over large complete projections and explicit delivery retries after early/late I/O failures; confirm completed native evaluators are not repeated.",
+    "20.f: compare whole native results and mandatory findings against large-window and independent direct kernels; each measured window confirms unique bound work, finalization and replay preserve exact bytes."
   ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0605",
@@ -351,6 +353,18 @@
     "tests/test_spooling_work.py::test_protected_roots_cannot_receive_spool_files[project]",
     "tests/test_spooling_work.py::test_relocated_root_is_rejected_and_both_directories_are_retained",
     "tests/test_spooling_work.py::test_streamed_collection_keeps_python_allocation_window_below_collection_size",
-    "tests/test_spooling_work.py::test_traversal_path_is_rejected_before_any_write"
+    "tests/test_spooling_work.py::test_traversal_path_is_rejected_before_any_write",
+    "tests/test_acceptance_work_matrix.py::test_complete_native_data_and_diagnostics_survive_every_profile_window[constrained-csv]",
+    "tests/test_acceptance_work_matrix.py::test_complete_native_data_and_diagnostics_survive_every_profile_window[constrained-document]",
+    "tests/test_acceptance_work_matrix.py::test_complete_native_data_and_diagnostics_survive_every_profile_window[constrained-evaluation]",
+    "tests/test_acceptance_work_matrix.py::test_complete_native_data_and_diagnostics_survive_every_profile_window[constrained-ndjson]",
+    "tests/test_acceptance_work_matrix.py::test_complete_native_data_and_diagnostics_survive_every_profile_window[constrained-reqif]",
+    "tests/test_acceptance_work_matrix.py::test_complete_native_data_and_diagnostics_survive_every_profile_window[constrained-reqifz]",
+    "tests/test_acceptance_work_matrix.py::test_complete_native_data_and_diagnostics_survive_every_profile_window[standard-csv]",
+    "tests/test_acceptance_work_matrix.py::test_complete_native_data_and_diagnostics_survive_every_profile_window[standard-document]",
+    "tests/test_acceptance_work_matrix.py::test_complete_native_data_and_diagnostics_survive_every_profile_window[standard-evaluation]",
+    "tests/test_acceptance_work_matrix.py::test_complete_native_data_and_diagnostics_survive_every_profile_window[standard-ndjson]",
+    "tests/test_acceptance_work_matrix.py::test_complete_native_data_and_diagnostics_survive_every_profile_window[standard-reqif]",
+    "tests/test_acceptance_work_matrix.py::test_complete_native_data_and_diagnostics_survive_every_profile_window[standard-reqifz]"
   ]
 }

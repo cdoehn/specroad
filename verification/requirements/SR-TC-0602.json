@@ -3,7 +3,8 @@
   "expected_diagnostics": [],
   "expected_exit_codes": [],
   "fixture_ids": [
-    "SR-FIX-OWNED-TEMP-v1"
+    "SR-FIX-OWNED-TEMP-v1",
+    "SR-FIX-ACCEPTANCE-WORK-v1"
   ],
   "implementation_status": "partial",
   "json_pointers": [],
@@ -36,7 +37,8 @@
     "Create a candidate from real owned input bytes and a complete declared finite unit plan.",
     "Partition units in a different order and verify stable identity, exact remaining work and all prior bytes after each roundtrip.",
     "Reject duplicate declarations or completion records; exercise segmented plans through 4097 units and detached values.",
-    "Exercise the R successor and hostile-data cases with independently rehashed packages, explicit planner fixtures and handler/foreign-object traps; require unchanged prior data and no execution or writes."
+    "Exercise the R successor and hostile-data cases with independently rehashed packages, explicit planner fixtures and handler/foreign-object traps; require unchanged prior data and no execution or writes.",
+    "20.f: compare whole native results and mandatory findings against large-window and independent direct kernels; each measured window confirms unique bound work, finalization and replay preserve exact bytes."
   ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0602",
@@ -67,6 +69,18 @@
     "tests/test_work_manifest_right.py::test_successor_rejects_replay_or_skipped_generation[0]",
     "tests/test_work_manifest_right.py::test_successor_rejects_replay_or_skipped_generation[2]",
     "tests/test_work_manifest_right.py::test_successor_rejects_replay_or_skipped_generation[9007199254740991]",
-    "tests/test_work_manifest_right.py::test_successor_rejects_rewritten_prior_evidence_even_with_valid_new_hashes"
+    "tests/test_work_manifest_right.py::test_successor_rejects_rewritten_prior_evidence_even_with_valid_new_hashes",
+    "tests/test_acceptance_work_matrix.py::test_complete_native_data_and_diagnostics_survive_every_profile_window[constrained-csv]",
+    "tests/test_acceptance_work_matrix.py::test_complete_native_data_and_diagnostics_survive_every_profile_window[constrained-document]",
+    "tests/test_acceptance_work_matrix.py::test_complete_native_data_and_diagnostics_survive_every_profile_window[constrained-evaluation]",
+    "tests/test_acceptance_work_matrix.py::test_complete_native_data_and_diagnostics_survive_every_profile_window[constrained-ndjson]",
+    "tests/test_acceptance_work_matrix.py::test_complete_native_data_and_diagnostics_survive_every_profile_window[constrained-reqif]",
+    "tests/test_acceptance_work_matrix.py::test_complete_native_data_and_diagnostics_survive_every_profile_window[constrained-reqifz]",
+    "tests/test_acceptance_work_matrix.py::test_complete_native_data_and_diagnostics_survive_every_profile_window[standard-csv]",
+    "tests/test_acceptance_work_matrix.py::test_complete_native_data_and_diagnostics_survive_every_profile_window[standard-document]",
+    "tests/test_acceptance_work_matrix.py::test_complete_native_data_and_diagnostics_survive_every_profile_window[standard-evaluation]",
+    "tests/test_acceptance_work_matrix.py::test_complete_native_data_and_diagnostics_survive_every_profile_window[standard-ndjson]",
+    "tests/test_acceptance_work_matrix.py::test_complete_native_data_and_diagnostics_survive_every_profile_window[standard-reqif]",
+    "tests/test_acceptance_work_matrix.py::test_complete_native_data_and_diagnostics_survive_every_profile_window[standard-reqifz]"
   ]
 }

@@ -3,7 +3,8 @@
   "expected_diagnostics": [],
   "expected_exit_codes": [],
   "fixture_ids": [
-    "SR-FIX-OWNED-TEMP-v1"
+    "SR-FIX-OWNED-TEMP-v1",
+    "SR-FIX-ACCEPTANCE-WORK-v1"
   ],
   "implementation_status": "partial",
   "json_pointers": [],
@@ -40,7 +41,8 @@
     "Reject missing or damaged objects, unsafe input paths and a different expected tool build.",
     "Exercise the R successor and hostile-data cases with independently rehashed packages, explicit planner fixtures and handler/foreign-object traps; require unchanged prior data and no execution or writes.",
     "Capture real files in small work windows and bounded reads; compare every captured byte and hash, early complete-file reuse, stable manifests across block sizes and locations, concrete missing-input errors and unchanged source inventories.",
-    "Capture and pause real files, change or remove already captured sources, require hash comparison for metadata changes, block active/orphan/transaction state, and verify retained bytes plus descriptor/mutex release."
+    "Capture and pause real files, change or remove already captured sources, require hash comparison for metadata changes, block active/orphan/transaction state, and verify retained bytes plus descriptor/mutex release.",
+    "20.f: compare whole native results and mandatory findings against large-window and independent direct kernels; each measured window confirms unique bound work, finalization and replay preserve exact bytes."
   ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0603",
@@ -156,6 +158,18 @@
     "tests/test_work_manifest_right.py::test_self_consistent_foreign_work_cannot_replace_the_expected_order[project]",
     "tests/test_work_manifest_right.py::test_self_consistent_foreign_work_cannot_replace_the_expected_order[scope]",
     "tests/test_work_manifest_right.py::test_shared_segment_amplification_is_rejected_before_repeated_leaf_decoding",
-    "tests/test_work_manifest_right.py::test_successor_preserves_even_previously_referenced_bytes_not_in_the_new_root"
+    "tests/test_work_manifest_right.py::test_successor_preserves_even_previously_referenced_bytes_not_in_the_new_root",
+    "tests/test_acceptance_work_matrix.py::test_complete_native_data_and_diagnostics_survive_every_profile_window[constrained-csv]",
+    "tests/test_acceptance_work_matrix.py::test_complete_native_data_and_diagnostics_survive_every_profile_window[constrained-document]",
+    "tests/test_acceptance_work_matrix.py::test_complete_native_data_and_diagnostics_survive_every_profile_window[constrained-evaluation]",
+    "tests/test_acceptance_work_matrix.py::test_complete_native_data_and_diagnostics_survive_every_profile_window[constrained-ndjson]",
+    "tests/test_acceptance_work_matrix.py::test_complete_native_data_and_diagnostics_survive_every_profile_window[constrained-reqif]",
+    "tests/test_acceptance_work_matrix.py::test_complete_native_data_and_diagnostics_survive_every_profile_window[constrained-reqifz]",
+    "tests/test_acceptance_work_matrix.py::test_complete_native_data_and_diagnostics_survive_every_profile_window[standard-csv]",
+    "tests/test_acceptance_work_matrix.py::test_complete_native_data_and_diagnostics_survive_every_profile_window[standard-document]",
+    "tests/test_acceptance_work_matrix.py::test_complete_native_data_and_diagnostics_survive_every_profile_window[standard-evaluation]",
+    "tests/test_acceptance_work_matrix.py::test_complete_native_data_and_diagnostics_survive_every_profile_window[standard-ndjson]",
+    "tests/test_acceptance_work_matrix.py::test_complete_native_data_and_diagnostics_survive_every_profile_window[standard-reqif]",
+    "tests/test_acceptance_work_matrix.py::test_complete_native_data_and_diagnostics_survive_every_profile_window[standard-reqifz]"
   ]
 }

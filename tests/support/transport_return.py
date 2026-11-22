@@ -6,6 +6,8 @@ from pathlib import Path
 import subprocess
 import sys
 
+from support.network_isolation import NETWORK_ISOLATION
+
 from specroad.authoring._inspection_snapshot import InspectionSnapshot
 from specroad.proposals.authoring import Proposal
 from support.transport_outbound import register, request, run_request
@@ -78,7 +80,7 @@ def audit(event,args):
         raise AssertionError('Return attempted external execution: '+event)
 sys.addaudithook(audit)
 sys.path.insert(0, """ + repr(str(distribution)) + ');\n' + program
-    process = subprocess.run([sys.executable,'-I','-S','-B','-c',body], cwd=root, env=environment,
+    process = subprocess.run([sys.executable,'-I','-S','-B','-c',NETWORK_ISOLATION + body], cwd=root, env=environment,
         stdin=subprocess.DEVNULL,capture_output=True)
     assert process.returncode == 0, process.stderr.decode(errors='replace')
     return json.loads(process.stdout)

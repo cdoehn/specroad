@@ -9,7 +9,8 @@
   ],
   "fixture_ids": [
     "SR-FIX-OWNED-TEMP-v1",
-    "SR-FIX-ISOLATED-CPYTHON-v1"
+    "SR-FIX-ISOLATED-CPYTHON-v1",
+    "SR-FIX-ACCEPTANCE-WORK-v1"
   ],
   "implementation_status": "partial",
   "json_pointers": [
@@ -49,7 +50,8 @@
     "Reuse one owned ledger across completed windows and compare independent CPU/wall sums, RSS peaks and registered byte peaks.",
     "Check machine values, measurement sources, unchanged semantic payloads and project inventories.",
     "Drive real SRX/graph and bounded native payload work through pure interval signals; compare complete results and byte hashes with the unobserved execution.",
-    "Check intermediate unknown/regression/source changes, actual native publication phase boundaries and unchanged authority/receipt contracts for the selected cases."
+    "Check intermediate unknown/regression/source changes, actual native publication phase boundaries and unchanged authority/receipt contracts for the selected cases.",
+    "20.f: compare whole native results and mandatory findings against large-window and independent direct kernels; each measured window confirms unique bound work, finalization and replay preserve exact bytes."
   ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0576",
@@ -68,6 +70,18 @@
     "tests/test_runtime_consumption_right.py::test_measured_native_publication_retains_exact_targets_and_incomplete_receipt_state",
     "tests/test_runtime_consumption_right.py::test_real_runtime_driver_samples_controls_without_changing_srx_inputs_or_policy",
     "tests/test_runtime_consumption_right.py::test_srx_failure_leaves_partial_controls_and_allows_explicit_completion_and_next_call",
-    "tests/test_runtime_consumption_right.py::test_unrepresentable_accumulated_cpu_remains_unknown_instead_of_breaking_json_report"
+    "tests/test_runtime_consumption_right.py::test_unrepresentable_accumulated_cpu_remains_unknown_instead_of_breaking_json_report",
+    "tests/test_acceptance_work_matrix.py::test_complete_native_data_and_diagnostics_survive_every_profile_window[constrained-csv]",
+    "tests/test_acceptance_work_matrix.py::test_complete_native_data_and_diagnostics_survive_every_profile_window[constrained-document]",
+    "tests/test_acceptance_work_matrix.py::test_complete_native_data_and_diagnostics_survive_every_profile_window[constrained-evaluation]",
+    "tests/test_acceptance_work_matrix.py::test_complete_native_data_and_diagnostics_survive_every_profile_window[constrained-ndjson]",
+    "tests/test_acceptance_work_matrix.py::test_complete_native_data_and_diagnostics_survive_every_profile_window[constrained-reqif]",
+    "tests/test_acceptance_work_matrix.py::test_complete_native_data_and_diagnostics_survive_every_profile_window[constrained-reqifz]",
+    "tests/test_acceptance_work_matrix.py::test_complete_native_data_and_diagnostics_survive_every_profile_window[standard-csv]",
+    "tests/test_acceptance_work_matrix.py::test_complete_native_data_and_diagnostics_survive_every_profile_window[standard-document]",
+    "tests/test_acceptance_work_matrix.py::test_complete_native_data_and_diagnostics_survive_every_profile_window[standard-evaluation]",
+    "tests/test_acceptance_work_matrix.py::test_complete_native_data_and_diagnostics_survive_every_profile_window[standard-ndjson]",
+    "tests/test_acceptance_work_matrix.py::test_complete_native_data_and_diagnostics_survive_every_profile_window[standard-reqif]",
+    "tests/test_acceptance_work_matrix.py::test_complete_native_data_and_diagnostics_survive_every_profile_window[standard-reqifz]"
   ]
 }
