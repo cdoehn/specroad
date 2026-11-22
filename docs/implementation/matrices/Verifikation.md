@@ -4,7 +4,7 @@ Aktualisierte Soll-Zuordnung; [Zentraler Fortschritt](../SpecRoad_Implementierun
 
 ## Anhang B – Verifikationsregister
 
-Alle 50 ursprünglichen SR-VER-Verträge bleiben referenziert. SR-VER-0051 ergänzt den PatchHarbor-Rundweg; insgesamt sind 51 Verträge zugeordnet. Die nachfolgenden Meilensteine liefern Beiträge; M20 konsolidiert tatsächliche Ergebnisse, ersetzt aber keine früheren Einzeltests. Referenzplattformen, Messdaten und TD-001-Ausnahmen sind in der echten Evidence getrennt zu führen.
+Alle 50 ursprünglichen SR-VER-Verträge bleiben referenziert. SR-VER-0051 ergänzt den PatchHarbor-Rundweg; mit den zehn neuen Verträgen sind insgesamt 61 Verträge zugeordnet. Die nachfolgenden Meilensteine liefern Beiträge; M20 konsolidiert tatsächliche Ergebnisse, ersetzt aber keine früheren Einzeltests. Referenzplattformen, Messdaten und TD-001-Ausnahmen sind in der echten Evidence getrennt zu führen.
 
 | Verifikationsvertrag | Requirements in diesem Vertrag | Beitragende Meilensteine |
 |---|---:|---|
@@ -63,3 +63,18 @@ Alle 50 ursprünglichen SR-VER-Verträge bleiben referenziert. SR-VER-0051 ergä
 ## Erneute Abnahme des geänderten Schreibvertrags
 
 SR-VER-0012/0019/0020/0031/0035/0040/0041/0051 werden für die betroffenen Teilverträge in 18.s–18.x neu gebunden. Die exakten heutigen Oracles stehen in der Spezifikation; alte Recovery-/Restore-Erfolge sind historische Nachweise. Die vollständige Plattform-/Releaseabnahme bleibt in M20.
+
+## Erweiterung 791
+
+| Verifikation | Requirements | Technische / finale Abnahme |
+|---|---:|---|
+| SR-VER-0052 | 9 | M21, 20.b/d, 20.n |
+| SR-VER-0053 | 4 | M21, 20.b/d, 20.n |
+| SR-VER-0054 | 7 | M21, 20.b/d, 20.n |
+| SR-VER-0055 | 3 | M21, 20.b/d, 20.n |
+| SR-VER-0056 | 5 | M21, 20.b/d, 20.n |
+| SR-VER-0057 | 2 | M21, 20.b/d, 20.n |
+| SR-VER-0058 | 9 | M21, 20.b/d, 20.n |
+| SR-VER-0059 | 2 | M21, 20.b/d, 20.n |
+| SR-VER-0060 | 5 | M21, 20.b/d, 20.n |
+| SR-VER-0061 | 2 | M21, 20.b/d, 20.n |

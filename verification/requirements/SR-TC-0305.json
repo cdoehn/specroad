@@ -35,7 +35,8 @@
   "method": "automated_behavior",
   "open_items": [
     "Full view scope/grouping/relation/computed/missing-value providers follow 11.k/11.l; document rendering follows 11.m. This data API does not claim complete document/project or release approval.",
-    "Targeted development tests and alternating Apply halves remain partial observations on their actual source states."
+    "Targeted development tests and alternating Apply halves remain partial observations on their actual source states.",
+    "IMPLEMENTATION-PLANS-791: current remaining owner 21.p; consolidate the exact existing technical gaps/original evidence in 21.v, integration in 21.w/x, final current release proof in 20.n. Existing normal-mode test references and original evidence are retained; new plan/Force/JSON behavior is not accepted by this documentation commit."
   ],
   "oracle": {
     "kind": "behavior",
@@ -57,7 +58,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "2dad4bf789cbede2f05084d27bd62e3197c814f5b84e5ea30675890c35bd90f5",
+  "specification_sha256": "b9914d91dd85b67714d334326c7dcec61b76b81b8da9f35a4e64e39d6c48a9fd",
   "steps": [
     "11.f.W: resolve embedded normalized queries and basic project views through the existing query engine; assert ordered typed rows, independent column projection, exact query totals/pagination, configuration filtering, unchanged source/revision/hash bindings, no 100-row view cap, explicit empty policy, literal width/types/copy rejection and Core/PYZ parity.",
     "11.f.R: reject executable and alternate-source payloads, missing/wrong view references, incomplete view columns, unsupported scopes/providers, forged native queries and invalid pointers. Verify original byte/revision/model bindings, duplicate identity rejection, native sorting, exact cell errors and no file reads, writes, process or network effects.",

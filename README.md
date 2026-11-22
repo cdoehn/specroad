@@ -81,3 +81,12 @@ Dev-Pakete; diese liegen in der regulären `.venv` für Python 3.14. Dev führt 
 Apply prüft diese zusätzlich zur gefilterten N=3-Gruppe; die Messhistorie
 läuft dabei weiter. Siehe [Testing.md](docs/development/Testing.md). Der Umgebungsaufbau startet keine Tests und ändert weder Apply-Rotation
 noch CI, Control oder den PatchHarbor-Watcher.
+
+
+Die aktuelle [Planerweiterung](docs/implementation/milestones/M21.md) ergänzt
+Implementierungs-/Commitpläne, gemeinsame Text-/JSON-Ergebnisse und explizites
+Force nach [Spezifikation Anhang X](docs/specification/SpecRoad_Spezifikation.md).
+Sie ist zunächst ein offener Implementierungsumfang. Der [Restplan](docs/implementation/SpecRoad_Implementierungsplan.md)
+zieht technische Arbeiten vor; menschliche Fach-/Sprach-/Bedienabnahmen und die
+ausdrückliche Benutzungsfreigabe bleiben zuletzt. Ein Planungsbundle erklärt
+keines dieser neuen Produktfeatures für bereits umgesetzt oder abgenommen.

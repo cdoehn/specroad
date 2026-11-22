@@ -33,7 +33,8 @@
   ],
   "method": "automated_behavior",
   "open_items": [
-    "15.f.W/R behavior and the shared command/reader cleanup in 15.f.C are covered by targeted parallel regression tests. Targeted evidence is not a full-suite, origin authenticity, release, provider or human approval proof."
+    "15.f.W/R behavior and the shared command/reader cleanup in 15.f.C are covered by targeted parallel regression tests. Targeted evidence is not a full-suite, origin authenticity, release, provider or human approval proof.",
+    "IMPLEMENTATION-PLANS-791: current remaining owner 21.s; consolidate the exact existing technical gaps/original evidence in 21.v, integration in 21.w/x, final current release proof in 20.n. Existing normal-mode test references and original evidence are retained; new plan/Force/JSON behavior is not accepted by this documentation commit."
   ],
   "oracle": {
     "kind": "behavior",
@@ -55,7 +56,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "2dad4bf789cbede2f05084d27bd62e3197c814f5b84e5ea30675890c35bd90f5",
+  "specification_sha256": "b9914d91dd85b67714d334326c7dcec61b76b81b8da9f35a4e64e39d6c48a9fd",
   "steps": [
     "Extract verified native partial bytes, read actual closure members through Python/CLI/alias/structured Show, and compare the original artifact and bounded incoming/outgoing edges.",
     "Reject context-only targets, forged boundaries, altered payloads, unsafe paths, missing markers and concurrent changes; observe no writes and no implicit rehydration.",

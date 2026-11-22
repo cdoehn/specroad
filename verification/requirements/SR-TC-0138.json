@@ -11,7 +11,8 @@
   "json_pointers": [],
   "method": "automated_behavior",
   "open_items": [
-    "Full verification aggregation and release workflows remain later steps."
+    "Full verification aggregation and release workflows remain later steps.",
+    "IMPLEMENTATION-PLANS-791: current remaining owner 21.q; consolidate the exact existing technical gaps/original evidence in 21.v, integration in 21.w/x, final current release proof in 20.n. Existing normal-mode test references and original evidence are retained; new plan/Force/JSON behavior is not accepted by this documentation commit."
   ],
   "oracle": {
     "kind": "behavior",
@@ -33,7 +34,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "2dad4bf789cbede2f05084d27bd62e3197c814f5b84e5ea30675890c35bd90f5",
+  "specification_sha256": "b9914d91dd85b67714d334326c7dcec61b76b81b8da9f35a4e64e39d6c48a9fd",
   "steps": [
     "Prepare guarded native workflow updates and evaluate actual waiver bindings, deadlines, human decisions and changed subject/configuration/scope without I/O.",
     "Exercise mutating host review callbacks and revocation; publish guarded workflow updates through the real common writer and verify refusal of stale, denied or calculated-result writes."

@@ -28,7 +28,8 @@
   "method": "automated_behavior",
   "open_items": [
     "Document composition, attachment resolution/media safety and rendering remain separate later steps; the owned-prose API is not complete project or release approval.",
-    "Targeted development and alternating Apply partitions remain partial observations on their actual source states."
+    "Targeted development and alternating Apply partitions remain partial observations on their actual source states.",
+    "IMPLEMENTATION-PLANS-791: current remaining owner 21.t; consolidate the exact existing technical gaps/original evidence in 21.v, integration in 21.w/x, final current release proof in 20.n. Existing normal-mode test references and original evidence are retained; new plan/Force/JSON behavior is not accepted by this documentation commit."
   ],
   "oracle": {
     "kind": "behavior",
@@ -50,7 +51,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "2dad4bf789cbede2f05084d27bd62e3197c814f5b84e5ea30675890c35bd90f5",
+  "specification_sha256": "b9914d91dd85b67714d334326c7dcec61b76b81b8da9f35a4e64e39d6c48a9fd",
   "steps": [
     "11.e.W: parse allowed paragraph/inline/code/list/quote/break/attachment node families; compare semantic data, owned source and normalized hashes, admonition levels, structured forbidden-content errors, real unchanged files and isolated Core/PYZ results.",
     "11.e.R: preserve unchanged W nodes while completing lazy/nested container and indentation behavior; verify one-time escape/entity decoding, multiline definition rejection, obfuscated external/traversing paths, inert extension-like text, no reads/process/network/writes, bounded parser resources and isolated Core/PYZ parity.",

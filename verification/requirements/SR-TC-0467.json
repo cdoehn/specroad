@@ -25,7 +25,8 @@
   "open_items": [
     "Complete section/composition/payload/include/view semantics in the assigned following document steps.",
     "The built-in specification view and explicit partial/legacy fallback are assigned to 11.q; no rendered or fallback view is claimed here.",
-    "Targeted development observations and alternating Apply partitions are not a full-suite, cross-platform or release proof."
+    "Targeted development observations and alternating Apply partitions are not a full-suite, cross-platform or release proof.",
+    "IMPLEMENTATION-PLANS-791: current remaining owner 21.t; consolidate the exact existing technical gaps/original evidence in 21.v, integration in 21.w/x, final current release proof in 20.n. Existing normal-mode test references and original evidence are retained; new plan/Force/JSON behavior is not accepted by this documentation commit."
   ],
   "oracle": {
     "kind": "behavior",
@@ -47,7 +48,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "2dad4bf789cbede2f05084d27bd62e3197c814f5b84e5ea30675890c35bd90f5",
+  "specification_sha256": "b9914d91dd85b67714d334326c7dcec61b76b81b8da9f35a4e64e39d6c48a9fd",
   "steps": [
     "Check native document fields and exactly one non-retired primary specification; bind and return its exact stored data. Refuse missing or ambiguous primaries, preserve field diagnostics and compare order-independent observations and isolated Core/PYZ results without writes.",
     "Refuse nonfull/configured declared scopes, malformed active or retired roles and invalid local fields. Request the bound full-project role stage in the actual shared validation pipeline; verify empty/missing/multiple primaries, unconnected selections, earlier schema/identity refusal, unchanged loaded-model defaults and absence of invented document services."

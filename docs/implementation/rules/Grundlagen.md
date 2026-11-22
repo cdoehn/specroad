@@ -1,6 +1,8 @@
 # Grundlagen und Rangfolge
 
-Aktuelle ausdrückliche Nutzerentscheidung: [RECOVERY-REMOVAL-006](../decisions/recovery-removal-006.md). Sie erweitert den vorhandenen Plan auf 918 Produktpositionen und ersetzt die alten Produkt-Recoveryabnahmen; historische Erfolge und die ursprünglichen Entstehungsbelege bleiben erhalten. Keine Live-Nutzung vor ausdrücklicher Nutzerfreigabe.
+Aktuelle ausdrückliche Nutzerentscheidung: [IMPLEMENTATION-PLANS-791](../decisions/implementation-plans-791.md). Sie erweitert den Plan auf 996 Positionen, erhält 888 bestätigte Abschlüsse und ordnet alle 108 offenen Positionen: 87 technische vor dem menschlich abhängigen Abschlussblock. Die vollständigen bestätigten Plan-/CLI-/Force-Details sind Umsetzungsauftrag und benötigen keine erneute Grundsatzfreigabe; Detaillücken folgen weiterhin dem Entscheidungsvertrag.
+
+Weiterhin gültige frühere Nutzerentscheidung: [RECOVERY-REMOVAL-006](../decisions/recovery-removal-006.md). Sie erweiterte den damaligen Plan auf 918 Produktpositionen und ersetzt die alten Produkt-Recoveryabnahmen; historische Erfolge und die ursprünglichen Entstehungsbelege bleiben erhalten. Keine Live-Nutzung vor ausdrücklicher Nutzerfreigabe.
 
 Übernommene fachliche Planbasis. Frühere Verträge und historische Ausgangszustände behalten ihre damalige Bedeutung; die aktuelle optionale Klärung folgt SPECROAD-DECISION-1, Vertrag 4 und verification/development_contract.json.
 
@@ -8,9 +10,11 @@ Aktuelle ausdrückliche Nutzerentscheidung: [RECOVERY-REMOVAL-006](../decisions/
 
 ## Verbindliche Grundlagen und Rangfolge
 
-Fachliche Grundlage ist [`docs/specification/SpecRoad_Spezifikation.md`](../../specification/SpecRoad_Spezifikation.md), einschließlich aller konsolidierten Korrekturen, 742 Requirements, 51 Verifikationsverträge, 46 Szenario-/E2E-Identitäten sowie R-01 bis R-75, Anhang U und den PatchHarbor-Rundweg aus Anhang W. Der [`Prüfbericht`](../../reviews/SpecRoad_v0.2.7_Implementierungsreife_Pruefbericht.md) ist ein vorgelagerter Entwurfsreview, kein späterer Produktnachweis.
+Fachliche Grundlage ist [`docs/specification/SpecRoad_Spezifikation.md`](../../specification/SpecRoad_Spezifikation.md), einschließlich aller konsolidierten Korrekturen, 790 Requirements, 61 Verifikationsverträge, 54 Szenario-/E2E-Identitäten sowie R-01 bis R-87, Anhang U, den PatchHarbor-Rundweg aus Anhang W und die vollständige Plan-/CLI-/Force-Erweiterung aus Anhang X. Der [`Prüfbericht`](../../reviews/SpecRoad_v0.2.7_Implementierungsreife_Pruefbericht.md) ist ein vorgelagerter Entwurfsreview, kein späterer Produktnachweis.
 
-Gebundene Spezifikations-SHA-256: `fa3e492d18aaff24d9b22cd5c31a554a65173232c6d55a6147d526ed4fb81a09`.
+Aktuelle Spezifikations-SHA-256 für diesen Planungsstand: `b9914d91dd85b67714d334326c7dcec61b76b81b8da9f35a4e64e39d6c48a9fd`.
+
+Historische gebundene Spezifikations-SHA-256: `fa3e492d18aaff24d9b22cd5c31a554a65173232c6d55a6147d526ed4fb81a09`.
 Planungsbasis: Commit `fe2661d02ecf2f7eb483b58a4487eb009c6b3846`; sauberes Result-Bundle `specroad_Result_120209_0914_df3504.zip`; Repository-ID `3d2576df-d611-46fc-9d2b-92869468aaca`. Diese Angaben dokumentieren die Entstehung des Plans, nicht die zukünftige Patchbindung. **Jedes spätere Patchpaket bindet den dann aktuellen tatsächlichen Result-Zustand.**
 
 Die ausdrücklichen Nutzerentscheidungen TD-001 und BD-001 vom 14. September 2026 gelten zusätzlich und bei den nachfolgend benannten Konflikten vorrangig. Sonstige normative Spezifikationsinhalte werden nicht stillschweigend abgeschwächt. Neue fachliche Widersprüche, fehlende zwingende Angaben und Sicherheitsprobleme sind offen zu benennen, nicht durch erfundene Annahmen oder Scheinerfolge zu lösen.

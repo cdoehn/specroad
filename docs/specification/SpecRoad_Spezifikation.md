@@ -1,19 +1,19 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.103
+## Version 0.2.104
 
 | Feld | Wert |
 |---|---|
 | Dokument-ID | `SR-SPEC-0001` |
-| Dokumentversion | `0.2.103` |
+| Dokumentversion | `0.2.104` |
 | Zielrelease | `SpecRoad Single-Repository Workbench 0.2.0` |
 | Status | **Fachlich konsolidierte Arbeitsgrundlage; technische Reviewentscheidung gesondert dokumentiert, formale Baseline-Freigabe und Produktabnahme nicht durch dieses Dokument erklärt** |
-| Stand | 21. November 2026 |
+| Stand | 22. November 2026 |
 | Sprache | Deutsch; technische Feldnamen, Enum-Werte und CLI-Kommandos Englisch |
-| Fachliche Quelle | **Diese Repositoryfassung v0.2.103 ist die aktive fachliche Arbeitsgrundlage; eine entsprechende PDF wird hiermit nicht veröffentlicht.** |
+| Fachliche Quelle | **Diese Repositoryfassung v0.2.104 ist die aktive fachliche Arbeitsgrundlage; eine entsprechende PDF wird hiermit nicht veröffentlicht.** |
 | Bearbeitbare Satzquelle | Diese Datei; eine spätere PDF muss denselben versionierten Inhalt wiedergeben. |
-| Vorgängerversion | Repository-Spezifikation v0.2.101; historische Nachweise bleiben unverändert. |
-| Prüf- und Entscheidungsgrundlage | APPROVAL-BINDING-783, delegiert gemäß SPECROAD-DECISION-1; gebundene Wiederfreigabe aus R-36. |
-| Änderungsart | Detailbindung des vorhandenen menschlichen Approval-Gates an den isolierten nativen Lifecycle-Übergang. |
+| Vorgängerversion | Repository-Spezifikation v0.2.103; historische Nachweise bleiben unverändert. |
+| Prüf- und Entscheidungsgrundlage | IMPLEMENTATION-PLANS-791: ausdrücklicher Nutzerauftrag und konsolidierte Entscheidungen vom 22. November 2026; frühere E-Mail-Ideen gelten nur soweit nicht ersetzt. |
+| Änderungsart | Implementierungs-/Commitpläne im gemeinsamen Modell, Markdownquelle, allgemeine Text-/JSON-Ergebnisse und explizites Force; technischer Rest vor gemeinsamer menschlicher Endabnahme. |
 
 > **Verbindlicher Quellenwechsel:** Die ausdrückliche Nutzerentscheidung REFERENCE-SOURCE-551 wird als v0.2.50 umgesetzt. Der neue Quellvertrag ist Entwurfsarbeit vom 3. November 2026, kein Nachweis eines früher existierenden Formats. Bestehende 0.2-Verträge, Transport-, Sicherheits- und Reviewgrenzen bleiben erhalten.
 
@@ -29,7 +29,7 @@ Diese Spezifikation definiert das Verhalten, das Datenmodell, die CLI-Verträge,
 
 SpecRoad ist ein lokales, Git-natives, offlinefähiges und sandbox-portables Spezifikationstool. Ein einzelner Benutzer oder ein externer KI-Agent bedient den Core ausschließlich über eine dokumentierte, nichtinteraktive CLI. Der Core verwaltet genau ein SpecRoad-Projekt in genau einem Repository beziehungsweise Projektroot, verwendet CPython 3.10 als Mindestlaufzeit und benötigt für nicht Git-spezifische Core-Funktionen keine extern zu installierenden Laufzeitpakete. Der zusätzlich verpflichtend gelieferte py3langid-Adapter ist eine getrennte Ausführungskomponente mit eigenen Abhängigkeiten und expliziter Verfügbarkeitsdiagnose nach Anhang T.
 
-SpecRoad überführt Anforderungen und angrenzende Spezifikationsinformationen in ein typisiertes, verknüpftes und überprüfbares Modell. Es stellt dieselben Regeln für menschliches Authoring, KI-Proposals, Migration, Import, Merge, Baselines und CI bereit. Normative Änderungen werden nicht durch freie Textbearbeitung, sondern durch kontrollierte Change Plans veröffentlicht.
+SpecRoad überführt Anforderungen und angrenzende Spezifikationsinformationen in ein typisiertes, verknüpftes und überprüfbares Modell. Es stellt dieselben Regeln für menschliches Authoring, KI-Proposals, Migration, Import, Merge, Baselines und CI bereit. SpecRoad-eigene normative Änderungen werden durch kontrollierte Change Plans veröffentlicht. Implementierungspläne sind zusätzlich unmittelbar editierbare normative Markdownquellen nach Anhang X; der nächste Modellaufruf liest ihre tatsächlichen Bytes und meldet gegebenenfalls Fehler, ohne eine zweite Planquelle zu pflegen.
 
 SpecRoad setzt keine fortbestehende KI-Sitzung voraus. Jeder Aufruf ermittelt seinen Kontext neu und verwendet einen kostengünstigen, befehlsspezifischen Preflight. Ressourcenprofile steuern den Aufwand über weiche Arbeitsziele und fortsetzbare Teilschritte, ohne den Gesamtauftrag oder fachliche Prüfungen zu verkürzen. Der Verlust der gesamten Sandbox kann nur durch extern erhaltene Distribution und Projektdateien beziehungsweise ein verifiziertes Vollbundle überbrückt werden; SpecRoad garantiert keine Erhaltung ungesicherter Daten.
 
@@ -40,11 +40,12 @@ Zum System SpecRoad 0.2 gehören:
 - ein reines, nichtinteraktives CLI-Programm;
 - eine entpackbare Python-Modul-Distribution und eine Python-Zipapp;
 - ein portables Paket aus SpecRoad-Distribution, vollständigem Projekt und unverändertem PatchHarbor-Result sowie der gebundene Rückweg nach Anhang W;
-- das kanonische JSON-Modell mit versionierten Schemas;
+- das kanonische typisierte Modell aus JSON-Ressourcen und normativen Markdown-Implementierungsplänen mit versionierten Schemas;
 - vollständiges CLI-Authoring für Artefakte, Beziehungen, Lifecycle, Dokumente und Evidence;
 - ein einheitliches Change-Plan-, Schreibschutz- und Idempotenzmodell;
 - deterministische Validation, Linting und die deklarative Regelsprache SRX 1.0;
 - Trace-, Query-, Why-, Impact-, Diff-, Coverage- und Readiness-Funktionen;
+- mehrere Implementierungs-/Commitpläne einschließlich Taskverknüpfung, Voraussetzungen, Planabdeckung und semantischem Merge nach Anhang X;
 - Dokumente, Abschnitte, Inhaltsblöcke, deklarative Views und Diagrammquellen;
 - Baselines, Bundles, Migration und semantischer Dreiwege-Merge;
 - ReqIF-1.2-/ReqIFZ-, CSV- und NDJSON-Austausch;
@@ -106,6 +107,18 @@ Für Requirements im ausführbaren Produktmodell gilt dagegen `normative_force` 
 
 ### 2.1 Widerspruchsregel
 
+**Explizite Normal-/Force-Bedingung:** Die Produktgates dieser Fassung —
+Abweisen, Nichtschreiben, Freigabepflichten und softwareseitige Sicherheits- oder
+Zustandsgrenzen — beschreiben den Normalmodus ohne Force. Für **alle** diese
+Sperrentscheidungen gilt zusätzlich SR-REQ-0783 bis SR-REQ-0787 / X.12 als
+ausdrücklicher alternativer Bedienvertrag. Das ist keine Rangfolge zwischen
+widersprüchlichen Requirements: ihre Sperrwirkung ist hier bedingt definiert.
+Eine tatsächliche Prüfung, menschliche Entscheidung, Original-Evidence oder
+physische Ausführung darf auch erzwungen nicht erfunden werden. Funktionsumfang
+(etwa kein Git-Schreiben, kein LLM, keine beliebige Codeausführung) wird durch
+Force nicht um fehlende Operationen erweitert. Entwicklungs-/Apply-/Control-
+Verträge aus Kapitel 2 sind keine übersteuerbaren SpecRoad-Produktgates.
+
 Bei einem Widerspruch innerhalb dieser Dokumentversion gilt:
 
 1. Eine explizite `SR-REQ-*`-Anforderung hat Vorrang vor normativen Tabellen, Architekturentscheidungen und erläuterndem Text.
@@ -113,7 +126,7 @@ Bei einem Widerspruch innerhalb dieser Dokumentversion gilt:
 3. `SR-DEC-*` hat Vorrang vor erläuterndem Text, Diagrammen und Beispielen.
 4. Beispiele sind niemals normativ, sofern sie nicht ausdrücklich als Testvektor bezeichnet sind.
 5. Zwei widersprüchliche `SR-REQ-*`-Anforderungen besitzen **keine implizite Rangfolge** nach Nummer, Position oder Spezifität. Ein solcher Fund ist ein Spezifikationsfehler, muss als Issue gelöst werden und verhindert die Freigabe.
-6. Diese Dokumentversion 0.2.91 ersetzt die frühere fachliche Arbeitsgrundlage vollständig. Bis zur gesonderten PDF-Veröffentlichung ist diese versionierte Repositorydatei maßgeblich. Eine spätere PDF muss inhaltsgleich sein; frühere PDFs werden nicht als Nachweis der neuen Verträge ausgegeben. Inhalte verschiedener Fassungen dürfen nicht zu einer Mischspezifikation kombiniert werden.
+6. Diese Dokumentversion 0.2.104 ersetzt die frühere fachliche Arbeitsgrundlage vollständig. Bis zur gesonderten PDF-Veröffentlichung ist diese versionierte Repositorydatei maßgeblich. Eine spätere PDF muss inhaltsgleich sein; frühere PDFs werden nicht als Nachweis der neuen Verträge ausgegeben. Inhalte verschiedener Fassungen dürfen nicht zu einer Mischspezifikation kombiniert werden.
 7. Eine nachträgliche Änderung dieser veröffentlichten Datei erfordert mindestens eine neue Patch-Dokumentversion; stille Korrekturen unter derselben Dokumentversion sind unzulässig.
 8. Eine normative Tabelle, auf die eine `SR-REQ-*`-Anforderung ausdrücklich als Algorithmus oder Matrix verweist, ist Bestandteil des Passkriteriums dieser Anforderung.
 
@@ -122,7 +135,7 @@ Bei einem Widerspruch innerhalb dieser Dokumentversion gilt:
 | Begriff | Verbindliche Definition |
 |---|---|
 | Artefakt | Ein typisiertes, durch eine stabile ID identifiziertes Objekt des kanonischen Modells. |
-| Kanonisches Modell | Die aus `specroad.json`, normativen JSON-Ressourcen, aktiven Profilen, Regeln, Konfigurationen und referenzierten Anhängen gebildete einzige semantische Source of Truth. |
+| Kanonisches Modell | Die aus `specroad.json`, normativen JSON-Ressourcen, Markdown-Planquellen nach Anhang X, aktiven Profilen, Regeln, Konfigurationen und referenzierten Anhängen gebildete einzige semantische Source of Truth. |
 | Normativ | Für Konformität verbindlich. |
 | Generierte Sicht | Eine reproduzierbar aus dem kanonischen Modell erzeugte, nicht normative Darstellung. |
 | Semantische Änderung | Eine Änderung an normativen Werten oder Beziehungen, die Bedeutung, Gültigkeit, Status, Verifikation, Planung, Dokumentkomposition oder Herkunft beeinflussen kann. |
@@ -1708,6 +1721,8 @@ neuen ausführbaren Reviewwerkzeuge und ihre Daten.
 
 #### 2.5.8 Technische Gesamtabnahmen vor menschlichen Abnahmen — HUMAN-ACCEPTANCE-LAST-779
 
+Ergänzung vom 22. November 2026, IMPLEMENTATION-PLANS-791: Der ausdrückliche Scopewechsel ergänzt M21 für Planfeature, allgemeines Force und vollständige CLI-Ergebnisse. Die 918 alten Positionen und 888 bestätigten Abschlüsse bleiben erhalten; 78 neue Positionen ergeben 996. M21 und technische M20-Restgruppen gehen dem unverändert offenen menschlichen Abschlussblock vor. Die folgende ursprüngliche Reihenfolgeentscheidung bleibt im Übrigen erhalten; ihre frühere unveränderte Gesamtzahl gilt nur für den damaligen Auftrag.
+
 Ausdrücklicher Nutzerauftrag vom 21. November 2026: Nach dem bestätigten
 19.x.C DÜRFEN fachlich unabhängige vollständige W/R/C-Gruppen aus Meilenstein
 20 vor den offenen menschlichen Abnahmen umgesetzt und technisch geprüft
@@ -1841,6 +1856,14 @@ Control-Budgets, historischen Verträge oder Betriebszustände.
 | SR-SCN-0044 | Core ohne Zusatzpakete | Ohne NumPy und py3langid alle Core-Operationen nutzen; angeforderte Detektion meldet unavailable statt Erfolg. |
 | SR-SCN-0045 | Analyzerarbeit fortsetzen | Vollständige Subjectmenge mit kleinen weichen Budgets über mehrere Prozesse und einen portablen Work-Roundtrip auswerten. |
 | SR-SCN-0046 | Entwurfsmetadaten migrieren | Alte Anforderungen mit explizitem Sprach-/Verbindlichkeitsmapping migrieren, historische Nachweise unverändert erhalten und SRX-Präzision projektgebunden auswerten. |
+| SR-SCN-0047 | Mehrere Pläne aus gebundenem Kontext | Requirement-Teilmenge als Grobplan erstellen, verfeinern und einen zweiten überlappenden Plan ergänzen. |
+| SR-SCN-0048 | Plan manuell ändern und fortschreiten | Markdown im Editor umnummerieren, verschieben und abhaken; tiefe Struktur und Freitext erhalten. |
+| SR-SCN-0049 | Planvoraussetzungen und Tasks erklären | A.2/A.5/B.3 und viele-zu-viele Tasks einschließlich offener/zyklischer Verweise auswerten. |
+| SR-SCN-0050 | Anforderungsänderung bis in Commitpläne verfolgen | Bereits abgehakte und neue Planstellen in mehreren Plänen über Proposal und direkten Write finden und ausdrücklich neu binden. |
+| SR-SCN-0051 | Pläne semantisch zusammenführen | Checkbox-Wiederöffnung, Reihenfolge, Move/Delete und gemischte Specänderung auflösen und anwenden. |
+| SR-SCN-0052 | Mehrsprachige Pläne portabel austauschen | Vorhandene Sprache erkennen, Planbaseline/Variante exportieren und durch echten PH-Hin-/Rückweg übertragen. |
+| SR-SCN-0053 | CLI und Force bei fehlerhaftem Bestand | Gleichen eindeutig bezeichneten Auftrag normal und erzwungen ausführen, Resultate textuell/JSON lesen und ungültige Dateien gezielt korrigieren. |
+| SR-SCN-0054 | Große Planung und gemeinsame Endabnahme | Große Kontexte/Abdeckung über Work fortsetzen; Trace-/Viewdaten lesen und vollständige technische sowie echte abschließende Reviewbelege trennen. |
 
 ---
 
@@ -1848,13 +1871,13 @@ Control-Budgets, historischen Verträge oder Betriebszustände.
 
 | ID | Entscheidung | Festlegung |
 |---|---|---|
-| SR-DEC-0001 | Kanonisches JSON-Modell | Normative semantische Projektdaten werden als versioniertes JSON gespeichert. Markdown, HTML, CSV und Diagrammquellen sind generierte Sichten. |
-| SR-DEC-0002 | Ein Artefakt pro Datei | Jedes Artefakt wird in einer eigenen Datei gespeichert, um Diffs, Reviews und konfliktarme Änderungen zu ermöglichen. |
+| SR-DEC-0001 | Gemeinsames typisiertes Modell | JSON bleibt der Träger bestehender Artefakte; vollständige Implementierungspläne haben normative Markdownquellen nach X.2. Ihre JSON-Projektion ist abgeleitet. Sonstige Berichte bleiben generierte Sichten. |
+| SR-DEC-0002 | Eindeutige normative Träger | Bestehende JSON-Artefakte: ein Artefakt pro Datei. Ausnahme nach X.2: ein vollständiger Implementierungsplan samt allen Einträgen pro Markdown-Datei, ohne normative JSON-Duplikate. |
 | SR-DEC-0003 | Stabile, branchfähige Identitäten | Neue Artefakte und Beziehungen erhalten 128-Bit-Zufallsidentitäten; migrierte Legacy-IDs bleiben unverändert. |
 | SR-DEC-0004 | Getrennte Statusdimensionen | Reifegrad, Umsetzung, Verifikation sowie berechnete Aktualitäts- und Relationsreviewzustände werden getrennt modelliert. |
 | SR-DEC-0005 | Gerichtete typisierte Beziehungen | Beziehungen besitzen Richtung, eigene ID und definierte Quell-/Zieltypen; inverse Sichten und Reviewstatus werden berechnet. |
 | SR-DEC-0006 | Deterministische Prüfung vor KI | Schema-, Typ-, Referenz-, Lifecycle-, Regel-, Merge- und Migrationseigenschaften funktionieren vollständig ohne KI. |
-| SR-DEC-0007 | KI nur über Proposals | KI-Änderungen werden als versionierte Proposals mit erwarteter Basis, Change Plan, Quellen und Review-Historie behandelt. |
+| SR-DEC-0007 | Explizite KI-Änderungsverträge | Normaler CLI-AI-Write verwendet Proposals; ausdrückliches Force folgt X.12. Manuell/extern editierte Planquellen werden nach X.3/X.4 eingelesen, ohne einen nicht vorhandenen Audit- oder Freigabenachweis zu behaupten. |
 | SR-DEC-0008 | Keine beliebige Codeausführung | Der Core führt weder Projektcode, Buildskripte, Templates, Plugins noch externe Renderer aus. |
 | SR-DEC-0009 | Offline-Kern | Alle Kernfunktionen sind lokal, initiieren keine Netzwerkverbindung und erfassen keine Telemetrie. |
 | SR-DEC-0010 | Deklarative Profile | Profile verschärfen Felder, Werte, Relations- und Lintregeln deklarativ und enthalten keinen ausführbaren Code. |
@@ -1948,6 +1971,8 @@ Die Entscheidungen begrenzen den Implementierungsspielraum, ersetzen aber keine 
 
 ### 7.1 Schreibpfad
 
+Plan- und Specänderungen verwenden gemeinsam diesen Writer. Markdown-Datei- und Artefaktprojektionbindungen folgen X.4. Der normale Ablauf bleibt erhalten; explizites Force nach X.12 erfasst übersteuerte Gates und ungültige Ziele ohne erfundenen Erfolg.
+
 Jeder normative Schreibweg verwendet dieselbe Reihenfolge:
 
 ```text
@@ -1970,9 +1995,11 @@ Marker dauerhaft entfernen; Lock lösen; Erfolg melden
 
 Vor dieser Folge gelten der aufrufbezogene Preflight aus Anhang N und die Betriebsbudgets aus Anhang O. Eine gefundene Abbruchsperre wird nicht durch einen zusätzlichen normalen Schreiblauf verdeckt.
 
-Direkte JSON-Bearbeitung durch externe Editoren ist technisch nicht verhindert. Sie gilt jedoch nicht als SpecRoad-Authoring-Operation, besitzt keinen Audit- oder Transaktionsnachweis und muss vor jeder weiteren kontrollierten Änderung vollständig validiert werden. KI-Agenten dürfen normative Managed-Path-Dateien nach dem Produktvertrag nicht direkt verändern.
+Direkte JSON-Bearbeitung durch externe Editoren ist technisch nicht verhindert. Sie gilt jedoch nicht als SpecRoad-Authoring-Operation, besitzt keinen Audit- oder Transaktionsnachweis und muss vor jeder weiteren kontrollierten Änderung vollständig validiert werden. Der normale CLI-Vertrag leitet AI-Writes in Proposals um; explizites Force folgt X.12. Externe Bearbeitung der normativen Markdown-Planquelle ist ein unterstützter Eingangsweg nach X.3/X.4; daraus entstehen keine rückwirkenden SpecRoad-Transaktions- oder Freigabebelege.
 
 ### 7.2 KI-Vertrauensgrenze
+
+Die folgende Folge ist der normale Proposalweg. Spec-only, Plan-only und gemeinsame Proposals sind zulässig (X.8). Ein ausdrücklich erzwungener Aufruf kann die Produktfreigabesperre nach X.12 übergehen, aber weder einen menschlichen Review noch gültige Verification-Evidence erzeugen.
 
 ```text
 KI fragt Capabilities, Schemas und Command Contracts ab
@@ -2024,6 +2051,8 @@ Ein persistenter Cache ist lediglich eine optionale Beschleunigung; Transaktions
 
 ### 8.1 Standardstruktur
 
+Ab Datenversion 0.3.0 sind `.md`-Dateien unter `spec/implementation-plans/` normative Ressourcen nach X.2, nicht generierte Dokumente. Ihr Inventar umfasst Trägerbytes und alle enthaltenen Plan-/Eintragsprojektionen; bestehende JSON-Ressourcen behalten ihre Speicherform.
+
 ```text
 specroad-project/
 ├── specroad.json
@@ -2045,6 +2074,7 @@ specroad-project/
 │   ├── releases/
 │   ├── milestones/
 │   ├── tasks/
+│   ├── implementation-plans/
 │   ├── terms/
 │   ├── proposals/
 │   ├── baselines/
@@ -2225,6 +2255,8 @@ Die Beispielkonfiguration zeigt Fachpolicies; konkrete Hashbindungen des vom Rel
 | code_ref | CODE | Quellcode-Referenz |
 | relation_review | RREV | Relationsreview |
 | configuration | CFG | Produktkonfiguration |
+| implementation_plan | IPLAN | Vollständiger Implementierungsplan in Markdown |
+| plan_entry | PENTRY | Stage, Arbeitsschritt oder geplanter Commit im Planträger |
 
 ### 9.2 Identität
 
@@ -2258,7 +2290,7 @@ Neue Artefakte verwenden ausschließlich `random128-v1`. `legacy-sequential-v1` 
 | `id_scheme` | Enum | ja | `random128-v1` oder `legacy-sequential-v1` |
 | `artifact_type` | Enum | ja | Kernartefakttyp |
 | `title` | String | ja | kurzer menschenlesbarer Titel |
-| `language` | BCP-47-Tag | bei requirement, document und term | explizite Inhaltssprache nach Anhang S; andere texttragende Artefakte dürfen sie deklarieren |
+| `language` | BCP-47-Tag | bei requirement, document, term, implementation_plan und plan_entry | explizite Inhaltssprache nach Anhang S; andere texttragende Artefakte dürfen sie deklarieren |
 | `text_direction` | `ltr`, `rtl` oder `auto` | nein | Darstellungsmetadatum, Default auto; keine aus Sprache erzwungene Richtung |
 | `maturity` | Enum | ja | fachlicher Reifegrad oder gekoppelte Spezialreife nach 9.6 |
 | `revision` | Integer >= 1 | ja | monotone Artefaktrevision |
@@ -2306,6 +2338,8 @@ Die Tabelle 9.3 gilt für reguläre 0.2-Artefakte. Unveränderbare Legacy-Ressou
 | `code_ref` | Pfad, Referenzart, Datei-/Auswahlhashes | für `approved`: Zustand nach Anhang H berechenbar |
 | `relation_review` | Relation, Endpunkthashes, Reviewer, Entscheidung, `review_state=recorded` | entsteht atomar mit `maturity=approved` und ist danach unveränderbar |
 | `configuration` | Dimensionen, Auswahl, optionaler Parent | für `approved`: gültige Werte und zyklusfreie Vererbung |
+| `implementation_plan` | Metadaten, Scope, Markdownträger und Rootordnung nach X.2 | eindeutige Struktur und Referenzen; fachliche Freigabe getrennt von Fortschritt |
+| `plan_entry` | stabile ID, Kennung, Titel, Art, Checkbox, Metadaten und Parentbezug nach X.2/X.3 | genau ein Plan/Parent; erfüllte eindeutige Modellregeln, Force bleibt sichtbar |
 
 ### 9.5 Primitive und zusammengesetzte Kerntypen
 
@@ -2423,6 +2457,8 @@ von SpecRoad selbst.
 
 ### 9.7 Exakte Kernrelationsmatrix
 
+Die generischen Zeilen gelten für die erweiterte Typmenge. Die zusätzlichen, disjunkten Quell-/Zielzeilen in X.5 sind Bestandteil dieser exakten Matrix. `derived_from` nimmt außerdem implementation_plan/plan_entry als Quellen auf. Strukturkanten und Planbindings werden aus ihrem einen Markdown-Speicherort projiziert, nicht nochmals in JSON gespeichert.
+
 | Relation | Exakt zulässige Quellen | Exakt zulässige Ziele | Zusatzregel |
 |---|---|---|---|
 | `addresses` | `need`, `capability`, `requirement` | `goal` | — |
@@ -2432,7 +2468,7 @@ von SpecRoad selbst.
 | `refines` | `scenario` | `need`, `capability`, `requirement`, `scenario` | detaillierter → allgemeiner |
 | `derived_from` | `goal`, `need`, `capability`, `requirement`, `scenario`, `decision`, `risk`, `assumption`, `component`, `interface`, `verification`, `test`, `release`, `milestone`, `task`, `term`, `document`, `section`, `content_block`, `view`, `code_ref`, `configuration` | `source`, `need`, `decision`, `assumption` | fachliche Herkunft |
 | `depends_on` | `capability`, `requirement`, `component`, `interface`, `task`, `release`, `milestone`, `code_ref`, `configuration` | `capability`, `requirement`, `component`, `interface`, `task`, `release`, `milestone`, `code_ref`, `configuration` | kein Self-Link |
-| `conflicts_with` | jeder der 28 Artefakttypen | jeder der 28 Artefakttypen | symmetrisch; genau einmal kanonisch gespeichert |
+| `conflicts_with` | jeder der 30 Artefakttypen | jeder der 30 Artefakttypen | symmetrisch; genau einmal kanonisch gespeichert |
 | `constrains` | `requirement`, `decision` | `capability`, `requirement`, `component`, `interface` | — |
 | `allocated_to` | `requirement` | `component`, `interface` | — |
 | `implemented_by` | `capability`, `requirement`, `decision` | `task`, `component`, `code_ref` | — |
@@ -2448,9 +2484,9 @@ von SpecRoad selbst.
 | `duplicates` | jeder Artefakttyp | exakt derselbe Artefakttyp wie die Quelle | symmetrisch; genau einmal kanonisch gespeichert |
 | `contains` | `document` | `section` | Position im Dokument |
 | `contains` | `section` | `section`, `content_block` | Position im Abschnitt; zyklusfrei |
-| `references` | `content_block`, `view`, `verification`, `test`, `source` | jeder der 28 Artefakttypen | nicht besitzende Referenz |
+| `references` | `content_block`, `view`, `verification`, `test`, `source` | jeder der 30 Artefakttypen | nicht besitzende Referenz |
 
-`superseded_by` ist ausschließlich eine berechnete inverse Sicht. „Jeder der 28 Artefakttypen“ bezeichnet exakt die in 9.1 aufgeführten Typen. Eine Relation ist nur zulässig, wenn genau eine Tabellenzeile Quelle und Ziel akzeptiert. Pflichtrelationen freigegebener Artefakte erfüllen den profilabhängig geforderten Relationsreviewstatus.
+`superseded_by` ist ausschließlich eine berechnete inverse Sicht. „Jeder der 30 Artefakttypen“ bezeichnet exakt die in 9.1 aufgeführten Typen. Eine Relation ist nur zulässig, wenn genau eine Tabellenzeile Quelle und Ziel akzeptiert. Pflichtrelationen freigegebener Artefakte erfüllen den profilabhängig geforderten Relationsreviewstatus.
 
 ### 9.8 Requirement-Qualitätsgate
 
@@ -2500,13 +2536,15 @@ Zulässige Kontextobjekte sind `artifact`, `configuration`, `project`, `relation
 
 ### 9.10 Mehrsprachen- und Analyzer-Abgrenzung
 
-Requirements besitzen die expliziten Pflichtfelder aus Anhang S. Im Approval-Gate sind fachliche Einzelforderung und Widerspruchsfreiheit menschlich zu beurteilen; der Core prüft nur seine dokumentierten Struktur- und Policykriterien. Ein fehlendes Wort MUSS ist kein Fehler. Analyzerberichte sind externe, gebundene Beobachtungsressourcen nach Anhang T, keine zusätzliche Artefaktklasse. Die bestehende Matrix aus 28 Artefakttypen und ihre Relationsregeln bleibt unverändert.
+Requirements besitzen die expliziten Pflichtfelder aus Anhang S. Im Approval-Gate sind fachliche Einzelforderung und Widerspruchsfreiheit menschlich zu beurteilen; der Core prüft nur seine dokumentierten Struktur- und Policykriterien. Ein fehlendes Wort MUSS ist kein Fehler. Analyzerberichte sind externe, gebundene Beobachtungsressourcen nach Anhang T, keine zusätzliche Artefaktklasse. Analyzerberichte bleiben außerhalb der Artefakttypmenge; ausschließlich X.2/X.5 erweitert diese um Implementierungsplan und Planeintrag. Für Pläne ist die zusätzliche Analyzerfähigkeit auf bestehende Spracherkennung begrenzt (X.10).
 
 ---
 
 ## 10. Änderungs-, Baseline-, Transaktions- und Austauschmodelle
 
 ### 10.1 Gemeinsamer Change Plan
+
+Das bestehende Format 1.2.0 bleibt lesbar. Format 1.3.0 ergänzt explizite Planträger-/Projektionbindungen, Forcekontext und die genau bezeichnete `resource_replace`-Operation nach X.12. Typisierte Planoperationen werden wie die bestehenden Kernoperationen normalisiert; gemischte Änderungen haben einen gemeinsamen Zielstand.
 
 Ein Change Plan enthält mindestens:
 
@@ -2541,6 +2579,8 @@ Die Metadaten werden ausschließlich durch die ausdrücklich ausgewählte Policy
 
 ### 10.2 Kernoperationen
 
+Die typisierten create/update/relation/transition-Operationen können die neuen Planprojektionen adressieren; ihr physischer Writer folgt X.3/X.4. Zusätzlich gilt `resource_replace` aus X.12 für explizite Raw-Zielbytes. Ohne diesen ausdrücklichen Auftrag darf ein Parserfehler nicht durch geratenen Inhalt repariert werden.
+
 | Operation | Mindestinhalt | Ergebnis |
 |---|---|---|
 | `create` | vollständiges neues Artefakt und gebundene Ergebnisidentität | neue Artefaktdatei |
@@ -2558,6 +2598,8 @@ Die Metadaten werden ausschließlich durch die ausdrücklich ausgewählte Policy
 Operationen werden in Array-Reihenfolge auf einen isolierten Zwischenstand angewendet. Die gebundenen IDs und Metadaten bewirken, dass die Anwendung exakt des gespeicherten Plans unabhängig vom Apply-Zeitpunkt dasselbe normative Ergebnis erzeugt. `change apply` verweigert einen Plan bei abweichendem Planhash, Basis-Hash, Metadatenvertrag oder Ergebnis-Hash.
 
 ### 10.3 Proposal-Statusmodell und Authoring
+
+Spec-only, Plan-only und gemeinsame Inhalte folgen X.8. Die folgende Status-/Reviewfolge definiert den Normalmodus. Erzwungene Anwendung nach X.12 hält übersprungene Gates und fehlende Freigaben sichtbar und führt keine erfundenen Kontrollentscheidungen in control_history ein.
 
 Ein Proposal trennt seine physische Artefaktrevision `revision` von der zur fachlichen Freigabe gehörenden `content_revision`. Beide beginnen bei 1. Jeder persistierte semantische Artefaktwrite erhöht `revision` einmal nach Anhang K. Nur eine Änderung des vorgeschlagenen Fachinhalts erhöht zusätzlich `content_revision`. Die Option `--expected-revision` meint immer die aktuelle Artefaktrevision; Freigaben binden ausdrücklich die Inhaltsrevision.
 
@@ -3342,6 +3384,8 @@ an ihre damaligen unveränderten Bytes gebunden.
 
 ### 10.6 Schreibzustände und Abbruchsperre
 
+Die folgende Zustandsmaschine beschreibt den Normalmodus. X.12 erlaubt ausdrücklich neue erzwungene Operationen gegen die beobachtete Sperre, ohne Abschluss/Recovery der alten Operation oder einen falschen clean-Nachweis. Alte Unterbrechungsbelege bleiben erhalten.
+
 Der Vertrag `write-guard-v1` ersetzt das frühere wiederherstellende
 Transaktionsprotokoll. Die logischen Zustände sind:
 
@@ -3365,6 +3409,8 @@ Ein abgebrochener ausschließlich lesender Aufruf erzeugt keinen Schreibmarker
 und macht ein zuvor konsistentes Projekt nicht allein dadurch `corrupted`.
 
 ### 10.7 Abbrucherkennung und manueller Git-Wiederanlauf
+
+Der normale Wiederanlauf bleibt der frische vollständige Git-Stand. Die ausdrücklich neue Force-Operation aus X.12 ist keine Wiederaufnahme, Reparatur oder Vervollständigung einer alten Publikation. Der frühere beschädigte Auftrag bleibt unbestätigt.
 
 **RECOVERY-REMOVAL-006, ausdrückliche Nutzerentscheidung vom 14. November 2026.**
 SpecRoad bietet keine automatische oder manuelle Reparatur einer unterbrochenen
@@ -3601,6 +3647,8 @@ hiermit abgelöst; ihre historische Fassung bleibt über Git nachvollziehbar.
 
 ### 10.8 Scope Descriptor und Scope-Closure
 
+X.10 ergänzt beide Planartefakttypen: ein selektierter Planeintrag zieht seinen vollständigen physischen Planträger ein; semantische Auswahl und mittransportierter Kontext bleiben getrennt. Requirements werden nicht allein durch Textnähe zum Planumfang hinzugefügt.
+
 Jede Operation mit Modellumfang verwendet genau einen kanonischen Scope Descriptor:
 
 ```json
@@ -3655,11 +3703,15 @@ Eine nach außen bereits veröffentlichte Basis oder Freigabe wird durch diese K
 
 ### 10.9 Modellwurzel
 
+Plan-Markdown wird nach X.4 mit Originalbytehash und eindeutig zugeordneten Projektionhashes inventarisiert. Kein Cache und keine zweite JSON-Planressource ersetzt diesen Beitrag zur Modellwurzel.
+
 Für jede im Modellumfang enthaltene normative JSON-Ressource wird der RFC-8785-Hash gebildet. Anhänge werden durch Pfad, Byte-Länge, Medientyp und Byte-Hash repräsentiert. Das Manifest enthält Scope Descriptor, Scope-Hash, Artefakte nach ID, Ressourcen nach Identität und Version, Anhänge nach Pfad, Boundary References nach `(source_id, relation_id, target_id)` sowie den effektiven Konfigurations- und Profilhash. Das Manifest wird nach RFC 8785 kanonisiert und mit SHA-256 gehasht.
 
 Absolute Pfade, lokale Zeitzone, Laufzeitstempel, Cache, Locks, Journale, Receipts, generierte Dateien und Darstellungseinstellungen fließen nicht in die fachliche Modellwurzel ein. Bei einem Projektbundle können Receipts als separat gehashte Betriebssektion im Bundlemanifest enthalten sein. Aufrufbezogene Ressourcenprofile, Budgets, Cachewahl, Runtime-Identität und explizite Messwerte sind ebenfalls keine Eingaben der fachlichen Modellwurzel, des Scope Descriptors oder der gebundenen Plan-/Operationshashes; die bestehenden semantischen Projekt- und Profilpolicies bleiben unverändert.
 
 ### 10.10 Profilkomposition
+
+Die neuen Planfelder und Typen sind in denselben Profil-/SRX-Verträgen adressierbar. Planabdeckung ist nur bei ausdrücklicher Profilregel ein zusätzliches Releasegate; ungeplante Requirements allein sind kein Fehler. X.12 gilt für die Sperrentscheidung, nicht als positives Prüfergebnis.
 
 Profile werden in dieser Reihenfolge aufgelöst: exakte Version von `core` zuerst, danach die geordnete Projekt- oder CLI-Liste. Sobald mindestens ein `--profile` angegeben ist, ersetzt diese Liste die Projektliste; `core` wird automatisch vorangestellt. Doppelte Profilidentitäten sind unzulässig.
 
@@ -3680,9 +3732,13 @@ Der effektive Profilhash ist der RFC-8785-/SHA-256-Hash aus geordneten Profilide
 
 ### 10.11 Baseline-Objektspeicher
 
+Planträger einschließlich Originaltext und Referenzen werden als eine physische Ressource nach X.10 aufgenommen; Planstatus ist von Verification und Baselinefreigabe getrennt.
+
 Beim Erzeugen einer Baseline werden kanonische JSON-Bytes und unveränderte Anhangsbytes content-addressiert unter `archive/objects/<erste-zwei-hex>/<sha256>` gesichert. Das Baseline-Manifest enthält Scope Descriptor, logische Rolle, Artefakt-ID oder Quellpfad, Revision, Byte-Länge, Medientyp, Hash, Boundary References und optionalen Konfigurationshash. Ein Archivobjekt darf nicht verändert oder gelöscht werden, solange eine Baseline darauf verweist.
 
 ### 10.12 External Identity und Import-Dreifachvergleich
+
+Planprojektionen verwenden stabile IDs statt Anzeigenummern; Import schreibt vollständige Markdownträger. Austausch- und Verlustprofile folgen X.10. Die folgenden Konfliktabweisungen gelten normal; ausdrücklich bezeichnete Force-Zieloperationen folgen X.12.
 
 Eine External Identity ist an Artefakten und Relationen zulässig:
 
@@ -3935,7 +3991,7 @@ In diesem Fall bleibt der lokale Wert erhalten, genau wie bei
 dieselbe native Revisionsregel; `update_if_unchanged` ändert ebenfalls niemals
 Fachinhalt unter Beibehaltung der alten Revision. Diese bewusst gemeinsame
 Übernahmegrenze ist Teil des v1-Vertrags, keine fehlende Implementierung
-einer Force-Variante. Ein vollständig wertgleicher No-op erzeugt keine
+einer impliziten Force-Variante; eine ausdrückliche Übersteuerung folgt X.12. Ein vollständig wertgleicher No-op erzeugt keine
 künstliche Revision. Eine tatsächlich geänderte Importhistorie ist dagegen
 Teil des vollständigen nativen Zielobjekts und unterliegt dessen regulären
 Metadatenregeln, auch bei gleicher fachlicher Mappingprojektion. Bei einer
@@ -4137,9 +4193,13 @@ gesondert; dieses Dokument behauptet keine fertige Exportfunktion.
 
 ### 10.13 Evidence-Origin
 
+Plancheckboxen, deklarierte Vollständigkeit und forced-Status sind keine Original-Evidence. Planänderungen und Forceherkunft müssen bei Aktualitäts-/Herkunftsprüfung nach X.4/X.12 berücksichtigt werden.
+
 Evidence unterscheidet `recorded_manual`, `imported_junit`, `imported_sarif`, `imported_generic` und `generated_internal`. Der Origin bestimmt Provenienzpflichten, nicht das berechnete Verification Result. Evidence speichert Subject-Revisionen und Vollhashes für Audit sowie `verification_context_hash-v1` für fachliche Aktualität und `run_context` nach 10.5.2 für die Auswahl des geprüften Stands und Laufs. Konfigurationsgebundene Evidence gilt nur für denselben Konfigurationshash; eine unabhängig verwendbare Evidence verlangt eine ausdrückliche Contract-Policy.
 
 ### 10.14 Dokumentblöcke und CommonMark-Kernsubset
+
+Die normative Planquelle nach X.3 ist von generierten Dokumenten getrennt. Views, Tabellen und Diagramme dürfen ihre Projektionen nach X.10 referenzieren; Rendern erzeugt keine zweite normative Quelle.
 
 Ein vollständiges Projekt besitzt genau ein nicht retiriertes Dokument mit `document_role=primary_specification`; weitere Dokumente verwenden `supporting`.
 
@@ -4158,6 +4218,8 @@ Das CommonMark-Kernsubset umfasst Absätze, Emphasis, Strong, Inline-Code, Fence
 `include_document`-Kanten werden vor Rendering als eigener Include-Graph geprüft; jeder direkte oder transitive Zyklus ist ein Fehler. `section remove` verlangt standardmäßig einen leeren Abschnitt. Für einen nichtleeren Abschnitt ist genau eine Option aus `--cascade` oder `--move-children-to <SECTION-ID>` erforderlich; alle Änderungen werden als Retire-/Relationsoperationen geplant, ohne verwaiste Kindobjekte zu hinterlassen.
 
 ### 10.15 Semantischer Merge-Plan
+
+Implementierungspläne und Einträge verwenden zusätzlich den vollständigen Dreiwegevertrag X.9 M01–M12. Bestehende Schutzkonflikte bleiben im Normalmodus wirksam; mit Force sind ausdrücklich bezeichnete Zielentscheidungen nach X.12 möglich, keine unsichtbare Seitenwahl.
 
 Ein Merge-Plan bindet `base`, `ours` und `theirs` jeweils an Projekt-ID, Scope Descriptor, Modellwurzel und Herkunft. Automatische Zusammenführungen und Konflikte werden feldweise dokumentiert. Eine Konfliktauflösung ist ein unveränderbarer Planbestandteil. Der Merge erzeugt keinen Git-Commit. Die Metadaten folgen Anhang K.
 
@@ -4545,7 +4607,7 @@ Collection- und konkurrierende Binärwertkonflikte werden nur tatsächlich
 vorhandene Seiten angeboten; `value` nur für JSON. Bei Identitäts-/Herkunfts-,
 Absenz-ohne-Entfernungswunsch-, Lifecycle-, Originalschutz-, Besitzer- oder
 Erstellungsmetadatenkonflikten bleibt sie leer: Eingaben müssen fachlich
-geklärt werden; kein Take umgeht diese Schutzregeln. Wenn eine Ressource
+geklärt werden; ein normales Take umgeht diese Schutzregeln nicht. Ausdrückliches Force folgt X.12. Wenn eine Ressource
 solch einen Schutzkonflikt besitzt, bietet auch ein zusätzlicher Inhalts-
 konflikt derselben Ressource keine Auflösung an. Bei remove-versus-edit auf
 Objektfeldern wird Abwesenheit nicht durch `take_*` zur Löschfreigabe;
@@ -4605,7 +4667,7 @@ Zahlen, ungültiges Unicode und fremde Python-Werte sind unzulässig.
 Dies ist keine Behauptung semantischer Zielgültigkeit: Typ-, Profil-,
 Referenz- und Invarianzprüfungen des vollständigen zusammengestellten Ziels
 bleiben zwingend in 17.j. Binärkonflikte erlauben nur gebundene Quellübernahme,
-keinen JSON-Ersatz. Schutzkonflikte nach 10.15.4 erhalten keine Umgehung.
+keinen JSON-Ersatz. Schutzkonflikte nach 10.15.4 behalten ihre normale Sperrwirkung; eine ausdrücklich bezeichnete erzwungene Auflösung folgt X.12.
 
 Jede Auflösung enthält genau `resolution_id`, `previous_sha256`,
 `conflict_id`, `choice`, `value`, `actor` und `resolved_at`. `choice` ist
@@ -5025,6 +5087,8 @@ Bei Fehlern bleiben die nativen Fehlerklassen und gegebenenfalls
 
 ## 10.16 Projektbundle und partieller Umfang
 
+X.10 erweitert vollständige/partielle Inventare um Plan-Markdown und qualifizierte Referenzen. Der normale Read-only-Vertrag partieller Bestände bleibt bestehen; explizites Force nach X.12 behauptet keine fehlenden Randressourcen als vorhanden.
+
 Ein Bundle verwendet ausschließlich die kanonischen Werte `bundle_kind=project|partial` nach Anhang E.3; `document` und `release` sind Scope-Arten, keine Werte dieses Felds. Ein `project`-Bundle enthält einen geschlossenen, nicht konfigurationsgefilterten Projektscope und bildet nach Extraktion ein normales schreibbares SpecRoad-Projekt. Es enthält standardmäßig abgeschlossene Request- und Transaktionsreceipts in einer getrennten Betriebssektion, deren Hash im Bundlemanifest gebunden ist, aber nicht in die fachliche Modellwurzel eingeht.
 
 Ein über `--scope document` oder `--scope release` gewähltes Bundle trägt `bundle_kind=partial`, `read_only=true`, Ursprungmodellwurzel, partiellen Scope Descriptor, partielle Modellwurzel und alle Boundary References. Nach Extraktion sind nur `validate --partial`, `show`, `query`, `trace`, `why`, `impact`, `diff`, `render`, `view render`, `diagram`, `bundle verify` und `project inspect` zulässig; zusätzlich sind die schreibfreien Metadatendiagnosen `environment check` und `lock status` sowie projektlose Bootstrapbefehle erlaubt. Normative Writes, Baselines, Migration, Merge, Import, vollständige Release Readiness und Re-Export als Vollprojekt sind bis zu einer expliziten Rehydrierung mit dem Ursprungsprojekt verweigert.
@@ -5046,6 +5110,8 @@ Das kanonische ZIP-Profil für Projektbundle und ReqIFZ lautet:
 
 ### 10.17 Formatierungsumfang
 
+Markdown-Pläne bleiben beim bisherigen JSON-Formatlauf unverändert. Eine ausdrücklich ausgewählte Planformatierung nach X.3 erhält Semantik und alle nicht beauftragten Freitextspannen.
+
 `specroad format` betrachtet ausschließlich `specroad.json`, Profile, Regeln, Mappings und aktuelle, veränderbare Artefakt-JSON-Dateien. Ausgeschlossen sind `archive/**`, `attachments/**`, `generated/**`, `.specroad/**`, recorded Evidence, sealed Baselines, recorded Relationsreviews und Proposals im Endstatus `applied`, `rejected` oder `stale`. `format --check` ist read-only. Eine tatsächliche Normalisierung verwendet `representation_normalize` mit erwartetem und resultierendem Byte-Hash; semantische Modellwurzel, Artefaktrevision und Zeit-/Akteursmetadaten bleiben unverändert.
 
 ### 10.18 Konfigurationsumfang
@@ -5059,6 +5125,8 @@ Eine ausgewählte `configuration` wird einschließlich Parent-Kette zu einer eff
 Die verbindliche Migration geschützter historischer Ressourcen steht in Anhang Q; positive 0.1-Unterstützung setzt ausdrücklich den Quellvertrag und die geprüfte native Integration nach Q.0 voraus. Der normative Manifestpfad ist `mappings/legacy-manifest.json`. Dieses Manifest und seine Originalhashes gehören zu jedem Scope, der eine darin registrierte Ressource einschließt. Originalbytes und historische Hashalgorithmen bleiben erhalten; aktuelle 0.2-Gültigkeit wird nicht aus ergänzten Metadaten erfunden.
 
 ### 10.20 Vollständige fortsetzbare Arbeitsaufträge
+
+X.10 bindet auch Planparsing, Kontext, Graph, Abdeckung, Merge und Analyzerarbeit vollständig. Keine Anzeige-/Budgetgrenze darf still Teilpläne als vollständigen Erfolg liefern.
 
 Der Arbeitsvertrag `work-v1` aus Anhang P zerlegt denselben gebundenen Gesamtauftrag in wiederholbare Schritte. `work_id`, Eingangsmanifest, fachliche Optionen, Actor, Request-ID und Planbindungen bleiben über alle Schritte gleich. Arbeitsdaten sind Betriebsdaten außerhalb des normativen Projekts, keine zweite fachliche Quelle und keine Projekterweiterung zu mehreren Repositories.
 
@@ -5077,6 +5145,8 @@ python3 specroad.pyz <command> ...
 Die drei Aufrufformen sind für die jeweilige Distribution semantisch gleichwertig. In einer nicht installierten Sandbox sind die beiden Python-Aufrufe verbindlich.
 
 ### 11.2 Mindestbefehle
+
+Die Planbefehle aus X.11 ergänzen die folgende bestehende Liste. Allgemeine pretty/json-Ergebnisfähigkeit und explizites Force gelten für jeden öffentlichen Befehl; capabilities und command describe müssen beides widerspiegeln.
 
 ```text
 specroad init [PATH]
@@ -5145,6 +5215,8 @@ versteckter Seiteneffekt von `bundle verify` oder `proposal apply`.
 ```text
 --project <path>
 --format pretty|json|sarif
+--force
+--force-reason <text>
 --profile <profile-id[@version]>
 --configuration <configuration-id>
 --strict
@@ -5171,7 +5243,7 @@ versteckter Seiteneffekt von `bundle verify` oder `proposal apply`.
 --step-wall-ms <positive-integer>
 ```
 
-`--project`, `--format`, `--profile`, `--configuration`, `--no-color` und `--quiet` sind nur anwendbar, wenn der maschinenlesbare Command Contract sie nennt. Normative Schreibbefehle unterstützen zusätzlich Akteur, Request-ID und Dry-Run. Unzulässige Optionen sind Nutzungsfehler und werden nie ignoriert. Betriebsoptionen aus Anhang O sind unabhängig von fachlichen Profilen; `--metrics` ist für ausführende und diagnostische Befehle optional. `environment check` besitzt den vollständigen Vertrag aus Anhang N.4.
+`--format pretty|json` und `--force` sind für alle öffentlichen Befehle anwendbar; SARIF bleibt befehlsspezifisch. `--project`, `--profile`, `--configuration`, `--no-color` und `--quiet` sind nur anwendbar, wenn der maschinenlesbare Command Contract sie nennt. Normative Schreibbefehle unterstützen zusätzlich Akteur, Request-ID und Dry-Run. Unzulässige Optionen sind Nutzungsfehler und werden nie ignoriert. Betriebsoptionen aus Anhang O sind unabhängig von fachlichen Profilen; `--metrics` ist für ausführende und diagnostische Befehle optional. `environment check` besitzt den vollständigen Vertrag aus Anhang N.4.
 
 ### 11.4 Konfigurations- und Optionspräzedenz
 
@@ -5186,6 +5258,8 @@ Von niedriger zu höherer Priorität:
 `--profile` darf wiederholt werden. Sobald mindestens ein `--profile` angegeben ist, ersetzt die geordnete CLI-Liste die Projektliste; die exakte Core-Version wird automatisch vorangestellt. `NO_COLOR` beeinflusst ausschließlich Darstellung. Die davon getrennte Auflösung rein betrieblicher Ressourcenbudgets steht in Anhang O.1; sie verändert keine semantische Konfigurationsprojektion.
 
 ### 11.5 stdout, stderr und JSON-Envelope
+
+Der Zielvertrag der Planerweiterung ist Envelope **2.1.0** nach X.11. Das folgende 2.0.0-Beispiel bleibt Lesekompatibilität für alte Ergebnisse; neue Ausgaben ergänzen validation_status/force und den eindeutig getrennten Status forced. Jeder öffentliche Befehl hat pretty/json, einschließlich früher Fehler und Exportberichte.
 
 Ergebnisdaten gehen auf stdout; betriebliche Meldungen außerhalb des Ergebnisdokuments gehen auf stderr. `--format json` erzeugt genau ein vollständiges JSON-Objekt. Wegen der neuen Fortsetzungs- und Ergebnislieferzustände hat dieser Envelope die eigenständige Major-Formatversion `2.0.0`; Programm-/Zielreleaseversion und Artefaktschema werden dadurch nicht stillschweigend geändert.
 
@@ -5286,6 +5360,8 @@ Ein in einem Scope Descriptor gebundenes Query-Objekt enthält die normalisierte
 
 ### 11.7 Verbindliche Befehlsklassen
 
+Die Planbefehle werden nach X.11 in dieselben bestehenden Klassen eingeteilt. --format pretty/json und --force sind klassenübergreifend verfügbar; Force wandelt einen lesenden Auftrag nicht in einen unbezeichneten Write um.
+
 Jeder in Kapitel 11.2 aufgeführte Befehl gehört exakt einer der folgenden Klassen. Kurzaliase erben ohne Ausnahme die Klasse ihres Zielbefehls.
 
 | Klasse | Exakt zugeordnete Befehle | Schreib-/Sicherheitsvertrag |
@@ -5369,6 +5445,8 @@ python3 -m specroad relation add SR-REQ-7K3M9W2D8R4P0ABCDEF1234567 \
 Die Beispiele sind informativ; maßgeblich sind die Requirements, Tabellen und maschinenlesbaren Command Contracts.
 
 ### 11.10 Proposal-Authoring- und Freigabevertrag
+
+Die folgenden Akteurs-/Freigabegates sind Normalmodus. Spec-only, Plan-only und gemischte Zielinhalte folgen X.8; X.12 ermöglicht ausdrückliches Force mit echten negativen Befunden und ohne fingierte menschliche Entscheidung.
 
 Schreibende Befehle dieser Gruppe sind `normative_write`, unterstützen `--dry-run` und verlangen Akteursangaben. Für `ai` und `ci` ist eine stabile Request-ID erforderlich. `<PROP>` ist entweder eine im Projekt vorhandene Proposal-ID oder ein ausdrücklich angegebener verwalteter Proposal-Dateipfad; beide werden vor der Operation auf dieselbe ID aufgelöst. Externe Dateien sind nur für lesende Prüfung zulässig und erteilen keine Schreibrechte. `--expected-revision` bindet stets die Artefaktrevision.
 
@@ -5624,7 +5702,9 @@ wiederhergestellt. Promptteilung betrifft ausschließlich die Vorbereitung.
 
 ## 12. Normative Produktanforderungen
 
-Dieser Katalog enthält **742** normative Produktanforderungen. Alle Anforderungen sind für das Zielrelease 0.2.0 verpflichtend, sofern ihr Wortlaut keine Bedingung nennt. Bis zur Freigabe erben sie `maturity = proposed`, `priority = mandatory` und `target_release = SpecRoad Single-Repository Workbench 0.2.0`.
+Die Speicher-/Planerweiterung aus 12.47 und Anhang X ergänzt die bestehenden Anforderungen. Sperrentscheidungen der bestehenden Requirementtabellen sind ausdrücklich durch den Normal-/Force-Vertrag in 2.1/X.12 bedingt; Nachweiswahrheit, fehlender Operationsinhalt und physische Ausführung bleiben davon getrennt.
+
+Dieser Katalog enthält **790** normative Produktanforderungen. Alle Anforderungen sind für das Zielrelease 0.2.0 verpflichtend, sofern ihr Wortlaut keine Bedingung nennt. Bis zur Freigabe erben sie `maturity = proposed`, `priority = mandatory` und `target_release = SpecRoad Single-Repository Workbench 0.2.0`.
 
 Die Spalte `Quelle` verweist auf Stakeholder-Bedarfe; `Verifikation` nennt den primären Verification Contract. Querschnittsanforderungen dürfen zusätzlich durch andere Verträge geprüft werden. Eine Anforderung ist erst bestanden, wenn ihr primärer Vertrag und alle für sie anwendbaren Querschnittsgates bestehen.
 
@@ -5647,12 +5727,12 @@ Diese Anforderungen definieren Projektroot, Grundstruktur und effektive Konfigur
 
 ### 12.2 Kanonisches Modell und Speicherung
 
-Normative Daten liegen im typisierten JSON-Modell; andere Darstellungen sind abgeleitet oder referenzierte Payloads.
+Normative Daten liegen im gemeinsamen typisierten Modell: bestehende JSON-Ressourcen und die alleinigen Markdown-Planquellen nach X.2. Andere Darstellungen bleiben abgeleitet oder ausdrücklich referenzierte Payloads.
 
 | ID | Normative Anforderung | Quelle | Verifikation | Testfall |
 |---|---|---|---|---|
-| SR-REQ-0011 | SpecRoad MUSS das aktuelle normative semantische Modell ausschließlich aus `specroad.json`, den dafür vorgesehenen JSON-Dateien unter `spec/`, `profiles/`, `rules/` und `mappings/` sowie den von diesen Ressourcen referenzierten Payloads unter `attachments/` und `archive/objects/` laden. | SR-NEED-0001, SR-NEED-0012, SR-NEED-0014 | SR-VER-0002 | SR-TC-0011 |
-| SR-REQ-0012 | Jede normative Artefaktdatei MUSS genau ein Artefakt als JSON-Objekt enthalten. | SR-NEED-0001, SR-NEED-0003 | SR-VER-0002 | SR-TC-0012 |
+| SR-REQ-0011 | SpecRoad MUSS das normative Modell aus specroad.json, den vorgesehenen JSON-Ressourcen, den vollständigen Markdown-Planträgern nach X.2 sowie referenzierten Anhängen und Archivobjekten laden; generierte Sichten und Caches sind keine zusätzliche Quelle. | SR-NEED-0001, SR-NEED-0012, SR-NEED-0014 | SR-VER-0002 | SR-TC-0011 |
+| SR-REQ-0012 | Jede bestehende normative JSON-Artefaktdatei MUSS genau ein Artefakt enthalten; ein Implementierungsplan MUSS abweichend nach X.2 als eine Markdown-Datei mit allen eigenen Einträgen gespeichert werden, ohne normative JSON-Duplikate. | SR-NEED-0001, SR-NEED-0003 | SR-VER-0002 | SR-TC-0012 |
 | SR-REQ-0013 | Normative und generierte Textdateien MÜSSEN als UTF-8 gespeichert werden und für interne JSON-, Markdown-, HTML-, SARIF- und NDJSON-Dateien LF sowie für einen ausdrücklich referenzierten Austauschstandard dessen festgelegtes Zeilenende verwenden. | SR-NEED-0007, SR-NEED-0012, SR-NEED-0014 | SR-VER-0002 | SR-TC-0013 |
 | SR-REQ-0014 | Jeder Artefakttyp MUSS durch ein versioniertes JSON Schema beschrieben sein. | SR-NEED-0002, SR-NEED-0012 | SR-VER-0002 | SR-TC-0014 |
 | SR-REQ-0015 | Jede normative JSON-Datei MUSS eine unterstützte `schema_version` enthalten, wobei unveränderbare Legacy-Ressourcen ausdrücklich über das versionierte Manifest und die eingebauten Leser aus Anhang Q unterstützt werden. | SR-NEED-0002, SR-NEED-0012 | SR-VER-0002 | SR-TC-0015 |
@@ -5952,7 +6032,7 @@ Diese Anforderungen schließen konkrete Authoring-, Review- und Schutzverträge 
 | SR-REQ-0218 | `specroad lifecycle transition <ID> --to retired --reason <TEXT>` MUSS die atomare Stilllegung mit genau einer Revisionsänderung, dem Endzustand `retired`, unveränderter Fachprojektion und dem gebundenen Grund-/Akteursnachweis nach Kapitel 9.6.3 ausführen. | SR-NEED-0002, SR-NEED-0009, SR-NEED-0013 | SR-VER-0018 | SR-TC-0218 |
 | SR-REQ-0219 | `specroad proposal review <FILE> --decision approved\|rejected` MUSS die Entscheidung an Proposal-ID, `content_revision`, `content_sha256`, Basis-Modellwurzel und Change-Plan-Hash binden. | SR-NEED-0003, SR-NEED-0008 | SR-VER-0012 | SR-TC-0219 |
 | SR-REQ-0220 | `specroad baseline show <ID>` MUSS das gespeicherte Baseline-Manifest und einen neu berechneten Integritätsstatus ausgeben, ohne den Arbeitsstand zu verändern. | SR-NEED-0003, SR-NEED-0009 | SR-VER-0011 | SR-TC-0220 |
-| SR-REQ-0221 | Die Befehlsgruppe `specroad lock` MUSS mit `status` die vollständigen Lock-Metadaten ausgeben und mit `recover --force` aktive Eigentümer desselben Hosts abweisen sowie bei fremdem oder nicht prüfbarem Host zusätzlich `--accept-remote-risk` verlangen. | SR-NEED-0011, SR-NEED-0007, SR-NEED-0013 | SR-VER-0019 | SR-TC-0221 |
+| SR-REQ-0221 | Die Befehlsgruppe specroad lock MUSS mit status vollständige beobachtete Lock-Metadaten liefern; recover prüft den normalen Eigentümervertrag. Das allgemeine --force nach X.12 MUSS ausdrücklich bezeichnete Software-Lockgates mit sichtbaren Risiken übersteuern können, ohne fremde Prozesse zu beenden oder deren Abschluss zu erfinden. | SR-NEED-0011, SR-NEED-0007, SR-NEED-0013 | SR-VER-0019 | SR-TC-0221 |
 | SR-REQ-0222 | Die Option `--quiet` MUSS ausschließlich Fortschritts- und Erfolgshinweise unterdrücken und Ergebnisdaten, Warnungen, Fehler sowie Pflichtfelder eines JSON- beziehungsweise SARIF-Dokuments vollständig erhalten. | SR-NEED-0007, SR-NEED-0008 | SR-VER-0013 | SR-TC-0222 |
 
 ### 12.16 Python-, Laufzeit- und Sandbox-Portabilität
@@ -6887,7 +6967,7 @@ Produktvarianten innerhalb eines Repositorys werden ohne Kopien durch benannte K
 | SR-REQ-0503 | Jeder andere Operationstyp MUSS den für ihn in Kapitel 10 definierten typisierten Operationsvertrag verwenden. | SR-NEED-0008, SR-NEED-0012, SR-NEED-0013 | SR-VER-0012 | SR-TC-0503 |
 | SR-REQ-0504 | Für ein neu erzeugtes Artefakt DARF NICHT die nächste sequentielle Nummer als Identität verwendet werden. | SR-NEED-0001, SR-NEED-0009, SR-NEED-0016 | SR-VER-0018 | SR-TC-0504 |
 | SR-REQ-0505 | Falls `specroad retire` bereitgestellt wird, MUSS der Befehl als kompatibler Alias exakt denselben Change Plan wie der entsprechende Lifecycle-Übergang erzeugen. | SR-NEED-0002, SR-NEED-0009, SR-NEED-0013 | SR-VER-0018 | SR-TC-0505 |
-| SR-REQ-0506 | Lockübernahme DARF NICHT einen Schreib-/Bootstrapmarker oder aktiven Alttransaktionszustand umgehen oder die Projektsperre aufheben. | SR-NEED-0011, SR-NEED-0007, SR-NEED-0013 | SR-VER-0019 | SR-TC-0506 |
+| SR-REQ-0506 | Eine normale Lockübernahme DARF NICHT eine Abbruchsperre aufheben. Ein ausdrücklich erzwungener neuer Auftrag MUSS X.12 folgen und die alte unterbrochene Publikation weiterhin als unbestätigt erhalten. | SR-NEED-0011, SR-NEED-0007, SR-NEED-0013 | SR-VER-0019 | SR-TC-0506 |
 | SR-REQ-0507 | Eine fehlgeschlagene Change-Plan-Operation MUSS die Auswertung aller nachfolgenden Operationen verhindern. | SR-NEED-0003, SR-NEED-0011, SR-NEED-0013 | SR-VER-0018 | SR-TC-0507 |
 | SR-REQ-0508 | Das erste Zeichen eines `random128-v1`-Tokens MUSS im Bereich `0` bis `7` liegen und dadurch genau 128 Zufallsbits ohne ungenutzte Mehrdeutigkeit repräsentieren. | SR-NEED-0002, SR-NEED-0012, SR-NEED-0016 | SR-VER-0018 | SR-TC-0508 |
 | SR-REQ-0509 | Eine regulär neu erzeugte `relation_id` DARF NICHT aus Quelle, Ziel oder Position abgeleitet werden; ausschließlich die Bestandsmigration nach SR-REQ-0273 verwendet `derived128-v1`. | SR-NEED-0003, SR-NEED-0016 | SR-VER-0018 | SR-TC-0509 |
@@ -7053,7 +7133,7 @@ Diese Anforderungen ergänzen die bestehenden Runtime-, Sicherheits- und Änderu
 | SR-REQ-0644 | Ein reiner Proposal-Kontrollwrite MUSS die fachliche Inhaltsrevision und ihren Hash unverändert erhalten. | SR-NEED-0003, SR-NEED-0008, SR-NEED-0009 | SR-VER-0043 | SR-TC-0644 |
 | SR-REQ-0645 | `proposal validate` und `proposal check` DÜRFEN NICHT ihren festgestellten Prüfzustand als persistierten Proposal-Status schreiben. | SR-NEED-0007, SR-NEED-0008, SR-NEED-0011 | SR-VER-0043 | SR-TC-0645 |
 | SR-REQ-0646 | `proposal review start` MUSS die vollständig geprüfte Kontrollfolge nach Kapitel 10.3 atomar bis `in_review` veröffentlichen. | SR-NEED-0003, SR-NEED-0008, SR-NEED-0013 | SR-VER-0043 | SR-TC-0646 |
-| SR-REQ-0647 | Die Proposal-Fortsetzung MUSS dieselben echten menschlichen Freigabevoraussetzungen wie der nicht aufgeteilte Ablauf verlangen. | SR-NEED-0003, SR-NEED-0008, SR-NEED-0011 | SR-VER-0043 | SR-TC-0647 |
+| SR-REQ-0647 | Die Proposal-Fortsetzung MUSS dieselben normalen menschlichen Freigabevoraussetzungen und denselben ausdrücklichen Forcevertrag nach X.12 wie der nicht aufgeteilte Ablauf besitzen; eine Übersteuerung DARF NICHT eine menschliche Freigabe erfinden. | SR-NEED-0003, SR-NEED-0008, SR-NEED-0011 | SR-VER-0043 | SR-TC-0647 |
 | SR-REQ-0648 | Eine Änderung des Proposal-Fachinhalts MUSS sämtliche Freigaben älterer Inhaltsbindungen unwirksam machen. | SR-NEED-0003, SR-NEED-0008, SR-NEED-0009 | SR-VER-0043 | SR-TC-0648 |
 | SR-REQ-0649 | Die Proposal-Positionsoperationen MÜSSEN die Indexgrenzen und Reihenfolgen aus Kapitel 11.10 exakt erfüllen. | SR-NEED-0001, SR-NEED-0008, SR-NEED-0013 | SR-VER-0043 | SR-TC-0649 |
 | SR-REQ-0650 | Die vollständige Releaseabnahme MUSS die kontraktübergreifenden Fälle aus Anhang R mit an diese Spezifikationsversion gebundener Evidence nachweisen. | SR-NEED-0005, SR-NEED-0007, SR-NEED-0009 | SR-VER-0041 | SR-TC-0650 |
@@ -7178,9 +7258,64 @@ benötigten öffentlichen API-Fähigkeiten. Diese Anforderungen sind noch offen.
 | SR-REQ-0737 | Hin- und Rückexport MÜSSEN denselben Befehl `bundle create --profile ai-runtime` mit expliziter Richtung verwenden; der Rückexport MUSS seine PatchHarbor-Bindungswerte unverändert aus dem ursprünglichen Result übernehmen. | SR-NEED-0001, SR-NEED-0008 | SR-VER-0051 | SR-TC-0737 |
 | SR-REQ-0738 | Der Rückexport MUSS nach W.5 ausschließlich einen vollständig ausgewiesenen Proposal samt benötigten passiven Daten und einem vertrauenswürdig vorgegebenen Entrypoint über `patchharbor.api.pack_patch` verpacken. | SR-NEED-0003, SR-NEED-0008 | SR-VER-0051 | SR-TC-0738 |
 | SR-REQ-0739 | Der lokale Integrationsadapter MUSS Paketintegrität, Referenzbindung, zulässigen Payload, Entrypoint und aktuelles Ziel vor dem ersten PatchHarbor-Payloadwrite prüfen und erst nach ausdrücklicher Übernahmeautorisierung die öffentliche Apply-API (mit `patchharbor.api.apply_guarded` nach W.5.1) aufrufen. | SR-NEED-0003, SR-NEED-0011 | SR-VER-0051 | SR-TC-0739 |
-| SR-REQ-0740 | Die lokale Rückübernahme MUSS die normativen Fachänderungen bis zum gültigen menschlichen Review und transaktionalen Proposal-Apply unveröffentlicht lassen; Transporterfolg und importierter Proposal DÜRFEN NICHT als fachliche Freigabe oder angewendete Änderung gelten. | SR-NEED-0003, SR-NEED-0008 | SR-VER-0051 | SR-TC-0740 |
+| SR-REQ-0740 | Die lokale Rückübernahme MUSS Fachänderungen im Normalmodus bis zum gültigen menschlichen Review und Proposal-Apply unveröffentlicht lassen; ausdrückliches Force folgt X.12. Transporterfolg, importierter Proposal und erzwungene Anwendung DÜRFEN NICHT als menschliche Freigabe oder bestandene Verification gelten. | SR-NEED-0003, SR-NEED-0008 | SR-VER-0051 | SR-TC-0740 |
 | SR-REQ-0741 | Wiederholung, geänderte Basis, Paketfehler und Abbruch MÜSSEN nach W.6 ohne doppelte Fachänderung, stilles Rebase, Verlust fremder Dateien oder fingierten Erfolg behandelt werden. | SR-NEED-0003, SR-NEED-0009, SR-NEED-0011 | SR-VER-0051 | SR-TC-0741 |
 | SR-REQ-0742 | Die Featureabnahme MUSS den vollständigen API-basierten Rundweg, die negativen Sicherheits-/Zustandsfälle und jedes angebotene Runtimeprofil nach W.7 mit realen Paketartefakten und gebundener Laufzeit-Evidence nachweisen. | SR-NEED-0005, SR-NEED-0008, SR-NEED-0012 | SR-VER-0051 | SR-TC-0742 |
+
+---
+
+### 12.47 Implementierungspläne und übergreifende Bedienverträge
+
+| ID | Normative Anforderung | Quelle | Verifikation | Testfall |
+|---|---|---|---|---|
+| SR-REQ-0743 | SpecRoad MUSS mehrere eigenständige Implementierungspläne für frei gewählte Requirement-Umfänge nach X.1/X.2 verwalten, ohne Requirements zu duplizieren oder einen zusätzlichen Featuretyp vorauszusetzen. | SR-NEED-0001, SR-NEED-0004, SR-NEED-0010, SR-NEED-0012 | SR-VER-0052 | SR-TC-0743 |
+| SR-REQ-0744 | Jeder vollständige Implementierungsplan MUSS genau eine direkt editierbare Markdown-Datei nach X.2/X.3 als alleinigen normativen Planbestand besitzen; Graphprojektionen und Caches DÜRFEN NICHT zu einer zweiten Quelle werden. | SR-NEED-0001, SR-NEED-0004, SR-NEED-0012 | SR-VER-0052 | SR-TC-0744 |
+| SR-REQ-0745 | Der Planparser MUSS die vollständige Grammatik aus X.3 einschließlich reservierter Metadaten, Freitext, Codebeispielen und unbegrenzter logischer Listentiefe eindeutig auswerten und Strukturfehler lokalisieren. | SR-NEED-0001, SR-NEED-0004, SR-NEED-0012 | SR-VER-0052 | SR-TC-0745 |
+| SR-REQ-0746 | Plan- und Eintragsidentität MÜSSEN nach X.2 von sichtbarer Kennung, Titel, Dateipfad und Position getrennt sein; Umnummerieren und Verschieben MÜSSEN bestehende Identitäten erhalten. | SR-NEED-0001, SR-NEED-0004, SR-NEED-0010, SR-NEED-0012 | SR-VER-0052 | SR-TC-0746 |
+| SR-REQ-0747 | Planabschnitte, Arbeitsschritte und Commits MÜSSEN eigene Kennung und Titel sowie die in X.2/X.3 festgelegte Hierarchie und Arbeitsmetadaten besitzen; W/R/C DARF NICHT als universelle Produktpflicht fest eingebaut sein. | SR-NEED-0001, SR-NEED-0004, SR-NEED-0012 | SR-VER-0052 | SR-TC-0747 |
+| SR-REQ-0748 | SpecRoad MUSS die beiden gespeicherten Checkboxwerte nach X.6 aus der Markdown-Quelle übernehmen und DARF NICHT Git-Commits zum Setzen, Entfernen oder Überschreiben dieser Werte abgleichen. | SR-NEED-0004, SR-NEED-0006, SR-NEED-0010 | SR-VER-0052 | SR-TC-0748 |
+| SR-REQ-0749 | Planfortschritt MUSS nach X.6 Pflichtblätter genau einmal zählen, optionale Arbeit getrennt ausweisen, gespeicherte Elternwerte erhalten und leere Nenner als nicht anwendbar darstellen. | SR-NEED-0004, SR-NEED-0006, SR-NEED-0010 | SR-VER-0052 | SR-TC-0749 |
+| SR-REQ-0750 | Pläne und Einträge MÜSSEN ausdrückliche planübergreifende AND-Voraussetzungen aus qualifizierten stabilen Eintragsverweisen nach X.5 unterstützen, ohne Zwischenpunkte zu ergänzen. | SR-NEED-0004, SR-NEED-0007, SR-NEED-0010 | SR-VER-0053 | SR-TC-0750 |
+| SR-REQ-0751 | Die Bereitschaftsprüfung MUSS nach X.5 offene, fehlende, mehrdeutige, optionale ausdrücklich verlangte und zyklische Voraussetzungen einschließlich transitiver Plan-/Parentbezüge vollständig erklären. | SR-NEED-0004, SR-NEED-0007, SR-NEED-0010 | SR-VER-0053 | SR-TC-0751 |
+| SR-REQ-0752 | Planschritte und Tasks MÜSSEN optional viele-zu-viele verknüpfbar bleiben; eine Checkbox DARF NICHT einen Task oder dessen Done-/Verification-Status automatisch abschließen. | SR-NEED-0003, SR-NEED-0004, SR-NEED-0006 | SR-VER-0053 | SR-TC-0752 |
+| SR-REQ-0753 | Die gemeinsame Traceability MUSS Requirement, Plan, Eintrag, geplanten Commit sowie vorhandene Task-, Code-, Test- und Evidencebezüge vorwärts und rückwärts über stabile Identitäten erklären. | SR-NEED-0003, SR-NEED-0004, SR-NEED-0006 | SR-VER-0053 | SR-TC-0753 |
+| SR-REQ-0754 | Alle Requirementänderungen und ihre Vorschauen beziehungsweise Proposalchecks MÜSSEN nach X.8 betroffene Planstellen einschließlich bereits umgesetzter Einträge mit direktem/indirektem Bezug in Text und JSON ausweisen. | SR-NEED-0003, SR-NEED-0004, SR-NEED-0009 | SR-VER-0054 | SR-TC-0754 |
+| SR-REQ-0755 | Planbindungen MÜSSEN Requirementrevision und Kontext-Hash nach X.7/X.8 binden; Änderungen erzeugen Prüfbedarf ohne automatische Text-/Checkboxänderung, eine Neubindung erfordert eine ausdrückliche Änderung. | SR-NEED-0003, SR-NEED-0004, SR-NEED-0009 | SR-VER-0054 | SR-TC-0755 |
+| SR-REQ-0756 | SpecRoad MUSS nach X.8 einen vollständigen gebundenen Planungskontext für ausgewählte Anforderungen beziehungsweise Release-/Variantenscopes in einem Aufruf oder explizit fortsetzbarer Arbeit liefern. | SR-NEED-0004, SR-NEED-0008, SR-NEED-0019 | SR-VER-0054 | SR-TC-0756 |
+| SR-REQ-0757 | Planabdeckung MUSS Scope-Mitgliedschaft von konkreter Stage-/Schritt-/Commitzuordnung trennen und Teilbeiträge beziehungsweise ausdrücklich vollständige Einzel- oder gemeinsame Wege nach X.7 unterscheiden. | SR-NEED-0004, SR-NEED-0005, SR-NEED-0006, SR-NEED-0010 | SR-VER-0054 | SR-TC-0757 |
+| SR-REQ-0758 | Die Abdeckungsquoten MÜSSEN die Mengen- und Deduplizierungsregeln aus X.7 erfüllen; mehrere Teilbeiträge oder überlappende Task-/Elternpfade DÜRFEN NICHT als zusätzliche vollständige Requirements gezählt werden. | SR-NEED-0004, SR-NEED-0005, SR-NEED-0006, SR-NEED-0010 | SR-VER-0054 | SR-TC-0758 |
+| SR-REQ-0759 | Leerer Umfang, scope-externe Referenzen, ungültige Ziele und stale Bindungen MÜSSEN nach X.7 getrennt und ohne erfundene Prozentwerte oder still vergrößerten Nenner ausgewiesen werden. | SR-NEED-0004, SR-NEED-0005, SR-NEED-0006, SR-NEED-0010 | SR-VER-0054 | SR-TC-0759 |
+| SR-REQ-0760 | Alternative vollständige Planungswege, deren eigene notwendige Beiträge und die getrennte Verification MÜSSEN nach X.7 erhalten bleiben; ungeplante Requirements sind ohne ausdrückliche Profilregel kein allgemeiner Strukturfehler. | SR-NEED-0004, SR-NEED-0005, SR-NEED-0006, SR-NEED-0010 | SR-VER-0054 | SR-TC-0760 |
+| SR-REQ-0761 | Proposals MÜSSEN Spec-only-, Plan-only- und gemeinsame Änderungen mit Referenzen auf im gemeinsamen Ziel neu entstehende Artefakte nach X.8 unterstützen. | SR-NEED-0003, SR-NEED-0008, SR-NEED-0013 | SR-VER-0055 | SR-TC-0761 |
+| SR-REQ-0762 | Die Mindestkonsistenz von Planproposals MUSS nach X.8 auf eindeutig entscheidbaren Format-, Typ-, Identitäts-, Referenz-, Besitz- und Zyklenregeln beruhen; ein fehlerfreier Check DARF NICHT semantische Richtigkeit behaupten. | SR-NEED-0003, SR-NEED-0008, SR-NEED-0013 | SR-VER-0055 | SR-TC-0762 |
+| SR-REQ-0763 | Manuelle Planänderungen MÜSSEN nach X.3/X.4 beim nächsten Einlesen vollständig berücksichtigt, unveränderte freie Textspannen bei Programmwrites erhalten und Revision/Dateibytes/Projektionhashes getrennt gebunden werden. | SR-NEED-0001, SR-NEED-0004, SR-NEED-0012 | SR-VER-0052 | SR-TC-0763 |
+| SR-REQ-0764 | Plan-Authoring MUSS denselben gebundenen Writer, Dry-run-, Request-, Audit- und Abbruchsperrvertrag wie Specänderungen nach X.4/X.10 verwenden; eine Trägerdatei wird pro Publikation genau einmal geschrieben. | SR-NEED-0001, SR-NEED-0004, SR-NEED-0013 | SR-VER-0055 | SR-TC-0764 |
+| SR-REQ-0765 | Der semantische Plan-Merge MUSS stabile Identitäten und die vollständige Dreiwege-Feldregel einschließlich Neuanlagekollisionen nach X.9 M01/M02 anwenden. | SR-NEED-0003, SR-NEED-0016 | SR-VER-0056 | SR-TC-0765 |
+| SR-REQ-0766 | Checkboxen und Geschwisterordnung MÜSSEN nach X.9 M03/M04 gemerged werden; Wiederöffnen bleibt erhalten, widersprüchliche Ordnungsänderungen bleiben Konflikte und es gibt kein Checkbox-OR. | SR-NEED-0003, SR-NEED-0016 | SR-VER-0056 | SR-TC-0766 |
+| SR-REQ-0767 | Plan-Merge MUSS Parent-/Plan-/Pfadwechsel und Löschen gegen Bearbeitung beziehungsweise geänderte Unterbäume nach X.9 M05/M06 vollständig behandeln. | SR-NEED-0003, SR-NEED-0016 | SR-VER-0056 | SR-TC-0767 |
+| SR-REQ-0768 | Plan-Merge MUSS Beziehungen, Voraussetzungen und Freitext nach X.9 M07/M08 zusammenführen, entfernte Referenzen und unveränderte Texte erhalten und neue globale Konflikte sichtbar lassen. | SR-NEED-0003, SR-NEED-0016 | SR-VER-0056 | SR-TC-0768 |
+| SR-REQ-0769 | Konfliktbericht, ausdrückliche Auflösung, gemeinsame Zielprüfung und gebundene Anwendung MÜSSEN X.9 M09 bis M12 erfüllen, einschließlich expliziter Force-Auflösung ohne erfundenen Zielinhalt. | SR-NEED-0003, SR-NEED-0013, SR-NEED-0016 | SR-VER-0056 | SR-TC-0769 |
+| SR-REQ-0770 | Mehrsprachige Planfelder MÜSSEN nach X.10 im vorhandenen Analyzervertrag mit eigenen Identitäts-, Revisions-, Feld-, Sprach-, Projektions- und Quelldateibindungen selektierbar sein. | SR-NEED-0002, SR-NEED-0020, SR-NEED-0021 | SR-VER-0057 | SR-TC-0770 |
+| SR-REQ-0771 | Die erste Planerweiterung MUSS ausschließlich die vorhandene Spracherkennung einschließlich py3langid verwenden; neue Grammatik-, Satzvollständigkeits-, Inhalts- oder LLM-Prüfer gehören nicht zu ihrem Lieferumfang. | SR-NEED-0002, SR-NEED-0020, SR-NEED-0021 | SR-VER-0057 | SR-TC-0771 |
+| SR-REQ-0772 | Gemeinsame Query-, Trace-, Why-, Impact-, Diff-, Profil-, Glossar- und SRX-Funktionen MÜSSEN Planprojektionen nach X.10 ohne abweichende zweite Regelengine erfassen. | SR-NEED-0001, SR-NEED-0003, SR-NEED-0015 | SR-VER-0058 | SR-TC-0772 |
+| SR-REQ-0773 | Baselines, Scope-Closure und Varianten MÜSSEN Planquellen nach X.10 vollständig und reproduzierbar binden, die physische Trägerdatei atomar behandeln und Randreferenzen ausdrücklich ausweisen. | SR-NEED-0002, SR-NEED-0005, SR-NEED-0006, SR-NEED-0010 | SR-VER-0058 | SR-TC-0773 |
+| SR-REQ-0774 | Release-, Milestone-, Roadmap-, Verification-, Test-, Evidence- und Codefunktionen MÜSSEN X.10 mit getrenntem Planstatus und ausdrücklich konfigurierter zusätzlicher Planabdeckung erfüllen. | SR-NEED-0002, SR-NEED-0005, SR-NEED-0006, SR-NEED-0010 | SR-VER-0058 | SR-TC-0774 |
+| SR-REQ-0775 | CSV-, NDJSON- und ReqIF-Austausch MÜSSEN Planprojektionen nach X.10 explizit abbilden und jeden nicht darstellbaren semantischen oder Markdown-Byteanteil als Verlust melden. | SR-NEED-0012, SR-NEED-0014 | SR-VER-0058 | SR-TC-0775 |
+| SR-REQ-0776 | Voll-/Teilprojektbundles und der reale portable PatchHarbor-Hin-/Rückweg MÜSSEN die neuen Planträger und Referenzen nach X.10 mit unveränderten Originalbindungen berücksichtigen. | SR-NEED-0008, SR-NEED-0014, SR-NEED-0017 | SR-VER-0058 | SR-TC-0776 |
+| SR-REQ-0777 | Dokumente, Views, Berichte und Diagrammquellen MÜSSEN Planinhalte, Zuordnungen, Fortschritt und Voraussetzungen nach X.10 als abgeleitete Sichten unterstützen. | SR-NEED-0001, SR-NEED-0003, SR-NEED-0015 | SR-VER-0058 | SR-TC-0777 |
+| SR-REQ-0778 | Capabilities, Schemakatalog, Command Contracts und Projektinspektion MÜSSEN sämtliche Planressourcen, neuen Befehle, Ergebnisfelder und Forceoptionen nach X.10/X.11 tatsächlich beschreiben. | SR-NEED-0001, SR-NEED-0007, SR-NEED-0008 | SR-VER-0058 | SR-TC-0778 |
+| SR-REQ-0779 | Große Plan-, Kontext-, Graph-, Merge-, Abdeckungs- und Analyzeraufträge MÜSSEN nach X.10 vollständig mit den vorhandenen Ressourcen-/Workverträgen fortsetzbar sein; stilles Sampling ist unzulässig. | SR-NEED-0017, SR-NEED-0018, SR-NEED-0019 | SR-VER-0058 | SR-TC-0779 |
+| SR-REQ-0780 | Formatversionen und der additive Projektübergang MÜSSEN X.2 erfüllen und historische Originalformate, Baselines und Nachweise ohne fingierte Aktualisierung erhalten. | SR-NEED-0001, SR-NEED-0004, SR-NEED-0010, SR-NEED-0012 | SR-VER-0058 | SR-TC-0780 |
+| SR-REQ-0781 | Jeder bestehende und neue öffentliche CLI-Befehl MUSS nach X.11 dieselben fachlichen Ergebnisdaten menschenlesbar und mit --format json strukturiert liefern. | SR-NEED-0001, SR-NEED-0007, SR-NEED-0008 | SR-VER-0059 | SR-TC-0781 |
+| SR-REQ-0782 | Fehler-, Hilfe-, Export-, Fortsetzungs- und Großresultatpfade MÜSSEN nach X.11 Ergebnisbericht und Payload trennen und vollständige maschinenlesbare Diagnosen, Planimpacts und Forceinformationen erhalten. | SR-NEED-0001, SR-NEED-0007, SR-NEED-0008 | SR-VER-0059 | SR-TC-0782 |
+| SR-REQ-0783 | Alle von SpecRoad gesetzten Sperrentscheidungen MÜSSEN durch ausdrückliches allgemeines --force beziehungsweise force:true nach X.12 übersteuerbar sein; eine versteckte ausgenommene Produktgateklasse ist unzulässig. | SR-NEED-0007, SR-NEED-0008, SR-NEED-0009, SR-NEED-0013 | SR-VER-0060 | SR-TC-0783 |
+| SR-REQ-0784 | Force MUSS nach X.11/X.12 weiterhin Prüfungen und vollständige negative beziehungsweise unbekannte Befunde liefern und Übersteuerungen an Plan, Operationshash, Dry-run, Audit und Request-Receipt binden. | SR-NEED-0007, SR-NEED-0008, SR-NEED-0009, SR-NEED-0013 | SR-VER-0060 | SR-TC-0784 |
+| SR-REQ-0785 | Force DARF NICHT fehlende Operationsinhalte, Konfliktentscheidungen, Ressourcen oder physische Ausführbarkeit erfinden; tatsächlich nicht ausgeführte Operationen MÜSSEN nach X.12 fehlschlagen. | SR-NEED-0007, SR-NEED-0008, SR-NEED-0009, SR-NEED-0013 | SR-VER-0060 | SR-TC-0785 |
+| SR-REQ-0786 | Erzwungen ungültige Projekt-/Planbestände MÜSSEN nach X.12 für ehrliche Diagnose und ausdrücklich bezeichnete Korrektur zugänglich bleiben, ohne automatische Recovery oder fingierte Modellwurzel. | SR-NEED-0007, SR-NEED-0008, SR-NEED-0009, SR-NEED-0013 | SR-VER-0060 | SR-TC-0786 |
+| SR-REQ-0787 | Erzwungene Anwendung und gespeicherte Statuslabels DÜRFEN NICHT als gültige Prüfung, menschliche Freigabe, aktueller Originalbeleg oder bestandene Verification ausgegeben werden; X.11/X.12 ist durchgängig anzuwenden. | SR-NEED-0007, SR-NEED-0008, SR-NEED-0009, SR-NEED-0013 | SR-VER-0060 | SR-TC-0787 |
+| SR-REQ-0788 | Die Erweiterung MUSS die vollständigen Integrations- und Regressionsabnahmen aus X.10/X.13 einschließlich bestehender Funktionen, beider Distributionen und aktueller Artefaktbindungen nachweisen. | SR-NEED-0005, SR-NEED-0012 | SR-VER-0061 | SR-TC-0788 |
+| SR-REQ-0789 | Technische Implementierung, automatisierte Abnahmen und Messvorbereitung MÜSSEN vor den abschließenden menschlichen Fach-/Sprach-/Bedienreviews planbar sein; X.13 erlaubt keine fingierte menschliche oder produktive Benutzungsfreigabe. | SR-NEED-0005, SR-NEED-0006, SR-NEED-0010 | SR-VER-0061 | SR-TC-0789 |
+| SR-REQ-0790 | Jeder geplante Commit MUSS nach X.3 eine aus seiner Kennung und seinem Titel ableitbare Commitmessage bereitstellen; SpecRoad DARF daraus weder Git-Commits noch automatischen Git-Statusabgleich erzeugen. | SR-NEED-0001, SR-NEED-0004, SR-NEED-0013 | SR-VER-0052 | SR-TC-0790 |
 
 ---
 
@@ -7302,6 +7437,21 @@ Jede konkrete Diagnose muss die in `SR-REQ-0089` festgelegten Felder bereitstell
 
 ---
 
+### 13.1 Plan- und Force-Diagnosen
+
+| Code | Default-Schwere | Bedeutung |
+|---|---|---|
+| SRV200 | error | Ungültige Plan-Markdown-Struktur oder Metadaten. |
+| SRV201 | error | Mehrdeutige Plan-/Eintragsidentität oder Besitzzuordnung. |
+| SRV202 | error | Ungültige oder zyklische explizite Planvoraussetzung. |
+| SRV203 | warning | Gespeicherter Parentstatus widerspricht abgeleitetem Fortschritt. |
+| SRV204 | warning | Planbindung benötigt Prüfung; Requirementkontext fehlt oder ist verändert. |
+| SRV205 | error | Ungültiger Vollständigkeitsweg oder nicht auflösbares Beitragsziel. |
+| SRV206 | warning | Manuell geänderter Planinhalt ohne passende bekannte Revisionsfortschreibung. |
+| SRV207 | error | Nicht aufgelöster Plan-Merge-/Ordnungs-/Textkonflikt. |
+| SRV208 | warning | Explizit erzwungene Operation; ursprüngliche negative Diagnosen bleiben erhalten. |
+| SRV209 | error | Bezeichneter Auftrag technisch nicht ausführbar oder Zielentscheidung fehlt. |
+
 ## 14. Verifikationsplan
 
 | ID | Prüfbereich | Methode/Verfahren | Bestehenskriterium |
@@ -7357,8 +7507,20 @@ Jede konkrete Diagnose muss die in `SR-REQ-0089` festgelegten Felder bereitstell
 | SR-VER-0049 | Sprach-/Force-Migration und Austausch | Explizite Entwurfsmigration mit negativen Aussagen, unveränderbaren Altnachweisen und CSV-/NDJSON-/ReqIF-Roundtrip. | Keine Inferenz aus Text/Priorität, alle Metadaten erhalten, keine alten Bytes verändert und keine fingierte aktuelle Evidence. |
 | SR-VER-0050 | Explizite SRX-Zahlenpolicy | Vektoren aus Anhang U plus Precisionrange, JCS-Grenzen und absichtlich verschiedene Decimal-Prozessdefaults. | Alle exakten Ergebnisse und Fehlergründe unabhängig vom lokalen Pythonkontext; Policy in Fachhash gebunden. |
 | SR-VER-0051 | Portabler PatchHarbor-Rundweg | Reale öffentliche Python-API, ausgelieferte PYZ-/Modulartefakte, vollständiger Hin-/Rückweg und negative Zustands-/Sicherheitsfälle nach W.7. | Bindung und Fachziel stimmen; Sandbox offline ohne Git/Shell/Installation; kein ungeprüfter Payloadwrite, keine vorgezogene Fachanwendung oder fingierte menschliche Freigabe; angebotene Runtimeprofile tatsächlich geprüft. |
+| SR-VER-0052 | Planformat und Identität | Reale Markdownquellen, Parser-/Writer-/Hash-/Statusvektoren; keine Dokumentlayouttests. | X.2–X.4/X.6 vollständig; Titel und IDs erhalten, keine zweite Quelle oder Git-Statusableitung. |
+| SR-VER-0053 | Plangraph und Voraussetzungen | Native Mehrplan-/Taskgraphen mit transitive/dead-end/cycle-Fällen. | X.5: genau explizite Ziele, viele-zu-viele und vollständige erklärende Tracepfade. |
+| SR-VER-0054 | Planabdeckung, Kontext und Impact | Unabhängige Mengenoracles, gemischte Scopes und echte Requirementwrites. | X.7/X.8: richtige Quoten, komplette Bindungen und betroffene bereits abgehakte Einträge. |
+| SR-VER-0055 | Planwriter und Proposals | Echte normale/gemischte Writes mit Prozessabbruch und Receiptbelegen. | Gemeinsamer Zielstand, Dry-run/Idempotenz, keine vorgetäuschte semantische oder menschliche Freigabe. |
+| SR-VER-0056 | Semantischer Plan-Merge | Vollständige Dreiwege-/Checkbox-/Existenz-/Hierarchiematrix und native Auflösung/Apply. | Alle M01–M12 erhalten Quellen, explizite Konflikte und genau bezeichneten Zielstand. |
+| SR-VER-0057 | Vorhandene Spracherkennung für Pläne | Gebundene mehrsprachige Subjects, echte vorhandene Runtime und unavailable/stale-Fälle. | Nur language_detection; keine Grammatik-/Inhaltsprüfung oder neue Bibliothek. |
+| SR-VER-0058 | Integration der Planressourcen | Baselines, Scope, Varianten, SRX, Austausch, öffentliche PH-API, Work und beide Distributionen. | Keine ausgelassene Planressource; aktuelle hashgebundene Originale oder ausdrücklich ausgewiesener Verlust. |
+| SR-VER-0059 | Einheitliche CLI-Ergebnisdaten | Vollständige Command-Inventur und strukturierte Ergebnisoracles aller Befehlsklassen. | Text/JSON dieselben Fachdaten; frühe Fehler, Export und große Resultate nach X.11. |
+| SR-VER-0060 | Allgemeines Force und ehrliche Diagnose | Je Produktgate normal/force; Raw-Write, corrupt/partial/stale, technische Fehler und tatsächliche Nachweise. | X.12: alle Softwaregates übersteuerbar, keine erfundene Operation oder erfolgreiche Abnahme. |
+| SR-VER-0061 | Gemeinsame technische und menschliche Endabnahme | Neue und bestehende aktuelle technische Matrix; separat echte menschliche Reviewbelege. | Technik zuerst; menschliche Sprach-/Fach-/Bedienung und ausdrückliche Freigabe zuletzt, nichts fingiert. |
 
 ### 14.1 Referenzplattform für Performance
+
+Die Planerweiterung ergänzt Größenfälle mit vielen Plänen, tiefen Hierarchien, überlappenden Requirements und planübergreifenden Voraussetzungen. Die bestehenden Referenzgrößen/Ziele bleiben; neue Operatoren weisen CPU, Wall, RSS und vollständige Ergebnisgrößen getrennt aus. Messplätze werden vor finalen menschlichen Reviews bereitgestellt; parallele Apply-Poollaufzeiten ersetzen keine isolierte Referenzmessung.
 
 Jeder Abnahmelauf bindet eine versionierte Datei `benchmark-platform.json`. Sie enthält mindestens CPU-Hersteller, exaktes Modell, Stepping, Microcode, Zahl physischer/logischer Kerne, RAM-Größe und -Takt soweit verfügbar, Kernelname und -version, Distribution, Dateisystemtyp und Mountoptionen, Blockgerät, CPython-Version und Buildkennung, SpecRoad-Build, CPU-Governor und SHA-256 der Benchmarkfixtures.
 
@@ -7530,27 +7692,28 @@ PatchHarbor-Testlauf belegt die Erweiterung nicht durch bloße Hashaktualisierun
 
 | Need | Anzahl Anforderungen | Exakt abgedeckte IDs |
 |---|---:|---|
-| SR-NEED-0001 | 90 | `SR-REQ-0001`–`SR-REQ-0006`<br>`SR-REQ-0009`–`SR-REQ-0012`<br>`SR-REQ-0022`<br>`SR-REQ-0024`–`SR-REQ-0026`<br>`SR-REQ-0032`<br>`SR-REQ-0066`–`SR-REQ-0067`<br>`SR-REQ-0073`<br>`SR-REQ-0075`<br>`SR-REQ-0080`<br>`SR-REQ-0087`–`SR-REQ-0088`<br>`SR-REQ-0101`<br>`SR-REQ-0105`–`SR-REQ-0106`<br>`SR-REQ-0108`<br>`SR-REQ-0123`<br>`SR-REQ-0179`<br>`SR-REQ-0181`<br>`SR-REQ-0186`–`SR-REQ-0187`<br>`SR-REQ-0190`<br>`SR-REQ-0209`–`SR-REQ-0210`<br>`SR-REQ-0216`–`SR-REQ-0217`<br>`SR-REQ-0226`–`SR-REQ-0227`<br>`SR-REQ-0231`–`SR-REQ-0235`<br>`SR-REQ-0240`<br>`SR-REQ-0251`<br>`SR-REQ-0272`<br>`SR-REQ-0278`<br>`SR-REQ-0281`<br>`SR-REQ-0299`–`SR-REQ-0302`<br>`SR-REQ-0304`<br>`SR-REQ-0308`<br>`SR-REQ-0310`–`SR-REQ-0313`<br>`SR-REQ-0320`–`SR-REQ-0321`<br>`SR-REQ-0325`<br>`SR-REQ-0332`<br>`SR-REQ-0354`<br>`SR-REQ-0372`<br>`SR-REQ-0378`<br>`SR-REQ-0380`<br>`SR-REQ-0386`<br>`SR-REQ-0393`–`SR-REQ-0394`<br>`SR-REQ-0402`<br>`SR-REQ-0409`<br>`SR-REQ-0417`<br>`SR-REQ-0443`<br>`SR-REQ-0463`<br>`SR-REQ-0467`–`SR-REQ-0468`<br>`SR-REQ-0471`<br>`SR-REQ-0501`<br>`SR-REQ-0504`<br>`SR-REQ-0524`–`SR-REQ-0525`<br>`SR-REQ-0527`<br>`SR-REQ-0530`–`SR-REQ-0531`<br>`SR-REQ-0544`–`SR-REQ-0545`<br>`SR-REQ-0649`<br>`SR-REQ-0651`–`SR-REQ-0652`<br>`SR-REQ-0737` |
-| SR-NEED-0002 | 116 | `SR-REQ-0007`–`SR-REQ-0008`<br>`SR-REQ-0014`–`SR-REQ-0017`<br>`SR-REQ-0027`–`SR-REQ-0029`<br>`SR-REQ-0031`<br>`SR-REQ-0037`–`SR-REQ-0043`<br>`SR-REQ-0046`<br>`SR-REQ-0051`–`SR-REQ-0052`<br>`SR-REQ-0054`–`SR-REQ-0056`<br>`SR-REQ-0059`–`SR-REQ-0061`<br>`SR-REQ-0063`<br>`SR-REQ-0065`–`SR-REQ-0072`<br>`SR-REQ-0074`<br>`SR-REQ-0076`–`SR-REQ-0079`<br>`SR-REQ-0081`–`SR-REQ-0082`<br>`SR-REQ-0084`–`SR-REQ-0086`<br>`SR-REQ-0091`<br>`SR-REQ-0093`–`SR-REQ-0097`<br>`SR-REQ-0130`<br>`SR-REQ-0143`–`SR-REQ-0144`<br>`SR-REQ-0148`–`SR-REQ-0149`<br>`SR-REQ-0218`<br>`SR-REQ-0235`<br>`SR-REQ-0238`<br>`SR-REQ-0244`<br>`SR-REQ-0246`–`SR-REQ-0247`<br>`SR-REQ-0264`<br>`SR-REQ-0276`<br>`SR-REQ-0280`<br>`SR-REQ-0282`<br>`SR-REQ-0286`–`SR-REQ-0288`<br>`SR-REQ-0290`–`SR-REQ-0293`<br>`SR-REQ-0297`<br>`SR-REQ-0307`<br>`SR-REQ-0316`<br>`SR-REQ-0326`<br>`SR-REQ-0367`<br>`SR-REQ-0369`<br>`SR-REQ-0395`–`SR-REQ-0397`<br>`SR-REQ-0399`<br>`SR-REQ-0406`<br>`SR-REQ-0414`–`SR-REQ-0415`<br>`SR-REQ-0419`<br>`SR-REQ-0421`–`SR-REQ-0424`<br>`SR-REQ-0431`<br>`SR-REQ-0433`<br>`SR-REQ-0499`<br>`SR-REQ-0505`<br>`SR-REQ-0508`<br>`SR-REQ-0515`<br>`SR-REQ-0517`<br>`SR-REQ-0519`–`SR-REQ-0521`<br>`SR-REQ-0529`<br>`SR-REQ-0542`<br>`SR-REQ-0546`–`SR-REQ-0548`<br>`SR-REQ-0636`<br>`SR-REQ-0653`<br>`SR-REQ-0656`<br>`SR-REQ-0658`<br>`SR-REQ-0662`–`SR-REQ-0663`<br>`SR-REQ-0665`<br>`SR-REQ-0667`<br>`SR-REQ-0727`–`SR-REQ-0728` |
-| SR-NEED-0003 | 168 | `SR-REQ-0012`<br>`SR-REQ-0021`–`SR-REQ-0022`<br>`SR-REQ-0024`<br>`SR-REQ-0030`<br>`SR-REQ-0032`–`SR-REQ-0034`<br>`SR-REQ-0036`<br>`SR-REQ-0042`–`SR-REQ-0045`<br>`SR-REQ-0047`–`SR-REQ-0048`<br>`SR-REQ-0052`–`SR-REQ-0053`<br>`SR-REQ-0057`–`SR-REQ-0058`<br>`SR-REQ-0060`<br>`SR-REQ-0063`–`SR-REQ-0064`<br>`SR-REQ-0068`<br>`SR-REQ-0070`<br>`SR-REQ-0072`<br>`SR-REQ-0082`<br>`SR-REQ-0089`–`SR-REQ-0090`<br>`SR-REQ-0095`<br>`SR-REQ-0097`<br>`SR-REQ-0099`<br>`SR-REQ-0103`–`SR-REQ-0104`<br>`SR-REQ-0106`–`SR-REQ-0109`<br>`SR-REQ-0111`–`SR-REQ-0116`<br>`SR-REQ-0124`<br>`SR-REQ-0126`<br>`SR-REQ-0152`<br>`SR-REQ-0154`–`SR-REQ-0155`<br>`SR-REQ-0158`<br>`SR-REQ-0161`–`SR-REQ-0162`<br>`SR-REQ-0169`<br>`SR-REQ-0171`<br>`SR-REQ-0173`–`SR-REQ-0175`<br>`SR-REQ-0191`–`SR-REQ-0193`<br>`SR-REQ-0213`<br>`SR-REQ-0219`–`SR-REQ-0220`<br>`SR-REQ-0228`<br>`SR-REQ-0231`–`SR-REQ-0234`<br>`SR-REQ-0237`<br>`SR-REQ-0239`<br>`SR-REQ-0241`–`SR-REQ-0242`<br>`SR-REQ-0248`<br>`SR-REQ-0250`–`SR-REQ-0251`<br>`SR-REQ-0269`<br>`SR-REQ-0273`<br>`SR-REQ-0275`–`SR-REQ-0281`<br>`SR-REQ-0283`–`SR-REQ-0285`<br>`SR-REQ-0293`<br>`SR-REQ-0299`<br>`SR-REQ-0302`<br>`SR-REQ-0305`<br>`SR-REQ-0309`–`SR-REQ-0311`<br>`SR-REQ-0314`<br>`SR-REQ-0317`–`SR-REQ-0318`<br>`SR-REQ-0322`<br>`SR-REQ-0331`<br>`SR-REQ-0347`<br>`SR-REQ-0349`<br>`SR-REQ-0351`<br>`SR-REQ-0353`<br>`SR-REQ-0358`<br>`SR-REQ-0361`–`SR-REQ-0362`<br>`SR-REQ-0364`–`SR-REQ-0366`<br>`SR-REQ-0368`<br>`SR-REQ-0370`–`SR-REQ-0372`<br>`SR-REQ-0374`<br>`SR-REQ-0398`–`SR-REQ-0399`<br>`SR-REQ-0402`–`SR-REQ-0403`<br>`SR-REQ-0405`<br>`SR-REQ-0410`<br>`SR-REQ-0412`<br>`SR-REQ-0415`–`SR-REQ-0416`<br>`SR-REQ-0418`<br>`SR-REQ-0426`–`SR-REQ-0430`<br>`SR-REQ-0434`<br>`SR-REQ-0437`<br>`SR-REQ-0441`<br>`SR-REQ-0449`<br>`SR-REQ-0456`–`SR-REQ-0457`<br>`SR-REQ-0473`<br>`SR-REQ-0475`<br>`SR-REQ-0507`<br>`SR-REQ-0509`–`SR-REQ-0510`<br>`SR-REQ-0512`<br>`SR-REQ-0514`<br>`SR-REQ-0516`<br>`SR-REQ-0521`<br>`SR-REQ-0524`–`SR-REQ-0525`<br>`SR-REQ-0530`<br>`SR-REQ-0537`<br>`SR-REQ-0541`<br>`SR-REQ-0611`<br>`SR-REQ-0637`–`SR-REQ-0638`<br>`SR-REQ-0643`–`SR-REQ-0644`<br>`SR-REQ-0646`–`SR-REQ-0648`<br>`SR-REQ-0657`<br>`SR-REQ-0673`–`SR-REQ-0674`<br>`SR-REQ-0685`<br>`SR-REQ-0693`<br>`SR-REQ-0708`<br>`SR-REQ-0712`<br>`SR-REQ-0734`<br>`SR-REQ-0738`–`SR-REQ-0741` |
-| SR-NEED-0004 | 17 | `SR-REQ-0010`<br>`SR-REQ-0049`<br>`SR-REQ-0078`<br>`SR-REQ-0120`<br>`SR-REQ-0127`<br>`SR-REQ-0131`<br>`SR-REQ-0153`<br>`SR-REQ-0176`<br>`SR-REQ-0342`–`SR-REQ-0347`<br>`SR-REQ-0495`<br>`SR-REQ-0536`–`SR-REQ-0537` |
-| SR-NEED-0005 | 64 | `SR-REQ-0050`<br>`SR-REQ-0062`<br>`SR-REQ-0065`<br>`SR-REQ-0074`–`SR-REQ-0077`<br>`SR-REQ-0086`<br>`SR-REQ-0096`<br>`SR-REQ-0127`<br>`SR-REQ-0129`–`SR-REQ-0134`<br>`SR-REQ-0136`–`SR-REQ-0142`<br>`SR-REQ-0177`<br>`SR-REQ-0284`<br>`SR-REQ-0333`–`SR-REQ-0341`<br>`SR-REQ-0369`<br>`SR-REQ-0374`<br>`SR-REQ-0432`<br>`SR-REQ-0444`–`SR-REQ-0452`<br>`SR-REQ-0491`–`SR-REQ-0493`<br>`SR-REQ-0500`<br>`SR-REQ-0533`–`SR-REQ-0535`<br>`SR-REQ-0622`<br>`SR-REQ-0633`<br>`SR-REQ-0642`<br>`SR-REQ-0650`<br>`SR-REQ-0668`<br>`SR-REQ-0682`<br>`SR-REQ-0686`<br>`SR-REQ-0720`–`SR-REQ-0721`<br>`SR-REQ-0730`<br>`SR-REQ-0742` |
-| SR-NEED-0006 | 35 | `SR-REQ-0049`–`SR-REQ-0050`<br>`SR-REQ-0073`<br>`SR-REQ-0101`<br>`SR-REQ-0113`<br>`SR-REQ-0115`<br>`SR-REQ-0118`–`SR-REQ-0121`<br>`SR-REQ-0125`–`SR-REQ-0126`<br>`SR-REQ-0136`–`SR-REQ-0137`<br>`SR-REQ-0139`–`SR-REQ-0141`<br>`SR-REQ-0144`<br>`SR-REQ-0150`<br>`SR-REQ-0283`–`SR-REQ-0284`<br>`SR-REQ-0347`<br>`SR-REQ-0358`<br>`SR-REQ-0400`–`SR-REQ-0401`<br>`SR-REQ-0408`<br>`SR-REQ-0411`<br>`SR-REQ-0414`<br>`SR-REQ-0444`<br>`SR-REQ-0446`<br>`SR-REQ-0450`–`SR-REQ-0451`<br>`SR-REQ-0493`<br>`SR-REQ-0516`<br>`SR-REQ-0537` |
-| SR-NEED-0007 | 239 | `SR-REQ-0001`<br>`SR-REQ-0005`–`SR-REQ-0006`<br>`SR-REQ-0009`<br>`SR-REQ-0013`<br>`SR-REQ-0016`<br>`SR-REQ-0020`–`SR-REQ-0021`<br>`SR-REQ-0029`<br>`SR-REQ-0035`<br>`SR-REQ-0041`<br>`SR-REQ-0051`<br>`SR-REQ-0054`–`SR-REQ-0056`<br>`SR-REQ-0059`<br>`SR-REQ-0083`–`SR-REQ-0085`<br>`SR-REQ-0087`–`SR-REQ-0089`<br>`SR-REQ-0091`–`SR-REQ-0094`<br>`SR-REQ-0098`–`SR-REQ-0100`<br>`SR-REQ-0102`<br>`SR-REQ-0104`<br>`SR-REQ-0110`<br>`SR-REQ-0114`<br>`SR-REQ-0117`<br>`SR-REQ-0145`<br>`SR-REQ-0147`<br>`SR-REQ-0149`<br>`SR-REQ-0151`<br>`SR-REQ-0164`<br>`SR-REQ-0179`–`SR-REQ-0189`<br>`SR-REQ-0191`<br>`SR-REQ-0193`–`SR-REQ-0195`<br>`SR-REQ-0202`–`SR-REQ-0203`<br>`SR-REQ-0205`<br>`SR-REQ-0207`–`SR-REQ-0208`<br>`SR-REQ-0210`–`SR-REQ-0215`<br>`SR-REQ-0217`<br>`SR-REQ-0221`–`SR-REQ-0222`<br>`SR-REQ-0225`<br>`SR-REQ-0227`<br>`SR-REQ-0229`–`SR-REQ-0230`<br>`SR-REQ-0237`–`SR-REQ-0238`<br>`SR-REQ-0240`<br>`SR-REQ-0243`<br>`SR-REQ-0252`<br>`SR-REQ-0254`–`SR-REQ-0256`<br>`SR-REQ-0261`–`SR-REQ-0263`<br>`SR-REQ-0267`<br>`SR-REQ-0270`–`SR-REQ-0271`<br>`SR-REQ-0281`<br>`SR-REQ-0294`–`SR-REQ-0295`<br>`SR-REQ-0297`–`SR-REQ-0298`<br>`SR-REQ-0303`<br>`SR-REQ-0314`–`SR-REQ-0315`<br>`SR-REQ-0325`<br>`SR-REQ-0327`–`SR-REQ-0328`<br>`SR-REQ-0330`<br>`SR-REQ-0332`<br>`SR-REQ-0338`<br>`SR-REQ-0340`<br>`SR-REQ-0346`<br>`SR-REQ-0352`–`SR-REQ-0354`<br>`SR-REQ-0356`–`SR-REQ-0357`<br>`SR-REQ-0359`<br>`SR-REQ-0361`<br>`SR-REQ-0363`<br>`SR-REQ-0371`<br>`SR-REQ-0373`<br>`SR-REQ-0375`–`SR-REQ-0377`<br>`SR-REQ-0379`–`SR-REQ-0382`<br>`SR-REQ-0384`–`SR-REQ-0385`<br>`SR-REQ-0388`–`SR-REQ-0389`<br>`SR-REQ-0391`–`SR-REQ-0392`<br>`SR-REQ-0397`–`SR-REQ-0398`<br>`SR-REQ-0400`<br>`SR-REQ-0404`–`SR-REQ-0407`<br>`SR-REQ-0410`<br>`SR-REQ-0412`–`SR-REQ-0413`<br>`SR-REQ-0415`<br>`SR-REQ-0417`<br>`SR-REQ-0420`<br>`SR-REQ-0423`<br>`SR-REQ-0425`<br>`SR-REQ-0435`–`SR-REQ-0436`<br>`SR-REQ-0438`–`SR-REQ-0440`<br>`SR-REQ-0442`–`SR-REQ-0443`<br>`SR-REQ-0446`<br>`SR-REQ-0449`<br>`SR-REQ-0459`<br>`SR-REQ-0463`–`SR-REQ-0465`<br>`SR-REQ-0468`<br>`SR-REQ-0470`<br>`SR-REQ-0472`–`SR-REQ-0480`<br>`SR-REQ-0484`–`SR-REQ-0492`<br>`SR-REQ-0494`–`SR-REQ-0499`<br>`SR-REQ-0506`<br>`SR-REQ-0522`–`SR-REQ-0523`<br>`SR-REQ-0526`<br>`SR-REQ-0533`–`SR-REQ-0534`<br>`SR-REQ-0539`<br>`SR-REQ-0543`<br>`SR-REQ-0548`<br>`SR-REQ-0573`–`SR-REQ-0600`<br>`SR-REQ-0603`<br>`SR-REQ-0606`<br>`SR-REQ-0614`<br>`SR-REQ-0617`<br>`SR-REQ-0622`–`SR-REQ-0623`<br>`SR-REQ-0627`<br>`SR-REQ-0631`–`SR-REQ-0633`<br>`SR-REQ-0636`–`SR-REQ-0637`<br>`SR-REQ-0645`<br>`SR-REQ-0650`<br>`SR-REQ-0666`<br>`SR-REQ-0679`<br>`SR-REQ-0689`<br>`SR-REQ-0694`<br>`SR-REQ-0697`<br>`SR-REQ-0713`–`SR-REQ-0714`<br>`SR-REQ-0722`<br>`SR-REQ-0729` |
-| SR-NEED-0008 | 130 | `SR-REQ-0018`<br>`SR-REQ-0083`<br>`SR-REQ-0090`<br>`SR-REQ-0116`<br>`SR-REQ-0142`<br>`SR-REQ-0154`–`SR-REQ-0170`<br>`SR-REQ-0172`–`SR-REQ-0174`<br>`SR-REQ-0176`–`SR-REQ-0180`<br>`SR-REQ-0182`–`SR-REQ-0183`<br>`SR-REQ-0185`<br>`SR-REQ-0192`<br>`SR-REQ-0200`<br>`SR-REQ-0219`<br>`SR-REQ-0222`–`SR-REQ-0228`<br>`SR-REQ-0230`<br>`SR-REQ-0236`<br>`SR-REQ-0240`<br>`SR-REQ-0242`<br>`SR-REQ-0327`<br>`SR-REQ-0376`–`SR-REQ-0380`<br>`SR-REQ-0382`<br>`SR-REQ-0384`<br>`SR-REQ-0386`<br>`SR-REQ-0392`<br>`SR-REQ-0426`–`SR-REQ-0429`<br>`SR-REQ-0476`–`SR-REQ-0477`<br>`SR-REQ-0481`<br>`SR-REQ-0487`–`SR-REQ-0490`<br>`SR-REQ-0502`–`SR-REQ-0503`<br>`SR-REQ-0543`<br>`SR-REQ-0549`–`SR-REQ-0572`<br>`SR-REQ-0608`<br>`SR-REQ-0610`<br>`SR-REQ-0616`<br>`SR-REQ-0624`–`SR-REQ-0628`<br>`SR-REQ-0630`<br>`SR-REQ-0632`<br>`SR-REQ-0635`<br>`SR-REQ-0643`–`SR-REQ-0649`<br>`SR-REQ-0670`<br>`SR-REQ-0675`<br>`SR-REQ-0689`<br>`SR-REQ-0691`<br>`SR-REQ-0700`<br>`SR-REQ-0705`<br>`SR-REQ-0714`<br>`SR-REQ-0726`<br>`SR-REQ-0731`–`SR-REQ-0733`<br>`SR-REQ-0735`–`SR-REQ-0738`<br>`SR-REQ-0740`<br>`SR-REQ-0742` |
-| SR-NEED-0009 | 198 | `SR-REQ-0019`–`SR-REQ-0020`<br>`SR-REQ-0023`<br>`SR-REQ-0025`–`SR-REQ-0026`<br>`SR-REQ-0030`–`SR-REQ-0031`<br>`SR-REQ-0033`–`SR-REQ-0037`<br>`SR-REQ-0040`<br>`SR-REQ-0043`–`SR-REQ-0048`<br>`SR-REQ-0061`–`SR-REQ-0062`<br>`SR-REQ-0064`<br>`SR-REQ-0071`<br>`SR-REQ-0081`<br>`SR-REQ-0092`<br>`SR-REQ-0102`–`SR-REQ-0103`<br>`SR-REQ-0105`<br>`SR-REQ-0107`<br>`SR-REQ-0111`–`SR-REQ-0112`<br>`SR-REQ-0122`<br>`SR-REQ-0129`<br>`SR-REQ-0132`–`SR-REQ-0135`<br>`SR-REQ-0138`<br>`SR-REQ-0143`<br>`SR-REQ-0145`–`SR-REQ-0148`<br>`SR-REQ-0150`–`SR-REQ-0153`<br>`SR-REQ-0156`–`SR-REQ-0157`<br>`SR-REQ-0163`<br>`SR-REQ-0171`–`SR-REQ-0172`<br>`SR-REQ-0178`<br>`SR-REQ-0184`<br>`SR-REQ-0196`–`SR-REQ-0199`<br>`SR-REQ-0204`<br>`SR-REQ-0206`–`SR-REQ-0208`<br>`SR-REQ-0216`<br>`SR-REQ-0218`<br>`SR-REQ-0220`<br>`SR-REQ-0234`<br>`SR-REQ-0241`<br>`SR-REQ-0245`–`SR-REQ-0246`<br>`SR-REQ-0250`<br>`SR-REQ-0253`<br>`SR-REQ-0257`–`SR-REQ-0260`<br>`SR-REQ-0262`<br>`SR-REQ-0265`–`SR-REQ-0266`<br>`SR-REQ-0268`–`SR-REQ-0269`<br>`SR-REQ-0271`<br>`SR-REQ-0273`–`SR-REQ-0275`<br>`SR-REQ-0279`<br>`SR-REQ-0285`<br>`SR-REQ-0317`–`SR-REQ-0319`<br>`SR-REQ-0322`<br>`SR-REQ-0328`<br>`SR-REQ-0330`–`SR-REQ-0331`<br>`SR-REQ-0339`<br>`SR-REQ-0342`<br>`SR-REQ-0345`<br>`SR-REQ-0357`<br>`SR-REQ-0364`<br>`SR-REQ-0370`<br>`SR-REQ-0375`<br>`SR-REQ-0383`<br>`SR-REQ-0385`<br>`SR-REQ-0387`–`SR-REQ-0389`<br>`SR-REQ-0401`<br>`SR-REQ-0406`–`SR-REQ-0407`<br>`SR-REQ-0412`–`SR-REQ-0413`<br>`SR-REQ-0416`<br>`SR-REQ-0418`<br>`SR-REQ-0425`<br>`SR-REQ-0429`–`SR-REQ-0439`<br>`SR-REQ-0441`–`SR-REQ-0442`<br>`SR-REQ-0445`<br>`SR-REQ-0447`–`SR-REQ-0448`<br>`SR-REQ-0452`–`SR-REQ-0462`<br>`SR-REQ-0464`<br>`SR-REQ-0466`<br>`SR-REQ-0478`<br>`SR-REQ-0482`–`SR-REQ-0483`<br>`SR-REQ-0485`–`SR-REQ-0486`<br>`SR-REQ-0491`–`SR-REQ-0494`<br>`SR-REQ-0496`<br>`SR-REQ-0499`–`SR-REQ-0501`<br>`SR-REQ-0504`–`SR-REQ-0505`<br>`SR-REQ-0510`–`SR-REQ-0514`<br>`SR-REQ-0536`<br>`SR-REQ-0607`<br>`SR-REQ-0609`<br>`SR-REQ-0616`<br>`SR-REQ-0618`<br>`SR-REQ-0620`–`SR-REQ-0621`<br>`SR-REQ-0629`<br>`SR-REQ-0638`–`SR-REQ-0644`<br>`SR-REQ-0648`<br>`SR-REQ-0650`<br>`SR-REQ-0655`<br>`SR-REQ-0657`<br>`SR-REQ-0660`<br>`SR-REQ-0671`<br>`SR-REQ-0674`<br>`SR-REQ-0678`–`SR-REQ-0679`<br>`SR-REQ-0683`<br>`SR-REQ-0685`–`SR-REQ-0688`<br>`SR-REQ-0690`<br>`SR-REQ-0697`<br>`SR-REQ-0724`–`SR-REQ-0725`<br>`SR-REQ-0733`–`SR-REQ-0734`<br>`SR-REQ-0741` |
-| SR-NEED-0010 | 14 | `SR-REQ-0058`<br>`SR-REQ-0109`<br>`SR-REQ-0118`–`SR-REQ-0119`<br>`SR-REQ-0121`–`SR-REQ-0125`<br>`SR-REQ-0128`<br>`SR-REQ-0211`<br>`SR-REQ-0395`<br>`SR-REQ-0408`<br>`SR-REQ-0546` |
+| SR-NEED-0001 | 104 | `SR-REQ-0001`–`SR-REQ-0006`<br>`SR-REQ-0009`–`SR-REQ-0012`<br>`SR-REQ-0022`<br>`SR-REQ-0024`–`SR-REQ-0026`<br>`SR-REQ-0032`<br>`SR-REQ-0066`–`SR-REQ-0067`<br>`SR-REQ-0073`<br>`SR-REQ-0075`<br>`SR-REQ-0080`<br>`SR-REQ-0087`–`SR-REQ-0088`<br>`SR-REQ-0101`<br>`SR-REQ-0105`–`SR-REQ-0106`<br>`SR-REQ-0108`<br>`SR-REQ-0123`<br>`SR-REQ-0179`<br>`SR-REQ-0181`<br>`SR-REQ-0186`–`SR-REQ-0187`<br>`SR-REQ-0190`<br>`SR-REQ-0209`–`SR-REQ-0210`<br>`SR-REQ-0216`–`SR-REQ-0217`<br>`SR-REQ-0226`–`SR-REQ-0227`<br>`SR-REQ-0231`–`SR-REQ-0235`<br>`SR-REQ-0240`<br>`SR-REQ-0251`<br>`SR-REQ-0272`<br>`SR-REQ-0278`<br>`SR-REQ-0281`<br>`SR-REQ-0299`–`SR-REQ-0302`<br>`SR-REQ-0304`<br>`SR-REQ-0308`<br>`SR-REQ-0310`–`SR-REQ-0313`<br>`SR-REQ-0320`–`SR-REQ-0321`<br>`SR-REQ-0325`<br>`SR-REQ-0332`<br>`SR-REQ-0354`<br>`SR-REQ-0372`<br>`SR-REQ-0378`<br>`SR-REQ-0380`<br>`SR-REQ-0386`<br>`SR-REQ-0393`–`SR-REQ-0394`<br>`SR-REQ-0402`<br>`SR-REQ-0409`<br>`SR-REQ-0417`<br>`SR-REQ-0443`<br>`SR-REQ-0463`<br>`SR-REQ-0467`–`SR-REQ-0468`<br>`SR-REQ-0471`<br>`SR-REQ-0501`<br>`SR-REQ-0504`<br>`SR-REQ-0524`–`SR-REQ-0525`<br>`SR-REQ-0527`<br>`SR-REQ-0530`–`SR-REQ-0531`<br>`SR-REQ-0544`–`SR-REQ-0545`<br>`SR-REQ-0649`<br>`SR-REQ-0651`–`SR-REQ-0652`<br>`SR-REQ-0737`<br>`SR-REQ-0743`–`SR-REQ-0747`<br>`SR-REQ-0763`–`SR-REQ-0764`<br>`SR-REQ-0772`<br>`SR-REQ-0777`–`SR-REQ-0778`<br>`SR-REQ-0780`–`SR-REQ-0782`<br>`SR-REQ-0790` |
+| SR-NEED-0002 | 120 | `SR-REQ-0007`–`SR-REQ-0008`<br>`SR-REQ-0014`–`SR-REQ-0017`<br>`SR-REQ-0027`–`SR-REQ-0029`<br>`SR-REQ-0031`<br>`SR-REQ-0037`–`SR-REQ-0043`<br>`SR-REQ-0046`<br>`SR-REQ-0051`–`SR-REQ-0052`<br>`SR-REQ-0054`–`SR-REQ-0056`<br>`SR-REQ-0059`–`SR-REQ-0061`<br>`SR-REQ-0063`<br>`SR-REQ-0065`–`SR-REQ-0072`<br>`SR-REQ-0074`<br>`SR-REQ-0076`–`SR-REQ-0079`<br>`SR-REQ-0081`–`SR-REQ-0082`<br>`SR-REQ-0084`–`SR-REQ-0086`<br>`SR-REQ-0091`<br>`SR-REQ-0093`–`SR-REQ-0097`<br>`SR-REQ-0130`<br>`SR-REQ-0143`–`SR-REQ-0144`<br>`SR-REQ-0148`–`SR-REQ-0149`<br>`SR-REQ-0218`<br>`SR-REQ-0235`<br>`SR-REQ-0238`<br>`SR-REQ-0244`<br>`SR-REQ-0246`–`SR-REQ-0247`<br>`SR-REQ-0264`<br>`SR-REQ-0276`<br>`SR-REQ-0280`<br>`SR-REQ-0282`<br>`SR-REQ-0286`–`SR-REQ-0288`<br>`SR-REQ-0290`–`SR-REQ-0293`<br>`SR-REQ-0297`<br>`SR-REQ-0307`<br>`SR-REQ-0316`<br>`SR-REQ-0326`<br>`SR-REQ-0367`<br>`SR-REQ-0369`<br>`SR-REQ-0395`–`SR-REQ-0397`<br>`SR-REQ-0399`<br>`SR-REQ-0406`<br>`SR-REQ-0414`–`SR-REQ-0415`<br>`SR-REQ-0419`<br>`SR-REQ-0421`–`SR-REQ-0424`<br>`SR-REQ-0431`<br>`SR-REQ-0433`<br>`SR-REQ-0499`<br>`SR-REQ-0505`<br>`SR-REQ-0508`<br>`SR-REQ-0515`<br>`SR-REQ-0517`<br>`SR-REQ-0519`–`SR-REQ-0521`<br>`SR-REQ-0529`<br>`SR-REQ-0542`<br>`SR-REQ-0546`–`SR-REQ-0548`<br>`SR-REQ-0636`<br>`SR-REQ-0653`<br>`SR-REQ-0656`<br>`SR-REQ-0658`<br>`SR-REQ-0662`–`SR-REQ-0663`<br>`SR-REQ-0665`<br>`SR-REQ-0667`<br>`SR-REQ-0727`–`SR-REQ-0728`<br>`SR-REQ-0770`–`SR-REQ-0771`<br>`SR-REQ-0773`–`SR-REQ-0774` |
+| SR-NEED-0003 | 181 | `SR-REQ-0012`<br>`SR-REQ-0021`–`SR-REQ-0022`<br>`SR-REQ-0024`<br>`SR-REQ-0030`<br>`SR-REQ-0032`–`SR-REQ-0034`<br>`SR-REQ-0036`<br>`SR-REQ-0042`–`SR-REQ-0045`<br>`SR-REQ-0047`–`SR-REQ-0048`<br>`SR-REQ-0052`–`SR-REQ-0053`<br>`SR-REQ-0057`–`SR-REQ-0058`<br>`SR-REQ-0060`<br>`SR-REQ-0063`–`SR-REQ-0064`<br>`SR-REQ-0068`<br>`SR-REQ-0070`<br>`SR-REQ-0072`<br>`SR-REQ-0082`<br>`SR-REQ-0089`–`SR-REQ-0090`<br>`SR-REQ-0095`<br>`SR-REQ-0097`<br>`SR-REQ-0099`<br>`SR-REQ-0103`–`SR-REQ-0104`<br>`SR-REQ-0106`–`SR-REQ-0109`<br>`SR-REQ-0111`–`SR-REQ-0116`<br>`SR-REQ-0124`<br>`SR-REQ-0126`<br>`SR-REQ-0152`<br>`SR-REQ-0154`–`SR-REQ-0155`<br>`SR-REQ-0158`<br>`SR-REQ-0161`–`SR-REQ-0162`<br>`SR-REQ-0169`<br>`SR-REQ-0171`<br>`SR-REQ-0173`–`SR-REQ-0175`<br>`SR-REQ-0191`–`SR-REQ-0193`<br>`SR-REQ-0213`<br>`SR-REQ-0219`–`SR-REQ-0220`<br>`SR-REQ-0228`<br>`SR-REQ-0231`–`SR-REQ-0234`<br>`SR-REQ-0237`<br>`SR-REQ-0239`<br>`SR-REQ-0241`–`SR-REQ-0242`<br>`SR-REQ-0248`<br>`SR-REQ-0250`–`SR-REQ-0251`<br>`SR-REQ-0269`<br>`SR-REQ-0273`<br>`SR-REQ-0275`–`SR-REQ-0281`<br>`SR-REQ-0283`–`SR-REQ-0285`<br>`SR-REQ-0293`<br>`SR-REQ-0299`<br>`SR-REQ-0302`<br>`SR-REQ-0305`<br>`SR-REQ-0309`–`SR-REQ-0311`<br>`SR-REQ-0314`<br>`SR-REQ-0317`–`SR-REQ-0318`<br>`SR-REQ-0322`<br>`SR-REQ-0331`<br>`SR-REQ-0347`<br>`SR-REQ-0349`<br>`SR-REQ-0351`<br>`SR-REQ-0353`<br>`SR-REQ-0358`<br>`SR-REQ-0361`–`SR-REQ-0362`<br>`SR-REQ-0364`–`SR-REQ-0366`<br>`SR-REQ-0368`<br>`SR-REQ-0370`–`SR-REQ-0372`<br>`SR-REQ-0374`<br>`SR-REQ-0398`–`SR-REQ-0399`<br>`SR-REQ-0402`–`SR-REQ-0403`<br>`SR-REQ-0405`<br>`SR-REQ-0410`<br>`SR-REQ-0412`<br>`SR-REQ-0415`–`SR-REQ-0416`<br>`SR-REQ-0418`<br>`SR-REQ-0426`–`SR-REQ-0430`<br>`SR-REQ-0434`<br>`SR-REQ-0437`<br>`SR-REQ-0441`<br>`SR-REQ-0449`<br>`SR-REQ-0456`–`SR-REQ-0457`<br>`SR-REQ-0473`<br>`SR-REQ-0475`<br>`SR-REQ-0507`<br>`SR-REQ-0509`–`SR-REQ-0510`<br>`SR-REQ-0512`<br>`SR-REQ-0514`<br>`SR-REQ-0516`<br>`SR-REQ-0521`<br>`SR-REQ-0524`–`SR-REQ-0525`<br>`SR-REQ-0530`<br>`SR-REQ-0537`<br>`SR-REQ-0541`<br>`SR-REQ-0611`<br>`SR-REQ-0637`–`SR-REQ-0638`<br>`SR-REQ-0643`–`SR-REQ-0644`<br>`SR-REQ-0646`–`SR-REQ-0648`<br>`SR-REQ-0657`<br>`SR-REQ-0673`–`SR-REQ-0674`<br>`SR-REQ-0685`<br>`SR-REQ-0693`<br>`SR-REQ-0708`<br>`SR-REQ-0712`<br>`SR-REQ-0734`<br>`SR-REQ-0738`–`SR-REQ-0741`<br>`SR-REQ-0752`–`SR-REQ-0755`<br>`SR-REQ-0761`–`SR-REQ-0762`<br>`SR-REQ-0765`–`SR-REQ-0769`<br>`SR-REQ-0772`<br>`SR-REQ-0777` |
+| SR-NEED-0004 | 39 | `SR-REQ-0010`<br>`SR-REQ-0049`<br>`SR-REQ-0078`<br>`SR-REQ-0120`<br>`SR-REQ-0127`<br>`SR-REQ-0131`<br>`SR-REQ-0153`<br>`SR-REQ-0176`<br>`SR-REQ-0342`–`SR-REQ-0347`<br>`SR-REQ-0495`<br>`SR-REQ-0536`–`SR-REQ-0537`<br>`SR-REQ-0743`–`SR-REQ-0760`<br>`SR-REQ-0763`–`SR-REQ-0764`<br>`SR-REQ-0780`<br>`SR-REQ-0790` |
+| SR-NEED-0005 | 72 | `SR-REQ-0050`<br>`SR-REQ-0062`<br>`SR-REQ-0065`<br>`SR-REQ-0074`–`SR-REQ-0077`<br>`SR-REQ-0086`<br>`SR-REQ-0096`<br>`SR-REQ-0127`<br>`SR-REQ-0129`–`SR-REQ-0134`<br>`SR-REQ-0136`–`SR-REQ-0142`<br>`SR-REQ-0177`<br>`SR-REQ-0284`<br>`SR-REQ-0333`–`SR-REQ-0341`<br>`SR-REQ-0369`<br>`SR-REQ-0374`<br>`SR-REQ-0432`<br>`SR-REQ-0444`–`SR-REQ-0452`<br>`SR-REQ-0491`–`SR-REQ-0493`<br>`SR-REQ-0500`<br>`SR-REQ-0533`–`SR-REQ-0535`<br>`SR-REQ-0622`<br>`SR-REQ-0633`<br>`SR-REQ-0642`<br>`SR-REQ-0650`<br>`SR-REQ-0668`<br>`SR-REQ-0682`<br>`SR-REQ-0686`<br>`SR-REQ-0720`–`SR-REQ-0721`<br>`SR-REQ-0730`<br>`SR-REQ-0742`<br>`SR-REQ-0757`–`SR-REQ-0760`<br>`SR-REQ-0773`–`SR-REQ-0774`<br>`SR-REQ-0788`–`SR-REQ-0789` |
+| SR-NEED-0006 | 46 | `SR-REQ-0049`–`SR-REQ-0050`<br>`SR-REQ-0073`<br>`SR-REQ-0101`<br>`SR-REQ-0113`<br>`SR-REQ-0115`<br>`SR-REQ-0118`–`SR-REQ-0121`<br>`SR-REQ-0125`–`SR-REQ-0126`<br>`SR-REQ-0136`–`SR-REQ-0137`<br>`SR-REQ-0139`–`SR-REQ-0141`<br>`SR-REQ-0144`<br>`SR-REQ-0150`<br>`SR-REQ-0283`–`SR-REQ-0284`<br>`SR-REQ-0347`<br>`SR-REQ-0358`<br>`SR-REQ-0400`–`SR-REQ-0401`<br>`SR-REQ-0408`<br>`SR-REQ-0411`<br>`SR-REQ-0414`<br>`SR-REQ-0444`<br>`SR-REQ-0446`<br>`SR-REQ-0450`–`SR-REQ-0451`<br>`SR-REQ-0493`<br>`SR-REQ-0516`<br>`SR-REQ-0537`<br>`SR-REQ-0748`–`SR-REQ-0749`<br>`SR-REQ-0752`–`SR-REQ-0753`<br>`SR-REQ-0757`–`SR-REQ-0760`<br>`SR-REQ-0773`–`SR-REQ-0774`<br>`SR-REQ-0789` |
+| SR-NEED-0007 | 249 | `SR-REQ-0001`<br>`SR-REQ-0005`–`SR-REQ-0006`<br>`SR-REQ-0009`<br>`SR-REQ-0013`<br>`SR-REQ-0016`<br>`SR-REQ-0020`–`SR-REQ-0021`<br>`SR-REQ-0029`<br>`SR-REQ-0035`<br>`SR-REQ-0041`<br>`SR-REQ-0051`<br>`SR-REQ-0054`–`SR-REQ-0056`<br>`SR-REQ-0059`<br>`SR-REQ-0083`–`SR-REQ-0085`<br>`SR-REQ-0087`–`SR-REQ-0089`<br>`SR-REQ-0091`–`SR-REQ-0094`<br>`SR-REQ-0098`–`SR-REQ-0100`<br>`SR-REQ-0102`<br>`SR-REQ-0104`<br>`SR-REQ-0110`<br>`SR-REQ-0114`<br>`SR-REQ-0117`<br>`SR-REQ-0145`<br>`SR-REQ-0147`<br>`SR-REQ-0149`<br>`SR-REQ-0151`<br>`SR-REQ-0164`<br>`SR-REQ-0179`–`SR-REQ-0189`<br>`SR-REQ-0191`<br>`SR-REQ-0193`–`SR-REQ-0195`<br>`SR-REQ-0202`–`SR-REQ-0203`<br>`SR-REQ-0205`<br>`SR-REQ-0207`–`SR-REQ-0208`<br>`SR-REQ-0210`–`SR-REQ-0215`<br>`SR-REQ-0217`<br>`SR-REQ-0221`–`SR-REQ-0222`<br>`SR-REQ-0225`<br>`SR-REQ-0227`<br>`SR-REQ-0229`–`SR-REQ-0230`<br>`SR-REQ-0237`–`SR-REQ-0238`<br>`SR-REQ-0240`<br>`SR-REQ-0243`<br>`SR-REQ-0252`<br>`SR-REQ-0254`–`SR-REQ-0256`<br>`SR-REQ-0261`–`SR-REQ-0263`<br>`SR-REQ-0267`<br>`SR-REQ-0270`–`SR-REQ-0271`<br>`SR-REQ-0281`<br>`SR-REQ-0294`–`SR-REQ-0295`<br>`SR-REQ-0297`–`SR-REQ-0298`<br>`SR-REQ-0303`<br>`SR-REQ-0314`–`SR-REQ-0315`<br>`SR-REQ-0325`<br>`SR-REQ-0327`–`SR-REQ-0328`<br>`SR-REQ-0330`<br>`SR-REQ-0332`<br>`SR-REQ-0338`<br>`SR-REQ-0340`<br>`SR-REQ-0346`<br>`SR-REQ-0352`–`SR-REQ-0354`<br>`SR-REQ-0356`–`SR-REQ-0357`<br>`SR-REQ-0359`<br>`SR-REQ-0361`<br>`SR-REQ-0363`<br>`SR-REQ-0371`<br>`SR-REQ-0373`<br>`SR-REQ-0375`–`SR-REQ-0377`<br>`SR-REQ-0379`–`SR-REQ-0382`<br>`SR-REQ-0384`–`SR-REQ-0385`<br>`SR-REQ-0388`–`SR-REQ-0389`<br>`SR-REQ-0391`–`SR-REQ-0392`<br>`SR-REQ-0397`–`SR-REQ-0398`<br>`SR-REQ-0400`<br>`SR-REQ-0404`–`SR-REQ-0407`<br>`SR-REQ-0410`<br>`SR-REQ-0412`–`SR-REQ-0413`<br>`SR-REQ-0415`<br>`SR-REQ-0417`<br>`SR-REQ-0420`<br>`SR-REQ-0423`<br>`SR-REQ-0425`<br>`SR-REQ-0435`–`SR-REQ-0436`<br>`SR-REQ-0438`–`SR-REQ-0440`<br>`SR-REQ-0442`–`SR-REQ-0443`<br>`SR-REQ-0446`<br>`SR-REQ-0449`<br>`SR-REQ-0459`<br>`SR-REQ-0463`–`SR-REQ-0465`<br>`SR-REQ-0468`<br>`SR-REQ-0470`<br>`SR-REQ-0472`–`SR-REQ-0480`<br>`SR-REQ-0484`–`SR-REQ-0492`<br>`SR-REQ-0494`–`SR-REQ-0499`<br>`SR-REQ-0506`<br>`SR-REQ-0522`–`SR-REQ-0523`<br>`SR-REQ-0526`<br>`SR-REQ-0533`–`SR-REQ-0534`<br>`SR-REQ-0539`<br>`SR-REQ-0543`<br>`SR-REQ-0548`<br>`SR-REQ-0573`–`SR-REQ-0600`<br>`SR-REQ-0603`<br>`SR-REQ-0606`<br>`SR-REQ-0614`<br>`SR-REQ-0617`<br>`SR-REQ-0622`–`SR-REQ-0623`<br>`SR-REQ-0627`<br>`SR-REQ-0631`–`SR-REQ-0633`<br>`SR-REQ-0636`–`SR-REQ-0637`<br>`SR-REQ-0645`<br>`SR-REQ-0650`<br>`SR-REQ-0666`<br>`SR-REQ-0679`<br>`SR-REQ-0689`<br>`SR-REQ-0694`<br>`SR-REQ-0697`<br>`SR-REQ-0713`–`SR-REQ-0714`<br>`SR-REQ-0722`<br>`SR-REQ-0729`<br>`SR-REQ-0750`–`SR-REQ-0751`<br>`SR-REQ-0778`<br>`SR-REQ-0781`–`SR-REQ-0787` |
+| SR-NEED-0008 | 142 | `SR-REQ-0018`<br>`SR-REQ-0083`<br>`SR-REQ-0090`<br>`SR-REQ-0116`<br>`SR-REQ-0142`<br>`SR-REQ-0154`–`SR-REQ-0170`<br>`SR-REQ-0172`–`SR-REQ-0174`<br>`SR-REQ-0176`–`SR-REQ-0180`<br>`SR-REQ-0182`–`SR-REQ-0183`<br>`SR-REQ-0185`<br>`SR-REQ-0192`<br>`SR-REQ-0200`<br>`SR-REQ-0219`<br>`SR-REQ-0222`–`SR-REQ-0228`<br>`SR-REQ-0230`<br>`SR-REQ-0236`<br>`SR-REQ-0240`<br>`SR-REQ-0242`<br>`SR-REQ-0327`<br>`SR-REQ-0376`–`SR-REQ-0380`<br>`SR-REQ-0382`<br>`SR-REQ-0384`<br>`SR-REQ-0386`<br>`SR-REQ-0392`<br>`SR-REQ-0426`–`SR-REQ-0429`<br>`SR-REQ-0476`–`SR-REQ-0477`<br>`SR-REQ-0481`<br>`SR-REQ-0487`–`SR-REQ-0490`<br>`SR-REQ-0502`–`SR-REQ-0503`<br>`SR-REQ-0543`<br>`SR-REQ-0549`–`SR-REQ-0572`<br>`SR-REQ-0608`<br>`SR-REQ-0610`<br>`SR-REQ-0616`<br>`SR-REQ-0624`–`SR-REQ-0628`<br>`SR-REQ-0630`<br>`SR-REQ-0632`<br>`SR-REQ-0635`<br>`SR-REQ-0643`–`SR-REQ-0649`<br>`SR-REQ-0670`<br>`SR-REQ-0675`<br>`SR-REQ-0689`<br>`SR-REQ-0691`<br>`SR-REQ-0700`<br>`SR-REQ-0705`<br>`SR-REQ-0714`<br>`SR-REQ-0726`<br>`SR-REQ-0731`–`SR-REQ-0733`<br>`SR-REQ-0735`–`SR-REQ-0738`<br>`SR-REQ-0740`<br>`SR-REQ-0742`<br>`SR-REQ-0756`<br>`SR-REQ-0761`–`SR-REQ-0762`<br>`SR-REQ-0776`<br>`SR-REQ-0778`<br>`SR-REQ-0781`–`SR-REQ-0787` |
+| SR-NEED-0009 | 205 | `SR-REQ-0019`–`SR-REQ-0020`<br>`SR-REQ-0023`<br>`SR-REQ-0025`–`SR-REQ-0026`<br>`SR-REQ-0030`–`SR-REQ-0031`<br>`SR-REQ-0033`–`SR-REQ-0037`<br>`SR-REQ-0040`<br>`SR-REQ-0043`–`SR-REQ-0048`<br>`SR-REQ-0061`–`SR-REQ-0062`<br>`SR-REQ-0064`<br>`SR-REQ-0071`<br>`SR-REQ-0081`<br>`SR-REQ-0092`<br>`SR-REQ-0102`–`SR-REQ-0103`<br>`SR-REQ-0105`<br>`SR-REQ-0107`<br>`SR-REQ-0111`–`SR-REQ-0112`<br>`SR-REQ-0122`<br>`SR-REQ-0129`<br>`SR-REQ-0132`–`SR-REQ-0135`<br>`SR-REQ-0138`<br>`SR-REQ-0143`<br>`SR-REQ-0145`–`SR-REQ-0148`<br>`SR-REQ-0150`–`SR-REQ-0153`<br>`SR-REQ-0156`–`SR-REQ-0157`<br>`SR-REQ-0163`<br>`SR-REQ-0171`–`SR-REQ-0172`<br>`SR-REQ-0178`<br>`SR-REQ-0184`<br>`SR-REQ-0196`–`SR-REQ-0199`<br>`SR-REQ-0204`<br>`SR-REQ-0206`–`SR-REQ-0208`<br>`SR-REQ-0216`<br>`SR-REQ-0218`<br>`SR-REQ-0220`<br>`SR-REQ-0234`<br>`SR-REQ-0241`<br>`SR-REQ-0245`–`SR-REQ-0246`<br>`SR-REQ-0250`<br>`SR-REQ-0253`<br>`SR-REQ-0257`–`SR-REQ-0260`<br>`SR-REQ-0262`<br>`SR-REQ-0265`–`SR-REQ-0266`<br>`SR-REQ-0268`–`SR-REQ-0269`<br>`SR-REQ-0271`<br>`SR-REQ-0273`–`SR-REQ-0275`<br>`SR-REQ-0279`<br>`SR-REQ-0285`<br>`SR-REQ-0317`–`SR-REQ-0319`<br>`SR-REQ-0322`<br>`SR-REQ-0328`<br>`SR-REQ-0330`–`SR-REQ-0331`<br>`SR-REQ-0339`<br>`SR-REQ-0342`<br>`SR-REQ-0345`<br>`SR-REQ-0357`<br>`SR-REQ-0364`<br>`SR-REQ-0370`<br>`SR-REQ-0375`<br>`SR-REQ-0383`<br>`SR-REQ-0385`<br>`SR-REQ-0387`–`SR-REQ-0389`<br>`SR-REQ-0401`<br>`SR-REQ-0406`–`SR-REQ-0407`<br>`SR-REQ-0412`–`SR-REQ-0413`<br>`SR-REQ-0416`<br>`SR-REQ-0418`<br>`SR-REQ-0425`<br>`SR-REQ-0429`–`SR-REQ-0439`<br>`SR-REQ-0441`–`SR-REQ-0442`<br>`SR-REQ-0445`<br>`SR-REQ-0447`–`SR-REQ-0448`<br>`SR-REQ-0452`–`SR-REQ-0462`<br>`SR-REQ-0464`<br>`SR-REQ-0466`<br>`SR-REQ-0478`<br>`SR-REQ-0482`–`SR-REQ-0483`<br>`SR-REQ-0485`–`SR-REQ-0486`<br>`SR-REQ-0491`–`SR-REQ-0494`<br>`SR-REQ-0496`<br>`SR-REQ-0499`–`SR-REQ-0501`<br>`SR-REQ-0504`–`SR-REQ-0505`<br>`SR-REQ-0510`–`SR-REQ-0514`<br>`SR-REQ-0536`<br>`SR-REQ-0607`<br>`SR-REQ-0609`<br>`SR-REQ-0616`<br>`SR-REQ-0618`<br>`SR-REQ-0620`–`SR-REQ-0621`<br>`SR-REQ-0629`<br>`SR-REQ-0638`–`SR-REQ-0644`<br>`SR-REQ-0648`<br>`SR-REQ-0650`<br>`SR-REQ-0655`<br>`SR-REQ-0657`<br>`SR-REQ-0660`<br>`SR-REQ-0671`<br>`SR-REQ-0674`<br>`SR-REQ-0678`–`SR-REQ-0679`<br>`SR-REQ-0683`<br>`SR-REQ-0685`–`SR-REQ-0688`<br>`SR-REQ-0690`<br>`SR-REQ-0697`<br>`SR-REQ-0724`–`SR-REQ-0725`<br>`SR-REQ-0733`–`SR-REQ-0734`<br>`SR-REQ-0741`<br>`SR-REQ-0754`–`SR-REQ-0755`<br>`SR-REQ-0783`–`SR-REQ-0787` |
+| SR-NEED-0010 | 28 | `SR-REQ-0058`<br>`SR-REQ-0109`<br>`SR-REQ-0118`–`SR-REQ-0119`<br>`SR-REQ-0121`–`SR-REQ-0125`<br>`SR-REQ-0128`<br>`SR-REQ-0211`<br>`SR-REQ-0395`<br>`SR-REQ-0408`<br>`SR-REQ-0546`<br>`SR-REQ-0743`<br>`SR-REQ-0746`<br>`SR-REQ-0748`–`SR-REQ-0751`<br>`SR-REQ-0757`–`SR-REQ-0760`<br>`SR-REQ-0773`–`SR-REQ-0774`<br>`SR-REQ-0780`<br>`SR-REQ-0789` |
 | SR-NEED-0011 | 116 | `SR-REQ-0002`–`SR-REQ-0003`<br>`SR-REQ-0023`<br>`SR-REQ-0100`<br>`SR-REQ-0117`<br>`SR-REQ-0128`<br>`SR-REQ-0135`<br>`SR-REQ-0165`–`SR-REQ-0168`<br>`SR-REQ-0170`<br>`SR-REQ-0175`<br>`SR-REQ-0188`–`SR-REQ-0191`<br>`SR-REQ-0195`–`SR-REQ-0206`<br>`SR-REQ-0221`<br>`SR-REQ-0224`–`SR-REQ-0225`<br>`SR-REQ-0229`<br>`SR-REQ-0236`<br>`SR-REQ-0239`<br>`SR-REQ-0245`<br>`SR-REQ-0249`<br>`SR-REQ-0252`–`SR-REQ-0258`<br>`SR-REQ-0260`–`SR-REQ-0261`<br>`SR-REQ-0266`–`SR-REQ-0267`<br>`SR-REQ-0274`<br>`SR-REQ-0287`<br>`SR-REQ-0289`<br>`SR-REQ-0295`–`SR-REQ-0296`<br>`SR-REQ-0304`<br>`SR-REQ-0306`<br>`SR-REQ-0315`<br>`SR-REQ-0323`–`SR-REQ-0324`<br>`SR-REQ-0329`<br>`SR-REQ-0341`<br>`SR-REQ-0344`<br>`SR-REQ-0348`<br>`SR-REQ-0350`<br>`SR-REQ-0355`<br>`SR-REQ-0359`–`SR-REQ-0360`<br>`SR-REQ-0363`<br>`SR-REQ-0373`<br>`SR-REQ-0390`<br>`SR-REQ-0393`–`SR-REQ-0394`<br>`SR-REQ-0458`<br>`SR-REQ-0460`–`SR-REQ-0461`<br>`SR-REQ-0465`–`SR-REQ-0466`<br>`SR-REQ-0469`<br>`SR-REQ-0479`–`SR-REQ-0480`<br>`SR-REQ-0484`<br>`SR-REQ-0506`–`SR-REQ-0507`<br>`SR-REQ-0511`<br>`SR-REQ-0513`<br>`SR-REQ-0518`<br>`SR-REQ-0523`<br>`SR-REQ-0527`–`SR-REQ-0528`<br>`SR-REQ-0532`<br>`SR-REQ-0535`<br>`SR-REQ-0538`<br>`SR-REQ-0540`<br>`SR-REQ-0544`–`SR-REQ-0545`<br>`SR-REQ-0609`<br>`SR-REQ-0615`<br>`SR-REQ-0619`<br>`SR-REQ-0621`<br>`SR-REQ-0625`–`SR-REQ-0626`<br>`SR-REQ-0634`<br>`SR-REQ-0645`<br>`SR-REQ-0647`<br>`SR-REQ-0677`<br>`SR-REQ-0680`<br>`SR-REQ-0690`<br>`SR-REQ-0692`<br>`SR-REQ-0695`<br>`SR-REQ-0702`–`SR-REQ-0704`<br>`SR-REQ-0717`<br>`SR-REQ-0735`–`SR-REQ-0736`<br>`SR-REQ-0739`<br>`SR-REQ-0741` |
-| SR-NEED-0012 | 145 | `SR-REQ-0004`<br>`SR-REQ-0007`–`SR-REQ-0008`<br>`SR-REQ-0011`<br>`SR-REQ-0013`–`SR-REQ-0015`<br>`SR-REQ-0017`–`SR-REQ-0019`<br>`SR-REQ-0027`–`SR-REQ-0028`<br>`SR-REQ-0038`–`SR-REQ-0039`<br>`SR-REQ-0053`<br>`SR-REQ-0057`<br>`SR-REQ-0069`<br>`SR-REQ-0079`–`SR-REQ-0080`<br>`SR-REQ-0098`<br>`SR-REQ-0110`<br>`SR-REQ-0146`<br>`SR-REQ-0159`–`SR-REQ-0160`<br>`SR-REQ-0194`<br>`SR-REQ-0201`–`SR-REQ-0202`<br>`SR-REQ-0209`<br>`SR-REQ-0212`<br>`SR-REQ-0214`–`SR-REQ-0215`<br>`SR-REQ-0223`–`SR-REQ-0224`<br>`SR-REQ-0226`<br>`SR-REQ-0229`–`SR-REQ-0230`<br>`SR-REQ-0243`–`SR-REQ-0244`<br>`SR-REQ-0249`<br>`SR-REQ-0263`–`SR-REQ-0265`<br>`SR-REQ-0268`<br>`SR-REQ-0272`<br>`SR-REQ-0282`<br>`SR-REQ-0286`–`SR-REQ-0296`<br>`SR-REQ-0298`<br>`SR-REQ-0301`<br>`SR-REQ-0306`<br>`SR-REQ-0316`<br>`SR-REQ-0335`<br>`SR-REQ-0337`<br>`SR-REQ-0343`<br>`SR-REQ-0348`–`SR-REQ-0350`<br>`SR-REQ-0360`<br>`SR-REQ-0367`<br>`SR-REQ-0376`–`SR-REQ-0379`<br>`SR-REQ-0381`<br>`SR-REQ-0391`–`SR-REQ-0394`<br>`SR-REQ-0396`<br>`SR-REQ-0404`<br>`SR-REQ-0419`–`SR-REQ-0425`<br>`SR-REQ-0474`<br>`SR-REQ-0476`–`SR-REQ-0477`<br>`SR-REQ-0496`–`SR-REQ-0498`<br>`SR-REQ-0502`–`SR-REQ-0503`<br>`SR-REQ-0508`<br>`SR-REQ-0515`<br>`SR-REQ-0517`–`SR-REQ-0523`<br>`SR-REQ-0528`<br>`SR-REQ-0538`<br>`SR-REQ-0542`<br>`SR-REQ-0544`–`SR-REQ-0545`<br>`SR-REQ-0547`<br>`SR-REQ-0570`<br>`SR-REQ-0581`–`SR-REQ-0582`<br>`SR-REQ-0587`–`SR-REQ-0591`<br>`SR-REQ-0596`–`SR-REQ-0597`<br>`SR-REQ-0605`<br>`SR-REQ-0615`<br>`SR-REQ-0632`<br>`SR-REQ-0640`–`SR-REQ-0641`<br>`SR-REQ-0658`–`SR-REQ-0659`<br>`SR-REQ-0661`<br>`SR-REQ-0667`<br>`SR-REQ-0669`–`SR-REQ-0670`<br>`SR-REQ-0675`–`SR-REQ-0676`<br>`SR-REQ-0684`<br>`SR-REQ-0696`<br>`SR-REQ-0699`–`SR-REQ-0701`<br>`SR-REQ-0722`<br>`SR-REQ-0727`–`SR-REQ-0732`<br>`SR-REQ-0742` |
-| SR-NEED-0013 | 99 | `SR-REQ-0159`–`SR-REQ-0160`<br>`SR-REQ-0175`<br>`SR-REQ-0179`–`SR-REQ-0180`<br>`SR-REQ-0189`<br>`SR-REQ-0204`–`SR-REQ-0206`<br>`SR-REQ-0209`<br>`SR-REQ-0217`–`SR-REQ-0218`<br>`SR-REQ-0221`<br>`SR-REQ-0231`–`SR-REQ-0233`<br>`SR-REQ-0235`–`SR-REQ-0239`<br>`SR-REQ-0241`–`SR-REQ-0242`<br>`SR-REQ-0252`–`SR-REQ-0262`<br>`SR-REQ-0308`<br>`SR-REQ-0333`<br>`SR-REQ-0341`<br>`SR-REQ-0382`–`SR-REQ-0385`<br>`SR-REQ-0435`–`SR-REQ-0443`<br>`SR-REQ-0458`–`SR-REQ-0459`<br>`SR-REQ-0461`–`SR-REQ-0464`<br>`SR-REQ-0471`<br>`SR-REQ-0478`<br>`SR-REQ-0480`<br>`SR-REQ-0487`<br>`SR-REQ-0489`–`SR-REQ-0490`<br>`SR-REQ-0502`–`SR-REQ-0503`<br>`SR-REQ-0505`–`SR-REQ-0507`<br>`SR-REQ-0511`<br>`SR-REQ-0535`<br>`SR-REQ-0543`<br>`SR-REQ-0549`–`SR-REQ-0551`<br>`SR-REQ-0553`–`SR-REQ-0559`<br>`SR-REQ-0561`–`SR-REQ-0564`<br>`SR-REQ-0568`–`SR-REQ-0569`<br>`SR-REQ-0572`<br>`SR-REQ-0599`<br>`SR-REQ-0607`<br>`SR-REQ-0611`<br>`SR-REQ-0616`–`SR-REQ-0618`<br>`SR-REQ-0620`–`SR-REQ-0621`<br>`SR-REQ-0637`<br>`SR-REQ-0646`<br>`SR-REQ-0649`<br>`SR-REQ-0652` |
-| SR-NEED-0014 | 87 | `SR-REQ-0011`<br>`SR-REQ-0013`<br>`SR-REQ-0030`<br>`SR-REQ-0040`<br>`SR-REQ-0090`<br>`SR-REQ-0114`<br>`SR-REQ-0143`<br>`SR-REQ-0146`<br>`SR-REQ-0151`<br>`SR-REQ-0247`<br>`SR-REQ-0263`–`SR-REQ-0274`<br>`SR-REQ-0286`<br>`SR-REQ-0298`<br>`SR-REQ-0313`–`SR-REQ-0332`<br>`SR-REQ-0334`<br>`SR-REQ-0336`<br>`SR-REQ-0356`<br>`SR-REQ-0362`<br>`SR-REQ-0386`–`SR-REQ-0391`<br>`SR-REQ-0405`<br>`SR-REQ-0407`–`SR-REQ-0408`<br>`SR-REQ-0413`<br>`SR-REQ-0416`<br>`SR-REQ-0453`–`SR-REQ-0457`<br>`SR-REQ-0481`–`SR-REQ-0486`<br>`SR-REQ-0488`<br>`SR-REQ-0512`–`SR-REQ-0513`<br>`SR-REQ-0517`<br>`SR-REQ-0532`<br>`SR-REQ-0541`<br>`SR-REQ-0628`<br>`SR-REQ-0639`–`SR-REQ-0642`<br>`SR-REQ-0660`<br>`SR-REQ-0691`<br>`SR-REQ-0723`–`SR-REQ-0726` |
-| SR-NEED-0015 | 76 | `SR-REQ-0038`<br>`SR-REQ-0053`<br>`SR-REQ-0101`<br>`SR-REQ-0115`<br>`SR-REQ-0130`<br>`SR-REQ-0136`–`SR-REQ-0137`<br>`SR-REQ-0299`–`SR-REQ-0313`<br>`SR-REQ-0320`–`SR-REQ-0321`<br>`SR-REQ-0349`–`SR-REQ-0360`<br>`SR-REQ-0395`–`SR-REQ-0398`<br>`SR-REQ-0400`–`SR-REQ-0402`<br>`SR-REQ-0404`<br>`SR-REQ-0409`<br>`SR-REQ-0411`<br>`SR-REQ-0414`<br>`SR-REQ-0417`<br>`SR-REQ-0451`<br>`SR-REQ-0467`–`SR-REQ-0472`<br>`SR-REQ-0479`<br>`SR-REQ-0482`<br>`SR-REQ-0524`–`SR-REQ-0531`<br>`SR-REQ-0538`–`SR-REQ-0540`<br>`SR-REQ-0546`–`SR-REQ-0548`<br>`SR-REQ-0623`<br>`SR-REQ-0654`–`SR-REQ-0655`<br>`SR-REQ-0664`<br>`SR-REQ-0672` |
-| SR-NEED-0016 | 72 | `SR-REQ-0026`<br>`SR-REQ-0038`<br>`SR-REQ-0052`<br>`SR-REQ-0057`<br>`SR-REQ-0132`–`SR-REQ-0133`<br>`SR-REQ-0216`<br>`SR-REQ-0244`–`SR-REQ-0251`<br>`SR-REQ-0275`–`SR-REQ-0280`<br>`SR-REQ-0282`–`SR-REQ-0283`<br>`SR-REQ-0285`<br>`SR-REQ-0333`–`SR-REQ-0340`<br>`SR-REQ-0342`–`SR-REQ-0346`<br>`SR-REQ-0348`<br>`SR-REQ-0361`–`SR-REQ-0375`<br>`SR-REQ-0399`<br>`SR-REQ-0403`<br>`SR-REQ-0418`<br>`SR-REQ-0434`<br>`SR-REQ-0495`<br>`SR-REQ-0501`<br>`SR-REQ-0504`<br>`SR-REQ-0508`–`SR-REQ-0510`<br>`SR-REQ-0514`–`SR-REQ-0516`<br>`SR-REQ-0533`–`SR-REQ-0534`<br>`SR-REQ-0536`<br>`SR-REQ-0541`–`SR-REQ-0542`<br>`SR-REQ-0638` |
-| SR-NEED-0017 | 33 | `SR-REQ-0549`–`SR-REQ-0572`<br>`SR-REQ-0608`<br>`SR-REQ-0610`<br>`SR-REQ-0619`<br>`SR-REQ-0628`–`SR-REQ-0630`<br>`SR-REQ-0635`<br>`SR-REQ-0715`–`SR-REQ-0716` |
-| SR-NEED-0018 | 46 | `SR-REQ-0573`–`SR-REQ-0602`<br>`SR-REQ-0604`–`SR-REQ-0606`<br>`SR-REQ-0612`–`SR-REQ-0614`<br>`SR-REQ-0631`<br>`SR-REQ-0634`–`SR-REQ-0635`<br>`SR-REQ-0694`<br>`SR-REQ-0705`<br>`SR-REQ-0715`<br>`SR-REQ-0717`–`SR-REQ-0719`<br>`SR-REQ-0721` |
-| SR-NEED-0019 | 34 | `SR-REQ-0601`–`SR-REQ-0615`<br>`SR-REQ-0617`–`SR-REQ-0620`<br>`SR-REQ-0622`–`SR-REQ-0627`<br>`SR-REQ-0629`–`SR-REQ-0631`<br>`SR-REQ-0633`–`SR-REQ-0634`<br>`SR-REQ-0636`<br>`SR-REQ-0715`–`SR-REQ-0716`<br>`SR-REQ-0719` |
-| SR-NEED-0020 | 38 | `SR-REQ-0651`–`SR-REQ-0674`<br>`SR-REQ-0681`<br>`SR-REQ-0698`<br>`SR-REQ-0706`–`SR-REQ-0713`<br>`SR-REQ-0720`<br>`SR-REQ-0723`–`SR-REQ-0725` |
-| SR-NEED-0021 | 50 | `SR-REQ-0673`<br>`SR-REQ-0675`–`SR-REQ-0722`<br>`SR-REQ-0726` |
+| SR-NEED-0012 | 154 | `SR-REQ-0004`<br>`SR-REQ-0007`–`SR-REQ-0008`<br>`SR-REQ-0011`<br>`SR-REQ-0013`–`SR-REQ-0015`<br>`SR-REQ-0017`–`SR-REQ-0019`<br>`SR-REQ-0027`–`SR-REQ-0028`<br>`SR-REQ-0038`–`SR-REQ-0039`<br>`SR-REQ-0053`<br>`SR-REQ-0057`<br>`SR-REQ-0069`<br>`SR-REQ-0079`–`SR-REQ-0080`<br>`SR-REQ-0098`<br>`SR-REQ-0110`<br>`SR-REQ-0146`<br>`SR-REQ-0159`–`SR-REQ-0160`<br>`SR-REQ-0194`<br>`SR-REQ-0201`–`SR-REQ-0202`<br>`SR-REQ-0209`<br>`SR-REQ-0212`<br>`SR-REQ-0214`–`SR-REQ-0215`<br>`SR-REQ-0223`–`SR-REQ-0224`<br>`SR-REQ-0226`<br>`SR-REQ-0229`–`SR-REQ-0230`<br>`SR-REQ-0243`–`SR-REQ-0244`<br>`SR-REQ-0249`<br>`SR-REQ-0263`–`SR-REQ-0265`<br>`SR-REQ-0268`<br>`SR-REQ-0272`<br>`SR-REQ-0282`<br>`SR-REQ-0286`–`SR-REQ-0296`<br>`SR-REQ-0298`<br>`SR-REQ-0301`<br>`SR-REQ-0306`<br>`SR-REQ-0316`<br>`SR-REQ-0335`<br>`SR-REQ-0337`<br>`SR-REQ-0343`<br>`SR-REQ-0348`–`SR-REQ-0350`<br>`SR-REQ-0360`<br>`SR-REQ-0367`<br>`SR-REQ-0376`–`SR-REQ-0379`<br>`SR-REQ-0381`<br>`SR-REQ-0391`–`SR-REQ-0394`<br>`SR-REQ-0396`<br>`SR-REQ-0404`<br>`SR-REQ-0419`–`SR-REQ-0425`<br>`SR-REQ-0474`<br>`SR-REQ-0476`–`SR-REQ-0477`<br>`SR-REQ-0496`–`SR-REQ-0498`<br>`SR-REQ-0502`–`SR-REQ-0503`<br>`SR-REQ-0508`<br>`SR-REQ-0515`<br>`SR-REQ-0517`–`SR-REQ-0523`<br>`SR-REQ-0528`<br>`SR-REQ-0538`<br>`SR-REQ-0542`<br>`SR-REQ-0544`–`SR-REQ-0545`<br>`SR-REQ-0547`<br>`SR-REQ-0570`<br>`SR-REQ-0581`–`SR-REQ-0582`<br>`SR-REQ-0587`–`SR-REQ-0591`<br>`SR-REQ-0596`–`SR-REQ-0597`<br>`SR-REQ-0605`<br>`SR-REQ-0615`<br>`SR-REQ-0632`<br>`SR-REQ-0640`–`SR-REQ-0641`<br>`SR-REQ-0658`–`SR-REQ-0659`<br>`SR-REQ-0661`<br>`SR-REQ-0667`<br>`SR-REQ-0669`–`SR-REQ-0670`<br>`SR-REQ-0675`–`SR-REQ-0676`<br>`SR-REQ-0684`<br>`SR-REQ-0696`<br>`SR-REQ-0699`–`SR-REQ-0701`<br>`SR-REQ-0722`<br>`SR-REQ-0727`–`SR-REQ-0732`<br>`SR-REQ-0742`–`SR-REQ-0747`<br>`SR-REQ-0763`<br>`SR-REQ-0775`<br>`SR-REQ-0780`<br>`SR-REQ-0788` |
+| SR-NEED-0013 | 109 | `SR-REQ-0159`–`SR-REQ-0160`<br>`SR-REQ-0175`<br>`SR-REQ-0179`–`SR-REQ-0180`<br>`SR-REQ-0189`<br>`SR-REQ-0204`–`SR-REQ-0206`<br>`SR-REQ-0209`<br>`SR-REQ-0217`–`SR-REQ-0218`<br>`SR-REQ-0221`<br>`SR-REQ-0231`–`SR-REQ-0233`<br>`SR-REQ-0235`–`SR-REQ-0239`<br>`SR-REQ-0241`–`SR-REQ-0242`<br>`SR-REQ-0252`–`SR-REQ-0262`<br>`SR-REQ-0308`<br>`SR-REQ-0333`<br>`SR-REQ-0341`<br>`SR-REQ-0382`–`SR-REQ-0385`<br>`SR-REQ-0435`–`SR-REQ-0443`<br>`SR-REQ-0458`–`SR-REQ-0459`<br>`SR-REQ-0461`–`SR-REQ-0464`<br>`SR-REQ-0471`<br>`SR-REQ-0478`<br>`SR-REQ-0480`<br>`SR-REQ-0487`<br>`SR-REQ-0489`–`SR-REQ-0490`<br>`SR-REQ-0502`–`SR-REQ-0503`<br>`SR-REQ-0505`–`SR-REQ-0507`<br>`SR-REQ-0511`<br>`SR-REQ-0535`<br>`SR-REQ-0543`<br>`SR-REQ-0549`–`SR-REQ-0551`<br>`SR-REQ-0553`–`SR-REQ-0559`<br>`SR-REQ-0561`–`SR-REQ-0564`<br>`SR-REQ-0568`–`SR-REQ-0569`<br>`SR-REQ-0572`<br>`SR-REQ-0599`<br>`SR-REQ-0607`<br>`SR-REQ-0611`<br>`SR-REQ-0616`–`SR-REQ-0618`<br>`SR-REQ-0620`–`SR-REQ-0621`<br>`SR-REQ-0637`<br>`SR-REQ-0646`<br>`SR-REQ-0649`<br>`SR-REQ-0652`<br>`SR-REQ-0761`–`SR-REQ-0762`<br>`SR-REQ-0764`<br>`SR-REQ-0769`<br>`SR-REQ-0783`–`SR-REQ-0787`<br>`SR-REQ-0790` |
+| SR-NEED-0014 | 89 | `SR-REQ-0011`<br>`SR-REQ-0013`<br>`SR-REQ-0030`<br>`SR-REQ-0040`<br>`SR-REQ-0090`<br>`SR-REQ-0114`<br>`SR-REQ-0143`<br>`SR-REQ-0146`<br>`SR-REQ-0151`<br>`SR-REQ-0247`<br>`SR-REQ-0263`–`SR-REQ-0274`<br>`SR-REQ-0286`<br>`SR-REQ-0298`<br>`SR-REQ-0313`–`SR-REQ-0332`<br>`SR-REQ-0334`<br>`SR-REQ-0336`<br>`SR-REQ-0356`<br>`SR-REQ-0362`<br>`SR-REQ-0386`–`SR-REQ-0391`<br>`SR-REQ-0405`<br>`SR-REQ-0407`–`SR-REQ-0408`<br>`SR-REQ-0413`<br>`SR-REQ-0416`<br>`SR-REQ-0453`–`SR-REQ-0457`<br>`SR-REQ-0481`–`SR-REQ-0486`<br>`SR-REQ-0488`<br>`SR-REQ-0512`–`SR-REQ-0513`<br>`SR-REQ-0517`<br>`SR-REQ-0532`<br>`SR-REQ-0541`<br>`SR-REQ-0628`<br>`SR-REQ-0639`–`SR-REQ-0642`<br>`SR-REQ-0660`<br>`SR-REQ-0691`<br>`SR-REQ-0723`–`SR-REQ-0726`<br>`SR-REQ-0775`–`SR-REQ-0776` |
+| SR-NEED-0015 | 78 | `SR-REQ-0038`<br>`SR-REQ-0053`<br>`SR-REQ-0101`<br>`SR-REQ-0115`<br>`SR-REQ-0130`<br>`SR-REQ-0136`–`SR-REQ-0137`<br>`SR-REQ-0299`–`SR-REQ-0313`<br>`SR-REQ-0320`–`SR-REQ-0321`<br>`SR-REQ-0349`–`SR-REQ-0360`<br>`SR-REQ-0395`–`SR-REQ-0398`<br>`SR-REQ-0400`–`SR-REQ-0402`<br>`SR-REQ-0404`<br>`SR-REQ-0409`<br>`SR-REQ-0411`<br>`SR-REQ-0414`<br>`SR-REQ-0417`<br>`SR-REQ-0451`<br>`SR-REQ-0467`–`SR-REQ-0472`<br>`SR-REQ-0479`<br>`SR-REQ-0482`<br>`SR-REQ-0524`–`SR-REQ-0531`<br>`SR-REQ-0538`–`SR-REQ-0540`<br>`SR-REQ-0546`–`SR-REQ-0548`<br>`SR-REQ-0623`<br>`SR-REQ-0654`–`SR-REQ-0655`<br>`SR-REQ-0664`<br>`SR-REQ-0672`<br>`SR-REQ-0772`<br>`SR-REQ-0777` |
+| SR-NEED-0016 | 77 | `SR-REQ-0026`<br>`SR-REQ-0038`<br>`SR-REQ-0052`<br>`SR-REQ-0057`<br>`SR-REQ-0132`–`SR-REQ-0133`<br>`SR-REQ-0216`<br>`SR-REQ-0244`–`SR-REQ-0251`<br>`SR-REQ-0275`–`SR-REQ-0280`<br>`SR-REQ-0282`–`SR-REQ-0283`<br>`SR-REQ-0285`<br>`SR-REQ-0333`–`SR-REQ-0340`<br>`SR-REQ-0342`–`SR-REQ-0346`<br>`SR-REQ-0348`<br>`SR-REQ-0361`–`SR-REQ-0375`<br>`SR-REQ-0399`<br>`SR-REQ-0403`<br>`SR-REQ-0418`<br>`SR-REQ-0434`<br>`SR-REQ-0495`<br>`SR-REQ-0501`<br>`SR-REQ-0504`<br>`SR-REQ-0508`–`SR-REQ-0510`<br>`SR-REQ-0514`–`SR-REQ-0516`<br>`SR-REQ-0533`–`SR-REQ-0534`<br>`SR-REQ-0536`<br>`SR-REQ-0541`–`SR-REQ-0542`<br>`SR-REQ-0638`<br>`SR-REQ-0765`–`SR-REQ-0769` |
+| SR-NEED-0017 | 35 | `SR-REQ-0549`–`SR-REQ-0572`<br>`SR-REQ-0608`<br>`SR-REQ-0610`<br>`SR-REQ-0619`<br>`SR-REQ-0628`–`SR-REQ-0630`<br>`SR-REQ-0635`<br>`SR-REQ-0715`–`SR-REQ-0716`<br>`SR-REQ-0776`<br>`SR-REQ-0779` |
+| SR-NEED-0018 | 47 | `SR-REQ-0573`–`SR-REQ-0602`<br>`SR-REQ-0604`–`SR-REQ-0606`<br>`SR-REQ-0612`–`SR-REQ-0614`<br>`SR-REQ-0631`<br>`SR-REQ-0634`–`SR-REQ-0635`<br>`SR-REQ-0694`<br>`SR-REQ-0705`<br>`SR-REQ-0715`<br>`SR-REQ-0717`–`SR-REQ-0719`<br>`SR-REQ-0721`<br>`SR-REQ-0779` |
+| SR-NEED-0019 | 36 | `SR-REQ-0601`–`SR-REQ-0615`<br>`SR-REQ-0617`–`SR-REQ-0620`<br>`SR-REQ-0622`–`SR-REQ-0627`<br>`SR-REQ-0629`–`SR-REQ-0631`<br>`SR-REQ-0633`–`SR-REQ-0634`<br>`SR-REQ-0636`<br>`SR-REQ-0715`–`SR-REQ-0716`<br>`SR-REQ-0719`<br>`SR-REQ-0756`<br>`SR-REQ-0779` |
+| SR-NEED-0020 | 40 | `SR-REQ-0651`–`SR-REQ-0674`<br>`SR-REQ-0681`<br>`SR-REQ-0698`<br>`SR-REQ-0706`–`SR-REQ-0713`<br>`SR-REQ-0720`<br>`SR-REQ-0723`–`SR-REQ-0725`<br>`SR-REQ-0770`–`SR-REQ-0771` |
+| SR-NEED-0021 | 52 | `SR-REQ-0673`<br>`SR-REQ-0675`–`SR-REQ-0722`<br>`SR-REQ-0726`<br>`SR-REQ-0770`–`SR-REQ-0771` |
+
 
 ### 15.3 Anforderungsabdeckung durch Verifikation
 
@@ -7607,6 +7770,17 @@ PatchHarbor-Testlauf belegt die Erweiterung nicht durch bloße Hashaktualisierun
 | SR-VER-0049 | 4 | `SR-REQ-0723`–`SR-REQ-0726` |
 | SR-VER-0050 | 4 | `SR-REQ-0727`–`SR-REQ-0730` |
 | SR-VER-0051 | 12 | `SR-REQ-0731`–`SR-REQ-0742` |
+| SR-VER-0052 | 9 | `SR-REQ-0743`–`SR-REQ-0749`<br>`SR-REQ-0763`<br>`SR-REQ-0790` |
+| SR-VER-0053 | 4 | `SR-REQ-0750`–`SR-REQ-0753` |
+| SR-VER-0054 | 7 | `SR-REQ-0754`–`SR-REQ-0760` |
+| SR-VER-0055 | 3 | `SR-REQ-0761`–`SR-REQ-0762`<br>`SR-REQ-0764` |
+| SR-VER-0056 | 5 | `SR-REQ-0765`–`SR-REQ-0769` |
+| SR-VER-0057 | 2 | `SR-REQ-0770`–`SR-REQ-0771` |
+| SR-VER-0058 | 9 | `SR-REQ-0772`–`SR-REQ-0780` |
+| SR-VER-0059 | 2 | `SR-REQ-0781`–`SR-REQ-0782` |
+| SR-VER-0060 | 5 | `SR-REQ-0783`–`SR-REQ-0787` |
+| SR-VER-0061 | 2 | `SR-REQ-0788`–`SR-REQ-0789` |
+
 
 ### 15.4 Anforderungskatalog nach Bereich
 
@@ -7658,6 +7832,7 @@ PatchHarbor-Testlauf belegt die Erweiterung nicht durch bloße Hashaktualisierun
 | 12.44 Implementierter py3langid-Adapter und vollständige Ausführung | 25 | `SR-REQ-0698`–`SR-REQ-0722` |
 | 12.45 Migration, Austausch und geschlossene SRX-Präzision | 8 | `SR-REQ-0723`–`SR-REQ-0730` |
 | 12.46 Portabler Projekt-Rundweg über PatchHarbor | 12 | `SR-REQ-0731`–`SR-REQ-0742` |
+| 12.47 Implementierungspläne und übergreifende Bedienverträge | 48 | `SR-REQ-0743`–`SR-REQ-0790` |
 
 ### 15.5 Qualitätskennzahlen dieser Spezifikation
 
@@ -7665,13 +7840,13 @@ PatchHarbor-Testlauf belegt die Erweiterung nicht durch bloße Hashaktualisierun
 |---|---:|
 | Produktziele | 10 |
 | Stakeholder-Bedarfe | 21 |
-| Nutzungsszenarien | 46 |
+| Nutzungsszenarien | 54 |
 | Architekturentscheidungen | 53 |
-| Normative Produktanforderungen | 742 |
-| Primäre Requirement-Solltestfälle | 742 |
-| Verifikationsverträge | 51 |
-| Diagnosecodes | 107 |
-| Kanonische Artefakttypen | 28 |
+| Normative Produktanforderungen | 790 |
+| Primäre Requirement-Solltestfälle | 790 |
+| Verifikationsverträge | 61 |
+| Diagnosecodes | 117 |
+| Kanonische Artefakttypen | 30 |
 | Requirements ohne Need / Verification / Solltestfall | 0 / 0 / 0 |
 | Doppelte Requirement-IDs | 0 |
 | Formale Zuordnung Requirement → Need / Verification / Solltestfall | jeweils 100 % |
@@ -7730,6 +7905,14 @@ Die folgende Matrix ist der exakte Mindestumfang jedes End-to-End-Szenarios. Ein
 | SR-SCN-0044 | `SR-TC-0700`–`SR-TC-0705` | SR-E2E-0044 |
 | SR-SCN-0045 | `SR-TC-0715`–`SR-TC-0722` | SR-E2E-0045 |
 | SR-SCN-0046 | `SR-TC-0723`–`SR-TC-0730` | SR-E2E-0046 |
+| SR-SCN-0047 | `SR-TC-0743`, `SR-TC-0744`, `SR-TC-0746`, `SR-TC-0747`, `SR-TC-0756`, `SR-TC-0757`, `SR-TC-0758`, `SR-TC-0790` | SR-E2E-0047 |
+| SR-SCN-0048 | `SR-TC-0745`, `SR-TC-0748`, `SR-TC-0749`, `SR-TC-0763`, `SR-TC-0764` | SR-E2E-0048 |
+| SR-SCN-0049 | `SR-TC-0750`, `SR-TC-0751`, `SR-TC-0752`, `SR-TC-0753`, `SR-TC-0774` | SR-E2E-0049 |
+| SR-SCN-0050 | `SR-TC-0754`, `SR-TC-0755`, `SR-TC-0760`, `SR-TC-0761`, `SR-TC-0762` | SR-E2E-0050 |
+| SR-SCN-0051 | `SR-TC-0765`, `SR-TC-0766`, `SR-TC-0767`, `SR-TC-0768`, `SR-TC-0769` | SR-E2E-0051 |
+| SR-SCN-0052 | `SR-TC-0770`, `SR-TC-0771`, `SR-TC-0773`, `SR-TC-0775`, `SR-TC-0776`, `SR-TC-0780` | SR-E2E-0052 |
+| SR-SCN-0053 | `SR-TC-0778`, `SR-TC-0781`, `SR-TC-0782`, `SR-TC-0783`, `SR-TC-0784`, `SR-TC-0785`, `SR-TC-0786`, `SR-TC-0787` | SR-E2E-0053 |
+| SR-SCN-0054 | `SR-TC-0759`, `SR-TC-0772`, `SR-TC-0777`, `SR-TC-0779`, `SR-TC-0788`, `SR-TC-0789` | SR-E2E-0054 |
 
 ### 15.7 Requirement-Testfall-Katalog
 
@@ -7743,11 +7926,13 @@ Der primäre Testfall zu `SR-REQ-NNNN` heißt `SR-TC-NNNN`. Im Implementierungsr
 - erforderliche Umgebung und Ressourcen;
 - erzeugte Evidence-Art und Bindung an Plattform-/Konfigurationshash soweit anwendbar.
 
-Ein Testfall gilt nur dann als bestanden, wenn seine aktuelle Evidence exakt Manifesthash, Requirement-ID, Spezifikationshash und Tool-Build bindet. Die 742 Zuordnungen in dieser Dokumentversion definieren Soll-Testfälle; sie sind kein Bericht über bereits ausgeführte Produkttests. Für SR-TC-0549 bis SR-TC-0650 gelten zusätzlich Kapitel 14.6–14.8 und Anhang N bis R.
+Ein Testfall gilt nur dann als bestanden, wenn seine aktuelle Evidence exakt Manifesthash, Requirement-ID, Spezifikationshash und Tool-Build bindet. Die 790 Zuordnungen in dieser Dokumentversion definieren Soll-Testfälle; sie sind kein Bericht über bereits ausgeführte Produkttests. Für SR-TC-0549 bis SR-TC-0650 gelten zusätzlich Kapitel 14.6–14.8 und Anhang N bis R.
 
 ---
 
 ## 16. Validation und Verification
+
+Planabdeckung und Checkboxfortschritt bilden nach X.6/X.7 zwei weitere getrennte Aussagen. Eine erzwungene Anwendung nach X.12 ist keine positive Validation, menschliche Entscheidung oder Verification.
 
 SpecRoad verwendet die Begriffe getrennt:
 
@@ -7763,20 +7948,22 @@ Ein `approved` Requirement kann unverifiziert sein. Ein technisch bestandener Te
 
 ## 17. Release-Abnahmekriterien
 
+Der Abschluss umfasst auch Anhang X und alle neuen Planintegrationen. Die technischen Gates gehen den tatsächlichen menschlichen Reviews möglichst voraus. Diese Produktabnahme und die ausdrückliche Benutzungsfreigabe sind keine durch Produkt-Force ersetzbaren tatsächlichen Nachweise. Historische Einzelabnahmen werden nur mit ihren originalen Bindungen geführt, nie auf den neuen Gesamtstand umgestempelt.
+
 Das Zielrelease `SpecRoad Single-Repository Workbench 0.2.0` gilt als abnahmefähig, wenn alle folgenden Bedingungen erfüllt sind:
 
-1. Alle unbedingten Anforderungen `SR-REQ-0001` bis `SR-REQ-0742` besitzen den Umsetzungsstatus `implemented` und aktuelle bestandene Evidence für ihren primären Testfall.
-2. Die Verifikationen `SR-VER-0001` bis `SR-VER-0050` bestehen; ein `waived`-Ergebnis erfüllt die Release-Abnahme nicht.
-3. Die Szenarien `SR-SCN-0001` bis `SR-SCN-0046` führen mindestens ihren exakten Umfang aus Kapitel 15.6 aus und erzeugen aktuelle `SR-E2E-*`-Evidence.
+1. Alle unbedingten Anforderungen `SR-REQ-0001` bis `SR-REQ-0790` besitzen den Umsetzungsstatus `implemented` und aktuelle bestandene Evidence für ihren primären Testfall.
+2. Die Verifikationen `SR-VER-0001` bis `SR-VER-0061` bestehen; ein `waived`-Ergebnis erfüllt die Release-Abnahme nicht.
+3. Die Szenarien `SR-SCN-0001` bis `SR-SCN-0054` führen mindestens ihren exakten Umfang aus Kapitel 15.6 aus und erzeugen aktuelle `SR-E2E-*`-Evidence.
 4. `specroad validate --strict --format json` liefert für Vollprojekt, Referenzkonfigurationen und zulässige partielle Fixtures Exit Code 0.
 5. Scope Descriptor, Closure, Relationsmatrix und Profilkomposition bestehen alle normativen Testvektoren.
 6. Zwei identische Render-, View-, Diagramm-, Export- und Bundle-Läufe erzeugen byte-identische Ausgaben.
 7. Crash-Injection an allen Schutz-/Publikations-/Abschlussgrenzen erfüllt Anhang C: unbestätigte Writes bleiben gesperrt; bestätigte Abschlüsse bleiben idempotent.
 8. Ein corrupted-Projekt blockiert normale Nutzung. Ein frischer vollständiger Git-Checkout besteht die normale Validierung; die beschädigte Kopie wird weder repariert noch entsperrt.
 9. Ein reales 0.1-Referenzprojekt kann nach Sicherungsbundle verlustfrei auf 0.2 migriert und anschließend verifiziert werden.
-10. Ein stale Proposal, ein AI-Direktschreibversuch, ein Proposal ohne menschliche Freigabe und ein fehlerhaftes Proposal werden ohne normative Änderung abgewiesen.
+10. Ohne Force werden stale, ungeprüfte, nicht freigegebene Proposals und unzulässige AI-Direktwrites normal abgewiesen. Ausdrückliches Force besteht zusätzlich X.12, ohne eine Freigabe oder erfolgreiche Prüfung zu fingieren.
 11. Proposal-Authoring und gespeicherte Change Plans erzeugen unabhängig vom Apply-Zeitpunkt dieselbe erwartete Zielwurzel.
-12. Ein Dreiwege-Merge führt unabhängige Änderungen zusammen, weist alle definierten Konflikte aus und veröffentlicht nur einen vollständig gelösten validen Plan.
+12. Ein Dreiwege-Merge führt unabhängige Spec-/Planänderungen zusammen, weist alle definierten Konflikte aus und veröffentlicht normal nur ein vollständig aufgelöstes gültiges Ziel. Erzwungene konkrete Zielentscheidungen erfüllen X.9/X.12 und bleiben als solche sichtbar.
 13. ReqIF/ReqIFZ-, CSV- und NDJSON-Roundtriptests erhalten alle Inhalte des jeweiligen Schnittmengenprofils einschließlich externer Relationsidentitäten und melden jeden Verlust.
 14. `update_if_unchanged` besteht alle fünf Fälle des Dreifachvergleichs.
 15. JUnit-, SARIF- und Generic-Evidence-Importe erzeugen korrekte Provenienz, ohne Subjects oder Planning Status zu verändern.
@@ -11583,6 +11770,8 @@ behauptet. Die eigentliche Workerbereitstellung behält ihre eigenen Planabnahme
 
 ## T.3 Request und Eingangsbindung
 
+Für explizit ausgewählte Plan-/Eintragsobjekte erweitert X.10 den vorhandenen Vertrag um typisierte Projektionen und Quelldateibindung; Defaultfelder sind title/description, keine neue Analyzer-Capability. Bestehende Requirementauswahl und deren statement-Default bleiben erhalten.
+
 Ein Request enthält `contract_version`, `request_id`, `analyzers`, `subjects`, `context`, `settings`, `snapshot_sha256` und `extensions`. `request_id` ist ausschließlich eine **Analysekennung (`AnalysisRequestId`)**. Sie korreliert Request, Reports und Fortsetzung; sie ist keine Request-ID eines normativen Schreibbefehls. Nur die Zeichenketten-Syntax `[A-Za-z0-9][A-Za-z0-9._:-]{0,127}` wird wiederverwendet. Weder die Akteurspflicht noch Operationshash, Projekttransaktion, Write-Idempotenz oder Receipts werden dadurch übernommen. Die Regeln SR-REQ-0383 bis SR-REQ-0385 gelten ausschließlich im normativen Schreibnamensraum.
 
 Die Vergabe ist abschließend festgelegt:
@@ -11646,6 +11835,8 @@ Code 3; Syntaxfehler und unbekannte Felder führen zu keiner Teilannahme.
 
 ### T.3.2 Vollständige native Subjectauswahl — ANALYZER-OBSERVATION-747
 
+Die folgenden JSON-Regeln gelten ebenso für die aus Markdown gelesenen Planprojektionen (X.4/X.10). Ihr Byteursprung wird als expliziter Kontext gebunden. Keine rohe Markdown-Datei wird ungeprüft als gewöhnliches Requirement-Statement ausgegeben.
+
 Der Projektleser verwendet die vorhandene sichere Quellbeobachtung,
 Konfigurationsanwendbarkeit und vollständige Queryselektion **vor** Pagination.
 Default sind alle Requirements der gewählten Konfiguration; eine explizite
@@ -11655,7 +11846,7 @@ wird nicht still verworfen. Verifizierte Partial-Bundles liefern nur ihre
 Manifestmitglieder, niemals Boundary-/Konfigurationskontext als zusätzliche
 Subjects und niemals eine Behauptung vollständiger Projektdeckung.
 
-Pointer werden generisch nach RFC 6901 auf gespeicherten JSON-Werten gelesen;
+Pointer werden generisch nach RFC 6901 auf gespeicherten JSON-Werten beziehungsweise den gebundenen Planprojektionen nach X.4 gelesen;
 das ist keine SRX-Auswertung und kein Dateipfad. Default ist `/statement`.
 Jede gewählte ID/Pointer-Kombination ergibt genau ein Subject, sortiert nach
 ID und Pointer. Fehlende Werte werden abgewiesen; für `language_detection`
@@ -12154,6 +12345,8 @@ Runtime-/API- und Artefaktbindung erfolgt im Implementierungsschritt.
 ---
 
 # Anhang W — Portabler SpecRoad-/PatchHarbor-Rundweg
+
+Planträger und gemischte Proposals gehören nach X.10 zum vollständigen Projektbestand dieses Rundwegs. Die eigene Produkt-Freigabesperre ist durch X.12 explizit übersteuerbar; die unabhängigen tatsächlichen PatchHarbor-API-/Transportverträge werden weder umgangen noch durch fingierte Belege ersetzt.
 
 ## W.1 Verantwortungsgrenzen und öffentliche API
 
@@ -13052,3 +13245,520 @@ Implementierungsschritten nachgewiesen sein.
 ---
 
 **Ende der SpecRoad-Produktspezifikation v0.2.72.**
+
+---
+
+# Anhang X — Implementierungspläne, einheitliche Ergebnisse und explizites Force
+
+## X.1 Geltung und fachliche Trennung
+
+IMPLEMENTATION-PLANS-791 setzt die ausdrücklichen Nutzerentscheidungen vom
+22. November 2026 um. Mehrere Implementierungspläne dürfen dieselben oder
+verschiedene Teilmengen einer Spezifikation behandeln. SpecRoad liefert
+gebundenen Kontext, Authoring, Prüfung und Austausch; Menschen oder externe
+KI entwerfen die fachliche Zerlegung. Es entstehen weder ein eingebauter
+Planungsgenerator mit LLM noch Workerzuteilung, Branchüberwachung oder ein
+Git-Statusabgleich. Kein zusätzlicher Feature-Artefakttyp ist erforderlich.
+
+Eine Implementation Stage ist ein Planungseintrag, kein Release-Milestone.
+Ein geplanter Commit ist eine Arbeitseinheit, kein bereits vorhandenes
+Git-Objekt. Ein Task bleibt ein eigenes Artefakt mit seinen Done-Kriterien.
+Planabdeckung, gespeicherte Umsetzung, Taskstatus, aktuelle Bindung,
+Startbereitschaft und Verification Result MÜSSEN getrennt ausgewiesen werden.
+Keiner dieser Werte beweist einen anderen. W/R/C ist eine deklarative
+Planvorlage; andere Phasen und Hierarchien sind gleichermaßen zulässig.
+Die Entwicklung von SpecRoad selbst behält ihre bestehenden W/R/C-Gates.
+
+## X.2 Modell, Versionen, Identität und alleinige Speicherung
+
+Die geschlossene Typmenge aus 9.1 wird um `implementation_plan` (`IPLAN`)
+und `plan_entry` (`PENTRY`) auf insgesamt 30 Typen erweitert. Neue Identitäten
+folgen unverändert `random128-v1`; kein globaler Sequenzzähler ist erforderlich.
+Jeder Plan und jeder Eintrag trägt zusätzlich `display_id`, einen nichtleeren
+NFC-String ohne Zeilenwechsel, Steuerzeichen oder eckige Klammern. Sichtbare
+Kennungen sind innerhalb des Plans eindeutig, projektweit genügt Plan-ID plus
+Kennung. Verweise verwenden ausschließlich stabile Artefakt-IDs. Ein
+qualifizierter Eintragsverweis besitzt genau `plan_id` und `entry_id`;
+beide MÜSSEN zusammenpassen. Eine Umnummerierung ändert keine Identität.
+Eine manuelle ID-Änderung ist Entfernen/Neuanlegen, keine implizite Umbenennung.
+
+Projekt- und neue Planartefaktschemas erhalten die Datenversion `0.3.0`;
+Programm-/Zielrelease und JSON-Envelopeversion sind davon unabhängig. Die
+weiterhin unterstützten 0.2-/0.1-Leser bleiben für historische Quellen erhalten.
+Der explizite additive Übergang 0.2→0.3 ergänzt die neue Typ-/Ressourcenfähigkeit;
+ein Projekt ohne Pläne bleibt gültig. Er migriert keine Original-Evidence,
+Baselines oder Legacy-Originalbytes. Neue Planressourcen sind im alten
+Projektformat nicht still als unbekannte Zusatzdateien anzunehmen.
+
+Ein vollständiger Plan liegt als `spec/implementation-plans/<PLAN-ID>.md`
+in genau einer regulären UTF-8/LF-Datei. Diese Datei speichert den Plan und
+alle seine Einträge. Eine zweite normative JSON-Datei pro Plan oder Eintrag
+DARF NICHT entstehen. Der gemeinsame Modellleser erzeugt daraus die durch
+JSON Schema beschriebenen typisierten Projektionen. Cache und Index sind
+ableitbar, werden beim Lesen anhand der aktuellen Quelldatei geprüft und
+sind keine Autorität. Teilweise nicht lesbare Dateien bleiben für Diagnose
+und ausdrücklich bezeichnete Korrekturen zugänglich; ungelesene Einträge
+werden nicht als gültiger leerer Plan ausgegeben.
+
+Gemeinsame Metadaten nach 9.3 stehen im jeweiligen Metadatenblock, mit den
+folgenden festgelegten Projektionen: `title`, `display_id` und bei Einträgen
+`implemented` werden aus der strukturierten Kopfzeile gelesen; `description` aus dem
+zugeordneten freien Text; `parent_id`, `plan_id` und `children` aus der
+Markdown-Struktur. Diese Werte dürfen im Metadatenblock nicht widersprüchlich
+ein zweites Mal vorkommen. `language` ist bei beiden neuen Typen Pflicht;
+`maturity` bleibt eine getrennte Fachdimension, nicht der Checkboxstatus.
+Plan-Metadaten enthalten außerdem `format: "plan-markdown-v1"`, `scope`,
+`prerequisites`, `coverage_claims`, `relations` und `extensions`.
+Eintragsmetadaten enthalten `entry_kind` (`stage`, `step`, `commit`),
+`work_kind` (`implementation`, `test`, `refactor`, `migration`,
+`infrastructure`, `documentation`), `required` (Default true),
+`prerequisites`, `requirement_bindings`, `relations` und `extensions`.
+Optionale Felder sind `notes` (Strings), `acceptance_criteria` (Strings),
+`expected_scope` (Listen `components`, `modules`, `symbols`, `files` mit
+expliziten IDs beziehungsweise literalen Namen/Pfaden), `phase` (String),
+`commit_refs` (explizite Code-/Commitbelege) und eine passive
+`commit_message_template`. Unbekannte Kernfelder sind Diagnosen; Erweiterungen
+stehen namespaced in `extensions`. Listenfelder ohne Einträge sind `[]`,
+optionale fehlende Werte werden nicht als leere Nachweise materialisiert.
+
+## X.3 Geschlossene Markdown-Grammatik und verlustarme Bearbeitung
+
+`plan-markdown-v1` besteht aus einer Planüberschrift, ihrem unmittelbar
+folgenden Metadaten-Fence und beliebig vielen hierarchischen Einträgen:
+
+````text
+# [PLAN-A] Anmeldung implementieren
+```specroad-plan-v1
+{... vollständige Planmetadaten nach X.2 ...}
+```
+
+## [ ] [1] Oberfläche
+```specroad-entry-v1
+{... id, entry_kind: stage und übrige Metadaten nach X.2 ...}
+```
+Freier Beschreibungstext bleibt erhalten.
+
+- [ ] [1.W] Formular implementieren
+  ```specroad-entry-v1
+  {... id, entry_kind: commit und übrige Metadaten nach X.2 ...}
+  ```
+  Beschreibung des Commitinhalts.
+````
+
+Das Beispiel erläutert die Trägerform; die Ellipsen sind keine gültigen
+Metadaten. Normativ sind folgende Regeln:
+
+1. Die erste Planüberschrift ist genau eine ATX-H1 mit `[display_id] Titel`,
+   danach ein Fence mit Info-String `specroad-plan-v1`. Zwischen Kopf und
+   Fence ist höchstens eine Leerzeile zulässig. Jeder Metadateninhalt ist
+   genau ein JSON-Objekt, UTF-8 ohne BOM, ohne doppelte Schlüssel, NaN oder
+   nachgestellte Daten. Der Fence benutzt mindestens drei Backticks und
+   schließt mit mindestens derselben Anzahl auf eigener Zeile.
+2. Ein Eintrag beginnt entweder als ATX-H2 bis H6 mit
+   `[ ] [display_id] Titel` beziehungsweise `[x] [display_id] Titel` oder
+   als Tasklisteneintrag `- [ ] [display_id] Titel` beziehungsweise `- [x] ...`.
+   Er wird nur mit unmittelbar folgendem `specroad-entry-v1`-Fence zum
+   Modellobjekt. Ohne diesen Fence bleibt die Zeile Freitext. `[X]`, `[~]`
+   oder andere Statuszeichen sind bei einem strukturierten Eintrag ungültig.
+3. ATX-Einträge hängen unter dem nächsten vorherigen strukturierten Eintrag
+   mit kleinerer Überschriftenebene, sonst direkt unter dem Plan. Übersprungene
+   Ebenen erzeugen keine leeren Knoten. Strukturierte Listen hängen unter der
+   aktuell offenen strukturierten Überschrift; verschachtelte Listen hängen
+   unter dem vorherigen Listeneintrag der unmittelbar geringeren Einrückung.
+   Listen verwenden genau zwei Leerzeichen zusätzlich je Tiefe, keine Tabs.
+   Metadaten und eigener Beschreibungstext sind gegenüber ihrem Listenmarker
+   um zwei Leerzeichen eingerückt. Ein neuer ATX-Eintrag beendet die Listen.
+   Dadurch sind über verschachtelte Listen auch Tiefen über sechs möglich.
+4. Ein Eintrag besitzt genau einen Metadatenblock. Sein eigener Beschreibungstext
+   reicht nach dem Metadatenblock bis zum nächsten strukturierten Eintrag;
+   Texte zwischen Kindern gehören dem davor geöffneten Kind. Für gesonderte
+   Elternnotizen ist das explizite `notes`-Feld zu verwenden. Der Parent-Stack
+   und die originale Reihenfolge bestimmen `children`; Metadaten erzeugen
+   keine versteckten, anders angeordneten Kinder.
+5. Innerhalb fremder Code-Fences, eingerückter Codeblöcke, Blockquotes oder
+   HTML-Kommentare werden keine Planmarkierungen erkannt. Ein Fence als
+   Codebeispiel ist keine zweite Planquelle. Unzuordenbare reservierte
+   Metadaten-Fences sind Strukturfehler, keine still verworfenen Daten.
+6. Ein Programmwrite MUSS nur betroffene Kopf-/Metadaten-/Textspannen ändern.
+   Unveränderte Kommentare, Prosa, Leerzeilen und Formatierung bleiben bytegleich.
+   No-op-Lesen/Schreiben erzeugt keine Neuformatierung. `format` normalisiert
+   Plan-Markdown nur bei ausdrücklich ausgewähltem `--plans`; die neue
+   Darstellung MUSS dieselbe semantische Projektion ergeben und darf nicht
+   zufällige Freitext-Checkboxen umschreiben.
+
+Jeder Eintrag besitzt einen nichtleeren Titel. Die Standard-Commitmessage ist
+`<display_id> <title>`; eine ausdrücklich konfigurierte passive Vorlage darf
+nur die Platzhalter `display_id`, `id`, `title` und `phase` verwenden und MUSS
+`title` enthalten. SpecRoad liefert die Message als Daten und erzeugt weder
+Git-Commit noch Änderung einer vorhandenen Commitmessage.
+
+## X.4 Hashes, Revisionen und manuelle Änderungen
+
+Eine Planquelle besitzt `file_sha256` über ihre vollständigen Bytes. Jeder
+projizierte Plan und Eintrag besitzt einen Artefakthash über seine vollständige
+JCS-Projektion. Eintragsprojektionen referenzieren Kinder nur durch IDs, nicht
+durch rekursiv eingebettete Hashes. Der Plan enthält geordnete Root-IDs, keine
+rekursiven vollständigen Kindobjekte. Das Ressourcenmanifest bindet zusätzlich
+alle zugeordneten Artefakt-IDs und Projektionhashes. Datei- und Modellwurzel
+binden somit auch Änderungen an frei erhaltenem normativem Text; keine
+mehrfache physische Datei in Scope-/Bundleinventaren und keine Hashrekursion.
+
+Für Relationsreviews der neuen Typen ist `plan-context-v1` die JCS-Projektion
+der Felder id, artifact_type, title, display_id, language, description, notes,
+entry_kind, work_kind, scope, prerequisites, requirement_bindings, coverage_claims,
+acceptance_criteria, expected_scope, relations, applicability, parent_id, plan_id
+und children, soweit beim Typ vorhanden. Fehlend bleibt fehlend; Auditmetadaten,
+Revision, maturity und Checkbox sind ausgeschlossen. Der vollständige
+Artefakthash für Analyzer bleibt davon getrennt.
+
+SpecRoad-Authoring erhöht die Revision geänderter Artefakte nach Anhang K;
+Kindänderungen erhöhen den Plan nur, wenn dessen eigene Projektion betroffen
+ist. Geänderte Dateibytes werden trotzdem neu gebunden. Manuell gespeicherte
+Metadaten, Texte, Reihenfolge und Checkboxen sind beim nächsten Lesen der
+aktuelle Bestand. Es findet keine automatische Metadatenkorrektur statt.
+Bei vorhandener Vergleichsbasis ist eine Inhaltsänderung ohne korrekte
+Revision als `SRV206` zu melden. Ohne solche Basis darf eine Revision nicht
+als historisch bewiesen gelten. Hashabweichungen machen Bindungen auch bei
+unveränderter Revisionszahl stale. Explizites Authoring kann Metadaten nach
+Prüfung korrigieren; Leser ändern niemals die Quelle.
+
+## X.5 Relationen und explizite Voraussetzungen
+
+Zusätzlich zu den erweiterten generischen Zeilen in 9.7 gelten:
+
+| Relation | Quelle | Ziel | Fachvertrag |
+|---|---|---|---|
+| `contains` | `implementation_plan`, `plan_entry` | `plan_entry` | Aus Markdown abgeleitete geordnete Besitzkante; genau ein Parent, gleiche Plan-ID, zyklusfrei. |
+| `plans` | `plan_entry` | `requirement` | Konkrete Zuordnung und Bindung nach X.7; Scope allein ist keine Kante. |
+| `works_on` | `plan_entry` | `task` | Optional viele-zu-viele; inverse Sicht berechnet, kein Statuswrite am Task. |
+| `requires_entry` | `implementation_plan`, `plan_entry` | `plan_entry` | Explizite AND-Voraussetzung mit qualifiziertem Plan-/Eintragsziel. |
+| `scheduled_for` | `implementation_plan`, `plan_entry` | `release`, `milestone` | Planabschnitt ist kein impliziter Release-Milestone. |
+| `references` | `implementation_plan`, `plan_entry` | alle 30 Typen | Nicht besitzende Kontext-, Test-, Code- oder Evidenceverweise. |
+
+`plans` und `requires_entry` besitzen wie andere Beziehungen eine stabile
+Relation-ID. Ihre fachlichen Daten stehen genau einmal in
+`requirement_bindings` beziehungsweise `prerequisites`; der Graph projiziert
+sie in das gemeinsame Relationsinterface, ohne JSON-Kopien zu speichern.
+Die strukturellen `contains`-Kanten tragen im jeweiligen Kind genau eine
+persistierte `parent_relation_id`; Parent, Plan und Position kommen aus
+Markdown. Ein Verschieben erhält diese ID. Alle anderen Beziehungen stehen
+in `relations`. Ein doppelter fachlicher Schlüssel wird diagnostiziert.
+
+Jede Voraussetzung nennt genau Relation-ID, `plan_id` und `entry_id`.
+Alle expliziten Ziele müssen umgesetzt sein; Lücken zwischen A.2 und A.5
+fügen A.3/A.4 nicht hinzu. Ein Parentziel verwendet die abgeleitete Erledigung
+seiner Pflichtkinder, ein Blatt seine gespeicherte Checkbox. Explizit benötigte
+optionale Ziele bleiben für diesen Aufruf verpflichtend. Zusätzlich gelten
+transitive explizite Voraussetzungen des Ziels; offene, fehlende oder zyklische
+Ziele ergeben mit Ursache keine Bereitschaft. Planvoraussetzungen gelten für
+alle eigenen Einträge. Selbstverweise und Zyklen einschließlich über Plan-
+und Parentgrenzen werden auf dem vollständigen Zielgraphen erkannt.
+Dies berechnet Bereitschaft und verhindert im Normalmodus einen expliziten
+Start/Abschluss gegen Voraussetzungen; es startet keine Prozesse. Für nur
+eingelesene manuelle Häkchen wird der Widerspruch angezeigt, nichts zurückgesetzt.
+
+## X.6 Checkboxen und Fortschritt
+
+Es gibt genau zwei gespeicherte Werte: geplant `[ ]` und umgesetzt `[x]`.
+Kein Git-Log-Abgleich liest Commits zum Setzen oder Überschreiben von Häkchen.
+Die ausführende Person oder KI pflegt sie in der Planquelle; eine zusätzliche
+Prüfung darf eine explizite Korrektur vorschlagen. Das Programm übernimmt keine
+fachliche Erledigung allein aus einer Commit-ID, einem Task oder einem Test.
+
+Für einen ausgewählten Teilbaum werden dessen feinste abhakbare Pflichtpunkte
+gezählt. Ein unzerlegter Schritt/Commit zählt selbst; ein `stage` ohne Kinder
+ist Gliederung ohne zählbare Arbeit. Besitzt ein Knoten zählbare Pflichtkinder,
+zählen nur diese, der Parent wird nicht zusätzlich gezählt. Ein optionaler
+Knoten macht seinen Unterbaum für diese Pflichtquote optional. Optionale
+Zahlen werden separat ausgewiesen. `derived_completed` eines Parents ist
+true genau dann, wenn mindestens ein zählbarer Pflichtpunkt vorliegt und alle
+erledigt sind; bei keiner solchen Arbeit ist es null mit Grund `no_required_work`.
+
+Das Elternhäkchen bleibt als `stored_completed` sichtbar. Abweichung zum
+abgeleiteten Wert ergibt `SRV203`, keine automatische Änderung. Fortschritt
+ist `100 * completed_required / total_required`, bei Nenner null `percent=null`
+mit Grund; keine künstlichen 100 Prozent. Gezählt werden Punkte, nicht Stunden.
+Prüfbedarf und Bereitschaft werden daneben mit Gründen ausgegeben.
+
+## X.7 Planumfang, Teilbeiträge und Anforderungsabdeckung
+
+`scope` ist ein bestehender versionierter Scope Descriptor mit ausdrücklicher
+Requirement-Auswahl. Ein ausgewerteter Bericht bindet zusätzlich die konkrete
+sortierte Menge unterschiedlicher Requirement-IDs, deren Kontext und gewählte
+Konfiguration. Neue Requirements erweitern einen gespeicherten Scope nicht
+still. Projekte ohne Plan und ungeplante Anforderungen bleiben erlaubt.
+
+Ein `requirement_bindings`-Eintrag enthält `relation_id`, `requirement_id`,
+`requirement_revision`, `requirement_context_sha256`, `contribution` (`partial`
+oder `full`) und eine optionale Begründung. `full` ist eine ausdrücklich
+deklarierte vollständige Planung durch diese konkrete Stelle; ohne explizite
+Vollständigkeitsangabe gilt `partial`. Der Hash benutzt dieselbe native
+Requirement-Kontextprojektion wie Reviews, nicht eine Textähnlichkeit.
+Nicht vorhandene oder mehrdeutige Ziele sind ungültig und zählen nicht.
+
+Ein planübergreifender Vollständigkeitsweg steht genau einmal in
+`coverage_claims` eines Plans: `{claim_id, requirement_id, requirement_revision,
+requirement_context_sha256, completeness:"full", contributors:[{plan_id,entry_id}]}`.
+`claim_id` ist ein zufälliger lokaler Token nach `random128-v1`, zusammen mit
+der besitzenden Plan-ID eindeutig. `contributors` ist nichtleer und eine
+dublettenfreie Menge. Jeder Beitrag MUSS dieselbe Requirement-ID zugeordnet
+haben; für einen vollständig umgesetzten Weg müssen alle Beiträge erledigt
+sein. Mehrere Teilbeiträge allein begründen keine vollständige Abdeckung.
+Mehrere vollständige Wege sind Alternativen, keine zusätzliche AND-Pflicht.
+
+Die Berichte unterscheiden für N gültige ausgewählte Requirements: unassigned,
+assigned, partial_only, declared_full, current_full, review_needed und overlaps.
+`assignment_percent=100*assigned/N`, `full_planning_percent=100*declared_full/N`,
+`current_full_percent=100*current_full/N`. Bei N=0 sind Quoten null mit Grund
+`empty_scope`. Jeder Requirement-Schlüssel zählt pro Zähler höchstens einmal;
+Eltern-/Kindzuordnungen, Taskpfade und mehrere Pläne werden dedupliziert.
+300 Zuordnungen in A und 250 in B mit 50 gemeinsamen ergeben 500, bei
+N=1000 also 50 Prozent. Scope-Mitgliedschaft allein zählt nicht als Zuordnung.
+
+Eine konkrete Stagezuordnung ist gültige Grobplanung; `planning_depth` nennt
+stage/step/commit. Scope-externe Referenzen werden separat gemeldet und
+erweitern den Nenner nicht. Stale Vollständigkeitswege bleiben als deklarierte
+Aussage sichtbar, zählen aber nicht zu current_full. Review-needed ändert
+keine Checkbox und erzeugt keine Verification-Evidence. Ein explizites
+Releaseprofil kann Planabdeckung verlangen; der Default verlangt sie nicht.
+
+## X.8 Impact, Kontext und Proposals
+
+Alle Requirementänderungen einschließlich direktem Authoring, Lifecycle,
+Import, Migration, Merge und Proposal-Anwendung liefern Planbetroffenheit.
+Proposalvorschau/-check liefert erwarteten, erfolgreiche Publikation den
+tatsächlichen Impact. Nach externer Textbearbeitung wird er beim nächsten
+Lesen aus gespeicherten Bindungen berechnet; ein Dateiwatcher ist nicht nötig.
+Ausgabe `plan_impacts` enthält pro Treffer Plan-/Eintrags-ID, sichtbare Kennung,
+Titel, bisherigen Checkboxwert, direkte Relation beziehungsweise indirekten
+Pfad, alte/neue Kontextbindung und `review_needed` mit Grund. Auch bereits
+umgesetzte Einträge sind enthalten. Keine gefundenen Treffer sind `[]`, eine
+unvollständige Inventur ist ausdrücklich incomplete und kein leerer Erfolg.
+
+Eine Neubewertung geschieht explizit mit `plan rebind` für ausgewählte Bindungen;
+alte und neue Hashes sowie die Begründung werden ausgegeben und auditiert.
+Sie darf Häkchen und Fachtext unverändert lassen und behauptet keine
+menschliche Fachfreigabe. Manuelle Bindungsänderungen sind genauso sichtbar.
+
+`plan context` liefert in einem Aufruf oder nach vollständig fortsetzbarer
+Arbeit Scope, Anforderungen, Relationen, vorhandene Planstellen, Abhängigkeiten,
+Tasks, Release-/Milestonebezüge, Code-/Test-/Evidencebezüge und ausdrücklich
+angeforderten weiteren Kontext. Originalhashes und Auswahl bleiben gebunden;
+große Resultate gehen verlustfrei in `result_ref`, nicht in stilles Sampling.
+
+Proposals dürfen nur Specs, nur Pläne oder beides ändern. Die isolierte
+Zielvalidierung prüft den gemeinsamen Zustand, sodass dort neu entstehende
+Requirements und Tasks referenzierbar sind. Ungeplant ist kein genereller
+Fehler. Harte Mindestchecks sind eindeutige Parser-, Typ-, Identitäts-,
+Referenz-, Besitz- und Zyklenregeln; Heuristiken beweisen keine fachliche
+Vollständigkeit. Normaler Freigabevertrag und explizites Force aus X.12
+gelten auch für reine Plan- und gemischte Proposals.
+
+## X.9 Semantischer Plan-Merge
+
+Die bestehenden `merge plan|conflicts|resolve|apply` arbeiten auf dem gemeinsamen
+Spec-/Planmodell. Alle Quellen, Rohdateien und Scopebindungen werden inventarisiert.
+Die folgenden Regeln ergänzen 10.15; es wird kein Git-Commit erzeugt:
+
+| Regel | Verbindliche Wirkung |
+|---|---|
+| M01 Identität | Zuordnung über feste IDs, nie Titel, Zeile, sichtbare Nummer oder Pfad. Konkurrierende Neuanlage gleicher ID bleibt Kollision, kein Auto-Rename. |
+| M02 Felder | O=T übernimmt den Wert; O=B übernimmt T; T=B übernimmt O; sonst Konflikt. Fehlend, null, leer und false sind verschieden. Unabhängige Felder kombinieren. |
+| M03 Checkbox | M02 ohne OR und ohne Git-/Taskableitung. B=false/O=true/T=false ergibt true; B=true/O=false/T=true ergibt false. Textänderung und Häkchen können unabhängig kombiniert werden; möglicher Prüfbedarf bleibt sichtbar. |
+| M04 Ordnung | Jede Geschwisterliste ist eine atomare geordnete Folge nach 10.15.2. Einseitige/gleiche Änderung übernehmen; unterschiedliche gleichzeitige Änderungen, auch zwei Einfügungen, als Konflikt erhalten. Inhalte nicht verlieren; keine ID-/Zeit-/Alphabetheuristik. |
+| M05 Struktur | Parent, Planbesitz und Dateipfad getrennt vergleichen. Einseitige Bewegung plus Textänderung kombinieren; konkurrierende Ziele auflösen. Gesamthierarchie und Unterbaum prüfen. |
+| M06 Existenz | Unterschiedliche neue IDs erhalten; Löschen gegen unverändert löscht; Löschen gegen Bearbeitung, Verschieben oder neue/geänderte Kinder konfligiert. Fremde Verweise nicht still löschen. |
+| M07 Beziehungen | Ungeordnete Mengen elementweise über stabile Relation-ID/fachlichen Schlüssel dreiwegig vergleichen. Entfernen bleibt wirksam, kein Union-only. Entfernen gegen Bearbeiten ist Konflikt; neue globale Zyklen separat erkennen. |
+| M08 Freitext | Titel, Beschreibung und Notizen sind eigene Felder nach M02. Keine LLM-Textverschmelzung. Unveränderte Prosa/Formatierung erhalten; unzuordenbare Bereiche als Konflikt zeigen. |
+| M09 Ziel | Gemeinsamen Spec-/Plan-Zielzustand einschließlich neuer Referenzziele validieren. Reviews, Analyzer und Evidence nur anhand ihrer tatsächlichen Bindungen bewerten. |
+| M10 Auflösung | Konflikt-ID, Quellen, drei Werte, Feldpfad, Klasse, Impact und Auflösung textuell/JSON liefern. Explizite base/ours/theirs/target-Entscheidung bindet Quellen; keine Konfliktmarker als gültige Modellwerte. |
+| M11 Force | X.12 übersteuert Gates, wählt aber keinen unausgesprochenen Zielwert. Eine ausdrücklich gewählte Sammelpolicy darf viele Konflikte lösen und protokolliert jede Wahl. |
+| M12 Wirkung | Planung ist lesend; erst gebundenes Apply veröffentlicht. Keine automatische Basisneuberechnung, Statussynchronisierung oder Git-Aktion. Veränderte Basis wird normal abgewiesen oder ausdrücklich als erzwungene Abweichung behandelt. |
+
+Für Pläne ist die Metadatenpolicy `merge-metadata-v1` auf projizierte
+Artefakte anzuwenden; die gemeinsame Trägerdatei wird genau einmal aus den
+explizit aufgelösten Feldern und erhaltenen Rohtextspannen erstellt. Nicht
+betroffene Einträge behalten ihre originalen Metadaten und Texte.
+
+## X.10 Integration ohne zweite Fachwelt
+
+| Bestehender Bereich | Verpflichtende Integration |
+|---|---|
+| Schema, IDs, Provenienz | Beide neuen Typen, Markdown-Ressourcenmanifest, additive Migration und unveränderte Legacy-Reader; keine JSON-Schattenkopie. |
+| Query, Trace, Why, Impact, Diff | Plan-/Eintragsprojektionen, Rückwärtsverweise, Pfade und gespeicherter/abgeleiteter Status; kein Git-Häkchenabgleich. |
+| Profile, Glossar, SRX | Neue Typen und Felder adressierbar; gleiche begrenzte deterministische Regelengine. Planmängel ohne fachliche Semantikinferenz. |
+| Tasks, Release, Roadmap | Viele-zu-viele, expliziter Scope und optionale Planungsgates; keine automatische Task-/Requirement-Erledigung. |
+| Verification/Evidence/Code | Referenzen und Aktualität, reale Nachweise getrennt von Checkbox und Vollständigkeitsbehauptung. |
+| Baseline, Scope, Varianten | Vollständige Planträgerdatei als atomare Ressource; bei Auswahl eines Eintrags dessen Plan mitsamt Einträgen aufnehmen und die fachliche Auswahl separat kennzeichnen. Keine zweite fragmentierte Planquelle; Randreferenzen nach bestehender Closurepolicy. |
+| Writer, Dry-run, Requests | Bestehender gemeinsamer Writer mit Markdown-Byte- und Projektionbindungen; pro geänderter Datei eine Veröffentlichung; alte Request-Receipts und Schreibmarker bleiben erhalten. |
+| Dokumente, Views, Diagramme | Deklarative Sichten auf Planobjekte, Fortschritt und Voraussetzungen; gerenderte Dateien bleiben abgeleitet. |
+| CSV, NDJSON, ReqIF | Explizite Mappingfelder für Typ, feste ID, Kennung, Plan/Parent/Ordnung, Checkbox, Text, Sprache und Beziehungen. Verlustmanifest nennt jede nicht repräsentierte Information. |
+| Projektbundle, PatchHarbor | Vollbundle erhält exakte Markdownbytes und Referenzen; Hin-/Rückweg nach W bindet diese wie übrige Ressourcen. Transporterfolg bleibt von Fachprüfung getrennt. |
+| Work und Ressourcen | Vollständige Planinventur, Graph-/Merge-/Coverage-/Analyzerarbeit mit gebundenen Checkpoints, keine stille Abschneidung großer Pläne. |
+| Selbstbeschreibung | Neue Schemas, Ressourcenarten, alle Befehle/Optionen und Forcefähigkeit in capabilities/schema/command/project; beide Distributionen gleich. |
+
+Ein projizierter NDJSON-/CSV-/ReqIF-Export ist keine bytegleiche Markdownkopie.
+Nur ein ausdrücklich versioniertes verlustfreies Profil mit vollständigem
+Planträger und Rohtextspannen darf einen solchen Roundtrip behaupten. Andernfalls
+wird semantisch repräsentierbarer Umfang getrennt vom Byteverlust ausgewiesen.
+Import baut den vollständigen Zielplan als Markdown auf, nicht nebenher JSON.
+
+Sprachunterstützung gilt für Titel, Beschreibung und Notizen beider Typen.
+Die erste Erweiterung verwendet ausschließlich vorhandene `language_detection`
+und den bestehenden py3langid-Adapter. Default bei expliziter Planselektion:
+`/title` und `/description`; Notizen nur mit expliziten String-Pointern.
+Kein Zusammenkleben von Feldern. Deklarierte Sprache gehört zum jeweiligen
+Subject; Plan und Requirements dürfen verschiedene Sprachen besitzen.
+T.3 bindet den vollständigen projizierten Artefakthash und zusätzlich die
+Planquelle als explizite Kontextressource mit Bytehash. Änderungen ohne neue
+Revision sind dadurch dennoch stale. Nicht verfügbar bleibt unavailable.
+Es werden keine Grammatik-, Satzvollständigkeits-, Inhalts- oder LLM-Prüfer
+und keine weitere Sprachbibliothek eingeführt. Die generische Schnittstelle
+bleibt für spätere Erweiterung offen; bestehende deterministische Lintregeln bleiben.
+
+## X.11 CLI und gemeinsames Ergebnis
+
+Die folgenden öffentlichen Befehle ergänzen 11.2:
+
+```text
+specroad plan create|show|update|remove|validate ...
+specroad plan entry add|update|move|remove|check|uncheck ...
+specroad plan context|coverage|progress|readiness|impact ...
+specroad plan rebind ...
+```
+
+Alle selektieren über feste IDs; freie Anzeigenummern sind nur ausdrücklich
+planqualifizierte Suchhilfen und müssen eindeutig auflösbar sein. `create`
+und `entry add` vergeben native IDs, `--input` nimmt vollständige passive
+Plan-/Eintragsdaten an. `entry move` nennt Zielplan, Parent und Position;
+planübergreifendes Verschieben aktualisiert alle betroffenen qualifizierten
+Verweise in einem Change Plan oder meldet den vollständigen offenen Impact.
+`remove` benötigt bei Kindern eine ausdrückliche Unterbaumwahl.
+`check|uncheck` ändert nur den gewählten gespeicherten Wert; eine optionale
+explizite Auswahl mehrerer IDs ist kein verdecktes rekursives Abhaken.
+Schreibkommandos haben Actor, Request-ID, Basis, Dry-run und --as-proposal
+wie bestehendes Authoring. Read-only-Kommandos verändern keine Quellen.
+
+Jeder bestehende und neue öffentliche CLI-Einstieg einschließlich Hilfe,
+Version, Selbstbeschreibung und Fehlerpfaden unterstützt `--format pretty`
+als Default und `--format json`. Das gilt auch vor erfolgreichem Projektladen
+oder bei unbekanntem Unterbefehl, soweit die Formatoption erkennbar ist.
+Ein gemeinsames strukturiertes Ergebnis speist beide Presenter. JSON hat
+feste Felder/IDs, keine notwendige Interpretation menschenlesbarer Meldungen.
+Exportpayload und Commandresult sind getrennt: bei JSON muss CSV/ZIP/PYZ in
+einem expliziten Ausgabeziel oder `result_ref` stehen; stdout enthält nur
+das Envelope. SARIF bleibt für passende Diagnosebefehle zusätzlich erhalten.
+
+Envelope `2.1.0` ergänzt bei unveränderten bisherigen Pflichtfeldern in
+`summary` die Pflichtfelder `validation_status` (`valid`, `invalid`, `unknown`)
+und `force` mit genau `requested`, `used`, `reason`, `overrides`.
+Normalfall: false/false/null/[]; `requested=true` ohne Blocker bleibt used=false.
+`overrides` ist vollständig, nach Gate-ID/Subject sortiert, je Eintrag
+`gate_id`, `diagnostic_code`, `subject`, `original_decision`, `operation`,
+`observed_binding`, `requested_binding` und `effect`.
+Der zusätzliche Envelope-Status `forced` hat Exit Code **0**, bedeutet nur
+vollständig ausgeführter erzwungener Auftrag und niemals bestandene Prüfung.
+`summary.complete` bezeichnet vollständige Ausführung, nicht Gültigkeit.
+Validierungsfehler bleiben mit ursprünglicher Schwere erhalten; fehlgeschlagene
+technische Ausführung bleibt `failed` mit dem bisherigen zutreffenden Code.
+Ein Controller muss zusätzlich Status, validation_status und Forcebelege prüfen.
+Ein bloßes Code-0 darf keine echte Abnahme oder Evidence erfinden.
+
+## X.12 Allgemeines explizites Force
+
+Der Normalmodus bleibt der Default. `--force` ist bei allen bestehenden und
+neuen Befehlen sowie im strukturierten API-Auftrag als `force:true` zulässig;
+es wird nicht aus Projektkonfiguration, Promptinhalt oder Umwelt geerbt.
+`--force-reason` ist optionaler Audittext, keine weitere Pflichtfreigabe.
+Diese Produktregel ändert keine Betreiberregeln von Codex, Control, PatchHarbor
+oder einer fremden Laufzeit. Externe Systeme erhalten keine vorgetäuschte Freigabe.
+
+Force übersteuert alle **von SpecRoad getroffenen Sperrentscheidungen** für
+eine bezeichnete Operation: Struktur/Schema, Referenzen/Zyklen, Profile und
+Sprachpolicy, Lifecycle/Task/Readiness, Akteur-/Review-/Approvalpolicy,
+unveränderbar/partial, stale Basis und Hashabweichung, Merge/Importkonflikte,
+Arbeits-/Schreibmarker, Lockpolicy, softwareseitige Sicherheits-, Pfad-,
+Format- und Ressourcenlimits. Es gibt keinen versteckten zweiten Katalog
+von ausgenommenen Produktgates. Prüfungen werden so weit wie tatsächlich
+ausführbar weiter durchgeführt; nicht ausführbare Prüfungen sind unknown,
+nicht passed. Ein passiver Prüfaufruf kann erzwungen vollständig berichten,
+ohne das geprüfte Modell gültig zu nennen.
+
+Force implementiert keine fehlende Fachoperation, erfindet keine Eingabe,
+Konfliktauflösung, Identität, Bytefolge, Hashbeobachtung oder physisch nicht
+vorhandene Ressource. Unbekannte Befehle und unlesbare Operationsbeschreibungen
+bleiben unbestimmte Aufträge. Ein aufzulösender Konflikt braucht eine konkrete
+Auflösung, eine ausdrücklich gewählte Seitenpolicy oder vollständige Zielbytes.
+OS-Zugriffsrechte, fehlender Platz, I/O-Fehler, Prozessende und nicht vorhandene
+Interpreter werden nicht als ausgeführt gemeldet. Wo ein fremder Transport
+verweigert, ist dies dessen tatsächlicher Fehler, kein SpecRoad-Gateerfolg.
+
+Der gemeinsame Writer MUSS den Forcekontext einschließlich beobachteter alter
+und verlangter neuer Bindungen in Plan, Operationshash, Dry-run, Audit und
+Request-Receipt binden. Eine später eintretende neue Abweichung wird beim
+Schreiben erneut geprüft und als solche aufgezeichnet; kein stilles Rebase.
+Ein normaler Request und ein erzwungener Request sind nicht idempotent
+austauschbar. Bereits tatsächlich abgeschlossene identische Requests dürfen
+keine Doppeländerung erhalten. Ein Force darf ältere Ausführungsbelege nicht
+nachträglich als für diese neue Operation gültig umdeklarieren.
+
+Zur ausdrücklichen Korrektur nicht projizierbarer Dateien erweitert
+Change-Plan `1.3.0` die Operation `resource_replace`: exakter relativer Zielpfad,
+beobachteter Bytehash oder ausdrücklich `absent`, vollständige Base64-Zielbytes
+oder ausdrücklich delete, Begründung und Forcekontext. Aufruf über bestehendes
+`change apply --force`, kein neuer Recoverybefehl. Der Writer kann dadurch
+auch einen strukturell ungültigen, aber konkret bezeichneten Bestand ablegen
+oder korrigieren. Er berichtet Rohinventar/Dateihashes; bei nicht lesbarer
+Semantik ist die Modellwurzel null mit Diagnose, niemals eine erfundene gültige
+Modellwurzel. Lesbare Bereiche bleiben mit Vollständigkeitskennzeichen
+diagnostizierbar. Typisierte Operationen dürfen bei mehrdeutigen IDs nicht
+willkürlich ein Ziel wählen; eine explizite Byteoperation benennt die Datei.
+
+Force gegen eine Abbruchsperre führt weder Rollback noch Fertigstellen einer
+alten Transaktion aus. Es ist eine ausdrücklich neue Operation auf dem
+beobachteten Bestand. Alte Marker und Teilpublikationsbelege bleiben bytegleich
+an ihrem ursprünglichen Ort und weiterhin normal sperrwirksam. Der neue Auftrag
+hat unter `.specroad/write-state/force-attempts/<write-id>/` eigenen Marker,
+Vorherinventar und Abschlussbeleg; nur sein eigener Marker wird nach Abschluss
+entfernt. Dies entsperrt die alte Operation nicht. Wiederholte Forceaufrufe
+binden weiterhin den tatsächlich beobachteten Altzustand; die frühere Operation
+bleibt unbestätigt und normaler Wiederanlauf verwendet einen frischen Checkout. Bei aktivem
+konkurrierendem Eigentümer benennt der Aufrufer ausdrücklich den beobachteten
+Lock/Marker als Übersteuerungsziel; der Bericht kennzeichnet den Verzicht auf
+die normale Exklusivitätsgarantie. Fremde Prozesse werden nicht beendet und
+ihre Wirkung nicht als eigene abgeschlossene Änderung ausgegeben. Ohne Force
+gelten Abbruchsperre und manueller frischer Git-Wiederanlauf unverändert.
+
+Ein erzwungenes approved/applied-Label ist keine menschliche Entscheidung.
+Review-/Verification-/Readinessleser MÜSSEN Forceherkunft und fehlende reale
+Belege weiter ausweisen. Erzwungene Änderungen an geschützten Originalen
+machen darauf beruhende Nachweise ungültig; sie erzeugen keinen Ersatzbeleg.
+Ein `force`-Durchlauf der SpecRoad-Entwicklung darf deshalb weder deren
+Apply-Gates noch menschliche Endabnahmen ersetzen.
+
+## X.13 Deterministische Abnahmevektoren und technische Reihenfolge
+
+Die Regressionen R-76 bis R-87 ergänzen Anhang R:
+
+| Fall | Vorbereitung | Vollständiges Oracle |
+|---|---|---|
+| R-76 Planquelle | Zwei Pläne, UTF-8/RTL, verschachtelte Listen über Tiefe 6, Codebeispiel mit Checkboxen. | Nur strukturierte Einträge; No-op bytegleich, keine JSON-Schattenquelle, dieselben IDs nach Umnummerierung. |
+| R-77 Status | Pflichtblatt erledigt, optionaler Unterbaum offen, Elternhäkchen widersprüchlich, leerer Stage. | Blatt einmal gezählt; optional separat; Eltern gespeichert/abgeleitet getrennt; leer null; kein Git-Aufruf. |
+| R-78 Voraussetzungen | C benötigt A.2/A.5/B.3; A.3/A.4 offen, später planübergreifender Zyklus. | Keine impliziten Zwischenpunkte; genaue offene Ziele; Zyklus normal diagnostiziert/gesperrt, Force weiterhin invalid. |
+| R-79 Coverage | A=300, B=250, Schnitt=50, N=1000; Teilbeiträge, expliziter Vollweg, alternativer Weg, N=0. | 50 Prozent Zuordnung; kein automatisches Zusammenzählen von Teilvollständigkeit; aktuelle/alte Wege getrennt, N=0 null. |
+| R-80 Impact/Tasks | Requirement ändern, bereits erledigter Commit und mehrere Tasks in zwei Plänen; anschließend rebind. | Vollständiger direkter/indirekter Impact; Checkbox/Taskstatus unverändert; nur explizite neue Bindung wird aktuell. |
+| R-81 Proposal | Spec-only, Plan-only, gemischtes Proposal mit neuem Requirement und Planref; fehlendes Ziel. | Gemeinsamer Zielgraph; erwarteter/tatsächlicher Impact; normale Abweisung und erzwungene Anwendung unterscheidbar. |
+| R-82 Merge | Vollständige boolesche B/O/T-Matrix; Text/Move; konkurrierende Listen; delete/edit; gleiche neue ID. | M01–M12 exakt, Wiederöffnen bleibt; kein OR, keine heuristische Ordnung/Identität; explizite Konfliktauflösung. |
+| R-83 Sprache | Requirement deutsch, Plan anderssprachig, kurze Titel, Unicode, unsupported/unavailable. | Nur bestehende Spracherkennung; eigene vollständige Feld-/Bytebindung; keine Grammatik-/Inhaltsbewertung oder Textänderung. |
+| R-84 Austausch | Voll-/Teilbaseline, Variante, alle angebotenen Austauschprofile, echter W-Rundweg mit Plan. | Ein Träger pro Plan; vollständige Closure/Boundary, exakte Vollbundlebytes; jeder begrenzte Exportverlust ausgewiesen. |
+| R-85 Ergebnis | Jede Befehlsklasse inkl. Hilfe, Export, Parserfehler, kein Projekt, großer Ergebnisdatei. | Gemeinsame Ergebnisdaten, vollständiges JSON-Envelope; kein vermischter CSV/ZIP/stdout, keine verlorenen Fehler/Force/Impactfelder. |
+| R-86 Force | Je Produktgate gleicher Auftrag normal/force; stale/Approval/immutable/partial/Marker/Lock/Pfad/Limit; I/O-Fehler. | Normale Ablehnung erhalten; Forcebefunde vollständig; explicit target nötig; fehlender Platz bleibt Fehler; kein Pass-/Reviewbeleg erfunden. |
+| R-87 Ungültiger Bestand/Work | Force-Rohersatz mit ungültigem Markdown, Diagnose/Korrektur; großer Kontext mit Checkpoint und Quellenwechsel. | Ungültigkeit wieder lesbar; gezielte Korrektur möglich, keine automatische Recovery; vollständige Fortsetzung oder konkrete Abweichung, keine Datenverluste. |
+
+Technische Implementierung, Testfixtures, Vergleichsdaten und Messplätze
+werden vor menschlichen Fach-/Sprach-/Bedienreviews eingerichtet. Letztere
+und die ausdrückliche Benutzungsfreigabe stehen im abschließenden gemeinsamen
+Abnahmeblock. Synthetische Reviewakteure in Verhaltenstests sind kein Ersatz.
+Sprachkorpusabhängige reale Adapterabnahme folgt notwendigerweise dem echten
+Korpusreview. Fortschritt, alte Testnachweise und neu geplante Abnahmen
+werden niemals allein durch dieses Spezifikationsbundle als bestanden erklärt.

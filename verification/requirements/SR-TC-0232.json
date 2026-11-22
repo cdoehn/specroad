@@ -30,7 +30,8 @@
     "Callers retain the original normalized operation for retry; recompiling field options against an already changed artifact is not an equivalent historical-intent guarantee.",
     "Proposal planning still requires both revision and hash; this authoring path accepts either and checks both when present.",
     "Only the user starts manual CI for the supported Python matrix; selected development evidence is not a full-suite or platform pass.",
-    "Complete general review/context-binding integration and missing native semantic services in their assigned plan steps; structural approved fixtures do not prove historical approval legitimacy."
+    "Complete general review/context-binding integration and missing native semantic services in their assigned plan steps; structural approved fixtures do not prove historical approval legitimacy.",
+    "IMPLEMENTATION-PLANS-791: current remaining owner 21.c; consolidate the exact existing technical gaps/original evidence in 21.v, integration in 21.w/x, final current release proof in 20.n. Existing normal-mode test references and original evidence are retained; new plan/Force/JSON behavior is not accepted by this documentation commit."
   ],
   "oracle": {
     "kind": "behavior",
@@ -53,7 +54,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "2dad4bf789cbede2f05084d27bd62e3197c814f5b84e5ea30675890c35bd90f5",
+  "specification_sha256": "b9914d91dd85b67714d334326c7dcec61b76b81b8da9f35a4e64e39d6c48a9fd",
   "steps": [
     "Apply real RFC-6902 operations in order on an isolated value snapshot.",
     "Compile ordered set/unset inputs without implicit parent creation or type conversion.",

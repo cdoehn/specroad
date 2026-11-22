@@ -9,7 +9,8 @@
   "json_pointers": [],
   "method": "automated_behavior",
   "open_items": [
-    "The live adapter covers only the closed six-command bootstrap plan. Arbitrary planner data remains inert, not execution proof. General multi-unit graph/closure execution, normative success receipts, CLI/Code-8 continuation and large external output delivery remain open. No release or full requirement approval is claimed."
+    "The live adapter covers only the closed six-command bootstrap plan. Arbitrary planner data remains inert, not execution proof. General multi-unit graph/closure execution, normative success receipts, CLI/Code-8 continuation and large external output delivery remain open. No release or full requirement approval is claimed.",
+    "IMPLEMENTATION-PLANS-791: current remaining owner 21.u; consolidate the exact existing technical gaps/original evidence in 21.v, integration in 21.w/x, final current release proof in 20.n. Existing normal-mode test references and original evidence are retained; new plan/Force/JSON behavior is not accepted by this documentation commit."
   ],
   "oracle": {
     "kind": "behavior",
@@ -31,7 +32,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "2dad4bf789cbede2f05084d27bd62e3197c814f5b84e5ea30675890c35bd90f5",
+  "specification_sha256": "b9914d91dd85b67714d334326c7dcec61b76b81b8da9f35a4e64e39d6c48a9fd",
   "steps": [
     "Execute each supported real handler and finalize its fully stored result under the Work lease; replay the same terminal bytes without handler execution or extra generations.",
     "Keep declared global work open until confirmed; retain complete failed outcome data and every provided diagnostic in labelled planner fixtures.",

@@ -12,7 +12,8 @@
   "method": "automated_behavior",
   "open_items": [
     "Successful stage-specific Apply execution evidence is required; Dev ran zero behavior tests.",
-    "17.k-17.l must still implement transactional merge publication/current evidence binding and final CLI/Work/report integration. SR-REQ-0373 and M17 are not complete."
+    "17.k-17.l must still implement transactional merge publication/current evidence binding and final CLI/Work/report integration. SR-REQ-0373 and M17 are not complete.",
+    "IMPLEMENTATION-PLANS-791: current remaining owner 21.n; consolidate the exact existing technical gaps/original evidence in 21.v, integration in 21.w/x, final current release proof in 20.n. Existing normal-mode test references and original evidence are retained; new plan/Force/JSON behavior is not accepted by this documentation commit."
   ],
   "oracle": {
     "kind": "behavior",
@@ -36,7 +37,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "2dad4bf789cbede2f05084d27bd62e3197c814f5b84e5ea30675890c35bd90f5",
+  "specification_sha256": "b9914d91dd85b67714d334326c7dcec61b76b81b8da9f35a4e64e39d6c48a9fd",
   "steps": [
     "Independently recompute the exact virtual target bytes/root and compare the complete native full-project validation report.",
     "Retain warnings and enforce the target validation policy; reject unresolved fields, invalid unchanged artifacts and missing primary documents without writes.",

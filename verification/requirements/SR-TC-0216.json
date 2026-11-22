@@ -17,7 +17,8 @@
   "open_items": [
     "Register the actual CLI and its dry-run/stdout contract with a complete production project/history loader. Explicit inventory values do not attest full historical membership.",
     "Real document-model, evidence-currentness, external-resource and configuration gates remain required for affected targets. No permissive replacement gates are provided.",
-    "Complete production history binding, platform and release validation remain open; the native interruption cases do not imply public CLI or general recovery orchestration coverage."
+    "Complete production history binding, platform and release validation remain open; the native interruption cases do not imply public CLI or general recovery orchestration coverage.",
+    "IMPLEMENTATION-PLANS-791: current remaining owner 21.c; consolidate the exact existing technical gaps/original evidence in 21.v, integration in 21.w/x, final current release proof in 20.n. Existing normal-mode test references and original evidence are retained; new plan/Force/JSON behavior is not accepted by this documentation commit."
   ],
   "oracle": {
     "kind": "behavior",
@@ -39,7 +40,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "2dad4bf789cbede2f05084d27bd62e3197c814f5b84e5ea30675890c35bd90f5",
+  "specification_sha256": "b9914d91dd85b67714d334326c7dcec61b76b81b8da9f35a4e64e39d6c48a9fd",
   "steps": [
     "Normalize field mapping/file/stdin through the shared input adapter, then invoke the actual native creation service.",
     "Observe real writer-lock metadata during random128 allocation; verify exact canonical artifact bytes, path, draft revision1, actor/time, untouched prior files and confirmed cleanup/receipts.",

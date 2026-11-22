@@ -10,7 +10,8 @@
   "method": "automated_behavior",
   "open_items": [
     "Automatic CLI delivery selection, final normative CLI/Work completion, multipart output and external large-diagnostic delivery remain open. Both source outcomes, canonical outputs and readbacks still use complete in-memory values; bounded I/O does not establish streaming generation. Historical receipt delivery does not assert current target validity, authentication, new write permission or overall requirement/release approval.",
-    "11.r.W: finer cursors within composition/query/row generation, bounded total memory, automatic document CLI integration and automatic inline/file delivery selection remain open. Supplied inventory scope is explicit; no current disk completeness, full validation, authentication or write/approval authority is inferred."
+    "11.r.W: finer cursors within composition/query/row generation, bounded total memory, automatic document CLI integration and automatic inline/file delivery selection remain open. Supplied inventory scope is explicit; no current disk completeness, full validation, authentication or write/approval authority is inferred.",
+    "IMPLEMENTATION-PLANS-791: current remaining owner 21.u; consolidate the exact existing technical gaps/original evidence in 21.v, integration in 21.w/x, final current release proof in 20.n. Existing normal-mode test references and original evidence are retained; new plan/Force/JSON behavior is not accepted by this documentation commit."
   ],
   "oracle": {
     "kind": "behavior",
@@ -35,7 +36,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "2dad4bf789cbede2f05084d27bd62e3197c814f5b84e5ea30675890c35bd90f5",
+  "specification_sha256": "b9914d91dd85b67714d334326c7dcec61b76b81b8da9f35a4e64e39d6c48a9fd",
   "steps": [
     "Execute and finalize each supported real read-only handler, then publish its entire unchanged result payload and bound file manifest.",
     "Check complete machine payload, original schema, exact byte size/hash, full diagnostics and source checkpoint binding; reuse through a fresh controller without writes or handler execution.",

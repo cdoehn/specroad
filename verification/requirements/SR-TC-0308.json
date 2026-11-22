@@ -47,7 +47,8 @@
   "open_items": [
     "CLI writer registration, complete model/history discovery and ID allocation remain outside this explicit prepared-plan embedding API.",
     "New mutation commands cover native block semantics; views, external attachment resources and unchanged non-draft history require actual explicit specialist services. Document creation and section addition retain their narrower service contract; section movement now uses the native block semantics and preservation guard under 11.j.",
-    "Targeted development and alternating Apply half-suite observations do not certify a full-suite or release pass."
+    "Targeted development and alternating Apply half-suite observations do not certify a full-suite or release pass.",
+    "IMPLEMENTATION-PLANS-791: current remaining owner 21.p; consolidate the exact existing technical gaps/original evidence in 21.v, integration in 21.w/x, final current release proof in 20.n. Existing normal-mode test references and original evidence are retained; new plan/Force/JSON behavior is not accepted by this documentation commit."
   ],
   "oracle": {
     "kind": "behavior",
@@ -69,7 +70,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "2dad4bf789cbede2f05084d27bd62e3197c814f5b84e5ea30675890c35bd90f5",
+  "specification_sha256": "b9914d91dd85b67714d334326c7dcec61b76b81b8da9f35a4e64e39d6c48a9fd",
   "steps": [
     "11.h.W: prepare document.create, section.add and section.move as closed ordinary typed operation sequences; save and execute through the shared native writer. Verify exact affected artifacts, unchanged file inventories, native revisions and audit, receipts and idempotent replay, actor/host denial, primary-role validity, specialist closure and isolated Core/PYZ publication.",
     "11.h.R: reject invalid parents, self/descendant/include cycles, stale relation hashes and actual on-disk bytes, identity reuse, forged operation shapes, missing lifecycle and host gate overrides. Preserve command/plan identity in structured failure audits. Verify unchanged full inventories on refusal and honest partial publication/recovery after an injected second-owner replace failure; conflicting retry preserves original receipt.",

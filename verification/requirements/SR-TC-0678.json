@@ -17,7 +17,8 @@
   "open_items": [
     "Target stage 19.b.C requires its own actual successful Apply gate and commit; tests are prepared, not executed in Dev.",
     "Full available behavior suite and separate CPython 3.10–3.14/platform matrix remain mandatory before milestone/release acceptance.",
-    "Later M19 steps retain project subject selection, report/work/CLI integration, actual installed language worker and independent engine evidence."
+    "Later M19 steps retain project subject selection, report/work/CLI integration, actual installed language worker and independent engine evidence.",
+    "IMPLEMENTATION-PLANS-791: current remaining owner 21.o; consolidate the exact existing technical gaps/original evidence in 21.v, integration in 21.w/x, final current release proof in 20.n. Existing normal-mode test references and original evidence are retained; new plan/Force/JSON behavior is not accepted by this documentation commit."
   ],
   "oracle": {
     "kind": "behavior",
@@ -40,7 +41,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "2dad4bf789cbede2f05084d27bd62e3197c814f5b84e5ea30675890c35bd90f5",
+  "specification_sha256": "b9914d91dd85b67714d334326c7dcec61b76b81b8da9f35a4e64e39d6c48a9fd",
   "steps": [
     "Construct a complete request and independently hash exactly contract_version, analyzers, subjects, context, settings and extensions; compare all output values and source-format independent reads.",
     "Compare allocated random128 identities, preserve previously assigned and explicit IDs through repeated reads; mutate each snapshot component and compare bindings.",

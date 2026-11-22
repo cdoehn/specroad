@@ -22,7 +22,8 @@
   "method": "automated_behavior",
   "open_items": [
     "Remaining public M18 CLI, lifecycle/revision writes and whole-flow integration require their own plan gates; this sequence value does not publish.",
-    "RECOVERY-REMOVAL-006: existing test references cover only their still-valid implemented scope. Changed interruption/receipt/preflight/work oracles require fresh implementation and evidence in 18.s–18.x; old repair/crash recovery results are not acceptance of the new contract."
+    "RECOVERY-REMOVAL-006: existing test references cover only their still-valid implemented scope. Changed interruption/receipt/preflight/work oracles require fresh implementation and evidence in 18.s–18.x; old repair/crash recovery results are not acceptance of the new contract.",
+    "IMPLEMENTATION-PLANS-791: current remaining owner 21.l; consolidate the exact existing technical gaps/original evidence in 21.v, integration in 21.w/x, final current release proof in 20.n. Existing normal-mode test references and original evidence are retained; new plan/Force/JSON behavior is not accepted by this documentation commit."
   ],
   "oracle": {
     "expected": "Exact ordered operations and paired explanations, unique stable IDs, closed index bounds, no source mutation or implicit write authority.",
@@ -45,7 +46,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "2dad4bf789cbede2f05084d27bd62e3197c814f5b84e5ea30675890c35bd90f5",
+  "specification_sha256": "b9914d91dd85b67714d334326c7dcec61b76b81b8da9f35a4e64e39d6c48a9fd",
   "steps": [
     "Append/insert at the specified zero-based position and retain old identities.",
     "Address get/update/remove/move by stable CHG identity; remove before insertion on move.",

@@ -31,7 +31,8 @@
   "method": "automated_behavior",
   "open_items": [
     "Complete R/C robustness and shared planner integration; effective profiles, alternate bases and platform/performance acceptance remain open.",
-    "Current Impact materializes inventory/output; Work continuation, external delivery and effective profile severity policy remain open."
+    "Current Impact materializes inventory/output; Work continuation, external delivery and effective profile severity policy remain open.",
+    "IMPLEMENTATION-PLANS-791: current remaining owner 21.p; consolidate the exact existing technical gaps/original evidence in 21.v, integration in 21.w/x, final current release proof in 20.n. Existing normal-mode test references and original evidence are retained; new plan/Force/JSON behavior is not accepted by this documentation commit."
   ],
   "oracle": {
     "kind": "behavior",
@@ -54,7 +55,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "2dad4bf789cbede2f05084d27bd62e3197c814f5b84e5ea30675890c35bd90f5",
+  "specification_sha256": "b9914d91dd85b67714d334326c7dcec61b76b81b8da9f35a4e64e39d6c48a9fd",
   "steps": [
     "Compare canonical value bindings, field deltas and all immediate relation neighbours without I/O.",
     "Query all direct incoming/outgoing neighbours and Appendix J review observations; compare independent groups/reasons/identities and guard currentness and all read-only boundaries.",

@@ -11,7 +11,8 @@
   "method": "automated_behavior",
   "open_items": [
     "Work identity, persistent generations, source-snapshot binding, portable/process-independent resume, automatic roots, locks and all-command integration remain open for subsequent plan steps. The live cursor does not import arbitrary state; durable_checkpoint remains false. Prepared path transport does not implement Why search/frontier preservation. Intermediate runs remain retained. Batch goals and work windows do not promise total RSS, host quota, cross-platform completion or preemptive wall-clock control.",
-    "11.r.W: finer cursors within composition/query/row generation, bounded total memory, automatic document CLI integration and automatic inline/file delivery selection remain open. Supplied inventory scope is explicit; no current disk completeness, full validation, authentication or write/approval authority is inferred."
+    "11.r.W: finer cursors within composition/query/row generation, bounded total memory, automatic document CLI integration and automatic inline/file delivery selection remain open. Supplied inventory scope is explicit; no current disk completeness, full validation, authentication or write/approval authority is inferred.",
+    "IMPLEMENTATION-PLANS-791: current remaining owner 21.u; consolidate the exact existing technical gaps/original evidence in 21.v, integration in 21.w/x, final current release proof in 20.n. Existing normal-mode test references and original evidence are retained; new plan/Force/JSON behavior is not accepted by this documentation commit."
   ],
   "oracle": {
     "kind": "behavior",
@@ -38,7 +39,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "2dad4bf789cbede2f05084d27bd62e3197c814f5b84e5ea30675890c35bd90f5",
+  "specification_sha256": "b9914d91dd85b67714d334326c7dcec61b76b81b8da9f35a4e64e39d6c48a9fd",
   "steps": [
     "Compare the complete stable diagnostic sequence across tiny batches and pages, including duplicates, mandatory errors, large individual records, large integer coordinates and an empty source.",
     "Generate a real run larger than 4 MiB with a one-pass iterator and 32-KiB encoded batches; measure only the selected Python allocation window.",

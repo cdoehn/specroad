@@ -8,7 +8,8 @@
   "method": "pending",
   "open_items": [
     "HUMAN-ACCEPTANCE-LAST-779: human language reviews and provenance/usage approval remain pending in reviews/modules/language-corpus.json. Review-tool tests and technical M20 progress do not constitute adapter evidence.",
-    "The complete 19.t.W/R/C group is deferred until after 20.m.C, before 19.y, the dependent 20.b/20.d/20.k gates and final release approval. Complete the reviewed corpus freeze and actual unchanged T.10 acceptance; no assumed pass."
+    "The complete 19.t.W/R/C group is deferred until after 20.m.C, before 19.y, the dependent 20.b/20.d/20.k gates and final release approval. Complete the reviewed corpus freeze and actual unchanged T.10 acceptance; no assumed pass.",
+    "IMPLEMENTATION-PLANS-791: current remaining owner 19.t; consolidate the exact existing technical gaps/original evidence in 21.v, integration in 21.w/x, final current release proof in 20.n. Existing normal-mode test references and original evidence are retained; new plan/Force/JSON behavior is not accepted by this documentation commit."
   ],
   "oracle": {
     "kind": "pending",
@@ -28,7 +29,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "2dad4bf789cbede2f05084d27bd62e3197c814f5b84e5ea30675890c35bd90f5",
+  "specification_sha256": "b9914d91dd85b67714d334326c7dcec61b76b81b8da9f35a4e64e39d6c48a9fd",
   "steps": [],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0720",

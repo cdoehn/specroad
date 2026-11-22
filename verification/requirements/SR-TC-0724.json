@@ -13,7 +13,8 @@
   "open_items": [
     "Behavior tests are prepared for the separate Apply gate; none ran in Dev.",
     "Public migration/CLI/Restore and transaction/global verification gates remain in subsequent M16 steps; no other draft source format is newly qualified.",
-    "Synthetic source reviews and authored test mappings grant no actual human approval or current release readiness."
+    "Synthetic source reviews and authored test mappings grant no actual human approval or current release readiness.",
+    "IMPLEMENTATION-PLANS-791: current remaining owner 21.r; consolidate the exact existing technical gaps/original evidence in 21.v, integration in 21.w/x, final current release proof in 20.n. Existing normal-mode test references and original evidence are retained; new plan/Force/JSON behavior is not accepted by this documentation commit."
   ],
   "oracle": {
     "kind": "behavior",
@@ -35,7 +36,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "2dad4bf789cbede2f05084d27bd62e3197c814f5b84e5ea30675890c35bd90f5",
+  "specification_sha256": "b9914d91dd85b67714d334326c7dcec61b76b81b8da9f35a4e64e39d6c48a9fd",
   "steps": [
     "Materialize only an explicitly supplied language default; require each source-bound force and full target text; compare independent target bytes/fields and hashes.",
     "Reject missing, invalid, duplicate, foreign or stale decisions; preserve original identity, metadata, Unicode and opaque fields.",

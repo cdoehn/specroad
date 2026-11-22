@@ -10,7 +10,8 @@
   "method": "automated_behavior",
   "open_items": [
     "General review-history/status selection belongs to 7.h; negative decisions and exact approval withdrawals belong to 7.i. Other relevant semantic subjects fail closed until their services exist.",
-    "Integrate registered CLI/dry-run/output, production model/history acquisition and supported-platform evidence; no complete requirement or release claim."
+    "Integrate registered CLI/dry-run/output, production model/history acquisition and supported-platform evidence; no complete requirement or release claim.",
+    "IMPLEMENTATION-PLANS-791: current remaining owner 21.f; consolidate the exact existing technical gaps/original evidence in 21.v, integration in 21.w/x, final current release proof in 20.n. Existing normal-mode test references and original evidence are retained; new plan/Force/JSON behavior is not accepted by this documentation commit."
   ],
   "oracle": {
     "kind": "behavior",
@@ -32,7 +33,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "2dad4bf789cbede2f05084d27bd62e3197c814f5b84e5ea30675890c35bd90f5",
+  "specification_sha256": "b9914d91dd85b67714d334326c7dcec61b76b81b8da9f35a4e64e39d6c48a9fd",
   "steps": [
     "Record a confirmed relation review under the real writer lock; inspect complete endpoint/context bindings, immutable revision-1 output and native receipts; replay the same request and reject changed intent, nonhuman actors, stale guards and tampered saved plans.",
     "Reject invalid supplied graphs, stale source guards and incomplete known historical exclusions before lock/allocation; verify saved-plan isolation and exact immutable audit bindings, live endpoint byte conflicts and native interrupted publication evidence."

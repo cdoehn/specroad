@@ -25,7 +25,8 @@
   ],
   "method": "automated_behavior",
   "open_items": [
-    "Remaining public Proposal show/apply or full requirement workflows retain their later assigned gates; 18.j proves the negative writer and shared read-only current qualification, not a complete Proposal apply."
+    "Remaining public Proposal show/apply or full requirement workflows retain their later assigned gates; 18.j proves the negative writer and shared read-only current qualification, not a complete Proposal apply.",
+    "IMPLEMENTATION-PLANS-791: current remaining owner 21.l; consolidate the exact existing technical gaps/original evidence in 21.v, integration in 21.w/x, final current release proof in 20.n. Existing normal-mode test references and original evidence are retained; new plan/Force/JSON behavior is not accepted by this documentation commit."
   ],
   "oracle": {
     "kind": "behavior",
@@ -49,7 +50,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "2dad4bf789cbede2f05084d27bd62e3197c814f5b84e5ea30675890c35bd90f5",
+  "specification_sha256": "b9914d91dd85b67714d334326c7dcec61b76b81b8da9f35a4e64e39d6c48a9fd",
   "steps": [
     "Perform explicit negative human decisions through native proposal review; compare full original content binding, retained history, exact revision and actual completion.",
     "Withdraw only the same human approval: in_review keeps status, approved becomes rejected; reject foreign/nonhuman/absent approvals and require an explicit withdrawal reason.",

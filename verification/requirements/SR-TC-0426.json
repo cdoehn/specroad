@@ -53,7 +53,8 @@
   "method": "automated_behavior",
   "open_items": [
     "Complete public raw-input CLI family wiring and final end-to-end acceptance in 18.p remain separate; current native API and tests do not claim those commands are registered.",
-    "Fresh behavior evidence is produced only by the corresponding Apply stage."
+    "Fresh behavior evidence is produced only by the corresponding Apply stage.",
+    "IMPLEMENTATION-PLANS-791: current remaining owner 21.l; consolidate the exact existing technical gaps/original evidence in 21.v, integration in 21.w/x, final current release proof in 20.n. Existing normal-mode test references and original evidence are retained; new plan/Force/JSON behavior is not accepted by this documentation commit."
   ],
   "oracle": {
     "expected": "Exact specification/closed/unconfigured descriptor and real canonical root, no control self-reference, actual native basis/target fold. Every actual control dependency fails with native source/target/relation-or-pointer context; free text is not an edge. Ordered complete plan retained; content edits advance both revisions once and reset draft while preserving ineffective historical reviews. Canonical no-op preserves original bytes and current review effect; terminal versions require a separate new Proposal identity. Original files/status/revisions remain unchanged; result binds source bytes/context and observes status without promoting it. Invalid or stale inputs cannot become eligible transitions. One transaction produces draft→validated→checked→in_review with maturity=in_review and physical revision +1. Content revision/hash, existing histories and unrelated normative bytes are preserved; exact report bytes bind the original context. Dry-run or pre-publication failure does not change the Proposal. Durable receipt identity is unchanged on replay; a read with the actual PublicationPreflight independently verifies the current target, whereas historical and replay reads do not claim renewed current-target verification; injected staging failure retains native recovery evidence and cannot imply success.",
@@ -80,7 +81,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "2dad4bf789cbede2f05084d27bd62e3197c814f5b84e5ea30675890c35bd90f5",
+  "specification_sha256": "b9914d91dd85b67714d334326c7dcec61b76b81b8da9f35a4e64e39d6c48a9fd",
   "steps": [
     "Build complete native inputs and actual bound requests.",
     "Observe exact result bytes, refusal codes, original file effects and native receipt evidence."

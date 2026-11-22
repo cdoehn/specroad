@@ -18,7 +18,8 @@
   ],
   "method": "automated_behavior",
   "open_items": [
-    "Apply this boundary to future model readers, transactional writes and explicitly authorized Git/analyzer adapters; complete cross-feature verification in later milestones."
+    "Apply this boundary to future model readers, transactional writes and explicitly authorized Git/analyzer adapters; complete cross-feature verification in later milestones.",
+    "IMPLEMENTATION-PLANS-791: current remaining owner 21.e; consolidate the exact existing technical gaps/original evidence in 21.v, integration in 21.w/x, final current release proof in 20.n. Existing normal-mode test references and original evidence are retained; new plan/Force/JSON behavior is not accepted by this documentation commit."
   ],
   "oracle": {
     "kind": "behavior",
@@ -40,7 +41,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "2dad4bf789cbede2f05084d27bd62e3197c814f5b84e5ea30675890c35bd90f5",
+  "specification_sha256": "b9914d91dd85b67714d334326c7dcec61b76b81b8da9f35a4e64e39d6c48a9fd",
   "steps": [
     "Exercise the single-root read boundary and reject prohibited execution before any handler.",
     "20.g: run actual Core/PYZ under unprivileged kernel network denial, retaining positive native access and structured path refusal; secret reads/process/network attempts and project code execution are separately forbidden."

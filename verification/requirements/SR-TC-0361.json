@@ -11,7 +11,8 @@
   "method": "automated_behavior",
   "open_items": [
     "Current successful Apply evidence is required for each prepared 17.b stage; no behavior tests were executed in Dev.",
-    "The inventory is an explicitly non-executable intermediate. Recursive merge, automatic adoption/combination, conflict resolution formats, final target roots, completion reports, CLI/Work and publication remain required in later M17 steps. No complete requirement or M17 success is claimed."
+    "The inventory is an explicitly non-executable intermediate. Recursive merge, automatic adoption/combination, conflict resolution formats, final target roots, completion reports, CLI/Work and publication remain required in later M17 steps. No complete requirement or M17 success is claimed.",
+    "IMPLEMENTATION-PLANS-791: current remaining owner 21.n; consolidate the exact existing technical gaps/original evidence in 21.v, integration in 21.w/x, final current release proof in 20.n. Existing normal-mode test references and original evidence are retained; new plan/Force/JSON behavior is not accepted by this documentation commit."
   ],
   "oracle": {
     "kind": "behavior",
@@ -34,7 +35,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "2dad4bf789cbede2f05084d27bd62e3197c814f5b84e5ea30675890c35bd90f5",
+  "specification_sha256": "b9914d91dd85b67714d334326c7dcec61b76b81b8da9f35a4e64e39d6c48a9fd",
   "steps": [
     "Acquire three complete sources, compare exact bytes and native scope/model-root bindings, check immutable detached output and original source provenance, and verify no writes or Git checkout occur.",
     "Reject partial markers/bundles and retained proof removal, foreign identities, old/new unsupported schemas, selected Baselines, unsafe or missing dependencies and late input changes; retain historic profiles and registered original bytes without changing them.",

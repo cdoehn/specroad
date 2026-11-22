@@ -15,7 +15,8 @@
   "method": "automated_behavior",
   "open_items": [
     "Complete registered artifact-create CLI/dry-run/stdout and production project/history loading; extend the shared boundary to subsequent authoring commands. The native embedding writer is now covered but is not a registered CLI.",
-    "Whole raw and normalized inputs remain memory-resident. Full model, profile, graph, local instance, platform and release coverage is not established by field-schema preparation."
+    "Whole raw and normalized inputs remain memory-resident. Full model, profile, graph, local instance, platform and release coverage is not established by field-schema preparation.",
+    "IMPLEMENTATION-PLANS-791: current remaining owner 21.c; consolidate the exact existing technical gaps/original evidence in 21.v, integration in 21.w/x, final current release proof in 20.n. Existing normal-mode test references and original evidence are retained; new plan/Force/JSON behavior is not accepted by this documentation commit."
   ],
   "oracle": {
     "kind": "behavior",
@@ -37,7 +38,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "2dad4bf789cbede2f05084d27bd62e3197c814f5b84e5ea30675890c35bd90f5",
+  "specification_sha256": "b9914d91dd85b67714d334326c7dcec61b76b81b8da9f35a4e64e39d6c48a9fd",
   "steps": [
     "Normalize the same declared draft fields through owned mappings, real JSON files, explicit binary stdin and actual field option token binding; compare canonical intent bytes and hashes.",
     "Verify all 24 regular draft field types, exact textual semantics, language canonicalization, detached values and preservation of input files; reject generated fields, specialized records, malformed JSON, conflicts and unsafe input paths.",

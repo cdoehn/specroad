@@ -10,7 +10,8 @@
   "method": "automated_behavior",
   "open_items": [
     "Current successful Apply evidence is still required for the prepared source stages; no Dev behavior tests were executed.",
-    "The complete merge command/Work integration and its current bound acceptance evidence remain in later M17 steps. Read-only source acquisition alone does not finish the merge feature."
+    "The complete merge command/Work integration and its current bound acceptance evidence remain in later M17 steps. Read-only source acquisition alone does not finish the merge feature.",
+    "IMPLEMENTATION-PLANS-791: current remaining owner 21.n; consolidate the exact existing technical gaps/original evidence in 21.v, integration in 21.w/x, final current release proof in 20.n. Existing normal-mode test references and original evidence are retained; new plan/Force/JSON behavior is not accepted by this documentation commit."
   ],
   "oracle": {
     "kind": "behavior",
@@ -32,7 +33,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "2dad4bf789cbede2f05084d27bd62e3197c814f5b84e5ea30675890c35bd90f5",
+  "specification_sha256": "b9914d91dd85b67714d334326c7dcec61b76b81b8da9f35a4e64e39d6c48a9fd",
   "steps": [
     "Acquire three complete sources, compare exact bytes and native scope/model-root bindings, check immutable detached output and original source provenance, and verify no writes or Git checkout occur.",
     "Reject partial markers/bundles and retained proof removal, foreign identities, old/new unsupported schemas, selected Baselines, unsafe or missing dependencies and late input changes; retain historic profiles and registered original bytes without changing them.",

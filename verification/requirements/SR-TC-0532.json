@@ -17,7 +17,8 @@
   "open_items": [
     "The bounded W/R corpus and shared fixture layout do not prove exhaustive resistance to every possible input or host failure.",
     "The goal-statement projection exercises real local parser-to-writer integration through explicit trusted test-host composition. It is not a complete import CLI, whole-format roundtrip, foreign-tool interoperability or approval/release claim.",
-    "The guard is a CPython audited API boundary, not a kernel network namespace or the complete reference-sandbox/multi-version verification. Evidence is limited to the actual platform and run."
+    "The guard is a CPython audited API boundary, not a kernel network namespace or the complete reference-sandbox/multi-version verification. Evidence is limited to the actual platform and run.",
+    "IMPLEMENTATION-PLANS-791: current remaining owner 21.r; consolidate the exact existing technical gaps/original evidence in 21.v, integration in 21.w/x, final current release proof in 20.n. Existing normal-mode test references and original evidence are retained; new plan/Force/JSON behavior is not accepted by this documentation commit."
   ],
   "oracle": {
     "kind": "behavior",
@@ -41,7 +42,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "2dad4bf789cbede2f05084d27bd62e3197c814f5b84e5ea30675890c35bd90f5",
+  "specification_sha256": "b9914d91dd85b67714d334326c7dcec61b76b81b8da9f35a4e64e39d6c48a9fd",
   "steps": [
     "Decode actual CSV, NDJSON, ReqIF and ReqIFZ bytes without filesystem opens, network or executable converters; pass the explicit goal-statement projection to the ordinary native import transaction.",
     "Require real committed output, verified target, incremented revision, exact original text and input hash; preserve unrelated project files and attachments.",

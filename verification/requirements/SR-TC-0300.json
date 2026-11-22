@@ -27,7 +27,8 @@
   "open_items": [
     "Complete 11.b.C structural consolidation with unchanged W/R behavior.",
     "Remaining document payload/include/rendering/authoring services follow their assigned steps; no full requirement or release approval is claimed.",
-    "Targeted development observations and alternating Apply partitions are partial tests on their actual individual source states."
+    "Targeted development observations and alternating Apply partitions are partial tests on their actual individual source states.",
+    "IMPLEMENTATION-PLANS-791: current remaining owner 21.p; consolidate the exact existing technical gaps/original evidence in 21.v, integration in 21.w/x, final current release proof in 20.n. Existing normal-mode test references and original evidence are retained; new plan/Force/JSON behavior is not accepted by this documentation commit."
   ],
   "oracle": {
     "kind": "behavior",
@@ -50,7 +51,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "2dad4bf789cbede2f05084d27bd62e3197c814f5b84e5ea30675890c35bd90f5",
+  "specification_sha256": "b9914d91dd85b67714d334326c7dcec61b76b81b8da9f35a4e64e39d6c48a9fd",
   "steps": [
     "Load supported stored records, reject malformed local fields and compare original bytes without executing referenced operations.",
     "Resolve source-owned relations using existing native checks, require one incoming contains per section and derive roots/children/preorder using position, target ID and relation ID. Compare nested permutations, stored relations and original bytes; reject cardinality, missing targets, cycles and missing fields; check immutable reports and isolated Core/PYZ parity.",

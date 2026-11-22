@@ -45,7 +45,8 @@
   ],
   "method": "automated_behavior",
   "open_items": [
-    "12.r.C retains these exact results while separating selection hashing and search cursors. H.3 reference-state composition (12.s), consumer integration (12.t) and their bound evidence remain planned; no full-suite or release success is claimed. Legacy anchors are not automatically rewritten into the explicit evaluation profile."
+    "12.r.C retains these exact results while separating selection hashing and search cursors. H.3 reference-state composition (12.s), consumer integration (12.t) and their bound evidence remain planned; no full-suite or release success is claimed. Legacy anchors are not automatically rewritten into the explicit evaluation profile.",
+    "IMPLEMENTATION-PLANS-791: current remaining owner 21.q; consolidate the exact existing technical gaps/original evidence in 21.v, integration in 21.w/x, final current release proof in 20.n. Existing normal-mode test references and original evidence are retained; new plan/Force/JSON behavior is not accepted by this documentation commit."
   ],
   "oracle": {
     "kind": "behavior",
@@ -68,7 +69,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "2dad4bf789cbede2f05084d27bd62e3197c814f5b84e5ea30675890c35bd90f5",
+  "specification_sha256": "b9914d91dd85b67714d334326c7dcec61b76b81b8da9f35a4e64e39d6c48a9fd",
   "steps": [
     "Validate required stored range fields; strictly decode original source bytes in the stored encoding, normalize CRLF and CR to LF, select exactly the inclusive stored lines including their existing LF terminators, then compare SHA-256 over UTF-8 selection bytes. Check other Unicode separators and decomposed text remain unchanged, outside modifications do not change a matching selection, and wrong expected hashes are not accepted because the raw file hash matches. Reject unavailable ranges and encoding failures without truncation or replacement. Compare file/historical Git results and unchanged source data; exercise detached values and fresh standard-library-only Core/PYZ processes without I/O, execution or writes during selection.",
     "Check the complete stored window first; otherwise hash all complete windows of the declared line/byte extent, including overlapping positions. Accept only one other match as relocated; report none versus multiple separately, with no saved position changes. Exercise normalized text, original bytes, final-newline sensitivity, missing/truncated old ranges, missing/invalid encoding, unknown and conflicting anchor profiles, detached values, historical Git parity and guarded fresh Core/PYZ runtimes."

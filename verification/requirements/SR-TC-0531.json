@@ -27,7 +27,8 @@
     "Actual partial-bundle acquisition/authentication belongs to M15; the full legacy reader/migration belongs to M16. Explicit source_kind is not proof of either origin.",
     "Complete end-user CLI/source-provider integration remains pending. Legacy relations remain passive and legacy semantics are not claimed valid.",
     "M12/M13 computations remain unavailable; targeted development and rotating Apply partitions do not establish full-suite success.",
-    "RESTORE-SCHEMA-SCOPE / Q.0 takes precedence for positive 0.1 qualification: a versioned complete source contract, source hash algorithms, closure/provenance and matching test vectors are required before supported registration and positive M16/Restore integration. Explicitly synthetic fixtures against that contract are permitted; real production data are not a general test prerequisite and historical external compatibility is not invented. Existing 0.2 identities/contracts, CLI aliases and passive presentation retain their documented limits. Current status and remaining M16 work are unchanged; no positive Legacy acceptance is claimed."
+    "RESTORE-SCHEMA-SCOPE / Q.0 takes precedence for positive 0.1 qualification: a versioned complete source contract, source hash algorithms, closure/provenance and matching test vectors are required before supported registration and positive M16/Restore integration. Explicitly synthetic fixtures against that contract are permitted; real production data are not a general test prerequisite and historical external compatibility is not invented. Existing 0.2 identities/contracts, CLI aliases and passive presentation retain their documented limits. Current status and remaining M16 work are unchanged; no positive Legacy acceptance is claimed.",
+    "IMPLEMENTATION-PLANS-791: current remaining owner 21.p; consolidate the exact existing technical gaps/original evidence in 21.v, integration in 21.w/x, final current release proof in 20.n. Existing normal-mode test references and original evidence are retained; new plan/Force/JSON behavior is not accepted by this documentation commit."
   ],
   "oracle": {
     "kind": "behavior",
@@ -49,7 +50,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "2dad4bf789cbede2f05084d27bd62e3197c814f5b84e5ea30675890c35bd90f5",
+  "specification_sha256": "b9914d91dd85b67714d334326c7dcec61b76b81b8da9f35a4e64e39d6c48a9fd",
   "steps": [
     "Use original supplied partial current-schema or legacy 0.1.0 record bytes without an active primary and project deterministically by type and identity; preserve absent legacy fields and passive relations without migration.",
     "Require the actual partial scope root, native typed fields, all strong targets and exact weak-boundary declarations. Reject reversed or duplicate symmetric storage for both present and omitted targets.",

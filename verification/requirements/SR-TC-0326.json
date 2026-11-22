@@ -15,7 +15,8 @@
   "json_pointers": [],
   "method": "automated_behavior",
   "open_items": [
-    "Higher-layer native whole-model projection and CLI/plan integration remain required; no old import plan, writer, loss approval, registry source provenance or full format-integration evidence is added by this pure dataset/field codec."
+    "Higher-layer native whole-model projection and CLI/plan integration remain required; no old import plan, writer, loss approval, registry source provenance or full format-integration evidence is added by this pure dataset/field codec.",
+    "IMPLEMENTATION-PLANS-791: current remaining owner 21.r; consolidate the exact existing technical gaps/original evidence in 21.v, integration in 21.w/x, final current release proof in 20.n. Existing normal-mode test references and original evidence are retained; new plan/Force/JSON behavior is not accepted by this documentation commit."
   ],
   "oracle": {
     "kind": "behavior",
@@ -37,7 +38,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "2dad4bf789cbede2f05084d27bd62e3197c814f5b84e5ea30675890c35bd90f5",
+  "specification_sha256": "b9914d91dd85b67714d334326c7dcec61b76b81b8da9f35a4e64e39d6c48a9fd",
   "steps": [
     "Select exact resources, decode literal UTF-8 RFC-4180 datasets and roundtrip explicit records without changing identity, types, values, order or field presence.",
     "Reject ambiguous/unsupported declarations, wrong resource bindings and nonrepresentable values before returning a result; preserve passive inputs and no-write boundaries.",

@@ -1,0 +1,36 @@
+{
+  "evidence_kind": "specroad-dev-pytest-v1",
+  "expected_diagnostics": [],
+  "expected_exit_codes": [],
+  "fixture_ids": [],
+  "implementation_status": "open",
+  "json_pointers": [],
+  "method": "pending",
+  "open_items": [
+    "Implement complete 21.j.W/R/C and its X-contract; define real independent fixtures and behavior oracles before claiming implementation.",
+    "Actual Apply tests and current integration evidence in 21.w/x; genuine human acceptance remains at the final M19/M20 block. This specification/planning commit is not implementation or release approval."
+  ],
+  "oracle": {
+    "kind": "pending",
+    "requirement_contract": "Planbindungen MÜSSEN Requirementrevision und Kontext-Hash nach X.7/X.8 binden; Änderungen erzeugen Prüfbedarf ohne automatische Text-/Checkboxänderung, eine Neubindung erfordert eine ausdrückliche Änderung.",
+    "scope": "Normative target only. No executable implementation or current pass evidence claimed."
+  },
+  "preconditions": [],
+  "primary_verification_id": "SR-VER-0054",
+  "required_environment": {
+    "declared_minimum_python": "3.10",
+    "implementation": "cpython",
+    "measured_scope": "current-run-only"
+  },
+  "requirement_id": "SR-REQ-0755",
+  "resources": {
+    "harness_suite_timeout": null,
+    "harness_test_timeout": null,
+    "owned_temporary_files": true
+  },
+  "specification_sha256": "b9914d91dd85b67714d334326c7dcec61b76b81b8da9f35a4e64e39d6c48a9fd",
+  "steps": [],
+  "test_case_format_version": 1,
+  "test_case_id": "SR-TC-0755",
+  "test_ids": []
+}

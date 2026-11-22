@@ -24,7 +24,8 @@
   "open_items": [
     "Connect the retained pure preparation to actual complete providers and the validated specialized Baseline writer in the following assigned integration steps.",
     "Connect actual project/resource providers, configured/language/archival snapshot support and the validated journalled Baseline writer in the following integration steps.",
-    "Release-kind data does not grant readiness or publication authority; no full requirement, full-suite or release success claimed."
+    "Release-kind data does not grant readiness or publication authority; no full requirement, full-suite or release success claimed.",
+    "IMPLEMENTATION-PLANS-791: current remaining owner 21.q; consolidate the exact existing technical gaps/original evidence in 21.v, integration in 21.w/x, final current release proof in 20.n. Existing normal-mode test references and original evidence are retained; new plan/Force/JSON behavior is not accepted by this documentation commit."
   ],
   "oracle": {
     "kind": "behavior",
@@ -46,7 +47,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "2dad4bf789cbede2f05084d27bd62e3197c814f5b84e5ea30675890c35bd90f5",
+  "specification_sha256": "b9914d91dd85b67714d334326c7dcec61b76b81b8da9f35a4e64e39d6c48a9fd",
   "steps": [
     "Resolve fixture scope, prepare the Baseline manifest, independently verify all retained bytes and the existing model-root projection, exercise refusal cases and round-trip through real external storage and isolated Core/PYZ processes.",
     "Bind a fresh planned Baseline identity outside its precreation model, reject self-inclusion and forged cached scope observations, and compare exact output bytes under semantic versus operational changes."

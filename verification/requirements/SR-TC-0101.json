@@ -16,7 +16,8 @@
   "open_items": [
     "Native projections remain atomic; public CLI registration and granular within-provider Work execution are not claimed complete. The C refactoring does not close these functional or release observations.",
     "Additional declarative column/block provider integration is not claimed complete. Presentation is excluded from automated tests by TD-001.",
-    "Targeted development and rotating Apply groups are partial observations, not full-suite or production Release approval."
+    "Targeted development and rotating Apply groups are partial observations, not full-suite or production Release approval.",
+    "IMPLEMENTATION-PLANS-791: current remaining owner 21.p; consolidate the exact existing technical gaps/original evidence in 21.v, integration in 21.w/x, final current release proof in 20.n. Existing normal-mode test references and original evidence are retained; new plan/Force/JSON behavior is not accepted by this documentation commit."
   ],
   "oracle": {
     "kind": "behavior",
@@ -38,7 +39,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "2dad4bf789cbede2f05084d27bd62e3197c814f5b84e5ea30675890c35bd90f5",
+  "specification_sha256": "b9914d91dd85b67714d334326c7dcec61b76b81b8da9f35a4e64e39d6c48a9fd",
   "steps": [
     "13.h.W: resolve Roadmap facts and optional native eight-gate Readiness through built-in views; compare exact direct-provider data, gate/selection hashes and unavailable/provisional/blocked states. Verify Coverage/Traceability selection parity and input admission through read-only render adapters, without inspecting rendered output.",
     "13.h.R: retain full native Built-in and Readiness semantic Work input, recompute with the original snapshot and fresh native services, and compare direct coverage/query, view and resumed projection. Persist complete source inputs in native Work storage; restore in isolated Core/PYZ while preserving pending work. Reject changed model, evaluation, time, product binding and absent required review authentication.",

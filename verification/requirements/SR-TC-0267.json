@@ -31,7 +31,8 @@
   "open_items": [
     "Apply of this specification/planning bundle is not implementation, release, or user authorization to use SpecRoad.",
     "18.v: fresh stage-specific Apply evidence is required. Dev only prepared the implementation, behavioral oracles and pure collection; no behavior tests ran in Dev.",
-    "Correction 716: actual v2 snapshot history, deletion/missing-file/registry contradictions and forged request paths require their own successful Apply gate; pure Dev collection is not behavioral evidence."
+    "Correction 716: actual v2 snapshot history, deletion/missing-file/registry contradictions and forged request paths require their own successful Apply gate; pure Dev collection is not behavioral evidence.",
+    "IMPLEMENTATION-PLANS-791: current remaining owner 21.r; consolidate the exact existing technical gaps/original evidence in 21.v, integration in 21.w/x, final current release proof in 20.n. Existing normal-mode test references and original evidence are retained; new plan/Force/JSON behavior is not accepted by this documentation commit."
   ],
   "oracle": {
     "kind": "behavior",
@@ -53,7 +54,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "2dad4bf789cbede2f05084d27bd62e3197c814f5b84e5ea30675890c35bd90f5",
+  "specification_sha256": "b9914d91dd85b67714d334326c7dcec61b76b81b8da9f35a4e64e39d6c48a9fd",
   "steps": [
     "Implement the complete new contract in 18.v and bind real behavioral tests and evidence before declaring acceptance.",
     "Execute native migration and merge against complete qualified source, target and external backup bytes; preserve every passive original/archive and verify full model/evidence gates and explicit fresh host authority.",

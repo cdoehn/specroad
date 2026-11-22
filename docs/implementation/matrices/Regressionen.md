@@ -83,3 +83,22 @@ Die genaue Vorbedingung und das vollständige Oracle stehen im versionierten Anh
 | `R-73` | Request-/Report-Paar | 6, 19 | 20.d |
 | `R-74` | Echter Speicherblocker | 6, 19 | 20.d |
 | `R-75` | Unterbrochener Requestaufbau | 6, 19 | 20.d |
+
+## Erweiterung R-76 bis R-87
+
+Vollständige Vorbedingungen und Oracles stehen in Anhang X.13. Alle bestehenden R-01–R-75 bleiben erhalten; Normalmodus und explizites Force werden getrennt geprüft.
+
+| Fall | Federführung | Gesamtabschluss |
+|---|---|---|
+| R-76 | 21.b | 21.w/x, 20.d, 20.n |
+| R-77 | 21.h | 21.w/x, 20.d, 20.n |
+| R-78 | 21.g | 21.w/x, 20.d, 20.n |
+| R-79 | 21.i | 21.w/x, 20.d, 20.n |
+| R-80 | 21.j | 21.w/x, 20.d, 20.n |
+| R-81 | 21.l | 21.w/x, 20.d, 20.n |
+| R-82 | 21.m/n | 21.w/x, 20.d, 20.n |
+| R-83 | 21.o | 21.w/x, 20.d, 20.n |
+| R-84 | 21.q/r/s | 21.w/x, 20.d, 20.n |
+| R-85 | 21.t | 21.w/x, 20.d, 20.n |
+| R-86 | 21.d/e | 21.w/x, 20.d, 20.n |
+| R-87 | 21.u | 21.w/x, 20.d, 20.n |

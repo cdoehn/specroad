@@ -15,13 +15,15 @@
   "method": "automated_behavior",
   "not_automated_by_user_policy": "TD-001",
   "open_items": [
-    "Current full release evidence and all remaining scenario, platform and human acceptances remain required. An inventory or passing technical test does not complete original-specification acceptance."
+    "Current full release evidence and all remaining scenario, platform and human acceptances remain required. An inventory or passing technical test does not complete original-specification acceptance.",
+    "IMPLEMENTATION-PLANS-791: current remaining owner 21.v; consolidate the exact existing technical gaps/original evidence in 21.v, integration in 21.w/x, final current release proof in 20.n. Existing normal-mode test references and original evidence are retained; new plan/Force/JSON behavior is not accepted by this documentation commit."
   ],
   "oracle": {
-    "kind": "behavior",
     "assertions": [
       "Exact current mapping; missing/stale/invalid reports never pass; partial implementation and TD-001 remain visible; original bytes unchanged; output exclusive; no release authorization."
-    ]
+    ],
+    "kind": "behavior",
+    "requirement_contract": "Jede normative Produktanforderung MUSS genau einen stabilen primären Testfall `SR-TC-NNNN` mit derselben Nummer besitzen."
   },
   "policy_excluded_scope": [
     "Only human-output, rendering and documentation-test obligations. Machine data contracts and real behavioral obligations remain in scope."
@@ -41,7 +43,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "2dad4bf789cbede2f05084d27bd62e3197c814f5b84e5ea30675890c35bd90f5",
+  "specification_sha256": "b9914d91dd85b67714d334326c7dcec61b76b81b8da9f35a4e64e39d6c48a9fd",
   "steps": [
     "Assemble actual REQ/VER/test/fixture bindings from native collection; compare original selected run with all current input hashes."
   ],

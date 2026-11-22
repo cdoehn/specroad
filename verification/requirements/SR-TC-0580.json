@@ -10,7 +10,8 @@
   "method": "automated_behavior",
   "open_items": [
     "Explicitly trusted direct POSIX-child host API with whole-byte I/O. No invocation authority is derived from Work/project data. Future Git/analyzer adapters, large streaming protocols, child consumption accounting and non-POSIX operation remain open. No guarantee is claimed for daemonizing descendants, fatal unhandled host termination or arbitrary interruption outside handled operation boundaries; no release approval or complete general command integration is claimed.",
-    "RECOVERY-REMOVAL-006: existing test references cover only their still-valid implemented scope. Changed interruption/receipt/preflight/work oracles require fresh implementation and evidence in 18.s–18.x; old repair/crash recovery results are not acceptance of the new contract."
+    "RECOVERY-REMOVAL-006: existing test references cover only their still-valid implemented scope. Changed interruption/receipt/preflight/work oracles require fresh implementation and evidence in 18.s–18.x; old repair/crash recovery results are not acceptance of the new contract.",
+    "IMPLEMENTATION-PLANS-791: current remaining owner 20.j; consolidate the exact existing technical gaps/original evidence in 21.v, integration in 21.w/x, final current release proof in 20.n. Existing normal-mode test references and original evidence are retained; new plan/Force/JSON behavior is not accepted by this documentation commit."
   ],
   "oracle": {
     "kind": "behavior",
@@ -32,7 +33,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "2dad4bf789cbede2f05084d27bd62e3197c814f5b84e5ea30675890c35bd90f5",
+  "specification_sha256": "b9914d91dd85b67714d334326c7dcec61b76b81b8da9f35a4e64e39d6c48a9fd",
   "steps": [
     "Run explicitly requested children synchronously with exact binary input/output and actual nonzero or signal status; observe completed child ownership through native waitpid.",
     "Exercise literal arguments, explicit environment, closed implicit stdin and closed unrelated descriptors. Reject malformed contracts before launch and preserve actual native launch failure without retry.",

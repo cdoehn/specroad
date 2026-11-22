@@ -12,13 +12,15 @@
   "fixture_ids": [
     "SR-FIX-OWNED-TEMP-v1"
   ],
-  "implementation_status": "implemented",
+  "implementation_status": "partial",
   "json_pointers": [],
   "method": "automated_behavior",
-  "open_items": [],
+  "open_items": [
+    "IMPLEMENTATION-PLANS-791: current remaining owner 21.l; consolidate the exact existing technical gaps/original evidence in 21.v, integration in 21.w/x, final current release proof in 20.n. Existing normal-mode test references and original evidence are retained; new plan/Force/JSON behavior is not accepted by this documentation commit."
+  ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Die Proposal-Fortsetzung MUSS dieselben echten menschlichen Freigabevoraussetzungen wie der nicht aufgeteilte Ablauf verlangen.",
+    "requirement_contract": "Die Proposal-Fortsetzung MUSS dieselben normalen menschlichen Freigabevoraussetzungen und denselben ausdrücklichen Forcevertrag nach X.12 wie der nicht aufgeteilte Ablauf besitzen; eine Übersteuerung DARF NICHT eine menschliche Freigabe erfinden.",
     "scope": "18.o: direct and split checks bind the complete native inputs, Proposal content, specification basis and recorded engine. Native Work export/restore and result recomputation never supply human approval. The optional Apply handoff retains current actual human provenance and native writer/host gates, including after sandbox changes. Prepared code/tests require their own Apply gate; no Dev execution is claimed."
   },
   "preconditions": [
@@ -36,7 +38,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "2dad4bf789cbede2f05084d27bd62e3197c814f5b84e5ea30675890c35bd90f5",
+  "specification_sha256": "b9914d91dd85b67714d334326c7dcec61b76b81b8da9f35a4e64e39d6c48a9fd",
   "steps": [
     "Compare direct native checks with split and portable Work through public requests and actual checkpoint stores.",
     "Apply the same bound checked content only with current real test-host review originals and authority; observe exact target bytes and unchanged inputs on refusal.",

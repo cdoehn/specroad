@@ -4,7 +4,7 @@ Aktualisierte Soll-Zuordnung einschließlich RECOVERY-REMOVAL-006; [Zentraler Fo
 
 ## Anhang A – vollständige Requirement-zu-Schritt-Matrix
 
-Jede der 742 Requirement-IDs (730 bestehende und zwölf neue) ist mindestens einem konkreten Schritt zugeordnet. „Federführung“ benennt den fachnahen Hauptschritt, nicht die Behauptung, dass ein querschnittliches Requirement dort bereits releaseweit vollständig bewiesen wäre. Weitere Beiträge, die exakte primäre SR-TC-ID sowie der unveränderte SR-VER-Bezug machen Integrations- und Abnahmearbeit auffindbar. Das sind **Soll-Zuordnungen, keine Coverage-Messergebnisse**. TD-001 gilt auch dort, wo die ursprüngliche SR-TC-Identität einen ausgeschlossenen Darstellungs-/Dokuanteil enthält.
+Jede der 790 Requirement-IDs (742 bestehende und 48 neue) ist mindestens einem konkreten Schritt zugeordnet. „Federführung“ benennt den fachnahen Hauptschritt, nicht die Behauptung, dass ein querschnittliches Requirement dort bereits releaseweit vollständig bewiesen wäre. Weitere Beiträge, die exakte primäre SR-TC-ID sowie der unveränderte SR-VER-Bezug machen Integrations- und Abnahmearbeit auffindbar. Das sind **Soll-Zuordnungen, keine Coverage-Messergebnisse**. TD-001 gilt auch dort, wo die ursprüngliche SR-TC-Identität einen ausgeschlossenen Darstellungs-/Dokuanteil enthält.
 
 | Requirement | Federführung | Weitere Schritte | Primärer Testfall laut Spec | Verifikationsvertrag laut Spec |
 |---|---|---|---|---|
@@ -750,3 +750,58 @@ Jede der 742 Requirement-IDs (730 bestehende und zwölf neue) ist mindestens ein
 | `SR-REQ-0740` | [18.r](../milestones/M18.md#step-18-r) | [18.n](../milestones/M18.md#step-18-n), [20.f](../milestones/M20.md#step-20-f) | `SR-TC-0740` | SR-VER-0051 |
 | `SR-REQ-0741` | [18.r](../milestones/M18.md#step-18-r) | [15.o](../milestones/M15.md#step-15-o), [18.q](../milestones/M18.md#step-18-q), [20.f](../milestones/M20.md#step-20-f) | `SR-TC-0741` | SR-VER-0051 |
 | `SR-REQ-0742` | [20.f](../milestones/M20.md#step-20-f) | [15.o](../milestones/M15.md#step-15-o), [18.r](../milestones/M18.md#step-18-r), [20.h](../milestones/M20.md#step-20-h), [20.m](../milestones/M20.md#step-20-m) | `SR-TC-0742` | SR-VER-0051 |
+
+## Neue Plan- und Querschnittsanforderungen
+
+| Requirement | Federführung | Weitere Beiträge / Endabnahme | Primärer Testfall | Verifikation |
+|---|---|---|---|---|
+| `SR-REQ-0743` | [21.a](../milestones/M21.md#step-21-a) | 21.w, 21.x, 20.b, 20.n | `SR-TC-0743` | SR-VER-0052 |
+| `SR-REQ-0744` | [21.b](../milestones/M21.md#step-21-b) | 21.w, 21.x, 20.b, 20.n | `SR-TC-0744` | SR-VER-0052 |
+| `SR-REQ-0745` | [21.b](../milestones/M21.md#step-21-b) | 21.w, 21.x, 20.b, 20.n | `SR-TC-0745` | SR-VER-0052 |
+| `SR-REQ-0746` | [21.a](../milestones/M21.md#step-21-a) | 21.w, 21.x, 20.b, 20.n | `SR-TC-0746` | SR-VER-0052 |
+| `SR-REQ-0747` | [21.b](../milestones/M21.md#step-21-b) | 21.w, 21.x, 20.b, 20.n | `SR-TC-0747` | SR-VER-0052 |
+| `SR-REQ-0748` | [21.h](../milestones/M21.md#step-21-h) | 21.w, 21.x, 20.b, 20.n | `SR-TC-0748` | SR-VER-0052 |
+| `SR-REQ-0749` | [21.h](../milestones/M21.md#step-21-h) | 21.w, 21.x, 20.b, 20.n | `SR-TC-0749` | SR-VER-0052 |
+| `SR-REQ-0750` | [21.g](../milestones/M21.md#step-21-g) | 21.w, 21.x, 20.b, 20.n | `SR-TC-0750` | SR-VER-0053 |
+| `SR-REQ-0751` | [21.g](../milestones/M21.md#step-21-g) | 21.w, 21.x, 20.b, 20.n | `SR-TC-0751` | SR-VER-0053 |
+| `SR-REQ-0752` | [21.f](../milestones/M21.md#step-21-f) | 21.w, 21.x, 20.b, 20.n | `SR-TC-0752` | SR-VER-0053 |
+| `SR-REQ-0753` | [21.f](../milestones/M21.md#step-21-f) | 21.w, 21.x, 20.b, 20.n | `SR-TC-0753` | SR-VER-0053 |
+| `SR-REQ-0754` | [21.j](../milestones/M21.md#step-21-j) | 21.w, 21.x, 20.b, 20.n | `SR-TC-0754` | SR-VER-0054 |
+| `SR-REQ-0755` | [21.j](../milestones/M21.md#step-21-j) | 21.w, 21.x, 20.b, 20.n | `SR-TC-0755` | SR-VER-0054 |
+| `SR-REQ-0756` | [21.k](../milestones/M21.md#step-21-k) | 21.w, 21.x, 20.b, 20.n | `SR-TC-0756` | SR-VER-0054 |
+| `SR-REQ-0757` | [21.i](../milestones/M21.md#step-21-i) | 21.w, 21.x, 20.b, 20.n | `SR-TC-0757` | SR-VER-0054 |
+| `SR-REQ-0758` | [21.i](../milestones/M21.md#step-21-i) | 21.w, 21.x, 20.b, 20.n | `SR-TC-0758` | SR-VER-0054 |
+| `SR-REQ-0759` | [21.i](../milestones/M21.md#step-21-i) | 21.w, 21.x, 20.b, 20.n | `SR-TC-0759` | SR-VER-0054 |
+| `SR-REQ-0760` | [21.i](../milestones/M21.md#step-21-i) | 21.w, 21.x, 20.b, 20.n | `SR-TC-0760` | SR-VER-0054 |
+| `SR-REQ-0761` | [21.l](../milestones/M21.md#step-21-l) | 21.w, 21.x, 20.b, 20.n | `SR-TC-0761` | SR-VER-0055 |
+| `SR-REQ-0762` | [21.l](../milestones/M21.md#step-21-l) | 21.w, 21.x, 20.b, 20.n | `SR-TC-0762` | SR-VER-0055 |
+| `SR-REQ-0763` | [21.b](../milestones/M21.md#step-21-b) | 21.w, 21.x, 20.b, 20.n | `SR-TC-0763` | SR-VER-0052 |
+| `SR-REQ-0764` | [21.c](../milestones/M21.md#step-21-c) | 21.w, 21.x, 20.b, 20.n | `SR-TC-0764` | SR-VER-0055 |
+| `SR-REQ-0765` | [21.m](../milestones/M21.md#step-21-m) | 21.w, 21.x, 20.b, 20.n | `SR-TC-0765` | SR-VER-0056 |
+| `SR-REQ-0766` | [21.m](../milestones/M21.md#step-21-m) | 21.w, 21.x, 20.b, 20.n | `SR-TC-0766` | SR-VER-0056 |
+| `SR-REQ-0767` | [21.m](../milestones/M21.md#step-21-m) | 21.w, 21.x, 20.b, 20.n | `SR-TC-0767` | SR-VER-0056 |
+| `SR-REQ-0768` | [21.m](../milestones/M21.md#step-21-m) | 21.w, 21.x, 20.b, 20.n | `SR-TC-0768` | SR-VER-0056 |
+| `SR-REQ-0769` | [21.n](../milestones/M21.md#step-21-n) | 21.w, 21.x, 20.b, 20.n | `SR-TC-0769` | SR-VER-0056 |
+| `SR-REQ-0770` | [21.o](../milestones/M21.md#step-21-o) | 21.w, 21.x, 20.b, 20.n | `SR-TC-0770` | SR-VER-0057 |
+| `SR-REQ-0771` | [21.o](../milestones/M21.md#step-21-o) | 21.w, 21.x, 20.b, 20.n | `SR-TC-0771` | SR-VER-0057 |
+| `SR-REQ-0772` | [21.p](../milestones/M21.md#step-21-p) | 21.w, 21.x, 20.b, 20.n | `SR-TC-0772` | SR-VER-0058 |
+| `SR-REQ-0773` | [21.q](../milestones/M21.md#step-21-q) | 21.w, 21.x, 20.b, 20.n | `SR-TC-0773` | SR-VER-0058 |
+| `SR-REQ-0774` | [21.q](../milestones/M21.md#step-21-q) | 21.w, 21.x, 20.b, 20.n | `SR-TC-0774` | SR-VER-0058 |
+| `SR-REQ-0775` | [21.r](../milestones/M21.md#step-21-r) | 21.w, 21.x, 20.b, 20.n | `SR-TC-0775` | SR-VER-0058 |
+| `SR-REQ-0776` | [21.s](../milestones/M21.md#step-21-s) | 21.w, 21.x, 20.b, 20.n | `SR-TC-0776` | SR-VER-0058 |
+| `SR-REQ-0777` | [21.p](../milestones/M21.md#step-21-p) | 21.w, 21.x, 20.b, 20.n | `SR-TC-0777` | SR-VER-0058 |
+| `SR-REQ-0778` | [21.t](../milestones/M21.md#step-21-t) | 21.w, 21.x, 20.b, 20.n | `SR-TC-0778` | SR-VER-0058 |
+| `SR-REQ-0779` | [21.u](../milestones/M21.md#step-21-u) | 21.w, 21.x, 20.b, 20.n | `SR-TC-0779` | SR-VER-0058 |
+| `SR-REQ-0780` | [21.a](../milestones/M21.md#step-21-a) | 21.w, 21.x, 20.b, 20.n | `SR-TC-0780` | SR-VER-0058 |
+| `SR-REQ-0781` | [21.t](../milestones/M21.md#step-21-t) | 21.w, 21.x, 20.b, 20.n | `SR-TC-0781` | SR-VER-0059 |
+| `SR-REQ-0782` | [21.t](../milestones/M21.md#step-21-t) | 21.w, 21.x, 20.b, 20.n | `SR-TC-0782` | SR-VER-0059 |
+| `SR-REQ-0783` | [21.d](../milestones/M21.md#step-21-d) | 21.w, 21.x, 20.b, 20.n | `SR-TC-0783` | SR-VER-0060 |
+| `SR-REQ-0784` | [21.d](../milestones/M21.md#step-21-d) | 21.w, 21.x, 20.b, 20.n | `SR-TC-0784` | SR-VER-0060 |
+| `SR-REQ-0785` | [21.e](../milestones/M21.md#step-21-e) | 21.w, 21.x, 20.b, 20.n | `SR-TC-0785` | SR-VER-0060 |
+| `SR-REQ-0786` | [21.e](../milestones/M21.md#step-21-e) | 21.w, 21.x, 20.b, 20.n | `SR-TC-0786` | SR-VER-0060 |
+| `SR-REQ-0787` | [21.e](../milestones/M21.md#step-21-e) | 21.w, 21.x, 20.b, 20.n | `SR-TC-0787` | SR-VER-0060 |
+| `SR-REQ-0788` | [21.w](../milestones/M21.md#step-21-w) | 21.w, 21.x, 20.b, 20.n | `SR-TC-0788` | SR-VER-0061 |
+| `SR-REQ-0789` | [21.z](../milestones/M21.md#step-21-z) | 21.w, 21.x, 20.b, 20.n | `SR-TC-0789` | SR-VER-0061 |
+| `SR-REQ-0790` | [21.c](../milestones/M21.md#step-21-c) | 21.w, 21.x, 20.b, 20.n | `SR-TC-0790` | SR-VER-0052 |
+
+Alle alten Zuordnungen bleiben erhalten; die aktuellen zusätzlichen Restverantwortlichen stehen vollständig in [Uebergabe](Uebergabe.md#restinventar-791). Tabellenzeilen sind Soll-Zuordnungen, keine Testerfolge.

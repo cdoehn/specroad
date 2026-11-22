@@ -11,7 +11,8 @@
   "open_items": [
     "Current successful Apply evidence for this stage is required; Dev ran zero behavior tests.",
     "17.g–17.l conflict/resolution, full merge metadata, target invariants, current qualification, public CLI and writer integration remain required.",
-    "SR-REQ-0637/0638 remain partial until the complete merge-metadata-v1 Planner/Writer and adoption contract is integrated and proven."
+    "SR-REQ-0637/0638 remain partial until the complete merge-metadata-v1 Planner/Writer and adoption contract is integrated and proven.",
+    "IMPLEMENTATION-PLANS-791: current remaining owner 21.n; consolidate the exact existing technical gaps/original evidence in 21.v, integration in 21.w/x, final current release proof in 20.n. Existing normal-mode test references and original evidence are retained; new plan/Force/JSON behavior is not accepted by this documentation commit."
   ],
   "oracle": {
     "kind": "behavior",
@@ -35,7 +36,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "2dad4bf789cbede2f05084d27bd62e3197c814f5b84e5ea30675890c35bd90f5",
+  "specification_sha256": "b9914d91dd85b67714d334326c7dcec61b76b81b8da9f35a4e64e39d6c48a9fd",
   "steps": [
     "Check conflicting lifecycle states and distinct successor identities against exact independent expected conflicts.",
     "Check byte-identical protected original adoption and exact original-byte observations; every conflict blocks original extraction.",

@@ -18,7 +18,8 @@
     "The native implementation is currently Linux/local-filesystem only; other platform, filesystem and complete release coverage remain open. Advisory mutexes do not sandbox noncooperating host writers.",
     "Parent directories must already exist. Whole bootstrap inputs and inventory are memory-resident. Full later document/project semantic gates are not implemented by initialization.",
     "15.e.C extraction cleanup remains open. Native Linux W/R extraction behavior is covered by the added behavior cases; existing init checks and all preceding scope limits remain unchanged.",
-    "18.v: fresh stage-specific Apply evidence is required. Dev only prepared the implementation, behavioral oracles and pure collection; no behavior tests ran in Dev."
+    "18.v: fresh stage-specific Apply evidence is required. Dev only prepared the implementation, behavioral oracles and pure collection; no behavior tests ran in Dev.",
+    "IMPLEMENTATION-PLANS-791: current remaining owner 21.t; consolidate the exact existing technical gaps/original evidence in 21.v, integration in 21.w/x, final current release proof in 20.n. Existing normal-mode test references and original evidence are retained; new plan/Force/JSON behavior is not accepted by this documentation commit."
   ],
   "oracle": {
     "kind": "behavior",
@@ -41,7 +42,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "2dad4bf789cbede2f05084d27bd62e3197c814f5b84e5ea30675890c35bd90f5",
+  "specification_sha256": "b9914d91dd85b67714d334326c7dcec61b76b81b8da9f35a4e64e39d6c48a9fd",
   "steps": [
     "Execute native init and bundle extraction on their allowed missing/existing targets; compare complete actual configuration, document, resources, bundle payload and retained foreign bytes.",
     "Before durable protection, refuse invalid input/collision without target changes. After protection, preserve the actual partial bytes and ownership markers; never roll back, finish or reuse the interrupted target.",

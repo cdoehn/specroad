@@ -52,7 +52,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "2dad4bf789cbede2f05084d27bd62e3197c814f5b84e5ea30675890c35bd90f5",
+  "specification_sha256": "b9914d91dd85b67714d334326c7dcec61b76b81b8da9f35a4e64e39d6c48a9fd",
   "steps": [
     "Run review start through current native Validate, isolated Check and the actual locked journal/staging/receipt pipeline.",
     "Read the resulting Proposal and durable completion; verify one physical revision, stable content and exactly three bound original reports, with no human approval.",

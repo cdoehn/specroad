@@ -19,7 +19,8 @@
   "method": "automated_behavior",
   "open_items": [
     "Target 19.u.C requires its own successful Apply gate and commit.",
-    "19.t human-reviewed corpus, 19.v reference-platform resources, 19.w durable Work integration and subsequent release acceptance remain open."
+    "19.t human-reviewed corpus, 19.v reference-platform resources, 19.w durable Work integration and subsequent release acceptance remain open.",
+    "IMPLEMENTATION-PLANS-791: current remaining owner 21.o; consolidate the exact existing technical gaps/original evidence in 21.v, integration in 21.w/x, final current release proof in 20.n. Existing normal-mode test references and original evidence are retained; new plan/Force/JSON behavior is not accepted by this documentation commit."
   ],
   "oracle": {
     "kind": "behavior",
@@ -44,7 +45,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "2dad4bf789cbede2f05084d27bd62e3197c814f5b84e5ea30675890c35bd90f5",
+  "specification_sha256": "b9914d91dd85b67714d334326c7dcec61b76b81b8da9f35a4e64e39d6c48a9fd",
   "steps": [
     "Preserve complete independent original strings, declared tags and hashes; use ASCII edge stripping only to count codepoints.",
     "Check minimum bounds and insufficient_text before optional loading, plus complete real-backend rankings on all five supported runtimes.",

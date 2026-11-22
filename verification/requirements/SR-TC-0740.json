@@ -18,11 +18,12 @@
   "method": "automated_behavior",
   "open_items": [
     "The prepared stage 18.r.C requires its own successful Apply gate and commit; collection is not behavior acceptance.",
-    "The full available behavior suite and separate CPython 3.10–3.14/platform matrix remain required before milestone/release acceptance."
+    "The full available behavior suite and separate CPython 3.10–3.14/platform matrix remain required before milestone/release acceptance.",
+    "IMPLEMENTATION-PLANS-791: current remaining owner 21.s; consolidate the exact existing technical gaps/original evidence in 21.v, integration in 21.w/x, final current release proof in 20.n. Existing normal-mode test references and original evidence are retained; new plan/Force/JSON behavior is not accepted by this documentation commit."
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "Die lokale Rückübernahme MUSS die normativen Fachänderungen bis zum gültigen menschlichen Review und transaktionalen Proposal-Apply unveröffentlicht lassen; Transporterfolg und importierter Proposal DÜRFEN NICHT als fachliche Freigabe oder angewendete Änderung gelten.",
+    "requirement_contract": "Die lokale Rückübernahme MUSS Fachänderungen im Normalmodus bis zum gültigen menschlichen Review und Proposal-Apply unveröffentlicht lassen; ausdrückliches Force folgt X.12. Transporterfolg, importierter Proposal und erzwungene Anwendung DÜRFEN NICHT als menschliche Freigabe oder bestandene Verification gelten.",
     "scope": "Native outbound/opening coverage is retained. Prepared 18.q uses the actual pinned 1.8.0 API to export one exact reference-bound passive proposal patch from an offline Python-only sandbox; empty delta emits no patch. Prepared 18.r performs guarded host admission before payload, independent native draft publication, then a separate actual local review/apply fixture. R includes native receipt plus successful PH-Result replay, genuine foreign review isolation, TOCTOU, staging/identity collisions, process loss and Result-publication failure. No Dev behavior tests have run. Each stage needs its actual Apply gate. Full-suite and independent CPython/platform release evidence remain open. Correction 745 retains the successful Apply commits 18.q.W/R/C and 18.r.W. The complete remaining stage 18.r.C persists the actual native historical completion after publication, keeping the transient current_target_verified/replayed observation distinct from the durable receipt. Exact native proof and canonical receipt comparison, original successful PH Result, unchanged project and staging bytes remain mandatory. The corrected 18.r.R and 18.r.C still require their own Apply gates; no behavior was run in Dev."
   },
   "preconditions": [
@@ -41,7 +42,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "2dad4bf789cbede2f05084d27bd62e3197c814f5b84e5ea30675890c35bd90f5",
+  "specification_sha256": "b9914d91dd85b67714d334326c7dcec61b76b81b8da9f35a4e64e39d6c48a9fd",
   "steps": [
     "Create, validate and check the native Proposal in an isolated Python-only process, then export through public argv and structured commands; verify exact bytes, original four-value binding and no_changes.",
     "Inspect and validate the exact native patch, require explicit local transport authorization under apply_guarded before payload, then native PublicationAuthority for a draft only; compare unchanged Fachbytes.",

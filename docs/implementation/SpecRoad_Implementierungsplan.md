@@ -1,13 +1,35 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 419 · **Stand:** 22. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.103
+**Planrevision:** 421 · **Stand:** 22. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.104
 
-Dieser Plan konkretisiert die vom Nutzer bestätigten **20 Meilensteine in 306 Schritte und 918 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die ursprünglichen Positionen bleiben erhalten; ausdrücklich geänderte Ausführungsfolgen stehen im Fortschrittsblock und in den betroffenen Voraussetzungen; die früher genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wurde nach der damaligen Spezifikation innerhalb von 15.l.R vorgezogen und bleibt als normaler Prüfkern erhalten. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
+Dieser Plan konkretisiert die vom Nutzer bestätigten **21 Meilensteine in 332 Schritte und 996 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die ursprünglichen Positionen bleiben erhalten; ausdrücklich geänderte Ausführungsfolgen stehen im Fortschrittsblock und in den betroffenen Voraussetzungen; die früher genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wurde nach der damaligen Spezifikation innerhalb von 15.l.R vorgezogen und bleibt als normaler Prüfkern erhalten. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
 Die Aufteilung vom 6. November 2026 ist ein reiner OFF-PLAN-Dokumentationsschritt. Die fachliche Planrevision, Produktpositionen und ihre Abnahmen werden dadurch nicht geändert. Zähler werden nur anhand erfolgreicher Apply-Commits fortgeschrieben.
 
 Vor der Arbeit: [Projektregeln](../../DEVELOPMENT.md), [Grundlagen](rules/Grundlagen.md), [gemeinsame Arbeitsregeln](../development/Plan_Arbeitsregeln.md) und [Planpflege](AGENTS.md) lesen. Danach nur den betroffenen Meilenstein, seine verlinkten Ergänzungen und benötigten Matrizen lesen. Die Dateien bilden gemeinsam den vollständigen Plan.
+
+## Aktueller Auftrag: Planfeature vor gemeinsamer Endabnahme
+
+[IMPLEMENTATION-PLANS-791](decisions/implementation-plans-791.md) erweitert die
+Spezifikation und den vollständigen Rest. [M21](milestones/M21.md) umfasst
+78 neue technische Commits; sämtliche 30 bisher offenen Commits bleiben.
+Nach diesem reinen Dokumentationscommit sind **888/996 bestätigt, 108 offen**.
+87 technische Commits gehen dem menschlich abhängigen 21-Commit-Abschlussblock
+voraus. Diese Zählung ist kein Zeit- oder Requirement-Erfüllungsgrad.
+
+Die [Einzelzuordnung aller alten Katalogreste](matrices/Uebergabe.md#restinventar-791)
+ist verbindlicher Teil des Restplans. Sprach-/Herkunfts-/Bedienreviews und
+Benutzungsfreigabe bleiben ganz am Schluss; Technik und Messplätze davor.
+Control bleibt auf Nutzerauftrag pausiert. Das Bundle erteilt keinen Start,
+keine Installation, keinen Budgetreset und keine Produktbenutzungsfreigabe.
+
+## Erhaltener Verlauf und frühere Auftragsbindungen bis Bundle 790
+
+Die folgenden früheren „aktuell/nächster/offen“-Aussagen beziehen sich jeweils
+auf ihren damaligen Auftrag. Sie ersetzen nicht den folgenden zentralen
+Fortschrittsblock. Fachliche Detailverträge bleiben gültig, soweit die aktive
+Spezifikation sie nicht ausdrücklich ändert; Originalnachweise bleiben erhalten.
 
 Detailentscheidungen für 17.l: [MERGE-WORK-627](decisions/merge-work-627.md) und [MERGE-CLI-633](decisions/merge-cli-633.md).
 Die zweite Ergänzung bindet ausschließlich die öffentliche Übergabe an den vorhandenen nativen Writer; Produktzähler und Freigabegates bleiben im Klärungsstand unverändert.
@@ -297,16 +319,16 @@ Korrektur der nativen Validierungsfälle und vollständiger Matrixrest: [Bundle 
 Prozess-/Journalreparatur des offenen C-Rests: [Bundle 790](history/bundle-790-process-journal.md). W/R sind bestätigt; C benötigt sein eigenes Apply-Gate.
 
 ```yaml
-plan_revision: 420
-implementation_plan_commits_total: 918
+plan_revision: 421
+implementation_plan_commits_total: 996
 implementation_plan_commits_completed: 888
 last_completed_plan_commit: 20.h.C
-next_plan_commit: 20.i.W
+next_plan_commit: 21.a.W
 priority_off_plan: null
 next_off_plan_commit: null
-last_completed_numbered_bundle: 790
+last_completed_numbered_bundle: 791
 implementation_state: in_progress
-prioritized_group_order: [20.a, 20.c, 20.e, 20.f, 20.g, 20.h, 20.i, 20.j, 20.m, 19.t, 19.y, 20.b, 20.d, 20.k, 20.l, 20.n]
+prioritized_group_order: [21.a, 21.b, 21.c, 21.d, 21.e, 21.f, 21.g, 21.h, 21.i, 21.j, 21.k, 21.l, 21.m, 21.n, 21.o, 21.p, 21.q, 21.r, 21.s, 21.t, 21.u, 21.v, 21.w, 21.x, 21.y, 21.z, 20.i, 20.j, 20.m, 19.t, 19.y, 20.b, 20.d, 20.k, 20.l, 20.n]
 deferred_return_after: 20.m.C
 deferred_plan_commits: [19.t.W, 19.t.R, 19.t.C, 19.y.W, 19.y.R, 19.y.C, 20.b.W, 20.b.R, 20.b.C, 20.d.W, 20.d.R, 20.d.C, 20.k.W, 20.k.R, 20.k.C, 20.l.W, 20.l.R, 20.l.C, 20.n.W, 20.n.R, 20.n.C]
 deferred_review_module: language-corpus
@@ -342,7 +364,8 @@ plan_setup_message: "docs(plan): add detailed SpecRoad WRC implementation plan"
 | 18 | [Proposals, Schreibschutz und kontrollierte KI-Bearbeitung](milestones/M18.md#m18) | 24 | 72 | 730–801 |
 | 19 | [Analyzer-Schnittstelle und echte Spracherkennung](milestones/M19.md#m19) | 25 | 75 | 802–876 |
 | 20 | [Gesamtabnahme und Release](milestones/M20.md#m20) | 14 | 42 | 877–918 |
-| **Gesamt** | **20 Meilensteine** | **306** | **918** | **1–918** |
+| 21 | [Implementierungspläne und vollständige Integration](milestones/M21.md#m21) | 26 | 78 | 919–996 |
+| **Gesamt** | **21 Meilensteine** | **332** | **996** | **1–996** |
 
 ## In Apply2 abgenommene Control-Erweiterung
 
@@ -358,7 +381,7 @@ OFF-PLAN-Auftrag vom 10. November 2026:
 [Testoptimierungen und Profiling mit sechs W/R/C-Abnahmen](../development/Test_Optimization_Profiling.md).
 Alle sechs Commits sind mit Dev2-Bundle 005 erfolgreich abgenommen; siehe
 [Ausführungsnachweis](history/dev2-control-profiling-001-005.md). Der Vergleich
-der Vorher-/Nachher-Laufzeiten steht noch aus. Produktpositionen und Zähler
+der Vorher-/Nachher-Laufzeiten steht noch aus und wird ausdrücklich in 21.y vorbereitet und nach beauftragter Messung ausgewertet. Produktpositionen und Zähler
 bleiben unverändert.
 
 ## Detaillierter Commitplan
@@ -377,6 +400,60 @@ Die Meilensteinlinks in der Übersicht öffnen die vollständigen W/R/C-Position
 - [Entscheidungen, Bundlehistorie und ergänzende Nachweise](history/README.md)
 
 Neue Berichte werden dort verlinkt; sie werden nicht erneut in diesen Einstieg kopiert.
+
+<a id="m21"></a>[Meilenstein 21](milestones/M21.md#m21)
+
+<a id="step-21-a"></a>[21.a](milestones/M21.md#step-21-a)
+
+<a id="step-21-b"></a>[21.b](milestones/M21.md#step-21-b)
+
+<a id="step-21-c"></a>[21.c](milestones/M21.md#step-21-c)
+
+<a id="step-21-d"></a>[21.d](milestones/M21.md#step-21-d)
+
+<a id="step-21-e"></a>[21.e](milestones/M21.md#step-21-e)
+
+<a id="step-21-f"></a>[21.f](milestones/M21.md#step-21-f)
+
+<a id="step-21-g"></a>[21.g](milestones/M21.md#step-21-g)
+
+<a id="step-21-h"></a>[21.h](milestones/M21.md#step-21-h)
+
+<a id="step-21-i"></a>[21.i](milestones/M21.md#step-21-i)
+
+<a id="step-21-j"></a>[21.j](milestones/M21.md#step-21-j)
+
+<a id="step-21-k"></a>[21.k](milestones/M21.md#step-21-k)
+
+<a id="step-21-l"></a>[21.l](milestones/M21.md#step-21-l)
+
+<a id="step-21-m"></a>[21.m](milestones/M21.md#step-21-m)
+
+<a id="step-21-n"></a>[21.n](milestones/M21.md#step-21-n)
+
+<a id="step-21-o"></a>[21.o](milestones/M21.md#step-21-o)
+
+<a id="step-21-p"></a>[21.p](milestones/M21.md#step-21-p)
+
+<a id="step-21-q"></a>[21.q](milestones/M21.md#step-21-q)
+
+<a id="step-21-r"></a>[21.r](milestones/M21.md#step-21-r)
+
+<a id="step-21-s"></a>[21.s](milestones/M21.md#step-21-s)
+
+<a id="step-21-t"></a>[21.t](milestones/M21.md#step-21-t)
+
+<a id="step-21-u"></a>[21.u](milestones/M21.md#step-21-u)
+
+<a id="step-21-v"></a>[21.v](milestones/M21.md#step-21-v)
+
+<a id="step-21-w"></a>[21.w](milestones/M21.md#step-21-w)
+
+<a id="step-21-x"></a>[21.x](milestones/M21.md#step-21-x)
+
+<a id="step-21-y"></a>[21.y](milestones/M21.md#step-21-y)
+
+<a id="step-21-z"></a>[21.z](milestones/M21.md#step-21-z)
 
 ## Erhaltene Sprungmarken
 

@@ -58,3 +58,16 @@ Die Bezeichnungen und Identitäten stammen aus der Spezifikation. Alle Szenarien
 ## RECOVERY-REMOVAL-006
 
 SR-SCN-0029 und der echte Abbruchanteil von SR-SCN-0030 gelten mit den neuen Oracles aus Spezifikation 0.2.85: schreibfreie Abbruchsperre und frischer Git-Wiederanlauf. Vorbereitungsfortsetzung bleibt erhalten. Umsetzung und frühe Integration in 18.t–18.x, vollständige E2E-Abnahme in M20. Alte Evidence wird nicht umgedeutet.
+
+## Planfeature und übergreifende Bedienung
+
+| Szenario / Evidence | Inhalt | Technische / finale Abnahme |
+|---|---|---|
+| SR-SCN-0047 / SR-E2E-0047 | Mehrere Pläne aus gebundenem Kontext | 21.w/x; anschließend 20.b und 20.n |
+| SR-SCN-0048 / SR-E2E-0048 | Plan manuell ändern und fortschreiten | 21.w/x; anschließend 20.b und 20.n |
+| SR-SCN-0049 / SR-E2E-0049 | Planvoraussetzungen und Tasks erklären | 21.w/x; anschließend 20.b und 20.n |
+| SR-SCN-0050 / SR-E2E-0050 | Anforderungsänderung bis in Commitpläne verfolgen | 21.w/x; anschließend 20.b und 20.n |
+| SR-SCN-0051 / SR-E2E-0051 | Pläne semantisch zusammenführen | 21.w/x; anschließend 20.b und 20.n |
+| SR-SCN-0052 / SR-E2E-0052 | Mehrsprachige Pläne portabel austauschen | 21.w/x; anschließend 20.b und 20.n |
+| SR-SCN-0053 / SR-E2E-0053 | CLI und Force bei fehlerhaftem Bestand | 21.w/x; anschließend 20.b und 20.n |
+| SR-SCN-0054 / SR-E2E-0054 | Große Planung und gemeinsame Endabnahme | 21.w/x; anschließend 20.b und 20.n |

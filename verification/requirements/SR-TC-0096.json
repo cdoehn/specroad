@@ -29,7 +29,8 @@
   "method": "automated_behavior",
   "open_items": [
     "Production language/SRX/formal-approval validation is evidenced separately by SR-TC-0086 and SR-TC-0100; reference aggregation is evidenced by the diagnostic manifests. Those adapters do not establish human review, complete evidence freshness or full command-level lint integration.",
-    "Full CLI integration and the complete target runtime matrix remain separate evidence scopes; no full schema, review or human approval result is inferred from lint."
+    "Full CLI integration and the complete target runtime matrix remain separate evidence scopes; no full schema, review or human approval result is inferred from lint.",
+    "IMPLEMENTATION-PLANS-791: current remaining owner 21.d; consolidate the exact existing technical gaps/original evidence in 21.v, integration in 21.w/x, final current release proof in 20.n. Existing normal-mode test references and original evidence are retained; new plan/Force/JSON behavior is not accepted by this documentation commit."
   ],
   "oracle": {
     "kind": "behavior",
@@ -52,7 +53,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "2dad4bf789cbede2f05084d27bd62e3197c814f5b84e5ea30675890c35bd90f5",
+  "specification_sha256": "b9914d91dd85b67714d334326c7dcec61b76b81b8da9f35a4e64e39d6c48a9fd",
   "steps": [
     "Capture and validate owned records and exact selections.",
     "Run literal checks on unchanged selected text and inspect structured findings and coverage.",

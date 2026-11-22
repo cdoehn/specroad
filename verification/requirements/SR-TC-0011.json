@@ -9,11 +9,12 @@
   "json_pointers": [],
   "method": "automated_behavior",
   "open_items": [
-    "Full artifact schemas, resource inventory, transaction writes and cross-platform release evidence remain assigned to later steps."
+    "Full artifact schemas, resource inventory, transaction writes and cross-platform release evidence remain assigned to later steps.",
+    "IMPLEMENTATION-PLANS-791: current remaining owner 21.a; consolidate the exact existing technical gaps/original evidence in 21.v, integration in 21.w/x, final current release proof in 20.n. Existing normal-mode test references and original evidence are retained; new plan/Force/JSON behavior is not accepted by this documentation commit."
   ],
   "oracle": {
     "kind": "behavior",
-    "requirement_contract": "SpecRoad MUSS das aktuelle normative semantische Modell ausschließlich aus `specroad.json`, den dafür vorgesehenen JSON-Dateien unter `spec/`, `profiles/`, `rules/` und `mappings/` sowie den von diesen Ressourcen referenzierten Payloads unter `attachments/` und `archive/objects/` laden.",
+    "requirement_contract": "SpecRoad MUSS das normative Modell aus specroad.json, den vorgesehenen JSON-Ressourcen, den vollständigen Markdown-Planträgern nach X.2 sowie referenzierten Anhängen und Archivobjekten laden; generierte Sichten und Caches sind keine zusätzliche Quelle.",
     "scope": "2.a: closed configuration, deterministic artifact paths, current root binding and input-only path classes."
   },
   "preconditions": [
@@ -31,7 +32,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "2dad4bf789cbede2f05084d27bd62e3197c814f5b84e5ea30675890c35bd90f5",
+  "specification_sha256": "b9914d91dd85b67714d334326c7dcec61b76b81b8da9f35a4e64e39d6c48a9fd",
   "steps": [
     "Read or validate the declared project resources and observe data, rejection and file effects."
   ],

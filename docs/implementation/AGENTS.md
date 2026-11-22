@@ -8,7 +8,7 @@ und [Dokumentationsregeln](../AGENTS.md) zusätzlich beachten.
 | Inhalt | Maßgebliche Stelle |
 |---|---|
 | Gesamtfortschritt und nächste Position | YAML-Block in `SpecRoad_Implementierungsplan.md` |
-| Meilensteinziel, Schrittumfang, W/R/C-Abnahmen und Checklisten | `milestones/M01.md` bis `M20.md` |
+| Meilensteinziel, Schrittumfang, W/R/C-Abnahmen und Checklisten | `milestones/M01.md` bis `M21.md` |
 | Ergänzende fachliche Details und bereits vorhandene Schrittbelege | Verlinkte Datei in `supplements/` |
 | Neue begründete Detailentscheidungen | Eigene Datei in `decisions/`, mit Datum und stabiler Kennung |
 | Neue Ausführungs-/Korrekturberichte | Eigene kurze Datei in `history/`, mit Datum und Bundle-/Commitkennung |
@@ -30,7 +30,8 @@ kopieren. Der gemeinsame Plan umfasst alle ausdrücklich verlinkten Detaildateie
    Auslagerung erklärt sie nicht pauschal für historisch oder optional.
 2. Kennung, Reihenfolge, Voraussetzungen, exakte Commitnachricht, Scope und
    Abnahmen erhalten, sofern der Auftrag deren Änderung nicht ausdrücklich
-   abdeckt. OFF-PLAN-Arbeit verändert weder die 900 Produktpositionen noch
+   abdeckt. OFF-PLAN-Arbeit verändert ohne ausdrücklichen Erweiterungsauftrag weder
+   die im zentralen Fortschrittsblock gezählte Positionsmenge noch
    stillschweigend ihre Erledigt-Kennzeichen.
 3. Neue fachliche Klärung nur im zulässigen Entscheidungsrahmen vornehmen.
    Begründung, normative Spezifikation, aktive Katalogbindungen und betroffene

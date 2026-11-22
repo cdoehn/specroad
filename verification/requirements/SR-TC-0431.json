@@ -36,7 +36,8 @@
   ],
   "method": "automated_behavior",
   "open_items": [
-    "Remaining M18 public authoring, human decision/quorum, Proposal apply, Work continuation and full workflow integration retain their own plan gates."
+    "Remaining M18 public authoring, human decision/quorum, Proposal apply, Work continuation and full workflow integration retain their own plan gates.",
+    "IMPLEMENTATION-PLANS-791: current remaining owner 21.l; consolidate the exact existing technical gaps/original evidence in 21.v, integration in 21.w/x, final current release proof in 20.n. Existing normal-mode test references and original evidence are retained; new plan/Force/JSON behavior is not accepted by this documentation commit."
   ],
   "oracle": {
     "expected": "Ordered complete plan retained; content edits advance both revisions once and reset draft while preserving ineffective historical reviews. Canonical no-op preserves original bytes and current review effect; terminal versions require a separate new Proposal identity. One transaction produces draft→validated→checked→in_review with maturity=in_review and physical revision +1. Content revision/hash, existing histories and unrelated normative bytes are preserved; exact report bytes bind the original context. Dry-run or pre-publication failure does not change the Proposal. Durable receipt identity is unchanged on replay; a read with the actual PublicationPreflight independently verifies the current target, whereas historical and replay reads do not claim renewed current-target verification; injected staging failure retains native recovery evidence and cannot imply success.",
@@ -61,7 +62,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "2dad4bf789cbede2f05084d27bd62e3197c814f5b84e5ea30675890c35bd90f5",
+  "specification_sha256": "b9914d91dd85b67714d334326c7dcec61b76b81b8da9f35a4e64e39d6c48a9fd",
   "steps": [
     "Load supported stored records, reject malformed local fields and compare original bytes without executing referenced operations.",
     "Prepare the four ordered authoring actions and reset changed open Proposals to draft with one physical/content revision.",

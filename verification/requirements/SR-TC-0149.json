@@ -13,7 +13,8 @@
     "CLI integration, selected/configured scopes, installed language package snapshot providers, general historical verification and release readiness remain separate integration work.",
     "These targeted tests and the alternating Apply partition are not a full-suite or release proof.",
     "Partial input capture is currently invocation-local; cross-process capture checkpoints, bounded-memory whole-model planning remain open.",
-    "The Baseline process-loss matrix does not prove power-loss or cross-platform durability; recovery behavior also retains the existing common native Work recovery regression coverage."
+    "The Baseline process-loss matrix does not prove power-loss or cross-platform durability; recovery behavior also retains the existing common native Work recovery regression coverage.",
+    "IMPLEMENTATION-PLANS-791: current remaining owner 21.q; consolidate the exact existing technical gaps/original evidence in 21.v, integration in 21.w/x, final current release proof in 20.n. Existing normal-mode test references and original evidence are retained; new plan/Force/JSON behavior is not accepted by this documentation commit."
   ],
   "oracle": {
     "kind": "behavior",
@@ -35,7 +36,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "2dad4bf789cbede2f05084d27bd62e3197c814f5b84e5ea30675890c35bd90f5",
+  "specification_sha256": "b9914d91dd85b67714d334326c7dcec61b76b81b8da9f35a4e64e39d6c48a9fd",
   "steps": [
     "Prepare and save a working-Baseline plan, then execute its exact bytes through the actual native transaction protocol; reject invalid model, changed sources, missing/changed objects, absent gates and denied authority.",
     "Inject late source/staging/archive corruption, native link/sync/unlink failures, lost publication acknowledgement and receipt/cleanup failures; inspect actual retained bytes and journal/completion state.",
