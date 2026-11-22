@@ -32,8 +32,8 @@
   "preconditions": [
     "Owned temporary directories; native Linux descriptor-relative reads, inode flock and renameat2 no-replace publication. Built module/zipapp cases use actual independently built distribution bytes in fresh isolated processes.",
     "Use only owned native test roots with actual backup/original evidence. No historical success record authorizes replay or restoration of a protected partial publication.",
-    "Bundle 792 21.a.R: native compiled Core and independent synthetic input bytes; no production or human approval assumed.",
-    "Bundle 793 21.a.R: correction of the failed 792 gate; original identities, oracles and native live admission retained, no completed Apply acceptance assumed."
+    "Bundle 792 21.a.C: native compiled Core and independent synthetic input bytes; no production or human approval assumed.",
+    "Bundle 793 21.a.C: correction of the failed 792 gate; original identities, oracles and native live admission retained, no completed Apply acceptance assumed."
   ],
   "primary_verification_id": "SR-VER-0001",
   "required_environment": {

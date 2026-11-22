@@ -54,3 +54,8 @@ def artifact_type(kind):
         raise ModelError("unknown_artifact_type", pointer="/artifact_type")
     return _BY_TYPE[kind]
 
+
+
+def original_artifact_types():
+    """The closed 0.2 domain, also used to bind historical migration contracts."""
+    return tuple(item for item in artifact_types() if item.schema_version == "0.2.0")

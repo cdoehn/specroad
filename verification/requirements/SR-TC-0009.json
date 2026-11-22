@@ -20,8 +20,8 @@
     "scope": "Native public config.show materializes the effective project configuration and known defaults, exposes every stored/default/CLI origin, checks source stability and performs no model load, write or profile-composition approval."
   },
   "preconditions": [
-    "Bundle 792 21.a.R: native compiled Core and independent synthetic input bytes; no production or human approval assumed.",
-    "Bundle 793 21.a.R: correction of the failed 792 gate; original identities, oracles and native live admission retained, no completed Apply acceptance assumed."
+    "Bundle 792 21.a.C: native compiled Core and independent synthetic input bytes; no production or human approval assumed.",
+    "Bundle 793 21.a.C: correction of the failed 792 gate; original identities, oracles and native live admission retained, no completed Apply acceptance assumed."
   ],
   "primary_verification_id": "SR-VER-0001",
   "required_environment": {
@@ -39,7 +39,7 @@
   "steps": [
     "Execute the exact bound tests in this stage-specific Apply gate; compare owned bytes, typed identities, native diagnostics and side effects.",
     "Run the bound original regressions and native init-to-migration integration in this commit gate; verify original bytes, rejection diagnostics and unchanged write/approval boundaries.",
-    "Bundle 794 21.a.R: require the independent exact public command set including config.show, together with duplicate/unavailable/alias rejection, request dispatch and native configuration observation."
+    "Bundle 794 21.a.C: require the independent exact public command set including config.show, together with duplicate/unavailable/alias rejection, request dispatch and native configuration observation."
   ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0009",

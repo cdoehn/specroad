@@ -24,8 +24,8 @@
   },
   "preconditions": [
     "Supply stable explicit base artifacts and ordered operations; bind change-metadata-v1, actor and planned_at. No runtime clock or external state is acquired.",
-    "Bundle 792 21.a.R: native compiled Core and independent synthetic input bytes; no production or human approval assumed.",
-    "Bundle 793 21.a.R: correction of the failed 792 gate; original identities, oracles and native live admission retained, no completed Apply acceptance assumed."
+    "Bundle 792 21.a.C: native compiled Core and independent synthetic input bytes; no production or human approval assumed.",
+    "Bundle 793 21.a.C: correction of the failed 792 gate; original identities, oracles and native live admission retained, no completed Apply acceptance assumed."
   ],
   "primary_verification_id": "SR-VER-0003",
   "required_environment": {

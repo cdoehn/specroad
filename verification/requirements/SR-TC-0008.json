@@ -22,7 +22,7 @@
   },
   "preconditions": [
     "Owned project fixtures; installed development dependencies; isolated process state.",
-    "Bundle 792 21.a.R: native compiled Core and independent synthetic input bytes; no production or human approval assumed."
+    "Bundle 792 21.a.C: native compiled Core and independent synthetic input bytes; no production or human approval assumed."
   ],
   "primary_verification_id": "SR-VER-0001",
   "required_environment": {

@@ -15,7 +15,7 @@ wird nicht aus der Implementierung abgeleitet. Die entsprechende feste
 Request-Sollmenge enthält den Befehl bereits. Weitere Katalogverbraucher
 bleiben in der Pflichtauswahl. Keine neue Produktregel oder Klärung.
 
-Diese Stage **21.a.R** setzt den vollständigen ursprünglichen R/C-Rest fort.
+Diese Stage **21.a.C** setzt den vollständigen ursprünglichen R/C-Rest fort.
 IDs, Rollen `implementation`, Reihenfolge und sämtliche alten Pflichtauswahlen
 bleiben erhalten. W wird weder erneut ausgeliefert noch committed. Die
 Korrekturbindung verweist genau auf **21.a.R, 21.a.C** des fehlgeschlagenen

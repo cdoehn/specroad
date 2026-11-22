@@ -10,7 +10,7 @@ import re
 from .._metadata import SRX_LANGUAGE_VERSION
 from ._schema import validate_builtin, _json_equal
 from .artifact_schemas import artifact_common_schema, validate_common_fields
-from .artifact_types import artifact_types
+from .artifact_types import original_artifact_types
 from .domain_fields import reference_schema
 from .errors import ModelError
 from .paths import project_path
@@ -35,7 +35,7 @@ def _nullable(schema):
 def _definitions():
     text = {"$ref": "#/$defs/text"}
     hash_value = {"type": "string", "pattern": r"^[0-9a-f]{64}(?![\s\S])"}
-    artifact = {"anyOf": [reference_schema(t.prefix) for t in artifact_types() if t.schema_version == "0.2.0"]}
+    artifact = {"anyOf": [reference_schema(t.prefix) for t in original_artifact_types()]}
     test = _nullable(reference_schema("TEST"))
     check = {"type": "string", "pattern": r"^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}(?![\s\S])"}
     scalar = {"anyOf": [{"type": t} for t in ("string", "number", "boolean", "null")]}

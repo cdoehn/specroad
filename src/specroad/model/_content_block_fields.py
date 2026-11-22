@@ -1,5 +1,5 @@
 """One native registry for passive content-block payloads and local references."""
-from .artifact_types import artifact_types
+from .artifact_types import original_artifact_types
 from .errors import ModelError
 from ._field_shapes import _object, _array, _typed_reference
 
@@ -34,7 +34,7 @@ def _block_reference(value):
     kind, payload = value["block_kind"], value["payload"]
     prefixes = None
     if kind == "artifact_ref":
-        prefixes = tuple(t.prefix for t in artifact_types() if t.schema_version == "0.2.0")
+        prefixes = tuple(t.prefix for t in original_artifact_types())
     elif kind in ("query", "table") and payload.get("source") == "view":
         prefixes = ("VIEW",)
     elif kind == "include_document":

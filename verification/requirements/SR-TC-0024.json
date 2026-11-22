@@ -28,7 +28,7 @@
   ],
   "preconditions": [
     "Use explicit current resource paths in an owned temporary project; no authoring or full schema/graph approval.",
-    "Bundle 792 21.a.R: native compiled Core and independent synthetic input bytes; no production or human approval assumed."
+    "Bundle 792 21.a.C: native compiled Core and independent synthetic input bytes; no production or human approval assumed."
   ],
   "primary_verification_id": "SR-VER-0002",
   "required_environment": {
