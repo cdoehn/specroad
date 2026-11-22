@@ -22,7 +22,7 @@
   },
   "preconditions": [
     "Trusted built-in field contracts and isolated synthetic data; no live project mutation.",
-    "Bundle 792 21.a.W: native compiled Core and independent synthetic input bytes; no production or human approval assumed."
+    "Bundle 792 21.a.R: native compiled Core and independent synthetic input bytes; no production or human approval assumed."
   ],
   "primary_verification_id": "SR-VER-0003",
   "required_environment": {
@@ -275,6 +275,19 @@
     "tests/test_plan_model.py::test_plan_catalog_rejects_duplicate_structural_references[contributors]",
     "tests/test_plan_model.py::test_plan_projections_use_current_native_catalog_and_one_carrier[implementation_plan]",
     "tests/test_plan_model.py::test_plan_projections_use_current_native_catalog_and_one_carrier[plan_entry]",
-    "tests/test_plan_model.py::test_projects_require_explicit_capability_and_reject_shadow_files"
+    "tests/test_plan_model.py::test_projects_require_explicit_capability_and_reject_shadow_files",
+    "tests/test_plan_model_right.py::test_additive_transition_preserves_nested_baselines_evidence_and_legacy_contract[failed]",
+    "tests/test_plan_model_right.py::test_additive_transition_preserves_nested_baselines_evidence_and_legacy_contract[incomplete]",
+    "tests/test_plan_model_right.py::test_additive_transition_preserves_nested_baselines_evidence_and_legacy_contract[passed]",
+    "tests/test_plan_model_right.py::test_additive_transition_preserves_nested_baselines_evidence_and_legacy_contract[skipped]",
+    "tests/test_plan_model_right.py::test_both_distributions_publish_identical_plan_and_configuration_schemas",
+    "tests/test_plan_model_right.py::test_configuration_selection_is_passive_and_cli_origin_is_preserved",
+    "tests/test_plan_model_right.py::test_no_plan_project_remains_readable_exportable_and_snapshot_bound",
+    "tests/test_plan_model_right.py::test_plan_entry_allocation_respects_all_historical_reservations",
+    "tests/test_plan_model_right.py::test_project_inventory_detaches_values_and_keeps_display_ids_local",
+    "tests/test_plan_model_right.py::test_projected_collisions_are_rejected_by_shared_identity_rules[claim]",
+    "tests/test_plan_model_right.py::test_projected_collisions_are_rejected_by_shared_identity_rules[display]",
+    "tests/test_plan_model_right.py::test_projected_collisions_are_rejected_by_shared_identity_rules[identity]",
+    "tests/test_plan_model_right.py::test_projected_collisions_are_rejected_by_shared_identity_rules[relation]"
   ]
 }

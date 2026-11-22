@@ -195,7 +195,8 @@ class SourceSnapshot:
             raise ModelError('merge_source_request_required')
         capture = _READERS[request.kind](request.root, request.reference)
         configuration = capture.configuration
-        if configuration.data['schema_version'] != MODEL_SCHEMA_VERSION:
+        from ..model.versions import PROJECT_SCHEMA_VERSIONS
+        if configuration.data['schema_version'] not in PROJECT_SCHEMA_VERSIONS:
             raise ModelError('merge_schema_migration_required')
         files = tuple(sorted(capture.resources))
         evidence = capture.finish()

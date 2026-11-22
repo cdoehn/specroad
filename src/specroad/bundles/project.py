@@ -25,7 +25,7 @@ def _metadata(snapshot, exclude_operational_receipts):
     return {
         'bundle_format_version': '1.0.0', **PROJECT.creation_fields(),
         'idempotency_scope': 'local_only' if exclude_operational_receipts else 'portable',
-        'project_id': model.configuration.project_id, 'schema_version': '0.2.0',
+        'project_id': model.configuration.project_id, 'schema_version': model.configuration.data['schema_version'],
         'tool_version': __version__, 'scope_descriptor': descriptor.data,
         'origin_model_root_sha256': native.sha256, 'bundle_model_root_sha256': native.sha256,
         'profile_sha256': native.data['profile_sha256'],

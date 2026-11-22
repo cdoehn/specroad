@@ -1,5 +1,7 @@
 # Entscheidungen und Ausführungsnachweise
 
+- [Bundle 794 — Registry-Erwartung und vollständiger 21.a-Rest](bundle-794-registry-correction.md)
+
 - [Bundle 793 — vollständige Korrektur von 21.a.W/R/C](bundle-793-plan-model-correction.md)
 
 - [Bundle 792 — Planmodell und explizite Projektfähigkeit](bundle-792-plan-model.md)

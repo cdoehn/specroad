@@ -103,7 +103,7 @@ def _prepare_partial(root, descriptor):
     exclusions.update({p: 'operational_receipts_excluded' for p in origin.receipts.payloads})
     metadata = {
         'bundle_format_version': '1.0.0', **PARTIAL.creation_fields(),
-        'project_id': origin.model.configuration.project_id, 'schema_version': '0.2.0',
+        'project_id': origin.model.configuration.project_id, 'schema_version': origin.model.configuration.data['schema_version'],
         'tool_version': __version__, 'scope_descriptor': selection,
         'origin_model_root_sha256': origin.native.sha256,
         'bundle_model_root_sha256': native.sha256,

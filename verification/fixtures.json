@@ -1081,8 +1081,8 @@
       "kind": "Actual hash-selected CPython 3.10–3.14, built module/PYZ, non-root Linux x86-64 no-site offline children, native transport return and separately authorized synthetic host review/dry-run/apply. Local configuration and human/release approval are not supplied. Each row retains complete native goal-only validation and exact incomplete/refused document_model/configuration validation of the unchanged roundtrip input; no missing service is a pass."
     },
     "SR-FIX-PLAN-MODEL-v1": {
-      "provider": "tests/support/plan_models.py; tests/test_plan_model.py; tests/test_config_show.py",
-      "kind": "Independently specified synthetic plan fields and identity pools; real public init/migration writer/backup/verification, configuration CLI and native source-byte inventories. No saved success labels, human approval or docs/layout assertions. Right stage adds legacy Baseline/Evidence originals and two actual distributions."
+      "provider": "tests/support/plan_models.py; tests/test_plan_model.py; tests/test_config_show.py; tests/test_plan_model_right.py; tests/test_plan_migration_originals.py",
+      "kind": "Independently specified synthetic plan fields and identity pools; real public init/migration writer/backup/verification, configuration CLI and native source-byte inventories. No saved success labels, human approval or docs/layout assertions. Right stage adds legacy Baseline/Evidence originals and two actual distributions. Native init original, byte-exact preservation, closed journal grammar and unknown/active operational rejection; no authority inferred from old inode metadata."
     }
   },
   "fixture_format_version": 1,

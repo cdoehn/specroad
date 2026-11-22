@@ -30,8 +30,8 @@
   "preconditions": [
     "Owned temporary directories; native Linux descriptor-relative reads, inode flock and renameat2 no-replace publication. Built module/zipapp cases use actual independently built distribution bytes in fresh isolated processes.",
     "Use only owned native test roots with actual backup/original evidence. No historical success record authorizes replay or restoration of a protected partial publication.",
-    "Bundle 792 21.a.W: native compiled Core and independent synthetic input bytes; no production or human approval assumed.",
-    "Bundle 793 21.a.W: correction of the failed 792 gate; original identities, oracles and native live admission retained, no completed Apply acceptance assumed."
+    "Bundle 792 21.a.R: native compiled Core and independent synthetic input bytes; no production or human approval assumed.",
+    "Bundle 793 21.a.R: correction of the failed 792 gate; original identities, oracles and native live admission retained, no completed Apply acceptance assumed."
   ],
   "primary_verification_id": "SR-VER-0001",
   "required_environment": {
@@ -155,6 +155,19 @@
     "tests/test_bootstrap_guard.py::test_pre_guard_failure_has_no_target_or_marker_effect[True]",
     "tests/test_bootstrap_guard.py::test_recreated_marker_after_unlink_cannot_escape_late_validation[marker]",
     "tests/test_bootstrap_guard.py::test_recreated_marker_after_unlink_cannot_escape_late_validation[owner]",
+    "tests/test_plan_migration_originals.py::test_malformed_bootstrap_original_blocks_planning_without_mutation[extra-entry]",
+    "tests/test_plan_migration_originals.py::test_malformed_bootstrap_original_blocks_planning_without_mutation[extra-file]",
+    "tests/test_plan_migration_originals.py::test_malformed_bootstrap_original_blocks_planning_without_mutation[identity-collision]",
+    "tests/test_plan_migration_originals.py::test_malformed_bootstrap_original_blocks_planning_without_mutation[noncanonical]",
+    "tests/test_plan_migration_originals.py::test_malformed_bootstrap_original_blocks_planning_without_mutation[oversized]",
+    "tests/test_plan_migration_originals.py::test_malformed_bootstrap_original_blocks_planning_without_mutation[resource-hash]",
+    "tests/test_plan_migration_originals.py::test_malformed_bootstrap_original_blocks_planning_without_mutation[state]",
+    "tests/test_plan_migration_originals.py::test_malformed_bootstrap_original_blocks_planning_without_mutation[unit-order]",
+    "tests/test_plan_migration_originals.py::test_malformed_bootstrap_original_blocks_planning_without_mutation[unknown-field]",
+    "tests/test_plan_migration_originals.py::test_original_bootstrap_is_preserved_as_history_not_current_approval",
+    "tests/test_plan_migration_originals.py::test_unknown_or_active_operational_input_is_never_hidden[.specroad-bootstrap/journal.json-bundle_unsupported_payload]",
+    "tests/test_plan_migration_originals.py::test_unknown_or_active_operational_input_is_never_hidden[.specroad/recovery/unregistered/journal.json-migration_protected_path]",
+    "tests/test_plan_migration_originals.py::test_unknown_or_active_operational_input_is_never_hidden[.specroad/transactions/active/journal.json-migration_protected_path]",
     "tests/test_project_initialization.py::test_built_distribution_initializes_without_project_imports_or_path[module]",
     "tests/test_project_initialization.py::test_built_distribution_initializes_without_project_imports_or_path[zipapp]",
     "tests/test_project_initialization.py::test_configuration_is_last_and_every_move_has_a_durable_journal",

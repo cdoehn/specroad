@@ -10,15 +10,16 @@ from .history_protection import protected_record
 from .paths import PathClass, artifact_path
 from .record_contracts import SPECIAL_STATES
 from .record_schemas import validate_record_fields
-from .versions import SCHEMA_VERSION
+from .versions import SCHEMA_VERSION, PROJECT_SCHEMA_VERSIONS
 from ..storage.json_syntax import parse_json_object
 
 
 def _validate_format_input(configuration, path, raw, kind):
     value = parse_json_object(raw, path=path)
-    if value.get("schema_version") != SCHEMA_VERSION:
+    supported = PROJECT_SCHEMA_VERSIONS if kind is PathClass.CONFIGURATION else (SCHEMA_VERSION,)
+    if value.get("schema_version") not in supported:
         raise ModelError("unsupported_schema_version", path=path,
-                         pointer="/schema_version", highest_supported=SCHEMA_VERSION)
+                         pointer="/schema_version", highest_supported=supported[-1])
     if kind is PathClass.CONFIGURATION:
         ProjectConfiguration(value)
     elif kind is PathClass.ARTIFACT:

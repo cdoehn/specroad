@@ -9,7 +9,7 @@ Der vollständige offene Rest **21.a.W, 21.a.R, 21.a.C** bleibt in dieser
 Reihenfolge mit den ursprünglichen Rollen `implementation` erhalten.
 Die Korrekturbindung bezeichnet genau diesen Rest des alten Commitplans.
 
-Dieser Zielbestand gehört zu **21.a.W** und gilt erst nach dessen eigenem
+Dieser Zielbestand gehört zu **21.a.R** und gilt erst nach dessen eigenem
 erfolgreichen Apply-Gate und Commit. Jeder Zwischenstand wird einzeln
 ausgebracht und geprüft. Der Endstand wird nicht vorab installiert.
 Dev führte ausschließlich Syntax-, Collection-, Schemaform- und passive

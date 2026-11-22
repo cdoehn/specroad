@@ -11,7 +11,7 @@ from ..graph.scope_descriptors import ScopeDescriptor
 from ..model._bundle_scope_contract import IDEMPOTENCY_SCOPES, KINDS, PROJECT
 from ..model.canonical import canonical_json_bytes
 from ..model.errors import ModelError
-from ..model.versions import SCHEMA_VERSION
+from ..model.versions import SCHEMA_VERSION, PROJECT_SCHEMA_VERSIONS
 from ..storage.archive import _inventory, validate_portable_archive_paths
 from ..storage.json_syntax import parse_json_object
 from .errors import BundleError
@@ -58,7 +58,7 @@ def _check_versions_and_identity(value):
     for field in ('bundle_format_version', 'schema_version'):
         require(type(value[field]) is str, 'bundle_version_type')
     require(value['bundle_format_version'] == FORMAT_VERSION
-            and value['schema_version'] == SCHEMA_VERSION,
+            and value['schema_version'] in PROJECT_SCHEMA_VERSIONS,
             'unsupported_bundle_version', code='SRV003')
     for field in ('project_id', 'tool_version'):
         _text(value[field])

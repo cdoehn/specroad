@@ -92,3 +92,10 @@ def validate_plan_fields(value, *, id_prefix=None):
     for ref in value['prerequisites']:
         validate_artifact_address('implementation_plan', ref['plan_id'], prefix)
         validate_artifact_address('plan_entry', ref['entry_id'], prefix)
+    for binding in value.get('requirement_bindings', []):
+        validate_artifact_address('requirement', binding['requirement_id'], prefix)
+    for claim in value.get('coverage_claims', []):
+        validate_artifact_address('requirement', claim['requirement_id'], prefix)
+        for ref in claim['contributors']:
+            validate_artifact_address('implementation_plan', ref['plan_id'], prefix)
+            validate_artifact_address('plan_entry', ref['entry_id'], prefix)

@@ -19,8 +19,8 @@
     "scope": "Existing normal-mode oracles retained, extended by 21.a typed plan fields, explicit additive schema capability and read-only effective configuration. Legacy originals are not current approvals; complete Markdown loading/authoring and final integration remain separately planned."
   },
   "preconditions": [
-    "Bundle 792 21.a.W: native compiled Core and independent synthetic input bytes; no production or human approval assumed.",
-    "Bundle 793 21.a.W: correction of the failed 792 gate; original identities, oracles and native live admission retained, no completed Apply acceptance assumed."
+    "Bundle 792 21.a.R: native compiled Core and independent synthetic input bytes; no production or human approval assumed.",
+    "Bundle 793 21.a.R: correction of the failed 792 gate; original identities, oracles and native live admission retained, no completed Apply acceptance assumed."
   ],
   "primary_verification_id": "SR-VER-0052",
   "required_environment": {
@@ -42,6 +42,19 @@
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0746",
   "test_ids": [
+    "tests/test_plan_migration_originals.py::test_malformed_bootstrap_original_blocks_planning_without_mutation[extra-entry]",
+    "tests/test_plan_migration_originals.py::test_malformed_bootstrap_original_blocks_planning_without_mutation[extra-file]",
+    "tests/test_plan_migration_originals.py::test_malformed_bootstrap_original_blocks_planning_without_mutation[identity-collision]",
+    "tests/test_plan_migration_originals.py::test_malformed_bootstrap_original_blocks_planning_without_mutation[noncanonical]",
+    "tests/test_plan_migration_originals.py::test_malformed_bootstrap_original_blocks_planning_without_mutation[oversized]",
+    "tests/test_plan_migration_originals.py::test_malformed_bootstrap_original_blocks_planning_without_mutation[resource-hash]",
+    "tests/test_plan_migration_originals.py::test_malformed_bootstrap_original_blocks_planning_without_mutation[state]",
+    "tests/test_plan_migration_originals.py::test_malformed_bootstrap_original_blocks_planning_without_mutation[unit-order]",
+    "tests/test_plan_migration_originals.py::test_malformed_bootstrap_original_blocks_planning_without_mutation[unknown-field]",
+    "tests/test_plan_migration_originals.py::test_original_bootstrap_is_preserved_as_history_not_current_approval",
+    "tests/test_plan_migration_originals.py::test_unknown_or_active_operational_input_is_never_hidden[.specroad-bootstrap/journal.json-bundle_unsupported_payload]",
+    "tests/test_plan_migration_originals.py::test_unknown_or_active_operational_input_is_never_hidden[.specroad/recovery/unregistered/journal.json-migration_protected_path]",
+    "tests/test_plan_migration_originals.py::test_unknown_or_active_operational_input_is_never_hidden[.specroad/transactions/active/journal.json-migration_protected_path]",
     "tests/test_plan_model.py::test_additive_migration_does_not_accept_other_edits_or_implicit_target",
     "tests/test_plan_model.py::test_additive_migration_runs_native_public_writer_backup_and_verification",
     "tests/test_plan_model.py::test_entry_field_errors_are_rejected_without_inventing_metadata[display_id-[x]]",
@@ -62,6 +75,19 @@
     "tests/test_plan_model.py::test_plan_catalog_rejects_duplicate_structural_references[contributors]",
     "tests/test_plan_model.py::test_plan_projections_use_current_native_catalog_and_one_carrier[implementation_plan]",
     "tests/test_plan_model.py::test_plan_projections_use_current_native_catalog_and_one_carrier[plan_entry]",
-    "tests/test_plan_model.py::test_projects_require_explicit_capability_and_reject_shadow_files"
+    "tests/test_plan_model.py::test_projects_require_explicit_capability_and_reject_shadow_files",
+    "tests/test_plan_model_right.py::test_additive_transition_preserves_nested_baselines_evidence_and_legacy_contract[failed]",
+    "tests/test_plan_model_right.py::test_additive_transition_preserves_nested_baselines_evidence_and_legacy_contract[incomplete]",
+    "tests/test_plan_model_right.py::test_additive_transition_preserves_nested_baselines_evidence_and_legacy_contract[passed]",
+    "tests/test_plan_model_right.py::test_additive_transition_preserves_nested_baselines_evidence_and_legacy_contract[skipped]",
+    "tests/test_plan_model_right.py::test_both_distributions_publish_identical_plan_and_configuration_schemas",
+    "tests/test_plan_model_right.py::test_configuration_selection_is_passive_and_cli_origin_is_preserved",
+    "tests/test_plan_model_right.py::test_no_plan_project_remains_readable_exportable_and_snapshot_bound",
+    "tests/test_plan_model_right.py::test_plan_entry_allocation_respects_all_historical_reservations",
+    "tests/test_plan_model_right.py::test_project_inventory_detaches_values_and_keeps_display_ids_local",
+    "tests/test_plan_model_right.py::test_projected_collisions_are_rejected_by_shared_identity_rules[claim]",
+    "tests/test_plan_model_right.py::test_projected_collisions_are_rejected_by_shared_identity_rules[display]",
+    "tests/test_plan_model_right.py::test_projected_collisions_are_rejected_by_shared_identity_rules[identity]",
+    "tests/test_plan_model_right.py::test_projected_collisions_are_rejected_by_shared_identity_rules[relation]"
   ]
 }

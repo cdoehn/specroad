@@ -25,7 +25,7 @@
   },
   "preconditions": [
     "Use the current trusted checkout and a private temporary directory.",
-    "Bundle 792 21.a.W: native compiled Core and independent synthetic input bytes; no production or human approval assumed."
+    "Bundle 792 21.a.R: native compiled Core and independent synthetic input bytes; no production or human approval assumed."
   ],
   "primary_verification_id": "SR-VER-0001",
   "required_environment": {
