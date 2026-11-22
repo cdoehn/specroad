@@ -1063,6 +1063,10 @@
     "SR-FIX-CONTRACT-REGRESSIONS-v1": {
       "provider": "verification/regressions.json; tests/support/requirement_approval.py",
       "kind": "Exact R-01..R-47 bindings; actual file/process/CLI paths with independent oracles. Review/services are synthetic; no human product approval."
+    },
+    "SR-FIX-WRITE-FAULT-MATRIX-v1": {
+      "provider": "tests/test_acceptance_write_matrix.py",
+      "kind": "Owned real change/migration/merge clients, exact actual file-effect indices, SIGKILL and EIO/ENOSPC/EDQUOT boundaries; no repair or fabricated release."
     }
   },
   "fixture_format_version": 1,
@@ -1352,6 +1356,7 @@
     "verification-context-independent",
     "verification-context-subjects",
     "SR-FIX-ACCEPTANCE-INVENTORY-v1",
-    "SR-FIX-CONTRACT-REGRESSIONS-v1"
+    "SR-FIX-CONTRACT-REGRESSIONS-v1",
+    "SR-FIX-WRITE-FAULT-MATRIX-v1"
   ]
 }
