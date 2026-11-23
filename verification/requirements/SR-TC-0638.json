@@ -37,7 +37,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "8bf89ada05e431e43c0512885b65c9cfc5cf142568b5cd3d0d854acc90ec7a33",
+  "specification_sha256": "a1e456ef08d3cef683fbd73d31a26b4f40a0f3d5591249d8660ef8b31c281b19",
   "steps": [
     "Compare original exact bytes for unchanged/adopted artifacts and all normative resources; revision 7 stays 7.",
     "Combine revisions 3/7 into 8, exact UTC maximum plus one microsecond, original creation and explicit/tool actor; include owned relations and resolved branches.",

@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 441 · **Stand:** 23. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.105
+**Planrevision:** 442 · **Stand:** 23. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.106
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **21 Meilensteine in 332 Schritte und 996 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die ursprünglichen Positionen bleiben erhalten; ausdrücklich geänderte Ausführungsfolgen stehen im Fortschrittsblock und in den betroffenen Voraussetzungen; die früher genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wurde nach der damaligen Spezifikation innerhalb von 15.l.R vorgezogen und bleibt als normaler Prüfkern erhalten. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -14,20 +14,21 @@ Vor der Arbeit: [Projektregeln](../../DEVELOPMENT.md), [Grundlagen](rules/Grundl
 [IMPLEMENTATION-PLANS-791](decisions/implementation-plans-791.md) erweitert die
 Spezifikation und den vollständigen Rest. [M21](milestones/M21.md) umfasst
 78 neue technische Commits; sämtliche 30 bisher offenen Commits bleiben.
-Bestätigt sind **894/996** Positionen bis 21.b.C. Bundle 801 scheiterte
-in 21.c.W mit 26.640 bestandenen Tests einzig am fehlenden aktuellen
-Messbeleg; kein weiterer Commit entstand. [Bundle 802](history/bundle-802-authoring-measurements.md)
-ergänzt echte, nativ geprüfte Messserien für alle drei unveränderten Builds.
-Der vollständige offene Rest 21.c.W/R/C behält seine getrennten Apply-Gates.
-Ziel dieser Stage **21.c.C**, erst nach ihrem eigenen Apply-Gate
-und Commit: **897/996**, 99 offen. Davon gehen
-78 technische Commits dem menschlich abhängigen 21-Commit-Abschlussblock voraus.
-Diese Zählung ist kein Zeit- oder Requirement-Erfüllungsgrad.
+Bestätigt sind **897/996** Positionen bis 21.c.C auf dem gebundenen
+Result `043fff6d178da99abffd38b0675d5c17951939576cf657531e7ce07403efc0ba`.
+Die [ergänzenden verbindlichen Abnahmen für 21.d](decisions/force-contract-804.md#planabnahmen-21d)
+gelten bereits mit diesem Planstand.
+[FORCE-CONTRACT-804](decisions/force-contract-804.md) präzisiert die gemeinsame
+Transportbindung. Die anschließende vollständige Gruppe 21.d erhält
+getrennte W/R/C-Zustände und ihren Ausführungsbericht ab W.
+Die vorbereiteten Zielzähler gelten erst nach dem jeweiligen Apply-Gate und Commit.
+21.e bindet anschließend alle Fachadapter und Marker-/Lock-Sonderfälle an.
+Ziel dieser Stage **OFF-PLAN-FORCE-CONTRACT-804**: **897/996**, danach **21.d.W**.
 
 Die [Einzelzuordnung aller alten Katalogreste](matrices/Uebergabe.md#restinventar-791)
 ist verbindlicher Teil des Restplans. Sprach-/Herkunfts-/Bedienreviews und
 Benutzungsfreigabe bleiben ganz am Schluss; Technik und Messplätze davor.
-Control bleibt auf Nutzerauftrag pausiert. Das Bundle erteilt keinen Start,
+Der aktuelle Entwicklungsauftrag bedient Control nicht. Das Bundle erteilt keinen Start,
 keine Installation, keinen Budgetreset und keine Produktbenutzungsfreigabe.
 
 ## Erhaltener Verlauf und frühere Auftragsbindungen bis Bundle 790
@@ -351,7 +352,7 @@ Korrektur der nativen Validierungsfälle und vollständiger Matrixrest: [Bundle 
 Prozess-/Journalreparatur des offenen C-Rests: [Bundle 790](history/bundle-790-process-journal.md). W/R sind bestätigt; C benötigt sein eigenes Apply-Gate.
 
 ```yaml
-plan_revision: 441
+plan_revision: 442
 implementation_plan_commits_total: 996
 implementation_plan_commits_completed: 897
 last_completed_plan_commit: 21.c.C

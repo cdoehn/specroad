@@ -33,7 +33,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "8bf89ada05e431e43c0512885b65c9cfc5cf142568b5cd3d0d854acc90ec7a33",
+  "specification_sha256": "a1e456ef08d3cef683fbd73d31a26b4f40a0f3d5591249d8660ef8b31c281b19",
   "steps": [
     "Prepare guarded native workflow updates and evaluate actual waiver bindings, deadlines, human decisions and changed subject/configuration/scope without I/O.",
     "Exercise mutating host review callbacks and revocation; publish guarded workflow updates through the real common writer and verify refusal of stale, denied or calculated-result writes."

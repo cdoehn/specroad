@@ -1,17 +1,17 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.105
+## Version 0.2.106
 
 | Feld | Wert |
 |---|---|
 | Dokument-ID | `SR-SPEC-0001` |
-| Dokumentversion | `0.2.105` |
+| Dokumentversion | `0.2.106` |
 | Zielrelease | `SpecRoad Single-Repository Workbench 0.2.0` |
 | Status | **Fachlich konsolidierte Arbeitsgrundlage; technische Reviewentscheidung gesondert dokumentiert, formale Baseline-Freigabe und Produktabnahme nicht durch dieses Dokument erklärt** |
 | Stand | 23. November 2026 |
 | Sprache | Deutsch; technische Feldnamen, Enum-Werte und CLI-Kommandos Englisch |
-| Fachliche Quelle | **Diese Repositoryfassung v0.2.105 ist die aktive fachliche Arbeitsgrundlage; eine entsprechende PDF wird hiermit nicht veröffentlicht.** |
+| Fachliche Quelle | **Diese Repositoryfassung v0.2.106 ist die aktive fachliche Arbeitsgrundlage; eine entsprechende PDF wird hiermit nicht veröffentlicht.** |
 | Bearbeitbare Satzquelle | Diese Datei; eine spätere PDF muss denselben versionierten Inhalt wiedergeben. |
-| Vorgängerversion | Repository-Spezifikation v0.2.104; historische Nachweise bleiben unverändert. |
+| Vorgängerversion | Repository-Spezifikation v0.2.105; historische Nachweise bleiben unverändert. |
 | Prüf- und Entscheidungsgrundlage | IMPLEMENTATION-PLANS-791: ausdrücklicher Nutzerauftrag und konsolidierte Entscheidungen vom 22. November 2026; frühere E-Mail-Ideen gelten nur soweit nicht ersetzt. |
 | Änderungsart | Implementierungs-/Commitpläne im gemeinsamen Modell, Markdownquelle, allgemeine Text-/JSON-Ergebnisse und explizites Force; technischer Rest vor gemeinsamer menschlicher Endabnahme. |
 
@@ -8466,6 +8466,7 @@ Die Umsetzung folgt im bestehenden Plan als 18.s–18.x nach 18.k.C.
 
 | Version | Datum | Status | Änderung |
 |---|---|---|---|
+| 0.2.106 | 2026-11-23 | Delegierte Detailklärung | FORCE-CONTRACT-804: geschlossener expliziter Force-/Raw-Plantransport, Operationshash und separate negative Ausführungsbelege; keine Host- oder Produktfreigabe. |
 | 0.2.105 | 2026-11-23 | Delegierte Detailklärung | PLAN-AUTHORING-798: physischer Markdown-Authoringvertrag im vorhandenen Writer, native Rohbefehle, exakte Wiederholung und originalgebundene Importadapter; keine Abnahme erklärt. |
 | 0.2.103 | 2026-11-21 | Delegierte Detailklärung | APPROVAL-BINDING-783: exakte Kontext-/Reviewreferenz und aktuelle native Gates für R-36; keine Aufhebung menschlicher Freigaben. |
 | 0.2.102 | 2026-11-21 | Ausdrücklicher Nutzerauftrag | HUMAN-ACCEPTANCE-LAST-779: unabhängige technische M20-Gruppen vorziehen; menschliche Abnahmen und abhängige Prüfungen zuletzt, ohne Änderung ihrer Erfolgskriterien. |
@@ -13845,6 +13846,78 @@ Belege weiter ausweisen. Erzwungene Änderungen an geschützten Originalen
 machen darauf beruhende Nachweise ungültig; sie erzeugen keinen Ersatzbeleg.
 Ein `force`-Durchlauf der SpecRoad-Entwicklung darf deshalb weder deren
 Apply-Gates noch menschliche Endabnahmen ersetzen.
+
+### X.12.1 Gemeinsame Force-Transportbindung
+
+**FORCE-CONTRACT-804, delegiert gemäß SPECROAD-DECISION-1 und 2.4.3.1.**
+Die additive Feldfestlegung lässt X.12, sämtliche Produktgateklassen und die
+getrennte Umsetzung ihrer Fachadapter unverändert. Sie erteilt keine
+Hostautorität, menschliche Zustimmung oder Entwicklungs-/Apply-Abnahme.
+
+Der explizite Forcekontext in Change-Plan 1.3.0 ist das geschlossene Objekt
+`force={requested:boolean,reason:string|null}`. Ein Grund ist nichtleer und
+nur zusammen mit `requested=true` zulässig. `project_id` benennt die ausdrücklich
+bestimmte Projektidentität. Bei nicht projizierbaren Raw-Beständen dürfen
+`base.model_root_sha256` und `expected_result.model_root_sha256` null sein;
+vorhandene Hashwerte bleiben Forderungen, keine erfundenen Beobachtungen.
+Die übrigen Planfelder und der Selbsthash bleiben nach dem bestehenden Vertrag
+gebunden. Historische 1.2.0-Pläne und ihre Operationshashes bleiben lesbar.
+Eine alte Planabsicht kann beim expliziten Forceaufruf in einen neuen 1.3.0-Plan
+mit sichtbarem Forcekontext gebunden werden; ursprüngliche gespeicherte Bytes
+werden nicht geändert. Ohne explizite Forceanforderung wird ein Forceplan nicht
+ausgeführt. Ein passiver Plan oder eine Begründung erteilt keine Ausführungsbefugnis.
+
+Die geschlossene Operation heißt `resource_replace` und enthält genau `op`,
+`path`, `observed_byte_sha256`, `target`, `reason`, `force`. Der beobachtete
+Bytehash ist ein vollständiger SHA-256 oder `absent`. `target` ist genau
+`{bytes_base64:string}` mit kanonischem Base64 (auch leere Zielbytes) oder
+`{delete:true}`; ausgelassene Bytes bedeuten nicht Löschen. Der nichtleere
+Operationsgrund erklärt den konkreten Eingriff, sein Forcekontext entspricht
+dem Plan. Wiederholte Ziele ohne eindeutige konkrete Gesamtwirkung bleiben
+unbestimmte Aufträge. Reine Raw-Pläne brauchen keine geratenen Ergebnisartefakte
+oder semantischen Voraussetzungen. Typisierte Mischoperationen behalten den
+bestehenden gemeinsamen Ziel- und Spezialistenvertrag; diese Festlegung
+ersetzt keinen noch fehlenden Fachadapter.
+
+Für Pläne mit explizitem Forcekontext ist der Operationshash der JCS-SHA-256
+über genau `operations`, `force`, `base`, `expected_result`, `preconditions`.
+Der Planselbsthash bindet zusätzlich die vollständige Projekt-/Actor-/Request-
+und Metadatenidentität. Eine gleiche Request-ID mit anderem Forcekontext,
+anderen Forderungen oder Zielbytes darf weder normalen noch erzwungenen
+historischen Erfolg übernehmen. Ein identischer, vollständig verifizierter
+Abschluss bleibt wiederholbar, ohne erneut Dateien zu verändern; er behauptet
+keine heutige Modellgültigkeit.
+
+Envelope 2.1.0 behält seine bestehenden Felder. `summary.force` enthält genau
+`requested`, `used`, `reason`, `overrides`. Jeder Override besitzt genau die
+acht in X.11 genannten Felder; negative Entscheidungen heißen `denied` oder
+`unknown`. Die Liste ist deterministisch nach Gate-ID, Subject und kanonischen
+Gesamtbytes sortiert und enthält keine identischen Doppelzeilen. `used` ist
+nur bei tatsächlichen Overrides wahr. Ohne Sperrentscheidung bleibt ein
+vollständig ausgeführter Auftrag `success` mit `used=false`; mit Overrides
+lautet er `forced`. Ein Ausführungsfehler bleibt `failed` mit ursprünglichem
+Exit-Code und dem bis dahin belegten Force-/Schreibzustand.
+
+Die gemeinsamen passiven Forcebelege erhalten eigene Versionen:
+`force-write-guard-v1`, `force-transaction-receipt-v1`,
+`force-request-receipt-v1`, `force-write-completion-v1` und
+`force-transaction-completion-v1`. Sie verwenden bei einem ununterbrochenen
+frischen Writer die bestehenden Receipt-/Completionpfade und binden vollständigen
+Plan, Forcebefunde, genaue Vorher-/Nachherdateihashes, Zielinventar und native
+Validierungsbeobachtung. Der Abschlussleser prüft deren vollständige Hashkette
+und gegenseitige Bindung; ein solcher Beleg ist ausdrücklich kein normaler
+positiver Validierungs-, Approval- oder Recoverybeleg. Der Spezialfall mit
+alten/aktiven Markern behält ausschließlich die getrennte Force-Attempt-Ablage
+aus X.12; alte Belege werden nicht überschrieben oder entsperrt.
+
+Ein Raw-Zielbericht enthält das vollständige Byteinventar, die tatsächlich
+ermittelbare Modellwurzel, native negative Diagnosen und Vollständigkeitsstatus.
+Bei unlesbarer Gesamtsemantik lautet der Befund `unknown`; pro Ressource kommen
+reine Parsebeobachtungen hinzu. Ein lesbares JSON-Objekt ist
+keine bestandene Fachprüfung. Ein vollständig lesbares, fachlich negatives
+Modell bleibt `invalid`. Quelländerungen nach der letzten gebundenen Beobachtung
+werden erneut erkannt und protokolliert; ohne verifizierten vollständigen
+Dateivollzug wird kein Abschlussbeleg ausgegeben.
 
 ## X.13 Deterministische Abnahmevektoren und technische Reihenfolge
 
