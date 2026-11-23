@@ -1,17 +1,17 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.104
+## Version 0.2.105
 
 | Feld | Wert |
 |---|---|
 | Dokument-ID | `SR-SPEC-0001` |
-| Dokumentversion | `0.2.104` |
+| Dokumentversion | `0.2.105` |
 | Zielrelease | `SpecRoad Single-Repository Workbench 0.2.0` |
 | Status | **Fachlich konsolidierte Arbeitsgrundlage; technische Reviewentscheidung gesondert dokumentiert, formale Baseline-Freigabe und Produktabnahme nicht durch dieses Dokument erklärt** |
-| Stand | 22. November 2026 |
+| Stand | 23. November 2026 |
 | Sprache | Deutsch; technische Feldnamen, Enum-Werte und CLI-Kommandos Englisch |
-| Fachliche Quelle | **Diese Repositoryfassung v0.2.104 ist die aktive fachliche Arbeitsgrundlage; eine entsprechende PDF wird hiermit nicht veröffentlicht.** |
+| Fachliche Quelle | **Diese Repositoryfassung v0.2.105 ist die aktive fachliche Arbeitsgrundlage; eine entsprechende PDF wird hiermit nicht veröffentlicht.** |
 | Bearbeitbare Satzquelle | Diese Datei; eine spätere PDF muss denselben versionierten Inhalt wiedergeben. |
-| Vorgängerversion | Repository-Spezifikation v0.2.103; historische Nachweise bleiben unverändert. |
+| Vorgängerversion | Repository-Spezifikation v0.2.104; historische Nachweise bleiben unverändert. |
 | Prüf- und Entscheidungsgrundlage | IMPLEMENTATION-PLANS-791: ausdrücklicher Nutzerauftrag und konsolidierte Entscheidungen vom 22. November 2026; frühere E-Mail-Ideen gelten nur soweit nicht ersetzt. |
 | Änderungsart | Implementierungs-/Commitpläne im gemeinsamen Modell, Markdownquelle, allgemeine Text-/JSON-Ergebnisse und explizites Force; technischer Rest vor gemeinsamer menschlicher Endabnahme. |
 
@@ -126,7 +126,7 @@ Bei einem Widerspruch innerhalb dieser Dokumentversion gilt:
 3. `SR-DEC-*` hat Vorrang vor erläuterndem Text, Diagrammen und Beispielen.
 4. Beispiele sind niemals normativ, sofern sie nicht ausdrücklich als Testvektor bezeichnet sind.
 5. Zwei widersprüchliche `SR-REQ-*`-Anforderungen besitzen **keine implizite Rangfolge** nach Nummer, Position oder Spezifität. Ein solcher Fund ist ein Spezifikationsfehler, muss als Issue gelöst werden und verhindert die Freigabe.
-6. Diese Dokumentversion 0.2.104 ersetzt die frühere fachliche Arbeitsgrundlage vollständig. Bis zur gesonderten PDF-Veröffentlichung ist diese versionierte Repositorydatei maßgeblich. Eine spätere PDF muss inhaltsgleich sein; frühere PDFs werden nicht als Nachweis der neuen Verträge ausgegeben. Inhalte verschiedener Fassungen dürfen nicht zu einer Mischspezifikation kombiniert werden.
+6. Diese Dokumentversion 0.2.105 ersetzt die frühere fachliche Arbeitsgrundlage vollständig. Bis zur gesonderten PDF-Veröffentlichung ist diese versionierte Repositorydatei maßgeblich. Eine spätere PDF muss inhaltsgleich sein; frühere PDFs werden nicht als Nachweis der neuen Verträge ausgegeben. Inhalte verschiedener Fassungen dürfen nicht zu einer Mischspezifikation kombiniert werden.
 7. Eine nachträgliche Änderung dieser veröffentlichten Datei erfordert mindestens eine neue Patch-Dokumentversion; stille Korrekturen unter derselben Dokumentversion sind unzulässig.
 8. Eine normative Tabelle, auf die eine `SR-REQ-*`-Anforderung ausdrücklich als Algorithmus oder Matrix verweist, ist Bestandteil des Passkriteriums dieser Anforderung.
 
@@ -2579,7 +2579,7 @@ Die Metadaten werden ausschließlich durch die ausdrücklich ausgewählte Policy
 
 ### 10.2 Kernoperationen
 
-Die typisierten create/update/relation/transition-Operationen können die neuen Planprojektionen adressieren; ihr physischer Writer folgt X.3/X.4. Zusätzlich gilt `resource_replace` aus X.12 für explizite Raw-Zielbytes. Ohne diesen ausdrücklichen Auftrag darf ein Parserfehler nicht durch geratenen Inhalt repariert werden.
+Die typisierten Authoringabsichten können die neuen Planprojektionen adressieren; für die neun Planbefehle bindet `plan_edit` nach X.11.1 ihre vollständige physische Umsetzung im bestehenden Writer nach X.3/X.4. Generische JSON-Dateioperationen dürfen keine Schattenquelle für Markdownprojektionen erzeugen. Zusätzlich gilt `resource_replace` aus X.12 für explizite Raw-Zielbytes. Ohne diesen ausdrücklichen Auftrag darf ein Parserfehler nicht durch geratenen Inhalt repariert werden.
 
 | Operation | Mindestinhalt | Ergebnis |
 |---|---|---|
@@ -8466,6 +8466,7 @@ Die Umsetzung folgt im bestehenden Plan als 18.s–18.x nach 18.k.C.
 
 | Version | Datum | Status | Änderung |
 |---|---|---|---|
+| 0.2.105 | 2026-11-23 | Delegierte Detailklärung | PLAN-AUTHORING-798: physischer Markdown-Authoringvertrag im vorhandenen Writer, native Rohbefehle, exakte Wiederholung und originalgebundene Importadapter; keine Abnahme erklärt. |
 | 0.2.103 | 2026-11-21 | Delegierte Detailklärung | APPROVAL-BINDING-783: exakte Kontext-/Reviewreferenz und aktuelle native Gates für R-36; keine Aufhebung menschlicher Freigaben. |
 | 0.2.102 | 2026-11-21 | Ausdrücklicher Nutzerauftrag | HUMAN-ACCEPTANCE-LAST-779: unabhängige technische M20-Gruppen vorziehen; menschliche Abnahmen und abhängige Prüfungen zuletzt, ohne Änderung ihrer Erfolgskriterien. |
 | 0.2.94 | 2026-11-18 | Delegierte Detailklärung nach SPECROAD-DECISION-1 | PROPOSAL-DIALOG-738: geschlossene native Veröffentlichung vorbereiteter Inhaltsrevisionen über den vorhandenen Writer; Reviews, Scope und CLI-Verträge bleiben erhalten. |
@@ -13663,6 +13664,115 @@ Validierungsfehler bleiben mit ursprünglicher Schwere erhalten; fehlgeschlagene
 technische Ausführung bleibt `failed` mit dem bisherigen zutreffenden Code.
 Ein Controller muss zusätzlich Status, validation_status und Forcebelege prüfen.
 Ein bloßes Code-0 darf keine echte Abnahme oder Evidence erfinden.
+
+
+### X.11.1 Gebundenes natives Plan-Authoring
+
+**PLAN-AUTHORING-798, delegiert gemäß SPECROAD-DECISION-1 und 2.4.3.1.**
+Die additive Operation `plan_edit` des bestehenden Change-Plan-Formats 1.2.0
+trägt genau `op`, `intent`, `sources` und `result_ids`. Ein Plan enthält für
+diesen nativen Authoringaufruf genau eine solche Operation. `intent` bindet
+den kanonischen Befehlsnamen und seine passiven Eingaben einschließlich
+nativ vergebener IDs. `sources` ist die nach Pfad sortierte vollständige
+Inventarliste der Planträger: jeder Eintrag hat `path`, `before`, `after`.
+Vorher-/Nachherwerte sind vollständiger UTF-8-Text; null bezeichnet Abwesenheit.
+Die Liste schließt unveränderte Planträger ein. `result_ids` bindet genau die
+sortierten neuen oder geänderten Projektionen. Alle Vorherbytes beziehungsweise
+Abwesenheiten sind zusätzliche Change-Plan-Präbedingungen. Der native Adapter
+MUSS den Auftrag aus den Vorherbytes erneut auswerten und alle Nachherbytes,
+Projektionen, Metadaten und Modellwurzeln vergleichen. Eingelesene Daten sind
+keine Schreibfähigkeit. Ältere Operationsformen und ihre Nachweise bleiben
+unverändert; unbekannte Operationen bleiben abzuweisen.
+
+Die bestehenden Transaktions-, Pfad-, Lock-, Historien-, Review- und
+Vollzielprüfungen gelten auch für Markdown. Eine entfernte Trägerdatei ist
+ein explizites natives Löschziel. Es gibt weder einen zweiten Writer noch
+eine JSON-Schattenressource. Das Manifest ergänzt den physischen Ressourcentyp
+`plan_source` mit `id`, `version=plan-markdown-v1`, `path`, `size`, `sha256`
+und sortierten `projections` mit jeweils `id` und `sha256`. Die bestehenden
+Artefaktressourcen binden die einzelnen Projektionen. Der Validierungsbericht
+führt dazu optional `plan_sources` mit Pfad, Dateihash und Projektionen; ohne
+Planquelle bleiben die alten Berichte unverändert. Prüfungen binden jeden
+physischen Träger genau einmal und alle seine Projektionen vollständig.
+
+`plan update` und `entry update` ändern genau die explizit in `--input`
+angegebenen fachlichen Felder; ausgelassene Felder bleiben erhalten. Identität,
+Audit, Revision, Lifecycle und Struktur sind keine frei überschreibbaren
+Felder. Die Strukturkommandos und der vorhandene Lifecyclevertrag berechnen
+diese Auswirkungen; Inhaltänderungen an approved ziehen dessen Freigabe
+gemäß 9.6.3 zurück. `--plan` qualifiziert den Ausgangsselektor. Ein Move
+bindet zusätzlich `--target-plan`, `--parent` und `--position` ausdrücklich.
+Die Basisoption heißt `--expected-model-root-sha256`. Alle neuen Ergebnisse
+berichten Operation, Hashbindungen, tatsächlichen Schreibzustand und Belege;
+Dry-run erzeugt keine Dateien, Sperren, Belege oder reservierten IDs.
+
+Bei `--as-proposal` enthält `--proposal-input` die expliziten Felder `title`,
+`rationale` und genau eine `changes`-Erklärung mit `rationale`,
+`requirement_or_issue_ids`, `sources`, `assumptions`, `confidence`; optionale
+`model_provenance` folgt dem bestehenden Vertrag. Proposal- und Change-ID
+sowie die aus der Operation abgeleiteten Targets werden nativ vergeben.
+Die gespeicherten Vorherbytes und Eingaben erlauben exakte Request-Wiederholung
+vor Neuzuteilung. Ein solcher Aufruf veröffentlicht ausschließlich einen
+Draft; er bestätigt weder menschliches Review noch Anwendbarkeit der Änderung.
+
+Für registriertes generisches Authoring bleiben die bestehenden normalisierten
+Operationen maßgeblich. Interleavte `--set`/`--unset`-Optionen behalten ihre
+Reihenfolge. Strukturierte Aufrufer verwenden für beliebige Interleavings
+einen expliziten geordneten Patch-Eingang; eine Optionsabbildung allein
+behauptet keine Reihenfolge zwischen verschiedenen Flags. Wiederholungen
+vergleichen die ursprünglich belegten Operationen und Guards; aktueller
+Inhalt ersetzt keine historische Eingabe. Historische Belege und Archive
+reservieren ihre IDs, erteilen aber keine Autorität.
+
+Die eine explizite Proposal-Erklärung gilt für den vollständigen beauftragten
+Vorgang und wird je normalisierter Operation mit eigener Change-ID gespeichert.
+Targets umfassen die tatsächlich betroffenen und entfernten IDs; ein No-op
+bezieht sich auf den ausdrücklich ausgewählten Eintrag. Keine frei gewählten
+Targets und keine erfundenen Begründungen oder Freigaben.
+
+Die bestehenden Standard-Lifecyclebedingungen bleiben erhalten. Eine isolierte
+normale `in_review`-nach-`approved`-Transition bindet zusätzlich
+`metadata.standard_approval` mit `version=standard-approval-v1` und
+`model_root_sha256` der vollständigen Ausgangsbasis. Der native Adapter prüft
+die vollständigen aktuellen Fachgates erneut gegen dieselbe Operation und
+Basis. Requirements behalten ausschließlich ihre vorhandene dedizierte
+Kontext-/Review-/Prerequisitebindung; Sonderlifecycles bleiben dediziert.
+Ein solcher Hash ist keine vom Aufrufer erteilbare Freigabe.
+
+Die öffentlichen Dokument-, Section-, Block-, View-, Baseline-, Relationsreview-
+und Evidence-Befehle akzeptieren mit `--input` einen geschlossenen fachlichen
+Eingang entsprechend dem jeweiligen vorhandenen nativen Operationsvertrag;
+Befehlsname, Hostautorität, Gates und Callbackcode sind darin unzulässig.
+Die bereits dokumentierten positionalen Formen für Relationsreview, Baseline
+und Evidence bleiben verfügbar; widersprüchliche doppelte Eingaben werden
+abgewiesen. `change apply <FILE>` liest unveränderte gespeicherte Planbytes,
+prüft Actor, Request, Basis, Metadaten, Ergebnis und aktuelle native Gates und
+vergibt keine Ersatz-IDs. Dedizierte Review-/Proposal-/Import-/Migrations-
+Kontrolloperationen werden dadurch nicht als generische Eingriffe freigegeben.
+Fehler berichten nur belegten Schreibzustand: vor Veröffentlichung
+`not_committed`, bei unbestätigtem Veröffentlichungsausgang `unknown`.
+Geplante IDs oder Zielhashes sind kein Erfolgs-/Recoverybeleg.
+
+Für `evidence import generic|junit|sarif <FILE>` gilt der vorhandene vollständige
+Import-, Mapping- und Evidenzvertrag. Originale und Mappingdateien müssen als
+aktuelle Anhänge mit vollständigen Größen-/SHA-256-Bindungen vorliegen. Der
+native Writer übernimmt ausschließlich daraus neu berechnete vollständige
+Kandidatensätze. Der geschlossene `evidence-import-context-v2` bindet
+`import_format`, `source_path`, `source_sha256`, `preparation_sha256`, `policy`
+und die jeweils nötigen `mapping_path`/`mapping_sha256`, bei JUnit außerdem
+`measurements_path`/`measurements_sha256` und `tool`; optionale
+`external_identifiers_path`/`external_identifiers_sha256` bleiben an das
+JUnit-Original gebunden. Die reine Generic-Form v1 bleibt bytekompatibel.
+JUnit enthält keine vollständigen nativen Messmetadaten: der ausdrücklich
+bereitgestellte Evidence Exchange enthält genau einen vollständigen Datensatz
+je akzeptiertem gemapptem Testcase in dessen Reihenfolge. Ziel beziehungsweise
+Test-ID, Ergebnis und Tool müssen übereinstimmen; nichts wird aus Uhrzeit,
+Dateiname oder erfolgreichen Parseraufrufen geraten. SARIF verwendet sein
+vorhandenes explizites Mapping mit Exchange. `--run-context` bindet, sofern
+angegeben, denselben vollständigen Kontext; jeder Widerspruch wird abgewiesen.
+Alle Originale bleiben erhalten und werden als Anhänge/Provenienz gebunden.
+Skip-Policy, ungültige Vorkommen und negative Messungen bleiben sichtbar;
+eine Importtransaktion erteilt keine fachliche Freigabe.
 
 ## X.12 Allgemeines explizites Force
 

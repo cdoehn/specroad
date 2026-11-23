@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 437 · **Stand:** 23. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.104
+**Planrevision:** 438 · **Stand:** 23. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.105
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **21 Meilensteine in 332 Schritte und 996 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die ursprünglichen Positionen bleiben erhalten; ausdrücklich geänderte Ausführungsfolgen stehen im Fortschrittsblock und in den betroffenen Voraussetzungen; die früher genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wurde nach der damaligen Spezifikation innerhalb von 15.l.R vorgezogen und bleibt als normaler Prüfkern erhalten. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -311,7 +311,33 @@ Der Klärungspräfix zählt keine Produktposition und erteilt keine Fachfreigabe
 Klärungspräfix und 20.c.W den vollständigen offenen Rest 20.c.R/C und 20.e.W/R/C
 fort. Die folgenden Zielwerte gelten erst nach dem jeweiligen Apply-Gate.
 
+## Normative Abnahmepräzisierung für 21.c
+
+[PLAN-AUTHORING-798](decisions/plan-authoring-798.md) bindet bereits im Klärungsstand die folgenden vollständigen Abnahmen des bestehenden [21.c-Umfangs](milestones/M21.md#step-21-c). Voraussetzungen, Commit-IDs und Commit-Messages bleiben unverändert. W, R und C benötigen jeweils ihr eigenes erfolgreiches Apply-Gate vor dem Commit; dieser Text ist kein Ausführungs- oder Erfolgsnachweis.
+
+**21.c.W:**
+
+**Umfang:** Vollständiger zugeordneter Altumfang einschließlich nativer Roh-CLI, Historienreservierung, Fachgates und exakter gespeicherter Pläne gemäß [PLAN-AUTHORING-798](decisions/plan-authoring-798.md); plan create/update/remove und entry add/update/move/remove/check/uncheck samt gebundenem Change-Plan, Revision, Dry-run und passiver Commitmessage über den bestehenden Writer veröffentlichen.
+
+**Verhaltensabnahme:** Echte native Writes und Dry-runs; genaue Vorher-/Nachherbytes, Requestbelege und erhaltene fremde Dateien. Abbruch bleibt normal gesperrt. Commitmessage enthält den Titel; kein Git-Schreibaufruf. Öffentliche Raw-/strukturierte Aufrufe, Originalimporte, Standard-/Requirementfreigaben, AI-Proposalumleitung und gespeicherte Pläne verwenden die vollständigen nativen Gates; ungültige Eingaben erzeugen keine Erfolgsaussage.
+
+**21.c.R:**
+
+**Umfang:** Planübergreifende Moves, vollständige Verweisanpassung, Kinderlöschung, concurrent source change, Idempotenz und reale Fehlerpunkte an den Markdownpublikationsgrenzen vervollständigen.
+
+**Verhaltensabnahme:** Echte native Writes und Dry-runs; genaue Vorher-/Nachherbytes, Requestbelege und erhaltene fremde Dateien. Abbruch bleibt normal gesperrt. Commitmessage enthält den Titel; kein Git-Schreibaufruf. Öffentliche Raw-/strukturierte Aufrufe, Originalimporte, Standard-/Requirementfreigaben, AI-Proposalumleitung und gespeicherte Pläne verwenden die vollständigen nativen Gates; ungültige Eingaben erzeugen keine Erfolgsaussage. Sämtliche W-Oracles sowie die genannten Fehler-/Randfälle bleiben verpflichtend.
+
+**21.c.C:**
+
+**Umfang:** Gemeinsame Daten-/Policy-/Fehlerpfade für Plan- und Eintragsauthoring konsolidieren; keine fachliche Erweiterung, keine abgekürzten Prüfungen und kein Umschreiben historischer Belege.
+
+**Verhaltensabnahme:** [Gemeinsame C-Abnahme](rules/C_Abnahme.md) vollständig; die gesamte unabhängige W/R-Pflichtmenge sowie Quellen-/Byte-/Status-/Seiteneffektoracles bleiben erhalten. Keine neuen Produktregeln in C.
+
 ## Fortschritt – einzige maßgebliche Planstelle
+
+Bundle 798: [vollständiger Umfang und Nachweisgrenzen](decisions/plan-authoring-798.md).
+Ziel dieser Stage **OFF-PLAN-PLAN-AUTHORING-798**, erst nach ihrem eigenen Apply-Gate und Commit:
+**894/996**, danach **21.c.W**. Ausgangsstand 894 bestätigt; Dev-Tests 0.
 
 Korrektur der offenen Folge 20.f/20.g: [Bundle 786](history/bundle-786-distribution-fixture.md). Zielwerte gelten erst nach dem jeweiligen erfolgreichen Apply-Gate.
 
@@ -324,7 +350,7 @@ Korrektur der nativen Validierungsfälle und vollständiger Matrixrest: [Bundle 
 Prozess-/Journalreparatur des offenen C-Rests: [Bundle 790](history/bundle-790-process-journal.md). W/R sind bestätigt; C benötigt sein eigenes Apply-Gate.
 
 ```yaml
-plan_revision: 437
+plan_revision: 438
 implementation_plan_commits_total: 996
 implementation_plan_commits_completed: 894
 last_completed_plan_commit: 21.b.C
