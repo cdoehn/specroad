@@ -9,13 +9,13 @@ Review-Abdeckung ist kein bestandener Adaptertest und keine Releasefreigabe. Meh
 
 ## Language corpus
 
-0/226 Prüfpunkte bestätigt; **226 offen**; 0 veraltete Einzelbewertungen.
+25/226 Prüfpunkte bestätigt; **201 offen**; 1 veraltete Einzelbewertungen.
 
-Modul: [JSON](modules/language-corpus.json). SHA-256: `ef68390c26628602c7c55003814022cae12dbc5deb0c45bafa9f9f38f771da9e`.
+Modul: [JSON](modules/language-corpus.json). SHA-256: `d321c8b4b49f150e308f3c4723e821a51b12c6dc2610e30a06f70fc65e1fadbf`.
 
 | Teil | Bestätigt | Offen |
 | --- | ---: | ---: |
-| Deutsch | 0 | 25 |
+| Deutsch | 25 | 0 |
 | English | 0 | 25 |
 | हिन्दी | 0 | 25 |
 | Bahasa Indonesia | 0 | 25 |
@@ -28,4 +28,30 @@ Modul: [JSON](modules/language-corpus.json). SHA-256: `ef68390c26628602c7c550038
 
 | Bewerteter Prüfpunkt | Stand | Reviewer und Belege (mehrfach möglich) |
 | --- | --- | --- |
-| — | Noch keine Bewertungen | — |
+| de-L01 | accepted | [Christian Döhn &#60;christian.doehn@gmail.com&#62;](results/language-corpus/0261f149-d628-4e4c-8c2b-ab54734397e4.json): accept |
+| de-L02 | accepted | [Christian Döhn &#60;christian.doehn@gmail.com&#62;](results/language-corpus/0261f149-d628-4e4c-8c2b-ab54734397e4.json): accept |
+| de-L03 | accepted | [Christian Döhn &#60;christian.doehn@gmail.com&#62;](results/language-corpus/0261f149-d628-4e4c-8c2b-ab54734397e4.json): accept |
+| de-L04 | accepted | [Christian Döhn &#60;christian.doehn@gmail.com&#62;](results/language-corpus/0261f149-d628-4e4c-8c2b-ab54734397e4.json): accept |
+| de-L05 | accepted | [Christian Döhn &#60;christian.doehn@gmail.com&#62;](results/language-corpus/0261f149-d628-4e4c-8c2b-ab54734397e4.json): accept |
+| de-L06 | accepted | [Christian Döhn &#60;christian.doehn@gmail.com&#62;](results/language-corpus/21835e62-7e8a-4d67-8074-90581ce7ba75.json): accept |
+| de-L07 | accepted | [Christian Döhn &#60;christian.doehn@gmail.com&#62;](results/language-corpus/0261f149-d628-4e4c-8c2b-ab54734397e4.json): accept |
+| de-L08 | accepted | [Christian Döhn &#60;christian.doehn@gmail.com&#62;](results/language-corpus/0261f149-d628-4e4c-8c2b-ab54734397e4.json): accept |
+| de-L09 | accepted | [Christian Döhn &#60;christian.doehn@gmail.com&#62;](results/language-corpus/0261f149-d628-4e4c-8c2b-ab54734397e4.json): accept |
+| de-L10 | accepted | [Christian Döhn &#60;christian.doehn@gmail.com&#62;](results/language-corpus/0261f149-d628-4e4c-8c2b-ab54734397e4.json): accept |
+| de-L11 | accepted | [Christian Döhn &#60;christian.doehn@gmail.com&#62;](results/language-corpus/0261f149-d628-4e4c-8c2b-ab54734397e4.json): accept |
+| de-L12 | accepted | [Christian Döhn &#60;christian.doehn@gmail.com&#62;](results/language-corpus/0261f149-d628-4e4c-8c2b-ab54734397e4.json): accept |
+| de-L13 | accepted | [Christian Döhn &#60;christian.doehn@gmail.com&#62;](results/language-corpus/0261f149-d628-4e4c-8c2b-ab54734397e4.json): accept |
+| de-L14 | accepted | [Christian Döhn &#60;christian.doehn@gmail.com&#62;](results/language-corpus/0261f149-d628-4e4c-8c2b-ab54734397e4.json): accept |
+| de-L15 | accepted | [Christian Döhn &#60;christian.doehn@gmail.com&#62;](results/language-corpus/0261f149-d628-4e4c-8c2b-ab54734397e4.json): accept |
+| de-L16 | accepted | [Christian Döhn &#60;christian.doehn@gmail.com&#62;](results/language-corpus/0261f149-d628-4e4c-8c2b-ab54734397e4.json): accept |
+| de-L17 | accepted | [Christian Döhn &#60;christian.doehn@gmail.com&#62;](results/language-corpus/0261f149-d628-4e4c-8c2b-ab54734397e4.json): accept |
+| de-L18 | accepted | [Christian Döhn &#60;christian.doehn@gmail.com&#62;](results/language-corpus/0261f149-d628-4e4c-8c2b-ab54734397e4.json): accept |
+| de-L19 | accepted | [Christian Döhn &#60;christian.doehn@gmail.com&#62;](results/language-corpus/0261f149-d628-4e4c-8c2b-ab54734397e4.json): accept |
+| de-L20 | accepted | [Christian Döhn &#60;christian.doehn@gmail.com&#62;](results/language-corpus/0261f149-d628-4e4c-8c2b-ab54734397e4.json): accept |
+| de-S01 | accepted | [Christian Döhn &#60;christian.doehn@gmail.com&#62;](results/language-corpus/0261f149-d628-4e4c-8c2b-ab54734397e4.json): accept |
+| de-S02 | accepted | [Christian Döhn &#60;christian.doehn@gmail.com&#62;](results/language-corpus/0261f149-d628-4e4c-8c2b-ab54734397e4.json): accept |
+| de-S03 | accepted | [Christian Döhn &#60;christian.doehn@gmail.com&#62;](results/language-corpus/0261f149-d628-4e4c-8c2b-ab54734397e4.json): accept |
+| de-S04 | accepted | [Christian Döhn &#60;christian.doehn@gmail.com&#62;](results/language-corpus/0261f149-d628-4e4c-8c2b-ab54734397e4.json): accept |
+| de-S05 | accepted | [Christian Döhn &#60;christian.doehn@gmail.com&#62;](results/language-corpus/0261f149-d628-4e4c-8c2b-ab54734397e4.json): accept |
+
+Veraltet (nicht mitgezählt): de-L06 [0261f149-d628-4e4c-8c2b-ab54734397e4](results/language-corpus/0261f149-d628-4e4c-8c2b-ab54734397e4.json)

@@ -1,0 +1,193 @@
+{
+  "attestations": [
+    "de"
+  ],
+  "created_at": "2026-11-22T21:36:52Z",
+  "decisions": [
+    {
+      "item_id": "de-L01",
+      "item_sha256": "0645417334de2cb67244f03d63061adf9d44429894b95c2d1f3a855f3bf3f199",
+      "note": "",
+      "proposed_text": "",
+      "verdict": "accept"
+    },
+    {
+      "item_id": "de-L02",
+      "item_sha256": "902cfac1bffc57ac0a333145cf8698174141ce2427901f5e03576c6328f67d9b",
+      "note": "",
+      "proposed_text": "",
+      "verdict": "accept"
+    },
+    {
+      "item_id": "de-L03",
+      "item_sha256": "c8dc7f35922edd1b800d17dcdfe9fab3ef7eeed95317d01472aeb32e6e5eaa73",
+      "note": "",
+      "proposed_text": "",
+      "verdict": "accept"
+    },
+    {
+      "item_id": "de-L04",
+      "item_sha256": "9506f95be3ef5d0a2f991729a076e915c55eb51073c9a470963b5105794a0065",
+      "note": "",
+      "proposed_text": "",
+      "verdict": "accept"
+    },
+    {
+      "item_id": "de-L05",
+      "item_sha256": "82ff6dbf227fa119049312710748b4a765419389b1ae8ddd7b0a366f70ae2b28",
+      "note": "",
+      "proposed_text": "",
+      "verdict": "accept"
+    },
+    {
+      "item_id": "de-L06",
+      "item_sha256": "e73527ed227c3095f7b3613b6b1448af29e4e428973314556a356b3b246293e3",
+      "note": "Korrektur nötig: Bedeutung von Zurückweisen und beide Versionen präzisieren.",
+      "proposed_text": "Wenn seit dem Öffnen eines Eintrags eine andere Änderung bestätigt wurde, darf das System die neue Bearbeitung nicht als aktuellen Stand übernehmen. Es muss den inzwischen bestätigten Stand und die zurückgewiesene Bearbeitung getrennt erhalten.",
+      "verdict": "correct"
+    },
+    {
+      "item_id": "de-L07",
+      "item_sha256": "a32ae4a285ebd5e1b81a165dcca9021b23ba3abf7462497c93218dbe98ba0250",
+      "note": "",
+      "proposed_text": "",
+      "verdict": "accept"
+    },
+    {
+      "item_id": "de-L08",
+      "item_sha256": "1a2bee9d4df14249211b615fca36ce8938d68379d8b9c6a00befea40a8165db4",
+      "note": "",
+      "proposed_text": "",
+      "verdict": "accept"
+    },
+    {
+      "item_id": "de-L09",
+      "item_sha256": "c16a1eb20528d07a07e9e5c6e0ac456d79aacc816a1e5c929db49d409bd400e0",
+      "note": "",
+      "proposed_text": "",
+      "verdict": "accept"
+    },
+    {
+      "item_id": "de-L10",
+      "item_sha256": "57a4c0a47f73b87cc6953524ee105db81ca1581cc02e822fa080ef25cc5d2b8c",
+      "note": "",
+      "proposed_text": "",
+      "verdict": "accept"
+    },
+    {
+      "item_id": "de-L11",
+      "item_sha256": "32eaea9e498dd206d3a5754c7ad53f4e3e6f2bf7d883beab3cbe04a7e273c4f1",
+      "note": "",
+      "proposed_text": "",
+      "verdict": "accept"
+    },
+    {
+      "item_id": "de-L12",
+      "item_sha256": "190e931510554f505647b409d6366b3d34886e939e4c30a0da99b3db40cdd418",
+      "note": "",
+      "proposed_text": "",
+      "verdict": "accept"
+    },
+    {
+      "item_id": "de-L13",
+      "item_sha256": "a1cc45b15aba273ff0427baab8580ec7fd03ad30fc3019ea8c8131f64e663efb",
+      "note": "",
+      "proposed_text": "",
+      "verdict": "accept"
+    },
+    {
+      "item_id": "de-L14",
+      "item_sha256": "28b1024775699f808512776fb7ee33defd1564b8034255c707e8ad3fc8971b0b",
+      "note": "",
+      "proposed_text": "",
+      "verdict": "accept"
+    },
+    {
+      "item_id": "de-L15",
+      "item_sha256": "a15e76a34894f7e1b0b4702c57a5c2b44528c9c886bb5cc740ec8ef169784026",
+      "note": "",
+      "proposed_text": "",
+      "verdict": "accept"
+    },
+    {
+      "item_id": "de-L16",
+      "item_sha256": "a36df94c58fdf856fa3155ad97fd9bfd41d10d898d6616872b1ee1dfa558ec85",
+      "note": "",
+      "proposed_text": "",
+      "verdict": "accept"
+    },
+    {
+      "item_id": "de-L17",
+      "item_sha256": "5d9b2ef33f29b338a09c60c39fe797d6009524fc4b974e0f0a9a17157a383bfb",
+      "note": "",
+      "proposed_text": "",
+      "verdict": "accept"
+    },
+    {
+      "item_id": "de-L18",
+      "item_sha256": "5c86b240bfcbd94ab486e7f7b8b9ec98eaf83b35c9f5456ffd30d953b070cf40",
+      "note": "",
+      "proposed_text": "",
+      "verdict": "accept"
+    },
+    {
+      "item_id": "de-L19",
+      "item_sha256": "9ec2806c02a23855467036cf6e23df243fa82b59070907c64ca1eeead47ec238",
+      "note": "",
+      "proposed_text": "",
+      "verdict": "accept"
+    },
+    {
+      "item_id": "de-L20",
+      "item_sha256": "d4015cdc1005d354c10360dc0b6f428170107ad0a7aaf874aeb7df0e422cc851",
+      "note": "",
+      "proposed_text": "",
+      "verdict": "accept"
+    },
+    {
+      "item_id": "de-S01",
+      "item_sha256": "7638dcf42ee73e1980f676ade0b3ef098b60c15c93c956ba277dfa2d44bd0fd2",
+      "note": "",
+      "proposed_text": "",
+      "verdict": "accept"
+    },
+    {
+      "item_id": "de-S02",
+      "item_sha256": "ff4abed067ad60d70e5fc54b6f560d9ece0b4e71e02727a8b4a2c5310cb563a7",
+      "note": "",
+      "proposed_text": "",
+      "verdict": "accept"
+    },
+    {
+      "item_id": "de-S03",
+      "item_sha256": "03da54d925598b8cc200df94ccc2e1bd9b5e936cfb4fcd4d33081ed64002a8fe",
+      "note": "",
+      "proposed_text": "",
+      "verdict": "accept"
+    },
+    {
+      "item_id": "de-S04",
+      "item_sha256": "2ea2f51a4675dbc01231684495929b804d035764425d85b1a53e9852c7c61d8b",
+      "note": "",
+      "proposed_text": "",
+      "verdict": "accept"
+    },
+    {
+      "item_id": "de-S05",
+      "item_sha256": "adb0173175d7b60b3b88e9e4e3389da48e5a3f9a77024e1cdd75799e6a9ce95d",
+      "note": "",
+      "proposed_text": "",
+      "verdict": "accept"
+    }
+  ],
+  "format_version": 1,
+  "id": "0261f149-d628-4e4c-8c2b-ab54734397e4",
+  "module_id": "language-corpus",
+  "module_sha256": "ef68390c26628602c7c55003814022cae12dbc5deb0c45bafa9f9f38f771da9e",
+  "personal_review": true,
+  "publication_consent": true,
+  "reviewer": {
+    "email": "christian.doehn@gmail.com",
+    "name": "Christian Döhn"
+  }
+}
