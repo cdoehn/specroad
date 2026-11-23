@@ -113,7 +113,7 @@ def _validate_native_report(native, targets):
         'source_bindings','identified_ids','identified_sources','requested_ids','checked_ids','stages',
         'checks_complete','model_valid','approval_granted','write_authorized','project_files_verified','atomic_snapshot'}
     optional={'currentness','legacy_manifest_sha256','legacy_original_ids','legacy_current_evidence',
-              'document_role_scope','selected_configuration'}
+              'document_role_scope','selected_configuration','plan_sources'}
     require(type(native) is dict and fields<=set(native)<=fields|optional,'invalid_write_validation_report')
     require(native['format_version']=='model-validation-v1' and _hash(native['input_sha256'])
         and native['model_valid'] is True and native['checks_complete'] is True
@@ -122,7 +122,16 @@ def _validate_native_report(native, targets):
                                            'project_files_verified','atomic_snapshot')),
         'write_validation_incomplete')
     expected=[{'path':p,'sha256':row['sha256']} for p,row in targets.items()
-              if p.startswith('spec/') and p.endswith('.json')]
+              if p.startswith('spec/') and (p.endswith('.json') or p.endswith('.md'))]
+    plan_sources = native.get('plan_sources', [])
+    require(type(plan_sources) is list and all(type(s) is dict and set(s) == {'path', 'sha256', 'projections'}
+        and type(s['path']) is str and type(s['projections']) is list and bool(s['projections']) for s in plan_sources),
+        'write_validation_plan_binding')
+    require([{'path': s['path'], 'sha256': s['sha256']} for s in plan_sources] == [s for s in expected if s['path'].endswith('.md')],
+        'write_validation_plan_binding')
+    for source in plan_sources:
+        require(all(type(p) is dict and set(p) == {'id', 'sha256'} and type(p['id']) is str and _hash(p['sha256'])
+            for p in source['projections']), 'write_validation_plan_binding')
     require(native['structural_scope']=='all_supplied_documents'
         and native['source_bindings']==expected and type(native['source_count']) is int
         and native['source_count']==len(expected),'write_validation_binding')
@@ -132,7 +141,10 @@ def _validate_native_report(native, targets):
     sources=native['identified_sources']
     require(type(sources) is list and all(type(s) is dict and set(s)=={'path','artifact_id'}
         and type(s['artifact_id']) is str for s in sources)
-        and [s['path'] for s in sources]==[s['path'] for s in expected]
+        and sorted(set(s['path'] for s in sources))==[s['path'] for s in expected]
+        and all([s['artifact_id'] for s in sources if s['path']==p['path']] == sorted(r['id'] for r in p['projections'])
+                for p in plan_sources)
+        and all(sum(s['path']==p['path'] for s in sources)==1 for p in expected if p['path'].endswith('.json'))
         and sorted(s['artifact_id'] for s in sources)==ids,'write_validation_binding')
     stages=native['stages'];names=[]
     require(type(stages) is list and bool(stages),'write_validation_incomplete')

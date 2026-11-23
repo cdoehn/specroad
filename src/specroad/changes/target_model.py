@@ -94,7 +94,8 @@ class TargetModel:
 
     def __init__(self, configuration_bytes, binding, documents, *, profile,
                  resource_files=(), attachments=(), language_packages=(),
-                 reserved_artifact_ids=(), reserved_relation_ids=(), previously_approved_ids=()):
+                 reserved_artifact_ids=(), reserved_relation_ids=(), previously_approved_ids=(),
+                 plan_sources=()):
         if type(configuration_bytes) is not bytes or type(binding) is not ProjectReadBinding:
             raise TargetError('target_configuration_bytes_and_binding_required')
         configuration = ProjectConfiguration(parse_json_object(configuration_bytes))
@@ -106,7 +107,9 @@ class TargetModel:
             raise TargetError('target_document_required')
         documents = tuple(ModelDocument(d.path, d.content) for d in documents)
         files = tuple(ModelDocument(d.path, d.content) for d in files)
-        paths = ['specroad.json', *(d.path for d in documents + files)]
+        from ..graph.plan_sources import own_sources, resource, records as plan_records
+        plan_sources = own_sources(plan_sources)
+        paths = ['specroad.json', *(d.path for d in documents + files), *(s.path for s in plan_sources)]
         if len(set(p.casefold() for p in paths)) != len(paths):
             raise TargetError('target_duplicate_path')
         from ..migration.model_inputs import qualified, original
@@ -125,6 +128,11 @@ class TargetModel:
             if document.path != expected:
                 raise TargetError('target_artifact_path_mismatch')
             records.append(r)
+        for r in plan_records(plan_sources):
+            if r.identity.id_prefix != configuration.id_prefix or r.identity.id in seen:
+                raise TargetError('target_plan_identity_conflict')
+            seen.add(r.identity.id)
+            records.append(r)
         descriptions = _sequence(attachments, 'target_attachments_required')
         if any(type(a) is not AttachmentDescriptor for a in descriptions):
             raise TargetError('target_attachment_descriptor_required')
@@ -132,7 +140,7 @@ class TargetModel:
         by_path = {a.path: a for a in descriptions}
         if len(by_path) != len(descriptions): raise TargetError('target_duplicate_attachment')
         registry_data = configuration.data.get('language_registry')
-        registry, resources, profile_sources = None, [], []
+        registry, resources, profile_sources = None, [resource(s, binding) for s in plan_sources], []
         for document in files:
             path = project_path(document.path)
             if registry_data is not None and path == registry_data['path']:
@@ -183,6 +191,7 @@ class TargetModel:
                                      reserved_relation_ids, previously_approved_ids)
         for name, value in (('configuration_bytes', configuration_bytes), ('configuration', configuration),
                 ('binding', binding), ('documents', tuple(sorted(documents, key=lambda d:d.path))),
+                ('plan_sources', plan_sources),
                 ('resource_files', tuple(sorted(files, key=lambda d:d.path))), ('resources', tuple(resources)),
                 ('profile', rebuilt), ('profile_resources', tuple(profile_sources)),
                 ('language_packages', packages), ('language_registry', registry),
@@ -199,6 +208,7 @@ class TargetModel:
         return TargetModel(self.configuration_bytes, self.binding, self.documents,
             profile=self.profile, resource_files=self.resource_files,
             attachments=self.attachment_descriptors, language_packages=self.language_packages,
+            plan_sources=self.plan_sources,
             **self.reservations)
 
     @property
@@ -209,7 +219,14 @@ class TargetModel:
     @property
     def source_files(self):
         return {'specroad.json': self.configuration_bytes,
-                **{d.path:d.content for d in self.documents + self.resource_files}}
+                **{d.path:d.content for d in self.documents + self.resource_files},
+                **{s.path:s.source_bytes for s in self.plan_sources}}
+
+    @property
+    def validation_documents(self):
+        """Exact physical sources bound by validate_model, including Markdown."""
+        return tuple(sorted((*self.documents, *(ModelDocument(s.path, s.source_bytes)
+            for s in self.plan_sources)), key=lambda d: d.path))
 
     @property
     def artifacts(self):
@@ -218,13 +235,18 @@ class TargetModel:
 
     @property
     def resources_sha256(self):
-        return canonical_json_sha256({'reservations': self.reservations, 'configuration_bytes': sha256(self.configuration_bytes).hexdigest(),
+        return canonical_json_sha256({**({'plan_sources': [{'path': s.path, 'sha256': s.file_sha256}
+                for s in self.plan_sources]} if self.plan_sources else {}), 'reservations': self.reservations, 'configuration_bytes': sha256(self.configuration_bytes).hexdigest(),
             'files': [{'path':d.path, 'sha256':sha256(d.content).hexdigest()} for d in self.resource_files],
             'language_packages': [p.binding() for p in self.language_packages],
             'profile': self.profile.binding()})
 
     def manifest(self, artifacts, descriptor):
         descriptor = _project_scope(descriptor)
+        from ..model.versions import PLAN_TYPES
+        planned = {p.data['id']: p.data for s in self.plan_sources for p in s.projections}
+        if planned != {v['id']: v for v in artifacts if v['artifact_type'] in PLAN_TYPES}:
+            raise TargetError('target_plan_carrier_projection_mismatch')
         resources = list(self.resources)
         attachments = {r.data['path']:r.data for r in resources if r.data['kind'] == 'attachment'}
         archives = {r.data['path']:r.data for r in resources if r.data['kind'] == 'archive'}

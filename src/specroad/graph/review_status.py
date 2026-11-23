@@ -41,7 +41,11 @@ class RelationReviewStatuses:
             # constructor, which binds original bytes and their complete closure.
             # Its historical schema is not the current record/domain contract.
             if source.storage_class != 'legacy_immutable':
-                validator(value)
+                if value['artifact_type'] in ('implementation_plan', 'plan_entry'):
+                    from ..model.plan_schemas import validate_plan_fields
+                    validate_plan_fields(value)
+                else:
+                    validator(value)
             if prefix is None:
                 prefix = source.identity.id_prefix
             for error in _source_identity_errors(source, index, prefix):

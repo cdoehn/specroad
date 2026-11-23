@@ -80,13 +80,28 @@ class ClosureBindings:
                 raise ModelError('closure_usage_source_missing')
             targets = _sequence(targets)
             for target in targets:
-                if type(target) is not ClosureNode or target.kind != 'resource':
+                carrier = resource_index.get(source.identity) if source.kind == 'resource' else None
+                member = record_index.get(target.identity) if type(target) is ClosureNode and target.kind == 'artifact' else None
+                carrier_member = (carrier is not None and carrier.kind == 'plan_source'
+                    and member is not None and member.path == carrier.resource_id
+                    and getattr(member, 'carrier_sha256', None) == carrier.sha256)
+                if type(target) is not ClosureNode or (target.kind != 'resource' and not carrier_member):
                     raise ModelError('closure_usage_resource_target_required')
                 if target not in nodes:
                     raise ModelError('closure_bound_resource_missing')
             if len(set(targets)) != len(targets):
                 raise ModelError('duplicate_closure_usage')
             use_map[source] = tuple(sorted(targets, key=lambda node: node.order_key))
+        for carrier in inventory.resources:
+            if carrier.kind != 'plan_source':
+                continue
+            members = {artifact_node(r.identity.id) for r in inventory.records
+                if r.path == carrier.resource_id and getattr(r, 'carrier_sha256', None) == carrier.sha256}
+            node = resource_node(carrier.resource_id)
+            if not members or set(use_map.get(node, ())) != members:
+                raise ModelError('closure_plan_carrier_members_required')
+            if any(node not in use_map.get(member, ()) for member in members):
+                raise ModelError('closure_plan_carrier_binding_required')
         review_map = {}
         for relation_id, review_ids in _mapping(current_reviews, 'closure_review_observations_required').items():
             if type(relation_id) is not str or relation_id not in relations:

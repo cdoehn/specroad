@@ -41,6 +41,8 @@ def assess_change_target(plan, model, *, policy, gates=(), strict=False):
     base = model.manifest(model.artifacts, scope)
     if value['base']['model_root_sha256'] != base.sha256:
         raise TargetError('target_base_root_mismatch', pointer='/base/model_root_sha256')
+    from .standard_approval import require_gate
+    require_gate(gates, value['operations'], model, actor=value['actor'], planned_at=value['planned_at'])
     from .requirement_approval import require_requirement_approval_gate
     require_requirement_approval_gate(gates, value['operations'], model,
         actor=value['actor'], planned_at=value['planned_at'])
@@ -51,15 +53,16 @@ def assess_change_target(plan, model, *, policy, gates=(), strict=False):
     originals = {parse_json_object(d.content)['id']:d for d in model.documents}
     documents = []
     for artifact in artifacts:
+        if artifact['artifact_type'] in ('implementation_plan', 'plan_entry'):
+            continue
         old = originals.get(artifact['id'])
         raw = old.content if old is not None and canonical_json_sha256(parse_json_object(old.content)) == canonical_json_sha256(artifact) else canonical_json_bytes(artifact)
         documents.append(ModelDocument(artifact_path(artifact['artifact_type'],artifact['id'],model.configuration.id_prefix), raw))
     documents = tuple(sorted(documents,key=lambda d:d.path))
     representation = {}
-    resource_documents = object_documents(value['operations'][0]) if baseline else ()
-    target_model = model
-    if baseline:
-        target_model = materialize_target(model, documents + resource_documents)
+    resource_documents = (*tuple(ModelDocument(s.path, s.source_bytes) for s in model.plan_sources),
+        *(object_documents(value['operations'][0]) if baseline else ()))
+    target_model = materialize_target(model, documents + resource_documents)
     if hasattr(folded, 'target_model'):
         target_model = folded.target_model
         documents = target_model.documents
@@ -77,15 +80,15 @@ def assess_change_target(plan, model, *, policy, gates=(), strict=False):
     registered, missing = _gates(gates,policy,plan,target_model)
     from .requirement_approval import approval_target_contexts
     report = validate_model(documents, profile=target_model.profile, gates=registered,
-                            resources=validation_resources(target_model),
+                            resources=validation_resources(target_model), plan_sources=target_model.plan_sources,
                             approval_contexts=approval_target_contexts(gates, documents, target_model))
     report = _empty_target_gates(report, registered, target_model.profile)
     assessment = assess_validation(report, fail_on=target_model.configuration.data['validation_policy'].get('fail_on','error'),
-                                   strict=strict, documents=documents)
+                                   strict=strict, documents=target_model.validation_documents)
     negative_review = (len(value['operations']) == 1
         and value['operations'][0]['op'] == 'relation_review_record'
         and value['operations'][0]['record']['decision'] == 'rejected')
-    diff, impact = _describe(model, artifacts)
+    diff, impact = _describe(model, artifacts, target_model=target_model)
     valid = assessment.passed and report.complete and not missing
     binding = {'version':TARGET_VERSION, 'plan_sha256':plan.sha256, 'base_model_root':base.sha256,
         'target_model_root':target.sha256, 'resources_sha256':model.resources_sha256,
@@ -102,8 +105,8 @@ def assess_change_target(plan, model, *, policy, gates=(), strict=False):
             fail_on=target_model.configuration.data['validation_policy'].get('fail_on', 'error'),
             strict=strict)} if negative_review else {}),
         **({'representation':representation} if normalize else {}),
-        'lifecycle':{'metadata_applied':False if normalize else folded.metadata_applied, 'decisions':folded.decisions,
-                     'history_complete':False, 'previously_approved_ids':folded.previously_approved_ids},
+        'lifecycle':{'metadata_applied':False if normalize else folded.metadata_applied, 'decisions':list(folded.decisions),
+                     'history_complete':False, 'previously_approved_ids':list(folded.previously_approved_ids)},
         'validation_scope':'complete_supplied_project_target', 'project_files_verified':False,
         'atomic_snapshot':False, 'transaction_prepared':False, 'execution_ready':False,
         'approval_granted':False, 'write_authorized':False},plan,documents,
@@ -135,13 +138,24 @@ def prepare_change_target(model, operations, *, change_plan_id, request_id, acto
     from .requirement_approval import (approval_mode, prepare_requirement_candidates,
         require_requirement_approval_gate)
     require_requirement_approval_gate(gates, operations, model, actor=actor, planned_at=planned_at)
+    from .standard_approval import mode as standard_mode, prepare as prepare_standard, require_gate
+    require_gate(gates, operations, model, actor=actor, planned_at=planned_at)
     approving = approval_mode(operations)
     controlled = review_start_mode(operations)
     normalize = not controlled and normalization_mode(operations)
     baseline = not controlled and baseline_mode(operations)
     evidence = not controlled and evidence_mode(operations)
     imported = not controlled and import_mode(operations)
-    if approving:
+    from .plan_candidates import mode as plan_mode, prepare as prepare_plans
+    if plan_mode(operations):
+        folded = prepare_plans(model, operations, metadata_policy_version=metadata_policy_version,
+            actor=actor, planned_at=planned_at, preconditions=preconditions)
+        target_model = folded.target_model
+    elif standard_mode(operations):
+        folded = prepare_standard(model, operations, metadata_policy_version=metadata_policy_version,
+            actor=actor, planned_at=planned_at, preconditions=preconditions)
+        target_model = model
+    elif approving:
         folded = prepare_requirement_candidates(model, operations,
             metadata_policy_version=metadata_policy_version, actor=actor,
             planned_at=planned_at, preconditions=preconditions)
@@ -162,7 +176,7 @@ def prepare_change_target(model, operations, *, change_plan_id, request_id, acto
             actor=actor, planned_at=planned_at, preconditions=preconditions)
         target_model = materialize_target(model, tuple(ModelDocument(
             artifact_path(a['artifact_type'], a['id'], model.configuration.id_prefix), canonical_json_bytes(a))
-            for a in folded.artifacts) + object_documents(operations[0]))
+            for a in folded.artifacts if a['artifact_type'] not in ('implementation_plan', 'plan_entry')) + object_documents(operations[0]))
     else:
         prepare = prepare_review_candidates if review_mode(operations) else prepare_change_lifecycle
         folded = prepare(model.artifacts, [] if normalize else operations,

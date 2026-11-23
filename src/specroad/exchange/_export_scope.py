@@ -170,6 +170,12 @@ def export_scope(model, descriptor):
 
     attachments = {d.path: d for d in model.attachment_descriptors}
     uses.update(_artifact_uses(records, active, attachments, registries, by_resource))
+    for source in getattr(model, 'plan_sources', ()):
+        carrier = resource_node(source.path)
+        members = {artifact_node(p.data['id']) for p in source.projections}
+        uses[carrier] = members
+        for member in members:
+            uses[member].add(carrier)
     reviews = RelationReviewStatuses(records)
     dependencies = ClosureBindings(inventory,
         uses={key: tuple(value) for key, value in uses.items()},

@@ -12,7 +12,7 @@ from ..security import ProjectBoundary
 from ..security.resource_access import opened_resource
 from ..storage.byte_binding import fingerprint_reader
 from ..storage.project import ProjectSource
-from ..storage.resource_discovery import current_json_paths
+from ..storage.resource_discovery import current_model_paths
 from .publication_values import PublicationCheckError
 
 def _stamp(info):
@@ -97,8 +97,8 @@ def _package_bindings(source, model, package_files):
 def observe_publication_files(source, model, request, package_files=(), *, check_rights):
     source.check_current()
     files = {**model.source_files, **{d.path:d.content for d in package_files}}
-    expected_json = tuple(sorted(p for p in files if source.classify(p) in CURRENT_JSON_CLASSES))
-    if current_json_paths(source) != expected_json:
+    expected_json = tuple(sorted(p for p in files if source.classify(p) in (*CURRENT_JSON_CLASSES, PathClass.PLAN)))
+    if current_model_paths(source) != expected_json:
         raise PublicationCheckError('publication_inventory_changed')
     states, parents = {}, {}
     for path, expected in sorted(files.items()):
@@ -110,8 +110,7 @@ def observe_publication_files(source, model, request, package_files=(), *, check
             if actual.size != len(expected) or actual.sha256 != sha256(expected).hexdigest():
                 raise PublicationCheckError('publication_base_changed', path=path)
             states[path] = {**_stamp(info), 'size': actual.size, 'sha256': actual.sha256}
-    for document in request.documents:
-        path = document.path
+    for path in request.data['changed_paths']:
         source.require_write_target(path)
         parents.update(_parent(source, path, check_rights=check_rights))
         if path not in files:
@@ -122,7 +121,7 @@ def observe_publication_files(source, model, request, package_files=(), *, check
                 pass
             else:
                 raise PublicationCheckError('publication_create_target_exists', path=path)
-    if current_json_paths(source) != expected_json:
+    if current_model_paths(source) != expected_json:
         raise PublicationCheckError('publication_inventory_changed')
     source.check_current()
     return {'files': states, 'parents': parents,

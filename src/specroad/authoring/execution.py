@@ -125,7 +125,7 @@ def _apply_saved_plan(plan, model, *, command_id, transaction_id, authority,
         checked.require_valid()
         preflight = prepare_publication_check(plan, model, policy=policy,
             gates=gates, strict=strict, package_files=package_files)
-        if not preflight.request.documents:
+        if not preflight.request.data['changed_paths']:
             recheck_publication(preflight, preflight.request, held_lock=held,
                 transaction_id=transaction_id, authority=authority, gates=gates)
             return _result(_audit(plan, command_id, dry_run=False, write_state='not_committed'), None)

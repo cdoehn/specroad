@@ -64,7 +64,7 @@ def bind_arguments(values, positionals):
     return normalized
 
 
-def bind_options(argv, route, options, positionals=()):
+def bind_options(argv, route, options, positionals=(), *, ordered=None):
     """Decode CLI spelling, then use the same binder as structured requests."""
     option_specs = {option.flag: option for option in options}
     values = {}
@@ -99,6 +99,8 @@ def bind_options(argv, route, options, positionals=()):
             if equals:
                 raise CommandUsageError("Flag does not accept a value")
             value = True
+        if ordered is not None:
+            ordered.append((flag, value))
         values[flag] = (*values.get(flag, ()), value) if option.repeatable else value
         index += 1
     repeated = bool(positionals and positionals[-1].repeatable)

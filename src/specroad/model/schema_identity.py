@@ -48,3 +48,5 @@ def identity_metadata(schema_id):
 RESULT_IDS += ('analyzer-descriptor-v1', 'analyzer-inputs-v1', 'analyzer-request-v1', 'analyzer-report-v1', 'analyzer-package-v1', 'analyzer-directory-v1', 'analyzer-inspection-v1')
 
 RESULT_IDS += ('config-show-v1',)
+
+RESULT_IDS += ('native-authoring-command-v1', 'plan-authoring-command-v1',)

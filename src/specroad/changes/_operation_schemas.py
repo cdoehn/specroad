@@ -46,6 +46,16 @@ def evidence_record_schema():
         'import_format': {'const': 'generic'}, 'source_path': text(),
         'source_sha256': digest(), 'preparation_sha256': digest(),
         'policy': {'enum': ['abort_import', 'skip_invalid_with_diagnostic']}})
+    extended = obj({'format_version': {'const': 'evidence-import-context-v2'},
+        'import_format': {'enum': ['generic','junit','sarif']}, 'source_path': text(),
+        'source_sha256': digest(), 'preparation_sha256': digest(),
+        'policy': {'enum': ['abort_import','skip_invalid_with_diagnostic']},
+        **{k:text() for k in ('mapping_path','measurements_path','external_identifiers_path')},
+        **{k:digest() for k in ('mapping_sha256','measurements_sha256','external_identifiers_sha256')},
+        'tool': blob, 'run_context': blob},
+        ['format_version','import_format','source_path','source_sha256','preparation_sha256','policy'])
+    # The required version constants make these branches disjoint.
+    imported = {'anyOf':[imported,extended]}
     return obj({**base, 'evidence': blob, 'import_context': imported,
                 'configuration_id': {'anyOf': [{'type': 'null'}, ref]}}, ['op', 'evidence'])
 

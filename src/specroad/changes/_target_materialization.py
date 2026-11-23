@@ -4,7 +4,7 @@ from ..validation import ValidationResources
 from ..model.paths import classify_path, PathClass
 
 
-def materialize_target(model, documents):
+def materialize_target(model, documents, *, replace_plan_sources=False):
     """Combine a checked write set with unchanged, independently bound sources.
 
     Existing resource/configuration replacement is representation-only in the
@@ -14,9 +14,13 @@ def materialize_target(model, documents):
     configuration = model.configuration_bytes
     artifacts = {d.path: d for d in model.documents}
     resources = {d.path: d for d in model.resource_files}
+    plans = {} if replace_plan_sources else {s.path: s for s in model.plan_sources}
     for document in documents:
         if document.path == 'specroad.json':
             configuration = document.content
+        elif classify_path(document.path, model.configuration) is PathClass.PLAN:
+            from ..storage.plan_markdown import parse_plan
+            plans[document.path] = parse_plan(document.content, path=document.path)
         elif (document.path in resources or
               classify_path(document.path, model.configuration) is PathClass.ARCHIVE_OBJECT):
             resources[document.path] = document
@@ -25,7 +29,7 @@ def materialize_target(model, documents):
     return TargetModel(configuration, model.binding, tuple(artifacts.values()),
         profile=model.profile, resource_files=tuple(resources.values()),
         attachments=model.attachment_descriptors, language_packages=model.language_packages,
-        **model.reservations)
+        plan_sources=tuple(plans.values()), **model.reservations)
 
 
 def validation_resources(model):
@@ -36,4 +40,10 @@ def validation_resources(model):
 
 
 def publication_target(preflight):
-    return materialize_target(preflight._model, preflight.request.documents)
+    model = preflight._model
+    files = {**model.source_files, **{d.path: d.content for d in preflight.request.documents}}
+    for path in preflight.request.data.get('deleted_paths', []):
+        files.pop(path)
+    from ..validation import ModelDocument
+    return materialize_target(model, tuple(ModelDocument(p, raw) for p, raw in files.items()),
+                              replace_plan_sources=True)

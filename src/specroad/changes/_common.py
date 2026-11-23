@@ -42,8 +42,15 @@ def _artifact(value, pointer, expected_type=None):
     if type(value) is not dict:
         raise ChangePlanError("artifact_object_required", pointer=pointer)
     kind = value.get("artifact_type")
-    validator = validate_record_fields if kind in RECORD_TYPES else validate_domain_fields
-    _at(pointer, validator, value, expected_type=expected_type)
+    from ..model.versions import PLAN_TYPES
+    from ..model.plan_schemas import validate_plan_fields
+    validator = validate_plan_fields if kind in PLAN_TYPES else validate_record_fields if kind in RECORD_TYPES else validate_domain_fields
+    if kind in PLAN_TYPES:
+        if expected_type is not None and kind != expected_type:
+            raise ChangePlanError("artifact_type_mismatch", pointer=pointer)
+        _at(pointer, validator, value)
+    else:
+        _at(pointer, validator, value, expected_type=expected_type)
     return _at(pointer, artifact_identity, value)
 
 def _generic(identity, pointer):

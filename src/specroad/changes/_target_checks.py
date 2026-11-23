@@ -24,6 +24,8 @@ def _gates(gates, policy, plan, model):
             'command':policy.data(), 'gate_resources':g.resources_sha256})) for g in gates)
     required = set(policy.required_gate_ids)
     operations = plan.data['operations']
+    if any(op['op'] == 'plan_edit' for op in operations):
+        required.add('extension:plan-authoring')
     if any(op['op'] in ('proposal_control', 'proposal_create', 'proposal_change') for op in operations):
         from ..proposals._control_dispatch import adapter
         command, gate, _, _ = adapter(operations)
@@ -94,9 +96,11 @@ def _empty_target_gates(report, registered, profile):
     return ValidationReport._create(data)
 
 
-def _describe(model, artifacts):
-    before = tuple(SourceRelations(d.content, path=d.path) for d in model.documents)
-    after = tuple(SourceRelations(canonical_json_bytes(v)) for v in artifacts)
+def _describe(model, artifacts, *, target_model=None):
+    from ..migration.model_inputs import records
+    before = records(model)
+    after = (records(target_model) if target_model is not None else
+             tuple(SourceRelations(canonical_json_bytes(v)) for v in artifacts))
     diff = compare_artifacts(ComparisonInputs(model.binding.project_id, before),
                              ComparisonInputs(model.binding.project_id, after))
     changed = [c['artifact_id'] for c in diff.data['changes']]

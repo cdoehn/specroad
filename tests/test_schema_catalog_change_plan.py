@@ -54,6 +54,7 @@ class SchemaCatalogChangePlanTests(unittest.TestCase):
         schemas += [configuration_json_schema(), configuration_json_schema("0.3.0"), change_plan_schema()]
         schemas += [request_schema(command) for command in builtin_registry().commands]
         schemas += [result_json_schema(name) for name in (
+            'native-authoring-command-v1', 'plan-authoring-command-v1',
             'json-envelope-v2', 'help-v1', 'version-info-v1', 'command-description-v1',
             'capabilities-v1', 'schema-catalog-v1', 'schema-document-v1', 'sarif-specroad-v1',
             'document-read-v1', 'model-validation-v1', 'proposal-validation-v1', 'proposal-check-v1', 'proposal-review-start-v1', 'proposal-review-v1', 'proposal-apply-v1', 'project-lock-v1',
@@ -154,7 +155,7 @@ class SchemaCatalogChangePlanTests(unittest.TestCase):
         self.assertEqual(ChangePlan(plan.canonical_bytes).data, original)
 
     def test_all_typed_operations_retain_their_field_boundaries(self):
-        operations = [operation(kind) for kind in OPERATION_TYPES]
+        operations = [operation(kind) for kind in OPERATION_TYPES if kind != 'plan_edit']
         results = [result(domain_value()), result(record_value('evidence')),
                    result(record_value('relation_review')),
                    result(record_value('baseline')),
@@ -168,12 +169,28 @@ class SchemaCatalogChangePlanTests(unittest.TestCase):
         branches = self.catalog.get(CHANGE_PLAN_ID).schema['properties']['operations']['items']['anyOf']
         self.assertEqual({branch['properties']['op']['const'] for branch in branches}, set(OPERATION_TYPES) | {'schema_migrate', 'merge_publish'})
         self.assertEqual(len(branches), len(OPERATION_TYPES) + 2)
-        for index, op in enumerate(operations):
+        # A native Markdown edit is an isolated envelope. It still
+        # receives every schema/field-boundary check below.
+        plan_op = operation('plan_edit')
+        isolated = document([plan_op], [])
+        isolated['preconditions'] = [{'kind': 'file', 'path': row['path'],
+            'expected_byte_sha256': hashlib.sha256(row['before'].encode()).hexdigest()}
+            for row in plan_op['sources']]
+        isolated_plan = prepare_change_plan(isolated)
+        self.catalog.validate(CHANGE_PLAN_ID, isolated_plan.data)
+        self.assertEqual(ChangePlan(isolated_plan.canonical_bytes).data, isolated_plan.data)
+        with self.assertRaises(ChangePlanError) as caught:
+            prepare_change_plan(document([*operations, plan_op], results))
+        self.assertEqual(caught.exception.reason, 'plan_source_specialist_sequence_required')
+        cases = [(index, op, plan) for index, op in enumerate(operations)]
+        cases.append((0, plan_op, isolated_plan))
+        self.assertEqual({op['op'] for _, op, _ in cases}, set(OPERATION_TYPES))
+        for index, op, owner in cases:
             with self.subTest(kind=op['op']):
                 self.assertIn(operation_schema(op['op']), branches)
                 self.assertEqual(ChangeOperation(op).data, op)
                 for invalid in ({**op, 'unexpected': True}, {k: v for k, v in op.items() if k != 'op'}):
-                    value = plan.data
+                    value = owner.data
                     value['operations'][index] = invalid
                     before = copy.deepcopy(value)
                     with self.assertRaises(ModelError):
@@ -222,7 +239,7 @@ class SchemaCatalogChangePlanTests(unittest.TestCase):
 
     def test_embedded_and_future_contracts_do_not_create_catalog_entries(self):
         for schema_id in ('urn:specroad:schema:1.2.0:change-operation:create',
-                          'urn:specroad:schema:1.0.0:request:change.apply',
+                          'urn:specroad:schema:1.0.0:request:change.apply.unavailable',
                           'urn:specroad:schema:1.0.0:transaction-receipt',
                           'urn:specroad:schema:1.0:srx', 'diagnostic-v1',
                           'language-policy-v1', 'reqif-mapping-v1'):

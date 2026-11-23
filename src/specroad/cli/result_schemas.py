@@ -85,6 +85,14 @@ def _with_currentness(schema, *, comparison=False):
 
 
 def _fields(schema_id):
+    if schema_id == 'native-authoring-command-v1':
+        from ..authoring.native_intents import COMMANDS
+        return _object({'format_version': {'const': schema_id},
+            'command_id': {'enum': [*COMMANDS, 'change.apply']}, 'outcome': {'type': 'object'}})
+    if schema_id == 'plan-authoring-command-v1':
+        from ..model.plan_command_ids import COMMANDS
+        return _object({'format_version': {'const': 'plan-authoring-command-v1'},
+            'command_id': {'enum': list(COMMANDS)}, 'outcome': {'type': 'object'}})
     if schema_id.startswith('analyzer-'):
         from ..analyzers.schemas import schema
         return schema(schema_id)

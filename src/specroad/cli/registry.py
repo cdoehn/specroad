@@ -122,10 +122,11 @@ class CommandRegistry:
         candidates = []
         for route, command in self._routes.items():
             try:
-                values, positions = bind_options(tuple(arguments), route, command.options, command.positionals)
+                ordered = []
+                values, positions = bind_options(tuple(arguments), route, command.options, command.positionals, ordered=ordered)
             except CommandUsageError:
                 continue
-            candidates.append(Invocation(self._bound_variant(command, values), values, arguments=positions))
+            candidates.append(Invocation(self._bound_variant(command, values), values, arguments=positions, option_order=tuple(ordered), raw_arguments=tuple(arguments)))
         if len(candidates) != 1:
             raise CommandUsageError("Unknown, invalid or ambiguous invocation")
         return candidates[0]
@@ -151,6 +152,13 @@ class CommandRegistry:
         from .application import execute_request
         from .requests import CommandRequest
         self._require_registered(invocation)
+        if invocation.raw_arguments:
+            from .application import execute
+            parsed = self.parse(invocation.raw_arguments)
+            if (parsed.command is not invocation.command or parsed.options != invocation.options
+                    or parsed.arguments != invocation.arguments or parsed.option_order != invocation.option_order):
+                raise CommandUsageError("Invocation argument binding changed")
+            return execute(invocation.raw_arguments, registry=self, **context_inputs).result
         request = CommandRequest(invocation.command.command_id, invocation.options, invocation.arguments)
         return execute_request(request, registry=self, **context_inputs).result
 

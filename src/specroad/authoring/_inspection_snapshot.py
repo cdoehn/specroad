@@ -10,7 +10,7 @@ from ..profiles.values import ProfileResource
 from ..storage.json_syntax import parse_json_object
 from ..storage.language_registry import read_language_registry
 from ..storage.project import ProjectSource
-from ..storage.resource_discovery import current_json_paths
+from ..storage.resource_discovery import current_json_paths, current_model_paths
 from ..validation import ModelDocument
 
 
@@ -20,12 +20,17 @@ class InspectionChanged(ModelError):
 
 class InspectionSnapshot:
     """An observation with a final reread, not an atomic snapshot or write grant."""
-    def __init__(self, root, profiles, *, include_archive_objects=False):
+    def __init__(self, root, profiles, *, include_archive_objects=False, include_plan_sources=False):
         from ..changes.normal_access import require_normal_access
         require_normal_access(root)
         self.source = source = ProjectSource(root)
-        self.paths = current_json_paths(source)
-        self.raw = {p: source.read_normative(p) for p in self.paths}
+        self._paths_reader = current_model_paths if include_plan_sources else current_json_paths
+        self.paths = self._paths_reader(source)
+        self.raw = {p: (source.read_plan_bytes(p) if source.classify(p) is PathClass.PLAN else
+                        source.read_normative(p)) for p in self.paths}
+        from ..storage.plan_markdown import parse_plan
+        self.plan_sources = tuple(parse_plan(self.raw[p], path=p, id_prefix=source.configuration.id_prefix)
+            for p in self.paths if source.classify(p) is PathClass.PLAN)
         configuration = source.configuration
         registry_binding = configuration.data.get('language_registry')
         self.registry_path = None if registry_binding is None else registry_binding['path']
@@ -35,7 +40,7 @@ class InspectionSnapshot:
             self.raw[self.registry_path] = registry.source_bytes
         documents, resources, profile_sources, packages, attachments = [], [], [], {}, {}
         for path, raw in self.raw.items():
-            if path == 'specroad.json':
+            if path == 'specroad.json' or source.classify(path) is PathClass.PLAN:
                 continue
             document = ModelDocument(path, raw)
             kind = source.classify(path)
@@ -91,7 +96,7 @@ class InspectionSnapshot:
                                      source.boundary._root_identity)
         self.model = TargetModel(self.raw['specroad.json'], binding, documents,
             profile=profile, resource_files=resources, attachments=tuple(attachments.values()),
-            language_packages=selected_packages)
+            language_packages=selected_packages, plan_sources=self.plan_sources)
 
     def verify_current(self):
         try:
@@ -102,13 +107,14 @@ class InspectionSnapshot:
     def _verify_current(self):
         source = self.source
         source.check_current()
-        if current_json_paths(source) != self.paths:
+        if self._paths_reader(source) != self.paths:
             raise InspectionChanged('inspection_inventory_changed')
         for path, raw in self.raw.items():
-            current = (source.boundary.read_bytes(path) if path == self.registry_path else
+            current = (source.read_plan_bytes(path) if source.classify(path) is PathClass.PLAN else
+                       source.boundary.read_bytes(path) if path == self.registry_path else
                        source.read_normative(path, referenced_payloads=self.payload_paths))
             if current != raw:
                 raise InspectionChanged('inspection_source_changed', path=path)
-        if current_json_paths(source) != self.paths:
+        if self._paths_reader(source) != self.paths:
             raise InspectionChanged('inspection_inventory_changed')
         source.check_current()

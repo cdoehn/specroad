@@ -18,6 +18,7 @@ STRONG_RELATIONS = frozenset((
     'addresses', 'refines', 'derived_from', 'depends_on', 'constrains',
     'allocated_to', 'implemented_by', 'verified_by', 'produces', 'mitigates',
     'scheduled_for', 'part_of', 'supersedes', 'contains', 'references',
+    'plans', 'works_on', 'requires_entry',
 ))
 WEAK_RELATIONS = frozenset(('conflicts_with', 'duplicates'))
 

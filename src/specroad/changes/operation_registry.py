@@ -12,6 +12,7 @@ from .errors import ChangePlanError
 from ._common import _at, _text, _reference, _generic
 from . import _operation_schemas as schemas
 from . import _operation_adapters as adapters
+from . import plan_source_operation
 
 @dataclass(frozen=True)
 class OperationContract:
@@ -50,6 +51,8 @@ def _target_owner(value):
 
 
 _CONTRACTS = MappingProxyType({
+    "plan_edit": OperationContract(plan_source_operation.operation_schema, plan_source_operation.validate_operation,
+        plan_source_operation.result_owners, "plan_authoring"),
     "create": OperationContract(schemas.create_schema, adapters.validate_create, _create_owner, "regular"),
     "update": OperationContract(schemas.update_schema, adapters.validate_update, _target_owner, "regular"),
     "relation_add": OperationContract(schemas.relation_add_schema, adapters.validate_relation_add, _source_owner, "regular"),
@@ -103,6 +106,12 @@ def validate_operation(value, pointer=""):
             if (name == "source" and kind.startswith("relation_") and kind != "relation_review_record"
                     or name == "target" and kind in ("update", "transition", "retire", "attachment_add", "attachment_remove")):
                 _generic(identity, pointer + "/" + name)
+    from ..model.versions import PLAN_TYPES
+    if kind == 'create' and value['artifact'].get('artifact_type') in PLAN_TYPES:
+        raise ChangePlanError('plan_native_command_required', pointer=pointer)
+    for name in ('source','target'):
+        if name in value and _reference(value[name],pointer+'/'+name).artifact_type in PLAN_TYPES:
+            raise ChangePlanError('plan_native_command_required', pointer=pointer+'/'+name)
     contract.validate_payload(value, pointer)
     return value
 

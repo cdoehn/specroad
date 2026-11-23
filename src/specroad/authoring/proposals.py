@@ -42,7 +42,14 @@ def prepare_authoring_proposal(plan, model, *, command_id, proposal_fields,
         value['actor'], value['planned_at'], gates)
     checked = assess_change_target(plan, model, policy=policy, gates=selected, strict=strict)
     checked.require_valid()
-    target = materialize_target(model, checked.publication_documents)
+    from ..changes.plan_candidates import mode
+    if mode(value['operations']):
+        from ..changes._saved_plan_fold import fold_saved_plan
+        folded, _, _ = fold_saved_plan(plan, model,
+            observed_base_root=value['base']['model_root_sha256'], observed_scope=value['base']['scope_descriptor'])
+        target = folded.target_model
+    else:
+        target = materialize_target(model, checked.publication_documents)
     inner = {k: v for k, v in value.items() if k != 'change_plan_sha256'}
     inner['base'] = build_proposal_basis(model).data
     inner['expected_result'] = {'model_root_sha256': build_proposal_basis(target).data['model_root_sha256']}
@@ -52,7 +59,7 @@ def prepare_authoring_proposal(plan, model, *, command_id, proposal_fields,
 
 
 def publish_authoring_proposal(plan, model, *, command_id, proposal_fields,
-        transaction_id, authority, gates=(), strict=False, package_files=(), services=None):
+        transaction_id, authority, gates=(), strict=False, package_files=(), services=None, source_guard=None):
     """Publish only the prepared draft using the existing native transaction."""
     from .execution import _apply_saved_plan
     from ..changes import PublicationAuthority
@@ -77,6 +84,16 @@ def publish_authoring_proposal(plan, model, *, command_id, proposal_fields,
     proposal = prepare_authoring_proposal(plan, model, command_id=command_id,
         proposal_fields=proposal_fields, gates=gates, strict=strict)
     selected = publication_gates(model, proposal, services=services)
+    if source_guard is not None:
+        from ..validation import ModelGate
+        if not callable(source_guard):
+            raise AuthoringError('typed_source_guard_required')
+        def dependencies(context):
+            return context.dependency_result({i:list(context.all_ids) for i in context.subjects})
+        def history(context):
+            source_guard()
+            return context.result()
+        selected += (ModelGate('extension:authoring-history','1',dependencies,history,model._sources_sha256),)
     value = plan.data
     checked = prepare_change_target(model, [{'op': 'proposal_create', 'record': proposal.data}],
         change_plan_id=value['change_plan_id'], request_id=value['request_id'],

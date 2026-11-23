@@ -9,6 +9,8 @@ _DIRECT = frozenset({'change apply', 'format', 'artifact create', 'artifact upda
 _PROPOSAL = frozenset({'proposal create', 'proposal change add', 'proposal change update',
     'proposal change remove', 'proposal change move', 'proposal review start'})
 _HUMAN_REVIEW = frozenset({'proposal review', 'relation review'})
+from ..model.plan_command_ids import COMMANDS as _PLAN_COMMANDS
+_DIRECT = _DIRECT | {command.replace('.', ' ') for command in _PLAN_COMMANDS}
 _COMMANDS = _DIRECT | _PROPOSAL | _HUMAN_REVIEW | {'proposal apply'}
 
 

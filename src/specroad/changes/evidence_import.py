@@ -86,7 +86,7 @@ def import_mode(operations):
     return selected
 
 
-def _input(model, source_path, policy):
+def _input(model, source_path, policy, format_name="generic", extras=None):
     project_path(source_path)
     descriptors = {a.path: a.data for a in model.attachment_descriptors}
     raw = {d.path: d.content for d in model.resource_files}.get(source_path)
@@ -101,16 +101,18 @@ def _input(model, source_path, policy):
         value = SourceRelations(document.content).data
         if value['artifact_type'] in kinds:
             targets[value['id']] = kinds[value['artifact_type']](document.content)
-    prepared = prepare_generic_import(raw, targets=list(targets.values()), policy=policy)
-    data = prepared.data
+    extras = dict(extras or {})
+    from ._import_originals import prepare_native_import
+    data, preparation_sha256, originals = prepare_native_import(model, raw, targets, policy, format_name, extras)
+    prepared = None
     if data['decision'] != 'prepared':
         raise TargetError('evidence_import_aborted')
     if not data['candidates']:
         raise TargetError('evidence_import_nonempty_set_required')
-    context = {'format_version': 'evidence-import-context-v1', 'import_format': 'generic',
+    context = {'format_version': 'evidence-import-context-v2' if extras or format_name!='generic' else 'evidence-import-context-v1', 'import_format': format_name,
         'source_path': source_path, 'source_sha256': sha256(raw).hexdigest(),
-        'preparation_sha256': prepared.sha256, 'policy': policy}
-    return targets, data, context, descriptor
+        'preparation_sha256': preparation_sha256, 'policy': policy, **extras}
+    return targets, data, context, (descriptor, *originals)
 
 
 class _EvidenceSetPlanner:
@@ -120,10 +122,10 @@ class _EvidenceSetPlanner:
     Each caller supplies its existing model snapshot; historical receipt replay
     never creates a planner or claims current validity of the imported set.
     """
-    def __init__(self, model, source_path, policy):
+    def __init__(self, model, source_path, policy, *, format_name="generic", extras=None):
         self._model = model
         self._targets, self.preparation, self.context, self._original = _input(
-            model, source_path, policy)
+            model, source_path, policy, format_name, extras)
 
     @property
     def candidate_count(self):
@@ -154,7 +156,8 @@ class _EvidenceSetPlanner:
 
     def operation(self, index, *, evidence_id, title, configuration_id, actor, planned_at):
         model, targets = self._model, self._targets
-        data, context, original = self.preparation, self.context, self._original
+        data, context, originals = self.preparation, self.context, self._original
+        original = originals[0]
         candidate = data['candidates'][index]
         contract_id = candidate['target']['artifact_id']
         contract = targets[contract_id]
@@ -181,9 +184,10 @@ class _EvidenceSetPlanner:
         if any(record[k] != candidate[k] for k in ('configuration_hash', 'configuration_policy')):
             raise TargetError('evidence_import_configuration_mismatch')
         attachments = {a['path']: a for a in candidate['attachments']}
-        if original['path'] in attachments and attachments[original['path']] != original:
-            raise TargetError('evidence_import_original_attachment_conflict')
-        attachments[original['path']] = original
+        for item in originals:
+            if item['path'] in attachments and attachments[item['path']] != item:
+                raise TargetError('evidence_import_original_attachment_conflict')
+            attachments[item['path']] = item
         record['attachments'] = _bound_attachments(model, [attachments[p] for p in sorted(attachments)])
         record['provenance'] = [{'locator': original['path'], 'captured_at': planned_at,
             'content_sha256': original['sha256'], 'extensions': {'specroad.evidence-import': {
@@ -214,7 +218,9 @@ def prepare_import_candidates(model, operations, *, metadata_policy_version,
     _relation_inventory(state, model.reserved_relation_ids)
     _preflight(state, preconditions, _files(model.source_files))
     context = owned[0]['import_context']
-    planner = _EvidenceSetPlanner(model, context['source_path'], context['policy'])
+    planner = _EvidenceSetPlanner(model, context['source_path'], context['policy'],
+        format_name=context['import_format'], extras={k:v for k,v in context.items() if k not in
+            ('format_version','import_format','source_path','source_sha256','preparation_sha256','policy')})
     planner.require_complete_set(owned)
     planner.require_new_measurements()
     candidates = []

@@ -105,6 +105,8 @@ class PublicationRequest:
         old = model.source_files
         if {d.path for d in model.documents} - {d.path for d in assessment.documents}:
             raise ChangeExecutionError('deletion_requires_specialized_backend', exit_code=3)
+        from .plan_source_operation import deleted_paths
+        deleted = deleted_paths(assessment.plan.data['operations'])
         changed = tuple(d for d in assessment.publication_documents if old.get(d.path) != d.content)
         data = {'version': EXECUTION_VERSION, 'plan_sha256': assessment.plan.sha256,
                 'plan_bytes_sha256': sha256(assessment.plan.source_bytes).hexdigest(),
@@ -113,7 +115,8 @@ class PublicationRequest:
                 'authoring_binding': authoring.data, 'authoring_sha256': authoring.sha256,
                 'base': _source_binding(model),
                 'target_root_sha256': value['binding']['target_model_root'],
-                'changed_paths': [d.path for d in changed],
+                'changed_paths': sorted([*(d.path for d in changed), *deleted]),
+                **({'deleted_paths': deleted} if deleted else {}),
                 'target_files': [{'path': d.path, 'sha256': sha256(d.content).hexdigest()}
                                  for d in assessment.publication_documents]}
         obj = object.__new__(cls)

@@ -39,7 +39,7 @@ class ScopeResource:
     def __post_init__(self):
         _text(self.resource_id)
         if type(self.kind) is not str or self.kind not in (
-                'profile', 'rule', 'mapping', 'language_registry', 'attachment', 'archive'):
+                'profile', 'rule', 'mapping', 'language_registry', 'attachment', 'archive', 'plan_source'):
             raise ModelError('non_normative_scope_resource')
         if type(self.sha256) is not str or re.fullmatch('[0-9a-f]{64}', self.sha256) is None:
             raise ModelError('invalid_scope_resource_hash')

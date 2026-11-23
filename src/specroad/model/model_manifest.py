@@ -44,6 +44,7 @@ class ManifestResource:
         kind = data.get("kind")
         fields = {
             "artifact": {"kind", "id", "artifact_type", "revision", "sha256"},
+            "plan_source": {"kind", "id", "version", "path", "size", "sha256", "projections"},
             "profile": {"kind", "id", "version", "sha256"},
             "rule": {"kind", "id", "version", "sha256"},
             "mapping": {"kind", "id", "version", "sha256"},
@@ -74,6 +75,20 @@ class ManifestResource:
             project_path(data["path"])
         if "size" in data and (type(data["size"]) is not int or data["size"] < 0):
             raise ModelError("invalid_resource_size")
+        if kind == "plan_source":
+            from .paths import artifact_path
+            prefix = data["id"].split("-")[0]
+            if (data["version"] != "plan-markdown-v1" or data["path"] !=
+                    artifact_path("implementation_plan", data["id"], prefix)):
+                raise ModelError("invalid_plan_manifest_resource")
+            rows = data["projections"]
+            if type(rows) is not list or not rows or any(type(r) is not dict or
+                    set(r) != {"id", "sha256"} for r in rows):
+                raise ModelError("invalid_plan_manifest_projections")
+            if [r["id"] for r in rows] != sorted(set(r["id"] for r in rows)):
+                raise ModelError("invalid_plan_manifest_projections")
+            for row in rows:
+                _text(row["id"]); _hash(row["sha256"])
         if kind == "attachment":
             from .attachments import AttachmentDescriptor
             AttachmentDescriptor.from_data({k: v for k, v in data.items() if k != "kind"})

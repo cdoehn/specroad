@@ -7,7 +7,8 @@ from __future__ import annotations
 
 from collections import deque
 
-from ..model.canonical import canonical_json_sha256
+from ..model.canonical import canonical_json_bytes, canonical_json_sha256
+from ..graph.plan_sources import own_sources, records as plan_records, check_references
 from ..model.errors import ModelError
 from ..model.domain_schemas import DOMAIN_TYPES, validate_domain_fields
 from ..model.record_schemas import RECORD_TYPES, validate_record_fields
@@ -33,7 +34,7 @@ from .production import production_gates, formal_findings, profile_applies
 
 def validate_model(documents, *, profile=None, selected_ids=None, gates=(), resources=None,
                    configuration_id=None, document_role_scope=None, currentness=None, partial=None,
-                   approval_contexts=(), legacy=None):
+                   approval_contexts=(), legacy=None, plan_sources=()):
     """Validate all loaded documents, or a conservatively expanded selection.
 
     Parsing/schema/reference checks inspect the ENTIRE supplied model, even for
@@ -60,6 +61,14 @@ def validate_model(documents, *, profile=None, selected_ids=None, gates=(), reso
     if len({d.path for d in documents}) != len(documents):
         raise ModelError("duplicate_validation_source")
     documents = tuple(sorted(documents, key=lambda d: d.path))
+    plan_sources = own_sources(plan_sources)
+    projected_records = {r.identity.id: r for r in plan_records(plan_sources)}
+    physical_documents = tuple(sorted((*documents, *(ModelDocument(s.path, s.source_bytes)
+        for s in plan_sources)), key=lambda d: d.path))
+    if len({d.path for d in physical_documents}) != len(physical_documents):
+        raise ModelError('duplicate_validation_source')
+    if plan_sources and (partial is not None or currentness is not None or configuration_id is not None):
+        raise ModelError('plan_validation_complete_project_required')
     legacy_records = {}
     if legacy is not None:
         from ._legacy_inputs import qualified_legacy_records
@@ -123,7 +132,7 @@ def validate_model(documents, *, profile=None, selected_ids=None, gates=(), reso
         **({"document_role_scope": document_role_scope} if document_role_scope is not None else {}),
         **({"resources_sha256": resources.sha256} if resources is not None else {}),
         **({'selected_configuration': configuration.binding} if configuration is not None else {}),
-        "documents": _document_bindings(documents),
+        "documents": _document_bindings(physical_documents),
         "selection": None if selected is None else list(selected),
         "profile": profile.binding() if profile is not None else None,
         "gates": [{"id": g.gate_id, "version": g.version, "resources_sha256": g.resources_sha256}
@@ -156,8 +165,11 @@ def validate_model(documents, *, profile=None, selected_ids=None, gates=(), reso
             **({'selected_configuration': configuration.binding} if configuration is not None else {}),
             "input_sha256": basis, "validation_scope": ("partial_bundle_artifacts" if partial is not None else
                 "loaded_model" if selected is None else "dependency_expanded_loaded_scope"),
-            "source_count": len(documents), "structural_scope": "all_supplied_documents",
-            "source_bindings": _document_bindings(documents),
+            "source_count": len(physical_documents), "structural_scope": "all_supplied_documents",
+            "source_bindings": _document_bindings(physical_documents),
+            **({'plan_sources': [{'path': s.path, 'sha256': s.file_sha256,
+                'projections': [{'id': p.data['id'], 'sha256': p.sha256} for p in s.projections]}
+                for s in plan_sources]} if plan_sources else {}),
             "identified_ids": sorted({v["id"] for _, v in parsed if type(v.get("id")) is str and v["id"]}),
             "identified_sources": [{"path": d.path, "artifact_id": v["id"]} for d, v in parsed
                                    if type(v.get("id")) is str and v["id"]],
@@ -173,6 +185,10 @@ def validate_model(documents, *, profile=None, selected_ids=None, gates=(), reso
             parsed.append((document, parse_json_object(document.content, path=document.path)))
         except ModelError as error:
             errors.append(_issue(error))
+    for source in plan_sources:
+        for projection in source.projections:
+            parsed.append((ModelDocument(source.path, canonical_json_bytes(projection.data)), projection.data))
+    parsed.sort(key=lambda pair: (pair[0].path, pair[1].get('id', '')))
     stage("parsing", errors)
     schema_errors = []
     for document, data in parsed:
@@ -183,6 +199,11 @@ def validate_model(documents, *, profile=None, selected_ids=None, gates=(), reso
             kind = data.get("artifact_type")
             if type(kind) is not str:
                 raise ModelError("artifact_type_required", pointer="/artifact_type")
+            if kind in ('implementation_plan', 'plan_entry'):
+                if data.get('id') not in projected_records:
+                    raise ModelError('plan_markdown_carrier_required')
+                records.append(projected_records[data['id']])
+                continue
             if kind in DOMAIN_TYPES:
                 validate_domain_fields(data)
             elif kind in RECORD_TYPES:
@@ -225,6 +246,7 @@ def validate_model(documents, *, profile=None, selected_ids=None, gates=(), reso
         stage("graph_and_semantics", status="blocked")
         return report()
     try:
+        check_references(records)
         require_canonical_relations(references)
         validate_hierarchies(references)
         stage("graph", ids=tuple(r.identity.id for r in records))

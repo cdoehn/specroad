@@ -17,7 +17,7 @@ from ..changes.negative_reviews import prepare_review_outcome_gates
 from ..changes.receipt_values import _created_ids
 from ..validation import ModelGate
 
-_OPERATIONS = {'artifact.create': ('create',), 'artifact.update': ('update',),
+_OPERATIONS = {'view.create': ('create',), 'artifact.create': ('create',), 'artifact.update': ('update',),
     'lifecycle.transition': ('transition', 'retire'),
     'relation.add': ('relation_add',), 'relation.remove': ('relation_remove',),
     'relation.review': ('relation_review_record',), 'baseline.create': ('baseline_create',),
@@ -26,6 +26,8 @@ _OPERATIONS = {'artifact.create': ('create',), 'artifact.update': ('update',),
     'section.move': ('relation_remove', 'relation_add'),
     'block.add': ('create', 'relation_add'), 'block.update': ('update',),
     'block.remove': ('retire',), 'section.remove': ('retire', 'relation_remove', 'relation_add')}
+from ..model.plan_command_ids import COMMANDS as PLAN_COMMANDS
+_OPERATIONS.update({command: ('plan_edit',) for command in PLAN_COMMANDS})
 _DOCUMENT_MUTATIONS = ('block.add', 'block.update', 'block.remove', 'section.remove')
 _SCOPE = {'scope_version': 'scope-v1', 'scope_kind': 'project', 'selector': {},
     'configuration_id': None, 'closure_profile': 'core-closure-v1', 'boundary_policy': 'closed'}
@@ -51,7 +53,8 @@ def _operations(command_id, operations):
     if type(operations) not in (list, tuple) or len(operations) != 1:
         raise AuthoringError('one_authoring_operation_required')
     owned = [ChangeOperation(value).data for value in operations]
-    if owned[0]['op'] not in _OPERATIONS[command_id]:
+    if (owned[0]['op'] not in _OPERATIONS[command_id] or
+            (command_id in PLAN_COMMANDS and owned[0]['intent'].get('command_id') != command_id)):
         raise AuthoringError('authoring_command_operation_mismatch')
     return owned
 
@@ -69,6 +72,8 @@ def prepare_authoring_target(model, operations, *, policy, **fields):
 
 
 def _execution_policy(command_id):
+    if command_id in PLAN_COMMANDS:
+        return TargetPolicy(command_id, 'plan-authoring-v1', ('extension:plan-authoring',))
     if command_id == 'evidence.import':
         return TargetPolicy(command_id, 'evidence-import-v1', ('extension:evidence-import',))
     if command_id == 'evidence.record':

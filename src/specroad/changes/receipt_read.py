@@ -23,9 +23,12 @@ from .receipt_finalization import _target_snapshot
 
 
 def _expected_target(preflight):
-    return {**preflight._model.source_files,
+    files = {**preflight._model.source_files,
             **{d.path: d.content for d in preflight.request.documents},
             **{d.path: d.content for d in preflight._package_files}}
+    for path in preflight.request.data.get('deleted_paths', []):
+        files.pop(path)
+    return files
 
 
 from ._completion_records import CompletionRecords

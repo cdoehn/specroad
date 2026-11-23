@@ -9,7 +9,7 @@ from ..model.errors import ModelError
 from .references import RelationReferences, ResolvedRelation
 from ._graph_traversal import _cycle_witness
 
-HIERARCHY_RELATION_TYPES = ("refines", "part_of", "supersedes", "contains")
+HIERARCHY_RELATION_TYPES = ("refines", "part_of", "supersedes", "contains", "requires_entry")
 
 
 def _require_references(references):

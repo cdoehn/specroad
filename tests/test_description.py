@@ -29,6 +29,9 @@ def described_fixture(handler):
             'options': {'--mode': 'a'}}))
 
 
+NATIVE_WRITERS = ('artifact.create', 'artifact.update', 'lifecycle.transition', 'relation.add', 'relation.remove', 'view.create', 'document.create', 'section.add', 'section.move', 'section.remove', 'block.add', 'block.update', 'block.remove', 'baseline.create', 'relation.review', 'evidence.record', 'evidence.import', 'change.apply', 'plan.create', 'plan.update', 'plan.remove', 'plan.entry.add', 'plan.entry.update', 'plan.entry.move', 'plan.entry.remove', 'plan.entry.check', 'plan.entry.uncheck')
+
+
 class DescriptionWorkTests(unittest.TestCase):
     def test_each_published_example_runs_the_actual_command(self):
         registry = builtin_registry()
@@ -45,7 +48,7 @@ class DescriptionWorkTests(unittest.TestCase):
                     assert_example_outcome(command, result)
                     self.assertEqual(result.command, command.command_id)
                     input_only = command.command_id in ('migrate.plan', 'migrate.apply', 'migrate.verify', 'merge.apply')
-                    if command.command_id in ('proposal.review.start', 'proposal.review', 'proposal.apply', 'analyzer.request'):
+                    if command.command_id in (*NATIVE_WRITERS, 'proposal.review.start', 'proposal.review', 'proposal.apply', 'analyzer.request'):
                         # These handlers return their operation
                         # result; the outer envelope only binds the selected root.
                         self.assertEqual(dict(result.project), {
@@ -226,7 +229,7 @@ class DescriptionRobustnessTests(unittest.TestCase):
             self.assertEqual(document['write_effects']['external_work'], work['external_side_effects'])
             self.assertEqual(document['lock_kind'],
                              'bootstrap' if command.command_id in ('init', 'bundle.extract') else
-                             'writer' if command.command_id in ('migrate.apply', 'merge.apply', 'proposal.review.start', 'proposal.review', 'proposal.apply') else 'none')
+                             'writer' if command.command_id in (*NATIVE_WRITERS, 'migrate.apply', 'merge.apply', 'proposal.review.start', 'proposal.review', 'proposal.apply') else 'none')
             self.assertEqual(8 in document['exit_codes'], continuation)
             self.assertEqual(document['budget_policy_version'],
                              'runtime-budget-v2' if command.command_id in (
@@ -330,6 +333,16 @@ class DescriptionRobustnessTests(unittest.TestCase):
                 self.assertEqual(document['write_effects']['scope'], 'normative_transaction')
                 self.assertFalse(document['work']['continuation_supported'])
                 rejected = ('--work-dir', '--resume', '--as-proposal')
+            elif command.command_id in NATIVE_WRITERS:
+                required = {option['flag'] for option in document['options'] if option['required']}
+                self.assertTrue({'--actor-type', '--actor-id'} <= required)
+                self.assertTrue({'--request-id', '--dry-run', '--expected-model-root-sha256'} <= accepted)
+                self.assertEqual(document['command_class'], 'normative_write')
+                self.assertEqual(document['preflight_profile'], 'project_write')
+                self.assertEqual(document['lock_kind'], 'writer')
+                self.assertEqual(document['write_effects']['scope'], 'normative_transaction')
+                self.assertEqual('--as-proposal' in accepted, command.command_id != 'change.apply')
+                rejected = ('--work-dir', '--resume')
             elif command.command_id == 'merge.resolve':
                 # Explicit actor/time values audit the plan; they grant no write authority.
                 required = {option['flag'] for option in document['options'] if option['required']}

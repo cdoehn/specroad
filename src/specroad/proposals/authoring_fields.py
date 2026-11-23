@@ -12,6 +12,9 @@ def validate_explanations(value, plan):
     for index, (row, operation) in enumerate(zip(changes, plan.operations)):
         pointer = '/changes/' + str(index)
         targets = list(operation.result_ids)
+        if operation.op == 'plan_edit':
+            from ..changes.plan_source_operation import explanation_targets
+            targets = explanation_targets(operation.data)
         if operation.op == 'representation_normalize':
             targets = [operation.data['path']]
         require(row['targets'] == targets, 'proposal_explanation_targets', pointer=pointer + '/targets')

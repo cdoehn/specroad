@@ -11,7 +11,7 @@ from test_relation_views import records
 
 
 def hierarchy(kind="refines", pairs=((1,2),(2,3)), *, isolated=()):
-    artifact_kind = {"part_of":"component", "contains":"section"}.get(kind,"requirement")
+    artifact_kind = {"part_of":"component", "contains":"section", "requires_entry":"plan_entry"}.get(kind,"requirement")
     values={number:artifact(artifact_kind,number) for pair in pairs for number in pair}
     for number in isolated: values[number]=artifact(artifact_kind,number)
     for number,(source,target) in enumerate(pairs,1):

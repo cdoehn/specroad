@@ -53,11 +53,20 @@ def reconstruct_proposal_target(context):
             'proposal_original_basis_mismatch', path=original.path, exit_code=6)
     folded, normalize, _ = fold_saved_plan(plan, model,
         observed_base_root=manifest.sha256, observed_scope=manifest.data['scope_descriptor'])
-    originals = {a['id']: d for a, d in zip(model.artifacts, model.documents)}
+    if hasattr(folded, 'target_model'):
+        target = folded.target_model
+        actual = specification_manifest(target)
+        require(actual.sha256 == plan.data['expected_result']['model_root_sha256'],
+                'proposal_original_target_mismatch', path=original.path)
+        return target
+    from ..storage.json_syntax import parse_json_object
+    originals = {parse_json_object(d.content)['id']: d for d in model.documents}
     documents = []
     from ..model.canonical import canonical_json_sha256
     from ..storage.json_syntax import parse_json_object
     for value in folded.artifacts:
+        if value['artifact_type'] in ('implementation_plan', 'plan_entry'):
+            continue
         old = originals.get(value['id'])
         raw = (old.content if old is not None and canonical_json_sha256(
             parse_json_object(old.content)) == canonical_json_sha256(value) else canonical_json_bytes(value))

@@ -53,6 +53,7 @@ def owned_payload_model(files, *, source_label, partial=False, profile_keys=None
     legacy = qualified(files, configuration.project_id)
     require(legacy is None or not partial, 'bundle_legacy_full_project_required')
     documents, resources, profiles, packages, attachments = [], [], [], {}, {}
+    plans = []
     for path, raw in files.items():
         if path == 'specroad.json' or (partial and path.startswith('bundle-context/')):
             continue
@@ -73,6 +74,10 @@ def owned_payload_model(files, *, source_label, partial=False, profile_keys=None
                 require(previous is None or previous.data == attachment.data,
                         'bundle_attachment_conflict')
                 attachments[attachment.path] = attachment
+        elif kind is PathClass.PLAN:
+            require(not partial, 'plan_partial_payload_reader_required')
+            from ..storage.plan_markdown import parse_plan
+            plans.append(parse_plan(raw, path=path, id_prefix=configuration.id_prefix))
         elif path == registry_path:
             resources.append(document)
         elif kind is PathClass.PROFILE:
@@ -104,7 +109,8 @@ def owned_payload_model(files, *, source_label, partial=False, profile_keys=None
     binding = ProjectReadBinding(configuration.project_id, source_label, (0, 0))
     constructor = PartialPayloadModel if partial else TargetModel
     return constructor(files['specroad.json'], binding, documents, profile=profile,
-        resource_files=resources, attachments=tuple(attachments.values()), language_packages=selected)
+        resource_files=resources, attachments=tuple(attachments.values()), language_packages=selected,
+        **({'plan_sources': tuple(plans)} if not partial else {}))
 
 
 @dataclass(frozen=True, init=False, eq=False)

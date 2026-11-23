@@ -301,6 +301,8 @@ class Invocation:
     restore_services: object = field(default=None, repr=False, compare=False)
     publication_authority: object = field(default=None, repr=False, compare=False)
     migration_gates: tuple = field(default=(), repr=False, compare=False)
+    option_order: tuple = ()
+    raw_arguments: tuple = ()
 
     def __post_init__(self) -> None:
         object.__setattr__(self, "options", MappingProxyType(dict(self.options)))

@@ -25,7 +25,7 @@ def _rule(kind, sources, targets, same_type=False):
 
 
 _ALL = " ".join(item.artifact_type for item in artifact_types())
-_DEPENDENCY = "capability requirement component interface task release milestone code_ref configuration"
+_DEPENDENCY = "capability requirement component interface task release milestone code_ref configuration implementation_plan plan_entry"
 _RULES = (
     _rule("addresses", "need capability requirement", "goal"),
     _rule("refines", "need", "goal need"),
@@ -33,6 +33,7 @@ _RULES = (
     _rule("refines", "requirement", "need capability requirement"),
     _rule("refines", "scenario", "need capability requirement scenario"),
     _rule("derived_from", "goal need capability requirement scenario decision risk assumption component interface verification test release milestone task term document section content_block view code_ref configuration", "source need decision assumption"),
+    _rule("derived_from", "implementation_plan plan_entry", "source need decision assumption"),
     _rule("depends_on", _DEPENDENCY, _DEPENDENCY),
     _rule("conflicts_with", _ALL, _ALL),
     _rule("constrains", "requirement decision", "capability requirement component interface"),
@@ -48,9 +49,13 @@ _RULES = (
     _rule("part_of", "task", "release milestone capability"),
     _rule("supersedes", _ALL, _ALL, True),
     _rule("duplicates", _ALL, _ALL, True),
+    _rule("contains", "implementation_plan plan_entry", "plan_entry"),
+    _rule("plans", "plan_entry", "requirement"),
+    _rule("requires_entry", "implementation_plan plan_entry", "plan_entry"),
+    _rule("works_on", "task", "plan_entry"),
     _rule("contains", "document", "section"),
     _rule("contains", "section", "section content_block"),
-    _rule("references", "content_block view verification test source", _ALL),
+    _rule("references", "content_block view verification test source implementation_plan plan_entry", _ALL),
 )
 
 

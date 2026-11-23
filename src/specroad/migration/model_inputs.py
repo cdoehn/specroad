@@ -26,7 +26,8 @@ def records(model):
         item = original(legacy, document.path, document.content)
         result.append(SourceRelations.from_legacy(item) if item is not None else
                       SourceRelations(document.content, path=document.path))
-    return tuple(result)
+    from ..graph.plan_sources import records as plan_records
+    return tuple(result) + plan_records(getattr(model, "plan_sources", ()))
 
 
 def artifact_resource(model, value):

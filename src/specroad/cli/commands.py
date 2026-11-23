@@ -483,6 +483,10 @@ def builtin_registry() -> CommandRegistry:
             diagnostic_codes=('SRV167', 'CORE_MODEL', 'CORE_SECURITY', 'CORE_CONFLICT'),
             work=WorkContract('environment_metadata', ('runtime_identity', 'distribution_metadata'))),
     ))
+    from .plan_authoring import plan_commands
+    commands += plan_commands()
+    from .native_authoring import commands as native_authoring_commands
+    commands += native_authoring_commands()
     from .document_commands import read_commands
     from .metadata_commands import metadata_commands
     commands += read_commands()

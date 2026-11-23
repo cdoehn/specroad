@@ -164,7 +164,7 @@ def project_validation_report(files, *, services=None):
     report = validate_model(model.documents, profile=model.profile, resources=validation_resources(model),
                             gates=gates, document_role_scope='full_project',
                             approval_contexts=tuple(pair[0] for pair in approvals.values()),
-                            legacy=model.legacy_manifest)
+                            legacy=model.legacy_manifest, plan_sources=model.plan_sources)
     return model, root, report
 
 

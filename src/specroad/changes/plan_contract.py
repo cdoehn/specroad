@@ -110,6 +110,8 @@ def _validate_plan(value, *, hash_present=True):
         if canonical_json_sha256(result["artifact"]) != result["sha256"]:
             raise ChangePlanError("result_hash_mismatch", pointer=at + "/sha256", code="SRV146")
     _result_bindings(value)
+    from .plan_source_operation import check_envelope
+    check_envelope(value)
     if migration:
         from ..migration.plan_contract import validate_migration_envelope
         _at("", validate_migration_envelope, value)

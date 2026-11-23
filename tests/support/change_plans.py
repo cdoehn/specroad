@@ -11,6 +11,13 @@ def scope():
 
 
 def operation(kind='create'):
+    if kind == 'plan_edit':
+        from .plan_sources import small_source
+        from .plan_models import PLAN, ENTRY
+        raw,_,_=small_source()
+        path='spec/implementation-plans/'+PLAN+'.md'
+        return {'op':'plan_edit','intent':{'command_id':'plan.entry.uncheck','target':ENTRY},
+            'sources':[{'path':path,'before':raw.decode(),'after':raw.decode()}],'result_ids':[]}
     if kind == 'proposal_change':
         value = proposal_draft(token='3')
         return dict(op=kind, target=value['id'], expected_revision=1,

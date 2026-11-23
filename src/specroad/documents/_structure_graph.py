@@ -42,7 +42,9 @@ def _document_structure(records, references, values):
         by_parent = {identity: [] for identity in sorted(values)
                      if values[identity]['artifact_type'] in ('document', 'section')}
         for edge in references.relations:
-            if edge.relation.type == 'contains':
+            # Native hierarchy validation already checked all edge types.
+            # Plan containment belongs to its own tree, not composition.
+            if edge.relation.type == 'contains' and edge.source.id in by_parent:
                 by_parent[edge.source.id].append(edge)
         for identity, edges in by_parent.items():
             children[identity] = [{'artifact_id': edge.target.id,

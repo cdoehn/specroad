@@ -36,7 +36,13 @@ def declared_resource(raw, path, *, normative=False):
         'artifact_type' in value or 'project_id' in value and
         any(key in value for key in ('managed_paths', 'id_prefix', 'project_name', 'validation_policy')) or
         any(key in value for key in ('profile_id', 'rule_id', 'mapping_id')))
-    supported = (PROJECT_SCHEMA_VERSIONS if path == 'specroad.json' else
+    # Archived semantic project configuration retains the project schema
+    # version. Its content address is not an artifact-type declaration.
+    # Actual reconstruction and manifest binding remain mandatory.
+    project_configuration = (path == 'specroad.json' or
+        path.startswith('archive/objects/') and 'artifact_type' not in value
+        and {'project_id', 'id_prefix', 'managed_paths'} <= value.keys())
+    supported = (PROJECT_SCHEMA_VERSIONS if project_configuration else
                  (PLAN_SCHEMA_VERSION,) if value.get('artifact_type') in PLAN_TYPES else (SCHEMA_VERSION,))
     if recognizable and 'schema_version' in value and value['schema_version'] not in supported:
         error = QualificationError('restore_unsupported_source_schema_version', path=path)

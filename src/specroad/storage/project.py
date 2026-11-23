@@ -10,7 +10,7 @@ import stat
 from types import MappingProxyType
 
 from ..model.configuration import ProjectConfiguration
-from ..model.paths import CURRENT_JSON_CLASSES, PAYLOAD_CLASSES, classify_path, project_path
+from ..model.paths import CURRENT_JSON_CLASSES, PAYLOAD_CLASSES, PathClass, classify_path, project_path
 from ..model.errors import ModelError
 from ..security import ProjectBoundary, SafetyViolation
 
@@ -137,7 +137,7 @@ class ProjectSource:
             from ..migration.plan_values import require
             require(False, 'legacy_immutable_write_forbidden', path=path)
         kind = self.classify(path)
-        if kind not in CURRENT_JSON_CLASSES and kind not in PAYLOAD_CLASSES:
+        if kind not in CURRENT_JSON_CLASSES and kind not in PAYLOAD_CLASSES and kind is not PathClass.PLAN:
             raise ModelError("outside_managed_paths", path=path)
         cursor = self.boundary.root
         parts = path.split("/")

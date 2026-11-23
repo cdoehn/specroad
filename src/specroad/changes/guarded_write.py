@@ -6,8 +6,8 @@ There is no recovery or resume branch in this path.
 """
 from types import SimpleNamespace
 from ..storage.json_syntax import parse_json_object as parsed
-from ..storage.resource_discovery import current_json_paths
-from ..model.paths import CURRENT_JSON_CLASSES
+from ..storage.resource_discovery import current_model_paths
+from ..model.paths import CURRENT_JSON_CLASSES, PathClass
 from ..validation import ModelDocument, validate_model, assess_validation
 from ._target_materialization import materialize_target, validation_resources
 from ._target_checks import _gates, _empty_target_gates
@@ -34,26 +34,28 @@ def publish_guarded_change(preflight, *, held_lock, authority, gates=()):
         transaction_id=held_lock.record.data['transaction_id'],authority=authority,gates=gates)
     before={**model.source_files,**{d.path:d.content for d in preflight._package_files}}
     target={**before,**{d.path:d.content for d in request.documents}}
+    for path in request.data.get('deleted_paths', []):
+        target.pop(path)
     def inventory_check(expected):
         from ..model.configuration import ProjectConfiguration
         config=ProjectConfiguration(parsed(expected['specroad.json']))
         from ..model.paths import classify_path
         source=SimpleNamespace(boundary=held_lock._files.boundary,configuration=config,
                                classify=lambda p:classify_path(p,config))
-        require(current_json_paths(source)==tuple(sorted(p for p in expected if source.classify(p) in CURRENT_JSON_CLASSES)),
+        require(current_model_paths(source)==tuple(sorted(p for p in expected if source.classify(p) in (*CURRENT_JSON_CLASSES, PathClass.PLAN))),
                 'write_inventory_changed',exit_code=6)
     def qualify(actual):
         documents=tuple(ModelDocument(p,actual[p]) for p in sorted(actual) if p in model.source_files or p in {d.path for d in request.documents})
-        result=materialize_target(model,documents)
+        result=materialize_target(model,documents,replace_plan_sources=True)
         require(result.manifest(result.artifacts,plan.data['base']['scope_descriptor']).sha256==request.data['target_root_sha256'],
                 'write_target_root_changed',exit_code=6)
         registered,missing=_gates(gates,preflight._policy,plan,result)
         from .requirement_approval import approval_target_contexts
         report=_empty_target_gates(validate_model(result.documents,profile=result.profile,gates=registered,
-                resources=validation_resources(result),
+                resources=validation_resources(result), plan_sources=result.plan_sources,
                 approval_contexts=approval_target_contexts(gates,result.documents,result)),registered,result.profile)
         assessment=assess_validation(report,fail_on=result.configuration.data['validation_policy'].get('fail_on','error'),
-                                    strict=preflight._strict,documents=result.documents)
+                                    strict=preflight._strict,documents=result.validation_documents)
         require(not missing and report.complete and assessment.passed,'write_target_invalid',exit_code=3)
         detached=request.detached();allowed=authority.check(detached);_same_request(detached,request)
         require(type(allowed) is bool and allowed,'write_authority_denied',exit_code=7)

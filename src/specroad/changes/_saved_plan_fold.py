@@ -22,7 +22,17 @@ def fold_saved_plan(plan, model, *, observed_base_root, observed_scope):
     evidence = not controlled and evidence_mode(value['operations'])
     imported = not controlled and import_mode(value['operations'])
     from .requirement_approval import approval_mode, prepare_plan_requirement
-    if approval_mode(value['operations']):
+    from .plan_candidates import mode as plan_mode, prepare as prepare_plans
+    from .standard_approval import mode as standard_mode, prepare as prepare_standard
+    if plan_mode(value['operations']):
+        folded = prepare_plans(model, value['operations'], metadata_policy_version=value['metadata_policy_version'],
+            actor=value['actor'], planned_at=value['planned_at'], preconditions=value['preconditions'])
+    elif standard_mode(value['operations']):
+        folded = prepare_standard(model, value['operations'], metadata_policy_version=value['metadata_policy_version'],
+            actor=value['actor'], planned_at=value['planned_at'], preconditions=value['preconditions'])
+        if {c.id:c.candidate_sha256 for c in folded.candidates} != {r['artifact']['id']:r['sha256'] for r in value['result_artifacts']}:
+            raise TargetError('declared_approval_result_mismatch')
+    elif approval_mode(value['operations']):
         folded = prepare_plan_requirement(plan, model,
             observed_base_root=observed_base_root, observed_scope=observed_scope)
     elif controlled:

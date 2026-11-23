@@ -20,7 +20,8 @@ from support.portable import build_distribution
 
 
 def test_all_operation_shapes_can_coexist_without_execution():
-    ops = [operation(k) for k in OPERATION_TYPES]
+    # Plan-source edits require their own isolated envelope.
+    ops = [operation(k) for k in OPERATION_TYPES if k != 'plan_edit']
     results = [result(domain_value()), result(record_value('evidence')), result(record_value('relation_review')), result(record_value('proposal', proposal_status='validated', maturity='proposed', content_sha256='b'*64)), result(record_value('baseline'))]
     results.append(result(operation('proposal_create')['record']))
     results.append(result(operation('proposal_change')['record']))
@@ -30,6 +31,10 @@ def test_all_operation_shapes_can_coexist_without_execution():
                               {'kind':'absent','path':'spec/new.json'}]
     plan = prepare_change_plan(value)
     assert len(plan.operations) == 15
+    assert {op.op for op in plan.operations} == set(OPERATION_TYPES) - {'plan_edit'}
+    with pytest.raises(ChangePlanError) as caught:
+        prepare_change_plan(document([*ops, operation('plan_edit')], results))
+    assert caught.value.reason == 'plan_source_specialist_sequence_required'
     assert ChangePlan(plan.canonical_bytes).data == plan.data
     assert not plan.execution_ready
 

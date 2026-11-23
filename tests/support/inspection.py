@@ -92,6 +92,12 @@ def command_example_inputs(root, command):
     The Work fixture labels its synthetic build identity explicitly. No native
     model/recovery/checkpoint validator or command handler is replaced.
     """
+    from specroad.model.plan_command_ids import COMMANDS as plan_commands
+    from specroad.authoring.native_intents import COMMANDS as native_commands
+    if command.command_id in (*plan_commands, *native_commands, 'change.apply'):
+        from support.native_plan_authoring import example
+        yield example(root, command)
+        return
     if command.command_id.startswith('analyzer.'):
         from .analyzer_cli import example_inputs
         yield example_inputs(root, command)

@@ -81,6 +81,14 @@ def _field_targets(record, relations=None):
             raise error
         relation = relations[data["relation_id"]]
         candidates.extend((v, "/relation_id", None) for v in (relation.source.id, relation.target.id))
+    if kind in ('implementation_plan', 'plan_entry'):
+        candidates.extend((ref['plan_id'], '/prerequisites/' + str(i) + '/plan_id', 'implementation_plan')
+                          for i, ref in enumerate(data['prerequisites']))
+        for i, claim in enumerate(data.get('coverage_claims', [])):
+            candidates.append((claim['requirement_id'], '/coverage_claims/' + str(i) + '/requirement_id', 'requirement'))
+            for j, ref in enumerate(claim['contributors']):
+                candidates.extend(((ref['plan_id'], '/coverage_claims/' + str(i) + '/contributors/' + str(j), 'implementation_plan'),
+                                   (ref['entry_id'], '/coverage_claims/' + str(i) + '/contributors/' + str(j), 'plan_entry')))
     for i, provenance in enumerate(data.get("provenance", ())):
         if provenance.get("source_id") is not None:
             candidates.append((provenance["source_id"], "/provenance/" + str(i) + "/source_id", "source"))

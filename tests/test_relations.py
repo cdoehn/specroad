@@ -30,7 +30,7 @@ class RelationWorkTests(unittest.TestCase):
     def test_every_stored_core_type_is_loadable_without_claiming_matrix_validity(self):
         expected = {"addresses", "refines", "derived_from", "depends_on", "conflicts_with", "constrains",
                     "allocated_to", "implemented_by", "verified_by", "produces", "mitigates",
-                    "scheduled_for", "part_of", "supersedes", "duplicates", "contains", "references"}
+                    "scheduled_for", "part_of", "supersedes", "duplicates", "contains", "references", "plans", "works_on", "requires_entry"}
         self.assertEqual(set(CORE_RELATION_TYPES), expected)
         for kind in sorted(expected):
             with self.subTest(kind=kind):

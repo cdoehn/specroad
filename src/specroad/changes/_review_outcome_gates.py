@@ -19,9 +19,11 @@ WITHDRAWAL_GATE = 'extension:review-withdrawal'
 
 
 def _sources(artifacts):
+    from ..graph.plan_sources import projection_records
+    plans = [a for a in artifacts if a['artifact_type'] in ('implementation_plan','plan_entry')]
     return tuple(SourceRelations(canonical_json_bytes(a),
         path=artifact_path(a['artifact_type'], a['id'], a['id'].split('-')[0]))
-        for a in artifacts)
+        for a in artifacts if a['artifact_type'] not in ('implementation_plan','plan_entry')) + projection_records(plans)
 
 
 def prepare_review_outcome_gates(model, operation, *, actor, planned_at):

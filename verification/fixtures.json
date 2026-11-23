@@ -1087,6 +1087,10 @@
     "SR-FIX-PLAN-SOURCE-v1": {
       "provider": "tests/support/plan_sources.py; tests/test_plan_markdown.py; tests/test_plan_markdown_right.py",
       "kind": "Independent authored UTF-8 plan carriers, exact expected projections and physical bytes; real native ProjectSource reads, no-op and minimal span candidates, current-file changes and native safety failures. Synthetic metadata only, no persisted approval or renderer oracle. Body indentation uses physical LF only; the Unicode separator case independently asserts exact authored input bytes before parsing."
+    },
+    "SR-FIX-NATIVE-PLAN-AUTHORING-v1": {
+      "provider": "tests/support/native_plan_authoring.py; tests/support/native_authoring_cases.py",
+      "kind": "Independently authored real UTF-8 Markdown carriers and native JSON projects, synthetic original measurements and explicit actor/service inputs; exact file effects and receipts. R adds multi-plan references, inherited prerequisites and actual process interruption at writer checkpoints. No production reviewers, measurements or approval claims."
     }
   },
   "fixture_format_version": 1,
@@ -1241,6 +1245,7 @@
     "SR-FIX-MODEL-MANIFEST-v1",
     "SR-FIX-MODEL-VALIDATION-v1",
     "SR-FIX-NATIVE-IMPORT-IDENTITIES-v1",
+    "SR-FIX-NATIVE-PLAN-AUTHORING-v1",
     "SR-FIX-NDJSON-NATIVE-CODEC-v1",
     "SR-FIX-NDJSON-STREAM-RESUME-v1",
     "SR-FIX-NORMAL-ADAPTERS-v1",

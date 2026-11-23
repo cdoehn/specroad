@@ -1,5 +1,13 @@
 # Entscheidungen und Ausführungsnachweise
 
+- [Bundle 802 — Echte Messbelege für den vollständigen 21.c-Rest](bundle-802-authoring-measurements.md)
+
+- [Bundle 801 — Zwei verbleibende Authoring-Fehler](bundle-801-native-authoring-oracles.md)
+
+- [Bundle 800 — Korrektur des offenen Authoring-Rests](bundle-800-native-authoring-repair.md)
+
+- [Bundle 798 — Natives Plan- und Eintragsauthoring](bundle-798-native-authoring.md)
+
 - [Bundle 797 — Physische LF-Zeilen in Plan-Testdaten](bundle-797-plan-fixture-lf.md)
 
 - [Bundle 796 — Metadatenfehler an ihrer Quelle](bundle-796-parser-metadata-correction.md)

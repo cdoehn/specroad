@@ -4,6 +4,8 @@
   "expected_exit_codes": [],
   "fixture_ids": [
     "SR-FIX-ARTIFACT-COMMON-v1",
+    "SR-FIX-NATIVE-PLAN-AUTHORING-v1",
+    "SR-FIX-OWNED-TEMP-v1",
     "SR-FIX-PLAN-MODEL-v1"
   ],
   "implementation_status": "partial",
@@ -18,7 +20,7 @@
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Erweiterungsdaten MÜSSEN ausschließlich im Objekt `extensions` unter einem namespaced Schlüssel der Form `<anbieter>.<name>` gespeichert werden.",
-    "scope": "Existing normal-mode oracles retained, extended by 21.a typed plan fields, explicit additive schema capability and read-only effective configuration. Legacy originals are not current approvals; complete Markdown loading/authoring and final integration remain separately planned."
+    "scope": "Existing normal-mode oracles retained, extended by 21.a typed plan fields, explicit additive schema capability and read-only effective configuration. Legacy originals are not current approvals; complete Markdown loading/authoring and final integration remain separately planned. Bundle 801 retains the raw interleaved option-order oracle with namespaced extension keys; the existing namespace rule is unchanged."
   },
   "preconditions": [
     "Trusted built-in field contracts and isolated synthetic data; no live project mutation.",
@@ -303,6 +305,7 @@
     "test_relation_identity_right.RelationIdentityRightTests.test_regular_update_cannot_change_id",
     "test_relation_identity_right.RelationIdentityRightTests.test_regular_update_cannot_change_scheme",
     "test_relation_identity_right.RelationIdentityRightTests.test_relation_identity_fields_are_an_all_or_none_partial_projection",
-    "test_relation_identity_right.RelationIdentityRightTests.test_zero_and_maximum_relation_tokens_roundtrip"
+    "test_relation_identity_right.RelationIdentityRightTests.test_zero_and_maximum_relation_tokens_roundtrip",
+    "tests/test_native_authoring_cli.py::test_raw_option_order_is_preserved_through_registry_execute"
   ]
 }
