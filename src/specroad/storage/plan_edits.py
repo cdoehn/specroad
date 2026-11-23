@@ -63,7 +63,7 @@ def replace_fields(source, updates, *, expected_file_sha256):
         metadata_bytes = section.metadata.read(source.source_bytes)
         meta = parse_json_object(_body(metadata_bytes, section.indent, source=source.source_bytes,
             path=source.path, offset=section.metadata.start).encode('utf-8'))
-        old_meta = canonical_json_bytes(meta)
+        old_meta = dict(meta)
         for field, replacement in fields.items():
             if type(field) is not str or field in fixed:
                 raise ModelError('plan_structural_edit_required', path=source.path)
@@ -84,9 +84,9 @@ def replace_fields(source, updates, *, expected_file_sha256):
                 edits.append(SourceEdit(span.start, span.end, span.read(source.source_bytes), raw))
             if span is None or field in meta:
                 meta[field] = replacement
-        if canonical_json_bytes(meta) != old_meta:
-            raw = _indented(canonical_json_bytes(meta).decode('utf-8') + '\n', section.indent)
-            edits.append(SourceEdit(section.metadata.start, section.metadata.end, metadata_bytes, raw))
+        if canonical_json_bytes(meta) != canonical_json_bytes(old_meta):
+            from .plan_json_spans import metadata_edits
+            edits.extend(metadata_edits(section, metadata_bytes, old_meta, meta))
     result = replace_spans(source, edits, expected_file_sha256=expected_file_sha256)
     actual = {p.data['id']: p.data for p in result.projections}
     if canonical_json_bytes(actual) != canonical_json_bytes(expected):

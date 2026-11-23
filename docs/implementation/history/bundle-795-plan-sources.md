@@ -7,7 +7,7 @@ beide Commits und den sauberen Stand
 `a395c08e6b1f385af0e179120d30843dc7e2341d`. **891/996** Positionen sind
 bestätigt; es gibt keinen offenen Korrekturrest.
 
-Diese Stage **21.b.W** gehört zur vollständigen Gruppe 21.b. Ihr Häkchen
+Diese Stage **21.b.R** gehört zur vollständigen Gruppe 21.b. Ihr Häkchen
 und Fortschritt gelten erst nach ihrem eigenen erfolgreichen Apply-Gate
 und Commit. Dev-Verhaltenstests: **0**. Syntax, reine Collection, native
 Paket- und passive Übergabeprüfung sind keine Verhaltensabnahme.

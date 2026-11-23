@@ -22,8 +22,8 @@
   ],
   "method": "automated_behavior",
   "open_items": [
-    "Correction 796 preserves the failed metadata oracle and all previous tests unchanged; carrier-type validation precedes derived parent schemas. The full 21.b.W/R/C remainder still requires its separate native Apply gates.",
-    "The complete 21.b source/parser slice and independent oracles are prepared; its own Apply gate remains mandatory. Dev executed no behavior tests.",
+    "Correction 797: 21.b.W is committed with 9335 passed tests. R failed one case because the independent fixture inserted spaces after Unicode separators; only physical LF lines are now indented. The original failed assertions and exact input-byte oracle are mandatory in both remaining gates.",
+    "The complete 21.b.R/C remainder and all previous identities/mandatory oracles are retained. Each stage still requires its own successful native Apply gate; Dev executed no behavior tests.",
     "Native transactional Authoring (21.c), common graph/scope integration (21.h) and current cross-component/platform acceptance (21.w/x) retain their full planned scope. Human reviews and release approval remain open in the final M19/M20 block."
   ],
   "oracle": {
@@ -32,7 +32,7 @@
     "scope": "Complete plan-markdown-v1 source/parser slice: typed fields and structural ownership, code/quote/comment exclusions, localized malformed input, byte-preserving no-op and affected spans, current manual changes, separate file/artifact/context bindings and explicit revision comparison. Existing writer, graph and final integration groups remain required."
   },
   "preconditions": [
-    "21.b 21.b.W: real independently authored UTF-8/LF plan files and current native field schemas; no cache or approval authority."
+    "21.b 21.b.R: real independently authored UTF-8/LF plan files and current native field schemas; no cache or approval authority."
   ],
   "primary_verification_id": "SR-VER-0052",
   "required_environment": {
@@ -77,6 +77,41 @@
     "tests/test_plan_markdown.py::test_malformed_structures_are_visible[utf8-invalid_utf8]",
     "tests/test_plan_markdown.py::test_manual_edits_are_next_read_truth_without_mutating_old_observation",
     "tests/test_plan_markdown.py::test_spans_require_exact_bytes_binding_ownership_and_nonoverlap",
-    "tests/test_plan_markdown.py::test_two_real_carriers_have_one_owned_manifest_each_and_no_shadow_files"
+    "tests/test_plan_markdown.py::test_two_real_carriers_have_one_owned_manifest_each_and_no_shadow_files",
+    "tests/test_plan_markdown_right.py::test_atx_metadata_fences_accept_non_code_indentation[0]",
+    "tests/test_plan_markdown_right.py::test_atx_metadata_fences_accept_non_code_indentation[1]",
+    "tests/test_plan_markdown_right.py::test_atx_metadata_fences_accept_non_code_indentation[2]",
+    "tests/test_plan_markdown_right.py::test_atx_metadata_fences_accept_non_code_indentation[3]",
+    "tests/test_plan_markdown_right.py::test_bad_content_revision_is_a_warning_with_exact_identity_not_reader_repair[1]",
+    "tests/test_plan_markdown_right.py::test_bad_content_revision_is_a_warning_with_exact_identity_not_reader_repair[3]",
+    "tests/test_plan_markdown_right.py::test_bad_content_revision_is_a_warning_with_exact_identity_not_reader_repair[7]",
+    "tests/test_plan_markdown_right.py::test_bad_or_colliding_ids_have_no_partial_projection[display-duplicate_plan_display_id]",
+    "tests/test_plan_markdown_right.py::test_bad_or_colliding_ids_have_no_partial_projection[duplicate-duplicate_artifact_id]",
+    "tests/test_plan_markdown_right.py::test_bad_or_colliding_ids_have_no_partial_projection[id-artifact_identity_mismatch]",
+    "tests/test_plan_markdown_right.py::test_bad_or_colliding_ids_have_no_partial_projection[prefix-artifact_identity_mismatch]",
+    "tests/test_plan_markdown_right.py::test_bad_or_colliding_ids_have_no_partial_projection[relation-duplicate_plan_relation_id]",
+    "tests/test_plan_markdown_right.py::test_comment_examples_cannot_hide_following_real_entries[    <!-- indented code\\n]",
+    "tests/test_plan_markdown_right.py::test_comment_examples_cannot_hide_following_real_entries[> <!-- a quoted example\\n]",
+    "tests/test_plan_markdown_right.py::test_comment_examples_cannot_hide_following_real_entries[An escaped \\\\<!-- token\\n]",
+    "tests/test_plan_markdown_right.py::test_comment_examples_cannot_hide_following_real_entries[An inline `<!--` token\\n]",
+    "tests/test_plan_markdown_right.py::test_current_native_reader_rejects_shadow_paths_old_projects_and_changed_configuration",
+    "tests/test_plan_markdown_right.py::test_duplicate_json_key_location_tracks_physical_unicode_source",
+    "tests/test_plan_markdown_right.py::test_field_edit_cannot_inject_extra_structured_entries_or_change_ownership",
+    "tests/test_plan_markdown_right.py::test_format_only_change_rebinds_file_without_changing_artifacts_or_revision",
+    "tests/test_plan_markdown_right.py::test_invalid_carrier_bytes_remain_readable_for_explicit_diagnosis",
+    "tests/test_plan_markdown_right.py::test_list_description_preserves_unicode_line_separators_and_white_lines",
+    "tests/test_plan_markdown_right.py::test_list_indentation_is_explicit_and_never_synthesizes_parents[body-plan_body_indentation]",
+    "tests/test_plan_markdown_right.py::test_list_indentation_is_explicit_and_never_synthesizes_parents[jump-plan_list_parent_missing]",
+    "tests/test_plan_markdown_right.py::test_list_indentation_is_explicit_and_never_synthesizes_parents[meta-plan_metadata_header_mismatch]",
+    "tests/test_plan_markdown_right.py::test_list_indentation_is_explicit_and_never_synthesizes_parents[odd-plan_list_indentation]",
+    "tests/test_plan_markdown_right.py::test_list_indentation_is_explicit_and_never_synthesizes_parents[tab-plan_orphan_metadata]",
+    "tests/test_plan_markdown_right.py::test_longer_fences_heading_closures_and_one_blank_line_are_preserved",
+    "tests/test_plan_markdown_right.py::test_many_levels_use_an_iterative_parent_stack",
+    "tests/test_plan_markdown_right.py::test_matched_derived_metadata_is_updated_with_only_the_requested_field",
+    "tests/test_plan_markdown_right.py::test_minimal_metadata_updates_preserve_literal_escapes_and_other_tokens",
+    "tests/test_plan_markdown_right.py::test_native_read_boundary_rejects_linked_carriers",
+    "tests/test_plan_markdown_right.py::test_nested_examples_and_inline_comments_do_not_change_parent_stack",
+    "tests/test_plan_markdown_right.py::test_new_optional_metadata_only_inserts_tokens_and_never_manufactures_proof",
+    "tests/test_plan_markdown_right.py::test_unicode_offsets_are_bytes_and_columns_are_characters"
   ]
 }

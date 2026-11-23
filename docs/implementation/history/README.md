@@ -1,5 +1,7 @@
 # Entscheidungen und Ausführungsnachweise
 
+- [Bundle 797 — Physische LF-Zeilen in Plan-Testdaten](bundle-797-plan-fixture-lf.md)
+
 - [Bundle 796 — Metadatenfehler an ihrer Quelle](bundle-796-parser-metadata-correction.md)
 
 - [Bundle 795 — Markdown-Planquellen](bundle-795-plan-sources.md)

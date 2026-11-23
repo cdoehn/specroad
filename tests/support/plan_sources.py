@@ -24,7 +24,8 @@ def block(head, value, body='', *, indent=0, fence='```', gap='', encoded=None):
     kind = 'plan' if value['artifact_type'] == 'implementation_plan' else 'entry'
     text = json.dumps(metadata(value), ensure_ascii=False, indent=2) if encoded is None else encoded
     meta = ''.join(prefix + line + '\n' for line in text.split('\n'))
-    content = ''.join((prefix + line if line.strip(' \t\n') else line) for line in body.splitlines(keepends=True))
+    # U+2028/U+2029 are body characters, not physical Markdown line breaks.
+    content = '\n'.join(prefix + line if line.strip(' \t') else line for line in body.split('\n'))
     return (head + '\n' + gap + prefix + fence + 'specroad-' + kind + '-v1\n' +
             meta + prefix + fence + '\n' + content).encode('utf-8')
 

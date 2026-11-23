@@ -170,6 +170,41 @@ def _body(raw, indent, *, source, path, offset):
     return ''.join(result)
 
 
+def _comments(line, inside):
+    """Track actual comment delimiters outside escaped/inline-code examples."""
+    cursor, first = 0, None
+    while cursor < len(line):
+        if inside:
+            end = line.find('-->', cursor)
+            if end < 0:
+                return True, first
+            inside, cursor = False, end + 3
+        elif line[cursor] == '\\':
+            cursor += 2
+        elif line[cursor] == '`':
+            end = cursor
+            while end < len(line) and line[end] == '`':
+                end += 1
+            delimiter = line[cursor:end]
+            closing = end
+            while True:
+                closing = line.find(delimiter, closing)
+                if closing < 0:
+                    cursor = end
+                    break
+                stop = closing + len(delimiter)
+                if line[closing-1] != '`' and line[stop:stop+1] != '`':
+                    cursor = stop
+                    break
+                closing += 1
+        elif line.startswith('<!--', cursor):
+            first = cursor if first is None else first
+            inside, cursor = True, cursor + 4
+        else:
+            cursor += 1
+    return inside, first
+
+
 def _scan(raw, path):
     try:
         text = raw.decode('utf-8')
@@ -196,18 +231,29 @@ def _scan(raw, path):
                 code = None
             i += 1
             continue
-        # HTML comment state is independent of model or metadata parsing.
-        if comment or '<!--' in line:
-            cursor = 0
-            while cursor < len(line):
-                marker = '-->' if comment else '<!--'
-                at = line.find(marker, cursor)
-                if at < 0:
-                    break
-                comment = not comment
-                cursor = at + len(marker)
+        # Markers inside quotes/indented code do not open an outer HTML comment.
+        # An already open outer comment still observes its closing delimiter.
+        if not comment:
+            indentation = len(line) - len(line.lstrip(' '))
+            code_indent = 4 if list_indent is None else list_indent + 6
+            if line.lstrip(' \t').startswith('>') or line.startswith('\t') or indentation >= code_indent:
+                i += 1
+                continue
+        if not comment and fence is not None:
+            if fence[1] == '`' and fence[3] in ('specroad-plan-v1', 'specroad-entry-v1'):
+                raise _error('plan_orphan_metadata', raw, path, offsets[i])
+            if fence[1] == '~' or '`' not in fence[3]:
+                code = fence
             i += 1
             continue
+        # Comment contents cannot activate a header. A closed inline comment
+        # after a real header remains literal source text in that title.
+        if comment or '<!--' in line:
+            was_comment = comment
+            comment, comment_start = _comments(line, comment)
+            if was_comment or comment or (comment_start is not None and comment_start <= len(line) - len(line.lstrip(' \t'))) or _heading(line) is None:
+                i += 1
+                continue
         if line.lstrip(' \t').startswith('>'):
             i += 1
             continue
@@ -258,6 +304,16 @@ def _scan(raw, path):
             row = min(j + (error.line or 1), k)
             column = (error.column or 1) - 1 + indent
             location = offsets[row] + len(lines[row][:column].encode('utf-8'))
+            if error.pointer and error.line is None:
+                from .plan_json_spans import member_spans
+                try:
+                    key = error.pointer.split('/')[1].replace('~1', '/').replace('~0', '~')
+                    members = member_spans(raw[offsets[j+1]:offsets[k]])
+                    matches = [m for m in members if m[0] == key]
+                    if matches:
+                        location = offsets[j+1] + matches[-1][1]
+                except (ValueError, RecursionError):
+                    pass
             raise _error(error.reason, raw, path, location, pointer=error.pointer) from error
         if records:
             records[-1]['body_end'] = offsets[i]
@@ -279,6 +335,29 @@ def parse_plan(raw, *, path=None, id_prefix=None):
     if any(r['level'] == 1 for r in records[1:]):
         r = next(r for r in records[1:] if r['level'] == 1)
         raise _error('duplicate_plan_heading', raw, path, r['start'])
+    # Locate identity/label collisions at the offending definition, before
+    # a parent's derived child array can obscure the source of the failure.
+    from ..model.paths import validate_artifact_address
+    from .plan_json_spans import member_spans
+    root_id = records[0]['meta'].get('id')
+    prefix = id_prefix or (root_id.split('-')[0] if type(root_id) is str else None)
+    identities, labels = set(), set()
+    for index, row in enumerate(records):
+        kind = 'plan_entry' if index else 'implementation_plan'
+        identity = row['meta'].get('id')
+        if row['meta'].get('artifact_type') == kind and type(prefix) is str and identity is not None:
+            try:
+                validate_artifact_address(kind, identity, prefix)
+            except ModelError as error:
+                fields = member_spans(raw[row['json_start']:row['json_end']])
+                location = next((m[1] for m in fields if m[0] == 'id'), 0)
+                raise _error(error.reason, raw, path, row['json_start']+location, pointer='/id') from error
+            if identity in identities:
+                raise _error('duplicate_artifact_id', raw, path, row['json_start'], pointer='/id')
+            identities.add(identity)
+        if row['display_id'] in labels:
+            raise _error('duplicate_plan_display_id', raw, path, row['start'], pointer='/display_id')
+        labels.add(row['display_id'])
     # Validate each carrier kind before its ID can affect a parent's schema.
     for index, row in enumerate(records):
         kind = 'implementation_plan' if index == 0 else 'plan_entry'
@@ -321,7 +400,17 @@ def parse_plan(raw, *, path=None, id_prefix=None):
         try:
             projection = PlanProjection(value, id_prefix=id_prefix)
         except ModelError as error:
-            raise _error(error.reason, raw, path, row['json_start'], pointer=error.pointer) from error
+            location = row['json_start']
+            if error.pointer:
+                from .plan_json_spans import member_spans
+                key = error.pointer.split('/')[1].replace('~1', '/').replace('~0', '~')
+                spans = member_spans(raw[row['json_start']:row['json_end']])
+                matches = [m for m in spans if m[0] == key]
+                if matches:
+                    location += matches[-1][1]
+                elif key in ('title', 'display_id', 'implemented'):
+                    location = row['start']
+            raise _error(error.reason, raw, path, location, pointer=error.pointer) from error
         def absolute(pair):
             return SourceSpan(row['start'] + pair[0], row['start'] + pair[1])
         sections.append(PlanSection(projection, SourceSpan(row['start'], row['header_end']),
