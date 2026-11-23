@@ -5,7 +5,7 @@ Keeping each untouched token also preserves escapes, ordering and whitespace.
 """
 import json
 from ..model.canonical import canonical_json_bytes
-from .plan_edits import SourceEdit
+from .plan_edit_values import SourceEdit
 
 
 def member_spans(raw):

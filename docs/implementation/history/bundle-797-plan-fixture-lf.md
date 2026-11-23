@@ -6,7 +6,7 @@ bestätigt **21.b.W** mit **9.335 bestandenen Tests** und Commit
 `7499d6bb4375e0ea5700869cb2c7f326533ad5bd`. Bestätigt sind **892/996**
 Positionen. Das anschließende R-Gate scheiterte mit **1 fehlgeschlagenen,
 9.441 bestandenen Tests**. Der vollständige offene Rest ist **21.b.R/C**;
-W wird nicht wiederholt. Diese Stage **21.b.R** wird erst nach ihrem
+W wird nicht wiederholt. Diese Stage **21.b.C** wird erst nach ihrem
 eigenen erfolgreichen Apply-Gate und Commit abgeschlossen.
 
 Der Fehler liegt im unabhängigen Testdatenhelfer `plan_sources.block`:

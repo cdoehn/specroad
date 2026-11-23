@@ -1,5 +1,5 @@
 """Pure, source-bound candidate bytes. No writer, audit or revision authority."""
-from dataclasses import dataclass
+from .plan_edit_values import SourceEdit
 
 from ..model.canonical import canonical_json_bytes
 from ..model.errors import ModelError
@@ -7,12 +7,6 @@ from .json_syntax import parse_json_object
 from .plan_markdown import PlanSource, parse_plan, _body
 
 
-@dataclass(frozen=True)
-class SourceEdit:
-    start: int
-    end: int
-    before: bytes
-    after: bytes
 
 
 def _bound(source, expected):

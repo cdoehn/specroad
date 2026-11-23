@@ -5,7 +5,7 @@
 belegt für Bundle 795 im Gate von **21.b.W**: **1 fehlgeschlagener,
 9.400 bestandene Tests**, kein Commit. Der bestätigte Stand bleibt
 **891/996**, HEAD `a395c08e6b1f385af0e179120d30843dc7e2341d`.
-Die Häkchen und Fortschrittswerte dieses Zielstands **21.b.R** gelten erst
+Die Häkchen und Fortschrittswerte dieses Zielstands **21.b.C** gelten erst
 nach seinem eigenen erfolgreichen Apply-Gate und Commit.
 
 Der bestehende Fehlerfall ersetzt die Eintragsmetadaten durch

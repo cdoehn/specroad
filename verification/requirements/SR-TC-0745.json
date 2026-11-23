@@ -32,7 +32,7 @@
     "scope": "Complete plan-markdown-v1 source/parser slice: typed fields and structural ownership, code/quote/comment exclusions, localized malformed input, byte-preserving no-op and affected spans, current manual changes, separate file/artifact/context bindings and explicit revision comparison. Existing writer, graph and final integration groups remain required."
   },
   "preconditions": [
-    "21.b 21.b.R: real independently authored UTF-8/LF plan files and current native field schemas; no cache or approval authority."
+    "21.b 21.b.C: real independently authored UTF-8/LF plan files and current native field schemas; no cache or approval authority."
   ],
   "primary_verification_id": "SR-VER-0052",
   "required_environment": {

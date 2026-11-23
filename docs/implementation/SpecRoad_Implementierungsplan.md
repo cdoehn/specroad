@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 436 · **Stand:** 23. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.104
+**Planrevision:** 437 · **Stand:** 23. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.104
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **21 Meilensteine in 332 Schritte und 996 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die ursprünglichen Positionen bleiben erhalten; ausdrücklich geänderte Ausführungsfolgen stehen im Fortschrittsblock und in den betroffenen Voraussetzungen; die früher genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wurde nach der damaligen Spezifikation innerhalb von 15.l.R vorgezogen und bleibt als normaler Prüfkern erhalten. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -17,8 +17,8 @@ Spezifikation und den vollständigen Rest. [M21](milestones/M21.md) umfasst
 Bundle 796 bestätigt 21.b.W mit 9.335 bestandenen Tests und **892/996**
 Positionen. R scheiterte mit einem Fehler und 9.441 bestandenen Tests;
 der vollständige offene Rest 21.b.R/C wird korrigiert. Ziel dieser Stage
-**21.b.R**, erst nach ihrem eigenen Apply-Gate und Commit: **893/996**,
-103 offen. Davon gehen 82 technische Commits dem menschlich
+**21.b.C**, erst nach ihrem eigenen Apply-Gate und Commit: **894/996**,
+102 offen. Davon gehen 81 technische Commits dem menschlich
 abhängigen 21-Commit-Abschlussblock voraus.
 [Korrektur und Nachweisgrenzen](history/bundle-797-plan-fixture-lf.md).
 Diese Zählung ist kein Zeit- oder Requirement-Erfüllungsgrad.
@@ -324,14 +324,14 @@ Korrektur der nativen Validierungsfälle und vollständiger Matrixrest: [Bundle 
 Prozess-/Journalreparatur des offenen C-Rests: [Bundle 790](history/bundle-790-process-journal.md). W/R sind bestätigt; C benötigt sein eigenes Apply-Gate.
 
 ```yaml
-plan_revision: 436
+plan_revision: 437
 implementation_plan_commits_total: 996
-implementation_plan_commits_completed: 893
-last_completed_plan_commit: 21.b.R
-next_plan_commit: 21.b.C
+implementation_plan_commits_completed: 894
+last_completed_plan_commit: 21.b.C
+next_plan_commit: 21.c.W
 priority_off_plan: null
 next_off_plan_commit: null
-last_completed_numbered_bundle: 794
+last_completed_numbered_bundle: 797
 implementation_state: in_progress
 prioritized_group_order: [21.a, 21.b, 21.c, 21.d, 21.e, 21.f, 21.g, 21.h, 21.i, 21.j, 21.k, 21.l, 21.m, 21.n, 21.o, 21.p, 21.q, 21.r, 21.s, 21.t, 21.u, 21.v, 21.w, 21.x, 21.y, 21.z, 20.i, 20.j, 20.m, 19.t, 19.y, 20.b, 20.d, 20.k, 20.l, 20.n]
 deferred_return_after: 20.m.C
