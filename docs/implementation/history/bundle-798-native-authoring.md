@@ -7,9 +7,9 @@ Das native Result bestätigt 21.b.R/C, die Gates mit 9347 beziehungsweise
 `0b9af660c25c20201e5b8ba112b077aada822ee4`. Ausgang: 894/996,
 kein offener Korrekturrest. Historische Result- und Freigabedaten bleiben erhalten.
 
-Diese Stage **21.c.R** ist vorbereitet, nicht in Dev verhaltensgeprüft.
+Diese Stage **21.c.C** ist vorbereitet, nicht in Dev verhaltensgeprüft.
 Zielzählung erst nach ihrem eigenen erfolgreichen Apply-Gate und Commit:
-896/996; danach 21.c.C. Syntax, reine Collection, vollständige
+897/996; danach 21.d.W. Syntax, reine Collection, vollständige
 Stage-Rekonstruktion und native Paketvalidierung ersetzen diese Abnahme nicht.
 
 Genau eine optionale notwendige Detailklärung

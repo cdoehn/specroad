@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 440 · **Stand:** 23. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.105
+**Planrevision:** 441 · **Stand:** 23. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.105
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **21 Meilensteine in 332 Schritte und 996 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die ursprünglichen Positionen bleiben erhalten; ausdrücklich geänderte Ausführungsfolgen stehen im Fortschrittsblock und in den betroffenen Voraussetzungen; die früher genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wurde nach der damaligen Spezifikation innerhalb von 15.l.R vorgezogen und bleibt als normaler Prüfkern erhalten. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -19,9 +19,9 @@ in 21.c.W mit 26.640 bestandenen Tests einzig am fehlenden aktuellen
 Messbeleg; kein weiterer Commit entstand. [Bundle 802](history/bundle-802-authoring-measurements.md)
 ergänzt echte, nativ geprüfte Messserien für alle drei unveränderten Builds.
 Der vollständige offene Rest 21.c.W/R/C behält seine getrennten Apply-Gates.
-Ziel dieser Stage **21.c.R**, erst nach ihrem eigenen Apply-Gate
-und Commit: **896/996**, 100 offen. Davon gehen
-79 technische Commits dem menschlich abhängigen 21-Commit-Abschlussblock voraus.
+Ziel dieser Stage **21.c.C**, erst nach ihrem eigenen Apply-Gate
+und Commit: **897/996**, 99 offen. Davon gehen
+78 technische Commits dem menschlich abhängigen 21-Commit-Abschlussblock voraus.
 Diese Zählung ist kein Zeit- oder Requirement-Erfüllungsgrad.
 
 Die [Einzelzuordnung aller alten Katalogreste](matrices/Uebergabe.md#restinventar-791)
@@ -337,8 +337,8 @@ fort. Die folgenden Zielwerte gelten erst nach dem jeweiligen Apply-Gate.
 ## Fortschritt – einzige maßgebliche Planstelle
 
 Bundle 798: [vollständiger Umfang und Nachweisgrenzen](history/bundle-798-native-authoring.md).
-Ziel dieser Stage **21.c.R**, erst nach ihrem eigenen Apply-Gate und Commit:
-**896/996**, danach **21.c.C**. Ausgangsstand 894 bestätigt; Dev-Tests 0.
+Ziel dieser Stage **21.c.C**, erst nach ihrem eigenen Apply-Gate und Commit:
+**897/996**, danach **21.d.W**. Ausgangsstand 894 bestätigt; Dev-Tests 0.
 
 Korrektur der offenen Folge 20.f/20.g: [Bundle 786](history/bundle-786-distribution-fixture.md). Zielwerte gelten erst nach dem jeweiligen erfolgreichen Apply-Gate.
 
@@ -351,14 +351,14 @@ Korrektur der nativen Validierungsfälle und vollständiger Matrixrest: [Bundle 
 Prozess-/Journalreparatur des offenen C-Rests: [Bundle 790](history/bundle-790-process-journal.md). W/R sind bestätigt; C benötigt sein eigenes Apply-Gate.
 
 ```yaml
-plan_revision: 440
+plan_revision: 441
 implementation_plan_commits_total: 996
-implementation_plan_commits_completed: 896
-last_completed_plan_commit: 21.c.R
-next_plan_commit: 21.c.C
+implementation_plan_commits_completed: 897
+last_completed_plan_commit: 21.c.C
+next_plan_commit: 21.d.W
 priority_off_plan: null
 next_off_plan_commit: null
-last_completed_numbered_bundle: 797
+last_completed_numbered_bundle: 802
 implementation_state: in_progress
 prioritized_group_order: [21.a, 21.b, 21.c, 21.d, 21.e, 21.f, 21.g, 21.h, 21.i, 21.j, 21.k, 21.l, 21.m, 21.n, 21.o, 21.p, 21.q, 21.r, 21.s, 21.t, 21.u, 21.v, 21.w, 21.x, 21.y, 21.z, 20.i, 20.j, 20.m, 19.t, 19.y, 20.b, 20.d, 20.k, 20.l, 20.n]
 deferred_return_after: 20.m.C

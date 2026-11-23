@@ -20,7 +20,7 @@
   ],
   "method": "automated_behavior",
   "open_items": [
-    "Complete assigned 21.c native authoring implementation and independent oracles are prepared in 21.c.R; successful behavior evidence requires this exact stage’s separate Apply gate. Dev executed zero behavior tests.",
+    "Complete assigned 21.c native authoring implementation and independent oracles are prepared in 21.c.C; successful behavior evidence requires this exact stage’s separate Apply gate. Dev executed zero behavior tests.",
     "Final cross-component consolidation/integration and platform evidence remain in 21.v/w/x and 20.n; required human reviews and release acceptance are still open. Later Force/combined-readiness/coverage groups retain their distinct scope."
   ],
   "oracle": {
@@ -31,7 +31,7 @@
   "preconditions": [
     "Explicit owned plan inputs and a test-only publisher; no persistent receipt store.",
     "Owned complete native fixtures; declared test actors and trusted test host services. Native publications and receipts execute only in Apply; no fabricated human approvals.",
-    "21.c.R: actual native discovery of current carriers, complete referenced resources and persisted history; typed host authority and native specialized providers remain mandatory. Synthetic owned temporary projects only."
+    "21.c.C: actual native discovery of current carriers, complete referenced resources and persisted history; typed host authority and native specialized providers remain mandatory. Synthetic owned temporary projects only."
   ],
   "primary_verification_id": "SR-VER-0018",
   "required_environment": {
