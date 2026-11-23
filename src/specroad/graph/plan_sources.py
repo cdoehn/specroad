@@ -68,6 +68,7 @@ def resource(source, binding):
 def check_references(records):
     """Qualified references retain their owner, even with a globally unique ID."""
     index = {r.identity.id: r.data for r in records}
+    check_prerequisite_cycles(list(index.values()))
     for identity, value in index.items():
         if value['artifact_type'] not in ('implementation_plan', 'plan_entry'):
             continue
@@ -80,3 +81,35 @@ def check_references(records):
             target = index.get(claim['requirement_id'])
             if target is None or target['artifact_type'] != 'requirement':
                 raise ModelError('plan_requirement_target_missing')
+
+
+
+def prerequisite_graph(values):
+    index = {v['id']: v for v in values if v['artifact_type'] in ('implementation_plan','plan_entry')}
+    graph = {}
+    for identity, value in index.items():
+        refs = list(value['prerequisites'])
+        if value['artifact_type'] == 'plan_entry':
+            refs += index[value['plan_id']]['prerequisites']
+        graph[identity] = {r['entry_id'] for r in refs} | {
+            child for child in value['children'] if index[child].get('required', True)}
+    return graph
+
+
+def check_prerequisite_cycles(values):
+    graph = prerequisite_graph(values)
+    complete = set()
+    for start in sorted(graph):
+        stack = [(start, False)]; active = set()
+        while stack:
+            node, leaving = stack.pop()
+            if leaving:
+                active.remove(node); complete.add(node); continue
+            if node in active:
+                raise ModelError('plan_prerequisite_cycle')
+            if node in complete:
+                continue
+            if node not in graph:
+                raise ModelError('plan_prerequisite_missing')
+            active.add(node); stack.append((node, True))
+            stack.extend((child, False) for child in sorted(graph[node], reverse=True))

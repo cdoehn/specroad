@@ -1089,7 +1089,7 @@
       "kind": "Independent authored UTF-8 plan carriers, exact expected projections and physical bytes; real native ProjectSource reads, no-op and minimal span candidates, current-file changes and native safety failures. Synthetic metadata only, no persisted approval or renderer oracle. Body indentation uses physical LF only; the Unicode separator case independently asserts exact authored input bytes before parsing."
     },
     "SR-FIX-NATIVE-PLAN-AUTHORING-v1": {
-      "provider": "tests/support/native_plan_authoring.py; tests/support/native_authoring_cases.py",
+      "provider": "tests/support/native_plan_authoring.py; tests/support/native_authoring_cases.py; tests/test_native_plan_authoring_right.py; tests/test_native_authoring_regressions.py",
       "kind": "Independently authored real UTF-8 Markdown carriers and native JSON projects, synthetic original measurements and explicit actor/service inputs; exact file effects and receipts. R adds multi-plan references, inherited prerequisites and actual process interruption at writer checkpoints. No production reviewers, measurements or approval claims."
     }
   },

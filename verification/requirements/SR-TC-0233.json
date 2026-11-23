@@ -24,7 +24,7 @@
   ],
   "method": "automated_behavior",
   "open_items": [
-    "Complete assigned 21.c native authoring implementation and independent oracles are prepared in 21.c.W; successful behavior evidence requires this exact stage’s separate Apply gate. Dev executed zero behavior tests.",
+    "Complete assigned 21.c native authoring implementation and independent oracles are prepared in 21.c.R; successful behavior evidence requires this exact stage’s separate Apply gate. Dev executed zero behavior tests.",
     "Final cross-component consolidation/integration and platform evidence remain in 21.v/w/x and 20.n; required human reviews and release acceptance are still open. Later Force/combined-readiness/coverage groups retain their distinct scope."
   ],
   "oracle": {
@@ -35,7 +35,7 @@
   "preconditions": [
     "Explicit complete local TargetModel and trusted PublicationAuthority; human/tool actor, UTC time, plan/transaction IDs and owned native project tree.",
     "Addition receives a complete current/archived/reserved RelationInventory; removal retains original relation ID, canonical relation hash and reason.",
-    "21.c.W: actual native discovery of current carriers, complete referenced resources and persisted history; typed host authority and native specialized providers remain mandatory. Synthetic owned temporary projects only."
+    "21.c.R: actual native discovery of current carriers, complete referenced resources and persisted history; typed host authority and native specialized providers remain mandatory. Synthetic owned temporary projects only."
   ],
   "primary_verification_id": "SR-VER-0018",
   "required_environment": {
@@ -146,6 +146,20 @@
     "tests/test_native_plan_authoring.py::test_noop_and_check_uncheck_keep_parent_checkbox_separate",
     "tests/test_native_plan_authoring.py::test_removal_is_explicit_and_reserves_historical_identity",
     "tests/test_native_plan_authoring.py::test_update_only_own_projection_and_preserves_all_other_bytes",
+    "tests/test_native_plan_authoring_right.py::test_actual_process_loss_keeps_native_barrier_and_foreign_bytes[before_marker_unlink]",
+    "tests/test_native_plan_authoring_right.py::test_actual_process_loss_keeps_native_barrier_and_foreign_bytes[effect_replaced:0]",
+    "tests/test_native_plan_authoring_right.py::test_actual_process_loss_keeps_native_barrier_and_foreign_bytes[effect_synced:0]",
+    "tests/test_native_plan_authoring_right.py::test_actual_process_loss_keeps_native_barrier_and_foreign_bytes[marker_synced]",
+    "tests/test_native_plan_authoring_right.py::test_actual_process_loss_keeps_native_barrier_and_foreign_bytes[marker_unlinked]",
+    "tests/test_native_plan_authoring_right.py::test_actual_process_loss_keeps_native_barrier_and_foreign_bytes[receipt:transaction.json]",
+    "tests/test_native_plan_authoring_right.py::test_actual_process_loss_keeps_native_barrier_and_foreign_bytes[receipts_synced]",
+    "tests/test_native_plan_authoring_right.py::test_actual_process_loss_keeps_native_barrier_and_foreign_bytes[staged:0]",
+    "tests/test_native_plan_authoring_right.py::test_complete_removal_impact_and_explicit_child_retention",
+    "tests/test_native_plan_authoring_right.py::test_cross_plan_move_updates_all_owners_and_qualified_references_atomically",
+    "tests/test_native_plan_authoring_right.py::test_native_authority_cannot_publish_after_a_concurrent_carrier_edit",
+    "tests/test_native_plan_authoring_right.py::test_plan_inheritance_and_parent_cycles_do_not_publish",
+    "tests/test_native_plan_authoring_right.py::test_retry_checks_original_explicit_root_before_new_allocations[False]",
+    "tests/test_native_plan_authoring_right.py::test_retry_checks_original_explicit_root_before_new_allocations[True]",
     "tests/test_native_saved_authoring.py::test_exact_saved_preview_is_native_write_and_replay_without_reallocation[json]",
     "tests/test_native_saved_authoring.py::test_exact_saved_preview_is_native_write_and_replay_without_reallocation[markdown]",
     "tests/test_native_saved_authoring.py::test_saved_plan_cannot_relabel_actor_or_request_or_bypass_authority",

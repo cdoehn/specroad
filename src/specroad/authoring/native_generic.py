@@ -18,7 +18,7 @@ from .plans import _execution_policy, _audit
 from .execution import _result
 
 
-def _replay(root, intent, actor, request_id, *, as_proposal, proposal_fields):
+def _replay(root, intent, actor, request_id, *, as_proposal, proposal_fields, expected_model_root=None):
     if request_id is None:
         return None
     from ..storage.project import ProjectSource
@@ -31,6 +31,8 @@ def _replay(root, intent, actor, request_id, *, as_proposal, proposal_fields):
         return None
     with LockFiles(root) as files:
         proof = _CompletionProof(files, source, receipt.data['transaction_id'])
+        if expected_model_root is not None and proof.journal.data['base_model_root_sha256'] != expected_model_root:
+            raise AuthoringError('request_base_root_conflict', exit_code=6)
         old = proof.journal.data
         ops = old['authoring_binding']['operations']
         record = None
@@ -145,7 +147,7 @@ def author_generic(root, intent, *, actor, request_id=None, dry_run=False,
     if not as_proposal and proposal_fields is not None:
         raise AuthoringError('proposal_option_requires_redirect')
     if not dry_run:
-        replay = _replay(root, intent, actor, request_id, as_proposal=as_proposal, proposal_fields=proposal_fields)
+        replay = _replay(root, intent, actor, request_id, as_proposal=as_proposal, proposal_fields=proposal_fields, expected_model_root=expected_model_root)
         if replay is not None:
             return replay
     sources = AuthoringSources(root); model = sources.model
@@ -201,7 +203,7 @@ def author_generic(root, intent, *, actor, request_id=None, dry_run=False,
         return _created_paths({**outcome, 'audit': _audit(checked.plan, command, dry_run=True, write_state='not_committed')}, model.configuration.id_prefix)
     with project_lock(root, kind='writer', command='change apply', project_id=model.binding.project_id,
                       request_id=request_id, transaction_id=txid) as held:
-        replay = _replay(root, intent, actor, request_id, as_proposal=as_proposal, proposal_fields=proposal_fields)
+        replay = _replay(root, intent, actor, request_id, as_proposal=as_proposal, proposal_fields=proposal_fields, expected_model_root=expected_model_root)
         if replay is not None:
             return replay
         checked, gates, original_gates = prepare()

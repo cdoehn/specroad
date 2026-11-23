@@ -44,9 +44,10 @@ def prepare(model, operations, *, metadata_policy_version, actor, planned_at, pr
                                       id_prefix=model.configuration.id_prefix)
     old = {v['id']: v for v in model.artifacts}
     new = {p.data['id']: p.data for s in target_sources for p in s.projections}
+    prior_plans = {v.data['id'] for source in model.plan_sources for v in source.projections}
     for value in values:
         prior = old.get(value['id'])
-        if prior is None and (value['id'] in old or value['id'] in model.reserved_artifact_ids):
+        if value['id'] not in prior_plans and (value['id'] in old or value['id'] in model.reserved_artifact_ids or value['id'] in model.previously_approved_ids):
             raise TargetError('plan_identity_reserved')
     removed = set(v['id'] for s in model.plan_sources for v in (p.data for p in s.projections)) - set(new)
     for identity in removed:
@@ -54,9 +55,11 @@ def prepare(model, operations, *, metadata_policy_version, actor, planned_at, pr
             raise TargetError('plan_historical_identity_removal_forbidden')
     from ..migration.model_inputs import records
     from ..graph.plan_sources import records as plan_records
-    old_relations = {e.identity.id for r in records(model) for e in r.relations}
+    ordinary_relations = {e.identity.id for r in records(model) if r.identity.id not in prior_plans for e in r.relations}
+    old_relations = {e.identity.id for r in plan_records(model.plan_sources) for e in r.relations}
     new_relations = [e.identity.id for r in plan_records(target_sources) for e in r.relations]
     if (len(new_relations) != len(set(new_relations)) or
+            set(new_relations) & ordinary_relations or
             (set(new_relations) - old_relations) & set(model.reserved_relation_ids)):
         raise TargetError('plan_relation_identity_reserved')
     incoming = []

@@ -65,7 +65,8 @@ def _check_command(before, after, operation):
     if operation['intent']['command_id'] != 'plan.entry.check':
         return
     from .plan_operations import _resolve
-    selected = _resolve(old, operation['intent']['target'], operation['intent'].get('plan_id'))
+    selected = _resolve({i:v for i,v in old.items() if v['artifact_type'] in ('implementation_plan','plan_entry')},
+        operation['intent']['target'], operation['intent'].get('plan_id'))
     # All explicit prerequisites, including the owning plan, are AND inputs.
     # Optional subtrees are excluded only when computing a parent's mandatory
     # leaves, never when the optional node is explicitly referenced.
@@ -89,6 +90,9 @@ def _check_command(before, after, operation):
         refs = list(value['prerequisites'])
         if value['artifact_type'] == 'plan_entry':
             refs += old[value['plan_id']]['prerequisites']
+        for child in value['children']:
+            if old[child].get('required', True):
+                ready(child, active | {identity})
         for ref in refs:
             target = ref['entry_id']
             ready(target, active | {identity})
@@ -98,7 +102,7 @@ def _check_command(before, after, operation):
     ready(selected, set())
 
 
-def _replay(root, intent, actor, request_id, *, as_proposal=False, proposal_fields=None):
+def _replay(root, intent, actor, request_id, *, as_proposal=False, proposal_fields=None, expected_model_root=None):
     if request_id is None:
         return None
     from ..storage.project import ProjectSource
@@ -111,6 +115,8 @@ def _replay(root, intent, actor, request_id, *, as_proposal=False, proposal_fiel
         return None
     with LockFiles(root) as files:
         proof = _CompletionProof(files, source, receipt.data['transaction_id'])
+        if expected_model_root is not None and proof.journal.data['base_model_root_sha256'] != expected_model_root:
+            raise AuthoringError('request_base_root_conflict', exit_code=6)
         ops = proof.journal.data['authoring_binding']['operations']
         record = None
         original_ops = ops
@@ -157,7 +163,7 @@ def author_plan(root, intent, *, actor, request_id=None, dry_run=False,
     if not as_proposal and proposal_fields is not None:
         raise AuthoringError('proposal_option_requires_redirect')
     if not dry_run:
-        replay = _replay(root, intent, actor, request_id, as_proposal=as_proposal, proposal_fields=proposal_fields)
+        replay = _replay(root, intent, actor, request_id, as_proposal=as_proposal, proposal_fields=proposal_fields, expected_model_root=expected_model_root)
         if replay is not None:
             return replay
     sources = AuthoringSources(root)
@@ -203,7 +209,7 @@ def author_plan(root, intent, *, actor, request_id=None, dry_run=False,
         # Rechecks bind all sources again before that independent publication.
         with project_lock(root, kind='writer', command='change apply', project_id=model.binding.project_id,
                           request_id=request_id, transaction_id=transaction_id):
-            replay = _replay(root,intent,actor,request_id,as_proposal=True,proposal_fields=proposal_fields)
+            replay = _replay(root,intent,actor,request_id,as_proposal=True,proposal_fields=proposal_fields,expected_model_root=expected_model_root)
             if replay is not None:
                 return replay
             checked, gates, target = compile_request()
@@ -218,7 +224,7 @@ def author_plan(root, intent, *, actor, request_id=None, dry_run=False,
             package_files=tuple(ModelDocument(p, sources.snapshot.raw[p]) for p in sources.packages))
     with project_lock(root, kind='writer', command='change apply', project_id=model.binding.project_id,
                       request_id=request_id, transaction_id=transaction_id) as held:
-        replay = _replay(root, intent, actor, request_id)
+        replay = _replay(root, intent, actor, request_id, expected_model_root=expected_model_root)
         if replay is not None:
             return replay
         checked, gates, target = compile_request()

@@ -115,6 +115,10 @@
     "test_scope_seeds.ScopeSeedTests.test_retired_and_rejected_seeds_are_not_dropped",
     "test_scope_seeds.ScopeSeedTests.test_specification_excludes_both_control_types",
     "test_scope_seeds.ScopeSeedTests.test_specification_uses_only_active_profiles_rules_mappings",
-    "tests/test_native_authoring_proposals.py::test_public_ai_redirect_publishes_only_an_explicit_proposal_and_replays[baseline.create]"
+    "tests/test_native_authoring_proposals.py::test_public_ai_redirect_publishes_only_an_explicit_proposal_and_replays[baseline.create]",
+    "tests/test_native_authoring_regressions.py::test_baseline_proposal_refusal_precedes_identity_and_writer[preview-ai]",
+    "tests/test_native_authoring_regressions.py::test_baseline_proposal_refusal_precedes_identity_and_writer[preview-human]",
+    "tests/test_native_authoring_regressions.py::test_baseline_proposal_refusal_precedes_identity_and_writer[publish-ai]",
+    "tests/test_native_authoring_regressions.py::test_baseline_proposal_refusal_precedes_identity_and_writer[publish-human]"
   ]
 }
