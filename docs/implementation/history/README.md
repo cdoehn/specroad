@@ -1,5 +1,7 @@
 # Entscheidungen und Ausführungsnachweise
 
+- [Bundle 808 — Statusbeobachtung und Fixture-Ende](bundle-808-worker-fixture-correction.md)
+
 - [Bundle 807 — Originalbelege und Hostablehnung in R/C](bundle-807-force-right-correction.md)
 
 - [Bundle 806 — Schedulerfortschritt bei unbekannten Laufzeiten](bundle-806-scheduler-exploration.md)
@@ -640,3 +642,5 @@
 - [Bundle 788 — erhaltene Fehlerdiagnose und vollständiger offener Rest](bundle-788-nested-run-diagnostics.md).
 
 - [Bundle 789 — native Validierungsfälle der Pythonmatrix](bundle-789-validation-matrix.md).
+
+- [Bundle 810 — manueller Abschluss 21.d.C](bundle-810-manual-c.md).

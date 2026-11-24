@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 452 · **Stand:** 24. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.106
+**Planrevision:** 455 · **Stand:** 24. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.106
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **21 Meilensteine in 332 Schritte und 996 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die ursprünglichen Positionen bleiben erhalten; ausdrücklich geänderte Ausführungsfolgen stehen im Fortschrittsblock und in den betroffenen Voraussetzungen; die früher genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wurde nach der damaligen Spezifikation innerhalb von 15.l.R vorgezogen und bleibt als normaler Prüfkern erhalten. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -14,21 +14,18 @@ Vor der Arbeit: [Projektregeln](../../DEVELOPMENT.md), [Grundlagen](rules/Grundl
 [IMPLEMENTATION-PLANS-791](decisions/implementation-plans-791.md) erweitert die
 Spezifikation und den vollständigen Rest. [M21](milestones/M21.md) umfasst
 78 neue technische Commits; sämtliche 30 bisher offenen Commits bleiben.
-Bestätigt sind **898/996** Positionen bis 21.d.W. Das native Result
-`1c2f300b9d75dea752f5789c30317ee30597c5f1a6d8d13f259d40cc6fb0d3fe`
-belegt den erfolgreichen W-Commit und anschließend zwei Fehler im R-Gate.
-Der vollständige Rest 21.d.R/C bleibt vor seiner jeweiligen Abnahme offen.
-[Bundle 807](history/bundle-807-force-right-correction.md) korrigiert
-Originalbelegleser und Hostablehnung in beiden getrennten Zuständen.
-Alle Produkt- und Schedulerkorrekturen aus 805/806 bleiben erhalten;
-der erfolgreiche W- und Klärungspräfix wird nicht wiederholt.
-Die [ergänzenden verbindlichen Abnahmen für 21.d](decisions/force-contract-804.md#planabnahmen-21d)
-gelten bereits mit diesem Planstand.
-[FORCE-CONTRACT-804](decisions/force-contract-804.md) präzisiert die gemeinsame
-Transportbindung. Der [ursprüngliche Nachweis](history/bundle-804-force-contract.md) bleibt erhalten; seine W/R/C-Vorbereitung wird durch die Korrekturen 805–807 fortgeführt.
-Die vorbereiteten Zielzähler gelten erst nach dem jeweiligen Apply-Gate und Commit.
-21.e bindet anschließend alle Fachadapter und Marker-/Lock-Sonderfälle an.
-Ziel dieser Stage **21.d.R**: **899/996**, danach **21.d.C**.
+Bestätigt werden mit dem ausdrücklich beauftragten manuellen Abschluss
+**900/996** Positionen bis **21.d.C**. Das ursprüngliche Apply-Gate von
+Bundle 808 bestand mit 27.104 Tests; anschließend scheiterte ausschließlich
+der Commit an EOF-Leerzeilen. [Abschluss 810](history/bundle-810-manual-c.md)
+dokumentiert die drei AST-identischen EOF-Korrekturen und den ausdrücklich
+angeordneten Verzicht auf eine Testwiederholung. Die zusätzlichen ungetesteten
+Messpolicy-Änderungen aus 809 gehören nicht zu diesem C-Commit und folgen
+als eigener OFF-PLAN-Commit vor weiterer Core-Entwicklung.
+Die [verbindlichen 21.d-Abnahmen](decisions/force-contract-804.md#planabnahmen-21d)
+und Originalbelege bleiben erhalten. Es wird kein neuer automatischer Gate-
+oder Messnachweis für die geänderten Bytes behauptet. Nächster Planschritt:
+**21.e.W – Force in sämtlichen Produktgrenzen**.
 
 Die [Einzelzuordnung aller alten Katalogreste](matrices/Uebergabe.md#restinventar-791)
 ist verbindlicher Teil des Restplans. Sprach-/Herkunfts-/Bedienreviews und
@@ -357,14 +354,14 @@ Korrektur der nativen Validierungsfälle und vollständiger Matrixrest: [Bundle 
 Prozess-/Journalreparatur des offenen C-Rests: [Bundle 790](history/bundle-790-process-journal.md). W/R sind bestätigt; C benötigt sein eigenes Apply-Gate.
 
 ```yaml
-plan_revision: 452
+plan_revision: 455
 implementation_plan_commits_total: 996
-implementation_plan_commits_completed: 899
-last_completed_plan_commit: 21.d.R
-next_plan_commit: 21.d.C
+implementation_plan_commits_completed: 900
+last_completed_plan_commit: 21.d.C
+next_plan_commit: 21.e.W
 priority_off_plan: null
 next_off_plan_commit: null
-last_completed_numbered_bundle: 802
+last_completed_numbered_bundle: 810
 implementation_state: in_progress
 prioritized_group_order: [21.a, 21.b, 21.c, 21.d, 21.e, 21.f, 21.g, 21.h, 21.i, 21.j, 21.k, 21.l, 21.m, 21.n, 21.o, 21.p, 21.q, 21.r, 21.s, 21.t, 21.u, 21.v, 21.w, 21.x, 21.y, 21.z, 20.i, 20.j, 20.m, 19.t, 19.y, 20.b, 20.d, 20.k, 20.l, 20.n]
 deferred_return_after: 20.m.C

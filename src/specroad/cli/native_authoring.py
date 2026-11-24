@@ -1,4 +1,5 @@
 """Raw public adapters for native creation, updates, relations and lifecycle."""
+from ..diagnostics.catalog import known_codes
 from .contracts import CommandProtocol, PositionalSpec, WorkContract
 from .registry import CommandClass, CommandSpec, EffectScope, OptionSpec, PreflightProfile
 from .results import CommandResult, OperationFailure, FailureKind
@@ -185,6 +186,6 @@ def commands():
         options=tuple(o for o in common_options() if o.flag not in ('--as-proposal','--proposal-input')),
         protocol=CommandProtocol('native-authoring-command-v1', {'command_id':'change.apply',
             'arguments':{'plan_file':'change-plan.json'},'options':{'--actor-type':'human','--actor-id':'author'}},
-            handler_exit_codes=tuple(range(8)),diagnostic_codes=('CORE_USAGE','CORE_MODEL','CORE_ENVIRONMENT','CORE_CONFLICT','CORE_SECURITY', *__import__('specroad.diagnostics.catalog', fromlist=['known_codes']).known_codes()),
+            handler_exit_codes=tuple(range(8)),diagnostic_codes=('CORE_USAGE','CORE_MODEL','CORE_ENVIRONMENT','CORE_CONFLICT','CORE_SECURITY', *known_codes()),
             lock_kind='writer',work=WorkContract('native_saved_authoring',('unchanged_plan','complete_inventory','native_writer')))))
     return tuple(result)

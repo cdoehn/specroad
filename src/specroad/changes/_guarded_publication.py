@@ -5,6 +5,7 @@ The fault boundary is a compiled adapter argument, never project-supplied code.
 """
 from dataclasses import dataclass
 from hashlib import sha256
+from ..force import operations_hash
 import os
 from ..model.canonical import canonical_json_bytes as jcs, canonical_json_sha256 as digest
 from ..security import paths as guards
@@ -165,7 +166,7 @@ class _Session:
         require(self.expected==self.target,'write_target_incomplete')
         self.guard();validation=self.qualify();plan=self.inputs.plan.data
         write=dict(marker=self.marker_value,actor=plan['actor'],planned_at=plan['planned_at'],
-            change_plan_id=plan['change_plan_id'],operations=plan['operations'],operations_sha256=__import__('specroad.force', fromlist=['operations_hash']).operations_hash(plan),
+            change_plan_id=plan['change_plan_id'],operations=plan['operations'],operations_sha256=operations_hash(plan),
             files=[dict(path=p,before=metadata(self.before.get(p)),after=metadata(self.target.get(p))) for p in self.paths],
             target_inventory=inventory(self.target),validation=validation)
         if self.inputs.force_record is not None:

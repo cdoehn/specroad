@@ -18,6 +18,19 @@ from specroad_control.local import REPO, write_private
 from codex_control_tests.test_thread_handover import HandoverCase
 
 
+def stop_test_worker(child):
+    """Reap an owned fixture process even if its graceful shutdown hangs."""
+    if child.poll() is not None:
+        return
+    child.terminate()
+    try:
+        child.wait(timeout=20)
+    except subprocess.TimeoutExpired:
+        child.kill()
+        child.wait(timeout=5)
+        raise  # Forced cleanup is not a successful lifecycle assertion.
+
+
 class DeferredCase(HandoverCase):
     def setUp(self):
         super().setUp()
@@ -41,11 +54,7 @@ class DeferredCase(HandoverCase):
         self.addCleanup(log.close)
         child = subprocess.Popen([sys.executable, '-B', str(self.paths.home / 'releases' / ('a' * 40) / 'control'), 'run'],
                                  env=dict(os.environ), stdin=subprocess.DEVNULL, stdout=log, stderr=log)
-        def close():
-            if child.poll() is None:
-                child.terminate()
-                child.wait(timeout=20)
-        self.addCleanup(close)
+        self.addCleanup(stop_test_worker, child)
         self.worker_log = log
         self.child = child
         return child
@@ -53,6 +62,7 @@ class DeferredCase(HandoverCase):
     def await_state(self, predicate, *, timeout=12):
         deadline = time.monotonic()+timeout
         last = None
+        last_error = None
         while time.monotonic() < deadline:
             if self.child.poll() is not None:
                 self.worker_log.seek(0)
@@ -62,10 +72,15 @@ class DeferredCase(HandoverCase):
                 if predicate(last):
                     return last
             except ControlError as exc:
-                if exc.code != 'not_running':
+                # Only read-only status polling may retry a delayed response.
+                # Malformed replies and security/scope errors still fail now.
+                timed_out = exc.code == 'protocol_error' and isinstance(exc.__context__, TimeoutError)
+                if exc.code != 'not_running' and not timed_out:
                     raise
+                last_error = (exc.code, type(exc.__context__).__name__)
             time.sleep(.02)
-        self.fail('Isolated worker did not reach expected state: '+repr(last))
+        self.fail('Isolated worker did not reach expected state: '+repr(last)
+                  +'; last status error: '+repr(last_error))
 
     def calls(self):
         path = self.codex_home/'calls.jsonl'

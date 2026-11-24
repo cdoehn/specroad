@@ -30584,6 +30584,17 @@
     "tests/test_force_right.py::test_force_host_refusal_before_publication_is_known_not_committed[false]",
     "tests/test_force_right.py::test_force_host_refusal_before_publication_is_known_not_committed[non_boolean]",
     "tests/test_force_right.py::test_force_original_read_fault_is_structured_and_preserves_evidence[disappearing]",
-    "tests/test_force_right.py::test_force_original_read_fault_is_structured_and_preserves_evidence[permission]"
+    "tests/test_force_right.py::test_force_original_read_fault_is_structured_and_preserves_evidence[permission]",
+    "tests/codex_control_tests/test_worker_fixture_lifecycle.py::test_cleanup_never_kills_a_normally_stopped_child[False]",
+    "tests/codex_control_tests/test_worker_fixture_lifecycle.py::test_cleanup_never_kills_a_normally_stopped_child[True]",
+    "tests/codex_control_tests/test_worker_fixture_lifecycle.py::test_cleanup_reaps_hung_child_and_preserves_shutdown_failure",
+    "tests/codex_control_tests/test_worker_fixture_lifecycle.py::test_dead_worker_is_not_accepted_as_a_transient_status_failure",
+    "tests/codex_control_tests/test_worker_fixture_lifecycle.py::test_invalid_or_unsafe_status_is_not_retried[malformed]",
+    "tests/codex_control_tests/test_worker_fixture_lifecycle.py::test_invalid_or_unsafe_status_is_not_retried[missing_boolean]",
+    "tests/codex_control_tests/test_worker_fixture_lifecycle.py::test_invalid_or_unsafe_status_is_not_retried[unsafe_socket]",
+    "tests/codex_control_tests/test_worker_fixture_lifecycle.py::test_invalid_or_unsafe_status_is_not_retried[wrong_scope]",
+    "tests/codex_control_tests/test_worker_fixture_lifecycle.py::test_observation_waits_for_valid_state_after_transient_status_failure[not_running]",
+    "tests/codex_control_tests/test_worker_fixture_lifecycle.py::test_observation_waits_for_valid_state_after_transient_status_failure[timeout]",
+    "tests/codex_control_tests/test_worker_fixture_lifecycle.py::test_repeated_status_timeouts_do_not_extend_the_overall_deadline"
   ]
 }

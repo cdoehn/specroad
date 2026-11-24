@@ -9,7 +9,7 @@
   "json_pointers": [],
   "method": "automated_behavior",
   "open_items": [
-    "21.d.R prepares the common 21.d contract; successful evidence requires this exact stage own Apply gate. Dev ran zero behavior tests.",
+    "21.d.C prepares the common 21.d contract; successful evidence requires this exact stage own Apply gate. Dev ran zero behavior tests.",
     "All domain adapter integrations and active/stale marker, immutable/partial, lock and specialized policy cases remain in 21.e; full R-86/R-87 cross-component integration remains in 21.w/x. No full requirement satisfaction or human acceptance claimed.",
     "Bundle 805 repairs the complete failed 21.d remainder; exact stage Apply acceptance remains pending. Existing negative-result oracles and requirement contract are retained.",
     "Bundle 807 preserves successful 21.d.W and corrects the complete remaining R/C sequence: typed missing/unreadable original receipts, and independently denied host publication before/after write start. Exact stage Apply acceptance remains pending."
