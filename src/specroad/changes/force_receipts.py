@@ -3,6 +3,7 @@
 These records prove execution and preserve negative findings. They never
 constitute an approval or replace an earlier transaction's evidence.
 """
+import os
 from hashlib import sha256
 from uuid import UUID
 from ..force import ForceRequest, validate_summary, operations_hash
@@ -67,6 +68,10 @@ def receipt_group(write):
     return group
 
 
+from ..qualification.errors import persisted_contract
+
+
+@persisted_contract
 def validate_transaction(raw):
     from .values import ChangePlan
     from .force_target import effect_path, validate_report
@@ -102,6 +107,27 @@ def validate_transaction(raw):
         require(row['before'] != row['after'] and targets.get(row['path']) == row['after'], 'force_effect_binding')
     require(paths == sorted(set(paths)) and list(targets) == sorted(targets), 'force_inventory_order')
     validate_report(write['validation'], write['target_inventory'])
+    from ..force import ForceDecisions
+    from .force_target import record_findings
+    ledger = ForceDecisions(ForceRequest.from_mapping(data['force']))
+    requested_binding = {'plan_sha256': plan.sha256, 'target_inventory_sha256': digest(write['target_inventory']),
+        'expected_model_root_sha256': data['expected_result']['model_root_sha256']}
+    record_findings(ledger, write['validation'], operation='change.apply', requested_binding=requested_binding)
+    require(all(row in force['overrides'] for row in ledger.summary['overrides']), 'force_missing_negative_finding')
+    from .resource_replace import target_bytes
+    effects = {row['path']: row for row in write['files']}
+    raw_operations = [op for op in data['operations'] if op['op'] == 'resource_replace']
+    if raw_operations:
+        require(set(effects) <= {op['path'] for op in raw_operations}, 'force_unrequested_effect')
+        for operation in raw_operations:
+            path = operation['path']; after = metadata(target_bytes(operation))
+            require(targets.get(path) == after, 'force_raw_target_binding')
+            observed = effects[path]['before'] if path in effects else after
+            actual_hash = 'absent' if observed is None else observed['sha256']
+            if actual_hash != operation['observed_byte_sha256']:
+                require(any(row['gate_id'] == 'hash:resource_precondition' and row['subject'] == path
+                    and row['observed_binding'] == actual_hash and row['requested_binding'] == operation['observed_byte_sha256']
+                    for row in force['overrides']), 'force_missing_source_override')
     require(raw == jcs(transaction_document(write)), 'force_receipt_binding')
     return write
 
@@ -120,11 +146,38 @@ def completion(write, *, current):
 
 
 def read_group(files, transaction_id, *, project_id):
+    """Missing/unreadable originals are structured failures, never completion."""
+    from .write_guard_values import WriteGuardError
+    try:
+        return _read_group(files, transaction_id, project_id=project_id)
+    except FileNotFoundError as error:
+        raise WriteGuardError('force_completion_missing', exit_code=6) from error
+    except OSError as error:
+        raise WriteGuardError('force_completion_read_failed', exit_code=5) from error
+
+
+def _read_group(files, transaction_id, *, project_id):
     from ._guarded_io import _read_path
     raw = _read_path(files, transaction_receipt_path(transaction_id))
     write = validate_transaction(raw)
     require(write['marker']['transaction_id'] == transaction_id and write['marker']['project_id'] == project_id,
         'force_receipt_project_binding', exit_code=6)
     group = receipt_group(write)
-    require(all(_read_path(files, path) == expected for path, expected in group.items()), 'force_completion_changed', exit_code=6)
+    prefix = transaction_receipt_path(transaction_id).rsplit('/', 1)[0]
+    from ..security import paths as guards
+    from ._journal_io import _read
+    identities = {}
+    for repeat in range(2):
+        with files.directory(tuple(prefix.split('/'))) as fd:
+            require(fd is not None and set(os.listdir(fd)) == {'transaction.json', 'committed.json'},
+                'force_completion_namespace_changed', exit_code=6)
+        for path, expected in group.items():
+            with files.directory(tuple(path.split('/')[:-1])) as fd:
+                require(fd is not None, 'force_completion_missing', exit_code=6)
+                name = path.rsplit('/', 1)[-1]
+                ident = guards._identity(os.stat(name, dir_fd=fd, follow_symlinks=False))
+                require(_read(fd, name, expected_identity=ident) == expected
+                    and (repeat == 0 or identities[path] == ident), 'force_completion_changed', exit_code=6)
+                identities[path] = ident
+        files.check_root()
     return write

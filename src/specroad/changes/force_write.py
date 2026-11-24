@@ -127,13 +127,28 @@ def apply_force_plan(root, plan, *, actor, request_id, force=False, force_reason
             replay = _replay(files, plan)
             if replay is not None: return replay
         before, _, _ = project_files(files, exclude=('.specroad',))
+        observed_all, _, _ = project_files(files)
+        history = {p: raw for p, raw in observed_all.items() if p.startswith('.specroad/receipts/')}
+    if 'specroad.json' in before:
+        try:
+            actual_project_id = parsed(before['specroad.json']).get('project_id')
+        except ValueError:
+            actual_project_id = None
+        require(actual_project_id is None or actual_project_id == data['project_id'],
+            'force_project_identity_conflict', exit_code=6)
     decisions = ForceDecisions(request)
     if actor['actor_type'] == 'ai':
         decisions.decide(False, gate_id='actor:direct_write', diagnostic_code='CORE_SECURITY',
             subject=actor['actor_id'], operation='change.apply', observed_binding=actor,
             requested_binding='explicit_direct_write', effect='write_without_human_approval_claim')
+    if data['base']['model_root_sha256'] is not None:
+        source_report = assess_files(before, services=services, history=history)
+        decisions.decide(source_report['model_root_sha256'] == data['base']['model_root_sha256'],
+            gate_id='hash:base_model_root', diagnostic_code='CORE_CONFLICT', subject='project', operation='change.apply',
+            observed_binding=source_report['model_root_sha256'], requested_binding=data['base']['model_root_sha256'],
+            effect='execute_explicit_target_on_observed_source')
     target = _target(root, plan, before, decisions, services)
-    report = assess_files(target, services=services)
+    report = assess_files(target, services=services, history=history)
     requested_binding = {'plan_sha256': plan.sha256, 'target_inventory_sha256': digest(inventory(target)),
         'expected_model_root_sha256': data['expected_result']['model_root_sha256']}
     record_findings(decisions, report, operation='change.apply', requested_binding=requested_binding)
@@ -156,23 +171,37 @@ def apply_force_plan(root, plan, *, actor, request_id, force=False, force_reason
         if replay is not None: return replay
         def inventory_check(expected):
             actual, _, _ = project_files(held._files, exclude=('.specroad',))
-            require(actual == expected, 'force_observed_source_changed', exit_code=6)
+            if actual != expected:
+                decisions.decide(False, gate_id='hash:live_source', diagnostic_code='CORE_CONFLICT',
+                    subject='project', operation='change.apply', observed_binding=inventory(actual),
+                    requested_binding=inventory(expected), effect='publication_not_confirmed_source_changed')
+                if _attempt is not None: _attempt['force'] = decisions.summary
+                require(False, 'force_observed_source_changed', exit_code=6)
+            for path, original in history.items():
+                require(_read_path(held._files, path) == original, 'force_history_changed', exit_code=6)
         inventory_check(before)
+        current_all, _, _ = project_files(held._files)
+        require({p: raw for p, raw in current_all.items() if p.startswith('.specroad/receipts/')} == history,
+            'force_history_changed', exit_code=6)
         host_request = ForcePublicationRequest(jcs({'format_version': 'force-publication-request-v1',
             'plan': data, 'force': summary, 'operations_sha256': operations_hash(data),
             'before_inventory': inventory(before), 'target_inventory': inventory(target), 'validation': report}))
+        publication_started = False
         def qualify(actual):
-            current = assess_files(actual, services=services)
+            current = assess_files(actual, services=services, history=history)
             require(current == report, 'force_target_observation_changed', exit_code=6)
             detached = ForcePublicationRequest(host_request.source_bytes)
             allowed = authority.check(detached)
-            require(type(allowed) is bool and allowed and detached.source_bytes == host_request.source_bytes,
-                'write_authority_denied', exit_code=7)
+            if not (type(allowed) is bool and allowed and detached.source_bytes == host_request.source_bytes):
+                from .execution_values import ChangeExecutionError
+                raise ChangeExecutionError('write_authority_denied', exit_code=7,
+                    write_state='unknown' if publication_started else 'not_committed')
             return current
         qualify(target)
         if target == before:
             return _outcome(plan, report, summary)
         from .guarded_write import _Inputs, _run
+        publication_started = True
         if _attempt is not None: _attempt['publication_started'] = True
         try:
             done = _run(_Inputs(plan, data['project_id'], 'change.apply', before, target,

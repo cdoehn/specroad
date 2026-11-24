@@ -9,9 +9,10 @@
   "json_pointers": [],
   "method": "automated_behavior",
   "open_items": [
-    "21.d.W prepares the common 21.d contract; successful evidence requires this exact stage own Apply gate. Dev ran zero behavior tests.",
+    "21.d.R prepares the common 21.d contract; successful evidence requires this exact stage own Apply gate. Dev ran zero behavior tests.",
     "All domain adapter integrations and active/stale marker, immutable/partial, lock and specialized policy cases remain in 21.e; full R-86/R-87 cross-component integration remains in 21.w/x. No full requirement satisfaction or human acceptance claimed.",
-    "Bundle 805 repairs the complete failed 21.d remainder; exact stage Apply acceptance remains pending. Existing negative-result oracles and requirement contract are retained."
+    "Bundle 805 repairs the complete failed 21.d remainder; exact stage Apply acceptance remains pending. Existing negative-result oracles and requirement contract are retained.",
+    "Bundle 807 preserves successful 21.d.W and corrects the complete remaining R/C sequence: typed missing/unreadable original receipts, and independently denied host publication before/after write start. Exact stage Apply acceptance remains pending."
   ],
   "oracle": {
     "kind": "behavior",
@@ -109,6 +110,31 @@
     "tests/test_force_native.py::test_real_cli_dry_run_and_write_keep_all_findings",
     "tests/test_force_native.py::test_real_host_authority_is_not_product_force_policy[None]",
     "tests/test_force_native.py::test_real_host_authority_is_not_product_force_policy[authority1]",
-    "tests/test_force_native.py::test_same_request_cannot_replay_different_force_reason_or_operation"
+    "tests/test_force_native.py::test_same_request_cannot_replay_different_force_reason_or_operation",
+    "tests/test_force_right.py::test_blocked_dependent_stages_are_unknown_not_passing",
+    "tests/test_force_right.py::test_broken_configuration_repair_uses_previously_explicit_identity",
+    "tests/test_force_right.py::test_cli_real_host_failure_retains_requested_force_and_negative_findings",
+    "tests/test_force_right.py::test_failed_native_io_is_not_forced_completion",
+    "tests/test_force_right.py::test_force_completion_requires_each_original_record[completion]",
+    "tests/test_force_right.py::test_force_completion_requires_each_original_record[request]",
+    "tests/test_force_right.py::test_force_completion_requires_each_original_record[transaction]",
+    "tests/test_force_right.py::test_force_host_refusal_after_publication_stays_unknown",
+    "tests/test_force_right.py::test_force_host_refusal_before_publication_is_known_not_committed[changed_request]",
+    "tests/test_force_right.py::test_force_host_refusal_before_publication_is_known_not_committed[false]",
+    "tests/test_force_right.py::test_force_host_refusal_before_publication_is_known_not_committed[non_boolean]",
+    "tests/test_force_right.py::test_force_original_read_fault_is_structured_and_preserves_evidence[disappearing]",
+    "tests/test_force_right.py::test_force_original_read_fault_is_structured_and_preserves_evidence[permission]",
+    "tests/test_force_right.py::test_force_reason_requires_valid_unicode",
+    "tests/test_force_right.py::test_new_replacement_and_delete_use_explicit_complete_bytes[None]",
+    "tests/test_force_right.py::test_new_replacement_and_delete_use_explicit_complete_bytes[\\x00\\xff\\r\\n]",
+    "tests/test_force_right.py::test_new_replacement_and_delete_use_explicit_complete_bytes[]",
+    "tests/test_force_right.py::test_normal_and_forced_saved_requests_do_not_share_success",
+    "tests/test_force_right.py::test_observed_source_hash_mismatch_is_recorded_with_exact_target",
+    "tests/test_force_right.py::test_rehashed_but_inconsistent_receipt_and_missing_originals_are_rejected[missing]",
+    "tests/test_force_right.py::test_rehashed_but_inconsistent_receipt_and_missing_originals_are_rejected[namespace]",
+    "tests/test_force_right.py::test_rehashed_but_inconsistent_receipt_and_missing_originals_are_rejected[negative]",
+    "tests/test_force_right.py::test_rehashed_but_inconsistent_receipt_and_missing_originals_are_rejected[target]",
+    "tests/test_force_right.py::test_source_change_during_host_check_stops_before_publication",
+    "tests/test_force_right.py::test_stale_semantic_root_is_a_bound_observation_not_a_rebased_plan"
   ]
 }

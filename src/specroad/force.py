@@ -29,7 +29,10 @@ class ForceContractError(ModelError):
 def _text(value):
     if type(value) is not str or not value.strip() or '\0' in value:
         raise ForceContractError('force_nonempty_text_required')
-    value.encode('utf-8')
+    try:
+        value.encode('utf-8')
+    except UnicodeError as error:
+        raise ForceContractError('force_valid_unicode_required') from error
     return value
 
 
