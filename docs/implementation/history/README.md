@@ -644,3 +644,6 @@
 - [Bundle 789 — native Validierungsfälle der Pythonmatrix](bundle-789-validation-matrix.md).
 
 - [Bundle 810 — manueller Abschluss 21.d.C](bundle-810-manual-c.md).
+
+- [Bundle 809 — damalige Vorbereitung](bundle-809-eof-and-final-resources.md); kein Commit, durch 810/811 getrennt fortgeführt.
+- [Bundle 811 — separate finale Ressourcenpflicht](bundle-811-resource-final.md).

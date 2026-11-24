@@ -9,7 +9,7 @@ from .common import CatalogError, json_bytes, sha256
 
 
 def source_identity(root):
-    """Hash current developer inputs, not repository docs or ignored build output."""
+    """Hash verification inputs, including progress that controls resource gates."""
     root = Path(root)
     entries = {}
     def visit(path):
@@ -35,6 +35,10 @@ def source_identity(root):
     # Small legacy fixtures without it remain valid input trees.
     if os.path.lexists(root / "conftest.py"):
         visit(root / "conftest.py")
+    # The final resource obligation reads this machine progress. Bind it like
+    # other executable-policy inputs; unrelated documentation remains excluded.
+    if os.path.lexists(root / "verification/resource_measurement_policy.json"):
+        visit(root / "docs/implementation/SpecRoad_Implementierungsplan.md")
     return sha256(json_bytes(entries))
 
 

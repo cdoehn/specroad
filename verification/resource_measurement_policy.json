@@ -1,0 +1,9 @@
+{
+  "format_version": 1,
+  "policy_id": "RESOURCE-FINAL-809",
+  "scope": "analyzer_total_process_cpu_rss",
+  "intermediate_builds": "deferred",
+  "final_plan_group": "20.n",
+  "final_obligation": "required_for_exact_final_build",
+  "obsolete_intermediate_builds": "no_retrospective_measurement"
+}

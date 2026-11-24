@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 455 · **Stand:** 24. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.106
+**Planrevision:** 456 · **Stand:** 24. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.107
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **21 Meilensteine in 332 Schritte und 996 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die ursprünglichen Positionen bleiben erhalten; ausdrücklich geänderte Ausführungsfolgen stehen im Fortschrittsblock und in den betroffenen Voraussetzungen; die früher genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wurde nach der damaligen Spezifikation innerhalb von 15.l.R vorgezogen und bleibt als normaler Prüfkern erhalten. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -14,18 +14,21 @@ Vor der Arbeit: [Projektregeln](../../DEVELOPMENT.md), [Grundlagen](rules/Grundl
 [IMPLEMENTATION-PLANS-791](decisions/implementation-plans-791.md) erweitert die
 Spezifikation und den vollständigen Rest. [M21](milestones/M21.md) umfasst
 78 neue technische Commits; sämtliche 30 bisher offenen Commits bleiben.
-Bestätigt werden mit dem ausdrücklich beauftragten manuellen Abschluss
-**900/996** Positionen bis **21.d.C**. Das ursprüngliche Apply-Gate von
-Bundle 808 bestand mit 27.104 Tests; anschließend scheiterte ausschließlich
-der Commit an EOF-Leerzeilen. [Abschluss 810](history/bundle-810-manual-c.md)
-dokumentiert die drei AST-identischen EOF-Korrekturen und den ausdrücklich
-angeordneten Verzicht auf eine Testwiederholung. Die zusätzlichen ungetesteten
-Messpolicy-Änderungen aus 809 gehören nicht zu diesem C-Commit und folgen
-als eigener OFF-PLAN-Commit vor weiterer Core-Entwicklung.
+Bestätigt sind **900/996** Positionen bis **21.d.C**. Der
+[manuelle Abschluss 810](history/bundle-810-manual-c.md) ist durch Result
+`efde049bd468cef14fe4ba6b7a9b11ee036905d37193205758b96c5920aa308f`
+und Commit `d7ede332a34085c04c86bfe723104a9e30f414bf` belegt.
+Die ursprünglichen 27.104 erfolgreichen Tests bleiben historische Nachweise;
+die ausdrücklich angeordnete EOF-Korrektur erhielt keinen neuen Testlauf.
+
+[Bundle 811](history/bundle-811-resource-final.md) übernimmt vor weiterer
+Core-Entwicklung die bereits beauftragte [Messaufschiebung](decisions/resource-final-809.md)
+als eigenen OFF-PLAN-Commit **RESOURCE-FINAL-809**. Der Produktzähler bleibt
+**900/996**, der nächste reguläre Planschritt **21.e.W**. Neue Zwischenbuilds
+werden als aufgeschoben geführt; die vollständige finale Ressourcenabnahme
+nach §14/T.10 bleibt offen. Diese Vorbereitung ist noch kein Apply-Erfolg.
 Die [verbindlichen 21.d-Abnahmen](decisions/force-contract-804.md#planabnahmen-21d)
-und Originalbelege bleiben erhalten. Es wird kein neuer automatischer Gate-
-oder Messnachweis für die geänderten Bytes behauptet. Nächster Planschritt:
-**21.e.W – Force in sämtlichen Produktgrenzen**.
+und sämtliche Originalbelege bleiben erhalten.
 
 Die [Einzelzuordnung aller alten Katalogreste](matrices/Uebergabe.md#restinventar-791)
 ist verbindlicher Teil des Restplans. Sprach-/Herkunfts-/Bedienreviews und
@@ -354,15 +357,17 @@ Korrektur der nativen Validierungsfälle und vollständiger Matrixrest: [Bundle 
 Prozess-/Journalreparatur des offenen C-Rests: [Bundle 790](history/bundle-790-process-journal.md). W/R sind bestätigt; C benötigt sein eigenes Apply-Gate.
 
 ```yaml
-plan_revision: 455
+plan_revision: 456
 implementation_plan_commits_total: 996
 implementation_plan_commits_completed: 900
 last_completed_plan_commit: 21.d.C
 next_plan_commit: 21.e.W
 priority_off_plan: null
 next_off_plan_commit: null
-last_completed_numbered_bundle: 810
+last_completed_numbered_bundle: 811
 implementation_state: in_progress
+resource_measurement_policy: RESOURCE-FINAL-809
+final_resource_acceptance: pending
 prioritized_group_order: [21.a, 21.b, 21.c, 21.d, 21.e, 21.f, 21.g, 21.h, 21.i, 21.j, 21.k, 21.l, 21.m, 21.n, 21.o, 21.p, 21.q, 21.r, 21.s, 21.t, 21.u, 21.v, 21.w, 21.x, 21.y, 21.z, 20.i, 20.j, 20.m, 19.t, 19.y, 20.b, 20.d, 20.k, 20.l, 20.n]
 deferred_return_after: 20.m.C
 deferred_plan_commits: [19.t.W, 19.t.R, 19.t.C, 19.y.W, 19.y.R, 19.y.C, 20.b.W, 20.b.R, 20.b.C, 20.d.W, 20.d.R, 20.d.C, 20.k.W, 20.k.R, 20.k.C, 20.l.W, 20.l.R, 20.l.C, 20.n.W, 20.n.R, 20.n.C]

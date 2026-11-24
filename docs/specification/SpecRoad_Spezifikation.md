@@ -1,15 +1,15 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.106
+## Version 0.2.107
 
 | Feld | Wert |
 |---|---|
 | Dokument-ID | `SR-SPEC-0001` |
-| Dokumentversion | `0.2.106` |
+| Dokumentversion | `0.2.107` |
 | Zielrelease | `SpecRoad Single-Repository Workbench 0.2.0` |
 | Status | **Fachlich konsolidierte Arbeitsgrundlage; technische Reviewentscheidung gesondert dokumentiert, formale Baseline-Freigabe und Produktabnahme nicht durch dieses Dokument erklärt** |
 | Stand | 23. November 2026 |
 | Sprache | Deutsch; technische Feldnamen, Enum-Werte und CLI-Kommandos Englisch |
-| Fachliche Quelle | **Diese Repositoryfassung v0.2.106 ist die aktive fachliche Arbeitsgrundlage; eine entsprechende PDF wird hiermit nicht veröffentlicht.** |
+| Fachliche Quelle | **Diese Repositoryfassung v0.2.107 ist die aktive fachliche Arbeitsgrundlage; eine entsprechende PDF wird hiermit nicht veröffentlicht.** |
 | Bearbeitbare Satzquelle | Diese Datei; eine spätere PDF muss denselben versionierten Inhalt wiedergeben. |
 | Vorgängerversion | Repository-Spezifikation v0.2.105; historische Nachweise bleiben unverändert. |
 | Prüf- und Entscheidungsgrundlage | IMPLEMENTATION-PLANS-791: ausdrücklicher Nutzerauftrag und konsolidierte Entscheidungen vom 22. November 2026; frühere E-Mail-Ideen gelten nur soweit nicht ersetzt. |
@@ -1760,6 +1760,44 @@ DARF bei offenen Pflichtgates NICHT als erteilt gelten. Scope, Sicherheits-
 und Kompatibilitätsgrenzen, T.10-Ziele, TD-001, tatsächliche Plattformnachweise
 und bestehende Befugnisse bleiben unverändert. Dieser Auftrag ändert keine
 Control-Budgets, historischen Verträge oder Betriebszustände.
+
+#### 2.5.9 Ressourcenmessungen zum Entwicklungsabschluss — RESOURCE-FINAL-809
+
+Ausdrücklicher Nutzerauftrag vom 24. November 2026: Die begonnenen echten
+Referenzmessungen für 21.d.R/C in Bundle 807 werden abgeschlossen und ihre
+Originalbelege erhalten. Für folgende Zwischenbuilds werden neue CPU-/RSS-
+Referenzmessungen bis zum Entwicklungsabschluss aufgeschoben. Gemessen wird
+dann der tatsächliche endgültige Build, nicht nachträglich jeder überholte
+Zwischenstand. Notwendige Optimierungen und erneute Messungen folgen erst
+auf diese abschließenden tatsächlichen Ergebnisse.
+
+Die Zielwerte, Messmethoden, Plattformbedingungen und getrennten Abnahmen
+nach §14 und T.10 bleiben unverändert. Vorhandene Belege behalten ausschließlich
+ihren ursprünglichen Buildbezug. Ein ungemessener Zwischenbuild ist ausdrücklich
+`deferred` mit offenem finalen Nachweis, niemals eine bestandene Ressourcenabnahme.
+Gültige negative oder unbestimmte Beobachtungen bleiben als solche sichtbar;
+ungültige oder falsch gebundene vorgelegte Belege werden weiterhin abgewiesen.
+Keine erfundenen Nullwerte, kopierten Erfolge, Skips oder automatische Messstarts.
+
+Die maschinenlesbare Analyzer-Verpflichtung in
+`verification/resource_measurement_policy.json` verlangt den exakten finalen
+Build. Der native Apply-Entrypoint prüft diese Verpflichtung unabhängig von
+Testrotation und Laufzeitfilter vor dem Verhaltenstestgate. Beim aktiven
+Abschlusscommit 20.n.W/R/C, einem bereits begonnenen 20.n-Abschlussstand, einem
+vollständigen Planzähler oder abgeschlossenem Entwicklungsstatus gilt wieder
+die strikte Messpflicht. Auch eine ausdrücklich finale Prüfung verlangt sie.
+Fehlende, fremde, fehlerhafte oder unbestimmte Messbelege verhindern dann den
+Abschluss. Ein gelöschter Policy-Marker kann die Prüfung von 20.n nicht umgehen.
+Das grüne Ressourcen-Ergebnis erteilt weder Release- noch menschliche Freigabe.
+
+20.i/20.j dürfen vorher ihre vollständigen Messwerkzeuge, Fixtures und
+Verhaltensabnahmen vorbereiten; ihre realen Ressourcenabnahmen bleiben bis
+20.n offen. Der Abschluss muss alle zurückgestellten Ressourcenpflichten am
+dann gültigen Gegenstand vollständig nachholen. Der Analyzer-Nachweis erfüllt
+nicht automatisch die übrigen §14-Grenzen. Menschliche Abnahmen bleiben Pflicht.
+Verhaltenstests, getrennte W/R/C-Gates, N=3 plus Pflichtauswahl und tatsächliche
+Testlaufzeithistorie werden nicht aufgeschoben. Control-Zähler, Betriebsfreigaben
+und erfolgreiche frühere Commits werden nicht verändert.
 
 ## 3. Produktziele
 
@@ -8466,6 +8504,7 @@ Die Umsetzung folgt im bestehenden Plan als 18.s–18.x nach 18.k.C.
 
 | Version | Datum | Status | Änderung |
 |---|---|---|---|
+| 0.2.107 | 2026-11-24 | Ausdrücklicher Nutzerauftrag | RESOURCE-FINAL-809: neue Ressourcenmessungen bis zum Entwicklungsabschluss aufschieben; finale Buildbindung und unveränderte Ziele bleiben Pflicht. |
 | 0.2.106 | 2026-11-23 | Delegierte Detailklärung | FORCE-CONTRACT-804: geschlossener expliziter Force-/Raw-Plantransport, Operationshash und separate negative Ausführungsbelege; keine Host- oder Produktfreigabe. |
 | 0.2.105 | 2026-11-23 | Delegierte Detailklärung | PLAN-AUTHORING-798: physischer Markdown-Authoringvertrag im vorhandenen Writer, native Rohbefehle, exakte Wiederholung und originalgebundene Importadapter; keine Abnahme erklärt. |
 | 0.2.103 | 2026-11-21 | Delegierte Detailklärung | APPROVAL-BINDING-783: exakte Kontext-/Reviewreferenz und aktuelle native Gates für R-36; keine Aufhebung menschlicher Freigaben. |

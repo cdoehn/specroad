@@ -49,7 +49,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "a1e456ef08d3cef683fbd73d31a26b4f40a0f3d5591249d8660ef8b31c281b19",
+  "specification_sha256": "9c7a1dac5d4f14e0649d4273630ad9951eba23173312baf3abce2019af0f75bc",
   "steps": [
     "Run actual isolated full qualification and native target lint/query/render/diff/impact; compare original inventory and exact byte/hash bindings.",
     "Observe actual cleanup or explicit retention, diagnostics and machine audit; no control write or review grant.",

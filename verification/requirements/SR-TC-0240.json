@@ -39,7 +39,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "a1e456ef08d3cef683fbd73d31a26b4f40a0f3d5591249d8660ef8b31c281b19",
+  "specification_sha256": "9c7a1dac5d4f14e0649d4273630ad9951eba23173312baf3abce2019af0f75bc",
   "steps": [
     "Normalize the same declared draft fields through owned mappings, real JSON files, explicit binary stdin and actual field option token binding; compare canonical intent bytes and hashes.",
     "Verify all 24 regular draft field types, exact textual semantics, language canonicalization, detached values and preservation of input files; reject generated fields, specialized records, malformed JSON, conflicts and unsafe input paths.",

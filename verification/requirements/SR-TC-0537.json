@@ -43,7 +43,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "a1e456ef08d3cef683fbd73d31a26b4f40a0f3d5591249d8660ef8b31c281b19",
+  "specification_sha256": "9c7a1dac5d4f14e0649d4273630ad9951eba23173312baf3abce2019af0f75bc",
   "steps": [
     "Compare one immutable computed observation across validation, impact, trace, diff, coverage and built-in verification/traceability views; refuse foreign, incomplete or untyped inputs without subject writes.",
     "Recompute saved complete currentness inputs from a bound native Work snapshot; compare single and resumed coverage/code/verification data and reject changed model, product, scope, time, trust or code bindings before producing a result."

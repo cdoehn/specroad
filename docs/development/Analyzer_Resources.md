@@ -88,13 +88,29 @@ Reports mit den nativen Parsern und wertet Ressourcen aus. `check` meldet
 fehlende oder unbekannte Daten als `blocked`. `passed` bedeutet nur diese
 historische Referenzmessung, niemals Release oder menschliche Abnahme.
 
-Der Apply-Test baut die aktuellen unveränderten Corequellen mit dem nativen
-Builder und vergleicht deren Identität mit dem gemessenen Build. Eine Änderung
-dieses Builds braucht einen neu gebundenen realen Ressourcenbeleg; alte Zahlen
-werden nicht automatisch auf neue Implementierungen übertragen. Gegenbeispiele
-verändern ausschließlich Messbelege und prüfen Ablehnung, ohne einen Detektor
-oder Erfolg zu simulieren. Alle Messwerkzeuge bleiben unter `tools/`, außerhalb
-der produktiven Abhängigkeiten. Die Corebudgets aus 14.6 bleiben unberührt.
+Nach dem ausdrücklichen Auftrag [RESOURCE-FINAL-809](../implementation/decisions/resource-final-809.md)
+gilt Spezifikation 2.5.9: neue Ressourcenmessungen entfallen während der
+Zwischenentwicklung. `verification/resource_measurement_policy.json` hält
+stattdessen die Pflicht zur echten finalen Messung offen. Der aktuelle Core
+wird weiterhin nativ gebaut; seine Identität wählt ausschließlich seinen
+eigenen Beleg. Fehlende Zwischenbuild-Belege ergeben `status=deferred`,
+`measurement_status=missing` und `final_obligation=pending`, keinen Messpass.
+Historische Originale und sämtliche Negativprüfungen bleiben erhalten.
+Vorhandene ungültige Belege werden auch während der Aufschiebung abgewiesen.
+
+`tools/check_analyzer_resources.py --commit-id <ID>` prüft diese Verpflichtung
+vor dem eigenen Apply-Testgate; es startet keine Messung. Bei 20.n.W/R/C oder
+finalem/abgeschlossenem Planfortschritt verlangt es automatisch gültige,
+bestandene Messungen genau des aktuellen Builds. `--final` erzwingt denselben
+strikten Abschlusscheck jederzeit. Fehlende oder fremde Belege, überschrittene
+Grenzen und unbestimmte RSS-Obergrenzen bleiben dann Abschlussfehler. Die
+Endabnahme misst nur den tatsächlich endgültigen Build; nach nötiger Optimierung
+ist dessen neuer Build erneut zu messen. Kein Nachmessen überholter Builds.
+
+Die Analyzer-Auswertung erfüllt nicht die separaten Core- und Gesamtprodukt-
+Budgets aus §14. Auch diese Pflichtmessungen werden in der Endabnahme nachgeholt.
+W/R/C-Verhaltenstests, N=3-Auswahl und Testlaufzeithistorie laufen unverändert.
+Alle Messwerkzeuge bleiben unter `tools/`, außerhalb produktiver Abhängigkeiten.
 
 
 ## Beobachter v2: eigene neue Kindprozesse
@@ -140,8 +156,8 @@ Nach ausdrücklichem erneutem Messauftrag am 21. November 2026 wurde jeder
 geänderte 19.w-Corebuild mit derselben unveränderten v1-Messanordnung gemessen.
 Die neue Ablage `verification/fixtures/analyzer-resources-builds/<build_sha256>/`
 enthält je gemessenem Build die vollständige komprimierte Exporthashkette.
-Das Apply-Gate baut die aktuellen Corequellen und wählt ausschließlich deren
-exakten Hash; fehlende oder abweichende Daten bleiben ein Fehler.
+Das damalige Apply-Gate verlangte für jeden Zwischenbuild dessen exakten
+Hash. Für künftige Lieferungen gilt die oben beschriebene finale Verpflichtung.
 Der ursprüngliche Nachweis und seine festen Regressionen bleiben erhalten.
 
 | Stufe | Corebuild-SHA-256 | CPU maximal | Laufzeit Median | RSS-Obergrenze |
@@ -154,4 +170,4 @@ Jede Serie umfasst einen Warm-up und fünf neue Prozesspaare mit jeweils
 1.000 ungekürzten Texten von 166–440 Codepoints. Die CPU-Prüfung addiert
 0,02 Sekunden Rundungsreserve; die RSS-Obergrenze bleibt konservativ.
 Die tatsächlichen Messwerte sind Referenzbelege, keine Apply-, Sprachkorpus-
-oder Releasefreigabe. Ein später erneut geänderter Build braucht neue Messdaten.
+oder Releasefreigabe. Der spätere endgültige Build braucht seine eigenen Messdaten.

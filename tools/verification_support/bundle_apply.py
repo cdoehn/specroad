@@ -231,6 +231,14 @@ class NativeApply:
         environment = dict(os.environ)
         for key in ('TMPDIR', 'TMP', 'TEMP', 'PYTEST_DEBUG_TEMPROOT'):
             environment[key] = str(scratch)
+        # This is an evidence check, never a benchmark. A final stage requires
+        # it even if somebody removed the development policy file. Toy runner
+        # projects without this project-specific obligation remain unaffected.
+        policy = self.root / 'verification/resource_measurement_policy.json'
+        if policy.exists() or policy.is_symlink() or stage['commit_id'].startswith('20.n.'):
+            subprocess.run([str(self.root / '.venv/bin/python'), '-I', '-B',
+                            'tools/check_analyzer_resources.py', '--commit-id', stage['commit_id']],
+                           cwd=self.root, env=environment, stdin=subprocess.DEVNULL, check=True)
         code = subprocess.run([str(self.root / '.venv/bin/python'), '-I', '-B',
                                'tools/run_apply_tests.py', '--test-plan', str(plan_path),
                                '--commit-id', stage['commit_id'], '--outdir', str(directory / 'gate')],

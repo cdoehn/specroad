@@ -48,7 +48,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "a1e456ef08d3cef683fbd73d31a26b4f40a0f3d5591249d8660ef8b31c281b19",
+  "specification_sha256": "9c7a1dac5d4f14e0649d4273630ad9951eba23173312baf3abce2019af0f75bc",
   "steps": [
     "Check native document fields and exactly one non-retired primary specification; bind and return its exact stored data. Refuse missing or ambiguous primaries, preserve field diagnostics and compare order-independent observations and isolated Core/PYZ results without writes.",
     "Refuse nonfull/configured declared scopes, malformed active or retired roles and invalid local fields. Request the bound full-project role stage in the actual shared validation pipeline; verify empty/missing/multiple primaries, unconnected selections, earlier schema/identity refusal, unchanged loaded-model defaults and absence of invented document services."

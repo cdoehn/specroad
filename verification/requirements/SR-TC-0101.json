@@ -39,7 +39,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "a1e456ef08d3cef683fbd73d31a26b4f40a0f3d5591249d8660ef8b31c281b19",
+  "specification_sha256": "9c7a1dac5d4f14e0649d4273630ad9951eba23173312baf3abce2019af0f75bc",
   "steps": [
     "13.h.W: resolve Roadmap facts and optional native eight-gate Readiness through built-in views; compare exact direct-provider data, gate/selection hashes and unavailable/provisional/blocked states. Verify Coverage/Traceability selection parity and input admission through read-only render adapters, without inspecting rendered output.",
     "13.h.R: retain full native Built-in and Readiness semantic Work input, recompute with the original snapshot and fresh native services, and compare direct coverage/query, view and resumed projection. Persist complete source inputs in native Work storage; restore in isolated Core/PYZ while preserving pending work. Reject changed model, evaluation, time, product binding and absent required review authentication.",
