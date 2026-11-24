@@ -33,7 +33,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "9c7a1dac5d4f14e0649d4273630ad9951eba23173312baf3abce2019af0f75bc",
+  "specification_sha256": "4ff085faac3f5db13020a39960751233d7b8bd381b9b8d0fa4f71ba4fe36ccbd",
   "steps": [
     "20.h: actual CPython 3.10–3.14 module/PYZ entrypoints and native offline PH roundtrip, separate real host receive/synthetic review/dry-run/apply and independent target hash.",
     "20.h.R: full six-reader CLI/request parity in fresh cwd for both distributions/all minors; real no-pip unactivated venvs, structured missing-input failures and unavailable python-bundled profiles; all W cases retained.",

@@ -56,7 +56,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "9c7a1dac5d4f14e0649d4273630ad9951eba23173312baf3abce2019af0f75bc",
+  "specification_sha256": "4ff085faac3f5db13020a39960751233d7b8bd381b9b8d0fa4f71ba4fe36ccbd",
   "steps": [
     "Extract verified native partial bytes, read actual closure members through Python/CLI/alias/structured Show, and compare the original artifact and bounded incoming/outgoing edges.",
     "Reject context-only targets, forged boundaries, altered payloads, unsafe paths, missing markers and concurrent changes; observe no writes and no implicit rehydration.",

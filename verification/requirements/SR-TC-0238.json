@@ -45,7 +45,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "9c7a1dac5d4f14e0649d4273630ad9951eba23173312baf3abce2019af0f75bc",
+  "specification_sha256": "4ff085faac3f5db13020a39960751233d7b8bd381b9b8d0fa4f71ba4fe36ccbd",
   "steps": [
     "Recompute ordered lifecycle candidates and their metadata, verify saved plan/base/target hashes, validate every supplied target artifact and inspect diff and direct impact.",
     "Execute the complete raw/structured native authoring, publication, replay and failure oracles in this stage’s own Apply gate; compare full bytes, bound plans, revisions, original evidence, receipts and unchanged foreign files. No behavior execution in Dev."

@@ -1,5 +1,5 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.107
+## Version 0.2.108
 
 | Feld | Wert |
 |---|---|
@@ -8505,6 +8505,7 @@ Die Umsetzung folgt im bestehenden Plan als 18.s–18.x nach 18.k.C.
 | Version | Datum | Status | Änderung |
 |---|---|---|---|
 | 0.2.107 | 2026-11-24 | Ausdrücklicher Nutzerauftrag | RESOURCE-FINAL-809: neue Ressourcenmessungen bis zum Entwicklungsabschluss aufschieben; finale Buildbindung und unveränderte Ziele bleiben Pflicht. |
+| 0.2.108 | 2026-11-24 | Delegierte Detailklärung | FORCE-DOMAINS-812: native Forceabsicht, idempotente Zielbindung und passive Herkunft; bestehende Host-/Reviewpflichten bleiben. |
 | 0.2.106 | 2026-11-23 | Delegierte Detailklärung | FORCE-CONTRACT-804: geschlossener expliziter Force-/Raw-Plantransport, Operationshash und separate negative Ausführungsbelege; keine Host- oder Produktfreigabe. |
 | 0.2.105 | 2026-11-23 | Delegierte Detailklärung | PLAN-AUTHORING-798: physischer Markdown-Authoringvertrag im vorhandenen Writer, native Rohbefehle, exakte Wiederholung und originalgebundene Importadapter; keine Abnahme erklärt. |
 | 0.2.103 | 2026-11-21 | Delegierte Detailklärung | APPROVAL-BINDING-783: exakte Kontext-/Reviewreferenz und aktuelle native Gates für R-36; keine Aufhebung menschlicher Freigaben. |
@@ -13957,6 +13958,63 @@ keine bestandene Fachprüfung. Ein vollständig lesbares, fachlich negatives
 Modell bleibt `invalid`. Quelländerungen nach der letzten gebundenen Beobachtung
 werden erneut erkannt und protokolliert; ohne verifizierten vollständigen
 Dateivollzug wird kein Abschlussbeleg ausgegeben.
+
+### X.12.2 Native Forceabsicht und passive Herkunft
+
+**FORCE-DOMAINS-812, delegiert gemäß SPECROAD-DECISION-1 und 2.4.3.1.**
+Native Authoring-Befehle müssen ihre ursprüngliche Absicht auch dann exakt
+wiedererkennen, wenn die konkrete Zielberechnung neue IDs oder Zeitstempel
+benötigt. Change-Plan `1.4.0` ergänzt dafür den unveränderten 1.3.0-Vertrag um
+`native_intent`. Dieses geschlossene Objekt enthält genau `command_id`,
+`intent`, `expected_model_root_sha256`, `as_proposal`, `proposal_fields`,
+`execution_binding`. `command_id` ist eine bekannte native Authoring- oder
+Plan-Authoring-Kennung oder `proposal.review.start`, `proposal.review`,
+`proposal.apply`, `merge.apply`, `migrate.apply`;
+`intent` ist das vollständige passive native Eingabeobjekt mit derselben
+Kennung, `expected_model_root_sha256` ein SHA-256 oder null, `as_proposal` ein
+Boolean, `proposal_fields` das ausdrücklich gelieferte Objekt oder null.
+`execution_binding` ist null bei nativer Allokation oder ein geschlossenes
+Objekt mit `planned_at`, `change_plan_id`, `transaction_id`, wenn diese Werte
+explizit vom Aufrufer stammen. Zeit und Plan-ID müssen den gleichnamigen
+Planfeldern entsprechen; die Transaktions-ID bleibt im tatsächlichen
+Writerbeleg gebunden. Gespeicherte Merge-/Migrationsaufrufe binden im
+`intent` den vollständigen ursprünglichen Plan und sämtliche ausdrücklichen
+Hash-, Quellen-, Berichts-, Zielversions- und Backupbindungen des Aufrufs.
+Es gibt keine darin speicherbare Hostautorität oder ausführbare Erweiterung.
+
+Ein 1.4.0-Plan enthält ausschließlich konkrete `resource_replace`-Operationen
+mit den tatsächlich beobachteten Vorherhashes und vollständigen Zielbytes.
+Auch eine leere Operationenliste ist eine konkrete unveränderte Zielmenge.
+Ihre 1.4.0-Ausführung erhält einen vollständigen Request-/Transaktionsbeleg
+mit leerer Effektliste; dieser behauptet keine geänderte Produktdatei.
+Der Planselbsthash bindet sämtliche Felder; der Operationshash erweitert nur
+für 1.4.0 die Projektion aus X.12.1 um `native_intent`. Historische Formate und
+Hashes bleiben unverändert. Die Absicht ersetzt keine Zielbytes und wird beim
+Anwenden eines gespeicherten Plans nicht erneut gegen einen anderen Bestand
+kompiliert. Die tatsächliche ausführende Befehlkennung steht im Writerbeleg.
+
+Die native Wiederholung prüft zuerst die vollständige abgeschlossene
+Receiptgruppe, Projekt, Actor, Request-ID, expliziten Forcekontext, Absicht
+und tatsächliche Befehlkennung. Erst ein noch nicht ausgeführter Auftrag darf
+neue IDs/Zeitstempel erhalten. Abweichende oder normale Requests erhalten
+keinen fremden Erfolg. Ein gespeicherter Plan ist passive Absicht, keine
+behauptete Ausführung seines Ursprungsbefehls. Der gemeinsame Writer bindet
+alle tatsächlich beobachteten nativen Ablehnungen und unbekannten Prüfungen;
+seine vollständige Quell-/Zielbeobachtung und echte Hostprüfung bleiben Pflicht.
+
+Vollständig verifizierte Force-Receiptgruppen sind als eigene passive
+Herkunft lesbar. Ihre Vorher-/Nachherhashes dürfen tatsächliche Dateifolgen
+belegen, aber niemals positive Review-, Approval-, Verification- oder
+Readinessbelege ersetzen. Ein aktueller Zustand, dessen genau gebundene Bytes
+noch auf erzwungener Publikation beruhen, weist diese Herkunft gesondert aus.
+Geänderte geschützte Originale bleiben für abhängige alte Nachweise ungültig.
+Unvollständige oder widersprüchliche Gruppen werden nicht als Herkunftserfolg
+angenommen. Die vorhandenen Befehls-Ergebnisschemata unterscheiden normale
+Ergebnisse und explizite Forceausführung; Berichte behalten negative und
+unbekannte Befunde sowie `approval_granted=false`. Reader für Impact,
+Relation-Reviews, Verification, Readiness und Qualifikation berücksichtigen
+die verifizierte Herkunft. Ein späterer echter Beleg bleibt anhand seiner eigenen Bytes und
+Abhängigkeiten zu prüfen; weder Zeitstempel noch Labels beweisen ihn.
 
 ## X.13 Deterministische Abnahmevektoren und technische Reihenfolge
 

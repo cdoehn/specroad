@@ -55,7 +55,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "9c7a1dac5d4f14e0649d4273630ad9951eba23173312baf3abce2019af0f75bc",
+  "specification_sha256": "4ff085faac3f5db13020a39960751233d7b8bd381b9b8d0fa4f71ba4fe36ccbd",
   "steps": [
     "11.j.W: move, nest, promote and reorder actual sections containing shared artifact_ref blocks. Save and publish the same native plan, read back exact files, receipts and composed/reference data. Only changed document/section relation owners gain revisions. Preserve all other original bytes and require actual block semantics.",
     "11.j.R: compare original and candidate hashes for requirement/test/code_ref records in draft and stored approved states; only real supported targets publish. Missing lifecycle, review, evidence and external-resource services block publication. Guard owner fields and all nonrequested relations, detach operation bindings, reject forged saved-plan result artifacts, verify sequential moves/replay and preserve actual interrupted owner publication.",

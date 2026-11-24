@@ -40,7 +40,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "9c7a1dac5d4f14e0649d4273630ad9951eba23173312baf3abce2019af0f75bc",
+  "specification_sha256": "4ff085faac3f5db13020a39960751233d7b8bd381b9b8d0fa4f71ba4fe36ccbd",
   "steps": [
     "Build and verify separate ABI-tagged offline artifacts and reject missing, changed or substituted package inputs.",
     "Keep each runtime observation bound to its actual interpreter and archive hash; require all five distinct probes for a matrix result.",

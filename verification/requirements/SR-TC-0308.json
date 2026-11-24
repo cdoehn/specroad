@@ -70,7 +70,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "9c7a1dac5d4f14e0649d4273630ad9951eba23173312baf3abce2019af0f75bc",
+  "specification_sha256": "4ff085faac3f5db13020a39960751233d7b8bd381b9b8d0fa4f71ba4fe36ccbd",
   "steps": [
     "11.h.W: prepare document.create, section.add and section.move as closed ordinary typed operation sequences; save and execute through the shared native writer. Verify exact affected artifacts, unchanged file inventories, native revisions and audit, receipts and idempotent replay, actor/host denial, primary-role validity, specialist closure and isolated Core/PYZ publication.",
     "11.h.R: reject invalid parents, self/descendant/include cycles, stale relation hashes and actual on-disk bytes, identity reuse, forged operation shapes, missing lifecycle and host gate overrides. Preserve command/plan identity in structured failure audits. Verify unchanged full inventories on refusal and honest partial publication/recovery after an injected second-owner replace failure; conflicting retry preserves original receipt.",
