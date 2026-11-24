@@ -169,7 +169,13 @@ def _fields(schema_id):
         return _object({"format_version": {"const": FORMAT_VERSION}, "command": nonempty,
             "status": {"enum": [s.value for s in ResultStatus]}, "project": _nullable(obj),
             "result": True, "result_ref": _nullable(reference), "diagnostics": _array(diagnostic),
-            "summary": _object({"complete": boolean}, extra=True)})
+            "summary": _object({"complete": boolean,
+                "validation_status": {"enum": ["valid", "invalid", "unknown"]},
+                "force": _object({"requested": boolean, "used": boolean, "reason": _nullable(nonempty),
+                    "overrides": _array(_object({"gate_id": nonempty, "diagnostic_code": nonempty,
+                        "subject": nonempty, "original_decision": {"enum": ["denied", "unknown"]},
+                        "operation": nonempty, "observed_binding": True, "requested_binding": True,
+                        "effect": nonempty}))})}, extra=True)})
     if schema_id == "help-v1":
         return _object({"usage": text, "options": _array(_object({"flag": text, "values": strings}, ("flag",))),
             "commands": _array(_object({k: surface[k] for k in ("command_id", "words", "aliases")})),

@@ -74,6 +74,22 @@ class CommandRequest:
     def from_mapping(cls, value):
         """Accept only request data, never handlers or previously resolved state."""
         if (not isinstance(value, Mapping) or 'command_id' not in value
-                or set(value) - {'command_id', 'options', 'arguments'}):
+                or set(value) - {'command_id', 'options', 'arguments', 'force', 'force_reason'}):
             raise CommandUsageError("Invalid structured request fields")
-        return cls(value['command_id'], value.get('options', {}), value.get('arguments', {}))
+        options = value.get('options', {})
+        if not isinstance(options, Mapping):
+            raise CommandUsageError('Structured options must be a mapping')
+        options = dict(options)
+        if 'force' in value or 'force_reason' in value:
+            from ..force import ForceRequest, ForceContractError
+            try:
+                request = ForceRequest(value.get('force', False), value.get('force_reason'))
+            except (ForceContractError, UnicodeError) as error:
+                raise CommandUsageError('Invalid explicit Force request') from error
+            if '--force' in options or '--force-reason' in options:
+                raise CommandUsageError('Force must have exactly one explicit spelling')
+            if request.requested:
+                options['--force'] = True
+            if request.reason is not None:
+                options['--force-reason'] = request.reason
+        return cls(value['command_id'], options, value.get('arguments', {}))

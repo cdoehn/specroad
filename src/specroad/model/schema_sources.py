@@ -33,6 +33,7 @@ def providers_for(registry):
     for kind in sorted(PLAN_TYPES):
         providers["urn:specroad:schema:" + PLAN_SCHEMA_VERSION + ":artifact-plan:" + kind] = SchemaProvider("artifact", PLAN_SCHEMA_VERSION, "plan", kind)
     providers[CHANGE_PLAN_ID] = SchemaProvider("exchange", CHANGE_PLAN_VERSION, CHANGE_PLAN_FAMILY, None)
+    providers['urn:specroad:schema:1.3.0:change-plan'] = SchemaProvider('exchange', '1.3.0', CHANGE_PLAN_FAMILY, None)
     for schema_id in RESULT_IDS:
         version, category, _ = identity_metadata(schema_id)
         providers[schema_id] = SchemaProvider(category, version, "result", schema_id)
@@ -58,7 +59,7 @@ def provider_document(provider, registry):
         return plan_schema(key)
     if family == CHANGE_PLAN_FAMILY:
         from ..changes.schema import change_plan_schema
-        return change_plan_schema()
+        return change_plan_schema(version=provider.version)
     if family == "result":
         from ..cli.result_schemas import result_json_schema
         return result_json_schema(key)

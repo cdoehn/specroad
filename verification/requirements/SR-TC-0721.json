@@ -11,12 +11,13 @@
   "open_items": [
     "The stage-specific corrected source and measured evidence require this stage's native Apply gate and commit.",
     "Durable dispatcher integration, subsequent source builds, Core startup budgets, human corpus review and release/matrix acceptance need their separate bound evidence.",
-    "IMPLEMENTATION-PLANS-791: current remaining owner 21.u; consolidate the exact existing technical gaps/original evidence in 21.v, integration in 21.w/x, final current release proof in 20.n. Existing normal-mode test references and original evidence are retained; new plan/Force/JSON behavior is not accepted by this documentation commit."
+    "IMPLEMENTATION-PLANS-791: current remaining owner 21.u; consolidate the exact existing technical gaps/original evidence in 21.v, integration in 21.w/x, final current release proof in 20.n. Existing normal-mode test references and original evidence are retained; new plan/Force/JSON behavior is not accepted by this documentation commit.",
+    "Bundle 805 adds observer v2 and fresh complete exact-build measurements; its regression tests and product correction still require each native Apply gate."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Die Analyzer-Performanceabnahme MUSS den getrennten Gesamtprozess-CPU-/RSS-Vertrag aus Anhang T.10 messen.",
-    "scope": "Real dated reference adapter observations, one warmup and five complete cold-process runs; <=120 CPU seconds including child accounting and <=512 MiB simultaneous RSS, with conservative lifetime bound. Pure data verification uses native full request/report parsers. Original scripts and numeric observations remain unchanged; export receipt describes private-field projection. R additionally rejects unknown/undersized hosts, mismatched identities, incomplete processes/texts, altered evidence, wrong units and unsupported counters; an uncertain RSS upper bound cannot pass. The v1 final parent label is reconciled with the independent parent/worker PIDs, start ticks, exact GNU-time wrapper ancestry and all actual RSS samples. Both measured processes remain required; original evidence and resource limits are unchanged. Adversarial cases reject missing/extra/duplicate/reused identities, wrong wrapper roles or ancestry, mismatched sample roles/PPIDs/start ticks, missing process observations and inconsistent sums or intervals. Historical original numbers and process-label regressions remain unchanged. Current Core builds additionally require their own genuine exported observations under analyzer-resources-builds/<exact-native-build-sha256>; no historical fallback."
+    "scope": "Real dated reference adapter observations, one warmup and five complete cold-process runs; <=120 CPU seconds including child accounting and <=512 MiB simultaneous RSS, with conservative lifetime bound. Pure data verification uses native full request/report parsers. Original scripts and numeric observations remain unchanged; export receipt describes private-field projection. R additionally rejects unknown/undersized hosts, mismatched identities, incomplete processes/texts, altered evidence, wrong units and unsupported counters; an uncertain RSS upper bound cannot pass. The v1 final parent label is reconciled with the independent parent/worker PIDs, start ticks, exact GNU-time wrapper ancestry and all actual RSS samples. Both measured processes remain required; original evidence and resource limits are unchanged. Adversarial cases reject missing/extra/duplicate/reused identities, wrong wrapper roles or ancestry, mismatched sample roles/PPIDs/start ticks, missing process observations and inconsistent sums or intervals. Historical original numbers and process-label regressions remain unchanged. Current Core builds additionally require their own genuine exported observations under analyzer-resources-builds/<exact-native-build-sha256>; no historical fallback. Observer v2 resolves late own forks by a live, rechecked wrapper ancestry with exact PID, PPID and start ticks. Missing, changed, reused, cyclic or unknown ancestry remains competing load. Exactly the preserved complete v1 or archived v2 script set is admitted; historical bytes and the CPU/RSS acceptance function remain unchanged."
   },
   "preconditions": [
     "Trusted complete real reference measurement, with unchanged native Core build and original engine/input hashes.",
@@ -39,13 +40,27 @@
   "steps": [
     "Read and verify the original/exported hash chain, all 1000 complete texts and all six full native reports.",
     "Build the current Core and bind its exact identity to the actual real adapter measurement.",
-    "Check whole-process CPU and simultaneous parent/worker RSS with a conservative lifetime upper bound."
+    "Check whole-process CPU and simultaneous parent/worker RSS with a conservative lifetime upper bound.",
+    "Check live observer ownership against late own forks and independent same-named load; reject unstable process identities without relaxing environment qualification."
   ],
   "test_case_format_version": 1,
   "test_case_id": "SR-TC-0721",
   "test_ids": [
     "tests/test_analyzer_resources.py::test_measured_full_adapter_stays_within_total_cpu_and_memory_limits",
     "tests/test_analyzer_resources.py::test_measured_sources_and_all_original_hash_chains_are_preserved",
+    "tests/test_analyzer_resources_observer.py::test_environment_keeps_a_late_unprovable_process_as_competing",
+    "tests/test_analyzer_resources_observer.py::test_late_own_forks_are_not_competing_but_same_named_foreign_load_is",
+    "tests/test_analyzer_resources_observer.py::test_unproven_or_changed_ancestry_is_never_excluded[cycle]",
+    "tests/test_analyzer_resources_observer.py::test_unproven_or_changed_ancestry_is_never_excluded[missing-parent]",
+    "tests/test_analyzer_resources_observer.py::test_unproven_or_changed_ancestry_is_never_excluded[missing-root]",
+    "tests/test_analyzer_resources_observer.py::test_unproven_or_changed_ancestry_is_never_excluded[other-root]",
+    "tests/test_analyzer_resources_observer.py::test_unproven_or_changed_ancestry_is_never_excluded[reparented-candidate]",
+    "tests/test_analyzer_resources_observer.py::test_unproven_or_changed_ancestry_is_never_excluded[reparented-parent]",
+    "tests/test_analyzer_resources_observer.py::test_unproven_or_changed_ancestry_is_never_excluded[reused-candidate]",
+    "tests/test_analyzer_resources_observer.py::test_unproven_or_changed_ancestry_is_never_excluded[reused-parent]",
+    "tests/test_analyzer_resources_observer.py::test_unproven_or_changed_ancestry_is_never_excluded[reused-root]",
+    "tests/test_analyzer_resources_observer.py::test_unproven_or_changed_ancestry_is_never_excluded[vanished-candidate]",
+    "tests/test_analyzer_resources_observer.py::test_unproven_or_changed_ancestry_is_never_excluded[younger-parent]",
     "tests/test_analyzer_resources_processes.py::test_final_label_reconciliation_never_hides_changed_process_membership[boolean-pid-invalid_process_identity]",
     "tests/test_analyzer_resources_processes.py::test_final_label_reconciliation_never_hides_changed_process_membership[cyclic-ancestry-wrong_process_ancestry]",
     "tests/test_analyzer_resources_processes.py::test_final_label_reconciliation_never_hides_changed_process_membership[different-parent-ppid-wrong_process_ancestry]",

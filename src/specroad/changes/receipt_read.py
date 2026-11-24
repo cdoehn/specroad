@@ -115,6 +115,17 @@ def read_transaction_completion(source, transaction_id, *, preflight=None):
         with LockFiles(source.boundary.root) as files:
             from .transition_history import find_journal, completion_proof
             from .transition_history import completion_data
+            from ._guarded_io import _read_path
+            from ..storage.json_syntax import parse_json_object
+            raw = _read_path(files, completion_marker_path(transaction_id), optional=True)
+            if raw is not None and parse_json_object(raw).get('format_version') == 'force-write-completion-v1':
+                from .force_receipts import read_group, completion
+                if preflight is not None:
+                    raise ReceiptError('normal_preflight_cannot_certify_force_write', exit_code=6)
+                source.check_current()
+                write = read_group(files, transaction_id, project_id=source.configuration.project_id)
+                source.check_current()
+                return completion(write, current=False)
             selected = find_journal(files, transaction_id)
             if selected is not None:
                 if preflight is not None:

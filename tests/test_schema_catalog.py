@@ -70,7 +70,7 @@ class SchemaCatalogWorkTests(unittest.TestCase):
         self.assertEqual(sum(data['categories'].values()), len(data['schemas']))
         self.assertEqual(data['categories']['artifact'], 60)
         self.assertEqual(data['categories']['configuration'], 2)
-        self.assertEqual(data['categories']['exchange'], 2)
+        self.assertEqual(data['categories']['exchange'], 3)
 
     def test_change_plan_resource_is_the_existing_structural_contract(self):
         schema_id = 'urn:specroad:schema:1.2.0:change-plan'
@@ -240,7 +240,7 @@ class SchemaCatalogWorkTests(unittest.TestCase):
     def test_cli_list_returns_catalog_in_standard_envelope(self):
         result = dispatch_result(['schema', 'list', '--format=json'])
         data = json.loads(serialize_result(result))
-        self.assertEqual(data['format_version'], '2.0.0')
+        self.assertEqual(data['format_version'], '2.1.0')
         self.assertEqual(data['result'], self.catalog.list()); self.assertIsNone(data['project'])
 
     def test_cli_show_returns_schema_not_a_stub(self):

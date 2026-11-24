@@ -110,3 +110,23 @@ __all__ += ['prepare_format_target']
 from .guarded_write import publish_guarded_change
 from .write_guard_read import inspect_write_state, read_guarded_completion, resolve_guarded_request
 from .write_guard_values import WriteGuardError, WriteCompletion
+
+# The Force writer depends on specialist readers which themselves use this
+# package's pure contracts. Resolve the public writer API only when requested.
+_FORCE_EXPORTS = {
+    'bind_force_plan': '.force_write',
+    'apply_force_plan': '.force_write',
+    'ForcePublicationRequest': '.force_write',
+    'read_force_completion': '.force_read',
+    'prepare_resource_plan': '.resource_replace',
+}
+__all__ += list(_FORCE_EXPORTS)
+
+
+def __getattr__(name):
+    if name not in _FORCE_EXPORTS:
+        raise AttributeError(name)
+    from importlib import import_module
+    value = getattr(import_module(_FORCE_EXPORTS[name], __name__), name)
+    globals()[name] = value
+    return value

@@ -13,7 +13,7 @@ import math
 import re
 
 
-FORMAT_VERSION = "2.0.0"
+FORMAT_VERSION = "2.1.0"
 
 
 from ..result_contract import ResultContractError
@@ -22,6 +22,7 @@ from ..diagnostics import Diagnostic, diagnostic_key as _diagnostic_key
 
 class ResultStatus(str, Enum):
     SUCCESS = "success"
+    FORCED = "forced"
     FAILED = "failed"
     PARTIAL = "partial"
     CONTINUATION_REQUIRED = "continuation_required"
@@ -88,7 +89,7 @@ class OperationFailure(Exception):
         if type(complete) is not bool:
             raise ResultContractError("Completion must be a boolean")
         reserved = {"complete", "failure_kind", "partial_scope", "delivery", "work_id",
-                    "completed_units", "total_units", "remaining_manifest_sha256", "checkpoint", "next_action"}
+                    "completed_units", "total_units", "remaining_manifest_sha256", "checkpoint", "next_action", "force", "validation_status"}
         details = {} if details is None else details
         if not isinstance(details, Mapping) or reserved.intersection(details):
             raise ResultContractError("Failure details cannot override control fields")
@@ -281,6 +282,8 @@ class CommandResult:
     result_ref: ResultReference | None = None
     partial_scope: str | None = None
     continuation: VerifiedContinuation | None = None
+    validation_status: str = "unknown"
+    force: Mapping = field(default_factory=lambda: {"requested": False, "used": False, "reason": None, "overrides": []})
 
     def __post_init__(self):
         if not isinstance(self.command, str) or not re.fullmatch(r"[a-z][a-z0-9_]*(?:\.[a-z][a-z0-9_]*)*", self.command):
@@ -289,6 +292,18 @@ class CommandResult:
             object.__setattr__(self, "status", ResultStatus(self.status))
         except (TypeError, ValueError) as error:
             raise ResultContractError("Unsupported result status") from error
+        from ..force import validate_summary, ForceContractError
+        try:
+            owned_force = validate_summary(thaw(self.force))
+        except (ForceContractError, ValueError, TypeError) as error:
+            raise ResultContractError('Invalid Force result binding') from error
+        object.__setattr__(self, 'force', freeze(owned_force))
+        if self.validation_status not in ('valid', 'invalid', 'unknown'):
+            raise ResultContractError('Invalid validation status')
+        if self.status is ResultStatus.FORCED and not owned_force['used']:
+            raise ResultContractError('Forced status needs actual overrides')
+        if owned_force['used'] and self.status is ResultStatus.SUCCESS:
+            raise ResultContractError('Overrides cannot be ordinary success')
         if type(self.complete) is not bool:
             raise ResultContractError("Completion must be a boolean")
         if self.status is ResultStatus.FAILED:
@@ -296,7 +311,7 @@ class CommandResult:
                 raise ResultContractError("A failed result needs an explicit failure class")
         elif self.failure is not None:
             raise ResultContractError("Only a failed result can have a failure class")
-        if self.status in (ResultStatus.SUCCESS, ResultStatus.PARTIAL) and not self.complete:
+        if self.status in (ResultStatus.SUCCESS, ResultStatus.PARTIAL, ResultStatus.FORCED) and not self.complete:
             raise ResultContractError("Success requires all work in its explicit scope")
         if self.status is ResultStatus.PARTIAL:
             _text(self.partial_scope, "explicit partial scope")
@@ -318,7 +333,7 @@ class CommandResult:
         if self.project is not None and not isinstance(self.project, Mapping):
             raise ResultContractError("Project binding must be an object or null")
         reserved = {"complete", "failure_kind", "partial_scope", "delivery", "work_id",
-                    "completed_units", "total_units", "remaining_manifest_sha256", "checkpoint", "next_action"}
+                    "completed_units", "total_units", "remaining_manifest_sha256", "checkpoint", "next_action", "force", "validation_status"}
         if not isinstance(self.details, Mapping) or reserved.intersection(self.details):
             raise ResultContractError("Summary cannot override result-control fields")
         for name in ("result", "project", "details"):

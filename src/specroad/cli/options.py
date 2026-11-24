@@ -16,11 +16,22 @@ def select_project(command, options, cwd, *, preflight=None):
         return None, None, {}
     if not command.requires_project and "--project" not in options:
         return None, None, {}
+    if command.command_id == 'change.apply' and options.get('--force') is True:
+        from ..security import ProjectBoundary
+        root = Path(options.get('--project', Path.cwd() if cwd is None else cwd))
+        if not root.is_absolute():
+            root = (Path.cwd() if cwd is None else Path(cwd)) / root
+        boundary = ProjectBoundary(root)
+        if preflight is not None:
+            preflight.update({'force_raw_selection': True, 'model_validated': False})
+        return boundary.root, 'explicit' if '--project' in options else 'cwd', {}
     from .project_selection import select_project as select
     return select(command, options, cwd, preflight=preflight)
 
 
 _GLOBAL_OPTIONS = {
+    "--force": OptionSpec("--force"),
+    "--force-reason": OptionSpec("--force-reason", takes_value=True),
     "--project": OptionSpec("--project", takes_value=True),
     "--profile": OptionSpec("--profile", takes_value=True, repeatable=True),
     "--configuration": OptionSpec("--configuration", takes_value=True),

@@ -1,5 +1,11 @@
 # Entscheidungen und Ausführungsnachweise
 
+- [Bundle 806 — Schedulerfortschritt bei unbekannten Laufzeiten](bundle-806-scheduler-exploration.md)
+
+- [Bundle 805 — vollständige Force-Korrektur](bundle-805-force-contract-correction.md)
+
+- [Bundle 804 — gemeinsamer Forcevertrag](bundle-804-force-contract.md)
+
 - [Bundle 802 — Echte Messbelege für den vollständigen 21.c-Rest](bundle-802-authoring-measurements.md)
 
 - [Bundle 801 — Zwei verbleibende Authoring-Fehler](bundle-801-native-authoring-oracles.md)

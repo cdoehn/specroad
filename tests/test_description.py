@@ -70,7 +70,7 @@ class DescriptionWorkTests(unittest.TestCase):
             'arguments': {'command': 'version'}, 'options': {'--format': 'json'}}).result
         self.assertEqual(cli.exit_code, 0)
         self.assertEqual(cli.as_dict(), data.as_dict())
-        self.assertEqual(cli.result['stdout']['json_envelope_version'], '2.0.0')
+        self.assertEqual(cli.result['stdout']['json_envelope_version'], '2.1.0')
 
     def test_unknown_commands_are_not_success_placeholders(self):
         for target in ('init.unavailable', 'retire', 'schema.unavailable', 'work.unavailable', 'not-registered'):
@@ -187,7 +187,7 @@ class DescriptionWorkTests(unittest.TestCase):
         document = describe_command(registry, 'version')
         document['options'].clear(); document['examples'][0]['options']['--format'] = 'invalid'
         fresh = describe_command(registry, 'version')
-        self.assertEqual({option['flag'] for option in fresh['options']}, {'--format', '--quiet', '--no-color'})
+        self.assertEqual({option['flag'] for option in fresh['options']}, {'--format', '--quiet', '--no-color', '--force', '--force-reason'})
         self.assertEqual(execute_request(fresh['examples'][0], registry=registry).result.exit_code, 0)
 
 

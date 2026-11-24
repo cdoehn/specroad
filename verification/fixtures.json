@@ -1091,6 +1091,10 @@
     "SR-FIX-NATIVE-PLAN-AUTHORING-v1": {
       "provider": "tests/support/native_plan_authoring.py; tests/support/native_authoring_cases.py; tests/test_native_plan_authoring_right.py; tests/test_native_authoring_regressions.py",
       "kind": "Independently authored real UTF-8 Markdown carriers and native JSON projects, synthetic original measurements and explicit actor/service inputs; exact file effects and receipts. R adds multi-plan references, inherited prerequisites and actual process interruption at writer checkpoints. No production reviewers, measurements or approval claims."
+    },
+    "SR-FIX-FORCE-COMMON-v1": {
+      "provider": "tests/support/force_cases.py; tests/test_force_contract.py; tests/test_force_native.py",
+      "kind": "Owned native JSON projects with original bytes, explicit synthetic actor/host inputs and direct normal/forced API/CLI outcomes. Complete resource bytes, unparseable targets, negative findings, exact request/receipt bindings and native failure boundaries. No invented host, reviewer or measurement success."
     }
   },
   "fixture_format_version": 1,
@@ -1198,6 +1202,7 @@
     "SR-FIX-EVIDENCE-RECORDING-v1",
     "SR-FIX-EXCHANGE-EXPORT-v1",
     "SR-FIX-EXCHANGE-MAPPINGS-v1",
+    "SR-FIX-FORCE-COMMON-v1",
     "SR-FIX-FORMAT-ROUNDTRIPS-v1",
     "SR-FIX-GIT-OBJECT-SOURCE-v1",
     "SR-FIX-GIT-RESTART-R-v1",

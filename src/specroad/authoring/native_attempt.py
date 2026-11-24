@@ -29,5 +29,8 @@ def audited(function):
                 'current_target_verified': False, 'retry_safe': False,
                 'recovery_required': diagnostic.get('recovery_required', state == 'unknown'),
                 'automatic_retry': False, 'automatic_rollback': False, 'approval_granted': False}
+            if 'force' in attempt:
+                error.authoring_attempt.update(force=attempt['force'],
+                    validation_status=attempt['validation_status'], force_report=attempt['force_report'])
             raise
     return run

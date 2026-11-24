@@ -28,6 +28,7 @@ class _Inputs:
     inventory_check: object
     qualify: object
     effect_path: object = None
+    force_record: object = None
 
 
 class _Session:
@@ -35,6 +36,11 @@ class _Session:
         self.checkpoint = checkpoint
         require(type(held) is HeldProjectLock,'native_write_lock_required',exit_code=7)
         held.check();self.held=held;self.files=held._files;self.inputs=inputs
+        from . import write_guard_values
+        self.codec = write_guard_values
+        if inputs.force_record is not None:
+            from . import force_receipts
+            self.codec = force_receipts
         self.before=dict(inputs.before);self.target=dict(inputs.target);self.expected=dict(self.before)
         self.paths=sorted(p for p in self.before.keys()|self.target.keys() if self.before.get(p)!=self.target.get(p))
         from .write_guard_values import _path
@@ -52,9 +58,14 @@ class _Session:
             and owner['request_id']==plan['request_id'] and owner['command'] in ('change apply',inputs.command_id),
             'write_lock_binding',exit_code=7)
         require(not self.files.journal_entries(),'write_state_blocked')
-        self.marker_value=marker_value(dict(format_version='write-guard-v1',project_id=inputs.project_id,
+        self.marker_value=self.codec.marker_value(dict(format_version='write-guard-v1',project_id=inputs.project_id,
             transaction_id=owner['transaction_id'],request_id=plan['request_id'],command_id=inputs.command_id,
             plan_sha256=inputs.plan.sha256,base_model_root_sha256=plan['base']['model_root_sha256'],
+            target_model_root_sha256=plan['expected_result']['model_root_sha256'],
+            owner={k:owner[k] for k in ('lock_id','host_id','process_id','process_start_id')},state='writing'), force=inputs.force_record) if inputs.force_record is not None else marker_value(dict(
+            format_version='write-guard-v1',project_id=inputs.project_id,transaction_id=owner['transaction_id'],
+            request_id=plan['request_id'],command_id=inputs.command_id,plan_sha256=inputs.plan.sha256,
+            base_model_root_sha256=plan['base']['model_root_sha256'],
             target_model_root_sha256=plan['expected_result']['model_root_sha256'],
             owner={k:owner[k] for k in ('lock_id','host_id','process_id','process_start_id')},state='writing'))
         self._parents(tuple(sorted(self.expected.keys()|set(self.paths))),capture=True)
@@ -154,11 +165,14 @@ class _Session:
         require(self.expected==self.target,'write_target_incomplete')
         self.guard();validation=self.qualify();plan=self.inputs.plan.data
         write=dict(marker=self.marker_value,actor=plan['actor'],planned_at=plan['planned_at'],
-            change_plan_id=plan['change_plan_id'],operations=plan['operations'],operations_sha256=digest(plan['operations']),
+            change_plan_id=plan['change_plan_id'],operations=plan['operations'],operations_sha256=__import__('specroad.force', fromlist=['operations_hash']).operations_hash(plan),
             files=[dict(path=p,before=metadata(self.before.get(p)),after=metadata(self.target.get(p))) for p in self.paths],
             target_inventory=inventory(self.target),validation=validation)
-        group=receipt_group(write)
-        validate_transaction(group[transaction_receipt_path(self.marker_value['transaction_id'])])
+        if self.inputs.force_record is not None:
+            write['plan'] = plan
+            write['force'] = self.inputs.force_record
+        group=self.codec.receipt_group(write)
+        self.codec.validate_transaction(group[transaction_receipt_path(self.marker_value['transaction_id'])])
         for path,raw in group.items():
             self.guard()
             with self.files.directory(tuple(path.split('/')[:-1]),create=True) as fd:
@@ -177,7 +191,7 @@ class _Session:
             require(not os.listdir(fd),'write_guard_namespace_changed')
         self.marker=None;self.active=False
         self.guard();self.held._write_release_allowed=True
-        return completion(write,current=True)
+        return self.codec.completion(write,current=True)
 
 
 def _run(inputs,held,*,checkpoint):

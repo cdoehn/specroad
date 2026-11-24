@@ -19,7 +19,7 @@ from specroad.model.domain_schemas import DOMAIN_TYPES, domain_schema
 from specroad.model.errors import ModelError
 from specroad.model.record_schemas import RECORD_TYPES, record_schema
 from specroad.model.schema_catalog import SchemaCatalog, SchemaLookupError, SchemaResource
-from support.change_plans import document, operation, result
+from support.change_plans import document, operation, result, resource_plan
 from support.domain import domain_value
 from support.records import record_value
 
@@ -51,7 +51,7 @@ class SchemaCatalogChangePlanTests(unittest.TestCase):
         schemas += [record_schema(kind) for kind in RECORD_TYPES]
         from specroad.model.plan_schemas import plan_schema
         schemas += [plan_schema("implementation_plan"), plan_schema("plan_entry")]
-        schemas += [configuration_json_schema(), configuration_json_schema("0.3.0"), change_plan_schema()]
+        schemas += [configuration_json_schema(), configuration_json_schema("0.3.0"), change_plan_schema(), change_plan_schema(version="1.3.0")]
         schemas += [request_schema(command) for command in builtin_registry().commands]
         schemas += [result_json_schema(name) for name in (
             'native-authoring-command-v1', 'plan-authoring-command-v1',
@@ -155,7 +155,7 @@ class SchemaCatalogChangePlanTests(unittest.TestCase):
         self.assertEqual(ChangePlan(plan.canonical_bytes).data, original)
 
     def test_all_typed_operations_retain_their_field_boundaries(self):
-        operations = [operation(kind) for kind in OPERATION_TYPES if kind != 'plan_edit']
+        operations = [operation(kind) for kind in OPERATION_TYPES if kind not in ('plan_edit', 'resource_replace')]
         results = [result(domain_value()), result(record_value('evidence')),
                    result(record_value('relation_review')),
                    result(record_value('baseline')),
@@ -184,6 +184,10 @@ class SchemaCatalogChangePlanTests(unittest.TestCase):
         self.assertEqual(caught.exception.reason, 'plan_source_specialist_sequence_required')
         cases = [(index, op, plan) for index, op in enumerate(operations)]
         cases.append((0, plan_op, isolated_plan))
+        raw_plan = resource_plan()
+        self.catalog.validate('urn:specroad:schema:1.3.0:change-plan', raw_plan.data)
+        self.assertEqual(ChangePlan(raw_plan.canonical_bytes).data, raw_plan.data)
+        cases.append((0, raw_plan.data['operations'][0], raw_plan))
         self.assertEqual({op['op'] for _, op, _ in cases}, set(OPERATION_TYPES))
         for index, op, owner in cases:
             with self.subTest(kind=op['op']):
@@ -194,7 +198,7 @@ class SchemaCatalogChangePlanTests(unittest.TestCase):
                     value['operations'][index] = invalid
                     before = copy.deepcopy(value)
                     with self.assertRaises(ModelError):
-                        self.catalog.validate(CHANGE_PLAN_ID, value)
+                        self.catalog.validate('urn:specroad:schema:' + value['format_version'] + ':change-plan', value)
                     with self.assertRaises(ChangePlanError):
                         ChangeOperation(invalid)
                     self.assertEqual(value, before)

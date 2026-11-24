@@ -106,7 +106,7 @@ class HostScheduling(WorkStealingScheduling):
         # Each worker needs a nextitem to execute its current item. Assign in
         # two rounds, so the fastest worker does not reserve all long tests.
         for depth in (0, 1):
-            for position, node in enumerate(live):
+            for node in live:
                 queue = self.node2pending[node]
                 if node.shutting_down or len(queue) > depth:
                     continue
@@ -115,13 +115,20 @@ class HostScheduling(WorkStealingScheduling):
                 candidates = self.candidates(self.long)
                 # Limited fast slots explore unknowns early. A known long test
                 # can still occupy the second position and other fast slots.
-                if self.unknown and ((position < exploration and depth == 0) or (not candidates and decision.speed(node) == fastest)):
-                    candidates.insert(0, self.unknown[-1])
+                explorers = live[:exploration] if candidates else [
+                    other for other in live if decision.speed(other) == fastest]
+                unknown = self.unknown[-1] if self.unknown else None
+                if unknown is not None and node in explorers and (depth == 0 or not candidates):
+                    candidates.insert(0, unknown)
                 candidates += self.candidates(self.short, 12)
                 chosen = None
                 for index in dict.fromkeys(candidates):
                     finish = decision.available(node) + decision.duration(node, index)
-                    earliest = min(decision.available(other) + decision.duration(other, index) for other in live if not other.shutting_down)
+                    # A host excluded from exploration cannot win its forecast
+                    # comparison and strand the candidate on every idle worker.
+                    # Keep measured durations and the full pool for known tests.
+                    eligible = explorers if index == unknown else live
+                    earliest = min(decision.available(other) + decision.duration(other, index) for other in eligible if not other.shutting_down)
                     if finish <= earliest * 1.05 + 0.001:
                         chosen = index
                         break

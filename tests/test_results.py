@@ -31,7 +31,7 @@ class ResultWorkTests(unittest.TestCase):
         original = CommandResult("fixture.check", result={"count": 2, "items": ["a", "b"]})
         data = json.loads(serialize_result(original))
         self.assertEqual(set(data), {"format_version", "command", "status", "project", "result", "result_ref", "diagnostics", "summary"})
-        self.assertEqual(data["format_version"], "2.0.0")
+        self.assertEqual(data["format_version"], "2.1.0")
         self.assertEqual(data["result"], {"count": 2, "items": ["a", "b"]})
         self.assertEqual((data["status"], data["summary"]["complete"], original.exit_code), ("success", True, 0))
         self.assertIsNone(data["project"])
@@ -328,7 +328,7 @@ class ContinuationBoundaryTests(unittest.TestCase):
     def test_sarif_request_for_continuation_returns_json_control_envelope(self):
         outcome = self.outcome()
         data = json.loads(serialize_result(outcome, "sarif"))
-        self.assertEqual((data["format_version"], data["status"]), ("2.0.0", "continuation_required"))
+        self.assertEqual((data["format_version"], data["status"]), ("2.1.0", "continuation_required"))
         self.assertFalse(data["summary"]["complete"])
         self.assertEqual(outcome.exit_code, 8)
 

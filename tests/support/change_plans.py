@@ -26,6 +26,10 @@ def operation(kind='create'):
     if kind == 'proposal_create':
         return {'op': kind, 'record': proposal_draft()}
     goal = domain_value()
+    if kind == 'resource_replace':
+        return {'op': kind, 'path': 'spec/goals/' + goal['id'] + '.json',
+            'observed_byte_sha256': 'a' * 64, 'target': {'bytes_base64': 'e30='},
+            'reason': 'Explicit synthetic bytes', 'force': {'requested': True, 'reason': None}}
     options = {
         'create': {'artifact': goal, 'result_id': goal['id']},
         'update': {'target': goal['id'], 'expected_revision': 1,
@@ -74,3 +78,12 @@ def proposal_draft(*, token='2'):
     return prepare_proposal(identity=ArtifactIdentity(ref('PROP', token), 'random128-v1', 'proposal', 'SR'),
         title='Synthetic initial draft', rationale='Shape validation only',
         change_plan=prepare_change_plan(value), changes=[]).data
+
+
+def resource_plan():
+    """An isolated 1.3 envelope, never an ordinary 1.2 operation sequence."""
+    from specroad.changes import prepare_resource_plan
+    value = document()
+    return prepare_resource_plan(operations=[operation('resource_replace')],
+        project_id='synthetic-project', actor=value['actor'], request_id=value['request_id'],
+        planned_at=value['planned_at'], change_plan_id=value['change_plan_id'], force=True)

@@ -18,6 +18,8 @@ def envelope_document(outcome):
     outcome.verify_delivery()
     summary = thaw(outcome.details)
     summary["complete"] = outcome.complete
+    summary["validation_status"] = outcome.validation_status
+    summary["force"] = thaw(outcome.force)
     if outcome.failure is not None:
         summary["failure_kind"] = outcome.failure.name.lower()
     if outcome.partial_scope is not None:

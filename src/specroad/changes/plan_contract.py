@@ -78,7 +78,9 @@ def _validate_plan(value, *, hash_present=True):
         raise ChangePlanError("unsupported_regular_metadata_policy", pointer="/metadata_policy_version", code="SRV174")
     if not migration and not merge and value.get("metadata_policy_version") != METADATA_POLICY:
         raise ChangePlanError("unsupported_regular_metadata_policy", pointer="/metadata_policy_version", code="SRV174")
-    schema = change_plan_schema()
+    if value.get('format_version') not in ('1.2.0', '1.3.0'):
+        raise ChangePlanError('unsupported_change_plan_format')
+    schema = change_plan_schema(version=value['format_version'])
     # Dispatch tagged operation validation separately for precise diagnostics;
     # the public schema still exposes the complete union of payload contracts.
     schema["properties"]["operations"]["items"] = {"type": "object"}
@@ -109,7 +111,16 @@ def _validate_plan(value, *, hash_present=True):
         seen.add(identity.id)
         if canonical_json_sha256(result["artifact"]) != result["sha256"]:
             raise ChangePlanError("result_hash_mismatch", pointer=at + "/sha256", code="SRV146")
-    _result_bindings(value)
+    from .resource_replace import check_plan
+    raw_plan = check_plan(value)
+    if value['format_version'] == '1.3.0':
+        from ..force import ForceRequest
+        ForceRequest.from_mapping(value['force'])
+        _text(value['project_id'], '/project_id')
+    if not raw_plan:
+        if any(value[k]['model_root_sha256'] is None for k in ('base', 'expected_result')):
+            raise ChangePlanError('typed_plan_requires_semantic_roots')
+        _result_bindings(value)
     from .plan_source_operation import check_envelope
     check_envelope(value)
     if migration:

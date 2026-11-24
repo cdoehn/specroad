@@ -97,6 +97,24 @@ oder Erfolg zu simulieren. Alle Messwerkzeuge bleiben unter `tools/`, außerhalb
 der produktiven Abhängigkeiten. Die Corebudgets aus 14.6 bleiben unberührt.
 
 
+## Beobachter v2: eigene neue Kindprozesse
+
+[Bundle 805](../implementation/history/bundle-805-force-contract-correction.md)
+korrigiert ein beobachtetes Rennen zwischen RSS-Baumaufnahme und Umfeldprüfung.
+Für neue Messungen ersetzt `tools/analyzer_benchmark/measured_v2/benchmark.py.gz`
+den Beobachter; die drei anderen v1-Skripte bleiben bytegleich. Die Zugehörigkeit
+wird anhand der aktuellen Elternkette bis zur ursprünglichen Wrapperidentität
+und erneut geprüfter PID, Eltern-PID und Startticks festgestellt. Fehlende,
+umgehängte, wiederverwendete oder unaufklärbare Prozesse bleiben Fremdlast.
+Der Vorabcheck hat keine Ausnahme für einen Messwrapper.
+
+Das Summary bindet weiterhin den vollständigen konkreten Skriptsatz. Die
+Quellenprüfung akzeptiert genau den archivierten v1- oder v2-Satz. Workload,
+Grenzwerte, Messformate und native CPU-/RSS-Auswertung bleiben unverändert.
+Alle alten Quellen und Belege bleiben erhalten. Zurückgewiesene Serien werden
+nicht nachträglich umgedeutet; v2-Belege stammen aus neuen vollständigen Serien.
+
+
 ## Historische v1-Prozessrollen
 
 Die v1-Beobachtung überschreibt die letzte Prozesszeile auch dann, wenn keine

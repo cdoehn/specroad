@@ -15,7 +15,7 @@ def precondition_schema():
         obj({"kind": {"const": "absent"}, "path": text()}),
     ]}
 
-def change_plan_schema(*, additive_migration=True):
+def change_plan_schema(*, additive_migration=True, version=FORMAT_VERSION):
     """Return a detached schema; no global cache, file access or external refs."""
     def schema_for(kind):
         if kind == "schema_migrate":
@@ -24,7 +24,7 @@ def change_plan_schema(*, additive_migration=True):
         return operation_schema(kind)
     defs = audit_definitions()
     fields = {
-        "format_version": {"const": FORMAT_VERSION},
+        "format_version": {"const": version},
         "metadata_policy_version": {"enum": [METADATA_POLICY, "migration-metadata-v1", "merge-metadata-v1"]},
         "change_plan_id": text(), "request_id": request_id_schema(),
         "planned_at": defs["utc"], "actor": defs["actor"],
@@ -35,6 +35,14 @@ def change_plan_schema(*, additive_migration=True):
         "expected_result": obj({"model_root_sha256": digest()}),
         "change_plan_sha256": digest(),
     }
+    if version == '1.3.0':
+        fields['force'] = obj({'requested': {'type': 'boolean'},
+            'reason': {'anyOf': [text(), {'type': 'null'}]}})
+        fields['project_id'] = text()
+        for section in ('base', 'expected_result'):
+            fields[section]['properties']['model_root_sha256'] = {'anyOf': [digest(), {'type': 'null'}]}
+    elif version != FORMAT_VERSION:
+        raise ValueError('Unsupported ChangePlan version')
     result = obj(fields)
     result["anyOf"] = [
         {"properties": {"metadata_policy_version": {"const": METADATA_POLICY},
@@ -46,6 +54,6 @@ def change_plan_schema(*, additive_migration=True):
             "operations": {"minItems": 1, "not": {"minItems": 2},
                 "items": operation_schema("merge_publish")}}},
     ]
-    return {**result, "$defs": defs, "$schema": DIALECT, "$id": SCHEMA_ID,
+    return {**result, "$defs": defs, "$schema": DIALECT, "$id": "urn:specroad:schema:" + version + ":change-plan",
             "x-specroad-validation-scope": CHANGE_PLAN_SCOPE,
             "description": "Typed Change Plan. No execution, state validation or write authorization."}

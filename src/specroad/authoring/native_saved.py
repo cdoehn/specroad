@@ -18,12 +18,21 @@ from .execution import _replay, _apply_saved_plan
 
 @audited
 def apply_saved(root, intent, *, actor, request_id=None, dry_run=False,
-                authority=None, services=None, expected_model_root=None, _attempt=None):
+                authority=None, services=None, expected_model_root=None, force=False, force_reason=None, _attempt=None):
     plan = ChangePlan(intent['plan_bytes']); data = plan.data; _attempt['plan'] = plan
     if actor != data['actor'] or request_id != data['request_id']:
         raise AuthoringError('saved_authoring_identity_mismatch', exit_code=6)
     if expected_model_root is not None and expected_model_root != data['base']['model_root_sha256']:
         raise AuthoringError('target_base_root_mismatch', exit_code=6)
+    if force or 'force' in data:
+        from ..changes.force_write import apply_force_plan, bind_force_plan
+        if force and 'force' not in data:
+            from ..storage.project import ProjectSource
+            project_id = ProjectSource(root).configuration.project_id
+            plan = bind_force_plan(plan, project_id=project_id, force=force, reason=force_reason)
+            _attempt['plan'] = plan
+        return apply_force_plan(root, plan, actor=actor, request_id=request_id, force=force,
+            force_reason=force_reason, dry_run=dry_run, authority=authority, services=services, _attempt=_attempt)
     operations = data['operations']
     request = prepare_authoring_request(command_id='change apply', actor=actor,
         request_id=request_id, operations=operations, dry_run=dry_run)

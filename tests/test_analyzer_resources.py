@@ -48,10 +48,17 @@ def test_measured_full_adapter_stays_within_total_cpu_and_memory_limits(tmp_path
 
 
 def test_measured_sources_and_all_original_hash_chains_are_preserved():
+    scripts = ROOT / 'tools/analyzer_benchmark'
+    names = ('benchmark.py', 'prepare.py', 'parent.py', 'worker.py')
+    v1 = {name: scripts / 'measured_v1' / (name + '.gz') for name in names}
+    v2 = {**v1, 'benchmark.py': scripts / 'measured_v2/benchmark.py.gz'}
+    # Admit exactly the preserved v1 set or its recorded v2 observer revision.
+    # No partial inventories, arbitrary script digests or modified old sources.
+    published = [{name: digest(gzip.decompress(path.read_bytes()))
+                  for name, path in version.items()} for version in (v1, v2)]
     for directory in (EVIDENCE, *sorted(BUILD_EVIDENCE.iterdir())):
         records = load(directory)
         summary = object_bytes(records['summary.json'])
-        for name, expected in summary['measurement_scripts_sha256'].items():
-            assert digest(gzip.decompress((ROOT / 'tools/analyzer_benchmark/measured_v1' / (name + '.gz')).read_bytes())) == expected
+        assert summary['measurement_scripts_sha256'] in published
         assert summary['apply_gate_passed'] is False
         assert summary['release_approved'] is summary['human_corpus_review_completed'] is False

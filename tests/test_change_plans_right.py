@@ -12,7 +12,7 @@ import pytest
 
 from specroad.changes import ChangePlan, ChangeOperation, ChangePlanError, prepare_change_plan, OPERATION_TYPES
 from specroad.model.canonical import canonical_json_bytes
-from support.change_plans import document, operation, result
+from support.change_plans import document, operation, result, resource_plan
 from support.domain import domain_value
 from support.records import record_value, ref
 from support.processes import run_python
@@ -20,8 +20,8 @@ from support.portable import build_distribution
 
 
 def test_all_operation_shapes_can_coexist_without_execution():
-    # Plan-source edits require their own isolated envelope.
-    ops = [operation(k) for k in OPERATION_TYPES if k != 'plan_edit']
+    # Native source edits and explicit raw replacements use separate envelopes.
+    ops = [operation(k) for k in OPERATION_TYPES if k not in ('plan_edit', 'resource_replace')]
     results = [result(domain_value()), result(record_value('evidence')), result(record_value('relation_review')), result(record_value('proposal', proposal_status='validated', maturity='proposed', content_sha256='b'*64)), result(record_value('baseline'))]
     results.append(result(operation('proposal_create')['record']))
     results.append(result(operation('proposal_change')['record']))
@@ -31,7 +31,13 @@ def test_all_operation_shapes_can_coexist_without_execution():
                               {'kind':'absent','path':'spec/new.json'}]
     plan = prepare_change_plan(value)
     assert len(plan.operations) == 15
-    assert {op.op for op in plan.operations} == set(OPERATION_TYPES) - {'plan_edit'}
+    assert {op.op for op in plan.operations} == set(OPERATION_TYPES) - {'plan_edit', 'resource_replace'}
+    raw = resource_plan()
+    assert ChangePlan(raw.canonical_bytes).data == raw.data
+    assert raw.data['format_version'] == '1.3.0' and not raw.execution_ready
+    with pytest.raises(ChangePlanError) as mixed:
+        prepare_change_plan(document([*ops, operation('resource_replace')], results))
+    assert mixed.value.reason == 'resource_replace_explicit_plan_required'
     with pytest.raises(ChangePlanError) as caught:
         prepare_change_plan(document([*ops, operation('plan_edit')], results))
     assert caught.value.reason == 'plan_source_specialist_sequence_required'

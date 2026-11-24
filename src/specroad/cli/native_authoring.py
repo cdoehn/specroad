@@ -89,13 +89,22 @@ def command(invocation):
             if flag in options and name not in SPECIAL_COMMANDS:
                 intent[key] = _integer(options[flag])
         proposal = parse_json_object(_read_input(options['--proposal-input'], cwd, None)) if '--proposal-input' in options else None
-        redirect = {} if name == 'change.apply' else dict(as_proposal=options.get('--as-proposal',False), proposal_fields=proposal)
+        redirect = dict(force=options.get('--force', False), force_reason=options.get('--force-reason')) if name == 'change.apply' else dict(as_proposal=options.get('--as-proposal',False), proposal_fields=proposal)
         result = author_generic(invocation.resolved.project_root, intent,
             actor={'actor_type': options['--actor-type'], 'actor_id': options['--actor-id']},
             request_id=options.get('--request-id'), dry_run=options.get('--dry-run',False),
             expected_model_root=options.get('--expected-model-root-sha256'),
             **redirect,
             authority=invocation.publication_authority, services=invocation.restore_services)
+        if result.get('format_version') == 'force-authoring-execution-v1':
+            from .results import ResultStatus
+            from ..diagnostics import Diagnostic
+            diagnostics = tuple(Diagnostic(d.get('code') or 'CORE_MODEL', d.get('severity', 'error'),
+                d.get('reason') or 'force_target_diagnostic', d.get('reason') or 'Target validation finding',
+                path=d.get('path')) for d in result['diagnostics'])
+            return CommandResult(name, status=ResultStatus(result['status']),
+                result={'format_version':'native-authoring-command-v1', 'command_id': name, 'outcome': result},
+                diagnostics=diagnostics, force=result['force'], validation_status=result['validation_status'])
         return CommandResult(name, result={'format_version':'native-authoring-command-v1',
                                            'command_id':name, 'outcome':result})
     except (ModelError, BundleError, SafetyViolation, OSError) as error:
@@ -176,6 +185,6 @@ def commands():
         options=tuple(o for o in common_options() if o.flag not in ('--as-proposal','--proposal-input')),
         protocol=CommandProtocol('native-authoring-command-v1', {'command_id':'change.apply',
             'arguments':{'plan_file':'change-plan.json'},'options':{'--actor-type':'human','--actor-id':'author'}},
-            handler_exit_codes=tuple(range(8)),diagnostic_codes=('CORE_USAGE','CORE_MODEL','CORE_ENVIRONMENT','CORE_CONFLICT','CORE_SECURITY'),
+            handler_exit_codes=tuple(range(8)),diagnostic_codes=('CORE_USAGE','CORE_MODEL','CORE_ENVIRONMENT','CORE_CONFLICT','CORE_SECURITY', *__import__('specroad.diagnostics.catalog', fromlist=['known_codes']).known_codes()),
             lock_kind='writer',work=WorkContract('native_saved_authoring',('unchanged_plan','complete_inventory','native_writer')))))
     return tuple(result)

@@ -12,7 +12,7 @@ from .errors import ChangePlanError
 from ._common import _at, _text, _reference, _generic
 from . import _operation_schemas as schemas
 from . import _operation_adapters as adapters
-from . import plan_source_operation
+from . import plan_source_operation, resource_replace
 
 @dataclass(frozen=True)
 class OperationContract:
@@ -51,6 +51,8 @@ def _target_owner(value):
 
 
 _CONTRACTS = MappingProxyType({
+    "resource_replace": OperationContract(resource_replace.operation_schema,
+        resource_replace.validate_operation, _no_owner, "explicit_resource_replace"),
     "plan_edit": OperationContract(plan_source_operation.operation_schema, plan_source_operation.validate_operation,
         plan_source_operation.result_owners, "plan_authoring"),
     "create": OperationContract(schemas.create_schema, adapters.validate_create, _create_owner, "regular"),
@@ -100,6 +102,9 @@ def validate_operation(value, pointer=""):
     _at(pointer, validate_builtin, value, contract.schema_factory())
     if "reason" in value:
         _text(value["reason"], pointer + "/reason")
+    if kind == 'resource_replace':
+        contract.validate_payload(value, pointer)
+        return value
     for name in ("source", "target"):
         if name in value:
             identity = _reference(value[name], pointer + "/" + name)

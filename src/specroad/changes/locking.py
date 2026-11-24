@@ -117,7 +117,7 @@ def _request(kind, command, project_id, request_id, transaction_id):
 
 @contextmanager
 def project_lock(root, *, kind, command, project_id, transaction_id=None, request_id=None,
-                 _before_record=None):
+                 _before_record=None, force_plan=None):
     """Acquire a nonblocking exclusive guard; release only this exact owner record.
 
     Writer: configuration identity and absence of unresolved journals required.
@@ -131,7 +131,15 @@ def project_lock(root, *, kind, command, project_id, transaction_id=None, reques
     # Preserve the native lock failure before bootstrap observation/model loading.
     from ._lock_files import require_native_lock
     require_native_lock()
-    if selected is LockKind.WRITER and command == 'migrate apply':
+    if force_plan is not None:
+        from .values import ChangePlan
+        if (type(force_plan) is not ChangePlan or selected is not LockKind.WRITER
+                or command != 'change apply' or force_plan.data.get('project_id') != project_id
+                or force_plan.data['request_id'] != request_id
+                or force_plan.data.get('force', {}).get('requested') is not True):
+            raise ProjectLockError('force_lock_plan_binding', exit_code=2)
+        source = None
+    elif selected is LockKind.WRITER and command == 'migrate apply':
         from ..migration.transaction_source import MigrationLockSource
         source = MigrationLockSource(root, expected_project_id=project_id)
     else:

@@ -167,6 +167,10 @@ class CommandSpec:
         object.__setattr__(self, "words", _sequence(self.words, "words"))
         object.__setattr__(self, "aliases", tuple(_sequence(alias, "alias") for alias in _sequence(self.aliases, "aliases")))
         object.__setattr__(self, "options", _sequence(self.options, "options"))
+        force_options = (OptionSpec('--force'), OptionSpec('--force-reason', takes_value=True))
+        declared = {option.flag for option in self.options if isinstance(option, OptionSpec)}
+        object.__setattr__(self, 'options', (*self.options,
+            *(option for option in force_options if option.flag not in declared)))
         object.__setattr__(self, "requires_write_paths", _sequence(self.requires_write_paths, "requires_write_paths"))
         for words in (self.words, *self.aliases):
             if not words or not all(isinstance(word, str) and re.fullmatch(r"(?:[a-z][a-z0-9-]*|--help|-h)", word) for word in words):

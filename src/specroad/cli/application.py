@@ -53,6 +53,8 @@ def execute(arguments: list[str] | tuple[str, ...] | CommandRequest, *, registry
     options = _error_options(arguments)
     project = None
     preflight = None
+    from ..force import ForceRequest, ForceDecisions, ForceContractError
+    force = ForceDecisions()
     consumption_call = None
     try:
         selected = builtin_registry() if registry is None else registry
@@ -60,6 +62,10 @@ def execute(arguments: list[str] | tuple[str, ...] | CommandRequest, *, registry
                       else selected.parse(arguments))
         command = invocation.command.command_id
         options = invocation.options
+        try:
+            force = ForceDecisions(ForceRequest(options.get('--force', False), options.get('--force-reason')))
+        except (ForceContractError, UnicodeError) as error:
+            raise CommandUsageError('Invalid explicit Force request') from error
         if (options.get('--metrics') is True or
                 invocation.command.budget_policy_version == 'runtime-budget-v2'):
             from ..runtime.budget_policy import RESOURCE_OPTIONS, ResourcePolicyError
@@ -73,6 +79,10 @@ def execute(arguments: list[str] | tuple[str, ...] | CommandRequest, *, registry
                     consumption_call = work.begin(targets)
             except (ResourcePolicyError, ConsumptionError) as error:
                 raise CommandUsageError(str(error)) from error
+        if (force.request.requested and (command == 'work.resume' or
+                invocation.command.command_class.value == 'normative_write'
+                and command != 'change.apply')):
+            raise CommandUsageError('This Force operation requires its native domain adapter')
         builder = InvocationContextBuilder() if context_builder is None else context_builder
         invocation = builder.prepare(
             invocation, cwd=cwd, profile_layers=profile_layers,
@@ -97,6 +107,11 @@ def execute(arguments: list[str] | tuple[str, ...] | CommandRequest, *, registry
         outcome = failed_result(command, FailureKind.ENVIRONMENT, "A required I/O operation failed.")
     except Exception:
         outcome = failed_result(command, FailureKind.INTERNAL, "An internal command contract failed.")
+    attempted = outcome.details.get('authoring_attempt')
+    if isinstance(attempted, Mapping) and attempted.get('force') is not None:
+        outcome = replace(outcome, force=attempted['force'], validation_status=attempted['validation_status'])
+    if not outcome.force['requested']:
+        outcome = replace(outcome, force=force.summary)
     if outcome.project is None and project is not None:
         outcome = replace(outcome, project=project)
     # A handler can perform a later check against changed live state.

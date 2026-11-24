@@ -35,7 +35,8 @@ def request_schema(command):
             "x-specroad-validation-scope": "request_fields_only", "type": "object",
             "additionalProperties": False, "required": required,
             "properties": {"command_id": {"const": command.command_id},
-                           "options": options, "arguments": arguments}}
+                           "options": options, "arguments": arguments, "force": {"type": "boolean"},
+                           "force_reason": {"type": "string", "minLength": 1}}}
     schema["description"] = "Structured request for " + command.command_id + "; binding never executes example requests."
     if command.protocol is not None:
         schema["examples"] = [command.protocol.example.as_dict()]
