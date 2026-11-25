@@ -70,7 +70,9 @@ class SchemaCatalogWorkTests(unittest.TestCase):
         self.assertEqual(sum(data['categories'].values()), len(data['schemas']))
         self.assertEqual(data['categories']['artifact'], 60)
         self.assertEqual(data['categories']['configuration'], 2)
-        self.assertEqual(data['categories']['exchange'], 3)
+        self.assertEqual(data['categories']['exchange'], 4)
+        self.assertIn('urn:specroad:schema:1.4.0:change-plan',
+                      [row['schema_id'] for row in data['schemas'] if row['category'] == 'exchange'])
 
     def test_change_plan_resource_is_the_existing_structural_contract(self):
         schema_id = 'urn:specroad:schema:1.2.0:change-plan'
@@ -190,7 +192,14 @@ class SchemaCatalogWorkTests(unittest.TestCase):
             self.assertIsNone(outcome.project)
             self.assertEqual(outcome.as_dict()['result'], self.catalog.show(schema_id))
         # Retrieval exposes a closed passive field contract, never write authority.
-        schema = resource.schema
+        normal, forced = resource.schema['anyOf']
+        self.assertFalse(forced['additionalProperties'])
+        self.assertEqual(forced['properties']['format_version'],
+                         {'const': 'force-authoring-execution-v1'})
+        self.assertIn('approval_granted', forced['required'])
+        self.assertEqual(forced['properties']['approval_granted'], {'const': False})
+        self.assertEqual(forced['properties']['force']['properties']['requested'], {'const': True})
+        schema = normal
         self.assertFalse(schema['additionalProperties'])
         self.assertEqual(schema['properties']['format_version'], {'const': schema_id})
         for name in ('approval_granted', 'write_authorized'):

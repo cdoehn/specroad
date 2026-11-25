@@ -75,8 +75,21 @@ class MergePublicationContext:
 
 @owned_checks
 def apply_merge_publication(root, raw, *, expected_plan_sha256, sources, transaction_id,
-        backup_descriptor, authority, services=None):
+        backup_descriptor, authority, services=None, force=False, force_reason=None):
     """One explicit attempt; preserve failed state for native recovery."""
+    from ..force import ForceRequest
+    if ForceRequest(force, force_reason).requested:
+        from ..changes.force_saved import apply_saved
+        from ..cli.merge_publication_inputs import revalidate
+        def backup():
+            from ..changes._schema_transition_io import external_backup
+            with LockFiles(root) as files:
+                external_backup(files, backup_descriptor, plan=ChangePlan(raw))
+        return apply_saved(root, ChangePlan(raw), command='merge.apply',
+            expected_plan_sha256=expected_plan_sha256, authority=authority,
+            force=True, force_reason=force_reason, services=services,
+            execution_binding=dict(transaction_id=transaction_id, backup_descriptor=backup_descriptor, sources=capture_sources(sources)),
+            observe=(lambda: revalidate(root, ChangePlan(raw), sources, services), backup))
     require(type(raw) is bytes and type(authority) is PublicationAuthority,'merge_publication_explicit_authority_required')
     plan=ChangePlan(raw)
     require(plan.data['metadata_policy_version']=='merge-metadata-v1' and plan.sha256==expected_plan_sha256,

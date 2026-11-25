@@ -12,8 +12,8 @@ def _group_connections(groups):
     return rows
 
 
-def _impact_rows(records, artifact_id, *, partial=None):
-    statuses = RelationReviewStatuses(records, partial=partial)
+def _impact_rows(records, artifact_id, *, partial=None, force_provenance=()):
+    statuses = RelationReviewStatuses(records, partial=partial, force_provenance=force_provenance)
     identities = {record.identity.id for record in records}
     if type(artifact_id) is not str or artifact_id not in identities:
         raise ModelError('unknown_impact_artifact')

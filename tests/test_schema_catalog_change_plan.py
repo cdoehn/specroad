@@ -51,7 +51,7 @@ class SchemaCatalogChangePlanTests(unittest.TestCase):
         schemas += [record_schema(kind) for kind in RECORD_TYPES]
         from specroad.model.plan_schemas import plan_schema
         schemas += [plan_schema("implementation_plan"), plan_schema("plan_entry")]
-        schemas += [configuration_json_schema(), configuration_json_schema("0.3.0"), change_plan_schema(), change_plan_schema(version="1.3.0")]
+        schemas += [configuration_json_schema(), configuration_json_schema("0.3.0"), change_plan_schema(), change_plan_schema(version="1.3.0"), change_plan_schema(version="1.4.0")]
         schemas += [request_schema(command) for command in builtin_registry().commands]
         schemas += [result_json_schema(name) for name in (
             'native-authoring-command-v1', 'plan-authoring-command-v1',

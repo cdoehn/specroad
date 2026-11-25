@@ -35,7 +35,7 @@ def change_plan_schema(*, additive_migration=True, version=FORMAT_VERSION):
         "expected_result": obj({"model_root_sha256": digest()}),
         "change_plan_sha256": digest(),
     }
-    if version == '1.3.0':
+    if version in ('1.3.0', '1.4.0'):
         fields['force'] = obj({'requested': {'type': 'boolean'},
             'reason': {'anyOf': [text(), {'type': 'null'}]}})
         fields['project_id'] = text()
@@ -43,6 +43,13 @@ def change_plan_schema(*, additive_migration=True, version=FORMAT_VERSION):
             fields[section]['properties']['model_root_sha256'] = {'anyOf': [digest(), {'type': 'null'}]}
     elif version != FORMAT_VERSION:
         raise ValueError('Unsupported ChangePlan version')
+    if version == '1.4.0':
+        fields['native_intent'] = obj({'command_id': text(), 'intent': {'type': 'object'},
+            'expected_model_root_sha256': {'anyOf': [digest(), {'type': 'null'}]},
+            'as_proposal': {'type': 'boolean'},
+            'proposal_fields': {'anyOf': [{'type': 'object'}, {'type': 'null'}]},
+            'execution_binding': {'anyOf': [{'type': 'null'}, obj({
+                'planned_at': defs['utc'], 'change_plan_id': text(), 'transaction_id': text()})]}})
     result = obj(fields)
     result["anyOf"] = [
         {"properties": {"metadata_policy_version": {"const": METADATA_POLICY},

@@ -36,7 +36,11 @@ def _impact_steps(root, artifact_id, *, currentness=None, configuration_id=None)
         _preflight(source)
         snapshot = _capture_sources(source)
         yield 'loaded'
-        groups, review_groups, findings = _impact_rows(snapshot.records, artifact_id)
+        from ..bundles._receipt_snapshot import ReceiptSnapshot
+        from ..changes.force_history import provenance
+        receipts = ReceiptSnapshot(source, local_observation=True)
+        origins = provenance(receipts.journals, {r.path: r.source_bytes for r in snapshot.records})
+        groups, review_groups, findings = _impact_rows(snapshot.records, artifact_id, force_provenance=origins)
         payload = {'format_version': '1.1.0', 'artifact_id': artifact_id, 'depth': 1,
                    'transitive': False, 'groups': groups, 'review_groups': review_groups,
                    'artifact_observations': _artifact_observations(snapshot.records, artifact_id, groups),
@@ -47,6 +51,8 @@ def _impact_steps(root, artifact_id, *, currentness=None, configuration_id=None)
                        'observation_sha256': snapshot.binding.sha256,
                        'validation_scope': 'artifact_fields_and_relation_review_status_only',
                        'atomic_snapshot': False}}
+        if origins:
+            payload['force_provenance'] = origins
         if currentness is not None:
             from ..verification.currentness_input import checked_currentness_records
             payload['currentness'] = checked_currentness_records(
@@ -54,6 +60,7 @@ def _impact_steps(root, artifact_id, *, currentness=None, configuration_id=None)
         yield 'evaluated'
         _preflight(source)
         _verify_current(source, snapshot.binding)
+        receipts.verify_current()
         validate_result_document('artifact-impact-v1', payload)
         if any(finding.severity == 'error' for finding in findings):
             return CommandResult.failed('impact', FailureKind.POLICY, complete=True,

@@ -176,7 +176,7 @@ def export_scope(model, descriptor):
         uses[carrier] = members
         for member in members:
             uses[member].add(carrier)
-    reviews = RelationReviewStatuses(records)
+    reviews = RelationReviewStatuses(records, force_provenance=getattr(model, "force_provenance", ()))
     dependencies = ClosureBindings(inventory,
         uses={key: tuple(value) for key, value in uses.items()},
         current_reviews={r.relation_id: r.matching_review_ids for r in reviews.statuses},

@@ -31,12 +31,19 @@ POLICY = TargetPolicy(COMMAND, '1', (GATE,))
 @owned_checks
 def review_project(root, operand, *, expected_revision, decision, actor, planned_at,
                          change_plan_id, transaction_id, authority=None, request_id=None,
-                         dry_run=False, comment=None, cwd=None, services=None):
+                         dry_run=False, comment=None, cwd=None, services=None, force=False, force_reason=None):
     """Fresh full checks and exactly one physical revision, or no publication.
 
     A host supplies authority and historical contexts when needed. Actor names,
     report hashes and request IDs do not grant human approval or write rights.
     """
+    from ..force import ForceRequest
+    if ForceRequest(force, force_reason).requested:
+        from .force import author
+        return author(root, operand, command='proposal.review', expected_revision=expected_revision,
+            actor=actor, request_id=request_id, dry_run=dry_run, authority=authority, services=services,
+            force=True, force_reason=force_reason, cwd=cwd, execution_binding=dict(planned_at=planned_at,
+                change_plan_id=change_plan_id, transaction_id=transaction_id), decision=decision, comment=comment)
     require(type(expected_revision) is int and expected_revision > 0,
             'proposal_expected_revision_required', exit_code=2)
     require(type(dry_run) is bool, 'proposal_dry_run_boolean_required', exit_code=2)
@@ -113,6 +120,9 @@ def _command(invocation):
     from uuid import uuid4
     from ..cli.results import CommandResult, FailureKind, OperationFailure
     options = invocation.options
+    if options.get('--force', False):
+        from ..cli.force_domain_result import proposal_command
+        return proposal_command(invocation)
     revision = options['--expected-revision']
     if not revision.isascii() or not revision.isdecimal() or int(revision) < 1:
         raise OperationFailure(FailureKind.USAGE, 'proposal_expected_revision_required')

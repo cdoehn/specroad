@@ -96,6 +96,8 @@ def prepare_verification_read_input(model, evaluation, *, configuration_id, inpu
         'project_files_verified': False, 'evaluation_identity_history_checked': False,
         'external_run_verified': False, 'release_readiness_evaluated': False,
         'write_authorized': False, 'approval_granted': False}
+    if model.force_provenance:
+        report['force_provenance'] = list(model.force_provenance)
     value = object.__new__(VerificationReadInput)
     object.__setattr__(value, '_encoded', canonical_json_bytes(report))
     return value

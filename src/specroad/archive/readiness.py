@@ -77,6 +77,8 @@ def assess_release_baseline_readiness(model, *, release_id, evaluation=None,
             provisional=data['provisional'], readiness=data,
             blockers=[] if eligible else ['release_baseline_readiness_required'],
             validation_scope='native_release_readiness_and_stored_selection')
+    if model.force_provenance:
+        value['force_provenance'] = list(model.force_provenance)
     result = object.__new__(ReleaseBaselineReadiness)
     object.__setattr__(result, '_encoded', canonical_json_bytes(value))
     object.__setattr__(result, '_context', readiness_context)

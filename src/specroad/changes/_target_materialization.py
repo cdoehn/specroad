@@ -26,10 +26,15 @@ def materialize_target(model, documents, *, replace_plan_sources=False):
             resources[document.path] = document
         else:
             artifacts[document.path] = document
+    from hashlib import sha256
+    target_files = {'specroad.json': configuration, **{d.path: d.content for d in (*artifacts.values(), *resources.values())},
+        **{s.path: s.source_bytes for s in plans.values()}}
+    origins = [dict(row, current_sha256=None if row['path'] not in target_files else
+        sha256(target_files[row['path']]).hexdigest()) for row in model.force_provenance]
     return TargetModel(configuration, model.binding, tuple(artifacts.values()),
         profile=model.profile, resource_files=tuple(resources.values()),
         attachments=model.attachment_descriptors, language_packages=model.language_packages,
-        plan_sources=tuple(plans.values()), **model.reservations)
+        plan_sources=tuple(plans.values()), force_provenance=origins, **model.reservations)
 
 
 def validation_resources(model):

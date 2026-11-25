@@ -2,10 +2,10 @@
 from ..force import operations_hash
 
 
-def _outcome(plan, report, force, *, dry_run=False, completion=None, replayed=False):
+def _outcome(plan, report, force, *, dry_run=False, completion=None, replayed=False, command_id='change.apply'):
     data = plan.data
     state = 'not_committed' if completion is None else 'committed'
-    return {'format_version': 'force-authoring-execution-v1', 'command_id': 'change.apply',
+    return {'format_version': 'force-authoring-execution-v1', 'command_id': command_id,
         'status': 'forced' if force['used'] else 'success', 'exit_code': 0,
         'dry_run': dry_run, 'write_state': state, 'replayed': replayed, 'complete': True,
         'plan_sha256': plan.sha256, 'operations_sha256': operations_hash(data),

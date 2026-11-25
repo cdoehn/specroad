@@ -16,12 +16,42 @@ from .plan_values import unb64
 
 def apply_migration_plan(root, raw, *, expected_plan_sha256, expected_inputs_sha256,
         expected_target_version, transaction_id, backup_path, backup_root,
-        backup_sha256, backup_size, backup_source_files_sha256, authority, gates=()):
+        backup_sha256, backup_size, backup_source_files_sha256, authority, gates=(), force=False, force_reason=None):
     """Execute exact native plan bytes; failures preserve the real journal state.
 
     No saved readiness/backup report is admitted. No implicit rollback, retry,
     ID allocation, clock-derived target data or downgrade is available.
     """
+    from ..force import ForceRequest
+    if ForceRequest(force, force_reason).requested:
+        from ..changes.force_saved import apply_saved
+        from .planning import plan_migration
+        from ._backup_source import _observe
+        def backup():
+            from ..changes._schema_transition_io import external_backup
+            from ..changes._lock_files import LockFiles
+            with LockFiles(root) as files:
+                external_backup(files, dict(path=backup_path, output_root=backup_root,
+                    sha256=backup_sha256, size=backup_size, source_files_sha256=backup_source_files_sha256),
+                    plan=ChangePlan(raw))
+        def observe():
+            require(expected_inputs_sha256 == ChangePlan(raw).data['operations'][0]['inputs_sha256'],
+                'migration_execution_binding_changed', exit_code=6)
+            files, _, current = _observe(root)
+            value = ChangePlan(raw).data
+            rebuilt = plan_migration(files, inputs=value['operations'][0]['inputs'],
+                **{k: value[k] for k in ('actor','planned_at','change_plan_id','request_id')},
+                target_version=expected_target_version)
+            require(rebuilt.ready and rebuilt.change_plan.sha256 == ChangePlan(raw).sha256,
+                'migration_report_recomputation_mismatch', exit_code=6)
+            current()
+        return apply_saved(root, ChangePlan(raw), command='migrate.apply',
+            expected_plan_sha256=expected_plan_sha256, authority=authority,
+            force=True, force_reason=force_reason, observe=(observe, backup),
+            execution_binding=dict(expected_inputs_sha256=expected_inputs_sha256,
+                expected_target_version=expected_target_version, transaction_id=transaction_id,
+                backup_path=backup_path, backup_root=str(backup_root), backup_sha256=backup_sha256,
+                backup_size=backup_size, backup_source_files_sha256=backup_source_files_sha256))
     require(type(raw) is bytes and type(authority) is PublicationAuthority,
             'migration_explicit_execution_inputs_required', exit_code=2)
     require(type(gates) in (tuple, list), 'migration_registered_gates_required', exit_code=2)

@@ -90,8 +90,16 @@ from .native_attempt import audited
 @audited
 def author_plan(root, intent, *, actor, request_id=None, dry_run=False,
                expected_model_root=None, authority=None, services=None,
-               as_proposal=False, proposal_fields=None, _attempt=None):
+               as_proposal=False, proposal_fields=None, force=False, force_reason=None, _attempt=None):
     """Allocate, compile, qualify and publish; a dry run leaves every file alone."""
+    from ..force import ForceRequest
+    requested = ForceRequest(force, force_reason)
+    if requested.requested:
+        from .force_native import author_force
+        return author_force(root, intent, actor=actor, request_id=request_id, dry_run=dry_run,
+            expected_model_root=expected_model_root, authority=authority, services=services,
+            as_proposal=as_proposal, proposal_fields=proposal_fields, force=True,
+            force_reason=force_reason, _attempt=_attempt)
     if type(intent) is not dict or type(dry_run) is not bool or type(as_proposal) is not bool:
         raise AuthoringError('plan_authoring_inputs_required')
     intent = deepcopy(intent)

@@ -1,5 +1,7 @@
 # Entscheidungen und Ausführungsnachweise
 
+- [Bundle 812 — Fachliche Force-Ausführung](bundle-812-force-domains.md)
+
 - [Bundle 808 — Statusbeobachtung und Fixture-Ende](bundle-808-worker-fixture-correction.md)
 
 - [Bundle 807 — Originalbelege und Hostablehnung in R/C](bundle-807-force-right-correction.md)
@@ -647,3 +649,9 @@
 
 - [Bundle 809 — damalige Vorbereitung](bundle-809-eof-and-final-resources.md); kein Commit, durch 810/811 getrennt fortgeführt.
 - [Bundle 811 — separate finale Ressourcenpflicht](bundle-811-resource-final.md).
+
+- [Bundle 813 — Ressourcen-Gate für geteilte Planpositionen](bundle-813-partition-resource-gate.md).
+
+- [Bundle 814 — Proposal-Aufruf und Force-Requestidentität](bundle-814-force-request-correction.md).
+
+- [Bundle 815 — Lokale Historienleser und Force-Schemaabnahmen](bundle-815-local-history-correction.md).

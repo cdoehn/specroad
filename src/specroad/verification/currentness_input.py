@@ -92,7 +92,7 @@ def prepare_currentness_read_input(model, verification, *, code_states=()):
         codes[identity] = {'artifact_id': identity, 'assessment_sha256': value.sha256, **data}
     if set(codes) != set(expected):
         raise ModelError('currentness_code_inventory_incomplete')
-    reviews = RelationReviewStatuses(records).data
+    reviews = RelationReviewStatuses(records, force_provenance=model.force_provenance).data
     review_groups = {state: {
         'relation_ids': sorted(r['relation_id'] for r in reviews['relations'] if r['status'] == state),
         'affected_ids': sorted({r[k] for r in reviews['relations'] if r['status'] == state

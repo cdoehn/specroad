@@ -40,10 +40,10 @@ def validate_operation(value, pointer=''):
 
 
 def check_plan(value):
-    raw = any(op['op'] == 'resource_replace' for op in value['operations'])
+    raw = value['format_version'] == '1.4.0' or any(op['op'] == 'resource_replace' for op in value['operations'])
     if not raw:
         return False
-    if (value['format_version'] != '1.3.0' or 'force' not in value
+    if (value['format_version'] not in ('1.3.0', '1.4.0') or 'force' not in value
             or not ForceRequest.from_mapping(value['force']).requested
             or any(op['op'] != 'resource_replace' for op in value['operations'])
             or value['result_artifacts'] or value['preconditions']):

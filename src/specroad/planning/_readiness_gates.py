@@ -66,6 +66,8 @@ def assess_validation(model, bound: ReadinessBinding, gates, ids, rows: GateDeci
     # The native validator owns schemas, type-specific gates and mandatory
     # providers. Including readiness in its resource binding prevents replay of
     # a provider result under changed scope, evaluation, time or policy bytes.
+    from ..qualification.force_provenance import provenance_gate
+    gates = (*gates, *provenance_gate(model))
     bound_gates = [ModelGate(g.gate_id, g.version, g.dependencies, g.check,
         canonical_json_sha256({'readiness_input_sha256': input_sha256,
             'provider_resources_sha256': g.resources_sha256})) for g in gates]
@@ -179,7 +181,7 @@ def assess_blockers(data, binding: ReadinessBinding, records, expected, reviews,
 
 def assess_relations(model, ids, rows: GateDecisions):
     sources = tuple(SourceRelations(d.content, path=d.path) for d in model.documents)
-    reviews = RelationReviewStatuses(sources)
+    reviews = RelationReviewStatuses(sources, force_provenance=model.force_provenance)
     # Closed core closure follows every stored outgoing edge, including weak
     # edges, and their review dependencies. These are used scope relations.
     relations = [r for r in reviews.data['relations'] if r['source_id'] in ids]

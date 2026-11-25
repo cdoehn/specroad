@@ -65,6 +65,26 @@ def apply_command(invocation):
         root = root_option(options)
         raw, plan_current = input_file(invocation.arguments['merge_plan'])
         plan = ChangePlan(raw)
+        if options.get('--force', False):
+            from ..changes.force_saved import apply_saved
+            from .force_domain_result import result
+            require(plan.data.get('metadata_policy_version') == 'merge-metadata-v1', 'merge_publication_plan_required')
+            def observe():
+                sources = live_sources(options)
+                revalidate(root, plan, sources, invocation.restore_services)
+                if not options.get('--dry-run', False):
+                    required(options, '--backup-root', '--backup')
+                    _backup(root, plan, sources, options)
+                plan_current()
+            plan_current()
+            value = apply_saved(root, plan, command='merge.apply',
+                expected_plan_sha256=options['--expected-plan-sha256'], authority=invocation.publication_authority,
+                dry_run=options.get('--dry-run', False), force=True, force_reason=options.get('--force-reason'),
+                services=invocation.restore_services, observe=observe,
+                execution_binding={k: v for k, v in options.items() if k in (
+                    '--base', '--ours', '--theirs', '--base-kind', '--ours-kind', '--theirs-kind',
+                    '--base-ref', '--ours-ref', '--theirs-ref', '--backup-root', '--backup', '--transaction-id')})
+            return result('merge.apply', value)
         require(plan.data.get('metadata_policy_version') == 'merge-metadata-v1'
                 and plan.sha256 == options['--expected-plan-sha256'], 'merge_publication_plan_binding')
         authoring(plan)

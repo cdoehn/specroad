@@ -38,8 +38,12 @@ def plan_command(invocation):
             request_id=options.get('--request-id'), dry_run=options.get('--dry-run', False),
             expected_model_root=options.get('--expected-model-root-sha256'),
             as_proposal=options.get('--as-proposal', False), proposal_fields=proposal,
+            force=options.get('--force', False), force_reason=options.get('--force-reason'),
             authority=invocation.publication_authority, services=invocation.restore_services)
-        return CommandResult(command, result={'format_version': 'plan-authoring-command-v1',
+        from .results import ResultStatus
+        force_fields = (dict(force=outcome['force'], validation_status=outcome['validation_status'],
+            status=ResultStatus(outcome['status'])) if 'force' in outcome else {})
+        return CommandResult(command, **force_fields, result={'format_version': 'plan-authoring-command-v1',
             'command_id': command, 'outcome': outcome})
     except (ModelError, BundleError, SafetyViolation, OSError) as error:
         if isinstance(error, SafetyViolation):

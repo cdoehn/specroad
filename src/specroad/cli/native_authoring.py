@@ -67,7 +67,7 @@ def command(invocation):
                     fields['record'] = {**record, 'run_context': run}
             intent = {'command_id': name, **fields}
         elif name == 'artifact.create':
-            fields = {k:v for k,v in options.items() if k not in {o.flag for o in common_options()} | {'--input'}}
+            fields = {k:v for k,v in options.items() if k not in {o.flag for o in common_options()} | {'--input', '--force', '--force-reason'}}
             prepared = read_artifact_create_input(intent['artifact_type'], options=fields,
                 input=options.get('--input'), cwd=cwd)
             intent['fields'] = prepared.fields
@@ -90,7 +90,8 @@ def command(invocation):
             if flag in options and name not in SPECIAL_COMMANDS:
                 intent[key] = _integer(options[flag])
         proposal = parse_json_object(_read_input(options['--proposal-input'], cwd, None)) if '--proposal-input' in options else None
-        redirect = dict(force=options.get('--force', False), force_reason=options.get('--force-reason')) if name == 'change.apply' else dict(as_proposal=options.get('--as-proposal',False), proposal_fields=proposal)
+        redirect = dict(force=options.get('--force', False), force_reason=options.get('--force-reason')) if name == 'change.apply' else dict(as_proposal=options.get('--as-proposal',False), proposal_fields=proposal,
+            force=options.get('--force', False), force_reason=options.get('--force-reason'))
         result = author_generic(invocation.resolved.project_root, intent,
             actor={'actor_type': options['--actor-type'], 'actor_id': options['--actor-id']},
             request_id=options.get('--request-id'), dry_run=options.get('--dry-run',False),

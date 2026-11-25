@@ -58,6 +58,7 @@ def _reservations(configuration, artifacts, relations, history):
 def _source_digest(model):
     return canonical_json_sha256({'files': [{'path': p, 'sha256': sha256(b).hexdigest()}
                                            for p, b in sorted(model.source_files.items())],
+        **({'force_provenance': list(model.force_provenance)} if model.force_provenance else {}),
         'profile': model.profile.binding(), 'reservations': model.reservations,
         'packages': [sha256(p.source_bytes).hexdigest() for p in model.language_packages],
         'attachments': [a.data for a in sorted(model.attachment_descriptors, key=lambda a: a.path)]})
@@ -95,7 +96,10 @@ class TargetModel:
     def __init__(self, configuration_bytes, binding, documents, *, profile,
                  resource_files=(), attachments=(), language_packages=(),
                  reserved_artifact_ids=(), reserved_relation_ids=(), previously_approved_ids=(),
-                 plan_sources=()):
+                 plan_sources=(), force_provenance=()):
+        from ..storage.json_syntax import parse_json_object
+        evidence = canonical_json_bytes(list(force_provenance))
+        object.__setattr__(self, '_force_provenance_bytes', evidence)
         if type(configuration_bytes) is not bytes or type(binding) is not ProjectReadBinding:
             raise TargetError('target_configuration_bytes_and_binding_required')
         configuration = ProjectConfiguration(parse_json_object(configuration_bytes))
@@ -208,8 +212,13 @@ class TargetModel:
         return TargetModel(self.configuration_bytes, self.binding, self.documents,
             profile=self.profile, resource_files=self.resource_files,
             attachments=self.attachment_descriptors, language_packages=self.language_packages,
-            plan_sources=self.plan_sources,
+            plan_sources=self.plan_sources, force_provenance=self.force_provenance,
             **self.reservations)
+
+    @property
+    def force_provenance(self):
+        import json
+        return tuple(json.loads(self._force_provenance_bytes))
 
     @property
     def reservations(self):
@@ -235,7 +244,7 @@ class TargetModel:
 
     @property
     def resources_sha256(self):
-        return canonical_json_sha256({**({'plan_sources': [{'path': s.path, 'sha256': s.file_sha256}
+        return canonical_json_sha256({**({'force_provenance': list(self.force_provenance)} if self.force_provenance else {}), **({'plan_sources': [{'path': s.path, 'sha256': s.file_sha256}
                 for s in self.plan_sources]} if self.plan_sources else {}), 'reservations': self.reservations, 'configuration_bytes': sha256(self.configuration_bytes).hexdigest(),
             'files': [{'path':d.path, 'sha256':sha256(d.content).hexdigest()} for d in self.resource_files],
             'language_packages': [p.binding() for p in self.language_packages],

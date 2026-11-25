@@ -21,14 +21,17 @@ def _read(options, root_flag, path_flag):
     return raw, current
 
 
-def _read_plan(options):
+def _read_plan(options, *, force=False):
     _required(options, *BOUND_PLAN)
     raw, current = _read(options, '--plan-root', '--plan')
     data = parsed(raw)
-    require(data.get('format_version') == 'migration-planning-v1' and data.get('ready') is True
+    require(data.get('format_version') == 'migration-planning-v1' and (force or data.get('ready') is True)
             and type(data.get('change_plan')) is dict, 'migration_complete_plan_required')
     plan = ChangePlan(jcs(data['change_plan']))
     from ..changes.schema_transition_values import authoring
+    if force:
+        require(plan.data['metadata_policy_version'] == 'migration-metadata-v1', 'migration_complete_plan_required')
+        return data, plan, raw, current
     authoring(plan)
     require(data.get('inputs_sha256') == plan.data['operations'][0]['inputs_sha256'],
             'migration_report_binding_invalid', exit_code=6)

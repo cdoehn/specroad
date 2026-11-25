@@ -26,7 +26,7 @@ def relation_status_report(model, artifact_id=None, *, fail_on='error', strict=F
     owned = model.snapshot()
     sources = tuple(SourceRelations(document.content, path=document.path)
         for document in owned.documents)
-    statuses = RelationReviewStatuses(sources)
+    statuses = RelationReviewStatuses(sources, force_provenance=owned.force_provenance)
     index = {source.identity.id: source for source in sources}
     if artifact_id is not None:
         if type(artifact_id) is not str:
@@ -51,6 +51,6 @@ def relation_status_report(model, artifact_id=None, *, fail_on='error', strict=F
     assessment = assess_diagnostics(findings,
         checked_ids=tuple(sorted({value.source_id for value in selected})),
         complete=True, fail_on=fail_on, strict=strict)
-    return {**assessment.as_dict(), 'report_version': 'relation-status-v1',
+    return {**assessment.as_dict(), **({'force_provenance': list(owned.force_provenance)} if owned.force_provenance else {}), 'report_version': 'relation-status-v1',
         'validation_scope': 'supplied_relation_status_policy_only', 'approval_granted': False,
         'artifact_filter': artifact_id, 'profile': owned.profile.binding(), 'relations': rows}

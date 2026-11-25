@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 457 · **Stand:** 24. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.108
+**Planrevision:** 460 · **Stand:** 25. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.108
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **21 Meilensteine in 333 Schritte und 999 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die ursprünglichen Positionen bleiben erhalten; ausdrücklich geänderte Ausführungsfolgen stehen im Fortschrittsblock und in den betroffenen Voraussetzungen; die früher genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wurde nach der damaligen Spezifikation innerhalb von 15.l.R vorgezogen und bleibt als normaler Prüfkern erhalten. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -37,6 +37,12 @@ ist verbindlicher Teil des Restplans. Sprach-/Herkunfts-/Bedienreviews und
 Benutzungsfreigabe bleiben ganz am Schluss; Technik und Messplätze davor.
 Der aktuelle Entwicklungsauftrag bedient Control nicht. Das Bundle erteilt keinen Start,
 keine Installation, keinen Budgetreset und keine Produktbenutzungsfreigabe.
+
+[Korrektur 813](history/bundle-813-partition-resource-gate.md) setzt nach dem erfolgreichen Klärungscommit von 812 ausschließlich den offenen Rest 21.e1.W/R/C fort. Der Eingabefehler im Ressourcen-Gate entstand vor dem W-Verhaltenstest; zusätzliche Produktpositionen sind durch das Fehler-Result nicht bestätigt. Die untenstehenden Zielwerte gelten erst nach dem jeweiligen eigenen Gate.
+
+[Korrektur 814](history/bundle-814-force-request-correction.md) setzt nach dem unterbrochenen W-Testlauf von 813 den gesamten offenen Rest 21.e1.W/R/C fort. Repariert werden die normale Proposal-Aufrufbindung und die passive Force-Requestidentität; bestätigt bleiben 900/999 Positionen. Die Zielwerte benötigen jeweils ihr eigenes erfolgreiches Gate.
+
+[Korrektur 815](history/bundle-815-local-history-correction.md) führt nach dem vollständigen W-Fehlergate von 814 den gesamten offenen Rest 21.e1.W/R/C fort. Alle 61 vorherigen Fehlerfälle bestanden; zehn andere Fälle erfordern die begrenzte Leser- und Testkorrektur. Bestätigt bleiben 900/999 Positionen; jedes Ziel benötigt sein eigenes erfolgreiches Gate.
 
 ## Erhaltener Verlauf und frühere Auftragsbindungen bis Bundle 790
 
@@ -359,11 +365,11 @@ Korrektur der nativen Validierungsfälle und vollständiger Matrixrest: [Bundle 
 Prozess-/Journalreparatur des offenen C-Rests: [Bundle 790](history/bundle-790-process-journal.md). W/R sind bestätigt; C benötigt sein eigenes Apply-Gate.
 
 ```yaml
-plan_revision: 457
+plan_revision: 460
 implementation_plan_commits_total: 999
-implementation_plan_commits_completed: 900
-last_completed_plan_commit: 21.d.C
-next_plan_commit: 21.e1.W
+implementation_plan_commits_completed: 901
+last_completed_plan_commit: 21.e1.W
+next_plan_commit: 21.e1.R
 priority_off_plan: null
 next_off_plan_commit: null
 last_completed_numbered_bundle: 811
@@ -385,86 +391,13 @@ plan_setup_message: "docs(plan): add detailed SpecRoad WRC implementation plan"
 Die ausdrücklich genehmigte [verlustfreie Aufteilung von 21.e](decisions/force-domains-812.md)
 führt 21.e1 und 21.e2 mit eigenen vollständigen W/R/C-Folgen. Der Umfang und
 alle alten Restfälle bleiben erhalten; Gesamtumfang jetzt **999** Positionen,
-weiterhin **900** tatsächlich abgeschlossene. Nächste Position **21.e1.W**.
+Zielstand nach dem eigenen erfolgreichen Gate **901** abgeschlossene. Nächste Position **21.e1.R**.
 Die normative Detailklärung steht in X.12.2; technische Umsetzung und
 Apply-Abnahme bleiben eigene, nachfolgende Stages. 21.f folgt erst auf 21.e2.C.
 
-## Verbindlicher Plan-Nachtrag für 21.e
-
-Dieser Nachtrag und [FORCE-DOMAINS-812](decisions/force-domains-812.md)
-ersetzen ab diesem Klärungsstand den bisherigen Abschnitt 21.e in M21.
-Die alte Dreiergruppe wird durch die folgenden sechs vollständigen Positionen
-ersetzt. M21 umfasst damit 27 Gruppen und 81 Positionen (919–999).
-Die bisherigen Positionen ab 21.f.W verschieben sich einheitlich um drei;
-21.f.W setzt 21.e2.C voraus, alle weiteren IDs, Umfänge, Commitnachrichten
-und Voraussetzungen bleiben erhalten. Der Produktzähler bleibt 900.
-Die folgenden Definitionen sind bereits verbindlich. Der erste Produktstand
-übernimmt sie in die M21-Detaildatei und ersetzt diesen Nachtrag durch den
-Verweis dorthin; diese Ablageänderung entscheidet keinen neuen Umfang.
-
-<a id="step-21-e1"></a>
-### 21.e1 – Fachliche Force-Ausführung
-
-**Umfang:** Authoring einschließlich Plan-Authoring, Proposal, Review, Lifecycle, Readiness, Import, Merge, Migration, Baseline und Analyzerpolicy; vollständige konkrete Zielberechnung, negative Befunde, Request-/Planbindung und tatsächliche Originalbelege; sichtbare Forceherkunft in den zugehörigen Lesern. Gemeinsamer Writer und echte Hostautorität bleiben verpflichtend.
-
-#### 21.e1.W – Let it Work
-
-- [ ] **21.e1.W** · Position **931/999** · Voraussetzung: `21.d.C`.
-**Exakte Commit-Message:** `21.e1.W feat(plan): Fachliche Force-Ausführung implementieren`
-
-**Umfang:** Vollständige nutzbare Ziel-/Befundausführung für den gesamten oben festgelegten Umfang.
-
-**Verhaltensabnahme:** Jede zugeordnete Gate-ID hat einen normalen Ablehnungsfall und einen erzwungenen Ziel-/Befundfall. Keine versteckte ausgenommene Produktklasse, kein beendeter Fremdprozess, keine Recovery und kein fingierter Review-/Testbeleg.
-
-#### 21.e1.R – Make it Right
-
-- [ ] **21.e1.R** · Position **932/999** · Voraussetzung: `21.e1.W`.
-**Exakte Commit-Message:** `21.e1.R fix(plan): Fachliche Force-Ausführung vervollständigen`
-
-**Umfang:** Denselben Umfang an immutable/partial/stale Beständen, beschädigter Semantik und fehlerhaften oder fehlenden Originalbelegen vervollständigen; Diagnose und bestimmter Raw-Write bleiben möglich, physische Fehler bleiben Fehler.
-
-**Verhaltensabnahme:** Jede zugeordnete Gate-ID hat einen normalen Ablehnungsfall und einen erzwungenen Ziel-/Befundfall. Keine versteckte ausgenommene Produktklasse, kein beendeter Fremdprozess, keine Recovery und kein fingierter Review-/Testbeleg. Sämtliche W-Oracles bleiben verpflichtend; Randfälle erhalten genaue Status-/Byte-/Seiteneffektoracles.
-
-#### 21.e1.C – Make it Clean
-
-- [ ] **21.e1.C** · Position **933/999** · Voraussetzung: `21.e1.R`.
-**Exakte Commit-Message:** `21.e1.C refactor(plan): Fachliche Force-Ausführung bereinigen`
-
-**Umfang:** Nur gemeinsame Daten-, Policy- und Fehlerpfade konsolidieren; keine neue Fachregel und kein Umschreiben historischer Belege.
-
-**Verhaltensabnahme:** Jede zugeordnete Gate-ID hat einen normalen Ablehnungsfall und einen erzwungenen Ziel-/Befundfall. Keine versteckte ausgenommene Produktklasse, kein beendeter Fremdprozess, keine Recovery und kein fingierter Review-/Testbeleg. Sämtliche W-Oracles bleiben verpflichtend; zusätzlich alle R-Randfälle und die [gemeinsame C-Abnahme](rules/C_Abnahme.md).
-
-<a id="step-21-e2"></a>
-### 21.e2 – Betriebliche Force-Ausführung und Gesamtintegration
-
-**Umfang:** Work, Bundle, aktive/alte Marker, konkurrierende Locks sowie softwareseitige Pfad-/Sicherheits-/Format-/Ressourcenlimits und physische Fehler. Eigene Force-Attempt-Ablage, explizite beobachtete Eigentümerbindung, erhaltene alte Marker und ehrliche fehlende Exklusivitätsgarantie. Vollständige Integration sämtlicher e1-Oracles und aller alten Restfälle.
-
-#### 21.e2.W – Let it Work
-
-- [ ] **21.e2.W** · Position **934/999** · Voraussetzung: `21.e1.C`.
-**Exakte Commit-Message:** `21.e2.W feat(plan): Betriebliche Force-Ausführung und Gesamtintegration implementieren`
-
-**Umfang:** Vollständige nutzbare Ziel-/Befundausführung für den gesamten oben festgelegten Umfang.
-
-**Verhaltensabnahme:** Jede zugeordnete Gate-ID hat einen normalen Ablehnungsfall und einen erzwungenen Ziel-/Befundfall. Keine versteckte ausgenommene Produktklasse, kein beendeter Fremdprozess, keine Recovery und kein fingierter Review-/Testbeleg.
-
-#### 21.e2.R – Make it Right
-
-- [ ] **21.e2.R** · Position **935/999** · Voraussetzung: `21.e2.W`.
-**Exakte Commit-Message:** `21.e2.R fix(plan): Betriebliche Force-Ausführung und Gesamtintegration vervollständigen`
-
-**Umfang:** Denselben Umfang an immutable/partial/stale Beständen, beschädigter Semantik und fehlerhaften oder fehlenden Originalbelegen vervollständigen; Diagnose und bestimmter Raw-Write bleiben möglich, physische Fehler bleiben Fehler.
-
-**Verhaltensabnahme:** Jede zugeordnete Gate-ID hat einen normalen Ablehnungsfall und einen erzwungenen Ziel-/Befundfall. Keine versteckte ausgenommene Produktklasse, kein beendeter Fremdprozess, keine Recovery und kein fingierter Review-/Testbeleg. Sämtliche W-Oracles bleiben verpflichtend; Randfälle erhalten genaue Status-/Byte-/Seiteneffektoracles.
-
-#### 21.e2.C – Make it Clean
-
-- [ ] **21.e2.C** · Position **936/999** · Voraussetzung: `21.e2.R`.
-**Exakte Commit-Message:** `21.e2.C refactor(plan): Betriebliche Force-Ausführung und Gesamtintegration bereinigen`
-
-**Umfang:** Nur gemeinsame Daten-, Policy- und Fehlerpfade konsolidieren; keine neue Fachregel und kein Umschreiben historischer Belege.
-
-**Verhaltensabnahme:** Jede zugeordnete Gate-ID hat einen normalen Ablehnungsfall und einen erzwungenen Ziel-/Befundfall. Keine versteckte ausgenommene Produktklasse, kein beendeter Fremdprozess, keine Recovery und kein fingierter Review-/Testbeleg. Sämtliche W-Oracles bleiben verpflichtend; zusätzlich alle R-Randfälle und die [gemeinsame C-Abnahme](rules/C_Abnahme.md).
+[Bundle 812](history/bundle-812-force-domains.md) enthält genau den Klärungspräfix und die vollständige fachliche
+Gruppe 21.e1.W/R/C. Jeder Zielzähler wird erst durch das eigene erfolgreiche
+Apply-Gate gültig; 21.e2 bleibt vollständig als nächster Rest erhalten.
 
 ## Meilensteinübersicht
 
@@ -537,7 +470,7 @@ Neue Berichte werden dort verlinkt; sie werden nicht erneut in diesen Einstieg k
 
 <a id="step-21-d"></a>[21.d](milestones/M21.md#step-21-d)
 
-<a id="step-21-e"></a>[21.e](milestones/M21.md#step-21-e) · [21.e1](#step-21-e1) · [21.e2](#step-21-e2)
+<a id="step-21-e"></a>[21.e](milestones/M21.md#step-21-e) · [21.e1](milestones/M21.md#step-21-e1) · [21.e2](milestones/M21.md#step-21-e2)
 
 <a id="step-21-f"></a>[21.f](milestones/M21.md#step-21-f)
 

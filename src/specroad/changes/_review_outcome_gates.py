@@ -54,7 +54,7 @@ def prepare_review_outcome_gates(model, operation, *, actor, planned_at):
 
     def retained_approval_findings(artifacts):
         sources = _sources(artifacts)
-        statuses = {s.relation_id: s for s in RelationReviewStatuses(sources).statuses}
+        statuses = {s.relation_id: s for s in RelationReviewStatuses(sources, force_provenance=owned.force_provenance).statuses}
         approved = {a['id'] for a in artifacts if a['maturity'] == 'approved'}
         checks = RelationObligations(sources, profile_rules=owned.profile.minimum_relation_rules()).checks
         return [{'reason': 'review_retained_approval_invalid', 'severity': 'error',
@@ -84,7 +84,7 @@ def prepare_review_outcome_gates(model, operation, *, actor, planned_at):
         # These are freshly recomputed status observations, not findings supplied
         # by another gate. The complete error assessment is retained separately.
         findings = [dict(value.as_dict(), reason=value.rationale)
-            for value in RelationReviewStatuses(_sources(folded.artifacts)).diagnostics
+            for value in RelationReviewStatuses(_sources(folded.artifacts), force_provenance=owned.force_provenance).diagnostics
             if not (value.code == 'SRV027' and value.severity == 'error'
                     and value.category == 'review_outcome' and value.rationale == 'current_review_rejected')]
         findings.extend(retained_approval_findings(folded.artifacts))

@@ -14,7 +14,7 @@ from .manifest import require
 from ._receipts import _path_kind, completed_receipts, verify_imported_receipts
 
 
-def _observe(source):
+def _observe(source, *, local_observation=False):
     records, directories = {}, {}
 
     def names(path, optional=False):
@@ -32,9 +32,17 @@ def _observe(source):
         require(not directory and _path_kind(path) == 'request', 'bundle_receipt_path_invalid')
         paths.append(path)
     for name, directory in names(RECEIPTS_ROOT, True):
+        # Normal readers do not claim unrelated loose operational files as
+        # receipt payload. Canonical transaction names still require a directory.
+        if local_observation and not directory and re.fullmatch('[0-9a-f]{64}', name) is None:
+            continue
         require(directory and re.fullmatch('[0-9a-f]{64}', name) is not None, 'bundle_receipt_path_invalid')
         parent = RECEIPTS_ROOT + '/' + name
         entries = names(parent)
+        # Removing optional history can leave an empty directory. Its absence
+        # of bytes is observed and rechecked; a partial group is never accepted.
+        if local_observation and not entries:
+            continue
         if ('journal.json', False) in entries:
             pending = [parent]
             while pending:
@@ -61,9 +69,12 @@ def _observe(source):
 class ReceiptSnapshot:
     """Retain bytes and bounded directory observations through publication."""
 
-    def __init__(self, source, *, imported_manifest=None):
+    def __init__(self, source, *, imported_manifest=None, local_observation=False):
         self.source = source
-        self.records, self.directories = _observe(source)
+        require(not local_observation or imported_manifest is None,
+                'bundle_import_requires_complete_receipt_inventory')
+        self._local_observation = local_observation
+        self.records, self.directories = _observe(source, local_observation=local_observation)
         self.payloads = {p: record[1] for p, record in self.records.items()}
         verify_imported_receipts(imported_manifest, self.payloads)
         self.journals = completed_receipts(self.payloads, source.configuration.project_id)
@@ -71,7 +82,7 @@ class ReceiptSnapshot:
 
     def _recheck_files(self):
         try:
-            current = _observe(self.source)
+            current = _observe(self.source, local_observation=self._local_observation)
         except BundleError as error:
             raise BundleError('bundle_receipt_inventory_changed', code=None, exit_code=6) from error
         if current != (self.records, self.directories):

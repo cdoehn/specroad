@@ -42,6 +42,19 @@ def completed_receipts(files, project_id):
         from ..migration.receipts import completed_migration_receipts
         migration_journals, migration_names = completed_migration_receipts(files, project_id)
         files = {p: b for p, b in files.items() if p not in migration_names}
+        from ..changes.force_history import read_force_group
+        from ..changes import force_receipts
+        forced_journals, forced_names = [], set()
+        for path, raw in files.items():
+            if _path_kind(path) != 'transaction' or parse_json_object(raw).get('format_version') != 'force-transaction-receipt-v1':
+                continue
+            write = force_receipts.validate_transaction(raw)
+            names = set(force_receipts.receipt_group(write))
+            require(path in names and names <= files.keys() and not forced_names.intersection(names),
+                'bundle_receipt_completion_missing', code='SRV060')
+            forced_journals.append(read_force_group({p: files[p] for p in names}, project_id))
+            forced_names.update(names)
+        files = {p: b for p, b in files.items() if p not in forced_names}
         from ..changes.normal_completion import read_normal_group, audit
         from ..changes.write_guard_values import validate_transaction, receipt_group
         normal_journals, normal_names = [], set()
@@ -116,7 +129,7 @@ def completed_receipts(files, project_id):
             used.update(linked)
             journals.append(journal)
         require(used == set(files), 'bundle_receipt_completion_missing', code='SRV060')
-        return tuple(journals + proposal_journals + normal_journals) + migration_journals
+        return tuple(journals + proposal_journals + normal_journals + forced_journals) + migration_journals
     except (ReceiptError, ModelError) as error:
         raise BundleError(error.reason) from error
 

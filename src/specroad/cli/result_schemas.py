@@ -548,13 +548,24 @@ def _fields(schema_id):
     raise ValueError("Unknown local result schema")
 
 
+def _public_fields(schema_id):
+    fields = _fields(schema_id)
+    if schema_id in ('proposal-apply-v1', 'proposal-review-v1', 'proposal-review-start-v1',
+            'merge-apply-command-v1', 'migration-command-v1'):
+        from .force_domain_result import schema
+        return {'anyOf': [fields, schema()]}
+    if schema_id == 'artifact-impact-v1':
+        fields['properties']['force_provenance'] = _array({'type': 'object'})
+    return fields
+
+
 def result_json_schema(schema_id):
     if type(schema_id) is not str or schema_id not in RESULT_IDS:
         raise ValueError("Unknown local result schema")
     return {"$schema": DIALECT, "$id": schema_id,
         "description": "Implemented serialized field contract; producer invariants and bound file integrity are additional checks.",
         "x-specroad-validation-scope": "sarif_projection_only" if schema_id == "sarif-specroad-v1" else "result_fields_only",
-        **_fields(schema_id)}
+        **_public_fields(schema_id)}
 
 
 def validate_result_document(schema_id, value):

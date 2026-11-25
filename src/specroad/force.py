@@ -139,5 +139,7 @@ def operations_hash(plan):
     if 'force' not in plan:
         return digest(plan['operations'])
     ForceRequest.from_mapping(plan['force'])
-    return digest({key: plan[key] for key in
-        ('operations', 'force', 'base', 'expected_result', 'preconditions')})
+    keys = ('operations', 'force', 'base', 'expected_result', 'preconditions')
+    if plan['format_version'] == '1.4.0':
+        keys += ('native_intent',)
+    return digest({key: plan[key] for key in keys})

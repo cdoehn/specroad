@@ -97,6 +97,13 @@ class InspectionSnapshot:
         self.model = TargetModel(self.raw['specroad.json'], binding, documents,
             profile=profile, resource_files=resources, attachments=tuple(attachments.values()),
             language_packages=selected_packages, plan_sources=self.plan_sources)
+        self._bind_force_history()
+
+    def _bind_force_history(self):
+        from ..bundles._receipt_snapshot import ReceiptSnapshot
+        from ..changes.force_history import model_provenance
+        self.receipts = ReceiptSnapshot(self.source, local_observation=True)
+        self.model = model_provenance(self.model, self.receipts.journals)
 
     def verify_current(self):
         try:
@@ -106,6 +113,7 @@ class InspectionSnapshot:
 
     def _verify_current(self):
         source = self.source
+        self.receipts.verify_current()
         source.check_current()
         if self._paths_reader(source) != self.paths:
             raise InspectionChanged('inspection_inventory_changed')

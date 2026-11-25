@@ -102,6 +102,8 @@ class AuthoringSources:
             attachments=model.attachment_descriptors, language_packages=model.language_packages,
             plan_sources=model.plan_sources, reserved_artifact_ids=sorted(old_ids),
             reserved_relation_ids=sorted(old_relations), previously_approved_ids=sorted(approved))
+        from ..changes.force_history import model_provenance
+        self.model = model_provenance(self.model, self.receipts.journals)
         from ..migration.model_inputs import records
         current = records(self.model)
         self.identities = IdentityInventory(prefix, {r.identity.id for r in current}, old_ids, set())

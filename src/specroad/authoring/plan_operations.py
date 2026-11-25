@@ -84,7 +84,7 @@ def _qualified_references(value):
     return rows
 
 
-def reduce_plan_intent(sources, intent, *, actor, planned_at, id_prefix):
+def reduce_plan_intent(sources, intent, *, actor, planned_at, id_prefix, force_decisions=None):
     """Return all resulting carriers and their changed projections.
 
     A removal with remaining incoming references fails with their complete
@@ -115,7 +115,15 @@ def reduce_plan_intent(sources, intent, *, actor, planned_at, id_prefix):
     values = deepcopy(before)
     roots = [s.projections[0].data['id'] for s in sources]
     fields = intent.get('fields', {})
-    require(type(fields) is dict and not set(fields) & CONTROLLED, 'controlled_plan_authoring_field')
+    require(type(fields) is dict, 'plan_fields_object_required')
+    if set(fields) & CONTROLLED:
+        if force_decisions is None:
+            require(False, 'controlled_plan_authoring_field')
+        else:
+            force_decisions.decide(False, gate_id='schema:controlled_plan_authoring_field',
+                diagnostic_code='CORE_MODEL', subject=intent.get('target', intent.get('new_id', 'plan')),
+                operation=command, observed_binding=sorted(set(fields) & CONTROLLED),
+                requested_binding=fields, effect='apply_explicit_plan_fields')
     target = None
     if command != 'plan.create':
         target = _resolve(values, intent.get('target'), intent.get('plan_id'))
@@ -181,6 +189,28 @@ def reduce_plan_intent(sources, intent, *, actor, planned_at, id_prefix):
                         ref['plan_id'] = new_plan
     require(len({v['id'] for group in _groups(values, roots) for v in group}) == len(values),
             'plan_target_ownership_invalid')
+    if force_decisions is not None:
+        from ..force import ForceDecisions
+        require(type(force_decisions) is ForceDecisions and force_decisions.request.requested,
+                'explicit_force_required')
+        from ..changes.force_domain_gates import record_denial
+        checks = [lambda value=value: PlanProjection(value, id_prefix=id_prefix) for value in values.values()]
+        checks.append(lambda: PlanProjectionInventory(list(values.values()), id_prefix=id_prefix))
+        for check in checks:
+            try:
+                check()
+            except ModelError as error:
+                record_denial(force_decisions, error, operation=command, subject=target or intent['new_id'], requested=intent)
+        for identity, value in values.items():
+            if identity not in created and value != before[identity]:
+                from ..changes._lifecycle_policy import _postconditions
+                try:
+                    _postconditions(before, {identity: deepcopy(value), **{k: v for k, v in values.items() if k != identity}},
+                        {identity: [0]}, [], 'plan_edit')
+                except ModelError as error:
+                    record_denial(force_decisions, error, operation=command, subject=identity, requested=intent)
+                value.update(updated_audit_fields(before[identity], actor=actor, planned_at=planned_at))
+        return render_plan_sources(sources, _groups(values, roots), id_prefix=id_prefix, raw_targets=True), []
     for value in values.values():
         PlanProjection(value, id_prefix=id_prefix)
         if value.get('entry_kind') == 'commit' or 'commit_message_template' in value:

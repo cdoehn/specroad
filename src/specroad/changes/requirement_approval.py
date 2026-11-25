@@ -92,7 +92,7 @@ class _RequirementApprovalCheck:
             from ..graph.review_status import RelationReviewStatuses
             from ..graph.relation_obligations import RelationObligations
             sources = tuple(SourceRelations(canonical_json_bytes(a)) for a in folded.artifacts)
-            statuses = {s.relation_id: s.status for s in RelationReviewStatuses(sources).statuses}
+            statuses = {s.relation_id: s.status for s in RelationReviewStatuses(sources, force_provenance=model.force_provenance).statuses}
             checks = RelationObligations(sources, profile_rules=model.profile.minimum_relation_rules()).checks
             if any(c.artifact_id == context.requirement_id and c.minimum > 0 and c.severity == 'error'
                    and (not c.satisfied or any(statuses[r] != 'current' for r in c.relation_ids)) for c in checks):

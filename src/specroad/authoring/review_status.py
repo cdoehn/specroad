@@ -13,7 +13,7 @@ def relation_review_status(model, source_id, relation_id):
         raise TargetError('target_model_required')
     owned = model.snapshot()
     statuses = RelationReviewStatuses(tuple(SourceRelations(document.content,
-        path=document.path) for document in owned.documents))
+        path=document.path) for document in owned.documents), force_provenance=owned.force_provenance)
     return {**statuses.for_relation(source_id, relation_id).as_fields(),
         'validation_scope': statuses.validation_scope,
         'approval_granted': statuses.approval_granted}
@@ -26,7 +26,7 @@ def relation_review_diagnostics(model, *, fail_on='error', strict=False):
     owned = model.snapshot()
     sources = tuple(SourceRelations(document.content,
         path=document.path) for document in owned.documents)
-    statuses = RelationReviewStatuses(sources)
+    statuses = RelationReviewStatuses(sources, force_provenance=owned.force_provenance)
     by_relation = {value.relation_id: value for value in statuses.statuses}
     selectors = {relation.identity.id: (relation.type, source.data['maturity'])
         for source in sources for relation in source.relations}

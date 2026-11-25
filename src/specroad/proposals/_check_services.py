@@ -71,7 +71,7 @@ def _services(basis, target, report):
         observation = dict(artifact_id=identifier, depth=1, transitive=False, before=None, after=None)
         for side, records in (('before', left), ('after', right)):
             if identifier in {r.identity.id for r in records}:
-                groups, reviews, findings = _impact_rows(records, identifier)
+                groups, reviews, findings = _impact_rows(records, identifier, force_provenance=(basis if side == "before" else target).force_provenance)
                 observation[side] = dict(groups=groups, review_groups=reviews,
                     artifact_observations=_artifact_observations(records, identifier, groups),
                     diagnostics=[f.as_dict() for f in findings])

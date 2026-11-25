@@ -53,7 +53,8 @@ def _project_bytes(files):
             and set(closure.resource_ids) == {resource_identity(r) for r in model.resources}
             and native.sha256 == model.manifest(artifacts, descriptor.data).sha256,
             'restore_project_closure_incomplete')
-    return model, native.sha256
+    from ..changes.force_history import model_provenance
+    return model_provenance(model, journals), native.sha256
 
 
 def project_validation_report(files, *, services=None):
@@ -161,6 +162,8 @@ def project_validation_report(files, *, services=None):
                    ('evidence_currentness', historical_evidence)))
     gates += (baseline_integrity_gate(tuple(SnapshotObject(b) for b in archives.values())),)
     gates += task_gate(model, services)
+    from .force_provenance import provenance_gate
+    gates += provenance_gate(model, independently_approved=approvals.keys())
     report = validate_model(model.documents, profile=model.profile, resources=validation_resources(model),
                             gates=gates, document_role_scope='full_project',
                             approval_contexts=tuple(pair[0] for pair in approvals.values()),

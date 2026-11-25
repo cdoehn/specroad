@@ -224,8 +224,8 @@ def test_changes_after_calculation_prevent_stale_success(tmp_path, change):
     values = mixed_graph(rejected=False); root = project(tmp_path / 'project', values)
     original = impact_module._impact_rows
 
-    def changed(records, start):
-        result = original(records, start)
+    def changed(records, start, *, force_provenance=()):
+        result = original(records, start, force_provenance=force_provenance)
         if change == 'configuration':
             configuration_file(root, resource_limits={'artifact_count': 7})
         elif change == 'membership':

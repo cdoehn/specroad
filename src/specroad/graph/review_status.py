@@ -23,7 +23,7 @@ class RelationReviewStatuses:
     _source_ids: tuple
     _diagnostics: tuple
 
-    def __init__(self, sources, *, partial=None):
+    def __init__(self, sources, *, partial=None, force_provenance=()):
         if isinstance(sources, (str, bytes, dict)):
             raise ModelError('source_relations_sequence_required')
         try:
@@ -73,14 +73,26 @@ class RelationReviewStatuses:
             endpoints = read_boundary_context(partial.container, partial.payload_model)
             outside = {b.data['relation_id'] for b in partial.references.boundary_references}
 
+        from ..model.canonical import canonical_json_bytes
+        from ..storage.json_syntax import parse_json_object
+        provenance = tuple(parse_json_object(canonical_json_bytes(row)) for row in force_provenance)
+        affected = {source.identity.id for source in records
+            if any(row['path'] == source.path for row in provenance)}
+        object.__setattr__(self, '_force_provenance', provenance)
+
         def observe(source, relation):
             history = histories.get(relation.identity.id, ())
             if relation.identity.id in outside:
                 if not history:
                     return RelationReviewStatus(source.identity.id, relation.identity.id,
                         relation.target, 'unreviewed', None, None, (), ())
-                return _status(source, relation, {**index, relation.target: endpoints[relation.target]}, history)
-            return _status(source, relation, index, history)
+                status = _status(source, relation, {**index, relation.target: endpoints[relation.target]}, history)
+            else:
+                status = _status(source, relation, index, history)
+            if status.status == 'current' and status.selected_review_id in affected:
+                from dataclasses import replace
+                status = replace(status, status='suspect', reason='force_review_requires_independent_evidence')
+            return status
 
         observations = tuple(observe(source, relation)
             for source in ordered
@@ -122,6 +134,7 @@ class RelationReviewStatuses:
 
     @property
     def data(self):
-        return {'validation_scope': self.validation_scope,
+        return {**({'force_provenance': list(self._force_provenance)} if self._force_provenance else {}),
+            'validation_scope': self.validation_scope,
             'approval_granted': self.approval_granted,
             'relations': [value.as_fields() for value in self.statuses]}

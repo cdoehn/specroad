@@ -167,6 +167,8 @@ def assess_release_readiness(context, *, gates=(), blocker_reviews=(), blocker_v
     assess_relations(model, ids, rows)
 
     report = readiness_report(binding, data['selection'], rows, complete=complete)
+    if model.force_provenance:
+        report['force_provenance'] = list(model.force_provenance)
     value = object.__new__(ReleaseReadiness)
     object.__setattr__(value, '_encoded', canonical_json_bytes(report))
     return value

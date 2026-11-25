@@ -36,12 +36,20 @@ def _failure_reason(error):
 
 @owned_checks
 def apply_project(root, operand, *, expected_revision, actor, planned_at, change_plan_id,
-                  transaction_id, authority=None, request_id=None, dry_run=False, cwd=None, services=None, checked_work=None):
+                  transaction_id, authority=None, request_id=None, dry_run=False, cwd=None, services=None, checked_work=None, force=False, force_reason=None):
+    from ..force import ForceRequest
+    if ForceRequest(force, force_reason).requested:
+        from .force import author
+        return author(root, operand, command='proposal.apply', expected_revision=expected_revision,
+            actor=actor, request_id=request_id, dry_run=dry_run, authority=authority, services=services,
+            force=True, force_reason=force_reason, cwd=cwd, execution_binding=dict(planned_at=planned_at,
+                change_plan_id=change_plan_id, transaction_id=transaction_id), checked_work=checked_work)
     audit = _initial()['audit']
     try:
         return _apply(root, operand, expected_revision=expected_revision, actor=actor,
             planned_at=planned_at, change_plan_id=change_plan_id, transaction_id=transaction_id,
-            authority=authority, request_id=request_id, dry_run=dry_run, cwd=cwd, services=services, audit=audit, checked_work=checked_work)
+            authority=authority, request_id=request_id, dry_run=dry_run, cwd=cwd,
+            services=services, audit=audit, checked_work=checked_work)
     except Exception as error:
         audit.update(ended_at=_now(), outcome='failed',
             diagnostics=[{'reason': _failure_reason(error)}])
@@ -131,6 +139,9 @@ def apply_command(invocation):
     audit = _initial()['audit']
     try:
         options = invocation.options
+        if options.get('--force', False):
+            from ..cli.force_domain_result import proposal_command
+            return proposal_command(invocation)
         revision = options['--expected-revision']
         require(revision.isascii() and revision.isdecimal() and int(revision) > 0,
                 'proposal_expected_revision_required', exit_code=2)

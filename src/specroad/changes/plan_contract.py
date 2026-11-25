@@ -78,7 +78,7 @@ def _validate_plan(value, *, hash_present=True):
         raise ChangePlanError("unsupported_regular_metadata_policy", pointer="/metadata_policy_version", code="SRV174")
     if not migration and not merge and value.get("metadata_policy_version") != METADATA_POLICY:
         raise ChangePlanError("unsupported_regular_metadata_policy", pointer="/metadata_policy_version", code="SRV174")
-    if value.get('format_version') not in ('1.2.0', '1.3.0'):
+    if value.get('format_version') not in ('1.2.0', '1.3.0', '1.4.0'):
         raise ChangePlanError('unsupported_change_plan_format')
     schema = change_plan_schema(version=value['format_version'])
     # Dispatch tagged operation validation separately for precise diagnostics;
@@ -113,10 +113,24 @@ def _validate_plan(value, *, hash_present=True):
             raise ChangePlanError("result_hash_mismatch", pointer=at + "/sha256", code="SRV146")
     from .resource_replace import check_plan
     raw_plan = check_plan(value)
-    if value['format_version'] == '1.3.0':
+    if value['format_version'] in ('1.3.0', '1.4.0'):
         from ..force import ForceRequest
         ForceRequest.from_mapping(value['force'])
         _text(value['project_id'], '/project_id')
+    if value['format_version'] == '1.4.0':
+        from ..model.authoring_command_ids import COMMANDS as author_commands
+        from ..model.plan_command_ids import COMMANDS as plan_commands
+        original = value['native_intent']
+        if original['execution_binding'] is not None:
+            from ._journal_codec import _transaction
+            execution = original['execution_binding']
+            _transaction(execution['transaction_id'])
+            if execution['planned_at'] != value['planned_at'] or execution['change_plan_id'] != value['change_plan_id']:
+                raise ChangePlanError('native_force_execution_binding')
+        if (original['command_id'] not in (*author_commands, *plan_commands, 'proposal.review.start', 'proposal.review', 'proposal.apply', 'merge.apply', 'migrate.apply')
+                or original['intent'].get('command_id') != original['command_id']
+                or not value['force']['requested'] or not raw_plan):
+            raise ChangePlanError('native_force_intent_binding')
     if not raw_plan:
         if any(value[k]['model_root_sha256'] is None for k in ('base', 'expected_result')):
             raise ChangePlanError('typed_plan_requires_semantic_roots')

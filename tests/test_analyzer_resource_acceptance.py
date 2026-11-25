@@ -129,11 +129,7 @@ def test_invalid_obligation_inputs_cannot_authorize_deferral(tmp_path, fault):
         final_required(root)
 
 
-@pytest.mark.parametrize('with_policy', [True, False])
-def test_native_final_gate_blocks_before_any_behavior_runner(tmp_path, monkeypatch, with_policy):
-    root = inputs(tmp_path / 'apply-fixture')
-    if not with_policy:
-        (root / POLICY_PATH).unlink()
+def native_gate_inputs(root):
     # Only the real evidence-check CLI and its inert builder are needed.
     paths = ['tools/check_analyzer_resources.py', 'tools/build_core.py', 'tools/core_build_metadata.py',
              'tools/analyzer_benchmark/acceptance.py', 'tools/analyzer_benchmark/records.py',
@@ -146,6 +142,14 @@ def test_native_final_gate_blocks_before_any_behavior_runner(tmp_path, monkeypat
     package.mkdir(parents=True)
     (package / '__init__.py').write_text('')
     (package / '__main__.py').write_text('pass\n')
+    return root
+
+
+@pytest.mark.parametrize('with_policy', [True, False])
+def test_native_final_gate_blocks_before_any_behavior_runner(tmp_path, monkeypatch, with_policy):
+    root = native_gate_inputs(inputs(tmp_path / 'apply-fixture'))
+    if not with_policy:
+        (root / POLICY_PATH).unlink()
     python = root / '.venv/bin/python'
     python.parent.mkdir(parents=True)
     python.symlink_to(sys.executable)
@@ -160,3 +164,63 @@ def test_native_final_gate_blocks_before_any_behavior_runner(tmp_path, monkeypat
     assert failure.value.returncode == 2
     assert not (root / 'TESTS_STARTED').exists()
     assert not (root / 'build/20.n.W/gate').exists()
+
+
+@pytest.mark.parametrize('last', ['21.e1.W', '21.e1.R', '21.e1.C',
+                                '21.e2.W', '21.e2.R', '21.e2.C'])
+def test_partitioned_intermediate_progress_keeps_unmeasured_obligation_open(tmp_path, last):
+    root = inputs(tmp_path, completed=901, total=999, last=last)
+    before = {p.relative_to(root): p.read_bytes() for p in root.rglob('*') if p.is_file()}
+    result = evaluate(root, expected_build='a' * 64, commit_id=last)
+    assert result['status'] == 'deferred' and result['measurement_status'] == 'missing'
+    assert result['measurement'] is None and not result['final_required']
+    assert result['final_obligation'] == 'pending'
+    assert result['release_approved'] is result['human_corpus_review_completed'] is False
+    assert before == {p.relative_to(root): p.read_bytes() for p in root.rglob('*') if p.is_file()}
+
+
+@pytest.mark.parametrize('last', ['21.e0.W', '21.e01.W', '21.e-1.W',
+                                '21.e1x.W', '21.e1.w', '21.e1.W.extra'])
+def test_malformed_partition_progress_cannot_authorize_deferral(tmp_path, last):
+    root = inputs(tmp_path, last=last)
+    with pytest.raises(ValueError, match='invalid_last_plan_commit'):
+        evaluate(root, expected_build='a' * 64)
+
+
+@pytest.mark.parametrize('progress, options', [
+    ({}, {'final': True}),
+    ({}, {'commit_id': '20.n.W'}),
+    ({}, {'commit_id': '20.n.R'}),
+    ({}, {'commit_id': '20.n.C'}),
+    ({'state': 'complete'}, {}),
+    ({'state': 'completed'}, {}),
+    ({'completed': 999}, {}),
+])
+def test_partitioned_progress_does_not_bypass_final_obligation(tmp_path, progress, options):
+    root = inputs(tmp_path, total=999, last='21.e1.C', **progress)
+    result = evaluate(root, expected_build='a' * 64, **options)
+    assert result['status'] == 'blocked' and result['final_required']
+    assert result['measurement_status'] == 'missing' and result['final_obligation'] == 'pending'
+    assert result['release_approved'] is result['human_corpus_review_completed'] is False
+
+
+@pytest.mark.parametrize('phase', ['W', 'R', 'C'])
+def test_native_partition_gate_defers_but_explicit_final_check_blocks(tmp_path, phase):
+    commit_id = '21.e1.' + phase
+    root = native_gate_inputs(inputs(tmp_path, completed=901, total=999, last=commit_id))
+    before = {p.relative_to(root): p.read_bytes() for p in root.rglob('*') if p.is_file()}
+    command = [sys.executable, '-I', '-B', str(root / 'tools/check_analyzer_resources.py'),
+               '--commit-id', commit_id]
+    deferred = subprocess.run(command, cwd=root, capture_output=True, text=True)
+    assert deferred.returncode == 0, deferred.stderr
+    status = json.loads(deferred.stdout.split('SPECROAD_RESOURCE_OBLIGATION ', 1)[1])
+    assert status['status'] == 'deferred' and status['measurement_status'] == 'missing'
+    assert status['final_obligation'] == 'pending' and not status['final_required']
+    final = subprocess.run([*command, '--final'], cwd=root, capture_output=True, text=True)
+    assert final.returncode == 2, final.stderr
+    strict = json.loads(final.stdout.split('SPECROAD_RESOURCE_OBLIGATION ', 1)[1])
+    assert strict['status'] == 'blocked' and strict['final_required']
+    assert strict['expected_build_sha256'] == status['expected_build_sha256']
+    assert strict['final_obligation'] == 'pending' and strict['measurement_status'] == 'missing'
+    assert strict['release_approved'] is strict['human_corpus_review_completed'] is False
+    assert before == {p.relative_to(root): p.read_bytes() for p in root.rglob('*') if p.is_file()}

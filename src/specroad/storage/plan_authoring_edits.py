@@ -132,7 +132,7 @@ def _existing(source, section, end, value, shape):
     return chunk
 
 
-def render_plan_sources(sources, values, *, id_prefix):
+def render_plan_sources(sources, values, *, id_prefix, raw_targets=False):
     """Render complete desired preorder; refuse all unrequested projections.
 
     Existing material outside an affected heading/metadata/body span is reused.
@@ -163,5 +163,6 @@ def render_plan_sources(sources, values, *, id_prefix):
                 _advance(shape, value['id'], headings, lists)
         from ..model.paths import artifact_path
         path = artifact_path('implementation_plan', root, id_prefix)
-        result.append(parse_plan(b''.join(chunks), path=path, id_prefix=id_prefix))
+        raw = b''.join(chunks)
+        result.append((path, raw) if raw_targets else parse_plan(raw, path=path, id_prefix=id_prefix))
     return tuple(result)

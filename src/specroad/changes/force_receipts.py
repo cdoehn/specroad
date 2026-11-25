@@ -89,6 +89,9 @@ def validate_transaction(raw):
         and write['operations_sha256'] == operations_hash(data)
         and marker['base_model_root_sha256'] == data['base']['model_root_sha256']
         and marker['target_model_root_sha256'] == data['expected_result']['model_root_sha256'], 'force_receipt_plan_binding')
+    if 'native_intent' in data:
+        require(marker['command_id'] in ('change.apply', data['native_intent']['command_id']),
+            'force_native_command_binding')
     force = validate_summary(write['force'])
     require(force == marker['force'] and {k: force[k] for k in ('requested', 'reason')} == data['force'], 'force_receipt_request_binding')
     require(type(write['target_inventory']) is list and type(write['files']) is list, 'force_inventory_fields')
@@ -112,7 +115,7 @@ def validate_transaction(raw):
     ledger = ForceDecisions(ForceRequest.from_mapping(data['force']))
     requested_binding = {'plan_sha256': plan.sha256, 'target_inventory_sha256': digest(write['target_inventory']),
         'expected_model_root_sha256': data['expected_result']['model_root_sha256']}
-    record_findings(ledger, write['validation'], operation='change.apply', requested_binding=requested_binding)
+    record_findings(ledger, write['validation'], operation=marker['command_id'], requested_binding=requested_binding)
     require(all(row in force['overrides'] for row in ledger.summary['overrides']), 'force_missing_negative_finding')
     from .resource_replace import target_bytes
     effects = {row['path']: row for row in write['files']}
@@ -128,6 +131,13 @@ def validate_transaction(raw):
                 require(any(row['gate_id'] == 'hash:resource_precondition' and row['subject'] == path
                     and row['observed_binding'] == actual_hash and row['requested_binding'] == operation['observed_byte_sha256']
                     for row in force['overrides']), 'force_missing_source_override')
+    else:
+        from .resource_replace import check_plan
+        if check_plan(data):
+            require(not effects, 'force_unrequested_effect')
+        else:
+            from .force_projection import check_recorded_effects
+            check_recorded_effects(data, targets, effects, write['validation']['resources'])
     require(raw == jcs(transaction_document(write)), 'force_receipt_binding')
     return write
 

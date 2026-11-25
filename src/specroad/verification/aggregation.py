@@ -100,6 +100,12 @@ def aggregate_verification_results(model, evaluation, *, configuration_id, input
         result, reasons = subject_result(applicability=applicability, waiver=waiver,
             plan_status=value['verification_plan_status'], bound=bound, coverage=coverage,
             broken=broken, selected=selected, runs=runs)
+        from ..qualification.force_provenance import affected
+        forced = affected(model)
+        forced_evidence = {e['evidence_id'] for run in runs for e in run['evidence']} & forced
+        if forced_evidence and result == 'passed':
+            result = 'incomplete'
+            reasons = [*reasons, 'force_evidence_requires_independent_original']
         results.append({'subject_artifact_id': subject_id,
             'source_sha256': sha256(subject.source_bytes).hexdigest(),
             'artifact_sha256': canonical_json_sha256(value),
@@ -123,6 +129,8 @@ def aggregate_verification_results(model, evaluation, *, configuration_id, input
         'result_aggregation_evaluated': True, 'full_verification_evaluated': False,
         'external_run_verified': False, 'release_readiness_evaluated': False,
         'test_code_executed': False, 'write_authorized': False, 'approval_granted': False}
+    if model.force_provenance:
+        report['force_provenance'] = list(model.force_provenance)
     result = object.__new__(VerificationResultAggregation)
     object.__setattr__(result, '_encoded', canonical_json_bytes(report))
     return result

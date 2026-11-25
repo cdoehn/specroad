@@ -49,8 +49,10 @@ class _Session:
         validate_portable_archive_paths(list(self.before.keys()|self.target.keys()))
         for p in self.paths:
             (_path if inputs.effect_path is None else inputs.effect_path)(p)
-            require(not p.startswith('archive/objects/') or p not in self.before,'immutable_write_target',exit_code=7)
-        require(bool(self.paths) or inputs.command_id == 'merge apply',
+            require(inputs.force_record is not None or not p.startswith('archive/objects/') or p not in self.before,
+                'immutable_write_target',exit_code=7)
+        require(bool(self.paths) or inputs.command_id == 'merge apply' or
+            inputs.force_record is not None and inputs.plan.data['format_version'] == '1.4.0',
                 'empty_write_program',exit_code=2)
         self.parents={};self.identities={};self.modes={};self.owners={};self.images={};self.records={}
         self.marker=None;self.marker_id=None;self.active=False;self.stage_created=False

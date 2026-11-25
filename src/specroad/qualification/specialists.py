@@ -41,7 +41,7 @@ def review_checks(model):
     """Keep historic negative/stale records; never turn them into approval."""
     from ..migration.model_inputs import records as model_records
     records = model_records(model)
-    statuses = RelationReviewStatuses(records)
+    statuses = RelationReviewStatuses(records, force_provenance=model.force_provenance)
     by_relation = {s.relation_id: s for s in statuses.statuses}
     approved = {a['id'] for a in model.artifacts if a['maturity'] == 'approved'
                 and a.get('schema_version') == '0.2.0'}

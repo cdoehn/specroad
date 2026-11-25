@@ -48,7 +48,7 @@ def final_required(root, *, commit_id=None, final=False):
     require(progress['implementation_state'] in ('in_progress', 'complete', 'completed'),
             'unknown_implementation_state')
     last = progress['last_completed_plan_commit']
-    require(re.fullmatch(r'[0-9]+\.[a-z]+\.[WRC]', last) is not None,
+    require(re.fullmatch(r'[0-9]+\.[a-z]+(?:[1-9][0-9]*)?\.[WRC]', last) is not None,
             'invalid_last_plan_commit')
     return (final or (commit_id or '').startswith('20.n.')
             or last.startswith('20.n.') or int(completed) == int(total)

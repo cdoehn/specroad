@@ -23,7 +23,8 @@ def make_parents(self,path):
 def publish_effect(self,index,path):
     self.guard();make_parents(self,path);self.guard()
     before=self.before.get(path);after=self.target.get(path)
-    require(not path.startswith('archive/objects/') or before is None,'immutable_write_target',exit_code=7)
+    require(self.inputs.force_record is not None or not path.startswith('archive/objects/') or before is None,
+        'immutable_write_target',exit_code=7)
     with self.files.directory(tuple(path.split('/')[:-1])) as fd:
         require(fd is not None,'write_parent_missing');_rights(fd,path)
         name=path.rsplit('/',1)[-1]

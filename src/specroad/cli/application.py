@@ -81,7 +81,9 @@ def execute(arguments: list[str] | tuple[str, ...] | CommandRequest, *, registry
                 raise CommandUsageError(str(error)) from error
         if (force.request.requested and (command == 'work.resume' or
                 invocation.command.command_class.value == 'normative_write'
-                and command != 'change.apply')):
+                and command not in ('change.apply', 'proposal.apply', 'proposal.review', 'proposal.review.start', 'merge.apply', 'migrate.apply')
+                and command not in __import__('specroad.model.authoring_command_ids', fromlist=['COMMANDS']).COMMANDS
+                and command not in __import__('specroad.model.plan_command_ids', fromlist=['COMMANDS']).COMMANDS)):
             raise CommandUsageError('This Force operation requires its native domain adapter')
         builder = InvocationContextBuilder() if context_builder is None else context_builder
         invocation = builder.prepare(
@@ -97,6 +99,8 @@ def execute(arguments: list[str] | tuple[str, ...] | CommandRequest, *, registry
             from ..bundles._command_guard import require_partial_command
             require_partial_command(invocation)
         outcome = selected._run_handler(invocation)
+        from .force_semantics import completed_policy
+        outcome = completed_policy(invocation, outcome, force)
     except OperationFailure as error:
         outcome = failed_result(command, error.kind, str(error), complete=error.complete, details=error.details)
     except OptionResolutionError as error:

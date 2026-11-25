@@ -82,15 +82,17 @@ def _apply(invocation, root, options):
     require(type(invocation.publication_authority) is PublicationAuthority,
             'migration_authority_required', exit_code=2)
     require(not ('--plan' in options and '--work-dir' in options), 'migration_input_modes_conflict', exit_code=2)
-    report = plan = None
+    report = plan = report_raw = None
     current = lambda: None
     if '--plan' in options:
         require(not set(PLANNING).intersection(options), 'migration_input_modes_conflict', exit_code=2)
-        report, plan, _, current = _read_plan(options)
+        report, plan, report_raw, current = _read_plan(options, force=options.get('--force', False))
     elif '--work-dir' in options:
         require(not set(PLANNING).intersection(options), 'migration_input_modes_conflict', exit_code=2)
         from .migration_work import completed_plan
         report, plan, current = completed_plan(invocation, options)
+    if options.get('--force', False) and plan is not None:
+        return _force_apply(invocation, root, options, plan, report, current, report_raw=report_raw)
     prior = _already_current(root, plan, options['--to'])
     if prior is not None:
         current()
@@ -103,6 +105,8 @@ def _apply(invocation, root, options):
         require(planned.ready, 'migration_plan_incomplete')
         report, plan = planned.data, planned.change_plan
         fresh(); current()
+        if options.get('--force', False):
+            return _force_apply(invocation, root, options, plan, report, current, report_raw=report_raw)
     source, _, fresh = _observe(root)
     value = plan.data
     rebuilt = plan_migration(source, inputs=value['operations'][0]['inputs'],
@@ -119,6 +123,36 @@ def _apply(invocation, root, options):
         backup_size=backup['file']['size'], backup_source_files_sha256=backup['source_files_sha256'],
         authority=invocation.publication_authority, gates=invocation.migration_gates)
     return document('apply', planning=report, execution=outcome, backup=backup)
+
+
+def _force_apply(invocation, root, options, plan, report, current, *, report_raw=None):
+    from ..changes.force_saved import apply_saved
+    from .force_domain_result import result
+    def report_binding():
+        from hashlib import sha256
+        if '--expected-report-sha256' in options:
+            require(report_raw is not None and sha256(report_raw).hexdigest() == options['--expected-report-sha256'],
+                'migration_report_hash_mismatch', exit_code=6)
+        current()
+    def observe():
+        source, _, fresh = _observe(root)
+        value = plan.data
+        rebuilt = plan_migration(source, inputs=value['operations'][0]['inputs'],
+            **{key: value[key] for key in ('actor','planned_at','change_plan_id','request_id')},
+            target_version=options['--to'])
+        require(rebuilt.ready and rebuilt.data == report
+            and plan.sha256 == options.get('--expected-plan-sha256', plan.sha256)
+            and value['operations'][0]['inputs_sha256'] == options.get('--expected-inputs-sha256', value['operations'][0]['inputs_sha256']), 'migration_report_recomputation_mismatch', exit_code=6)
+        fresh(); current()
+    value = apply_saved(root, plan, command='migrate.apply',
+        expected_plan_sha256=options.get('--expected-plan-sha256', plan.sha256),
+        authority=invocation.publication_authority, force=True, force_reason=options.get('--force-reason'),
+        observe=(observe, report_binding, lambda: _backup(root, options, plan)), services=invocation.restore_services,
+        execution_binding={**{k: v for k, v in options.items() if k in (
+            '--to', '--expected-inputs-sha256', '--expected-report-sha256', '--transaction-id', '--backup-root', '--backup')},
+            'report': report, 'report_bytes_base64': None if report_raw is None else
+                __import__('base64').b64encode(report_raw).decode('ascii')})
+    return result('migrate.apply', value)
 
 
 def _verify(invocation, root, options):

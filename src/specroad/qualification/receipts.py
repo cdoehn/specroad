@@ -21,8 +21,9 @@ def check_receipt_targets(journals, target):
     # Timestamps and transaction-name order never establish publication order.
     from ..migration.receipts import HistoricalMigrationJournal
     from ..changes.normal_completion import NormalAudit
+    from ..changes.force_history import ForceAudit
     def effects(journal):
-        if type(journal) is NormalAudit:
+        if type(journal) in (NormalAudit, ForceAudit):
             # v2 stores explicit optional before/after bindings, including deletions.
             return [dict(path=row['path'], existed_before=row['before'] is not None,
                 before_size=(row['before'] or {}).get('size'),
@@ -50,7 +51,7 @@ def check_receipt_targets(journals, target):
                                    'expected_revision': value['revision'] - 1})
             return result
         native = journal.data['authoring_binding']['operations']
-        if (type(journal) is NormalAudit and len(native) == 1 and native[0]['op'] in
+        if (type(journal) in (NormalAudit, ForceAudit) and len(native) == 1 and native[0]['op'] in
                 ('schema_migrate', 'merge_publish')):
             from ..migration.plan_values import unb64
             result = []
@@ -64,7 +65,7 @@ def check_receipt_targets(journals, target):
     edges = {}
     for journal in journals:
         for item in effects(journal):
-            if item['existed_before'] or type(journal) is NormalAudit:
+            if item['existed_before'] or type(journal) in (NormalAudit, ForceAudit):
                 edges.setdefault(item['path'], {}).setdefault(
                     (item['before_size'], item['before_sha256']), set()).add(
                     (item['after_size'], item['after_sha256']))
