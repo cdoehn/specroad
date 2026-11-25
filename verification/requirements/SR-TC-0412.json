@@ -40,7 +40,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "4ff085faac3f5db13020a39960751233d7b8bd381b9b8d0fa4f71ba4fe36ccbd",
+  "specification_sha256": "f7236064f0fe5d595dbf514022f2678f1d4e839768a5282cff3f13d06ddd2bc3",
   "steps": [
     "Compute the strong reachable fixed point, resolving typed relations and known schema dependency fields; reject missing or stale observations.",
     "Compare the fixed point with an independent exhaustive reachability oracle, revalidate observations, and run the same pure operation in moved portable distributions.",

@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 460 · **Stand:** 25. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.108
+**Planrevision:** 461 · **Stand:** 25. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.109
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **21 Meilensteine in 333 Schritte und 999 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die ursprünglichen Positionen bleiben erhalten; ausdrücklich geänderte Ausführungsfolgen stehen im Fortschrittsblock und in den betroffenen Voraussetzungen; die früher genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wurde nach der damaligen Spezifikation innerhalb von 15.l.R vorgezogen und bleibt als normaler Prüfkern erhalten. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -43,6 +43,8 @@ keine Installation, keinen Budgetreset und keine Produktbenutzungsfreigabe.
 [Korrektur 814](history/bundle-814-force-request-correction.md) setzt nach dem unterbrochenen W-Testlauf von 813 den gesamten offenen Rest 21.e1.W/R/C fort. Repariert werden die normale Proposal-Aufrufbindung und die passive Force-Requestidentität; bestätigt bleiben 900/999 Positionen. Die Zielwerte benötigen jeweils ihr eigenes erfolgreiches Gate.
 
 [Korrektur 815](history/bundle-815-local-history-correction.md) führt nach dem vollständigen W-Fehlergate von 814 den gesamten offenen Rest 21.e1.W/R/C fort. Alle 61 vorherigen Fehlerfälle bestanden; zehn andere Fälle erfordern die begrenzte Leser- und Testkorrektur. Bestätigt bleiben 900/999 Positionen; jedes Ziel benötigt sein eigenes erfolgreiches Gate.
+
+[FORCE-OPERATIONS-816](decisions/force-operations-816.md) präzisiert die Eigentümerbindung und eigene betriebliche Forceversuche. Bundle 815 ist vollständig bestätigt (903/999); der volle nächste Scope bleibt 21.e2.W/R/C mit einzelnen Apply-Gates.
 
 ## Erhaltener Verlauf und frühere Auftragsbindungen bis Bundle 790
 
@@ -365,7 +367,7 @@ Korrektur der nativen Validierungsfälle und vollständiger Matrixrest: [Bundle 
 Prozess-/Journalreparatur des offenen C-Rests: [Bundle 790](history/bundle-790-process-journal.md). W/R sind bestätigt; C benötigt sein eigenes Apply-Gate.
 
 ```yaml
-plan_revision: 460
+plan_revision: 461
 implementation_plan_commits_total: 999
 implementation_plan_commits_completed: 903
 last_completed_plan_commit: 21.e1.C

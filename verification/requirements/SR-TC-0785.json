@@ -21,7 +21,7 @@
   "json_pointers": [],
   "method": "automated_behavior",
   "open_items": [
-    "The entire operational 21.e2.W/R/C group and cross-domain integration remain required: Work/Bundle, markers/locks, physical/path/format/resource boundaries.",
+    "Implement the complete existing 21.e2.W/R/C group with the additive X.12.3 owner binding and own-attempt records, then its entire integration; no scope split.",
     "Current Apply acceptance and the final 21.w/x integration and human M19/M20 acceptance remain required."
   ],
   "oracle": {
@@ -44,7 +44,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "4ff085faac3f5db13020a39960751233d7b8bd381b9b8d0fa4f71ba4fe36ccbd",
+  "specification_sha256": "f7236064f0fe5d595dbf514022f2678f1d4e839768a5282cff3f13d06ddd2bc3",
   "steps": [
     "Run the native normal/Force command pairs and compare complete original/target bytes, ledger, durable receipts and exact replay.",
     "Observe real negative or unavailable native validation and retain every actual original. No behavior tests run in Dev."

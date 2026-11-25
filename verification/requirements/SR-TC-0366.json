@@ -34,7 +34,7 @@
     "harness_test_timeout": null,
     "owned_temporary_files": true
   },
-  "specification_sha256": "4ff085faac3f5db13020a39960751233d7b8bd381b9b8d0fa4f71ba4fe36ccbd",
+  "specification_sha256": "f7236064f0fe5d595dbf514022f2678f1d4e839768a5282cff3f13d06ddd2bc3",
   "steps": [
     "Merge explicit nested disjoint changes and JSON-equivalent targets; compare against independent exact expected values.",
     "Observe every conflicting source value with its presence and RFC-6901 pointer; reject target access while unresolved.",

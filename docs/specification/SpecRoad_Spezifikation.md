@@ -1,5 +1,5 @@
 # SpecRoad — Produktspezifikation
-## Version 0.2.108
+## Version 0.2.109
 
 | Feld | Wert |
 |---|---|
@@ -8505,6 +8505,7 @@ Die Umsetzung folgt im bestehenden Plan als 18.s–18.x nach 18.k.C.
 | Version | Datum | Status | Änderung |
 |---|---|---|---|
 | 0.2.107 | 2026-11-24 | Ausdrücklicher Nutzerauftrag | RESOURCE-FINAL-809: neue Ressourcenmessungen bis zum Entwicklungsabschluss aufschieben; finale Buildbindung und unveränderte Ziele bleiben Pflicht. |
+| 0.2.109 | 2026-11-25 | Delegierte Detailklärung nach SPECROAD-DECISION-1 | FORCE-OPERATIONS-816: versionierte Eigentümerbindung und eigene betriebliche Forceversuche; Umfang 21.e2 und alle Nachweispflichten bleiben erhalten. |
 | 0.2.108 | 2026-11-24 | Delegierte Detailklärung | FORCE-DOMAINS-812: native Forceabsicht, idempotente Zielbindung und passive Herkunft; bestehende Host-/Reviewpflichten bleiben. |
 | 0.2.106 | 2026-11-23 | Delegierte Detailklärung | FORCE-CONTRACT-804: geschlossener expliziter Force-/Raw-Plantransport, Operationshash und separate negative Ausführungsbelege; keine Host- oder Produktfreigabe. |
 | 0.2.105 | 2026-11-23 | Delegierte Detailklärung | PLAN-AUTHORING-798: physischer Markdown-Authoringvertrag im vorhandenen Writer, native Rohbefehle, exakte Wiederholung und originalgebundene Importadapter; keine Abnahme erklärt. |
@@ -14015,6 +14016,73 @@ unbekannte Befunde sowie `approval_granted=false`. Reader für Impact,
 Relation-Reviews, Verification, Readiness und Qualifikation berücksichtigen
 die verifizierte Herkunft. Ein späterer echter Beleg bleibt anhand seiner eigenen Bytes und
 Abhängigkeiten zu prüfen; weder Zeitstempel noch Labels beweisen ihn.
+
+### X.12.3 Beobachtete Eigentümer und betriebliche Forceversuche
+
+**FORCE-OPERATIONS-816, delegiert gemäß SPECROAD-DECISION-1 und 2.4.3.1.**
+Diese additive Festlegung präzisiert die bereits verlangte Eigentümerbindung
+und getrennte Ausführung aus X.12. Sie erweitert weder Scope noch Befugnisse.
+Change-Plan 1.5.0 behält den expliziten Forcevertrag und ergänzt das geschlossene
+Objekt `operational_binding={owners:[{path,sha256}]}`. Die sortierte Liste
+enthält höchstens einen Eintrag je Eigentümerpfad. Zulässige Eigentümerpfade
+sind `.specroad/locks/project.json`, `work-lock.json`, `bootstrap-root.owner`
+und `bootstrap-container.owner`; die letzten beiden bezeichnen die vom nativen
+Bootstrapverfahren exakt bestimmten Geschwisterdateien am Root beziehungsweise
+an dessen übergeordnetem Transportcontainer. Sie binden Ownerbytes oder, falls
+diese fehlen, die beobachteten Pendingbytes. Der vollständige
+SHA-256 bezeichnet exakt die vom Aufrufer beobachteten Eigentümerbytes.
+`native_intent` folgt 1.4.0 oder ist null für einen Raw-Auftrag. Der
+Operationshash ergänzt gegenüber 1.3.0 genau `native_intent` und
+`operational_binding`; alte Versionen behalten ihre Hashprojektionen.
+CLI `--force-owner PATH=SHA256` ist wiederholbar; die strukturierte
+Aufrufform verwendet `operational_binding`. Sie ist ausschließlich bei
+explizitem Force zulässig und wird niemals aus einem Profil übernommen.
+
+Ein konkurrierender aktiver oder nicht nachweisbar exklusiver Zugriff braucht
+die passende ausdrückliche Eigentümerauswahl. Fehlende oder inzwischen andere
+Eigentümerbytes sind keine Auswahl dieses Eigentümers. Der neue Versuch prüft
+die beobachteten vollständigen alten Betriebsdateien und ihre Identitäten
+weiter; Geschwistermarker werden im Vorherinventar mit den festen Aliaspräfixen
+`@bootstrap-root/` und `@bootstrap-container/` einschließlich Pending-/Ownerbytes
+gebunden, ohne fremde Verzeichnisse zu scannen. Konkurrierende Änderungen verhindern einen eigenen Abschluss.
+Eigenes Force bedeutet keinen Stop, Unlock oder Abschluss fremder Prozesse.
+Der Verlust normaler Exklusivität wird negativ als `lock`-Befund gespeichert.
+
+Der bestehende native Writer verwendet für einen durch Betriebsmarker
+blockierten oder ausdrücklich 1.5.0-gebundenen neuen Auftrag eine eigene
+Attemptwurzel aus X.12. Sie enthält einen eigenen Eigentümer, `before.json`
+mit vollständigem Vorherinventar, eigenen Pendingmarker, Staging und eine
+vollständige eigene Receiptgruppe. Erst nach dauerhafter Entfernung des eigenen
+Pendingmarkers entsteht `complete.json` (`force-attempt-completed-v1`), das
+Vorher-/Eigentümerbytes und die vollständige Receiptgruppe mit SHA-256 bindet.
+Ohne diesen letzten Beleg ist der eigene Versuch nicht vollständig abgeschlossen. Alter Marker und fremder Eigentümer bleiben
+bytegleich an ihrem Ort; nur der eigene Pendingmarker und eigene temporäre
+Stagingdateien werden nach vollständig geprüftem Abschluss entfernt. Die
+abgeschlossenen Belege bleiben passiv lesbar und erlauben eine verifizierte
+identische Wiederholung ohne Doppelwirkung. Fehlende Originalteile, ein
+abweichender Request oder eine geänderte alte Beobachtung liefern keinen Erfolg.
+Normale Leser behandeln weiterhin jeden alten aktiven Marker als Sperre.
+
+Work übersteuert eine eigene Sperrpolicy nur für einen ausdrücklich neuen
+Versuch auf dem exakt gebundenen ursprünglichen Auftrag. Es schreibt weder
+fremde Checkpoints um noch übernimmt es einen alten ungeprüften Erfolg. Die
+ursprünglichen Eingaben, abgeschlossenen Einheiten und tatsächlichen
+Transportwirkungen bleiben erneut prüfpflichtig. Eine Fortsetzung benötigt
+die reale native Operation und aktuelle Hostautorität; fehlende Originaldaten
+werden nicht erraten. Bundleprüfung erhält alle lesbaren Befunde auch bei
+übersteuerter Format-, Größen-, Integritäts- oder Pfadpolicy; die tatsächliche
+Extraktion verwendet die eindeutig bezeichneten vorhandenen Bytes und den
+vorhandenen nativen Publikationsweg. Nicht lesbare ZIP-Daten, mehrdeutige
+Doppelziele und eine nicht bestimmbare Operation liefern keinen fingierten
+Abschluss. Eine reine Parsebeobachtung wird nicht zur semantischen Abnahme.
+
+Softwareseitige portable Namens-, private Modus-, Format- und Budgetgates
+bleiben im Normalmodus unverändert. Ein expliziter Forceaufruf zeichnet ihre
+negativen Befunde auf und führt die bestimmte Operation tatsächlich aus.
+Nicht eindeutige relative Adressen, fehlende Eingaben, geänderte reale
+Dateiidentitäten und Fehler tatsächlicher OS-/Transportoperationen sind keine
+ausgeführten Wirkungen. Kontrollierte Testgrenzen ersetzen keine reale
+Ressourcenmessung und keine menschliche Endabnahme.
 
 ## X.13 Deterministische Abnahmevektoren und technische Reihenfolge
 
