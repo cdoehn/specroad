@@ -70,17 +70,18 @@ def apply_command(invocation):
             from .force_domain_result import result
             require(plan.data.get('metadata_policy_version') == 'merge-metadata-v1', 'merge_publication_plan_required')
             def observe():
-                sources = live_sources(options)
-                revalidate(root, plan, sources, invocation.restore_services)
+                revalidate(root, plan, live_sources(options), invocation.restore_services)
+                plan_current()
+            def backup():
                 if not options.get('--dry-run', False):
                     required(options, '--backup-root', '--backup')
-                    _backup(root, plan, sources, options)
+                    _backup(root, plan, live_sources(options), options)
                 plan_current()
             plan_current()
             value = apply_saved(root, plan, command='merge.apply',
                 expected_plan_sha256=options['--expected-plan-sha256'], authority=invocation.publication_authority,
                 dry_run=options.get('--dry-run', False), force=True, force_reason=options.get('--force-reason'),
-                services=invocation.restore_services, observe=observe,
+                services=invocation.restore_services, observe=(observe, backup),
                 execution_binding={k: v for k, v in options.items() if k in (
                     '--base', '--ours', '--theirs', '--base-kind', '--ours-kind', '--theirs-kind',
                     '--base-ref', '--ours-ref', '--theirs-ref', '--backup-root', '--backup', '--transaction-id')})
@@ -118,4 +119,8 @@ def apply_command(invocation):
             'execution': outcome, 'project_writes_performed': outcome is not None and not outcome['replayed'],
             'approval_granted': False, 'write_authorized': False})
     except (ModelError, BundleError, SrxError, ArchiveError, SafetyViolation, OSError, ChangeExecutionError) as error:
-        raise command_error(error) from error
+        failure = command_error(error)
+        if hasattr(error, 'authoring_attempt'):
+            failure = OperationFailure(failure.kind, str(failure), complete=failure.complete,
+                details={**failure.details, 'authoring_attempt': error.authoring_attempt})
+        raise failure from error

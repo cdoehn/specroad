@@ -21,12 +21,14 @@ from ._inspection_snapshot import InspectionSnapshot, InspectionChanged
 
 def _history(value, artifacts, relations, approved):
     """Conservative reservation of native identities in passive historical data."""
+    from .history_targets import values
     pending = [value]
     while pending:
         item = pending.pop()
         if type(item) is list:
             pending.extend(item)
         elif type(item) is dict:
+            pending.extend(values(item))
             if 'artifact_type' in item and 'id' in item:
                 try:
                     identity = artifact_identity(item)

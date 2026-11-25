@@ -189,5 +189,6 @@ def migration_command(invocation):
         code = 7 if isinstance(error, SafetyViolation) else 5 if isinstance(error, OSError) else getattr(error,'exit_code',3)
         reason = getattr(error,'reason','migration_io_failure')
         facts = {'reason': reason}
+        if hasattr(error, 'authoring_attempt'): facts['authoring_attempt'] = error.authoring_attempt
         if hasattr(error,'write_state'): facts['write_state'] = error.write_state
         raise OperationFailure(FailureKind(code), reason, details=facts) from error

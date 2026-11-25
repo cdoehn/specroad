@@ -1,6 +1,7 @@
 """Attempt evidence only; never an assertion of successful recovery."""
 from functools import wraps
 from ..model.errors import ModelError
+from ..bundles.errors import BundleError
 from ..security import SafetyViolation
 from .plans import _audit
 
@@ -11,7 +12,7 @@ def audited(function):
         attempt = {'plan': None, 'publication_started': False}
         try:
             return function(root, intent, _attempt=attempt, **options)
-        except (ModelError, SafetyViolation, OSError) as error:
+        except (ModelError, BundleError, SafetyViolation, OSError) as error:
             diagnostic = error.diagnostic() if isinstance(error, ModelError) else {}
             state = diagnostic.get('write_state', 'unknown' if attempt['publication_started'] else 'not_committed')
             if state not in ('committed', 'not_committed', 'unknown'):

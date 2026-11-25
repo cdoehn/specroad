@@ -14,12 +14,17 @@ from .force_write import apply_force_plan
 from ._lock_files import LockFiles
 
 
+from .force_attempt import audited
+
+
+@audited
 def apply_saved(root, plan, *, command, expected_plan_sha256, authority=None,
                 dry_run=False, force=False, force_reason=None, observe=None, services=None,
-                execution_binding=None):
+                execution_binding=None, _attempt=None):
     require(type(plan) is ChangePlan, 'force_saved_plan_required', exit_code=2)
     require(command in ('merge.apply', 'migrate.apply'), 'force_saved_command_required', exit_code=2)
     request = ForceRequest(force, force_reason)
+    _attempt['force'] = ForceDecisions(request).summary
     require(request.requested and type(dry_run) is bool, 'explicit_force_required', exit_code=2)
     from .publication_values import PublicationAuthority
     require(dry_run or type(authority) is PublicationAuthority, 'authoring_host_authority_required', exit_code=7)
@@ -44,8 +49,9 @@ def apply_saved(root, plan, *, command, expected_plan_sha256, authority=None,
     if prior is not None:
         return apply_force_plan(root, prior, actor=data['actor'], request_id=data['request_id'],
             dry_run=dry_run, force=True, force_reason=force_reason, authority=authority,
-            services=services, _command_id=command)
+            services=services, _command_id=command, _attempt=_attempt)
     decisions = ForceDecisions(request)
+    _attempt['decisions'] = decisions
     decisions.decide(plan.sha256 == expected_plan_sha256, gate_id='hash:saved_plan',
         diagnostic_code='CORE_CONFLICT', subject='plan', operation=command,
         observed_binding=plan.sha256, requested_binding=expected_plan_sha256,
@@ -71,4 +77,4 @@ def apply_saved(root, plan, *, command, expected_plan_sha256, authority=None,
         project_id, request, source_report['model_root_sha256'], report['model_root_sha256'])
     return apply_force_plan(root, bound, actor=data['actor'], request_id=data['request_id'],
         force=True, force_reason=force_reason, dry_run=dry_run, authority=authority, services=services,
-        _command_id=command, _native_findings=decisions.summary['overrides'], _observed_source=before)
+        _attempt=_attempt, _command_id=command, _native_findings=decisions.summary['overrides'], _observed_source=before)

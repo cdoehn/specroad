@@ -53,11 +53,16 @@ def _previous(files, original, actor, request_id, force, project_id):
     return ChangePlan(jcs(value))
 
 
+from ..changes.force_attempt import audited
+
+
+@audited
 def author_force(root, intent, *, actor, request_id=None, dry_run=False,
                  expected_model_root=None, authority=None, services=None,
                  as_proposal=False, proposal_fields=None, force=False,
                  force_reason=None, _attempt=None, execution_binding=None):
     request = ForceRequest(force, force_reason)
+    _attempt['force'] = ForceDecisions(request).summary
     require(request.requested and type(dry_run) is bool, 'explicit_force_required', exit_code=2)
     actor = read_actor(actor).as_fields()
     normalized_request_id = normalize_request_id(request_id)
@@ -90,6 +95,7 @@ def author_force(root, intent, *, actor, request_id=None, dry_run=False,
     before = {p: b for p, b in observed.items() if not p.startswith('.specroad/')}
     history = {p: b for p, b in observed.items() if receipt_path(p)}
     decisions = ForceDecisions(request)
+    _attempt['decisions'] = decisions
     # Observe actor policy independently from target validation.
     from ..changes import prepare_authoring_request
     try:

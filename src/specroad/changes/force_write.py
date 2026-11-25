@@ -107,15 +107,19 @@ def _target(root, plan, before, decisions, services):
     return target
 
 
+from .force_attempt import audited
+
+
+@audited
 def apply_force_plan(root, plan, *, actor, request_id, force=False, force_reason=None,
                      dry_run=False, authority=None, services=None, _attempt=None,
                      _command_id='change.apply', _native_findings=(), _observed_source=None):
     require(type(plan) is ChangePlan and type(dry_run) is bool, 'force_change_plan_required', exit_code=2)
     request = ForceRequest(force, force_reason); data = plan.data
+    _attempt['force'] = ForceDecisions(request).summary
     command = _command_id
     if command != 'change.apply':
-        require(data.get('native_intent', {}).get('command_id') == command
-            or command in ('proposal.apply', 'proposal.review', 'proposal.review.start', 'merge.apply', 'migrate.apply'),
+        require(data.get('native_intent', {}).get('command_id') == command,
             'force_native_command_binding', exit_code=2)
     require(request.requested, 'explicit_force_required', exit_code=2)
     require(data.get('force') == request.data, 'request_force_binding_conflict', exit_code=6)
@@ -140,6 +144,7 @@ def apply_force_plan(root, plan, *, actor, request_id, force=False, force_reason
         require(actual_project_id is None or actual_project_id == data['project_id'],
             'force_project_identity_conflict', exit_code=6)
     decisions = ForceDecisions(request)
+    _attempt['decisions'] = decisions
     if _observed_source is not None:
         require(before == _observed_source, 'force_observed_source_changed', exit_code=6)
     from ..force import validate_override

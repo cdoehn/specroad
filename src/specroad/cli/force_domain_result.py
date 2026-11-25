@@ -19,7 +19,7 @@ def proposal_command(invocation):
     from ..changes.write_guard_values import require
     require(type(revision) is str and revision.isascii() and revision.isdecimal(),
         'proposal_expected_revision_required', exit_code=2)
-    value = author(invocation.resolved.project_root, invocation.arguments['proposal'],
+    value = _invoke(author, invocation.resolved.project_root, invocation.arguments['proposal'],
         command=invocation.command.command_id, expected_revision=int(revision),
         actor=dict(actor_type=options['--actor-type'], actor_id=options['--actor-id']),
         request_id=options.get('--request-id'), decision=options.get('--decision'), comment=options.get('--comment'),
@@ -47,3 +47,16 @@ def schema():
         'report': {'type': 'object'}, 'diagnostics': _array({'type': 'object'}),
         'completion': _nullable({'type': 'object'}), 'approval_granted': {'const': False},
         'audit': {'type': 'object'}})
+
+
+def _invoke(callback, *args, **options):
+    from ..model.errors import ModelError
+    from ..bundles.errors import BundleError
+    from ..security import SafetyViolation
+    from .results import OperationFailure, FailureKind
+    try:
+        return callback(*args, **options)
+    except (ModelError, BundleError, SafetyViolation, OSError) as error:
+        code = 7 if isinstance(error, SafetyViolation) else 5 if isinstance(error, OSError) else error.exit_code
+        raise OperationFailure(FailureKind(code), getattr(error, 'reason', 'force_io_failure'),
+            details={'authoring_attempt': getattr(error, 'authoring_attempt', None)}) from error
