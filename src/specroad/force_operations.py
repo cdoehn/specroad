@@ -148,7 +148,7 @@ def plan_scope(function):
         selected = plan.data.get('operational_binding') if type(plan) is ChangePlan else None
         outer = current()
         if outer is not None and request.requested:
-            supplied = {'owners': [{'path': p, 'sha256': h} for p, h in outer.owners]}
+            supplied = _selection(outer)
             if selected is not None and supplied['owners'] and binding(selected) != supplied:
                 from .changes.write_guard_values import require
                 require(False, 'explicit_owner_plan_conflict', exit_code=6)
@@ -167,7 +167,12 @@ def invocation_scope(function):
         request = ForceRequest(kwargs.get('force', False), kwargs.get('force_reason'))
         outer = current()
         if operational_binding is None and outer is not None and request.requested:
-            operational_binding = {'owners': [{'path': p, 'sha256': h} for p, h in outer.owners]}
+            operational_binding = _selection(outer)
         with scope(ForceDecisions(request), operational_binding):
             return function(*args, **kwargs)
     return call
+
+
+def _selection(call):
+    """Detached typed projection shared by the two public scope adapters."""
+    return {'owners': [{'path': path, 'sha256': digest} for path, digest in call.owners]}

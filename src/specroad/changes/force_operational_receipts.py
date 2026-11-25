@@ -54,7 +54,6 @@ def read_attempt(files, transaction, *, project_id, check_originals=True):
             'force_attempt_incomplete', exit_code=6)
     # Bind every original proof file before decoding, including metadata. A
     # byte-identical replacement during admission is still a different source.
-    from .force_receipts import paths
     with files.directory(tuple((root + '/receipts').split('/'))) as fd:
         require(fd is not None, 'force_attempt_incomplete', exit_code=6)
         receipt_names = sorted(os.listdir(fd))
@@ -63,26 +62,10 @@ def read_attempt(files, transaction, *, project_id, check_originals=True):
     original_proof = {p: _snapshot(files, p) for p in proof_paths}
     write = read_group(files, transaction, project_id=project_id, attempt=True)
     before_raw = _read_path(files, root + '/before.json')
-    before = parsed(before_raw)
-    require(set(before) == {'observation', 'inventory'} and jcs(before) == before_raw
-        and before['observation'] == write['marker']['operational'], 'force_before_binding', exit_code=6)
-    # Reconstruct the actual pre-effect inventory, not the plan's requested hashes.
-    old = {row['path']: {k: row[k] for k in ('size', 'sha256')} for row in write['target_inventory']}
-    for effect in write['files']:
-        if effect['before'] is None:
-            old.pop(effect['path'], None)
-        else:
-            old[effect['path']] = effect['before']
-    require(before['inventory'] == [dict(path=p, **v) for p, v in sorted(old.items())],
-        'force_before_inventory_binding', exit_code=6)
-    from .lock_values import LockRecord
-    owner = LockRecord(_read_path(files, root + '/owner.json')).data
-    marker = write['marker']
-    require(owner['transaction_id'] == transaction and owner['request_id'] == marker['request_id']
-        and owner['project_id'] == project_id and owner['root_identity'] == before['observation']['root_identity']
-        and marker['owner'] == {k: owner[k] for k in marker['owner']}, 'force_attempt_owner_binding', exit_code=6)
+    owner_raw = _read_path(files, root + '/owner.json')
+    before = validate_original_records(write, before_raw, owner_raw)
     require(_read_path(files, root + '/complete.json') == completion_seal(write, before_raw,
-        _read_path(files, root + '/owner.json')), 'force_attempt_completion_binding', exit_code=6)
+        owner_raw), 'force_attempt_completion_binding', exit_code=6)
     if check_originals:
         for row in before['observation']['operational_inventory']:
             raw, identity = _snapshot(files, row['path'])
@@ -172,6 +155,7 @@ def validate_original_records(write, before_raw, owner_raw):
     require(owner['transaction_id'] == marker['transaction_id'] and owner['request_id'] == marker['request_id']
         and owner['project_id'] == marker['project_id'] and owner['root_identity'] == before['observation']['root_identity']
         and marker['owner'] == {k: owner[k] for k in marker['owner']}, 'force_attempt_owner_binding', exit_code=6)
+    return before
 
 
 def reject_normal_request(files, request_id):
@@ -196,7 +180,10 @@ def _snapshot_local(files, path):
         _regular(before)
         raw = _read_path(files, path)
         after = os.stat(path.rsplit('/', 1)[-1], dir_fd=fd, follow_symlinks=False)
-        identity = lambda info: (info.st_dev, info.st_ino, info.st_mode, info.st_uid, info.st_gid)
-        require(identity(before) == identity(after) and before.st_size == len(raw) == after.st_size,
+        require(_file_identity(before) == _file_identity(after) and before.st_size == len(raw) == after.st_size,
             'force_attempt_original_changed', exit_code=6)
-        return raw, identity(after)
+        return raw, _file_identity(after)
+
+
+def _file_identity(info):
+    return info.st_dev, info.st_ino, info.st_mode, info.st_uid, info.st_gid
