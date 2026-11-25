@@ -659,3 +659,5 @@
 - [Bundle 816 — Betriebliche Force-Ausführung](bundle-816-force-operations.md).
 
 - [Bundle 817 — Byteparser und eingefrorene Forcebefunde](bundle-817-force-boundary-correction.md).
+
+- [Bundle 818 — Bindungsfehler beim belegten Work-Lock](bundle-818-work-owner-binding.md).

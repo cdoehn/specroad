@@ -17,6 +17,11 @@ def own_attempt(store):
     if call is None or not call.decisions.request.requested:
         return store
     with store._location.inspect_checkpoint() as held:
+        from ._root_lock import WorkBindingViolation
+        selected = dict(call.owners).get('work-lock.json')
+        actual = None if held._owner is None else sha256(held._owner[0]).hexdigest()
+        if selected is not None and selected != actual:
+            raise WorkBindingViolation('The explicitly selected Work owner changed')
         if held._owner is None:
             return store
         from ._root_lock import WorkBindingViolation

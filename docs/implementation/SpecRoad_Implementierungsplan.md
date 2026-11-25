@@ -1,7 +1,7 @@
 # SpecRoad – vollständiger W/R/C-Implementierungsplan
 
 **Status:** aktive Implementierung; verbindlicher Fortschritt im folgenden Fortschrittsblock.  
-**Planrevision:** 465 · **Stand:** 25. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.109
+**Planrevision:** 468 · **Stand:** 25. November 2026 · **Zielrelease:** 0.2.0 · **Spezifikationsstand:** 0.2.109
 
 Dieser Plan konkretisiert die vom Nutzer bestätigten **21 Meilensteine in 333 Schritte und 999 einzeln beschriebene W/R/C-Commits**. Bei seiner Anlage enthielt er keine abgeschlossene Produktimplementierung; der folgende Fortschrittsblock wird commitweise nach erfolgreicher Verhaltensabnahme aktualisiert. Die ursprünglichen Positionen bleiben erhalten; ausdrücklich geänderte Ausführungsfolgen stehen im Fortschrittsblock und in den betroffenen Voraussetzungen; die früher genehmigte lesende Voraussetzung RESTORE-PROPOSAL-PREREQUISITE wurde nach der damaligen Spezifikation innerhalb von 15.l.R vorgezogen und bleibt als normaler Prüfkern erhalten. Jeder Schritt behält seinen konkreten Arbeitsumfang und seine eigene Verhaltensabnahme.
 
@@ -49,6 +49,8 @@ keine Installation, keinen Budgetreset und keine Produktbenutzungsfreigabe.
 [Bundle 816](history/bundle-816-force-operations.md) führt den gesamten betrieblichen Scope 21.e2.W/R/C mit getrennten Gates fort; die folgenden Zielzähler sind erst nach dem jeweiligen erfolgreichen Apply gültig.
 
 [Korrektur 817](history/bundle-817-force-boundary-correction.md) erhält den bestätigten Klärungscommit von 816 und führt den vollständigen offenen 21.e2.W/R/C-Rest fort. 92 Testfehler verhindern den W-Abschluss; bestätigt bleiben 903/999 Positionen. Die folgenden Zielzähler benötigen jeweils ihr eigenes erfolgreiches Gate.
+
+[Korrektur 818](history/bundle-818-work-owner-binding.md) belegt den erfolgreichen W-Abschluss aus 817 (904/999 bestätigt) und korrigiert den einen verbliebenen R-Fehler. Der vollständige offene Rest bleibt 21.e2.R/C mit unveränderten Tests, Rollen und eigenen Gates; die folgenden Zielzähler sind bis dahin keine Erfolgsnachweise.
 
 ## Erhaltener Verlauf und frühere Auftragsbindungen bis Bundle 790
 
@@ -371,11 +373,11 @@ Korrektur der nativen Validierungsfälle und vollständiger Matrixrest: [Bundle 
 Prozess-/Journalreparatur des offenen C-Rests: [Bundle 790](history/bundle-790-process-journal.md). W/R sind bestätigt; C benötigt sein eigenes Apply-Gate.
 
 ```yaml
-plan_revision: 465
+plan_revision: 468
 implementation_plan_commits_total: 999
-implementation_plan_commits_completed: 904
-last_completed_plan_commit: 21.e2.W
-next_plan_commit: 21.e2.R
+implementation_plan_commits_completed: 905
+last_completed_plan_commit: 21.e2.R
+next_plan_commit: 21.e2.C
 priority_off_plan: null
 next_off_plan_commit: null
 last_completed_numbered_bundle: 815
@@ -397,7 +399,7 @@ plan_setup_message: "docs(plan): add detailed SpecRoad WRC implementation plan"
 Die ausdrücklich genehmigte [verlustfreie Aufteilung von 21.e](decisions/force-domains-812.md)
 führt 21.e1 und 21.e2 mit eigenen vollständigen W/R/C-Folgen. Der Umfang und
 alle alten Restfälle bleiben erhalten; Gesamtumfang jetzt **999** Positionen,
-Zielstand nach dem eigenen erfolgreichen Gate **904** abgeschlossene. Nächste Position **21.e2.R**.
+Zielstand nach dem eigenen erfolgreichen Gate **905** abgeschlossene. Nächste Position **21.e2.C**.
 Die normative Detailklärung steht in X.12.2; technische Umsetzung und
 Apply-Abnahme bleiben eigene, nachfolgende Stages. 21.f folgt erst auf 21.e2.C.
 

@@ -237,8 +237,13 @@ class _HeldWorkRoot:
                 fcntl.flock(self._root, fcntl.LOCK_EX | fcntl.LOCK_NB)
                 self._locked = True
             except BlockingIOError:
-                from ..force_operations import selected_owner, permit
-                if not self._inspection or not selected_owner(_LOCK, self._read(_LOCK)[0]):
+                from ..force_operations import current, selected_owner, permit
+                if not self._inspection:
+                    raise
+                if not selected_owner(_LOCK, self._read(_LOCK)[0]):
+                    call = current()
+                    if call is not None and dict(call.owners).get(_LOCK) is not None:
+                        raise WorkBindingViolation('The explicitly selected Work owner changed') from None
                     raise
                 permit(False, gate='lock:work_exclusivity', subject=str(self.path),
                     observed={'exclusive_access_proven': False}, requested='observe_explicit_owner_for_own_attempt')

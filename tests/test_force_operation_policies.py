@@ -206,3 +206,16 @@ def test_public_work_resume_uses_new_attempt_and_keeps_original_request(recorded
         assert request.data['request_id'] == 'force-own-analysis'
         assert len(request.data['subjects']) == 2
         assert inventory(original) == before
+
+
+@pytest.mark.parametrize('selected', ['no-owner', 'wrong-owner'])
+def test_work_owner_selection_is_not_ignored_after_observation_changed(recorded, tmp_path, selected):
+    _, _, location, store = work_setup(tmp_path)
+    from contextlib import nullcontext
+    from specroad.work._root_lock import WorkBindingViolation
+    with (location.for_checkpoint() if selected == 'wrong-owner' else nullcontext()):
+        before = inventory(location.path)
+        with forced([{'path': 'work-lock.json', 'sha256': '0' * 64}]):
+            with pytest.raises(WorkBindingViolation): own_attempt(store)
+        assert inventory(location.path) == before
+        assert not list(location.path.parent.glob(location.path.name + '.force-*'))

@@ -52,6 +52,15 @@ def read_attempt(files, transaction, *, project_id, check_originals=True):
     with files.directory(tuple(root.split('/'))) as fd:
         require(fd is not None and set(os.listdir(fd)) == {'owner.json', 'before.json', 'complete.json', 'receipts'},
             'force_attempt_incomplete', exit_code=6)
+    # Bind every original proof file before decoding, including metadata. A
+    # byte-identical replacement during admission is still a different source.
+    from .force_receipts import paths
+    with files.directory(tuple((root + '/receipts').split('/'))) as fd:
+        require(fd is not None, 'force_attempt_incomplete', exit_code=6)
+        receipt_names = sorted(os.listdir(fd))
+    proof_paths = [root + '/' + p for p in ('before.json', 'owner.json', 'complete.json')]
+    proof_paths += [root + '/receipts/' + p for p in receipt_names]
+    original_proof = {p: _snapshot(files, p) for p in proof_paths}
     write = read_group(files, transaction, project_id=project_id, attempt=True)
     before_raw = _read_path(files, root + '/before.json')
     before = parsed(before_raw)
@@ -76,11 +85,20 @@ def read_attempt(files, transaction, *, project_id, check_originals=True):
         _read_path(files, root + '/owner.json')), 'force_attempt_completion_binding', exit_code=6)
     if check_originals:
         for row in before['observation']['operational_inventory']:
-            from .force_bootstrap import addressed
-            with addressed(files, row['path']) as (observed_files, observed_path):
-                raw = _read_path(observed_files, observed_path)
-            require(len(raw) == row['size'] and sha256(raw).hexdigest() == row['sha256'],
+            raw, identity = _snapshot(files, row['path'])
+            require(len(raw) == row['size'] and sha256(raw).hexdigest() == row['sha256']
+                and list(identity) == before['observation']['operational_identities'][row['path']],
                 'force_original_changed', exit_code=6)
+        from ._lock_files import identity as root_identity
+        require(root_identity(os.fstat(files.root_fd)) == before['observation']['root_identity'],
+            'force_original_root_changed', exit_code=6)
+    require({p: _snapshot(files, p) for p in proof_paths} == original_proof,
+        'force_proof_changed', exit_code=6)
+    with files.directory(tuple(root.split('/'))) as fd:
+        require(set(os.listdir(fd)) == {'owner.json', 'before.json', 'complete.json', 'receipts'},
+            'force_attempt_namespace_changed', exit_code=6)
+    with files.directory(tuple((root + '/receipts').split('/'))) as fd:
+        require(sorted(os.listdir(fd)) == receipt_names, 'force_attempt_namespace_changed', exit_code=6)
     require(_read_path(files, root + '/before.json') == before_raw, 'force_before_changed', exit_code=6)
     return write
 
@@ -125,8 +143,14 @@ def read_force_attempt(root, transaction, *, expected_project_id):
     """Inspect an original complete attempt without clearing an older blocker."""
     from ._lock_files import LockFiles
     from .force_receipts import completion
-    with LockFiles(root) as files:
-        return completion(read_attempt(files, transaction, project_id=expected_project_id), current=False)
+    from .write_guard_values import WriteGuardError
+    try:
+        with LockFiles(root) as files:
+            return completion(read_attempt(files, transaction, project_id=expected_project_id), current=False)
+    except FileNotFoundError as error:
+        raise WriteGuardError('force_attempt_original_missing', exit_code=6) from error
+    except OSError as error:
+        raise WriteGuardError('force_attempt_read_failed', exit_code=5) from error
 
 
 def validate_original_records(write, before_raw, owner_raw):
@@ -156,3 +180,23 @@ def reject_normal_request(files, request_id):
         return
     require(not any(write['marker']['request_id'] == request_id for write in
         completed_attempts(files, include_incomplete=True)), 'request_force_binding_conflict', exit_code=6)
+
+
+def _snapshot(files, path):
+    from .force_bootstrap import addressed
+    with addressed(files, path) as (observed_files, observed_path):
+        return _snapshot_local(observed_files, observed_path)
+
+
+def _snapshot_local(files, path):
+    with files.directory(tuple(path.split('/')[:-1])) as fd:
+        require(fd is not None, 'force_attempt_original_missing', exit_code=6)
+        from ..security.paths import _regular
+        before = os.stat(path.rsplit('/', 1)[-1], dir_fd=fd, follow_symlinks=False)
+        _regular(before)
+        raw = _read_path(files, path)
+        after = os.stat(path.rsplit('/', 1)[-1], dir_fd=fd, follow_symlinks=False)
+        identity = lambda info: (info.st_dev, info.st_ino, info.st_mode, info.st_uid, info.st_gid)
+        require(identity(before) == identity(after) and before.st_size == len(raw) == after.st_size,
+            'force_attempt_original_changed', exit_code=6)
+        return raw, identity(after)
