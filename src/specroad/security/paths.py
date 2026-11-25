@@ -15,6 +15,16 @@ _HAS_SAFE_OPEN = (os.name == "posix" and os.open in os.supports_dir_fd
 
 
 def _parts(logical_path):
+    from ..force_operations import permit, explicit_path
+    if (isinstance(logical_path, str) and logical_path and (
+            '\\' in logical_path or ':' in logical_path or any(ord(c) < 32 or ord(c) == 127 for c in logical_path))
+            and permit(False,
+            gate='path:portable_spelling', subject=logical_path, observed=logical_path,
+            requested='literal_root_relative_address')):
+        try:
+            return tuple(explicit_path(logical_path).split('/'))
+        except ValueError as error:
+            raise SafetyViolation('An unambiguous relative address is required') from error
     if not isinstance(logical_path, str) or not logical_path or "\\" in logical_path:
         raise SafetyViolation("A relative project path is required")
     try:

@@ -21,7 +21,7 @@ class ForceAudit:
             authoring_binding=dict(command_id=marker['command_id'], actor=write['actor'],
                 planned_at=write['planned_at'], operations=write['operations'],
                 operation_sequence_sha256=write['operations_sha256']),
-            receipts=parsed(force_receipts.receipt_group(write)[completion_marker_path(marker['transaction_id'])])['receipts'],
+            receipts=parsed(force_receipts.receipt_group(write)[force_receipts.paths(marker)[1]])['receipts'],
             validation=write['validation'], approval_granted=False, write_authorized=False)
 
     def __bool__(self):
@@ -33,7 +33,19 @@ def read_force_group(files, project_id):
     require(len(paths) == 1, 'force_completion_group_required')
     raw = files[paths[0]]
     write = force_receipts.validate_transaction(raw)
-    require(write['marker']['project_id'] == project_id and files == force_receipts.receipt_group(write),
+    expected = force_receipts.receipt_group(write)
+    if write['marker']['format_version'] == 'force-write-guard-v2':
+        from .force_lock import attempt_root
+        from .force_operational_receipts import validate_original_records, completion_seal
+        prefix = attempt_root(write['marker']['transaction_id'])
+        require(prefix + '/before.json' in files and prefix + '/owner.json' in files,
+            'force_attempt_original_missing', exit_code=6)
+        validate_original_records(write, files[prefix + '/before.json'], files[prefix + '/owner.json'])
+        require(files.get(prefix + '/complete.json') == completion_seal(write,
+            files[prefix + '/before.json'], files[prefix + '/owner.json']),
+            'force_attempt_completion_binding', exit_code=6)
+        expected.update({p: files[p] for p in (prefix + '/before.json', prefix + '/owner.json', prefix + '/complete.json')})
+    require(write['marker']['project_id'] == project_id and files == expected,
         'force_completion_changed', exit_code=6)
     return ForceAudit(raw)
 

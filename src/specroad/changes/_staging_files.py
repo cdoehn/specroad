@@ -16,7 +16,9 @@ def _image(parent, name, size, digest, *, identity=None):
     """Hash the complete current regular file through a freshly verified descriptor."""
     before = os.stat(name, dir_fd=parent, follow_symlinks=False)
     guards._regular(before)
-    if before.st_nlink != 1:
+    from ..force_operations import permit
+    if not permit(before.st_nlink == 1, gate='safety:image_link_count', subject=name,
+                  observed=before.st_nlink, requested=1):
         raise StagingError('staging_hardlink_refused', path=name, exit_code=7)
     if before.st_size != size or (identity is not None and guards._identity(before) != identity):
         raise StagingError('staging_image_changed', path=name, exit_code=6)

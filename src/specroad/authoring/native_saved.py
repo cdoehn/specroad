@@ -29,7 +29,12 @@ def apply_saved(root, intent, *, actor, request_id=None, dry_run=False,
         if force and 'force' not in data:
             from ..storage.project import ProjectSource
             project_id = ProjectSource(root).configuration.project_id
-            plan = bind_force_plan(plan, project_id=project_id, force=force, reason=force_reason)
+            from ..force_operations import current
+            call = current()
+            selected = None if call is None or not call.owners else {
+                'owners': [{'path': p, 'sha256': h} for p, h in call.owners]}
+            plan = bind_force_plan(plan, project_id=project_id, force=force, reason=force_reason,
+                                   operational_binding=selected)
             _attempt['plan'] = plan
         return apply_force_plan(root, plan, actor=actor, request_id=request_id, force=force,
             force_reason=force_reason, dry_run=dry_run, authority=authority, services=services, _attempt=_attempt)

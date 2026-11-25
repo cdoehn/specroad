@@ -10,7 +10,8 @@ from .write_guard_values import inventory, require
 
 def effect_path(path):
     from ..bundles.migration_source import ADMIN_ROOTS
-    project_path(path)
+    from ..force_operations import explicit_path
+    explicit_path(path)
     require(path.split('/')[0] not in (*ADMIN_ROOTS, '.specroad'), 'force_target_not_product_resource', exit_code=2)
 
 

@@ -22,16 +22,23 @@ from ._publication_observation import _root, _package_bindings, observe_publicat
 _ACCESS_SUPPORTED = os.access in os.supports_dir_fd and os.access in os.supports_effective_ids
 
 def _rights(fd, path):
-    # Advisory even under a cooperating writer lock: actual publication still
-    # needs error handling for ACL/mount changes, quotas, ENOSPC and I/O errors.
+    # Advisory diagnostics do not replace the actual syscall's rights/error result.
+    from ..force_operations import permit
     if not _ACCESS_SUPPORTED:
-        raise PublicationCheckError('effective_permission_probe_unavailable', exit_code=7, path=path)
-    mode = os.fstat(fd).st_mode
-    if not mode & 0o222 or not mode & 0o111 or not os.access(
-            '.', os.W_OK | os.X_OK, dir_fd=fd, effective_ids=True):
-        raise PublicationCheckError('publication_parent_not_writable', exit_code=7, path=path)
+        if not permit(False, gate='safety:permission_probe', subject=path,
+                      observed='unavailable', requested='attempt_native_publication'):
+            raise PublicationCheckError('effective_permission_probe_unavailable', exit_code=7, path=path)
+    else:
+        mode = os.fstat(fd).st_mode
+        allowed = bool(mode & 0o222 and mode & 0o111 and os.access(
+            '.', os.W_OK | os.X_OK, dir_fd=fd, effective_ids=True))
+        if not permit(allowed, gate='safety:permission_probe', subject=path,
+                      observed=allowed, requested='attempt_native_publication'):
+            raise PublicationCheckError('publication_parent_not_writable', exit_code=7, path=path)
     if hasattr(os, 'fstatvfs') and os.fstatvfs(fd).f_flag & getattr(os, 'ST_RDONLY', 1):
-        raise PublicationCheckError('publication_mount_read_only', exit_code=7, path=path)
+        if not permit(False, gate='safety:mount_policy', subject=path,
+                      observed='read_only', requested='attempt_native_publication'):
+            raise PublicationCheckError('publication_mount_read_only', exit_code=7, path=path)
 
 
 def _observe(source, model, request, package_files=()):

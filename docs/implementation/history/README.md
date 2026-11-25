@@ -655,3 +655,7 @@
 - [Bundle 814 — Proposal-Aufruf und Force-Requestidentität](bundle-814-force-request-correction.md).
 
 - [Bundle 815 — Lokale Historienleser und Force-Schemaabnahmen](bundle-815-local-history-correction.md).
+
+- [Bundle 816 — Betriebliche Force-Ausführung](bundle-816-force-operations.md).
+
+- [Bundle 817 — Byteparser und eingefrorene Forcebefunde](bundle-817-force-boundary-correction.md).

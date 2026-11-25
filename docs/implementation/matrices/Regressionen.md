@@ -102,3 +102,11 @@ Vollständige Vorbedingungen und Oracles stehen in Anhang X.13. Alle bestehenden
 | R-85 | 21.t | 21.w/x, 20.d, 20.n |
 | R-86 | 21.d/e | 21.w/x, 20.d, 20.n |
 | R-87 | 21.u | 21.w/x, 20.d, 20.n |
+
+
+Für R-86/R-87 bindet [21.e2 / Bundle 816](../history/bundle-816-force-operations.md)
+zusätzlich `tests/test_force_operations.py`, `tests/test_force_operation_policies.py`
+und ab R `tests/test_force_operations_right.py`: reale Normal-/Force-Wirkung,
+beobachtete Eigentümer, erhaltene Marker, Work/Bundle, Vorherbytes, physische
+Fehler und vollständige passive Belege. Sämtliche bestehenden e1-Oracles
+bleiben verpflichtend; dies behauptet keine bereits bestandene Apply-Abnahme.

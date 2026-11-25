@@ -25,8 +25,26 @@ def verify_bundle(raw, *, expected_sha256=None):
     """
     try:
         container = BundleContainer(raw, expected_sha256=expected_sha256)
-        scope = verify_model(container)
-        return _result(container, expected_sha256 is not None, scope)
+        from ..force_operations import current, permit
+        try:
+            scope = verify_model(container)
+            model_verified = True
+        except (ModelError, BundleError, SrxError, SafetyViolation) as error:
+            if not permit(False, gate='schema:bundle_model', subject='bundle',
+                    observed={'reason': getattr(error, 'reason', type(error).__name__)},
+                    requested='report_actual_readable_inventory'):
+                raise
+            scope = 'container_manifest_and_payload_only'
+            model_verified = False
+        result = _result(container, expected_sha256 is not None, scope)
+        call = current()
+        if call is not None and call.decisions.summary['used']:
+            from hashlib import sha256
+            result.update(format_version='force-bundle-verify-v1', force=call.decisions.summary,
+                container_verified=False, model_root_verified=model_verified,
+                closure_verified=model_verified, external_hash_verified=(expected_sha256 is not None
+                    and sha256(raw).hexdigest() == expected_sha256))
+        return result
     except SafetyViolation as error:
         raise BundleError('unsafe_bundle_model', code='SRV083', exit_code=7) from error
     except ModelError as error:

@@ -125,6 +125,9 @@ def require_bootstrap_complete(root):
     if state['state']=='clean' and target.name=='project':
         state=observe_bootstrap(target.parent)
     if state['state'] != 'clean':
+        from ..changes.force_bootstrap import permit_read
+        if permit_read(root, state):
+            return
         error = BootstrapError('project_corrupted' if state['project_corrupted'] else
                                'bootstrap_' + state['state'], exit_code=5)
         error.observation = state

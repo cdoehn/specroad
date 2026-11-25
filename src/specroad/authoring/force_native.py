@@ -27,6 +27,10 @@ from ..changes.native_force_binding import native_binding, _previous
 from ..changes.force_attempt import audited
 
 
+from ..force_operations import invocation_scope
+
+
+@invocation_scope
 @audited
 def author_force(root, intent, *, actor, request_id=None, dry_run=False,
                  expected_model_root=None, authority=None, services=None,
@@ -65,7 +69,8 @@ def author_force(root, intent, *, actor, request_id=None, dry_run=False,
     from ..bundles._receipts import receipt_path
     before = {p: b for p, b in observed.items() if not p.startswith('.specroad/')}
     history = {p: b for p, b in observed.items() if receipt_path(p)}
-    decisions = ForceDecisions(request)
+    from ..force_operations import current
+    decisions = current().decisions
     _attempt['decisions'] = decisions
     # Observe actor policy independently from target validation.
     from ..changes import prepare_authoring_request

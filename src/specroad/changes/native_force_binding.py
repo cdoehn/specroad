@@ -21,7 +21,23 @@ def _previous(files, original, actor, request_id, force, project_id):
         return None
     raw = _read_path(files, request_receipt_path(request_id), optional=True)
     if raw is None:
-        return None
+        from .force_operational_receipts import completed_attempts
+        matches = [w for w in completed_attempts(files, include_incomplete=True, check_originals=True)
+                   if w['marker']['request_id'] == request_id]
+        if not matches:
+            return None
+        require(len(matches) == 1, 'request_force_binding_conflict', exit_code=6)
+        write = matches[0]; value = write['plan']
+        from ..force_operations import current
+        call = current()
+        selected = [] if call is None else [{'path': p, 'sha256': h} for p, h in call.owners]
+        require(value.get('native_intent') == original and value['actor'] == actor
+            and value['force'] == force.data and value['request_id'] == request_id
+            and value.get('operational_binding') == {'owners': selected}
+            and write['marker']['command_id'] == original['command_id'],
+            'request_force_binding_conflict', exit_code=6)
+        from .values import ChangePlan
+        return ChangePlan(jcs(value))
     hint = parsed(raw)
     require(hint.get('format_version') == 'force-request-receipt-v1',
         'request_force_binding_conflict', exit_code=6)

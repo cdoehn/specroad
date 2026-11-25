@@ -9,7 +9,7 @@ from .options import OptionResolutionError
 from .invocation_context import InvocationContextBuilder
 from .registry import CommandRegistry, CommandUsageError
 from .requests import CommandRequest
-from .results import CommandResult, FailureKind, OperationFailure, failed_result
+from .results import CommandResult, FailureKind, OperationFailure, failed_result, thaw
 from ..diagnostics import Diagnostic
 from ..model.native_force_command_ids import COMMANDS as NATIVE_FORCE_COMMANDS
 
@@ -57,6 +57,8 @@ def execute(arguments: list[str] | tuple[str, ...] | CommandRequest, *, registry
     from ..force import ForceRequest, ForceDecisions, ForceContractError
     force = ForceDecisions()
     consumption_call = None
+    from contextlib import ExitStack
+    operational_scope = ExitStack()
     try:
         selected = builtin_registry() if registry is None else registry
         invocation = (selected.bind_request(arguments) if isinstance(arguments, CommandRequest)
@@ -65,6 +67,8 @@ def execute(arguments: list[str] | tuple[str, ...] | CommandRequest, *, registry
         options = invocation.options
         try:
             force = ForceDecisions(ForceRequest(options.get('--force', False), options.get('--force-reason')))
+            from ..force_operations import scope, option_binding
+            operational_scope.enter_context(scope(force, option_binding(options)))
         except (ForceContractError, UnicodeError) as error:
             raise CommandUsageError('Invalid explicit Force request') from error
         if (options.get('--metrics') is True or
@@ -80,9 +84,8 @@ def execute(arguments: list[str] | tuple[str, ...] | CommandRequest, *, registry
                     consumption_call = work.begin(targets)
             except (ResourcePolicyError, ConsumptionError) as error:
                 raise CommandUsageError(str(error)) from error
-        if (force.request.requested and (command == 'work.resume' or
-                invocation.command.command_class.value == 'normative_write'
-                and command not in ('change.apply', *NATIVE_FORCE_COMMANDS))):
+        if (force.request.requested and invocation.command.command_class.value == 'normative_write'
+                and command not in ('change.apply', *NATIVE_FORCE_COMMANDS)):
             raise CommandUsageError('This Force operation requires its native domain adapter')
         builder = InvocationContextBuilder() if context_builder is None else context_builder
         invocation = builder.prepare(
@@ -110,11 +113,24 @@ def execute(arguments: list[str] | tuple[str, ...] | CommandRequest, *, registry
         outcome = failed_result(command, FailureKind.ENVIRONMENT, "A required I/O operation failed.")
     except Exception:
         outcome = failed_result(command, FailureKind.INTERNAL, "An internal command contract failed.")
+    finally:
+        operational_scope.close()
     attempted = outcome.details.get('authoring_attempt')
     if isinstance(attempted, Mapping) and attempted.get('force') is not None:
         outcome = replace(outcome, force=attempted['force'], validation_status=attempted['validation_status'])
     if not outcome.force['requested']:
-        outcome = replace(outcome, force=force.summary)
+        from .results import ResultStatus
+        outcome = replace(outcome, force=force.summary,
+            status=ResultStatus.FORCED if force.summary['used'] and outcome.status is ResultStatus.SUCCESS else outcome.status)
+    if force.summary['used']:
+        from ..force import validate_override
+        for row in outcome.force['overrides']:
+            checked = validate_override(thaw(row))
+            force.decide(False if checked['original_decision'] == 'denied' else None,
+                **{k: v for k, v in checked.items() if k != 'original_decision'})
+        from .results import ResultStatus
+        outcome = replace(outcome, force=force.summary,
+            status=ResultStatus.FORCED if outcome.status is ResultStatus.SUCCESS else outcome.status)
     if outcome.project is None and project is not None:
         outcome = replace(outcome, project=project)
     # A handler can perform a later check against changed live state.

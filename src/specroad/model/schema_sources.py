@@ -35,6 +35,7 @@ def providers_for(registry):
     providers[CHANGE_PLAN_ID] = SchemaProvider("exchange", CHANGE_PLAN_VERSION, CHANGE_PLAN_FAMILY, None)
     providers['urn:specroad:schema:1.3.0:change-plan'] = SchemaProvider('exchange', '1.3.0', CHANGE_PLAN_FAMILY, None)
     providers['urn:specroad:schema:1.4.0:change-plan'] = SchemaProvider('exchange', '1.4.0', CHANGE_PLAN_FAMILY, None)
+    providers['urn:specroad:schema:1.5.0:change-plan'] = SchemaProvider('exchange', '1.5.0', CHANGE_PLAN_FAMILY, None)
     for schema_id in RESULT_IDS:
         version, category, _ = identity_metadata(schema_id)
         providers[schema_id] = SchemaProvider(category, version, "result", schema_id)

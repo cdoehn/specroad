@@ -74,7 +74,7 @@ class CommandRequest:
     def from_mapping(cls, value):
         """Accept only request data, never handlers or previously resolved state."""
         if (not isinstance(value, Mapping) or 'command_id' not in value
-                or set(value) - {'command_id', 'options', 'arguments', 'force', 'force_reason'}):
+                or set(value) - {'command_id', 'options', 'arguments', 'force', 'force_reason', 'operational_binding'}):
             raise CommandUsageError("Invalid structured request fields")
         options = value.get('options', {})
         if not isinstance(options, Mapping):
@@ -92,4 +92,15 @@ class CommandRequest:
                 options['--force'] = True
             if request.reason is not None:
                 options['--force-reason'] = request.reason
+        if 'operational_binding' in value:
+            from ..force_operations import binding
+            from ..force import ForceContractError
+            try:
+                owners = binding(value['operational_binding'])['owners']
+                if options.get('--force') is not True or '--force-owner' in options:
+                    raise ForceContractError('Explicit unique Force binding required')
+            except ForceContractError as error:
+                raise CommandUsageError(str(error)) from error
+            if owners:
+                options['--force-owner'] = tuple(r['path'] + '=' + r['sha256'] for r in owners)
         return cls(value['command_id'], options, value.get('arguments', {}))

@@ -7,7 +7,8 @@
     3,
     5,
     6,
-    7
+    7,
+    8
   ],
   "fixture_ids": [
     "SR-FIX-FORCE-COMMON-v1",
@@ -21,13 +22,13 @@
   "json_pointers": [],
   "method": "automated_behavior",
   "open_items": [
-    "Implement the complete existing 21.e2.W/R/C group with the additive X.12.3 owner binding and own-attempt records, then its entire integration; no scope split.",
-    "Current Apply acceptance and the final 21.w/x integration and human M19/M20 acceptance remain required."
+    "The current prepared 21.e2 stage still requires its own Apply gate; final 21.w/x integration and human M19/M20 acceptance remain required.",
+    "Final actual-build resource evidence and product-use acceptance remain pending."
   ],
   "oracle": {
     "kind": "behavior",
     "requirement_contract": "Erzwungen ungültige Projekt-/Planbestände MÜSSEN nach X.12 für ehrliche Diagnose und ausdrücklich bezeichnete Korrektur zugänglich bleiben, ohne automatische Recovery oder fingierte Modellwurzel.",
-    "scope": "Prepared semantic 21.e1 coverage only; complete byte targets, actual negative/unknown findings, exact request/receipt binding, no invented evidence or approval. This is not a test-pass or whole-requirement completion claim."
+    "scope": "Prepared complete 21.e1/21.e2 behavior: explicit targets, native Work/Bundle, retained owners and markers, exact own attempts, policy negatives, real physical failure and passive proof. Each state needs its own Apply acceptance; this is not a whole-requirement or release pass."
   },
   "preconditions": [
     "Owned native project and complete original inputs; synthetic actors; explicit live host authority for publication."
@@ -104,6 +105,45 @@
     "tests/test_force_native.py::test_real_host_authority_is_not_product_force_policy[None]",
     "tests/test_force_native.py::test_real_host_authority_is_not_product_force_policy[authority1]",
     "tests/test_force_native.py::test_same_request_cannot_replay_different_force_reason_or_operation",
+    "tests/test_force_operation_policies.py::test_archive_resource_limit_records_exact_negative_and_all_bytes",
+    "tests/test_force_operation_policies.py::test_bundle_negative_checks_preserve_actual_bytes_and_allow_native_extraction[compressed]",
+    "tests/test_force_operation_policies.py::test_bundle_negative_checks_preserve_actual_bytes_and_allow_native_extraction[invalid_manifest_binding]",
+    "tests/test_force_operation_policies.py::test_bundle_negative_checks_preserve_actual_bytes_and_allow_native_extraction[wrong_hash]",
+    "tests/test_force_operation_policies.py::test_cli_force_bundle_verification_is_scoped_and_never_becomes_a_normal_pass",
+    "tests/test_force_operation_policies.py::test_force_private_work_mode_runs_native_handler_without_chmod_of_original",
+    "tests/test_force_operation_policies.py::test_literal_portable_path_policy_is_overridden_only_on_explicit_call[owned/CON.txt]",
+    "tests/test_force_operation_policies.py::test_literal_portable_path_policy_is_overridden_only_on_explicit_call[owned/colon:name.txt]",
+    "tests/test_force_operation_policies.py::test_literal_portable_path_policy_is_overridden_only_on_explicit_call[owned/trailing.]",
+    "tests/test_force_operation_policies.py::test_native_work_force_clones_bound_inputs_and_preserves_busy_original[False]",
+    "tests/test_force_operation_policies.py::test_native_work_force_clones_bound_inputs_and_preserves_busy_original[True]",
+    "tests/test_force_operation_policies.py::test_public_work_resume_uses_new_attempt_and_keeps_original_request",
+    "tests/test_force_operation_policies.py::test_structured_owner_input_is_explicit_typed_and_not_ambient",
+    "tests/test_force_operation_policies.py::test_unknown_or_ambiguous_bundle_bytes_never_invent_target_data[duplicate]",
+    "tests/test_force_operation_policies.py::test_unknown_or_ambiguous_bundle_bytes_never_invent_target_data[navigation]",
+    "tests/test_force_operation_policies.py::test_unknown_or_ambiguous_bundle_bytes_never_invent_target_data[unreadable]",
+    "tests/test_force_operations.py::test_changed_old_marker_does_not_inherit_previous_success",
+    "tests/test_force_operations.py::test_live_kernel_lock_requires_exact_selected_owner_without_unlocking[False-absent]",
+    "tests/test_force_operations.py::test_live_kernel_lock_requires_exact_selected_owner_without_unlocking[False-exact]",
+    "tests/test_force_operations.py::test_live_kernel_lock_requires_exact_selected_owner_without_unlocking[False-wrong]",
+    "tests/test_force_operations.py::test_live_kernel_lock_requires_exact_selected_owner_without_unlocking[True-absent]",
+    "tests/test_force_operations.py::test_live_kernel_lock_requires_exact_selected_owner_without_unlocking[True-exact]",
+    "tests/test_force_operations.py::test_live_kernel_lock_requires_exact_selected_owner_without_unlocking[True-wrong]",
+    "tests/test_force_operations.py::test_missing_own_original_never_becomes_historical_success[before.json]",
+    "tests/test_force_operations.py::test_missing_own_original_never_becomes_historical_success[complete.json]",
+    "tests/test_force_operations.py::test_missing_own_original_never_becomes_historical_success[owner.json]",
+    "tests/test_force_operations.py::test_missing_own_original_never_becomes_historical_success[receipts/committed.json]",
+    "tests/test_force_operations.py::test_missing_own_original_never_becomes_historical_success[receipts/request.json]",
+    "tests/test_force_operations.py::test_missing_own_original_never_becomes_historical_success[receipts/transaction.json]",
+    "tests/test_force_operations.py::test_old_marker_stays_blocking_after_exact_force_effect_and_replay",
+    "tests/test_force_operations.py::test_operational_owner_is_bound_in_both_hashes_and_not_inherited",
+    "tests/test_force_operations.py::test_operational_request_cannot_be_reused_by_normal_authoring",
+    "tests/test_force_operations.py::test_real_io_failure_retains_original_and_own_incomplete_state[before_attempt_completion]",
+    "tests/test_force_operations.py::test_real_io_failure_retains_original_and_own_incomplete_state[effect_synced:0]",
+    "tests/test_force_operations.py::test_real_io_failure_retains_original_and_own_incomplete_state[marker_synced]",
+    "tests/test_force_operations.py::test_saved_owner_selection_cannot_silently_replace_explicit_call_selection",
+    "tests/test_force_operations.py::test_sibling_bootstrap_marker_is_bound_and_never_cleared[False]",
+    "tests/test_force_operations.py::test_sibling_bootstrap_marker_is_bound_and_never_cleared[True]",
+    "tests/test_force_operations.py::test_unbound_original_change_during_host_check_cannot_finish_own_attempt",
     "tests/test_force_right.py::test_blocked_dependent_stages_are_unknown_not_passing",
     "tests/test_force_right.py::test_broken_configuration_repair_uses_previously_explicit_identity",
     "tests/test_force_right.py::test_cli_real_host_failure_retains_requested_force_and_negative_findings",

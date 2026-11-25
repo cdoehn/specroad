@@ -78,7 +78,7 @@ def _validate_plan(value, *, hash_present=True):
         raise ChangePlanError("unsupported_regular_metadata_policy", pointer="/metadata_policy_version", code="SRV174")
     if not migration and not merge and value.get("metadata_policy_version") != METADATA_POLICY:
         raise ChangePlanError("unsupported_regular_metadata_policy", pointer="/metadata_policy_version", code="SRV174")
-    if value.get('format_version') not in ('1.2.0', '1.3.0', '1.4.0'):
+    if value.get('format_version') not in ('1.2.0', '1.3.0', '1.4.0', '1.5.0'):
         raise ChangePlanError('unsupported_change_plan_format')
     schema = change_plan_schema(version=value['format_version'])
     # Dispatch tagged operation validation separately for precise diagnostics;
@@ -113,11 +113,16 @@ def _validate_plan(value, *, hash_present=True):
             raise ChangePlanError("result_hash_mismatch", pointer=at + "/sha256", code="SRV146")
     from .resource_replace import check_plan
     raw_plan = check_plan(value)
-    if value['format_version'] in ('1.3.0', '1.4.0'):
+    if value['format_version'] in ('1.3.0', '1.4.0', '1.5.0'):
         from ..force import ForceRequest
         ForceRequest.from_mapping(value['force'])
         _text(value['project_id'], '/project_id')
-    if value['format_version'] == '1.4.0':
+    if value['format_version'] == '1.5.0':
+        from ..force_operations import binding
+        binding(value['operational_binding'])
+        if not value['force']['requested']:
+            raise ChangePlanError('explicit_operational_force_required')
+    if value.get('native_intent') is not None:
         from ..model.native_force_command_ids import COMMANDS
         original = value['native_intent']
         if original['execution_binding'] is not None:

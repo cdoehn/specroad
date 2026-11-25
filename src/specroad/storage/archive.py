@@ -16,6 +16,7 @@ from ..model.canonical import canonical_json_bytes
 from ..model.errors import ModelError
 from ..model.paths import project_path
 from ..storage.json_syntax import parse_json_object
+from ..force_operations import current, explicit_path, permit
 
 
 _ZIP_TIMESTAMP = (1980, 1, 1, 0, 0, 0)
@@ -35,6 +36,10 @@ class ArchiveError(ValueError):
 
 
 def _require(condition, reason='invalid_archive'):
+    policy = reason.startswith('noncanonical_') or reason == 'archive_header_mismatch'
+    if policy:
+        condition = permit(condition, gate='format:' + reason, subject='archive',
+                           observed=reason, requested='decode_actual_bytes')
     if not condition:
         raise ArchiveError(reason)
 
@@ -44,7 +49,16 @@ def _path(name):
             or '\\' in name or ':' in name
             or any(part in ('', '.', '..') for part in name.split('/'))
             or any(ord(c) < 32 or ord(c) == 127 for c in name)):
-        raise ArchiveError('unsafe_archive_path', exit_code=7)
+        call = current()
+        if call is None or not call.decisions.request.requested:
+            raise ArchiveError('unsafe_archive_path', exit_code=7)
+        try:
+            explicit_path(name)
+        except (ValueError, UnicodeError) as error:
+            raise ArchiveError('unsafe_archive_path', exit_code=7) from error
+        if not permit(False, gate='path:archive_spelling', subject=name, observed=name,
+                      requested='literal_archive_member'):
+            raise ArchiveError('unsafe_archive_path', exit_code=7)
     try:
         return name.encode('utf-8')
     except UnicodeError as error:
@@ -84,7 +98,9 @@ def validate_portable_archive_paths(names):
             key = prefix.casefold()
             if ((key in prefixes and prefixes[key] != prefix)
                     or (end < len(parts) and key in files)):
-                raise ArchiveError('unsafe_archive_path_collision', exit_code=7)
+                if not permit(False, gate='path:portable_collision', subject=prefix,
+                              observed=prefixes.get(key), requested=prefix):
+                    raise ArchiveError('unsafe_archive_path_collision', exit_code=7)
             prefixes[key] = prefix
 
 
@@ -156,7 +172,9 @@ def encode_zip(payloads, *, max_uncompressed_bytes):
     """Canonical members only; domain manifests are the caller's concern."""
     _byte_limit(max_uncompressed_bytes)
     _require(type(payloads) is dict and all(type(v) is bytes for v in payloads.values()))
-    if sum(map(len, payloads.values())) > max_uncompressed_bytes:
+    if not permit(sum(map(len, payloads.values())) <= max_uncompressed_bytes,
+            gate='resource_limit:archive_bytes', subject='archive',
+            observed=sum(map(len, payloads.values())), requested=max_uncompressed_bytes):
         raise ArchiveError('archive_byte_limit', exit_code=7)
     _inventory(payloads)  # Hash every name/payload before inclusion, as for bundles.
     _paths(payloads)
@@ -177,7 +195,8 @@ def decode_zip(raw, *, max_uncompressed_bytes, validate_paths=None):
 
 def _entry_profile(info, archive_size):
     """Shared entry invariants, preserving security-before-format failures."""
-    if info.external_attr != _ZIP_EXTERNAL_ATTR:
+    if not permit(info.external_attr == _ZIP_EXTERNAL_ATTR, gate='safety:archive_entry_mode',
+                  subject=info.filename, observed=info.external_attr, requested=_ZIP_EXTERNAL_ATTR):
         raise ArchiveError('unsafe_archive_entry', exit_code=7)
     _require(info.compress_type == ZIP_STORED
         and info.file_size == info.compress_size and info.file_size <= archive_size
@@ -237,7 +256,9 @@ def _read_zip(raw, *, manifest_name=None, max_uncompressed_bytes=None, validate_
                 # Inspect the complete portable target set for unsafe types
                 # before a different member's format error can mask them.
                 # The legacy manifest-bound API keeps its original ordering.
-                if any(info.external_attr != _ZIP_EXTERNAL_ATTR for info in infos):
+                if not permit(all(info.external_attr == _ZIP_EXTERNAL_ATTR for info in infos),
+                        gate='safety:archive_entry_mode', subject='archive',
+                        observed=[info.external_attr for info in infos], requested=_ZIP_EXTERNAL_ATTR):
                     raise ArchiveError('unsafe_archive_entry', exit_code=7)
             _require(len(names) == len(set(names))
                      and (manifest_name is None or names.count(manifest_name) == 1),
@@ -249,9 +270,14 @@ def _read_zip(raw, *, manifest_name=None, max_uncompressed_bytes=None, validate_
             if max_uncompressed_bytes is not None:
                 _require(names == sorted(names, key=lambda name: name.encode('utf-8')),
                          'noncanonical_archive')
-                _stored_layout(raw, infos)
-            if (max_uncompressed_bytes is not None
-                    and sum(info.file_size for info in infos) > max_uncompressed_bytes):
+                # The stored-profile preflight is not a decompressor. A
+                # noncanonical compressed member is read by ZipFile, including
+                # its original header, supported method, extent and CRC checks.
+                if all(info.compress_type == ZIP_STORED and not info.extra for info in infos):
+                    _stored_layout(raw, infos)
+            if not permit(max_uncompressed_bytes is None or sum(info.file_size for info in infos) <= max_uncompressed_bytes,
+                    gate='resource_limit:archive_bytes', subject='archive',
+                    observed=sum(info.file_size for info in infos), requested=max_uncompressed_bytes):
                 raise ArchiveError('archive_byte_limit', exit_code=7)
             entries = {info.filename: archive.read(info) for info in infos}
     except (BadZipFile, OSError, ValueError, NotImplementedError) as error:

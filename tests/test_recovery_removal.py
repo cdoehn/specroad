@@ -56,5 +56,9 @@ def test_work_resume_cannot_accept_old_owner_takeover_options(tmp_path, option):
                'options': {option: True if option in ('--force', '--accept-remote-risk') else 'old-authority'}}
     with no_write_attempts():
         result = execute_request(request, cwd=tmp_path).result
-    assert result.exit_code == 2
+    # X.12.3 now accepts explicit Force, but supplies neither a missing Work
+    # nor owner-takeover authority. The removed recovery options stay invalid.
+    assert result.exit_code == (3 if option == '--force' else 2)
+    assert result.force['requested'] is (option == '--force')
+    assert not result.force['used'] and not result.force['overrides']
     assert inventory(tmp_path) == before

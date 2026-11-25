@@ -1,12 +1,10 @@
 {
   "format_version": 1,
-  "specification_sha256": "4ff085faac3f5db13020a39960751233d7b8bd381b9b8d0fa4f71ba4fe36ccbd",
   "regressions": [
     {
+      "contract": "Regular random128 and repeatable Q.3 migration identities with no entropy substitution.",
       "regression_id": "R-01",
       "requirement_id": "SR-REQ-0650",
-      "verification_id": "SR-VER-0041",
-      "contract": "Regular random128 and repeatable Q.3 migration identities with no entropy substitution.",
       "test_ids": [
         "test_artifact_identity.ArtifactIdentityRightTests.test_allocation_must_carry_exact_new_reservation",
         "test_artifact_identity.ArtifactIdentityRightTests.test_allocation_performs_no_file_network_or_process_operations",
@@ -83,13 +81,13 @@
         "tests/test_migration_relations_right.py::test_relation_lookup_rejects_a_changed_or_unbound_original[path]",
         "tests/test_migration_relations_right.py::test_relation_lookup_rejects_a_changed_or_unbound_original[role]",
         "tests/test_migration_relations_right.py::test_relation_lookup_rejects_a_changed_or_unbound_original[snapshot]"
-      ]
+      ],
+      "verification_id": "SR-VER-0041"
     },
     {
+      "contract": "Combined revisions three and seven publish eight with exact K.3 audit and receipt.",
       "regression_id": "R-02",
       "requirement_id": "SR-REQ-0650",
-      "verification_id": "SR-VER-0041",
-      "contract": "Combined revisions three and seven publish eight with exact K.3 audit and receipt.",
       "test_ids": [
         "tests/test_acceptance_merge_vectors.py::test_exact_three_seven_vector_reaches_disk_receipt_and_idempotent_retry[adopt-seven]",
         "tests/test_acceptance_merge_vectors.py::test_exact_three_seven_vector_reaches_disk_receipt_and_idempotent_retry[combine-three-seven]",
@@ -180,13 +178,13 @@
         "tests/test_merge_publication.py::test_request_replay_is_historical_and_never_reexecutes_or_requalifies",
         "tests/test_merge_publication.py::test_stale_current_ours_or_extra_normative_file_is_not_silently_rebased[existing]",
         "tests/test_merge_publication.py::test_stale_current_ours_or_extra_normative_file_is_not_silently_rebased[extra]"
-      ]
+      ],
+      "verification_id": "SR-VER-0041"
     },
     {
+      "contract": "Unchanged ours adopts original revision seven and original timestamp/bytes.",
       "regression_id": "R-03",
       "requirement_id": "SR-REQ-0650",
-      "verification_id": "SR-VER-0041",
-      "contract": "Unchanged ours adopts original revision seven and original timestamp/bytes.",
       "test_ids": [
         "tests/test_acceptance_merge_vectors.py::test_exact_three_seven_vector_reaches_disk_receipt_and_idempotent_retry[adopt-seven]",
         "tests/test_acceptance_merge_vectors.py::test_exact_three_seven_vector_reaches_disk_receipt_and_idempotent_retry[combine-three-seven]",
@@ -220,13 +218,13 @@
         "tests/test_merge_publication.py::test_request_replay_is_historical_and_never_reexecutes_or_requalifies",
         "tests/test_merge_publication.py::test_stale_current_ours_or_extra_normative_file_is_not_silently_rebased[existing]",
         "tests/test_merge_publication.py::test_stale_current_ours_or_extra_normative_file_is_not_silently_rebased[extra]"
-      ]
+      ],
+      "verification_id": "SR-VER-0041"
     },
     {
+      "contract": "Rationale changes invalidate review context; current confirmation restores only matching relation state.",
       "regression_id": "R-04",
       "requirement_id": "SR-REQ-0650",
-      "verification_id": "SR-VER-0041",
-      "contract": "Rationale changes invalidate review context; current confirmation restores only matching relation state.",
       "test_ids": [
         "tests/test_merge_publication.py::test_changed_evidence_subject_is_reassessed_without_rewriting_the_record",
         "tests/test_merge_publication.py::test_changed_relation_context_preserves_review_original_as_suspect",
@@ -319,13 +317,13 @@
         "tests/test_relation_review_status_right.py::test_untyped_history_input_never_produces_a_passing_observation[bad4]",
         "tests/test_relation_review_status_right.py::test_untyped_history_input_never_produces_a_passing_observation[records0]",
         "tests/test_relation_review_status_right.py::test_untyped_history_input_never_produces_a_passing_observation[records1]"
-      ]
+      ],
+      "verification_id": "SR-VER-0041"
     },
     {
+      "contract": "Latest matching decision and exact timestamp/identity tie order retain all history.",
       "regression_id": "R-05",
       "requirement_id": "SR-REQ-0650",
-      "verification_id": "SR-VER-0041",
-      "contract": "Latest matching decision and exact timestamp/identity tie order retain all history.",
       "test_ids": [
         "tests/test_relation_review_status.py::test_audit_hashes_and_revisions_are_not_currentness_selectors[source_artifact_sha256]",
         "tests/test_relation_review_status.py::test_audit_hashes_and_revisions_are_not_currentness_selectors[source_revision]",
@@ -407,13 +405,13 @@
         "tests/test_relation_review_status_right.py::test_untyped_history_input_never_produces_a_passing_observation[bad4]",
         "tests/test_relation_review_status_right.py::test_untyped_history_input_never_produces_a_passing_observation[records0]",
         "tests/test_relation_review_status_right.py::test_untyped_history_input_never_produces_a_passing_observation[records1]"
-      ]
+      ],
+      "verification_id": "SR-VER-0041"
     },
     {
+      "contract": "Add positions append or insert zero through length; illegal indices allocate nothing.",
       "regression_id": "R-06",
       "requirement_id": "SR-REQ-0650",
-      "verification_id": "SR-VER-0041",
-      "contract": "Add positions append or insert zero through length; illegal indices allocate nothing.",
       "test_ids": [
         "tests/test_proposal_changes.py::test_append_and_insert_follow_normative_vector_and_keep_existing_identities[0-CAB]",
         "tests/test_proposal_changes.py::test_append_and_insert_follow_normative_vector_and_keep_existing_identities[1-ACB]",
@@ -532,13 +530,13 @@
         "tests/test_proposal_dialog.py::test_all_four_changes_publish_through_native_writer_without_applying_the_inner_plan[update]",
         "tests/test_proposal_dialog.py::test_dry_run_and_canonical_noop_preserve_bytes_and_create_no_completion",
         "tests/test_proposal_dialog.py::test_public_dialog_requires_renewed_approval_and_publishes_the_exact_revised_target"
-      ]
+      ],
+      "verification_id": "SR-VER-0041"
     },
     {
+      "contract": "Original 0.1 history, manifests and archive bytes survive migration; projection remains separate.",
       "regression_id": "R-07",
       "requirement_id": "SR-REQ-0650",
-      "verification_id": "SR-VER-0041",
-      "contract": "Original 0.1 history, manifests and archive bytes survive migration; projection remains separate.",
       "test_ids": [
         "tests/test_migration_history.py::test_actual_writer_preserves_historical_report_and_baseline_verifier",
         "tests/test_migration_history.py::test_fixed_contract_baseline_uses_stored_original_root_and_bytes",
@@ -668,13 +666,13 @@
         "tests/test_snapshot_guard.py::test_failed_protected_publication_never_replays_or_rolls_back[staged:0-merge]",
         "tests/test_snapshot_guard.py::test_failed_protected_publication_never_replays_or_rolls_back[staged:0-migration]",
         "tests/test_snapshot_guard.py::test_real_migration_process_death_cannot_supply_completion_authority"
-      ]
+      ],
+      "verification_id": "SR-VER-0041"
     },
     {
+      "contract": "Legacy evidence stays migration_context_unverified unless independently measured under current binding.",
       "regression_id": "R-08",
       "requirement_id": "SR-REQ-0650",
-      "verification_id": "SR-VER-0041",
-      "contract": "Legacy evidence stays migration_context_unverified unless independently measured under current binding.",
       "test_ids": [
         "tests/test_migration_history.py::test_actual_writer_preserves_historical_report_and_baseline_verifier",
         "tests/test_migration_history.py::test_fixed_contract_baseline_uses_stored_original_root_and_bytes",
@@ -732,13 +730,13 @@
         "tests/test_migration_history_right.py::test_update_and_lifecycle_cannot_rewrite_historical_values[True-retire]",
         "tests/test_migration_history_right.py::test_update_and_lifecycle_cannot_rewrite_historical_values[True-transition]",
         "tests/test_migration_history_right.py::test_update_and_lifecycle_cannot_rewrite_historical_values[True-update]"
-      ]
+      ],
+      "verification_id": "SR-VER-0041"
     },
     {
+      "contract": "Complete real draft/check/review/edit/renewed-human-approval/apply dialogue with exact revisions and one target publication.",
       "regression_id": "R-09",
       "requirement_id": "SR-REQ-0650",
-      "verification_id": "SR-VER-0041",
-      "contract": "Complete real draft/check/review/edit/renewed-human-approval/apply dialogue with exact revisions and one target publication.",
       "test_ids": [
         "tests/test_proposal_apply.py::test_configured_two_human_quorum_is_required_before_real_apply",
         "tests/test_proposal_apply.py::test_dry_run_checks_real_approval_without_any_write_or_process",
@@ -797,13 +795,13 @@
         "tests/test_proposal_work.py::test_split_native_check_has_same_complete_result_without_project_writes[1]",
         "tests/test_proposal_work.py::test_split_native_check_has_same_complete_result_without_project_writes[3]",
         "tests/test_proposal_work.py::test_work_completion_does_not_replace_real_reviews_before_apply"
-      ]
+      ],
+      "verification_id": "SR-VER-0041"
     },
     {
+      "contract": "Read, render and dry-run paths preserve project bytes and retain checkpoints externally.",
       "regression_id": "R-10",
       "requirement_id": "SR-REQ-0650",
-      "verification_id": "SR-VER-0041",
-      "contract": "Read, render and dry-run paths preserve project bytes and retain checkpoints externally.",
       "test_ids": [
         "test_read_only_validation.ReadOnlyValidationTests.test_absent_semantic_gate_is_not_passed",
         "test_read_only_validation.ReadOnlyValidationTests.test_active_transaction_blocks_before_model_load",
@@ -959,13 +957,13 @@
         "tests/test_work_progress.py::test_untrusted_work_is_rejected_before_measurement_or_mutation[None]",
         "tests/test_work_progress.py::test_untrusted_work_is_rejected_before_measurement_or_mutation[invalid1]",
         "tests/test_work_progress.py::test_window_projections_are_detached_and_cannot_change_confirmed_work"
-      ]
+      ],
+      "verification_id": "SR-VER-0041"
     },
     {
+      "contract": "Finite work exceeds soft budgets safely and preserves exact full results through durable windows.",
       "regression_id": "R-11",
       "requirement_id": "SR-REQ-0650",
-      "verification_id": "SR-VER-0041",
-      "contract": "Finite work exceeds soft budgets safely and preserves exact full results through durable windows.",
       "test_ids": [
         "tests/test_adaptive_spooling_work.py::test_already_exceeded_tiny_target_still_completes_one_real_unit_per_window[--cpu-budget-ms]",
         "tests/test_adaptive_spooling_work.py::test_already_exceeded_tiny_target_still_completes_one_real_unit_per_window[--step-cpu-ms]",
@@ -1088,13 +1086,13 @@
         "tests/test_work_progress.py::test_untrusted_work_is_rejected_before_measurement_or_mutation[None]",
         "tests/test_work_progress.py::test_untrusted_work_is_rejected_before_measurement_or_mutation[invalid1]",
         "tests/test_work_progress.py::test_window_projections_are_detached_and_cannot_change_confirmed_work"
-      ]
+      ],
+      "verification_id": "SR-VER-0041"
     },
     {
+      "contract": "Tiny targets make actual progress without identical checkpoint loops or invented blockers.",
       "regression_id": "R-12",
       "requirement_id": "SR-REQ-0650",
-      "verification_id": "SR-VER-0041",
-      "contract": "Tiny targets make actual progress without identical checkpoint loops or invented blockers.",
       "test_ids": [
         "tests/test_adaptive_spooling_right.py::test_actual_allocation_refusal_in_labelled_initializer_reports_unknown_minimum",
         "tests/test_adaptive_spooling_right.py::test_already_completed_task_returns_complete_without_new_work",
@@ -1206,13 +1204,13 @@
         "tests/test_work_progress_right.py::test_unclassified_or_interrupted_execution_keeps_its_original_exception[failure1]",
         "tests/test_work_progress_right.py::test_unclassified_or_interrupted_execution_keeps_its_original_exception[failure2]",
         "tests/test_work_progress_right.py::test_unsafe_work_data_stays_a_safety_failure_and_is_never_removed"
-      ]
+      ],
+      "verification_id": "SR-VER-0041"
     },
     {
+      "contract": "Global cycles, references and complete explanation paths survive batching without local-only success.",
       "regression_id": "R-13",
       "requirement_id": "SR-REQ-0650",
-      "verification_id": "SR-VER-0041",
-      "contract": "Global cycles, references and complete explanation paths survive batching without local-only success.",
       "test_ids": [
         "test_hierarchies.HierarchyWorkTests.test_children_sort_by_numeric_position_not_relation_array",
         "test_hierarchies.HierarchyWorkTests.test_dependency_cycle_is_not_subject_to_hierarchy_prohibition",
@@ -1421,13 +1419,13 @@
         "tests/test_work_evaluation_right.py::test_self_hashed_observations_cannot_drop_phases_scope_or_findings[source_binding-finalize]",
         "tests/test_work_evaluation_right.py::test_self_hashed_observations_cannot_drop_phases_scope_or_findings[unknown_stage-advance]",
         "tests/test_work_evaluation_right.py::test_self_hashed_observations_cannot_drop_phases_scope_or_findings[unknown_stage-finalize]"
-      ]
+      ],
+      "verification_id": "SR-VER-0041"
     },
     {
+      "contract": "Spooling preserves full totals, requested pagination, output bytes and digests beyond a bounded view.",
       "regression_id": "R-14",
       "requirement_id": "SR-REQ-0650",
-      "verification_id": "SR-VER-0041",
-      "contract": "Spooling preserves full totals, requested pagination, output bytes and digests beyond a bounded view.",
       "test_ids": [
         "tests/test_query_paging.py::test_all_input_permutations_have_the_same_sorted_page",
         "tests/test_query_paging.py::test_computed_sort_requires_actual_provider_even_for_empty_input[False-/verification_result/status]",
@@ -1569,13 +1567,13 @@
         "tests/test_work_result_files.py::test_unsafe_result_storage_is_refused_without_project_writes[hardlink]",
         "tests/test_work_result_files.py::test_unsafe_result_storage_is_refused_without_project_writes[public]",
         "tests/test_work_result_files.py::test_unsafe_result_storage_is_refused_without_project_writes[symlink]"
-      ]
+      ],
+      "verification_id": "SR-VER-0041"
     },
     {
+      "contract": "Portable Work resumes in a fresh runtime without the original cache and preserves bindings/cursors.",
       "regression_id": "R-15",
       "requirement_id": "SR-REQ-0650",
-      "verification_id": "SR-VER-0041",
-      "contract": "Portable Work resumes in a fresh runtime without the original cache and preserves bindings/cursors.",
       "test_ids": [
         "tests/test_work_evaluation.py::test_complete_policy_failures_retain_all_native_findings_in_final_result[100]",
         "tests/test_work_evaluation.py::test_complete_policy_failures_retain_all_native_findings_in_final_result[1]",
@@ -1706,13 +1704,13 @@
         "tests/test_work_resume.py::test_unimplemented_or_nonbootstrap_resume_is_not_declared[command_request2]",
         "tests/test_work_resume.py::test_unrecorded_runtime_does_not_invent_build_compatibility",
         "tests/test_work_resume.py::test_work_mutex_remains_held_during_real_command_execution"
-      ]
+      ],
+      "verification_id": "SR-VER-0041"
     },
     {
+      "contract": "Changed live basis refuses publication as conflict without rebase, partial effects or implicit approval.",
       "regression_id": "R-16",
       "requirement_id": "SR-REQ-0650",
-      "verification_id": "SR-VER-0041",
-      "contract": "Changed live basis refuses publication as conflict without rebase, partial effects or implicit approval.",
       "test_ids": [
         "tests/test_change_execution_right.py::test_arbitrary_plan_whitespace_survives_dryrun_and_apply",
         "tests/test_change_execution_right.py::test_boolean_modes_are_strict[fail_on_change-0]",
@@ -1793,13 +1791,13 @@
         "tests/test_work_publication_right.py::test_individually_valid_but_different_completion_observations_cannot_be_combined[txn-work-native-True]",
         "tests/test_work_publication_right.py::test_preparation_pause_releases_project_and_work_for_a_fresh_process[pause_one]",
         "tests/test_work_publication_right.py::test_preparation_pause_releases_project_and_work_for_a_fresh_process[pause_two]"
-      ]
+      ],
+      "verification_id": "SR-VER-0041"
     },
     {
+      "contract": "Missing/tampered checkpoint segments and incompatible algorithm reject false progress without hidden replay.",
       "regression_id": "R-17",
       "requirement_id": "SR-REQ-0650",
-      "verification_id": "SR-VER-0041",
-      "contract": "Missing/tampered checkpoint segments and incompatible algorithm reject false progress without hidden replay.",
       "test_ids": [
         "tests/test_work_checkpoints.py::test_active_publisher_mutex_blocks_an_independent_reader",
         "tests/test_work_checkpoints.py::test_all_payload_files_are_synced_before_the_current_pointer_can_change",
@@ -1934,13 +1932,13 @@
         "tests/test_work_manifest_right.py::test_successor_rejects_replay_or_skipped_generation[2]",
         "tests/test_work_manifest_right.py::test_successor_rejects_replay_or_skipped_generation[9007199254740991]",
         "tests/test_work_manifest_right.py::test_successor_rejects_rewritten_prior_evidence_even_with_valid_new_hashes"
-      ]
+      ],
+      "verification_id": "SR-VER-0041"
     },
     {
+      "contract": "Confirmed original receipt after output loss repeats only the historical result and creates no second effect.",
       "regression_id": "R-18",
       "requirement_id": "SR-REQ-0650",
-      "verification_id": "SR-VER-0041",
-      "contract": "Confirmed original receipt after output loss repeats only the historical result and creates no second effect.",
       "test_ids": [
         "tests/test_work_receipt_files.py::test_complete_original_receipt_is_delivered_without_another_apply[False]",
         "tests/test_work_receipt_files.py::test_complete_original_receipt_is_delivered_without_another_apply[True]",
@@ -2084,13 +2082,13 @@
         "tests/test_write_guard_right.py::test_receipt_rejects_incomplete_or_contradictory_native_validation[unavailable_stage]",
         "tests/test_write_guard_right.py::test_receipt_rejects_incomplete_or_contradictory_native_validation[unknown_field]",
         "tests/test_write_guard_right.py::test_zero_write_preserves_blocker_without_normative_changes"
-      ]
+      ],
+      "verification_id": "SR-VER-0041"
     },
     {
+      "contract": "Actual process loss leaves durable write guards; no automatic recovery or replay of unconfirmed writes.",
       "regression_id": "R-19",
       "requirement_id": "SR-REQ-0650",
-      "verification_id": "SR-VER-0041",
-      "contract": "Actual process loss leaves durable write guards; no automatic recovery or replay of unconfirmed writes.",
       "test_ids": [
         "tests/test_snapshot_guard.py::test_complete_publication_has_only_normal_proof_and_read_only_repeat[merge]",
         "tests/test_snapshot_guard.py::test_complete_publication_has_only_normal_proof_and_read_only_repeat[migration]",
@@ -2285,13 +2283,13 @@
         "tests/test_write_guard_right.py::test_receipt_rejects_incomplete_or_contradictory_native_validation[unavailable_stage]",
         "tests/test_write_guard_right.py::test_receipt_rejects_incomplete_or_contradictory_native_validation[unknown_field]",
         "tests/test_write_guard_right.py::test_zero_write_preserves_blocker_without_normative_changes"
-      ]
+      ],
+      "verification_id": "SR-VER-0041"
     },
     {
+      "contract": "Changed prompt and AI actor never fabricate human decisions or continuation authority.",
       "regression_id": "R-20",
       "requirement_id": "SR-REQ-0650",
-      "verification_id": "SR-VER-0041",
-      "contract": "Changed prompt and AI actor never fabricate human decisions or continuation authority.",
       "test_ids": [
         "tests/test_proposal_decisions_right.py::test_generic_change_route_cannot_authorize_a_human_decision",
         "tests/test_proposal_decisions_right.py::test_invalid_inputs_or_authority_never_publish_decision[denied]",
@@ -2365,13 +2363,13 @@
         "tests/test_work_prompt.py::test_terminal_work_does_not_get_an_executable_continuation[False]",
         "tests/test_work_prompt.py::test_terminal_work_does_not_get_an_executable_continuation[True]",
         "tests/test_work_prompt.py::test_work_location_is_typed_data_and_cannot_select_or_run_an_operation"
-      ]
+      ],
+      "verification_id": "SR-VER-0041"
     },
     {
+      "contract": "Actual resource refusal preserves critical data and reports a blocker without relaxing hard archive policy.",
       "regression_id": "R-21",
       "requirement_id": "SR-REQ-0650",
-      "verification_id": "SR-VER-0041",
-      "contract": "Actual resource refusal preserves critical data and reports a blocker without relaxing hard archive policy.",
       "test_ids": [
         "tests/test_adaptive_spooling_right.py::test_actual_allocation_refusal_in_labelled_initializer_reports_unknown_minimum",
         "tests/test_adaptive_spooling_right.py::test_already_completed_task_returns_complete_without_new_work",
@@ -2516,13 +2514,13 @@
         "tests/test_work_archive_right.py::test_real_optional_zip_features_do_not_expand_the_canonical_profile[extra]",
         "tests/test_work_archive_right.py::test_real_optional_zip_features_do_not_expand_the_canonical_profile[internal_attribute]",
         "tests/test_work_archive_right.py::test_shared_directory_prefixes_and_similar_filenames_remain_distinct"
-      ]
+      ],
+      "verification_id": "SR-VER-0041"
     },
     {
+      "contract": "Unknown capacity remains unknown; real conservative operations proceed or report their actual failure.",
       "regression_id": "R-22",
       "requirement_id": "SR-REQ-0650",
-      "verification_id": "SR-VER-0041",
-      "contract": "Unknown capacity remains unknown; real conservative operations proceed or report their actual failure.",
       "test_ids": [
         "tests/test_adaptive_spooling_right.py::test_actual_allocation_refusal_in_labelled_initializer_reports_unknown_minimum",
         "tests/test_adaptive_spooling_right.py::test_already_completed_task_returns_complete_without_new_work",
@@ -2663,13 +2661,13 @@
         "tests/test_runtime_resource_policy.py::test_unclassified_or_invalid_hard_limits_are_rejected[limits2]",
         "tests/test_runtime_resource_policy.py::test_unknown_host_quotas_remain_unknown_even_with_large_declared_targets[constrained]",
         "tests/test_runtime_resource_policy.py::test_unknown_host_quotas_remain_unknown_even_with_large_declared_targets[standard]"
-      ]
+      ],
+      "verification_id": "SR-VER-0041"
     },
     {
+      "contract": "Specification scope excludes control artifacts and rejects direct/transitive dependencies with SRV140; project scope remains valid.",
       "regression_id": "R-23",
       "requirement_id": "SR-REQ-0650",
-      "verification_id": "SR-VER-0041",
-      "contract": "Specification scope excludes control artifacts and rejects direct/transitive dependencies with SRV140; project scope remains valid.",
       "test_ids": [
         "test_scope_controls.ScopeControlTests.test_adding_unreferenced_controls_does_not_change_selected_values",
         "test_scope_controls.ScopeControlTests.test_closed_weak_control_dependency_is_denied",
@@ -2796,13 +2794,13 @@
         "tests/test_proposal_basis_right.py::test_saved_invalid_basis_is_model_error_without_rebinding[ProposalOriginal-descriptor4]",
         "tests/test_proposal_basis_right.py::test_saved_invalid_basis_is_model_error_without_rebinding[ProposalOriginal-descriptor5]",
         "tests/test_proposal_basis_right.py::test_saved_invalid_basis_is_model_error_without_rebinding[ProposalOriginal-descriptor6]"
-      ]
+      ],
+      "verification_id": "SR-VER-0041"
     },
     {
+      "contract": "Proposal accepts only its canonical specification basis; forbidden CLI selection fails before state/identity writes.",
       "regression_id": "R-24",
       "requirement_id": "SR-REQ-0650",
-      "verification_id": "SR-VER-0041",
-      "contract": "Proposal accepts only its canonical specification basis; forbidden CLI selection fails before state/identity writes.",
       "test_ids": [
         "tests/test_proposal_basis.py::test_absolute_location_and_original_json_format_are_not_basis_inputs",
         "tests/test_proposal_basis.py::test_basis_is_owned_and_has_no_mutable_manifest_or_descriptor_alias",
@@ -2885,13 +2883,13 @@
         "tests/test_proposal_basis_right.py::test_saved_invalid_basis_is_model_error_without_rebinding[ProposalOriginal-descriptor4]",
         "tests/test_proposal_basis_right.py::test_saved_invalid_basis_is_model_error_without_rebinding[ProposalOriginal-descriptor5]",
         "tests/test_proposal_basis_right.py::test_saved_invalid_basis_is_model_error_without_rebinding[ProposalOriginal-descriptor6]"
-      ]
+      ],
+      "verification_id": "SR-VER-0041"
     },
     {
+      "contract": "Evidence for product state A stays historical when evaluating B; only B current complete runs can pass.",
       "regression_id": "R-25",
       "requirement_id": "SR-REQ-0650",
-      "verification_id": "SR-VER-0041",
-      "contract": "Evidence for product state A stays historical when evaluating B; only B current complete runs can pass.",
       "test_ids": [
         "tests/test_verification_aggregation.py::test_all_observations_of_one_run_participate_without_a_newest_success_rule",
         "tests/test_verification_aggregation.py::test_configuration_exclusion_has_priority_without_a_descriptor_or_product_bytes[not_planned]",
@@ -3080,13 +3078,13 @@
         "tests/test_verification_run_selection_right.py::test_untyped_model_is_rejected_without_discovery[None]",
         "tests/test_verification_run_selection_right.py::test_untyped_model_is_rejected_without_discovery[current-model]",
         "tests/test_verification_run_selection_right.py::test_untyped_model_is_rejected_without_discovery[untyped1]"
-      ]
+      ],
+      "verification_id": "SR-VER-0041"
     },
     {
+      "contract": "Same-state failure survives later success unless an exactly bound human replacement is valid; original evidence remains.",
       "regression_id": "R-26",
       "requirement_id": "SR-REQ-0650",
-      "verification_id": "SR-VER-0041",
-      "contract": "Same-state failure survives later success unless an exactly bound human replacement is valid; original evidence remains.",
       "test_ids": [
         "tests/test_verification_aggregation.py::test_all_observations_of_one_run_participate_without_a_newest_success_rule",
         "tests/test_verification_aggregation.py::test_configuration_exclusion_has_priority_without_a_descriptor_or_product_bytes[not_planned]",
@@ -3239,13 +3237,13 @@
         "tests/test_verification_run_replacements_right.py::test_terminal_report_preserves_every_raw_result_and_all_binding_defects[running-stale-False-reasons6]",
         "tests/test_verification_run_replacements_right.py::test_unsupported_terminal_context_never_becomes_current_from_matching_audit_hash[capability]",
         "tests/test_verification_run_replacements_right.py::test_unsupported_terminal_context_never_becomes_current_from_matching_audit_hash[task]"
-      ]
+      ],
+      "verification_id": "SR-VER-0041"
     },
     {
+      "contract": "Every mandatory slot and all contradictory run observations participate; failure is independent of import order.",
       "regression_id": "R-27",
       "requirement_id": "SR-REQ-0650",
-      "verification_id": "SR-VER-0041",
-      "contract": "Every mandatory slot and all contradictory run observations participate; failure is independent of import order.",
       "test_ids": [
         "tests/test_verification_aggregation_right.py::test_aggregation_uses_explicit_exact_waiver_deadline[2026-10-21T23:59:59.999999999Z-waived]",
         "tests/test_verification_aggregation_right.py::test_aggregation_uses_explicit_exact_waiver_deadline[2026-10-22T00:00:00.000000001Z-failed]",
@@ -3595,13 +3593,13 @@
         "tests/test_verification_run_selection_right.py::test_untyped_model_is_rejected_without_discovery[None]",
         "tests/test_verification_run_selection_right.py::test_untyped_model_is_rejected_without_discovery[current-model]",
         "tests/test_verification_run_selection_right.py::test_untyped_model_is_rejected_without_discovery[untyped1]"
-      ]
+      ],
+      "verification_id": "SR-VER-0041"
     },
     {
+      "contract": "Cycles, nonhuman/unbound replacements and later old-run evidence cannot manufacture an effective passing terminal.",
       "regression_id": "R-28",
       "requirement_id": "SR-REQ-0650",
-      "verification_id": "SR-VER-0041",
-      "contract": "Cycles, nonhuman/unbound replacements and later old-run evidence cannot manufacture an effective passing terminal.",
       "test_ids": [
         "tests/test_verification_aggregation_right.py::test_aggregation_uses_explicit_exact_waiver_deadline[2026-10-21T23:59:59.999999999Z-waived]",
         "tests/test_verification_aggregation_right.py::test_aggregation_uses_explicit_exact_waiver_deadline[2026-10-22T00:00:00.000000001Z-failed]",
@@ -3911,13 +3909,13 @@
         "tests/test_verification_run_replacements_right.py::test_terminal_report_preserves_every_raw_result_and_all_binding_defects[running-stale-False-reasons6]",
         "tests/test_verification_run_replacements_right.py::test_unsupported_terminal_context_never_becomes_current_from_matching_audit_hash[capability]",
         "tests/test_verification_run_replacements_right.py::test_unsupported_terminal_context_never_becomes_current_from_matching_audit_hash[task]"
-      ]
+      ],
+      "verification_id": "SR-VER-0041"
     },
     {
+      "contract": "Semantic self-description is path independent; runtime/operational state is separate and cannot certify snapshots.",
       "regression_id": "R-29",
       "requirement_id": "SR-REQ-0650",
-      "verification_id": "SR-VER-0041",
-      "contract": "Semantic self-description is path independent; runtime/operational state is separate and cannot certify snapshots.",
       "test_ids": [
         "test_model_root.ModelRootWorkTests.test_artifact_content_changes_root",
         "test_model_root.ModelRootWorkTests.test_artifact_order_is_independent_of_path_input_order",
@@ -4144,13 +4142,13 @@
         "tests/test_verification_evaluation_right.py::test_unknown_or_nonmatching_product_bytes_are_incomplete[extra-evaluation_input_unexpected]",
         "tests/test_verification_evaluation_right.py::test_unknown_or_nonmatching_product_bytes_are_incomplete[missing-evaluation_input_missing]",
         "tests/test_verification_evaluation_right.py::test_unknown_or_nonmatching_product_bytes_are_incomplete[unavailable-evaluation_input_bytes_required]"
-      ]
+      ],
+      "verification_id": "SR-VER-0041"
     },
     {
+      "contract": "Repeated same-field values OR; distinct groups and SRX expressions AND; empty groups are true.",
       "regression_id": "R-30",
       "requirement_id": "SR-REQ-0650",
-      "verification_id": "SR-VER-0041",
-      "contract": "Repeated same-field values OR; distinct groups and SRX expressions AND; empty groups are true.",
       "test_ids": [
         "tests/test_query_read_integration.py::test_all_retained_readers_equal_the_complete_direct_result[1-artifact.show]",
         "tests/test_query_read_integration.py::test_all_retained_readers_equal_the_complete_direct_result[1-diff]",
@@ -4290,13 +4288,13 @@
         "tests/test_query_selection_right.py::test_untrusted_normalized_envelope_rejects_unknown_or_noncanonical_fields[sort]",
         "tests/test_query_selection_right.py::test_untrusted_normalized_envelope_rejects_unknown_or_noncanonical_fields[top]",
         "tests/test_query_selection_right.py::test_untrusted_normalized_envelope_rejects_unknown_or_noncanonical_fields[wrong_hash]"
-      ]
+      ],
+      "verification_id": "SR-VER-0041"
     },
     {
+      "contract": "Saved evaluation input/descriptor changes reject stale Work; unchanged durable selection equals direct results.",
       "regression_id": "R-31",
       "requirement_id": "SR-REQ-0650",
-      "verification_id": "SR-VER-0041",
-      "contract": "Saved evaluation input/descriptor changes reject stale Work; unchanged durable selection equals direct results.",
       "test_ids": [
         "tests/test_planning_builtin_work.py::test_capture_does_not_run_a_projection_or_create_readiness_and_owns_its_input",
         "tests/test_planning_builtin_work.py::test_currentness_resumes_with_original_observations_and_selection[False-current-traceability]",
@@ -4446,13 +4444,13 @@
         "tests/test_work_resume_right.py::test_self_consistent_saved_completion_must_obey_request_and_handler_contract[undeclared_exit]",
         "tests/test_work_resume_right.py::test_self_consistent_saved_completion_must_obey_request_and_handler_contract[unit]",
         "tests/test_work_resume_right.py::test_unprotected_current_target_cannot_be_promoted_by_a_resume_check"
-      ]
+      ],
+      "verification_id": "SR-VER-0041"
     },
     {
+      "contract": "Unsaved explicit evaluation permits provisional reads only; release baseline needs stored exact selection and preserves old bytes.",
       "regression_id": "R-32",
       "requirement_id": "SR-REQ-0650",
-      "verification_id": "SR-VER-0041",
-      "contract": "Unsaved explicit evaluation permits provisional reads only; release baseline needs stored exact selection and preserves old bytes.",
       "test_ids": [
         "tests/test_release_baseline.py::test_a_missing_mandatory_native_provider_keeps_release_preparation_read_only[evidence_currentness]",
         "tests/test_release_baseline.py::test_a_missing_mandatory_native_provider_keeps_release_preparation_read_only[lifecycle]",
@@ -4559,13 +4557,13 @@
         "tests/test_release_baseline_right.py::test_unbound_or_unconfirmed_blocker_completion_never_seals_a_baseline[unbound]",
         "tests/test_release_baseline_right.py::test_unbound_or_unconfirmed_blocker_completion_never_seals_a_baseline[untyped]",
         "tests/test_release_baseline_right.py::test_unbound_or_unconfirmed_blocker_completion_never_seals_a_baseline[wrong_subject]"
-      ]
+      ],
+      "verification_id": "SR-VER-0041"
     },
     {
+      "contract": "Pure approved lifecycle retire/supersede has one revision and excluded audit changes.",
       "regression_id": "R-33",
       "requirement_id": "SR-REQ-0650",
-      "verification_id": "SR-VER-0041",
-      "contract": "Pure approved lifecycle retire/supersede has one revision and excluded audit changes.",
       "test_ids": [
         "tests/test_change_lifecycle.py::test_add_then_remove_relation_preserves_approval",
         "tests/test_change_lifecycle.py::test_approval_not_granted_by_an_actor_label_or_transition_metadata",
@@ -4704,13 +4702,13 @@
         "tests/test_lifecycle_authoring_right.py::test_superseded_needs_real_incoming_acyclic_successor[cycle-relation_hierarchy_cycle]",
         "tests/test_lifecycle_authoring_right.py::test_superseded_needs_real_incoming_acyclic_successor[none-successor_required_in_final_model]",
         "tests/test_lifecycle_authoring_right.py::test_superseded_needs_real_incoming_acyclic_successor[outgoing-successor_required_in_final_model]"
-      ]
+      ],
+      "verification_id": "SR-VER-0041"
     },
     {
+      "contract": "Approved substantive edits reset to proposed once; forbidden combined maturity targets reject before writes.",
       "regression_id": "R-34",
       "requirement_id": "SR-REQ-0650",
-      "verification_id": "SR-VER-0041",
-      "contract": "Approved substantive edits reset to proposed once; forbidden combined maturity targets reject before writes.",
       "test_ids": [
         "tests/test_change_authoring.py::test_actor_declaration_is_explicit_not_authenticated[ai]",
         "tests/test_change_authoring.py::test_actor_declaration_is_explicit_not_authenticated[ci]",
@@ -4885,13 +4883,13 @@
         "tests/test_change_lifecycle_right.py::test_unchanged_approved_explicit_same_status_is_not_forged_approval",
         "tests/test_change_lifecycle_right.py::test_undeclared_actor_or_time_changes_fail_saved_result_verification",
         "tests/test_change_lifecycle_right.py::test_wrong_base_root_or_scope_cannot_be_verified"
-      ]
+      ],
+      "verification_id": "SR-VER-0041"
     },
     {
+      "contract": "Required negative relation review writes approved review plus one proposed downgrade, while separate validation fails SRV027.",
       "regression_id": "R-35",
       "requirement_id": "SR-REQ-0650",
-      "verification_id": "SR-VER-0041",
-      "contract": "Required negative relation review writes approved review plus one proposed downgrade, while separate validation fails SRV027.",
       "test_ids": [
         "tests/test_negative_relation_review.py::test_another_gate_cannot_turn_an_error_into_an_exempt_review_outcome",
         "tests/test_negative_relation_review.py::test_denied_authority_preserves_both_original_source_and_review_history",
@@ -4941,13 +4939,13 @@
         "tests/test_negative_relation_review_right.py::test_structural_invalidity_is_not_a_review_outcome_exception[self_reference]",
         "tests/test_negative_relation_review_right.py::test_successful_negative_write_still_fails_separate_read_only_review_assessment[False]",
         "tests/test_negative_relation_review_right.py::test_successful_negative_write_still_fails_separate_read_only_review_assessment[True]"
-      ]
+      ],
+      "verification_id": "SR-VER-0041"
     },
     {
+      "contract": "New confirmation leaves proposed/5; two explicit native writes produce in_review/6 and approved/7 only after current authenticated human and all semantic gates.",
       "regression_id": "R-36",
       "requirement_id": "SR-REQ-0650",
-      "verification_id": "SR-VER-0041",
-      "contract": "New confirmation leaves proposed/5; two explicit native writes produce in_review/6 and approved/7 only after current authenticated human and all semantic gates.",
       "test_ids": [
         "tests/test_lifecycle_authoring.py::test_actor_policy_blocks_before_writer[ai-lifecycle-1-7-retire]",
         "tests/test_lifecycle_authoring.py::test_actor_policy_blocks_before_writer[ai-lifecycle-1-7-transition]",
@@ -5133,13 +5131,13 @@
         "tests/test_requirement_reapproval_right.py::test_unavailable_or_malformed_provider_fails_closed_without_effects[throw]",
         "tests/test_requirement_reapproval_right.py::test_unavailable_or_malformed_provider_fails_closed_without_effects[unbound]",
         "tests/test_requirement_reapproval_right.py::test_unavailable_or_malformed_provider_fails_closed_without_effects[wrong_type]"
-      ]
+      ],
+      "verification_id": "SR-VER-0041"
     },
     {
+      "contract": "Draft/optional rejection does not downgrade; AI and missing/invalid endpoints fail without effects.",
       "regression_id": "R-37",
       "requirement_id": "SR-REQ-0650",
-      "verification_id": "SR-VER-0041",
-      "contract": "Draft/optional rejection does not downgrade; AI and missing/invalid endpoints fail without effects.",
       "test_ids": [
         "tests/test_negative_relation_review.py::test_another_gate_cannot_turn_an_error_into_an_exempt_review_outcome",
         "tests/test_negative_relation_review.py::test_denied_authority_preserves_both_original_source_and_review_history",
@@ -5222,13 +5220,13 @@
         "tests/test_relation_review_status.py::test_unknown_selected_relation_never_creates_a_status[SR-REQ-00000000000000000000000002-REL-00000000000000000000000001-review_source_missing]",
         "tests/test_relation_review_status.py::test_unrelated_relation_history_does_not_turn_unreviewed_into_suspect",
         "tests/test_relation_review_status.py::test_unreviewed_relation_has_no_selected_or_historical_review"
-      ]
+      ],
+      "verification_id": "SR-VER-0041"
     },
     {
+      "contract": "Killed review/source publication stays blocked; confirmed retry returns one original review and downgrade receipt.",
       "regression_id": "R-38",
       "requirement_id": "SR-REQ-0650",
-      "verification_id": "SR-VER-0041",
-      "contract": "Killed review/source publication stays blocked; confirmed retry returns one original review and downgrade receipt.",
       "test_ids": [
         "tests/test_negative_relation_review.py::test_another_gate_cannot_turn_an_error_into_an_exempt_review_outcome",
         "tests/test_negative_relation_review.py::test_denied_authority_preserves_both_original_source_and_review_history",
@@ -5295,13 +5293,13 @@
         "tests/test_write_guard.py::test_process_loss_never_replays_or_unlocks_partial_write[receipts_synced]",
         "tests/test_write_guard.py::test_process_loss_never_replays_or_unlocks_partial_write[staged:0]",
         "tests/test_write_guard.py::test_request_retry_returns_original_and_rejects_changed_intent"
-      ]
+      ],
+      "verification_id": "SR-VER-0041"
     },
     {
+      "contract": "Coupled lifecycle downgrade does not change the review-context projection or make its own rejection suspect.",
       "regression_id": "R-39",
       "requirement_id": "SR-REQ-0650",
-      "verification_id": "SR-VER-0041",
-      "contract": "Coupled lifecycle downgrade does not change the review-context projection or make its own rejection suspect.",
       "test_ids": [
         "tests/test_negative_relation_review.py::test_another_gate_cannot_turn_an_error_into_an_exempt_review_outcome",
         "tests/test_negative_relation_review.py::test_denied_authority_preserves_both_original_source_and_review_history",
@@ -5398,13 +5396,13 @@
         "tests/test_relation_review_status_right.py::test_untyped_history_input_never_produces_a_passing_observation[bad4]",
         "tests/test_relation_review_status_right.py::test_untyped_history_input_never_produces_a_passing_observation[records0]",
         "tests/test_relation_review_status_right.py::test_untyped_history_input_never_produces_a_passing_observation[records1]"
-      ]
+      ],
+      "verification_id": "SR-VER-0041"
     },
     {
+      "contract": "Project/document/release bundles roundtrip exact kind, scope and read_only through native extraction/readers.",
       "regression_id": "R-40",
       "requirement_id": "SR-REQ-0650",
-      "verification_id": "SR-VER-0041",
-      "contract": "Project/document/release bundles roundtrip exact kind, scope and read_only through native extraction/readers.",
       "test_ids": [
         "tests/test_acceptance_bundle_processes.py::test_public_extraction_rejects_tampering_and_aliases_before_target_creation[consistent_replacement]",
         "tests/test_acceptance_bundle_processes.py::test_public_extraction_rejects_tampering_and_aliases_before_target_creation[document_alias]",
@@ -5561,13 +5559,13 @@
         "tests/test_project_bundle.py::test_unresolved_state_refuses_without_writes[.specroad/locks/writer.json]",
         "tests/test_project_bundle.py::test_unresolved_state_refuses_without_writes[.specroad/tmp/staging.json]",
         "tests/test_project_bundle.py::test_unresolved_state_refuses_without_writes[.specroad/transactions/active/journal.json]"
-      ]
+      ],
+      "verification_id": "SR-VER-0041"
     },
     {
+      "contract": "Noncanonical kinds and invalid scope/read_only combinations fail before extraction; partial writes stay forbidden.",
       "regression_id": "R-41",
       "requirement_id": "SR-REQ-0650",
-      "verification_id": "SR-VER-0041",
-      "contract": "Noncanonical kinds and invalid scope/read_only combinations fail before extraction; partial writes stay forbidden.",
       "test_ids": [
         "tests/test_acceptance_bundle_processes.py::test_public_extraction_rejects_tampering_and_aliases_before_target_creation[consistent_replacement]",
         "tests/test_acceptance_bundle_processes.py::test_public_extraction_rejects_tampering_and_aliases_before_target_creation[document_alias]",
@@ -5953,13 +5951,13 @@
         "tests/test_product_bundle_right.py::test_writer_real_host_failure_stays_separate_from_invalid_data[PermissionError]",
         "tests/test_product_bundle_right.py::test_writer_reports_unrepresentable_zip_name_without_struct_error[ascii-overflow]",
         "tests/test_product_bundle_right.py::test_writer_reports_unrepresentable_zip_name_without_struct_error[utf8-overflow]"
-      ]
+      ],
+      "verification_id": "SR-VER-0041"
     },
     {
+      "contract": "Nonrecursive manifest inventory is exactly payload minus manifest; model identity excludes operational/container fields.",
       "regression_id": "R-42",
       "requirement_id": "SR-REQ-0650",
-      "verification_id": "SR-VER-0041",
-      "contract": "Nonrecursive manifest inventory is exactly payload minus manifest; model identity excludes operational/container fields.",
       "test_ids": [
         "tests/test_acceptance_bundle_processes.py::test_public_extraction_rejects_tampering_and_aliases_before_target_creation[consistent_replacement]",
         "tests/test_acceptance_bundle_processes.py::test_public_extraction_rejects_tampering_and_aliases_before_target_creation[document_alias]",
@@ -6339,13 +6337,13 @@
         "tests/test_project_bundle.py::test_unresolved_state_refuses_without_writes[.specroad/locks/writer.json]",
         "tests/test_project_bundle.py::test_unresolved_state_refuses_without_writes[.specroad/tmp/staging.json]",
         "tests/test_project_bundle.py::test_unresolved_state_refuses_without_writes[.specroad/transactions/active/journal.json]"
-      ]
+      ],
+      "verification_id": "SR-VER-0041"
     },
     {
+      "contract": "Payload/manifest tampering fails internally; consistent replacement fails the old external ZIP digest without authentication claims.",
       "regression_id": "R-43",
       "requirement_id": "SR-REQ-0650",
-      "verification_id": "SR-VER-0041",
-      "contract": "Payload/manifest tampering fails internally; consistent replacement fails the old external ZIP digest without authentication claims.",
       "test_ids": [
         "tests/test_acceptance_bundle_processes.py::test_public_extraction_rejects_tampering_and_aliases_before_target_creation[consistent_replacement]",
         "tests/test_acceptance_bundle_processes.py::test_public_extraction_rejects_tampering_and_aliases_before_target_creation[document_alias]",
@@ -6563,13 +6561,13 @@
         "tests/test_product_bundle.py::test_unsafe_paths_and_collisions_are_rejected_before_reading_payloads[files2]",
         "tests/test_product_bundle.py::test_unsafe_paths_and_collisions_are_rejected_before_reading_payloads[files3]",
         "tests/test_product_bundle.py::test_unsafe_paths_and_collisions_are_rejected_before_reading_payloads[files4]"
-      ]
+      ],
+      "verification_id": "SR-VER-0041"
     },
     {
+      "contract": "Complete fresh Git checkout is a new root/new intent with original resources and receipt history; old root stays blocked.",
       "regression_id": "R-44",
       "requirement_id": "SR-REQ-0650",
-      "verification_id": "SR-VER-0041",
-      "contract": "Complete fresh Git checkout is a new root/new intent with original resources and receipt history; old root stays blocked.",
       "test_ids": [
         "tests/test_acceptance_git_resources.py::test_original_attachment_and_primary_document_are_required_in_a_fresh_git_root[None]",
         "tests/test_acceptance_git_resources.py::test_original_attachment_and_primary_document_are_required_in_a_fresh_git_root[attachment]",
@@ -6589,13 +6587,13 @@
         "tests/test_git_restart_right.py::test_applied_proposal_requires_original_native_receipts_in_the_new_root[transaction]",
         "tests/test_git_restart_right.py::test_referenced_archive_object_is_required_in_a_separate_checkout[False]",
         "tests/test_git_restart_right.py::test_referenced_archive_object_is_required_in_a_separate_checkout[True]"
-      ]
+      ],
+      "verification_id": "SR-VER-0041"
     },
     {
+      "contract": "Incomplete fresh checkout rejects missing required attachments, archives, receipts or primary document without fallback.",
       "regression_id": "R-45",
       "requirement_id": "SR-REQ-0650",
-      "verification_id": "SR-VER-0041",
-      "contract": "Incomplete fresh checkout rejects missing required attachments, archives, receipts or primary document without fallback.",
       "test_ids": [
         "tests/test_acceptance_git_resources.py::test_original_attachment_and_primary_document_are_required_in_a_fresh_git_root[None]",
         "tests/test_acceptance_git_resources.py::test_original_attachment_and_primary_document_are_required_in_a_fresh_git_root[attachment]",
@@ -6615,13 +6613,13 @@
         "tests/test_git_restart_right.py::test_applied_proposal_requires_original_native_receipts_in_the_new_root[transaction]",
         "tests/test_git_restart_right.py::test_referenced_archive_object_is_required_in_a_separate_checkout[False]",
         "tests/test_git_restart_right.py::test_referenced_archive_object_is_required_in_a_separate_checkout[True]"
-      ]
+      ],
+      "verification_id": "SR-VER-0041"
     },
     {
+      "contract": "Old-root repair, deleting interruption data, or copying old Work is never a supported unlock.",
       "regression_id": "R-46",
       "requirement_id": "SR-REQ-0650",
-      "verification_id": "SR-VER-0041",
-      "contract": "Old-root repair, deleting interruption data, or copying old Work is never a supported unlock.",
       "test_ids": [
         "tests/test_git_restart.py::test_complete_separate_checkout_accepts_new_intent_and_retains_old_root",
         "tests/test_git_restart.py::test_incomplete_checkout_fails_native_qualification_without_reconstruction[profile]",
@@ -6759,13 +6757,13 @@
         "tests/test_write_guard_right.py::test_receipt_rejects_incomplete_or_contradictory_native_validation[unavailable_stage]",
         "tests/test_write_guard_right.py::test_receipt_rejects_incomplete_or_contradictory_native_validation[unknown_field]",
         "tests/test_write_guard_right.py::test_zero_write_preserves_blocker_without_normative_changes"
-      ]
+      ],
+      "verification_id": "SR-VER-0041"
     },
     {
+      "contract": "Real kill and fsync boundaries, live/unknown owners and corrupt markers remain blocked; only confirmed original receipts replay read-only.",
       "regression_id": "R-47",
       "requirement_id": "SR-REQ-0650",
-      "verification_id": "SR-VER-0041",
-      "contract": "Real kill and fsync boundaries, live/unknown owners and corrupt markers remain blocked; only confirmed original receipts replay read-only.",
       "test_ids": [
         "tests/test_snapshot_guard.py::test_complete_publication_has_only_normal_proof_and_read_only_repeat[merge]",
         "tests/test_snapshot_guard.py::test_complete_publication_has_only_normal_proof_and_read_only_repeat[migration]",
@@ -6960,7 +6958,9 @@
         "tests/test_write_guard_right.py::test_receipt_rejects_incomplete_or_contradictory_native_validation[unavailable_stage]",
         "tests/test_write_guard_right.py::test_receipt_rejects_incomplete_or_contradictory_native_validation[unknown_field]",
         "tests/test_write_guard_right.py::test_zero_write_preserves_blocker_without_normative_changes"
-      ]
+      ],
+      "verification_id": "SR-VER-0041"
     }
-  ]
+  ],
+  "specification_sha256": "f7236064f0fe5d595dbf514022f2678f1d4e839768a5282cff3f13d06ddd2bc3"
 }

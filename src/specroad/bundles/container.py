@@ -61,7 +61,10 @@ class BundleContainer:
         require(type(raw) is bytes, 'bundle_bytes_required')
         if expected_sha256 is not None:
             require_hash(expected_sha256)
-            require(sha256(raw).hexdigest() == expected_sha256, 'bundle_hash_mismatch', code='SRV060')
+            from ..force_operations import permit
+            require(permit(sha256(raw).hexdigest() == expected_sha256, gate='hash:bundle_input',
+                subject='bundle', observed=sha256(raw).hexdigest(), requested=expected_sha256),
+                'bundle_hash_mismatch', code='SRV060')
         try:
             # ZIP_STORED has no expansion: the already-owned input is a hard
             # upper bound on total member bytes. No soft resource goal truncates.
@@ -69,7 +72,16 @@ class BundleContainer:
                                validate_paths=validate_portable_archive_paths)
             require(MANIFEST_NAME in files, 'bundle_manifest_missing', code='SRV060')
             manifest_raw = files.pop(MANIFEST_NAME)
-            check_manifest_bytes(manifest_raw, files)
+            try:
+                check_manifest_bytes(manifest_raw, files)
+            except (BundleError, ModelError) as error:
+                from ..force_operations import permit
+                if not permit(False, gate='format:bundle_manifest', subject='bundle-manifest.json',
+                        observed={'reason': error.reason}, requested='preserve_original_manifest_and_actual_inventory'):
+                    raise
+                # An unreadable manifest cannot supply an invented object.
+                from ..storage.json_syntax import parse_json_object
+                parse_json_object(manifest_raw)
         except ArchiveError as error:
             raise _archive_failure(error) from error
         except ModelError as error:

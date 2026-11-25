@@ -152,5 +152,7 @@ def extract_bundle(raw, target, *, expected_sha256=None, cwd=None, _recheck_inpu
         'creator_authenticated': False, 'approval_granted': False, 'full_semantic_validation': False,
         'files': [{'path': p, 'size': len(b), 'sha256': sha256(b).hexdigest()} for p, b in sorted(content.items())],
         'directories': sorted(directories)}
+    if verified['format_version'] == 'force-bundle-verify-v1':
+        result.update(format_version='force-bundle-extract-v1', force=verified['force'])
     validate_result_document('bundle-extract-v1', result)
     return result

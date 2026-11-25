@@ -70,7 +70,7 @@ class SchemaCatalogWorkTests(unittest.TestCase):
         self.assertEqual(sum(data['categories'].values()), len(data['schemas']))
         self.assertEqual(data['categories']['artifact'], 60)
         self.assertEqual(data['categories']['configuration'], 2)
-        self.assertEqual(data['categories']['exchange'], 4)
+        self.assertEqual(data['categories']['exchange'], 5)
         self.assertIn('urn:specroad:schema:1.4.0:change-plan',
                       [row['schema_id'] for row in data['schemas'] if row['category'] == 'exchange'])
 

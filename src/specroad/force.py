@@ -140,6 +140,8 @@ def operations_hash(plan):
         return digest(plan['operations'])
     ForceRequest.from_mapping(plan['force'])
     keys = ('operations', 'force', 'base', 'expected_result', 'preconditions')
-    if plan['format_version'] == '1.4.0':
+    if plan['format_version'] == '1.5.0':
+        keys += ('operational_binding',)
+    if plan['format_version'] in ('1.4.0', '1.5.0'):
         keys += ('native_intent',)
     return digest({key: plan[key] for key in keys})

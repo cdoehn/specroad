@@ -12,12 +12,14 @@ def _read(parent, name, *, expected_identity=None):
     guards._regular(before)
     if expected_identity is not None and guards._identity(before)!=expected_identity:
         raise JournalError('journal_file_replaced',exit_code=6)
-    if before.st_nlink != 1:
+    from ..force_operations import permit
+    if not permit(before.st_nlink == 1, gate='safety:read_link_count', subject=name,
+                  observed=before.st_nlink, requested=1):
         raise JournalError('journal_hardlink_refused',exit_code=7)
     fd=os.open(name,os.O_RDONLY|os.O_NOFOLLOW|getattr(os,'O_NONBLOCK',0)|getattr(os,'O_CLOEXEC',0),dir_fd=parent)
     try:
         first=os.fstat(fd); guards._regular(first)
-        if first.st_nlink != 1 or guards._signature(first) != guards._signature(before):
+        if first.st_nlink != before.st_nlink or guards._signature(first) != guards._signature(before):
             raise JournalError('journal_changed_during_read',exit_code=6)
         out=bytearray()
         while len(out) <= first.st_size:

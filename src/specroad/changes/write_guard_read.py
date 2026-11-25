@@ -32,7 +32,7 @@ def inspect_write_state(root, *, expected_project_id=None, _held_files=None):
         with (LockFiles(root) if _held_files is None else nullcontext(_held_files)) as files, ExitStack() as observation:
             with files.directory(('.specroad','write-state')) as fd:
                 names=[] if fd is None else sorted(os.listdir(fd))
-                guard_present=bool(names)
+                guard_present=bool(files.active_write_state_names())
                 raw=None if 'pending.json' not in names else files._read(fd,'pending.json')[0]
                 if raw is not None:
                     marker=marker_value(parsed(raw))
@@ -118,7 +118,10 @@ def resolve_guarded_request(root,request,*,expected_project_id):
     if not identity.applicable:return None
     with LockFiles(root) as files:
         path=request_receipt_path(identity.request_id);raw=_read_path(files,path,optional=True)
-        if raw is None:return None
+        if raw is None:
+            from .force_operational_receipts import reject_normal_request
+            reject_normal_request(files, identity.request_id)
+            return None
         value=parsed(raw)
         require(value.get('format_version')=='request-receipt-v2' and set(value)=={
             'format_version','namespace','request_id','project_id','transaction_id','actor',

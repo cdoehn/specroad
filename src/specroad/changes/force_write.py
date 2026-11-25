@@ -38,12 +38,16 @@ class ForcePublicationRequest:
         return sha256(self.source_bytes).hexdigest()
 
 
-def bind_force_plan(plan, *, project_id, force=False, reason=None):
+def bind_force_plan(plan, *, project_id, force=False, reason=None, operational_binding=None):
     require(type(plan) is ChangePlan, 'force_change_plan_required', exit_code=2)
     value = plan.data
     value.pop('change_plan_sha256')
     value.update(format_version='1.4.0' if 'native_intent' in value else '1.3.0',
         project_id=project_id, force=ForceRequest(force, reason).data)
+    if operational_binding is not None or 'operational_binding' in value:
+        from ..force_operations import binding
+        value.update(format_version='1.5.0', native_intent=value.get('native_intent'),
+                     operational_binding=binding(operational_binding if operational_binding is not None else value['operational_binding']))
     return prepare_change_plan(value)
 
 
@@ -110,6 +114,10 @@ def _target(root, plan, before, decisions, services):
 from .force_attempt import audited
 
 
+from ..force_operations import plan_scope
+
+
+@plan_scope
 @audited
 def apply_force_plan(root, plan, *, actor, request_id, force=False, force_reason=None,
                      dry_run=False, authority=None, services=None, _attempt=None,
@@ -119,16 +127,45 @@ def apply_force_plan(root, plan, *, actor, request_id, force=False, force_reason
     _attempt['force'] = ForceDecisions(request).summary
     command = _command_id
     if command != 'change.apply':
-        require(data.get('native_intent', {}).get('command_id') == command,
+        require((data.get('native_intent') or {}).get('command_id') == command,
             'force_native_command_binding', exit_code=2)
     require(request.requested, 'explicit_force_required', exit_code=2)
     require(data.get('force') == request.data, 'request_force_binding_conflict', exit_code=6)
     require(data['actor'] == actor and data['request_id'] == request_id, 'saved_authoring_identity_mismatch', exit_code=6)
     if not dry_run:
         require(type(authority) is PublicationAuthority, 'authoring_host_authority_required', exit_code=7)
+    from ..force_operations import current, binding
+    decisions = current().decisions
+    _attempt['decisions'] = decisions
+    from .force_lock import observation, force_project_lock
     from .normal_access import require_normal_access
-    require_normal_access(root, expected_project_id=data['project_id'])
+    from .write_guard_read import inspect_write_state
+    access = inspect_write_state(root, expected_project_id=data['project_id'])
+    from .force_bootstrap import observe as bootstrap_observation
+    with LockFiles(root) as probe:
+        siblings, _ = bootstrap_observation(probe)
+    operational = data['format_version'] == '1.5.0' or access['state'] != 'clean' or bool(siblings)
+    if operational and data['format_version'] != '1.5.0':
+        plan = bind_force_plan(plan, project_id=data['project_id'], force=force, reason=force_reason,
+            operational_binding={'owners': [{'path': p, 'sha256': h} for p, h in current().owners]})
+        data = plan.data
+        _attempt['plan'] = plan
+    if operational:
+        decisions.decide(access['state'] == 'clean', gate_id='write_marker:normal_access',
+            diagnostic_code='CORE_SECURITY', subject='project', operation=command,
+            observed_binding=access, requested_binding={'plan_sha256': plan.sha256},
+            effect='preserve_old_state_execute_new_attempt')
+    else:
+        require_normal_access(root, expected_project_id=data['project_id'])
     with LockFiles(root) as files:
+        original = observation(files) if operational else None
+        if operational:
+            from .force_lock import check_selected_owner
+            check_selected_owner(files, original[0], decisions, data['operational_binding'])
+        if operational and not dry_run:
+            from .force_operational_receipts import replay as attempt_replay
+            replay = attempt_replay(files, plan, command)
+            if replay is not None: return replay
         if not dry_run:
             replay = _replay(files, plan, command)
             if replay is not None: return replay
@@ -143,8 +180,6 @@ def apply_force_plan(root, plan, *, actor, request_id, force=False, force_reason
             actual_project_id = None
         require(actual_project_id is None or actual_project_id == data['project_id'],
             'force_project_identity_conflict', exit_code=6)
-    decisions = ForceDecisions(request)
-    _attempt['decisions'] = decisions
     if _observed_source is not None:
         require(before == _observed_source, 'force_observed_source_changed', exit_code=6)
     from ..force import validate_override
@@ -163,6 +198,8 @@ def apply_force_plan(root, plan, *, actor, request_id, force=False, force_reason
             observed_binding=source_report['model_root_sha256'], requested_binding=data['base']['model_root_sha256'],
             effect='execute_explicit_target_on_observed_source')
     target = _target(root, plan, before, decisions, services)
+    from ..storage.archive import validate_portable_archive_paths
+    validate_portable_archive_paths(list(before.keys() | target.keys()))
     report = assess_files(target, services=services, history=history)
     requested_binding = {'plan_sha256': plan.sha256, 'target_inventory_sha256': digest(inventory(target)),
         'expected_model_root_sha256': data['expected_result']['model_root_sha256']}
@@ -178,6 +215,25 @@ def apply_force_plan(root, plan, *, actor, request_id, force=False, force_reason
                 subject=path, operation=command, observed_binding=sha256(before[path]).hexdigest(),
                 requested_binding=None if path not in target else sha256(target[path]).hexdigest(),
                 effect='change_explicit_original_invalidating_dependent_evidence')
+    from .publication_check import _rights
+    from ..force_operations import permit
+    with LockFiles(root) as probe_files:
+        for path in before:
+            import os
+            with probe_files.directory(tuple(path.split('/')[:-1])) as fd:
+                info = os.stat(path.rsplit('/', 1)[-1], dir_fd=fd, follow_symlinks=False)
+                permit(info.st_dev == os.fstat(probe_files.root_fd).st_dev and info.st_nlink == 1
+                    and not info.st_mode & 0o7000, gate='safety:write_source_metadata', subject=path,
+                    observed={'device': info.st_dev, 'links': info.st_nlink, 'mode': info.st_mode},
+                    requested={'device': os.fstat(probe_files.root_fd).st_dev, 'links': 1, 'special_bits': False})
+                permit(info.st_nlink == 1, gate='safety:image_link_count', subject=path.rsplit('/', 1)[-1],
+                    observed=info.st_nlink, requested=1)
+        for path in sorted(before.keys() | target.keys()):
+            if before.get(path) == target.get(path): continue
+            parts = tuple(path.split('/')[:-1])
+            for end in range(len(parts) + 1):
+                with probe_files.directory(parts[:end]) as fd:
+                    if fd is not None: _rights(fd, path)
     summary = decisions.summary
     if _attempt is not None:
         _attempt['force'] = summary
@@ -185,10 +241,14 @@ def apply_force_plan(root, plan, *, actor, request_id, force=False, force_reason
         _attempt['force_report'] = report
     if dry_run:
         return _outcome(plan, report, summary, dry_run=True, command_id=command)
-    execution = data.get('native_intent', {}).get('execution_binding')
+    execution = (data.get('native_intent') or {}).get('execution_binding')
     txid = execution['transaction_id'] if execution is not None else 'force-' + str(uuid4())
-    with project_lock(root, kind='writer', command='change apply', project_id=data['project_id'],
-            transaction_id=txid, request_id=request_id, force_plan=plan) as held:
+    lock = (force_project_lock(root, plan=plan, transaction_id=txid, original=original, decisions=decisions)
+        if operational else project_lock(root, kind='writer', command='change apply', project_id=data['project_id'],
+            transaction_id=txid, request_id=request_id, force_plan=plan))
+    with lock as held:
+        summary = decisions.summary
+        _attempt['force'] = summary
         replay = _replay(held._files, plan, command)
         if replay is not None: return replay
         def inventory_check(expected):
@@ -203,7 +263,8 @@ def apply_force_plan(root, plan, *, actor, request_id, force=False, force_reason
                 require(_read_path(held._files, path) == original, 'force_history_changed', exit_code=6)
         inventory_check(before)
         current_all, _, _ = project_files(held._files)
-        require({p: raw for p, raw in current_all.items() if receipt_path(p)} == history,
+        require({p: raw for p, raw in current_all.items() if receipt_path(p)
+            and not (operational and p.startswith('/'.join(held.force_storage) + '/'))} == history,
             'force_history_changed', exit_code=6)
         host_request = ForcePublicationRequest(jcs({'format_version': 'force-publication-request-v1',
             'plan': data, 'force': summary, 'operations_sha256': operations_hash(data),
@@ -220,7 +281,7 @@ def apply_force_plan(root, plan, *, actor, request_id, force=False, force_reason
                     write_state='unknown' if publication_started else 'not_committed')
             return current
         qualify(target)
-        if target == before and data['format_version'] != '1.4.0':
+        if target == before and data['format_version'] not in ('1.4.0', '1.5.0'):
             return _outcome(plan, report, summary, command_id=command)
         from .guarded_write import _Inputs, _run
         publication_started = True

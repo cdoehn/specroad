@@ -34,16 +34,18 @@ def target_bytes(operation):
 def validate_operation(value, pointer=''):
     from ..model._schema import validate_builtin
     validate_builtin(value, operation_schema())
-    project_path(value['path'])
+    # Raw intent is explicitly addressed; portable policy is examined at execution.
+    from ..force_operations import explicit_path
+    explicit_path(value['path'])
     ForceRequest.from_mapping(value['force'])
     target_bytes(value)
 
 
 def check_plan(value):
-    raw = value['format_version'] == '1.4.0' or any(op['op'] == 'resource_replace' for op in value['operations'])
+    raw = value['format_version'] == '1.4.0' or (value['format_version'] == '1.5.0' and not value['operations']) or value.get('native_intent') is not None or any(op['op'] == 'resource_replace' for op in value['operations'])
     if not raw:
         return False
-    if (value['format_version'] not in ('1.3.0', '1.4.0') or 'force' not in value
+    if (value['format_version'] not in ('1.3.0', '1.4.0', '1.5.0') or 'force' not in value
             or not ForceRequest.from_mapping(value['force']).requested
             or any(op['op'] != 'resource_replace' for op in value['operations'])
             or value['result_artifacts'] or value['preconditions']):
@@ -58,14 +60,19 @@ def check_plan(value):
 
 def prepare_resource_plan(*, operations, project_id, actor, request_id, planned_at,
                           change_plan_id, base_model_root=None, target_model_root=None,
-                          force=False, reason=None):
+                          force=False, reason=None, operational_binding=None):
     """Build passive complete intent. No filesystem observation or authority."""
     from .core import prepare_change_plan
     from .target_model import _default_scope
     request = ForceRequest(force, reason)
-    return prepare_change_plan({'format_version': '1.3.0', 'metadata_policy_version': 'change-metadata-v1',
+    value = {'format_version': '1.3.0', 'metadata_policy_version': 'change-metadata-v1',
         'change_plan_id': change_plan_id, 'request_id': request_id, 'planned_at': planned_at,
         'actor': actor, 'force': request.data, 'project_id': project_id,
         'base': {'scope_descriptor': _default_scope(), 'model_root_sha256': base_model_root},
         'operations': operations, 'preconditions': [], 'result_artifacts': [],
-        'expected_result': {'model_root_sha256': target_model_root}})
+        'expected_result': {'model_root_sha256': target_model_root}}
+    if operational_binding is not None:
+        from ..force_operations import binding
+        value.update(format_version='1.5.0', native_intent=None,
+                     operational_binding=binding(operational_binding))
+    return prepare_change_plan(value)

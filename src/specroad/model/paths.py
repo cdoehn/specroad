@@ -40,6 +40,7 @@ PAYLOAD_CLASSES = frozenset({PathClass.ATTACHMENT, PathClass.ARCHIVE_OBJECT})
 
 
 def project_path(value):
+    from ..force_operations import permit
     try:
         parts = _parts(value)
     except SafetyViolation as error:
@@ -49,7 +50,9 @@ def project_path(value):
     reserved.update("LPT" + str(number) for number in range(1, 10))
     if any(part.endswith((".", " ")) or part.split(".")[0].upper() in reserved
            or any(char in part for char in '<>"|?*') for part in parts):
-        raise ModelError("unsafe_path")
+        if not permit(False, gate='path:portable_name', subject=value, observed=value,
+                      requested='literal_root_relative_address'):
+            raise ModelError("unsafe_path")
     if any(part.casefold() in {".git", ".patchharbor"} for part in parts):
         raise ModelError("reserved_path")
     return "/".join(parts)

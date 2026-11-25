@@ -18,10 +18,16 @@ from .manifest import require
 
 
 def receipt_path(path):
-    return any(path == root or path.startswith(root + '/') for root in (REQUESTS_ROOT, RECEIPTS_ROOT))
+    return (any(path == root or path.startswith(root + '/') for root in (REQUESTS_ROOT, RECEIPTS_ROOT))
+        or re.fullmatch(r'\.specroad/write-state/force-attempts/[^/]+/(?:before\.json|owner\.json|complete\.json|receipts/(?:transaction|committed|request)\.json)', path) is not None)
 
 
 def _path_kind(path):
+    match = re.fullmatch(r'\.specroad/write-state/force-attempts/([^/]+)/(before\.json|owner\.json|complete\.json|receipts/(transaction|committed|request)\.json)', path)
+    if match:
+        from ..changes.force_lock import attempt_root
+        attempt_root(match.group(1))
+        return match.group(3) or 'force_original'
     if re.fullmatch(re.escape(REQUESTS_ROOT) + r'/[0-9a-f]{64}\.json', path):
         return 'request'
     if re.fullmatch(re.escape(RECEIPTS_ROOT) + r'/[0-9a-f]{64}/(?:journal\.json|source\.zip|(?:before|staging|moves)/[^/]+|journal\.[0-9a-f]{64}\.pending|recovery-[^/]+\.json)', path):
@@ -50,6 +56,10 @@ def completed_receipts(files, project_id):
                 continue
             write = force_receipts.validate_transaction(raw)
             names = set(force_receipts.receipt_group(write))
+            if write['marker']['format_version'] == 'force-write-guard-v2':
+                from ..changes.force_lock import attempt_root
+                prefix = attempt_root(write['marker']['transaction_id'])
+                names |= {prefix + '/before.json', prefix + '/owner.json', prefix + '/complete.json'}
             require(path in names and names <= files.keys() and not forced_names.intersection(names),
                 'bundle_receipt_completion_missing', code='SRV060')
             forced_journals.append(read_force_group({p: files[p] for p in names}, project_id))
@@ -93,7 +103,7 @@ def completed_receipts(files, project_id):
         values = {}
         for path, raw in files.items():
             kind = _path_kind(path)
-            require(kind != 'migration_original', 'bundle_receipt_completion_missing', code='SRV060')
+            require(kind not in ('migration_original', 'force_original'), 'bundle_receipt_completion_missing', code='SRV060')
             value = {'request': RequestReceipt, 'transaction': TransactionReceipt,
                      'committed': CommittedJournal}[kind](raw)
             expected = completion_marker_path(value.data['transaction_id']) if kind == 'committed' else value.path

@@ -11,6 +11,7 @@ import os
 import stat
 import sys
 from ..security import ProjectBoundary, SafetyViolation
+from ..model.errors import ModelError
 from ..model.operational_paths import OPERATIONAL_DIRECTORIES, EMPTY_OPERATIONAL_DIRECTORIES, passive_journal_directory
 from ..security import paths as guards
 from .lock_values import ProjectLockError, LockRecord, MAX_LOCK_BYTES, LOCK_PATH
@@ -141,7 +142,10 @@ class LockFiles:
                 except FileNotFoundError:
                     pass
                 else:
-                    raise ProjectLockError('nested_lock_project', exit_code=7)
+                    from ..force_operations import permit
+                    if not permit(False, gate='path:nested_project', subject='/'.join(parts),
+                            observed='nested_project', requested='explicit_root_relative_operation'):
+                        raise ProjectLockError('nested_lock_project', exit_code=7)
                 opened.append((parent, name, child, guards._identity(before)))
                 parent = child
             yield parent
@@ -162,16 +166,22 @@ class LockFiles:
     def _read(self, parent, name):
         before = os.stat(name, dir_fd=parent, follow_symlinks=False)
         guards._regular(before)
-        if before.st_nlink != 1 or before.st_size > MAX_LOCK_BYTES:
+        from ..force_operations import permit
+        if not permit(before.st_nlink == 1, gate='safety:owner_link_count', subject=name,
+                observed=before.st_nlink, requested=1):
             raise ProjectLockError('unsafe_lock_record', exit_code=7)
+        if not permit(before.st_size <= MAX_LOCK_BYTES, gate='resource_limit:owner_bytes', subject=name,
+                observed=before.st_size, requested=MAX_LOCK_BYTES):
+            raise ProjectLockError('unsafe_lock_record', exit_code=7)
+        limit = max(MAX_LOCK_BYTES, before.st_size)
         fd = os.open(name, os.O_RDONLY | os.O_NOFOLLOW | getattr(os, 'O_NONBLOCK', 0) | getattr(os, 'O_CLOEXEC', 0), dir_fd=parent)
         try:
             first = os.fstat(fd); guards._regular(first)
-            if first.st_nlink != 1 or guards._signature(first) != guards._signature(before):
+            if first.st_nlink != before.st_nlink or guards._signature(first) != guards._signature(before):
                 raise ProjectLockError('lock_record_changed', exit_code=6)
             data = bytearray()
-            while len(data) <= MAX_LOCK_BYTES:
-                chunk = os.read(fd, min(8192, MAX_LOCK_BYTES + 1 - len(data)))
+            while len(data) <= limit:
+                chunk = os.read(fd, min(8192, limit + 1 - len(data)))
                 if not chunk:
                     break
                 data.extend(chunk)
@@ -255,6 +265,21 @@ class LockFiles:
                 os.close(fd)
         return '.specroad/recovery/lock-audit/' + name
 
+    def active_write_state_names(self):
+        with self.directory(('.specroad', 'write-state')) as fd:
+            names = [] if fd is None else sorted(os.listdir(fd))
+        if 'force-attempts' in names:
+            try:
+                from .force_operational_receipts import completed_attempts
+                completed_attempts(self)
+            except (ValueError, TypeError, KeyError, OSError, ModelError, SafetyViolation):
+                # No claim of passivity without all native original bindings.
+                # The caller still reports the original blocker.
+                pass
+            else:
+                names.remove('force-attempts')
+        return names
+
     def journal_entries(self):
         found = []
         with self.directory(('.specroad',)) as directory:
@@ -266,7 +291,7 @@ class LockFiles:
                         found.append('.specroad/' + name)
                     elif name in EMPTY_OPERATIONAL_DIRECTORIES:
                         with self.directory(('.specroad', name)) as child:
-                            if os.listdir(child):
+                            if (self.active_write_state_names() if name == 'write-state' else os.listdir(child)):
                                 found.append('.specroad/' + name)
         for folder in ('transactions', 'recovery'):
             with self.directory(('.specroad', folder)) as directory:

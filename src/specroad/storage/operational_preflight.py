@@ -68,6 +68,10 @@ def observe_operational_preflight(boundary, *, complete_inventory=False, metadat
             for child, is_directory in entries(path):
                 logical = path + '/' + child
                 observed.append({'path': logical, 'directory': is_directory})
+                if name == 'write-state' and child == 'force-attempts' and is_directory:
+                    # Actual completion/active-marker validation belongs to the
+                    # write-state observer, not this shallow metadata traversal.
+                    continue
                 unknown.append(logical)
             continue
         if directory and name in ('locks', 'transactions', 'recovery'):

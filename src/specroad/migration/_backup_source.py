@@ -16,7 +16,10 @@ def _scan(handles):
         with handles.directory(parts) as fd:
             require(fd is not None, 'migration_backup_source_changed')
             names = sorted(os.listdir(fd))
-            _safe(len({n.casefold() for n in names}) == len(names), 'migration_backup_path_collision')
+            from ..force_operations import permit
+            _safe(permit(len({n.casefold() for n in names}) == len(names),
+                gate='path:source_portable_collision', subject='/'.join(parts) or '.',
+                observed=names, requested='literal_distinct_names'), 'migration_backup_path_collision')
             for name in names:
                 if not parts and name in ADMIN_ROOTS:
                     continue  # Outside the project; never open credentials/Git state.

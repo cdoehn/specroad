@@ -28,7 +28,11 @@ def _private(info, *, directory=False):
     guards._regular(info, directory=directory)
     if (info.st_uid != os.geteuid() or stat.S_IMODE(info.st_mode) & 0o077
             or (not directory and info.st_nlink != 1)):
-        raise SafetyViolation('Work storage must be private and exclusively owned')
+        from ..force_operations import permit
+        if not permit(False, gate='safety:private_work_storage', subject='work',
+                observed={'uid': info.st_uid, 'mode': stat.S_IMODE(info.st_mode), 'links': info.st_nlink},
+                requested={'uid': os.geteuid(), 'private': True}):
+            raise SafetyViolation('Work storage must be private and exclusively owned')
 
 
 class _HeldWorkRoot:
@@ -43,6 +47,7 @@ class _HeldWorkRoot:
         self._entries = []
         self._pid = os.getpid()
         self._locked = False
+        self._observed_busy = False
         self._owner = None
         self._owner_released = False
 
@@ -87,7 +92,9 @@ class _HeldWorkRoot:
         self._check_path()
         before = os.stat(name, dir_fd=self._root, follow_symlinks=False)
         _private(before)
-        if before.st_size > 65536:
+        from ..force_operations import permit
+        if not permit(before.st_size <= 65536, gate='resource_limit:work_control_bytes',
+                subject=name, observed=before.st_size, requested=65536):
             raise SafetyViolation('Work control record is too large')
         fd = os.open(name, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK, dir_fd=self._root)
         try:
@@ -226,8 +233,16 @@ class _HeldWorkRoot:
                             raise
             self._root = self._directory(parent, parts[-1])
             self._check_path()
-            fcntl.flock(self._root, fcntl.LOCK_EX | fcntl.LOCK_NB)
-            self._locked = True
+            try:
+                fcntl.flock(self._root, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                self._locked = True
+            except BlockingIOError:
+                from ..force_operations import selected_owner, permit
+                if not self._inspection or not selected_owner(_LOCK, self._read(_LOCK)[0]):
+                    raise
+                permit(False, gate='lock:work_exclusivity', subject=str(self.path),
+                    observed={'exclusive_access_proven': False}, requested='observe_explicit_owner_for_own_attempt')
+                self._observed_busy = True
             self._check_path()
             info = os.fstat(self._root)
             self._binding = canonical_json_bytes({'format_version': 'work-root-v1',
@@ -299,7 +314,7 @@ class _HeldWorkRoot:
 
     def check(self):
         self._check_path()
-        if not self._locked or (self._owner is None and not self._inspection):
+        if not (self._locked or self._inspection and self._observed_busy) or (self._owner is None and not self._inspection):
             raise SafetyViolation('No active work lock')
         if self._read(_BINDING) != (self._binding, self._binding_inode):
             raise WorkBindingViolation('Work identity changed')

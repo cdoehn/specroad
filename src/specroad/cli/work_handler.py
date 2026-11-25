@@ -111,6 +111,9 @@ def _work(invocation):
             registry=invocation.registry, protected_roots=(origin,), directory=absolute(options['--output']))
         return _payload(operation, inspect_work_status(store))
     store = open_existing_work(absolute(invocation.arguments['work_dir']), registry=invocation.registry)
+    if operation == 'resume' and options.get('--force'):
+        from ..work.force_attempt import own_attempt
+        store = own_attempt(store)
     if operation == 'status':
         return _payload(operation, inspect_work_status(store))
     if operation == 'prompt':
@@ -135,7 +138,14 @@ def _work(invocation):
 @owned_checks
 def work_command(invocation):
     try:
-        return _work(invocation)
+        result = _work(invocation)
+        from ..force_operations import current
+        call = current()
+        if call is not None and call.decisions.summary['used']:
+            from dataclasses import replace
+            result = replace(result, force=call.decisions.summary,
+                status=ResultStatus.FORCED if result.status is ResultStatus.SUCCESS else result.status)
+        return result
     except QualificationError as error:
         raise OperationFailure(FailureKind(error.exit_code), error.reason, details=error.diagnostic()) from error
 
@@ -151,7 +161,7 @@ def _transport_work(invocation, store, operation):
     try:
         original, _, evidence = checked(store.read())
         options = invocation.options
-        require_transport(not any(key in options for key in ('--force', '--expected-lock-sha256',
+        require_transport(not any(key in options for key in ('--expected-lock-sha256',
             '--accept-remote-risk', '--expected-work-lock-sha256', '--work-recovery-reason')),
             'outbound_work_takeover_not_supported', 2)
         if '--project' in options:

@@ -40,7 +40,8 @@ def require_project_read_preflight(boundary, configuration_bytes, metadata):
         from ..changes.normal_access import observe_normal_state
         state = observe_normal_state(boundary.root, first)
         data.update(state)
-        if state['state'] != 'clean':
+        from ..force_operations import read_access
+        if not read_access(boundary.root, state):
             fail(FailureKind.CONFLICT if state['state'] == 'writer_active' else FailureKind.ENVIRONMENT,
                  'project_' + state['state'])
     except ModelError as error:
@@ -50,4 +51,5 @@ def require_project_read_preflight(boundary, configuration_bytes, metadata):
         fail(FailureKind.SECURITY, 'unsafe_preflight_resource')
     except OSError:
         fail(FailureKind.ENVIRONMENT, 'preflight_resource_unavailable')
-    return {**data, **metadata.summary(), 'reason': 'preflight_clear', 'preflight_passed': True}
+    return {**data, **metadata.summary(), 'reason': 'preflight_clear' if data.get('state') == 'clean' else 'preflight_force_override',
+            'preflight_passed': data.get('state') == 'clean'}

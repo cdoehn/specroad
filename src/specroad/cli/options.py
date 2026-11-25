@@ -32,6 +32,7 @@ def select_project(command, options, cwd, *, preflight=None):
 _GLOBAL_OPTIONS = {
     "--force": OptionSpec("--force"),
     "--force-reason": OptionSpec("--force-reason", takes_value=True),
+    "--force-owner": OptionSpec("--force-owner", takes_value=True, repeatable=True),
     "--project": OptionSpec("--project", takes_value=True),
     "--profile": OptionSpec("--profile", takes_value=True, repeatable=True),
     "--configuration": OptionSpec("--configuration", takes_value=True),

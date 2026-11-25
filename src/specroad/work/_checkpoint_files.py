@@ -25,7 +25,10 @@ def read_file(held, folder, name, *, check, error_type, sync=False, expected_siz
         _private(before)
         check(expected_size is None or before.st_size == expected_size,
               'checkpoint_bytes_changed', path=logical)
-        check(maximum is None or before.st_size <= maximum,
+        from ..force_operations import permit
+        check(permit(maximum is None or before.st_size <= maximum,
+              gate='resource_limit:work_checkpoint_bytes', subject=logical,
+              observed=before.st_size, requested=maximum),
               'checkpoint_metadata_too_large', path=logical)
         fd = os.open(name, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK, dir_fd=parent)
         try:

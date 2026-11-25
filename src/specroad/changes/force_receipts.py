@@ -16,12 +16,18 @@ from .receipt_values import transaction_receipt_path, request_receipt_path, comp
 from .request_ids import normalize_request_id
 
 
-def marker_value(value, *, force=None):
+def marker_value(value, *, force=None, operational=None):
     if force is not None:
         value = {**value, 'format_version': 'force-write-guard-v1', 'force': validate_summary(force)}
+    if operational is not None:
+        value = {**value, 'format_version': 'force-write-guard-v2', 'operational': operational}
     fields = {'format_version', 'project_id', 'transaction_id', 'request_id', 'command_id',
         'plan_sha256', 'base_model_root_sha256', 'target_model_root_sha256', 'owner', 'state', 'force'}
-    require(type(value) is dict and set(value) == fields and value['format_version'] == 'force-write-guard-v1'
+    if value.get('format_version') == 'force-write-guard-v2':
+        fields.add('operational')
+        from .force_operational_receipts import check_observation
+        check_observation(value['operational'])
+    require(type(value) is dict and set(value) == fields and value['format_version'] in ('force-write-guard-v1', 'force-write-guard-v2')
         and value['state'] == 'writing', 'force_marker_fields')
     text(value['project_id']); text(value['command_id']); _transaction(value['transaction_id'])
     normalize_request_id(value['request_id'])
@@ -49,20 +55,32 @@ def transaction_document(write):
         write_sha256=digest(write), result_object=result_object(write))
 
 
+def paths(marker):
+    if marker['format_version'] == 'force-write-guard-v2':
+        from .force_lock import attempt_root
+        root = attempt_root(marker['transaction_id']) + '/receipts/'
+        return root + 'transaction.json', root + 'committed.json', (
+            None if marker['request_id'] is None else root + 'request.json')
+    return (transaction_receipt_path(marker['transaction_id']),
+        completion_marker_path(marker['transaction_id']),
+        None if marker['request_id'] is None else request_receipt_path(marker['request_id']))
+
+
 def receipt_group(write):
     marker = write['marker']; transaction = transaction_document(write)
-    path = transaction_receipt_path(marker['transaction_id']); raw = jcs(transaction)
+    transaction_path, completed_path, request_path = paths(marker)
+    path = transaction_path; raw = jcs(transaction)
     refs = {'transaction': {'path': path, 'sha256': sha256(raw).hexdigest()}, 'request': None}
     group = {path: raw}
     if marker['request_id'] is not None:
-        path = request_receipt_path(marker['request_id'])
+        path = request_path
         request = dict(format_version='force-request-receipt-v1', namespace='normative_write',
             request_id=marker['request_id'], project_id=marker['project_id'], transaction_id=marker['transaction_id'],
             actor=write['actor'], operations_sha256=write['operations_sha256'], plan_sha256=marker['plan_sha256'],
             force=write['force'], result='committed', result_object=transaction['result_object'],
             transaction_receipt=refs['transaction'])
         raw = jcs(request); group[path] = raw; refs['request'] = {'path': path, 'sha256': sha256(raw).hexdigest()}
-    group[completion_marker_path(marker['transaction_id'])] = jcs(dict(format_version='force-write-completion-v1',
+    group[completed_path] = jcs(dict(format_version='force-write-completion-v1',
         project_id=marker['project_id'], transaction_id=marker['transaction_id'], write_sha256=digest(write),
         receipts=refs, force=write['force'], validation_status=write['validation']['validation_status']))
     return group
@@ -82,6 +100,9 @@ def validate_transaction(raw):
     require(type(write) is dict and set(write) == {'marker', 'actor', 'planned_at', 'change_plan_id',
         'operations', 'operations_sha256', 'files', 'target_inventory', 'validation', 'plan', 'force'}, 'force_write_fields')
     marker = marker_value(write['marker']); plan = ChangePlan(jcs(write['plan'])); data = plan.data
+    if marker['format_version'] == 'force-write-guard-v2':
+        require(data['format_version'] == '1.5.0' and marker['operational']['plan_sha256'] == plan.sha256,
+            'force_operational_plan_binding')
     require(data['force']['requested'] and marker['plan_sha256'] == plan.sha256
         and marker['project_id'] == data['project_id'] and marker['request_id'] == data['request_id']
         and write['actor'] == data['actor'] and write['planned_at'] == data['planned_at']
@@ -89,7 +110,7 @@ def validate_transaction(raw):
         and write['operations_sha256'] == operations_hash(data)
         and marker['base_model_root_sha256'] == data['base']['model_root_sha256']
         and marker['target_model_root_sha256'] == data['expected_result']['model_root_sha256'], 'force_receipt_plan_binding')
-    if 'native_intent' in data:
+    if data.get('native_intent') is not None:
         require(marker['command_id'] in ('change.apply', data['native_intent']['command_id']),
             'force_native_command_binding')
     force = validate_summary(write['force'])
@@ -144,7 +165,7 @@ def validate_transaction(raw):
 
 def completion(write, *, current):
     marker = write['marker']; group = receipt_group(write)
-    proof = parsed(group[completion_marker_path(marker['transaction_id'])])
+    proof = parsed(group[paths(marker)[1]])
     return WriteCompletion(jcs(dict(format_version='force-transaction-completion-v1', state='committed',
         transaction_id=marker['transaction_id'], request_id=marker['request_id'], project_id=marker['project_id'],
         receipts=proof['receipts'], result_object=result_object(write), force=write['force'],
@@ -155,31 +176,37 @@ def completion(write, *, current):
         write_authorized=False, approval_granted=False, atomic_snapshot=False)))
 
 
-def read_group(files, transaction_id, *, project_id):
+def read_group(files, transaction_id, *, project_id, attempt=False):
     """Missing/unreadable originals are structured failures, never completion."""
     from .write_guard_values import WriteGuardError
     try:
-        return _read_group(files, transaction_id, project_id=project_id)
+        return _read_group(files, transaction_id, project_id=project_id, attempt=attempt)
     except FileNotFoundError as error:
         raise WriteGuardError('force_completion_missing', exit_code=6) from error
     except OSError as error:
         raise WriteGuardError('force_completion_read_failed', exit_code=5) from error
 
 
-def _read_group(files, transaction_id, *, project_id):
+def _read_group(files, transaction_id, *, project_id, attempt=False):
     from ._guarded_io import _read_path
-    raw = _read_path(files, transaction_receipt_path(transaction_id))
+    if attempt:
+        from .force_lock import attempt_root
+        source_path = attempt_root(transaction_id) + '/receipts/transaction.json'
+    else:
+        source_path = transaction_receipt_path(transaction_id)
+    raw = _read_path(files, source_path)
     write = validate_transaction(raw)
     require(write['marker']['transaction_id'] == transaction_id and write['marker']['project_id'] == project_id,
         'force_receipt_project_binding', exit_code=6)
     group = receipt_group(write)
-    prefix = transaction_receipt_path(transaction_id).rsplit('/', 1)[0]
+    require(paths(write['marker'])[0] == source_path, 'force_receipt_location_binding')
+    prefix = source_path.rsplit('/', 1)[0]
     from ..security import paths as guards
     from ._journal_io import _read
     identities = {}
     for repeat in range(2):
         with files.directory(tuple(prefix.split('/'))) as fd:
-            require(fd is not None and set(os.listdir(fd)) == {'transaction.json', 'committed.json'},
+            require(fd is not None and set(os.listdir(fd)) == {p.rsplit('/', 1)[-1] for p in group if p.startswith(prefix + '/')},
                 'force_completion_namespace_changed', exit_code=6)
         for path, expected in group.items():
             with files.directory(tuple(path.split('/')[:-1])) as fd:

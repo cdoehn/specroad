@@ -60,7 +60,8 @@ def require_normal_access(root, *, expected_project_id=None):
     from ..storage.operational_preflight import observe_operational_preflight
     observed = observe_operational_preflight(boundary)
     observation = observe_normal_state(root, observed, expected_project_id=expected_project_id)
-    if observation['state'] != 'clean':
+    from ..force_operations import read_access
+    if not read_access(root, observation):
         raise NormalAccessError(observation)
 
 

@@ -126,6 +126,17 @@ def read_transaction_completion(source, transaction_id, *, preflight=None):
                 write = read_group(files, transaction_id, project_id=source.configuration.project_id)
                 source.check_current()
                 return completion(write, current=False)
+            from .force_lock import attempt_root
+            own = _read_path(files, attempt_root(transaction_id) + '/receipts/committed.json', optional=True)
+            if own is not None:
+                from .force_operational_receipts import read_attempt
+                from .force_receipts import completion
+                if preflight is not None:
+                    raise ReceiptError('normal_preflight_cannot_certify_force_write', exit_code=6)
+                source.check_current()
+                write = read_attempt(files, transaction_id, project_id=source.configuration.project_id, check_originals=False)
+                source.check_current()
+                return completion(write, current=False)
             selected = find_journal(files, transaction_id)
             if selected is not None:
                 if preflight is not None:
@@ -178,6 +189,8 @@ def _read_confirmed_request(source, identity):
             raise ReceiptError('request_root_changed', exit_code=6)
         first = _request_bytes(files, path)
         if first is None:
+            from .force_operational_receipts import reject_normal_request
+            reject_normal_request(files, identity)
             from ..bundles._receipt_admission import reject_missing_imported_request
             reject_missing_imported_request(source, path)
             source.check_current()

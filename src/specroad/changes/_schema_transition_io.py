@@ -53,8 +53,12 @@ def project_files(files, *, exclude=()):
             name = path.rsplit('/', 1)[-1]
             info = os.stat(name, dir_fd=parent, follow_symlinks=False)
             guards._regular(info)
-            require(info.st_dev == os.fstat(files.root_fd).st_dev and info.st_nlink == 1
-                    and not info.st_mode & 0o7000, 'transition_unsafe_source', exit_code=7)
+            from ..force_operations import permit
+            require(permit(info.st_dev == os.fstat(files.root_fd).st_dev and info.st_nlink == 1
+                    and not info.st_mode & 0o7000, gate='safety:source_metadata', subject=path,
+                    observed={'device': info.st_dev, 'links': info.st_nlink, 'mode': info.st_mode},
+                    requested={'device': os.fstat(files.root_fd).st_dev, 'links': 1, 'special_bits': False}),
+                    'transition_unsafe_source', exit_code=7)
             identities[path] = guards._identity(info)
             observed[path] = _read(parent, name, expected_identity=identities[path])
             modes[path] = info.st_mode & 0o777

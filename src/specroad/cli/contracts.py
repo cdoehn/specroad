@@ -167,7 +167,8 @@ class CommandSpec:
         object.__setattr__(self, "words", _sequence(self.words, "words"))
         object.__setattr__(self, "aliases", tuple(_sequence(alias, "alias") for alias in _sequence(self.aliases, "aliases")))
         object.__setattr__(self, "options", _sequence(self.options, "options"))
-        force_options = (OptionSpec('--force'), OptionSpec('--force-reason', takes_value=True))
+        force_options = (OptionSpec('--force'), OptionSpec('--force-reason', takes_value=True),
+                         OptionSpec('--force-owner', takes_value=True, repeatable=True))
         declared = {option.flag for option in self.options if isinstance(option, OptionSpec)}
         object.__setattr__(self, 'options', (*self.options,
             *(option for option in force_options if option.flag not in declared)))

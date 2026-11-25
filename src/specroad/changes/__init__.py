@@ -118,6 +118,7 @@ _FORCE_EXPORTS = {
     'apply_force_plan': '.force_write',
     'ForcePublicationRequest': '.force_write',
     'read_force_completion': '.force_read',
+    'read_force_attempt': '.force_operational_receipts',
     'prepare_resource_plan': '.resource_replace',
 }
 __all__ += list(_FORCE_EXPORTS)

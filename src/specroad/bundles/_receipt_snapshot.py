@@ -59,6 +59,18 @@ def _observe(source, *, local_observation=False):
         require(set(entries) == {('transaction.json', False), ('committed.json', False)},
                 'bundle_receipt_completion_missing', code='SRV060')
         paths.extend(parent + '/' + child for child, _ in entries)
+    from ..changes.force_lock import ATTEMPTS
+    for transaction, is_directory in names(ATTEMPTS, True):
+        require(is_directory, 'force_attempt_directory_required')
+        parent = ATTEMPTS + '/' + transaction
+        require(set(names(parent)) == {('owner.json', False), ('before.json', False), ('complete.json', False), ('receipts', True)},
+            'force_attempt_incomplete')
+        paths.extend((parent + '/owner.json', parent + '/before.json', parent + '/complete.json'))
+        for name, directory in names(parent + '/receipts'):
+            path = parent + '/receipts/' + name
+            require(not directory and _path_kind(path) in ('transaction', 'committed', 'request'),
+                'force_attempt_receipt_path')
+            paths.append(path)
     for path in sorted(paths):
         with opened_resource(source.boundary, path) as (_, info):
             records[path] = ((info.st_dev, info.st_ino), source.boundary.read_bytes(path))
@@ -92,6 +104,7 @@ class ReceiptSnapshot:
         self._recheck_files()
         from ..proposals.receipts import HistoricalProposalJournal
         from ..migration.receipts import HistoricalMigrationJournal
+        from ..changes.force_history import ForceAudit
         # Pure historical completion readers must not route through the active
         # journal/retry API. Recheck their complete owned group and unchanged
         # directory/inode/byte observations, never current publication authority.
@@ -100,7 +113,7 @@ class ReceiptSnapshot:
                 tuple(j.source_bytes for j in self.journals), 'bundle_receipt_inventory_changed')
         try:
             for journal in self.journals:
-                if type(journal) not in (HistoricalProposalJournal, HistoricalMigrationJournal):
+                if type(journal) not in (HistoricalProposalJournal, HistoricalMigrationJournal, ForceAudit):
                     read_transaction_completion(self.source, journal.data['transaction_id'])
         except ReceiptError as error:
             raise BundleError(error.reason, code=None, exit_code=error.exit_code) from error

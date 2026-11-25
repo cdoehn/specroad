@@ -187,7 +187,7 @@ class DescriptionWorkTests(unittest.TestCase):
         document = describe_command(registry, 'version')
         document['options'].clear(); document['examples'][0]['options']['--format'] = 'invalid'
         fresh = describe_command(registry, 'version')
-        self.assertEqual({option['flag'] for option in fresh['options']}, {'--format', '--quiet', '--no-color', '--force', '--force-reason'})
+        self.assertEqual({option['flag'] for option in fresh['options']}, {'--format', '--quiet', '--no-color', '--force', '--force-reason', '--force-owner'})
         self.assertEqual(execute_request(fresh['examples'][0], registry=registry).result.exit_code, 0)
 
 

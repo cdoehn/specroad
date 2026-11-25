@@ -37,6 +37,11 @@ def request_schema(command):
             "properties": {"command_id": {"const": command.command_id},
                            "options": options, "arguments": arguments, "force": {"type": "boolean"},
                            "force_reason": {"type": "string", "minLength": 1}}}
+    schema['properties']['operational_binding'] = {'type': 'object', 'additionalProperties': False,
+        'required': ['owners'], 'properties': {'owners': {'type': 'array', 'items': {
+            'type': 'object', 'additionalProperties': False, 'required': ['path', 'sha256'],
+            'properties': {'path': {'enum': ['.specroad/locks/project.json', 'work-lock.json', 'bootstrap-root.owner', 'bootstrap-container.owner']},
+                'sha256': {'type': 'string', 'pattern': '^[0-9a-f]{64}$'}}}}}}
     schema["description"] = "Structured request for " + command.command_id + "; binding never executes example requests."
     if command.protocol is not None:
         schema["examples"] = [command.protocol.example.as_dict()]

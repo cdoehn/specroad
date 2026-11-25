@@ -37,9 +37,9 @@ def publish_effect(self,index,path):
             staged=str(index)+'.bin';raw,ident=self.images[staged]
             def moved(info):
                 self.expected[path]=after;self.identities[path]=guards._identity(info)
-                self.modes[path]=info.st_mode&0o777;self.owners[path]=(info.st_uid,info.st_gid);self.images.pop(staged)
+                self.modes[path]=info.st_mode&0o777;self.owners[path]=(info.st_uid,info.st_gid,info.st_mode&0o7000);self.images.pop(staged)
                 self.checkpoint('effect_replaced:'+str(index))
-            with self.files.directory(('.specroad','write-state','staging')) as stage:
+            with self.files.directory((*self.storage, 'staging')) as stage:
                 replace_bound_image(stage,staged,fd,name,size=len(raw),digest=sha256(raw).hexdigest(),identity=ident,
                     mode=self.modes.get(path,0o644),create_only=before is None,single_link_create=True,
                     source_changed=lambda:WriteGuardError('write_image_changed',exit_code=6),

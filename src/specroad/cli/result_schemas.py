@@ -200,13 +200,21 @@ def _fields(schema_id):
                 files=_array(_object({'path': nonempty, 'size': count, 'sha256': sha})), directories=strings)
         return _object(fields)
     if schema_id == 'bundle-extract-v1':
-        return _object({'format_version': {'const': 'bundle-extract-v1'}, 'project_root': nonempty,
+        normal = _object({'format_version': {'const': 'bundle-extract-v1'}, 'project_root': nonempty,
             'manifest': obj, 'file': _object({'size': count, 'sha256': sha}),
             'validation_scope': {'enum': ['closed_project_payload_model', 'partial_payload_model']},
             'bootstrap_state': {'const': 'complete'}, 'external_hash_verified': boolean,
             'files': _array(_object({'path': nonempty, 'size': count, 'sha256': sha})),
             'directories': strings, **{k: {'const': False} for k in
                 ('creator_authenticated', 'approval_granted', 'full_semantic_validation')}})
+        from copy import deepcopy
+        forced = deepcopy(normal)
+        forced['properties']['format_version'] = {'const': 'force-bundle-extract-v1'}
+        forced['properties']['validation_scope'] = nonempty
+        forced['properties']['force'] = _object({'requested': {'const': True},
+            'used': {'const': True}, 'reason': _nullable(nonempty), 'overrides': _array(obj)})
+        forced['required'].append('force')
+        return {'anyOf': [normal, forced]}
     if schema_id == 'document-read-v1':
         return _object({'format_version': {'const': 'document-read-v1'},
             'operation': {'enum': ['render', 'view.render', 'diagram']}, 'data': obj,
@@ -226,13 +234,23 @@ def _fields(schema_id):
             'recovery_required': boolean, 'observation_only': {'const': True},
             **{k: {'const': False} for k in ('exclusive_access_proven', 'write_authorized', 'atomic_snapshot')}})
     if schema_id == 'bundle-verify-v1':
-        return _object({'format_version': {'const': 'bundle-verify-v1'}, 'manifest': obj,
+        normal = _object({'format_version': {'const': 'bundle-verify-v1'}, 'manifest': obj,
             'file': _object({'size': count, 'sha256': sha}),
             'validation_scope': {'enum': ['closed_project_payload_model', 'partial_payload_model']},
             'container_verified': {'const': True}, 'model_root_verified': {'const': True},
             'closure_verified': {'const': True}, 'external_hash_verified': boolean,
             'creator_authenticated': {'const': False}, 'full_semantic_validation': {'const': False},
             'approval_granted': {'const': False}, 'write_authorized': {'const': False}})
+        from copy import deepcopy
+        forced = deepcopy(normal)
+        forced['properties']['format_version'] = {'const': 'force-bundle-verify-v1'}
+        forced['properties']['validation_scope'] = nonempty
+        forced['properties']['force'] = _object({'requested': {'const': True},
+            'used': {'const': True}, 'reason': _nullable(nonempty), 'overrides': _array(obj)})
+        forced['required'].append('force')
+        for field in ('container_verified', 'model_root_verified', 'closure_verified'):
+            forced['properties'][field] = boolean
+        return {'anyOf': [normal, forced]}
     if schema_id == 'proposal-return-export-v1':
         return _object({'format_version': {'const': 'proposal-return-export-v1'}, 'manifest': obj,
             'status': {'enum': ['created', 'no_changes']}, 'generated': boolean,
