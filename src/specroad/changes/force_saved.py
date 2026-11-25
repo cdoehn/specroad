@@ -22,7 +22,8 @@ def apply_saved(root, plan, *, command, expected_plan_sha256, authority=None,
                 dry_run=False, force=False, force_reason=None, observe=None, services=None,
                 execution_binding=None, _attempt=None):
     require(type(plan) is ChangePlan, 'force_saved_plan_required', exit_code=2)
-    require(command in ('merge.apply', 'migrate.apply'), 'force_saved_command_required', exit_code=2)
+    from ..model.native_force_command_ids import SAVED_COMMANDS
+    require(command in SAVED_COMMANDS, 'force_saved_command_required', exit_code=2)
     request = ForceRequest(force, force_reason)
     _attempt['force'] = ForceDecisions(request).summary
     require(request.requested and type(dry_run) is bool, 'explicit_force_required', exit_code=2)
@@ -31,7 +32,8 @@ def apply_saved(root, plan, *, command, expected_plan_sha256, authority=None,
     data = plan.data
     expected_policy = 'merge-metadata-v1' if command == 'merge.apply' else 'migration-metadata-v1'
     require(data['metadata_policy_version'] == expected_policy, 'force_saved_domain_mismatch', exit_code=2)
-    from ..authoring.force_native import native_binding, _previous, byte_plan
+    from .native_force_binding import native_binding, _previous
+    from ..authoring.force_native import byte_plan
     original = native_binding(dict(command_id=command, plan=data,
         expected_plan_sha256=expected_plan_sha256, execution_binding=execution_binding), None, False, None,
         None if not execution_binding or execution_binding.get('transaction_id', execution_binding.get('--transaction-id')) is None else dict(

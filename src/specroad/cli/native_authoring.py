@@ -99,14 +99,9 @@ def command(invocation):
             **redirect,
             authority=invocation.publication_authority, services=invocation.restore_services)
         if result.get('format_version') == 'force-authoring-execution-v1':
-            from .results import ResultStatus
-            from ..diagnostics import Diagnostic
-            diagnostics = tuple(Diagnostic(d.get('code') or 'CORE_MODEL', d.get('severity', 'error'),
-                d.get('reason') or 'force_target_diagnostic', d.get('reason') or 'Target validation finding',
-                path=d.get('path')) for d in result['diagnostics'])
-            return CommandResult(name, status=ResultStatus(result['status']),
-                result={'format_version':'native-authoring-command-v1', 'command_id': name, 'outcome': result},
-                diagnostics=diagnostics, force=result['force'], validation_status=result['validation_status'])
+            from .force_domain_result import result as force_result
+            return force_result(name, result, payload={'format_version':'native-authoring-command-v1',
+                'command_id': name, 'outcome': result})
         return CommandResult(name, result={'format_version':'native-authoring-command-v1',
                                            'command_id':name, 'outcome':result})
     except (ModelError, BundleError, SafetyViolation, OSError) as error:

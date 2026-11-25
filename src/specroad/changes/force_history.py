@@ -1,7 +1,6 @@
 """Verified passive Force history, never positive model/review evidence."""
 from dataclasses import dataclass
 from hashlib import sha256
-from ..model.canonical import canonical_json_bytes as jcs
 from ..storage.json_syntax import parse_json_object as parsed
 from .write_guard_values import require
 from .receipt_values import completion_marker_path

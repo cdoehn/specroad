@@ -4,53 +4,24 @@ Only the common publication engine writes. Historical results are verified
 before allocating IDs/time; an input document can never supply host authority.
 """
 from base64 import b64encode
-from copy import deepcopy
 from datetime import datetime, timezone
 from hashlib import sha256
 from uuid import uuid4
 from ..force import ForceRequest, ForceDecisions
 from ..model.audit import actor as read_actor
-from ..model.canonical import canonical_json_bytes as jcs, canonical_json_sha256 as digest
 from ..model.errors import ModelError
 from ..changes.request_ids import normalize_request_id
 from ..changes.write_guard_values import require
 from ..changes._lock_files import LockFiles
-from ..changes._guarded_io import _read_path
 from ..changes._schema_transition_io import project_files
-from ..changes.receipt_values import request_receipt_path
 from ..changes.force_domain_gates import record_denial
 from ..changes.force_write import apply_force_plan
 from ..changes.force_target import assess_files
 from ..changes.publication_values import PublicationAuthority
-from ..changes import force_receipts
 from ..storage.json_syntax import parse_json_object as parsed
 
 
-def native_binding(intent, expected_model_root, as_proposal, proposal_fields, execution_binding=None):
-    require(type(intent) is dict and type(intent.get('command_id')) is str and type(as_proposal) is bool,
-        'force_native_intent_required', exit_code=2)
-    return dict(command_id=intent['command_id'], intent=deepcopy(intent),
-        expected_model_root_sha256=expected_model_root, as_proposal=as_proposal,
-        proposal_fields=deepcopy(proposal_fields), execution_binding=deepcopy(execution_binding))
-
-
-def _previous(files, original, actor, request_id, force, project_id):
-    if request_id is None:
-        return None
-    raw = _read_path(files, request_receipt_path(request_id), optional=True)
-    if raw is None:
-        return None
-    hint = parsed(raw)
-    require(hint.get('format_version') == 'force-request-receipt-v1',
-        'request_force_binding_conflict', exit_code=6)
-    write = force_receipts.read_group(files, hint['transaction_id'], project_id=project_id)
-    value = write['plan']
-    require(value.get('native_intent') == original and value['actor'] == actor
-        and value['force'] == force.data and value['request_id'] == request_id
-        and write['marker']['command_id'] == original['command_id'],
-        'request_force_binding_conflict', exit_code=6)
-    from ..changes.values import ChangePlan
-    return ChangePlan(jcs(value))
+from ..changes.native_force_binding import native_binding, _previous
 
 
 from ..changes.force_attempt import audited

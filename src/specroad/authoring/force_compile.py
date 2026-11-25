@@ -153,7 +153,6 @@ def apply_operations(sources, ops, actor, time, decisions, command):
 
 def explicit_operations(sources, intent, actor, time, decisions):
     name = intent['command_id']; data = {k: v for k, v in intent.items() if k != 'command_id'}
-    from ..model.authoring_command_ids import BASIC_COMMANDS
     from .native_specialists import FIELDS, KINDS
     allowed = {'artifact.create': {'artifact_type', 'fields'},
         'artifact.update': {'target', 'patch', 'options', 'expected_revision', 'expected_sha256'},

@@ -29,7 +29,6 @@ def target_plan(sources, intent, actor, time, decisions):
     target.update(rows)
     if sources.native is not None:
         try:
-            from .native_plan import _prepared
             # Observe prerequisite/coverage/command policies on the same
             # actual plan target; no second allocator or alternate target.
             from ..changes._target_materialization import materialize_target

@@ -367,12 +367,12 @@ Prozess-/Journalreparatur des offenen C-Rests: [Bundle 790](history/bundle-790-p
 ```yaml
 plan_revision: 460
 implementation_plan_commits_total: 999
-implementation_plan_commits_completed: 902
-last_completed_plan_commit: 21.e1.R
-next_plan_commit: 21.e1.C
+implementation_plan_commits_completed: 903
+last_completed_plan_commit: 21.e1.C
+next_plan_commit: 21.e2.W
 priority_off_plan: null
 next_off_plan_commit: null
-last_completed_numbered_bundle: 811
+last_completed_numbered_bundle: 815
 implementation_state: in_progress
 resource_measurement_policy: RESOURCE-FINAL-809
 final_resource_acceptance: pending
@@ -391,7 +391,7 @@ plan_setup_message: "docs(plan): add detailed SpecRoad WRC implementation plan"
 Die ausdrücklich genehmigte [verlustfreie Aufteilung von 21.e](decisions/force-domains-812.md)
 führt 21.e1 und 21.e2 mit eigenen vollständigen W/R/C-Folgen. Der Umfang und
 alle alten Restfälle bleiben erhalten; Gesamtumfang jetzt **999** Positionen,
-Zielstand nach dem eigenen erfolgreichen Gate **902** abgeschlossene. Nächste Position **21.e1.C**.
+Zielstand nach dem eigenen erfolgreichen Gate **903** abgeschlossene. Nächste Position **21.e2.W**.
 Die normative Detailklärung steht in X.12.2; technische Umsetzung und
 Apply-Abnahme bleiben eigene, nachfolgende Stages. 21.f folgt erst auf 21.e2.C.
 

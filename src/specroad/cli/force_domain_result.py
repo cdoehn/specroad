@@ -3,12 +3,12 @@ from ..diagnostics import Diagnostic
 from .results import CommandResult
 
 
-def result(command, value):
+def result(command, value, *, payload=None):
     diagnostics = tuple(Diagnostic(d.get('code') or 'CORE_MODEL', d.get('severity', 'error'),
         d.get('reason') or 'force_target_diagnostic', d.get('reason') or 'Target validation finding',
         path=d.get('path')) for d in value['diagnostics'])
     from .results import ResultStatus
-    return CommandResult(command, status=ResultStatus(value['status']), result=value, force=value['force'],
+    return CommandResult(command, status=ResultStatus(value['status']), result=value if payload is None else payload, force=value['force'],
         validation_status=value['validation_status'], diagnostics=diagnostics)
 
 

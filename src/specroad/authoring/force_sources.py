@@ -9,7 +9,6 @@ from ..model.errors import ModelError
 from ..bundles.errors import BundleError
 from ..model.identities import IdentityInventory, allocate_artifact_identity
 from ..model.relation_identity import RelationInventory, allocate_relation_identity
-from ..model.canonical import canonical_json_bytes as jcs
 from ..changes.force_projection import _records
 from ..changes.force_domain_gates import record_denial
 from ..changes.write_guard_values import require

@@ -1,5 +1,6 @@
 """One public adapter over native migration planning, backup, writer and verify."""
 from hashlib import sha256
+from base64 import b64encode
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -151,7 +152,7 @@ def _force_apply(invocation, root, options, plan, report, current, *, report_raw
         execution_binding={**{k: v for k, v in options.items() if k in (
             '--to', '--expected-inputs-sha256', '--expected-report-sha256', '--transaction-id', '--backup-root', '--backup')},
             'report': report, 'report_bytes_base64': None if report_raw is None else
-                __import__('base64').b64encode(report_raw).decode('ascii')})
+                b64encode(report_raw).decode('ascii')})
     return result('migrate.apply', value)
 
 

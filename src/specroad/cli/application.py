@@ -11,6 +11,7 @@ from .registry import CommandRegistry, CommandUsageError
 from .requests import CommandRequest
 from .results import CommandResult, FailureKind, OperationFailure, failed_result
 from ..diagnostics import Diagnostic
+from ..model.native_force_command_ids import COMMANDS as NATIVE_FORCE_COMMANDS
 
 
 @dataclass(frozen=True)
@@ -81,9 +82,7 @@ def execute(arguments: list[str] | tuple[str, ...] | CommandRequest, *, registry
                 raise CommandUsageError(str(error)) from error
         if (force.request.requested and (command == 'work.resume' or
                 invocation.command.command_class.value == 'normative_write'
-                and command not in ('change.apply', 'proposal.apply', 'proposal.review', 'proposal.review.start', 'merge.apply', 'migrate.apply')
-                and command not in __import__('specroad.model.authoring_command_ids', fromlist=['COMMANDS']).COMMANDS
-                and command not in __import__('specroad.model.plan_command_ids', fromlist=['COMMANDS']).COMMANDS)):
+                and command not in ('change.apply', *NATIVE_FORCE_COMMANDS))):
             raise CommandUsageError('This Force operation requires its native domain adapter')
         builder = InvocationContextBuilder() if context_builder is None else context_builder
         invocation = builder.prepare(

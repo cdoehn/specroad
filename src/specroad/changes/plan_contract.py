@@ -118,8 +118,7 @@ def _validate_plan(value, *, hash_present=True):
         ForceRequest.from_mapping(value['force'])
         _text(value['project_id'], '/project_id')
     if value['format_version'] == '1.4.0':
-        from ..model.authoring_command_ids import COMMANDS as author_commands
-        from ..model.plan_command_ids import COMMANDS as plan_commands
+        from ..model.native_force_command_ids import COMMANDS
         original = value['native_intent']
         if original['execution_binding'] is not None:
             from ._journal_codec import _transaction
@@ -127,7 +126,7 @@ def _validate_plan(value, *, hash_present=True):
             _transaction(execution['transaction_id'])
             if execution['planned_at'] != value['planned_at'] or execution['change_plan_id'] != value['change_plan_id']:
                 raise ChangePlanError('native_force_execution_binding')
-        if (original['command_id'] not in (*author_commands, *plan_commands, 'proposal.review.start', 'proposal.review', 'proposal.apply', 'merge.apply', 'migrate.apply')
+        if (original['command_id'] not in COMMANDS
                 or original['intent'].get('command_id') != original['command_id']
                 or not value['force']['requested'] or not raw_plan):
             raise ChangePlanError('native_force_intent_binding')

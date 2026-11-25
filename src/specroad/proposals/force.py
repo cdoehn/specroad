@@ -5,14 +5,12 @@ requested label and decision are retained in the bound native-intent receipt;
 existing review/control originals are preserved byte for byte as values.
 """
 from copy import deepcopy
-from types import SimpleNamespace
 from ..model.canonical import canonical_json_bytes as jcs
-from ..model.errors import ModelError
 from ..changes.write_guard_values import require
 from ..changes.metadata_update import updated_audit_fields
 from ..authoring.force_compile import _observe, _guard
 
-COMMANDS = ('proposal.review.start', 'proposal.review', 'proposal.apply')
+from ..model.native_force_command_ids import PROPOSAL_COMMANDS as COMMANDS
 
 
 def author(root, operand, *, command, expected_revision, actor, request_id=None,
@@ -123,7 +121,7 @@ def compile_target(sources, intent, actor, time, decisions, *, services=None):
         from ..changes.force_projection import recorded_target
         inner = ChangePlan(jcs(before['change_plan']))
         if inner.data.get('format_version') in ('1.3.0', '1.4.0'):
-            from ..changes.resource_replace import check_plan, target_bytes
+            from ..changes.resource_replace import check_plan
             if check_plan(inner.data):
                 from ..changes.force_write import _target
                 target = _target(sources.root, inner, target, decisions, services)
